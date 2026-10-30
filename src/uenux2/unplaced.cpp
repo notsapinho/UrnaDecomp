@@ -2224,11 +2224,6 @@
 // f11900 · 12 B · unmatched · placement: link order · name unknown
 // void f11900(i32) { ... }
 
-// link-order cluster 627 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cmenubase.cpp
-
-// f12235 · 159 B · unmatched · placement: link order · name unknown
-// ? f12235(i32) { ... }
-
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 
 // f4678 · 957 B · unmatched · placement: link order · name unknown
@@ -2667,11 +2662,6 @@
 // f5872 · 12 B · unmatched · placement: link order · name unknown
 // void f5872(i32) { ... }
 
-// link-order cluster 853 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cmenubase.cpp
-
-// f5913 · 1334 B · unmatched · placement: link order · name unknown
-// void f5913(i32) { ... }
-
 // link-order cluster 869 · uses=2
 
 // f6041 · 331 B · unmatched · placement: link order · name unknown
@@ -2687,11 +2677,6 @@
 
 // f6155 · 1623 B · unmatched · placement: link order · name unknown
 // void f6155(i32, i32, i32, i32) { ... }
-
-// link-order cluster 879 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cmenubase.cpp
-
-// f6188 · 162 B · unmatched · placement: link order · name unknown
-// void f6188(i32) { ... }
 
 // link-order cluster 881 · uses=2
 
