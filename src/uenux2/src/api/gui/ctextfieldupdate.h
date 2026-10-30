@@ -9,8 +9,8 @@
 // with the interval and a lambda; Draw (fn 10916) erases +64 with +48 when it is not empty, draws the text at +24 with
 // +36, +44 and +48, stores the drawn rectangle at +64 and the text it drew at +52; Show and Hide (fns 10915, 10914)
 // call slots 2 and 3 of the timer; the destructor (fn 5495) releases +72, +52 and +28 in that order. The member names
-// are chosen; the timer's type is only declared here: no header of ours defines it yet (simulador::CWasmTimer and
-// api::CTimer, the classes the schedulers create, derive from api::ITimer, ledger/classes.json).
+// are chosen; the timer's type is only declared here, though api/util/itimer.h defines it (simulador::CWasmTimer
+// and api::CTimer, the classes the schedulers create, derive from api::ITimer, ledger/classes.json).
 
 #include <chrono>
 #include <memory>

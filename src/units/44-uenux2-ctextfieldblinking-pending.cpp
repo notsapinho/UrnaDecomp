@@ -7,8 +7,8 @@
 // bodies below are NOT the target's, they trap. Target functions, by vtable slot (vtable @1582448; ledger/vtables.json),
 // and what each waits for:
 //   2  10946  Draw(IScreen&) const: draws through the IScreen slot at +76, which api/gui/iscreen.h does not declare
-//   3  10945  Show(): m_timer's slot 2 (+8), 4  10944  Hide(): m_timer's slot 3 (+12): api::ITimer has no header here
-//             (api/util/itimer.h is round DECOMP3 lane K's), so the class only forward-declares it
+//   3  10945  Show(): m_timer's slot 2 (+8), 4  10944  Hide(): m_timer's slot 3 (+12), Start and Stop in
+//             api/util/itimer.h, which the class header does not include: it only forward-declares api::ITimer
 //   7  10940  GetTypeName() const: builds "CTextFieldBlinking" through fn 3891, which has no name yet
 //   8  10943  Rect() const (record ctextfieldblinking.cpp:70:21): calls fn 3889, which has no name yet
 //   9  2241   Move(const SPoint&): binaryen's one body for CImageField, CDSImageField, CImageFieldUpdate, CTextField,

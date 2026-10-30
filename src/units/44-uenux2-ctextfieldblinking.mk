@@ -4,7 +4,7 @@
 # (its vptr, m_nome at +12). The destructor is implicit: the deleting one holds the base-object body inlined, where an
 # out-of-line destructor's would call it. The header goes beside ctextfieldblinking.cpp, the file whose records name
 # the constructor (lines 39 and 42, column 15) and Rect (70:21); no record names a header. api::ITimer is only
-# forward-declared (the destructors need no complete type, and api/util/itimer.h is not in this tree yet).
+# forward-declared (the destructors need no complete type; api/util/itimer.h defines it).
 # The unit has no source of its own yet: every virtual member is pending, so the vtable, its key function Draw and with
 # it the implicit destructors are emitted in the pending object (as units 26 and 30 emit theirs); they move to
 # ctextfieldblinking.o when Draw does. The constructor has no target function of its own (binaryen inlined it into its

@@ -9,7 +9,8 @@
 // Target functions:
 // - Draw 11090 calls IScreen's vtable slots 22 and 24 (the image-drawing members), which api/gui/iscreen.h does not
 //   declare;
-// - Show 11089 and Hide 11088 call slots 2 and 3 of the api::ITimer at +44 (m_timer), whose header is not ours yet;
+// - Show 11089 and Hide 11088 call slots 2 and 3 (Start and Stop in api/util/itimer.h) of the api::ITimer at +44
+//   (m_timer), which the class header only declares;
 // - Rect 11087 (record cimagefieldupdate.cpp:80:12) calls CPolySingleton<IScreen>'s instance, fn 512, not named yet;
 // - Move 2241 is binaryen's one body for CTextField, CImageField, CDSImageField, CImageFieldUpdate, CTextFieldBlinking
 //   and CTextFieldUpdate; it reads the IForm<IScreen> the field belongs to, which api/gui/iform.h does not declare.

@@ -12,7 +12,7 @@
 //   CImageField::Draw passes its std::unique_ptr<SPoint>, +40 the anchor, +44/+48 the std::shared_ptr that slot 0 of
 //   ITimerScheduler::GetInst() (fn 1259, record itimerscheduler.cpp:23) returns for the interval and a lambda of the
 //   constructor (the std::function<void()> __func of typeinfo 1579116). Show (fn 11089) and Hide (fn 11088) call that
-//   object's slots 2 and 3. RTTI names api::ITimer, whose header is not ours yet, so it is only declared here.
+//   object's slots 2 and 3. RTTI names api::ITimer; it is only declared here, though api/util/itimer.h defines it.
 // The member names are chosen, as in cimagefield.h; no evidence gives them.
 //
 // The destructor is defined in the class: the deleting destructor (fn 11086) is free(D2(this)), a direct call to a D2

@@ -2,8 +2,8 @@
 // class's vtable (emitted with the destructor, its key function, in that TU) needs them defined; their bodies are NOT the
 // target's, they trap. Target functions:
 //   Draw 10916   calls IScreen slots at +24 and +76, which api/gui/iscreen.h does not declare yet
-//   Show 10915   calls slot 2 of the timer at +72, and Hide 10914 its slot 3: api::ITimer has no header of ours yet
-//                (lane DECOMP3-K's api/util/itimer.h declares it)
+//   Show 10915   calls slot 2 of the timer at +72, and Hide 10914 its slot 3, Start and Stop in api/util/itimer.h,
+//                which the class header does not include: it only forward-declares api::ITimer
 //   Rect 10913   record ctextfieldupdate.cpp:73:21; calls fn 3889, which has no name yet
 //   Move 2241    binaryen's one body for CImageField, CDSImageField, CImageFieldUpdate, CTextFieldBlinking, CTextField and
 //                this class

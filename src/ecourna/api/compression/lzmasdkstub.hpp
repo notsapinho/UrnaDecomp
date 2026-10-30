@@ -4,7 +4,7 @@
 // 9586): a 568-byte context object kept in a static std::unique_ptr by CLzmaCompress::DoAdd, whose ctor creates the
 // CCodecs (CCodecs::Load inlined), and an entry point taking (ctx, files, archive, names, bool compress,
 // std::function<void(unsigned long long, const std::string&)> progress) that returns true on success and leaves the
-// HRESULT at +532 and the message at +536. The 7-Zip lane owns the real thing; this file only lets the ecourna TUs
+// HRESULT at +532 and the message at +536. The real thing is that package's; this file only lets the ecourna TUs
 // compile and link. Names are ours.
 #include <functional>
 #include <string>
