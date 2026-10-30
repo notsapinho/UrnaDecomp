@@ -10,12 +10,12 @@
 //
 // Evidence that the status block at +4 and the reads through slot 15 are this class's, not the mock's: comum's and
 // vota's code holds only an IPower (the singleton of fn 862) and does the same call, `this->slot15(this + 4)`, then
-// reads the block's fields, in fns 1898, 2774, 10226, 11107, 11188, 12017 and 12061. Those are non-virtual members of
-// this class that clang inlined (one body in many callers; binaryen inlines a function with one call site only). They
-// are not reconstructed: their bodies live in those callers. Slots 0 to 6 have the same shape, so they are written
-// here: that they are IPower's and not CPowerMock's is a reading, and a CPowerMock that defines them gives the same
-// bytes. Slot 7 reads the mock's own block (+32) without the call, so it is the mock's override, and pure here by
-// choice; slots 15 and 16 are pure here by choice too.
+// reads the block's fields, in fns 1898, 2774, 10226, 11107, 11188, 12017 and 12061. The callers show the calls and the
+// block; that non-virtual inline members of this class hold that code is a reading (the same code in many callers, and
+// binaryen inlines a function with one call site only), and none is reconstructed. Slots 0 to 6 have the same shape, so
+// they are written here: that they are IPower's and not CPowerMock's is a reading too, and a CPowerMock that defines
+// them gives the same bytes. Slot 7 reads the mock's own block (+32) without the call, so it is the mock's override,
+// and pure here by choice; slots 15 and 16 are pure here by choice too.
 //
 // The block is 16 bytes of 32-bit words (fn 8071 copies it with i64 accesses of alignment 4). The target's loads say
 // the fields share words: slot 2 tests a top half with `word < 65536`, slot 7 rewrites a low half with a 32-bit load and
@@ -32,10 +32,12 @@
 // Slot roles, from vota::CThreadMonitor::LogaStatusRedeAcBateria (its records sit in fn 10226), which divides each by
 // 100 for "{} rede CA em [{:3.2f}V] e " and "na Bateria Interna com [{:2.2f}V/{}A]": slot 4 is the mains voltage, slot
 // 1 the internal battery's, slot 3 the external battery's (taken instead of slot 1 when above 0), slot 2 the current.
-// That caller reads them as signed (f64.convert_i32_s, i32.le_s), so they return int. Slot 7 is formatted as an
-// unsigned ("{: >3}%", argument type 6, fn 11107) and masked to a byte, so it returns uebyte; an int return differs
-// (measured). Every member name but the five records', every field name and the block's name are chosen: no record
-// names them. Slots 0, 5, 6 and 16 have no caller that says what they are, so they keep their slot.
+// That caller reads them as signed (f64.convert_i32_s, i32.le_s), so they return int. Slot 2 is 0 with the internal
+// battery's status at 3 and negative with no mains voltage. Slot 5 scales word 3's low half by a factor stepped on the
+// battery voltage in use, the external one when it has one. Slot 7 is formatted as an unsigned ("{: >3}%", argument type
+// 6, fn 11107) and masked to a byte, so it returns uebyte; an int return differs (measured). Slot 6's uebyte is chosen:
+// int or unsigned give the same bytes. Every member name but the five records', every field name and the block's name
+// are chosen: no record names them. Slots 0, 5, 6 and 16 have no caller that says what they are, so they keep their slot.
 #include <cmath>
 #include <cstdint>
 #include <tuple>
@@ -82,7 +84,6 @@ public:
         return m_status.m_tensaoBatInt;
     }
 
-    // 0 with the internal battery's status at 3; negative with no mains voltage
     virtual int BatCurrent()
     {
         ReadStatus(m_status);
@@ -105,7 +106,6 @@ public:
         return m_status.m_tensaoRede;
     }
 
-    // scales word 3's low half by a factor stepped on the battery voltage in use, the external one when it has one
     virtual int Slot5()
     {
         ReadStatus(m_status);

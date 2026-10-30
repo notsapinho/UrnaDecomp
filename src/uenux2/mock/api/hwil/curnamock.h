@@ -20,6 +20,9 @@ namespace api::teste {
 // the deleting one holds the other's body (R5): implicit here, and a body cheap enough that a destructor defined in
 // the class, with or without `inline`, gives the same bytes. The members' names are IUrna's, chosen (api/hwil/iurna.h
 // says from what), and so are the data members'. The path is chosen as cpowermock.h's is.
+// Slot 4 copies the data, then fills with 1s up to 1024 bytes. The test and the size taken after it are the target's: fn
+// 8144 fills 1024 bytes with a constant size where the path that copies computes its own. Without the test clang joins
+// the two paths, and with the size taken first the loads swap. The count is unsigned: its loop's test is `size != 1024`.
 class CUrnaMock : public IUrna {
 public:
     virtual int Modelo() const override { return m_modelo; }
@@ -27,9 +30,6 @@ public:
     virtual int NumeroSerie() const override { return m_numeroSerie; }
     virtual int Slot3() const override { return m_slot3; }
 
-    // the data, then 1s up to 1024 bytes. The test and the size taken after it are the target's: fn 8144 fills 1024 bytes
-    // with a constant size where the path that copies computes its own, and without the test, or with the size taken
-    // before it, clang joins the two paths. The count is unsigned: its loop's test is `size != 1024`, as the target's.
     virtual void Slot4(uebyte* destino) const override
     {
         if (m_dados.empty()) {

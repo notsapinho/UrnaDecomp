@@ -18,9 +18,9 @@ namespace api::teste {
 // it is final is not recovered. The members' names are IPower's, chosen (api/hwil/ipower.h says from what), and so are
 // the data members'. The path is chosen: the class has no record; comum::teste::CAppInfoBuilder's names
 // mock/app/comum/cappinfobuilder.cpp for the tree of the teste namespaces, and the directory mirrors src/api/hwil/.
+// Slot 7 reads this class's block, without ReadStatus, and clamps the level it holds.
 class CPowerMock : public IPower {
 public:
-    // slot 7: reads this class's block, without ReadStatus, and clamps the level it holds
     virtual uebyte BatLevel() override
     {
         if (m_simulado.m_carga > 100) {
