@@ -9,8 +9,8 @@
 # 9442, the GetInt/GetInt64/GetDouble/GetText/IsNull/GetBool pairs (2679 9441, 5165 9440, 5164 9439, 3514 9438, 5163
 # 9435, 9446 9433), GetDateTime(const std::string &) 9434, GetBlob(const std::string &) 9432, Next 9444 and
 # VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer control blocks' __get_deleter and
-# __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from the
-# roots object, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
+# __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from
+# celeitordinamicodao.cpp.o, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
 # externs' Replace 9398; and library code these bodies call: std::map<std::string, int>'s tree members 1677, 2678,
 # 9447, std::set<int>'s __find_equal 2676 and string::replace 4667.
 #

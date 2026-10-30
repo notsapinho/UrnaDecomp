@@ -17,9 +17,9 @@ namespace comum::dao {
 // The constructor is not written: fn 7787 holds it with a stack prologue of its own, so it is out of line in the
 // original (reading.md R10), and it has no target function. It opens the connection and creates the table.
 //
-// Clone is written as a trap in src/units/66-uenux2-cjustificadordao-pending.cpp. In the three DAOs its function
-// comes after the file's other members and before the base's defaults, the place of an inline member or of the file's
-// last one (reading.md R9): which of the two is open.
+// In the three DAOs Clone's function comes after the file's other members and before the base's defaults, the place of
+// an inline member or of the file's last one (reading.md R9): which of the two is open, so the .cpp's last place is a
+// choice, and a body in the class gives the same bytes.
 class CJustificadorDAO final : public IJustificadorDAO {
 public:
     ~CJustificadorDAO() override;

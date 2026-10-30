@@ -1,10 +1,11 @@
-# uenux2 comum::dao::CJustificadorDAO: slot 3, the INSERT of a justified absence (target fn 11473), and the destructor
-# and deleting destructor (target fns 1704 and 3767, slots 0 and 1 of its vtable @1560760) in
-# src/app/comum/justificativa/dao/cjustificadordao.cpp, the file the records of ExcluirID and Atualizar name (lines 56
-# and 63; both pending). The headers cjustificadordao.h and ijustificadordao.h beside it, and the bases
-# src/api/persistencia/iuenuxgenericdao.h, the file the records of the base's defaults name, and idao.h beside it. The
-# class chain is RTTI's: CJustificadorDAO, IJustificadorDAO, IUenuxGenericDAO<CIdentificacaoJustificativa, std::string>,
-# IDAO.
+# uenux2 comum::dao::CJustificadorDAO: slot 3, the INSERT of a justified absence (target fn 11473), slot 2, Clone (11468,
+# a thunk into binaryen's 3894, which forms with unit 91's two), slots 5 and 6, ExcluirID and Atualizar (11472, 11471,
+# with the header app/comum/justificativa/euecomumjustificativaerror.h), and the destructor and deleting destructor
+# (target fns 1704 and 3767, slots 0 and 1 of its vtable @1560760) in src/app/comum/justificativa/dao/cjustificadordao.cpp,
+# the file the records of ExcluirID and Atualizar name (lines 56 and 63). The headers cjustificadordao.h and
+# ijustificadordao.h beside it, and the bases src/api/persistencia/iuenuxgenericdao.h, the file the records of the base's
+# defaults name, and idao.h beside it. The class chain is RTTI's: CJustificadorDAO, IJustificadorDAO,
+# IUenuxGenericDAO<CIdentificacaoJustificativa, std::string>, IDAO. Slot 4 is the base's default (11467, unit 91's row).
 #
 # Read from the bytes:
 # - slot 3: the calls are ISqlConnection's slot 5 (Prepare) and ISqlStatement's slots 3, 2, 10 and 12 (SetInt64, SetInt,
@@ -20,13 +21,13 @@
 #
 # Chosen, no evidence names them: Inserir (slot 3), Clone (slot 2), RecuperarID and RecuperarTodos (slots 7 and 8, whose
 # result types the bytes give), the const of those four, every parameter and member name, the paths of
-# cjustificadordao.h, ijustificadordao.h and idao.h, and the pure slots of the bases. The destructor declared first is
+# cjustificadordao.h, ijustificadordao.h, idao.h and euecomumjustificativaerror.h, the enumerators of
+# EUeComumJustificativaError, and the pure slots of the bases. The destructor declared first is
 # the key function: a choice, as ExcluirID and Atualizar are out of line in the same file too.
 #
-# Lines: no record gives a function here its line. Evidence: Inserir stands before line 56, as band uses 1 of
-# ledger/ordinals.tsv runs 11473, 11472 (line 56), 11471 (line 63) downwards. Chosen: its exact line, the destructors'
-# place at the top of the file, and the lines of the declarations in iuenuxgenericdao.h, which leave the records' lines
-# 41, 49 and 57 free. That band says nothing of the destructors: 1704 is in uses 7, 3767 in uses 3. Only a sibling
+# Lines: ExcluirID and Atualizar throw on their records' lines, 56 and 63. Evidence: Inserir stands before line 56, as
+# band uses 1 of ledger/ordinals.tsv runs 11473, 11472 (line 56), 11471 (line 63) downwards. Chosen: its exact line,
+# Clone's, and the destructors' place at the top of the file. That band says nothing of the destructors: 1704 is in uses 7, 3767 in uses 3. Only a sibling
 # speaks for their place, and it corroborates, no more: in uses 3 the adjacent 3768, 3767, 3766 are, in link order,
 # CEleitorDinamicoDAO's constructor, the D0 and that class's slot 8.
 #
@@ -44,7 +45,7 @@ UENUX2_SRCS += $(CJUSTIFICADORDAO_SRCS)
 # src/ecourna/api/sql/isqlstatement.hpp and isqlresultset.hpp include Boost, and UENUX2_CXXFLAGS has no Boost path. An
 # include path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").
 $(ROOT)/$(APP)/uenux2/$(CJUSTIFICADORDAO_SRCS).o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# slots 2 and 4 to 8 are not reconstructed: 66-uenux2-cjustificadordao-pending.cpp gives the vtable trapping bodies,
+# slots 7 and 8 are not reconstructed: 66-uenux2-cjustificadordao-pending.cpp gives the vtable trapping bodies,
 # compiled with the unit's flags, and says what each waits for
 $(ROOT)/$(APP)/66-uenux2-cjustificadordao-pending.o: $(ROOT)/src/units/66-uenux2-cjustificadordao-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/66-uenux2-cjustificadordao.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -I$(BOOST_HDR) -c src/units/66-uenux2-cjustificadordao-pending.cpp -o $(R)
