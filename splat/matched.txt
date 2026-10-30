@@ -7509,3 +7509,6 @@
 11948 _ZNSt3__220__shared_ptr_emplaceIN5comum12CParteCargosENS_9allocatorIS2_EEED2Ev
 6188 _ZN5comum9CMenuBaseD0Ev
 12235 _ZN5comum9CMenuBaseD2Ev
+11575 _ZN5comum12CGravadorWSQD0Ev
+11576 _ZN5comum12CGravadorWSQD2Ev
+12090 _ZN5comum10IResultadoD2Ev
