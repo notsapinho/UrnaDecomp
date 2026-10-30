@@ -19,12 +19,6 @@ uedword CLocal::GetMunicipio() const
     return m_local->GetMunicipio().GetCodigo();
 }
 
-const std::string& CLocal::GetNomeMunicipio() const
-{
-    VerificaLido("GetNomeMunicipio");
-    return m_local->GetMunicipio().GetNome();
-}
-
 const std::string& CLocal::GetUF() const
 {
     VerificaLido("GetUF");
@@ -43,7 +37,7 @@ const md::CLocal& CLocal::GetLocalData() const
     return *m_local;
 }
 
-// (original lines 46-76: content not recovered)
+// (original lines 40-76: content not recovered)
 #line 77
 TZonaID CLocal::GetZonaID() const
 {
@@ -71,6 +65,12 @@ TSecaoID CLocal::GetSecaoID() const
     throw CUeComumDadosError(EUE_COMUM_DADOS_7873, "Tipo de local inválido");
 }
 
+const std::string& CLocal::GetNomeMunicipio() const
+{
+    VerificaLido("GetNomeMunicipio");
+    return m_local->GetMunicipio().GetNome();
+}
+
 bool CLocal::UrnaBiometrica() const
 {
     if (EhSecao("UrnaBiometrica")) {
@@ -79,7 +79,7 @@ bool CLocal::UrnaBiometrica() const
     return false;
 }
 
-// (original lines 121-341: content not recovered)
+// (original lines 127-341: content not recovered)
 #line 342
 void CLocal::VerificaLido(const std::string& funcao) const
 {

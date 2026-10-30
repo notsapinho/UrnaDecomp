@@ -4,6 +4,8 @@
 
 namespace comum {
 
+// Chosen, as in cidentificacaourna.h: the same using-declarations as iresultado.h, of which the bodies read here give
+// only the widths.
 using ecourna::app::dados::TLocalID;
 using ecourna::app::dados::TSecaoID;
 

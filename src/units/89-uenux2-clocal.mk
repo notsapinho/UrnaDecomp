@@ -10,27 +10,36 @@
 # Read from the body, no record names them:
 # - The constructors of CInfoMunicipio (5674, 5676), CHorarioVeraoMunicipio (5677, 5679) and CComplementoMunicipio (3710,
 #   3711): each stores the members and calls its class's ValidaCriacao, and the three pairs are that function's only
-#   callers. The file is the class's. Their place in it is a choice: the band reads 5676, 5675, 5674 in link order, and
-#   this file defines both constructors first, which moves no byte.
+#   callers. The file is the class's. Their order is the bands': each class defines the constructor without the optional
+#   first (5676, 5679, 3711), then the one with it. ValidaCriacao's place between them in the object (the band reads 5676,
+#   5675, 5674) needs no definition there: the first constructor's call creates its declaration. Where the two sit among
+#   the file's other lines is a choice.
 # - comum::CLocal's GetMunicipio (1004), GetNomeMunicipio (1077), GetUF (1702), GetLocalData (5743), UrnaBiometrica (820):
 #   each passes its own name to VerificaLido as a literal, which is the evidence for the name. The literal of fn 1003 is
 #   "GetZona", so the literal is not always the whole name. 3753 passes "GetUF" as well and returns CStringUtils::ToLower of
 #   it, so GetUFMinuscula is chosen. GetMunicipio's result type is chosen.
+#   GetNomeMunicipio follows GetSecaoID, the order of their band, 1078 then 1077, by how-to step 3 "What a record's place
+#   says". That is a judgement: a call of GetSecaoID in unwritten code earlier in the file would give the same order with
+#   the definitions the other way round. Nothing read shows one: none of 1078's ten callers has a record in this file, and
+#   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 4161, 11223, 11902 and 11908 have no record, so
+#   they cannot be ruled out.
 # - comum::CLocal's constructor and destructor (2262, 2261): the singleton's builder (5738) allocates 4 bytes and calls
 #   them. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
 #   std::unique_ptr; both are defined out of line because the target calls them.
 # - md::CIndiceFoto's constructor (5659), declared by unit 36. The file is the one the record of CIndicesFotos::at names
 #   (cindicesfotos.cpp:30, a function not written, whose line stays blank).
-# - md::CImpedido's constructors (5661, 5662). The file is the record's (cimpedido.cpp:46, GetImpedimentoP2, held inlined
-#   by fn 5764 and not written, so its line stays blank). The class is read from 11410, CConversorImpedido's DoDesconverte,
+# - md::CImpedido's constructors (5662, 5661, in the order of their band). The file is the record's (cimpedido.cpp:46,
+#   GetImpedimentoP2, held inlined by fn 5764 and not written, so its line stays blank). The class is read from 11410, CConversorImpedido's DoDesconverte,
 #   their only caller. Why the second constructor stores 15 in the second impediment is not known: the value is the bytes'.
 #
 # Evidence for forms:
 # - m_codigo is a plain uedword lvalue where it is formatted (5675, 5678). std::format over such a member stores the pair
 #   +24 then +16, the target's order; a prvalue (.Get() over a CBaseType member, a static_cast) stores +16 then +24, and a
-#   local copy of the member differs in 28 rows. So these classes do not hold ecourna's CBaseType, the type the
-#   using-declaration in iresultado.h gives comum::TMunicipioID; CComplementoMunicipio's member follows them by choice, as
-#   no body of it tells. TZonaID and TSecaoID keep that using-declaration: the records spell them and the bytes accept both.
+#   local copy of the member differs in 28 rows. Of the forms measured only the plain member gives the target's bytes, so
+#   these two classes do not hold ecourna's CBaseType, the type the using-declaration in iresultado.h gives
+#   comum::TMunicipioID; CComplementoMunicipio's member follows them by choice, as no body of it tells. The identification
+#   classes keep all four of iresultado.h's using-declarations, TMunicipioID, TZonaID, TLocalID and TSecaoID, by choice:
+#   the records spell the names, these bodies read only widths, and another declaration would not compile beside those.
 # - UrnaBiometrica tests the section as a statement of its own, so the temporary string dies before +58 is read: 820 frees
 #   it between the two reads, and `return EhSecao(...) && ...`, which keeps it alive, differs in 37 rows. EhSecao is
 #   defined in the class because 820, 5738 and 5741 hold the same inlined code, so clang inlined it (how-to step 3).
@@ -44,8 +53,9 @@
 # GetIdentificacao, GetCodigo, GetNome, EhUrnaBiometrica, GetSiglaUF, GetOrdem, GetNomeUrna, GetZona, GetMunicipio and
 # GetSecao of the identification classes; the paths of every new header (the lower-case rule, how-to step 3), under
 # app/comum/md/ for the classes whose records are there; CCandidaturas::TCargoID as a member alias; which constructor
-# parameter is by const reference where a pointer is all the body shows (CHorarioVerao); and that
-# CIdentificacaoUrnaContingencia derives from CIdentificacaoUrna with no member of its own. The code 8013 is a static_cast
+# parameter is by const reference where a pointer is all the body shows (CHorarioVerao); that
+# CIdentificacaoUrnaContingencia derives from CIdentificacaoUrna with no member of its own; and CSecaoEleitoral's first
+# member as a plain int, since the record gives the type's name and the bodies only its width. The code 8013 is a static_cast
 # because euecomumdadoserror.h holds only the codes passed to fn 170 directly, and 3724 passes it to binaryen's merge 6029.
 #
 # Measured, the same code (the function's disassembly with object-local numbers masked):

@@ -4,6 +4,9 @@
 
 namespace comum {
 
+// Chosen: the same using-declarations as iresultado.h. The records spell these names, and the bodies read here give only
+// their widths. The measurement in unit 89's fragment speaks against ecourna's CBaseType for the municipality in comum's
+// classes; these stay because another declaration of the names would not compile beside iresultado.h's.
 using ecourna::app::dados::TMunicipioID;
 using ecourna::app::dados::TZonaID;
 

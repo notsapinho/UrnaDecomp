@@ -4,14 +4,14 @@
 
 namespace comum::md {
 
-CComplementoMunicipio::CComplementoMunicipio(uedword codigo, short fusoHorario, const CHorarioVerao& horarioVerao)
-    : m_codigo(codigo), m_fusoHorario(fusoHorario), m_horarioVerao(horarioVerao)
+CComplementoMunicipio::CComplementoMunicipio(uedword codigo, short fusoHorario)
+    : m_codigo(codigo), m_fusoHorario(fusoHorario)
 {
     ValidaCriacao();
 }
 
-CComplementoMunicipio::CComplementoMunicipio(uedword codigo, short fusoHorario)
-    : m_codigo(codigo), m_fusoHorario(fusoHorario)
+CComplementoMunicipio::CComplementoMunicipio(uedword codigo, short fusoHorario, const CHorarioVerao& horarioVerao)
+    : m_codigo(codigo), m_fusoHorario(fusoHorario), m_horarioVerao(horarioVerao)
 {
     ValidaCriacao();
 }

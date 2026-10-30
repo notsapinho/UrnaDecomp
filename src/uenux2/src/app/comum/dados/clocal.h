@@ -8,8 +8,9 @@
 namespace comum {
 
 // Recovered: one std::unique_ptr, 4 bytes (fn 5738 allocates 4, and 2261 resets it and frees a md::CLocal), the data a
-// loader fills; every member below checks it through VerificaLido, which takes the member's name as a literal, so
-// those literals name the members with no record. The member name is not in the target.
+// loader fills. Every member below checks it through VerificaLido with a literal. Reading that literal as the member's
+// name is a choice, for the members with no record: it is shorter than the record's name in GetZonaID, and in
+// GetUFMinuscula it is GetUF's (the fragment lists them). The data member's name is not in the target.
 class CLocal {
 public:
     CLocal();

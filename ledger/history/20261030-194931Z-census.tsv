@@ -5524,8 +5524,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5658	193	2	app	ecourna	-	-	none	-	
 5659	65	2	app	comum	skeleton	5401	addr	1	comum::md::CIndiceFoto::CIndiceFoto(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, comum::SIndiceFoto const&)
 5660	1196	2	app	ecourna	-	-	none	-	
-5661	104	2	app	comum	skeleton	5419	addr	1	comum::md::CImpedido::CImpedido(unsigned short, comum::md::CEleitorIdentidade const&, comum::md::ETipoImpedimento, comum::md::ETipoImpedimento)
-5662	104	2	app	comum	skeleton	5415	addr	1	comum::md::CImpedido::CImpedido(unsigned short, comum::md::CEleitorIdentidade const&, comum::md::ETipoImpedimento)
+5661	104	2	app	comum	skeleton	5415	addr	1	comum::md::CImpedido::CImpedido(unsigned short, comum::md::CEleitorIdentidade const&, comum::md::ETipoImpedimento, comum::md::ETipoImpedimento)
+5662	104	2	app	comum	skeleton	5419	addr	1	comum::md::CImpedido::CImpedido(unsigned short, comum::md::CEleitorIdentidade const&, comum::md::ETipoImpedimento)
 5663	275	2	app	comum	-	-	none	-	
 5664	210	2	app	comum	-	-	none	-	
 5665	144	2	app	vota	-	-	none	-	
