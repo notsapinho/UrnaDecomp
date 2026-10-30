@@ -106,6 +106,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `23-uenux2-cmovie` | the `api::CMovie` constructor (target fn 5526), the `CMovie` and `CMovieFrame` class header and the 4943 enumerator of `EUeGuiError` |
 | `24-uenux2-ctime` | the `api::CTime` constructor from hours, minutes and seconds and `operator-(int) const` (target fns 3642 and 3641, with `operator-=` and `operator+=` inlined into the latter; no evidence names 3641, so `operator-(int) const` is read from its body's shape, a copy of `*this` with `-=` applied, which a free `operator-(const CTime &, int)` would give too), the `CTime` class header and the 7079, 7081 and 7082 enumerators of `EUeUtilError`; the constructor from a string (3643) is not reconstructed yet |
 | `26-uenux2-csigverifier` | the `comum::CSigVerifier` constructor (target fn 1540) and its implicit destructors (11178, 11176), the class header, the `api::ISigVerifier` interface and the `ESavdAplic` type; `Verify` (11179) pending |
+| `50-uenux2-cinformacaothreadoperador` | the implicit destructors of `vota::impl::CInformacaoThreadOperador` (target fns 10552, 10551), the class header, the `vota::impl::IInformacaoThreadOperador` interface and the layouts of `comum::md::CEleitorIdentidade`, `api::CDateTime` and `api::CDate`; no source of its own: the 29 members of slots 2 to 30 are pending (25 under chosen `SlotN` names) and emit the vtable and the destructors; `vota::TipoToStr` (10586) and `GetInst` (599) not reconstructed |
 
 ## Companion files
 
