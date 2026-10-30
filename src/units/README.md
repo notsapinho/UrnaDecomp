@@ -111,6 +111,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `29-uenux2-cimagefield` | the `api::CImageField` constructor (target fn 2242) and its implicit destructors (11099, 11098), the `CImageField` class header and `IImage`, `SharedIImage` and `EAnchorPoint` (`api/gui/iimage.h`); the roots' `make_shared` brings `__shared_ptr_emplace<CImageField>`'s D0/D2 (12639, 12640); `GetTypeName` (11097), `Draw` (11102), `Rect` (11101) and `Move` (2241) pending |
 | `30-uenux2-ctextfieldmt` | the `api::CTextFieldMT` constructor (target fn 1262) with its implicit destructors (10933, 10932), the class header, the 4970 enumerator of `EUeGuiError` and the `IFormField<IScreenMT>` specialization of `api/gui/iformfield.h` with its inline `GetTypeName` (11051), and the `IFormFieldBase<IScreenMT>` destructor (11052) that binaryen merges with `IFormFieldBase<IScreen>`'s (12658) into 1566; `Draw` (10934) pending |
 | `31-uenux2-cformbuilder` | `api::CFormBuilder::GetLabeledKeyPos` (target fn 5544), the `CFormBuilder` class header and the 4914 enumerator of `EUeGuiError`; `AddStatusHeader` (502) is not reconstructed |
+| `32-uenux2-csystem` | `api::CSystem::GetFileSize` and `api::truncate` (target fns 2759 and 5457) in `api/util/csystem.cpp`, the `CSystem` class header and the 7038 and 7070 enumerators of `EUeUtilError`; the file-static `api::ExistResource` (1690) waits for its callers in that file |
 
 ## Companion files
 
