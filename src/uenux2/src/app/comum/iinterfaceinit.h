@@ -19,9 +19,16 @@
 //   EnviarMensagemThrowVoid (fn 3833) passes its message to it, and fns 729 and 11646 read the std::vector<int> it
 //   returns, so its name and types are chosen from those uses. Slots 3, 4, 6 and 7 are named after their slot, with
 //   the wasm types of CWasmInit's overriders (fns 434, 9418, 340, 425).
-// - EBootDeviceId: CurrentBootDevice's record spells it unqualified; its enumerators (fn 11646 returns 0, 1 or 2) and
-//   its underlying type are not recovered.
-// - The other members are declared from their records in iinterfaceinit.cpp; none of them is reconstructed yet. The
+// - EBootDeviceId: CurrentBootDevice's record spells it unqualified. Its values are what fn 11646 returns, 0, 1 or 2:
+//   their names, and that the fixed type is int, are chosen.
+// - HabilitarMR and DesabilitarMR: no record names them. Fn 2863 sends message 10 through EnviarMensagemThrowVoid with
+//   "habilitando MR" and sleeps 500 ms; the same code with message 11, "desabilitando MR" and 100 ms is inlined into its
+//   one caller, fn 7160, so it has no target function. Their names are chosen from those texts, and that they are
+//   members of this class from the `this` they pass on.
+// - EnviarMensagemThrowVoid is defined `inline` in the .cpp: its records (lines 731, 737) lie after the record of line
+//   855 and after the class's typeinfo (@1552464), in the part of the object clang emits after the file's external
+//   functions (docs/reference/facts/reading.md R8), and its callers are all in this file. The other members are
+//   declared from their records in iinterfaceinit.cpp, and the unit's fragment says which are reconstructed. The
 //   header's path, the access of each member and the parameter names are not in the target.
 
 #include <memory>
@@ -32,7 +39,11 @@
 
 namespace comum {
 
-enum EBootDeviceId : int;
+enum EBootDeviceId : int {
+    BOOT_DEVICE_DESCONHECIDO = 0,
+    BOOT_DEVICE_1 = 1,
+    BOOT_DEVICE_2 = 2,
+};
 
 /**
  * Interface de inicialização da plataforma: dispositivo de boot, mídia de resultado (MR), modo de demonstração e
@@ -51,6 +62,8 @@ public:
     virtual bool Slot6() = 0;
     virtual void Slot7(int) = 0;
 
+    void HabilitarMR();
+    void DesabilitarMR();
     bool IsMRPresenteSemHabilitar();
     bool IsMRMontadoSemHabilitar();
     void MontarMRSemHabilitar();

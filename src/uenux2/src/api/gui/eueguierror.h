@@ -21,6 +21,12 @@ enum EUeGuiError {
     // the value is the code api::CMovie::CMovie (target fn 5526) throws; the name is chosen from its message, "Não
     // havia frames": no evidence names it
     EUE_GUI_MOVIE_SEM_FRAMES = 4943,
+    // the value is the code api::CTextBox's constructor throws (record ctextbox.cpp 41:15, inlined into fn 11805); the name
+    // is chosen from its message, the same as 4963's: no evidence names it
+    EUE_GUI_TEXTBOX_POSICAO_INICIAL_INVALIDA = 4961,
+    // the value is the code api::CTextBox::Draw (target fn 10958) throws; the name is chosen from its message, "Status
+    // indefinido": no evidence names it
+    EUE_GUI_TEXTBOX_STATUS_INDEFINIDO = 4962,
     // the value is the code api::CTextBox::Move (target fn 10957) throws; the name is chosen from its message, "A
     // posição da caixa não pode ter x < 3 ou y < 1.": no evidence names it
     EUE_GUI_TEXTBOX_POSICAO_INVALIDA = 4963,
@@ -40,6 +46,9 @@ enum EUeGuiError {
     // the value is the code api::CTextFieldPaper::CTextFieldPaper (target fn 2771) throws; the name is chosen from its
     // message, "Campo estava com o texto nulo": no evidence names it
     EUE_GUI_TEXTFIELDPAPER_TEXTO_NULO = 4973,
+    // the value is the code api::CTextRectField's constructor throws (record ctextrectfield.cpp 51:15, inlined into
+    // fn 5546); the name is chosen from its message, "Campo estava com o texto nulo": no evidence names it
+    EUE_GUI_TEXTRECTFIELD_TEXTO_NULO = 4976,
     // the value is the code api::CTextSource's constructor throws (record ctextsource.h 37:19, inlined into fn 10740);
     // the name is chosen from its message, "Texto nulo": no evidence names it
     EUE_GUI_TEXTSOURCE_TEXTO_NULO = 4977,

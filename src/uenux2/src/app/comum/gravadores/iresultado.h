@@ -18,7 +18,7 @@ using ecourna::app::dados::TZonaID;
 
 // Recovered: only the type of a result file's extension that IResultado's constructor, CArquivosResultado::operator[]
 // (carquivosresultado.cpp:99) and CLogComum's records take: 4 bytes wide (the constructor stores it at +32 with an
-// i32.store). Its enumerators are not recovered, and that it is declared here is a choice.
+// i32.store). Its enumerators are in app/comum/carquivosresultado.h, and that it is declared here is a choice.
 enum EExtensaoArquivoResultado : int;
 
 // Recovered: the layout (40 bytes) and the virtual members. The vtable (@1541020) is the destructors and two pure

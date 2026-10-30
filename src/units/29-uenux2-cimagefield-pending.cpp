@@ -6,8 +6,6 @@
 //   functions returning an 11-character name (with CMovieField 11059, CInputField<CFramedText> 12411 and RHVoice's
 //   userdict::empty_string::describe 9690). Written as `return "CImageField";` our link keeps it a body of its own,
 //   not merged with describe (the only other such function our link has), so 11097 differs at its first operand;
-// - Draw 11102 calls IScreen's vtable slots 22 and 24 (the image-drawing members), two of the DrawImage overloads of
-//   api/gui/iscreen.h;
 // - Rect 11101 (record cimagefield.cpp:52:12) calls CPolySingleton<IScreen>'s instance, fn 512, not named yet.
 // Move each into cimagefield.cpp when it is reconstructed; delete this file with the last one.
 #include "api/gui/cimagefield.h"
@@ -15,11 +13,6 @@
 namespace api {
 
 std::string CImageField::GetTypeName() const
-{
-    __builtin_trap();
-}
-
-void CImageField::Draw(IScreen&) const
 {
     __builtin_trap();
 }

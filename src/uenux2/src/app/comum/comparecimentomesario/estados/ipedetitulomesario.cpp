@@ -37,8 +37,6 @@ IPedeTituloMesario::IPedeTituloMesario(std::shared_ptr<api::CInteractiveForm<api
 {
 }
 
-IPedeTituloMesario::~IPedeTituloMesario() = default;
-
 void IPedeTituloMesario::StartState()
 {
     m_pNextState = this;

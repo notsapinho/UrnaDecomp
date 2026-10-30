@@ -46,6 +46,7 @@ import {
   readPieceBodies,
   referencedFunctionsAt,
   reviewWarnings,
+  withMatches,
 } from '../src/splat-sub';
 import { runSplatSubCommand } from '../src/splat-sub-cli';
 import {
@@ -804,9 +805,10 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
     expect(there.ok).toBe(true);
     const addr = there.ok ? there.addr : Number.NaN;
     expect(operandKind(c5.kinds, 0x23)).toBe('address');
+    // the first differing byte is any of the literal's three, by what our data holds at 124328
     expect(failure(byName('c5'), c5.maps)).toMatch(
       new RegExp(
-        `function 1260 .* DIFFERS at \\+0x24 target \\+0x23 i32\\.const 124328 \\| ours \\+0x23 i32\\.const ${addr} \\[ours 124328 = .*: address string`,
+        `function 1260 .* DIFFERS at \\+0x2[4-6] target \\+0x23 i32\\.const 124328 \\| ours \\+0x23 i32\\.const ${addr} \\[ours 124328 = .*: address string`,
       ),
     );
     // c8: a table slot whose literal is the target's slot number; re-pointed, it is the target's slot of the function
@@ -929,8 +931,11 @@ describe('table slots read with operand kinds', { timeout: 300_000 }, () => {
   });
 
   it.skipIf(!real)('offers a table slot every target slot of its function, however many', () => {
-    // sqlite3_initialize's +0x32 names the empty function binaryen merged the target's into, which fills 126 slots
-    const { maps } = load();
+    // sqlite3_initialize's +0x32 names the empty function binaryen merged the target's into, which fills 126 slots.
+    // Read with the match list applied, as the scan reads it: a landing can drop that function's line from the symbol
+    // file and bring it back (docs/reference/facts/splat.md §S8), and its match line stays
+    const { matches } = parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8'));
+    const maps = withMatches(load().maps, matches);
     const ours = maps.ours.fnByKey.get('sqlite3_initialize')!;
     const piece = (m: SymbolMaps) => {
       const r = remapBody(m, ours);
@@ -941,13 +946,15 @@ describe('table slots read with operand kinds', { timeout: 300_000 }, () => {
     const a = attempt(maps, { ours, symbol: 'sqlite3_initialize', source: 'symbol' }, 250, readPieceBodies(PIECES).get(250)!);
     expect(a.verdict).toBe('match');
     // an operand that may be anything is offered a function's slots only while they are few: here no slot, only the
-    // integer and, as our slot number is past GLOBAL_BASE, what our data holds at that address (which object that is
-    // depends on the link)
-    const unverified = piece({ ...maps, kinds: undefined });
+    // integer and, as our slot number is past GLOBAL_BASE, what our data holds at that address. Which object that is
+    // depends on the link: one the target lacks gives no piece, only a soft note of why the slots were not offered
+    const anything = { ...maps, kinds: undefined };
+    const unverified = piece(anything);
     const readings = unverified !== undefined && !(unverified instanceof Uint8Array) ? unverified.readings : [];
-    expect(readings.at(-1)).toBe('literal');
-    expect(readings.length).toBeGreaterThan(1);
-    expect(readings.slice(0, -1).filter((r) => !r.startsWith('address '))).toEqual([]);
+    const r = remapBody(anything, ours);
+    const note = r.ok ? r.soft.find((s) => s.at === 0x32)?.reason : undefined;
+    expect(readings.length === 0 ? note : readings.at(-1)).toMatch(/^literal$|the target function fills 126 slots$/);
+    expect(readings.slice(0, -1).filter((x) => !x.startsWith('address '))).toEqual([]);
   });
 
   it.skipIf(!real)("reads renameUnmapSelectCb's slot in sqlite3AddDefaultValue as a table slot, as both links' tables say", () => {

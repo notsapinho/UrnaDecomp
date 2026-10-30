@@ -137,13 +137,13 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-(roots|pending)\.o$/) r[$2]
 # 55 roots, other
 ```
 
-- the members of the control blocks the roots files build, from units 12, 14, 27, 28, 29, 49, 58, 77, 78, 79, 83 and
-  84 (U3);
+- the members of the control blocks the roots files build, from units 12, 14, 27, 28, 29, 49, 54, 58, 65, 77, 78, 79,
+  83, 84 and 90 (U3);
 - code of a header the roots files emit in the shapes of `src/units/README.md` "Companion files": an inline default
   of a virtual member (`api::IScreen::GetFontMetrics`, 8938, unit 19), and the members of classes and class templates
   with no key function that the roots build (units 64, 67, 75, 79 and 83);
 - the implicit and inline members of a class whose key function is pending, from the pending objects of units 26,
-  29, 43, 44, 58, 59, 60, 62, 65, 77 and 79. The pending member there is the class's key function (its first
+  29, 58, 59, 60, 62, 77 and 79. The pending member there is the class's key function (its first
   non-inline virtual member), so the vtable is emitted in the pending object, and with it every implicit or inline
   member the vtable names. Those bodies are the compiler's code for the class definition. When the key function lands
   in the class's source, they move with the vtable under the same symbols: unit 30's moved to `ctextfieldmt.cpp.o`

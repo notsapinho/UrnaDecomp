@@ -12,11 +12,21 @@
 # Show and Hide (fns 10915, 10914, slots 3 and 4) are Start and Stop of the timer, whose class the source includes
 # (api/util/itimer.h); their lines are a choice, above Rect's line 73, in the band's order. Move (one of the five
 # functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) is below line 73, a choice.
+# Draw (target fn 10916, slot 2) is above Show, in the band's order; its lines are a choice. Its first test is evidence
+# for an inline function that returns 16 bits and is compared with 1 (a member, its name and the return's sign are
+# chosen: a free function, a uint16_t return and a lambda give the same object): `m_rectDesenhado.Width() != 1`
+# (api/gui/primitives.h, whose body is right - left + 1, as fn 10958 shows) gives the target's subtraction and 16-bit
+# mask, and clang inlines it in the object (no call remains). The same expression written in place, cast to TPosition,
+# gives `i32.eq` on the two loads, and so does `right != left`; `> 1` gives a sign extension and a compare. The name
+# Width is chosen, and only functions of this shape are told apart. Same object code, by the function's disassembly
+# with the object-local numbers masked: a local TPosition for the width, `!(Width() == 1)`, an inline test that returns
+# `Width() == 1`, and a local std::string moved into m_textoDesenhado. A local SRect for DrawText's result does not: the
+# frame grows from 16 to 32 B.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTEXTFIELDUPDATE_SRCS := src/api/gui/ctextfieldupdate.cpp
 UENUX2_SRCS += $(CTEXTFIELDUPDATE_SRCS)
-# Draw (10916) and Rect (10913) are not reconstructed:
-# 42-uenux2-ctextfieldupdate-pending.cpp gives the vtable trapping bodies, compiled with the unit's flags; it reads only
+# Rect (10913) is not reconstructed:
+# 42-uenux2-ctextfieldupdate-pending.cpp gives the vtable a trapping body, compiled with the unit's flags; it reads only
 # api/gui headers
 $(ROOT)/$(APP)/42-uenux2-ctextfieldupdate-pending.o: $(ROOT)/src/units/42-uenux2-ctextfieldupdate-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/42-uenux2-ctextfieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/42-uenux2-ctextfieldupdate-pending.cpp -o $(R)

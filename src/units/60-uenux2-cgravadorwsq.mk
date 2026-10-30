@@ -9,7 +9,7 @@
 # CGravadorWSQ's inlines it (out of line in iresultado.cpp, measured in a try link, it is a call there and 11576 does
 # not match); it is emitted with IResultado's vtable, which the inlined vptr store keeps.
 # With it: the comum::IGravador and comum::IResultado interfaces (igravador.h and iresultado.h beside it),
-# EExtensaoArquivoResultado (iresultado.h), EUrnaFase (cgravadorwsq.h), ESavdArquivoUE (app/comum/iinterfacesavd.h,
+# EExtensaoArquivoResultado (iresultado.h), EUrnaFase (app/comum/eurnafase.h), ESavdArquivoUE (app/comum/iinterfacesavd.h,
 # beside ESavdAplic) and the layouts of api::CDateTime and api::CDate (src/api/util/cdatetime.h and cdate.h, beside
 # their records' cdatetime.cpp and cdate.cpp). The headers go beside the files the classes' records name
 # (cgravadorwsq.cpp, iresultado.cpp); no record names igravador.h, which goes with them, a choice. No evidence names

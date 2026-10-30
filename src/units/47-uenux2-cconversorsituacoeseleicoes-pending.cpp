@@ -9,6 +9,12 @@
 // specialization, with the symbol the vtable references; its body is NOT the target's, it traps.
 // Delete this file when iconversorasn.h defines the default DoConverte: the specialization is a strong symbol with the
 // name of that template's instantiation, so the link would keep this trap in the vtable without a word.
+// Its source, in the class at lines 87 to 90 of the header (the default DoDesconverte is the same at lines 96 to 99, with
+// code 7656 and "Método DoDesconverte()..."; the codes are comum::EUeComumAsnError's):
+//     throw CUeComumAsnError(7655, std::format("Método DoConverte() não implementado para {}", typeid(TEntidade).name()));
+// Fn 731 is binaryen's merge of those two defaults, 20 thunks over it, so it forms only with both in the link (one
+// inherited DoDesconverte: comum::asn::CConversorHistoricoVotoImpresso, CConversorEntidadeBU or CConversorEntidadeHashes)
+// and it waits for -O3: 96-uenux2-app-comum-asn.mk has the measurement.
 #include "app/comum/dados/asn/processoeleitoral/cconversorsituacoeseleicoes.h"
 
 namespace comum::asn {

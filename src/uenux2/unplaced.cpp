@@ -355,16 +355,8 @@
 
 // link-order cluster 541 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cproporcionalnulo.cpp
 
-// f11701 · 52 B · unmatched · placement: link order · name unknown
-// void f11701(i32, i32) { ... }
-
 // f11700 · 25 B · unmatched · placement: link order · name unknown
 // ? f11700(i32, i32, i32, i32) { ... }
-
-// link-order cluster 542 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cproporcionalbranco.cpp
-
-// f11704 · 51 B · unmatched · placement: link order · name unknown
-// void f11704(i32, i32) { ... }
 
 // link-order cluster 546 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cpedenominal.cpp
 
@@ -379,28 +371,10 @@
 // f11728 · 51 B · unmatched · placement: link order · name unknown
 // void f11728(i32, i32) { ... }
 
-// link-order cluster 548 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ccandidatoinexistente.cpp
-
-// f11731 · 52 B · unmatched · placement: link order · name unknown
-// void f11731(i32, i32) { ... }
-
-// link-order cluster 549 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmavotolegenda.cpp
-
-// f11735 · 52 B · unmatched · placement: link order · name unknown
-// void f11735(i32, i32) { ... }
-
-// link-order cluster 552 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ccandidatoinapto.cpp
-
-// f11748 · 52 B · unmatched · placement: link order · name unknown
-// void f11748(i32, i32) { ... }
-
 // link-order cluster 553 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cproporcionalbranco.cpp
 
 // f11752 · 25 B · unmatched · placement: link order · name unknown
 // ? f11752(i32, i32, i32) { ... }
-
-// f11751 · 5 B · unmatched · placement: link order · name unknown
-// ? f11751(i32) { ... }
 
 // link-order cluster 558 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/curnainspecionada.cpp
 
@@ -1379,9 +1353,6 @@
 
 // link-order cluster 1029 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/ctestefalhou.cpp
 
-// f3857 · 27 B · unmatched · placement: link order · name unknown
-// void f3857(i32) { ... }
-
 // f3854 · 36 B · unmatched · placement: link order · name unknown
 // ? f3854(i32, i32) { ... }
 
@@ -1535,11 +1506,6 @@
 
 // f2789 · 738 B · unmatched · placement: link order · name unknown
 // void f2789(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1112 · uses=4 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
-
-// f2863 · 135 B · unmatched · placement: link order · name unknown
-// void f2863(i32) { ... }
 
 // link-order cluster 1117 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/cinformacaozeresimatardia.cpp
 
@@ -1745,11 +1711,6 @@
 // f1559 · 66 B · unmatched · placement: link order · name unknown
 // ? f1559(i32) { ... }
 
-// link-order cluster 1238 · uses=8 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp
-
-// f1560 · 13 B · unmatched · placement: link order · name unknown
-// void f1560(i32) { ... }
-
 // link-order cluster 1239 · uses=8
 
 // f1591 · 658 B · unmatched · placement: link order · name unknown
@@ -1818,23 +1779,10 @@
 // f948 · 15 B · unmatched · placement: link order · name unknown
 // ? f948() { ... }
 
-// link-order cluster 1290 · uses=15 · neighbours' file uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp
-
-// f884 · 7 B · unmatched · placement: link order · name unknown
-// ? f884(i32) { ... }
-
-// f883 · 13 B · unmatched · placement: link order · name unknown
-// void f883(i32) { ... }
-
 // link-order cluster 1297 · uses=17
 
 // f807 · 12 B · unmatched · placement: link order · name unknown
 // ? f807(i32, i32) { ... }
-
-// link-order cluster 1301 · uses=18 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp
-
-// f785 · 56 B · unmatched · placement: link order · name unknown
-// ? f785(i32) { ... }
 
 // link-order cluster 1310 · uses=22 · neighbours' file uenux2/src/api/gui/capplicationcontextstack.cpp
 
@@ -2565,9 +2513,6 @@
 
 // link-order cluster 970 · uses=3 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpedetitulomesariovotacao.cpp
 
-// f3609 · 13 B · unmatched · placement: link order · name unknown
-// void f3609(i32) { ... }
-
 // f3607 · 12 B · unmatched · placement: link order · name unknown
 // ? f3607(i32) { ... }
 
@@ -3124,14 +3069,6 @@
 // f10878 · 91 B · unmatched · placement: link order · name unknown
 // ? f10878(i32) { ... }
 
-// link-order cluster 375 · uses=1 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f10960 · 27 B · unmatched · placement: link order · name unknown
-// void f10960(i32, i32) { ... }
-
-// f10959 · 34 B · unmatched · placement: link order · name unknown
-// void f10959(i32, i32) { ... }
-
 // link-order cluster 382 · uses=1 · neighbours' file uenux2/src/api/gui/iform.cpp
 
 // f11009 · 212 B · unmatched · placement: link order · name unknown
@@ -3207,14 +3144,6 @@
 
 // f11139 · 17 B · unmatched · placement: link order · name unknown
 // void f11139(i32, i32) { ... }
-
-// link-order cluster 405 · uses=1 · neighbours' file uenux2/src/api/gui/cfillfield.cpp
-
-// f11142 · 25 B · unmatched · placement: link order · name unknown
-// void f11142(i32, i32) { ... }
-
-// f11141 · 34 B · unmatched · placement: link order · name unknown
-// void f11141(i32, i32) { ... }
 
 // link-order cluster 406 · uses=1 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
 
@@ -3423,11 +3352,6 @@
 // f5492 · 1445 B · unmatched · placement: link order · name unknown
 // void f5492(i32, i32) { ... }
 
-// link-order cluster 773 · uses=2 · neighbours' file uenux2/src/api/gui/cqrcodeguard.cpp
-
-// f5501 · 58 B · unmatched · placement: link order · name unknown
-// ? f5501(i32, i32) { ... }
-
 // link-order cluster 775 · uses=2 · neighbours' file uenux2/src/api/gui/cstepsprogressbar.cpp
 
 // f5506 · 836 B · unmatched · placement: link order · name unknown
@@ -3514,11 +3438,6 @@
 // f5548 · 16 B · unmatched · placement: link order · name unknown
 // ? f5548(i32, i32, i32) { ... }
 
-// link-order cluster 794 · uses=2 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f5551 · 12 B · unmatched · placement: link order · name unknown
-// void f5551(i32, i32) { ... }
-
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
 // f5565 · 193 B · unmatched · placement: link order · name unknown
@@ -3558,12 +3477,6 @@
 
 // f6023 · 64 B · unmatched · placement: link order · name unknown
 // ? f6023(i32, i32, i32) { ... }
-
-// f6022 · 98 B · unmatched · placement: link order · name unknown
-// ? f6022(i32, i32) { ... }
-
-// f6021 · 101 B · unmatched · placement: link order · name unknown
-// void f6021(i32, i32) { ... }
 
 // link-order cluster 889 · uses=2 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
 

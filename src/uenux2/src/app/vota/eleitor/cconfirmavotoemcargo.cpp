@@ -4,7 +4,4 @@
 
 // f5928 · 20 B · unmatched · name unknown
 // void f5928(i32, i32, i32) { ... }
-
-// f11755 · 267 B · unmatched · placement: link order · name unknown
-// void f11755(i32) { ... }
 // </stubs>

@@ -3,15 +3,10 @@
 #include <string>
 
 #include "api/util/cdatetime.h"
+#include "app/comum/eurnafase.h"
 #include "app/comum/gravadores/igravador.h"
 
 namespace comum {
-
-// Recovered: only the type of the urna's phase that CGravadorUtil::ConverteFase returns (record cgravadorutil.cpp:97,
-// fn 2274) and comum::md::CDadosDisponiveisCarga's constructor takes: 4 bytes wide (CGravadorWSQ's constructor stores
-// ConverteFase's result at +52 with an i32.store). Its enumerators are not recovered, and that it is declared here is
-// a choice.
-enum EUrnaFase : int;
 
 // Recovered: the layout (88 bytes: vota::CGravaResultado::StartState, fn 12098, allocates it with f137(88)) and the
 // virtual members. The constructor is fn 3796 (it stores the vptr @1557300), with ValidaTipoBiometria inlined (record

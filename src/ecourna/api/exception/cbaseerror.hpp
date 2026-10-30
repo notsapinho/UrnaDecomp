@@ -12,7 +12,7 @@ template <typename E, SErrorLimits Limites>
 class CBaseError : public CError {
 public:
     CBaseError(E codigo, std::string mensagem, std::source_location local = std::source_location::current())
-        : CError(static_cast<int>(codigo), std::move(mensagem), local)
+        : CError(codigo, std::move(mensagem), local)
     {
     }
 };
