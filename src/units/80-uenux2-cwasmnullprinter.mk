@@ -28,7 +28,7 @@
 # - 10881 holds three stack prologues, so binaryen inlined two functions into it (docs/reference/facts/reading.md
 #   §R10): CUeCodedPrinterError's constructor and, inside it, CUePrinterError's three-argument one. Each has one
 #   caller. clang inlining either merges its frame. Measured in the whole link, with the score against 10881: the base
-#   constructor defined where clang sees it (in the class, 117 rows; the two in one .cpp, 119 rows) loses a frame.
+#   constructor defined where clang sees it (in the class, or in one .cpp with the other: 117 rows) loses a frame.
 # - the operand order of `style != m_style`: `m_style != style` gives 10881 with the two operands of its i32.ne swapped.
 # - the order of the two objects: iimpressorarelatorios.cpp before eueprintererror.cpp in the list below. The other
 #   order gives the same instructions with other locals (score 34 over 189 rows against 15 over 185, a `local.get 2;
