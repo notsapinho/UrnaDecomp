@@ -3,11 +3,11 @@
 // api::CPolySingletonList, the registry behind api::CPolySingleton (/home/rubio/tse/uenux2/src/api/pattern/
 // cpolysingletonlist.h; the records' lines are 99, 105 and 129). The reconstruction's notes are in unit 100's fragment.
 //
-// Only has and instance are written, and what they call. push (record at line 129; fn 3882 is one of its bodies) is
-// not, so that line is blank. TPolySingletonsInfo is the records' name; every other name here is chosen unless the fragment
-// says otherwise. The offsets are the bytes': a vector of 24-byte entries at +0 (fns 6161, 6779), a byte at +12 that fn
-// 11265 sets and fn 14476 reads, the lock at +16, 148 bytes in all (fn 11265's guard follows). An entry is a string at
-// +0, a std::type_info pointer at +12 (fn 512 reads the name through it) and a std::shared_ptr at +16.
+// Only has and instance are written, and what they call. push (record at line 129; fn 3882 is one of its bodies) is not:
+// trace's debug call sits on that line, and writing push moves it. TPolySingletonsInfo is the records' name; the
+// fragment lists the chosen ones. The bytes give a vector of 24-byte entries at +0 (fns 6161, 6779), a byte at +12 that
+// fn 11265 sets and fn 14476 reads, the lock at +16, 148 bytes in all (fn 11265's guard follows). An entry is a string
+// at +0, a std::type_info pointer at +12 (fn 512 reads the name through it), a std::shared_ptr at +16.
 
 #include <algorithm>
 #include <cstdarg>

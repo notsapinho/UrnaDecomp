@@ -34041,8 +34041,9 @@ _ZN3api19CTextFieldMultiLineC2ERKNS_5SRectERKNSt3__210shared_ptrINS_5ITextEEERKN
 # (ledger/vtables.json); our D1 is an alias of D2, so D2 is the name our link carries.
 _ZN7ecourna3api9exception6CErrorD2Ev = func:4636; // size:0x20 evidence:vtable-slot
 # unit 100: the word at 0x174a30 is table slot 284 (the data segment; wasm-objdump -x -j Elem: elem[284] = ref.func:11265, the only slot of 11265).
-# unit 100: 11265 sets the byte at +12 of the object at 0x1bf690 and returns the object, and 14476 reads that +12 of what the word's function returns. All 282 readers
-# unit 100: of the address do i32.load, call_indirect ()->(i32). Our only .data word that holds the slot of that body is this one. No match is read to get here.
+# unit 100: 11265 sets the byte at +12 of the object at 0x1bf600 and returns the object, and 14476 reads that +12 of what the word's function returns. 282 functions
+# unit 100: read the address, 554 uses: 538 are i32.load, call_indirect ()->(i32), 15 go through invoke_i, 1 keeps the value in a local first. Our only .data word that
+# unit 100: holds the slot of that body is this one. No match is read to get here.
 _ZN3api20g_polySingletonsInfoE = 0x174a30; // type:data size:0x4 evidence:content holds table slot 284, func:11265, the body of our polySingletonsInfoPadrao
 # unit 100: each has<T> below: the function of type (i32)->(i32) that holds T's type name address (for a class with a key function, the address of its typeinfo's name
 # unit 100: pointer), by i32.const in the split's pieces. The other holders are instance<T>, (i32 i32)->(i32), T's push or 8302, and for comum::CCalculaCV 3698 of the

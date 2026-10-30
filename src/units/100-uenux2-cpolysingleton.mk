@@ -9,7 +9,12 @@
 # class and nothing here needs more. The type name is a constant in each target body but 11157's and 611's, so those
 # 14 classes have no key function in the TUs that compiled them, and CEscritorLog and IInterfaceInit have one.
 # The same objects give 403 (std::operator""s), 429 and 430 (__format_arg_store); libc++ gives 251
-# (condition_variable::wait), and __cxa_demangle, which demangle calls, brings in the libc++abi demangler.
+# (condition_variable::wait), and __cxa_demangle, which demangle calls, brings in the libc++abi demangler. 6222 is the
+# target's __cxa_demangle, called by 212 and 5521: it has no name and stays `no-candidate`, because our link has one caller
+# of it and inlines it into trace. The 217 demangler matches are what it calls, not it.
+# 4788, filesystem::detail::ErrorHandler<void>::report_impl, came from the content pass: it has no symbol-file line and
+# no census pair. Its `symbol` in splat/scan.tsv comes from the rescan once the match names it. It is the one body of its
+# kind in our link, with no direct caller on either side. Every other match of this unit was named before the scan.
 #
 # What waits, and for what:
 # - 1714 IScreenMT, 2079 ITextToSpeech: our headers give each a key function, a trap of units 78 and 82 that the original
@@ -27,7 +32,8 @@
 # - trace 212, find 305 and 608, debug 13156, the error thunks 235 and 331: the executable TU's copies (levels.md §V1),
 #   written and not matching, as 212's and 6161's landing pads show. Only their names are needed. 14476, the test of
 #   m_depuracao around 212, and push are not written: only push calls them.
-# - 11265: `unresolved`, self-voted: the two .bss names only its own vote gives. fn 10620 reads them too and is not reached.
+# - 11265: `unresolved`, self-voted: the two .bss names only its own vote gives. fn 10620 holds the object's address and
+#   not the guard's, and is not reached.
 #
 # How the names hold. instance<T> pair only by srcloc-anchor: at the census's depth 2 their fingerprints take in 212's and
 # 305's bodies, which differ. An anchor casts no data vote, and its call vote for has<T> has that one voter, which the
@@ -47,11 +53,13 @@
 # the pointer again there. The default arguments are the callers' (fn 11132 calls the pointer and stores a record). Rows:
 # the first literal and " [" are `"…"s`, and ":" and "]" plain; in has<T> the name comes before the lock and in instance<T>
 # after it; `const auto [a, b]`; `std::to_string` of an unsigned; a copy of the shared_ptr, whose count test stays;
-# the type compared by its name pointer; the wait's predicate; the lambda capturing by value (fn 6161's string copy).
+# the type compared by the name pointer its typeinfo holds, not by the typeinfo's address; the wait's predicate; the
+# lambda capturing by value (fn 6161's string copy).
 #
-# Chosen, no byte decides: every name but those of the records and the message's unlock_shared (enumerators, members,
-# CMutexCompartilhado, lock_shared, CTravaLeitura, SPolySingletonInfo, g_polySingletonsInfo, polySingletonsInfoPadrao,
-# m_depuracao, has, trace, demangle, debug, find); the
+# Chosen, no byte decides: the operator of the name compare; m_escritor's type, bool (the wait tests it as a byte, and
+# unsigned char gives the same object); every name but those of the records and the message's unlock_shared (enumerators,
+# members, CMutexCompartilhado, lock_shared, CTravaLeitura, SPolySingletonInfo, g_polySingletonsInfo,
+# polySingletonsInfoPadrao, m_depuracao, has, trace, demangle, debug, find); the
 # paths of cmutexcompartilhado.h, iajustedatahora.h, icontroladorregistramesarios.h and cpolysingletonlist.cpp (its header
 # says why); TPolySingletonsInfo as a struct and not a typedef; a template on the info's constness for the two finds,
 # where the target shows two instantiations and not what tells them; has<T>'s const; std::ranges::find_if, which
@@ -61,15 +69,17 @@
 #
 # Forms measured, per function, the object's rows at uenux2's flags with its numbers masked (how-to step 3), against
 # CPolySingleton<IScreen>::instance, CPolySingletonList::instance<IScreen> and has<IScreen>:
-# - the same bytes: std::unique_lock for the std::lock_guard in unlock_shared; m_leitores < 1 for <= 0; the decrement on
-#   its own line; `inline` on lock_shared or on the guard's constructor; unlock_shared or ~CTravaLeitura defined inline
+# - the same bytes: std::unique_lock or std::scoped_lock for the std::lock_guard in unlock_shared; m_leitores < 1 for
+#   <= 0; the decrement on its own line; m_escritor as unsigned char; `inline` on lock_shared or on the guard's
+#   constructor; unlock_shared or ~CTravaLeitura defined inline
 #   after their class; a flag in the guard that its destructor tests; for the copy of the shared_ptr, `const auto
 #   instancia = it->m_instancia` with a static_cast of .get(), a typed local, a temporary, or reinterpret_pointer_cast;
-#   `!(*it->m_tipo == typeid(INTERFACE))`; m_tipo as a std::type_index or a std::reference_wrapper; the literal "instance"
+#   `!(*it->m_tipo == typeid(INTERFACE))` or `it->m_tipo->name() != typeid(INTERFACE).name()`; m_tipo as a std::type_index
+#   or a std::reference_wrapper; the literal "instance"
 #   for __func__ in the format or in trace; has<T>(g_polySingletonsInfo()) written out, or an overload for the default;
 #   std::literals for std::string_literals; std::pair{…} for make_pair; end() != it; find_if over two iterators; std::find_if;
-#   a local bool in has<T>; const_cast for mutable; `const auto&` for the structured binding; has<T> taking the info
-#   non-const (the rows differ in the symbol of one call, which binaryen merges with the other).
+#   a local bool in has<T>; a non-const name in has<T>; const_cast for mutable; `const auto&` for the structured binding;
+#   has<T> taking the info non-const (the rows differ in the symbol of one call, which binaryen merges with the other).
 # - other bytes: no `inline` on unlock_shared, or none on ~CTravaLeitura; std::shared_lock (its destructor stays out of
 #   line, cost 245 against 225: levels.md §V2); a while loop for the wait's predicate, or `<= 0` in it; no copy of the
 #   shared_ptr; has<T>(info); the name before the lock in instance<T> or after it in has<T>; a non-const name in
@@ -77,6 +87,12 @@
 #   CPolySingleton<T>::instance; the second if nested; a local for the message;
 #   a by-reference capture; `std::string(…)` or the two-argument constructor for the first literal; `std::string(" [")`
 #   or a plain " ["; `":"s`; std::to_string(int); `it->m_tipo != &typeid(INTERFACE)`.
+#
+# The extern template in the roots file. fn 252, operator+(string&&, string&&), is matched from libc++.a. Measured with
+# the line taken out: the roots object has `W` for the operator instead of `U`, its copy wins the link since roots objects
+# come before the libraries, and exactly 252 leaves `match`. None of the 16 instances does. The line emits nothing
+# and adds no body. It holds until a real uenux2 TU instantiates that operator, whose object links before libc++.a too.
+# So after a merge read `awk -F'\t' '$1==252 {print $5, $11}' splat/scan.tsv`, which prints `match` and a libc++.a member.
 #
 # The roots object compiles with APP_CXXFLAGS. With uenux2's -fno-strict-aliasing 9 of its 165 functions differ, all
 # libc++ format internals, and the link takes none of the nine from it: its 40 functions in the link are the same.

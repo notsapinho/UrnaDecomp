@@ -97,8 +97,10 @@ the commit. A new setup is a new entry in `setups.json` and a re-selection of th
 
 `NN-<component>-<what>.mk`:
 
-- `NN`, two digits, is the order `src/Makefile` reads the fragments in, and so the order their objects take in
-  `ECOURNA_SRCS`, `UENUX2_SRCS` and `EXTRA_OBJS`, and their flags in `ECOURNA_CXXFLAGS`. That order reaches the link:
+- `NN`, two digits and from 100 on three, is the order `src/Makefile` reads the fragments in, and so the order their
+  objects take in `ECOURNA_SRCS`, `UENUX2_SRCS` and `EXTRA_OBJS`, and their flags in `ECOURNA_CXXFLAGS`. It is the names'
+  text order, so `100-…` sorts between `10-…` and `11-…`, not last, and a filter over the companion objects spells the
+  number `[0-9]+`. That order reaches the link:
   wasm-ld numbers functions in input order, and binaryen's inlining can depend on it. The order of the sources inside
   one fragment can decide a body's locals: unit 80 lists `iimpressorarelatorios.cpp` before `eueprintererror.cpp`,
   because `SetStyle` (10881), which inlines that file's constructors, scores 15 over 185 rows in the orders measured

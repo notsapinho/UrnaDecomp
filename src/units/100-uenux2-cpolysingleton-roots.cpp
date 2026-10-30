@@ -10,8 +10,8 @@
 // is in a cold function because clang inlines the operator in a hot one, and that would be no call.
 //
 // The extern template keeps fn 252, std::operator+(string&&, string&&), libc++'s: it is matched from libc++.a, which
-// links after this object, and with an instantiation here this object's copy wins the link and the match goes. It
-// does not change a row of the instances (the fragment has the measurement).
+// links after this object, and with an instantiation here this object's copy wins the link and the match goes. Without
+// this line exactly 252 leaves `match`. It holds until a real uenux2 TU instantiates that operator: the fragment has both.
 //
 // w100_usa and w100_todos are stand-ins with a body no target function has. w100_usa passes both arguments, an empty
 // std::source_location for the record a real caller's default argument makes: a record here would be none of the target's.
