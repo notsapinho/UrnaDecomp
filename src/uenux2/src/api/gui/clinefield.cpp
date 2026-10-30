@@ -6,7 +6,7 @@
 //   12658 / 3681  ~CLineField() (complete / deleting; implicit, emitted with the vtable). The class's members are
 //         trivially destructible, so its complete destructor is IFormFieldBase<IScreen>'s (12658), and the target's
 //         deleting one (3681, shared with CFillField and CRectField) is a thunk into fn 1565, binaryen's one body for
-//         eight such deleting destructors: ours stays a body of its own until the link has the others
+//         eight such deleting destructors, which our link forms from this one and api::CLedFieldMT's (2777)
 //   11068 Draw(IScreen&) const  (pending: calls IScreen slot 8, which api/gui/iscreen.h does not declare yet)
 //   5527  Move(const SPoint&)   (pending: one body binaryen shares with CTextFieldDoubleLine's; reads IForm<IScreen>)
 // The pending members are defined in src/units/54-uenux2-clinefield-pending.cpp. The definitions follow the target's

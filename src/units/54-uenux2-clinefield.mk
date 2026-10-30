@@ -5,10 +5,10 @@
 # cimagefieldupdate.cpp, which the GUI fields' records put in api/gui/ (docs/how-to-decompile.md step 3, rules 2 and
 # 3). GetTypeName is the first virtual member the header declares out of line, so clinefield.o emits the vtable and the
 # implicit destructors. The members are trivially destructible, so clang emits no complete destructor of the class's
-# own: slot 0 is IFormFieldBase<IScreen>'s (12658, matched with unit 14). The deleting one is a body of its own here;
-# the target's (3681) is a thunk into fn 1565, binaryen's one body for eight deleting destructors that store a vptr and
-# free the string at +12 (ledger/callgraph.tsv: 2777 3681 5516 10362 10369 10374 12317 12564), so it stays unmatched
-# until our link has the others. Draw (11068) and Move (5527) are pending. The constructor has no target function of
+# own: slot 0 is IFormFieldBase<IScreen>'s (12658, matched with unit 14). The deleting one (3681) is a thunk into
+# fn 1565, binaryen's one body for eight deleting destructors that store a vptr and free the string at +12
+# (ledger/callgraph.tsv: 2777 3681 5516 10362 10369 10374 12317 12564): two are enough for binaryen to form that body,
+# this one and unit 56's (2777). Draw (11068) and Move (5527) are pending. The constructor has no target function of
 # its own (the std::make_shared of fn 2244 inlines it), so the header defines it. Paths relative to src/uenux2; the
 # generic uenux2 rule depends on the source and every uenux2 header.
 CLINEFIELD_SRCS := src/api/gui/clinefield.cpp

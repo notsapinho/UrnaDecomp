@@ -14,8 +14,8 @@
 //             throws code 6950 the same way, then calls slot 4
 //   4  8327   simulador::CWasmLogd::escreve, the name chosen: formats "{}|{}|{}|{}|{}|{}|{}", appends it to m_arquivo
 //             (fopen "ab", fwrite, fputc, fflush, fclose) and calls fn 5152 (no-candidate) with 2 and the line; it
-//             releases m_mutex through fn 150, which is std::mutex::~mutex in our link and both ~mutex and unlock in
-//             the target's (a std::lock_guard needs that merge first)
+//             releases m_mutex through fn 150, the one body std::mutex's ~mutex and unlock have in the target and
+//             in our link
 // The stubs of 10262 and 10260 were the last ones of src/uenux2/src/api/uelog/cescritorlog.cpp, a stub-only file the
 // generator removed when their slots joined this vtable: whoever writes fazOperacao and slot 3 writes that file again,
 // with the throws on the record lines 28, 38 and 44 (ledger/source-locations.tsv). The constructor (inlined into

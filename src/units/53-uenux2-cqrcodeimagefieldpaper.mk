@@ -1,12 +1,13 @@
 # uenux2 api::CQRCodeImageFieldPaper's implicit destructors (target fns 10962 and 10961, vtable slots 0 and 1), the
 # compiler's code for the class definition in src/uenux2/src/api/gui/cqrcodeimagefieldpaper.h: they free the
 # std::vector of bytes of the CQRCodeImagePaper::QrcodeData member at +24, then IFormFieldBase<IPaper>'s name. The
-# destructor is implicit: the deleting one holds the base-object body inlined. With them IFormFieldBase<IPaper>'s
-# destructor (fn 11013), which binaryen merges with the other media's into one body taking the vptr (fn 1566), as the
-# target's link did, and the layout-only header of the member's type (src/uenux2/src/api/gui/cqrcodeimagepaper.h). No
-# record names either header or a member of the class: the class header follows the class name beside the field
-# classes of api/gui/ and the name of link-order cluster 376 (src/uenux2/unplaced.cpp), and QrcodeData goes beside
-# cqrcodeimagepaper.cpp, whose records name it (MontaImagem's return type).
+# destructor is implicit: the deleting one holds the base-object body inlined. IFormFieldBase<IPaper>'s destructor
+# (fn 11013), which binaryen merges with the other media's into one body taking the vptr (fn 1566), as the target's
+# link did, is unit 39's, whose object links first. The unit also has the layout-only header of the member's type
+# (src/uenux2/src/api/gui/cqrcodeimagepaper.h). No record names either header or a member of the class: the class
+# header follows the class name beside the field classes of api/gui/ and the name of link-order cluster 376
+# (src/uenux2/unplaced.cpp), and QrcodeData goes beside cqrcodeimagepaper.cpp, whose records name it (MontaImagem's
+# return type).
 # The unit has no source of its own yet: the class's only member of its own, Draw (fn 10963), is pending, so the
 # vtable, its key function Draw and with it the implicit destructors are emitted in the pending object (as units 26 and
 # 30's are); they move to src/uenux2/src/api/gui/cqrcodeimagefieldpaper.cpp's object when Draw lands there. The

@@ -19,8 +19,8 @@
 // before theirs in the table and in the target's function order), not from the object that defines the constructor,
 // which the target links among the api/gui objects (fn 3660 lies between CQRCodeImage's functions and
 // CTextFieldDoubleLine's constructor). The destructor is implicit: the D0 holds the D2's body. ImprimeParte (slot 6,
-// fn 12009) calls slot 2 of the +28 pointee, api::IReportPart, whose header is not in this tree yet; it is declared
-// here and defined in src/units/57-uenux2-csubreport-pending.cpp until then (its source is in that file's header).
+// fn 12009) calls slot 2 of the +28 pointee, api::IReportPart, whose header this file does not include yet; it is
+// declared here and defined in src/units/57-uenux2-csubreport-pending.cpp until it does (see that file's header).
 
 #include <memory>
 #include <string>

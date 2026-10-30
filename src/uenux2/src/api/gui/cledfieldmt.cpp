@@ -4,7 +4,7 @@
 // Draw is the class's key function, so this object also emits the vtable with what it names that the class
 // declares implicitly or inherits inline: slot 0 is IFormFieldBase<IScreenMT>'s destructor (11052), slot 7
 // GetTypeName (11051). The deleting destructor (slot 1, fn 2777, one body with three sibling classes') is a thunk
-// into 1565, a body binaryen shares among eight functions, which this link does not reproduce.
+// into 1565, a body binaryen shares among eight functions; our link forms it with api::CLineField's (3681).
 
 #include "api/gui/cledfieldmt.h"
 

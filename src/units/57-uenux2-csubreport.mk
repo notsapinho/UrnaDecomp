@@ -16,7 +16,7 @@
 # the source and every uenux2 header.
 CSUBREPORT_SRCS := src/api/gui/csubreport.cpp
 UENUX2_SRCS += $(CSUBREPORT_SRCS)
-# ImprimeParte (fn 12009) calls api::IReportPart, which no header of the tree defines yet:
+# ImprimeParte (fn 12009) calls api::IReportPart, whose header csubreport.h does not include yet:
 # 57-uenux2-csubreport-pending.cpp defines it with a trapping body, and as the class's key function it emits the vtable
 # there with the implicit destructors (fns 12014, 12013) and the inline slots; the constructor's three callers are not
 # reconstructed either: 57-uenux2-csubreport-roots.cpp gives it two
