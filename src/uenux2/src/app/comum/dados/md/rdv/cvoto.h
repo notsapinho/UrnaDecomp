@@ -1,5 +1,6 @@
 #pragma once
 
+#include <compare>
 #include <string>
 
 namespace comum::md {
@@ -30,6 +31,9 @@ public:
     bool EhBranco() const;
 
     static bool EhNulo(ETipo tipo);
+
+    // Out of line: f11496 holds it inlined by binaryen, a strong_ordering returned from a call (its i32.extend8_s).
+    std::strong_ordering operator<=>(const CVoto& outro) const;
 
 private:
     ETipo m_tipo;

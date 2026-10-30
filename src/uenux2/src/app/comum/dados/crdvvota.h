@@ -1,9 +1,17 @@
 #pragma once
 
 #include "app/comum/dados/crdv.h"
+#include "app/comum/dados/md/rdv/crdvposicionador.h"
 #include "app/comum/dados/md/rdv/cvotoseleicoesvota.h"
 
 namespace comum {
+
+// RTTI gives the name and the base; no record names a file. crdvvota.cpp defines the member and emits the vtable
+// (src/units/13-uenux2-crdvvota.mk has the evidence); that the class is declared here is chosen.
+class CRdvPosicionadorVota : public md::CRdvPosicionador {
+public:
+    size_t Posicao(const std::vector<md::CVoto>& votos, const md::CVoto& voto) const override;
+};
 
 class CRdvVota final : public CRdv {
 public:

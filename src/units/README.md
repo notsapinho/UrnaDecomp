@@ -123,7 +123,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `10-ecourna-app-dados-resultadournacadastro` | the voter-register result data classes, non-PIC |
 | `11-ecourna-api-security` | the OpenSSL wrappers (`CSha`, `CSipHashMac`, `CHkdfSeed`, `CKey`, `CAesCipher`, …) |
 | `12-ecourna-api-sql-sqlite` | the SQLite DAO (`CSqlConnection`, `CSqlResultSet`, `CSqlStatement`) |
-| `13-uenux2-crdvvota` | `comum::CRdvVota::Candidato` (target fn 1931) and the `CVotos*` totals it calls |
+| `13-uenux2-crdvvota` | `comum::CRdvVota::Candidato` (target fn 1931) and the `CVotos*` totals it calls; `comum::CRdvPosicionadorVota::Posicao` (target fn 11496, a chosen name, in `crdvvota.cpp`, whose object holds the class's vtable), the `comum::md::CRdvPosicionador` header and `CVoto::operator<=>`, which binaryen inlines into it |
 | `14-uenux2-ctextfieldmultiline` | the `api::CTextFieldMultiLine` constructor (target fn 5498) |
 | `15-ecourna-cconversorhorariosurna` | `CConversorHorariosUrna::DoDeconverte` (target fn 9132) and the `CHorariosUrna` it builds, non-PIC; `DoConverte` (9133) pending |
 | `16-ecourna-cconversormunicipiozona` | `CConversorMunicipioZona::DoConverte` (target fn 9131) and the `CMunicipioZona` data class it reads; `DoDeconverte` (9130) pending |

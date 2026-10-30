@@ -1,5 +1,6 @@
 #include "app/comum/dados/crdvvota.h"
 
+#include <algorithm>
 #include <string>
 
 #include "ecourna/api/util/cstringutils.hpp"
@@ -7,6 +8,11 @@
 namespace comum {
 
 using ecourna::api::util::CStringUtils;
+
+size_t CRdvPosicionadorVota::Posicao(const std::vector<md::CVoto>& votos, const md::CVoto& voto) const
+{
+    return std::upper_bound(votos.begin(), votos.end(), voto) - votos.begin();
+}
 
 md::TQtdVoto CRdvVota::Candidato(md::TCargoID cargo, uedword numero, uebyte digitos) const
 {
