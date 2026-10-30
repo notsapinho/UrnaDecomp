@@ -21,6 +21,9 @@ enum EUeGuiError {
     // the value is the code api::CMovie::CMovie (target fn 5526) throws; the name is chosen from its message, "Não
     // havia frames": no evidence names it
     EUE_GUI_MOVIE_SEM_FRAMES = 4943,
+    // the value is the code api::CTextBox::Move (target fn 10957) throws; the name is chosen from its message, "A
+    // posição da caixa não pode ter x < 3 ou y < 1.": no evidence names it
+    EUE_GUI_TEXTBOX_POSICAO_INVALIDA = 4963,
     // the value is the code api::CTextField::CTextField (target fn 1918) throws; the name is chosen from its message,
     // "Campo estava com o texto nulo", as 4972's was: no evidence names it
     EUE_GUI_TEXTFIELD_TEXTO_NULO = 4964,
