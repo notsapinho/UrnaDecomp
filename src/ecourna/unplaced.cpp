@@ -1012,9 +1012,4 @@
 
 // f235 · 21 B · unmatched · placement: link order · name unknown
 // ? f235(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1383 · uses=282
-
-// f170 · 21 B · unmatched · placement: link order · name unknown
-// ? f170(i32, i32, i32, i32) { ... }
 // </stubs>
