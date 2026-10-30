@@ -89,9 +89,10 @@ integer) comes from a second link of the same objects, with the data and the tab
   vote, so a `.bss` object only anchored functions use stays unnamed. `by:` lists up to 4 target functions that cast
   a vote. `vote:N+rtti` is a vote that the RTTI decoding agrees with.
 - `rtti`: vtables and typeinfos decoded from the target's bytes.
-- `content`, `string`, `srcloc`: unique bytes, a C string, or a `std::source_location` record.
+- `content`, `string`, `srcloc`: unique bytes, a C string, or a `std::source_location` record the target holds at one
+  address. A record it holds at several has no line, since no one place is its own (§3).
 - `srcloc-anchor`: a function pair whose bodies are the same instructions and load the same
-  `std::source_location` record.
+  `std::source_location` record, one the target holds at one address.
 - `vtable`: the function in a slot of a vtable both links name by `rtti`, where the target's same slot holds the
   target function. A vtable is one table of slots per base with virtual functions, and a table pairs only when the
   target's table at the same offset has as many slots: a base that declares other members in the target's version
@@ -105,8 +106,9 @@ function fills a slot of a vtable decoded from RTTI, as the generated `vtable` k
 vtable address point), `rtti-operand` (the only target function holding a class's vtable and typeinfo addresses),
 `pair-depth0` (the only pair with that fingerprint at depth 0, where deeper fingerprints differ only by an inlined
 callee), `vptr+shape` (the function stores a class's vtable address point, which other functions store too, and its
-`shape` hash is the only one on both sides) and `callers+content` (the target callers and the loaded content single
-the function out). Each hand edit's
+`shape` hash is the only one on both sides), `callers+content` (the target callers and the loaded content single
+the function out) and `merged-body` (the target merged this function's body into the index, its callers there call it,
+and our own body of that name is not equal, so no match can name it; §3 says what it does). Each hand edit's
 comment gives the addresses or indices that make the evidence checkable.
 
 A name with conflicting evidence is left out. So is a data name that the target's own bytes contradict.
@@ -175,7 +177,10 @@ the object's content places it:
   whole string our link merged it into (`resolveString`). A short literal the target tail-merged into another string
   then differs at its end pointer alone, until our link holds the string the target merged it into: unit 75's
   `ModeloAbreviado` (8168), whose `"{:02}"` waits for fn 10425's `"-{:02}-{:02}"`;
-- a `std::source_location` record by what it records;
+- a `std::source_location` record by what it records: its file, function, line and column. A header-inline throw has
+  its record once per TU that inlines it, so the target holds 10 such keys at more than one address. Each address is a
+  copy, with no first among them: every reading says `address same-content`, the target body picks one, and a key the
+  target does not hold leaves the body `unresolved` ([facts/splat.md](facts/splat.md) §S12);
 - a read-only object by its exact bytes, found once (up to 64 copies when found more often). wasm-ld's
   map gives no object's alignment, so our address stands in for it: an object our link puts at a multiple
   of 4 is looked for only at multiples of 4, any other one anywhere. A typeinfo name (`_ZTS…`) is looked
@@ -199,13 +204,18 @@ Two rules guard the evidence:
   or if another holding match uses the same name. Otherwise it is `unresolved (self-voted)` in the scan
   and `UNCONFIRMED` in the build. For an object of a few bytes that agreement is thin (`api::CSystem::s_dorme`, one
   byte, voted by 8461 alone): say in the fragment what else ties the operand to the object, such as the other
-  target functions that read the same address. A function name voted only by the match's own call or table operand holds
+  target functions that read the same address. The rule asks this only of an `address symbol …` reading. A copy (the
+  same string, read-only bytes or `source_location` record at another address) is no name and no vote: our side
+  offers it from the target's data, so the rule asks nothing of an operand that took one, and the body alone decides
+  it. A function name voted only by the match's own call or table operand holds
   only if another holding match calls it or has a constant the target reads as its table slot. A constant
   the target keeps as an integer does not count, even when it equals the function's slot in our table, so a
   unit that shifts our table cannot make or break a match.
 - **A match names its function.** The build re-points with every match applied: the matched symbol names
   that target function, and no other symbol does. A match found by body therefore corrects what its
-  callers' calls resolve to.
+  callers' calls resolve to. The one exception is a hand edit with evidence `merged-body`: that name stays, beside the
+  match, because the target merged its body into that function and our link keeps it apart. A generated name never
+  stays, nor a hand edit of another kind.
 
 ### 4. Assemble and check
 
@@ -229,7 +239,7 @@ function you took out of the source), delete the match line by hand in the same 
 message; `splat/matched.txt` is a list people edit, unlike `splat/scan.tsv`. While the line names a function our link
 no longer has, `make -C src splat-match` fails after it writes the status files and before it runs `make -C src
 stubs`, so run it again once the line is gone. Never edit a piece, and never add a symbol-file hand edit to make a
-match pass.
+match pass. A `merged-body` line (§3) is not one: its name stands on a caller it does not rescue.
 
 One failure is not drift: `our link has no function <symbol>` for a byte-identical twin whose surviving name moved,
 because a new unit's identical body comes first in the link. The body still verifies under the new name, and
@@ -327,7 +337,8 @@ What the build lists after the meter is for the reviewer:
 What no check here rejects, so a reviewer of a TSE function reads it in the source:
 
 - which copy an address or a table slot of ours became. Where our side offers several target places of the same
-  content (a C string's copies, read-only content found at several places by its bytes or its re-pointed bytes) or
+  content (a C string's copies, a `source_location` record's, read-only content found at several places by its bytes
+  or its re-pointed bytes) or
   several target slots of one function (126 for binaryen's merged empty function), the target body picks one, and no
   check proves that the place holds the object our source names. A pointer swapped for one to another object of ours
   whose content also sits at the place the target body uses gives the target's bytes. Calls through any slot of a

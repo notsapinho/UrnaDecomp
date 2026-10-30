@@ -1,13 +1,10 @@
 #pragma once
 
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
+#include "app/comum/dados/md/etipoimpedimento.h"
 #include "ecourna/api/uetypes.hpp"
 
 namespace comum::md {
-
-// The type of a voter's impediment (records of cconversorimpedido.cpp:109 and celeitordetalhe.cpp:49). Recovered: its
-// name and width only: the constructors store it with an i32.store.
-enum ETipoImpedimento : int;
 
 // Recovered: the layout, 32 bytes, from the two constructors (target fns 5661, 5662), whose only caller is
 // CConversorImpedido's DoDesconverte (fn 11410): a 16-bit word at +0, the voter's identity at +4, the impediment at +20,

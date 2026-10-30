@@ -540,7 +540,8 @@ function readingsText(readings: readonly string[]): string {
 
 /**
  * A match is the strongest evidence of which target function our symbol is: the maps with every matched symbol
- * naming its target function, and no other symbol naming a matched function.
+ * naming its target function, and no other symbol naming a matched function, but for a hand edit's `merged-body`
+ * name: a body the target merged into that function and our link keeps apart, which its callers still call.
  */
 export function withMatches(maps: SymbolMaps, matches: Iterable<{ index: number; symbol: string }>): SymbolMaps {
   const matched = new Map<number, string>();
@@ -549,7 +550,7 @@ export function withMatches(maps: SymbolMaps, matches: Iterable<{ index: number;
   }
   const fns = new Map(maps.target.symbols.fns);
   for (const [name, index] of fns) {
-    if (matched.has(index) && matched.get(index) !== name) {
+    if (matched.has(index) && matched.get(index) !== name && !maps.target.symbols.mergedBody.has(name)) {
       fns.delete(name);
     }
   }

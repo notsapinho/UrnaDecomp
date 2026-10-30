@@ -2,8 +2,8 @@
 // which src/uenux2/src/app/vota/operador/aguardaeleitor/celeitorvotounaovotou.cpp does not hold yet. The class's vtable
 // is emitted there and needs it defined; this body is NOT the target's, it traps. The target's reads the form's input
 // (api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read, record cinteractiveform.h:57, inlined) and on the
-// result 9 goes to one of two states (fns 5393 and 652). It waits for CInteractiveForm's members and fields, its
-// api::IInputMT source (fn 383) and those two states, none of them in this tree yet.
+// result 9 goes to one of two states (fns 5393 and 652). It waits for CInteractiveForm's members and fields and
+// those two states, none of them in this tree yet; its api::IInputMT source, fn 383, is.
 // Move it into celeitorvotounaovotou.cpp when it is reconstructed.
 //
 // Pending member: comum::IPedeTituloMesario::ProcessInput (target fn 10313, slot 7, 6002 B, the states

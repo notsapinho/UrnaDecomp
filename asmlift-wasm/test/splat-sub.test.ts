@@ -21,7 +21,15 @@ import {
   selfVoted,
   withMatches,
 } from '../src/splat-sub';
-import { loadOurSide, loadTargetSide, parseSymbolFile, symbolMaps, targetSymbolsOf } from '../src/splat-symbols';
+import {
+  HAND_EDIT_MARKER,
+  loadOurSide,
+  loadTargetSide,
+  parseSymbolFile,
+  symbolMaps,
+  type SymbolMaps,
+  targetSymbolsOf,
+} from '../src/splat-symbols';
 import { URNA_ROOT } from './helpers';
 
 const URNA = process.env.URNA_SPLAT_ROOT ?? URNA_ROOT;
@@ -275,6 +283,40 @@ describe('withMatches', { timeout: 180_000 }, () => {
     expect(matched.target.symbols.fns.get('BF_encrypt')).toBe(162);
     expect(matched.target.symbols.fns.has('sqlite3ErrorMsg')).toBe(false);
     expect(maps.target.symbols.fns.get('sqlite3ErrorMsg')).toBe(162);
+  });
+
+  it('keeps a merged-body hand edit on a matched function, and only that', () => {
+    const symbols = targetSymbolsOf(
+      parseSymbolFile(
+        [
+          'generated = func:7; // evidence:call',
+          'generatedSpelled = func:7; // evidence:merged-body',
+          HAND_EDIT_MARKER,
+          'aliased = func:7; // evidence:merged-body the target merged this body into 7',
+          'handOnly = func:7; // evidence:callers+content',
+          'other = func:8; // evidence:merged-body its function is not matched',
+          'longerWord = func:7; // evidence:merged-body+content',
+          'prefixed = func:7; // counter-evidence:merged-body',
+          'inComment = func:7; // see evidence:merged-body',
+          'movedOn = func:8; // evidence:merged-body',
+          'movedOn = func:7; // evidence:callers+content the later line wins',
+          'dataName = 0x7; // evidence:merged-body',
+          '',
+        ].join('\n'),
+      ),
+    );
+    const maps = { target: { symbols } } as unknown as SymbolMaps;
+    const { fns } = withMatches(maps, [{ index: 7, symbol: 'twin' }]).target.symbols;
+    expect(fns.get('twin')).toBe(7);
+    expect(fns.get('aliased')).toBe(7);
+    expect(fns.get('other')).toBe(8);
+    expect(fns.has('generated')).toBe(false);
+    expect(fns.has('generatedSpelled')).toBe(false);
+    expect(fns.has('handOnly')).toBe(false);
+    for (const name of ['longerWord', 'prefixed', 'inComment', 'movedOn']) {
+      expect(fns.has(name)).toBe(false);
+    }
+    expect(symbols.mergedBody.has('dataName')).toBe(false);
   });
 });
 

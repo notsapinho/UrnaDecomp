@@ -1,3 +1,16 @@
+#pragma once
+
+// api::IGenericFactory<AP>: the head alone. RTTI gives the instances and no base, and AP is the records' name for the
+// parameter. No member is reconstructed (the records of Create are at lines 44 and 50), so its sizeof is wrong and
+// nothing may construct it. Only typeid in api::CPolySingleton<T> needs an instance complete.
+
+namespace api {
+
+template <typename AP>
+class IGenericFactory {};
+
+} // namespace api
+
 // <stubs>
 // f10872 · 21 B · unmatched · name unknown
 // ? f10872(i32, i32) { ... }

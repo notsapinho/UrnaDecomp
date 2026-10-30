@@ -27,8 +27,9 @@
 //                                   the low word is one of our C strings of exactly that length: its address
 //                                   readings, plus the literal
 // An address reading is the target address of our object's symbol or content (splat-symbols resolveDataAddress:
-// a C string through its NUL, read-only bytes, an object's bytes with its pointers re-pointed), plus every other
-// target address holding the same content: the target body picks the copy it uses.
+// a C string through its NUL, a std::source_location record by what it records, read-only bytes, an object's bytes with
+// its pointers re-pointed), plus every other target address holding the same content: the target body picks the copy
+// it uses.
 // A named operand that does not resolve makes the body unresolved, with the reason; in a kind-unverified function an
 // ambiguous operand whose address or slot reading does not resolve keeps only its literal reading and is listed in
 // `soft`.

@@ -19,7 +19,8 @@
 //   rtti         typeinfo, typeinfo-name and vtable symbols from the ledger's classes.json / vtables.json
 //   content      a read-only object of ours whose exact bytes occur once in the target's data
 //   string       a string from the ledger's strings.tsv, named by its content (`str.<hash>`)
-//   srcloc       a std::source_location record from source-locations.tsv, named by what it records
+//   srcloc       a std::source_location record from source-locations.tsv, named by what it records; a record the
+//                target holds at several addresses has no one place to name
 // A name with conflicting evidence is left out: a missing symbol costs a match, a wrong one makes a false one.
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
@@ -286,6 +287,9 @@ export const HAND_EDIT_MARKER =
 
 const ENTRY = /^(\S+) = (func:(\d+)|import:(\d+)|0x([0-9a-f]+));(?:\s*\/\/\s*(.*))?$/;
 
+/** The evidence word of a hand edit naming a body the target merged and our link keeps apart (withMatches). */
+export const MERGED_BODY = 'merged-body';
+
 export function renderSymbolEntry(e: SymbolEntry): string {
   const at = e.at.kind === 'data' ? `0x${e.at.addr.toString(16)}` : `${e.at.kind}:${e.at.index}`;
   const notes = [
@@ -311,7 +315,7 @@ export function parseSymbolLine(line: string): SymbolEntry | null {
         ? { kind: 'import', index: Number(imp) }
         : { kind: 'data', addr: Number.parseInt(addr, 16) };
   const size = /size:0x([0-9a-f]+)/.exec(notes);
-  const evidence = /evidence:(\S+)/.exec(notes);
+  const evidence = /^(?:type:data\s+)?(?:size:0x[0-9a-f]+\s+)?evidence:(\S+)/.exec(notes);
   const by = /\bby:(\d+(?:,\d+)*)/.exec(notes);
   return {
     name,
@@ -354,10 +358,19 @@ export interface TargetSymbols {
   dataEvidence: Map<string, { evidence: string; voters?: number[] }>;
   /** a function name's evidence and, when anchored pairs voted for it, the target functions that cast the votes */
   fnEvidence: Map<string, { evidence: string; voters?: number[] }>;
+  /** function names a hand edit marks `merged-body`: an alias of a body the target merged, which a match keeps */
+  mergedBody: Set<string>;
 }
 
 export function emptySymbols(): TargetSymbols {
-  return { fns: new Map(), imports: new Map(), data: new Map(), dataEvidence: new Map(), fnEvidence: new Map() };
+  return {
+    fns: new Map(),
+    imports: new Map(),
+    data: new Map(),
+    dataEvidence: new Map(),
+    fnEvidence: new Map(),
+    mergedBody: new Set(),
+  };
 }
 
 export function targetSymbolsOf(file: SymbolFile): TargetSymbols {
@@ -367,6 +380,11 @@ export function targetSymbolsOf(file: SymbolFile): TargetSymbols {
     into.set(e.name, e.at.kind === 'data' ? e.at.addr : e.at.index);
     const evidence = e.at.kind === 'data' ? out.dataEvidence : e.at.kind === 'func' ? out.fnEvidence : null;
     evidence?.set(e.name, { evidence: e.evidence, ...(e.voters ? { voters: e.voters } : {}) });
+  }
+  for (const e of file.hand) {
+    if (e.at.kind === 'func' && e.evidence === MERGED_BODY && out.fnEvidence.get(e.name)?.evidence === MERGED_BODY) {
+      out.mergedBody.add(e.name);
+    }
   }
   return out;
 }
@@ -406,8 +424,8 @@ export interface TargetSide {
   imageBase: number;
   /** the end of the target's .bss, when known (OurSide.stackSize below __stack_pointer's initial value) */
   dataEnd: number | null;
-  /** srcloc key → record address (see srclocKey) */
-  srcloc: Map<string, number | 'ambiguous'>;
+  /** srcloc key → every address holding that record, in the ledger's order (see srclocKey) */
+  srcloc: Map<string, number[]>;
 }
 
 export function memoryImage(m: Module): { image: Buffer; base: number } {
@@ -458,9 +476,10 @@ export function srclocKey(image: Buffer, base: number, addr: number): string | n
   return `${f.toString('latin1')}\u0000${g.toString('latin1')}\u0000${line}\u0000${col}`;
 }
 
-/** `loc_addr` column of the ledger's source-locations.tsv → key. */
-export function readSourceLocations(path: string, image: Buffer, base: number): Map<string, number | 'ambiguous'> {
-  const out = new Map<string, number | 'ambiguous'>();
+/** The `loc_addr` column of the ledger's source-locations.tsv, by key: a header-inline throw that several TUs inline
+ *  has its record once per TU. */
+export function readSourceLocations(path: string, image: Buffer, base: number): Map<string, number[]> {
+  const out = new Map<string, number[]>();
   for (const line of readFileSync(path, 'utf8').split('\n').slice(1)) {
     const addr = Number(line.split('\t')[0]);
     if (line === '' || !Number.isFinite(addr)) {
@@ -468,7 +487,8 @@ export function readSourceLocations(path: string, image: Buffer, base: number): 
     }
     const key = srclocKey(image, base, addr);
     if (key !== null) {
-      out.set(key, out.has(key) ? 'ambiguous' : addr);
+      const places = out.get(key) ?? [];
+      out.set(key, places.includes(addr) ? places : [...places, addr]);
     }
   }
   return out;
@@ -523,7 +543,8 @@ export function loadTargetSide(
 // content identity
 
 /** `same`: every other target address holding the same content (a string's bytes through its NUL, a read-only
- *  object's bytes), when there are at most SAME_CONTENT_LIMIT of them (STRING_COPY_LIMIT for a C string) */
+ *  object's bytes, a source_location record's four words), when there are at most SAME_CONTENT_LIMIT of them
+ *  (STRING_COPY_LIMIT for a C string; a record's places are all offered) */
 export type Resolution =
   { ok: true; addr: number; how: string; same?: number[] } | { ok: false; reason: string; same?: number[] };
 
@@ -678,14 +699,17 @@ export function resolveDataAddress(ours: OurSide, ourImage: Buffer, target: Targ
   }
   if (isSourceLocationRecord(obj)) {
     const key = srclocKey(ourImage, GLOBAL_BASE, obj.addr);
-    const t = key === null ? undefined : target.srcloc.get(key);
-    if (typeof t === 'number') {
-      return { ok: true, addr: t + off, how: 'srcloc' };
+    const places = key === null ? undefined : target.srcloc.get(key);
+    if (places === undefined) {
+      return { ok: false, reason: 'source_location not in the target' };
     }
-    return {
-      ok: false,
-      reason: t === 'ambiguous' ? 'source_location record ambiguous' : 'source_location not in the target',
-    };
+    // no place of several is the one: as for read-only bytes found several times, the target body picks the copy
+    return shifted(
+      places.length === 1
+        ? { ok: true, addr: places[0], how: 'srcloc' }
+        : { ok: false, reason: `source_location record occurs ${places.length} times in the target`, same: places },
+      off,
+    );
   }
   if (isReadOnly(obj)) {
     const r = readOnlyBytes(ourImage, target, obj);
@@ -1309,7 +1333,8 @@ export function srclocAnchors(
   tn: readonly NormalizedFn[],
   on: readonly NormalizedFn[],
 ): [number, number][] {
-  const records = new Set([...target.srcloc.values()].filter((a): a is number => typeof a === 'number'));
+  // a record the target holds at several addresses anchors nothing: which copy a function loads is no name
+  const records = new Set([...target.srcloc.values()].flatMap((a) => (a.length === 1 ? a : [])));
   const users = new Map<number, { t: Set<number>; o: Set<number> }>();
   const use = (record: number, side: 't' | 'o', fn: number): void => {
     let u = users.get(record);
@@ -1338,9 +1363,9 @@ export function srclocAnchors(
         continue;
       }
       const key = srclocKey(ourImage, GLOBAL_BASE, obj.addr);
-      const t = key === null ? undefined : target.srcloc.get(key);
-      if (typeof t === 'number') {
-        use(t, 'o', n.index);
+      const places = key === null ? undefined : target.srcloc.get(key);
+      if (places?.length === 1) {
+        use(places[0], 'o', n.index);
       }
     }
   }
@@ -1728,13 +1753,13 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     }
   }
   stats.dataSrcloc = 0;
-  for (const [key, addr] of target.srcloc) {
-    if (addr === 'ambiguous') {
+  for (const [key, places] of target.srcloc) {
+    if (places.length !== 1) {
       continue;
     }
     const [file, , line, col] = key.split('\u0000');
     dataNames.set(`srcloc.${sha12(key)}`, {
-      addr,
+      addr: places[0],
       size: 16,
       evidence: 'srcloc',
       comment: `${file.split('/').pop()}:${line}:${col}`,

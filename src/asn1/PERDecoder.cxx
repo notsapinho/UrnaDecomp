@@ -398,11 +398,7 @@ bool PERDecoder::do_visit(OpenData& data)
 
 bool PERDecoder::do_revisit(OpenData& value)
 {
-  if (!value.has_buf() || !value.has_data())
-    return false;
-
-  PERDecoder decoder(&(*value.get_buf().begin()), value.get_buf().size(), get_env());
-  return value.get_data().accept(decoder);
+  return value.has_buf() && value.has_data();
 }
 
 bool PERDecoder::do_visit(TypeConstrainedOpenData& value)

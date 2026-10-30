@@ -91,6 +91,11 @@ public:
   }
 };
 
+AbstractData::AbstractData(const void* information)
+: info_(information)
+{
+}
+
 bool AbstractData::isValid() const
 {
   ValidChecker checker;
@@ -101,148 +106,6 @@ bool AbstractData::isStrictlyValid() const
 {
   StrictlyValidChecker checker;
   return accept(checker);
-}
-
-bool INTEGER::isStrictlyValid() const
-{
-  if (getConstraintType() == Unconstrained)
-    return true;
-  INT_TYPE v = static_cast<INT_TYPE>(value);
-  if (getLowerLimit() >= 0)
-    return value >= static_cast<UINT_TYPE>(getLowerLimit()) && value <= getUpperLimit();
-  return v >= getLowerLimit() && v <= static_cast<INT_TYPE>(getUpperLimit());
-}
-
-
-bool AbstractString::isValid() const
-{
-  return size() >= static_cast<UINT_TYPE>(getLowerLimit()) &&
-         (size() <= getUpperLimit() || extendable()) &&
-         find_first_invalid() == ASN1_STD string::npos;
-}
-
-bool AbstractString::isStrictlyValid() const
-{
-  return size() >= static_cast<UINT_TYPE>(getLowerLimit()) &&
-         size() <= getUpperLimit() &&
-         find_first_invalid() == ASN1_STD string::npos;
-}
-
-bool BMPString::legalCharacter(wchar_t ch) const
-{
-  if (ch < getFirstChar())
-    return false;
-
-  if (ch > getLastChar())
-    return false;
-
-  return true;
-}
-
-BMPString::size_type BMPString::first_illegal_at() const
-{
-  const_iterator first = begin(), last = end();
-  for (; first != end(); ++first)
-    if (!legalCharacter(*first))
-      break;
-
-  return first-begin();
-}
-
-bool BMPString::isValid() const
-{
-  return size() >= static_cast<UINT_TYPE>(getLowerLimit()) &&
-         (size() <= getUpperLimit() || extendable()) &&
-         first_illegal_at() == size();
-}
-
-bool BMPString::isStrictlyValid() const
-{
-  return size() >= static_cast<UINT_TYPE>(getLowerLimit()) &&
-         size() <= getUpperLimit() &&
-         first_illegal_at() == size();
-}
-
-bool UTCTime::isStrictlyValid() const
-{
-  return year > 0 &&
-         (month > 0 && month < 13) &&
-         (day > 0 && day < 32) &&
-         (hour >= 0 && hour <= 24) &&
-         (minute >= 0 && minute < 60) &&
-         (second >= 0 && second < 60) &&
-         (mindiff <= 60*12 && mindiff >= -60*12);
-}
-
-bool GeneralizedTime::isStrictlyValid() const
-{
-  return year > 0  &&
-         (month > 0 && month < 13) &&
-         (day > 0 && day < 32) &&
-         (hour >= 0 && hour <= 24) &&
-         (minute >= 0 && minute < 60) &&
-         (second >= 0 && second < 60) &&
-         (mindiff <= 60*12 && mindiff >= -60*12);
-}
-
-bool CHOICE::isValid() const
-{
-  return choiceID >=0 && (static_cast<unsigned>(choiceID) < info()->numChoices || extendable() ) && choice->isValid();
-}
-
-bool CHOICE::isStrictlyValid() const
-{
-  return choiceID >= 0 && static_cast<unsigned>(choiceID) < info()->numChoices && choice->isStrictlyValid();
-}
-
-bool SEQUENCE_OF_Base::isValid() const
-{
-  if (container.size() >= static_cast<UINT_TYPE>(getLowerLimit()) &&
-      (extendable() || container.size() <= getUpperLimit()))
-  {
-    Container::const_iterator first = container.begin(),
-                            last  = container.end();
-    for (; first != last; ++ first)
-    {
-      if (!(*first)->isValid())
-        return false;
-    }
-
-    return true;
-  }
-  return false;
-}
-
-bool SEQUENCE_OF_Base::isStrictlyValid() const
-{
-  if (container.size() >= static_cast<UINT_TYPE>(getLowerLimit()) &&
-      container.size() <= getUpperLimit())
-  {
-    Container::const_iterator first = container.begin(),
-                            last  = container.end();
-    for (; first != last; ++ first)
-    {
-      if (!(*first)->isStrictlyValid())
-        return false;
-    }
-
-    return true;
-  }
-  return false;
-}
-
-bool OpenData::isValid() const
-{
-  if (has_data())
-    return get_data().isValid();
-  return has_buf();
-}
-
-bool OpenData::isStrictlyValid() const
-{
-  if (has_data())
-    return get_data().isStrictlyValid();
-  return has_buf();
 }
 
 }// namespace ASN1

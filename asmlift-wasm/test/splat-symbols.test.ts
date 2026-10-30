@@ -1,16 +1,21 @@
 // The splat symbol maps on the real modules of this checkout: the target, the plain skeleton link, the scratch
 // relink with wasm-ld's map (tools/round/link-map.sh) and the generated splat/symbol_addrs.txt.
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { disassemble } from '../src/disasm';
 import { normalizeModule } from '../src/normalize';
 import { parseModule } from '../src/parse';
+import { defaultKindsPath, readOperandKinds } from '../src/splat-kinds';
 import { matchesTarget, remapBody } from '../src/splat-remap';
+import { attempt, readingKind, selfVoted } from '../src/splat-sub';
 import {
   type DataObject,
   HAND_EDIT_MARKER,
   SAME_CONTENT_LIMIT,
+  type SymbolMaps,
   type TargetSide,
   cStringAt,
   compareObject,
@@ -27,6 +32,7 @@ import {
   renderSymbolFile,
   resolveBytes,
   resolveDataAddress,
+  readSourceLocations,
   resolveRepointed,
   rttiClassAt,
   soleFnVoters,
@@ -152,6 +158,12 @@ describe('remapBody', () => {
         expect(srclocKey(maps.target.image, 1024, l.addr - 8)).toBe(srclocKey(maps.ourImage, 1024, loc.addr));
         resolved++;
         numbered += loc.name === '.L.constant' ? 0 : 1;
+      } else if (l.same !== undefined) {
+        // a right record the target holds at several addresses: each is the record, and the target body picks one
+        expect(l.same.length).toBeGreaterThan(1);
+        for (const a of l.same) {
+          expect(srclocKey(maps.target.image, 1024, a - 8)).toBe(srclocKey(maps.ourImage, 1024, loc.addr));
+        }
       } else {
         // a reconstructed unit whose line, column or function spelling is not yet the target's
         expect(l.reason).toBe('source_location not in the target');
@@ -210,6 +222,147 @@ describe('srclocAnchors', { timeout: 180_000 }, () => {
     expect([...syms.fnEvidence.values()].some((e) => e.evidence === 'call' && (e.voters?.length ?? 0) > 0)).toBe(true);
     // a name a seed pair voted for lists no voters
     expect(soleFnVoters(syms, '__cxa_allocate_exception')).toBeNull();
+  });
+});
+
+// A header-inline throw has its record once per TU that inlines it. Whichever keys our link holds, these cases make
+// target 700's record such a one: they edit a copy of the target's image, and the ledger's rows read it as
+// loadTargetSide does. 1108468 and 1110696 are the ledger's first two records, lower than 700's and in no function
+// these cases re-point.
+const RECORDS = `${URNA}/ledger/source-locations.tsv`;
+const GET_KEY_RECORDS = [1538968, 1547328, 1580692, 1593104];
+
+describe('a source_location record the target holds more than once', { timeout: 180_000 }, () => {
+  const load = () => {
+    const ours = loadOurSide(PLAIN, MAP_DIR);
+    const target = loadTargetSide(TARGET, SYMBOLS, `${URNA}/ledger`, ours.stackSize);
+    const kinds = readOperandKinds(defaultKindsPath(PLAIN), new Uint8Array(readFileSync(PLAIN)));
+    const maps = symbolMaps(ours, target, kinds);
+    const index = ours.fnByKey.get(START_TICK)!;
+    const record = disassemble(ours.module.funcs[index - ours.module.importedFuncCount])
+      .flatMap((i) => (i.opcode === 0x41 && i.imms[0]?.kind === 's32' ? [i.imms[0].value] : []))
+      .map((v) => (v >= 1024 && v < ours.dataEnd ? dataObjectAt(ours.map.data, v) : null))
+      .find((d) => d !== null && isSourceLocationRecord(d))!;
+    const held = resolveDataAddress(ours, maps.ourImage, target, record.addr);
+    if (!held.ok) {
+      throw new Error(`target 700's record: ${held.reason}`);
+    }
+    const tm = target.module;
+    return {
+      maps,
+      record,
+      /** where the target holds target 700's record: the operand its body loads */
+      own: held.addr,
+      body: tm.funcs[700 - tm.importedFuncCount].bodyBytes,
+      candidate: { ours: index, symbol: START_TICK, source: 'symbol' as const },
+    };
+  };
+
+  /** `maps` with `edit` applied to a copy of the target's image, the ledger's rows read over it. */
+  const edited = (maps: SymbolMaps, edit: (image: Buffer) => void): SymbolMaps => {
+    const image = Buffer.from(maps.target.image);
+    edit(image);
+    const srcloc = readSourceLocations(RECORDS, image, maps.target.imageBase);
+    return { ...maps, target: { ...maps.target, image, srcloc } };
+  };
+  const copyTo = (image: Buffer, from: number, to: number): void => {
+    image.copy(image, to - 1024, from - 1024, from - 1024 + 16);
+  };
+  /** Another line in the record at `at`: the key it held is no longer there. */
+  const moveLine = (image: Buffer, at: number): void => {
+    image.writeUInt32LE(image.readUInt32LE(at - 1024 + 8) + 1, at - 1024 + 8);
+  };
+
+  it('keeps every address of a key, the ten keys the target holds more than once among them', () => {
+    const target = loadTargetSide(TARGET, null, `${URNA}/ledger`);
+    expect(target.srcloc.get(srclocKey(target.image, 1024, GET_KEY_RECORDS[0])!)).toEqual(GET_KEY_RECORDS);
+    expect(target.srcloc.get(srclocKey(target.image, 1024, 1110696)!)).toEqual([1110696]);
+    const held = [...target.srcloc.values()].filter((a) => a.length > 1);
+    expect(held.length).toBe(10);
+    expect(held.flat().length).toBe(106);
+  });
+
+  it('reads a row twice as one address', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'srcloc-'));
+    const target = loadTargetSide(TARGET, null);
+    const rows = `loc_addr\tfile\n${GET_KEY_RECORDS[0]}\ta\n${GET_KEY_RECORDS[0]}\ta\n`;
+    writeFileSync(join(dir, 'source-locations.tsv'), rows);
+    const out = readSourceLocations(join(dir, 'source-locations.tsv'), target.image, target.imageBase);
+    expect([...out.values()]).toEqual([[GET_KEY_RECORDS[0]]]);
+    rmSync(dir, { recursive: true });
+  });
+
+  it.skipIf(!real700)('offers every address, and the match takes the one the target body holds', () => {
+    const { maps, record, own, body, candidate } = load();
+    const held = edited(maps, (image) => copyTo(image, own, 1108468));
+    const r = resolveDataAddress(held.ours, held.ourImage, held.target, record.addr);
+    expect(r).toMatchObject({ ok: false, same: [1108468, own] });
+    // a byte inside the record, as an operand can point at
+    expect(resolveDataAddress(held.ours, held.ourImage, held.target, record.addr + 8).same).toEqual([
+      1108468 + 8,
+      own + 8,
+    ]);
+    const a = attempt(held, candidate, 700, body);
+    expect(a.verdict).toBe('match');
+    expect(a.verdict === 'match' && Buffer.from(a.bytes).equals(Buffer.from(body))).toBe(true);
+    const copy = a.verdict === 'match' ? a.chosen.filter((c) => c.reading.startsWith('address same-content')) : [];
+    // the target's own address, not the first reading; on the meter it is "which copy", never "re-pointing alone"
+    expect(copy.map((c) => c.reading)).toEqual([`address same-content 0x${own.toString(16)}`]);
+    expect(copy[0].preferred).toBe(false);
+    expect(readingKind(copy[0].reading)).toBe('copy');
+  });
+
+  it.skipIf(!real700)('fails a function whose key the target holds, but not at the address its body loads', () => {
+    const { maps, own, body, candidate } = load();
+    const held = edited(maps, (image) => {
+      copyTo(image, own, 1108468);
+      copyTo(image, own, 1110696);
+      moveLine(image, own);
+    });
+    const a = attempt(held, candidate, 700, body);
+    expect(a.verdict).toBe('differs');
+    expect(a.verdict === 'differs' && a.detail).toMatch(/: source_location record occurs 2 times in the target\]$/);
+  });
+
+  // passes on the code before readings too: that path did not change, and no reading may reach it
+  it.skipIf(!real700)('fails a function loading a key the target does not hold', () => {
+    const { maps, own, body, candidate } = load();
+    const a = attempt(edited(maps, (image) => moveLine(image, own)), candidate, 700, body);
+    expect(a.verdict).toBe('unresolved');
+    expect(a.verdict === 'unresolved' && a.detail).toMatch(/an address of ours: source_location not in the target$/);
+  });
+
+  // passes on the code before readings too: a held record never named anything, and readings must not start to
+  it.skipIf(!real700)('names nothing: no anchor, and no name for the self-vote rule to hold', () => {
+    const { maps, own, body, candidate } = load();
+    // the copy lies above 700's record, in a function these cases do not re-point: with it below, this case passes even
+    // with the anchor rule broken
+    const held = edited(maps, (image) => copyTo(image, own, 1601348));
+    const anchored = (m: SymbolMaps): number[] =>
+      srclocAnchors(
+        m.ours,
+        m.ourImage,
+        m.target,
+        normalizeModule(m.target.module, { depth: 0 }),
+        normalizeModule(m.ours.module, { depth: 0 }),
+      )
+        .filter(([t]) => t === 700)
+        .map(([, o]) => o);
+    expect(anchored(maps)).toEqual([candidate.ours]);
+    expect(anchored(held)).toEqual([]);
+    // the reading is a copy of bytes, not a name a vote gave: the self-vote rule has nothing to ask of it
+    const a = attempt(held, candidate, 700, body);
+    const chosen = a.verdict === 'match' ? a.chosen.filter((c) => c.reading.startsWith('address same-content')) : [];
+    expect(chosen.length).toBe(1);
+    expect(selfVoted(held, new Map([[700, { chosen }]])).size).toBe(0);
+  });
+
+  it.skipIf(!real)('gives no such record a symbol line', () => {
+    const target = loadTargetSide(TARGET, SYMBOLS, `${URNA}/ledger`);
+    const places = new Set([...target.srcloc.values()].filter((a) => a.length > 1).flat());
+    const named = [...target.symbols.data].filter(([name]) => name.startsWith('srcloc.')).map(([, addr]) => addr);
+    expect(named.length).toBeGreaterThan(0);
+    expect(named.filter((a) => places.has(a))).toEqual([]);
   });
 });
 

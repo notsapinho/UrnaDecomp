@@ -68,12 +68,6 @@ ASN1_STD ostream & operator<<(ASN1_STD ostream & os, const AbstractData & arg)
   return g_inserter(os, arg);
 }
 
-void AbstractData::Print(PrintHelper& helper) const
-{
-    AVNPrinter printer(helper);
-    accept(printer);
-}
-
 bool IntegerWithNamedNumber::getName(ASN1_STD string& str) const
 {
   const NameEntry* begin = info()->nameEntries;
@@ -86,14 +80,6 @@ bool IntegerWithNamedNumber::getName(ASN1_STD string& str) const
     return true;
   }
   return false;
-}
-
-const char* ENUMERATED::getName() const
-{
-  if (value >=0 && value <= getMaximum())
-    return info()->names[value];
-
-  return 0;
 }
 
 bool AVNEncoder::do_visit(const Null& value)
@@ -132,11 +118,12 @@ bool AVNEncoder::do_visit(const IntegerWithNamedNumber& value)
 
 bool AVNEncoder::do_visit(const ENUMERATED& value)
 {
+  ASN1_STD ostream& os = strm;
   const char* name = value.getName();
   if (name != 0)
-    strm << name;
+    os << name;
   else
-    strm << value.asInt();
+    os << value.asInt();
   return strm.good();
 }
 
@@ -335,236 +322,6 @@ bool AVNEncoder::afterVisitSequence(const SEQUENCE& value)
   outputSeparators.pop_back();
   strm << ASN1_STD setw(indent + 1) << "}";
   return strm.good();
-}
-
-/////////////////////////////////////
-// AVNPrinter
-/////////////////////////////////////
-
-bool AVNPrinter::do_visit(const Null& value)
-{
-  helper.Print("NULL");
-  return true;
-}
-
-bool AVNPrinter::do_visit(const BOOLEAN& value)
-{
-  if (value)
-    helper.Print("TRUE");
-  else
-    helper.Print("FALSE");
-  return true;
-}
-
-bool AVNPrinter::do_visit(const INTEGER& value)
-{
-  if (!value.constrained() || value.getLowerLimit() < 0)
-    helper.Print("%d", (int)value.getValue());
-  else
-    helper.Print("%u", (unsigned)value.getValue());
-  return true;
-}
-
-bool AVNPrinter::do_visit(const IntegerWithNamedNumber& value)
-{
-  ASN1_STD string str;
-  if (value.getName(str))
-    helper.Print("%s", str.c_str());
-  else
-    return visit(static_cast<const INTEGER&>(value));
-  return true;
-}
-
-bool AVNPrinter::do_visit(const ENUMERATED& value)
-{
-  const char* name = value.getName();
-  if (name != 0)
-    helper.Print("%s", name);
-  else
-    helper.Print("%d", value.asInt());
-  return true;
-}
-
-bool AVNPrinter::do_visit(const OBJECT_IDENTIFIER& value)
-{
-  helper.Print("{ ");
-  for (unsigned i = 0;  i < value.levels(); ++i)
-    helper.Print("%u ", value[i]);
-  helper.Print("}");
-  return true;
-}
-
-bool AVNPrinter::do_visit(const BIT_STRING& value)
-{
-  if(value.hasNames()) { //IdentifierList notation
-    helper.Print("{");
-    char sep = ' ';
-    const char * name;
-
-    for (unsigned i = 0; i < value.size(); ++i) {
-      if (value[i]) {
-        helper.Print("%c", sep);
-        name = value.getName(i);
-        if(name)
-          helper.Print("%s", name);
-        else
-          helper.Print("%d", i);
-
-        sep = ',';
-      }
-    }
-    helper.Print(" }");
-  }
-  else { //bstring notation
-    helper.Print("\'");
-    for (unsigned i = 0; i < value.size() && true; ++i)
-    {
-      if (value[i])
-        helper.Print("1");
-      else
-        helper.Print("0");
-    }
-    helper.Print("\'B");
-  }
-  return true;
-}
-
-bool AVNPrinter::do_visit(const OCTET_STRING& value)
-{
-  helper.Print("\'");
-
-  for (unsigned i = 0; i < value.size() && true; ++i)
-  {
-    helper.Print("%02x", (0xFF & value[i]));
-    if (i != value.size()-1)
-      helper.Print(" ");
-  }
-
-  helper.Print("\'H");
-  return true;
-}
-
-bool AVNPrinter::do_visit(const AbstractString& value)
-{
-  helper.Print("\"%s\"", static_cast<const ASN1_STD string&>(value).c_str());
-  return true;
-}
-
-bool AVNPrinter::do_visit(const BMPString& value)
-{
-  ASN1_STD vector<char> tmp;
-  tmp.resize(value.size()*2+1, 0);
-  int len = wcstombs(&*tmp.begin(), &*value.begin(), value.size());
-  if (len != -1)
-  {
-    tmp[len] = 0;
-    helper.Print("\"%s\"", &(*tmp.begin()));
-  }
-  else // output Quadruple form
-  {
-    helper.Print("{");
-    for (unsigned i = 0; i < value.size() && true; ++i)
-    {
-      helper.Print("{ 0, 0, %d, %d }", (int) (value[i] >> 8), (int) value[i]);
-      if (i != value.size()-1)
-        helper.Print(", ");
-    }
-    helper.Print("}");
-  }
-  return true;
-}
-
-bool AVNPrinter::do_visit(const CHOICE& value)
-{
-  if (value.currentSelection() >= 0)
-  {
-    helper.Print("%s : ", value.getSelectionName());
-    return value.getSelection()->accept(*this);
-  }
-  return false;
-}
-
-bool AVNPrinter::do_visit(const OpenData& value)
-{
-  if (value.has_data())
-  {
-    return value.get_data().accept(*this);
-  }
-  else if (value.has_buf())
-  {
-    OCTET_STRING ostr(value.get_buf());
-    return ostr.accept(*this);
-  }
-  return false;
-}
-
-bool AVNPrinter::do_visit(const UTCTime& value)
-{
-  helper.Print("\"%s\"", value.get().c_str());
-  return true;
-}
-
-bool AVNPrinter::do_visit(const GeneralizedTime& value)
-{
-  helper.Print("\"%s\"", value.get().c_str());
-  return true;
-}
-
-bool AVNPrinter::do_visit(const SEQUENCE_OF_Base& value)
-{
-  helper.Print("{\n");
-    SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
-    indent +=2;
-  for (; first != last && true; ++first)
-  {
-    helper.Print("%*s", indent, "");
-    if (!(*first)->accept(*this))
-      return false;
-    if (first != last-1)
-      helper.Print(",\n");
-  }
-    indent -=2;
-  if (value.size())
-    helper.Print("\n");
-  helper.Print("%*s}", indent, "");
-  return true;
-}
-
-bool AVNPrinter::preVisitExtensionRoots(const SEQUENCE& value)
-{
-  outputSeparators.push_back(false);
-  helper.Print("{\n");
-  return true;
-}
-
-bool AVNPrinter::visitExtensionRoot(const SEQUENCE& value, int index)
-{
-  if (outputSeparators.back())
-    helper.Print(",\n");
-  helper.Print("%*s ", strlen(value.getFieldName(index)) + indent +2, value.getFieldName(index));
-    indent +=2;
-  if (!value.getField(index)->accept(*this))
-    return false;
-    indent -=2;
-  outputSeparators.back() = true;
-  return true;
-}
-
-bool AVNPrinter::visitKnownExtension(const SEQUENCE& value, int index)
-{
-  return visitExtensionRoot(value, index);
-}
-
-bool AVNPrinter::afterVisitSequence(const SEQUENCE& value)
-{
-  if (outputSeparators.back())
-    helper.Print("\n");
-  outputSeparators.pop_back();
-  if (indent)
-    helper.Print("%*s}", indent, "");
-  else
-    helper.Print("}");
-  return true;
 }
 
 }

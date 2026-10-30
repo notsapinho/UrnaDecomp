@@ -1085,7 +1085,7 @@ unit's roots object defines, once the link map is this link's (step 8 makes it t
 
 ```sh
 TMPDIR=/tmp make -C src link-map
-awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9][0-9]-.*-roots\.o$/ {print $1, $8, $10}' build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv
+awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9]+-.*-roots\.o$/ {print $1, $8, $10}' build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv
 # 9409 addr std::__2::__shared_ptr_emplace<api::CImageField, std::__2::allocator<api::CImageField>>::~__shared_ptr_emplace()
 # …
 ```
@@ -1158,7 +1158,12 @@ scan matches.
 link: the body verifies, but the evidence says another function sits there, as with 11611, matched as
 `wrapexcept<bad_weekday>::rethrow` while the target's `wrapexcept<bad_month>` vtable holds it
 ([facts/splat.md](reference/facts/splat.md) §S7). It changes nothing; find which side is right, and correct the
-match line by hand when the evidence is. A second name beside the matched one is not reported, so read step 8's
+match line by hand when the evidence is. Both sides can be right: the target merged two functions into one body, our
+link keeps them apart, and only the matched symbol's body equals it. A match of that index then drops the other name
+([reference/splat.md](reference/splat.md) §3), its callers leave `match`, and `status.py` stops step 9, naming them
+after `matched.txt only:`. Withdrawing the match does not help, since the content pass adds it back. Add a hand edit of the
+other name with `evidence:merged-body` and, in its comment, the callers, that the target merged the body, and that our
+own body is not equal (`pnpm wasm score`, not the first byte `splat-remap` prints). The comment must also cite a caller the line does not rescue: one named by other evidence that calls the name at the aligned site, as 8811 does for 543. Without one, or when our body differs because our source is wrong, this is not the case: fix the source, or withdraw the callers with a reason. The report goes on printing that line, and that is expected. A second name beside the matched one is not reported, so read step 8's
 `git diff splat/symbol_addrs.txt` for a `func:N` that gained a name, and for a matched index that lost its line: a
 vtable slot your unit fills with a body that is not the target's (a defaulted or implicit member of an earlier unit)
 votes that slot's index onto the body, and the function the body is matched as can lose its line
@@ -1196,7 +1201,9 @@ A row of another unit can turn `match` for a reason you can name:
   as another match removes its last twin. Among bodies alike, the name can be the wrong one, and the build cannot tell
   ([facts/splat.md](reference/facts/splat.md) §S11 has the cases). A row whose detail reads `address same-content` or
   `table slot copy`, or whose `source` is `content`, is checked against what calls or points at the function and against
-  its neighbours in `splat/matched.txt`; correct the line by hand when they disagree.
+  its neighbours in `splat/matched.txt`; correct the line by hand when they disagree. A function that loads a
+  `std::source_location` record the target holds more than once reads so too: it matches like any other, and the
+  target body picks the copy ([facts/splat.md](reference/facts/splat.md) §S12).
 
 A match the scan found by body has `content` in the `source` column of `splat/scan.tsv`. Once the match names the
 function, a later scan writes `symbol` there, so a rescan of the committed state differs from the committed
@@ -1337,12 +1344,10 @@ before the commit, with:
   …`): that takes a re-selection of the dataset in a commit of its own
   ([asmlift-wasm/benchmark/README.md](../asmlift-wasm/benchmark/README.md) "Re-selecting");
 - from `asmlift-wasm/`, `TMPDIR=/tmp pnpm test`, alone in the checkout: beside a census or `splat-match` its
-  real-link cases skip and it still exits 0, so read the count, `195 passed (195)`. Every case passes on `main` since
+  real-link cases skip and it still exits 0, so read the count (§W12). Every case passes on `main` since
   04a718a ([facts/workflow.md](reference/facts/workflow.md) §W12), so a failing one is your branch's to explain: run
-  it on the commit your branch started from to see whether it fails there too. One failure is not a fault: a right
-  record the target holds twice (a header-inline function two TUs inline) fails `splat-symbols.test.ts`'s record case
-  with `expected 'source_location record ambiguous'`; check it with `check_srcloc.py --strict` (§W12). And `4 skipped`
-  means the `emscripten/emsdk:6.0.0` tag is missing (§W12).
+  it on the commit your branch started from to see whether it fails there too. And `4 skipped` means the
+  `emscripten/emsdk:6.0.0` tag is missing (§W12).
 
 **Landing onto a moved main.** When another unit landed after your branch started, merging conflicts in generated
 files and in the census snapshot, which both branches renamed. Resolve only the files people write:

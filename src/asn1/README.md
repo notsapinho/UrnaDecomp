@@ -15,6 +15,7 @@ The upstream files here are a modified copy of the III ASN.1 runtime at that com
 | `asn1.h`, `asn1.cxx`, the coders (`BER*`, `PER*`, `AVN*`), `ValidChecker.cxx`, `InvalidTracer.cxx`, … | the upstream runtime with the fork's changes read from the target: `AbstractData`'s seventh virtual `getTypeName()`, the `typeName` word of the `SEQUENCE` and `SEQUENCE_OF_Base` info records, the two out-of-line `CHOICE` helpers, `IAbstractVisitor`, `ISeeder` |
 | `BERDecoderPartial.cxx`, `BufferSeeder.h`, `DataFree.cxx` | fork-only classes, reconstructed from the target's vtables and readouts |
 | `DataLengthCounter.cxx` | `DataLengthCounter` and the length functions over it, which upstream's `BEREncoder.cxx` holds and the target keeps outside `BEREncoder`'s object (facts §A6); the file and its name are chosen |
+| `ValidChecks.cxx` | the data classes' `isValid` and `isStrictlyValid`, which upstream's `ValidChecker.cxx` holds. The split from the checkers is real: clang inlines these members into a caller that sees them, and the target calls them. The file is free and its name is chosen: no byte needs it. Members in `ValidChecker.cxx` with the checkers in `asn1.cxx`, and members in `asn1.cxx` with the checkers kept, each lost 0 matches in a private scan, which makes both leads. Which TU is `asn1.cxx` is unsettled: the visitors 8968 to 8987 lie inside the target's run of `asn1.o`'s functions, which is the lead |
 | `AssocVector.h`, `Platform*.h`, `ios_helper.*`, `asn1_useful.*` | upstream support files, ported to compile at C++20 |
 | `modules/<Modulo>.{h,cxx}` | the 32 generated modules (below) |
 | `unplaced.cpp` | generated comment stubs of the `ASN1` functions no evidence places in a file; a `.cpp`, so `src/mk/asn1.mk` never compiles it. The `.cxx` files hold stubs too, as comments that change no object ([../README.md](../README.md) "Stubs") |
@@ -39,18 +40,22 @@ own objects are C++17: `BERDecoderPartial::do_visit(OBJECT_IDENTIFIER&)` (8841) 
 To score the runtime alone against the target's ASN.1 slice: `tools/libs/asn1/build.sh <name> -Os -fexceptions
 -fignore-exceptions -DNDEBUG`, then `tools/libs/census_subset.ts` on the result (`tools/libs/asn1/flags.txt` holds the per-file extras).
 
+The runtime's objects go through `tools/round/gen_try_roots.py`, which takes the address of every external function, so a
+function the target only calls has to leave those roots, or binaryen keeps its result and never inlines it. `src/mk/asn1.mk`
+holds `ASN1_ROOTS_EXCLUDE`, and a unit's fragment adds to it with `+=`.
+
 ## The generated modules
 
 `modules/` holds one header and one source per `Modulo*` module, 32 of each, in asnparser's output style. The target
 keeps the whole schema of these types in its data: every generated class has a static `theInfo` record, and TSE's
 asnparser appends the type's name to it (facts §A3). The 297 records give the field names, order, tags and
 optionality, the enumerators and the constraints exactly. Class names come from RTTI, from the names the app's
-`std::source_location` records spell, or are made up from the field name; the 15 made-up ones say `SYNTHESIZED` in
+`std::source_location` records spell, or are made up from the field name; the 14 made-up ones say `SYNTHESIZED` in
 their header comment. A generated class has no code of its own (all `SEQUENCE` classes share seven vtable functions),
 so the modules place data, not functions.
 
 `tools/extract/asn1/run.sh` regenerates them from the target into `build/out/asn1-schema/modules/` (about 15 s;
-it needs `build/dump/vota.objdump.txt`). Its output differs from the committed modules in eleven files, which carry
+it needs `build/dump/vota.objdump.txt`). Its output differs from the committed modules in 15 files, which carry
 hand edits made after generation: setters that take
 `x::const_reference` for every field, as asnparser writes them; generated classes that the target does not have
 (`Cabecalho`, nested `value_type`s) replaced by a `typedef` of the type it uses; an inline enumeration turned into

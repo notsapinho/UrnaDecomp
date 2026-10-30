@@ -78,6 +78,8 @@ private:
     int EscalaY(api::TPosition valor) const { return static_cast<int>(std::ceil(m_escalaY * valor)); }
     // a line width, scaled as an int (slots 8 to 11)
     int Espessura(int valor) const { return static_cast<int>(std::ceil(m_escalaX * valor)); }
+    // a path on the canvas (fn 5113, which slots 17 and 18 call)
+    std::vector<api::SPathCommand> EscalaCaminho(const std::vector<api::SPathCommand>& caminho) const;
 
     bool m_campo4 = true;
     int m_campo8 = 0;
