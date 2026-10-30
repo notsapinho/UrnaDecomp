@@ -211,7 +211,10 @@ elsewhere), no function defined in more than one object (COMDAT), no libc++ temp
 * `band_structs` is vectorised (one argsort per band per iteration, masked prefix extrema for the exclusion):
   3.4 s per iteration.
 * `ordinals.tsv` has `rank_lo`/`rank_hi` (the sound window in rank space; `ord_lo`/`ord_hi` is its ordinal hull,
-  which is meaningless when the window spans digit zones).
+  which is meaningless when the window spans digit zones). Its `ordinal` is a point estimate, not a solved ordinal:
+  for a `window` row the ordinal at the window's middle rank, which steps through 3- and 2-digit values among 4-digit
+  ones from one band position to the next, and 3,476 values are shared by 10,002 functions
+  ([facts/link-order.md](facts/link-order.md) §L7 item 14). Never compare two functions by it.
 
 Validation on the frozen skeleton (truth = §7.1; `--positions --top mgfn-skel.txt --holes 2`):
 
@@ -290,3 +293,12 @@ reads as clean reverse link order: e.g. band positions 11,047–11,066 = 20 func
 functions each. Each stretch row carries the band, the exact band-position range, the (loose) zone-major ordinal
 window, the component mix, the file and the evidence kinds; `docs/reference/tu-slices.md` is the table, `ledger/tu-clusters.tsv`
 the machine-readable form (one row per band stretch; a TU appears once per band it has functions in).
+
+A stretch is a run of band positions, which the order law makes reverse link order except where a function of
+another digit zone sorts in (a 3- or 2-digit ordinal sorts right after the 4-digit ones it begins). The twin rule takes
+out only a *labelled* interruption, and for an unanchored function nothing in the ledger says which zone it is in: its
+`ordinal` is the window's middle (§7.3), so stretch 853's 5909 to 5913 read 4301, 4300, 430, 43 and 4299 whatever
+5911 and 5912 are. Read a function's link neighbours by band position, and confirm them from the data: a TU's
+vtables, typeinfos and `std::source_location` records lie in link-line order, object by object, with no digit
+scramble, so the files whose data surround a class's vtable are linked beside its object
+([facts/link-order.md](facts/link-order.md) §L7 items 14 and 15).

@@ -26,6 +26,9 @@ The board is a folder **outside** the repository, created for one run; the run's
   the user (or the coordinator transcribing the user, marked as such) writes there.
 - The board is not part of the repository and does not outlive the run. Before a run ends, move every fact a
   tracked file depends on into `docs/reference/facts/` and cite it there: code and docs never cite a board post.
+  Nor do they name a round, a lane or an agent handle, which mean nothing once the run is over: say what a file
+  waits for in the tree's terms (`api/util/itimer.h defines it`, a header that is not in this tree yet), not who is
+  making it.
 
 ## Working in one shared checkout
 
@@ -40,6 +43,10 @@ The board is a folder **outside** the repository, created for one run; the run's
   `git commit -F -` and a heredoc. A folder every agent sees (the session's scratchpad, a fixed `/tmp/<name>`) holds
   another agent's file of the same name by the time you read it back: a commit message written there was replaced
   that way before a retry committed it.
+- A branch follows the docs of the commit it started from, and a reviewer of it says which version it judged by.
+  When `main`'s docs change while the branch runs, its landing reads the branch's choices against `main`'s docs too,
+  since the merge lands under them (`docs/how-to-decompile.md` step 10, "Landing onto a moved main"). Read `main`'s
+  text with `git show main:<path>`, not from another checkout.
 - If `.git/index.lock` exists, wait and retry. Remove it only when it is older than ten minutes and no git process
   runs.
 - Never `git stash` (the stash is shared with every checkout of the repository); use a WIP commit. Never push
@@ -70,8 +77,11 @@ The board is a folder **outside** the repository, created for one run; the run's
 - Two units landing in one run each need their own fragment number: the coordinator assigns them before the
   matchers start, and the unit that lands second re-runs link, census, symbols, match and the splat build on top of
   the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
-- An edit to a shared header recompiles every unit that includes it, and a half-finished edit breaks every other
-  agent's link until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the
+- An edit to a header, or a new header, recompiles every object of its tree, whether it includes the header or not
+  (the generic rules depend on every header there), the tree's roots object, and the companions whose rules name it:
+  46 compiles for `src/uenux2/src/api/util/cdatetime.h`, 60 for a new header in `src/uenux2/src/api/gui/`
+  ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link
+  until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the
   matched functions of those units; to show that a restructure left them as they were (a vtable, an inline member a
   parallel lane builds on), list the objects the edit will rebuild, keep a copy of them before the first link or try,
   and compare each after relinking ([facts/workflow.md](reference/facts/workflow.md) §W13):
@@ -83,9 +93,16 @@ The board is a folder **outside** the repository, created for one run; the run's
   while read o; do tar -xOf build/out/<handle>/before.tar "$o" | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/<handle>/rebuilt.txt
   ```
 
-  An object that is not in the list compares equal with itself and proves nothing.
+  An object that is not in the list compares equal with itself and proves nothing. Before a link, the same list
+  taken for each file a unit added or changed gives, as their union, what the unit's headers will rebuild. To check a
+  unit's objects fresh afterwards (move them aside, rebuild, compare), move aside every object its worktree built:
+  `find build/out/app -name '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file
+  dates from its creation and a cloned `build/out/` keeps older mtimes ([facts/workflow.md](reference/facts/workflow.md)
+  §W15). `find build/out/app -newer <header>` compares with the header's last edit and misses an object of the unit
+  built before it.
 - A header your unit needs that `main` gained after your branch started: start your copy from `main`'s text and only
-  add to it (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
+  add to it. One that a branch landing before yours adds: copy it from that branch byte for byte, claim it, and do
+  not edit it (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
 - Every agent's link recompiles on the same machine. With a dozen agents the load average passes 130 and one
   compile of eight objects takes six minutes; size the fan-out to the machine, and prefer a lone compile
   (`tools/round/try-tu.sh --single`) or a library probe for questions that do not need the whole link.

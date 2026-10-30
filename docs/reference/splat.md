@@ -343,7 +343,19 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
 - a second name for a matched function. `splat-match` reports a match line only when none of the symbol file's names
   for its index is the matched symbol (`addMatches` in `asmlift-wasm/src/splat-sub.ts`), so a wrong name beside the
   right one says nothing. Read the range's symbol-file diff (`git diff <base> -- splat/symbol_addrs.txt`) for a
-  `func:N` of a matched index that gained a line.
+  `func:N` of a matched index that gained a line. Some lines move at every landing whatever the unit: an
+  `evidence:table` name that 7530 or 615 gains while the function that name belongs to loses its `vtable` line, and
+  the `pair-addr` lines of matched SQLite functions that drop out and come back. [facts/splat.md](facts/splat.md) §S8
+  lists them, with the command that separates them from a range's own lines;
+- a source form chosen for the code it gives. Ordinary C++ in the project's types is a source form, whatever made the
+  matcher pick it: locals read before the first store, an order of evaluation, a temporary
+  ([facts/codegen.md](facts/codegen.md) §C1). A construct whose only purpose is to constrain the compiler is
+  scaffolding and does not land: a `volatile` store, an empty `asm`, a `may_alias` or `aligned` type, `noinline`, a
+  `goto` that a loop or an `if` would express ([../how-to-decompile.md](../how-to-decompile.md) step 3). A form that
+  makes up for a header of ours that may not be the original's (locals read first, as a constructor's arguments
+  would be, where our header declares an aggregate) says so in the fragment's header comment, not above the function
+  (step 3 of the how-to; `src/README.md` "Gaps" keeps a TSE file's lines free of our comments), so that whoever
+  corrects the header can simplify it.
 
 [facts/splat.md](facts/splat.md) §S5 has the measurements behind the first two items and the review warnings, and the
 cases the tests pin; [facts/units.md](facts/units.md) has those behind the companion objects and the stand-ins.

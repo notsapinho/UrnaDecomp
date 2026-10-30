@@ -113,6 +113,22 @@ pool: it reaches you as a callee or a table slot of a TSE function you read (ste
 `api::CThread::Start` passes by table slot, was found that way (`awk -F'\t' '$1==10255 {print $1, $5, $9}'
 splat/scan.tsv` prints `10255 match app`).
 
+The third verdict with work left, `unresolved`, is in neither pool: 817 rows at ee595de, 237 of them compiled from a
+TSE tree. Each has a body of ours, and its `detail` names the operand that has no target counterpart:
+
+```sh
+awk -F'\t' 'NR>1 && $5=="unresolved" && $11 ~ /^app\/(uenux2|ecourna|asn1)\// {print $1, $7, $6}' splat/scan.tsv | sort -k2 -n | less
+```
+
+A callee that "has no target function" is one of two things. Either the target inlined it everywhere, and the
+source defines it where ours keeps it out of line: 9484, `ecourna::api::security::ISymmetricCipher`'s destructor,
+calls `CAesKey`'s destructor, which `src/ecourna/api/security/isymmetriccipher.cpp` line 9 defines out of line, and
+the target has no such function. Or it is a `byn$mgfn-shared$` body: binaryen merged the function with others of its
+shape (*mgfn*), and the target merged another set, so the fix is to write the missing members of the target's set,
+which can belong to another component. 9597 and 9810, two RHVoice destructors, call such a body of ours; the target's,
+3904, has a third caller, 12014, a destructor of `api::CSubReport` (`pnpm wasm fn ../target/vota_web_wasm.wasm 3904`
+prints `;; callers (3): 9597 9810 12014`), so the library rows wait for that TSE class.
+
 A `differs` row of a library component is a different job: see [Library functions](#library-functions) below
 before taking one.
 
@@ -211,18 +227,31 @@ build, constant loads only (an address computed from a base is missed):
 # build/out/splat/pieces/asm/comum/10266.wat
 ```
 
+A throw that builds its message with `std::format` stores two i64 constants that spell the call
+([facts/reading.md](reference/facts/reading.md) §R13): `(length << 32) | address` of the format string, whose text
+`ledger/strings.tsv` has at that address, and the argument types packed 5 bits each, the first argument lowest, as
+libc++'s `__arg_t` numbers them (3 `int`, 6 `unsigned`, 12 `const char*`, 13 a string). 11050 stores
+`103079218254`, `24 << 32 | 3150`, the 24 bytes `"Operação desconhecida {}"` at 3150, and `3`: one `int`.
+
 A by-value member whose type no header of ours defines needs that header before the class compiles: write it with
 the data members at the offsets the bodies give and declarations only of the members a record names, say in its
 comment that the layout is all that is recovered, and claim it like any new file ([agents.md](agents.md)); the type's
-own `.cpp` stays a stub file until its functions are written.
+own `.cpp` stays a stub file until its functions are written. A member of that type whose code a function you write
+holds inlined is the exception: define it in the header, named as step 3 says when no record names it, since the
+bytes are then its evidence and the function cannot be written without it. When the target holds that code inlined in
+two functions, write it so that clang inlines it (step 3, "Code binaryen inlined from another function").
 
 The wasm parameters follow the C++ ABI. A member function takes `this` first. A function that returns a class by
 value returns nothing in wasm and takes the address of the result as a hidden parameter before everything else, so
 target 9131, `MunicipioZona CConversorMunicipioZona::DoConverte(const CMunicipioZona&) const`, has the wasm type
 `(i32 i32 i32)->()`: `p0` is the result, `p1` is `this`, `p2` is the argument. A trivially copyable class that holds
 one scalar is the exception: it comes back as that scalar, so 3641, `CTime CTime::operator-(int) const` with `CTime`
-one `size_t`, is `(i32 i32)->(i32)`. binaryen changes the type further
-([facts/reading.md](reference/facts/reading.md) §R1–R3):
+one `size_t`, is `(i32 i32)->(i32)`. A class passed by value is likewise the address of a copy the caller makes,
+unless it is one scalar: a by-value `std::unique_ptr` is the raw pointer. libc++'s `std::shared_ptr` is trivial-ABI
+in this build, so the callee owns the copy, and a constructor that moves one into a member copies its two words and
+writes nothing back (5587, `comum::CParteCargos`'s), where a `&&` parameter would be nulled and a `const &` one's
+count incremented. Read a parameter's form from what the callee writes to it. binaryen changes the type further
+([facts/reading.md](reference/facts/reading.md) §R1–R3, §R12):
 
 - its dead-argument elimination removes a parameter every caller passes as the same constant and puts the constant
   in the body: the record of 5890, `void comum::ValidarUE(IInterfaceSavd &, ESavdAplic, const std::string &)`, has
@@ -268,6 +297,20 @@ of its own: unit 19 matches `api::IScreen::GetFontMetrics` from its roots object
 only. The file the class's records name then stays a stub file; `src/units/README.md` "What a fragment holds" says
 what such a fragment holds.
 
+**A form chosen for the code it gives.** The lift keeps the target's order of loads and stores, and the source has
+to give it back. That order is evidence of the source's form ([facts/codegen.md](reference/facts/codegen.md) §C1):
+stores whose values were all read first come out in the reverse of the source's order. A lift whose stores run
+backwards over a struct (+6, +4, +2, +0 in 11067, `api::CLineField::Rect`) comes from values read into locals before
+the aggregate is built; a constructor that moves every argument out before its first store into the object and
+stores the vptr last (3660, `api::CSubReport`'s) delegates to a constructor that takes them by value again. A call
+through `vtable[N + 4*x]` after an unsigned range check of `x` is a `switch` whose cases call consecutive virtual
+slots, its `default` the code under the check (§C2, 11050); write the switch, not a table of member pointers. Such
+a form is source when it is ordinary C++ in the project's types: a local that holds a value the function reads, an
+order of evaluation, a temporary, a delegating constructor. A construct whose only purpose is to steer the compiler
+is scaffolding and never lands: `volatile`, an `asm` barrier, an attribute, a `may_alias` cast, a `goto`. When a form
+stands in for a header that is not the original's (an aggregate where the target has a constructor), say so in the
+fragment's header comment.
+
 The lifter names a callee from the ledger's pairs, not from the symbol file, so a callee can be `extern "C" …
 f219(…)` although `splat/symbol_addrs.txt` names it (`_ZN4ASN18SEQUENCEC2EPKv = func:219;`, the
 `ASN1::SEQUENCE` constructor). Look a callee up there by `func:<index>;` before you guess.
@@ -290,15 +333,25 @@ had one caller in the link and so has no target index of its own). Two signs say
 i32.sub(g0, 32); g0 = l3;` in 3641, `operator+=` inlined into `operator-`), and byte arguments loaded with
 `i32.load8_u` into locals before the stores that use them, as for a call (`comum::md::CSituacoesEleicoes`'s
 constructor inside 11361). Write such a function out of line in its class's `.cpp`, and leave it unrooted, so that
-it has one caller in our link too.
+it has one caller in our link too. binaryen inlines a function with one call site only, so the same inlined code in
+two target functions means clang inlined it in at least one TU: an observer's detach (a lock over an erase of the
+observer, `call 736` and `call 150`) is inlined in both 2778 and 5902, the destructors of `api::CDSImageField` and
+`comum::CInfoMTLCD`. Write such a member so that clang inlines it, with the `inline` keyword, which raises the cost
+up to which clang inlines (§R5); a form clang leaves out of line matches only while it has one caller, and drifts when
+the second lands ([facts/codegen.md](reference/facts/codegen.md) §C3 links such a detach both ways, with one caller and
+with two).
 
 **When no record names the file**, as for every stub in `unplaced.cpp`, choose the path the way the landed
 units do, and say why in the fragment's header comment (step 6):
 
 1. a header of the class that already exists names the directory (`src/ecourna/app/dados/asn/resultadournacadastro/`
    for `CConversorDadosComparecimentoCifrado`);
-2. else the directory of the objects linked beside it: the stretches next to its cluster in `ledger/tu-clusters.tsv`
-   whose label is a record's (below);
+2. else the directory of the objects linked beside a function only the class's own object defines: a constructor
+   or a member defined out of line, the key function. Read its neighbours in link order (below) and take the
+   stretches of `ledger/tu-clusters.tsv` among them whose label is a record's. The vtable's slots, the inline members
+   and, for a class with no key function, the destructors are linkonce: the link keeps the copy of the first object
+   that emits them, often a user's. `api::CSubReport`'s slots 12008-12014 sit in stretch 603 among
+   `app/vota/eleitor/` files, while its constructor 3660 sits among `api/gui/` ones;
 3. else the directory where the class's family has records or landed sources: the ecourna `CConversor*` converters
    are in `app/dados/asn/` (or its subdirectory for their family), and the data classes they build in
    `app/dados/`; a comum converter is in the subdirectory of `app/comum/dados/asn/` that mirrors its data class's
@@ -311,10 +364,14 @@ units do, and say why in the fragment's header comment (step 6):
 
 The `unplaced.cpp` comment over a cluster, `// link-order cluster 255 · uses=1 · neighbours' file
 uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhasharquivo.cpp`, is that stretch's `probable_file` in
-`ledger/tu-clusters.tsv`. Its label says where the name comes from ([reference/tu-slices.md](reference/tu-slices.md)):
-`source_location` and `class-record` from records, `class-convention` from the tool's guess, the namespace's
-directory and the class name in lower case. Take the file name from it, and the directory from the stretches beside
-it that have records:
+`ledger/tu-clusters.tsv`. Its label (column `label_kinds`) says where the name comes from
+([reference/tu-slices.md](reference/tu-slices.md)): `source_location` and `class-record` from a record of another
+function in the stretch, `class-convention` from the tool's guess when none has one, the namespace's directory and
+the class name in lower case. A stretch can hold unlabelled functions of other classes, so a record's label can be
+another class's file: f3660, `api::CSubReport`'s constructor, sits under `neighbours' file
+uenux2/src/api/gui/ctextfielddoubleline.cpp`, the label of stretch 984 from 3659's record. Take the file name from the
+comment only when its label is a `class-convention` guess for this class; otherwise rule 4 names the file, and the
+comment gives the directory at most. The directory comes from the stretches beside it that have records:
 
 ```sh
 awk -F'\t' 'NR>1 && $1>=253 && $1<=263 {print $1, $10, $11}' ledger/tu-clusters.tsv
@@ -333,6 +390,38 @@ uenux2/src/app/comum/.*cconversor" src/uenux2/unplaced.cpp | LC_ALL=C sed -E "s|
 uenux2/src/app/comum/||; s|/[^/]*$||" | sort | uniq -c`). Stretch 255's recorded neighbours are
 `app/comum/gravadores/` files, so `comum::asn::CConversorHashArquivo` (10267) goes in `app/comum/gravadores/asn/`, as
 commit 1d026c9 (branch `decomp/decomp3-h`) lands it.
+
+Read a function's link neighbours by band position. Inside one band (one `uses` value of `ledger/ordinals.tsv`) the
+target's index runs in reverse link order ([glossary](glossary.md#link-order), *order law*), so the indices next to it
+in its band, and the stretches they fall in, are its neighbours, except where a function of another digit zone sorts
+in between (a 3- or 2-digit ordinal sorts right after the 4-digit ones it begins), which the ledger cannot single out
+for an unanchored function. Never compare two functions by the `ordinal` column: for 3,232 of the 3,270 TSE functions
+it is the middle of a window thousands of ranks wide, it steps through 3- and 2-digit values from one index to the
+next whatever the functions are (stretch 853's 5909 to 5913 read 4301, 4300, 430, 43 and 4299), and 3,476 values are
+shared: 4303 is the estimate of 5907, of `api::CTextFieldUpdateMT`'s D0 10549 and of 10945 in `api/gui/`'s
+`CTextFieldBlinking` stretch ([facts/link-order.md](reference/facts/link-order.md) §L7 item 14). The neighbours of
+5913 (`comum::CMenuBase`'s slot 2) in its band, `uses` 2:
+
+```sh
+awk -F'\t' 'NR>1 && $2==2 && $1>=5908 && $1<=5918 {printf "%s ", $1} END {print ""}' ledger/ordinals.tsv
+# 5908 5909 5910 5911 5912 5913 5914 5915 5916 5917 5918
+```
+
+then each neighbour's records or stub: `awk -F'\t' '$6 ~ /(^|,)5914(,|$)/ {print $2}' ledger/source-locations.tsv`
+prints `/home/rubio/tse/uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp`. Confirm them from the data, which has
+no digit scramble: a TU's vtables, typeinfos and `std::source_location` records lie in link-line order, object by
+object, so the records and vtables at the addresses around the class's vtable (`ledger/vtables.json` `address`) are its
+object's neighbours' ([facts/link-order.md](reference/facts/link-order.md) §L7 item 15 lists them in address order).
+`comum::CMenuBase`'s vtable (1550924) follows a record of `app/comum/informacao/cinformacaoeleicao.cpp` and four
+`comum::CItem*` vtables. A vtable or typeinfo of a class with no key function is a copy in its first user's object, as
+its linkonce functions are (rule 2).
+
+When the recorded neighbours on the two sides name different directories, compare file names only where the data
+show a run in name order. `app/comum/`'s own files run carquivosresultado, carquivossavd, cinfomtlcd, cpacotearquivos,
+cpath, iinterfaceinit, iinterfacesavd in data order, and `comum::CAppState`'s vtable lies just before
+`carquivosresultado.cpp`'s first record, where `cappstate.cpp` sorts. `app/vota/operador/`'s subdirectories run
+outrasopcoes, leidentidade, justificativa, comum, confirmaidentidade, aguardaeleitor, and there a name that sorts
+between two neighbours supports nothing.
 
 **Keep every throw on its record's line.** A decompiled function's `std::source_location` records are bytes of the
 target, so each throw site must sit at the line and column its record gives; above it, blank lines and *gaps* hold
@@ -397,6 +486,12 @@ linkages in the fragment's header comment with any other choice that gives the s
 member one). Parameter and local names need no mark: no record holds one. The symbol file then names the function by
 `pair-*` or `srcloc-anchor` evidence, which says that our body is the target's, not what the function was called.
 
+A type a record names but no evidence fills gets its name and its size only. The record of
+`api::CTextFieldPaper::CTextFieldPaper(const SharedIText &, IPaper::EStyle)` names a nested enum, and no target code
+tests its values; `src/uenux2/src/api/gui/ipaper.h` declares `enum EStyle {};` with a comment that the callers pass 1
+and 2 and that the enumerators are not recovered. Invent enumerators only where the code shows what a value does, and
+mark them as chosen.
+
 **A stub-only file.** A file the evidence names that does not exist yet holds its stubs only, written from line 2
 on, not at their records' lines ([src/README.md](../src/README.md) "Stubs"). `--strip` leaves next to nothing of
 it, so there is no "where the stub was": lay the file out yourself so that each throw lands on its record's line,
@@ -407,6 +502,22 @@ in a header comment at the top that says plainly it is the reconstruction's, as 
 `src/uenux2/src/api/util/cgenerictags.cpp` do. Before step 9 writes gaps into it, `awk 'NR==<line>' <file>`
 prints the line a record names; after a `--strip` of a file that has gaps, it does again
 (`awk 'NR==60' <file>` prints `InvertColors`' throw in the stripped `src/uenux2/src/api/gui/cbmpconversor.cpp`).
+
+A record of a function you do not write (a constructor its only caller inlines) keeps its line blank. Put the
+functions you write after it, or before it where the evidence says so, and say in the fragment's header comment that
+their lines are a choice. Step 9 then puts that caller's stub over the record's line, and writes no gap over a run of
+blank lines with no record below it. `src/uenux2/src/api/gui/cstepsprogressbar.cpp` (unit 41) has one record, line
+428, of the constructor that 13550 inlines; its gap ends at `#line 425`, f13550's stub takes lines 425 to 428, and the
+unit's functions follow. `src/uenux2/src/api/gui/cprogressbar.cpp` (unit 40) keeps lines 4 to 77 blank around its
+constructor's records at 52, 58 and 67, with its destructor at 78, and that run stays blank:
+
+```sh
+awk 'NR==52||NR==58||NR==67||NR==78 {print NR": ["$0"]"}' src/uenux2/src/api/gui/cprogressbar.cpp
+# 52: []
+# 58: []
+# 67: []
+# 78: [CProgressBar::~CProgressBar() = default;]
+```
 
 **Save TSE sources as Latin-1.** TSE's files are ISO-8859-1, and their string literals are bytes of the target: an
 editor that saves `"inválido"` as UTF-8 changes the data the census and the splat scan compare. `.editorconfig`
@@ -447,9 +558,12 @@ under heavy load. The flags come from the recipe `src/Makefile` has for the obje
 outside `src/` needs `--component` with the directory under `src/` it would land in (`uenux2/src/app/comum/dados`,
 `ecourna/app/dados`, `asn1`, …). `--print-flags` shows the compile command without running it. try-tu compiles a
 copy of each file, under `build/out/try/<name>/src/`, so a quoted `#include` of a header beside a scratch variant
-finds the tracked header of that name instead (or none); pass the variant headers' directory with
-`--flags "-I/work/<dir>"`, the headers under it at their tree paths
-([facts/workflow.md](reference/facts/workflow.md) §W2).
+finds the tracked header of that name instead (or none). Pass the variant headers' directory with
+`--flags "-iquote /work/<dir>"`, the headers under it at their tree paths. Not `-I`: try-tu puts `--flags` after the
+tree's `-I` paths, so a variant of a tracked header passed with `-I` loses to the tracked one, also when another
+tracked header includes it, and the try measures the tracked form with no word said. Check that the try's object
+holds what only the variant gives (`--symbols`, or `llvm-nm` on `build/out/try/<name>/obj/<tu>.o`;
+[facts/tool-traps.md](reference/facts/tool-traps.md) §X8, [facts/workflow.md](reference/facts/workflow.md) §W2).
 
 The lone compile and link is one `em++` with `-fexceptions`, as the build's link is. uenux2 code is compiled
 without it (no landing pads, [facts/app-flags.md](reference/facts/app-flags.md) §F6), so for a TU whose own flags
@@ -498,7 +612,11 @@ TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only bui
 
 A function linked alone gets different inlining and dead-argument decisions from the same function inside the
 program, so a score of 0 here is a reason to try the whole link, not a match. The reverse holds too: target 1931 is
-matched, yet its body linked alone still differs from the target's.
+matched, yet its body linked alone still differs from the target's. Even a function with no callee and no argument
+to drop can come out differently: 11067, `api::CLineField::Rect`, matches as written and scores 9 alone, because the
+whole link computes each compare once and keeps it for two `select`s, and the lone link computes it twice
+([facts/tool-traps.md](reference/facts/tool-traps.md) §X9). Read a lone score for what binaryen does not change,
+the instruction kinds, the loads and the store order, and rank the forms that differ in the rest in the whole link.
 
 **When the lone score is noise.** Two differences come from the lone link itself
 ([facts/workflow.md](reference/facts/workflow.md) §W2):
@@ -554,7 +672,11 @@ function added; the function extends that unit (step 6).
 
 **A class with virtual members.** The TU that defines a class's first non-inline virtual member emits its vtable,
 and the vtable needs every virtual member defined. A member you have not written goes in a `-pending.cpp` with a
-trapping body (`src/units/README.md` "Pending members"), and the vtable needs a root that takes its address. try-tu
+trapping body (`src/units/README.md` "Pending members"), and the vtable needs a root that takes its address. The
+class's typeinfo names each base's typeinfo, and a base with a virtual member defined out of line emits its typeinfo
+only with that member, so a base whose key function no unit defines leaves the link with `undefined symbol: typeinfo
+for <base>` even when the class overrides every slot of it ([facts/units.md](reference/facts/units.md) §U9,
+[facts/reading.md](reference/facts/reading.md) §R6); "Pending members" says what to define then. try-tu
 has no compile rule for a path under `src/units/`, so pass `--component` with the directory the class lands in;
 it puts every TU of the run there, with that directory's flags. The roots file goes through `--roots`. Here is the
 landed unit 16 tried again:
@@ -571,18 +693,33 @@ Because `--component` moves every TU, it also moves the `std::source_location` p
 directory. Use it when the TUs share a directory's flags and the moved ones have no records.
 
 **The destructors say how the class is declared.** Read the D2 and D0 in the vtable's slots 0 and 1 before you write
-the class head ([facts/reading.md](reference/facts/reading.md) §R4–R7):
+the class head. The D2's bytes are the same in every form of the destructor, so a D2 that matches settles nothing; the
+D0's shape decides ([facts/reading.md](reference/facts/reading.md) §R4–R7):
 
-- A D0 that calls its D2 (`f5709(p0); f136(p0);` in 11443) belongs to a destructor defined out of line: define it
-  in the `.cpp`, where it is the key function unless another virtual member is out of line before it. A D0 that holds
-  the D2's body (11176, 12049) belongs to an implicit destructor or one defined in the class. The D2 is the same
-  either way, so a D2 that matches settles neither.
-- A destructor that destroys members and stores no vptr (11178 begins with its strings, not with `i32.store[p0] =
-  <vptr>`) belongs to a `final` class: write `final`.
+- A D0 that holds the D2's body and then frees `this` (11176, 12049) belongs to a destructor with the inline hint:
+  implicit, or declared `inline`, in the class (`inline virtual ~X() = default;`) or after it in the header (`inline
+  X::~X() = default;`), which give the same object. Leave it implicit when the class has a base; declare it `inline`
+  when it must be declared, as in a class with no base, whose destructor is virtual only when declared so. An
+  in-class destructor without `inline` gives this shape only for a cheap D2: `vota::IQRCodeBUDS`, a class with no
+  base, declares `virtual ~IQRCodeBUDS() = default;`, and its D0 12049 holds the 116-B D2.
+- A D0 that frees what the D2 returns, `f136(f5531(p0))` (10 B, 11086), belongs to a destructor defined in the class
+  without `inline` (`= default` or `{}`, the same object), whose D2 was too costly to inline without the hint. The
+  same shape around a base's D2 (9388 calls 5898, `comum::IInterfaceInit`'s) belongs to a class with no member of its
+  own, whose slot 0 holds that out-of-line base D2.
+- A D0 that calls the D2 and then frees `this`, `f5709(p0); f136(p0);` with a `drop` between them (13 B, 11443),
+  belongs to a destructor defined out of line: define it in the `.cpp`, where it is the key function unless another
+  virtual member is out of line before it.
+- A derived class's D2 inlines its base's destructor unless the base's is defined out of line, which it calls. So a
+  base destructor out of line shows as a `call` in every derived D2, and an inline one as the base's vptr store and
+  member frees after the derived class's own.
+- A D2 that destroys members and does not begin with its class's own vptr store (11178 begins with its strings, not
+  with `i32.store[p0] = <vptr>`) belongs to a `final` class: write `final`. A vptr stored further on is a base's,
+  where the base's inlined destructor begins; `final` leaves that store in place.
 - A class whose virtual members are all inline (an implicit or in-class destructor, nothing else out of line) has no
-  key function: only a TU that uses its vtable, one that defines a constructor, emits the vtable, D2 and D0. To land
-  such destructors, write a constructor as well, at its record's line; the target may have inlined it everywhere, and
-  our link then drops it.
+  key function: only a TU that uses its vtable emits the vtable, D2 and D0. One that defines a constructor does, and
+  so does one that emits a derived class's destructor that inlines this one, since it stores this class's vptr. When
+  neither is written, write a constructor as well, at its record's line; the target may have inlined it everywhere,
+  and our link then drops it.
 - A slot that holds `__cxa_pure_virtual` (12143) is a pure member: declare it `= 0` at its slot even when no evidence
   names it (step 3, "Names no evidence gives"), so the class stays abstract. An abstract class's D0 is a trap (its
   slot 1 holds 325, `unreachable`); without the pure members the vtable is shorter and the D0 a real body the target
@@ -613,10 +750,19 @@ pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../build/out/try/mun
 ```
 
 `link-kinds.sh` refuses a try link whose objects were rebuilt after it was linked: run it right after `try-tu.sh`.
+Give `--name` a plain name: the try goes to `build/out/try/<name>/`, and `link-map.sh` and `link-kinds.sh` look for the
+path they are given, spelled as it is, in the link's `link.cmd` (line 28 of `tools/round/link-map.sh`, line 50 of
+`link-kinds.sh`), so a try put elsewhere with `--name ../<dir>` is found only under the spelling
+`build/out/try/../<dir>/wasm/vota_web` ([facts/tool-traps.md](reference/facts/tool-traps.md) §X10).
 To skip the two kind steps, pass `--no-kinds` to `splat-remap`; it then says `KIND-UNVERIFIED (no operand-kind
 table)` and offers every operand every reading its value suggests. `IDENTICAL` there is the
 signal to land. `splat-remap` reads the committed symbol file and none of the matches, so
 `differs` or `UNRESOLVED` can still turn into a match once steps 8 and 9 add names; the scan in step 9 decides.
+One `UNRESOLVED` no name fixes: a call into `byn$mgfn-shared$…`, which means binaryen merged your function with
+others of its shape in the try link (*mgfn*), and the target did not merge that set. Our body is then a short thunk
+where the target's is a whole body, and the shared body's callers (`pnpm wasm fn <try wasm> <its index>`) name the
+partners. It matches once the partners have the target's shapes, or once it merges with the target's set (step 1,
+`unresolved` rows; `src/units/README.md` "Pending members" has a member that waits so).
 The `ours` index is the function's index in the try link; `pnpm wasm fn` on the try link's wasm with that index
 shows its body beside the target's.
 
@@ -677,7 +823,10 @@ the paths of its reports; the target functions whose census tier moved are under
 `build/out/census/progress.md`. Commit the new snapshot and `git rm` the previous one by name
 (`ledger/README.md`); step 10's commit names the removed one after `--`. Expect thousands of changed lines in
 `ledger/functions.tsv` for a small unit: its `best_index` column holds our function indices, and every function
-after the unit's place in the link shifts. The next three steps read this census.
+after the unit's place in the link shifts. The census also re-picks a pair among byte-identical bodies of ours once
+the indices shift, so `best_name` changes on rows that have nothing to do with the unit, and step 9 carries that into
+the scan (step 9 says how to check it; [facts/splat.md](reference/facts/splat.md) §S8). The next three steps read this
+census.
 
 Read the pairs with your roots file before step 8. A stand-in caller can compile to a target function's body (`int
 B(int p) { return D2(p); }` is any derived class's destructor that adds no member), the census then pairs that target
@@ -705,9 +854,11 @@ git diff --stat splat/symbol_addrs.txt
 The *symbol file* names target functions and data from evidence that includes the census's unique pairs, so a new
 unit's functions and data get their names here. Run it after every landing that adds functions or data, and read
 the diff: a name that moves can break existing matches (step 10 would say so). It also re-picks the arbitrary name
-of byte-identical *twins*, so expect some churn in lines that have nothing to do with your unit; keep it, do not
-pick lines by hand. Lines below the hand-edit marker survive; never add one whose only evidence is the match it
-enables ([reference/splat.md](reference/splat.md) §2).
+of byte-identical *twins*, drops and restores the `pair-addr` lines of matched functions the census pairs by address,
+moves an `evidence:table` name between functions, and re-places data placed by its content (`g_MidAlloc` and
+`g_BigAlloc` moved with unit 41), so expect churn in lines that have nothing to do with your unit
+([facts/splat.md](reference/facts/splat.md) §S8); keep it, do not pick lines by hand. Lines below the hand-edit marker
+survive; never add one whose only evidence is the match it enables ([reference/splat.md](reference/splat.md) §2).
 
 ## 9. Match
 
@@ -752,7 +903,25 @@ link: the body verifies, but the evidence says another function sits there, as w
 `wrapexcept<bad_weekday>::rethrow` while the target's `wrapexcept<bad_month>` vtable holds it
 ([facts/splat.md](reference/facts/splat.md) §S7). It changes nothing; find which side is right, and correct the
 match line by hand when the evidence is. A second name beside the matched one is not reported, so read step 8's
-`git diff splat/symbol_addrs.txt` for a `func:N` that gained a name.
+`git diff splat/symbol_addrs.txt` for a `func:N` that gained a name. Two kinds of line move at every landing whatever
+the unit, and are not evidence. A matched index gains an `evidence:table` name while the function that name belongs
+to loses its `vtable` line: a constant both bodies hold reads as a table slot once our read-only data moved (7530,
+matched as `ossl_ec_GFp_simple_cmp`, gains a `visitExtensionRoot` name and loses it again as units land; 615 does the
+same). And the `pair-addr` line of one matched SQLite function drops out as the one the last landing dropped comes
+back. [facts/splat.md](reference/facts/splat.md) §S8 lists them, with the command that prints a landing's lines
+without its own matches. The match lines are right and the lines are generated; keep the file as step 8 wrote it. A
+gained name on another index is the range's to explain.
+
+The scan changes rows that are not yours as well: the census's re-picked pairs change the `symbol` and `object` columns
+(30 rows of 36-byte `__cxx_global_array_dtor` copies with unit 41), and now and then a verdict moves between
+`unresolved`, `no-candidate` and `differs` ([facts/splat.md](reference/facts/splat.md) §S8). Read the verdicts against
+the commit your branch started from: no row may leave `match`, and every row that turns `match` must be yours:
+
+```sh
+join -t "$(printf '\t')" <(git show "$(git merge-base main HEAD)":splat/scan.tsv | cut -f1,5 | sort) <(cut -f1,5 splat/scan.tsv | sort) | awk -F'\t' '$2 != $3'
+```
+
+It prints `<index> <verdict before> <verdict now>` for each row that moved; on an unchanged tree it prints nothing.
 
 A match the scan found by body has `content` in the `source` column of `splat/scan.tsv`. Once the match names the
 function, a later scan writes `symbol` there, so a rescan of the committed state differs from the committed
@@ -797,8 +966,18 @@ prints the rename:
 
 Any other missing symbol is left as written and printed (`… left as written, so the splat build fails on it`): that
 one is drift or a deleted function, and yours to fix. Say in the commit message which lines were renamed
-([facts/splat.md](reference/facts/splat.md) §S6). `git diff splat/matched.txt` shows each rename as a `-` and a `+`
-line with the same index at the same place, and `git diff --word-diff splat/matched.txt` as one line,
+([facts/splat.md](reference/facts/splat.md) §S6).
+
+A unit can also make two functions it never touches into twins, through their callers. binaryen's dead-argument
+elimination folds a parameter every caller passes as the same constant (step 2), and a new caller that passes
+another value keeps it. `std::mutex::unlock` is a `()->()` body of 47 B in our link at ee595de, its only callers
+passing one mutex, beside `std::mutex::~mutex`, `(i32)->()` and 45 B, which is matched as 150; the target's 150 is
+both. The first `lock_guard` over a member mutex keeps `unlock`'s parameter, the two bodies become one, and step 9
+renames line `150 _ZNSt3__25mutexD2Ev` to `150 _ZNSt3__25mutex6unlockEv` (commit ad74d47;
+[facts/splat.md](reference/facts/splat.md) §S6). A rename line that names no symbol of yours is that.
+
+`git diff splat/matched.txt` shows each rename as a `-` and a `+` line with the same index at the same place, and
+`git diff --word-diff splat/matched.txt` as one line,
 `246 [-_ZN21ModuloTiposEleitorais4FotoD0Ev-]{+_ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev+}`: a
 rename, not a lost match. So count lost matches by index, not by line, against the commit your branch started from.
 Against a `main` that moved since, the count also lists every match `main` gained, which are not yours to lose
@@ -831,6 +1010,7 @@ only (§W7):
 ```sh
 git rm -q <each stub-only file step 9 removed>
 git add <the sources, fragment, companion, ledger, splat and status files>
+# the checks below
 git commit -F - -- <the same files> ledger/history/<the previous snapshot> <the removed stub files> <<'EOF'
 <subject>
 
@@ -841,9 +1021,11 @@ git log -1 --stat
 
 CI checks that the match list, the scan and the status files agree (`python3 -I -B tools/round/status.py --check`)
 and that every stub is the one the evidence gives and every gap the one the generator writes
-(`python3 -I -B tools/round/stubs.py --check`, also `make -C src stubs-check`). Run both before you commit, with:
+(`python3 -I -B tools/round/stubs.py --check`, also `make -C src stubs-check`). Run both after the `git add` and
+before the commit, with:
 
-- `python3 -I -B tools/round/check_encoding.py` (step 3);
+- `python3 -I -B tools/round/check_encoding.py` (step 3), which checks the files `git ls-files` lists: a new header
+  or source is checked only once it is added ([facts/workflow.md](reference/facts/workflow.md) §W8);
 - `python3 -I -B tools/round/check_srcloc.py --strict <your unit's objects>`, which must report 0 records that are
   not the target's (`build/out/app/uenux2/src/api/util/cgenerictags.cpp.o build/out/app/33-uenux2-cgenerictags-roots.o`
   for unit 33: `1 source_location records in 2 objects (1 files): 1 are records of the target; …`);
@@ -851,14 +1033,30 @@ and that every stub is the one the evidence gives and every gap the one the gene
   the flags of a setup in `asmlift-wasm/benchmark/dataset/setups.json`, which a flag added in a fragment breaks while
   every other check passes ([src/units/README.md](../src/units/README.md) "What a fragment holds");
 - from `asmlift-wasm/`, `TMPDIR=/tmp pnpm test`, alone in the checkout: beside a census or `splat-match` its
-  real-link cases skip and it still exits 0, so read the count, `193 passed (193)`. A failing case that compares the
-  committed symbol file or our link with a fixed value fails on `main` too, not because of your unit
-  ([facts/workflow.md](reference/facts/workflow.md) §W12 has the one known at 7bf701e).
+  real-link cases skip and it still exits 0, so read the count, `193 passed (193)`. Every case passes on `main` since
+  04a718a ([facts/workflow.md](reference/facts/workflow.md) §W12), so a failing one is your branch's to explain: run
+  it on the commit your branch started from to see whether it fails there too.
 
 **Landing onto a moved main.** When another unit landed after your branch started, merging conflicts in every
 generated file and in the census snapshot, which both branches renamed. Resolve only the files people write:
 `src/units/README.md` keeps both rows, and `splat/matched.txt` keeps both branches' match lines (step 10 checks
-every one again). The stub file keeps both branches' removals. Every other generated file takes one side whole, with
+every one again), each index once. Two units can match the same function (a base's destructor both bring in:
+11013, `api::IFormFieldBase<api::IPaper>`'s, came with two units), and a second line for an index stops the splat
+build with `Error: match list line N: function 11013 is already matched on line M`; git may join the two additions,
+keep both or mark a conflict, depending on where each side put its line. Keep one line, under the symbol the merged
+link names, count that match once, and check that none is left twice
+([facts/workflow.md](reference/facts/workflow.md) §W16):
+
+```sh
+/usr/bin/grep -v '^#' splat/matched.txt | cut -d' ' -f1 | sort | uniq -d     # prints nothing when no index is listed twice
+```
+
+The stub file keeps both branches' removals; a conflict inside a `// <stubs>` run can take either side, since stubs
+are comments and step 9 writes them again. Do not run `make -C src stubs` on the merge before step 9: until steps 7
+and 8 rewrite the census and the symbol file and step 9 the scan, they are one side's, so the generator puts back
+the stubs of the other side's matches and pending members and recreates, untracked, the stub-only files that side
+removed. Step 9's `splat-match` runs it on the new scan and writes back what the merge holds
+([facts/workflow.md](reference/facts/workflow.md) §W14). Every other generated file takes one side whole, with
 `git checkout HEAD -- <file>` (it stages that side): a `git add` of a conflicted file stages its conflict markers.
 The census snapshot is a rename/rename conflict (`DD` on the old name, `AU` and `UA` on the two new ones), and git
 has already merged both snapshots into your side's name, markers included. Keep one name and drop the others from
@@ -871,7 +1069,16 @@ git rm -q ledger/history/<the other branch's snapshot>
 ```
 
 A header your unit needs that `main` gained after your branch started is an add/add conflict: create it from `main`'s
-text (`git show main:<path> > <path>`) and only add to it, so the merge is one hunk, and say so in the commit.
+text (`git show main:<path> > <path>`) and only add to it, so the merge is one hunk, and say so in the commit. A
+header that is not on `main` yet but on a branch that lands before yours: copy it from that branch byte for byte
+(`git show <branch>:<path> > <path>`), claim it, and do not edit it. git merges an add/add of one blob with no
+conflict (`git hash-object <path>` and `git rev-parse <branch>:<path>` print the same id;
+[facts/workflow.md](reference/facts/workflow.md) §W17). If that branch changes the file before it lands, take
+`main`'s text at the merge, as above.
+
+Your branch was written against the docs of the commit it started from. When `main`'s docs changed since, read your
+unit's choices against `main`'s docs too before the merge (`git diff "$(git merge-base main HEAD)" main -- docs
+src/README.md src/units/README.md`), since the merge lands under them.
 
 Then run steps 6 to 10 again on the merge: link, census (`git rm` the snapshot you kept, add the new one), symbols,
 match, build and the checks, and count lost matches against `main`. Commit it all as the merge commit.

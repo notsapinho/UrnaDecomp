@@ -9,6 +9,8 @@ wins, as in EditorConfig.
 
 The files come from the index (`git ls-files`): a tracked file deleted in the worktree and not yet `git rm`'d (a
 stub-only file that `make -C src stubs` removed) stops the check with FileNotFoundError, so stage the deletion first.
+A new file is not in the index until it is staged, so it is not checked: `git add` (or `git add -N`) a unit's new
+headers and sources before running this.
 """
 import os
 import re
