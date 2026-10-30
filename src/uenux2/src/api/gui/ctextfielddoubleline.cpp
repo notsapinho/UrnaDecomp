@@ -3,16 +3,16 @@
 //   3659  CTextFieldDoubleLine(const SPoint&, const SPoint&, TPosition, const SharedIText&, const SFont&, TColor, TColor)
 //         (here; its three throws are the records at lines 40, 43 and 46, column 15, so its position is fixed)
 //   10926 GetTypeName() const                                                     (here; no record: placed after the ctor)
-//   10928 / 10927  ~CTextFieldDoubleLine() (complete / deleting; implicit, emitted with the vtable; the target's are
-//         12 B thunks into the bodies binaryen merged with CTextRectField's, 6022 / 6021)
+//   10928 / 10927  ~CTextFieldDoubleLine() (implicit; the target's are thunks into binaryen's merges 6022 / 6021)
 //   5499  GetTextLines() const   record at line 68, col 21                         (not reconstructed)
 //   10931 Draw(IScreen&) const and 10929 Rect() const (record at line 133, col 21: the inlined CalcLineRect), which call
-//   GetTextLines, and 5527 Move(const SPoint&) (one body binaryen shares with CLineField) are pending: they trap, in
-//   src/units/28-uenux2-ctextfielddoubleline-pending.cpp.
+//   GetTextLines, are pending: they trap, in src/units/28-uenux2-ctextfielddoubleline-pending.cpp.
+//   5527  Move(const SPoint&)    one body binaryen shares with CLineField's   (here, below line 133: a choice)
 
 #include "api/gui/ctextfielddoubleline.h"
 
 #include "api/gui/eueguierror.h"
+#include "api/gui/iform.h"
 
 namespace api {
 
@@ -52,9 +52,98 @@ std::string CTextFieldDoubleLine::GetTypeName() const
     return "CTextFieldDoubleLine";
 }
 
-} // namespace api
-
+// (original lines 55-64: content not recovered)
+#line 65
 // <stubs>
 // f5499 · 2912 B · unmatched · name unknown
 // void f5499(i32, i32) { ... }
 // </stubs>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void CTextFieldDoubleLine::Move(const SPoint& posicao)
+{
+    if (posicao.x == m_linha1.x && posicao.y == m_linha1.y) {
+        return;
+    }
+
+    const TPosition dx = posicao.x - m_linha1.x;
+    const TPosition dy = posicao.y - m_linha1.y;
+
+    m_linha2.x += dx;
+    m_linha2.y += dy;
+    m_linha1 = posicao;
+
+    if (m_form != nullptr && m_form->IsVisible()) {
+        m_alterado = true;
+        m_form->Refresh();
+    }
+}
+
+} // namespace api

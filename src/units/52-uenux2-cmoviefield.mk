@@ -12,10 +12,16 @@
 # types of +40 (an int: 32-bit stores) and +44 (a bool) are chosen. The movie and the timer are std::shared_ptrs to the
 # forward-declared api::CMovie and api::ITimer; cmoviefield.cpp includes api/util/itimer.h for Hide's Stop. The
 # constructor is not reconstructed: it calls api::ITimerScheduler::GetInst (fn 1259), which has no body of ours.
+# Move and Show (fns 11062, 11061, slots 9 and 3) are written in the band's order, below line 53, at lines that are a
+# choice. Move is CTextField's (27-uenux2-ctextfield.mk lists the forms) with the position at +32: binaryen keeps it
+# apart, as the target does. Show stores 1 at +40, rewinds the movie and redraws as Move does; CMovie::Rewind, a member
+# added to api/gui/cmovie.h for the store at the movie's +12, is chosen, name and all: defined out of line in cmovie.cpp
+# with this one caller it gives the same bytes in the whole link (binaryen inlines it; scored against 11061, one operand
+# row, the call to 150), so its being inline in the class is a choice too.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CMOVIEFIELD_SRCS := src/api/gui/cmoviefield.cpp
 UENUX2_SRCS += $(CMOVIEFIELD_SRCS)
-# Draw (11064), Rect (11063), Move (11062), Show (11061) and GetTypeName (11059) are not reconstructed:
+# Draw (11064), Rect (11063) and GetTypeName (11059) are not reconstructed:
 # 52-uenux2-cmoviefield-pending.cpp gives the vtable trapping bodies, compiled with the unit's flags; it reads only
 # api/gui headers
 $(ROOT)/$(APP)/52-uenux2-cmoviefield-pending.o: $(ROOT)/src/units/52-uenux2-cmoviefield-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/52-uenux2-cmoviefield.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)

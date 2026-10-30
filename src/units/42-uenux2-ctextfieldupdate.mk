@@ -9,10 +9,13 @@
 # constructor (fn 3658) and Draw (fn 10916) store; the member names are chosen and the timer at +72 is a
 # std::shared_ptr to a forward-declared api::ITimer. The constructor (3658) is not reconstructed: it calls
 # api::ITimerScheduler::GetInst (fn 1259), which has no body of ours, and keeps its stub; line 38 stays free for it.
+# Show and Hide (fns 10915, 10914, slots 3 and 4) are Start and Stop of the timer, whose class the source includes
+# (api/util/itimer.h); their lines are a choice, above Rect's line 73, in the band's order. Move (one of the five
+# functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) is below line 73, a choice.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTEXTFIELDUPDATE_SRCS := src/api/gui/ctextfieldupdate.cpp
 UENUX2_SRCS += $(CTEXTFIELDUPDATE_SRCS)
-# Draw (10916), Show (10915), Hide (10914), Rect (10913) and Move (2241) are not reconstructed:
+# Draw (10916) and Rect (10913) are not reconstructed:
 # 42-uenux2-ctextfieldupdate-pending.cpp gives the vtable trapping bodies, compiled with the unit's flags; it reads only
 # api/gui headers
 $(ROOT)/$(APP)/42-uenux2-ctextfieldupdate-pending.o: $(ROOT)/src/units/42-uenux2-ctextfieldupdate-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/42-uenux2-ctextfieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)

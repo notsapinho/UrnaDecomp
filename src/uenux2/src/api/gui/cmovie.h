@@ -29,6 +29,10 @@ class CMovie {
 public:
     CMovie(std::vector<CMovieFrame> frames, const SPoint& tamanho);
 
+    // back to the first frame: CMovieField::Show (fn 11061) stores 0 in m_frameAtual. The name is chosen, and so is
+    // that a member of CMovie does it: the store is all the target shows
+    void Rewind() { m_frameAtual = 0; }
+
 private:
     std::vector<CMovieFrame> m_frames;
     size_t m_frameAtual;
