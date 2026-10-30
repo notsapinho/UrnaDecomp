@@ -5,8 +5,8 @@
 // - A function with direct calls gets two call sites. The constructors of CLocalidadeEleitoral (fn 5631, target callers
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each. The
 //   constructors of CDadoCarga (fn 5633, 10167 and 11402) and CEstadoGeralVota (fn 5628, 10067 and 11391), GetFaseChar
-//   (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and DefineHistoricoCargas and
-//   DefineIdentificadorCarga (fns 5622 and 5623, 1956 and 12110 each) have none, and neither do the four converter
+//   (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's DefineHistoricoCarga
+//   and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) have none, and neither do the four converter
 //   helpers each of which its class's unwritten slot calls twice (fns 5693, 5694, 5689, 5690), so one stand-in that
 //   calls each twice.
 // - CDadoCorrespondencia's constructor (fn 5630) has one direct caller in the target (11400) and a table slot (450), so
@@ -24,8 +24,8 @@ void* estadoaplicacao_sa(void*, int, int, int, int, int) __asm__("_ZN5comum2md15
 void* estadoaplicacao_carga(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoCargaC1EiNS_9EUrnaTipoES3_NS_11EUrnaModeloENS_9EUrnaFaseE");
 int estadoaplicacao_fase(const void*) __asm__("_ZNK5comum2md15estadoaplicacao10CDadoCarga11GetFaseCharEv");
 void estadoaplicacao_delta(void*, int) __asm__("_ZN5comum2md15estadoaplicacao15CAjusteDataHora14AdicionaDeltaTEi");
-void estadoaplicacao_historico(void*, const void*) __asm__("_ZN5comum2md15estadoaplicacao15CCamposQRCodeBU21DefineHistoricoCargasERKNSt3__26vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEE");
-void estadoaplicacao_idcarga(void*, const void*) __asm__("_ZN5comum2md15estadoaplicacao15CCamposQRCodeBU24DefineIdentificadorCargaERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
+void estadoaplicacao_historico(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder20DefineHistoricoCargaERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
+void estadoaplicacao_idcarga(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder17DefineCodigoCargaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void* estadoaplicacao_vota(void*, int, int, int, void*, void*, void*, int, int, void*, int, void*, void*, int) __asm__("_ZN5comum2md15estadoaplicacao16CEstadoGeralVotaC1ENS_11EEstadoVotaENS_19EEstadoEncerramentoEhNSt3__28optionalIjEENS6_IN3api9CDateTimeEEESA_ttSA_bNS1_27CNumViasImpressasRelatoriosESA_b");
 void* estadoaplicacao_corresp(void*, int, void*, void*, void*, void*, void*, void*) __asm__("_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC1EjNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEN3api9CDateTimeES9_NS1_20CLocalidadeEleitoralENS3_6vectorIhNS7_IhEEEEN7ecourna3app5dados26CIdentificadorGeradorMidiaE");
 void estadoaplicacao_tipo(void*, const void*, int) __asm__("_ZNK5comum3asn19CConversorDadoCarga16ConverteTipoUrnaENS_9EUrnaTipoE");

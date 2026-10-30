@@ -7011,7 +7011,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 7145	184	0	-	-	skeleton	5511	addr	6	idea_ofb_cipher
 7146	138	0	-	-	skeleton	5512	addr	3	idea_cfb64_cipher
 7147	128	0	-	-	skeleton	5513	addr	2	idea_cbc_cipher
-7148	103	0	-	-	skeleton	5515	addr	6	idea_init_key
+7148	103	0	-	-	skeleton	5514	addr	6	idea_init_key
 7149	493	0	-	-	skeleton	5505	addr	12	rc4_hmac_md5_ctrl
 7150	311	0	-	-	skeleton	5506	addr	13	rc4_hmac_md5_cipher
 7151	86	0	-	-	skeleton	5507	addr	4	rc4_hmac_md5_init_key
@@ -7029,14 +7029,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 7163	230	0	-	-	skeleton	7119	addr	6	des_ede_cfb64_cipher
 7164	88	0	-	-	skeleton	7120	addr	5	des3_ctrl
 7165	53	0	-	-	skeleton	7121	addr	2	des_ede_init_key
-7166	132	0	-	-	skeleton	5516	addr	2	des_cfb8_cipher
-7167	217	0	-	-	skeleton	5517	addr	1	des_cfb1_cipher
-7168	71	0	-	-	skeleton	5518	addr	1	des_ecb_cipher
-7169	184	0	-	-	skeleton	5519	addr	6	des_ofb_cipher
-7170	194	0	-	-	skeleton	5520	addr	6	des_cfb64_cipher
-7171	36	0	-	-	skeleton	5521	addr	2	des_ctrl
-7172	166	0	-	-	skeleton	5522	addr	2	des_cbc_cipher
-7173	25	0	-	-	skeleton	5523	addr	1	des_init_key
+7166	132	0	-	-	skeleton	5515	addr	2	des_cfb8_cipher
+7167	217	0	-	-	skeleton	5516	addr	1	des_cfb1_cipher
+7168	71	0	-	-	skeleton	5517	addr	1	des_ecb_cipher
+7169	184	0	-	-	skeleton	5518	addr	6	des_ofb_cipher
+7170	194	0	-	-	skeleton	5519	addr	6	des_cfb64_cipher
+7171	36	0	-	-	skeleton	5520	addr	2	des_ctrl
+7172	166	0	-	-	skeleton	5521	addr	2	des_cbc_cipher
+7173	25	0	-	-	skeleton	5522	addr	1	des_init_key
 7174	3288	0	app	vota	-	-	none	-	
 7175	10	0	-	-	skeleton	10952	addr	2	__cxx_global_array_dtor.2
 7176	73	0	-	-	skeleton	7052	byte	0	ex_callback_compare

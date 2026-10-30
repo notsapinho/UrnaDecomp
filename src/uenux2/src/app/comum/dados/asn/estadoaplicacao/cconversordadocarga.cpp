@@ -1,6 +1,6 @@
 // Reconstruction: comum::asn::CConversorDadoCarga::ConverteTipoUrna and DesconverteTipoUrna (target fns 5693, 5694, the
-// records at lines 61, 84 and 88). DoConverte and DoDesconverte, with the records at lines 105, 127 and 131, are not
-// reconstructed; their lines stay blank.
+// records at lines 61, 84 and 88). ConverteModelo and DesconverteModelo, the records at lines 105, 127 and 131, and the
+// DoConverte and DoDesconverte they are inlined into, are not reconstructed; those lines stay blank.
 #include "app/comum/dados/asn/estadoaplicacao/cconversordadocarga.h"
 
 #include <format>

@@ -9,6 +9,14 @@
 
 namespace comum::asn {
 
+CConversorEstadoGeralSA::TDado CConversorEstadoGeralSA::DoDesconverte(const TEntidade& entidade) const
+{
+    const EEstadoSA estado = DesconverteEstadoSA(entidade.get_estadoSA());
+    const auto& secao = entidade.get_dadosSecao();
+    return TDado(estado, entidade.get_atualizacaoBloqueada(), secao.get_municipio().getValue(),
+                 secao.get_zona().getValue(), secao.get_secao().getValue());
+}
+
 CConversorEstadoGeralSA::TEntidade CConversorEstadoGeralSA::DoConverte(const TDado& dado) const
 {
     TEntidade entidade;
@@ -18,14 +26,6 @@ CConversorEstadoGeralSA::TEntidade CConversorEstadoGeralSA::DoConverte(const TDa
     entidade.set_dadosSecao().set_zona(dado.GetZona());
     entidade.set_dadosSecao().set_secao(dado.GetSecao());
     return entidade;
-}
-
-CConversorEstadoGeralSA::TDado CConversorEstadoGeralSA::DoDesconverte(const TEntidade& entidade) const
-{
-    const EEstadoSA estado = DesconverteEstadoSA(entidade.get_estadoSA());
-    const auto& secao = entidade.get_dadosSecao();
-    return TDado(estado, entidade.get_atualizacaoBloqueada(), secao.get_municipio().getValue(),
-                 secao.get_zona().getValue(), secao.get_secao().getValue());
 }
 
 // (original lines 31-45: content not recovered)

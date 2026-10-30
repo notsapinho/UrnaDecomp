@@ -8,18 +8,18 @@
 
 namespace comum::asn {
 
+CConversorAjusteDataHora::TDado CConversorAjusteDataHora::DoDesconverte(const TEntidade& entidade) const
+{
+    return TDado(DesconverteTipoAjusteDataHora(entidade.get_tipoAjusteDataHora()),
+                 entidade.get_valorAjusteDataHora().getValue());
+}
+
 CConversorAjusteDataHora::TEntidade CConversorAjusteDataHora::DoConverte(const TDado& dado) const
 {
     TEntidade entidade;
     entidade.set_valorAjusteDataHora(dado.GetDeltaT());
     entidade.set_tipoAjusteDataHora(ConverteTipoAjusteDataHora(dado.GetTipoDeltaT()));
     return entidade;
-}
-
-CConversorAjusteDataHora::TDado CConversorAjusteDataHora::DoDesconverte(const TEntidade& entidade) const
-{
-    return TDado(DesconverteTipoAjusteDataHora(entidade.get_tipoAjusteDataHora()),
-                 entidade.get_valorAjusteDataHora().getValue());
 }
 
 // (original lines 25-38: content not recovered)

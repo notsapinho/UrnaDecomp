@@ -21,8 +21,8 @@ namespace comum::md::estadoaplicacao {
 // The vota application's state: the fields of ModuloEstadoGeralVota::EstadoGeralVota, as
 // comum::asn::CConversorEstadoGeralVota::DoDesconverte (target fn 11391) hands them to the constructor (fn 5628), which
 // gives the offsets. A std::optional is what fn 11391 builds for each OPTIONAL field: the value and a flag, as
-// `value | 1 << 32` for the 8-byte one. The member names follow the ASN.1 fields; the records' getters (lines 90 and 106
-// here) and the rest of the class are not reconstructed.
+// `value | 1 << 32` for the 8-byte one. The member names follow the ASN.1 fields; the records' getters (lines 90, 106, 131
+// and 159 here) and the rest of the class are not reconstructed.
 class CEstadoGeralVota {
 public:
     CEstadoGeralVota(EEstadoVota estadoVota, EEstadoEncerramento estadoEncerramento, uebyte qtdBU,

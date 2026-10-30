@@ -10,9 +10,9 @@
 namespace comum {
 
 // CDadoCarga::GetFaseChar (target fn 2253) gives 'o', 's' and 't' for 49, 50 and 51, and CGravadorUtil::ConverteFase
-// (fn 2274) takes those three chars back. A plain enum, not unit 60's opaque `: int`: the target formats it through fn
-// 536 (slot 2285), and an enum whose underlying type is int goes through fn 1711, formatter<int>. A TU cannot include
-// this header and cgravadorwsq.h, whose opaque declaration says otherwise.
+// (fn 2274) takes those three chars back. That it is a plain enum is a choice: with the explicit std::formatter below,
+// which is what sends it through fn 536, `: int` and `: unsigned int` give the same cdadocarga.cpp object. A TU cannot
+// include this header and cgravadorwsq.h, whose opaque declaration says `: int`.
 enum EUrnaFase {
     eFaseOficial = 49,
     eFaseSimulado = 50,

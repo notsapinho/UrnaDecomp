@@ -5486,7 +5486,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5620	-	-	-	no-candidate	no symbol and no ledger pair	417	none	vota	0	-
 5621	-	-	-	no-candidate	no symbol and no ledger pair	419	none	vota	0	-
 5622	-	-	-	no-candidate	no symbol and no ledger pair	942	none	vota	0	-
-5623	_ZN5comum2md15estadoaplicacao15CCamposQRCodeBU24DefineIdentificadorCargaERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	5436	symbol	match	readings: table slot,address string	463	none	vota	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/ccamposqrcodebu.cpp.o
+5623	_ZN5comum23CCabecalhoQRCodeBuilder17DefineCodigoCargaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5439	symbol	match	readings: table slot,address string	463	none	vota	1	app/uenux2/src/app/comum/relatorios/ccabecalhoqrcodebuilder.cpp.o
 5624	_ZN4lzma9CContextoC2Ev	4987	ledger	differs	+0x6 target +0x5 i32.const 396 | ours +0x5 i32.const 568	14	shape	vota	1	app/ecourna/api_compression_lzmasdkstub.cpp.o
 5625	_ZN5comum2md15estadoaplicacao14CEstadoGeralSAC2ENS_9EEstadoSAEbjtt	5425	symbol	match	-	37	byte	comum	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cestadogeralsa.cpp.o
 5626	-	-	-	no-candidate	no symbol and no ledger pair	267	none	comum	0	-
@@ -5496,7 +5496,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5630	_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC2EjNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEN3api9CDateTimeES9_NS1_20CLocalidadeEleitoralENS3_6vectorIhNS7_IhEEEEN7ecourna3app5dados26CIdentificadorGeradorMidiaE	5427	symbol	match	-	275	byte	comum	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadocorrespondencia.cpp.o
 5631	_ZN5comum2md15estadoaplicacao20CLocalidadeEleitoralC2Ejtt	5414	symbol	match	readings: address string,address srcloc,address symbol,table slot	204	none	ecourna	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.cpp.o
 5632	-	-	-	no-candidate	no symbol and no ledger pair	61	none	comum	0	-
-5633	_ZN5comum2md15estadoaplicacao10CDadoCargaC2EiNS_9EUrnaTipoES3_NS_11EUrnaModeloENS_9EUrnaFaseE	5430	content	match	readings: table slot,address string,address srcloc,address symbol	525	none	ecourna	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadocarga.cpp.o
+5633	_ZN5comum2md15estadoaplicacao10CDadoCargaC2EiNS_9EUrnaTipoES3_NS_11EUrnaModeloENS_9EUrnaFaseE	5430	symbol	match	readings: table slot,address string,address srcloc,address symbol	525	none	ecourna	1	app/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadocarga.cpp.o
 5634	-	-	-	no-candidate	no symbol and no ledger pair	2021	none	vota	0	-
 5635	-	-	-	no-candidate	no symbol and no ledger pair	279	none	vota	0	-
 5636	-	-	-	no-candidate	no symbol and no ledger pair	3903	none	app	0	-
@@ -7011,7 +7011,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7145	idea_ofb_cipher	5511	symbol	match	-	184	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_idea.o)
 7146	idea_cfb64_cipher	5512	symbol	match	-	138	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_idea.o)
 7147	idea_cbc_cipher	5513	symbol	match	-	128	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_idea.o)
-7148	idea_init_key	5515	symbol	match	-	103	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_idea.o)
+7148	idea_init_key	5514	symbol	match	-	103	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_idea.o)
 7149	rc4_hmac_md5_ctrl	5505	symbol	match	-	493	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_rc4_hmac_md5.o)
 7150	rc4_hmac_md5_cipher	5506	symbol	match	-	311	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_rc4_hmac_md5.o)
 7151	rc4_hmac_md5_init_key	5507	symbol	match	-	86	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_rc4_hmac_md5.o)
@@ -7029,14 +7029,14 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7163	des_ede_cfb64_cipher	7119	symbol	match	-	230	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_des3.o
 7164	des3_ctrl	7120	symbol	match	-	88	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_des3.o
 7165	des_ede_init_key	7121	symbol	match	-	53	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_des3.o
-7166	des_cfb8_cipher	5516	symbol	match	-	132	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
-7167	des_cfb1_cipher	5517	symbol	match	-	217	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
-7168	des_ecb_cipher	5518	symbol	match	-	71	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
-7169	des_ofb_cipher	5519	symbol	match	-	184	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
-7170	des_cfb64_cipher	5520	symbol	match	-	194	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
-7171	des_ctrl	5521	symbol	match	-	36	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
-7172	des_cbc_cipher	5522	symbol	match	-	166	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
-7173	des_init_key	5523	symbol	match	-	25	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7166	des_cfb8_cipher	5515	symbol	match	-	132	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7167	des_cfb1_cipher	5516	symbol	match	-	217	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7168	des_ecb_cipher	5517	symbol	match	-	71	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7169	des_ofb_cipher	5518	symbol	match	-	184	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7170	des_cfb64_cipher	5519	symbol	match	-	194	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7171	des_ctrl	5520	symbol	match	-	36	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7172	des_cbc_cipher	5521	symbol	match	-	166	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
+7173	des_init_key	5522	symbol	match	-	25	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_des.o)
 7174	-	-	-	no-candidate	no symbol and no ledger pair	3288	none	vota	0	-
 7175	__cxx_global_array_dtor.2@app/ecourna/api_compression_clzmacompress.cpp.o	10952	ledger	unresolved	ours +0x1 i32.const 1452632: an address of ours: _ZN7ecourna3api11compression12_GLOBAL__N_17s_mutexE (.bss) has no target symbol	10	addr	unknown	1	app/ecourna/api_compression_clzmacompress.cpp.o
 7176	ex_callback_compare	7052	symbol	match	-	73	byte	unknown	1	openssl/O3/crypto/libcrypto-lib-ex_data.o
@@ -11251,12 +11251,12 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11385	-	-	-	no-candidate	no symbol and no ledger pair	391	none	comum	0	-
 11386	_ZNK5comum3asn36CConversorNumViasImpressasRelatorios10DoConverteERKNS_2md15estadoaplicacao27CNumViasImpressasRelatoriosE	7370	symbol	match	readings: address content-repointed,address symbol	86	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversornumviasimpressasrelatorios.cpp.o
 11387	_ZNK5comum3asn36CConversorNumViasImpressasRelatorios13DoDesconverteERKN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosE	7368	symbol	match	-	44	fingerprint	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversornumviasimpressasrelatorios.cpp.o
-11388	_ZNK5comum3asn29CConversorLocalidadeEleitoral10DoConverteERKNS_2md15estadoaplicacao20CLocalidadeEleitoralE	5448	symbol	unresolved	ours +0x32 call 2215: _ZN4ASN17INTEGERC2EPKv has no target function	143	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp.o
-11389	_ZNK5comum3asn29CConversorLocalidadeEleitoral13DoDesconverteERKN21ModuloEstadoGeralUrna9DadoSecaoE	11621	symbol	match	-	36	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp.o
+11388	_ZNK5comum3asn29CConversorLocalidadeEleitoral10DoConverteERKNS_2md15estadoaplicacao20CLocalidadeEleitoralE	11621	symbol	unresolved	ours +0x32 call 2215: _ZN4ASN17INTEGERC2EPKv has no target function	143	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp.o
+11389	_ZNK5comum3asn29CConversorLocalidadeEleitoral13DoDesconverteERKN21ModuloEstadoGeralUrna9DadoSecaoE	5448	symbol	match	-	36	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp.o
 11390	-	-	-	no-candidate	no symbol and no ledger pair	3335	none	comum	0	-
 11391	-	-	-	no-candidate	no symbol and no ledger pair	3356	none	comum	0	-
-11392	_ZNK5comum3asn23CConversorEstadoGeralSA10DoConverteERKNS_2md15estadoaplicacao14CEstadoGeralSAE	5460	symbol	match	readings: address content-repointed,address symbol,table slot,address string,address srcloc	1362	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralsa.cpp.o
-11393	_ZNK5comum3asn23CConversorEstadoGeralSA13DoDesconverteERKN19ModuloEstadoGeralSA13EstadoGeralSAE	5452	symbol	match	readings: table slot,address string,address srcloc,address symbol	1254	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralsa.cpp.o
+11392	_ZNK5comum3asn23CConversorEstadoGeralSA10DoConverteERKNS_2md15estadoaplicacao14CEstadoGeralSAE	5452	symbol	match	readings: address content-repointed,address symbol,table slot,address string,address srcloc	1362	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralsa.cpp.o
+11393	_ZNK5comum3asn23CConversorEstadoGeralSA13DoDesconverteERKN19ModuloEstadoGeralSA13EstadoGeralSAE	5460	symbol	match	readings: table slot,address string,address srcloc,address symbol	1254	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralsa.cpp.o
 11394	-	-	-	no-candidate	no symbol and no ledger pair	1109	none	comum	0	-
 11395	-	-	-	no-candidate	no symbol and no ledger pair	1421	none	comum	0	-
 11396	-	-	-	no-candidate	no symbol and no ledger pair	18	none	app	0	-
@@ -11268,8 +11268,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11402	-	-	-	no-candidate	no symbol and no ledger pair	1603	none	comum	0	-
 11403	-	-	-	no-candidate	no symbol and no ledger pair	295	none	comum	0	-
 11404	-	-	-	no-candidate	no symbol and no ledger pair	274	none	comum	0	-
-11405	_ZNK5comum3asn24CConversorAjusteDataHora10DoConverteERKNS_2md15estadoaplicacao15CAjusteDataHoraE	5534	symbol	match	readings: address content-repointed,address symbol,table slot,address string,address srcloc	594	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorajustedatahora.cpp.o
-11406	_ZNK5comum3asn24CConversorAjusteDataHora13DoDesconverteERKN21ModuloEstadoGeralUrna14AjusteDataHoraE	5514	symbol	match	readings: address string,table slot,address srcloc,address symbol	999	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorajustedatahora.cpp.o
+11405	_ZNK5comum3asn24CConversorAjusteDataHora10DoConverteERKNS_2md15estadoaplicacao15CAjusteDataHoraE	5523	symbol	match	readings: address content-repointed,address symbol,table slot,address string,address srcloc	594	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorajustedatahora.cpp.o
+11406	_ZNK5comum3asn24CConversorAjusteDataHora13DoDesconverteERKN21ModuloEstadoGeralUrna14AjusteDataHoraE	5534	symbol	match	readings: address string,table slot,address srcloc,address symbol	999	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorajustedatahora.cpp.o
 11407	-	-	-	no-candidate	no symbol and no ledger pair	1313	none	comum	0	-
 11408	-	-	-	no-candidate	no symbol and no ledger pair	13	none	comum	0	-
 11409	-	-	-	no-candidate	no symbol and no ledger pair	29	none	comum	0	-

@@ -4,6 +4,11 @@
 
 namespace comum::asn {
 
+CConversorLocalidadeEleitoral::TDado CConversorLocalidadeEleitoral::DoDesconverte(const TEntidade& entidade) const
+{
+    return TDado(entidade.get_municipio().getValue(), entidade.get_zona().getValue(), entidade.get_secao().getValue());
+}
+
 CConversorLocalidadeEleitoral::TEntidade CConversorLocalidadeEleitoral::DoConverte(const TDado& dado) const
 {
     TEntidade entidade;
@@ -11,11 +16,6 @@ CConversorLocalidadeEleitoral::TEntidade CConversorLocalidadeEleitoral::DoConver
     entidade.set_zona(dado.GetZona());
     entidade.set_secao(dado.GetSecao());
     return entidade;
-}
-
-CConversorLocalidadeEleitoral::TDado CConversorLocalidadeEleitoral::DoDesconverte(const TEntidade& entidade) const
-{
-    return TDado(entidade.get_municipio().getValue(), entidade.get_zona().getValue(), entidade.get_secao().getValue());
 }
 
 } // namespace comum::asn
