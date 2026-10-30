@@ -4481,19 +4481,6 @@
 // f7945 · 14 B · unmatched · placement: link order · name unknown
 // void f7945(i32, i64) { ... }
 
-// link-order cluster 45 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmlogd.cpp
-
-// f8318 · 37 B · unmatched · placement: link order · name unknown
-// ? f8318(i32) { ... }
-
-// f8316 · 40 B · unmatched · placement: link order · name unknown
-// void f8316(i32) { ... }
-
-// link-order cluster 46 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/csequentialinstreamsizecount2.cpp
-
-// f8327 · 818 B · unmatched · placement: link order · name unknown
-// void f8327(i32, i32, i32, i32) { ... }
-
 // link-order cluster 53 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmnullprinter.cpp
 
 // f8365 · 9 B · unmatched · placement: link order · name unknown

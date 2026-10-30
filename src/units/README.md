@@ -118,6 +118,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 | `37-uenux2-iqrcodebuds` | `vota::IQRCodeBUDS::~IQRCodeBUDS`, the D2 and D0 of its vtable (target fns 12050, 12049), inline in the class header; the constructor (inlined into 1956, no target function of its own) emits them, with the 9372 enumerator of `EUeVotaError` |
 | `38-uenux2-cwavfile` | the `api::CWavFile` destructor and deleting destructor (target fns 5345 and 10238), the `CWavFile` class header with the `CWavAudio` WAV header it copies; the constructor (inlined into 10841) is not reconstructed |
+| `62-uenux2-cwasmlogd` | `simulador::CWasmLogd`'s implicit destructors (target fns 8318 and 8316, `mock/app/simulador/wasm/cwasmlogd.h`), emitted with the vtable in the pending object: no source of its own yet; the `api::CEscritorLog` base (`api/uelog/cescritorlog.h`) and the `ELogOperacoesLogD`, `ELogAplicativos` and `ESeveridade` enums its slots take; `escreve` (8327, the key function), `fazOperacao` (10262) and `loga` (10260) pending |
 
 ## Companion files
 
