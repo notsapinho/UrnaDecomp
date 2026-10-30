@@ -3460,42 +3460,6 @@
 // f11428 · 10 B · unmatched · placement: link order · name unknown
 // ? f11428(i32) { ... }
 
-// link-order cluster 496 · uses=1 · neighbours' file uenux2/src/api/gui/itexttospeech.cpp
-
-// f11494 · 37 B · unmatched · placement: link order · name unknown
-// void f11494(i32) { ... }
-
-// f11491 · 9 B · unmatched · placement: link order · name unknown
-// void f11491(i32, i64) { ... }
-
-// f11489 · 39 B · unmatched · placement: link order · name unknown
-// ? f11489(i32) { ... }
-
-// link-order cluster 501 · uses=1 · neighbours' file uenux2/src/api/gui/itexttospeech.cpp
-
-// f11518 · 13 B · unmatched · placement: link order · name unknown
-// void f11518(i32, i32) { ... }
-
-// f11511 · 9 B · unmatched · placement: link order · name unknown
-// void f11511(i32, i32) { ... }
-
-// f11507 · 9 B · unmatched · placement: link order · name unknown
-// void f11507(i32, i32) { ... }
-
-// f11505 · 22 B · unmatched · placement: link order · name unknown
-// void f11505(i32, i32) { ... }
-
-// f11504 · 7 B · unmatched · placement: link order · name unknown
-// ? f11504(i32) { ... }
-
-// f11500 · 42 B · unmatched · placement: link order · name unknown
-// void f11500(i32) { ... }
-
-// link-order cluster 503 · uses=1 · neighbours' file uenux2/src/api/gui/itexttospeech.cpp
-
-// f11530 · 415 B · unmatched · placement: link order · name unknown
-// void f11530(i32, i32, i32) { ... }
-
 // link-order cluster 527 · uses=1 · neighbours' file uenux2/src/api/gui/iobservable.cpp
 
 // f11651 · 102 B · unmatched · placement: link order · name unknown
@@ -3649,11 +3613,6 @@
 
 // f12784 · 12 B · unmatched · placement: link order · name unknown
 // void f12784(i32, i32) { ... }
-
-// link-order cluster 668 · uses=1
-
-// f13877 · 148 B · unmatched · placement: link order · name unknown
-// ? f13877(i32) { ... }
 
 // link-order cluster 695 · uses=2
 
@@ -4542,9 +4501,6 @@
 
 // link-order cluster 208 · uses=1 · neighbours' file ecourna/api/sql/sqlite/csqlstatement.cpp
 
-// f9427 · 58 B · unmatched · placement: link order · name unknown
-// void f9427(i32) { ... }
-
 // f9418 · 7 B · unmatched · placement: link order · name unknown
 // ? f9418(i32) { ... }
 
@@ -4555,9 +4511,6 @@
 
 // f9445 · 7 B · unmatched · placement: link order · name unknown
 // ? f9445(i32) { ... }
-
-// f9436 · 9 B · unmatched · placement: link order · name unknown
-// void f9436(i32, i32, i32, i32) { ... }
 
 // link-order cluster 212 · uses=1 · neighbours' file ecourna/api/sql/sqlite/csqlconnection.cpp
 
