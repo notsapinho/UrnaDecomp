@@ -24,11 +24,11 @@
 #   width before the height; the other order differs.
 # - slots 17 and 18, FillPath and DrawPath (9146, 9125), and the scaling they share, a private member EscalaCaminho
 #   (fn 5113, whose name is chosen; it reads m_escalaX and m_escalaY, and its push_back is target fn 2670, which
-#   matches): written and `unresolved`. Both need -O3, which inlines `tipos.push_back` as the target does (at cost 225,
+#   matches): written and `unresolved`. Both need 5113's name and -O3, which inlines `tipos.push_back` as the target does (at cost 225,
 #   docs/reference/facts/levels.md V2): in a scratch link with the simulator's three objects at -O3, 9146 scores 13 over
 #   307 rows and 9125 13 over 313, all operand-only. At -O2 their two push_backs stay calls of one vector<int> body, a twin of
-#   vector<long>'s in roots_boost.o, and that body is target fn 543, which matches: a body only this level brings, so
-#   at -O3 543 needs another caller. 5113 itself differs at both levels (86 over 273 rows): the target reads each
+#   vector<long>'s in roots_boost.o, and that body equals target fn 543 by bytes, which matches: the name is link order
+#   only, since the target's callers inline it, and at -O3 543 needs another caller. 5113 itself differs at both levels (86 over 273 rows): the target reads each
 #   command's values first and stores the type, then y, then x; the locals above are the nearest form found, and the
 #   `SPathCommand` aggregate stands in for a header whose constructors, if any, are not known.
 # - slot 12 of CWasmImageSurfaceOps, ImageSize (3493): written and `differs`, 11 over 256 rows, 5 of them operand-only. Every
