@@ -19,11 +19,14 @@ parameters leave no room for a returned struct), or, with no name, `f<index>` an
 
 Which functions. Every target function of a TSE component (splat/scan.tsv's group: vota, comum, api, simulador,
 vota-web, ecourna, asn1-modules, ASN1) that splat/matched.txt does not list, unless it has code of ours already: our
-link has a body for it (the scan's `ours` column); or every record of it in its file falls on a line of code of ours
-or names a function our file defines; or it fills a slot of a vtable our link holds (the symbol file gives that
-vtable a size, which it takes from our link) or of the vtable of a class whose members our sources define. An
-asn1-modules function that no evidence puts in a source file is left out, since the generated modules hold data, not
-functions (src/asn1/README.md).
+link has a body that is it (the scan's candidate, when the symbol file names the function by it; a census pair, the
+scan's source `ledger`, only when its symbol names the class and member of a record of the function or of a name the
+symbol file gives it, or the class of a vtable that holds it or of a vptr it stores); or every record of it in its
+file falls on a line of code of ours or names a function our file defines (a definition with the record's qualified
+name and parameter types: an overload never stands for another, nor a destructor for its constructor); or it fills a
+slot of a vtable our link holds (the symbol file gives that vtable a size, which it takes from our link) or of the
+vtable of a class whose members our sources define. An asn1-modules function that no evidence puts in a source file
+is left out, since the generated modules hold data, not functions (src/asn1/README.md).
 
 Where. The file, in this order of evidence: the file of its std::source_location records (ledger/source-locations.tsv;
 the .cpp holding most of them, else the header); the file of its class (ledger/vtables.json: the class whose vtable
@@ -60,6 +63,7 @@ A named stub's signature is demangled by llvm-cxxfilt (the pinned toolchain's li
 they hold the name, else llvm-cxxfilt or c++filt on the PATH, with `> >` spelled `>>` as llvm-cxxfilt does).
 The files are read and written as Latin-1 bytes; `·` is written in the charset .editorconfig gives the file.
 """
+import bisect
 import collections
 import json
 import os
@@ -177,10 +181,11 @@ class Facts:
     """What the ledger, the scan and the match list say, read once."""
 
     def __init__(self):
-        self.group, self.ours, self.object = {}, {}, {}
+        self.group, self.ours, self.object, self.candidate, self.source = {}, {}, {}, {}, {}
         for p in tsv('splat/scan.tsv'):
             i = int(p[0])
             self.group[i], self.ours[i], self.object[i] = p[8], p[2], p[10]
+            self.candidate[i], self.source[i] = p[1], p[3]
         self.matched = set()
         for line in open(os.path.join(ROOT, 'splat', 'matched.txt')):
             p = line.split()
@@ -259,11 +264,9 @@ class Facts:
         return out
 
 
-def name_scopes(func):
-    """The scopes of the function a pretty function name (a record's) names: `virtual void a::B::C(int)` -> [a, B, C].
-    An anonymous namespace is spelled `{anon}`."""
-    s = func.replace('(anonymous namespace)', '{anon}')
-    depth, cut, k = 0, None, 0
+def param_open(s):
+    """Where the parameter list of the function a pretty function name names opens (its `(`), or None."""
+    depth, k = 0, 0
     while k < len(s):
         ch = s[k]
         if ch == '<':
@@ -274,9 +277,16 @@ def name_scopes(func):
             if s[:k].endswith('operator'):
                 k += 2
                 continue
-            cut = k
-            break
+            return k
         k += 1
+    return None
+
+
+def name_scopes(func):
+    """The scopes of the function a pretty function name (a record's) names: `virtual void a::B::C(int)` -> [a, B, C].
+    An anonymous namespace is spelled `{anon}`."""
+    s = func.replace('(anonymous namespace)', '{anon}')
+    cut = param_open(s)
     head = s[:cut] if cut is not None else s
     depth, start = 0, 0
     for k, ch in enumerate(head):
@@ -306,6 +316,281 @@ def class_key(c):
         elif depth == 0:
             out += ch
     return out
+
+
+def record_params(func):
+    """The parameter types of the function a pretty function name (a record's) names, as param_key spells them:
+    `size_t api::EncodeTime(const std::string &)` -> ['const string &']; None when the text has no parameter list."""
+    s = func.replace('(anonymous namespace)', '{anon}')
+    k = param_open(s)
+    end = matching_paren(s, k) if k is not None else None
+    if end is None:
+        return None
+    return [param_key(p) for p in split_params(s[k + 1:end])]
+
+
+def matching_paren(s, k):
+    """The index of the `)` that closes the `(` at s[k], or None."""
+    depth = 0
+    for j in range(k, len(s)):
+        if s[j] == '(':
+            depth += 1
+        elif s[j] == ')':
+            depth -= 1
+            if depth == 0:
+                return j
+    return None
+
+
+CV = {'const', 'volatile'}
+ELABORATED = {'struct', 'class', 'enum', 'union', 'typename'}
+BUILTIN = {'void', 'bool', 'char', 'wchar_t', 'char8_t', 'char16_t', 'char32_t', 'short', 'int', 'long', 'signed',
+           'unsigned', 'float', 'double', 'auto'}
+INTEGER = {'signed', 'unsigned', 'short', 'long', 'int', 'char'}
+TOKEN_RE = re.compile(r'[A-Za-z_]\w*|::|\.\.\.|&&|\d[\w.]*|\S')
+IDENT_RE = re.compile(r'[A-Za-z_]\w*$')
+
+
+def param_key(text):
+    """One parameter's type, spelled so that two spellings of a type compare equal: without the parameter's name and
+    default argument, namespace and class qualifiers, `struct`/`class`/`enum`/`typename`, and top-level const (not
+    part of the function's type); `X const` as `const X`; `unsigned int` as `unsigned`, `long int` as `long`."""
+    depth = 0
+    for k, ch in enumerate(text):
+        if ch in '<([':
+            depth += 1
+        elif ch in '>)]':
+            depth -= 1
+        elif ch == '=' and depth == 0:
+            text = text[:k]
+            break
+    toks = []
+    for t in TOKEN_RE.findall(text):
+        if t in ELABORATED:
+            continue
+        if t != '::':
+            toks.append(t)
+            continue
+        # drop the qualifier this `::` ends: an identifier, with its template arguments
+        if toks and toks[-1] == '>':
+            d = 0
+            while toks:
+                x = toks.pop()
+                d += {'>': 1, '<': -1}.get(x, 0)
+                if d == 0:
+                    break
+        if toks and IDENT_RE.match(toks[-1]) and toks[-1] not in BUILTIN | CV:
+            toks.pop()
+    depths, d = [], 0
+    for t in toks:
+        if t in '<([':
+            depths.append(d)
+            d += 1
+        elif t in '>)]':
+            d -= 1
+            depths.append(d)
+        else:
+            depths.append(d)
+    drop = set()
+    # the name of a pointer to function or array: `void (*name)(int)`, `int (&name)[4]`
+    for k, t in enumerate(toks):
+        if t == '(':
+            j = k + 1
+            while j < len(toks) and toks[j] in {'*', '&', '&&'} | CV:
+                j += 1
+            if j > k + 1 and j + 1 < len(toks) and IDENT_RE.match(toks[j]) and toks[j + 1] == ')':
+                drop.add(j)
+    if not drop:
+        # the declarator's name: the last identifier at depth 0, followed by nothing but array bounds, after a type
+        last = None
+        for k, t in enumerate(toks):
+            if depths[k] == 0 and IDENT_RE.match(t):
+                last = k
+        if last is not None and toks[last] not in BUILTIN | CV and all(
+                depths[j] > 0 or toks[j] in '[]' for j in range(last + 1, len(toks))) and any(
+                depths[j] == 0 and t not in CV and (IDENT_RE.match(t) or t in ('>', '*', '&', '&&', ')'))
+                for j, t in enumerate(toks[:last])):
+            drop.add(last)
+    toks = [t for k, t in enumerate(toks) if k not in drop]
+    depths = [x for k, x in enumerate(depths) if k not in drop]
+    # cv first in each part between pointer and reference declarators at depth 0
+    parts, cur = [], []
+    for t, x in zip(toks, depths):
+        if x == 0 and t in ('*', '&', '&&'):
+            parts.append(cur)
+            parts.append([t])
+            cur = []
+        else:
+            cur.append((t, x))
+    parts.append(cur)
+    simple = not any(x == 0 and t in '([' for t, x in zip(toks, depths))
+    out = []
+    for n, part in enumerate(parts):
+        if part and isinstance(part[0], str):
+            out += part
+            continue
+        cv = sorted(t for t, x in part if x == 0 and t in CV)
+        rest = [t for t, x in part if not (x == 0 and t in CV)]
+        top = n == len(parts) - 1 and (len(parts) == 1 or parts[-2][0] == '*')
+        out += ([] if top and simple else cv) + rest
+    # one spelling of each integer type
+    canon, k = [], 0
+    while k < len(out):
+        if out[k] not in INTEGER:
+            canon.append(out[k])
+            k += 1
+            continue
+        j = k
+        while j < len(out) and out[j] in INTEGER:
+            j += 1
+        spec = out[k:j]
+        if 'int' in spec and set(spec) & {'short', 'long', 'signed', 'unsigned'}:
+            spec = [t for t in spec if t != 'int']
+        if 'signed' in spec and 'char' not in spec:
+            spec = [t for t in spec if t != 'signed'] or ['int']
+        canon += sorted(spec)
+        k = j
+    return ' '.join(canon)
+
+
+def name_key(text):
+    """(class, member) of a demangled or pretty function name, spelled for comparison: `std::__2::` as `std::`, no
+    ABI tags, integer suffixes, spaces, or template arguments on the member. `api::X<int>::~X()` -> ('api::X<int>',
+    '~X')."""
+    scopes = name_scopes(text)
+    return spelled('::'.join(scopes[:-1])), spelled(scopes[-1].split('<')[0])
+
+
+def spelled(s):
+    s = s.replace('(anonymous namespace)', '{anon}').replace('std::__2::', 'std::')
+    s = re.sub(r'\[abi:[^\]]*\]', '', s)
+    s = re.sub(r'\b(\d+)(?:ull|ul|ll|u|l)\b', r'\1', s, flags=re.I)
+    return re.sub(r'\s+', '', s)
+
+
+def bare(symbol):
+    """A symbol without binaryen's merge prefix: `byn$mgfn-shared$_ZN...` -> `_ZN...`."""
+    return re.sub(r'^byn\$[^$]*\$', '', symbol)
+
+
+def code_only(lines):
+    """`lines` with every comment and the inside of every string and character literal turned into spaces, and every
+    preprocessor directive (with its continuation lines) emptied; the line count and the columns stay."""
+    out, in_block, in_directive = [], False, False
+    for line in lines:
+        if in_directive or (not in_block and line.lstrip().startswith('#')):
+            in_directive = line.endswith('\\')
+            out.append('')
+            continue
+        chars, k = list(line), 0
+        while k < len(line):
+            if in_block:
+                e = line.find('*/', k)
+                stop = len(line) if e < 0 else e + 2
+                chars[k:stop] = ' ' * (stop - k)
+                in_block, k = e < 0, stop
+                continue
+            if line.startswith('//', k):
+                chars[k:] = ' ' * (len(line) - k)
+                break
+            if line.startswith('/*', k):
+                chars[k:k + 2] = '  '
+                in_block, k = True, k + 2
+                continue
+            if line[k] in '"\'':
+                q, e = line[k], k + 1
+                while e < len(line) and line[e] != q:
+                    e += 2 if line[e] == '\\' else 1
+                e = min(e, len(line) - 1)
+                chars[k + 1:e] = ' ' * (e - k - 1)
+                k = e + 1
+                continue
+            k += 1
+        out.append(''.join(chars))
+    return out
+
+
+def scopes_at_lines(code):
+    """For each line of code_only text, the braces open at its start: ('ns', [names]) for a namespace (`{anon}` for
+    an anonymous one, none for `extern "C"`), ('class', name), or ('other', None) for any other brace."""
+    stack, prefix, out = [], '', []
+    for line in code:
+        out.append(tuple(stack))
+        for ch in line:
+            if ch == '{':
+                m = re.search(r'\bnamespace\s*((?:[A-Za-z_]\w*\s*::\s*)*[A-Za-z_]\w*)?\s*$', prefix)
+                c = re.search(r'\b(?:class|struct|union)\s+([A-Za-z_]\w*)\s*(?:<[^;{}]*>)?\s*(?:final\s*)?'
+                              r'(?::[^;{}]*)?$', prefix)
+                if m:
+                    stack.append(('ns', [n.strip() for n in m.group(1).split('::')] if m.group(1) else ['{anon}']))
+                elif re.search(r'\bextern\s*"\s*"\s*$', prefix):
+                    stack.append(('ns', []))
+                elif c and not re.search(r'\benum\s+(?:class|struct)\s+\w+[^;{}]*$', prefix):
+                    stack.append(('class', c.group(1)))
+                else:
+                    stack.append(('other', None))
+                prefix = ''
+            elif ch == '}':
+                if stack:
+                    stack.pop()
+                prefix = ''
+            elif ch == ';':
+                prefix = ''
+            else:
+                prefix += ch
+        prefix += ' '
+    return out
+
+
+def definition_follows(text, k):
+    """Whether what follows a parameter list closing just before text[k] makes it a definition: after the function's
+    qualifiers (cv, ref, noexcept, throw(), override, final, a trailing return type) comes its body, a constructor's
+    initializers, `try` or `= default`."""
+    while True:
+        m = re.match(r'\s*(?:(?:const|volatile|override|final|mutable)\b|&&|&|(noexcept|throw)\b\s*)', text[k:])
+        if not m:
+            break
+        k += m.end()
+        if m.group(1) and text[k:k + 1] == '(':
+            end = matching_paren(text, k)
+            if end is None:
+                return False
+            k = end + 1
+    rest = text[k:].lstrip()
+    if rest.startswith('->'):
+        stop = re.search(r'[{;]', rest)
+        return bool(stop) and stop.group(0) == '{'
+    return (rest.startswith('{') or (rest.startswith(':') and not rest.startswith('::')) or
+            re.match(r'try\b', rest) is not None or re.match(r'=\s*default\b', rest) is not None)
+
+
+def qualifier_before(line, k):
+    """The scopes written before line[k] (`a::B<T>::` -> ['a', 'B<T>']), up to the start of the qualified name."""
+    out, j = [], k
+    while True:
+        i = j
+        while i > 0 and line[i - 1] in ' \t':
+            i -= 1
+        if line[i - 2:i] != '::':
+            return out
+        i -= 2
+        while i > 0 and line[i - 1] in ' \t':
+            i -= 1
+        end = i
+        if i > 0 and line[i - 1] == '>':
+            d = 0
+            while i > 0:
+                i -= 1
+                d += {'>': 1, '<': -1}.get(line[i], 0)
+                if d == 0:
+                    break
+            while i > 0 and line[i - 1] in ' \t':
+                i -= 1
+        m = re.search(r'[A-Za-z_]\w*$', line[:i])
+        if not m:
+            return out
+        out.insert(0, line[m.start():end].replace(' ', ''))
+        j = m.start()
 
 
 # ---- source files -------------------------------------------------------------------------------------------------
@@ -701,15 +986,23 @@ class Plan:
         self.code_files = {p for p, b in self.base.items() if b and not is_unplaced(p)}
         self.member_files = self._member_files()
         self._defines_memo = {}
+        self._code_memo = {}
         self.defined = {}       # index -> why it is not stubbed
+        self.not_ours = {}      # index -> why its census candidate is another function's body, not code of ours for it
         self.excluded = []      # asn1-modules functions no evidence puts in a file
         self.stubs = {}
+        paired = [i for i in sorted(facts.group) if facts.group[i] in TSE and i not in facts.matched and
+                  facts.ours[i] != '-' and facts.source[i] != 'symbol']
+        self.demangled = demangle_all([bare(n) for i in paired for n in [facts.candidate[i]] + facts.names.get(i, [])])
         for i in sorted(facts.group):
             if facts.group[i] not in TSE or i in facts.matched:
                 continue
             if facts.ours[i] != '-':
-                self.defined[i] = 'candidate'
-                continue
+                why = self._other_function(i)
+                if why is None:
+                    self.defined[i] = 'candidate'
+                    continue
+                self.not_ours[i] = why
             if i in facts.in_linked_vtable:
                 self.defined[i] = 'vtable'
                 continue
@@ -722,6 +1015,24 @@ class Plan:
         for i, s in self.stubs.items():
             sig, s.named = signature_of(i, facts, demangled)
             s.signature = f'// {sig} {{ ... }}'
+
+    def _other_function(self, i):
+        """None when the scan's candidate for target function i is code of ours for it; else why it is not. The
+        symbol file's name is evidence: a candidate it gives (scan source `symbol`) is the function. Any other, a
+        census pair (`ledger`), is only a body of like shape: it counts when its symbol names the class and member of a
+        record of i or of a name the symbol file gives i, or the class of a vtable that holds i or of a vptr i stores.
+        With no such evidence nothing shows the pair is i, and i keeps its stub."""
+        facts = self.facts
+        if facts.source[i] == 'symbol':
+            return None
+        cls, member = name_key(self.demangled.get(bare(facts.candidate[i]), bare(facts.candidate[i])))
+        evidence = [name_key(self.demangled.get(bare(n), bare(n))) for n in facts.names.get(i, [])]
+        evidence += [name_key(func) for _, _, func in facts.records.get(i, [])]
+        evidence += [(spelled(c), None) for c in sorted(facts.vtable_classes.get(i, ()))]
+        evidence += [(spelled(c), None) for c in facts.vptr_classes.get(i, [])]
+        if any(c == cls and m in (None, member) for c, m in evidence):
+            return None
+        return 'evidence names another function' if evidence else 'no evidence names it'
 
     def _head(self, s):
         parts = [f'f{s.index}', f'{self.facts.size[s.index]} B', 'unmatched']
@@ -743,23 +1054,54 @@ class Plan:
         return out
 
     def _defines(self, path, func):
-        """Whether our file defines the function a record names (by its last two scope names), wherever it sits."""
+        """Whether our file defines the function a record names, wherever it sits: a definition (a body, a ctor's
+        initializers or `= default` after its parameter list; not a declaration or a call) on a line that starts at
+        column 0, whose qualified name (the enclosing namespaces and classes, then the scopes written before the name)
+        is the record's, without anonymous namespaces and template arguments, and whose parameter types are the
+        record's (param_key). A destructor never stands for a constructor, nor one overload for another."""
         key = (path, func)
         if key not in self._defines_memo:
-            parts = name_scopes(func)
-            last = re.escape(parts[-1].split('<')[0])
-            pats = [rf'\b{re.escape(parts[-2].split("<")[0])}::{last}\s*\(' if len(parts) > 1 else None, rf'\b{last}\s*\(']
-            text = self.base[path]
-            found = False
-            for pat in pats:
-                if pat is None:
-                    continue
-                rx = re.compile(r'^[^\s/#][^;]*' + pat)
-                if any(rx.search(line) and not line.rstrip().endswith(';') for line in text):
-                    found = True
-                    break
-            self._defines_memo[key] = found
+            self._defines_memo[key] = self._find_definition(path, func)
         return self._defines_memo[key]
+
+    def _find_definition(self, path, func):
+        if path not in self._code_memo:
+            code = code_only(self.base[path])
+            starts, n = [], 0
+            for line in code:
+                starts.append(n)
+                n += len(line) + 1
+            self._code_memo[path] = (code, '\n'.join(code), starts, scopes_at_lines(code))
+        code, text, starts, scopes = self._code_memo[path]
+        parts = name_scopes(func)
+        want = class_key('::'.join(parts))
+        params = record_params(func)
+        name = parts[-1].split('<')[0]
+        if name.startswith('~'):
+            rx = r'~\s*' + re.escape(name[1:].strip()) + r'\s*\('
+        elif name.startswith('operator'):
+            rx = r'\boperator' + ''.join(r'\s*' + re.escape(c) for c in name[len('operator'):].strip()) + r'\s*\('
+        else:
+            rx = r'(?<![\w~])' + re.escape(name) + r'\s*\('
+        for m in re.finditer(rx, text):
+            n = bisect.bisect_right(starts, m.start()) - 1
+            line, col = code[n], m.start() - starts[n]
+            if not line or line[0] in ' \t/#' or any(ch in ';{}' for ch in line[:col]):
+                continue
+            if not name.startswith('~') and line[:col].rstrip().endswith('~'):
+                continue                                    # a destructor, not the constructor
+            if any(kind == 'other' for kind, _ in scopes[n]):
+                continue                                    # inside a function body or an initializer
+            enclosing = [x for kind, names in scopes[n] for x in (names if kind == 'ns' else [names])]
+            if class_key('::'.join(enclosing + qualifier_before(line, col) + [name])) != want:
+                continue
+            k = m.end() - 1
+            end = matching_paren(text, k)
+            if end is None or not definition_follows(text, end + 1):
+                continue
+            if params is None or [param_key(p) for p in split_params(text[k + 1:end])] == params:
+                return True
+        return False
 
     def _class_file(self, cls):
         key = class_key(cls)
@@ -1144,6 +1486,8 @@ def counts(plan):
              f'{sum(last - first + 2 for g in plan.gaps.values() for first, last in g)} blank lines',
              f'unmatched TSE functions not stubbed because they have code: {len(plan.defined)} '
              f'({", ".join(f"{k} {v}" for k, v in sorted(defined.items()))})',
+             f'census pairs not counted as code of ours, being another function\'s body: {len(plan.not_ours)} '
+             f'({", ".join(f"{k} {v}" for k, v in sorted(collections.Counter(plan.not_ours.values()).items()))})',
              f'asn1-modules functions with no source file (left out): {len(plan.excluded)}']
     return lines
 

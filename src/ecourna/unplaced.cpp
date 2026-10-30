@@ -530,6 +530,11 @@
 // f3509 · 530 B · unmatched · placement: link order · name unknown
 // void f3509(i32) { ... }
 
+// link-order cluster 961 · uses=3 · neighbours' file ecourna/api/security/csha.cpp
+
+// f3517 · 60 B · unmatched · placement: link order · name unknown
+// void f3517(i32) { ... }
+
 // link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
 
 // f3527 · 104 B · unmatched · placement: link order · name unknown
@@ -813,6 +818,9 @@
 // f2294 · 129 B · unmatched · placement: link order · name unknown
 // ? f2294(i32, i32, i32, i32, i32, i32) { ... }
 
+// f2283 · 57 B · unmatched · placement: link order · name unknown
+// void f2283(i32, i32) { ... }
+
 // link-order cluster 1173 · uses=6 · neighbours' file ecourna/app/dados/cregistroidentificacaoeleitor.cpp
 
 // f1879 · 12 B · unmatched · placement: link order · name unknown
@@ -860,6 +868,11 @@
 
 // f1500 · 98 B · unmatched · placement: link order · name unknown
 // void f1500(i32, i32) { ... }
+
+// link-order cluster 1226 · uses=8
+
+// f1522 · 32 B · unmatched · placement: link order · name unknown
+// void f1522(i32, i32) { ... }
 
 // link-order cluster 1230 · uses=8 · neighbours' file uenux2/src/app/vota/operador/leidentidade/cpedeidentidade.cpp
 

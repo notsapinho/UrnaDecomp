@@ -35,10 +35,16 @@ The scripts the build calls are in `../tools/round/` (`census.sh`, `census_repor
 
 Every unmatched TSE function that `tools/round/stubs.py` finds no code of ours for has a stub in `ecourna/`,
 `uenux2/` or `asn1/`: two comment lines generated where the evidence says the function sat, between `// <stubs>`
-and `// </stubs>` markers. Code of ours, to the generator, is a body in our link, a record that falls on a line of
-our code, or a slot of a vtable our link holds (`stubs.py --report` counts each reason). So a pending member's
-trapping body (`units/README.md`) removes its stub. A non-virtual function we wrote that has no record, a
-constructor for one, keeps its stub.
+and `// </stubs>` markers. Code of ours, to the generator, is a body in our link that is the function, a record that
+falls on a line of our code or names a function our file defines, or a slot of a vtable our link holds
+(`stubs.py --report` counts each reason). A body is the function when the symbol file names the function by it. A
+body the census only paired with the function (`splat/scan.tsv` source `ledger`) is the function only when its
+symbol names the class and member of one of the function's records or symbol-file names, or the class of a vtable
+that holds the function or of a vptr it stores; a sibling class's destructor one vptr apart, or a library body of
+like shape, leaves the stub (`--report` counts these pairs too). A record names a function our file defines when a
+definition there has the record's qualified name and parameter types, so a defined overload does not hide an
+unwritten one, nor a destructor its constructor. So a pending member's trapping body (`units/README.md`) removes its
+stub. A non-virtual function we wrote that has no record, a constructor for one, keeps its stub.
 
 ```
 // <stubs>

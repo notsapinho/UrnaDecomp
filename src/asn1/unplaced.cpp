@@ -9,6 +9,9 @@
 // f8851 · 36 B · unmatched · placement: link order · name unknown
 // void f8851(i32) { ... }
 
+// f8850 · 36 B · unmatched · placement: link order · name unknown
+// void f8850(i32) { ... }
+
 // link-order cluster 129 · uses=1 · neighbours' file uenux2/src/api/gui/iscreen.cpp
 
 // f8941 · 31 B · unmatched · placement: link order · name unknown
