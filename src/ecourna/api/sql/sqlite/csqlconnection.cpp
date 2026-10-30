@@ -16,7 +16,7 @@ CSqlConnection::CSqlConnection(const std::string& caminho) : m_caminho(caminho),
 {
     if (sqlite3_open(caminho.c_str(), &m_db) != SQLITE_OK) {
         std::string mensagem = ObterMensagemErro(m_db);
-        sqlite3_close_v2(m_db);
+        sqlite3_close(m_db);
         throw CSqlError(ESE_ABRIR_BANCO, mensagem);
     }
 
@@ -28,11 +28,21 @@ CSqlConnection::CSqlConnection(const std::string& caminho) : m_caminho(caminho),
         comando->Close();
     } catch (...) {
         std::string mensagem = ObterMensagemErro(m_db);
-        sqlite3_close_v2(m_db);
+        sqlite3_close(m_db);
         m_fechada = true;
 
 
         throw CSqlError(ESE_INICIALIZAR_BANCO, mensagem);
+    }
+}
+
+CSqlConnection::~CSqlConnection()
+{
+    if (!m_fechada) {
+        try {
+            Close();
+        } catch (...) {
+        }
     }
 }
 
@@ -62,7 +72,7 @@ TSharedSqlStatement CSqlConnection::Prepare(const std::string& sql)
     sqlite3_stmt* comando;
     if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &comando, nullptr) != SQLITE_OK) {
 
-        // (original lines 74-85: content not recovered)
+        // (original lines 84-85: content not recovered)
 #line 86
         throw CSqlError(ESE_PREPARAR_COMANDO,
                         std::format("Falha ao executar operação no banco de dados.\nMensagem do banco de dados: '{}'\nOperação: '{}'",
@@ -77,10 +87,10 @@ bool CSqlConnection::IsClosed() const
     return m_fechada;
 }
 
-
 void CSqlConnection::Close()
 {
-    if (sqlite3_close_v2(m_db) != SQLITE_OK) {
+    const int resultado = sqlite3_close(m_db);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_FECHAR_BANCO, ObterMensagemErro(m_db));
     }
 

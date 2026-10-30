@@ -1,5 +1,13 @@
 #pragma once
 
+// api::IText: RTTI names the class; it has no vtable in the target. The alignment at +4 is this class's own. Every
+// implementation holds fn 1661, `return *(p + 4)`, in slot 3, which alone only says they share a layout (binaryen keeps
+// one of identical bodies). What decides is the store order in the call shapes where the two layouts differ: fns 10934
+// and 10548 build an api::CFixedText and store the vptr, then +4, which a member set by IText's constructor gives there
+// and one set in CFixedText's mem-initializer does not (+4 first). fn 10958 stores +4 first, and in its shape (a by-value
+// copy of a string, then the constructor) both layouts compile to one body that does: it is neutral, not against. The
+// default argument is chosen (fn 8757's WasmText stores 0 there, after its vptr).
+
 #include <memory>
 #include <string>
 
@@ -16,9 +24,17 @@ enum ETextAlignment {
  */
 class IText {
 public:
+    explicit IText(ETextAlignment alinhamento = ALINHAMENTO_ESQUERDA)
+        : m_alinhamento(alinhamento)
+    {
+    }
+
     virtual ~IText() = default;
     virtual std::string GetText() const = 0;
-    virtual ETextAlignment GetAlignment() const = 0;
+    virtual ETextAlignment GetAlignment() const { return m_alinhamento; }
+
+private:
+    ETextAlignment m_alinhamento;
 };
 
 using SharedIText = std::shared_ptr<IText>;

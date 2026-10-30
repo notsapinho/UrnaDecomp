@@ -1,13 +1,44 @@
-// <stubs>
-// f10967 · 1751 B · unmatched · name unknown
-// void f10967(i32, i32) { ... }
+// api::CQRCodeImage's constructor, fn 3662 (a note of the reconstruction). No record names it: its vptr store says
+// whose it is. The class's file is evidence: its vtable @1582024, 3 slots, ends at 1582044, this file's record 36:15,
+// so the key function, GetData, is here. That the constructor is here, after line 36, is a choice. Line 36 is
+// MontaImagem's throw, inlined into fn 10967 and not written, so it stays blank.
 
-// f10966 · 12 B · unmatched · placement: link order · name unknown
-// ? f10966(i32) { ... }
+#include "api/gui/cqrcodeimage.h"
 
-// f10964 · 12 B · unmatched · placement: link order · name unknown
-// void f10964(i32) { ... }
+namespace api {
 
-// f3662 · 103 B · unmatched · placement: link order · name unknown
-// ? f3662(i32, i32, i32) { ... }
-// </stubs>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CQRCodeImage::CQRCodeImage(const TPosition tamanho, const std::function<std::string()>& fonte)
+    : m_tamanho(tamanho)
+    , m_fonte(fonte)
+{
+}
+
+} // namespace api

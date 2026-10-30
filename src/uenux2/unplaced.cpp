@@ -3048,17 +3048,6 @@
 // f10362 · 12 B · unmatched · placement: link order · name unknown
 // void f10362(i32) { ... }
 
-// link-order cluster 308 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f10536 · 66 B · unmatched · placement: link order · name unknown
-// ? f10536(i32) { ... }
-
-// f10535 · 69 B · unmatched · placement: link order · name unknown
-// void f10535(i32) { ... }
-
-// f10534 · 54 B · unmatched · placement: link order · name unknown
-// void f10534(i32, i32) { ... }
-
 // link-order cluster 327 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
 
 // f10688 · 12 B · unmatched · placement: link order · name unknown
@@ -3074,17 +3063,6 @@
 
 // f10726 · 643 B · unmatched · placement: link order · name unknown
 // void f10726(i32, i32) { ... }
-
-// link-order cluster 341 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f10748 · 91 B · unmatched · placement: link order · name unknown
-// ? f10748(i32) { ... }
-
-// f10747 · 94 B · unmatched · placement: link order · name unknown
-// void f10747(i32) { ... }
-
-// f10746 · 216 B · unmatched · placement: link order · name unknown
-// void f10746(i32, i32) { ... }
 
 // link-order cluster 347 · uses=1 · neighbours' file uenux2/src/api/gui/logger.cpp
 
@@ -3193,26 +3171,6 @@
 // f11043 · 7 B · unmatched · placement: link order · name unknown
 // void f11043(i32) { ... }
 
-// link-order cluster 389 · uses=1 · neighbours' file uenux2/src/api/gui/cpreshowclearmt.cpp
-
-// f11047 · 28 B · unmatched · placement: link order · name unknown
-// void f11047(i32, i32) { ... }
-
-// link-order cluster 390 · uses=1 · neighbours' file uenux2/src/api/gui/cclockfieldmt.cpp
-
-// f11048 · 20 B · unmatched · placement: link order · name unknown
-// void f11048(i32, i32) { ... }
-
-// link-order cluster 391 · uses=1 · neighbours' file uenux2/src/api/gui/cbuzzfieldmt.cpp
-
-// f11049 · 25 B · unmatched · placement: link order · name unknown
-// void f11049(i32, i32) { ... }
-
-// link-order cluster 393 · uses=1 · neighbours' file uenux2/src/api/gui/cbeepfieldmt.cpp
-
-// f11053 · 20 B · unmatched · placement: link order · name unknown
-// void f11053(i32, i32) { ... }
-
 // link-order cluster 396 · uses=1 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
 
 // f11079 · 47 B · unmatched · placement: link order · name unknown
@@ -3282,42 +3240,6 @@
 // f11650 · 105 B · unmatched · placement: link order · name unknown
 // void f11650(i32) { ... }
 
-// link-order cluster 634 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f12287 · 39 B · unmatched · placement: link order · name unknown
-// void f12287(i32, i32) { ... }
-
-// link-order cluster 635 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f12291 · 88 B · unmatched · placement: link order · name unknown
-// ? f12291(i32) { ... }
-
-// f12290 · 91 B · unmatched · placement: link order · name unknown
-// void f12290(i32) { ... }
-
-// link-order cluster 636 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f12301 · 32 B · unmatched · placement: link order · name unknown
-// void f12301(i32, i32) { ... }
-
-// link-order cluster 637 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f12305 · 12 B · unmatched · placement: link order · name unknown
-// ? f12305(i32) { ... }
-
-// f12303 · 12 B · unmatched · placement: link order · name unknown
-// void f12303(i32) { ... }
-
-// link-order cluster 638 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f12317 · 12 B · unmatched · placement: link order · name unknown
-// void f12317(i32) { ... }
-
-// link-order cluster 639 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f12323 · 12 B · unmatched · placement: link order · name unknown
-// ? f12323(i32) { ... }
-
 // link-order cluster 641 · uses=1 · neighbours' file uenux2/src/api/gui/cinputfield.cpp
 
 // f12411 · 17 B · unmatched · placement: link order · name unknown
@@ -3348,21 +3270,6 @@
 
 // f12524 · 101 B · unmatched · placement: link order · name unknown
 // ? f12524(i32) { ... }
-
-// link-order cluster 648 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f12564 · 12 B · unmatched · placement: link order · name unknown
-// void f12564(i32) { ... }
-
-// link-order cluster 649 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f12567 · 12 B · unmatched · placement: link order · name unknown
-// ? f12567(i32) { ... }
-
-// link-order cluster 650 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f12580 · 57 B · unmatched · placement: link order · name unknown
-// void f12580(i32, i32) { ... }
 
 // link-order cluster 651 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
 
@@ -3423,11 +3330,6 @@
 // f12742 · 500 B · unmatched · placement: link order · name unknown
 // void f12742(i32, i32) { ... }
 
-// link-order cluster 663 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f12784 · 12 B · unmatched · placement: link order · name unknown
-// void f12784(i32, i32) { ... }
-
 // link-order cluster 695 · uses=2
 
 // f4620 · 229 B · unmatched · placement: link order · name unknown
@@ -3461,11 +3363,6 @@
 
 // f5052 · 10 B · unmatched · placement: link order · name unknown
 // void f5052(i32) { ... }
-
-// link-order cluster 722 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreen.cpp
-
-// f5071 · 17 B · unmatched · placement: link order · name unknown
-// ? f5071(i32) { ... }
 
 // link-order cluster 736 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
 
@@ -3656,12 +3553,6 @@
 // f6061 · 209 B · unmatched · placement: link order · name unknown
 // ? f6061(i32, i32, i32) { ... }
 
-// f6060 · 60 B · unmatched · placement: link order · name unknown
-// ? f6060(i32, i32) { ... }
-
-// f6059 · 63 B · unmatched · placement: link order · name unknown
-// void f6059(i32, i32) { ... }
-
 // f6049 · 159 B · unmatched · placement: link order · name unknown
 // ? f6049(i32, i32) { ... }
 
@@ -3694,16 +3585,6 @@
 
 // f6327 · 41 B · unmatched · placement: link order · name unknown
 // void f6327(i32) { ... }
-
-// link-order cluster 892 · uses=2 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
-
-// f6330 · 12 B · unmatched · placement: link order · name unknown
-// void f6330(i32, i32) { ... }
-
-// link-order cluster 893 · uses=2 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f6404 · 17 B · unmatched · placement: link order · name unknown
-// void f6404(i32, i32) { ... }
 
 // link-order cluster 894 · uses=2 · neighbours' file uenux2/src/api/gui/cmaskedtextfield.cpp
 
@@ -3890,11 +3771,6 @@
 // f2024 · 441 B · unmatched · placement: link order · name unknown
 // ? f2024(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1212 · uses=7 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
-
-// f1694 · 423 B · unmatched · placement: link order · name unknown
-// void f1694(i32, i32, i32) { ... }
-
 // link-order cluster 1268 · uses=11 · neighbours' file uenux2/src/api/util/isystemdatetime.cpp
 
 // f1152 · 444 B · unmatched · placement: link order · name unknown
@@ -3902,16 +3778,6 @@
 
 // f1151 · 330 B · unmatched · placement: link order · name unknown
 // void f1151(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1288 · uses=14 · neighbours' file uenux2/src/app/comum/relatorios/ccalculacv.cpp
-
-// f941 · 385 B · unmatched · placement: link order · name unknown
-// void f941(i32, i32, i32) { ... }
-
-// link-order cluster 1305 · uses=20 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
-
-// f728 · 381 B · unmatched · placement: link order · name unknown
-// void f728(i32, i32) { ... }
 
 // link-order cluster 1312 · uses=23 · neighbours' file uenux2/src/api/gui/cinteractiveformbuilder.cpp
 
@@ -3997,35 +3863,8 @@
 
 // link-order cluster 128 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
 
-// f8810 · 67 B · unmatched · placement: link order · name unknown
-// void f8810(i32) { ... }
-
-// f8799 · 499 B · unmatched · placement: link order · name unknown
-// void f8799(i32, i32, i32) { ... }
-
-// f8787 · 15 B · unmatched · placement: link order · name unknown
-// void f8787(i32, i32, i32) { ... }
-
-// f8757 · 250 B · unmatched · placement: link order · name unknown
-// void f8757(i32, i32) { ... }
-
 // f8748 · 12 B · unmatched · placement: link order · name unknown
 // ? f8748(i32) { ... }
-
-// f8746 · 1371 B · unmatched · placement: link order · name unknown
-// void f8746(i32) { ... }
-
-// f8745 · 127 B · unmatched · placement: link order · name unknown
-// ? f8745(i32) { ... }
-
-// f8744 · 130 B · unmatched · placement: link order · name unknown
-// void f8744(i32) { ... }
-
-// f8743 · 5 B · unmatched · placement: link order · name unknown
-// ? f8743(i32) { ... }
-
-// f8742 · 5 B · unmatched · placement: link order · name unknown
-// ? f8742(i32) { ... }
 
 // link-order cluster 207 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasminit.cpp
 
@@ -4060,22 +3899,6 @@
 
 // f4683 · 57 B · unmatched · placement: link order · name unknown
 // void f4683(i32, i32, i32) { ... }
-
-// link-order cluster 720 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
-
-// f5039 · 15 B · unmatched · placement: link order · name unknown
-// void f5039(i32, i32) { ... }
-
-// f5038 · 22 B · unmatched · placement: link order · name unknown
-// void f5038(i32) { ... }
-
-// f5036 · 22 B · unmatched · placement: link order · name unknown
-// void f5036(i32) { ... }
-
-// link-order cluster 724 · uses=2 · neighbours' file ecourna/app/dados/resultadournacadastro/cdadoscifracao.cpp
-
-// f5098 · 202 B · unmatched · placement: link order · name unknown
-// void f5098(i32, i32) { ... }
 
 // link-order cluster 726 · uses=2 · neighbours' file ecourna/app/dados/cnumerocpf.cpp
 
@@ -4119,11 +3942,6 @@
 
 // f1524 · 705 B · unmatched · placement: link order · name unknown
 // void f1524(i32, i32) { ... }
-
-// link-order cluster 1242 · uses=9
-
-// f1355 · 190 B · unmatched · placement: link order · name unknown
-// ? f1355(i32, i32, i32) { ... }
 
 // component vota-web
 

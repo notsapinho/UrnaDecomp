@@ -7,7 +7,7 @@
 //         GetTypeName, the class's key function, puts in the pending object until it moves here)
 //   11097 GetTypeName() const   a call into fn 2904, the body binaryen's merge-similar-functions made of four
 //                               functions that return an 11-character name; our link keeps it unmerged     (pending)
-//   11102 Draw(IScreen&) const  calls IScreen slots 22 and 24, which iscreen.h does not declare           (pending)
+//   11102 Draw(IScreen&) const  calls IScreen slots 22 and 24, two of iscreen.h's DrawImage overloads      (pending)
 //   11101 Rect() const          record at line 52, col 12: CPolySingleton<IScreen>::instance() (fn 512)  (pending)
 //   2241  Move(const SPoint&)   one body binaryen shares with CTextField, CImageFieldUpdate, CTextFieldBlinking and
 //                               CTextFieldUpdate; CDSImageField inherits it   (here, below Rect's line: a choice)

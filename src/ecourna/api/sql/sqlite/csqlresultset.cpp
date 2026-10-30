@@ -11,6 +11,19 @@
 
 namespace ecourna::api::sql::sqlite {
 
+namespace {
+
+std::string ObterSql(sqlite3_stmt* comando)
+{
+    const char* sql = sqlite3_sql(comando);
+    if (sql != nullptr) {
+        return std::string(sql);
+    }
+    return std::string("INDISPONÍVEL");
+}
+
+} // namespace
+
 CSqlResultSet::CSqlResultSet(sqlite3* db, sqlite3_stmt* stmt)
     : m_db(db), m_stmt(stmt), m_temDados(false), m_primeiraLinha(false), m_numeroColunas(0)
 {
@@ -18,8 +31,7 @@ CSqlResultSet::CSqlResultSet(sqlite3* db, sqlite3_stmt* stmt)
     m_primeiraLinha = true;
 }
 
-// (original lines 21-34: content not recovered)
-#line 35
+
 int CSqlResultSet::GetInt(int coluna)
 {
     VerifyColumnIndex(coluna);
@@ -118,12 +130,13 @@ std::vector<uebyte> CSqlResultSet::GetBlob(int coluna)
 
     const uebyte* dados = static_cast<const uebyte*>(sqlite3_column_blob(m_stmt, coluna));
     int tamanho = sqlite3_column_bytes(m_stmt, coluna);
+    if (tamanho == 0) {
+        return std::vector<uebyte>();
+    }
 
     return std::vector<uebyte>(dados, dados + tamanho);
 }
 
-// (original lines 137-139: content not recovered)
-#line 140
 void CSqlResultSet::VerifyColumnIndex(int coluna) const
 {
     if (coluna < 0 || coluna >= m_numeroColunas) {
@@ -162,12 +175,12 @@ bool CSqlResultSet::StepStatement()
         }
     }
 
-    bool temLinha = resultado == SQLITE_ROW;
-    if (temLinha || resultado == SQLITE_OK || resultado == SQLITE_DONE) {
-        return temLinha;
+    if (resultado == SQLITE_ROW) {
+        return true;
+    } else if (resultado == SQLITE_OK || resultado == SQLITE_DONE) {
+        return false;
     } else {
-        const char* sql = sqlite3_sql(m_stmt);
-        std::string operacao = sql != nullptr ? std::string(sql) : std::string("INDISPONÍVEL");
+        std::string operacao = ObterSql(m_stmt);
 
         throw CSqlError(ESE_EXECUTAR_PASSO,
                         std::format("Falha ao executar operação no banco de dados.\nMensagem do banco de dados: '{}'\nOperação: '{}'",
@@ -206,8 +219,3 @@ std::vector<uebyte> CSqlResultSet::GetBlob(const std::string& coluna)
 }
 
 } // namespace ecourna::api::sql::sqlite
-
-// <stubs>
-// f9449 · 135 B · unmatched · placement: link order · name unknown
-// ? f9449(i32, i32, i32) { ... }
-// </stubs>

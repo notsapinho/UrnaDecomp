@@ -12,15 +12,7 @@ namespace ecourna::api::sql::sqlite {
 class CSqlStatement final : public ISqlStatement {
 public:
     CSqlStatement(sqlite3* db, sqlite3_stmt* stmt);
-    ~CSqlStatement() override
-    {
-        if (!m_fechado) {
-            try {
-                Close();
-            } catch (...) {
-            }
-        }
-    }
+    ~CSqlStatement() override;
 
     void SetInt(int indice, int valor) override;
     void SetInt64(int indice, ueint64 valor) override;

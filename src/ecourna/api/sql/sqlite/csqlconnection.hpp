@@ -10,15 +10,7 @@ namespace ecourna::api::sql::sqlite {
 class CSqlConnection final : public ISqlConnection {
 public:
     explicit CSqlConnection(const std::string& caminho);
-    ~CSqlConnection() override
-    {
-        if (!m_fechada) {
-            try {
-                Close();
-            } catch (...) {
-            }
-        }
-    }
+    ~CSqlConnection() override;
 
     void BeginTransaction() override;
     void CommitTransaction() override;

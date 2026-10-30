@@ -6,7 +6,7 @@
 // api/gui/ctextfieldblinking.h, not stand-ins; they move to ctextfieldblinking.o with the vtable when Draw does. The
 // bodies below are NOT the target's, they trap. Target functions, by vtable slot (vtable @1582448; ledger/vtables.json),
 // and what each waits for:
-//   2  10946  Draw(IScreen&) const: draws through the IScreen slot at +76, which api/gui/iscreen.h does not declare
+//   2  10946  Draw(IScreen&) const: draws through the IScreen slot at +76, iscreen.h's DrawText from a point
 //   7  10940  GetTypeName() const: builds "CTextFieldBlinking" through fn 3891, which has no name yet
 //   8  10943  Rect() const (record ctextfieldblinking.cpp:70:21): calls fn 3889, which has no name yet
 // Slots 5 and 6 are IFormFieldBase<IScreen>'s Refresh and SetForm (fns 4118, 3037), inherited. Move each member into
