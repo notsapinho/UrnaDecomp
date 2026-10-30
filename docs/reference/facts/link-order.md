@@ -211,3 +211,83 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     5898 (`comum::IInterfaceInit::~IInterfaceInit`) has one direct caller, 9388, and table slot 535, so it sits in
     the `uses` 2 band (4303-6974, L1) among the members of its file. A band read from `ledger/functions.tsv` puts it
     in the wrong one.
+14. `ledger/ordinals.tsv`'s `ordinal` column is not a link ordinal. For a `window` row (9,576 of 14,343, and 3,232 of
+    the 3,270 TSE functions) it is the ordinal at the middle rank of the window `rank_lo`..`rank_hi`
+    (`tools/linkorder/linkorder.py` line 587, `ord_of_rank[(rk_lo + rk_hi) // 2]`), so consecutive band positions with
+    windows of one width step through consecutive ranks, which the order law fills with 3- and 2-digit values among the
+    4-digit ones. Values repeat across unrelated functions:
+
+    ```sh
+    awk -F'\t' 'NR>1 && $1>=5909 && $1<=5913 {print $1, $5, $8, $9, $10}' ledger/ordinals.tsv
+    # 5909 4301 window 2570 10086 / 5910 4300 window 2571 10087 / 5911 430 window 2572 10088
+    # 5912 43 window 2573 10089 / 5913 4299 window 2574 10090
+    awk -F'\t' 'NR>1 && $5==4303 {print $1, $2, $8, $9, $10}' ledger/ordinals.tsv
+    # 5907 2 window 2568 10084 / 10549 1 window 5793 6860 / 10945 1 window 6195 6457
+    awk -F'\t' 'NR>1 {n[$5]++} END {d=0; f=0; for (k in n) if (n[k]>1) {d++; f+=n[k]}; print d, f}' ledger/ordinals.tsv
+    # 3476 10002                                (values held by more than one function; the functions holding them)
+    awk -F'\t' 'NR>1 && $8=="anchored" {n[$2" "$5]++} END {d=0; for (k in n) if (n[k]>1) d++; print d}' ledger/ordinals.tsv
+    # 387                                       (values two anchored functions of one band share)
+    ```
+
+    An `anchored` row's `ordinal` is the solve's estimate too: real ordinals are unique, and 387 values are shared
+    inside one band by anchored rows, so the windows of §L6 are sound only where the anchors are right.
+
+    So stretch 853's 430 and 43 say nothing about 5911 and 5912, whose windows span 7,516 ranks; and 4303 is the
+    estimate of 5907, of `api::CTextFieldUpdateMT`'s D0 10549 and of 10945, in `api::CTextFieldBlinking`'s stretch. A
+    stretch is a run of band positions, which the order law makes reverse link order (L1) except where a function of
+    another digit zone sorts in; the twin rule (`docs/reference/link-order.md` §7.5) takes out only a labelled one, and
+    for an unanchored function the ledger cannot tell. Read neighbours by band position, never by comparing two `ordinal` values, and confirm them from
+    the data (item 15).
+15. Data order is link order with no digit scramble. wasm-ld lays out each data segment's input sections in the order
+    of the objects on the link line, and with `-fPIC` a TU's vtables, typeinfos and `std::source_location` records all
+    go to `.data` (`.data.rel.ro`), so they interleave object by object. In our own link, from its map:
+
+    ```sh
+    P=build/out/linkorder-facts; mkdir -p $P; M=build/out/wasm-map/vota_web/vota_web_wasm.map
+    tr ' ' '\n' < build/out/wasm-map/vota_web/link.cmd | /usr/bin/grep -E '\.o$' | awk '!s[$0]++' > $P/line.txt
+    for seg in .rodata .data; do
+      awk -v seg=$seg 'NF==4 && ($4==".rodata" || $4==".data" || $4==".bss") {d = ($4 == seg); next} d && $4 ~ /\.o:\(/ {o=$4; sub(/:\(.*$/, "", o); if (!(o in s)) {s[o]=1; print o}}' $M > $P/seg.txt
+      awk -v seg=$seg 'NR==FNR {p[$0]=NR; next} ($0 in p) {n++; if (p[$0] < last) {bad++; b=b " " $0}; last=p[$0]} END {print seg ": " n " objects, " bad+0 " out of link-line order" b}' $P/line.txt $P/seg.txt; done
+    # .rodata: 266 objects, 0 out of link-line order
+    # .data: 250 objects, 1 out of link-line order app/wasm_shim.o      (its em_js section, which emscripten places last)
+    ```
+
+    In the target, the vtables (`ledger/vtables.json` `address`) and records (`ledger/source-locations.tsv` column 1)
+    around a class's vtable therefore belong to the objects linked beside the one that emits it. A vtable or typeinfo
+    of a class with no key function is a linkonce copy kept in its first user's object, like a linkonce function.
+    `comum::CMenuBase` (5913's class) follows `informacao/cinformacaoeleicao.cpp`, and `comum::CAppState` sits before
+    the first record of `app/comum/carquivosresultado.cpp`:
+
+    ```sh
+    python3 -I -c "
+    import csv, json
+    lo, hi = 1550760, 1551360
+    d = [(e['address'], 'vtable ' + e['class']) for e in json.load(open('ledger/vtables.json')) if lo <= e['address'] <= hi]
+    d += [(int(r[0]), 'record ' + r[1].split('/src/', 1)[-1]) for r in csv.reader(open('ledger/source-locations.tsv', encoding='latin-1'), delimiter='\t') if r[0].isdigit() and lo <= int(r[0]) <= hi]
+    [print(a, t[:90]) for a, t in sorted(set(d))]"
+    # 1550764 record app/comum/informacao/cinformacaoeleicao.cpp
+    # 1550780 vtable comum::CItemImprimeEstadoUrna         … CItemImprimeListaEleitores, CItemParametrosUrna, CItemVersoesPacotes
+    # 1550924 vtable comum::CMenuBase
+    # 1550952 vtable api::COptionValidation                (no key function: a copy in its first user)
+    # …                                                    (api/persistencia/cdaorepositorio.hpp records, two __shared_ptr_pointer vtables)
+    # 1551204 vtable comum::CAbstractTelaProgresso
+    # 1551240 vtable comum::CAppState
+    # 1551304 vtable comum::CAppStateContext
+    # 1551340 record app/comum/carquivosresultado.cpp
+    # 1551356 record app/comum/carquivossavd.cpp
+    ```
+
+    A run of files is in name order only where the data show it. `app/comum/`'s own files are; `app/vota/operador/`'s
+    subdirectories and the files of `confirmaidentidade/` are not:
+
+    ```sh
+    LC_ALL=C awk -F'\t' -v d="uenux2/src/app/comum/" 'index($2, d) {f = substr($2, index($2, d) + length(d)); if (f !~ /\//) print $1, f}' ledger/source-locations.tsv | sort -n | awk '!s[$2]++ {printf " %s", $2} END {print ""}'
+    # carquivosresultado.cpp carquivossavd.cpp cinfomtlcd.cpp cpacotearquivos.cpp cpath.cpp iinterfaceinit.cpp iinterfacesavd.cpp
+    LC_ALL=C awk -F'\t' -v d="uenux2/src/app/vota/operador/" 'index($2, d) {print $1, substr($2, index($2, d) + length(d))}' ledger/source-locations.tsv | sort -n | awk '!s[$2]++ {printf " %s", $2} END {print ""}'
+    # outrasopcoes/caguardaeleitoresvotarem.cpp outrasopcoes/cencerramentohorarioinvalido.cpp outrasopcoes/cescolheopcao.cpp
+    #   leidentidade/cpedeidentidade.cpp leidentidade/celeitorencontrado.cpp justificativa/iconfirmajustificativa.cpp
+    #   justificativa/iiniciajustificativa.cpp comum/cinformacaothreadoperador.cpp confirmaidentidade/ccontrolareconhecimento.cpp
+    #   confirmaidentidade/cnomeeleitor.cpp confirmaidentidade/cdigitalreconhecida.cpp confirmaidentidade/cdigitalnaoreconhecida.cpp
+    #   confirmaidentidade/cpededigital.cpp confirmaidentidade/cregistradigitaloperador.cpp aguardaeleitor/cmostraeleitorvotando.cpp
+    #   aguardaeleitor/csuspensaoautomaticaeleitor.cpp cthreadoperador.cpp
+    ```

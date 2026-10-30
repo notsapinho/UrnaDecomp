@@ -2,8 +2,10 @@
 
 How the tools a decompile round runs behave where the obvious reading of a command is wrong: Node versions, the
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed snapshot, the checks
-after step 9, Latin-1 text in pipes, zsh, withdrawing a match and `pnpm test`. `docs/how-to-decompile.md`,
-`docs/getting-started.md` and `docs/agents.md` rely on these. Measured in a worktree at 7bf701e on macOS (zsh 5.9,
+after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
+rebuilds, a match line two branches add, and a header two branches add. `docs/how-to-decompile.md`,
+`docs/getting-started.md` and `docs/agents.md` rely on these.
+W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, on macOS (zsh 5.9,
 wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH; Node 26 aborts with no message
@@ -25,7 +27,7 @@ line:
 The same command with that PATH scores the function (W2). `tools/setup/bootstrap.sh --check` names the cause:
 `WRONG node v26.11.1: the toolkit is tested on Node 24`.
 
-## W2. The lone link of `try-tu.sh --single` differs from the build in three ways a source change cannot explain
+## W2. The lone link of `try-tu.sh --single` differs from the build in ways a source change cannot explain
 
 1. **Callees the program shares are inlined.** A uenux2 throw that builds its message with `std::format` instantiates
    libc++'s formatting code in the TU; linked alone, each piece has one caller and binaryen inlines them all.
@@ -69,10 +71,21 @@ The same command with that PATH scores the function (W2). `tools/setup/bootstrap
    The whole link of the same TU matches 3907: unit 48 lands it, and `git show 01a2157:splat/matched.txt | awk
    '$1==3907'` lists it.
 
-3. **try-tu compiles a copy of the TU.** It copies each file to `build/out/try/<name>/src/<component>/`
-   (`tools/round/try-tu.sh` line 146, `cp "$p" "$T/$src"`) and compiles the copy, so a quoted `#include` of a file
-   beside the original is not found there and `-I/work/src/uenux2/src` resolves it to the tracked header of that
-   name, or to nothing. Pass a variant header's directory with `--flags "-I/work/<dir>"`, as above.
+3. **try-tu compiles a copy of the TU, and `--flags` come after the tree's include paths.** It copies each file to
+   `build/out/try/<name>/src/<component>/` (`tools/round/try-tu.sh` line 152, `cp "$p" "$T/$src"`) and compiles the
+   copy, so a quoted `#include` of a file beside the original is not found there and `-I/work/src/uenux2/src`
+   resolves it to the tracked header of that name, or to nothing. try-tu appends `--flags` after the tree's `-Isrc
+   -Isrc/uenux2/src -Isrc/asn1` (line 160 prints the command), so a header passed with `-I` is found only where the
+   tree has none at that path, as in item 2's run; a variant of a tracked header loses to it, and the try compiles the
+   tracked one with no word said. Pass a variant with `--flags "-iquote /work/<dir>"` instead, the headers under it
+   at their tree paths, and check the try's object for a symbol only the variant gives (`--symbols`, or `llvm-nm` on
+   `build/out/try/<name>/obj/<tu>.o`). [tool-traps.md](tool-traps.md) §X8 has the include search order and the probes,
+   one of them a variant that a tracked header includes.
+4. **binaryen can treat a function with no callee differently alone.** A compare that the whole link computes once
+   and keeps with `local.tee` for two `select`s can stay computed twice alone: a source that matches 11067
+   (`api::CLineField::Rect`) in the whole link scores 9 alone ([tool-traps.md](tool-traps.md) §X9). What binaryen does
+   not touch reads the same in both links: the instruction kinds, the loads and the store order
+   ([codegen.md](codegen.md) §C1).
 
 `--symbols` lists the function symbols and weak data a TU defines (`llvm-nm` types `T` and `W`, line 164), not
 strong data. The class's own vtable and typeinfo are strong:
@@ -182,6 +195,20 @@ file whose last stub goes; until that deletion is staged, the check dies:
     python3 -I -B tools/round/check_encoding.py
       every file .editorconfig gives a charset is in that charset
 
+The other side of the same list: a new file is checked only once it is in the index. A scratch UTF-8 header in a
+Latin-1 directory, at ee595de:
+
+    printf '// probe: \xc3\xa1 in UTF-8\n' > src/uenux2/src/api/gui/probe-utf8.h
+    python3 -I -B tools/round/check_encoding.py; echo "exit $?"
+      every file .editorconfig gives a charset is in that charset
+      exit 0
+    git add -N src/uenux2/src/api/gui/probe-utf8.h && python3 -I -B tools/round/check_encoding.py; echo "exit $?"
+      src/uenux2/src/api/gui/probe-utf8.h: declared latin1 in .editorconfig, but its non-ASCII bytes are UTF-8
+      exit 1
+    git rm -q --cached src/uenux2/src/api/gui/probe-utf8.h; rm src/uenux2/src/api/gui/probe-utf8.h
+
+So run it after `git add` of the unit's new files and `git rm` of the removed ones, before the commit.
+
 ## W9. A Latin-1 line breaks macOS `sed`, `cut` and `tr` in a UTF-8 locale, not only `grep`
 
 Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"`:
@@ -244,25 +271,31 @@ The real-link suites skip their cases when build outputs are missing at collecti
 which rewrite those files, can exit 0 with cases skipped. A run alone counts `193` tests with none skipped (below).
 CI has no build outputs and always skips them.
 
-`test/splat-kinds.test.ts` and `test/splat-review.test.ts` read our link's numbers from the link since 74604f5. One
-case of `test/splat-symbols.test.ts` still pins a list in the committed symbol file: "names a callee its anchored
-callers vote for, listing them as its voters" expects `__vformat_to` (146) to be named by `call` evidence with
-voters `700, 5447, 10250`. Each uenux2 function that throws a `std::format` message is an anchored caller of 146, so
-each one a unit lands adds a voter, and the symbol file lists voters only while there are at most four
-(`VOTERS_LISTED = 4`, `asmlift-wasm/src/splat-symbols.ts` line 282):
+`test/splat-kinds.test.ts` and `test/splat-review.test.ts` read our link's numbers from the link since 74604f5, and
+`test/splat-symbols.test.ts`'s "names a callee its anchored callers vote for, listing them as its voters" checks
+`__vformat_to` (146)'s `call` evidence since 04a718a, and its voters only while the symbol file lists them (at most
+four, `VOTERS_LISTED` in `asmlift-wasm/src/splat-symbols.ts`). Before 04a718a it expected exactly the voters `700,
+5447, 10250`, and each landed uenux2 function that throws a `std::format` message adds one, so it failed on 7bf701e:
 
     for c in 8cb5376 d09d335 ce227bf 7bf701e; do printf '%s ' $c; git show "${c}:splat/symbol_addrs.txt" | /usr/bin/grep -F '= func:146;' | sed 's/.*evidence:/evidence:/'; done
       8cb5376 evidence:call by:700,5447,10250
       d09d335 evidence:call by:700,5447,5544,10250
       ce227bf evidence:call
       7bf701e evidence:call
-    cd asmlift-wasm && TMPDIR=/tmp pnpm test
+    cd asmlift-wasm && TMPDIR=/tmp pnpm test                      # on 7bf701e
       FAIL  test/splat-symbols.test.ts > srclocAnchors > names a callee its anchored callers vote for, listing them as its voters
       AssertionError: expected null to deeply equal [ 700, 5447, 10250 ]
-      Test Files  1 failed | 16 passed (17)
            Tests  1 failed | 192 passed (193)
 
-So on 7bf701e `pnpm test` has one failure that no landing of the run caused, and every other case passes.
+On ee595de, which holds 04a718a, every case passes, run alone:
+
+    git merge-base --is-ancestor 04a718a HEAD && echo ancestor
+      ancestor
+    cd asmlift-wasm && TMPDIR=/tmp pnpm test
+      Test Files  17 passed (17)
+           Tests  193 passed (193)
+
+So on a commit that holds 04a718a no case is known to fail.
 
 ## W13. Showing that a header edit left the units that include it unchanged
 
@@ -280,3 +313,88 @@ Without an edit the loop prints nothing. The list is what make would rebuild, so
 leaves alone: such an object would compare equal with itself and prove nothing. The same holds for a comparison with
 a `tools/round/build-at.sh` base, whose `build/out/` is a clone of this one (W5): only the objects the base rebuilt
 are its own. A whole-link try rebuilds the objects of the list (W3), so take the copy before the first try.
+
+## W14. `make -C src stubs` on a merge before step 9 puts back what the other branch removed
+
+`tools/round/stubs.py` reads tracked inputs only (its docstring, "Inputs": `splat/scan.tsv`, `splat/matched.txt`,
+`splat/symbol_addrs.txt`, `ledger/functions.tsv`, …). Until steps 7 to 9 run on a merge, the scan, the symbol file and
+the census are the side git took whole, so the generator puts back the stubs of the other side's matches and pending
+members. At ee595de, with `main`'s side of unit 44's merge (9127880's first parent) in place of the three generated
+inputs:
+
+    git checkout 9127880^1 -- splat/scan.tsv splat/symbol_addrs.txt ledger/functions.tsv && make -s -C src stubs 2>&1 | tail -1; git status --short src
+      1 files written
+      ?? src/uenux2/src/api/gui/ctextfieldblinking.cpp
+    git checkout HEAD -- splat/scan.tsv splat/symbol_addrs.txt ledger/functions.tsv && make -s -C src stubs 2>&1 | tail -1; git status --short
+      1 files written
+
+The stub-only file unit 44 removed comes back, untracked, and the merge's own inputs remove it again. Step 9's
+`splat-match` runs the generator on the new scan, so it writes back what the merge holds. Stubs are comments and a gap
+keeps the numbers of the lines below it with `#line` (the docstring: "an object compiles byte-identical"), so a run
+before the link changes no object; a regenerated file the link compiles costs its compile twice, at the link and
+again in the splat build after step 9 rewrites it.
+
+## W15. An edit of a header, or a new header, rebuilds every object of its tree
+
+`UENUX2_HDRS` is every header under `src/uenux2/` (`src/Makefile` line 144, a `find`), and every generic uenux2
+object and `roots_uenux2.o` depend on all of it (lines 146 and 148), whether they include a header or not; a
+companion's rule names its own headers. At ee595de, a header that two headers and unit 50 include:
+
+    LC_ALL=C /usr/bin/grep -rl 'api/util/cdatetime.h' src
+      src/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.h
+      src/uenux2/src/app/vota/operador/comum/iinformacaothreadoperador.h
+      src/units/50-uenux2-cinformacaothreadoperador.mk
+    make -n -C src link -W $PWD/src/uenux2/src/api/util/cdatetime.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' | sed -E 's|^.*build/out/app/||' | awk '{ if ($0 ~ /^uenux2\//) g++; else print } END { print g " objects under uenux2/" }'
+      roots_uenux2.o
+      50-uenux2-cinformacaothreadoperador-pending.o
+      44 objects under uenux2/
+
+A header of `api/gui/`, whose directory 15 companion rules name with `$(wildcard …/api/gui/*.h)`, rebuilds those
+too, and a new header is newer than every object, so it does the same:
+
+    make -n -C src link -W $PWD/src/uenux2/src/api/gui/cimagefieldupdate.h | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -oE -- ' -o [^ ]+' | awk '{k = $2 ~ /app\/uenux2\// ? "uenux2" : ($2 ~ /-(pending|roots)\.o$/ ? "companion" : $2); c[k]++} END {for (k in c) print c[k], k}'
+      44 uenux2
+      1 build/out/app/roots_uenux2.o
+      15 companion
+    printf '#pragma once\n' > src/uenux2/src/api/gui/probe-new.h; make -n -C src link | /usr/bin/grep -c 'em++.* -c '; rm src/uenux2/src/api/gui/probe-new.h
+      60
+
+So before a link, the objects a unit's headers will rebuild are the union of `make -n -C src link -W $PWD/<file>`
+over the files it added or changed. After it, in the unit's worktree, they are every object built since the worktree
+was made: its `.git` file dates from `git worktree add`, and a cloned `build/out/` keeps the checkout's older mtimes,
+so `find build/out/app -name '*.o' -newer .git` lists them. That prints nothing in a worktree that has rebuilt
+nothing, and 48, 37, 38 and 48 objects in four lane worktrees whose units added headers, each the set that moving the
+objects aside and rebuilding recompiled. `find build/out/app -newer <header>` compares with that header's last edit
+and misses an object of the unit built before it (a roots object that includes nothing).
+
+## W16. A match line both branches add stops the splat build until one goes
+
+Two units can match one function that neither wrote as its target: a base's destructor that both bring in.
+`api::IFormFieldBase<api::IPaper>`'s D2, 11013, which any `IPaper` field's destructor pulls in through the base's
+vtable, came with unit 39 (commit 0af7fb0) and again with unit 53 (commit 4dd4f96, from a base without unit 39). A
+list that holds its line twice, at ee595de, from the repository root:
+
+    mkdir -p build/out/workflow-facts
+    { cat splat/matched.txt; /usr/bin/grep -m1 '^11013 ' splat/matched.txt; } > build/out/workflow-facts/matched-dup.txt
+    (cd asmlift-wasm && pnpm --silent wasm splat-build ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm --matches ../build/out/workflow-facts/matched-dup.txt --kinds ../build/out/wasm-kinds/vota_web/kinds.json --max-kind-unverified 0 -o ../build/out/workflow-facts/splat-dup.wasm 2>&1 | /usr/bin/grep -m1 Error)
+      Error: match list line 7479: function 11013 is already matched on line 7463
+    /usr/bin/grep -v '^#' build/out/workflow-facts/matched-dup.txt | cut -d' ' -f1 | sort | uniq -d
+      11013
+    /usr/bin/grep -v '^#' splat/matched.txt | cut -d' ' -f1 | sort | uniq -d
+      (nothing)
+
+So a landing keeps one line per index, under the symbol the merged link names, and counts that match once.
+
+## W17. A header added on two branches as the same blob merges with no conflict
+
+`src/uenux2/src/api/util/cdatetime.h` and `cdate.h` came to `main` with unit 50, and a branch from a base without unit
+50 (unit 60's commit a1b82b3, from fd8bb2d) added both as copies of that branch's files. The blobs are one, and a merge
+of the two lists neither among its conflicts (at ee595de):
+
+    git cat-file -e fd8bb2d:src/uenux2/src/api/util/cdatetime.h
+      fatal: path 'src/uenux2/src/api/util/cdatetime.h' exists on disk, but not in 'fd8bb2d'
+    git hash-object src/uenux2/src/api/util/cdatetime.h; git rev-parse a1b82b3:src/uenux2/src/api/util/cdatetime.h
+      2ba901277b2ae7d337b0189955dd5f777fe80b81
+      2ba901277b2ae7d337b0189955dd5f777fe80b81
+    git merge-tree --write-tree --name-only ee595de a1b82b3 2>/dev/null | /usr/bin/grep -c 'cdatetime.h\|cdate.h'
+      0

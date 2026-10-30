@@ -66,8 +66,15 @@ caller uses (5526, the `api::CMovie` constructor, is `(i32 i32 i32)->()`). A par
 constant is folded into the body, so the wasm type can have fewer parameters than the C++ function
 (`docs/how-to-decompile.md` step 2). The file comes from the function's records, else from its class's vtable or vptr
 (`ledger/vtables.json`, `ledger/func-attribution.tsv`); a function with neither is in its tree's `unplaced.cpp`,
-grouped by link-order cluster. A file the evidence names that does not exist yet holds its stubs only, and goes when
-its last stub goes, even when records name it: they can be an inlined callee's. Whoever removes that last stub, by a
+grouped by link-order cluster. The comment over a cluster (`// link-order cluster 984 · uses=3 · neighbours' file
+uenux2/src/api/gui/ctextfielddoubleline.cpp`) is its stretch's `probable_file` in `ledger/tu-clusters.tsv`: the file
+of a record one of the stretch's functions loads, or of a vtable class's records (`label_kinds` `source_location`,
+`class-record`), else a guess from a class name (`class-convention`). A stretch also holds unlabelled functions of
+other classes: f3660, `api::CSubReport`'s constructor, sits under 3659's record in cluster 984, and a stretch can
+hold functions of another digit zone ([../docs/reference/link-order.md](../docs/reference/link-order.md) §7.5). So
+the comment is a hint, not the file; `docs/how-to-decompile.md` step 3 gives the file. A file the evidence names
+that does not exist yet holds its stubs only, and goes when its last stub goes, even when records name it: they can
+be an inlined callee's. Whoever removes that last stub, by a
 match or a pending member, names the file and its record lines in the fragment's or the `-pending.cpp`'s header
 (`units/README.md` "Pending members"), so that whoever writes the functions of those records finds it. The deletion is
 left unstaged: `git rm` it before `python3 -I -B tools/round/check_encoding.py`, which reads the index and stops with
@@ -101,7 +108,14 @@ CNumeroCPF::CNumeroCPF(const std::string& numeroCPF) : IIdentificadorEleitor(TTi
 ```
 
 Write nothing of your own into those lines: they stay blank, and step 9 makes a run of three or more a gap, the
-project's statement that the content is not recovered. A comment there reads as TSE's, and no evidence gives it.
+project's statement that the content is not recovered. The lines a record names for a function no file of ours
+writes (a constructor its only caller inlined) stay blank too, and the members you write go after them, or before
+them when evidence says so: their lines are then a choice, which the file's header says. Such a run gets no gap when
+no record line lies below it: lines 4-77 of `uenux2/src/api/gui/cprogressbar.cpp` hold the records 52, 58 and 67 of
+the constructor that `std::make_shared`'s 5545 inlined, and stay 74 blank lines. When the records' function has a
+stub, step 9 writes the stub over its record's line: `uenux2/src/api/gui/cstepsprogressbar.cpp` holds a gap for
+lines 18-424, then f13550's stub on lines 425-428 (its record is 428:15), then the unit's members. A comment there
+reads as TSE's, and no evidence gives it.
 What a reader needs to know about the reconstruction (which target functions the file holds, which names and paths
 are chosen) goes in the file's header comment. Files landed before this rule still hold doc comments of their own
 above a function (`LC_ALL=C git grep -l '^ */\*\*' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'` lists them); they are
@@ -151,9 +165,12 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
   `src/` names the component; a TU outside `src/` needs `--component <dir under src/>` (`ecourna/app/dados`,
   `uenux2`, `asn1`, …), the directory it would land in.
 - **`--single`** compiles the TU alone, keeps one exported function through the toolkit's rank adapter, and scores
-  it against the target. A lone link makes other inlining and dead-argument decisions than the whole program, so
-  use it to iterate on a body and the whole link to conclude. Several TUs are rival candidates, ranked against
-  each other, never linked together: a callee in another TU stays an import. Undefined functions become imports,
+  it against the target. A lone link makes other inlining and dead-argument decisions than the whole program, and
+  even a function with no callee can come out otherwise alone (a compare the whole link shares between two `select`s
+  stays computed twice: a source that matches 11067 scores 9 alone,
+  [../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X9). So use it to iterate on a
+  body and the whole link to conclude. Several TUs are rival candidates, ranked against each other, never linked
+  together: a callee in another TU stays an import. Undefined functions become imports,
   but undefined data fails the link; `--flags '-Wl,--unresolved-symbols=ignore-all'` lets it through
   (`docs/how-to-decompile.md` step 4). The score counts what the lone link inlines into the function: for a throw
   that builds its message with `std::format`, all of libc++'s formatting code, so target 5468
@@ -163,8 +180,11 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
   way to compile a `src/units/*-pending.cpp`, which has no rule of its own that try-tu can find. A TU that is not at
   the path it would land in is compiled as a copy there, under `build/out/try/<name>/src/`, so a quoted `#include`
   of a file beside the original is not found, and `-Isrc/uenux2/src` (or the tree's other `-I`) finds the tracked
-  header of that name instead. Include a scratch header by its `/work/…` path, or edit the tracked one in your
-  worktree.
+  header of that name instead. To try a variant of a tracked header, put it under a scratch directory at its path in
+  the tree and pass `--flags "-iquote /work/<dir>"`: try-tu appends `--flags` after the tree's `-I` paths, so
+  `-I/work/<dir>` silently compiles the tracked header, while a `-iquote` directory comes before every `-I` one for
+  the tree's quoted includes, at any depth ([../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md)
+  §X8). Check the object for the variant's symbols afterwards.
 - **`--symbols`** compiles the TU and prints the function symbols it defines, mangled and demangled: `llvm-nm`'s `T`
   and `W` lines, so weak data shows too (an inline base's typeinfo) and strong data does not. A class's own vtable and
   typeinfo, which the TU that defines its key function emits, are strong data: to see whether a TU emits them, read
@@ -187,7 +207,11 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
   A census tier of `none` does not mean the body differs. `tools/round/link-map.sh build/out/try/<name>/wasm/vota_web`
   maps the try link the way `make -C src link-map` maps the plain one, `tools/round/link-kinds.sh` with the toolkit's
   `splat-kinds` gives it an operand-kind table the way `make -C src link-kinds` does, and `pnpm wasm splat-remap` then
-  compares one function of it with the target (`docs/how-to-decompile.md` step 5).
+  compares one function of it with the target (`docs/how-to-decompile.md` step 5). `--name` (default: the first TU's
+  base name) is joined to `build/out/try/` as given: `--name ../verify/x` puts the try in `build/out/verify/x/`, and
+  then `link-map.sh` and `link-kinds.sh` take its path as try-tu prints it, `build/out/try/../verify/x/wasm/vota_web`
+  (the normalised path fails with `link.cmd does not write …`,
+  [../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X10).
 
 `--skip-units <fragment>.mk` leaves a landed fragment out of the link, with its companion objects, so its TUs can be
 tried again without a duplicate symbol.

@@ -1,14 +1,17 @@
 # Reading the source from the target's bytes
 
 What a target body says about the C++ that compiled to it, beyond the name its `std::source_location` record gives:
-the parameters a wasm type hides, how a class returns by value, whether a destructor is out of line, implicit or
-`final`, whether a class is abstract, a free function's linkage, and code binaryen inlined from another function.
-`docs/how-to-decompile.md` steps 2, 3 and 5 rely on these.
+the parameters a wasm type hides, how a class returns or takes a class by value, how a destructor is declared and
+whether its class is `final`, whether a class is abstract, a free function's linkage, code binaryen inlined from
+another function, and the format string and argument types of a `std::format` throw. `docs/how-to-decompile.md` steps
+2, 3 and 5 rely on these. What a source form compiles to (the order of a body's stores, a switch over virtual slots,
+an in-class member against an `inline` one) is in [codegen.md](codegen.md).
 
 The probes are short TUs compiled by the pinned em++ with uenux2's flags, `-O2 -fPIC -std=c++20 -DNDEBUG
--fno-strict-aliasing` (`docs/reference/facts/app-flags.md` §F6), under `build/out/DOCS-A/probe/` of a checkout at
-7bf701e; their sources are given in full. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`,
-run from `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
+-fno-strict-aliasing` (`docs/reference/facts/app-flags.md` §F6); their sources are given in full. R1–R3 and R7–R11
+were measured under `build/out/DOCS-A/probe/` of a checkout at 7bf701e, R4–R6, R12 and R13 under
+`build/out/DOCS2-A/probe/` at ee595de. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run
+from `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
 ## R1. A parameter every caller passes as the same constant is gone from the wasm type
 
@@ -54,7 +57,7 @@ m_segundos;`), and `CTime CTime::operator-(int) const` is `(i32 i32)->(i32)` on 
 
 3641 is matched (`awk '$1==3641' splat/matched.txt` prints `3641 _ZNK3api5CTimemiEi`).
 
-## R4. A destructor that destroys members and stores no vptr is a `final` class's
+## R4. A destructor that destroys members and does not begin with its class's vptr store is a `final` class's
 
 clang stores the class's vptr at the start of a destructor so that virtual calls from it reach this class's
 members. It skips the store when no derived class can exist: the class (or the destructor) is `final`. Probe
@@ -98,36 +101,171 @@ The target's `comum::CSigVerifier` D2 frees three strings and stores nothing at 
         push p0;
       }
 
-## R5. A D0 that calls its D2 is an out-of-line destructor's; a D0 that holds the D2's body is an implicit or in-class one's
+`final` removes only the class's own store. A derived class's D2 that inlines its base's destructor stores the
+base's vptr where the base's part begins, `final` or not, and a class with no member of its own has no D2 of its own
+(its slot 0 holds the base's). Probe `dtorbase.cpp`:
 
-For a destructor defined out of line, clang emits D1 as an alias of D2 and the deleting destructor D0 calls D1, then
-`operator delete`; the inliner does not inline through the alias. An implicit destructor, or one defined in the
-class, is linkonce_odr with no alias, and D0 inlines it. The probe above (R4):
+    // What a derived class's implicit destructor does with its base's, and what final changes.
+    #include <string>
+    struct P { virtual ~P(); virtual void key(); std::string t; };    // P::~P() is out of line, in another .cpp
+    struct Q : P { std::string s; void key() override; };
+    struct P2 { virtual ~P2() = default; virtual void f() = 0; std::string t; };   // no key function: every virtual member is inline or pure
+    struct Q2 : P2 { std::string s; void f() override; };
+    struct Q3 final : P2 { std::string s; void f() override; };
+    struct Q4 : P2 { void f() override; };                            // no member of its own
+    void Q::key() {}
+    void Q2::f() {}
+    void Q3::f() {}
+    void Q4::f() {}
 
-    wasm-objdump -d build/out/DOCS-A/probe/dtor.o | awk '/^[0-9a-f]+ func\[/ {name=$3} /D0Ev>:/ {p=1} p && /call |i32.store/ {print name, $0} /^$/ {p=0}'
-      <_ZN3OolD0Ev>:  0000fd: 10 81 80 80 80 00          | call 1 <_ZN3OolD1Ev>
-      <_ZN3OolD0Ev>:  000108: 10 80 80 80 80 00          | call 0 <env._ZdlPvm>
-      <_ZN3FinD0Ev>:  00015d: 10 84 80 80 80 00          | call 4 <_ZN3FinD1Ev>
-      <_ZN3FinD0Ev>:  000168: 10 80 80 80 80 00          | call 0 <env._ZdlPvm>
-      <_ZN3InlD0Ev>:  0001b8: 36 02 00                   | i32.store 2 0
-      <_ZN3InlD0Ev>:  0001d8: 10 80 80 80 80 00          |   call 0 <env._ZdlPvm>
-      <_ZN3InlD0Ev>:  0001e3: 10 80 80 80 80 00          | call 0 <env._ZdlPvm>
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/dtorbase.cpp -o /work/build/out/DOCS2-A/probe/dtorbase.o
+    for s in _ZN1QD2Ev _ZN2Q2D2Ev _ZN2Q3D2Ev; do printf '%s: ' $s; wasm-objdump -d build/out/DOCS2-A/probe/dtorbase.o | awk -v s="<$s>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -E 'call |GOT.mem' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | tr '\n' ';'; echo; done
+      _ZN1QD2Ev: global.get 0 <GOT.mem._ZTV1Q>;call 0 <env._ZdlPvm>;call 1 <env._ZN1PD2Ev>;
+      _ZN2Q2D2Ev: global.get 1 <GOT.mem._ZTV2Q2>;call 0 <env._ZdlPvm>;global.get 2 <GOT.mem._ZTV2P2>;call 0 <env._ZdlPvm>;
+      _ZN2Q3D2Ev: call 0 <env._ZdlPvm>;global.get 2 <GOT.mem._ZTV2P2>;call 0 <env._ZdlPvm>;
 
-(the awk also prints lines of the functions that follow each D0 up to the next blank line; the D0 rows are the ones
-named `D0Ev`). In the target:
+`Q3`'s D2 begins with its string and stores `P2`'s vptr before `P2`'s string; `Q2`'s stores its own vptr first. `Q`
+calls `P`'s out-of-line D2 instead of inlining it (R5). The symbols (R6 reads them too):
 
-    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11443 | sed -n '/folded readout/,$p'
-      function f11443(i32 p0) -> () {
-        f5709(p0);
-        f136(p0);
-      }
+    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/DOCS2-A/probe/dtorbase.o | /usr/bin/grep -E 'D[012]Ev|_ZTV'
+               U _ZN1PD2Ev
+      0000004a W _ZN1QD0Ev
+      0000000d W _ZN1QD2Ev
+      0000029d W _ZN2P2D0Ev
+      00000227 W _ZN2P2D2Ev
+      …                                   # Q2's and Q3's D0 and D2
+      0000025e W _ZN2Q4D0Ev               # no _ZN2Q4D2Ev
+      00000000 D _ZTV1Q
+      0000009c W _ZTV2P2
+      …                                   # D _ZTV2Q2, _ZTV2Q3, _ZTV2Q4, and two U typeinfo vtables
 
-11443 is `comum::asn::CVisitanteFoto`'s D0 calling its D2 5709: out of line, as unit 36 writes it (`git show
-9271d74:src/uenux2/src/app/comum/dados/asn/candidatura/cvisitantefoto.cpp` has `CVisitanteFoto::~CVisitanteFoto() =
-default;` on line 5). 11176 (`comum::CSigVerifier`'s D0; unit 26 keeps the destructor implicit) and 12049
-(`vota::IQRCodeBUDS`'s) free the members themselves and then call `f136(p0)`, `operator delete`; 12049 starts with
-the vptr store `i32.store[p0] = 1542092` (R4: not `final`). The D2's bytes are the same in both forms, so only the D0 tells them apart. Whether the destructor
-is out of line decides the key function, and so the TU that emits the vtable, the D2 and the D0.
+## R5. The D0's shape gives the destructor's form; the D2 is the same in every form
+
+clang emits a virtual destructor in one of three shapes, and only the deleting destructor (D0) shows which. Probe
+`dtorform.cpp`, one class whose destructor is written six ways (`key()` is the key function, so every form emits the
+vtable):
+
+    // One class, its destructor written six ways (FORM 0-5); key() is the key function, so every form emits the vtable.
+    #include <memory>
+    #include <string>
+    #include <vector>
+    struct B { virtual ~B() = default; virtual void key(); };
+    struct X : B {
+        std::vector<std::shared_ptr<int>> v;
+        std::string s;
+        void key() override;
+    #if FORM == 1
+        ~X() override = default;          // in the class
+    #elif FORM == 2
+        ~X() override {}                  // in the class, braces
+    #elif FORM == 3
+        inline ~X() override = default;   // in the class, inline
+    #elif FORM == 4 || FORM == 5
+        ~X() override;                    // declared only
+    #endif                                // FORM 0: implicit
+    };
+    #if FORM == 4
+    inline X::~X() = default;             // after the class, inline (a header's form)
+    #elif FORM == 5
+    X::~X() = default;                    // out of line, in the .cpp
+    #endif
+    void X::key() {}
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 2 3 4 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/DOCS2-A/probe/dtorform.cpp -o /work/build/out/DOCS2-A/probe/dtorform-$f.o; done'
+    for f in 0 1 2 3 4 5; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/DOCS2-A/probe/dtorform-$f.o | awk '/<_ZN1XD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} END {print n " lines, calls at depth 0:" c}'; done
+      FORM 0: 87 lines, calls at depth 0: <env._ZdlPvm>
+      FORM 1: 5 lines, calls at depth 0: <_ZN1XD2Ev> <env._ZdlPvm>
+      FORM 2: 5 lines, calls at depth 0: <_ZN1XD2Ev> <env._ZdlPvm>
+      FORM 3: 87 lines, calls at depth 0: <env._ZdlPvm>
+      FORM 4: 87 lines, calls at depth 0: <env._ZdlPvm>
+      FORM 5: 7 lines, calls at depth 0: <_ZN1XD1Ev> <env._ZdlPvm>
+    cmp build/out/DOCS2-A/probe/dtorform-0.o build/out/DOCS2-A/probe/dtorform-3.o && cmp build/out/DOCS2-A/probe/dtorform-3.o build/out/DOCS2-A/probe/dtorform-4.o && cmp build/out/DOCS2-A/probe/dtorform-1.o build/out/DOCS2-A/probe/dtorform-2.o && echo 'FORM 0 = 3 = 4, FORM 1 = 2'
+      FORM 0 = 3 = 4, FORM 1 = 2
+
+| form | D0 | in the target |
+| --- | --- | --- |
+| implicit, or declared `inline` (in the class, or `inline X::~X() = default;` after it: the same object) | the D2's body inlined, then `operator delete` | 11176 (82 B, `comum::CSigVerifier`, implicit, unit 26) |
+| in the class without `inline` (`= default` or `{}`: the same object) | `call D2` and `operator delete` of its result | `f136(f5531(p0))`, 11086 (10 B, `api::CImageFieldUpdate`, unit 43) |
+| out of line in the `.cpp` | `call D1` (D2's alias), `drop`, `operator delete(this)` | `f5709(p0); f136(p0);`, 11443 (13 B, `comum::asn::CVisitanteFoto`, unit 36) |
+
+What separates the first two rows is the inline hint. Only an implicit destructor and one declared `inline` carry it
+before optimization:
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 3 4 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -S -emit-llvm -Xclang -disable-llvm-passes /work/build/out/DOCS2-A/probe/dtorform.cpp -o /work/build/out/DOCS2-A/probe/dtorform-$f.ll; done'
+    for f in 0 1 3 4 5; do a=$(/usr/bin/grep -E '^define .*@_ZN1XD2Ev\(' build/out/DOCS2-A/probe/dtorform-$f.ll | /usr/bin/grep -oE '#[0-9]+'); printf 'FORM %s: %s\n' $f "$(/usr/bin/grep -E "^attributes $a " build/out/DOCS2-A/probe/dtorform-$f.ll | /usr/bin/grep -oE 'inlinehint' || echo no inlinehint)"; done
+      FORM 0: inlinehint
+      FORM 1: no inlinehint
+      FORM 3: inlinehint
+      FORM 4: inlinehint
+      FORM 5: no inlinehint
+
+The hint raises the cost up to which LLVM inlines the D2 into the D0. So an in-class destructor without `inline`
+still holds a cheap D2's body: `vota::IQRCodeBUDS` declares `virtual ~IQRCodeBUDS() = default;` in
+`src/uenux2/src/app/vota/eleitor/fimvotacao/cmostraqrcodebu.h`, and its D0 12049 (119 B) holds the 116-B D2 12050.
+The probe's D2, a vector of `shared_ptr` and a string, is above that cost and below the hinted one;
+`api::CImageFieldUpdate`'s (5531, 175 B) is above the first, since 11086 calls it.
+
+A class with no base (a root class) has a virtual destructor only by declaring it, so the implicit form is not open
+to it. Probe `dtorroot.cpp`, the same members in a root class `R`:
+
+    // A class with no base: its destructor is virtual only when declared so.
+    #include <memory>
+    #include <string>
+    #include <vector>
+    struct R {
+        std::vector<std::shared_ptr<int>> v;
+        std::string s;
+        virtual void key();
+    #if FORM == 1
+        virtual ~R() = default;           // in the class
+    #elif FORM == 3
+        inline virtual ~R() = default;    // in the class, inline
+    #elif FORM == 5
+        virtual ~R();                     // out of line, below
+    #endif
+    };
+    #if FORM == 5
+    R::~R() = default;
+    #endif
+    void R::key() {}
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 1 3 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/DOCS2-A/probe/dtorroot.cpp -o /work/build/out/DOCS2-A/probe/dtorroot-$f.o; done'
+    for f in 1 3 5; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/DOCS2-A/probe/dtorroot-$f.o | awk '/<_ZN1RD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} END {print n " lines, calls at depth 0:" c}'; done
+      FORM 1: 5 lines, calls at depth 0: <_ZN1RD2Ev> <env._ZdlPvm>
+      FORM 3: 87 lines, calls at depth 0: <env._ZdlPvm>
+      FORM 5: 7 lines, calls at depth 0: <_ZN1RD1Ev> <env._ZdlPvm>
+
+So a root class whose D0 holds a D2 too costly for the plain in-class form declares it `inline`.
+
+The D2 is the same in every form: its body differs only in the object-local type index of a `call_indirect`.
+
+    for f in 0 1 5; do wasm-objdump -d build/out/DOCS2-A/probe/dtorform-$f.o | awk '/<_ZN1XD[12]Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //; s/(call|global.get) [0-9]+ /\1 /' > build/out/DOCS2-A/probe/d2-$f.txt; done
+    diff build/out/DOCS2-A/probe/d2-0.txt build/out/DOCS2-A/probe/d2-1.txt && echo 'D2: FORM 0 = 1'
+      D2: FORM 0 = 1
+    diff build/out/DOCS2-A/probe/d2-0.txt build/out/DOCS2-A/probe/d2-5.txt
+      58c58
+      <         call_indirect 0 <env.__indirect_function_table> (type 0)
+      ---
+      >         call_indirect 0 <env.__indirect_function_table> (type 2)
+
+So a D2 that matches settles nothing about the form; a derived class's D2 does, since it inlines a base destructor
+with the hint or defined in the class and calls one defined out of line (R4's `Q`). A class with no member of its own
+has the base's D2 in its slot (R4's `Q4`). When that D2 is out of line, the class's D0 is the 10-B shape around it:
+`simulador::CWasmInit`'s vtable starts `[5898, 9388]`, 5898 being `comum::IInterfaceInit`'s out-of-line D2 (R9), and
+9388 is `f136(f5898(p0))`. Whether the destructor is out of line decides the key function, and so the TU that emits
+the vtable, the D2 and the D0 (R6). The target's readouts:
+
+    for i in 11176 11086 11443 12049 12050; do pnpm --silent wasm fn ../target/vota_web_wasm.wasm $i | /usr/bin/grep -m1 '^;; function'; done
+      ;; function 11176 (i32)->() locals() body@0x4e5988 size 82 instrs 39
+      ;; function 11086 (i32)->() locals() body@0x4e2967 size 10 instrs 4
+      ;; function 11443 (i32)->() locals() body@0x5090b9 size 13 instrs 6
+      ;; function 12049 (i32)->() locals(i32 i32 i32) body@0x53d30c size 119 instrs 57
+      ;; function 12050 (i32)->(i32) locals(i32 i32 i32) body@0x53d384 size 116 instrs 56
+    awk '$1==11176 || $1==11086 || $1==11443 || $1==12049' splat/matched.txt      # from the repository root
+      11176 _ZN5comum12CSigVerifierD0Ev
+      11443 _ZN5comum3asn14CVisitanteFotoD0Ev
+      12049 _ZN4vota11IQRCodeBUDSD0Ev
+      11086 _ZN3api17CImageFieldUpdateD0Ev
 
 ## R6. A class whose only virtual members are inline has no key function: only a TU that uses its vtable emits it
 
@@ -141,9 +279,41 @@ non-virtual member defined) gets nothing; `Inl` (the same with a constructor def
       00000010 W _ZTV3Inl
       00000000 D _ZTV3Ool
 
-So to land such a class's destructors in the form the target's D0 shows (R5, in the class), the TU must also define
-a constructor, at its record's line; the target may have inlined it everywhere, and our link then drops it as
-unreferenced. The out-of-line form emits them without a constructor but gives a D0 that calls the D2 (R5).
+A derived class's destructor that inlines this one references the vtable too, since it stores this class's vptr
+(R4). In `dtorbase.cpp`, `P2` has an inline destructor and a pure slot, and no constructor anywhere; `Q2`'s and
+`Q3`'s destructors give the object `P2`'s vtable, D2 and D0, all weak (`W _ZTV2P2`, `W _ZN2P2D2Ev`, `W _ZN2P2D0Ev`
+in R4's `llvm-nm`).
+
+So to land such a class's destructors in the form the target's D0 shows (R5, in the class), a TU must also define a
+constructor, at its record's line, or emit a derived class's destructor that inlines this one; the target may have
+inlined the constructor everywhere, and our link then drops it as unreferenced. The out-of-line form emits them
+without either but gives a D0 that calls the D2 (R5).
+
+The typeinfo follows the same rule, and a derived class's typeinfo names its base's. So a TU that emits a derived
+class's vtable needs the base's typeinfo from the TU of the base's key function, when the base has one, even if the
+derived class overrides every slot. Probe `typeinfo.cpp`:
+
+    // A derived class's typeinfo names its base's: emitted here only when the base has no key function.
+    struct KeyBase { virtual ~KeyBase(); virtual void f(); };          // key function ~KeyBase(), defined in another .cpp
+    struct InlBase { virtual ~InlBase() = default; virtual void f() {} };  // every virtual member inline: no key function
+    struct D1 : KeyBase { void f() override; };
+    struct D2 : InlBase { void f() override; };
+    void D1::f() {}
+    void D2::f() {}
+
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/typeinfo.cpp -o /work/build/out/DOCS2-A/probe/typeinfo.o
+    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/DOCS2-A/probe/typeinfo.o | /usr/bin/grep -E '_ZT[IV][0-9]'
+      0000004c D _ZTI2D1
+      00000014 D _ZTI2D2
+      00000024 W _ZTI7InlBase
+               U _ZTI7KeyBase
+      00000038 D _ZTV2D1
+      00000000 D _ZTV2D2
+
+A link that keeps `D1`'s vtable and has no TU that defines `KeyBase`'s key function stops on `undefined symbol:
+typeinfo for KeyBase`, and on `KeyBase`'s destructor as well when it is out of line, since `D1`'s calls it (R4's `Q`).
+[units.md](units.md) §U9 has that link and the one that passes, and `src/units/README.md` "Pending members" says what
+a unit defines then.
 
 ## R7. A slot that holds `__cxa_pure_virtual` is a pure member, and dropping it makes the class concrete
 
@@ -312,3 +482,97 @@ B's global `GFrame` and C's nested one give the same text and two symbols. `api:
 ledger/source-locations.tsv`), leaves `CMovieFrame`'s scope open in the same way, and no RTTI or vtable names the type
 (`/usr/bin/grep -c CMovieFrame ledger/classes.json ledger/vtables.json` prints 0 for both). Unit 23 puts it in `api`,
 the namespace of `CMovie`.
+
+## R12. A class passed by value is the address of a copy, unless it is one scalar; libc++'s smart pointers are trivial-ABI here
+
+clang's WebAssembly ABI passes a class argument by value as the address of a copy the caller makes, except a
+trivially copyable (or trivial-ABI) class of one scalar, which travels as that scalar (R3 is the same rule for a
+result). The pinned libc++ is ABI v2 (`std::__2`), which marks `std::shared_ptr` and `std::unique_ptr` trivial-ABI: the
+callee owns the copy and destroys it, so a parameter moved into a member leaves nothing to write back. Probe
+`byvalue.cpp`:
+
+    // Three ways to pass a std::shared_ptr into a constructor, and two for a std::unique_ptr.
+    #include <memory>
+    struct I { virtual ~I(); };
+    struct Val { virtual ~Val(); Val(std::shared_ptr<I> a, std::shared_ptr<I> b); std::shared_ptr<I> m_a, m_b; };
+    Val::Val(std::shared_ptr<I> a, std::shared_ptr<I> b) : m_a(std::move(a)), m_b(std::move(b)) {}
+    struct RRef { virtual ~RRef(); RRef(std::shared_ptr<I> &&a, std::shared_ptr<I> &&b); std::shared_ptr<I> m_a, m_b; };
+    RRef::RRef(std::shared_ptr<I> &&a, std::shared_ptr<I> &&b) : m_a(std::move(a)), m_b(std::move(b)) {}
+    struct CRef { virtual ~CRef(); CRef(const std::shared_ptr<I> &a, const std::shared_ptr<I> &b); std::shared_ptr<I> m_a, m_b; };
+    CRef::CRef(const std::shared_ptr<I> &a, const std::shared_ptr<I> &b) : m_a(a), m_b(b) {}
+    struct UVal { virtual ~UVal(); UVal(std::unique_ptr<I> a); std::unique_ptr<I> m_a; };
+    UVal::UVal(std::unique_ptr<I> a) : m_a(std::move(a)) {}
+    struct URef { virtual ~URef(); URef(std::unique_ptr<I> &&a); std::unique_ptr<I> m_a; };
+    URef::URef(std::unique_ptr<I> &&a) : m_a(std::move(a)) {}
+
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/byvalue.cpp -o /work/build/out/DOCS2-A/probe/byvalue.o
+    wasm-objdump -d build/out/DOCS2-A/probe/byvalue.o | awk '/ func\[/ {name=$3} /store/ {c[name]++} END {for (k in c) print c[k], k}' | sort -k2
+      5 <_ZN3ValC1ENSt3__210shared_ptrI1IEES3_>:                           # the vptr and four words copied
+      7 <_ZN4CRefC1ERKNSt3__210shared_ptrI1IEES5_>:                        # and a count increment per source
+      7 <_ZN4RRefC1EONSt3__210shared_ptrI1IEES4_>:                         # and an i64.store 0 per source
+      3 <_ZN4URefC1EONSt3__210unique_ptrI1INS0_14default_deleteIS2_EEEE>:
+      2 <_ZN4UValC1ENSt3__210unique_ptrI1INS0_14default_deleteIS2_EEEE>:
+    for s in _ZN4UValC1 _ZN4URefC1; do printf '%s: ' $s; wasm-objdump -d build/out/DOCS2-A/probe/byvalue.o | awk -v s="<$s" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -vE '^$|^end$|^local\[' | tr '\n' ';'; echo; done
+      _ZN4UValC1: local.get 0;local.get 1;i32.store 2 4;local.get 0;global.get 3 <GOT.mem._ZTV4UVal>;i32.const 8;i32.add;i32.store 2 0;local.get 0;
+      _ZN4URefC1: local.get 0;global.get 4 <GOT.mem._ZTV4URef>;i32.const 8;i32.add;i32.store 2 0;local.get 1;i32.load 2 0;local.set 2;local.get 1;i32.const 0;i32.store 2 0;local.get 0;local.get 2;i32.store 2 4;local.get 0;
+
+The by-value `unique_ptr` parameter is the raw pointer (`p1` stored at +4); the `&&` one is an address, loaded and
+nulled. `comum::CParteCargos`'s constructor 5587 is `Val`'s shape, the vptr store and four copied words:
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 5587 | sed -n '/folded readout/,/^}/p'
+      ;; --- folded readout (approximate)
+      function f5587(i32 p0, i32 p1, i32 p2) -> (i32) {
+        i32.store[p0] = 1576564;
+        i32.store[p0+4] = i32.load[p1];
+        i32.store[p0+8] = i32.load[p1+4];
+        i32.store[p0+12] = i32.load[p2];
+        i32.store[p0+16] = i32.load[p2+4];
+        push p0;
+      }
+
+## R13. A `std::format` throw spells its format string and argument types in two i64 constants
+
+A uenux2 throw that builds its message with `std::format` stores two i64 constants into the format call's
+arguments: `(length << 32) | address` of the format string (its `string_view`), and the argument types packed 5 bits
+each, the first argument lowest (libc++'s `__packed_arg_t_bits`). The type codes are libc++'s `__arg_t`, counted from
+0:
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'sed -n 61,79p /emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__format/format_arg.h'
+      enum class __arg_t : uint8_t {
+        __none,
+        __boolean,
+        __char_type,
+        __int,
+        __long_long,
+        __i128, // extension
+        __unsigned,
+        __unsigned_long_long,
+        __u128, // extension
+        __float,
+        __double,
+        __long_double,
+        __const_char_type_ptr,
+        __string_view,
+        __ptr,
+        __handle
+      };
+    TMPDIR=/tmp build/docker-build.sh sh -c 'grep -n "__packed_arg_t_bits =" /emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__format/format_arg.h'
+      80:inline constexpr unsigned __packed_arg_t_bits = 5;
+
+`api::CSystem::GetFileSize` (2759, matched) and `api::CLedFieldMT::Draw` (11050):
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 2759 | /usr/bin/grep -E 'i64.store\[l[0-9]+\+(24|16)\]'
+        i64.store[l1+24] = 180388633521;
+        i64.store[l1+16] = 397;
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11050 | /usr/bin/grep -E 'i64.store\[l[0-9]+\+(24|16)\]'
+        i64.store[l2+16] = 3;
+        i64.store[l2+24] = 103079218254;
+    python3 -I -B -c "print(180388633521 >> 32, 180388633521 & 0xffffffff, [(397 >> (5*i)) & 31 for i in range(2)], 103079218254 >> 32, 103079218254 & 0xffffffff)"
+      42 7089 [13, 12] 24 3150
+    awk -F'\t' '$1==7089 || $1==3150 {print $1, $2, $4}' ledger/strings.tsv      # from the repository root
+      3150 24 Operação desconhecida {}
+      7089 42 Falha ao obter tamanho do arquivo [{}]: {}
+
+So 2759 formats a `std::string` (13, `__string_view`) and a `const char*` (12), and 11050 one `int` (3). The code is
+the type `std::format` sees after its own conversions, not the variable's: `std::format` has no formatter for an
+enum, so the source casts one, and the code is the cast's type.

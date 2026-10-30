@@ -5,6 +5,9 @@
 #
 #   tools/round/link-kinds.sh [<plain out dir, default build/out/wasm/vota_web>]   (make -C src link-kinds)
 #
+# The out dir is matched against the `-o` path of its link.cmd as given, so spell a try-tu link's dir as try-tu prints
+# it: build/out/try/../verify/x/wasm/vota_web after --name ../verify/x (the normalised path stops with exit 2).
+#
 # 1. Re-runs the plain link's own em++ line (<plain>/link.cmd) into <plain>/../../wasm-kinds/<name>/ with
 #    -sGLOBAL_BASE=1024+D and -sTABLE_BASE=1+T (emcc passes them to wasm-ld as --global-base / --table-base),
 #    wasm-ld's --Map, --no-demangle and EMCC_DEBUG=1 (every intermediate module kept under …/wasm-kinds/tmp/).

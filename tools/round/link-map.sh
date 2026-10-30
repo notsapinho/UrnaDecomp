@@ -4,6 +4,9 @@
 #
 #   tools/round/link-map.sh [<plain out dir, default build/out/wasm/vota_web>]   (make -C src link-map)
 #
+# The out dir is matched against the `-o` path of its link.cmd as given, so spell a try-tu link's dir as try-tu prints
+# it: build/out/try/../verify/x/wasm/vota_web after --name ../verify/x (the normalised path stops with exit 2).
+#
 # 1. Re-runs the plain link's own em++ line (<plain>/link.cmd) into <plain>/../../wasm-map/<name>/ with wasm-ld's
 #    --Map (data and function symbols at their wasm-ld addresses), --no-demangle (mangled names in the map and in the
 #    wasm-ld name section) and EMCC_DEBUG=1 (every intermediate module kept under …/wasm-map/tmp/), then
