@@ -27,6 +27,8 @@ bool CVoto::EhBranco() const
     return m_tipo == BRANCO || m_tipo == BRANCO_APOS_SUSPENSAO;
 }
 
+std::strong_ordering CVoto::operator<=>(const CVoto& outro) const = default;
+
 } // namespace comum::md
 
 // <stubs>

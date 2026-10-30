@@ -10,7 +10,7 @@
 //   declare;
 // - Rect 11101 (record cimagefield.cpp:52:12) calls CPolySingleton<IScreen>'s instance, fn 512, not named yet;
 // - Move 2241 is binaryen's one body for CTextField, CImageField, CDSImageField, CImageFieldUpdate, CTextFieldBlinking
-//   and CTextFieldUpdate; it reads the IForm<IScreen> the field belongs to, which api/gui/iform.h does not declare.
+//   and CTextFieldUpdate; it reads the field's IForm<IScreen> through IsVisible and Refresh (api/gui/iform.h).
 // Move each into cimagefield.cpp when it is reconstructed; delete this file with the last one.
 #include "api/gui/cimagefield.h"
 

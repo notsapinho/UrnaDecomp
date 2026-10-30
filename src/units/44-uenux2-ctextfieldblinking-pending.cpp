@@ -12,7 +12,8 @@
 //   7  10940  GetTypeName() const: builds "CTextFieldBlinking" through fn 3891, which has no name yet
 //   8  10943  Rect() const (record ctextfieldblinking.cpp:70:21): calls fn 3889, which has no name yet
 //   9  2241   Move(const SPoint&): binaryen's one body for CImageField, CDSImageField, CImageFieldUpdate, CTextField,
-//             CTextFieldUpdate and this class; it reads api::IForm<IScreen>, and api/gui/iform.h is stub-only
+//             CTextFieldUpdate and this class; it reads api::IForm<IScreen> through IsVisible and Refresh
+//             (api/gui/iform.h)
 // Slots 5 and 6 are IFormFieldBase<IScreen>'s Refresh and SetForm (fns 4118, 3037), inherited. Move each member into
 // ctextfieldblinking.cpp when it is reconstructed; delete this file with the last one.
 #include "api/gui/ctextfieldblinking.h"

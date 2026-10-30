@@ -14,6 +14,7 @@ enum EUeIpcError {
     EUE_IPC_FALHA_TRAVAR_SEMAFORO = 6162,
     EUE_IPC_FALHA_DESTRAVAR_SEMAFORO = 6163,
     EUE_IPC_FALHA_VALOR_SEMAFORO = 6164,
+    EUE_IPC_FILA_VAZIA = 6228, // the name is chosen from its message, "A fila estava vazia.": no evidence names it
     EUE_IPC_IMPLEMENTACAO_NAO_ESPECIFICADA = 6231,
 };
 
