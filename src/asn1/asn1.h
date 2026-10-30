@@ -1818,12 +1818,7 @@ namespace ASN1 {
           : static_cast<const InfoType*>(info()->selectionInfos[choiceID])->tag );
     }
 
-    unsigned getSelectionTagInternal() const {
-      assert(choiceID >= 0);
-      return info()->tags == 0
-        ? (ContextSpecificTagClass<<30) | choiceID
-        : info()->tags[choiceID];
-    }
+    unsigned getSelectionTagInternal() const;
     bool isSelectionExplicit() const;
     unsigned getSelectionInfoTag() const;
 

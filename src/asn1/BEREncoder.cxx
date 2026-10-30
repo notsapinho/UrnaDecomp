@@ -63,18 +63,7 @@ private:
   bool preVisitExtensionRoots(const SEQUENCE& value) { return false; }
 };
 
-unsigned getIntegerDataLength(INT_TYPE value)
-{
-  // create a mask which is the top nine bits of a DWORD, or 0xFF800000
-  // on a big endian machine
-  int shift = (sizeof(value)-1)*8-1;
-
-  // remove all sequences of nine 0's or 1's at the start of the value
-  while (shift > 0 && ((value >> shift)&0x1ff) == (value < 0 ? 0x1ff : 0))
-    shift -= 8;
-
-  return (shift+9)/8;
-}
+extern unsigned getIntegerDataLength(INT_TYPE value);
 
 static unsigned getDataLength(const AbstractData& data);
 static unsigned getObjectLength(const AbstractData& data, unsigned tag);
