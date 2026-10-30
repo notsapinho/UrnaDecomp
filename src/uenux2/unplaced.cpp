@@ -93,11 +93,6 @@
 // f10419 · 85 B · unmatched · placement: link order · name unknown
 // void f10419(i32, i32) { ... }
 
-// link-order cluster 284 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitorvotounaovotou.cpp
-
-// f10431 · 101 B · unmatched · placement: link order · name unknown
-// void f10431(i32) { ... }
-
 // link-order cluster 285 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdesabilitaaudioeleitor.cpp
 
 // f10436 · 200 B · unmatched · placement: link order · name unknown
@@ -1551,11 +1546,6 @@
 // f2880 · 2039 B · unmatched · placement: link order · name unknown
 // ? f2880() { ... }
 
-// link-order cluster 1119 · uses=4 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.cpp
-
-// f2884 · 13 B · unmatched · placement: link order · name unknown
-// void f2884(i32) { ... }
-
 // link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
 
 // f2902 · 63 B · unmatched · placement: link order · name unknown
@@ -1672,9 +1662,6 @@
 
 // f1902 · 82 B · unmatched · placement: link order · name unknown
 // void f1902(i32, i32) { ... }
-
-// f1901 · 1197 B · unmatched · placement: link order · name unknown
-// ? f1901() { ... }
 
 // f1900 · 40 B · unmatched · placement: link order · name unknown
 // void f1900(i32) { ... }
@@ -1810,11 +1797,6 @@
 
 // f1278 · 10 B · unmatched · placement: link order · name unknown
 // void f1278(i32) { ... }
-
-// link-order cluster 1262 · uses=10 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cdigitalnaoreconhecida.cpp
-
-// f1284 · 156 B · unmatched · placement: link order · name unknown
-// ? f1284(i32) { ... }
 
 // link-order cluster 1266 · uses=11
 

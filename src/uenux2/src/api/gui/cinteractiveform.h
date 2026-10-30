@@ -1,3 +1,19 @@
+#pragma once
+
+#include "api/gui/iform.h"
+
+namespace api {
+
+// api::CInteractiveForm<MEDIA, INPUT>: a form that reads input (RTTI: si_class of api::IForm<MEDIA>; instances
+// <IScreen, IInputKbd>, vtable @1579168, and <IScreenMT, IInputMT>, vtable @1580280). Written only as far as the states
+// that hold one need it, its base: no member is reconstructed, so slots 2 and 3, which the target's instances override
+// (fns 11030, 11029), resolve to IForm's here; a call through a pointer to it goes through the vtable either way. The
+// records of this header are Read() (line 57), WaitAndRead() (line 62) and ClearKeyboardInput() (line 148).
+template <typename MEDIA, typename INPUT>
+class CInteractiveForm : public IForm<MEDIA> {};
+
+} // namespace api
+
 // <stubs>
 // f12077 · 600 B · unmatched · name unknown
 // void f12077(i32) { ... }
@@ -160,9 +176,6 @@
 
 // f10435 · 200 B · unmatched · name unknown
 // void f10435(i32) { ... }
-
-// f10430 · 150 B · unmatched · name unknown
-// void f10430(i32) { ... }
 
 // f10420 · 1917 B · unmatched · name unknown
 // void f10420(i32) { ... }
