@@ -18,7 +18,9 @@
 
 namespace api {
 
-// (original lines 21-60: content not recovered)
+bool CSystem::s_dorme = true;
+
+// (original lines 23-60: content not recovered)
 #line 61
 // <stubs>
 // f1690 · 591 B · unmatched · name unknown

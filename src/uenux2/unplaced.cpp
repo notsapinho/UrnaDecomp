@@ -3083,11 +3083,6 @@
 // f8879 · 278 B · unmatched · placement: link order · name unknown
 // void f8879(i32, i32) { ... }
 
-// link-order cluster 226 · uses=1 · neighbours' file uenux2/src/api/gui/cesperaaudio.cpp
-
-// f9509 · 9 B · unmatched · placement: link order · name unknown
-// void f9509(i32) { ... }
-
 // link-order cluster 253 · uses=1 · neighbours' file uenux2/src/api/uelog/cescritorlog.cpp
 
 // f10257 · 138 B · unmatched · placement: link order · name unknown
@@ -3195,11 +3190,6 @@
 
 // f10847 · 45 B · unmatched · placement: link order · name unknown
 // void f10847(i32) { ... }
-
-// link-order cluster 357 · uses=1 · neighbours' file uenux2/src/api/gui/csystemdatetime.cpp
-
-// f10853 · 2 B · unmatched · placement: link order · name unknown
-// void f10853(i32, i64) { ... }
 
 // link-order cluster 358 · uses=1 · neighbours' file uenux2/src/api/gui/cdefaultgenericfactory.cpp
 
@@ -4114,25 +4104,12 @@
 // f180 · 258 B · unmatched · placement: link order · name unknown
 // void f180(i32, i32, i32, i32, i32) { ... }
 
-// no link-order cluster
-
-// f10855 · 7 B · unmatched · placement: link order · name unknown
-// ? f10855(i32) { ... }
-
 // component simulador
 
 // link-order cluster 36 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmtimerscheduler.cpp
 
 // f7871 · 498 B · unmatched · placement: link order · name unknown
 // void f7871(i32, i32, i32, i32) { ... }
-
-// link-order cluster 39 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmsystemdatetime.cpp
-
-// f7954 · 18 B · unmatched · placement: link order · name unknown
-// ? f7954(i32) { ... }
-
-// f7945 · 14 B · unmatched · placement: link order · name unknown
-// void f7945(i32, i64) { ... }
 
 // link-order cluster 53 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmnullprinter.cpp
 
@@ -4146,29 +4123,6 @@
 
 // f8371 · 52 B · unmatched · placement: link order · name unknown
 // void f8371(i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 62 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/carchiveupdatecallback.cpp
-
-// f8461 · 96 B · unmatched · placement: link order · name unknown
-// ? f8461(i32, i32) { ... }
-
-// f8450 · 524 B · unmatched · placement: link order · name unknown
-// void f8450(i32, i32, i32, i32) { ... }
-
-// link-order cluster 64 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmnullsound.cpp
-
-// f8472 · 253 B · unmatched · placement: link order · name unknown
-// void f8472(i32, i32, i32) { ... }
-
-// link-order cluster 65 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/carchiveupdatecallback.cpp
-
-// f8479 · 124 B · unmatched · placement: link order · name unknown
-// void f8479(i32, i32, i32) { ... }
-
-// link-order cluster 67 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/carchiveupdatecallback.cpp
-
-// f8487 · 52 B · unmatched · placement: link order · name unknown
-// void f8487(i32, i32) { ... }
 
 // link-order cluster 91 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmresource.cpp
 
@@ -4276,17 +4230,6 @@
 
 // f4683 · 57 B · unmatched · placement: link order · name unknown
 // void f4683(i32, i32, i32) { ... }
-
-// link-order cluster 716 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasminputmt.cpp
-
-// f5015 · 5 B · unmatched · placement: link order · name unknown
-// ? f5015(i32) { ... }
-
-// f5014 · 7 B · unmatched · placement: link order · name unknown
-// ? f5014(i32) { ... }
-
-// f5013 · 4 B · unmatched · placement: link order · name unknown
-// void f5013(i32) { ... }
 
 // link-order cluster 720 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
 

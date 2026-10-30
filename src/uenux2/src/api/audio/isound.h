@@ -4,10 +4,12 @@
 #include <memory>
 #include <string>
 
+#include "api/audio/cesperaaudio.h"
+#include "api/util/csystem.h"
+
 namespace api {
 
 class CWavFile;
-class IEsperaAudio;
 
 // Recovered: RTTI names api::ISound (typeinfo 1526576), a polymorphic class with no base, and its two implementers
 // simulador::CWasmWebSound and simulador::CWasmNullSound (vtables @1528468 and @1530360, 12 slots each). The class has
@@ -33,20 +35,17 @@ class IEsperaAudio;
 //   std::function<void (bool)>), which its lambda's typeinfo names; it returns a std::shared_ptr to the
 //   std::make_shared<api::CEsperaAudio> it builds (CEsperaAudio is an si_class of api::IEsperaAudio) through a hidden
 //   result (fns 8450 and 3851).
-// Four slots have ISound's own bodies in the target, which only CWasmNullSound's vtable shows. Slots 2 and 4 are
-// written below: fns 8479 and 8472 build ISound::Wait()'s lambda, and these two definitions compile to 8479 row for
-// row and to 8472 but for the `call 142` that a link of it alone inlines. No object emits them yet: CWasmWebSound
-// overrides both, and they come with the first class that inherits them. Slots 8 and 9 have bodies too and stay pure
-// here because they cannot be written yet: fn 8461 (slot 8, which builds no lambda: its being ISound's is inferred
-// from its calls of slot 7 through the vtable, in a class whose slot 7 returns 0) reads an unnamed .bss byte, 1584624,
-// before emscripten_sleep(20), and fn 8450 (slot 9, which builds ISound::WaitAsync's lambda) needs api::CEsperaAudio
-// complete. Pure changes nothing for an implementer that overrides both, as CWasmWebSound does; CWasmNullSound
-// inherits them, so its unit writes both here. No evidence gives ISound a body in the six other slots.
-// No record, symbol or string names this file or the member names but Wait and WaitAsync, so all of those are chosen.
-// So are the two enumerations and the type of the mode of slots 2 and 4 (an enumeration: it is compared with 1, where a
-// bool is passed on as it is). The target's own glue backs EModo's two values: its js_wasm_web_sound_play_wav takes
-// that argument as `modo` and runs `if(modo===0){stopCurrent(state,true)}`, so 0 interrupts and clears the queue, and
-// any other value queues.
+// Four slots have ISound's own bodies in the target, which only CWasmNullSound's vtable shows, and all four are written
+// below and emitted by the class that inherits them: fns 8479 and 8472 build ISound::Wait()'s lambda, and fn 8450 builds
+// ISound::WaitAsync's, whose captures are the CEsperaAudio and the cancelling function, in that order (the lambda's
+// __func holds the shared_ptr at +8 and the std::function at +16). Fn 8461 builds no lambda: its being ISound's is
+// inferred from its calls of slot 7 through the vtable, in a class whose slot 7 returns 0. Its sleep is CSystem::Dorme,
+// which api/util/csystem.h says what is chosen about. No evidence gives ISound a body in the six other slots.
+// No record, symbol or string names this file. Typeinfos name Wait() and WaitAsync; that slot 8 is an overload of
+// Wait() is inferred, and the other member names are chosen. So are the two enumerations and the type of the mode of
+// slots 2 and 4 (an enumeration: it is compared with 1, where a bool is passed on as it is). The target's own glue
+// backs EModo's two values: its js_wasm_web_sound_play_wav takes that argument as `modo` and runs
+// `if(modo===0){stopCurrent(state,true)}`, so 0 interrupts and clears the queue, and any other value queues.
 class ISound {
 public:
     enum EModo { INTERROMPE, ENFILEIRA };
@@ -70,8 +69,23 @@ public:
     virtual void Stop() = 0;
     virtual void Mute(bool mute) = 0;
     virtual EStatus GetStatus() = 0;
-    virtual bool Wait(std::function<bool()> cancelado) = 0;
-    virtual std::shared_ptr<IEsperaAudio> WaitAsync(std::function<bool()> cancelado, std::function<void(bool)> fim) = 0;
+    virtual bool Wait(std::function<bool()> cancelado)
+    {
+        while (GetStatus() == TOCANDO) {
+            if (cancelado && cancelado())
+                return false;
+            CSystem::Dorme(20);
+        }
+        return true;
+    }
+    virtual std::shared_ptr<IEsperaAudio> WaitAsync(std::function<bool()> cancelado, std::function<void(bool)> fim)
+    {
+        auto espera = std::make_shared<CEsperaAudio>();
+        const bool terminou = Wait([espera, cancelado] { return espera->Cancelada() || (cancelado && cancelado()); });
+        if (!espera->Cancelada() && fim)
+            fim(terminou);
+        return espera;
+    }
     virtual ~ISound() = default;
 
     void Wait()
