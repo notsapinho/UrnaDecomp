@@ -2,7 +2,8 @@
 # instantiations, fn 710, the merge of the instantiations compiled with uenux2's flags, and the thunks that pass each
 # one's vptr. The unit is a form of two headers and has no source or companion of its own: CError's template constructor
 # in src/ecourna/api/exception/cerror.hpp, which CBaseError's constructor in cbaseerror.hpp calls. Every TU that throws
-# a CBaseError emits this code, so the matches come from the landed objects of both trees.
+# a CBaseError emits this code, so most matches come from the landed objects of both trees; 346 and 1889 come from
+# app/roots_uenux2.o and 1229 from app/75-uenux2-api-hwil-roots.o, whose bodies compile the same at the tree's flags.
 #
 # Matches: 1011 and its thunks 9025 9026 9041 9046 9107 9158 9181 9229 9266 9410 9461 9505 9584; 710 and its thunks 253
 # 346 406 655 1229 1889. Bodies of units 06 and 07 that were `unresolved self-voted` on those thunks match with them:
