@@ -7,7 +7,7 @@
 //         trivially destructible, so its complete destructor is IFormFieldBase<IScreen>'s (12658), and the target's
 //         deleting one (3681, shared with CFillField and CRectField) is a thunk into fn 1565, binaryen's one body for
 //         eight such deleting destructors, which our link forms from this one and api::CLedFieldMT's (2777)
-//   11068 Draw(IScreen&) const  (pending: calls IScreen slot 8, which api/gui/iscreen.h does not declare yet)
+//   11068 Draw(IScreen&) const  (pending: calls IScreen slot 8, DrawLine in api/gui/iscreen.h)
 //   5527  Move(const SPoint&)   (here: one body binaryen shares with CTextFieldDoubleLine's)
 // The pending member is defined in src/units/54-uenux2-clinefield-pending.cpp. The definitions follow the target's
 // link order: the uses-1 band 11066-11068 of ledger/ordinals.tsv gives Draw, Rect, GetTypeName. Move shares its body,

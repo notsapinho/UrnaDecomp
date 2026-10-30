@@ -2,7 +2,7 @@
 // vtable (emitted with the destructor, its key function, in that TU) needs them defined; their bodies are NOT the
 // target's, they trap. Target functions:
 //   Draw 11064         calls IScreen's slot 26 with the position (+32), the movie (+24) and the anchor (+36);
-//                      api/gui/iscreen.h does not declare that slot
+//                      api/gui/iscreen.h declares that slot as DrawMovie
 //   Rect 11063         record cmoviefield.cpp:53:12; calls CPolySingleton<IScreen>'s instance, fn 512, not named yet
 //   GetTypeName 11059  a thunk into binaryen's merge 2904 (f2904(p0, p1, "CMovieField", ...)), whose other callers
 //                      are api::CImageField's (11097) and api::CInputField<api::CFramedText>'s (12411) GetTypeName and

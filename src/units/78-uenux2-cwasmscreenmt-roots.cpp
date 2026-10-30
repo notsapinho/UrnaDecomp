@@ -14,10 +14,10 @@
 //   builders are not reconstructed. Each CompartilhaX below instantiates one and nothing else: it takes a T* it never
 //   gets, so it uses no constructor, and no vtable, of T. As with std::make_shared, the control blocks' members come from
 //   this object until the builders land; T's own inline members stay the units' objects', first on the link line. Their
-//   addresses are taken so they stay in the link; nothing calls them. The lines' order changes no function's re-pointed
-//   bytes and serves only the scan's alignment test (resolveBytes places a name string our link puts at a multiple of 4
-//   only at one in the target), which a tool fix will make order-independent: 9 of the 10 deleter names are off a multiple
-//   of 4 in the target (not 11034's), and this order puts none of ours on one. Compiled with APP_CXXFLAGS.
+//   addresses are taken so they stay in the link; nothing calls them. The lines' order is free: it changes no function's
+//   re-pointed bytes, and splat-symbols' resolveBytes finds a typeinfo name string by its content at any alignment
+//   (docs/reference/facts/splat.md section S9), so where this object puts the deleter names in our link matters to no
+//   match. Compiled with APP_CXXFLAGS.
 #include <memory>
 
 #include "api/gui/cbeepfieldmt.h"
