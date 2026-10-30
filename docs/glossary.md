@@ -455,8 +455,12 @@ solver's sound windows are rank ranges (`rank_lo`, `rank_hi`). Not to be confuse
 `-Oz` inlining: one shared body that several functions call with their differing constants. They take the highest
 ordinals (189 in the frozen skeleton of `docs/reference/link-order.md` §7.1). `link-map.sh`'s log counts them as "binaryen thunks", and the
 scan's `object` column says `<binaryen>`. A target function whose whole body is a call into such a shared body (11097,
-`f2904(p0, p1, 197764, 197771)`) matches only when our link merges the same set of functions. *Where:*
-`docs/reference/link-order.md` §1, §5 and §7, `src/units/README.md` "Pending members".
+`f2904(p0, p1, 197764, 197771)`) matches only when our link merges the same set of functions. The other way round,
+an `unresolved` row or a `splat-remap` whose operand is a call into `byn$mgfn-shared$…` "has no target function" means
+our link merged a set the target did not; the shared body's callers (`pnpm wasm fn`) name its members, and the set can
+span components (the target's 3904 has two RHVoice destructors and one of `api::CSubReport` as callers). *Where:*
+`docs/reference/link-order.md` §1, §5 and §7, `src/units/README.md` "Pending members", `docs/how-to-decompile.md`
+steps 1 and 5.
 
 **frozen skeleton** — a copy of one plain link and its `ledger/functions.tsv` kept under
 `build/out/LINKORDER2/frozen/`, so a link-order measurement keeps running on the same link while the tree moves on.
