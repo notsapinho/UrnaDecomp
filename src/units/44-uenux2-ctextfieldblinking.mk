@@ -5,16 +5,19 @@
 # out-of-line destructor's would call it. The header goes beside ctextfieldblinking.cpp, the file whose records name
 # the constructor (lines 39 and 42, column 15) and Rect (70:21); no record names a header. api::ITimer is only
 # forward-declared (the destructors need no complete type; api/util/itimer.h defines it).
-# The unit has no source of its own yet: every virtual member is pending, so the vtable, its key function Draw and with
-# it the implicit destructors are emitted in the pending object (as units 26 and 30 emit theirs); they move to
-# ctextfieldblinking.o when Draw does. The constructor has no target function of its own (binaryen inlined it into its
-# one caller, fn 1265) and is not reconstructed, so lines 39 and 42 stay free for its throws. ctextfieldblinking.cpp
-# held only stubs, and none is left (the destructors match, and the pending members' stubs go with the vtable), so
-# make -C src stubs removed the file; it comes back with the first member written there. Paths relative to src/uenux2.
-# Draw, Show, Hide, GetTypeName, Rect and Move (target fns 10946, 10945, 10944, 10940, 10943, 2241) are not
-# reconstructed: 44-uenux2-ctextfieldblinking-pending.cpp defines them with trapping bodies, compiled with the unit's
-# flags, and its header names what each waits for. Every header the class includes is in src/uenux2/src/api/gui/, which
-# the wildcard below names ($(UENUX2_HDRS) is set after src/Makefile reads the fragments: here it would be empty).
+# ctextfieldblinking.cpp holds Show and Hide (target fns 10945, 10944, slots 3 and 4: Start and Stop of the timer, whose
+# class it includes, api/util/itimer.h) at lines that are a choice, above Rect's line 70 in the band's order, and Move (one
+# of the five functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) below it, a choice. The
+# vtable, its key function Draw and with it the implicit destructors stay in the pending object (as units 26 and 30 emit
+# theirs); they move to ctextfieldblinking.o when Draw does. The constructor has no target function of its own (binaryen
+# inlined it into its one caller, fn 1265) and is not reconstructed, so lines 39 and 42 stay free for its throws. Paths
+# relative to src/uenux2.
+# Draw, GetTypeName and Rect (target fns 10946, 10940, 10943) are not reconstructed:
+# 44-uenux2-ctextfieldblinking-pending.cpp defines them with trapping bodies, compiled with the unit's flags, and its
+# header names what each waits for. Every header the class includes is in src/uenux2/src/api/gui/, which the wildcard
+# below names ($(UENUX2_HDRS) is set after src/Makefile reads the fragments: here it would be empty).
+CTEXTFIELDBLINKING_SRCS := src/api/gui/ctextfieldblinking.cpp
+UENUX2_SRCS += $(CTEXTFIELDBLINKING_SRCS)
 $(ROOT)/$(APP)/44-uenux2-ctextfieldblinking-pending.o: $(ROOT)/src/units/44-uenux2-ctextfieldblinking-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/44-uenux2-ctextfieldblinking.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/44-uenux2-ctextfieldblinking-pending.cpp -o $(R)
 # nothing calls the destructors directly in the target, which reaches them through the vtable only:

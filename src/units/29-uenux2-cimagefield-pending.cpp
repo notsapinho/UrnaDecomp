@@ -8,9 +8,7 @@
 //   not merged with describe (the only other such function our link has), so 11097 differs at its first operand;
 // - Draw 11102 calls IScreen's vtable slots 22 and 24 (the image-drawing members), which api/gui/iscreen.h does not
 //   declare;
-// - Rect 11101 (record cimagefield.cpp:52:12) calls CPolySingleton<IScreen>'s instance, fn 512, not named yet;
-// - Move 2241 is binaryen's one body for CTextField, CImageField, CDSImageField, CImageFieldUpdate, CTextFieldBlinking
-//   and CTextFieldUpdate; it reads the field's IForm<IScreen> through IsVisible and Refresh (api/gui/iform.h).
+// - Rect 11101 (record cimagefield.cpp:52:12) calls CPolySingleton<IScreen>'s instance, fn 512, not named yet.
 // Move each into cimagefield.cpp when it is reconstructed; delete this file with the last one.
 #include "api/gui/cimagefield.h"
 
@@ -27,11 +25,6 @@ void CImageField::Draw(IScreen&) const
 }
 
 SRect CImageField::Rect() const
-{
-    __builtin_trap();
-}
-
-void CImageField::Move(const SPoint&)
 {
     __builtin_trap();
 }

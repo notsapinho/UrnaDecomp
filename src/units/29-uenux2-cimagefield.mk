@@ -4,7 +4,9 @@
 # members, and the file is the class's (record cimagefield.cpp:52:12 of Rect). Its parameter types are taken from the
 # records of the CImageFieldUpdate and CDSImageField ctors (const SPoint &, const SharedIImage &, EAnchorPoint); they
 # and the parameter and member names are not in the bytes. No record names the header of IImage or EAnchorPoint, so
-# iimage.h is chosen (see its header comment).
+# iimage.h is chosen (see its header comment). Move (one of the five functions of target fn 2241, see
+# 27-uenux2-ctextfield.mk, which lists the forms) is in cimagefield.cpp, below Rect's line 52, a choice; api::CDSImageField
+# inherits it.
 UENUX2_SRCS += src/api/gui/cimagefield.cpp
 # the class's members not reconstructed yet (trapping bodies the vtable needs; GetTypeName is the key function, so the
 # vtable and the implicit destructors, target fns 11099 and 11098, are emitted there; see the file header), and two

@@ -8,13 +8,17 @@
 # with the members the vtable emission creates, so it is inline too. The header's comment gives the layout (from 5531
 # and the constructor that binaryen inlined into fn 3059) and the evidence for each member; the member names are
 # chosen. The file the records name, src/uenux2/src/api/gui/cimagefieldupdate.cpp (the constructor's throw at line 32,
-# Rect's at line 80), holds none of the unit's code: the constructor is not reconstructed (no target function of its
-# own; it needs api::ITimerScheduler and the lambda it hands to it) and every member defined out of the class is
-# pending, so the unit has no source of its own, as unit 19 has none. Paths relative to src/uenux2.
-# Draw, Show, Hide, Rect and Move are not reconstructed: 43-uenux2-cimagefieldupdate-pending.cpp defines them with
-# trapping bodies and names each with its target function. Draw, the first of them the class declares, is the key
-# function, so that object emits the vtable and with it the destructors and GetTypeName. Every header of ours it
-# reads is in src/uenux2/src/api/gui.
+# Rect's at line 80), holds Show and Hide (fns 11089, 11088, slots 3 and 4: Start and Stop of the timer, whose class it
+# includes, api/util/itimer.h) at lines that are a choice, above line 80 in the band's order, and Move (one of the five
+# functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) below it, a choice. The constructor is
+# not reconstructed (no target function of its own; it needs api::ITimerScheduler and the lambda it hands to it), so
+# lines 32 and 80 stay free. Paths relative to src/uenux2.
+# Draw and Rect are not reconstructed: 43-uenux2-cimagefieldupdate-pending.cpp defines them with trapping bodies and
+# names each with its target function. Draw, the first of them the class declares, is the key function and stays
+# there, so that object emits the vtable and with it the destructors and GetTypeName, which keep matching from it.
+# Every header of ours it reads is in src/uenux2/src/api/gui.
+CIMAGEFIELDUPDATE_SRCS := src/api/gui/cimagefieldupdate.cpp
+UENUX2_SRCS += $(CIMAGEFIELDUPDATE_SRCS)
 $(ROOT)/$(APP)/43-uenux2-cimagefieldupdate-pending.o: $(ROOT)/src/units/43-uenux2-cimagefieldupdate-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/43-uenux2-cimagefieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/43-uenux2-cimagefieldupdate-pending.cpp -o $(R)
 # nothing reconstructed references the vtable yet: 43-uenux2-cimagefieldupdate-roots.cpp takes its address, which keeps
