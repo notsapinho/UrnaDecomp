@@ -16,7 +16,7 @@ ModuloTiposEleitorais::Turno CConversorTurno::DoConverte(const TDado& dado) cons
     default:
         break;
     }
-    throw CAsnError(EAE_TURNO_INVALIDO, "Turno inv·lido.");
+    throw CAsnError(EAE_TURNO_INVALIDO, "Turno inv√°lido.");
 }
 
 
@@ -30,7 +30,7 @@ app::dados::TTurno CConversorTurno::DoDeconverte(const TEntidade& entidade) cons
     default:
         break;
     }
-    throw CAsnError(EAE_TURNO_ENTIDADE_INVALIDO, "Turno inv·lido.");
+    throw CAsnError(EAE_TURNO_ENTIDADE_INVALIDO, "Turno inv√°lido.");
 }
 
 } // namespace ecourna::app::dados::asn
