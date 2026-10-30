@@ -3475,12 +3475,6 @@
 
 // link-order cluster 384 · uses=1 · neighbours' file uenux2/src/api/gui/cnewlinefieldpaper.cpp
 
-// f11014 · 21 B · unmatched · placement: link order · name unknown
-// void f11014(i32, i32) { ... }
-
-// f11013 · 12 B · unmatched · placement: link order · name unknown
-// ? f11013(i32) { ... }
-
 // f11012 · 43 B · unmatched · placement: link order · name unknown
 // void f11012(i32, i32) { ... }
 

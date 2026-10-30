@@ -118,6 +118,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 | `37-uenux2-iqrcodebuds` | `vota::IQRCodeBUDS::~IQRCodeBUDS`, the D2 and D0 of its vtable (target fns 12050, 12049), inline in the class header; the constructor (inlined into 1956, no target function of its own) emits them, with the 9372 enumerator of `EUeVotaError` |
 | `38-uenux2-cwavfile` | the `api::CWavFile` destructor and deleting destructor (target fns 5345 and 10238), the `CWavFile` class header with the `CWavAudio` WAV header it copies; the constructor (inlined into 10841) is not reconstructed |
+| `39-uenux2-ctextfieldpaper` | the `api::CTextFieldPaper` constructor and `Draw` (target fns 2771 and 10920) with its implicit destructors (10919, 10918) and `IFormFieldBase<IPaper>`'s destructor (11013, merged into 1566 with the IScreen and IScreenMT ones), the class header, `api::IPaper` and its nested `EStyle` (`api/gui/ipaper.h`) and the 4973 enumerator of `EUeGuiError`; `IFormField<IPaper>::GetTypeName` (11014) waits on binaryen's 3-way merge 3891 |
 
 ## Companion files
 
