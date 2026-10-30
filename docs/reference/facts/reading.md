@@ -2,15 +2,16 @@
 
 What a target body says about the C++ that compiled to it, beyond the name its `std::source_location` record gives:
 the parameters a wasm type hides, how a class returns or takes a class by value, how a destructor is declared and
-whether its class is `final`, whether a class is abstract, a free function's linkage, code binaryen inlined from
-another function, and the format string and argument types of a `std::format` throw. `docs/how-to-decompile.md` steps
-2, 3 and 5 rely on these. What a source form compiles to (the order of a body's stores, a switch over virtual slots,
+whether its class is `final`, whether a class is abstract or has a key function, a free function's linkage, code
+binaryen inlined from another function, the format string and argument types of a `std::format` throw, a `bool`'s
+reads, and an `invoke` around a callee that cannot throw. `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a source form compiles to (the order of a body's stores, a switch over virtual slots,
 an in-class member against an `inline` one) is in [codegen.md](codegen.md).
 
 The probes are short TUs compiled by the pinned em++ with uenux2's flags, `-O2 -fPIC -std=c++20 -DNDEBUG
 -fno-strict-aliasing` (`docs/reference/facts/app-flags.md` §F6); their sources are given in full. R1–R3 and R7–R11
 were measured under `build/out/DOCS-A/probe/` of a checkout at 7bf701e, R4–R6, R12 and R13 under
-`build/out/DOCS2-A/probe/` at ee595de. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run
+`build/out/DOCS2-A/probe/` at ee595de, and the parts marked bb6f018 (R14 and R15 among them) under
+`build/out/reading-probe/` at bb6f018. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run
 from `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
 ## R1. A parameter every caller passes as the same constant is gone from the wasm type
@@ -139,6 +140,66 @@ calls `P`'s out-of-line D2 instead of inlining it (R5). The symbols (R6 reads th
       0000009c W _ZTV2P2
       …                                   # D _ZTV2Q2, _ZTV2Q3, _ZTV2Q4, and two U typeinfo vtables
 
+The base's vptr store says less than the class's own. clang marks a destructor's `this` dead on return, so LLVM
+deletes the store of an inlined base destructor when nothing after it can read the vptr: only a call in the base
+destructor's body keeps it. Probe `basevptr.cpp` (bb6f018, under `build/out/reading-probe/`):
+
+    // Whether a derived class's destructor keeps the vptr store of the base destructor it inlines.
+    #include <string>
+    void hook();
+    struct Base {
+    #if FORM == 0
+        virtual ~Base() = default;            // empty
+    #elif FORM == 1
+        virtual ~Base() { (void)0; }          // a body that does nothing
+    #elif FORM == 2
+        virtual ~Base() { hook(); }           // a body that makes a call
+    #endif
+        virtual void f();
+    };
+    struct Derived : Base { ~Derived() override; void f() override; std::string s; };
+    Derived::~Derived() = default;
+    void Derived::f() {}
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 2; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/reading-probe/basevptr.cpp -o /work/build/out/reading-probe/basevptr-$f.o; done'
+    for f in 0 1 2; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/reading-probe/basevptr-$f.o | awk '/<_ZN7DerivedD1Ev>:/ {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -oE 'GOT\.mem\._ZTV[0-9A-Za-z]+|call [0-9]+ <[^>]+>' | sed -E 's/call [0-9]+ //' | tr '\n' ' '; echo; done
+      FORM 0: GOT.mem._ZTV7Derived <env._ZdlPvm>
+      FORM 1: GOT.mem._ZTV7Derived <env._ZdlPvm>
+      FORM 2: GOT.mem._ZTV7Derived <env._ZdlPvm> GOT.mem._ZTV4Base <env._Z4hookv>
+
+So a derived D2 without the base's vptr store says that the base destructor's body makes no call, not that it is
+empty, inline or `= default`, and that form is a choice (unit 62's fragment says so of `api::CEscritorLog` under
+`simulador::CWasmLogd`'s 8318).
+
+**`final` where the D2 holds nothing to read.** A class whose destructor destroys nothing has one of binaryen's
+shared bodies in slot 0 (174, `return this`), which shows no store at all. When the target builds the class with
+`std::make_shared`, its control block shows it instead: `__shared_ptr_emplace<T>`'s slot 2, `__on_zero_shared`,
+destroys `T` through `T`'s vtable unless `T` or its destructor is `final`, and then the call devirtualizes to the
+empty destructor and the slot holds the shared empty body 218:
+
+    python3 -I -c "import json; [print(e['class'], e['functions']) for e in json.load(open('ledger/vtables.json')) if 'CEsperaAudio' in e['class']]"
+      std::__2::__shared_ptr_emplace<api::CEsperaAudio, std::__2::allocator<api::CEsperaAudio> > [9506, 9501, 218, 519, 144]
+      api::CEsperaAudio [174, 144, 9509, 2683]
+      std::__2::__shared_ptr_emplace<simulador::(anonymous namespace)::CEsperaAudioWasm, …> [9490, 9481, 9472, 519, 144]
+      simulador::(anonymous namespace)::CEsperaAudioWasm [9459, 9448, 2680, 9445]
+
+Probe `onzero.cpp`:
+
+    // What std::make_shared's control block does on the last release, for a class whose destructor does nothing.
+    #include <memory>
+    struct I { virtual ~I() = default; virtual void f() = 0; };
+    struct T FINAL : I { void f() override; };
+    void T::f() {}
+    std::shared_ptr<I> Make() { return std::make_shared<T>(); }
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFINAL= -c /work/build/out/reading-probe/onzero.cpp -o /work/build/out/reading-probe/onzero-open.o && em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFINAL=final -c /work/build/out/reading-probe/onzero.cpp -o /work/build/out/reading-probe/onzero-final.o'
+    for v in open final; do printf '%s: ' $v; wasm-objdump -d build/out/reading-probe/onzero-$v.o | awk '/__on_zero_shared/ && / func\[/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -vE '^$' | tr '\n' ';'; echo; done
+      open: local.get 0;i32.const 12;i32.add;local.get 0;i32.load 2 12;i32.load 2 0;call_indirect 0 <env.__indirect_function_table> (type 1);drop;end;local.get 0;i32.const 16;call 1 <env._ZdlPvm>;end;
+      final: end;local.get 0;i32.const 16;call 1 <env._ZdlPvm>;end;
+
+(The second body each prints is `__on_zero_shared_weak`.) `api::CEsperaAudio` is `final` in
+`src/uenux2/src/api/audio/cesperaaudio.h`; `CEsperaAudioWasm`'s slot 2, 9472, is a body of its own.
+
 ## R5. The D0's shape gives the destructor's form; the D2 is the same in every form
 
 clang emits a virtual destructor in one of three shapes, and only the deleting destructor (D0) shows which. Probe
@@ -237,6 +298,58 @@ to it. Probe `dtorroot.cpp`, the same members in a root class `R`:
 
 So a root class whose D0 holds a D2 too costly for the plain in-class form declares it `inline`.
 
+The hint raises the threshold, not without limit (LLVM's remarks give 325 against 225: [levels.md](levels.md) §V2).
+Above it an implicit destructor gives the in-class shape as well, a D0 that calls the D2, so that shape alone does not
+separate the two forms. Probe `dtorcost.cpp` (bb6f018, under `build/out/reading-probe/`), two `final` classes of three
+and five `std::shared_ptr` members:
+
+    // An implicit (hinted) destructor whose D2 costs more than the hinted threshold: the D0 calls the D2 as the in-class form does.
+    #include <memory>
+    struct B { virtual ~B() = default; virtual void key(); };
+    struct C3 final : B { std::shared_ptr<int> a, b, c; void key() override; DTOR(C3) };
+    struct C5 final : B { std::shared_ptr<int> a, b, c, d, e; void key() override; DTOR(C5) };
+    void C3::key() {}
+    void C5::key() {}
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing "-DDTOR(X)=" -c /work/build/out/reading-probe/dtorcost.cpp -o /work/build/out/reading-probe/dtorcost-implicit.o && em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing "-DDTOR(X)=~X() override = default;" -c /work/build/out/reading-probe/dtorcost.cpp -o /work/build/out/reading-probe/dtorcost-inclass.o'
+    for v in implicit inclass; do for c in C3 C5; do printf '%s %s D0: ' $v $c; wasm-objdump -d build/out/reading-probe/dtorcost-$v.o | awk -v s="<_ZN2${c}D0Ev>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} END {print n " lines, calls:" c}'; done; done
+      implicit C3 D0: 74 lines, calls: <env._ZdlPvm>
+      implicit C5 D0: 5 lines, calls: <_ZN2C5D2Ev> <env._ZdlPvm>
+      inclass C3 D0: 74 lines, calls: <env._ZdlPvm>
+      inclass C5 D0: 5 lines, calls: <_ZN2C5D2Ev> <env._ZdlPvm>
+    cmp build/out/reading-probe/dtorcost-implicit.o build/out/reading-probe/dtorcost-inclass.o && echo same
+      same
+
+A `final` class's D2 has no vptr store to cost, so the plain threshold holds its three-pointer D2 too, and for such a
+class the two forms are one object at both sizes. `comum::CParteCandidatos`, `final` with five `shared_ptr` members
+and an implicit destructor (unit 77), has the 10-B D0 5590, `f136(f2876(p0))`, over its 256-B D2. Only the out-of-line form's D0 (`call D1`, `drop`, free) stays
+apart; between the other two, compare the forms in the class's own shape.
+
+In a class template the two in-class spellings, `= default` and `{}`, give the same bodies, and in the small case
+below the same object; in `api::CPriorityMessageQueue<T>` (unit 64) `{}` moves the D0 later in the object, which
+changes no byte of the link's functions (the fragment's measurement). Probe `dtortmpl.cpp`:
+
+    // A class template's destructor written `= default` or `{}` in the class, under implicit instantiation.
+    #include <string>
+    struct B { virtual ~B() = default; virtual void f() = 0; };
+    template <class T> struct Q : B {
+        T t;
+        std::string s;
+        void f() override { s += 'x'; }
+    #if FORM == 1
+        ~Q() override = default;
+    #else
+        ~Q() override {}
+    #endif
+    };
+    B *make() { return new Q<int>; }
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 1 2; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/reading-probe/dtortmpl.cpp -o /work/build/out/reading-probe/dtortmpl-$f.o; done'
+    cmp build/out/reading-probe/dtortmpl-1.o build/out/reading-probe/dtortmpl-2.o && echo same
+      same
+
+So compare such forms by function, not by `cmp` of the object.
+
 The D2 is the same in every form: its body differs only in the object-local type index of a `call_indirect`.
 
     for f in 0 1 5; do wasm-objdump -d build/out/DOCS2-A/probe/dtorform-$f.o | awk '/<_ZN1XD[12]Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //; s/(call|global.get) [0-9]+ /\1 /' > build/out/DOCS2-A/probe/d2-$f.txt; done
@@ -315,6 +428,40 @@ typeinfo for KeyBase`, and on `KeyBase`'s destructor as well when it is out of l
 [units.md](units.md) §U9 has that link and the one that passes, and `src/units/README.md` "Pending members" says what
 a unit defines then.
 
+**Reading the target for a key function.** When the destructors are shared bodies (slot 0 the shared `return this`
+174, slot 1 the trap 325 of an abstract class), the D0 says nothing, and a missing vtable says nothing either: wasm-ld
+drops a vtable nothing references, whichever object emitted it. Where the typeinfo lies does say it, by which object
+holds it. wasm-ld keeps the first object's copy of a linkonce typeinfo, so a class with no key function has its
+typeinfo in the object of a TU that uses it: no later than its earliest derived class's typeinfo, or inside the data of
+a TU that uses the class without deriving from it. A typeinfo well after the earliest derived one, among other objects'
+records, is the copy of the object that defines the key function. Both kinds, at bb6f018:
+
+    python3 -I -c "
+    import json, sys
+    c = {x['name']: x for x in json.load(open('ledger/classes.json'))['classes']}
+    def derives(n, b): return any(e['name'] == b or derives(e['name'], b) for e in c.get(n, {}).get('bases', []))
+    b = sys.argv[1]; t = c[b]['typeinfo']
+    d = sorted((x['typeinfo'], n) for n, x in c.items() if derives(n, b) and x.get('typeinfo'))
+    print(b, t, 'derived', len(d), 'first', d[0], 'below', sum(1 for a, _ in d if a < t))
+    " comum::CAppState
+      comum::CAppState 1551284 derived 198 first (1533000, 'vota::CAguardaMensagem') below 105
+
+`comum::CAppState`'s typeinfo lies 18284 B after its earliest derived class's, with 105 derived typeinfos and other
+files' records below it, so it is the copy of its own object, which has an out-of-line virtual member (unit 61 chooses
+the destructor). `api::ITextToSpeech`'s and `api::ISound`'s lie inside the executable TU's data, between that file's
+records ([levels.md](levels.md) §V1 has the command): copies, so neither class has a key function. Adjacency to the
+class's own vtable is not the test: `api::IScreen`'s vtable lies right after `simulador::CWasmScreen`'s typeinfo, and
+its own typeinfo 2312 B later.
+
+**Emitting the destructors of a class with no key function.** A TU emits the vtable, D2 and D0 of such a class when it
+references the vtable: a constructor defined there, a derived class's destructor that inlines this one, or a call of
+the destructor by its qualified name (the D2 stores the vptr too). The last needs neither constructor nor derived
+class: `src/units/64-uenux2-cmessagequeue-roots.cpp` calls `TFilaMensagens::~TFilaMensagens()` from an `optnone`
+function for a class whose constructor cannot be written. A class that declares no constructor has an implicit one,
+so `new T` in such a function emits them as well, while no constructor is declared, and building the object does the
+same where a constructor is written (unit 67). `src/units/README.md` "A class with no key function" says what a roots
+file may do with this.
+
 ## R7. A slot that holds `__cxa_pure_virtual` is a pure member, and dropping it makes the class concrete
 
 The target names `__cxa_pure_virtual` as function 12143 (`/usr/bin/grep -F '= func:12143;' splat/symbol_addrs.txt`
@@ -392,6 +539,31 @@ symbol is the internal `_ZN3apiL13ExistResource…`, no header declares it, and 
 in its own file keep it there. A caller of it from another file in `ledger/callgraph.tsv` is binaryen inlining across
 translation units, not a call in the source.
 
+That last sentence is for a function its records show file-static. For a function with no record, a caller in
+another file is read by where the call sits in that caller. A call in the caller's own code, or in code binaryen
+inlined from another function of the caller's file (R10), is a call across files: the callee is external. Only a call
+inside code inlined from the callee's own file fits a file-static callee. 5449 has no record and two callers,
+`api::EncodeTime` (3643, `ctime.cpp`) and `api::CDateTime::CDateTime(const std::string &)` (5475, `cdatetime.cpp`):
+
+    awk -F'\t' '$2==5449 || $2==5479 {print $1, $2}' ledger/callgraph.tsv
+      3643 5449
+      3649 5479
+      5475 5479
+      5475 5449
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 5475 | sed -n '/folded readout/,$p' | /usr/bin/grep -n -E 'i32.sub\(g0|f5479|f5449|f3643|f3649'
+      4:  l2 = i32.sub(g0, 32);
+      11:        l3 = i32.sub(g0, 32);
+      45:                if (i32.eqz(f5479(l4))) br 0;
+      71:                l5 = f5449(i32.add(l3, 8));
+      102:        i64.store[l7] = i64.load[f3649(l2, l4)];
+      132:        i32.store[l8] = i32.load[f3643(l2, i32.add(l2, 8))];
+
+5475 calls 5449 inside a second frame, a date-and-time check binaryen inlined, which also calls `CDate`'s check 5479,
+and later calls the `CTime` and `CDate` string constructors (3643's caller and 3649) itself. Which file defined that
+check, no byte says: in `cdatetime.cpp` it makes 5449 external, in `ctime.cpp` a file-static 5449 gives the same bytes
+(its symbol becomes `_ZN3apiL11IsValidTime…`). Unit 24 declares it in `ctime.h`, external, as a choice
+(`src/uenux2/src/api/util/ctime.h` line 15).
+
 ## R9. A member with no record: its place in its use band says whether the `.cpp` defines it
 
 `ledger/ordinals.tsv` column `uses` is the band key binaryen's `reorder-functions` sorted by (direct call sites plus
@@ -411,6 +583,38 @@ record:
 So 5898 comes before line 148's function in the object. An inline or implicit destructor, which only the vtable
 references, is emitted after the TU's external functions, after 5894. 5898 is defined in `iinterfaceinit.cpp`
 above line 148, as unit 35 writes it.
+
+Three limits to this reading:
+
+- **After all of them is two places.** A member after every other member of its file in the band is inline or
+  implicit, or the file's last function: the DAOs' slot 2 comes after their other members and before the base's
+  template defaults (`awk -F'\t' 'NR>1 && $1>=11467 && $1<=11473 {printf "%s(%s) ", $1, $2} END {print ""}'
+  ledger/ordinals.tsv` prints `11467(1) … 11473(1)`, read downwards: slots 3, 5, 6, 7, 8, then 2, then the default 4),
+  and its merge-thunk body cannot tell which.
+- **A deferred function sits after its first caller in the object, not at its end.** clang creates a function in the
+  module where it is first referenced, and emits the body (and its records, R8) at the end of the TU; the object's
+  function order is the module's. Probe `deferorder.cpp` (bb6f018, under `build/out/reading-probe/`):
+
+      // A file-static function: its record is emitted after the external functions' (R8), its body sits after its first caller.
+      #include <source_location>
+      void use(const std::source_location &);
+      static __attribute__((noinline)) void h() { use(std::source_location::current()); }
+      void a() { use(std::source_location::current()); }
+      void b() { use(std::source_location::current()); h(); }
+      void c() { use(std::source_location::current()); h(); }
+
+      TMPDIR=/tmp build/docker-build.sh sh -c 'em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -S -emit-llvm /work/build/out/reading-probe/deferorder.cpp -o /work/build/out/reading-probe/deferorder.ll && em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/deferorder.cpp -o /work/build/out/reading-probe/deferorder.o'
+      /usr/bin/grep -oE 'i32 [4-7], i32 [0-9]+ \}' build/out/reading-probe/deferorder.ll | awk '{print $2}' | tr -d ',' | tr '\n' ' '
+        5 6 7 4                                   # the records' lines: h's last
+      wasm-objdump -d build/out/reading-probe/deferorder.o | /usr/bin/grep -oE 'func\[[0-9]+\] <[^>]+>' | tr '\n' ' '
+        func[1] <_Z1av> func[2] <_Z1bv> func[3] <_ZL1hv> func[4] <_Z1cv>
+
+  So the band reading holds for a member nothing earlier in the file calls, such as a destructor only the vtable
+  references; an inline or static function that an external one calls sits among the external ones.
+- **A shared body has no band place.** A member whose target body binaryen keeps once for several classes counts
+  every class's table slots in its `uses`, so it sits in another band than its class's other members: `awk -F'\t'
+  '$1==2241 || $1==5527 {print $1, $2}' ledger/ordinals.tsv` prints `2241 5` and `5527 2` for the `Move` that five
+  and two field classes share, while each class's other members are in band 1. Its line in its file is a choice.
 
 ## R10. Code binaryen inlined from an out-of-line function of the source
 
@@ -447,6 +651,53 @@ function then has no target index of its own, and the source defines it out of l
   Unit 47 (commit 9159e6c, branch `decomp/decomp3-i`) defines that constructor out of line in
   `md/processoeleitoral/csituacoeseleicoes.cpp` and matches 11361 (`git show 9159e6c:splat/matched.txt | awk
   '$1==11361'`).
+
+The first tell has a variant, and there are two more (bb6f018):
+
+- **A leaf callee's frame is not written back.** A callee that makes no call and whose frame fits LLVM's red zone
+  reads the stack pointer and never stores it, so its prologue is a second `i32.sub(g0, N)` with no `g0 =` after it.
+  `api::CPriorityMessageQueue<api::SMessage>::Remove` (2073) holds `std::priority_queue::pop` so (unit 64 leaves `pop`
+  out of line and matches 2073):
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 2073 | sed -n '/folded readout/,$p' | /usr/bin/grep -n 'g0'
+        4:  l10 = i32.sub(g0, 16);
+        5:  g0 = l10;
+        17:      l4 = i32.sub(g0, 16);
+        118:    g0 = i32.add(l10, 16);
+
+- **A value read back right after it was stored.** clang forwards a stored value to a later load unless a call it
+  cannot see into stands between; binaryen inlining that call afterwards leaves the reload. `simulador::CWasmBeep`'s
+  slot 2 (8533) stores a local vector's begin and end into its frame and loads begin again at once:
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 8533 | sed -n '/folded readout/,$p' | sed -n 6,13p
+          l2 = f137(16);
+          i32.store[l3+4] = l2;
+          l4 = i32.add(l2, 16);
+          i32.store[l3+12] = l4;
+          i64.store[l2+8] = 42949675160;
+          i64.store[l2] = 42949675260;
+          i32.store[l3+8] = l4;
+          l2 = i32.load[l3+4];
+
+  The vector was filled by a function clang did not inline: a builder returning it by value, which clang inlines
+  when it sits in the caller's TU (any small function), so it is in another one. Unit 72 puts the tone sequences in
+  `src/uenux2/src/api/hwil/ibeep.cpp` and matches 8533 (`awk '$1==8533' splat/matched.txt`).
+- **A by-value `std::shared_ptr` copied word by word out of a frame temporary.** A constructor that clang inlines
+  stores its by-value `shared_ptr` arguments straight from the caller's values; one binaryen inlined keeps the
+  argument's temporary and reads it back into the object. `comum::CParteCandidatosMajoritarios`'s constructor inside
+  11946:
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11946 | /usr/bin/grep -A4 'i32.store\[l13\] = 1576416'
+          i32.store[l13] = 1576416;
+          i32.store[l8+16] = i32.load[l2+192];
+          i32.store[l8+20] = i32.load[l2+196];
+          i32.store[l8+24] = i32.load[l2+184];
+          i32.store[l8+28] = i32.load[l2+188];
+
+  Unit 77 defines the comum constructors out of line, by value, one caller each.
+
+Such a function is a member in its class's `.cpp` when it reads the class's state; one that reads none (8533's tone
+sequences) is a free function, and its file is a choice as long as it is not the caller's TU.
 
 ## R11. A record fixes the function's qualified name and its types' spelling, not the scope of a type it prints unqualified
 
@@ -576,3 +827,65 @@ each, the first argument lowest (libc++'s `__packed_arg_t_bits`). The type codes
 So 2759 formats a `std::string` (13, `__string_view`) and a `const char*` (12), and 11050 one `int` (3). The code is
 the type `std::format` sees after its own conversions, not the variable's: `std::format` has no formatter for an
 enum, so the source casts one, and the code is the cast's type.
+
+## R14. A `bool` tested in a condition can read as a compare with 1; a loop tells a `bool` from a byte
+
+LLVM tests a `bool` by its value 0 or 1, so a read in a condition can be `i32.load8_u; i32.const 1; i32.eq` (or
+`i32.ne`) as often as a bare `br_if` on the byte, and that `1` is no literal of the source. One read says nothing of the
+type: a byte compared with 1 gives the same rows. A loop that tests a global at its entry and on its back edge does
+tell them apart. Probe `boolread.cpp` (bb6f018, under `build/out/reading-probe/`):
+
+    // How a one-byte global's reads look in a loop: the first test and the back edge.
+    #if FORM == 0
+    extern bool g;
+    #define TEST g
+    #elif FORM == 1
+    extern unsigned char g;
+    #define TEST (g == 1)
+    #else
+    extern unsigned char g;
+    #define TEST (g != 0)
+    #endif
+    void work();
+    void Loop() { while (TEST) work(); }
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 2; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/reading-probe/boolread.cpp -o /work/build/out/reading-probe/boolread-$f.o; done'
+    for f in 0 1 2; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/reading-probe/boolread-$f.o | awk '/<_Z4Loopv>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -E 'load8|i32.const 1$|i32.eq|i32.ne|br_if|eqz' | tr -s ' ' | tr '\n' ';'; echo; done
+      FORM 0:  i32.load8_u 0 0; i32.const 1; i32.ne; br_if 0; i32.load8_u 0 0; br_if 0;
+      FORM 1:  i32.load8_u 0 0; i32.const 1; i32.ne; br_if 0; i32.load8_u 0 0; i32.const 1; i32.eq; br_if 0;
+      FORM 2:  i32.load8_u 0 0; i32.eqz; br_if 0; i32.load8_u 0 0; br_if 0;
+
+Only the `bool` compares at the entry and tests bare on the back edge. The byte at 1584624
+(`_ZN3api7CSystem7s_dormeE` in `splat/symbol_addrs.txt`) is read so by fn 5446, the one reader with a loop:
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 5446 | sed -n '/folded readout/,$p' | /usr/bin/grep -n '1584624'
+      7:    if (i32.ne(i32.load8_u[1584624], 1)) br 0;
+      17:      if (i32.load8_u[1584624]) br 0;
+
+so it is a `bool`; a reader with one test, such as fn 8461, cannot say.
+
+## R15. An `invoke` around a callee that cannot throw: the callee had a call that might, which a later pass removed
+
+emscripten turns a call inside a `try` (or a cleanup scope) into an `invoke_*` when the callee may throw at the time
+its pass runs, before binaryen inlines and simplifies. So an `invoke` whose callee cannot throw in the final module
+says that the callee's source held a call that could, which optimisation then removed. `CSqlConnection::Prepare`
+(9460) reaches the `CSqlStatement` constructor (9430) through `invoke_iiii` with table slot 6338, and the
+constructor's body calls only `sqlite3_bind_parameter_count` (6536):
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 9460 | sed -n '/folded readout/,$p' | /usr/bin/grep 'invoke_iiii(6338'
+              p2 = invoke_iiii(6338, l4, p1, i32.load[l3+92]);
+    wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[6338\] '      # from the repository root
+      - elem[6338] = ref.func:9430
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 9430 | sed -n '/folded readout/,$p' | sed -n 3,8p
+        i32.store8[p0+12] = 0;
+        i32.store[p0+8] = p2;
+        i32.store[p0+4] = p1;
+        i32.store[p0] = 1116948;
+        i32.store[p0+16] = f6536(i32.load[p0+8]);
+        push p0;
+
+A `std::mutex::lock()` in the constructor gives both: `pthread_mutex_lock` may throw through `std::system_error` when
+the invoke is made, and in this single-threaded build it is a stub that returns 0, so the throw path and the call
+vanish. `src/ecourna/api/sql/sqlite/csqlstatement.cpp` (unit 12) locks a file-level mutex there, and 9430 and 9460
+match (`awk '$1==9430 || $1==9460' splat/matched.txt`). The reverse case, a direct call inside a cleanup scope, is
+[app-flags.md](app-flags.md) §F9 item 5.

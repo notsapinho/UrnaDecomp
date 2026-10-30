@@ -26,7 +26,7 @@ byte-compare it).
 | `app/roots.cpp` | one function the stubs call that reaches every library entry point once (keeps the app's reachable set without exporting) |
 | `app/roots_ecourna.cpp`, `app/roots_uenux2.cpp` | callers of the reconstructed ecourna / uenux2 units with the target's call-site counts (binaryen inlines a function it sees called once) |
 | `app/roots_{7zip,rhvoice,boost}.cpp`, `stubs_7zip.cpp` | the library probes' drivers compiled as app code; definitions 7-Zip needs that emscripten lacks |
-| `web/wasm_shim.cpp` | the 34 EM_JS functions (generated: `../tools/extract/gen_wasm_shim.py` from `web/library_vota.pretty.js` + the target import types) |
+| `web/wasm_shim.cpp` | the 34 EM_JS functions (generated: `../tools/extract/gen_wasm_shim.py` from `web/library_vota.pretty.js` + the target import types). A reconstructed TSE source that calls one declares it `extern "C"` with this file's signature and never defines it again: the glue lists them in the order of this file's `em_js` sections (`uenux2/mock/app/simulador/wasm/cwasmbeep.cpp` declares three) |
 
 The scripts the build calls are in `../tools/round/` (`census.sh`, `census_report.py`, `link-map.sh`,
 `link-kinds.sh`, `link-symbols.sh`, `status.py`) and `../tools/libs/`; `../tools/README.md` describes each.
@@ -44,7 +44,10 @@ that holds the function or of a vptr it stores; a sibling class's destructor one
 like shape, leaves the stub (`--report` counts these pairs too). A record names a function our file defines when a
 definition there has the record's qualified name and parameter types, so a defined overload does not hide an
 unwritten one, nor a destructor its constructor. So a pending member's trapping body (`units/README.md`) removes its
-stub. A non-virtual function we wrote that has no record, a constructor for one, keeps its stub.
+stub. A non-virtual function we wrote that has no record, a constructor for one, keeps its stub. A function whose
+records all fall on lines of our code counts as written even when it is a caller that inlined the code on those lines:
+writing `ctextsource.h`'s inline constructor on its record's line (37:19) removed the stubs of 1150 and 652, whose only
+record that is. Name such functions in the fragment's header, as for a stub-only file that goes (below).
 
 ```
 // <stubs>
@@ -57,39 +60,49 @@ The first line gives the target function index, its body size and its status, th
 `std::source_location` record gives the function a line (its place in the file comes from the recovered link order, or
 it follows the file's code), and `name unknown` when `splat/symbol_addrs.txt` names no function at that index. The
 second is its signature: the demangled name, or `f<index>` and the wasm parameter types; the return type is `?` unless
-the wasm signature settles it (`void`). For `f<index>` the types are the target's, after binaryen, so they are not
-the C++ declaration. `void` says only that the wasm function returns nothing: a C++ function that returns a class by
-value does that too, through a hidden first parameter that holds the result's address, unless the class is trivially
-copyable and holds one scalar, which comes back as that scalar (3641, `CTime CTime::operator-(int) const`, is
-`(i32 i32)->(i32)`); and a constructor or a non-deleting destructor returns `this` until binaryen drops a result no
-caller uses (5526, the `api::CMovie` constructor, is `(i32 i32 i32)->()`). A parameter every caller passed as one
-constant is folded into the body, so the wasm type can have fewer parameters than the C++ function
-(`docs/how-to-decompile.md` step 2). The file comes from the function's records, else from its class's vtable or vptr
-(`ledger/vtables.json`, `ledger/func-attribution.tsv`); a function with neither is in its tree's `unplaced.cpp`,
-grouped by link-order cluster. The comment over a cluster (`// link-order cluster 984 · uses=3 · neighbours' file
-uenux2/src/api/gui/ctextfielddoubleline.cpp`) is its stretch's `probable_file` in `ledger/tu-clusters.tsv`: the file
-of a record one of the stretch's functions loads, or of a vtable class's records (`label_kinds` `source_location`,
-`class-record`), else a guess from a class name (`class-convention`). A stretch also holds unlabelled functions of
-other classes: f3660, `api::CSubReport`'s constructor, sits under 3659's record in cluster 984, and a stretch can
-hold functions of another digit zone ([../docs/reference/link-order.md](../docs/reference/link-order.md) §7.5). So
-the comment is a hint, not the file; `docs/how-to-decompile.md` step 3 gives the file. A file the evidence names
-that does not exist yet holds its stubs only, and goes when its last stub goes, even when records name it: they can
-be an inlined callee's. Whoever removes that last stub, by a
-match or a pending member, names the file and its record lines in the fragment's or the `-pending.cpp`'s header
-(`units/README.md` "Pending members"), so that whoever writes the functions of those records finds it. The deletion is
-left unstaged: `git rm` it before `python3 -I -B tools/round/check_encoding.py`, which reads the index and stops with
-`FileNotFoundError` on a tracked file that is gone. The stub files
-and `unplaced.cpp` are never compiled: no fragment lists them, and the generator never creates a `.cxx` in `asn1/`,
-where `mk/asn1.mk` compiles every one. A stub is a comment, never the target's code: there is no `INCLUDE_ASM`, and an
-unmatched function's bytes come from its piece in the splat build
+the wasm signature settles it (`void`). For `f<index>` the types are the target's, after binaryen, so they are not the
+C++ declaration. `void` says only that the wasm function returns nothing: a C++ function that returns a class by value
+does that too, through a hidden first parameter that holds the result's address, unless the class is trivially
+copyable and holds one scalar, which comes back as that scalar (3641, `CTime CTime::operator-(int) const`, is `(i32
+i32)->(i32)`); and a constructor or a non-deleting destructor returns `this` until binaryen drops a result no caller
+uses (5526, the `api::CMovie` constructor, is `(i32 i32 i32)->()`). A parameter every caller passed as one constant is
+folded into the body, so the wasm type can have fewer parameters than the C++ function (`docs/how-to-decompile.md`
+step 2). The file comes from the function's records, else from its class's vtable or vptr (`ledger/vtables.json`,
+`ledger/func-attribution.tsv`): its records' file when a record names the class, else the one file that defines the
+class's members, else `<class>.cpp` in lower case once such a file exists. So a unit that creates `cwasmscreen.cpp`
+takes `CWasmScreen`'s stubs out of `unplaced.cpp` at step 9, whatever the file holds. A function with neither is in
+its tree's `unplaced.cpp`, grouped by link-order cluster. That tree is the scan's `group` column's (`tree_of` in
+`tools/round/stubs.py`), a guess like the group. 5449, `api::IsValidTime`, is in group `ecourna` because it calls
+ecourna's `CStringUtils::ToByte`, so its stub was in `ecourna/unplaced.cpp`, and it matches from a uenux2 object (`awk
+-F'\t' '$1==5449 {print $9, $11}' splat/scan.tsv` prints `ecourna app/uenux2/src/api/util/ctime.cpp.o`). Decide a
+function's tree from its callers' records and its landing pads (an `invoke_*` around a throwing call is ecourna's or
+ASN.1's flags, none is uenux2's: `docs/reference/facts/app-flags.md` §F6). The comment over a cluster (`// link-order
+cluster 984 · uses=3 · neighbours' file uenux2/src/api/gui/ctextfielddoubleline.cpp`) is its stretch's `probable_file`
+in `ledger/tu-clusters.tsv`: the file of a record one of the stretch's functions loads, or of a vtable class's records
+(`label_kinds` `source_location`, `class-record`), else a guess from a class name (`class-convention`). A stretch also
+holds unlabelled functions of other classes: f3660, `api::CSubReport`'s constructor, sits under 3659's record in
+cluster 984, and a stretch can hold functions of another digit zone
+([../docs/reference/link-order.md](../docs/reference/link-order.md) §7.5). So the comment is a hint, not the file;
+`docs/how-to-decompile.md` step 3 gives the file. A file the evidence names that does not exist yet holds its stubs
+only, and goes when its last stub goes, even when records name it: they can be an inlined callee's. Whoever removes
+that last stub, by a match or a pending member, names the file and its record lines in the fragment's or the
+`-pending.cpp`'s header (`units/README.md` "Pending members"), so that whoever writes the functions of those records
+finds it. The deletion is left unstaged: `git rm` it before `python3 -I -B tools/round/check_encoding.py`, which reads
+the index and stops with `FileNotFoundError` on a tracked file that is gone. The stub files and `unplaced.cpp` are
+never compiled: no fragment lists them, and the generator never creates a `.cxx` in `asn1/`, where `mk/asn1.mk`
+compiles every one. A stub is a comment, never the target's code: there is no `INCLUDE_ASM`, and an unmatched
+function's bytes come from its piece in the splat build
 ([../docs/reference/include-asm.md](../docs/reference/include-asm.md)).
 
 Stubs only take blank lines (the ones that keep a decompiled function's throw sites at their recorded lines) or go
-after the end of a file, so no object changes; where a run of blank lines is too short for the stubs its records put
-there, a `#line N` after them gives the next line its number back, the same directive a gap ends with (below). The
-markers say the runs are generated: `make -C src stubs` rewrites them (`splat-scan` and `splat-match` run it), and
-`make -C src stubs-check` (CI) fails on a stub that is missing, extra, stale or out of place. To edit a file that holds
-stubs or gaps, `python3 -I -B tools/round/stubs.py --strip <file>` turns them back into blank lines first;
+after the end of a file, so no object changes. They take the blank lines of a record only at namespace level: a record
+line inside a class body (a template member defined in its class) keeps its gap, and the stub goes after the end of
+the file, marked `placement: link order` though a record names the function (f316 and f270 in
+`uenux2/src/api/ipc/cmessagequeue.h`, records 113 and 114). Where a run of blank lines is too short for the stubs its
+records put there, a `#line N` after them gives the next line its number back, the same directive a gap ends with
+(below). The markers say the runs are generated: `make -C src stubs` rewrites them (`splat-scan` and `splat-match` run
+it), and `make -C src stubs-check` (CI) fails on a stub that is missing, extra, stale or out of place. To edit a file
+that holds stubs or gaps, `python3 -I -B tools/round/stubs.py --strip <file>` turns them back into blank lines first;
 [../docs/how-to-decompile.md](../docs/how-to-decompile.md) step 3 has the rest.
 
 ## Gaps: the original lines not recovered
@@ -164,18 +177,25 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
   ASN.1 runtime's and modules' rules from `mk/asn1.mk`) or, for a landed unit, its fragment's own rule. The path under
   `src/` names the component; a TU outside `src/` needs `--component <dir under src/>` (`ecourna/app/dados`,
   `uenux2`, `asn1`, …), the directory it would land in.
-- **`--single`** compiles the TU alone, keeps one exported function through the toolkit's rank adapter, and scores
-  it against the target. A lone link makes other inlining and dead-argument decisions than the whole program, and
-  even a function with no callee can come out otherwise alone (a compare the whole link shares between two `select`s
-  stays computed twice: a source that matches 11067 scores 9 alone,
-  [../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X9). So use it to iterate on a
-  body and the whole link to conclude. Several TUs are rival candidates, ranked against each other, never linked
-  together: a callee in another TU stays an import. Undefined functions become imports,
-  but undefined data fails the link; `--flags '-Wl,--unresolved-symbols=ignore-all'` lets it through
-  (`docs/how-to-decompile.md` step 4). The score counts what the lone link inlines into the function: for a throw
-  that builds its message with `std::format`, all of libc++'s formatting code, so target 5468
-  (`api::CGenericTags::TagSize`, unit 33) scores `10836 over 10850 rows (… inserted 10622 …)` alone and is matched in
-  the whole link. How-to step 4 says when to skip to the whole link.
+- **`--single`** compiles the TU alone, keeps one exported function through the toolkit's rank adapter, and scores it
+  against the target. A lone link makes other inlining and dead-argument decisions than the whole program, and even a
+  function with no callee can come out otherwise alone (a compare the whole link shares between two `select`s stays
+  computed twice: a source that matches 11067 scores 9 alone,
+  [../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X9). So use it to iterate on a body
+  and the whole link to conclude. Several TUs are rival candidates, ranked against each other, never linked together:
+  a callee in another TU stays an import. Undefined functions become imports, but undefined data fails the link;
+  `--flags '-Wl,--unresolved-symbols=ignore-all'` lets it through (`docs/how-to-decompile.md` step 4). The score
+  counts what the lone link inlines into the function: for a throw that builds its message with `std::format`, all of
+  libc++'s formatting code, so target 5468 (`api::CGenericTags::TagSize`, unit 33) scores `10836 over 10850 rows (…
+  inserted 10622 …)` alone and is matched in the whole link. How-to step 4 says when to skip to the whole link. The
+  compile and the lone link are one `em++` line, `-Oz -fexceptions` and then the TU's own flags, and emcc takes the
+  last `-O`: binaryen runs at the TU's level (`-O2` for uenux2), not at the build link's `-Oz`
+  ([../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X6). `--single` compiles every TU
+  as a copy named `cand.cpp` in a directory of its own, tracked TUs included, so a TU that includes a header beside it
+  by a bare quoted name (`#include "cwasmtimer.h"` in `uenux2/mock/app/simulador/wasm/`) fails with `file not found`
+  until `--flags "-iquote /work/<its directory>"` names that directory. try-tu rewrites the tree's relative `-I` paths
+  for the container, not the paths in `--flags`: write those as `/work/<path>` (`-I/work/third_party/boost`, not
+  `-Ithird_party/boost`).
 - **`--component`** overrides the path of every TU of the run, not only the ones outside `src/`. It is also the
   way to compile a `src/units/*-pending.cpp`, which has no rule of its own that try-tu can find. A TU that is not at
   the path it would land in is compiled as a copy there, under `build/out/try/<name>/src/`, so a quoted `#include`
@@ -214,7 +234,12 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
   [../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X10).
 
 `--skip-units <fragment>.mk` leaves a landed fragment out of the link, with its companion objects, so its TUs can be
-tried again without a duplicate symbol.
+tried again without a duplicate symbol. To measure a variant of one source of a landed unit, copy every source the
+fragment lists, its `-externs.cpp` included, into one scratch directory, change the copy, and pass that directory with
+`--skip-units <fragment>.mk --component <the sources' directory under src/> --roots <the unit's -roots.cpp>`.
+`--component` gives the copies their tree's flags and path map, and the externs file, which has no rule of its own
+once the fragment is skipped, the flags it has in the fragment. Run the unchanged copy first: it must reproduce the
+committed result.
 
 Times: `--single` takes about 7 s on an idle machine and the whole link about a minute (compile, both links,
 census). Both are mostly docker runs, so they grow with the machine's load: `--single` takes about 35 s while a fresh

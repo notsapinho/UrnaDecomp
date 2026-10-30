@@ -40,7 +40,7 @@ pnpm bench <command> …               # the lifter benchmark, benchmark/README.
 | `splat-scan <target> <plain> [-o scan.tsv] [--match [<matches>]] [--kinds f \| --no-kinds]`                 | every target function against our re-pointed candidate; `--match` appends new matches to the match list                                                                           |
 | `splat-build <target> <plain> [--matches f] [-o out.wasm] [--expect <sha256>] [--kinds f \| --no-kinds] [--max-kind-unverified n]` | the split with our bytes for every match; fails on a match that does not verify, or on more than n kind-unverified matches; prints the meter, the kind-unverified matches and the review warnings |
 | `splat-kinds <plain> [--shifted <dir>] [-o kinds.json] [--matches f]`                                       | the operand-kind table: which constants of our link are addresses, table slots or integers, from a relink with data and table moved                                             |
-| `splat-review <target> <plain> <index> [--matches f] [-o <dir>] [--kinds f \| --no-kinds]`                  | the blanked-target check of one match: its piece blanked, the split assembled with the match's own bytes (the gate, the exit status) and with every operand at its first reading |
+| `splat-review <target> <plain> <index> [--matches f] [--symbols f] [-o <dir>] [--kinds f \| --no-kinds]`    | the blanked-target check of one match: its piece blanked, the split assembled with the match's own bytes (the gate, the exit status) and with every operand at its first reading |
 
 `<fn>` is a function index (function index space: imports first, so the target's first defined
 function is 136), `export:<name>` (linked module; the real name, resolved through the glue when the
@@ -612,7 +612,7 @@ the readings the target chose.
 | `splat-scan <target> <plain> [-o scan.tsv] [--match [<matches>]] [--pieces d]`              | every target function against our re-pointed candidate          |
 | `splat-build <target> <plain> [--matches f] [-o out.wasm] [--expect <sha256>] [--pieces d] [--max-kind-unverified n]` | the split with our bytes for every match, verified, and a meter |
 | `splat-kinds <plain> [--shifted <dir>] [--map-dir d] [-o kinds.json] [--matches f]`         | the operand-kind table from the plain link and its shifted relink |
-| `splat-review <target> <plain> <index> [--matches f] [-o <dir>] [--pieces d]`                | one match's blanked-target check, both ways                     |
+| `splat-review <target> <plain> <index> [--matches f] [--symbols f] [-o <dir>] [--pieces d]`  | one match's blanked-target check, both ways                     |
 
 **splat-review** (`splat-review.ts`) is the check urna's `docs/reference/splat.md` "Reviewing a match" describes. It
 blanks the matched piece in a copy of the split (in memory: a body of the same size with no locals, `unreachable`s
@@ -627,7 +627,9 @@ applied first (`withMatches`), as `splat-build` does:
   seconds.
 - **preferred readings**: `remapBody(...).bytes`, every operand at its first reading, with the blanked module as the
   target side. That module and a copy of the target's glue beside it (the import names) are written to `-o`
-  (default `<root>/build/out/splat-review/<index>`). No target body exists in that run. A match whose operands needed
+  (default `<root>/build/out/splat-review/<index>`). No target body exists in that run, but the self-vote check of
+  `selfVoted` does not run either: a body that only its own vote holds is judged by the gate alone, and `--symbols`
+  on a copy of the symbol file without such a name shows what the name carries. A match whose operands needed
   the target body's choice among our readings (which copy of the same content, which table slot of a function, and
   in a kind-unverified function which kind) fails it legitimately: the command lists each such operand, the reading
   the target body picked and the first one.

@@ -4,7 +4,8 @@ The flags each part of TSE's application code (uenux2, ecourna) was compiled wit
 one. The current flag sets live in `src/Makefile` (`ECOURNA_CXXFLAGS`, `UENUX2_CXXFLAGS`, `APP_CXXFLAGS`) and
 `src/mk/ecourna-flags.mk`; [../app-flags.md](../app-flags.md) gives them with their evidence. The ASN.1 runtime's
 flags are in [asn1.md §A1–A2](asn1.md), the libraries' in [libraries.md](libraries.md), the link line in
-[toolchain.md §T3](toolchain.md).
+[toolchain.md §T3](toolchain.md). What a level does at one site is in [levels.md](levels.md): the executable TU's
+flags, LLVM's inlining remarks and the deferred `-O3 -std=c++23`.
 
 How a flag is measured: compile the reconstructed TU under each flag set in `urna-emsdk:6.0.0`, link, and score
 each function against the target with `pnpm wasm score <target> <fn> <candidate.wasm> <index> --depth 0` (from
@@ -17,6 +18,7 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
 | uenux2 (`src/uenux2`) | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
+| the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, not reconstructed) | `-Oz -fexceptions` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fno-exceptions -std=c++14 -DNDEBUG` ([asn1.md](asn1.md)) |
 
 ## F1. ecourna: `-O3 -fexceptions -std=c++20 -DNDEBUG`
@@ -288,11 +290,18 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
 
 - **Not -Oz.** At -Oz the `std::format` throw path stays as calls with a 496-byte frame; the target has the inlined
   `__format_arg_store` constants and a 480-byte frame. The copy of `CError::~CError` (func 4636) that wins the link
-  looks like -Oz code, but it comes from the **first** object defining it (an executable TU, possibly -Oz), not from
-  the uenux2 library trees: it says nothing about uenux2's level.
+  looks like -Oz code, but it comes from the **first** object defining it (the executable TU,
+  [levels.md](levels.md) §V1), not from the uenux2 library trees: it says nothing about uenux2's level.
 - **Not -Os.** -Os loses `CIniKey::operator=` (string `operator==` stays a call).
-- **-O2 = -O3** on every surviving function (the objects differ; a loop-bearing unit must separate them). -O2 is
-  kept.
+- **-O2, kept; -O3 is not the same.** The four functions of the table are the same at both, but the two levels'
+  inlining thresholds differ, so a body can separate them with no loop ([levels.md](levels.md) §V2 has the remarks and
+  what to read first on a body that differs in what is inlined).
+- **`-std=c++20` is ecourna's measurement, carried over.** F1's 3703 is an ecourna function; no uenux2 function decided
+  uenux2's `-std`.
+- **-O3 with `-std=c++23` is a deferred decision, not the tree's setting.** Every match verifies there, and the bodies
+  that gain are all in `mock/app/simulador/wasm/` ([levels.md](levels.md) §V3).
+- **The executable TU is not uenux2's set.** `wasm/vota_web/vota_web_wasm.cpp`, not reconstructed, is compiled
+  `-Oz -fexceptions`, and the linkonce copies it emits are the ones the target kept ([levels.md](levels.md) §V1).
 - **-fPIC** removes the last structural rows of all three ctors.
 - **No `-fexceptions`.** 0 of 1,645 uenux2 functions that load a `source_location` record call `invoke_*`; uenux2
   throw sites call `__cxa_throw` directly. Without `-fexceptions` emcc defaults to `-fignore-exceptions`
@@ -421,6 +430,29 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    runtime included, with the flag on the `UENUX2_SRCS` objects and the uenux2 `-pending.cpp` and on no stand-in. The
    five steps take about 9 minutes on a loaded machine. With `-fno-delete-null-pointer-checks` the build ends
    `3 matched functions no longer verify` (the tool's message), listing 5194, 11321 and 11326, as F6 says.
+
+   That answers whether a flag set keeps every match. It does not say what the flag set adds: steps 7 to 9 read the
+   plain link's fixed paths (`/usr/bin/grep -n 'build/out/wasm' tools/round/census.sh` prints `M=` and `N=` under
+   `build/out/wasm/` and `build/out/wasm-named/`). The scan of the private link is a lead, not a verdict. It takes the
+   kind table `splat-kinds` wrote beside the private link (`$P/wasm-kinds/vota_web/kinds.json`). But it reads the
+   committed symbol file and ledger, whose census pairs are function indices of the plain link, so a row can pair a
+   target function with another function of the private link:
+
+   ```sh
+   P=build/out/flags-o3-cxx23      # the private link of levels.md §V3
+   (cd asmlift-wasm && pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../$P/wasm/vota_web/vota_web_wasm.wasm -o ../$P/scan.tsv > /dev/null 2>&1)
+   join -t "$(printf '\t')" <(cut -f1,5 splat/scan.tsv | sort) <(cut -f1,5 $P/scan.tsv | sort) | awk -F'\t' '$2 != $3 {print $2, "->", $3}' | sort | uniq -c
+   #    2 differs -> match
+   #   43 differs -> unresolved
+   #   51 unresolved -> differs
+   awk -F'\t' '$1==1143 {print $1, $2, $3, $5}' $P/scan.tsv
+   # 1143 DES_ofb64_encrypt 1860 differs
+   ```
+
+   1143 is `CError`'s constructor, an ecourna function whose object the uenux2 flags do not change: its row names
+   whatever function 1860 is in the private link. Take a row that moves there to `splat-remap` against the private link
+   (`docs/reference/splat.md` "Matching a function"). To have steps 7 to 9 name what a flag adds, build in place in a
+   worktree of your own, and `rm` the objects whose flags change, since make keeps an object whose flags changed.
 7. **A lone-link residue of whole-program DAE.** Extra `drop`s after `~shared_ptr` in a landing pad, or a
    `memcpy` return value kept or dropped, come from callers elsewhere in the program; they close only in the
    whole link.

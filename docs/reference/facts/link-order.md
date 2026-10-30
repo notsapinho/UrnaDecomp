@@ -256,6 +256,39 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     In the target, the vtables (`ledger/vtables.json` `address`) and records (`ledger/source-locations.tsv` column 1)
     around a class's vtable therefore belong to the objects linked beside the one that emits it. A vtable or typeinfo
     of a class with no key function is a linkonce copy kept in its first user's object, like a linkonce function.
+    "First" is the object wasm-ld starts parsing first, and an archive member that object pulls while it is parsed can
+    be laid out before it. A probe: `IB` has no key function, `D : IB` has one in `d.o`, `y.o` builds a `D` and takes
+    `typeid(IB)`, and `m.o` calls `y`. With `d.o` first in the archive, `D`'s vtable and typeinfo come first and
+    `IB`'s typeinfo, `y.o`'s copy, after them:
+
+    ```sh
+    P=build/out/linkorder-facts/ar; mkdir -p $P
+    printf '%s\n' 'struct IB { virtual ~IB() = default; virtual int f() const { return 1; } };' 'struct D : IB { D(); int f() const override; };' > $P/h.h
+    printf '%s\n' '#include "h.h"' 'D::D() {}' 'int D::f() const { return 2; }' > $P/d.cpp
+    printf '%s\n' '#include "h.h"' '#include <typeinfo>' 'const void* y() { IB* p = new D; return &typeid(IB) == &typeid(*p) ? static_cast<const void*>(p) : nullptr; }' > $P/y.cpp
+    printf '%s\n' 'const void* y();' 'int main() { return y() != nullptr; }' > $P/m.cpp
+    for f in d y m; do TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -c /work/$P/$f.cpp -o /work/$P/$f.o; done
+    TMPDIR=/tmp build/docker-build.sh bash -c "cd /work/$P && emar rcs lib2.a d.o y.o && emar rcs lib3.a y.o d.o && em++ m.o lib2.a -o a2.js -Wl,--Map=a2.map && em++ m.o lib3.a -o a3.js -Wl,--Map=a3.map"
+    for m in a2 a3; do printf '%s: ' $m; /usr/bin/grep -oE 'lib[23]\.a\([dy]\.o\):\(\.data\.rel\.ro\._ZT[VI][0-9A-Za-z]+\)' $P/$m.map | sed -E 's/lib[23]\.a\(([dy]\.o)\):\(\.data\.rel\.ro\.(.*)\)/\1 \2/' | tr '\n' ',' ; echo; done
+    # a2: d.o _ZTV1D,d.o _ZTI1D,y.o _ZTI2IB,
+    # a3: y.o _ZTI2IB,d.o _ZTV1D,d.o _ZTI1D,
+    ```
+
+    So a base's typeinfo at a higher address than a derived class's vtable, with nothing of the base right after the
+    derived class's typeinfo, says the derived class's object was pulled by the TU that holds the base's copy. It does
+    not say that the base has a key function. `simulador::CWasmBeep`'s typeinfo (1530348) is followed by
+    `CWasmNullSound`'s vtable (1530360), and `api::IBeep`'s typeinfo lies further on, at 1531756:
+
+    ```sh
+    python3 -I -c "
+    import json
+    v = [(e['address'], 'vtable ' + e['class']) for e in json.load(open('ledger/vtables.json')) if 1530340 <= e['address'] <= 1530370]
+    t = [(c['typeinfo'], 'typeinfo ' + c['name']) for c in json.load(open('ledger/classes.json'))['classes'] if 1530340 <= c['typeinfo'] <= 1530370 or c['name'] == 'api::IBeep']
+    [print(a, n) for a, n in sorted(v + t)]"
+    # 1530348 typeinfo simulador::CWasmBeep
+    # 1530360 vtable simulador::CWasmNullSound
+    # 1531756 typeinfo api::IBeep
+    ```
     `comum::CMenuBase` (5913's class) follows `informacao/cinformacaoeleicao.cpp`, and `comum::CAppState` sits before
     the first record of `app/comum/carquivosresultado.cpp`:
 

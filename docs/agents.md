@@ -13,6 +13,7 @@ The board is a folder **outside** the repository, created for one run; the run's
 | `board/facts/` | what is true of the repo, the target or a tool, with the command that shows it |
 | `board/traps/` | commands or files that give a plausible wrong answer |
 | `board/rounds/` | a stage's claim (the paths it owns) and its result |
+| `board/friction/` | one post per point where a doc was missing, wrong, ambiguous or misleading |
 | `queue/` | requests to the coordinator (blocked on something outside one's area, a question the board does not answer); the reply is `<same name>.reply.md` |
 | `inbox/` | the user's notes; the coordinator acknowledges each in `inbox/ack/` |
 
@@ -20,10 +21,13 @@ The board is a folder **outside** the repository, created for one run; the run's
   command**. It opens with `from:`, `date:`, `tags:`, and `corrects: <file>` when it corrects another post.
 - Posts are append-only: never edit or delete one; correct it with a new post. Before acting on a post, look for
   posts that correct it (`grep -rl "corrects: <filename>" board/`).
-- Append one line per post to `INDEX.md` with `printf '%s\n' "<path>  <hook>" >> INDEX.md`, nothing else.
+- Append one line per post to `INDEX.md` with `printf '%s\n' "<path>  <hook>" >> INDEX.md`, nothing else ("Two
+  machines" has the second machine's file).
 - A number is posted with the command that produced it, or not at all. Post what you learned, not status.
-- The inbox is the user's word and outranks every brief. Every agent reads it at the start of each stage; only
-  the user (or the coordinator transcribing the user, marked as such) writes there.
+- The inbox is the user's word and outranks every brief. Every agent reads it at the start of each stage, again
+  before a step that cannot be undone (a `git worktree remove`, a merge onto `main`) and before posting its result: a
+  note that arrives during a stage outranks the brief from then on. Only the user (or the coordinator transcribing the
+  user, marked as such) writes there.
 - The board is not part of the repository and does not outlive the run. Before a run ends, move every fact a
   tracked file depends on into `docs/reference/facts/` and cite it there: code and docs never cite a board post.
   Nor do they name a round, a lane or an agent handle, which mean nothing once the run is over: say what a file
@@ -33,7 +37,9 @@ The board is a folder **outside** the repository, created for one run; the run's
 ## Working in one shared checkout
 
 - **Claim before editing.** Post a `rounds/` claim listing the files or directories you own. Do not edit a path
-  another active stage claimed; file a `queue/` request instead.
+  another active stage claimed; file a `queue/` request instead. A header you derive from is one you depend on, claimed
+  or not: when another stage claims it, read that claim's layout and link against it before you commit, since a base's
+  moved member breaks your matches at the merge and no check shows it earlier.
 - **Commit only your own paths**: `git add <paths> && git commit -m "…" -- <paths>`. The `-- <paths>` keeps other
   agents' staged changes out of your commit. A path you removed with `git rm` (the previous census snapshot, a stub
   file step 9 deleted) goes after `--` only: `git add` refuses it, and then adds nothing at all
@@ -61,6 +67,49 @@ The board is a folder **outside** the repository, created for one run; the run's
   `build/out/wasm/vota_web/vota_web_wasm.wasm` and `build/out/wasm-named/vota_web/vota_web_wasm.wasm` by name and
   link again.
 
+## Worktrees
+
+One worktree per lane, for as long as the lane runs, and no longer: leftover worktrees hold gigabytes and confuse
+the next run.
+
+- **Delete a worktree as soon as its lane is landed or dropped. Keep the branch.** `git worktree remove <worktree>`
+  deletes the directory and leaves the branch. Before it, check that nothing is lost: `git -C <worktree> status
+  --porcelain` prints nothing, and for a landed lane `git merge-base --is-ancestor <commit> main` exits 0, with
+  `<commit>` the one that landed, which need not be the branch's tip. A dropped lane's branch keeps its commits, so
+  commit what is worth having first.
+- **Copy out what the board cites first.** The clean-up check sees tracked and untracked files only, and the worktree's
+  ignored `build/out/` goes with it, with every script and log a post names. Copy the files posts cite (top-level
+  scripts and logs, not scratch clones) to `build/out/land/<lane>/` of the main checkout, and name the new path in your
+  result. A script worth keeping past the run belongs in `tools/`.
+- **At a round's end `git worktree list` shows only the main checkout.** Read it before you report the round.
+
+## Two machines
+
+A round can run on two machines. Each has its own checkout, its own worktrees and its own copy of the board, at the
+same paths on both, and its own limit of agents, sized to its CPUs.
+
+- **One index per machine.** Agents on the first machine append to `INDEX.md`, and agents on the second to
+  `INDEX-<machine>.md`, so the two copies never overwrite each other. A post's stamp and handle make its name unique,
+  so posts from both machines merge with no conflict.
+- **The coordinator copies the board,** both ways, adding and updating and never deleting. A post from the other
+  machine is on yours only after the next copy.
+
+  ```sh
+  rsync -au <board>/ <host>:<board>/
+  rsync -au <host>:<board>/ <board>/
+  ```
+
+- **Lanes never push.** A lane commits on its branch in its own machine's checkout, and its VERIFY runs on that machine.
+- **One machine lands.** The coordinator fetches the other machine's branches over ssh, then merges each confirmed
+  commit by its id as usual:
+
+  ```sh
+  git fetch <host>:<checkout> decomp/<lane>:decomp/<lane>
+  ```
+
+- **A worktree is deleted on the machine that holds it,** as "Worktrees" says, cited files included. At a round's end
+  `git worktree list` shows only the main checkout on both machines.
+
 ## Shared build outputs
 
 - `build/out/` is shared. Every link rewrites `build/out/wasm/vota_web/vota_web_wasm.wasm`; freeze a copy of the
@@ -71,7 +120,10 @@ The board is a folder **outside** the repository, created for one run; the run's
   flag value, so the object would survive into everyone's link. Add the flag with `UENUX2_EXTRA=…` (or
   `ECOURNA_EXTRA=…`), never a command-line `UENUX2_CXXFLAGS`, which drops the fragments' target-specific additions
   and reaches the stand-ins. [facts/app-flags.md](reference/facts/app-flags.md) §F9 item 6 has the command and the
-  splat check of such a link.
+  splat check of such a link. To measure one variant object in the whole link (a companion file against an overlay
+  header, a source with one more flag), clone the objects with their mtimes (`cp -Rp build/out/app
+  build/out/<handle>/app`), replace that one object, and pass the clone as `APP`: `make -n` then counts 0 compiles
+  against the 347 of a fresh `APP` ([facts/workflow.md](reference/facts/workflow.md) §W13).
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree.
 - Two units landing in one run each need their own fragment number: the coordinator assigns them before the
@@ -88,12 +140,17 @@ The board is a folder **outside** the repository, created for one run; the run's
 
   ```sh
   make -n -C src link -W $PWD/<header> | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' > build/out/<handle>/rebuilt.txt
-  tar -cf build/out/<handle>/before.tar -T build/out/<handle>/rebuilt.txt
+  while read o; do [ ! -f "$o" ] || echo "$o"; done < build/out/<handle>/rebuilt.txt > build/out/<handle>/existing.txt
+  tar -cf build/out/<handle>/before.tar -T build/out/<handle>/existing.txt
   # edit the header, then TMPDIR=/tmp make -C src link
   while read o; do tar -xOf build/out/<handle>/before.tar "$o" | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/<handle>/rebuilt.txt
   ```
 
-  An object that is not in the list compares equal with itself and proves nothing. Before a link, the same list
+  The list names the objects of sources a unit adds too; they are not built yet, so the filter keeps them out of the
+  archive (`tar -T` would report each one and exit 1), and the loop prints `DIFFER` for them, which is right. An object
+  that is not in the list compares equal with itself and proves nothing. A reviewer with no copy from before the edit
+  compiles the base's objects from `git archive <commit> src` in scratch
+  ([facts/workflow.md](reference/facts/workflow.md) §W13). Before a link, the same list
   taken for each file a unit added or changed gives, as their union, what the unit's headers will rebuild. To check a
   unit's objects fresh afterwards (move them aside, rebuild, compare), move aside every object its worktree built:
   `find build/out/app -name '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file
@@ -120,7 +177,8 @@ The board is a folder **outside** the repository, created for one run; the run's
   file gets a time newer than any object, so the first link recompiles everything. The script clones those inputs
   in, copies this checkout's mtimes, and touches the files the commit has differently, so make rebuilds exactly
   what depends on them; it prints how many objects the link will recompile. Remove the tree with
-  `git worktree remove <dir>`.
+  `git worktree remove <dir>`. To compare a few objects with an earlier commit you need no tree: `git archive <commit>
+  src` into scratch and the compile lines of `make -n` there ([facts/workflow.md](reference/facts/workflow.md) §W13).
 - `make -C src splat-symbols` after a new link re-picks the arbitrary name of byte-identical twins, so two runs'
   symbol files conflict on such lines: regenerate after merging rather than pick a side. `splat-scan` and
   `splat-match` can disagree on a count; trust the splat build's verification, and read `git diff

@@ -11,7 +11,8 @@ shows it, as for `-fPIC`; the per-flag measurements are in
 
 | tree | sources | flags | set in | evidence |
 | --- | --- | --- | --- | --- |
-| uenux2 | `src/uenux2/` | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` | `UENUX2_CXXFLAGS` in `src/Makefile` | facts §F6 (level, PIC and aliasing), §F1 (`-std`, `-DNDEBUG`); exceptions below |
+| uenux2 | `src/uenux2/` | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` | `UENUX2_CXXFLAGS` in `src/Makefile` | facts §F6 (level, PIC and aliasing); `-O3 -std=c++23` is a deferred decision ([facts/levels.md](facts/levels.md) §V3); `-std` and `-DNDEBUG` are ecourna's measurement (§F1), carried over; exceptions below |
+| the executable TU, `wasm/vota_web/vota_web_wasm.cpp` | not reconstructed | `-Oz -fexceptions` | nowhere: no setup has these flags | [facts/levels.md](facts/levels.md) §V1: the inline members of a class whose typeinfo sits in its data are its copies |
 | ecourna | `src/ecourna/` | `-O3 -fexceptions -std=c++20 -DNDEBUG`, no `-fPIC` | `ECOURNA_CXXFLAGS` in `src/Makefile` | facts §F1, §F5 |
 | ecourna, every unit | | `+ -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow` | `src/mk/ecourna-flags.mk` | facts §F2, §F3, §F4 |
 | the stand-in and roots TUs (`src/app/`, `src/web/`, the units' `-roots.cpp`) | | `APP_CXXFLAGS` = `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`; `APP_CFLAGS` for the generated C roots | `src/Makefile` | they stand in for app code; the library templates they instantiate win the link, and the target's copies have TBAA (facts §F6) |
@@ -22,13 +23,14 @@ records (below). `make -C src print-ECOURNA_CXXFLAGS` and `print-UENUX2_CXXFLAGS
 
 Flags that make no difference on the units measured: `-std=gnu++20` vs `-std=c++20`; `-DNDEBUG` on the units (none has
 an `assert`; the flag is pinned by the missing `__assert_fail` import, [facts/toolchain.md](facts/toolchain.md) §T6).
-`-ffunction-sections -fdata-sections`, tried together with `-fvisibility=hidden` in a test whose method is not recorded,
-changed 11 bytes of one libc helper and nothing of the units. Visibility on its own does change ecourna: with
-`ECOURNA_EXTRA=-fvisibility=default` all 82 of its objects differ and 4 matches break ([facts/app-flags.md](facts/app-flags.md)
-§F5, §F9 item 9).
-`-std=c++23` is excluded: it changes `EncodeBase64(...).substr(0, 8)` in function 3703 through C++23's rvalue
-`substr() &&` overload. `-std=c++17` does not compile the code (`std::source_location` and class-type template
-parameters are C++20).
+`-ffunction-sections -fdata-sections`, tried together with `-fvisibility=hidden` in a test whose method is not
+recorded, changed 11 bytes of one libc helper and nothing of the units. Visibility on its own does change ecourna:
+with `ECOURNA_EXTRA=-fvisibility=default` all 82 of its objects differ and 4 matches break
+([facts/app-flags.md](facts/app-flags.md) §F5, §F9 item 9). `-std=c++23` is excluded for ecourna: it changes
+`EncodeBase64(...).substr(0, 8)` in function 3703 through C++23's rvalue `substr() &&` overload. uenux2 takes
+`-std=c++20` from that ecourna measurement; its own functions 8799 and 8746 differ at the tree's flags and match at
+`-O3 -std=c++23`, which the tree has not taken ([facts/levels.md](facts/levels.md) §V3). `-std=c++17` does not
+compile the code (`std::source_location` and class-type template parameters are C++20).
 
 ## The error records are `std::source_location`, not a macro
 
@@ -79,7 +81,8 @@ cross-TU-inlined body that also carries ecourna records or an `api/pattern/*.h` 
 pads and catch handlers (`fn 6023`: `new T()` with a cleanup pad, `fn 1561`: the IGenericFactory default `Create` throw — their records sit
 in that TU's data). So: `src/api` and `src/app` were compiled **without `-fexceptions`** (emcc's default, clang `-fignore-exceptions`:
 `throw` compiles to a direct `__cxa_throw`, no landing pads — not `-fno-exceptions`, which rejects the `throw` statements these TUs
-contain), the executable TU with `-fexceptions`. 707 functions of the whole target call an `invoke_*` import.
+contain), the executable TU with `-fexceptions` ([facts/levels.md](facts/levels.md) §V1). 707 functions of the whole
+target call an `invoke_*` import.
 
 The `mock/` tree splits the same way, by file. The record-bearing functions of `mock/app/simulador/wasm/` call no
 `invoke_*` (9655 in `cwasmthread.cpp`, 3876 in `cwasmclp.cpp`), while both of `mock/app/comum/cappinfobuilder.cpp`

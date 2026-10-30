@@ -242,11 +242,16 @@ export names are minified (`a.o`, `Cb…Yb`) and the glue is where their real na
 *Where:* `docs/reference/toolchain.md` §2, `asmlift-wasm/README.md` "What is what" (imports).
 
 **EM_JS** — JavaScript function bodies compiled into the C++ objects; the app's `js_*` / `wasm_input_*` functions
-are EM_JS. `src/web/wasm_shim.cpp` holds all 34, generated from `src/web/library_vota.pretty.js` by `tools/extract/gen_wasm_shim.py`.
-*Where:* `docs/reference/toolchain.md` §2 "App JavaScript", `build/README.md`.
+are EM_JS. `src/web/wasm_shim.cpp` holds all 34, generated from `src/web/library_vota.pretty.js` by `tools/extract/gen_wasm_shim.py`,
+in the order the glue lists them. A reconstructed source that calls one declares it `extern "C"` with wasm_shim.cpp's
+signature and never defines it again, which would define it twice and move that order
+(`src/uenux2/mock/app/simulador/wasm/cwasmbeep.cpp`). *Where:* `docs/reference/toolchain.md` §2 "App JavaScript",
+`build/README.md`.
 
 **invoke thunk** — an `invoke_*` import through which legacy JS exception handling (`-fexceptions`) makes a call
 inside a `try`. Whether a function calls one tells whether its TU had `-fexceptions` (ecourna does, uenux2 does not).
+One around a callee that cannot throw in the final module means the callee's source had a call that could
+(`docs/reference/facts/reading.md` §R15).
 *Where:* `docs/reference/toolchain.md` §2–§3, `docs/reference/app-flags.md` "Exceptions".
 
 **harness probe** — the hello-world program in `build/probe/` used to pin the toolchain and link flags; its link
@@ -399,7 +404,8 @@ build lists them for a reviewer and never fails on them (all in upstream librari
 **scan verdicts** — `make -C src splat-scan` writes `splat/scan.tsv` (committed: the work list) with one verdict per
 target function: `match`, `differs` (with the first differing instruction), `unresolved` (an operand with no target
 image), or `no-candidate` (no body of ours was found for it: no symbol-file name, no census pair, no content pair; the
-function may still be written, see `docs/how-to-decompile.md` step 1). `make -C src splat-match` appends the new
+function may still be written and compiled, dropped by the link or inlined into its one caller, see
+`docs/how-to-decompile.md` step 1). `make -C src splat-match` appends the new
 `match` rows to `splat/matched.txt`, so after it the `match` rows are exactly the match list. The scan's columns
 (`ours`, `source`, `tried`, `object`, …) are explained in `docs/how-to-decompile.md` step 1. In prose, "no candidate"
 is the `no-candidate` verdict. *Where:* `docs/status.md` "What is left", `docs/reference/splat.md` "Matching a
@@ -460,7 +466,12 @@ solver's sound windows are rank ranges (`rank_lo`, `rank_hi`). Not to be confuse
 `-Oz` inlining: one shared body that several functions call with their differing constants. They take the highest
 ordinals (189 in the frozen skeleton of `docs/reference/link-order.md` §7.1). `link-map.sh`'s log counts them as "binaryen thunks", and the
 scan's `object` column says `<binaryen>`. A target function whose whole body is a call into such a shared body (11097,
-`f2904(p0, p1, 197764, 197771)`) matches only when our link merges the same set of functions. The other way round,
+`f2904(p0, p1, 197764, 197771)`) matches when our link merges enough of those functions for binaryen to form the same
+shared body: the same operands must differ among them, so that its parameters agree, and the pass must find the merge
+worthwhile. Two can be enough: 1565 has eight callers in the target and forms from any two of its deleting destructors
+(`docs/reference/facts/splat.md` §S10, which also lists the matches such a body holds up); `pnpm wasm fn <target>
+<body>` lists the callers, and a unit that lands a second caller should read its siblings' rows in the scan. Whether
+a smaller body needs more than two was not measured. The other way round,
 an `unresolved` row or a `splat-remap` whose operand is a call into `byn$mgfn-shared$…` "has no target function" means
 our link merged a set the target did not; the shared body's callers (`pnpm wasm fn`) name its members, and the set can
 span components (the target's 3904 has two RHVoice destructors and one of `api::CSubReport` as callers). *Where:*
