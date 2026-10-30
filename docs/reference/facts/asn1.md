@@ -167,14 +167,19 @@ alone: a name says which function sits there, and the scan still compares the by
   `pnpm wasm fn` on one shows the `call` at the offset where ours has it.
 
 Names free callers, not bodies. 3473 (`decodeCommon`) stays unmatched: it calls 543, a 239-B body with 28 callers, the
-`push_back(&&)` of a 4-byte element, and that equals no body of ours, nor a probe at the flags of uenux2, ecourna, RHVoice
-or the runtime. Where it comes from is not known.
+`push_back(&&)` of a 4-byte element, and that equals no body of ours. The target's 543 is RHVoice's
+`vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`,
+which only takes the pads away, matches 543 by content from that object. Our object has them. A twin reaches the same bytes
+another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merges with `vector<long>`'s from
+`roots_boost.o`, and the content pass matches 543 through it, with no source written for it. That twin goes if uenux2 moves to
+`-O3`, unless another caller lands.
 
 More of the same kind, from the same tally of aligned calls:
 
 - `pair-depth0`: 5055 and 5054, equal bodies the census cannot pair while a callee differs.
-- `callers+content`: 220, 2247, 2249, 2706, 5306, 1497, 5076, 1067 and 1068. The first three read as the executable TU's
-  (`-Oz -fexceptions`) by rows before binaryen, which is no match; our bodies differ, and their callers need only the
+- `callers+content`: 220, 2247, 2249, 2706, 5306, 1497, 5076, 1067 and 1068. A probe object at the
+  executable TU's `-Oz -fexceptions`, first on the link line, matches 2247 and 2249, so those two are that flag set's. 220
+  stays `differs` at the locals there, so for it the flag set is a lead. Our bodies differ, and their callers need only the
   name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair. An anchor casts votes
   only while nothing else names it (`anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`).
 - 8041, `use_facet<num_put>`: one of twelve thunks of 453. Its one slot is the `invoke` operand at +0xa2 of 446 and 541,
@@ -214,8 +219,10 @@ stores its vptr, so its vtable sits with the constructor, and that vtable (11485
 `ENUMERATED::getName` is not in `AVNEncoder.cxx`'s TU: clang inlines it there, and 8919 holds wasm-opt's shape, a reload of
 `value.asInt()` after the inlined body. `asn1.cxx` is a choice.
 
-The runtime has no `AVNPrinter`: `ledger/classes.json` has no such class, and only 3559, 8903 and 9770 load `AVNEncoder`'s
-vptr. Neither `AbstractData`'s `asValueNotation`, `print_on`, `setFromValueNotation` and `get_from` nor its two stream
+`AVNPrinter` and `AbstractData::Print` are deleted from `AVNEncoder.cxx`, and that is a choice. `ledger/classes.json` has no such
+class, and only 3559, 8903 and 9770 load `AVNEncoder`'s vptr, which says the target's module holds none, not that the source
+lacked one: with both restored and left out of the generated roots, the plain link is byte for byte the same. `asn1.h` still
+declares both. Neither `AbstractData`'s `asValueNotation`, `print_on`, `setFromValueNotation` and `get_from` nor its two stream
 operators has a target body, so the roots leave them out (`src/units/87-asn1-avn.mk`).
 
 `GeneralizedTime` is 48 B, with a `bool` at +44 the fork added: 8951 and 8956 allocate 48, 5072 and 8928 read the byte, 8951
@@ -223,5 +230,8 @@ copies it, 8956 sets it, and 2185 computes it.
 
 **One row that is a callee's signature.** 208, 2653, 2186, 8890 and 8887 equal the target's rows but for one `drop` or one
 constant argument. In each the callee is in our table and not the target's: a `-fexceptions` object of ours calls it
-through `invoke_*`. Of 770 rows with a candidate from `rhvoice/…`, 3 target bodies call `__cxa_find_matching_catch_*` and
-192 of ours do, which is a lead on §A2's open question. Measured as counts only.
+through `invoke_*`. Measured by links that take those landing pads away with `-fignore-exceptions`, which says nothing of the
+target's flags: with `userdict.cpp` so compiled, 208, 2653, 2186 and 8890 match, and with `app_dados_asn_datahoraasn` 8887
+does. Of 770 rows with a candidate from `rhvoice/…`, 3 target bodies call `__cxa_find_matching_catch_*` and 192 of ours do,
+which is a lead on §A2's open question. The whole library so compiled, at unchanged symbols, gains 43 rows and loses 28: a
+lead too, not a run of the pipeline.

@@ -33841,7 +33841,7 @@ _ZN4ASN116SEQUENCE_OF_BaseC2ERKS0_ = func:2656; // evidence:callers+content 1 fu
 _ZN4ASN18SEQUENCEC2ERKS0_ = func:853; // evidence:callers+content 1 function(s) the symbol file names, each with rows equal to ours up to callees, call it at the site where ours calls this symbol (8958), and no such site disagrees; 8958 is SEQUENCE's do_clone slot, new X(*this), so its callee is the copy constructor; rows equal ours up to callees (docs/reference/facts/asn1.md A5)
 # 8041: 12 B, `locale::use_facet(1924600)`, one of twelve such thunks of 453 in the target. Its one table slot, 8355, is the operand of `invoke_iii` at +0xa2
 # of 446 and 541, and of 8040, 9769, 9774; 446 and 541 equal our __put_num_integer_promote<unsigned short> and <int> in every row but their table slots, and the
-# facet's virtual call that follows is num_put's do_put. The id's distance to num_get's is ours: 1924600 - 1924584 (8046, in 1227's and 4760's slot) = 16 = 1486360 - 1486344.
+# facet's virtual call that follows is num_put's do_put. The id's distance to num_get's is ours: 1924600 - 1924584 (8046, in 1227's and 4760's slot) = 16, the distance of num_put<char>'s id above num_get<char>'s in our link.
 _ZNSt3__29use_facetB8ne210108INS_7num_putIcNS_19ostreambuf_iteratorIcNS_11char_traitsIcEEEEEEEERKT_RKNS_6localeE = func:8041; // size:0xc evidence:callers+content
 # The record of ModuloTiposEcoUrna::RegistroIdentificacaoEleitor names itself (docs/reference/facts/asn1.md §A3): its create word is 7054, SEQUENCE::create, word 12 points at the string
 # "RegistroIdentificacaoEleitor", and its two field names are "identificacaoUtilizada" and "identificacaoPrincipal". 9114 alone reads it, so a vote by 9114 would check nothing.
