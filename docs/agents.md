@@ -21,7 +21,8 @@ The board is a folder **outside** the repository, created for one run; the run's
   command**. It opens with `from:`, `date:`, `tags:`, and `corrects: <file>` when it corrects another post.
 - Posts are append-only: never edit or delete one; correct it with a new post. Before acting on a post, look for
   posts that correct it (`grep -rl "corrects: <filename>" board/`).
-- Append one line per post to `INDEX.md` with `printf '%s\n' "<path>  <hook>" >> INDEX.md`, nothing else.
+- Append one line per post to `INDEX.md` with `printf '%s\n' "<path>  <hook>" >> INDEX.md`, nothing else ("Two
+  machines" has the second machine's file).
 - A number is posted with the command that produced it, or not at all. Post what you learned, not status.
 - The inbox is the user's word and outranks every brief. Every agent reads it at the start of each stage, again
   before a step that cannot be undone (a `git worktree remove`, a merge onto `main`) and before posting its result: a
@@ -73,13 +74,41 @@ the next run.
 
 - **Delete a worktree as soon as its lane is landed or dropped. Keep the branch.** `git worktree remove <worktree>`
   deletes the directory and leaves the branch. Before it, check that nothing is lost: `git -C <worktree> status
-  --porcelain` prints nothing, and for a landed lane `git merge-base --is-ancestor <branch> main` exits 0. A dropped
-  lane's branch keeps its commits, so commit what is worth having first.
+  --porcelain` prints nothing, and for a landed lane `git merge-base --is-ancestor <commit> main` exits 0, with
+  `<commit>` the one that landed, which need not be the branch's tip. A dropped lane's branch keeps its commits, so
+  commit what is worth having first.
 - **Copy out what the board cites first.** The clean-up check sees tracked and untracked files only, and the worktree's
   ignored `build/out/` goes with it, with every script and log a post names. Copy the files posts cite (top-level
-  scripts and logs, not scratch clones) to `build/out/land/from-<lane>/` of the main checkout, and name the new path in
-  your result. A script worth keeping past the run belongs in `tools/`.
+  scripts and logs, not scratch clones) to `build/out/land/<lane>/` of the main checkout, and name the new path in your
+  result. A script worth keeping past the run belongs in `tools/`.
 - **At a round's end `git worktree list` shows only the main checkout.** Read it before you report the round.
+
+## Two machines
+
+A round can run on two machines. Each has its own checkout, its own worktrees and its own copy of the board, at the
+same paths on both, and its own limit of agents, sized to its CPUs.
+
+- **One index per machine.** Agents on the first machine append to `INDEX.md`, and agents on the second to
+  `INDEX-<machine>.md`, so the two copies never overwrite each other. A post's stamp and handle make its name unique,
+  so posts from both machines merge with no conflict.
+- **The coordinator copies the board,** both ways, adding and updating and never deleting. A post from the other
+  machine is on yours only after the next copy.
+
+  ```sh
+  rsync -au <board>/ <host>:<board>/
+  rsync -au <host>:<board>/ <board>/
+  ```
+
+- **Lanes never push.** A lane commits on its branch in its own machine's checkout, and its VERIFY runs on that machine.
+- **One machine lands.** The coordinator fetches the other machine's branches over ssh, then merges each confirmed
+  commit by its id as usual:
+
+  ```sh
+  git fetch <host>:<checkout> decomp/<lane>:decomp/<lane>
+  ```
+
+- **A worktree is deleted on the machine that holds it,** as "Worktrees" says, cited files included. At a round's end
+  `git worktree list` shows only the main checkout on both machines.
 
 ## Shared build outputs
 

@@ -17,8 +17,9 @@ The example throughout is target function 1931, `comum::CRdvVota::Candidato`, wh
 
 To match several functions at once with Claude Code, run `/decompile-functions`
 ([.claude/commands/decompile-functions.md](../.claude/commands/decompile-functions.md)): it runs this loop in one
-worktree per function, verifies each match with a second agent, lands the matches as step 10 says, and collects
-where this page fell short.
+worktree per function, verifies each match with a second agent, lands the matches as step 10 says, deletes each
+worktree once its lane is landed or dropped ([agents.md](agents.md) "Worktrees"), and collects where this page fell
+short.
 
 ## The loop at a glance
 
@@ -752,7 +753,8 @@ variant gives (`--symbols`, or `llvm-nm` on `build/out/try/<name>/obj/<tu>.o`;
 
 The lone compile and link is one `em++` with `-fexceptions`, as the build's link is. Its level is not the link's:
 the TU's own `-O2` or `-O3` comes after the template's `-Oz`, and em++ takes the last, so binaryen runs at that level
-([facts/workflow.md](reference/facts/workflow.md) §W2 item 5). uenux2 code is compiled without `-fexceptions` (no landing pads,
+([facts/tool-traps.md](reference/facts/tool-traps.md) §X6, [facts/workflow.md](reference/facts/workflow.md) §W2 item
+5). uenux2 code is compiled without `-fexceptions` (no landing pads,
 [facts/app-flags.md](reference/facts/app-flags.md) §F6), so for a TU whose own flags lack it `--single` adds
 `-fignore-exceptions`, and the `flags:` line it prints ends with it: its throw sites call `__cxa_throw` directly, as in
 the build, instead of growing `call import:invoke_…` and `__resumeException` rows
@@ -915,11 +917,13 @@ file: a callee not written, a flag its tree does not have, a data object or a li
 `differs` or `unresolved`, which is an ordinary state of a TSE object. Show the cause with a link or a compile that holds
 what the body waits for, and say what it waits for, with that measurement, in the fragment's header and its README
 row. `ModeloAbreviado` (8168, unit 75) is `differs` until the literal it shares a tail with is in the link, and with that
-literal in a scratch link `splat-remap` prints `IDENTICAL`; `api::ITextToSpeech::SetVoice` (11518, unit 82) gives the
-target's rows at the executable TU's flags ([facts/levels.md](reference/facts/levels.md) §V1). A trap in a
-`-pending.cpp` is right for a member that cannot be written yet (a callee or a type the tree lacks), and for one whose
-real body cannot be the target's or would cost a match: `return "CProgressBar";` compiles to the target's 10975 and
-stays a trap because the real body would drift matched 9696 (unit 40). A member the compiler writes from the class
+literal in a scratch link `splat-remap` prints `IDENTICAL`; it prints that for 8746 and 8799 (unit 78) at `-O3
+-std=c++23` ([facts/levels.md](reference/facts/levels.md) §V3), and `api::ITextToSpeech::SetVoice` (11518, unit 82)
+gives the target's rows at the executable TU's flags (§V1). A trap in a
+`-pending.cpp` is right for a member that cannot be written yet (a callee or a type the tree lacks), that cannot match
+until other code lands (a merge thunk: `src/units/README.md` "Pending members"), or whose real body would cost a match:
+`return "CProgressBar";` compiles to the target's 10975 and stays a trap because the real body would drift matched 9696
+(unit 40). A member the compiler writes from the class
 definition has no body to trap at all (an implicit destructor), so there the class stays as it is and the fragment
 says what differs. Do not replace a right body with a trap to clear a row.
 
@@ -958,9 +962,9 @@ D0's shape decides ([facts/reading.md](reference/facts/reading.md) §R4–R7):
   key function: only a TU that uses its vtable emits the vtable, D2 and D0. One that defines a constructor does, and
   so does one that emits a derived class's destructor that inlines this one, since it stores this class's vptr. When
   neither is written, write a constructor as well, at its record's line; the target may have inlined it everywhere,
-  and our link then drops it. When the constructor cannot be written either (its callees are not in the tree), a
-  roots function under `optnone` that calls the destructor by its qualified name emits the same three, as unit 64's
-  does (§R6).
+  and our link then drops it. When no reconstructed TU can do it, the roots file does, in an `optnone` function: it
+  builds an object where the constructor is written (unit 67) and calls the destructor by its qualified name where it
+  cannot be (unit 64). `src/units/README.md` "A class with no key function" has the shape, §R6 the mechanism.
 - When the destructors are shared bodies, or the class has no vtable in the target, they say nothing of a key
   function, and a missing vtable does not either: wasm-ld drops one nothing references. Read where the typeinfo lies:
   a copy in a user's object (inside a TU that only uses the class, or no later than its earliest derived class's
@@ -1086,10 +1090,11 @@ awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && o
 # …
 ```
 
-A `__shared_ptr_emplace<T>` member is what a `std::make_shared` root is meant to emit (`src/units/README.md`
-"Companion files"); a `(anonymous namespace)::` name of your roots file is a stand-in, so give it a body no target
-function has. A third kind is a real member under its real name: a roots object that emits a header's inline code
-pairs so (`api::COptionValidation::isValid`, unit 67). That is expected for a function your unit claims; for any other
+A `__shared_ptr_emplace<T>` or `__shared_ptr_pointer<T*, …>` member is what a control-block root is meant to emit
+(`src/units/README.md` "Companion files"); a `(anonymous namespace)::` name of your roots file is a stand-in, so give
+it a body no target function has. A third kind is a real member under its real name: a roots object that emits a
+header's inline code pairs so (`api::COptionValidation::isValid`, unit 67; [facts/units.md](reference/facts/units.md)
+§U4 counts them). That is expected for a function your unit claims; for any other
 target function read its scan row after step 9, since a `match` there is a function you did not mean to claim.
 
 ## 8. Symbols
@@ -1188,12 +1193,10 @@ A row of another unit can turn `match` for a reason you can name:
   body; say which in the commit message.
 - **A body the content pass pairs.** The pass pairs one of our unused bodies with a target body it equals when no
   other unmatched target body equals it, by locals and opcodes, not by wasm type, so a small or empty body pairs as soon
-  as another match removes its last twin (7722, [facts/workflow.md](reference/facts/workflow.md) §W18). Among bodies
-  alike, the name can be the wrong one: 14072 and 14073 went in as `aes_cbc_cts_*_ctx_params` where the target's
-  neighbours and the data they return say `camellia_cbc_cts_*`, and the build cannot tell, since the two tables hold
-  the same bytes. A row whose detail reads `address same-content` or `table slot copy`, or whose `source` is `content`,
-  is checked against what calls or points at the function and against its neighbours in `splat/matched.txt`; correct
-  the line by hand when they disagree.
+  as another match removes its last twin. Among bodies alike, the name can be the wrong one, and the build cannot tell
+  ([facts/splat.md](reference/facts/splat.md) §S11 has the cases). A row whose detail reads `address same-content` or
+  `table slot copy`, or whose `source` is `content`, is checked against what calls or points at the function and against
+  its neighbours in `splat/matched.txt`; correct the line by hand when they disagree.
 
 A match the scan found by body has `content` in the `source` column of `splat/scan.tsv`. Once the match names the
 function, a later scan writes `symbol` there, so a rescan of the committed state differs from the committed
@@ -1346,7 +1349,7 @@ files and in the census snapshot, which both branches renamed. Resolve only the 
 `src/units/README.md` keeps one row per fragment, both sides' new rows in fragment order. Git joins changes to adjacent
 rows into one hunk that holds every row on both sides, so "keep both" gives a row twice with one copy stale: for a row
 both sides hold, keep the side that changed it from the merge base (`git show :1:src/units/README.md`), and resolve a
-row both sides changed by hand ([facts/workflow.md](reference/facts/workflow.md) §W21). `splat/matched.txt` keeps both
+row both sides changed by hand ([facts/workflow.md](reference/facts/workflow.md) §W20). `splat/matched.txt` keeps both
 branches' match lines (step 10 checks every one again), each index once. Two units can match the same function (a
 base's destructor both bring in: 11013, `api::IFormFieldBase<api::IPaper>`'s, came with two units), and a second line
 for an index stops the splat build with `Error: match list line N: function 11013 is already matched on line M`; git
@@ -1383,7 +1386,7 @@ git rm -q ledger/history/<the other branch's snapshot>
 
 When `main` has replaced that snapshot since, it is a rename/delete instead: `git status --short -- ledger/history`
 lists only the branch's snapshot, `DU`, left in the tree, and `main`'s is in no conflict. Remove the branch's, `git rm
--q -f ledger/history/<the branch's snapshot>` ([facts/workflow.md](reference/facts/workflow.md) §W20).
+-q -f ledger/history/<the branch's snapshot>` ([facts/workflow.md](reference/facts/workflow.md) §W19).
 
 A header your unit needs that `main` gained after your branch started is an add/add conflict: create it from `main`'s
 text (`git show main:<path> > <path>`) and only add to it, so the merge is one hunk, and say so in the commit. A
@@ -1401,13 +1404,13 @@ unit's choices against `main`'s docs too before the merge (`git diff "$(git merg
 src/README.md src/units/README.md`), since the merge lands under them.
 
 Then run steps 6 to 10 again on the merge: link, census (`git rm` the snapshot you kept, add the new one), symbols,
-match, build and the checks, and count lost matches against `main`. Eight matches rest on the whole link and not on
-a source, so a merge that touches none of them can drop them (2056, 9517, 1565, 2777, 3681, 2899, 6026, 7722); read
-their rows after step 9, and stop if one left `match`: [facts/workflow.md](reference/facts/workflow.md) §W18 says what
-each depends on. Commit it all as the merge commit. A merge commit takes no pathspec (`fatal: cannot do a partial
-commit during a merge`): stage everything, read `git status --short`, and commit with a bare `git commit -F -`, owning
-the checkout while you do, since nothing else may be staged (§W19). Two branches that each took "the next free NN"
-collide too; `src/units/README.md` "Names" says how to avoid that.
+match, build and the checks, and count lost matches against `main`. Some matches rest on the whole link and not on a
+source, so a merge that touches none of them can drop them: after step 9 run the check of
+[facts/splat.md](reference/facts/splat.md) §S10, which lists them, and stop if one left `match`. Commit it all as the
+merge commit. A merge commit takes no pathspec (`fatal: cannot do a partial commit during a merge`): stage everything,
+read `git status --short`, and commit with a bare `git commit -F -`, owning the checkout while you do, since nothing
+else may be staged ([facts/workflow.md](reference/facts/workflow.md) §W18). Two branches that each took "the next free
+NN" collide too; `src/units/README.md` "Names" says how to avoid that.
 
 ## Library functions
 

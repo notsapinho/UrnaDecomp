@@ -317,14 +317,10 @@ rule of its own in the fragment (it is not in `ECOURNA_SRCS`) that is added to `
 moves into the class's real source when it is reconstructed, and the file and its rule go with the last one.
 
 A trap is for a member that cannot be written yet, that cannot match until other code lands (a merge thunk, below),
-or whose written body would cost a match. A member whose body is written
-and right, and whose row differs for a reason outside its source, keeps that body where it belongs, in the class or
-its `.cpp`. Its row stays `differs`, and the fragment's header and its row in the table say what it waits for. That is
-the tree's flags for units 69, 78 and 82 (`docs/reference/facts/app-flags.md` §F6). For unit 75's `ModeloAbreviado`
-(8168) it is another function's literal, which decides where the linker merges its format string
-(`docs/reference/splat.md` §3). Show the cause where a link can: one that holds what the member waits for, in which
-`splat-remap` prints `IDENTICAL` (§F6 does it for unit 78's 8746 and 8799). An implicit destructor has no body to trap
-either: declaring it to trap it changes the class.
+or whose real body would cost a match. A member whose body is written and right keeps it where it belongs, in the
+class or its `.cpp`, and its row stays `differs`, whatever the reason outside its source: `docs/how-to-decompile.md`
+step 5, "A written body that does not match yet", has the rule and what to measure. An implicit destructor has no body
+to trap either: declaring it to trap it changes the class.
 
 What the vtable needs, slot by slot:
 
@@ -349,7 +345,7 @@ What the vtable needs, slot by slot:
   inline members it emits with it are the same code either way, so the matches they give do not depend on the trap
   (§U10). They do depend on whose copy the target kept. A class whose typeinfo lies in the executable TU's data
   (`vota_web_wasm.cpp`, first on the TSE link line) has that TU's copies of its inline members, compiled
-  `-Oz -fexceptions` (`docs/reference/facts/app-flags.md` §F6). An inline member that this level compiles otherwise
+  `-Oz -fexceptions` (`docs/reference/facts/levels.md` §V1). An inline member that this level compiles otherwise
   than the uenux2 flags cannot match from an object of ours: unit 82's `ITextToSpeech::SetVoice` (11518) and
   destructor (11489) stay written and `differs`.
 - **A default of an interface with no vtable.** A class with no vtable of its own in the target (`ledger/vtables.json`

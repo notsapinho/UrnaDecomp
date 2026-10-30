@@ -42,7 +42,8 @@ Never run more than `agents` (default 2) of them at once, counting every stage. 
 about 7 minutes each against one minute alone (how-to step 5), so a third agent mostly makes the other two slower.
 A lane's VERIFY may start as soon as its MATCH returns, while the other lane is still matching, and LAND may take
 the confirmed lanes in batches while others still match. DOCS runs every few rounds, on the friction posts since the
-last DOCS stage.
+last DOCS stage. A round on two machines follows [docs/agents.md](../../docs/agents.md) "Two machines": Stage 0 runs on
+each, and LAND runs on one.
 
 ---
 
@@ -173,8 +174,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
 
   The first lists the stubs of 40 to 600 B (`--min`/`--max` change it), smallest first. The `differs` rows of TSE
   code (the second) are the other pool: a body of ours exists and the work is fixing its C++. A third pool is in
-  neither listing: the pending members of landed units. They have no stub and are `no-candidate`, and the class's
-  vtable and layout are already on `main`, so a whole class can be taken at once. Each `src/units/*-pending.cpp`
+  neither listing: the pending members of landed units. They have no stub, each row is `no-candidate` or `differs` with
+  the `-pending.o` as its object (how-to step 9), and the class's vtable and layout are already on `main`, so a whole
+  class can be taken at once. Each `src/units/*-pending.cpp`
   header names its members and what each waits for (`ls src/units/*-pending.cpp`). The scan's
   `unresolved` rows are in neither (`tools/round/pick_pool.py`'s docstring has the command that lists the TSE ones):
   a body of ours calls something the target has no function for, which the row's `detail` names. Either the target
@@ -321,25 +323,17 @@ lands ("Pausing and resuming" below).
 2. **Each later lane** merges with `git merge --no-ff --no-commit <commit>` and resolves the conflicts as
    [how-to-decompile.md](../../docs/how-to-decompile.md) step 10 "Landing onto a moved main" says, then runs steps 6
    to 10 again on the merge (link, census, symbols, match, build, checks) and commits it all as the merge commit. A
-   merge commit takes no pathspec (`fatal: cannot do a partial commit during a merge`): stage everything, check that
-   `git status --short` shows no unstaged or untracked line, and commit with a bare `git commit -F -`. That is safe
-   only because LAND owns the whole checkout.
-   Do not pick generated lines by hand, and do not run `make -C src stubs` on the merge before step 9:
-   `tools/round/stubs.py` reads `splat/scan.tsv`, `splat/symbol_addrs.txt` and `ledger/functions.tsv`, which are one
-   side's until steps 7 to 9 regenerate them, so it puts back the other side's removed stubs and stub-only files, and
-   step 9's `splat-match` runs it on the new scan anyway (`docs/reference/facts/workflow.md` §W14).
-   `splat/matched.txt` keeps both sides' lines once per index: two lanes can match the same function (a base's
-   destructor both bring in), and an index listed twice stops the splat build with `function N is already matched on
-   line M` (`docs/reference/facts/workflow.md` §W16). The merged link does not exist yet while you resolve: keep
-   either side's line, and after step 9 check that `build/out/wasm-map/vota_web/names.tsv` holds the kept symbol
-   (`cut -f2 build/out/wasm-map/vota_web/names.tsv | /usr/bin/grep -c -x -F <symbol>` prints 1). Step 9 renames a
-   line whose symbol left the link to the twin that holds the body. Count the index once.
+   merge commit takes no pathspec (`docs/reference/facts/workflow.md` §W18): stage everything, check that `git status
+   --short` shows no unstaged or untracked line, and commit with a bare `git commit -F -`. That is safe only because
+   LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
+   stubs` on the merge before step 9, each index once in `splat/matched.txt`, and which side of a twin's line to keep,
+   with the check after step 9.
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The
-   matches `docs/reference/facts/splat.md` §S10 lists are held up by the link, not by a source: check at every merge
-   that they are still `match`. A merged link can add matches no lane had: a name that moved, a vtable the merged link
-   places by content, or a body the scan pairs by content once the lanes' matches leave one unmatched target body equal
+   matches `docs/reference/facts/splat.md` §S10 lists are held up by the link, not by a source: run its check at every
+   merge, and stop if one left `match`. A merged link can add matches no lane had: a name that moved, a vtable the
+   merged link places by content, or a body the scan pairs by content once the lanes' matches leave one unmatched target body equal
    to it (`content` in the scan's `source` column). Such an extra, and any whose readings say `address same-content`
    or `table slot copy`, can carry the name of another function of the same content. Check its name against the
    functions around its index in `splat/matched.txt` and the data that point at it, and correct the line by hand when
@@ -354,7 +348,8 @@ lands ("Pausing and resuming" below).
      its branch keeps it) and that a landed lane's commit is in `main` (`git merge-base --is-ancestor <commit> main`);
    - run `git worktree remove <worktree>`.
 
-   Keep the branches. Never push. The result post quotes `git worktree list`.
+   Keep the branches. Never push. The result post quotes `git worktree list`. A worktree on the other machine of a
+   two-machine round is removed there.
 
 ---
 

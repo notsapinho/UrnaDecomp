@@ -456,8 +456,12 @@ object's alignment (`contentAlignment`):
 ## S10. Matches our link holds up, not a source
 
 Some matches rest on how the whole link comes out, not on a source of the range that matched them. A landing can
-take them away without touching their sources, and how-to step 10's `comm` then reports them lost. These hold today
-at every landing; check them at a merge.
+take them away without touching their sources, and how-to step 10's `comm` then reports them lost. So a landing checks
+these sixteen after its step 9, and stops if one left `match`:
+
+```sh
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
    `api/compression/icompressor.cpp`) passes `__search`'s table slot as an `i32.const`. The census's address-blind
@@ -497,10 +501,23 @@ at every landing; check them at a merge.
    # no-candidate: 10374
    ```
 
-   A unit that matches one of the four `differs` callers, or 10374, adds a member to one of these bodies.
+   A unit that matches one of the four `differs` callers, or 10374, adds a member to one of these bodies. In our link
+   the three bodies are 1794, 5072 and 5071, and each has fewer callers than the target's:
+
+   ```sh
+   wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u | tr '\n' ' '; echo
+   # 1794 func[10460]: 1794 func[10473]: 1794 func[1894]: 1794 func[3322]: 1794 func[6853]: 5071 func[10539]: 5071 func[10541]: 5072 func[10540]: 5072 func[10542]:
+   ```
+
+   1894 and 6853 are `CLedFieldMT`'s and `CLineField`'s D0, 3322 `api::CCutFieldPaper`'s, 10460 and 10473 two
+   `api::CDataTextFmt<…>` D0s from unit 79's roots object, and 10539 to 10542 unit 77's pending object
+   (`build/out/wasm-map/vota_web/names.tsv`). When such a set changes, the bodies stop verifying, or the merged body
+   takes another member's name and step 9 renames its line (how-to step 10, "A twin whose name moved").
 3. **10881, by the order of two objects of unit 80.** `api::IImpressoraRelatorios::SetStyle` matches with
    `iimpressorarelatorios.cpp` before `eueprintererror.cpp` in the fragment's list and differs in its locals the other
    way (`src/units/README.md` "Names").
+4. **7722, by the scan's content pass (§S11).** No symbol-file line names it: `/usr/bin/grep -c '= func:7722;'
+   splat/symbol_addrs.txt` prints 0, so its match line alone does.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -535,8 +552,10 @@ is checked against its neighbours and the data it uses before it is listed, at a
 The scan's content pass can make the same kind of match. It pairs one of our functions that no match uses with an
 unmatched target body when, re-pointed, it equals exactly that one body and no other function of ours equals it
 (`contentPairs` in `asmlift-wasm/src/splat-sub.ts`). Its key is the locals and the opcodes, not the wasm type, so an
-empty body pairs as soon as other matches leave one unmatched empty target body. The merge 9a0cec7 matched 7722 that
-way, under `sqlite3_thread_cleanup`, a name no lane had chosen (`awk -F'\t' '$1==7722 {print $1, $2, $4, $7}'
+empty body pairs as soon as other matches leave one unmatched empty target body: 7722 is 2 bytes, as are 218, 425,
+1528, 1870, 8372, 10853 and 14351, of other types (`awk -F'\t' '$7==2 {print $1}' splat/scan.tsv`). The merge 9a0cec7
+matched 7722 that way, under `sqlite3_thread_cleanup`, a name no lane had chosen
+(`awk -F'\t' '$1==7722 {print $1, $2, $4, $7}'
 splat/scan.tsv` prints `7722 sqlite3_thread_cleanup symbol 2`, `git show 9a0cec7^1:splat/matched.txt | awk '$1==7722'`
 prints nothing). What ties the name to 7722 is data the scan never reads: the target's `sqlite3Apis`, SQLite's table
 of its API functions, holds 7722's one table slot, 12188, at 1802196:

@@ -3,11 +3,11 @@
 How the tools a decompile round runs behave where the obvious reading of a command is wrong: Node versions, the
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed snapshot, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
-rebuilds, a match line two branches add, a header two branches add, the matches a link holds up, and what a merge
-does to a commit's pathspec, the census snapshot and a table's rows. `docs/how-to-decompile.md`,
+rebuilds, a match line two branches add, a header two branches add, and what a merge does to a commit's pathspec,
+the census snapshot and a table's rows. `docs/how-to-decompile.md`,
 `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
-and W18–W21 at bb6f018, on macOS (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
+and W18–W20 at bb6f018, on macOS (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH; Node 26 aborts with no message
 
@@ -518,39 +518,7 @@ of the two lists neither among its conflicts (at ee595de):
     git merge-tree --write-tree --name-only ee595de a1b82b3 2>/dev/null | /usr/bin/grep -c 'cdatetime.h\|cdate.h'
       0
 
-## W18. Matches the link holds up: eight that a landing can drop with no source changed
-
-These verify like any other, but each rests on something of the whole link rather than on its own source, so a merge
-that never touches them can lose them. Measured at bb6f018 (from `asmlift-wasm/` where a command says `pnpm`):
-
-| target | our body | what holds it | how to read it |
-| --- | --- | --- | --- |
-| 9517 `std::regex_match` and 2056 `basic_regex::__search` (libc++, `src/ecourna/api/compression/icompressor.cpp`'s instantiations) | 10979, 10929 | 9517 passes `__search` as a table slot, and the census's address-blind hash writes an `i32.const` of 1024 or more as `<addr>` and a smaller one as itself (`asmlift-wasm/src/normalize.ts`). With our slot at or above 1024 the census pairs 9517 by `addr`, step 8 names it `evidence:pair-addr`, its table vote names 2056 `evidence:table`, and both re-point. Below 1024 the pair, the names and both matches go | `pnpm --silent wasm fn ../build/out/wasm/vota_web/vota_web_wasm.wasm "$(awk -F'\t' '$1==9517 {print $3}' ../splat/scan.tsv)" \| /usr/bin/grep -E '^ *0+55 '` prints `000055  i32.const 1421`; the target's operand is 6160 |
-| 1565, and 2777 and 3681 (`api::CLedFieldMT`'s and `api::CLineField`'s D0, thunks into it) | 1794 (`byn$mgfn-shared$_ZN3api10CLineFieldD0Ev`) | binaryen's merge of functions that differ in constants (*mgfn*) forming the target's shared body: the members differ in one constant, the base part's vptr, so any two give its `(i32 i32)->()` body. The target's 1565 has eight callers, ours five | below |
-| 2899 and 6026 (`comum::CParteEleitores`'s and `api::CFormPart`'s D2 and D0 bodies) | 5072, 5071 | the same merge, formed by unit 77's two classes; the target's 2899 has two more callers (3607, 3740), unwritten classes of the same shape | below |
-| 7722 `sqlite3_thread_cleanup` | 9983 | the scan's content pass: it pairs an unused body of ours with a target body it equals and no other unmatched target body equals, by locals and opcodes, not by wasm type. 7722 is the target's empty `()->()` body, 2 bytes, as are 218, 425, 1528, 1870, 8372, 10853 and 14351 of other types (`awk -F'\t' '$7==2' splat/scan.tsv`), so it paired once the others were matched. No symbol-file line names it (`/usr/bin/grep -c '= func:7722;' splat/symbol_addrs.txt` prints 0): its match line alone does, and the name is right by the target's `sqlite3Apis` table, whose word between `sqlite3_table_column_metadata`'s and `sqlite3_total_changes`'s holds 7722's slot | `awk -F'\t' '$1==7722 {print $2, $5}' splat/scan.tsv` |
-
-The callers of the three merged bodies in our link:
-
-    wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u
-      1794 func[10460]:   1794 func[10473]:   1794 func[1894]:   1794 func[3322]:   1794 func[6853]:
-      5071 func[10539]:   5071 func[10541]:   5072 func[10540]:   5072 func[10542]:       (one per line)
-    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 1565 | /usr/bin/grep '^;; callers'
-      ;; callers (8): 2777 3681 5516 10362 10369 10374 12317 12564
-
-1894 and 6853 are `CLedFieldMT`'s and `CLineField`'s D0, 3322 `api::CCutFieldPaper`'s, 10460 and 10473 two
-`api::CDataTextFmt<…>` D0s from unit 79's roots object, 10539 to 10542 unit 77's pending object
-(`build/out/wasm-map/vota_web/names.tsv`). A unit that adds a member of such a set can change which constants differ,
-and so the shared body's parameters; one that takes members away can leave fewer than two. In both cases the bodies
-stop verifying, or the merged body takes another member's name and step 9 renames its line (how-to step 10, "A twin
-whose name moved").
-
-So a landing reads these eight rows after its step 9, and stops if one left `match`:
-
-    awk -F'\t' '$1==2056 || $1==9517 || $1==1565 || $1==2777 || $1==3681 || $1==2899 || $1==6026 || $1==7722 {print $1, $5}' splat/scan.tsv
-      1565 match / 2056 match / 2777 match / 2899 match / 3681 match / 6026 match / 7722 match / 9517 match   (one per line)
-
-## W19. A merge commit takes no pathspec
+## W18. A merge commit takes no pathspec
 
 `git commit -- <paths>` is a partial commit, and git refuses one while a merge is in progress. A scratch repository
 (bb6f018's git):
@@ -571,7 +539,7 @@ So a landing reads these eight rows after its step 9, and stops if one left `mat
 So a merge commits everything staged: stage the merge's files, read `git status --short` for a ` M` or `??` line
 that is not the merge's, and commit with a bare `git commit -F -`. Nothing else may be staged in that checkout then.
 
-## W20. The census snapshot merges as rename/rename, or as rename/delete when `main` has replaced it since
+## W19. The census snapshot merges as rename/rename, or as rename/delete when `main` has replaced it since
 
 Every census run renames `ledger/history/<stamp>-census.tsv` (how-to step 7). git pairs a branch's snapshot with
 `main`'s by rename only while the two are similar enough to the base's. A scratch repository, `h/s0.tsv` the base's
@@ -599,7 +567,7 @@ In the second shape `main`'s snapshot is in no conflict and the branch's is `DU`
 shape's `git rm --cached <the old snapshot>` names a path that is in neither the index nor the tree. A branch whose
 base `main` has run several censuses on since gives the second shape; one a census or two behind gives the first.
 
-## W21. Two branches that change adjacent rows of a table conflict in one hunk that holds every row on both sides
+## W20. Two branches that change adjacent rows of a table conflict in one hunk that holds every row on both sides
 
 git joins changes to adjacent lines into one hunk. When one side changed rows 52 and 54 of `src/units/README.md`'s
 table and the other row 53, the hunk holds all three rows on both sides, each side keeping the base's text of the rows

@@ -458,7 +458,9 @@ references the vtable: a constructor defined there, a derived class's destructor
 the destructor by its qualified name (the D2 stores the vptr too). The last needs neither constructor nor derived
 class: `src/units/64-uenux2-cmessagequeue-roots.cpp` calls `TFilaMensagens::~TFilaMensagens()` from an `optnone`
 function for a class whose constructor cannot be written. A class that declares no constructor has an implicit one,
-so `new T` in such a function emits them as well, while no constructor is declared.
+so `new T` in such a function emits them as well, while no constructor is declared, and building the object does the
+same where a constructor is written (unit 67). `src/units/README.md` "A class with no key function" says what a roots
+file may do with this.
 
 ## R7. A slot that holds `__cxa_pure_virtual` is a pure member, and dropping it makes the class concrete
 

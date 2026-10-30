@@ -2,9 +2,10 @@
 
 What a compile level does to a site, where the level of a tree is not the question: the flags of the executable TU
 whose copies of inline code the target keeps, how to read LLVM's inlining decisions, and the evidence for uenux2 at
-`-O3 -std=c++23`. The trees' flag sets and their evidence are in [app-flags.md](app-flags.md); nothing here changes a
-flag. Measured at bb6f018, on the pinned image (`TMPDIR=/tmp build/docker-build.sh …`), from the repository root,
-or from `asmlift-wasm/` with Node 24 first on PATH for `pnpm` ([workflow.md](workflow.md) §W1).
+`-O3 -std=c++23`. This file is the one home of those three. The trees' flag sets and their evidence are in
+[app-flags.md](app-flags.md); nothing here changes a flag. Measured at bb6f018, on the pinned image
+(`TMPDIR=/tmp build/docker-build.sh …`), from the repository root, or from `asmlift-wasm/` with Node 24 first on PATH
+for `pnpm` ([workflow.md](workflow.md) §W1).
 
 ## V1. The executable TU compiles at `-Oz -fexceptions`, and the target keeps its copies of inline code
 
@@ -29,20 +30,26 @@ So `api::ITextToSpeech`'s inline members in the target (its D2 11489, `SetVoice`
 ../target/vota_web_wasm.wasm 7840 | /usr/bin/grep -c invoke_`), where uenux2's `src/` has none
 ([app-flags.md](app-flags.md) §F6).
 
-Its level is `-Oz`. The header of unit 82 compiled at uenux2's flags and at `-Oz … -fexceptions`, and the callees
-of the D2 and of `SetVoice`:
+Its level is `-Oz`. The header of unit 82 compiled with `-fexceptions` at each level, and the callees of the D2 and of
+`SetVoice`:
 
-    mkdir -p build/out/levels-probe
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -Isrc/asn1 -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o build/out/levels-probe/tts-uenux2.o
-    TMPDIR=/tmp build/docker-build.sh em++ -Oz -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -fexceptions -Isrc -Isrc/uenux2/src -Isrc/asn1 -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o build/out/levels-probe/tts-exe.o
-    for v in uenux2 exe; do for s in D2:_ZN3api13ITextToSpeechD2Ev SetVoice:_ZN3api13ITextToSpeech8SetVoiceERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE; do printf '%s %s: ' $v ${s%%:*}; wasm-objdump -d build/out/levels-probe/tts-$v.o | awk -v s="<${s#*:}>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -oE 'call [0-9]+ <[^>]+>' | sed -E 's/call [0-9]+ <(env\.)?//; s/>$//' | c++filt | sed -E 's/<.*//; s/\(.*//' | tr '\n' ','; echo; done; done
-      uenux2 D2: operator delete,std::__2::__hash_table,operator delete,operator delete,operator delete,std::__2::__list_imp,
-      uenux2 SetVoice: std::__2::basic_string,std::__2::basic_string,
-      exe D2: std::__2::basic_string,std::__2::__hash_table,api::ITextToSpeech::SRecentCache::~SRecentCache,
-      exe SetVoice: std::__2::basic_string,
+    P=build/out/levels-probe; mkdir -p $P
+    for l in -O2 -O3 -Os -Oz; do
+      TMPDIR=/tmp build/docker-build.sh em++ $l -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -fexceptions -Isrc -Isrc/uenux2/src -Isrc/asn1 -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o /work/$P/tts$l.o
+      for s in D2:_ZN3api13ITextToSpeechD2Ev SetVoice:_ZN3api13ITextToSpeech8SetVoiceERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE; do printf '%s %s: ' $l ${s%%:*}; wasm-objdump -d $P/tts$l.o | awk -v s="<${s#*:}>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -oE 'call [0-9]+ <[^>]+>' | sed -E 's/call [0-9]+ <(env\.)?//; s/>$//' | c++filt | sed -E 's/<.*//; s/\(.*//' | tr '\n' ','; echo; done
+    done
+      -O2 D2: operator delete,std::__2::__hash_table,operator delete,operator delete,operator delete,std::__2::__list_imp,
+      -O2 SetVoice: std::__2::basic_string,std::__2::basic_string,
+      -O3 D2: operator delete,std::__2::__hash_table,api::ITextToSpeech::SRecentCache::~SRecentCache,
+      -O3 SetVoice: std::__2::basic_string,std::__2::basic_string,
+      -Os D2: operator delete,std::__2::__hash_table,std::__2::__hash_table,std::__2::__list_imp,
+      -Os SetVoice: std::__2::basic_string,
+      -Oz D2: std::__2::basic_string,std::__2::__hash_table,api::ITextToSpeech::SRecentCache::~SRecentCache,
+      -Oz SetVoice: std::__2::basic_string,
 
-The target's two bodies are the `-Oz` ones: the string's destructor, the hash table's and the cache's as three calls,
-and `operator=` as one:
+The target's two bodies are the `-Oz` ones. `SetVoice` keeps `std::string::operator=` as one call (1700,
+`/usr/bin/grep -F '= func:1700;' splat/symbol_addrs.txt`), which `-Os` gives too and `-O2` and `-O3` do not, and only
+`-Oz` gives the D2's three calls, the string's destructor, the hash table's and the cache's:
 
     pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11489 | sed -n '/folded readout/,$p' | sed -n 3,7p
         i32.store[p0] = 1526528;
@@ -53,17 +60,20 @@ and `operator=` as one:
     pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11518 | sed -n '/folded readout/,$p' | sed -n 3p
         f1700(i32.sub(p0, -64), p1);
 
-Not measured for this TU: `-fPIC`, aliasing and `-std`. No setup of `asmlift-wasm/benchmark/dataset/setups.json` has
-`-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups are 7-Zip's and RHVoice's, each ending in
+`CError::~CError` (4636) reads the same way: the copy that wins the link is `-Oz` code from this TU, so it says nothing
+of uenux2's level. Not measured for this TU: `-fPIC`, aliasing and `-std`. No setup of
+`asmlift-wasm/benchmark/dataset/setups.json` has `-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups are 7-Zip's and RHVoice's, each ending in
 `-O3`), so no fragment may compile a TSE object so (`pnpm bench setups --check` refuses one), and
 `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` is a stub-only file. A uenux2 object's copy of such a member is right
-source with the wrong level: 11489 and 11518 stay `differs` with unit 82's source as written (how-to steps 4 and 5).
+source with the wrong level, so it matches only when its body is the same at uenux2's flags: 11489 and 11518 stay
+`differs` with unit 82's source as written (how-to steps 4 and 5).
 
 ## V2. LLVM's inlining remarks give the cost and the threshold, and the thresholds are what separate the levels
 
 `-Rpass=inline -Rpass-missed=inline` prints, for every call site LLVM considers, whether it inlined the callee, its
-cost and the threshold it was held to: 225 at `-O2`, 250 at `-O3`, and 325 for a callee with the inline hint (an
-implicit destructor, or one declared `inline`: [reading.md](reading.md) §R5). On unit 82's source:
+cost and the threshold it was held to: 225 at `-O2`, 250 at `-O3`, and 325 at both for a callee with the inline hint
+(an implicit destructor, or one declared `inline`: [reading.md](reading.md) §R5; unit 82's fragment prints an in-class
+`= default` one at 225). On unit 82's source:
 
     for L in O2 O3; do echo "-$L"; TMPDIR=/tmp build/docker-build.sh em++ -$L -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -Isrc/asn1 -Rpass=inline -Rpass-missed=inline -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o build/out/levels-probe/rp-$L.o 2>&1 | /usr/bin/grep -oE "'_ZN[0-9A-Za-z_]*(SRecentCacheD2Ev|ITextToSpeechD2Ev|5clearEv)' (not )?inlined into '_ZN[0-9A-Za-z_]*(SRecentCacheD2Ev|ITextToSpeechD2Ev|D0Ev)'[^(]*\(cost=[0-9]+, threshold=[0-9]+\)" | sed -E "s/'_ZN[0-9A-Za-z_]*(SRecentCacheD2Ev|ITextToSpeechD2Ev|5clearEv|D0Ev)'/\1/g; s/ because too costly to inline//" | sort -u; done
       -O2
@@ -84,17 +94,24 @@ threshold at the tree's level says that no source form of the caller changes the
 
 ## V3. uenux2 at `-O3 -std=c++23`: every match verifies, and four sites need it, all in `mock/app/simulador/wasm/`
 
-Evidence for a decision about uenux2's flags, which stay `-O2 -std=c++20` ([app-flags.md](app-flags.md) §F6). The
-private link of [app-flags.md](app-flags.md) §F9 item 6 with `P=build/out/flags-o3-cxx23` and
-`UENUX2_EXTRA='-O3 -std=c++23'` (the stand-ins keep their flags, ecourna keeps `-O3 -std=c++20`) links in 224 s and
+Evidence for a decision about uenux2's flags. They stay `-O2 -std=c++20` ([app-flags.md](app-flags.md) §F6), since a
+level is a tree's setting (how-to step 4). The private link of [app-flags.md](app-flags.md) §F9 item 6 with
+`P=build/out/flags-o3-cxx23` and `UENUX2_EXTRA='-O3 -std=c++23'` (the stand-ins keep their flags, ecourna keeps `-O3 -std=c++20`) links in 224 s and
 ends:
 
     splat.wasm: 7713699 bytes, sha256 8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2 (expected, 7935 matches from ../splat/matched.txt)
     kind-unverified: 0/7935 matches (0 B) whose operand kinds the shifted link could not tell; their operands kept every reading
     splat-build exit 0
 
-So no match depends on `-O2` or on `-std=c++20`. Four written bodies that differ in the plain link come closer or
-match there (from `asmlift-wasm/`, `P=build/out/flags-o3-cxx23`):
+So no match depends on `-O2` or on `-std=c++20`. Its scan ([app-flags.md](app-flags.md) §F9 item 6) turns two rows
+`match`:
+
+    P=build/out/flags-o3-cxx23
+    join -t "$(printf '\t')" <(cut -f1,5 splat/scan.tsv | sort) <(cut -f1,5 $P/scan.tsv | sort) | awk -F'\t' '$3 == "match" && $2 != "match" {print $1}'
+      8746
+      8799
+
+Four written bodies that differ in the plain link come closer or match there (from `asmlift-wasm/`):
 
     pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../$P/wasm/vota_web/vota_web_wasm.wasm sym:_ZN9simulador13CWasmScreenMT8ShowTextERKN3api6SPointERKNS1_5ITextE --against 8799
       target 8799: IDENTICAL (0 ambiguous operands read as -)                   (plain link: differs at body byte 0)
@@ -114,7 +131,8 @@ plain one's.) 8799 (`CWasmScreenMT::ShowText`) needs `-std=c++23`: `text.GetText
 C++23's `substr() &&`, which moves the string. 8746 needs `-O3` (V2's `push_back`, and the range-for over four lines
 unrolled). 9427 needs `-O3` (V2); its two calls then lack target names, so it is `unresolved`, not a match. 9104
 (`CWasmScreen::DrawText`) moves its 80-B frame and both `append` calls to the target's with both flags; what is left
-is its rectangle's `select`s.
+is its rectangle's `select`s. The units that hold these bodies say what each needs in their fragments: 69 (9104), 78
+(8746, 8799) and 82 (9427).
 
 **The limit.** Every site is in `mock/app/simulador/wasm/`. 16 of the 91 uenux2 objects change, 4 there and 12 under
 `src/`:

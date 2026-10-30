@@ -469,7 +469,7 @@ scan's `object` column says `<binaryen>`. A target function whose whole body is 
 `f2904(p0, p1, 197764, 197771)`) matches when our link merges enough of those functions for binaryen to form the same
 shared body: the same operands must differ among them, so that its parameters agree, and the pass must find the merge
 worthwhile. Two can be enough: 1565 has eight callers in the target and forms from any two of its deleting destructors
-(`docs/reference/facts/workflow.md` §W18, which also lists the matches such a body holds up); `pnpm wasm fn <target>
+(`docs/reference/facts/splat.md` §S10, which also lists the matches such a body holds up); `pnpm wasm fn <target>
 <body>` lists the callers, and a unit that lands a second caller should read its siblings' rows in the scan. Whether
 a smaller body needs more than two was not measured. The other way round,
 an `unresolved` row or a `splat-remap` whose operand is a call into `byn$mgfn-shared$…` "has no target function" means

@@ -93,7 +93,8 @@ No `invoke_*` row is left (without `-fignore-exceptions` the same TU scores 162 
 `invoke_iiiii`, `invoke_viii` and `__resumeException` calls). The rest of the difference is what binaryen inlines
 into a body linked alone; the splat build matches this source.
 
-The same line also sets the lone link's level, and not to the build link's `-Oz`. The TU's flags come after the
+The same line also sets the lone link's level, and not to the build link's `-Oz` ([workflow.md](workflow.md) §W2
+item 5 has what that changes in a body). The TU's flags come after the
 template's `-Oz -fexceptions`, and emcc takes the last `-O` for the compile and the link alike, so binaryen runs at the
 TU's level, `-O2` for uenux2 and `-O3` for ecourna:
 
