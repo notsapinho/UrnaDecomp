@@ -1,6 +1,6 @@
 # uenux2 simulador::CWasmImageSurfaceOps, the wasm build's api::IImageSurfaceOps, in
-# src/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp (+ cwasmimagesurfaceops.h), with the api::IImageSurfaceOps interface
-# (src/uenux2/src/api/gui/iimagesurfaceops.h) and IImage's third slot, GetData (iimage.h):
+# src/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp (+ cwasmimagesurfaceops.h), with the api::IImageSurfaceOps
+# interface (src/uenux2/src/api/gui/iimagesurfaceops.h) and IImage's third slot, GetData (iimage.h):
 # - ImageRect(width, height, point, anchor), slot 14 (target fn 9289), and the class's other slots of its own: Slot2 to
 #   Slot7 (9365, 9362, 9356, 9348, 9339, 9333), CopyBytes (slot 8, 9328), Slot9 (9322), Slot10 (9317), FreeBytes (slot
 #   11, 9307). iimagesurfaceops.h says what each body shows.
@@ -30,25 +30,40 @@
 # header or sits in CWasmScreen's. A separate cwasmimagesurfaceops.cpp gives the same bytes for this unit's functions;
 # it would not for 9058 and 9079, whose `this` needs the callee in their TU.
 #
-# Names, all chosen (no record, symbol or string names a member, parameter or alias): every member of
+# Names and types, all chosen (no record, symbol or string names a member, parameter or alias): every member of
 # api::IImageSurfaceOps, IImage::GetData, the IImageSurfaceSource class of slots 3, 6 and 10's parameter, the
-# SharedBytes alias, and the unused parameters' `int`. The class names are RTTI's. The members' const is chosen too: no
-# body reads this, and without const every body compiles the same.
+# SharedBytes alias, the unused parameters' `int`, and the uint8_t* of slots 3, 4, 6, 7, 9 and 10, whose bodies show
+# one i32 (only slots 8 and 11 show a pointer, the `new` and the free). The class names are RTTI's. The members' const
+# is chosen too: no body reads this, and without const every body compiles the same.
+#
+# IImageSurfaceSource is a class this unit invents. What the target shows: 9362, 9339 and 9317 call [vtable+12] on the
+# object itself with it as `this`, type (i32)->(i32), so the parameter is a polymorphic object, and its slot 2 and
+# destructors are not shown at all. Nothing calls slots 2 to 11, so no caller gives the argument's class, and no RTTI
+# class fits by role, which is a reading, not a proof. Its destructor pair is a choice: three plain slots and no
+# destructor give the same object.
 #
 # Forms measured, by the object's disassembly against this source's (call targets masked), or by the whole link where
 # it says so:
 # - ImageRect: width and height as int give the same object. Cases 4 and 8 give the same object with their two
 #   statements either way round, and a `default:` label or none too, and so does a named SRect returned. Cases 5 and 7
 #   are not free: x first, then y, gives the target's y, then x (docs/reference/facts/codegen.md C1), and the other
-#   order differs. Hence x first in every case, a choice for 4 and 8. Reading into TPosition locals is what gives the
-#   target's `x + (w / -2)` (int locals give `(w / -2) + x`, the shape of the int arithmetic in 9058) and its stores
-#   after all the reads. std::min(x, direita) and std::max(x, direita) in that operand order are the target's: swapped,
-#   the object differs and the whole link re-points with `differs`.
+#   order differs. Hence x first in every case, a choice for 4 and 8. Width and height as int, or x and y as int with
+#   TPosition parameters, give the same code; both int give the target's sums with their operands swapped, `(w / -2) +
+#   x` for its `x + (w / -2)`, the shape of the int arithmetic in 9058. So one side at least is TPosition, and both is
+#   chosen. The two sums in locals are a choice as well: written inside the aggregate, they give the same object.
+#   std::min(x, direita) and std::max(x, direita) in that operand order are the target's: swapped, one or both, the
+#   object differs, and with both swapped the whole link re-points with `differs` (at +0xb4).
 # - the SRect aggregate stands in for a header that is not the original's: fns 1916 and 11067 end in the same
-#   four-select store run, so the real SRect probably has a normalising constructor. primitives.h is not this unit's.
+#   four-select store run, so the real SRect probably has a normalising constructor. One that takes left, top, right
+#   and bottom and applies std::min and std::max in its initializers gives this object, cmp-identical, with `return
+#   SRect(x, y, x + largura, y + altura);`, and so the operand order above would live there. primitives.h is not this
+#   unit's, and every landed `SRect{...}` would go through that constructor, so it stays an aggregate.
 # - CopyBytes: `if (!dados.empty())`, `if (dados.size() != 0)` around the std::copy, std::copy_n, std::copy over data()
 #   pointers and a guarded std::memcpy give the same object; an unguarded std::memcpy does not.
 # - slots 13 and 15 to 17 defined inline in CWasmImageSurfaceOps instead of the base give the same bodies.
+# - the parameter types: `const X*` for every reference parameter, void* for the uint8_t* of slots 3, 4, 6, 7, 9 and 10,
+#   and const SharedBytes& read with get() in slots 4 and 7 give the same code under other symbols.
+# - the class's destructor defined in the class, `virtual ~CWasmImageSurfaceOps() = default;`, gives the same object.
 # Paths relative to src/uenux2; the generic uenux2 rule compiles mock/ too and depends on the source and every uenux2
 # header.
 CWASMIMAGESURFACEOPS_SRCS := mock/app/simulador/wasm/cwasmscreen.cpp
