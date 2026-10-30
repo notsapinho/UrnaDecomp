@@ -23,8 +23,29 @@ CSqlStatement::CSqlStatement(sqlite3* db, sqlite3_stmt* stmt)
 {
 }
 
-// (original lines 26-47: content not recovered)
-#line 48
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void CSqlStatement::SetInt(int indice, int valor)
 {
     VerifyParameterIndex(indice);
@@ -33,8 +54,8 @@ void CSqlStatement::SetInt(int indice, int valor)
     }
 }
 
-// (original lines 56-57: content not recovered)
-#line 58
+
+
 void CSqlStatement::SetInt64(int indice, ueint64 valor)
 {
     VerifyParameterIndex(indice);
@@ -43,8 +64,8 @@ void CSqlStatement::SetInt64(int indice, ueint64 valor)
     }
 }
 
-// (original lines 66-67: content not recovered)
-#line 68
+
+
 void CSqlStatement::SetDouble(int indice, double valor)
 {
     VerifyParameterIndex(indice);
@@ -53,8 +74,8 @@ void CSqlStatement::SetDouble(int indice, double valor)
     }
 }
 
-// (original lines 76-77: content not recovered)
-#line 78
+
+
 void CSqlStatement::SetText(int indice, const std::string& valor)
 {
     VerifyParameterIndex(indice);
@@ -76,8 +97,11 @@ void CSqlStatement::SetBool(int indice, bool valor)
     SetInt(indice, valor);
 }
 
-// (original lines 99-103: content not recovered)
-#line 104
+
+
+
+
+
 void CSqlStatement::SetBlob(int indice, const std::vector<uebyte>& valor)
 {
     VerifyParameterIndex(indice);
@@ -86,8 +110,8 @@ void CSqlStatement::SetBlob(int indice, const std::vector<uebyte>& valor)
     }
 }
 
-// (original lines 112-113: content not recovered)
-#line 114
+
+
 void CSqlStatement::SetNull(int indice)
 {
     VerifyParameterIndex(indice);
@@ -101,8 +125,8 @@ TSharedSqlResultSet CSqlStatement::Execute()
     return TSharedSqlResultSet(new CSqlResultSet(m_db, m_stmt));
 }
 
-// (original lines 127-128: content not recovered)
-#line 129
+
+
 void CSqlStatement::Reset()
 {
     if (sqlite3_reset(m_stmt) != SQLITE_OK) {
@@ -141,8 +165,3 @@ bool CSqlStatement::IsClosed() const
 }
 
 } // namespace ecourna::api::sql::sqlite
-
-// <stubs>
-// f9430 · 48 B · unmatched · placement: link order · name unknown
-// ? f9430(i32, i32, i32) { ... }
-// </stubs>

@@ -206,8 +206,3 @@ std::vector<uebyte> CSqlResultSet::GetBlob(const std::string& coluna)
 }
 
 } // namespace ecourna::api::sql::sqlite
-
-// <stubs>
-// f9449 · 135 B · unmatched · placement: link order · name unknown
-// ? f9449(i32, i32, i32) { ... }
-// </stubs>
