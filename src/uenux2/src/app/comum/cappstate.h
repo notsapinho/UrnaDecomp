@@ -30,11 +30,12 @@
 // own vptr) and the destructor. A member of the class is out of line, as the key function: the typeinfo (@1551284) is
 // emitted with the vtable, not in the first derived class's object (vota::CAguardaMensagem, typeinfo @1533000), where a
 // class with no key function gets it (api::ITimer's @1532124 follows simulador::CWasmTimer's @1532112). Which member is
-// not recorded (slots 0, 1, 5 to 8 are bodies other classes share); the destructor is chosen. NeedChangeState is inline:
-// fn 7480 lies among caguardamensagem.cpp's functions in the target's order (fns 7479 to 7482). The directory and file
-// name: the vtable and typeinfo lie between comum::CAbstractTelaProgresso's (@1551204) and the records of
+// not recorded (slots 0, 1 and 4 to 8 are bodies other classes share); the destructor is chosen. NeedChangeState is inline:
+// fn 7480 lies among caguardamensagem.cpp's functions in the target's order (fns 7479 to 7482). The directory: the
+// vtable and typeinfo lie between comum::CAbstractTelaProgresso's (@1551204) and the records of
 // app/comum/carquivosresultado.cpp (@1551340), with comum::CAppStateContext's vtable after them, in the name order the
-// root of app/comum/ links in (carquivossavd, cinfomtlcd, cpacotearquivos, cpath, iinterfaceinit follow).
+// root of app/comum/ links in (carquivossavd, cinfomtlcd, cpacotearquivos, cpath, iinterfaceinit follow). The file
+// name cappstate.cpp is the class-name convention, which that order fits but does not single out.
 
 namespace comum {
 

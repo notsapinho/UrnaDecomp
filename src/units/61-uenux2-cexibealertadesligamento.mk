@@ -3,15 +3,17 @@
 # src/app/vota/eleitor/iniciovotacao/cexibealertadesligamento.cpp, the file the records of its StartState and
 # ProcessTick name (lines 45, 53, 54; both pending). The class is final (its destructor stores no vptr) and holds an
 # api::CDateTime (+12), a std::shared_ptr to its form (+24), a tick id (+32) and a state pointer (+36); the destructor
-# releases the shared_ptr. It is out of line, as the deleting one calling it shows, and declared first, so it is the
-# key function and cexibealertadesligamento.o emits the vtable. The constructor (inlined into GetInst, fn 5979) and
+# releases the shared_ptr. It is out of line, as the deleting one calling it shows. Declared first, it is the key
+# function and cexibealertadesligamento.o emits the vtable: a choice, as StartState and ProcessTick are out of line in
+# the same file too. The constructor (inlined into GetInst, fn 5979) and
 # GetInst are not reconstructed.
 #
 # Its base comum::CAppState, the base of every application state: the constructor (fn 224) and the inline
 # NeedChangeState (fn 7480, slot 3), in src/app/comum/cappstate.cpp and cappstate.h, with api::CState
-# (src/api/pattern/cstate.h). No record names either class's file. cappstate.cpp: the CAppState vtable and typeinfo lie
-# between comum::CAbstractTelaProgresso's and the records of app/comum/carquivosresultado.cpp, comum::CAppStateContext's
-# vtable right after them, which is the name order of the root of app/comum/ (cappstate.h says more). The destructor is
+# (src/api/pattern/cstate.h). No record names either class's file. The directory app/comum/: the CAppState vtable and
+# typeinfo lie between comum::CAbstractTelaProgresso's and the records of app/comum/carquivosresultado.cpp,
+# comum::CAppStateContext's vtable right after them, which is the name order of the root of app/comum/ (cappstate.h
+# says more); the file name cappstate.cpp is the class-name convention. The destructor is
 # its key function: chosen, as no evidence says which member is out of line, only that one is. cstate.h's directory is
 # chosen. Chosen names, marked in the headers: CAppState's slots 4 (GetNextState) and 6 (ProcessKey), its constructor's
 # argument type and the enumeration of its bits, CExibeAlertaDesligamento::GetInst, the type of the +24 pointee

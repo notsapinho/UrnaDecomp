@@ -19,8 +19,9 @@ namespace vota {
 // std::mutex (@1833992, destroyed at exit by fn 12021) and keeps the object in a static std::unique_ptr (@1834016,
 // destroyed at exit by fn 12022, which calls this destructor as fn 5979 does). The constructor, inlined
 // there, passes comum::CAppState::EVENTO_TICK (4) to the base constructor (fn 224) and stores what the layout below
-// holds. Recovered: the layout and the destructor, out of line (the deleting one, fn 12019, calls it) and declared
-// first, so it is the key function and cexibealertadesligamento.cpp emits the vtable. It stores no vptr, which clang
+// holds. Recovered: the layout and the destructor, out of line (the deleting one, fn 12019, calls it). Declared first,
+// it is the key function and cexibealertadesligamento.cpp emits the vtable: a choice, as StartState and ProcessTick are
+// out of line in the same file too and the target does not show the declaration order. It stores no vptr, which clang
 // leaves out of a destructor that destroys members only when the class is final. Not recovered: the constructor,
 // GetInst (fn 5979; its name follows the project's other singletons, its callees 1000, 316 and 4640 have no name yet)
 // and the two overriders (pending, src/units/61-uenux2-cexibealertadesligamento-pending.cpp).
