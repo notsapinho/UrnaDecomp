@@ -4,8 +4,8 @@
 //         so this object emits its vtable: calls fn 5537, the drawing of one cell, which inlines api::SRect::Top and
 //         Bottom (records api/gui/primitives.cpp 26:37 and 38:37) and calls fns 5488 and 5487, none of them written
 //   5534  CGrayedFramedText::MaskText(IScreen&, const std::string&) const, record cgrayedframedtext.cpp 29:15: calls fns 5536
-//         and 5537, not written, and DrawFrame, which is
-//   12387 CInputField<CFramedText>::SetLength(size_t), record cinputfield.h 148:13, which is that call's: it calls fn 512,
+//         and 5537, not written, and DrawFrame
+//   12387 CInputField<CFramedText>::SetLength(size_t), record cinputfield.h 148:13: it calls fn 512,
 //         api::CPolySingleton<IScreen>'s instance, which has no body in this tree. Inline in the original: an explicit
 //         specialization of the one instantiation stands in for it here. Delete it when the template's member is
 //         written: a specialization is a strong definition and would keep the trap in the vtable with no word from the

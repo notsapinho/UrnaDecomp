@@ -5,7 +5,7 @@
 //   emit what the target's builders emit (src/units/README.md "A class with no key function", "A control block"):
 //   w92_emite and w92_emite_mt build a CInputFieldControl as fns 5530 and 395 do, w92_emite_campo a CInputField as fn
 //   2383 does; w92_emite_mascara and w92_emite_mascara_cinza call the destructor by its qualified name, the device of
-//   unit 64, as the masks' constructors cannot run; the w92_emite_bloco_* and w92_emite_controle* ones instantiate each
+//   unit 64; the w92_emite_bloco_* and w92_emite_controle* ones instantiate each
 //   control block as its builder does: std::shared_ptr<U>(T*) for __shared_ptr_pointer<CInputField<CFramedText>*>
 //   (fn 2383), <CMaskedTextField<CFramedText>*> (fn 7787) and <CInputFieldControl<IScreenMT>*> (fn 395), and
 //   std::make_shared for __shared_ptr_emplace<CInputFieldControl<IScreen>> (fn 5530), <CInputFieldControl<IScreenMT>>

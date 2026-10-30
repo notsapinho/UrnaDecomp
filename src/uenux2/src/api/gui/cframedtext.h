@@ -11,7 +11,7 @@
 // Rect, Move and DrawFrame (fns 3677, 3676, 2779) have no record: their names and their being members are chosen from
 // what they read and from their callers, and 2779's parameter types as far as its body uses them
 // (docs/how-to-decompile.md step 3). CellRect holds what fns 2779, 2780, 5536 and 5537 inline; Espaco and Largura what
-// fn 1385 and those inline. All three names are chosen. Their spelling is the part the bytes decide:
+// fn 1385 and those inline. All three names are chosen, and Largura's and CellRect's operand orders are free. What the bytes decide:
 // - Espaco reads the quotient into a local and tests that: `i32.div_s` with the test on the size, with no extend16 and
 //   no shift, comes from that form. `std::max(size / 8, 1)` (compares the quotient) and `size < 8 ? 1 : size / 8`
 //   (`std::max(size, 8) >> 3`) compile to other code. A TPosition local gives the same functions; the int is chosen.

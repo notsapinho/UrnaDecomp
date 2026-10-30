@@ -30,14 +30,14 @@
 #   a list of them at +140. CInputFieldMT.
 # Evidence for the forms is in the headers; what follows is what the bytes do not decide, measured by compiling each variant
 # and comparing the functions with the object-local numbers masked (docs/how-to-decompile.md step 3).
-# - m_alterado as a std::atomic<bool>: api/gui/iformfield.h. Measured: a plain bool gives `i32.eq 1` where 4118 has
+# - m_alterado as a std::atomic<bool>, the best reading: api/gui/iformfield.h. Measured: a plain bool gives `i32.eq 1` where 4118 has
 #   `i32.and 1`, and so do std::exchange and an atomic read and store; a bit-field stores `and 254`. exchange with
 #   memory_order_relaxed, _acquire or _acq_rel and std::atomic_exchange give one function.
 # - IInput::GetKey with `inline`: measured, without it Read differs. Everything else in that line is a choice.
 # - Invalidate as a member against its statements in place: the same functions.
 # - IInputField's destructor in the class with or without `inline`, and with an early return: the same functions.
-# - Show, Clear, SetLength, Read, Rect and the rest: the headers list the forms that give the same functions, and the ones that
-#   do not. move-by-members of CFramedText::Move does not: 3676 copies the SPoint whole.
+# - Show, Clear, SetLength, Read, Rect and the rest: the headers list forms that give the same functions, and ones that do not;
+#   DrawFrame with a local SRect gives the same too. move-by-members of CFramedText::Move does not: 3676 copies the SPoint whole.
 # - CFramedText's three members are in cframedtext.cpp by choice. No record places them. They were out of line in the
 #   target, with three callers each in other TUs (the templates' users and cinputmenufield.cpp), so they are not in a
 #   header, and the class's file is the plain one. 3676's and 3677's stubs lay in stretch 989, labelled
@@ -46,6 +46,9 @@
 # - The two masks in their own headers beside the recorded .cpp, and cmaskedtextfield.h, are chosen paths.
 # - The roots compile with APP_CXXFLAGS; their 145 functions compare equal under UENUX2_CXXFLAGS.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+#
+# The control-block roots are builders the link drops, with the block's vtable kept in the sink: the shape of unit 83's
+# roots file. They reach no member that has no body in the link.
 IINPUTFIELD_SRCS := src/api/gui/cframedtext.cpp
 UENUX2_SRCS += $(IINPUTFIELD_SRCS)
 # $(UENUX2_HDRS) is still empty when the fragments are read, so the companion rules name the directories they read.
