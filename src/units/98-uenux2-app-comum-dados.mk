@@ -22,12 +22,14 @@
 # - s_labels: a private static member, or file-static in an anonymous namespace (12 over 91 in the link either way);
 #   const char token, char token or const auto token; const auto it or auto it;
 # - TResultado: std::pair<bool, std::string>, a struct of those two members, or std::tuple with std::get;
-# - m_dadosDinamicosCarregados: bool tested with !, or unsigned char compared with 0;
+# - m_dadosDinamicosCarregados: bool tested with !, unsigned char compared with 0, or the flag of a std::optional of a
+#   192-byte struct tested with has_value();
+# - md::ETipoImpedimento's type: fixed int, fixed unsigned, or no fixed type;
 # - each conversion: a switch, with or without a default, or a chain of if;
 # - 5699's message argument: tipo.asInt() or static_cast<int>(tipo).
 # s_labels' name rests on one vote, 11341's own (evidence:vote:2 by:11341), for 12 bytes of .bss. What else ties the
-# operand to the object: 5658 and 11341 read it, and target fns 654, 5794 and 14478 (__wasm_call_ctors) hold the same
-# addresses 1839056, 1839060 and 1839064, as a map's begin node, root and size.
+# operand to the object: 5658 and 11341 read it, target fns 654 and 5794 hold the same addresses 1839056, 1839060 and
+# 1839064, as a map's begin node, root and size, and 14478 (__wasm_call_ctors) holds the first two.
 # Names chosen, no evidence gives them: s_labels and the parameters' and members' names; every enumerator of
 # md::ETipoImpedimento (md/etipoimpedimento.h, its path chosen too); CTradutorFrase's and CConversorImpedido's headers'
 # paths follow step 3's rule 4; CEleitorDetalhe's 192 bytes before its flag are not recovered. Codes 8184 and unit 17's
@@ -35,8 +37,9 @@
 # with a local constant, which goes when the header gains it.
 #
 # ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
-# called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it, and its nameList
-# (@1623648) lies right before EleitorImpedido's fieldNames (@1623736) in the target's data.
+# called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it. The target's data do not
+# tell the two modules apart: its nameList (@1623648) lies between EntidadeHashes' fieldNames and EleitorImpedido's
+# fieldInfos.
 #
 # Not reconstructed. CConversorImpedido::DoDesconverte (11410, the class's only override) waits for fns 566, 5661 and
 # 5662, so nothing emits that class's vtable. CHV's member 5745 and its record at chv.cpp line 117 wait for

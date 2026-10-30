@@ -11,8 +11,14 @@ constexpr auto EUE_COMUM_DADOS_7953 = static_cast<EUeComumDadosError>(7953);
 
 } // namespace
 
-// (original lines 14-26: content not recovered)
-#line 27
+// (original lines 14-20: content not recovered)
+#line 21
+CConversorOrigemConfiguracao::TEntidade CConversorOrigemConfiguracao::DoConverte(const TDado& origem) const
+{
+    return origem == md::ORIGEM_COMUNITARIA ? TEntidade::comunitaria : TEntidade::oficial;
+}
+
+
 md::EOrigemConfiguracao CConversorOrigemConfiguracao::DoDesconverte(const TEntidade& entidade) const
 {
     switch (entidade) {
@@ -27,13 +33,5 @@ md::EOrigemConfiguracao CConversorOrigemConfiguracao::DoDesconverte(const TEntid
     throw CUeComumDadosError(EUE_COMUM_DADOS_7953, "Origem configuração inválida");
 }
 
-
-
-
-
-CConversorOrigemConfiguracao::TEntidade CConversorOrigemConfiguracao::DoConverte(const TDado& origem) const
-{
-    return origem == md::ORIGEM_COMUNITARIA ? TEntidade::comunitaria : TEntidade::oficial;
-}
 
 } // namespace comum::asn

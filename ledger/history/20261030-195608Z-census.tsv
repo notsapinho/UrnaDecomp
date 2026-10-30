@@ -5946,7 +5946,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 6080	129	2	openssl	openssl	skeleton	5098	addr	5	
 6081	60	2	openssl	openssl	skeleton	5099	addr	8	
 6082	68	2	openssl	openssl	skeleton	5100	addr	8	
-6083	68	2	openssl	openssl	skeleton	5101	addr	8	
+6083	68	2	openssl	openssl	skeleton	5102	addr	8	
 6084	105	2	openssl	vota	-	-	none	-	
 6085	68	2	openssl	openssl	skeleton	5103	addr	8	
 6086	146	2	openssl	openssl	skeleton	5104	addr	11	
@@ -7471,16 +7471,16 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 7605	10	0	-	-	skeleton	7366	byte	0	dsa_pkey_dirty_cnt
 7606	12	0	-	-	skeleton	6904	addr	1	old_rsa_priv_encode
 7607	76	0	-	openssl	skeleton	7368	addr	8	old_dsa_priv_decode
-7608	27	0	-	-	skeleton	7370	byte	0	dsa_pkey_ctrl
-7609	10	0	-	-	skeleton	7371	addr	1	int_dsa_free
-7610	190	0	openssl	-	skeleton	7372	addr	13	dsa_sig_print
-7611	120	0	openssl	-	skeleton	7373	addr	7	dsa_param_print
-7612	23	0	openssl	-	skeleton	7374	fingerprint	0	dsa_cmp_parameters
-7613	78	0	openssl	-	skeleton	7375	addr	2	dsa_copy_parameters
-7614	47	0	openssl	-	skeleton	7376	byte	0	dsa_missing_parameters
+7608	27	0	-	-	skeleton	7369	byte	0	dsa_pkey_ctrl
+7609	10	0	-	-	skeleton	7370	addr	1	int_dsa_free
+7610	190	0	openssl	-	skeleton	7371	addr	13	dsa_sig_print
+7611	120	0	openssl	-	skeleton	7372	addr	7	dsa_param_print
+7612	23	0	openssl	-	skeleton	7373	fingerprint	0	dsa_cmp_parameters
+7613	78	0	openssl	-	skeleton	7374	addr	2	dsa_copy_parameters
+7614	47	0	openssl	-	skeleton	7375	byte	0	dsa_missing_parameters
 7615	12	0	openssl	-	skeleton	7367	addr	1	old_dsa_priv_encode
-7616	47	0	openssl	-	skeleton	7378	addr	2	dsa_param_decode
-7617	10	0	openssl	-	skeleton	7379	addr	1	dsa_security_bits
+7616	47	0	openssl	-	skeleton	7377	addr	2	dsa_param_decode
+7617	10	0	openssl	-	skeleton	7378	addr	1	dsa_security_bits
 7618	10	0	openssl	-	skeleton	7380	addr	1	int_dsa_size
 7619	193	0	openssl	-	skeleton	7381	addr	11	dsa_priv_print
 7620	353	0	openssl	openssl	skeleton	7382	addr	37	dsa_priv_encode
@@ -14264,7 +14264,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 14398	312	0	openssl	openssl	skeleton	6900	addr	11	rsa_sig_info_set
 14399	986	0	openssl	openssl	skeleton	6902	addr	38	rsa_item_sign
 14400	536	0	openssl	openssl	skeleton	6903	addr	37	rsa_item_verify
-14401	12	0	openssl	-	skeleton	7377	addr	1	dsa_param_encode
+14401	12	0	openssl	-	skeleton	7376	addr	1	dsa_param_encode
 14402	39	0	openssl	-	skeleton	6905	addr	2	old_rsa_priv_decode
 14403	222	0	openssl	openssl	skeleton	6906	addr	12	rsa_pkey_ctrl
 14404	10	0	openssl	-	skeleton	6907	addr	1	int_rsa_free

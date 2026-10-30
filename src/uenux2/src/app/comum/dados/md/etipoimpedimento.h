@@ -2,8 +2,8 @@
 
 namespace comum::md {
 
-// A voter's impediment. The records spell comum::md::ETipoImpedimento (CImpedido::GetImpedimentoP2,
-// CConversorImpedido::DesconverteTipoImpedimento). DesconverteTipoImpedimento (target fn 5699) maps the ASN.1
+// A voter's impediment. The record of vota::CLogVota::LogaEleitorImpedido spells it in full,
+// comum::md::ETipoImpedimento. CConversorImpedido::DesconverteTipoImpedimento (target fn 5699) maps the ASN.1
 // enumerators 1 to 15 onto value - 1, so the values are evidence; the enumerator names are chosen, from
 // ModuloImpedidos::TipoImpedimento's, and the fixed type and this file's path are chosen too: no record names them.
 enum ETipoImpedimento : int {

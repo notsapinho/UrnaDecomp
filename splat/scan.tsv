@@ -5893,7 +5893,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6027	byn$mgfn-shared$_ZNSt3__26vectorIjNS_9allocatorIjEEE18__assign_with_sizeB8ne210108IPjS5_EEvT_T0_l	5080	symbol	match	-	314	none	app	1	<binaryen>
 6028	-	-	-	no-candidate	no symbol and no ledger pair	478	none	ecourna	0	-
 6029	-	-	-	no-candidate	no symbol and no ledger pair	68	none	ecourna	0	-
-6030	byn$mgfn-shared$_ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23ModuloProcessoEleitoral18OrigemConfiguracaoE	5102	symbol	match	readings: address symbol,table slot	69	none	ecourna	1	<binaryen>
+6030	byn$mgfn-shared$_ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23ModuloProcessoEleitoral18OrigemConfiguracaoE	5101	symbol	match	readings: address symbol,table slot	69	none	ecourna	1	<binaryen>
 6031	-	-	-	no-candidate	no symbol and no ledger pair	151	none	ecourna	0	-
 6032	-	-	-	no-candidate	no symbol and no ledger pair	151	none	ecourna	0	-
 6033	byn$mgfn-shared$_ZNK5comum2md18CVotosEleicoesVota7LegendaEhRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	5118	symbol	differs	+0x9 target +0x8 local.tee 7 | ours +0x8 local.tee 6	339	none	comum	1	<binaryen>
@@ -5946,7 +5946,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6080	byn$mgfn-shared$dh_gen_init	5098	symbol	match	readings: address string	129	addr	openssl	1	<binaryen>
 6081	byn$mgfn-shared$x25519_newctx	5099	symbol	match	readings: address string	60	addr	openssl	1	<binaryen>
 6082	byn$mgfn-shared$rsa2text_encode	5100	symbol	match	readings: address string	68	addr	openssl	1	<binaryen>
-6083	byn$mgfn-shared$ec2text_encode	5101	symbol	match	readings: address string	68	addr	openssl	1	<binaryen>
+6083	byn$mgfn-shared$ec2text_encode	5102	symbol	match	readings: address string	68	addr	openssl	1	<binaryen>
 6084	-	-	-	no-candidate	no symbol and no ledger pair	105	none	vota	0	-
 6085	byn$mgfn-shared$dh2text_encode	5103	symbol	match	readings: address string	68	addr	openssl	1	<binaryen>
 6086	byn$mgfn-shared$ec2blob_encode	5104	symbol	match	readings: address string	146	addr	openssl	1	<binaryen>
@@ -7471,16 +7471,16 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7605	dsa_pkey_dirty_cnt	7366	symbol	match	-	10	byte	unknown	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
 7606	old_dsa_priv_encode	7367	symbol	match	-	12	addr	unknown	2	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
 7607	old_dsa_priv_decode	7368	symbol	match	readings: address string	76	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7608	dsa_pkey_ctrl	7370	symbol	match	-	27	byte	unknown	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7609	int_dsa_free	7371	symbol	match	-	10	addr	unknown	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7610	dsa_sig_print	7372	symbol	match	readings: address same-content,address string	190	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7611	dsa_param_print	7373	symbol	match	readings: address string	120	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7612	dsa_cmp_parameters	7374	symbol	match	-	23	fingerprint	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7613	dsa_copy_parameters	7375	symbol	match	-	78	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7614	dsa_missing_parameters	7376	symbol	match	-	47	byte	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7615	dsa_param_encode	7377	symbol	match	-	12	addr	openssl	2	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7616	dsa_param_decode	7378	symbol	match	-	47	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
-7617	dsa_security_bits	7379	symbol	match	-	10	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7608	dsa_pkey_ctrl	7369	symbol	match	-	27	byte	unknown	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7609	int_dsa_free	7370	symbol	match	-	10	addr	unknown	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7610	dsa_sig_print	7371	symbol	match	readings: address same-content,address string	190	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7611	dsa_param_print	7372	symbol	match	readings: address string	120	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7612	dsa_cmp_parameters	7373	symbol	match	-	23	fingerprint	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7613	dsa_copy_parameters	7374	symbol	match	-	78	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7614	dsa_missing_parameters	7375	symbol	match	-	47	byte	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7615	dsa_param_encode	7376	symbol	match	-	12	addr	openssl	2	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7616	dsa_param_decode	7377	symbol	match	-	47	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
+7617	dsa_security_bits	7378	symbol	match	-	10	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
 7618	int_dsa_size	7380	symbol	match	-	10	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
 7619	dsa_priv_print	7381	symbol	match	readings: address string	193	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
 7620	dsa_priv_encode	7382	symbol	match	readings: address string	353	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ameth.o
@@ -11229,8 +11229,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11363	-	-	-	no-candidate	no symbol and no ledger pair	2456	none	comum	0	-
 11364	-	-	-	no-candidate	no symbol and no ledger pair	29	none	comum	0	-
 11365	-	-	-	no-candidate	no symbol and no ledger pair	214	none	comum	0	-
-11366	_ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23ModuloProcessoEleitoral18OrigemConfiguracaoE	7390	symbol	match	readings: address srcloc,address string	23	none	comum	1	app/uenux2/src/app/comum/dados/asn/processoeleitoral/cconversororigemconfiguracao.cpp.o
-11367	_ZNK5comum3asn28CConversorOrigemConfiguracao10DoConverteERKNS_2md19EOrigemConfiguracaoE	7369	symbol	match	readings: address content-repointed,address symbol	44	none	comum	1	app/uenux2/src/app/comum/dados/asn/processoeleitoral/cconversororigemconfiguracao.cpp.o
+11366	_ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23ModuloProcessoEleitoral18OrigemConfiguracaoE	7379	symbol	match	readings: address srcloc,address string	23	none	comum	1	app/uenux2/src/app/comum/dados/asn/processoeleitoral/cconversororigemconfiguracao.cpp.o
+11367	_ZNK5comum3asn28CConversorOrigemConfiguracao10DoConverteERKNS_2md19EOrigemConfiguracaoE	7390	symbol	match	readings: address content-repointed,address symbol	44	none	comum	1	app/uenux2/src/app/comum/dados/asn/processoeleitoral/cconversororigemconfiguracao.cpp.o
 11368	-	-	-	no-candidate	no symbol and no ledger pair	29	none	comum	0	-
 11369	-	-	-	no-candidate	no symbol and no ledger pair	871	none	comum	0	-
 11370	-	-	-	no-candidate	no symbol and no ledger pair	29	none	comum	0	-
