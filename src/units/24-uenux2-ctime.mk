@@ -12,15 +12,17 @@
 #   operator-(int) const is read from the body's shape, a copy of *this with -= applied and returned by value; a free
 #   operator-(const CTime &, int) would give the same bytes.
 # - fn 5449's name, IsValidTime, and its lines (22-40, inside the unknown lines 10-41): no record, slot or RTTI names
-#   it, and it throws nothing. Its stub was in src/ecourna/unplaced.cpp, the tree of its component (it calls ecourna's
-#   CStringUtils::ToByte), but it is uenux2 code of this file: it calls ToByte, which can throw, while a std::string
+#   it, and it throws nothing. Its stub was in src/ecourna/unplaced.cpp, the tree of its component (a component records
+#   who calls a function: ledger/func-attribution.tsv reads `5449 ecourna callers`), but it is uenux2 code of this
+#   file: it calls ecourna's CStringUtils::ToByte, which can throw, while a std::string
 #   temporary is alive with no landing pad (uenux2 compiles without -fexceptions, docs/reference/facts/app-flags.md
 #   §F6); its callers are this file's EncodeTime(const std::string &) and the date and time check fn 5475,
-#   api::CDateTime's constructor from a string (cdatetime.cpp), inlines; and its use band of ledger/ordinals.tsv puts it
-#   after ctickmanager.cpp's fn 5451 in link order. It is external, declared in ctime.h, because 5475 calls it from
-#   that check, which binaryen inlined (a second stack frame) beside a call of CDate's check (fn 5479), while 5475
-#   calls fn 3643 itself: no ctime.cpp function inlined there could carry a call to a file-static one. A static member
-#   CTime::IsValidTime would give the same bytes; a free function is chosen because it reads no member.
+#   api::CDateTime's constructor from a string (cdatetime.cpp), inlines; and, inside one digit zone, its use band of
+#   ledger/ordinals.tsv puts it after ctickmanager.cpp's fn 5451 in link order. Its linkage is chosen too: external,
+#   declared in ctime.h, because 5475 calls it from a check binaryen inlined (a second stack frame) beside CDate's
+#   check (fn 5479), which reads as cdatetime.cpp's. No record or band places that check: defined in ctime.cpp, with
+#   IsValidTime file-static, it gives the same bytes. A static member CTime::IsValidTime would too; a free function
+#   is chosen because it reads no member.
 # - the 7080 enumerator's name (eueutilerror.h says so beside it).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTIME_SRCS := src/api/util/ctime.cpp
