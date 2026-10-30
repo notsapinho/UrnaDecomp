@@ -115,6 +115,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `33-uenux2-cgenerictags` | `api::CGenericTags::TagSize` (target fn 5468), the `CGenericTags` class header and the 7016 enumerator of `EUeUtilError`; the class's other members (insert, the TLV functions) are not reconstructed |
 | `34-uenux2-cassinador` | the `comum::CAssinador` destructor and its deleting destructor (target fns 1007, 4694), the class header and the `ESavdPacote` type of its +8 member |
 | `35-uenux2-iinterfaceinit` | the `comum::IInterfaceInit` destructor (target fn 5898, slot 0 of its vtable and of `simulador::CWasmInit`'s) and the class header, with the out-of-line constructor no target function holds; `CurrentBootDevice` (11646) pending |
+| `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 
 ## Companion files
 

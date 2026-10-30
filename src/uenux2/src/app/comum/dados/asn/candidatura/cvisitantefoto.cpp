@@ -1,10 +1,7 @@
-// <stubs>
-// f11443 · 13 B · unmatched · placement: link order · name unknown
-// void f11443(i32) { ... }
+#include "app/comum/dados/asn/candidatura/cvisitantefoto.h"
 
-// f11442 · 1198 B · unmatched · name unknown
-// ? f11442(i32, i32, i32, i32, i32, i32) { ... }
+namespace comum::asn {
 
-// f5709 · 116 B · unmatched · placement: link order · name unknown
-// ? f5709(i32) { ... }
-// </stubs>
+CVisitanteFoto::~CVisitanteFoto() = default;
+
+} // namespace comum::asn

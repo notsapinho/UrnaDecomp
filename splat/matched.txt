@@ -7430,3 +7430,5 @@
 1007 _ZN5comum10CAssinadorD2Ev
 4694 _ZN5comum10CAssinadorD0Ev
 5898 _ZN5comum14IInterfaceInitD2Ev
+5709 _ZN5comum3asn14CVisitanteFotoD2Ev
+11443 _ZN5comum3asn14CVisitanteFotoD0Ev
