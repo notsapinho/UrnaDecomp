@@ -1918,11 +1918,6 @@
 
 // component comum
 
-// link-order cluster 26 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp
-
-// f7480 · 18 B · unmatched · placement: link order · name unknown
-// ? f7480(i32) { ... }
-
 // link-order cluster 255 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhasharquivo.cpp
 
 // f10269 · 210 B · unmatched · placement: link order · name unknown
@@ -3174,11 +3169,6 @@
 
 // f244 · 56 B · unmatched · placement: link order · name unknown
 // ? f244(i32) { ... }
-
-// link-order cluster 1372 · uses=116
-
-// f224 · 57 B · unmatched · placement: link order · name unknown
-// ? f224(i32, i32) { ... }
 
 // no link-order cluster
 
