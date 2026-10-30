@@ -2,11 +2,11 @@
 
 // api::IText: RTTI names the class; it has no vtable in the target. The alignment at +4 is this class's own. Every
 // implementation holds fn 1661, `return *(p + 4)`, in slot 3, which alone only says they share a layout (binaryen keeps
-// one of identical bodies). What decides is where the constructor stores it: fns 10934 and 10548 build an api::CFixedText
-// and store the vptr, then +4. An alignment set by the base's constructor comes before the derived class's vptr in the
-// source and the backend reverses the two (docs/reference/facts/codegen.md C1); one set in CFixedText's mem-initializer
-// gives +4 first, and neither function matches with it. fn 10958 does store +4 first, and it is not written yet, so that
-// site is unexplained. The default argument is chosen (WasmText's in fn 8757 stores 0).
+// one of identical bodies). What decides is the store order in the call shapes where the two layouts differ: fns 10934
+// and 10548 build an api::CFixedText and store the vptr, then +4, which a member set by IText's constructor gives there
+// and one set in CFixedText's mem-initializer does not (+4 first). fn 10958 stores +4 first, and in its shape (a by-value
+// copy of a string, then the constructor) both layouts compile to one body that does: it is neutral, not against. The
+// default argument is chosen (fn 8757's WasmText stores 0 there, after its vptr).
 
 #include <memory>
 #include <string>

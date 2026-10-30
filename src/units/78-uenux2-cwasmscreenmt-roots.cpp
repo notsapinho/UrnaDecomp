@@ -9,15 +9,15 @@
 //   address is taken here for the same reason; without it our link has only direct callers that drop the result, and
 //   binaryen removes it.
 // - the control blocks of the classes the target builds with std::shared_ptr<U>(new T), the __shared_ptr_pointer<T*, ...>
-//   whose __get_deleter are target fns 11034-11040, 11046 and 10537 (their vtables @1579896-1580240 and @1590608; the
-//   other slots are the shared 174, 144 and 172), and the one std::shared_ptr<IScreenMT>(std::unique_ptr<IScreenMT>)
-//   makes, fn 8036 (@1531492). The code that builds them is not reconstructed. Each CompartilhaX below instantiates one
-//   and nothing else: it takes a T* it never gets, so no constructor, and so no vtable, of T is used. As with
-//   std::make_shared, the roots object is where the control block's members come from until the real builders land, and
-//   T's own inline members stay the units' objects', which come first on the link line. The function addresses are
-//   taken so the stand-ins stay in the link; nothing calls them. The order of the lines below is a choice for the scan's
-//   sake: a type's name string that our link happens to put at a multiple of 4 is placed by its bytes only at a multiple
-//   of 4 of the target, so this order leaves none of the deleter names there. Compiled with APP_CXXFLAGS.
+//   whose __get_deleter are target fns 11034-11040, 11046 and 10537 (vtables @1579896-1580240 and @1590608; the other
+//   slots are the shared 174, 144 and 172), and fn 8036 (@1531492), std::shared_ptr<IScreenMT>(std::unique_ptr)'s. The
+//   builders are not reconstructed. Each CompartilhaX below instantiates one and nothing else: it takes a T* it never
+//   gets, so it uses no constructor, and no vtable, of T. As with std::make_shared, the control blocks' members come from
+//   this object until the builders land; T's own inline members stay the units' objects', first on the link line. Their
+//   addresses are taken so they stay in the link; nothing calls them. The lines' order changes no function's re-pointed
+//   bytes and serves only the scan's alignment test (resolveBytes places a name string our link puts at a multiple of 4
+//   only at one in the target), which a tool fix will make order-independent: 9 of the 10 deleter names are off a multiple
+//   of 4 in the target (not 11034's), and this order puts none of ours on one. Compiled with APP_CXXFLAGS.
 #include <memory>
 
 #include "api/gui/cbeepfieldmt.h"
