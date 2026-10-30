@@ -3940,16 +3940,6 @@
 // f6737 · 878 B · unmatched · placement: link order · name unknown
 // void f6737(i32) { ... }
 
-// link-order cluster 931 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmessageoperador.cpp
-
-// f3157 · 111 B · unmatched · placement: link order · name unknown
-// void f3157(i32) { ... }
-
-// link-order cluster 932 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmessageoperador.cpp
-
-// f3162 · 108 B · unmatched · placement: link order · name unknown
-// ? f3162(i32) { ... }
-
 // link-order cluster 944 · uses=3
 
 // f3333 · 1260 B · unmatched · placement: link order · name unknown
