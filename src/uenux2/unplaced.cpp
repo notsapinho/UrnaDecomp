@@ -3193,26 +3193,6 @@
 // f11043 · 7 B · unmatched · placement: link order · name unknown
 // void f11043(i32) { ... }
 
-// link-order cluster 389 · uses=1 · neighbours' file uenux2/src/api/gui/cpreshowclearmt.cpp
-
-// f11047 · 28 B · unmatched · placement: link order · name unknown
-// void f11047(i32, i32) { ... }
-
-// link-order cluster 390 · uses=1 · neighbours' file uenux2/src/api/gui/cclockfieldmt.cpp
-
-// f11048 · 20 B · unmatched · placement: link order · name unknown
-// void f11048(i32, i32) { ... }
-
-// link-order cluster 391 · uses=1 · neighbours' file uenux2/src/api/gui/cbuzzfieldmt.cpp
-
-// f11049 · 25 B · unmatched · placement: link order · name unknown
-// void f11049(i32, i32) { ... }
-
-// link-order cluster 393 · uses=1 · neighbours' file uenux2/src/api/gui/cbeepfieldmt.cpp
-
-// f11053 · 20 B · unmatched · placement: link order · name unknown
-// void f11053(i32, i32) { ... }
-
 // link-order cluster 396 · uses=1 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
 
 // f11079 · 47 B · unmatched · placement: link order · name unknown
@@ -3890,11 +3870,6 @@
 // f2024 · 441 B · unmatched · placement: link order · name unknown
 // ? f2024(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1212 · uses=7 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
-
-// f1694 · 423 B · unmatched · placement: link order · name unknown
-// void f1694(i32, i32, i32) { ... }
-
 // link-order cluster 1268 · uses=11 · neighbours' file uenux2/src/api/util/isystemdatetime.cpp
 
 // f1152 · 444 B · unmatched · placement: link order · name unknown
@@ -3902,16 +3877,6 @@
 
 // f1151 · 330 B · unmatched · placement: link order · name unknown
 // void f1151(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1288 · uses=14 · neighbours' file uenux2/src/app/comum/relatorios/ccalculacv.cpp
-
-// f941 · 385 B · unmatched · placement: link order · name unknown
-// void f941(i32, i32, i32) { ... }
-
-// link-order cluster 1305 · uses=20 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
-
-// f728 · 381 B · unmatched · placement: link order · name unknown
-// void f728(i32, i32) { ... }
 
 // link-order cluster 1312 · uses=23 · neighbours' file uenux2/src/api/gui/cinteractiveformbuilder.cpp
 
@@ -3997,35 +3962,8 @@
 
 // link-order cluster 128 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
 
-// f8810 · 67 B · unmatched · placement: link order · name unknown
-// void f8810(i32) { ... }
-
-// f8799 · 499 B · unmatched · placement: link order · name unknown
-// void f8799(i32, i32, i32) { ... }
-
-// f8787 · 15 B · unmatched · placement: link order · name unknown
-// void f8787(i32, i32, i32) { ... }
-
-// f8757 · 250 B · unmatched · placement: link order · name unknown
-// void f8757(i32, i32) { ... }
-
 // f8748 · 12 B · unmatched · placement: link order · name unknown
 // ? f8748(i32) { ... }
-
-// f8746 · 1371 B · unmatched · placement: link order · name unknown
-// void f8746(i32) { ... }
-
-// f8745 · 127 B · unmatched · placement: link order · name unknown
-// ? f8745(i32) { ... }
-
-// f8744 · 130 B · unmatched · placement: link order · name unknown
-// void f8744(i32) { ... }
-
-// f8743 · 5 B · unmatched · placement: link order · name unknown
-// ? f8743(i32) { ... }
-
-// f8742 · 5 B · unmatched · placement: link order · name unknown
-// ? f8742(i32) { ... }
 
 // link-order cluster 207 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasminit.cpp
 
@@ -4060,17 +3998,6 @@
 
 // f4683 · 57 B · unmatched · placement: link order · name unknown
 // void f4683(i32, i32, i32) { ... }
-
-// link-order cluster 720 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
-
-// f5039 · 15 B · unmatched · placement: link order · name unknown
-// void f5039(i32, i32) { ... }
-
-// f5038 · 22 B · unmatched · placement: link order · name unknown
-// void f5038(i32) { ... }
-
-// f5036 · 22 B · unmatched · placement: link order · name unknown
-// void f5036(i32) { ... }
 
 // link-order cluster 724 · uses=2 · neighbours' file ecourna/app/dados/resultadournacadastro/cdadoscifracao.cpp
 
@@ -4119,11 +4046,6 @@
 
 // f1524 · 705 B · unmatched · placement: link order · name unknown
 // void f1524(i32, i32) { ... }
-
-// link-order cluster 1242 · uses=9
-
-// f1355 · 190 B · unmatched · placement: link order · name unknown
-// ? f1355(i32, i32, i32) { ... }
 
 // component vota-web
 
