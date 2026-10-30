@@ -276,9 +276,6 @@
 // f5434 · 11 B · unmatched · placement: link order · name unknown
 // ? f5434(i32) { ... }
 
-// f5431 · 11 B · unmatched · placement: link order · name unknown
-// ? f5431(i32) { ... }
-
 // link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
 
 // f5460 · 73 B · unmatched · placement: link order · name unknown
@@ -744,9 +741,6 @@
 // f2134 · 311 B · unmatched · placement: link order · name unknown
 // void f2134(i32) { ... }
 
-// f2132 · 152 B · unmatched · placement: link order · name unknown
-// void f2132(i32, i32) { ... }
-
 // link-order cluster 1145 · uses=5
 
 // f2199 · 723 B · unmatched · placement: link order · name unknown
@@ -826,11 +820,6 @@
 // f1953 · 243 B · unmatched · placement: link order · name unknown
 // ? f1953(i32, i32, i32) { ... }
 
-// link-order cluster 1195 · uses=6
-
-// f1980 · 32 B · unmatched · placement: link order · name unknown
-// ? f1980(i32, i32) { ... }
-
 // link-order cluster 1215 · uses=7 · neighbours' file uenux2/src/app/comum/asn/util.cpp
 
 // f1710 · 18 B · unmatched · placement: link order · name unknown
@@ -840,11 +829,6 @@
 
 // f1715 · 18 B · unmatched · placement: link order · name unknown
 // ? f1715(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1223 · uses=8
-
-// f1500 · 98 B · unmatched · placement: link order · name unknown
-// void f1500(i32, i32) { ... }
 
 // link-order cluster 1226 · uses=8
 
@@ -985,11 +969,6 @@
 // f348 · 15 B · unmatched · placement: link order · name unknown
 // ? f348() { ... }
 
-// link-order cluster 1353 · uses=60 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
-
-// f331 · 21 B · unmatched · placement: link order · name unknown
-// ? f331(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1361 · uses=78
 
 // f283 · 18 B · unmatched · placement: link order · name unknown
@@ -1007,11 +986,6 @@
 
 // f255 · 21 B · unmatched · placement: link order · name unknown
 // ? f255(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1370 · uses=107
-
-// f235 · 21 B · unmatched · placement: link order · name unknown
-// ? f235(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1383 · uses=282
 

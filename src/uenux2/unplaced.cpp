@@ -1128,19 +1128,6 @@
 // f6115 · 160 B · unmatched · placement: link order · name unknown
 // void f6115(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 877 · uses=2
-
-// f6169 · 22 B · unmatched · placement: link order · name unknown
-// ? f6169(i32) { ... }
-
-// f6168 · 19 B · unmatched · placement: link order · name unknown
-// ? f6168(i32, i32, i32) { ... }
-
-// link-order cluster 882 · uses=2
-
-// f6243 · 106 B · unmatched · placement: link order · name unknown
-// void f6243(i32, i32) { ... }
-
 // link-order cluster 885 · uses=2
 
 // f6265 · 123 B · unmatched · placement: link order · name unknown
