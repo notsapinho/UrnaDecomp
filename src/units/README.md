@@ -106,6 +106,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `23-uenux2-cmovie` | the `api::CMovie` constructor (target fn 5526), the `CMovie` and `CMovieFrame` class header and the 4943 enumerator of `EUeGuiError` |
 | `24-uenux2-ctime` | the `api::CTime` constructor from hours, minutes and seconds and `operator-(int) const` (target fns 3642 and 3641, with `operator-=` and `operator+=` inlined into the latter; no evidence names 3641, so `operator-(int) const` is read from its body's shape, a copy of `*this` with `-=` applied, which a free `operator-(const CTime &, int)` would give too), the `CTime` class header and the 7079, 7081 and 7082 enumerators of `EUeUtilError`; the constructor from a string (3643) is not reconstructed yet |
 | `26-uenux2-csigverifier` | the `comum::CSigVerifier` constructor (target fn 1540) and its implicit destructors (11178, 11176), the class header, the `api::ISigVerifier` interface and the `ESavdAplic` type; `Verify` (11179) pending |
+| `47-uenux2-cconversorsituacoeseleicoes` | `comum::asn::CConversorSituacoesEleicoes::DoDesconverte` (target fn 11361) and the `comum::md::CSituacoesEleicoes` data class it builds; slot 2, the base's default `DoConverte` (11360), pending as an explicit specialization of that one `IConversorASN` instantiation's member |
 
 ## Companion files
 

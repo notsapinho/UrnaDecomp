@@ -1989,11 +1989,6 @@
 // f11359 · 419 B · unmatched · placement: link order · name unknown
 // void f11359(i32, i32, i32) { ... }
 
-// link-order cluster 434 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorsituacoeseleicoes.cpp
-
-// f11361 · 173 B · unmatched · placement: link order · name unknown
-// void f11361(i32, i32, i32) { ... }
-
 // link-order cluster 436 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorpleito.cpp
 
 // f11365 · 214 B · unmatched · placement: link order · name unknown

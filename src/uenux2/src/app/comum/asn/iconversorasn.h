@@ -159,9 +159,6 @@ protected:
 // f11364 · 29 B · unmatched · placement: link order · name unknown
 // void f11364(i32, i32, i32) { ... }
 
-// f11360 · 29 B · unmatched · placement: link order · name unknown
-// void f11360(i32, i32, i32) { ... }
-
 // f11358 · 29 B · unmatched · placement: link order · name unknown
 // void f11358(i32, i32, i32) { ... }
 
