@@ -23,7 +23,7 @@
 # comum::IPedeTituloMesario's destructor into each derived class's out-of-line D2, and binaryen's duplicate-function
 # elimination merges those bodies with the base's own. So that destructor is inline. Unit 71 had chosen it out of line,
 # as the key function. Over that form an implicit derived destructor gives a 10-B D0, where 3609 differs at byte 6 in
-# the whole link, and an out-of-line one gives a D2 of one call, which is not slot 0's body (compiled). Fn 785 stores no
+# the whole link, and an out-of-line one in another object gives a D2 of one call, which is not slot 0's body (compiled). Fn 785 stores no
 # vptr and CErroTesteTecladoFim is final: without final the D2 gains the store (compiled).
 #
 # Same bytes, each compiled and compared by function with the object-local numbers masked (how-to step 3). Slot 15:

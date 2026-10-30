@@ -13,7 +13,7 @@ class IInputKbd;
 template <typename MEDIA, typename INPUT>
 class CInteractiveForm;
 // The record of fn 3139 qualifies it (std::pair<api::EInputResult, std::string>). Its enumerators are not recovered
-// and no header of this tree defines it yet: declared opaque, with a chosen underlying type.
+// and no header of this tree defines it yet: declared opaque, 4 bytes by fn 3139, signedness chosen.
 enum EInputResult : int;
 } // namespace api
 
@@ -37,7 +37,7 @@ public:
 // EmiteEcoComInputField (:188); the overriders' records name slots 9 and 10 (ProcessInputAudio and StartStateAudio,
 // cinstrucaovotacaoacessibilidade.cpp:54 and :129). StartState and FinishState are comum::CAppState's names. Chosen:
 // the names of slots 11 (FinishState calls it last), 12 (ProcessTick calls it with any other tick's id), 14 and 15, and
-// slot 14's const. ProcessTick (fn 7010) calls slot 15 and hands the result to slot 14: slot 15 is the message, with
+// slots 14 and 15's const. ProcessTick (fn 7010) calls slot 15 and hands the result to slot 14: slot 15 is the message, with
 // {cargo-atual}-style tags, and slot 14 fills them in (fn 6999 holds those tags and returns a string).
 // Slots 2, 5, 7, 8, 13 and 14 are pending (src/units/97-uenux2-cvotacaostateaudio-pending.cpp).
 //
