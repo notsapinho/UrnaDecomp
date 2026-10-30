@@ -20,7 +20,18 @@ Run every command from the repository root unless it starts with `cd asmlift-was
 | git, curl, make, unzip, bzip2, shasum | GNU make 3.81 or later | fetching and building (`bzip2` unpacks the Boost release) |
 
 On macOS, `brew install node@24 wabt p7zip` and then `corepack enable && corepack prepare pnpm@9.14.4 --activate`
-cover all but Docker.
+cover all but Docker. Homebrew's `node@24` is keg-only: a newer `node` stays first on PATH, so put Node 24 first in
+every shell that runs the toolkit, before the `corepack` line too:
+
+```sh
+export PATH="$(brew --prefix node@24)/bin:$PATH"     # /opt/homebrew/opt/node@24/bin
+node --version                                       # v24.22.2
+```
+
+Under another Node (26, say) every command that runs the toolkit stops with `Abort trap: 6` and no other message:
+`pnpm wasm …`, `tools/round/try-tu.sh`, `make -C src census` and the splat targets
+([facts/workflow.md](reference/facts/workflow.md) §W1). `tools/setup/bootstrap.sh --check` names the cause:
+`WRONG node v26.11.1: the toolkit is tested on Node 24`.
 
 About 4 GB of disk is needed: a bootstrapped and linked clone takes 1.8 GB (0.45 GB of `third_party/` sources,
 0.15 GB of downloads, 1 GB of `build/out/`), and the image 2.2 GB.
@@ -162,7 +173,9 @@ whole program: here the candidate opens two more stack frames (inlined callees) 
 pad (`call import:__resumeException`) that the target's body does not have. That is the normal case
 for TSE code, not a broken setup: the matched `CStringUtils::ToQWord` (target 1141) scores 982 over 999 alone, because
 its template helper is inlined. Use `--single` to iterate on one function's shape; conclude with the whole-link mode
-([how-to-decompile.md](how-to-decompile.md) step 5), because only the whole link decides a match.
+([how-to-decompile.md](how-to-decompile.md) step 5), because only the whole link decides a match. For a function that
+throws with a `std::format` message, the lone score is mostly libc++ inlined into it (thousands of rows), and
+how-to step 4 says what to read instead.
 
 It takes about 7 s on an idle machine. The 35 s above is a run with other builds going on, and heavy load
 stretches its docker runs to several minutes. A file outside `src/` needs `--component <dir under src/>`
@@ -219,6 +232,7 @@ function.
 | symptom | cause |
 | --- | --- |
 | a compile through docker cannot find its input or output files | `TMPDIR` is not `/tmp` (section 1) |
+| `pnpm`, `try-tu.sh`, `make -C src census` or a splat target dies with `Abort trap: 6` | another Node than 24 is first on PATH (section 1) |
 | `make -C src link` fails with `assert names`, or says "Nothing to be done" after a failure | a `-j` run; delete `build/out/wasm/vota_web/vota_web_wasm.wasm` and `build/out/wasm-named/vota_web/vota_web_wasm.wasm` by name and link again without `-j` |
 | a flag change in `src/units/*.mk` does not change the link | make does not rebuild objects when only a fragment's flags change; touch the sources (each object depends on its own source and every header of its tree, so an edit of either rebuilds it) |
 | the bootstrap refuses a `third_party/` checkout | that directory is at another commit; it is never reset for you, so move it aside and run the bootstrap again |
