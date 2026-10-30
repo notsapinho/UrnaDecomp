@@ -6,9 +6,9 @@ namespace api {
 
 // api::CInteractiveForm<MEDIA, INPUT>: a form that reads input (RTTI: si_class of api::IForm<MEDIA>; instances
 // <IScreen, IInputKbd>, vtable @1579168, and <IScreenMT, IInputMT>, vtable @1580280). Written only as far as the states
-// that hold one need it, its base: no member is reconstructed, so slots 2 and 3, which the target's instances override
-// (fns 11030, 11029), resolve to IForm's here; a call through a pointer to it goes through the vtable either way. The
-// records of this header are Read() (line 57), WaitAndRead() (line 62) and ClearKeyboardInput() (line 148).
+// that hold one need it, its base: no member is reconstructed, so slots 0-3, 6 and 7, which both instances override,
+// resolve to IForm's here; a call through a pointer to it goes through the vtable either way. Records of this header:
+// Read() (line 57), WaitAndRead() (line 62), ClearKeyboardInput() (line 148).
 template <typename MEDIA, typename INPUT>
 class CInteractiveForm : public IForm<MEDIA> {};
 

@@ -6,20 +6,25 @@
 #
 # The file of vota::CEleitorVotouNaoVotou: no record names it, and the path is chosen, on this evidence. Its cluster's
 # comment, app/vota/eleitor/fimvotacao/celeitorvotounaovotou.cpp, is the tool's class-convention guess, and the data
-# speak against it: fimvotacao/'s records lie at @1540116-1542960 and this vtable at @1592928, and the class's form is
+# speak against it: fimvotacao/'s records lie at @1540116-1542976 and this vtable at @1592928, and the class's form is
 # the operator's api::CInteractiveForm<api::IScreenMT, api::IInputMT>. The target's Read() records of the IScreen
 # instance all sit between app/vota/eleitor/ records, and none of the IScreenMT instance's does. Band and data order:
 # the next object is app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp, recorded @1593044 with nothing
 # between. In band 1 this class's fns 10431 and 10430 are followed by fns 10429 and 10428, the exit-time destructors of
-# that class's singleton statics (only fn 1150, which stores its vptr, uses them), and then by its fns 10427 to 10425;
-# this class's own fns 10434 and 10433 come right before fn 10431. The previous recorded object is
+# that class's singleton statics (only fn 1150, which stores its vptr, uses them), and then by its fns 10427 to 10425.
+# Fns 10434 and 10433 are this class's own (fn 1901's statics), just before fn 10431 with one function of another place
+# between them, 10432, a libc++ function. The table's order has no such gap: elem 4215 to 4222 hold fns 10434 and 10433,
+# this vtable's 1284, 2884, 10431 and 10430, then fns 10429 and 10428. The previous recorded object is
 # app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp (@1592596), four unrecorded states away
 # (CDadoEleitorNaoConfere, CVerificaDadoEleitor, CEleitorDemorando, CDesabilitaAudioEleitor). So the two recorded
 # sides name different directories and the data do not place the boundary between them: aguardaeleitor/ is a choice,
 # for the adjacent neighbour. Name order agrees and proves nothing: aguardaeleitor's cmostraeleitorvotando,
 # cperguntacodigosuspensao, cperguntaeleitorvotando and csuspensaoautomaticaeleitor run in name order and this name
 # sorts before them, but confirmaidentidade's files do not run in name order. The file name is the class-name
-# convention. The header's path, the member names and GetInst are chosen too.
+# convention. The header's path, the member names and GetInst are chosen too, and so are two things of the +11 flag:
+# bool (with a uebyte the object differs, and with that one object swapped on the link line the plain link is
+# cmp-identical to this one) and private with no setter, although fns 10425, 10419 and 10209, of three other classes,
+# write it. No byte depends on the second, and those classes need a setter or public access when they are written.
 #
 # Other forms of StartState that give the same bytes (each compiled and compared with this one; none is singled out
 # by the target): assign() for either assignment, the literal held in a local const char* first, an if/else with one
@@ -33,7 +38,9 @@
 # comum::IPedeTituloMesario: src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp is the file its record
 # names. Line 30 of it, the anonymous GetControlador, stays blank, and the functions written come after it: their
 # lines are a choice (no record gives one). The order inside StartState is the target's: the next state, then +20's
-# form, then +12's.
+# form, then +12's. Chosen: the header's path, beside that file; the destructor as the key function (the vtable's place
+# shows that a member is out of line there, not which); Slot9, its name and its int result (no record, symbol or caller
+# names it, and the derived classes return 1 and 2); the member and parameter names.
 #
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 65's, byte
 # for byte: this unit adds nothing to it.

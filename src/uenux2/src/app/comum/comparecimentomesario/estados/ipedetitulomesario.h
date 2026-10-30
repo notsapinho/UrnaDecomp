@@ -29,11 +29,11 @@ namespace comum {
 // The layout is what the constructor (fn 3608) stores: +12 and +20 two std::shared_ptr it takes by value (it copies
 // their four words and writes nothing back). +12 is the operator's form: fn 10313 reads it through
 // api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() (record cinteractiveform.h:57 @1595652). +20 is the form
-// on the voter's terminal: fn 10388 builds it with fn 1255 ("REGISTRO DE MESARIOS"), which ends in fn 5550, whose
-// control block is __shared_ptr_pointer<api::IForm<api::IScreen>*, ...> (vptr 1578144). Fn 3608 passes
-// comum::CAppState::EVENTO_ENTRADA (2) to the base constructor. Slot 9's name and result type are chosen: the derived
-// classes return 1 (Inicial, Votacao, fn 434) and 2 (Final, fn 2254), and fn 10313 only passes the value on to fn 2738.
-// The member and parameter names are not in the target.
+// on the voter's terminal: fn 10388 builds it with fn 1255 ("REGISTRO DE MESÁRIOS"), which reaches fn 5550 through fns
+// 11140 and 6117; 5550's control block is __shared_ptr_pointer<api::IForm<api::IScreen>*, ...> (vptr 1578144). Fn 3608
+// passes comum::CAppState::EVENTO_ENTRADA (2) to the base constructor. Slot 9's name and result type are chosen: the
+// derived classes return 1 (Inicial, Votacao, fn 434) and 2 (Final, fn 2254), and fn 10313 only passes the value on to
+// fn 2738. The member and parameter names are not in the target.
 class IPedeTituloMesario : public CAppState {
 public:
     virtual ~IPedeTituloMesario() override;

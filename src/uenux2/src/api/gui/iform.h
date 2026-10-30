@@ -4,9 +4,9 @@
 // GetRenderForm, line 178, name the file). Nothing here is TSE's text. RTTI gives IForm<IScreen>, IForm<IScreenMT> and
 // IForm<IPaper>, each a class with no base; their vtables have 8 slots.
 //
-// The layout is what the constructor (fn 6024, shared by the media: 5548 and 5522 pass it their vptr) and the
-// destructor (IForm<IScreen>'s fn 2781, which destroys +60, +52, +28, +20 and +8 in that order) give; 72 bytes, the
-// offset where CInteractiveForm's own members begin (fn 554):
+// The layout is what the constructor (fn 6024 for IScreen and IScreenMT, 5548 and 5522 passing it their vptr;
+// IForm<IPaper>'s is inlined into fn 5515) and the destructor (IForm<IScreen>'s fn 2781, which destroys +60, +52, +28,
+// +20 and +8 in that order) give; 72 bytes, the offset where CInteractiveForm's own members begin (fn 554):
 //   +4       the flag IsVisible reads: the constructor zeroes it, slot 7 (fn 5539) stores 1, the code that covers a
 //            form (fns 5540, 5541, 5987) stores 0, and its readers hold the mutex. Only those stores of 0 and 1 and its
 //            size are evidence: the bool is chosen
@@ -18,19 +18,19 @@
 //            flag test and the drawing, and the fields hold it to read the flag: only the unlock shows, fn 150 after
 //            the load; the lock leaves no call in the target or in our link
 //   +52/+56  a std::shared_ptr<FormControlBlock>: the constructor builds it with std::make_shared (RTTI names
-//            __shared_ptr_emplace<api::FormControlBlock>, 140 bytes, so 128 of object: a flag set to 1 and, at +4, the
-//            124 bytes of a std::shared_mutex, by the lock and unlock fn 2781 calls, 3328 and 3327); the destructor
-//            clears the block's flag under that lock
+//            __shared_ptr_emplace<api::FormControlBlock>, 140 bytes, so 128 of object: a byte set to 1 and, at +4, 124
+//            bytes locked and unlocked by fns 3328 and 3327, between which fn 2781 clears the byte). The bool and the
+//            std::shared_mutex are chosen: a std::shared_timed_mutex is 124 bytes too and links to the same module
 //   +60      a std::string, assigned from an argument of fn 554
 //
 // The names of the data members, of slots 2, 3, 4, 6 and 7, of IsVisible, the constructor's parameters and of
-// FormControlBlock's members, and slot 6's parameter type (its empty body, fn 425, takes one argument besides this),
-// are chosen: no evidence gives them. Refresh is named for its body (fn 11133, slot 4): under the mutex, when the flag
-// is set, it calls Refresh on every field and then the render form's slot 27. IsVisible is a member by choice: the
-// fields' code inlines its lock, read and unlock. GetRenderForm and FindFieldAs are the records' names, and their
-// definitions are not recovered: their records sit at lines 178 and 142 of the original, which this header does not
-// reach. The destructor's body is not recovered either; its D0 (fn 11136, f136(f2781(p0))) is the shape of a destructor
-// defined in the class.
+// FormControlBlock's members, and slot 6's parameter type, are chosen: no evidence gives them. Its empty body, fn 425,
+// takes one argument besides this; CInteractiveForm's override, fn 5529, searches a vector of 4-byte values for it, so
+// the int may be a pointer. Refresh is named for its body (fn 11133, slot 4): under the mutex, when the flag is set, it
+// calls Refresh on every field and then the render form's slot 27. IsVisible is a member by choice: the fields' code
+// inlines its lock, read and unlock. GetRenderForm and FindFieldAs are the records' names; their definitions are not
+// recovered, and their records' lines, 178 and 142, lie past this header. The destructor's body is not recovered
+// either; its D0 (fn 11136, f136(f2781(p0))) is the shape of a destructor defined in the class.
 
 #include <memory>
 #include <mutex>
