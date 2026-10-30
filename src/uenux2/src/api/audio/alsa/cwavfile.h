@@ -23,10 +23,17 @@ struct CWavAudio {
     uedword tamanhoDados;
 };
 
+// The three accessors are what simulador::CWasmWebSound reads to hand the WAV to the browser (fns 9559, 9565): the
+// header at +4, the samples at +48 and their size at +60. Their names and their being inline accessors are chosen:
+// no record or symbol names them, and no target function holds one (they are inlined wherever they are used).
 class CWavFile {
 public:
     CWavFile(const CWavAudio& audio, const void* dados);
     virtual ~CWavFile();
+
+    const CWavAudio& GetAudio() const { return m_audio; }
+    const uebyte* GetDados() const { return m_dados; }
+    uedword GetTamanhoDados() const { return m_tamanhoDados; }
 
 private:
     CWavAudio m_audio;
