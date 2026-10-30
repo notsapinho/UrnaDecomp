@@ -31,10 +31,14 @@ UENUX2_SRCS += src/api/util/cwait.cpp
    …_NOPIC_RULE` template instantiated per source with `$(foreach u,$(DADOS_SRCS),$(eval $(call …)))`; it filters
    `-fPIC` out of `ECOURNA_CXXFLAGS`, adds `-fno-pic`, and compiles from `/work/src/…` so `-ffile-prefix-map`
    rewrites the `std::source_location` paths. Its prerequisites are the source, `$(ROOT)/src/Makefile`, the fragment
-   and every header the compile reads: `$(ECOURNA_HDRS)` (every `src/ecourna` header) or `$(UENUX2_HDRS)` (every
-   `src/uenux2` and `src/ecourna` header), the sets the generic rules depend on, plus `$(wildcard
-   $(ROOT)/src/asn1/*.h)` when it includes `asn1/asn1.h`, which neither set holds. Then an edit or a flag change here
-   rebuilds the objects. A hand list of headers misses the ones they include: unit 36's pending rule names
+   and every header the compile reads. Do not write `$(ECOURNA_HDRS)` or `$(UENUX2_HDRS)` there: `src/Makefile`
+   includes the fragments before it sets those two variables, and a rule's prerequisites are expanded when the rule
+   is read, so in a fragment both are empty and the rule depends on no header at all, with every check still
+   passing. Compute the set in the fragment with the same command the generic rules use, `$(shell find
+   $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')`, or name the directories the compile reads
+   with `$(wildcard …)` (unit 40's companion rules list `$(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)` and the
+   ecourna headers they include), plus `$(wildcard $(ROOT)/src/asn1/*.h)` when it includes `asn1/asn1.h`, which
+   neither tree's set holds. Then an edit or a flag change here rebuilds the objects. A hand list of headers misses the ones they include: unit 36's pending rule names
    `src/asn1/asn1.h` but not the `asn1_useful.h` it includes (`docs/reference/facts/units.md` §U7). A unit under
    `app/dados/` does not need a rule for `-fno-PIC`: `src/mk/ecourna-flags.mk` adds it to the generic rule for every
    `app_dados_%.o` (`tools/round/try-tu.sh --print-flags <source>` ends in `-fno-PIC`).
