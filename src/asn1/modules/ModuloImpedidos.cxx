@@ -2,6 +2,33 @@
 
 namespace ModuloImpedidos{
 
+const char * ModuloImpedidos::TipoImpedimento::nameList[] = {
+    "<undefined>=0",
+    "semImpedimento",
+    "votaNaSecaoOriginal",
+    "solicitouVotoEmTransito",
+    "presoProvisorio",
+    "suspenso",
+    "cancelado",
+    "naoLiberado",
+    "semIdadeMinima",
+    "militarEmServico",
+    "tteAcessibilidade",
+    "tteEleitorConvocado",
+    "tteJusticaEleitoral",
+    "tteOficio",
+    "tteIndigenasQuilombolas",
+    "tteSituacaoRua"
+  };
+
+const ModuloImpedidos::TipoImpedimento::InfoType ModuloImpedidos::TipoImpedimento::theInfo = {
+    ASN1::ENUMERATED::create,
+    0x0000000a,
+    0,
+    0,
+    15, nameList
+};
+
 const void* ModuloImpedidos::EleitorImpedido::fieldInfos[3] = {
     &identificadorEleitor::value_type::theInfo,
     &impedimentoP1::value_type::theInfo,

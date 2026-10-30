@@ -52,31 +52,4 @@ const ModuloHashes::EntidadeHashes::InfoType ModuloHashes::EntidadeHashes::theIn
     "EntidadeHashes"
 };
 
-const char * ModuloHashes::ImpedimentoP1::nameList[] = {
-    "<undefined>=0",
-    "semImpedimento",
-    "votaNaSecaoOriginal",
-    "solicitouVotoEmTransito",
-    "presoProvisorio",
-    "suspenso",
-    "cancelado",
-    "naoLiberado",
-    "semIdadeMinima",
-    "militarEmServico",
-    "tteAcessibilidade",
-    "tteEleitorConvocado",
-    "tteJusticaEleitoral",
-    "tteOficio",
-    "tteIndigenasQuilombolas",
-    "tteSituacaoRua"
-  };
-
-const ModuloHashes::ImpedimentoP1::InfoType ModuloHashes::ImpedimentoP1::theInfo = {
-    ASN1::ENUMERATED::create,
-    0x0000000a,
-    0,
-    0,
-    15, nameList
-};
-
 } // namespace ModuloHashes
