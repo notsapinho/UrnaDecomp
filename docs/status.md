@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**7,910 of 14,343 functions matched (55.15%), 2,186,287 of 5,883,903 code bytes (37.16%).**
+**7,935 of 14,343 functions matched (55.32%), 2,189,383 of 5,883,903 code bytes (37.21%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -26,10 +26,10 @@ library function with no evidence of its own that only TSE code calls counts as 
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 753 / 3,285 | 22.92% | 121,288 / 2,168,476 | 5.59% |
+| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 778 / 3,285 | 23.68% | 124,384 / 2,168,476 | 5.74% |
 | upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `boost`, `libc++abi`, `utf8cpp`, `rapidxml` | 5,800 / 8,294 | 69.93% | 1,850,684 / 3,145,292 | 58.84% |
 | not attributed | `unknown`, `app` | 1,357 / 2,764 | 49.10% | 214,315 / 570,135 | 37.59% |
-| **total** | | **7,910 / 14,343** | **55.15%** | **2,186,287 / 5,883,903** | **37.16%** |
+| **total** | | **7,935 / 14,343** | **55.32%** | **2,189,383 / 5,883,903** | **37.21%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -46,9 +46,9 @@ come from getting the version, the flags and the link order right, not from writ
 | `vota` | uenux2 `src/app/vota`: the voting application | 38 / 780 | 4.87% | 5,362 / 470,204 | 1.14% |
 | `comum` | uenux2 `src/app/comum`: shared urna code (domain model, converters, reports) | 59 / 599 | 9.85% | 6,839 / 606,487 | 1.13% |
 | `api` | uenux2 `src/api`: GUI toolkit, io, ipc, util, logging, audio | 206 / 516 | 39.92% | 18,573 / 214,120 | 8.67% |
-| `simulador` | the web simulator's `CWasm*` devices | 70 / 144 | 48.61% | 7,552 / 58,157 | 12.99% |
+| `simulador` | the web simulator's `CWasm*` devices | 95 / 144 | 65.97% | 10,648 / 58,157 | 18.31% |
 | `vota-web` | the web engine (`CVotaWebEngine`, …) | 4 / 11 | 36.36% | 17 / 2,808 | 0.61% |
-| **uenux2** | the five rows above | **377 / 2,050** | **18.39%** | **38,343 / 1,351,776** | **2.84%** |
+| **uenux2** | the five rows above | **402 / 2,050** | **19.61%** | **41,439 / 1,351,776** | **3.07%** |
 | `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 199 / 799 | 24.91% | 66,673 / 721,680 | 9.24% |
 | `asn1-modules` | the generated `Modulo*` ASN.1 types | 19 / 59 | 32.20% | 3,338 / 41,909 | 7.96% |
 | `ASN1` | TSE's fork of the III ASN.1 runtime | 158 / 377 | 41.91% | 12,934 / 53,111 | 24.35% |
@@ -118,14 +118,14 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 7,910 | 2,186,287 | matched |
-| `differs` | 438 | 88,779 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `match` | 7,935 | 2,189,383 | matched |
+| `differs` | 439 | 90,659 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
 | `unresolved` | 806 | 546,058 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 5,189 | 3,062,779 | our link has no body for it yet |
+| `no-candidate` | 5,163 | 3,057,803 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 753 `match`, 82 `differs`, 210 `unresolved` and 2,240 `no-candidate`.
+For TSE code alone: 778 `match`, 82 `differs`, 211 `unresolved` and 2,214 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -148,7 +148,7 @@ the component tables), and three lines about readings:
 because binaryen merges identical bodies and the target keeps one copy under one index:
 
 <!-- status:twins -->
-287 matches are bodies of 8 B or less, and 52 matches have a byte-identical twin in the target. 0 matches are kind-unverified: the operand-kind table cannot vouch for their constants, so the check offered each one every reading (`make -C src splat` names them).
+290 matches are bodies of 8 B or less, and 52 matches have a byte-identical twin in the target. 0 matches are kind-unverified: the operand-kind table cannot vouch for their constants, so the check offered each one every reading (`make -C src splat` names them).
 <!-- /status:twins -->
 
 A meter that does not show the target's sha256 is not a meter: the build failed, and its output lists the matches
@@ -177,11 +177,11 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 998 | 998 | 0 | 0 | 0 |
-| `fingerprint` | 588 | 587 | 0 | 1 | 0 |
-| `addr` | 5,809 | 5,459 | 194 | 152 | 4 |
-| `shape` | 250 | 178 | 30 | 40 | 2 |
-| `none` | 6,698 | 688 | 214 | 613 | 5,183 |
+| `byte` | 1,009 | 1,009 | 0 | 0 | 0 |
+| `fingerprint` | 591 | 590 | 0 | 1 | 0 |
+| `addr` | 5,818 | 5,468 | 194 | 152 | 4 |
+| `shape` | 249 | 178 | 29 | 40 | 2 |
+| `none` | 6,676 | 690 | 216 | 613 | 5,157 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

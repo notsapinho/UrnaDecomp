@@ -3364,11 +3364,6 @@
 // f5052 · 10 B · unmatched · placement: link order · name unknown
 // void f5052(i32) { ... }
 
-// link-order cluster 722 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreen.cpp
-
-// f5071 · 17 B · unmatched · placement: link order · name unknown
-// ? f5071(i32) { ... }
-
 // link-order cluster 736 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
 
 // f5205 · 403 B · unmatched · placement: link order · name unknown
@@ -3904,11 +3899,6 @@
 
 // f4683 · 57 B · unmatched · placement: link order · name unknown
 // void f4683(i32, i32, i32) { ... }
-
-// link-order cluster 724 · uses=2 · neighbours' file ecourna/app/dados/resultadournacadastro/cdadoscifracao.cpp
-
-// f5098 · 202 B · unmatched · placement: link order · name unknown
-// void f5098(i32, i32) { ... }
 
 // link-order cluster 726 · uses=2 · neighbours' file ecourna/app/dados/cnumerocpf.cpp
 
