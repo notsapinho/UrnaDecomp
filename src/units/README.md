@@ -113,6 +113,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `31-uenux2-cformbuilder` | `api::CFormBuilder::GetLabeledKeyPos` (target fn 5544), the `CFormBuilder` class header and the 4914 enumerator of `EUeGuiError`; `AddStatusHeader` (502) is not reconstructed |
 | `32-uenux2-csystem` | `api::CSystem::GetFileSize` and `api::truncate` (target fns 2759 and 5457) in `api/util/csystem.cpp`, the `CSystem` class header and the 7038 and 7070 enumerators of `EUeUtilError`; the file-static `api::ExistResource` (1690) waits for its callers in that file |
 | `33-uenux2-cgenerictags` | `api::CGenericTags::TagSize` (target fn 5468), the `CGenericTags` class header and the 7016 enumerator of `EUeUtilError`; the class's other members (insert, the TLV functions) are not reconstructed |
+| `34-uenux2-cassinador` | the `comum::CAssinador` destructor and its deleting destructor (target fns 1007, 4694), the class header and the `ESavdPacote` type of its +8 member |
 
 ## Companion files
 
