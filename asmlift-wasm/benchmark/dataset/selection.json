@@ -1,7 +1,7 @@
 {
-  "version": 5,
+  "version": 6,
   "per": 12,
-  "commit": "39caffd146e68adde424896b213d839aa3a6dca8",
+  "commit": "0a34cc5f3f9cd6b31ecf560ecc69acfd588cc03e",
   "inputs": {
     "target": {
       "path": "target/vota_web_wasm.wasm",
@@ -13,11 +13,11 @@
     },
     "ledger": {
       "path": "ledger/functions.tsv",
-      "blob": "34d68fb2663ac00de25cfdb4c75090d56b37ef07"
+      "blob": "096a2468ead3bb12d62c95254bed5794fcd0bbc4"
     },
     "setups": {
       "path": "asmlift-wasm/benchmark/dataset/setups.json",
-      "blob": "7d3a00ed7676723ba9c20d4ce4db0ece55e5659c"
+      "blob": "76ace0fd3c29cce8b2369365ad731d3344501e8f"
     },
     "sources": {
       "src/asn1/AVNDecoder.cxx": "763af3ce5d6453b479effd0ed4fc6daf438332d7",
@@ -29,19 +29,19 @@
       "src/ecourna/api/compression/icompressor.cpp": "a35d7d5cb7710cc4d4a38810004dcd5770e93f87",
       "src/ecourna/api/security/caescipher.cpp": "8b2b576f69a3ff340606e67ca8de41422199b369",
       "src/ecourna/app/dados/parametrizacaourna/cparametrosurna.cpp": "6876a658873836b495f7d8747ef10ee49a9ee9a0",
-      "src/ecourna/app/dados/resultadournacadastro/capresentacaofotoeleitor.cpp": "50a308989ba7a69d4aa4af4fb8599b316660c586",
-      "src/ecourna/app/dados/resultadournacadastro/cresultadournacadastro.cpp": "8fb90cebc4bdc5f8dc9f6f3c0abcdfd7e965c561",
+      "src/ecourna/app/dados/resultadournacadastro/cestadocomparecimento.cpp": "9fb63c1a364a061e938e1ec53ebf925b9de6b98e",
       "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp": "6610b6af3c8934ee9a9242d4d01f0d7aa84e5468",
+      "src/uenux2/src/api/gui/clinefield.cpp": "92943d3e7e51f7f225049aeeec0e2e75014a65e4",
+      "src/uenux2/src/api/gui/cmoviefield.cpp": "e73fc5ffd5330435ac2fe6a3a2eccee928f7daf0",
       "src/uenux2/src/api/gui/cprogressbar.cpp": "a812b834e3d221ccd15daca7f5e61b80fd0d3d41",
-      "src/uenux2/src/api/ipc/cthread.cpp": "8452bff720ad8fe30e5310219db09b4eaac870dd",
       "src/uenux2/src/api/ipc/posix/cposixmutex.cpp": "eb53bb387292ca15dd8d0422edcc76242dcd1db8",
       "tools/libs/7zip/sources.txt": "de7f5cdbcc930f24960d18ab7e1631df01d330b4"
     },
     "definitions": {
       "path": "asmlift-wasm/benchmark/dataset/selection-definitions.json",
-      "sha256": "1e7c97cac9f873d3f46c3b7c1116c3c03cc368c9685a8012884b87f1358f92ba",
-      "names": 6447,
-      "build": "39caffd146e68adde424896b213d839aa3a6dca8"
+      "sha256": "d3e0bc04757014f7068ba035c3445fccda33121075e6d9dbf5c3cf118d28785e",
+      "names": 6489,
+      "build": "0a34cc5f3f9cd6b31ecf560ecc69acfd588cc03e"
     }
   }
 }

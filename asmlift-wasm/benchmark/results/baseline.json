@@ -1,37 +1,37 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-30T08:53:33.710Z",
+ "createdAt": "2026-10-30T10:58:31.255Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
  },
  "image": "urna-emsdk:6.0.0",
  "dataset": {
-  "rows": 188,
-  "rowsSha256": "bbd306216fcd6bb14dbe58d7462759191bdd6efb9d9939e20ff64329b7afcc56",
-  "setupsSha256": "d35bf87d39b80dda81eb4ef97a1d645992b22474453a04398f748d3874bc6356"
+  "rows": 180,
+  "rowsSha256": "c6576203173418e96912ecdb35f810a2ef94fe6c5a27ba49eb48629ab44583b2",
+  "setupsSha256": "8ce51e1ea3d2096213ed8db7b60b3260025804a797500c0584d5e77ec003eb75"
  },
- "commit": "39caffd+dirty",
+ "commit": "0a34cc5+dirty",
  "durationMs": {
-  "lift": 89,
-  "compileAndOptimise": 6012,
-  "total": 12273
+  "lift": 96,
+  "compileAndOptimise": 3709,
+  "total": 10667
  },
  "totals": {
   "overall": {
-   "rows": 188,
-   "lifted": 188,
-   "compiled": 188,
-   "optimised": 188,
+   "rows": 180,
+   "lifted": 180,
+   "compiled": 180,
+   "optimised": 180,
    "exactRaw": 38,
-   "exact": 100,
-   "medianRatio": 0.375,
-   "medianOptRatio": 0,
-   "meanOptRatio": 0.1635,
+   "exact": 90,
+   "medianRatio": 0.3693,
+   "medianOptRatio": 0.003,
+   "meanOptRatio": 0.1737,
    "outcomes": {
-    "differs": 88,
-    "exact": 100
+    "differs": 90,
+    "exact": 90
    }
   },
   "bySetup": {
@@ -41,43 +41,28 @@
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 3,
-    "exact": 6,
-    "medianRatio": 0.4537,
-    "medianOptRatio": 0.0912,
-    "meanOptRatio": 0.146,
+    "exact": 5,
+    "medianRatio": 0.4573,
+    "medianOptRatio": 0.1911,
+    "meanOptRatio": 0.1724,
     "outcomes": {
-     "differs": 6,
-     "exact": 6
+     "differs": 7,
+     "exact": 5
     }
    },
    "ecourna": {
-    "rows": 8,
-    "lifted": 8,
-    "compiled": 8,
-    "optimised": 8,
-    "exactRaw": 1,
-    "exact": 7,
-    "medianRatio": 0.6329,
-    "medianOptRatio": 0,
-    "meanOptRatio": 0.0271,
-    "outcomes": {
-     "exact": 7,
-     "differs": 1
-    }
-   },
-   "ecourna-nopic": {
     "rows": 12,
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 1,
-    "exact": 6,
-    "medianRatio": 0.7021,
-    "medianOptRatio": 0.003,
-    "meanOptRatio": 0.0604,
+    "exact": 4,
+    "medianRatio": 0.6484,
+    "medianOptRatio": 0.0678,
+    "meanOptRatio": 0.0965,
     "outcomes": {
-     "exact": 6,
-     "differs": 6
+     "differs": 8,
+     "exact": 4
     }
    },
    "asn1": {
@@ -190,9 +175,9 @@
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 3,
+    "exactRaw": 4,
     "exact": 11,
-    "medianRatio": 0.1374,
+    "medianRatio": 0.0995,
     "medianOptRatio": 0,
     "meanOptRatio": 0.0158,
     "outcomes": {
@@ -410,59 +395,6 @@
    ]
   },
   {
-   "id": "uenux2/10252",
-   "index": 10252,
-   "setup": "uenux2",
-   "size": 35,
-   "band": "small",
-   "features": [
-    "leaf",
-    "frame"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 16,
-   "raw": {
-    "score": 3,
-    "ratio": 0.1875
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "unused frame"
-   ]
-  },
-  {
-   "id": "uenux2/10255",
-   "index": 10255,
-   "setup": "uenux2",
-   "size": 24,
-   "band": "tiny",
-   "features": [
-    "call_indirect"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 10,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
    "id": "uenux2/10451",
    "index": 10451,
    "setup": "uenux2",
@@ -597,6 +529,57 @@
    "standIns": []
   },
   {
+   "id": "uenux2/11060",
+   "index": 11060,
+   "setup": "uenux2",
+   "size": 29,
+   "band": "tiny",
+   "features": [
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 11,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2/11067",
+   "index": 11067,
+   "setup": "uenux2",
+   "size": 86,
+   "band": "small",
+   "features": [
+    "leaf",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 41,
+   "raw": {
+    "score": 17,
+    "ratio": 0.4146
+   },
+   "opt": {
+    "score": 13,
+    "ratio": 0.3171
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "uenux2/11620",
    "index": 11620,
    "setup": "uenux2",
@@ -660,20 +643,48 @@
    "standIns": []
   },
   {
-   "id": "ecourna/424",
-   "index": 424,
+   "id": "ecourna/307",
+   "index": 307,
    "setup": "ecourna",
-   "size": 54,
+   "size": 104,
    "band": "small",
    "features": [
-    "call_indirect"
+    "leaf",
+    "i64",
+    "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 24,
+   "targetRows": 53,
    "raw": {
-    "score": 17,
-    "ratio": 0.7083
+    "score": 23,
+    "ratio": 0.434
+   },
+   "opt": {
+    "score": 9,
+    "ratio": 0.1698
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "ecourna/2193",
+   "index": 2193,
+   "setup": "ecourna",
+   "size": 176,
+   "band": "medium",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 77,
+   "raw": {
+    "score": 70,
+    "ratio": 0.9091
    },
    "opt": {
     "score": 0,
@@ -685,50 +696,62 @@
    "standIns": []
   },
   {
-   "id": "ecourna/1242",
-   "index": 1242,
+   "id": "ecourna/5093",
+   "index": 5093,
    "setup": "ecourna",
-   "size": 32,
-   "band": "tiny",
-   "features": [],
+   "size": 1288,
+   "band": "large",
+   "features": [
+    "leaf",
+    "i64"
+   ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 14,
+   "targetRows": 508,
    "raw": {
-    "score": 6,
-    "ratio": 0.4286
+    "score": 560,
+    "ratio": 1.1024
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 3,
+    "ratio": 0.0059
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
    "standIns": []
   },
   {
-   "id": "ecourna/5170",
-   "index": 5170,
+   "id": "ecourna/5102",
+   "index": 5102,
    "setup": "ecourna",
-   "size": 84,
-   "band": "small",
-   "features": [],
+   "size": 345,
+   "band": "medium",
+   "features": [
+    "loop",
+    "invoke",
+    "throw",
+    "frame",
+    "i64"
+   ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 38,
+   "targetRows": 158,
    "raw": {
-    "score": 24,
-    "ratio": 0.6316
+    "score": 109,
+    "ratio": 0.6899
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 45,
+    "ratio": 0.2848
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
-   "standIns": []
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
    "id": "ecourna/5174",
@@ -761,241 +784,9 @@
    ]
   },
   {
-   "id": "ecourna/5354",
-   "index": 5354,
-   "setup": "ecourna",
-   "size": 14,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 5,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna/7137",
-   "index": 7137,
-   "setup": "ecourna",
-   "size": 17,
-   "band": "tiny",
-   "features": [
-    "leaf",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 8,
-   "raw": {
-    "score": 3,
-    "ratio": 0.375
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna/9462",
-   "index": 9462,
-   "setup": "ecourna",
-   "size": 60,
-   "band": "small",
-   "features": [],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 27,
-   "raw": {
-    "score": 24,
-    "ratio": 0.8889
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna/9469",
-   "index": 9469,
-   "setup": "ecourna",
-   "size": 75,
-   "band": "small",
-   "features": [],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 34,
-   "raw": {
-    "score": 27,
-    "ratio": 0.7941
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna-nopic/1081",
-   "index": 1081,
-   "setup": "ecourna-nopic",
-   "size": 18,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 8,
-   "raw": {
-    "score": 3,
-    "ratio": 0.375
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna-nopic/3482",
-   "index": 3482,
-   "setup": "ecourna-nopic",
-   "size": 365,
-   "band": "medium",
-   "features": [
-    "leaf",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 147,
-   "raw": {
-    "score": 157,
-    "ratio": 1.068
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna-nopic/3483",
-   "index": 3483,
-   "setup": "ecourna-nopic",
-   "size": 445,
-   "band": "medium",
-   "features": [
-    "leaf",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 189,
-   "raw": {
-    "score": 197,
-    "ratio": 1.0423
-   },
-   "opt": {
-    "score": 14,
-    "ratio": 0.0741
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna-nopic/5093",
-   "index": 5093,
-   "setup": "ecourna-nopic",
-   "size": 1288,
-   "band": "large",
-   "features": [
-    "leaf",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 508,
-   "raw": {
-    "score": 560,
-    "ratio": 1.1024
-   },
-   "opt": {
-    "score": 3,
-    "ratio": 0.0059
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "ecourna-nopic/5102",
-   "index": 5102,
-   "setup": "ecourna-nopic",
-   "size": 345,
-   "band": "medium",
-   "features": [
-    "loop",
-    "invoke",
-    "throw",
-    "frame",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 158,
-   "raw": {
-    "score": 109,
-    "ratio": 0.6899
-   },
-   "opt": {
-    "score": 45,
-    "ratio": 0.2848
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "ecourna-nopic/9112",
+   "id": "ecourna/9112",
    "index": 9112,
-   "setup": "ecourna-nopic",
+   "setup": "ecourna",
    "size": 613,
    "band": "large",
    "features": [
@@ -1026,9 +817,9 @@
    ]
   },
   {
-   "id": "ecourna-nopic/9529",
+   "id": "ecourna/9529",
    "index": 9529,
-   "setup": "ecourna-nopic",
+   "setup": "ecourna",
    "size": 105,
    "band": "small",
    "features": [
@@ -1054,9 +845,9 @@
    ]
   },
   {
-   "id": "ecourna-nopic/13816",
+   "id": "ecourna/13816",
    "index": 13816,
-   "setup": "ecourna-nopic",
+   "setup": "ecourna",
    "size": 28,
    "band": "tiny",
    "features": [
@@ -1080,9 +871,34 @@
    "standIns": []
   },
   {
-   "id": "ecourna-nopic/13838",
+   "id": "ecourna/13820",
+   "index": 13820,
+   "setup": "ecourna",
+   "size": 10,
+   "band": "tiny",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 4,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "ecourna/13838",
    "index": 13838,
-   "setup": "ecourna-nopic",
+   "setup": "ecourna",
    "size": 20,
    "band": "tiny",
    "features": [
@@ -1105,34 +921,38 @@
    "standIns": []
   },
   {
-   "id": "ecourna-nopic/13875",
-   "index": 13875,
-   "setup": "ecourna-nopic",
-   "size": 67,
-   "band": "small",
+   "id": "ecourna/14051",
+   "index": 14051,
+   "setup": "ecourna",
+   "size": 165,
+   "band": "medium",
    "features": [
-    "leaf"
+    "leaf",
+    "loop"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 31,
+   "targetRows": 83,
    "raw": {
-    "score": 26,
-    "ratio": 0.8387
+    "score": 55,
+    "ratio": 0.6627
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 10,
+    "ratio": 0.1205
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
-   "standIns": []
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
-   "id": "ecourna-nopic/14295",
+   "id": "ecourna/14295",
    "index": 14295,
-   "setup": "ecourna-nopic",
+   "setup": "ecourna",
    "size": 104,
    "band": "small",
    "features": [
@@ -1157,31 +977,6 @@
     "arm tail kept from the join",
     "goto"
    ]
-  },
-  {
-   "id": "ecourna-nopic/14367",
-   "index": 14367,
-   "setup": "ecourna-nopic",
-   "size": 10,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 4,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
   },
   {
    "id": "asn1/670",
@@ -3567,31 +3362,6 @@
    "standIns": []
   },
   {
-   "id": "boost/9301",
-   "index": 9301,
-   "setup": "boost",
-   "size": 40,
-   "band": "small",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 18,
-   "raw": {
-    "score": 3,
-    "ratio": 0.1667
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
    "id": "boost/9306",
    "index": 9306,
    "setup": "boost",
@@ -3761,6 +3531,29 @@
    "raw": {
     "score": 21,
     "ratio": 1.1053
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "boost/11614",
+   "index": 11614,
+   "setup": "boost",
+   "size": 27,
+   "band": "tiny",
+   "features": [],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 7,
+   "raw": {
+    "score": 0,
+    "ratio": 0
    },
    "opt": {
     "score": 0,
