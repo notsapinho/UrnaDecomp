@@ -35,9 +35,10 @@
 #   header gives the target's rows, with the string's destructor as a call (fn 149), which the uenux2 flags inline.
 # - this class's D0 (target fn 9427, slot 10, `differs`). The target's holds the D2 with the string's destructor inlined
 #   and the cache's destructor (fn 3764) as a call, as fn 5441 does. At -O2 clang inlines that destructor into the D2
-#   (cost=210, threshold=225), and the D2 is then too big for the D0 (cost=320, threshold=225). No form of the class
-#   changes that at -O2: the cache's destructor implicit or `= default` in the class, the cache a class or a template, a
-#   pair or a struct in the list; `inline` on ITextToSpeech's only inlines the D2, cache and all, into the D0. At -O3
+#   (cost=210, threshold=325: it is implicit, so hinted; `= default` in the class prints the same cost, threshold=225),
+#   and the D2 is then too big for the D0 (cost=320, threshold=225). No form of the class changes that at -O2: the
+#   cache's destructor implicit or `= default`, the cache a class or a template, a pair or a struct in the list;
+#   `inline` on ITextToSpeech's only inlines the D2, cache and all, into the D0. At -O3
 #   this header gives the target's rows, with `= default`, `{}` or `inline` on ITextToSpeech's destructor (the same
 #   object): std::list's clear goes inline into the cache's destructor (cost=240, threshold=250), and that one stays a
 #   call (cost=450, threshold=325). The whole tree at UENUX2_EXTRA=-O3 (the private link of

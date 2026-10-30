@@ -15,9 +15,9 @@ class CWavFile;
 // each, as its own @1526520). Slots 0 to 8 hold the same nine functions in all three vtables, so they are this class's
 // own bodies. Slot 9 and 10 are its destructors (fn 11489 returns this and destroys the members below; its slot 10 is
 // fn 325, `unreachable`, the deleting destructor of an abstract class), and slot 11 is pure (fn 12143).
-// The class has no key function: its typeinfo and its vtable lie inside vota_web_wasm.cpp's data (the typeinfo between
-// that file's records at 1526324 and 1526348, the vtable before its record at 1526584), a copy in a TU that uses the
-// class, where a key function would have put them in that function's own TU. So every virtual member is inline or pure.
+// The class has no key function: its typeinfo and its vtable lie inside vota_web_wasm.cpp's data (both between that
+// file's records at 1526324 and 1526664), a copy in a TU that uses the class, where a key function would have put them
+// in that function's own TU. So every virtual member is inline or pure.
 // That TU is compiled with exceptions: the copies of slot 0 (fn 11530, which calls through invoke_*) and of the
 // destructor (fn 11489, which calls fn 149 for the string where fns 9427 and 5441 inline it) are its code.
 // The layout comes from the implicit constructor (fn 13877, in the table for the invoke_ii of std::make_unique in fn
