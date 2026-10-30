@@ -1,7 +1,10 @@
 #pragma once
 #include <memory>
+#include <string>
+#include <typeinfo>
 #include <vector>
 
+#include "api/persistencia/euepersistenciaerror.h"
 #include "api/persistencia/idao.h"
 
 namespace api::persistencia {
@@ -14,10 +17,9 @@ namespace api::persistencia {
 // std::shared_ptr that takes a `new` copy of the row; a std::vector filled row by row. Pure is chosen: the three
 // DAOs override them, and the target has no vtable of this template to show the slots.
 //
-// Excluir, ExcluirID and Atualizar are declared so that their records' lines stay free. Their defaults, defined here
-// in the original with each throw on its record's line at column 15, are not written: all five instantiated ones go
-// through fn 2297, binaryen's merge of them, so they match together, with CEleitorDinamicoDAO and
-// CComparecimentoMesarioDAO. Each throws a CBaseError<api::EUePersistenciaError, {6800, 6850}>.
+// The three defaults: all five instantiated ones are thunks into fn 2297, binaryen's merge of them. The name's string
+// is built before __cxa_allocate_exception, so it is a local of the function and not a temporary of the throw, and
+// the local is an lvalue: fn 2297 calls the out-of-line operator+(const char*, const std::string&) (fn 345).
 template <typename DADO, typename ID>
 class IUenuxGenericDAO : public IDAO {
 public:
@@ -26,36 +28,32 @@ public:
 
     virtual void Inserir(const TDado& dado) const = 0;
 
-    // (original lines 29-38: content not recovered)
-#line 39
-    virtual void Excluir(const TDado& dado) const;
+    // (original lines 31-37: content not recovered)
+#line 38
+    virtual void Excluir(const TDado&) const
+    {
+        const std::string entidade = typeid(DADO).name();
+        throw CUePersistenciaError(EUE_PERSISTENCIA_EXCLUIR_NAO_IMPLEMENTADA, "Excluir não implementada para entidade " + entidade);
+    }
 
-    // (original lines 41-46: content not recovered)
-#line 47
-    virtual void ExcluirID(const TDadoID& id) const;
+    // (original lines 44-45: content not recovered)
+#line 46
+    virtual void ExcluirID(const TDadoID&) const
+    {
+        const std::string entidade = typeid(DADO).name();
+        throw CUePersistenciaError(EUE_PERSISTENCIA_EXCLUIR_ID_NAO_IMPLEMENTADA, "ExcluirID não implementada para entidade " + entidade);
+    }
 
-    // (original lines 49-54: content not recovered)
-#line 55
-    virtual void Atualizar(const TDado& dado) const;
-
-
+    // (original lines 52-53: content not recovered)
+#line 54
+    virtual void Atualizar(const TDado&) const
+    {
+        const std::string entidade = typeid(DADO).name();
+        throw CUePersistenciaError(EUE_PERSISTENCIA_ATUALIZAR_NAO_IMPLEMENTADA, "Atualizar não implementada para entidade " + entidade);
+    }
 
     virtual std::shared_ptr<TDado> RecuperarID(const TDadoID& id) const = 0;
     virtual std::vector<TDado> RecuperarTodos() const = 0;
 };
 
 } // namespace api::persistencia
-
-// <stubs>
-// f11540 · 25 B · unmatched · placement: link order · name unknown
-// void f11540(i32, i32) { ... }
-
-// f10398 · 25 B · unmatched · placement: link order · name unknown
-// void f10398(i32, i32) { ... }
-
-// f10397 · 25 B · unmatched · placement: link order · name unknown
-// void f10397(i32, i32) { ... }
-
-// f10396 · 25 B · unmatched · placement: link order · name unknown
-// void f10396(i32, i32) { ... }
-// </stubs>

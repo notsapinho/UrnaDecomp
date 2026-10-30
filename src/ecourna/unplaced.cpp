@@ -776,11 +776,6 @@
 // f2255 · 35 B · unmatched · placement: link order · name unknown
 // void f2255(i32) { ... }
 
-// link-order cluster 1155 · uses=5 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/ccargo.cpp
-
-// f2260 · 18 B · unmatched · placement: link order · name unknown
-// ? f2260(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1156 · uses=5 · neighbours' file uenux2/src/app/comum/dados/cintegridadereferencial.cpp
 
 // f2261 · 31 B · unmatched · placement: link order · name unknown
@@ -793,9 +788,6 @@
 
 // f2299 · 535 B · unmatched · placement: link order · name unknown
 // ? f2299(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f2297 · 64 B · unmatched · placement: link order · name unknown
-// void f2297(i32, i32, i32, i32, i32, i32) { ... }
 
 // f2294 · 129 B · unmatched · placement: link order · name unknown
 // ? f2294(i32, i32, i32, i32, i32, i32) { ... }
@@ -835,11 +827,6 @@
 
 // f1710 · 18 B · unmatched · placement: link order · name unknown
 // ? f1710(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1216 · uses=7 · neighbours' file uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp
-
-// f1715 · 18 B · unmatched · placement: link order · name unknown
-// ? f1715(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1223 · uses=8
 
@@ -1012,9 +999,4 @@
 
 // f235 · 21 B · unmatched · placement: link order · name unknown
 // ? f235(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1383 · uses=282
-
-// f170 · 21 B · unmatched · placement: link order · name unknown
-// ? f170(i32, i32, i32, i32) { ... }
 // </stubs>

@@ -2275,9 +2275,6 @@
 
 // link-order cluster 811 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/candidatura/ccandidatura.cpp
 
-// f5663 · 275 B · unmatched · placement: link order · name unknown
-// ? f5663(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // f5662 · 104 B · unmatched · placement: link order · name unknown
 // ? f5662(i32, i32, i32, i32) { ... }
 
@@ -2294,9 +2291,6 @@
 
 // f5666 · 477 B · unmatched · placement: link order · name unknown
 // ? f5666(i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f5664 · 210 B · unmatched · placement: link order · name unknown
-// ? f5664(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 813 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/correspondencia/ccarga.cpp
 
@@ -2708,9 +2702,6 @@
 
 // f3897 · 327 B · unmatched · placement: link order · name unknown
 // ? f3897(i32, i32, i32, i32) { ... }
-
-// f3894 · 58 B · unmatched · placement: link order · name unknown
-// ? f3894(i32, i32) { ... }
 
 // link-order cluster 1047 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelascargo.cpp
 
