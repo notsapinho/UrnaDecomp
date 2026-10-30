@@ -7,8 +7,8 @@
 # ConverteHeader; the class headers beside them and app/comum/euecomumerror.h, with the handle formatter of the three
 # SAVD enums. The formatter's handle body (fn 536) is the one binaryen keeps for every such enum, ours named by the
 # table vote of 275, 680 and 5900; it stays unresolved on libc++'s __fields_integral, and no match here waits for it.
-# 480, CBaseError<comum::EUeComumError, ...>'s constructor, is named by the calls and stays unresolved: it is a thunk
-# of 710, whose body ours does not form (the shape of the constructor in ecourna/api/exception/cbaseerror.hpp).
+# 480, CBaseError<comum::EUeComumError, ...>'s constructor, is named by the calls and matches with this header's enum:
+# it is a thunk of 710, the body unit 94's form gives (the constructor in ecourna/api/exception/cbaseerror.hpp).
 #
 # Not written: IInterfaceSavd's destructor (5503, slot 0 of its vtable and of the executable TU's CWasmSavd): its body
 # calls the string's destructor, which -Oz gives and uenux2's -O2 does not (a probe of the class's shape at both levels,
