@@ -118,6 +118,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 | `37-uenux2-iqrcodebuds` | `vota::IQRCodeBUDS::~IQRCodeBUDS`, the D2 and D0 of its vtable (target fns 12050, 12049), inline in the class header; the constructor (inlined into 1956, no target function of its own) emits them, with the 9372 enumerator of `EUeVotaError` |
 | `38-uenux2-cwavfile` | the `api::CWavFile` destructor and deleting destructor (target fns 5345 and 10238), the `CWavFile` class header with the `CWavAudio` WAV header it copies; the constructor (inlined into 10841) is not reconstructed |
+| `42-uenux2-ctextfieldupdate` | the `api::CTextFieldUpdate` destructor and deleting destructor (target fns 5495 and 10917; out of line, the class's key function: 10917 calls 5495) and `GetTypeName` (10912), the `CTextFieldUpdate` class header with a forward-declared `api::ITimer` for its +72 timer; `Draw`, `Show`, `Hide`, `Rect` and `Move` (10916, 10915, 10914, 10913, 2241) pending, the constructor (3658) not reconstructed: it calls `api::ITimerScheduler::GetInst` (1259) |
 
 ## Companion files
 
