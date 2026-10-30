@@ -7395,3 +7395,6 @@
 5526 _ZN3api6CMovieC2ENSt3__26vectorINS_11CMovieFrameENS1_9allocatorIS3_EEEERKNS_6SPointE
 3641 _ZNK3api5CTimemiEi
 3642 _ZN3api5CTimeC2Ehhh
+1684 _ZN3api7CThread5StartEv
+10250 _ZN3api15CPosixSemaphoreC2Ej
+10255 _ZN3api7CThread6RotinaEPv
