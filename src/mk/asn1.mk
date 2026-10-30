@@ -30,11 +30,19 @@ $(ROOT)/$(ASN1_DIR)/%.o: $(ROOT)/src/asn1/%.cxx $(wildcard $(ROOT)/src/asn1/*.h)
 # Functions the target only calls, so the generated roots must not take their address: binaryen inlines a function with
 # one call site only when nothing else refers to it (decodeChoicePreamle into 8861, getDataLength into 994), and
 # BERDecoder::decode, used only under ASN_DEBUG, keeps a push_back that 8854 inlines (docs/reference/facts/asn1.md §A6).
-ASN1_ROOTS_EXCLUDE := _ZN4ASN16CHOICEC _ZN4ASN110BERDecoder19decodeChoicePreamle _ZN4ASN110BERDecoder6decodeE _ZN4ASN113getDataLengthE \
+# += so that a unit's fragment, which src/Makefile reads first, can add the names its own functions need.
+ASN1_ROOTS_EXCLUDE += _ZN4ASN16CHOICEC _ZN4ASN110BERDecoder19decodeChoicePreamle _ZN4ASN110BERDecoder6decodeE _ZN4ASN113getDataLengthE \
                       _ZN4ASN115getHeaderLengthEji _ZN4ASN120getIntegerDataLengthEi _ZN4ASN16CHOICE5setIDEjj \
-                      _ZNK4ASN16CHOICE23getSelectionTagInternalEv
+                      _ZNK4ASN16CHOICE23getSelectionTagInternalEv \
+                      _ZN4ASN116SEQUENCE_OF_Base6resizeEm _ZN4ASN18SEQUENCE6BitMap6resizeEj \
+                      _ZN4ASN115GeneralizedTimeaSERKS0_ _ZN4ASN17UTCTimeaSERKS0_ \
+                      _ZNK4ASN116SEQUENCE_OF_Base15isStrictlyValidEv _ZNK4ASN116SEQUENCE_OF_Base7isValidEv \
+                      _ZNK4ASN19BMPString15isStrictlyValidEv _ZNK4ASN19BMPString7isValidEv \
+                      _ZNK4ASN114AbstractString15isStrictlyValidEv _ZNK4ASN114AbstractString7isValidEv \
+                      _ZN4ASN110PERDecoder19decodeChoicePreamleERNS_6CHOICEERNS0_12memento_typeE \
+                      _ZN4ASN117BERDecoderPartial19decodeChoicePreamleERNS_6CHOICEERj
 
-$(ROOT)/$(ASN1_DIR)/roots_asn1.cpp: $(ASN1_OBJS) $(ROOT)/tools/round/gen_try_roots.py
+$(ROOT)/$(ASN1_DIR)/roots_asn1.cpp: $(ASN1_OBJS) $(ROOT)/tools/round/gen_try_roots.py $(wildcard $(ROOT)/src/units/*.mk)
 	$(H) python3 -I tools/round/gen_try_roots.py $(addprefix --exclude=,$(ASN1_ROOTS_EXCLUDE)) $(ASN1_DIR)/roots_asn1.cpp $(patsubst $(ROOT)/%,%,$(ASN1_OBJS))
 $(ROOT)/$(ASN1_DIR)/roots_asn1.o: $(ROOT)/$(ASN1_DIR)/roots_asn1.cpp $(ROOT)/src/Makefile
 	$(H) build/docker-build.sh em++ $(APP_CXXFLAGS) -c $(ASN1_DIR)/roots_asn1.cpp -o $(ASN1_DIR)/roots_asn1.o
