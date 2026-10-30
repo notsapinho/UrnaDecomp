@@ -46,7 +46,7 @@ simulator's scenario list `manifest.json`, and `fs/` + `fs-manifest.tsv` (the pa
 
 **ecourna** — a TSE library shipped as the conan package `libecea1da310e5107` (security, SQLite wrapper, compression,
 io, util, and the `app/dados` data model with its ASN.1 converters). Mirrored under `src/ecourna/`, compiled with
-`ECOURNA_CXXFLAGS` (`-O3 -fexceptions`, `-fPIC` per file). Note that ecourna has its own `api/` directory, which is
+`ECOURNA_CXXFLAGS` (`-O3 -fexceptions`, no `-fPIC`). Note that ecourna has its own `api/` directory, which is
 component `ecourna`, not component `api`. *Where:* `src/ecourna/`, `src/mk/ecourna-flags.mk`,
 `docs/reference/toolchain.md` §3.
 
@@ -226,14 +226,16 @@ deleting destructor (destroys, then frees), D1 the complete-object destructor, D
 often makes D1 an alias of D2, so the link carries only the D2 name. The constructors' C1 and C2 are the same pair.
 *Where:* `splat/symbol_addrs.txt` hand edits.
 
-**compile setup, component flags** — one set of compile flags that produced target code (uenux2, ecourna PIC and
-non-PIC, asn1, the libraries, emscripten's system libraries). The benchmark registry `asmlift-wasm/benchmark/dataset/setups.json`
+**compile setup, component flags** — one set of compile flags that produced target code (uenux2, ecourna, asn1,
+the libraries, emscripten's system libraries). The benchmark registry `asmlift-wasm/benchmark/dataset/setups.json`
 lists them and `pnpm bench setups --check` re-derives them from the build. *Where:* `asmlift-wasm/benchmark/README.md`,
 `docs/reference/toolchain.md` §3.
 
-**PIC / non-PIC** — whether a TU was compiled with `-fPIC`. In ecourna it varies per file: `app/dados`, `api/io` and
-`api/compression` are non-PIC (a table address folds into the load offset), `api/security/base64.cpp` is PIC.
-*Where:* `src/mk/ecourna-flags.mk`, `src/units/03-ecourna-api-io-util.mk`, `src/units/06-ecourna-api-compression.mk`, `docs/reference/toolchain.md` §3.
+**PIC / non-PIC** — whether a TU was compiled with `-fPIC`. uenux2 is PIC and ecourna is built non-PIC. In the target all 277
+records of ecourna's sources, and every vtable and typeinfo its objects define strongly, sit below `.rodata`'s end. uenux2's
+1,639 records sit in `.data`, and the 39 vtables and 48 typeinfos with ecourna in their names that sit there too lie inside the
+band of uenux2's records.
+*Where:* `ECOURNA_CXXFLAGS` and `UENUX2_CXXFLAGS` in `src/Makefile`, `docs/reference/facts/app-flags.md` §F5, `docs/reference/toolchain.md` §3.
 
 **glue** — the JS file emscripten writes beside the module (`vota_web_wasm.js`); at `-Oz` the module's import and
 export names are minified (`a.o`, `Cb…Yb`) and the glue is where their real names are read from.

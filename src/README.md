@@ -160,7 +160,7 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
 
 - **Flags.** Each candidate TU compiles with the flags the Makefile builds that source with (plus `--flags`): try-tu
   asks `make -n` for the recipe of the object the source would become, so a TU gets its tree's rule
-  (`ECOURNA_CXXFLAGS` with `mk/ecourna-flags.mk`'s additions and the `app/dados` `-fno-PIC`, `UENUX2_CXXFLAGS`, the
+  (`ECOURNA_CXXFLAGS` with `mk/ecourna-flags.mk`'s additions, `UENUX2_CXXFLAGS`, the
   ASN.1 runtime's and modules' rules from `mk/asn1.mk`) or, for a landed unit, its fragment's own rule. The path under
   `src/` names the component; a TU outside `src/` needs `--component <dir under src/>` (`ecourna/app/dados`,
   `uenux2`, `asn1`, …), the directory it would land in.

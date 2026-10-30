@@ -17,10 +17,18 @@ describe('codegenFlags', () => {
 });
 
 describe('effectiveFlags', () => {
-  it('spells three ways of turning PIC off the same', () => {
+  it('spells the ways of leaving PIC off the same', () => {
     const base = '-O3 -fexceptions -std=c++20 -DNDEBUG';
-    expect(effectiveFlags(`${base} -fPIC -fno-PIC`)).toBe(effectiveFlags(`${base} -fno-PIC -fno-pic`));
+    expect(effectiveFlags(`${base} -fno-PIC -fno-pic`)).toBe(effectiveFlags(`${base} -fno-pic`));
     expect(effectiveFlags(`${base} -fno-pic`)).toBe(effectiveFlags(base));
+  });
+
+  it('keeps the default visibility -fPIC leaves behind when a later -fno-PIC turns PIC off', () => {
+    const base = '-O3 -fexceptions -std=c++20 -DNDEBUG';
+    expect(effectiveFlags(`${base} -fPIC -fno-PIC`)).toBe(effectiveFlags(`${base} -fvisibility=default`));
+    expect(effectiveFlags(`${base} -fPIC -fno-PIC`)).not.toBe(effectiveFlags(base));
+    expect(effectiveFlags(`${base} -fPIC -fno-PIC -fvisibility=hidden`)).toBe(effectiveFlags(`${base} -fvisibility=hidden`));
+    expect(effectiveFlags(`${base} -fPIC`)).toBe(`-O3 -std=c++20 -fPIC -fexceptions -DNDEBUG`);
   });
 
   it('takes the last -O and the last exceptions switch', () => {

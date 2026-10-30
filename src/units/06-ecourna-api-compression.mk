@@ -3,10 +3,6 @@
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp
 # the ecourna rule turns '_' in a source name into '/': no underscores in unit file names (lzmasdkstub.cpp, not lzmasdk_stub.cpp).
-# These four TUs are NOT -fPIC: CZip::ConvertToCompressLevel (fn 9539) folds its switch table into the load's memarg, and 9537/9539
-# become structurally identical only with -fno-PIC (docs/reference/facts/app-flags.md §F5); target-specific so the other ecourna units keep
-# the base setting.
-$(ROOT)/$(APP)/ecourna/api_compression_%.o: ECOURNA_CXXFLAGS += -fno-PIC
 # czip.cpp needs api::io::CFile (api/io/cfile.cpp, in 03-ecourna-api-io-util.mk); it joins the link only once that unit is in ECOURNA_SRCS
 # (fragments are read in name order, 03 before 06), so the skeleton link never sees an undefined CFile.
 ifneq ($(filter api/io/cfile.cpp,$(ECOURNA_SRCS)),)

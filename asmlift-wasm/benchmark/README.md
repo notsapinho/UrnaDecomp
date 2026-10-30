@@ -45,8 +45,7 @@ them (`truth`).
 | setup | what | flags from | rows |
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
-| `ecourna` | ecourna's PIC translation units | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 8 |
-| `ecourna-nopic` | ecourna's non-PIC units (app/dados, api/io, api/compression, the asn converters) | the same, with the fragments' `-fno-PIC` rules | 12 |
+| `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
 | `asn1-eh` | the ASN.1 units that throw (`-fexceptions -fignore-exceptions`) | `src/mk/asn1.mk` `ASN1_FLAGS_<unit>` | 11 |
 | `zlib` | zlib 1.3.1 + minizip | `src/units/06-ecourna-api-compression.mk` `ZLIB_CFLAGS` | 12 |
@@ -73,7 +72,7 @@ the build and fails on drift, so a flag changed in the Makefile cannot leave the
 
 - `make`: the objects of the named `src/Makefile` variables (`make print-<VAR>`), each one's compile
   command from `make -n -B`. Every object must compile with the flags of exactly one setup naming its
-  variable; this is also how `ecourna` and `ecourna-nopic` split the same `ECOURNA_OBJS`.
+  variable; this is also how `asn1` and `asn1-eh` split the same `ASN1_OBJS`.
 - `artefact`: a library build records the flags it compiled with beside its objects (`cflags.txt`,
   `flags.nul`, OpenSSL's configured Makefile); they must be the setup's. Absent in a checkout that has
   not built the library, the setup is `unverified`, not failed.
@@ -87,7 +86,9 @@ the build and fails on drift, so a flag changed in the Makefile cannot leave the
 
 Flags are compared by effect (`effectiveFlags`): the last `-O` and `-std` win, PIC and exceptions are
 on or off whatever the spelling, include paths, path maps, warnings and debug info are not flags of
-the code. A changed define is drift.
+the code. A changed define is drift. `-fPIC … -fno-PIC` is non-PIC but is not `-fno-PIC` alone: em++ adds
+`-fvisibility=default` for the word `-fPIC` anywhere on its line, so `effectiveFlags` keeps that visibility
+(`docs/reference/facts/app-flags.md` §F9 item 9).
 
 ## How a row's setup is decided
 

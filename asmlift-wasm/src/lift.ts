@@ -1970,13 +1970,12 @@ function unguardMemOps(body: Line[]): Line[] {
 
 const APP = '-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing';
 const ECOURNA =
-  '-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fPIC';
+  '-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow';
 const ASN1 = '-Os -fno-exceptions -std=c++17 -DNDEBUG';
 
 /** The vota build's compile flags per ledger component (urna docs/reference/toolchain.md §3); libc++,
  *  libc++abi and unattributed functions get the application's. A copy for the lifted file's header and for
- *  lift-eval: urna's tools/round/try-tu.sh reads the flags from src/Makefile, including the per-directory
- *  -fno-PIC of ecourna's non-PIC units that a component cannot express. */
+ *  lift-eval: urna's tools/round/try-tu.sh reads the flags from src/Makefile. */
 export const COMPONENT_FLAGS: Readonly<Record<string, string>> = {
   vota: APP,
   'vota-web': APP,

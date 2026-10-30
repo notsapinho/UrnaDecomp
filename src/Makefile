@@ -64,12 +64,13 @@ RHVOICE_OBJS  := $(filter-out %/driver.o,$(sort $(wildcard $(ROOT)/$(RHVOICE_DIR
 APP := build/out/app
 GEN := $(APP)/gen
 # ---- the TSE application TUs' flags (docs/reference/app-flags.md; measured on the ecourna units in src/ecourna) ----------
-# ecourna (conan package libecea1da310e5107): -O3 -fPIC -fexceptions -std=c++20 -DNDEBUG; the sources sit in the
+# ecourna (conan package libecea1da310e5107): -O3 -fexceptions -std=c++20 -DNDEBUG, no -fPIC anywhere in the tree
+# (docs/reference/facts/app-flags.md §F5: its records sit in the target's .rodata); the sources sit in the
 # conan build dir, so the file names std::source_location records are reproduced with -ffile-prefix-map: the /work
 # spelling for the sources, the relative one for the headers found through -Isrc (api/asn/iconversorasn.hpp).
 ECOURNA_PREFIX_MAP := -ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna \
                       -ffile-prefix-map=src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna
-ECOURNA_CXXFLAGS   := -O3 -fPIC -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP) -Isrc -Isrc/asn1
+ECOURNA_CXXFLAGS   := -O3 -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP) -Isrc -Isrc/asn1
 # uenux2 (the app itself, /home/rubio/tse/uenux2, tree mirrored under src/uenux2 so the records' paths map): -O2 -fPIC,
 # NO -fexceptions (emcc's default -fignore-exceptions: throw sites call __cxa_throw directly, no landing pads),
 # -DNDEBUG, -fno-strict-aliasing (no TBAA: comum's converters reload a vector's begin after an int store, fn 10289);

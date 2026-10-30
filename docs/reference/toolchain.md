@@ -81,7 +81,7 @@ Each row is measured by reconstructing or building that component and scoring it
 | component | source root embedded in the binary | compile flags |
 | --- | --- | --- |
 | uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` |
-| ecourna (conan package `libecea1da310e5107`) | `/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna/...` | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks`; `-fPIC` per file |
+| ecourna (conan package `libecea1da310e5107`) | `/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna/...` | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks`; no `-fPIC` |
 | III ASN.1 runtime (TSE fork) | none | `-Os -fno-exceptions -std=c++17 -DNDEBUG` |
 | SQLite 3.50.4 amalgamation | none | `-O3 -fPIC` + `-DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_UNLOCK_NOTIFY` + `-DHAVE_FDATASYNC -DHAVE_GMTIME_R -DHAVE_LOCALTIME_R -DHAVE_POSIX_FALLOCATE -DHAVE_STRERROR_R -DHAVE_USLEEP` |
 | OpenSSL 3.0.17 (libcrypto only) | relative `crypto/...` paths | objects at `-O3`; `./Configure cc no-shared --release --prefix=/ --libdir=lib --openssldir=/etc/ssl threads no-unit-test no-tests -fPIC no-fips no-md2`, `CC=emcc` |
@@ -105,9 +105,11 @@ Each row is measured by reconstructing or building that component and scoring it
 - `-fno-strict-aliasing` keeps `std::vector`'s exception guard out of line: the `CInfoSalt` constructor drops from 164 to 75 differing rows, all operand-only.
 - `-fno-delete-null-pointer-checks` keeps the short-string `if/else` shape instead of a `select`.
 
-**`-fPIC` in ecourna is per file.**
-- `api/security/base64.cpp` is PIC: the table address is added, never folded into the load offset.
-- `api/io/*` and `api/compression/*` are non-PIC: their table addresses are folded into the load offset.
+**ecourna is built without `-fPIC`, as one setting for the tree.**
+- All 277 records of its sources sit in the target's `.rodata`, where `-fPIC` would put them in `.data` with uenux2's 1,639 records.
+- `api/io/*` and `api/compression/*` show it in the code too: their table addresses are folded into the load offset.
+- That is evidence for 63 of its 82 objects. For the other 19 no witness exists either way: there it is the tree's setting, not a measurement.
+- [facts/app-flags.md](facts/app-flags.md) §F5 has the measurement, and the command that lists the 19.
 
 **ASN.1 runtime.** `-Os -fno-exceptions -DNDEBUG` gives the best census, 208 of 320 functions in a probe. No ASN.1 function calls an `invoke_*` import.
 
