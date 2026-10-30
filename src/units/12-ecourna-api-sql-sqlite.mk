@@ -14,25 +14,46 @@
 # externs' Replace 9398; and library code these bodies call: std::map<std::string, int>'s tree members 1677, 2678,
 # 9447, std::set<int>'s __find_equal 2676 and string::replace 4667.
 #
+# Names: records name the connection's constructor, Prepare and Close; the statement's SetInt, SetInt64, SetDouble,
+# SetText, SetBlob, SetNull, Reset, Close and VerifyParameterIndex; the result set's GetInt(int), GetInt64(int),
+# GetDouble(int), GetText(int), IsNull(int), GetBlob(int), VerifyColumnIndex, IndexForColumnName and StepStatement.
+# RTTI names the classes and their interfaces, and the vtables place each slot. Every other member name is chosen, from
+# what its body does: BeginTransaction, CommitTransaction and RollbackTransaction (they run "begin transaction",
+# "commit transaction", "rollback transaction"), CheckIntegrity ("PRAGMA integrity_check(1)"), IsClosed (the closed
+# flag), GetCaminho (the path member), Execute (builds the result set), SetDateTime and SetBool (format a ptime and pass
+# a bool to SetText and SetInt), Next (the first-row flag, else StepStatement), GetBool and GetDateTime, and the
+# `const std::string &` overloads, which call IndexForColumnName and then the int form. The constructors are named by
+# their role (a fresh object's vptr store), ObterMensagemErro and its file sqliteutils.{hpp,cpp} by choice. All of these
+# names are the base's, in the headers before this unit was reached; the one name this unit's matching adds is the
+# helper ObterSql (below).
+#
 # What the target shows, and the source follows (evidence):
 # - The destructors of CSqlConnection and CSqlStatement are out of line, defined in the .cpp: the control blocks'
 #   __on_zero_shared (11539, 9451) call the D2 (5167, 3513) where an in-class destructor is inlined into them. Both
 #   classes are final: those calls are direct, not through the vtable.
-# - CSqlConnection closes with sqlite3_close, not sqlite3_close_v2: the constructor's and Close's table slot 6335 is
-#   fn 6521, sqlite3_close (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`).
+# - CSqlConnection closes with sqlite3_close, not sqlite3_close_v2: the constructor reaches it through table slot 6335,
+#   fn 6521, sqlite3_close (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`), and Close (9458) calls f6521
+#   directly.
 # - Each sqlite3_bind_*, sqlite3_reset and sqlite3_close result is held in a named local before the test: in ecourna's
 #   -fexceptions code the local's lifetime end on the throw path gives the landing-pad layout the target has; the call
-#   in the condition gives another (first difference `block` at +0x19 in 5160). docs/reference/facts/app-flags.md and
-#   CSha::Reset (unit 11) have the same case.
+#   in the condition gives another (first difference `block` at +0x19 in 5160). Unit 11's fragment
+#   (11-ecourna-api-security.mk) has the same case for CSha::Reset.
 # - StepStatement tests SQLITE_ROW first, then SQLITE_OK or SQLITE_DONE, and builds the operation's text in a helper
 #   that returns either string: the `temLinha` form and an in-place ternary of two strings each give other code (184 and
-#   180 rows against the target, against 64 operand-only rows for this one). The helper's name and its file-static
-#   linkage are chosen; binaryen inlines it into its one caller.
+#   180 rows against the target, against 64 operand-only rows for this one). The helper's name, its file-static
+#   linkage and its place are chosen: it sits at csqlresultset.cpp lines 14-25, in lines the base kept blank as not
+#   recovered, which moves the constructor (no record) to line 27. binaryen inlines it into its one caller.
 # - CSqlStatement's constructor takes the file's mutex and Close releases it. Prepare calls the constructor through
 #   an invoke_ thunk (slot 6338), which emscripten keeps only for a callee that may throw when it runs, and the
 #   constructor's own code (stores and sqlite3_bind_parameter_count) cannot: std::mutex::lock can, and its code goes
 #   once pthread_mutex_lock, a stub in this single-threaded build, is inlined. Without the lock the call is direct and
-#   neither 9430 nor 9460 matches. That Close does not take the lock again is chosen: the bytes cannot tell.
+#   neither 9430 nor 9460 matches. The body places the lock too: 9430 stores m_stmt and then reloads it from +8 for
+#   sqlite3_bind_parameter_count, which LLVM does only with an opaque call between the store and the count. Compiled
+#   with ecourna's flags, the object of this form (member stores, lock, then the count) reloads `i32.load 2 8` after
+#   `call std::mutex::lock`; the base's form (the count in the initializer list, no lock) and the same with the lock in
+#   the body both pass the parameter (`local.get 2`). A std::lock_guard, or the count before the lock, does not match
+#   in the whole link either (measured by this unit's verification). That Close does not take the lock again is
+#   chosen: a second lock there gives the same bytes.
 # - GetBlob returns an empty vector before building one when the column has no bytes: the target tests the size
 #   before the vector's exception guard is set up.
 #
@@ -70,6 +91,6 @@ ECOURNA_SRCS += ../units/12-ecourna-api-sql-sqlite-externs.cpp
 # nothing in the skeleton reaches the unit: 12-ecourna-api-sql-sqlite-roots.cpp builds the connection as the target's
 # callers do (its header says how), and the class header it includes needs Boost's
 $(ROOT)/$(APP)/12-ecourna-api-sql-sqlite-roots.o: $(ROOT)/src/units/12-ecourna-api-sql-sqlite-roots.cpp $(ROOT)/src/Makefile \
-    $(ROOT)/src/ecourna/api/sql/sqlite/csqlconnection.hpp
+    $(ROOT)/src/units/12-ecourna-api-sql-sqlite.mk $(shell find $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -c src/units/12-ecourna-api-sql-sqlite-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/12-ecourna-api-sql-sqlite-roots.o
