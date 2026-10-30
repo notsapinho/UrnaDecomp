@@ -330,7 +330,16 @@ nothing), four kinds of line:
 
    Whenever our copy of `"}"` lands on a table slot of ours, the name of the function in that slot is voted onto
    7530; 615's votes were not traced. At ee595de neither 615 nor 7530 has a second name (`/usr/bin/grep -E '= func:(615|7530);'
-   splat/symbol_addrs.txt`).
+   splat/symbol_addrs.txt`). The name need not be one the file held before, so no line need lose it: one landing
+   gave 615 `CAesKey`'s destructor, a function of our link the symbol file had never named, and the next took it
+   away again:
+
+   ```sh
+   for c in 8a0b54c 6fc7107 1a6f1e2; do printf '%s ' $c; git show "${c}:splat/symbol_addrs.txt" | /usr/bin/grep -c 'CAesKeyD2Ev'; done
+   # 8a0b54c 0
+   # 6fc7107 1
+   # 1a6f1e2 0
+   ```
 2. **A matched function's `pair-*` line that drops out and comes back.** Each landing from 1c3d9f9 on removes the line
    of one matched SQLite function and restores the one the landing before removed: 12427 `rankValueFunc`, then 12432,
    12443, 12447, 12288, 12466, 12479, 12485, 12492, 12500 and 12510 `statInit`, which 9127880 restores. The match lines
@@ -340,6 +349,35 @@ nothing), four kinds of line:
    (`CConversorParametrosUrna::DesconverterCabecalho`) goes from a `call` vote to `pair-addr`, 9153 (an
    `IConversorASN<…TituloRelatorio…>::Deconverte`) from `srcloc-anchor` to `table`, and 9152 (the `vector` it fills)
    gains a `table` line; each is the name its match line has.
+
+A fifth kind comes from a range, not from every landing: **a matched function's line that the range's own vtable
+takes away.** Unit 69's commit ab51b8d dropped `_ZN7RHVoice6clientD2Ev = func:174; … evidence:vtable`, a line since
+fe861ad, and the match line stays. Our `CWasmScreen` vtable's slots 0 and 1 hold the shared empty destructors, 208 and
+148 in our link, because `api::IScreen`'s `~IScreen() = default` makes the D2 a `return this` body that binaryen merges
+with the others (`src/units/README.md` "Pending members"). 208 is matched as 174. The target's slots hold 5071 and
+8963, so the vtables vote 208 for both 174 and 5071, and step 8 gives it no name:
+
+```sh
+git log --format=%h -S'_ZN7RHVoice6clientD2Ev = func:174' -- splat/symbol_addrs.txt
+# ab51b8d
+# fe861ad
+python3 -I -c "
+import sys, struct; sys.path.insert(0, 'tools/extract'); import wasmmod
+m = wasmmod.Module('build/out/wasm/vota_web/vota_web_wasm.wasm'); base, img = m.memory_image(); el = m._elem()
+a = next(int(f[0], 16) for f in (l.split() for l in open('build/out/wasm-map/vota_web/vota_web_wasm.map')) if f and f[-1] == '_ZTVN9simulador11CWasmScreenE')
+print([el[struct.unpack_from('<I', img, a + 8 + 4 * k - base)[0]] for k in (0, 1)])"
+# [208, 148]
+awk -F'\t' '$1==208 || $1==148 {print $1, substr($2, 1, 50)}' build/out/wasm-map/vota_web/names.tsv
+# 148 _ZNSt3__220__shared_ptr_emplaceIN7ecourna3app5dado
+# 208 _ZN7RHVoice6clientD2Ev
+python3 -I -c "import json; print([e['functions'][:2] for e in json.load(open('ledger/vtables.json')) if e['class'] == 'simulador::CWasmScreen'])"
+# [[5071, 8963]]
+/usr/bin/grep -E '^(174|144) ' splat/matched.txt | cut -c1-60
+# 144 _ZNSt3__220__shared_ptr_emplaceIN7ecourna3app5dados25CNu
+# 174 _ZN7RHVoice6clientD2Ev
+```
+
+So a reviewer reads the lines a range drops for matched indices too, not only the ones it gains.
 
 Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- splat/symbol_addrs.txt | /usr/bin/grep
 -E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses).
@@ -414,3 +452,101 @@ object's alignment (`contentAlignment`):
    ```sh
    /usr/bin/grep -cE '^_ZTS[^ ]* = 0x[0-9a-f]*[1235679abdef];.*evidence:content' splat/symbol_addrs.txt
    ```
+
+## S10. Matches our link holds up, not a source
+
+Some matches rest on how the whole link comes out, not on a source of the range that matched them. A landing can
+take them away without touching their sources, and how-to step 10's `comm` then reports them lost. These hold today
+at every landing; check them at a merge.
+
+1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
+   `api/compression/icompressor.cpp`) passes `__search`'s table slot as an `i32.const`. The census's address-blind
+   hash reads a constant at or above 1024 as an address and keeps a smaller one as written
+   (`asmlift-wasm/src/normalize.ts`, its header comment), so the census pairs 9517 only while our slot is at or above
+   1024, as the target's 6160 is. That pair names 9517 (`pair-addr`), its table vote names 2056, and 2056's calls name
+   its callees:
+
+   ```sh
+   o=$(awk -F'\t' '$1==9517 {print $7}' ledger/functions.tsv); awk -F'\t' '$1==9517 {print $1, $6, $8}' ledger/functions.tsv
+   # 9517 skeleton addr
+   (cd asmlift-wasm && for w in ../build/out/wasm/vota_web/vota_web_wasm.wasm ../target/vota_web_wasm.wasm; do pnpm --silent wasm fn $w $([ $w = ../target/vota_web_wasm.wasm ] && echo 9517 || echo $o) 2>/dev/null | /usr/bin/grep -E '^000055  i32' | cut -c1-24; done)
+   # 000055  i32.const 1421
+   # 000055  i32.const 6160
+   /usr/bin/grep -E 'func:(9517|2056);' splat/symbol_addrs.txt | sed -E 's/^[^ ]* = (func:[0-9]+);.*(evidence:[a-z-]+).*/\1 \2/'
+   # func:2056 evidence:table
+   # func:9517 evidence:pair-addr
+   ```
+
+   Our table grows as units take functions' addresses, so landings keep the slot there. A change that drops
+   address-taken functions before it would take the names, and the splat build would fail on both.
+2. **The merged bodies and their thunks: 1565, 2777, 3681, 5516, 12317, 12564; 2899, 10888, 11205; 6026, 10887,
+   11204.** Each group is one binaryen merge-similar-functions body and the thunks that call it. The match holds while
+   our link merges functions whose differing operands give the shared body the target's parameters
+   (`src/units/README.md` "Pending members", the merge-thunk bullet). A landing that adds a member with another
+   differing operand, or takes one away, can reshape the body and its thunks. The target's callers of each body, and
+   their verdicts:
+
+   ```sh
+   (cd asmlift-wasm && for b in 1565 2899 6026; do printf '%s ' $b; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $b 2>/dev/null | /usr/bin/grep -E '^;; callers'; done)
+   # 1565 ;; callers (8): 2777 3681 5516 10362 10369 10374 12317 12564
+   # 2899 ;; callers (4): 3607 3740 10888 11205
+   # 6026 ;; callers (2): 10887 11204
+   for i in 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204; do awk -F'\t' -v i=$i '$1==i {printf "%s %s\n", $1, $5}' splat/scan.tsv; done | awk '{v[$2] = v[$2] " " $1} END {for (k in v) print k ":" v[k]}' | sort
+   # differs: 10362 10369 3607 3740
+   # match: 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204
+   # no-candidate: 10374
+   ```
+
+   A unit that matches one of the four `differs` callers, or 10374, adds a member to one of these bodies.
+3. **10881, by the order of two objects of unit 80.** `api::IImpressoraRelatorios::SetStyle` matches with
+   `iimpressorarelatorios.cpp` before `eueprintererror.cpp` in the fragment's list and differs in its locals the other
+   way (`src/units/README.md` "Names").
+
+## S11. A match among bodies of the same content can take the other one's name
+
+Two functions whose bodies are the same but for an address, each returning a table of the same bytes as the other's,
+re-point into either place: the readings of the scan say `address same-content`, and the sha256 cannot tell which name
+goes with which index. The landing c5b51ea matched four 7-byte OpenSSL getters no lane had. Step 9 wrote
+`aes_cbc_cts_*_ctx_params` for 14072 and 14073 and `camellia_cbc_cts_*_ctx_params` for 14241 and 14242, and
+`splat-match` reported nothing, since no name of the symbol file disagreed. The target's function order says otherwise:
+each index sits among its own file's functions in `splat/matched.txt`, and the landing corrected the lines by hand
+(`git show -s --format=%B c5b51ea` says how):
+
+```sh
+awk -F'\t' '$1==14072 || $1==14241 {print $1, $2, $6}' splat/scan.tsv
+# 14072 camellia_cbc_cts_settable_ctx_params readings: address same-content
+# 14241 aes_cbc_cts_settable_ctx_params readings: address same-content
+awk '$1>=14071 && $1<=14075 || $1>=14240 && $1<=14244 {print $1, $2}' splat/matched.txt | sort -n | cut -c1-48
+# 14071 cipher_hw_camellia_initkey
+# 14072 camellia_cbc_cts_settable_ctx_params
+# 14073 camellia_cbc_cts_gettable_ctx_params
+# 14074 camellia_cbc_cts_set_ctx_params
+# 14075 camellia_cbc_cts_get_ctx_params
+# 14240 aes128ccm_newctx
+# 14241 aes_cbc_cts_settable_ctx_params
+# 14242 aes_cbc_cts_gettable_ctx_params
+# 14243 aes_cbc_cts_set_ctx_params
+# 14244 aes_cbc_cts_get_ctx_params
+```
+
+So a new match whose readings say `address same-content` or `table slot copy`, and one the scan found by `content`,
+is checked against its neighbours and the data it uses before it is listed, at a landing as in a lane.
+
+The scan's content pass can make the same kind of match. It pairs one of our functions that no match uses with an
+unmatched target body when, re-pointed, it equals exactly that one body and no other function of ours equals it
+(`contentPairs` in `asmlift-wasm/src/splat-sub.ts`). Its key is the locals and the opcodes, not the wasm type, so an
+empty body pairs as soon as other matches leave one unmatched empty target body. The merge 9a0cec7 matched 7722 that
+way, under `sqlite3_thread_cleanup`, a name no lane had chosen (`awk -F'\t' '$1==7722 {print $1, $2, $4, $7}'
+splat/scan.tsv` prints `7722 sqlite3_thread_cleanup symbol 2`, `git show 9a0cec7^1:splat/matched.txt | awk '$1==7722'`
+prints nothing). What ties the name to 7722 is data the scan never reads: the target's `sqlite3Apis`, SQLite's table
+of its API functions, holds 7722's one table slot, 12188, at 1802196:
+
+```sh
+python3 -I -c "
+import sys, struct, re; sys.path.insert(0, 'tools/extract'); import wasmmod
+m = wasmmod.Module('target/vota_web_wasm.wasm'); el = m._elem(); base, img = m.memory_image()
+syms = [(int(x[2], 16), int(x[3], 16), x[1]) for x in (re.match(r'(\S+) = 0x([0-9a-f]+);.*size:0x([0-9a-f]+)', l) for l in open('splat/symbol_addrs.txt', encoding='latin-1')) if x]
+for s in [k for k, v in el.items() if v == 7722]:
+    print(s, [(base + o, n) for o in range(0, len(img) - 3, 4) if struct.unpack_from('<I', img, o)[0] == s for (a, z, n) in syms if a <= base + o < a + z and n == 'sqlite3Apis'])"
+# 12188 [(1802196, 'sqlite3Apis')]
+```

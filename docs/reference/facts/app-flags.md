@@ -17,6 +17,7 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
 | uenux2 (`src/uenux2`) | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
+| the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, not reconstructed) | `-Oz -fexceptions` (F6) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fno-exceptions -std=c++14 -DNDEBUG` ([asn1.md](asn1.md)) |
 
 ## F1. ecourna: `-O3 -fexceptions -std=c++20 -DNDEBUG`
@@ -288,11 +289,86 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
 
 - **Not -Oz.** At -Oz the `std::format` throw path stays as calls with a 496-byte frame; the target has the inlined
   `__format_arg_store` constants and a 480-byte frame. The copy of `CError::~CError` (func 4636) that wins the link
-  looks like -Oz code, but it comes from the **first** object defining it (an executable TU, possibly -Oz), not from
+  looks like -Oz code, but it comes from the **first** object defining it (the executable TU, below), not from
   the uenux2 library trees: it says nothing about uenux2's level.
 - **Not -Os.** -Os loses `CIniKey::operator=` (string `operator==` stays a call).
-- **-O2 = -O3** on every surviving function (the objects differ; a loop-bearing unit must separate them). -O2 is
-  kept.
+- **-O2, kept; -O3 is not the same.** The four functions of the table are the same at both, but the levels differ
+  without a loop. clang prints each inlining decision with its cost and threshold under `-Rpass=inline
+  -Rpass-missed=inline`: an ordinary call's threshold is 225 at -O2 and 250 at -O3, and a call the inline hint covers
+  gets 325 at both (the implicit cache destructor below; unit 82's fragment measures an in-class `= default` one at
+  225). A callee whose cost lies between 225 and 250 separates the levels. So does one
+  decision that changes the next one's cost. On unit 82's TU, at -O2 `~ITextToSpeech` (cost 320) stays a call in
+  `CWasmNullTextToSpeech`'s D0. At -O3 the cache's destructor (cost 450 there) stays out of it, and it then costs 110
+  and is inlined:
+
+  ```sh
+  P=build/out/flags-levels; mkdir -p $P
+  for l in -O2 -O3; do
+    TMPDIR=/tmp build/docker-build.sh em++ $l -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -Isrc/asn1 \
+      -Rpass=inline -Rpass-missed=inline -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o /work/$P/t$l.o 2>&1 |
+      /usr/bin/grep -E "into '_ZN(9simulador21CWasmNullTextToSpeechD0|3api13ITextToSpeech8SetVoice)" |
+      sed -E "s/^.*remark: '_ZN([^']{1,36})[^']*' (not )?inlined into '_ZN([^']{1,36})[^']*'.*cost=([0-9]+), threshold=([0-9]+).*/$l \2\1 -> \3: \4 \5/"
+  done
+  # -O2 St3__212basic_stringIcNS_11char_trai -> 3api13ITextToSpeech8SetVoiceERKNSt3_: 125 225
+  # -O2 not 3api13ITextToSpeechD2Ev -> 9simulador21CWasmNullTextToSpeechD0E: 320 225
+  # -O3 St3__212basic_stringIcNS_11char_trai -> 3api13ITextToSpeech8SetVoiceERKNSt3_: 125 250
+  # -O3 3api13ITextToSpeechD2Ev -> 9simulador21CWasmNullTextToSpeechD0E: 110 250
+  # -O3 not 3api13ITextToSpeech12SRecentCacheD2E -> 9simulador21CWasmNullTextToSpeechD0E: 450 325
+  # -O3 not St3__212__hash_tableINS_17__hash_val -> 9simulador21CWasmNullTextToSpeechD0E: 260 250
+  ```
+
+  The remark is the first thing to read on a body that differs in what is inlined: it says whether any form at the
+  tree's level can inline it or keep it a call.
+- **`-std=c++20` is ecourna's measurement, carried over.** F1's 3703 is an ecourna function; no uenux2 function decided
+  uenux2's `-std`.
+- **-O3 with `-std=c++23` is a deferred decision, not the tree's setting.** At bb6f018 the private link of F9 item 6
+  with `UENUX2_EXTRA='-O3 -std=c++23'` (its `P=build/out/flags-o3-cxx23`) ends with the target's sha256 and every one
+  of the 7935 committed matches verified. Its scan (F9 item 6) turns two rows `match`, 8746 and 8799,
+  `simulador::CWasmScreenMT`'s `Refresh` and `ShowText` (unit 78), and `splat-remap` against that link prints
+  `IDENTICAL` for both:
+
+  ```sh
+  P=build/out/flags-o3-cxx23
+  join -t "$(printf '\t')" <(cut -f1,5 splat/scan.tsv | sort) <(cut -f1,5 $P/scan.tsv | sort) | awk -F'\t' '$3 == "match" && $2 != "match" {print $1}'
+  # 8746
+  # 8799
+  ```
+
+  A level is a tree's setting (`docs/how-to-decompile.md` step 4), so `UENUX2_CXXFLAGS` stays `-O2 -std=c++20`. The
+  units that hold bodies written for the other setting say what each needs in their fragments: 69 (9104, which
+  `splat-remap` finds different at body byte 639 in that link and at byte 23 in the plain one), 78 (8746, 8799) and 82
+  (9427, 11489, 11518).
+- **The executable TU (`wasm/vota_web/vota_web_wasm.cpp`, not reconstructed) is compiled `-Oz -fexceptions`.** It has
+  landing pads ([../app-flags.md](../app-flags.md) "Exceptions"), and the linkonce copies it emits are the ones the
+  target kept: `CError::~CError` (4636) above, and the ones below. A class with no key function whose typeinfo sits in its data, between its records, gets its
+  inline members from it: `api::ITextToSpeech`'s typeinfo is at 1526340, between that file's record 1526324 and the
+  next record 1526348 (`python3 -I -c "import json; print([c['typeinfo'] for c in json.load(open('ledger/classes.json'))['classes'] if c['name'] == 'api::ITextToSpeech'])"`,
+  `awk -F'\t' 'NR>1 && $1>=1526300 && $1<=1526360 {print $1, $2}' ledger/source-locations.tsv`). Its `SetVoice`
+  (11518) keeps `std::string::operator=` (1700) as a call, which only -Os and -Oz do:
+
+  ```sh
+  P=build/out/flags-levels; mkdir -p $P
+  for l in -O2 -O3 -Os -Oz; do
+    TMPDIR=/tmp build/docker-build.sh em++ $l -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -fexceptions -Isrc -Isrc/uenux2/src -Isrc/asn1 \
+      -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o /work/$P/x$l.o
+    printf '%s ' $l; wasm-objdump -d $P/x$l.o | awk '/ func\[[0-9]+\] <_ZN3api13ITextToSpeech8SetVoice/ {p=1; next} p && / func\[/ {exit} p' |
+      /usr/bin/grep -oE 'call [0-9]+ <(env\.)?_ZNSt3__212basic_string[^>]*(aSERKS5_|assign_no_alias)' | sed -E 's/.*(aSERKS5_|assign_no_alias)$/\1/' | tr '\n' ' '; echo
+  done
+  # -O2 assign_no_alias assign_no_alias
+  # -O3 assign_no_alias assign_no_alias
+  # -Os aSERKS5_
+  # -Oz aSERKS5_
+  (cd asmlift-wasm && pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11518 2>/dev/null | sed -n '/folded readout/,$p' | /usr/bin/grep -E '^ +f[0-9]+\(')
+  #   f1700(i32.sub(p0, -64), p1);
+  /usr/bin/grep -F '= func:1700;' splat/symbol_addrs.txt | cut -d' ' -f1
+  # _ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_
+  ```
+
+  -Oz rather than -Os rests on the `CError::~CError` copy above and on unit 82's fragment, where `-Oz -fexceptions`
+  gives the target's rows for 11518 and 11489. No setup of `asmlift-wasm/benchmark/dataset/setups.json` has these
+  flags, so no fragment can carry them (`src/units/README.md` "What a fragment holds"): an inline member whose winning
+  copy is this TU's matches only when its body is the same at the uenux2 flags (`src/units/README.md` "Pending
+  members").
 - **-fPIC** removes the last structural rows of all three ctors.
 - **No `-fexceptions`.** 0 of 1,645 uenux2 functions that load a `source_location` record call `invoke_*`; uenux2
   throw sites call `__cxa_throw` directly. Without `-fexceptions` emcc defaults to `-fignore-exceptions`
@@ -421,6 +497,29 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    runtime included, with the flag on the `UENUX2_SRCS` objects and the uenux2 `-pending.cpp` and on no stand-in. The
    five steps take about 9 minutes on a loaded machine. With `-fno-delete-null-pointer-checks` the build ends
    `3 matched functions no longer verify` (the tool's message), listing 5194, 11321 and 11326, as F6 says.
+
+   That answers whether a flag set keeps every match. It does not say what the flag set adds: steps 7 to 9 read the
+   plain link's fixed paths (`/usr/bin/grep -n 'build/out/wasm' tools/round/census.sh` prints `M=` and `N=` under
+   `build/out/wasm/` and `build/out/wasm-named/`). The scan of the private link is a lead, not a verdict. It takes the
+   kind table `splat-kinds` wrote beside the private link (`$P/wasm-kinds/vota_web/kinds.json`). But it reads the
+   committed symbol file and ledger, whose census pairs are function indices of the plain link, so a row can pair a
+   target function with another function of the private link:
+
+   ```sh
+   P=build/out/flags-o3-cxx23      # F6's private link
+   (cd asmlift-wasm && pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../$P/wasm/vota_web/vota_web_wasm.wasm -o ../$P/scan.tsv > /dev/null 2>&1)
+   join -t "$(printf '\t')" <(cut -f1,5 splat/scan.tsv | sort) <(cut -f1,5 $P/scan.tsv | sort) | awk -F'\t' '$2 != $3 {print $2, "->", $3}' | sort | uniq -c
+   #    2 differs -> match
+   #   43 differs -> unresolved
+   #   51 unresolved -> differs
+   awk -F'\t' '$1==1143 {print $1, $2, $3, $5}' $P/scan.tsv
+   # 1143 DES_ofb64_encrypt 1860 differs
+   ```
+
+   1143 is `CError`'s constructor, an ecourna function whose object the uenux2 flags do not change: its row names
+   whatever function 1860 is in the private link. Take a row that moves there to `splat-remap` against the private link
+   (`docs/reference/splat.md` "Matching a function"). To have steps 7 to 9 name what a flag adds, build in place in a
+   worktree of your own, and `rm` the objects whose flags change, since make keeps an object whose flags changed.
 7. **A lone-link residue of whole-program DAE.** Extra `drop`s after `~shared_ptr` in a landing pad, or a
    `memcpy` return value kept or dropped, come from callers elsewhere in the program; they close only in the
    whole link.

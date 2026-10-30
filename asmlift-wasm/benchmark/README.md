@@ -193,7 +193,20 @@ would drop, add and change, and writes nothing. `pnpm bench select --write [--pe
 definitions snapshot and the copies in `dataset/selection-inputs/`. It refuses while the ledger, the registry, `src/` or the 7-Zip source list have
 uncommitted changes, since it records HEAD as their commit. Then `pnpm bench run --label baseline`, and
 commit `rows.json`, `selection.json`, `selection-definitions.json`, `selection-inputs/` and
-`results/baseline.{json,md}` together.
+`results/baseline.{json,md}` together, with the `rows` column of "The compile setups" table updated from
+`rows.json` (no test reads the table). `test/run.test.ts` takes three rows by id (`uenux2/10251`, `zlib/4824`,
+`libc-optz/504`): when a re-selection drops one, give the test a row of the same setup, size band and features.
+
+A setup retired or merged into another is the same steps after the change to `setups.json`. Commit `setups.json`
+first, since `--write` refuses it uncommitted; `pnpm test:bench` fails at that commit (the rows still name the old
+setup) and passes again at the re-selection's commit, which follows it.
+
+To check a re-selection without touching a worktree's tracked files, run it in another worktree at the commit
+`selection.json` records. A bare `git clone` cannot: selection reads the build's objects through `llvm-nm`.
+`tools/round/build-at.sh <commit> <dir>` makes one with the build's inputs. There, `pnpm bench select --write` must
+write `dataset/` as the commit under review holds it: extract that commit's `asmlift-wasm/benchmark/dataset` with
+`git archive <reviewed commit> asmlift-wasm/benchmark/dataset | tar -x -C <scratch>` and compare with `diff -r`, since
+`git diff` does not show the copies the selection adds, which are untracked there. Remove the worktree afterwards.
 
 ## Results
 

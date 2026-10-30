@@ -81,9 +81,13 @@ integer) comes from a second link of the same objects, with the data and the tab
   addresses, and the `srcloc-anchor` pairs
   (`seeds`, the propagation loop and `anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`). A function named by
   `vtable` alone casts none: a callback that only such a function passes by its table slot stays unnamed, and the
-  try link's one `UNRESOLVED` operand there does not become a match at step 8.
-- `vote:N`: aligned address operands. `by:` lists up to 4 target functions that cast a vote. `vote:N+rtti` is a
-  vote that the RTTI decoding agrees with.
+  try link's one `UNRESOLVED` operand there does not become a match at step 8. Anchors take one step: a function an
+  anchor's vote names casts no votes in turn. A thunk with a record can name its merged body, and the body's own
+  callees stay unnamed unless another pair names them (8360 and 8341 named 6133, whose callee waited for 10881's
+  vote).
+- `vote:N`: aligned address operands of the seed pairs and of the pairs their votes form; an anchor casts no data
+  vote, so a `.bss` object only anchored functions use stays unnamed. `by:` lists up to 4 target functions that cast
+  a vote. `vote:N+rtti` is a vote that the RTTI decoding agrees with.
 - `rtti`: vtables and typeinfos decoded from the target's bytes.
 - `content`, `string`, `srcloc`: unique bytes, a C string, or a `std::source_location` record.
 - `srcloc-anchor`: a function pair whose bodies are the same instructions and load the same
@@ -164,7 +168,11 @@ An address of ours resolves through the symbol file's name for its object when t
 the object's content places it:
 
 - a C string by its bytes through the NUL; every place the target holds the same string is a copy (up to
-  4,096 of them: tail merging leaves a short string such as `"\n"` in hundreds of places);
+  4,096 of them: tail merging leaves a short string such as `"\n"` in hundreds of places). An end pointer, which
+  points at a string's NUL, is the empty tail, found in more places than that, so it resolves only to the end of the
+  whole string our link merged it into (`resolveString`). A short literal the target tail-merged into another string
+  then differs at its end pointer alone, until our link holds the string the target merged it into: unit 75's
+  `ModeloAbreviado` (8168), whose `"{:02}"` waits for fn 10425's `"-{:02}-{:02}"`;
 - a `std::source_location` record by what it records;
 - a read-only object by its exact bytes, found once (up to 64 copies when found more often). wasm-ld's
   map gives no object's alignment, so our address stands in for it: an object our link puts at a multiple
@@ -187,7 +195,9 @@ Two rules guard the evidence:
 - **No circular evidence.** A data name whose only vote came from the function being matched checks
   nothing there. Such a match holds only if our object's bytes agree with the target's at that address,
   or if another holding match uses the same name. Otherwise it is `unresolved (self-voted)` in the scan
-  and `UNCONFIRMED` in the build. A function name voted only by the match's own call or table operand holds
+  and `UNCONFIRMED` in the build. For an object of a few bytes that agreement is thin (`api::CSystem::s_dorme`, one
+  byte, voted by 8461 alone): say in the fragment what else ties the operand to the object, such as the other
+  target functions that read the same address. A function name voted only by the match's own call or table operand holds
   only if another holding match calls it or has a constant the target reads as its table slot. A constant
   the target keeps as an integer does not count, even when it equals the function's slot in our table, so a
   unit that shifts our table cannot make or break a match.
@@ -316,10 +326,13 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
 
 - which copy an address or a table slot of ours became. Where our side offers several target places of the same
   content (a C string's copies, read-only content found at several places by its bytes or its re-pointed bytes) or
-  several target slots of one function (126 for binaryen's merged empty function), the target body picks one, and no check proves that the place
-  holds the object our source names. A pointer swapped for one to another object of ours whose content also sits at
-  the place the target body uses gives the target's bytes. Calls through any slot of a function are the same, but
-  pointer identity differs;
+  several target slots of one function (126 for binaryen's merged empty function), the target body picks one, and no
+  check proves that the place holds the object our source names. A pointer swapped for one to another object of ours
+  whose content also sits at the place the target body uses gives the target's bytes. Calls through any slot of a
+  function are the same, but pointer identity differs. The same holds for a whole match: two bodies that differ only
+  in which of two tables of the same bytes they return can take each other's names, and `splat-match` reports nothing,
+  since no name of the symbol file disagrees ([facts/splat.md](facts/splat.md) §S11). Check such a match against the
+  functions around its index in `splat/matched.txt` and the data that points at it;
 - a number equal to the target's number of another kind: the target's slot number written as an integer inside our
   table (every small integer is some target slot), a pointer of ours whose re-pointed value equals an integer the
   target holds, or a target address written as an integer that lies inside our data range and is not the start of a
@@ -333,6 +346,10 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   prints unqualified (5526's record says `std::vector<CMovieFrame>`, the same text for `api::CMovieFrame` and
   `::CMovieFrame`, which mangle differently), a free function's linkage (a record prints `static` only for a member;
   [../how-to-decompile.md](../how-to-decompile.md) step 3);
+- the order of a file's members that have no record. Inside one use band the target's index and our link's run the
+  same way, so two members of one object that pair in the other order are two definitions swapped: compare the
+  `ours` column of `splat/scan.tsv` with the target index for the unit's matches. A swapped order gives the same bytes
+  and matches all the same;
 - a body from a companion object. Read the `object` column of each new match in `splat/scan.tsv`. A body compiled in a
   `-roots.o` or a `-pending.o` must be code a landed header defines (an implicit or inline member, a template instance
   such as `__shared_ptr_emplace<T>`'s destructors), never a stand-in's own body, and the fragment's header says which;
@@ -342,14 +359,18 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   and the build verifies it. The matcher sees it in the census's `moved:` list; a census re-run on the committed state
   moves nothing, since the committed `ledger/functions.tsv` already holds the pairs. So list the census pairs and the
   match lines whose function of ours a unit's `-roots.o` defines (the two commands of §U4): each must be an instance or
-  inline member the roots file is meant to emit, not one of its callers;
+  inline member the roots file is meant to emit, not one of its callers. Two stand-ins binaryen merged have the
+  object `<binaryen>`, which those commands miss: §U4 also searches the match list and the census for their merged
+  bodies by name;
 - a second name for a matched function. `splat-match` reports a match line only when none of the symbol file's names
   for its index is the matched symbol (`addMatches` in `asmlift-wasm/src/splat-sub.ts`), so a wrong name beside the
   right one says nothing. Read the range's symbol-file diff (`git diff <base> -- splat/symbol_addrs.txt`) for a
   `func:N` of a matched index that gained a line. Some lines move at every landing whatever the unit: an
   `evidence:table` name that 7530 or 615 gains while the function that name belongs to loses its `vtable` line, and
   the `pair-addr` lines of matched SQLite functions that drop out and come back. [facts/splat.md](facts/splat.md) §S8
-  lists them, with the command that separates them from a range's own lines;
+  lists them, with the command that separates them from a range's own lines. Read the lines the range drops for
+  matched indices too: a vtable slot our link fills with a body that is not the target's can take a matched
+  function's name away (§S8, the fifth kind);
 - a source form chosen for the code it gives. Ordinary C++ in the project's types is a source form, whatever made the
   matcher pick it: locals read before the first store, an order of evaluation, a temporary
   ([facts/codegen.md](facts/codegen.md) §C1). A construct whose only purpose is to constrain the compiler is
@@ -368,8 +389,9 @@ in `ledger/callgraph.tsv`; check such a claim with the grep for its address poin
 [../../src/units/README.md](../../src/units/README.md) "Companion files" gives.
 
 Re-running the generators on the committed state is the check that they wrote it: `make -C src splat-symbols` leaves
-`git status` clean, and a rescan changes `splat/scan.tsv` only in the `source` column of a new match the scan found by
-content, from `content` to `symbol`, since the match now names it. A new match step 8 already named
+`git status` clean, and a rescan changes `splat/scan.tsv` only in the `source` column, to `symbol`, since the match
+now names the function: from `content` for a new match the scan found by content, and from `ledger` for a match line
+step 9 renamed to a twin. A new match step 8 already named
 (`srcloc-anchor`, `pair-*`, `call`, `vtable`) is `symbol` from the start, and the rescan leaves its line alone: 5526
 (`evidence:srcloc-anchor`) reads `symbol` in the committed scan (`awk -F'\t' '$1==5526' splat/scan.tsv | cut -f1,3-5`).
 
@@ -392,19 +414,36 @@ The two ways differ in what picks the readings of the ambiguous operands:
 - **Preferred readings.** The blanked split, assembled into a module with `target/vota_web_wasm.js` copied beside
   it, is loaded as the target side (`loadTargetSide` takes the import names from the glue next to the wasm it reads;
   without it every `invoke_*` call is `UNRESOLVED`), and `remapBody(...).bytes` sets every operand at its preferred
-  (first) reading. No target body exists anywhere in that run, so this is stricter than the match rule. A match whose
+  (first) reading. No target body exists anywhere in that run, so no reading comes from the target. It is not
+  stricter than the match rule in every way: it does not apply §3's self-vote check (`remapBody` without
+  `selfVoted`), so a body that only its own vote holds is judged by the gate alone, and the symbol file's lines were
+  read from the target's bodies before the piece was blanked. A match whose
   operands need the target body's choice among our readings (which copy, which table slot of a function, and in a
   kind-unverified function which kind: §3) fails it legitimately. The command then lists each such operand, the
   reading the target body picked and the first one. With operand kinds, the preferred bytes of 9131, 9132 and 9218 are
   their pieces. Without them (`--no-kinds`), 9218's are 313 B against its 311 B piece, because the target body then
   picks its operands' kinds.
 
+A `vote:N by:<this index>` data name was read from this very body, so for that operand the review shows only what §3's
+byte comparison shows. To see what such a name carries, run the review with `--symbols` on a copy of the symbol file
+without its line. 8461 (`api::ISound::Wait`) and `api::CSystem::s_dorme`, which only 8461 votes for, from
+`asmlift-wasm/`:
+
+```sh
+mkdir -p ../build/out/splat-review-facts && /usr/bin/grep -v '_ZN3api7CSystem7s_dormeE' ../splat/symbol_addrs.txt > ../build/out/splat-review-facts/symbols-without-s_dorme.txt
+pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm 8461 -o ../build/out/splat-review-facts/8461 \
+  --symbols ../build/out/splat-review-facts/symbols-without-s_dorme.txt | /usr/bin/grep -E '^(preferred|the gate)' | cut -c1-110
+# preferred readings:    UNRESOLVED: +0x37 i32.const 1235768: an address of ours: _ZN3api7CSystem7s_dormeE (.dat
+# the gate is the match's own bytes: FAIL (… s)
+```
+
 In both ways the maps get the matches of `splat/matched.txt` first (`withMatches(maps, matches)` with the `matches` of
 `parseMatchList`, both in `splat-sub.ts`), as the build does (`buildSplat`): each matched symbol then names its
 target function, and a call to a function that only its match names re-points as in the build. Without them such a
 call can resolve elsewhere or not at all, and the review checks something other than the build. `--matches <f>`
-reviews against another match list, `--no-kinds` checks without the operand-kind table, and `-o <dir>` is where the
-blanked module and the glue copy go (default `build/out/splat-review/<index>/`).
+reviews against another match list, `--symbols <f>` against another symbol file, `--no-kinds` checks without the
+operand-kind table, and `-o <dir>` is where the blanked module and the glue copy go (default
+`build/out/splat-review/<index>/`).
 
 9218 passes both ways:
 

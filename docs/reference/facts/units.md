@@ -83,6 +83,41 @@ and `ctextfieldmultiline.cpp.o`; `CImageField`'s D2 comes from `app/29-uenux2-ci
 is emitted (U4). The constructor itself does not need `make_shared`: the target builds a CMovie inside a
 `make_shared` block too (unit 23's roots header, fn 1593), and unit 23's `__asm__`-label stand-ins match 5526.
 
+The target builds some classes with `std::shared_ptr<U>(new T)` instead: the builder stores the vptr of
+`__shared_ptr_pointer<T*, …>` (the vtable's address + 8) into a block of its own. 3768 and 7787 store
+`CSqlConnection`'s, 11523 `CFileSeeder`'s:
+
+```sh
+python3 -I -c "
+import json
+for e in json.load(open('ledger/vtables.json')):
+    if e['class'].startswith(('std::__2::__shared_ptr_pointer<api::CFileSeeder*', 'std::__2::__shared_ptr_pointer<ecourna::api::sql::sqlite::CSqlConnection*')): print(e['address'] + 8, e['functions'], e['class'][:60])"
+# 1559008 [174, 144, 11539, 11538, 144] std::__2::__shared_ptr_pointer<ecourna::api::sql::sqlite::CS
+# 1564560 [174, 144, 172, 11427, 144] std::__2::__shared_ptr_pointer<api::CFileSeeder*, std::__2::
+(cd asmlift-wasm && for f in 11523 3768 7787; do printf '%s ' $f; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $f 2>/dev/null | sed -n '/folded readout/,$p' | /usr/bin/grep -c -E '= (1564560|1559008);'; done)
+# 11523 1
+# 3768 1
+# 7787 3
+```
+
+A roots file that builds the same `std::shared_ptr` stores the same vtable, and that template's members match from
+the roots object as the `make_shared` ones do: `__get_deleter`, and for `CSqlConnection` `__on_zero_shared`. The
+control-block members the roots objects supply, by kind, at bb6f018:
+
+```sh
+awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-roots\.o$/) r[$2]=$3; next } ($2 in r) && $2 ~ /__shared_ptr_(emplace|pointer)/ {k = ($2 ~ /emplace/) ? "emplace" : "pointer"; m = ($2 ~ /D0Ev$/) ? "D0" : ($2 ~ /D2Ev$/) ? "D2" : ($2 ~ /__on_zero_shared/) ? "__on_zero_shared" : ($2 ~ /__get_deleter/) ? "__get_deleter" : "other"; n[k " " m]++} END {for (x in n) print n[x], x}' \
+  FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt | sort -k2
+# 21 emplace D0
+# 21 emplace D2
+# 5 emplace __on_zero_shared
+# 19 pointer __get_deleter
+# 1 pointer __on_zero_shared
+```
+
+`__on_zero_shared` of `__shared_ptr_emplace<T>` is a target function of its own only for some classes: of unit 77's
+parts, the ones declared `final` have one (5966, 5969, 11958), and `CParteCargos` and `CParteEleitores` share 411 in
+slot 2 (`ledger/vtables.json`).
+
 ## U4. The matches compiled in a companion object
 
 The match lines whose symbol a unit's `-roots.o` or `-pending.o` defines (`names.tsv`'s object column):
@@ -92,18 +127,27 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-(roots|pending)\.o$/) r[$2]
   FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt
 ```
 
-prints 17 lines at 9271d74. Each is code a landed header defines, never a stand-in's own body:
+prints 155 lines at bb6f018 (17 at 9271d74). Each is code a landed header defines, never a stand-in's own body:
 
-- the D0 and D2 of `__shared_ptr_emplace<T>` from the roots of units 14, 27, 28 and 29 (U3);
-- `api::IScreen::GetFontMetrics` (8938), the inline default of a virtual member, which unit 19's roots emit and
-  address-take;
-- the implicit destructors of `comum::CSigVerifier` (11178, 11176), `api::CImageField` (11099, 11098) and
-  `api::CTextFieldMT` (10933, 10932), and `IFormField<IScreenMT>::GetTypeName` (11051) and the
-  `IFormFieldBase<IScreenMT>` destructor (11052), from the pending objects of units 26, 29 and 30. The pending member
-  there is the class's key function (its first non-inline virtual member), so the vtable is emitted in the pending
-  object, and with it every implicit or inline member the vtable names. Those bodies are the compiler's code for the
-  class definition. When the key function lands in the class's source, they move with the vtable under the same
-  symbols.
+```sh
+awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-(roots|pending)\.o$/) r[$2]=$3; next } ($2 in r) {k = (r[$2] ~ /pending/) ? "pending" : ($2 ~ /__shared_ptr_(emplace|pointer)/) ? "roots, control block" : "roots, other"; n[k]++} END {for (x in n) print n[x], x}' \
+  FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt | sort -k2
+# 33 pending
+# 67 roots, control block
+# 55 roots, other
+```
+
+- the members of the control blocks the roots files build, from units 12, 14, 27, 28, 29, 49, 58, 77, 78, 79, 83 and
+  84 (U3);
+- code of a header the roots files emit in the shapes of `src/units/README.md` "Companion files": an inline default
+  of a virtual member (`api::IScreen::GetFontMetrics`, 8938, unit 19), and the members of classes and class templates
+  with no key function that the roots build (units 64, 67, 75, 79 and 83);
+- the implicit and inline members of a class whose key function is pending, from the pending objects of units 26,
+  29, 43, 44, 58, 59, 60, 62, 65, 77 and 79. The pending member there is the class's key function (its first
+  non-inline virtual member), so the vtable is emitted in the pending object, and with it every implicit or inline
+  member the vtable names. Those bodies are the compiler's code for the class definition. When the key function lands
+  in the class's source, they move with the vtable under the same symbols: unit 30's moved to `ctextfieldmt.cpp.o`
+  when its `Draw` landed, and its pending file went.
 
 The census pairs whose function of ours comes from a unit's roots object (`ledger/functions.tsv` `best_index`):
 
@@ -112,7 +156,33 @@ awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && o
   build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv
 ```
 
-prints 8 pairs at 9271d74, all of them `__shared_ptr_emplace<T>` destructors.
+prints 110 pairs at bb6f018 (8 at 9271d74): 67 control-block members and 43 members of the headers the roots emit,
+none an `(anonymous namespace)` stand-in:
+
+```sh
+awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9][0-9]-.*-roots\.o$/ {print ($10 ~ /^\(anonymous/) ? "stand-in" : ($10 ~ /__shared_ptr_(emplace|pointer)/) ? "control block" : "header member"}' \
+  build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv | sort | uniq -c
+#   67 control block
+#   43 header member
+```
+
+Neither command sees a stand-in that binaryen merged with another: the merged body's object in `names.tsv` is
+`<binaryen>`, and its name is `byn$mgfn-shared$` and the first member's symbol. A roots file's stand-ins live in an
+anonymous namespace, so search for that prefix as well. At bb6f018 five such bodies exist, and none is matched or
+paired:
+
+```sh
+awk -F'\t' '$3=="<binaryen>" && $2 ~ /^byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1/ {print $1, substr($2, 1, 60)}' build/out/wasm-map/vota_web/names.tsv
+# 1068 byn$mgfn-shared$_ZN12_GLOBAL__N_111CompartilhaIN3api5ITextEN
+# 5065 byn$mgfn-shared$_ZN12_GLOBAL__N_118TextoCompartilhadoEPFNSt3
+# 5066 byn$mgfn-shared$_ZN12_GLOBAL__N_112TextoFormatoEPFNSt3__212b
+# 5069 byn$mgfn-shared$_ZN12_GLOBAL__N_121CriaParteMajoritariosENSt
+# 5070 byn$mgfn-shared$_ZN12_GLOBAL__N_119CriaParteCandidatosENSt3_
+/usr/bin/grep -cE 'byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1' splat/matched.txt
+# 0
+awk -F'\t' 'NR==FNR { if ($3=="<binaryen>" && $2 ~ /^byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1/) b[$1]; next } FNR>1 && $6=="skeleton" && ($7 in b)' build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv | wc -l
+# 0
+```
 
 ## U5. How a pending member shows in the symbol file and the scan
 
@@ -170,6 +240,27 @@ they are `CImageFieldUpdate::GetTypeName` and `IFormField<IScreenMT>::GetTypeNam
 the one `src/asn1/asn1.h` declares, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
 ledger/source-locations.tsv | sort -u`).
 
+At bb6f018 11366 is the merged case too. Unit 84's `CMenuValidation::isValid` trap has its wasm type, binaryen merged
+the two, and the merged body, named after unit 17's trap, sits in two slots. A trap that came later is alone: unit 69's
+`CWasmScreen::DrawImage`, after which 9058 is named:
+
+```sh
+awk -F'\t' '$1==11366 || $1==11442 || $1==9058 {print $1, $5, $11}' splat/scan.tsv
+# 9058 differs app/69-uenux2-cwasmimagesurfaceops-pending.o
+# 11366 no-candidate -
+# 11442 differs app/36-uenux2-cvisitantefoto-pending.o
+python3 -I -c "
+import sys; sys.path.insert(0, 'tools/extract'); import wasmmod
+d = wasmmod.Module('build/out/wasm/vota_web/vota_web_wasm.wasm')._elem()
+for line in open('build/out/wasm-map/vota_web/names.tsv'):
+    i, name, obj = line.split('\t')[:3]
+    if obj.endswith('-pending.o') and ('DoDesconverte' in name or 'DrawImage' in name):
+        print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
+"
+# 4941 2 _ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23Modul 17-uenux2-cconversororigemconfiguracao-pending.o
+# 10567 1 _ZN9simulador11CWasmScreen9DrawImageERKN3api6SPointERKNS1_6IImageES4_N 69-uenux2-cwasmimagesurfaceops-pending.o
+```
+
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word
 
 A virtual member a class inherits from a class template, not overridden, is that template's member; when the
@@ -216,6 +307,26 @@ for h in src/asn1/asn1.h src/asn1/asn1_useful.h; do
 make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -c -- '-o [^ ]*cvisitantefoto.cpp.o'
 # 0                                         (the generic uenux2 rule depends on no src/asn1 header)
 ```
+
+So an edit of `src/asn1/asn1.h` rebuilds the ASN.1 runtime, the converters whose rules name `src/asn1` (units 04, 09
+and 16) and the companions that name it, and misses two kinds of object that include it. At bb6f018 the rebuild list
+holds 82 objects, no uenux2 object among them, and not unit 15's `cconversorhorariosurna.cpp.o`, whose rule names its
+fragment and the ecourna headers only, though the source includes `asn1.h`:
+
+```sh
+make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -c 'em++.* -c '
+# 82
+make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE -- '-o [^ ]+\.o' | /usr/bin/grep -c 'app/uenux2/'
+# 0
+make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -c -- '-o [^ ]*cconversorhorariosurna.cpp.o'
+# 0
+TMPDIR=/tmp build/docker-build.sh sh -c "$(tools/round/try-tu.sh --print-flags src/ecourna/app/dados/asn/cconversorhorariosurna.cpp | sed -E 's/^[^:]*: //; s/ -c / -M /')" | tr ' ' '\n' | /usr/bin/grep -c '^src/asn1/asn1\.h$'
+# 1
+```
+
+After an edit of `asn1.h`, touch those sources and the companions that include it
+(`/usr/bin/grep -ln asn1 src/units/*-roots.cpp src/units/*-pending.cpp`), and compare the objects before and after
+([workflow.md](workflow.md) §W15).
 
 The two header lists are empty inside a fragment. `src/Makefile` reads the fragments before it sets them, and make
 expands a rule's prerequisites when it reads the rule (GNU Make 3.81, this machine's `make`):

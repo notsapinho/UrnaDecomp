@@ -93,6 +93,23 @@ No `invoke_*` row is left (without `-fignore-exceptions` the same TU scores 162 
 `invoke_iiiii`, `invoke_viii` and `__resumeException` calls). The rest of the difference is what binaryen inlines
 into a body linked alone; the splat build matches this source.
 
+The same line also sets the lone link's level, and not to the build link's `-Oz`. The TU's flags come after the
+template's `-Oz -fexceptions`, and emcc takes the last `-O` for the compile and the link alike, so binaryen runs at the
+TU's level, `-O2` for uenux2 and `-O3` for ecourna:
+
+```sh
+P=build/out/try-facts/olevel; mkdir -p $P; printf 'extern "C" int f(int x) { return x * 3; }\n' > $P/a.cpp
+for l in -Oz -O2 -O3; do TMPDIR=/tmp build/docker-build.sh em++ -Oz $l /work/$P/a.cpp -o /work/$P/a.js --no-entry -sEXPORTED_FUNCTIONS=_f -v 2>&1 | /usr/bin/grep -oE 'wasm-opt --strip-target-features --post-emscripten -O[0-9sz]'; done
+# wasm-opt --strip-target-features --post-emscripten -Oz
+# wasm-opt --strip-target-features --post-emscripten -O2
+# wasm-opt --strip-target-features --post-emscripten -O3
+```
+
+binaryen at `-O2` numbers locals and merges branches otherwise than at `-Oz`: a lone body can differ in its locals or
+keep two `br_if` where the whole link has one `i32.or`, from a source that matches. To see the build's body alone,
+compile with `-c` and the TU's flags, then link the object in a second `em++ -Oz -fexceptions` (the template's other
+options, with `-sEXPORTED_FUNCTIONS=_<symbol>`).
+
 ## X7. A TSE file name the path map does not rewrite
 
 `-ffile-prefix-map` rewrites a path as clang spells it. A source compiled from a relative `src/uenux2/…` path, or a
