@@ -4,12 +4,17 @@
 // changed, in both links the way a source edit would change it (an integer stays put in the relink, an address moves
 // by the data shift, a table slot by the table shift), then the build. baseSums, which follows a __table_base
 // constant through the operand stack, is tested on hand-written bodies.
+//
+// Every landing moves our data and our table, so no address or slot of our link is written here: each is found in
+// the link the suite runs on, from the target's number for the same thing or from a symbol name (the "our link's
+// numbers" helpers below). The target's numbers never move and are literals.
 import { copyFileSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { type Instr, disassemble } from '../src/disasm';
+import { GLOBAL_BASE } from '../src/normalize';
 import type { Func, Module } from '../src/parse';
 import { parseModule } from '../src/parse';
 import {
@@ -29,6 +34,7 @@ import {
   parseOperandKinds,
   readOperandKinds,
   renderOperandKinds,
+  tableBase,
 } from '../src/splat-kinds';
 import { type Piece, remapBody } from '../src/splat-remap';
 import {
@@ -42,7 +48,14 @@ import {
   reviewWarnings,
 } from '../src/splat-sub';
 import { runSplatSubCommand } from '../src/splat-sub-cli';
-import { type SymbolMaps, loadOurSide, loadTargetSide, symbolMaps } from '../src/splat-symbols';
+import {
+  type SymbolMaps,
+  cStringAt,
+  loadOurSide,
+  loadTargetSide,
+  resolveDataAddress,
+  symbolMaps,
+} from '../src/splat-symbols';
 import { URNA_ROOT } from './helpers';
 
 const URNA = process.env.URNA_SPLAT_ROOT ?? URNA_ROOT;
@@ -69,6 +82,8 @@ const DO_CONVERTE =
   '_ZNK5comum3asn36CConversorNumViasImpressasRelatorios10DoConverteERKNS_2md15estadoaplicacao27CNumViasImpressasRelatoriosE';
 const RAW_READ = '_ZNK7ecourna3api2io5CFile7RawReadEPvj';
 const DSA_PEM_THUNK = 'byn$mgfn-shared$dsa_to_SubjectPublicKeyInfo_pem_encode';
+// the vtable DO_CONVERTE stores at +0xc
+const VTABLE = '_ZTVN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosE';
 
 interface Loaded {
   maps: SymbolMaps;
@@ -153,6 +168,75 @@ function valueAt(m: Module, index: number, at: number): number | bigint {
   const im = i.imms.find((x) => x.kind === 'memarg') ?? i.imms[0];
   return im.kind === 'memarg' ? im.offset : im.kind === 's32' || im.kind === 'u32' || im.kind === 's64' ? im.value : Number.NaN;
 }
+
+// ---------------------------------------------------------------------------------------------------------------
+// our link's numbers, found in the link the suite runs on (the plain link: the relink's are these plus D or T)
+
+/** Our table slot of function `name`: the one slot our table gives it. */
+function slotOf(l: Loaded, name: string): number {
+  const f = l.maps.ours.fnByKey.get(name);
+  const slots = [...l.maps.ours.elem].filter(([, g]) => f !== undefined && g === f).map(([s]) => s);
+  expect(slots, `our slots of ${name}`).toHaveLength(1);
+  return slots[0];
+}
+
+/** Our table slot of function `name` relative to our table base: an operand of an unfolded __table_base sum. */
+function relativeSlotOf(l: Loaded, name: string): number {
+  return slotOf(l, name) - tableBase(l.plain.module);
+}
+
+/** Our table slot of the function the target keeps in its slot `targetSlot` (the function the symbol file gives that
+ *  target function's name): the one slot our table gives it. */
+function ourSlotOf(l: Loaded, targetSlot: number): number {
+  const { ours, target } = l.maps;
+  const f = target.elem.get(targetSlot);
+  const slots = [...ours.elem]
+    .filter(([, g]) => f !== undefined && target.symbols.fns.get(ours.fns.get(g)?.key ?? '') === f)
+    .map(([s]) => s);
+  expect(slots, `our slots of the function in target slot ${targetSlot}`).toHaveLength(1);
+  return slots[0];
+}
+
+/** The target's slot of the function in our slot `slot` (the target function the symbol file gives its name): the
+ *  one slot the target's table gives it. */
+function targetSlotOf(l: Loaded, slot: number): number {
+  const { ours, target } = l.maps;
+  const f = target.symbols.fns.get(ours.fns.get(ours.elem.get(slot) ?? -1)?.key ?? '');
+  const slots = f === undefined ? [] : (target.slots.get(f) ?? []);
+  expect(slots, `target slots of the function in our slot ${slot}`).toHaveLength(1);
+  return slots[0];
+}
+
+/** Our address of the C string the target keeps at `addr`: the one place our data holds those bytes as a whole
+ *  string (a NUL before and after). */
+function ourStringOf(l: Loaded, addr: number): number {
+  const { ourImage, target } = l.maps;
+  const s = cStringAt(target.image, target.imageBase, addr);
+  expect(s, `a string at the target's ${addr}`).not.toBeNull();
+  const whole = Buffer.concat([Buffer.from([0]), s!, Buffer.from([0])]);
+  const places: number[] = [];
+  for (let k = ourImage.indexOf(whole); k >= 0; k = ourImage.indexOf(whole, k + 1)) {
+    places.push(GLOBAL_BASE + k + 1);
+  }
+  expect(places, `our copies of ${JSON.stringify(s!.toString('latin1'))}`).toHaveLength(1);
+  return places[0];
+}
+
+/** Our address of data symbol `name` (the link map). */
+function dataAddressOf(l: Loaded, name: string): number {
+  const objects = l.maps.ours.map.data.filter((d) => d.key === name);
+  expect(objects, name).toHaveLength(1);
+  return objects[0].addr;
+}
+
+/** NextEntry +0x23: the string the target keeps at 124328 ("O diretório não está aberto"). */
+const ourString = (l: Loaded): number => ourStringOf(l, 124328);
+/** NextEntry +0x37, __cxa_throw's destructor argument: CError's destructor, which the target keeps in slot 69. */
+const ourDtorSlot = (l: Loaded): number => ourSlotOf(l, 69);
+/** The slot of ours whose function the target keeps in slot 7010, the value of NextEntry's enum at +0x1b. */
+const ourSlot7010 = (l: Loaded): number => ourSlotOf(l, 7010);
+/** DO_CONVERTE +0xc: its vtable's address point, past the offset-to-top and typeinfo words. */
+const ourVtable = (l: Loaded): number => dataAddressOf(l, VTABLE) + 8;
 
 /** A function of one i32 parameter whose body is `code` (no locals, the final `end` added), alone in a module. */
 function handWritten(code: number[]): { m: Module; fn: Func; instrs: Instr[] } {
@@ -357,7 +441,7 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
   };
 
   it.skipIf(!real)("tells api::CDirReader::NextEntry's enum, string, typeinfo and destructor pointer apart", () => {
-    // the enum 7010 equals the target's slot of the function in our slot 1440 (case c2 below); 16 is __cxa_throw's
+    // the enum 7010 equals the target's slot of a function in our table (case c2 below); +0x37 is __cxa_throw's
     // destructor argument, a table slot
     const k = kindsOf(NEXT_ENTRY);
     expect(k.verified).toBe(true);
@@ -379,8 +463,8 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
   });
 
   it.skipIf(!real)("reads an unfolded __table_base sum's base and the slots relative to it", () => {
-    // sqlite's -fPIC objects add __table_base to select(2035, 2036, 2037): the base moves by T, the relative operands
-    // do not, and alone they would read as literals
+    // sqlite's -fPIC objects add __table_base to a select of three slots relative to it: the base moves by T, the
+    // relative operands do not, and alone they would read as literals
     const k = kindsOf('vdbeSorterSort');
     expect(k.verified).toBe(true);
     expect([0xa8, 0xab, 0xae, 0xbd].map((at) => operandKind(k, at))).toEqual([
@@ -393,13 +477,17 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
   });
 
   it.skipIf(!real)('leaves a function kind-unverified when a constant added to __table_base moved', () => {
-    const { plain, shifted } = load();
+    const l = load();
+    const { plain, shifted } = l;
     const p = indexOf(plain, 'vdbeSorterSort');
     const s = indexOf(shifted, 'vdbeSorterSort');
-    const k = kindsOf('vdbeSorterSort', undefined, patched(shifted.module, s, shiftedAt(p, s, 0xae), 2037 + T));
+    // +0xae is vdbeSorterCompare's slot relative to the base
+    const rel = relativeSlotOf(l, 'vdbeSorterCompare');
+    expect(valueAt(plain.module, p, 0xae)).toBe(rel);
+    const k = kindsOf('vdbeSorterSort', undefined, patched(shifted.module, s, shiftedAt(p, s, 0xae), rel + T));
     expect(k).toEqual({
       verified: false,
-      // 2037 moved as a table slot: the base added to a slot, neither part can be told
+      // the relative slot moved as a table slot: the base added to a slot, neither part can be told
       why: "+0xbd i32.const is the link's base itself, added to a table slot",
     });
   });
@@ -408,9 +496,10 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
     const { shifted } = load();
     const s = indexOf(shifted, NEXT_ENTRY);
     const at = shiftedAt(indexOf(load().plain, NEXT_ENTRY), s, 0x23);
-    expect(valueAt(shifted.module, s, at)).toBe(64029 + D);
-    const k = kindsOf(NEXT_ENTRY, undefined, patched(shifted.module, s, at, 64029 + D + 4));
-    expect(k).toEqual({ verified: false, why: `+0x23 i32.const 64029 moved to ${64029 + D + 4}, by neither shift` });
+    const str = ourString(load());
+    expect(valueAt(shifted.module, s, at)).toBe(str + D);
+    const k = kindsOf(NEXT_ENTRY, undefined, patched(shifted.module, s, at, str + D + 4));
+    expect(k).toEqual({ verified: false, why: `+0x23 i32.const ${str} moved to ${str + D + 4}, by neither shift` });
   });
 
   it.skipIf(!real)('leaves a function kind-unverified when the relink has another shape', () => {
@@ -424,20 +513,22 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
   });
 
   it.skipIf(!real)('leaves a function kind-unverified when the two slots hold different functions', () => {
-    // the relink's table with slots 16 and 17 swapped: 16 still moves by T, to a slot naming another function
+    // the relink's table with the destructor's slot (+0x37) and the next swapped: the operand still moves by T, to a
+    // slot naming another function
     const { shifted } = load();
+    const slot = ourDtorSlot(load());
     const elems = shifted.module.elems.map((e) => {
       if (e.mode !== 'active') {
         return e;
       }
       const funcIndices = [...e.funcIndices];
-      const at = 16 + T - (e.offset!.value as number);
+      const at = slot + T - (e.offset!.value as number);
       [funcIndices[at], funcIndices[at + 1]] = [funcIndices[at + 1], funcIndices[at]];
       return { ...e, funcIndices };
     });
     expect(kindsOf(NEXT_ENTRY, undefined, { ...shifted.module, elems })).toEqual({
       verified: false,
-      why: "+0x37 i32.const 16: the two links' slots hold different functions",
+      why: `+0x37 i32.const ${slot}: the two links' slots hold different functions`,
     });
   });
 });
@@ -498,27 +589,42 @@ describe('remapBody with operand kinds', { timeout: 180_000 }, () => {
 // integer (c5L, c8L, I2, TH2), an integer of the target's written as a pointer (c2S), integers over vdbeSorterSort's
 // relative slots (V1, V2), and a function the relink does not name. Each case: our function, the instruction, the
 // original value, the value in the plain link and the value the shifted relink would have (by the operand's kind in
-// the source).
+// the source). A value of our link (an original address or slot, a slot or address of ours a case writes) is a
+// function of the links, found as the helpers above say; the target's numbers are literals.
+type Value = number | bigint | ((l: Loaded) => number | bigint);
 interface Case {
   name: string;
   symbol: string;
   target: number;
   at?: number;
-  was?: number | bigint;
-  plain?: number | bigint | ((l: Loaded) => number);
-  shifted?: number | bigint | ((l: Loaded) => number);
+  was?: Value;
+  plain?: Value;
+  shifted?: Value;
   /** the relink names no function after the symbol */
   unnamed?: boolean;
+}
+/** c4's wrong string: the one after the right one in our merged strings */
+function nextString(l: Loaded): number {
+  const right = ourString(l);
+  return right + cStringAt(l.maps.ourImage, GLOBAL_BASE, right)!.length + 1;
 }
 const CASES: Case[] = [
   { name: 'c0 identity', symbol: NEXT_ENTRY, target: 1260 },
   { name: 'c1 enum 7011', symbol: NEXT_ENTRY, target: 1260, at: 0x1b, was: 7010, plain: 7011, shifted: 7011 },
-  // our slot 1440 holds the function the target keeps in slot 7010
-  { name: 'c2 enum 1440', symbol: NEXT_ENTRY, target: 1260, at: 0x1b, was: 7010, plain: 1440, shifted: 1440 },
+  // our slot of the function the target keeps in slot 7010
+  { name: 'c2 enum our slot of target slot 7010', symbol: NEXT_ENTRY, target: 1260, at: 0x1b, was: 7010, plain: ourSlot7010, shifted: ourSlot7010 },
   { name: 'c3 enum 1622', symbol: INVERT_COLORS, target: 3663, at: 0xc7, was: 4903, plain: 1622, shifted: 1622 },
-  { name: 'c4 wrong string', symbol: NEXT_ENTRY, target: 1260, at: 0x23, was: 64029, plain: 65300, shifted: 65300 + D },
+  {
+    name: 'c4 wrong string',
+    symbol: NEXT_ENTRY,
+    target: 1260,
+    at: 0x23,
+    was: ourString,
+    plain: nextString,
+    shifted: (l) => nextString(l) + D,
+  },
   // 124328 is the target's address of the right string, and an address inside our merged strings
-  { name: 'c5 string at the target number', symbol: NEXT_ENTRY, target: 1260, at: 0x23, was: 64029, plain: 124328, shifted: 124328 + D },
+  { name: 'c5 string at the target number', symbol: NEXT_ENTRY, target: 1260, at: 0x23, was: ourString, plain: 124328, shifted: 124328 + D },
   {
     name: 'c6 wrong callee',
     symbol: NEXT_ENTRY,
@@ -527,33 +633,94 @@ const CASES: Case[] = [
     plain: (l) => l.maps.ours.fnByKey.get('_Znwm')!,
     shifted: (l) => indexOf(l.shifted, '_Znwm'),
   },
-  { name: 'c7 wrong slot 17', symbol: NEXT_ENTRY, target: 1260, at: 0x37, was: 16, plain: 17, shifted: 17 + T },
+  // the slot after the destructor's
+  {
+    name: 'c7 wrong slot',
+    symbol: NEXT_ENTRY,
+    target: 1260,
+    at: 0x37,
+    was: ourDtorSlot,
+    plain: (l) => ourDtorSlot(l) + 1,
+    shifted: (l) => ourDtorSlot(l) + 1 + T,
+  },
   // 69 is the target's slot of the destructor
-  { name: 'c8 slot 69, the target number', symbol: NEXT_ENTRY, target: 1260, at: 0x37, was: 16, plain: 69, shifted: 69 + T },
+  { name: 'c8 slot 69, the target number', symbol: NEXT_ENTRY, target: 1260, at: 0x37, was: ourDtorSlot, plain: 69, shifted: 69 + T },
   // the target's vtable address written as an integer: past our data, so no reading of ours names it
-  { name: 'c9 the target vtable address', symbol: DO_CONVERTE, target: 11386, at: 0xc, was: 1212884, plain: 1569340, shifted: 1569340 },
-  { name: 'c10 vtable + 4', symbol: DO_CONVERTE, target: 11386, at: 0xc, was: 1212884, plain: 1212888, shifted: 1212888 + D },
+  { name: 'c9 the target vtable address', symbol: DO_CONVERTE, target: 11386, at: 0xc, was: ourVtable, plain: 1569340, shifted: 1569340 },
+  {
+    name: 'c10 vtable + 4',
+    symbol: DO_CONVERTE,
+    target: 11386,
+    at: 0xc,
+    was: ourVtable,
+    plain: (l) => ourVtable(l) + 4,
+    shifted: (l) => ourVtable(l) + 4 + D,
+  },
   // the target's numbers written as integers: the string's address, the destructor's slot, a packed string view
   // (length 9 << 32 | the target's address 3395) and a string's address in a binaryen thunk
-  { name: 'c5L the string address as an integer', symbol: NEXT_ENTRY, target: 1260, at: 0x23, was: 64029, plain: 124328, shifted: 124328 },
-  { name: 'c8L the slot as an integer', symbol: NEXT_ENTRY, target: 1260, at: 0x37, was: 16, plain: 69, shifted: 69 },
+  { name: 'c5L the string address as an integer', symbol: NEXT_ENTRY, target: 1260, at: 0x23, was: ourString, plain: 124328, shifted: 124328 },
+  { name: 'c8L the slot as an integer', symbol: NEXT_ENTRY, target: 1260, at: 0x37, was: ourDtorSlot, plain: 69, shifted: 69 },
   {
     name: 'I2 the string view as an integer',
     symbol: RAW_READ,
     target: 598,
     at: 0x25f,
-    was: (9n << 32n) | 1096n,
+    // our "size = {}", the string the target keeps at 3395
+    was: (l) => (9n << 32n) | BigInt(ourStringOf(l, 3395)),
     plain: (9n << 32n) | 3395n,
     shifted: (9n << 32n) | 3395n,
   },
-  { name: 'TH2 a thunk string as an integer', symbol: DSA_PEM_THUNK, target: 1724, at: 0x3a, was: 105737, plain: 187586, shifted: 187586 },
-  // the enum 7010 written as a pointer to the function in our slot 1440, which the target keeps in slot 7010
-  { name: 'c2S the enum as a pointer', symbol: NEXT_ENTRY, target: 1260, at: 0x1b, was: 7010, plain: 1440, shifted: 1440 + T },
-  // integers over vdbeSorterSort's relative slots: the table reads them as table-rel, relative to the base, and the
-  // slots that makes of them (our 11886 and 11884) are past our table
-  { name: 'V1 a relative slot as an integer', symbol: 'vdbeSorterSort', target: 6458, at: 0xae, was: 2037, plain: 11885, shifted: 11885 },
-  { name: 'V2 another', symbol: 'vdbeSorterSort', target: 6458, at: 0xa8, was: 2035, plain: 11883, shifted: 11883 },
-  { name: 'U c2 in a function the relink does not name', symbol: NEXT_ENTRY, target: 1260, at: 0x1b, was: 7010, plain: 1440, shifted: 1440, unnamed: true },
+  // our "key2any_encode", the string the target keeps at 187586
+  {
+    name: 'TH2 a thunk string as an integer',
+    symbol: DSA_PEM_THUNK,
+    target: 1724,
+    at: 0x3a,
+    was: (l) => ourStringOf(l, 187586),
+    plain: 187586,
+    shifted: 187586,
+  },
+  // the enum 7010 written as a pointer to the function in our slot of it, which the target keeps in slot 7010
+  {
+    name: 'c2S the enum as a pointer',
+    symbol: NEXT_ENTRY,
+    target: 1260,
+    at: 0x1b,
+    was: 7010,
+    plain: ourSlot7010,
+    shifted: (l) => ourSlot7010(l) + T,
+  },
+  // the target's relative slots of vdbeSorterSort (11883 at +0xa8, 11885 at +0xae) written as integers: the table
+  // reads them as table-rel, relative to the base, and the slots that makes of them (our base + each) are past our
+  // table. Ours are vdbeSorterCompare's slot (+0xae) and vdbeSorterCompareInt's (+0xa8), relative to the base.
+  {
+    name: 'V1 a relative slot as an integer',
+    symbol: 'vdbeSorterSort',
+    target: 6458,
+    at: 0xae,
+    was: (l) => relativeSlotOf(l, 'vdbeSorterCompare'),
+    plain: 11885,
+    shifted: 11885,
+  },
+  {
+    name: 'V2 another',
+    symbol: 'vdbeSorterSort',
+    target: 6458,
+    at: 0xa8,
+    was: (l) => relativeSlotOf(l, 'vdbeSorterCompareInt'),
+    plain: 11883,
+    shifted: 11883,
+  },
+  {
+    name: 'U c2 in a function the relink does not name',
+    symbol: NEXT_ENTRY,
+    target: 1260,
+    at: 0x1b,
+    was: 7010,
+    plain: ourSlot7010,
+    shifted: ourSlot7010,
+    unnamed: true,
+  },
 ];
 
 /** The maps of the case: our module patched, and its function's kinds from the patched pair of links. */
@@ -564,10 +731,10 @@ function caseMaps(c: Case): { maps: SymbolMaps; kinds: FunctionKinds } {
   if (c.at === undefined) {
     return { maps: l.maps, kinds: l.kinds.functions.get(p)! };
   }
+  const v = (x: Value | undefined): number | bigint => (typeof x === 'function' ? x(l) : x!);
   if (c.was !== undefined) {
-    expect(valueAt(l.plain.module, p, c.at)).toBe(c.was);
+    expect(valueAt(l.plain.module, p, c.at), c.name).toBe(v(c.was));
   }
-  const v = (x: Case['plain']): number | bigint => (typeof x === 'function' ? x(l) : x!);
   const plainModule = patched(l.plain.module, p, c.at, v(c.plain));
   const shiftedModule = patched(l.shifted.module, s, shiftedAt(p, s, c.at), v(c.shifted));
   const pair = { ...l.plain, module: plainModule };
@@ -620,23 +787,35 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
     for (const name of ['c2', 'c5', 'c8']) {
       expect(failure(byName(name), { ...caseMaps(byName(name)).maps, kinds: undefined }), name).toBe('built');
     }
+    const l = load();
     // c2: an integer that our table slot reading would have turned into the target's 7010
     const c2 = caseMaps(byName('c2'));
+    const slot = ourSlot7010(l);
     expect(operandKind(c2.kinds, 0x1b)).toBe('literal');
     expect(failure(byName('c2'), c2.maps)).toMatch(
-      /function 1260 .* DIFFERS at \+0x1c target \+0x1b i32\.const 7010 \| ours \+0x1b i32\.const 1440 \[ours 1440: an integer/,
+      new RegExp(
+        `function 1260 .* DIFFERS at \\+0x1c target \\+0x1b i32\\.const 7010 \\| ours \\+0x1b i32\\.const ${slot} \\[ours ${slot}: an integer`,
+      ),
     );
-    // c5: an address whose literal is the target's number for the right string
+    // c5: an address whose literal is the target's number for the right string; re-pointed, it is the target's
+    // address of what our data holds at 124328
     const c5 = caseMaps(byName('c5'));
+    const there = resolveDataAddress(l.maps.ours, l.maps.ourImage, l.maps.target, 124328);
+    expect(there.ok).toBe(true);
+    const addr = there.ok ? there.addr : Number.NaN;
     expect(operandKind(c5.kinds, 0x23)).toBe('address');
     expect(failure(byName('c5'), c5.maps)).toMatch(
-      /function 1260 .* DIFFERS at \+0x24 target \+0x23 i32\.const 124328 \| ours \+0x23 i32\.const 207494 \[ours 124328 = .*: address string/,
+      new RegExp(
+        `function 1260 .* DIFFERS at \\+0x24 target \\+0x23 i32\\.const 124328 \\| ours \\+0x23 i32\\.const ${addr} \\[ours 124328 = .*: address string`,
+      ),
     );
-    // c8: a table slot whose literal is the target's slot number
+    // c8: a table slot whose literal is the target's slot number; re-pointed, it is the target's slot of the function
+    // in our slot 69
     const c8 = caseMaps(byName('c8'));
     expect(operandKind(c8.kinds, 0x37)).toBe('slot');
+    const theirs = targetSlotOf(l, 69);
     expect(failure(byName('c8'), c8.maps)).toMatch(
-      /function 1260 .* DIFFERS at \+0x38 target \+0x37 i32\.const 69 \| ours \+0x37 i32\.const 3599$/m,
+      new RegExp(`function 1260 .* DIFFERS at \\+0x38 target \\+0x37 i32\\.const 69 \\| ours \\+0x37 i32\\.const ${theirs}$`, 'm'),
     );
   });
 
@@ -678,10 +857,14 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
   });
 
   it.skipIf(!real)('an integer in the target table past ours is a review warning', () => {
-    const c = { ...byName('c1'), plain: 12000, shifted: 12000 };
+    // midway between the end of our table and the end of the target's
+    const { ours, target } = load().maps;
+    const past = Math.floor((ours.tableSize + target.module.tables[0].min) / 2);
+    expect(past).toBeGreaterThan(ours.tableSize);
+    const c = { ...byName('c1'), plain: past, shifted: past };
     const { maps } = caseMaps(c);
     const matched = new Map([[1260, { match: parseMatchList(`1260 ${NEXT_ENTRY}\n`).matches[0], ours: indexOf(load().plain, NEXT_ENTRY) }]]);
-    expect(reviewWarnings(maps, matched).map((w) => [w.at, w.why, w.value])).toEqual([[0x1b, 'past-table', 12000]]);
+    expect(reviewWarnings(maps, matched).map((w) => [w.at, w.why, w.value])).toEqual([[0x1b, 'past-table', past]]);
   });
 
   it.skipIf(!real)('c8L, c2S: the limits of the check build the target, with no review warning', () => {
@@ -740,7 +923,8 @@ describe('table slots read with operand kinds', { timeout: 300_000 }, () => {
     expect(a.verdict).toBe('match');
     const refs = referencedFunctionsAt(maps, ours, a.verdict === 'match' ? a.chosen : []);
     const named = (at: number) => refs.filter((r) => r.at === at).map((r) => maps.ours.fns.get(r.f)?.key);
-    // our slots 2035, 2036 and 2037 hold sqlite3InitCallback, vdbeSorterCompareInt and vdbeSorterCompareText
+    // each operand is relative to the base: our table base (1) plus it is the slot of the function named, the
+    // operand alone the slot before it
     expect([0xa8, 0xab, 0xae].map(named)).toEqual([['vdbeSorterCompareInt'], ['vdbeSorterCompareText'], ['vdbeSorterCompare']]);
   });
 
@@ -756,22 +940,23 @@ describe('table slots read with operand kinds', { timeout: 300_000 }, () => {
     expect(p !== undefined && !(p instanceof Uint8Array) && p.alternatives.length).toBe(126);
     const a = attempt(maps, { ours, symbol: 'sqlite3_initialize', source: 'symbol' }, 250, readPieceBodies(PIECES).get(250)!);
     expect(a.verdict).toBe('match');
-    // an operand that may be anything is offered a function's slots only while they are few (here an address too)
+    // an operand that may be anything is offered a function's slots only while they are few: here no slot, only the
+    // integer and, as our slot number is past GLOBAL_BASE, what our data holds at that address (which object that is
+    // depends on the link)
     const unverified = piece({ ...maps, kinds: undefined });
-    expect(unverified !== undefined && !(unverified instanceof Uint8Array) && unverified.readings).toEqual([
-      'address string',
-      expect.stringMatching(/^address same-content /),
-      'literal',
-    ]);
+    const readings = unverified !== undefined && !(unverified instanceof Uint8Array) ? unverified.readings : [];
+    expect(readings.at(-1)).toBe('literal');
+    expect(readings.length).toBeGreaterThan(1);
+    expect(readings.slice(0, -1).filter((r) => !r.startsWith('address '))).toEqual([]);
   });
 
-  it.skipIf(!real)("reads 2077 in sqlite3AddDefaultValue as a table slot, as both links' tables say", () => {
+  it.skipIf(!real)("reads renameUnmapSelectCb's slot in sqlite3AddDefaultValue as a table slot, as both links' tables say", () => {
     // its object as a whole has address relocations, which does not make this operand an address
-    const { kinds, maps, plain } = load();
+    const l = load();
+    const { kinds, plain } = l;
     const p = indexOf(plain, 'sqlite3AddDefaultValue');
-    expect(valueAt(plain.module, p, 0x292)).toBe(2077);
+    expect(valueAt(plain.module, p, 0x292)).toBe(slotOf(l, 'renameUnmapSelectCb'));
     expect(operandKind(kinds.functions.get(p), 0x292)).toBe('slot');
-    expect(maps.ours.fns.get(maps.ours.elem.get(2077)!)?.key).toBe('renameUnmapSelectCb');
   });
 });
 
@@ -782,7 +967,10 @@ describe('buildSplat with operand kinds', { timeout: 300_000 }, () => {
     const r = buildSplat(maps, PIECES, matches, TARGET_SHA);
     expect(r.matched).toBe(3);
     expect(r.kindUnverified).toEqual([]);
-    // LZMA's dictionary-size bounds: 3 << 12 (+ 1) past our table, 3 << 19 (+ 1) past our data
+    // LZMA's dictionary-size bounds: 3 << 12 (+ 1) past our table, 3 << 19 (+ 1) past our data (the source's
+    // integers, so literals; past ours while our table has at most 12288 slots and our data ends by 1572864)
+    expect(maps.ours.tableSize).toBeLessThanOrEqual(12288);
+    expect(maps.ours.dataEnd).toBeLessThanOrEqual(1572864);
     expect(r.reviewWarnings.map((w) => [w.match.index, w.why, w.value])).toEqual([
       [3418, 'past-table', 12288],
       [3418, 'past-table', 12289],
