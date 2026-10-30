@@ -35,18 +35,29 @@ The project is not affiliated with the TSE.
 <!-- /status:headline -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-history-dark.svg">
-  <img alt="The share of functions matched over time, for all functions and for TSE code" src="docs/img/progress-history-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-origins-dark.svg">
+  <img alt="Functions matched by origin: a 10 by 10 waffle each, one square per percent, coloured by verdict" src="docs/img/progress-origins-light.svg">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-components-dark.svg">
-  <img alt="The share of functions matched per component, grouped by origin" src="docs/img/progress-components-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-tse-dark.svg">
+  <img alt="Every function of TSE code: one square per function, by component, coloured by verdict" src="docs/img/progress-tse-light.svg">
 </picture>
 
-[docs/status.md](docs/status.md) has the same numbers as tables, with code bytes and what is left. `make -C src status`
-writes the headline above, the two charts (`docs/img/`) and the history they draw (`splat/history.tsv`, one row per
-point at which the matches changed).
+<details>
+<summary>Every component</summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-components-dark.svg">
+  <img alt="Functions matched by component: a 10 by 10 waffle each, one square per percent, coloured by verdict" src="docs/img/progress-components-light.svg">
+</picture>
+
+</details>
+
+Each square is coloured by the function's verdict in the scan: matched, differs (our body exists and differs),
+unresolved (our body names something the target lacks) or no candidate yet. [docs/status.md](docs/status.md) has the
+same numbers as tables, with code bytes and what is left. `make -C src status` writes the headline above and the
+waffles (`docs/img/`).
 
 A match is a line of `splat/matched.txt` that `TMPDIR=/tmp make -C src splat` verifies on every run; their count is
 the only progress number this project reports. `docs/status.md` is written by `make -C src status` from the committed

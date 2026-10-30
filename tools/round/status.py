@@ -1,7 +1,7 @@
-"""Write the progress numbers into README.md and docs/status.md, and the README's charts, from the committed scan.
+"""Write the progress numbers into README.md and docs/status.md, and the README's waffles, from the committed scan.
 
-    python3 -I -B tools/round/status.py           # rewrite the generated blocks and charts (make -C src status)
-    python3 -I -B tools/round/status.py --check   # exit 1 when a block, a chart or the scan disagrees (CI)
+    python3 -I -B tools/round/status.py           # rewrite the generated blocks and waffles (make -C src status)
+    python3 -I -B tools/round/status.py --check   # exit 1 when a block, a waffle or the scan disagrees (CI)
 
 Inputs, all tracked: splat/matched.txt (the match list), splat/scan.tsv (the verdict of every target function, written
 by `make -C src splat-scan` and `splat-match`) and target/vota_web_wasm.wasm (for byte-identical twins). The scan's
@@ -9,7 +9,7 @@ by `make -C src splat-scan` and `splat-match`) and target/vota_web_wasm.wasm (fo
 whose detail says `kinds unverified` is counted apart as kind-unverified.
 
 Each generated block sits between `<!-- status:NAME -->` and `<!-- /status:NAME -->`; text outside the markers is
-hand-written and kept. The progress history, splat/history.tsv, and the charts in docs/img/ are progress_charts.py's.
+hand-written and kept. The waffles in docs/img/ are progress_waffles.py's.
 """
 import collections
 import hashlib
@@ -18,7 +18,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import progress_charts  # noqa: E402
+import progress_waffles  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MATCHES = os.path.join(ROOT, 'splat', 'matched.txt')
@@ -268,12 +268,11 @@ def blocks(rows, listed):
     return out
 
 
-def chart_groups(rows):
-    """The components chart's rows: each origin's components, in the order of the status tables."""
+def origins(rows):
+    """Each origin's components, in the order of the status tables."""
     t = tally(rows)
     libs = sorted((g for g in t if g not in TSE and g not in NOT_ATTRIBUTED), key=lambda g: (-t[g][0], g))
-    return [(origin, [(g, t[g][0], t[g][1]) for g in groups])
-            for origin, groups in (('TSE code', TSE), ('Upstream libraries', libs), ('Not attributed', NOT_ATTRIBUTED))]
+    return [('TSE code', TSE), ('Upstream libraries', libs), ('Not attributed', NOT_ATTRIBUTED)]
 
 
 def substitute(path, generated):
@@ -305,16 +304,8 @@ def main(argv):
                         f'(scan only: {extra}, matched.txt only: {missing}); run TMPDIR=/tmp make -C src splat-match')
     generated = blocks(rows, listed)
     files = {p: substitute(p, generated) for p in (README, STATUS)}
-    history = progress_charts.read_history()
-    current = progress_charts.point(rows, TSE)
-    if not history or history[-1][1] != current:
-        if check:
-            problems.append('the last row of splat/history.tsv is not the totals of splat/scan.tsv; run make -C src status')
-        else:
-            history.append((progress_charts.now(), current))
-    files[progress_charts.HISTORY] = (None, progress_charts.history_text(history))
-    for path, chart in progress_charts.charts(history, chart_groups(rows)).items():
-        files[path] = (None, chart)
+    for path, image in progress_waffles.images(rows, origins(rows)).items():
+        files[path] = (None, image)
     for path, (old, new) in files.items():
         if old is None:
             old = open(path, encoding='utf-8').read() if os.path.exists(path) else None
@@ -329,8 +320,8 @@ def main(argv):
     for p in problems:
         print(p, file=sys.stderr)
     if not problems:
-        print(f'{len(listed)} matches ({kind_unverified(rows)} kind-unverified); README.md, docs/status.md, '
-              'splat/history.tsv and the charts agree with splat/scan.tsv')
+        print(f'{len(listed)} matches ({kind_unverified(rows)} kind-unverified); README.md, docs/status.md '
+              'and the waffles agree with splat/scan.tsv')
     return 1 if problems else 0
 
 

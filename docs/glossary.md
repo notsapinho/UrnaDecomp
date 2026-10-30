@@ -307,15 +307,15 @@ pair is not a match. *Where:* `ledger/`, `docs/reference/appmap.md` (artefact ta
 
 **meter** — the tally `TMPDIR=/tmp make -C src splat` prints: matched functions and code bytes, in total and per
 component. Its count of matches in `splat/matched.txt` is the project's one progress number; `docs/status.md` has it,
-written by `make -C src status`, which also draws it in the README's charts. *Where:* `docs/status.md`,
+written by `make -C src status`, which also draws it in the README's waffles. *Where:* `docs/status.md`,
 `docs/reference/splat.md` "The meter".
 
 **progress** — two things with the one name. (1) The toolkit command `pnpm wasm progress` (also the end of
 `make -C src census`, and its `build/out/census/progress.md`): the census tiers per owner or component with the delta
 since the last snapshot. Despite its name it is a diagnostic, not the meter. *Where:* `asmlift-wasm/README.md`
-"progress". (2) The README's progress charts: the share of functions matched over time and per component, drawn by
-`make -C src status` from `splat/scan.tsv` and `splat/history.tsv`. *Where:* `README.md` "Status",
-`tools/round/progress_charts.py`. "Progress" alone, and "the progress number", mean the meter.
+"progress". (2) The README's progress waffles: squares coloured by verdict, a 10 x 10 waffle per origin and per
+component and one square per function of TSE code, drawn by `make -C src status` from `splat/scan.tsv`. *Where:*
+`README.md` "Status", `tools/round/progress_waffles.py`. "Progress" alone, and "the progress number", mean the meter.
 
 **snapshot** — a copy of `ledger/functions.tsv` saved as `ledger/history/<stamp>[-label].tsv` by
 `progress --snapshot`, so the next run can print what moved. *Where:* `tools/round/census.sh`, `ledger/history/`.

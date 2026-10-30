@@ -5,7 +5,7 @@ from the repository root:
 
 | step | what it checks |
 | --- | --- |
-| `python3 -I -B tools/round/status.py --check` | the committed scan `splat/scan.tsv` has a `match` verdict for exactly the functions in `splat/matched.txt`, every generated block in `README.md` and `docs/status.md` is what that scan gives, the last row of `splat/history.tsv` is its totals, and the README's charts in `docs/img/` are what the scan and the history draw |
+| `python3 -I -B tools/round/status.py --check` | the committed scan `splat/scan.tsv` has a `match` verdict for exactly the functions in `splat/matched.txt`, every generated block in `README.md` and `docs/status.md` is what that scan gives, and the README's waffles in `docs/img/` are what it draws |
 | `python3 -I -B tools/round/check_encoding.py` | every tracked file `.editorconfig` declares Latin-1 (TSE's sources) has not been re-saved as UTF-8 |
 | `python3 -I -B tools/round/stubs.py --check` | every unmatched TSE function with no code of ours has exactly one stub, in the file and at the place its evidence gives, with the text the generator derives, and no other function has one (`src/README.md` "Stubs"); every run of 3 or more blank lines that holds code at its original lines is a gap comment and `#line`, each the generator's ("Gaps") |
 
