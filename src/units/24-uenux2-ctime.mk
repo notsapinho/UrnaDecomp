@@ -3,8 +3,11 @@
 # inlines the file's static EncodeTime(uebyte, uebyte, uebyte) (line 48 col 11, the CUeUtilError 7079 throw), and
 # operator- inlines operator-= (line 161 col 19, the 7082 throw), which calls operator+= (line 148 col 19, the 7081
 # throw), with the class header (api/util/ctime.h: the seconds since midnight, one size_t) and the three enumerators
-# of api/util/eueutilerror.h. The constructor from a string (fn 3643) is not reconstructed yet. Paths relative to
-# src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# of api/util/eueutilerror.h. No evidence names fn 3641 (its records are those of the inlined -= and +=, and no RTTI,
+# vtable slot or export holds it): the name operator-(int) const is read from the body's shape, a copy of *this with
+# -= applied and returned by value; a free operator-(const CTime &, int) would give the same bytes. The constructor
+# from a string (fn 3643) is not reconstructed yet. Paths relative to src/uenux2; the generic uenux2 rule depends on
+# the source and every uenux2 header.
 CTIME_SRCS := src/api/util/ctime.cpp
 UENUX2_SRCS += $(CTIME_SRCS)
 # the six callers of both are not reconstructed yet: 24-uenux2-ctime-roots.cpp gives each two call sites
