@@ -26,44 +26,17 @@
     "reference": null
   },
   {
-    "id": "uenux2/2219",
-    "index": 2219,
-    "size": 20,
-    "band": "tiny",
-    "component": "api",
-    "owner": "rhvoice",
-    "features": [
-      "leaf",
-      "frame"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CPosixSemaphore::Lock()",
-    "symbol": "_ZN3api15CPosixSemaphore4LockEv",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/ipc/posix/cposixsemaphore.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/ipc/posix/cposixsemaphore.cpp",
-      "line": 87
-    }
-  },
-  {
-    "id": "uenux2/5465",
-    "index": 5465,
-    "size": 258,
+    "id": "uenux2/4793",
+    "index": 4793,
+    "size": 412,
     "band": "medium",
     "component": "comum",
-    "owner": "app",
+    "owner": "libcxx",
     "features": [
-      "frame",
-      "inlined-frame",
-      "bulk-memory",
+      "loop",
+      "invoke",
+      "throw",
+      "i64",
       "select"
     ],
     "ledger": {
@@ -81,11 +54,11 @@
     "reference": null
   },
   {
-    "id": "uenux2/5629",
-    "index": 5629,
-    "size": 30,
+    "id": "uenux2/7902",
+    "index": 7902,
+    "size": 10,
     "band": "tiny",
-    "component": "comum",
+    "component": "simulador",
     "owner": "app",
     "features": [
       "leaf"
@@ -98,41 +71,14 @@
     "setup": "uenux2",
     "lang": "c++",
     "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "comum::md::estadoaplicacao::CNumViasImpressasRelatorios::CNumViasImpressasRelatorios(unsigned char, unsigned char, unsigned char, unsigned char)",
-    "symbol": "_ZN5comum2md15estadoaplicacao27CNumViasImpressasRelatoriosC1Ehhhh",
+    "name": "simulador::CWasmTimer::IsRunning() const",
+    "symbol": "_ZNK9simulador10CWasmTimer9IsRunningEv",
     "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.cpp.o",
+    "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp.o",
     "reference": {
-      "path": "src/uenux2/src/app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.cpp",
-      "line": 5
+      "path": "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp",
+      "line": 28
     }
-  },
-  {
-    "id": "uenux2/6265",
-    "index": 6265,
-    "size": 123,
-    "band": "small",
-    "component": "vota",
-    "owner": "-",
-    "features": [
-      "loop",
-      "frame",
-      "i64",
-      "float"
-    ],
-    "ledger": {
-      "kind": "none",
-      "score": null
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": null,
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
-    "reference": null
   },
   {
     "id": "uenux2/10251",
@@ -191,18 +137,48 @@
     }
   },
   {
-    "id": "uenux2/10307",
-    "index": 10307,
-    "size": 2480,
-    "band": "huge",
-    "component": "vota-web",
+    "id": "uenux2/10255",
+    "index": 10255,
+    "size": 24,
+    "band": "tiny",
+    "component": "unknown",
     "owner": "app",
     "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "api::CThread::Rotina(void*)",
+    "symbol": "_ZN3api7CThread6RotinaEPv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/ipc/cthread.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/ipc/cthread.cpp",
+      "line": 79
+    }
+  },
+  {
+    "id": "uenux2/10451",
+    "index": 10451,
+    "size": 6996,
+    "band": "huge",
+    "component": "vota",
+    "owner": "app",
+    "features": [
+      "loop",
       "call_indirect",
-      "invoke",
-      "throw",
       "frame",
-      "i64"
+      "inlined-frame",
+      "i64",
+      "float",
+      "bulk-memory",
+      "select"
     ],
     "ledger": {
       "kind": "none",
@@ -219,9 +195,9 @@
     "reference": null
   },
   {
-    "id": "uenux2/10740",
-    "index": 10740,
-    "size": 944,
+    "id": "uenux2/10713",
+    "index": 10713,
+    "size": 1389,
     "band": "large",
     "component": "vota",
     "owner": "app",
@@ -229,9 +205,11 @@
       "loop",
       "switch",
       "call_indirect",
-      "throw",
       "frame",
-      "i64"
+      "inlined-frame",
+      "i64",
+      "bulk-memory",
+      "select"
     ],
     "ledger": {
       "kind": "none",
@@ -276,14 +254,15 @@
     "reference": null
   },
   {
-    "id": "uenux2/11317",
-    "index": 11317,
-    "size": 10,
+    "id": "uenux2/10974",
+    "index": 10974,
+    "size": 12,
     "band": "tiny",
-    "component": "unknown",
+    "component": "api",
     "owner": "app",
     "features": [
-      "leaf"
+      "leaf",
+      "i64"
     ],
     "ledger": {
       "kind": "byte",
@@ -293,13 +272,13 @@
     "setup": "uenux2",
     "lang": "c++",
     "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "comum::md::CVoto::EhLegenda() const",
-    "symbol": "_ZNK5comum2md5CVoto9EhLegendaEv",
+    "name": "api::CProgressBar::Rect() const",
+    "symbol": "_ZNK3api12CProgressBar4RectEv",
     "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp.o",
+    "object": "build/out/app/uenux2/src/api/gui/cprogressbar.cpp.o",
     "reference": {
-      "path": "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp",
-      "line": 15
+      "path": "src/uenux2/src/api/gui/cprogressbar.cpp",
+      "line": 80
     }
   },
   {
@@ -316,6 +295,32 @@
       "inlined-frame",
       "i64",
       "bulk-memory"
+    ],
+    "ledger": {
+      "kind": "none",
+      "score": null
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2/11668",
+    "index": 11668,
+    "size": 106,
+    "band": "small",
+    "component": "comum",
+    "owner": "app",
+    "features": [
+      "call_indirect",
+      "frame",
+      "select"
     ],
     "ledger": {
       "kind": "none",
@@ -378,30 +383,6 @@
     "reference": null
   },
   {
-    "id": "ecourna/3874",
-    "index": 3874,
-    "size": 49,
-    "band": "small",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "i64"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "ecourna::api::security::CSha::GetAlgoritmo() const",
-    "symbol": "_ZNK7ecourna3api8security4CSha12GetAlgoritmoEv",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_csha.cpp.o",
-    "reference": null
-  },
-  {
     "id": "ecourna/5170",
     "index": 5170,
     "size": 84,
@@ -450,30 +431,6 @@
     "reference": {
       "path": "src/ecourna/api/security/caescipher.cpp"
     }
-  },
-  {
-    "id": "ecourna/5176",
-    "index": 5176,
-    "size": 117,
-    "band": "small",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "invoke"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 7
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "ecourna::api::security::CSha512::~CSha512()",
-    "symbol": "_ZN7ecourna3api8security7CSha512D0Ev",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_csha.cpp.o",
-    "reference": null
   },
   {
     "id": "ecourna/5354",
@@ -678,30 +635,31 @@
     }
   },
   {
-    "id": "ecourna-nopic/9073",
-    "index": 9073,
-    "size": 503,
+    "id": "ecourna-nopic/5102",
+    "index": 5102,
+    "size": 345,
     "band": "medium",
     "component": "ecourna",
     "owner": "app",
     "features": [
-      "call_indirect",
+      "loop",
       "invoke",
       "throw",
-      "frame"
+      "frame",
+      "i64"
     ],
     "ledger": {
       "kind": "addr",
-      "score": 25
+      "score": 12
     },
     "origin": "selected",
     "setup": "ecourna-nopic",
     "lang": "c++",
     "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "ecourna::app::dados::asn::CConversorEstadoHabilitacaoPorCodigo::DoDeconverte(ModuloResultadoUrnaCadastro::EstadoHabilitacaoPorCodigo const&) const",
-    "symbol": "_ZNK7ecourna3app5dados3asn36CConversorEstadoHabilitacaoPorCodigo12DoDeconverteERKN27ModuloResultadoUrnaCadastro26EstadoHabilitacaoPorCodigoE",
+    "name": "ecourna::app::dados::asn::CConversorParametrosUrna::DesconverterCabecalho(ASN1::SEQUENCE_OF<ModuloParametrizacaoUrna::TituloRelatorio, ASN1::EmptyConstraint> const&) const",
+    "symbol": "_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna21DesconverterCabecalhoERKN4ASN111SEQUENCE_OFIN24ModuloParametrizacaoUrna15TituloRelatorioENS4_15EmptyConstraintEEE",
     "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_asn_resultadournacadastro_cconversorestadohabilitacaoporcodigo.cpp.o",
+    "object": "build/out/app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o",
     "reference": null
   },
   {
@@ -4907,6 +4865,33 @@
     }
   },
   {
+    "id": "libcxxabi/3946",
+    "index": 3946,
+    "size": 75,
+    "band": "small",
+    "component": "libc++",
+    "owner": "libcxx",
+    "features": [
+      "call_indirect",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "__cxxabiv1::__base_class_type_info::search_above_dst(__cxxabiv1::__dynamic_cast_info*, void const*, void const*, int, bool) const",
+    "symbol": "_ZNK10__cxxabiv122__base_class_type_info16search_above_dstEPNS_19__dynamic_cast_infoEPKvS4_ib",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:private_typeinfo.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
+    }
+  },
+  {
     "id": "libcxxabi/3947",
     "index": 3947,
     "size": 154,
@@ -4952,33 +4937,6 @@
     "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
     "name": "__cxxabiv1::__class_type_info::process_found_base_class(__cxxabiv1::__dynamic_cast_info*, void*, int) const",
     "symbol": "_ZNK10__cxxabiv117__class_type_info24process_found_base_classEPNS_19__dynamic_cast_infoEPvi",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
-    }
-  },
-  {
-    "id": "libcxxabi/6173",
-    "index": 6173,
-    "size": 123,
-    "band": "small",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "call_indirect",
-      "select"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__base_class_type_info::has_unambiguous_public_base(__cxxabiv1::__dynamic_cast_info*, void*, int) const",
-    "symbol": "_ZNK10__cxxabiv122__base_class_type_info27has_unambiguous_public_baseEPNS_19__dynamic_cast_infoEPvi",
     "evidence": "symbol",
     "object": "emsdk:libc++abi.a:private_typeinfo.o",
     "reference": {

@@ -1,7 +1,7 @@
 {
-  "version": 4,
+  "version": 5,
   "per": 12,
-  "commit": "37d004d5115ad11bffd655beb00019448b637d4a",
+  "commit": "39caffd146e68adde424896b213d839aa3a6dca8",
   "inputs": {
     "target": {
       "path": "target/vota_web_wasm.wasm",
@@ -13,7 +13,7 @@
     },
     "ledger": {
       "path": "ledger/functions.tsv",
-      "blob": "21f0bf26e3ed2c1df91df2058c7d37fe75daa9d7"
+      "blob": "34d68fb2663ac00de25cfdb4c75090d56b37ef07"
     },
     "setups": {
       "path": "asmlift-wasm/benchmark/dataset/setups.json",
@@ -31,17 +31,17 @@
       "src/ecourna/app/dados/parametrizacaourna/cparametrosurna.cpp": "6876a658873836b495f7d8747ef10ee49a9ee9a0",
       "src/ecourna/app/dados/resultadournacadastro/capresentacaofotoeleitor.cpp": "50a308989ba7a69d4aa4af4fb8599b316660c586",
       "src/ecourna/app/dados/resultadournacadastro/cresultadournacadastro.cpp": "8fb90cebc4bdc5f8dc9f6f3c0abcdfd7e965c561",
+      "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp": "6610b6af3c8934ee9a9242d4d01f0d7aa84e5468",
+      "src/uenux2/src/api/gui/cprogressbar.cpp": "a812b834e3d221ccd15daca7f5e61b80fd0d3d41",
+      "src/uenux2/src/api/ipc/cthread.cpp": "8452bff720ad8fe30e5310219db09b4eaac870dd",
       "src/uenux2/src/api/ipc/posix/cposixmutex.cpp": "eb53bb387292ca15dd8d0422edcc76242dcd1db8",
-      "src/uenux2/src/api/ipc/posix/cposixsemaphore.cpp": "6a89e931ba07bbd6feccf076365e8bb08409e186",
-      "src/uenux2/src/app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.cpp": "a6f17507ef04dd8f820eedd70ce2fd8b5ad80d25",
-      "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp": "62b6f6e8daf7b1eb0fc12f3b4a55dfba073d29fc",
       "tools/libs/7zip/sources.txt": "de7f5cdbcc930f24960d18ab7e1631df01d330b4"
     },
     "definitions": {
       "path": "asmlift-wasm/benchmark/dataset/selection-definitions.json",
-      "sha256": "624f85624ff73280687ca754bf93e1488fb900eaab692fac99f3743c45e86e7b",
-      "names": 6407,
-      "build": "37d004d5115ad11bffd655beb00019448b637d4a"
+      "sha256": "1e7c97cac9f873d3f46c3b7c1116c3c03cc368c9685a8012884b87f1358f92ba",
+      "names": 6447,
+      "build": "39caffd146e68adde424896b213d839aa3a6dca8"
     }
   }
 }
