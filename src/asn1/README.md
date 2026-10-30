@@ -12,9 +12,10 @@ The upstream files here are a modified copy of the III ASN.1 runtime at that com
 
 | path | what |
 | --- | --- |
-| `asn1.h`, `asn1.cxx`, the coders (`BER*`, `PER*`, `AVN*`), `ValidChecker.cxx`, `ValidChecks.cxx`, `InvalidTracer.cxx`, … | the upstream runtime with the fork's changes read from the target: `AbstractData`'s seventh virtual `getTypeName()`, the `typeName` word of the `SEQUENCE` and `SEQUENCE_OF_Base` info records, the two out-of-line `CHOICE` helpers, `IAbstractVisitor`, `ISeeder` |
+| `asn1.h`, `asn1.cxx`, the coders (`BER*`, `PER*`, `AVN*`), `ValidChecker.cxx`, `InvalidTracer.cxx`, … | the upstream runtime with the fork's changes read from the target: `AbstractData`'s seventh virtual `getTypeName()`, the `typeName` word of the `SEQUENCE` and `SEQUENCE_OF_Base` info records, the two out-of-line `CHOICE` helpers, `IAbstractVisitor`, `ISeeder` |
 | `BERDecoderPartial.cxx`, `BufferSeeder.h`, `DataFree.cxx` | fork-only classes, reconstructed from the target's vtables and readouts |
 | `DataLengthCounter.cxx` | `DataLengthCounter` and the length functions over it, which upstream's `BEREncoder.cxx` holds and the target keeps in an object of their own (facts §A6); the file's name is chosen |
+| `ValidChecks.cxx` | the data classes' `isValid` and `isStrictlyValid`, which upstream's `ValidChecker.cxx` holds. The split from the checkers is real: clang inlines these members into a caller that sees them, and the target calls them. The file is free and its name is chosen: no byte needs it. Members in `ValidChecker.cxx` with the checkers in `asn1.cxx`, and members in `asn1.cxx` with the checkers kept, each lost 0 matches in a private scan, which makes both leads. Which TU is `asn1.cxx` is unsettled: the visitors 8968 to 8987 lie inside the target's run of `asn1.o`'s functions, which is the lead |
 | `AssocVector.h`, `Platform*.h`, `ios_helper.*`, `asn1_useful.*` | upstream support files, ported to compile at C++20 |
 | `modules/<Modulo>.{h,cxx}` | the 32 generated modules (below) |
 | `unplaced.cpp` | generated comment stubs of the `ASN1` functions no evidence places in a file; a `.cpp`, so `src/mk/asn1.mk` never compiles it. The `.cxx` files hold stubs too, as comments that change no object ([../README.md](../README.md) "Stubs") |

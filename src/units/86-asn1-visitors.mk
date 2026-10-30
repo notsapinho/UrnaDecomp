@@ -15,7 +15,9 @@
 #   target's br_table (an or of the two tests, or a switch: both do, in the object).
 # - 2183, 3469 BERDecoderPartial's destructor and constructor: one row, a drop. Target 424, shared_ptr<ISeeder>'s
 #   destructor among others, has no result; ours is one body with an RHVoice copy, and four of our RHVoice functions
-#   (item::append, append_child, prepend, relation::append) read its result. 8831 matches by their names.
+#   (item::append, append_child, prepend, relation::append) read its result. Target 388 is a second copy that reads +4
+#   and keeps its result, and 2650 calls it and drops that, so one body of ours cannot serve both. 8831 matches by their
+#   names.
 # - 8811 PERDecoder::do_visit(SEQUENCE_OF_Base&): differs. It calls 543, which is no body of ours
 #   (docs/reference/facts/asn1.md A5), with one block more than the target around the vector growth wasm-opt inlined
 #   from SEQUENCE_OF_Base::resize, which asn1.cxx holds.
@@ -25,13 +27,13 @@
 # What the target decided:
 # - BERDecoderPartial::decodeHeader (995) writes the type's name in the one << chain: the target builds the string
 #   between " on type " and " on position ". A named string before the chain moves 11 rows.
-# - decodeTime keeps its compare in a bool: 8828 and 8829 compare twice over one read of len, which is LLVM sinking one
-#   compare to its two uses. The compare written twice reads len again, in 96 rows against 92.
+# - decodeTime reads len once: 8828 and 8829 compare twice over that one read, which is LLVM sinking one compare to its
+#   two uses. The compare written twice reads len again, in 96 rows against 92.
 # - preVisitExtensionRoots (8827) tests m_path.size() == 0: empty() gives begin == end, the target's end == begin. It
 #   pushes an lvalue, twice: 5054 and 938 are the push_back(const&) overloads, and the first string dies before the
 #   next takes its frame slot. endPosition reads tell() first: `len + tell()` gives other rows.
-# - visitExtensionRoot (8826) tests the tag once and accepts once in the source. That single accept, with the sequence
-#   branch notifying before it and the others after, gives the target's order of calls, which two accepts do not.
+# - visitExtensionRoot (8826) accepts once in the source. That single accept, with the sequence branch notifying before
+#   it and the others after, gives the target's order of calls, which two accepts do not.
 # - notify calls visit whatever mayFree says: the target's `or` of the two tests has no branch between them.
 # - PERDecoder::do_revisit (8808) only tests its data: 8808 has no decoder, and reads buf before data. In the other
 #   order the rows differ.
@@ -47,11 +49,13 @@
 # Chosen, with the forms measured to give the same bytes (one function's rows, object-local numbers masked):
 # - src/asn1/ValidChecks.cxx: no evidence names it. The band puts 1068 and 1067 before asn1.o's first function, and the
 #   target's checker vtables lie among asn1.o's, so asn1.cxx may hold the checkers. Which of the two TUs is which is not
-#   decided. The members moved as one block, though only those above are measured to need it.
-# - visitExtensionRoot: `sequence` is a chosen local; the test written twice gives the same bytes. Its branch order is
-#   not free: the pop_back in the else gives other rows.
+#   decided. The members moved as one block, though only those above are measured to need it. Members in
+#   ValidChecker.cxx with the checkers in asn1.cxx, and members in asn1.cxx with the checkers kept, each lost no match in a
+#   private scan, so no byte needs this file, and the visitors 8968 to 8987 lie inside the target's run of asn1.o.
+# - visitExtensionRoot: `sequence` is a chosen local, so the tag tested once is a choice: the test written twice gives the
+#   same bytes. Its branch order is not free: the pop_back in the else gives other rows.
 # - preVisitExtensionRoots' typeName: `string typeName(...)` and `const string& typeName = ...` give the same bytes.
-# - decodeTime's result: an early `return false` gives the same bytes.
+# - decodeTime's bool: it holds the compare by choice, and an early `return false` gives the same bytes.
 # - notify's `consumed`: an int result compared in the test gives the same bytes.
 # - PERDecoder::do_revisit: `if (!has_buf() || !has_data()) return false; return true;` gives the same bytes.
 # - DataFree: `delete value.release_data()` in place of the second asn_ptr gives the same bytes.
