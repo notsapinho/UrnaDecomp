@@ -8,13 +8,17 @@
 // take it (iscreen.h, not recovered there).
 //
 // IImage's RTTI is a class with no base (typeinfo 1530296). Its implementations' vtables (api::CFixedImage @1530272:
-// fns 8563, 8554, 4975) have a third slot that no record or symbol names; it is not recovered.
+// fns 8563, 8554, 4975) have a third slot that no record or symbol names; GetData is its chosen name. It returns the
+// image's encoded bytes: CFixedImage's 4975 copies a std::vector<unsigned char> member, and simulador::CWasmScreen's
+// 9058 and 9079 hand its result to js_image.
 //
 // EAnchorPoint's values are read from simulador::CWasmScreen's two image-drawing members (IScreen vtable slots 22 and
 // 24, fns 9079 and 9058): 0 draws the image from the position, 1 to 8 move it left by its width or half of it and up
 // by its height or half of it. The enumerator names are chosen: no evidence names them.
 
+#include <cstdint>
 #include <memory>
+#include <vector>
 
 namespace api {
 
@@ -24,6 +28,7 @@ namespace api {
 class IImage {
 public:
     virtual ~IImage() = default;
+    virtual std::vector<uint8_t> GetData() const = 0;
 };
 
 using SharedIImage = std::shared_ptr<IImage>;
