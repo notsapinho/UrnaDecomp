@@ -6,6 +6,6 @@ UENUX2_SRCS += src/api/gui/ctextfieldmultiline.cpp
 # CBaseError<EUeGuiError> ctor thunk, and drops the two constant TColor arguments as the target's wasm-opt did
 $(ROOT)/$(APP)/14-uenux2-ctextfieldmultiline-pending.o: $(ROOT)/src/units/14-uenux2-ctextfieldmultiline-pending.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/14-uenux2-ctextfieldmultiline-pending.cpp -o $(R)
-$(ROOT)/$(APP)/14-uenux2-ctextfieldmultiline-roots.o: $(ROOT)/src/units/14-uenux2-ctextfieldmultiline-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
+$(ROOT)/$(APP)/14-uenux2-ctextfieldmultiline-roots.o: $(ROOT)/src/units/14-uenux2-ctextfieldmultiline-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h $(ROOT)/src/ecourna/api/exception/*.hpp)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/14-uenux2-ctextfieldmultiline-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/14-uenux2-ctextfieldmultiline-pending.o $(APP)/14-uenux2-ctextfieldmultiline-roots.o
