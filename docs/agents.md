@@ -32,7 +32,14 @@ The board is a folder **outside** the repository, created for one run; the run's
 - **Claim before editing.** Post a `rounds/` claim listing the files or directories you own. Do not edit a path
   another active stage claimed; file a `queue/` request instead.
 - **Commit only your own paths**: `git add <paths> && git commit -m "…" -- <paths>`. The `-- <paths>` keeps other
-  agents' staged changes out of your commit.
+  agents' staged changes out of your commit. A path you removed with `git rm` (the previous census snapshot, a stub
+  file step 9 deleted) goes after `--` only: `git add` refuses it, and then adds nothing at all
+  ([facts/workflow.md](reference/facts/workflow.md) §W7; `docs/how-to-decompile.md` step 10 has the whole command).
+  Read `git log -1 --stat` after every commit.
+- **Keep scratch in your own worktree**, under `build/out/<handle>/` (ignored), and pass a commit message with
+  `git commit -F -` and a heredoc. A folder every agent sees (the session's scratchpad, a fixed `/tmp/<name>`) holds
+  another agent's file of the same name by the time you read it back: a commit message written there was replaced
+  that way before a retry committed it.
 - If `.git/index.lock` exists, wait and retry. Remove it only when it is older than ten minutes and no git process
   runs.
 - Never `git stash` (the stash is shared with every checkout of the repository); use a WIP commit. Never push
@@ -40,7 +47,12 @@ The board is a folder **outside** the repository, created for one run; the run's
 - A fresh `git worktree add` gives every tracked file today's mtime, so the first link recompiles everything.
   Copy the mtimes from a clean checkout at the same commit
   (`git ls-files -z | while IFS= read -r -d '' f; do touch -h -r "$f" "<new>/$f"; done`), then
-  `make -n -C src link` should report nothing to do.
+  `make -n -C src link` should report nothing to do. That check cannot see a `build/out/` cloned from a checkout
+  at another commit: a link that holds units this tree lacks is still newer than every object this tree lists, so
+  make keeps it ([facts/workflow.md](reference/facts/workflow.md) §W4). Clone build outputs only from a checkout at
+  the same commit, or use `tools/round/build-at.sh` (below); when in doubt, delete
+  `build/out/wasm/vota_web/vota_web_wasm.wasm` and `build/out/wasm-named/vota_web/vota_web_wasm.wasm` by name and
+  link again.
 
 ## Shared build outputs
 
@@ -59,7 +71,21 @@ The board is a folder **outside** the repository, created for one run; the run's
   matchers start, and the unit that lands second re-runs link, census, symbols, match and the splat build on top of
   the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
 - An edit to a shared header recompiles every unit that includes it, and a half-finished edit breaks every other
-  agent's link until it is fixed. Keep shared headers compiling at every commit.
+  agent's link until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the
+  matched functions of those units; to show that a restructure left them as they were (a vtable, an inline member a
+  parallel lane builds on), list the objects the edit will rebuild, keep a copy of them before the first link or try,
+  and compare each after relinking ([facts/workflow.md](reference/facts/workflow.md) §W13):
+
+  ```sh
+  make -n -C src link -W $PWD/<header> | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' > build/out/<handle>/rebuilt.txt
+  tar -cf build/out/<handle>/before.tar -T build/out/<handle>/rebuilt.txt
+  # edit the header, then TMPDIR=/tmp make -C src link
+  while read o; do tar -xOf build/out/<handle>/before.tar "$o" | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/<handle>/rebuilt.txt
+  ```
+
+  An object that is not in the list compares equal with itself and proves nothing.
+- A header your unit needs that `main` gained after your branch started: start your copy from `main`'s text and only
+  add to it (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
 - Every agent's link recompiles on the same machine. With a dozen agents the load average passes 130 and one
   compile of eight objects takes six minutes; size the fan-out to the machine, and prefer a lone compile
   (`tools/round/try-tu.sh --single`) or a library probe for questions that do not need the whole link.
@@ -67,7 +93,11 @@ The board is a folder **outside** the repository, created for one run; the run's
   toolkit, a measurement can depend on code nobody committed; measure against a committed tree (`git archive
   <commit> asmlift-wasm | tar -x -C <dir>`) when that matters.
 - To build an earlier commit, run `tools/round/build-at.sh <commit> <dir>` from a checkout whose build is current,
-  then `TMPDIR=/tmp make -C <dir>/src splat`. A bare `git worktree add` or `git archive` of the commit cannot build:
+  then `TMPDIR=/tmp make -C <dir>/src splat`. `<dir>` is a new directory outside the checkout, a sibling of the
+  worktree (`../<worktree>-base`): the script clones the checkout's whole `build/out/` into it, so a `<dir>` under
+  `build/out/` would hold a copy of itself ([facts/workflow.md](reference/facts/workflow.md) §W5). A `cmp` against
+  the base's objects means something only for the objects the base's build rebuilt; every other one is a clone of
+  yours. A bare `git worktree add` or `git archive` of the commit cannot build:
   it lacks every ignored input (`third_party/*`, `target/fs/`, `asmlift-wasm/node_modules/`, the library outputs
   under `build/out/`; without node_modules the split fails right after `splat-split` with no message), and every
   file gets a time newer than any object, so the first link recompiles everything. The script clones those inputs
@@ -90,9 +120,16 @@ The board is a folder **outside** the repository, created for one run; the run's
 - Run the Python tools with `python3 -I -B`: `-B` keeps `__pycache__` out of the tree.
 - In zsh, pass flag lists as arrays ([facts/tool-traps.md §X3](reference/facts/tool-traps.md)). zsh does not split an
   unquoted `$list` into words, and it expands an unquoted glob in an argument (`--include=*.hpp` fails with "no
-  matches found"): quote it.
+  matches found"): quote it. It also reads `:` after a bare parameter as a modifier, so `git show $rev:path` fails
+  with `bad substitution`: write `"${rev}:path"`. And a word that starts with `=` is a command's path: `echo ======`
+  fails with `===== not found` ([facts/workflow.md](reference/facts/workflow.md) §W10).
 - In an agent's shell, `grep` can be a shell function that prints nothing for a search over the Latin-1 sources.
-  Use `/usr/bin/grep` (or `command grep`) there.
+  Use `/usr/bin/grep` (or `command grep`) there. Run every text tool of a pipe over those sources or a stub line
+  under `LC_ALL=C` (`sed`, `cut`, `tr`, `awk` with a regex, `git grep`), or convert with `iconv -f latin1 -t utf-8`
+  first: in a UTF-8 locale macOS `sed` and `cut` stop with `illegal byte sequence` at a stub's middle dot, and
+  `git grep` prints nothing ([facts/workflow.md](reference/facts/workflow.md) §W9).
+- Run `pnpm test` (from `asmlift-wasm/`) alone in a checkout: beside a census or `splat-match` its real-link cases
+  skip and it still exits 0. Read the count ([facts/workflow.md](reference/facts/workflow.md) §W12).
 - The official progress check is `TMPDIR=/tmp make -C src splat`: it must print the target's sha256. A stage that
   touches sources, fragments or flags runs `TMPDIR=/tmp make -C src link` and then the splat build before it
   commits.
