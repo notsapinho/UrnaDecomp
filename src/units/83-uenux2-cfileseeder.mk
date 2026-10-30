@@ -1,10 +1,10 @@
 # uenux2 api::CFileSeeder, all of its vtable @1564400 (an si_class of ASN1::ISeeder), in the header the records name,
 # api/io/asn/cpartialfileasn.h: eof (target fn 11434), decodeByte (11433), decodeBlock (11432), seek (11431), skip
-# (11430), size (2587, a body binaryen shares with three other slots; the match line now names this class), remaining
-# (11429), tell (11428) and resize (3037, the body of IFormFieldBase's SetForm, kept under that name). Slots 0 and 1 are
-# the shared empty destructors (174, 144). With it the 5957 to 5961 enumerators of EUeIoError, the __get_deleter of the
-# __shared_ptr_pointer the target builds around the object (11427, from the roots object), and the ISeeder and
-# ASN1::BufferSeeder changes below.
+# (11430), size (2587, a body binaryen shares with three other slots, whose match line takes unit 50's
+# GetEstadoBiometria, that object coming first in link order), remaining (11429), tell (11428) and resize (3037, the
+# body of IFormFieldBase's SetForm, kept under that name). Slots 0 and 1 are the shared empty destructors (174, 144).
+# With it the 5957 to 5961 enumerators of EUeIoError, the __get_deleter of the __shared_ptr_pointer the target builds
+# around the object (11427, from the roots object), and the ISeeder and ASN1::BufferSeeder changes below.
 #
 # The unit has no source of its own: the class has no key function and the TUs that build it (the two ReadFromFile
 # instances, fns 11523 and 7787) are not reconstructed, so the roots file emits the vtable and its members (see its
