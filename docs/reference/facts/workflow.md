@@ -1,0 +1,282 @@
+# Workflow: the shell, git, Node and the round tools
+
+How the tools a decompile round runs behave where the obvious reading of a command is wrong: Node versions, the
+lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed snapshot, the checks
+after step 9, Latin-1 text in pipes, zsh, withdrawing a match and `pnpm test`. `docs/how-to-decompile.md`,
+`docs/getting-started.md` and `docs/agents.md` rely on these. Measured in a worktree at 7bf701e on macOS (zsh 5.9,
+wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
+
+## W1. Every command that runs the toolkit needs Node 24 first on PATH; Node 26 aborts with no message
+
+`tools/round/try-tu.sh` runs the toolkit itself (`kit()`, line 47: `pnpm exec tsx src/cli.ts "$@"`), and so do
+`tools/round/census.sh` (`make -C src census`, its `kit()` on line 14) and every splat make target
+(`SPLAT_KIT = cd $(WASM_KIT) && pnpm --silent exec tsx src/cli.ts`, `src/mk/splat-build.mk` line 16:
+`splat-symbols`, `splat-scan`, `splat-match`, `splat`). `make -C src link`, `link-map.sh` and `link-kinds.sh` do not.
+Homebrew's `node@24` is keg-only, so a newer `node` stays first on PATH, and the run dies right after try-tu's flags
+line:
+
+    node --version                                    # v26.11.1
+    TMPDIR=/tmp tools/round/try-tu.sh --single 5468 --extract 'export:_ZNK3api12CGenericTags7TagSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE' src/uenux2/src/api/util/cgenerictags.cpp
+      flags: -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing … -fignore-exceptions
+      tools/round/try-tu.sh: line 47: 67368 Abort trap: 6           pnpm exec tsx src/cli.ts "$@"
+    brew --prefix node@24                             # /opt/homebrew/opt/node@24
+    PATH="/opt/homebrew/opt/node@24/bin:$PATH" node --version    # v24.22.2
+
+The same command with that PATH scores the function (W2). `tools/setup/bootstrap.sh --check` names the cause:
+`WRONG node v26.11.1: the toolkit is tested on Node 24`.
+
+## W2. The lone link of `try-tu.sh --single` differs from the build in three ways a source change cannot explain
+
+1. **Callees the program shares are inlined.** A uenux2 throw that builds its message with `std::format` instantiates
+   libc++'s formatting code in the TU; linked alone, each piece has one caller and binaryen inlines them all.
+   `api::CGenericTags::TagSize` (5468), matched as written (`awk '$1==5468' splat/matched.txt`):
+
+       TMPDIR=/tmp tools/round/try-tu.sh --single 5468 --extract 'export:_ZNK3api12CGenericTags7TagSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE' src/uenux2/src/api/util/cgenerictags.cpp
+         score 10836 over 10850 rows (same 14, replaced 214 [25 operand-only], inserted 10622, deleted 0) APPROXIMATE alignment
+
+   The object `--symbols` compiles keeps those calls, and its frame is the target's 480 bytes:
+
+       TMPDIR=/tmp tools/round/try-tu.sh --symbols src/uenux2/src/api/util/cgenerictags.cpp
+       wasm-objdump -d build/out/try/cgenerictags/obj/cgenerictags.o | awk '/func\[.*TagSize/{p=1; next} p&&/func\[/{exit} p'
+         … i32.const 480 / i32.sub …
+         call 35 <_ZNKSt3__26__treeI…4findIS7_EE…>
+         call 0 <env.__cxa_allocate_exception>
+         call 36 <_ZNSt3__28__format22__try_constant_foldingB8ne210108IcE…>
+         …
+         call 42 <_ZN7ecourna3api9exception10CBaseErrorIN3api12EUeUtilErrorE…C2E…>
+         call 3 <env.__cxa_throw>
+       pnpm --silent wasm fn ../target/vota_web_wasm.wasm 5468 | /usr/bin/grep -m1 'i32.const 480'     # from asmlift-wasm/
+         000005  i32.const 480                                    | i32.const 480
+
+   That object is the one a hand compile with the `--print-flags` line gives (`cmp` of the two functions'
+   disassembly: identical).
+2. **Library callees resolve to the toolchain's own libraries, not the build's.** The lone link is one `em++` of the
+   TU (`tools/round/try-tu.sh` line 32: `--single: no link of the skeleton`), so no library object of `build/out/`
+   is in it. `std::mutex::~mutex` is a 45-byte body in the target (150, `_ZNSt3__25mutexD2Ev`, matched: `pnpm
+   --silent wasm fn ../target/vota_web_wasm.wasm 150 | sed -n 1p` prints `… size 45 instrs 18`), and the lone link
+   drops the call to it. `vota::CProgressoEncerramento`'s destructor (3907), its source and two new headers taken
+   from commit 01a2157 (branch `decomp/decomp3-j`, unit 48) with `git show` into `build/out/DOCS-A/j/`, the headers
+   under `inc/` at their tree paths:
+
+       TMPDIR=/tmp tools/round/try-tu.sh --single 3907 --extract export:_ZN4vota22CProgressoEncerramentoD2Ev --component uenux2/src/app/vota/eleitor/fimvotacao --flags "-I/work/build/out/DOCS-A/j/inc" build/out/DOCS-A/j/cprogressoencerramento.cpp
+         score 4 over 53 rows (same 49, replaced 0 [0 operand-only], inserted 0, deleted 4)
+         local.get 0 / i32.const 20 / i32.add / call fn:d44d8ce5a31bd6d4        (target only)
+       TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -Isrc/asn1 -Ibuild/out/DOCS-A/j/inc -c /work/build/out/DOCS-A/j/cprogressoencerramento.cpp -o build/out/DOCS-A/j/cprogressoencerramento.o
+       wasm-objdump -d build/out/DOCS-A/j/cprogressoencerramento.o | /usr/bin/grep -E 'func\[|call ' | head -2
+         00017d func[6] <_ZN4vota22CProgressoEncerramentoD1Ev>:
+          000185: 10 80 80 80 80 00          | call 0 <env._ZNSt3__25mutexD1Ev>
+
+   The whole link of the same TU matches 3907: unit 48 lands it, and `git show 01a2157:splat/matched.txt | awk
+   '$1==3907'` lists it.
+
+3. **try-tu compiles a copy of the TU.** It copies each file to `build/out/try/<name>/src/<component>/`
+   (`tools/round/try-tu.sh` line 146, `cp "$p" "$T/$src"`) and compiles the copy, so a quoted `#include` of a file
+   beside the original is not found there and `-I/work/src/uenux2/src` resolves it to the tracked header of that
+   name, or to nothing. Pass a variant header's directory with `--flags "-I/work/<dir>"`, as above.
+
+`--symbols` lists the function symbols and weak data a TU defines (`llvm-nm` types `T` and `W`, line 164), not
+strong data. The class's own vtable and typeinfo are strong:
+
+    TMPDIR=/tmp tools/round/try-tu.sh --symbols src/uenux2/src/app/comum/iinterfaceinit.cpp | cut -f1
+      _ZN5comum14IInterfaceInitC2Ev  _ZN5comum14IInterfaceInitD0Ev  _ZN5comum14IInterfaceInitD1Ev  _ZN5comum14IInterfaceInitD2Ev   (one per line)
+    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only build/out/app/uenux2/src/app/comum/iinterfaceinit.cpp.o | /usr/bin/grep -E ' [DdTWV] .*IInterfaceInit'
+      … T _ZN5comum14IInterfaceInitD2Ev
+      00000028 D _ZTIN5comum14IInterfaceInitE
+      00000030 D _ZTSN5comum14IInterfaceInitE
+      00000000 D _ZTVN5comum14IInterfaceInitE
+
+## W3. A whole-link try runs the shared link's make, so it compiles stale skeleton objects into `build/out/app/`
+
+try-tu's whole link is `make -s -C src link SKIP_UNITS=… EXTRA_OBJS=… OUT=… OUT_NAMED=…` (`tools/round/try-tu.sh` line
+236) with the default `APP`. make first brings every object of the link up to date, so after an edit of a landed
+unit's source or header, a try compiles those objects into `build/out/app/` before its own link, and a later
+`make -n -C src link | /usr/bin/grep -c 'em++.* -c '` prints 0: the try already rebuilt them. To ask whether an edit
+of one file rebuilds anything, name it: `make -n -C src link -W $PWD/<file> | /usr/bin/grep -c 'em++.* -c '`
+(`src/uenux2/src/api/util/cgenerictags.cpp`: 1).
+
+A try of a file a landed unit already compiles, without `--skip-units` for that unit, links the object twice:
+
+    echo 1684 > build/out/DOCS-A/targets.txt
+    TMPDIR=/tmp tools/round/try-tu.sh --name docsa-noskip src/uenux2/src/api/ipc/cthread.cpp --roots none --targets build/out/DOCS-A/targets.txt
+      wasm-ld: error: duplicate symbol: api::CThread::~CThread()
+      >>> defined in app/uenux2/src/api/ipc/cthread.cpp.o
+      >>> defined in try/docsa-noskip/obj/cthread.o
+
+## W4. A `build/out/` cloned from a checkout at another commit can pass `make -n` and still hold that checkout's link
+
+A new worktree that gets its build outputs by cloning another checkout's `build/out/` (APFS clones), with the tracked
+files' mtimes copied, reports nothing to do even when the cloned link is another tree's. Here the clone came from a
+checkout at a later commit, whose link holds unit 36 (`src/units/36-…` is not in this tree); before the relink:
+
+    make -n -C src link                                   # make: Nothing to be done for `link'.
+    ls build/out/app | /usr/bin/grep -E '^36-'            # 36-uenux2-cvisitantefoto-pending.o  36-uenux2-cvisitantefoto-roots.o
+    /usr/bin/grep -c 'CVisitanteFoto' build/out/wasm-map/vota_web/names.tsv     # 3
+    awk -F'\t' '$1==1931' splat/scan.tsv | cut -f3                              # 7596, the committed scan's index of ours
+    awk -F'\t' '$2=="_ZNK5comum8CRdvVota9CandidatoEhjh" {print $1}' build/out/wasm-map/vota_web/names.tsv   # 7597
+
+The link's prerequisites are the objects this tree lists, all older than the link, and a unit that is gone from the
+list makes nothing stale. Deleting the two link outputs by name and linking again compiled 0 objects (unit 36 added
+files only), after which `TMPDIR=/tmp make -C src splat` printed the target's sha256 at 7428 matches and every matched
+row of the committed scan agrees with the link map:
+
+    rm build/out/wasm/vota_web/vota_web_wasm.wasm build/out/wasm-named/vota_web/vota_web_wasm.wasm
+    TMPDIR=/tmp make -C src link
+    awk -F'\t' 'NR==FNR { if (FNR>1) idx[$2]=$1; next } FNR>1 && $5=="match" && ($2 in idx) { d=idx[$2]-$3; c[d]++ } END { for (k in c) print k, c[k] }' build/out/wasm-map/vota_web/names.tsv splat/scan.tsv
+      0 7369              # (before the relink: 27 different offsets)
+
+(The awk compares, for each `match` row whose symbol the link map names, the scan's `ours` with the map's index; it
+holds on a commit whose scan was written from its own link.) A cloned object whose source this tree has at an older
+version is newer than that source too, so make keeps it: clone only from a checkout at the same commit, or use
+`tools/round/build-at.sh` (W5), which touches every file that differs.
+
+## W5. `tools/round/build-at.sh` clones the checkout's whole `build/out/` into `<dir>`
+
+Step 3 of the script clones every ignored input of the checkout into `<dir>`, and the list it walks names the build
+tree as one entry:
+
+    git ls-files --others --ignored --exclude-standard --directory | /usr/bin/grep -E '^build/'
+      build/dump/
+      build/out/
+      build/probe/target.fns.jsonl
+
+So a `<dir>` under `build/out/` is inside the directory the script copies into it (`cp -cpR` on macOS, `cp -a
+--reflink=auto` elsewhere, the script's step 3): the new tree holds a copy of `build/out/` with `<dir>` in it. Give
+`<dir>` outside the checkout, as a sibling of the worktree.
+
+## W6. Lost matches counted against a `main` that moved list `main`'s newer matches
+
+`main` moved past this branch's start while this worktree worked (units 36 and 37 landed). The same count against
+`main` and against the merge base:
+
+    git merge-base main HEAD                     # 7bf701e18847521834934637da0876401cfcc0fe
+    comm -23 <(git show main:splat/matched.txt | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort)
+      10238 11443 12049 12050 5345 5709        (one per line: main's matches since 7bf701e)
+    comm -23 <(git show "$(git merge-base main HEAD)":splat/matched.txt | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort)
+      (nothing)
+
+After merging `main` in (`docs/how-to-decompile.md` step 10, "Landing onto a moved main"), the count against `main`
+is the right one and must print nothing. zsh and bash both take `<(…)`.
+
+## W7. `git add` refuses a path already removed with `git rm`; `git commit -- <path>` records it
+
+In a scratch repository (`build/out/DOCS-A/gitprobe`), after `git rm -q old.tsv` with `a.txt` modified and `new.tsv`
+new:
+
+    git add a.txt new.tsv old.tsv
+      fatal: pathspec 'old.tsv' did not match any files          (exit 128; nothing is added)
+    git add a.txt new.tsv && git commit -q -m snap -- a.txt new.tsv old.tsv
+    git show --stat --oneline HEAD
+      a.txt | 2 +-   new.tsv | 1 +   old.tsv | 1 -
+
+So the census snapshot step 7 `git rm`s goes after `git commit --` and not into `git add`.
+
+## W8. `check_encoding.py` reads the index, so a tracked file the generator deleted makes it fail with a traceback
+
+It lists files with `git ls-files` (`tools/round/check_encoding.py` line 46) and opens each. Step 9 removes a stub-only
+file whose last stub goes; until that deletion is staged, the check dies:
+
+    rm src/uenux2/src/api/util/cdatetime.cpp                    # standing in for the generator's removal
+    python3 -I -B tools/round/check_encoding.py
+      FileNotFoundError: [Errno 2] No such file or directory: '…/src/uenux2/src/api/util/cdatetime.cpp'
+    git rm -q src/uenux2/src/api/util/cdatetime.cpp
+    python3 -I -B tools/round/check_encoding.py
+      every file .editorconfig gives a charset is in that charset
+
+## W9. A Latin-1 line breaks macOS `sed`, `cut` and `tr` in a UTF-8 locale, not only `grep`
+
+Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"`:
+
+    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | sed -E 's/·/x/'
+      sed: RE error: illegal byte sequence
+    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | cut -d' ' -f1-3
+      cut: stdin: Illegal byte sequence
+    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | LC_ALL=C cut -d' ' -f1-3
+      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:11:// f7010 <0xB7>
+    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | tr -d '\n'
+      tr: Illegal byte sequence
+    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | iconv -f latin1 -t utf-8
+      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:11:// f7010 · 683 B · unmatched · name unknown
+    git grep -h -E '^// f7010 ' HEAD -- src/uenux2 | wc -l              # 0
+    LC_ALL=C git grep -h -E '^// f7010 ' HEAD -- src/uenux2 | wc -l     # 1
+
+## W10. zsh: `$var:` is a modifier, and a word that starts with `=` is a command path
+
+    zsh -c 'b=main; git show $b:splat/matched.txt | head -1'
+      zsh:1: bad substitution
+    zsh -c 'b=main; git show "${b}:splat/matched.txt" | head -1'
+      # splat match list: <target function index> <our symbol> per line (# starts a comment).
+    zsh -c 'echo ======'
+      zsh:1: ===== not found                   (exit 1)
+
+zsh reads `:s`, `:h`, `:t` … after a bare parameter as history modifiers, so git's `<rev>:<path>` with the rev in a
+variable needs braces. `=word` expands to the path of the command `word`; quote it. `docs/reference/facts/tool-traps.md`
+§X3 has zsh's word splitting and globs.
+
+## W11. A match line whose symbol our link lacks stops `make -C src splat-match` before the stubs
+
+With a line `9130 _ZN3api15NotOurFunctionEv` appended to `splat/matched.txt` (9130 is a `no-candidate` row):
+
+    TMPDIR=/tmp make -C src splat-match                         # exit 2
+      …/splat/matched.txt: 0 matches added, 0 renamed
+        line 7433: function 9130 matched to _ZN3api15NotOurFunctionEv: our link has no function _ZN3api15NotOurFunctionEv, and the scan matches 9130 with no other symbol; left as written, so the splat build fails on it
+      cd … && python3 -I -B tools/round/status.py
+      splat/scan.tsv has 7428 match rows but splat/matched.txt has 7429 matches (scan only: [], matched.txt only: [9130]); run TMPDIR=/tmp make -C src splat-match
+      make: *** [splat-match] Error 1
+
+The recipe is the scan, then `status.py`, then `stubs.py` (`src/mk/splat-sub.mk`, `splat-match:`): the scan writes
+`splat/scan.tsv` and exits 0, `status.py` fails, and `stubs.py` does not run. `status.py` first writes every status
+file that differs from what the new scan gives, and only then reports the disagreement and exits 1
+(`tools/round/status.py`, the end of `main`), so after a scan that changed, README.md, docs/status.md and the waffles
+are rewritten while the stubs are not. Deleting that one line and running the target again:
+
+    /usr/bin/grep -v -x -F '9130 _ZN3api15NotOurFunctionEv' splat/matched.txt > build/out/DOCS-A/matched.txt && mv build/out/DOCS-A/matched.txt splat/matched.txt
+    TMPDIR=/tmp make -C src splat-match                         # exit 0
+      …/splat/matched.txt: 0 matches added, 0 renamed
+      7428 matches (0 kind-unverified); README.md, docs/status.md and the waffles agree with splat/scan.tsv
+      0 files written
+    git status --short                                          # (nothing)
+
+## W12. `pnpm test`: run it alone, and read the counts
+
+The real-link suites skip their cases when build outputs are missing at collection time
+(`asmlift-wasm/test/splat-sub.test.ts` line 34, `const real = existsSync(\`${MAP_DIR}/names.tsv\`) && …`; likewise
+`splat-review.test.ts` and `splat-symbols.test.ts`), so a run beside a census or `splat-match` in the same checkout,
+which rewrite those files, can exit 0 with cases skipped. A run alone counts `193` tests with none skipped (below).
+CI has no build outputs and always skips them.
+
+`test/splat-kinds.test.ts` and `test/splat-review.test.ts` read our link's numbers from the link since 74604f5. One
+case of `test/splat-symbols.test.ts` still pins a list in the committed symbol file: "names a callee its anchored
+callers vote for, listing them as its voters" expects `__vformat_to` (146) to be named by `call` evidence with
+voters `700, 5447, 10250`. Each uenux2 function that throws a `std::format` message is an anchored caller of 146, so
+each one a unit lands adds a voter, and the symbol file lists voters only while there are at most four
+(`VOTERS_LISTED = 4`, `asmlift-wasm/src/splat-symbols.ts` line 282):
+
+    for c in 8cb5376 d09d335 ce227bf 7bf701e; do printf '%s ' $c; git show "${c}:splat/symbol_addrs.txt" | /usr/bin/grep -F '= func:146;' | sed 's/.*evidence:/evidence:/'; done
+      8cb5376 evidence:call by:700,5447,10250
+      d09d335 evidence:call by:700,5447,5544,10250
+      ce227bf evidence:call
+      7bf701e evidence:call
+    cd asmlift-wasm && TMPDIR=/tmp pnpm test
+      FAIL  test/splat-symbols.test.ts > srclocAnchors > names a callee its anchored callers vote for, listing them as its voters
+      AssertionError: expected null to deeply equal [ 700, 5447, 10250 ]
+      Test Files  1 failed | 16 passed (17)
+           Tests  1 failed | 192 passed (193)
+
+So on 7bf701e `pnpm test` has one failure that no landing of the run caused, and every other case passes.
+
+## W13. Showing that a header edit left the units that include it unchanged
+
+The splat build checks matched functions only; an edit of a shared header can change a vtable or an unmatched
+inline member another lane builds on. Before the edit, keep the objects the edit will rebuild; after relinking, compare
+each:
+
+    make -n -C src link -W $PWD/src/uenux2/src/api/gui/iformfield.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' > build/out/DOCS-A/rebuilt.txt
+    wc -l < build/out/DOCS-A/rebuilt.txt                         # 42
+    tar -cf build/out/DOCS-A/before.tar -T build/out/DOCS-A/rebuilt.txt
+    (edit the header; TMPDIR=/tmp make -C src link)
+    while read o; do tar -xOf build/out/DOCS-A/before.tar "$o" | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/DOCS-A/rebuilt.txt
+
+Without an edit the loop prints nothing. The list is what make would rebuild, so it holds no object that the edit
+leaves alone: such an object would compare equal with itself and prove nothing. The same holds for a comparison with
+a `tools/round/build-at.sh` base, whose `build/out/` is a clone of this one (W5): only the objects the base rebuilt
+are its own. A whole-link try rebuilds the objects of the list (W3), so take the copy before the first try.

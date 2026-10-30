@@ -125,8 +125,9 @@ each side pairs them in index order, which says nothing about identity — 18 of
 have a body of ≤ 8 bytes, and shape pairs the probe's own 7-byte `probeExported` with an app function.
 
 **ledger** (`ledger.ts`). For every target function: `index size uses owner component best_label
-best_index best_kind best_score best_name`. `uses` counts the target's direct call sites (what
-binaryen sorted the code section by); `owner` is the class map (`tools/libs/cls2.json`),
+best_index best_kind best_score best_name`. `uses` counts the target's direct call sites, which is not
+the key binaryen sorted the code section by: that one also counts table entries and exports (urna's
+`ledger/ordinals.tsv` column `uses`, `docs/reference/facts/link-order.md` §L7); `owner` is the class map (`tools/libs/cls2.json`),
 `component` the attribution ledger (`ledger/func-attribution.tsv`); the best pair over every
 `<label>=<module.wasm>` candidate is the strongest of **byte** (same body bytes) > **fingerprint** >
 **addr** > **shape** (with the row-diff `score`), named from the candidate's `x.js.symbols`. Under
@@ -157,7 +158,11 @@ functions, 54 KB of body; `fn` alone is 4.3 s). The full readout is large (2.1 M
 (349 KB). `fn` prints through the same renderer. `fn` lists the table slot an `invoke_*`
 thunk takes as its first argument among the strings referenced (any `i32.const` in the data range is read as a
 pointer) and gives only the import as the callee; `lift` names the function behind the slot in a comment,
-`invoke_iii(6708 /* &f339 */, …)`.
+`invoke_iii(6708 /* &f339 */, …)`. A function pointer passed as a plain argument (a thread routine, a callback) is
+listed the same way and named by neither: `fn 1684` lists `4527 (+22 into 4505)  "Falha ao obter valor do semáforo:
+{}"`, and 4527 is a table slot. The element section names it: from the urna checkout,
+`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[4527\]'` prints
+`- elem[4527] = ref.func:10255`.
 
 **ledger `label=plain.wasm@twin.wasm`**. A plain `-Oz` link has no names and its `--emit-symbol-map`
 twin has a different function order, so the byte tier needs the plain module and the names live in
@@ -665,15 +670,27 @@ and covers every component and band, `canonRow` equalises the object's and the t
 a four-function evaluation compiles, optimises and scores through the pinned image, and two em++
 errors differing only in a name fall in one class (skips without it).
 
-The splat tests (`splat.test.ts`, `splat-symbols.test.ts`, `splat-sub.test.ts`, `splat-review.test.ts`) read a
-checkout that has the splat build (`URNA_SPLAT_ROOT`, default the same checkout): its target, split, plain link, link
-map and `splat/` files, and skip what needs them when they are absent. They cover:
+The splat tests (`splat.test.ts`, `splat-symbols.test.ts`, `splat-sub.test.ts`, `splat-kinds.test.ts`,
+`splat-review.test.ts`) read a checkout that has the splat build (`URNA_SPLAT_ROOT`, default the same checkout): its
+target, split, plain link, link map, operand kinds and `splat/` files, and skip what needs them when they are absent.
+They decide that when they are collected, so a run beside a census or a `splat-*` step that is rewriting `build/out/`
+in the same checkout skips real-link tests and still exits 0: run `pnpm test` after every build of that checkout has
+finished, and read the summary's `skipped` count as well as its exit status. `splat-kinds.test.ts` and
+`splat-review.test.ts` read the addresses and table slots of our link from the link they run on, so a landing that
+moves our data or table leaves them passing. One case still pins what landings change: `splat-symbols.test.ts`'s
+`srclocAnchors > names a callee its anchored callers vote for` reads urna's committed `splat/symbol_addrs.txt` and
+expects `std::__format::__vformat_to` (146) to list exactly the voters 700, 5447 and 10250. Every TSE function that
+throws a `std::format` message and lands is one more anchored voter, and past `VOTERS_LISTED` (4, `splat-symbols.ts`)
+the line lists none, so at urna 9271d74 it fails with `expected null to deeply equal [ 700, 5447, 10250 ]` (1 failed,
+192 passed). That failure is the test's, not a landing's. They cover:
 
 - the round trip to the target's sha256, and a refused edited piece;
 - the symbol file's pairs, refutations and virtual-base vtables;
 - a match that re-points through both maps;
 - AudioCollector's destructors not matching;
 - a self-voted match failing the build;
+- the operand kinds the shifted link gives, and the perturbation cases of urna's `docs/reference/facts/splat.md` §S5
+  item 3;
 - the blanked-target check: 9218 reproducing the target both ways (and its preferred readings 313 B without operand
   kinds), 12829 failing the preferred way on the table slot copy the target body picked, a wrong match failing the
   gate.

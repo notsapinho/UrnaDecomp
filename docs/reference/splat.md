@@ -49,7 +49,8 @@ are `splat/symbol_addrs.txt`, `splat/matched.txt` and `splat/scan.tsv`, with the
   index, table and elem, memory, globals, exports, data offsets, and each piece's size and sha256.
 
 `<group>` is the function's component. `<name>`, when there is one, is the ledger's best guess, so it can be wrong:
-target 10822's piece says `OBJECT_IDENTIFIER`, but the function is `api::AudioCollector`'s destructor. The split
+target 10822's piece says `OBJECT_IDENTIFIER`, but the function is `api::AudioCollector`'s destructor. It is spelled
+for a file name, which drops a destructor's `~`: `api/2721-api_CThread_CThread.bin` is `~CThread`. The split
 re-runs after every census, so a piece's path can change. Always key a function by its target index, never by its
 path.
 
@@ -71,9 +72,16 @@ integer) comes from a second link of the same objects, with the data and the tab
 `<name> = func:N; | import:N; | 0xADDR; // [type:data] [size:0x…] evidence:… [by:…]`. The evidence kinds:
 
 - `glue`, `export`: import and export names from `target/vota_web_wasm.js`.
-- `pair-fingerprint`, `pair-addr`: a census pair that is unique on both sides.
+- `pair-fingerprint`, `pair-addr`: a census pair that is unique on both sides. The pair says the body is the target
+  function's; the name is our symbol's, carried over, so it is only as good as our source's name for the function
+  (`srcloc-anchor` below is the same).
 - `call`, `table`: aligned call operands and function-pointer constants. They name a function only when
-  every vote agrees and our function has the target function's signature.
+  every vote agrees and our function has the target function's signature. The votes come from aligning the census
+  seed pairs (`pair-fingerprint`, `pair-addr`), the pairs those votes form when the two bodies agree up to callees and
+  addresses, and the `srcloc-anchor` pairs
+  (`seeds`, the propagation loop and `anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`). A function named by
+  `vtable` alone casts none: a callback that only such a function passes by its table slot stays unnamed, and the
+  try link's one `UNRESOLVED` operand there does not become a match at step 8.
 - `vote:N`: aligned address operands. `by:` lists up to 4 target functions that cast a vote. `vote:N+rtti` is a
   vote that the RTTI decoding agrees with.
 - `rtti`: vtables and typeinfos decoded from the target's bytes.
@@ -85,7 +93,8 @@ integer) comes from a second link of the same objects, with the data and the tab
   target's table at the same offset has as many slots: a base that declares other members in the target's version
   of a library shifts every later slot. A name is given only when every slot holding our function agrees, no other
   function of ours votes for that target function (binaryen's merged bodies), neither side is named yet, and the
-  signatures agree.
+  signatures agree. A pending member's slot holds its trap, so the trap's declaration can name the target function
+  ([../../src/units/README.md](../../src/units/README.md) "Pending members").
 
 The hand edits name their own evidence in the comment after it. The kinds in use: `vtable` and `vtable-slot` (the
 function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind above does), `rtti-vptr` (the only target function that stores a class's
@@ -200,9 +209,12 @@ toolchain change breaks a matched function, `make -C src splat` exits 1 and list
 Each failure names the `splat/matched.txt` line, the function, and the first differing instruction on both
 sides, with what our operand resolves to. If the function does not resolve, it says why instead.
 
-To repair drift, fix the source until the match verifies again. If the loss is deliberate, delete the
-match line in the same commit and say why in the commit message. Never edit a piece, and never add a
-symbol-file hand edit to make a match pass.
+To repair drift, fix the source until the match verifies again. If the loss is deliberate (a refuted match whose
+function you took out of the source), delete the match line by hand in the same commit and say why in the commit
+message; `splat/matched.txt` is a list people edit, unlike `splat/scan.tsv`. While the line names a function our link
+no longer has, `make -C src splat-match` fails after it writes the status files and before it runs `make -C src
+stubs`, so run it again once the line is gone. Never edit a piece, and never add a symbol-file hand edit to make a
+match pass.
 
 One failure is not drift: `our link has no function <symbol>` for a byte-identical twin whose surviving name moved,
 because a new unit's identical body comes first in the link. The body still verifies under the new name, and
@@ -309,9 +321,42 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   table (every small integer is some target slot), a pointer of ours whose re-pointed value equals an integer the
   target holds, or a target address written as an integer that lies inside our data range and is not the start of a
   named target object. The module is the target byte for byte, but our source means something else. Neither binary
-  records the target's kind. The review warnings list only the target numbers outside our data and table.
+  records the target's kind. The review warnings list only the target numbers outside our data and table;
+- a name no evidence gives. A match's symbol is our name for the body, and `pair-*` and `srcloc-anchor` evidence carry
+  that name over (§2): they say the body is the target's, not what it was called. What no record, vtable slot or RTTI
+  gives is the source's choice, and the fragment's header says so: a name read from the body's shape and its callers
+  (3641's `CTime CTime::operator-(int) const`, which a free `operator-(const CTime &, int)` would compile to as well), a
+  callback named for its role (10255, `api::CThread::Rotina`, `evidence:pair-fingerprint`), the scope of a type a record
+  prints unqualified (5526's record says `std::vector<CMovieFrame>`, the same text for `api::CMovieFrame` and
+  `::CMovieFrame`, which mangle differently), a free function's linkage (a record prints `static` only for a member;
+  [../how-to-decompile.md](../how-to-decompile.md) step 3);
+- a body from a companion object. Read the `object` column of each new match in `splat/scan.tsv`. A body compiled in a
+  `-roots.o` or a `-pending.o` must be code a landed header defines (an implicit or inline member, a template instance
+  such as `__shared_ptr_emplace<T>`'s destructors), never a stand-in's own body, and the fragment's header says which;
+  [facts/units.md](facts/units.md) §U4 lists the ones today and the command that lists them;
+- a stand-in a target function pairs with. A roots stand-in whose body is a target function's (`return D2(p);` is a
+  derived class's destructor, [facts/units.md](facts/units.md) §U2) pairs with it in the census and matches under the stand-in's name,
+  and the build verifies it. The matcher sees it in the census's `moved:` list; a census re-run on the committed state
+  moves nothing, since the committed `ledger/functions.tsv` already holds the pairs. So list the census pairs and the
+  match lines whose function of ours a unit's `-roots.o` defines (the two commands of §U4): each must be an instance or
+  inline member the roots file is meant to emit, not one of its callers;
+- a second name for a matched function. `splat-match` reports a match line only when none of the symbol file's names
+  for its index is the matched symbol (`addMatches` in `asmlift-wasm/src/splat-sub.ts`), so a wrong name beside the
+  right one says nothing. Read the range's symbol-file diff (`git diff <base> -- splat/symbol_addrs.txt`) for a
+  `func:N` of a matched index that gained a line.
 
-[facts/splat.md](facts/splat.md) §S5 has the measurements behind these lists and the cases the tests pin.
+[facts/splat.md](facts/splat.md) §S5 has the measurements behind the first two items and the review warnings, and the
+cases the tests pin; [facts/units.md](facts/units.md) has those behind the companion objects and the stand-ins.
+
+A fragment's header may rest a file or a roots shape on who uses a class's vtable. A vtable is data, with no call edge
+in `ledger/callgraph.tsv`; check such a claim with the grep for its address point that
+[../../src/units/README.md](../../src/units/README.md) "Companion files" gives.
+
+Re-running the generators on the committed state is the check that they wrote it: `make -C src splat-symbols` leaves
+`git status` clean, and a rescan changes `splat/scan.tsv` only in the `source` column of a new match the scan found by
+content, from `content` to `symbol`, since the match now names it. A new match step 8 already named
+(`srcloc-anchor`, `pair-*`, `call`, `vtable`) is `symbol` from the start, and the rescan leaves its line alone: 5526
+(`evidence:srcloc-anchor`) reads `symbol` in the committed scan (`awk -F'\t' '$1==5526' splat/scan.tsv | cut -f1,3-5`).
 
 A reviewer who wants to see the matched bytes come from our link, with the target's body gone, runs the
 **blanked-target check**: `splat-review` (`asmlift-wasm/src/splat-review.ts`), from `asmlift-wasm/`, with the target

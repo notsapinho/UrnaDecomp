@@ -8,7 +8,9 @@
 #   tools/round/try-tu.sh --single <target fn> --extract export:<name>|index:<n> [--component <dir>] [--flags '…'] <tu.cpp>...
 #   tools/round/try-tu.sh --print-flags [--component <dir>] <tu.cpp|dir>...   (each TU's compile command, nothing run)
 #   tools/round/try-tu.sh --symbols [--component <dir>] [--flags '…'] <tu.cpp|dir>...   (compile; print each defined
-#                       function symbol as <mangled> TAB <demangled>: the name --extract export:<mangled> takes)
+#                       function symbol as <mangled> TAB <demangled>: the name --extract export:<mangled> takes. llvm-nm's
+#                       T and W only, so weak data shows and strong data does not: a class's own vtable and typeinfo
+#                       are missing even when the TU emits them; read the object with llvm-nm --defined-only for those)
 #
 # Whole-link mode writes build/out/try/<name>/{obj/,wasm/,wasm-named/,functions.tsv,targets.txt,report.md} and never touches
 # ledger/ (you decide what lands in src/; `make -C src census` then moves the ledger). Each TU is compiled with the
@@ -31,6 +33,10 @@
 # sym:<mangled> --against <fn>` (or skip the kinds with --no-kinds; docs/how-to-decompile.md step 5).
 # --single: no link of the skeleton; the toolkit's rank adapter compiles the TU alone and scores one exported function
 # (a candidate linked alone has other inlining/DAE decisions than inside the app — use it to iterate, not to conclude).
+# A TU that is not at the path it would land in (one outside src/, or any under --component) is compiled as a copy
+# there under build/out/try/<name>/, so a quoted #include of a file beside the original is not found (the tree's -I
+# finds the tracked header of that name instead): include a scratch header by its /work path.
+# The toolkit runs through pnpm (kit below): with a Node other than 24 first on PATH it dies with "Abort trap: 6".
 # Several <tu.cpp> are rival candidates ranked against each other, not one program: a callee in another TU stays an
 # import. Undefined functions become imports but undefined data fails the link; pass
 # --flags '-Wl,--unresolved-symbols=ignore-all' for a TU that uses another TU's data (theInfo, vtables, typeinfo).

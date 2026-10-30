@@ -206,7 +206,8 @@ when its sources are under `src/` and a fragment `src/units/<name>.mk` adds them
 **placeholder, pending TU** — a landed TU that holds definitions belonging elsewhere. `src/units/14-uenux2-ctextfieldmultiline-pending.cpp`
 defines the `CTextFieldMultiLine` members not reconstructed yet with `__builtin_trap()` bodies, because the class's
 vtable needs them defined; each moves into the real source when reconstructed. Such a member has no stub, so its
-pending file's header is the note that it is left to do. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds
+pending file's header is the note that it is left to do. When the pending member is the class's key function, the
+vtable and the implicit members it names are emitted in the pending object, and those can match there. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds
 reconstructed `CStringUtils` functions that belong to a unit not landed yet. *Where:* those files' headers,
 `src/units/14-uenux2-ctextfieldmultiline.mk`, `src/units/12-ecourna-api-sql-sqlite.mk`.
 
@@ -217,7 +218,8 @@ construct that has no closer C++ form, marked `/* wasm: … */` (`asmlift-wasm/R
 
 **COMDAT** — a section an object may define that the linker keeps once however many objects define it: inline
 functions and template instantiations. Whichever object wasm-ld reads first supplies the copy, which is why a roots TU
-declares what it calls instead of instantiating it. *Where:* `src/units/README.md` "Companion files".
+declares what it calls instead of instantiating what a unit's object or a later one also instantiates. *Where:*
+`src/units/README.md` "Companion files".
 
 **D0, D1, D2** (in mangled names `…D0Ev`, `…D1Ev`, `…D2Ev`) — the Itanium C++ ABI's destructor variants: D0 the
 deleting destructor (destroys, then frees), D1 the complete-object destructor, D2 the base-object destructor. clang
@@ -425,7 +427,9 @@ The order of functions in the target's code section encodes the order of objects
 
 **use count, uses** — a function's direct `call` sites plus function-table entries plus exports. binaryen's
 `reorder-functions` (run by `wasm-metadce` at `-Oz`) sorts the code section by it, descending. *Where:*
-`ledger/functions.tsv` column `uses`, `docs/reference/link-order.md` §1.
+`ledger/ordinals.tsv` column `uses` (the band key), `docs/reference/link-order.md` §1. `ledger/functions.tsv` column
+`uses` and the `uses` of `pnpm wasm fn`'s header count direct call sites only, so they put a function the table holds
+in a lower band: 5898 is `uses 1` there and 2 in `ledger/ordinals.tsv` (`docs/reference/facts/link-order.md` §L7).
 
 **band** — all functions with the same use count; the `uses=1` band is the largest and the most informative.
 (The benchmark and lift-eval also use "size band": tiny ≤ 32, small ≤ 128, medium ≤ 512, large ≤ 2048 bytes, huge.)
@@ -450,7 +454,9 @@ solver's sound windows are rank ranges (`rank_lo`, `rank_hi`). Not to be confuse
 **mgfn, binaryen thunks** — the `byn$mgfn-shared$*` thunks that binaryen's merge-similar-functions pass adds after
 `-Oz` inlining: one shared body that several functions call with their differing constants. They take the highest
 ordinals (189 in the frozen skeleton of `docs/reference/link-order.md` §7.1). `link-map.sh`'s log counts them as "binaryen thunks", and the
-scan's `object` column says `<binaryen>`. *Where:* `docs/reference/link-order.md` §1, §5 and §7.
+scan's `object` column says `<binaryen>`. A target function whose whole body is a call into such a shared body (11097,
+`f2904(p0, p1, 197764, 197771)`) matches only when our link merges the same set of functions. *Where:*
+`docs/reference/link-order.md` §1, §5 and §7, `src/units/README.md` "Pending members".
 
 **frozen skeleton** — a copy of one plain link and its `ledger/functions.tsv` kept under
 `build/out/LINKORDER2/frozen/`, so a link-order measurement keeps running on the same link while the tree moves on.
