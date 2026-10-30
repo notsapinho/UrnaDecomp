@@ -13,7 +13,7 @@
 145 _ZNSt3__26localeD2Ev
 147 CRYPTO_free
 149 _ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev
-150 _ZNSt3__25mutexD2Ev
+150 _ZNSt3__25mutex6unlockEv
 151 growOp3
 152 _ZNSt3__227__tree_balance_after_insertB8ne210108IPNS_16__tree_node_baseIPvEEEEvT_S5_
 156 strlen
@@ -7436,3 +7436,8 @@
 10238 _ZN3api8CWavFileD0Ev
 12049 _ZN4vota11IQRCodeBUDSD0Ev
 12050 _ZN4vota11IQRCodeBUDSD2Ev
+2778 _ZN3api13CDSImageFieldD2Ev
+11091 _ZNK3api13CDSImageField11GetTypeNameEv
+11094 _ZThn44_N3api13CDSImageFieldD0Ev
+11095 _ZN3api13CDSImageFieldD0Ev
+11096 _ZThn44_N3api13CDSImageFieldD1Ev

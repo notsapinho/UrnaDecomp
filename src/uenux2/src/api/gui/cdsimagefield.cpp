@@ -1,22 +1,44 @@
-// <stubs>
-// f11096 · 10 B · unmatched · placement: link order · name unknown
-// ? f11096(i32) { ... }
+// api::CDSImageField (/home/rubio/tse/uenux2/src/api/gui/cdsimagefield.cpp, named by the record of the constructor's
+// throw at line 29, column 15). Target functions of this file:
+//   2778  ~CDSImageField() (base object; the complete destructor is its alias)                          (here)
+//   11095 ~CDSImageField() (deleting)                                                                   (here)
+//   11096 / 11094  the thunks at -44 of the two, in the IObserver<SharedIImage> vtable (emitted with them) (here)
+//   11093 / 11092  Update(const SharedIImage&) and its thunk at -44: they pass a copy of the image, by value, to
+//         fn 5533, which no evidence names yet                                                           (pending)
+//   11091 GetTypeName() const                                                                           (here)
+// The constructor is not reconstructed: binaryen inlined it into fn 502, so no target function holds it, and the lines
+// around its record stay blank. The target's function order puts Update and its thunk after the deleting destructor's
+// thunk and before GetTypeName, so the file defines Update between the destructor and GetTypeName.
+// The pending member is defined in src/units/55-uenux2-cdsimagefield-pending.cpp.
 
-// f11095 · 13 B · unmatched · placement: link order · name unknown
-// void f11095(i32) { ... }
+#include "api/gui/cdsimagefield.h"
 
-// f11094 · 18 B · unmatched · placement: link order · name unknown
-// void f11094(i32) { ... }
+namespace api {
 
-// f11093 · 77 B · unmatched · placement: link order · name unknown
-// void f11093(i32, i32) { ... }
 
-// f11092 · 80 B · unmatched · placement: link order · name unknown
-// void f11092(i32, i32) { ... }
 
-// f11091 · 61 B · unmatched · placement: link order · name unknown
-// void f11091(i32, i32) { ... }
 
-// f2778 · 368 B · unmatched · placement: link order · name unknown
-// ? f2778(i32) { ... }
-// </stubs>
+
+
+
+
+
+
+
+
+
+
+
+
+
+CDSImageField::~CDSImageField()
+{
+    m_fonte->Detach(this);
+}
+
+std::string CDSImageField::GetTypeName() const
+{
+    return "CDSImageField";
+}
+
+} // namespace api
