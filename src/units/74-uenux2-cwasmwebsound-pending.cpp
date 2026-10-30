@@ -7,7 +7,7 @@
 // calls js_wasm_web_sound_wait_async and returns a std::make_shared of the file-static
 // simulador::(anonymous namespace)::CEsperaAudioWasm (vtable @1528660, whose members 9459, 9448, 2680 and 9445 are not
 // reconstructed either). The map is an unnamed .bss object (1832664: zeros, which only a name places), so it waits for
-// that name and for the CEsperaAudio and CEsperaAudioWasm classes.
+// that name and for the CEsperaAudioWasm class.
 #include "uenux2/mock/app/simulador/wasm/cwasmwebsound.h"
 
 namespace simulador {
