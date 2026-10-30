@@ -3408,17 +3408,6 @@
 // f11247 · 904 B · unmatched · placement: link order · name unknown
 // void f11247(i32, i32) { ... }
 
-// link-order cluster 474 · uses=1 · neighbours' file uenux2/src/api/gui/cfileseeder.cpp
-
-// f11434 · 10 B · unmatched · placement: link order · name unknown
-// ? f11434(i32) { ... }
-
-// f11429 · 16 B · unmatched · placement: link order · name unknown
-// ? f11429(i32) { ... }
-
-// f11428 · 10 B · unmatched · placement: link order · name unknown
-// ? f11428(i32) { ... }
-
 // link-order cluster 496 · uses=1 · neighbours' file uenux2/src/api/gui/itexttospeech.cpp
 
 // f11494 · 37 B · unmatched · placement: link order · name unknown

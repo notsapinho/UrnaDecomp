@@ -80,7 +80,7 @@ bool BERDecoderPartial::do_visit(BOOLEAN& value)
       return false;
     }
 
-    value = (m_seeder->read() != 0);
+    value = (m_seeder->decodeByte() != 0);
   }
 
   return true;
@@ -92,14 +92,14 @@ bool BERDecoderPartial::do_visit(INTEGER& value)
   if (!decodeHeader(value, len) || len == 0 || m_seeder->eof())
     return false;
 
-  INTEGER::int_type accumulator = static_cast<signed char>(m_seeder->read()); // sign extended first byte
+  INTEGER::int_type accumulator = static_cast<signed char>(m_seeder->decodeByte()); // sign extended first byte
   while (--len > 0) {
     if (m_seeder->eof()) {
       m_log << "INTEGER" << badEndOfStream;
       return false;
     }
 
-    accumulator = (accumulator << 8) | m_seeder->read();
+    accumulator = (accumulator << 8) | m_seeder->decodeByte();
   }
 
   value = accumulator;
@@ -120,7 +120,7 @@ bool BERDecoderPartial::do_visit(ENUMERATED& value)
       return false;
     }
 
-    val = (val << 8) | m_seeder->read();
+    val = (val << 8) | m_seeder->decodeByte();
   }
 
   value.setFromInt(val);
@@ -140,7 +140,7 @@ bool BERDecoderPartial::do_visit(OBJECT_IDENTIFIER& value)
   }
 
   ASN1_STD shared_ptr<char[]> buffer(new char[len]);
-  m_seeder->read(buffer.get(), len);
+  m_seeder->decodeBlock(buffer.get(), len);
   bool result = value.decodeCommon(buffer.get(), len);
   trace_invalid(m_log, "", value);
   return result;
@@ -152,12 +152,12 @@ bool BERDecoderPartial::do_visit(BIT_STRING& value)
   if (!decodeHeader(value, len) || len == 0 || m_seeder->eof())
     return false;
 
-  value.totalBits = (len-1)*8 - m_seeder->read();
+  value.totalBits = (len-1)*8 - m_seeder->decodeByte();
   unsigned nBytes = (value.totalBits+7)/8;
   if(!nBytes) // crash on VS8 platform when BitString is empty
     return true;
   value.bitData.resize(nBytes);
-  unsigned read = m_seeder->read(&*value.bitData.begin(), nBytes);
+  unsigned read = m_seeder->decodeBlock(&*value.bitData.begin(), nBytes);
   trace_invalid(m_log, "", value);
   return read == nBytes;
 }
@@ -172,7 +172,7 @@ bool BERDecoderPartial::do_visit(OCTET_STRING& value)
     return true;
 
   value.resize(len);
-  unsigned read = m_seeder->read(&*value.begin(), len);
+  unsigned read = m_seeder->decodeBlock(&*value.begin(), len);
   trace_invalid(m_log, "", value);
   return read == len;
 }
@@ -187,7 +187,7 @@ bool BERDecoderPartial::do_visit(AbstractString& value)
     return true;
 
   value.resize(len);
-  unsigned read = m_seeder->read(&*value.begin(), len);
+  unsigned read = m_seeder->decodeBlock(&*value.begin(), len);
   trace_invalid(m_log, "", value);
   return read == len;
 }
@@ -208,7 +208,7 @@ bool BERDecoderPartial::do_visit(BMPString& value)
   }
 
   for (unsigned i = 0; i < len/2; ++i)
-    value[i] = (m_seeder->read() << 8) | m_seeder->read();
+    value[i] = (m_seeder->decodeByte() << 8) | m_seeder->decodeByte();
   trace_invalid(m_log, "", value);
   return true;
 }
@@ -363,7 +363,7 @@ bool BERDecoderPartial::do_visit(OpenData& value)
     value.grab(new OpenBuf);
 
   value.get_buf().resize(entryLen);
-  m_seeder->read(&*value.get_buf().begin(), entryLen);
+  m_seeder->decodeBlock(&*value.get_buf().begin(), entryLen);
   trace_invalid(m_log, "", value);
   return true;
 }
@@ -406,7 +406,7 @@ bool BERDecoderPartial::decodeTime(TIME& value, unsigned& len)
     return true;
 
   ASN1_STD vector<char> block(len+1, '\0');
-  unsigned read = m_seeder->read(&*block.begin(), len);
+  unsigned read = m_seeder->decodeBlock(&*block.begin(), len);
   if (read == len)
   {
     value.set(&*block.begin());
@@ -558,7 +558,7 @@ bool BERDecoderPartial::decodeHeader(unsigned& tag, bool & primitive, unsigned &
     return false;
 
   unsigned tagVal, tagClass;
-  unsigned char ident = m_seeder->read();
+  unsigned char ident = m_seeder->decodeByte();
 
   if(!ident) // universal tag 0 is not valid
     return false;
@@ -575,7 +575,7 @@ bool BERDecoderPartial::decodeHeader(unsigned& tag, bool & primitive, unsigned &
       if (m_seeder->eof())
         return false;
 
-      b = m_seeder->read();
+      b = m_seeder->decodeByte();
       tagVal = (tagVal << 7) | (b&0x7f);
     } while ((b&0x80) != 0);
 
@@ -588,7 +588,7 @@ bool BERDecoderPartial::decodeHeader(unsigned& tag, bool & primitive, unsigned &
   if (m_seeder->eof())
     return false;
 
-  unsigned char len_len = m_seeder->read();
+  unsigned char len_len = m_seeder->decodeByte();
   if ((len_len & 0x80) == 0) {
     len = len_len;
     return true;
@@ -601,7 +601,7 @@ bool BERDecoderPartial::decodeHeader(unsigned& tag, bool & primitive, unsigned &
     if (m_seeder->eof())
       return false;
 
-    len = (len << 8) | m_seeder->read();
+    len = (len << 8) | m_seeder->decodeByte();
   }
 
   return true;
