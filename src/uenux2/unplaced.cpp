@@ -2072,11 +2072,6 @@
 // f11455 · 71 B · unmatched · placement: link order · name unknown
 // void f11455(i32, i32, i32) { ... }
 
-// link-order cluster 488 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorpartido.cpp
-
-// f11460 · 290 B · unmatched · placement: link order · name unknown
-// void f11460(i32, i32, i32) { ... }
-
 // link-order cluster 490 · uses=1 · neighbours' file uenux2/src/app/comum/asn/util.cpp
 
 // f11464 · 13 B · unmatched · placement: link order · name unknown
