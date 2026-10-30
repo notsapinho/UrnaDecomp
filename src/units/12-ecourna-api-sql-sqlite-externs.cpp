@@ -1,8 +1,15 @@
-// Placeholder TU: definitions the api/sql/sqlite units call but which belong to other units (CStringUtils).
-// Reconstructed from target fns 5158 (ToLower in place), 1879 (ToLower copy) and 9398 (Replace); compiled with the
-// ecourna flags through src/units/12-ecourna-api-sql-sqlite.mk. Fold into api/util/cstringutils.cpp when that unit takes them over.
+// Definitions the api/sql/sqlite units call that belong to api/util/cstringutils.cpp (CStringUtils), until that file
+// is reconstructed around them: target fns 5158 (ToLower in place), 1879 (ToLower copy) and 9398 (Replace), compiled
+// with the ecourna flags through src/units/12-ecourna-api-sql-sqlite.mk.
+// Replace matches. It reads the replacement's size once, before the loop, as the target does; a loop that adds
+// para.size() each time gives other code, a while loop over the same hoisted size the same object code.
+// ToLower in place maps each character through std::transform: a range-for over the string gives other code (39 rows
+// against the target, 8 inserted and 12 deleted), this form 8 rows, all operand-only. It does not match: the scan
+// finds no target name for the function-local static set or its guard variable (.bss, target 1911836 and 1911848).
+// The copying ToLower does not match either: CSqlResultSet::IndexForColumnName (unit 12's fragment) says why.
 #include "ecourna/api/util/cstringutils.hpp"
 
+#include <algorithm>
 #include <cctype>
 #include <set>
 
@@ -10,15 +17,17 @@ namespace ecourna::api::util {
 
 void CStringUtils::ToLower(std::string& valor)
 {
-    for (char& caractere : valor) {
+    std::transform(valor.begin(), valor.end(), valor.begin(), [](char caractere) -> char {
         static const std::set<int> acentuadas = {'Ç', 'Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Â', 'Ê', 'Î',
                                                  'Ô', 'Û', 'Ã', 'Õ', 'Ñ'};
         if (acentuadas.find(caractere) != acentuadas.end()) {
-            caractere |= 32;
-        } else if (isalpha(caractere)) {
-            caractere = tolower(caractere);
+            return caractere | 32;
         }
-    }
+        if (isalpha(caractere)) {
+            return tolower(caractere);
+        }
+        return caractere;
+    });
 }
 
 std::string CStringUtils::ToLower(const std::string& valor)
@@ -30,11 +39,9 @@ std::string CStringUtils::ToLower(const std::string& valor)
 
 void CStringUtils::Replace(std::string& valor, char de, const std::string& para)
 {
-    size_t posicao = valor.find(de);
-    while (posicao != std::string::npos) {
+    const size_t tamanho = para.size();
+    for (size_t posicao = valor.find(de); posicao != std::string::npos; posicao = valor.find(de, posicao + tamanho)) {
         valor.replace(posicao, 1, para);
-        posicao += para.size();
-        posicao = valor.find(de, posicao);
     }
 }
 

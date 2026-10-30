@@ -18,47 +18,59 @@ std::mutex s_mutex;
 
 } // namespace
 
-CSqlStatement::CSqlStatement(sqlite3* db, sqlite3_stmt* stmt)
-    : m_db(db), m_stmt(stmt), m_fechado(false), m_numeroParametros(sqlite3_bind_parameter_count(m_stmt))
+CSqlStatement::CSqlStatement(sqlite3* db, sqlite3_stmt* stmt) : m_db(db), m_stmt(stmt), m_fechado(false)
 {
+    s_mutex.lock();
+    m_numeroParametros = sqlite3_bind_parameter_count(m_stmt);
 }
 
-// (original lines 26-47: content not recovered)
+CSqlStatement::~CSqlStatement()
+{
+    if (!m_fechado) {
+        try {
+            Close();
+        } catch (...) {
+        }
+    }
+}
+
+// (original lines 37-47: content not recovered)
 #line 48
 void CSqlStatement::SetInt(int indice, int valor)
 {
     VerifyParameterIndex(indice);
-    if (sqlite3_bind_int(m_stmt, indice, valor) != SQLITE_OK) {
+    const int resultado = sqlite3_bind_int(m_stmt, indice, valor);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_SET_INT, ObterMensagemErro(m_db));
     }
 }
 
-// (original lines 56-57: content not recovered)
-#line 58
+
 void CSqlStatement::SetInt64(int indice, ueint64 valor)
 {
     VerifyParameterIndex(indice);
-    if (sqlite3_bind_int64(m_stmt, indice, valor) != SQLITE_OK) {
+    const int resultado = sqlite3_bind_int64(m_stmt, indice, valor);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_SET_INT64, ObterMensagemErro(m_db));
     }
 }
 
-// (original lines 66-67: content not recovered)
-#line 68
+
 void CSqlStatement::SetDouble(int indice, double valor)
 {
     VerifyParameterIndex(indice);
-    if (sqlite3_bind_double(m_stmt, indice, valor) != SQLITE_OK) {
+    const int resultado = sqlite3_bind_double(m_stmt, indice, valor);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_SET_DOUBLE, ObterMensagemErro(m_db));
     }
 }
 
-// (original lines 76-77: content not recovered)
-#line 78
+
 void CSqlStatement::SetText(int indice, const std::string& valor)
 {
     VerifyParameterIndex(indice);
-    if (sqlite3_bind_text(m_stmt, indice, valor.c_str(), valor.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
+    const int resultado = sqlite3_bind_text(m_stmt, indice, valor.c_str(), valor.size(), SQLITE_TRANSIENT);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_SET_TEXT, ObterMensagemErro(m_db));
     }
 }
@@ -76,22 +88,23 @@ void CSqlStatement::SetBool(int indice, bool valor)
     SetInt(indice, valor);
 }
 
-// (original lines 99-103: content not recovered)
+// (original lines 100-103: content not recovered)
 #line 104
 void CSqlStatement::SetBlob(int indice, const std::vector<uebyte>& valor)
 {
     VerifyParameterIndex(indice);
-    if (sqlite3_bind_blob(m_stmt, indice, valor.data(), valor.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
+    const int resultado = sqlite3_bind_blob(m_stmt, indice, valor.data(), valor.size(), SQLITE_TRANSIENT);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_SET_BLOB, ObterMensagemErro(m_db));
     }
 }
 
-// (original lines 112-113: content not recovered)
-#line 114
+
 void CSqlStatement::SetNull(int indice)
 {
     VerifyParameterIndex(indice);
-    if (sqlite3_bind_null(m_stmt, indice) != SQLITE_OK) {
+    const int resultado = sqlite3_bind_null(m_stmt, indice);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_SET_NULL, ObterMensagemErro(m_db));
     }
 }
@@ -101,19 +114,19 @@ TSharedSqlResultSet CSqlStatement::Execute()
     return TSharedSqlResultSet(new CSqlResultSet(m_db, m_stmt));
 }
 
-// (original lines 127-128: content not recovered)
-#line 129
+
 void CSqlStatement::Reset()
 {
-    if (sqlite3_reset(m_stmt) != SQLITE_OK) {
+    const int resultado = sqlite3_reset(m_stmt);
+    if (resultado != SQLITE_OK) {
         throw CSqlError(ESE_RESET, ObterMensagemErro(m_db));
     }
 }
 
-
+// (original lines 137-138: content not recovered)
+#line 139
 void CSqlStatement::Close()
 {
-    s_mutex.lock();
     try {
         if (sqlite3_finalize(m_stmt) != SQLITE_OK) {
             throw CSqlError(ESE_FECHAR_COMANDO, ObterMensagemErro(m_db));
@@ -141,8 +154,3 @@ bool CSqlStatement::IsClosed() const
 }
 
 } // namespace ecourna::api::sql::sqlite
-
-// <stubs>
-// f9430 · 48 B · unmatched · placement: link order · name unknown
-// ? f9430(i32, i32, i32) { ... }
-// </stubs>

@@ -87,11 +87,6 @@
 // f9410 · 18 B · unmatched · placement: link order · name unknown
 // ? f9410(i32, i32, i32, i32) { ... }
 
-// link-order cluster 212 · uses=1 · neighbours' file ecourna/api/sql/sqlite/csqlconnection.cpp
-
-// f9461 · 18 B · unmatched · placement: link order · name unknown
-// ? f9461(i32, i32, i32, i32) { ... }
-
 // link-order cluster 217 · uses=1 · neighbours' file ecourna/api/security/ctrng.cpp
 
 // f9477 · 90 B · unmatched · placement: link order · name unknown
@@ -670,14 +665,6 @@
 // f2659 · 88 B · unmatched · placement: link order · name unknown
 // void f2659(i32) { ... }
 
-// link-order cluster 1073 · uses=4 · neighbours' file ecourna/api/sql/sqlite/csqlresultset.cpp
-
-// f2678 · 261 B · unmatched · placement: link order · name unknown
-// ? f2678(i32, i32) { ... }
-
-// f2676 · 464 B · unmatched · placement: link order · name unknown
-// ? f2676(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1074 · uses=4 · neighbours' file ecourna/api/security/cepesc/ccepesccipher.cpp
 
 // f2681 · 345 B · unmatched · placement: link order · name unknown
@@ -815,11 +802,6 @@
 
 // f2283 · 57 B · unmatched · placement: link order · name unknown
 // void f2283(i32, i32) { ... }
-
-// link-order cluster 1173 · uses=6 · neighbours' file ecourna/app/dados/cregistroidentificacaoeleitor.cpp
-
-// f1879 · 12 B · unmatched · placement: link order · name unknown
-// void f1879(i32, i32) { ... }
 
 // link-order cluster 1176 · uses=6 · neighbours' file ecourna/api/security/csymmetriccipherfactory.cpp
 
