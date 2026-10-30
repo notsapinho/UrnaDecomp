@@ -7464,3 +7464,7 @@
 5509 _ZN3api12CProgressBarD2Ev
 10974 _ZNK3api12CProgressBar4RectEv
 10978 _ZN3api12CProgressBarD0Ev
+3665 _ZN3api17CStepsProgressBarD2Ev
+10968 _ZNK3api17CStepsProgressBar4RectEv
+10969 _ZNK3api17CStepsProgressBar11GetTypeNameEv
+10973 _ZN3api17CStepsProgressBarD0Ev
