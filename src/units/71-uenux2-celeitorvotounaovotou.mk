@@ -1,6 +1,6 @@
 # uenux2 vota::CEleitorVotouNaoVotou::StartState (target fn 10431, slot 2 of its vtable @1592928) with its destructor
 # and deleting destructor (fns 1284, 2884, slots 0 and 1), and comum::IPedeTituloMesario's StartState, constructor and
-# destructor (fns 10314, 3608, 1378). The class headers say what the layout rests on; ProcessInput of each (fns 10430,
+# implicit destructor (fns 10314, 3608, 1378). The class headers say what the layout rests on; ProcessInput of each (fns 10430,
 # 10313) is pending. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) is declared
 # as far as these states need it, its base api::IForm<MEDIA> (api/gui/iform.h).
 #
@@ -38,8 +38,9 @@
 # comum::IPedeTituloMesario: src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp is the file its record
 # names. Line 30 of it, the anonymous GetControlador, stays blank, and the functions written come after it: their
 # lines are a choice (no record gives one). The order inside StartState is the target's: the next state, then +20's
-# form, then +12's. Chosen: the header's path, beside that file; the destructor as the key function (the vtable's place
-# shows that a member is out of line there, not which); Slot9, its name and its int result (no record, symbol or caller
+# form, then +12's. The destructor is implicit: unit 97's derived classes show it inline. Chosen: the header's path,
+# beside that file; StartState as the key function (the vtable's place shows that a member is out of line there, not
+# which); Slot9, its name and its int result (no record, symbol or caller
 # names it, and the derived classes return 1 and 2); the member and parameter names.
 #
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 65's, byte

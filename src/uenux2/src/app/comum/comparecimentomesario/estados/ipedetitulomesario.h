@@ -23,8 +23,12 @@ namespace comum {
 // comum::CAppState's. A record in ipedetitulomesario.cpp (line 30, the anonymous GetControlador inlined into fn 10313)
 // names the file; this header's path is chosen, beside it. The vtable and typeinfo lie in that file's data, before that
 // record and after the derived classes' objects, so a member is out of line there: a class with no key function would
-// have its vtable copied in its first user's object. The destructor is declared first as that key function, a choice:
-// no evidence says which member it is.
+// have its vtable copied in its first user's object. StartState, declared first, is that key function, a choice: no
+// evidence says which member it is. The destructor is not: the derived classes' D0 (fn 3609) calls their D1 and frees
+// `this`, so their destructors are out of line, and their slot 0 still holds fn 1378. A derived D2 that holds this D2's
+// body, which clang inlines only when the destructor is inline, is what binaryen merges with this one; over an
+// out-of-line destructor it would be a body of one call, as fn 884 is over fn 1035. It is left implicit: in the class,
+// `= default` with or without `inline` gives the same fns 1378 and 3609 (src/units/97-uenux2-cvotacaostateaudio.mk).
 //
 // The layout is what the constructor (fn 3608) stores: +12 and +20 two std::shared_ptr it takes by value (it copies
 // their four words and writes nothing back). +12 is the operator's form: fn 10313 reads it through
@@ -36,8 +40,6 @@ namespace comum {
 // fn 2738. The member and parameter names are not in the target.
 class IPedeTituloMesario : public CAppState {
 public:
-    virtual ~IPedeTituloMesario() override;
-
     virtual void StartState() override;
 
     virtual void ProcessInput() override;
