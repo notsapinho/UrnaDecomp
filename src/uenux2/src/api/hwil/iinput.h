@@ -1,16 +1,18 @@
 #pragma once
 
 // Reconstruction's note, not TSE's text. This file's records are the only recovered lines: line 61 is the throw of
-// `std::string api::KeyName(char)` (fn 744) and line 86 the throw of `char api::IInput::GetKey()`, held inlined by fns
-// 6319, 10426, 11024 and 11804. Neither is written, so both lines stay blank and the classes follow them: their lines
-// are a choice, and so is having IInputKbd and IInputMT in this file. Their names and bases are RTTI's: IInput
+// `std::string api::KeyName(char)` (fn 744), which is not written, so that line stays blank, and line 86, column 19, the
+// throw of `char api::IInput::GetKey()`, held inlined by fns 6319, 10426, 11024 and 11804. The lines of everything
+// else are a choice, and so is having IInputKbd and IInputMT in this file. Their names and bases are RTTI's: IInput
 // (typeinfo 1530852, a polymorphic class with no base), IInputKbd (1530840) and IInputMT (1530860), si_classes of
 // IInput, implemented by simulador::CWasmInputKbd and simulador::CWasmInputMT (vtables @1530084 and @1530136).
 // What the target shows of IInput:
 // - slots 0 and 1 are the destructor: both implementers hold the shared empty bodies 174 and 144 there. A defaulted
 //   destructor in the class is the chosen form.
 // - GetKey is not a slot, and its body, read in fn 6319, gives slots 2 and 3 and the int at +4: it throws "IInput - Nao
-//   havia um caractere disponivel" unless slot 3 returns true, then calls slot 2 and adds 1 to +4.
+//   havia um caractere disponivel" unless slot 3 returns true, then calls slot 2 and adds 1 to +4. It is declared
+//   `inline`: without the keyword IInputField's Read (fns 6319, 11024) compiles to other code, and four target functions
+//   hold it inlined, which binaryen alone cannot do. Where it is defined in the class is a choice.
 // - both implementers' objects are 8 bytes and fn 8302 stores 0 at +4 of each right after the vptr, so the counter is
 //   this class's member. Its type and its default initializer are chosen.
 // - slot 4 takes nothing and returns nothing: fns 10835, 11075, 11077, 11791 and 13564 call it on the keyboard they get
@@ -24,22 +26,15 @@
 // implementers call (wasm_input_get_key, wasm_input_has_key, wasm_input_clear), the SlotN after their slots, as no
 // evidence gives them a role.
 
-// (original lines 27-57: content not recovered)
+#include "api/hwil/euehwilerror.h"
+
+// (original lines 31-57: content not recovered)
 #line 58
 // <stubs>
 // f744 · 625 B · unmatched · name unknown
 // void f744(i32, i32) { ... }
 // </stubs>
 
-// (original lines 63-78: content not recovered)
-#line 79
-// <stubs>
-// f11024 · 673 B · unmatched · name unknown
-// ? f11024(i32, i32) { ... }
-
-// f6319 · 673 B · unmatched · name unknown
-// ? f6319(i32, i32) { ... }
-// </stubs>
 
 namespace api {
 
@@ -50,6 +45,19 @@ public:
     virtual char ReadKey() = 0;
     virtual bool HasKey() = 0;
     virtual void Clear() = 0;
+
+    // (original lines 74-82: content not recovered)
+#line 83
+    inline char GetKey()
+    {
+        if (!HasKey()) {
+            throw CUeHwilError(EUE_HWIL_TECLA_INDISPONIVEL, "IInput - Nao havia um caractere disponivel");
+        }
+
+        const char tecla = ReadKey();
+        ++m_lidas;
+        return tecla;
+    }
 
 protected:
     int m_lidas = 0;
