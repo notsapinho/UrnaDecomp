@@ -1031,11 +1031,6 @@
 // f255 · 21 B · unmatched · placement: link order · name unknown
 // ? f255(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1367 · uses=91
-
-// f253 · 18 B · unmatched · placement: link order · name unknown
-// ? f253(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1370 · uses=107
 
 // f235 · 21 B · unmatched · placement: link order · name unknown
