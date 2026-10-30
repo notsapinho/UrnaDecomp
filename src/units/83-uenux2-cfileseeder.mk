@@ -41,7 +41,8 @@
 #   long or unsigned; an if that assigns the count or the parameter for the ?:, and the ?: inverted with <=;
 #   size + posicao for posicao + size; the target of skip as size + Position(); seek's second test as == false; an else
 #   around decodeByte's read; RawRead's result kept in an unused local; the -1 as a default member initializer; a throw
-#   broken over two lines; seek after the class.
+#   broken over two lines; seek after the class; for the implicit destructor, one in the class, `~CFileSeeder()
+#   override = default;`, `override {}` or `inline` with `= default` (the roots object cmp-identical).
 # - other bytes: `byte` initialized; std::min for the ?: (decodeBlock); m_tamanho < position for position > m_tamanho, a
 #   copy of the name for GetNome() (seek); tell() in skip; size() - tell(), or the position read first into a local, in
 #   remaining (the target loads the size before the call).

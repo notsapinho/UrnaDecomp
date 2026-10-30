@@ -15,13 +15,13 @@
 namespace api {
 
 // Recovered: the vtable @1564400, an si_class of ASN1::ISeeder (ledger/classes.json), a file at +4 and a size at +8.
-// Slots 0 and 1 are the shared empty destructors (174, 144), so the destructor is implicit. The class is not final:
-// decodeByte and skip call eof and seek through the vtable, which `final` devirtualizes. It has no key function: the
-// vtable, the typeinfos and the members' records lie among the data of the TU that uses them, after that TU's record of
-// line 182 (ledger/vtables.json, ledger/source-locations.tsv), so every member is inline. Defined in the class is a choice
-// the column fits. The constructor has no function of its own: 11523 and 7787 hold it, and code in two target functions
-// means clang inlined it in at least one TU; it stores -1 at +8, then measures the file. Chosen, no evidence names them:
-// the data members and the names of slots 2 and 7 to 10 (asn1.h says which of ISeeder's names are the records').
+// Not final: decodeByte and skip call eof and seek through the vtable, which `final` devirtualizes. No key function:
+// the vtable, the typeinfos and the members' records lie among the data of the TU that uses them, after its record of
+// line 182 (ledger/vtables.json, ledger/source-locations.tsv), so every member is inline; in the class is a choice the
+// column fits. Slots 0 and 1 are the shared empty destructors (174, 144): the destructor is inline, implicit or defined
+// in the class (the same bytes, the fragment lists the forms), and implicit is chosen. The constructor has no function
+// of its own (11523 and 7787 hold it); it stores -1 at +8, then measures the file. Chosen, no evidence names them: the
+// data members and the names of slots 2 and 7 to 10 (asn1.h says which of ISeeder's names are the records').
 class CFileSeeder : public ASN1::ISeeder {
 public:
     explicit CFileSeeder(const ecourna::api::io::CFile& arquivo) : m_arquivo(arquivo), m_tamanho(static_cast<size_t>(-1))
