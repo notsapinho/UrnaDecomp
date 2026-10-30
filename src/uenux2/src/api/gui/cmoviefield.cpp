@@ -1,25 +1,76 @@
-// <stubs>
-// f11065 · 13 B · unmatched · placement: link order · name unknown
-// void f11065(i32) { ... }
+// api::CMovieField (/home/rubio/tse/uenux2/src/api/gui/cmoviefield.cpp, the file Rect's record names).
+// Target functions of this file:
+//   5524 / 11065  ~CMovieField() (base-object / deleting)   (here; out of line: the D0 calls the D2 and drops its
+//                 result; it stops the timer through Hide, which clang inlines into it)
+//   11064 Draw(IScreen&) const                                    (pending)
+//   11063 Rect() const   record at line 53, column 12; calls fn 512, not named yet   (pending)
+//   11062 Move(const SPoint&), 11061 Show()                       (pending)
+//   11060 Hide()                                                  (here)
+//   11059 GetTypeName() const   a thunk into binaryen's merge 2904 (pending)
+// The constructor has no target function of its own (it is inlined, with std::make_shared, into fn 5543; its lambda's
+// std::function members are fns 11054-11058) and is not reconstructed: it calls ITimerScheduler::GetInst (fn 1259),
+// which has no body of ours. The definitions follow the target's order (the uses-1 band 11059-11065 of
+// ledger/ordinals.tsv: D0, Draw, Rect, Move, Show, Hide, GetTypeName); no record falls in the destructor or Hide, so
+// their lines are a choice: the destructor above Rect's line 53, Hide below it. The pending members are defined in
+// src/units/52-uenux2-cmoviefield-pending.cpp.
 
-// f11064 · 30 B · unmatched · placement: link order · name unknown
-// void f11064(i32, i32) { ... }
+#include "api/gui/cmoviefield.h"
 
-// f11063 · 109 B · unmatched · name unknown
-// void f11063(i32, i32) { ... }
+#include "api/util/itimer.h"
 
-// f11062 · 97 B · unmatched · placement: link order · name unknown
-// void f11062(i32, i32) { ... }
+namespace api {
 
-// f11061 · 77 B · unmatched · placement: link order · name unknown
-// void f11061(i32) { ... }
+// (original lines 23-39: content not recovered)
+#line 40
+CMovieField::~CMovieField()
+{
+    Hide();
+}
 
-// f11060 · 29 B · unmatched · placement: link order · name unknown
-// void f11060(i32) { ... }
 
-// f11059 · 17 B · unmatched · placement: link order · name unknown
-// void f11059(i32, i32) { ... }
 
-// f5524 · 176 B · unmatched · placement: link order · name unknown
-// ? f5524(i32) { ... }
-// </stubs>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void CMovieField::Hide()
+{
+    m_timer->Stop();
+    m_visivel = 0;
+}
+
+} // namespace api
