@@ -2,8 +2,9 @@
 
 The two TSE trees in the target, **uenux2** (the application) and **ecourna** (a conan package of shared classes),
 were compiled with different flags. This page gives the flags the build uses, where each one is set and the
-evidence for it, and the source-level facts that come with them. Every flag is decided by compiling the
-reconstructed units with and without it and scoring them against the target; the per-flag measurements are in
+evidence for it, and the source-level facts that come with them. A flag is decided by compiling the
+reconstructed units with and without it and scoring them against the target, and by where the target's data sits when that
+shows it, as for `-fPIC`; the per-flag measurements are in
 [facts/app-flags.md](facts/app-flags.md) (§F1–§F9). The libraries' flags are in [toolchain.md](toolchain.md) §3.
 
 ## The flags
@@ -11,9 +12,8 @@ reconstructed units with and without it and scoring them against the target; the
 | tree | sources | flags | set in | evidence |
 | --- | --- | --- | --- | --- |
 | uenux2 | `src/uenux2/` | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` | `UENUX2_CXXFLAGS` in `src/Makefile` | facts §F6 (level, PIC and aliasing), §F1 (`-std`, `-DNDEBUG`); exceptions below |
-| ecourna | `src/ecourna/` | `-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG` | `ECOURNA_CXXFLAGS` in `src/Makefile` | facts §F1 |
+| ecourna | `src/ecourna/` | `-O3 -fexceptions -std=c++20 -DNDEBUG`, no `-fPIC` in any TU | `ECOURNA_CXXFLAGS` in `src/Makefile` | facts §F1, §F5 |
 | ecourna, every unit | | `+ -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow` | `src/mk/ecourna-flags.mk` | facts §F2, §F3, §F4 |
-| ecourna `app/dados`, `api/io`, `api/compression`, `api/security/csha.cpp` | | `-fno-PIC` (PIC is per CMake target, not per package) | `src/mk/ecourna-flags.mk` for `app/dados`, the unit fragments in `src/units/` for the others | facts §F5 |
 | the stand-in and roots TUs (`src/app/`, `src/web/`, the units' `-roots.cpp`) | | `APP_CXXFLAGS` = `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`; `APP_CFLAGS` for the generated C roots | `src/Makefile` | they stand in for app code; the library templates they instantiate win the link, and the target's copies have TBAA (facts §F6) |
 
 Both trees also take a `-ffile-prefix-map` that puts the original build directory into their `std::source_location`

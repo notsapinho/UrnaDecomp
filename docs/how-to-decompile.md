@@ -541,8 +541,8 @@ group `ecourna`), `head -3 /tmp/lift/1260.cpp` prints:
 ```
 
 A function with no record and no stub outside `unplaced.cpp`, or whose records name both trees, gets its component's
-flags, and the third line says so (`component ecourna's flags: no record or stub names its tree`). The lifter's copy
-of the flags has no per-directory `-fno-PIC` either. The next steps use `try-tu.sh`, which reads the flags from
+flags, and the third line says so (`component ecourna's flags: no record or stub names its tree`). The lifter's flags
+are a copy, with no flag a unit's fragment adds. The next steps use `try-tu.sh`, which reads the flags from
 `src/Makefile` by the source's path; trust those.
 
 ## 4. Iterate on the function alone
@@ -644,9 +644,12 @@ here, then find out whether the flag is the tree's: a flag is decided for a whol
 can explain, never on the one function that needs it. [facts/app-flags.md](reference/facts/app-flags.md) §F9 item
 8 has a trap here (a reload that an out-of-line call gives as well), and §F6 the evidence for uenux2's
 `-fno-strict-aliasing`. A flag set changes in `src/Makefile` (or `src/mk/ecourna-flags.mk`) with its evidence in that facts
-file, and every match must still verify in a private link with it (§F9 item 6 has the command). A fragment may carry a target-specific flag only where the evidence is
-per TU, as `-fno-PIC` is (§F5), and then the objects' flag set must be a setup of
-`asmlift-wasm/benchmark/dataset/setups.json`, as `ecourna-nopic` is: `pnpm bench setups --check` fails on an
+file, and every match must still verify in a private link with it (§F9 item 6 has the command; to measure taking a flag
+away, take it off the line, since an override is not the same: §F9 item 9). A flag can look per file when it is not: `-fno-PIC` was set file by file until the
+target's data showed one setting for all of ecourna (§F5). So before you call evidence per TU, look at what the
+whole tree's data and code say. A fragment may carry a target-specific flag only where the evidence is
+per TU, and then the objects' flag set must be a setup of
+`asmlift-wasm/benchmark/dataset/setups.json`, as `asn1-eh` is for the ASN.1 TUs that throw: `pnpm bench setups --check` fails on an
 object that compiles with flags no setup has ([asmlift-wasm/benchmark/README.md](../asmlift-wasm/benchmark/README.md)
 "The compile setups"). If neither holds, leave the function pending and report the measurement.
 

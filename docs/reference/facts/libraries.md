@@ -31,7 +31,8 @@ Census of the 1,141 functions the classifier calls sqlite (paired = byte, exact 
 
 With `keep()`, 1,348 of the probe's 1,370 SQLite functions are found in the target (485,906 of 489,889
 instructions). **-fPIC is the big lever**: it changes LLVM's output for most functions. Since conan sets
-`fPIC=True` for every static library, expect `-fPIC` on every conan-built library.
+`fPIC=True` for every static library, expect `-fPIC` on a conan-built third-party library. ecourna, TSE's own
+conan package, does not have it ([app-flags.md](app-flags.md) §F5), so read a package's data before assuming.
 
 The `HAVE_*` defines, one removed at a time:
 

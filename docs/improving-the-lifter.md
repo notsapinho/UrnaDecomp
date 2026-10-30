@@ -98,7 +98,7 @@ From rewriting drafts into landed sources:
 - **Boolean logic reads as bit arithmetic**, and `shared_ptr` reference counting as raw arithmetic.
 - **A lone link of a draft needs data stubs** for the `theInfo` and typeinfo symbols it references.
 - **The header's compile line** comes from the lifter's own tables (`TREE_FLAGS` for the tree the function's records
-  or stub name, else `COMPONENT_FLAGS`), which cannot express ecourna's per-directory `-fno-PIC`;
+  or stub name, else `COMPONENT_FLAGS`), which cannot express a flag one unit's fragment adds;
   `tools/round/try-tu.sh` reads the real flags from `src/Makefile`.
 
 A callee prints by its mangled symbol when the ledger names it: the symbol lists `make -C src link` writes

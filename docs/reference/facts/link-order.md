@@ -240,7 +240,8 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     the data (item 15).
 15. Data order is link order with no digit scramble. wasm-ld lays out each data segment's input sections in the order
     of the objects on the link line, and with `-fPIC` a TU's vtables, typeinfos and `std::source_location` records all
-    go to `.data` (`.data.rel.ro`), so they interleave object by object. In our own link, from its map:
+    go to `.data` (`.data.rel.ro`), so they interleave object by object. ecourna's TUs have no `-fPIC`, so theirs go to
+    `.rodata` in the same order ([app-flags.md](app-flags.md) §F5). In our own link, from its map:
 
     ```sh
     P=build/out/linkorder-facts; mkdir -p $P; M=build/out/wasm-map/vota_web/vota_web_wasm.map
@@ -248,8 +249,8 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     for seg in .rodata .data; do
       awk -v seg=$seg 'NF==4 && ($4==".rodata" || $4==".data" || $4==".bss") {d = ($4 == seg); next} d && $4 ~ /\.o:\(/ {o=$4; sub(/:\(.*$/, "", o); if (!(o in s)) {s[o]=1; print o}}' $M > $P/seg.txt
       awk -v seg=$seg 'NR==FNR {p[$0]=NR; next} ($0 in p) {n++; if (p[$0] < last) {bad++; b=b " " $0}; last=p[$0]} END {print seg ": " n " objects, " bad+0 " out of link-line order" b}' $P/line.txt $P/seg.txt; done
-    # .rodata: 266 objects, 0 out of link-line order
-    # .data: 250 objects, 1 out of link-line order app/wasm_shim.o      (its em_js section, which emscripten places last)
+    # .rodata: 294 objects, 0 out of link-line order
+    # .data: 256 objects, 1 out of link-line order app/wasm_shim.o      (its em_js section, which emscripten places last)
     ```
 
     In the target, the vtables (`ledger/vtables.json` `address`) and records (`ledger/source-locations.tsv` column 1)

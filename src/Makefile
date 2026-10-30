@@ -65,7 +65,7 @@ APP := build/out/app
 GEN := $(APP)/gen
 # ---- the TSE application TUs' flags (docs/reference/app-flags.md; measured on the ecourna units in src/ecourna) ----------
 # ecourna (conan package libecea1da310e5107): -O3 -fexceptions -std=c++20 -DNDEBUG, no -fPIC anywhere in the tree
-# (docs/reference/facts/app-flags.md §F5: its records and vtables sit in the target's .rodata); the sources sit in the
+# (docs/reference/facts/app-flags.md §F5: its records sit in the target's .rodata); the sources sit in the
 # conan build dir, so the file names std::source_location records are reproduced with -ffile-prefix-map: the /work
 # spelling for the sources, the relative one for the headers found through -Isrc (api/asn/iconversorasn.hpp).
 ECOURNA_PREFIX_MAP := -ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna \

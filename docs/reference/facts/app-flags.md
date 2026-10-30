@@ -15,11 +15,11 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 
 | component | flags |
 | --- | --- |
-| ecourna (`src/ecourna`) | `-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`; `-fno-PIC` for `api/io`, `api/compression`, `app/dados` |
+| ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, with no `-fPIC` in any TU (F5) |
 | uenux2 (`src/uenux2`) | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
 | ASN.1 runtime (`src/asn1`) | `-Os -fno-exceptions -std=c++14 -DNDEBUG` ([asn1.md](asn1.md)) |
 
-## F1. ecourna: `-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG`
+## F1. ecourna: `-O3 -fexceptions -std=c++20 -DNDEBUG`
 
 Compared on three reconstructed units (`api/security/base64.cpp`, `api/util/cstringutils.cpp`, the `app/dados`
 identifier units) with `tools/round/appflags/compare.sh`:
@@ -30,7 +30,7 @@ identifier units) with `tools/round/appflags/compare.sh`:
   (landing pads).
 - **-std=c++20, not 23.** C++23's rvalue `substr()` changes func 3703 (116 rows vs 53); `gnu++20` equals `c++20`
   byte for byte.
-- **-fPIC** is the build's base setting for the TUs F5 does not list. It is not evidence that they were PIC: every ecourna record sits in the target's `.rodata`, where `-fPIC` would put it in `.data`.
+- **No -fPIC**, in any TU: F5.
 - **Paths.** `-ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna`
   produces an object byte-identical to compiling at the real path (`cmp` of three objects). The include root is
   `-Isrc` (`#include "ecourna/api/…"` = the conan package's `b/src`).
@@ -91,27 +91,115 @@ to operand-only; the byte-exact 5093 and 5112 stay byte-exact; no other function
 not separate `-fno-strict-overflow` (= `-fwrapv` + `-fwrapv-pointer` in clang 23) from `-fwrapv-pointer` alone: no
 measured function depends on signed-overflow wrapping.
 
-## F5. `-fPIC` is per TU (per CMake target), not per component
+## F5. ecourna is non-PIC in the whole tree; uenux2 is PIC
 
-Conan builds every static library with `fPIC=True` by default and `POSITION_INDEPENDENT_CODE` is a CMake target
-property, so each ecourna sub-library can differ. The telltale is data addressing: **non-PIC** code folds a
-private table's address into the load's memarg (`i32.load offset=ADDR`) and packs a `std::format` string's
-{ptr, len} into one folded `i64` constant; **PIC** code goes through `global.get __memory_base + off`
-(`i32.const; i32.add; i32.load`) and reorders the surrounding stores.
+**Where the target's data sits decides it, and it says one thing for each tree.** A constant that holds pointers (a
+`std::source_location` record, a vtable, a typeinfo) goes to `.data.rel.ro.*` under `-fPIC` and to `.rodata.*`
+without it, and wasm-ld merges `.data.rel.ro.*` into `.data`. A constant with no pointers, a class's `_ZTS` name, is
+`.rodata` either way. So the side of `.rodata`'s end a constant sits on says how its object was compiled. Our own objects show
+the two section names, a uenux2 object first:
 
-| TUs | verdict | evidence |
-| --- | --- | --- |
-| `api/security` (`base64.cpp`) | not told by its code | func 3703's `encoding_table`/`mod_table` reads are `i32.const 1112848; i32.add; i32.load8_u`, but under `-fno-strict-overflow` (F4) a non-PIC object keeps the address added too, so this read separates nothing. `--single` 271 rows -fPIC vs 281 without. Its 2 records sit in the target's `.rodata` |
-| `api/security/csha.cpp` | non-PIC | `CSha::Reset` 5177, compiled with the TU's flags and linked alone at `-Oz`: with -fPIC 44 rows operand-only, 22 of them local indices (`local.tee 2` vs `1`, …), and the locals differ in every source form tried; with -fno-PIC 22 rows, none a local, and the whole link re-points it `IDENTICAL`. `CSha::Update` 3519 is 40 rows operand-only either way, so it does not tell. Its records, vtables and typeinfo sit in the target's `.rodata`, as non-PIC code puts them |
-| `api/io` | non-PIC | `CIoError::CIoError` 3520: 78 rows (12 ins, 9 del) with -fPIC, 71 operand-only without; `CFile::RawWrite` 1886: 121 (9, 9) vs 106 operand-only; `CFile::RawRead` 598: 140 (18, 18) vs 146 operand-only. The ctor's `Description(EFileOperation)` table is `i32.load align=2 offset=1112652` |
-| `api/compression` | non-PIC | `CZip::ConvertToCompressLevel` 9539 reads its switch table `{0,1,-1,9}` as `i32.load offset=1110872`: 42/118 (2 ins) with -fPIC, 21/116 operand-only without. `CZip::AtualizaProgresso` 9537: 50/361 vs 32/356 |
-| `app/dados` | non-PIC | every `std::format` string's {ptr, len} is one folded `i64` (2666/2668: 214748740548 = 50<<32 \| 375748). `--single` -fPIC vs -fno-pic: 9047 70 vs 58, 2669 36 vs 20, 2666 114 vs 85 |
-| `app/dados/resultadournacadastro` | non-PIC | 9024: 39 rows with -fPIC, 20 without (both operand-only) |
-| `app/dados/asn` converters | non-PIC | 9192 / 9191: 23 / 20 rows operand-only without -fPIC, 34 / 29 with 3 / 2 structural rows with it |
+```sh
+for o in build/out/app/uenux2/src/api/util/ctime.cpp.o build/out/app/ecourna/api_security_csha.cpp.o; do
+  wasm-objdump -x -j Data "$o" | /usr/bin/grep -oE '\.(data\.rel\.ro|rodata)\.\.L\.constant' | sort -u; done
+# .data.rel.ro..L.constant
+# .rodata..L.constant
+```
 
-The fragments compile those TUs with `$(filter-out -fPIC,$(ECOURNA_CXXFLAGS)) -fno-pic` or a target-specific
-`ECOURNA_CXXFLAGS += -fno-PIC` (the last `-f` wins); `src/mk/ecourna-flags.mk` covers every
-`app/dados` object.
+The target's `.rodata` ends at 1526320. `_ZTSSt8bad_cast` is the last `.rodata` item of our link (the lines before `.data` in
+`build/out/wasm-map/vota_web/vota_web_wasm.map`), it sits at 0x174a24 with size 0xc in the target
+(`/usr/bin/grep '^_ZTSSt8bad_cast' splat/symbol_addrs.txt`), and the first record above that end is 1526324, `vota_web_wasm.cpp`'s.
+
+**The records split with no exception:**
+
+```sh
+awk -F'\t' 'NR>1 { t = ($2 ~ /\/b\/src\/ecourna\//) ? "ecourna-src" : ($2 ~ /\/p\/include\/ecourna\//) ? "ecourna-include" : ($2 ~ /\/tse\/uenux2\//) ? "uenux2" : "other"; k = t " " (($1 < 1526320) ? "below" : "above"); c[k]++ } END { for (k in c) print k, c[k] }' ledger/source-locations.tsv | sort
+# ecourna-include above 23
+# ecourna-src below 277
+# uenux2 above 1639
+```
+
+The 23 are headers the package installs, instantiated in uenux2's TUs.
+
+**A typeinfo and its name show the same split inside the target, with no link of ours.** A class's `_ZTS` is `.rodata` either
+way, so a typeinfo sits beside it only when its object is non-PIC:
+
+```sh
+P=build/out/flags-placement; mkdir -p $P
+python3 -I -B - <<'END' | tee $P/report.txt
+import re, statistics as st
+B = 1526320; sym = {}
+for l in open("splat/symbol_addrs.txt", encoding="latin-1"):
+    m = re.match(r"(_ZT[IS])(\S+) = 0x([0-9a-f]+);", l)
+    if m: sym[m[1], m[2]] = int(m[3], 16)
+names = sorted(n for k, n in sym if k == "_ZTI" and ("_ZTS", n) in sym)
+dist = lambda ns: [abs(sym["_ZTI", n] - sym["_ZTS", n]) for n in ns]
+for label, pat in (("ecourna", "N7ecourna"), ("api/comum/vota", "N(3api|5comum|4vota)")):
+    sel = [n for n in names if re.match(pat, n)]
+    lo = [n for n in sel if sym["_ZTI", n] < B]; hi = [n for n in sel if sym["_ZTI", n] >= B]
+    print(label, "below", len(lo), "above", len(hi), "median distance", int(st.median(dist(lo or hi))))
+    if label == "ecourna": open("build/out/flags-placement/above.txt", "w").write("".join("_ZTI" + n + "\n" for n in hi))
+END
+# ecourna below 109 above 38 median distance 12
+# api/comum/vota below 0 above 592 median distance 1057087
+```
+
+The 38 are no exception. They are `CBaseError<…>` instantiations and classes with no key function, so a typeinfo is a linkonce
+copy kept in its first user's object ([link-order.md](link-order.md) §L7 item 15), and for these that object is a PIC one, whose data
+is `.data`. All of them are weak in every ecourna object that defines them, and none is strong:
+
+```sh
+TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/app/ecourna/*.o 2>/dev/null | awk 'NR==FNR {w[$1]=1; next} NF==3 && ($3 in w) {c[$2]++} END {for (k in c) print k, c[k]}' build/out/flags-placement/above.txt -
+# W 83
+/usr/bin/grep -E '^_ZT[VI]N7ecourna3api2io8CIoErrorE ' splat/symbol_addrs.txt | cut -d';' -f1
+# _ZTVN7ecourna3api2io8CIoErrorE = 0x10fa38
+# _ZTIN7ecourna3api2io8CIoErrorE = 0x17b7b8
+```
+
+`CIoError` shows it in one class: its vtable is `.rodata`, from a non-PIC object, and its typeinfo is `.data`, from a PIC object
+earlier on the link line.
+
+**No match needs `-fPIC`, and every step toward dropping it gains some.** Measured in one worktree at 102f503, the last commit that had
+the per-file rules, each state through how-to steps 6 to 10:
+
+| state | sha256 | matches | added | lost |
+| --- | --- | --- | --- | --- |
+| 19 objects PIC, 12 non-PIC with default visibility, 51 non-PIC with hidden | the target's | 7546 | | |
+| `ECOURNA_EXTRA=-fno-PIC`: none PIC, 31 default, 51 hidden | the target's | 7547 | 9465 | none |
+| `-fPIC` off the line, every object: none PIC, all hidden | the target's | 7549 | 9465, 9484, 9535 | none |
+
+The middle state is not the third because `-fPIC` anywhere on an em++ line means `-fvisibility=default` (F9 item 9). 9465 is
+`CPlainText`'s constructor, which differed by `local.set 1 | local.set 2` under `-fPIC`. 9484, `ISymmetricCipher`'s destructor, and
+9535, `boost::detail::sp_pointer_construct` in `api/compression/icompressor.cpp`, need the hidden visibility. So the target's ecourna
+TUs behave as if `-fPIC` was never on their line, not as if it was overridden.
+
+The other way round, on today's tree, F9 item 6's five steps with one flag put back:
+
+| `ECOURNA_EXTRA` | what `splat-build` says |
+| --- | --- |
+| `-fPIC` | `44 matched functions no longer verify`, 9465, 9484 and 9535 among them |
+| `-fvisibility=default` | `4 matched functions no longer verify`: 9484, 9535 and the two csha.cpp destructors 5175 and 5176, whose twin names move |
+
+**The code agrees wherever it can tell.** Non-PIC code folds a private table's address into the load's memarg
+(`i32.load offset=ADDR`) and packs a `std::format` string's {ptr, len} into one folded `i64` constant. These are the first measurements,
+and they found the setting directory by directory, so they are supporting evidence and not a per-directory rule:
+
+| TUs | what the code shows |
+| --- | --- |
+| `api/io` | `CIoError::CIoError` 3520: 78 rows (12 ins, 9 del) with -fPIC, 71 operand-only without; `CFile::RawWrite` 1886: 121 (9, 9) vs 106 operand-only; `CFile::RawRead` 598: 140 (18, 18) vs 146 operand-only. The ctor's `Description(EFileOperation)` table is `i32.load align=2 offset=1112652` |
+| `api/compression` | `CZip::ConvertToCompressLevel` 9539 reads its switch table `{0,1,-1,9}` as `i32.load offset=1110872`: 42/118 (2 ins) with -fPIC, 21/116 operand-only without. `CZip::AtualizaProgresso` 9537: 50/361 vs 32/356 |
+| `app/dados` | every `std::format` string's {ptr, len} is one folded `i64` (2666/2668: 214748740548 = 50<<32 \| 375748). `--single` -fPIC vs -fno-pic: 9047 70 vs 58, 2669 36 vs 20, 2666 114 vs 85 |
+| `app/dados/resultadournacadastro` | 9024: 39 rows with -fPIC, 20 without (both operand-only) |
+| `app/dados/asn` converters | 9192 / 9191: 23 / 20 rows operand-only without -fPIC, 34 / 29 with 3 / 2 structural rows with it |
+| `api/security/csha.cpp` | `CSha::Reset` 5177, compiled with the TU's flags and linked alone at `-Oz`: with -fPIC 44 rows operand-only, 22 of them local indices (`local.tee 2` vs `1`, …); with -fno-PIC 22 rows, none a local, and the whole link re-points it `IDENTICAL`. `CSha::Update` 3519 is 40 rows operand-only either way |
+| `api/security/ckey.cpp` | `CKey::CKey` 9504 differs at +0x1dd on `local.set 4 | local.set 3` with -fPIC. Without it the first difference is +0x42e, `call 306 | call 2671`, where 9466, 9470, 9497 and 9498 stop too |
+| `api/security/base64.cpp` | says nothing: func 3703's `encoding_table`/`mod_table` reads are `i32.const 1112848; i32.add; i32.load8_u`, but under `-fno-strict-overflow` (F4) a non-PIC object keeps the address added too. This row is why the file was once called PIC. Its 2 records sit in `.rodata` |
+
+So a table read with an `i32.add` proves nothing, and neither does one function's locals. Read the data first.
+
+`ECOURNA_CXXFLAGS` in `src/Makefile` has no `-fPIC`, so every ecourna object compiles without it, the two `-pending.cpp` objects and unit
+12's externs included. The `-roots.cpp` files are stand-ins and compile with `APP_CXXFLAGS`. Why the package differs from conan's default
+`fPIC=True` ([libraries.md](libraries.md) §B1) is not known: the target shows the result, not the reason.
 
 ## F6. uenux2: `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`
 
@@ -269,3 +357,20 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    so the final body is the same. fn 11386 matches both with inline getters and `-fno-strict-aliasing` and with
    out-of-line getters and strict aliasing. Decide with a site where no call can sit between the two, such as a
    constant stored next (fn 10289, F6).
+9. **`-fPIC … -fno-PIC` is not "no `-fPIC`".** em++ adds `-fvisibility=default` for the word `-fPIC` anywhere on its line
+   (`/emsdk/upstream/emscripten/tools/compile.py` in the image), and a later `-fno-PIC` leaves it there. The code comes out
+   non-PIC, but the visibility is not the hidden a line without `-fPIC` gets, and the objects differ: a default-visibility
+   vtable address loads as `i32.const 524; i32.const 8; i32.add`, and the functions around it change size. So `ECOURNA_EXTRA` can
+   measure adding a flag, never removing one. To measure a tree without a flag, take the flag off the line.
+
+   ```sh
+   P=build/out/flags-visibility; mkdir -p $P; printf 'int f(int x) { return x + 1; }\n' > $P/a.cpp
+   TMPDIR=/tmp build/docker-build.sh em++ -O3 -fno-PIC -c /work/$P/a.cpp -o /work/$P/a.o -v 2>&1 | /usr/bin/grep -o -- '-fvisibility=[a-z]*' | sort -u
+   # -fvisibility=hidden
+   TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -fno-PIC -c /work/$P/a.cpp -o /work/$P/a.o -v 2>&1 | /usr/bin/grep -o -- '-fvisibility=[a-z]*' | sort -u
+   # -fvisibility=default
+   ```
+
+   At 102f503, `make ... ECOURNA_EXTRA=-fno-PIC` against the same sources with `-fPIC` off the line: `cmp` of all 295 objects, 264 identical and
+   31 different, and the 31 are exactly the objects that had `-fPIC` on the line. `effectiveFlags`
+   (`asmlift-wasm/benchmark/src/flags.ts`) keeps this visibility, so `pnpm bench setups --check` tells the two apart.

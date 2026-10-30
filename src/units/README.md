@@ -3,8 +3,8 @@
 A unit is a set of reconstructed translation units that landed together. Its fragment, `<name>.mk`, is a piece of
 Makefile that `src/Makefile` reads: it appends the unit's sources to `ECOURNA_SRCS` (paths relative to
 `src/ecourna`, compiled with `ECOURNA_CXXFLAGS`) or `UENUX2_SRCS` (paths relative to `src/uenux2`, compiled with
-`UENUX2_CXXFLAGS`, the object keeping the path), and adds whatever the unit needs beyond that: its own compile rule
-(`-fno-PIC`, or compiling from the `/work` path so `-ffile-prefix-map` rewrites `__FILE__`), and companion objects
+`UENUX2_CXXFLAGS`, the object keeping the path), and adds whatever the unit needs beyond that: prerequisites the
+generic rules lack, a compile rule of its own in the rare case the generic one gives the wrong flags, and companion objects
 appended to `EXTRA_OBJS`. The build machinery the fragments rely on (the ecourna flags every unit gets, the ASN.1
 runtime, the splat build) is in `src/mk/`.
 
@@ -15,7 +15,8 @@ UENUX2_SRCS += src/api/util/cwait.cpp
 
 ## What a fragment holds
 
-`07-ecourna-app-dados.mk` has every part, in the order fragments write them:
+`07-ecourna-app-dados.mk` has items 1, 2 and 4, in the order fragments write them; `08-ecourna-app-dados-midias.mk` has
+item 3 as well:
 
 1. A header comment naming the classes and the target functions the unit reconstructs.
 2. The sources: `DADOS_SRCS := app/dados/tiposbasicos.cpp …` then `ECOURNA_SRCS += $(DADOS_SRCS)`. A variable of its
@@ -27,10 +28,10 @@ UENUX2_SRCS += src/api/util/cwait.cpp
    definition goes in a header they include, and the `.cpp` the records name, if any, stays a stub-only file that
    `make -C src stubs` rewrites. Unit 19 has only a roots rule, which emits and address-takes
    `IScreen::GetFontMetrics`, an inline default in `api/gui/iscreen.h`.
-3. A compile rule of its own, when the generic one gives the wrong flags. For a non-PIC unit it is a `define
-   …_NOPIC_RULE` template instantiated per source with `$(foreach u,$(DADOS_SRCS),$(eval $(call …)))`; it filters
-   `-fPIC` out of `ECOURNA_CXXFLAGS`, adds `-fno-pic`, and compiles from `/work/src/…` so `-ffile-prefix-map`
-   rewrites the `std::source_location` paths. Its prerequisites are the source, `$(ROOT)/src/Makefile`, the fragment
+3. A compile rule of its own, when the generic one gives the wrong flags: a `define …_RULE` template instantiated
+   per source with `$(foreach u,$(DADOS_MIDIAS_SRCS),$(eval $(call …)))`, compiling from `/work/src/…` so
+   `-ffile-prefix-map` rewrites the `std::source_location` paths. Most units need none, and unit 08's only repeats a flag
+   the tree has. Its prerequisites are the source, `$(ROOT)/src/Makefile`, the fragment
    and every header the compile reads. Do not write `$(ECOURNA_HDRS)` or `$(UENUX2_HDRS)` there: `src/Makefile`
    includes the fragments before it sets those two variables, and a rule's prerequisites are expanded when the rule
    is read, so in a fragment both are empty and the rule depends on no header at all, with every check still
@@ -40,15 +41,13 @@ UENUX2_SRCS += src/api/util/cwait.cpp
    ecourna headers they include), plus `$(wildcard $(ROOT)/src/asn1/*.h)` when it includes `asn1/asn1.h`, which
    neither tree's set holds (§U7 has the make probe). Then an edit or a flag change here rebuilds the objects. A hand
    list of headers misses the ones they include: unit 36's pending rule names `src/asn1/asn1.h` but not the
-   `asn1_useful.h` it includes (`docs/reference/facts/units.md` §U7). A unit under
-   `app/dados/` does not need a rule for `-fno-PIC`: `src/mk/ecourna-flags.mk` adds it to the generic rule for every
-   `app_dados_%.o` (`tools/round/try-tu.sh --print-flags <source>` ends in `-fno-PIC`).
+   `asn1_useful.h` it includes (`docs/reference/facts/units.md` §U7).
 
    The generic ecourna rule in `src/Makefile` makes each object depend on its own source, at any depth, and on
-   every `src/ecourna` header, as the generic uenux2 rule does for its tree; units 03, 04, 07 to 10, 15 and 16 also
-   name their sources in rules of their own, which is redundant but harmless. Neither generic rule depends on a
+   every `src/ecourna` header, as the generic uenux2 rule does for its tree. Neither generic rule depends on a
    `src/asn1` header: an edit of `asn1/asn1.h` rebuilds no uenux2 object that includes it (§U7), so touch such a
-   unit's sources after one. The other way round, a header a unit edits or adds rebuilds every object of its tree,
+   unit's sources after one, or do what units 04, 09 and 16 do: a rule with prerequisites and no recipe, which adds the
+   `src/asn1` headers to the objects and leaves the generic rule to compile them (unit 15's adds its fragment and its headers). The other way round, a header a unit edits or adds rebuilds every object of its tree,
    whether it includes the header or not, with `src/app/roots_uenux2.o` and every companion whose rule names the
    header's directory: an edit of `api/gui/cimagefieldupdate.h`, or a new empty header beside it, recompiles 60
    objects (the 44 uenux2 sources, `roots_uenux2.o` and 15 companions; `docs/reference/facts/workflow.md` §W15). A
@@ -59,7 +58,7 @@ UENUX2_SRCS += src/api/util/cwait.cpp
    rebuilds the source's object. For a header or a fragment, count the object you care about: `make -n -C src link
    -W $PWD/<header> | /usr/bin/grep -c -- '-o [^ ]*<object>'` prints 1 when an edit of the header rebuilds it. The
    generic ecourna and uenux2 rules do not depend on any fragment: after changing a flag that only a target-specific
-   variable carries (`06-…`'s `api_compression_%.o: ECOURNA_CXXFLAGS += -fno-PIC`), touch the unit's sources.
+   variable carries, touch the unit's sources.
 
    A rule of the fragment's own compiles the TSE source from its `/work/src/…` path, as the generic ecourna and
    uenux2 rules do: the tree's `-ffile-prefix-map` (`UENUX2_PREFIX_MAP`, `ECOURNA_PREFIX_MAP`) rewrites only that
@@ -76,12 +75,12 @@ UENUX2_SRCS += src/api/util/cwait.cpp
 A fragment holds no flag that every unit of its tree needs; those go in `src/mk/ecourna-flags.mk` or in
 `src/Makefile` (`docs/reference/app-flags.md` lists them with their evidence). Comments cite the facts that decided a
 flag as `docs/reference/facts/app-flags.md §F5`. A flag that one function seems to need is decided for its tree;
-a fragment carries it only when the evidence is per TU, as `-fno-PIC`'s is (§F5;
-`docs/how-to-decompile.md` step 4, "When only a flag closes the gap").
+a fragment carries it only when the evidence is per TU (`docs/how-to-decompile.md` step 4, "When only a flag closes
+the gap"). `-fno-PIC` looked per file until the target's data showed otherwise (§F5).
 
 A flag a fragment does add gives its objects a flag set, and
 the benchmark's registry `asmlift-wasm/benchmark/dataset/setups.json` must have a setup with exactly that set, as
-`ecourna-nopic` has for `-fno-PIC`. Otherwise, from `asmlift-wasm/`, `pnpm bench setups --check` reports the tree's
+`asn1-eh` has for the ASN.1 TUs that throw. Otherwise, from `asmlift-wasm/`, `pnpm bench setups --check` reports the tree's
 setup as drift and `pnpm test:bench` fails; every splat, status and stubs check still passes, so run it before
 the commit. A new setup is a new entry in `setups.json` and a re-selection of the dataset
 (`asmlift-wasm/benchmark/README.md` "The compile setups").
@@ -113,19 +112,19 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `00-ecourna-app-dados-identificadoreleitor` | the voter-identifier classes of `app/dados` and the `CError`, base64 and `CStringUtils` code they call, the units the ecourna flags were measured on; `src/app/roots_ecourna.cpp` calls them |
 | `01-uenux2-api-util-io-ipc` | `CWait`, `CIniKey`, `CPosixMutex`, `CPosixSemaphore` and the wasm semaphore shim, the units the uenux2 flags were measured on |
 | `02-uenux2-cthreadvota` | `vota::CThreadVota` and `api::CTickManager` (target fn 700) |
-| `03-ecourna-api-io-util` | `CFile`, `CIoError`, `CBitArray`, `CSynchronizer`, non-PIC |
-| `04-ecourna-app-dados-asn` | the core ASN.1 converters and the data classes they build, non-PIC; puts the generated ASN.1 modules in the link |
+| `03-ecourna-api-io-util` | `CFile`, `CIoError`, `CBitArray`, `CSynchronizer` |
+| `04-ecourna-app-dados-asn` | the core ASN.1 converters and the data classes they build; puts the generated ASN.1 modules in the link |
 | `05-ecourna-api-security-cepesc` | the CEPESC envelope classes and `CKeyLoader` |
-| `06-ecourna-api-compression` | `ICompressor`, `CZip`, `CLzmaCompress`, non-PIC, and the zlib + minizip build they need |
-| `07-ecourna-app-dados` | `app/dados` value types: `tiposbasicos`, `CRegistroIdentificacaoEleitor`, `CSerialMidia`, `CFederacao`, `CConfiguracaoMunicipios`, non-PIC |
-| `08-ecourna-app-dados-midias` | the media descriptor classes and their converters, non-PIC |
-| `09-ecourna-app-dados-asn-resultadournacadastro` | the voter-register result converters, non-PIC |
-| `10-ecourna-app-dados-resultadournacadastro` | the voter-register result data classes, non-PIC |
-| `11-ecourna-api-security` | the OpenSSL wrappers (`CSha`, `CSipHashMac`, `CHkdfSeed`, `CKey`, `CAesCipher`, …); `csha.cpp` non-PIC |
+| `06-ecourna-api-compression` | `ICompressor`, `CZip`, `CLzmaCompress`, and the zlib + minizip build they need |
+| `07-ecourna-app-dados` | `app/dados` value types: `tiposbasicos`, `CRegistroIdentificacaoEleitor`, `CSerialMidia`, `CFederacao`, `CConfiguracaoMunicipios` |
+| `08-ecourna-app-dados-midias` | the media descriptor classes and their converters |
+| `09-ecourna-app-dados-asn-resultadournacadastro` | the voter-register result converters |
+| `10-ecourna-app-dados-resultadournacadastro` | the voter-register result data classes |
+| `11-ecourna-api-security` | the OpenSSL wrappers (`CSha`, `CSipHashMac`, `CHkdfSeed`, `CKey`, `CAesCipher`, …) |
 | `12-ecourna-api-sql-sqlite` | the SQLite DAO (`CSqlConnection`, `CSqlResultSet`, `CSqlStatement`) |
 | `13-uenux2-crdvvota` | `comum::CRdvVota::Candidato` (target fn 1931) and the `CVotos*` totals it calls |
 | `14-uenux2-ctextfieldmultiline` | the `api::CTextFieldMultiLine` constructor (target fn 5498) |
-| `15-ecourna-cconversorhorariosurna` | `CConversorHorariosUrna::DoDeconverte` (target fn 9132) and the `CHorariosUrna` it builds, non-PIC; `DoConverte` (9133) pending |
+| `15-ecourna-cconversorhorariosurna` | `CConversorHorariosUrna::DoDeconverte` (target fn 9132) and the `CHorariosUrna` it builds; `DoConverte` (9133) pending |
 | `16-ecourna-cconversormunicipiozona` | `CConversorMunicipioZona::DoConverte` (target fn 9131) and the `CMunicipioZona` data class it reads; `DoDeconverte` (9130) pending |
 | `17-uenux2-cconversororigemconfiguracao` | `comum::asn::CConversorOrigemConfiguracao::DoConverte` (target fn 11367), the `comum::asn::IConversorASN` base and the `md::EOrigemConfiguracao` enum; `DoDesconverte` (11366) pending |
 | `18-uenux2-cthread` | the `api::CThread` destructor (target fn 2721) and the `IThreadImpl` interface its `std::unique_ptr` members delete; `Start` (target fn 1684), its thread routine (10255) and the 6231 enumerator of `EUeIpcError` |
