@@ -230,24 +230,8 @@ expands a rule's prerequisites when it reads the rule (GNU Make 3.81, this machi
 ```
 
 The generic rules depend on every header of their tree, so a header edit, or a new header, rebuilds the whole tree,
-included or not (at ee595de):
-
-```sh
-make -n -C src link -W $PWD/src/uenux2/src/api/gui/cimagefieldupdate.h | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -oE -- ' -o [^ ]+' |
-  awk '{k = $2 ~ /app\/uenux2\// ? "uenux2" : ($2 ~ /-(pending|roots)\.o$/ ? "companion" : $2); c[k]++} END {for (k in c) print c[k], k}'
-# 44 uenux2
-# 1 build/out/app/roots_uenux2.o
-# 15 companion                              (the rules that name $(wildcard …/api/gui/*.h))
-printf '#pragma once\n' > src/uenux2/src/api/gui/probe-new.h; make -n -C src link | /usr/bin/grep -c 'em++.* -c '; rm src/uenux2/src/api/gui/probe-new.h
-# 60
-```
-
-So the objects a lane's header edits rebuilt are every object built since the lane's worktree was made. A
-worktree's `.git` file dates from `git worktree add`, and a cloned `build/out/` keeps the checkout's older mtimes, so
-`find build/out/app -name '*.o' -newer .git` lists them: nothing in a worktree that has rebuilt nothing, and in four
-lane worktrees whose units added headers, 48, 37, 38 and 48 objects, each the set that moving the objects aside and
-rebuilding recompiled. `-newer <header>` compares with the header's last edit and leaves out an object built before
-it, such as a roots object that includes no header.
+included or not, with the companions whose rules name the header's directory: [workflow.md](workflow.md) §W15 counts
+it and says how to list the objects a lane rebuilt.
 
 ## U8. A slot that holds `__cxa_pure_virtual` is a pure member the class declares
 
@@ -263,8 +247,9 @@ body where the target's slot 1 is the trap, and the vtable loses the five slots.
 
 A derived class's typeinfo names its base's typeinfo. A base with a virtual member defined out of line emits its
 typeinfo (and its vtable) only in the TU of its key function, so a class that overrides every slot of its base still
-needs that TU. A probe: `IBase` with two out-of-line virtual members and no data member, `CDerived` overriding both,
-and a `main` that builds a `CDerived`:
+needs that TU; a base with no key function has its typeinfo emitted, weak, by every TU that needs it
+([reading.md](reading.md) §R6). A probe: `IBase` with two out-of-line virtual members and no data member, `CDerived`
+overriding both, and a `main` that builds a `CDerived`:
 
 ```sh
 P=build/out/units-facts/typeinfo; mkdir -p $P

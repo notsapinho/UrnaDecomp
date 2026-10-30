@@ -437,7 +437,10 @@ in a lower band: 5898 is `uses 1` there and 2 in `ledger/ordinals.tsv` (`docs/re
 
 **ordinal** (link ordinal) — a function's defined index after `wasm-opt -Oz`: wasm-ld's input order (each object's
 live functions in the object's own order, then archive members) compacted by inlining and merging, with the mgfn
-thunks appended last. *Where:* `ledger/ordinals.tsv`, `docs/reference/link-order.md` §1, `tools/linkorder/linkorder.py` docstring.
+thunks appended last. `ledger/ordinals.tsv`'s `ordinal` column is the solver's estimate of it, the middle of a window
+for an unanchored function, and is no link ordinal to compare two functions by (`docs/reference/facts/link-order.md`
+§L7 item 14). *Where:* `ledger/ordinals.tsv`, `docs/reference/link-order.md` §1, `tools/linkorder/linkorder.py`
+docstring.
 
 **order law** — inside a band, functions are ordered by the decimal string of their ordinal, descending; across bands
 nothing orders them. So a band reads as reverse link order with lower digit counts interleaved. Verified with 0

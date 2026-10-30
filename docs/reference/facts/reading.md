@@ -3,12 +3,13 @@
 What a target body says about the C++ that compiled to it, beyond the name its `std::source_location` record gives:
 the parameters a wasm type hides, how a class returns or takes a class by value, how a destructor is declared and
 whether its class is `final`, whether a class is abstract, a free function's linkage, code binaryen inlined from
-another function, the format string and argument types of a `std::format` throw, what orders a body's stores, and a
-switch over virtual slots. `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these.
+another function, and the format string and argument types of a `std::format` throw. `docs/how-to-decompile.md` steps
+2, 3 and 5 rely on these. What a source form compiles to (the order of a body's stores, a switch over virtual slots,
+an in-class member against an `inline` one) is in [codegen.md](codegen.md).
 
 The probes are short TUs compiled by the pinned em++ with uenux2's flags, `-O2 -fPIC -std=c++20 -DNDEBUG
 -fno-strict-aliasing` (`docs/reference/facts/app-flags.md` §F6); their sources are given in full. R1–R3 and R7–R11
-were measured under `build/out/DOCS-A/probe/` of a checkout at 7bf701e, R4–R6 and R12–R15 under
+were measured under `build/out/DOCS-A/probe/` of a checkout at 7bf701e, R4–R6, R12 and R13 under
 `build/out/DOCS2-A/probe/` at ee595de. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run
 from `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
@@ -309,15 +310,10 @@ derived class overrides every slot. Probe `typeinfo.cpp`:
       00000038 D _ZTV2D1
       00000000 D _ZTV2D2
 
-A link that keeps `D1`'s vtable and has no TU that defines `KeyBase`'s key function stops on that typeinfo (here on
-`KeyBase`'s destructor as well, which `D1`'s calls; `src/units/README.md` "Pending members" says what a unit defines
-then). `build/out/DOCS2-A/probe/ti/use.cpp` holds `KeyBase` and `D1` as above and `KeyBase *make1() { return new D1;
-}`:
-
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing --no-entry -sEXPORTED_FUNCTIONS=__Z5make1v /work/build/out/DOCS2-A/probe/typeinfo.o /work/build/out/DOCS2-A/probe/ti/use.cpp -o /work/build/out/DOCS2-A/probe/ti/use.js 2>&1 | /usr/bin/grep -E 'undefined symbol' | head -4
-      wasm-ld: error: /work/build/out/DOCS2-A/probe/typeinfo.o: undefined symbol: KeyBase::~KeyBase()
-      wasm-ld: error: /work/build/out/DOCS2-A/probe/typeinfo.o: undefined symbol: KeyBase::~KeyBase()
-      wasm-ld: error: /work/build/out/DOCS2-A/probe/typeinfo.o: undefined symbol: typeinfo for KeyBase
+A link that keeps `D1`'s vtable and has no TU that defines `KeyBase`'s key function stops on `undefined symbol:
+typeinfo for KeyBase`, and on `KeyBase`'s destructor as well when it is out of line, since `D1`'s calls it (R4's `Q`).
+[units.md](units.md) §U9 has that link and the one that passes, and `src/units/README.md` "Pending members" says what
+a unit defines then.
 
 ## R7. A slot that holds `__cxa_pure_virtual` is a pure member, and dropping it makes the class concrete
 
@@ -509,7 +505,7 @@ callee owns the copy and destroys it, so a parameter moved into a member leaves 
     struct URef { virtual ~URef(); URef(std::unique_ptr<I> &&a); std::unique_ptr<I> m_a; };
     URef::URef(std::unique_ptr<I> &&a) : m_a(std::move(a)) {}
 
-    TMPDIR=/tmp build/docker-build.sh sh -c 'for v in byvalue order ctor switch; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/$v.cpp -o /work/build/out/DOCS2-A/probe/$v.o; done'
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/byvalue.cpp -o /work/build/out/DOCS2-A/probe/byvalue.o
     wasm-objdump -d build/out/DOCS2-A/probe/byvalue.o | awk '/ func\[/ {name=$3} /store/ {c[name]++} END {for (k in c) print c[k], k}' | sort -k2
       5 <_ZN3ValC1ENSt3__210shared_ptrI1IEES3_>:                           # the vptr and four words copied
       7 <_ZN4CRefC1ERKNSt3__210shared_ptrI1IEES5_>:                        # and a count increment per source
@@ -580,106 +576,3 @@ each, the first argument lowest (libc++'s `__packed_arg_t_bits`). The type codes
 So 2759 formats a `std::string` (13, `__string_view`) and a `const char*` (12), and 11050 one `int` (3). The code is
 the type `std::format` sees after its own conversions, not the variable's: `std::format` has no formatter for an
 enum, so the source casts one, and the code is the cast's type.
-
-## R14. Stores whose values are all read first come out in the reverse of the source's order
-
-The wasm backend keeps the order of stores that depend on one another and schedules independent ones last to first.
-So the stores' order says where the source read its values: interleaved with the loads when the source reads each
-value where it stores it, reversed after every load when the values were read first (into locals, or into the
-parameters of a call clang inlined). Probes `order.cpp` and `ctor.cpp`:
-
-    // The same aggregate built from member loads directly, and from locals read first.
-    #include <algorithm>
-    struct SRect { short l, t, r, b; };
-    struct Line {
-        int pad[6];
-        short x1, y1, x2, y2;                 // +24 +26 +28 +30
-        SRect Direct() const;
-        SRect Locals() const;
-    };
-    SRect Line::Direct() const { return SRect{std::min(x1, x2), std::min(y1, y2), std::max(x1, x2), std::max(y1, y2)}; }
-    SRect Line::Locals() const {
-        const short a = x1, b = y1, c = x2, d = y2;
-        return SRect{std::min(a, c), std::min(b, d), std::max(a, c), std::max(b, d)};
-    }
-
-    // A constructor that moves two by-value strings into members, written plainly and as a delegating constructor.
-    #include <string>
-    struct Plain { virtual ~Plain(); Plain(std::string t, std::string s, bool h); std::string m_t, m_s; bool m_h; };
-    Plain::Plain(std::string t, std::string s, bool h) : m_t(std::move(t)), m_s(std::move(s)), m_h(h) {}
-    struct Deleg {
-        virtual ~Deleg();
-        Deleg(std::string t, std::string s, bool h);
-        Deleg(std::string t, std::string s, int p, bool h);
-        std::string m_t, m_s; int m_p; bool m_h;
-    };
-    Deleg::Deleg(std::string t, std::string s, bool h) : Deleg(std::move(t), std::move(s), 0, h) {}
-    Deleg::Deleg(std::string t, std::string s, int p, bool h) : m_t(std::move(t)), m_s(std::move(s)), m_p(p), m_h(h) {}
-
-(compiled by R12's command)
-
-    for s in _ZNK4Line6DirectEv _ZNK4Line6LocalsEv; do printf '%s: ' $s; wasm-objdump -d build/out/DOCS2-A/probe/order.o | awk -v s="<$s>" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -E 'load|store' | awk '{print $1, $3}' | tr '\n' ';'; echo; done
-      _ZNK4Line6DirectEv: i32.load16_s 28;i32.load16_s 24;i32.store16 0;i32.load16_s 26;i32.load16_s 30;i32.store16 4;i32.store16 6;i32.store16 2;
-      _ZNK4Line6LocalsEv: i32.load16_s 28;i32.load16_s 24;i32.load16_s 26;i32.load16_s 30;i32.store16 6;i32.store16 4;i32.store16 2;i32.store16 0;
-    for s in _ZN5PlainC1 _ZN5DelegC1ENSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_b; do printf '%s: ' $s; wasm-objdump -d build/out/DOCS2-A/probe/ctor.o | awk -v s="<$s" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -E 'load|store|GOT' | awk '{print $1, $3}' | tr '\n' ';'; echo; done
-      _ZN5PlainC1: global.get <GOT.mem._ZTV5Plain>;i32.store 0;i32.load 8;i32.store 12;i64.load 0;i64.store 4;i64.store 0;i32.store 8;i32.load 8;i32.store 24;i64.load 0;i64.store 16;i64.store 0;i32.store 8;i32.store8 28;
-      _ZN5DelegC1ENSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_b: i64.load 0;i64.store 0;i32.load 8;i32.store 8;i64.load 0;i64.store 0;i32.load 8;i32.store 8;i32.store8 32;i32.store 28;i32.store 24;i64.store 16;i32.store 12;i64.store 4;global.get <GOT.mem._ZTV5Deleg>;i32.store 0;
-
-`Plain` stores the vptr first and each member as it moves its argument (a by-value argument may alias `this`, so
-the moves stay ordered). `Deleg` moves both arguments out (the loads and the zeroing stores into them) before any
-store into the object, then stores the members last to first and the vptr last: the moves went into the inner
-constructor's parameters, which clang inlined into values. The target has both reversed shapes:
-
-    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11067 | /usr/bin/grep -E '^[0-9a-f]+ +i32\.(load16_s|store16)' | awk '{print $2, $4}' | tr '\n' ';'; echo
-      i32.load16_s offset=28;i32.load16_s offset=24;i32.load16_s offset=26;i32.load16_s offset=30;i32.store16 offset=6;i32.store16 offset=4;i32.store16 offset=2;i32.store16 offset=0;
-    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 3660 | sed -n '/folded readout/,/^}/p' | /usr/bin/grep -E 'store|load'
-        l4 = i64.load[p1];
-        i64.store[p1] = 0;
-        …                                 # the same for p1+8, p2, p2+8
-        i32.store8[p0+36] = p3;
-        i64.store[p0+28] = 0;
-        i32.store[p0+24] = p1;
-        i64.store[p0+16] = l5;
-        i32.store[p0+12] = l6;
-        i64.store[p0+4] = l4;
-        i32.store[p0] = 1543180;
-
-11067 (`api::CLineField::Rect`) is `Locals`' shape: its coordinates are read into locals first. 3660
-(`api::CSubReport`'s constructor) is `Deleg`'s: it delegates to a constructor that takes the strings by value again and
-sets one more member (+28). binaryen keeps the object's store order, so compare object disassembly (`em++ -c` with the
-tree's flags, `wasm-objdump -d`) of a few forms; the lone link of step 4 is noise for it.
-
-## R15. A call through `vtable[N + 4*x]` after an unsigned range check is a switch over consecutive virtual slots
-
-LLVM turns a `switch` whose cases call consecutive virtual slots of one object into one indirect call through a
-computed slot, and its `default` into the unsigned range check before it; no table of member pointers is involved.
-Probe `switch.cpp` (compiled by R12's command):
-
-    // A switch whose cases call four consecutive virtual slots (8-11), the default a throwing call.
-    struct S {
-        virtual ~S();
-        virtual void s2(); virtual void s3(); virtual void s4(); virtual void s5(); virtual void s6(); virtual void s7();
-        virtual void LedA(); virtual void LedB(); virtual void LedC(); virtual void LedD();
-    };
-    [[noreturn]] void Falha(int);
-    void Draw(S &s, int op) {
-        switch (op) {
-        case 0: s.LedA(); break;
-        case 1: s.LedB(); break;
-        case 2: s.LedC(); break;
-        case 3: s.LedD(); break;
-        default: Falha(op);
-        }
-    }
-
-    wasm-objdump -d build/out/DOCS2-A/probe/switch.o | awk '/<_Z4DrawR1Si>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | tr '\n' ';'; echo
-      block;local.get 1;i32.const 4;i32.lt_u;br_if 0;local.get 1;call 0 <env._Z5Falhai>;unreachable;end;local.get 0;local.get 0;i32.load 2 0;local.get 1;i32.const 2;i32.shl;i32.add;i32.load 2 32;call_indirect 0 <env.__indirect_function_table> (type 1);;end;
-
-The first case's slot is the load's offset over 4 (32: slot 8). `api::CLedFieldMT::Draw` (11050) has the same shape
-over `api::IScreenMT`'s slots 8 to 11, its `default` the throw of R13:
-
-    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11050 | /usr/bin/grep -E 'i32.ge_u|table\['
-      ;; vtable api::CLedFieldMT slot 2 (vtable @1579684, table[3276])
-      000016  i32.ge_u                                         | i32.ge_u
-        if (i32.ge_u(l3, 4)) {
-        table[i32.load[i32.add(i32.load[p1], i32.shl(l3, 2))+32]](p1);

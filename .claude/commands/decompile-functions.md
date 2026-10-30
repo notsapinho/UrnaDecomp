@@ -243,7 +243,7 @@ has changed them since (`git diff "$(git merge-base main HEAD)" main -- docs src
    `find build/out/app -name '*.o' -newer .git` lists them, since the worktree's `.git` file dates from its creation
    and the cloned objects keep the checkout's older mtimes. A header the lane added or edited rebuilds every object of
    its tree and the companions that name its directory, not only the unit's (`src/units/README.md` "What a fragment
-   holds" item 3; `docs/reference/facts/units.md` §U7), and `-newer <header>` misses an object built before that
+   holds" item 3; `docs/reference/facts/workflow.md` §W15), and `-newer <header>` misses an object built before that
    header's last edit. Run `TMPDIR=/tmp make -C src splat`, check that it compiled exactly those objects, and `cmp`
    each with its old copy. A stale object means the source edits never rebuilt.
 2. **The splat build** prints the target's sha256, and no index the branch's base matches is lost (how-to step 10's
@@ -297,13 +297,14 @@ Brief: the rules above, the board path, the CONFIRMED lanes in landing order, an
 2. **Each later lane** merges with `git merge --no-ff --no-commit decomp/<lane>` and resolves the conflicts as
    [how-to-decompile.md](../../docs/how-to-decompile.md) step 10 "Landing onto a moved main" says, then runs steps 6
    to 10 again on the merge (link, census, symbols, match, build, checks) and commits it all as the merge commit.
-   Do not pick generated lines by hand, and do not run `make -C src stubs` before the link: `tools/round/stubs.py`
-   reads `splat/scan.tsv`, `splat/symbol_addrs.txt` and `ledger/functions.tsv`, which are one side's until steps 7 to
-   9 regenerate them, so it puts back the other side's removed stubs and stub-only files, and step 9's
-   `splat-match` runs it on the new scan anyway. `splat/matched.txt` keeps both sides' lines once per index: two
-   lanes can match the same function (a base's destructor both bring in), and an index listed twice stops the splat
-   build with `function N is already matched on line M` (`docs/reference/facts/splat.md` §S8). Keep one line, under
-   the symbol the merged link names, and count it once.
+   Do not pick generated lines by hand, and do not run `make -C src stubs` on the merge before step 9:
+   `tools/round/stubs.py` reads `splat/scan.tsv`, `splat/symbol_addrs.txt` and `ledger/functions.tsv`, which are one
+   side's until steps 7 to 9 regenerate them, so it puts back the other side's removed stubs and stub-only files, and
+   step 9's `splat-match` runs it on the new scan anyway (`docs/reference/facts/workflow.md` §W14).
+   `splat/matched.txt` keeps both sides' lines once per index: two lanes can match the same function (a base's
+   destructor both bring in), and an index listed twice stops the splat build with `function N is already matched on
+   line M` (`docs/reference/facts/workflow.md` §W16). Keep one line, under the symbol the merged link names, and count
+   it once.
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). A

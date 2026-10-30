@@ -353,7 +353,8 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   scaffolding and does not land: a `volatile` store, an empty `asm`, a `may_alias` or `aligned` type, `noinline`, a
   `goto` that a loop or an `if` would express ([../how-to-decompile.md](../how-to-decompile.md) step 3). A form that
   makes up for a header of ours that may not be the original's (locals read first, as a constructor's arguments
-  would be, where our header declares an aggregate) says so in a comment above the function, so that whoever
+  would be, where our header declares an aggregate) says so in the fragment's header comment, not above the function
+  (step 3 of the how-to; `src/README.md` "Gaps" keeps a TSE file's lines free of our comments), so that whoever
   corrects the header can simplify it.
 
 [facts/splat.md](facts/splat.md) §S5 has the measurements behind the first two items and the review warnings, and the

@@ -93,10 +93,13 @@ The board is a folder **outside** the repository, created for one run; the run's
   while read o; do tar -xOf build/out/<handle>/before.tar "$o" | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/<handle>/rebuilt.txt
   ```
 
-  An object that is not in the list compares equal with itself and proves nothing. To check a unit's objects fresh
-  (move them aside, rebuild, compare), take the same list for each file the unit added or changed: their union is
-  what the unit's headers rebuilt. `find build/out/app -newer <header>` compares with the header's last edit and
-  misses an object of the unit built before it.
+  An object that is not in the list compares equal with itself and proves nothing. Before a link, the same list
+  taken for each file a unit added or changed gives, as their union, what the unit's headers will rebuild. To check a
+  unit's objects fresh afterwards (move them aside, rebuild, compare), move aside every object its worktree built:
+  `find build/out/app -name '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file
+  dates from its creation and a cloned `build/out/` keeps older mtimes ([facts/workflow.md](reference/facts/workflow.md)
+  §W15). `find build/out/app -newer <header>` compares with the header's last edit and misses an object of the unit
+  built before it.
 - A header your unit needs that `main` gained after your branch started: start your copy from `main`'s text and only
   add to it. One that a branch landing before yours adds: copy it from that branch byte for byte, claim it, and do
   not edit it (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").

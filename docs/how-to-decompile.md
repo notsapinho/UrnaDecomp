@@ -298,13 +298,13 @@ only. The file the class's records name then stays a stub file; `src/units/READM
 what such a fragment holds.
 
 **A form chosen for the code it gives.** The lift keeps the target's order of loads and stores, and the source has
-to give it back. That order is evidence of the source's form ([facts/reading.md](reference/facts/reading.md) §R14):
+to give it back. That order is evidence of the source's form ([facts/codegen.md](reference/facts/codegen.md) §C1):
 stores whose values were all read first come out in the reverse of the source's order. A lift whose stores run
 backwards over a struct (+6, +4, +2, +0 in 11067, `api::CLineField::Rect`) comes from values read into locals before
 the aggregate is built; a constructor that moves every argument out before its first store into the object and
 stores the vptr last (3660, `api::CSubReport`'s) delegates to a constructor that takes them by value again. A call
 through `vtable[N + 4*x]` after an unsigned range check of `x` is a `switch` whose cases call consecutive virtual
-slots, its `default` the code under the check (§R15, 11050); write the switch, not a table of member pointers. Such
+slots, its `default` the code under the check (§C2, 11050); write the switch, not a table of member pointers. Such
 a form is source when it is ordinary C++ in the project's types: a local that holds a value the function reads, an
 order of evaluation, a temporary, a delegating constructor. A construct whose only purpose is to steer the compiler
 is scaffolding and never lands: `volatile`, an `asm` barrier, an attribute, a `may_alias` cast, a `goto`. When a form
@@ -336,9 +336,10 @@ constructor inside 11361). Write such a function out of line in its class's `.cp
 it has one caller in our link too. binaryen inlines a function with one call site only, so the same inlined code in
 two target functions means clang inlined it in at least one TU: an observer's detach (a lock over an erase of the
 observer, `call 736` and `call 150`) is inlined in both 2778 and 5902, the destructors of `api::CDSImageField` and
-`comum::CInfoMTLCD`. Write such a member so that clang inlines it, with the `inline`
-keyword, which raises the cost up to which clang inlines (§R5); a form clang leaves out of line matches only while it
-has one caller, and drifts when the second lands.
+`comum::CInfoMTLCD`. Write such a member so that clang inlines it, with the `inline` keyword, which raises the cost
+up to which clang inlines (§R5); a form clang leaves out of line matches only while it has one caller, and drifts when
+the second lands ([facts/codegen.md](reference/facts/codegen.md) §C3 links such a detach both ways, with one caller and
+with two).
 
 **When no record names the file**, as for every stub in `unplaced.cpp`, choose the path the way the landed
 units do, and say why in the fragment's header comment (step 6):
@@ -390,30 +391,37 @@ uenux2/src/app/comum/||; s|/[^/]*$||" | sort | uniq -c`). Stretch 255's recorded
 `app/comum/gravadores/` files, so `comum::asn::CConversorHashArquivo` (10267) goes in `app/comum/gravadores/asn/`, as
 commit 1d026c9 (branch `decomp/decomp3-h`) lands it.
 
-Read a function's link neighbours by ordinal, not by the stretch rows beside its own. Inside a band the order law
-puts a 3- or 2-digit ordinal right after the 4-digit one that starts with its digits
-([glossary](glossary.md#link-order), *digit zone*), so a stretch can hold unlabelled functions of another zone that
-sit thousands of functions away in link order. Stretch 853 holds 5909 to 5913, whose ordinals in `ledger/ordinals.tsv`
-are 4301, 4300, 430, 43 and 4299: 5911 and 5912 are strangers. The neighbours of 5913 (`comum::CMenuBase`'s slot 2)
-in its band (`uses` 2) and zone:
+Read a function's link neighbours by band position. Inside one band (one `uses` value of `ledger/ordinals.tsv`) the
+target's index runs in reverse link order ([glossary](glossary.md#link-order), *order law*), so the indices next to it
+in its band, and the stretches they fall in, are its neighbours, except where a function of another digit zone sorts
+in between (a 3- or 2-digit ordinal sorts right after the 4-digit ones it begins), which the ledger cannot single out
+for an unanchored function. Never compare two functions by the `ordinal` column: for 3,232 of the 3,270 TSE functions
+it is the middle of a window thousands of ranks wide, it steps through 3- and 2-digit values from one index to the
+next whatever the functions are (stretch 853's 5909 to 5913 read 4301, 4300, 430, 43 and 4299), and 3,476 values are
+shared: 4303 is the estimate of 5907, of `api::CTextFieldUpdateMT`'s D0 10549 and of 10945 in `api/gui/`'s
+`CTextFieldBlinking` stretch ([facts/link-order.md](reference/facts/link-order.md) §L7 item 14). The neighbours of
+5913 (`comum::CMenuBase`'s slot 2) in its band, `uses` 2:
 
 ```sh
-awk -F'\t' 'NR>1 && $2==2 && length($5)==4 && $5>=4296 && $5<=4302 {print $1, $5}' ledger/ordinals.tsv
-# 5908 4302
-# 5909 4301
-# 5910 4300
-# 5913 4299
-# 5914 4298
-# 5915 4297
-# 5916 4296
+awk -F'\t' 'NR>1 && $2==2 && $1>=5908 && $1<=5918 {printf "%s ", $1} END {print ""}' ledger/ordinals.tsv
+# 5908 5909 5910 5911 5912 5913 5914 5915 5916 5917 5918
 ```
 
 then each neighbour's records or stub: `awk -F'\t' '$6 ~ /(^|,)5914(,|$)/ {print $2}' ledger/source-locations.tsv`
-prints `/home/rubio/tse/uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp`. When the recorded neighbours on the
-two sides name different directories, compare file names: a directory's files sit in name order in link order where
-records show them (`app/comum/`'s stretches 851 `cinfomtlcd.cpp`, 850 `cpacotearquivos.cpp`, 849 `iinterfaceinit.cpp`
-and 847 `iinterfacesavd.cpp` run in link order), so take the directory where the class's file name falls between its
-neighbours'.
+prints `/home/rubio/tse/uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp`. Confirm them from the data, which has
+no digit scramble: a TU's vtables, typeinfos and `std::source_location` records lie in link-line order, object by
+object, so the records and vtables at the addresses around the class's vtable (`ledger/vtables.json` `address`) are its
+object's neighbours' ([facts/link-order.md](reference/facts/link-order.md) §L7 item 15 lists them in address order).
+`comum::CMenuBase`'s vtable (1550924) follows a record of `app/comum/informacao/cinformacaoeleicao.cpp` and four
+`comum::CItem*` vtables. A vtable or typeinfo of a class with no key function is a copy in its first user's object, as
+its linkonce functions are (rule 2).
+
+When the recorded neighbours on the two sides name different directories, compare file names only where the data
+show a run in name order. `app/comum/`'s own files run carquivosresultado, carquivossavd, cinfomtlcd, cpacotearquivos,
+cpath, iinterfaceinit, iinterfacesavd in data order, and `comum::CAppState`'s vtable lies just before
+`carquivosresultado.cpp`'s first record, where `cappstate.cpp` sorts. `app/vota/operador/`'s subdirectories run
+outrasopcoes, leidentidade, justificativa, comum, confirmaidentidade, aguardaeleitor, and there a name that sorts
+between two neighbours supports nothing.
 
 **Keep every throw on its record's line.** A decompiled function's `std::source_location` records are bytes of the
 target, so each throw site must sit at the line and column its record gives; above it, blank lines and *gaps* hold
@@ -555,7 +563,7 @@ finds the tracked header of that name instead (or none). Pass the variant header
 tree's `-I` paths, so a variant of a tracked header passed with `-I` loses to the tracked one, also when another
 tracked header includes it, and the try measures the tracked form with no word said. Check that the try's object
 holds what only the variant gives (`--symbols`, or `llvm-nm` on `build/out/try/<name>/obj/<tu>.o`;
-[facts/workflow.md](reference/facts/workflow.md) §W2).
+[facts/tool-traps.md](reference/facts/tool-traps.md) §X8, [facts/workflow.md](reference/facts/workflow.md) §W2).
 
 The lone compile and link is one `em++` with `-fexceptions`, as the build's link is. uenux2 code is compiled
 without it (no landing pads, [facts/app-flags.md](reference/facts/app-flags.md) §F6), so for a TU whose own flags
@@ -607,7 +615,7 @@ program, so a score of 0 here is a reason to try the whole link, not a match. Th
 matched, yet its body linked alone still differs from the target's. Even a function with no callee and no argument
 to drop can come out differently: 11067, `api::CLineField::Rect`, matches as written and scores 9 alone, because the
 whole link computes each compare once and keeps it for two `select`s, and the lone link computes it twice
-([facts/workflow.md](reference/facts/workflow.md) §W2 item 4). Read a lone score for what binaryen does not change,
+([facts/tool-traps.md](reference/facts/tool-traps.md) §X9). Read a lone score for what binaryen does not change,
 the instruction kinds, the loads and the store order, and rank the forms that differ in the rest in the whole link.
 
 **When the lone score is noise.** Two differences come from the lone link itself
@@ -667,8 +675,8 @@ and the vtable needs every virtual member defined. A member you have not written
 trapping body (`src/units/README.md` "Pending members"), and the vtable needs a root that takes its address. The
 class's typeinfo names each base's typeinfo, and a base with a virtual member defined out of line emits its typeinfo
 only with that member, so a base whose key function no unit defines leaves the link with `undefined symbol: typeinfo
-for <base>` even when the class overrides every slot of it ([facts/reading.md](reference/facts/reading.md) §R6);
-"Pending members" says what to define then. try-tu
+for <base>` even when the class overrides every slot of it ([facts/units.md](reference/facts/units.md) §U9,
+[facts/reading.md](reference/facts/reading.md) §R6); "Pending members" says what to define then. try-tu
 has no compile rule for a path under `src/units/`, so pass `--component` with the directory the class lands in;
 it puts every TU of the run there, with that directory's flags. The roots file goes through `--roots`. Here is the
 landed unit 16 tried again:
@@ -745,7 +753,7 @@ pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../build/out/try/mun
 Give `--name` a plain name: the try goes to `build/out/try/<name>/`, and `link-map.sh` and `link-kinds.sh` look for the
 path they are given, spelled as it is, in the link's `link.cmd` (line 28 of `tools/round/link-map.sh`, line 50 of
 `link-kinds.sh`), so a try put elsewhere with `--name ../<dir>` is found only under the spelling
-`build/out/try/../<dir>/wasm/vota_web`.
+`build/out/try/../<dir>/wasm/vota_web` ([facts/tool-traps.md](reference/facts/tool-traps.md) §X10).
 To skip the two kind steps, pass `--no-kinds` to `splat-remap`; it then says `KIND-UNVERIFIED (no operand-kind
 table)` and offers every operand every reading its value suggests. `IDENTICAL` there is the
 signal to land. `splat-remap` reads the committed symbol file and none of the matches, so
@@ -754,7 +762,7 @@ One `UNRESOLVED` no name fixes: a call into `byn$mgfn-shared$…`, which means b
 others of its shape in the try link (*mgfn*), and the target did not merge that set. Our body is then a short thunk
 where the target's is a whole body, and the shared body's callers (`pnpm wasm fn <try wasm> <its index>`) name the
 partners. It matches once the partners have the target's shapes, or once it merges with the target's set (step 1,
-`unresolved` rows).
+`unresolved` rows; `src/units/README.md` "Pending members" has a member that waits so).
 The `ours` index is the function's index in the try link; `pnpm wasm fn` on the try link's wasm with that index
 shows its body beside the target's.
 
@@ -817,7 +825,8 @@ the paths of its reports; the target functions whose census tier moved are under
 `ledger/functions.tsv` for a small unit: its `best_index` column holds our function indices, and every function
 after the unit's place in the link shifts. The census also re-picks a pair among byte-identical bodies of ours once
 the indices shift, so `best_name` changes on rows that have nothing to do with the unit, and step 9 carries that into
-the scan (step 9 says how to check it). The next three steps read this census.
+the scan (step 9 says how to check it; [facts/splat.md](reference/facts/splat.md) §S8). The next three steps read this
+census.
 
 Read the pairs with your roots file before step 8. A stand-in caller can compile to a target function's body (`int
 B(int p) { return D2(p); }` is any derived class's destructor that adds no member), the census then pairs that target
@@ -845,11 +854,11 @@ git diff --stat splat/symbol_addrs.txt
 The *symbol file* names target functions and data from evidence that includes the census's unique pairs, so a new
 unit's functions and data get their names here. Run it after every landing that adds functions or data, and read
 the diff: a name that moves can break existing matches (step 10 would say so). It also re-picks the arbitrary name
-of byte-identical *twins*, re-pairs functions the census pairs by address only, and re-places data placed by content
-(its bytes: `g_MidAlloc` and `g_BigAlloc` moved with unit 41), so expect churn in lines that have nothing to do with
-your unit ([facts/workflow.md](reference/facts/workflow.md) §W17); keep it, do not pick lines by hand. Lines below
-the hand-edit marker survive; never add one whose only evidence is the match it enables
-([reference/splat.md](reference/splat.md) §2).
+of byte-identical *twins*, drops and restores the `pair-addr` lines of matched functions the census pairs by address,
+moves an `evidence:table` name between functions, and re-places data placed by its content (`g_MidAlloc` and
+`g_BigAlloc` moved with unit 41), so expect churn in lines that have nothing to do with your unit
+([facts/splat.md](reference/facts/splat.md) §S8); keep it, do not pick lines by hand. Lines below the hand-edit marker
+survive; never add one whose only evidence is the match it enables ([reference/splat.md](reference/splat.md) §2).
 
 ## 9. Match
 
@@ -894,16 +903,19 @@ link: the body verifies, but the evidence says another function sits there, as w
 `wrapexcept<bad_weekday>::rethrow` while the target's `wrapexcept<bad_month>` vtable holds it
 ([facts/splat.md](reference/facts/splat.md) §S7). It changes nothing; find which side is right, and correct the
 match line by hand when the evidence is. A second name beside the matched one is not reported, so read step 8's
-`git diff splat/symbol_addrs.txt` for a `func:N` that gained a name. A gained `evidence:table` name on an index that
-has a `pair-*` name is a constant both bodies hold read as a table slot once our read-only data moved, not evidence:
-7530, matched as `ossl_ec_GFp_simple_cmp`, gains a `visitExtensionRoot` name and loses it again as units land
-([facts/workflow.md](reference/facts/workflow.md) §W17). The match line is right and both lines are generated; keep
-the file as step 8 wrote it.
+`git diff splat/symbol_addrs.txt` for a `func:N` that gained a name. Two kinds of line move at every landing whatever
+the unit, and are not evidence. A matched index gains an `evidence:table` name while the function that name belongs
+to loses its `vtable` line: a constant both bodies hold reads as a table slot once our read-only data moved (7530,
+matched as `ossl_ec_GFp_simple_cmp`, gains a `visitExtensionRoot` name and loses it again as units land; 615 does the
+same). And the `pair-addr` line of one matched SQLite function drops out as the one the last landing dropped comes
+back. [facts/splat.md](reference/facts/splat.md) §S8 lists them, with the command that prints a landing's lines
+without its own matches. The match lines are right and the lines are generated; keep the file as step 8 wrote it. A
+gained name on another index is the range's to explain.
 
-The scan changes rows that are not yours as well: the census's re-picked pairs change the `symbol` and `object`
-columns (30 rows of 36-byte `__cxx_global_array_dtor` copies with unit 41), and now and then a verdict moves between
-`unresolved`, `no-candidate` and `differs`. Read the verdicts against the commit your branch started from: no row may
-leave `match`, and every row that turns `match` must be yours:
+The scan changes rows that are not yours as well: the census's re-picked pairs change the `symbol` and `object` columns
+(30 rows of 36-byte `__cxx_global_array_dtor` copies with unit 41), and now and then a verdict moves between
+`unresolved`, `no-candidate` and `differs` ([facts/splat.md](reference/facts/splat.md) §S8). Read the verdicts against
+the commit your branch started from: no row may leave `match`, and every row that turns `match` must be yours:
 
 ```sh
 join -t "$(printf '\t')" <(git show "$(git merge-base main HEAD)":splat/scan.tsv | cut -f1,5 | sort) <(cut -f1,5 splat/scan.tsv | sort) | awk -F'\t' '$2 != $3'
@@ -961,10 +973,11 @@ elimination folds a parameter every caller passes as the same constant (step 2),
 another value keeps it. `std::mutex::unlock` is a `()->()` body of 47 B in our link at ee595de, its only callers
 passing one mutex, beside `std::mutex::~mutex`, `(i32)->()` and 45 B, which is matched as 150; the target's 150 is
 both. The first `lock_guard` over a member mutex keeps `unlock`'s parameter, the two bodies become one, and step 9
-renames line `150 _ZNSt3__25mutexD2Ev` to `150 _ZNSt3__25mutex6unlockEv` (commit ad74d47, branch `decomp/decomp4-e`).
-A rename line that names no symbol of yours is that.
+renames line `150 _ZNSt3__25mutexD2Ev` to `150 _ZNSt3__25mutex6unlockEv` (commit ad74d47;
+[facts/splat.md](reference/facts/splat.md) §S6). A rename line that names no symbol of yours is that.
 
-`git diff splat/matched.txt` shows each rename as a `-` and a `+` line with the same index at the same place, and `git diff --word-diff splat/matched.txt` as one line,
+`git diff splat/matched.txt` shows each rename as a `-` and a `+` line with the same index at the same place, and
+`git diff --word-diff splat/matched.txt` as one line,
 `246 [-_ZN21ModuloTiposEleitorais4FotoD0Ev-]{+_ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev+}`: a
 rename, not a lost match. So count lost matches by index, not by line, against the commit your branch started from.
 Against a `main` that moved since, the count also lists every match `main` gained, which are not yours to lose
@@ -1030,8 +1043,9 @@ generated file and in the census snapshot, which both branches renamed. Resolve 
 every one again), each index once. Two units can match the same function (a base's destructor both bring in:
 11013, `api::IFormFieldBase<api::IPaper>`'s, came with two units), and a second line for an index stops the splat
 build with `Error: match list line N: function 11013 is already matched on line M`; git may join the two additions,
-keep both or mark a conflict, depending on where each side put its line. Keep one line, count that match once, and
-check that none is left twice ([facts/workflow.md](reference/facts/workflow.md) §W16):
+keep both or mark a conflict, depending on where each side put its line. Keep one line, under the symbol the merged
+link names, count that match once, and check that none is left twice
+([facts/workflow.md](reference/facts/workflow.md) §W16):
 
 ```sh
 /usr/bin/grep -v '^#' splat/matched.txt | cut -d' ' -f1 | sort | uniq -d     # prints nothing when no index is listed twice
@@ -1059,7 +1073,7 @@ text (`git show main:<path> > <path>`) and only add to it, so the merge is one h
 header that is not on `main` yet but on a branch that lands before yours: copy it from that branch byte for byte
 (`git show <branch>:<path> > <path>`), claim it, and do not edit it. git merges an add/add of one blob with no
 conflict (`git hash-object <path>` and `git rev-parse <branch>:<path>` print the same id;
-[facts/workflow.md](reference/facts/workflow.md) §W18). If that branch changes the file before it lands, take
+[facts/workflow.md](reference/facts/workflow.md) §W17). If that branch changes the file before it lands, take
 `main`'s text at the merge, as above.
 
 Your branch was written against the docs of the commit it started from. When `main`'s docs changed since, read your

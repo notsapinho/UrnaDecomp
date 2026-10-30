@@ -3,10 +3,10 @@
 How the tools a decompile round runs behave where the obvious reading of a command is wrong: Node versions, the
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed snapshot, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
-rebuilds, a match line two branches add, the lines of generated files a unit changes that are not its own, and a
-header two branches add. `docs/how-to-decompile.md`, `docs/getting-started.md` and `docs/agents.md` rely on these.
-W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W18 at ee595de, on macOS (zsh 5.9, wabt 1.0.42), with Node 24 first
-on PATH unless a section says otherwise.
+rebuilds, a match line two branches add, and a header two branches add. `docs/how-to-decompile.md`,
+`docs/getting-started.md` and `docs/agents.md` rely on these.
+W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, on macOS (zsh 5.9,
+wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH; Node 26 aborts with no message
 
@@ -27,7 +27,7 @@ line:
 The same command with that PATH scores the function (W2). `tools/setup/bootstrap.sh --check` names the cause:
 `WRONG node v26.11.1: the toolkit is tested on Node 24`.
 
-## W2. The lone link of `try-tu.sh --single` differs from the build in three ways a source change cannot explain
+## W2. The lone link of `try-tu.sh --single` differs from the build in ways a source change cannot explain
 
 1. **Callees the program shares are inlined.** A uenux2 throw that builds its message with `std::format` instantiates
    libc++'s formatting code in the TU; linked alone, each piece has one caller and binaryen inlines them all.
@@ -77,43 +77,15 @@ The same command with that PATH scores the function (W2). `tools/setup/bootstrap
    resolves it to the tracked header of that name, or to nothing. try-tu appends `--flags` after the tree's `-Isrc
    -Isrc/uenux2/src -Isrc/asn1` (line 160 prints the command), so a header passed with `-I` is found only where the
    tree has none at that path, as in item 2's run; a variant of a tracked header loses to it, and the try compiles the
-   tracked one with no word said. A quoted `#include` searches the including file's directory, then every `-iquote`
-   directory, then the `-I` ones, so `--flags "-iquote /work/<dir>"` reaches a variant at any depth of includes (at ee595de):
-   `build/out/DOCS2-A/inc/api/gui/iformfield.h` is the tracked header with one line added, `#define DOCS2A_VARIANT 1`,
-   and `build/out/DOCS2-A/vj/variant.cpp` reaches it only through the tracked `api/gui/cimagefieldupdate.h`:
-
-       // Includes the tracked cimagefieldupdate.h, which includes "api/gui/iformfield.h"; only the variant defines DOCS2A_VARIANT.
-       #include "api/gui/cimagefieldupdate.h"
-       #ifdef DOCS2A_VARIANT
-       int docs2a_variant_seen() { return 1; }
-       #endif
-       int docs2a_probe() { return 2; }
-
-       TMPDIR=/tmp tools/round/try-tu.sh --print-flags --component uenux2/src/api/gui --flags "-I/work/build/out/DOCS2-A/inc" build/out/DOCS2-A/vj/variant.cpp
-         build/out/DOCS2-A/vj/variant.cpp: em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing … -Isrc -Isrc/uenux2/src -Isrc/asn1  -I/work/build/out/DOCS2-A/inc -c /work/build/out/try/variant/src/uenux2/src/api/gui/variant.cpp
-       for fl in "-I/work/build/out/DOCS2-A/inc" "-iquote /work/build/out/DOCS2-A/inc"; do echo "== $fl"; TMPDIR=/tmp tools/round/try-tu.sh --symbols --component uenux2/src/api/gui --flags "$fl" build/out/DOCS2-A/vj/variant.cpp 2>&1 | /usr/bin/grep -E 'docs2a|rror'; done
-         == -I/work/build/out/DOCS2-A/inc
-         _Z12docs2a_probev	docs2a_probe()
-         == -iquote /work/build/out/DOCS2-A/inc
-         _Z12docs2a_probev	docs2a_probe()
-         _Z19docs2a_variant_seenv	docs2a_variant_seen()
-
-   So pass variant headers with `-iquote`, and check the try's object for a symbol only the variant gives
-   (`--symbols`, or `llvm-nm` on `build/out/try/<name>/obj/<tu>.o`).
-4. **binaryen can treat a function with no callee differently alone.** `api::CLineField::Rect` (11067) calls nothing
-   and takes no argument binaryen could drop, and it matches in the whole link as written (commit 1eec493, branch
-   `decomp/decomp4-d`, unit 54). Alone it scores 9: the target computes each axis's compare once and keeps it with
-   `local.tee` for both of its `select`s, and the lone link computes it twice. The source and header taken from that
-   commit with `git show` into `build/out/DOCS2-A/d/` (at ee595de), the header under `inc/` at its tree path:
-
-       TMPDIR=/tmp tools/round/try-tu.sh --single 11067 --extract export:_ZNK3api10CLineField4RectEv --component uenux2/src/api/gui --flags "-iquote /work/build/out/DOCS2-A/d/inc" build/out/DOCS2-A/d/clinefield.cpp
-         score 9 over 46 rows (same 37, replaced 3 [3 operand-only], inserted 4, deleted 2)
-         i32.lt_s / local.tee 5 (target only) … i32.lt_s / local.tee 6 (target only) … i32.lt_s / i32.lt_s (ours only)
-       git show 1eec493:splat/matched.txt | /usr/bin/grep '^11067 '
-         11067 _ZNK3api10CLineField4RectEv
-
-   What binaryen does not touch reads the same in both links: the instruction kinds, the loads and the store order
-   (`docs/reference/facts/reading.md` §R14).
+   tracked one with no word said. Pass a variant with `--flags "-iquote /work/<dir>"` instead, the headers under it
+   at their tree paths, and check the try's object for a symbol only the variant gives (`--symbols`, or `llvm-nm` on
+   `build/out/try/<name>/obj/<tu>.o`). [tool-traps.md](tool-traps.md) §X8 has the include search order and the probes,
+   one of them a variant that a tracked header includes.
+4. **binaryen can treat a function with no callee differently alone.** A compare that the whole link computes once
+   and keeps with `local.tee` for two `select`s can stay computed twice alone: a source that matches 11067
+   (`api::CLineField::Rect`) in the whole link scores 9 alone ([tool-traps.md](tool-traps.md) §X9). What binaryen does
+   not touch reads the same in both links: the instruction kinds, the loads and the store order
+   ([codegen.md](codegen.md) §C1).
 
 `--symbols` lists the function symbols and weak data a TU defines (`llvm-nm` types `T` and `W`, line 164), not
 strong data. The class's own vtable and typeinfo are strong:
@@ -226,14 +198,14 @@ file whose last stub goes; until that deletion is staged, the check dies:
 The other side of the same list: a new file is checked only once it is in the index. A scratch UTF-8 header in a
 Latin-1 directory, at ee595de:
 
-    printf '// probe: \xc3\xa1 in UTF-8\n' > src/uenux2/src/api/gui/docs2a-probe.h
+    printf '// probe: \xc3\xa1 in UTF-8\n' > src/uenux2/src/api/gui/probe-utf8.h
     python3 -I -B tools/round/check_encoding.py; echo "exit $?"
       every file .editorconfig gives a charset is in that charset
       exit 0
-    git add -N src/uenux2/src/api/gui/docs2a-probe.h && python3 -I -B tools/round/check_encoding.py; echo "exit $?"
-      src/uenux2/src/api/gui/docs2a-probe.h: declared latin1 in .editorconfig, but its non-ASCII bytes are UTF-8
+    git add -N src/uenux2/src/api/gui/probe-utf8.h && python3 -I -B tools/round/check_encoding.py; echo "exit $?"
+      src/uenux2/src/api/gui/probe-utf8.h: declared latin1 in .editorconfig, but its non-ASCII bytes are UTF-8
       exit 1
-    git rm -q --cached src/uenux2/src/api/gui/docs2a-probe.h; rm src/uenux2/src/api/gui/docs2a-probe.h
+    git rm -q --cached src/uenux2/src/api/gui/probe-utf8.h; rm src/uenux2/src/api/gui/probe-utf8.h
 
 So run it after `git add` of the unit's new files and `git rm` of the removed ones, before the commit.
 
@@ -377,92 +349,52 @@ companion's rule names its own headers. At ee595de, a header that two headers an
       50-uenux2-cinformacaothreadoperador-pending.o
       44 objects under uenux2/
 
-A new header is newer than every object, so it does the same, and more where companion rules name a directory's
-headers with `$(wildcard …)`:
+A header of `api/gui/`, whose directory 15 companion rules name with `$(wildcard …/api/gui/*.h)`, rebuilds those
+too, and a new header is newer than every object, so it does the same:
 
-    printf '#pragma once\n' > src/uenux2/src/api/gui/docs2a-probe.h
-    make -n -C src link | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' | sed -E 's|^.*build/out/app/||' | awk '{ if ($0 ~ /^uenux2\//) g++; else print } END { print g " objects under uenux2/" }'
-      roots_uenux2.o
-      14-uenux2-ctextfieldmultiline-pending.o
-      …                                   # 15 companion objects of units 14, 19, 27-30 and 40-44
-      44-uenux2-ctextfieldblinking-pending.o
-      44 objects under uenux2/
-    rm src/uenux2/src/api/gui/docs2a-probe.h
+    make -n -C src link -W $PWD/src/uenux2/src/api/gui/cimagefieldupdate.h | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -oE -- ' -o [^ ]+' | awk '{k = $2 ~ /app\/uenux2\// ? "uenux2" : ($2 ~ /-(pending|roots)\.o$/ ? "companion" : $2); c[k]++} END {for (k in c) print c[k], k}'
+      44 uenux2
+      1 build/out/app/roots_uenux2.o
+      15 companion
+    printf '#pragma once\n' > src/uenux2/src/api/gui/probe-new.h; make -n -C src link | /usr/bin/grep -c 'em++.* -c '; rm src/uenux2/src/api/gui/probe-new.h
+      60
 
-So the objects a unit's headers rebuilt are the union of `make -n -C src link -W $PWD/<file>` over the files it added
-or changed, which also holds before any link. `find build/out/app -newer <header>` compares with that header's last
-edit and misses an object of the unit built before it (a roots object that includes nothing).
+So before a link, the objects a unit's headers will rebuild are the union of `make -n -C src link -W $PWD/<file>`
+over the files it added or changed. After it, in the unit's worktree, they are every object built since the worktree
+was made: its `.git` file dates from `git worktree add`, and a cloned `build/out/` keeps the checkout's older mtimes,
+so `find build/out/app -name '*.o' -newer .git` lists them. That prints nothing in a worktree that has rebuilt
+nothing, and 48, 37, 38 and 48 objects in four lane worktrees whose units added headers, each the set that moving the
+objects aside and rebuilding recompiled. `find build/out/app -newer <header>` compares with that header's last edit
+and misses an object of the unit built before it (a roots object that includes nothing).
 
 ## W16. A match line both branches add stops the splat build until one goes
 
-Two units can match one function: a base's destructor that both bring in. `api::IFormFieldBase<api::IPaper>`'s D2,
-11013, came with unit 39 (commit 0af7fb0) and again with unit 53 (commit 4dd4f96, branch `decomp/decomp4-c`, from a
-base without unit 39). A list that holds its line twice, at ee595de:
+Two units can match one function that neither wrote as its target: a base's destructor that both bring in.
+`api::IFormFieldBase<api::IPaper>`'s D2, 11013, which any `IPaper` field's destructor pulls in through the base's
+vtable, came with unit 39 (commit 0af7fb0) and again with unit 53 (commit 4dd4f96, from a base without unit 39). A
+list that holds its line twice, at ee595de, from the repository root:
 
-    { cat splat/matched.txt; /usr/bin/grep -m1 '^11013 ' splat/matched.txt; } > build/out/DOCS2-A/matched-dup.txt
-    cd asmlift-wasm && pnpm --silent exec tsx src/cli.ts splat-build ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm --matches ../build/out/DOCS2-A/matched-dup.txt --kinds ../build/out/wasm-kinds/vota_web/kinds.json --max-kind-unverified 0 -o ../build/out/DOCS2-A/splat-dup.wasm 2>&1 | /usr/bin/grep -m1 Error
+    mkdir -p build/out/workflow-facts
+    { cat splat/matched.txt; /usr/bin/grep -m1 '^11013 ' splat/matched.txt; } > build/out/workflow-facts/matched-dup.txt
+    (cd asmlift-wasm && pnpm --silent wasm splat-build ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm --matches ../build/out/workflow-facts/matched-dup.txt --kinds ../build/out/wasm-kinds/vota_web/kinds.json --max-kind-unverified 0 -o ../build/out/workflow-facts/splat-dup.wasm 2>&1 | /usr/bin/grep -m1 Error)
       Error: match list line 7479: function 11013 is already matched on line 7463
-    /usr/bin/grep -v '^#' build/out/DOCS2-A/matched-dup.txt | cut -d' ' -f1 | sort | uniq -d      # from the repository root
+    /usr/bin/grep -v '^#' build/out/workflow-facts/matched-dup.txt | cut -d' ' -f1 | sort | uniq -d
       11013
     /usr/bin/grep -v '^#' splat/matched.txt | cut -d' ' -f1 | sort | uniq -d
       (nothing)
 
-## W17. A unit changes lines of the generated files that are not its own
+So a landing keeps one line per index, under the symbol the merged link names, and counts that match once.
 
-Besides its new matches and names, a unit's steps 7 to 9 change rows that belong to no function it wrote:
-
-1. **`splat/scan.tsv`: pairs re-picked among byte-identical bodies.** Every index of ours after the unit's place in
-   the link shifts, and the census pairs a target function with another of our identical bodies. Unit 41's commit
-   against its parent, by the columns index, symbol, verdict and object:
-
-       diff <(git show ac90d25^1:splat/scan.tsv | cut -f1,2,5,11) <(git show ac90d25:splat/scan.tsv | cut -f1,2,5,11) | /usr/bin/grep '^>' | awk -F'\t' '{print ($3=="match" ? "new match" : $2 ~ /^__cxx_global_array_dtor/ ? "__cxx_global_array_dtor, " $3 : "other")}' | sort | uniq -c
-         30 __cxx_global_array_dtor, unresolved
-          4 new match
-
-   Now and then a verdict moves too, between `unresolved`, `no-candidate` and `differs`. Unit 42's merge against
-   `main` before it:
-
-       join -t "$(printf '\t')" <(git show a57eae1^1:splat/scan.tsv | cut -f1,5 | sort) <(git show a57eae1:splat/scan.tsv | cut -f1,5 | sort) | awk -F'\t' '$2 != $3'
-         10912	no-candidate	match
-         10917	no-candidate	match
-         5495	no-candidate	match
-         8875	unresolved	no-candidate
-
-2. **`splat/symbol_addrs.txt`: more than twins.** Unit 41's commit, by evidence kind:
-
-       git diff ac90d25^1 ac90d25 -- splat/symbol_addrs.txt | /usr/bin/grep -E '^[-+][^-+]' | sed -E 's/.*evidence:([a-z-]+).*/\1/' | sort | uniq -c
-          5 content
-          4 pair-addr
-          1 pair-fingerprint
-          5 rtti
-          3 vote
-          1 vtable
-
-   Among them a function paired by address only changes its name (`-ntileValueFunc = func:12423`,
-   `+nth_valueFinalizeFunc = func:12416`, both still matched), and the `content`-placed `g_Alloc`, `g_MidAlloc` and
-   `g_BigAlloc` move (`git diff ac90d25^1 ac90d25 -- splat/symbol_addrs.txt | /usr/bin/grep -E 'g_(Mid|Big)?Alloc'`).
-3. **A `table` name on a matched index.** A constant two bodies share can read as a table slot once our read-only data
-   moves, and the index gains a second name by `table` evidence. 7530, matched as `ossl_ec_GFp_simple_cmp`, has gained
-   a `visitExtensionRoot` name and lost it again over `main`'s history:
-
-       for c in $(git log --format=%h -n 24 --first-parent -- splat/symbol_addrs.txt); do printf '%s:%s ' $c "$(git show "${c}:splat/symbol_addrs.txt" | /usr/bin/grep -cE '= func:7530; .*evidence:table')"; done; echo
-         9127880:0 fbbf760:0 a57eae1:1 e745d72:0 5ce1d43:0 1fb0b7b:0 b9b9139:0 39d3947:0 4ffe715:1 972d6c0:0 b5b025d:0 1c3d9f9:0 fd8bb2d:0 de26625:0 fe861ad:0 54095b7:0 138ca31:0 e60f9ca:0 4e1e115:0 cda0d64:0 56aee1e:0 53382af:0 b12328e:1 3977f42:1
-       git show a57eae1:splat/symbol_addrs.txt | /usr/bin/grep -E '= func:7530;'
-         _ZN4ASN110AVNDecoder18visitExtensionRootERNS_8SEQUENCEEii = func:7530; // size:0x201 evidence:table
-         ossl_ec_GFp_simple_cmp = func:7530; // size:0x201 evidence:pair-addr
-
-   The match line is right and both lines are generated, above the hand-edit marker.
-
-## W18. A header added on two branches as the same blob merges with no conflict
+## W17. A header added on two branches as the same blob merges with no conflict
 
 `src/uenux2/src/api/util/cdatetime.h` and `cdate.h` came to `main` with unit 50, and a branch from a base without unit
-50 (`decomp/decomp4-j`, from fd8bb2d) added both as copies of that branch's files. The blobs are one, and a merge of
-the two lists neither among its conflicts (at ee595de):
+50 (unit 60's commit a1b82b3, from fd8bb2d) added both as copies of that branch's files. The blobs are one, and a merge
+of the two lists neither among its conflicts (at ee595de):
 
     git cat-file -e fd8bb2d:src/uenux2/src/api/util/cdatetime.h
       fatal: path 'src/uenux2/src/api/util/cdatetime.h' exists on disk, but not in 'fd8bb2d'
-    git hash-object src/uenux2/src/api/util/cdatetime.h; git rev-parse decomp/decomp4-j:src/uenux2/src/api/util/cdatetime.h
+    git hash-object src/uenux2/src/api/util/cdatetime.h; git rev-parse a1b82b3:src/uenux2/src/api/util/cdatetime.h
       2ba901277b2ae7d337b0189955dd5f777fe80b81
       2ba901277b2ae7d337b0189955dd5f777fe80b81
-    git merge-tree --write-tree --name-only ee595de decomp/decomp4-j 2>/dev/null | /usr/bin/grep -c 'cdatetime.h\|cdate.h'
+    git merge-tree --write-tree --name-only ee595de a1b82b3 2>/dev/null | /usr/bin/grep -c 'cdatetime.h\|cdate.h'
       0

@@ -358,18 +358,17 @@ __cxx_global_array_dtor 30`), and some re-pick the symbol of `differs` rows amon
 `__shared_ptr_emplace` destructors at 1c3d9f9, six libc++ `__function::__func::target_type` at a57eae1): the census
 pairs a target function with one of several byte-identical bodies of ours, and our indices shift. So compare a
 range's scan with its base on the `verdict` column (index and verdict): only the range's own matches, and verdicts
-with a reason in the range (a pending member's trap, a name gained or lost as above), move.
-
-Two units can match the same index: a body neither wrote as its target, which both bring in (`IFormFieldBase<IPaper>`'s
-destructor 11013, which any `IPaper` field's destructor pulls in through the base's vtable). A match list with an
-index twice fails the build:
+with a reason in the range (a pending member's trap, a name gained or lost as above), move. Unit 42's
+landing against the `main` before it:
 
 ```sh
-{ cat splat/matched.txt; /usr/bin/grep -E '^11013 ' splat/matched.txt; } > build/out/splat-facts/matched-dup.txt
-cd asmlift-wasm && pnpm --silent wasm splat-build ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm \
-  --matches ../build/out/splat-facts/matched-dup.txt --kinds ../build/out/wasm-kinds/vota_web/kinds.json \
-  --max-kind-unverified 0 -o ../build/out/splat-facts/splat-dup.wasm 2>&1 | /usr/bin/grep -m1 Error
-# Error: match list line 7479: function 11013 is already matched on line 7463
+join -t "$(printf '\t')" <(git show a57eae1^1:splat/scan.tsv | cut -f1,5 | sort) <(git show a57eae1:splat/scan.tsv | cut -f1,5 | sort) | awk -F'\t' '$2 != $3'
+# 10912	no-candidate	match
+# 10917	no-candidate	match
+# 5495	no-candidate	match
+# 8875	unresolved	no-candidate
 ```
 
-So a landing keeps one line per index, under the symbol the merged link names, and counts it once.
+The first three are the unit's matches. 8875 is `AVNDecoder::visitExtensionRoot`, whose name that landing moved onto
+7530 by `table` evidence (item 1), leaving 8875 with none. `docs/how-to-decompile.md` step 9 runs the same `join`
+against a branch's merge base. A match line both branches of a landing add is [workflow.md](workflow.md) §W16.

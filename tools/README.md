@@ -67,7 +67,7 @@ another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap
 | file | does |
 | --- | --- |
 | `wasmcode.py` | decodes the code section far enough to count uses the way binaryen's reorder-functions does |
-| `linkorder.py` | inverts binaryen's function-order scramble: each target function's link ordinal → `ledger/ordinals.tsv` |
+| `linkorder.py` | inverts binaryen's function-order scramble: each target function's window of link ordinals and a point estimate in it (the window's middle for an unanchored function, `docs/reference/facts/link-order.md` §L7 item 14) → `ledger/ordinals.tsv` |
 | `tu_clusters.py` | groups the recovered ordinals into anchored objects and the stretches between them; `publish.sh` writes `ledger/tu-clusters.tsv` with `tu_slices.py` instead |
 | `tu_slices.py` | slices the order into translation-unit stretches → `docs/reference/tu-slices.md` |
 | `linkline.py` | the recovered link line, one anchored object per row |

@@ -159,6 +159,20 @@ TMPDIR=/tmp tools/round/try-tu.sh --print-flags --component uenux2/src/api/gui -
 # -Isrc -Isrc/uenux2/src -Isrc/asn1 -iquote /work/build/out/variant-facts/inc
 ```
 
+A variant that only another tracked header includes is reached the same way. A copy of `api/gui/iformfield.h` with
+one `#define` added, and a TU that includes only the tracked `api/gui/cimagefieldupdate.h`, whose line 29 is
+`#include "api/gui/iformfield.h"`:
+
+```sh
+mkdir -p build/out/variant-facts/inc/api/gui
+{ cat src/uenux2/src/api/gui/iformfield.h; printf '#define VARIANT_SEEN 1\n'; } > build/out/variant-facts/inc/api/gui/iformfield.h
+printf '%s\n' '#include "api/gui/cimagefieldupdate.h"' '#ifdef VARIANT_SEEN' 'int VariantSeen() { return 1; }' '#endif' 'int Probe() { return 2; }' > build/out/variant-facts/deep.cpp
+for f in "-I/work/build/out/variant-facts/inc" "-iquote /work/build/out/variant-facts/inc"; do
+  TMPDIR=/tmp tools/round/try-tu.sh --symbols --name variant-deep --component uenux2/src/api/gui --flags "$f" build/out/variant-facts/deep.cpp | /usr/bin/grep -c VariantSeen; done
+# 0      (-I: the tracked iformfield.h)
+# 1      (-iquote: the variant, one include down)
+```
+
 After a try with a variant header, check that the object holds the variant's symbols
 (`TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/try/variant-facts/obj/43-uenux2-cimagefieldupdate-pending.o`
 for the last try above lists no `CImageFieldUpdateD` symbol).
