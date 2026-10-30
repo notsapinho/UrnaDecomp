@@ -1391,7 +1391,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1525	-	-	-	no-candidate	no symbol and no ledger pair	964	none	ecourna	0	-
 1526	_ZN7ecourna3api11compression11ICompressorD2Ev	1334	symbol	match	readings: address symbol	182	addr	ecourna	1	app/ecourna/api_compression_icompressor.cpp.o
 1527	_ZNSt3__213__tree_removeB8ne210108IPNS_16__tree_node_baseIPvEEEEvT_S5_	1278	symbol	match	-	1269	byte	simulador	1	app/roots_boost.o
-1528	_ZN9simulador14CWasmNullPaper9PrintTextERKN3api5ITextENS1_6IPaper6EStyleE	1895	ledger	match	-	2	byte	libc++abi	1	app/uenux2/mock/app/simulador/wasm/cwasmnullpaper.cpp.o
+1528	_ZN9simulador14CWasmNullPaper9PrintTextERKN3api5ITextENS1_6IPaper6EStyleE	1895	symbol	match	-	2	byte	libc++abi	1	app/uenux2/mock/app/simulador/wasm/cwasmnullpaper.cpp.o
 1529	HTS_Node_clear	1147	symbol	match	-	71	addr	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_model.c.o
 1530	-	-	-	no-candidate	no symbol and no ledger pair	440	none	RHVoice	0	-
 1531	-	-	-	no-candidate	no symbol and no ledger pair	158	none	libc++	0	-
@@ -1733,7 +1733,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1867	_ZN7AString8ReAlloc2Ej	1701	symbol	match	readings: address symbol	88	none	libc++	1	7zip/21.02-st-O3/obj/CPP_Common_MyString.cpp.o
 1868	-	-	-	no-candidate	no symbol and no ledger pair	147	none	7zip	0	-
 1869	_Z19FindCharPosInStringPKww	1440	symbol	match	-	62	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_Common_MyString.cpp.o
-1870	_ZN9simulador16CWasmNullPrinter6Slot14Eiii	1583	ledger	match	-	2	byte	RHVoice	1	app/uenux2/mock/app/simulador/wasm/cwasmnullprinter.cpp.o
+1870	_ZN9simulador16CWasmNullPrinter6Slot14Eiii	1583	symbol	match	-	2	byte	RHVoice	1	app/uenux2/mock/app/simulador/wasm/cwasmnullprinter.cpp.o
 1871	_ZN4ASN110PERDecoder11decodeBlockEPcj	1306	symbol	match	-	117	byte	ASN1	1	app/asn1/PERDecoder.o
 1872	-	-	-	no-candidate	no symbol and no ledger pair	848	none	api	0	-
 1873	-	-	-	no-candidate	no symbol and no ledger pair	137	none	libc++	0	-
@@ -8234,7 +8234,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8368	_ZN18COutStreamCalcSize15OutStreamFinishEv	4254	symbol	differs	+0x1 target the locals | ours the locals	126	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_Common_CoderMixer2.cpp.o
 8369	_ZN18COutStreamCalcSize5WriteEPKvjPj	9015	symbol	match	-	106	fingerprint	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_Common_CoderMixer2.cpp.o
 8370	_ZN27CSequentialInStreamCalcSize4ReadEPvjPj	9016	symbol	match	-	113	fingerprint	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_Common_CoderMixer2.cpp.o
-8371	_ZN9simulador14CWasmNullPaper5Slot8EiiNSt3__210shared_ptrIN3api6IImageEEEii	6584	symbol	match	-	52	fingerprint	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmnullpaper.cpp.o
+8371	_ZN9simulador14CWasmNullPaper9PrintFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKN3api12ISigVerifierENS1_10shared_ptrINSA_5IFormINSA_6IPaperEEEEES9_S9_	6584	ledger	match	-	52	fingerprint	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmnullpaper.cpp.o
 8372	_ZN9simulador14CWasmNullPaper9PrintFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKN3api12ISigVerifierES9_S9_	6595	symbol	match	-	2	byte	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmnullpaper.cpp.o
 8373	_ZN7CCodecsD0Ev	8558	symbol	match	readings: address symbol	83	addr	7zip	1	app/roots_7zip.o
 8374	_ZN7CCodecsD2Ev	8717	symbol	match	readings: address symbol	80	addr	7zip	1	app/roots_7zip.o
@@ -10120,7 +10120,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10254	-	-	-	no-candidate	no symbol and no ledger pair	505	none	api	0	-
 10255	_ZN3api7CThread6RotinaEPv	7270	symbol	match	-	24	byte	app	1	app/uenux2/src/api/ipc/cthread.cpp.o
 10256	-	-	-	no-candidate	no symbol and no ledger pair	386	none	app	0	-
-10257	_ZN3api15CUePrinterErrorC2ENS_15EUePrinterErrorENSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS2_15source_locationE	6634	ledger	match	readings: address symbol	138	shape	api	1	app/uenux2/src/api/hwil/eueprintererror.cpp.o
+10257	_ZN3api15CUePrinterErrorC2ENS_15EUePrinterErrorENSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS2_15source_locationE	6634	symbol	match	readings: address symbol	138	shape	api	1	app/uenux2/src/api/hwil/eueprintererror.cpp.o
 10258	-	-	-	no-candidate	no symbol and no ledger pair	173	none	app	0	-
 10259	__cxx_global_array_dtor@app/ecourna/app_dados_tiposbasicos.cpp.o	10798	ledger	unresolved	ours +0x1 i32.const 1426651: an address of ours: _ZN9CBaseTypeIjLj0ELj99999ELi0EE4NOMEE (.bss) has no target symbol	36	addr	app	1	app/ecourna/app_dados_tiposbasicos.cpp.o
 10260	-	-	-	no-candidate	no symbol and no ledger pair	579	none	simulador	0	-

@@ -26,7 +26,8 @@ void CWasmNullPaper::PrintFile(const std::string&, const api::ISigVerifier&, con
 {
 }
 
-void CWasmNullPaper::Slot8(int, int, std::shared_ptr<api::IImage>, int, int)
+void CWasmNullPaper::PrintFile(const std::string&, const api::ISigVerifier&, std::shared_ptr<api::IForm<api::IPaper>>,
+                               const std::string&, const std::string&)
 {
 }
 
@@ -35,7 +36,7 @@ int CWasmNullPaper::Slot9()
     return 0;
 }
 
-void CWasmNullPaper::Slot10()
+void CWasmNullPaper::EndPrintFile()
 {
 }
 

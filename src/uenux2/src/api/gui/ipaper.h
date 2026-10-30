@@ -9,19 +9,24 @@
 // own: slot 2 prints a text (api::CTextFieldPaper::Draw, target fn 10920, passes the field's IText and its EStyle),
 // slots 3 and 4 take no argument (api::CCutFieldPaper's Draw 11015 calls slot 3, api::CNewLineFieldPaper's 11012 calls
 // slot 4 once per line) and slot 12 takes the three members of a CQRCodeImagePaper::QrcodeData
-// (api::CQRCodeImageFieldPaper's Draw 10963). The slots between them are IPaper's too, since a base's come first.
-// Slots 13 and 14 could be IPaperRelatorios's: no evidence separates the two, and they are left here. Three more slots
-// have callers through api::CPolySingleton<api::IPaperRelatorios>::instance (fn 905). api::CScopedReportFile's
-// constructor and destructor, inlined into fn 3654, call slot 5 with a copy of the string of the path the record gives
-// the constructor, and slot 6. vota::CImprimirBJust's slot 2 (fn 12068) and five others call slot 7 with a saved
+// (api::CQRCodeImageFieldPaper's Draw 10963). The slots between them are IPaper's too, since a base's come first. Slots
+// 13 and 14 could be IPaperRelatorios's: no evidence separates the two, and they are left here. Five more slots have
+// callers through api::CPolySingleton<api::IPaperRelatorios>::instance (fn 905). api::CScopedReportFile's constructor
+// and destructor, inlined into fn 3654, call slot 5 with a copy of the string of the path the record gives the
+// constructor, and slot 6. vota::CImprimirBJust's slot 2 (fn 12068) and five other functions call slot 7 with a saved
 // report's file name, the comum::CSigVerifier fn 1540 builds and two strings, the report's title ("boletim de
-// justificativa eleitoral") and its copy. Slot 10 is called by fn 2890 after it prints, which shows no role of its own.
-// The others are read from CWasmNullPaper's bodies alone (fns 218, 8371, 340, 1870, 371, 1528): their wasm types, and
-// slot 8's third argument, a std::shared_ptr by value that the callee releases (fn 8371). No call in the target has
-// slot 8's offset and type, so the element type of that std::shared_ptr and each argument's type beyond its size are
-// chosen. The parameter types of slots 5 and 7 are chosen too: the strings could be std::string by value (the caller
-// owns such a copy) and the verifier another base of CSigVerifier. The names PrintText, Cut, NewLine, PrintQRCode,
-// StartReportFile, EndReportFile and PrintFile are chosen from those callers, and the others are their slots'; no
+// justificativa eleitoral") and its copy. vota::CImprimindoBU::ImprimeBU (fn 2890) calls slot 8 with the same arguments
+// and, third, a std::shared_ptr by value that the callee releases (fn 8371): RTTI makes it a
+// std::shared_ptr<IForm<IPaper>>, since its control block, vptr 1581324, is
+// __shared_ptr_pointer<IFormImpressao<IPaperRelatorios>*, shared_ptr<IForm<IPaper>>::__shared_ptr_default_delete<...>>.
+// Slot 10 takes no argument, and all eight of its calls, in those seven functions, are the next call on the paper after
+// slot 7 or slot 8, inside the bracket of fns 1488 and 1487, which both load "dinamico/imprimindo". Slots 9, 11, 13 and
+// 14 have no call on fn 905's result in its eleven callers, or in the fields' Draws fn 11006's result reaches, so they
+// are read from CWasmNullPaper's bodies alone (fns 340, 1870, 371, 1528), which give their wasm types: their names are
+// their slots', and their arguments' types beyond their size are chosen. So are the parameter types of slots 5, 7 and
+// 8, but for slot 8's std::shared_ptr: the strings could be std::string by value (the caller owns such a copy) and the
+// verifier another base of CSigVerifier. The names PrintText, Cut, NewLine, PrintQRCode, StartReportFile,
+// EndReportFile, PrintFile and EndPrintFile are chosen from those callers, and that slots 7 and 8 are overloads; no
 // record or symbol names any of them.
 //
 // EStyle is the record's `IPaper::EStyle` (ctextfieldpaper.cpp:23:15). The target's callers of the CTextFieldPaper
@@ -37,7 +42,8 @@
 
 namespace api {
 
-class IImage;
+template <typename MEDIA>
+class IForm;
 class ISigVerifier;
 
 /**
@@ -64,9 +70,11 @@ public:
     virtual void EndReportFile() = 0;
     virtual void PrintFile(const std::string& arquivo, const ISigVerifier& verificador, const std::string& titulo,
                            const std::string& via) = 0;
-    virtual void Slot8(int a, int b, std::shared_ptr<IImage> imagem, int c, int d) = 0;
+    virtual void PrintFile(const std::string& arquivo, const ISigVerifier& verificador,
+                           std::shared_ptr<IForm<IPaper>> formulario, const std::string& titulo,
+                           const std::string& via) = 0;
     virtual int Slot9() = 0;
-    virtual void Slot10() = 0;
+    virtual void EndPrintFile() = 0;
     virtual void Slot11(int a, int b, int c) = 0;
     virtual void PrintQRCode(const std::vector<uebyte>& imagem, size_t tamanho, uebyte escala) = 0;
     virtual int Slot13(int a) = 0;

@@ -10,8 +10,8 @@
 // 11, so ten members are declared before it; slots 4 and 5 hold IImpressoraRelatorios's bodies. Slots 6 and 7 are the
 // two defaults the records name, whose fns 8360 and 8341 are thunks of binaryen's merge of the two (fn 6133). The name
 // SetStyle comes from the record of the override, and GetColumns is chosen from what slot 5 returns (fn 10880: 38, or
-// 19 in style 3). No evidence names slots 0 to 3, 8 and 9, and no body shows more than their wasm types (fns 340, 425,
-// 218): the names are their slots' and the return types are chosen.
+// 19 in style 3). Fn 3875 calls slot 9 with no argument before a report prints, which names nothing. No caller of slots
+// 0 to 3 and 8 was found, and their bodies show only wasm types (fns 340, 425, 218). Slot names; return types chosen.
 
 #include <format>
 

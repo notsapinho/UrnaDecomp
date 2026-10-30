@@ -19,9 +19,11 @@ public:
     void EndReportFile() override;
     void PrintFile(const std::string& arquivo, const api::ISigVerifier& verificador, const std::string& titulo,
                    const std::string& via) override;
-    void Slot8(int a, int b, std::shared_ptr<api::IImage> imagem, int c, int d) override;
+    void PrintFile(const std::string& arquivo, const api::ISigVerifier& verificador,
+                   std::shared_ptr<api::IForm<api::IPaper>> formulario, const std::string& titulo,
+                   const std::string& via) override;
     int Slot9() override;
-    void Slot10() override;
+    void EndPrintFile() override;
     void Slot11(int a, int b, int c) override;
     void PrintQRCode(const std::vector<uebyte>& imagem, size_t tamanho, uebyte escala) override;
     int Slot13(int a) override;

@@ -8234,7 +8234,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 8368	126	0	7zip	7zip	-	-	none	-	
 8369	106	0	7zip	7zip	skeleton	9015	fingerprint	0	COutStreamCalcSize::Write(void const*, unsigned int, unsigned int*)
 8370	113	0	7zip	7zip	skeleton	9016	fingerprint	0	CSequentialInStreamCalcSize::Read(void*, unsigned int, unsigned int*)
-8371	52	0	app	simulador	skeleton	6584	fingerprint	0	simulador::CWasmNullPaper::Slot8(int, int, std::__2::shared_ptr<api::IImage>, int, int)
+8371	52	0	app	simulador	skeleton	6584	fingerprint	0	simulador::CWasmNullPaper::PrintFile(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, api::ISigVerifier const&, std::__2::shared_ptr<api::IForm<api::IPaper>>, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 8372	2	0	app	simulador	skeleton	6595	byte	0	simulador::CWasmNullPaper::PrintFile(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, api::ISigVerifier const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 8373	83	0	7zip	7zip	skeleton	8558	addr	5	CCodecs::~CCodecs()_249
 8374	80	0	7zip	7zip	skeleton	8717	addr	4	CCodecs::~CCodecs()

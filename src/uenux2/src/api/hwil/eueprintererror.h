@@ -20,9 +20,12 @@
 //
 // Fn 10881 holds three stack prologues, so binaryen inlined two functions into it (docs/reference/facts/reading.md
 // §R10), each with one caller: CUeCodedPrinterError's constructor and, inside it, CUePrinterError's three-argument one.
-// So clang saw neither inlined, and the three-argument constructor is defined in another TU than
-// CUeCodedPrinterError's; eueprintererror.cpp is a chosen path for it. Where 10257 and CUeCodedPrinterError's
-// constructor are defined is chosen (src/units/80-uenux2-cwasmnullprinter.mk lists what was measured).
+// So clang inlined neither, and the three-argument constructor is defined in another TU than CUeCodedPrinterError's;
+// eueprintererror.cpp is a chosen path for it. CUeCodedPrinterError's constructor is defined in the class on evidence:
+// fn 10881 uses the pointer the constructor returns, and a strong definition in SetStyle's TU does not give that (its
+// call goes through the C1 alias and drops the result), where `inline` at the same place does. A .cpp of its own before
+// SetStyle's object is out too: that object would hold the typeinfo that the target has after SetStyle's record. Where
+// 10257 is defined is chosen. src/units/80-uenux2-cwasmnullprinter.mk lists what was measured.
 
 #include <source_location>
 #include <string>

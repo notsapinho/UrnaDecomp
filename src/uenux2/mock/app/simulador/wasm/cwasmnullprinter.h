@@ -9,9 +9,10 @@ namespace simulador {
 // is inlined, allocates 8, stores the vptr and 0 at +4), so the class adds no data member to its base's style. Slots 4
 // to 7 are inherited; the destructors (slots 10 and 11) are the shared empty bodies 174 and 144, an implicit
 // destructor. Every other slot is overridden: their target functions are 340, 425, 218, 8365 and 1870, and only slot
-// 12's is not a body binaryen shares with other classes. The target shows no more of the others than their wasm types
-// and, for slots 0 and 13, that they return 0; which of them are defined in the class is chosen, here all in the .cpp.
-// The class is not known to be final: no member is called on it directly, and `final` gives the same object.
+// 12's is not a body binaryen shares with other classes. SetStyle calls slot 12, and fn 3875 calls slot 9, with no
+// argument, before a report prints. No caller of the others was found, so the target shows no more of them than their
+// wasm types and, for slots 0 and 13, that they return 0. Which of them are defined in the class is chosen, here all in
+// the .cpp. The class is not known to be final: no member is called on it directly, and `final` gives the same object.
 class CWasmNullPrinter : public api::IImpressoraRelatorios {
 public:
     int Slot0() override;
