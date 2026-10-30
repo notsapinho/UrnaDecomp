@@ -39,7 +39,7 @@ bool IInterfaceSavd::EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& requisi
 
     resposta.clear();
     ueint32 estado;
-    Le(estado, resposta, sizeof(ueRespostaSavd));
+    RecebeMensagem(estado, resposta, sizeof(ueRespostaSavd));
     const ueRespostaSavd* header = DesconverteHeader(resposta);
 
     const uebyte erro = header->erro;
@@ -49,7 +49,7 @@ bool IInterfaceSavd::EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& requisi
         std::string motivo;
         if (header->tamanho) {
             std::vector<uebyte> mensagem;
-            Le(estado, mensagem, header->tamanho);
+            RecebeMensagem(estado, mensagem, header->tamanho);
             motivo = DesconverteMensagem(header, mensagem);
         } else {
             motivo = "Motivo não informado pelo serviço.";

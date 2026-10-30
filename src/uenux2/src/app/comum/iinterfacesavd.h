@@ -69,11 +69,12 @@ struct ueRespostaSavd {
 // comum::IInterfaceSavd: the channel to the SAVD. Its vtable (@1526728, 5 slots) holds the destructor (slot 0, fn 5503;
 // slot 1 is fn 325, the trap an abstract class's deleting destructor gets) and three pure members, and
 // (anonymous namespace)::CWasmSavd, of the executable TU, overrides them (fns 425, 10949, 10930). No record names a
-// slot, so `Escreve`, `Le` and `Slot4` are chosen, from what fn 3830 does with the first two; their parameter types are
+// slot, so `Escreve`, `RecebeMensagem` and `Slot4` are chosen: the first from what fn 3830 does with it, the second from
+// the text fn 10949 throws ("CWasmSavd::RecebeMensagem - mensagem de tamanho invalido"); their parameter types are
 // read from those calls and CWasmSavd's overriders. The members: +4 the std::string fns 3830, 5889 and 5890 store the
 // failure's text in, +16 the code fn 3830 writes through its first parameter (fn 5890 passes this + 16). Their names and
 // the header's path are chosen. EnviarRequisicao (fn 3830) is named from what it does, ConverteHeader (no target
-// function: inlined into it) likewise; the two Desconverte members are the records'.
+// function: inlined into it, and 3829 holds the same loop, so re-read this form when 3829 lands) likewise; the two Desconverte members are the records'.
 // The destructor is `= default` in the class, a choice among the inline forms: the target's copy, 5503, is the executable
 // TU's, compiled -Oz (docs/reference/facts/levels.md V1, the call of the string's destructor), and nothing of ours
 // emits it, so fn 5503 is not reconstructed.
@@ -82,7 +83,7 @@ public:
     virtual ~IInterfaceSavd() = default;
 
     virtual void Escreve(const std::vector<uebyte>& dados) = 0;
-    virtual void Le(ueint32& estado, std::vector<uebyte>& dados, size_t tamanho) = 0;
+    virtual void RecebeMensagem(ueint32& estado, std::vector<uebyte>& dados, size_t tamanho) = 0;
     virtual ueint32 Slot4() = 0;
 
     bool EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& requisicao, const std::string& dados);

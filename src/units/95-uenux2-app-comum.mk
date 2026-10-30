@@ -34,8 +34,8 @@
 # - the order of the definitions, measured in the whole link (pnpm wasm score, rows that differ of the body's rows):
 #   ConverteHeader, DesconverteHeader, DesconverteMensagem, EnviarRequisicao 379 over 1191; ConverteHeader,
 #   EnviarRequisicao, then the two Desconverte 130 over 1178; EnviarRequisicao, ConverteHeader, then the two Desconverte
-#   81 over 1168, every one operand-only. So EnviarRequisicao and ConverteHeader stand before line 553, in that order,
-#   and what differs without it is the locals; their exact lines are a choice.
+#   81 over 1168, every one operand-only. EnviarRequisicao, the two Desconverte, then ConverteHeader gives the same module too, so what
+#   decides is that the caller stands before all three helpers; ConverteHeader's place and the exact lines are a choice.
 # Forms that give the same function (measured the same way), the one written first:
 # - 275, 680: `const auto it` and `auto it`;
 # - 347: the case falling out of the switch and `default: break;`; static_cast<int>, a C cast and unary +;
