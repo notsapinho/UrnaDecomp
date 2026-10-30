@@ -393,8 +393,9 @@ identical functions into one that fills several slots (all of them; in a kind-un
 function in more slots leaves the operand unresolved). The target body picks only among copies. The meter's "readings the target chose" lines (re-pointing
 alone / another reading / which copy) count how often it had to pick; "another reading" (the target body picking a
 kind) happens only in a kind-unverified match. A data object the symbol file does not
-name is placed by its content: a C string, a `source_location` record, exact read-only bytes, or its bytes with each
-pointer word re-pointed (`content-repointed`). *Where:* `docs/reference/splat.md` §3 and "The meter".
+name is placed by its content: a C string, a `source_location` record (each address of a record the target holds
+more than once is a copy), exact read-only bytes, or its bytes with each pointer word re-pointed
+(`content-repointed`). *Where:* `docs/reference/splat.md` §3 and "The meter".
 
 **review warning** — a literal operand of a match that may be a target number written into our source (`past-data`,
 `target-object`, `past-table`). An integer is compared as itself, so the bytes agree and no check can reject it; the

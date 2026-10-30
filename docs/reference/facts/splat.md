@@ -569,3 +569,66 @@ for s in [k for k, v in el.items() if v == 7722]:
     print(s, [(base + o, n) for o in range(0, len(img) - 3, 4) if struct.unpack_from('<I', img, o)[0] == s for (a, z, n) in syms if a <= base + o < a + z and n == 'sqlite3Apis'])"
 # 12188 [(1802196, 'sqlite3Apis')]
 ```
+
+## S12. A `std::source_location` record the target holds more than once
+
+clang emits a record per TU and wasm-ld merges none of them, so a header-inline throw has its record once per TU that
+inlines it. The target holds 10 keys (file, function, line and column) at more than one address, 106 addresses in all,
+and the ledger has a row for each address:
+
+```sh
+LC_ALL=C awk -F'\t' 'NR>1 { k=$2 FS $3 FS $4 FS $5; n[k]++ } END { for (k in n) if (n[k]>1) { keys++; addrs+=n[k] } print keys, addrs }' ledger/source-locations.tsv
+# 10 106
+awk -F'\t' '$2 ~ /api\/hwil\/iinput\.h$/ && $3==86 {print $1, $6}' ledger/source-locations.tsv
+# 1538968 6319
+# 1547328 11804
+# 1580692 11024
+# 1593104 10426
+```
+
+The other nine are `cinteractiveform.h` 57:25 (two keys, of 56 and 25 addresses), `cmessagequeue.h` 113:22 and 114:18,
+three of `cestadogeralvota.h`, `iconversorasn.hpp` 66:19 and `ctextsource.h` 37:19.
+
+`target.srcloc` keeps every address of a key, and `resolveDataAddress` gives a key of several as `same`, with no place
+of its own, the shape read-only bytes found several times have. So `addressReadings` offers each address as `address
+same-content 0x…`, the target body picks one, the scan's detail says so, and the meter counts it under "which copy",
+whichever the body picks. A first address that resolved would hide that when the body happened to load it, and would
+tell a reviewer nothing about the other copies.
+
+**The check is as exact as before.** The candidates come from the target's data, not from a body: `source_locations.py`
+finds the records in the data image, and `readSourceLocations` reads only their addresses, never the ledger's `funcs`
+column, so rule 4 of [../splat.md](../splat.md) §3 holds. The body must reproduce the target's own address, and a wrong
+record fails. `IInputField<IScreen>::Read` (6319), unit 92's commit 1780148 with this rule, against a ledger copy
+through `splat-remap --ledger`:
+
+| `source-locations.tsv` | `splat-remap … --against 6319` |
+| --- | --- |
+| as committed | `target 6319: IDENTICAL (4 ambiguous operands read as address string, address same-content 0x177b98, …` |
+| without row 1538968, the address the body holds | `target 6319: differs at body byte 654 (target instruction +28d i32.const 1538968)` |
+| without the key's four rows | `+028d i32.const 1248364: an address of ours: source_location not in the target`, `UNRESOLVED` |
+
+**A reading names nothing.** A record is `.L.constant`, anonymous, so `alignVotes` casts no data vote for it. A key of
+several addresses gets no `srcloc.…` line, and `srclocAnchors` counts only keys of one address: which copy a function
+loads pairs no function. The self-vote rule looks only at `address symbol …` readings, so it has nothing to ask of a
+copy. The name of a function that loads such a record comes from the symbol file's other evidence, or, for a row whose
+`source` is `content`, from the body alone: it equals exactly one unmatched target body and no other unused function of
+ours does, so such a row is read as how-to step 9 says. `contentPairs` refuses a body of ours that equals two target
+bodies.
+
+**What it leaves to the reviewer** is the same as for any copy ([../splat.md](../splat.md) "Reviewing a match", §S11).
+Our link can hold one record where the target holds several: unit 92's `-roots.o` builds both `Read`s, so both load our
+1248364, and the target bodies hold 1538968 and 1580692. 11024 then passes `splat-review`'s gate and fails its
+preferred way legitimately, `the target body read address same-content 0x181e94; the first reading is address
+same-content 0x177b98`. Two functions that differ only in which copy they load can take each other's names. A TU's
+records lie in link-line order, so the ledger's rows around the address say which TU the target's copy belongs to:
+
+```sh
+LC_ALL=C awk -F'\t' 'NR>1 && $1>=1538968-48 && $1<=1538968+48 {f=$2; sub(/.*\//,"",f); print $1, f, $3":"$4, $6}' ledger/source-locations.tsv
+# 1538968 iinput.h 86:19 6319
+# 1538984 cinputfield.h 148:13 12387
+```
+
+`test/splat-symbols.test.ts`, "a source_location record the target holds more than once", pins all of this whichever
+keys our link holds: it copies target 700's record over another in a copy of the target's image, and the ledger's rows
+read that image. Our link at b7fcb05 holds 342 records and none is such a key, so this rule moved no line of
+`splat/symbol_addrs.txt` or `splat/scan.tsv` there.

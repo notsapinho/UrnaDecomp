@@ -1196,7 +1196,9 @@ A row of another unit can turn `match` for a reason you can name:
   as another match removes its last twin. Among bodies alike, the name can be the wrong one, and the build cannot tell
   ([facts/splat.md](reference/facts/splat.md) §S11 has the cases). A row whose detail reads `address same-content` or
   `table slot copy`, or whose `source` is `content`, is checked against what calls or points at the function and against
-  its neighbours in `splat/matched.txt`; correct the line by hand when they disagree.
+  its neighbours in `splat/matched.txt`; correct the line by hand when they disagree. A function that loads a
+  `std::source_location` record the target holds more than once reads so too: it matches like any other, and the
+  target body picks the copy ([facts/splat.md](reference/facts/splat.md) §S12).
 
 A match the scan found by body has `content` in the `source` column of `splat/scan.tsv`. Once the match names the
 function, a later scan writes `symbol` there, so a rescan of the committed state differs from the committed
@@ -1337,12 +1339,10 @@ before the commit, with:
   …`): that takes a re-selection of the dataset in a commit of its own
   ([asmlift-wasm/benchmark/README.md](../asmlift-wasm/benchmark/README.md) "Re-selecting");
 - from `asmlift-wasm/`, `TMPDIR=/tmp pnpm test`, alone in the checkout: beside a census or `splat-match` its
-  real-link cases skip and it still exits 0, so read the count, `195 passed (195)`. Every case passes on `main` since
+  real-link cases skip and it still exits 0, so read the count (§W12). Every case passes on `main` since
   04a718a ([facts/workflow.md](reference/facts/workflow.md) §W12), so a failing one is your branch's to explain: run
-  it on the commit your branch started from to see whether it fails there too. One failure is not a fault: a right
-  record the target holds twice (a header-inline function two TUs inline) fails `splat-symbols.test.ts`'s record case
-  with `expected 'source_location record ambiguous'`; check it with `check_srcloc.py --strict` (§W12). And `4 skipped`
-  means the `emscripten/emsdk:6.0.0` tag is missing (§W12).
+  it on the commit your branch started from to see whether it fails there too. And `4 skipped` means the
+  `emscripten/emsdk:6.0.0` tag is missing (§W12).
 
 **Landing onto a moved main.** When another unit landed after your branch started, merging conflicts in generated
 files and in the census snapshot, which both branches renamed. Resolve only the files people write:
