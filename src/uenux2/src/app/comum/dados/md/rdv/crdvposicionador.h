@@ -7,9 +7,9 @@
 
 namespace comum::md {
 
-// crdv.h forward-declares this class in comum::md, the records of CVotosCargos::InsereCedula and
-// CVotosEleicoesVota::RecebeCedula take it by const reference, and RTTI gives it no base. The path of this header, the
-// name Posicao and its first parameter's type are chosen: no evidence names them. Slot 2 is what f4454 calls.
+// crdv.h forward-declares this class in comum::md, the records of InsereCedula and RecebeCedula take it by const
+// reference (Posicao's const rests on that: non-const gives the same code), and RTTI gives it no base. Chosen: this
+// header's path, the name Posicao, its first parameter's type and = 0: the target has no vtable of this class to read.
 class CRdvPosicionador {
 public:
     virtual ~CRdvPosicionador() = default;
