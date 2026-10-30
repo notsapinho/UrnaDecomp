@@ -121,7 +121,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `08-ecourna-app-dados-midias` | the media descriptor classes and their converters, non-PIC |
 | `09-ecourna-app-dados-asn-resultadournacadastro` | the voter-register result converters, non-PIC |
 | `10-ecourna-app-dados-resultadournacadastro` | the voter-register result data classes, non-PIC |
-| `11-ecourna-api-security` | the OpenSSL wrappers (`CSha`, `CSipHashMac`, `CHkdfSeed`, `CKey`, `CAesCipher`, …) |
+| `11-ecourna-api-security` | the OpenSSL wrappers (`CSha`, `CSipHashMac`, `CHkdfSeed`, `CKey`, `CAesCipher`, …); `csha.cpp` non-PIC |
 | `12-ecourna-api-sql-sqlite` | the SQLite DAO (`CSqlConnection`, `CSqlResultSet`, `CSqlStatement`) |
 | `13-uenux2-crdvvota` | `comum::CRdvVota::Candidato` (target fn 1931) and the `CVotos*` totals it calls |
 | `14-uenux2-ctextfieldmultiline` | the `api::CTextFieldMultiLine` constructor (target fn 5498) |
