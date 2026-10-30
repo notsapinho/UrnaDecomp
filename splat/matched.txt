@@ -7461,3 +7461,6 @@
 10919 _ZN3api15CTextFieldPaperD2Ev
 10920 _ZNK3api15CTextFieldPaper4DrawERNS_6IPaperE
 11013 _ZN3api14IFormFieldBaseINS_6IPaperEED2Ev
+5509 _ZN3api12CProgressBarD2Ev
+10974 _ZNK3api12CProgressBar4RectEv
+10978 _ZN3api12CProgressBarD0Ev
