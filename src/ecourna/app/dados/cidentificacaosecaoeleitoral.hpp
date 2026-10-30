@@ -5,7 +5,7 @@ namespace ecourna::app::dados {
 
 // LAYOUT-ONLY STAND-IN (R-RUC-DATA): what CComparecimentoSecao needs - 16 bytes, 4-byte aligned, trivially copyable
 // (fn 3485 copies it as two align=2 i64 pairs). Members follow ModuloTiposEleitorais::IdentificacaoSecaoEleitoral
-// (municipioZona, local, secao); their order and types are not recovered. The lane that reconstructs the class (its
+// (municipioZona, local, secao); their order and types are not recovered. The class's reconstruction (its
 // converter converts CComparecimentoSecao, fn 9101) replaces this file.
 class CIdentificacaoSecaoEleitoral {
 public:

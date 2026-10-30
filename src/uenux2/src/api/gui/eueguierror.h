@@ -31,6 +31,9 @@ enum EUeGuiError {
     // "Campo estava com o texto nulo": no evidence names it
     EUE_GUI_TEXTFIELDMT_TEXTO_NULO = 4970,
     EUE_GUI_TEXTFIELDMULTILINE_TEXTO_NULO = 4972,
+    // the value is the code api::CTextFieldPaper::CTextFieldPaper (target fn 2771) throws; the name is chosen from its
+    // message, "Campo estava com o texto nulo": no evidence names it
+    EUE_GUI_TEXTFIELDPAPER_TEXTO_NULO = 4973,
     // the value is the code api::IScreen::GetFontMetrics (target fn 8938) throws; the name is chosen from its message,
     // "Método não implementado": no evidence names it
     EUE_GUI_METODO_NAO_IMPLEMENTADO = 4982,
