@@ -20,7 +20,15 @@ protected:
     virtual void Run() = 0;
 
 private:
-    int m_estado;
+    enum EEstado {
+        ESTADO_CRIADA = 0,
+        ESTADO_EXECUTANDO = 1,
+        ESTADO_FINALIZADA = 3,
+    };
+
+    static void* Rotina(void* parametro);
+
+    EEstado m_estado;
     bool m_iniciada;
     bool m_parar;
     std::unique_ptr<IThreadImpl> m_impl;

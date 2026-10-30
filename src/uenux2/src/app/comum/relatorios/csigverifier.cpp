@@ -1,10 +1,12 @@
-// <stubs>
-// f11178 · 79 B · unmatched · placement: link order · name unknown
-// ? f11178(i32) { ... }
+#include "app/comum/relatorios/csigverifier.h"
 
-// f11176 · 82 B · unmatched · placement: link order · name unknown
-// void f11176(i32) { ... }
+#include <utility>
 
-// f1540 · 123 B · unmatched · placement: link order · name unknown
-// ? f1540(i32, i32, i32, i32) { ... }
-// </stubs>
+namespace comum {
+
+CSigVerifier::CSigVerifier(ESavdAplic aplic, std::string diretorio, std::string arquivo, std::string pacote)
+    : m_aplic(aplic), m_diretorio(std::move(diretorio)), m_arquivo(std::move(arquivo)), m_pacote(std::move(pacote))
+{
+}
+
+} // namespace comum
