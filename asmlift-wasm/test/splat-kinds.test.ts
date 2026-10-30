@@ -804,9 +804,10 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
     expect(there.ok).toBe(true);
     const addr = there.ok ? there.addr : Number.NaN;
     expect(operandKind(c5.kinds, 0x23)).toBe('address');
+    // the first differing byte is any of the literal's three, by what our data holds at 124328
     expect(failure(byName('c5'), c5.maps)).toMatch(
       new RegExp(
-        `function 1260 .* DIFFERS at \\+0x24 target \\+0x23 i32\\.const 124328 \\| ours \\+0x23 i32\\.const ${addr} \\[ours 124328 = .*: address string`,
+        `function 1260 .* DIFFERS at \\+0x2[4-6] target \\+0x23 i32\\.const 124328 \\| ours \\+0x23 i32\\.const ${addr} \\[ours 124328 = .*: address string`,
       ),
     );
     // c8: a table slot whose literal is the target's slot number; re-pointed, it is the target's slot of the function
