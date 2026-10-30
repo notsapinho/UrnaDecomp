@@ -3448,17 +3448,6 @@
 // f11053 · 20 B · unmatched · placement: link order · name unknown
 // void f11053(i32, i32) { ... }
 
-// link-order cluster 395 · uses=1 · neighbours' file uenux2/src/api/gui/clinefield.cpp
-
-// f11068 · 32 B · unmatched · placement: link order · name unknown
-// void f11068(i32, i32) { ... }
-
-// f11067 · 86 B · unmatched · placement: link order · name unknown
-// void f11067(i32, i32) { ... }
-
-// f11066 · 34 B · unmatched · placement: link order · name unknown
-// void f11066(i32, i32) { ... }
-
 // link-order cluster 396 · uses=1 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
 
 // f11079 · 47 B · unmatched · placement: link order · name unknown
@@ -4149,11 +4138,6 @@
 
 // f3676 · 12 B · unmatched · placement: link order · name unknown
 // void f3676(i32, i32) { ... }
-
-// link-order cluster 990 · uses=3 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f3681 · 12 B · unmatched · placement: link order · name unknown
-// void f3681(i32) { ... }
 
 // link-order cluster 1032 · uses=3 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmclp.cpp
 

@@ -7485,3 +7485,5 @@
 10549 _ZN3api18CTextFieldUpdateMTD0Ev
 10961 _ZN3api22CQRCodeImageFieldPaperD0Ev
 10962 _ZN3api22CQRCodeImageFieldPaperD2Ev
+11066 _ZNK3api10CLineField11GetTypeNameEv
+11067 _ZNK3api10CLineField4RectEv
