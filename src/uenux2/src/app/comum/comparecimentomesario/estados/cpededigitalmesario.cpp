@@ -7,7 +7,4 @@
 
 // f10315 · 17 B · unmatched · name unknown
 // void f10315(i32) { ... }
-
-// f10313 · 6002 B · unmatched · name unknown
-// void f10313(i32) { ... }
 // </stubs>

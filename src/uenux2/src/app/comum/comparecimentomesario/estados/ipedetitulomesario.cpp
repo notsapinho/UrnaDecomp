@@ -1,10 +1,49 @@
-// <stubs>
-// f10314 · 47 B · unmatched · placement: link order · name unknown
-// void f10314(i32) { ... }
+#include "app/comum/comparecimentomesario/estados/ipedetitulomesario.h"
 
-// f3608 · 61 B · unmatched · placement: link order · name unknown
-// ? f3608(i32, i32, i32) { ... }
+#include <utility>
 
-// f1378 · 116 B · unmatched · placement: link order · name unknown
-// ? f1378(i32) { ... }
-// </stubs>
+#include "api/gui/cinteractiveform.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+namespace comum {
+
+IPedeTituloMesario::IPedeTituloMesario(std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> form,
+                                       std::shared_ptr<api::IForm<api::IScreen>> formEleitor)
+    : CAppState(EVENTO_ENTRADA), m_form(std::move(form)), m_formEleitor(std::move(formEleitor))
+{
+}
+
+IPedeTituloMesario::~IPedeTituloMesario() = default;
+
+void IPedeTituloMesario::StartState()
+{
+    m_pNextState = this;
+    m_formEleitor->Slot2();
+    m_form->Slot2();
+}
+
+} // namespace comum
