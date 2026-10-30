@@ -3025,7 +3025,9 @@ namespace ASN1 {
     const char* beginPosition;
     const char* endPosition;
     ASN1_STD vector<const char*> endSEQUENCEPositions;
-    int dontCheckTag;
+    // Upstream's dontCheckTag, inverted: the target's bodies store 1 where upstream clears it and test it as a bool
+    // (one byte at +28). The name is chosen: no evidence names it.
+    bool checkTag;
 
     class BER_Element;
     BER_Element *m_parsed;

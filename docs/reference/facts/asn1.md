@@ -58,11 +58,11 @@ other object `B8ne210108`, and the target's runtime calls the `ne` copies the re
 
 - 8923 calls 194, `__put_character_sequence`, whose body has `call import:invoke_iii`. A `nn` copy cannot hold one.
 - 750, `vector<char>::push_back`, calls 158, `vector<unsigned char>::__throw_length_error[abi:ne210108]`.
-- `BERDecoderPartial::preVisitExtensionRoots` (8827, `push_back(unsigned&&)`) and
-  `AVNDecoder::do_visit(OBJECT_IDENTIFIER&)` (8887, `push_back(const unsigned&)`) call 938, also called by 9672 and
-  four more RHVoice functions: the 230-B body RHVoice's `-O3` gives, not the 291-B body of the runtime's `-Os`. A symbol
-  of the runtime's own would have kept that body. The `-Os` body is 3475, `vector<AbstractData*>::push_back(&&)`,
-  called by the three `do_visit(SEQUENCE_OF_Base&)` (8835, 8860, 8881).
+- `AVNDecoder::do_visit(OBJECT_IDENTIFIER&)` (8887) and `OBJECT_IDENTIFIER::decodeCommon` (3473) call 938 for
+  `push_back(const unsigned&)`, as 9672 and four more RHVoice functions do: the 230-B body RHVoice's `-O3` gives, not
+  the 291-B body of the runtime's `-Os`. A symbol of the runtime's own would have kept that body. The `-Os` body is 3475,
+  `vector<AbstractData*>::push_back(const&)`, called by the three `do_visit(SEQUENCE_OF_Base&)` (8835, 8860, 8881).
+  `push_back(unsigned&&)` is not RHVoice's: `decodeCommon`'s `value.push_back(0)` calls 543 (§A5).
 
 So `ASN1_CXXFLAGS` in `src/mk/asn1.mk` holds `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` for every
 runtime TU and module: a `throw` compiles to a direct `__cxa_throw`, as the fork's `BufferSeeder` needs
@@ -72,8 +72,8 @@ more functions: the `assert()`s in `asn1.h`'s inline accessors kept them out of 
 
 **What it moves in the link.** Measured on the base 0cb0ebc (7,935 matches) with steps 6 to 10 of
 `docs/how-to-decompile.md`, the flag adds 24 matches, renames the three `nn` lines (777, 1874, 3479), and takes nothing
-when the link order below holds. `/usr/bin/grep -c 'B8nn210108' splat/matched.txt` prints 0. 194 still gets no name: the
-census has no pair for it.
+when the link order below holds. `/usr/bin/grep -c 'B8nn210108' splat/matched.txt` prints 0. 194 gets no name from the
+census, which has no pair for it (§A5).
 
 **One symbol, so the first definer wins.** With both sides `ne`, the runtime and RHVoice define the same
 `vector<unsigned>::push_back`, and the runtime's objects come first in our link. In the target RHVoice's copy won, and
@@ -87,13 +87,14 @@ because our RHVoice objects emit bodies the target does not have. The measuremen
 | all before ecourna, as §L3 reads | 22 | 777, 1837, 8814, 8891, 8892, 10983 | `operator>>(istream&, char&)` and the row below |
 | `language`, `document` before ecourna | 24 | 1837, 8814, 10983 | `language`'s `basic_ostringstream()` calls `string::resize` through `invoke_viii`, so `resize` keeps a table slot and the constant argument 1837's type has lost |
 | `language`, `document` just before the runtime | 24 | none | |
+| `language` just before the runtime | the same | none | the line `src/mk/asn1.mk` holds; measured on the runtime's sources as they stand after §A6 |
 
-`document.cpp.o` defines `push_back(&&)` and `language.cpp.o` `push_back(const&)`. `data_only_language.cpp.o`,
-`equalizer.cpp.o` and `pitch.cpp.o` emit a 354-B `operator>>` with a landing pad, which cannot be the target's: only
-777, 1383, 1917, 2149, 3557, 5254, 9741 and 10841 call both `sentry` (722) and `ios_base::clear` (702), and 777, the
-body the runtime's callers reach, is 163 B. Why our RHVoice objects hold these calls differently is not known.
-`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk` therefore holds the last row. It is the smallest set and place that loses
-nothing: a measured choice, not the target's link line, and a later change to the RHVoice build may let it go.
+`language.cpp.o` is the first object that defines `push_back(const&)`. `data_only_language.cpp.o`, `equalizer.cpp.o`
+and `pitch.cpp.o` emit a 354-B `operator>>` with a landing pad, which cannot be the target's: only 777, 1383, 1917,
+2149, 3557, 5254, 9741 and 10841 call both `sentry` (722) and `ios_base::clear` (702), and 777, the body the runtime's
+callers reach, is 163 B. Why our RHVoice objects hold these calls differently is not known. `RHVOICE_BEFORE_ASN1` in
+`src/mk/asn1.mk` is the smallest set and place that loses nothing: a measured choice, not the target's link line, and a
+later change to the RHVoice build may let it go.
 
 ## A3. The whole schema of the 32 `Modulo*` modules is in the target's data
 
@@ -146,3 +147,49 @@ The generated headers are `src/asn1/modules/<Modulo>.h` + `.cxx`.
 5. `tools/libs/cls2.json`'s 320 'asn1' functions include ~15 app functions (`api::AudioCollector`,
    `simulador::CWasm*`, `itanium_demangle` slots); filter by `ledger/func-attribution.tsv`'s component.
 6. A runtime probe build takes 6 s; a full skeleton link takes minutes. Test flags on the probe.
+
+## A5. Names the census cannot give the runtime
+
+A census pair fails while a leaf differs (the runtime's rows pair at depth 2 only when every callee does), and a function
+named by `vtable` casts no votes (`docs/reference/splat.md` §2). So a runtime visitor and its callee wait for each other:
+8866 is `unresolved` on `decodeCommon`, and `decodeCommon` has no name. `splat/symbol_addrs.txt` holds hand edits for them,
+below its marker. Each rests on evidence the match does not supply, and none of the bodies below is matched by naming it
+alone: a name says which function sits there, and the scan still compares the bytes.
+
+- `pair-depth0`: 3472, 3473 and 5066. From `asmlift-wasm/`, `pnpm --silent wasm fingerprint <wasm> --depth 0` prints one
+  target and one ours for each fingerprint.
+- `callers+content`: 194, 446, 541, 2184, 2185, 2186, 2653, 2656 and 853. Take every function the symbol file names whose
+  rows equal ours with locals and branch depths kept and with callee, global and address operands blanked (7,460 such
+  functions on this tree), and pair their `call`s in order. Each of these target functions then pairs with one symbol of
+  ours and that symbol with it alone: 31 callers for 194, 10 for 446, 9 for 541, 3 each for 2184, 2185, 2186 and 2653,
+  and none disagrees. 2656 and 853 have one caller each, `do_clone` slots of `new X(*this)` (9012, 8958), so the callee
+  can only be the copy constructor, and their rows equal ours up to callees. The hand edits' comments list the callers;
+  `pnpm wasm fn` on one shows the `call` at the offset where ours has it.
+
+Names free callers, not bodies. Three bodies stay unmatched for a callee of theirs that is no body of ours:
+
+- 3472 (`encodeCommon`) calls 2706, `vector<char>::reserve` by its callers, and ours is the 54-row body of `-Os`; the
+  target's has 65 rows. Of the flag sets tried it is closest to the executable TU's `-Oz -fexceptions`
+  ([levels.md](levels.md) §V1), by rows before binaryen, which is no match.
+- 3473 (`decodeCommon`), 2656 and 5066 call 543, a 239-B body with 28 callers. It is the `push_back(&&)` of a 4-byte
+  element, and it equals no body of ours, nor a probe at the flags of uenux2, ecourna, RHVoice or the runtime. Where it
+  comes from is not known.
+
+## A6. `DataLengthCounter` has a TU of its own
+
+`ledger/vtables.json`'s vtables, in address order: `BEREncoder` 1151144, `PrimitiveChecker` 1151276, `PEREncoder` 1151416,
+`DataLengthCounter` 1151548, `DataFree` 1151688. A TU's vtables lie together in the data (`docs/how-to-decompile.md`
+step 3), so `DataLengthCounter` is in no object with `BEREncoder`, though upstream's `BEREncoder.cxx` holds both. The code
+says the same. Clang inlines `getDataLength` into `encodeHeader` when it sees the body (cost 10 against 75, then -14990
+with the last-call bonus, `-Rpass=inline`). The target's `encodeHeader` (994) holds it behind a second stack prologue,
+which is wasm-opt's inlining ([reading.md](reading.md) §R10), and `getObjectLength` (2647) holds it in one frame, which is
+clang's: so `getDataLength` is external, in `getObjectLength`'s TU, and `encodeHeader` calls it from another.
+`src/asn1/DataLengthCounter.cxx` holds that TU, and its name is chosen.
+
+`getIntegerDataLength` is in neither: 5037 and 5043 both call 5064, and clang inlines it at cost 20 against 50 wherever it
+sees the body. `asn1.cxx` is a choice.
+
+The generated roots take the address of every external function of the runtime, which keeps a function binaryen would
+inline into its one caller. `ASN1_ROOTS_EXCLUDE` in `src/mk/asn1.mk` lists the ones the target only calls. Two more kept
+dead code. `BERDecoder::decode` is used only under `ASN_DEBUG`, and its `vector<BER_Element*>::push_back(&&)` is one body
+with `vector<const char*>::push_back(&&)`: with `decode` rooted, 8854 has a `call` where the target has that body inline.
