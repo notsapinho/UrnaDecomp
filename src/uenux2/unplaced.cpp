@@ -3379,17 +3379,6 @@
 // f10959 · 34 B · unmatched · placement: link order · name unknown
 // void f10959(i32, i32) { ... }
 
-// link-order cluster 376 · uses=1 · neighbours' file uenux2/src/api/gui/cqrcodeimagefieldpaper.cpp
-
-// f10963 · 30 B · unmatched · placement: link order · name unknown
-// void f10963(i32, i32) { ... }
-
-// f10962 · 79 B · unmatched · placement: link order · name unknown
-// ? f10962(i32) { ... }
-
-// f10961 · 82 B · unmatched · placement: link order · name unknown
-// void f10961(i32) { ... }
-
 // link-order cluster 382 · uses=1 · neighbours' file uenux2/src/api/gui/iform.cpp
 
 // f11009 · 212 B · unmatched · placement: link order · name unknown

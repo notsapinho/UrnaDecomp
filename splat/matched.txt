@@ -7483,3 +7483,5 @@
 10545 _ZN3api18CTextFieldUpdateMT4HideEv
 10546 _ZN3api18CTextFieldUpdateMT4ShowEv
 10549 _ZN3api18CTextFieldUpdateMTD0Ev
+10961 _ZN3api22CQRCodeImageFieldPaperD0Ev
+10962 _ZN3api22CQRCodeImageFieldPaperD2Ev
