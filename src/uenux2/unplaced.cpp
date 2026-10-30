@@ -3936,11 +3936,6 @@
 // f5522 · 16 B · unmatched · placement: link order · name unknown
 // ? f5522(i32, i32, i32) { ... }
 
-// link-order cluster 785 · uses=2 · neighbours' file uenux2/src/api/gui/ctextfielddoubleline.cpp
-
-// f5527 · 135 B · unmatched · placement: link order · name unknown
-// void f5527(i32, i32) { ... }
-
 // link-order cluster 786 · uses=2 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
 
 // f5529 · 78 B · unmatched · placement: link order · name unknown

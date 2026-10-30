@@ -103,6 +103,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `20-uenux2-cconversornumviasimpressasrelatorios` | `comum::asn::CConversorNumViasImpressasRelatorios::DoConverte` and `DoDesconverte` (target fns 11386, 11387) and the `md::estadoaplicacao::CNumViasImpressasRelatorios` data class with its constructor (5629) |
 | `21-uenux2-cdirreader` | `api::CDirReader::NextEntry` (target fn 1260), the `CDirReader` class header and the 7010 enumerator of `EUeUtilError`; the constructor (1914) waits for its callee 5470 |
 | `22-uenux2-cbmpconversor` | `api::CBmpConversor::VerticalFlip` and `InvertColors` (target fns 3664 and 3663), the `CBmpConversor` class header and the 4900, 4901 and 4903 enumerators of `EUeGuiError` |
+| `28-uenux2-ctextfielddoubleline` | the `api::CTextFieldDoubleLine` constructor and `GetTypeName` (target fns 3659 and 10926), the class header and the 4967, 4968 and 4969 enumerators of `EUeGuiError`; `Draw`, `Rect` and `Move` (10931, 10929, 5527) pending, `GetTextLines` (5499) not reconstructed |
 
 ## Companion files
 
