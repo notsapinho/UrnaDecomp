@@ -11,11 +11,11 @@
 //   +32, +34  640 and 480, the logical size slots 30 and 31 return (fns 8959, 8953)
 //   +36, +40  2 and 0, the two colours slot 29 keeps (fn 9013)
 //   +44       the CWasmImageSurfaceOps slot 34 returns (fn 8945)
-// Every member name is chosen (iscreen.h). Slots 14, 30, 31, 34, 35 and 36 are defined in the class: the uses-1 band
-// puts 8959, 8953 and 8945 after every strong member of cwasmscreen.cpp, where clang defers inline functions
-// (docs/reference/facts/reading.md R8); slots 14, 35 and 36 hold the empty fn 218, which binaryen shares with other
-// classes, so that they are inline is chosen. The destructor is implicit: slot 0 is api::IScreen's destructor (fn 5071)
-// and slot 1 the deleting destructor around it (fn 8963), so this class destroys nothing of its own.
+// Every member name is chosen (iscreen.h). Slots 14, 35 and 36 are this class's: fn 218 at table slots 559, 580, 581,
+// where IScreen's vtable has __cxa_pure_virtual; 13, 37 and 38 are IScreen's (slots 558, 582, 583 in both vtables).
+// 14, 30, 31, 34, 35, 36 are in the class: 8959, 8953 and 8945 follow every strong member in the uses-1 band, where
+// clang defers inline functions (reading.md R8); for 14, 35, 36 (fn 218, shared) it is chosen. The destructor is
+// implicit: slot 0 is IScreen's (fn 5071), slot 1 the deleting one around it (8963); the class destroys nothing itself.
 
 #include <cmath>
 #include <cstdint>

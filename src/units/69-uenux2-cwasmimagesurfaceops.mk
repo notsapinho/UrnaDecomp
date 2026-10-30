@@ -18,10 +18,12 @@
 #   tree's flags; the measurement is not in a tracked file).
 # - pending, in 69-uenux2-cwasmimagesurfaceops-pending.cpp with what each waits for: FillPath and DrawPath (slots 17, 18:
 #   9146, 9125), DrawImage (slots 22, 24: 9079, 9058), Refresh (slots 27, 28: 9022, 9018).
-# - not reconstructed: the destructors in slots 0 and 1 (api::IScreen's 5071 and the deleting 8963 around it), which call
-#   fn 5069 (iscreen.h). The constructor is written out of line, as the data order needs (below); binaryen inlined it into
-#   fn 8302, so it is no target function, our link drops it for want of a caller, and its body (js_init, Clear(1), the
-#   "CWasmScreen this=" log, read from 8302) is not checked by any match.
+# - not reconstructed: the destructors in slots 0 and 1 (api::IScreen's 5071 and the deleting 8963 around it), which
+#   call fn 5069 (iscreen.h, the -pending.cpp header). The constructor's being out of line is evidence (the data order,
+#   below); its body is not checked by any match: binaryen inlined it into fn 8302, and our link drops it for want of a
+#   caller. It differs from 8302's in two known places: 8302 builds the log as std::string("CWasmScreen this=") and then
+#   appends to_string's result, where the written `"CWasmScreen this=" + std::to_string(...)` compiles to an insert;
+#   and 8302 stores 480 and 640 at +34 and +32 as two 16-bit stores, where ours is one 32-bit store.
 # CWasmImageSurfaceOps:
 # - ImageRect(width, height, point, anchor), slot 14 (target fn 9289), and the class's other slots of its own: Slot2 to
 #   Slot7 (9365, 9362, 9356, 9348, 9339, 9333), CopyBytes (slot 8, 9328), Slot9 (9322), Slot10 (9317), FreeBytes (slot

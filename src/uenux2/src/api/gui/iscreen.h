@@ -2,15 +2,15 @@
 
 // api::IScreen (/home/rubio/tse/uenux2/src/api/gui/iscreen.h): the screen the forms draw on. RTTI gives the class (no
 // base) and its vtable (@1529092, 39 slots, ledger/vtables.json): slot 1 is the trap an abstract class's deleting
-// destructor gets, slot 3 is GetFontMetrics (target fn 8938, here: its throw is the record at line 69, column 15), slots
-// 13, 37 and 38 hold the empty fn 218 and the other 33 __cxa_pure_virtual. Only slot 3 has a name from a record: every
-// other member name and every parameter type no body fixes is chosen, from what simulador::CWasmScreen's overrides
-// (vtable @1528816, the one implementation) and the fields' Draws that call them show; the comments say what. Slot 2 is
-// declared above slot 3, as the vtable's order needs; that it sits right under the destructor, in lines 24-61, which
-// are not recovered, is chosen. CWasmScreen overrides slot 3 (fn 9261), so no target function calls this
-// GetFontMetrics: it is reached only through IScreen's vtable. Slot 0, the destructor (fn 5071), stores the vptr and
-// calls fn 5069, a function of no parameters that walks a global list and that nothing names; `= default` below does
-// not, so 5071 and CWasmScreen's deleting destructor (8963) are not reconstructed.
+// destructor gets, slot 3 is GetFontMetrics (target fn 8938, here: its throw is the record at line 69, column 15),
+// slots 13, 37 and 38 hold the empty fn 218 and the other 33 __cxa_pure_virtual. Only slot 3 has a name from a record:
+// every other member name and every parameter type no body fixes is chosen, from what simulador::CWasmScreen's
+// overrides (vtable @1528816, the one implementation) and the fields' Draws that call them show; the comments say what.
+// Slot 2 is declared above slot 3, as the vtable's order needs; that it sits right under the destructor, above the
+// file's lines 40 to 61, which are not recovered, is chosen. CWasmScreen overrides slot 3 (fn 9261), so no target
+// function calls this GetFontMetrics: it is reached only through IScreen's vtable. Slot 0, the destructor (fn 5071),
+// stores the vptr and calls fn 5069, a function of no parameters that walks a global list and that nothing names;
+// `= default` below does not, so 5071 and CWasmScreen's deleting destructor (8963) are not reconstructed.
 
 #include <cstdint>
 #include <string>
@@ -60,8 +60,8 @@ public:
     virtual void DrawCircle(const SPoint& centro, int raio, TColor cor, int largura) = 0;
     virtual void DrawRoundRect(const SRect& rect, int raio, TColor cor, int largura) = 0;
     virtual void DrawGrayGradient(const SRect& rect) = 0;
-
-    // slot 13 holds the empty fn 218 here and slot 14 is pure; fn 218 takes `this` alone. Nothing shows what they do.
+    // slot 13 is IScreen's own empty fn 218: table slot 558 in both vtables, so one symbol, inherited. Slot 14 is pure,
+    // and CWasmScreen's override is fn 218 at table slot 559, its own. fn 218 takes `this` alone; nothing shows more.
     virtual void Slot13() {}
     virtual void Slot14() = 0;
 
@@ -106,8 +106,8 @@ public:
 
     // slot 34: the image operations (fn 8945 returns the member at +44); the callers are listed in iimagesurfaceops.h
     virtual const IImageSurfaceOps& GetImageSurfaceOps() const = 0;
-
-    // slots 35 and 36 are pure, 37 and 38 hold the empty fn 218. Nothing shows what they do.
+    // slots 35 and 36 are pure, and CWasmScreen's overrides are fn 218 at table slots 580 and 581, its own; 37 and 38
+    // are IScreen's own fn 218, table slots 582 and 583 in both vtables (inherited). Nothing shows what they do.
     virtual void Slot35() = 0;
     virtual void Slot36() = 0;
     virtual void Slot37() {}
