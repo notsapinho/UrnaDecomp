@@ -17,7 +17,7 @@ public:
 
   bool eof() const { return m_current >= m_end; }
 
-  unsigned char read()
+  unsigned char decodeByte()
   {
     if (eof())
       throw ASN1_STD runtime_error("BufferSeed: no more buffer");
@@ -26,18 +26,18 @@ public:
     return value;
   }
 
-  unsigned read(char* buffer, unsigned size)
+  size_t decodeBlock(char* buffer, size_t size)
   {
     const char* end = m_end;
     const char* current = m_current;
     memcpy(buffer, current, size);
     if (current + size > end)
       size = end - current;
-    m_current = current + size;
+    m_current += size;
     return size;
   }
 
-  void seek(unsigned position)
+  void seek(size_t position)
   {
     const char* p = m_begin + position;
     if (p > m_end)
@@ -45,7 +45,7 @@ public:
     m_current = p;
   }
 
-  void skip(unsigned size)
+  void skip(size_t size)
   {
     const char* p = m_current + size;
     if (p > m_end)
