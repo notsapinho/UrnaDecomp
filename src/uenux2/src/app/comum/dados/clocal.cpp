@@ -1,13 +1,100 @@
-// <stubs>
-// f1003 · 187 B · unmatched · name unknown
-// ? f1003(i32) { ... }
+#include "app/comum/dados/clocal.h"
 
-// f1078 · 167 B · unmatched · name unknown
-// ? f1078(i32) { ... }
+#include <format>
 
-// f782 · 517 B · unmatched · name unknown
-// void f782(i32, i32) { ... }
+#include "app/comum/dados/euecomumdadoserror.h"
+#include "ecourna/api/util/cstringutils.hpp"
 
-// f5742 · 527 B · unmatched · name unknown
-// void f5742(i32, i32) { ... }
-// </stubs>
+namespace comum {
+
+using ecourna::api::util::CStringUtils;
+
+CLocal::CLocal() = default;
+
+CLocal::~CLocal() = default;
+
+uedword CLocal::GetMunicipio() const
+{
+    VerificaLido("GetMunicipio");
+    return m_local->GetMunicipio().GetCodigo();
+}
+
+const std::string& CLocal::GetNomeMunicipio() const
+{
+    VerificaLido("GetNomeMunicipio");
+    return m_local->GetMunicipio().GetNome();
+}
+
+const std::string& CLocal::GetUF() const
+{
+    VerificaLido("GetUF");
+    return m_local->GetSiglaUF();
+}
+
+std::string CLocal::GetUFMinuscula() const
+{
+    VerificaLido("GetUF");
+    return CStringUtils::ToLower(m_local->GetSiglaUF());
+}
+
+const md::CLocal& CLocal::GetLocalData() const
+{
+    VerificaLido("GetLocalData");
+    return *m_local;
+}
+
+// (original lines 46-76: content not recovered)
+#line 77
+TZonaID CLocal::GetZonaID() const
+{
+    VerificaLido("GetZona");
+    if (m_local->TemSecao()) {
+        return m_local->GetSecao().GetIdentificacao().GetZona();
+    }
+    if (m_local->TemContingencia()) {
+        return m_local->GetContingencia().GetZona();
+    }
+    throw CUeComumDadosError(EUE_COMUM_DADOS_7872, "Tipo de local inválido");
+}
+
+// (original lines 89-100: content not recovered)
+#line 101
+TSecaoID CLocal::GetSecaoID() const
+{
+    VerificaLido("GetSecaoID");
+    if (m_local->TemSecao()) {
+        return m_local->GetSecao().GetIdentificacao().GetSecao();
+    }
+    if (m_local->TemContingencia()) {
+        return 0;
+    }
+    throw CUeComumDadosError(EUE_COMUM_DADOS_7873, "Tipo de local inválido");
+}
+
+bool CLocal::UrnaBiometrica() const
+{
+    if (EhSecao("UrnaBiometrica")) {
+        return m_local->GetMunicipio().EhUrnaBiometrica();
+    }
+    return false;
+}
+
+// (original lines 121-341: content not recovered)
+#line 342
+void CLocal::VerificaLido(const std::string& funcao) const
+{
+    if (!m_local) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7874, std::format("{}: o arquivo de locais ainda não foi carregado", funcao));
+    }
+}
+
+
+void CLocal::VerificaEhSecao(const std::string& funcao) const
+{
+    VerificaLido(funcao);
+    if (!m_local->TemSecao()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7875, std::format("{}: o local não era de seção", funcao));
+    }
+}
+
+} // namespace comum

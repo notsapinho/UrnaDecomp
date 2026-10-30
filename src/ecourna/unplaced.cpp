@@ -781,11 +781,6 @@
 // f2260 · 18 B · unmatched · placement: link order · name unknown
 // ? f2260(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1156 · uses=5 · neighbours' file uenux2/src/app/comum/dados/cintegridadereferencial.cpp
-
-// f2261 · 31 B · unmatched · placement: link order · name unknown
-// void f2261(i32) { ... }
-
 // link-order cluster 1159 · uses=5 · neighbours' file uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp
 
 // f2302 · 483 B · unmatched · placement: link order · name unknown
@@ -1012,9 +1007,4 @@
 
 // f235 · 21 B · unmatched · placement: link order · name unknown
 // ? f235(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1383 · uses=282
-
-// f170 · 21 B · unmatched · placement: link order · name unknown
-// ? f170(i32, i32, i32, i32) { ... }
 // </stubs>

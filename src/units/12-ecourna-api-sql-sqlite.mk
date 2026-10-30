@@ -78,9 +78,10 @@
 # - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
-# - CSqlResultSet::IndexForColumnName (1525): its call of the copying ToLower (1879) is self-voted. 1879 is a thunk
-#   into binaryen's merge 3942 in the target, with fns 1374 and 5156, copying wrappers of other functions not
-#   reconstructed (5156 of 3509, a ToUpper-like body); with no partner ours stays a whole body.
+# - The copying ToLower (1879) is a thunk into binaryen's merge 3942 in the target, with fns 1374 and 5156, copying
+#   wrappers of other functions not reconstructed (5156 of 3509, a ToUpper-like body); with no partner ours stays a whole
+#   body. CSqlResultSet::IndexForColumnName (1525), which calls it, matches since unit 89's comum::CLocal::GetUFMinuscula
+#   (3753) is a second holding caller.
 ECOURNA_SRCS += api/sql/sqlite/csqlconnection.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlresultset.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlstatement.cpp
