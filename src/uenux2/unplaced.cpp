@@ -1912,17 +1912,6 @@
 // f11204 · 12 B · unmatched · placement: link order · name unknown
 // void f11204(i32) { ... }
 
-// link-order cluster 415 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cpartecargos.cpp
-
-// f11209 · 111 B · unmatched · placement: link order · name unknown
-// void f11209(i32) { ... }
-
-// f11208 · 116 B · unmatched · placement: link order · name unknown
-// ? f11208(i32) { ... }
-
-// f11207 · 119 B · unmatched · placement: link order · name unknown
-// void f11207(i32) { ... }
-
 // link-order cluster 416 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cpartecandidatosproporcionais.cpp
 
 // f11210 · 10 B · unmatched · placement: link order · name unknown
@@ -2308,9 +2297,6 @@
 
 // f5588 · 159 B · unmatched · placement: link order · name unknown
 // void f5588(i32) { ... }
-
-// f5587 · 54 B · unmatched · placement: link order · name unknown
-// ? f5587(i32, i32, i32) { ... }
 
 // link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
