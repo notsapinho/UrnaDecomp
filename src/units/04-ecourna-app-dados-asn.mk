@@ -4,8 +4,8 @@
 # Compiled WITHOUT -fPIC like app/dados (docs/reference/facts/app-flags.md §F5; measured on 9192/9191 too: 23/20 rows
 # operand-only non-PIC vs 34/29 with 3/2 structural rows -fPIC).
 # cconversorturno.cpp is saved as UTF-8, not Latin-1 (.editorconfig's UTF-8 section): the target holds the
-# "Turno inválido." both converters throw (9192/9191) as UTF-8 bytes at 367628, the one UTF-8 string
-# ledger/strings.tsv lists, and has no Latin-1 copy of it.
+# "Turno inválido." both converters throw (9192/9191) as UTF-8 bytes at 367628, the one UTF-8 text string
+# ledger/strings.tsv lists (its other `utf8` rows are binary data), and has no Latin-1 copy of it.
 DADOS_ASN_SRCS := app/dados/asn/cconversorturno.cpp app/dados/asn/cconversorfase.cpp app/dados/asn/cconversorcargoid.cpp \
                  app/dados/asn/cconversorfoto.cpp app/dados/asn/cconversorcabecalhoentidade.cpp \
                  app/dados/asn/cconversoridentificadoreleitor.cpp app/dados/asn/datahoraasn.cpp \

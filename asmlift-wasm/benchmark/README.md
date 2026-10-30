@@ -45,7 +45,7 @@ them (`truth`).
 | setup | what | flags from | rows |
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
-| `ecourna` | ecourna's PIC translation units | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 10 |
+| `ecourna` | ecourna's PIC translation units | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 8 |
 | `ecourna-nopic` | ecourna's non-PIC units (app/dados, api/io, api/compression, the asn converters) | the same, with the fragments' `-fno-PIC` rules | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
 | `asn1-eh` | the ASN.1 units that throw (`-fexceptions -fignore-exceptions`) | `src/mk/asn1.mk` `ASN1_FLAGS_<unit>` | 11 |
