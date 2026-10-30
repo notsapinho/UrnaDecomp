@@ -32,15 +32,15 @@ describe('classifyObjects', () => {
     }
     expect(objects.find((o) => o.object === 'build/out/app/asn1/BERDecoderPartial.o')?.setup).toBe('asn1-eh');
     expect(objects.find((o) => o.object === 'build/out/app/ecourna/api_security_base64.cpp.o')?.setup).toBe('ecourna');
-    expect(objects.find((o) => o.object === 'build/out/app/ecourna/api_io_cfile.cpp.o')?.setup).toBe('ecourna-nopic');
+    expect(objects.find((o) => o.object === 'build/out/app/ecourna/api_io_cfile.cpp.o')?.setup).toBe('ecourna');
   });
 
   it('reports drift when a setup no longer has the flags its objects compile with', () => {
     const { checks } = classifyObjects(
-      edited('ecourna-nopic', (s) => ({ ...s, flags: { 'c++': s.flags!['c++']!.replace('-O3', '-O2') } })),
+      edited('ecourna', (s) => ({ ...s, flags: { 'c++': s.flags!['c++']!.replace('-O3', '-O2') } })),
       IMAGE,
     );
-    const c = checks.find((x) => x.key === 'ecourna-nopic')!;
+    const c = checks.find((x) => x.key === 'ecourna')!;
     expect(c.status).toBe('drift');
     expect(c.detail.some((d) => d.includes('api_io_cfile.cpp.o') && d.includes('no setup has'))).toBe(true);
   });

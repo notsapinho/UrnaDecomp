@@ -70,7 +70,10 @@ export function codegenFlags(tokens: readonly string[]): string[] {
 
 /** A canonical spelling of what the flags decide: the last -O and -std, whether PIC and C++
  *  exceptions end up on, and every other flag once, sorted. Two flag strings that compile the same
- *  way spell the same here (`-fPIC … -fno-PIC` and `-fno-pic` both say non-PIC). */
+ *  way spell the same here (`-fno-PIC` and `-fno-pic` both say non-PIC). `-fPIC … -fno-PIC` does not
+ *  spell like them: em++ adds `-fvisibility=default` for the word `-fPIC` anywhere on its line
+ *  (emscripten's tools/compile.py), and a later `-fno-PIC` leaves that in place, so the code is non-PIC
+ *  and the visibility is not the hidden a line without `-fPIC` gets. */
 export function effectiveFlags(flags: string | readonly string[]): string {
   const tokens = codegenFlags(typeof flags === 'string' ? splitFlags(flags) : flags);
   let opt = '-O0';
@@ -94,6 +97,9 @@ export function effectiveFlags(flags: string | readonly string[]): string {
     } else {
       rest.add(t);
     }
+  }
+  if (!pic && tokens.includes('-fPIC') && !tokens.some((t) => t.startsWith('-fvisibility'))) {
+    rest.add('-fvisibility=default');
   }
   return [opt, std, pic ? '-fPIC' : null, exceptions ? '-fexceptions' : null, ...[...rest].sort()]
     .filter((x) => x !== null)

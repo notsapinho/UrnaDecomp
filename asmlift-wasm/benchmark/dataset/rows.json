@@ -109,61 +109,6 @@
     }
   },
   {
-    "id": "uenux2/10252",
-    "index": 10252,
-    "size": 35,
-    "band": "small",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "frame"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CPosixMutex::Lock()",
-    "symbol": "_ZN3api11CPosixMutex4LockEv",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/ipc/posix/cposixmutex.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/ipc/posix/cposixmutex.cpp",
-      "line": 43
-    }
-  },
-  {
-    "id": "uenux2/10255",
-    "index": 10255,
-    "size": 24,
-    "band": "tiny",
-    "component": "unknown",
-    "owner": "app",
-    "features": [
-      "call_indirect"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CThread::Rotina(void*)",
-    "symbol": "_ZN3api7CThread6RotinaEPv",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/ipc/cthread.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/ipc/cthread.cpp",
-      "line": 79
-    }
-  },
-  {
     "id": "uenux2/10451",
     "index": 10451,
     "size": 6996,
@@ -282,6 +227,61 @@
     }
   },
   {
+    "id": "uenux2/11060",
+    "index": 11060,
+    "size": 29,
+    "band": "tiny",
+    "component": "api",
+    "owner": "app",
+    "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "api::CMovieField::Hide()",
+    "symbol": "_ZN3api11CMovieField4HideEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/gui/cmoviefield.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/gui/cmoviefield.cpp",
+      "line": 85
+    }
+  },
+  {
+    "id": "uenux2/11067",
+    "index": 11067,
+    "size": 86,
+    "band": "small",
+    "component": "api",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "api::CLineField::Rect() const",
+    "symbol": "_ZNK3api10CLineField4RectEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/gui/clinefield.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/gui/clinefield.cpp",
+      "line": 21
+    }
+  },
+  {
     "id": "uenux2/11620",
     "index": 11620,
     "size": 4622,
@@ -337,71 +337,112 @@
     "reference": null
   },
   {
-    "id": "ecourna/424",
-    "index": 424,
-    "size": 54,
+    "id": "ecourna/307",
+    "index": 307,
+    "size": 104,
     "band": "small",
     "component": "unknown",
     "owner": "-",
     "features": [
-      "call_indirect"
+      "leaf",
+      "i64",
+      "select"
     ],
     "ledger": {
-      "kind": "fingerprint",
+      "kind": "byte",
       "score": 0
     },
     "origin": "selected",
     "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::shared_ptr<ecourna::api::cepesc::CInfoSalt>::~shared_ptr[abi:ne210108]()",
-    "symbol": "_ZNSt3__210shared_ptrIN7ecourna3api6cepesc9CInfoSaltEED2B8ne210108Ev",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "std::__2::__format_arg_store<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>> std::__2::make_format_args[abi:ne210108]<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&)",
+    "symbol": "_ZNSt3__216make_format_argsB8ne210108INS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEJNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEESD_EEENS_18__format_arg_storeIT_JDpT0_EEEDpRSG_",
     "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_cepesc_ccipheredout.cpp.o",
+    "object": "build/out/app/ecourna/api_compression_czip.cpp.o",
     "reference": null
   },
   {
-    "id": "ecourna/1242",
-    "index": 1242,
-    "size": 32,
-    "band": "tiny",
-    "component": "unknown",
-    "owner": "sqlite",
-    "features": [],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::__tree<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, std::__2::__map_value_compare<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, std::__2::pair<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const, evp_cipher_st const* (*)()>, std::__2::less<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>>, true>, std::__2::allocator<std::__2::pair<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const, evp_cipher_st const* (*)()>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, void*>*)",
-    "symbol": "_ZNSt3__26__treeINS_12__value_typeINS_4pairIN7ecourna3api8security15EOperationModesENS5_23ESymmetricCipherKeySizeEEEPFPK13evp_cipher_stvEEENS_19__map_value_compareIS8_NS2_IKS8_SD_EENS_4lessIS8_EELb1EEENS_9allocatorISH_EEE7destroyEPNS_11__tree_nodeISE_PvEE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_caescipher.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna/5170",
-    "index": 5170,
-    "size": 84,
-    "band": "small",
+    "id": "ecourna/2193",
+    "index": 2193,
+    "size": 176,
+    "band": "medium",
     "component": "unknown",
     "owner": "app",
-    "features": [],
+    "features": [
+      "leaf",
+      "i64"
+    ],
     "ledger": {
-      "kind": "addr",
-      "score": 3
+      "kind": "byte",
+      "score": 0
     },
     "origin": "selected",
     "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::unique_ptr<ecourna::api::cepesc::CInfoSalt, std::__2::default_delete<ecourna::api::cepesc::CInfoSalt>>::~unique_ptr[abi:ne210108]()",
-    "symbol": "_ZNSt3__210unique_ptrIN7ecourna3api6cepesc9CInfoSaltENS_14default_deleteIS4_EEED2B8ne210108Ev",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "ecourna::app::dados::CEstadoComparecimento::CEstadoComparecimento(ecourna::app::dados::CRegistroIdentificacaoEleitor const&, ecourna::app::dados::CEstadoComparecimento::ESituacaoComparecimento, ecourna::app::dados::CApresentacaoFotoEleitor const&, ecourna::app::dados::CEstadoComparecimento::ESituacaoHabilitacaoAudio)",
+    "symbol": "_ZN7ecourna3app5dados21CEstadoComparecimentoC1ERKNS1_29CRegistroIdentificacaoEleitorENS2_23ESituacaoComparecimentoERKNS1_24CApresentacaoFotoEleitorENS2_25ESituacaoHabilitacaoAudioE",
     "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_cepesc_ccipheredout.cpp.o",
+    "object": "build/out/app/ecourna/app_dados_resultadournacadastro_cestadocomparecimento.cpp.o",
+    "reference": {
+      "path": "src/ecourna/app/dados/resultadournacadastro/cestadocomparecimento.cpp"
+    }
+  },
+  {
+    "id": "ecourna/5093",
+    "index": 5093,
+    "size": 1288,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "ecourna",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "ecourna::app::dados::CParametrosUrna::CParametrosUrna(ecourna::app::dados::CParametrosUrna::EFormaSuspenderSemVoto, ecourna::app::dados::CParametrosUrna::EFormaSuspenderComVoto, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, bool, bool, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, ecourna::app::dados::CLabelParametrizado, ecourna::app::dados::CLabelParametrizado, ecourna::app::dados::CLabelParametrizado, ecourna::app::dados::CLabelParametrizado, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool)",
+    "symbol": "_ZN7ecourna3app5dados15CParametrosUrnaC1ENS2_22EFormaSuspenderSemVotoENS2_22EFormaSuspenderComVotoEjjjjjjjjjjjjjjjjbbjjjjjjNSt3__26vectorINS1_16CTituloRelatorioENS5_9allocatorIS7_EEEESA_SA_SA_SA_SA_NS5_12basic_stringIcNS5_11char_traitsIcEENS8_IcEEEENS1_19CLabelParametrizadoESG_SG_SG_bbbbbbbbbb",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/app_dados_parametrizacaourna_cparametrosurna.cpp.o",
+    "reference": {
+      "path": "src/ecourna/app/dados/parametrizacaourna/cparametrosurna.cpp",
+      "line": 7
+    }
+  },
+  {
+    "id": "ecourna/5102",
+    "index": 5102,
+    "size": 345,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "invoke",
+      "throw",
+      "frame",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 12
+    },
+    "origin": "selected",
+    "setup": "ecourna",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "ecourna::app::dados::asn::CConversorParametrosUrna::DesconverterCabecalho(ASN1::SEQUENCE_OF<ModuloParametrizacaoUrna::TituloRelatorio, ASN1::EmptyConstraint> const&) const",
+    "symbol": "_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna21DesconverterCabecalhoERKN4ASN111SEQUENCE_OFIN24ModuloParametrizacaoUrna15TituloRelatorioENS4_15EmptyConstraintEEE",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o",
     "reference": null
   },
   {
@@ -423,7 +464,7 @@
     "origin": "selected",
     "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
     "name": "std::__2::__tree_node_base<void*>*& std::__2::__tree<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, std::__2::__map_value_compare<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, std::__2::pair<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const, evp_cipher_st const* (*)()>, std::__2::less<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>>, true>, std::__2::allocator<std::__2::pair<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const, evp_cipher_st const* (*)()>>>::__find_equal<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>>(std::__2::__tree_const_iterator<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, std::__2::__tree_node<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, void*>*, long>, std::__2::__tree_end_node<std::__2::__tree_node_base<void*>*>*&, std::__2::__tree_node_base<void*>*&, std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const&)",
     "symbol": "_ZNSt3__26__treeINS_12__value_typeINS_4pairIN7ecourna3api8security15EOperationModesENS5_23ESymmetricCipherKeySizeEEEPFPK13evp_cipher_stvEEENS_19__map_value_compareIS8_NS2_IKS8_SD_EENS_4lessIS8_EELb1EEENS_9allocatorISH_EEE12__find_equalIS8_EERPNS_16__tree_node_baseIPvEENS_21__tree_const_iteratorISE_PNS_11__tree_nodeISE_SQ_EElEERPNS_15__tree_end_nodeISS_EEST_RKT_",
     "evidence": "symbol",
@@ -433,237 +474,7 @@
     }
   },
   {
-    "id": "ecourna/5354",
-    "index": 5354,
-    "size": 14,
-    "band": "tiny",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::__shared_ptr_emplace<ecourna::api::cepesc::CInfoSalt, std::__2::allocator<ecourna::api::cepesc::CInfoSalt>>::~__shared_ptr_emplace()",
-    "symbol": "_ZNSt3__220__shared_ptr_emplaceIN7ecourna3api6cepesc9CInfoSaltENS_9allocatorIS4_EEED0Ev",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_cepesc_cplaintext.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna/7137",
-    "index": 7137,
-    "size": 17,
-    "band": "tiny",
-    "component": "libc++",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::__shared_ptr_pointer<ecourna::api::cepesc::CInfoSalt*, std::__2::shared_ptr<ecourna::api::cepesc::CInfoSalt>::__shared_ptr_default_delete<ecourna::api::cepesc::CInfoSalt, ecourna::api::cepesc::CInfoSalt>, std::__2::allocator<ecourna::api::cepesc::CInfoSalt>>::__get_deleter(std::type_info const&) const",
-    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7ecourna3api6cepesc9CInfoSaltENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_cepesc_ccipheredout.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna/9462",
-    "index": 9462,
-    "size": 60,
-    "band": "small",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [],
-    "ledger": {
-      "kind": "addr",
-      "score": 2
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::__shared_ptr_emplace<ecourna::api::cepesc::CInfoSalt, std::__2::allocator<ecourna::api::cepesc::CInfoSalt>>::__on_zero_shared()",
-    "symbol": "_ZNSt3__220__shared_ptr_emplaceIN7ecourna3api6cepesc9CInfoSaltENS_9allocatorIS4_EEE16__on_zero_sharedEv",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_cepesc_cplaintext.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna/9469",
-    "index": 9469,
-    "size": 75,
-    "band": "small",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [],
-    "ledger": {
-      "kind": "addr",
-      "score": 3
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::__shared_ptr_pointer<ecourna::api::cepesc::CInfoSalt*, std::__2::shared_ptr<ecourna::api::cepesc::CInfoSalt>::__shared_ptr_default_delete<ecourna::api::cepesc::CInfoSalt, ecourna::api::cepesc::CInfoSalt>, std::__2::allocator<ecourna::api::cepesc::CInfoSalt>>::__on_zero_shared()",
-    "symbol": "_ZNSt3__220__shared_ptr_pointerIPN7ecourna3api6cepesc9CInfoSaltENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEE16__on_zero_sharedEv",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_security_cepesc_ccipheredout.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna-nopic/1081",
-    "index": 1081,
-    "size": 18,
-    "band": "tiny",
-    "component": "unknown",
-    "owner": "-",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "ecourna-nopic",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "ecourna::app::dados::CApresentacaoFotoEleitor::CApresentacaoFotoEleitor(ecourna::app::dados::CApresentacaoFotoEleitor::EEstado, ecourna::app::dados::CApresentacaoFotoEleitor::EResultado)",
-    "symbol": "_ZN7ecourna3app5dados24CApresentacaoFotoEleitorC1ENS2_7EEstadoENS2_10EResultadoE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_resultadournacadastro_capresentacaofotoeleitor.cpp.o",
-    "reference": {
-      "path": "src/ecourna/app/dados/resultadournacadastro/capresentacaofotoeleitor.cpp",
-      "line": 5
-    }
-  },
-  {
-    "id": "ecourna-nopic/3482",
-    "index": 3482,
-    "size": 365,
-    "band": "medium",
-    "component": "unknown",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "ecourna-nopic",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "ecourna::app::dados::CResultadoUrnaCadastro::CResultadoUrnaCadastro(ecourna::app::dados::CCabecalhoEntidade, ecourna::app::dados::CFaseID, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, ecourna::app::dados::CResultadoUrnaCadastro::ESituacaoArquivo, std::__2::optional<ecourna::app::dados::CDadosComparecimentoCifrado>)",
-    "symbol": "_ZN7ecourna3app5dados22CResultadoUrnaCadastroC1ENS1_18CCabecalhoEntidadeENS1_7CFaseIDENSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEENS2_16ESituacaoArquivoENS5_8optionalINS1_27CDadosComparecimentoCifradoEEE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_resultadournacadastro_cresultadournacadastro.cpp.o",
-    "reference": {
-      "path": "src/ecourna/app/dados/resultadournacadastro/cresultadournacadastro.cpp"
-    }
-  },
-  {
-    "id": "ecourna-nopic/3483",
-    "index": 3483,
-    "size": 445,
-    "band": "medium",
-    "component": "unknown",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "ecourna-nopic",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "ecourna::app::dados::CResultadoUrnaCadastro::CResultadoUrnaCadastro(ecourna::app::dados::CCabecalhoEntidade, ecourna::app::dados::CFaseID, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, ecourna::app::dados::CResultadoUrnaCadastro::ESituacaoArquivo, std::__2::optional<ecourna::app::dados::CDadosComparecimento>)",
-    "symbol": "_ZN7ecourna3app5dados22CResultadoUrnaCadastroC1ENS1_18CCabecalhoEntidadeENS1_7CFaseIDENSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEENS2_16ESituacaoArquivoENS5_8optionalINS1_20CDadosComparecimentoEEE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_resultadournacadastro_cresultadournacadastro.cpp.o",
-    "reference": {
-      "path": "src/ecourna/app/dados/resultadournacadastro/cresultadournacadastro.cpp"
-    }
-  },
-  {
-    "id": "ecourna-nopic/5093",
-    "index": 5093,
-    "size": 1288,
-    "band": "large",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "ecourna-nopic",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "ecourna::app::dados::CParametrosUrna::CParametrosUrna(ecourna::app::dados::CParametrosUrna::EFormaSuspenderSemVoto, ecourna::app::dados::CParametrosUrna::EFormaSuspenderComVoto, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, bool, bool, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, ecourna::app::dados::CLabelParametrizado, ecourna::app::dados::CLabelParametrizado, ecourna::app::dados::CLabelParametrizado, ecourna::app::dados::CLabelParametrizado, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool)",
-    "symbol": "_ZN7ecourna3app5dados15CParametrosUrnaC1ENS2_22EFormaSuspenderSemVotoENS2_22EFormaSuspenderComVotoEjjjjjjjjjjjjjjjjbbjjjjjjNSt3__26vectorINS1_16CTituloRelatorioENS5_9allocatorIS7_EEEESA_SA_SA_SA_SA_NS5_12basic_stringIcNS5_11char_traitsIcEENS8_IcEEEENS1_19CLabelParametrizadoESG_SG_SG_bbbbbbbbbb",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_parametrizacaourna_cparametrosurna.cpp.o",
-    "reference": {
-      "path": "src/ecourna/app/dados/parametrizacaourna/cparametrosurna.cpp",
-      "line": 7
-    }
-  },
-  {
-    "id": "ecourna-nopic/5102",
-    "index": 5102,
-    "size": 345,
-    "band": "medium",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "loop",
-      "invoke",
-      "throw",
-      "frame",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 12
-    },
-    "origin": "selected",
-    "setup": "ecourna-nopic",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "ecourna::app::dados::asn::CConversorParametrosUrna::DesconverterCabecalho(ASN1::SEQUENCE_OF<ModuloParametrizacaoUrna::TituloRelatorio, ASN1::EmptyConstraint> const&) const",
-    "symbol": "_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna21DesconverterCabecalhoERKN4ASN111SEQUENCE_OFIN24ModuloParametrizacaoUrna15TituloRelatorioENS4_15EmptyConstraintEEE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna-nopic/9112",
+    "id": "ecourna/9112",
     "index": 9112,
     "size": 613,
     "band": "large",
@@ -681,9 +492,9 @@
       "score": 20
     },
     "origin": "selected",
-    "setup": "ecourna-nopic",
+    "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
     "name": "ecourna::app::dados::asn::CConversorRegistroIdentificacaoEleitor::DoDeconverte(ModuloTiposEcoUrna::RegistroIdentificacaoEleitor const&) const",
     "symbol": "_ZNK7ecourna3app5dados3asn38CConversorRegistroIdentificacaoEleitor12DoDeconverteERKN18ModuloTiposEcoUrna28RegistroIdentificacaoEleitorE",
     "evidence": "symbol",
@@ -691,7 +502,7 @@
     "reference": null
   },
   {
-    "id": "ecourna-nopic/9529",
+    "id": "ecourna/9529",
     "index": 9529,
     "size": 105,
     "band": "small",
@@ -706,9 +517,9 @@
       "score": 0
     },
     "origin": "selected",
-    "setup": "ecourna-nopic",
+    "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
     "name": "ecourna::api::compression::ICompressor::Add(std::__2::map<std::__2::filesystem::path, std::__2::filesystem::path, std::__2::less<std::__2::filesystem::path>, std::__2::allocator<std::__2::pair<std::__2::filesystem::path const, std::__2::filesystem::path>>> const&)",
     "symbol": "_ZN7ecourna3api11compression11ICompressor3AddERKNSt3__23mapINS3_10filesystem4pathES6_NS3_4lessIS6_EENS3_9allocatorINS3_4pairIKS6_S6_EEEEEE",
     "evidence": "symbol",
@@ -718,7 +529,7 @@
     }
   },
   {
-    "id": "ecourna-nopic/13816",
+    "id": "ecourna/13816",
     "index": 13816,
     "size": 28,
     "band": "tiny",
@@ -733,9 +544,9 @@
       "score": 0
     },
     "origin": "selected",
-    "setup": "ecourna-nopic",
+    "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
     "name": "std::__2::__alternate<char>::__exec_split(bool, std::__2::__state<char>&) const",
     "symbol": "_ZNKSt3__211__alternateIcE12__exec_splitEbRNS_7__stateIcEE",
     "evidence": "symbol",
@@ -743,7 +554,31 @@
     "reference": null
   },
   {
-    "id": "ecourna-nopic/13838",
+    "id": "ecourna/13820",
+    "index": 13820,
+    "size": 10,
+    "band": "tiny",
+    "component": "libc++",
+    "owner": "libcxx",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "ecourna",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "std::__2::__alternate<char>::__exec(std::__2::__state<char>&) const",
+    "symbol": "_ZNKSt3__211__alternateIcE6__execERNS_7__stateIcEE",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/api_compression_icompressor.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "ecourna/13838",
     "index": 13838,
     "size": 20,
     "band": "tiny",
@@ -757,9 +592,9 @@
       "score": 0
     },
     "origin": "selected",
-    "setup": "ecourna-nopic",
+    "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
     "name": "std::__2::__repeat_one_loop<char>::__exec(std::__2::__state<char>&) const",
     "symbol": "_ZNKSt3__217__repeat_one_loopIcE6__execERNS_7__stateIcEE",
     "evidence": "symbol",
@@ -767,31 +602,32 @@
     "reference": null
   },
   {
-    "id": "ecourna-nopic/13875",
-    "index": 13875,
-    "size": 67,
-    "band": "small",
+    "id": "ecourna/14051",
+    "index": 14051,
+    "size": 165,
+    "band": "medium",
     "component": "libc++",
     "owner": "libcxx",
     "features": [
-      "leaf"
+      "leaf",
+      "loop"
     ],
     "ledger": {
       "kind": "byte",
       "score": 0
     },
     "origin": "selected",
-    "setup": "ecourna-nopic",
+    "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "std::__2::__end_marked_subexpression<char>::__exec(std::__2::__state<char>&) const",
-    "symbol": "_ZNKSt3__226__end_marked_subexpressionIcE6__execERNS_7__stateIcEE",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "std::__2::__back_ref_collate<char, std::__2::regex_traits<char>>::__exec(std::__2::__state<char>&) const",
+    "symbol": "_ZNKSt3__218__back_ref_collateIcNS_12regex_traitsIcEEE6__execERNS_7__stateIcEE",
     "evidence": "symbol",
     "object": "build/out/app/ecourna/api_compression_icompressor.cpp.o",
     "reference": null
   },
   {
-    "id": "ecourna-nopic/14295",
+    "id": "ecourna/14295",
     "index": 14295,
     "size": 104,
     "band": "small",
@@ -806,35 +642,11 @@
       "score": 0
     },
     "origin": "selected",
-    "setup": "ecourna-nopic",
+    "setup": "ecourna",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
     "name": "std::__2::__r_anchor_multiline<char>::__exec(std::__2::__state<char>&) const",
     "symbol": "_ZNKSt3__220__r_anchor_multilineIcE6__execERNS_7__stateIcEE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_compression_icompressor.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna-nopic/14367",
-    "index": 14367,
-    "size": 10,
-    "band": "tiny",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "ecourna-nopic",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "name": "std::__2::__end_state<char>::__exec(std::__2::__state<char>&) const",
-    "symbol": "_ZNKSt3__211__end_stateIcE6__execERNS_7__stateIcEE",
     "evidence": "symbol",
     "object": "build/out/app/ecourna/api_compression_icompressor.cpp.o",
     "reference": null
@@ -3162,8 +2974,8 @@
     "origin": "selected",
     "setup": "boost",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "instantiatedBy": "ecourna-nopic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "instantiatedBy": "ecourna",
     "name": "boost::detail::sp_counted_base::destroy()",
     "symbol": "_ZN5boost6detail15sp_counted_base7destroyEv",
     "evidence": "symbol",
@@ -3185,8 +2997,8 @@
     "origin": "selected",
     "setup": "boost",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "instantiatedBy": "ecourna-nopic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "instantiatedBy": "ecourna",
     "name": "boost::detail::sp_counted_impl_p<boost::signals2::optional_last_value<void>>::dispose()",
     "symbol": "_ZN5boost6detail17sp_counted_impl_pINS_8signals219optional_last_valueIvEEE7disposeEv",
     "evidence": "symbol",
@@ -3239,31 +3051,6 @@
     "instantiatedBy": "app-stand-ins",
     "name": "boost::re_detail_600::perl_matcher<char const*, std::__2::allocator<boost::sub_match<char const*>>, boost::regex_traits<char, boost::cpp_regex_traits<char>>>::unwind_end(bool)",
     "symbol": "_ZN5boost13re_detail_60012perl_matcherIPKcNSt3__29allocatorINS_9sub_matchIS3_EEEENS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE10unwind_endEb",
-    "evidence": "symbol",
-    "object": "build/out/app/roots_boost.o",
-    "reference": null
-  },
-  {
-    "id": "boost/9301",
-    "index": 9301,
-    "size": 40,
-    "band": "small",
-    "component": "unknown",
-    "owner": "-",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "boost",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG",
-    "instantiatedBy": "app-stand-ins",
-    "name": "boost::re_detail_600::perl_matcher<char const*, std::__2::allocator<boost::sub_match<char const*>>, boost::regex_traits<char, boost::cpp_regex_traits<char>>>::match_restart_continue()",
-    "symbol": "_ZN5boost13re_detail_60012perl_matcherIPKcNSt3__29allocatorINS_9sub_matchIS3_EEEENS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE22match_restart_continueEv",
     "evidence": "symbol",
     "object": "build/out/app/roots_boost.o",
     "reference": null
@@ -3437,8 +3224,8 @@
     "origin": "selected",
     "setup": "boost",
     "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic",
-    "instantiatedBy": "ecourna-nopic",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "instantiatedBy": "ecourna",
     "name": "boost::signals2::signal<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), boost::signals2::optional_last_value<void>, int, std::__2::less<int>, boost::function<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>, boost::function<void (boost::signals2::connection const&, unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>, boost::signals2::mutex>::lock_pimpl() const",
     "symbol": "_ZNK5boost8signals26signalIFvmmRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEENS0_19optional_last_valueIvEEiNS2_4lessIiEENS_8functionISB_EENSG_IFvRKNS0_10connectionEmmSA_EEENS0_5mutexEE10lock_pimplEv",
     "evidence": "symbol",
@@ -3446,6 +3233,29 @@
     "reference": {
       "path": "src/ecourna/api/compression/icompressor.cpp"
     }
+  },
+  {
+    "id": "boost/11614",
+    "index": 11614,
+    "size": 27,
+    "band": "tiny",
+    "component": "boost",
+    "owner": "boost",
+    "features": [],
+    "ledger": {
+      "kind": "addr",
+      "score": 5
+    },
+    "origin": "selected",
+    "setup": "boost",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "instantiatedBy": "ecourna",
+    "name": "boost::wrapexcept<boost::gregorian::bad_day_of_month>::clone() const",
+    "symbol": "_ZNK5boost10wrapexceptINS_9gregorian16bad_day_of_monthEE5cloneEv",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/app_dados_asn_datahoraasn.cpp.o",
+    "reference": null
   },
   {
     "id": "libc/390",

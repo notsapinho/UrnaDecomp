@@ -235,7 +235,7 @@ pnpm wasm lift ../target/vota_web_wasm.wasm --all
   The component says which code calls a function, not where it is written: 1260
   (`api::CDirReader::NextEntry`, group `ecourna`) gets uenux2's flags from its record in
   `cdirreader.cpp`. The per-tree flags are `TREE_FLAGS`; `lift --check` and `lift-eval`
-  choose the same way. The table cannot express ecourna's per-directory `-fno-PIC`:
+  choose the same way. The table cannot express a flag one unit's fragment adds:
   urna's `tools/round/try-tu.sh` reads the real flags from `src/Makefile`.
 - **Names.** Imports and exports by the glue's real names; other functions by the ledger's
   `best_name` when the pairing is byte, fingerprint or addr (a shape pairing is often another
