@@ -29,6 +29,16 @@ class CMovie {
 public:
     CMovie(std::vector<CMovieFrame> frames, const SPoint& tamanho);
 
+    // back to the first frame: CMovieField::Show (fn 11061) stores 0 in m_frameAtual. The name is chosen, and so is
+    // that a member of CMovie does it: the store is all the target shows
+    void Rewind() { m_frameAtual = 0; }
+
+    // the frame on show and the size: simulador::CWasmScreen's slot 26 (fn 9038) reads them, the frame through at() (its
+    // `call 234`, the vector's out_of_range). The names are chosen
+    const CMovieFrame& FrameAtual() const { return m_frames.at(m_frameAtual); }
+
+    const SPoint& Tamanho() const { return m_tamanho; }
+
 private:
     std::vector<CMovieFrame> m_frames;
     size_t m_frameAtual;
