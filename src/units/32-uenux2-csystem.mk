@@ -8,8 +8,9 @@
 # the anonymous-namespace helpers: it is file-static, declared in no header, and stays a stub until two of its callers
 # here (2762 IsEmptyDir, 5455, 2761 ZeroFill) are written, without which clang does not emit it out of line.
 # CSystem's other members (TemporaryPath 5455, IsEmptyDir 2762, CopyFile 378, Rename 11584, AreFilesEqual, ZeroFill
-# 2761) are not reconstructed yet. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and
-# every uenux2 header.
+# 2761) are not reconstructed yet. The flag CSystem::s_dorme, defined here, and the inline CSystem::Dorme over it are
+# unit 81's (ISound::Wait, fn 8461, is the first reader written); api/util/csystem.h says what is chosen about them.
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSYSTEM_SRCS := src/api/util/csystem.cpp
 UENUX2_SRCS += $(CSYSTEM_SRCS)
 # neither function's callers are reconstructed yet: 32-uenux2-csystem-roots.cpp gives each two call sites or more
