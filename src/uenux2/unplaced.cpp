@@ -2662,11 +2662,6 @@
 // f3752 · 861 B · unmatched · placement: link order · name unknown
 // void f3752(i32, i32) { ... }
 
-// link-order cluster 1009 · uses=3 · neighbours' file uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp
-
-// f3767 · 13 B · unmatched · placement: link order · name unknown
-// void f3767(i32) { ... }
-
 // link-order cluster 1012 · uses=3 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
 
 // f3780 · 235 B · unmatched · placement: link order · name unknown
@@ -2916,9 +2911,6 @@
 
 // f1705 · 787 B · unmatched · placement: link order · name unknown
 // void f1705(i32, i32, i32, i32, i32, i32) { ... }
-
-// f1704 · 56 B · unmatched · placement: link order · name unknown
-// ? f1704(i32) { ... }
 
 // link-order cluster 1214 · uses=7 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
 
