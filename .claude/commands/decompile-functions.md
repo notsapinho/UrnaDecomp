@@ -161,7 +161,12 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   ```
 
   The first lists the stubs of 40 to 600 B (`--min`/`--max` change it), smallest first. The `differs` rows of TSE
-  code (the second) are the other pool: a body of ours exists and the work is fixing its C++.
+  code (the second) are the other pool: a body of ours exists and the work is fixing its C++. The scan's
+  `unresolved` rows are in neither (`tools/round/pick_pool.py`'s docstring has the command that lists the TSE ones):
+  a body of ours calls something the target has no function for, which the row's `detail` names. Either the target
+  inlined that callee (fix our source so ours inlines it too), or it is a binaryen merge body whose target
+  counterpart has other members, which can be another component's: `pnpm wasm fn` on the target body lists its
+  callers, and writing the missing member is what fixes the row.
 
   Claude Code replaces a `$` followed by a digit in this file with one of the command's argument words before the
   session reads it (a dollar and 0 become the first word; Claude Code's skills docs, "Available string substitutions"), fenced code
@@ -230,15 +235,25 @@ the branch started, the same `comm` also prints every match `main` gained since,
 A different agent from the matcher, given only: the rules above, the board path, the worktree, the branch, the
 commit range, the target index and the match line. Not the matcher's transcript. Its job is to refute the match.
 It changes no tracked file, works in scratch under `build/out/verify/` (ignored), and posts a verdict,
-**CONFIRMED** or **REFUTED** with the check that failed:
+**CONFIRMED** or **REFUTED** with the check that failed. It judges by the docs of the branch's base, and where `main`
+has changed them since (`git diff "$(git merge-base main HEAD)" main -- docs src/README.md src/units/README.md`), by
+`main`'s too, since the branch lands under them; the verdict says which text it read:
 
-1. **Fresh objects.** Move the unit's objects aside by name (into `build/out/verify/old-objs/`), run
-   `TMPDIR=/tmp make -C src splat`, and `cmp` the rebuilt objects with the old ones. A stale object means the
-   source edits never rebuilt (`src/units/README.md` "What a fragment holds" item 3).
+1. **Fresh objects.** Move aside, by name (into `build/out/verify/old-objs/`), every object the lane built:
+   `find build/out/app -name '*.o' -newer .git` lists them, since the worktree's `.git` file dates from its creation
+   and the cloned objects keep the checkout's older mtimes. A header the lane added or edited rebuilds every object of
+   its tree and the companions that name its directory, not only the unit's (`src/units/README.md` "What a fragment
+   holds" item 3; `docs/reference/facts/units.md` §U7), and `-newer <header>` misses an object built before that
+   header's last edit. Run `TMPDIR=/tmp make -C src splat`, check that it compiled exactly those objects, and `cmp`
+   each with its old copy. A stale object means the source edits never rebuilt.
 2. **The splat build** prints the target's sha256, and no index the branch's base matches is lost (how-to step 10's
    `comm`, against `git merge-base main HEAD`). A
    line removed and its index added back under another symbol is a twin rename: check that the old symbol is gone
-   from the link (`build/out/wasm-map/vota_web/names.tsv`) and the new one is a byte-identical body.
+   from the link (`build/out/wasm-map/vota_web/names.tsv`) and the new one is a byte-identical body. Compare the
+   range's `splat/scan.tsv` with the base's on the index and verdict columns: only the lane's matches, and verdicts
+   with a reason in the range, may move. The symbol of `unresolved` and `differs` rows among identical bodies, and
+   some lines of the symbol file, change at every landing whatever the unit
+   (`docs/reference/facts/splat.md` §S8 lists them and the commands that separate them out).
 3. **The blanked-target check**, as [docs/reference/splat.md](../../docs/reference/splat.md) "Reviewing a match"
    describes: for each target index the lane matched, from `asmlift-wasm/`,
    `pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm <index> -o ../build/out/verify/<index>`.
@@ -282,7 +297,13 @@ Brief: the rules above, the board path, the CONFIRMED lanes in landing order, an
 2. **Each later lane** merges with `git merge --no-ff --no-commit decomp/<lane>` and resolves the conflicts as
    [how-to-decompile.md](../../docs/how-to-decompile.md) step 10 "Landing onto a moved main" says, then runs steps 6
    to 10 again on the merge (link, census, symbols, match, build, checks) and commits it all as the merge commit.
-   Do not pick generated lines by hand.
+   Do not pick generated lines by hand, and do not run `make -C src stubs` before the link: `tools/round/stubs.py`
+   reads `splat/scan.tsv`, `splat/symbol_addrs.txt` and `ledger/functions.tsv`, which are one side's until steps 7 to
+   9 regenerate them, so it puts back the other side's removed stubs and stub-only files, and step 9's
+   `splat-match` runs it on the new scan anyway. `splat/matched.txt` keeps both sides' lines once per index: two
+   lanes can match the same function (a base's destructor both bring in), and an index listed twice stops the splat
+   build with `function N is already matched on line M` (`docs/reference/facts/splat.md` §S8). Keep one line, under
+   the symbol the merged link names, and count it once.
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). A

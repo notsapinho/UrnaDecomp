@@ -211,3 +211,18 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     5898 (`comum::IInterfaceInit::~IInterfaceInit`) has one direct caller, 9388, and table slot 535, so it sits in
     the `uses` 2 band (4303-6974, L1) among the members of its file. A band read from `ledger/functions.tsv` puts it
     in the wrong one.
+14. A stretch of `ledger/tu-clusters.tsv` can hold functions of another digit zone. Its members are consecutive band
+    positions, and an unlabelled 3- or 2-digit ordinal sorts right after the 4-digit one it begins (L1 item 1), so
+    nothing takes it out:
+
+    ```sh
+    awk -F'\t' 'NR>1 && $1==853 {print $1, $2, $10, $16}' ledger/tu-clusters.tsv
+    # 853 2 uenux2/src/app/comum/dados/cmenubase.cpp 5909,5910,5911,5912,5913
+    awk -F'\t' 'NR>1 && $1>=5909 && $1<=5913 {print $1, $5}' ledger/ordinals.tsv
+    # 5909 4301 / 5910 4300 / 5911 430 / 5912 43 / 5913 4299
+    awk -F'\t' 'NR>1 && $2==2 && $5>=4294 && $5<=4308 && length($5)==4 {print $5, $1}' ledger/ordinals.tsv | sort -n
+    # 4294 5918 … 4298 5914 / 4299 5913 / 4300 5910 / 4301 5909 / 4302 5908 … 4308 5902
+    ```
+
+    5913's link neighbours are 5914-5918 (stretch 854) and 5910, 5909 and 5902-5908 (stretches 853 to 851); 5911 and
+    5912 are 3,869 and 4,256 ordinals away. Read neighbours by ordinal, within the band and at the same digit count.

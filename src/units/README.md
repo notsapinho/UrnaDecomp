@@ -38,8 +38,9 @@ UENUX2_SRCS += src/api/util/cwait.cpp
    $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')`, or name the directories the compile reads
    with `$(wildcard …)` (unit 40's companion rules list `$(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)` and the
    ecourna headers they include), plus `$(wildcard $(ROOT)/src/asn1/*.h)` when it includes `asn1/asn1.h`, which
-   neither tree's set holds. Then an edit or a flag change here rebuilds the objects. A hand list of headers misses the ones they include: unit 36's pending rule names
-   `src/asn1/asn1.h` but not the `asn1_useful.h` it includes (`docs/reference/facts/units.md` §U7). A unit under
+   neither tree's set holds (§U7 has the make probe). Then an edit or a flag change here rebuilds the objects. A hand
+   list of headers misses the ones they include: unit 36's pending rule names `src/asn1/asn1.h` but not the
+   `asn1_useful.h` it includes (`docs/reference/facts/units.md` §U7). A unit under
    `app/dados/` does not need a rule for `-fno-PIC`: `src/mk/ecourna-flags.mk` adds it to the generic rule for every
    `app_dados_%.o` (`tools/round/try-tu.sh --print-flags <source>` ends in `-fno-PIC`).
 
@@ -47,7 +48,11 @@ UENUX2_SRCS += src/api/util/cwait.cpp
    every `src/ecourna` header, as the generic uenux2 rule does for its tree; units 03, 04, 07 to 10, 15 and 16 also
    name their sources in rules of their own, which is redundant but harmless. Neither generic rule depends on a
    `src/asn1` header: an edit of `asn1/asn1.h` rebuilds no uenux2 object that includes it (§U7), so touch such a
-   unit's sources after one.
+   unit's sources after one. The other way round, a header a unit edits or adds rebuilds every object of its tree,
+   whether it includes the header or not, with `src/app/roots_uenux2.o` and every companion whose rule names the
+   header's directory: an edit of `api/gui/cimagefieldupdate.h`, or a new empty header beside it, recompiles 60
+   objects (the 44 uenux2 sources, `roots_uenux2.o` and 15 companions, §U7). A check that the unit's objects are
+   fresh moves all of them aside, not only the unit's own.
 
    Check it with `make -n -C src link -W $PWD/src/ecourna/<source> | grep -c 'em++.* -c '`: 1 means an edit
    rebuilds the source's object. For a header or a fragment, count the object you care about: `make -n -C src link
@@ -235,6 +240,21 @@ What the vtable needs, slot by slot:
   (an implicit destructor). Those bodies are the compiler's code for the class definition, not stand-ins, and they
   match from the pending object; they move with the vtable, under the same symbols, when the key function lands
   (units 26, 29 and 30; `docs/reference/facts/units.md` §U4).
+- **A base's key function.** A class's typeinfo names its base's typeinfo, and a base with a virtual member defined
+  out of line emits its typeinfo only in the TU that defines its key function. So when no unit defines the base's
+  key function, the link stops on `undefined symbol: typeinfo for <base>`, even when the class overrides every slot
+  of the base. Define the base's out-of-line virtual members as traps in the `-pending.cpp` too (its vtable, emitted
+  there with the typeinfo, needs every one of them). When nothing in our link stores the base's vptr (a base without
+  data members, whose store the derived destructor drops), wasm-ld drops the base's vtable and the traps and keeps the
+  typeinfo, and the traps' target functions keep their stubs (§U9). A later unit of another class derived from that
+  base uses these traps; it does not define them a second time (`duplicate symbol`).
+- **A member inline in the original.** A class with no key function in the target has its vtable emitted with every
+  TU that uses it (`docs/reference/facts/reading.md` §R6). When one of its inline members cannot be written yet (its
+  callee's class has no header), declare it in the class without a body, trap it in the `-pending.cpp`, and say in the
+  class header that the member is inline in the original and moves into the class with its body. The trap is then a
+  key function of our link only: the pending object emits the vtable strong where the original emits it weak. The
+  inline members it emits with it are the same code either way, so the matches they give do not depend on the trap
+  (§U10).
 - **A pure slot.** A slot that holds `__cxa_pure_virtual` (12143) is a pure member. Declare it `= 0` at its slot even
   when no evidence names it: name it from its callers, else after its slot, and say in the class header that the name
   is chosen. Left out, it makes the class concrete, which gives it a deleting destructor the target does not have and
@@ -251,7 +271,12 @@ What the vtable needs, slot by slot:
   merge-similar-functions body, with its own constants as arguments (the glossary's mgfn: `CImageField::GetTypeName`,
   11097, is `f2904(p0, p1, 197764, 197771)`), matches only when our link merges the same set of functions, which can be
   other classes' and libraries' (`pnpm wasm fn <target> 2904` lists its callers). Until it does, the member stays
-  pending, with its source written in the `-pending.cpp` header (unit 29).
+  pending, with its source written in the `-pending.cpp` header (unit 29). The other way round, a member whose
+  source gives the target's body can become a merge thunk in our link alone, when binaryen merges it with bodies of
+  like shape that the target keeps apart: `splat-remap` then reports `UNRESOLVED` on its one `call`, into a
+  `byn$mgfn-shared$…` body, which no naming step resolves. It matches once those bodies have the target's shape;
+  unit 40's `GetTypeName` (10975) waits on our `ASN1::AbstractData::getTypeName` (5075, `differs` in
+  `splat/scan.tsv`), as its `-pending.cpp` header says.
 
 A constructor is not a pending member: no vtable slot holds it. A member it would bring (the control block of a
 `std::make_shared<T>` the target calls) waits for the unit that writes it ("Roots").
@@ -260,16 +285,19 @@ A pending member has no stub: `tools/round/stubs.py` counts a function in a slot
 of ours, so `make -C src stubs` removes its stub when the unit lands. When that stub was the last one of a stub-only
 file, the file goes too ([../README.md](../README.md) "Stubs"). The `-pending.cpp` header names each member with its
 target index and what it waits for, and the file and record lines of a stub-only file that went with it, since the
-member's reconstruction writes that file again.
+member's reconstruction writes that file again. What a member waits for is what is missing (`api/util/itimer.h is
+not in this tree yet`, a callee no evidence names), never who is writing it: a round, a lane or an agent's handle
+means nothing once the run that used it ends.
 
-In the generated files the trap stands for the member. `make -C src splat-symbols` names the function in a vtable
-slot after ours (`evidence:vtable`), so when the trap is a function of its own the symbol file names the target
-function after the trap's declaration, and the scan lists it as `differs` with the `-pending.o` as its object
-(11366, 11442, 11646). binaryen merges the traps of one wasm type into one body that fills several vtables' slots;
-then no name is given and the member stays `no-candidate` (9130, 9133, 11097; §U5). So declare the trap with the
-member's real signature, its record's. When a landed header forces another one (unit 36's `visit` follows
-`src/asn1/asn1.h`, whose declaration its records contradict), say so in the `-pending.cpp` header: until that header
-changes, `splat/symbol_addrs.txt` carries its name for the target function.
+In the generated files the trap stands for the member. `make -C src splat-symbols` names the function in a vtable slot
+after ours (`evidence:vtable`), so when the trap is a function of its own the symbol file names the target function
+after the trap's declaration, and the scan lists it as `differs` with the `-pending.o` as its object (11366, 11442).
+binaryen merges the traps of one wasm type into one body that fills several vtables' slots; then no name is given and
+the member stays `no-candidate` (9130, 9133, 11097; §U5). A trap a unit adds can merge with another unit's that was
+alone, and that member then loses its name and its `differs` row (11646, §U5). So declare the trap with the member's
+real signature, its record's. When a landed header forces another one (unit 36's `visit` follows `src/asn1/asn1.h`,
+whose declaration its records contradict), say so in the `-pending.cpp` header: until that header changes,
+`splat/symbol_addrs.txt` carries its name for the target function.
 
 To try a candidate with its pending file before the fragment exists, see `docs/how-to-decompile.md` step 5, "A class
 with virtual members": try-tu has no rule for a path under `src/units/`.

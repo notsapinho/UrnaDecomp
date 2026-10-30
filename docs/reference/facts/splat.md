@@ -260,6 +260,17 @@ match was lost, as the first `diff` above does; count lost matches by index (`do
 same merging makes a callee's matched name possibly another instantiation's: 760 is matched as
 `vector<pair<unsigned long, unsigned long>>::push_back(&&)` (`awk -v n=760 '$(1) == n' splat/matched.txt`).
 
+A unit can also make a twin out of two functions already in our link, by changing what binaryen's dead-argument
+elimination folds. Target 150 (`(i32)->()`, 45 B, 797 call sites in `ledger/callgraph.tsv`, one of them 2778's
+`lock_guard`) is both `std::mutex::~mutex` and `std::mutex::unlock`, and is matched as `_ZNSt3__25mutexD2Ev`. Our link
+has the two apart (`awk -F'\t' '$2 ~ /^_ZNSt3__25mutex(D2Ev|6unlockEv)$/ {print $1, $2}'
+build/out/wasm-map/vota_web/names.tsv` prints 3098 and 5190), and `pnpm wasm fn` gives `~mutex` (3098) the target's
+`(i32)->()` and `unlock` (5190) `()->()`. Its two calls are both in our 5361, `CLzmaCompress::DoAdd` (`wasm-objdump -d
+build/out/wasm/vota_web/vota_web_wasm.wasm | awk '/ func\[/ {f=$2} /\| *call 5190$/ {print f}'` prints `func[5361]:`
+twice), which passed the same constant both times, and dead-argument elimination folded it into the body. The first
+caller that passes another mutex keeps the parameter; the two bodies are then byte-identical, binaryen keeps one under
+the first name in link order, and `splat-match` renames 150's line to `_ZNSt3__25mutex6unlockEv` as it renamed 246's.
+
 ## S7. A match that verifies under a twin class's name; vtable slots name functions
 
 Target 11611 is `boost::wrapexcept<boost::gregorian::bad_month>::rethrow`, yet a match of it under
@@ -284,3 +295,81 @@ that does not come from its own body. Where they disagree, `splat-match` reports
 function; check which is right (docs/how-to-decompile.md step 9)`. It reports the line only when none of the symbol
 file's names for the index is the matched symbol (`addMatches` in `asmlift-wasm/src/splat-sub.ts`): a wrong name
 beside the matched one is not reported (`docs/reference/splat.md` "Reviewing a match").
+
+## S8. What every landing changes besides its matches
+
+`make -C src splat-symbols` and the scan re-pick some names and pairs at every landing, whatever the unit adds. None
+of it is evidence from the unit, and none of it loses a match. The function lines of the symbol file each landing of
+`main` changed, leaving out the indices it matched:
+
+```sh
+mkdir -p build/out/splat-facts
+for c in $(git rev-list --first-parent --reverse fd8bb2d..ee595de); do
+  git diff $c^1 $c -- splat/matched.txt | awk '/^\+[0-9]/ {print substr($1, 2)}' > build/out/splat-facts/new.idx
+  git diff $c^1 $c -- splat/symbol_addrs.txt | /usr/bin/grep -E '^[-+][^-+].*= func:[0-9]+;' |
+    awk -v c=$(git rev-parse --short $c) 'NR==FNR {n[$1]; next} {match($0, /func:[0-9]+;/); i = substr($0, RSTART+5, RLENGTH-6); if (!(i in n)) print c, substr($0, 1, 1), i, substr($1, 2, 44), $NF}' build/out/splat-facts/new.idx -
+done
+```
+
+prints, over the 12 landings (the 14 commits less the docs merge 2545b19 and the comment fix ee595de, which print
+nothing), four kinds of line:
+
+1. **A `table` name that moves onto a matched function and back.** 7530 (matched `ossl_ec_GFp_simple_cmp`) gains
+   `ASN1::BERDecoder::visitExtensionRoot` by `evidence:table` at 4ffe715 while 8853, the function that name belongs
+   to, loses its `vtable` line; 39d3947 puts both back; a57eae1 and fbbf760 do the same with
+   `AVNDecoder::visitExtensionRoot` (8875). 615 (matched `CCodecs::Release`) does it with `AVNEncoder::~AVNEncoder`
+   (972d6c0, back at 4ffe715) and `IInterfaceInit::CurrentBootDevice` (b9b9139, gone again at 5ce1d43). 7530's vote
+   comes from a matched pair whose constant is a data address on both sides and also a table slot: the target's
+   `rtreenode` (12364, matched) passes the string `"}"` at 9039, and slot 9039 of the target's table is 7530.
+
+   ```sh
+   wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[9039\] '    # - elem[9039] = ref.func:7530
+   wasm-objdump -d target/vota_web_wasm.wasm | awk '/ func\[12364\]/ {p=1; next} / func\[/ {p=0} p && /i32.const 9039$/' | wc -l   # 1
+   python3 -I -c "import sys; sys.path.insert(0, 'tools/extract'); import wasmmod; base, b = wasmmod.Module('target/vota_web_wasm.wasm').memory_image(); print(bytes(b[9039 - base:9041 - base]))"   # b'}\x00'
+   ```
+
+   Whenever our copy of `"}"` lands on a table slot of ours, the name of the function in that slot is voted onto
+   7530; 615's votes were not traced. At ee595de neither 615 nor 7530 has a second name (`/usr/bin/grep -E '= func:(615|7530);'
+   splat/symbol_addrs.txt`).
+2. **A matched function's `pair-*` line that drops out and comes back.** Each landing from 1c3d9f9 on removes the line
+   of one matched SQLite function and restores the one the landing before removed: 12427 `rankValueFunc`, then 12432,
+   12443, 12447, 12288, 12466, 12479, 12485, 12492, 12500 and 12510 `statInit`, which 9127880 restores. The match lines
+   stay and the build verifies them.
+3. **One name with another evidence kind.** Boost's 519 goes from `table` to `vtable` (39d3947) and back (b9b9139).
+4. **A matched name with new evidence.** At 5ce1d43, 5102
+   (`CConversorParametrosUrna::DesconverterCabecalho`) goes from a `call` vote to `pair-addr`, 9153 (an
+   `IConversorASN<…TituloRelatorio…>::Deconverte`) from `srcloc-anchor` to `table`, and 9152 (the `vector` it fills)
+   gains a `table` line; each is the name its match line has.
+
+Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- splat/symbol_addrs.txt | /usr/bin/grep
+-E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses).
+
+The scan's rows change in the same way. The rows each landing gave a new symbol under the same verdict:
+
+```sh
+for c in $(git rev-list --first-parent --reverse fd8bb2d..ee595de); do
+  git show "${c}^1:splat/scan.tsv" > build/out/splat-facts/a.tsv; git show "${c}:splat/scan.tsv" > build/out/splat-facts/b.tsv
+  awk -F'\t' -v c=$(git rev-parse --short $c) 'NR==FNR {v[$1]=$5; s[$1]=$2; next} FNR>1 && v[$1]==$5 && s[$1]!=$2 {m[$5 " " substr($2, 1, 23)]++} END {for (k in m) print c, k, m[k]}' build/out/splat-facts/a.tsv build/out/splat-facts/b.tsv | sort -k4,4nr | head -3
+done
+```
+
+Six landings re-pair the 30 `unresolved` rows of the 36-byte `__cxx_global_array_dtor` bodies (`… unresolved
+__cxx_global_array_dtor 30`), and some re-pick the symbol of `differs` rows among identical bodies of ours (ten
+`__shared_ptr_emplace` destructors at 1c3d9f9, six libc++ `__function::__func::target_type` at a57eae1): the census
+pairs a target function with one of several byte-identical bodies of ours, and our indices shift. So compare a
+range's scan with its base on the `verdict` column (index and verdict): only the range's own matches, and verdicts
+with a reason in the range (a pending member's trap, a name gained or lost as above), move.
+
+Two units can match the same index: a body neither wrote as its target, which both bring in (`IFormFieldBase<IPaper>`'s
+destructor 11013, which any `IPaper` field's destructor pulls in through the base's vtable). A match list with an
+index twice fails the build:
+
+```sh
+{ cat splat/matched.txt; /usr/bin/grep -E '^11013 ' splat/matched.txt; } > build/out/splat-facts/matched-dup.txt
+cd asmlift-wasm && pnpm --silent wasm splat-build ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm \
+  --matches ../build/out/splat-facts/matched-dup.txt --kinds ../build/out/wasm-kinds/vota_web/kinds.json \
+  --max-kind-unverified 0 -o ../build/out/splat-facts/splat-dup.wasm 2>&1 | /usr/bin/grep -m1 Error
+# Error: match list line 7479: function 11013 is already matched on line 7463
+```
+
+So a landing keeps one line per index, under the symbol the merged link names, and counts it once.

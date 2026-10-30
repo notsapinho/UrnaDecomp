@@ -290,3 +290,10 @@ reads as clean reverse link order: e.g. band positions 11,047–11,066 = 20 func
 functions each. Each stretch row carries the band, the exact band-position range, the (loose) zone-major ordinal
 window, the component mix, the file and the evidence kinds; `docs/reference/tu-slices.md` is the table, `ledger/tu-clusters.tsv`
 the machine-readable form (one row per band stretch; a TU appears once per band it has functions in).
+
+A stretch is a run of band positions, and the twin rule takes out only a *labelled* interruption, so a stretch can
+hold unlabelled functions of another digit zone that sort between its members: 3- and 2-digit ordinals sort right
+after the 4-digit ones they begin (430 and 43 after 4300). Stretch 853 holds 5909 to 5913, and 5911 and 5912 are
+ordinals 430 and 43, 3,869 and 4,256 ordinals away from 5913 (4299). Read a function's link neighbours from
+`ledger/ordinals.tsv` within its band at the same digit count, not from the stretch rows beside it
+([facts/link-order.md](facts/link-order.md) §L7 item 14).
