@@ -1,12 +1,16 @@
-// <stubs>
-// f11646 · 138 B · unmatched · name unknown
-// ? f11646(i32) { ... }
+#include "app/comum/iinterfaceinit.h"
 
+namespace comum {
+
+IInterfaceInit::IInterfaceInit() = default;
+
+IInterfaceInit::~IInterfaceInit() = default;
+
+} // namespace comum
+
+// <stubs>
 // f2862 · 17 B · unmatched · name unknown
 // ? f2862(i32) { ... }
-
-// f5898 · 91 B · unmatched · placement: link order · name unknown
-// ? f5898(i32) { ... }
 
 // f5897 · 17 B · unmatched · name unknown
 // ? f5897(i32) { ... }
