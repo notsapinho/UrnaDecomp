@@ -41,11 +41,11 @@ class CWavFile;
 // __func holds the shared_ptr at +8 and the std::function at +16). Fn 8461 builds no lambda: its being ISound's is
 // inferred from its calls of slot 7 through the vtable, in a class whose slot 7 returns 0. Its sleep is CSystem::Dorme,
 // which api/util/csystem.h says what is chosen about. No evidence gives ISound a body in the six other slots.
-// No record, symbol or string names this file or the member names but Wait and WaitAsync, so all of those are chosen.
-// So are the two enumerations and the type of the mode of slots 2 and 4 (an enumeration: it is compared with 1, where a
-// bool is passed on as it is). The target's own glue backs EModo's two values: its js_wasm_web_sound_play_wav takes
-// that argument as `modo` and runs `if(modo===0){stopCurrent(state,true)}`, so 0 interrupts and clears the queue, and
-// any other value queues.
+// No record, symbol or string names this file. Typeinfos name Wait() and WaitAsync; that slot 8 is an overload of
+// Wait() is inferred, and the other member names are chosen. So are the two enumerations and the type of the mode of
+// slots 2 and 4 (an enumeration: it is compared with 1, where a bool is passed on as it is). The target's own glue
+// backs EModo's two values: its js_wasm_web_sound_play_wav takes that argument as `modo` and runs
+// `if(modo===0){stopCurrent(state,true)}`, so 0 interrupts and clears the queue, and any other value queues.
 class ISound {
 public:
     enum EModo { INTERROMPE, ENFILEIRA };
