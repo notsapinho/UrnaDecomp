@@ -36,7 +36,9 @@ These hold on the plain skeleton link (`build/out/wasm/vota_web`), whose functio
 a pair by unique fingerprint (`pair-fingerprint`) or address-blind body (`pair-addr`), call votes (`call`),
 table-constant votes (`table`), exports (`export`), the slots of RTTI-named vtables (`vtable`, §S7). Data: RTTI
 (`rtti`), address votes (`vote:N`), content (`content`), strings (`string`; a text that occurs twice in the target
-is left out) and `source_location` records (`srcloc`). Count the lines per evidence with
+is left out) and `source_location` records (`srcloc`). Hand edits add words of their own, listed in
+[../splat.md](../splat.md) §2; one of them, `merged-body`, also changes what a match of its index does (§3 there).
+Count the lines per evidence with
 
 ```sh
 grep -o 'evidence:[a-z0-9-]*' splat/symbol_addrs.txt | sort | uniq -c | sort -rn

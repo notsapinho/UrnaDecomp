@@ -175,12 +175,18 @@ alone: a name says which function sits there, and the scan still compares the by
   hashes each occur once in the target and once in ours (the `fingerprint` command above).
 
 Names free callers, not bodies. 3473 (`decodeCommon`) stays unmatched: it calls 543, a 239-B body with 28 callers, the
-`push_back(&&)` of a 4-byte element, and that equals no body of ours. The target's 543 is RHVoice's
+`push_back(&&)` of a 4-byte element, and no body of the runtime equals it. The target's 543 is RHVoice's
 `vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`,
 which only takes the pads away, matches 543 by content from that object. Our object has them. A twin reaches the same bytes
 another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merges with `vector<long>`'s from
-`roots_boost.o`, and the content pass matches 543 through it, with no source written for it. That twin goes if uenux2 moves to
-`-O3`, unless another caller lands.
+`roots_boost.o`, and the content pass matches 543 through it, with no source written for it. So 543's match line names
+`vector<long>` by link order and not by evidence: neither `FillPath` nor `DrawPath` calls 543 in the target, which inlines
+it there. That twin goes if uenux2 moves to `-O3`, unless another caller lands.
+
+`vector<AbstractData*>::push_back(&&)` is a `merged-body` hand edit on 543 ([../splat.md](../splat.md) §3): 2656 and 5066
+call it, the target merged that body into 543, and our own body of that name differs from 543 at its locals, so no match
+can name it. Without the line, a match of 543 under any other name leaves those two calls with no target function, and both
+leave `match`.
 
 More of the same kind, from the same tally of aligned calls:
 

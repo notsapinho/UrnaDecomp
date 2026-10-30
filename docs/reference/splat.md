@@ -106,8 +106,9 @@ function fills a slot of a vtable decoded from RTTI, as the generated `vtable` k
 vtable address point), `rtti-operand` (the only target function holding a class's vtable and typeinfo addresses),
 `pair-depth0` (the only pair with that fingerprint at depth 0, where deeper fingerprints differ only by an inlined
 callee), `vptr+shape` (the function stores a class's vtable address point, which other functions store too, and its
-`shape` hash is the only one on both sides) and `callers+content` (the target callers and the loaded content single
-the function out). Each hand edit's
+`shape` hash is the only one on both sides), `callers+content` (the target callers and the loaded content single
+the function out) and `merged-body` (the target merged this function's body into the index, its callers there call it,
+and our own body of that name is not equal, so no match can name it; §3 says what it does). Each hand edit's
 comment gives the addresses or indices that make the evidence checkable.
 
 A name with conflicting evidence is left out. So is a data name that the target's own bytes contradict.
@@ -212,7 +213,9 @@ Two rules guard the evidence:
   unit that shifts our table cannot make or break a match.
 - **A match names its function.** The build re-points with every match applied: the matched symbol names
   that target function, and no other symbol does. A match found by body therefore corrects what its
-  callers' calls resolve to.
+  callers' calls resolve to. The one exception is a hand edit with evidence `merged-body`: that name stays, beside the
+  match, because the target merged its body into that function and our link keeps it apart. A generated name never
+  stays, nor a hand edit of another kind.
 
 ### 4. Assemble and check
 

@@ -287,6 +287,9 @@ export const HAND_EDIT_MARKER =
 
 const ENTRY = /^(\S+) = (func:(\d+)|import:(\d+)|0x([0-9a-f]+));(?:\s*\/\/\s*(.*))?$/;
 
+/** The evidence word of a hand edit naming a body the target merged and our link keeps apart (withMatches). */
+export const MERGED_BODY = 'merged-body';
+
 export function renderSymbolEntry(e: SymbolEntry): string {
   const at = e.at.kind === 'data' ? `0x${e.at.addr.toString(16)}` : `${e.at.kind}:${e.at.index}`;
   const notes = [
@@ -355,10 +358,19 @@ export interface TargetSymbols {
   dataEvidence: Map<string, { evidence: string; voters?: number[] }>;
   /** a function name's evidence and, when anchored pairs voted for it, the target functions that cast the votes */
   fnEvidence: Map<string, { evidence: string; voters?: number[] }>;
+  /** function names a hand edit marks `merged-body`: an alias of a body the target merged, which a match keeps */
+  mergedBody: Set<string>;
 }
 
 export function emptySymbols(): TargetSymbols {
-  return { fns: new Map(), imports: new Map(), data: new Map(), dataEvidence: new Map(), fnEvidence: new Map() };
+  return {
+    fns: new Map(),
+    imports: new Map(),
+    data: new Map(),
+    dataEvidence: new Map(),
+    fnEvidence: new Map(),
+    mergedBody: new Set(),
+  };
 }
 
 export function targetSymbolsOf(file: SymbolFile): TargetSymbols {
@@ -368,6 +380,11 @@ export function targetSymbolsOf(file: SymbolFile): TargetSymbols {
     into.set(e.name, e.at.kind === 'data' ? e.at.addr : e.at.index);
     const evidence = e.at.kind === 'data' ? out.dataEvidence : e.at.kind === 'func' ? out.fnEvidence : null;
     evidence?.set(e.name, { evidence: e.evidence, ...(e.voters ? { voters: e.voters } : {}) });
+  }
+  for (const e of file.hand) {
+    if (e.at.kind === 'func' && e.evidence === MERGED_BODY) {
+      out.mergedBody.add(e.name);
+    }
   }
   return out;
 }
