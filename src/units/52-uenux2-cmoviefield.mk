@@ -3,7 +3,8 @@
 # file the class's one record names (cmoviefield.cpp:53:12, Rect). The destructor is user-declared and defined out of
 # line (the D0 calls the D2 and drops its result: an implicit or in-class destructor gives another D0), declared first
 # among the class's virtual members, so it is the key function and cmoviefield.o emits the vtable, the D2 and the D0.
-# Its body calls Hide, which clang inlines: the D2 stops the timer and clears +40 before the members go. No record
+# The D2 stops the timer and clears +40 before the members go; the body is written as a call to Hide, which clang
+# inlines (Hide's two stores spelled out give the same object, so the spelling is a choice). No record
 # falls in the destructor or Hide: their lines are a choice, in the target's order (the uses-1 band 11059-11065 of
 # ledger/ordinals.tsv gives D0, Draw, Rect, Move, Show, Hide, GetTypeName), the destructor above Rect's line 53 and Hide
 # below it. The class header (api/gui/cmoviefield.h, new; its path is chosen, no record names it) has the layout the

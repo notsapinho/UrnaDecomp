@@ -1,7 +1,7 @@
 // api::CMovieField (/home/rubio/tse/uenux2/src/api/gui/cmoviefield.cpp, the file Rect's record names).
 // Target functions of this file:
 //   5524 / 11065  ~CMovieField() (base-object / deleting)   (here; out of line: the D0 calls the D2 and drops its
-//                 result; it stops the timer through Hide, which clang inlines into it)
+//                 result; written as a call to Hide: Hide's two stores spelled out give the same object)
 //   11064 Draw(IScreen&) const                                    (pending)
 //   11063 Rect() const   record at line 53, column 12; calls fn 512, not named yet   (pending)
 //   11062 Move(const SPoint&), 11061 Show()                       (pending)
