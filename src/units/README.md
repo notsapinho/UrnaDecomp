@@ -121,7 +121,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `09-ecourna-app-dados-asn-resultadournacadastro` | the voter-register result converters |
 | `10-ecourna-app-dados-resultadournacadastro` | the voter-register result data classes |
 | `11-ecourna-api-security` | the OpenSSL wrappers (`CSha`, `CSipHashMac`, `CHkdfSeed`, `CKey`, `CAesCipher`, …) |
-| `12-ecourna-api-sql-sqlite` | the SQLite DAO (`CSqlConnection`, `CSqlResultSet`, `CSqlStatement`) |
+| `12-ecourna-api-sql-sqlite` | the SQLite DAO, `CSqlConnection`, `CSqlStatement` and `CSqlResultSet` (`ecourna::api::sql::sqlite`), with their `__shared_ptr_pointer` control blocks and `ObterMensagemErro` (49 target fns, from 3515, the connection's constructor), reached from its roots file as fns 3768 and 7787 build the connection; `CStringUtils::Replace` (9398) among the externs; `Close` (9429), `SetDateTime` (9422), `GetDateTime(int)` (5162), `GetBlob(int)` (5161), `StepStatement` (5166) and `IndexForColumnName` (1525) wait, the fragment says for what |
 | `13-uenux2-crdvvota` | `comum::CRdvVota::Candidato` (target fn 1931) and the `CVotos*` totals it calls; `comum::CRdvPosicionadorVota::Posicao` (target fn 11496, a chosen name, in `crdvvota.cpp`, whose object holds the class's vtable), the `comum::md::CRdvPosicionador` header and `CVoto::operator<=>`, which binaryen inlines into it |
 | `14-uenux2-ctextfieldmultiline` | the `api::CTextFieldMultiLine` constructor (target fn 5498) |
 | `15-ecourna-cconversorhorariosurna` | `CConversorHorariosUrna::DoDeconverte` (target fn 9132) and the `CHorariosUrna` it builds; `DoConverte` (9133) pending |
@@ -327,10 +327,8 @@ with virtual members": try-tu has no rule for a path under `src/units/`.
 `12-ecourna-api-sql-sqlite-externs.cpp` holds `CStringUtils::ToLower` and `Replace`, reconstructed from their target
 functions (5158, 1879, 9398) and compiled with the ecourna flags (listed in `ECOURNA_SRCS` as `../units/…`). Unlike a
 pending member, an extern is a real reconstruction; it moves into the owning source (`api/util/cstringutils.cpp`)
-when that unit lands. None of the three is matched: none is a function of its own in our plain link
-(`build/out/wasm-map/vota_web/names.tsv` has no `ToLower` or `Replace`), so the scan lists them as `no-candidate`,
-and 5158 and 1879 still have stubs in `src/ecourna/unplaced.cpp`. Matching them needs callers that keep their
-bodies, not new code.
+when that unit lands. They are in our link once unit 12's roots file reaches the DAO that calls them. `Replace`
+(9398) matches; the two `ToLower` do not, and the file's header says what each waits for.
 
 ## Landing a unit
 

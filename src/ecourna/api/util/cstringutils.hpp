@@ -24,9 +24,9 @@ public:
     // fn 1243: two upper-case hex digits per byte (callers 9257, 5604, 5634, 5636, 10273, 11587, 11626, 11629)
     static std::string BytesToHexString(const std::vector<uebyte>& valor);
 
-    // Declared by round R-SQL (api/sql/sqlite callers): the target has ToLower as an in-place body (fn 5158,
-    // Latin-1 aware) plus a copying wrapper (fn 1879), and Replace(char -> string) as fn 9398. Their definitions
-    // are placeholders in src/units/12-ecourna-api-sql-sqlite-externs.cpp until the cstringutils unit reconstructs them.
+    // The api/sql/sqlite callers' helpers: ToLower in place (fn 5158, Latin-1 aware), its copying form (fn 1879) and
+    // Replace of a char by a string (fn 9398). They are defined in src/units/12-ecourna-api-sql-sqlite-externs.cpp
+    // until api/util/cstringutils.cpp is reconstructed around them.
     static void ToLower(std::string& valor);
     static std::string ToLower(const std::string& valor);
     static void Replace(std::string& valor, char de, const std::string& para);

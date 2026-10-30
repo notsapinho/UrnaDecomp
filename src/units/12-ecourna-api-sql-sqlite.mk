@@ -1,8 +1,75 @@
 # ecourna::api::sql::sqlite DAO (csqlconnection / csqlresultset / csqlstatement) + the shared sqlite error helper.
 # (sqlite3.h and boost come from the include dirs src/mk/ecourna-flags.mk adds)
+#
+# What matches (target fns): CSqlConnection's constructor 3515, D2 5167, D0 9456, BeginTransaction 9455,
+# CommitTransaction 9454, RollbackTransaction 9453, Prepare 9460, IsClosed 9457, Close 9458, CheckIntegrity 9452 and
+# GetCaminho 5322 (a twin of an RHVoice getter, whose line now carries this name); CSqlStatement's constructor 9430, D2
+# 3513, D0 9426, SetInt 5160, SetInt64 9425, SetDouble 9424, SetText 9423, SetBool 9421, SetBlob 9420, SetNull 9419,
+# Execute 9417, Reset 9416, IsClosed 9428 and VerifyParameterIndex 1882; CSqlResultSet's constructor 9449, D2 9443, D0
+# 9442, the GetInt/GetInt64/GetDouble/GetText/IsNull/GetBool pairs (2679 9441, 5165 9440, 5164 9439, 3514 9438, 5163
+# 9435, 9446 9433), GetDateTime(const std::string &) 9434, GetBlob(const std::string &) 9432, Next 9444 and
+# VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer control blocks' __get_deleter and
+# __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from the
+# roots object, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
+# externs' Replace 9398; and library code these bodies call: std::map<std::string, int>'s tree members 1677, 2678,
+# 9447, std::set<int>'s __find_equal 2676 and string::replace 4667.
+#
+# What the target shows, and the source follows (evidence):
+# - The destructors of CSqlConnection and CSqlStatement are out of line, defined in the .cpp: the control blocks'
+#   __on_zero_shared (11539, 9451) call the D2 (5167, 3513) where an in-class destructor is inlined into them. Both
+#   classes are final: those calls are direct, not through the vtable.
+# - CSqlConnection closes with sqlite3_close, not sqlite3_close_v2: the constructor's and Close's table slot 6335 is
+#   fn 6521, sqlite3_close (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`).
+# - Each sqlite3_bind_*, sqlite3_reset and sqlite3_close result is held in a named local before the test: in ecourna's
+#   -fexceptions code the local's lifetime end on the throw path gives the landing-pad layout the target has; the call
+#   in the condition gives another (first difference `block` at +0x19 in 5160). docs/reference/facts/app-flags.md and
+#   CSha::Reset (unit 11) have the same case.
+# - StepStatement tests SQLITE_ROW first, then SQLITE_OK or SQLITE_DONE, and builds the operation's text in a helper
+#   that returns either string: the `temLinha` form and an in-place ternary of two strings each give other code (184 and
+#   180 rows against the target, against 64 operand-only rows for this one). The helper's name and its file-static
+#   linkage are chosen; binaryen inlines it into its one caller.
+# - CSqlStatement's constructor takes the file's mutex and Close releases it. Prepare calls the constructor through
+#   an invoke_ thunk (slot 6338), which emscripten keeps only for a callee that may throw when it runs, and the
+#   constructor's own code (stores and sqlite3_bind_parameter_count) cannot: std::mutex::lock can, and its code goes
+#   once pthread_mutex_lock, a stub in this single-threaded build, is inlined. Without the lock the call is direct and
+#   neither 9430 nor 9460 matches. That Close does not take the lock again is chosen: the bytes cannot tell.
+# - GetBlob returns an empty vector before building one when the column has no bytes: the target tests the size
+#   before the vector's exception guard is set up.
+#
+# Choices, each with the forms that give the same object code (`em++` with ecourna's flags, the function's
+# disassembly compared): the local's name and type (`const int resultado`; `int`, `const bool ok = ... == SQLITE_OK`
+# and an if-initializer give the same bytes); the destructors test `m_fechada`/`m_fechado` (`IsClosed()` gives the same
+# bytes) and sit right after the constructors, a place no record gives; GetBlob's `return std::vector<uebyte>();`
+# (`return {};` gives the same bytes; `if (tamanho > 0)` around the copy does not).
+#
+# Not matched, each with what blocks it:
+# - CSqlStatement::Close (9429): the scan finds no target name for the file-static std::mutex it unlocks (our .bss
+#   `s_mutex`; the target's is at 1911796). Every byte before that operand is the target's. A .bss object gets a name
+#   only from a vote of a census-paired function, and the census pairs neither 9429 nor 9431, the mutex's exit-time
+#   destructor.
+# - CSqlStatement::SetDateTime (9422): its callees boost::date_time's from_day_number (1376) and ymd_to_string are
+#   linkonce copies the link takes from src/app/roots_boost.o, which comes first and compiles at -O2 without
+#   -fexceptions; the target's 1376 is an -fexceptions copy, and its ymd_to_string has this one caller.
+# - CSqlResultSet::GetDateTime (5162): its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B) is the copy of
+#   app/dados/asn/datahoraasn.cpp in our link, a different body (fn 6004, whose folded readout is 290 lines against the target's 1568).
+# - CSqlResultSet::GetBlob (5161): the vector's exception guard destructor is the separate 306 in the target, inlined
+#   into ours (`call 306 | call 2671`), the blocker of 5111, 9226, 9467, 3521 and 5169 too.
+# - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
+#   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
+#   The rest of the body is the target's up to operands (64 rows, all operand-only).
+# - CSqlResultSet::IndexForColumnName (1525): its call of the copying ToLower (1879) is self-voted. 1879 is a thunk
+#   into binaryen's merge 3942 in the target, with fns 1374 and 5156, copying wrappers of other functions not
+#   reconstructed (5156 of 3509, a ToUpper-like body); with no partner ours stays a whole body.
 ECOURNA_SRCS += api/sql/sqlite/csqlconnection.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlresultset.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlstatement.cpp
 ECOURNA_SRCS += api/sql/sqlite/sqliteutils.cpp
-# placeholder definitions of CStringUtils::ToLower/Replace (see the file header); path is relative to src/ecourna
+# definitions of CStringUtils::ToLower/Replace until api/util/cstringutils.cpp holds them (see the file header); path is
+# relative to src/ecourna
 ECOURNA_SRCS += ../units/12-ecourna-api-sql-sqlite-externs.cpp
+# nothing in the skeleton reaches the unit: 12-ecourna-api-sql-sqlite-roots.cpp builds the connection as the target's
+# callers do (its header says how), and the class header it includes needs Boost's
+$(ROOT)/$(APP)/12-ecourna-api-sql-sqlite-roots.o: $(ROOT)/src/units/12-ecourna-api-sql-sqlite-roots.cpp $(ROOT)/src/Makefile \
+    $(ROOT)/src/ecourna/api/sql/sqlite/csqlconnection.hpp
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -c src/units/12-ecourna-api-sql-sqlite-roots.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/12-ecourna-api-sql-sqlite-roots.o
