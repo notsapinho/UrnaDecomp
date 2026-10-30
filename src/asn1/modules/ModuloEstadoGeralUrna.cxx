@@ -113,7 +113,7 @@ const ModuloEstadoGeralUrna::EstadoUrna::InfoType ModuloEstadoGeralUrna::EstadoU
     3, nameList
 };
 
-const char * ModuloEstadoGeralUrna::TipoUrnaT1::nameList[] = {
+const char * ModuloEstadoGeralUrna::TipoUrnaOperacao::nameList[] = {
     "semtipo",
     "vota",
     "contingencia",
@@ -121,7 +121,7 @@ const char * ModuloEstadoGeralUrna::TipoUrnaT1::nameList[] = {
     "contingenciavotarecupera"
   };
 
-const ModuloEstadoGeralUrna::TipoUrnaT1::InfoType ModuloEstadoGeralUrna::TipoUrnaT1::theInfo = {
+const ModuloEstadoGeralUrna::TipoUrnaOperacao::InfoType ModuloEstadoGeralUrna::TipoUrnaOperacao::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,
