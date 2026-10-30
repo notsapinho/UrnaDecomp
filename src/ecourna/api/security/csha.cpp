@@ -18,8 +18,8 @@ CSha::~CSha() = default;
 
 void CSha::Reset()
 {
-    if (!EVP_DigestInit_ex(m_ctx.get(), EVP_get_digestbyname(m_algoritmo.c_str()), nullptr)) {
-
+    const int resultado = EVP_DigestInit_ex2(m_ctx.get(), EVP_get_digestbyname(m_algoritmo.c_str()), nullptr);
+    if (!resultado) {
         throw CSecurityError(ESE_SHA_FALHA_INICIAR, "Falha ao iniciar o contexto.");
     }
 }

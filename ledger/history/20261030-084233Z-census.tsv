@@ -338,24 +338,24 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 472	170	37	-	openssl	-	-	none	-	
 473	34	36	-	openssl	skeleton	347	byte	0	OSSL_PARAM_construct_int
 474	16	35	-	openssl	skeleton	346	byte	0	sqlite3_db_handle
-475	186	35	-	openssl	skeleton	351	addr	10	EC_KEY_free
-476	346	36	-	openssl	skeleton	352	addr	21	BN_dup
-477	459	35	sqlite	openssl	skeleton	353	addr	3	BN_add
-478	73	35	sqlite	-	skeleton	1783	byte	0	ASN1::SEQUENCE_OF_Base::clear()
+475	186	35	-	openssl	skeleton	350	addr	10	EC_KEY_free
+476	346	36	-	openssl	skeleton	351	addr	21	BN_dup
+477	459	35	sqlite	openssl	skeleton	352	addr	3	BN_add
+478	73	35	sqlite	-	skeleton	1784	byte	0	ASN1::SEQUENCE_OF_Base::clear()
 479	24	36	-	-	-	-	none	-	
 480	18	36	-	ecourna	-	-	none	-	
 481	390	36	-	-	-	-	none	-	
-482	34	36	-	openssl	skeleton	355	addr	1	
+482	34	36	-	openssl	skeleton	354	addr	1	
 483	22	35	rhvoice	RHVoice	probe	65	addr	2	std::runtime_error::~runtime_error()
 484	95	36	-	-	skeleton	364	byte	0	strncmp
-485	44	36	-	sqlite	skeleton	354	addr	1	jsonAppendCharExpand
-486	68	35	openssl	openssl	skeleton	358	addr	3	EVP_MD_is_a
-487	13	35	-	openssl	skeleton	349	addr	1	EVP_DigestInit_ex
-488	76	35	sqlite	openssl	skeleton	350	addr	8	ENGINE_finish
-489	398	34	-	openssl	skeleton	357	byte	0	bn_add_words
+485	44	36	-	sqlite	skeleton	353	addr	1	jsonAppendCharExpand
+486	68	35	openssl	openssl	skeleton	357	addr	3	EVP_MD_is_a
+487	13	35	-	openssl	skeleton	358	addr	1	EVP_DigestInit_ex
+488	76	35	sqlite	openssl	skeleton	349	addr	8	ENGINE_finish
+489	398	34	-	openssl	skeleton	356	byte	0	bn_add_words
 490	168	35	-	openssl	skeleton	359	addr	9	ERR_reason_error_string
 491	1329	34	app	api	-	-	none	-	
-492	93	35	-	-	skeleton	356	addr	6	std::__2::locale::locale()
+492	93	35	-	-	skeleton	355	addr	6	std::__2::locale::locale()
 493	298	35	-	ecourna	-	-	none	-	
 494	109	35	sqlite	-	skeleton	361	fingerprint	0	sqlite3VdbeAddOp4Int
 495	199	35	-	openssl	-	-	none	-	
@@ -511,7 +511,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 645	46	23	7zip	openssl	skeleton	484	addr	1	BN_clear
 646	14	22	-	libc++	skeleton	666	addr	2	std::runtime_error::runtime_error(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 647	178	22	libcxx	libc++	skeleton	764	shape	13	std::__2::basic_filebuf<char, std::__2::char_traits<char>>::~basic_filebuf()
-648	32	23	-	libc++	skeleton	1667	shape	4	std::__2::__throw_bad_function_call[abi:ne210108]()
+648	32	23	-	libc++	skeleton	1668	shape	4	std::__2::__throw_bad_function_call[abi:ne210108]()
 649	310	22	boost	-	-	-	none	-	
 650	336	23	-	RHVoice	-	-	none	-	
 651	265	23	-	api	-	-	none	-	
@@ -820,7 +820,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 954	133	14	libcxx	RHVoice	skeleton	711	addr	1	__floatsitf
 955	573	14	openssl	-	skeleton	894	addr	21	fopen
 956	557	13	openssl	RHVoice	-	-	none	-	
-957	17	14	-	ecourna	skeleton	1843	addr	2	closedir
+957	17	14	-	ecourna	skeleton	1844	addr	2	closedir
 958	631	14	sqlite	openssl	skeleton	694	addr	8	whereClauseInsert
 959	750	14	openssl	sqlite	skeleton	695	addr	17	lockTable
 960	255	14	openssl	openssl	skeleton	696	addr	3	sqlite3KeyInfoAlloc
@@ -1436,7 +1436,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1570	271	8	7zip	7zip	skeleton	1082	addr	9	casemap
 1571	19	8	sqlite	openssl	skeleton	1321	byte	0	tolower
 1572	31	8	-	-	-	-	none	-	
-1573	69	7	-	-	skeleton	1829	addr	1	read
+1573	69	7	-	-	skeleton	1830	addr	1	read
 1574	5	7	-	-	probe	82	fingerprint	0	abort
 1575	826	8	sqlite	sqlite	skeleton	1155	addr	31	jsonStringGrow
 1576	8006	8	sqlite	sqlite	skeleton	1156	addr	114	isDate
@@ -1475,7 +1475,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1609	98	8	-	openssl	skeleton	1105	addr	9	RAND_priv_bytes_ex
 1610	183	8	-	openssl	skeleton	1112	addr	9	EVP_RAND_CTX_free
 1611	48	8	openssl	openssl	skeleton	1106	addr	3	ossl_property_name
-1612	60	8	-	-	skeleton	1899	addr	1	std::__2::basic_regex<char, std::__2::regex_traits<char>>::~basic_regex()
+1612	60	8	-	-	skeleton	1900	addr	1	std::__2::basic_regex<char, std::__2::regex_traits<char>>::~basic_regex()
 1613	643	8	-	-	skeleton	1086	fingerprint	0	CRYPTO_ofb128_encrypt
 1614	37	7	-	openssl	skeleton	1239	addr	2	OSSL_DECODER_is_a
 1615	106	7	openssl	openssl	skeleton	1221	fingerprint	0	OSSL_PARAM_set_utf8_ptr
@@ -1846,7 +1846,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1980	32	6	-	ecourna	probe	122	addr	2	__gmtime_r
 1981	318	5	-	libc++	skeleton	1544	addr	5	mbrtowc
 1982	12	6	-	-	skeleton	1324	addr	1	fseek
-1983	315	6	app	ecourna	skeleton	1842	fingerprint	0	fgets
+1983	315	6	app	ecourna	skeleton	1843	fingerprint	0	fgets
 1984	393	6	sqlite	sqlite	skeleton	1454	addr	16	rtreeCheckPrepare
 1985	585	6	app	sqlite	skeleton	1455	addr	1	json5Whitespace
 1986	288	6	-	sqlite	skeleton	1456	addr	4	jsonArgIsJsonb
@@ -1928,8 +1928,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2062	1365	5	openssl	libc++	-	-	none	-	
 2063	263	5	-	openssl	skeleton	1608	addr	21	ossl_provider_activate
 2064	293	5	sqlite	openssl	skeleton	1609	addr	9	provider_deactivate
-2065	61	5	sqlite	openssl	skeleton	1643	addr	5	OSSL_DECODER_CTX_free
-2066	46	5	openssl	openssl	skeleton	1644	addr	6	OSSL_DECODER_get0_provider
+2065	61	5	sqlite	openssl	skeleton	1644	addr	5	OSSL_DECODER_CTX_free
+2066	46	5	openssl	openssl	skeleton	1645	addr	6	OSSL_DECODER_get0_provider
 2067	59	5	sqlite	openssl	skeleton	1610	addr	2	ossl_provider_up_ref_parent
 2068	19	5	openssl	openssl	skeleton	1615	byte	0	OSSL_PARAM_modified
 2069	88	5	-	openssl	skeleton	1616	addr	7	OSSL_PARAM_BLD_push_utf8_string
@@ -1938,8 +1938,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2072	16	5	openssl	vota	-	-	none	-	
 2073	674	5	app	ecourna	-	-	none	-	
 2074	192	4	openssl	openssl	skeleton	1639	addr	2	des_ede_cbc_cipher
-2075	131	5	sqlite	openssl	skeleton	1662	addr	5	ossl_namemap_name2num_n
-2076	204	5	sqlite	openssl	skeleton	1663	addr	5	ossl_namemap_doall_names
+2075	131	5	sqlite	openssl	skeleton	1663	addr	5	ossl_namemap_name2num_n
+2076	204	5	sqlite	openssl	skeleton	1664	addr	5	ossl_namemap_doall_names
 2077	18	5	sqlite	openssl	skeleton	1625	byte	0	ossl_ffc_set_digest
 2078	16	5	sqlite	openssl	skeleton	1619	byte	0	OBJ_length
 2079	1784	5	app	ecourna	-	-	none	-	
@@ -1955,39 +1955,39 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2089	862	4	openssl	openssl	skeleton	1637	addr	47	EVP_DecryptUpdate
 2090	474	5	openssl	openssl	skeleton	1640	addr	17	EVP_DigestFinalXOF
 2091	61	5	-	openssl	skeleton	1641	addr	5	EVP_DigestInit
-2092	13	5	-	ecourna	skeleton	1965	addr	1	EVP_DigestInit_ex2
-2093	467	5	openssl	openssl	skeleton	1673	addr	19	EVP_PKEY_asn1_find_str
+2092	13	5	-	ecourna	skeleton	1642	addr	1	EVP_DigestInit_ex2
+2093	467	5	openssl	openssl	skeleton	1674	addr	19	EVP_PKEY_asn1_find_str
 2094	159	5	app	libc++	-	-	none	-	
 2095	654	5	app	openssl	-	-	none	-	
 2096	9	5	openssl	openssl	skeleton	1577	addr	1	ossl_curve448_scalar_destroy
 2097	187	5	app	vota	-	-	none	-	
-2098	11	5	-	openssl	skeleton	1651	addr	1	EC_KEY_new_ex
-2099	11	5	-	openssl	skeleton	1652	addr	1	EC_KEY_new
-2100	179	5	-	openssl	skeleton	1647	addr	11	EC_POINT_cmp
-2101	694	5	openssl	openssl	skeleton	1648	addr	42	EC_GROUP_set_generator
-2102	55	5	-	openssl	skeleton	1649	addr	3	EC_GROUP_dup
-2103	330	5	-	openssl	skeleton	1650	addr	35	ossl_ec_group_new_ex
-2104	35	5	-	openssl	skeleton	1654	addr	5	ECDSA_SIG_free
-2105	166	4	-	openssl	skeleton	1655	addr	24	i2d_ECParameters
-2106	581	4	-	openssl	skeleton	1656	addr	67	i2d_ECPrivateKey
-2107	797	5	openssl	openssl	skeleton	1653	addr	63	EC_GROUP_new_by_curve_name_ex
-2108	1467	5	openssl	openssl	skeleton	1646	addr	77	EC_POINT_point2oct
-2109	32	5	openssl	openssl	skeleton	1657	byte	0	DSA_SIG_get0
+2098	11	5	-	openssl	skeleton	1652	addr	1	EC_KEY_new_ex
+2099	11	5	-	openssl	skeleton	1653	addr	1	EC_KEY_new
+2100	179	5	-	openssl	skeleton	1648	addr	11	EC_POINT_cmp
+2101	694	5	openssl	openssl	skeleton	1649	addr	42	EC_GROUP_set_generator
+2102	55	5	-	openssl	skeleton	1650	addr	3	EC_GROUP_dup
+2103	330	5	-	openssl	skeleton	1651	addr	35	ossl_ec_group_new_ex
+2104	35	5	-	openssl	skeleton	1655	addr	5	ECDSA_SIG_free
+2105	166	4	-	openssl	skeleton	1656	addr	24	i2d_ECParameters
+2106	581	4	-	openssl	skeleton	1657	addr	67	i2d_ECPrivateKey
+2107	797	5	openssl	openssl	skeleton	1654	addr	63	EC_GROUP_new_by_curve_name_ex
+2108	1467	5	openssl	openssl	skeleton	1647	addr	77	EC_POINT_point2oct
+2109	32	5	openssl	openssl	skeleton	1658	byte	0	DSA_SIG_get0
 2110	114	5	openssl	openssl	-	-	none	-	
-2111	227	5	-	openssl	skeleton	1670	addr	17	ASN1_item_pack
-2112	11	5	-	openssl	skeleton	1668	addr	1	ASN1_item_ex_free
-2113	148	5	openssl	openssl	skeleton	1674	addr	1	ASN1_INTEGER_set
+2111	227	5	-	openssl	skeleton	1671	addr	17	ASN1_item_pack
+2112	11	5	-	openssl	skeleton	1669	addr	1	ASN1_item_ex_free
+2113	148	5	openssl	openssl	skeleton	1675	addr	1	ASN1_INTEGER_set
 2114	16	5	-	openssl	skeleton	1582	addr	2	d2i_ASN1_INTEGER
-2115	26	5	openssl	openssl	skeleton	1671	byte	0	ASN1_put_eoc
-2116	653	5	openssl	openssl	skeleton	1672	addr	15	ASN1_get_object
-2117	222	5	openssl	openssl	skeleton	1669	addr	14	ASN1_buf_print
-2118	32	5	openssl	openssl	skeleton	1659	byte	0	DH_get0_key
-2119	16	5	openssl	openssl	skeleton	1660	fingerprint	0	DH_get0_pqg
-2120	22	5	openssl	openssl	skeleton	1661	byte	0	DH_up_ref
-2121	558	5	-	openssl	skeleton	1665	addr	20	bnrand
-2122	574	5	-	openssl	skeleton	1664	addr	23	BN_mod_mul_reciprocal
+2115	26	5	openssl	openssl	skeleton	1672	byte	0	ASN1_put_eoc
+2116	653	5	openssl	openssl	skeleton	1673	addr	15	ASN1_get_object
+2117	222	5	openssl	openssl	skeleton	1670	addr	14	ASN1_buf_print
+2118	32	5	openssl	openssl	skeleton	1660	byte	0	DH_get0_key
+2119	16	5	openssl	openssl	skeleton	1661	fingerprint	0	DH_get0_pqg
+2120	22	5	openssl	openssl	skeleton	1662	byte	0	DH_up_ref
+2121	558	5	-	openssl	skeleton	1666	addr	20	bnrand
+2122	574	5	-	openssl	skeleton	1665	addr	23	BN_mod_mul_reciprocal
 2123	138	5	openssl	openssl	skeleton	1578	addr	5	BN_mod_word
-2124	195	5	-	openssl	skeleton	1666	addr	8	BN_mod_lshift_quick
+2124	195	5	-	openssl	skeleton	1667	addr	8	BN_mod_lshift_quick
 2125	32	5	-	vota	skeleton	3090	addr	1	std::__2::__tree<std::__2::__value_type<CBaseType<unsigned int, 0u, 99999u, 6>, ecourna::app::dados::CConfiguracaoMunicipio>, std::__2::__map_value_compare<CBaseType<unsigned int, 0u, 99999u, 6>, std::__2::pair<CBaseType<unsigned int, 0u, 99999u, 6> const, ecourna::app::dados::CConfiguracaoMunicipio>, std::__2::less<CBaseType<unsigned int, 0u, 99999u, 6>>, true>, std::__2::allocator<std::__2::pair<CBaseType<unsigned int, 0u, 99999u, 6> const, ecourna::app::dados::CConfiguracaoMunicipio>>>::destroy(std::__2::__tree_node<std::__2::__value_type<CBaseType<unsigned int, 0u, 99999u, 6>, ecourna::app::dados::CConfiguracaoMunicipio>, void*>*)
 2126	64	3	app	vota	-	-	none	-	
 2127	241	5	-	openssl	skeleton	1579	addr	6	bn_mul_normal
@@ -1996,35 +1996,35 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2130	250	4	openssl	ecourna	-	-	none	-	
 2131	33	5	openssl	-	skeleton	3097	fingerprint	0	std::__2::filesystem::ConsumeRootDir(std::__2::filesystem::parser::PathParser*)
 2132	152	4	openssl	ecourna	-	-	none	-	
-2133	71	5	-	ecourna	skeleton	1807	byte	0	std::__2::filesystem::parser::PathParser::consumeName(char const*, char const*) const
+2133	71	5	-	ecourna	skeleton	1808	byte	0	std::__2::filesystem::parser::PathParser::consumeName(char const*, char const*) const
 2134	311	5	-	ecourna	-	-	none	-	
 2135	136	4	app	comum	-	-	none	-	
 2136	32	4	-	libc++	-	-	none	-	
-2137	11	0	libcxx	libc++	skeleton	1809	byte	0	std::__2::codecvt<char, char, __mbstate_t>::do_unshift(__mbstate_t&, char*, char*, char*&) const
-2138	61	5	libcxx	-	skeleton	1811	addr	1	std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>>::__move_assign[abi:ne210108](std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>>&, std::__2::integral_constant<bool, true>)
-2139	63	4	libcxx	libc++	skeleton	1812	byte	0	void std::__2::__reverse_impl[abi:ne210108]<std::__2::_ClassicAlgPolicy, wchar_t*>(wchar_t*, wchar_t*, std::__2::random_access_iterator_tag)
-2140	251	4	libcxx	libc++	skeleton	1813	addr	6	std::__2::ostreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>> std::__2::__pad_and_output[abi:ne210108]<wchar_t, std::__2::char_traits<wchar_t>>(std::__2::ostreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, wchar_t const*, wchar_t const*, wchar_t const*, std::__2::ios_base&, wchar_t)
-2141	379	4	libcxx	libc++	skeleton	1814	addr	1	std::__2::__num_get<wchar_t>::__stage2_int_loop(wchar_t, int, char*, char*&, unsigned int&, wchar_t, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned int*, unsigned int*&, wchar_t*)
-2142	10	4	libcxx	libc++	skeleton	1815	fingerprint	0	std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>::operator*[abi:ne210108]() const
-2143	381	4	libcxx	libc++	skeleton	1816	addr	1	std::__2::__num_get<char>::__stage2_int_loop(char, int, char*, char*&, unsigned int&, char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned int*, unsigned int*&, char*)
-2144	11	4	libcxx	libc++	skeleton	1817	fingerprint	0	std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>::operator*[abi:ne210108]() const
+2137	11	0	libcxx	libc++	skeleton	1810	byte	0	std::__2::codecvt<char, char, __mbstate_t>::do_unshift(__mbstate_t&, char*, char*, char*&) const
+2138	61	5	libcxx	-	skeleton	1812	addr	1	std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>>::__move_assign[abi:ne210108](std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>>&, std::__2::integral_constant<bool, true>)
+2139	63	4	libcxx	libc++	skeleton	1813	byte	0	void std::__2::__reverse_impl[abi:ne210108]<std::__2::_ClassicAlgPolicy, wchar_t*>(wchar_t*, wchar_t*, std::__2::random_access_iterator_tag)
+2140	251	4	libcxx	libc++	skeleton	1814	addr	6	std::__2::ostreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>> std::__2::__pad_and_output[abi:ne210108]<wchar_t, std::__2::char_traits<wchar_t>>(std::__2::ostreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, wchar_t const*, wchar_t const*, wchar_t const*, std::__2::ios_base&, wchar_t)
+2141	379	4	libcxx	libc++	skeleton	1815	addr	1	std::__2::__num_get<wchar_t>::__stage2_int_loop(wchar_t, int, char*, char*&, unsigned int&, wchar_t, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned int*, unsigned int*&, wchar_t*)
+2142	10	4	libcxx	libc++	skeleton	1816	fingerprint	0	std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>::operator*[abi:ne210108]() const
+2143	381	4	libcxx	libc++	skeleton	1817	addr	1	std::__2::__num_get<char>::__stage2_int_loop(char, int, char*, char*&, unsigned int&, char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned int*, unsigned int*&, char*)
+2144	11	4	libcxx	libc++	skeleton	1818	fingerprint	0	std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>::operator*[abi:ne210108]() const
 2145	414	4	libcxx	-	-	-	none	-	
-2146	39	4	openssl	libc++	skeleton	1818	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::sgetc[abi:ne210108]()
-2147	23	4	libcxx	libc++	skeleton	1819	addr	2	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::~basic_streambuf()
+2146	39	4	openssl	libc++	skeleton	1819	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::sgetc[abi:ne210108]()
+2147	23	4	libcxx	libc++	skeleton	1820	addr	2	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::~basic_streambuf()
 2148	38	4	libcxx	libc++	skeleton	5278	fingerprint	0	std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>::operator=[abi:ne210108](char)
-2149	360	5	asn1	ASN1	skeleton	1820	shape	16	std::__2::basic_istream<char, std::__2::char_traits<char>>::putback(char)
+2149	360	5	asn1	ASN1	skeleton	1821	shape	16	std::__2::basic_istream<char, std::__2::char_traits<char>>::putback(char)
 2150	318	5	libcxx	libc++	skeleton	669	shape	15	std::__2::basic_istream<char, std::__2::char_traits<char>>::peek()
-2151	49	4	openssl	libc++	skeleton	1821	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::sbumpc[abi:ne210108]()
+2151	49	4	openssl	libc++	skeleton	1822	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::sbumpc[abi:ne210108]()
 2152	66	4	-	-	-	-	none	-	
 2153	74	5	openssl	-	-	-	none	-	
 2154	63	5	libcxx	libc++	-	-	none	-	
-2155	103	5	openssl	-	skeleton	1823	addr	3	std::__2::__decimalLength9[abi:ne210108](unsigned int)
-2156	1132	4	libcxx	-	skeleton	1824	addr	12	std::__2::__d2fixed_buffered_n(char*, char*, double, unsigned int)
-2157	145	5	libcxx	-	skeleton	1825	addr	3	std::__2::__append_nine_digits(unsigned int, char*)
-2158	949	5	app	ecourna	skeleton	1675	addr	16	adler32
+2155	103	5	openssl	-	skeleton	1824	addr	3	std::__2::__decimalLength9[abi:ne210108](unsigned int)
+2156	1132	4	libcxx	-	skeleton	1825	addr	12	std::__2::__d2fixed_buffered_n(char*, char*, double, unsigned int)
+2157	145	5	libcxx	-	skeleton	1826	addr	3	std::__2::__append_nine_digits(unsigned int, char*)
+2158	949	5	app	ecourna	skeleton	1676	addr	16	adler32
 2159	1125	4	7zip	7zip	-	-	none	-	
 2160	19	5	app	-	-	-	none	-	
-2161	256	3	7zip	7zip	skeleton	1694	addr	50	NCompress::NLzma2::CEncoder::QueryInterface(GUID const&, void**)
+2161	256	3	7zip	7zip	skeleton	1695	addr	50	NCompress::NLzma2::CEncoder::QueryInterface(GUID const&, void**)
 2162	371	5	7zip	7zip	-	-	none	-	
 2163	487	5	7zip	7zip	-	-	none	-	
 2164	134	5	7zip	7zip	-	-	none	-	
@@ -2071,8 +2071,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2205	57	5	app	RHVoice	skeleton	1613	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_voice_gender>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_voice_gender>, RHVoice::str::less, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_voice_gender>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_voice_gender>, void*>*)
 2206	35	5	rhvoice	RHVoice	skeleton	2041	addr	1	void std::__2::vector<double, std::__2::allocator<double>>::__assign_with_size[abi:ne210108]<double*, double*>(double*, double*, long)
 2207	474	5	rhvoice	RHVoice	-	-	none	-	
-2208	235	5	-	RHVoice	skeleton	1691	fingerprint	0	HTS_dp_match
-2209	457	5	-	-	skeleton	1678	shape	2	RHVoice::speech_processor::process(double const*, unsigned long)
+2208	235	5	-	RHVoice	skeleton	1692	fingerprint	0	HTS_dp_match
+2209	457	5	-	-	skeleton	1679	shape	2	RHVoice::speech_processor::process(double const*, unsigned long)
 2210	119	5	rhvoice	RHVoice	-	-	none	-	
 2211	119	5	rhvoice	RHVoice	-	-	none	-	
 2212	650	5	rhvoice	RHVoice	-	-	none	-	
@@ -2080,7 +2080,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2214	189	5	rhvoice	api	-	-	none	-	
 2215	137	5	-	RHVoice	-	-	none	-	
 2216	250	5	rhvoice	RHVoice	-	-	none	-	
-2217	67	0	rhvoice	RHVoice	skeleton	1683	addr	4	RHVoice::sentence::append_token::~append_token()
+2217	67	0	rhvoice	RHVoice	skeleton	1684	addr	4	RHVoice::sentence::append_token::~append_token()
 2218	21	5	-	ecourna	-	-	none	-	
 2219	20	0	rhvoice	api	skeleton	4025	byte	0	api::CPosixSemaphore::Lock()
 2220	233	5	-	ecourna	-	-	none	-	
@@ -2092,7 +2092,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2226	20	5	app	vota	-	-	none	-	
 2227	14	0	rhvoice	RHVoice	skeleton	1587	byte	0	RHVoice::property<RHVoice::quality_t>::check_value(RHVoice::quality_t const&, RHVoice::quality_t&) const
 2228	57	5	app	RHVoice	skeleton	1627	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_punctuation_mode>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_punctuation_mode>, RHVoice::str::less, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_punctuation_mode>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_punctuation_mode>, void*>*)
-2229	57	5	app	RHVoice	skeleton	1676	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_capitals_mode>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_capitals_mode>, RHVoice::str::less, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_capitals_mode>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_capitals_mode>, void*>*)
+2229	57	5	app	RHVoice	skeleton	1677	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_capitals_mode>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_capitals_mode>, RHVoice::str::less, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice_capitals_mode>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice_capitals_mode>, void*>*)
 2230	86	5	-	-	-	-	none	-	
 2231	11	5	-	-	-	-	none	-	
 2232	74	5	-	-	-	-	none	-	
@@ -2163,8 +2163,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2297	64	5	app	ecourna	-	-	none	-	
 2298	182	5	app	vota	-	-	none	-	
 2299	535	5	app	ecourna	-	-	none	-	
-2300	58	5	app	libc++	skeleton	1801	addr	3	
-2301	55	5	app	libc++	skeleton	1802	addr	2	
+2300	58	5	app	libc++	skeleton	1802	addr	3	
+2301	55	5	app	libc++	skeleton	1803	addr	2	
 2302	483	5	app	ecourna	-	-	none	-	
 2303	734	5	7zip	7zip	skeleton	1522	addr	16	
 2304	517	5	7zip	7zip	skeleton	1180	addr	16	
@@ -2176,11 +2176,11 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2310	1361	4	libcxx	libc++abi	-	-	none	-	
 2311	114	5	-	libc++abi	-	-	none	-	
 2312	19	5	-	-	-	-	none	-	
-2313	1366	5	rhvoice	RHVoice	skeleton	1827	addr	5	strstr
+2313	1366	5	rhvoice	RHVoice	skeleton	1828	addr	5	strstr
 2314	14	5	-	ASN1	skeleton	3161	byte	0	isalpha
 2315	426	5	-	openssl	skeleton	1550	fingerprint	0	convert_ioctl_struct
 2316	156	5	-	libc++	skeleton	1551	addr	1	__fseeko_unlocked
-2317	188	5	-	simulador	skeleton	1841	addr	1	do_putc
+2317	188	5	-	simulador	skeleton	1842	addr	1	do_putc
 2318	30	5	-	-	skeleton	1552	addr	1	fileno
 2319	65	5	-	ecourna	skeleton	1553	fingerprint	0	__uflow
 2320	124	5	-	-	skeleton	1554	fingerprint	0	__toread
@@ -2191,54 +2191,54 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2325	146	5	rhvoice	RHVoice	skeleton	1559	byte	0	__cos
 2326	141	5	-	RHVoice	skeleton	1561	byte	0	R
 2327	62	5	-	ecourna	probe	56	addr	9	__tzset
-2328	290	5	-	-	skeleton	1721	addr	14	jsonEachCursorReset
-2329	419	5	-	sqlite	skeleton	1722	addr	34	rtreeRelease
-2330	251	5	-	sqlite	skeleton	1723	addr	2	jsonBlobAppendNode
-2331	1644	5	-	sqlite	skeleton	1724	addr	10	jsonbValidityCheck
-2332	1047	5	sqlite	sqlite	skeleton	1725	addr	33	jsonAppendSqlValue
-2333	294	5	sqlite	sqlite	skeleton	1726	addr	18	sqlite3NotPureFunc
-2334	909	5	sqlite	sqlite	skeleton	1727	addr	28	renameParseSql
-2335	246	5	sqlite	openssl	skeleton	1728	addr	2	windowReadPeerValues
-2336	1622	5	sqlite	openssl	skeleton	1729	addr	10	whereLoopInsert
-2337	366	5	sqlite	openssl	skeleton	1730	addr	5	codeExprOrVector
-2338	207	5	sqlite	openssl	skeleton	1731	addr	3	sqlite3IndexAffinityOk
-2339	2560	5	sqlite	sqlite	skeleton	1732	addr	27	pushOntoSorter
-2340	1726	5	sqlite	openssl	skeleton	1733	addr	19	windowCodeRangeTest
+2328	290	5	-	-	skeleton	1722	addr	14	jsonEachCursorReset
+2329	419	5	-	sqlite	skeleton	1723	addr	34	rtreeRelease
+2330	251	5	-	sqlite	skeleton	1724	addr	2	jsonBlobAppendNode
+2331	1644	5	-	sqlite	skeleton	1725	addr	10	jsonbValidityCheck
+2332	1047	5	sqlite	sqlite	skeleton	1726	addr	33	jsonAppendSqlValue
+2333	294	5	sqlite	sqlite	skeleton	1727	addr	18	sqlite3NotPureFunc
+2334	909	5	sqlite	sqlite	skeleton	1728	addr	28	renameParseSql
+2335	246	5	sqlite	openssl	skeleton	1729	addr	2	windowReadPeerValues
+2336	1622	5	sqlite	openssl	skeleton	1730	addr	10	whereLoopInsert
+2337	366	5	sqlite	openssl	skeleton	1731	addr	5	codeExprOrVector
+2338	207	5	sqlite	openssl	skeleton	1732	addr	3	sqlite3IndexAffinityOk
+2339	2560	5	sqlite	sqlite	skeleton	1733	addr	27	pushOntoSorter
+2340	1726	5	sqlite	openssl	skeleton	1734	addr	19	windowCodeRangeTest
 2341	242	5	sqlite	comum	-	-	none	-	
-2342	591	5	sqlite	sqlite	skeleton	1734	addr	17	sqlite3VdbeAddFunctionCall
-2343	120	5	sqlite	sqlite	skeleton	1735	addr	4	renameTestSchema
-2344	221	5	sqlite	sqlite	skeleton	1736	addr	3	returnSingleText
-2345	979	5	openssl	sqlite	skeleton	1737	addr	12	sqlite3ComputeGeneratedColumns
-2346	88	5	sqlite	-	skeleton	1738	addr	2	sqlite3VdbeSetP4KeyInfo
-2347	902	5	sqlite	sqlite	skeleton	1739	addr	4	triggersReallyExist
-2348	1109	5	sqlite	openssl	skeleton	1740	addr	14	computeLimitRegisters
-2349	454	5	sqlite	openssl	skeleton	1741	addr	7	exprListAppendList
-2350	414	5	sqlite	sqlite	skeleton	1742	addr	2	sqlite3CodeVerifyNamedSchema
-2351	2509	5	sqlite	sqlite	skeleton	1743	addr	33	sqlite3RefillIndex
-2352	21077	5	sqlite	sqlite	skeleton	1744	addr	449	sqlite3Pragma
-2353	442	5	sqlite	sqlite	skeleton	1745	addr	3	sqlite3ExprSetHeightAndFlags
-2354	173	5	sqlite	sqlite	skeleton	1746	addr	7	sqlite3UpsertNew
-2355	194	5	sqlite	sqlite	skeleton	1747	addr	2	sqlite3NameFromToken
-2356	5689	5	sqlite	sqlite	skeleton	1748	addr	115	sqlite3CreateIndex
-2357	176	5	sqlite	sqlite	skeleton	1749	addr	8	sqlite3WindowDelete
-2358	71	5	sqlite	sqlite	skeleton	1750	addr	3	execSqlF
-2359	390	5	sqlite	sqlite	skeleton	1751	addr	6	btreeOverwriteContent
-2360	303	5	sqlite	sqlite	skeleton	1752	addr	7	getAndInitPage
-2361	638	5	sqlite	sqlite	skeleton	1753	addr	22	vdbePmaReaderNext
-2362	364	5	sqlite	sqlite	skeleton	1756	addr	2	sqlite3VtabSavepoint
-2363	446	5	sqlite	sqlite	skeleton	1760	addr	22	decodeFlags
-2364	66	5	sqlite	sqlite	skeleton	1763	fingerprint	0	sqlite3ColumnColl
-2365	42822	5	sqlite	sqlite	skeleton	1765	addr	874	sqlite3RunParser
-2366	324	5	-	sqlite	skeleton	1768	addr	14	btreeRestoreCursorPosition
-2367	206	5	sqlite	sqlite	skeleton	1769	addr	2	sqlite3VdbeAddOpList
-2368	409	5	-	sqlite	skeleton	1770	addr	5	growOpArray
+2342	591	5	sqlite	sqlite	skeleton	1735	addr	17	sqlite3VdbeAddFunctionCall
+2343	120	5	sqlite	sqlite	skeleton	1736	addr	4	renameTestSchema
+2344	221	5	sqlite	sqlite	skeleton	1737	addr	3	returnSingleText
+2345	979	5	openssl	sqlite	skeleton	1738	addr	12	sqlite3ComputeGeneratedColumns
+2346	88	5	sqlite	-	skeleton	1739	addr	2	sqlite3VdbeSetP4KeyInfo
+2347	902	5	sqlite	sqlite	skeleton	1740	addr	4	triggersReallyExist
+2348	1109	5	sqlite	openssl	skeleton	1741	addr	14	computeLimitRegisters
+2349	454	5	sqlite	openssl	skeleton	1742	addr	7	exprListAppendList
+2350	414	5	sqlite	sqlite	skeleton	1743	addr	2	sqlite3CodeVerifyNamedSchema
+2351	2509	5	sqlite	sqlite	skeleton	1744	addr	33	sqlite3RefillIndex
+2352	21077	5	sqlite	sqlite	skeleton	1745	addr	449	sqlite3Pragma
+2353	442	5	sqlite	sqlite	skeleton	1746	addr	3	sqlite3ExprSetHeightAndFlags
+2354	173	5	sqlite	sqlite	skeleton	1747	addr	7	sqlite3UpsertNew
+2355	194	5	sqlite	sqlite	skeleton	1748	addr	2	sqlite3NameFromToken
+2356	5689	5	sqlite	sqlite	skeleton	1749	addr	115	sqlite3CreateIndex
+2357	176	5	sqlite	sqlite	skeleton	1750	addr	8	sqlite3WindowDelete
+2358	71	5	sqlite	sqlite	skeleton	1751	addr	3	execSqlF
+2359	390	5	sqlite	sqlite	skeleton	1752	addr	6	btreeOverwriteContent
+2360	303	5	sqlite	sqlite	skeleton	1753	addr	7	getAndInitPage
+2361	638	5	sqlite	sqlite	skeleton	1754	addr	22	vdbePmaReaderNext
+2362	364	5	sqlite	sqlite	skeleton	1757	addr	2	sqlite3VtabSavepoint
+2363	446	5	sqlite	sqlite	skeleton	1761	addr	22	decodeFlags
+2364	66	5	sqlite	sqlite	skeleton	1764	fingerprint	0	sqlite3ColumnColl
+2365	42822	5	sqlite	sqlite	skeleton	1766	addr	874	sqlite3RunParser
+2366	324	5	-	sqlite	skeleton	1769	addr	14	btreeRestoreCursorPosition
+2367	206	5	sqlite	sqlite	skeleton	1770	addr	2	sqlite3VdbeAddOpList
+2368	409	5	-	sqlite	skeleton	1771	addr	5	growOpArray
 2369	11	4	app	vota	-	-	none	-	
 2370	277	4	-	-	skeleton	3001	addr	8	sqlite3_column_bytes
-2371	127	4	sqlite	-	skeleton	1774	addr	1	sqlite3VdbeIntValue
-2372	1494	5	-	openssl	skeleton	1775	addr	20	pager_end_transaction
-2373	252	5	sqlite	sqlite	skeleton	1776	addr	5	sqlite3BtreeUpdateMeta
-2374	3084	5	sqlite	sqlite	skeleton	1777	addr	120	sqlite3LeaveMutexAndCloseZombie
-2375	325	4	-	-	skeleton	1778	addr	7	sqlite3_column_int
+2371	127	4	sqlite	-	skeleton	1775	addr	1	sqlite3VdbeIntValue
+2372	1494	5	-	openssl	skeleton	1776	addr	20	pager_end_transaction
+2373	252	5	sqlite	sqlite	skeleton	1777	addr	5	sqlite3BtreeUpdateMeta
+2374	3084	5	sqlite	sqlite	skeleton	1778	addr	120	sqlite3LeaveMutexAndCloseZombie
+2375	325	4	-	-	skeleton	1779	addr	7	sqlite3_column_int
 2376	935	5	app	-	-	-	none	-	
 2377	328	4	openssl	openssl	skeleton	1586	addr	12	ossl_cipher_generic_get_ctx_params
 2378	13	5	openssl	openssl	skeleton	1593	addr	2	ossl_prov_ctx_free
@@ -2287,73 +2287,73 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2421	969	5	openssl	-	skeleton	1571	fingerprint	0	CRYPTO_ccm128_decrypt
 2422	1177	5	openssl	-	skeleton	1572	fingerprint	0	CRYPTO_ccm128_encrypt
 2423	292	5	openssl	-	skeleton	1573	addr	1	CRYPTO_ccm128_aad
-2424	1365	4	app	-	skeleton	1863	byte	0	md4_block_data_order
-2425	45	4	openssl	openssl	skeleton	1923	addr	2	ossl_provider_deactivate
-2426	246	4	-	openssl	skeleton	1924	addr	23	provider_remove_store_methods
-2427	44	3	app	openssl	skeleton	1925	addr	6	infopair_free
+2424	1365	4	app	-	skeleton	1864	byte	0	md4_block_data_order
+2425	45	4	openssl	openssl	skeleton	1924	addr	2	ossl_provider_deactivate
+2426	246	4	-	openssl	skeleton	1925	addr	23	provider_remove_store_methods
+2427	44	3	app	openssl	skeleton	1926	addr	6	infopair_free
 2428	525	4	openssl	openssl	skeleton	1973	addr	54	ossl_decoder_instance_new
 2429	460	4	openssl	openssl	skeleton	1974	addr	41	OSSL_DECODER_from_bio
-2430	77	4	-	openssl	skeleton	1934	addr	4	ossl_pw_clear_passphrase_data
-2431	132	4	-	openssl	skeleton	1936	fingerprint	0	OSSL_PARAM_set_BN
-2432	34	4	openssl	openssl	skeleton	1937	byte	0	OSSL_PARAM_construct_uint64
-2433	42	4	openssl	openssl	skeleton	1941	addr	1	OPENSSL_hexchar2int
-2434	194	4	openssl	openssl	skeleton	1864	addr	11	OPENSSL_DIR_read
-2435	200	4	app	openssl	skeleton	1943	addr	16	sh_clearbit
-2436	221	4	app	openssl	skeleton	1944	addr	16	sh_add_to_list
-2437	196	4	app	openssl	skeleton	1945	addr	16	sh_setbit
+2430	77	4	-	openssl	skeleton	1935	addr	4	ossl_pw_clear_passphrase_data
+2431	132	4	-	openssl	skeleton	1937	fingerprint	0	OSSL_PARAM_set_BN
+2432	34	4	openssl	openssl	skeleton	1938	byte	0	OSSL_PARAM_construct_uint64
+2433	42	4	openssl	openssl	skeleton	1942	addr	1	OPENSSL_hexchar2int
+2434	194	4	openssl	openssl	skeleton	1865	addr	11	OPENSSL_DIR_read
+2435	200	4	app	openssl	skeleton	1944	addr	16	sh_clearbit
+2436	221	4	app	openssl	skeleton	1945	addr	16	sh_add_to_list
+2437	196	4	app	openssl	skeleton	1946	addr	16	sh_setbit
 2438	166	3	-	vota	-	-	none	-	
-2439	433	4	app	-	skeleton	1874	addr	1	CAST_ofb64_encrypt
-2440	1272	4	app	-	skeleton	1875	addr	4	CAST_cbc_encrypt
-2441	433	4	app	-	skeleton	1876	fingerprint	0	BF_ofb64_encrypt
-2442	1272	4	app	-	skeleton	1877	fingerprint	0	BF_cbc_encrypt
-2443	441	4	app	-	skeleton	1867	addr	1	IDEA_ofb64_encrypt
-2444	1251	4	app	-	skeleton	1868	addr	4	IDEA_cbc_encrypt
-2445	1332	4	app	-	skeleton	1866	addr	46	IDEA_set_encrypt_key
+2439	433	4	app	-	skeleton	1875	addr	1	CAST_ofb64_encrypt
+2440	1272	4	app	-	skeleton	1876	addr	4	CAST_cbc_encrypt
+2441	433	4	app	-	skeleton	1877	fingerprint	0	BF_ofb64_encrypt
+2442	1272	4	app	-	skeleton	1878	fingerprint	0	BF_cbc_encrypt
+2443	441	4	app	-	skeleton	1868	addr	1	IDEA_ofb64_encrypt
+2444	1251	4	app	-	skeleton	1869	addr	4	IDEA_cbc_encrypt
+2445	1332	4	app	-	skeleton	1867	addr	46	IDEA_set_encrypt_key
 2446	381	4	app	libc++	-	-	none	-	
-2447	824	4	app	-	skeleton	1871	addr	4	DES_xcbc_encrypt
-2448	335	4	app	-	skeleton	1885	addr	1	DES_ede3_ofb64_encrypt
-2449	270	4	app	-	skeleton	1887	addr	2	DES_ede3_cfb64_encrypt
+2447	824	4	app	-	skeleton	1872	addr	4	DES_xcbc_encrypt
+2448	335	4	app	-	skeleton	1886	addr	1	DES_ede3_ofb64_encrypt
+2449	270	4	app	-	skeleton	1888	addr	2	DES_ede3_cfb64_encrypt
 2450	19	4	app	-	-	-	none	-	
-2451	333	4	-	-	skeleton	1873	addr	1	DES_ofb64_encrypt
-2452	717	4	-	-	skeleton	1886	addr	4	DES_ncbc_encrypt
-2453	531	4	-	openssl	skeleton	1950	addr	19	CRYPTO_dup_ex_data
+2451	333	4	-	-	skeleton	1874	addr	1	DES_ofb64_encrypt
+2452	717	4	-	-	skeleton	1887	addr	4	DES_ncbc_encrypt
+2453	531	4	-	openssl	skeleton	1951	addr	19	CRYPTO_dup_ex_data
 2454	553	4	-	openssl	skeleton	1994	addr	38	context_deinit
 2455	69	4	openssl	openssl	skeleton	1995	addr	6	ossl_lib_ctx_write_lock
 2456	377	4	openssl	openssl	skeleton	1990	addr	34	DSO_load
 2457	116	4	openssl	openssl	skeleton	1996	byte	0	trim_ws
 2458	166	4	-	openssl	skeleton	1997	addr	4	_CONF_get_string
 2459	464	4	openssl	openssl	-	-	none	-	
-2460	302	4	-	openssl	skeleton	1946	addr	10	ossl_ffc_params_simple_validate
-2461	21	4	openssl	-	skeleton	1947	addr	1	ossl_ffc_params_FIPS186_4_generate
-2462	357	4	openssl	openssl	skeleton	1948	addr	23	ossl_ffc_params_print
-2463	100	4	openssl	openssl	skeleton	1949	addr	3	ossl_ffc_params_set0_pqg
-2464	66	4	openssl	openssl	skeleton	1951	addr	8	EVP_PKEY_CTX_md
-2465	221	4	openssl	openssl	skeleton	1880	addr	9	ossl_ecdh_kdf_X9_63
+2460	302	4	-	openssl	skeleton	1947	addr	10	ossl_ffc_params_simple_validate
+2461	21	4	openssl	-	skeleton	1948	addr	1	ossl_ffc_params_FIPS186_4_generate
+2462	357	4	openssl	openssl	skeleton	1949	addr	23	ossl_ffc_params_print
+2463	100	4	openssl	openssl	skeleton	1950	addr	3	ossl_ffc_params_set0_pqg
+2464	66	4	openssl	openssl	skeleton	1952	addr	8	EVP_PKEY_CTX_md
+2465	221	4	openssl	openssl	skeleton	1881	addr	9	ossl_ecdh_kdf_X9_63
 2466	59	3	app	vota	-	-	none	-	
-2467	22	4	-	openssl	skeleton	1952	byte	0	EVP_PKEY_up_ref
-2468	411	4	openssl	openssl	skeleton	1953	addr	31	evp_pkey_name2type
+2467	22	4	-	openssl	skeleton	1953	byte	0	EVP_PKEY_up_ref
+2468	411	4	openssl	openssl	skeleton	1954	addr	31	evp_pkey_name2type
 2469	19	4	app	-	-	-	none	-	
-2470	15	4	-	openssl	skeleton	1954	addr	1	EVP_PKEY_set_type
-2471	134	4	app	openssl	skeleton	1955	addr	10	EVP_PKEY_set_type_by_keymgmt
+2470	15	4	-	openssl	skeleton	1955	addr	1	EVP_PKEY_set_type
+2471	134	4	app	openssl	skeleton	1956	addr	10	EVP_PKEY_set_type_by_keymgmt
 2472	12	4	openssl	openssl	skeleton	2018	addr	2	PBEPARAM_free
-2473	9	4	-	openssl	skeleton	1869	addr	1	EVP_get_cipherbyname
-2474	12	0	-	-	skeleton	1870	addr	1	sha512_224_int_final
-2475	25	4	app	openssl	skeleton	1956	addr	4	evp_keymgmt_fetch_from_prov
-2476	199	4	openssl	-	skeleton	1957	fingerprint	0	EVP_Cipher
+2473	9	4	-	openssl	skeleton	1870	addr	1	EVP_get_cipherbyname
+2474	12	0	-	-	skeleton	1871	addr	1	sha512_224_int_final
+2475	25	4	app	openssl	skeleton	1957	addr	4	evp_keymgmt_fetch_from_prov
+2476	199	4	openssl	-	skeleton	1958	fingerprint	0	EVP_Cipher
 2477	7	0	-	-	skeleton	1971	addr	1	decoder_store_free
 2478	7	0	-	-	skeleton	1972	addr	1	decoder_store_new
-2479	78	4	app	openssl	skeleton	1958	addr	2	evp_generic_fetch_from_prov
-2480	328	4	openssl	openssl	skeleton	1959	addr	18	EVP_CIPHER_CTX_set_key_length
-2481	17	3	openssl	openssl	skeleton	1960	addr	1	EVP_DecryptInit_ex
-2482	26	3	openssl	openssl	skeleton	1961	byte	0	evp_cipher_up_ref
+2479	78	4	app	openssl	skeleton	1959	addr	2	evp_generic_fetch_from_prov
+2480	328	4	openssl	openssl	skeleton	1960	addr	18	EVP_CIPHER_CTX_set_key_length
+2481	17	3	openssl	openssl	skeleton	1961	addr	1	EVP_DecryptInit_ex
+2482	26	3	openssl	openssl	skeleton	1962	byte	0	evp_cipher_up_ref
 2483	13	3	app	vota	-	-	none	-	
-2484	1477	4	app	openssl	skeleton	1964	addr	71	evp_md_init_internal
+2484	1477	4	app	openssl	skeleton	1965	addr	71	evp_md_init_internal
 2485	149	4	app	openssl	skeleton	1969	addr	8	engine_unlocked_finish
 2486	70	4	openssl	openssl	skeleton	1970	byte	0	engine_unlocked_init
 2487	162	4	app	openssl	skeleton	1975	addr	13	ecx_generic_import_from
-2488	698	4	app	openssl	skeleton	1882	byte	0	sc_subx
-2489	1142	4	app	openssl	skeleton	1883	addr	1	gf_isr
-2490	1265	4	app	openssl	skeleton	1881	fingerprint	0	fe_invert
+2488	698	4	app	openssl	skeleton	1883	byte	0	sc_subx
+2489	1142	4	app	openssl	skeleton	1884	addr	1	gf_isr
+2490	1265	4	app	openssl	skeleton	1882	fingerprint	0	fe_invert
 2491	120	4	app	openssl	-	-	none	-	
 2492	49	4	app	openssl	skeleton	1986	addr	1	EC_KEY_key2buf
 2493	10	4	app	openssl	skeleton	1987	addr	1	EC_KEY_dup
@@ -2371,20 +2371,20 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2505	277	4	-	openssl	skeleton	1989	addr	29	i2o_ECPublicKey
 2506	1334	4	-	openssl	-	-	none	-	
 2507	1897	4	-	openssl	skeleton	2006	addr	4	BN_GF2m_mod_mul_arr
-2508	16	3	-	openssl	skeleton	1884	addr	2	d2i_DSAparams
+2508	16	3	-	openssl	skeleton	1885	addr	2	d2i_DSAparams
 2509	357	4	app	libc++	-	-	none	-	
 2510	274	3	-	openssl	-	-	none	-	
 2511	16	3	-	openssl	skeleton	1992	addr	2	d2i_DHparams
 2512	35	4	openssl	openssl	skeleton	2011	addr	3	ossl_x509_algor_mgf1_decode
 2513	307	4	-	openssl	skeleton	2016	addr	7	ossl_asn1_primitive_free
 2514	279	4	openssl	openssl	skeleton	2020	addr	24	i2a_ASN1_OBJECT
-2515	562	4	openssl	openssl	skeleton	1890	addr	7	BIO_dump_indent_cb
+2515	562	4	openssl	openssl	skeleton	1891	addr	7	BIO_dump_indent_cb
 2516	16	4	-	openssl	skeleton	2012	byte	0	ossl_asn1_get_choice_selector
 2517	364	4	app	openssl	skeleton	2021	addr	21	ASN1_INTEGER_get_uint64
 2518	535	4	openssl	openssl	skeleton	2022	addr	10	c2i_ibuf
-2519	14	4	openssl	openssl	skeleton	1892	addr	2	i2d_ASN1_TYPE
+2519	14	4	openssl	openssl	skeleton	1893	addr	2	i2d_ASN1_TYPE
 2520	81	4	app	vota	-	-	none	-	
-2521	14	4	openssl	openssl	skeleton	1893	addr	2	i2d_ASN1_OCTET_STRING
+2521	14	4	openssl	openssl	skeleton	1894	addr	2	i2d_ASN1_OCTET_STRING
 2522	1191	4	sqlite	openssl	skeleton	2017	addr	44	asn1_template_ex_i2d
 2523	58	4	openssl	openssl	skeleton	2005	byte	0	bn_set_all_zero
 2524	362	4	openssl	openssl	-	-	none	-	
@@ -2396,8 +2396,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2530	55	4	-	openssl	skeleton	2000	addr	4	BN_from_montgomery
 2531	134	4	openssl	openssl	skeleton	2001	addr	10	BN_mod_add
 2532	350	4	app	openssl	skeleton	2009	addr	1	BN_uadd
-2533	466	4	-	openssl	skeleton	1888	addr	3	bn_sqr_recursive
-2534	16	4	-	openssl	skeleton	1889	addr	1	BN_sqr
+2533	466	4	-	openssl	skeleton	1889	addr	3	bn_sqr_recursive
+2534	16	4	-	openssl	skeleton	1890	addr	1	BN_sqr
 2535	99	4	-	openssl	skeleton	2008	addr	8	BN_CTX_secure_new_ex
 2536	726	4	openssl	openssl	skeleton	1968	addr	49	ENGINE_by_id
 2537	13	0	-	-	skeleton	2019	byte	0	table_cmp_BSEARCH_CMP_FN
@@ -2413,7 +2413,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2547	60	4	libcxx	ecourna	-	-	none	-	
 2548	778	3	libcxx	simulador	-	-	none	-	
 2549	71	3	libcxx	-	-	-	none	-	
-2550	4	0	libcxx	libc++	skeleton	1707	byte	0	CCrcHasher::GetDigestSize()
+2550	4	0	libcxx	libc++	skeleton	1708	byte	0	CCrcHasher::GetDigestSize()
 2551	58	4	libcxx	libc++	skeleton	5217	byte	0	std::__2::unique_ptr<std::__2::locale::facet, std::__2::(anonymous namespace)::releaser>::~unique_ptr[abi:ne210108]()
 2552	45	4	libcxx	libc++	-	-	none	-	
 2553	8	0	libcxx	libc++	skeleton	2289	byte	0	std::__2::moneypunct<wchar_t, false>::do_decimal_point() const
@@ -2465,7 +2465,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2599	253	4	7zip	libc++	-	-	none	-	
 2600	171	1	7zip	7zip	skeleton	2080	addr	33	NArchive::N7z::CFolderInStream::QueryInterface(GUID const&, void**)
 2601	809	4	7zip	7zip	-	-	none	-	
-2602	188	4	7zip	-	skeleton	1692	addr	8	CArcInfoEx::~CArcInfoEx()
+2602	188	4	7zip	-	skeleton	1693	addr	8	CArcInfoEx::~CArcInfoEx()
 2603	13555	4	7zip	comum	-	-	none	-	
 2604	59	4	7zip	7zip	-	-	none	-	
 2605	522	4	7zip	7zip	-	-	none	-	
@@ -2490,8 +2490,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2624	131	4	7zip	7zip	skeleton	1431	byte	0	ConvertStringToUInt32(wchar_t const*, wchar_t const**)
 2625	186	4	-	7zip	-	-	none	-	
 2626	3824	4	app	libc++	-	-	none	-	
-2627	19	0	7zip	7zip	skeleton	1708	byte	0	non-virtual thunk to CArchiveUpdateCallback::AddRef()_5549
-2628	19	0	7zip	7zip	skeleton	1709	byte	0	non-virtual thunk to CArchiveUpdateCallback::AddRef()_5544
+2627	19	0	7zip	7zip	skeleton	1709	byte	0	non-virtual thunk to CArchiveUpdateCallback::AddRef()_5549
+2628	19	0	7zip	7zip	skeleton	1710	byte	0	non-virtual thunk to CArchiveUpdateCallback::AddRef()_5544
 2629	19	0	7zip	7zip	skeleton	2106	byte	0	non-virtual thunk to CArchiveUpdateCallback::AddRef()
 2630	421	4	7zip	7zip	skeleton	2090	fingerprint	0	CFilterCoder::Flush2()
 2631	321	4	-	api	-	-	none	-	
@@ -2506,7 +2506,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2640	57	4	7zip	7zip	skeleton	1439	byte	0	MyStringLower_Ascii(wchar_t*)
 2641	187	4	7zip	7zip	-	-	none	-	
 2642	182	4	7zip	7zip	-	-	none	-	
-2643	62	4	7zip	7zip	skeleton	1715	byte	0	CompareFileTime
+2643	62	4	7zip	7zip	skeleton	1716	byte	0	CompareFileTime
 2644	85	4	7zip	7zip	skeleton	2826	addr	1	SysAllocString
 2645	86	4	-	-	skeleton	4428	addr	1	SysAllocStringLen
 2646	526	4	7zip	-	skeleton	2104	byte	0	ConvertInt64ToString(long long, char*)
@@ -2526,7 +2526,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2660	15	4	app	ecourna	-	-	none	-	
 2661	15	4	app	ecourna	-	-	none	-	
 2662	821	4	-	simulador	-	-	none	-	
-2663	102	4	app	ecourna	skeleton	1905	addr	4	ecourna::app::dados::CLabelParametrizado::~CLabelParametrizado()
+2663	102	4	app	ecourna	skeleton	1906	addr	4	ecourna::app::dados::CLabelParametrizado::~CLabelParametrizado()
 2664	123	4	-	ecourna	skeleton	2246	addr	2	std::__2::vector<ecourna::app::dados::CAplicativo, std::__2::allocator<ecourna::app::dados::CAplicativo>>::~vector[abi:ne210108]()
 2665	20	4	app	ecourna	-	-	none	-	
 2666	870	4	app	ecourna	-	-	none	-	
@@ -2788,7 +2788,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2922	82	4	app	-	skeleton	2263	byte	0	
 2923	77	4	app	openssl	skeleton	2276	addr	4	
 2924	351	4	app	libc++	-	-	none	-	
-2925	45	4	app	7zip	skeleton	1798	byte	0	
+2925	45	4	app	7zip	skeleton	1799	byte	0	
 2926	263	4	app	asn1-modules	-	-	none	-	
 2927	1275	4	-	ecourna	-	-	none	-	
 2928	13	0	libcxx	libc++	probe	66	addr	2	std::logic_error::~logic_error()_212
@@ -2815,25 +2815,25 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2949	539	4	-	openssl	skeleton	2316	addr	4	strtox_15516
 2950	13	4	-	ecourna	skeleton	2317	addr	1	strtoull
 2951	258	4	-	-	skeleton	2318	fingerprint	0	strncpy
-2952	220	4	-	-	skeleton	1828	byte	0	strcpy
+2952	220	4	-	-	skeleton	1829	byte	0	strcpy
 2953	164	4	-	-	-	-	none	-	
 2954	9	3	-	-	skeleton	3151	addr	1	rmdir
 2955	70	3	-	ecourna	skeleton	3152	addr	1	readlink
-2956	72	4	-	openssl	skeleton	1830	byte	0	shl
-2957	327	4	-	openssl	skeleton	1831	fingerprint	0	trinkle
-2958	75	4	-	openssl	skeleton	1832	byte	0	shr
-2959	590	4	-	openssl	skeleton	1833	fingerprint	0	__qsort_r
+2956	72	4	-	openssl	skeleton	1831	byte	0	shl
+2957	327	4	-	openssl	skeleton	1832	fingerprint	0	trinkle
+2958	75	4	-	openssl	skeleton	1833	byte	0	shr
+2959	590	4	-	openssl	skeleton	1834	fingerprint	0	__qsort_r
 2960	371	4	libc	libc++	skeleton	3150	addr	17	__get_locale
 2961	9	4	-	vota	-	-	none	-	
 2962	41	4	-	-	skeleton	3160	addr	1	mbstowcs
-2963	1034	3	-	libc++	skeleton	1836	addr	7	mbsrtowcs
+2963	1034	3	-	libc++	skeleton	1837	addr	7	mbsrtowcs
 2964	49	4	-	openssl	-	-	none	-	
-2965	23	4	-	ecourna	skeleton	1837	byte	0	isxdigit
-2966	37	4	-	-	skeleton	1839	addr	1	ftell
+2965	23	4	-	ecourna	skeleton	1838	byte	0	isxdigit
+2966	37	4	-	-	skeleton	1840	addr	1	ftell
 2967	19	0	libcxx	libc++	-	-	none	-	
 2968	24	4	-	-	skeleton	3167	byte	0	__math_xflow
 2969	135	3	-	-	-	-	none	-	
-2970	9	4	rhvoice	RHVoice	skeleton	1844	addr	1	atof
+2970	9	4	rhvoice	RHVoice	skeleton	1845	addr	1	atof
 2971	16	3	app	vota	skeleton	5374	addr	1	access
 2972	449	4	-	-	-	-	none	-	
 2973	5288	4	-	-	skeleton	2138	addr	52	rtreeInsertCell
@@ -2904,102 +2904,102 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3038	399	4	sqlite	sqlite	skeleton	2206	addr	7	sqlite3SchemaGet
 3039	259	4	sqlite	sqlite	skeleton	2209	addr	6	sqlite3BtreeCheckpoint
 3040	492	4	sqlite	sqlite	skeleton	2211	addr	20	createFunctionApi
-3041	289	3	rhvoice	sqlite	skeleton	1764	addr	13	sqlite3_vtab_config
+3041	289	3	rhvoice	sqlite	skeleton	1765	addr	13	sqlite3_vtab_config
 3042	369	4	sqlite	sqlite	skeleton	2212	addr	11	yy_destructor
-3043	987	3	sqlite	sqlite	skeleton	1766	addr	32	sqlite3_declare_vtab
-3044	355	3	sqlite	-	skeleton	1767	addr	24	sqlite3_free_table
+3043	987	3	sqlite	sqlite	skeleton	1767	addr	32	sqlite3_declare_vtab
+3044	355	3	sqlite	-	skeleton	1768	addr	24	sqlite3_free_table
 3045	205	4	sqlite	ecourna	skeleton	2213	addr	6	bindText
 3046	11	3	sqlite	ecourna	skeleton	4848	addr	1	sqlite3_column_text
 3047	75	4	sqlite	-	skeleton	2214	addr	2	sqlite3DbStrDup
 3048	46	3	sqlite	-	skeleton	2217	addr	2	sqlite3ValueFree
 3049	93	4	-	sqlite	skeleton	2218	addr	1	vdbeMemAddTerminator
 3050	515	4	-	sqlite	skeleton	2219	byte	0	sqlite3PcacheDirtyList
-3051	918	3	sqlite	sqlite	skeleton	1779	addr	9	sqlite3_file_control
+3051	918	3	sqlite	sqlite	skeleton	1780	addr	9	sqlite3_file_control
 3052	383	4	sqlite	sqlite	skeleton	2220	addr	18	robust_open
-3053	110	3	sqlite	sqlite	skeleton	1780	fingerprint	0	sqlite3_stricmp
+3053	110	3	sqlite	sqlite	skeleton	1781	fingerprint	0	sqlite3_stricmp
 3054	290	4	-	vota	-	-	none	-	
-3055	133	3	sqlite	sqlite	skeleton	1781	addr	9	sqlite3_hard_heap_limit64
+3055	133	3	sqlite	sqlite	skeleton	1782	addr	9	sqlite3_hard_heap_limit64
 3056	1347	4	rhvoice	sqlite	skeleton	2224	addr	59	sqlite3_config
-3057	149	3	openssl	openssl	skeleton	1910	addr	7	ossl_cipher_var_keylen_set_ctx_params
+3057	149	3	openssl	openssl	skeleton	1911	addr	7	ossl_cipher_var_keylen_set_ctx_params
 3058	352	4	app	libc++	-	-	none	-	
 3059	2801	4	app	libc++	-	-	none	-	
 3060	294	4	openssl	libc++	-	-	none	-	
-3061	581	4	openssl	openssl	skeleton	1894	addr	50	rsa_signverify_init
-3062	189	4	openssl	openssl	skeleton	1895	addr	17	mac_newctx
+3061	581	4	openssl	openssl	skeleton	1895	addr	50	rsa_signverify_init
+3062	189	4	openssl	openssl	skeleton	1896	addr	17	mac_newctx
 3063	617	4	app	vota	-	-	none	-	
 3064	1307	4	app	vota	-	-	none	-	
-3065	803	4	openssl	-	skeleton	1897	addr	23	hash_df
-3066	702	4	app	-	skeleton	1898	addr	2	ctr_BCC_update
+3065	803	4	openssl	-	skeleton	1898	addr	23	hash_df
+3066	702	4	app	-	skeleton	1899	addr	2	ctr_BCC_update
 3067	507	4	app	vota	-	-	none	-	
 3068	294	4	sqlite	libc++	-	-	none	-	
-3069	167	3	openssl	openssl	skeleton	1900	addr	15	mac_gen_set_params
-3070	103	3	openssl	openssl	skeleton	1901	addr	8	ossl_mac_key_free
+3069	167	3	openssl	openssl	skeleton	1901	addr	15	mac_gen_set_params
+3070	103	3	openssl	openssl	skeleton	1902	addr	8	ossl_mac_key_free
 3071	336	0	app	openssl	-	-	none	-	
 3072	286	4	openssl	openssl	-	-	none	-	
-3073	211	4	openssl	-	skeleton	1904	addr	8	ecx_get_params
+3073	211	4	openssl	-	skeleton	1905	addr	8	ecx_get_params
 3074	428	4	openssl	-	-	-	none	-	
 3075	1772	4	app	ecourna	-	-	none	-	
 3076	1224	4	app	libc++	-	-	none	-	
-3077	532	4	openssl	openssl	skeleton	1906	addr	29	HKDF_Extract
+3077	532	4	openssl	openssl	skeleton	1907	addr	29	HKDF_Extract
 3078	10	4	libcxx	vota	skeleton	3979	shape	2	BN_BLINDING_is_current_thread
-3079	245	3	openssl	openssl	skeleton	1907	addr	22	prepare_ec_params
-3080	168	3	openssl	openssl	skeleton	1908	addr	15	prepare_dsa_params
+3079	245	3	openssl	openssl	skeleton	1908	addr	22	prepare_ec_params
+3080	168	3	openssl	openssl	skeleton	1909	addr	15	prepare_dsa_params
 3081	124	4	openssl	libc++	-	-	none	-	
-3082	1281	4	openssl	openssl	skeleton	1932	addr	30	do_i2b
+3082	1281	4	openssl	openssl	skeleton	1933	addr	30	do_i2b
 3083	338	3	-	libc++	-	-	none	-	
 3084	574	4	openssl	libc++	-	-	none	-	
-3085	19	0	-	-	skeleton	1911	addr	1	aes_128_ctr_get_params
+3085	19	0	-	-	skeleton	1912	addr	1	aes_128_ctr_get_params
 3086	7	4	openssl	libc++	-	-	none	-	
 3087	7	4	openssl	libc++	-	-	none	-	
-3088	13	4	openssl	openssl	skeleton	1846	addr	2	i2d_X509_PUBKEY_bio
+3088	13	4	openssl	openssl	skeleton	1847	addr	2	i2d_X509_PUBKEY_bio
 3089	281	4	openssl	openssl	skeleton	1594	addr	21	x509v3_add_len_value
 3090	74	4	openssl	libc++	-	-	none	-	
-3091	163	4	openssl	openssl	skeleton	1913	addr	13	OPENSSL_sk_set
-3092	122	4	-	openssl	skeleton	1914	byte	0	OPENSSL_sk_delete_ptr
-3093	116	4	openssl	openssl	skeleton	1915	addr	13	OPENSSL_sk_new_reserve
-3094	8190	4	openssl	-	skeleton	1847	byte	0	ossl_sm3_block_data_order
+3091	163	4	openssl	openssl	skeleton	1914	addr	13	OPENSSL_sk_set
+3092	122	4	-	openssl	skeleton	1915	byte	0	OPENSSL_sk_delete_ptr
+3093	116	4	openssl	openssl	skeleton	1916	addr	13	OPENSSL_sk_new_reserve
+3094	8190	4	openssl	-	skeleton	1848	byte	0	ossl_sm3_block_data_order
 3095	119	3	openssl	-	-	-	none	-	
-3096	402	4	openssl	-	skeleton	1851	addr	24	KeccakF1600
-3097	358	4	-	-	skeleton	1852	addr	4	SHA3_absorb
-3098	1124	4	-	-	skeleton	1849	addr	2	ossl_sha1_ctrl
-3099	78	4	openssl	openssl	skeleton	1850	addr	3	ossl_sha1
-3100	21	4	openssl	-	skeleton	1853	addr	1	SEED_ofb128_encrypt
-3101	42	4	openssl	-	skeleton	1854	addr	2	SEED_cbc_encrypt
+3096	402	4	openssl	-	skeleton	1852	addr	24	KeccakF1600
+3097	358	4	-	-	skeleton	1853	addr	4	SHA3_absorb
+3098	1124	4	-	-	skeleton	1850	addr	2	ossl_sha1_ctrl
+3099	78	4	openssl	openssl	skeleton	1851	addr	3	ossl_sha1
+3100	21	4	openssl	-	skeleton	1854	addr	1	SEED_ofb128_encrypt
+3101	42	4	openssl	-	skeleton	1855	addr	2	SEED_cbc_encrypt
 3102	993	4	openssl	libc++	-	-	none	-	
-3103	16	4	-	openssl	skeleton	1916	byte	0	ossl_rsa_pss_params_30_trailerfield
-3104	20	4	openssl	openssl	skeleton	1917	byte	0	ossl_rsa_pss_params_30_set_saltlen
-3105	20	4	openssl	openssl	skeleton	1918	byte	0	ossl_rsa_pss_params_30_set_maskgenhashalg
-3106	20	4	openssl	openssl	skeleton	1919	byte	0	ossl_rsa_pss_params_30_set_hashalg
+3103	16	4	-	openssl	skeleton	1917	byte	0	ossl_rsa_pss_params_30_trailerfield
+3104	20	4	openssl	openssl	skeleton	1918	byte	0	ossl_rsa_pss_params_30_set_saltlen
+3105	20	4	openssl	openssl	skeleton	1919	byte	0	ossl_rsa_pss_params_30_set_maskgenhashalg
+3106	20	4	openssl	openssl	skeleton	1920	byte	0	ossl_rsa_pss_params_30_set_hashalg
 3107	7	4	openssl	libc++	-	-	none	-	
 3108	309	4	openssl	libc++	-	-	none	-	
-3109	5496	4	openssl	-	skeleton	1855	byte	0	ripemd160_block_data_order
-3110	331	4	openssl	-	skeleton	1856	addr	1	RC2_ofb64_encrypt
-3111	709	4	openssl	-	skeleton	1857	addr	4	RC2_cbc_encrypt
-3112	83	4	openssl	openssl	skeleton	1920	addr	6	ossl_rand_pool_free
-3113	24	4	openssl	openssl	skeleton	1921	addr	1	RAND_bytes
-3114	426	4	openssl	openssl	skeleton	1922	addr	38	RAND_get0_primary
+3109	5496	4	openssl	-	skeleton	1856	byte	0	ripemd160_block_data_order
+3110	331	4	openssl	-	skeleton	1857	addr	1	RC2_ofb64_encrypt
+3111	709	4	openssl	-	skeleton	1858	addr	4	RC2_cbc_encrypt
+3112	83	4	openssl	openssl	skeleton	1921	addr	6	ossl_rand_pool_free
+3113	24	4	openssl	openssl	skeleton	1922	addr	1	RAND_bytes
+3114	426	4	openssl	openssl	skeleton	1923	addr	38	RAND_get0_primary
 3115	596	4	openssl	libc++	-	-	none	-	
-3116	48	4	openssl	openssl	skeleton	1926	addr	3	ossl_property_value
-3117	928	4	openssl	openssl	skeleton	1927	addr	6	ossl_property_list_to_string
-3118	331	4	openssl	-	skeleton	1928	byte	0	ossl_property_match_count
-3119	603	4	-	openssl	skeleton	1929	addr	28	ossl_parse_query
+3116	48	4	openssl	openssl	skeleton	1927	addr	3	ossl_property_value
+3117	928	4	openssl	openssl	skeleton	1928	addr	6	ossl_property_list_to_string
+3118	331	4	openssl	-	skeleton	1929	byte	0	ossl_property_match_count
+3119	603	4	-	openssl	skeleton	1930	addr	28	ossl_parse_query
 3120	1831	4	openssl	libc++	-	-	none	-	
-3121	163	4	openssl	openssl	skeleton	1930	addr	3	ossl_method_store_do_all
-3122	74	4	openssl	openssl	skeleton	1931	addr	1	ossl_method_store_remove_all_provided
+3121	163	4	openssl	openssl	skeleton	1931	addr	3	ossl_method_store_do_all
+3122	74	4	openssl	openssl	skeleton	1932	addr	1	ossl_method_store_remove_all_provided
 3123	237	4	openssl	openssl	skeleton	2013	addr	10	asn1_print_fsname
 3124	1811	4	openssl	openssl	skeleton	2014	addr	82	asn1_item_print_ctx
 3125	14	4	app	-	-	-	none	-	
 3126	287	3	openssl	openssl	-	-	none	-	
-3127	14	4	openssl	openssl	skeleton	1962	addr	2	EVP_ENCODE_CTX_free
+3127	14	4	openssl	openssl	skeleton	1963	addr	2	EVP_ENCODE_CTX_free
 3128	182	4	openssl	openssl	-	-	none	-	
 3129	156	4	openssl	openssl	-	-	none	-	
-3130	149	4	app	openssl	skeleton	1940	addr	15	OBJ_NAME_cleanup
-3131	721	4	-	-	skeleton	1942	addr	1	CRYPTO_ocb128_setiv
-3132	416	4	-	openssl	skeleton	1859	addr	3	CRYPTO_gcm128_finish
-3133	649	4	-	openssl	skeleton	1860	fingerprint	0	CRYPTO_gcm128_init
-3134	1291	4	-	-	skeleton	1861	fingerprint	0	CRYPTO_ctr128_encrypt
+3130	149	4	app	openssl	skeleton	1941	addr	15	OBJ_NAME_cleanup
+3131	721	4	-	-	skeleton	1943	addr	1	CRYPTO_ocb128_setiv
+3132	416	4	-	openssl	skeleton	1860	addr	3	CRYPTO_gcm128_finish
+3133	649	4	-	openssl	skeleton	1861	fingerprint	0	CRYPTO_gcm128_init
+3134	1291	4	-	-	skeleton	1862	fingerprint	0	CRYPTO_ctr128_encrypt
 3135	7	3	app	vota	-	-	none	-	
-3136	62	4	-	openssl	skeleton	1862	byte	0	CRYPTO_ccm128_init
+3136	62	4	-	openssl	skeleton	1863	byte	0	CRYPTO_ccm128_init
 3137	283	4	openssl	vota	-	-	none	-	
 3138	1569	3	openssl	openssl	skeleton	2495	addr	70	provider_activate
 3139	525	2	app	vota	-	-	none	-	
@@ -3189,7 +3189,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3323	104	2	libcxx	vota	-	-	none	-	
 3324	297	3	asn1	ASN1	skeleton	3095	addr	1	std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>>::resize(unsigned long, wchar_t)
 3325	72	3	-	-	-	-	none	-	
-3326	208	2	-	libc++	skeleton	1806	addr	1	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::insert(std::__2::__wrap_iter<char const*>, char)
+3326	208	2	-	libc++	skeleton	1807	addr	1	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::insert(std::__2::__wrap_iter<char const*>, char)
 3327	22	3	app	api	-	-	none	-	
 3328	135	3	app	api	-	-	none	-	
 3329	153	2	-	libc++	skeleton	5183	addr	4	std::__2::__get_classname(char const*, bool)
@@ -3252,7 +3252,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3386	15	3	app	-	-	-	none	-	
 3387	345	3	app	libc++	-	-	none	-	
 3388	31	3	7zip	7zip	skeleton	1429	addr	1	CSeqOutStreamWrap::Init(ISequentialOutStream*)
-3389	24	3	7zip	7zip	skeleton	1700	addr	1	CCompressProgressWrap::Init(ICompressProgressInfo*)
+3389	24	3	7zip	7zip	skeleton	1701	addr	1	CCompressProgressWrap::Init(ICompressProgressInfo*)
 3390	1435	3	7zip	libc++	-	-	none	-	
 3391	12	3	7zip	-	-	-	none	-	
 3392	12	3	7zip	-	-	-	none	-	
@@ -3430,7 +3430,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3564	120	3	rhvoice	ecourna	-	-	none	-	
 3565	1639	3	rhvoice	RHVoice	-	-	none	-	
 3566	109	3	rhvoice	RHVoice	skeleton	1634	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<RHVoice::language_info>>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, std::__2::shared_ptr<RHVoice::language_info>>, RHVoice::str::less, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, std::__2::shared_ptr<RHVoice::language_info>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::shared_ptr<RHVoice::language_info>>, void*>*)
-3567	95	3	rhvoice	RHVoice	skeleton	1688	addr	4	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::phoneme>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::phoneme>, std::__2::less<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::phoneme>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::phoneme>, void*>*)
+3567	95	3	rhvoice	RHVoice	skeleton	1689	addr	4	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::phoneme>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::phoneme>, std::__2::less<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::phoneme>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::phoneme>, void*>*)
 3568	85	3	rhvoice	RHVoice	skeleton	2051	addr	3	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::vector<RHVoice::pitch::target_t, std::__2::allocator<RHVoice::pitch::target_t>>>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, std::__2::vector<RHVoice::pitch::target_t, std::__2::allocator<RHVoice::pitch::target_t>>>, std::__2::less<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, std::__2::vector<RHVoice::pitch::target_t, std::__2::allocator<RHVoice::pitch::target_t>>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::vector<RHVoice::pitch::target_t, std::__2::allocator<RHVoice::pitch::target_t>>>, void*>*)
 3569	279	3	rhvoice	RHVoice	skeleton	1256	addr	15	RHVoice::resource_description::~resource_description()
 3570	1120	3	rhvoice	RHVoice	-	-	none	-	
@@ -3441,7 +3441,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3575	289	3	rhvoice	RHVoice	-	-	none	-	
 3576	6226	3	rhvoice	RHVoice	-	-	none	-	
 3577	281	3	rhvoice	RHVoice	-	-	none	-	
-3578	60	3	rhvoice	RHVoice	skeleton	1682	addr	2	std::__2::__tree<std::__2::__value_type<unsigned int, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned int, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>, void*>*)
+3578	60	3	rhvoice	RHVoice	skeleton	1683	addr	2	std::__2::__tree<std::__2::__value_type<unsigned int, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned int, std::__2::vector<RHVoice::lts::state, std::__2::allocator<RHVoice::lts::state>>>, void*>*)
 3579	2235	3	rhvoice	RHVoice	-	-	none	-	
 3580	489	3	rhvoice	RHVoice	-	-	none	-	
 3581	68	0	rhvoice	RHVoice	-	-	none	-	
@@ -3528,7 +3528,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3662	103	3	app	api	-	-	none	-	
 3663	234	3	app	ecourna	-	-	none	-	
 3664	274	3	app	ecourna	-	-	none	-	
-3665	286	2	app	api	skeleton	1935	addr	8	api::CStepsProgressBar::~CStepsProgressBar()
+3665	286	2	app	api	skeleton	1936	addr	8	api::CStepsProgressBar::~CStepsProgressBar()
 3666	26	2	libcxx	libc++	skeleton	5273	addr	3	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::~basic_stringbuf()
 3667	112	3	-	vota	-	-	none	-	
 3668	803	3	app	RHVoice	-	-	none	-	
@@ -3762,7 +3762,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3896	223	3	app	ecourna	-	-	none	-	
 3897	327	3	app	comum	-	-	none	-	
 3898	182	3	app	-	-	-	none	-	
-3899	129	3	boost	boost	skeleton	1799	addr	4	
+3899	129	3	boost	boost	skeleton	1800	addr	4	
 3900	370	3	boost	boost	-	-	none	-	
 3901	82	3	app	boost	skeleton	2259	addr	3	
 3902	145	3	app	vota	-	-	none	-	
@@ -3826,7 +3826,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3960	225	3	libcxx	libc++abi	-	-	none	-	
 3961	790	3	libcxx	ecourna	skeleton	3139	fingerprint	0	__udivmodti4
 3962	69	3	libcxx	RHVoice	skeleton	3140	addr	1	__subtf3
-3963	462	3	-	-	skeleton	1826	addr	4	wcstombs
+3963	462	3	-	-	skeleton	1827	addr	4	wcstombs
 3964	15	3	app	vota	-	-	none	-	
 3965	16	3	-	RHVoice	-	-	none	-	
 3966	66	3	-	vota	-	-	none	-	
@@ -3851,7 +3851,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3985	195	3	libcxx	libc++	skeleton	2326	fingerprint	0	__fwritex
 3986	56	3	libcxx	libc++	skeleton	3119	addr	3	fwide
 3987	109	3	libcxx	libc++	skeleton	2327	fingerprint	0	__ftello_unlocked
-3988	133	3	libcxx	openssl	skeleton	1840	addr	2	__fstatat
+3988	133	3	libcxx	openssl	skeleton	1841	addr	2	__fstatat
 3989	15	2	libcxx	libc++	skeleton	3113	addr	2	freelocale
 3990	148	3	-	-	skeleton	2328	fingerprint	0	__overflow
 3991	89	3	-	libc++	probe	57	byte	0	__towrite
@@ -4065,7 +4065,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 4199	170	3	-	openssl	skeleton	2436	addr	17	key2any_encode
 4200	568	3	openssl	openssl	skeleton	2505	addr	43	ossl_do_blob_header
 4201	15	0	-	-	skeleton	2437	fingerprint	0	rsa_adjust
-4202	75	0	libcxx	libc++	skeleton	1845	addr	3	std::__2::__loop<char>::~__loop()
+4202	75	0	libcxx	libc++	skeleton	1846	addr	3	std::__2::__loop<char>::~__loop()
 4203	846	3	openssl	libc++	-	-	none	-	
 4204	372	3	openssl	-	skeleton	2338	addr	2	ossl_blake2s_final
 4205	5060	3	openssl	-	skeleton	2339	byte	0	blake2s_compress
@@ -4998,7 +4998,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5132	24	1	boost	boost	-	-	none	-	
 5133	92	0	boost	boost	-	-	none	-	
 5134	24	1	boost	boost	-	-	none	-	
-5135	281	2	boost	-	skeleton	1771	addr	4	boost::re_detail_600::perl_matcher<char const*, std::__2::allocator<boost::sub_match<char const*>>, boost::regex_traits<char, boost::cpp_regex_traits<char>>>::~perl_matcher()
+5135	281	2	boost	-	skeleton	1772	addr	4	boost::re_detail_600::perl_matcher<char const*, std::__2::allocator<boost::sub_match<char const*>>, boost::regex_traits<char, boost::cpp_regex_traits<char>>>::~perl_matcher()
 5136	107	1	boost	boost	-	-	none	-	
 5137	313	2	boost	-	-	-	none	-	
 5138	803	2	boost	-	-	-	none	-	
@@ -5040,14 +5040,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5174	610	1	app	libc++	skeleton	10593	byte	0	std::__2::__tree_node_base<void*>*& std::__2::__tree<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, std::__2::__map_value_compare<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, std::__2::pair<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const, evp_cipher_st const* (*)()>, std::__2::less<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>>, true>, std::__2::allocator<std::__2::pair<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const, evp_cipher_st const* (*)()>>>::__find_equal<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>>(std::__2::__tree_const_iterator<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, std::__2::__tree_node<std::__2::__value_type<std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize>, evp_cipher_st const* (*)()>, void*>*, long>, std::__2::__tree_end_node<std::__2::__tree_node_base<void*>*>*&, std::__2::__tree_node_base<void*>*&, std::__2::pair<ecourna::api::security::EOperationModes, ecourna::api::security::ESymmetricCipherKeySize> const&)
 5175	114	1	app	ecourna	skeleton	5032	addr	6	ecourna::api::security::CSha::~CSha()_2298
 5176	117	0	app	ecourna	skeleton	10602	addr	7	ecourna::api::security::CSha512::~CSha512()
-5177	290	1	app	ecourna	-	-	none	-	
+5177	290	1	app	ecourna	skeleton	10607	shape	22	ecourna::api::security::CSha::Reset()
 5178	1059	1	app	ecourna	-	-	none	-	
 5179	680	2	app	ecourna	-	-	none	-	
 5180	36	2	app	comum	-	-	none	-	
 5181	2349	2	app	ecourna	-	-	none	-	
 5182	299	2	app	libc++	-	-	none	-	
 5183	299	2	app	libc++	-	-	none	-	
-5184	104	2	app	-	skeleton	1909	addr	2	std::__2::__split_buffer<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>&>::~__split_buffer()
+5184	104	2	app	-	skeleton	1910	addr	2	std::__2::__split_buffer<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::allocator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>&>::~__split_buffer()
 5185	886	2	app	-	-	-	none	-	
 5186	873	1	app	libc++	-	-	none	-	
 5187	1151	2	app	libc++	-	-	none	-	
@@ -5079,7 +5079,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5213	646	2	rhvoice	RHVoice	-	-	none	-	
 5214	13	2	rhvoice	RHVoice	skeleton	4104	addr	1	std::__2::deque<double, std::__2::allocator<double>>::~deque[abi:ne210108]()
 5215	515	2	rhvoice	RHVoice	skeleton	4105	shape	6	RHVoice::limiter::process_sample()
-5216	13	2	rhvoice	RHVoice	skeleton	1680	addr	1	std::__2::deque<RHVoice::prosodic_attributes, std::__2::allocator<RHVoice::prosodic_attributes>>::~deque[abi:ne210108]()
+5216	13	2	rhvoice	RHVoice	skeleton	1681	addr	1	std::__2::deque<RHVoice::prosodic_attributes, std::__2::allocator<RHVoice::prosodic_attributes>>::~deque[abi:ne210108]()
 5217	13	2	rhvoice	-	-	-	none	-	
 5218	1901	2	rhvoice	libc++	-	-	none	-	
 5219	722	1	rhvoice	RHVoice	-	-	none	-	
@@ -5158,7 +5158,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5292	229	2	rhvoice	RHVoice	-	-	none	-	
 5293	59	1	rhvoice	RHVoice	-	-	none	-	
 5294	16	2	rhvoice	-	-	-	none	-	
-5295	253	2	rhvoice	RHVoice	skeleton	1689	addr	5	RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node::~node()
+5295	253	2	rhvoice	RHVoice	skeleton	1690	addr	5	RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node::~node()
 5296	538	2	rhvoice	api	-	-	none	-	
 5297	403	2	rhvoice	libc++	-	-	none	-	
 5298	270	2	rhvoice	RHVoice	-	-	none	-	
@@ -5700,7 +5700,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5834	30	1	app	boost	skeleton	1486	shape	6	void boost::throw_exception<boost::gregorian::bad_day_of_month>(boost::gregorian::bad_day_of_month const&)
 5835	94	2	app	-	-	-	none	-	
 5836	53	1	app	libc++	-	-	none	-	
-5837	30	1	app	boost	skeleton	1755	shape	6	void boost::throw_exception<boost::gregorian::bad_month>(boost::gregorian::bad_month const&)
+5837	30	1	app	boost	skeleton	1756	shape	6	void boost::throw_exception<boost::gregorian::bad_month>(boost::gregorian::bad_month const&)
 5838	319	2	app	libc++	-	-	none	-	
 5839	619	2	app	libc++	-	-	none	-	
 5840	180	2	app	-	-	-	none	-	
@@ -6685,7 +6685,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 6819	101	1	openssl	openssl	skeleton	3564	byte	0	print_error
 6820	978	2	openssl	openssl	-	-	none	-	
 6821	21	2	openssl	openssl	skeleton	3566	addr	1	UI_add_verify_string
-6822	334	2	openssl	openssl	skeleton	1912	addr	25	general_allocate_string
+6822	334	2	openssl	openssl	skeleton	1913	addr	25	general_allocate_string
 6823	21	2	openssl	openssl	skeleton	3567	addr	1	UI_add_input_string
 6824	80	2	openssl	openssl	skeleton	3568	addr	6	UI_free
 6825	230	2	openssl	openssl	skeleton	3569	addr	26	UI_new_method
