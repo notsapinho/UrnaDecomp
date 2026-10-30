@@ -20,23 +20,27 @@
 // slots 13 and 15-19 are pure; slot 14 has an empty body, and simulador::CWasmScreenMT calls it from its slots 7-11
 // and 19.
 
+#include "api/gui/primitives.h"
+
 namespace api {
+
+class IText;
 
 class IScreenMT {
 public:
     virtual ~IScreenMT();
 
-    virtual void Slot2() = 0;
+    virtual void Clear() = 0;
 
-    virtual void Slot3(int, int) = 0;
+    virtual void ShowText(const SPoint& posicao, const IText& text) = 0;
 
     virtual void Slot4(int, int, int) = 0;
 
     virtual void Slot5() = 0;
 
-    virtual void Slot6(int, int) = 0;
+    virtual void Buzz(int, int) = 0;
 
-    virtual void Slot7(int) = 0;
+    virtual void Beep(int) = 0;
 
     virtual void Led0() = 0;
 
@@ -45,6 +49,22 @@ public:
     virtual void Led2() = 0;
 
     virtual void Led3() = 0;
+
+    virtual void ShowClock(const SPoint& posicao) = 0;
+
+    virtual void Slot13() = 0;
+
+    virtual void Refresh() {}
+
+    virtual void Slot15() = 0;
+
+    virtual void Slot16() = 0;
+
+    virtual int GetWidth() const = 0;
+
+    virtual int GetHeight() const = 0;
+
+    virtual void Slot19(int) = 0;
 };
 
 } // namespace api
