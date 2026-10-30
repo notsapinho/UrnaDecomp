@@ -174,14 +174,27 @@ alone: a name says which function sits there, and the scan still compares the by
   constant, so this is not `rtti-vptr`. It reads its second argument's fields as a copy does, and its `addr` and `shape`
   hashes each occur once in the target and once in ours (the `fingerprint` command above).
 
-Names free callers, not bodies. Four bodies stay unmatched for a callee of theirs that is no body of ours:
+Names free callers, not bodies. 3473 (`decodeCommon`) stays unmatched: it calls 543, a 239-B body with 28 callers, the
+`push_back(&&)` of a 4-byte element, and that equals no body of ours. The target's 543 is RHVoice's
+`vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`,
+which only takes the pads away, matches 543 by content from that object. Our object has them. A twin reaches the same bytes
+another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merges with `vector<long>`'s from
+`roots_boost.o`, and the content pass matches 543 through it, with no source written for it. That twin goes if uenux2 moves to
+`-O3`, unless another caller lands.
 
-- 3472 (`encodeCommon`) calls 2706, `vector<char>::reserve` by its callers, and ours is the 54-row body of `-Os`; the
-  target's has 65 rows. Of the flag sets tried it is closest to the executable TU's `-Oz -fexceptions`
-  ([levels.md](levels.md) §V1), by rows before binaryen, which is no match.
-- 3473 (`decodeCommon`), 2656 and 5066 call 543, a 239-B body with 28 callers. It is the `push_back(&&)` of a 4-byte
-  element, and it equals no body of ours, nor a probe at the flags of uenux2, ecourna, RHVoice or the runtime. Where it
-  comes from is not known.
+More of the same kind, from the same tally of aligned calls:
+
+- `pair-depth0`: 5055 and 5054, equal bodies the census cannot pair while a callee differs.
+- `callers+content`: 220, 2247, 2249, 2706, 5306, 1497, 5076, 1067 and 1068. A probe object at the
+  executable TU's `-Oz -fexceptions`, first on the link line, matches 2247 and 2249, so those two are that flag set's. 220
+  stays `differs` at the locals there, so for it the flag set is a lead. Our bodies differ, and their callers need only the
+  name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair. An anchor casts votes
+  only while nothing else names it (`anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`).
+- 8041, `use_facet<num_put>`: one of twelve thunks of 453. Its one slot is the `invoke` operand at +0xa2 of 446 and 541,
+  whose rows equal `__put_num_integer_promote` but for table slots, and the `id` lies 16 B above `num_get`'s (8046) on both
+  sides. With it 446 and 541 match, as they could not by name alone.
+- `ModuloTiposEcoUrna::RegistroIdentificacaoEleitor::theInfo`: the record's `typeName` word points at its own name
+  (§A3). 9114 alone reads it, so a vote by 9114 would check nothing.
 
 ## A6. `DataLengthCounter` is not in `BEREncoder`'s object
 
@@ -205,3 +218,32 @@ The generated roots take the address of every external function of the runtime, 
 inline into its one caller. `ASN1_ROOTS_EXCLUDE` in `src/mk/asn1.mk` lists the ones the target only calls. Two more kept
 dead code. `BERDecoder::decode` is used only under `ASN_DEBUG`, and its `vector<BER_Element*>::push_back(&&)` is one body
 with `vector<const char*>::push_back(&&)`: with `decode` rooted, 8854 has a `call` where the target has that body inline.
+
+## A7. What the data and the callers say of the files
+
+`AbstractData`'s constructor is not in `asn1.cxx`'s TU. 22 target functions call 669, among them every `create` (2654, 8941,
+8950, 8956, 8992, 8999), and clang inlines the body wherever it sees it, so none of those TUs holds it: not `asn1.o`,
+`AVNEncoder.o` (8912), `DataFree.o` (8749, 8750) or `PERDecoder.o` (8809). `AbstractData` has no key function and only 669
+stores its vptr, so its vtable sits with the constructor, and that vtable (1148544) lies right before `ValidChecker`'s
+(1148612). `ValidChecker.cxx` is therefore a choice next to the evidence, not evidence of that file. With it there, 532, 553,
+1521, 1671, 2189, 2190, 2654, 3481, 3938, 8941, 8950, 8992, 8999, 9003 and 9010 match.
+
+`ENUMERATED::getName` is not in `AVNEncoder.cxx`'s TU: clang inlines it there, and 8919 holds wasm-opt's shape, a reload of
+`value.asInt()` after the inlined body. `asn1.cxx` is a choice.
+
+`AVNPrinter` and `AbstractData::Print` are deleted from `AVNEncoder.cxx`, and that is a choice. `ledger/classes.json` has no such
+class, and only 3559, 8903 and 9770 load `AVNEncoder`'s vptr, which says the target's module holds none, not that the source
+lacked one: with both restored and left out of the generated roots, the plain link is byte for byte the same. `asn1.h` still
+declares both. Neither `AbstractData`'s `asValueNotation`, `print_on`, `setFromValueNotation` and `get_from` nor its two stream
+operators has a target body, so the roots leave them out (`src/units/87-asn1-avn.mk`).
+
+`GeneralizedTime` is 48 B, with a `bool` at +44 the fork added: 8951 and 8956 allocate 48, 5072 and 8928 read the byte, 8951
+copies it, 8956 sets it, and 2185 computes it.
+
+**One row that is a callee's signature.** 208, 2653, 2186, 8890 and 8887 equal the target's rows but for one `drop` or one
+constant argument. In each the callee is in our table and not the target's: a `-fexceptions` object of ours calls it
+through `invoke_*`. Measured by links that take those landing pads away with `-fignore-exceptions`, which says nothing of the
+target's flags: with `userdict.cpp` so compiled, 208, 2653, 2186 and 8890 match, and with `app_dados_asn_datahoraasn` 8887
+does. Of 770 rows with a candidate from `rhvoice/…`, 3 target bodies call `__cxa_find_matching_catch_*` and 192 of ours do,
+which is a lead on §A2's open question. The whole library so compiled, at unchanged symbols, gains 43 rows and loses 28: a
+lead too, not a run of the pipeline.

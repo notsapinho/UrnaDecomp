@@ -472,8 +472,3 @@ void PEREncoder::encodeBlock(const char * bufptr, unsigned nBytes)
 }
 
 } // namespace ASN1
-
-// <stubs>
-// f3464 · 291 B · unmatched · placement: link order · name unknown
-// ? f3464(i32, i32) { ... }
-// </stubs>

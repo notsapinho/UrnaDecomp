@@ -220,7 +220,7 @@ bool InvalidTracer::do_visit(const OpenData& value)
 
 bool InvalidTracer::do_visit(const UTCTime& value)
 {
-  if (value.isStrictlyValid())
+  if (!value.isStrictlyValid())
   {
     strm << " Campo UTCTime não é válido";
     return false;
@@ -230,9 +230,9 @@ bool InvalidTracer::do_visit(const UTCTime& value)
 
 bool InvalidTracer::do_visit(const GeneralizedTime& value)
 {
-  if (value.isStrictlyValid())
+  if (!value.isStrictlyValid())
   {
-    strm << " Campo GeneralizedTime não é válido ";
+    strm << " Campo GeneralizedTime não é válido " << value.get();
     return false;
   }
   return true;
