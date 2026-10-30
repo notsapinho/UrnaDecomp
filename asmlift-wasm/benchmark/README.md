@@ -197,7 +197,7 @@ commit `rows.json`, `selection.json`, `selection-definitions.json`, `selection-i
 ## Results
 
 `pnpm bench run --label <l> [--setup k,…]` writes `results/<l>.json` (type `BenchResults` in
-`src/schema.ts`; the playground imports it from `@asmlift/wasm-benchmark/schema`) and `results/<l>.md`.
+`src/schema.ts`) and `results/<l>.md`.
 The lifted sources, objects, linked modules and compiler output stay in `build/out/bench/<l>/lifted/`.
 
 | field | |

@@ -24,5 +24,5 @@ it names and are not refreshed.
 Other documentation lives next to what it describes: `README.md` (start here),
 `target/README.md`, `build/README.md` (the toolchain pin), `src/README.md`, `src/units/README.md`,
 `src/asn1/README.md`, `tools/README.md`, `ledger/README.md`, `third_party/MANIFEST.md`, and the toolkit's
-`asmlift-wasm/README.md`, `asmlift-wasm/benchmark/README.md` and `asmlift-wasm/playground/README.md`. The Claude Code
+`asmlift-wasm/README.md` and `asmlift-wasm/benchmark/README.md`. The Claude Code
 command `.claude/commands/decompile-functions.md` runs a decompilation round on top of these documents.
