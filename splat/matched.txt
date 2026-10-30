@@ -7512,3 +7512,7 @@
 11575 _ZN5comum12CGravadorWSQD0Ev
 11576 _ZN5comum12CGravadorWSQD2Ev
 12090 _ZN5comum10IResultadoD2Ev
+224 _ZN5comum9CAppStateC2Ei
+2883 _ZN4vota24CExibeAlertaDesligamentoD2Ev
+7480 _ZN5comum9CAppState15NeedChangeStateEv
+12019 _ZN4vota24CExibeAlertaDesligamentoD0Ev
