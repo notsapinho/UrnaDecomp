@@ -1,7 +1,8 @@
-// Reconstruction notes: comum::md::CRegraCPF's Formata (target fn 11269) and ValidaDigitoVerificador (fn 11270), slots
-// 3 and 4 of its vtable. No record names this file or these members: the path and the names are chosen (the fragment's
-// header comment says why). Digitos and CalculaDV are file-static helpers that clang inlines, as in cregratitulo.cpp;
-// their names are chosen.
+// Reconstruction notes: comum::md::CRegraCPF's ValidaDigitoVerificador (target fn 11270) and Formata (fn 11269), slots
+// 4 and 3 of its vtable, defined in the target's link order. No record names this file or these members: the path and
+// the names are chosen (the fragment's header comment says why). Digitos, Soma and CalculaDV are file-static helpers
+// that clang inlines, as in cregratitulo.cpp; their names are chosen. Soma's loop is a choice among forms that give the
+// same bytes, which the fragment lists; written in ValidaDigitoVerificador itself, the same loop differs.
 #include "app/comum/dados/md/cregracpf.h"
 
 #include <algorithm>
@@ -24,6 +25,14 @@ std::array<uebyte, 11> Digitos(const std::string& numero)
     return digitos;
 }
 
+ueword Soma(const std::array<uebyte, 11>& digitos, int n, int peso)
+{
+    ueword soma = 0;
+    for (int i = 0; i < n; ++i)
+        soma += digitos[i] * (peso - i);
+    return soma;
+}
+
 uebyte CalculaDV(ueword soma)
 {
     const int resto = soma % 11;
@@ -32,11 +41,6 @@ uebyte CalculaDV(ueword soma)
 
 } // namespace
 
-std::string CRegraCPF::Formata(const std::string& numero) const
-{
-    return CStringUtils::PreencheAEsquerda(numero, '0', 11);
-}
-
 bool CRegraCPF::ValidaDigitoVerificador(const std::string& numero) const
 {
     if (numero.size() > 11)
@@ -44,15 +48,18 @@ bool CRegraCPF::ValidaDigitoVerificador(const std::string& numero) const
 
     const std::array<uebyte, 11> digitos = Digitos(numero);
 
-    ueword soma = digitos[0] * 10 + digitos[1] * 9 + digitos[2] * 8 + digitos[3] * 7 + digitos[4] * 6 + digitos[5] * 5 +
-                  digitos[6] * 4 + digitos[7] * 3 + digitos[8] * 2;
+    ueword soma = Soma(digitos, 9, 10);
     const uebyte dv1 = CalculaDV(soma);
     if (digitos[9] != dv1)
         return false;
 
-    soma = digitos[0] * 11 + digitos[1] * 10 + digitos[2] * 9 + digitos[3] * 8 + digitos[4] * 7 + digitos[5] * 6 +
-           digitos[6] * 5 + digitos[7] * 4 + digitos[8] * 3 + dv1 * 2;
+    soma = Soma(digitos, 9, 11) + dv1 * 2;
     return digitos[10] == CalculaDV(soma);
+}
+
+std::string CRegraCPF::Formata(const std::string& numero) const
+{
+    return CStringUtils::PreencheAEsquerda(numero, '0', 11);
 }
 
 } // namespace comum::md

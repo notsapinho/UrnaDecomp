@@ -11132,10 +11132,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11266	-	-	-	no-candidate	no symbol and no ledger pair	9	none	unknown	0	-
 11267	-	-	-	no-candidate	no symbol and no ledger pair	39	none	unknown	0	-
 11268	-	-	-	no-candidate	no symbol and no ledger pair	39	none	unknown	0	-
-11269	_ZNK5comum2md9CRegraCPF7FormataERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6961	symbol	match	-	13	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregracpf.cpp.o
-11270	_ZNK5comum2md9CRegraCPF23ValidaDigitoVerificadorERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6960	symbol	match	-	571	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregracpf.cpp.o
-11271	_ZNK5comum2md12CRegraTitulo7FormataERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6964	symbol	match	-	13	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregratitulo.cpp.o
-11272	_ZNK5comum2md12CRegraTitulo23ValidaDigitoVerificadorERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6962	symbol	match	-	537	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregratitulo.cpp.o
+11269	_ZNK5comum2md9CRegraCPF7FormataERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6960	symbol	match	-	13	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregracpf.cpp.o
+11270	_ZNK5comum2md9CRegraCPF23ValidaDigitoVerificadorERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6961	symbol	match	-	571	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregracpf.cpp.o
+11271	_ZNK5comum2md12CRegraTitulo7FormataERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6962	symbol	match	-	13	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregratitulo.cpp.o
+11272	_ZNK5comum2md12CRegraTitulo23ValidaDigitoVerificadorERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6964	symbol	match	-	537	shape	comum	1	app/uenux2/src/app/comum/dados/md/cregratitulo.cpp.o
 11273	_ZNK7RHVoice8sentence7commandILNS0_12command_typeE3EE8get_typeEv	4897	symbol	match	-	4	byte	comum	1	app/roots_rhvoice.o
 11274	_ZNK5comum2md21CRegraIdentidadeLivre7FormataERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	6973	symbol	match	-	49	addr	comum	1	app/uenux2/src/app/comum/dados/md/cregraidentidadelivre.cpp.o
 11275	_ZNKSt3__210__function6__funcIZNK5comum2md18CVotosEleicoesVota5CargoEhE3$_0FtRKNS3_12CVotosCargosEhEE11target_typeEv	7392	symbol	match	readings: address symbol	7	addr	libc++	2	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o

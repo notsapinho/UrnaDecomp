@@ -11132,10 +11132,10 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11266	9	0	-	-	-	-	none	-	
 11267	39	0	-	-	-	-	none	-	
 11268	39	0	-	-	-	-	none	-	
-11269	13	0	-	comum	skeleton	6961	shape	1	comum::md::CRegraCPF::Formata(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
-11270	571	0	-	comum	skeleton	6960	shape	4	comum::md::CRegraCPF::ValidaDigitoVerificador(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
-11271	13	0	app	comum	skeleton	6964	shape	1	comum::md::CRegraTitulo::Formata(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
-11272	537	0	app	comum	skeleton	6962	shape	3	comum::md::CRegraTitulo::ValidaDigitoVerificador(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
+11269	13	0	-	comum	skeleton	6960	shape	1	comum::md::CRegraCPF::Formata(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
+11270	571	0	-	comum	skeleton	6961	shape	4	comum::md::CRegraCPF::ValidaDigitoVerificador(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
+11271	13	0	app	comum	skeleton	6962	shape	1	comum::md::CRegraTitulo::Formata(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
+11272	537	0	app	comum	skeleton	6964	shape	3	comum::md::CRegraTitulo::ValidaDigitoVerificador(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
 11273	4	0	app	comum	skeleton	4897	byte	0	RHVoice::sentence::command<(RHVoice::sentence::command_type)3>::get_type() const
 11274	49	0	app	comum	skeleton	6973	addr	1	comum::md::CRegraIdentidadeLivre::Formata(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
 11275	7	0	app	libc++	skeleton	7417	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Brancos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target_type() const
