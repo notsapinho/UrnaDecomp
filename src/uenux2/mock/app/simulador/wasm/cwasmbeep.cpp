@@ -29,7 +29,7 @@ void CWasmBeep::Beep(int frequency, int duration)
 
 void CWasmBeep::BeepConfirm(int times)
 {
-    const std::vector<std::pair<int, int>> tones = ConfirmTones();
+    const std::vector<std::pair<int, int>> tones = api::ConfirmTones();
     if (times <= 0 || tones.empty())
         return;
     for (int i = 0; i < times; ++i) {
@@ -40,19 +40,19 @@ void CWasmBeep::BeepConfirm(int times)
 
 void CWasmBeep::BeepError()
 {
-    for (const auto& [frequency, duration] : ErrorTones())
+    for (const auto& [frequency, duration] : api::ErrorTones())
         Beep(frequency, duration);
 }
 
 void CWasmBeep::BeepAlert()
 {
-    for (const auto& [frequency, duration] : AlertTones())
+    for (const auto& [frequency, duration] : api::AlertTones())
         Beep(frequency, duration);
 }
 
 void CWasmBeep::BeepDiscard()
 {
-    for (const auto& [frequency, duration] : DiscardTones())
+    for (const auto& [frequency, duration] : api::DiscardTones())
         Beep(frequency, duration);
 }
 
