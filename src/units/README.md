@@ -118,6 +118,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 | `37-uenux2-iqrcodebuds` | `vota::IQRCodeBUDS::~IQRCodeBUDS`, the D2 and D0 of its vtable (target fns 12050, 12049), inline in the class header; the constructor (inlined into 1956, no target function of its own) emits them, with the 9372 enumerator of `EUeVotaError` |
 | `38-uenux2-cwavfile` | the `api::CWavFile` destructor and deleting destructor (target fns 5345 and 10238), the `CWavFile` class header with the `CWavAudio` WAV header it copies; the constructor (inlined into 10841) is not reconstructed |
+| `60-uenux2-cgravadorwsq` | `comum::CGravadorWSQ`'s implicit destructors (target fns 11576, 11575) and `comum::IResultado`'s in-class destructor (12090), emitted with the vtables in the pending object (no source of its own), the `CGravadorWSQ`, `IGravador` and `IResultado` class headers, the `EExtensaoArquivoResultado`, `EUrnaFase` and `ESavdArquivoUE` types and the `api::CDateTime`/`api::CDate` layouts; `CGravadorWSQ`'s `Slot2`, `Slot3` and `Slot6` (11579, 11577, 11578) and `IGravador`'s five members (11630-11634, which its typeinfo needs) pending |
 
 ## Companion files
 

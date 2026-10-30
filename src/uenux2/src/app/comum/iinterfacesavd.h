@@ -15,4 +15,10 @@ enum ESavdAplic : int;
 // operator. Its enumerators are not recovered, and that it is declared beside ESavdAplic is a choice.
 enum ESavdPacote : int;
 
+// Recovered: only the type of the SAVD file of the urna that CArquivosSavd::operator[] (its record in
+// carquivossavd.cpp spells it ESavdArquivoUE), CAssinador::Assina and comum::IResultado's constructor take: 4 bytes
+// wide (that constructor, inlined into fn 1396, stores it at +36 with an i32.store). Its enumerators are not
+// recovered, and that it is declared beside ESavdAplic is a choice.
+enum ESavdArquivoUE : int;
+
 } // namespace comum
