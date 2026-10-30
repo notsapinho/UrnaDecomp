@@ -7,6 +7,15 @@
 # "linha 1", "linha 2"). The implicit destructors emitted with the vtable do not match 10928/10927 (12 B thunks into
 # bodies binaryen merged with CTextRectField's); the census pairs them with CTextFieldPaper's 10919/10918 instead
 # (one vptr apart), so stubs.py drops those two stubs from ctextfieldpaper.cpp although they are not written.
+# Move (target fn 5527, slot 9) is binaryen's one body for this class's and CLineField's, written in each class's file;
+# binaryen keeps the first in link order, this one, so the match line names it. Its place below line 133 is a choice.
+# The two deltas are read before the first store: `m_linha2.x += posicao.x - m_linha1.x` written in place reads y again
+# after that store, which the target does not. Forms that give the object code of the delta locals after the test, by
+# the function's disassembly in a compile with the unit's flags: the deltas before the test, tested with `dx == 0 && dy ==
+# 0` or around the body with `dx != 0 || dy != 0`; a SPoint of the two deltas; the four coordinates in locals; the x compare
+# spelled `m_linha1.x == posicao.x`; a free SPoint operator== for the test. So all of those are choices. A lone link
+# (tools/round/try-tu.sh --single) of any of them scores 12 over 68: the y pair's two loads come out swapped there and four
+# rows are the library callee, and the whole link matches.
 CTEXTFIELDDOUBLELINE_SRCS := src/api/gui/ctextfielddoubleline.cpp
 UENUX2_SRCS += $(CTEXTFIELDDOUBLELINE_SRCS)
 # the class's members not reconstructed yet (trapping bodies the vtable needs; see the file header), and two callers of

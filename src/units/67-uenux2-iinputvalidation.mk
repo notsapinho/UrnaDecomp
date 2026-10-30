@@ -16,8 +16,8 @@
 # their members, and keeps both vtables (see its header). The headers' paths (the class names in lower case, beside the
 # recorded api/gui/cinputmenufield.cpp, which defines the fourth derived class CMenuValidation), the member names
 # isValid and isValidChar, their const, the data member's name and the constructors' explicit are chosen; each header
-# says why. Not reconstructed: CNumberValidation and CControlValidation (their slot 2 is the same body as 4022) and
-# CMenuValidation (10900, 10899 in cinputmenufield.cpp).
+# says why. Not reconstructed: CNumberValidation and CControlValidation (their slot 2 is the same body as 4022).
+# CMenuValidation (10900, 10899 in cinputmenufield.cpp) is unit 84's.
 # Every header the roots file includes is in src/uenux2/src/api/gui/, which the wildcard below names ($(UENUX2_HDRS) is
 # set after src/Makefile reads the fragments: here it would be empty).
 $(ROOT)/$(APP)/67-uenux2-iinputvalidation-roots.o: $(ROOT)/src/units/67-uenux2-iinputvalidation-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/67-uenux2-iinputvalidation.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)

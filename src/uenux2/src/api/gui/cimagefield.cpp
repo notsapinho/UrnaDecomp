@@ -9,11 +9,13 @@
 //                               functions that return an 11-character name; our link keeps it unmerged     (pending)
 //   11102 Draw(IScreen&) const  calls IScreen slots 22 and 24, which iscreen.h does not declare           (pending)
 //   11101 Rect() const          record at line 52, col 12: CPolySingleton<IScreen>::instance() (fn 512)  (pending)
-//   2241  Move(const SPoint&)   one body binaryen shares with CTextField, CDSImageField, CImageFieldUpdate,
-//                               CTextFieldBlinking and CTextFieldUpdate                                  (pending)
+//   2241  Move(const SPoint&)   one body binaryen shares with CTextField, CImageFieldUpdate, CTextFieldBlinking and
+//                               CTextFieldUpdate; CDSImageField inherits it   (here, below Rect's line: a choice)
 // The pending members are defined in src/units/29-uenux2-cimagefield-pending.cpp.
 
 #include "api/gui/cimagefield.h"
+
+#include "api/gui/iform.h"
 
 namespace api {
 
@@ -29,6 +31,42 @@ CImageField::CImageField(const SPoint& posicao, const SharedIImage& imagem, EAnc
     , m_imagem(imagem)
     , m_ancora(ancora)
 {
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void CImageField::Move(const SPoint& posicao)
+{
+    if (posicao.x == m_posicao.x && posicao.y == m_posicao.y) {
+        return;
+    }
+
+    m_posicao = posicao;
+
+    if (m_form != nullptr && m_form->IsVisible()) {
+        m_alterado = true;
+        m_form->Refresh();
+    }
 }
 
 } // namespace api

@@ -8,13 +8,16 @@
 //         deleting one (3681, shared with CFillField and CRectField) is a thunk into fn 1565, binaryen's one body for
 //         eight such deleting destructors, which our link forms from this one and api::CLedFieldMT's (2777)
 //   11068 Draw(IScreen&) const  (pending: calls IScreen slot 8, which api/gui/iscreen.h does not declare yet)
-//   5527  Move(const SPoint&)   (pending: one body binaryen shares with CTextFieldDoubleLine's; reads IForm<IScreen>)
-// The pending members are defined in src/units/54-uenux2-clinefield-pending.cpp. The definitions follow the target's
-// link order: ledger/ordinals.tsv gives Draw, Rect and GetTypeName the ordinals 4193, 4194 and 4195.
+//   5527  Move(const SPoint&)   (here: one body binaryen shares with CTextFieldDoubleLine's)
+// The pending member is defined in src/units/54-uenux2-clinefield-pending.cpp. The definitions follow the target's
+// link order: the uses-1 band 11066-11068 of ledger/ordinals.tsv gives Draw, Rect, GetTypeName. Move shares its body,
+// so the band does not place it: after Rect is a choice.
 
 #include "api/gui/clinefield.h"
 
 #include <algorithm>
+
+#include "api/gui/iform.h"
 
 namespace api {
 
@@ -25,6 +28,25 @@ SRect CLineField::Rect() const
     const TPosition x2 = m_fim.x;
     const TPosition y2 = m_fim.y;
     return SRect{std::min(x1, x2), std::min(y1, y2), std::max(x1, x2), std::max(y1, y2)};
+}
+
+void CLineField::Move(const SPoint& posicao)
+{
+    if (posicao.x == m_inicio.x && posicao.y == m_inicio.y) {
+        return;
+    }
+
+    const TPosition dx = posicao.x - m_inicio.x;
+    const TPosition dy = posicao.y - m_inicio.y;
+
+    m_fim.x += dx;
+    m_fim.y += dy;
+    m_inicio = posicao;
+
+    if (m_form != nullptr && m_form->IsVisible()) {
+        m_alterado = true;
+        m_form->Refresh();
+    }
 }
 
 std::string CLineField::GetTypeName() const

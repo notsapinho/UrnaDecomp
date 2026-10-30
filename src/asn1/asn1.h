@@ -3206,16 +3206,18 @@ namespace ASN1 {
     virtual int visit(int index, const ASN1_STD string& path, AbstractData* data, unsigned position, unsigned length) = 0;
   };
 
-  /** Byte source of the partial BER decoder (BufferSeeder.h holds the in-memory one). */
+  /** Byte source of the partial BER decoder (BufferSeeder.h holds the in-memory one, api/io/asn/cpartialfileasn.h the
+      file one). decodeByte, decodeBlock, seek and skip are spelled as api::CFileSeeder's records spell its overriders;
+      no record names the other members, whose names and unsigned types are chosen. */
   class ASN1_API ISeeder
   {
   public:
     virtual ~ISeeder() {}
     virtual bool eof() const = 0;
-    virtual unsigned char read() = 0;
-    virtual unsigned read(char* buffer, unsigned size) = 0;
-    virtual void seek(unsigned position) = 0;
-    virtual void skip(unsigned size) = 0;
+    virtual unsigned char decodeByte() = 0;
+    virtual size_t decodeBlock(char* buffer, size_t size) = 0;
+    virtual void seek(size_t position) = 0;
+    virtual void skip(size_t size) = 0;
     virtual unsigned size() const = 0;
     virtual unsigned remaining() const = 0;
     virtual unsigned tell() const = 0;
