@@ -50,8 +50,8 @@ public:
 } // namespace comum
 
 // std::format has no formatter for an enum, so the target's throws pass one as a handle (type code 15). Evidence: the
-// handles of EUrnaFase and ETipoLocalVotacao, plain enums of non-negative values, hold fn 536, whose char presentation
-// tests `>= 128` unsigned (formatter<unsigned int>), and the handle of the generated
+// handles of EUrnaFase and ETipoLocalVotacao (chosen as plain enums of non-negative values) hold fn 536, whose char
+// presentation tests `>= 128` unsigned (formatter<unsigned int>), and the handle of the generated
 // ModuloTiposEleitorais::TipoAbrangencia::NamedNumber, an `int` enum since it has unknownEnumeration_ = -1, holds fn
 // 1711, which tests the signed range (formatter<int>). That one template over the underlying type serves them is
 // chosen; an explicit specialization per enum gives the same bodies (the fragment's measurement).

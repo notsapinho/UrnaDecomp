@@ -8,8 +8,9 @@
 # switch, in a default:, for the two Fase members; 11 is a throw after the switch for the other three), and the
 # codes, messages and bodies give the rest. A by-value TipoLocalVotacao is the address of the caller's copy (3800's p0).
 # The switch tables 497848 and 497860 and the identity ranges give the enums' values.
-# Chosen: the names of the enumerators, where ETipoLocalVotacao and md::ETipoAbrangencia are declared, the header paths,
-# and that one template over the underlying type formats the enums (util.h).
+# Chosen: the names of the enumerators, where ETipoLocalVotacao and md::ETipoAbrangencia are declared, EUrnaFase's
+# comum:: scope, the header paths, and that one template over the underlying type formats the enums (util.h). `: int`
+# with an explicit formatter<unsigned int> gives the same bodies.
 #
 # Forms that give the same function, measured in the object with the object-local numbers masked:
 # - the switch's `return X::a;` against `return X(X::a);` and `{ X r; r.set_a(); return r; }` (1712, 3801);
@@ -32,8 +33,8 @@
 # - 731, the base's default DoConverte and DoDesconverte merged, and 11418, IConversorBiometriaASN's default DoConverte,
 #   need -O3, which uenux2's flags do not have (docs/reference/facts/levels.md §V3). Their format strings are 44 and 47
 #   bytes. In a body that is only such a throw, the object at -O2 keeps libc++'s search of the format string for a brace
-#   (__try_constant_folding, inlined by clang) as a loop: a probe folds 36 bytes and not 40, and at -O3 folds 68 and not
-#   76. The target has no such loop for these and keeps one for its strings of 84 bytes and more (11514, 10772). In a
+#   (__try_constant_folding, inlined by clang) as a loop: a probe folds up to 36 bytes, and at -O3 up to 74. The target has
+#   no such loop for these and keeps one for its strings of 79 bytes and more (10226, 11514, 10772). In a
 #   private link with UENUX2_EXTRA=-O3 (facts/app-flags.md §F9 item 6), holding the defaults in iconversorasn.h and
 #   comum::asn::CConversorHistoricoVotoImpresso for one inherited DoDesconverte, the shared body gives `target 731:
 #   IDENTICAL` from splat-remap; thunks 11360 and 10275 differ in operands only, their call of 731; 11418's rows differ
