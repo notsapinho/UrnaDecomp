@@ -136,7 +136,20 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
 - **No `-fexceptions`.** 0 of 1,645 uenux2 functions that load a `source_location` record call `invoke_*`; uenux2
   throw sites call `__cxa_throw` directly. Without `-fexceptions` emcc defaults to `-fignore-exceptions`
   (throw → direct `__cxa_throw`, no landing pads). That is **not** `-fno-exceptions`, which fails to compile every
-  uenux2 TU with a `throw`; write the flag set as "without `-fexceptions`".
+  uenux2 TU with a `throw`; write the flag set as "without `-fexceptions`". The `mock/` tree is not all alike: from
+  `asmlift-wasm/`,
+
+  ```sh
+  for f in 9655 3876 10243 10212; do printf '%s ' $f; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $f 2>/dev/null | /usr/bin/grep -c invoke_; done
+  # 9655 0      (mock/app/simulador/wasm/cwasmthread.cpp)
+  # 3876 0      (mock/app/simulador/wasm/cwasmclp.cpp)
+  # 10243 18    (mock/app/comum/cappinfobuilder.cpp)
+  # 10212 62    (mock/app/comum/cappinfobuilder.cpp)
+  ```
+
+  (the files from `awk -F'\t' '$2 ~ /\/mock\// {print $2, $6}' ledger/source-locations.tsv`). So
+  `mock/app/simulador/wasm/` is throw-only like `src/`, and `cappinfobuilder.cpp` has landing pads, like the executable
+  TU.
 - **`-fno-strict-aliasing`: no TBAA.** `comum::asn::CConversorCorrespResultado::DoConverte` (fn 10289, rows 355-360
   of `pnpm wasm fn ../target/vota_web_wasm.wasm 10289`) stores a constant into a SEQUENCE field and then reloads the
   fields vector's begin (`local.get 0; i32.load offset=8; i32.load offset=4; i32.const 1; i32.store offset=8`). No

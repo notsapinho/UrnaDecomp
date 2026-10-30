@@ -102,9 +102,30 @@ TMPDIR=/tmp tools/round/try-tu.sh --print-flags src/uenux2/src/app/vota/eleitor/
 # … -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -ffile-prefix-map=src/uenux2=/home/rubio/tse/uenux2
 #   -Isrc -Isrc/uenux2/src -Isrc/asn1  -c /work/src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp
 TMPDIR=/tmp make -C src check-srcloc
-# prints, for example, 280 source_location records in 184 objects (69 files): 259 are records of the target;
+# at 9271d74: 294 source_location records in 217 objects (78 files): 273 are records of the target;
 #   0 that matched functions load are not; 21 that only unmatched functions load are not; 0 name an unmapped file
 ```
+
+The 21 records that only unmatched functions load are wrong in code nobody has fixed yet, and the check passes with
+them. A range adds to them only through an object it rebuilds, so compare the list per object with the base's:
+
+```sh
+TMPDIR=/tmp make -C src check-srcloc 2>&1 | /usr/bin/grep '^unmatched' | awk '{print $2}' | sort | uniq -c
+# at 9271d74:
+#    9 build/out/app/ecourna/api_sql_sqlite_csqlstatement.cpp.o:
+#    2 build/out/app/ecourna/api_util_cstringutils.cpp.o:
+#    2 build/out/app/ecourna/app_dados_asn_cconversorcargoid.cpp.o:
+#    2 build/out/app/ecourna/app_dados_asn_cconversorfase.cpp.o:
+#    2 build/out/app/ecourna/app_dados_asn_midias_cconversordadosgeracaomidia.cpp.o:
+#    1 build/out/app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o:
+#    1 build/out/app/ecourna/app_dados_asn_resultadournacadastro_cconversorhabilitacaobiometrica.cpp.o:
+#    1 build/out/app/ecourna/app_dados_iidentificadoreleitor.cpp.o:
+#    1 build/out/app/uenux2/src/api/util/ctickmanager.cpp.o:
+```
+
+A record in an object the range does not rebuild (`make -n -C src link -W $PWD/<file>` for each file it changed) and
+on a line of a file it does not edit is the base's. Any other needs the base's own list
+(`tools/round/build-at.sh <base> <dir>`, then the same command there).
 
 A function that loads a record with the wrong file name does not match: most of the functions that need the mapped
 records are `ecourna::api::asn::IConversorASN<…>::Converte` and `Deconverte` instantiations. A uenux2 TU that

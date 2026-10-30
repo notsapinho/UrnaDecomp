@@ -4,7 +4,10 @@ Run each from the repository root. Python scripts run with `python3 -I` (isolate
 environment); the ones that import `wasmmod.py` or `wasmcode.py` find them through their own path. TypeScript
 scripts import the toolkit's modules from `asmlift-wasm/src/` and run with the toolkit's `tsx`, for example
 `(cd asmlift-wasm && pnpm exec tsx ../tools/libs/census_subset.ts …)`; `pnpm typecheck` in `asmlift-wasm/` checks
-them through `tools/tsconfig.json`. The build itself (`src/Makefile`) calls the scripts it needs from here.
+them through `tools/tsconfig.json`. The build itself (`src/Makefile`) calls the scripts it needs from here. Every
+script that runs the toolkit needs Node 24 first on `PATH` (`docs/getting-started.md`): the TypeScript scripts,
+`round/try-tu.sh` (`--single` and the whole link's census), `round/census.sh` and the `splat*` make targets. With
+another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap: 6` line.
 
 | directory | what the scripts do |
 | --- | --- |
@@ -41,7 +44,7 @@ them through `tools/tsconfig.json`. The build itself (`src/Makefile`) calls the 
 
 | file | does |
 | --- | --- |
-| `try-tu.sh` | compiles candidate TUs with their component's flags, links the whole module with them and reports what moved; `--single` scores one function alone; `--symbols` lists the mangled symbols a TU defines |
+| `try-tu.sh` | compiles candidate TUs with their component's flags, links the whole module with them and reports what moved; `--single` scores one function alone; `--symbols` lists the function symbols a TU defines (`llvm-nm`'s `T` and `W`: not a class's own vtable or typeinfo, which are strong data; `src/README.md` "Trying a candidate") |
 | `gen_try_roots.py` | the roots TU that keeps a candidate's functions in the link (also used for the ASN.1 runtime by `src/mk/asn1.mk`) |
 | `census.sh` | `make -C src census`: the census of the plain link against the target, the ledger and the progress snapshot |
 | `census_report.py` | the structural report of that census (anatomy, imports, exports, glue diff) |
@@ -54,9 +57,9 @@ them through `tools/tsconfig.json`. The build itself (`src/Makefile`) calls the 
 | `progress_waffles.py` | status.py's waffles: `docs/img/progress-{origins,tse,components}-{light,dark}.svg`, squares coloured by the scan's verdict |
 | `check_srcloc.py` | `make -C src check-srcloc`: reads the `std::source_location` records out of the link's app objects and fails when one that a matched function loads is not a record of the target (a throw site moved), or whose file name is still our checkout's (`UNMAPPED`: a TSE source or header compiled without its tree's `-ffile-prefix-map`); records of unmatched functions are listed |
 | `stubs.py` | `make -C src stubs`: the generated comment stub of every TSE function not decompiled yet, in the file and at the line its evidence gives (`src/README.md` "Stubs"), and the gap comment and `#line` of every run of blank lines that holds code at its original lines ("Gaps"); `--check` (`make -C src stubs-check`, CI) fails on a stub or gap that is missing, extra, stale or out of place; `--strip` turns a file's stubs and gaps back into blank lines before it is edited |
-| `pick_pool.py` | the functions to pick from: a tree's comment stubs joined with `splat/scan.tsv` (`src/ecourna`, `src/uenux2`, `src/asn1` or `--tse`; 40 to 600 B unless `--min`/`--max`), or with `--differs` the TSE `differs` rows (`docs/how-to-decompile.md` step 1) |
-| `build-at.sh` | `build-at.sh <commit> <dir>`: a worktree of that commit `make -C src splat` can build, with this checkout's ignored inputs cloned in and its mtimes, the files the commit has differently touched so make rebuilds what depends on them (`docs/agents.md`) |
-| `check_encoding.py` | checks that the files `.editorconfig` declares Latin-1 (TSE's sources) were not re-saved as UTF-8 (CI) |
+| `pick_pool.py` | the functions to pick from: a tree's comment stubs joined with `splat/scan.tsv` (`src/ecourna`, `src/uenux2`, `src/asn1` or `--tse`; 40 to 600 B unless `--min`/`--max`), or with `--differs` the TSE `differs` rows (`docs/how-to-decompile.md` step 1). The `--differs` rows include libc++ templates a TSE object instantiates (symbols `_ZNSt3__2…`: 2125, 244 and 3517 at 9271d74), which are library code: `awk -F'\t' '$2 ~ /^_ZNSt3__2/'` on its output lists them. Its columns are tab-separated, so look a function up with `awk -F'\t' '$1==3643'`: `/usr/bin/grep '^3643 '` finds nothing |
+| `build-at.sh` | `build-at.sh <commit> <dir>`: a worktree of that commit `make -C src splat` can build, with this checkout's ignored inputs cloned in and its mtimes, the files the commit has differently touched so make rebuilds what depends on them (`docs/agents.md`). `<dir>` is a new directory outside the checkout's ignored inputs, `build/out/` above all, which the script clones into it: a sibling of the worktree, such as `../<worktree>-base` |
+| `check_encoding.py` | checks that the files `.editorconfig` declares Latin-1 (TSE's sources) were not re-saved as UTF-8 (CI). It lists the files from the index (`git ls-files`), so a tracked file deleted and not yet `git rm`'d (a stub-only file `make -C src stubs` removed) stops it with `FileNotFoundError` |
 | `appflags/` | the compile-flag probe: `probe.sh` links the ecourna units with given flags and `driver.cpp`, `compare.sh` scores the pairs in `pairs.tsv` (`score_pairs.ts`), `variants.sh` scores source variants of one function (`variants/`) |
 
 ## linkorder/
