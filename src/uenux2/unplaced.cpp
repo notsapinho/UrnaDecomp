@@ -1903,14 +1903,6 @@
 // f7480 · 18 B · unmatched · placement: link order · name unknown
 // ? f7480(i32) { ... }
 
-// link-order cluster 255 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhasharquivo.cpp
-
-// f10269 · 210 B · unmatched · placement: link order · name unknown
-// void f10269(i32, i32, i32) { ... }
-
-// f10267 · 265 B · unmatched · placement: link order · name unknown
-// void f10267(i32, i32, i32) { ... }
-
 // link-order cluster 259 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhistoricovotoimpresso.cpp
 
 // f10276 · 241 B · unmatched · placement: link order · name unknown
