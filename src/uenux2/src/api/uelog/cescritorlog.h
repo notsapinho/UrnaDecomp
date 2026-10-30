@@ -21,8 +21,9 @@ enum ELogOperacoesLogD {};
 // CWasmLogd's vptr. Its slots are CWasmLogd's: the destructor's two, fazOperacao (slot 2, fn 10262, records
 // cescritorlog.cpp:38/44), the application's log call (slot 3, fn 10260) and the writer both of them call through the
 // vtable (slot 4), which CWasmLogd overrides (fn 8327). The class has no data member (CWasmLogd's first one is at +4)
-// and its destructor has an empty body: CWasmLogd's destructors store no vptr, not even this class's, which clang
-// leaves out only for such a destructor. Slot 3 checks its first argument with api::confereAppValida (record
+// and its destructor calls nothing: CWasmLogd's destructors store no vptr, not even this class's, because clang drops
+// the base's vptr store as dead when nothing after it reads the object. The evidence pins only that; the destructor's
+// form (in the class, = default) is chosen. Slot 3 checks its first argument with api::confereAppValida (record
 // cescritorlog.cpp:28, inlined), passing it "loga", and api::CLoga::loga (fn 433) calls it with its own three
 // arguments: hence its name and parameter types. Slot 4 takes the code as a byte (slot 3 passes it masked with 255),
 // the severity and the text; fazOperacao passes it the operation and 1. The name of slot 4, its parameter types other

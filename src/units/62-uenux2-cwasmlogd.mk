@@ -3,9 +3,10 @@
 # destructors store no vptr) and they destroy its two members, the std::string at +28 and the std::mutex at +4. The
 # destructor is not out of line: the deleting one holds the base-object body inlined. It is implicit, as the class
 # needs no destructor of its own; `virtual ~CWasmLogd() override = default;` in the class gives the same object bytes.
-# With it: the api::CEscritorLog base (src/uenux2/src/api/uelog/cescritorlog.h), whose empty inline destructor and
-# missing data members are why no vptr of the base is stored either, and the ELogOperacoesLogD, ELogAplicativos and
-# ESeveridade enums its slots take (names from the records, no enumerator recovered). No record names cwasmlogd.h or
+# With it: the api::CEscritorLog base (src/uenux2/src/api/uelog/cescritorlog.h), which has no data member and whose
+# destructor calls nothing, so clang drops the base's vptr store as dead (any such destructor gives these bytes; its
+# form is chosen), and the ELogOperacoesLogD, ELogAplicativos and ESeveridade enums its slots take (names from the
+# records, no enumerator recovered). No record names cwasmlogd.h or
 # the class's file: the file is the one ledger/tu-clusters.tsv gives clusters 45 and 47 (45's is the `neighbours'
 # file` over the destructors' unplaced.cpp stubs), in the directory where simulador's other wasm classes have records
 # (cwasmthread.cpp, cwasmclp.cpp). cescritorlog.h goes beside cescritorlog.cpp, the file whose records name
