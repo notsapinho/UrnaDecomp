@@ -105,7 +105,7 @@ the roots object as the `make_shared` ones do: `__get_deleter`, and for `CSqlCon
 control-block members the roots objects supply, by kind, at bb6f018:
 
 ```sh
-awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-roots\.o$/) r[$2]=$3; next } ($2 in r) && $2 ~ /__shared_ptr_(emplace|pointer)/ {k = ($2 ~ /emplace/) ? "emplace" : "pointer"; m = ($2 ~ /D0Ev$/) ? "D0" : ($2 ~ /D2Ev$/) ? "D2" : ($2 ~ /__on_zero_shared/) ? "__on_zero_shared" : ($2 ~ /__get_deleter/) ? "__get_deleter" : "other"; n[k " " m]++} END {for (x in n) print n[x], x}' \
+awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-roots\.o$/) r[$2]=$3; next } ($2 in r) && $2 ~ /__shared_ptr_(emplace|pointer)/ {k = ($2 ~ /emplace/) ? "emplace" : "pointer"; m = ($2 ~ /D0Ev$/) ? "D0" : ($2 ~ /D2Ev$/) ? "D2" : ($2 ~ /__on_zero_shared/) ? "__on_zero_shared" : ($2 ~ /__get_deleter/) ? "__get_deleter" : "other"; n[k " " m]++} END {for (x in n) print n[x], x}' \
   FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt | sort -k2
 # 21 emplace D0
 # 21 emplace D2
@@ -123,14 +123,14 @@ slot 2 (`ledger/vtables.json`).
 The match lines whose symbol a unit's `-roots.o` or `-pending.o` defines (`names.tsv`'s object column):
 
 ```sh
-awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-(roots|pending)\.o$/) r[$2]=$3; next } ($2 in r) {print $1, r[$2]}' \
+awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-(roots|pending)\.o$/) r[$2]=$3; next } ($2 in r) {print $1, r[$2]}' \
   FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt
 ```
 
 prints 155 lines at bb6f018 (17 at 9271d74). Each is code a landed header defines, never a stand-in's own body:
 
 ```sh
-awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-(roots|pending)\.o$/) r[$2]=$3; next } ($2 in r) {k = (r[$2] ~ /pending/) ? "pending" : ($2 ~ /__shared_ptr_(emplace|pointer)/) ? "roots, control block" : "roots, other"; n[k]++} END {for (x in n) print n[x], x}' \
+awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-(roots|pending)\.o$/) r[$2]=$3; next } ($2 in r) {k = (r[$2] ~ /pending/) ? "pending" : ($2 ~ /__shared_ptr_(emplace|pointer)/) ? "roots, control block" : "roots, other"; n[k]++} END {for (x in n) print n[x], x}' \
   FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt | sort -k2
 # 33 pending
 # 67 roots, control block
@@ -152,7 +152,7 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9][0-9]-.*-(roots|pending)\.o$/) r[$2]
 The census pairs whose function of ours comes from a unit's roots object (`ledger/functions.tsv` `best_index`):
 
 ```sh
-awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9][0-9]-.*-roots\.o$/ {print $1, $7, $10, obj[$7]}' \
+awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9]+-.*-roots\.o$/ {print $1, $7, $10, obj[$7]}' \
   build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv
 ```
 
@@ -160,7 +160,7 @@ prints 110 pairs at bb6f018 (8 at 9271d74): 67 control-block members and 43 memb
 none an `(anonymous namespace)` stand-in:
 
 ```sh
-awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9][0-9]-.*-roots\.o$/ {print ($10 ~ /^\(anonymous/) ? "stand-in" : ($10 ~ /__shared_ptr_(emplace|pointer)/) ? "control block" : "header member"}' \
+awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9]+-.*-roots\.o$/ {print ($10 ~ /^\(anonymous/) ? "stand-in" : ($10 ~ /__shared_ptr_(emplace|pointer)/) ? "control block" : "header member"}' \
   build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv | sort | uniq -c
 #   67 control block
 #   43 header member
