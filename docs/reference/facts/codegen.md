@@ -1,7 +1,8 @@
 # Facts: what a source form compiles to
 
-Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them), a
-switch over virtual members, and when a member's body is inlined. `docs/how-to-decompile.md` step 3 relies on these;
+Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them,
+and what it says of the class that holds a member), what an object's disassembly does not settle, a switch over
+virtual members, and when a member's body is inlined. `docs/how-to-decompile.md` step 3 relies on these;
 [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors, linkage). Each probe
 compiles with the uenux2 flags (`-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, `docs/reference/app-flags.md`) in
 the pinned image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the
@@ -93,8 +94,94 @@ pnpm --silent wasm fn ../target/vota_web_wasm.wasm 3660 | sed -n '/folded readou
 #   i32.store[p0] = 1543180;
 ```
 
-binaryen keeps the object's store order, so the object's disassembly is enough to compare forms, and a lone link
-(`try-tu.sh --single`) shows it too ([tool-traps.md](tool-traps.md) §X9).
+binaryen keeps the object's store order, so the object's disassembly shows it, and a lone link (`try-tu.sh
+--single`) shows it too ([tool-traps.md](tool-traps.md) §X9).
+
+**Which class holds a member.** The vptr store is a store like the others. A member that the base's constructor sets
+is stored before the derived class's vptr in the source, so the reversal puts the vptr first; a member the derived
+class's mem-initializer sets comes after its vptr, so it is stored first. The order therefore says which class holds
+the member, which `ledger/classes.json` cannot, but only in a call shape where the two layouts differ. Probe
+`basemember.cpp` (bb6f018), a field class with a base that holds its alignment or not, built from a literal and from a
+by-value copy of a string:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+cat > $P/basemember.cpp <<'EOF'
+// The vptr store against a member's: the member set by the base's constructor or by the derived class's.
+#include <string>
+struct IText {
+    virtual ~IText();
+    virtual int Alinhamento() const;
+#if BASE
+    explicit IText(int al) : m_al(al) {}
+    int m_al;
+#endif
+};
+struct CFixed final : IText {
+#if BASE
+    CFixed(std::string t, int al) : IText(al), m_t(std::move(t)) {}
+#else
+    CFixed(std::string t, int al) : m_al(al), m_t(std::move(t)) {}
+    int m_al;
+#endif
+    std::string m_t;
+};
+IText *Literal() { return new CFixed("texto", 2); }                         // a literal
+IText *Copy(const std::string &s) { return new CFixed(s, 2); }              // a by-value copy of a string
+EOF
+TMPDIR=/tmp build/docker-build.sh sh -c 'for b in 0 1; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DBASE=$b -c /work/build/out/codegen-facts/basemember.cpp -o /work/build/out/codegen-facts/basemember-$b.o; done'
+for b in 0 1; do for f in _Z7Literalv _Z4CopyRKNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE; do printf 'BASE=%s %s: ' $b ${f:0:12}; wasm-objdump -d $P/basemember-$b.o | awk -v s="<$f>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk '/^global.get .*GOT.mem._ZTV/ {print "vptr"} /^i32.store 2 4$/ {print "+4"}' | tr '\n' ' '; echo; done; done
+# BASE=0 _Z7Literalv: +4 vptr
+# BASE=0 _Z4CopyRKNSt: +4 vptr
+# BASE=1 _Z7Literalv: vptr +4
+# BASE=1 _Z4CopyRKNSt: +4 vptr
+```
+
+From a literal the two layouts store in opposite orders; from a by-value copy of a string both store +4 first. The
+target's `api::CFixedText` sites 10934 and 10548 store the vptr first, so `api::IText` holds the alignment
+(`src/uenux2/src/api/gui/itext.h`), and 10958, which stores +4 first, is the copy's shape and says nothing. Before
+reading a store order as evidence, compile both forms in the target function's own call shape.
+
+**Assignments that meet after a branch.** The same reversal holds for two independent assignments of equal cost that
+are read only after the branches join, and not across costs: in `simulador::CWasmImageSurfaceOps::ImageRect` (9289,
+unit 69), the cases that assign two divides or two subtractions run in reverse of the source, and the cases that mix
+a subtraction and a divide keep the divide last whichever order the source writes (the fragment
+`src/units/69-uenux2-cwasmimagesurfaceops.mk` lists the forms measured). So such an order is evidence only between
+equals.
+
+**What the object shows and what it does not.** The object's store order is the module's, but two forms whose objects
+differ can still give the same function: an `i32.const` added to `global.get __memory_base` is an offset into the
+object's own literal data, which moves when the literals' order does and which the link's string merge replaces.
+Probe `literals.cpp`, one choice written with its condition negated:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+cat > $P/literals.cpp <<'EOF'
+// The same choice written with its condition negated: the object's literal offsets move, the code does not.
+const char *Situacao(bool votou) {
+#if NEG
+    return !votou ? "Nao votou" : "Votou";
+#else
+    return votou ? "Votou" : "Nao votou";
+#endif
+}
+EOF
+TMPDIR=/tmp build/docker-build.sh sh -c 'for n in 0 1; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DNEG=$n -c /work/build/out/codegen-facts/literals.cpp -o /work/build/out/codegen-facts/literals-$n.o; done'
+for n in 0 1; do wasm-objdump -d $P/literals-$n.o | awk '/<_Z8Situacaob>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' > $P/literals-$n.txt; done
+paste -d'|' $P/literals-0.txt $P/literals-1.txt
+# global.get 0 <env.__memory_base>|global.get 0 <env.__memory_base>
+# i32.const 0|i32.const 10
+# i32.const 6|i32.const 0
+# local.get 0|local.get 0
+# select|select
+# i32.add|i32.add
+# end|end
+```
+
+Mask those offsets (and the object-local `call` and `global.get` indices) before calling two objects different, and
+compare function by function, not with `cmp` of the whole object ([reading.md](reading.md) §R5 has a template whose
+spellings move a function within the object). A load that only moves across a stretch with no store can also be one
+binaryen sinks at link; when a form's object differs only there, link both before calling it evidence.
 
 ## C2. A switch whose cases call consecutive virtual members is one call through a computed slot
 

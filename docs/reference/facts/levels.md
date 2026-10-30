@@ -1,0 +1,157 @@
+# Facts: optimisation levels measured on single sites
+
+What a compile level does to a site, where the level of a tree is not the question: the flags of the executable TU
+whose copies of inline code the target keeps, how to read LLVM's inlining decisions, and the evidence for uenux2 at
+`-O3 -std=c++23`. The trees' flag sets and their evidence are in [app-flags.md](app-flags.md); nothing here changes a
+flag. Measured at bb6f018, on the pinned image (`TMPDIR=/tmp build/docker-build.sh …`), from the repository root,
+or from `asmlift-wasm/` with Node 24 first on PATH for `pnpm` ([workflow.md](workflow.md) §W1).
+
+## V1. The executable TU compiles at `-Oz -fexceptions`, and the target keeps its copies of inline code
+
+The TSE link's first object defines `votaInit` ([toolchain.md](../toolchain.md) "Export order"), whose record is
+`/home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp:515`: the executable TU. wasm-ld keeps the first object's copy
+of a linkonce function or vtable ([link-order.md](../link-order.md) §1). A class with no key function that this TU
+uses has its typeinfo and vtable in this TU's data, between its records:
+
+    awk -F'\t' '$1>=1526300 && $1<=1526700 {print $1, $2, $3}' ledger/source-locations.tsv | sort -n | sed 's|/home/rubio/tse/uenux2/||'
+      1526324 wasm/vota_web/vota_web_wasm.cpp 515
+      1526348 src/api/pattern/cpolysingletonlist.h 129
+      1526584 src/api/pattern/cpolysingleton.h 78
+      …
+      1526664 wasm/vota_web/vota_web_wasm.cpp 592
+    python3 -I -c "import json; c=json.load(open('ledger/classes.json'))['classes']; v=json.load(open('ledger/vtables.json')); print([(x['name'], x['typeinfo']) for x in c if x['name'] in ('api::ITextToSpeech','api::ISound')]); print([(e['class'], e['address']) for e in v if e['class'] in ('api::ITextToSpeech','simulador::CWasmNullTextToSpeech')])"
+      [('api::ITextToSpeech', 1526340), ('api::ISound', 1526576)]
+      [('api::ITextToSpeech', 1526520), ('simulador::CWasmNullTextToSpeech', 1528696)]
+
+So `api::ITextToSpeech`'s inline members in the target (its D2 11489, `SetVoice` 11518) are that TU's code, and
+`CWasmNullTextToSpeech`, which has a key function, has its vtable elsewhere. The TU has landing pads: `votaInit`
+(7840, record `vota_web_wasm.cpp:515`) calls through `invoke_*` 228 times (`pnpm --silent wasm fn
+../target/vota_web_wasm.wasm 7840 | /usr/bin/grep -c invoke_`), where uenux2's `src/` has none
+([app-flags.md](app-flags.md) §F6).
+
+Its level is `-Oz`. The header of unit 82 compiled at uenux2's flags and at `-Oz … -fexceptions`, and the callees
+of the D2 and of `SetVoice`:
+
+    mkdir -p build/out/levels-probe
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -Isrc/asn1 -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o build/out/levels-probe/tts-uenux2.o
+    TMPDIR=/tmp build/docker-build.sh em++ -Oz -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -fexceptions -Isrc -Isrc/uenux2/src -Isrc/asn1 -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o build/out/levels-probe/tts-exe.o
+    for v in uenux2 exe; do for s in D2:_ZN3api13ITextToSpeechD2Ev SetVoice:_ZN3api13ITextToSpeech8SetVoiceERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE; do printf '%s %s: ' $v ${s%%:*}; wasm-objdump -d build/out/levels-probe/tts-$v.o | awk -v s="<${s#*:}>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -oE 'call [0-9]+ <[^>]+>' | sed -E 's/call [0-9]+ <(env\.)?//; s/>$//' | c++filt | sed -E 's/<.*//; s/\(.*//' | tr '\n' ','; echo; done; done
+      uenux2 D2: operator delete,std::__2::__hash_table,operator delete,operator delete,operator delete,std::__2::__list_imp,
+      uenux2 SetVoice: std::__2::basic_string,std::__2::basic_string,
+      exe D2: std::__2::basic_string,std::__2::__hash_table,api::ITextToSpeech::SRecentCache::~SRecentCache,
+      exe SetVoice: std::__2::basic_string,
+
+The target's two bodies are the `-Oz` ones: the string's destructor, the hash table's and the cache's as three calls,
+and `operator=` as one:
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11489 | sed -n '/folded readout/,$p' | sed -n 3,7p
+        i32.store[p0] = 1526528;
+        f149(i32.sub(p0, -64));
+        f3746(i32.add(p0, 40));
+        f3764(i32.add(p0, 4));
+        push p0;
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11518 | sed -n '/folded readout/,$p' | sed -n 3p
+        f1700(i32.sub(p0, -64), p1);
+
+Not measured for this TU: `-fPIC`, aliasing and `-std`. No setup of `asmlift-wasm/benchmark/dataset/setups.json` has
+`-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups are 7-Zip's and RHVoice's, each ending in
+`-O3`), so no fragment may compile a TSE object so (`pnpm bench setups --check` refuses one), and
+`src/uenux2/wasm/vota_web/vota_web_wasm.cpp` is a stub-only file. A uenux2 object's copy of such a member is right
+source with the wrong level: 11489 and 11518 stay `differs` with unit 82's source as written (how-to steps 4 and 5).
+
+## V2. LLVM's inlining remarks give the cost and the threshold, and the thresholds are what separate the levels
+
+`-Rpass=inline -Rpass-missed=inline` prints, for every call site LLVM considers, whether it inlined the callee, its
+cost and the threshold it was held to: 225 at `-O2`, 250 at `-O3`, and 325 for a callee with the inline hint (an
+implicit destructor, or one declared `inline`: [reading.md](reading.md) §R5). On unit 82's source:
+
+    for L in O2 O3; do echo "-$L"; TMPDIR=/tmp build/docker-build.sh em++ -$L -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -Isrc/asn1 -Rpass=inline -Rpass-missed=inline -c /work/src/uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.cpp -o build/out/levels-probe/rp-$L.o 2>&1 | /usr/bin/grep -oE "'_ZN[0-9A-Za-z_]*(SRecentCacheD2Ev|ITextToSpeechD2Ev|5clearEv)' (not )?inlined into '_ZN[0-9A-Za-z_]*(SRecentCacheD2Ev|ITextToSpeechD2Ev|D0Ev)'[^(]*\(cost=[0-9]+, threshold=[0-9]+\)" | sed -E "s/'_ZN[0-9A-Za-z_]*(SRecentCacheD2Ev|ITextToSpeechD2Ev|5clearEv|D0Ev)'/\1/g; s/ because too costly to inline//" | sort -u; done
+      -O2
+      5clearEv not inlined into ITextToSpeechD2Ev (cost=240, threshold=225)
+      5clearEv not inlined into SRecentCacheD2Ev (cost=240, threshold=225)
+      ITextToSpeechD2Ev not inlined into D0Ev (cost=320, threshold=225)
+      SRecentCacheD2Ev inlined into ITextToSpeechD2Ev with (cost=210, threshold=325)
+      -O3
+      ITextToSpeechD2Ev inlined into D0Ev with (cost=110, threshold=250)
+      SRecentCacheD2Ev not inlined into D0Ev (cost=450, threshold=325)
+      SRecentCacheD2Ev not inlined into ITextToSpeechD2Ev (cost=450, threshold=325)
+
+`CWasmNullTextToSpeech`'s D0 (9427) holds the D2 with the cache's destructor as a call: `-O3`'s shape. At `-O2` the
+cache's destructor goes into the D2, which is then too costly for the D0. A callee whose cost falls between 225 and
+250 separates the two levels with no loop at all; libc++'s `push_back` in `CWasmScreenMT::Refresh` (8746) is another,
+at cost 225 (unit 78's fragment). So when a body differs in what is inlined, run the remarks first: a cost above the
+threshold at the tree's level says that no source form of the caller changes the decision.
+
+## V3. uenux2 at `-O3 -std=c++23`: every match verifies, and four sites need it, all in `mock/app/simulador/wasm/`
+
+Evidence for a decision about uenux2's flags, which stay `-O2 -std=c++20` ([app-flags.md](app-flags.md) §F6). The
+private link of [app-flags.md](app-flags.md) §F9 item 6 with `P=build/out/flags-o3-cxx23` and
+`UENUX2_EXTRA='-O3 -std=c++23'` (the stand-ins keep their flags, ecourna keeps `-O3 -std=c++20`) links in 224 s and
+ends:
+
+    splat.wasm: 7713699 bytes, sha256 8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2 (expected, 7935 matches from ../splat/matched.txt)
+    kind-unverified: 0/7935 matches (0 B) whose operand kinds the shifted link could not tell; their operands kept every reading
+    splat-build exit 0
+
+So no match depends on `-O2` or on `-std=c++20`. Four written bodies that differ in the plain link come closer or
+match there (from `asmlift-wasm/`, `P=build/out/flags-o3-cxx23`):
+
+    pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../$P/wasm/vota_web/vota_web_wasm.wasm sym:_ZN9simulador13CWasmScreenMT8ShowTextERKN3api6SPointERKNS1_5ITextE --against 8799
+      target 8799: IDENTICAL (0 ambiguous operands read as -)                   (plain link: differs at body byte 0)
+    pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../$P/wasm/vota_web/vota_web_wasm.wasm sym:_ZN9simulador13CWasmScreenMT7RefreshEv --against 8746
+      target 8746: IDENTICAL (2 ambiguous operands read as address string)      (plain link: differs at body byte 1)
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 9427 ../$P/wasm/vota_web/vota_web_wasm.wasm 5489
+      score 5 over 27 rows (same 22, replaced 5 [5 operand-only], inserted 0, deleted 0)
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 9427 ../build/out/wasm/vota_web/vota_web_wasm.wasm 5510
+      score 24 over 27 rows (same 3, replaced 2 [0 operand-only], inserted 0, deleted 22)
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 9104 ../$P/wasm/vota_web/vota_web_wasm.wasm 6371
+      score 97 over 747 rows (same 650, replaced 62 [57 operand-only], inserted 22, deleted 13)
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 9104 ../build/out/wasm/vota_web/vota_web_wasm.wasm 6375
+      score 396 over 949 rows (same 553, replaced 128 [96 operand-only], inserted 224, deleted 44)
+
+(5489 and 6371 are the two symbols' indices in that link's `wasm-map/vota_web/names.tsv`, 5510 and 6375 in the
+plain one's.) 8799 (`CWasmScreenMT::ShowText`) needs `-std=c++23`: `text.GetText().substr(0, 40)` on an rvalue is
+C++23's `substr() &&`, which moves the string. 8746 needs `-O3` (V2's `push_back`, and the range-for over four lines
+unrolled). 9427 needs `-O3` (V2); its two calls then lack target names, so it is `unresolved`, not a match. 9104
+(`CWasmScreen::DrawText`) moves its 80-B frame and both `append` calls to the target's with both flags; what is left
+is its rectangle's `select`s.
+
+**The limit.** Every site is in `mock/app/simulador/wasm/`. 16 of the 91 uenux2 objects change, 4 there and 12 under
+`src/`:
+
+    for o in $(cd build/out/app && find uenux2 -name '*.o' | sort); do cmp -s build/out/app/$o $P/app/$o || echo $o; done | awk -F/ '{print $2}' | sort | uniq -c
+       4 mock
+      12 src
+
+and in the 12, the functions whose disassembly changes (call and global indices masked; libc++'s and data symbols
+left out) are matched ones that still verify, functions with no scan row of their own (inlined or dropped), and one
+row, 4118, that scores the same in both links:
+
+    for o in $(cd build/out/app && find uenux2/src -name '*.o' | sort); do cmp -s build/out/app/$o $P/app/$o || python3 -I - build/out/app/$o $P/app/$o <<'EOF'
+    import re, subprocess, sys
+    def bodies(o):
+        b, name = {}, None
+        for line in subprocess.run(['wasm-objdump', '-d', o], capture_output=True, text=True).stdout.splitlines():
+            m = re.match(r'^[0-9a-f]+ func\[\d+\] <(.*)>:$', line)
+            if m: name = m.group(1); b[name] = []
+            elif name and '|' in line: b[name].append(re.sub(r'^(call|global\.[gs]et) \d+', r'\1', line.split('|', 1)[1].strip()))
+        return b
+    a, c = bodies(sys.argv[1]), bodies(sys.argv[2])
+    print('\n'.join(n for n in sorted(set(a) | set(c)) if a.get(n) != c.get(n)))
+    EOF
+    done | /usr/bin/grep -vE '^_Z(Z?N?K?St|TV|TS|TI)' | sort -u | while read s; do printf '%s %s\n' "$(awk -F'\t' -v s="$s" '$2==s {print $1, $5; exit}' splat/scan.tsv)" "$s"; done
+      8341 match _ZN3api11IImpressora13EnableSensorsEh
+       _ZN3api11IObservableINSt3__210shared_ptrINS_6IImageEEEE6DetachEPNS_9IObserverIS4_EE
+      …                                                       # 4 more with no row: CTickManager's two, CDSImageField's D1
+      4118 differs _ZN3api14IFormFieldBaseINS_7IScreenEE7RefreshERS1_
+      1930 match _ZNK5comum2md18CVotosEleicoesVota5CargoEh
+      …                                                       # 6 more CVotosEleicoesVota members, matched, and Total, Candidato with no row
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 4118 ../build/out/wasm/vota_web/vota_web_wasm.wasm 2601      # plain
+      score 4 over 21 rows (same 17, replaced 1 [0 operand-only], inserted 2, deleted 1)
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 4118 ../$P/wasm/vota_web/vota_web_wasm.wasm 2599
+      score 4 over 21 rows (same 17, replaced 1 [0 operand-only], inserted 2, deleted 1)
+
+So the `src/` matches are compatible with the two flags without supporting them, and two readings fit every
+measurement: uenux2 at `-O3 -std=c++23` throughout, or `mock/app/simulador/wasm/` built with its own set, as
+`docs/reference/app-flags.md` "Exceptions" already splits `mock/` by file. A built `src/` site that separates the two
+decides. The `-std` reading rests on one kind of site (the rvalue `substr`), with a handful of C++20 forms tried.
