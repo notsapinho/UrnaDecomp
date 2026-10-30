@@ -7,21 +7,21 @@
 
 namespace comum {
 
-// Reconstruction notes, not TSE's text. The four classes are named by RTTI (each an si_class of api::IReportPart), and
-// cpartecandidatos.cpp by the records of CParteCandidatosMajoritarios::Imprime (:75:19) and
-// CParteCandidatosConsultas::Imprime (:174:19). That one header declares all four is chosen: no record names a header.
+// Reconstruction notes, not TSE's text. The four classes are named by RTTI (each an si_class of api::IReportPart). The
+// records of CParteCandidatosMajoritarios::Imprime (cpartecandidatos.cpp:75:19) and CParteCandidatosConsultas::Imprime
+// (:174:19) name that file for those two only. That it holds the other two is chosen, on the data order: Candidatos's
+// and Majoritarios's vtables, the record :75, Proporcionais's and Consultas's vtables and the record :174 follow one
+// another at 1576388-1576484. That one header declares all four is chosen: no record names a header.
 //
 // Each class is final: D2s 2876, 5589 and 3867 destroy members and never store the class's vptr (reading.md R4), and
 // the control blocks' __on_zero_shared (5969, 11958) call the D2 directly, where a class that is not final goes
-// through slot 0 (fn 411, as for CParteCargos). The destructors are implicit, as reading.md R5 says to leave one when
-// the class has a base. That form and that place for final are choices: src/units/77-uenux2-ireportpart.mk lists the
-// forms that give the same bytes.
+// through slot 0 (fn 411). The destructors are implicit, as reading.md R5 says to leave one when the class has a base.
+// That form and where final is written are choices: src/units/77-uenux2-ireportpart.mk lists what gives the same bytes.
 //
-// Each shared_ptr holds what Imprime calls slot 2 of, so api::IReportPart is the type those calls show. The member
-// names and the order of the constructors' parameters are chosen from the roles below. The constructors are out of
-// line in cpartecandidatos.cpp, inlined by binaryen into their one caller, fn 11946 (the fragment has the evidence),
-// and take their arguments by value. Fn 11946 allocates 12 + sizeof for the three smaller classes and 16 + 88 for
-// CParteCandidatosProporcionais, whose std::function aligns it to 8.
+// Imprime calls slot 2 of each shared_ptr; their element type, api::IReportPart, the member names and the order of the
+// constructors' parameters are chosen, from the roles below. The constructors are out of line in cpartecandidatos.cpp,
+// by value, inlined by binaryen into their one caller, fn 11946 (the fragment has the evidence), which allocates 12 +
+// sizeof for the three smaller classes and 16 + 88 for CParteCandidatosProporcionais, 8-aligned by its std::function.
 
 // 44 bytes. D2 2876 and D0 5590 (f136(D2(p0)): this D2 is above the inlining cost in the hinted forms as well) are
 // CParteRdv's too: its body has the same bytes and binaryen keeps one. Imprime (fn 11215) prints m_cabecalho and then
