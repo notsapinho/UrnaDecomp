@@ -9,6 +9,9 @@
 # - slots 15, 16, 19, 21, 23, 25, 26, 29 to 31, 33, 34: DrawTriangle (9165), DrawPolygon (9155), DrawText from a point
 #   (9115), DrawText inside a clip (9090), DrawImagePlaceholder (9068), DrawImage into a rectangle (9049), DrawMovie (9038),
 #   SetColors (9013), GetWidth (8959), GetHeight (8953), Clear of a screen (9004), GetImageSurfaceOps (8945);
+# - slot 27, Refresh (9022), which logs and calls simulador::EmitEvent (fn 3533, unit 99's wasmjs.cpp), a call clang
+#   would inline were the function in this TU. The string as an explicit std::string temporary gives the same function; a
+#   named local does not;
 # - slot 32, GetTextWidth (9009), and the file-static ParaUtf8 it calls (5098), which converts the text's Latin-1 to UTF-8
 #   for js_measure_text_width and js_text; its second caller is slot 20 (9104).
 # - slot 20, DrawText into a rectangle (9104), is written and differs: its log line's `substr(0, 40)` on a temporary is
@@ -16,8 +19,25 @@
 #   and -std=c++20. A scratch link with this object at -O3 -std=c++23 leaves 97 of 747 rows of 9104, the order of the
 #   screen rectangle's selects, and every other match of the object IDENTICAL (docs/reference/facts/app-flags.md has the
 #   tree's flags; the measurement is not in a tracked file).
-# - pending, in 69-uenux2-cwasmimagesurfaceops-pending.cpp with what each waits for: FillPath and DrawPath (slots 17, 18:
-#   9146, 9125), DrawImage (slots 22, 24: 9079, 9058), Refresh (slots 27, 28: 9022, 9018).
+# - slots 22 and 24, DrawImage (9079, 9058), DrawMovie's shape over ImageSize. Same functions: the data held by `const
+#   std::vector<uint8_t>&` or `const auto`, `!largura || !altura` for the two tests. Not free: 9058 scales the natural
+#   width before the height; the other order differs.
+# - slots 17 and 18, FillPath and DrawPath (9146, 9125), and the scaling they share, a private member EscalaCaminho
+#   (fn 5113, whose name is chosen; it reads m_escalaX and m_escalaY, and its push_back is target fn 2670, which
+#   matches): written and `unresolved`. Both need -O3, which inlines `tipos.push_back` as the target does (at cost 225,
+#   docs/reference/facts/levels.md V2): in a scratch link with the simulator's three objects at -O3, 9146 scores 13 over
+#   307 rows and 9125 13 over 313, all operand-only. At -O2 their two push_backs stay calls of one vector<int> body, a twin of
+#   vector<long>'s in roots_boost.o, and that body is target fn 543, which matches: a body only this level brings, so
+#   at -O3 543 needs another caller. 5113 itself differs at both levels (86 over 273 rows): the target reads each
+#   command's values first and stores the type, then y, then x; the locals above are the nearest form found, and the
+#   `SPathCommand` aggregate stands in for a header whose constructors, if any, are not known.
+# - slot 12 of CWasmImageSurfaceOps, ImageSize (3493): written and `differs`, 11 over 256 rows, 5 of them operand-only. Every
+#   form tried leaves one thing: the target tests the size against 12, the guard of the JPEG loop, before bytes[1] == 0xD8,
+#   ours after it. Writing that test ahead lets LLVM thread the short path past bytes[0] and drops the target's test of
+#   4. std::equal is measured: std::memcmp, over a const or a plain array, folds the signature into the compare, where the
+#   target stores it to the frame and loads it back. Each of these also brought the rows closer: one exit with both
+#   sizes in locals, altura declared first, `i += 2` before the length is read, and largura assigned first.
+# - pending, in 69-uenux2-cwasmimagesurfaceops-pending.cpp with what it waits for: Refresh of a rectangle (slot 28: 9018).
 # - not reconstructed: the destructors in slots 0 and 1 (api::IScreen's 5071 and the deleting 8963 around it), which
 #   call fn 5069 (iscreen.h, the -pending.cpp header). The constructor's being out of line is evidence (the data order,
 #   below); its body is not checked by any match: binaryen inlined it into fn 8302, and our link drops it for want of a
@@ -32,7 +52,9 @@
 #   bytes, an IImage and a shared IImage, slots 15 to 17 (8994, 8991, 8985).
 # - std::__shared_ptr_emplace<std::vector<unsigned char>> (D2 8833, D0 8823, __on_zero_shared 5047), libc++'s code for
 #   the make_shared of slots 2, 5 and 9.
-# - ImageSize(const std::vector<uint8_t>&), slot 12 (3493), is pending.
+# std::vector<double>'s range insert (fn 2662), which FillPath and DrawPath call, has to come from
+# src/app/roots_uenux2.cpp: the target's copy has TBAA, this object's does not (24 over 434 rows), and as the first definer
+# on the link line this object would take it from RHVoice's speech_processor, and 2209 and 5255 with it.
 # Nothing reconstructed calls the constructor, so the roots file keeps both vtables.
 #
 # The file is a choice, and the TU is not: the class shares one object with simulador::CWasmScreen. No record names
@@ -71,7 +93,7 @@
 # extend16 in 9194 and 9184), a line width is scaled as an int (none in 9213), and the widths js_round_rect,
 # js_gray_gradient and js_image get are narrowed to 16 bits. The IText, SFont, IImage and CMovie parameters are what
 # the fields' Draws pass (iscreen.h). The constructor's two TPosition parameters, the two data members at +4 and +8, every member and local
-# name, the file-static helpers (Cor, Ponto, Ancora, Normaliza, Retangulo, ParaUtf8) and their linkage are chosen.
+# name, the file-static helpers (Cor, Ponto, Ancora, Normaliza, Retangulo, ParaUtf8, TipoCaminho, Le16) and their linkage are chosen.
 # CMovie's two accessors (cmovie.h) are chosen; that the frame is read with at() is the target's (`call 234`, the
 # vector's out_of_range).
 # Forms measured for CWasmScreen, by the object's disassembly against this source's (call targets masked):

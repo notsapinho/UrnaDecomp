@@ -5,10 +5,13 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 
 #include "api/gui/cmovie.h"
+#include "api/gui/cstepsprogressbar.h"
 #include "api/gui/itext.h"
+#include "wasmjs.h"
 
 // the JavaScript side (EM_JS, src/web/wasm_shim.cpp, whose generated declarations take an int for every pointer and
 // size): the TPosition widths are what the bodies give, a 16-bit sign extension at the call
@@ -24,6 +27,7 @@ void js_circle(int x, int y, int r, const char* c, int width);
 void js_round_rect(int x, int y, api::TPosition w, api::TPosition h, int r, const char* c, int width);
 void js_gray_gradient(int x, int y, api::TPosition w, api::TPosition h);
 void js_image(const void* data, int size, int x, int y, api::TPosition w, api::TPosition h);
+void js_path(int count, const int* types, const double* values, const char* c, int fill, int width);
 void js_log(const char* msg);
 }
 
@@ -133,6 +137,23 @@ api::SRect Retangulo(api::TPosition x, api::TPosition y, api::TPosition largura,
     return Normaliza(x, y, x + largura - 1, y + altura - 1);
 }
 
+// the type js_path takes for a path command
+int TipoCaminho(api::SPathCommand::EType tipo)
+{
+    switch (tipo) {
+    case api::SPathCommand::LINE_TO: return 1;
+    case api::SPathCommand::ARC: return 2;
+    case api::SPathCommand::CLOSE: return 3;
+    default: return 0;
+    }
+}
+
+// a big-endian 16-bit number of an image's header
+uint16_t Le16(const uint8_t* bytes)
+{
+    return static_cast<uint16_t>(bytes[0] << 8 | bytes[1]);
+}
+
 // the text's Latin-1 as UTF-8 for the canvas (fn 5098; GetTextWidth and DrawText into a rectangle call it)
 std::string ParaUtf8(const std::string& texto)
 {
@@ -203,6 +224,59 @@ api::SharedBytes CWasmImageSurfaceOps::Slot10(const api::IImageSurfaceSource& fo
 void CWasmImageSurfaceOps::FreeBytes(uint8_t* bytes) const
 {
     delete[] bytes;
+}
+
+api::SPoint CWasmImageSurfaceOps::ImageSize(const std::vector<uint8_t>& dados) const
+{
+    if (dados.empty()) {
+        return api::SPoint{1, 1};
+    }
+    const uint8_t* bytes = dados.data();
+    const size_t tamanho = dados.size();
+    if (tamanho >= 10 && bytes[0] == 'G' && bytes[1] == 'I' && bytes[2] == 'F') {
+        api::SPoint ponto;
+        std::memcpy(&ponto, bytes + 6, sizeof(ponto));
+        return ponto;
+    }
+    api::TPosition altura = 1;
+    api::TPosition largura = 1;
+    const uint8_t assinaturaPng[8] = {0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'};
+    if (tamanho >= 24 && std::equal(assinaturaPng, assinaturaPng + 8, bytes)) {
+        largura = Le16(bytes + 18);
+        altura = Le16(bytes + 22);
+    } else if (tamanho >= 4 && bytes[0] == 0xFF && bytes[1] == 0xD8) {
+        size_t i = 2;
+        while (i + 9 < tamanho) {
+            if (bytes[i] != 0xFF) {
+                ++i;
+                continue;
+            }
+            if (i + 4 > tamanho) {
+                break;
+            }
+            const uint8_t* segmento = bytes + i;
+            const uint8_t marcador = segmento[1];
+            if (marcador == 0xD9 || marcador == 0xDA) {
+                break;
+            }
+            i += 2;
+            const size_t comprimento = Le16(bytes + i);
+            if (comprimento < 2) {
+                break;
+            }
+            i += comprimento;
+            if (i > tamanho) {
+                break;
+            }
+            if ((marcador >= 0xC0 && marcador <= 0xC3) || (marcador >= 0xC5 && marcador <= 0xC7) ||
+                (marcador >= 0xC9 && marcador <= 0xCB) || (marcador >= 0xCD && marcador <= 0xCF)) {
+                largura = Le16(segmento + 7);
+                altura = Le16(segmento + 5);
+                break;
+            }
+        }
+    }
+    return api::SPoint{largura, altura};
 }
 
 api::SRect CWasmImageSurfaceOps::ImageRect(api::TPosition largura, api::TPosition altura, const api::SPoint& posicao,
@@ -353,6 +427,74 @@ void CWasmScreen::DrawPolygon(const std::vector<api::SPoint>& pontos, api::TColo
     DrawLine(pontos.back(), pontos.front(), cor, largura);
 }
 
+std::vector<api::SPathCommand> CWasmScreen::EscalaCaminho(const std::vector<api::SPathCommand>& caminho) const
+{
+    std::vector<api::SPathCommand> escalado;
+    escalado.reserve(caminho.size());
+    for (const api::SPathCommand& comando : caminho) {
+        switch (comando.tipo) {
+        case api::SPathCommand::MOVE_TO: {
+            const double x = comando.x * m_escalaX;
+            const double y = comando.y * m_escalaY;
+            escalado.push_back({api::SPathCommand::MOVE_TO, x, y});
+            break;
+        }
+        case api::SPathCommand::LINE_TO: {
+            const double x = comando.x * m_escalaX;
+            const double y = comando.y * m_escalaY;
+            escalado.push_back({api::SPathCommand::LINE_TO, x, y});
+            break;
+        }
+        case api::SPathCommand::ARC: {
+            const double x = comando.x * m_escalaX;
+            const double y = comando.y * m_escalaY;
+            const double raioX = comando.raioX * m_escalaX;
+            const double raioY = comando.raioY * m_escalaY;
+            escalado.push_back({api::SPathCommand::ARC, x, y, raioX, raioY, comando.anguloInicial, comando.anguloVarredura});
+            break;
+        }
+        case api::SPathCommand::CLOSE:
+            escalado.push_back({api::SPathCommand::CLOSE});
+            break;
+        }
+    }
+    return escalado;
+}
+
+void CWasmScreen::FillPath(const std::vector<api::SPathCommand>& caminho, api::TColor cor)
+{
+    const std::vector<api::SPathCommand> escalado = EscalaCaminho(caminho);
+    std::vector<int> tipos;
+    std::vector<double> valores;
+    tipos.reserve(escalado.size());
+    valores.reserve(escalado.size() * 6);
+    for (const api::SPathCommand& comando : escalado) {
+        tipos.push_back(TipoCaminho(comando.tipo));
+        valores.insert(valores.end(), {comando.x, comando.y, comando.raioX, comando.raioY, comando.anguloInicial,
+                                       comando.anguloVarredura});
+    }
+    if (!tipos.empty()) {
+        js_path(tipos.size(), tipos.data(), valores.data(), Cor(cor), 1, 1);
+    }
+}
+
+void CWasmScreen::DrawPath(const std::vector<api::SPathCommand>& caminho, api::TColor cor, int largura)
+{
+    const std::vector<api::SPathCommand> escalado = EscalaCaminho(caminho);
+    std::vector<int> tipos;
+    std::vector<double> valores;
+    tipos.reserve(escalado.size());
+    valores.reserve(escalado.size() * 6);
+    for (const api::SPathCommand& comando : escalado) {
+        tipos.push_back(TipoCaminho(comando.tipo));
+        valores.insert(valores.end(), {comando.x, comando.y, comando.raioX, comando.raioY, comando.anguloInicial,
+                                       comando.anguloVarredura});
+    }
+    if (!tipos.empty()) {
+        js_path(tipos.size(), tipos.data(), valores.data(), Cor(cor), 0, Espessura(largura));
+    }
+}
+
 api::SRect CWasmScreen::DrawText(const api::SPoint& posicao, const api::IText& texto, const api::SFont& font,
                                  api::TColor cor, api::TColor fundo)
 {
@@ -455,11 +597,46 @@ void CWasmScreen::DrawText(const api::SPoint& posicao, const api::SRect&, const 
     DrawText(posicao, texto, font, cor, fundo);
 }
 
+void CWasmScreen::DrawImage(const api::SPoint& posicao, const api::IImage& imagem, api::EAnchorPoint ancora)
+{
+    const std::vector<uint8_t> dados = imagem.GetData();
+    const api::SPoint tamanho = m_ops.ImageSize(dados);
+    const int largura = EscalaY(tamanho.x);
+    const int altura = EscalaY(tamanho.y);
+    int x = EscalaX(posicao.x);
+    int y = EscalaY(posicao.y);
+    Ancora(x, y, largura, altura, ancora);
+    const api::SRect rect = Retangulo(x, y, std::max(largura, 1), std::max(altura, 1));
+    if (!dados.empty()) {
+        js_image(dados.data(), dados.size(), rect.left, rect.top, rect.right - rect.left + 1, rect.bottom - rect.top + 1);
+    }
+}
+
 void CWasmScreen::DrawImagePlaceholder(const api::SPoint& posicao, const api::IImage&, api::EAnchorPoint ancora)
 {
     const api::SRect rect = m_ops.ImageRect(64, 64, posicao, ancora);
     FillRect(rect, static_cast<api::TColor>(5));
     DrawRect(rect, static_cast<api::TColor>(3), 1);
+}
+
+void CWasmScreen::DrawImage(const api::SPoint& posicao, const api::IImage& imagem, const api::SPoint& tamanho,
+                            api::EAnchorPoint ancora)
+{
+    const std::vector<uint8_t> dados = imagem.GetData();
+    int largura = EscalaX(tamanho.x);
+    int altura = EscalaY(tamanho.y);
+    if (largura == 0 || altura == 0) {
+        const api::SPoint natural = m_ops.ImageSize(dados);
+        largura = EscalaY(natural.x);
+        altura = EscalaY(natural.y);
+    }
+    int x = EscalaX(posicao.x);
+    int y = EscalaY(posicao.y);
+    Ancora(x, y, largura, altura, ancora);
+    const api::SRect rect = Retangulo(x, y, std::max(largura, 1), std::max(altura, 1));
+    if (!dados.empty()) {
+        js_image(dados.data(), dados.size(), rect.left, rect.top, rect.right - rect.left + 1, rect.bottom - rect.top + 1);
+    }
 }
 
 void CWasmScreen::DrawImage(const api::SPoint& posicao, const api::IImage& imagem, const api::SRect& rect)
@@ -491,6 +668,12 @@ void CWasmScreen::DrawMovie(const api::SPoint& posicao, const api::CMovie& filme
     if (!dados.empty()) {
         js_image(dados.data(), dados.size(), rect.left, rect.top, rect.right - rect.left + 1, rect.bottom - rect.top + 1);
     }
+}
+
+void CWasmScreen::Refresh()
+{
+    js_log("Refresh()");
+    EmitEvent("vota:screen", "{\"refreshed\":true}");
 }
 
 void CWasmScreen::SetColors(api::TColor cor, api::TColor fundo)

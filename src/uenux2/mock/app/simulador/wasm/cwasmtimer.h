@@ -21,8 +21,9 @@ namespace simulador {
 // generation are atomics: the callback Start schedules (fn 7909) reloads the shared_ptr from its argument before each
 // of them, which only an atomic load forces (with a plain bool and uint64_t clang keeps it in a local); their stores
 // and the increment compile as a plain bool's and uint64_t's would. The member names are chosen: no record, symbol
-// or string names them (api/util/itimer.h for the slots). Start and that callback are pending
-// (src/units/49-uenux2-cwasmtimer-pending.cpp, whose header has their source).
+// or string names them (api/util/itimer.h for the slots). Call, Schedule and Fire are chosen too: fn 7918 and fn 7909,
+// the callback, each hold the same 16-byte allocation and emscripten_async_call, so one helper binaryen inlined into
+// both is a reading, and Fire's being a private static member of this class, not a file-static function, is a choice.
 class CWasmTimer final : public api::ITimer {
 public:
     CWasmTimer(std::chrono::milliseconds interval, std::function<void()> callback);
@@ -42,6 +43,15 @@ private:
         int interval;
         std::function<void()> callback;
     };
+
+    // what a pending emscripten_async_call carries: the state, and the generation it was scheduled for
+    struct Call {
+        std::shared_ptr<State> state;
+        std::uint64_t generation;
+    };
+
+    static void Schedule(const std::shared_ptr<State>& state, std::uint64_t generation);
+    static void Fire(void* arg);
 
     std::shared_ptr<State> m_state;
 };
