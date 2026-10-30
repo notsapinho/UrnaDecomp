@@ -48,10 +48,10 @@ public:
     virtual void SetBiometriaEleitor() override;
     virtual void LimpaBiometria() override;
     virtual EEstadoBiometria GetEstadoBiometria() const override;
-    virtual std::string GetTextoLocal() const override;
+    virtual std::string GetTextoComparecimento() const override;
     virtual void AgendaInspecao() override;
     virtual api::CDateTime GetDataHoraInspecao() const override;
-    virtual bool Slot19() const override;
+    virtual bool IsVotacaoBloqueadaPorHorario() const override;
     virtual void LimpaIdentidades() override;
     virtual void SetIdentidadeDigitada(const std::string& identidade) override;
     virtual void SetTipoIdentidadeDigitada(ecourna::app::dados::ETipoIdentificadorEleitor tipo) override;

@@ -27,11 +27,11 @@ namespace vota::impl {
 //                 holds CMostraEleitorVotando::SalvaHabilitacaoEleitor's records, switches on slot 15: 1 reads the
 //                 voter's saved biometric data, 2 the operator's ("_Operador", "...biometria do mesário.").
 //   slot 2        the only call is in CCancelaHabilitacaoEleitor's slot 2 (fn 10646).
-//   slot 16       returns the "Local {:04}" text and goes with slot 8 (fns 10583 and 10584 call one each, alike).
+//   slot 16       formats "{:04}" over a count: CEleitores +104, which fn 10566 tests beside "Nenhum eleitor votou".
 //   slots 17, 18  CPedeIdentidade's slot 8 (fn 10676, which holds "Inspecione cabina e urna") compares slot 18 with
 //                 now and, past it, calls slot 17, which draws a time 60 to 90 minutes from now (fn 5412).
-//   slot 19       compares now with an election date and the last vote; nothing says what for, so it keeps its
-//                 slot's name.
+//   slot 19       when it is true, CPedeIdentidade's slot 8 (fn 10676, through fn 2226) logs "Votacao foi bloqueada
+//                 por horario"; the body compares now with an election date and the last vote.
 //   slots 20-22   slot 20 resets the four optionals, called from CPedeIdentidade's slot 2 (fn 10680) right after
 //                 "Aguardando digitação do identificador do eleitor"; 21 and 22 set what slots 23 and 24 return.
 //   slots 27-30   the CApresentacaoFotoEleitor state and result: slot 27 EleitorSemFoto, 28 Apresentada, 29
@@ -63,10 +63,10 @@ public:
     virtual void SetBiometriaEleitor() = 0;
     virtual void LimpaBiometria() = 0;
     virtual EEstadoBiometria GetEstadoBiometria() const = 0;
-    virtual std::string GetTextoLocal() const = 0;
+    virtual std::string GetTextoComparecimento() const = 0;
     virtual void AgendaInspecao() = 0;
     virtual api::CDateTime GetDataHoraInspecao() const = 0;
-    virtual bool Slot19() const = 0;
+    virtual bool IsVotacaoBloqueadaPorHorario() const = 0;
     virtual void LimpaIdentidades() = 0;
     virtual void SetIdentidadeDigitada(const std::string& identidade) = 0;
     virtual void SetTipoIdentidadeDigitada(ecourna::app::dados::ETipoIdentificadorEleitor tipo) = 0;

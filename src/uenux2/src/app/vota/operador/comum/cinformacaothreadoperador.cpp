@@ -7,8 +7,8 @@
 //   10    10574 IsBiometriaEleitor          (here)     11    10573 IsSemBiometria               (here)
 //   12    10572 SetBiometriaOperador        (here)     13    10571 SetBiometriaEleitor          (here)
 //   14    10570 LimpaBiometria              (here)     15    2587  GetEstadoBiometria           (here)
-//   16    10569 GetTextoLocal               (pending)  17    10568 AgendaInspecao               (pending)
-//   18    10567 GetDataHoraInspecao         (here)     19    10566 Slot19                       (pending)
+//   16    10569 GetTextoComparecimento      (pending)  17    10568 AgendaInspecao               (pending)
+//   18    10567 GetDataHoraInspecao         (here)     19    10566 IsVotacaoBloqueadaPorHorario (pending)
 //   20    10565 LimpaIdentidades            (here)     21    10564 SetIdentidadeDigitada        (pending)
 //   22    10563 SetTipoIdentidadeDigitada   (pending)  27    10558 SetEleitorSemFoto            (here)
 //   28    10557 SetFotoApresentada          (here)     29    10556 SetFotoNaoApresentada        (here)
@@ -18,7 +18,7 @@
 // The names of slots 2 to 22 and 27 to 30 are chosen (iinformacaothreadoperador.h says from what). A member marked
 // pending is defined in src/units/50-uenux2-cinformacaothreadoperador-pending.cpp until it is reconstructed.
 // vota::TipoToStr (10586, record at line 40) and IInformacaoThreadOperador::GetInst (599, record at line 554) are not
-// reconstructed, and their lines stay blank. The four records are the only lines the target fixes: the members run in
+// reconstructed, and their lines stay blank. The six records are the only lines the target fixes: the members run in
 // slot order, as the target's function order has them, and the lines of slots 2 to 22 and 27 to 30 are a choice.
 
 #include "app/vota/operador/comum/cinformacaothreadoperador.h"
