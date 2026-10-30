@@ -12,6 +12,13 @@ enum EUeVotaError {
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,
+    // the values are the codes CInformacaoThreadOperador's four getters throw (target fns 10562, 10561, 10560, 10559);
+    // the names are chosen from their messages and their getters, "Identidade não registrada" and "Tipo de identidade
+    // não registrado": no evidence names them
+    EUE_VOTA_IDENTIDADE_DIGITADA_NAO_REGISTRADA = 9401,
+    EUE_VOTA_TIPO_IDENTIDADE_NAO_REGISTRADO = 9402,
+    EUE_VOTA_IDENTIDADE_ELEITOR_NAO_REGISTRADA = 9403,
+    EUE_VOTA_IDENTIDADE_PRINCIPAL_NAO_REGISTRADA = 9404,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;
