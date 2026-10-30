@@ -118,6 +118,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 | `37-uenux2-iqrcodebuds` | `vota::IQRCodeBUDS::~IQRCodeBUDS`, the D2 and D0 of its vtable (target fns 12050, 12049), inline in the class header; the constructor (inlined into 1956, no target function of its own) emits them, with the 9372 enumerator of `EUeVotaError` |
 | `38-uenux2-cwavfile` | the `api::CWavFile` destructor and deleting destructor (target fns 5345 and 10238), the `CWavFile` class header with the `CWavAudio` WAV header it copies; the constructor (inlined into 10841) is not reconstructed |
+| `40-uenux2-cprogressbar` | the `api::CProgressBar` destructor and deleting destructor (target fns 5509 and 10978, defined out of line: the deleting one calls the other) and `Rect` (10974), the `CProgressBar` class header; the constructor (inlined into `std::make_shared`'s 5545) is not reconstructed; `Draw` (10977), `Move` (10976) and `GetTypeName` (10975, which binaryen merges with our `ASN1::AbstractData::getTypeName`) pending |
 
 ## Companion files
 
