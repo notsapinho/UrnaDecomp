@@ -1,6 +1,11 @@
-# uenux2 api::CTextField ctor (target fn 1918), GetTypeName (10947) and its implicit destructors (10950, 10948, emitted
-# with the vtable) in src/uenux2/src/api/gui/ctextfield.cpp, with the class header ctextfield.h and the 4964 enumerator
-# of eueguierror.h; paths relative to src/uenux2.
+# uenux2 api::CTextField ctor (target fn 1918), Draw (10952), GetTypeName (10947) and its implicit destructors (10950,
+# 10948, emitted with the vtable) in src/uenux2/src/api/gui/ctextfield.cpp, with the class header ctextfield.h and the
+# 4964 enumerator of eueguierror.h; paths relative to src/uenux2.
+# Draw sits above Rect's line 55, in the band's order (uses 1, 10947-10952: Draw, Rect, the destructors, GetTypeName); no
+# record falls in it, so its lines are a choice. Same object code, by the function's disassembly with the object-local
+# numbers masked: `m_apagar == true`, and m_apagar as an unsigned char compared with 1 (no loop tells a bool from a byte,
+# docs/reference/facts/reading.md R14), so the bool is a choice. A local SRect for DrawText's result differs in the whole
+# link too (120 B against 114), so the assignment from the call is evidence.
 # Move (target fn 2241, slot 9) is binaryen's one body for five functions, each written in its class's file: the Move of
 # this class, CImageField, CImageFieldUpdate, CTextFieldBlinking and CTextFieldUpdate (the vtables of six classes hold it:
 # api::CDSImageField inherits CImageField's). Binaryen keeps the first in link order, this one, so the match line names

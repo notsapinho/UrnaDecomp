@@ -13,10 +13,13 @@
 # functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) below it, a choice. The constructor is
 # not reconstructed (no target function of its own; it needs api::ITimerScheduler and the lambda it hands to it), so
 # lines 32 and 80 stay free. Paths relative to src/uenux2.
-# Draw and Rect are not reconstructed: 43-uenux2-cimagefieldupdate-pending.cpp defines them with trapping bodies and
-# names each with its target function. Draw, the first of them the class declares, is the key function and stays
-# there, so that object emits the vtable and with it the destructors and GetTypeName, which keep matching from it.
-# Every header of ours it reads is in src/uenux2/src/api/gui.
+# Draw (target fn 11090, slot 2), the class's key function, is in cimagefieldupdate.cpp above Show, in the band's order,
+# at lines that are a choice, so that object emits the vtable and with it the destructors and GetTypeName. Testing
+# m_tamanho for null first is evidence: testing it != nullptr first swaps the two calls. Same object code, by the
+# function's disassembly with the object-local numbers masked: `!m_tamanho`, and a `return` after the first call in
+# place of the `else`; so those spellings are choices. Rect is not reconstructed:
+# 43-uenux2-cimagefieldupdate-pending.cpp defines it with a trapping body and names its target function. Every header of
+# ours it reads is in src/uenux2/src/api/gui.
 CIMAGEFIELDUPDATE_SRCS := src/api/gui/cimagefieldupdate.cpp
 UENUX2_SRCS += $(CIMAGEFIELDUPDATE_SRCS)
 $(ROOT)/$(APP)/43-uenux2-cimagefieldupdate-pending.o: $(ROOT)/src/units/43-uenux2-cimagefieldupdate-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/43-uenux2-cimagefieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)

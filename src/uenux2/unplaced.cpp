@@ -3124,14 +3124,6 @@
 // f10878 · 91 B · unmatched · placement: link order · name unknown
 // ? f10878(i32) { ... }
 
-// link-order cluster 375 · uses=1 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f10960 · 27 B · unmatched · placement: link order · name unknown
-// void f10960(i32, i32) { ... }
-
-// f10959 · 34 B · unmatched · placement: link order · name unknown
-// void f10959(i32, i32) { ... }
-
 // link-order cluster 382 · uses=1 · neighbours' file uenux2/src/api/gui/iform.cpp
 
 // f11009 · 212 B · unmatched · placement: link order · name unknown
@@ -3207,14 +3199,6 @@
 
 // f11139 · 17 B · unmatched · placement: link order · name unknown
 // void f11139(i32, i32) { ... }
-
-// link-order cluster 405 · uses=1 · neighbours' file uenux2/src/api/gui/cfillfield.cpp
-
-// f11142 · 25 B · unmatched · placement: link order · name unknown
-// void f11142(i32, i32) { ... }
-
-// f11141 · 34 B · unmatched · placement: link order · name unknown
-// void f11141(i32, i32) { ... }
 
 // link-order cluster 406 · uses=1 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
 
@@ -3423,11 +3407,6 @@
 // f5492 · 1445 B · unmatched · placement: link order · name unknown
 // void f5492(i32, i32) { ... }
 
-// link-order cluster 773 · uses=2 · neighbours' file uenux2/src/api/gui/cqrcodeguard.cpp
-
-// f5501 · 58 B · unmatched · placement: link order · name unknown
-// ? f5501(i32, i32) { ... }
-
 // link-order cluster 775 · uses=2 · neighbours' file uenux2/src/api/gui/cstepsprogressbar.cpp
 
 // f5506 · 836 B · unmatched · placement: link order · name unknown
@@ -3514,11 +3493,6 @@
 // f5548 · 16 B · unmatched · placement: link order · name unknown
 // ? f5548(i32, i32, i32) { ... }
 
-// link-order cluster 794 · uses=2 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f5551 · 12 B · unmatched · placement: link order · name unknown
-// void f5551(i32, i32) { ... }
-
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
 // f5565 · 193 B · unmatched · placement: link order · name unknown
@@ -3558,12 +3532,6 @@
 
 // f6023 · 64 B · unmatched · placement: link order · name unknown
 // ? f6023(i32, i32, i32) { ... }
-
-// f6022 · 98 B · unmatched · placement: link order · name unknown
-// ? f6022(i32, i32) { ... }
-
-// f6021 · 101 B · unmatched · placement: link order · name unknown
-// void f6021(i32, i32) { ... }
 
 // link-order cluster 889 · uses=2 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
 

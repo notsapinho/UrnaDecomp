@@ -7,12 +7,14 @@
 # forward-declared (the destructors need no complete type; api/util/itimer.h defines it).
 # ctextfieldblinking.cpp holds Show and Hide (target fns 10945, 10944, slots 3 and 4: Start and Stop of the timer, whose
 # class it includes, api/util/itimer.h) at lines that are a choice, above Rect's line 70 in the band's order, and Move (one
-# of the five functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) below it, a choice. The
-# vtable, its key function Draw and with it the implicit destructors stay in the pending object (as units 26 and 30 emit
-# theirs); they move to ctextfieldblinking.o when Draw does. The constructor has no target function of its own (binaryen
-# inlined it into its one caller, fn 1265) and is not reconstructed, so lines 39 and 42 stay free for its throws. Paths
-# relative to src/uenux2.
-# Draw, GetTypeName and Rect (target fns 10946, 10940, 10943) are not reconstructed:
+# of the five functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) below it, a choice. Draw
+# (target fn 10946, slot 2), the class's key function, is above Show, in the band's order, at lines that are a choice, so
+# that object emits the vtable and the implicit destructors. The one call with a choice of colour is evidence: an if/else
+# with two calls gives another body. Same object code, by the function's disassembly with the object-local numbers
+# masked: the colour in a local TColor, and `!m_aceso ? m_corPisca : m_corTexto`; so those spellings are choices. The
+# constructor has no target function of its own (binaryen inlined it into its one caller, fn 1265) and is not
+# reconstructed, so lines 39 and 42 stay free for its throws. Paths relative to src/uenux2.
+# GetTypeName and Rect (target fns 10940, 10943) are not reconstructed:
 # 44-uenux2-ctextfieldblinking-pending.cpp defines them with trapping bodies, compiled with the unit's flags, and its
 # header names what each waits for. Every header the class includes is in src/uenux2/src/api/gui/, which the wildcard
 # below names ($(UENUX2_HDRS) is set after src/Makefile reads the fragments: here it would be empty).
