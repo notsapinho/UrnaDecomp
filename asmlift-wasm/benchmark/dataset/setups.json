@@ -23,27 +23,12 @@
   },
   {
     "key": "ecourna",
-    "title": "ecourna (conan libecea1da310e5107), PIC translation units",
+    "title": "ecourna (conan libecea1da310e5107)",
     "flags": {
-      "c++": "-O3 -fPIC -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow"
+      "c++": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow"
     },
     "image": "urna-emsdk:6.0.0",
     "source": "src/Makefile ECOURNA_CXXFLAGS + src/mk/ecourna-flags.mk",
-    "truth": {
-      "kind": "make",
-      "vars": [
-        "ECOURNA_OBJS"
-      ]
-    }
-  },
-  {
-    "key": "ecourna-nopic",
-    "title": "ecourna, non-PIC translation units (app/dados, api/io, api/compression, app/dados/asn converters, api/security/csha.cpp)",
-    "flags": {
-      "c++": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fno-pic"
-    },
-    "image": "urna-emsdk:6.0.0",
-    "source": "src/Makefile ECOURNA_CXXFLAGS + the -fno-PIC rules of src/mk/ecourna-flags.mk, 06-ecourna-api-compression.mk, 04-ecourna-app-dados-asn.mk and the other unit fragments",
     "truth": {
       "kind": "make",
       "vars": [
