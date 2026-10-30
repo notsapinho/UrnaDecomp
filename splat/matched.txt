@@ -7468,3 +7468,6 @@
 10968 _ZNK3api17CStepsProgressBar4RectEv
 10969 _ZNK3api17CStepsProgressBar11GetTypeNameEv
 10973 _ZN3api17CStepsProgressBarD0Ev
+5495 _ZN3api16CTextFieldUpdateD2Ev
+10912 _ZNK3api16CTextFieldUpdate11GetTypeNameEv
+10917 _ZN3api16CTextFieldUpdateD0Ev
