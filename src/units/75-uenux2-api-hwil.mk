@@ -10,7 +10,8 @@
 #   5176 of EUeHwilError), the implicit destructors (slots 13 and 14: the shared empty bodies 174 and 144, matched
 #   already), ReadStatus (8071, slot 15) and Slot16 (slot 16: 434, the shared `return 1`, matched already).
 # - CUrnaMock's vtable @1530880, 9 slots: Modelo, NumeroSerie and Slot3 (slots 0, 2, 3: the shared 7-byte getters 1661,
-#   2587 and 3383, of which 2587 and 3383 are matched and take this unit's names), ModeloAbreviado (8168, slot 1), Slot4
+#   2587 and 3383, matched already: 3383's line takes this unit's Slot3, this object coming before sqlite3.o, and 2587's
+#   takes unit 50's GetEstadoBiometria, whose object comes first in link order), ModeloAbreviado (8168, slot 1), Slot4
 #   (8144), Slot5 (8134), Semente (8131) and the implicit destructors (8130, 8129).
 # - round (fn 2953): the libc body Slot5 calls; it is not this unit's code. RHVoice's do_synthesize calls it too, and
 #   binaryen inlined it into that one caller until Slot5 gave it a second, so the function keeps its own body.
