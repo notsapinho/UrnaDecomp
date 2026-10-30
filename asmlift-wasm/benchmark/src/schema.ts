@@ -1,6 +1,6 @@
 // The benchmark's data: the compile-setup registry (dataset/setups.json), the dataset rows
 // (dataset/rows.json) and a run's results (results/<label>.json). benchmark/README.md documents
-// every field; the playground imports these types from `@asmlift/wasm-benchmark/schema`.
+// every field.
 
 export type Lang = 'c' | 'c++';
 

@@ -7,10 +7,9 @@ rebuild, and compile-and-rank candidate C++ sources against one target function 
 dependency beyond `@asmlift/core` (`rankBy`) and `@match-kit/compiler` (the compile template).
 
 ```sh
-cd asmlift-wasm && pnpm install    # once (a pnpm workspace: this package, benchmark/ and playground/)
+cd asmlift-wasm && pnpm install    # once (a pnpm workspace: this package and benchmark/)
 pnpm wasm <command> …                # from asmlift-wasm/; module paths below are relative to it
 pnpm bench <command> …               # the lifter benchmark, benchmark/README.md
-pnpm playground                      # the web app over the target and the benchmark, playground/README.md
 ```
 
 | command                                                                                                     | does                                                                                                                                                                              |
@@ -228,8 +227,8 @@ pnpm wasm lift ../target/vota_web_wasm.wasm --all
   component); else its ledger component (`componentFlags`; a library's own code has neither and comes here).
   The component says which code calls a function, not where it is written: 1260
   (`api::CDirReader::NextEntry`, group `ecourna`) gets uenux2's flags from its record in
-  `cdirreader.cpp`. The per-tree flags are `TREE_FLAGS`; `lift --check`, `lift-eval` and the
-  playground choose the same way. The table cannot express ecourna's per-directory `-fno-PIC`:
+  `cdirreader.cpp`. The per-tree flags are `TREE_FLAGS`; `lift --check` and `lift-eval`
+  choose the same way. The table cannot express ecourna's per-directory `-fno-PIC`:
   urna's `tools/round/try-tu.sh` reads the real flags from `src/Makefile`.
 - **Names.** Imports and exports by the glue's real names; other functions by the ledger's
   `best_name` when the pairing is byte, fingerprint or addr (a shape pairing is often another
@@ -375,18 +374,6 @@ its libraries and emscripten's system libraries, each compiled with its own setu
 ledger's component, the benchmark decides each row's setup from the build object that defines the
 ledger's name and checks its flags against `src/Makefile`. Its README has the setups, the dataset, the
 results schema (`BenchResults`) and how to add a row.
-
-## The playground
-
-`playground/` (package `@asmlift/wasm-playground`, MIT) is a web app with two pages. The playground
-shows any target function's WAT, folded readout and lifted C++, its facts from the module, the glue
-and the ledger, its callers, callees and strings, its benchmark result when it is a row, and the
-local commands that compile and score it; all of it is computed in the browser from the module with
-`parse`, `disasm`, `fold`, `lift`, `imports` and `strings`. The benchmark page shows every run under
-`benchmark/results/` per compile setup, as a table and a chart, with a per-row drill-down and a diff
-between two runs. Those six modules import no `node:*` module so that a browser can bundle them: the
-glue file and import-name file readers are in `glue-file.ts`, the ledger readers in `readout.ts` and
-`ledger.ts`.
 
 ## rank: compiling candidates
 

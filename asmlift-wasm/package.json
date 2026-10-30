@@ -14,10 +14,7 @@
     "bench": "pnpm --filter @asmlift/wasm-benchmark bench",
     "test": "vitest run",
     "test:bench": "pnpm --filter @asmlift/wasm-benchmark test",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p ../tools && pnpm --filter @asmlift/wasm-benchmark typecheck && pnpm --filter @asmlift/wasm-playground typecheck",
-    "playground": "pnpm --filter @asmlift/wasm-playground dev",
-    "playground:build": "pnpm --filter @asmlift/wasm-playground build",
-    "test:playground": "pnpm --filter @asmlift/wasm-playground test"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p ../tools && pnpm --filter @asmlift/wasm-benchmark typecheck"
   },
   "dependencies": {
     "@asmlift/core": "0.9.0",

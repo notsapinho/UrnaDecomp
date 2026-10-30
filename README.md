@@ -1,4 +1,4 @@
-# UrnaDecomp <img src="./asmlift-wasm/playground/src/assets/urnadecomp.png" align="right" height="125px" />
+# UrnaDecomp <img src="./docs/img/urnadecomp.png" align="right" height="125px" />
 
 🗳️ _Matching decompilation of the TSE voting simulator_
 
@@ -30,9 +30,34 @@ The project is not affiliated with the TSE.
 
 ## Status
 
-The progress is on the [web app](https://macabeus.github.io/urnadecomp): matched functions and code bytes per
-origin, per component and per function, and how they grew over time. [docs/status.md](docs/status.md) has the same
-numbers as tables.
+<!-- status:headline -->
+**7,390 of 14,343 functions matched (51.52%), 2,134,232 of 5,883,903 code bytes (36.27%).**
+<!-- /status:headline -->
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-origins-dark.svg">
+  <img alt="Functions matched by origin: a 10 by 10 waffle each, one square per percent, coloured by verdict" src="docs/img/progress-origins-light.svg">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-tse-dark.svg">
+  <img alt="Every function of TSE code: one square per function, by component, coloured by verdict" src="docs/img/progress-tse-light.svg">
+</picture>
+
+<details>
+<summary>Every component</summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/progress-components-dark.svg">
+  <img alt="Functions matched by component: a 10 by 10 waffle each, one square per percent, coloured by verdict" src="docs/img/progress-components-light.svg">
+</picture>
+
+</details>
+
+Each square is coloured by the function's verdict in the scan: matched, differs (our body exists and differs),
+unresolved (our body names something the target lacks) or no candidate yet. [docs/status.md](docs/status.md) has the
+same numbers as tables, with code bytes and what is left. `make -C src status` writes the headline above and the
+waffles (`docs/img/`).
 
 A match is a line of `splat/matched.txt` that `TMPDIR=/tmp make -C src splat` verifies on every run; their count is
 the only progress number this project reports. `docs/status.md` is written by `make -C src status` from the committed
@@ -78,7 +103,7 @@ turns each point where the docs misled into a doc fix.
 | `ledger/` | what the project knows about the target, as data: strings, classes, vtables, call graph, attribution, per-function census state (`ledger/README.md`) |
 | `tools/` | every script: `setup/`, `extract/` (reading the target), `round/` (the decompile loop), `linkorder/`, `libs/` (pinning each upstream library); `tools/README.md` describes each file |
 | `build/` | the toolchain pin: `Dockerfile`, `docker-build.sh` and the link-line probe (`build/README.md`); its `out/` and `dump/` are generated and ignored |
-| `asmlift-wasm/` | the decompilation toolkit, with its benchmark and playground (below) |
+| `asmlift-wasm/` | the decompilation toolkit, with its benchmark (below) |
 | `third_party/` | the upstream library sources at the versions the target links, fetched by setup and ignored; `third_party/MANIFEST.md` records each version, how it is fetched and its commit or sha256 |
 | `docs/` | the glossary, the how-tos, reference pages and measured facts (index in `docs/README.md`) |
 | `.github/` | CI: the toolkit's tests, typecheck and benchmark dataset checks |
@@ -104,12 +129,6 @@ pnpm test && pnpm typecheck
   from each compile setup in the module, compiled at that setup's flags and scored raw and after `-Oz`. Run
   `pnpm bench run` before and after a lifter change and put `pnpm bench diff` in the pull request (`asmlift-wasm/benchmark/README.md`;
   [docs/improving-the-lifter.md](docs/improving-the-lifter.md) says what to optimise and lists the known gaps).
-- **Playground.** `asmlift-wasm/playground/` is a web app with four pages: the decompilation progress (waffles from
-  origins down to single functions, and the matches over time), any target function's WAT, readout and lifted C++,
-  computed in the browser, with the commands to try it filled in, the benchmark's runs, and a link to
-  [UrnaEmu](https://eleicoes.rlaneth.com/urnaemu/), the emulator that runs the same module (`pnpm playground`;
-  `asmlift-wasm/playground/README.md`). `.github/workflows/pages.yml` deploys it to GitHub Pages on every push to
-  `main`.
 
 ## Where next
 

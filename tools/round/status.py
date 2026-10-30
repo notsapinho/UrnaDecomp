@@ -1,7 +1,7 @@
-"""Write the progress numbers into docs/status.md from the committed scan.
+"""Write the progress numbers into README.md and docs/status.md, and the README's waffles, from the committed scan.
 
-    python3 -I -B tools/round/status.py           # rewrite the generated blocks (make -C src status)
-    python3 -I -B tools/round/status.py --check   # exit 1 when a block or the scan disagrees with the matches (CI)
+    python3 -I -B tools/round/status.py           # rewrite the generated blocks and waffles (make -C src status)
+    python3 -I -B tools/round/status.py --check   # exit 1 when a block, a waffle or the scan disagrees (CI)
 
 Inputs, all tracked: splat/matched.txt (the match list), splat/scan.tsv (the verdict of every target function, written
 by `make -C src splat-scan` and `splat-match`) and target/vota_web_wasm.wasm (for byte-identical twins). The scan's
@@ -9,7 +9,7 @@ by `make -C src splat-scan` and `splat-match`) and target/vota_web_wasm.wasm (fo
 whose detail says `kinds unverified` is counted apart as kind-unverified.
 
 Each generated block sits between `<!-- status:NAME -->` and `<!-- /status:NAME -->`; text outside the markers is
-hand-written and kept.
+hand-written and kept. The waffles in docs/img/ are progress_waffles.py's.
 """
 import collections
 import hashlib
@@ -17,11 +17,15 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import progress_waffles  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MATCHES = os.path.join(ROOT, 'splat', 'matched.txt')
 SCAN = os.path.join(ROOT, 'splat', 'scan.tsv')
 TARGET = os.path.join(ROOT, 'target', 'vota_web_wasm.wasm')
 STATUS = os.path.join(ROOT, 'docs', 'status.md')
+README = os.path.join(ROOT, 'README.md')
 
 UENUX2 = [
     ('vota', 'uenux2 `src/app/vota`: the voting application'),
@@ -264,6 +268,13 @@ def blocks(rows, listed):
     return out
 
 
+def origins(rows):
+    """Each origin's components, in the order of the status tables."""
+    t = tally(rows)
+    libs = sorted((g for g in t if g not in TSE and g not in NOT_ATTRIBUTED), key=lambda g: (-t[g][0], g))
+    return [('TSE code', TSE), ('Upstream libraries', libs), ('Not attributed', NOT_ATTRIBUTED)]
+
+
 def substitute(path, generated):
     text = open(path, encoding='utf-8').read()
     names = re.findall(r'<!-- status:([a-z-]+) -->', text)
@@ -292,19 +303,25 @@ def main(argv):
         problems.append(f'splat/scan.tsv has {len(matches)} match rows but splat/matched.txt has {len(listed)} matches '
                         f'(scan only: {extra}, matched.txt only: {missing}); run TMPDIR=/tmp make -C src splat-match')
     generated = blocks(rows, listed)
-    for path, (old, new) in [(p, substitute(p, generated)) for p in (STATUS,)]:
+    files = {p: substitute(p, generated) for p in (README, STATUS)}
+    for path, image in progress_waffles.images(rows, origins(rows)).items():
+        files[path] = (None, image)
+    for path, (old, new) in files.items():
+        if old is None:
+            old = open(path, encoding='utf-8').read() if os.path.exists(path) else None
         if old != new:
             if check:
                 problems.append(f'{os.path.relpath(path, ROOT)} is not what the scan gives; run make -C src status')
             else:
+                os.makedirs(os.path.dirname(path), exist_ok=True)
                 with open(path, 'w', encoding='utf-8') as f:
                     f.write(new)
                 print(f'wrote {os.path.relpath(path, ROOT)}')
     for p in problems:
         print(p, file=sys.stderr)
     if not problems:
-        print(f'{len(listed)} matches ({kind_unverified(rows)} kind-unverified); docs/status.md agrees with '
-              'splat/scan.tsv')
+        print(f'{len(listed)} matches ({kind_unverified(rows)} kind-unverified); README.md, docs/status.md '
+              'and the waffles agree with splat/scan.tsv')
     return 1 if problems else 0
 
 

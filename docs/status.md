@@ -13,8 +13,9 @@ Every block between `status:` markers on this page is written by
 `make -C src status` from two committed files: `splat/matched.txt` and `splat/scan.tsv`, the scan that
 `make -C src splat-match` writes together with the match list. CI runs `python3 -I -B tools/round/status.py --check`,
 which fails when the scan's `match` rows are not exactly the lines of `splat/matched.txt` or when a block here is
-not what the scan gives.
-Never edit the numbers by hand.
+not what the scan gives. The same command draws the README's waffles in `docs/img/` from the scan, and the check
+fails when one is stale.
+Never edit the numbers or the waffles by hand.
 
 ## By origin
 
