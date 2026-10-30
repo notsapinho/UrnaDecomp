@@ -4,10 +4,11 @@
 # docs/how-to-decompile.md step 3 asks a fragment to say.
 #
 # Pending, each written and in its source, none a trap:
-# - 2182 notify: differs. The target holds two helpers wasm-opt inlined: a search of m_visitors behind a second prologue,
-#   and the path's construction, by its result pointer (l8 = l10 + 4) and its second read of size() in erase. Both read
-#   private members, so they wait for two declarations in asn1.h. A link with them gives score 15 over 346 against 172
-#   over 376. Its callers match by its name.
+# - 2182 notify: differs. The target holds three helpers wasm-opt inlined: a search of m_visitors behind a second
+#   prologue, the path's construction, by its result pointer (l8 = l10 + 4) and its second read of size() in erase, and
+#   a DataFree on a third prologue. The first two read private members, so they wait for two declarations in asn1.h. A
+#   link with all three, before notify called visit unconditionally, gives score 15 over 346 against 172 over 376. Its
+#   callers match by its name.
 # - 8976, 8987 INTEGER's visitors: unresolved. INTEGER::isValid is defined in its class, so clang inlines it into
 #   ValidChecker's visitor and isStrictlyValid keeps two callers, where the target holds the range check in both. Moved
 #   out of line, 8976 differs in operands only; 8987 stays at 21 over 52 until isValid's body is one that gives the
