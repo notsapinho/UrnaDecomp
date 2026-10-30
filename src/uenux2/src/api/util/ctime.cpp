@@ -18,7 +18,14 @@ static size_t EncodeTime(uebyte hora, uebyte minuto, uebyte segundo)
     throw CUeUtilError(EUE_UTIL_HORA_INVALIDA, "Hora inválida");
 }
 
-// (original lines 51-70: content not recovered)
+// (original lines 51-59: content not recovered)
+#line 60
+// <stubs>
+// f3643 · 452 B · unmatched · name unknown
+// ? f3643(i32, i32) { ... }
+// </stubs>
+
+// (original lines 65-70: content not recovered)
 #line 71
 CTime::CTime(uebyte hora, uebyte minuto, uebyte segundo)
     : m_segundos(EncodeTime(hora, minuto, segundo))
