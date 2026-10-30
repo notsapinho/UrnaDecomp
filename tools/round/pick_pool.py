@@ -11,6 +11,11 @@ Go by the tree that holds the stub, not by the `group` column, which says who ca
 (docs/how-to-decompile.md step 1). The differs pool is step 1's filter: `differs` rows of TSE groups whose body was
 compiled from src/uenux2, src/ecourna or src/asn1 (the `object` column), printed as `index symbol detail size group
 object`. Both are sorted by size, then index. Reads the tracked files only; the sources are Latin-1.
+
+Neither pool lists the scan's `unresolved` rows: a body of ours with an operand the target lacks, which the `detail`
+column names (a callee the target inlined, or a binaryen merge body with another set of members than the target's).
+List the ones compiled from a TSE tree with
+    awk -F'\\t' 'NR>1 && $5=="unresolved" && $11 ~ "^app/(uenux2|ecourna|asn1)/"' splat/scan.tsv
 """
 import os
 import re
