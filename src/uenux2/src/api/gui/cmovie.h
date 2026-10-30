@@ -1,0 +1,38 @@
+#pragma once
+
+#include <cstddef>
+#include <cstdint>
+#include <vector>
+
+#include "api/gui/primitives.h"
+#include "ecourna/api/uetypes.hpp"
+
+namespace api {
+
+/**
+ * Um quadro de um filme: a imagem e por quanto tempo ela fica na tela.
+ */
+// 24 bytes, as the target's callers copy it (fn 1593, api::getResourceMovie: a std::vector<CMovieFrame> copied
+// element by element, the bytes with memcpy and an 8-byte field at +16; fn 8605, simulador::CWasmResource slot 4:
+// one frame built from a resource's bytes and the integer 80)
+struct CMovieFrame {
+    std::vector<uebyte> imagem;
+    uint64_t duracao;
+};
+
+/**
+ * Um filme: quadros do mesmo tamanho, exibidos um após o outro.
+ */
+// 20 bytes: std::make_shared<CMovie> allocates 32, 12 of them the control block (fn 1593); the SPoint is the image's
+// width and height (fn 8605 reads them from a GIF or JPEG header)
+class CMovie {
+public:
+    CMovie(std::vector<CMovieFrame> frames, const SPoint& tamanho);
+
+private:
+    std::vector<CMovieFrame> m_frames;
+    size_t m_frameAtual;
+    SPoint m_tamanho;
+};
+
+} // namespace api
