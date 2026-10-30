@@ -16,12 +16,13 @@
 # the source and every uenux2 header.
 CSUBREPORT_SRCS := src/api/gui/csubreport.cpp
 UENUX2_SRCS += $(CSUBREPORT_SRCS)
-# ImprimeParte (fn 12009) calls api::IReportPart, whose header csubreport.h does not include yet:
-# 57-uenux2-csubreport-pending.cpp defines it with a trapping body, and as the class's key function it emits the vtable
-# there with the implicit destructors (fns 12014, 12013) and the inline slots; the constructor's three callers are not
-# reconstructed either: 57-uenux2-csubreport-roots.cpp gives it two
-$(ROOT)/$(APP)/57-uenux2-csubreport-pending.o: $(ROOT)/src/units/57-uenux2-csubreport-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/57-uenux2-csubreport.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/57-uenux2-csubreport-pending.cpp -o $(R)
+# ImprimeParte (fn 12009) is defined in the class like the other slots. Defined out of line in csubreport.cpp it has the
+# same bytes (a probe with uenux2's flags, as has `(*m_parte).Imprime()` or `m_parte.get()->Imprime()` in the class), but
+# it would be the key function and the vtable strong, where the data order above shows a linkonce copy: that is what
+# makes the class form the choice. The constructor's three callers are not reconstructed:
+# 57-uenux2-csubreport-roots.cpp gives it two. The vtable, the implicit destructors (fns 12014, 12013) and the inline
+# slots are emitted with the constructor, in csubreport.cpp's object, which comes before the ecourna csha object in the
+# link: slot 2, a twin of CSha::GetAlgoritmo, is GetTitulo's body now.
 $(ROOT)/$(APP)/57-uenux2-csubreport-roots.o: $(ROOT)/src/units/57-uenux2-csubreport-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/57-uenux2-csubreport.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/57-uenux2-csubreport-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/57-uenux2-csubreport-pending.o $(APP)/57-uenux2-csubreport-roots.o
+override EXTRA_OBJS += $(APP)/57-uenux2-csubreport-roots.o

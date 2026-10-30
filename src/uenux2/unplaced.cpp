@@ -1873,27 +1873,6 @@
 // f10312 · 13 B · unmatched · placement: link order · name unknown
 // void f10312(i32) { ... }
 
-// link-order cluster 413 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cparterdv.cpp
-
-// f11203 · 125 B · unmatched · placement: link order · name unknown
-// void f11203(i32) { ... }
-
-// link-order cluster 414 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cparteeleitores.cpp
-
-// f11206 · 75 B · unmatched · placement: link order · name unknown
-// void f11206(i32) { ... }
-
-// f11205 · 12 B · unmatched · placement: link order · name unknown
-// ? f11205(i32) { ... }
-
-// f11204 · 12 B · unmatched · placement: link order · name unknown
-// void f11204(i32) { ... }
-
-// link-order cluster 416 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cpartecandidatosproporcionais.cpp
-
-// f11210 · 10 B · unmatched · placement: link order · name unknown
-// void f11210(i32) { ... }
-
 // link-order cluster 420 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
 // f11224 · 13 B · unmatched · placement: link order · name unknown
@@ -2232,17 +2211,6 @@
 
 // f5571 · 2179 B · unmatched · placement: link order · name unknown
 // void f5571(i32) { ... }
-
-// link-order cluster 797 · uses=2 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
-
-// f5590 · 10 B · unmatched · placement: link order · name unknown
-// void f5590(i32) { ... }
-
-// f5589 · 156 B · unmatched · placement: link order · name unknown
-// ? f5589(i32) { ... }
-
-// f5588 · 159 B · unmatched · placement: link order · name unknown
-// void f5588(i32) { ... }
 
 // link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
@@ -2736,9 +2704,6 @@
 // f3869 · 466 B · unmatched · placement: link order · name unknown
 // ? f3869(i32, i32, i32, i32, i32) { ... }
 
-// f3867 · 403 B · unmatched · placement: link order · name unknown
-// ? f3867(i32) { ... }
-
 // link-order cluster 1033 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp
 
 // f3897 · 327 B · unmatched · placement: link order · name unknown
@@ -2850,11 +2815,6 @@
 
 // f2853 · 423 B · unmatched · placement: link order · name unknown
 // ? f2853(i32, i32, i32) { ... }
-
-// link-order cluster 1116 · uses=4 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
-
-// f2876 · 256 B · unmatched · placement: link order · name unknown
-// ? f2876(i32) { ... }
 
 // link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
 
@@ -3258,17 +3218,6 @@
 
 // f10878 · 91 B · unmatched · placement: link order · name unknown
 // ? f10878(i32) { ... }
-
-// link-order cluster 364 · uses=1 · neighbours' file uenux2/src/api/gui/cformpart.cpp
-
-// f10889 · 20 B · unmatched · placement: link order · name unknown
-// void f10889(i32) { ... }
-
-// f10888 · 12 B · unmatched · placement: link order · name unknown
-// ? f10888(i32) { ... }
-
-// f10887 · 12 B · unmatched · placement: link order · name unknown
-// void f10887(i32) { ... }
 
 // link-order cluster 375 · uses=1 · neighbours' file uenux2/src/api/gui/crectfield.cpp
 
@@ -4134,9 +4083,6 @@
 
 // f604 · 490 B · unmatched · placement: link order · name unknown
 // void f604(i32, i32, i32) { ... }
-
-// f601 · 34 B · unmatched · placement: link order · name unknown
-// ? f601(i32, i32) { ... }
 
 // link-order cluster 1324 · uses=30 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
 
