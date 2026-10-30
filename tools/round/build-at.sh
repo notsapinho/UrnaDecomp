@@ -3,6 +3,9 @@
 #
 #   tools/round/build-at.sh <commit> <dir>        # then: TMPDIR=/tmp make -C <dir>/src splat
 #
+# <dir> is a new directory outside this checkout's ignored inputs (build/out/ above all, which step 3 clones into it):
+# a sibling of the worktree, such as ../<worktree>-base.
+#
 # A plain `git worktree add` (or a `git archive`) of a commit cannot build: it lacks every ignored input (third_party/*,
 # target/fs/, the node_modules of asmlift-wasm and its packages, the library outputs under build/out/), and every file
 # gets the time of the checkout, newer than any object, so the first link would recompile everything. This script:
@@ -15,7 +18,7 @@
 # It ends with `make -n -C <dir>/src link`, which lists what the build will recompile. Run it from a checkout whose
 # build is current (`make -n -C src link` says "Nothing to be done"), or step 2 rebuilds less than it should.
 set -euo pipefail
-[ $# -eq 2 ] || { sed -n '2,4p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
+[ $# -eq 2 ] || { sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
 COMMIT=$1 DIR=$2
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$ROOT"

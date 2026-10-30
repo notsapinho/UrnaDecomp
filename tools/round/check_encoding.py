@@ -6,6 +6,9 @@ A Latin-1 file with accented letters is almost never valid UTF-8, so a file decl
 decode as UTF-8 was most likely re-saved by a UTF-8 editor; a file declared utf-8 must decode as UTF-8. Files with
 ASCII bytes only pass either way. The section globs support `*`, `**`, `?` and `{a,b}`; the last matching section
 wins, as in EditorConfig.
+
+The files come from the index (`git ls-files`): a tracked file deleted in the worktree and not yet `git rm`'d (a
+stub-only file that `make -C src stubs` removed) stops the check with FileNotFoundError, so stage the deletion first.
 """
 import os
 import re
