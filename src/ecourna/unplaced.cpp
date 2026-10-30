@@ -82,11 +82,6 @@
 // f9221 · 104 B · unmatched · placement: link order · name unknown
 // void f9221(i32, i32, i32) { ... }
 
-// link-order cluster 207 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasminit.cpp
-
-// f9410 · 18 B · unmatched · placement: link order · name unknown
-// ? f9410(i32, i32, i32, i32) { ... }
-
 // link-order cluster 217 · uses=1 · neighbours' file ecourna/api/security/ctrng.cpp
 
 // f9477 · 90 B · unmatched · placement: link order · name unknown
@@ -915,9 +910,6 @@
 // ? f1166(i32, i32) { ... }
 
 // link-order cluster 1282 · uses=13 · neighbours' file uenux2/src/app/comum/gravadores/cassinador.cpp
-
-// f1011 · 181 B · unmatched · placement: link order · name unknown
-// ? f1011(i32, i32, i32, i32, i32) { ... }
 
 // f1008 · 572 B · unmatched · placement: link order · name unknown
 // void f1008(i32, i32, i32, i32, i32) { ... }

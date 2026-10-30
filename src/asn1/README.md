@@ -39,6 +39,10 @@ own objects are C++17: `BERDecoderPartial::do_visit(OBJECT_IDENTIFIER&)` (8841) 
 To score the runtime alone against the target's ASN.1 slice: `tools/libs/asn1/build.sh <name> -Os -fexceptions
 -fignore-exceptions -DNDEBUG`, then `tools/libs/census_subset.ts` on the result (`tools/libs/asn1/flags.txt` holds the per-file extras).
 
+The runtime's objects go through `tools/round/gen_try_roots.py`, which takes the address of every external function, so a
+function the target only calls has to leave those roots, or binaryen keeps its result and never inlines it. `src/mk/asn1.mk`
+holds `ASN1_ROOTS_EXCLUDE`, and a unit's fragment adds to it with `+=`.
+
 ## The generated modules
 
 `modules/` holds one header and one source per `Modulo*` module, 32 of each, in asnparser's output style. The target

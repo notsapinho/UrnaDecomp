@@ -1319,7 +1319,12 @@ namespace ASN1 {
     bool isValid() const;
     bool isStrictlyValid() const;
     size_type find_first_invalid() const {
-      return info()->characterSetSize ? find_first_not_of(info()->characterSet) : ASN1_STD string::npos;
+      const char* first = info()->characterSet;
+      const char* last = first + info()->characterSetSize;
+      for (const_iterator it = begin(); it != end(); ++it)
+        if (!ASN1_STD binary_search(first, last, *it))
+          return it - begin();
+      return ASN1_STD string::npos;
     }
 
     AbstractString*  clone() const { return static_cast<AbstractString*>(do_clone()); }
@@ -1738,7 +1743,7 @@ namespace ASN1 {
 
     bool isValid() const { return isStrictlyValid();}
     static AbstractData* create(const void* info);
-    bool isStrictlyValid() const;
+    bool isStrictlyValid() const { return valid; }
 
     static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
@@ -1751,6 +1756,7 @@ namespace ASN1 {
     virtual bool do_accept(ConstVisitor&) const;
 
     int millisec;
+    bool valid;     // the name is chosen: 5072 and 8928 read this byte, 8951 copies it, 8956 sets it, 2185 computes it
   }; // end class ASN1::GeneralizedTime
 
   //

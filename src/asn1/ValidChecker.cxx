@@ -91,6 +91,11 @@ public:
   }
 };
 
+AbstractData::AbstractData(const void* information)
+: info_(information)
+{
+}
+
 bool AbstractData::isValid() const
 {
   ValidChecker checker;
@@ -165,24 +170,36 @@ bool BMPString::isStrictlyValid() const
 
 bool UTCTime::isStrictlyValid() const
 {
-  return year > 0 &&
-         (month > 0 && month < 13) &&
-         (day > 0 && day < 32) &&
-         (hour >= 0 && hour <= 24) &&
-         (minute >= 0 && minute < 60) &&
-         (second >= 0 && second < 60) &&
-         (mindiff <= 60*12 && mindiff >= -60*12);
-}
+  if (year <= 0 || month < 1 || month > 12 || day <= 0)
+    return false;
 
-bool GeneralizedTime::isStrictlyValid() const
-{
-  return year > 0  &&
-         (month > 0 && month < 13) &&
-         (day > 0 && day < 32) &&
-         (hour >= 0 && hour <= 24) &&
-         (minute >= 0 && minute < 60) &&
-         (second >= 0 && second < 60) &&
-         (mindiff <= 60*12 && mindiff >= -60*12);
+  switch (month)
+  {
+    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+      if (day > 31)
+        return false;
+      break;
+
+    case 4: case 6: case 9: case 11:
+      if (day > 30)
+        return false;
+      break;
+
+    case 2:
+      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+      {
+        if (day > 29)
+          return false;
+      }
+      else if (day > 28)
+        return false;
+      break;
+  }
+
+  return (hour >= 0 && hour <= 23) &&
+         (minute >= 0 && minute <= 59) &&
+         (second >= 0 && second <= 59) &&
+         (mindiff >= -720 && mindiff <= 720);
 }
 
 bool CHOICE::isValid() const

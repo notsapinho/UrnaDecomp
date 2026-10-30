@@ -111,11 +111,6 @@ int lexicographic_compare_bytes(const char* first1, size_t size1,
 
 /////////////////////////////////////////////////////////////////////
 
-AbstractData::AbstractData(const void* information)
-: info_(information)
-{
-}
-
 ////////////////////////////////////////////////////////////
 
 ASN1_API const Null::InfoType Null::theInfo = {
@@ -298,6 +293,14 @@ ENUMERATED& ENUMERATED::operator = (const ENUMERATED& that)
   assert(info() == that.info()); // compatible type check
   value = that.value;
   return *this;
+}
+
+const char* ENUMERATED::getName() const
+{
+  if (value >=0 && value <= getMaximum())
+    return info()->names[value];
+
+  return 0;
 }
 
 bool ENUMERATED::do_accept(Visitor& visitor)
@@ -1104,15 +1107,15 @@ AbstractData* GeneralizedTime::create(const void* info)
 }
 
 GeneralizedTime::GeneralizedTime(const void* info)
-: UTCTime(info), millisec(0)
+: UTCTime(info), millisec(0), valid(true)
 {}
 
 GeneralizedTime::GeneralizedTime()
-: UTCTime(&theInfo),  millisec(0)
+: UTCTime(&theInfo),  millisec(0), valid(true)
 {}
 
 GeneralizedTime::GeneralizedTime(const char* value)
-: UTCTime(&theInfo)
+: UTCTime(&theInfo), millisec(0), valid(true)
 {
     set(value);
 }
@@ -1120,7 +1123,7 @@ GeneralizedTime::GeneralizedTime(const char* value)
 GeneralizedTime::GeneralizedTime(int yr, int mon, int dy,
     int hr , int mn, int sc,
     int ms , int md, bool u )
-: UTCTime(yr, mon, dy, hr, mn, sc, md, u), millisec(ms)
+: UTCTime(yr, mon, dy, hr, mn, sc, md, u), millisec(ms), valid(true)
 {
 }
 
@@ -1128,11 +1131,12 @@ GeneralizedTime& GeneralizedTime::operator = (const GeneralizedTime& other )
 {
   UTCTime::operator==(other);
   millisec = other.millisec;
+  valid = other.valid;
   return *this;
 }
 
 GeneralizedTime::GeneralizedTime(const GeneralizedTime& other)
-: UTCTime(other), millisec(other.millisec)
+: UTCTime(other), millisec(other.millisec), valid(other.valid)
 {}
 
 void GeneralizedTime::set(const char* valueNotion)
@@ -1157,24 +1161,28 @@ void GeneralizedTime::set(const char* valueNotion)
 
 ASN1_STD string GeneralizedTime::get() const
 {
-  char buf[128];
-  sprintf(buf, "%04d%02d%02d%02d%02d%02d", year, month, day, hour, minute, second);
+  char buf[64];
+  ASN1_STD string result;
 
-  int len = 14;
+  snprintf(buf, sizeof(buf), "%04d%02d%02d%02d%02d%02d", year, month, day, hour, minute, second);
+  result = buf;
+
   if (millisec)
   {
-    sprintf(&buf[14], ".%03d", millisec);
-    len = 18;
+    snprintf(buf, sizeof(buf), ".%07d", millisec);
+    ASN1_STD string fraction(buf);
+    result += fraction.substr(0, fraction.find_last_not_of('0') + 1);
   }
 
   if (utc)
-    sprintf(&buf[len], "Z");
-  else if(mindiff<0)
-    sprintf(&buf[len], "-%02d%02d", -mindiff/60, -mindiff%60);
+    snprintf(buf, sizeof(buf), "Z");
+  else if (mindiff < 0)
+    snprintf(buf, sizeof(buf), "-%04d", -mindiff);
   else
-    sprintf(&buf[len], "+%02d%02d", mindiff/60, mindiff%60);
+    snprintf(buf, sizeof(buf), "+%04d", mindiff);
 
-  return ASN1_STD string(buf);
+  result += buf;
+  return result;
 }
 
 bool GeneralizedTime::do_accept(Visitor& visitor)
@@ -1191,6 +1199,7 @@ void GeneralizedTime::swap(GeneralizedTime& other)
 {
   UTCTime::swap(other);
   ASN1_STD swap(millisec, other.millisec);
+  ASN1_STD swap(valid, other.valid);
 }
 
 INT_TYPE GeneralizedTime::do_compare(const AbstractData& other) const
@@ -1796,7 +1805,4 @@ bool ConstVisitor::visit(const SEQUENCE& value)
 // <stubs>
 // f9063 · 141 B · unmatched · placement: link order · name unknown
 // void f9063(i32, i32) { ... }
-
-// f8967 · 12 B · unmatched · placement: link order · name unknown
-// ? f8967(i32) { ... }
 // </stubs>
