@@ -2012,11 +2012,6 @@
 // f11484 · 132 B · unmatched · placement: link order · name unknown
 // void f11484(i32) { ... }
 
-// link-order cluster 499 · uses=1 · neighbours' file uenux2/src/app/comum/dados/crdvposicionadorvota.cpp
-
-// f11496 · 257 B · unmatched · placement: link order · name unknown
-// ? f11496(i32, i32, i32) { ... }
-
 // link-order cluster 511 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cservicoestadogeral.cpp
 
 // f11569 · 176 B · unmatched · placement: link order · name unknown
