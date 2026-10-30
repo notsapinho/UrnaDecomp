@@ -7436,3 +7436,7 @@
 10238 _ZN3api8CWavFileD0Ev
 12049 _ZN4vota11IQRCodeBUDSD0Ev
 12050 _ZN4vota11IQRCodeBUDSD2Ev
+3665 _ZN3api17CStepsProgressBarD2Ev
+10968 _ZNK3api17CStepsProgressBar4RectEv
+10969 _ZNK3api17CStepsProgressBar11GetTypeNameEv
+10973 _ZN3api17CStepsProgressBarD0Ev
