@@ -7474,3 +7474,5 @@
 5531 _ZN3api17CImageFieldUpdateD2Ev
 11085 _ZNK3api17CImageFieldUpdate11GetTypeNameEv
 11086 _ZN3api17CImageFieldUpdateD0Ev
+10941 _ZN3api18CTextFieldBlinkingD0Ev
+10942 _ZN3api18CTextFieldBlinkingD2Ev
