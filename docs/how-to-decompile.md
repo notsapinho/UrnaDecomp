@@ -646,7 +646,7 @@ can explain, never on the one function that needs it. [facts/app-flags.md](refer
 `-fno-strict-aliasing`. A flag set changes in `src/Makefile` (or `src/mk/ecourna-flags.mk`) with its evidence in that facts
 file, and every match must still verify in a private link with it (§F9 item 6 has the command; to measure taking a flag
 away, take it off the line, since an override is not the same: §F9 item 9). A flag can look per file when it is not: `-fno-PIC` was set file by file until the
-target's data showed one setting for all of ecourna (§F5). So before you call evidence per TU, look at what the
+target's data showed no file of ecourna apart from the rest (§F5). So before you call evidence per TU, look at what the
 whole tree's data and code say. A fragment may carry a target-specific flag only where the evidence is
 per TU, and then the objects' flag set must be a setup of
 `asmlift-wasm/benchmark/dataset/setups.json`, as `asn1-eh` is for the ASN.1 TUs that throw: `pnpm bench setups --check` fails on an

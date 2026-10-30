@@ -231,8 +231,10 @@ the libraries, emscripten's system libraries). The benchmark registry `asmlift-w
 lists them and `pnpm bench setups --check` re-derives them from the build. *Where:* `asmlift-wasm/benchmark/README.md`,
 `docs/reference/toolchain.md` §3.
 
-**PIC / non-PIC** — whether a TU was compiled with `-fPIC`. uenux2 is PIC and ecourna is non-PIC, in the whole of each
-tree: the target keeps ecourna's records, vtables and typeinfo in `.rodata` and uenux2's in `.data`.
+**PIC / non-PIC** — whether a TU was compiled with `-fPIC`. uenux2 is PIC and ecourna is built non-PIC. In the target all 277
+records of ecourna's sources, and every vtable and typeinfo its objects define strongly, sit below `.rodata`'s end. uenux2's
+1,639 records sit in `.data`, and the 39 vtables and 48 typeinfos with ecourna in their names that sit there too lie inside the
+band of uenux2's records.
 *Where:* `ECOURNA_CXXFLAGS` and `UENUX2_CXXFLAGS` in `src/Makefile`, `docs/reference/facts/app-flags.md` §F5, `docs/reference/toolchain.md` §3.
 
 **glue** — the JS file emscripten writes beside the module (`vota_web_wasm.js`); at `-Oz` the module's import and

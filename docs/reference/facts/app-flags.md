@@ -15,7 +15,7 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 
 | component | flags |
 | --- | --- |
-| ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, with no `-fPIC` in any TU (F5) |
+| ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
 | uenux2 (`src/uenux2`) | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
 | ASN.1 runtime (`src/asn1`) | `-Os -fno-exceptions -std=c++14 -DNDEBUG` ([asn1.md](asn1.md)) |
 
@@ -30,7 +30,7 @@ identifier units) with `tools/round/appflags/compare.sh`:
   (landing pads).
 - **-std=c++20, not 23.** C++23's rvalue `substr()` changes func 3703 (116 rows vs 53); `gnu++20` equals `c++20`
   byte for byte.
-- **No -fPIC**, in any TU: F5.
+- **No -fPIC**: F5.
 - **Paths.** `-ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna`
   produces an object byte-identical to compiling at the real path (`cmp` of three objects). The include root is
   `-Isrc` (`#include "ecourna/api/…"` = the conan package's `b/src`).
@@ -91,9 +91,9 @@ to operand-only; the byte-exact 5093 and 5112 stay byte-exact; no other function
 not separate `-fno-strict-overflow` (= `-fwrapv` + `-fwrapv-pointer` in clang 23) from `-fwrapv-pointer` alone: no
 measured function depends on signed-overflow wrapping.
 
-## F5. ecourna is non-PIC in the whole tree; uenux2 is PIC
+## F5. ecourna's setting is non-PIC, for the whole tree; uenux2 is PIC
 
-**Where the target's data sits decides it, and it says one thing for each tree.** A constant that holds pointers (a
+**Where the target's data sits decides it, and wherever it can tell it says one thing per tree.** A constant that holds pointers (a
 `std::source_location` record, a vtable, a typeinfo) goes to `.data.rel.ro.*` under `-fPIC` and to `.rodata.*`
 without it, and wasm-ld merges `.data.rel.ro.*` into `.data`. A constant with no pointers, a class's `_ZTS` name, is
 `.rodata` either way. So the side of `.rodata`'s end a constant sits on says how its object was compiled. Our own objects show
@@ -144,20 +144,72 @@ END
 # api/comum/vota below 0 above 592 median distance 1057087
 ```
 
-The 38 are no exception. They are `CBaseError<…>` instantiations and classes with no key function, so a typeinfo is a linkonce
-copy kept in its first user's object ([link-order.md](link-order.md) §L7 item 15), and for these that object is a PIC one, whose data
-is `.data`. All of them are weak in every ecourna object that defines them, and none is strong:
+The 38 are no exception, though our own objects can say little about them: only 6 of the 38 have a definition there, all weak, and
+32 have none. They are `CBaseError<…>` instantiations and classes with no key function, so a typeinfo is a linkonce copy kept in its
+first user's object ([link-order.md](link-order.md) §L7 item 15). What decides it is the strong definitions and where the rest sit:
+every vtable and typeinfo our ecourna objects define strongly and the target names sits below the end, and every one above the end
+with ecourna in its name lies inside the band of uenux2's records, so `.data` has no ecourna band. The 48 typeinfos are the 38 and 10
+libc++ and uenux2 templates with an ecourna class as an argument (`__shared_ptr_pointer<CSha512*, …>`). The same block counts the
+witnesses for each object:
 
 ```sh
-TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/app/ecourna/*.o 2>/dev/null | awk 'NR==FNR {w[$1]=1; next} NF==3 && ($3 in w) {c[$2]++} END {for (k in c) print k, c[k]}' build/out/flags-placement/above.txt -
-# W 83
+P=build/out/flags-placement; mkdir -p $P
+TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm $(find build/out/app/ecourna -name '*.o') build/out/app/15-ecourna-cconversorhorariosurna-pending.o build/out/app/16-ecourna-cconversormunicipiozona-pending.o > $P/nm.txt 2>/dev/null
+python3 -I -B - <<'END' | tee $P/witness.txt
+import collections, re
+B = 1526320; P = "build/out/flags-placement/"
+# the matches -fPIC breaks: the `function N` of splat-build's report in the table below
+BROKEN = "598 1885 1886 2306 2669 5088 5090 5175 5176 5177 6144 6151 9014 9015 9016 9017 9019 9020 9021 9023 9024 9030 9035 9036 9042 9069 9070 9073 9080 9085 9088 9089 9103 9112 9156 9169 9191 9192 9218 9260 9465 9484 9517 9535".split()
+sym = {}
+for l in open("splat/symbol_addrs.txt", encoding="latin-1"):
+    m = re.match(r"(\S+) = 0x([0-9a-f]+);", l)
+    if m: sym.setdefault(m[1], int(m[2], 16))
+obj, defs = None, collections.defaultdict(dict)
+for l in open(P + "nm.txt"):
+    f = l.split()
+    if l.rstrip().endswith(".o:"): obj = l.strip()[:-1]
+    elif len(f) == 3: defs[f[2]][obj] = f[1]
+objs = sorted({o for d in defs.values() for o in d})
+named = lambda k: k[:4] in ("_ZTV", "_ZTI") and "N7ecourna" in k
+strong = [(k, o) for k, d in defs.items() if named(k) and k in sym for o, t in d.items() if t not in "WV"]
+rec, uenux2 = set(), []
+for l in list(open("ledger/source-locations.tsv", encoding="latin-1"))[1:]:
+    a, file = l.split("\t")[:2]
+    if "/tse/uenux2/" in file: uenux2.append(int(a))
+    if int(a) < B and "/b/src/ecourna/" in file:
+        rec.add("build/out/app/ecourna/" + file.split("/b/src/ecourna/")[1].replace("/", "_") + ".o")
+print("strong and named in the target:", len(strong), "below the end:", sum(sym[k] < B for k, o in strong))
+above = [k for k, a in sym.items() if a >= B and named(k)]
+lo, hi = min(uenux2), max(uenux2)
+print("above the end:", sum(k[3] == "V" for k in above), "vtables,", sum(k[3] == "I" for k in above), "typeinfos,", sum(lo <= sym[k] <= hi for k in above), "inside uenux2's records", hex(lo), hex(hi))
+t38 = [l.strip() for l in open(P + "above.txt")]; have = [k for k in t38 if k in defs]
+kinds = [t for k in have for t in defs[k].values()]
+print("the 38:", len(have), "defined here,", sum(t in "WV" for t in kinds), "weak definitions,", sum(t not in "WV" for t in kinds), "strong,", len(t38) - len(have), "not defined here")
+witness = (rec | {o for k, o in strong if sym[k] < B}) & set(objs); none = [o for o in objs if o not in witness]
+print("objects:", len(objs), "witnessed:", len(witness), "not:", len(none))
+row = {l.split("\t")[0]: l.rstrip("\n").split("\t")[10] for l in open("splat/scan.tsv", encoding="latin-1")}
+at = collections.Counter("build/out/" + row[i] for i in BROKEN)
+print("matches -fPIC breaks:", sum(v for o, v in at.items() if o in objs), "in", sum(o in objs for o in at), "objects,", at["build/out/<binaryen>"], "merged bodies,", sum(at[o] for o in none), "in the unwitnessed")
+open(P + "no-witness.txt", "w").write("\n".join(none) + "\n")
+END
+# strong and named in the target: 65 below the end: 65
+# above the end: 39 vtables, 48 typeinfos, 87 inside uenux2's records 0x174a34 0x186f44
+# the 38: 6 defined here, 83 weak definitions, 0 strong, 32 not defined here
+# objects: 82 witnessed: 63 not: 19
+# matches -fPIC breaks: 41 in 24 objects, 3 merged bodies, 0 in the unwitnessed
+```
+
+`CIoError` shows the split in one class: in the target its vtable is `.rodata` and its typeinfo is `.data`, inside uenux2's band. That
+a PIC object supplied that typeinfo rests on the target's layout alone. Our link cannot show it: no uenux2 user of the class is
+reconstructed, so there the copy comes from a non-PIC ecourna object, into `.rodata`:
+
+```sh
 /usr/bin/grep -E '^_ZT[VI]N7ecourna3api2io8CIoErrorE ' splat/symbol_addrs.txt | cut -d';' -f1
 # _ZTVN7ecourna3api2io8CIoErrorE = 0x10fa38
 # _ZTIN7ecourna3api2io8CIoErrorE = 0x17b7b8
+/usr/bin/grep -oE 'app/ecourna/[a-z_.]+:\(\.[a-z.]+_ZTIN7ecourna3api2io8CIoErrorE\)' build/out/wasm-map/vota_web/vota_web_wasm.map
+# app/ecourna/api_io_cfile.cpp.o:(.rodata._ZTIN7ecourna3api2io8CIoErrorE)
 ```
-
-`CIoError` shows it in one class: its vtable is `.rodata`, from a non-PIC object, and its typeinfo is `.data`, from a PIC object
-earlier on the link line.
 
 **No match needs `-fPIC`, and every step toward dropping it gains some.** Measured in one worktree at 102f503, the last commit that had
 the per-file rules, each state through how-to steps 6 to 10:
@@ -170,15 +222,35 @@ the per-file rules, each state through how-to steps 6 to 10:
 
 The middle state is not the third because `-fPIC` anywhere on an em++ line means `-fvisibility=default` (F9 item 9). 9465 is
 `CPlainText`'s constructor, which differed by `local.set 1 | local.set 2` under `-fPIC`. 9484, `ISymmetricCipher`'s destructor, and
-9535, `boost::detail::sp_pointer_construct` in `api/compression/icompressor.cpp`, need the hidden visibility. So the target's ecourna
-TUs behave as if `-fPIC` was never on their line, not as if it was overridden.
+9535, `boost::detail::sp_pointer_construct` in `api/compression/icompressor.cpp`, need the hidden visibility (F9 item 9 has the
+mechanism). So where the target can tell, its ecourna TUs behave as if `-fPIC` was never on their line, not as if it was overridden.
 
 The other way round, on today's tree, F9 item 6's five steps with one flag put back:
 
 | `ECOURNA_EXTRA` | what `splat-build` says |
 | --- | --- |
 | `-fPIC` | `44 matched functions no longer verify`, 9465, 9484 and 9535 among them |
-| `-fvisibility=default` | `4 matched functions no longer verify`: 9484, 9535 and the two csha.cpp destructors 5175 and 5176, whose twin names move |
+| `-fvisibility=default` | `4 matched functions no longer verify`: 5175, 5176, 9484 and 9535 |
+
+Those 4 are not one case. 5175 is a name: the body is there, under another of its twin names (`our link has no function
+_ZN7ecourna3api8security4CShaD2Ev`). 5176 is a body. Under default `CSha`'s D0 is 7 instructions that call the destructor, and under
+hidden 69 with it inlined, which is the target's (F9 item 9 has the command). So at 102f503, where csha.cpp's line held `-fPIC`, the
+`CSha` vtable's D0 slot held a body with no target function, and it did not show, because 5176 matched `CSha512`'s D0 instead. Under
+hidden the two D0s are one body and binaryen merges them, 11047 functions against 11048, as the target's two vtables do: both hold 5175
+and 5176 (`ledger/vtables.json`).
+
+**How far the evidence reaches.** Non-PIC is evidenced in 63 of the 82 objects: each has a record or a strong vtable or typeinfo below
+the end, and those are the objects the matches `-fPIC` breaks sit in. Hidden visibility is evidenced in 4 TUs: `csha.cpp` (5176),
+`isymmetriccipher.cpp` (9484), `icompressor.cpp` (9535) and `cepesc/ccipheredout.cpp` (9466, unmatched, whose store order is the
+hidden one, F9 item 9). For the other 19 objects non-PIC and hidden are the tree's setting, not a measurement. Nothing contradicts it, and
+15 of them hold no `.data.rel.ro` section even when compiled with `-fPIC`, so the data could not tell. With `build/out/flags-pic` the
+`-fPIC` link of the table above, the first command lists the 19 and the second counts the 4 that do hold the section:
+
+```sh
+cat build/out/flags-placement/no-witness.txt
+while read o; do wasm-objdump -x -j Data "build/out/flags-pic/app/${o#build/out/app/}" 2>/dev/null | /usr/bin/grep -q 'data\.rel\.ro' && echo "$o"; done < build/out/flags-placement/no-witness.txt | /usr/bin/grep -c .
+# 4
+```
 
 **The code agrees wherever it can tell.** Non-PIC code folds a private table's address into the load's memarg
 (`i32.load offset=ADDR`) and packs a `std::format` string's {ptr, len} into one folded `i64` constant. These are the first measurements,
@@ -369,6 +441,65 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    # -fvisibility=hidden
    TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -fno-PIC -c /work/$P/a.cpp -o /work/$P/a.o -v 2>&1 | /usr/bin/grep -o -- '-fvisibility=[a-z]*' | sort -u
    # -fvisibility=default
+   ```
+
+   Visibility reaches the code through LLVM, in two ways, and the link only follows. LLVM takes a hidden symbol to be `dso_local` (it is
+   implied, so the word is not in the `.ll`: `hidden` on the alias is what shows). A C1 or D1 is an alias of its C2 or D2, and a call through
+   the alias is resolved, and so can be inlined, only when the target is `dso_local`. That is 9484, `~CAesKey` inlined into
+   `~ISymmetricCipher`, and 5176, `~CSha` inlined into its D0. And hidden folds vtable+8 into the relocation where default keeps an
+   `i32.add`, and the add moves the store. That is 9535 and the unmatched 9466, whose store order in the target is the hidden one:
+
+   ```sh
+   P=build/out/flags-visibility; mkdir -p $P
+   cat > $P/k.cpp <<'END'
+   struct K { K(); ~K(); void *p; };
+   K::~K() { ::operator delete(p); }
+   struct H { virtual ~H(); K k; };
+   H::~H() = default;
+   END
+   cat > $P/v.cpp <<'END'
+   struct V { V(); virtual void f(); long long a; };
+   void V::f() {}
+   V::V() : a(0) {}
+   END
+   for v in hidden default; do
+     TMPDIR=/tmp build/docker-build.sh em++ -O3 -fvisibility=$v -S -emit-llvm /work/$P/k.cpp -o /work/$P/k-$v.ll
+     TMPDIR=/tmp build/docker-build.sh em++ -O3 -fvisibility=$v -c /work/$P/v.cpp -o /work/$P/v-$v.o
+     awk '/call .*@_ZN1KD1Ev/ {n++} END {print n+0}' $P/k-$v.ll
+     wasm-objdump -d -r $P/v-$v.o | /usr/bin/grep -oE 'ADDR_SLEB [0-9]+( \+ 8)? <_ZTV1V>'
+   done
+   # 0
+   # ADDR_SLEB 2 + 8 <_ZTV1V>
+   # 1
+   # ADDR_SLEB 2 <_ZTV1V>
+   ```
+
+   On the real objects, the tree's against the same source at default visibility: `CSha`'s D0 in instructions, then `CCipheredOut`'s first
+   two of the vtable store and the `i64.store` beside it, then the target's 9466, which stores the vtable first:
+
+   ```sh
+   P=build/out/flags-visibility
+   TMPDIR=/tmp make -C src $PWD/$P/app/ecourna/api_security_csha.cpp.o $PWD/$P/app/ecourna/api_security_cepesc_ccipheredout.cpp.o APP=$P/app ECOURNA_EXTRA=-fvisibility=default > $P/make.log 2>&1
+   for d in build/out/app/ecourna $P/app/ecourna; do
+     wasm-objdump -d $d/api_security_csha.cpp.o | awk '/func\[[0-9]+\] <_ZN7ecourna3api8security4CShaD0Ev>:/ {p=1; next} p && /func\[[0-9]+\] </ {exit} p' | /usr/bin/grep -c '|'
+     wasm-objdump -d -r $d/api_security_cepesc_ccipheredout.cpp.o | awk '/func\[[0-9]+\] <_ZN7ecourna3api6cepesc12CCipheredOutC1.*CInfoSaltE>:/ {p=1; next} p && /func\[[0-9]+\] </ {exit} p' | /usr/bin/grep -oE 'ADDR_SLEB [0-9]+( \+ 8)? <_ZTVNSt3__220__shared_ptr_pointer|i64\.store 2 4$' | head -2
+   done
+   # 69
+   # ADDR_SLEB 36 + 8 <_ZTVNSt3__220__shared_ptr_pointer
+   # i64.store 2 4
+   # 7
+   # i64.store 2 4
+   # ADDR_SLEB 36 <_ZTVNSt3__220__shared_ptr_pointer
+   (cd asmlift-wasm && pnpm --silent wasm fn ../target/vota_web_wasm.wasm 9466 2>/dev/null | /usr/bin/grep -A4 '^000267 ' | cut -c1-36 | sed 's/ *$//')
+   # 000267  i32.const 1115328
+   # 00026c  i32.store align=2 offset=0
+   # 00026f  local.get 3
+   # 000271  i64.const 0
+   # 000273  i64.store align=2 offset=4
+   git show 102f503:splat/matched.txt | /usr/bin/grep '^5176 '
+   # 5176 _ZN7ecourna3api8security7CSha512D0Ev
+   git show 102f503:splat/symbol_addrs.txt | awk '/^_ZN7ecourna3api8security4CShaD0Ev / {n++} END {print n+0}'
+   # 0
    ```
 
    At 102f503, `make ... ECOURNA_EXTRA=-fno-PIC` against the same sources with `-fPIC` off the line: `cmp` of all 295 objects, 264 identical and
