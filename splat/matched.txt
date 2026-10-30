@@ -7492,3 +7492,7 @@
 11094 _ZThn44_N3api13CDSImageFieldD0Ev
 11095 _ZN3api13CDSImageFieldD0Ev
 11096 _ZThn44_N3api13CDSImageFieldD1Ev
+11050 _ZNK3api11CLedFieldMT4DrawERNS_9IScreenMTE
+1565 byn$mgfn-shared$_ZN3api10CLineFieldD0Ev
+2777 _ZN3api11CLedFieldMTD0Ev
+3681 _ZN3api10CLineFieldD0Ev
