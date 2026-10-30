@@ -241,12 +241,10 @@ the one `src/asn1/asn1.h` declares, not its records' (`awk -F'\t' '$6 ~ /(^|,)11
 ledger/source-locations.tsv | sort -u`).
 
 At bb6f018 11366 is the merged case too. Unit 84's `CMenuValidation::isValid` trap has its wasm type, binaryen merged
-the two, and the merged body, named after unit 17's trap, sits in two slots. A trap that came later is alone: unit 69's
-`CWasmScreen::DrawImage`, after which 9058 is named:
+the two, and the merged body, named after unit 17's trap, sits in two slots:
 
 ```sh
-awk -F'\t' '$1==11366 || $1==11442 || $1==9058 {print $1, $5, $11}' splat/scan.tsv
-# 9058 differs app/69-uenux2-cwasmimagesurfaceops-pending.o
+awk -F'\t' '$1==11366 || $1==11442 {print $1, $5, $11}' splat/scan.tsv
 # 11366 no-candidate -
 # 11442 differs app/36-uenux2-cvisitantefoto-pending.o
 python3 -I -c "
@@ -254,11 +252,10 @@ import sys; sys.path.insert(0, 'tools/extract'); import wasmmod
 d = wasmmod.Module('build/out/wasm/vota_web/vota_web_wasm.wasm')._elem()
 for line in open('build/out/wasm-map/vota_web/names.tsv'):
     i, name, obj = line.split('\t')[:3]
-    if obj.endswith('-pending.o') and ('DoDesconverte' in name or 'DrawImage' in name):
+    if obj.endswith('-pending.o') and 'DoDesconverte' in name:
         print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
 "
 # 4941 2 _ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23Modul 17-uenux2-cconversororigemconfiguracao-pending.o
-# 10567 1 _ZN9simulador11CWasmScreen9DrawImageERKN3api6SPointERKNS1_6IImageES4_N 69-uenux2-cwasmimagesurfaceops-pending.o
 ```
 
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word

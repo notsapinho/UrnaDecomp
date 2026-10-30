@@ -1,7 +1,2 @@
-// The two uenux_wasm_web_sound_wait_* exports the JS side calls back through Module.ccall from
-// js_wasm_web_sound_wait_async: Lb _uenux_wasm_web_sound_wait_cancel_requested (i32)->i32,
-// Mb _uenux_wasm_web_sound_wait_finished (i32,i32)->nil.
-#include "roots.h"
-
-extern "C" int uenux_wasm_web_sound_wait_cancel_requested(int id) { return urna_roots(id + 5); }
-extern "C" void uenux_wasm_web_sound_wait_finished(int id, int ok) { urna_roots(id + ok + 6); }
+// The two uenux_wasm_web_sound_wait_* exports are written in src/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp,
+// whose object holds what they read. This object stays on the link line, empty, as APP_OBJS lists it.

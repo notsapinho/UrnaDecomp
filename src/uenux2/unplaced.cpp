@@ -3631,19 +3631,6 @@
 // f9418 · 7 B · unmatched · placement: link order · name unknown
 // ? f9418(i32) { ... }
 
-// link-order cluster 211 · uses=1 · neighbours' file ecourna/api/sql/sqlite/csqlresultset.cpp
-
-// f9448 · 12 B · unmatched · placement: link order · name unknown
-// void f9448(i32) { ... }
-
-// f9445 · 7 B · unmatched · placement: link order · name unknown
-// ? f9445(i32) { ... }
-
-// link-order cluster 212 · uses=1 · neighbours' file ecourna/api/sql/sqlite/csqlconnection.cpp
-
-// f9459 · 9 B · unmatched · placement: link order · name unknown
-// ? f9459(i32) { ... }
-
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 
 // f4684 · 52 B · unmatched · placement: link order · name unknown
@@ -3665,11 +3652,6 @@
 // f6256 · 404 B · unmatched · placement: link order · name unknown
 // void f6256(i32, i32) { ... }
 
-// link-order cluster 963 · uses=3
-
-// f3533 · 22 B · unmatched · placement: link order · name unknown
-// void f3533(i32, i32) { ... }
-
 // link-order cluster 1050 · uses=3
 
 // f4162 · 143 B · unmatched · placement: link order · name unknown
@@ -3679,16 +3661,6 @@
 
 // f2548 · 778 B · unmatched · placement: link order · name unknown
 // ? f2548(i32, i32) { ... }
-
-// link-order cluster 1072 · uses=4 · neighbours' file ecourna/app/dados/cregistroidentificacaoeleitor.cpp
-
-// f2670 · 359 B · unmatched · placement: link order · name unknown
-// void f2670(i32, i32) { ... }
-
-// link-order cluster 1074 · uses=4 · neighbours' file ecourna/api/security/cepesc/ccepesccipher.cpp
-
-// f2680 · 327 B · unmatched · placement: link order · name unknown
-// void f2680(i32) { ... }
 
 // link-order cluster 1227 · uses=8 · neighbours' file ecourna/api/sql/sqlite/csqlresultset.cpp
 

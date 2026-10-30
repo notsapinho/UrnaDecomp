@@ -31,7 +31,7 @@ The project is not affiliated with the TSE.
 ## Status
 
 <!-- status:headline -->
-**8,358 of 14,343 functions matched (58.27%), 2,264,162 of 5,883,903 code bytes (38.48%).**
+**8,379 of 14,343 functions matched (58.42%), 2,266,775 of 5,883,903 code bytes (38.53%).**
 <!-- /status:headline -->
 
 <picture>

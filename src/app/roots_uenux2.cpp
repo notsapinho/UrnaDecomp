@@ -4,6 +4,7 @@
 // two places. Compiled as uenux2 code (APP_CXXFLAGS).
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "api/io/cinikey.h"
 #include "api/io/eueioerror.h"
@@ -76,6 +77,14 @@ __attribute__((noinline)) void LancaIpc1(int c, const std::string& m) { throw ap
 __attribute__((noinline)) void LancaIpc2(int c, const std::string& m) { throw api::CUeIpcError(static_cast<api::EUeIpcError>(c), m + "2"); }
 
 } // namespace
+
+// std::vector<double>'s range insert (target fn 2662), which simulador::CWasmScreen::FillPath and DrawPath and RHVoice's
+// speech_processor call: the target's copy has TBAA, so this object, ahead of uenux2's on the link line, holds the instance
+// (docs/reference/facts/app-flags.md, "The stand-ins keep strict aliasing"; uenux2's -fno-strict-aliasing gives another body)
+void urna_insere_doubles(std::vector<double>& valores, const double* inicio, const double* fim)
+{
+    valores.insert(valores.end(), inicio, fim);
+}
 
 int urna_roots_uenux2(int a)
 {
