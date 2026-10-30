@@ -12,6 +12,9 @@ enum EUeGuiError {
     // the value is the code api::CBmpConversor::InvertColors (target fn 3663) throws; the name is chosen from its message,
     // "Dado de entrada nulo": no evidence names it
     EUE_GUI_INVERTCOLORS_DADO_NULO = 4903,
+    // the value is the code api::CFormBuilder::GetLabeledKeyPos (target fn 5544) throws; the name is chosen from its
+    // message, "Alinhamento desconhecido ({})": no evidence names it
+    EUE_GUI_GETLABELEDKEYPOS_ALINHAMENTO_DESCONHECIDO = 4914,
     // the value is the code api::CMovie::CMovie (target fn 5526) throws; the name is chosen from its message, "Não
     // havia frames": no evidence names it
     EUE_GUI_MOVIE_SEM_FRAMES = 4943,
