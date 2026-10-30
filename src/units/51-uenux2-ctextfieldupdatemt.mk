@@ -8,11 +8,13 @@
 # class's own object, not linkonce copies. Cluster 309 starts right after the last functions of
 # app/vota/operador/comum/cinformacaothreadoperador.cpp (stretch 310, records) and comes before
 # app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp (304); cluster 757 sits between
-# api/util/itimerscheduler.cpp (759) and the same confirmaidentidade file (756). api/gui's own fields
-# (ctextfieldupdate.cpp, ctextfieldmt.cpp, ...) link in other runs (band 1 stretches 366-400, band 2 768-772), so the
-# namespace's directory, api/gui/, is not where the object was; app/vota/operador/comum/, after
-# cinformacaothreadoperador.cpp in name order, fits both clusters. No record puts any other api:: class's member in an
-# app/ file, so this is the reconstruction's reading of the link order, not a record's. The header (ctextfieldupdatemt.h beside it, chosen) has the layout the constructor (inlined into
+# api/util/itimerscheduler.cpp (759) and the same confirmaidentidade file (756). The data order decides: the class's
+# vtable (@1590476, 0x1844cc) follows cinformacaothreadoperador.cpp's data and comes before confirmaidentidade's
+# (0x1846f4), while api/ objects link their data in runs of their own (api/gui's fields at 0x182544-0x182a78; their
+# functions in band 1 stretches 366-400 and band 2 768-772). So the object linked among app/vota/operador/'s objects,
+# not api/gui/'s; the subdirectory comum/ is chosen (confirmaidentidade/ fits the order as well). No record puts any
+# other api:: class's member in an app/ file: this is the reconstruction's reading of the link order, not a record's.
+# The header (ctextfieldupdatemt.h beside it, chosen) has the layout the constructor (inlined into
 # fn 652), Draw (fn 10548) and the destructor give; the member names are chosen and the timer at +48 is a
 # std::shared_ptr to a forward-declared api::ITimer, whose Start and Stop (chosen names, api/util/itimer.h) Show and
 # Hide call. The destructor is user-declared and defined out of line, declared first among the class's virtual
