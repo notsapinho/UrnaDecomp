@@ -32,11 +32,10 @@
 # - the operand order of `style != m_style`: `m_style != style` gives 10881 with the two operands of its i32.ne swapped.
 # - the order of the two objects: iimpressorarelatorios.cpp before eueprintererror.cpp in the list below. It is the
 #   target's: 10257 sits in use band 1 between 10260 (cescritorlog.cpp, records from 1599572) and 10255 (cthread.cpp,
-#   1599980), both after SetStyle's record (1583816), so its object reads as after SetStyle's. Measured: 10881 scores 15
-#   over 185 whenever SetStyle's object precedes eueprintererror.cpp's, whatever the other four objects do, and 34 over
-#   189 otherwise, the same instructions with other locals (a `local.get 2; local.set 1` more). With data addresses and
-#   callee numbers masked, the two links are the same up to binaryen's `inlining-optimizing` and first differ after it.
-#   Why that pass depends on the order is not read from its source, so no mechanism is claimed here.
+#   1599980), both after SetStyle's record (1583816), so its object reads as after SetStyle's. Measured in four orders
+#   of the six objects: 10881 scores 15 over 185 in the two where SetStyle's object precedes eueprintererror.cpp's, and
+#   34 over 189 in the two where it follows, the same instructions with other locals (a `local.get 2; local.set 1`
+#   more). Why binaryen's inlining depends on the order is not measured here, so no mechanism is claimed.
 # - slot 8's parameters: fn 2890 calls it with a file name, a comum::CSigVerifier, a by-value std::shared_ptr whose
 #   control block's vptr (1581324) is a shared_ptr<IForm<IPaper>>'s, and two strings. The overload is a choice.
 # - CUeCodedPrinterError's constructor is not a strong definition in SetStyle's TU. There it scores 37 over 189, before
