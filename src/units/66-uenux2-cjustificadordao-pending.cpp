@@ -5,10 +5,10 @@
 //             f3894(this, vptr): fn 3894 is binaryen's merge of the three DAOs' Clone (10399, 11468, 11541), so it
 //             matches once comum::dao::CEleitorDinamicoDAO and CComparecimentoMesarioDAO have theirs
 //   4  11467  the base's default, IUenuxGenericDAO<CIdentificacaoJustificativa, std::string>::Excluir, record
-//             api/persistencia/iuenuxgenericdao.h:41:15, code 6804. A merge thunk into fn 2297 with four other defaults.
-//             iuenuxgenericdao.h does not define it yet, and every DAO compiles that header, so this file defines this one
-//             instantiation as an explicit specialization, with the symbol the vtable references. Delete it when the
-//             header defines the default: a strong symbol with that name would keep this trap in the vtable with no word
+//             iuenuxgenericdao.h:41:15: throws code 6804 of a CBaseError<api::EUePersistenciaError, {6800, 6850}> with
+//             "Excluir n\xe3o implementada para entidade " + std::string(typeid(DADO).name()). A merge thunk into
+//             fn 2297 with four other defaults, and the header every DAO compiles does not define it: an explicit
+//             specialization, the vtable's symbol. Delete it when the header defines the default, or the trap stays.
 //   5  11472  ExcluirID, record cjustificadordao.cpp:56:11, code 8804 of a CBaseError<comum::EUeComumJustificativaError,
 //             {8800, 8850}>, whose header and constructor (fn 2260, no-candidate) are not in this tree
 //   6  11471  Atualizar, record cjustificadordao.cpp:63:11, code 8805, the same

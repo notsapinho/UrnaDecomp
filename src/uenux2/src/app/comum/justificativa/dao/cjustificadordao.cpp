@@ -1,7 +1,7 @@
 // The reconstruction's note, not TSE's text: fns 1704 and 3767 (the destructors) and 11473 (slot 3, Inserir, a chosen
-// name), the only functions written here. Their lines are a choice: no record gives one. They stand before line 56,
-// the first record of the file (ExcluirID): in their band the indices run 11473, 11472 (ExcluirID), 11471 (Atualizar)
-// downwards, so Inserir comes first. The other members are in src/units/66-uenux2-cjustificadordao-pending.cpp.
+// name), the only functions written here; no record gives one a line. Evidence: Inserir stands before line 56, the
+// first record (ExcluirID), as band uses 1 runs 11473, 11472 (ExcluirID), 11471 downwards. Chosen: its exact line, and
+// the destructors' place (1704, 3767: other bands). Other members: src/units/66-uenux2-cjustificadordao-pending.cpp.
 #include "app/comum/justificativa/dao/cjustificadordao.h"
 
 #include "ecourna/api/util/cstringutils.hpp"

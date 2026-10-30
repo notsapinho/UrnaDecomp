@@ -15,8 +15,8 @@ public:
 
     // Slot 2. The name is chosen from the role: CDAORepositorio::Entregar (fns 815, 3742) calls the slot on the object it
     // holds and passes the result to __dynamic_cast with this class's typeinfo as the source, so the result is an IDAO*;
-    // each DAO returns a new copy of itself (fn 3894). Pure is chosen: the three DAOs override it and the target has no
-    // vtable of this class to show the slot.
+    // each DAO returns a new copy of itself (fn 3894). Chosen too: const, which no evidence gives, and pure: the three
+    // DAOs override the slot and the target has no vtable of this class to show it.
     virtual IDAO* Clone() const = 0;
 };
 

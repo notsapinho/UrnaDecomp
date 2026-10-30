@@ -18,18 +18,25 @@
 #   IDAO's vptr store to this class's D2 (measured with this class final). 1704 and 3767 fill slots 0 and 1 of all
 #   three DAOs: binaryen merged their destructors. This unit's alone give the same two bodies.
 #
-# Chosen, no evidence names them: Inserir (slot 3) and its const, Clone (slot 2), RecuperarID and RecuperarTodos (slots 7
-# and 8, whose result types the bytes give), every parameter and member name, the paths of cjustificadordao.h,
-# ijustificadordao.h and idao.h, the pure slots of the bases, and the line of every function here: no record gives one,
-# and they stand before line 56 because in their band the indices run 11473, 11472 (line 56), 11471 (line 63)
-# downwards. The lines of the declarations in iuenuxgenericdao.h are chosen too, to leave the records' lines 41, 49 and
-# 57 free. The destructor declared first is the key function: a choice, as ExcluirID and Atualizar are out of line in
-# the same file too.
+# Chosen, no evidence names them: Inserir (slot 3), Clone (slot 2), RecuperarID and RecuperarTodos (slots 7 and 8, whose
+# result types the bytes give), the const of those four, every parameter and member name, the paths of
+# cjustificadordao.h, ijustificadordao.h and idao.h, and the pure slots of the bases. The destructor declared first is
+# the key function: a choice, as ExcluirID and Atualizar are out of line in the same file too.
+#
+# Lines: no record gives a function here its line. Evidence: Inserir stands before line 56, as band uses 1 of
+# ledger/ordinals.tsv runs 11473, 11472 (line 56), 11471 (line 63) downwards. Chosen: its exact line, the destructors'
+# place at the top of the file, and the lines of the declarations in iuenuxgenericdao.h, which leave the records' lines
+# 41, 49 and 57 free. That band says nothing of the destructors: 1704 is in uses 7, 3767 in uses 3. Only a sibling
+# speaks for their place, and it corroborates, no more: in uses 3 the adjacent 3768, 3767, 3766 are, in link order,
+# CEleitorDinamicoDAO's constructor, the D0 and that class's slot 8.
 #
 # Other forms that give the same bytes (each compiled, the unit's functions compared row by row with
 # wasm-objdump -d, addresses aside): std::string and the statement not const; `const auto` for the statement; the
-# literal split in two adjacent strings; .Get() or static_cast<int> on the birth year; a local reference to the
-# record; `~CJustificadorDAO() final` in a class not marked final; `CJustificadorDAO::~CJustificadorDAO() {}`.
+# string's `sql(...)` or `sql{...}` initializer; the literal split in two adjacent strings; `m_conexao.get()->` for the
+# call of Prepare; .Get() or static_cast<int> on the birth year; a local reference to the record; a const m_conexao;
+# `~CJustificadorDAO() final` in a class not marked final; `CJustificadorDAO::~CJustificadorDAO() {}`; a covariant
+# `CJustificadorDAO* Clone() const override`, with the same symbol and the same vtable of 0x2c bytes (the target's
+# __dynamic_cast shows the slot's result in IDAO, not the override's).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.
 CJUSTIFICADORDAO_SRCS := src/app/comum/justificativa/dao/cjustificadordao.cpp
