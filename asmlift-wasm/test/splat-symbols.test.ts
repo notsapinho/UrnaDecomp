@@ -335,7 +335,9 @@ describe('a source_location record the target holds more than once', { timeout: 
   // passes on the code before readings too: a held record never named anything, and readings must not start to
   it.skipIf(!real700)('names nothing: no anchor, and no name for the self-vote rule to hold', () => {
     const { maps, own, body, candidate } = load();
-    const held = edited(maps, (image) => copyTo(image, own, 1108468));
+    // the copy lies above 700's record, in a function these cases do not re-point: with it below, this case passes even
+    // with the anchor rule broken
+    const held = edited(maps, (image) => copyTo(image, own, 1601348));
     const anchored = (m: SymbolMaps): number[] =>
       srclocAnchors(
         m.ours,

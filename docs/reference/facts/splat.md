@@ -610,8 +610,10 @@ through `splat-remap --ledger`:
 **A reading names nothing.** A record is `.L.constant`, anonymous, so `alignVotes` casts no data vote for it. A key of
 several addresses gets no `srcloc.…` line, and `srclocAnchors` counts only keys of one address: which copy a function
 loads pairs no function. The self-vote rule looks only at `address symbol …` readings, so it has nothing to ask of a
-copy. The name of a function that loads such a record comes from other evidence, and `contentPairs` refuses a body of
-ours that equals two target bodies.
+copy. The name of a function that loads such a record comes from the symbol file's other evidence, or, for a row whose
+`source` is `content`, from the body alone: it equals exactly one unmatched target body and no other unused function of
+ours does, so such a row is read as how-to step 9 says. `contentPairs` refuses a body of ours that equals two target
+bodies.
 
 **What it leaves to the reviewer** is the same as for any copy ([../splat.md](../splat.md) "Reviewing a match", §S11).
 Our link can hold one record where the target holds several: unit 92's `-roots.o` builds both `Read`s, so both load our

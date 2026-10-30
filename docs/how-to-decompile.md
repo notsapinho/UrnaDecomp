@@ -1339,7 +1339,7 @@ before the commit, with:
   …`): that takes a re-selection of the dataset in a commit of its own
   ([asmlift-wasm/benchmark/README.md](../asmlift-wasm/benchmark/README.md) "Re-selecting");
 - from `asmlift-wasm/`, `TMPDIR=/tmp pnpm test`, alone in the checkout: beside a census or `splat-match` its
-  real-link cases skip and it still exits 0, so read the count, `202 passed (202)`. Every case passes on `main` since
+  real-link cases skip and it still exits 0, so read the count (§W12). Every case passes on `main` since
   04a718a ([facts/workflow.md](reference/facts/workflow.md) §W12), so a failing one is your branch's to explain: run
   it on the commit your branch started from to see whether it fails there too. And `4 skipped` means the
   `emscripten/emsdk:6.0.0` tag is missing (§W12).
