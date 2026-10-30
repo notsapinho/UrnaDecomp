@@ -17,10 +17,10 @@ class IForm;
 // __on_zero_shared is the virtual fn 411. In the target both are thunks, 10888 into fn 2899 and 10887 into fn 6026,
 // binaryen's merges with comum::CParteEleitores's (and, for 2899, two comum::servico classes' D2s). The D0 holds the
 // D2's body, so the destructor is not out of line; src/units/77-uenux2-ireportpart.mk lists the forms that give the same
-// bytes. The member's type is chosen: RTTI's __shared_ptr_pointer<api::IFormImpressao<api::IPaperRelatorios>*,
-// std::shared_ptr<api::IForm<api::IPaper>>::...> shows report forms held that way. The D2 needs no complete type, so
-// the two classes are only declared here. The member's name and this header's path are chosen too: no record names the
-// class, and the fragment says what the path rests on. Imprime (fn 10889) calls slot 2 of the form; it waits for
+// bytes. The member's type: fn 11908 passes fn 357's result to the constructor, and 357's callee 5515 stores vptr
+// 1581324, __shared_ptr_pointer<api::IFormImpressao<api::IPaperRelatorios>*, shared_ptr<api::IForm<api::IPaper>>::...>.
+// The D2 needs no complete type, so the two classes are only declared here. The member's name and this header's path
+// are chosen, and the fragment has the path's support. Imprime (fn 10889) calls slot 2 of the form; it waits for
 // api/gui/iform.h, which does not define api::IForm in this tree yet.
 class CFormPart : public IReportPart {
 public:

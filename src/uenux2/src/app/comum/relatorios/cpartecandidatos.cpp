@@ -1,7 +1,7 @@
-// Reconstruction notes, not TSE's text: this file holds the constructors of the four classes of cpartecandidatos.h,
-// which have no target function (binaryen inlined each into its one caller, fn 11946). The records of this file are
-// lines 75 and 174, the throws of CParteCandidatosMajoritarios::Imprime and CParteCandidatosConsultas::Imprime; that
-// the constructors come before them is chosen. Imprime is not reconstructed (src/units/77-uenux2-ireportpart-pending.cpp).
+// Reconstruction notes, not TSE's text: this file holds the constructors of cpartecandidatos.h's four classes, which
+// binaryen inlined into fn 11946 (no target function). Its records, lines 75 and 174, are the Imprime throws of
+// CParteCandidatosMajoritarios and CParteCandidatosConsultas. That it holds the other two classes is chosen: the four
+// vtables interleave with the records at 1576388-1576484. Imprime is in src/units/77-uenux2-ireportpart-pending.cpp.
 #include "app/comum/relatorios/cpartecandidatos.h"
 
 #include <utility>
