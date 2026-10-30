@@ -561,20 +561,6 @@
 // f12062 · 189 B · unmatched · placement: link order · name unknown
 // void f12062(i32) { ... }
 
-// link-order cluster 622 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp
-
-// f12104 · 13 B · unmatched · placement: link order · name unknown
-// void f12104(i32) { ... }
-
-// f12103 · 45 B · unmatched · placement: link order · name unknown
-// void f12103(i32) { ... }
-
-// f12102 · 27 B · unmatched · placement: link order · name unknown
-// void f12102(i32) { ... }
-
-// f12101 · 18 B · unmatched · placement: link order · name unknown
-// void f12101(i32) { ... }
-
 // link-order cluster 625 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cfinalizaaquisicao.cpp
 
 // f12113 · 9 B · unmatched · placement: link order · name unknown
@@ -1438,9 +1424,6 @@
 // ? f3877() { ... }
 
 // link-order cluster 1033 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp
-
-// f3907 · 114 B · unmatched · placement: link order · name unknown
-// ? f3907(i32) { ... }
 
 // f3902 · 145 B · unmatched · placement: link order · name unknown
 // void f3902(i32, i32, i32, i32, i32, i32, i32) { ... }
