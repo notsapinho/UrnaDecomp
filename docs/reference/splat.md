@@ -239,7 +239,7 @@ function you took out of the source), delete the match line by hand in the same 
 message; `splat/matched.txt` is a list people edit, unlike `splat/scan.tsv`. While the line names a function our link
 no longer has, `make -C src splat-match` fails after it writes the status files and before it runs `make -C src
 stubs`, so run it again once the line is gone. Never edit a piece, and never add a symbol-file hand edit to make a
-match pass.
+match pass. A `merged-body` line (§3) is not one: its name stands on a caller it does not rescue.
 
 One failure is not drift: `our link has no function <symbol>` for a byte-identical twin whose surviving name moved,
 because a new unit's identical body comes first in the link. The body still verifies under the new name, and

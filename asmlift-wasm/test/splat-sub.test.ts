@@ -295,6 +295,12 @@ describe('withMatches', { timeout: 180_000 }, () => {
           'aliased = func:7; // evidence:merged-body the target merged this body into 7',
           'handOnly = func:7; // evidence:callers+content',
           'other = func:8; // evidence:merged-body its function is not matched',
+          'longerWord = func:7; // evidence:merged-body+content',
+          'prefixed = func:7; // counter-evidence:merged-body',
+          'inComment = func:7; // see evidence:merged-body',
+          'movedOn = func:8; // evidence:merged-body',
+          'movedOn = func:7; // evidence:callers+content the later line wins',
+          'dataName = 0x7; // evidence:merged-body',
           '',
         ].join('\n'),
       ),
@@ -307,6 +313,10 @@ describe('withMatches', { timeout: 180_000 }, () => {
     expect(fns.has('generated')).toBe(false);
     expect(fns.has('generatedSpelled')).toBe(false);
     expect(fns.has('handOnly')).toBe(false);
+    for (const name of ['longerWord', 'prefixed', 'inComment', 'movedOn']) {
+      expect(fns.has(name)).toBe(false);
+    }
+    expect(symbols.mergedBody.has('dataName')).toBe(false);
   });
 });
 

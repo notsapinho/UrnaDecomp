@@ -315,7 +315,7 @@ export function parseSymbolLine(line: string): SymbolEntry | null {
         ? { kind: 'import', index: Number(imp) }
         : { kind: 'data', addr: Number.parseInt(addr, 16) };
   const size = /size:0x([0-9a-f]+)/.exec(notes);
-  const evidence = /evidence:(\S+)/.exec(notes);
+  const evidence = /^(?:type:data\s+)?(?:size:0x[0-9a-f]+\s+)?evidence:(\S+)/.exec(notes);
   const by = /\bby:(\d+(?:,\d+)*)/.exec(notes);
   return {
     name,
@@ -382,7 +382,7 @@ export function targetSymbolsOf(file: SymbolFile): TargetSymbols {
     evidence?.set(e.name, { evidence: e.evidence, ...(e.voters ? { voters: e.voters } : {}) });
   }
   for (const e of file.hand) {
-    if (e.at.kind === 'func' && e.evidence === MERGED_BODY) {
+    if (e.at.kind === 'func' && e.evidence === MERGED_BODY && out.fnEvidence.get(e.name)?.evidence === MERGED_BODY) {
       out.mergedBody.add(e.name);
     }
   }

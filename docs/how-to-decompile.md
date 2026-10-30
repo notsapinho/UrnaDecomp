@@ -1163,7 +1163,7 @@ link keeps them apart, and only the matched symbol's body equals it. A match of 
 ([reference/splat.md](reference/splat.md) §3), its callers leave `match`, and `status.py` stops step 9, naming them
 after `matched.txt only:`. Withdrawing the match does not help, since the content pass adds it back. Add a hand edit of the
 other name with `evidence:merged-body` and, in its comment, the callers, that the target merged the body, and that our
-own body is not equal; the report goes on printing that line, and that is expected. A second name beside the matched one is not reported, so read step 8's
+own body is not equal (`pnpm wasm score`, not the first byte `splat-remap` prints). The comment must also cite a caller the line does not rescue: one named by other evidence that calls the name at the aligned site, as 8811 does for 543. Without one, or when our body differs because our source is wrong, this is not the case: fix the source, or withdraw the callers with a reason. The report goes on printing that line, and that is expected. A second name beside the matched one is not reported, so read step 8's
 `git diff splat/symbol_addrs.txt` for a `func:N` that gained a name, and for a matched index that lost its line: a
 vtable slot your unit fills with a body that is not the target's (a defaulted or implicit member of an earlier unit)
 votes that slot's index onto the body, and the function the body is matched as can lose its line

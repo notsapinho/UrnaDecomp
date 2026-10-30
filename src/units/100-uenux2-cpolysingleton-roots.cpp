@@ -4,10 +4,10 @@
 // each instance has two call sites, and calls has<T> once more, which the target does in another function (fn 5566 for
 // IScreen), so has<T> stays out of line too: a member with one caller is inlined, and the target's are calls.
 //
-// w100_falha is the one thing here no T asks for. Every call of std::operator""s in this object passes the same string,
-// so binaryen's dead-argument elimination takes its parameters and fn 403's two arguments leave the instances' bodies.
-// The target's 403 has other arguments from its other callers (fns 148, 155, 1497), so a second literal keeps them. It
-// is in a cold function because clang inlines the operator in a hot one, and that would be no call.
+// w100_falha is the one thing here no T asks for. It was written to keep fn 403's two arguments from dead-argument
+// elimination, but 1497 calls 403 with others: without it no row of a --no-kinds scan moves. It stays until a scan with
+// kinds says the same. It is in a cold function because clang inlines the operator in a hot one, and that would be no
+// call.
 //
 // The extern template keeps fn 252, std::operator+(string&&, string&&), libc++'s: it is matched from libc++.a, which
 // links after this object, and with an instantiation here this object's copy wins the link and the match goes. Without
