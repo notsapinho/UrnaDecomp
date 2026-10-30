@@ -166,13 +166,16 @@ the object's content places it:
 - a C string by its bytes through the NUL; every place the target holds the same string is a copy (up to
   4,096 of them: tail merging leaves a short string such as `"\n"` in hundreds of places);
 - a `std::source_location` record by what it records;
-- a read-only object by its exact bytes, found once (up to 64 copies when found more often);
+- a read-only object by its exact bytes, found once (up to 64 copies when found more often). wasm-ld's
+  map gives no object's alignment, so our address stands in for it: an object our link puts at a multiple
+  of 4 is looked for only at multiples of 4, any other one anywhere. A typeinfo name (`_ZTS…`) is looked
+  for anywhere, wherever our link puts it, since its alignment is 1 ([facts/splat.md](facts/splat.md) §S9);
 - **by its re-pointed bytes** (`content-repointed`): a `.data` object, or a read-only one whose exact
   bytes are not in the target (it holds pointers), is our object's bytes with every aligned word that is
   one of our addresses or table slots replaced by what it re-points to (any copy, or the plain integer
   it also is). A word whose pointer resolves nowhere matches anything. The object is placed where these
-  bytes occur once, at its alignment, when they hold at least 4 telling bytes (non-zero fixed bytes, 4
-  per pointer word at or above 1024, the non-zero bytes of a smaller one). Read-only content
+  bytes occur once, at an address equal to ours mod 4, when they hold at least 4 telling bytes (non-zero
+  fixed bytes, 4 per pointer word at or above 1024, the non-zero bytes of a smaller one). Read-only content
   (`.rodata`, `.data.rel.ro`) found at several places offers each as a copy; a writable object found at
   several places stays unresolved. Placing one object can re-point a word of another, so the placement
   repeats until nothing more resolves. It reads only the two images and the names, never a function body.

@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**7,733 of 14,343 functions matched (53.91%), 2,169,908 of 5,883,903 code bytes (36.88%).**
+**7,781 of 14,343 functions matched (54.25%), 2,170,734 of 5,883,903 code bytes (36.89%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -27,9 +27,9 @@ library function with no evidence of its own that only TSE code calls counts as 
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
 | TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 669 / 3,285 | 20.37% | 107,738 / 2,168,476 | 4.97% |
-| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `boost`, `libc++abi`, `utf8cpp`, `rapidxml` | 5,710 / 8,294 | 68.84% | 1,848,480 / 3,145,292 | 58.77% |
+| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `boost`, `libc++abi`, `utf8cpp`, `rapidxml` | 5,758 / 8,294 | 69.42% | 1,849,306 / 3,145,292 | 58.80% |
 | not attributed | `unknown`, `app` | 1,354 / 2,764 | 48.99% | 213,690 / 570,135 | 37.48% |
-| **total** | | **7,733 / 14,343** | **53.91%** | **2,169,908 / 5,883,903** | **36.88%** |
+| **total** | | **7,781 / 14,343** | **54.25%** | **2,170,734 / 5,883,903** | **36.89%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -60,11 +60,11 @@ come from getting the version, the flags and the link order right, not from writ
 | component | functions | | code bytes | |
 | --- | ---: | ---: | ---: | ---: |
 | `openssl` | 3,124 / 3,258 | 95.89% | 943,452 / 1,014,603 | 92.99% |
-| `libc++` | 883 / 1,957 | 45.12% | 111,193 / 439,879 | 25.28% |
+| `libc++` | 930 / 1,957 | 47.52% | 111,998 / 439,879 | 25.46% |
 | `sqlite` | 878 / 927 | 94.71% | 700,394 / 772,965 | 90.61% |
 | `7zip` | 477 / 970 | 49.18% | 44,657 / 292,539 | 15.27% |
 | `RHVoice` | 278 / 740 | 37.57% | 39,137 / 450,027 | 8.70% |
-| `boost` | 52 / 192 | 27.08% | 4,800 / 105,977 | 4.53% |
+| `boost` | 53 / 192 | 27.60% | 4,821 / 105,977 | 4.55% |
 | `libc++abi` | 11 / 234 | 4.70% | 2,209 / 53,263 | 4.15% |
 | `utf8cpp` | 6 / 10 | 60.00% | 2,306 / 8,275 | 27.87% |
 | `rapidxml` | 1 / 6 | 16.67% | 332 / 7,764 | 4.28% |
@@ -118,9 +118,9 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 7,733 | 2,169,908 | matched |
-| `differs` | 435 | 86,251 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 816 | 539,213 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `match` | 7,781 | 2,170,734 | matched |
+| `differs` | 407 | 85,771 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `unresolved` | 796 | 538,867 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
 | `no-candidate` | 5,359 | 3,088,531 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
@@ -179,9 +179,9 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `byte` | 984 | 984 | 0 | 0 | 0 |
 | `fingerprint` | 582 | 581 | 0 | 1 | 0 |
-| `addr` | 5,745 | 5,376 | 196 | 169 | 4 |
+| `addr` | 5,745 | 5,422 | 168 | 151 | 4 |
 | `shape` | 221 | 152 | 30 | 37 | 2 |
-| `none` | 6,811 | 640 | 209 | 609 | 5,353 |
+| `none` | 6,811 | 642 | 209 | 607 | 5,353 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

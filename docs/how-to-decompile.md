@@ -1036,7 +1036,7 @@ before the commit, with:
   the flags of a setup in `asmlift-wasm/benchmark/dataset/setups.json`, which a flag added in a fragment breaks while
   every other check passes ([src/units/README.md](../src/units/README.md) "What a fragment holds");
 - from `asmlift-wasm/`, `TMPDIR=/tmp pnpm test`, alone in the checkout: beside a census or `splat-match` its
-  real-link cases skip and it still exits 0, so read the count, `193 passed (193)`. Every case passes on `main` since
+  real-link cases skip and it still exits 0, so read the count, `195 passed (195)`. Every case passes on `main` since
   04a718a ([facts/workflow.md](reference/facts/workflow.md) §W12), so a failing one is your branch's to explain: run
   it on the commit your branch started from to see whether it fails there too.
 
