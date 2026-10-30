@@ -4772,44 +4772,6 @@
 // f9459 · 9 B · unmatched · placement: link order · name unknown
 // ? f9459(i32) { ... }
 
-// link-order cluster 227 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp
-
-// f9533 · 4 B · unmatched · placement: link order · name unknown
-// ? f9533(i32) { ... }
-
-// f9523 · 38 B · unmatched · placement: link order · name unknown
-// ? f9523(i32, i32) { ... }
-
-// f9515 · 995 B · unmatched · placement: link order · name unknown
-// void f9515(i32, i32, i32, i32) { ... }
-
-// link-order cluster 228 · uses=1 · neighbours' file ecourna/api/compression/czip.cpp
-
-// f9541 · 13 B · unmatched · placement: link order · name unknown
-// void f9541(i32, i32) { ... }
-
-// link-order cluster 230 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp
-
-// f9580 · 18 B · unmatched · placement: link order · name unknown
-// void f9580(i32, i32) { ... }
-
-// f9573 · 18 B · unmatched · placement: link order · name unknown
-// void f9573(i32, i32, i32) { ... }
-
-// f9565 · 211 B · unmatched · placement: link order · name unknown
-// void f9565(i32, i32) { ... }
-
-// f9559 · 157 B · unmatched · placement: link order · name unknown
-// void f9559(i32, i32, i32) { ... }
-
-// f9550 · 11 B · unmatched · placement: link order · name unknown
-// void f9550(i32) { ... }
-
-// link-order cluster 232 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp
-
-// f9589 · 11 B · unmatched · placement: link order · name unknown
-// void f9589(i32) { ... }
-
 // link-order cluster 362 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmnullprinter.cpp
 
 // f10880 · 15 B · unmatched · placement: link order · name unknown
