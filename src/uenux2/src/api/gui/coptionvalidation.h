@@ -12,7 +12,7 @@ namespace api {
 // that builds the object, so every member is inline. The constructor, inlined into fn 5913, hands its string to the
 // base. Slot 2 (fn 4022) accepts an empty text and otherwise calls slot 3 on each character, stopping at the first one
 // it refuses; CNumberValidation and CControlValidation have the same body, and binaryen keeps one of the three. No
-// record names the class's file, so the path (the class name in lower case) and the constructor's parameter are chosen.
+// record names the class's file, so the path (the class name in lower case), the parameter's name and `explicit` are chosen.
 class COptionValidation : public IInputValidation {
 public:
     explicit COptionValidation(const std::string& options) : IInputValidation(options) {}

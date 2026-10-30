@@ -11,7 +11,7 @@ namespace api {
 // and vtable lie among the data of vota/eleitor/comum/ctelasvota.cpp, the TU that builds a CNumberValidation, right
 // after CNumberValidation's typeinfo, so every virtual member is inline or pure and each TU that uses the vtable emits
 // it. The layout comes from the destructor (12502: the vptr, then the std::string at +4 it frees) and from the
-// constructor, which binaryen inlined into every caller: fn 5913 copies a COptionValidation's string argument into +4
+// constructor, inline in the class and so inlined by clang at each of its 9 sites: fn 5913 copies a COptionValidation's string argument into +4
 // between the two vptr stores, fn 1151 builds "0123456789" there for a CNumberValidation and fn 395 "" for a
 // CControlValidation. The derived classes' deleting destructor (2980) holds this destructor's body, so it is inline.
 // Slot 3 (fn 12473) says whether a character is one of the string's. Slot 2 judges a whole text: CNumberValidation,

@@ -9,7 +9,7 @@
 // A vtable with no key function is emitted only by a TU that uses it: the optnone function below builds a
 // COptionValidation as fn 5913 does, so clang emits the inline constructor here and with it both vtables, their
 // members and the typeinfos (as COMDATs). It is not rooted, so wasm-ld drops it and the constructor (the target has no
-// function of its own for the constructor either: binaryen inlined it into every caller); the static constructor takes
+// function of its own for the constructor either: clang inlined it, from the class, at each site); the static constructor takes
 // the two vtables' addresses, the reference the target's constructors store, which keeps every slot.
 #include <string>
 
