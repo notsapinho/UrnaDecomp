@@ -7476,3 +7476,7 @@
 11086 _ZN3api17CImageFieldUpdateD0Ev
 10941 _ZN3api18CTextFieldBlinkingD0Ev
 10942 _ZN3api18CTextFieldBlinkingD2Ev
+5411 _ZN3api18CTextFieldUpdateMTD2Ev
+10545 _ZN3api18CTextFieldUpdateMT4HideEv
+10546 _ZN3api18CTextFieldUpdateMT4ShowEv
+10549 _ZN3api18CTextFieldUpdateMTD0Ev
