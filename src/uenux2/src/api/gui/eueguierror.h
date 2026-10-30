@@ -18,6 +18,12 @@ enum EUeGuiError {
     // the value is the code api::CTextField::CTextField (target fn 1918) throws; the name is chosen from its message,
     // "Campo estava com o texto nulo", as 4972's was: no evidence names it
     EUE_GUI_TEXTFIELD_TEXTO_NULO = 4964,
+    // the values are the codes api::CTextFieldDoubleLine's constructor (target fn 3659) throws; the names are chosen from
+    // its messages, "Campo estava com o texto nulo" and "maxX menor que a posição x da linha 1" (and "... linha 2"): no
+    // evidence names them
+    EUE_GUI_TEXTFIELDDOUBLELINE_TEXTO_NULO = 4967,
+    EUE_GUI_TEXTFIELDDOUBLELINE_MAXX_MENOR_LINHA1 = 4968,
+    EUE_GUI_TEXTFIELDDOUBLELINE_MAXX_MENOR_LINHA2 = 4969,
     // the value is the code api::CTextFieldMT::CTextFieldMT (target fn 1262) throws; the name is chosen from its message,
     // "Campo estava com o texto nulo": no evidence names it
     EUE_GUI_TEXTFIELDMT_TEXTO_NULO = 4970,
