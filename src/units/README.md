@@ -103,6 +103,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `20-uenux2-cconversornumviasimpressasrelatorios` | `comum::asn::CConversorNumViasImpressasRelatorios::DoConverte` and `DoDesconverte` (target fns 11386, 11387) and the `md::estadoaplicacao::CNumViasImpressasRelatorios` data class with its constructor (5629) |
 | `21-uenux2-cdirreader` | `api::CDirReader::NextEntry` (target fn 1260), the `CDirReader` class header and the 7010 enumerator of `EUeUtilError`; the constructor (1914) waits for its callee 5470 |
 | `22-uenux2-cbmpconversor` | `api::CBmpConversor::VerticalFlip` and `InvertColors` (target fns 3664 and 3663), the `CBmpConversor` class header and the 4900, 4901 and 4903 enumerators of `EUeGuiError` |
+| `30-uenux2-ctextfieldmt` | the `api::CTextFieldMT` constructor (target fn 1262) with its implicit destructors (10933, 10932), the class header, the 4970 enumerator of `EUeGuiError` and the `IFormField<IScreenMT>` specialization of `api/gui/iformfield.h` with its inline `GetTypeName` (11051), and the `IFormFieldBase<IScreenMT>` destructor (11052) that binaryen merges with `IFormFieldBase<IScreen>`'s (12658) into 1566; `Draw` (10934) pending |
 
 ## Companion files
 
