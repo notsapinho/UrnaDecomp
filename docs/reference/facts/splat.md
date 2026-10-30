@@ -372,3 +372,45 @@ join -t "$(printf '\t')" <(git show a57eae1^1:splat/scan.tsv | cut -f1,5 | sort)
 The first three are the unit's matches. 8875 is `AVNDecoder::visitExtensionRoot`, whose name that landing moved onto
 7530 by `table` evidence (item 1), leaving 8875 with none. `docs/how-to-decompile.md` step 9 runs the same `join`
 against a branch's merge base. A match line both branches of a landing add is [workflow.md](workflow.md) §W16.
+
+## S9. Where a read-only object is looked for by its bytes
+
+A read-only object of ours with no target name is placed where its exact bytes occur once in the target
+(`resolveBytes` in `asmlift-wasm/src/splat-symbols.ts`): step 8 writes the place as `evidence:content`, and the scan
+re-points an address into it. wasm-ld's map has no alignment column (`head -1
+build/out/wasm-map/vota_web/vota_web_wasm.map` prints `Addr Off Size Out In Symbol`), so our address stands in for the
+object's alignment (`contentAlignment`):
+
+1. **An object our link puts at a multiple of 4 is looked for only at multiples of 4.** A constant's bytes can recur
+   at an odd offset. OpenSSL's `default_iv`, eight 0xa6 bytes, is at 1430064 in the target and the same eight bytes
+   start again at 1430065, inside a run of nine; sqlite's `rankName`, `"rank"`, a char array our link puts at a
+   multiple of 4, is at 1497244 and its bytes also end two other strings:
+
+   ```sh
+   cd asmlift-wasm && pnpm --silent exec tsx -e "
+   import { readFileSync } from 'node:fs'; import { parseModule } from './src/parse'; import { memoryImage } from './src/splat-symbols';
+   const { image, base } = memoryImage(parseModule(new Uint8Array(readFileSync('../target/vota_web_wasm.wasm'))));
+   const places = (b: Buffer) => { const r = []; for (let k = image.indexOf(b); k >= 0; k = image.indexOf(b, k + 1)) r.push(base + k); return r; };
+   console.log(places(Buffer.alloc(8, 0xa6)), places(Buffer.from('rank\0')));"
+   # [ 1430064, 1430065 ] [ 1497239, 1497244, 1497257 ]
+   ```
+
+2. **A typeinfo name (`_ZTS…`) is looked for anywhere.** clang emits it as a char array aligned as char, whatever
+   its length, and the target packs them tightly:
+
+   ```sh
+   TMPDIR=/tmp build/docker-build.sh bash -c "printf 'struct LongEnoughName { virtual ~LongEnoughName(); };\nLongEnoughName::~LongEnoughName() {}\n' | em++ -x c++ -O2 -S -emit-llvm -o - - | grep '^@_ZTS'"
+   # @_ZTS14LongEnoughName = hidden constant [17 x i8] c"14LongEnoughName\00", align 1
+   ```
+
+   Which of our names fall at a multiple of 4 moves with all the read-only data before them. Looked for at multiples
+   of 4 only, such a name missed its one copy, and a `__shared_ptr_pointer<…>::__get_deleter`, whose body compares
+   `typeid(deleter).name()` with that name's address, was `unresolved` (`bytes not in the target`), so a landing could
+   take one of them out of the scan, and `splat-match` then stops on the match line the scan no longer finds
+   ([workflow.md](workflow.md) §W11). Made at e62ecee, the rule placed 51 more `_ZTS` names on 9d385a1's link, and step
+   9 matched 48 `get_deleter` bodies the symbol file already named by `vtable`. The `_ZTS` names placed by content at
+   an address that is not a multiple of 4 went from 96 to 147:
+
+   ```sh
+   /usr/bin/grep -cE '^_ZTS[^ ]* = 0x[0-9a-f]*[1235679abdef];.*evidence:content' splat/symbol_addrs.txt
+   ```

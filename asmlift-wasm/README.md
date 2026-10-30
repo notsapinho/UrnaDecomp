@@ -535,7 +535,8 @@ of our C strings and whose high word is that string's length is a string_view cl
 **matchesTarget(pieces, body)** says whether some choice of readings gives the target body, and the first byte none
 explains. A data address resolves through our symbol to the target's; anonymous objects by what they hold: a string
 by its whole NUL-terminated text found once in the target, a `std::source_location` record by its file, function,
-line and column, other read-only objects by bytes found once. Content that the target holds at several places adds each
+line and column, other read-only objects by bytes found once (only at a multiple of 4 when our link puts the object at
+one, except a typeinfo name, `_ZTS…`, whose alignment is 1). Content that the target holds at several places adds each
 place as a reading, and the target body picks the copy it uses: every place of the same C string through its NUL,
 wherever tail merging put it (`STRING_COPY_LIMIT`, 4,096), and up to `SAME_CONTENT_LIMIT` (64) places of the same
 read-only bytes. An object with no name whose exact bytes the target does not hold (a `.data` object, or read-only
