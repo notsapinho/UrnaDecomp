@@ -3081,16 +3081,6 @@
 
 // component api
 
-// link-order cluster 28 · uses=1 · neighbours' file uenux2/src/api/gui/cfixedtext.cpp
-
-// f7666 · 12 B · unmatched · placement: link order · name unknown
-// void f7666(i32) { ... }
-
-// link-order cluster 29 · uses=1 · neighbours' file uenux2/src/api/gui/cfixedtext.cpp
-
-// f7706 · 12 B · unmatched · placement: link order · name unknown
-// ? f7706(i32) { ... }
-
 // link-order cluster 40 · uses=1
 
 // f8131 · 12 B · unmatched · placement: link order · name unknown
