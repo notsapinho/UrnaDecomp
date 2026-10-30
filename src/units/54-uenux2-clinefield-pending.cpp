@@ -5,8 +5,8 @@
 //         api/gui/iscreen.h does not declare that slot yet, and nothing names it
 //   5527  Move(const SPoint&): binaryen's one body for this class and CTextFieldDoubleLine (whose Move is pending in
 //         28-uenux2-ctextfielddoubleline-pending.cpp); it moves m_fim by the offset of the new m_inicio, then marks the
-//         field changed through IForm<IScreen> (its +28 mutex, +4 flag and slot 4), which api/gui/iform.h does not
-//         declare yet
+//         field changed through IForm<IScreen> (its +28 mutex, +4 flag and slot 4), which api/gui/iform.h declares
+//         as IsVisible and Refresh
 // Move each into clinefield.cpp when it is reconstructed; delete this file with the last one.
 #include "api/gui/clinefield.h"
 

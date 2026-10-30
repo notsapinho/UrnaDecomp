@@ -5,7 +5,7 @@
 //         5505, 5506 and 5507 (no name), and draws them through IScreen slots 17, 18 and 19, which iscreen.h does not
 //         declare yet
 //   10970 Move(const SPoint&) (slot 9, 214 B): moves m_rect through fn 1915 (no name), sets m_recalcular, clears the
-//         segments and marks the form (IForm<IScreen>, stub-only iform.h)
+//         segments and marks the form (IForm<IScreen>'s IsVisible and Refresh, api/gui/iform.h)
 // Move each into cstepsprogressbar.cpp when it is reconstructed; delete this file with the last one.
 #include "api/gui/cstepsprogressbar.h"
 
