@@ -329,7 +329,8 @@ The real-link suites skip their cases when build outputs are missing at collecti
 (`asmlift-wasm/test/splat-sub.test.ts` line 34, `const real = existsSync(\`${MAP_DIR}/names.tsv\`) && …`; likewise
 `splat-review.test.ts` and `splat-symbols.test.ts`), so a run beside a census or `splat-match` in the same checkout,
 which rewrite those files, can exit 0 with cases skipped. A run alone counts every test with none skipped: `193` at
-ee595de (below), `Tests  195 passed (195)` at bb6f018. CI has no build outputs and always skips them.
+ee595de (below), `Tests  195 passed (195)` at bb6f018, `Tests  202 passed (202)` with the record cases of
+[splat.md](splat.md) §S12. CI has no build outputs and always skips them.
 
 `test/splat-kinds.test.ts` and `test/splat-review.test.ts` read our link's numbers from the link since 74604f5, and
 `test/splat-symbols.test.ts`'s "names a callee its anchored callers vote for, listing them as its voters" checks
@@ -357,7 +358,7 @@ On ee595de, which holds 04a718a, every case passes, run alone:
 
 So on a commit that holds 04a718a no case is known to fail.
 
-Two more ways a run alone can mislead (bb6f018):
+One more way a run alone can mislead (bb6f018):
 
 - **Four cases skip without the stock emsdk tag.** `test/lift.test.ts` line 328, `test/lift-eval.test.ts` lines 91 and
   132 and `test/rank.test.ts` line 37 are `skipIf(!hasImage)`, and `hasImage` is `docker image inspect` of
@@ -365,14 +366,15 @@ Two more ways a run alone can mislead (bb6f018):
   `urna-emsdk:6.0.0`. A BuildKit build of `urna-emsdk:6.0.0` can pull its base without tagging it, and the run then
   reads `189 passed | 4 skipped` and exits 0. `docker image ls --format '{{.Repository}}:{{.Tag}}' | /usr/bin/grep
   emsdk` should list both images; `docker pull emscripten/emsdk:6.0.0` adds the tag from the layers already there.
-- **A record the target holds twice fails a case though it is right.** `splat-symbols.ts` line 687 gives a record the
-  target holds at more than one address the reason `source_location record ambiguous`, and `test/splat-symbols.test.ts`
-  line 157 expects `source_location not in the target` for every record of ours it cannot place. A header-inline
-  function two TUs inline has its record twice in the target, so a roots file that builds such a class (a
-  `CTextSource`, whose constructor's record is at 1587008 and 1590592: `awk -F'\t' '$2 ~ /ctextsource/ {print $1, $3}'
-  ledger/source-locations.tsv`) makes that case fail with `expected 'source_location record ambiguous' to be
-  'source_location not in the target'`. `python3 -I -B tools/round/check_srcloc.py --strict` on the unit's objects
-  says whether the record is the target's.
+
+A record the target holds twice no longer fails a case. A header-inline function two TUs inline has its record twice
+in the target (a `CTextSource`'s constructor, at 1587008 and 1590592: `awk -F'\t' '$2 ~ /ctextsource/ {print $1, $3}'
+ledger/source-locations.tsv`), and `test/splat-symbols.test.ts`'s record case now reads every address such a record
+resolves to and checks that each holds the record, whichever keys our link holds. Before readings
+([splat.md](splat.md) §S12) it failed on the right record with `expected 'source_location record ambiguous' to be
+'source_location not in the target'`. `source_location not in the target` still means our record's file, function,
+line or column is not the target's; `python3 -I -B tools/round/check_srcloc.py --strict` on the unit's objects says
+the same from the objects.
 
 ## W13. Showing that a header edit left the units that include it unchanged
 

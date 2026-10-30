@@ -515,8 +515,9 @@ object of ours with different bytes, or the target's RTTI, holds. A vtable of a 
 at its first virtual-base offset, as many words ahead of the typeinfo pointer as our own vtable has.
 
 What the pairs leave unnamed, **anchors** may fill (`srclocAnchors`): a target function and one of ours that both
-reference a `std::source_location` record (resolved by what it records) that no other function of either side
-references, and whose bodies are the same instructions, are a pair (`evidence:srcloc-anchor`). Their call and table
+reference a `std::source_location` record (resolved by what it records, and held at one target address) that no other
+function of either side references, and whose bodies are the same instructions, are a pair
+(`evidence:srcloc-anchor`). Their call and table
 votes name a function only when neither side is named yet, the votes agree and the signatures match; anchors cast
 no data votes. A name only anchors voted for lists them in `by:`. This reaches std::format throwers, whose format
 helpers our link inlines differently from the target's, so no unique pair ever reaches them.
@@ -538,8 +539,10 @@ by its whole NUL-terminated text found once in the target, a `std::source_locati
 line and column, other read-only objects by bytes found once (only at a multiple of 4 when our link puts the object at
 one, except a typeinfo name, `_ZTS…`, whose alignment is 1). Content that the target holds at several places adds each
 place as a reading, and the target body picks the copy it uses: every place of the same C string through its NUL,
-wherever tail merging put it (`STRING_COPY_LIMIT`, 4,096), and up to `SAME_CONTENT_LIMIT` (64) places of the same
-read-only bytes. An object with no name whose exact bytes the target does not hold (a `.data` object, or read-only
+wherever tail merging put it (`STRING_COPY_LIMIT`, 4,096), every place of the same record (a header-inline throw has
+one per TU, `target.srcloc` keeps them all, and a record held so names nothing), and up to `SAME_CONTENT_LIMIT` (64)
+places of the same read-only bytes. An object with no name whose exact bytes the target does not hold (a `.data`
+object, or read-only
 data holding pointers) is placed by its bytes with each pointer word re-pointed (`content-repointed`): where that
 pattern occurs once, or at each place for read-only content; a writable object found at several places stays
 unresolved. Placing one object can re-point a word of another, so the placement repeats until nothing more
@@ -563,8 +566,9 @@ operands read as <readings>)` or `differs at body byte <k>` with the target inst
 ones `matchesTarget` chose for the operands re-pointed as an address or a table slot (and, in a kind-unverified
 function, the literals); the first reading of each is the preferred one (`RemapResult.bytes`), so it needed no
 choice. It loads the symbol file (`--symbols`, default
-`<root>/splat/symbol_addrs.txt`) and the map directory beside the plain module (`--map-dir`), and applies no
-matches, unlike `splat-scan` and `splat-build` (`withMatches`). `<ours>` is our index or `sym:<names.tsv name>`; run
+`<root>/splat/symbol_addrs.txt`), the ledger (`--ledger`, default `<root>/ledger`) and the map directory beside the
+plain module (`--map-dir`), and applies no matches, unlike `splat-scan` and `splat-build` (`withMatches`). `<ours>` is
+our index or `sym:<names.tsv name>`; run
 it as `pnpm exec tsx src/cli.ts splat-remap …` when the name holds a `$`, which `pnpm wasm` hands to a shell.
 
 ## splat substitution: the match list and the build
@@ -707,6 +711,8 @@ the branch's to explain. They cover:
 - a match that re-points through both maps;
 - AudioCollector's destructors not matching;
 - a self-voted match failing the build;
+- a `std::source_location` record the target holds more than once: the match takes the address the target body holds,
+  a key without that address or not in the target fails, and the record names nothing;
 - the operand kinds the shifted link gives, and the perturbation cases of urna's `docs/reference/facts/splat.md` §S5
   item 3;
 - the blanked-target check: 9218 reproducing the target both ways (and its preferred readings 313 B without operand
