@@ -2,9 +2,9 @@
 # @1600476, and fn 10238, the deleting one in slot 1) in src/uenux2/src/api/audio/alsa/cwavfile.cpp, the file the
 # constructor's std::source_location record names (cwavfile.cpp:47:19 api::CWavFile::CWavFile(const CWavAudio &,
 # const void *)). The constructor is not reconstructed: binaryen inlined it into fn 10841 (slot 11 of
-# api::CRHVoiceTextToSpeech), so line 47 stays free for it. 10841 is left to do although it has no stub any more:
-# tools/round/stubs.py matches a record to a definition by name, and its `\bCWavFile\s*\(` reads the destructor's
-# `CWavFile::~CWavFile()` as the constructor. No record falls in the destructor, so its line (55, after
+# api::CRHVoiceTextToSpeech), so line 47 stays free for it, and 10841 keeps its stub (tools/round/stubs.py matches a
+# record to a definition by its signature and never reads a destructor as the constructor). No record falls in the
+# destructor, so its line (55, after
 # the constructor's) is a choice, not evidence. The class header (api/audio/alsa/cwavfile.h) has the layout the
 # inlined constructor stores (vptr, the 44-byte CWavAudio WAV header at +4, the malloc'd copy of the samples at +48,
 # +52 and +56 zeroed, the samples' size at +60, +64 zeroed after the copy) and simulador::CWasmWebSound reads (+4 with
