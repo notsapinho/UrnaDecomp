@@ -439,9 +439,6 @@
 // f6031 · 151 B · unmatched · placement: link order · name unknown
 // void f6031(i32, i32, i32, i32, i32) { ... }
 
-// f6030 · 69 B · unmatched · placement: link order · name unknown
-// ? f6030(i32, i32, i32, i32, i32, i32) { ... }
-
 // f6029 · 68 B · unmatched · placement: link order · name unknown
 // ? f6029(i32, i32, i32, i32, i32) { ... }
 
@@ -1012,9 +1009,4 @@
 
 // f235 · 21 B · unmatched · placement: link order · name unknown
 // ? f235(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1383 · uses=282
-
-// f170 · 21 B · unmatched · placement: link order · name unknown
-// ? f170(i32, i32, i32, i32) { ... }
 // </stubs>

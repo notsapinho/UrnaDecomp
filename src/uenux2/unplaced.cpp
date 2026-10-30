@@ -2872,9 +2872,6 @@
 // f1709 · 156 B · unmatched · placement: link order · name unknown
 // void f1709(i32, i32) { ... }
 
-// f1706 · 132 B · unmatched · placement: link order · name unknown
-// void f1706(i32, i32) { ... }
-
 // link-order cluster 1223 · uses=8
 
 // f1501 · 318 B · unmatched · placement: link order · name unknown

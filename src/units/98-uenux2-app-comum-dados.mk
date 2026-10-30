@@ -1,0 +1,56 @@
+# uenux2 comum throwers over comum::EUeComumDadosError (app/comum/dados/euecomumdadoserror.h), each function's file named
+# by its std::source_location record:
+# - comum::md::CTradutorFrase::RecuperaLabel (target fn 5658, md/parametrizacaourna/ctradutorfrase.cpp line 95) and its
+#   std::map<char, CLabelParametrizado>: the map's global destructor (11341) and __tree::destroy (1706) match with it;
+# - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344);
+# - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224);
+# - comum::asn::CConversorTipoIdentificadorEleitor::DoConverte and DoDesconverte (11357 and 11356, slots 2 and 3 of the
+#   vtable @1570668, lines 32 and 51 of asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp); 11356 is a thunk
+#   into binaryen's body 6030, which it forms with unit 17's DoDesconverte (11366);
+# - comum::asn::CConversorImpedido::DesconverteTipoImpedimento (5699, asn/eleitor/cconversorimpedido.cpp line 109).
+# Only the record's function is written in each file; every other line of it is blank, and where the function starts is
+# chosen so that the throw lands on its record's line.
+#
+# What the bytes decide, measured in the whole link with `pnpm wasm score` against each target function:
+# - RecuperaLabel reads the key into a char local before find: 12 rows over 91, all operand-only. find(label.at(0)) gives
+#   other locals, 25 over 92 with one row inserted and one deleted, and a const char& local compiles as that form too. An
+#   if (it != end) { return } else { throw }, which also puts the throw at column 15, gives 38 over 103.
+# - A throw after the conversion and no range check ahead of it: a range test on the value and a cast give 36 over 59 for
+#   11357 and 19 over 201 with a row that is not an operand for 5699, and 11356 no longer merges into 6030.
+# What they do not decide (same function, object-local offsets masked as docs/how-to-decompile.md step 3 says, unless
+# said otherwise); the first form of each is the one written:
+# - s_labels: a private static member, or file-static in an anonymous namespace (12 over 91 in the link either way);
+#   const char token, char token or const auto token; const auto it or auto it;
+# - TResultado: std::pair<bool, std::string>, a struct of those two members, or std::tuple with std::get;
+# - m_dadosDinamicosCarregados: bool tested with !, or unsigned char compared with 0;
+# - each conversion: a switch, with or without a default, or a chain of if;
+# - 5699's message argument: tipo.asInt() or static_cast<int>(tipo).
+# s_labels' name rests on one vote, 11341's own (evidence:vote:2 by:11341), for 12 bytes of .bss. What else ties the
+# operand to the object: 5658 and 11341 read it, and target fns 654, 5794 and 14478 (__wasm_call_ctors) hold the same
+# addresses 1839056, 1839060 and 1839064, as a map's begin node, root and size.
+# Names chosen, no evidence gives them: s_labels and the parameters' and members' names; every enumerator of
+# md::ETipoImpedimento (md/etipoimpedimento.h, its path chosen too); CTradutorFrase's and CConversorImpedido's headers'
+# paths follow step 3's rule 4; CEleitorDetalhe's 192 bytes before its flag are not recovered. Codes 8184 and unit 17's
+# 7953 are not in the shared enum header, which lists what the target passes to fn 170 directly: each .cpp names its code
+# with a local constant, which goes when the header gains it.
+#
+# ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
+# called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it, and its nameList
+# (@1623648) lies right before EleitorImpedido's fieldNames (@1623736) in the target's data.
+#
+# Not reconstructed. CConversorImpedido::DoDesconverte (11410, the class's only override) waits for fns 566, 5661 and
+# 5662, so nothing emits that class's vtable. CHV's member 5745 and its record at chv.cpp line 117 wait for
+# md/chorarioveraomunicipio.{h,cpp}: it inlines CHorarioVeraoMunicipio::GetHorarioVerao (record at line 37 of that file).
+# With stand-ins of those two files the scan matches 5745, and only with its member defined above
+# VerificaEntraEmHorarioVerao in chv.cpp: defined below it, the locals differ (47 rows over 298 against 29 over 293).
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp \
+  src/app/comum/dados/cintegridadereferencial.cpp \
+  src/app/comum/dados/celeitordetalhe.cpp \
+  src/app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp \
+  src/app/comum/dados/asn/eleitor/cconversorimpedido.cpp
+UENUX2_SRCS += $(COMUM_DADOS_SRCS)
+# the sources' users are not reconstructed yet: 98-uenux2-app-comum-dados-roots.cpp reaches them the way the target does
+$(ROOT)/$(APP)/98-uenux2-app-comum-dados-roots.o: $(ROOT)/src/units/98-uenux2-app-comum-dados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/98-uenux2-app-comum-dados.mk
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/98-uenux2-app-comum-dados-roots.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/98-uenux2-app-comum-dados-roots.o

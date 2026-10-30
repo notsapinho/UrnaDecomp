@@ -9,6 +9,105 @@
 namespace ModuloImpedidos {
 
 //
+// ModuloImpedidos::TipoImpedimento
+//
+
+class TipoImpedimento : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    TipoImpedimento(const void* info) : Inherited(info) {}
+public:
+    TipoImpedimento() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        semImpedimento = 1,
+        votaNaSecaoOriginal,
+        solicitouVotoEmTransito,
+        presoProvisorio,
+        suspenso,
+        cancelado,
+        naoLiberado,
+        semIdadeMinima,
+        militarEmServico,
+        tteAcessibilidade,
+        tteEleitorConvocado,
+        tteJusticaEleitoral,
+        tteOficio,
+        tteIndigenasQuilombolas,
+        tteSituacaoRua
+    };
+
+    bool is_semImpedimento() const { return value == semImpedimento; }
+    void set_semImpedimento() { value = semImpedimento; }
+
+    bool is_votaNaSecaoOriginal() const { return value == votaNaSecaoOriginal; }
+    void set_votaNaSecaoOriginal() { value = votaNaSecaoOriginal; }
+
+    bool is_solicitouVotoEmTransito() const { return value == solicitouVotoEmTransito; }
+    void set_solicitouVotoEmTransito() { value = solicitouVotoEmTransito; }
+
+    bool is_presoProvisorio() const { return value == presoProvisorio; }
+    void set_presoProvisorio() { value = presoProvisorio; }
+
+    bool is_suspenso() const { return value == suspenso; }
+    void set_suspenso() { value = suspenso; }
+
+    bool is_cancelado() const { return value == cancelado; }
+    void set_cancelado() { value = cancelado; }
+
+    bool is_naoLiberado() const { return value == naoLiberado; }
+    void set_naoLiberado() { value = naoLiberado; }
+
+    bool is_semIdadeMinima() const { return value == semIdadeMinima; }
+    void set_semIdadeMinima() { value = semIdadeMinima; }
+
+    bool is_militarEmServico() const { return value == militarEmServico; }
+    void set_militarEmServico() { value = militarEmServico; }
+
+    bool is_tteAcessibilidade() const { return value == tteAcessibilidade; }
+    void set_tteAcessibilidade() { value = tteAcessibilidade; }
+
+    bool is_tteEleitorConvocado() const { return value == tteEleitorConvocado; }
+    void set_tteEleitorConvocado() { value = tteEleitorConvocado; }
+
+    bool is_tteJusticaEleitoral() const { return value == tteJusticaEleitoral; }
+    void set_tteJusticaEleitoral() { value = tteJusticaEleitoral; }
+
+    bool is_tteOficio() const { return value == tteOficio; }
+    void set_tteOficio() { value = tteOficio; }
+
+    bool is_tteIndigenasQuilombolas() const { return value == tteIndigenasQuilombolas; }
+    void set_tteIndigenasQuilombolas() { value = tteIndigenasQuilombolas; }
+
+    bool is_tteSituacaoRua() const { return value == tteSituacaoRua; }
+    void set_tteSituacaoRua() { value = tteSituacaoRua; }
+
+    TipoImpedimento(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    TipoImpedimento & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const TipoImpedimento &rhs) const { return value == rhs.value; }
+    bool operator != (const TipoImpedimento &rhs) const { return value != rhs.value; }
+
+    void swap (TipoImpedimento & that) { Inherited::swap(that); }
+    TipoImpedimento * clone() const
+    { return static_cast<TipoImpedimento*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class TipoImpedimento
+
+//
 // ModuloImpedidos::EleitorImpedido
 //
 
@@ -46,7 +145,7 @@ public:
     class impedimentoP1
     {
     public:
-        typedef ModuloHashes::ImpedimentoP1 value_type;
+        typedef TipoImpedimento value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -56,13 +155,13 @@ public:
     impedimentoP1::const_reference get_impedimentoP1 () const { return *static_cast<impedimentoP1::const_pointer>(fields[1]); }
     impedimentoP1::reference ref_impedimentoP1 () { return *static_cast<impedimentoP1::pointer>(fields[1]); }
     impedimentoP1::reference set_impedimentoP1 () { return *static_cast<impedimentoP1::pointer>(fields[1]); }
-    impedimentoP1::reference set_impedimentoP1 (ModuloHashes::ImpedimentoP1::NamedNumber v)
+    impedimentoP1::reference set_impedimentoP1 (TipoImpedimento::NamedNumber v)
     { return *static_cast<impedimentoP1::pointer>(fields[1]) = v; }
 
     class impedimentoP2
     {
     public:
-        typedef ModuloHashes::ImpedimentoP1 value_type;
+        typedef TipoImpedimento value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -84,7 +183,7 @@ public:
       includeOptionalField( e_impedimentoP2, 2);
       return *static_cast<impedimentoP2::pointer>(fields[2]);
     }
-    impedimentoP2::reference set_impedimentoP2 (ModuloHashes::ImpedimentoP1::NamedNumber v)
+    impedimentoP2::reference set_impedimentoP2 (TipoImpedimento::NamedNumber v)
     {
       includeOptionalField( e_impedimentoP2, 2);
       return *static_cast<impedimentoP2::pointer>(fields[2]) = v;
