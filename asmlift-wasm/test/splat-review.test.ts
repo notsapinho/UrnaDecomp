@@ -8,6 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { type SplatManifest, readManifest, sha256 } from '../src/splat';
 import { defaultKindsPath, readOperandKinds } from '../src/splat-kinds';
+import { type Piece, remapBody } from '../src/splat-remap';
 import { blankBody, blankSplit, confirmingPart, reviewMatch } from '../src/splat-review';
 import { parseMatchList, readPieceBodies, verifyMatches, withMatches } from '../src/splat-sub';
 import { runSplatSubCommand } from '../src/splat-sub-cli';
@@ -108,13 +109,21 @@ describe('reviewMatch', { timeout: 300_000 }, () => {
     expect(r.needed).toEqual([]);
   });
 
-  it.skipIf(!real)('9218 without operand kinds: the preferred readings are 313 B, and it names what the target picked', () => {
+  it.skipIf(!real)('9218 without operand kinds: the preferred readings fail, and it names what the target picked', () => {
     const m = maps(false);
     const r = reviewMatch(m, PIECES, matches(), 9218, blankedLoader(m.ours.stackSize));
     expect(r.kindUnverified).toBe('no operand-kind table');
     expect(r.own).toMatchObject({ reproduces: true, sha256: TARGET_SHA });
     expect(r.preferred.reproduces).toBe(false);
-    expect(r.preferred.bytes!.length).toBe(313);
+    // the match's own bytes (the target's 311) with each needed operand at its first reading instead of the target's:
+    // how long those are depends on our numbers (313 B in all on 51122f5's link)
+    const body = remapBody(withMatches(m, matches()), r.ours!);
+    const pieces = body.ok ? body.pieces.filter((p): p is Exclude<Piece, Uint8Array> => !(p instanceof Uint8Array)) : [];
+    const grown = r.needed.reduce((n, x) => {
+      const p = pieces.find((y) => y.at === x.oursAt)!;
+      return n + p.alternatives[0].length - p.alternatives[p.readings.indexOf(x.reading)].length;
+    }, 0);
+    expect(r.preferred.bytes!.length).toBe(r.own.bytes!.length + grown);
     expect(r.needed.length).toBeGreaterThan(0);
     for (const n of r.needed) {
       expect(n.reading).not.toBe(n.preferred);
@@ -130,8 +139,12 @@ describe('reviewMatch', { timeout: 300_000 }, () => {
     expect(r.preferred.reproduces).toBe(false);
     expect(r.preferred.bytes!.length).toBe(134);
     expect(r.needed).toHaveLength(1);
-    expect(r.needed[0].instr).toBe('i32.const 2044');
-    expect(r.needed[0].reading).toMatch(/^table slot copy 11892 of symbol /);
+    // our slot of the function the target's table holds in 11892 among other slots
+    const slot = /^i32\.const (\d+)$/.exec(r.needed[0].instr);
+    expect(slot, r.needed[0].instr).not.toBeNull();
+    const f = m.ours.fns.get(m.ours.elem.get(Number(slot![1])) ?? -1);
+    expect(f, `the function in our slot ${slot![1]}`).toBeDefined();
+    expect(r.needed[0].reading).toBe(`table slot copy 11892 of symbol ${f!.key}`);
     expect(r.needed[0].preferred).toMatch(/^table slot copy \d+ of symbol /);
   });
 
