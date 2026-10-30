@@ -207,7 +207,9 @@ not a match. The workarounds that keep it compiling and close to clang's own low
 
 Refining toward a match mostly means taking these back out: `volatile` where the source had
 none, the escape `asm`s, the casts, the `goto`s; then giving the integers and pointers their
-source types.
+source types. A form chosen afterwards for the code it gives (locals read before a store, an
+order of evaluation, a temporary) is ordinary C++ and can land; one whose only purpose is to
+constrain the compiler cannot (urna's `docs/reference/splat.md` "Reviewing a match").
 
 `liftFunction(module, index, opts)` (`lift.ts`) turns any defined function into a self-contained
 C++ translation unit: `<stdint.h>`, `extern "C"` declarations of every callee and global it
@@ -265,7 +267,14 @@ pnpm wasm lift ../target/vota_web_wasm.wasm --all
 - **Stores are volatile** (`*(volatile int32_ma*)p = v;`). The stores of optimised code are the
   ones LLVM kept; a plain store it would merge with a neighbour (two vtable-pointer constants into
   one `i64.store`), schedule past another or drop. Refining toward a match starts by taking
-  `volatile` off where the source had none.
+  `volatile` off where the source had none. The backend then orders the stores, and their order
+  follows the loads, not the order the source writes them in: when the source reads every value
+  before the first store (into locals, or as a constructor's arguments), the independent stores
+  come out in the reverse of the source's order, so stores running backwards over a struct
+  (`+6, +4, +2, +0`) come from a value built in member order from values read first; with loads
+  between them the order is mixed (urna's `docs/reference/facts/codegen.md` §C1). Compare the
+  object's disassembly of a few forms (`em++ -c` with the tree's flags, `wasm-objdump -d`):
+  binaryen keeps the object's store order.
 - **Control flow.** Blocks are flat; a branch is `break`/`continue`/`return` when that statement
   lands on the same instruction, a direct-child `br_if` out of a void block nests the rest as
   `if (!c) { … }`, and the rest are `goto`s to labels at block ends. Loops are `for (;;)`,
@@ -306,15 +315,20 @@ pnpm wasm lift ../target/vota_web_wasm.wasm --all
   reserved it below them, and declared first it sits above them here, so the function's objects
   keep their wasm offsets. The `-c` object holds the
   callee apart, so only the `-Oz` score compares the whole.
-- **Calls.** `call_indirect` casts the slot to a function pointer. An `invoke_*` thunk (legacy JS
-  exceptions) stays a call to the import, `invoke_vi(241 /* &callee */, …)`, with the callee a
-  constant slot holds named in a comment: that is the call the target makes, and clang only emits
-  it from a call inside a try region. The `__THREW__` stores and loads around it stay as memory
-  accesses. A callee parameter some call site sign- or zero-extends from 8 or 16 bits
-  (`(int32_t)(int8_t)x`, `x & 255`) is declared that narrow type, so the caller extends it as the
-  wasm ABI has it, also where clang could prove an `int`'s extension redundant. `if (n)` around a
-  `memory.copy` or `memory.fill` of length `n` is dropped: LLVM lowers both behind a test of the
-  length of its own, which is the one the wasm shows.
+- **Calls.** `call_indirect` casts the slot to a function pointer. One whose slot is computed from a
+  value, `vtable + (l3 << 2) + 32` after an unsigned range check that throws or traps
+  (`(uint32_t)l3 >= 4u`), is a `switch` whose cases call consecutive virtual members: LLVM sinks the cases'
+  identical calls into one through the computed slot, the range check is the `default:`, and the
+  constant over 4 is the first case's slot (urna's `docs/reference/facts/codegen.md` §C2). Write the
+  switch, not a table of member pointers. An `invoke_*` thunk (legacy JS exceptions) stays a call to
+  the import, `invoke_vi(241 /* &callee */, …)`, with the callee a constant slot holds named in a
+  comment: that is the call the target makes, and clang only emits it from a call inside a try
+  region. The `__THREW__` stores and loads around it stay as memory accesses. A callee parameter
+  some call site sign- or zero-extends from 8 or 16 bits (`(int32_t)(int8_t)x`, `x & 255`) is
+  declared that narrow type, so the caller extends it as the wasm ABI has it, also where clang could
+  prove an `int`'s extension redundant. `if (n)` around a `memory.copy` or `memory.fill` of length
+  `n` is dropped: LLVM lowers both behind a test of the length of its own, which is the one the wasm
+  shows.
 - **Branches** that discard pending calls still make them; a loop's parameters are temporaries a
   `continue` reassigns; a second function result is returned only in a `/* wasm: also returns */`
   comment (LLVM never emits one for this target).
@@ -677,12 +691,13 @@ They decide that when they are collected, so a run beside a census or a `splat-*
 in the same checkout skips real-link tests and still exits 0: run `pnpm test` after every build of that checkout has
 finished, and read the summary's `skipped` count as well as its exit status. `splat-kinds.test.ts` and
 `splat-review.test.ts` read the addresses and table slots of our link from the link they run on, so a landing that
-moves our data or table leaves them passing. One case still pins what landings change: `splat-symbols.test.ts`'s
-`srclocAnchors > names a callee its anchored callers vote for` reads urna's committed `splat/symbol_addrs.txt` and
-expects `std::__format::__vformat_to` (146) to list exactly the voters 700, 5447 and 10250. Every TSE function that
-throws a `std::format` message and lands is one more anchored voter, and past `VOTERS_LISTED` (4, `splat-symbols.ts`)
-the line lists none, so at urna 9271d74 it fails with `expected null to deeply equal [ 700, 5447, 10250 ]` (1 failed,
-192 passed). That failure is the test's, not a landing's. They cover:
+moves our data or table leaves them passing. `splat-symbols.test.ts`'s `srclocAnchors > names a callee its anchored
+callers vote for` reads urna's committed `splat/symbol_addrs.txt` and checks that `std::__format::__vformat_to` (146)
+is named by `call` evidence, with 700 and 5447 among its voters while the line lists voters: every TSE function that
+throws a `std::format` message and lands is one more voter, and past `VOTERS_LISTED` (4, `splat-symbols.ts`) the
+line lists none. Every case passes on urna ee595de, run alone from this directory with Node 24 first on `PATH`
+(`TMPDIR=/tmp pnpm test`: `Test Files 17 passed (17)`, `Tests 193 passed (193)`), so a failing case on a branch is
+the branch's to explain. They cover:
 
 - the round trip to the target's sha256, and a refused edited piece;
 - the symbol file's pairs, refutations and virtual-base vtables;

@@ -28,6 +28,8 @@
 # A census tier of `none` does not mean the body differs. Map the try link and derive its operand kinds with
 #   tools/round/link-map.sh build/out/try/<name>/wasm/vota_web
 #   tools/round/link-kinds.sh build/out/try/<name>/wasm/vota_web
+#   (<name> is joined to build/out/try/ as given: after --name ../verify/x, give both scripts the path as printed,
+#   build/out/try/../verify/x/wasm/vota_web; they look for it in the try's link.cmd and refuse the normalised one)
 #   (asmlift-wasm/) pnpm wasm splat-kinds ../build/out/try/<name>/wasm/vota_web/vota_web_wasm.wasm
 # and compare one function with `pnpm wasm splat-remap <target> build/out/try/<name>/wasm/vota_web/vota_web_wasm.wasm
 # sym:<mangled> --against <fn>` (or skip the kinds with --no-kinds; docs/how-to-decompile.md step 5).
@@ -35,7 +37,10 @@
 # (a candidate linked alone has other inlining/DAE decisions than inside the app — use it to iterate, not to conclude).
 # A TU that is not at the path it would land in (one outside src/, or any under --component) is compiled as a copy
 # there under build/out/try/<name>/, so a quoted #include of a file beside the original is not found (the tree's -I
-# finds the tracked header of that name instead): include a scratch header by its /work path.
+# finds the tracked header of that name instead): include a scratch header by its /work path. To try a variant of a
+# tracked header, put it at its tree path under a scratch <dir> and pass --flags '-iquote /work/<dir>': --flags come
+# after the tree's -I paths, so -I/work/<dir> silently compiles the tracked header (docs/reference/facts/tool-traps.md
+# X8); check the object's symbols.
 # The toolkit runs through pnpm (kit below): with a Node other than 24 first on PATH it dies with "Abort trap: 6".
 # Several <tu.cpp> are rival candidates ranked against each other, not one program: a callee in another TU stays an
 # import. Undefined functions become imports but undefined data fails the link; pass

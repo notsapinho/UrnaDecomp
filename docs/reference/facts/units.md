@@ -125,19 +125,20 @@ so no name is given and the member stays `no-candidate`.
 
 ```sh
 awk -F'\t' '$1==9130 || $1==9133 || $1==10931 || $1==11097 || $1==11366 || $1==11442 || $1==11646 {print $1, $5, $11}' splat/scan.tsv
+# at ee595de:
 # 9130 no-candidate -
 # 9133 no-candidate -
 # 10931 no-candidate -
 # 11097 no-candidate -
 # 11366 differs app/17-uenux2-cconversororigemconfiguracao-pending.o
 # 11442 differs app/36-uenux2-cvisitantefoto-pending.o
-# 11646 differs app/35-uenux2-iinterfaceinit-pending.o
+# 11646 no-candidate -
 /usr/bin/grep -cE 'func:(11442|11366|11646);.*evidence:vtable' splat/symbol_addrs.txt
-# 3
+# 2
 ```
 
 Which case a trap is shows in the plain link: the functions of the pending objects other than destructors, with the
-number of table slots that hold each:
+number of table slots that hold each (at ee595de):
 
 ```sh
 python3 -I -c "
@@ -148,21 +149,25 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
     if obj.endswith('-pending.o') and 'D0Ev' not in name and 'D2Ev' not in name:
         print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
 "
-# 708 14 _ZNK3api19CTextFieldMultiLine4DrawERNS_7IScreenE 14-uenux2-ctextfieldmultiline-pending.o
-# 5038 2 _ZNK7ecourna3app5dados3asn22CConversorHorariosUrna10DoConverteERKNS1_1 15-ecourna-cconversorhorariosurna-pending.o
-# 10496 1 _ZN5comum3asn14CVisitanteFoto5visitEiRKNSt3__212basic_stringIcNS2_11ch 36-uenux2-cvisitantefoto-pending.o
-# 10497 1 _ZN5comum14IInterfaceInit17CurrentBootDeviceEv 35-uenux2-iinterfaceinit-pending.o
-# 10510 1 _ZNK3api10IFormFieldINS_9IScreenMTEE11GetTypeNameEv 30-uenux2-ctextfieldmt-pending.o
-# 10546 1 _ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23Modul 17-uenux2-cconversororigemconfiguracao-pending.o
+# 330 40 _ZNK3api19CTextFieldMultiLine4DrawERNS_7IScreenE 14-uenux2-ctextfieldmultiline-pending.o
+# 887 11 _ZN5comum14IInterfaceInit17CurrentBootDeviceEv 35-uenux2-iinterfaceinit-pending.o
+# 1794 5 _ZNK7ecourna3app5dados3asn22CConversorHorariosUrna10DoConverteERKNS1_1 15-ecourna-cconversorhorariosurna-pending.o
+# 10501 1 _ZNK3api17CImageFieldUpdate11GetTypeNameEv 43-uenux2-cimagefieldupdate-pending.o
+# 10506 1 _ZN5comum3asn14CVisitanteFoto5visitEiRKNSt3__212basic_stringIcNS2_11ch 36-uenux2-cvisitantefoto-pending.o
+# 10520 1 _ZNK3api10IFormFieldINS_9IScreenMTEE11GetTypeNameEv 30-uenux2-ctextfieldmt-pending.o
+# 10558 1 _ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23Modul 17-uenux2-cconversororigemconfiguracao-pending.o
 ```
 
-Unit 14's `Draw` trap is one body in 14 table slots: binaryen merged the pending traps of its wasm type into it, and
-the merged ones have no name in `names.tsv` (`/usr/bin/grep -c CTextFieldDoubleLine4Draw
-build/out/wasm-map/vota_web/names.tsv` prints 0). 9133's trap shares its body with 9130's (unit 16). None of them gets
-a name. The traps of 11366 (`(i32 i32)->(i32)`, an enum by value), 11442 and 11646 are alone in their slot, so each
-is named after its trap. 10510 is no trap: it is `IFormField<IScreenMT>::GetTypeName`, matched as 11051 (U4). So the
-name the symbol file gives 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`, is the one
-`src/asn1/asn1.h` declares, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
+Unit 14's `Draw` trap is one body in 40 table slots: binaryen merged the pending traps of its wasm type into it, and the
+merged ones have no name in `names.tsv` (`/usr/bin/grep -c CTextFieldDoubleLine4Draw
+build/out/wasm-map/vota_web/names.tsv` prints 0). 9133's trap shares its body with 9130's (unit 16). None of them gets a
+name. The traps of 11366 (`(i32 i32)->(i32)`, an enum by value) and 11442 are alone in their slot, so each is named
+after its trap. 11646's trap had a slot of its own at 9271d74 (and the name and the `differs` row that gave it); at
+ee595de it is one body in 11 slots, merged with traps of its wasm type, and 11646 has neither. So a pending member a
+unit adds can take another unit's trap name away, in a function the unit never touched. 10501 and 10520 are no traps:
+they are `CImageFieldUpdate::GetTypeName` and `IFormField<IScreenMT>::GetTypeName`, matched as 11085 (unit 43) and 11051
+(U4). So the name the symbol file gives 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`, is
+the one `src/asn1/asn1.h` declares, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
 ledger/source-locations.tsv | sort -u`).
 
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word
@@ -212,6 +217,38 @@ make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -c -- '-o [^ ]*cvisi
 # 0                                         (the generic uenux2 rule depends on no src/asn1 header)
 ```
 
+The two header lists are empty inside a fragment. `src/Makefile` reads the fragments before it sets them, and make
+expands a rule's prerequisites when it reads the rule (GNU Make 3.81, this machine's `make`):
+
+```sh
+/usr/bin/grep -nE '^-include .*units|^(UENUX2|ECOURNA)_HDRS :=' src/Makefile | cut -c1-60
+# 126:-include $(filter-out $(addprefix $(ROOT)/src/units/,$(S
+# 132:ECOURNA_HDRS := $(shell find $(ROOT)/src/ecourna -name '
+# 144:UENUX2_HDRS := $(shell find $(ROOT)/src/uenux2 -name '*.
+(mkdir -p build/out/units-facts/mk && cd build/out/units-facts/mk && printf 'include frag.mk\nHDRS := a.h b.h\n' > probe.mk && printf 't: $(HDRS)\n\t@echo "prereqs=[$^]"\n' > frag.mk && touch a.h b.h && make -f probe.mk t)
+# prereqs=[]
+```
+
+The generic rules depend on every header of their tree, so a header edit, or a new header, rebuilds the whole tree,
+included or not (at ee595de):
+
+```sh
+make -n -C src link -W $PWD/src/uenux2/src/api/gui/cimagefieldupdate.h | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -oE -- ' -o [^ ]+' |
+  awk '{k = $2 ~ /app\/uenux2\// ? "uenux2" : ($2 ~ /-(pending|roots)\.o$/ ? "companion" : $2); c[k]++} END {for (k in c) print c[k], k}'
+# 44 uenux2
+# 1 build/out/app/roots_uenux2.o
+# 15 companion                              (the rules that name $(wildcard …/api/gui/*.h))
+printf '#pragma once\n' > src/uenux2/src/api/gui/probe-new.h; make -n -C src link | /usr/bin/grep -c 'em++.* -c '; rm src/uenux2/src/api/gui/probe-new.h
+# 60
+```
+
+So the objects a lane's header edits rebuilt are every object built since the lane's worktree was made. A
+worktree's `.git` file dates from `git worktree add`, and a cloned `build/out/` keeps the checkout's older mtimes, so
+`find build/out/app -name '*.o' -newer .git` lists them: nothing in a worktree that has rebuilt nothing, and in four
+lane worktrees whose units added headers, 48, 37, 38 and 48 objects, each the set that moving the objects aside and
+rebuilding recompiled. `-newer <header>` compares with the header's last edit and leaves out an object built before
+it, such as a roots object that includes no header.
+
 ## U8. A slot that holds `__cxa_pure_virtual` is a pure member the class declares
 
 `comum::IInterfaceInit`'s target vtable is `[5898, 325, 11646, 12143, 12143, 12143, 12143, 12143]`
@@ -221,3 +258,64 @@ at slots 3 to 7 (named after their slot or their callers, `src/uenux2/src/app/co
 the symbol file gives our vtable the target's size: `/usr/bin/grep -F '_ZTVN5comum14IInterfaceInitE' splat/symbol_addrs.txt`
 prints `… size:0x28 …`. Without them the class is concrete: clang gives a concrete class a deleting destructor with a
 body where the target's slot 1 is the trap, and the vtable loses the five slots.
+
+## U9. A class's typeinfo needs its base's, which only the base's key function emits
+
+A derived class's typeinfo names its base's typeinfo. A base with a virtual member defined out of line emits its
+typeinfo (and its vtable) only in the TU of its key function, so a class that overrides every slot of its base still
+needs that TU. A probe: `IBase` with two out-of-line virtual members and no data member, `CDerived` overriding both,
+and a `main` that builds a `CDerived`:
+
+```sh
+P=build/out/units-facts/typeinfo; mkdir -p $P
+printf '%s\n' 'struct IBase {' '    virtual ~IBase() = default;' '    virtual int Slot2() const;' '    virtual int Slot3() const;' '};' \
+  'struct CDerived final : IBase {' '    int Slot2() const override;' '    int Slot3() const override;' '};' > $P/h.h
+printf '%s\n' '#include "h.h"' 'int CDerived::Slot2() const { __builtin_trap(); }' 'int CDerived::Slot3() const { __builtin_trap(); }' > $P/derived.cpp
+{ cat $P/derived.cpp; printf '%s\n' 'int IBase::Slot2() const { __builtin_trap(); }' 'int IBase::Slot3() const { __builtin_trap(); }'; } > $P/base-too.cpp
+printf '%s\n' '#include "h.h"' 'int main(int argc, char**) { IBase* p = new CDerived; int r = argc > 5 ? p->Slot2() : 0; delete p; return r; }' > $P/main.cpp
+for f in derived base-too main; do TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/$P/$f.cpp -o /work/$P/$f.o; done
+TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm $P/derived.o | /usr/bin/grep 5IBase
+# 00000009 W _ZN5IBaseD2Ev
+#          U _ZTI5IBase
+TMPDIR=/tmp build/docker-build.sh em++ -Oz /work/$P/main.o /work/$P/derived.o -o /work/$P/a.js 2>&1 | /usr/bin/grep 'wasm-ld: error'
+# wasm-ld: error: /work/build/out/units-facts/typeinfo/derived.o: undefined symbol: typeinfo for IBase
+TMPDIR=/tmp build/docker-build.sh em++ -Oz /work/$P/main.o /work/$P/base-too.o -o /work/$P/b.js -Wl,--Map=/work/$P/b.map
+/usr/bin/grep -oE '_ZTV5IBase|_ZTI5IBase|_ZNK5IBase5Slot[23]Ev' $P/b.map | sort | uniq -c
+#    1 _ZTI5IBase
+```
+
+With the base's members defined as traps beside the class's (`base-too.cpp`), the object emits the base's vtable and
+typeinfo (`D`), and the link keeps only the typeinfo: nothing stores the base's vptr, so its vtable and the two traps
+are dropped. A target function whose slot is in a vtable the link drops keeps its stub (`src/README.md` "Stubs").
+
+## U10. A member inline in the original, trapped as a key function: the same inline code, another object
+
+A class with no key function emits its vtable, weak, in every TU that uses it; a trap for one of its virtual members
+makes that member the key function, and the vtable strong in the trap's TU. A probe: `CRelatorio` with an inline
+`TemParte` and `ImprimeParte`, either declared only and trapped (`pending.cpp`) or inline (`user.cpp`, which builds
+one):
+
+```sh
+P=build/out/units-facts/nokey; mkdir -p $P
+printf '%s\n' 'struct IParte {' '    virtual ~IParte() = default;' '    virtual void Imprime() const = 0;' '};' 'struct CRelatorio {' \
+  '    virtual ~CRelatorio() = default;' '    virtual bool TemParte() const { return m_parte != nullptr; }' \
+  '    virtual void ImprimeParte() const;' '    IParte* m_parte = nullptr;' '    int m_n = 0;' '};' > $P/pending.h
+sed 's/virtual void ImprimeParte() const;/virtual void ImprimeParte() const { m_parte->Imprime(); }/' $P/pending.h > $P/inline.h
+printf '%s\n' '#include "pending.h"' 'void CRelatorio::ImprimeParte() const { __builtin_trap(); }' > $P/pending.cpp
+printf '%s\n' '#include "inline.h"' 'CRelatorio* Cria() { return new CRelatorio; }' > $P/user.cpp
+for f in pending user; do TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/$P/$f.cpp -o /work/$P/$f.o; done
+TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only $P/pending.o $P/user.o | /usr/bin/grep -E '_ZTV|:$'
+# build/out/units-facts/nokey/pending.o:
+# 00000000 D _ZTV10CRelatorio
+# build/out/units-facts/nokey/user.o:
+# 00000000 W _ZTV10CRelatorio
+for o in pending user; do wasm-objdump -d $P/$o.o | awk '/ func\[/ {n=$3} /^ [0-9a-f]+:/ {sub(/^ [0-9a-f]+:[^|]*\| /, ""); sub(/call [0-9]+ /, "call "); b[n]=b[n] $0 "; "} END {for (n in b) print n, b[n]}' | sort > $P/$o.bodies; done
+diff $P/pending.bodies $P/user.bodies | /usr/bin/grep -oE '^[<>] <[^>]*>'
+# > <_Z4Criav>
+# < <_ZNK10CRelatorio12ImprimeParteEv>
+# > <_ZNK10CRelatorio12ImprimeParteEv>
+```
+
+The bodies, with object-local call indices dropped, differ only in `ImprimeParte` (the trap against the inline body)
+and the user's own function: `TemParte`, the D2 and the D0 are the same code from either object. So a trap that
+stands for an inline member decides which object of ours emits the vtable's members, not their bytes.

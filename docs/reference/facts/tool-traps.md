@@ -20,6 +20,12 @@ fingerprint only need their own body and callees to agree, so census counts unde
 bound. The same holds for the app's own roots TUs (`src/app/roots.cpp`, `src/units/*-roots.cpp`): an uncalled
 root keeps the target's bodies, a called one behaves as in the app.
 
+The rule counts call sites in the whole link, so a match that rests on it holds only while the count does. A member
+defined in its class that clang leaves out of line, and binaryen inlines into its one caller, stays out of line in
+both callers once a second one links ([codegen.md §C3](codegen.md)). When the target holds the same inlined code in
+two functions, clang inlined it in at least one TU (an `inline`-specified definition is inlined in each), and a form
+that only binaryen inlines matches until the other caller is written: link with both before choosing.
+
 ## X2. Probe links
 
 1. `em++ … -o probe.wasm` (no `.js`) silently selects `STANDALONE_WASM`: an `_initialize` export, WASI-flavoured
@@ -132,3 +138,71 @@ records are `ecourna::api::asn::IConversorASN<…>::Converte` and `Deconverte` i
 includes an ecourna header needs a third spelling: the target names those `…/libecea1da310e5107/p/include/ecourna/…`,
 the conan package's installed headers (13 records in `ledger/source-locations.tsv`). No uenux2 TU in `src/uenux2`
 holds such a record, so no map has that spelling.
+
+## X8. `try-tu.sh --flags "-I<dir>"` loses to a tracked header of the same name
+
+try-tu appends `--flags` after the tree's own `-Isrc -Isrc/uenux2/src -Isrc/asn1`, so a variant of a tracked header
+passed through `-I` is never read: the try compiles the tracked header, links, and reports as usual. A quoted
+`#include` searches the including file's directory, then the `-iquote` directories, then the `-I` ones; the tree's
+headers include each other by their path under the tree (`#include "api/gui/iformfield.h"`), which is not beside
+the including file, so a `-iquote` directory holding the variant at that path wins at any include depth. A variant
+of unit 43's class header that declares the destructor without defining it:
+
+```sh
+mkdir -p build/out/variant-facts/inc/api/gui
+LC_ALL=C sed 's/~CImageFieldUpdate() override = default;/~CImageFieldUpdate() override;/' src/uenux2/src/api/gui/cimagefieldupdate.h > build/out/variant-facts/inc/api/gui/cimagefieldupdate.h
+for f in "-I/work/build/out/variant-facts/inc" "-iquote /work/build/out/variant-facts/inc"; do
+  TMPDIR=/tmp tools/round/try-tu.sh --symbols --name variant-facts --component uenux2/src/api/gui --flags "$f" src/units/43-uenux2-cimagefieldupdate-pending.cpp | /usr/bin/grep -c 'CImageFieldUpdateD[02]Ev'; done
+# 2      (-I: the tracked header, whose in-class destructor the pending object emits with the vtable)
+# 0      (-iquote: the variant, whose destructor is now the key function and is defined nowhere)
+TMPDIR=/tmp tools/round/try-tu.sh --print-flags --component uenux2/src/api/gui --flags "-iquote /work/build/out/variant-facts/inc" src/units/43-uenux2-cimagefieldupdate-pending.cpp | /usr/bin/grep -oE -- '-I[^ ]+|-iquote [^ ]+' | tr '\n' ' '
+# -Isrc -Isrc/uenux2/src -Isrc/asn1 -iquote /work/build/out/variant-facts/inc
+```
+
+After a try with a variant header, check that the object holds the variant's symbols
+(`TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/try/variant-facts/obj/43-uenux2-cimagefieldupdate-pending.o`
+for the last try above lists no `CImageFieldUpdateD` symbol).
+
+## X9. `try-tu.sh --single` can differ for a function with no callee
+
+A lone link's binaryen run does not always give the body the whole link gives, even for a leaf: a compare that the
+whole link computes once and shares between two `select`s (`local.tee`) can stay computed twice alone. A scratch
+class with target 11067's layout (`api::CLineField::Rect`, no callee and no argument binaryen could drop) and its
+matched source form, scored alone, then linked whole and re-pointed:
+
+```sh
+mkdir -p build/out/try-facts
+printf '%s\n' '#include <algorithm>' '' '#include "api/gui/primitives.h"' '' 'namespace api {' '' 'class CLinhaProbe {' 'public:' \
+  '    virtual ~CLinhaProbe();' '    virtual SRect Rect() const;' '' 'private:' '    char m_resto[20];' '    SPoint m_inicio;' '    SPoint m_fim;' '};' '' \
+  'CLinhaProbe::~CLinhaProbe() = default;' '' 'SRect CLinhaProbe::Rect() const' '{' '    const TPosition x1 = m_inicio.x;' \
+  '    const TPosition y1 = m_inicio.y;' '    const TPosition x2 = m_fim.x;' '    const TPosition y2 = m_fim.y;' \
+  '    return SRect{std::min(x1, x2), std::min(y1, y2), std::max(x1, x2), std::max(y1, y2)};' '}' '' '} // namespace api' > build/out/try-facts/clinhaprobe.cpp
+TMPDIR=/tmp tools/round/try-tu.sh --single 11067 --extract export:_ZNK3api11CLinhaProbe4RectEv --component uenux2/src/api/gui build/out/try-facts/clinhaprobe.cpp | /usr/bin/grep '^score'
+# score 9 over 46 rows (same 37, replaced 3 [3 operand-only], inserted 4, deleted 2)
+TMPDIR=/tmp tools/round/try-tu.sh --name ../try-facts/clinha --component uenux2/src/api/gui build/out/try-facts/clinhaprobe.cpp | tail -1
+# total 31 s (link 30 s incl. census); outputs in build/out/try/../try-facts/clinha
+TMPDIR=/tmp tools/round/link-map.sh build/out/try-facts/clinha/wasm/vota_web
+# build/out/try-facts/clinha/wasm/vota_web/link.cmd does not write try-facts/clinha/wasm/vota_web/vota_web_wasm.js   (exit 2)
+TMPDIR=/tmp tools/round/link-map.sh build/out/try/../try-facts/clinha/wasm/vota_web
+# scratch link byte-identical to build/out/try/../try-facts/clinha/wasm/vota_web/vota_web_wasm.wasm
+# build/out/try/../try-facts/clinha/wasm-map/vota_web/names.tsv: 10970 functions named (224 binaryen thunks), 16578 wasm-ld functions
+TMPDIR=/tmp tools/round/link-kinds.sh build/out/try/../try-facts/clinha/wasm/vota_web | tail -1
+# shifted link (data +1048576, table +20000) named: build/out/try/../try-facts/clinha/wasm-kinds/vota_web/names.tsv
+cd asmlift-wasm && pnpm --silent wasm splat-kinds ../build/out/try-facts/clinha/wasm/vota_web/vota_web_wasm.wasm | tail -1
+#   every function: 10970/10970 kind-verified; …
+pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm ../build/out/try-facts/clinha/wasm/vota_web/vota_web_wasm.wasm sym:_ZNK3api11CLinhaProbe4RectEv --against 11067 | tail -1
+# target 11067: IDENTICAL (0 ambiguous operands read as -)
+```
+
+The lone score's rows are the two compares the target shares (`local.tee 5`, `local.tee 6`, then `local.get 5`/`6`)
+and the lone link computes again; the whole link gives the target's body. So a lone score ranks the parts binaryen
+does not touch (the instructions, the loads, the store order, C1 of [codegen.md](codegen.md)), and the whole link
+concludes.
+
+## X10. A try outside `build/out/try/`: map it by the path try-tu prints
+
+`--name` is joined to `build/out/try/` as given, so `--name ../try-facts/clinha` writes the try under
+`build/out/try-facts/clinha/` (X9). `link-map.sh` and `link-kinds.sh` then look for the output path inside the try's
+`link.cmd` as they are given it: the normalised `build/out/try-facts/…` fails with `link.cmd does not write …`, and
+the spelling try-tu prints, `build/out/try/../try-facts/clinha/wasm/vota_web`, works. `splat-kinds` and `splat-remap`
+take either.
