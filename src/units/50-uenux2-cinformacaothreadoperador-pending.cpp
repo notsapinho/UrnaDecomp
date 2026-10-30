@@ -3,8 +3,8 @@
 // target's, they trap, and the vtable that object emits names each of them. Defined in slot order, as the target's
 // function order has them. The names are chosen (iinformacaothreadoperador.h says from what). Target functions, by
 // vtable slot (vtable @1590108; ledger/vtables.json), and what each waits for: callees with no body of ours. Records
-// name fns 326, 656, 555, 187, 903, 1926, 566 and 708, so each of those wants its body and a symbol-file line; fns 697,
-// 1269, 5412, 1485, 479, 759, 2233, 170, 2225, 2803, 1703 and 185 have no record and no name yet either.
+// name fns 326, 656, 555, 187, 903, 1926 and 566, so each of those wants its body and a symbol-file line; fns 697,
+// 1269, 5412, 1485, 479, 759, 2233, 2225, 2803, 1703 and 185 have no record and no name yet either.
 //   3  10580  +4, else asks comum::CEleitores::GetInst() (fn 326) and CDataMap<...>::GetCurrent (fn 656)
 //   5  10579  the same question as slot 3 without +4 (fns 326, 656)
 //   16 10569  formats "{:04}" over a count: fn 1269 of comum::CRdvVota::GetInst() (fn 555) when fn 697 holds, else

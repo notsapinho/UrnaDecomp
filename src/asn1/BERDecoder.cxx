@@ -183,7 +183,7 @@ BERDecoder::BERDecoder(const char* first, size_t size, CoderEnv* coder)
 : Visitor(coder)
 , beginPosition(first)
 , endPosition(first+size)
-, dontCheckTag(0)
+, checkTag(true)
 , m_parsed(new BER_Element)
 {
 #if ASN_DEBUG
@@ -205,29 +205,25 @@ BERDecoder::~BERDecoder()
 
 bool CHOICE::setID(unsigned tagVal, unsigned tagClass)
 {
+  int savedID = choiceID;
   bool result = true;
   unsigned tag = tagClass << 30 | tagVal;
-
   if (info()->tags == 0)
     choiceID = tagVal;
   else
   {
     result = false;
-
     for(choiceID = 0; choiceID<(int)info()->numChoices; ++choiceID) {
-      if(makePrimitive(getSelectionTag())==tag) {
+      if(makePrimitive(info()->tags[choiceID])==tag) {
         result = true;
         break;
       }
     }
   }
-
   if (result)
-  {
-    if (!createSelection())
-      return false;
-  }
-  return result;
+    return createSelection();
+  choiceID = savedID;
+  return false;
 }
 
 inline bool BERDecoder::atEnd()
@@ -388,7 +384,7 @@ bool BERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
   nextPosition = beginPosition + entryLen;
 
   if(value.getTag()) {
-    if(!dontCheckTag && makePrimitive(value.getTag()) != tag)
+    if(checkTag && makePrimitive(value.getTag()) != tag)
       return true;
 
     savedPosition = beginPosition;
@@ -399,7 +395,7 @@ bool BERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
   {
     if (!value.isSelectionExplicit()) {
       beginPosition = savedPosition;
-      dontCheckTag = 1;
+      checkTag = false;
     }
 
     return true;
@@ -411,18 +407,18 @@ bool BERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
 
 struct FlagSaver
 {
-  FlagSaver(int& rfl) : m_value(rfl), m_ref(rfl) {}
+  FlagSaver(bool& rfl) : m_value(rfl), m_ref(rfl) {}
   ~FlagSaver() { m_ref = m_value; }
 
 private:
-  int m_value, &m_ref;
+  bool m_value, &m_ref;
 };
 
 bool BERDecoder::do_visit(CHOICE& value)
 {
   memento_type memento;
 
-  FlagSaver fs(dontCheckTag);
+  FlagSaver fs(checkTag);
 
   if (decodeChoicePreamle(value,memento))
   {
@@ -590,7 +586,7 @@ Visitor::VISIT_SEQ_RESULT BERDecoder::visitExtensionRoot(SEQUENCE& value, int in
 
   const char* savedPosition = beginPosition;
 
-  dontCheckTag = 0;
+  checkTag = true;
 
   unsigned tag;
   bool primitive;
@@ -609,7 +605,7 @@ Visitor::VISIT_SEQ_RESULT BERDecoder::visitExtensionRoot(SEQUENCE& value, int in
     if (field)
     {
       if(fieldTag) {
-        dontCheckTag = 1;
+        checkTag = false;
         if(!isExplicit(fieldTag)) {//is IMPLICIT
           beginPosition = savedPosition;
         }
@@ -648,9 +644,11 @@ Visitor::VISIT_SEQ_RESULT BERDecoder::visitKnownExtension(SEQUENCE& value, int i
 
 bool BERDecoder::visitUnknownExtensions(SEQUENCE& value)
 {
-  beginPosition = endSEQUENCEPositions.back();
+  const char* end = endSEQUENCEPositions.back();
   endSEQUENCEPositions.pop_back();
-  return true;
+  bool noUnknown = beginPosition == end;
+  beginPosition = end;
+  return noUnknown;
 }
 
 bool BERDecoder::decodeHeader(unsigned& tag, bool & primitive, unsigned & len)
@@ -679,6 +677,9 @@ bool BERDecoder::decodeHeader(unsigned& tag, bool & primitive, unsigned & len)
       b = decodeByte();
       tagVal = (tagVal << 7) | (b&0x7f);
     } while ((b&0x80) != 0);
+
+    if (tagVal < 0x1f) // the short form holds these
+      return false;
   }
 
   tag = tagVal | (tagClass << 30);
@@ -713,8 +714,8 @@ bool BERDecoder::decodeHeader(AbstractData & obj, unsigned & len)
   bool primitive;
 
   if (decodeHeader(tag, primitive, len) &&
-      (tag == makePrimitive(obj.getTag()) || dontCheckTag)) {
-    dontCheckTag = 0;
+      (tag == makePrimitive(obj.getTag()) || !checkTag)) {
+    checkTag = true;
 
     if(isExplicit(obj.getTag())) {
       unsigned tag1, len1 =len;

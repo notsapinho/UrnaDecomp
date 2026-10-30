@@ -72,10 +72,23 @@ unsigned CountBits(UINT_TYPE range)
   if (range == 0) return sizeof(UINT_TYPE)*8;
 
   unsigned nBits = 0;
-  while (nBits < (sizeof(UINT_TYPE)*8) && range > (UINT_TYPE)(1 << nBits))
+  while (nBits < (sizeof(UINT_TYPE)*8) && range >= (UINT_TYPE)(1 << nBits))
     ++nBits;
 
   return nBits;
+}
+
+unsigned getIntegerDataLength(INT_TYPE value)
+{
+  // create a mask which is the top nine bits of a DWORD, or 0xFF800000
+  // on a big endian machine
+  int shift = (sizeof(value)-1)*8-1;
+
+  // remove all sequences of nine 0's or 1's at the start of the value
+  while (shift > 0 && ((value >> shift)&0x1ff) == (value < 0 ? 0x1ff : 0))
+    shift -= 8;
+
+  return (shift+9)/8;
 }
 
 int lexicographic_compare_bytes(const char* first1, size_t size1,
@@ -1223,6 +1236,13 @@ AbstractData* GeneralizedTime::do_clone() const
 bool CHOICE::isSelectionExplicit() const
 {
   return info()->tags ? isExplicit(info()->tags[choiceID]) : false;
+}
+
+unsigned CHOICE::getSelectionTagInternal() const
+{
+  return info()->tags == 0
+    ? (ContextSpecificTagClass<<30) | choiceID
+    : info()->tags[choiceID];
 }
 
 unsigned CHOICE::getSelectionInfoTag() const

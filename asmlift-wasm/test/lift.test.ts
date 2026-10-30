@@ -3,7 +3,7 @@
 // The tests that spell a callee by its mangled symbol read the symbol lists `make -C src link` writes beside the
 // plain link (tools/round/link-symbols.sh); they are skipped where those are absent, as in a fresh clone.
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -406,7 +406,10 @@ describe('liftFlags', () => {
       ]),
       stubs: new Map([[1, 'src/asn1/BEREncoder.cxx']]),
     };
-    expect(liftFlags(1, 'ecourna', ev)).toMatchObject({ flags: TREE_FLAGS.asn1, by: 'stub', of: 'asn1' });
+    const asn1Mk = readFileSync(`${URNA_ROOT}/src/mk/asn1.mk`, 'utf8');
+    const asn1Flags = /^ASN1_CXXFLAGS\s*:=\s*(.*)$/m.exec(asn1Mk)?.[1]?.replace(/\s*-I\S+/g, '');
+    expect(asn1Flags).toBeTruthy();
+    expect(liftFlags(1, 'ecourna', ev)).toMatchObject({ flags: asn1Flags, by: 'stub', of: 'asn1' });
     expect(liftFlags(2, 'vota', ev)).toMatchObject({ flags: COMPONENT_FLAGS.vota, by: 'component' });
     expect(liftFlags(1, 'ecourna', { ...ev, stubs: new Map() }).why).toBe(
       "component ecourna's flags: its records name ecourna and uenux2",

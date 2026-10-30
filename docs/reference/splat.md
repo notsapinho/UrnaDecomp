@@ -104,7 +104,9 @@ The hand edits name their own evidence in the comment after it. The kinds in use
 function fills a slot of a vtable decoded from RTTI, as the generated `vtable` kind above does), `rtti-vptr` (the only target function that stores a class's
 vtable address point), `rtti-operand` (the only target function holding a class's vtable and typeinfo addresses),
 `pair-depth0` (the only pair with that fingerprint at depth 0, where deeper fingerprints differ only by an inlined
-callee) and `callers+content` (the target callers and the loaded content single the function out). Each hand edit's
+callee), `vptr+shape` (the function stores a class's vtable address point, which other functions store too, and its
+`shape` hash is the only one on both sides) and `callers+content` (the target callers and the loaded content single
+the function out). Each hand edit's
 comment gives the addresses or indices that make the evidence checkable.
 
 A name with conflicting evidence is left out. So is a data name that the target's own bytes contradict.

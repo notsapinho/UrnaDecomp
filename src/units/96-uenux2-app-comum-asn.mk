@@ -41,8 +41,8 @@
 #   in operands only and its first difference is the record, which a scratch file cannot hold; and every match of the
 #   tree still verifies, sha256 the target's. The defaults stay as unit 47's specialization with their source in its
 #   header, since the target's body is a merge thunk (src/units/README.md "An inherited template default").
-# - 11437, 11438 and 11401 hold other members of this file inlined. 11437 and 11438 need fn 591, and 11438 needs fns 515
-#   and 339 as well, none of them with a name, and 2654, which differs. 11401 calls fn 5693, which has no body of ours.
+# - 11437, 11438 and 11401 hold other members of this file inlined. 11437 and 11438 need fn 591, and 11438 needs fn 339
+#   as well, neither with a name, and 2654, which differs. 11401 calls fn 5693, which has no body of ours.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 COMUM_ASN_SRCS := src/app/comum/asn/util.cpp

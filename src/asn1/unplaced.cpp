@@ -53,11 +53,6 @@
 // f9770 · 621 B · unmatched · placement: link order · name unknown
 // ? f9770(i32, i32, i32) { ... }
 
-// link-order cluster 720 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
-
-// f5045 · 184 B · unmatched · placement: link order · name unknown
-// void f5045(i32, i32) { ... }
-
 // link-order cluster 721 · uses=2 · neighbours' file uenux2/src/api/gui/iobservable.cpp
 
 // f5055 · 882 B · unmatched · placement: link order · name unknown
@@ -74,22 +69,11 @@
 
 // link-order cluster 722 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreen.cpp
 
-// f5079 · 46 B · unmatched · placement: link order · name unknown
-// ? f5079(i32) { ... }
-
-// f5077 · 143 B · unmatched · placement: link order · name unknown
-// ? f5077(i32, i32, i32) { ... }
-
 // f5076 · 200 B · unmatched · placement: link order · name unknown
 // ? f5076(i32) { ... }
 
 // f5058 · 95 B · unmatched · placement: link order · name unknown
 // ? f5058(i32, i32) { ... }
-
-// link-order cluster 723 · uses=2 · neighbours' file ecourna/app/dados/resultadournacadastro/cestadohabilitacaoporcodigo.cpp
-
-// f5084 · 156 B · unmatched · placement: link order · name unknown
-// void f5084(i32, i32) { ... }
 
 // link-order cluster 738 · uses=2
 
@@ -106,23 +90,8 @@
 // f3480 · 192 B · unmatched · placement: link order · name unknown
 // ? f3480(i32) { ... }
 
-// f3477 · 98 B · unmatched · placement: link order · name unknown
-// ? f3477(i32, i32) { ... }
-
 // f3476 · 443 B · unmatched · placement: link order · name unknown
 // void f3476(i32, i32, i32, i32) { ... }
-
-// f3475 · 291 B · unmatched · placement: link order · name unknown
-// void f3475(i32, i32) { ... }
-
-// f3473 · 441 B · unmatched · placement: link order · name unknown
-// ? f3473(i32, i32, i32) { ... }
-
-// f3472 · 360 B · unmatched · placement: link order · name unknown
-// void f3472(i32, i32) { ... }
-
-// f3471 · 747 B · unmatched · placement: link order · name unknown
-// ? f3471(i32, i32, i32) { ... }
 
 // link-order cluster 964 · uses=3
 
@@ -130,12 +99,6 @@
 // void f3552(i32) { ... }
 
 // link-order cluster 1070 · uses=4
-
-// f2656 · 144 B · unmatched · placement: link order · name unknown
-// ? f2656(i32, i32) { ... }
-
-// f2652 · 264 B · unmatched · placement: link order · name unknown
-// void f2652(i32, i32, i32) { ... }
 
 // f2650 · 36 B · unmatched · placement: link order · name unknown
 // void f2650(i32) { ... }
@@ -164,12 +127,6 @@
 // f2189 · 35 B · unmatched · placement: link order · name unknown
 // ? f2189(i32, i32) { ... }
 
-// f2185 · 1698 B · unmatched · placement: link order · name unknown
-// void f2185(i32, i32) { ... }
-
-// f2184 · 452 B · unmatched · placement: link order · name unknown
-// void f2184(i32, i32) { ... }
-
 // link-order cluster 1149 · uses=5 · neighbours' file uenux2/src/api/gui/cfixedimage.cpp
 
 // f2247 · 42 B · unmatched · placement: link order · name unknown
@@ -192,14 +149,8 @@
 
 // link-order cluster 1205 · uses=7 · neighbours' file uenux2/src/app/vota/eleitor/comum/carchiveopencallback_offset.cpp
 
-// f1672 · 98 B · unmatched · placement: link order · name unknown
-// ? f1672(i32, i32, i32, i32) { ... }
-
 // f1671 · 44 B · unmatched · placement: link order · name unknown
 // ? f1671(i32, i32) { ... }
-
-// f1669 · 312 B · unmatched · placement: link order · name unknown
-// ? f1669(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1223 · uses=8
 
@@ -214,19 +165,10 @@
 // f1519 · 114 B · unmatched · placement: link order · name unknown
 // ? f1519(i32, i32, i32, i32) { ... }
 
-// f1518 · 261 B · unmatched · placement: link order · name unknown
-// void f1518(i32, i32) { ... }
-
 // link-order cluster 1280 · uses=13
-
-// f996 · 193 B · unmatched · placement: link order · name unknown
-// ? f996(i32, i32, i32) { ... }
 
 // f995 · 347 B · unmatched · placement: link order · name unknown
 // ? f995(i32, i32, i32) { ... }
-
-// f994 · 286 B · unmatched · placement: link order · name unknown
-// void f994(i32, i32) { ... }
 
 // link-order cluster 1296 · uses=16 · neighbours' file uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp
 

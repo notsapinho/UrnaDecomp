@@ -9,8 +9,8 @@
 # 9442, the GetInt/GetInt64/GetDouble/GetText/IsNull/GetBool pairs (2679 9441, 5165 9440, 5164 9439, 3514 9438, 5163
 # 9435, 9446 9433), GetDateTime(const std::string &) 9434, GetBlob(const std::string &) 9432, Next 9444 and
 # VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer control blocks' __get_deleter and
-# __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from the
-# roots object, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
+# __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from
+# celeitordinamicodao.cpp.o, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
 # externs' Replace 9398; and library code these bodies call: std::map<std::string, int>'s tree members 1677, 2678,
 # 9447, std::set<int>'s __find_equal 2676 and string::replace 4667.
 #
@@ -78,9 +78,10 @@
 # - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
-# - CSqlResultSet::IndexForColumnName (1525): its call of the copying ToLower (1879) is self-voted. 1879 is a thunk
-#   into binaryen's merge 3942 in the target, with fns 1374 and 5156, copying wrappers of other functions not
-#   reconstructed (5156 of 3509, a ToUpper-like body); with no partner ours stays a whole body.
+# - The copying ToLower (1879) is a thunk into binaryen's merge 3942 in the target, with fns 1374 and 5156, copying
+#   wrappers of other functions not reconstructed (5156 of 3509, a ToUpper-like body); with no partner ours stays a whole
+#   body. CSqlResultSet::IndexForColumnName (1525), which calls it, matches since unit 89's comum::CLocal::GetUFMinuscula
+#   (3753) is a second holding caller.
 ECOURNA_SRCS += api/sql/sqlite/csqlconnection.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlresultset.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlstatement.cpp
