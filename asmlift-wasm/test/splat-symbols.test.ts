@@ -8,8 +8,10 @@ import { normalizeModule } from '../src/normalize';
 import { parseModule } from '../src/parse';
 import { matchesTarget, remapBody } from '../src/splat-remap';
 import {
+  type DataObject,
   HAND_EDIT_MARKER,
   SAME_CONTENT_LIMIT,
+  type TargetSide,
   cStringAt,
   compareObject,
   dataObjectAt,
@@ -23,6 +25,7 @@ import {
   refuteDataNames,
   renderSymbolEntry,
   renderSymbolFile,
+  resolveBytes,
   resolveDataAddress,
   resolveRepointed,
   rttiClassAt,
@@ -336,6 +339,36 @@ describe('resolveRepointed', { timeout: 180_000 }, () => {
     expect(o.section.startsWith('.data.rel.ro')).toBe(false);
     expect(resolveRepointed(maps, o).same?.length).toBeGreaterThan(1);
     expect(resolveDataAddress(maps.ours, maps.ourImage, maps.target, o.addr).same).toBeUndefined();
+  });
+});
+
+describe('resolveBytes', () => {
+  // two images from address 1024, and an object of ours that our link happens to put at a multiple of 4
+  const images = () => {
+    const ourImage = Buffer.alloc(64);
+    const image = Buffer.alloc(64);
+    const target = { image, imageBase: 1024 } as unknown as TargetSide;
+    const object = (name: string, addr: number, bytes: Buffer): DataObject => {
+      bytes.copy(ourImage, addr - 1024);
+      return { addr, size: bytes.length, key: name, name, object: 'a.o', section: `.rodata.${name}`, out: '.rodata' };
+    };
+    return { ourImage, image, target, object };
+  };
+
+  it("finds a typeinfo name at the target's odd address when ours is a multiple of 4", () => {
+    const { ourImage, image, target, object } = images();
+    const name = Buffer.from('N3api5CFooE\0', 'latin1');
+    const zts = object('_ZTSN3api5CFooE', 1032, name);
+    name.copy(image, 1045 - 1024);
+    expect(resolveBytes(ourImage, target, zts)).toEqual({ ok: true, addr: 1045, how: 'content' });
+  });
+
+  it('searches any other object at a multiple of 4 only there: a constant also occurs at an odd offset', () => {
+    // OpenSSL's default_iv, eight 0xa6 bytes, sits in a run of nine in the target
+    const { ourImage, image, target, object } = images();
+    const iv = object('default_iv', 1048, Buffer.alloc(8, 0xa6));
+    image.fill(0xa6, 1064 - 1024, 1073 - 1024);
+    expect(resolveBytes(ourImage, target, iv)).toEqual({ ok: true, addr: 1064, how: 'content' });
   });
 });
 

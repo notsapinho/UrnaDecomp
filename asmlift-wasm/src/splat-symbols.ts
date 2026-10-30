@@ -586,13 +586,24 @@ export function resolveString(ourImage: Buffer, target: TargetSide, obj: DataObj
   };
 }
 
-/** A read-only object of ours by its exact bytes: found once in the target at the same 4-byte alignment. */
+/**
+ * The alignment a read-only object of ours is searched at in the target. wasm-ld's map gives no input section's
+ * alignment, so our address stands in for it: 4 at a multiple of 4, which keeps a constant from matching where its
+ * bytes recur at an odd offset (`default_iv`'s eight 0xa6 inside a run of nine), else 1. A typeinfo name (`_ZTS…`)
+ * is 1 wherever our link puts it: clang emits it as a char array aligned as char, and the target packs them tightly.
+ * Other char arrays keep the 4: the bytes of some recur at an odd offset (`rankName`, `default_iv`).
+ */
+function contentAlignment(obj: DataObject): number {
+  return obj.name.startsWith('_ZTS') || obj.addr % 4 !== 0 ? 1 : 4;
+}
+
+/** A read-only object of ours by its exact bytes: found once in the target at its alignment (contentAlignment). */
 export function resolveBytes(ourImage: Buffer, target: TargetSide, obj: DataObject): Resolution {
   const bytes = ourImage.subarray(obj.addr - GLOBAL_BASE, obj.addr - GLOBAL_BASE + obj.size);
   if (bytes.length !== obj.size || obj.size < 4) {
     return { ok: false, reason: 'object too small to identify by content' };
   }
-  const align = obj.addr % 4 === 0 ? 4 : 1;
+  const align = contentAlignment(obj);
   const hits = occurrences(target.image, bytes, SAME_CONTENT_LIMIT + 1).filter(
     (h) => (target.imageBase + h) % align === 0,
   );
