@@ -21,7 +21,7 @@ struct SRect {
     TPosition bottom = 0;
 
     // right and left both count: api::CTextBox::Draw (target fn 10958) centres on this value, and api::CTextFieldUpdate::Draw
-    // and api::CTextRectField::Draw (fns 10916, 10906) compare it with 1. The name is chosen: no evidence gives it
+    // and api::CTextRectField::Draw (fns 10916, 10906) compare it with 1. The member, its name and its sign are chosen
     TPosition Width() const { return right - left + 1; }
 };
 

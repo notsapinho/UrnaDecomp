@@ -13,7 +13,8 @@
 # (api/util/itimer.h); their lines are a choice, above Rect's line 73, in the band's order. Move (one of the five
 # functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) is below line 73, a choice.
 # Draw (target fn 10916, slot 2) is above Show, in the band's order; its lines are a choice. Its first test is evidence
-# for an inline function of the rectangle that returns a TPosition and is compared with 1: `m_rectDesenhado.Width() != 1`
+# for an inline function that returns 16 bits and is compared with 1 (a member, its name and the return's sign are
+# chosen: a free function, a uint16_t return and a lambda give the same object): `m_rectDesenhado.Width() != 1`
 # (api/gui/primitives.h, whose body is right - left + 1, as fn 10958 shows) gives the target's subtraction and 16-bit
 # mask, and clang inlines it in the object (no call remains). The same expression written in place, cast to TPosition,
 # gives `i32.eq` on the two loads, and so does `right != left`; `> 1` gives a sign extension and a compare. The name

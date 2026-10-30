@@ -6,7 +6,7 @@
 // (fn 10956), Move (fn 10957) and the destructor (fn 10955) give:
 //   +24 a CFixedText by value, built from the text and the alignment: Draw copies its string (+32), Rect reads its
 //       alignment (+28)
-//   +44 the ETextStatus: Draw's switch has cases 0, 2 and 1, in that order, and throws "Status indefinido" otherwise
+//   +44 the ETextStatus: Draw's switch has cases 0, 1 and 2, written 0, 2, 1 by choice, and throws "Status indefinido" otherwise
 //   +48 the position, +52 the font size (Draw builds a font from it, style 0)
 //   +56 and +60 two colours (the constructor's two TColor arguments, stored in that order). Draw's case 1 fills with
 //       +60 and writes the text in +56, which is the reading behind the names corTexto and corFundo

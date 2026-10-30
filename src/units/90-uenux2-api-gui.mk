@@ -9,15 +9,16 @@
 #
 # Evidence. The classes and their base are RTTI's; ctextrectfield.cpp and its constructor's and Rect's lines are the
 # records' (51:15, 71:21), and the constructor's code 4976 and message are bytes of fn 5546, which binaryen inlined it
-# into (its second stack-pointer prologue). The layouts are the constructors' and the Draws' stores and loads. Slot 2 of
+# into (its second stack-pointer prologue). No byte compares that constructor: it has no target function of its own, and
+# its three store orders all equal fns 11805, 5546 and 2245. The layouts are the constructors' and the Draws' stores and loads. Slot 2 of
 # each is Draw by RTTI and slot (api::IFormField<api::IScreen>), and it calls IScreen's slots 6, 9 and 20.
 # CTextRectField's first test is the width compared with 1, as api::CTextFieldUpdate::Draw's:
 # 42-uenux2-ctextfieldupdate.mk has the measurement. In its Draw the if/else with two calls is evidence too: a ternary on
 # the two calls and one call with a ternary colour compile to one call, and the if/else negated swaps the blocks.
 #
 # The directory of cfillfield.* and crectfield.* is evidence, from the data: CFillField's vtable @1577780 lies between
-# the records of cfixedimage.cpp and cformbuilder.cpp, CRectField's @1582172 between those of cprogressbar.cpp and
-# CTextBox's vtable, all of api/gui/.
+# the records of cfixedimage.cpp and cformbuilder.cpp, CRectField's @1582172 between the record of
+# cqrcodeimagepaper.cpp @1582156 and CTextBox's vtable, all of api/gui/.
 #
 # Chosen, no evidence gives them. The files' names: no record names either class, so they are the classes' in lower
 # case (docs/how-to-decompile.md step 3, rule 4); ctextrectfield.h, beside its .cpp. Every member
