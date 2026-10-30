@@ -81,6 +81,7 @@ Each row is measured by reconstructing or building that component and scoring it
 | component | source root embedded in the binary | compile flags |
 | --- | --- | --- |
 | uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` |
+| the executable TU (not reconstructed) | `/home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp` | `-Oz -fexceptions` (facts/app-flags.md §F6) |
 | ecourna (conan package `libecea1da310e5107`) | `/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna/...` | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks`; no `-fPIC` |
 | III ASN.1 runtime (TSE fork) | none | `-Os -fno-exceptions -std=c++17 -DNDEBUG` |
 | SQLite 3.50.4 amalgamation | none | `-O3 -fPIC` + `-DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_UNLOCK_NOTIFY` + `-DHAVE_FDATASYNC -DHAVE_GMTIME_R -DHAVE_LOCALTIME_R -DHAVE_POSIX_FALLOCATE -DHAVE_STRERROR_R -DHAVE_USLEEP` |

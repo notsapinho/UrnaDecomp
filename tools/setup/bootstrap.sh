@@ -45,7 +45,7 @@ missing=()
 need() {  # need <command> <what it is for / how to get it>
   if command -v "$1" >/dev/null 2>&1; then say "ok   $1"; else say "MISSING $1: $2"; missing+=("$1"); fi
 }
-need docker  "Docker Desktop or OrbStack; every compile runs in the pinned image urna-emsdk:6.0.0"
+need docker  "Docker Desktop, OrbStack or Colima (colima start --runtime docker); every compile runs in the pinned image urna-emsdk:6.0.0"
 need node    "Node 24 (https://nodejs.org, or nvm install 24)"
 need pnpm    "pnpm 9 (corepack enable && corepack prepare pnpm@9.14.4 --activate)"
 need python3 "Python 3 (the extraction and census scripts)"
@@ -70,7 +70,7 @@ if command -v wasm-objdump >/dev/null 2>&1; then
   [ "$v" = 1.0.42 ] || say "note: wabt $v; the scripts are checked against wabt 1.0.42's dump (1.0.34, the image's, numbers locals differently)"
 fi
 if command -v docker >/dev/null 2>&1 && ! docker info >/dev/null 2>&1; then
-  say "docker is installed but its daemon does not answer: start Docker Desktop or OrbStack"; missing+=(dockerd)
+  say "docker is installed but its daemon does not answer: start Docker Desktop, OrbStack or Colima"; missing+=(dockerd)
 fi
 [ ${#missing[@]} -eq 0 ] || die "fix the host tools above, then run this again"
 step_done
@@ -94,6 +94,9 @@ if [ "$MODE" = check ]; then
 fi
 
 # ---- the pinned image ------------------------------------------------------------------------------------------
+# A BuildKit build can leave the base image emscripten/emsdk:6.0.0 untagged. The toolkit's `rank` and
+# `lift --check` use that tag by default (asmlift-wasm/src/rank.ts, DEFAULT_IMAGE), and four `pnpm test` cases skip
+# without it (`docker image inspect emscripten/emsdk:6.0.0` fails): `docker pull emscripten/emsdk:6.0.0` adds it.
 if [ "$MODE" != sources ]; then
   step "docker image urna-emsdk:6.0.0"
   if docker image inspect urna-emsdk:6.0.0 >/dev/null 2>&1; then say "already built"; else build/docker-build.sh; fi
