@@ -2,16 +2,16 @@
 <title>Functions matched, by origin: one square per percent, coloured by verdict</title>
 <text x="0" y="18" font-size="15" fill="#f0efec" font-weight="600">Functions matched, by origin</text>
 <rect x="0" y="34" width="11" height="11" rx="2" fill="#199e70"/>
-<text x="17" y="44" font-size="12" fill="#c3c2b7">matched 8,129</text>
+<text x="17" y="44" font-size="12" fill="#c3c2b7">matched 8,157</text>
 <rect x="124.8" y="34" width="11" height="11" rx="2" fill="#3987e5"/>
-<text x="141.8" y="44" font-size="12" fill="#c3c2b7">differs 451</text>
+<text x="141.8" y="44" font-size="12" fill="#c3c2b7">differs 444</text>
 <rect x="236.4" y="34" width="11" height="11" rx="2" fill="#d95926"/>
-<text x="253.4" y="44" font-size="12" fill="#c3c2b7">unresolved 687</text>
+<text x="253.4" y="44" font-size="12" fill="#c3c2b7">unresolved 671</text>
 <rect x="367.8" y="34" width="11" height="11" rx="2" fill="#21262d"/>
-<text x="384.8" y="44" font-size="12" fill="#c3c2b7">no candidate yet 5,076</text>
+<text x="384.8" y="44" font-size="12" fill="#c3c2b7">no candidate yet 5,071</text>
 <text x="0" y="82" font-size="13" fill="#f0efec" font-weight="600">All functions</text>
-<text x="0" y="108" font-size="22" fill="#f0efec" font-weight="600">56.7%</text>
-<text x="0" y="126" font-size="12" fill="#c3c2b7">8,129 / 14,343 functions</text>
+<text x="0" y="108" font-size="22" fill="#f0efec" font-weight="600">56.9%</text>
+<text x="0" y="126" font-size="12" fill="#c3c2b7">8,157 / 14,343 functions</text>
 <rect x="0" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="17" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="34" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
@@ -113,8 +113,8 @@
 <rect x="136" y="293" width="15" height="15" rx="2.5" fill="#21262d"/>
 <rect x="153" y="293" width="15" height="15" rx="2.5" fill="#21262d"/>
 <text x="200" y="82" font-size="13" fill="#f0efec" font-weight="600">TSE code</text>
-<text x="200" y="108" font-size="22" fill="#f0efec" font-weight="600">28.9%</text>
-<text x="200" y="126" font-size="12" fill="#c3c2b7">949 / 3,285 functions</text>
+<text x="200" y="108" font-size="22" fill="#f0efec" font-weight="600">29.7%</text>
+<text x="200" y="126" font-size="12" fill="#c3c2b7">975 / 3,285 functions</text>
 <rect x="200" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="217" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="234" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
@@ -144,9 +144,9 @@
 <rect x="302" y="174" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="319" y="174" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="336" y="174" width="15" height="15" rx="2.5" fill="#199e70"/>
-<rect x="353" y="174" width="15" height="15" rx="2.5" fill="#3987e5"/>
+<rect x="353" y="174" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="200" y="191" width="15" height="15" rx="2.5" fill="#3987e5"/>
-<rect x="217" y="191" width="15" height="15" rx="2.5" fill="#d95926"/>
+<rect x="217" y="191" width="15" height="15" rx="2.5" fill="#3987e5"/>
 <rect x="234" y="191" width="15" height="15" rx="2.5" fill="#d95926"/>
 <rect x="251" y="191" width="15" height="15" rx="2.5" fill="#d95926"/>
 <rect x="268" y="191" width="15" height="15" rx="2.5" fill="#21262d"/>
@@ -320,7 +320,7 @@
 <rect x="553" y="293" width="15" height="15" rx="2.5" fill="#21262d"/>
 <text x="600" y="82" font-size="13" fill="#f0efec" font-weight="600">Not attributed</text>
 <text x="600" y="108" font-size="22" fill="#f0efec" font-weight="600">49.5%</text>
-<text x="600" y="126" font-size="12" fill="#c3c2b7">1,367 / 2,764 functions</text>
+<text x="600" y="126" font-size="12" fill="#c3c2b7">1,369 / 2,764 functions</text>
 <rect x="600" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="617" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>
 <rect x="634" y="140" width="15" height="15" rx="2.5" fill="#199e70"/>

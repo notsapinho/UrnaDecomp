@@ -9,9 +9,6 @@
 // f8851 · 36 B · unmatched · placement: link order · name unknown
 // void f8851(i32) { ... }
 
-// f8850 · 36 B · unmatched · placement: link order · name unknown
-// void f8850(i32) { ... }
-
 // link-order cluster 129 · uses=1 · neighbours' file uenux2/src/api/gui/iscreen.cpp
 
 // f8902 · 193 B · unmatched · placement: link order · name unknown
@@ -70,11 +67,6 @@
 // f3552 · 80 B · unmatched · placement: link order · name unknown
 // void f3552(i32) { ... }
 
-// link-order cluster 1070 · uses=4
-
-// f2650 · 36 B · unmatched · placement: link order · name unknown
-// void f2650(i32) { ... }
-
 // link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
 
 // f2704 · 9 B · unmatched · placement: link order · name unknown
@@ -104,11 +96,6 @@
 
 // f1519 · 114 B · unmatched · placement: link order · name unknown
 // ? f1519(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1280 · uses=13
-
-// f995 · 347 B · unmatched · placement: link order · name unknown
-// ? f995(i32, i32, i32) { ... }
 
 // link-order cluster 1296 · uses=16 · neighbours' file uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp
 
