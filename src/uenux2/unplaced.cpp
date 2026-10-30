@@ -4296,39 +4296,6 @@
 // f8487 · 52 B · unmatched · placement: link order · name unknown
 // void f8487(i32, i32) { ... }
 
-// link-order cluster 69 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8494 · 20 B · unmatched · placement: link order · name unknown
-// void f8494(i32) { ... }
-
-// link-order cluster 72 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8505 · 221 B · unmatched · placement: link order · name unknown
-// void f8505(i32) { ... }
-
-// link-order cluster 75 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8514 · 344 B · unmatched · placement: link order · name unknown
-// void f8514(i32) { ... }
-
-// link-order cluster 77 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/carchiveopencallback_offset.cpp
-
-// f8523 · 450 B · unmatched · placement: link order · name unknown
-// void f8523(i32) { ... }
-
-// link-order cluster 79 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8538 · 11 B · unmatched · placement: link order · name unknown
-// void f8538(i32, i32, i32) { ... }
-
-// f8533 · 203 B · unmatched · placement: link order · name unknown
-// void f8533(i32, i32) { ... }
-
-// link-order cluster 81 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8541 · 6 B · unmatched · placement: link order · name unknown
-// void f8541(i32, i32) { ... }
-
 // link-order cluster 91 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmresource.cpp
 
 // f8591 · 50 B · unmatched · placement: link order · name unknown
