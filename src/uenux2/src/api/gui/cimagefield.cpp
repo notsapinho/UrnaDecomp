@@ -1,19 +1,34 @@
-// <stubs>
-// f11102 З 81 B З unmatched З placement: link order З name unknown
-// void f11102(i32, i32) { ... }
+// api::CImageField (/home/rubio/tse/uenux2/src/api/gui/cimagefield.cpp, named by the record of Rect at line 52).
+// Target functions of this file:
+//   2242  CImageField(const SPoint&, const SharedIImage&, EAnchorPoint)   (here; no record: it stores CImageField's
+//         vptr over the IFormFieldBase members, so it is the class's constructor, and its parameter types are those
+//         of CImageFieldUpdate's and CDSImageField's constructor records, which do not reach the bytes)
+//   11099 / 11098  ~CImageField() (complete / deleting; implicit, emitted with the vtable, which the pending
+//         GetTypeName, the class's key function, puts in the pending object until it moves here)
+//   11097 GetTypeName() const   a call into fn 2904, the body binaryen's merge-similar-functions made of four
+//                               functions that return an 11-character name; our link keeps it unmerged     (pending)
+//   11102 Draw(IScreen&) const  calls IScreen slots 22 and 24, which iscreen.h does not declare           (pending)
+//   11101 Rect() const          record at line 52, col 12: CPolySingleton<IScreen>::instance() (fn 512)  (pending)
+//   2241  Move(const SPoint&)   one body binaryen shares with CTextField, CDSImageField, CImageFieldUpdate,
+//                               CTextFieldBlinking and CTextFieldUpdate                                  (pending)
+// The pending members are defined in src/units/29-uenux2-cimagefield-pending.cpp.
 
-// f11101 З 118 B З unmatched З name unknown
-// void f11101(i32, i32) { ... }
+#include "api/gui/cimagefield.h"
 
-// f11099 З 125 B З unmatched З placement: link order З name unknown
-// ? f11099(i32) { ... }
+namespace api {
 
-// f11098 З 128 B З unmatched З placement: link order З name unknown
-// void f11098(i32) { ... }
+/**
+ * Cria um campo que desenha @p imagem em @p posicao.
+ *
+ * @param posicao posiчуo da tela onde a imagem щ desenhada
+ * @param imagem imagem do campo; pode ser nula, e entуo nada щ desenhado
+ * @param ancora ponto da imagem que fica em @p posicao
+ */
+CImageField::CImageField(const SPoint& posicao, const SharedIImage& imagem, EAnchorPoint ancora)
+    : m_posicao(posicao)
+    , m_imagem(imagem)
+    , m_ancora(ancora)
+{
+}
 
-// f11097 З 17 B З unmatched З placement: link order З name unknown
-// void f11097(i32, i32) { ... }
-
-// f2242 З 99 B З unmatched З placement: link order З name unknown
-// ? f2242(i32, i32, i32, i32) { ... }
-// </stubs>
+} // namespace api
