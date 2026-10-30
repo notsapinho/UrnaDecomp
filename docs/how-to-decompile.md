@@ -853,7 +853,7 @@ away, take it off the line, since an override is not the same: §F9 item 9). A f
 target's data showed no file of ecourna apart from the rest (§F5). So before you call evidence per TU, look at what the
 whole tree's data and code say. A fragment may carry a target-specific flag only where the evidence is
 per TU, and then the objects' flag set must be a setup of
-`asmlift-wasm/benchmark/dataset/setups.json`, as `asn1-eh` is for the ASN.1 TUs that throw: `pnpm bench setups --check` fails on an
+`asmlift-wasm/benchmark/dataset/setups.json`: `pnpm bench setups --check` fails on an
 object that compiles with flags no setup has ([asmlift-wasm/benchmark/README.md](../asmlift-wasm/benchmark/README.md)
 "The compile setups"). If neither holds, keep the source as written when it gives the target's rows at the flags that
 close the gap: its row stays `differs`, and the fragment's header says so with the measurement (step 5, "A written

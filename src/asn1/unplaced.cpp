@@ -86,11 +86,6 @@
 // f5058 · 95 B · unmatched · placement: link order · name unknown
 // ? f5058(i32, i32) { ... }
 
-// link-order cluster 723 · uses=2 · neighbours' file ecourna/app/dados/resultadournacadastro/cestadohabilitacaoporcodigo.cpp
-
-// f5084 · 156 B · unmatched · placement: link order · name unknown
-// void f5084(i32, i32) { ... }
-
 // link-order cluster 738 · uses=2
 
 // f5282 · 70 B · unmatched · placement: link order · name unknown
@@ -112,17 +107,11 @@
 // f3476 · 443 B · unmatched · placement: link order · name unknown
 // void f3476(i32, i32, i32, i32) { ... }
 
-// f3475 · 291 B · unmatched · placement: link order · name unknown
-// void f3475(i32, i32) { ... }
-
 // f3473 · 441 B · unmatched · placement: link order · name unknown
 // ? f3473(i32, i32, i32) { ... }
 
 // f3472 · 360 B · unmatched · placement: link order · name unknown
 // void f3472(i32, i32) { ... }
-
-// f3471 · 747 B · unmatched · placement: link order · name unknown
-// ? f3471(i32, i32, i32) { ... }
 
 // link-order cluster 964 · uses=3
 
@@ -133,9 +122,6 @@
 
 // f2656 · 144 B · unmatched · placement: link order · name unknown
 // ? f2656(i32, i32) { ... }
-
-// f2652 · 264 B · unmatched · placement: link order · name unknown
-// void f2652(i32, i32, i32) { ... }
 
 // f2650 · 36 B · unmatched · placement: link order · name unknown
 // void f2650(i32) { ... }
@@ -192,9 +178,6 @@
 
 // link-order cluster 1205 · uses=7 · neighbours' file uenux2/src/app/vota/eleitor/comum/carchiveopencallback_offset.cpp
 
-// f1672 · 98 B · unmatched · placement: link order · name unknown
-// ? f1672(i32, i32, i32, i32) { ... }
-
 // f1671 · 44 B · unmatched · placement: link order · name unknown
 // ? f1671(i32, i32) { ... }
 
@@ -213,9 +196,6 @@
 
 // f1519 · 114 B · unmatched · placement: link order · name unknown
 // ? f1519(i32, i32, i32, i32) { ... }
-
-// f1518 · 261 B · unmatched · placement: link order · name unknown
-// void f1518(i32, i32) { ... }
 
 // link-order cluster 1280 · uses=13
 

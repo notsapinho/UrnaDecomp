@@ -87,8 +87,8 @@ unit 66's uenux2 TU includes ecourna's SQL headers, which include Boost, so its 
 rule. Its objects keep their tree's setup.
 
 A flag a fragment does add gives its objects a flag set, and
-the benchmark's registry `asmlift-wasm/benchmark/dataset/setups.json` must have a setup with exactly that set, as
-`asn1-eh` has for the ASN.1 TUs that throw. Otherwise, from `asmlift-wasm/`, `pnpm bench setups --check` reports the tree's
+the benchmark's registry `asmlift-wasm/benchmark/dataset/setups.json` must have a setup with exactly that set.
+Otherwise, from `asmlift-wasm/`, `pnpm bench setups --check` reports the tree's
 setup as drift and `pnpm test:bench` fails; every splat, status and stubs check still passes, so run it before
 the commit. A new setup is a new entry in `setups.json` and a re-selection of the dataset
 (`asmlift-wasm/benchmark/README.md` "The compile setups").

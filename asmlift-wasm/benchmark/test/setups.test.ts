@@ -30,7 +30,7 @@ describe('classifyObjects', () => {
       expect(c.status, `${s.key}: ${c.detail.join('; ')}`).toBe('ok');
       expect(c.objects).toBeGreaterThan(0);
     }
-    expect(objects.find((o) => o.object === 'build/out/app/asn1/BERDecoderPartial.o')?.setup).toBe('asn1-eh');
+    expect(objects.find((o) => o.object === 'build/out/app/asn1/BERDecoderPartial.o')?.setup).toBe('asn1');
     expect(objects.find((o) => o.object === 'build/out/app/ecourna/api_security_base64.cpp.o')?.setup).toBe('ecourna');
     expect(objects.find((o) => o.object === 'build/out/app/ecourna/api_io_cfile.cpp.o')?.setup).toBe('ecourna');
   });

@@ -83,7 +83,7 @@ Each row is measured by reconstructing or building that component and scoring it
 | uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` |
 | the executable TU (not reconstructed) | `/home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp` | `-Oz -fexceptions` (facts/levels.md §V1) |
 | ecourna (conan package `libecea1da310e5107`) | `/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna/...` | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks`; no `-fPIC` |
-| III ASN.1 runtime (TSE fork) | none | `-Os -fno-exceptions -std=c++17 -DNDEBUG` |
+| III ASN.1 runtime (TSE fork) | none | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` |
 | SQLite 3.50.4 amalgamation | none | `-O3 -fPIC` + `-DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_UNLOCK_NOTIFY` + `-DHAVE_FDATASYNC -DHAVE_GMTIME_R -DHAVE_LOCALTIME_R -DHAVE_POSIX_FALLOCATE -DHAVE_STRERROR_R -DHAVE_USLEEP` |
 | OpenSSL 3.0.17 (libcrypto only) | relative `crypto/...` paths | objects at `-O3`; `./Configure cc no-shared --release --prefix=/ --libdir=lib --openssldir=/etc/ssl threads no-unit-test no-tests -fPIC no-fips no-md2`, `CC=emcc` |
 | 7-Zip / LZMA SDK 21.02 | none | `-O3 -D_7ZIP_ST -DNDEBUG` |
@@ -112,7 +112,7 @@ Each row is measured by reconstructing or building that component and scoring it
 - That is evidence for 63 of its 82 objects. For the other 19 no witness exists either way: there it is the tree's setting, not a measurement.
 - [facts/app-flags.md](facts/app-flags.md) §F5 has the measurement, and the command that lists the 19.
 
-**ASN.1 runtime.** `-Os -fno-exceptions -DNDEBUG` gives the best census, 208 of 320 functions in a probe. No ASN.1 function calls an `invoke_*` import.
+**ASN.1 runtime.** `-Os -DNDEBUG` with no landing pads gives the best census, 208 of 320 functions in a probe: no ASN.1 function calls an `invoke_*` import. A probe's `-fno-exceptions` removes the pads too, but it gives libc++'s `nn` ABI tag where the target's runtime calls the program's shared `ne` copies, so the runtime is compiled with `-fexceptions -fignore-exceptions` ([facts/asn1.md](facts/asn1.md) §A2).
 
 ### Source paths in the binary
 

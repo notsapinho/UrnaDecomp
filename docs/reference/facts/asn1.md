@@ -39,7 +39,7 @@ The -Os pairs are large upstream bodies, not accessors: `PERDecoder::do_visit(CH
 `AVNEncoder::do_visit(BIT_STRING)` 482 B, `OBJECT_IDENTIFIER::encodeCommon` 360 B; `BERDecoder::do_visit(INTEGER&)`
 scores 45 rows against the -O3 body, 46 against -Oz, 0 against -Os.
 
-## A2. … and without exceptions
+## A2. … with no landing pads and libc++'s exceptions-on ABI tag
 
 `tools/libs/asn1/build.sh up-Os-noexc -Os -fno-exceptions` → 157 paired (126 / 31 / 18), 19,560 B (41.7 %),
 against 125 / 28.3 % for -Os alone. What `-fno-exceptions` buys: every call under an owning local loses its
@@ -51,10 +51,49 @@ functions calls an `invoke_*` import; one calls `__cxa_throw` (2706). Across the
 `invoke_*` imports has exactly one caller, while `__cxa_begin_catch` has 652 callers and `__cxa_throw` 220: throw
 and catch sites are common in app TUs, landing pads almost absent, so exception flags are per TU.
 
-The fork's `BufferSeeder` throws `std::runtime_error("BufferSeed: no more buffer")`, so the TUs that include
-`BufferSeeder.h` compile with `-fexceptions -fignore-exceptions` (a `throw` compiles, no landing pads; the target's
-`BufferSeeder` calls `__cxa_throw` directly). `-DNDEBUG` alone is worth 15 more functions: the `assert()`s in
-`asn1.h`'s inline accessors kept them out of line. The current flag set is `ASN1_CXXFLAGS` in `src/mk/asn1.mk`.
+That is evidence for no landing pads, and `-fno-exceptions` is not the only flag that gives none. It is the wrong one:
+libc++ puts the exceptions state in its ABI tag, so a `-fno-exceptions` object emits `B8nn210108` symbols and every
+other object `B8ne210108`, and the target's runtime calls the `ne` copies the rest of the program shares. From
+`asmlift-wasm/`, with `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`:
+
+- 8923 calls 194, `__put_character_sequence`, whose body has `call import:invoke_iii`. A `nn` copy cannot hold one.
+- 750, `vector<char>::push_back`, calls 158, `vector<unsigned char>::__throw_length_error[abi:ne210108]`.
+- `BERDecoderPartial::preVisitExtensionRoots` (8827, `push_back(unsigned&&)`) and
+  `AVNDecoder::do_visit(OBJECT_IDENTIFIER&)` (8887, `push_back(const unsigned&)`) call 938, also called by 9672 and
+  four more RHVoice functions: the 230-B body RHVoice's `-O3` gives, not the 291-B body of the runtime's `-Os`. A symbol
+  of the runtime's own would have kept that body. The `-Os` body is 3475, `vector<AbstractData*>::push_back(&&)`,
+  called by the three `do_visit(SEQUENCE_OF_Base&)` (8835, 8860, 8881).
+
+So `ASN1_CXXFLAGS` in `src/mk/asn1.mk` holds `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` for every
+runtime TU and module: a `throw` compiles to a direct `__cxa_throw`, as the fork's `BufferSeeder` needs
+(`std::runtime_error("BufferSeed: no more buffer")`), with no landing pads. Plain `-Os -std=c++17 -DNDEBUG`, emcc's
+default, gives the same 14 objects (`cmp`), so the spelling is a choice and not evidence. `-DNDEBUG` alone is worth 15
+more functions: the `assert()`s in `asn1.h`'s inline accessors kept them out of line.
+
+**What it moves in the link.** Measured on the base 0cb0ebc (7,935 matches) with steps 6 to 10 of
+`docs/how-to-decompile.md`, the flag adds 24 matches, renames the three `nn` lines (777, 1874, 3479), and takes nothing
+when the link order below holds. `/usr/bin/grep -c 'B8nn210108' splat/matched.txt` prints 0. 194 still gets no name: the
+census has no pair for it.
+
+**One symbol, so the first definer wins.** With both sides `ne`, the runtime and RHVoice define the same
+`vector<unsigned>::push_back`, and the runtime's objects come first in our link. In the target RHVoice's copy won, and
+the bands put RHVoice before the runtime ([link-order.md](link-order.md) §L3). The whole of RHVoice cannot follow,
+because our RHVoice objects emit bodies the target does not have. The measurements, with each row's lost indices the
+`comm -23` of step 10 joined with the rows that left `match` in `splat/scan.tsv`:
+
+| RHVoice objects | added | lost | why |
+| --- | --- | --- | --- |
+| all last, as before | 24 | 9672 | it calls `push_back(const&)`, now the runtime's `-Os` copy |
+| all before ecourna, as §L3 reads | 22 | 777, 1837, 8814, 8891, 8892, 10983 | `operator>>(istream&, char&)` and the row below |
+| `language`, `document` before ecourna | 24 | 1837, 8814, 10983 | `language`'s `basic_ostringstream()` calls `string::resize` through `invoke_viii`, so `resize` keeps a table slot and the constant argument 1837's type has lost |
+| `language`, `document` just before the runtime | 24 | none | |
+
+`document.cpp.o` defines `push_back(&&)` and `language.cpp.o` `push_back(const&)`. `data_only_language.cpp.o`,
+`equalizer.cpp.o` and `pitch.cpp.o` emit a 354-B `operator>>` with a landing pad, which cannot be the target's: only
+777, 1383, 1917, 2149, 3557, 5254, 9741 and 10841 call both `sentry` (722) and `ios_base::clear` (702), and 777, the
+body the runtime's callers reach, is 163 B. Why our RHVoice objects hold these calls differently is not known.
+`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk` therefore holds the last row. It is the smallest set and place that loses
+nothing: a measured choice, not the target's link line, and a later change to the RHVoice build may let it go.
 
 ## A3. The whole schema of the 32 `Modulo*` modules is in the target's data
 
