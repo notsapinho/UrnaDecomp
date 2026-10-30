@@ -112,7 +112,7 @@ Each row is measured by reconstructing or building that component and scoring it
 - That is evidence for 63 of its 82 objects. For the other 19 no witness exists either way: there it is the tree's setting, not a measurement.
 - [facts/app-flags.md](facts/app-flags.md) §F5 has the measurement, and the command that lists the 19.
 
-**ASN.1 runtime.** `-Os -DNDEBUG` with no landing pads gives the best census, 208 of 320 functions in a probe: no ASN.1 function calls an `invoke_*` import. A probe's `-fno-exceptions` removes the pads too, but it gives libc++'s `nn` ABI tag where the target's runtime calls the program's shared `ne` copies, so the runtime is compiled with `-fexceptions -fignore-exceptions` ([facts/asn1.md](facts/asn1.md) §A2).
+**ASN.1 runtime.** `-Os -DNDEBUG` with no landing pads gives the best census, and no ASN.1 function calls an `invoke_*` import. A probe pairs 229 of 320 functions at `-fno-exceptions` and at `-fexceptions -fignore-exceptions` alike, so the census does not tell the two apart. `-fno-exceptions` gives libc++'s `nn` ABI tag where the target's runtime calls the program's shared `ne` copies, so the runtime is compiled with `-fexceptions -fignore-exceptions` ([facts/asn1.md](facts/asn1.md) §A2).
 
 ### Source paths in the binary
 

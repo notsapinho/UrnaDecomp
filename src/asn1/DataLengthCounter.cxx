@@ -38,7 +38,8 @@
 
 // The reconstruction's file: BEREncoder.cxx upstream holds this code. In the target DataLengthCounter's vtable lies after
 // PEREncoder's, not with BEREncoder's and PrimitiveChecker's, and BEREncoder::encodeHeader calls getDataLength, which
-// clang would inline in one TU. The file's name is chosen: no evidence names it.
+// clang would inline in one TU. That puts the class outside BEREncoder's object and no further: this file and its name
+// are chosen.
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

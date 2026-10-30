@@ -59,15 +59,17 @@ other object `B8ne210108`, and the target's runtime calls the `ne` copies the re
 - 8923 calls 194, `__put_character_sequence`, whose body has `call import:invoke_iii`. A `nn` copy cannot hold one.
 - 750, `vector<char>::push_back`, calls 158, `vector<unsigned char>::__throw_length_error[abi:ne210108]`.
 - `AVNDecoder::do_visit(OBJECT_IDENTIFIER&)` (8887) and `OBJECT_IDENTIFIER::decodeCommon` (3473) call 938 for
-  `push_back(const unsigned&)`, as 9672 and four more RHVoice functions do: the 230-B body RHVoice's `-O3` gives, not
-  the 291-B body of the runtime's `-Os`. A symbol of the runtime's own would have kept that body. The `-Os` body is 3475,
+  `push_back(const unsigned&)`, as 9672 does: the 230-B body RHVoice's `-O3` gives, not the 291-B body of the runtime's
+  `-Os`. A symbol of the runtime's own would have kept that body. Five more callers lie outside the runtime
+  (`ledger/func-attribution.tsv`: 1248 and 9644 RHVoice, 2702 and 5218 libc++, 3546 none). The `-Os` body is 3475,
   `vector<AbstractData*>::push_back(const&)`, called by the three `do_visit(SEQUENCE_OF_Base&)` (8835, 8860, 8881).
   `push_back(unsigned&&)` is not RHVoice's: `decodeCommon`'s `value.push_back(0)` calls 543 (§A5).
 
 So `ASN1_CXXFLAGS` in `src/mk/asn1.mk` holds `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` for every
 runtime TU and module: a `throw` compiles to a direct `__cxa_throw`, as the fork's `BufferSeeder` needs
 (`std::runtime_error("BufferSeed: no more buffer")`), with no landing pads. Plain `-Os -std=c++17 -DNDEBUG`, emcc's
-default, gives the same 14 objects (`cmp`), so the spelling is a choice and not evidence. `-DNDEBUG` alone is worth 15
+default, gives the same 47 objects, the 15 runtime TUs and the 32 modules (`cmp`), so the spelling is a choice and not
+evidence. `-DNDEBUG` alone is worth 15
 more functions: the `assert()`s in `asn1.h`'s inline accessors kept them out of line.
 
 **What it moves in the link.** Measured on the base 0cb0ebc (7,935 matches) with steps 6 to 10 of
@@ -158,15 +160,21 @@ alone: a name says which function sits there, and the scan still compares the by
 
 - `pair-depth0`: 3472, 3473 and 5066. From `asmlift-wasm/`, `pnpm --silent wasm fingerprint <wasm> --depth 0` prints one
   target and one ours for each fingerprint.
-- `callers+content`: 194, 446, 541, 2184, 2185, 2186, 2653, 2656 and 853. Take every function the symbol file names whose
-  rows equal ours with locals and branch depths kept and with callee, global and address operands blanked (7,460 such
-  functions on this tree), and pair their `call`s in order. Each of these target functions then pairs with one symbol of
-  ours and that symbol with it alone: 31 callers for 194, 10 for 446, 9 for 541, 3 each for 2184, 2185, 2186 and 2653,
-  and none disagrees. 2656 and 853 have one caller each, `do_clone` slots of `new X(*this)` (9012, 8958), so the callee
-  can only be the copy constructor, and their rows equal ours up to callees. The hand edits' comments list the callers;
-  `pnpm wasm fn` on one shows the `call` at the offset where ours has it.
+- `callers+content`: 194, 446, 541, 2184, 2185, 2186, 2653 and 853. For every function the symbol file names, take the
+  target's body and our body of that symbol from `wasm-objdump -d`, with the operands of `call`, `global.get`,
+  `global.set` and `call_indirect` blanked and every `i32.const` and `i64.const` of absolute value 1024 or more blanked,
+  locals and branch depths kept. Keep the function when the two lists are equal (7,470 functions on this tree), pair its
+  `call`s in order, and count the kept functions behind each pair of callees. Each of these target functions then pairs
+  with one symbol of ours and that symbol with it alone: 32 callers for 194, 11 for 446, 9 for 541, 3 each for 2184,
+  2185, 2186 and 2653, and none disagrees. 853 has one caller, 8958, `new SEQUENCE(*this)`; its line enables nothing,
+  since 853 and 8958 match by content without it. The hand edits' comments list the callers; `pnpm wasm fn` on one shows
+  the `call` at the offset where ours has it.
+- `vptr+shape`: 2656. Its one caller, 9012, cannot vote: it is the row this name releases. The name rests on the body. It
+  stores 1147840, `SEQUENCE_OF_Base`'s vtable address point (`ledger/vtables.json`), though 27 target functions load that
+  constant, so this is not `rtti-vptr`. It reads its second argument's fields as a copy does, and its `addr` and `shape`
+  hashes each occur once in the target and once in ours (the `fingerprint` command above).
 
-Names free callers, not bodies. Three bodies stay unmatched for a callee of theirs that is no body of ours:
+Names free callers, not bodies. Four bodies stay unmatched for a callee of theirs that is no body of ours:
 
 - 3472 (`encodeCommon`) calls 2706, `vector<char>::reserve` by its callers, and ours is the 54-row body of `-Os`; the
   target's has 65 rows. Of the flag sets tried it is closest to the executable TU's `-Oz -fexceptions`
@@ -175,7 +183,7 @@ Names free callers, not bodies. Three bodies stay unmatched for a callee of thei
   element, and it equals no body of ours, nor a probe at the flags of uenux2, ecourna, RHVoice or the runtime. Where it
   comes from is not known.
 
-## A6. `DataLengthCounter` has a TU of its own
+## A6. `DataLengthCounter` is not in `BEREncoder`'s object
 
 `ledger/vtables.json`'s vtables, in address order: `BEREncoder` 1151144, `PrimitiveChecker` 1151276, `PEREncoder` 1151416,
 `DataLengthCounter` 1151548, `DataFree` 1151688. A TU's vtables lie together in the data (`docs/how-to-decompile.md`
@@ -184,7 +192,11 @@ says the same. Clang inlines `getDataLength` into `encodeHeader` when it sees th
 with the last-call bonus, `-Rpass=inline`). The target's `encodeHeader` (994) holds it behind a second stack prologue,
 which is wasm-opt's inlining ([reading.md](reading.md) §R10), and `getObjectLength` (2647) holds it in one frame, which is
 clang's: so `getDataLength` is external, in `getObjectLength`'s TU, and `encodeHeader` calls it from another.
-`src/asn1/DataLengthCounter.cxx` holds that TU, and its name is chosen.
+
+That is as far as the evidence goes: it takes the class out of `BEREncoder`'s object and gives it no object of its own.
+With the class at the end of `PEREncoder.cxx` and `DataLengthCounter.o` empty, the link gives the same 8046 matches, the
+target's sha256 and no verdict change. `DataFree.cxx` was not tried. `src/asn1/DataLengthCounter.cxx` is a choice, the
+file and its name.
 
 `getIntegerDataLength` is in neither: 5037 and 5043 both call 5064, and clang inlines it at cost 20 against 50 wherever it
 sees the body. `asn1.cxx` is a choice.

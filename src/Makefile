@@ -178,7 +178,7 @@ APP_OBJS := vota_init.o vota_api.o main.o wasm_sound.o wasm_shim.o roots.o roots
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=
 # app-side objects (the uenux2 units) precede the conan libraries (ecourna first); the ASN.1 runtime rides in EXTRA_OBJS (src/mk/asn1.mk),
-# with the two RHVoice objects that must come before it (RHVOICE_BEFORE_ASN1 there)
+# with the one RHVoice object a measured choice puts before it (RHVOICE_BEFORE_ASN1 there)
 LINK_OBJS := $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS))
 EXPORTS := _main,_votaInit,_votaPressKey,_votaTick,_votaSetAudioEnabled,_votaGetStateJson,_uenux_wasm_web_sound_wait_cancel_requested,_uenux_wasm_web_sound_wait_finished
 LINK_FLAGS := -Oz -fexceptions -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8MB -sEXPORTED_FUNCTIONS=$(EXPORTS) -sEXPORTED_RUNTIME_METHODS=ccall,FS,callMain

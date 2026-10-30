@@ -11,6 +11,8 @@
 #   8861 stores 0 where upstream sets it, all with i32.store8 at +28; 8861 tests it with a compare with 1, a bool's
 #   read in a condition (docs/reference/facts/reading.md §R14), and saves and restores one byte around the visit,
 #   which is FlagSaver over a bool. Its name is chosen (asn1.h says so).
+# - CountBits (1066) compares with >=: the target tests range >> nBits, which LLVM folds from >= and not from upstream's
+#   >, which keeps a shift of 1.
 # - decodeHeader(unsigned&, bool&, unsigned&) (1669) refuses a long-form tag under 31 after its loop, which upstream
 #   does not; the target's `i32.lt_u(tagVal, 31)` is that test.
 # - getHeaderLength and encodeTag mask 0x1FFFFFFF, and encodeTag masks the identifier with 0xE0: the constants of 3463
@@ -28,9 +30,13 @@
 #   visitors keep calls because the bodies are in other TUs (§A6). 8854 needed BERDecoder::decode out of the roots.
 #
 # Chosen, with the forms measured to give the same bytes (one function's rows, object-local numbers masked):
-# - The flag's spelling: plain -Os -std=c++17 -DNDEBUG gives the same 14 objects (cmp).
-# - src/asn1/DataLengthCounter.cxx: the data show a separate object, and no evidence names it.
-# - getHeaderLength sits in that file: both TUs call it and clang inlines it in neither (cost 85 against 50).
+# - The flag's spelling: plain -Os -std=c++17 -DNDEBUG gives the same 47 objects, the 15 runtime TUs and the 32 modules
+#   (cmp).
+# - src/asn1/DataLengthCounter.cxx, the file and its name: the data put the class outside BEREncoder's object and go no
+#   further. With the class at the end of PEREncoder.cxx the link gives the same 8046 matches and the target's sha256;
+#   DataFree.cxx was not tried.
+# - getHeaderLength sits in that file: both TUs call it and clang inlines it in neither (cost 85 against 50). In
+#   BEREncoder.cxx the link gives the same 8046 matches and the target's sha256.
 # - getIntegerDataLength in asn1.cxx: any TU but those two gives the same calls.
 # - CHOICE::setID stays in BERDecoder.cxx, upstream's file, though 5077 sits next to asn1.o's 5078 in its band. It spells
 #   info()->tags[choiceID]. In asn1.cxx over getSelectionTagInternal(), which clang inlines there, it gives the same
@@ -38,4 +44,4 @@
 # - The spelling of each of these, every alternative the same bytes: 8792 with the two tests swapped, or written over
 #   currentSelection(); 8852 saving the old position in a local before the store; 1669 with `tagVal <= 0x1e`; 5045's
 #   identifier as `(char)((a_tag >> 24) & 0xe0)` or `(char)((a_tag & 0xe0000000) >> 24)`; 8759's end declared before
-#   the loop; FlagSaver's two members in either order.
+#   the loop; FlagSaver's two members in either order; 1066's test as `(range >> nBits) != 0` (the whole asn1.o, cmp).

@@ -14,7 +14,7 @@ The upstream files here are a modified copy of the III ASN.1 runtime at that com
 | --- | --- |
 | `asn1.h`, `asn1.cxx`, the coders (`BER*`, `PER*`, `AVN*`), `ValidChecker.cxx`, `InvalidTracer.cxx`, … | the upstream runtime with the fork's changes read from the target: `AbstractData`'s seventh virtual `getTypeName()`, the `typeName` word of the `SEQUENCE` and `SEQUENCE_OF_Base` info records, the two out-of-line `CHOICE` helpers, `IAbstractVisitor`, `ISeeder` |
 | `BERDecoderPartial.cxx`, `BufferSeeder.h`, `DataFree.cxx` | fork-only classes, reconstructed from the target's vtables and readouts |
-| `DataLengthCounter.cxx` | `DataLengthCounter` and the length functions over it, which upstream's `BEREncoder.cxx` holds and the target keeps in an object of their own (facts §A6); the file's name is chosen |
+| `DataLengthCounter.cxx` | `DataLengthCounter` and the length functions over it, which upstream's `BEREncoder.cxx` holds and the target keeps outside `BEREncoder`'s object (facts §A6); the file and its name are chosen |
 | `AssocVector.h`, `Platform*.h`, `ios_helper.*`, `asn1_useful.*` | upstream support files, ported to compile at C++20 |
 | `modules/<Modulo>.{h,cxx}` | the 32 generated modules (below) |
 | `unplaced.cpp` | generated comment stubs of the `ASN1` functions no evidence places in a file; a `.cpp`, so `src/mk/asn1.mk` never compiles it. The `.cxx` files hold stubs too, as comments that change no object ([../README.md](../README.md) "Stubs") |
