@@ -14,6 +14,10 @@ enum EUeUtilError {
     EUE_UTIL_TICK_NAO_EXISTE_INICIAR = 7075,
     EUE_UTIL_TICK_SEM_ID_DISPONIVEL = 7077,
     EUE_UTIL_HORA_INVALIDA = 7079,
+    // the value is the code api::EncodeTime(const std::string &) throws (inlined into the CTime constructor from a
+    // string, target fn 3643); the name is chosen from its message, "Hora inválida", as 7079's, and its string
+    // argument: no evidence names it
+    EUE_UTIL_HORA_TEXTO_INVALIDA = 7080,
     EUE_UTIL_HORA_OVERFLOW = 7081,
     EUE_UTIL_HORA_UNDERFLOW = 7082,
     EUE_UTIL_TEMPO_EXCESSIVO = 7083,

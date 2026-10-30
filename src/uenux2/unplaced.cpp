@@ -1934,27 +1934,6 @@
 // f11241 · 16 B · unmatched · placement: link order · name unknown
 // void f11241(i32, i32, i32) { ... }
 
-// link-order cluster 426 · uses=1 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cregracpf.cpp
-
-// f11270 · 571 B · unmatched · placement: link order · name unknown
-// ? f11270(i32, i32) { ... }
-
-// f11269 · 13 B · unmatched · placement: link order · name unknown
-// void f11269(i32, i32, i32) { ... }
-
-// link-order cluster 427 · uses=1 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cregratitulo.cpp
-
-// f11272 · 537 B · unmatched · placement: link order · name unknown
-// ? f11272(i32, i32) { ... }
-
-// f11271 · 13 B · unmatched · placement: link order · name unknown
-// void f11271(i32, i32, i32) { ... }
-
-// link-order cluster 428 · uses=1 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cregraidentidadelivre.cpp
-
-// f11274 · 49 B · unmatched · placement: link order · name unknown
-// void f11274(i32, i32, i32) { ... }
-
 // link-order cluster 433 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorsuplencia.cpp
 
 // f11359 · 419 B · unmatched · placement: link order · name unknown
@@ -3577,16 +3556,6 @@
 // f12438 · 83 B · unmatched · placement: link order · name unknown
 // void f12438(i32, i32) { ... }
 
-// link-order cluster 643 · uses=1 · neighbours' file uenux2/src/api/gui/iinputvalidation.cpp
-
-// f12473 · 58 B · unmatched · placement: link order · name unknown
-// ? f12473(i32, i32) { ... }
-
-// link-order cluster 644 · uses=1 · neighbours' file uenux2/src/api/gui/ccontrolvalidation.cpp
-
-// f12502 · 12 B · unmatched · placement: link order · name unknown
-// ? f12502(i32) { ... }
-
 // link-order cluster 645 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
 
 // f12520 · 16 B · unmatched · placement: link order · name unknown
@@ -4093,11 +4062,6 @@
 // f4021 · 17 B · unmatched · placement: link order · name unknown
 // ? f4021(i32) { ... }
 
-// link-order cluster 1044 · uses=3 · neighbours' file uenux2/src/api/gui/coptionvalidation.cpp
-
-// f4022 · 110 B · unmatched · placement: link order · name unknown
-// ? f4022(i32, i32) { ... }
-
 // link-order cluster 1046 · uses=3
 
 // f4129 · 280 B · unmatched · placement: link order · name unknown
@@ -4143,11 +4107,6 @@
 
 // f2781 · 355 B · unmatched · placement: link order · name unknown
 // ? f2781(i32) { ... }
-
-// link-order cluster 1126 · uses=4 · neighbours' file uenux2/src/api/gui/coptionvalidation.cpp
-
-// f2980 · 12 B · unmatched · placement: link order · name unknown
-// void f2980(i32) { ... }
 
 // link-order cluster 1146 · uses=5
 
@@ -4315,39 +4274,6 @@
 
 // f8487 · 52 B · unmatched · placement: link order · name unknown
 // void f8487(i32, i32) { ... }
-
-// link-order cluster 69 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8494 · 20 B · unmatched · placement: link order · name unknown
-// void f8494(i32) { ... }
-
-// link-order cluster 72 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8505 · 221 B · unmatched · placement: link order · name unknown
-// void f8505(i32) { ... }
-
-// link-order cluster 75 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8514 · 344 B · unmatched · placement: link order · name unknown
-// void f8514(i32) { ... }
-
-// link-order cluster 77 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/carchiveopencallback_offset.cpp
-
-// f8523 · 450 B · unmatched · placement: link order · name unknown
-// void f8523(i32) { ... }
-
-// link-order cluster 79 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8538 · 11 B · unmatched · placement: link order · name unknown
-// void f8538(i32, i32, i32) { ... }
-
-// f8533 · 203 B · unmatched · placement: link order · name unknown
-// void f8533(i32, i32) { ... }
-
-// link-order cluster 81 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmbeep.cpp
-
-// f8541 · 6 B · unmatched · placement: link order · name unknown
-// void f8541(i32, i32) { ... }
 
 // link-order cluster 91 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmresource.cpp
 
@@ -4637,44 +4563,6 @@
 
 // f9459 · 9 B · unmatched · placement: link order · name unknown
 // ? f9459(i32) { ... }
-
-// link-order cluster 227 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp
-
-// f9533 · 4 B · unmatched · placement: link order · name unknown
-// ? f9533(i32) { ... }
-
-// f9523 · 38 B · unmatched · placement: link order · name unknown
-// ? f9523(i32, i32) { ... }
-
-// f9515 · 995 B · unmatched · placement: link order · name unknown
-// void f9515(i32, i32, i32, i32) { ... }
-
-// link-order cluster 228 · uses=1 · neighbours' file ecourna/api/compression/czip.cpp
-
-// f9541 · 13 B · unmatched · placement: link order · name unknown
-// void f9541(i32, i32) { ... }
-
-// link-order cluster 230 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp
-
-// f9580 · 18 B · unmatched · placement: link order · name unknown
-// void f9580(i32, i32) { ... }
-
-// f9573 · 18 B · unmatched · placement: link order · name unknown
-// void f9573(i32, i32, i32) { ... }
-
-// f9565 · 211 B · unmatched · placement: link order · name unknown
-// void f9565(i32, i32) { ... }
-
-// f9559 · 157 B · unmatched · placement: link order · name unknown
-// void f9559(i32, i32, i32) { ... }
-
-// f9550 · 11 B · unmatched · placement: link order · name unknown
-// void f9550(i32) { ... }
-
-// link-order cluster 232 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp
-
-// f9589 · 11 B · unmatched · placement: link order · name unknown
-// void f9589(i32) { ... }
 
 // link-order cluster 362 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmnullprinter.cpp
 

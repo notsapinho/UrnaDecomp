@@ -30,7 +30,7 @@ identifier units) with `tools/round/appflags/compare.sh`:
   (landing pads).
 - **-std=c++20, not 23.** C++23's rvalue `substr()` changes func 3703 (116 rows vs 53); `gnu++20` equals `c++20`
   byte for byte.
-- **-fPIC** holds for `api/security` (F5).
+- **-fPIC** is the build's base setting for the TUs F5 does not list. It is not evidence that they were PIC: every ecourna record sits in the target's `.rodata`, where `-fPIC` would put it in `.data`.
 - **Paths.** `-ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna`
   produces an object byte-identical to compiling at the real path (`cmp` of three objects). The include root is
   `-Isrc` (`#include "ecourna/api/…"` = the conan package's `b/src`).
@@ -101,7 +101,8 @@ private table's address into the load's memarg (`i32.load offset=ADDR`) and pack
 
 | TUs | verdict | evidence |
 | --- | --- | --- |
-| `api/security` (`base64.cpp`) | PIC | func 3703's `encoding_table`/`mod_table` reads are `i32.const 1112848; i32.add; i32.load8_u`; `--single` 271 rows -fPIC vs 281 without |
+| `api/security` (`base64.cpp`) | not told by its code | func 3703's `encoding_table`/`mod_table` reads are `i32.const 1112848; i32.add; i32.load8_u`, but under `-fno-strict-overflow` (F4) a non-PIC object keeps the address added too, so this read separates nothing. `--single` 271 rows -fPIC vs 281 without. Its 2 records sit in the target's `.rodata` |
+| `api/security/csha.cpp` | non-PIC | `CSha::Reset` 5177, compiled with the TU's flags and linked alone at `-Oz`: with -fPIC 44 rows operand-only, 22 of them local indices (`local.tee 2` vs `1`, …), and the locals differ in every source form tried; with -fno-PIC 22 rows, none a local, and the whole link re-points it `IDENTICAL`. `CSha::Update` 3519 is 40 rows operand-only either way, so it does not tell. Its records, vtables and typeinfo sit in the target's `.rodata`, as non-PIC code puts them |
 | `api/io` | non-PIC | `CIoError::CIoError` 3520: 78 rows (12 ins, 9 del) with -fPIC, 71 operand-only without; `CFile::RawWrite` 1886: 121 (9, 9) vs 106 operand-only; `CFile::RawRead` 598: 140 (18, 18) vs 146 operand-only. The ctor's `Description(EFileOperation)` table is `i32.load align=2 offset=1112652` |
 | `api/compression` | non-PIC | `CZip::ConvertToCompressLevel` 9539 reads its switch table `{0,1,-1,9}` as `i32.load offset=1110872`: 42/118 (2 ins) with -fPIC, 21/116 operand-only without. `CZip::AtualizaProgresso` 9537: 50/361 vs 32/356 |
 | `app/dados` | non-PIC | every `std::format` string's {ptr, len} is one folded `i64` (2666/2668: 214748740548 = 50<<32 \| 375748). `--single` -fPIC vs -fno-pic: 9047 70 vs 58, 2669 36 vs 20, 2666 114 vs 85 |
