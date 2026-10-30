@@ -18,10 +18,12 @@
 # added to api/gui/cmovie.h for the store at the movie's +12, is chosen, name and all: defined out of line in cmovie.cpp
 # with this one caller it gives the same bytes in the whole link (binaryen inlines it; scored against 11061, one operand
 # row, the call to 150), so its being inline in the class is a choice too.
+# Draw (fn 11064, slot 2) is one call of IScreen's slot 26, DrawMovie in api/gui/iscreen.h, between the destructor and
+# Rect's line 53, in the band's order; its lines are a choice.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CMOVIEFIELD_SRCS := src/api/gui/cmoviefield.cpp
 UENUX2_SRCS += $(CMOVIEFIELD_SRCS)
-# Draw (11064), Rect (11063) and GetTypeName (11059) are not reconstructed:
+# Rect (11063) and GetTypeName (11059) are not reconstructed:
 # 52-uenux2-cmoviefield-pending.cpp gives the vtable trapping bodies, compiled with the unit's flags; it reads only
 # api/gui headers
 $(ROOT)/$(APP)/52-uenux2-cmoviefield-pending.o: $(ROOT)/src/units/52-uenux2-cmoviefield-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/52-uenux2-cmoviefield.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)

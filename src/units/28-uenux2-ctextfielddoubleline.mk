@@ -4,9 +4,8 @@
 # (api/gui/ctextfielddoubleline.h) and the three enumerators of api/gui/eueguierror.h. Paths relative to src/uenux2;
 # the generic uenux2 rule depends on the source and every uenux2 header. The layout is the ctor's stores (60 B, the
 # 72 B make_shared blocks of its callers); the member and parameter names are chosen, after the messages ("maxX",
-# "linha 1", "linha 2"). The implicit destructors emitted with the vtable do not match 10928/10927 (12 B thunks into
-# bodies binaryen merged with CTextRectField's); the census pairs them with CTextFieldPaper's 10919/10918 instead
-# (one vptr apart), so stubs.py drops those two stubs from ctextfieldpaper.cpp although they are not written.
+# "linha 1", "linha 2"). The implicit destructors emitted with the vtable are 10928/10927, 12 B thunks into bodies
+# binaryen merges with CTextRectField's (6022, 6021), which form since unit 90 brought that class.
 # Move (target fn 5527, slot 9) is binaryen's one body for this class's and CLineField's, written in each class's file;
 # binaryen keeps the first in link order, this one, so the match line names it. Its place below line 133 is a choice.
 # The two deltas are read before the first store: `m_linha2.x += posicao.x - m_linha1.x` written in place reads y again

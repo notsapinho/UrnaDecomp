@@ -6,7 +6,11 @@
 # and the parameter and member names are not in the bytes. No record names the header of IImage or EAnchorPoint, so
 # iimage.h is chosen (see its header comment). Move (one of the five functions of target fn 2241, see
 # 27-uenux2-ctextfield.mk, which lists the forms) is in cimagefield.cpp, below Rect's line 52, a choice; api::CDSImageField
-# inherits it.
+# inherits it. Draw (target fn 11102, slot 2) is above Rect's line 52, in the band's order (uses 1, 11097-11102); no
+# record falls in it, so its lines are a choice. Testing m_tamanho for null first is evidence: testing it != nullptr
+# first swaps the two calls. Same object code, by the function's disassembly with the object-local numbers masked: the
+# test of m_imagem as an outer `if` around the rest, `!m_imagem` and `!m_tamanho`, and a `return` after the first call in
+# place of the `else`; so those spellings are choices.
 UENUX2_SRCS += src/api/gui/cimagefield.cpp
 # the class's members not reconstructed yet (trapping bodies the vtable needs; GetTypeName is the key function, so the
 # vtable and the implicit destructors, target fns 11099 and 11098, are emitted there; see the file header), and two
