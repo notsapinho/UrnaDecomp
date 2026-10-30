@@ -6,8 +6,8 @@
 # app/roots_uenux2.o and 1229 from app/75-uenux2-api-hwil-roots.o, whose bodies compile the same at the tree's flags.
 #
 # Matches: 1011 and its thunks 9025 9026 9041 9046 9107 9158 9181 9229 9266 9410 9461 9505 9584; 710 and its thunks 253
-# 346 406 480 655 1229 1889, 480 once unit 95 gives its enum. Bodies of units 06 and 07 that were `unresolved
-# self-voted` on those thunks match with them:
+# 346 406 480 655 1229 1715 1889 2260, 480 once unit 95 gives its enum, 1715 and 2260 once units 66 and 91 throw them.
+# Bodies of units 06 and 07 that were `unresolved self-voted` on those thunks match with them:
 # 9539 (CZip, on 9584), 9028 (CConfiguracaoMunicipios, on 9026), 9047 (CFederacao, on 9046).
 #
 # Evidence for the form. 1011 and 710 read and zero both words of the moved string, then store them into the frame

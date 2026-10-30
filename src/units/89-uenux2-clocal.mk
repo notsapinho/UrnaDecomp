@@ -83,8 +83,9 @@
 # Written, not matching:
 # - comum::CLocal::GetZonaID (1003) is `unresolved self-voted` on its call of md::CLocal::GetContingencia (3724), and nothing
 #   else that holds calls 3724. The target's 3724 is a thunk into binaryen's merge 6029, whose other caller is
-#   CCargo::GetDetalheConsulta (1923, record ccargo.cpp:89); with no partner ours stays a whole body (`differs`). It waits
-#   for that function or for 11451, CConversorLocal::DoConverte, the other caller. Measured: a try link with a stand-in
+#   CCargo::GetDetalheConsulta (1923, record ccargo.cpp:89); unit 88 writes 1923, but clang inlines it there and the link
+#   drops its body, so with no partner ours stays a whole body (`differs`). It waits for a caller that keeps 1923, or for
+#   11451, CConversorLocal::DoConverte, the other caller. Measured: a try link with a stand-in
 #   of 1923 (flag at +136, member at +88, its code and literal) forms the merge, and 3724, 1923, 6029 and 1003 differ from
 #   the target in operand rows only (4 of 8, 4 of 8, 5 of 33, 14 of 84).
 # - md::CCandidatura's constructor (5660) needs -O3: at -O2 clang inlines vector::__init_with_size and leaves
@@ -95,7 +96,6 @@
 #   (docs/how-to-decompile.md step 4, "When only a flag closes the gap").
 #
 # Not written:
-# - CEleitorDinamico's constructors (5663, 5664): md/eleitor/celeitordinamico.h is not in this tree yet.
 # - CMunicipio's constructor (3712) and CEleitor::ValidaCriacao (5667) call 1374, a copying wrapper of the trim body 9406
 #   that binaryen merges into 3942 with the copying CStringUtils::ToLower; no source defines it yet, and either alone
 #   would be self-voted on it.

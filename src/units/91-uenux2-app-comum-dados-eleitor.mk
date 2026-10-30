@@ -3,7 +3,10 @@
 # CEleitorDecorator::GetIdentidadePorTipo (708),
 # CEleitorDinamicoDAO::ExcluirID (11543), the three defaults of api/persistencia/iuenuxgenericdao.h with their merge
 # (11540, 11467, 10398, 10397, 10396, thunks of 2297), and the three DAOs' Clone with theirs (11541, 11468, 10399, thunks
-# of 3894). All three DAOs must be in the link: binaryen forms 2297 and 3894 from those members, and unit 66's file holds
+# of 3894), and CBaseError<api::EUePersistenciaError>'s and CBaseError<comum::EUeComumJustificativaError>'s constructors
+# (1715, 2260), thunks of fn 710, with unit 94's constructor. 1715's name is a hand edit, evidence:rtti-vptr (the only
+# target function holding that vptr); 2297 calls it and has no other way to name it, since an anchor's vote casts none.
+# All three DAOs must be in the link: binaryen forms 2297 and 3894 from those members, and unit 66's file holds
 # the third of each. The sources are the files the records name: md/eleitor/{celeitordinamico,cbiometriaeleitor,
 # celeitordecorator}.cpp, dados/dao/celeitordinamicodao.cpp, comparecimentomesario/dao/ccomparecimentomesariodao.cpp.
 #
@@ -16,10 +19,6 @@
 #   char*, size_t) at -O2, and the target calls it (fn 160). With this one object at -O3 (c++20 or c++23) in a whole
 #   link, `pnpm wasm score` gives 22 over 267, 18 over 404 and 18 over 400 rows, operands only. What then remains is the
 #   name of the .bss string NOME_TABELA (1838780, built in __wasm_call_ctors, freed by fn 11545), which no vote gives.
-# - CBaseError<api::EUePersistenciaError>'s and CBaseError<comum::EUeComumJustificativaError>'s constructors (1715, 2260):
-#   thunks of fn 710, whose body our merge does not form: `pnpm wasm score` of 710 against it gives 23 over 58 rows, with
-#   the temporary at +4 of the frame where ours has it at +0. 1715's name is a hand edit, evidence:rtti-vptr (the only
-#   target function holding that vptr); 2297 calls it and has no other way to name it, since an anchor's vote casts none.
 #
 # Read from the bytes:
 # - The throws of 1548 and 708 stand at column 11, at the function's own indent, so each is the fall-through after an

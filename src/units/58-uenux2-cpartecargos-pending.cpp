@@ -4,9 +4,9 @@
 // (target fns 11208 and 11207, vtable slots 0 and 1), the compiler's code for the class definition in
 // cpartecargos.h; they move to cpartecargos.cpp.o with the vtable when Imprime does.
 // Target function: Imprime 11209 (vtable slot 2, vtable @1576556; ledger/vtables.json). It calls
-// comum::CCargos::GetInst (fn 273), GetCurrentEleicaoID (fn 2835) and Next (fn 1708), which their records name and
-// no unit defines yet, the end test fn 602 (no record), and fn 2269, CCargos's reset of its index, a binaryen twin
-// already matched as pthread_mutexattr_init.
+// comum::CCargos::GetInst (fn 273), which its record names and no unit defines yet, GetCurrentEleicaoID (fn 2835) and
+// Next (fn 1708), unit 88's, the end test fn 602 (no record), and fn 2269, CCargos's reset of its index, a binaryen
+// twin already matched as pthread_mutexattr_init.
 // Move it into cpartecargos.cpp when it is reconstructed; delete this file with it.
 #include "app/comum/relatorios/cpartecargos.h"
 
