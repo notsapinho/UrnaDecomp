@@ -11,7 +11,7 @@ Run every command from the repository root unless it starts with `cd asmlift-was
 
 | tool | version | used for |
 | --- | --- | --- |
-| Docker (Docker Desktop or OrbStack) | any recent; the daemon must be running | every compile, in the *pinned image* `urna-emsdk:6.0.0` (`build/Dockerfile`) |
+| Docker (Docker Desktop, OrbStack or Colima) | any recent; the daemon must be running | every compile, in the *pinned image* `urna-emsdk:6.0.0` (`build/Dockerfile`) |
 | Node | 24 | the toolkit `asmlift-wasm/` and `tools/setup/unpack_fs.mjs` |
 | pnpm | 9 (`asmlift-wasm/package.json` pins `pnpm@9.14.4`) | installing and running the toolkit |
 | Python 3 | any 3.x | the scripts in `tools/` |
@@ -39,6 +39,15 @@ About 4 GB of disk is needed: a bootstrapped and linked clone takes 1.8 GB (0.45
 **Use `TMPDIR=/tmp` on macOS for every command that compiles.** macOS's default temp directory is under
 `/var/folders`, which the Docker daemon cannot mount, so a compile that stages its files there fails. The
 bootstrap sets it for its own steps; the commands below spell it out.
+
+Under Colima the VM needs both mounts writable, the home directory (the checkout) and host `/private/tmp` at `/tmp`,
+and a template with no `runtime:` key needs `--runtime docker` (without it `colima start` stops with `unsupported
+container runtime ''`, and leaves `runtime: ""` in `~/.colima/default/colima.yaml`):
+
+```sh
+colima start --runtime docker --cpu 8 --memory 12 --disk 60 --vm-type vz --mount-type virtiofs --mount "$HOME:w" --mount "/private/tmp:/tmp:w"
+colima ssh -- mount | /usr/bin/grep virtiofs        # lists the home directory and /tmp, both rw
+```
 
 ## 2. Bootstrap
 
@@ -72,6 +81,11 @@ the OpenSSL checkout's commit time. The run ends with the time per step and the 
 `tools/setup/bootstrap.sh --sources` runs only the steps that fetch sources (`third_party/`).
 `tools/setup/bootstrap.sh --build` also runs the commands below, compiling the link's objects `JOBS` at a time
 (default 4).
+
+A BuildKit build pulls `emscripten/emsdk:6.0.0` without tagging it, and the toolkit's `rank` and `lift --check`
+default to that tag, and four `pnpm test` cases skip without it ([facts/workflow.md](reference/facts/workflow.md) §W12).
+`docker image ls --format '{{.Repository}}:{{.Tag}}' | /usr/bin/grep emsdk` should list both images; `docker pull
+emscripten/emsdk:6.0.0` adds the tag from the layers already there.
 
 Then link the skeleton and run the splat build once:
 
