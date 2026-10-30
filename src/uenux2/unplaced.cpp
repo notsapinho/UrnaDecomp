@@ -4381,25 +4381,6 @@
 // f7871 · 498 B · unmatched · placement: link order · name unknown
 // void f7871(i32, i32, i32, i32) { ... }
 
-// link-order cluster 37 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmtimer.cpp
-
-// f7918 · 137 B · unmatched · placement: link order · name unknown
-// void f7918(i32) { ... }
-
-// f7902 · 10 B · unmatched · placement: link order · name unknown
-// ? f7902(i32) { ... }
-
-// f7896 · 12 B · unmatched · placement: link order · name unknown
-// void f7896(i32, i64) { ... }
-
-// link-order cluster 38 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmtimer.cpp
-
-// f7934 · 30 B · unmatched · placement: link order · name unknown
-// void f7934(i32) { ... }
-
-// f7926 · 13 B · unmatched · placement: link order · name unknown
-// void f7926(i32) { ... }
-
 // link-order cluster 39 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmsystemdatetime.cpp
 
 // f7954 · 18 B · unmatched · placement: link order · name unknown
@@ -4847,11 +4828,6 @@
 
 // f6256 · 404 B · unmatched · placement: link order · name unknown
 // void f6256(i32, i32) { ... }
-
-// link-order cluster 945 · uses=3 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmtimer.cpp
-
-// f3347 · 84 B · unmatched · placement: link order · name unknown
-// ? f3347(i32) { ... }
 
 // link-order cluster 956 · uses=3 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmimagesurfaceops.cpp
 
