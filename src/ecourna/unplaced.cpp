@@ -902,11 +902,6 @@
 // f1406 · 72 B · unmatched · placement: link order · name unknown
 // ? f1406(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1252 · uses=10
-
-// f1229 · 18 B · unmatched · placement: link order · name unknown
-// ? f1229(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1254 · uses=10 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ieleitorimpedidovotar.cpp
 
 // f1253 · 378 B · unmatched · placement: link order · name unknown

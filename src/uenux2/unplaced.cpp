@@ -3091,59 +3091,6 @@
 // f7706 · 12 B · unmatched · placement: link order · name unknown
 // ? f7706(i32) { ... }
 
-// link-order cluster 40 · uses=1
-
-// f8131 · 12 B · unmatched · placement: link order · name unknown
-// void f8131(i32, i32) { ... }
-
-// f8130 · 44 B · unmatched · placement: link order · name unknown
-// ? f8130(i32) { ... }
-
-// f8129 · 47 B · unmatched · placement: link order · name unknown
-// void f8129(i32) { ... }
-
-// f8128 · 29 B · unmatched · placement: link order · name unknown
-// ? f8128(i32) { ... }
-
-// f8120 · 25 B · unmatched · placement: link order · name unknown
-// ? f8120(i32) { ... }
-
-// f8116 · 62 B · unmatched · placement: link order · name unknown
-// ? f8116(i32) { ... }
-
-// f8113 · 25 B · unmatched · placement: link order · name unknown
-// ? f8113(i32) { ... }
-
-// f8111 · 25 B · unmatched · placement: link order · name unknown
-// ? f8111(i32) { ... }
-
-// f8109 · 401 B · unmatched · placement: link order · name unknown
-// ? f8109(i32) { ... }
-
-// f8108 · 25 B · unmatched · placement: link order · name unknown
-// ? f8108(i32) { ... }
-
-// f8107 · 47 B · unmatched · placement: link order · name unknown
-// ? f8107(i32) { ... }
-
-// f8071 · 22 B · unmatched · placement: link order · name unknown
-// void f8071(i32, i32) { ... }
-
-// link-order cluster 41 · uses=1
-
-// f8134 · 62 B · unmatched · placement: link order · name unknown
-// void f8134(i32, i32) { ... }
-
-// link-order cluster 42 · uses=1
-
-// f8144 · 87 B · unmatched · placement: link order · name unknown
-// void f8144(i32, i32) { ... }
-
-// link-order cluster 43 · uses=1
-
-// f8168 · 366 B · unmatched · placement: link order · name unknown
-// void f8168(i32, i32) { ... }
-
 // link-order cluster 49 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/coutstreamcalcsize.cpp
 
 // f8351 · 124 B · unmatched · placement: link order · name unknown
