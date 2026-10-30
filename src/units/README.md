@@ -118,6 +118,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 | `37-uenux2-iqrcodebuds` | `vota::IQRCodeBUDS::~IQRCodeBUDS`, the D2 and D0 of its vtable (target fns 12050, 12049), inline in the class header; the constructor (inlined into 1956, no target function of its own) emits them, with the 9372 enumerator of `EUeVotaError` |
 | `38-uenux2-cwavfile` | the `api::CWavFile` destructor and deleting destructor (target fns 5345 and 10238), the `CWavFile` class header with the `CWavAudio` WAV header it copies; the constructor (inlined into 10841) is not reconstructed |
+| `58-uenux2-cpartecargos` | the `comum::CParteCargos` constructor (target fn 5587) and the implicit destructors emitted with its vtable (11208, 11207), the class header and the `api::IReportPart` interface (`api/gui/reports/ireportpart.h`); the roots' `make_shared` brings `__shared_ptr_emplace<CParteCargos>`'s D2 and D0 (11948, 11947); `Imprime` (11209) pending |
 
 ## Companion files
 
