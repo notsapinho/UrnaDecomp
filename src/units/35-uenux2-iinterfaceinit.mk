@@ -1,19 +1,34 @@
-# uenux2 comum::IInterfaceInit::~IInterfaceInit (target fn 5898, slot 0 of the IInterfaceInit vtable @1552152 and of
-# simulador::CWasmInit's @1528764: one table entry, 535, so CWasmInit's destructor is this one) in
-# src/app/comum/iinterfaceinit.cpp, the file the records of the class's other members name (no record falls in the
-# destructor: it is placed at the top, and the link order puts it before line 148, iinterfaceinit.h says why). Its
-# body frees the two members, a std::string at +12 and a std::shared_ptr<bool> at +4, after storing the vptr. With it:
-# the class header (src/app/comum/iinterfaceinit.h) and the out-of-line constructor, which no target function holds
-# (binaryen inlined it into its one caller, fn 8302). Paths relative to src/uenux2; the generic uenux2 rule depends on
-# the source and every uenux2 header.
+# uenux2 comum::IInterfaceInit in src/app/comum/iinterfaceinit.cpp, the file the records of the class's members name: the
+# destructor (target fn 5898, slot 0 of the IInterfaceInit vtable @1552152 and of simulador::CWasmInit's @1528764: one
+# table entry, 535, so CWasmInit's destructor is this one; no record falls in it: it is placed at the top, and the link
+# order puts it before line 148, iinterfaceinit.h says why), which frees the two members, a std::string at +12 and a
+# std::shared_ptr<bool> at +4, after storing the vptr; CurrentBootDevice (11646, slot 2, record 47:15),
+# IsMRPresenteSemHabilitar and IsMRMontadoSemHabilitar (2862, 5897, 137:15, 148:15: thunks into binaryen's body 6046,
+# which those two form), DesmontarMRSemDesabilitar (3832, 184:15, 188:15), EnviarMensagemThrowVoid (3833, 731:15, 737:15),
+# GetDemoMode (729, 753:15, 757:15) with __shared_ptr_pointer<bool*, ...>::__get_deleter (11644), and HabilitarMR (2863,
+# a chosen name) with DesabilitarMR (a chosen name, no target function: binaryen inlines it into 7160). With them the
+# class header (src/app/comum/iinterfaceinit.h) and the out-of-line constructor, which no target function holds (binaryen
+# inlined it into its one caller, fn 8302). DesligarUrna (5894) is not reconstructed: it calls fn 837, a
+# CPolySingleton instance no unit has, and fn 233; MontarMRSemHabilitar (5896) and LogDiskInfo (10226) neither.
+# Evidence and choices. The records fix each throw's line; EnviarMensagemThrowVoid's `inline` is read from where its
+# records lie (iinterfaceinit.h). HabilitarMR's place before line 137 is read from fn 2863 sitting before fn 2862 in
+# their use band, with fn 3833 after it and before fn 3832 in theirs (docs/reference/facts/reading.md R8, an inline
+# function sits right after its first caller); its line, DesabilitarMR's and every name without a record are chosen.
+# What the bytes decide, measured on this object, function by function with object-local numbers masked: GetDemoMode
+# returns a local, not *m_demoMode, which reloads the byte (4 rows more); DesmontarMRSemDesabilitar reads resposta[0]
+# twice, the second read for the format argument, and a local `erro` gives other code.
+# Forms that give the same function, measured the same way, the one written first:
+# - CurrentBootDevice: a switch, an if chain, a conditional expression, a switch over a local int;
+# - IsMR*: `resposta[0] == 0`, `!resposta[0]`, `resposta.front() == 0`;
+# - DesmontarMRSemDesabilitar: `resposta[0] != 0` and `resposta[0]`;
+# - EnviarMensagemThrowVoid: with and without `inline` (only the offset of its records moves, which the link rewrites);
+# - GetDemoMode: `m_demoMode = std::shared_ptr<bool>(new bool(x))` and `m_demoMode.reset(new bool(x))`; `!= 0` and
+#   static_cast<bool>; `if (m_demoMode)` and `!= nullptr`.
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 IINTERFACEINIT_SRCS := src/app/comum/iinterfaceinit.cpp
 UENUX2_SRCS += $(IINTERFACEINIT_SRCS)
-# CurrentBootDevice (target fn 11646) is not reconstructed: 35-uenux2-iinterfaceinit-pending.cpp gives the vtable a
-# trapping body, compiled with the unit's flags
-$(ROOT)/$(APP)/35-uenux2-iinterfaceinit-pending.o: $(ROOT)/src/units/35-uenux2-iinterfaceinit-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/35-uenux2-iinterfaceinit.mk $(ROOT)/src/uenux2/src/app/comum/iinterfaceinit.h $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/35-uenux2-iinterfaceinit-pending.cpp -o $(R)
-# the destructor's callers are not reconstructed yet: 35-uenux2-iinterfaceinit-roots.cpp takes its address, as the
-# two vtables do
-$(ROOT)/$(APP)/35-uenux2-iinterfaceinit-roots.o: $(ROOT)/src/units/35-uenux2-iinterfaceinit-roots.cpp $(ROOT)/src/Makefile
+# the members' callers are not reconstructed yet: 35-uenux2-iinterfaceinit-roots.cpp takes the destructor's address,
+# as the two vtables do, and gives the others call sites
+$(ROOT)/$(APP)/35-uenux2-iinterfaceinit-roots.o: $(ROOT)/src/units/35-uenux2-iinterfaceinit-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/35-uenux2-iinterfaceinit.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/35-uenux2-iinterfaceinit-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/35-uenux2-iinterfaceinit-pending.o $(APP)/35-uenux2-iinterfaceinit-roots.o
+override EXTRA_OBJS += $(APP)/35-uenux2-iinterfaceinit-roots.o

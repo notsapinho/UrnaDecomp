@@ -1536,11 +1536,6 @@
 // f2789 · 738 B · unmatched · placement: link order · name unknown
 // void f2789(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1112 · uses=4 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
-
-// f2863 · 135 B · unmatched · placement: link order · name unknown
-// void f2863(i32) { ... }
-
 // link-order cluster 1117 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/cinformacaozeresimatardia.cpp
 
 // f2880 · 2039 B · unmatched · placement: link order · name unknown

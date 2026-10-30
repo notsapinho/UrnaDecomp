@@ -418,9 +418,6 @@
 // f6050 · 88 B · unmatched · placement: link order · name unknown
 // void f6050(i32, i32, i32) { ... }
 
-// f6046 · 115 B · unmatched · placement: link order · name unknown
-// ? f6046(i32, i32, i32, i32) { ... }
-
 // f6044 · 571 B · unmatched · placement: link order · name unknown
 // void f6044(i32, i32, i32, i32, i32) { ... }
 
@@ -964,11 +961,6 @@
 
 // f493 · 298 B · unmatched · placement: link order · name unknown
 // ? f493(i32, i32, i32) { ... }
-
-// link-order cluster 1331 · uses=36
-
-// f480 · 18 B · unmatched · placement: link order · name unknown
-// ? f480(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1332 · uses=37
 
