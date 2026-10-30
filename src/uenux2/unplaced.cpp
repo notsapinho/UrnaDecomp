@@ -3526,12 +3526,6 @@
 
 // link-order cluster 391 · uses=1 · neighbours' file uenux2/src/api/gui/cbuzzfieldmt.cpp
 
-// f11052 · 12 B · unmatched · placement: link order · name unknown
-// ? f11052(i32) { ... }
-
-// f11051 · 73 B · unmatched · placement: link order · name unknown
-// void f11051(i32, i32) { ... }
-
 // f11049 · 25 B · unmatched · placement: link order · name unknown
 // void f11049(i32, i32) { ... }
 
@@ -4383,9 +4377,6 @@
 // void f1694(i32, i32, i32) { ... }
 
 // link-order cluster 1238 · uses=8 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp
-
-// f1566 · 36 B · unmatched · placement: link order · name unknown
-// ? f1566(i32, i32) { ... }
 
 // f1565 · 39 B · unmatched · placement: link order · name unknown
 // void f1565(i32, i32) { ... }
