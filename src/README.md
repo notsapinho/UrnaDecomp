@@ -5,7 +5,7 @@ TMPDIR=/tmp make -C src libs     # the upstream libraries, through tools/libs/*/
 TMPDIR=/tmp make -C src link     # the app objects, the plain link and its --emit-symbol-map twin
 TMPDIR=/tmp make -C src census   # census of the plain link → ledger/functions.tsv and a snapshot in ledger/history/
 TMPDIR=/tmp make -C src splat    # the official check: the target's sha256 and the meter (docs/reference/splat.md)
-make -C src status               # the progress blocks of docs/status.md, from splat/scan.tsv
+make -C src status               # README.md's headline, docs/status.md's progress blocks and docs/img/progress-*.svg, from splat/scan.tsv
 make -C src stubs                # the stub of every TSE function not decompiled yet, and the gaps (below); stubs-check checks them
 TMPDIR=/tmp make -C src check-srcloc   # the source_location records of the app objects against the target's
 make -C src print-APP_CXXFLAGS   # any Makefile variable, for scripts (print-APP_INCLUDES, print-LINK_OBJS, …)
@@ -57,11 +57,21 @@ The first line gives the target function index, its body size and its status, th
 `std::source_location` record gives the function a line (its place in the file comes from the recovered link order, or
 it follows the file's code), and `name unknown` when `splat/symbol_addrs.txt` names no function at that index. The
 second is its signature: the demangled name, or `f<index>` and the wasm parameter types; the return type is `?` unless
-the wasm signature settles it (`void`). For `f<index>`, `void` says only that the wasm function returns nothing: a C++
-function that returns a class by value does that too, through a hidden first parameter that holds the result's address
+the wasm signature settles it (`void`). For `f<index>` the types are the target's, after binaryen, so they are not
+the C++ declaration. `void` says only that the wasm function returns nothing: a C++ function that returns a class by
+value does that too, through a hidden first parameter that holds the result's address, unless the class is trivially
+copyable and holds one scalar, which comes back as that scalar (3641, `CTime CTime::operator-(int) const`, is
+`(i32 i32)->(i32)`); and a constructor or a non-deleting destructor returns `this` until binaryen drops a result no
+caller uses (5526, the `api::CMovie` constructor, is `(i32 i32 i32)->()`). A parameter every caller passed as one
+constant is folded into the body, so the wasm type can have fewer parameters than the C++ function
 (`docs/how-to-decompile.md` step 2). The file comes from the function's records, else from its class's vtable or vptr
 (`ledger/vtables.json`, `ledger/func-attribution.tsv`); a function with neither is in its tree's `unplaced.cpp`,
-grouped by link-order cluster. A file the evidence names that does not exist yet holds its stubs only. The stub files
+grouped by link-order cluster. A file the evidence names that does not exist yet holds its stubs only, and goes when
+its last stub goes, even when records name it: they can be an inlined callee's. Whoever removes that last stub, by a
+match or a pending member, names the file and its record lines in the fragment's or the `-pending.cpp`'s header
+(`units/README.md` "Pending members"), so that whoever writes the functions of those records finds it. The deletion is
+left unstaged: `git rm` it before `python3 -I -B tools/round/check_encoding.py`, which reads the index and stops with
+`FileNotFoundError` on a tracked file that is gone. The stub files
 and `unplaced.cpp` are never compiled: no fragment lists them, and the generator never creates a `.cxx` in `asn1/`,
 where `mk/asn1.mk` compiles every one. A stub is a comment, never the target's code: there is no `INCLUDE_ASM`, and an
 unmatched function's bytes come from its piece in the splat build
@@ -89,6 +99,13 @@ namespace ecourna::app::dados {
 #line 17
 CNumeroCPF::CNumeroCPF(const std::string& numeroCPF) : IIdentificadorEleitor(TTipoIdentificadorEleitor(TipoIDCPF), numeroCPF, 11)
 ```
+
+Write nothing of your own into those lines: they stay blank, and step 9 makes a run of three or more a gap, the
+project's statement that the content is not recovered. A comment there reads as TSE's, and no evidence gives it.
+What a reader needs to know about the reconstruction (which target functions the file holds, which names and paths
+are chosen) goes in the file's header comment. Files landed before this rule still hold doc comments of their own
+above a function (`LC_ALL=C git grep -l '^ */\*\*' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'` lists them); they are
+not the form to copy.
 
 The comment is ASCII (a `-` between the numbers: Latin-1 has no dash), indented like the line under it, and sits on
 the first line it names; the `#line` names the line after the last. A `#line` without a file name keeps the file
@@ -121,7 +138,11 @@ TMPDIR=/tmp tools/round/try-tu.sh --symbols cand.cpp                            
 TMPDIR=/tmp tools/round/try-tu.sh cand.cpp|dir [--flags '…'] [--targets idx.txt] [--roots mine.cpp|none]  # the whole link
 ```
 
-[../docs/how-to-decompile.md](../docs/how-to-decompile.md) uses both modes in the decompile loop. What try-tu does:
+[../docs/how-to-decompile.md](../docs/how-to-decompile.md) uses both modes in the decompile loop. try-tu runs the
+toolkit (`pnpm exec tsx`, from `asmlift-wasm/`) for `--single` and the whole link's census, so it needs Node 24 first on
+`PATH`, as `tools/round/census.sh` (`make -C src census`) and the `splat*` make targets do. With another Node
+first it stops after the `flags:` line with only the shell's `tools/round/try-tu.sh: line 47: <pid> Abort trap: 6
+pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
 
 - **Flags.** Each candidate TU compiles with the flags the Makefile builds that source with (plus `--flags`): try-tu
   asks `make -n` for the recipe of the object the source would become, so a TU gets its tree's rule
@@ -134,16 +155,32 @@ TMPDIR=/tmp tools/round/try-tu.sh cand.cpp|dir [--flags '…'] [--targets idx.tx
   use it to iterate on a body and the whole link to conclude. Several TUs are rival candidates, ranked against
   each other, never linked together: a callee in another TU stays an import. Undefined functions become imports,
   but undefined data fails the link; `--flags '-Wl,--unresolved-symbols=ignore-all'` lets it through
-  (`docs/how-to-decompile.md` step 4).
+  (`docs/how-to-decompile.md` step 4). The score counts what the lone link inlines into the function: for a throw
+  that builds its message with `std::format`, all of libc++'s formatting code, so target 5468
+  (`api::CGenericTags::TagSize`, unit 33) scores `10836 over 10850 rows (… inserted 10622 …)` alone and is matched in
+  the whole link. How-to step 4 says when to skip to the whole link.
 - **`--component`** overrides the path of every TU of the run, not only the ones outside `src/`. It is also the
-  way to compile a `src/units/*-pending.cpp`, which has no rule of its own that try-tu can find.
+  way to compile a `src/units/*-pending.cpp`, which has no rule of its own that try-tu can find. A TU that is not at
+  the path it would land in is compiled as a copy there, under `build/out/try/<name>/src/`, so a quoted `#include`
+  of a file beside the original is not found, and `-Isrc/uenux2/src` (or the tree's other `-I`) finds the tracked
+  header of that name instead. Include a scratch header by its `/work/…` path, or edit the tracked one in your
+  worktree.
+- **`--symbols`** compiles the TU and prints the function symbols it defines, mangled and demangled: `llvm-nm`'s `T`
+  and `W` lines, so weak data shows too (an inline base's typeinfo) and strong data does not. A class's own vtable and
+  typeinfo, which the TU that defines its key function emits, are strong data: to see whether a TU emits them, read
+  its object, `TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only
+  build/out/app/uenux2/src/app/comum/dados/asn/candidatura/cvisitantefoto.cpp.o | /usr/bin/grep -v ' [TWt] '`, which
+  prints the `D` lines of `_ZTIN5comum3asn14CVisitanteFotoE`, `_ZTSN5comum3asn14CVisitanteFotoE` and
+  `_ZTVN5comum3asn14CVisitanteFotoE`.
 - **The whole link** generates a roots TU (`gen_try_roots.py`: every strong function symbol of the objects is
   address-taken from a static constructor, because nothing in the skeleton calls a candidate and wasm-ld drops what
   nothing references; `--keep-weak` roots the inline and template instantiations too, `--roots your.cpp` supplies
   real callers instead, `none` skips it), then links the whole skeleton with the TUs through
   `make link EXTRA_OBJS=… OUT=build/out/try/<name>/wasm/… OUT_NAMED=…` (the libraries prebuilt, nothing of theirs
-  rebuilt), runs the census against the target, and writes `build/out/try/<name>/report.md`: the census tiers per
-  owner and per component against `ledger/functions.tsv`, the functions that moved, and for each target function
+  rebuilt; the skeleton's own objects are the shared `build/out/app/` ones, so a stale one is recompiled there, and
+  afterwards `make -n -C src link` has nothing left to count for it), runs the census against the target, and writes
+  `build/out/try/<name>/report.md`: the census tiers per owner and per component against `ledger/functions.tsv`, the
+  functions that moved, and for each target function
   in `--targets` (default: every target function whose best pair in the try link is one of the TU's own symbols) its tier
   before and after, the skeleton function it pairs with and the first differing rows. `unmatched-symbols.txt` lists
   the TU functions that reached the link and paired with no target function. try-tu never writes `ledger/`.

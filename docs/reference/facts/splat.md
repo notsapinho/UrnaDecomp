@@ -163,7 +163,10 @@ The counts grow with the link and the match list; what holds is `N/N kind-verifi
    data in our layout, §S3.5), and function pointers that look like integers or addresses. No rule on the value alone
    tells them apart, and with the table none is needed.
 3. **The perturbation cases are tests.** `pnpm test test/splat-kinds.test.ts` pins them (it needs the build outputs
-   of `make -C src splat`; without them the cases are skipped). Each case patches one operand, at a body offset of one
+   of `make -C src splat`; without them the cases are skipped). The numbers of our link in a case (its addresses and
+   table slots) are read from the link the suite runs on, from the target's number for the same thing or from a symbol
+   name, so a landing that moves our data or our table changes none of them: at 9271d74 the file passes its 36 tests.
+   Each case patches one operand, at a body offset of one
    function, in a copy of our plain link and its shifted link (the `plain` and `shifted` values of the case), and
    builds that function's match:
    - c2, c5 and c8 build the target with every reading offered, and fail with the table (`DIFFERS`): the operand is a
@@ -278,4 +281,6 @@ so they reach functions the census cannot tell apart: mostly destructors, deleti
 7-Zip, RHVoice, libc++ and the ASN.1 runtime. Where a vtable name and a match line agree, the match has evidence
 that does not come from its own body. Where they disagree, `splat-match` reports the line: `line <n>: function
 <index> matched to <symbol>, but the symbol file names it <name>: the body verifies, the evidence says another
-function; check which is right (docs/how-to-decompile.md step 9)`.
+function; check which is right (docs/how-to-decompile.md step 9)`. It reports the line only when none of the symbol
+file's names for the index is the matched symbol (`addMatches` in `asmlift-wasm/src/splat-sub.ts`): a wrong name
+beside the matched one is not reported (`docs/reference/splat.md` "Reviewing a match").

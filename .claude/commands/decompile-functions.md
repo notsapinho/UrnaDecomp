@@ -63,11 +63,12 @@ Put this list in every brief, word for word. It is the standard a match is judge
 4. **No lifter scaffolding** in a source that lands: no `volatile` stores, no empty `asm` barriers, no
    `may_alias` casts, no `goto` a loop or an `if` would express (how-to step 3).
 5. **Stand-ins add only what the docs sanction.** A `-roots.cpp` reaches a function the way the target does, and
-   a `-pending.cpp` holds trapping members, as `src/units/README.md` "Companion files" says. Nothing else
-   changes to make a match land.
+   a `-pending.cpp` holds trapping members (and what their vtable brings), as `src/units/README.md` "Companion files"
+   says. Nothing else changes to make a match land.
 6. **Generated files are regenerated, never edited**: stubs and gaps, `splat/scan.tsv`, `splat/symbol_addrs.txt`
-   above its hand-edit marker, the status blocks of `docs/status.md`, `ledger/functions.tsv` and
-   its snapshot. The commands that write them are how-to steps 7 to 9.
+   above its hand-edit marker, the status blocks of `docs/status.md` and `README.md` and the waffles
+   `docs/img/progress-*.svg`, `ledger/functions.tsv` and its snapshot. The commands that write them are how-to steps
+   7 to 9.
 7. **House rules** ([docs/agents.md](../../docs/agents.md)): `TMPDIR=/tmp` on every docker command, no wildcard
    `rm`, no `git stash`, `/usr/bin/grep` over the Latin-1 sources, never push. Commit messages end with the
    co-author trailer your session's instructions give.
@@ -168,9 +169,22 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   `/usr/bin/grep -nE '\$[0-9]' .claude/commands/decompile-functions.md` must print nothing.
 - **Every callee must resolve.** Read each candidate with `pnpm wasm fn` and lift it with `pnpm wasm lift … --check`
   (how-to steps 2 and 3). `fn` does not name the function behind an `invoke_*` table slot; the lift does
-  (`/* &fN */`). A callee resolves when it is matched (`/usr/bin/grep -E '^N ' splat/matched.txt` prints a line) or
+  (`/* &fN */`). Neither names a function pointer passed as a plain argument (a thread routine, a callback): `fn`
+  lists its slot among the strings referenced, and the element section names it
+  (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[4527\]'` prints
+  `- elem[4527] = ref.func:10255`, the routine 1684 passes to `IThreadImpl::Create`). Count it as a callee, and put it
+  in the same lane. A callee resolves when it is matched (`/usr/bin/grep -E '^N ' splat/matched.txt` prints a line) or
   named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A function whose callees are unnamed
-  needs those first. The name that resolves can be a *twin*'s: binaryen merges byte-identical bodies and keeps one
+  needs those first, with one kind of exception: a callee the candidate's own TU instantiates, which step 8 names by
+  `call` evidence once the candidate is paired (`docs/reference/splat.md` §2). A `CBaseError<E, SErrorLimits{…}>`
+  constructor is one, even when the target's is a binaryen merge thunk: 1889, `push f710(p0, p1, p2, p3, 1528452)`,
+  is named `evidence:call by:1684,10250`. A name only the candidate's own call votes for is self-voted, and the match
+  holds once another match calls the same function (splat.md §3): 10250 matched when 1684 landed. It holds only where
+  our link merges the same bodies binaryen merged in the target. 2294 is the body of five such constructors (its
+  callers 170, 210, 235, 255 and 331, `pnpm wasm fn ../target/vota_web_wasm.wasm 2294`; 170's is
+  `CBaseError<comum::EUeComumDadosError, {7800, 8600}>`, by the vptr 1528096 it passes), and no caller of those five
+  is matched yet: a pick past one of them is a measurement, and the pick post says so. The name that resolves can be
+  a *twin*'s: binaryen merges byte-identical bodies and keeps one
   name, so 760, matched as `vector<pair<unsigned long, unsigned long>>::push_back`, is also the `push_back` of
   another vector of an 8-byte element in the target: 11361, `CConversorSituacoesEleicoes`'s converter, which builds a
   `vector<CSituacoesEleicoes>`, calls 760 (`pnpm wasm fn ../target/vota_web_wasm.wasm 11361` shows `call 760`). A
@@ -197,15 +211,17 @@ to 10 as written, including steps 6 to 10 in the worktree: link, census, symbols
 checks, and one commit on its branch. It never touches the urna checkout's `main` and never merges.
 
 It returns, and posts as a `rounds/` result: the verdict (matched, or not matchable yet and why), the commit(s), the
-splat build's sha256 and match count, the matches added and lost against `main`, the files it owns,
+splat build's sha256 and match count, the matches added and lost against the branch's base, the files it owns,
 its stretch target's state, and the number of friction posts. A target that cannot be matched yet is a result:
 post the blocker as a `facts/` post (which callee, which codegen) and leave it pending. Nothing lands from a lane
 without a match.
 
 Count the matches by target index, not by line. `git diff main -- splat/matched.txt` shows the added lines, but a
 line removed there is not always a lost match: a twin whose surviving name moved is removed under its old symbol and
-added back under the new one. The lost matches are the indices `main` matches and the branch does not, which the
-`comm` of [how-to-decompile.md](../../docs/how-to-decompile.md) step 10 ("A twin whose name moved") prints.
+added back under the new one. The lost matches are the indices the branch's base matches and the branch does not,
+which the `comm` of [how-to-decompile.md](../../docs/how-to-decompile.md) step 10 ("A twin whose name moved") prints
+when it is run against `git show "$(git merge-base main HEAD)":splat/matched.txt`. Against a `main` that moved since
+the branch started, the same `comm` also prints every match `main` gained since, which are not the lane's to lose.
 
 ---
 
@@ -219,7 +235,8 @@ It changes no tracked file, works in scratch under `build/out/verify/` (ignored)
 1. **Fresh objects.** Move the unit's objects aside by name (into `build/out/verify/old-objs/`), run
    `TMPDIR=/tmp make -C src splat`, and `cmp` the rebuilt objects with the old ones. A stale object means the
    source edits never rebuilt (`src/units/README.md` "What a fragment holds" item 3).
-2. **The splat build** prints the target's sha256, and no index `main` matches is lost (how-to step 10's `comm`). A
+2. **The splat build** prints the target's sha256, and no index the branch's base matches is lost (how-to step 10's
+   `comm`, against `git merge-base main HEAD`). A
    line removed and its index added back under another symbol is a twin rename: check that the old symbol is gone
    from the link (`build/out/wasm-map/vota_web/names.tsv`) and the new one is a byte-identical body.
 3. **The blanked-target check**, as [docs/reference/splat.md](../../docs/reference/splat.md) "Reviewing a match"
@@ -231,18 +248,24 @@ It changes no tracked file, works in scratch under `build/out/verify/` (ignored)
    legitimately, and the command lists each reading the target body picked. Say which way gave which result.
 4. **The checks**: `make -C src stubs-check`, `python3 -I -B tools/round/status.py --check`,
    `python3 -I -B tools/round/stubs.py --check`, `python3 -I -B tools/round/check_encoding.py`,
-   `TMPDIR=/tmp make -C src check-srcloc` with no wrong record of a matched function (compare its list with
-   `main`'s; the records `main` already lists are not the lane's), and from `asmlift-wasm/`
-   `TMPDIR=/tmp pnpm test:bench`. The last one
-   fails when the lane compiles an object with a flag set that no setup of
-   `asmlift-wasm/benchmark/dataset/setups.json` has (how-to step 4, "When only a flag closes the gap"); every other
-   check passes on such a lane.
+   `TMPDIR=/tmp make -C src check-srcloc` with no wrong record of a matched function (its records that only
+   unmatched functions load are the base's unless they sit in an object the range rebuilds or on a line of a file it
+   edits: compare the list per object, [docs/reference/facts/tool-traps.md](../../docs/reference/facts/tool-traps.md)
+   §X7), and from `asmlift-wasm/` `TMPDIR=/tmp pnpm test:bench`. The last one fails when the lane compiles an object
+   with a flag set that no setup of `asmlift-wasm/benchmark/dataset/setups.json` has (how-to step 4, "When only a flag
+   closes the gap"); every other check passes on such a lane. Run `TMPDIR=/tmp pnpm test` too, alone, after every
+   build in the worktree has finished: it skips its real-link tests while `build/out/` is being rewritten and still
+   exits 0, so read its `skipped` count, and a failure the base has as well is not the lane's.
 5. **Generated files are what the generators write.** Re-running `make -C src splat-symbols` leaves
-   `git status` clean. A rescan changes `splat/scan.tsv` in one way only, the `source` column of a new match
-   (how-to step 9). Restore anything a re-run rewrote with `git checkout -- <file>`, and report it.
-6. **The source**, against rules 3 to 5: the real mangled name and where its evidence comes from, real classes, no
-   scaffolding in the landed TSE files, Latin-1, throws on their record lines, and roots and pending files in the
-   shapes `src/units/README.md` sanctions.
+   `git status` clean. A rescan changes `splat/scan.tsv` in one way only, the `source` column of a new match the
+   scan found by content; a new match step 8 already named is `symbol` from the start, and the rescan leaves its line
+   alone (`docs/reference/splat.md` "Reviewing a match"). Restore anything a re-run rewrote with
+   `git checkout -- <file>`, and report it.
+6. **The source**, against rules 3 to 5: the real mangled name and where its evidence comes from (a name no record,
+   slot or RTTI gives is marked as chosen), real classes, no scaffolding in the landed TSE files, Latin-1, throws on
+   their record lines, and roots and pending files in the shapes `src/units/README.md` sanctions. A match compiled in
+   a `-roots.o` or `-pending.o`, and a census pair with a roots stand-in, are checked as
+   [docs/reference/splat.md](../../docs/reference/splat.md) "Reviewing a match" says.
 
 A REFUTED lane does not land. Send its finding back to the lane's matcher once, as a new MATCH run, then to a new
 VERIFY. If it is refuted again, report it to the user.

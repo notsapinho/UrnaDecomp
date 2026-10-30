@@ -78,6 +78,12 @@ in that TU's data). So: `src/api` and `src/app` were compiled **without `-fexcep
 `throw` compiles to a direct `__cxa_throw`, no landing pads — not `-fno-exceptions`, which rejects the `throw` statements these TUs
 contain), the executable TU with `-fexceptions`. 707 functions of the whole target call an `invoke_*` import.
 
+The `mock/` tree splits the same way, by file. The record-bearing functions of `mock/app/simulador/wasm/` call no
+`invoke_*` (9655 in `cwasmthread.cpp`, 3876 in `cwasmclp.cpp`), while both of `mock/app/comum/cappinfobuilder.cpp`
+do (10243: 18 calls, 10212: 62); [facts/app-flags.md](facts/app-flags.md) §F6 has the command. The generic uenux2 rule
+compiles all of `mock/` with `UENUX2_CXXFLAGS`, which is right for `mock/app/simulador/wasm/`; a unit in
+`mock/app/comum/` measures its exception flag first.
+
 ## Measuring a flag
 
 The probe links the reconstructed ecourna units with a given flag set and scores them pair by pair:

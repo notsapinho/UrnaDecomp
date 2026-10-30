@@ -196,3 +196,18 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
 11. A function with a Portuguese app string sitting between two SQLite functions in the uses==1 band is not a
     misattribution: it is a 4-digit twin (ordinal ≈ 1290) sprinkled into the 5-digit SQLite run.
 12. Python's `print` buffers when stdout is a file: pass `flush=True` in long solver runs, or they look dead.
+13. Two files have a `uses` column, and only one is the band key. `ledger/ordinals.tsv` counts uses as L1 does (call
+    sites + table entries + exports); `ledger/functions.tsv` (the toolkit's `ledger`) and the `uses` of `pnpm wasm
+    fn`'s header count direct call sites only. They differ for 8872 of the 14343 functions:
+
+    ```sh
+    awk -F'\t' 'NR==FNR { if (FNR>1) u[$1]=$2; next } FNR>1 && ($1 in u) { n++; if (u[$1]!=$3) d++ } END { print n, d }' \
+      ledger/ordinals.tsv ledger/functions.tsv
+    # 14343 8872
+    awk -F'\t' '$1==5898 {print $1, $3}' ledger/functions.tsv      # 5898 1
+    awk -F'\t' '$1==5898 {print $1, $2}' ledger/ordinals.tsv       # 5898 2
+    ```
+
+    5898 (`comum::IInterfaceInit::~IInterfaceInit`) has one direct caller, 9388, and table slot 535, so it sits in
+    the `uses` 2 band (4303-6974, L1) among the members of its file. A band read from `ledger/functions.tsv` puts it
+    in the wrong one.
