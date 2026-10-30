@@ -1475,16 +1475,6 @@
 // f4152 · 297 B · unmatched · placement: link order · name unknown
 // void f4152(i32, i32) { ... }
 
-// link-order cluster 1054 · uses=3
-
-// f4276 · 3688 B · unmatched · placement: link order · name unknown
-// ? f4276(i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1055 · uses=3
-
-// f4279 · 3113 B · unmatched · placement: link order · name unknown
-// ? f4279(i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1059 · uses=4
 
 // f2495 · 35 B · unmatched · placement: link order · name unknown
@@ -1734,16 +1724,6 @@
 
 // f2023 · 109 B · unmatched · placement: link order · name unknown
 // void f2023(i32, i32) { ... }
-
-// link-order cluster 1199 · uses=6
-
-// f2054 · 1106 B · unmatched · placement: link order · name unknown
-// void f2054(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1200 · uses=6
-
-// f2056 · 594 B · unmatched · placement: link order · name unknown
-// ? f2056(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1209 · uses=7 · neighbours' file uenux2/src/app/vota/operador/justificativa/iconfirmajustificativa.cpp
 
@@ -2103,11 +2083,6 @@
 
 // f11455 · 71 B · unmatched · placement: link order · name unknown
 // void f11455(i32, i32, i32) { ... }
-
-// link-order cluster 488 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorpartido.cpp
-
-// f11460 · 290 B · unmatched · placement: link order · name unknown
-// void f11460(i32, i32, i32) { ... }
 
 // link-order cluster 490 · uses=1 · neighbours' file uenux2/src/app/comum/asn/util.cpp
 
