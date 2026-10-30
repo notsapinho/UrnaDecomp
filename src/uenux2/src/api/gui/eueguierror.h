@@ -15,6 +15,9 @@ enum EUeGuiError {
     // the value is the code api::CMovie::CMovie (target fn 5526) throws; the name is chosen from its message, "Não
     // havia frames": no evidence names it
     EUE_GUI_MOVIE_SEM_FRAMES = 4943,
+    // the value is the code api::CTextField::CTextField (target fn 1918) throws; the name is chosen from its message,
+    // "Campo estava com o texto nulo", as 4972's was: no evidence names it
+    EUE_GUI_TEXTFIELD_TEXTO_NULO = 4964,
     // the value is the code api::CTextFieldMT::CTextFieldMT (target fn 1262) throws; the name is chosen from its message,
     // "Campo estava com o texto nulo": no evidence names it
     EUE_GUI_TEXTFIELDMT_TEXTO_NULO = 4970,

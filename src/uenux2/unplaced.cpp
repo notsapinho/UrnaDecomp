@@ -4336,11 +4336,6 @@
 // f2214 · 189 B · unmatched · placement: link order · name unknown
 // void f2214(i32, i32) { ... }
 
-// link-order cluster 1148 · uses=5 · neighbours' file uenux2/src/api/gui/ctextfieldupdate.cpp
-
-// f2241 · 97 B · unmatched · placement: link order · name unknown
-// void f2241(i32, i32) { ... }
-
 // link-order cluster 1165 · uses=5
 
 // f2383 · 297 B · unmatched · placement: link order · name unknown
