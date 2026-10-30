@@ -1,8 +1,7 @@
 # uenux2 api::CMenuValidation::isValidChar (target fn 10899, slot 3 of the vtable @1583300) in
-# src/uenux2/src/api/gui/cinputmenufield.cpp, the file the class's records name, with the new class header
-# api/gui/cinputmenufield.h, api/gui/iinputfield.h and the until now stub-only api/gui/cinputfield.h, which take
-# CInputMenuField down to the text at +24 of IInputField<IScreen> (the paths of the two new headers and the member names
-# chosen). The body inlines IInputValidation::isValidChar (the memchr) and then builds the text plus the character:
+# src/uenux2/src/api/gui/cinputmenufield.cpp, the file the class's records name, with the class header
+# api/gui/cinputmenufield.h (its path chosen), which reads the text at +24 of IInputField<IScreen> through
+# api/gui/cinputfield.h and iinputfield.h, unit 92's. The body inlines IInputValidation::isValidChar (the memchr) and then builds the text plus the character:
 # `text + std::string(1, c)`, libc++'s operator+(const string&, string&&), whose insert(0, ...) is fn 499 and whose
 # move the words at +16 show. isValid is the key function, so the vtable and the implicit deleting destructor (one body
 # with the other validations', 2980) are emitted in the pending object until it lands; slot 0 is the base's destructor.

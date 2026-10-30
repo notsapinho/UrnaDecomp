@@ -11,11 +11,12 @@
 // parameter are chosen. isValid (fn 10900, records 198:5 and 210:5, matchesExactly and matchesPartially) waits for fn 925.
 //
 // CInputMenuField is declared as far as its base (RTTI: an si_class of CInputField<CFramedText>; fn 3675 stores its vptr
-// after calling IInputField<IScreen>'s constructor, fn 2024), so that isValidChar can read the text it holds. Its slots
-// and members are not recovered.
+// after calling IInputField<IScreen>'s constructor, fn 2024), so that isValidChar can read the text it holds. Its own
+// slots and members are not recovered, nor is its constructor, so nothing builds one.
 
 #include <string>
 
+#include "api/gui/cframedtext.h"
 #include "api/gui/cinputfield.h"
 #include "api/gui/iinputvalidation.h"
 
