@@ -184,8 +184,8 @@ another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2'
 it there. That twin goes if uenux2 moves to `-O3`, unless another caller lands.
 
 `vector<AbstractData*>::push_back(&&)` is a `merged-body` hand edit on 543 ([../splat.md](../splat.md) §3): 2656 and 5066
-call it, the target merged that body into 543, and our own body of that name differs from 543 (263 B against 239, three
-more blocks), so no match can name it. Without the line, a match of 543 under any other name leaves those two calls with
+call it, the target merged that body into 543, and our own body of that name differs from 543 (263 B against 239, 3 `block`s and 3
+`if`s against 1 and 5), so no match can name it. Without the line, a match of 543 under any other name leaves those two calls with
 no target function, and both leave `match`. 8811, named by its vtable and unmatched, calls it too, so the name does not
 rest on those two.
 

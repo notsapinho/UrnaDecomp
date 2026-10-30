@@ -578,7 +578,7 @@ is byte-identical to its piece (`matchesTarget`, no blinding). **splat-scan** tr
 functions of ours the symbol file names it by, then the ledger's skeleton pair; then, among what is left, pairs by
 body alone (`contentPairs`): one unused function of ours with the same locals and opcode sequence whose re-pointed
 body equals exactly one unmatched target body, and no other such function of ours equals it. A match is the
-strongest evidence of a name (`withMatches`: the matched symbol names that target function, no other symbol does but a `merged-body` hand edit, docs/reference/splat.md ง3),
+strongest evidence of a name (`withMatches`: the matched symbol names that target function, no other symbol does but a `merged-body` hand edit, docs/reference/splat.md ยง3),
 so the scan runs again with its matches listed, until they stop changing: a pair found by body corrects the name
 its callers' calls resolve through, and the last pass holds for a build whose match list is exactly its matches. Verdicts: `match`,
 `differs` (the first differing instruction on both sides, plus what our operand there resolves to), `unresolved`
