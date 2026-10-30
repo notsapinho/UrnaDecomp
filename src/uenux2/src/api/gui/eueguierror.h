@@ -15,6 +15,9 @@ enum EUeGuiError {
     // the value is the code api::CFormBuilder::GetLabeledKeyPos (target fn 5544) throws; the name is chosen from its
     // message, "Alinhamento desconhecido ({})": no evidence names it
     EUE_GUI_GETLABELEDKEYPOS_ALINHAMENTO_DESCONHECIDO = 4914,
+    // the value is the code api::CLedFieldMT::Draw (target fn 11050) throws; the name is chosen from its message,
+    // "Operação desconhecida {}": no evidence names it
+    EUE_GUI_LEDFIELDMT_OPERACAO_DESCONHECIDA = 4940,
     // the value is the code api::CMovie::CMovie (target fn 5526) throws; the name is chosen from its message, "Não
     // havia frames": no evidence names it
     EUE_GUI_MOVIE_SEM_FRAMES = 4943,

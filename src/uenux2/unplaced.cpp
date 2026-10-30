@@ -4306,11 +4306,6 @@
 // f2775 · 543 B · unmatched · placement: link order · name unknown
 // void f2775(i32, i32) { ... }
 
-// link-order cluster 1092 · uses=4 · neighbours' file uenux2/src/api/gui/cbeepfieldmt.cpp
-
-// f2777 · 12 B · unmatched · placement: link order · name unknown
-// void f2777(i32) { ... }
-
 // link-order cluster 1094 · uses=4 · neighbours' file uenux2/src/api/gui/cframedtext.cpp
 
 // f2779 · 166 B · unmatched · placement: link order · name unknown

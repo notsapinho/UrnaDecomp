@@ -118,6 +118,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `36-uenux2-cvisitantefoto` | `comum::asn::CVisitanteFoto::~CVisitanteFoto`, D2 and D0 (target fns 5709 and 11443), the `CVisitanteFoto` class header and the `md::CIndiceFoto` and `SIndiceFoto` types of its vector; `visit` (11442) pending |
 | `37-uenux2-iqrcodebuds` | `vota::IQRCodeBUDS::~IQRCodeBUDS`, the D2 and D0 of its vtable (target fns 12050, 12049), inline in the class header; the constructor (inlined into 1956, no target function of its own) emits them, with the 9372 enumerator of `EUeVotaError` |
 | `38-uenux2-cwavfile` | the `api::CWavFile` destructor and deleting destructor (target fns 5345 and 10238), the `CWavFile` class header with the `CWavAudio` WAV header it copies; the constructor (inlined into 10841) is not reconstructed |
+| `56-uenux2-cledfieldmt` | `api::CLedFieldMT::Draw` (target fn 11050), the `CLedFieldMT` class header with its `ELedOperacao` enum, the `api::IScreenMT` interface header (`api/gui/iscreenmt.h`, slots 0-11 declared, every member name chosen) and the 4940 enumerator of `EUeGuiError`; Draw is the key function, so its object emits the vtable with the implicit destructors (slot 0 is `IFormFieldBase<IScreenMT>`'s, 11052); the deleting destructor (2777) is a thunk into a merged body and the constructor is inlined into the factory 3890 |
 
 ## Companion files
 
