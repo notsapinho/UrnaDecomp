@@ -8,6 +8,14 @@ enum EUeIpcError {
     EUE_IPC_FALHA_CRIAR_MUTEX = 6150,
     EUE_IPC_FALHA_TRAVAR_MUTEX = 6151,
     EUE_IPC_FALHA_DESTRAVAR_MUTEX = 6152,
+    // The six values of cposixrwmutex.cpp's six throws are chosen, in the gap of six between the mutex's and the
+    // semaphore's: no code loads them, so no byte of the target holds them. The names are chosen from the messages.
+    EUE_IPC_FALHA_INICIALIZAR_ATRIBUTOS_RWMUTEX = 6153,
+    EUE_IPC_FALHA_CRIAR_RWMUTEX = 6154,
+    EUE_IPC_FALHA_DESTRUIR_ATRIBUTOS_RWMUTEX = 6155,
+    EUE_IPC_FALHA_BLOQUEAR_LEITURA = 6156,
+    EUE_IPC_FALHA_BLOQUEAR_ESCRITA = 6157,
+    EUE_IPC_FALHA_DESBLOQUEAR_RWMUTEX = 6158,
     EUE_IPC_FALHA_CRIAR_SEMAFORO = 6159,
     EUE_IPC_FALHA_RELOGIO = 6160,
     EUE_IPC_FALHA_AGUARDAR_SEMAFORO = 6161,

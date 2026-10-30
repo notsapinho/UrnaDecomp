@@ -10,17 +10,17 @@
 <rect x="275.4" y="34" width="11" height="11" rx="2" fill="#21262d"/>
 <text x="292.4" y="44" font-size="12" fill="#c3c2b7">no candidate yet</text>
 <text x="0" y="80" font-size="13" fill="#f0efec" font-weight="600">TSE code</text>
-<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">841 / 3,285 · 25.6%</text>
+<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">856 / 3,285 · 26.1%</text>
 <text x="0" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">vota</text>
-<text x="0" y="118" font-size="11" fill="#c3c2b7">5.3% · 41 / 780</text>
+<text x="0" y="118" font-size="11" fill="#c3c2b7">6.7% · 52 / 780</text>
 <rect x="0" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="11" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="22" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="33" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="44" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
-<rect x="55" y="128" width="10" height="10" rx="1.7" fill="#3987e5"/>
-<rect x="66" y="128" width="10" height="10" rx="1.7" fill="#d95926"/>
-<rect x="77" y="128" width="10" height="10" rx="1.7" fill="#21262d"/>
+<rect x="55" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
+<rect x="66" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
+<rect x="77" y="128" width="10" height="10" rx="1.7" fill="#3987e5"/>
 <rect x="88" y="128" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="99" y="128" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="0" y="139" width="10" height="10" rx="1.7" fill="#21262d"/>
@@ -114,7 +114,7 @@
 <rect x="88" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="99" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="133" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">comum</text>
-<text x="133" y="118" font-size="11" fill="#c3c2b7">10.0% · 60 / 599</text>
+<text x="133" y="118" font-size="11" fill="#c3c2b7">10.2% · 61 / 599</text>
 <rect x="133" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="144" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="155" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -216,7 +216,7 @@
 <rect x="221" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="232" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="266" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">api</text>
-<text x="266" y="118" font-size="11" fill="#c3c2b7">44.2% · 228 / 516</text>
+<text x="266" y="118" font-size="11" fill="#c3c2b7">44.8% · 231 / 516</text>
 <rect x="266" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="277" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="288" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -261,11 +261,11 @@
 <rect x="277" y="172" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="288" y="172" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="299" y="172" width="10" height="10" rx="1.7" fill="#199e70"/>
-<rect x="310" y="172" width="10" height="10" rx="1.7" fill="#3987e5"/>
+<rect x="310" y="172" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="321" y="172" width="10" height="10" rx="1.7" fill="#3987e5"/>
 <rect x="332" y="172" width="10" height="10" rx="1.7" fill="#3987e5"/>
-<rect x="343" y="172" width="10" height="10" rx="1.7" fill="#d95926"/>
-<rect x="354" y="172" width="10" height="10" rx="1.7" fill="#21262d"/>
+<rect x="343" y="172" width="10" height="10" rx="1.7" fill="#3987e5"/>
+<rect x="354" y="172" width="10" height="10" rx="1.7" fill="#d95926"/>
 <rect x="365" y="172" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="266" y="183" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="277" y="183" width="10" height="10" rx="1.7" fill="#21262d"/>
