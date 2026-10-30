@@ -79,7 +79,7 @@ ECOURNA_CXXFLAGS   := -O3 -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP)
 UENUX2_PREFIX_MAP  := -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -ffile-prefix-map=src/uenux2=/home/rubio/tse/uenux2
 UENUX2_CXXFLAGS    := -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
-# -Os -fno-exceptions -std=c++17, the throwing TUs -fexceptions -fignore-exceptions
+# -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
 # no __assert_fail) but keep strict aliasing: the library templates they instantiate (roots_rhvoice.o's std::__tree and
 # __split_buffer, roots_boost.o's __tree_remove) win the link, and the target's copies have TBAA (6 matches need it)
@@ -177,8 +177,9 @@ APP_OBJS := vota_init.o vota_api.o main.o wasm_sound.o wasm_shim.o roots.o roots
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=
-# app-side objects (the uenux2 units) precede the conan libraries (ecourna first); the ASN.1 runtime rides in EXTRA_OBJS (src/mk/asn1.mk)
-LINK_OBJS := $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(RHVOICE_OBJS)
+# app-side objects (the uenux2 units) precede the conan libraries (ecourna first); the ASN.1 runtime rides in EXTRA_OBJS (src/mk/asn1.mk),
+# with the one RHVoice object a measured choice puts before it (RHVOICE_BEFORE_ASN1 there)
+LINK_OBJS := $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS))
 EXPORTS := _main,_votaInit,_votaPressKey,_votaTick,_votaSetAudioEnabled,_votaGetStateJson,_uenux_wasm_web_sound_wait_cancel_requested,_uenux_wasm_web_sound_wait_finished
 LINK_FLAGS := -Oz -fexceptions -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8MB -sEXPORTED_FUNCTIONS=$(EXPORTS) -sEXPORTED_RUNTIME_METHODS=ccall,FS,callMain
 OUT := build/out/wasm/vota_web

@@ -1,31 +1,5 @@
 [
   {
-    "id": "uenux2/1527",
-    "index": 1527,
-    "size": 1269,
-    "band": "large",
-    "component": "simulador",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "loop",
-      "select"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "void std::__2::__tree_remove[abi:ne210108]<std::__2::__tree_node_base<void*>*>(std::__2::__tree_node_base<void*>*, std::__2::__tree_node_base<void*>*)",
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
-    "reference": null
-  },
-  {
     "id": "uenux2/4793",
     "index": 4793,
     "size": 412,
@@ -54,6 +28,33 @@
     "reference": null
   },
   {
+    "id": "uenux2/5036",
+    "index": 5036,
+    "size": 22,
+    "band": "tiny",
+    "component": "simulador",
+    "owner": "app",
+    "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "simulador::CWasmScreenMT::Led1()",
+    "symbol": "_ZN9simulador13CWasmScreenMT4Led1Ev",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp.o",
+    "reference": {
+      "path": "src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp",
+      "line": 73
+    }
+  },
+  {
     "id": "uenux2/7902",
     "index": 7902,
     "size": 10,
@@ -78,34 +79,6 @@
     "reference": {
       "path": "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp",
       "line": 28
-    }
-  },
-  {
-    "id": "uenux2/10251",
-    "index": 10251,
-    "size": 35,
-    "band": "small",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "frame"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CPosixMutex::Unlock()",
-    "symbol": "_ZN3api11CPosixMutex6UnlockEv",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/ipc/posix/cposixmutex.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/ipc/posix/cposixmutex.cpp",
-      "line": 52
     }
   },
   {
@@ -138,6 +111,34 @@
     "evidence": "component",
     "object": null,
     "reference": null
+  },
+  {
+    "id": "uenux2/10581",
+    "index": 10581,
+    "size": 23,
+    "band": "tiny",
+    "component": "vota",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "vota::impl::CInformacaoThreadOperador::CancelaHabilitacao()",
+    "symbol": "_ZN4vota4impl25CInformacaoThreadOperador18CancelaHabilitacaoEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp",
+      "line": 395
+    }
   },
   {
     "id": "uenux2/10713",
@@ -199,41 +200,14 @@
     "reference": null
   },
   {
-    "id": "uenux2/10974",
-    "index": 10974,
-    "size": 12,
-    "band": "tiny",
+    "id": "uenux2/11012",
+    "index": 11012,
+    "size": 43,
+    "band": "small",
     "component": "api",
     "owner": "app",
     "features": [
-      "leaf",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CProgressBar::Rect() const",
-    "symbol": "_ZNK3api12CProgressBar4RectEv",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/gui/cprogressbar.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/gui/cprogressbar.cpp",
-      "line": 80
-    }
-  },
-  {
-    "id": "uenux2/11060",
-    "index": 11060,
-    "size": 29,
-    "band": "tiny",
-    "component": "api",
-    "owner": "app",
-    "features": [
+      "loop",
       "call_indirect"
     ],
     "ledger": {
@@ -244,13 +218,13 @@
     "setup": "uenux2",
     "lang": "c++",
     "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CMovieField::Hide()",
-    "symbol": "_ZN3api11CMovieField4HideEv",
+    "name": "api::CNewLineFieldPaper::Draw(api::IPaper&) const",
+    "symbol": "_ZNK3api18CNewLineFieldPaper4DrawERNS_6IPaperE",
     "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/gui/cmoviefield.cpp.o",
+    "object": "build/out/app/uenux2/src/api/gui/cnewlinefieldpaper.cpp.o",
     "reference": {
-      "path": "src/uenux2/src/api/gui/cmoviefield.cpp",
-      "line": 85
+      "path": "src/uenux2/src/api/gui/cnewlinefieldpaper.cpp",
+      "line": 11
     }
   },
   {
@@ -278,8 +252,34 @@
     "object": "build/out/app/uenux2/src/api/gui/clinefield.cpp.o",
     "reference": {
       "path": "src/uenux2/src/api/gui/clinefield.cpp",
-      "line": 21
+      "line": 24
     }
+  },
+  {
+    "id": "uenux2/11270",
+    "index": 11270,
+    "size": 571,
+    "band": "large",
+    "component": "comum",
+    "owner": "-",
+    "features": [
+      "loop",
+      "frame",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 4
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "comum::md::CRegraCPF::ValidaDigitoVerificador(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const",
+    "symbol": "_ZNK5comum2md9CRegraCPF23ValidaDigitoVerificadorERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/dados/md/cregracpf.cpp.o",
+    "reference": null
   },
   {
     "id": "uenux2/11620",
@@ -418,34 +418,6 @@
     }
   },
   {
-    "id": "ecourna/5102",
-    "index": 5102,
-    "size": 345,
-    "band": "medium",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "loop",
-      "invoke",
-      "throw",
-      "frame",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 12
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "ecourna::app::dados::asn::CConversorParametrosUrna::DesconverterCabecalho(ASN1::SEQUENCE_OF<ModuloParametrizacaoUrna::TituloRelatorio, ASN1::EmptyConstraint> const&) const",
-    "symbol": "_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna21DesconverterCabecalhoERKN4ASN111SEQUENCE_OFIN24ModuloParametrizacaoUrna15TituloRelatorioENS4_15EmptyConstraintEEE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o",
-    "reference": null
-  },
-  {
     "id": "ecourna/5174",
     "index": 5174,
     "size": 610,
@@ -499,6 +471,33 @@
     "symbol": "_ZNK7ecourna3app5dados3asn38CConversorRegistroIdentificacaoEleitor12DoDeconverteERKN18ModuloTiposEcoUrna28RegistroIdentificacaoEleitorE",
     "evidence": "symbol",
     "object": "build/out/app/ecourna/app_dados_asn_cconversorregistroidentificacaoeleitor.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "ecourna/9264",
+    "index": 9264,
+    "size": 339,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "invoke",
+      "throw",
+      "frame",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 21
+    },
+    "origin": "selected",
+    "setup": "ecourna",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "ecourna::app::dados::CNumeroCPF::Formatado() const",
+    "symbol": "_ZNK7ecourna3app5dados10CNumeroCPF9FormatadoEv",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/app_dados_cnumerocpf.cpp.o",
     "reference": null
   },
   {
@@ -668,7 +667,7 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "ASN1::CHOICE::setSelection(int, ASN1::AbstractData*)",
     "symbol": "_ZN4ASN16CHOICE12setSelectionEiPNS_12AbstractDataE",
     "evidence": "symbol",
@@ -696,13 +695,40 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "bool ASN1::PERDecoder::decodeMultiBit<unsigned int>(unsigned int, unsigned int&)",
     "symbol": "_ZN4ASN110PERDecoder14decodeMultiBitIjEEbjRT_",
     "evidence": "symbol",
     "object": "build/out/app/asn1/PERDecoder.o",
     "reference": {
       "path": "src/asn1/PERDecoder.cxx"
+    }
+  },
+  {
+    "id": "asn1/1668",
+    "index": 1668,
+    "size": 335,
+    "band": "medium",
+    "component": "ASN1",
+    "owner": "asn1",
+    "features": [
+      "loop",
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "asn1",
+    "lang": "c++",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
+    "name": "ASN1::BERDecoderPartial::decodeHeader(unsigned int&, bool&, unsigned int&)",
+    "symbol": "_ZN4ASN117BERDecoderPartial12decodeHeaderERjRbS1_",
+    "evidence": "symbol",
+    "object": "build/out/app/asn1/BERDecoderPartial.o",
+    "reference": {
+      "path": "src/asn1/BERDecoderPartial.cxx"
     }
   },
   {
@@ -723,7 +749,7 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "ASN1::CHOICE::createSelection()",
     "symbol": "_ZN4ASN16CHOICE15createSelectionEv",
     "evidence": "symbol",
@@ -752,7 +778,7 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "ASN1::SEQUENCE_OF_Base::erase(std::__2::__wrap_iter<ASN1::AbstractData**>, std::__2::__wrap_iter<ASN1::AbstractData**>)",
     "symbol": "_ZN4ASN116SEQUENCE_OF_Base5eraseENSt3__211__wrap_iterIPPNS_12AbstractDataEEES6_",
     "evidence": "symbol",
@@ -763,61 +789,28 @@
     }
   },
   {
-    "id": "asn1/3468",
-    "index": 3468,
-    "size": 157,
-    "band": "medium",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "loop",
-      "frame"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::PERDecoder::decodeBitMap(std::__2::vector<char, std::__2::allocator<char>>&, unsigned int)",
-    "symbol": "_ZN4ASN110PERDecoder12decodeBitMapERNSt3__26vectorIcNS1_9allocatorIcEEEEj",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/PERDecoder.o",
-    "reference": {
-      "path": "src/asn1/PERDecoder.cxx",
-      "line": 53
-    }
-  },
-  {
-    "id": "asn1/3478",
-    "index": 3478,
-    "size": 120,
+    "id": "asn1/5051",
+    "index": 5051,
+    "size": 95,
     "band": "small",
     "component": "ASN1",
     "owner": "asn1",
     "features": [
-      "leaf",
-      "loop",
-      "select"
+      "i64"
     ],
     "ledger": {
-      "kind": "byte",
-      "score": 0
+      "kind": "addr",
+      "score": 1
     },
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::BMPString::first_illegal_at() const",
-    "symbol": "_ZNK4ASN19BMPString16first_illegal_atEv",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
+    "name": "ASN1::BERDecoderPartial::Visitante::Visitante(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::shared_ptr<ASN1::IAbstractVisitor> const&)",
+    "symbol": "_ZN4ASN117BERDecoderPartial9VisitanteC2ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS2_10shared_ptrINS_16IAbstractVisitorEEE",
     "evidence": "symbol",
-    "object": "build/out/app/asn1/ValidChecker.o",
-    "reference": {
-      "path": "src/asn1/ValidChecker.cxx",
-      "line": 142
-    }
+    "object": "build/out/app/asn1/BERDecoderPartial.o",
+    "reference": null
   },
   {
     "id": "asn1/8755",
@@ -836,7 +829,7 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "ASN1::DataFree::do_visit(ASN1::BIT_STRING&)",
     "symbol": "_ZN4ASN18DataFree8do_visitERNS_10BIT_STRINGE",
     "evidence": "symbol",
@@ -846,53 +839,28 @@
     }
   },
   {
-    "id": "asn1/8756",
-    "index": 8756,
-    "size": 17,
-    "band": "tiny",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::DataFree::do_visit(ASN1::INTEGER&)",
-    "symbol": "_ZN4ASN18DataFree8do_visitERNS_7INTEGERE",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/DataFree.o",
-    "reference": {
-      "path": "src/asn1/DataFree.cxx"
-    }
-  },
-  {
-    "id": "asn1/8781",
-    "index": 8781,
-    "size": 141,
+    "id": "asn1/8815",
+    "index": 8815,
+    "size": 258,
     "band": "medium",
     "component": "ASN1",
     "owner": "asn1",
     "features": [
-      "switch"
+      "switch",
+      "frame"
     ],
     "ledger": {
       "kind": "addr",
-      "score": 1
+      "score": 3
     },
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::PEREncoder::do_visit(ASN1::OCTET_STRING const&)",
-    "symbol": "_ZN4ASN110PEREncoder8do_visitERKNS_12OCTET_STRINGE",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
+    "name": "ASN1::PERDecoder::do_visit(ASN1::OCTET_STRING&)",
+    "symbol": "_ZN4ASN110PERDecoder8do_visitERNS_12OCTET_STRINGE",
     "evidence": "symbol",
-    "object": "build/out/app/asn1/PEREncoder.o",
+    "object": "build/out/app/asn1/PERDecoder.o",
     "reference": null
   },
   {
@@ -912,7 +880,7 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "ASN1::AVNDecoder::do_visit(ASN1::TypeConstrainedOpenData&)",
     "symbol": "_ZN4ASN110AVNDecoder8do_visitERNS_23TypeConstrainedOpenDataE",
     "evidence": "symbol",
@@ -938,7 +906,7 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "ASN1::UTCTime::do_accept(ASN1::ConstVisitor&) const",
     "symbol": "_ZNK4ASN17UTCTime9do_acceptERNS_12ConstVisitorE",
     "evidence": "symbol",
@@ -964,7 +932,7 @@
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "ASN1::BMPString::do_accept(ASN1::ConstVisitor&) const",
     "symbol": "_ZNK4ASN19BMPString9do_acceptERNS_12ConstVisitorE",
     "evidence": "symbol",
@@ -974,220 +942,12 @@
     }
   },
   {
-    "id": "asn1-eh/1668",
-    "index": 1668,
-    "size": 335,
-    "band": "medium",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "loop",
-      "call_indirect"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "ASN1::BERDecoderPartial::decodeHeader(unsigned int&, bool&, unsigned int&)",
-    "symbol": "_ZN4ASN117BERDecoderPartial12decodeHeaderERjRbS1_",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": {
-      "path": "src/asn1/BERDecoderPartial.cxx"
-    }
-  },
-  {
-    "id": "asn1-eh/5051",
-    "index": 5051,
-    "size": 95,
-    "band": "small",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "i64"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "ASN1::BERDecoderPartial::Visitante::Visitante(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::shared_ptr<ASN1::IAbstractVisitor> const&)",
-    "symbol": "_ZN4ASN117BERDecoderPartial9VisitanteC2ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS2_10shared_ptrINS_16IAbstractVisitorEEE",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": null
-  },
-  {
-    "id": "asn1-eh/5057",
-    "index": 5057,
-    "size": 13,
-    "band": "tiny",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "ASN1::BufferSeeder::tell() const",
-    "symbol": "_ZNK4ASN112BufferSeeder4tellEv",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": {
-      "path": "src/asn1/BERDecoderPartial.cxx"
-    }
-  },
-  {
-    "id": "asn1-eh/5059",
-    "index": 5059,
-    "size": 156,
-    "band": "medium",
-    "component": "unknown",
-    "owner": "asn1",
-    "features": [
-      "loop",
-      "call_indirect"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "std::__2::pair<std::__2::__wrap_iter<ASN1::BERDecoderPartial::Visitante const*>, ASN1::BERDecoderPartial::Visitante*> std::__2::__copy_move_unwrap_iters[abi:ne210108]<std::__2::__copy_impl, std::__2::__wrap_iter<ASN1::BERDecoderPartial::Visitante const*>, std::__2::__wrap_iter<ASN1::BERDecoderPartial::Visitante const*>, ASN1::BERDecoderPartial::Visitante*, 0>(std::__2::__wrap_iter<ASN1::BERDecoderPartial::Visitante const*>, std::__2::__wrap_iter<ASN1::BERDecoderPartial::Visitante const*>, ASN1::BERDecoderPartial::Visitante*)",
-    "symbol": "_ZNSt3__224__copy_move_unwrap_itersB8ne210108INS_11__copy_implENS_11__wrap_iterIPKN4ASN117BERDecoderPartial9VisitanteEEES8_PS5_TnNS_9enable_ifIXsr12__can_rewrapIT0_T2_EE5valueEiE4typeELi0EEENS_4pairISB_SC_EESB_T1_SC_",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": {
-      "path": "src/asn1/BERDecoderPartial.cxx"
-    }
-  },
-  {
-    "id": "asn1-eh/8894",
-    "index": 8894,
-    "size": 15,
-    "band": "tiny",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "ASN1::BufferSeeder::resize(unsigned int)",
-    "symbol": "_ZN4ASN112BufferSeeder6resizeEj",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": {
-      "path": "src/asn1/BERDecoderPartial.cxx"
-    }
-  },
-  {
-    "id": "asn1-eh/8895",
-    "index": 8895,
-    "size": 13,
-    "band": "tiny",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "ASN1::BufferSeeder::remaining() const",
-    "symbol": "_ZNK4ASN112BufferSeeder9remainingEv",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": {
-      "path": "src/asn1/BERDecoderPartial.cxx"
-    }
-  },
-  {
-    "id": "asn1-eh/8896",
-    "index": 8896,
-    "size": 13,
-    "band": "tiny",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "ASN1::BufferSeeder::size() const",
-    "symbol": "_ZNK4ASN112BufferSeeder4sizeEv",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": {
-      "path": "src/asn1/BERDecoderPartial.cxx"
-    }
-  },
-  {
-    "id": "asn1-eh/8901",
-    "index": 8901,
-    "size": 13,
-    "band": "tiny",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "ASN1::BufferSeeder::eof() const",
-    "symbol": "_ZNK4ASN112BufferSeeder3eofEv",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": {
-      "path": "src/asn1/BERDecoderPartial.cxx"
-    }
-  },
-  {
-    "id": "asn1-eh/10036",
-    "index": 10036,
+    "id": "asn1/9972",
+    "index": 9972,
     "size": 17,
     "band": "tiny",
     "component": "libc++",
-    "owner": "app",
+    "owner": "-",
     "features": [
       "leaf",
       "select"
@@ -1197,61 +957,11 @@
       "score": 1
     },
     "origin": "selected",
-    "setup": "asn1-eh",
+    "setup": "asn1",
     "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
     "name": "std::__2::__shared_ptr_pointer<ASN1::BufferSeeder*, std::__2::shared_ptr<ASN1::ISeeder>::__shared_ptr_default_delete<ASN1::ISeeder, ASN1::BufferSeeder>, std::__2::allocator<ASN1::BufferSeeder>>::__get_deleter(std::type_info const&) const",
     "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN4ASN112BufferSeederENS_10shared_ptrINS1_7ISeederEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": null
-  },
-  {
-    "id": "asn1-eh/10037",
-    "index": 10037,
-    "size": 17,
-    "band": "tiny",
-    "component": "libc++",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "std::__2::__shared_ptr_pointer<char*, std::__2::shared_ptr<char []>::__shared_ptr_default_delete<char [], char>, std::__2::allocator<char>>::__get_deleter(std::type_info const&) const",
-    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPcNS_10shared_ptrIA_cE27__shared_ptr_default_deleteIS3_cEENS_9allocatorIcEEE13__get_deleterERKSt9type_info",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": null
-  },
-  {
-    "id": "asn1-eh/10038",
-    "index": 10038,
-    "size": 17,
-    "band": "tiny",
-    "component": "libc++",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "selected",
-    "setup": "asn1-eh",
-    "lang": "c++",
-    "flags": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions",
-    "name": "std::__2::__shared_ptr_pointer<ASN1::IAbstractVisitor*, std::__2::shared_ptr<ASN1::IAbstractVisitor>::__shared_ptr_default_delete<ASN1::IAbstractVisitor, ASN1::IAbstractVisitor>, std::__2::allocator<ASN1::IAbstractVisitor>>::__get_deleter(std::type_info const&) const",
-    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN4ASN116IAbstractVisitorENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info",
     "evidence": "symbol",
     "object": "build/out/app/asn1/BERDecoderPartial.o",
     "reference": null
@@ -4633,7 +4343,7 @@
       "select"
     ],
     "ledger": {
-      "kind": "fingerprint",
+      "kind": "byte",
       "score": 0
     },
     "origin": "selected",
@@ -4642,6 +4352,33 @@
     "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
     "name": "__dynamic_cast",
     "symbol": "__dynamic_cast",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:private_typeinfo.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
+    }
+  },
+  {
+    "id": "libcxxabi/2929",
+    "index": 2929,
+    "size": 73,
+    "band": "small",
+    "component": "libc++",
+    "owner": "libcxx",
+    "features": [
+      "call_indirect",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "__cxxabiv1::__base_class_type_info::search_below_dst(__cxxabiv1::__dynamic_cast_info*, void const*, int, bool) const",
+    "symbol": "_ZNK10__cxxabiv122__base_class_type_info16search_below_dstEPNS_19__dynamic_cast_infoEPKvib",
     "evidence": "symbol",
     "object": "emsdk:libc++abi.a:private_typeinfo.o",
     "reference": {
@@ -4672,33 +4409,6 @@
     "object": "emsdk:libc++abi.a:cxa_handlers.o",
     "reference": {
       "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_handlers.cpp"
-    }
-  },
-  {
-    "id": "libcxxabi/3946",
-    "index": 3946,
-    "size": 75,
-    "band": "small",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "call_indirect",
-      "select"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__base_class_type_info::search_above_dst(__cxxabiv1::__dynamic_cast_info*, void const*, void const*, int, bool) const",
-    "symbol": "_ZNK10__cxxabiv122__base_class_type_info16search_above_dstEPNS_19__dynamic_cast_infoEPKvS4_ib",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
     }
   },
   {

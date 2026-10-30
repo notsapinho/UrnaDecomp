@@ -96,6 +96,12 @@ Component runs seen there (`tools/extract/attribute.py`, exact-start string refe
 | 12375–12975 | mostly unattributed (sqlite/musl by string refs) |
 | 12975–14478 | libcrypto providers, then x509, ui, rsa, rand, property, pem, objects, then `__wasm_call_ctors` |
 
+`LINK_OBJS` in `src/Makefile` does not follow this order: it holds the uenux2 objects, ecourna, the units' companions
+and the ASN.1 runtime, SQLite, 7-Zip, then RHVoice. One object moves towards it: `language.cpp.o` sits just before the
+runtime (`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk`), because the runtime's `vector<unsigned>::push_back(const&)` has to be
+RHVoice's copy. That is a measured choice, not this table's order: the rest of RHVoice cannot follow.
+[asn1.md](asn1.md) §A2 has the links tried.
+
 ## L4. Ordinal recovery from the bands: what anchors can and cannot give
 
 Band order alone fixes nothing absolute: every interleaving of the bands is a solution. Anchors are library

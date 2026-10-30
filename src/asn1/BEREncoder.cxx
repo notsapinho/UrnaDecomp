@@ -63,154 +63,9 @@ private:
   bool preVisitExtensionRoots(const SEQUENCE& value) { return false; }
 };
 
-unsigned getIntegerDataLength(INT_TYPE value)
-{
-  // create a mask which is the top nine bits of a DWORD, or 0xFF800000
-  // on a big endian machine
-  int shift = (sizeof(value)-1)*8-1;
-
-  // remove all sequences of nine 0's or 1's at the start of the value
-  while (shift > 0 && ((value >> shift)&0x1ff) == (value < 0 ? 0x1ff : 0))
-    shift -= 8;
-
-  return (shift+9)/8;
-}
-
-static unsigned getDataLength(const AbstractData& data);
-static unsigned getObjectLength(const AbstractData& data, unsigned tag);
-
-static unsigned getHeaderLength(unsigned tag, int l)
-{
-  int len = 1;
-
-  unsigned tagVal = tag & 0x1FFFFF;
-
-  if (tagVal >= 31)
-    len += (CountBits(tagVal)+6)/7;
-
-  if (l < 128)
-    ++len;
-  else
-    len += (CountBits(l)+7)/8 + 1;
-
-  return len;
-}
-
-class DataLengthCounter : public ConstVisitor
-{
-public:
-  DataLengthCounter() : length(0) {}
-
-  unsigned getDataLen() const { return length; }
-
-private:
-  using ConstVisitor::do_visit;
-  bool do_visit(const Null& value) {
-    return true;
-  }
-  bool do_visit(const BOOLEAN& value) {
-    ++length;
-    return true;
-  }
-  bool do_visit(const INTEGER& value) {
-    length += getIntegerDataLength(value.getValue());
-    return true;
-  }
-  bool do_visit(const ENUMERATED& value) {
-    length += getIntegerDataLength(value.asInt());
-    return true;
-  }
-  bool do_visit(const OBJECT_IDENTIFIER& value) {
-    ASN1_STD vector<char> dummy;
-    value.encodeCommon(dummy);
-    length += dummy.size();
-    return true;
-  }
-  bool do_visit(const BIT_STRING& value) {
-    length += (value.size()+7)/8 + 1;
-    return true;
-  }
-  bool do_visit(const OCTET_STRING& value) {
-    length += value.size();
-    return true;
-  }
-  bool do_visit(const AbstractString& value) {
-    length += value.size();
-    return true;
-  }
-  bool do_visit(const BMPString& value) {
-    length += value.size()*2;
-    return true;
-  }
-  bool do_visit(const CHOICE& value) {
-    if (value.currentSelection() >=0 )
-      length +=  getObjectLength(*value.getSelection(), value.getSelectionTagInternal());
-    return true;
-  }
-  bool do_visit(const OpenData& value) {
-    if(value.has_data())
-      length += getObjectLength(value.get_data(), value.get_data().getTag());
-    else if(value.has_buf())
-      length += value.get_buf().size();
-    return true;
-  }
-  bool do_visit(const UTCTime& value) {
-    length += value.get().size();
-    return true;
-  }
-  bool do_visit(const GeneralizedTime& value) {
-    length += value.get().size();
-    return true;
-  }
-  bool do_visit(const SEQUENCE_OF_Base& value) {
-    for (SEQUENCE_OF_Base::const_iterator i = value.begin(); i != value.end(); ++i)
-      length += getObjectLength(**i, InvalidTag);
-    return true;
-  }
-
-  bool preVisitExtensionRoots(const SEQUENCE& value) {
-    return true;
-  }
-  bool visitExtensionRoot(const SEQUENCE& value, int index) {
-    int l = getObjectLength(*value.getField(index), value.getFieldTag(index));
-    length += l;
-    return true;
-  }
-  bool VisitExtensions(const SEQUENCE& value) {
-    return true;
-  }
-  bool visitKnownExtension(const SEQUENCE& value, int index) {
-    length += getObjectLength(*value.getField(index), value.getFieldTag(index));
-    return true;
-  }
-
-  unsigned length;
-};
-
-unsigned getDataLength(const AbstractData& data)
-{
-  DataLengthCounter counter;
-  data.accept(counter);
-  return counter.getDataLen();
-}
-
-unsigned getObjectLength(const AbstractData& data, unsigned tag)
-{
-  int l = getDataLength(data);
-
-  unsigned obj_tag = tag;
-
-  if (tag==InvalidTag)
-    obj_tag = data.getTag();
-
-  if(obj_tag==InvalidTag) return l;
-
-  if(isExplicit(obj_tag) || isExplicit(data.getTag())) {
-    unsigned tag1 = isExplicit(tag) ? data.getTag() : data.getParentTag();
-    if(tag1) l += getHeaderLength(tag1, l);
-  }
-  return l + getHeaderLength(obj_tag, l);
-}
+extern unsigned getIntegerDataLength(INT_TYPE value);
+extern unsigned getDataLength(const AbstractData& data);
+extern unsigned getHeaderLength(unsigned tag, int l);
 
 inline void BEREncoder::encodeByte(unsigned value)
 {
@@ -305,7 +160,7 @@ bool BEREncoder::do_visit(const BMPString& value)
 
 bool BEREncoder::do_visit(const CHOICE& value)
 {
-  if (value.currentSelection() != CHOICE::unselected_)
+  if (!value.isUnknownSelection() && !value.isUnselected())
   {
     if (tag!=InvalidTag || value.getTag()!=InvalidTag)
       encodeHeader(value);
@@ -387,8 +242,8 @@ bool BEREncoder::visitKnownExtension(const SEQUENCE& value, int index)
 
 void BEREncoder::encodeTag(unsigned a_tag)
 {
-  char ident = (char)(a_tag >> 24);
-  unsigned tagNumber = a_tag & 0x1ffffff;
+  char ident = (char)(a_tag >> 24) & 0xe0;
+  unsigned tagNumber = a_tag & 0x1fffffff;
 
   if (tagNumber < 0x1f)
     encodeByte(ident|tagNumber);

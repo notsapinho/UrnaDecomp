@@ -40,7 +40,7 @@
     "key": "asn1",
     "title": "TSE fork of the III ASN.1 runtime and its generated Modulo* modules",
     "flags": {
-      "c++": "-Os -fno-exceptions -std=c++17 -DNDEBUG"
+      "c++": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG"
     },
     "image": "urna-emsdk:6.0.0",
     "source": "src/mk/asn1.mk ASN1_CXXFLAGS (the runtime and the modules)",
@@ -49,21 +49,6 @@
       "vars": [
         "ASN1_OBJS",
         "ASN1MOD_OBJS"
-      ]
-    }
-  },
-  {
-    "key": "asn1-eh",
-    "title": "ASN.1 runtime translation units that throw (BERDecoderPartial)",
-    "flags": {
-      "c++": "-Os -fno-exceptions -std=c++17 -DNDEBUG -fexceptions -fignore-exceptions"
-    },
-    "image": "urna-emsdk:6.0.0",
-    "source": "src/mk/asn1.mk ASN1_CXXFLAGS + ASN1_FLAGS_<unit>",
-    "truth": {
-      "kind": "make",
-      "vars": [
-        "ASN1_OBJS"
       ]
     }
   },

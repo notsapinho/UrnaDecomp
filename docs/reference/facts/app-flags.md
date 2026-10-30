@@ -19,7 +19,7 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
 | uenux2 (`src/uenux2`) | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, not reconstructed) | `-Oz -fexceptions` ([levels.md](levels.md) §V1) |
-| ASN.1 runtime (`src/asn1`) | `-Os -fno-exceptions -std=c++14 -DNDEBUG` ([asn1.md](asn1.md)) |
+| ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
 ## F1. ecourna: `-O3 -fexceptions -std=c++20 -DNDEBUG`
 

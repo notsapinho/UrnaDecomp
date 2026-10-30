@@ -1818,12 +1818,7 @@ namespace ASN1 {
           : static_cast<const InfoType*>(info()->selectionInfos[choiceID])->tag );
     }
 
-    unsigned getSelectionTagInternal() const {
-      assert(choiceID >= 0);
-      return info()->tags == 0
-        ? (ContextSpecificTagClass<<30) | choiceID
-        : info()->tags[choiceID];
-    }
+    unsigned getSelectionTagInternal() const;
     bool isSelectionExplicit() const;
     unsigned getSelectionInfoTag() const;
 
@@ -3030,7 +3025,9 @@ namespace ASN1 {
     const char* beginPosition;
     const char* endPosition;
     ASN1_STD vector<const char*> endSEQUENCEPositions;
-    int dontCheckTag;
+    // Upstream's dontCheckTag, inverted: the target's bodies store 1 where upstream clears it and test it as a bool
+    // (one byte at +28). The name is chosen: no evidence names it.
+    bool checkTag;
 
     class BER_Element;
     BER_Element *m_parsed;
