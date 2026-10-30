@@ -284,11 +284,6 @@
 // f5431 · 11 B · unmatched · placement: link order · name unknown
 // ? f5431(i32) { ... }
 
-// link-order cluster 762 · uses=2 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
-
-// f5449 · 495 B · unmatched · placement: link order · name unknown
-// ? f5449(i32) { ... }
-
 // link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
 
 // f5460 · 73 B · unmatched · placement: link order · name unknown
