@@ -1115,7 +1115,7 @@ GeneralizedTime::GeneralizedTime()
 {}
 
 GeneralizedTime::GeneralizedTime(const char* value)
-: UTCTime(&theInfo), millisec(0), valid(true)
+: UTCTime(&theInfo)
 {
     set(value);
 }
