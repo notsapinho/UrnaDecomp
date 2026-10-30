@@ -9,9 +9,6 @@
 // f8851 · 36 B · unmatched · placement: link order · name unknown
 // void f8851(i32) { ... }
 
-// f8850 · 36 B · unmatched · placement: link order · name unknown
-// void f8850(i32) { ... }
-
 // link-order cluster 129 · uses=1 · neighbours' file uenux2/src/api/gui/iscreen.cpp
 
 // f8941 · 31 B · unmatched · placement: link order · name unknown
@@ -58,9 +55,6 @@
 // f5055 · 882 B · unmatched · placement: link order · name unknown
 // ? f5055(i32, i32, i32) { ... }
 
-// f5054 · 93 B · unmatched · placement: link order · name unknown
-// void f5054(i32, i32) { ... }
-
 // f5050 · 98 B · unmatched · placement: link order · name unknown
 // ? f5050(i32, i32, i32, i32) { ... }
 
@@ -100,16 +94,10 @@
 
 // link-order cluster 1070 · uses=4
 
-// f2650 · 36 B · unmatched · placement: link order · name unknown
-// void f2650(i32) { ... }
-
 // f2649 · 99 B · unmatched · placement: link order · name unknown
 // ? f2649(i32, i32) { ... }
 
 // link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
-
-// f2706 · 136 B · unmatched · placement: link order · name unknown
-// void f2706(i32, i32) { ... }
 
 // f2704 · 9 B · unmatched · placement: link order · name unknown
 // void f2704(i32) { ... }
@@ -126,11 +114,6 @@
 
 // f2189 · 35 B · unmatched · placement: link order · name unknown
 // ? f2189(i32, i32) { ... }
-
-// link-order cluster 1149 · uses=5 · neighbours' file uenux2/src/api/gui/cfixedimage.cpp
-
-// f2247 · 42 B · unmatched · placement: link order · name unknown
-// void f2247(i32, i32) { ... }
 
 // link-order cluster 1170 · uses=6 · neighbours' file uenux2/src/app/vota/comum/csincronizavota.cpp
 
@@ -164,11 +147,6 @@
 
 // f1519 · 114 B · unmatched · placement: link order · name unknown
 // ? f1519(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1280 · uses=13
-
-// f995 · 347 B · unmatched · placement: link order · name unknown
-// ? f995(i32, i32, i32) { ... }
 
 // link-order cluster 1296 · uses=16 · neighbours' file uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp
 
