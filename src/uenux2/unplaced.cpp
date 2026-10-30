@@ -3564,29 +3564,6 @@
 // f11650 · 105 B · unmatched · placement: link order · name unknown
 // void f11650(i32) { ... }
 
-// link-order cluster 603 · uses=1 · neighbours' file uenux2/src/api/gui/csubreport.cpp
-
-// f12014 · 12 B · unmatched · placement: link order · name unknown
-// ? f12014(i32) { ... }
-
-// f12013 · 119 B · unmatched · placement: link order · name unknown
-// void f12013(i32) { ... }
-
-// f12012 · 49 B · unmatched · placement: link order · name unknown
-// void f12012(i32, i32) { ... }
-
-// f12011 · 23 B · unmatched · placement: link order · name unknown
-// ? f12011(i32) { ... }
-
-// f12010 · 10 B · unmatched · placement: link order · name unknown
-// ? f12010(i32) { ... }
-
-// f12009 · 20 B · unmatched · placement: link order · name unknown
-// void f12009(i32) { ... }
-
-// f12008 · 7 B · unmatched · placement: link order · name unknown
-// ? f12008(i32) { ... }
-
 // link-order cluster 634 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
 
 // f12287 · 39 B · unmatched · placement: link order · name unknown
@@ -4104,11 +4081,6 @@
 
 // f3571 · 486 B · unmatched · placement: link order · name unknown
 // void f3571(i32, i32, i32) { ... }
-
-// link-order cluster 984 · uses=3 · neighbours' file uenux2/src/api/gui/ctextfielddoubleline.cpp
-
-// f3660 · 116 B · unmatched · placement: link order · name unknown
-// ? f3660(i32, i32, i32, i32) { ... }
 
 // link-order cluster 985 · uses=3 · neighbours' file uenux2/src/api/gui/cbmpconversor.cpp
 
