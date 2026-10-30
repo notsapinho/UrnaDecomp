@@ -3268,20 +3268,6 @@
 // f10534 · 54 B · unmatched · placement: link order · name unknown
 // void f10534(i32, i32) { ... }
 
-// link-order cluster 309 · uses=1 · neighbours' file uenux2/src/api/gui/ctextfieldupdatemt.cpp
-
-// f10549 · 13 B · unmatched · placement: link order · name unknown
-// void f10549(i32) { ... }
-
-// f10548 · 503 B · unmatched · placement: link order · name unknown
-// void f10548(i32, i32) { ... }
-
-// f10546 · 20 B · unmatched · placement: link order · name unknown
-// void f10546(i32) { ... }
-
-// f10545 · 20 B · unmatched · placement: link order · name unknown
-// void f10545(i32) { ... }
-
 // link-order cluster 327 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
 
 // f10688 · 12 B · unmatched · placement: link order · name unknown
@@ -3860,9 +3846,6 @@
 
 // f5413 · 20 B · unmatched · placement: link order · name unknown
 // void f5413() { ... }
-
-// f5411 · 176 B · unmatched · placement: link order · name unknown
-// ? f5411(i32) { ... }
 
 // f5409 · 356 B · unmatched · placement: link order · name unknown
 // void f5409(i32, i32, i32, i32) { ... }
