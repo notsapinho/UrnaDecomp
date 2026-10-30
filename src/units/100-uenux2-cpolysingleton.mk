@@ -20,8 +20,9 @@
 # - 1714 IScreenMT, 2079 ITextToSpeech: our headers give each a key function, a trap of units 78 and 82 that the original
 #   does not have, so `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 48 and 44 rows
 #   more (pnpm wasm score). They wait for those members, inline in the original.
-# - 5443 ITimerScheduler, 1822 comum::IInterfaceSavd: wait for the class in api/util/itimerscheduler.h and
-#   app/comum/iinterfacesavd.h. With a head in a scratch header each scores 86 rows, all operand-only.
+# - 5443 ITimerScheduler, 1822 comum::IInterfaceSavd: wait for an instance in the roots: their classes are in
+#   api/util/itimerscheduler.h and app/comum/iinterfacesavd.h. With a head in a scratch header each scores 86 rows, all
+#   operand-only.
 # - has<T>: written, and `differs` or `unresolved`. The target's 3387 calls 608 and instance's 512 calls 305: the
 #   executable TU's two find instantiations, kept apart by the two table slots their landing pads hold (fn 6161, the merged
 #   body, takes the slot as its last argument). Ours have no landing pads, so the two are byte-identical and binaryen

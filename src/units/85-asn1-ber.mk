@@ -2,8 +2,8 @@
 # keeps these objects, so this fragment has no sources and no rules: it holds what docs/how-to-decompile.md step 3 asks
 # a fragment to say. docs/reference/facts/asn1.md has the evidence (§A2 the flags, §A5 the names, §A6 the files).
 #
-# Pending. 3473 (decodeCommon) waits for its callee 543, which is no body of ours (§A5). Its rows equal ours up to
-# callees, so the source stays as written.
+# Pending. 3473 (decodeCommon) waits for its callee 543: ours calls 3475 there, and no body of the runtime equals 543
+# (§A5). Its rows equal ours up to callees, so the source stays as written.
 #
 # What the target decided:
 # - checkTag: a bool, inverted from upstream's int dontCheckTag. 996 and 8853 store 1 where upstream clears the flag,

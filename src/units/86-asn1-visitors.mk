@@ -18,7 +18,7 @@
 #   (item::append, append_child, prepend, relation::append) read its result. Target 388 is a second copy that reads +4
 #   and keeps its result, and 2650 calls it and drops that, so one body of ours cannot serve both. 8831 matches by their
 #   names.
-# - 8811 PERDecoder::do_visit(SEQUENCE_OF_Base&): differs. It calls 543, which is no body of ours
+# - 8811 PERDecoder::do_visit(SEQUENCE_OF_Base&): differs. It calls 543, which no body of the runtime equals
 #   (docs/reference/facts/asn1.md A5), with one block more than the target around the vector growth wasm-opt inlined
 #   from SEQUENCE_OF_Base::resize, which asn1.cxx holds.
 # - 5034 DataFree's OpenData visitors: unresolved. The target holds default_delete<OpenBuf> inline, and it has three

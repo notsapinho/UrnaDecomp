@@ -193,8 +193,8 @@ More of the same kind, from the same tally of aligned calls:
 - `pair-depth0`: 5055 and 5054, equal bodies the census cannot pair while a callee differs.
 - `callers+content`: 220, 2247, 2249, 2706, 5306, 1497, 5076, 1067 and 1068. A probe object at the
   executable TU's `-Oz -fexceptions`, first on the link line, matches 2247 and 2249, so those two are that flag set's. 220
-  stays `differs` at the locals there, so for it the flag set is a lead. Our bodies differ, and their callers need only the
-  name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair. An anchor casts votes
+  stays `differs` at the locals there, so for it the flag set is a lead. Our bodies differ, but for 1497's, which matches, and
+  their callers need only the name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair. An anchor casts votes
   only while nothing else names it (`anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`).
 - 8041, `use_facet<num_put>`: one of twelve thunks of 453. Its one slot is the `invoke` operand at +0xa2 of 446 and 541,
   whose rows equal `__put_num_integer_promote` but for table slots, and the `id` lies 16 B above `num_get`'s (8046) on both
