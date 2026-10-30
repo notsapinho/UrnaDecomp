@@ -65,7 +65,7 @@
 #   copy of CEleicaoPE, and fn 2289 calls no __init_with_size. At -O2 clang keeps __init_with_size<CCargo> out of line
 #   (-Rpass-missed=inline: cost=230, threshold=225) and inlines the copy into the constructor; at -O3 cpleito.cpp gives the
 #   target's calls. With that object and second callers for 1953 and 3870 in a scratch link, it scores 103 over 438 rows
-#   against 1150 over 1448; what is left includes the placement of its three throws, so no body here is shown right.
+#   against 1150 over 1448 (3 of them the tree's reload: without -fno-strict-aliasing, 100 over 435); what is left includes the placement of its three throws, so no body here is shown right.
 # - CCargos::GetCurrent and GetCurrentEleicao (fns 332, 2836, records 59 and 76), and the file's other records (lines 24,
 #   25 and 93), wait for comum::CConfiguracaoEleicao: GetInst (187), GetCargo (861), and GetEleicao, inlined into 2836.
 #   GetInst throws pattern error 1303, which ecourna::api::pattern::EPatternError does not have yet.

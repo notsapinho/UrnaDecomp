@@ -1,5 +1,5 @@
 // Reconstruction notes: comum::md::CCargo. Lines 81, 89, 112 and 212 to 240 are records' and fix their throws; no record
-// names the name getters, so their place between GetOrdinalEscolha and Valida is a choice, as their names are (read
+// names the name getters, so their place around GetOrdinalEscolha, above Valida, is a choice, as their names are (read
 // from which field each copies; the fragment lists them). GetDetalheConsulta's own body is target fn 1923, a thunk of
 // binaryen's merge 6029, so it stays out of our link: every call of it here is inlined by clang.
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"

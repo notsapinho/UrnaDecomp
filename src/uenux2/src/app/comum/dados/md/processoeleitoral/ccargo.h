@@ -20,7 +20,7 @@ using TQtdEscolha = uebyte;
 // messages confirm four of them. The two details are std::optional: fn 11373 clears each engaged flag (+84, +136) and
 // builds the other detail. The enumerators' and members' names are chosen; ETipo's name is a record's
 // (CConversorCargo::DesconverteTipoCargo), and Valida's switch gives which values hold which detail. That +8 is an
-// md::ETipoAbrangencia is chosen: fn 11373 stores the converter's own word there, Valida's message calls it the
+// md::ETipoAbrangencia is evidence (fn 5827, DesconverteAbrangencia): fn 11373 stores the converter's own word there, Valida's message calls it the
 // abrangencia, and a plain enum, a scoped enum and an int give the same bytes.
 class CCargo {
 public:
