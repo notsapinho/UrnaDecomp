@@ -3675,16 +3675,6 @@
 // f12438 · 83 B · unmatched · placement: link order · name unknown
 // void f12438(i32, i32) { ... }
 
-// link-order cluster 643 · uses=1 · neighbours' file uenux2/src/api/gui/iinputvalidation.cpp
-
-// f12473 · 58 B · unmatched · placement: link order · name unknown
-// ? f12473(i32, i32) { ... }
-
-// link-order cluster 644 · uses=1 · neighbours' file uenux2/src/api/gui/ccontrolvalidation.cpp
-
-// f12502 · 12 B · unmatched · placement: link order · name unknown
-// ? f12502(i32) { ... }
-
 // link-order cluster 645 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
 
 // f12520 · 16 B · unmatched · placement: link order · name unknown
@@ -4204,11 +4194,6 @@
 // f4021 · 17 B · unmatched · placement: link order · name unknown
 // ? f4021(i32) { ... }
 
-// link-order cluster 1044 · uses=3 · neighbours' file uenux2/src/api/gui/coptionvalidation.cpp
-
-// f4022 · 110 B · unmatched · placement: link order · name unknown
-// ? f4022(i32, i32) { ... }
-
 // link-order cluster 1046 · uses=3
 
 // f4129 · 280 B · unmatched · placement: link order · name unknown
@@ -4259,11 +4244,6 @@
 
 // f2781 · 355 B · unmatched · placement: link order · name unknown
 // ? f2781(i32) { ... }
-
-// link-order cluster 1126 · uses=4 · neighbours' file uenux2/src/api/gui/coptionvalidation.cpp
-
-// f2980 · 12 B · unmatched · placement: link order · name unknown
-// void f2980(i32) { ... }
 
 // link-order cluster 1146 · uses=5
 
