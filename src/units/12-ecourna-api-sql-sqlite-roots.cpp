@@ -7,7 +7,7 @@
 //
 // As units 29 and 58 do for make_shared, this TU includes the class header: the control block it instantiates,
 // __shared_ptr_pointer<CSqlConnection*, ...> (fns 11539, 11538, whose vtable lies in uenux2's data band: the target's
-// copy is a uenux2 caller's) is this object's own, and it moves to the real callers' objects when they land. The
+// copy is a uenux2 caller's) comes from celeitordinamicodao.cpp.o, the real caller, earlier in the link. The
 // class's inline members still come from the unit's object, earlier on the link line. Compiled with APP_CXXFLAGS and
 // Boost's headers, which isqlresultset.hpp includes.
 //

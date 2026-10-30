@@ -34,7 +34,8 @@
 # - 2799's map and photo are std::optional members, from the flags fn 11422 stores at +32 and +16. The target reads the
 #   map with no test of the flag: value() adds 8 rows to GetDedo.
 #
-# Chosen, no evidence names them: every data member's name, every getter's name but GetTituloMesarioHabilitacao, the
+# Chosen, no evidence names them: every data member's name, parameter names, every getter's name but
+# GetTituloMesarioHabilitacao, the
 # paths of every new header (cdedo.h, celeitordecorator.h, cbiometriaeleitor.h, celeitordinamico.h, celeitordinamicodao.h,
 # ieleitordinamicodao.h, ccomparecimentomesariodao.h, icomparecimentomesariodao.h, comparecimentomesario/md/
 # ccomparecimentomesario.h, api/persistencia/euepersistenciaerror.h), the enumerators of EUePersistenciaError, the name
@@ -47,7 +48,8 @@
 # inline member or of the file's last one, a choice.
 #
 # Other forms that give the same bytes (each compiled, the function compared row by row with wasm-objdump -d, the
-# object's call indices and data offsets masked): 1548: `if (m_x)`, `.has_value()`, `TemTituloMesarioHabilitacao()` or
+# object's call indices and data offsets masked): the constructors: `m_tituloMesarioHabilitacao(std::nullopt)` or none;
+# 1548: `if (m_x)`, `.has_value()`, `TemTituloMesarioHabilitacao()` or
 # `!= std::nullopt` for the test, `*m_x` or `.value()` for the result. 3720: `auto` for the iterator, `(*m_dedos).find`, a
 # local reference to the map, a const_iterator with cend(). 708: std::ranges::find_if, cbegin() and cend(), the
 # cast through `unsigned int` as well. The defaults: a non-const local, `entidade(...)`, `entidade{...}`. Clone defined

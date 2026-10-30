@@ -9,8 +9,8 @@
 
 namespace comum::md {
 
-// What the machine records of a voter who showed up, a row of the table eleitor_dinamico. No vtable and no RTTI of its
-// own. Recovered: the layout, 84 bytes. fns 5775 and 5776 bind each column to one offset, and the columns' names name
+// What the machine records of a voter who showed up, a row of the table eleitor_dinamico. No vtable of its own; the target
+// holds its type name, which fn 11540 passes. Recovered: the layout, 84 bytes. fns 5775 and 5776 bind each column to one offset, and the columns' names name
 // the members: titulo and tipo_identificador at +0, identidade_habilitacao and tipo_identidade_habilitacao at +16,
 // estado_comparecimento +32, tipo_habilitacao +36, dedo_habilitacao +40, score_habilitacao +44 (16 bits),
 // numero_tentativa +46 (8 bits), tipo_ativacao_audio +48, erro_decifrar_biometria +52, an optional titulo_mesario with

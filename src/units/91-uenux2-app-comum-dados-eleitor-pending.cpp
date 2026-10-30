@@ -1,8 +1,8 @@
 // Pending members: the virtual members two vtables need and no source holds yet. These bodies are NOT the target's, they
 // trap. Target functions, by slot, and what each waits for:
 // comum::dao::CEleitorDinamicoDAO (@1558896), emitted by celeitordinamicodao.cpp with the destructor:
-//   7  11542  RecuperarID (a chosen name): SELECT by the key; waits for fns 566, 5663 and 5664, no-candidate
-//   8   3766  RecuperarTodos (a chosen name): SELECT of every row; the same three and fn 5759, no-candidate
+//   7  11542  RecuperarID (a chosen name): SELECT by the key; waits for fn 566, no-candidate
+//   8   3766  RecuperarTodos (a chosen name): SELECT of every row; fns 566 and 5759, no-candidate
 // comum::dao::CComparecimentoMesarioDAO (@1593352), emitted by ccomparecimentomesariodao.cpp with the destructor:
 //   3  10403  Inserir (a chosen name), the INSERT into comparecimento_mesario: waits for fn 1381, no-candidate, the
 //             function that turns data_hora_registro (a CDate and a CTime) into a time_t through mktime (fn 2961), which
