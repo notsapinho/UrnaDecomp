@@ -7429,3 +7429,4 @@
 5468 _ZNK3api12CGenericTags7TagSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
 1007 _ZN5comum10CAssinadorD2Ev
 4694 _ZN5comum10CAssinadorD0Ev
+5898 _ZN5comum14IInterfaceInitD2Ev
