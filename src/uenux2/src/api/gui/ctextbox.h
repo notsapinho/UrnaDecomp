@@ -14,7 +14,7 @@
 //       to y, and measures the text instead when either is 0
 // Every member and parameter name is chosen: no evidence gives them. ETextStatus gets its name from the constructor's
 // record and its size from Draw's 32-bit read; its enumerators are not recovered.
-// Draw is the first virtual member defined out of line, so it is the key function. Inside the uses-42 band of
+// Draw is the first virtual member defined out of line, so it is the key function. Inside the uses-1 band of
 // ledger/ordinals.tsv the index runs against the link order, and the records put Draw, Move and Rect in their file's
 // order; the destructors and GetTypeName follow them, so those are implicit or inline, and GetTypeName is written in
 // the class. The comments are ours, not TSE's.
