@@ -1,37 +1,37 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-30T10:58:31.255Z",
+ "createdAt": "2026-10-30T18:55:43.746Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
  },
  "image": "urna-emsdk:6.0.0",
  "dataset": {
-  "rows": 180,
-  "rowsSha256": "c6576203173418e96912ecdb35f810a2ef94fe6c5a27ba49eb48629ab44583b2",
-  "setupsSha256": "8ce51e1ea3d2096213ed8db7b60b3260025804a797500c0584d5e77ec003eb75"
+  "rows": 169,
+  "rowsSha256": "947fde4da4ad20f4ec5e6e3968eb9a113a0d6215eff357d2a61b8b683bcba325",
+  "setupsSha256": "4cbe3c07d2ef9a60839b6c28ab62c61dfcf137d6b5dec184de55413fd33f7dab"
  },
- "commit": "0a34cc5+dirty",
+ "commit": "f1ee3fb+dirty",
  "durationMs": {
-  "lift": 96,
-  "compileAndOptimise": 3709,
-  "total": 10667
+  "lift": 122,
+  "compileAndOptimise": 5095,
+  "total": 11198
  },
  "totals": {
   "overall": {
-   "rows": 180,
-   "lifted": 180,
-   "compiled": 180,
-   "optimised": 180,
-   "exactRaw": 38,
-   "exact": 90,
-   "medianRatio": 0.3693,
-   "medianOptRatio": 0.003,
-   "meanOptRatio": 0.1737,
+   "rows": 169,
+   "lifted": 169,
+   "compiled": 169,
+   "optimised": 169,
+   "exactRaw": 30,
+   "exact": 81,
+   "medianRatio": 0.3982,
+   "medianOptRatio": 0.0189,
+   "meanOptRatio": 0.1812,
    "outcomes": {
-    "differs": 90,
-    "exact": 90
+    "differs": 88,
+    "exact": 81
    }
   },
   "bySetup": {
@@ -44,7 +44,7 @@
     "exact": 5,
     "medianRatio": 0.4573,
     "medianOptRatio": 0.1911,
-    "meanOptRatio": 0.1724,
+    "meanOptRatio": 0.1958,
     "outcomes": {
      "differs": 7,
      "exact": 5
@@ -56,13 +56,13 @@
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 1,
-    "exact": 4,
-    "medianRatio": 0.6484,
-    "medianOptRatio": 0.0678,
-    "meanOptRatio": 0.0965,
+    "exact": 5,
+    "medianRatio": 0.6362,
+    "medianOptRatio": 0.0104,
+    "meanOptRatio": 0.0728,
     "outcomes": {
-     "differs": 8,
-     "exact": 4
+     "differs": 7,
+     "exact": 5
     }
    },
    "asn1": {
@@ -72,27 +72,12 @@
     "optimised": 12,
     "exactRaw": 4,
     "exact": 10,
-    "medianRatio": 0.2595,
+    "medianRatio": 0.1838,
     "medianOptRatio": 0,
-    "meanOptRatio": 0.0632,
+    "meanOptRatio": 0.0179,
     "outcomes": {
      "exact": 10,
      "differs": 2
-    }
-   },
-   "asn1-eh": {
-    "rows": 11,
-    "lifted": 11,
-    "compiled": 11,
-    "optimised": 11,
-    "exactRaw": 8,
-    "exact": 10,
-    "medianRatio": 0,
-    "medianOptRatio": 0,
-    "meanOptRatio": 0.0085,
-    "outcomes": {
-     "differs": 1,
-     "exact": 10
     }
    },
    "zlib": {
@@ -267,7 +252,7 @@
     "optimised": 12,
     "exactRaw": 1,
     "exact": 8,
-    "medianRatio": 0.2641,
+    "medianRatio": 0.2404,
     "medianOptRatio": 0,
     "meanOptRatio": 0.0843,
     "outcomes": {
@@ -278,36 +263,6 @@
   }
  },
  "rows": [
-  {
-   "id": "uenux2/1527",
-   "index": 1527,
-   "setup": "uenux2",
-   "size": 1269,
-   "band": "large",
-   "features": [
-    "leaf",
-    "loop",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 613,
-   "raw": {
-    "score": 417,
-    "ratio": 0.6803
-   },
-   "opt": {
-    "score": 191,
-    "ratio": 0.3116
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
   {
    "id": "uenux2/4793",
    "index": 4793,
@@ -342,6 +297,31 @@
    ]
   },
   {
+   "id": "uenux2/5036",
+   "index": 5036,
+   "setup": "uenux2",
+   "size": 22,
+   "band": "tiny",
+   "features": [
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 9,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "uenux2/7902",
    "index": 7902,
    "setup": "uenux2",
@@ -365,34 +345,6 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
-  },
-  {
-   "id": "uenux2/10251",
-   "index": 10251,
-   "setup": "uenux2",
-   "size": 35,
-   "band": "small",
-   "features": [
-    "leaf",
-    "frame"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 16,
-   "raw": {
-    "score": 5,
-    "ratio": 0.3125
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "unused frame"
-   ]
   },
   {
    "id": "uenux2/10451",
@@ -431,6 +383,32 @@
     "goto",
     "inlined callee outlined"
    ]
+  },
+  {
+   "id": "uenux2/10581",
+   "index": 10581,
+   "setup": "uenux2",
+   "size": 23,
+   "band": "tiny",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 10,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "uenux2/10713",
@@ -503,46 +481,21 @@
    ]
   },
   {
-   "id": "uenux2/10974",
-   "index": 10974,
+   "id": "uenux2/11012",
+   "index": 11012,
    "setup": "uenux2",
-   "size": 12,
-   "band": "tiny",
+   "size": 43,
+   "band": "small",
    "features": [
-    "leaf",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 5,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "uenux2/11060",
-   "index": 11060,
-   "setup": "uenux2",
-   "size": 29,
-   "band": "tiny",
-   "features": [
+    "loop",
     "call_indirect"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 11,
+   "targetRows": 20,
    "raw": {
-    "score": 0,
-    "ratio": 0
+    "score": 5,
+    "ratio": 0.25
    },
    "opt": {
     "score": 0,
@@ -578,6 +531,35 @@
    "outcome": "differs",
    "failure": null,
    "standIns": []
+  },
+  {
+   "id": "uenux2/11270",
+   "index": 11270,
+   "setup": "uenux2",
+   "size": 571,
+   "band": "large",
+   "features": [
+    "loop",
+    "frame",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 309,
+   "raw": {
+    "score": 292,
+    "ratio": 0.945
+   },
+   "opt": {
+    "score": 183,
+    "ratio": 0.5922
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "goto"
+   ]
   },
   {
    "id": "uenux2/11620",
@@ -722,38 +704,6 @@
    "standIns": []
   },
   {
-   "id": "ecourna/5102",
-   "index": 5102,
-   "setup": "ecourna",
-   "size": 345,
-   "band": "medium",
-   "features": [
-    "loop",
-    "invoke",
-    "throw",
-    "frame",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 158,
-   "raw": {
-    "score": 109,
-    "ratio": 0.6899
-   },
-   "opt": {
-    "score": 45,
-    "ratio": 0.2848
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "ecourna/5174",
    "index": 5174,
    "setup": "ecourna",
@@ -813,6 +763,37 @@
    "standIns": [
     "arm tail kept from the join",
     "frame object escapes at entry",
+    "goto"
+   ]
+  },
+  {
+   "id": "ecourna/9264",
+   "index": 9264,
+   "setup": "ecourna",
+   "size": 339,
+   "band": "medium",
+   "features": [
+    "invoke",
+    "throw",
+    "frame",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 141,
+   "raw": {
+    "score": 90,
+    "ratio": 0.6383
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
     "goto"
    ]
   },
@@ -1033,6 +1014,35 @@
    ]
   },
   {
+   "id": "asn1/1668",
+   "index": 1668,
+   "setup": "asn1",
+   "size": 335,
+   "band": "medium",
+   "features": [
+    "loop",
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 161,
+   "raw": {
+    "score": 65,
+    "ratio": 0.4037
+   },
+   "opt": {
+    "score": 15,
+    "ratio": 0.0932
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
    "id": "asn1/2187",
    "index": 2187,
    "setup": "asn1",
@@ -1089,60 +1099,30 @@
    "standIns": []
   },
   {
-   "id": "asn1/3468",
-   "index": 3468,
+   "id": "asn1/5051",
+   "index": 5051,
    "setup": "asn1",
-   "size": 157,
-   "band": "medium",
+   "size": 95,
+   "band": "small",
    "features": [
-    "loop",
-    "frame"
+    "i64"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 84,
+   "targetRows": 43,
    "raw": {
-    "score": 46,
-    "ratio": 0.5476
+    "score": 6,
+    "ratio": 0.1395
    },
    "opt": {
-    "score": 33,
-    "ratio": 0.3929
+    "score": 0,
+    "ratio": 0
    },
-   "exact": false,
-   "outcome": "differs",
+   "exact": true,
+   "outcome": "exact",
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "asn1/3478",
-   "index": 3478,
-   "setup": "asn1",
-   "size": 120,
-   "band": "small",
-   "features": [
-    "leaf",
-    "loop",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 63,
-   "raw": {
-    "score": 28,
-    "ratio": 0.4444
-   },
-   "opt": {
-    "score": 23,
-    "ratio": 0.3651
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
     "goto"
    ]
   },
@@ -1172,52 +1152,28 @@
    "standIns": []
   },
   {
-   "id": "asn1/8756",
-   "index": 8756,
+   "id": "asn1/8815",
+   "index": 8815,
    "setup": "asn1",
-   "size": 17,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 7,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1/8781",
-   "index": 8781,
-   "setup": "asn1",
-   "size": 141,
+   "size": 258,
    "band": "medium",
    "features": [
-    "switch"
+    "switch",
+    "frame"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 67,
+   "targetRows": 124,
    "raw": {
-    "score": 15,
-    "ratio": 0.2239
+    "score": 26,
+    "ratio": 0.2097
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 15,
+    "ratio": 0.121
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
@@ -1300,269 +1256,9 @@
    "standIns": []
   },
   {
-   "id": "asn1-eh/1668",
-   "index": 1668,
-   "setup": "asn1-eh",
-   "size": 335,
-   "band": "medium",
-   "features": [
-    "loop",
-    "call_indirect"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 161,
-   "raw": {
-    "score": 65,
-    "ratio": 0.4037
-   },
-   "opt": {
-    "score": 15,
-    "ratio": 0.0932
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "asn1-eh/5051",
-   "index": 5051,
-   "setup": "asn1-eh",
-   "size": 95,
-   "band": "small",
-   "features": [
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 43,
-   "raw": {
-    "score": 6,
-    "ratio": 0.1395
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "asn1-eh/5057",
-   "index": 5057,
-   "setup": "asn1-eh",
-   "size": 13,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 6,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/5059",
-   "index": 5059,
-   "setup": "asn1-eh",
-   "size": 156,
-   "band": "medium",
-   "features": [
-    "loop",
-    "call_indirect"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 75,
-   "raw": {
-    "score": 8,
-    "ratio": 0.1067
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/8894",
-   "index": 8894,
-   "setup": "asn1-eh",
-   "size": 15,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 7,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/8895",
-   "index": 8895,
-   "setup": "asn1-eh",
-   "size": 13,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 6,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/8896",
-   "index": 8896,
-   "setup": "asn1-eh",
-   "size": 13,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 6,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/8901",
-   "index": 8901,
-   "setup": "asn1-eh",
-   "size": 13,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 6,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/10036",
-   "index": 10036,
-   "setup": "asn1-eh",
-   "size": 17,
-   "band": "tiny",
-   "features": [
-    "leaf",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 8,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/10037",
-   "index": 10037,
-   "setup": "asn1-eh",
-   "size": 17,
-   "band": "tiny",
-   "features": [
-    "leaf",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 8,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "asn1-eh/10038",
-   "index": 10038,
-   "setup": "asn1-eh",
+   "id": "asn1/9972",
+   "index": 9972,
+   "setup": "asn1",
    "size": 17,
    "band": "tiny",
    "features": [
@@ -4998,6 +4694,32 @@
    ]
   },
   {
+   "id": "libcxxabi/2929",
+   "index": 2929,
+   "setup": "libcxxabi",
+   "size": 73,
+   "band": "small",
+   "features": [
+    "call_indirect",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 36,
+   "raw": {
+    "score": 9,
+    "ratio": 0.25
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "libcxxabi/2930",
    "index": 2930,
    "setup": "libcxxabi",
@@ -5024,32 +4746,6 @@
     "arm tail kept from the join",
     "goto"
    ]
-  },
-  {
-   "id": "libcxxabi/3946",
-   "index": 3946,
-   "setup": "libcxxabi",
-   "size": 75,
-   "band": "small",
-   "features": [
-    "call_indirect",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 37,
-   "raw": {
-    "score": 11,
-    "ratio": 0.2973
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
   },
   {
    "id": "libcxxabi/3947",
