@@ -39,11 +39,15 @@
 #   whose row is then `differs` at +0x3, with an outer block and the string's address in a local;
 #   `final` on either template: 24 functions differ, the D2s and D0s among them. The target's D2s begin with the vptr store.
 #
-# The seven __get_deleter matches rest on one more thing: each holds the address of a __shared_ptr_default_delete type's
-# _ZTS string, which no typeinfo names, so only its content places it, and resolveBytes in asmlift-wasm/src/splat-symbols.ts
-# does not place a string our link happens to put 4-aligned where the target's is not. So the sink order in the roots file
-# is chosen, to leave none of the seven 4-aligned. That order means nothing to the source. Rodata before this object
-# moves the strings, and a row can then turn `unresolved` and stop splat-match until the order is chosen again.
+# Six of the seven __get_deleter matches rest on one more thing. Each holds the address of a __shared_ptr_default_delete
+# type's _ZTS string, which no typeinfo names, so only its content places it, and resolveBytes in
+# asmlift-wasm/src/splat-symbols.ts places a string whose address in our link is 4-aligned only at a 4-aligned target
+# copy. 12345's target copy is 4-aligned, so it resolves wherever ours lies; the other six are not. Their strings lie in
+# one run of type names, from unit 15's pending object to this roots object, so a change in the length of the names
+# before them in that run moves them: by 3 bytes mod 4 it turns 12546, 10745 and 11998 `unresolved` (which stops
+# splat-match), by 1 byte 10623 and 11245, by 2 bytes 10533. The order of the roots' sink lines is chosen so that none
+# of the six lies 4-aligned. It changes no function's bytes and serves only that test, which a resolveBytes reading the
+# object's alignment makes order-independent.
 #
 # CTextSource's constructor, with the record at 37:19, is written and in no object: no stand-in builds a CTextSource. Built
 # once to measure it, the record is the target's (check_srcloc --strict, 1 of 1). Writing it took the stubs of fns 1150

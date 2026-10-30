@@ -20,10 +20,10 @@
 // CTextSource by reference, as fn 5409 does, and build none: the target holds the record at ctextsource.h 37:19 twice, once
 // in each of two TUs, and our link holds no record of that kind yet.
 //
-// The order of the sink lines is chosen, for a reason outside the source: they decide the order of this object's _ZTS
-// strings, and the name of a __shared_ptr_default_delete type has no typeinfo beside it, so only its content places it, and
-// splat-symbols' resolveBytes does not place one whose address in our link happens to be 4-aligned while the target's is
-// not. This order leaves none of the seven names 4-aligned; the fragment says what that holds and what it does not.
+// The order of the sink lines is chosen and changes no function's bytes. It decides where this object's _ZTS strings
+// fall, and it serves only the scan's alignment test: splat-symbols' resolveBytes places a string whose address in our
+// link is 4-aligned only at a 4-aligned target copy. Six __get_deleter rows depend on it, and the fragment says which
+// shift breaks which. A resolveBytes that reads the object's alignment makes the order free.
 #include <cstdint>
 #include <functional>
 #include <memory>

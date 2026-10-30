@@ -1,10 +1,10 @@
 #pragma once
 
 // api::CDataText<T>: an IText whose text comes from a callable T. RTTI: an si_class of api::IText, in 12 instantiations
-// whose T is a function pointer, a std::function, api::CTextSource or a class of comum or vota. The layout is what the
-// bodies give: IText's alignment at +4, the callable at +8. GetText, slot 2, is `m_fonte()`: fn 12784 calls the function
-// pointer, 12580 calls it and copies the std::string the reference names, 12301 calls the std::function, and 10534 holds
-// CTextSource's operator() inlined.
+// whose T is a function pointer, a std::function, api::CTextSource, a class of comum or vota, or a lambda of api
+// (api::CFormBuilder::AddStatusHeader's). The layout is what the bodies give: IText's alignment at +4, the callable at
+// +8. GetText, slot 2, is `m_fonte()`: fn 12784 calls the function pointer, 12580 calls it and copies the std::string
+// the reference names, 12301 calls the std::function, and 10534 holds CTextSource's operator() inlined.
 //
 // The header's path is chosen: no record names it. The file name is the class name in lower case, beside ctextsource.h,
 // whose path a record gives (docs/how-to-decompile.md step 3, rule 4). The member and parameter names are chosen too.

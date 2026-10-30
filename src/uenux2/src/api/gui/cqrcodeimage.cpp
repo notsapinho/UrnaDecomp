@@ -1,7 +1,7 @@
-// api::CQRCodeImage's constructor, target fn 3662. This note is the reconstruction's, not TSE's text. No record names the
-// constructor: it stores the class's vptr (vtable @1582024), and it is in this file for that reason, as a member defined
-// out of line. Its place in the file is a choice. Line 36 is the record of MontaImagem's throw (fn 10967 holds it inlined),
-// which is not written, so the line stays blank and the constructor comes after it.
+// api::CQRCodeImage's constructor, fn 3662 (a note of the reconstruction). No record names it: its vptr store says
+// whose it is. The class's file is evidence: its vtable @1582024, 3 slots, ends at 1582044, this file's record 36:15,
+// so the key function, GetData, is here. That the constructor is here, after line 36, is a choice. Line 36 is
+// MontaImagem's throw, inlined into fn 10967 and not written, so it stays blank.
 
 #include "api/gui/cqrcodeimage.h"
 
