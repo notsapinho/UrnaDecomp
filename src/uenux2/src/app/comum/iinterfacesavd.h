@@ -9,4 +9,10 @@ namespace comum {
 // recovered; the header's path follows iinterfacesavd.cpp.
 enum ESavdAplic : int;
 
+// Recovered: only the type of the SAVD package that comum::CArquivosSavd::operator[] takes (its record in
+// carquivossavd.cpp spells it ESavdPacote, fn 275) and comum::CAssinador keeps: vota::CAssinadorVota's constructor
+// (fn 1501) stores its argument in the inlined CAssinador's +8 member with an i32.store and passes it to that
+// operator. Its enumerators are not recovered, and that it is declared beside ESavdAplic is a choice.
+enum ESavdPacote : int;
+
 } // namespace comum

@@ -3526,12 +3526,6 @@
 
 // link-order cluster 391 · uses=1 · neighbours' file uenux2/src/api/gui/cbuzzfieldmt.cpp
 
-// f11052 · 12 B · unmatched · placement: link order · name unknown
-// ? f11052(i32) { ... }
-
-// f11051 · 73 B · unmatched · placement: link order · name unknown
-// void f11051(i32, i32) { ... }
-
 // f11049 · 25 B · unmatched · placement: link order · name unknown
 // void f11049(i32, i32) { ... }
 
@@ -4020,11 +4014,6 @@
 // f5522 · 16 B · unmatched · placement: link order · name unknown
 // ? f5522(i32, i32, i32) { ... }
 
-// link-order cluster 785 · uses=2 · neighbours' file uenux2/src/api/gui/ctextfielddoubleline.cpp
-
-// f5527 · 135 B · unmatched · placement: link order · name unknown
-// void f5527(i32, i32) { ... }
-
 // link-order cluster 786 · uses=2 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
 
 // f5529 · 78 B · unmatched · placement: link order · name unknown
@@ -4342,11 +4331,6 @@
 // f2214 · 189 B · unmatched · placement: link order · name unknown
 // void f2214(i32, i32) { ... }
 
-// link-order cluster 1148 · uses=5 · neighbours' file uenux2/src/api/gui/ctextfieldupdate.cpp
-
-// f2241 · 97 B · unmatched · placement: link order · name unknown
-// void f2241(i32, i32) { ... }
-
 // link-order cluster 1165 · uses=5
 
 // f2383 · 297 B · unmatched · placement: link order · name unknown
@@ -4383,9 +4367,6 @@
 // void f1694(i32, i32, i32) { ... }
 
 // link-order cluster 1238 · uses=8 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp
-
-// f1566 · 36 B · unmatched · placement: link order · name unknown
-// ? f1566(i32, i32) { ... }
 
 // f1565 · 39 B · unmatched · placement: link order · name unknown
 // void f1565(i32, i32) { ... }

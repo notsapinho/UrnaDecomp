@@ -196,8 +196,15 @@ describe('srclocAnchors', { timeout: 180_000 }, () => {
     expect(syms.fns.get(START_TICK)).toBe(700);
     expect(syms.fnEvidence.get(START_TICK)?.evidence).toBe('srcloc-anchor');
     expect(syms.fns.get(VFORMAT_TO)).toBe(146);
-    // 10250 (CPosixSemaphore's ctor) votes too since its std::source_location record names the target's file
-    expect(soleFnVoters(syms, VFORMAT_TO)).toEqual([700, 5447, 10250]);
+    expect(syms.fnEvidence.get(VFORMAT_TO)?.evidence).toBe('call');
+    // every landed function that throws a formatted message votes for it too, and past the symbol file's limit no
+    // voter is listed; while they are listed, the two anchored callers are among them
+    const voters = soleFnVoters(syms, VFORMAT_TO);
+    if (voters !== null) {
+      expect(voters).toEqual(expect.arrayContaining([700, 5447]));
+    }
+    // the symbol file lists the voters of the names call votes give, while they are few
+    expect([...syms.fnEvidence.values()].some((e) => e.evidence === 'call' && (e.voters?.length ?? 0) > 0)).toBe(true);
     // a name a seed pair voted for lists no voters
     expect(soleFnVoters(syms, '__cxa_allocate_exception')).toBeNull();
   });
