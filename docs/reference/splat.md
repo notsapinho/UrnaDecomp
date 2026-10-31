@@ -30,7 +30,7 @@ target's sha256, `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007
 | our link | `TMPDIR=/tmp make -C src link` | `src/`, `third_party/`, `src/mk/*.mk`, `src/units/*.mk` | `build/out/wasm/vota_web/vota_web_wasm.wasm` (the plain link) |
 | our symbols | `make -C src link-map` | the plain link's own `link.cmd` | `build/out/wasm-map/vota_web/{names.tsv,vota_web_wasm.map}` |
 | our operand kinds | `make -C src link-kinds` | the plain link's `link.cmd` and objects, link-map's map | the shifted link `build/out/wasm-kinds/vota_web/{vota_web_wasm.wasm,names.tsv}` and `kinds.json` |
-| target symbols | `make -C src splat-symbols` | the target, the plain link, its map, `ledger/` | `splat/symbol_addrs.txt` (committed) |
+| target symbols | `make -C src splat-symbols` | the target, the plain link, its map, the operand kinds, `ledger/` | `splat/symbol_addrs.txt` (committed) |
 | scan | `make -C src splat-scan` | all of the above | `splat/scan.tsv` (committed) and the status blocks (`make -C src status`) |
 | match | `make -C src splat-match` | the scan | appends its new matches to `splat/matched.txt` (committed), renames a twin whose name moved |
 | build | `make -C src splat` | pieces, plain link, maps, operand kinds, symbol file, match list | `build/out/splat/vota_web_wasm.wasm` + meter |
@@ -198,7 +198,8 @@ A data name takes a hand edit under the same burden: `_ZN4ASN1L14badEndOfStreamE
 constructors build it from a literal only it has, and five functions read it) and `_ZN3api20g_polySingletonsInfoE`
 (`content`: the word holds the one slot of 11265, paired on its own). A `_ZGV` guard that one body reads has such
 evidence in its object: the target keeps our link's distance between the two ([facts/splat.md](facts/splat.md) §S13),
-so the object's address, held by another match, places the guard. No line uses it yet.
+so the object's address, held by another match, places the guard. §3's self-vote rule reads that itself, so such a
+guard takes no hand line (5158's, in §3).
 
 Step 8 reads no hand line: `gatherEvidence` takes the two maps and the ledger, not the file it rewrites
 (`splat-symbols-cli.ts`). So a function named by hand casts no vote, and the objects its body reads need names of their
@@ -238,6 +239,13 @@ to a slot relative to it, and binaryen leaves the sum unfolded when the relative
 (`vdbeSorterSort`: `select(2035, 2036, 2037) + 1`). That base constant is followed to its use: the base reads as the
 target's table base, and the constants added to it as target slots minus that base. Every other moved slot is
 followed too, to see whether it is added to constants or to another slot.
+
+Our data is compared the same way, word by word (`classifyDataWords`): an aligned word whose value reads as one of
+our addresses or table slots is an address if the shifted link holds it moved by D, a slot if by T (both slots holding
+functions of one name), an integer if it did not move, and unverified otherwise. `kinds.json`'s `data` lists the words
+that are integers, the ones that read as both and which they are, and the unverified ones; a word that reads as one
+of the two and is it is left out. Placing a data object by its re-pointed bytes reads each word by it (below), and so
+does the byte comparison of the self-vote rule (`compareObject`).
 
 Each operand is offered only the readings of its kind, and the target body picks among them only where our side
 offers several:
@@ -289,11 +297,13 @@ the object's content places it:
   fixed bytes, 4 per pointer word at or above 1024, the non-zero bytes of a smaller one). Read-only content
   (`.rodata`, `.data.rel.ro`) found at several places offers each as a copy; a writable object found at
   several places stays unresolved. Placing one object can re-point a word of another, so the placement
-  repeats until nothing more resolves. It reads only the two images and the names, never a function body. The
-  pattern reads the plain link, so a small integer that is also a slot of ours (an ASN.1 tag) reads as both, and
-  goes open while that slot's function has no target name: a landing that moves the table's first slots can loosen
-  an object past 64 places and take a match from a unit it never touched (8750, through `UTCTime::theInfo`, which a
-  `content` hand edit now holds). Look at what the word lands on, not for a C++ cause.
+  repeats until nothing more resolves. It reads only the two images, the names and the operand kinds of our data,
+  never a function body. A word's value does not say what it is: a small integer that is also a slot of ours (an
+  ASN.1 tag) reads as both, and read as a slot it goes open while that slot's function has no target name, so a
+  landing that moves the table's first slots can loosen an object past 64 places and take a match from a unit it never
+  touched (8750, through `UTCTime::theInfo`'s tag 23). So each word is read by the kind the shifted link gives it
+  (above): an integer is its bytes, and a word that reads as an address and as a slot keeps the reading it is. A word
+  moved by neither shift, or a command run without the table, keeps every reading.
   The matches count among the names, and a scan pass re-points with the previous pass's matches applied, so
   a function is first matched before its own name re-points any word of the objects it uses.
 
@@ -304,7 +314,11 @@ Two rules guard the evidence:
   or if another holding match uses the same name. Otherwise it is `unresolved (self-voted)` in the scan
   and `UNCONFIRMED` in the build. An object of zeros never agrees, so a `.bss` name that one body votes for alone holds
   only through a second match that uses it, such as the object's static destructor, or a vote of another function
-  (`ctors:N`). For an object of a few bytes that agreement is thin (`api::CSystem::s_dorme`, one
+  (`ctors:N`). A `_ZGV` guard is placed by its object instead when the target holds the two at our link's distance
+  (§2; `guardedObject` in `asmlift-wasm/src/splat-sub.ts`): it is not the function's own when the object's name has
+  other evidence, and else it holds as the object does, through a match that uses the object. 5158
+  (`CStringUtils::ToLower`) reads `acentuadas` and its guard, which it alone votes for, and holds through 9402, the
+  object's static destructor. For an object of a few bytes that agreement is thin (`api::CSystem::s_dorme`, one
   byte, voted by 8461 alone): say in the fragment what else ties the operand to the object, such as the other
   target functions that read the same address. The rule asks this only of an `address symbol …` reading. A copy (the
   same string, read-only bytes or `source_location` record at another address) is no name and no vote: our side

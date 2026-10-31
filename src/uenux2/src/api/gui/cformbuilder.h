@@ -7,13 +7,19 @@
 // std::vector. Its destructor is implicit: the callers destroy the vector in line. Fn 203 stays out of line in the target,
 // with 88 callers and 18 bytes, which clang would inline from a header, so the constructor is defined in the .cpp. No
 // record names an adder: every adder's name, and which overloads share a name, are chosen from the field each builds.
+//
+// GetForm (fn 5550) builds the api::IForm<IScreen> of the fields added, names it, and clears the vector: its name and
+// its parameters are chosen. m_campos is protected because api::CInteractiveFormBuilder (cinteractiveformbuilder.h)
+// builds its forms from it, a choice that goes with deriving that class.
 
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "api/gui/iform.h"
 #include "api/gui/iformfield.h"
 #include "api/gui/iimage.h"
+#include "api/gui/ipreshow.h"
 #include "api/gui/itext.h"
 #include "api/gui/primitives.h"
 
@@ -48,12 +54,15 @@ public:
 
     static SPoint GetLabeledKeyPos(const SRect& area, ETextAlignment alinhamento, TPosition deslocamento);
 
+    std::shared_ptr<IForm<IScreen>> GetForm(const std::shared_ptr<IPreShow<IScreen>>& preShow, const std::string& nome);
+
+protected:
+    std::vector<SharedField> m_campos;
+
 private:
     SharedField AddRect(const SRect& rect);
 
     std::string GeraNome(const IFormField<IScreen>& campo) const;
-
-    std::vector<SharedField> m_campos;
 };
 
 } // namespace api

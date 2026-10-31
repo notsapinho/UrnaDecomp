@@ -47,10 +47,9 @@
 # Fn 764 has 19 members here, as in the target. The two destructor bodies are named after an internal symbol that
 # repeats across objects, so tools/round/splat_names.py spells the first member's object on such a pair.
 #
-# A hand edit, splat/symbol_addrs.txt: _ZN4ASN17UTCTime7theInfoE, evidence:content, for fn 8750. This unit moves the
-# table's early slots, and slot 23 of ours now holds a function with no target name, so the object's tag 23 reads as an
-# open slot and its re-pointed bytes occur more than 64 times. The line's comment gives what the object holds, read
-# without 8750.
+# This unit moved the table's early slots, and slot 23 of ours held a function with no target name, so the tag 23 of
+# ASN1::UTCTime::theInfo read as an open slot and a hand edit placed the object for fn 8750. The operand-kind table now
+# reads the tag as the integer it is, and the line is gone (docs/reference/facts/splat.md S10 item 15).
 #
 # Chosen, no evidence names them: GetInst (the name the project's recorded singletons use) and its reference result,
 # which unit 61 wrote; every data member's name, s_mutex and s_inst among them; the local trava; the implicit destructor

@@ -18,11 +18,28 @@
 #include "api/gui/cdatatext.h"
 #include "api/gui/cdatatextfmt.h"
 #include "api/gui/cfixedtext.h"
+#include "api/gui/cpreshowclearmt.h"
+#include "api/gui/iscreenmt.h"
 #include "api/gui/ctextfieldmt.h"
 
 namespace api {
 
 CMTFormBuilder::CMTFormBuilder() = default;
+
+std::shared_ptr<IForm<IScreenMT>> CMTFormBuilder::GetForm(const std::string& nome)
+{
+    return GetForm(std::shared_ptr<IPreShow<IScreenMT>>(new CPreShowClearMT), nome);
+}
+
+std::shared_ptr<IForm<IScreenMT>> CMTFormBuilder::GetForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow, const std::string& nome)
+{
+    std::shared_ptr<IForm<IScreenMT>> form(new IForm<IScreenMT>(m_campos, preShow));
+    if (!nome.empty()) {
+        form->SetName(nome);
+    }
+    m_campos.clear();
+    return form;
+}
 
 CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(std::string (*fonte)(), const SPoint& posicao, ETextAlignment alinhamento)
 {
@@ -90,6 +107,22 @@ CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(CTextSource fonte, cons
 {
     const SharedIText text(new CDataText<CTextSource>(fonte, alinhamento));
     return AddTextField(text, posicao);
+}
+
+std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> CMTFormBuilder::GetInteractiveForm(const std::string& nome, bool limpaTeclado)
+{
+    return GetInteractiveForm(std::shared_ptr<IPreShow<IScreenMT>>(new CPreShowClearMT), nome, limpaTeclado);
+}
+
+std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> CMTFormBuilder::GetInteractiveForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow,
+                                                                                          const std::string& nome, bool limpaTeclado)
+{
+    std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> form(new CInteractiveForm<IScreenMT, IInputMT>(m_campos, preShow, limpaTeclado));
+    if (!nome.empty()) {
+        form->SetName(nome);
+    }
+    m_campos.clear();
+    return form;
 }
 
 } // namespace api

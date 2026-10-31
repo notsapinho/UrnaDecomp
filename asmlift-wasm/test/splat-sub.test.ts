@@ -14,6 +14,7 @@ import {
   buildSplat,
   cachedRemapper,
   contentPairs,
+  guardedObject,
   parseMatchList,
   readPieceBodies,
   readingMeterOf,
@@ -149,6 +150,122 @@ describe('selfVoted', { timeout: 180_000 }, () => {
       symbol: 'NOME',
       bytes: 'unknown',
     });
+  });
+
+  describe('a guard placed by its object', () => {
+    // a function-local static's object and its _ZGV guard, 12 bytes apart in our link; both names voted by 5158 alone
+    // unless a case says whose votes they are
+    const bss = (key: string, addr: number, size: number) => ({
+      addr,
+      size,
+      key,
+      name: key,
+      object: 'o',
+      section: `.bss.${key}`,
+      out: '.bss',
+    });
+    const OBJECT = '_ZZ1fvE1s';
+    const GUARD = '_ZGVZ1fvE1s';
+    const mapsWith = (guardAt: number, objectVoters = [5158], guardVoters = [5158]) =>
+      ({
+        ours: { map: { data: [bss(OBJECT, 2000, 12), bss(GUARD, 2012, 1)] } },
+        ourImage: Buffer.alloc(2000),
+        target: {
+          symbols: {
+            ...emptySymbols(),
+            data: new Map([
+              [OBJECT, 3000],
+              [GUARD, guardAt],
+            ]),
+            dataEvidence: new Map([
+              [OBJECT, { evidence: 'vote:4', voters: objectVoters }],
+              [GUARD, { evidence: 'vote:2', voters: guardVoters }],
+            ]),
+          },
+          image: Buffer.alloc(0),
+          imageBase: 1024,
+        },
+      }) as unknown as SymbolMaps;
+    const read = (...names: string[]) => ({
+      chosen: names.map((n) => ({ reading: `address symbol ${n}`, preferred: true, at: 0, oursAt: 0 })),
+    });
+
+    it('names the object of a guard the target holds at our distance from it, and nothing else', () => {
+      const maps = mapsWith(3012);
+      const byKey = new Map(maps.ours.map.data.map((d) => [d.key, d]));
+      expect(guardedObject(maps.target.symbols, byKey, GUARD)).toBe(OBJECT);
+      expect(guardedObject(mapsWith(3016).target.symbols, byKey, GUARD)).toBeUndefined();
+      expect(guardedObject(maps.target.symbols, byKey, OBJECT)).toBeUndefined();
+    });
+
+    it('holds the guard through a match that holds its object: the static destructor', () => {
+      expect(selfVoted(mapsWith(3012), new Map([[5158, read(OBJECT, GUARD)]])).get(5158)).toMatchObject({
+        bytes: 'unknown',
+      });
+      expect(
+        selfVoted(
+          mapsWith(3012),
+          new Map([
+            [5158, read(OBJECT, GUARD)],
+            [9402, read(OBJECT)],
+          ]),
+        ).size,
+      ).toBe(0);
+      // off our distance the guard is the match's own vote again, whoever holds the object
+      expect(
+        selfVoted(
+          mapsWith(3016),
+          new Map([
+            [5158, read(OBJECT, GUARD)],
+            [9402, read(OBJECT)],
+          ]),
+        ).get(5158),
+      ).toMatchObject({ symbol: GUARD });
+    });
+
+    it("needs no holder when the object's name rests on another function's vote", () => {
+      // boost's mem_block_cache::instance: 9281 alone votes for the guard, 3496 and 9329 for the object
+      expect(selfVoted(mapsWith(3012, [3496, 9329], [9281]), new Map([[9281, read(GUARD)]])).size).toBe(0);
+      expect(selfVoted(mapsWith(3016, [3496, 9329], [9281]), new Map([[9281, read(GUARD)]])).get(9281)).toMatchObject({
+        symbol: GUARD,
+      });
+    });
+  });
+
+  it.skipIf(!real)("holds 5158's guard by the object its static destructor 9402 holds", () => {
+    // CStringUtils::ToLower's lambda reads acentuadas and its guard; 5158 alone votes for both names, and the
+    // object's static destructor (9402) re-points through the object's
+    const { maps } = load();
+    const { matches } = parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8'));
+    const symbolOf = (i: number): string => matches.find((m) => m.index === i)!.symbol;
+    const toLower = chosenOf(symbolOf(5158), 5158);
+    const dtor = chosenOf(symbolOf(9402), 9402);
+    const guard = toLower.map((c) => c.reading.split(' ')[2]).find((n) => n?.startsWith('_ZGV'))!;
+    expect(guard).toMatch(/acentuadas$/);
+    expect(maps.target.symbols.dataEvidence.get(guard)).toMatchObject({ voters: [5158] });
+    expect(selfVoted(maps, new Map([[5158, { chosen: toLower }]])).get(5158)).toMatchObject({ symbol: guard });
+    expect(
+      selfVoted(
+        maps,
+        new Map([
+          [5158, { chosen: toLower }],
+          [9402, { chosen: dtor }],
+        ]),
+      ).size,
+    ).toBe(0);
+    // the guard 4 bytes off our distance from its object: nothing places it but 5158's own operand
+    const data = new Map(maps.target.symbols.data);
+    data.set(guard, data.get(guard)! + 4);
+    const moved = { ...maps, target: { ...maps.target, symbols: { ...maps.target.symbols, data } } };
+    expect(
+      selfVoted(
+        moved,
+        new Map([
+          [5158, { chosen: toLower }],
+          [9402, { chosen: dtor }],
+        ]),
+      ).get(5158),
+    ).toMatchObject({ symbol: guard });
   });
 
   it.skipIf(!real)('refuses a match whose callee name comes only from its own call operand', () => {

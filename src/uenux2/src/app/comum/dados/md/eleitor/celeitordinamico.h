@@ -47,6 +47,54 @@ public:
     const CEleitorIdentidade& GetTituloMesarioHabilitacao() const;
     const ecourna::app::dados::CApresentacaoFotoEleitor& GetApresentacaoFoto() const { return m_apresentacaoFoto; }
 
+    // How CEleitorDetalhe::MarcaHabilitado (inlined into target fn 2825) changes a voter who showed up. Each kind of
+    // enabling stores the state 2, its kind and its own set of the members after them, in reverse member order, from
+    // values read before the first store: the shape of a call clang inlined (docs/reference/facts/codegen.md C1). The
+    // mesario's kind with a title reads as a call binaryen inlined (2825 keeps this object's address in a local across
+    // GetTituloMesario); the inline member here gives that shape at -O3 (src/units/110-uenux2-singletons.mk has the
+    // measurement). The members, their names, their parameters and the four-way split are chosen, and so are the setters.
+    void HabilitaSemBiometria()
+    {
+        m_estadoComparecimento = 2;
+        m_tipoHabilitacao = 0;
+        m_dedoHabilitacao = CDedo::TipoDedo();
+        m_numeroTentativa = 0;
+        m_erroDecifrarBiometria = 0;
+    }
+    void HabilitaPorBiometria(CDedo::TipoDedo dedo, ueword score, uebyte numeroTentativa)
+    {
+        m_estadoComparecimento = 2;
+        m_tipoHabilitacao = 1;
+        m_dedoHabilitacao = dedo;
+        m_scoreHabilitacao = score;
+        m_numeroTentativa = numeroTentativa;
+        m_erroDecifrarBiometria = 0;
+    }
+    void HabilitaPorMesario(uebyte numeroTentativa, int erroDecifrarBiometria, const CEleitorIdentidade& tituloMesario)
+    {
+        m_estadoComparecimento = 2;
+        m_tipoHabilitacao = 2;
+        m_dedoHabilitacao = CDedo::TipoDedo();
+        m_numeroTentativa = numeroTentativa;
+        m_erroDecifrarBiometria = erroDecifrarBiometria;
+        m_tituloMesarioHabilitacao = tituloMesario;
+    }
+    void HabilitaPorMesario(uebyte numeroTentativa, int erroDecifrarBiometria)
+    {
+        m_estadoComparecimento = 2;
+        m_tipoHabilitacao = 2;
+        m_dedoHabilitacao = CDedo::TipoDedo();
+        m_numeroTentativa = numeroTentativa;
+        m_erroDecifrarBiometria = erroDecifrarBiometria;
+        m_tituloMesarioHabilitacao.reset();
+    }
+    void SetTipoAtivacaoAudio(int tipoAtivacaoAudio) { m_tipoAtivacaoAudio = tipoAtivacaoAudio; }
+    void SetIdentidadeHabilitacao(const CEleitorIdentidade& identidade) { m_identidadeHabilitacao = identidade; }
+    void SetApresentacaoFoto(const ecourna::app::dados::CApresentacaoFotoEleitor& apresentacaoFoto)
+    {
+        m_apresentacaoFoto = apresentacaoFoto;
+    }
+
 private:
     CEleitorIdentidade m_eleitor;
     CEleitorIdentidade m_identidadeHabilitacao;

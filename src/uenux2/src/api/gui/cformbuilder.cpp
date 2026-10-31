@@ -22,6 +22,7 @@
 #include "api/gui/clinefield.h"
 #include "api/gui/crectfield.h"
 #include "api/gui/ctextfield.h"
+#include "api/gui/iscreen.h"
 #include "api/gui/ctextfielddoubleline.h"
 #include "api/gui/eueguierror.h"
 
@@ -129,7 +130,17 @@ CFormBuilder::SharedField CFormBuilder::AddTextField(const std::string& texto, c
     return campo;
 }
 
-// (original lines 132-347: content not recovered)
+std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::shared_ptr<IPreShow<IScreen>>& preShow, const std::string& nome)
+{
+    std::shared_ptr<IForm<IScreen>> form(new IForm<IScreen>(m_campos, preShow));
+    if (!nome.empty()) {
+        form->SetName(nome);
+    }
+    m_campos.clear();
+    return form;
+}
+
+// (original lines 143-347: content not recovered)
 #line 348
 /**
  * Posição do rótulo de uma tecla desenhada em @p area: junto à borda esquerda,

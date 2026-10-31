@@ -19,7 +19,7 @@
 // The fragment's name sorts between 10- and 11-, ahead of most units, so this object is the first definition of what it
 // and a later companion both instantiate: comum::IResultado's D2 (fn 12090) came from here, not from unit 60's pending
 // object, until unit 122's iresultado.cpp.o, which uenux2's sources link ahead of it, emitted it. Compiled with
-// APP_CXXFLAGS. Compiled with UENUX2_CXXFLAGS the object's 427 functions compare equal, by function with the
+// APP_CXXFLAGS. Compiled with UENUX2_CXXFLAGS the object's 391 functions compare equal, by function with the
 // object-local numbers masked. The fragment says what ecourna's flags give for the ecourna classes' blocks. The order of
 // the sink lines is free (docs/reference/facts/splat.md section S9).
 #include <memory>
@@ -35,12 +35,10 @@
 #include "api/gui/cfixedimage.h"
 #include "api/gui/cimagefieldupdate.h"
 #include "api/gui/cinputfieldmt.h"
-#include "api/gui/cinteractiveform.h"
 #include "api/gui/cmovie.h"
 #include "api/gui/cmoviefield.h"
 #include "api/gui/cnewlinefieldpaper.h"
 #include "api/gui/cnumbervalidation.h"
-#include "api/gui/cpaperformbuilder.h"
 #include "api/gui/coptionvalidation.h"
 #include "api/gui/cpowerinformation.h"
 #include "api/gui/cpreshowclearscreen.h"
@@ -50,9 +48,7 @@
 #include "api/gui/ctextfieldblinking.h"
 #include "api/gui/ctextfieldpaper.h"
 #include "api/gui/ctextfieldupdate.h"
-#include "api/gui/iform.h"
 #include "api/gui/iinputvalidation.h"
-#include "api/gui/ipaperrelatorios.h"
 #include "api/persistencia/idao.h"
 #include "api/util/ctimer.h"
 #include "app/comum/ccopiadormr.h"
@@ -91,7 +87,6 @@ extern const char w102_vt_cfixedimage[] __asm__("_ZTVNSt3__220__shared_ptr_empla
 extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api11CMovieFieldENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api12CProgressBarENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctextfieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16CTextFieldUpdateENS_9allocatorIS2_EEEE");
-extern const char w102_vt_formcontrolblock[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16FormControlBlockENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cimagefieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api17CImageFieldUpdateENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctextfieldblinking[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api18CTextFieldBlinkingENS_9allocatorIS2_EEEE");
 extern const char w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api21BatteryIconDataSourceILNS1_17CPowerInformation15IconOrientationE0EEENS_9allocatorIS5_EEEE");
@@ -111,18 +106,13 @@ extern const char w102_vt_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN7e
 extern const char w102_vt_cdsimagefield[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api13CDSImageFieldENS_10shared_ptrINS1_10IFormFieldINS1_7IScreenEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cinputfieldmt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api13CInputFieldMTENS_10shared_ptrINS1_11IInputFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccutfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_iformimpressao_ipaperrelatorios[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api14IFormImpressaoINS1_16IPaperRelatoriosEEENS_10shared_ptrINS1_5IFormINS1_6IPaperEEEE27__shared_ptr_default_deleteIS9_S4_EENS_9allocatorIS4_EEEE");
-extern const char w102_vt_cpreshownothing_ipaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CPreShowNothingINS1_6IPaperEEENS_10shared_ptrINS1_8IPreShowIS3_EEE27__shared_ptr_default_deleteIS8_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_cpreshownothing_iscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CPreShowNothingINS1_7IScreenEEENS_10shared_ptrINS1_8IPreShowIS3_EEE27__shared_ptr_default_deleteIS8_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_ctextfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CTextFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cinteractiveform_iscreen_iinputkbd[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api16CInteractiveFormINS1_7IScreenENS1_9IInputKbdEEENS_10shared_ptrIS5_E27__shared_ptr_default_deleteIS5_S5_EENS_9allocatorIS5_EEEE");
-extern const char w102_vt_cinteractiveform_iscreenmt_iinputmt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api16CInteractiveFormINS1_9IScreenMTENS1_8IInputMTEEENS_10shared_ptrIS5_E27__shared_ptr_default_deleteIS5_S5_EENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cnumbervalidation[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api17CNumberValidationENS_10shared_ptrINS1_16IInputValidationEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_coptionvalidation[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api17COptionValidationENS_10shared_ptrINS1_16IInputValidationEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cnewlinefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cpreshowclearscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api19CPreShowClearScreenENS_10shared_ptrINS1_8IPreShowINS1_7IScreenEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cqrcodeimagefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api22CQRCodeImageFieldPaperENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_iform_iscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api5IFormINS1_7IScreenEEENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_cdatatext_cescolheopcao_copcaods[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS9_S6_EENS_9allocatorIS6_EEEE");
 extern const char w102_vt_cdatatext_cpadds_ctoupperds_ccargodsnome[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api9CDataTextIN5comum6CPadDSINS3_10CToUpperDSINS3_12CCargoDSNomeEEEEEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISC_S9_EENS_9allocatorIS9_EEEE");
 extern const char w102_vt_cpreshowformvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota16CPreShowFormVotaENS_10shared_ptrIN3api8IPreShowINS5_7IScreenEEEE27__shared_ptr_default_deleteIS8_S2_EENS_9allocatorIS2_EEEE");
@@ -157,8 +147,6 @@ extern const char w102_vt_item_visualizar[] __asm__("_ZTVN4vota29CItemVisualizar
 }
 
 namespace api {
-class IInputKbd;
-class IInputMT;
 class IScreenMT;
 } // namespace api
 
@@ -174,8 +162,6 @@ using TFormPaper = api::IFormField<api::IPaper>;
 using TFormScreen = api::IFormField<api::IScreen>;
 using TDao = api::persistencia::IDAO;
 using TAes = ecourna::api::security::CBlockCipher<ecourna::api::security::CAesCipher, ecourna::api::security::CTrng>;
-using TFormKbd = api::CInteractiveForm<api::IScreen, api::IInputKbd>;
-using TFormMT = api::CInteractiveForm<api::IScreenMT, api::IInputMT>;
 
 template struct SBloco<TFormPaper, api::CTextFieldPaper>;
 template struct SBloco<TFormPaper, api::CCutFieldPaper>;
@@ -192,9 +178,6 @@ template struct SBloco<comum::md::CEleitorDinamico, comum::md::CEleitorDinamico>
 using TJustificativa = ecourna::app::dados::CIdentificacaoJustificativa;
 template struct SBloco<TJustificativa, TJustificativa>;
 template struct SBloco<comum::asn::CVisitanteFoto, comum::asn::CVisitanteFoto>;
-template struct SBloco<api::IForm<api::IScreen>, api::IForm<api::IScreen>>;
-template struct SBloco<TFormKbd, TFormKbd>;
-template struct SBloco<TFormMT, TFormMT>;
 template struct SBloco<api::CQRCodeImageFieldPaper, api::CQRCodeImageFieldPaper>;
 template struct SBloco<comum::md::CComparecimentoMesario, comum::md::CComparecimentoMesario>;
 template struct SBloco<std::string, std::string>;
@@ -210,10 +193,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CMovie> w102_filme(
 __attribute__((optnone, noinline)) std::shared_ptr<vota::CProgressoEncerramento> w102_progresso()
 {
     return std::make_shared<vota::CProgressoEncerramento>();
-}
-__attribute__((optnone, noinline)) std::shared_ptr<api::FormControlBlock> w102_controle()
-{
-    return std::make_shared<api::FormControlBlock>();
 }
 
 __attribute__((optnone, noinline)) std::shared_ptr<ecourna::api::security::CTrng> w102_trng()
@@ -272,10 +251,8 @@ template struct SBloco<TItem, vota::CItemVisualizarCandidatosVota>;
 template struct SBloco<TPreShow, vota::CPreShowFormVota>;
 template struct SBloco<TPreShow, api::CPreShowClearScreen>;
 template struct SBloco<TPreShow, api::CPreShowNothing<api::IScreen>>;
-template struct SBloco<api::IPreShow<api::IPaper>, api::CPreShowNothing<api::IPaper>>;
 template struct SBloco<api::IInputValidation, api::CNumberValidation>;
 template struct SBloco<api::IInputField<api::IScreenMT>, api::CInputFieldMT>;
-template struct SBloco<api::IForm<api::IPaper>, api::IFormImpressao<api::IPaperRelatorios>>;
 template struct SBloco<comum::asn::CVisitanteEleitor, comum::asn::CVisitanteEleitor>;
 template struct SBloco<api::IText, api::CDataText<comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>>>;
 template struct SBloco<api::IText, api::CDataText<vota::CEscolheOpcao::COpcaoDS>>;
@@ -334,7 +311,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cmoviefield;
         w102_sink = w102_vt_cprogressbar;
         w102_sink = w102_vt_ctextfieldupdate;
-        w102_sink = w102_vt_formcontrolblock;
         w102_sink = w102_vt_cimagefieldupdate;
         w102_sink = w102_vt_ctextfieldblinking;
         w102_sink = w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0;
@@ -354,18 +330,13 @@ struct SW102Roots {
         w102_sink = w102_vt_cdsimagefield;
         w102_sink = w102_vt_cinputfieldmt;
         w102_sink = w102_vt_ccutfieldpaper;
-        w102_sink = w102_vt_iformimpressao_ipaperrelatorios;
-        w102_sink = w102_vt_cpreshownothing_ipaper;
         w102_sink = w102_vt_cpreshownothing_iscreen;
         w102_sink = w102_vt_ctextfieldpaper;
-        w102_sink = w102_vt_cinteractiveform_iscreen_iinputkbd;
-        w102_sink = w102_vt_cinteractiveform_iscreenmt_iinputmt;
         w102_sink = w102_vt_cnumbervalidation;
         w102_sink = w102_vt_coptionvalidation;
         w102_sink = w102_vt_cnewlinefieldpaper;
         w102_sink = w102_vt_cpreshowclearscreen;
         w102_sink = w102_vt_cqrcodeimagefieldpaper;
-        w102_sink = w102_vt_iform_iscreen;
         w102_sink = w102_vt_cdatatext_cescolheopcao_copcaods;
         w102_sink = w102_vt_cdatatext_cpadds_ctoupperds_ccargodsnome;
         w102_sink = w102_vt_cpreshowformvota;

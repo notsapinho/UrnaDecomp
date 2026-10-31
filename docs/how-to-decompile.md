@@ -1056,9 +1056,11 @@ moves an `evidence:table` name between functions, and re-places data placed by i
 ([facts/splat.md](reference/facts/splat.md) §S8); keep it, do not pick lines by hand. Lines below the hand-edit marker
 survive, and `N hand edits kept` is the one line that says so: read it after every run. The file is UTF-8, and a script
 that opens it as Latin-1 and dies leaves it truncated, after which the next run regenerates from what is left and prints
-a smaller N; recover with `git checkout HEAD -- splat/symbol_addrs.txt`. Add a hand edit only as step 9 says. A run
-that stops with `JavaScript heap out of memory` has written nothing: run steps 7 to 9 with
-`NODE_OPTIONS=--max-old-space-size=8000` ([facts/workflow.md](reference/facts/workflow.md) §W1).
+a smaller N; recover with `git checkout HEAD -- splat/symbol_addrs.txt`. Add a hand edit only as step 9 says. Step 8
+runs `make -C src link-kinds` first when the shifted link or its table is stale: the generator reads the operand kinds
+of our data ([reference/splat.md](reference/splat.md) §3). Steps 7 to 9 fit Node's default heap; a run that stops
+with `JavaScript heap out of memory` has written nothing, and goes again with `NODE_OPTIONS=--max-old-space-size=8000`
+([facts/workflow.md](reference/facts/workflow.md) §W1).
 
 ## 9. Match
 
@@ -1153,15 +1155,15 @@ so a data name becomes `vote:1` by its only reader, which is `self-voted`, and t
 that named its callee (matching 181 took 8979, 9074, 9083, 9108 and 9111 out so). `git diff splat/symbol_addrs.txt` shows
 each evidence change. Fix it with the name's own evidence, not by withdrawing a line. A row can also leave because an
 instance of yours took the symbol (step 3), or a stronger name moved (below). And with no source at fault, for one
-link's data layout, in two ways:
+link's data layout:
 
 - **An object at address 0x100000.** `-Oz` writes the add of that address as a subtract, so a body that adds it reads
   `differs` with `i32.const -1048576` on our side ([facts/codegen.md](reference/facts/codegen.md) §C7).
-- **A small integer in a data object read as a slot of ours.** `re-pointed bytes occur 65+ times` on a row whose body
-  did not change ([reference/splat.md](reference/splat.md) §3; "Library functions" below has what to do).
 
-The next landing that moves the data clears either. Never add or drop a string to move it: a verdict that turns on
+The next landing that moves the data clears it. Never add or drop a string to move it: a verdict that turns on
 layout is a tool defect to report (`src/units/README.md`). At a landing, land the next lane first and retry (step 10).
+A small integer in a data object that equals a table slot of ours is not such a case: the operand-kind table reads
+it as the integer it is ([reference/splat.md](reference/splat.md) §3).
 
 The scan's first pass can also leave a new match `match` that the build's fixed point refuses: `make -C src splat` then
 stops on `UNCONFIRMED: self-voted`. Read it as `unresolved self-voted`: the callee's name has no voter but the match.
@@ -1422,10 +1424,10 @@ reasons again too: a stand-in caller beside its real caller compiles, links and 
 comment names the target callers it stands for; one whose every caller is now in the link goes in this merge, before
 these steps, and one whose callers landed in part stays, its comment saying which still wait. A caller in the link
 counts whether its row matches or not: search `splat/matched.txt` for the callers, and our link for their calls
-(`src/units/README.md` "Companion files"). 9052 is `differs` and calls 5103 in our link (ours 10728 is one of the two
-callers `wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5178 '/ func\[/ {f=$2} $0 ~ " call " c
-"( |$)" {print f}'` prints), so the stand-in for it went. Commit it all as the merge commit. A merge commit takes no
-pathspec (`fatal: cannot do a partial commit during a merge`): stage everything,
+(`src/units/README.md` "Companion files"). When the stand-in for 9052 went, 9052 was `differs` and called 5103 in our
+link (ours 10728 was one of the two callers `wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5178
+'/ func\[/ {f=$2} $0 ~ " call " c "( |$)" {print f}'` printed then); it matches since. Commit it all as the merge
+commit. A merge commit takes no pathspec (`fatal: cannot do a partial commit during a merge`): stage everything,
 read `git status --short`, and commit with a bare `git commit -F -`, owning the checkout while you do, since nothing
 else may be staged ([facts/workflow.md](reference/facts/workflow.md) §W18). To leave a merge after step 9, `git merge
 --abort` needs everything staged first (§W22). Two branches that each took "the next free
@@ -1440,7 +1442,7 @@ differs, the code is usually right and something around it is not. The scan's `d
 | `detail` says | what is usually wrong | how to look into it |
 | --- | --- | --- |
 | `an address of ours: … (.data) has no target symbol`, `… (.bss) has no target symbol` | the symbol file has no name for a data object the body uses, and its content does not place it either: what follows the `;` says why its re-pointed bytes did not (not in the target, several places of a writable object, too little content); a `.bss` object is zeros, so only a name places it | find independent evidence for that object (RTTI, a unique string or content, a census pair) and see whether `make -C src splat-symbols` picks it up; [reference/splat.md](reference/splat.md) §2 lists the evidence kinds and §3 how content places an object. The object named is our candidate's, and the census pairs identical bodies in any order, so for a body that only loads the address (a static destructor above all) the target's constant says which object it is: 9383 reads `target … i32.const 1911891 \| ours … i32.const 1912015` |
-| `… re-pointed bytes occur 65+ times` on a row whose body did not change | a word of the object is a small integer (an ASN.1 tag) that is also a table slot of ours, and once that slot's function has no target name the word reads as anything, so the pattern fits too many places | print the object's words, and `wasm-objdump -x -j Elem` for the slot; a `content` hand edit of the object on its own evidence holds it (step 9, "A body need not have changed") |
+| `… re-pointed bytes occur 65+ times` on a row whose body did not change | a pointer word of the object resolves nowhere (the function or object of ours it points at has no target name, or the shifted link moved the word by neither shift), so it reads as anything and the pattern fits too many places. A word the shifted link shows is an integer keeps its bytes, so a small integer that equals a slot of ours (an ASN.1 tag) is not the cause | print the object's words with their kinds (`data` in `build/out/wasm-kinds/vota_web/kinds.json`), and `wasm-objdump -x -j Elem` for a slot; the pointer's own name comes first (step 8), and a `content` hand edit of the object on its own evidence holds it meanwhile (step 9, "A body need not have changed") |
 | `a table slot of ours: X has no target function` | the shifted link says the operand is a pointer to our function X, and the symbol file names no target function for X | the same as a callee with no target function: X's own match or name comes first (step 8) |
 | `a table slot of ours: the target function fills N slots` | in a kind-unverified function, the operand may be a pointer to a function the target's table holds in more than 64 slots (binaryen's merged empty function fills 126); without its kind, re-pointing offers a function's slots only up to 64 | the source is not at fault: the check cannot re-point such an operand ([reference/splat.md](reference/splat.md) §3 "Operand kinds") |
 | `the address resolves (symbol)/(string) to another place` | our data sits elsewhere: a different string merge, a missing or extra object, or another version's constants | compare the two strings or objects at the addresses the detail prints; check the version evidence in `third_party/MANIFEST.md` |

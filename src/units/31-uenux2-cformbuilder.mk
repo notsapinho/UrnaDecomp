@@ -11,6 +11,14 @@
 #   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut)
 #   binaryen's         3890, the one body of 435, 1072 and 198; 1400, vector<shared_ptr<IFormField<...>>>::emplace_back(const
 #                      value_type&), one body of the media's instantiations, under the first in the link
+#   the getters        5550 (CFormBuilder::GetForm), 1694 and 301 (CMTFormBuilder::GetForm and GetInteractiveForm, each
+#                      inlining a private overload that takes the pre-show) and 5515 (CPaperFormBuilder::GetForm): they
+#                      build the forms of api/gui/iform.h and api/gui/cinteractiveform.h, whose code these objects emit,
+#                      and src/units/120-uenux2-iform.mk has their notes. Their names are chosen. GetForm sits after
+#                      the adders of cformbuilder.cpp, a choice; in cmtformbuilder.cpp GetForm comes before the adders
+#                      and GetInteractiveForm after them, the order of their first uses in the target's data
+#                      (IForm<IScreenMT>'s vtable @1579936 before the adders' control blocks @1580040 to @1580240, and
+#                      CInteractiveForm<IScreenMT, IInputMT>'s @1580280 after them)
 #
 # 426, AddField, waits for -O3, which is the tree's flag and not this unit's: it stays written (docs/how-to-decompile.md
 # step 5). At -O2 it scores 292 over 449 rows: clang inlines std::string::append into operator+, and one loop compares the

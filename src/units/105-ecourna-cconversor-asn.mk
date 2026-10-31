@@ -63,13 +63,16 @@
 # 9123 9140 9183 9210 and 9099 9122 9139 9160, their merges 1970 and 2926 and 9209 need no line: the scan pairs them by
 # content, each alone and all together.
 #
+# 9226, 9061, 9057, 9052, 9054 and 5095 stopped at `target call 306 | ours call 2671`: 306 is
+# __exception_guard_exceptions<vector<uebyte>::__destroy_vector>'s destructor with __destroy_vector out of line (call
+# 4967), and ours inlined it and joined 2671. They match since src/app/roots_vector.cpp holds the target's copies.
+# 9200 was `unresolved` on the table slot of CAutenticacao(unsigned, unsigned, const vector&) (9037); it matches since
+# the content pass names 9037, which it does once 306 is the target's.
+#
 # Written, and not a match yet:
-# - 9226, 9200, 9061, 9057, 9056, 9052, 9054 and 5095: `target call 306 | ours call 2671`. 306 is
-#   __exception_guard_exceptions<vector<uebyte>::__destroy_vector>'s destructor with __destroy_vector out of line (call
-#   4967); ours inlines it and joins 2671, which is the vector<TPartidoID> guard. A probe at -Oz -fexceptions gives that
-#   shape, 9 rows and the call, and ecourna's flags give 34 rows and no call, so -Oz fits. That the copy is the executable
-#   TU's is a reading, not measured: no object of ours holds it. Rows otherwise operand-only (9061 52 over 538, 9057 71
-#   over 555, 9056 134 over 857, 9052 100 over 889).
+# - 9056 gets past that call and is `unresolved` at ours +0x2ed, on the table slot of 5365,
+#   IConversorASN<DadosComparecimento, CDadosComparecimento>::Converte, whose name only 9056's own operand votes for
+#   (`self-voted`). 5365 is one of uenux2's copies below: 9056 waits for a match that names it.
 # - 9202: operand-only (29 over 274), on IConversorASN<IdentificadorGeradorMidia, ...>::Deconverte's table slot, which has
 #   no target function; it calls 2240 too, `differs`.
 # - 9216: 146 over 705 rows, one more `block` at +0x3dd: the element goes through a temporary (a loop gives neither that

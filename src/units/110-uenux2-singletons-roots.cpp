@@ -10,6 +10,12 @@
 //                       5604, 7377, 11209, 12098, 12110
 //   DestroiDecoradores  ~CEleitorDecorator 379: 15 callers, some read its result, so this stand-in reads it (R18)
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
+//   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
+//   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
+//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 2822, 6034, 7174, 10210, 10635 and 11616 (2825 is in the
+//                       link)
+//   t11526 to t11529    the four CEleitorDado*::Text, which the target reaches only by table slot (fn 5401 passes all
+//                       four): their addresses are taken
 // 273, 332 and 407 hold table slots 84, 86 and 108, so their addresses are taken. A destructor returns `this` in the object;
 // DestroiTodos drops it, which lets binaryen remove the result as the target's did. Bodies differ from every target
 // function's. Declared through asm labels with the object's signatures, so this TU instantiates nothing.
@@ -43,6 +49,14 @@ int d5773(int) __asm__("_ZN5comum10CEleitoresD1Ev");
 int d5792(int) __asm__("_ZN5comum20CConfiguracaoEleicaoD1Ev");
 int d5805(int) __asm__("_ZN5comum7CCargosD1Ev");
 int d6548(int) __asm__("_ZN4vota10CTelasVotaD1Ev");
+
+void w5765(int, int) __asm__("_ZNK5comum10CEleitores24ValidaIdentidadesEleitorERKNS_2md17CEleitorDecoratorE");
+void t11529(int, int) __asm__("_ZN5comum24CEleitorDadoNomeParaUrna4TextERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+void t11528(int, int) __asm__("_ZN5comum22CEleitorDadoSequencial4TextERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+void t11527(int, int) __asm__("_ZN5comum17CEleitorDadoSecao4TextERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+void t11526(int) __asm__("_ZN5comum15CEleitorDadoTTE4TextEv");
+void w2825(int, int) __asm__("_ZN5comum10CEleitores25MarcaEleitorFoiHabilitadoERKNS_24CEleitorDadosHabilitacaoE");
+int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 }
 
 namespace {
@@ -82,6 +96,23 @@ __attribute__((noinline)) int DestroiDecoradores(int p)
     return d379(p) + d379(p + 108) * 3;
 }
 
+__attribute__((noinline)) void ValidaEleitores(int eleitores, int eleitor)
+{
+    w5765(eleitores, eleitor);
+    w5765(eleitores, eleitor + 108);
+}
+
+__attribute__((noinline)) void HabilitaEleitores(int eleitores, int dados)
+{
+    w2825(eleitores, dados);
+    w2825(eleitores, dados + 64);
+}
+
+__attribute__((noinline)) int ConsultaDinamicos(int detalhe)
+{
+    return w1271(detalhe) + w1271(detalhe + 204) * 3;
+}
+
 const void* volatile singletons_sink;
 
 struct SSingletonsRoots {
@@ -94,6 +125,13 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&w273);
         singletons_sink = reinterpret_cast<const void*>(&w332);
         singletons_sink = reinterpret_cast<const void*>(&w407);
+        singletons_sink = reinterpret_cast<const void*>(&ValidaEleitores);
+        singletons_sink = reinterpret_cast<const void*>(&t11529);
+        singletons_sink = reinterpret_cast<const void*>(&t11528);
+        singletons_sink = reinterpret_cast<const void*>(&t11527);
+        singletons_sink = reinterpret_cast<const void*>(&t11526);
+        singletons_sink = reinterpret_cast<const void*>(&HabilitaEleitores);
+        singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
     }
 } singletons_roots;
 

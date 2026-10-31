@@ -2414,16 +2414,6 @@
 // f8741 · 17 B · unmatched · placement: link order · name unknown
 // ? f8741(i32) { ... }
 
-// link-order cluster 128 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
-
-// f8872 · 363 B · unmatched · placement: link order · name unknown
-// ? f8872(i32, i32) { ... }
-
-// link-order cluster 129 · uses=1 · neighbours' file uenux2/src/api/gui/iscreen.cpp
-
-// f8879 · 278 B · unmatched · placement: link order · name unknown
-// void f8879(i32, i32) { ... }
-
 // link-order cluster 274 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
 
 // f10377 · 12 B · unmatched · placement: link order · name unknown
@@ -2507,76 +2497,10 @@
 // f10878 · 91 B · unmatched · placement: link order · name unknown
 // ? f10878(i32) { ... }
 
-// link-order cluster 382 · uses=1 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f11009 · 212 B · unmatched · placement: link order · name unknown
-// void f11009(i32) { ... }
-
-// f11008 · 289 B · unmatched · placement: link order · name unknown
-// void f11008(i32) { ... }
-
-// f11007 · 106 B · unmatched · placement: link order · name unknown
-// void f11007(i32) { ... }
-
-// f11005 · 183 B · unmatched · placement: link order · name unknown
-// void f11005(i32) { ... }
-
-// link-order cluster 387 · uses=1 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
-
-// f11042 · 118 B · unmatched · placement: link order · name unknown
-// void f11042(i32) { ... }
-
-// f11032 · 47 B · unmatched · placement: link order · name unknown
-// ? f11032(i32) { ... }
-
-// f11031 · 50 B · unmatched · placement: link order · name unknown
-// void f11031(i32) { ... }
-
-// f11028 · 17 B · unmatched · placement: link order · name unknown
-// void f11028(i32) { ... }
-
-// link-order cluster 388 · uses=1 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f11045 · 10 B · unmatched · placement: link order · name unknown
-// void f11045(i32) { ... }
-
-// f11044 · 7 B · unmatched · placement: link order · name unknown
-// void f11044(i32) { ... }
-
-// f11043 · 7 B · unmatched · placement: link order · name unknown
-// void f11043(i32) { ... }
-
-// link-order cluster 396 · uses=1 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
-
-// f11079 · 47 B · unmatched · placement: link order · name unknown
-// ? f11079(i32) { ... }
-
-// f11078 · 50 B · unmatched · placement: link order · name unknown
-// void f11078(i32) { ... }
-
-// f11074 · 17 B · unmatched · placement: link order · name unknown
-// void f11074(i32) { ... }
-
 // link-order cluster 401 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
 
 // f11107 · 432 B · unmatched · placement: link order · name unknown
 // void f11107(i32, i32) { ... }
-
-// link-order cluster 402 · uses=1 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
-
-// f11133 · 118 B · unmatched · placement: link order · name unknown
-// void f11133(i32) { ... }
-
-// link-order cluster 403 · uses=1 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f11136 · 10 B · unmatched · placement: link order · name unknown
-// void f11136(i32) { ... }
-
-// f11135 · 7 B · unmatched · placement: link order · name unknown
-// void f11135(i32) { ... }
-
-// f11134 · 7 B · unmatched · placement: link order · name unknown
-// void f11134(i32) { ... }
 
 // link-order cluster 404 · uses=1 · neighbours' file uenux2/src/api/gui/cpreshowclearscreen.cpp
 
@@ -2663,24 +2587,6 @@
 // f4653 · 26 B · unmatched · placement: link order · name unknown
 // void f4653(i32) { ... }
 
-// link-order cluster 717 · uses=2 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f5019 · 10 B · unmatched · placement: link order · name unknown
-// void f5019(i32) { ... }
-
-// link-order cluster 719 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/cfiltercoder.cpp
-
-// f5022 · 22 B · unmatched · placement: link order · name unknown
-// void f5022(i32) { ... }
-
-// link-order cluster 721 · uses=2 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f5056 · 22 B · unmatched · placement: link order · name unknown
-// void f5056(i32) { ... }
-
-// f5052 · 10 B · unmatched · placement: link order · name unknown
-// void f5052(i32) { ... }
-
 // link-order cluster 737 · uses=2
 
 // f5254 · 1114 B · unmatched · placement: link order · name unknown
@@ -2742,68 +2648,10 @@
 // f5507 · 504 B · unmatched · placement: link order · name unknown
 // ? f5507(i32, i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 778 · uses=2 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f5511 · 10 B · unmatched · placement: link order · name unknown
-// void f5511(i32) { ... }
-
-// link-order cluster 779 · uses=2 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f5514 · 761 B · unmatched · placement: link order · name unknown
-// ? f5514(i32) { ... }
-
-// f5513 · 10 B · unmatched · placement: link order · name unknown
-// void f5513(i32) { ... }
-
-// f5512 · 22 B · unmatched · placement: link order · name unknown
-// void f5512(i32) { ... }
-
-// link-order cluster 780 · uses=2 · neighbours' file uenux2/src/api/gui/cnewlinefieldpaper.cpp
-
-// f5515 · 555 B · unmatched · placement: link order · name unknown
-// void f5515(i32, i32) { ... }
-
-// link-order cluster 782 · uses=2 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f5520 · 212 B · unmatched · placement: link order · name unknown
-// void f5520(i32) { ... }
-
-// f5519 · 289 B · unmatched · placement: link order · name unknown
-// void f5519(i32) { ... }
-
-// f5518 · 195 B · unmatched · placement: link order · name unknown
-// void f5518(i32) { ... }
-
-// link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
-
-// f5522 · 16 B · unmatched · placement: link order · name unknown
-// ? f5522(i32, i32, i32) { ... }
-
-// link-order cluster 786 · uses=2 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
-
-// f5529 · 78 B · unmatched · placement: link order · name unknown
-// void f5529(i32, i32) { ... }
-
 // link-order cluster 789 · uses=2 · neighbours' file uenux2/src/api/gui/primitives.cpp
 
 // f5536 · 164 B · unmatched · placement: link order · name unknown
 // void f5536(i32, i32, i32, i32) { ... }
-
-// link-order cluster 790 · uses=2 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f5541 · 212 B · unmatched · placement: link order · name unknown
-// void f5541(i32) { ... }
-
-// f5540 · 289 B · unmatched · placement: link order · name unknown
-// void f5540(i32) { ... }
-
-// f5539 · 195 B · unmatched · placement: link order · name unknown
-// void f5539(i32) { ... }
-
-// link-order cluster 793 · uses=2 · neighbours' file uenux2/src/api/gui/ctextrectfield.cpp
-
-// f5548 · 16 B · unmatched · placement: link order · name unknown
-// ? f5548(i32, i32, i32) { ... }
 
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
@@ -2851,22 +2699,6 @@
 // f3333 · 1260 B · unmatched · placement: link order · name unknown
 // void f3333() { ... }
 
-// f3328 · 135 B · unmatched · placement: link order · name unknown
-// void f3328(i32) { ... }
-
-// f3327 · 22 B · unmatched · placement: link order · name unknown
-// void f3327(i32) { ... }
-
-// link-order cluster 953 · uses=3 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f3458 · 12 B · unmatched · placement: link order · name unknown
-// ? f3458(i32) { ... }
-
-// link-order cluster 954 · uses=3 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f3470 · 12 B · unmatched · placement: link order · name unknown
-// ? f3470(i32) { ... }
-
 // link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
 
 // f3528 · 530 B · unmatched · placement: link order · name unknown
@@ -2877,41 +2709,15 @@
 // f3661 · 423 B · unmatched · placement: link order · name unknown
 // void f3661(i32, i32, i32, i32) { ... }
 
-// link-order cluster 987 · uses=3 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f3670 · 321 B · unmatched · placement: link order · name unknown
-// void f3670() { ... }
-
-// f3669 · 12 B · unmatched · placement: link order · name unknown
-// ? f3669(i32) { ... }
-
 // link-order cluster 988 · uses=3 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
 
 // f3673 · 441 B · unmatched · placement: link order · name unknown
 // ? f3673(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1036 · uses=3
-
-// f3941 · 269 B · unmatched · placement: link order · name unknown
-// void f3941(i32, i32, i32, i32) { ... }
-
-// f3940 · 167 B · unmatched · placement: link order · name unknown
-// ? f3940(i32, i32) { ... }
-
 // link-order cluster 1046 · uses=3
 
 // f4129 · 280 B · unmatched · placement: link order · name unknown
 // void f4129(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1069 · uses=4
-
-// f2631 · 321 B · unmatched · placement: link order · name unknown
-// void f2631() { ... }
-
-// link-order cluster 1070 · uses=4
-
-// f2651 · 321 B · unmatched · placement: link order · name unknown
-// void f2651() { ... }
 
 // link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
 
@@ -2920,16 +2726,6 @@
 
 // f2715 · 109 B · unmatched · placement: link order · name unknown
 // void f2715(i32, i32) { ... }
-
-// link-order cluster 1091 · uses=4 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f2776 · 761 B · unmatched · placement: link order · name unknown
-// ? f2776(i32) { ... }
-
-// link-order cluster 1095 · uses=4 · neighbours' file uenux2/src/api/gui/iform.cpp
-
-// f2781 · 355 B · unmatched · placement: link order · name unknown
-// ? f2781(i32) { ... }
 
 // link-order cluster 1146 · uses=5
 
@@ -2940,11 +2736,6 @@
 
 // f2383 · 297 B · unmatched · placement: link order · name unknown
 // void f2383(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1172 · uses=6 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmnullpaper.cpp
-
-// f1872 · 848 B · unmatched · placement: link order · name unknown
-// void f1872(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1178 · uses=6 · neighbours' file uenux2/src/app/comum/util/cmonitoraalimentacao.cpp
 
@@ -2966,11 +2757,6 @@
 // f1151 · 330 B · unmatched · placement: link order · name unknown
 // void f1151(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1324 · uses=30 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
-
-// f554 · 418 B · unmatched · placement: link order · name unknown
-// void f554(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1329 · uses=35
 
 // f491 · 1329 B · unmatched · placement: link order · name unknown
@@ -2980,11 +2766,6 @@
 
 // f395 · 327 B · unmatched · placement: link order · name unknown
 // void f395(i32) { ... }
-
-// link-order cluster 1359 · uses=68
-
-// f301 · 545 B · unmatched · placement: link order · name unknown
-// void f301(i32, i32, i32, i32) { ... }
 
 // component simulador
 
