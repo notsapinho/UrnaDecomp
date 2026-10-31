@@ -474,7 +474,9 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
       'table-rel',
       'table-base',
     ]);
-    expect(operandKind(kindsOf('sqlite3VdbeExec'), 0x7df0)).toBe('table-base');
+    // a constant's encoded width moves this one's offset with our data, so read it by its kind
+    const exec = kindsOf('sqlite3VdbeExec');
+    expect(exec.verified && [...exec.ops.values()].filter((kind) => kind === 'table-base')).toEqual(['table-base']);
   });
 
   it.skipIf(!real)('leaves a function kind-unverified when a constant added to __table_base moved', () => {

@@ -50,16 +50,17 @@ holds `ASN1_ROOTS_EXCLUDE`, and a unit's fragment adds to it with `+=`.
 keeps the whole schema of these types in its data: every generated class has a static `theInfo` record, and TSE's
 asnparser appends the type's name to it (facts §A3). The 297 records give the field names, order, tags and
 optionality, the enumerators and the constraints exactly. Class names come from RTTI, from the names the app's
-`std::source_location` records spell, or are made up from the field name; the 14 made-up ones say `SYNTHESIZED` in
+`std::source_location` records spell, or are made up from the field name; the 13 made-up ones say `SYNTHESIZED` in
 their header comment. A generated class has no code of its own (all `SEQUENCE` classes share seven vtable functions),
 so the modules place data, not functions.
 
 `tools/extract/asn1/run.sh` regenerates them from the target into `build/out/asn1-schema/modules/` (about 15 s;
-it needs `build/dump/vota.objdump.txt`). Its output differs from the committed modules in 15 files, which carry
+it needs `build/dump/vota.objdump.txt`). Its output differs from the committed modules in 17 files, which carry
 hand edits made after generation: setters that take
 `x::const_reference` for every field, as asnparser writes them; generated classes that the target does not have
 (`Cabecalho`, nested `value_type`s) replaced by a `typedef` of the type it uses; an inline enumeration turned into
 the named type the target's RTTI shows (`ModuloTiposEcoUrna::SituacaoArquivo`) and a string type added
 (`ModuloTiposEleitorais::DataHoraJE`); typedefs for the names the app's source spells (`EstiloTitulo`,
-`GeneroLabel`, …); and the `#include` C++20 needs. So diff a regeneration against this
+`GeneroLabel`, …); a made-up class name replaced by the one RTTI shows (`ModuloEstadoGeralUrna::TipoUrnaOperacao`);
+and the `#include` C++20 needs. So diff a regeneration against this
 directory before copying anything over.
