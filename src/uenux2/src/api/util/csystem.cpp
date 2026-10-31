@@ -60,14 +60,7 @@ uedword CSystem::GetFileSize(const std::string& arquivo)
 // void f378(i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 399-688: content not recovered)
-#line 689
-// <stubs>
-// f11584 · 4385 B · unmatched · name unknown
-// void f11584(i32, i32) { ... }
-// </stubs>
-
-// (original lines 694-912: content not recovered)
+// (original lines 399-912: content not recovered)
 #line 913
 // <stubs>
 // f5455 · 4258 B · unmatched · name unknown
