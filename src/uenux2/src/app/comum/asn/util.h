@@ -11,9 +11,11 @@
 #include <format>
 #include <type_traits>
 
+#include "app/comum/dados/md/candidatura/cdadoscandidato.h"
 #include "app/comum/etipolocalvotacao.h"
 #include "app/comum/eurnafase.h"
 #include "app/comum/eurnaturno.h"
+#include "asn1/modules/ModuloCandidatos.h"
 #include "asn1/modules/ModuloTiposCadastro.h"
 #include "asn1/modules/ModuloTiposEleitorais.h"
 
@@ -37,6 +39,7 @@ public:
     static EUrnaFase DesconverteFase(const ModuloTiposEleitorais::Fase& fase);
     static md::ETipoAbrangencia DesconverteAbrangencia(ModuloTiposEleitorais::TipoAbrangencia::NamedNumber abrangencia);
     static ModuloTiposEleitorais::TipoAbrangencia::NamedNumber ConverteAbrangencia(md::ETipoAbrangencia abrangencia);
+    static md::CSexo::ESexo DesconverteSexo(ModuloTiposEleitorais::CodigoSexo::NamedNumber sexo);
     static ModuloTiposEleitorais::Turno ConverteTurno(EUrnaTurno turno);
     static EUrnaTurno DesconverteTurno(ModuloTiposEleitorais::Turno turno);
     static ModuloTiposCadastro::TipoLocalVotacao ConverteTipoLocalVotacao(ETipoLocalVotacao tipo);

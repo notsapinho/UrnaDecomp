@@ -61,8 +61,23 @@ EUrnaFase Utils::DesconverteFase(const ModuloTiposEleitorais::Fase& fase)
 // void f11437(i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 331-485: content not recovered)
-#line 486
+// (original lines 331-470: content not recovered)
+#line 471
+md::CSexo::ESexo Utils::DesconverteSexo(ModuloTiposEleitorais::CodigoSexo::NamedNumber sexo)
+{
+    switch (sexo) {
+        case ModuloTiposEleitorais::CodigoSexo::sexoMasculino:
+            return md::CSexo::SEXO_MASCULINO;
+        case ModuloTiposEleitorais::CodigoSexo::sexoFeminino:
+            return md::CSexo::SEXO_FEMININO;
+        case ModuloTiposEleitorais::CodigoSexo::sexoNaoInformado:
+            return md::CSexo::SEXO_NAO_INFORMADO;
+        default:
+            break;
+    }
+    throw CUeComumAsnError(EUE_COMUM_ASN_SEXO_INVALIDO, std::format("Sexo inválido: {}", sexo));
+}
+
 md::ETipoAbrangencia Utils::DesconverteAbrangencia(ModuloTiposEleitorais::TipoAbrangencia::NamedNumber abrangencia)
 {
     switch (abrangencia) {

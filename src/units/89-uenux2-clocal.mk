@@ -42,7 +42,9 @@
 #   so does 5738, which holds it inlined. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
 #   std::unique_ptr; both are defined out of line because the target calls them.
 # - md::CIndiceFoto's constructor (5659), declared by unit 36. The file is the one the record of CIndicesFotos::at names
-#   (cindicesfotos.cpp:30, a function not written, whose line stays blank).
+#   (cindicesfotos.cpp:30, a function not written, whose line stays blank). md::CIndicesFotos's constructor is there
+#   too: binaryen inlines it into comum::asn::CIndexadorFotos::DoDesconverte (11441), which
+#   124-uenux2-app-comum-dados-asn.mk matches.
 # - md::CImpedido's constructors (5662, 5661, in the order of their band). The file is the record's (cimpedido.cpp:46,
 #   GetImpedimentoP2, held inlined by fn 5764 and not written, so its line stays blank). The class is read from 11410, CConversorImpedido's DoDesconverte,
 #   their only caller. Why the second constructor stores 15 in the second impediment is not known: the value is the bytes'.
