@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-30T18:55:43.746Z",
+ "createdAt": "2026-10-31T03:27:54.526Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
@@ -9,14 +9,14 @@
  "image": "urna-emsdk:6.0.0",
  "dataset": {
   "rows": 169,
-  "rowsSha256": "947fde4da4ad20f4ec5e6e3968eb9a113a0d6215eff357d2a61b8b683bcba325",
-  "setupsSha256": "4cbe3c07d2ef9a60839b6c28ab62c61dfcf137d6b5dec184de55413fd33f7dab"
+  "rowsSha256": "5e4861b80727a7d09b26e91485dd0f2d7b601490cfa10caa35dd7346620ff16d",
+  "setupsSha256": "d84a6cd1cf58ee48da4b50c9cc8a35b30a93f14367ddce8a355ec6a88500efe2"
  },
- "commit": "f1ee3fb+dirty",
+ "commit": "af07748+dirty",
  "durationMs": {
-  "lift": 122,
-  "compileAndOptimise": 5095,
-  "total": 11198
+  "lift": 106,
+  "compileAndOptimise": 4737,
+  "total": 11721
  },
  "totals": {
   "overall": {
@@ -24,14 +24,14 @@
    "lifted": 169,
    "compiled": 169,
    "optimised": 169,
-   "exactRaw": 30,
-   "exact": 81,
-   "medianRatio": 0.3982,
-   "medianOptRatio": 0.0189,
-   "meanOptRatio": 0.1812,
+   "exactRaw": 32,
+   "exact": 78,
+   "medianRatio": 0.4043,
+   "medianOptRatio": 0.0682,
+   "meanOptRatio": 0.1835,
    "outcomes": {
-    "differs": 88,
-    "exact": 81
+    "differs": 91,
+    "exact": 78
    }
   },
   "bySetup": {
@@ -42,9 +42,9 @@
     "optimised": 12,
     "exactRaw": 3,
     "exact": 5,
-    "medianRatio": 0.4573,
-    "medianOptRatio": 0.1911,
-    "meanOptRatio": 0.1958,
+    "medianRatio": 0.5572,
+    "medianOptRatio": 0.119,
+    "meanOptRatio": 0.174,
     "outcomes": {
      "differs": 7,
      "exact": 5
@@ -57,9 +57,9 @@
     "optimised": 12,
     "exactRaw": 1,
     "exact": 5,
-    "medianRatio": 0.6362,
-    "medianOptRatio": 0.0104,
-    "meanOptRatio": 0.0728,
+    "medianRatio": 0.6505,
+    "medianOptRatio": 0.0585,
+    "meanOptRatio": 0.0793,
     "outcomes": {
      "differs": 7,
      "exact": 5
@@ -71,13 +71,13 @@
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 4,
-    "exact": 10,
-    "medianRatio": 0.1838,
+    "exact": 9,
+    "medianRatio": 0.1882,
     "medianOptRatio": 0,
-    "meanOptRatio": 0.0179,
+    "meanOptRatio": 0.0392,
     "outcomes": {
-     "exact": 10,
-     "differs": 2
+     "exact": 9,
+     "differs": 3
     }
    },
    "zlib": {
@@ -145,14 +145,14 @@
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 4,
+    "exactRaw": 5,
     "exact": 8,
-    "medianRatio": 0.2708,
+    "medianRatio": 0.1383,
     "medianOptRatio": 0,
-    "meanOptRatio": 0.1116,
+    "meanOptRatio": 0.0922,
     "outcomes": {
-     "exact": 8,
-     "differs": 4
+     "differs": 4,
+     "exact": 8
     }
    },
    "boost": {
@@ -237,9 +237,9 @@
     "optimised": 12,
     "exactRaw": 2,
     "exact": 5,
-    "medianRatio": 0.3401,
-    "medianOptRatio": 0.0432,
-    "meanOptRatio": 0.1535,
+    "medianRatio": 0.4329,
+    "medianOptRatio": 0.1588,
+    "meanOptRatio": 0.1728,
     "outcomes": {
      "exact": 5,
      "differs": 7
@@ -250,14 +250,14 @@
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 1,
-    "exact": 8,
-    "medianRatio": 0.2404,
-    "medianOptRatio": 0,
-    "meanOptRatio": 0.0843,
+    "exactRaw": 2,
+    "exact": 6,
+    "medianRatio": 0.3258,
+    "medianOptRatio": 0.0509,
+    "meanOptRatio": 0.1103,
     "outcomes": {
-     "differs": 4,
-     "exact": 8
+     "differs": 6,
+     "exact": 6
     }
    }
   }
@@ -345,6 +345,33 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
+  },
+  {
+   "id": "uenux2/9523",
+   "index": 9523,
+   "setup": "uenux2",
+   "size": 38,
+   "band": "small",
+   "features": [
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 19,
+   "raw": {
+    "score": 12,
+    "ratio": 0.6316
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "goto"
+   ]
   },
   {
    "id": "uenux2/10451",
@@ -449,6 +476,33 @@
    ]
   },
   {
+   "id": "uenux2/10946",
+   "index": 10946,
+   "setup": "uenux2",
+   "size": 74,
+   "band": "small",
+   "features": [
+    "call_indirect",
+    "frame",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 36,
+   "raw": {
+    "score": 2,
+    "ratio": 0.0556
+   },
+   "opt": {
+    "score": 2,
+    "ratio": 0.0556
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "uenux2/10949",
    "index": 10949,
    "setup": "uenux2",
@@ -503,32 +557,6 @@
    },
    "exact": true,
    "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "uenux2/11067",
-   "index": 11067,
-   "setup": "uenux2",
-   "size": 86,
-   "band": "small",
-   "features": [
-    "leaf",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 41,
-   "raw": {
-    "score": 17,
-    "ratio": 0.4146
-   },
-   "opt": {
-    "score": 13,
-    "ratio": 0.3171
-   },
-   "exact": false,
-   "outcome": "differs",
    "failure": null,
    "standIns": []
   },
@@ -596,33 +624,6 @@
     "goto",
     "inlined callee outlined"
    ]
-  },
-  {
-   "id": "uenux2/11668",
-   "index": 11668,
-   "setup": "uenux2",
-   "size": 106,
-   "band": "small",
-   "features": [
-    "call_indirect",
-    "frame",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 54,
-   "raw": {
-    "score": 22,
-    "ratio": 0.4074
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
   },
   {
    "id": "ecourna/307",
@@ -734,35 +735,35 @@
    ]
   },
   {
-   "id": "ecourna/9112",
-   "index": 9112,
+   "id": "ecourna/9117",
+   "index": 9117,
    "setup": "ecourna",
-   "size": 613,
+   "size": 1268,
    "band": "large",
    "features": [
-    "call_indirect",
+    "switch",
     "invoke",
     "throw",
     "frame",
-    "i64"
+    "i64",
+    "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 266,
+   "targetRows": 533,
    "raw": {
-    "score": 190,
-    "ratio": 0.7143
+    "score": 434,
+    "ratio": 0.8143
    },
    "opt": {
-    "score": 4,
-    "ratio": 0.015
+    "score": 93,
+    "ratio": 0.1745
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
-    "frame object escapes at entry",
     "goto"
    ]
   },
@@ -931,32 +932,30 @@
    ]
   },
   {
-   "id": "ecourna/14295",
-   "index": 14295,
+   "id": "ecourna/14153",
+   "index": 14153,
    "setup": "ecourna",
    "size": 104,
    "band": "small",
    "features": [
-    "leaf",
-    "switch"
+    "call_indirect"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 47,
+   "targetRows": 45,
    "raw": {
-    "score": 29,
-    "ratio": 0.617
+    "score": 35,
+    "ratio": 0.7778
    },
    "opt": {
-    "score": 9,
-    "ratio": 0.1915
+    "score": 5,
+    "ratio": 0.1111
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
-    "arm tail kept from the join",
-    "goto"
+    "arm tail kept from the join"
    ]
   },
   {
@@ -1043,35 +1042,6 @@
    ]
   },
   {
-   "id": "asn1/2187",
-   "index": 2187,
-   "setup": "asn1",
-   "size": 133,
-   "band": "medium",
-   "features": [
-    "call_indirect",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 61,
-   "raw": {
-    "score": 18,
-    "ratio": 0.2951
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "asn1/2191",
    "index": 2191,
    "setup": "asn1",
@@ -1099,20 +1069,20 @@
    "standIns": []
   },
   {
-   "id": "asn1/5051",
-   "index": 5051,
+   "id": "asn1/8753",
+   "index": 8753,
    "setup": "asn1",
-   "size": 95,
+   "size": 51,
    "band": "small",
    "features": [
-    "i64"
+    "leaf"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 43,
+   "targetRows": 24,
    "raw": {
-    "score": 6,
-    "ratio": 0.1395
+    "score": 4,
+    "ratio": 0.1667
    },
    "opt": {
     "score": 0,
@@ -1150,6 +1120,39 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
+  },
+  {
+   "id": "asn1/8812",
+   "index": 8812,
+   "setup": "asn1",
+   "size": 393,
+   "band": "medium",
+   "features": [
+    "call_indirect",
+    "frame",
+    "inlined-frame",
+    "i64",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 195,
+   "raw": {
+    "score": 145,
+    "ratio": 0.7436
+   },
+   "opt": {
+    "score": 50,
+    "ratio": 0.2564
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto",
+    "inlined callee outlined"
+   ]
   },
   {
    "id": "asn1/8815",
@@ -1256,8 +1259,8 @@
    "standIns": []
   },
   {
-   "id": "asn1/9972",
-   "index": 9972,
+   "id": "asn1/9973",
+   "index": 9973,
    "setup": "asn1",
    "size": 17,
    "band": "tiny",
@@ -2636,34 +2639,6 @@
    "standIns": []
   },
   {
-   "id": "rhvoice/394",
-   "index": 394,
-   "setup": "rhvoice",
-   "size": 123,
-   "band": "small",
-   "features": [
-    "frame"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 58,
-   "raw": {
-    "score": 20,
-    "ratio": 0.3448
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "rhvoice/755",
    "index": 755,
    "setup": "rhvoice",
@@ -2686,32 +2661,6 @@
    },
    "exact": false,
    "outcome": "differs",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "rhvoice/902",
-   "index": 902,
-   "setup": "rhvoice",
-   "size": 16,
-   "band": "tiny",
-   "features": [
-    "leaf",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 7,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
    "failure": null,
    "standIns": []
   },
@@ -2745,33 +2694,31 @@
    ]
   },
   {
-   "id": "rhvoice/1680",
-   "index": 1680,
+   "id": "rhvoice/1252",
+   "index": 1252,
    "setup": "rhvoice",
-   "size": 312,
+   "size": 183,
    "band": "medium",
    "features": [
-    "switch",
-    "bulk-memory"
+    "call_indirect",
+    "frame",
+    "i64"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 146,
+   "targetRows": 84,
    "raw": {
-    "score": 66,
-    "ratio": 0.4521
+    "score": 38,
+    "ratio": 0.4524
    },
    "opt": {
-    "score": 43,
-    "ratio": 0.2945
+    "score": 2,
+    "ratio": 0.0238
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
+   "standIns": []
   },
   {
    "id": "rhvoice/2697",
@@ -2801,31 +2748,31 @@
    "standIns": []
   },
   {
-   "id": "rhvoice/3544",
-   "index": 3544,
+   "id": "rhvoice/2701",
+   "index": 2701,
    "setup": "rhvoice",
-   "size": 211,
+   "size": 136,
    "band": "medium",
    "features": [
-    "leaf",
     "loop",
-    "switch"
+    "bulk-memory"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 92,
+   "targetRows": 71,
    "raw": {
-    "score": 63,
-    "ratio": 0.6848
+    "score": 50,
+    "ratio": 0.7042
    },
    "opt": {
-    "score": 47,
-    "ratio": 0.5109
+    "score": 39,
+    "ratio": 0.5493
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
+    "arm tail kept from the join",
     "goto"
    ]
   },
@@ -2907,6 +2854,32 @@
    "standIns": []
   },
   {
+   "id": "rhvoice/5247",
+   "index": 5247,
+   "setup": "rhvoice",
+   "size": 58,
+   "band": "small",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 25,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "rhvoice/9626",
    "index": 9626,
    "setup": "rhvoice",
@@ -2933,6 +2906,32 @@
    "standIns": [
     "arm tail kept from the join"
    ]
+  },
+  {
+   "id": "rhvoice/9630",
+   "index": 9630,
+   "setup": "rhvoice",
+   "size": 20,
+   "band": "tiny",
+   "features": [
+    "leaf",
+    "float"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 7,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "rhvoice/10196",
@@ -4371,36 +4370,6 @@
    "standIns": []
   },
   {
-   "id": "libcxx/2561",
-   "index": 2561,
-   "setup": "libcxx",
-   "size": 539,
-   "band": "large",
-   "features": [
-    "switch",
-    "frame",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 265,
-   "raw": {
-    "score": 35,
-    "ratio": 0.1321
-   },
-   "opt": {
-    "score": 2,
-    "ratio": 0.0075
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "libcxx/2566",
    "index": 2566,
    "setup": "libcxx",
@@ -4547,6 +4516,38 @@
    ]
   },
   {
+   "id": "libcxx/7870",
+   "index": 7870,
+   "setup": "libcxx",
+   "size": 925,
+   "band": "large",
+   "features": [
+    "loop",
+    "switch",
+    "call_indirect",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 468,
+   "raw": {
+    "score": 221,
+    "ratio": 0.4722
+   },
+   "opt": {
+    "score": 112,
+    "ratio": 0.2393
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
    "id": "libcxx/7882",
    "index": 7882,
    "setup": "libcxx",
@@ -4664,34 +4665,89 @@
    "standIns": []
   },
   {
-   "id": "libcxxabi/188",
-   "index": 188,
+   "id": "libcxxabi/544",
+   "index": 544,
    "setup": "libcxxabi",
-   "size": 405,
-   "band": "medium",
+   "size": 5354,
+   "band": "huge",
    "features": [
+    "loop",
     "switch",
-    "call_indirect",
+    "frame",
+    "inlined-frame",
     "i64",
     "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 187,
+   "targetRows": 2432,
    "raw": {
-    "score": 58,
-    "ratio": 0.3102
+    "score": 1170,
+    "ratio": 0.4811
    },
    "opt": {
-    "score": 49,
-    "ratio": 0.262
+    "score": 592,
+    "ratio": 0.2434
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
-    "goto"
+    "arm tail kept from the join",
+    "frame object escapes at entry",
+    "goto",
+    "inlined callee outlined"
    ]
+  },
+  {
+   "id": "libcxxabi/1567",
+   "index": 1567,
+   "setup": "libcxxabi",
+   "size": 39,
+   "band": "small",
+   "features": [
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 19,
+   "raw": {
+    "score": 3,
+    "ratio": 0.1579
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "libcxxabi/1971",
+   "index": 1971,
+   "setup": "libcxxabi",
+   "size": 39,
+   "band": "small",
+   "features": [
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 19,
+   "raw": {
+    "score": 3,
+    "ratio": 0.1579
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "libcxxabi/2929",
@@ -4720,136 +4776,73 @@
    "standIns": []
   },
   {
-   "id": "libcxxabi/2930",
-   "index": 2930,
+   "id": "libcxxabi/2942",
+   "index": 2942,
    "setup": "libcxxabi",
-   "size": 160,
-   "band": "medium",
+   "size": 3703,
+   "band": "huge",
    "features": [
-    "invoke"
+    "loop",
+    "switch",
+    "invoke",
+    "throw",
+    "frame",
+    "i64",
+    "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 58,
+   "targetRows": 1566,
    "raw": {
-    "score": 41,
-    "ratio": 0.7069
+    "score": 966,
+    "ratio": 0.6169
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "libcxxabi/3947",
-   "index": 3947,
-   "setup": "libcxxabi",
-   "size": 154,
-   "band": "medium",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 77,
-   "raw": {
-    "score": 13,
-    "ratio": 0.1688
-   },
-   "opt": {
-    "score": 7,
-    "ratio": 0.0909
+    "score": 321,
+    "ratio": 0.205
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
+    "frame object escapes at entry",
     "goto"
    ]
   },
   {
-   "id": "libcxxabi/3948",
-   "index": 3948,
+   "id": "libcxxabi/6184",
+   "index": 6184,
    "setup": "libcxxabi",
-   "size": 118,
-   "band": "small",
+   "size": 386,
+   "band": "medium",
    "features": [
-    "leaf"
+    "loop",
+    "switch",
+    "invoke",
+    "throw",
+    "frame",
+    "i64"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 56,
+   "targetRows": 165,
    "raw": {
-    "score": 3,
-    "ratio": 0.0536
+    "score": 97,
+    "ratio": 0.5879
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 40,
+    "ratio": 0.2424
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
    "standIns": [
-    "arm tail kept from the join"
+    "arm tail kept from the join",
+    "frame object escapes at entry",
+    "goto"
    ]
-  },
-  {
-   "id": "libcxxabi/12128",
-   "index": 12128,
-   "setup": "libcxxabi",
-   "size": 67,
-   "band": "small",
-   "features": [
-    "call_indirect",
-    "frame"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 31,
-   "raw": {
-    "score": 3,
-    "ratio": 0.0968
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "libcxxabi/12129",
-   "index": 12129,
-   "setup": "libcxxabi",
-   "size": 28,
-   "band": "tiny",
-   "features": [],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 13,
-   "raw": {
-    "score": 3,
-    "ratio": 0.2308
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
   },
   {
    "id": "libcxxabi/12135",
@@ -4881,85 +4874,6 @@
    ]
   },
   {
-   "id": "libcxxabi/12136",
-   "index": 12136,
-   "setup": "libcxxabi",
-   "size": 660,
-   "band": "large",
-   "features": [
-    "loop",
-    "call_indirect",
-    "bulk-memory",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 301,
-   "raw": {
-    "score": 190,
-    "ratio": 0.6312
-   },
-   "opt": {
-    "score": 148,
-    "ratio": 0.4917
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "libcxxabi/12139",
-   "index": 12139,
-   "setup": "libcxxabi",
-   "size": 28,
-   "band": "tiny",
-   "features": [],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 13,
-   "raw": {
-    "score": 3,
-    "ratio": 0.2308
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "libcxxabi/12141",
-   "index": 12141,
-   "setup": "libcxxabi",
-   "size": 13,
-   "band": "tiny",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 6,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
    "id": "libcxxabi/12144",
    "index": 12144,
    "setup": "libcxxabi",
@@ -4974,6 +4888,120 @@
    "raw": {
     "score": 5,
     "ratio": 0.3846
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "libcxxabi/12147",
+   "index": 12147,
+   "setup": "libcxxabi",
+   "size": 587,
+   "band": "large",
+   "features": [
+    "loop",
+    "invoke",
+    "throw",
+    "i64",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 280,
+   "raw": {
+    "score": 150,
+    "ratio": 0.5357
+   },
+   "opt": {
+    "score": 102,
+    "ratio": 0.3643
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "frame object escapes at entry",
+    "goto"
+   ]
+  },
+  {
+   "id": "libcxxabi/12234",
+   "index": 12234,
+   "setup": "libcxxabi",
+   "size": 230,
+   "band": "medium",
+   "features": [
+    "loop",
+    "i64",
+    "float",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 118,
+   "raw": {
+    "score": 39,
+    "ratio": 0.3305
+   },
+   "opt": {
+    "score": 12,
+    "ratio": 0.1017
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "libcxxabi/12262",
+   "index": 12262,
+   "setup": "libcxxabi",
+   "size": 12,
+   "band": "tiny",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 5,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "libcxxabi/12265",
+   "index": 12265,
+   "setup": "libcxxabi",
+   "size": 9,
+   "band": "tiny",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 4,
+   "raw": {
+    "score": 0,
+    "ratio": 0
    },
    "opt": {
     "score": 0,

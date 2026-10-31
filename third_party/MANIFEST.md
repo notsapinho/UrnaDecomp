@@ -152,9 +152,15 @@ Build inference (matches conan-center `openssl/3.x.x` recipe for os=Emscripten: 
   synthesis, results in `tools/libs/rhvoice/census.json`): of the 746 functions labelled rhvoice, 1.14.0 matches 264
   (117 fingerprint), 1.16.5 245 (111). The lemon-generated user-dictionary parser (`yy_destructor`, target 2211: 1.14.0
   0/61 differing rows, 1.16.5 11/63) and `userdict::word_break::apply` (0/20 vs 1/20) carry the 1.14.0 bodies.
-- Build facts: RHVoice uses `std::unary_function`/`std::not1` → with the pinned libc++ it compiles at `-std=c++14`
-  (or c++17 + `-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION`), **not** at C++20 (the CMake default) → TSE
-  compiled it at ≤ C++17. Objects at -O3 (1.16.5: -Oz 110, -O2 240, -O3 245 matched). `voice.cpp` needs Boost headers.
+- Build facts: RHVoice uses `std::unary_function`/`std::not1` → with the pinned libc++ it compiles at `-std=c++14`, at
+  c++17 with `-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION`, and at C++20 (the CMake default) with that and three
+  more macros (`docs/reference/facts/libraries.md` §B6). Objects at -O3 (1.16.5: -Oz 110, -O2 240, -O3 245 matched).
+  `voice.cpp` needs Boost headers.
+- One source differs from the tag. `tools/libs/rhvoice/build.sh` overlays `src/core/str_hts_engine_impl.cpp` with a
+  one-parameter `HTS_Audio_initialize`, through a clang VFS overlay, so the checkout stays clean. The target has no trap and
+  no call at that site, and upstream's mismatch is in every tag (`git -C third_party/RHVoice log --all --oneline
+  -G'HTS_Audio_initialize' -- src/core/str_hts_engine_impl.cpp src/hts_engine/HTS_engine.c` prints one commit). §B6 has the
+  measurement and the other form.
   `CONFIG_PATH=/etc/RHVoice`, `DATA_PATH=/share/RHVoice`, `ENABLE_SONIC=1`, `ENABLE_PKG=0`; the C API (`src/lib/lib.cpp`)
   is not linked (none of its literals is in the target) — the app drives the C++ core directly.
 

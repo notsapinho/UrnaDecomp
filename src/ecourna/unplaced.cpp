@@ -485,11 +485,6 @@
 // f3509 · 530 B · unmatched · placement: link order · name unknown
 // void f3509(i32) { ... }
 
-// link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
-
-// f3527 · 104 B · unmatched · placement: link order · name unknown
-// void f3527(i32) { ... }
-
 // link-order cluster 966 · uses=3
 
 // f3564 · 120 B · unmatched · placement: link order · name unknown

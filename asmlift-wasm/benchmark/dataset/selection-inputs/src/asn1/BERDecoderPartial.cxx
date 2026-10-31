@@ -51,7 +51,8 @@ void BERDecoderPartial::notify(int index, const ASN1_STD string& name, AbstractD
 
   if (it != m_visitors.end()) {
     ASN1_STD shared_ptr<IAbstractVisitor> visitor = it->getVisitor();
-    if (mayFree && visitor->visit(index, path, data, position, length) == 1) {
+    bool consumed = visitor->visit(index, path, data, position, length) == 1;
+    if (mayFree && consumed) {
       DataFree dataFree;
       data->accept(dataFree);
     }
@@ -407,12 +408,13 @@ bool BERDecoderPartial::decodeTime(TIME& value, unsigned& len)
 
   ASN1_STD vector<char> block(len+1, '\0');
   unsigned read = m_seeder->decodeBlock(&*block.begin(), len);
-  if (read == len)
+  bool result = read == len;
+  if (result)
   {
     value.set(&*block.begin());
     trace_invalid(m_log, "", value);
   }
-  return read == len;
+  return result;
 }
 
 bool BERDecoderPartial::do_visit(UTCTime& value)
@@ -440,8 +442,11 @@ Visitor::VISIT_SEQ_RESULT BERDecoderPartial::preVisitExtensionRoots(SEQUENCE& va
   if (!decodeHeader(value, len)) return FAIL;
 
   unsigned headerLength = m_seeder->tell() - position;
-  if (m_path.empty()) {
-    m_path.push_back(value.getTypeName());
+  if (m_path.size() == 0) {
+    {
+      ASN1_STD string typeName = value.getTypeName();
+      m_path.push_back(typeName);
+    }
     ASN1_STD string name("");
     notify(0, name, &value, position, len + headerLength, false);
   }
@@ -450,7 +455,8 @@ Visitor::VISIT_SEQ_RESULT BERDecoderPartial::preVisitExtensionRoots(SEQUENCE& va
     notify(0, name, &value, position, len + headerLength, false);
   }
 
-  endSEQUENCEPositions.push_back(m_seeder->tell() + len);
+  unsigned endPosition = m_seeder->tell() + len;
+  endSEQUENCEPositions.push_back(endPosition);
   return !m_seeder->eof() ? CONTINUE : STOP;
 }
 
@@ -492,27 +498,22 @@ Visitor::VISIT_SEQ_RESULT BERDecoderPartial::visitExtensionRoot(SEQUENCE& value,
       else
         m_seeder->seek(savedPosition); //EXPLICIT or native tag
 
-      bool accepted;
-      if ((tag & ~1u) == 16) {
-        {
-          ASN1_STD string name(value.getFieldName(index));
-          notify(index, name, field, savedPosition, entryLen + headerLength, true);
-          m_path.push_back(ASN1_STD string(value.getFieldName(index)));
-        }
-        accepted = field->accept(*this);
-        if (accepted)
-          m_path.pop_back();
-      }
-      else {
-        accepted = field->accept(*this);
-        if (accepted) {
-          ASN1_STD string name(value.getFieldName(index));
-          notify(index, name, field, savedPosition, entryLen + headerLength, true);
-        }
+      bool sequence = (tag & ~1u) == 16;
+      if (sequence) {
+        ASN1_STD string name(value.getFieldName(index));
+        notify(index, name, field, savedPosition, entryLen + headerLength, true);
+        m_path.push_back(ASN1_STD string(value.getFieldName(index)));
       }
 
-      if (accepted)
+      if (field->accept(*this))
       {
+        if (sequence)
+          m_path.pop_back();
+        else {
+          ASN1_STD string name(value.getFieldName(index));
+          notify(index, name, field, savedPosition, entryLen + headerLength, true);
+        }
+
         if(m_seeder->tell() >= endSEQUENCEPositions.back()) {
           endSEQUENCEPositions.pop_back();
           return STOP;
@@ -630,14 +631,8 @@ bool BERDecoderPartial::decodeHeader(AbstractData & obj, unsigned & len)
   }
 
   m_seeder->seek(pos);
-  ASN1_STD string typeName = obj.getTypeName();
-  m_log << " This HEADER has invalid on tag " << tag << " on type " << typeName << " on position " << pos;
+  m_log << " This HEADER has invalid on tag " << tag << " on type " << obj.getTypeName() << " on position " << pos;
   return false;
 }
 
 }//namespace
-
-// <stubs>
-// f3469 · 117 B · unmatched · placement: link order · name unknown
-// ? f3469(i32, i32, i32) { ... }
-// </stubs>
