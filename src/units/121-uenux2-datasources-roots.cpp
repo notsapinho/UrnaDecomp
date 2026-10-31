@@ -8,15 +8,18 @@
 //   defined out of line in crespostas.cpp and cescolheopcao.cpp, which binaryen inlines into its one caller (fns 12621
 //   and 10685; the fragment says which form the target shows). Unit 102's roots object, ahead of this one, instantiates
 //   CDataText<CRespostasDSNumero> too, in a builder it drops, so the copies the link keeps of that class's vtable and
-//   GetText are that object's, the same code. CRespostasDSNumero's constructor is declared only (out of line in the
-//   target, fn 5729); COpcaoDS is copied, as fn 2753 copies it.
+//   GetText are that object's, the same code. CRespostasDSNumero's constructor is declared only: fn 6652 builds the
+//   source with a call of fn 5729, which stores its byte and returns this, and fn 600 calls the same body on another
+//   class's one-byte object, so the target holds one body for both and does not tell which source defines it. COpcaoDS
+//   is copied, as fn 2753 copies it.
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fns
-//   652, 1150, 1901, 2734, 2747, 5397, 10440 and 10465) and api::CInputMenuField (1579324, fn 3675); and the
-//   std::shared_ptr<T> made from a std::unique_ptr<T>, for __shared_ptr_pointer<T*, std::default_delete<T>,
-//   std::allocator<T>>, with T comum::CCalculaCV (1575124, fn 12110, whose push<CCalculaCV> record at
-//   cpolysingletonlist.h:129 takes the std::unique_ptr). A dropped builder needs T's constructor declared, not defined.
-// And one stand-in caller, of CCalculaCV's destructor, kept by its address: its comment names the target caller it
-// stands for.
+//   652, 1150, 1901, 2734, 2747, 5397, 10440 and 10465) and api::CInputMenuField (1579324, fn 3675). A dropped builder
+//   needs T's constructor declared, not defined.
+// And one stand-in caller, of CCalculaCV's destructor, kept by its address: its comment names the target callers it
+// stands for. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
+// 1575124, stored by fn 12110), has no builder here: one in this object only declares the destructor, so the block's
+// __on_zero_shared frees what the destructor returns, where the target's (fn 11263) frees the pointer it passed, and
+// the destructor (fn 5614) then keeps its result and stops matching. The fragment has the measurement.
 //
 // Compiled with APP_CXXFLAGS, like the other roots; the fragment says what UENUX2_CXXFLAGS gives. The order of the sink
 // lines is free (docs/reference/facts/splat.md section S9).
@@ -34,7 +37,6 @@ extern const char w121_vt_respostas[] __asm__("_ZTVN3api9CDataTextIN5comum18CRes
 extern const char w121_vt_opcao[] __asm__("_ZTVN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEEE");
 extern const char w121_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEEE");
 extern const char w121_vt_menu[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api15CInputMenuFieldENS_9allocatorIS2_EEEE");
-extern const char w121_vt_calcula[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum10CCalculaCVENS_14default_deleteIS2_EENS_9allocatorIS2_EEEE");
 }
 
 __attribute__((optnone, noinline)) void w121_respostas(uebyte digitos)
@@ -58,16 +60,12 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CInputMenuField> w121_me
     return std::make_shared<api::CInputMenuField>(posicao, font, largura);
 }
 
-__attribute__((optnone, noinline)) std::shared_ptr<comum::CCalculaCV> w121_calcula(
-    std::unique_ptr<comum::CCalculaCV> calcula)
-{
-    return std::shared_ptr<comum::CCalculaCV>(std::move(calcula));
-}
-
 namespace {
 
-// Stands for fn 12110, the second target caller of CCalculaCV's destructor (fn 5614); the block's __on_zero_shared is
-// the first. With one caller, binaryen would inline the destructor into it. Two calls, so the body is no target function's.
+// Stands for the two target callers of CCalculaCV's destructor (fn 5614): fn 11263, the __on_zero_shared of CCalculaCV's
+// block (the header says why this object builds none), and fn 12110, which holds push<CCalculaCV> and the release of its
+// std::unique_ptr. With one call site, binaryen would inline the destructor into it. Two calls, so the body is no target
+// function's.
 __attribute__((noinline)) void w121_destroi_calcula(comum::CCalculaCV* primeiro, comum::CCalculaCV* segundo)
 {
     primeiro->~CCalculaCV();
@@ -84,7 +82,6 @@ struct SW121Roots {
         w121_sink = w121_vt_opcao;
         w121_sink = w121_vt_string;
         w121_sink = w121_vt_menu;
-        w121_sink = w121_vt_calcula;
     }
 } w121_roots;
 

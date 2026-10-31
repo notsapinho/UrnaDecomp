@@ -828,7 +828,7 @@
 <rect x="221" y="399" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="232" y="399" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="0" y="450" font-size="13" fill="#f0efec" font-weight="600">Upstream libraries</text>
-<text x="800" y="450" font-size="12" fill="#c3c2b7" text-anchor="end">6,420 / 8,294 · 77.4%</text>
+<text x="800" y="450" font-size="12" fill="#c3c2b7" text-anchor="end">6,419 / 8,294 · 77.4%</text>
 <text x="0" y="472" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">openssl</text>
 <text x="0" y="488" font-size="11" fill="#c3c2b7">96.2% · 3,135 / 3,258</text>
 <rect x="0" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -932,7 +932,7 @@
 <rect x="88" y="597" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="99" y="597" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="133" y="472" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">libc++</text>
-<text x="133" y="488" font-size="11" fill="#c3c2b7">63.2% · 1,236 / 1,957</text>
+<text x="133" y="488" font-size="11" fill="#c3c2b7">63.1% · 1,235 / 1,957</text>
 <rect x="133" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="144" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="155" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -1748,7 +1748,7 @@
 <rect x="354" y="769" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="365" y="769" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="0" y="820" font-size="13" fill="#f0efec" font-weight="600">Not attributed</text>
-<text x="800" y="820" font-size="12" fill="#c3c2b7" text-anchor="end">1,631 / 2,764 · 59.0%</text>
+<text x="800" y="820" font-size="12" fill="#c3c2b7" text-anchor="end">1,632 / 2,764 · 59.0%</text>
 <text x="0" y="842" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">unknown</text>
 <text x="0" y="858" font-size="11" fill="#c3c2b7">77.3% · 1,165 / 1,508</text>
 <rect x="0" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -1852,7 +1852,7 @@
 <rect x="88" y="967" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="99" y="967" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="133" y="842" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">app</text>
-<text x="133" y="858" font-size="11" fill="#c3c2b7">37.1% · 466 / 1,256</text>
+<text x="133" y="858" font-size="11" fill="#c3c2b7">37.2% · 467 / 1,256</text>
 <rect x="133" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="144" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="155" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>

@@ -9,7 +9,7 @@
 #   CDataText<vota::CEscolheOpcao::COpcaoDS>::GetText                 10685, with the source's call operator inlined
 #   __shared_ptr_emplace<std::string> D2, D0, __on_zero_shared        10675, 10674, 10673
 #   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069
-#   __shared_ptr_pointer<comum::CCalculaCV*, default_delete, ...>     __get_deleter 11262
+#   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o
 # Two forms of the operator give 10685 the same instructions in the whole link (`score 10 over 216 rows`, all
 # operand-only, both): out of line in cescolheopcao.cpp, which binaryen inlines into its one caller, and defined in the
 # class, with cescolheopcao.cpp.o left out of a copy of the plain link. Written out of line, a choice. The vtable
@@ -24,23 +24,26 @@
 #   12621 scores `20 over 190 rows`, all operand-only, and splat-remap stops at one operand: the end of the format string
 #   "{:0{}}", which in the target is the tail of "  {}{}{:0{}}" (address 1042, loaded by fn 11973, not written) and in our
 #   link a string of its own. So it waits for uenux2 at -O3, the user's decision, and for that literal in the link.
-# - 5614, CCalculaCV's destructor, and 11263, the block's __on_zero_shared, which calls it (rows `no-candidate`, as no
-#   evidence names our destructor, and `unresolved` at that call). Our 11263 is this roots object's, compiled where the
-#   destructor is only declared, and it frees what the D2 returns, so binaryen keeps the D2's result: 5614 scores
-#   `6 over 52 rows` (5 operand-only, 1 inserted). A probe of
-#   `delete p` at -O2 frees the D2's result when the TU only declares the destructor, and drops it and frees p when the TU
-#   defines it, as the target's 11263 and fn 12110 do. With this roots object compiled without the CCalculaCV block, in a
-#   copy of the plain link, 5614 scores `4 over 51 rows`, all operand-only. So both wait for the block's real builder in
-#   ccalculacv.cpp (push<CCalculaCV>, inlined into fn 12110, which holds the constructor's records), whose throws are
-#   comum::EUeComumRelatoriosError's, an enum no header of this tree declares yet.
 # Members the unit brings with no target body of their own:
 # - 10688 and 10686, CDataText<COpcaoDS>'s D2 and D0: the implicit destructor cdatatext.h gives, as compiled here. In
 #   the target each is a 12-B thunk into fns 6053 and 6052, binaryen's merges of them with the D2 and D0 of
 #   __func<vota::IConfereVotoEmCargo::ExecutarAposAudioAtual(std::function<void ()>)::$_2, void (bool)> (11765, 11764).
 #   They read `differs` until that lambda's function lands and our link forms the same merge.
 #
+# CCalculaCV's destructor, 5614, has two target callers, fn 11263 (the __on_zero_shared of the class's block,
+# __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...>) and fn 12110; neither is in our link, and the
+# roots file's stand-in calls it twice for them, so it stays a function of its own. The block itself, its __get_deleter
+# 11262 and __on_zero_shared 11263, waits for its real builder in ccalculacv.cpp: push<CCalculaCV>, inlined into fn 12110,
+# which holds the constructor's records and throws comum::EUeComumRelatoriosError, an enum no header of this tree
+# declares yet. A dropped builder in the roots file does not stand in for it. Measured with one: 11262 matched, and the
+# block's __on_zero_shared, compiled where the destructor is only declared, freed what the destructor returns, so
+# binaryen kept the destructor's result and 5614 scored `6 over 52 rows` (5 operand-only, 1 inserted) and did not match;
+# without the builder, 5614 matches. A probe of `delete p` at -O2 frees the destructor's result when the TU only
+# declares the destructor, and drops it and frees p when the TU defines it, which is the shape of the target's 11263 and
+# of fn 12110's release of the std::unique_ptr, which reads as both compiled where the destructor is defined.
+#
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
-# `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 34 functions
+# `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions
 # compare equal. The names and types no evidence gives are marked as chosen where they are declared: crespostasds.h,
 # cescolheopcao.h, ccalculacv.h, cinputmenufield.h's constructor and crespostaconsulta.h's GetNumero.
 #

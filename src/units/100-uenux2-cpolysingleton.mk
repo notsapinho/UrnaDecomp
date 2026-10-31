@@ -63,8 +63,8 @@
 #   but they are its -Oz outlined copies, and uenux2's level inlines them. 388 (~shared_ptr) is too: our copy is `score 6 over
 #   28 rows`, with an early exit where -Oz nests the ifs. Only their names matter to their callers.
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
-#   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) is unit 121's, whose fragment says what
-#   its __on_zero_shared waits for.
+#   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
+#   unit 121's fragment says why no roots builder stands in for it.
 # - has<T>: written, and `differs` or `unresolved`. The target's 3387 calls 608 and instance's 512 calls 305: the
 #   executable TU's two find instantiations, kept apart by the two table slots their landing pads hold (fn 6161, the merged
 #   body, takes the slot as its last argument). Ours have no landing pads, so the two are byte-identical and binaryen
