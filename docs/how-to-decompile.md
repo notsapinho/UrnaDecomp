@@ -512,7 +512,8 @@ says which, so its linkage is a choice). A function-local static's guard shows l
 **The order of two members.** Inside one use band and one object, a higher target index must have a lower `ld_index` in
 `build/out/wasm-map/vota_web/names.tsv` ([reference/splat.md](reference/splat.md) "Reviewing a match" holds a reviewer
 to it). Compare `ld_index`, not the scan's `ours`: `ours` follows the final order, whose digit zones sort as text (`998`
-above `1002`), so a pair across ordinal 999 and 1000 reads the wrong way round.
+above `1002`, [facts/link-order.md](reference/facts/link-order.md) §L1), so a pair across ordinal 999 and 1000 reads the
+wrong way round.
 
 ```sh
 for i in 5742 5743; do s=$(awk -v i=$i '$1==i {print $2}' splat/matched.txt); printf '%s %s\n' $i "$(awk -F'\t' -v s="$s" '$2==s {print $4}' build/out/wasm-map/vota_web/names.tsv)"; done
@@ -791,10 +792,8 @@ cannot match until other code lands (a merge thunk: `src/units/README.md` "Pendi
 cost a match: `return "CProgressBar";` compiles to the target's 10975 and stays a trap because the real body would drift
 matched 9696 (unit 40). A member the compiler writes from the class definition has no body to trap at all (an implicit
 destructor), so there the class stays as it is and the fragment says what differs. Do not replace a right body with a
-trap to clear a row. A member a constructor would bring waits for the unit that writes that constructor, with one
-exception: a control block needs only its builder's symbols, and an `optnone` builder the link drops lifts the wait.
-Unit 83's roots file builds `std::shared_ptr<ASN1::ISeeder>` so, with the block's vtable in the sink, and its constructor
-is unmeasured, which the fragment says (`src/units/README.md` "A control block").
+trap to clear a row. A member a constructor would bring waits for the unit that writes that constructor, unless a
+builder the link drops can emit it (`src/units/README.md` "A control block").
 
 **The destructors say how the class is declared.** Read the D2 and D0 in the vtable's slots 0 and 1 before you write
 the class head. The D2's bytes are the same in every form of the destructor, so a D2 that matches settles nothing; the
@@ -993,15 +992,13 @@ regenerates the progress numbers (`make -C src status`: the status blocks of `do
 `wrote <file>` for each one it changes), and rewrites the stubs and gaps (`make -C src stubs`): a function with a match
 or a body of ours has no stub, so yours goes, and a stub-only file whose last stub goes is removed. A pending member's
 stub goes too, although its body is only a trap: `stubs.py` counts a function in a slot of a vtable our link holds as
-code of ours, and any virtual member of a class our sources define, with or without a vtable in the link. So a stub can
-go with no body of ours: `comum::IInterfaceSavd`'s 5503 lost its when unit 95 defined the class, and the rule goes by
-the class's last name, so f10874 and f10875, `api::CAjusteDataHora`'s, went with unit 93's
-`comum::md::estadoaplicacao::CAjusteDataHora`. Such a row is still `no-candidate`: when your class leaves a slot with no
-body, name it in the fragment, the only note left. The scan lists a pending member one of two ways. When binaryen merged
-its trap with another trap of the same wasm type, the slot gets no name and the row stays `no-candidate` (9133 and 9130,
-units 15's and 16's). When the trap is a function of its own, step 8 names the target function after the trap by
-`vtable` evidence, and the row is `differs` with the `-pending.o` as its object (11442, unit 36's). A landing moves
-these rows: a later trap of one type can merge with yours, and a trap left alone turns `differs`.
+code of ours, and any virtual member of a class our sources define, with or without a vtable in the link, by the class's
+last name alone (`src/units/README.md` "Pending members" has the cases). So a stub can go with no body of ours. Such a
+row is still `no-candidate`: when your class leaves a slot with no body, name it in the fragment, the only note left. The
+scan lists a pending member one of two ways. When binaryen merged its trap with another trap of the same wasm type, the
+slot gets no name and the row stays `no-candidate` (9133 and 9130, units 15's and 16's). When the trap is a function of
+its own, step 8 names the target function after the trap by `vtable` evidence, and the row is `differs` with the
+`-pending.o` as its object (11442, unit 36's). A landing moves these rows ("Pending members" says how).
 
 ```sh
 awk -F'\t' '$1==9130 || $1==9133 || $1==11442 {print $1, $4, $5, $11}' splat/scan.tsv
@@ -1032,12 +1029,11 @@ line by hand when the evidence is. Both sides can be right: the target merged tw
 keeps them apart, and only the matched symbol's body equals it. A match of that index then drops the other name
 ([reference/splat.md](reference/splat.md) §3), its callers leave `match`, and `status.py` stops step 9, naming them
 after `matched.txt only:`. Withdrawing the match does not help, since the content pass adds it back. Add a hand edit of
-the other name with `evidence:merged-body` and, in its comment, the callers, that the target merged the body, and that
-our own body is not equal (`pnpm wasm score`, not the first byte `splat-remap` prints: the scan stops at the first
-difference). The comment must also cite a caller the line does not rescue: one named by other evidence that calls the
-name at the aligned site, as 8811 does for 543. Without one, or when our body differs because our source is wrong, this
-is not the case: fix the source, or withdraw the callers with a reason. The report goes on printing that line, and that
-is expected.
+the other name with `evidence:merged-body` and, in its comment, the callers, that the target merged the body, that our
+own body is not equal (`pnpm wasm score`, not the first byte `splat-remap` prints: the scan stops at the first
+difference), and the caller the line does not rescue ([reference/splat.md](reference/splat.md) §2). Without one, or when
+our body differs because our source is wrong, fix the source, or withdraw the callers with a reason. The report goes on
+printing that line, and that is expected.
 
 A second name beside the matched one is not reported, so read step 8's `git diff splat/symbol_addrs.txt` for a `func:N`
 that gained a name, and for a matched index that lost its line: a vtable slot your unit fills with a body that is not
@@ -1106,27 +1102,11 @@ build/out/wasm/vota_web/vota_web_wasm.wasm` before and after the link) changes n
 symbol-file hand edit whose only evidence is the match it enables: a name whose only use is to make a function match
 proves nothing. A hand edit is allowed when no generated route reaches a name and evidence outside the match gives it: a
 callee whose callers are all named by `vtable` (those cast no votes), a callee with one caller that can land, a merge
-body's own callee, a `.bss` object or a small pointer no vote reaches. The kinds and what each rests on are in
-[reference/splat.md](reference/splat.md) §2. A hand line with one caller is the case §3's self-vote rule refuses in a
-generated line, and that rule does not read hand lines, so the line's comment must cite evidence from the callee's own
-body. `pair-depth0` is the only pair with that hash at depth 0, where a callee's body does not count (`pnpm --silent
-wasm fingerprint <wasm> --depth 0`, on both sides). The hash is `fingerprint`, or `shape` for a body that holds its own
-table slot, whose constant cannot be equal, and the comment says which. The uniqueness reads no match, but it compares
-the same two bodies a match would, so a verifier weighs such a line too.
+body's own callee, a `.bss` object or a small pointer no vote reaches. [reference/splat.md](reference/splat.md) §2 has
+the kinds, what each rests on and what each comment must cite, a line with one caller's above all: §3's self-vote rule
+does not read hand lines.
 
-A verifier weighs each line by removing it ([reference/splat.md](reference/splat.md) "Reviewing a match"). On a copy of
-the symbol file without the line, and a copy of the match list without the range's lines (a match names its function,
-§3, so the list must lose them too), scan and say what falls:
-
-```sh
-pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm --kinds ../build/out/wasm-kinds/vota_web/kinds.json --symbols <copy> --match <list copy> -o <scratch.tsv>
-```
-
-`--match` rewrites its file, so pass a copy, and pass one line's copy per scan. Then rule on whether what remains is
-independent of the match: the same line rewritten `evidence:call by:<its caller>` shows what the self-vote rule would
-refuse, and a line that refuses is sound only on evidence from the callee's own body. 46 of one unit's matches rest on
-such lines, and each one was read so. A line a generated line has caught up with falls to nothing: no output says so, so
-such a scan is how to find it, and it can go unless the generated line is a `vote:1` that would be self-voted. A data
+A verifier weighs each line by removing it: "Reviewing a match" there has the scan, with the rule for what falls. A data
 name is the same question: a generated `vote:1 by:<index>` line is a name whose only evidence is the one body that
 voted, and the build's check is that body's bytes and the object's (one byte for `api::CSystem::s_dorme`, which 8461
 alone votes for). Say in the fragment what else ties the operand to the object (the other readers of the address), so a
@@ -1152,15 +1132,9 @@ source. For a TSE function, check that each one of yours is a number its source 
 The review's blanked-target check blanks the function's piece, not what the symbol file already took from it. So a
 data name held only by this match's own vote (`evidence:vote:1 by:<this index>`) passes both ways, and for that operand
 the check shows no more than the byte comparison does. To see what the name carries, review on a copy of the symbol
-file without its line (from `asmlift-wasm/`). A function's name needs its match line out as well, with `--matches` on a
-copy of the list, since a match names its function; a data name needs only the symbol line:
-
-```sh
-mkdir -p ../build/out/review-probe
-/usr/bin/grep -v '_ZN3api7CSystem7s_dormeE' ../splat/symbol_addrs.txt > ../build/out/review-probe/symbols-no-dorme.txt
-pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm 8461 -o ../build/out/review-probe/8461-nosym --symbols ../build/out/review-probe/symbols-no-dorme.txt
-# preferred readings:    UNRESOLVED: +0x37 i32.const <address>: an address of ours: _ZN3api7CSystem7s_dormeE (.data) has no target symbol; too little content to place by its re-pointed bytes
-```
+file without its line. A function's name needs its match line out as well, with `--matches` on a copy of the list, since
+a match names its function; a data name needs only the symbol line ([reference/splat.md](reference/splat.md) "Reviewing
+a match" has the command, on 8461).
 
 **A twin whose name moved** is the one break that is not drift. When your unit brings in a body byte-identical to a
 matched one (another class's deleting destructor, another instantiation), binaryen keeps the first in link order,

@@ -54,7 +54,7 @@ Read the class's vtable and typeinfo in the data before you create the file the 
 The `unplaced.cpp` comment over a cluster, `// link-order cluster 255 · uses=1 · neighbours' file
 uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhasharquivo.cpp`, is that stretch's `probable_file` in
 `ledger/tu-clusters.tsv`. Its label (column `label_kinds`) says where the name comes from
-([tu-slices.md](../tu-slices.md)): `source_location` and `class-record` from a record of another
+([link-order.md](../link-order.md) §7.5): `source_location` and `class-record` from a record of another
 function in the stretch, `class-convention` from the tool's guess when none has one, the namespace's directory and
 the class name in lower case. A stretch can hold unlabelled functions of other classes, so a record's label can be
 another class's file: `api::CSubReport`'s constructor 3660 sits in stretch 984, labelled

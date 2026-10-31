@@ -123,9 +123,9 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 - `pair-depth0`: the only pair with that hash at depth 0, where a callee's body does not count, so a callee that
   differs or is inlined leaves the pair standing while deeper hashes part (`pnpm wasm fingerprint <wasm> --depth 0`, on
   each side, prints one index per hash). The hash is `fingerprint`, or `shape` for a body that holds its own table slot,
-  whose constant cannot be equal: 7909's comment says `shape` and gives the one row that differs. The uniqueness runs
-  over every function of both modules and reads no match, but it compares the same two bodies a match would, so the
-  comment says which hash it is.
+  whose constant cannot be equal, and the comment says which: 7909's says `shape` and gives the one row that differs.
+  The uniqueness runs over every function of both modules and reads no match, but it compares the same two bodies a
+  match would, so a verifier weighs such a line too.
 - `vptr+shape`: the function stores a class's vtable address point, which other functions store too, and its `shape`
   hash is the only one on both sides.
 - `callers+content`: the target callers and the loaded content single the function out. Each caller counts when other
@@ -399,13 +399,9 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   [../how-to-decompile.md](../how-to-decompile.md) step 3). "No evidence" is said of the object, not only of the
   function: before a class is chosen, follow `this` from the callers to the next functions that take the object, and
   read their vptr stores, strings and records (5622's class is named one hop on, by 5604's callee 2791);
-- the order of a file's members that have no record. Inside one use band a higher target index has a lower `ld_index`
-  in `build/out/wasm-map/vota_web/names.tsv`. Compare with that column, not with the `ours` of `splat/scan.tsv`: `ours`
-  is the final index, whose ties sort as strings ([facts/link-order.md](facts/link-order.md) §L1), so across a digit zone
-  it reads pairs backwards (5742 and 5743 hold 5474 and 5494, and `ld_index` 1976 and 1971, the target's order). A
-  function's place in its object is its first mention in the TU, not its definition, so an inverted pair is two
-  definitions swapped only when no earlier function of the TU can mention either one. A swapped order gives the same
-  bytes and matches all the same;
+- the order of a file's members that have no record: compare `ld_index`, not the `ours` of `splat/scan.tsv`
+  ([../how-to-decompile.md](../how-to-decompile.md) step 3, "The order of two members", has the rule, the command and
+  when an inverted pair is two definitions swapped). A swapped order gives the same bytes and matches all the same;
 - a body with no target function. A function binaryen inlined, written out of line and unrooted
   ([../how-to-decompile.md](../how-to-decompile.md) step 3), or a constructor only a dropped builder reaches, is compared
   with nothing. Compare its store order with the target caller's by hand, and the fragment says "compared with nothing";
@@ -494,14 +490,15 @@ without its line. 8461 (`api::ISound::Wait`) and `api::CSystem::s_dorme`, which 
 mkdir -p ../build/out/splat-review-facts && /usr/bin/grep -v '_ZN3api7CSystem7s_dormeE' ../splat/symbol_addrs.txt > ../build/out/splat-review-facts/symbols-without-s_dorme.txt
 pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm 8461 -o ../build/out/splat-review-facts/8461 \
   --symbols ../build/out/splat-review-facts/symbols-without-s_dorme.txt | /usr/bin/grep -E '^(preferred|the gate)' | cut -c1-110
-# preferred readings:    UNRESOLVED: +0x37 i32.const 1235768: an address of ours: _ZN3api7CSystem7s_dormeE (.dat
+# preferred readings:    UNRESOLVED: +0x37 i32.const <address>: an address of ours: _ZN3api7CSystem7s_dormeE (.dat
 # the gate is the match's own bytes: FAIL (… s)
 ```
 
 A function's name needs its match line out as well: "A match names its function" (§3) holds it otherwise, so with
 only the symbol line gone the review of 7909 still passes. For the question "which matches fall without this name?",
-scan on copies of both files, each without the name and without the match lines of what it may carry (`--match <f>`
-rewrites `<f>`). A data name needs only its symbol line out. 7909's `pair-depth0` line, from `asmlift-wasm/`:
+scan on copies of both files, each without the name and without the match lines of what it may carry, one hand line per
+scan (`--match <f>` rewrites `<f>`). A data name needs only its symbol line out. 7909's `pair-depth0` line, from
+`asmlift-wasm/`:
 
 ```sh
 /usr/bin/grep -v '_ZN9simulador10CWasmTimer4FireEPv' ../splat/symbol_addrs.txt > ../build/out/splat-review-facts/symbols-no-fire.txt
@@ -515,7 +512,9 @@ join -t "$(printf '\t')" <(cut -f1,5 ../splat/scan.tsv | sort) <(cut -f1,5 ../bu
 ```
 
 What falls is what the line carries. Then rule on whether the evidence in its comment stands without those matches: the
-two rows above are the line's own, and its uniqueness reads neither of them.
+two rows above are the line's own, and its uniqueness reads neither of them. The same line rewritten `evidence:call
+by:<its caller>` shows what the self-vote rule would refuse, and a line it refuses is sound only on evidence from the
+callee's own body.
 
 `make -C src splat-symbols` says nothing of a hand edit a generated line has caught up with. These are the names on both
 sides of the marker, each with its two targets:

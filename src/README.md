@@ -52,8 +52,8 @@ record that is. Name such functions in the fragment's header, as for a stub-only
 
 ```
 // <stubs>
-// f7010 · 683 B · unmatched · name unknown
-// void f7010(i32, i32) { ... }
+// f1455 · 496 B · unmatched · name unknown
+// void f1455(i32, i32) { ... }
 // </stubs>
 ```
 

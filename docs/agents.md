@@ -130,11 +130,12 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   ```
 
 - **One coordinator owns `main`.** A second machine can carry on when the first goes offline, and then it has a
-  coordinator of its own. Two must never own `main` at once. The one that hands over writes the line `HANDBACK:
-  <origin's main>, <matches>, <what is left>` in its state file and a `rounds/` post, when `origin` holds its work and
-  its worktrees are gone. The other takes `main` from `origin` on reading it. Until then it starts no landing, and the
-  one handing over finishes what it holds and starts nothing new. A worktree's `build/out/` stays on its machine, so the
-  first link after a move recompiles what the commits changed.
+  coordinator of its own. Two must never own `main` at once. The one that hands over finishes or stops what it holds and
+  starts nothing new. It writes the line `HANDBACK: <origin's main>, <matches>, <its pull requests>, <what is left>` in
+  its state file and a `rounds/` post, when `origin` holds its work and its worktrees are gone. The other starts no
+  landing until it reads that line and the inbox, then takes `main` from `origin` and runs Stage 0 step 1's checks
+  (`.claude/commands/decompile-functions.md`). A worktree's `build/out/` stays on its machine, so the first link after a
+  move recompiles what the commits changed.
 - **A worktree is deleted on the machine that holds it,** as "Worktrees" says, cited files included. At a round's end
   `git worktree list` shows only the main checkout on both machines.
 
@@ -155,15 +156,13 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
   fragment rebuilds that fragment's companions and `roots_asn1.o`, whose rules name it.
-- `-j` goes on the object list only, never on `link` or `splat`: the link's two outputs share one recipe, so `-j` runs
-  it twice and leaves a corrupt named wasm that make calls up to date ([facts/workflow.md](reference/facts/workflow.md)
-  §W21).
+- `-j` goes on the object list only, never on `link` or `splat` ([facts/workflow.md](reference/facts/workflow.md) §W21).
 - Two units landing in one run each need their own fragment number: the coordinator assigns them before the
   matchers start, and the unit that lands second re-runs link, census, symbols, match and the splat build on top of
   the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
 - An edit to a header, or a new header, recompiles every object of its tree, whether it includes the header or not
   (the generic rules depend on every header there), the tree's roots object, and the companions whose rules name it:
-  46 compiles for `src/uenux2/src/api/util/cdatetime.h`, 60 for a new header in `src/uenux2/src/api/gui/`
+  164 compiles for `src/uenux2/src/api/util/cdatetime.h`, 189 for a new header in `src/uenux2/src/api/gui/`, at 0b5f410
   ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link
   until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the
   matched functions of those units; to show that a restructure left them as they were (a vtable, an inline member a

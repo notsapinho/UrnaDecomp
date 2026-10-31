@@ -3,8 +3,8 @@
 How the tools a decompile round runs behave where the obvious reading of a command is wrong: Node versions, the
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed snapshot, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
-rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec, the
-census snapshot and a table's rows, `-j` on the link, and leaving a merge after step 9. `docs/how-to-decompile.md`,
+rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec and a
+table's rows, `-j` on the link, and leaving a merge after step 9. `docs/how-to-decompile.md`,
 `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
 and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, on macOS (zsh 5.9, wabt 1.0.42), with Node 24
@@ -278,18 +278,18 @@ So run it after `git add` of the unit's new files and `git rm` of the removed on
 
 Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"`:
 
-    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | sed -E 's/·/x/'
+    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | sed -E 's/·/x/'
       sed: RE error: illegal byte sequence
-    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | cut -d' ' -f1-3
+    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | cut -d' ' -f1-3
       cut: stdin: Illegal byte sequence
-    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | LC_ALL=C cut -d' ' -f1-3
-      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:11:// f7010 <0xB7>
-    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | tr -d '\n'
+    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | LC_ALL=C cut -d' ' -f1-3
+      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:13:// f1455 <0xB7>
+    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | tr -d '\n'
       tr: Illegal byte sequence
-    LC_ALL=C /usr/bin/grep -rn '^// f7010 ' src/uenux2 | iconv -f latin1 -t utf-8
-      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:11:// f7010 · 683 B · unmatched · name unknown
-    git grep -h -E '^// f7010 ' HEAD -- src/uenux2 | wc -l              # 0
-    LC_ALL=C git grep -h -E '^// f7010 ' HEAD -- src/uenux2 | wc -l     # 1
+    LC_ALL=C /usr/bin/grep -rn '^// f1455 ' src/uenux2 | iconv -f latin1 -t utf-8
+      src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:13:// f1455 · 496 B · unmatched · name unknown
+    git grep -h -E '^// f1455 ' HEAD -- src/uenux2 | wc -l              # 0
+    LC_ALL=C git grep -h -E '^// f1455 ' HEAD -- src/uenux2 | wc -l     # 1
 
 ## W10. zsh: `$var:` is a modifier, and a word that starts with `=` is a command path
 
@@ -382,7 +382,7 @@ makes the tree, from a checkout whose build is current (W5):
     tools/round/build-at.sh <base> ../<worktree>-base
     TMPDIR=/tmp make -C ../<worktree>-base/src splat
     (cd ../<worktree>-base/asmlift-wasm && TMPDIR=/tmp pnpm test)
-    git worktree remove --force ../<worktree>-base
+    git worktree remove ../<worktree>-base
 
 Its `splat` must print the target's sha256 with the base's count first: a stale link fails as the branch does. Do not
 change a test to suit one link. A landing changes the case that fails on its merge, to read the rule and not the number,
@@ -536,6 +536,9 @@ too, and a new header is newer than every object, so it does the same:
       15 companion
     printf '#pragma once\n' > src/uenux2/src/api/gui/probe-new.h; make -n -C src link | /usr/bin/grep -c 'em++.* -c '; rm src/uenux2/src/api/gui/probe-new.h
       60
+
+The counts grow with the tree. At 0b5f410 the same commands print 153 uenux2, `roots_uenux2.o` and 35 companions, 189 in
+all for the `api/gui/` header and the new one, and `cdatetime.h`'s list has 164 lines.
 
 So before a link, the objects a unit's headers will rebuild are the union of `make -n -C src link -W $PWD/<file>`
 over the files it added or changed. After it, in the unit's worktree, they are every object built since the worktree
@@ -705,4 +708,4 @@ The generators leave unstaged edits over staged paths:
       fatal: Could not reset index file to revision 'HEAD'.          (exit 128; the merge stays open)
     git add -A -- . && git merge --abort                             # exit 0
 
-This also drops the census's new untracked snapshot, so save what you want first. Then `git diff --quiet <head>` exits 0.
+This also drops every untracked file it staged, so save what you want first. Then `git diff --quiet <head>` exits 0.

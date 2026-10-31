@@ -110,7 +110,7 @@ Post it when you hit it, not at the end of your stage.
    Create, folders first:
 
    ```
-   board/facts/  board/traps/  board/rounds/  board/friction/  queue/  inbox/ack/
+   board/facts/  board/traps/  board/rounds/  board/friction/  queue/  inbox/ack/  shared/
    README.md     INDEX.md
    ```
 
@@ -188,11 +188,8 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   class can be taken at once. Each `src/units/*-pending.cpp`
   header names its members and what each waits for (`ls src/units/*-pending.cpp`). The scan's
   `unresolved` rows are in neither (`tools/round/pick_pool.py`'s docstring has the command that lists the TSE ones):
-  a body of ours calls something no target function is named for, which the row's `detail` names. The target inlined
-  that callee (fix our source so ours inlines it too), or it is a binaryen merge body whose target counterpart has
-  other members, which can be another component's (`pnpm wasm fn` on the target body lists its callers, and writing
-  the missing member fixes the row), or the target has it as its own index and nothing has named it: read the target's
-  `call` at the same offset (how-to step 1).
+  a body of ours calls something no target function is named for, which the row's `detail` names, and how-to step 1
+  tells the three cases apart.
 
   Claude Code replaces a `$` followed by a digit in this file with one of the command's argument words before the
   session reads it (a dollar and 0 become the first word; Claude Code's skills docs, "Available string substitutions"), fenced code
@@ -342,8 +339,8 @@ lands ("Pausing and resuming" below).
    merge commit takes no pathspec (`docs/reference/facts/workflow.md` §W18): stage everything, check that `git status
    --short` shows no unstaged or untracked line, and commit with a bare `git commit -F -`. That is safe only because
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
-   stubs` on the merge before step 9, each index once in `splat/matched.txt`, and which side of a twin's line to keep,
-   with the check after step 9.
+   stubs` on the merge before step 9, each index once in `splat/matched.txt`, both sides' hand edits with one line per
+   name, and which side of a twin's line to keep, with the check after step 9.
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The
@@ -357,12 +354,8 @@ lands ("Pausing and resuming" below).
    run the checks of VERIFY step 4, and from `asmlift-wasm/` `pnpm test`, `pnpm typecheck` and `pnpm test:bench`.
 4. **Clean up**, which is not optional: no worktree outlives its lane. Read the inbox again first. Then, for each lane
    of the batch and each lane dropped since the last batch:
-   - copy every file of 5 MB or less that a board post cites out of the worktree's `build/out/` (scripts, logs, small
-     outputs) into the board's `shared/from-<lane>/`, with a `SKIPPED.txt` of what stayed out, since `git worktree
-     remove` deletes the ignored `build/out/` with the worktree. Posts cite paths relative to the lane's scratch too, so
-     check the copy against the names the lane's result lists, not against a script's own report;
-   - check that `git -C <worktree> status --porcelain` prints nothing (a dropped lane commits what it has first, so
-     its branch keeps it) and that a landed lane's commit is in `main` (`git merge-base --is-ancestor <commit> main`);
+   - copy what the board cites to its `shared/from-<lane>/`, and check that nothing is lost, as
+     [docs/agents.md](../../docs/agents.md) "Worktrees" says, since `git worktree remove` deletes the ignored `build/out/`;
    - run `git worktree remove <worktree>`.
 
    Keep the branches. Never push. The result post quotes `git worktree list`. A worktree on the other machine of a
@@ -402,10 +395,9 @@ the WIP commit into its result commit (`git commit --amend`) or resets its branc
 says in its claim when it rebased onto a newer `main`. Its result names the commit, which VERIFY and LAND then use by
 id (Stage 4).
 
-One coordinator owns `main` at a time. To hand a round to a coordinator on the other machine, the one that owns `main`
-finishes or stops what it holds, removes its worktrees and writes one `HANDBACK:` line: the commit `main` is at, its match
-count, the state of its pull requests and what is the next owner's. The next owner reads it and the inbox, then checks
-Stage 0 step 1 before it starts anything ([docs/agents.md](../../docs/agents.md) "Two machines").
+One coordinator owns `main` at a time. To hand a round to a coordinator on the other machine, the owner writes one
+`HANDBACK:` line, and the next owner checks Stage 0 step 1 before it starts anything
+([docs/agents.md](../../docs/agents.md) "Two machines").
 
 ---
 

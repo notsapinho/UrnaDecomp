@@ -158,7 +158,7 @@ byte-identical, and names every final function (`build/out/wasm-map/vota_web/nam
 `src/mk/splat-map.mk`, `docs/reference/splat.md` §2.
 
 **stub** — two meanings. (1) A generated comment for a TSE function not decompiled yet, where the evidence says it
-sat in TSE's file: `// f7010 · 683 B · unmatched · name unknown` over its signature, between `// <stubs>` and
+sat in TSE's file: `// f1455 · 496 B · unmatched · name unknown` over its signature, between `// <stubs>` and
 `// </stubs>` markers. `tools/round/stubs.py` writes them (`make -C src stubs`, run by `splat-match`, so a matched
 function's stub goes) and CI checks them (`stubs.py --check`); a function no evidence places is in its tree's
 `unplaced.cpp`. A function the generator finds code of ours for has none, and a pending member counts as code of
@@ -459,7 +459,7 @@ exceptions on the skeleton. *Where:* `docs/reference/link-order.md` §1, `src/Ma
 **digit zone, zone twin** — the ordinals with the same number of digits; a zone twin is an ordinal that sorts next to
 one of another zone ("293" sits right after "2936"), so a placement can flip between the two, and the scan's `ours` reads
 two members across ordinal 999 and 1000 the wrong way round: compare `names.tsv`'s `ld_index`, which has no zones
-(`docs/how-to-decompile.md` step 3). *Where:* `docs/reference/link-order.md` §1 and §7.4, `docs/reference/tu-slices.md`.
+(`docs/how-to-decompile.md` step 3). *Where:* `docs/reference/link-order.md` §1 and §7.4.
 
 **rank** — here, the position of an ordinal's decimal string in the descending string order of all ordinals; the
 solver's sound windows are rank ranges (`rank_lo`, `rank_hi`). Not to be confused with the toolkit's compile-and-rank

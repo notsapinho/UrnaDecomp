@@ -55,8 +55,8 @@ item 3 as well:
    and the ecourna headers but no `src/asn1` header, so an `asn1.h` edit misses its converter too, which includes it
    (§U7 lists what such an edit rebuilds). The other way round, a header a unit edits or adds rebuilds every object of
    its tree, whether it includes the header or not, with `src/app/roots_uenux2.o` and every companion whose rule names
-   the header's directory: an edit of `api/gui/cimagefieldupdate.h`, or a new empty header beside it, recompiles 60
-   objects (the 44 uenux2 sources, `roots_uenux2.o` and 15 companions; `docs/reference/facts/workflow.md` §W15). A
+   the header's directory: an edit of `api/gui/cimagefieldupdate.h`, or a new empty header beside it, recompiles 189
+   objects at 0b5f410 (153 uenux2 sources, `roots_uenux2.o` and 35 companions; `docs/reference/facts/workflow.md` §W15). A
    check that the unit's objects are fresh moves all of them aside, not only the unit's own: in the unit's worktree,
    `find build/out/app -name '*.o' -newer .git` lists every object it built.
 
@@ -111,14 +111,10 @@ the commit. A new setup is a new entry in `setups.json` and a re-selection of th
   text order, so `100-…` sorts between `10-…` and `11-…`, not last, and a filter over the companion objects spells the
   number `[0-9]+`. That order reaches the link:
   wasm-ld numbers functions in input order, and binaryen's inlining can depend on it. The order of the sources inside
-  one fragment can decide a body's locals: unit 80 lists `iimpressorarelatorios.cpp` before `eueprintererror.cpp`,
-  because `SetStyle` (10881), which inlines that file's constructors, scores 15 over 185 rows in the orders measured
-  with its object first and 34 over 189 with it after, the same instructions with other locals (the fragment has the
-  measurement; the mechanism is not known). A body that differs only in its locals is worth one link with a fragment's
-  sources swapped before a source form is hunted. So can the order of definitions inside one `.cpp`, where the records'
-  lines leave room: 3830 scores 379 over 1191 rows with its caller last and 81 over 1168, a match, with the caller first
-  (unit 95's fragment has the three orders). A new fragment takes the next free number; renumbering a landed one
-  changes the link. A function whose file a landed unit already compiles takes no number: it extends that unit
+  one fragment can decide a body's locals, and so can the order of definitions inside one `.cpp` where the records' lines
+  leave room (`docs/reference/facts/codegen.md` §C4). A body that differs only in its locals is worth one link with a
+  fragment's sources swapped before a source form is hunted. A new fragment takes the next free number; renumbering a
+  landed one changes the link. A function whose file a landed unit already compiles takes no number: it extends that unit
   ("Landing a unit"). When several people or agents land units at the same time, each takes its number before it
   starts: in a run of several agents the coordinator hands them out (`docs/agents.md`), and otherwise the number is
   said in the pull request or issue that announces the work. Whoever lands second has a link the first never measured:
@@ -379,7 +375,7 @@ moves into the class's real source when it is reconstructed, and the file and it
 
 A trap is for a member that cannot be written yet, that cannot match until other code lands (a merge thunk, below),
 or whose real body would cost a match. A member whose body is written and right keeps it where it belongs, in the
-class or its `.cpp`, and its row stays `differs`, whatever the reason outside its source: `docs/how-to-decompile.md`
+class or its `.cpp`, and its row stays as it is, whatever the reason outside its source: `docs/how-to-decompile.md`
 step 5, "A written body that does not match yet", has the rule and what to measure. An implicit destructor has no body
 to trap either: declaring it to trap it changes the class.
 

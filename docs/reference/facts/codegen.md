@@ -331,8 +331,8 @@ inlines into it can be the cause, with no difference in the object. A caller fir
 round. Why, binaryen's source in the image does not show; the effect is measured:
 
 - **Across objects.** `api::IImpressoraRelatorios::SetStyle` (10881) differs in local numbers only with
-  `eueprintererror.cpp` before `iimpressorarelatorios.cpp` in its fragment's sources, and matches with the caller's
-  object first; the objects between them are free (unit 80's fragment).
+  `eueprintererror.cpp` before `iimpressorarelatorios.cpp` in its fragment's sources, `34 over 189`, and matches with the
+  caller's object first, `15 over 185`, all operand rows; the objects between them are free (unit 80's fragment).
 - **Inside one `.cpp`.** Only the order of the definitions moves. 3830 and the three functions it inlines: `379 over
   1191`, `130 over 1178`, and with the caller first `81 over 1168`, a match, where the first order also keeps a pointer
   argument in a local that the last folds into the loads (unit 95's fragment). 11405 goes from `34 over 247` to `24 over
