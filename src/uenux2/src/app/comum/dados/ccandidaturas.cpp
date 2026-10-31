@@ -3,6 +3,7 @@
 #include <format>
 #include <mutex>
 
+#include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/euecomumdadoserror.h"
 
 namespace comum {
@@ -19,11 +20,11 @@ CCandidaturas& CCandidaturas::GetInst()
 std::unique_ptr<CCandidaturas> CCandidaturas::s_inst;
 std::mutex CCandidaturas::s_mutex;
 
-CCandidaturas::CCandidaturas() : CCandidaturas("CCandidaturas") {}
+CCandidaturas::CCandidaturas() : CDataMap("CCandidaturas"), m_carregado(true) {}
 
 CCandidaturas::~CCandidaturas() = default;
 
-// (original lines 26-84: content not recovered)
+// (original lines 27-84: content not recovered)
 #line 85
 const std::string CCandidaturas::RecuperaVersaoPacote(TCargoID cargo) const
 {
@@ -34,9 +35,31 @@ const std::string CCandidaturas::RecuperaVersaoPacote(TCargoID cargo) const
     return versao->second;
 }
 
-} // namespace comum
+// (original lines 94-256: content not recovered)
+#line 257
+const md::CCandidatura& GetCandidaturaAtual(const std::string& funcao)
+{
+    const md::CCandidatura* candidatura = CCandidaturas::GetInst().GetCurrent();
+    if (candidatura == nullptr) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7805, std::format("{} - não posicionado no candidato corretamente", funcao));
+    }
+    return *candidatura;
+}
 
-// <stubs>
-// f2838 · 599 B · unmatched · name unknown
-// ? f2838(i32) { ... }
-// </stubs>
+namespace {
+
+const md::CDadosCandidato& GetCandidatoAtual(const std::string& funcao, uebyte suplente)
+{
+    const md::CCandidatura& candidatura = GetCandidaturaAtual(funcao);
+    return suplente == 0 ? candidatura.GetTitular() : candidatura.GetSuplente(suplente);
+}
+
+} // namespace
+
+md::CSexo::ESexo CCandidaturasDSSexo::operator()() const
+{
+    const md::CDadosCandidato& candidato = GetCandidatoAtual("CCandidaturasDSSexo", m_suplente);
+    return candidato.GetSexo();
+}
+
+} // namespace comum

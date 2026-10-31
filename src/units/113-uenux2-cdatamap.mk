@@ -83,8 +83,11 @@
 # The lines in cregistradormesario.cpp and cjustificador.cpp are a choice, and each file's records (85; 55, 83 and 104)
 # belong to functions not written.
 #
-# Not reconstructed: CDataMap's constructor and CRegistradorMesario's (inlined into 815, GetInst, which gives the map
-# the literal "CRegistradorMesario"), its destructor 5380, CRegistradorMesario::SaveCurrentInternal (record 85, held by
+# CDataMap's constructor from a name and IsFim are written for their users in units 89 and 129 (comum::CCandidaturas's
+# constructor 5811, and fn 2268, which holds IsFim inline); cdatamap.h's comment says which parts are chosen.
+#
+# Not reconstructed: CRegistradorMesario's constructor (inlined into 815, GetInst, which gives the map the literal
+# "CRegistradorMesario"; whether it passes the name to CDataMap's constructor is not tried), its destructor 5380, CRegistradorMesario::SaveCurrentInternal (record 85, held by
 # 10337) and CJustificador's members. 5378 and 5379's other callers are 10337 and 6734.
 CDATAMAP_SRCS := src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
