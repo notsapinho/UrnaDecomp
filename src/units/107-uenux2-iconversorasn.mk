@@ -10,6 +10,10 @@
 # CSeguranca (3823), CIdentificacaoAgregada (5672), CDadoLocal (5632), and fn 591, the thunk of
 # CBaseError<comum::EUeComumMdError, {8900, 8950}>'s constructor, which 3739 and 3823 name. CConversorDadoCarga (11402)
 # is in unit 96's list, CConversorPartido (11459) in unit 45's.
+# CMunicipio's constructor (3712) builds m_nome as the copying ecourna::api::util::CStringUtils::Trim's result (fn 1374,
+# declared by unit 112 in api/util/cstringutils.hpp; the target's call writes the result in place at +4), and matches
+# since; CConversorMunicipio::DoDesconverte (11378), 3 operand rows from the target, matched with it, its one call now
+# named.
 #
 # Evidence. Records name each member, its class, the header and the throws' lines (iconversorasn.h 56 and 71, column 19, so
 # a throw in an `if` in a body in the class). 7653 and 7654 and the literals are the throws' own. The order of the
@@ -65,11 +69,6 @@
 # CSeguranca's vector is uebyte, the record's, and DoConverte makes a std::vector<char> of it for the OCTET_STRING.
 #
 # Written and not matched, and what each waits for:
-# - 3712, CMunicipio's constructor, `no-candidate`: the target's calls fn 1374, a copying Trim (`f3942(p0, p1, table
-# slot 6416)`,
-#   slot 6416 is fn 9406, the in-place CStringUtils::Trim), with 1879, the copying ToLower, and 5156 over 3942. Unit 112
-#   declares that overload in api/util/cstringutils.hpp; the constructor here copies the string, the one difference. 11378,
-#   its caller, is 3 operand rows from the target and stays `unresolved` on that one call: an anchor needs the same body.
 # - 1158, std::vector<char>::__assign_with_size with __wrap_iter<const char*>, `differs`. Ours merges with
 #   roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the target's (the compare's operands and the
 #   locals). 11413 matches over the name, which unit 105's 9060 and 9062 use too.
@@ -82,7 +81,7 @@
 #   (its destructors 11484 and 11485 match with unit 13's CRdvVota).
 # - 5680, Desconverte<EntidadeRegistroDigitalVoto, ...> with api::CFileASN<T>'s decode inlined: calls fn 5825.
 # - 11588, 11589 (CConversorCabecalhoEntidade): fns 1713 (written, unit 96) and 1080, the dates; 1945, its constructor,
-#   can then land.
+#   matches (unit 157).
 # - 11399, 11400 (CConversorDadoCorrespondencia): the same dates, 3604, 3733, 3734 (3605 matches, unit 122).
 # - The default DoConverte and DoDesconverte stay out of the header: unit 96's fragment. 5710, 11457, 11458, 11454, 11453,
 #   11424, 11483 and 10266 hold instances of Converte or Desconverte inlined by binaryen, one call site each.
