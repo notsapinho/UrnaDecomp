@@ -830,7 +830,7 @@ D0's shape decides ([facts/reading.md](reference/facts/reading.md) §R4–R7):
   this one, since it stores this class's vptr. When neither is written, write a constructor as well, at its record's
   line; the target may have inlined it everywhere, and our link then drops it. When no reconstructed TU can do it, the
   roots file does, in an `optnone` function: it builds an object where the constructor is written (unit 67) and calls
-  the destructor by its qualified name where it cannot be (unit 64). `src/units/README.md` "A class with no key
+  the destructor by its qualified name where it cannot be (unit 92). `src/units/README.md` "A class with no key
   function" has the shape, §R6 the mechanism.
 - **When the destructors are shared bodies,** or the class has no vtable in the target, they say nothing of a key
   function, and a missing vtable does not either: wasm-ld drops one nothing references. Read where the typeinfo lies: a

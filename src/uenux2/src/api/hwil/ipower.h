@@ -12,7 +12,7 @@
 // vota's code holds only an IPower (the singleton of fn 862) and does the same call, `this->slot15(this + 4)`, then
 // reads the block's fields, in fns 1898, 2774, 10226, 11107, 11188, 12017 and 12061. The callers show the calls and the
 // block; that non-virtual inline members of this class hold that code is a reading (the same code in many callers, and
-// binaryen inlines a function with one call site only), and none is reconstructed. Slots 0 to 6 have the same shape, so
+// binaryen inlines a function with one call site only), and only FoneDesconectado is reconstructed. Slots 0 to 6 have the same shape, so
 // they are written here: that they are IPower's and not CPowerMock's is a reading too, and a CPowerMock that defines
 // them gives the same bytes. Slot 7 reads the mock's own block (+32) without the call, so it is the mock's override,
 // and pure here by choice; slots 15 and 16 are pure here by choice too.
@@ -199,6 +199,14 @@ public:
     }
 
     virtual ~IPower() = default;
+
+    // Fn 1898's slot-15 call and read of bit 1 of word 1. The member and its name are chosen, and the statements written
+    // in the caller give the same object: src/units/116-uenux2-cthreads.mk lists the forms.
+    bool FoneDesconectado()
+    {
+        ReadStatus(m_status);
+        return m_status.m_foneDesconectado;
+    }
 
 protected:
     virtual void ReadStatus(SStatus& status) = 0;

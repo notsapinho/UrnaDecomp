@@ -4,6 +4,7 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdlib>
+#include <iterator>
 #include <limits>
 #include <source_location>
 
@@ -16,10 +17,9 @@ namespace {
 ueqword ConverteSemSinal(const std::string& valor, int base, const char* digitosValidos, ueqword maximo,
                          std::source_location local)
 {
-    std::string texto(valor);
-    CStringUtils::Trim(texto);
+    const std::string texto = CStringUtils::Trim(valor);
 
-    if (texto.find_first_not_of(digitosValidos) != std::string::npos) {
+    if (texto.empty() || texto.find_first_not_of(digitosValidos) != std::string::npos) {
         throw CUtilError(EUE_VALOR_INVALIDO, "valor invalido [" + valor + "]", local);
     }
 
@@ -38,10 +38,9 @@ ueqword ConverteSemSinal(const std::string& valor, int base, const char* digitos
 ueint64 ConverteComSinal(const std::string& valor, const char* digitosValidos, ueint64 minimo, ueint64 maximo,
                          std::source_location local)
 {
-    std::string texto(valor);
-    CStringUtils::Trim(texto);
+    const std::string texto = CStringUtils::Trim(valor);
 
-    if (texto.find_first_not_of(digitosValidos) != std::string::npos) {
+    if (texto.empty() || texto.find_first_not_of(digitosValidos) != std::string::npos) {
         throw CUtilError(EUE_VALOR_INVALIDO, "valor invalido [" + valor + "]", local);
     }
 
@@ -84,7 +83,7 @@ bool NaoEhBranco(unsigned char c)
     return c > ' ';
 }
 
-int HexCharToInt(char c)
+int HexCharToInt(int c)
 {
     if (c >= '0' && c <= '9') {
         return c - '0';
@@ -102,11 +101,18 @@ int HexCharToInt(char c)
 
 void CStringUtils::Trim(std::string& valor)
 {
-    if (!valor.empty()) {
+    if (!std::empty(valor)) {
         const std::string::reverse_iterator ultimo = std::find_if(valor.rbegin(), valor.rend(), NaoEhBranco);
         valor.erase(valor.size() - (ultimo - valor.rbegin()));
+        valor.erase(valor.begin(), std::find_if(valor.begin(), valor.end(), NaoEhBranco));
     }
-    valor.erase(0, std::find_if(valor.begin(), valor.end(), NaoEhBranco) - valor.begin());
+}
+
+std::string CStringUtils::Trim(const std::string& valor)
+{
+    std::string resultado = valor;
+    Trim(resultado);
+    return resultado;
 }
 
 std::string CStringUtils::PreencheAEsquerda(const std::string& valor, char preenchimento, size_t tamanho)
@@ -121,7 +127,7 @@ std::string CStringUtils::PreencheAEsquerda(const std::string& valor, char preen
 // Blank lines below keep each std::source_location call site (the To* conversions and the throw) on
 // the line the target records (ledger/source-locations.tsv).
 
-// (original lines 124-711: content not recovered)
+// (original lines 130-711: content not recovered)
 #line 712
 uebyte CStringUtils::ToByte(const std::string& valor)
 {
@@ -170,24 +176,19 @@ ueqword CStringUtils::HexToQWord(const std::string& valor)
 
 std::vector<uebyte> CStringUtils::HexStringToBytes(const std::string& valor)
 {
-    std::string texto(valor);
-    Trim(texto);
+    const std::string texto = Trim(valor);
+    const size_t tamanho = texto.size();
 
-    if (texto.empty()) {
-        return std::vector<uebyte>();
-    }
-
-    // (original lines 766-805: content not recovered)
-#line 806
-    for (const char c : texto) {
-        if (!std::isxdigit(c)) {
-            throw CUtilError(EUE_HEX_INVALIDO, "valor invalido [" + texto + "]");
-        }
+    // (original lines 762-806: content not recovered)
+#line 807
+    if (!std::all_of(texto.begin(), texto.end(), [](char c) { return std::isxdigit(c) != 0; })) {
+        throw CUtilError(EUE_HEX_INVALIDO, "valor invalido [" + texto + "]");
     }
 
     std::vector<uebyte> bytes;
-    bytes.reserve(texto.size() / 2);
-    for (int i = 0; i < static_cast<int>(texto.size()) - 1; i += 2) {
+    bytes.reserve(tamanho / 2);
+    const int ultimo = static_cast<int>(tamanho) - 1;
+    for (int i = 0; i < ultimo; i += 2) {
         const int alto = HexCharToInt(texto[i]);
         const int baixo = HexCharToInt(texto[i + 1]);
         if (alto >= 0 && baixo >= 0) {

@@ -8,7 +8,7 @@
 //   3  10580  +4, else asks comum::CEleitores::GetInst() (fn 326) and CDataMap<...>::GetCurrent (fn 656)
 //   5  10579  the same question as slot 3 without +4 (fns 326, 656)
 //   16 10569  formats "{:04}" over a count: fn 1269 of comum::CRdvVota::GetInst() (fn 555) when fn 697 holds, else
-//             CEleitores +104 (fn 326). Those four are what it waits for: the symbol file names its std::format code
+//             CEleitores +104 (fn 326). Of those four it waits for fn 1269: the symbol file names its std::format code
 //   17 10568  sets +12 from fn 5412
 //   19 10566  compares api::CDateTime values; inlines CEstadoGeralVota::GetDtHrUltimoVoto (record
 //             cestadogeralvota.h:131, where its stub was) and calls fns 1485, 479, 187, 759, 326, 185, 903, 2233, 170

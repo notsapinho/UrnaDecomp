@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 
+#include "ecourna/api/pattern/singleton.hpp"
 #include "ecourna/api/util/cstringutils.hpp"
 
 namespace comum {
@@ -19,6 +20,17 @@ md::TQtdVoto CRdvVota::Candidato(md::TCargoID cargo, uedword numero, uebyte digi
     const std::string numeroCandidato = CStringUtils::PreencheAEsquerda(std::to_string(numero), '0', digitos);
     return m_votos.Candidato(cargo, numeroCandidato);
 }
+
+// (original lines 24-86: content not recovered)
+#line 87
+SINGLETON_IMPL_GET_INST(CRdvVota, s_mutex, s_instancia)
+
+// (original lines 89-93: content not recovered)
+#line 94
+std::unique_ptr<CRdvVota> CRdvVota::s_instancia;
+std::mutex CRdvVota::s_mutex;
+
+CRdvVota::~CRdvVota() = default;
 
 } // namespace comum
 

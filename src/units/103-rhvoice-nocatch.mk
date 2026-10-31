@@ -3,10 +3,12 @@
 # marker of splat/symbol_addrs.txt, each with its evidence in its comment. It changes no RHVoice source but the one the
 # build overlays (tools/libs/rhvoice/build.sh).
 #
-# Matches: 172 added to the base, and 5805 withdrawn (below). 41 follow from the flag and the roots alone: 208, 2653, 3469, 9687, 2567 and
+# Matches: 172 added to the base. 41 follow from the flag and the roots alone: 208, 2653, 3469, 9687, 2567 and
 # 3904 and 12014 among them. 3904 is the merged destructor body step 1 of docs/how-to-decompile.md names, whose third
 # caller is api::CSubReport's D2. 131 more follow from the hand-edit names, among them 2186, 8890 and the hts_* feature
-# functions over their merged bodies 863 and 3880.
+# functions over their merged bodies 863 and 3880. 5805 is not one of them. It once matched as RHVoice::text_token's D2
+# through a twin, but its target callers, 7787 and 11561, are not RHVoice's, and only landing pads reached that destructor
+# in our link. It is comum::CCargos::~CCargos, unit 110's.
 #
 # Choices, each measured:
 # - The flag. The allow-list is the closest build found that loses no row, as one flag set for every object. The evidence
@@ -20,9 +22,6 @@
 # - The roots' stand-in names and bodies.
 #
 # What waits, and for what:
-# - 5805: withdrawn. It matched as RHVoice::text_token's D2 through a twin. Its target callers, 7787 and 11561, are not
-#   RHVoice's, and only landing pads reached that destructor in our link, so a stand-in would reach what the target does
-#   not. It waits for the class those callers hold.
 # - 2183 and 3552 (BERDecoderPartial's D2, vector<Visitante>::__destroy_vector): 3552 has 6 rows fewer than ours, and 8824,
 #   8846, 8847 and 2650 hold the rest of that vector. 2650 calls 388 where ours calls 424: two ~shared_ptr bodies in the
 #   target, one in our link, and 388 keeps a result no caller of ours reads.

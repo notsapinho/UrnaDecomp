@@ -19,7 +19,7 @@ namespace comum {
 #line 221
 void CEleitorDetalhe::ConfereDadosDinamicos(const std::string& funcao) const
 {
-    if (!m_dadosDinamicosCarregados) {
+    if (!m_dinamico.has_value()) {
         throw CUeComumDadosError(EUE_COMUM_DADOS_7832, std::format("{}: Dados dinâmicos não carregados", funcao));
     }
 }

@@ -322,11 +322,6 @@
 // f5582 · 96893 B · unmatched · placement: link order · name unknown
 // void f5582(i32, i32, i32, i32) { ... }
 
-// link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
-
-// f5598 · 35 B · unmatched · placement: link order · name unknown
-// void f5598(i32) { ... }
-
 // link-order cluster 799 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
 
 // f5606 · 1782 B · unmatched · placement: link order · name unknown
@@ -389,9 +384,6 @@
 
 // f6044 · 571 B · unmatched · placement: link order · name unknown
 // void f6044(i32, i32, i32, i32, i32) { ... }
-
-// f6042 · 535 B · unmatched · placement: link order · name unknown
-// ? f6042(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // f6038 · 229 B · unmatched · placement: link order · name unknown
 // void f6038(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
@@ -570,11 +562,6 @@
 // f3921 · 97 B · unmatched · placement: link order · name unknown
 // void f3921(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1036 · uses=3
-
-// f3942 · 123 B · unmatched · placement: link order · name unknown
-// void f3942(i32, i32, i32) { ... }
-
 // link-order cluster 1053 · uses=3
 
 // f4192 · 704 B · unmatched · placement: link order · name unknown
@@ -715,9 +702,6 @@
 // f2302 · 483 B · unmatched · placement: link order · name unknown
 // void f2302(i32, i32, i32, i32) { ... }
 
-// f2299 · 535 B · unmatched · placement: link order · name unknown
-// ? f2299(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // f2294 · 129 B · unmatched · placement: link order · name unknown
 // ? f2294(i32, i32, i32, i32, i32, i32) { ... }
 
@@ -771,11 +755,6 @@
 
 // f1397 · 107 B · unmatched · placement: link order · name unknown
 // void f1397(i32, i32) { ... }
-
-// link-order cluster 1249 · uses=9 · neighbours' file uenux2/src/app/comum/cpath.cpp
-
-// f1406 · 72 B · unmatched · placement: link order · name unknown
-// ? f1406(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1254 · uses=10 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ieleitorimpedidovotar.cpp
 

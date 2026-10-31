@@ -24,6 +24,8 @@ public:
     CPleito(const TPleitoID id, const std::string& nome, const api::CDate& data, const TVectorEleicaoPE& eleicoes,
             const TMapVersaoPacoteEleicao& versoesPacote, const std::vector<CSituacoesEleicoes>& situacoes);
 
+    // The name is chosen: no record names this accessor.
+    const TVectorEleicaoPE& GetEleicoes() const { return m_eleicoes; }
     const CEleicaoPE& GetEleicao(const TEleicaoID id) const;
     const CSituacoesEleicoes& GetSituacoesEleicoes(const TEleicaoID id) const;
 

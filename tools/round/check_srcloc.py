@@ -14,7 +14,11 @@ the record through the object's relocations. Each record the target does not hav
 that load it and the target's line and column for the same file and function. It fails when such a record is loaded
 by a matched function (its symbol is in splat/matched.txt): a match cannot hold with a moved record, so that is a
 line a change broke. A record loaded only by unmatched functions is reconstruction not finished yet and is printed
-as such; `--strict` fails on those too.
+as such; `--strict` fails on those too. A record whose functions the link kept only from other objects is not in the
+link at all (a linkonce copy: `build/out/wasm-map/vota_web/names.tsv` says which objects it kept), so it is left out, as a
+converter's copy of CBaseType's constructor is when an earlier object holds the one the target has. That holds for an
+object of the link and a map no older than the wasm: an object elsewhere keeps every record, and a stale map filters
+nothing (`make -C src link-map` writes it).
 
 A record whose file name is still our checkout's (`src/uenux2/…`, `src/ecourna/…`, or the container's
 `/work/src/…`) comes from a TSE source compiled without its tree's -ffile-prefix-map: no record of it can be the
@@ -31,6 +35,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 LEDGER = os.path.join(ROOT, 'ledger', 'source-locations.tsv')
 MATCHES = os.path.join(ROOT, 'splat', 'matched.txt')
 LINK_CMD = os.path.join(ROOT, 'build', 'out', 'wasm', 'vota_web', 'link.cmd')
+NAMES = os.path.join(ROOT, 'build', 'out', 'wasm-map', 'vota_web', 'names.tsv')
 
 R_WASM_MEMORY_ADDR_I32 = 5
 # relocation types that carry an addend (the wasm object-file convention, tool-conventions/Linking.md)
@@ -237,6 +242,19 @@ def link_objects():
     return [os.path.join(ROOT, 'build', 'out', w) for w in words if w.startswith('app/') and w.endswith('.o')]
 
 
+def kept_objects():
+    """Each function of the link's map with the objects the link kept it from, as that file spells them."""
+    kept = {}
+    wasm = os.path.join(ROOT, 'build', 'out', 'wasm', 'vota_web', 'vota_web_wasm.wasm')
+    if os.path.exists(NAMES) and os.path.getmtime(NAMES) >= os.path.getmtime(wasm):
+        with open(NAMES, encoding='utf-8') as f:
+            next(f)
+            for line in f:
+                p = line.rstrip('\n').split('\t')
+                kept.setdefault(p[1], set()).add(p[2])
+    return kept
+
+
 def main(argv):
     strict = '--strict' in argv
     objects = [os.path.abspath(a) for a in argv if a != '--strict'] or link_objects()
@@ -253,9 +271,14 @@ def main(argv):
         p = line.split()
         if len(p) >= 2 and not p[0].startswith('#'):
             matched.add(p[1].split('@')[0])
+    kept = kept_objects()
+    linked = {os.path.relpath(o, os.path.join(ROOT, 'build', 'out')) for o in link_objects()}
     broken, unfinished, unmapped_recs, seen, files = [], [], [], 0, set()
     for obj in objects:
+        here = os.path.relpath(obj, os.path.join(ROOT, 'build', 'out'))
         for rec, users in sorted(set(records(obj))):
+            if here in linked and users and all(u in kept and here not in kept[u] for u in users):
+                continue
             seen += 1
             files.add(rec[0])
             if rec in target:

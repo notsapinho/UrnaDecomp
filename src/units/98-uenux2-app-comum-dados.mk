@@ -42,10 +42,7 @@
 # fieldInfos.
 #
 # Not reconstructed. CConversorImpedido::DoDesconverte (11410, the class's only override) waits for fns 566, 5661 and
-# 5662, so nothing emits that class's vtable. CHV's member 5745 and its record at chv.cpp line 117 wait for
-# md/chorarioveraomunicipio.{h,cpp}: it inlines CHorarioVeraoMunicipio::GetHorarioVerao (record at line 37 of that file).
-# With stand-ins of those two files the scan matches 5745, and only with its member defined above
-# VerificaEntraEmHorarioVerao in chv.cpp: defined below it, the locals differ (47 rows over 298 against 29 over 293).
+# 5662, so nothing emits that class's vtable. CHV's member 5745 is unit 110's.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp \
   src/app/comum/dados/cintegridadereferencial.cpp \

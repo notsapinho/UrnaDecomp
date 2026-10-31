@@ -520,8 +520,8 @@ its own typeinfo 2312 B later.
 **Emitting the destructors of a class with no key function.** A TU emits the vtable, D2 and D0 of such a class when it
 references the vtable: a constructor defined there, a derived class's destructor that inlines this one, or a call of
 the destructor by its qualified name (the D2 stores the vptr too). The last needs neither constructor nor derived
-class: `src/units/64-uenux2-cmessagequeue-roots.cpp` calls `TFilaMensagens::~TFilaMensagens()` from an `optnone`
-function for a class whose constructor cannot be written. A class that declares no constructor has an implicit one,
+class: `src/units/92-uenux2-iinputfield-roots.cpp` calls `campo.api::CMaskedTextField<api::CFramedText>::~CMaskedTextField()`
+from an `optnone` function. A class that declares no constructor has an implicit one,
 so `new T` in such a function emits them as well, while no constructor is declared, and building the object does the
 same where a constructor is written (unit 67). `src/units/README.md` "A class with no key function" says what a roots
 file may do with this.

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <mutex>
+
 #include "app/comum/dados/crdv.h"
 #include "app/comum/dados/md/rdv/crdvposicionador.h"
 #include "app/comum/dados/md/rdv/cvotoseleicoesvota.h"
@@ -15,6 +18,8 @@ public:
 
 class CRdvVota final : public CRdv {
 public:
+    ~CRdvVota();
+
     static CRdvVota& GetInst();
     static void CreateInst();
 
@@ -35,6 +40,9 @@ public:
 
 private:
     md::CVotosEleicoesVota m_votos;
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CRdvVota> s_instancia;
 };
 
 } // namespace comum

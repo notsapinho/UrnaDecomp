@@ -18,14 +18,15 @@ public:
     // static initialiser). No primary definition: an instantiation without a specialization fails to link.
     static const std::string NOME;
 
-    // (original lines 21-35: content not recovered)
-#line 36
+    // (original lines 21-33: content not recovered)
+#line 34
     CBaseType(TYPE valor) : m_valor(valor)
     {
-        if (valor < MIN_VAL || valor > MAX_VAL) {
+        if (!(valor >= MIN_VAL && valor <= MAX_VAL)) {
+            const int minimo = MIN_VAL;
+            const int maximo = MAX_VAL;
             throw ecourna::api::pattern::CPatternError(ecourna::api::pattern::EPE_VALOR_INVALIDO,
-                std::format("O tipo '{}' deve ter valores no intervalo [{},{}].", NOME, static_cast<int>(MIN_VAL),
-                            static_cast<int>(MAX_VAL)));
+                std::format("O tipo '{}' deve ter valores no intervalo [{},{}].", NOME, minimo, maximo));
         }
     }
 
