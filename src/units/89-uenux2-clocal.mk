@@ -4,18 +4,31 @@
 # Names and files from records: md::CLocal::GetSecao (target fn 943) and ValidaCriacao (5673); comum::CLocal::VerificaLido
 # (782), GetSecaoID (1078) and VerificaEhSecao (5742); md::CInfoMunicipio::GetHorarioVerao (3725) and ValidaCriacao (5675);
 # md::CComplementoMunicipio::GetHorarioVerao (2795) and ValidaCriacao (5647); md::CHorarioVeraoMunicipio::ValidaCriacao
-# (5678); md::CCandidatura::GetSuplente (1389); comum::CCandidaturas::RecuperaVersaoPacote (5810). Each throw is on its
-# record's line; the lines of everything else are a choice.
+# (5678); md::CCandidatura::GetSuplente (1389); comum::CCandidaturas::RecuperaVersaoPacote (5810); comum::GetCandidaturaAtual
+# (2838, ccandidaturas.cpp:261). Each throw is on its record's line; the lines of everything else are a choice.
 #
 # Singletons, read from the body: comum::CLocal's accessor (401) and its static destructors (11506, 11508), and comum::CCandidaturas's
 # accessor, destructor and static destructors (521, 3786, 11563, 11564) with the __tree::destroy they call (681). Each class's statics
 # are members defined after the accessor; unit 109's fragment has why, the form's measurements and the same-code forms. GetInst
-# is chosen, as there. No target caller of either accessor is written: 401 has 29, and the roots stand in for them; 521 has 25
-# and holds table slot 99, so the roots take its address.
-# CCandidaturas's constructor (5811) stays `differs`: the target frees the temporary name before it stores the flag at +28 and builds
-# the map at +32, so the name's owner is a base class or member object at +0, and the records name api::CDataMap<K, V>
-# there. A delegating constructor frees it last (8 rows of 48). A scratch class with a base taking const std::string& gives the
-# target's order of calls and stores exactly. 1709, __tree::destroy over md::CCandidatura, stays `differs` at -O2:
+# is chosen, as there. 401 has 29 target callers, none written, and the roots stand in for them; 521 has 25, of which unit 129's
+# 2268 is written, and holds table slot 99, so the roots take its address. GetCandidaturaAtual (2838) holds 521 inlined.
+# CCandidaturas's constructor (5811) matches with the class as an api::CDataMap<uedword, md::CCandidatura> (its base, whose
+# constructor takes the name as const std::string&, api/io/cdatamap.h): the target frees the temporary name before it stores the
+# flag at +28 and builds the map at +32, and fns 2268 and 2838 pass the singleton's pointer to that CDataMap's GetCurrent (1200).
+# A delegating constructor frees the name last (8 rows of 48). Its callers are 521 and 2838, both written, so the stand-in that
+# took 2838's place went.
+#
+# GetCandidaturaAtual (2838) and comum::CCandidaturasDSSexo's call operator (5806). 5806 has no record; its file is a
+# choice: ccandidaturas.cpp after 2838, which only the data-source classes' code calls (5806, 5807, 12641, 12742), and
+# in link order the band (ledger/ordinals.tsv, uses 2) puts 5806 and 5807 after 5810 and 5811 and before ccargos.cpp's 5805. The class's header is
+# ccandidaturasds.h, with the other data-source classes. 5806 builds its literal, loads the substitute's order, calls
+# 2838, picks the holder or the substitute, frees the literal and only then reads the ESexo at +40: the file-static
+# GetCandidatoAtual, which takes the order as its parameter and which clang inlines, gives that order (measured: 5806
+# matches). Its name, its linkage and the form are chosen; a form that picks after the full expression is not tried.
+# 2838's external linkage is chosen too: the roots stand in for its callers 5807, 12641 and 12742, and for 5806's 13101.
+# 5807 (CCandidaturasDSNome's operator) is not written.
+#
+# 1709, __tree::destroy over md::CCandidatura, stays `differs` at -O2:
 # __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.
 # 1719, vector<md::CDadosCandidato>::__destroy_vector, stays `differs` for another reason, TBAA, not the level: at the tree's flags the
 # store of __end_ comes ahead of the reload of __begin_, -O3 leaves that as it is, and the same compile without -fno-strict-aliasing

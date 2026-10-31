@@ -25,6 +25,8 @@ public:
 
     const std::string& GetNomeUrna() const { return m_nomeUrna; }
     signed char GetOrdem() const { return m_ordem; }
+    // The name is chosen: comum::CCandidaturasDSSexo's call operator (fn 5806) reads +40 for its ESexo.
+    CSexo::ESexo GetSexo() const { return m_sexo; }
 
 private:
     std::string m_nome;

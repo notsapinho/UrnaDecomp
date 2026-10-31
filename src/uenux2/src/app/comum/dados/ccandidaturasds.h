@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "app/comum/dados/md/candidatura/cdadoscandidato.h"
+
 namespace comum {
 
 // Data sources of a candidature's texts and photo (RTTI, in the arguments of api::CDataText and api::CDataImage; fns
@@ -22,6 +24,22 @@ public:
 class CCandidaturasDSFoto {
 public:
     std::vector<uint8_t> operator()() const;
+};
+
+// The sex of the current candidacy's holder or of one of its substitutes. fn 5806 builds the literal
+// "CCandidaturasDSSexo" for GetCandidaturaAtual and reads a byte of its object as the substitute's order (0, the
+// holder); fn 2268 builds the object from that order. No RTTI names the class: its name is the literal's, chosen, as
+// fn 5807 builds "CCandidaturasDSNome", the name of the class whose CDataText (fn 12649) calls it. The member, the
+// constructor and the call operator's form are chosen too. The call operator is in ccandidaturas.cpp, a chosen file
+// (src/units/89-uenux2-clocal.mk).
+class CCandidaturasDSSexo {
+public:
+    explicit CCandidaturasDSSexo(uebyte suplente) : m_suplente(suplente) {}
+
+    md::CSexo::ESexo operator()() const;
+
+private:
+    uebyte m_suplente;
 };
 
 } // namespace comum
