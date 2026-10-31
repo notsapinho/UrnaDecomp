@@ -15,7 +15,9 @@
 //                the target's callee, every vote agreeing
 //   table        an i32.const of an aligned pair inside both tables that its address reading does not explain:
 //                our slot's function ↔ the target slot's function
-//   vote         an address operand of an aligned pair: our data symbol + offset ↔ the target address
+//   vote         an address operand of an aligned pair: our data symbol + offset ↔ the target address. A pair that
+//                only a record, a vtable slot or an anchor's call names votes for .bss objects alone
+//   ctors        a .bss object of ours whose run of __wasm_call_ctors the target's holds, by its literals (ctorVotes)
 //   rtti         typeinfo, typeinfo-name and vtable symbols from the ledger's classes.json / vtables.json
 //   content      a read-only object of ours whose exact bytes occur once in the target's data
 //   string       a string from the ledger's strings.tsv, named by its content (`str.<hash>`)
@@ -26,7 +28,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
-import type { Instr } from './disasm';
+import { type Instr, immText } from './disasm';
 import { glueNamesFor } from './glue-file';
 import { importResolver } from './imports';
 import { GLOBAL_BASE, type NormalizedFn, normalizeModule } from './normalize';
@@ -393,7 +395,7 @@ export function targetSymbolsOf(file: SymbolFile): TargetSymbols {
  *  alone); null when the name has evidence of another kind or more voters than the symbol file lists. */
 export function soleVoters(symbols: TargetSymbols, name: string): number[] | null {
   const e = symbols.dataEvidence.get(name);
-  return e !== undefined && /^vote:\d+$/.test(e.evidence) && e.voters !== undefined ? e.voters : null;
+  return e !== undefined && /^(vote|ctors):\d+$/.test(e.evidence) && e.voters !== undefined ? e.voters : null;
 }
 
 /** The target functions whose call or table operands are the only evidence for function name `name`; null when
@@ -1194,6 +1196,10 @@ interface VoteBox {
   fnVoters: Map<number, Set<number>>;
 }
 
+function emptyVoteBox(): VoteBox {
+  return { fn: new Map(), table: new Map(), data: new Map(), voters: new Map(), fnVoters: new Map() };
+}
+
 function alignVotes(
   ours: OurSide,
   target: TargetSide,
@@ -1385,6 +1391,173 @@ export function srclocAnchors(
     .map(([o, ts]) => [[...ts][0], o]);
 }
 
+/** the function that runs every translation unit's static initialisers: binaryen inlines them into it */
+export const CALL_CTORS = '__wasm_call_ctors';
+
+const GLOBAL_GET = 0x23;
+const I32_CONST = 0x41;
+const I64_CONST = 0x42;
+/** below this a literal is a size or a flag, whatever the body holds */
+const TELLING_LITERAL = 256;
+
+/**
+ * Where each .bss object of ours that __wasm_call_ctors builds sits in the target: our object → the addresses voted.
+ * The two bodies are not the same instructions, since each runs another set of translation units, so nothing aligns
+ * them whole; each object is aligned alone, by what it is built from. Our body is cut into runs: a run starts at the
+ * first operand of a .bss object and ends at the next .bss object's or at a stack prologue, the next initialiser. A
+ * row of a run tells when the target's body holds its literal, or the place its address resolves to by content, in
+ * one row only: the bytes of a short string, a capacity and size, a chunk of a literal. A run with a telling row is
+ * set against the target at that row, and it votes only if every row from its start through its last telling row or
+ * string chunk fits: a run that shares only the tail of its string with the target's breaks on the next chunk. A
+ * literal two statics of the target build tells nothing, so a vote never picks between them, and two objects of ours
+ * built alike at one target address lose their votes.
+ */
+export function ctorVotes(
+  ours: OurSide,
+  ourImage: Buffer,
+  target: TargetSide,
+  oi: readonly Instr[],
+  ti: readonly Instr[],
+  /** whether our callee and the target's may be one function */
+  sameCallee: (ours: number, target: number) => boolean,
+): Map<string, Set<number>> {
+  const bssOf = (v: number): DataObject | null => {
+    const obj = v < GLOBAL_BASE || v >= ours.dataEnd ? null : dataObjectAt(ours.map.data, v);
+    return obj?.out === '.bss' && !isAnonymous(obj) ? obj : null;
+  };
+  const targetBss = target.imageBase + target.image.length;
+  const inTargetBss = (v: number): boolean => v >= targetBss && (target.dataEnd === null || v < target.dataEnd);
+  const places = (v: number): number[] => {
+    if (v < GLOBAL_BASE || v >= ours.dataEnd) {
+      return [];
+    }
+    const r = resolveDataAddress(ours, ourImage, target, v);
+    return [...(r.ok ? [r.addr] : []), ...(r.same ?? [])];
+  };
+  // a row's address operand: an i32.const, or a memarg offset binaryen folded an address into
+  const addressOf = (i: Instr): number | null => {
+    const m = i.imms[0];
+    return i.opcode === I32_CONST && m?.kind === 's32'
+      ? m.value
+      : m?.kind === 'memarg' && m.offset >= GLOBAL_BASE
+        ? m.offset
+        : null;
+  };
+  const fits = (k: number, j: number): boolean => {
+    const o = oi[k];
+    const t = ti[j];
+    if (o.opcode !== t.opcode || o.imms.length !== t.imms.length) {
+      return false;
+    }
+    const vo = addressOf(o);
+    const vt = addressOf(t);
+    if (vo !== null && vt !== null && vo !== vt) {
+      return bssOf(vo) !== null ? inTargetBss(vt) : places(vo).includes(vt) || (ours.elem.has(vo) && target.elem.has(vt));
+    }
+    return o.imms.every((im, n) => {
+      const tm = t.imms[n];
+      return im.kind === 'u32' && im.role === 'func' && tm.kind === 'u32'
+        ? sameCallee(im.value, tm.value)
+        : im.kind === 'u32' && im.role === 'local'
+          ? true
+          : immText(im) === immText(tm);
+    });
+  };
+  const literal = (i: Instr): bigint | null => {
+    const m = i.imms[0];
+    return (i.opcode === I32_CONST && m?.kind === 's32') || (i.opcode === I64_CONST && m?.kind === 's64')
+      ? BigInt(m.value)
+      : null;
+  };
+  const targetRows = new Map<string, number[]>();
+  ti.forEach((i, j) => {
+    const v = literal(i);
+    if (v !== null) {
+      const key = `${i.opcode} ${v}`;
+      (targetRows.get(key) ?? targetRows.set(key, []).get(key)!).push(j);
+    }
+  });
+  /** the one row of the target's body holding what row k of ours holds, else null */
+  const tellingRow = (k: number): number | null => {
+    const i = oi[k];
+    const v = literal(i);
+    if (v === null) {
+      return null;
+    }
+    const address = i.opcode === I32_CONST ? places(Number(v)) : [];
+    const big = v >= TELLING_LITERAL || v <= -TELLING_LITERAL;
+    const held = address.length > 0 ? address.map(BigInt) : big ? [v] : [];
+    const rows = i.opcode === I32_CONST && bssOf(Number(v)) !== null ? [] : held.flatMap((h) => targetRows.get(`${i.opcode} ${h}`) ?? []);
+    return rows.length === 1 ? rows[0] : null;
+  };
+  const runs: { from: number; to: number; obj: DataObject }[] = [];
+  oi.forEach((i, k) => {
+    const v = addressOf(i);
+    const obj = v === null ? null : bssOf(v);
+    const open = runs[runs.length - 1];
+    const closed = open === undefined || open.to < oi.length;
+    if (!closed && (i.opcode === GLOBAL_GET || (obj !== null && obj !== open.obj))) {
+      open.to = k;
+    }
+    if (obj !== null && (closed || open.to < oi.length)) {
+      runs.push({ from: k, to: oi.length, obj });
+    }
+  });
+  const out = new Map<string, Set<number>>();
+  for (const { from, to, obj } of runs) {
+    const telling = new Map<number, number>();
+    for (let k = from; k < to; k++) {
+      const j = tellingRow(k);
+      if (j !== null) {
+        telling.set(k, j);
+      }
+    }
+    if (telling.size === 0) {
+      continue;
+    }
+    const [[k0, j0]] = telling;
+    const shift = j0 - k0;
+    // a chunk of a string the target does not hold tells nothing and still has to fit
+    let last = Math.max(...telling.keys());
+    for (let k = to - 1; k > last; k--) {
+      const v = addressOf(oi[k]);
+      const obj = v === null || v < GLOBAL_BASE || v >= ours.dataEnd ? null : dataObjectAt(ours.map.data, v);
+      if (obj !== null && (obj.section === '<merged strings>' || obj.name.startsWith('.L.str'))) {
+        last = k;
+      }
+    }
+    let aligned = from + shift >= 0 && last + shift < ti.length;
+    for (let k = from; aligned && k <= last; k++) {
+      aligned = fits(k, k + shift) && (telling.get(k) ?? k + shift) === k + shift;
+    }
+    for (let k = from; aligned && k <= last; k++) {
+      const vo = addressOf(oi[k]);
+      const vt = addressOf(ti[k + shift]);
+      if (vo !== null && vt !== null && bssOf(vo) === obj) {
+        (out.get(obj.key) ?? out.set(obj.key, new Set()).get(obj.key)!).add(vt - (vo - obj.addr));
+      }
+    }
+  }
+  const claims = new Map<number, string[]>();
+  for (const [name, addrs] of out) {
+    for (const addr of addrs) {
+      (claims.get(addr) ?? claims.set(addr, []).get(addr)!).push(name);
+    }
+  }
+  for (const names of claims.values()) {
+    if (names.length > 1) {
+      names.forEach((n) => out.delete(n));
+    }
+  }
+  return out;
+}
+
+/** The real name of a side's imported function. */
+function importName(side: { module: Module; importNames: Record<string, string> }, index: number): string {
+  const imp = side.module.imports.filter((i) => i.kind === 'func')[index];
+  return side.importNames[imp.name] ?? imp.name;
+}
+
 export interface GenerateInputs {
   ours: OurSide;
   target: TargetSide;
@@ -1427,7 +1600,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   const tTypes = typeMap(om, tm);
   const sameSignature = (o: number, t: number): boolean =>
     t >= tFirst && tTypes.get(om.funcs[o - oFirst].typeIndex) === tm.funcs[t - tFirst].typeIndex;
-  const votes: VoteBox = { fn: new Map(), table: new Map(), data: new Map(), voters: new Map(), fnVoters: new Map() };
+  const votes = emptyVoteBox();
   const aligned = new Set<string>();
   const pairOf = new Map<number, number>(pairs.map(([t, o]) => [o, t]));
   const viaTable = new Set<number>();
@@ -1470,20 +1643,24 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
 
   // anchors fill what the pairs left: a pair a source_location record names, kept when the bodies are the same
   // instructions, and the names its call and table votes agree on. Neither side may be named already, the
-  // signatures must agree, and anchors cast no data votes.
-  const anchorVotes: VoteBox = {
-    fn: new Map(),
-    table: new Map(),
-    data: new Map(),
-    voters: new Map(),
-    fnVoters: new Map(),
-  };
+  // signatures must agree, and anchors' data votes count for .bss objects alone.
+  const anchorVotes = emptyVoteBox();
   const namedT = new Set(pairOf.values());
   const anchoredT = new Set<number>();
   const anchorEvidence = new Map<number, string>();
   stats.pairSrclocAnchor = 0;
+  // an anchor of a pair named otherwise and never aligned still has operands to read: its data votes alone count
+  const namedAnchorVotes = emptyVoteBox();
+  const namedAnchors = new Set<string>();
   for (const [t, o] of srclocAnchors(ours, ourImage, target, tn0, on0)) {
-    if (namedT.has(t) || pairOf.has(o) || sizeT(t) <= trivial || !sameSignature(o, t)) {
+    if (sizeT(t) <= trivial || !sameSignature(o, t)) {
+      continue;
+    }
+    if (namedT.has(t) || pairOf.has(o)) {
+      if (pairOf.get(o) === t && !aligned.has(`${t}:${o}`)) {
+        namedAnchors.add(`${t}:${o}`);
+        alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, namedAnchorVotes, t);
+      }
       continue;
     }
     if (alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t)) {
@@ -1566,6 +1743,53 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   const dataNames: Evidence['dataNames'] = new Map();
   const ourByKey = new Map(ours.map.data.map((d) => [d.key, d]));
   stats.dataVoteConflicts = 0;
+  const castVote = (key: string, addr: number, n: number, voter: Iterable<number>): void => {
+    const box = votes.data.get(key) ?? votes.data.set(key, new Map()).get(key)!;
+    box.set(addr, (box.get(addr) ?? 0) + n);
+    const who = votes.voters.get(key) ?? votes.voters.set(key, new Set()).get(key)!;
+    for (const v of voter) {
+      who.add(v);
+    }
+  };
+  // anchors vote for .bss objects alone: a name there places what content cannot, and a name for a read-only or .data
+  // object would hide the copies content finds
+  stats.dataAnchorVote = 0;
+  for (const box of [anchorVotes, namedAnchorVotes]) {
+    for (const [key, vs] of box.data) {
+      if (ourByKey.get(key)?.out !== '.bss') {
+        continue;
+      }
+      stats.dataAnchorVote += votes.data.has(key) ? 0 : 1;
+      for (const [addr, n] of vs) {
+        castVote(key, addr, n, box.voters.get(key) ?? []);
+      }
+    }
+  }
+  const ctorOnly = new Set<string>();
+  const ctorsO = ours.fnByKey.get(CALL_CTORS);
+  const ctorsT = tm.exports.find((e) => e.kind === 'func' && glue?.exports[e.name] === CALL_CTORS)?.index;
+  if (ctorsO !== undefined && ctorsT !== undefined) {
+    const sameCallee = (co: number, ct: number): boolean =>
+      co < oFirst || ct < tFirst
+        ? co < oFirst && ct < tFirst && importName(ours, co) === importName(target, ct)
+        : sameSignature(co, ct);
+    for (const [key, addrs] of ctorVotes(
+      ours,
+      ourImage,
+      target,
+      on0[ctorsO - oFirst].instrs,
+      tn0[ctorsT - tFirst].instrs,
+      sameCallee,
+    )) {
+      if (!votes.data.has(key)) {
+        ctorOnly.add(key);
+      }
+      for (const addr of addrs) {
+        castVote(key, addr, 1, [ctorsT]);
+      }
+    }
+  }
+  stats.dataCtorVote = ctorOnly.size;
   for (const [key, vs] of votes.data) {
     if (vs.size !== 1) {
       stats.dataVoteConflicts++;
@@ -1577,7 +1801,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     dataNames.set(key, {
       addr,
       ...(obj ? { size: obj.size } : {}),
-      evidence: `vote:${n}`,
+      evidence: `${ctorOnly.has(key) ? 'ctors' : 'vote'}:${n}`,
       ...(voters.length <= VOTERS_LISTED ? { voters } : {}),
     });
   }
@@ -1712,6 +1936,42 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     }
   }
 
+  // every other named body that is the same instructions reads its .bss operands too: a vtable slot or an anchor's
+  // call says which function it is, and that evidence owes nothing to the object
+  const lateVotes = emptyVoteBox();
+  for (const [name, { index: t }] of fnNames) {
+    const o = ours.fnByKey.get(name);
+    if (o !== undefined && t >= tFirst && o >= oFirst && sizeT(t) > trivial && !aligned.has(`${t}:${o}`) &&
+        !anchoredT.has(t) && !namedAnchors.has(`${t}:${o}`)) {
+      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, lateVotes, t);
+    }
+  }
+  stats.dataLateVote = 0;
+  for (const [key, vs] of lateVotes.data) {
+    const obj = ourByKey.get(key);
+    const prev = dataNames.get(key);
+    if (obj?.out !== '.bss' || (votes.data.has(key) && prev === undefined)) {
+      continue;
+    }
+    const addrs = new Set([...vs.keys(), ...(prev === undefined ? [] : [prev.addr])]);
+    if (addrs.size !== 1) {
+      stats.dataVoteConflicts++;
+      dataNames.delete(key);
+      continue;
+    }
+    const [addr] = addrs;
+    const n = [...vs.values()].reduce((a, b) => a + b, 0);
+    const voters = [...new Set([...(prev?.voters ?? []), ...(lateVotes.voters.get(key) ?? [])])].sort((a, b) => a - b);
+    const many = prev !== undefined && prev.voters === undefined;
+    dataNames.set(key, {
+      addr,
+      size: obj.size,
+      evidence: `vote:${n + Number(prev?.evidence.split(':')[1] ?? 0)}`,
+      ...(!many && voters.length <= VOTERS_LISTED ? { voters } : {}),
+    });
+    stats.dataLateVote += prev === undefined ? 1 : 0;
+  }
+
   // our named read-only objects found by content
   stats.dataContent = 0;
   for (const obj of ours.map.data) {
@@ -1771,7 +2031,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   return { fnNames, dataNames, stats };
 }
 
-const isVote = (evidence: string): boolean => /^vote:\d+$/.test(evidence);
+const isVote = (evidence: string): boolean => /^(vote|ctors):\d+$/.test(evidence);
 
 /**
  * Drop the data names the target's own bytes contradict: an RTTI symbol whose bytes describe another class, a
