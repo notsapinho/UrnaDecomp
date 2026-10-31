@@ -186,8 +186,8 @@ Build facts: RHVoice uses `std::unary_function`/`std::not1`, so with the image's
 `-std=c++11`, upstream's SConstruct, compiles and loses 120 rows (2217 reads +24 where ours reads +16). Objects at -O3.
 
 **No landing pads: the closest build found that loses no row.** [asn1.md](asn1.md) §A7 counts the target's pads and ours. What
-`src/Makefile` holds is one flag set for every object, the closest found with no row lost. It is not shown to be the library's
-build, and the per-object table below reads better. Steps 7 to 9 on each build, from 173cfb3 (8648 matches), with each link's
+landed first is one flag set for every object, the closest found with no row lost. It is not shown to be the library's build,
+and the per-object build below, which `src/Makefile` holds now, reads better. Steps 7 to 9 on each build, from 173cfb3 (8648 matches), with each link's
 census and symbols, by `splat/scan.tsv`'s verdicts:
 
 | RHVoice objects, on top of `-O3 -std=c++14 -DNDEBUG` | added | lost |
@@ -208,7 +208,7 @@ with a stand-in for 5805, which the roots no longer hold (below). The third row 
 | `-fignore-exceptions` for the allow-list, `-fno-strict-aliasing` | 211 | 12 |
 | `-fno-strict-aliasing -fno-sized-deallocation` | 162 | 97 |
 
-`src/Makefile` holds the first row. With 66 names it lands 172, for 8819 matches: 45 names carry rows, and 21 anchor the callers
+The first row landed (unit 103). With 66 names it lands 172, for 8819 matches: 45 names carry rows, and 21 anchor the callers
 of 402, 590, 798, 950, 2210, 3858 and 5267, whose names would otherwise rest on the matches they enable. Removing any one of the
 21 drops nothing. 5 of the 66 have one caller (1227, 2210, 2237, 2714, 4760).
 
@@ -237,7 +237,7 @@ callee or changing its type. Without RHVoice's pads the callees the target keeps
 its result, which only 12979 reads, and that took 2184, 8920, 10431, 3558 and 3830 with it. `src/units/103-rhvoice-nocatch-roots.cpp`
 stands in for those means.
 
-**A lead, not landed: the build reads per object, without TBAA, and better at C++20.** `-fno-strict-aliasing` adds the reloads
+**Per object, without TBAA: landed at C++14; C++20 waits.** `-fno-strict-aliasing` adds the reloads
 the target has, in C and in C++: `HTS_SStreamSet_clear` 181 to 184 rows, `item::remove` 108 to 112, and 24 more matches (681,
 756, 896, 915, 1199, 1530, 2211, 2215, 2705, 3535, 3537, 3560, 3566, 3568, 5219, 5224, 5245, 5246, 5256, 5257, 5286, 5320,
 9591, 9625). It loses `get_key` of `symbol`, `substring`, `start_of_token` and `end_of_token` (9683, 4975, 9697, 9700): at the
@@ -269,8 +269,54 @@ hts_engine_call (5215, 9634), engine (3590), pitch (5280), document (5805, the t
 
 So `I T` fits most objects better than `A`, and what `A` buys is one libc++ template and its callers. **The unknown is why the
 `vector<T>::push_back` family has the target's shape, with no `n ? new : 0`, while the rest of the library reads as `I T` at
-C++20,** and what 678, 2184 and 7726 need at C++20. Run steps 7 to 9 on `I T` at C++20 first, since the names here are the C++14
-link's. One row, `A T` with `userdict.cpp.o` from `I T`:
+C++20.**
+
+**Landed: `A T`, with `userdict.cpp.o` at `I T`.** `src/Makefile` builds it with `build.sh`'s `--only`, which compiles the
+sources it names with the flags after it and records them in `flags/<source>.nul`:
+
+```sh
+tools/libs/rhvoice/build.sh 1.14.0 cxx14-O3-ndebug-nsa-nocatch-userdict-ign -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing \
+  '-sEXCEPTION_CATCHING_ALLOWED=[nothing]' --only userdict.cpp -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions
+```
+
+By `cmp`, 53 of its objects equal a whole `A T` build's and `userdict.cpp.o` a whole `I T` build's. Steps 7 to 9 on it at
+4487d6b (9528 matches), with the census and symbols, add 28 and lose none: 756, 896, 915, 1199, 1530, 2211, 2215, 2705, 2875,
+3535, 3537, 3550, 3560, 3566, 3568, 5219, 5224, 5245, 5246, 5256, 5257, 5265, 5286, 5320, 9591, 9625, 9678, 9682 (681 matched
+before). The four `get_key` rows stay matched. The benchmark's registry gives `userdict.cpp.o` a setup of its own,
+`rhvoice-ignore`, since an artefact setup reads one recorded flag file.
+
+**C++20 waits for one object.** Steps 7 to 9 at 4487d6b on top of that build, the default `I T` at C++20 with the four macros,
+the objects named at `A T` C++20; "lines" is new match lines against 4487d6b, "left" the rows whose verdict left `match`:
+
+| at `A T` C++20 | 678 rooted | lines | left |
+| --- | --- | ---: | --- |
+| language, hts_engine_call, engine, pitch, document (the table's last row) | no | 74 | 354 678 2182 2184 5222 7726 |
+| the same | yes | 74 | 354 5222 |
+| the same, and str_hts_engine_impl | yes | 74 | 354 |
+| the same, and hts_engine_impl | yes | 74 | 354 5209 |
+| hts_engine_call, engine, pitch, document (language at `I T` C++20, hts_engine_impl at `I T` C++14) | yes | 85 | 938 1682 3546 5222 8827 9672 |
+
+- **678, 2182, 2184, 7726.** No RHVoice object references `string::append(const char*)` at C++20 (`llvm-nm`: four have it `U`
+  at C++14), so no caller of ours reads its result and binaryen removes it: ours is `(i32 i32)->()`, the target's
+  `(i32 i32)->(i32)`. The one target caller that reads it is 176, `operator+(string&&, const char*)`, whose copy in our link
+  inlines the append. The target holds 678 at `elem[466]`, which 9963 passes to `invoke_iii`, and its address taken in unit
+  103's roots brings the four back. Unit 103 does not hold that root, since the C++14 build needs none.
+- **5222**, `str_hts_engine_impl`'s constructor with the base constructor inlined into it: with `str_hts_engine_impl.cpp` at
+  `I T` C++20 our link inlines the constructor into both its callers instead, and at `I T` C++14 the row leaves `match` too.
+  At `A T` C++20 it matches.
+- **354**, `config::register_setting`: its copy and the first copy of its callee `__tree<string, abstract_property*>::
+  __emplace_unique_key_args` are `language.cpp.o`'s, first in the link (`RHVOICE_BEFORE_ASN1`). Target 758 is that callee
+  merged with the other `map<string, X>` emplaces (callers 354, 5209, 5287, 10842), in the `I` shape: in the fourth row the
+  scan matches 758 by content to `params.cpp.o`'s `I` copy of another one. With `language.cpp` at `A`, its copy merges with no
+  `I` copy, and binaryen inlines it into 354: the object's `register_setting` calls it, and with `language.cpp` at `A T`
+  C++14 among `I T` C++20 objects the link has no such emplace and our 354 calls the emplace's own callees (`str::less`,
+  `__tree_balance_after_insert`); in the first row 354 scores 182 over 383 rows, 149 inserted. With `language.cpp` at `I`, 354 matches, and 938 and 1682, which `language.cpp.o` also defines first, lose the
+  `A` shape, with their callers 3546, 8827 and 9672. One flag for that object cannot give both, so the best build found,
+  the third row, has 9601 matches and loses 354.
+
+At C++14 every copy is `A` and merges into one body: 354 matches through it, and 758 itself stays `differs`.
+
+To measure a row without landing it, link a copied build in a private `OUT`. One row, `A T` with `userdict.cpp.o` from `I T`:
 
 ```sh
 R=build/out/rhvoice/1.14.0
@@ -288,8 +334,8 @@ pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../$P/wasm/vota_web/v
 ```
 
 `--match` appends to the list it is given, so give it a copy, and `--symbols` defaults to the committed file: that is what holds
-the names fixed. Compare column 5 of `$P/scan.tsv` with `splat/scan.tsv`: at this commit this row prints 25 turned `match` and
-none left it. For C++20 use `-std=c++20` and the four macros above. A copy of `build.sh` does not change the build: outside
+the names fixed. Compare column 5 of `$P/scan.tsv` with `splat/scan.tsv`: at 8820 matches this row printed 25 turned `match`
+and none left it. For C++20 use `-std=c++20` and the four macros above. A copy of `build.sh` does not change the build: outside
 docker it re-executes the tracked script.
 
 ## B7. Boost 1.89.0 (medium confidence), header-only
