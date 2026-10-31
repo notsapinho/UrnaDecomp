@@ -16,6 +16,8 @@
 //   every member of CFormStack, CObservable and FormHandle, the data members and every parameter. FindFieldAs (fn 1721)
 //   is not written, so its line stays blank. The spacing before GetRenderForm's brace puts the call on the record's
 //   column, a choice.
+// - api::IScreen's and api::IScreenMT's destructors are defined at the end, after CFormStack, whose Limpa (fns 5069 and
+//   3461) they call: iscreen.h and iscreenmt.h say why, units 69's and 78's fragments what shows it.
 
 #include <algorithm>
 #include <memory>
@@ -87,6 +89,8 @@ public:
 
     static void Remove(IForm<MEDIA>* form);
 
+    static void Limpa();
+
     static void Notifica();
 
 private:
@@ -133,7 +137,7 @@ public:
         }
     }
 
-    // (original lines 136-177: content not recovered)
+    // (original lines 140-177: content not recovered)
 #line 178
     virtual MEDIA& GetRenderForm() const  { return CPolySingleton<MEDIA>::instance(); }
 
@@ -278,9 +282,32 @@ void CFormStack<MEDIA>::Remove(IForm<MEDIA>* form)
 }
 
 template <typename MEDIA>
+void CFormStack<MEDIA>::Limpa()
+{
+    {
+        std::lock_guard<std::mutex> trava(s_mutex);
+        while (!s_forms.empty()) {
+            s_forms.back()->Hide();
+            s_forms.pop_back();
+        }
+    }
+    Notifica();
+}
+
+template <typename MEDIA>
 void CFormStack<MEDIA>::Notifica()
 {
     GetObservable().Atualiza(GetHandles());
+}
+
+inline IScreen::~IScreen()
+{
+    CFormStack<IScreen>::Limpa();
+}
+
+inline IScreenMT::~IScreenMT()
+{
+    CFormStack<IScreenMT>::Limpa();
 }
 
 } // namespace api

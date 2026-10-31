@@ -17,6 +17,19 @@
 #              two roots files as one --roots) each scored operand-only: 706 38 over 923 rows, 3649 33 over 363, 2764 28
 #              over 576, 779 16 over 596 (pnpm wasm score against the try's link-map names); at -O2 985 over 1772, 191 over
 #              469, 328 over 698 and 938 over 1355. 3649 is named by the call votes of 2765 and 5475.
+#              5472 FormatCurrentDate and 5473 FormatCurrentTime, the callbacks cdatetime.h describes, match at the
+#              tree's -O3 with 706 and 779, which they call; at -O2 they were operand-only (3 over 32 and 3 over 30 rows,
+#              the callee rows) and `unresolved`, named by pair-depth0 hand lines. No vote reaches them (their one
+#              direct caller, 11216, has its name by vtable evidence, and 5343 and 7787 are not written): the scan's
+#              content pass finds each, and 11216 matches over them. They sit in band 2 of
+#              ledger/ordinals.tsv between 5475 and 5471 (cluster 765, labelled cdatetime.cpp), and are defined after
+#              ConvertFromLocalTime, 5473 first (names.tsv's ld_index); their lines are chosen. The forms, each object
+#              against the target's frame offsets: a named CDateTime and a copy of its date
+#              (`const CDateTime agora = Now(); const CDate data = agora.GetData(); return data.Format(formato);`) puts
+#              the CDateTime at +16 and the copy at +8 in 5472, +4 and +0 in 5473, as the target does;
+#              `return Now().GetData().Format(formato)` with a GetData that returns by value, and
+#              `const CDate data = Now().GetData();`, put the CDateTime at +8 and the copy at +24 (5472), +0 and +12
+#              (5473). GetData's and GetHora's return by reference is 11198's (cdatetime.h).
 #   written    the rest below.
 #              5476 ConvertFromLocalTime is operand-only (14 over 90 rows) and `unresolved self-voted`: it calls
 #              std::to_string(long long) (fn 4658), whose other target caller, 3612, is not written, so the name has 5476
@@ -48,7 +61,8 @@
 # `+= dias % 7` (`+= 7 - dias % 7` in -=) and then `%= 7`, as the target wraps the sum to 16 bits before the remainder.
 # Chosen, no byte decides: every name but the records' (Format, CDate(const std::string &), the three CDateTime functions
 # with records) and the messages': IsValidDate, IsValidDateTime, Now, ConvertToLocalTime, operator+= and operator<=> of
-# CDateTime, CDate's operators and getters, g_seculo, DIAS_SEMANA and the file-static helpers Bissexto, DiasNoMes,
+# CDateTime, FormatCurrentDate, FormatCurrentTime (and that they are static members), GetData and GetHora, CDate's
+# operators and getters, g_seculo, DIAS_SEMANA and the file-static helpers Bissexto, DiasNoMes,
 # DiasNoAno and DiaDoAno, which clang inlines, and that they are file-static functions and not members; IsValidDate
 # and IsValidDateTime free functions in api, declared in the headers, as unit 24's IsValidTime is (5475 holds
 # IsValidDateTime with a stack prologue of its own, binaryen's inlining, so it is a function of the object, left unrooted;

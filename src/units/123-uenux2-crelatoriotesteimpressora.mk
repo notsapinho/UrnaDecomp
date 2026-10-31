@@ -1,23 +1,46 @@
 # uenux2 comum::CRelatorioTesteImpressora, the printer test report, in src/app/comum/relatorios/: its overrides in
 # crelatoriotesteimpressora.cpp (the file of its records), the class in crelatoriotesteimpressora.h, its base
-# comum::CImprimirExtratoCarga in cimprimirextratocarga.h, and the callee comum::CRelUtil::GetSeparadorFase in crelutil.cpp
-# (its record's file) with crelutil.h and euecomumrelatorioserror.h, the error it throws.
+# comum::CImprimirExtratoCarga in cimprimirextratocarga.h with its one out-of-line member in cimprimirextratocarga.cpp, and
+# the callee comum::CRelUtil::GetSeparadorFase in crelutil.cpp (its record's file) with crelutil.h and
+# euecomumrelatorioserror.h, the error it throws.
 #
-# Matched: the overrides TemHorarioVerao, EhTreinamento, GetHorarioVerao, GetCabecalho, EhEleicaoComunitaria,
-# EhModoDemonstracao, GetNomeEleicao, GetPleito, GetTipoUrna, GetUF, GetTitulo, GetMensagemEncerramento,
-# GetMensagemCondicoes and GetSeparadorFase (target fns 11202, 11201, 11199, 11195, 11194, 11193, 11192, 11191, 11190,
-# 11189, 11187, 11186, 11184, 11183: slots 3, 2, 7, 11, 12, 22, 13, 14, 17, 16, 21, 18, 19, 20 of the vtable @1576652);
-# CRelUtil::GetSeparadorFase (1919, record crelutil.cpp:554:23) and CBaseError<EUeComumRelatoriosError>'s constructor
-# (580, the thunk of binaryen's 710 for that enum). The base's GetConteudosQRCodeAdicionais (slot 6) is the body of 902,
-# whose match line it takes over from RHVoice's language_info::get_country, a twin.
+# Matched: the overrides TemHorarioVerao, EhTreinamento, GetHorarioVerao, EstaEmHorarioVerao, GetCorrespondencia,
+# GetCabecalho, EhEleicaoComunitaria, EhModoDemonstracao, GetNomeEleicao, GetPleito, GetTipoUrna, GetUF, GetTitulo,
+# GetMensagemEncerramento, GetMensagemCondicoes and GetSeparadorFase (target fns 11202, 11201, 11199, 11198, 11197, 11195,
+# 11194, 11193, 11192, 11191, 11190, 11189, 11187, 11186, 11184, 11183: slots 3, 2, 7, 8, 9, 11, 12, 22, 13, 14, 17, 16,
+# 21, 18, 19, 20 of the vtable @1576652); the base's ImprimeDataHoraEmissao (11216, slot 25); CRelUtil::GetSeparadorFase
+# (1919, record crelutil.cpp:554:23) and CBaseError<EUeComumRelatoriosError>'s constructor (580, the thunk of binaryen's
+# 710 for that enum); and three libc++ instances InicializaTradutorFrase brings, from this unit's object:
+# pair<const char, CLabelParametrizado>'s constructor from a char and a label (1552) and its copy constructor (5793), and
+# the label map's __assign_multi (5794, found by content; its target callers are 11196 and 7787, and it holds the address
+# of CTradutorFrase's map). The map's __tree::destroy (1706), matched before from ctradutorfrase.cpp.o, comes from this
+# object now, which links first. The base's GetConteudosQRCodeAdicionais (slot 6) is the body of 902, whose match line
+# it takes over from RHVoice's language_info::get_country, a twin.
+# - EstaEmHorarioVerao (11198) tests the date of api::CDateTime::Now() (fn 479) against the CHorarioVerao of CHV through
+#   comum::md::CHorarioVerao::Contem, out of line in chorarioverao.cpp (unit 147, which has the two forms measured).
+# - GetCorrespondencia (11197) calls CDadoCorrespondencia's copy constructor, fn 1249 in the target, which has landing
+#   pads (invoke_iii), so the target's copy is an -fexceptions object's, and ours, from this unit's object, differs from
+#   it (188 over 232 rows). A callers+content hand line of splat/symbol_addrs.txt names 1249 from its body and from
+#   11197's call; 11197 (3 over 9 rows, all operand-only, with the roots' stand-in for 1249's other callers) matches over
+#   it, and with the line out it is `unresolved` again.
+# - ImprimeDataHoraEmissao (11216) prints "EMISSAO DO RELATORIO" and one std::format line of the date and the time, from
+#   api::CDateTime::FormatCurrentDate and FormatCurrentTime (fns 5472, 5473, unit 125's callbacks, which match at the
+#   tree's -O3 with their callees 706 and 779). The four
+#   strings of the second line (the two formats and the two results) are destroyed after its call, the last built first,
+#   which reads as one statement holding the format and both calls, as written; other forms were not linked. The style 1
+#   and the alignments 2 and 0 are the constants the target passes (IPaper::EStyle has no enumerators, ipaper.h).
 #
-# Written and not matched: GetCorrespondencia (11197, slot 9) is `unresolved`: it calls CDadoCorrespondencia's copy
-# constructor, fn 1249 in the target, which no evidence names. The target's 1249 has landing pads (invoke_iii), so it
-# is not a uenux2 object's copy, and ours (from this unit's object) differs from it: 188 over 232 rows. 11197 itself is
-# 3 over 9 rows, all operand-only (`pnpm wasm score`), with the roots' stand-in for 1249's other callers.
+# Written and not matched: InicializaTradutorFrase (11196, slot 10) builds a std::map<char, CLabelParametrizado> of the
+# four labels of CConfiguracaoEleicao's CParametrosUrna ('M' municipio, 'Z' zona, 'S' secao, 'P' partido) and hands it
+# to CTradutorFrase::SetLabels (ctradutorfrase.h). It differs at -O2 and at the tree's -O3: the target calls the map's initializer-list constructor (fn 5795, which holds the insertion
+# inlined), and at -O2 clang inlines that constructor into 11196, 281 over 345 rows (`unresolved` on the insertion's
+# __emplace_hint_unique_extract_key, which the target has inside 5795). In a private link with this TU at -O3 and a
+# scratch second caller of the constructor in it (standing for 7787, the target's other caller), 11196 scores 20 over
+# 289 and 5795 1 over 172, all operand-only; without that second caller binaryen inlines the constructor into 11196 (212
+# over 453, as in the whole link at the tree's -O3). So 5795 needs a stand-in for 7787 here. The list handed straight to the setter keeps the constructor
+# out of line at -O3 too, in a probe object; it was not linked.
 #
-# Pending, in the -pending.cpp, whose header says what each waits for: ImprimeDataHoraEmissao (11216, slot 25, the base's),
-# GetConteudoQRCode (11200), EstaEmHorarioVerao (11198), InicializaTradutorFrase (11196), GetDadosLocal (11188).
+# Pending, in the -pending.cpp, whose header says what each waits for: GetConteudoQRCode (11200), GetDadosLocal (11188).
 # Not reconstructed: the constructor (5586, declared; its stub stays in crelatoriotesteimpressora.cpp): it calls
 # 1382 and 1261, which unit 125 matches as api::CDate's default constructor and operator<=> (the latter's name chosen
 # there), and 2787, 2788, which have no name. Slots 4, 23 and 24 are the base's defaults,
@@ -28,8 +51,9 @@
 # GetDadosLocal, not written), and it stays blank. The members are defined in the order of their target indices, a higher
 # index first: inside the use-1 band that is the link order (docs/how-to-decompile.md step 3), 11202 to 11189 before 11188
 # and 11187 to 11183 after; their lines are chosen. cimprimirextratocarga.h's path and the base's slot names are chosen;
-# that header says what places the base in a file of its own (its typeinfo, and 11216 in the band). crelutil.h,
-# euecomumrelatorioserror.h and crelatoriotesteimpressora.h are chosen paths beside the sources.
+# that header says what places the base in a file of its own (its typeinfo, and 11216 in the band), whose one function's
+# lines are chosen. crelutil.h, euecomumrelatorioserror.h and crelatoriotesteimpressora.h are chosen paths beside the
+# sources.
 #
 # What the bytes decide, measured with `pnpm wasm score` in the whole link:
 # - GetTipoUrna reads the urna's type through CDadoCarga::GetTipoUrna, an inline member of cdadocarga.h (unit 93's header,
@@ -50,17 +74,17 @@
 # takes that class now: 603's match line follows the new symbol (a rename, splat-match), and the masked disassembly of
 # cinformacaoeleicao.cpp's object is the same before and after.
 #
-# Roots (123-uenux2-crelatoriotesteimpressora-roots.cpp): the vtable's address, as the constructor stores it, and three
+# Roots (123-uenux2-crelatoriotesteimpressora-roots.cpp): the vtable's address, as the constructor stores it, and four
 # stand-ins for callers not reconstructed, each of a function with several callers in the target that binaryen would
 # inline into its one caller here: w123_copia for 1249's (without it binaryen inlines the copy and 11197 scores 204 over
 # 208), w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro can go when a
 # second thrower of EUeComumRelatoriosError lands (CCalculaCV::IncluiString, fn 942, is one), w123_separador when one of
-# 2785, 11943, 11946, 12105 or 12110 does, and w123_copia when one of 5637, 5740, 5856, 11395 or 12098 does.
-#
-# Not kept: an inline static setter of comum::md::CTradutorFrase's map (ctradutorfrase.h) for InicializaTradutorFrase,
-# which stays pending (the -pending.cpp header has the measurement).
-CRELATORIOTESTEIMPRESSORA_SRCS := src/app/comum/relatorios/crelatoriotesteimpressora.cpp src/app/comum/relatorios/crelutil.cpp
+# 2785, 11943, 11946, 12105 or 12110 does, and w123_copia when one of 5637, 5740, 5856, 11395 or 12098 does. The fourth,
+# w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
+# lands.
+CRELATORIOTESTEIMPRESSORA_SRCS := src/app/comum/relatorios/crelatoriotesteimpressora.cpp src/app/comum/relatorios/crelutil.cpp \
+                                  src/app/comum/relatorios/cimprimirextratocarga.cpp
 UENUX2_SRCS += $(CRELATORIOTESTEIMPRESSORA_SRCS)
 # cconfiguracaoeleicao.h reaches ecourna's chorariosurna.hpp, which includes Boost (unit 88 adds the path the same way)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(CRELATORIOTESTEIMPRESSORA_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)

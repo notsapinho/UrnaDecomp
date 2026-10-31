@@ -7,10 +7,13 @@
 // fn 218). Only ShowClock has a name in the target, through the RTTI name of the local class
 // simulador::CWasmScreenMT::ShowClock(api::SPoint const&)::WasmText (ledger/classes.json); every other member name is
 // chosen, from what the callers and simulador::CWasmScreenMT's overrides do:
-//   slot 0      the destructor. Inline in the original: CWasmScreenMT's D2 and D0 (fns 8745, 8744) hold its body, the
-//               vptr store and a call of fn 3461, where one defined out of line would be a call
-//               (docs/reference/facts/reading.md R5). Its body waits for fn 3461, so it is declared here without one
-//               and trapped in src/units/78-uenux2-cwasmscreenmt-pending.cpp; it moves into the class with its body
+//   slot 0      the destructor, inline: CWasmScreenMT's D2 and D0 (fns 8745, 8744) hold its body, the vptr store and a
+//               call of fn 3461, where one defined out of line would be a call (docs/reference/facts/reading.md R5).
+//               3461 empties CFormStack<IScreenMT>'s stack as fn 5069 does IScreen's: api/gui/iform.h writes both as
+//               CFormStack<MEDIA>::Limpa. iform.h includes this header and the body needs CFormStack, so the
+//               destructor is declared inline here and defined in iform.h after CFormStack, as IScreen's is: a choice.
+//               A TU that deletes one through the vtable without iform.h (unit 78's roots) warns -Wundefined-inline
+//               and links
 //   slot 2      Clear: CWasmScreenMT's override fills its four lines with spaces and repaints; api::CPreShowClearMT
 //               (fn 11047) calls it, then slot 13
 //   slot 3      ShowText: fn 8799 reads the position's two shorts and calls the text's slots 2 and 3; CTextFieldMT::Draw
@@ -42,7 +45,7 @@ class IText;
 
 class IScreenMT {
 public:
-    virtual ~IScreenMT();
+    inline virtual ~IScreenMT();
 
     virtual void Clear() = 0;
 

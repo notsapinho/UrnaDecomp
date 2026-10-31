@@ -371,6 +371,34 @@ signal, date_time, lexical_cast, function, optional.
   `"DH:dhKeyAgreement:1.2.840.113549.1.3.1"` at memory 355903, referenced once by `i32.load8_u; i32.const 49;
   i32.ne` = the inlined `version[0] != '1'` check of `inflateInit2_`/`deflateInit2_`. No other candidate's tail
   (1.2.11–1.3.0.1) is referenced.
+- **zlib's flags and object order.** `src/units/06-ecourna-api-compression.mk` builds zlib and minizip at `-O3 -fPIC
+  -DNDEBUG -D_LARGEFILE64_SOURCE=1`, and links minizip's `ioapi.o` and `zip.o` ahead of zlib's objects. With that order,
+  the 35 scan rows whose candidate is a zlib or minizip object all match. The order is the one the target's bands read
+  as ([link-order.md](link-order.md) §L3). It is also what gives the deflate chain, through binaryen's inlining
+  ([codegen.md](codegen.md) §C4):
+  - `crc32.c` defines `crc32` as a 14-byte call of `crc32_z` (`wasm-objdump -x build/out/zlib/O3pic/crc32.o`).
+  - With zlib's objects ahead of minizip's, our link keeps `crc32` with `crc32_z` inlined, its null-buffer return a
+    `block (result i32)` left by `br_if`. Against target 893 it scores `66 over 960 rows (same 894, replaced 61
+    [59 operand-only], inserted 3, deleted 2)`. `deflate_stored` (4825) keeps one non-operand row, a `MIN` whose
+    compare is `i32.gt_u` where the target's is `i32.lt_u`. None of the chain pairs.
+  - With `ioapi.o` and `zip.o` first, the link keeps `crc32_z` with the target's `if … i32.const 0; return; end`
+    (893: `59 over 957 rows (… 59 operand-only, inserted 0, deleted 0)`), and `deflate_stored` loses its row.
+    `crc32_z`, `fill_window`, `deflate_stored`, `deflate`, `deflate_slow`, `deflate_fast`,
+    `zipCloseFileInZipRaw64`, `zipWriteInFileInZip`, `zipOpenNewFileInZip2_64` and `zipCloseFileInZip` match, and
+    with them `CZip::Close` (2691).
+
+  The flags are measured in a small link instead: a driver that calls `zipOpen64`, `zipOpenNewFileInZip64`,
+  `zipWriteInFileInZip`, `zipCloseFileInZip` and `zipClose`, linked at the build's `em++ -Oz -fexceptions` with
+  zlib and minizip at each flag set, objects in fragment 06's order. 18 bodies were scored against the target.
+  `-O3 -fPIC` gives `deflate`, `_tr_flush_block` and `zip64FlushWriteBuffer` with operand rows only. `-O2 -fPIC` gives
+  `deflate` `42 over 3259` (3 inserted), `_tr_flush_block` `169 over 1216` (42 inserted, 58 deleted) and
+  `zip64FlushWriteBuffer` `21 over 152` (4 deleted). `-Os -fPIC` changes most bodies (`deflate` `1199 over 3362`).
+  `-O3` without `-fPIC` deletes 2 rows each in `deflate`, `deflate_slow`, `deflate_fast` and `_tr_flush_block`, and
+  inserts 3 and deletes 13 in `compress_block`. Leaving out `-D_LARGEFILE64_SOURCE=1` changes none of the 18 scores, so
+  that define is not decided. That small link does not stand in for the whole link's order: the driver's direct calls
+  inline `zip.c`'s functions into it, and in fragment 06's order it keeps `crc32`, not `crc32_z` (in a second order, with
+  `deflate.o` and `trees.o` ahead of `crc32.o` and `zip.o` ahead of `ioapi.o`, it keeps `crc32_z`; which of the two
+  changes decides is not measured). It ranks flags; the whole link measures the order.
 - **`std::format` is libc++'s**, not fmt: the error texts are libc++'s ("The format string contains an invalid
   escape sequence"); fmt's are absent.
 - **Absent** (no strings, no RTTI): nlohmann/json, rapidjson, libpng, libjpeg, freetype, pcre, libsodium, xz.

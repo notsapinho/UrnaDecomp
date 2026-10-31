@@ -48,9 +48,13 @@
 # kind in our link, with no direct caller on either side. Every other match of this unit was named before the scan.
 #
 # What waits, and for what:
-# - 1714 IScreenMT, 2079 ITextToSpeech: our headers give each a key function, a trap of units 78 and 82 that the original
-#   does not have, so `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 48 and 44 rows
-#   more (pnpm wasm score). They wait for those members, inline in the original.
+# - 1714 IScreenMT: unit 78's trap, which gave IScreenMT a key function the original does not have, is gone, and our
+#   1714 differs from 455 (IInputKbd's) only in constants, so binaryen merges the two into one body
+#   (byn$mgfn-shared$...IInputKbd...instance) where the target keeps two: the target's 455 has the executable TU's
+#   landing pads (below). 1714 matches only once our 455 differs from it. Their callers 11041, 11075 and 11077 match.
+# - 2079 ITextToSpeech: our headers give it a key function, a trap of unit 82 that the original does not have, so
+#   `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 44 rows more (pnpm wasm
+#   score). It waits for that member, inline in the original.
 # - 4879 and 4890, set<ITimerScheduler> and set<ISystemDateTime>: written and `differs` in frame offsets alone, a body right
 #   apart from something outside it (how-to step 5). Their records (1531292, 1531932) lie in fn 8302's object, so the target's
 #   copies are that TU's, and it is not written. Which stack slots push's temporaries take depends on what was emitted first

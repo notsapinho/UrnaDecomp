@@ -21,8 +21,8 @@ namespace comum {
 //   (fn 5586) overwrites it. Slot 25's body (fn 11216) sits in the same place of the use-1 band, between
 //   CGeradorRelVersaoPacoteDados's functions (11224-11217) and cpartecandidatos.cpp's (11215-11210): so slot 25 is this
 //   class's member, out of line in that file. That it is the key function is a choice: another out-of-line member there
-//   would be one of the slots below whose bodies binaryen shares, which no place shows. That file is not written; the
-//   member traps in src/units/123-uenux2-crelatoriotesteimpressora-pending.cpp.
+//   would be one of the slots below whose bodies binaryen shares, which no place shows. cimprimirextratocarga.cpp holds
+//   it, the only function written there.
 // - Slots 0 and 1 of the derived class are fn 174 (returns this, nothing else) and fn 144 (a free of this): the
 //   destructor is inline and empty here, and the derived class's implicit (docs/how-to-decompile.md step 5).
 // - The slots' signatures come from their one caller, fn 5591 (8678 B, not reconstructed: it builds the report on an

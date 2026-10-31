@@ -5,10 +5,12 @@
 // 11187 down to 11183), and their lines are a choice. src/units/123-uenux2-crelatoriotesteimpressora.mk lists them.
 #include "app/comum/relatorios/crelatoriotesteimpressora.h"
 
+#include "api/util/cdatetime.h"
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/chv.h"
 #include "app/comum/dados/cpe.h"
+#include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/comum/informacao/cinformacaoeleicao.h"
 #include "app/comum/relatorios/crelutil.h"
 
@@ -29,9 +31,26 @@ const md::CHorarioVerao& CRelatorioTesteImpressora::GetHorarioVerao() const
     return CHV::GetInst().GetHorarioVerao();
 }
 
+bool CRelatorioTesteImpressora::EstaEmHorarioVerao() const
+{
+    const md::CHorarioVerao& horarioVerao = CHV::GetInst().GetHorarioVerao();
+    const api::CDateTime agora = api::CDateTime::Now();
+    return horarioVerao.Contem(agora.GetData());
+}
+
 md::estadoaplicacao::CDadoCorrespondencia CRelatorioTesteImpressora::GetCorrespondencia() const
 {
     return CAppInfo::GetInst().GetGeral().GetCorrespondencia();
+}
+
+void CRelatorioTesteImpressora::InicializaTradutorFrase() const
+{
+    const ecourna::app::dados::CParametrosUrna& parametros = CConfiguracaoEleicao::GetInst().GetParametrosUrna();
+    const std::map<char, ecourna::app::dados::CLabelParametrizado> labels = {{'M', parametros.GetLabelMunicipio()},
+                                                                              {'Z', parametros.GetLabelZona()},
+                                                                              {'S', parametros.GetLabelSecao()},
+                                                                              {'P', parametros.GetLabelPartido()}};
+    md::CTradutorFrase::SetLabels(labels);
 }
 
 const ecourna::app::dados::CParametrosUrna::TVectorTituloRelatorio& CRelatorioTesteImpressora::GetCabecalho() const
@@ -78,25 +97,6 @@ std::string CRelatorioTesteImpressora::GetUF() const
 {
     return CAppInfo::GetInst().GetGeral().GetDadoLocal().GetUF();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -4,6 +4,13 @@
 # (docs/reference/app-flags.md); src/app/roots_ecourna.cpp calls them with the target's call-site counts.
 # CStringUtils::Trim, the two converters and HexStringToBytes match since src/units/112-ecourna-cbasetype.mk, which has their
 # evidence and the stand-ins for their other callers.
+# CStringUtils::PreencheADireita (target fn 3511) pads a string in place on the right with a character up to a length.
+# Its callers are api::CInputFieldMT::Draw (fn 10726, src/units/146-uenux2-cinputfieldmt.mk) and fns 11972 and 11973 (not
+# reconstructed; roots_ecourna.cpp's UsaPreencheADireita stands for them). No record names it. Its use band, 3, puts it
+# between fn 3513 (api/sql/sqlite/csqlstatement.cpp) and this file's ToInt16 (fn 3508), with fns 3509, 3510 and 3512
+# (`awk -F'\t' 'NR>1 && $2==3 && $1>=3505 && $1<=3514' ledger/ordinals.tsv`), unwritten; 3512 pads a string on the left
+# with '0' and 3510 strips its leading '0's, for other callers. That it is this file's is a reading of that, and its
+# name, after PreencheAEsquerda's, its being a CStringUtils member and its line after PreencheAEsquerda are chosen.
 # IIdentificadorEleitor's constructor (9256) matches. Its zero string is a temporary in the condition, destroyed before the
 # throw as in the target; as a named local it lives across the throw (241 rows against 52 in try-tu.sh --single, with the
 # record's line right in both). iidentificadoreleitor.cpp is Latin-1: the target's literal is 60 bytes of Latin-1

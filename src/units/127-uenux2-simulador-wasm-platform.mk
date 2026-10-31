@@ -1,9 +1,15 @@
 # uenux2: two platform classes of the wasm simulator, each in a file of its own under mock/app/simulador/wasm/, with the
 # interface and data members they need:
 # - simulador::CWasmInit (cwasminit.cpp, cwasminit.h), over comum::IInterfaceInit: Slot4 (target fn 9418, slot 4, the
-#   key function) and the implicit deleting destructor (9388, slot 1, which frees what IInterfaceInit's out-of-line D2,
-#   5898, returns); slots 2, 3, 6 and 7 are shared bodies (434, 434, 340, 425). EnviarMensagem (9405, slot 5) is pending
-#   in 127-uenux2-simulador-wasm-platform-pending.cpp, which says what it waits for.
+#   key function), the implicit deleting destructor (9388, slot 1, which frees what IInterfaceInit's out-of-line D2,
+#   5898, returns), and EnviarMensagem (9405, slot 5): a switch over the message's low 16 bits that answers with a
+#   one-element std::vector<int> and logs each answer through the file's Loga (fn 1524), which formats
+#   "CWasmInit::{} {}" and writes it to channel 0 of simulador::CWasmCanaisLog (unit 141). Slots 2, 3, 6 and 7 are
+#   shared bodies (434, 434, 340, 425). 9405 is named by vtable alone, so no vote names 1524; the scan's content pass
+#   finds it (a `callers+content` hand line, weighed as docs/reference/splat.md "Reviewing a match" says, carried
+#   nothing), once 5152, which it calls, has its name (unit 141's fragment).
+#   Loga builds CWasmCanaisLog's static through the inline GetInst, so this object also emits the static's destructor,
+#   fn 5154 (unit 141's fragment), and std::deque<std::string>'s D2, fn 3503, which that destructor calls.
 # - simulador::CWasmResource (cwasmresource.cpp, cwasmresource.h), over api::IResource, whose slots 2 to 6 this unit
 #   declares (api/gui/iresource.h): GetImage (8633, slot 2), GetFile (8611, slot 3), Exists (8600, slot 5) and
 #   IsResource (8591, slot 6); the file-static helpers ComMulher (4996) and Le (3452), and Caminho (2626), with
@@ -44,17 +50,23 @@
 #   docs/reference/facts/reading.md R10); a CMovieFrame aggregate built in GetMovie, with the vector moved through a
 #   local, gives 221 over 516 rows at -O3.
 #
+# EnviarMensagem: the cases and the answers are the target's (its br_table on the message less 6, and each block's
+#   constants). The order of the case bodies is measured: in value order the blocks come out in another order (108 over
+#   310 rows); in the order written, the target's, 26 over 278, all operand-only. 15 and 16, and 17 and 18, are two case
+#   groups with one body each, and 7 a case of its own, as the target has a block for each (it passes 7 as a constant
+#   there). The empty texts are `{}`: they zero 12 bytes, as the target does, where "" gives two byte stores (the
+#   object's disassembly, relocated operands masked); std::string() gives the same object as `{}`. `mensagem & 0xFFFF`
+#   is measured too: a cast to ueint16 gives another object. Loga's place in an anonymous namespace (as
+#   cwasmresource.cpp's helpers), its name and its parameters' names are chosen; the int of its first parameter is the
+#   format's argument type (3).
 # Names and types. RTTI names the classes. The slots' names are chosen (iresource.h and cwasminit.h say from what), and
 # so are the helpers', the data members', the constructors' parameters, GetImage's two int parameters, which no body
 # reads, and that no member is const. "Mulher4", "resolve", "missing" and the paths are the target's literals. Paths
 # relative to src/uenux2; the generic uenux2 rule compiles mock/ too and depends on each source and every uenux2 header.
 SIMULADOR_PLATFORM_SRCS := mock/app/simulador/wasm/cwasminit.cpp mock/app/simulador/wasm/cwasmresource.cpp
 UENUX2_SRCS += $(SIMULADOR_PLATFORM_SRCS)
-# CWasmInit's slot 5, trapping, compiled with the unit's flags; the header set is the generic rule's
-$(ROOT)/$(APP)/127-uenux2-simulador-wasm-platform-pending.o: $(ROOT)/src/units/127-uenux2-simulador-wasm-platform-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/127-uenux2-simulador-wasm-platform.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/127-uenux2-simulador-wasm-platform-pending.cpp -o $(R)
 # nothing reconstructed creates these classes yet: 127-uenux2-simulador-wasm-platform-roots.cpp keeps their vtables,
 # the reference the target's vptr stores (fn 8302) give
 $(ROOT)/$(APP)/127-uenux2-simulador-wasm-platform-roots.o: $(ROOT)/src/units/127-uenux2-simulador-wasm-platform-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/127-uenux2-simulador-wasm-platform.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/127-uenux2-simulador-wasm-platform-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/127-uenux2-simulador-wasm-platform-pending.o $(APP)/127-uenux2-simulador-wasm-platform-roots.o
+override EXTRA_OBJS += $(APP)/127-uenux2-simulador-wasm-platform-roots.o
