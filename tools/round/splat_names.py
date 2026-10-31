@@ -12,6 +12,7 @@ names an unnamed function by its defined index
   final defined index   -> post-Oz index     metadce and the final wasm-opt replayed with -g on emcc-08 carrying
                                              "k" names (code == the plain module's)
 """
+import collections
 import os
 import re
 import sys
@@ -181,6 +182,11 @@ def compose(out, tmp, plain_path):
         raise SystemExit(f'--Map lists {len(objects)} functions, wasm-ld wrote {len(base.func_types)}')
     # the name section's spelling (the map calls a signature_mismatch:f stub plain f), the map's object
     entries = [(ld_names[base.n_imported_funcs + k], obj) for k, (_, obj) in enumerate(objects)]
+    # merge-similar-functions names its shared body after the first merged function's (default) name. An internal
+    # symbol repeats across objects (__cxx_global_array_dtor), and two bodies named after it would be one name to every
+    # tool, as name@object cannot part two <binaryen> rows: those two also spell the member's object.
+    merged = (re.match(r'^byn\$mgfn-shared\$(\d+)$', oz_to_ld[final_to_oz[fi]]) for fi, _, _ in plain.code)
+    shared = collections.Counter(entries[int(m.group(1))][0] for m in merged if m)
     rows = []
     for fi, _, _ in plain.code:
         oz = final_to_oz[fi]
@@ -189,9 +195,10 @@ def compose(out, tmp, plain_path):
             name, obj = entries[int(ld)]
             rows.append((fi, name, obj, ld, oz))
         else:
-            # merge-similar-functions names its shared body after the first merged function's (default) name
             m = re.match(r'^(byn\$mgfn-shared\$)(\d+)$', ld)
-            rows.append((fi, m.group(1) + entries[int(m.group(2))][0] if m else ld, '<binaryen>', '-', oz))
+            first, first_obj = entries[int(m.group(2))] if m else (None, None)
+            name = ld if not m else m.group(1) + first + (f'@{first_obj}' if shared[first] > 1 else '')
+            rows.append((fi, name, '<binaryen>', '-', oz))
     with open(f'{out}/names.tsv', 'w') as f:
         f.write('index\tname\tobject\tld_index\tpost_oz_index\n')
         for r in rows:
