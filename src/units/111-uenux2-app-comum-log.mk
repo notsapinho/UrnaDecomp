@@ -1,7 +1,8 @@
 # uenux2 comum's log and CInformacaoEleicao, at the paths their std::source_location records name:
 # - api::CLoga::loga (target fn 433) in src/api/uelog/cloga.cpp, record 26:36;
-# - comum::IEventosLog in src/app/comum/log/ieventoslog.cpp: loga (233, a chosen name) and ConverteERelatoriosUE (5879,
-#   record 426:19), with 2861, CBaseError<comum::EUeComumLogError>'s constructor thunk, the header euecomumlogerror.h;
+# - comum::IEventosLog in src/app/comum/log/ieventoslog.cpp: loga (233, a chosen name), logaAlerta (1398, a chosen name)
+#   and ConverteERelatoriosUE (5879, record 426:19), with 2861, CBaseError<comum::EUeComumLogError>'s constructor thunk,
+#   the header euecomumlogerror.h;
 # - comum::CLogComum in src/app/comum/log/clogcomum.cpp: LogaCopiandoArqResParaFI and LogaResultadoCopiadoResFE (5878, 3828,
 #   thunks of binaryen's 6045, records 76:18, 84:18), LogaNivelBateria (5875, record 106:18, holding the ieventoslog.cpp
 #   records 440:19 and 456:19), GetInst (948);
@@ -14,6 +15,15 @@
 #   members read are that class's fields; cinformacaoeleicao.h).
 # Files: the order here is the data's, ieventoslog.cpp's records (@1552880) before clogcomum.cpp's (@1552996). Chosen
 # paths: cloga.h, clogcomum.h, euecomumlogerror.h, cinformacaoeleicao.h, each beside the .cpp its records name.
+#
+# logaAlerta (1398) is loga with severity 2: `f433(i32.load[p0+4], 2, p1)`. Its target callers (6115, 10415, 10416,
+# 10420, 10512, 10642, 10676, 10774) call it on vota::CLogVota::GetInst()'s result (fn 184), so the class is IEventosLog
+# or CLogVota. Its band (uses 9) puts it between 1399 (app/comum/cpath.cpp's GetPathResult, record 189) and 1396
+# (app/comum/gravadores/iresultado.cpp's constructor, record 40); in the data, ieventoslog.cpp's records (@1552880) lie
+# between those two files' (@1552104, @1553632), and clogvota.cpp's (@1532800) do not, so it is IEventosLog's, in this
+# file. No other function of the file is in its band, so its place in the file, above the constructor, is a choice.
+# One caller is in the link, unit 119's slot 28 (10774, written, not matching at -O2); the roots file stands in for
+# the other seven. The census pairs it (`shape`), and step 9 matches it by that pair.
 #
 # Written, not matching, and what each waits for:
 # - 6045 and 5876 match at the tree's -O3; at -O2 they were `differs` and `no-candidate`. Their literals are 43 and 40
@@ -83,8 +93,8 @@
 # the same linked bytes at -O2 only, with both special members out of line (cost=225, threshold=225), and not the target's
 # orders; its object reads 35 rows against 37, since the constructor's call differs by what the TU sees.
 #
-# Chosen, no byte decides: every name but the records' (loga 233, LogaCargaBateria, GetInst, s_instancia, s_mutex,
-# m_aplicativo, the seven members and m_parametros, the enumerators of ERelatoriosUE,
+# Chosen, no byte decides: every name but the records' (loga 233, logaAlerta 1398, LogaCargaBateria, GetInst,
+# s_instancia, s_mutex, m_aplicativo, the seven members and m_parametros, the enumerators of ERelatoriosUE,
 # EStatusOperacaoRelatorio and EUeComumLogError); 603's parameter taken by `const &` and held as a reference member,
 # where a pointer is the same address; the namespace of ERelatoriosUE and EStatusOperacaoRelatorio; the
 # severities as bare casts, as ESeveridade has no enumerator; the lines of every function but the throws' and the lines the
