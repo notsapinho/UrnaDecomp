@@ -61,11 +61,12 @@
 # fitted to the record and not evidence. Enumerator EPE_SINGLETON_NAO_CRIADO, CCargos's Reset, IsFim and
 # GetUltimaEleicaoID (fns 2269 and 602 have no record), CCargo's GetID and three predicates, CPleito's GetEleicoes,
 # CHorarioVeraoMunicipio's TemHorarioVerao, the headers' paths beside the records' files, the map keys and element types
-# the class heads say are chosen, STelasCargo and ETelaVotacao's definition, and the lines of the statics, of each
+# the class heads say are chosen, ETelaVotacao's definition, ctelascargo.h's path, and the lines of the statics, of each
 # destructor and of Reset and IsFim. The statics sit below CreateInst's lines in the +47 files.
 #
-# Records give what a head could otherwise only choose: 1536124 CRespostas's key and element, 1536832 with fn 4135
-# CTelasVota's keys and inner element. Both CEleitores and CRespostas are CDataMaps by record or RTTI. Until
+# Records give what a head could otherwise only choose: 1536124 CRespostas's key and element; 1536832 with fn 4135
+# CTelasVota's keys and inner element; 1536624 and 1536592 the outer element, vota::CTelasCargo, a TCargoID and a map (2386
+# stores the byte, 4135 reads it). Both CEleitores and CRespostas are CDataMaps by record or RTTI. Until
 # api/io/cdatamap.h is here each holds that base's 28 bytes as three members: the map, the cursor and the name. A class
 # that takes the base takes all three: with the map alone 5773 and 11535 stop matching.
 #

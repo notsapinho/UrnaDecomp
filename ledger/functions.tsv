@@ -4000,7 +4000,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 4134	187	2	app	-	skeleton	2230	addr	8	sqlite3_column_blob
 4135	1190	3	app	ecourna	-	-	none	-	
 4136	150	3	sqlite	sqlite	skeleton	3017	addr	2	sqlite3BtreeFirst
-4137	45	3	sqlite	comum	skeleton	2705	addr	2	std::__2::__tree<std::__2::__value_type<unsigned char, vota::CTelasVota::STelasCargo>, std::__2::__map_value_compare<unsigned char, std::__2::pair<unsigned char const, vota::CTelasVota::STelasCargo>, std::__2::less<unsigned char>, true>, std::__2::allocator<std::__2::pair<unsigned char const, vota::CTelasVota::STelasCargo>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned char, vota::CTelasVota::STelasCargo>, void*>*)
+4137	45	3	sqlite	comum	skeleton	2705	addr	2	std::__2::__tree<std::__2::__value_type<unsigned char, vota::CTelasCargo>, std::__2::__map_value_compare<unsigned char, std::__2::pair<unsigned char const, vota::CTelasCargo>, std::__2::less<unsigned char>, true>, std::__2::allocator<std::__2::pair<unsigned char const, vota::CTelasCargo>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned char, vota::CTelasCargo>, void*>*)
 4138	150	3	sqlite	sqlite	skeleton	3018	addr	2	sqlite3OomFault
 4139	203	2	sqlite	sqlite	skeleton	2232	addr	3	sqlite3_result_error_nomem
 4140	265	2	sqlite	-	skeleton	2233	addr	6	sqlite3_result_zeroblob64

@@ -4000,7 +4000,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4134	sqlite3_column_blob	2230	symbol	match	readings: address symbol	187	addr	app	1	sqlite/O3pic2/sqlite3.o
 4135	-	-	-	no-candidate	no symbol and no ledger pair	1190	none	ecourna	0	-
 4136	sqlite3BtreeFirst	3017	symbol	match	-	150	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-4137	_ZNSt3__26__treeINS_12__value_typeIhN4vota10CTelasVota11STelasCargoEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	2705	symbol	match	-	45	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+4137	_ZNSt3__26__treeINS_12__value_typeIhN4vota11CTelasCargoEEENS_19__map_value_compareIhNS_4pairIKhS3_EENS_4lessIhEELb1EEENS_9allocatorIS8_EEE7destroyEPNS_11__tree_nodeIS4_PvEE	2705	symbol	match	-	45	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 4138	sqlite3OomFault	3018	symbol	match	readings: address string	150	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4139	sqlite3_result_error_nomem	2232	symbol	match	readings: address string	203	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4140	sqlite3_result_zeroblob64	2233	symbol	match	readings: address string	265	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
