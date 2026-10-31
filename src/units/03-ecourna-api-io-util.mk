@@ -1,6 +1,10 @@
 # ecourna api/io (CFile + CIoError/EFileOperation), api/util (CBitArray, CSynchronizer); header-only units that go
 # with them: api/pattern/cbasetype.hpp, api/asn/iconversorasn.hpp, api/io/asn/serialization.hpp.
 # cbitarray.cpp includes <boost/dynamic_bitset.hpp>, which ECOURNA_CXXFLAGS alone does not find.
+# CBitArray's D2 and D0 (11417, 11414) are code cbitarray.hpp defines, and match from the roots object, compiled with
+# Boost's path too (its header says how): at UENUX2_CXXFLAGS both compare equal, by function with the object-local
+# numbers masked; at ECOURNA_CXXFLAGS both differ (55 and 57 rows against 48 and 50, the address arithmetic). The
+# target's copies are a uenux2 object's: their vtable lies among app/comum/dados/asn/eleitor/ records.
 # CFile's constructor (fn 517) is out of line in cfile.cpp: its target body has an -fexceptions object's landing pad
 # around the call of Open (invoke_iiiii through Open's slot, 6209, and m_nome destroyed inline), and uenux2 callers such
 # as api::CEncryptedFile::Save (2767, unit 128) call it, where an inline constructor is inlined into them; compiled in
@@ -36,6 +40,7 @@ ECOURNA_SRCS += api/util/csynchronizer.cpp
 # the units' bodies have no caller in the skeleton yet: 03-ecourna-api-io-util-roots.cpp address-takes the functions the target keeps
 # (same mechanism as 06-ecourna-api-compression-roots.cpp; the single-caller functions the target inlines are deliberately not rooted)
 $(ROOT)/$(APP)/03-ecourna-api-io-util-roots.o: $(ROOT)/src/units/03-ecourna-api-io-util-roots.cpp $(ROOT)/src/Makefile \
-    $(ROOT)/src/units/03-ecourna-api-io-util.mk $(wildcard $(ROOT)/src/ecourna/api/*.hpp $(ROOT)/src/ecourna/api/io/*.hpp)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/03-ecourna-api-io-util-roots.cpp -o $(R)
+    $(ROOT)/src/units/03-ecourna-api-io-util.mk $(wildcard $(ROOT)/src/ecourna/api/*.hpp $(ROOT)/src/ecourna/api/io/*.hpp \
+    $(ROOT)/src/ecourna/api/util/*.hpp)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -c src/units/03-ecourna-api-io-util-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/03-ecourna-api-io-util-roots.o
