@@ -9,6 +9,7 @@ namespace ecourna::api::util {
 class CStringUtils {
 public:
     static void Trim(std::string& valor);
+    static std::string Trim(const std::string& valor);
     static std::string PreencheAEsquerda(const std::string& valor, char preenchimento, size_t tamanho);
 
     static uebyte ToByte(const std::string& valor);

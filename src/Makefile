@@ -75,8 +75,10 @@ ECOURNA_CXXFLAGS   := -O3 -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP)
 # NO -fexceptions (emcc's default -fignore-exceptions: throw sites call __cxa_throw directly, no landing pads),
 # -DNDEBUG, -fno-strict-aliasing (no TBAA: comum's converters reload a vector's begin after an int store, fn 10289);
 # measured on the api/util, api/io, api/ipc/posix and comum units (docs/reference/facts/app-flags.md §F6). The
-# include root of the app's own headers is src/uenux2/src ("api/util/cwait.h"); ecourna headers come from -Isrc.
-UENUX2_PREFIX_MAP  := -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -ffile-prefix-map=src/uenux2=/home/rubio/tse/uenux2
+# include root of the app's own headers is src/uenux2/src ("api/util/cwait.h"); ecourna headers come from -Isrc, and a
+# uenux2 object's records of them name the conan package's installed headers, p/include (the third map).
+UENUX2_PREFIX_MAP  := -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -ffile-prefix-map=src/uenux2=/home/rubio/tse/uenux2 \
+                      -ffile-prefix-map=src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/p/include/ecourna
 UENUX2_CXXFLAGS    := -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17

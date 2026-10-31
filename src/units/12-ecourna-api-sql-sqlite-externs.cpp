@@ -6,7 +6,8 @@
 // ToLower in place maps each character through std::transform: a range-for over the string gives other code (39 rows
 // against the target, 8 inserted and 12 deleted), this form 8 rows, all operand-only. It does not match: the scan
 // finds no target name for the function-local static set or its guard variable (.bss, target 1911836 and 1911848).
-// The copying ToLower does not match either: CSqlResultSet::IndexForColumnName (unit 12's fragment) says why.
+// The copying ToLower matches as a thunk into binaryen's merge 3942 since CStringUtils::Trim's copying overload is in the
+// link (unit 112's fragment).
 #include "ecourna/api/util/cstringutils.hpp"
 
 #include <algorithm>
