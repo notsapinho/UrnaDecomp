@@ -3220,7 +3220,6 @@ namespace ASN1 {
    *
    * @see PEREncoder
    */
-  /** Callback of the partial BER decoder: told about every decoded node whose path is registered. */
   /** The callback of BERDecoderPartial: the records of comum::asn::CVisitanteFoto's override spell the slot (its result
       type, the reference and the two size_t). BERDecoderPartial::notify frees the node when the result is 1; the
       enumerators' names, and that 0 is the other, are chosen. */

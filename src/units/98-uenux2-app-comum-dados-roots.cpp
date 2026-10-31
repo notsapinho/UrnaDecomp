@@ -6,7 +6,8 @@
 // 1271 (CEleitorDetalhe::GetDinamico) and 2825 (which holds CEleitorDetalhe::MarcaHabilitado inlined) are in the link
 // now; its stand-in waits for 10210. The converter's
 // users are not reconstructed either: its vtable (@1570668) is what the target keeps it by (slots 2 and 3, table
-// slots 2773 and 2774, no direct caller). Declared through asm labels with the object's signatures, so this TU needs no
+// slots 2773 and 2774, no direct caller). CConversorImpedido's vtable (@1567096) is kept the same way: its slots 2
+// and 3 (table slots 2633 and 2634, fns 11409 and 11410) have no direct caller either. Declared through asm labels with the object's signatures, so this TU needs no
 // uenux2 or ASN.1 header and instantiates nothing; DesconverteTipoImpedimento takes this, unused, and the address of a
 // by-value ModuloImpedidos::TipoImpedimento.
 extern "C" {

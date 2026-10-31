@@ -17,7 +17,8 @@
 # (strlen, then a copy) into a named md::CIndiceFoto, which push_back copies, as the target does (a call of the string
 # copy); push_back of a temporary gives another body (912 against 946 rows of the object's visit). Chosen: the
 # parameters' and the local's names, and EVisitorResult's enumerators (CONSUMIDO is 1, what BERDecoderPartial::notify
-# tests).
+# tests). Same bytes, listed: the sequencer's store after the index's assignment, and SIndiceFoto{posicao, tamanho}
+# through the constructor; the order written and the parenthesized call are chosen.
 # The destructor is user-declared and defined out of line before visit, so it is the class's key function and the
 # vtable is emitted here. Evidence: in the target's uses-1 band visit (11442) comes right before the D0 (11443), so the
 # D0 has the lower link ordinal (docs/reference/link-order.md section 1, for ordinals of one digit count, as
