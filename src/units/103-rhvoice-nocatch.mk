@@ -23,7 +23,8 @@
 #   target, one in our link, and 388 keeps a result no caller of ours reads.
 # - 3473 (decodeCommon): calls 543, a body none of ours equals. document.cpp.o, the object that defines
 #   vector<unsigned>::push_back(&&), ahead of the runtime moves the row to `call 938` and matches nothing.
-# - 9682: word_editor::delete_char has no name, and its one caller is this row.
+# - 9682: the target holds word_editor::delete_char inline, 53 rows ours has behind a call. Ours keeps that in-class member
+#   out of line in both its callers (symbol::apply, deletion::apply), so this is what clang inlines, not a name.
 # - 2875 and 3674: match by content only at -fignore-exceptions, where their twins' bodies are the target's. Their target
 #   callers (813, 1245, 11943, 11946 and 395, 1151, 5410) are not written. 2875 scores 6 over 557 rows here, 4 operand-only.
 # - 8811, 194, 2706: differ past the first local. Not read further.
