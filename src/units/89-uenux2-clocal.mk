@@ -31,9 +31,11 @@
 # comum::CCandidaturas's queries, in ccandidaturas.cpp after RecuperaVersaoPacote (no record; lines and names chosen):
 # GetCandidatosPartido (2272), ExisteCandidato (2271), GetCandidatos (2840) and Busca (1273), measured operand-only
 # against the target in the whole link (`pnpm wasm score`: 2272 2 of 139 rows, 2271 0 of 56, 2840 1 of 77, 1273 1 of 62).
-# Their `this` is CCandidaturas::GetInst()'s result at every target call, and they walk the base's map and set its
-# cursor, as Localiza (record ccandidaturas.cpp:56, held by fn 11213, not written) does: so they are members, and
-# api/io/cdatamap.h makes the map and cursor protected. They read three accessors added for them,
+# The first three's `this` is CCandidaturas::GetInst()'s result (fn 521) at every target call, and they walk the
+# base's map, as Localiza (record ccandidaturas.cpp:56, held by fn 11213, not written) does, which also sets its
+# cursor: so they are members, and api/io/cdatamap.h makes the map and cursor protected. Busca's one target body is
+# also called on CRespostas::GetInst()'s result (fn 2812: by 11212, and by 11683 on one of its two calls), a CDataMap
+# of the same layout giving the same bytes: CCandidaturas as its class is chosen between the two. They read three accessors added for them,
 # md::CCandidatura::GetPartidoID and GetCandidatoID and md::CDadosCandidato::GetSituacao (chosen names). Their callers in
 # our link are unit 77's 11215 (2271) and 11214 (2840, 1273); the roots' Consultas stands for the rest.
 #

@@ -7,9 +7,9 @@
 // the cursor test fn 2268 holds inline, and Reset the cursor's move to the first record, which fn 11206
 // (comum::CParteEleitores::Imprime) holds inline. Chosen, no evidence names them: Find, IsFim, Reset, m_registros,
 // m_corrente, m_nome.
-// The map and the cursor are protected, a choice: comum::CCandidaturas's own members walk the map at +0 and +4 (fns
-// 2271, 2272, 2840) and set the cursor at +12 (fn 1273), which is the evidence that the derived class reaches them;
-// an accessor is the other form, not tried.
+// The map, the cursor and the name are protected, a choice: comum::CCandidaturas's members walk the map at +0 and +4
+// (fns 2271, 2272, 2840), and Localiza, inlined in fn 11213 (record ccandidaturas.cpp:56), sets the cursor at +12:
+// the evidence that the derived class reaches them; an accessor is the other form, not tried.
 // Add(KeyType, RecordType) has no record: its body is fn 5377's. src/units/113-uenux2-cdatamap.mk lists what the
 // bytes decide and what they do not.
 #pragma once
