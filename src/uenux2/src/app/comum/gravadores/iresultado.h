@@ -8,13 +8,14 @@
 namespace comum {
 
 // Recovered: the section identifiers IResultado's constructor takes, as its record (iresultado.cpp:40) spells them;
-// comum's records write them unqualified, and comum::TZonaID once. That they are ecourna's types, brought into comum
-// by using-declarations, is a choice: ecourna's are as wide as the constructor's stores (fn 1396: TMunicipioID and
-// TLocalID with i32.store, TZonaID and TSecaoID with i32.store16).
-using ecourna::app::dados::TLocalID;
-using ecourna::app::dados::TMunicipioID;
-using ecourna::app::dados::TSecaoID;
-using ecourna::app::dados::TZonaID;
+// comum's records write them unqualified, and comum::TZonaID once. They are the plain unsigned integers of
+// app/comum/md/cidentificacaourna.h and cidentificacaosecao.h, which say what shows it, as wide as the constructor's
+// stores (fn 1396: TMunicipioID and TLocalID with i32.store, TZonaID and TSecaoID with i32.store16). Repeating the
+// aliases here is a choice.
+using TLocalID = uedword;
+using TMunicipioID = uedword;
+using TSecaoID = ueword;
+using TZonaID = ueword;
 
 // Recovered: only the type of a result file's extension that IResultado's constructor, CArquivosResultado::operator[]
 // (carquivosresultado.cpp:99) and CLogComum's records take: 4 bytes wide (the constructor stores it at +32 with an

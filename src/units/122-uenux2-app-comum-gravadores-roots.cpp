@@ -28,7 +28,7 @@
 
 extern "C" int w122_igravador(void* objeto, unsigned int municipio, unsigned int zona, unsigned int local,
     unsigned int secao, int fase, int extensao, int arquivoSavd)
-    __asm__("_ZN5comum9IGravadorC2E9CBaseTypeIjLj0ELj99999ELi6EES1_ItLt0ELt9999ELi7EES1_IjLj0ELj9999ELi8EES1_ItLt0ELt9999ELi9EEcNS_25EExtensaoArquivoResultadoENS_14ESavdArquivoUEE");
+    __asm__("_ZN5comum9IGravadorC2EjtjtcNS_25EExtensaoArquivoResultadoENS_14ESavdArquivoUEE");
 
 extern "C" void w122_cria(void* resultado, const void* gravador, const void* identidade)
     __asm__("_ZNK5comum16CGravadorRCSecao21CriaIdentidadeEleitorERKNS_2md18CEleitorIdentidadeE");

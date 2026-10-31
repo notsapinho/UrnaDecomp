@@ -56,12 +56,10 @@
 # - 3798 DeterminaNomeArquivo and 3604 DesconverteSerialFlash call std::string::append(const char*, size_t) in the
 #   target (fn 160), which clang inlines at this tree's -O2 and calls at -O3: compiled by tools/round/try-tu.sh
 #   --symbols, the objects of cgravadorutil.cpp and gravadores/asn/util.cpp call __grow_by_and_replace in both
-#   functions, and with --flags -O3 they call append(const char*, size_t). They score 200 over 954 rows and 121 over 346
-#   in this link. -O3 for uenux2 is the user's decision. 3798 differs in one more way: the target compares the zone and
-#   the section it takes with no mask, and ours, over iresultado.h's CBaseType aliases, masks each with 65535 first.
-#   Plain unsigned short aliases in iresultado.h, md/cidentificacaourna.h and md/cidentificacaosecao.h add a mask to
-#   CLocal::GetSecaoID (fn 1078, matched) in clocal.cpp.o (its object before and after), and what they give 3798 was not
-#   measured, so the aliases stay as landed and the type the target has is not settled.
+#   functions, and with --flags -O3 they call append(const char*, size_t). They scored 200 over 954 rows and 121 over 346
+#   in the link of this unit's landing. -O3 for uenux2 is the user's decision. Since comum's names are plain integers
+#   (143-uenux2-cidentificacao.mk has the measurement), 3798 compares the zone and the section it takes with no mask, as
+#   the target does, and scores 191 over 944 rows.
 # - 1396 IGravador's constructor equals the target's but for operands (20 over 239 rows), and the scan reads it
 #   `unresolved self-voted`: its call of 3798 is the only vote for 3798's name. It matches when 3798 does, or when
 #   another caller of 3798 (fns 1276, 12134) lands.
