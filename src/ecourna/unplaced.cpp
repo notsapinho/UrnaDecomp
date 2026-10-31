@@ -185,9 +185,6 @@
 
 // link-order cluster 766 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
 
-// f5479 · 723 B · unmatched · placement: link order · name unknown
-// ? f5479(i32) { ... }
-
 // f5478 · 945 B · unmatched · placement: link order · name unknown
 // void f5478(i32, i32) { ... }
 

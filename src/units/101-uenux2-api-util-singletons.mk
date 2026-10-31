@@ -4,11 +4,14 @@
 #   callers are not written: unit 100's roots call it. CreateInst returns what GetInst returns, as its record spells it; no
 #   caller reads it, so binaryen dropped the result. The 7085 enumerator of EUeUtilError is new, its name chosen.
 # - api::CAjusteDataHora (api/util/cajustedatahora.{h,cpp}, chosen paths): Registra (10876, a chosen name: only table slot 118
-#   reaches it, so the roots take its address) and Ajusta(const time_t&) (10874). 10876 holds set<IAjusteDataHora> and
+#   reaches it, so the roots take its address), Ajusta(const CDateTime&) (10875, slot 0, the clock set to
+#   CDateTime::ConvertToLocalTime's time_t, fn 1381, unit 125) and Ajusta(const time_t&) (10874). The three are defined in
+#   that order, the band's (ledger/ordinals.tsv, uses 1: 10876, 10875, 10874 in reverse link order); the class's vtable is
+#   emitted with Ajusta(const CDateTime&), its key function. 10876 holds set<IAjusteDataHora> and
 #   push<IAjusteDataHora>, which binaryen inlined (two more prologues), so unit 100's fragment reads it for push. The file
 #   is placed by data order: the vtable (@1584156) and the interface's typeinfo lie between api/io/cinisection.cpp's records and
 #   api/util/cdate.cpp's. api::IAjusteDataHora's header has its members now, with their slots.
-# Pending, in the -pending.cpp: CTimerScheduler::CreateTimer (10846) and CAjusteDataHora's first Ajusta (10875).
+# Pending, in the -pending.cpp: CTimerScheduler::CreateTimer (10846).
 # ISystemDateTime::GetInst and CreateInst (1155, records isystemdatetime.cpp:23 and .h:46) are in unit 81's source, the same
 # shape; 1155 holds instance<T> because it is its only caller, and CreateInst for the same reason.
 # Chosen, no byte decides: every name but GetInst's, CreateInst's and the messages'; has<T> and not a member of CPolySingleton
