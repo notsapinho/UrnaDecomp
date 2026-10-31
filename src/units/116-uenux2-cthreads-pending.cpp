@@ -8,8 +8,9 @@
 //   that file's stub-only state is unchanged by this trap's taking the stub.
 // - vota::CThreadEleitor::ParaOutrasThreads 7030 (slot 5), 18 B: `IExecucaoVota::GetInst().Slot6();`, which needs fn 3594,
 //   record iexecucaovota.cpp:74, 1923 B, not written. Slot 6 of vota::IExecucaoVota is the call at vtable + 24.
-// - vota::CThreadOperador::Run 10204 (slot 2), 1873 B, record cthreadoperador.cpp:87: fns 180, 203, 1694, 3593, 3842, 3843,
-//   3844, 3966, 5343, 5450, 5908 to 5911.
+// - vota::CThreadOperador::Run 10204 (slot 2), 1873 B, record cthreadoperador.cpp:87: fns 3593, 3842, 3966, 5343, 5450 and
+//   5908 to 5911, comum::CAppStateContext's members among them (fragment 168 matches its 3843 and 3844 and says what
+//   3842 waits for); its other callees, 180, 203 and 1694, match.
 // - vota::CThreadMonitor::Run 10226 (slot 2), 7171 B: its records name VotacaoSuspensa, MonitorFoneOuvido,
 //   VerificaErroCriticoFlash, VerificaErroCriticoKbdTE, LogaEspaco, LogaStatusRedeAcBateria and
 //   CMonitoraAlimentacao::GetInst and VerificaAlimentacao, all inlined there.
