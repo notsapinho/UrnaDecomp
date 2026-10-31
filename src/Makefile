@@ -30,7 +30,9 @@ OPENSSL_INCLUDES := -I$(OPENSSL_DIR)/include -I$(OPENSSL_SRC)/include
 SEVENZIP_DIR := build/out/7zip/21.02-st-O3
 SEVENZIP_SRC := third_party/7zip
 # RHVoice at -DNDEBUG: the target imports no __assert_fail, and hts_labeller/phoneme_set/userdict assert without it
-RHVOICE_DIR  := build/out/rhvoice/1.14.0-cxx14-O3-ndebug
+# and with no landing pads: an allow-list that names no function, so clang keeps exception semantics and each invoke
+# becomes a call in the backend. The spelling is a measured choice (docs/reference/facts/libraries.md B6).
+RHVOICE_DIR  := build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch
 RHVOICE_SRC  := third_party/RHVoice
 BOOST_HDR    := third_party/boost
 
@@ -41,7 +43,7 @@ $(ROOT)/$(LIBCRYPTO):
 $(ROOT)/$(SEVENZIP_DIR)/probe.wasm:
 	$(H) tools/libs/7zip/build.sh 21.02 st-O3 -O3
 $(ROOT)/$(RHVOICE_DIR)/probe.wasm:
-	$(H) tools/libs/rhvoice/build.sh 1.14.0 cxx14-O3-ndebug -O3 -std=c++14 -DNDEBUG
+	$(H) tools/libs/rhvoice/build.sh 1.14.0 cxx14-O3-ndebug-nocatch -O3 -std=c++14 -DNDEBUG '-sEXCEPTION_CATCHING_ALLOWED=[nothing]'
 $(ROOT)/$(BOOST_HDR)/boost/version.hpp:
 	@echo "missing $(BOOST_HDR): tools/setup/bootstrap.sh --sources fetches the Boost 1.89.0 headers"; exit 2
 

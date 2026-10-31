@@ -181,8 +181,61 @@ the two generated `config.h` (`CONFIG_PATH=/etc/RHVoice`, `DATA_PATH=/share/RHVo
 app drives the C++ core. `voice.cpp` needs Boost headers.
 
 Build facts: RHVoice uses `std::unary_function`/`std::not1`, so with the image's libc++ it compiles at
-`-std=c++14` (or C++17 with `-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION`), not at C++20 although CMake
-asks for it: TSE compiled RHVoice at ≤ C++17. Objects at -O3.
+`-std=c++14`, at C++17 with `-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION`, and at C++20 with that and
+`-D_LIBCPP_ENABLE_CXX20_REMOVED_BINDER_TYPEDEFS`, `…_NEGATORS` and `…_TYPE_TRAITS`. C++17 changes 13 of the 54 objects.
+`-std=c++11`, upstream's SConstruct, compiles and loses 120 rows (2217 reads +24 where ours reads +16). Objects at -O3.
+
+**No landing pads, with clang's exception semantics.** [asn1.md](asn1.md) §A7 counts the target's pads and ours. Steps 7 to 9
+on each build, from 173cfb3 (8648 matches), with each link's census and symbols, by `splat/scan.tsv`'s verdicts:
+
+| RHVoice objects, on top of `-O3 -std=c++14 -DNDEBUG` | added | lost |
+| --- | ---: | ---: |
+| `-fexceptions -fignore-exceptions` | 53 | 31 |
+| same, with `HTS_Audio_initialize` fixed (below) | 55 | 23 |
+| `-fexceptions -sEXCEPTION_CATCHING_ALLOWED=[nothing]`, fixed | 36 | 13 |
+| same, with unit 103's roots | 41 | 0 |
+
+The same roots with 77 names under the hand-edit marker, from the tally of [asn1.md](asn1.md) §A5. The third row leaves out
+5805's stand-in, since that build emits no `text_token::~text_token`:
+
+| the allow-list build above, and | added | lost |
+| --- | ---: | ---: |
+| nothing more | 167 | 0 |
+| `-fno-strict-aliasing` | 191 | 4 |
+| `-fignore-exceptions` for the allow-list, `-fno-strict-aliasing` | 211 | 12 |
+| `-fno-strict-aliasing -fno-sized-deallocation` | 162 | 97 |
+
+`src/Makefile` holds the first row. With 68 names, the 63 of those 77 that carry a row and 5 one-caller names, it lands 172, 0 lost.
+
+`-fignore-exceptions` and emcc's default, with no `-fexceptions` on the line, give the same 54 objects (`cmp`): clang gets
+`-fcxx-exceptions -fignore-exceptions -fexceptions` either way and drops the `invoke`s itself. That build is not the
+target's: `vector<double>::push_back(&&)` gains an `n ? new : 0` the target lacks (130 rows against 119 in
+`hts_engine_call.cpp.o`). The allow-list keeps `invoke`s through -O3, and the backend turns each into a call, since no
+function is on the list. `-mllvm -enable-emscripten-cxx-exceptions=0` gives the same 54 objects, so the spelling is a choice
+that gives the bytes. Which flag TSE's build used is not recoverable.
+
+**`HTS_Audio_initialize`.** `HTS_engine.c` calls it with one argument, `str_hts_engine_impl.cpp` defines it with three, and
+wasm-ld routes the call to a trap, `signature_mismatch:HTS_Audio_initialize`. The target has no trap and no call there:
+`pnpm wasm fn ../target/vota_web_wasm.wasm 9647` runs from the stores of `HTS_Engine_initialize` straight into `f5247(l3+116)`,
+`HTS_ModelSet_initialize`. A pad hid it: with `invoke_vi` binaryen could not see the trap, and without one the inlined trap
+makes the rest of `do_initialize` dead (161 B against the target's 15034 B) and takes HTS_fclose, HTS_fseek and six more
+out of the link. So TSE's source differs from the tag here. `tools/libs/rhvoice/build.sh` overlays a one-parameter
+definition, a choice: giving the call three arguments instead changes two objects and leaves the link byte for byte the same.
+
+**What the pads held.** An `invoke_*` takes a table slot for its callee, and a table entry stops binaryen inlining the
+callee or changing its type. Without RHVoice's pads the callees the target keeps by other means leave or change: 276 lost
+its result, which only 12979 reads, and that took 2184, 8920, 10431, 3558 and 3830 with it. `src/units/103-rhvoice-nocatch-roots.cpp`
+stands in for those means.
+
+**`-fno-strict-aliasing` is a lead.** It adds the reloads the target has, in C and in C++: `HTS_SStreamSet_clear` 181 to 184
+rows, `item::remove` 108 to 112, and 24 more matches (681, 756, 896, 915, 1199, 1530, 2211, 2215, 2705, 3535, 3537, 3560, 3566,
+3568, 5219, 5224, 5245, 5246, 5256, 5257, 5286, 5320, 9591, 9625). It loses `get_key` of `symbol`, `substring`, `start_of_token`
+and `end_of_token` (9683, 4975, 9697, 9700): the guard of `vector<unsigned>`'s copy stays on the frame, because clang leaves
+its destructor out of line in the landing pad by one unit (`-Rpass-missed=inline`: `too costly to inline (cost=45,
+threshold=45)`). With `-fignore-exceptions` there is no landing pad and `get_key` matches, and the `push_back` family goes
+(the third row). `-fno-sized-deallocation` removes the guard too, and the target's rows then show it wrong: they read the
+capacity. `-fno-delete-null-pointer-checks`, `-fno-strict-overflow`, `-fPIC`, `-O2`, C++17 and C++20 keep the guard. So
+something is still unknown, and the flag waits for what makes that destructor cheaper: nothing lands with a row lost.
 
 ## B7. Boost 1.89.0 (medium confidence), header-only
 

@@ -87,7 +87,7 @@ Each row is measured by reconstructing or building that component and scoring it
 | SQLite 3.50.4 amalgamation | none | `-O3 -fPIC` + `-DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_UNLOCK_NOTIFY` + `-DHAVE_FDATASYNC -DHAVE_GMTIME_R -DHAVE_LOCALTIME_R -DHAVE_POSIX_FALLOCATE -DHAVE_STRERROR_R -DHAVE_USLEEP` |
 | OpenSSL 3.0.17 (libcrypto only) | relative `crypto/...` paths | objects at `-O3`; `./Configure cc no-shared --release --prefix=/ --libdir=lib --openssldir=/etc/ssl threads no-unit-test no-tests -fPIC no-fips no-md2`, `CC=emcc` |
 | 7-Zip / LZMA SDK 21.02 | none | `-O3 -D_7ZIP_ST -DNDEBUG` |
-| RHVoice 1.14.0 (+ hts_engine, sonic) | none | `-O3 -std=c++14 -DNDEBUG` |
+| RHVoice 1.14.0 (+ hts_engine, sonic) | none | `-O3 -fexceptions -sEXCEPTION_CATCHING_ALLOWED=[nothing] -std=c++14 -DNDEBUG` (no landing pads: [facts/libraries.md](facts/libraries.md) §B6) |
 | Boost 1.89.0 | header-only | instantiated by the including TU's flags |
 | zlib 1.3.1 + minizip | none | `-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1` (stopgap, not yet confirmed) |
 

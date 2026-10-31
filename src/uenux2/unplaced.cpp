@@ -1539,11 +1539,6 @@
 // f3078 · 10 B · unmatched · placement: link order · name unknown
 // ? f3078(i32) { ... }
 
-// link-order cluster 1135 · uses=4
-
-// f3135 · 7 B · unmatched · placement: link order · name unknown
-// void f3135() { ... }
-
 // link-order cluster 1136 · uses=4
 
 // f3137 · 283 B · unmatched · placement: link order · name unknown
@@ -3168,11 +3163,6 @@
 // f5052 · 10 B · unmatched · placement: link order · name unknown
 // void f5052(i32) { ... }
 
-// link-order cluster 736 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
-
-// f5205 · 403 B · unmatched · placement: link order · name unknown
-// void f5205(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 737 · uses=2
 
 // f5254 · 1114 B · unmatched · placement: link order · name unknown
@@ -3372,16 +3362,8 @@
 
 // link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
 
-// f3529 · 191 B · unmatched · placement: link order · name unknown
-// ? f3529(i32, i32) { ... }
-
 // f3528 · 530 B · unmatched · placement: link order · name unknown
 // void f3528(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 966 · uses=3
-
-// f3571 · 486 B · unmatched · placement: link order · name unknown
-// void f3571(i32, i32, i32) { ... }
 
 // link-order cluster 985 · uses=3 · neighbours' file uenux2/src/api/gui/cbmpconversor.cpp
 
@@ -3439,11 +3421,6 @@
 
 // f2715 · 109 B · unmatched · placement: link order · name unknown
 // void f2715(i32, i32) { ... }
-
-// link-order cluster 1085 · uses=4 · neighbours' file uenux2/src/api/util/csystem.cpp
-
-// f2756 · 484 B · unmatched · placement: link order · name unknown
-// void f2756(i32, i32, i32) { ... }
 
 // link-order cluster 1091 · uses=4 · neighbours' file uenux2/src/api/gui/iform.cpp
 

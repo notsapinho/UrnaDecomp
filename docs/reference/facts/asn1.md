@@ -92,6 +92,10 @@ since the symbol file and the ledger stay committed; each compiles nothing:
 | all just before the runtime | `'RHVOICE_BEFORE_ASN1=$(RHVOICE_OBJS)'` | 777, 1917 |
 | all before ecourna, as §L3 reads | none: `link.cmd` edited | 777, 1837, 1917, 8814, 8838, 8863, 10983 |
 
+That table is the `-fexceptions` RHVoice objects. On the objects `src/Makefile` builds now ([libraries.md](libraries.md) §B6),
+measured by steps 7 to 9, all of RHVoice just before the runtime loses 16 rows (777, 1917, 2649, 5055, 8750 and 11 `AVNDecoder`
+visitors), and `language` with `document`, the one object that defines `vector<unsigned>::push_back(&&)`, loses none and adds none.
+
 ```sh
 P=build/out/order-last; mkdir -p $P; cp -cpR build/out/app $P/app
 TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web RHVOICE_BEFORE_ASN1=
@@ -106,7 +110,7 @@ and `pitch.cpp.o` emit a 354-B `operator>>` with a landing pad, which cannot be 
 2149, 3557, 5254, 9741 and 10841 call both `sentry` (722) and `ios_base::clear` (702), and 777, the body the runtime's
 callers reach, is 163 B. The lead on why our RHVoice objects hold these calls differently is their landing pads (§A7).
 `RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk` is the smallest set and place that loses nothing: a measured choice, not the
-target's link line, and a later change to the RHVoice build may let it go.
+target's link line. Building RHVoice with no landing pads did not let it go.
 
 ## A3. The whole schema of the 32 `Modulo*` modules is in the target's data
 
@@ -197,7 +201,7 @@ alone: a name says which function sits there, and the scan still compares the by
 Names free callers, not bodies. 3473 (`decodeCommon`) stays unmatched: it calls 543, a 239-B body with 28 callers, the
 `push_back(&&)` of a 4-byte element, and no body of the runtime equals it. The target's 543 is RHVoice's
 `vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`,
-which only takes the pads away, matches 543 by content from that object. Our object has them. A twin reaches the same bytes
+which only takes the pads away, matches 543 by content from that object. A twin reaches the same bytes
 another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merges with `vector<long>`'s from
 `roots_boost.o`, and the content pass matches 543 through it, with no source written for it. So 543's match line names
 `vector<long>` by link order and not by evidence: neither `FillPath` nor `DrawPath` calls 543 in the target, which inlines
@@ -273,11 +277,10 @@ through `invoke_*`. Measured by links that take those landing pads away with `-f
 target's flags: with `userdict.cpp` so compiled, 208, 2653, 2186 and 8890 match, and with `app_dados_asn_datahoraasn` 8887
 does.
 
-**The target's RHVoice bodies have no landing pads, and ours do.** Of the 680 rows of `splat/scan.tsv` at 0b5f410 whose
-candidate comes from an `rhvoice/…` object, 2 target bodies call `__cxa_find_matching_catch_*` (9769 and 9774) and 127 of
-ours do, and of those 127 only 2 match. `tools/libs/rhvoice/build.sh` compiles with `-fexceptions`. The whole library
-compiled with `-fignore-exceptions`, at unchanged symbols, gains 43 rows and loses 28 (measured on an older link). That is
-a lead on §A2's open question and no run of the pipeline: the flag says nothing of the target's. The count:
+**The target's RHVoice bodies have no landing pads.** Of the 680 rows of `splat/scan.tsv` at 0b5f410 whose
+candidate comes from an `rhvoice/…` object, 2 target bodies call `__cxa_find_matching_catch_*` (9769 and 9774), and 127 of
+ours did then, of which only 2 matched. [libraries.md](libraries.md) §B6 has the build that follows, with what each flag
+adds and loses. This is the count on 0b5f410's link:
 
 ```sh
 python3 -I -B - <<'END'
