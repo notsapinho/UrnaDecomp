@@ -51,7 +51,7 @@ them (`truth`).
 | `sqlite` | SQLite 3.50.4 amalgamation | `tools/libs/sqlite/build.sh` (recorded in `cflags.txt`) | 12 |
 | `openssl` | OpenSSL 3.0.17 libcrypto | `tools/libs/openssl/configure.sh` (the configured Makefile) | 12 |
 | `7zip` | 7-Zip / LZMA SDK 21.02, single-threaded | `tools/libs/7zip/build.sh` (recorded in `flags.nul`) | 12 |
-| `rhvoice-ignore` | RHVoice's objects built at `-fignore-exceptions` (`userdict.cpp`) | `tools/libs/rhvoice/build.sh --only` (recorded in `flags/<source>.nul`) | 0 |
+| `rhvoice-ignore` | RHVoice's objects built at `-fignore-exceptions` (`userdict.cpp`) | `tools/libs/rhvoice/build.sh --only` (recorded in `flags/<source>.nul`) | 12 |
 | `rhvoice` | RHVoice 1.14.0 core, hts_engine and sonic | `tools/libs/rhvoice/build.sh` (recorded in `flags.nul`) | 12 |
 | `boost` | Boost 1.89.0, header-only | the instantiating setup's flags | 12 |
 | `app-stand-ins` | the stand-ins' flags: what the Boost probe instantiates with (no rows of its own) | `src/Makefile` `APP_CXXFLAGS`, `APP_CFLAGS` | 0 |

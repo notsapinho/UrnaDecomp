@@ -1,5 +1,32 @@
 [
   {
+    "id": "uenux2/1915",
+    "index": 1915,
+    "size": 70,
+    "band": "small",
+    "component": "api",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "api::SRect::Move(api::SPoint const&)",
+    "symbol": "_ZN3api5SRect4MoveERKNS_6SPointE",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/gui/primitives.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/gui/primitives.cpp",
+      "line": 47
+    }
+  },
+  {
     "id": "uenux2/4793",
     "index": 4793,
     "size": 412,
@@ -53,6 +80,30 @@
       "path": "src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp",
       "line": 73
     }
+  },
+  {
+    "id": "uenux2/6548",
+    "index": 6548,
+    "size": 1530,
+    "band": "large",
+    "component": "comum",
+    "owner": "sqlite",
+    "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "vota::CTelasVota::~CTelasVota()",
+    "symbol": "_ZN4vota10CTelasVotaD1Ev",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o",
+    "reference": null
   },
   {
     "id": "uenux2/7902",
@@ -256,60 +307,6 @@
     "reference": null
   },
   {
-    "id": "uenux2/11012",
-    "index": 11012,
-    "size": 43,
-    "band": "small",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "loop",
-      "call_indirect"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CNewLineFieldPaper::Draw(api::IPaper&) const",
-    "symbol": "_ZNK3api18CNewLineFieldPaper4DrawERNS_6IPaperE",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/gui/cnewlinefieldpaper.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/gui/cnewlinefieldpaper.cpp",
-      "line": 11
-    }
-  },
-  {
-    "id": "uenux2/11270",
-    "index": 11270,
-    "size": 571,
-    "band": "large",
-    "component": "comum",
-    "owner": "-",
-    "features": [
-      "loop",
-      "frame",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 4
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "comum::md::CRegraCPF::ValidaDigitoVerificador(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const",
-    "symbol": "_ZNK5comum2md9CRegraCPF23ValidaDigitoVerificadorERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/app/comum/dados/md/cregracpf.cpp.o",
-    "reference": null
-  },
-  {
     "id": "uenux2/11620",
     "index": 11620,
     "size": 4622,
@@ -363,6 +360,33 @@
     "evidence": "symbol",
     "object": "build/out/app/ecourna/api_compression_czip.cpp.o",
     "reference": null
+  },
+  {
+    "id": "ecourna/1875",
+    "index": 1875,
+    "size": 125,
+    "band": "small",
+    "component": "unknown",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "ecourna",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "ecourna::app::dados::CIdentificacaoJustificativa::CIdentificacaoJustificativa(ecourna::app::dados::CRegistroIdentificacaoEleitor const&, CBaseType<unsigned short, (unsigned short)0, (unsigned short)9999, 36>)",
+    "symbol": "_ZN7ecourna3app5dados27CIdentificacaoJustificativaC1ERKNS1_29CRegistroIdentificacaoEleitorE9CBaseTypeItLt0ELt9999ELi36EE",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/app_dados_resultadournacadastro_cidentificacaojustificativa.cpp.o",
+    "reference": {
+      "path": "src/ecourna/app/dados/resultadournacadastro/cidentificacaojustificativa.cpp",
+      "line": 5
+    }
   },
   {
     "id": "ecourna/2193",
@@ -629,30 +653,6 @@
     "reference": null
   },
   {
-    "id": "ecourna/14153",
-    "index": 14153,
-    "size": 104,
-    "band": "small",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "call_indirect"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::__match_char_icase<char, std::__2::regex_traits<char>>::__exec(std::__2::__state<char>&) const",
-    "symbol": "_ZNKSt3__218__match_char_icaseIcNS_12regex_traitsIcEEE6__execERNS_7__stateIcEE",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_compression_icompressor.cpp.o",
-    "reference": null
-  },
-  {
     "id": "asn1/670",
     "index": 670,
     "size": 45,
@@ -676,7 +676,7 @@
     "object": "build/out/app/asn1/asn1.o",
     "reference": {
       "path": "src/asn1/asn1.cxx",
-      "line": 1292
+      "line": 1410
     }
   },
   {
@@ -734,6 +734,33 @@
     }
   },
   {
+    "id": "asn1/1669",
+    "index": 1669,
+    "size": 312,
+    "band": "medium",
+    "component": "ASN1",
+    "owner": "asn1",
+    "features": [
+      "leaf",
+      "loop"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "asn1",
+    "lang": "c++",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
+    "name": "ASN1::BERDecoder::decodeHeader(unsigned int&, bool&, unsigned int&)",
+    "symbol": "_ZN4ASN110BERDecoder12decodeHeaderERjRbS1_",
+    "evidence": "symbol",
+    "object": "build/out/app/asn1/BERDecoder.o",
+    "reference": {
+      "path": "src/asn1/BERDecoder.cxx"
+    }
+  },
+  {
     "id": "asn1/2191",
     "index": 2191,
     "size": 97,
@@ -759,33 +786,7 @@
     "object": "build/out/app/asn1/asn1.o",
     "reference": {
       "path": "src/asn1/asn1.cxx",
-      "line": 1647
-    }
-  },
-  {
-    "id": "asn1/8753",
-    "index": 8753,
-    "size": 51,
-    "band": "small",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1",
-    "lang": "c++",
-    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::DataFree::do_visit(ASN1::AbstractString&)",
-    "symbol": "_ZN4ASN18DataFree8do_visitERNS_14AbstractStringE",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/DataFree.o",
-    "reference": {
-      "path": "src/asn1/DataFree.cxx"
+      "line": 1771
     }
   },
   {
@@ -843,31 +844,6 @@
     "reference": null
   },
   {
-    "id": "asn1/8815",
-    "index": 8815,
-    "size": 258,
-    "band": "medium",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "switch",
-      "frame"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 3
-    },
-    "origin": "selected",
-    "setup": "asn1",
-    "lang": "c++",
-    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::PERDecoder::do_visit(ASN1::OCTET_STRING&)",
-    "symbol": "_ZN4ASN110PERDecoder8do_visitERNS_12OCTET_STRINGE",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/PERDecoder.o",
-    "reference": null
-  },
-  {
     "id": "asn1/8880",
     "index": 8880,
     "size": 22,
@@ -891,6 +867,33 @@
     "object": "build/out/app/asn1/AVNDecoder.o",
     "reference": {
       "path": "src/asn1/AVNDecoder.cxx"
+    }
+  },
+  {
+    "id": "asn1/8987",
+    "index": 8987,
+    "size": 94,
+    "band": "small",
+    "component": "ASN1",
+    "owner": "asn1",
+    "features": [
+      "leaf",
+      "switch"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "asn1",
+    "lang": "c++",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
+    "name": "ASN1::ValidChecker::do_visit(ASN1::INTEGER const&)",
+    "symbol": "_ZN4ASN112ValidChecker8do_visitERKNS_7INTEGERE",
+    "evidence": "symbol",
+    "object": "build/out/app/asn1/ValidChecker.o",
+    "reference": {
+      "path": "src/asn1/ValidChecker.cxx"
     }
   },
   {
@@ -2342,6 +2345,301 @@
     }
   },
   {
+    "id": "rhvoice-ignore/2211",
+    "index": 2211,
+    "size": 119,
+    "band": "small",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "frame"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 4
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "yy_destructor(yyParser*, unsigned char, YYMINORTYPE*)",
+    "symbol": "_ZL13yy_destructorP8yyParserhP11YYMINORTYPE",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/5256",
+    "index": 5256,
+    "size": 512,
+    "band": "medium",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "void std::__2::__sort5[abi:ne210108]<std::__2::_ClassicAlgPolicy, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node::compare&, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, 0>(RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node::compare&)",
+    "symbol": "_ZNSt3__27__sort5B8ne210108INS_17_ClassicAlgPolicyERN7RHVoice4trieIjNS2_8userdict4ruleENS4_4dict8to_lowerEE4node7compareEPPS9_TnNS_9enable_ifIXnt21__use_branchless_sortIT0_T1_EEiE4typeELi0EEEvSG_SG_SG_SG_SG_SF_",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/5257",
+    "index": 5257,
+    "size": 971,
+    "band": "large",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "loop",
+      "switch"
+    ],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "bool std::__2::__insertion_sort_incomplete[abi:ne210108]<std::__2::_ClassicAlgPolicy, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node::compare&, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**>(RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node**, RHVoice::trie<unsigned int, RHVoice::userdict::rule, RHVoice::userdict::dict::to_lower>::node::compare&)",
+    "symbol": "_ZNSt3__227__insertion_sort_incompleteB8ne210108INS_17_ClassicAlgPolicyERN7RHVoice4trieIjNS2_8userdict4ruleENS4_4dict8to_lowerEE4node7compareEPPS9_EEbT1_SE_T0_",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/5262",
+    "index": 5262,
+    "size": 361,
+    "band": "medium",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "loop",
+      "call_indirect",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "std::__2::vector<RHVoice::userdict::rule, std::__2::allocator<RHVoice::userdict::rule>>::__move_range(RHVoice::userdict::rule*, RHVoice::userdict::rule*, RHVoice::userdict::rule*)",
+    "symbol": "_ZNSt3__26vectorIN7RHVoice8userdict4ruleENS_9allocatorIS3_EEE12__move_rangeEPS3_S7_S7_",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/5263",
+    "index": 5263,
+    "size": 85,
+    "band": "small",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "RHVoice::userdict::dict::simple_search(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const",
+    "symbol": "_ZNK7RHVoice8userdict4dict13simple_searchERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/5265",
+    "index": 5265,
+    "size": 356,
+    "band": "medium",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "loop",
+      "call_indirect",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "std::__2::vector<RHVoice::userdict::rule, std::__2::allocator<RHVoice::userdict::rule>>::__swap_out_circular_buffer(std::__2::__split_buffer<RHVoice::userdict::rule, std::__2::allocator<RHVoice::userdict::rule>&>&)",
+    "symbol": "_ZNSt3__26vectorIN7RHVoice8userdict4ruleENS_9allocatorIS3_EEE26__swap_out_circular_bufferERNS_14__split_bufferIS3_RS5_EE",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/8036",
+    "index": 8036,
+    "size": 17,
+    "band": "tiny",
+    "component": "libc++",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "std::__2::__shared_ptr_pointer<RHVoice::userdict::start_of_token*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::start_of_token>, std::__2::allocator<RHVoice::userdict::start_of_token>>::__get_deleter(std::type_info const&) const",
+    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict14start_of_tokenENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/9659",
+    "index": 9659,
+    "size": 16,
+    "band": "tiny",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "RHVoice::userdict::initialism_flag::apply(RHVoice::userdict::word_editor&) const",
+    "symbol": "_ZNK7RHVoice8userdict15initialism_flag5applyERNS0_11word_editorE",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/9663",
+    "index": 9663,
+    "size": 23,
+    "band": "tiny",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "RHVoice::userdict::unstressed_flag::apply(RHVoice::userdict::word_editor&) const",
+    "symbol": "_ZNK7RHVoice8userdict15unstressed_flag5applyERNS0_11word_editorE",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/9690",
+    "index": 9690,
+    "size": 17,
+    "band": "tiny",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [],
+    "ledger": {
+      "kind": "addr",
+      "score": 3
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "RHVoice::userdict::empty_string::describe() const",
+    "symbol": "_ZNK7RHVoice8userdict12empty_string8describeEv",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/9692",
+    "index": 9692,
+    "size": 40,
+    "band": "small",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 2
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "RHVoice::userdict::word_break::describe() const",
+    "symbol": "_ZNK7RHVoice8userdict10word_break8describeEv",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/9699",
+    "index": 9699,
+    "size": 34,
+    "band": "small",
+    "component": "unknown",
+    "owner": "rhvoice",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 3
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "RHVoice::userdict::stress_mark::describe() const",
+    "symbol": "_ZNK7RHVoice8userdict11stress_mark8describeEv",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
     "id": "rhvoice/755",
     "index": 755,
     "size": 198,
@@ -2359,42 +2657,14 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_get_token_from_string_with_separator",
     "symbol": "HTS_get_token_from_string_with_separator",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_misc.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/HTS_misc.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
       "line": 496
-    }
-  },
-  {
-    "id": "rhvoice/1069",
-    "index": 1069,
-    "size": 923,
-    "band": "large",
-    "component": "RHVoice",
-    "owner": "rhvoice",
-    "features": [
-      "loop",
-      "switch"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 18
-    },
-    "origin": "selected",
-    "setup": "rhvoice",
-    "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
-    "name": "HTS_get_pattern_token",
-    "symbol": "HTS_get_pattern_token",
-    "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_misc.c.o",
-    "reference": {
-      "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
-      "line": 352
     }
   },
   {
@@ -2416,41 +2686,12 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "RHVoice::resource_info<RHVoice::language>::get_instance() const",
     "symbol": "_ZNK7RHVoice13resource_infoINS_8languageEE12get_instanceEv",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/document.cpp.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/document.cpp.o",
     "reference": null
-  },
-  {
-    "id": "rhvoice/2697",
-    "index": 2697,
-    "size": 45,
-    "band": "small",
-    "component": "RHVoice",
-    "owner": "rhvoice",
-    "features": [
-      "leaf",
-      "loop",
-      "select"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "rhvoice",
-    "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
-    "name": "HTS_Label_get_parsed",
-    "symbol": "HTS_Label_get_parsed",
-    "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_label.c.o",
-    "reference": {
-      "path": "third_party/RHVoice/src/hts_engine/HTS_label.c",
-      "line": 250
-    }
   },
   {
     "id": "rhvoice/2701",
@@ -2470,15 +2711,39 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_alloc_matrix",
     "symbol": "HTS_alloc_matrix",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_misc.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/HTS_misc.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
       "line": 575
     }
+  },
+  {
+    "id": "rhvoice/5219",
+    "index": 5219,
+    "size": 722,
+    "band": "large",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "loop"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 30
+    },
+    "origin": "selected",
+    "setup": "rhvoice",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "RHVoice::hts_engine_impl::~hts_engine_impl()",
+    "symbol": "_ZN7RHVoice15hts_engine_implD0Ev",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/hts_engine_impl.cpp.o",
+    "reference": null
   },
   {
     "id": "rhvoice/5225",
@@ -2498,11 +2763,11 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_Engine_set_fperiod",
     "symbol": "HTS_Engine_set_fperiod",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_engine.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/HTS_engine.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_engine.c",
       "line": 207
@@ -2525,11 +2790,11 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_SStreamSet_get_gv_switch",
     "symbol": "HTS_SStreamSet_get_gv_switch",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_sstream.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/HTS_sstream.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_sstream.c",
       "line": 519
@@ -2553,42 +2818,69 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_SStreamSet_get_vari",
     "symbol": "HTS_SStreamSet_get_vari",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_sstream.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/HTS_sstream.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_sstream.c",
       "line": 489
     }
   },
   {
-    "id": "rhvoice/5247",
-    "index": 5247,
-    "size": 58,
-    "band": "small",
+    "id": "rhvoice/5246",
+    "index": 5246,
+    "size": 655,
+    "band": "large",
     "component": "RHVoice",
     "owner": "rhvoice",
     "features": [
-      "leaf",
+      "loop",
       "i64"
     ],
     "ledger": {
-      "kind": "byte",
-      "score": 0
+      "kind": "addr",
+      "score": 20
     },
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
-    "name": "HTS_ModelSet_initialize",
-    "symbol": "HTS_ModelSet_initialize",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "HTS_ModelSet_clear",
+    "symbol": "HTS_ModelSet_clear",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_model.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/HTS_model.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_model.c",
-      "line": 829
+      "line": 850
+    }
+  },
+  {
+    "id": "rhvoice/5253",
+    "index": 5253,
+    "size": 95,
+    "band": "small",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "switch"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 3
+    },
+    "origin": "selected",
+    "setup": "rhvoice",
+    "lang": "c",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "HTS_fgetc",
+    "symbol": "HTS_fgetc",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/HTS_misc.c.o",
+    "reference": {
+      "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
+      "line": 206
     }
   },
   {
@@ -2609,39 +2901,42 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "RHVoice::(anonymous namespace)::notifier::on_finished()",
     "symbol": "_ZN7RHVoice12_GLOBAL__N_18notifier11on_finishedEv",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/hts_engine_call.cpp.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/hts_engine_call.cpp.o",
     "reference": {
       "path": "third_party/RHVoice/src/core/hts_engine_call.cpp"
     }
   },
   {
-    "id": "rhvoice/9630",
-    "index": 9630,
-    "size": 20,
-    "band": "tiny",
+    "id": "rhvoice/9643",
+    "index": 9643,
+    "size": 617,
+    "band": "large",
     "component": "RHVoice",
     "owner": "rhvoice",
     "features": [
-      "leaf",
+      "loop",
+      "i64",
       "float"
     ],
     "ledger": {
-      "kind": "byte",
-      "score": 0
+      "kind": "addr",
+      "score": 9
     },
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
-    "name": "RHVoice::speech_processor::get_desired_input_size() const",
-    "symbol": "_ZNK7RHVoice16speech_processor22get_desired_input_sizeEv",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "RHVoice::str_hts_engine_impl::do_reset()",
+    "symbol": "_ZN7RHVoice19str_hts_engine_impl8do_resetEv",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/hts_engine_call.cpp.o",
-    "reference": null
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/str_hts_engine_impl.cpp.o",
+    "reference": {
+      "path": "third_party/RHVoice/src/core/str_hts_engine_impl.cpp"
+    }
   },
   {
     "id": "rhvoice/10196",
@@ -2660,11 +2955,11 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "RHVoice::sentence::append_token::set_eos()",
     "symbol": "_ZN7RHVoice8sentence12append_token7set_eosEv",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/document.cpp.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/document.cpp.o",
     "reference": {
       "path": "third_party/RHVoice/src/core/document.cpp"
     }

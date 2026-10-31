@@ -3,23 +3,24 @@
 //   the constructor   records at lines 39 and 42, column 15; binaryen inlined it into fn 1265; not reconstructed
 //   10946 Draw(IScreen&) const                                                                 (here)
 //   10945 Show(), 10944 Hide()                                                                 (here)
-//   10943 Rect() const   record at line 70, column 21; calls fn 3889, not named yet            (pending)
+//   10943 Rect() const   record at line 70, column 21; a thunk of fn 3889                      (here)
 //   2241  Move(const SPoint&)  one body binaryen shares with four other fields                 (here)
 //   10942 / 10941  the implicit destructors, emitted here with the vtable: Draw is the key function
-//   10940 GetTypeName() const: through fn 3891, which has no name yet                          (pending)
+//   10940 GetTypeName() const: in the class, a thunk of fn 3891, a merge of three 18-character names
 // Draw, Show and Hide follow the target's order (the uses-1 band 10940-10946 of ledger/ordinals.tsv: Draw, Show, Hide,
 // Rect, the destructors, GetTypeName); no record falls in them, so their lines are a choice. Move shares its body, so
-// the band does not place it: below Rect's line is a choice. The pending members are in the unit's -pending.cpp.
+// the band does not place it: below Rect's line is a choice.
 
 #include "api/gui/ctextfieldblinking.h"
 
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
+#include "api/pattern/cpolysingleton.h"
 #include "api/util/itimer.h"
 
 namespace api {
 
-// (original lines 22-52: content not recovered)
+// (original lines 23-52: content not recovered)
 #line 53
 void CTextFieldBlinking::Draw(IScreen& screen) const
 {
@@ -36,13 +37,17 @@ void CTextFieldBlinking::Hide()
     m_timer->Stop();
 }
 
+SRect CTextFieldBlinking::Rect() const
+{
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    SPoint posicao = m_posicao;
+    TPosition largura;
+    TPosition altura;
+    tela.GetFontMetrics(largura, altura, m_font, m_text->GetText());
+    AlinhaPosicao(posicao, m_text->GetAlignment(), largura);
 
-
-
-
-
-
-
+    return SRect::Normalized(posicao.x, posicao.y, posicao.x + largura, posicao.y + altura);
+}
 
 void CTextFieldBlinking::Move(const SPoint& posicao)
 {

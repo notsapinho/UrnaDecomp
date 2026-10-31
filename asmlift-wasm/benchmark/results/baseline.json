@@ -1,37 +1,37 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-31T03:27:54.526Z",
+ "createdAt": "2026-10-31T10:42:32.954Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
  },
  "image": "urna-emsdk:6.0.0",
  "dataset": {
-  "rows": 169,
-  "rowsSha256": "5e4861b80727a7d09b26e91485dd0f2d7b601490cfa10caa35dd7346620ff16d",
-  "setupsSha256": "d84a6cd1cf58ee48da4b50c9cc8a35b30a93f14367ddce8a355ec6a88500efe2"
+  "rows": 181,
+  "rowsSha256": "7823066bfafbf673fd0edcad0ac5b44ea4b3907eb4594bc60ee0d38a3ec5cbe2",
+  "setupsSha256": "cba43edf564858681446c5c04ab30f73ab4ac3829d8421925cbed33d1feddb65"
  },
- "commit": "af07748+dirty",
+ "commit": "1900524+dirty",
  "durationMs": {
-  "lift": 106,
-  "compileAndOptimise": 4737,
-  "total": 11721
+  "lift": 113,
+  "compileAndOptimise": 4298,
+  "total": 10823
  },
  "totals": {
   "overall": {
-   "rows": 169,
-   "lifted": 169,
-   "compiled": 169,
-   "optimised": 169,
-   "exactRaw": 32,
-   "exact": 78,
-   "medianRatio": 0.4043,
+   "rows": 181,
+   "lifted": 181,
+   "compiled": 181,
+   "optimised": 181,
+   "exactRaw": 35,
+   "exact": 83,
+   "medianRatio": 0.4069,
    "medianOptRatio": 0.0682,
-   "meanOptRatio": 0.1835,
+   "meanOptRatio": 0.1778,
    "outcomes": {
-    "differs": 91,
-    "exact": 78
+    "differs": 98,
+    "exact": 83
    }
   },
   "bySetup": {
@@ -42,9 +42,9 @@
     "optimised": 12,
     "exactRaw": 3,
     "exact": 5,
-    "medianRatio": 0.5572,
+    "medianRatio": 0.3468,
     "medianOptRatio": 0.119,
-    "meanOptRatio": 0.174,
+    "meanOptRatio": 0.1407,
     "outcomes": {
      "differs": 7,
      "exact": 5
@@ -56,13 +56,13 @@
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 1,
-    "exact": 5,
+    "exact": 6,
     "medianRatio": 0.6505,
-    "medianOptRatio": 0.0585,
-    "meanOptRatio": 0.0793,
+    "medianOptRatio": 0.003,
+    "meanOptRatio": 0.0701,
     "outcomes": {
-     "differs": 7,
-     "exact": 5
+     "differs": 6,
+     "exact": 6
     }
    },
    "asn1": {
@@ -71,13 +71,13 @@
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 4,
-    "exact": 9,
-    "medianRatio": 0.1882,
+    "exact": 8,
+    "medianRatio": 0.3167,
     "medianOptRatio": 0,
-    "meanOptRatio": 0.0392,
+    "meanOptRatio": 0.0494,
     "outcomes": {
-     "exact": 9,
-     "differs": 3
+     "exact": 8,
+     "differs": 4
     }
    },
    "zlib": {
@@ -140,19 +140,34 @@
      "differs": 8
     }
    },
+   "rhvoice-ignore": {
+    "rows": 12,
+    "lifted": 12,
+    "compiled": 12,
+    "optimised": 12,
+    "exactRaw": 4,
+    "exact": 7,
+    "medianRatio": 0.289,
+    "medianOptRatio": 0,
+    "meanOptRatio": 0.1009,
+    "outcomes": {
+     "differs": 5,
+     "exact": 7
+    }
+   },
    "rhvoice": {
     "rows": 12,
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 5,
-    "exact": 8,
-    "medianRatio": 0.1383,
-    "medianOptRatio": 0,
-    "meanOptRatio": 0.0922,
+    "exactRaw": 4,
+    "exact": 6,
+    "medianRatio": 0.3598,
+    "medianOptRatio": 0.0119,
+    "meanOptRatio": 0.1212,
     "outcomes": {
-     "differs": 4,
-     "exact": 8
+     "differs": 6,
+     "exact": 6
     }
    },
    "boost": {
@@ -264,6 +279,31 @@
  },
  "rows": [
   {
+   "id": "uenux2/1915",
+   "index": 1915,
+   "setup": "uenux2",
+   "size": 70,
+   "band": "small",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 31,
+   "raw": {
+    "score": 6,
+    "ratio": 0.1935
+   },
+   "opt": {
+    "score": 6,
+    "ratio": 0.1935
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "uenux2/4793",
    "index": 4793,
    "setup": "uenux2",
@@ -311,6 +351,31 @@
    "raw": {
     "score": 0,
     "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2/6548",
+   "index": 6548,
+   "setup": "uenux2",
+   "size": 1530,
+   "band": "large",
+   "features": [
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 695,
+   "raw": {
+    "score": 60,
+    "ratio": 0.0863
    },
    "opt": {
     "score": 0,
@@ -535,61 +600,6 @@
    ]
   },
   {
-   "id": "uenux2/11012",
-   "index": 11012,
-   "setup": "uenux2",
-   "size": 43,
-   "band": "small",
-   "features": [
-    "loop",
-    "call_indirect"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 20,
-   "raw": {
-    "score": 5,
-    "ratio": 0.25
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "uenux2/11270",
-   "index": 11270,
-   "setup": "uenux2",
-   "size": 571,
-   "band": "large",
-   "features": [
-    "loop",
-    "frame",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 309,
-   "raw": {
-    "score": 292,
-    "ratio": 0.945
-   },
-   "opt": {
-    "score": 183,
-    "ratio": 0.5922
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "goto"
-   ]
-  },
-  {
    "id": "uenux2/11620",
    "index": 11620,
    "setup": "uenux2",
@@ -649,6 +659,31 @@
    },
    "exact": false,
    "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "ecourna/1875",
+   "index": 1875,
+   "setup": "ecourna",
+   "size": 125,
+   "band": "small",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 56,
+   "raw": {
+    "score": 52,
+    "ratio": 0.9286
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
    "failure": null,
    "standIns": []
   },
@@ -932,33 +967,6 @@
    ]
   },
   {
-   "id": "ecourna/14153",
-   "index": 14153,
-   "setup": "ecourna",
-   "size": 104,
-   "band": "small",
-   "features": [
-    "call_indirect"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 45,
-   "raw": {
-    "score": 35,
-    "ratio": 0.7778
-   },
-   "opt": {
-    "score": 5,
-    "ratio": 0.1111
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join"
-   ]
-  },
-  {
    "id": "asn1/670",
    "index": 670,
    "setup": "asn1",
@@ -1042,6 +1050,35 @@
    ]
   },
   {
+   "id": "asn1/1669",
+   "index": 1669,
+   "setup": "asn1",
+   "size": 312,
+   "band": "medium",
+   "features": [
+    "leaf",
+    "loop"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 164,
+   "raw": {
+    "score": 77,
+    "ratio": 0.4695
+   },
+   "opt": {
+    "score": 29,
+    "ratio": 0.1768
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
    "id": "asn1/2191",
    "index": 2191,
    "setup": "asn1",
@@ -1067,34 +1104,6 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
-  },
-  {
-   "id": "asn1/8753",
-   "index": 8753,
-   "setup": "asn1",
-   "size": 51,
-   "band": "small",
-   "features": [
-    "leaf"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 24,
-   "raw": {
-    "score": 4,
-    "ratio": 0.1667
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
   },
   {
    "id": "asn1/8755",
@@ -1155,35 +1164,6 @@
    ]
   },
   {
-   "id": "asn1/8815",
-   "index": 8815,
-   "setup": "asn1",
-   "size": 258,
-   "band": "medium",
-   "features": [
-    "switch",
-    "frame"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 124,
-   "raw": {
-    "score": 26,
-    "ratio": 0.2097
-   },
-   "opt": {
-    "score": 15,
-    "ratio": 0.121
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "asn1/8880",
    "index": 8880,
    "setup": "asn1",
@@ -1207,6 +1187,34 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
+  },
+  {
+   "id": "asn1/8987",
+   "index": 8987,
+   "setup": "asn1",
+   "size": 94,
+   "band": "small",
+   "features": [
+    "leaf",
+    "switch"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 45,
+   "raw": {
+    "score": 15,
+    "ratio": 0.3333
+   },
+   "opt": {
+    "score": 3,
+    "ratio": 0.0667
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "goto"
+   ]
   },
   {
    "id": "asn1/8990",
@@ -2639,6 +2647,326 @@
    "standIns": []
   },
   {
+   "id": "rhvoice-ignore/2211",
+   "index": 2211,
+   "setup": "rhvoice-ignore",
+   "size": 119,
+   "band": "small",
+   "features": [
+    "frame"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 60,
+   "raw": {
+    "score": 19,
+    "ratio": 0.3167
+   },
+   "opt": {
+    "score": 6,
+    "ratio": 0.1
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "rhvoice-ignore/5256",
+   "index": 5256,
+   "setup": "rhvoice-ignore",
+   "size": 512,
+   "band": "medium",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 222,
+   "raw": {
+    "score": 58,
+    "ratio": 0.2613
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "rhvoice-ignore/5257",
+   "index": 5257,
+   "setup": "rhvoice-ignore",
+   "size": 971,
+   "band": "large",
+   "features": [
+    "loop",
+    "switch"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 452,
+   "raw": {
+    "score": 206,
+    "ratio": 0.4558
+   },
+   "opt": {
+    "score": 133,
+    "ratio": 0.2942
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "rhvoice-ignore/5262",
+   "index": 5262,
+   "setup": "rhvoice-ignore",
+   "size": 361,
+   "band": "medium",
+   "features": [
+    "loop",
+    "call_indirect",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 177,
+   "raw": {
+    "score": 96,
+    "ratio": 0.5424
+   },
+   "opt": {
+    "score": 74,
+    "ratio": 0.4181
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "rhvoice-ignore/5263",
+   "index": 5263,
+   "setup": "rhvoice-ignore",
+   "size": 85,
+   "band": "small",
+   "features": [
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 41,
+   "raw": {
+    "score": 6,
+    "ratio": 0.1463
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join"
+   ]
+  },
+  {
+   "id": "rhvoice-ignore/5265",
+   "index": 5265,
+   "setup": "rhvoice-ignore",
+   "size": 356,
+   "band": "medium",
+   "features": [
+    "loop",
+    "call_indirect",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 168,
+   "raw": {
+    "score": 83,
+    "ratio": 0.494
+   },
+   "opt": {
+    "score": 39,
+    "ratio": 0.2321
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "rhvoice-ignore/8036",
+   "index": 8036,
+   "setup": "rhvoice-ignore",
+   "size": 17,
+   "band": "tiny",
+   "features": [
+    "leaf",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 8,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "rhvoice-ignore/9659",
+   "index": 9659,
+   "setup": "rhvoice-ignore",
+   "size": 16,
+   "band": "tiny",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 7,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "rhvoice-ignore/9663",
+   "index": 9663,
+   "setup": "rhvoice-ignore",
+   "size": 23,
+   "band": "tiny",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 10,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "rhvoice-ignore/9690",
+   "index": 9690,
+   "setup": "rhvoice-ignore",
+   "size": 17,
+   "band": "tiny",
+   "features": [],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 6,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "rhvoice-ignore/9692",
+   "index": 9692,
+   "setup": "rhvoice-ignore",
+   "size": 40,
+   "band": "small",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 15,
+   "raw": {
+    "score": 7,
+    "ratio": 0.4667
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "constant address hidden from alignment inference"
+   ]
+  },
+  {
+   "id": "rhvoice-ignore/9699",
+   "index": 9699,
+   "setup": "rhvoice-ignore",
+   "size": 34,
+   "band": "small",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 12,
+   "raw": {
+    "score": 6,
+    "ratio": 0.5
+   },
+   "opt": {
+    "score": 2,
+    "ratio": 0.1667
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "rhvoice/755",
    "index": 755,
    "setup": "rhvoice",
@@ -2665,35 +2993,6 @@
    "standIns": []
   },
   {
-   "id": "rhvoice/1069",
-   "index": 1069,
-   "setup": "rhvoice",
-   "size": 923,
-   "band": "large",
-   "features": [
-    "loop",
-    "switch"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 436,
-   "raw": {
-    "score": 165,
-    "ratio": 0.3784
-   },
-   "opt": {
-    "score": 97,
-    "ratio": 0.2225
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "rhvoice/1252",
    "index": 1252,
    "setup": "rhvoice",
@@ -2717,33 +3016,6 @@
    },
    "exact": false,
    "outcome": "differs",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "rhvoice/2697",
-   "index": 2697,
-   "setup": "rhvoice",
-   "size": 45,
-   "band": "small",
-   "features": [
-    "leaf",
-    "loop",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 24,
-   "raw": {
-    "score": 5,
-    "ratio": 0.2083
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
    "failure": null,
    "standIns": []
   },
@@ -2775,6 +3047,31 @@
     "arm tail kept from the join",
     "goto"
    ]
+  },
+  {
+   "id": "rhvoice/5219",
+   "index": 5219,
+   "setup": "rhvoice",
+   "size": 722,
+   "band": "large",
+   "features": [
+    "loop"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 309,
+   "raw": {
+    "score": 198,
+    "ratio": 0.6408
+   },
+   "opt": {
+    "score": 77,
+    "ratio": 0.2492
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "rhvoice/5225",
@@ -2854,18 +3151,43 @@
    "standIns": []
   },
   {
-   "id": "rhvoice/5247",
-   "index": 5247,
+   "id": "rhvoice/5246",
+   "index": 5246,
    "setup": "rhvoice",
-   "size": 58,
-   "band": "small",
+   "size": 655,
+   "band": "large",
    "features": [
-    "leaf",
+    "loop",
     "i64"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 25,
+   "targetRows": 321,
+   "raw": {
+    "score": 124,
+    "ratio": 0.3863
+   },
+   "opt": {
+    "score": 30,
+    "ratio": 0.0935
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "rhvoice/5253",
+   "index": 5253,
+   "setup": "rhvoice",
+   "size": 95,
+   "band": "small",
+   "features": [
+    "switch"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 44,
    "raw": {
     "score": 0,
     "ratio": 0
@@ -2877,7 +3199,10 @@
    "exact": true,
    "outcome": "exact",
    "failure": null,
-   "standIns": []
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
    "id": "rhvoice/9626",
@@ -2908,28 +3233,29 @@
    ]
   },
   {
-   "id": "rhvoice/9630",
-   "index": 9630,
+   "id": "rhvoice/9643",
+   "index": 9643,
    "setup": "rhvoice",
-   "size": 20,
-   "band": "tiny",
+   "size": 617,
+   "band": "large",
    "features": [
-    "leaf",
+    "loop",
+    "i64",
     "float"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 7,
+   "targetRows": 269,
    "raw": {
-    "score": 0,
-    "ratio": 0
+    "score": 122,
+    "ratio": 0.4535
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 61,
+    "ratio": 0.2268
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
    "standIns": []
   },
