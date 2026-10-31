@@ -24,8 +24,8 @@ namespace vota {
 // calls fns 5410 and 1903, which have no name, deletes the old object through fn 244 and, before it returns, calls fn
 // 150 (one body with std::mutex::unlock) on @1908732.
 //
-// The statics are what the slots and the static members read and write: in .data, three 32-bit words that hold 1 and
-// that StartState sets to 1 again (@1590924, @1590928, @1590932, in that order); in .bss, a byte (@1908668).
+// The statics are what the slots and the static members read and write: in .data, three 32-bit words that hold 1, set
+// again by StartState, second first (@1590924, @1590928, @1590932: first to third below); in .bss, a byte (@1908668).
 // AvancaTentativa compares the first with the byte CConfiguracaoEleicao holds at +136 (its CParametrosUrna's
 // numTentativasHabilitacao), AvancaVerificacao the second with the one at +140 (numTentativasVerificacao); fn 10465
 // copies the first into the third, and fn 10425 reads the third's low byte. The .bss byte is the index of the finger

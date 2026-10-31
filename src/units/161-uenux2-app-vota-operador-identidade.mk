@@ -66,7 +66,9 @@
 #
 # Chosen, no evidence names them: the names of the three helpers, of the statics and of every data member, and their
 # types where only a width shows (int for the 32-bit counters), and uebyte as the spelling of the byte's unsigned 8-bit
-# type, which 10465's increment and its bound of 4 give; the CLogVota members' names (from their messages) and their
+# type, which the target gives: the reads that index the table load it with i32.load8_u before the shift (10465 at
+# +0xe90, 10425 at +0x209), where a signed char gives i32.load8_s, and 10465's increment and its bound of 4 make it a
+# counter, not a flag; the CLogVota members' names (from their messages) and their
 # place, after GetInst; IEleitorImpedidoVotar's slot 9 name (LogaImpedimento, from the one override, which logs) and its
 # +20 int; CPedeIdentidade's +16 pointee (the voter's form, as comum::CPedeDigitalMesario's header chooses); GetInst and
 # the private constructors, declared and not defined; the destructors declared first. The lines: AvancaTentativa's throw
