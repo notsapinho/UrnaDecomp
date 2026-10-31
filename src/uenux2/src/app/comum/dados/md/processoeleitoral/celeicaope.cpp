@@ -18,14 +18,7 @@ void CEleicaoPE::ValidaOrdem(std::set<uebyte>& ordens, uebyte ordem, const std::
     }
 }
 
-// (original lines 74-75: content not recovered)
-#line 76
-// <stubs>
-// f11371 · 3396 B · unmatched · name unknown
-// void f11371(i32, i32, i32) { ... }
-// </stubs>
-
-// (original lines 81-140: content not recovered)
+// (original lines 74-140: content not recovered)
 #line 141
 const TVectorCargo& CEleicaoPE::GetCargos() const
 {

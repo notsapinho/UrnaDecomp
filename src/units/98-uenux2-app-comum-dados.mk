@@ -53,8 +53,9 @@
 # tell the two modules apart: its nameList (@1623648) lies between EntidadeHashes' fieldNames and EleitorImpedido's
 # fieldInfos.
 #
-# Not reconstructed. CConversorImpedido::DoDesconverte (11410, the class's only override) waits for fns 566, 5661 and
-# 5662, so nothing emits that class's vtable. CHV's member 5745 is unit 110's.
+# Not reconstructed. CConversorImpedido::DoDesconverte (11410, the class's only override) waits for fn 566 (5661 and
+# 5662 are matched at 7cfbf9e): 98-uenux2-app-comum-dados-pending.cpp traps it and so emits the class's vtable, with the
+# base's default DoConverte (11409, fragment 159's match), and the roots keep that vtable. CHV's member 5745 is unit 110's.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp \
   src/app/comum/dados/cintegridadereferencial.cpp \
@@ -62,7 +63,11 @@ COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp
   src/app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp \
   src/app/comum/dados/asn/eleitor/cconversorimpedido.cpp
 UENUX2_SRCS += $(COMUM_DADOS_SRCS)
+# CConversorImpedido's only override, DoDesconverte, is not written: 98-uenux2-app-comum-dados-pending.cpp traps it and
+# emits the class's vtable, compiled with the tree's flags
+$(ROOT)/$(APP)/98-uenux2-app-comum-dados-pending.o: $(ROOT)/src/units/98-uenux2-app-comum-dados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/98-uenux2-app-comum-dados.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/98-uenux2-app-comum-dados-pending.cpp -o $(R)
 # the sources' users are not reconstructed yet: 98-uenux2-app-comum-dados-roots.cpp reaches them the way the target does
 $(ROOT)/$(APP)/98-uenux2-app-comum-dados-roots.o: $(ROOT)/src/units/98-uenux2-app-comum-dados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/98-uenux2-app-comum-dados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/98-uenux2-app-comum-dados-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/98-uenux2-app-comum-dados-roots.o
+override EXTRA_OBJS += $(APP)/98-uenux2-app-comum-dados-pending.o $(APP)/98-uenux2-app-comum-dados-roots.o

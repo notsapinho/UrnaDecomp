@@ -55,8 +55,9 @@
 #   comum::asn::CConversorHistoricoVotoImpresso for one inherited DoDesconverte, the shared body gives `target 731:
 #   IDENTICAL` from splat-remap; thunks 11360 and 10275 differ in operands only, their call of 731; 11418's rows differ
 #   in operands only and its first difference is the record, which a scratch file cannot hold; and every match of the
-#   tree still verifies, sha256 the target's. The defaults stay as unit 47's specialization with their source in its
-#   header, since the target's body is a merge thunk (src/units/README.md "An inherited template default").
+#   tree still verifies, sha256 the target's. Both are written in their headers since, at the tree's -O3, and match:
+#   fragment 159 says what they rest on. CConversorDadosCandidato's slot 2 is that default (11449), emitted here with
+#   the vtable.
 # - 11437 and 11438 hold other members of this file inlined, with members of app/comum/md/'s CIDEleitoral, CIDPacote
 #   and CCabecalhoPacote (their records), which are not written: comum::asn::CConversorCabecalhoPacote's two slots
 #   (140-uenux2-app-comum-converters.mk says what they hold).
@@ -99,10 +100,6 @@ UENUX2_SRCS += $(COMUM_ASN_SRCS)
 # second call site, the way the target reaches them
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(COMUM_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# CConversorDadosCandidato's slot 2 is the base's default DoConverte, which iconversorasn.h does not define yet:
-# 96-uenux2-app-comum-asn-pending.cpp gives the vtable a trapping explicit specialization, compiled with the tree's flags
-$(ROOT)/$(APP)/96-uenux2-app-comum-asn-pending.o: $(ROOT)/src/units/96-uenux2-app-comum-asn-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/96-uenux2-app-comum-asn.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/96-uenux2-app-comum-asn-pending.cpp -o $(R)
 $(ROOT)/$(APP)/96-uenux2-app-comum-asn-roots.o: $(ROOT)/src/units/96-uenux2-app-comum-asn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/96-uenux2-app-comum-asn.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/96-uenux2-app-comum-asn-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/96-uenux2-app-comum-asn-pending.o $(APP)/96-uenux2-app-comum-asn-roots.o
+override EXTRA_OBJS += $(APP)/96-uenux2-app-comum-asn-roots.o

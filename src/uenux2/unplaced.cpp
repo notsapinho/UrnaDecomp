@@ -1381,11 +1381,6 @@
 
 // component comum
 
-// link-order cluster 259 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhistoricovotoimpresso.cpp
-
-// f10276 · 241 B · unmatched · placement: link order · name unknown
-// void f10276(i32, i32, i32) { ... }
-
 // link-order cluster 264 · uses=1 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp
 
 // f10312 · 13 B · unmatched · placement: link order · name unknown
@@ -1412,16 +1407,6 @@
 
 // f11241 · 16 B · unmatched · placement: link order · name unknown
 // void f11241(i32, i32, i32) { ... }
-
-// link-order cluster 477 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorfotocandidato.cpp
-
-// f11440 · 346 B · unmatched · placement: link order · name unknown
-// void f11440(i32, i32, i32) { ... }
-
-// link-order cluster 480 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidaturas.cpp
-
-// f11445 · 281 B · unmatched · placement: link order · name unknown
-// void f11445(i32, i32, i32) { ... }
 
 // link-order cluster 481 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidatura.cpp
 

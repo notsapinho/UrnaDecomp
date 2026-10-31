@@ -47,52 +47,18 @@ public:
 // (original lines 76-84: content not recovered)
 #line 85
 protected:
-    virtual TEntidade DoConverte(const TDado& dado) const;
 
-    // (original lines 88-93: content not recovered)
-#line 94
-    virtual TDado DoDesconverte(const TEntidade& entidade) const;
+    virtual TEntidade DoConverte(const TDado& /*dado*/) const
+    {
+        throw CUeComumAsnError(EUE_COMUM_ASN_DOCONVERTE_NAO_IMPLEMENTADO, std::format("Método DoConverte() não implementado para {}", typeid(TEntidade).name()));
+    }
+
+    // (original lines 92-95: content not recovered)
+#line 96
+    virtual TDado DoDesconverte(const TEntidade& /*entidade*/) const
+    {
+        throw CUeComumAsnError(EUE_COMUM_ASN_DODESCONVERTE_NAO_IMPLEMENTADO, std::format("Método DoDesconverte() não implementado para {}", typeid(TEntidade).name()));
+    }
 };
 
 } // namespace comum::asn
-
-// <stubs>
-// f11421 · 29 B · unmatched · placement: link order · name unknown
-// void f11421(i32, i32, i32) { ... }
-
-// f11415 · 29 B · unmatched · placement: link order · name unknown
-// void f11415(i32, i32, i32) { ... }
-
-// f11374 · 29 B · unmatched · placement: link order · name unknown
-// void f11374(i32, i32, i32) { ... }
-
-// f11372 · 29 B · unmatched · placement: link order · name unknown
-// void f11372(i32, i32, i32) { ... }
-
-// f11370 · 29 B · unmatched · placement: link order · name unknown
-// void f11370(i32, i32, i32) { ... }
-
-// f11446 · 29 B · unmatched · placement: link order · name unknown
-// void f11446(i32, i32, i32) { ... }
-
-// f11444 · 29 B · unmatched · placement: link order · name unknown
-// void f11444(i32, i32, i32) { ... }
-
-// f11439 · 29 B · unmatched · placement: link order · name unknown
-// void f11439(i32, i32, i32) { ... }
-
-// f11409 · 29 B · unmatched · placement: link order · name unknown
-// void f11409(i32, i32, i32) { ... }
-
-// f11376 · 29 B · unmatched · placement: link order · name unknown
-// void f11376(i32, i32, i32) { ... }
-
-// f10275 · 29 B · unmatched · name unknown
-// void f10275(i32, i32, i32) { ... }
-
-// f10272 · 29 B · unmatched · name unknown
-// void f10272(i32, i32, i32) { ... }
-
-// f10265 · 29 B · unmatched · name unknown
-// void f10265(i32, i32, i32) { ... }
-// </stubs>

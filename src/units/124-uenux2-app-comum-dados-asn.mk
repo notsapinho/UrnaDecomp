@@ -63,8 +63,8 @@
 # - 11398, CConversorEstadoGeral::DoDesconverte: CEstadoGeral's constructor, fn 5637, which calls fn 1249 (no name).
 # - 11399 and 11400, CConversorDadoCorrespondencia's slots (11397 builds the class on its stack): the correspondence's
 #   dates through api::CDateTime.
-# - The base's default DoConverte of each converter that overrides only DoDesconverte (11380, 11358): fn 731 waits for
-#   the defaults in iconversorasn.h (96-uenux2-app-comum-asn.mk).
+# The base's default DoConverte of the two converters that override only DoDesconverte (11380, 11358) is emitted with
+# their vtables in their objects and matches: fragment 159's row.
 # Not written: 10266 (CConversorEntidadeHashes) converts comum::md::CEntidadeHashes of app/comum/gravadores/. The
 # members this list held before, 11363, 11352, 11351, 2794, 11483, 11482, 11437 and 11438, are fragment 140's and unit
 # 13's now, and their fragments say what each waits for.
@@ -81,9 +81,7 @@ DADOS_ASN124_SRCS := src/app/comum/dados/md/candidatura/cdadoscandidato.cpp \
 UENUX2_SRCS += $(DADOS_ASN124_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(DADOS_ASN124_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# slot 2 of each converter is the base's default DoConverte, which iconversorasn.h does not define yet:
-# 124-uenux2-app-comum-dados-asn-pending.cpp gives the vtables trapping explicit specializations, compiled with the
-# tree's flags
+# the slots not written: 124-uenux2-app-comum-dados-asn-pending.cpp traps them, compiled with the tree's flags
 $(ROOT)/$(APP)/124-uenux2-app-comum-dados-asn-pending.o: $(ROOT)/src/units/124-uenux2-app-comum-dados-asn-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/124-uenux2-app-comum-dados-asn.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/124-uenux2-app-comum-dados-asn-pending.cpp -o $(R)
 # the converters' users are not reconstructed yet: 124-uenux2-app-comum-dados-asn-roots.cpp keeps their vtables the way

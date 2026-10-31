@@ -48,9 +48,9 @@
 #   operand-only; 11351 94 over 1235 (89 operand-only, 2 inserted, 3 deleted); 11350 99 over 870 (96 operand-only, 3
 #   deleted).
 #
-# Pending (this unit's -pending.cpp traps them): 11364 and 11362, the base's default DoConverte of CConversorPleito and
-# CConversorProcessoEleitoral (fn 731: 96-uenux2-app-comum-asn.mk says what it waits for); 11349,
-# CConversorEleicoesVota::DoDesconverte
+# The base's default DoConverte of CConversorPleito and CConversorProcessoEleitoral (11364, 11362) is emitted with
+# their vtables in their objects and matches: fragment 159's row.
+# Pending (this unit's -pending.cpp traps them): 11349, CConversorEleicoesVota::DoDesconverte
 # (records :69, :74, :94 and :104, not written); 11483 and 11482, CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s
 # DoConverte and DoDesconverte (not written; 11483 holds Converte<Eleicoes, ...> inlined, iconversorasn.h:56).
 #
@@ -104,9 +104,7 @@ $(foreach u,$(CONVERSORES_140_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildc
 # its bare name, as the ecourna objects' include path finds it
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/rdv/cconversorvotoscargo.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
-# slot 2 of CConversorPleito is the base's default DoConverte, which iconversorasn.h does not define yet:
-# 140-uenux2-app-comum-converters-pending.cpp gives the vtable a trapping explicit specialization, compiled with the
-# tree's flags
+# the slots not written: 140-uenux2-app-comum-converters-pending.cpp traps them, compiled with the tree's flags
 $(ROOT)/$(APP)/140-uenux2-app-comum-converters-pending.o: $(ROOT)/src/units/140-uenux2-app-comum-converters-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/140-uenux2-app-comum-converters.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/140-uenux2-app-comum-converters-pending.cpp -o $(R)
 # the converters' users are not reconstructed yet: 140-uenux2-app-comum-converters-roots.cpp reaches them the way the

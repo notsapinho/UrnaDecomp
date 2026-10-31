@@ -584,11 +584,6 @@
 // f817 · 350 B · unmatched · placement: link order · name unknown
 // void f817(i32, i32) { ... }
 
-// link-order cluster 1305 · uses=20 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
-
-// f731 · 410 B · unmatched · placement: link order · name unknown
-// void f731(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1315 · uses=24
 
 // f642 · 10 B · unmatched · placement: link order · name unknown

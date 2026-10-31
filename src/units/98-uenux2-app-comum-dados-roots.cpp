@@ -11,6 +11,7 @@
 // by-value ModuloImpedidos::TipoImpedimento.
 extern "C" {
 extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTipoIdentificadorEleitorE");
+extern const char impedido_vt[] __asm__("_ZTVN5comum3asn18CConversorImpedidoE");
 int w5658_root(int) __asm__("_ZN5comum2md14CTradutorFrase13RecuperaLabelERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 void w3770_root(int, int) __asm__("_ZNK5comum15CEleitorDetalhe21ConfereDadosDinamicosERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
@@ -47,6 +48,7 @@ struct SComumDadosRoots {
     SComumDadosRoots()
     {
         comum_dados_sink = tipoidentificador_vt;
+        comum_dados_sink = impedido_vt;
         comum_dados_sink = reinterpret_cast<const void*>(&MesmoRotulo);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&ConfereEleitor);

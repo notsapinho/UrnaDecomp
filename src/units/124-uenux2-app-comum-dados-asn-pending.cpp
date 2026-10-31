@@ -1,37 +1,10 @@
 // Pending members: the members the vtables of this unit's comum converters need and no source of ours defines yet.
-// Each class overrides only DoDesconverte (slot 3); slot 2 is the base's default DoConverte,
-// comum::asn::IConversorASN<ENTIDADE, DADO>::DoConverte, a 29-byte thunk of fn 731 in the target, whose record puts a
-// throw on line 89 col 15 of src/app/comum/asn/iconversorasn.h. iconversorasn.h does not define that default yet (unit
-// 47's pending file says why, and 96-uenux2-app-comum-asn.mk has the measurement of fn 731 at -O3), so this file
-// defines each instantiation's member as an explicit specialization, with the symbol the vtable references; its body is
-// NOT the target's, it traps. Delete these when iconversorasn.h defines the default DoConverte: a specialization is a
-// strong symbol with the name of that template's instantiation, so the link would keep the trap without a word.
-// Their source, in the class at lines 87 to 90 of the header (the codes are comum::EUeComumAsnError's):
-//     throw CUeComumAsnError(7655, std::format("Método DoConverte() não implementado para {}", typeid(TEntidade).name()));
-//   - CConversorComplementosMunicipios: slot 2, target fn 11380
-//   - CConversorSuplencia: slot 2, target fn 11358
+// Their bodies are NOT the target's; they trap.
 #include "app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.h"
 #include "app/comum/dados/asn/estadoaplicacao/cconversorestadogeral.h"
-#include "app/comum/dados/asn/municipiozona/cconversorcomplementosmunicipios.h"
-#include "app/comum/dados/asn/processoeleitoral/cconversorsuplencia.h"
 #include "app/comum/dados/asn/rdv/cconversorvoto.h"
 
 namespace comum::asn {
-
-template <>
-IConversorASN<ModuloComplementosMunicipios::EntidadeComplementosMunicipios, md::CComplementosMunicipiosUF>::TEntidade
-IConversorASN<ModuloComplementosMunicipios::EntidadeComplementosMunicipios, md::CComplementosMunicipiosUF>::DoConverte(
-    const TDado&) const
-{
-    __builtin_trap();
-}
-
-template <>
-IConversorASN<ModuloEleicao::Suplencias, md::CSuplencia>::TEntidade
-IConversorASN<ModuloEleicao::Suplencias, md::CSuplencia>::DoConverte(const TDado&) const
-{
-    __builtin_trap();
-}
 
 // comum::asn::CConversorEstadoGeral::DoDesconverte, slot 3, target fn 11398: its record lines (cconversorestadogeral.cpp
 // 87 and 91, DesconverteEstadoUrna inlined) and its callee fn 5637, comum::md::estadoaplicacao::CEstadoGeral's
