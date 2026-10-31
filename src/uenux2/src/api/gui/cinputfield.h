@@ -9,7 +9,8 @@
 // link holds it, as IInputField's cannot be reached.
 //
 // Draw (fn 12438) is written, and so are Rect and Move. GetTypeName (fn 12411) is a thunk of binaryen's fn 2904.
-// SetLength (fn 12387) is the record's, a member defined in the class at line 148.
+// SetLength (fn 12387) is defined in the class: its record's line 148 is the instance() call in its body, and the
+// member's first line is a choice.
 
 #include <memory>
 #include <string>
@@ -58,7 +59,7 @@ public:
         this->Invalidate();
     }
 
-    // (original lines 61-144: content not recovered)
+    // (original lines 62-144: content not recovered)
 #line 145
     void SetLength(size_t length) override
     {

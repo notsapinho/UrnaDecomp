@@ -3,7 +3,8 @@
 #   1916 Union(const SRect&) const   callers 1693, 7787, 10896, 10925, 10929
 #   MoveX(TPosition)                 no target function of its own: binaryen inlined it into its one caller, fn 10956
 # The file is the records' (SRect::Left, Top, Right and Bottom, lines 20, 26, 32 and 38, col 37, in fns 5488, 5537, 5487).
-# None of the three written here has a record, so their being in this file is a choice. What supports it: in the uses-6
+# None of the three written here has a record, so their being in this file, and their lines below Bottom's 38, are a
+# choice. Union comes before Move as the band has them: a higher target index, a lower ld_index (how-to step 3). What supports it: in the uses-6
 # band of ledger/ordinals.tsv fns 1916 and 1915 lie between fn 1918 (ctextfield.cpp) and fn 1914 (cdirreader.cpp), where a
 # file of api/gui/ named primitives sorts. The setters are not written: they throw api::EUeAssertError through fn 463, a
 # macro behind `Assert (r >= left)` at col 37 that no header holds, and their callers 5537 and 10977 are not written.

@@ -27,8 +27,19 @@ namespace api {
 // void f5487(i32, i32) { ... }
 // </stubs>
 
-// (original lines 34-36: content not recovered)
-#line 37
+
+
+
+
+
+
+SRect SRect::Union(const SRect& outro) const
+{
+    const TPosition direitaOutro = outro.right;
+    const TPosition direita = right;
+    return Normalized(std::min(left, outro.left), std::min(top, outro.top), std::max(direita, direitaOutro), std::max(bottom, outro.bottom));
+}
+
 void SRect::Move(const SPoint& posicao)
 {
     const TPosition x = posicao.x;
@@ -37,13 +48,6 @@ void SRect::Move(const SPoint& posicao)
     bottom += y - top;
     left = x;
     top = y;
-}
-
-SRect SRect::Union(const SRect& outro) const
-{
-    const TPosition direitaOutro = outro.right;
-    const TPosition direita = right;
-    return Normalized(std::min(left, outro.left), std::min(top, outro.top), std::max(direita, direitaOutro), std::max(bottom, outro.bottom));
 }
 
 void SRect::MoveX(TPosition x)

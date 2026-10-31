@@ -1778,8 +1778,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1912	11	6	app	-	-	-	none	-	
 1913	101	6	-	-	-	-	none	-	
 1914	127	6	app	ecourna	-	-	none	-	
-1915	70	6	app	api	skeleton	2706	byte	0	api::SRect::Move(api::SPoint const&)
-1916	150	6	app	-	skeleton	2705	byte	0	api::SRect::Union(api::SRect const&) const
+1915	70	6	app	api	skeleton	2705	byte	0	api::SRect::Move(api::SPoint const&)
+1916	150	6	app	-	skeleton	2706	byte	0	api::SRect::Union(api::SRect const&) const
 1917	648	6	app	-	-	-	none	-	
 1918	201	6	app	api	-	-	none	-	
 1919	897	6	app	ecourna	-	-	none	-	

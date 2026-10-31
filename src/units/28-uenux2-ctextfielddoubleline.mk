@@ -4,9 +4,14 @@
 # (api/gui/ctextfielddoubleline.h) and the three enumerators of api/gui/eueguierror.h. Paths relative to src/uenux2;
 # the generic uenux2 rule depends on the source and every uenux2 header. Draw (10931) and Rect (10929) are here too, Rect
 # with CalcLineRect, which clang inlines twice: both copies are in its frame, with no second prologue. GetTextLines (5499,
-# record 68:21) is written and `differs`, score 577 over 1672 rows (131 of the replaced rows operand-only). What stands:
-# its first test and loops read as written, and the two callers match through its record, which names it. What does not:
-# the block order of the two copies at the two returns and of the loops' tests. Tried with no gain: one return (632),
+# record 68:21) is written and `differs`, score 577 over 1672 rows at this tree's level. With this object alone at -O3 in a
+# private link it scores 375 over 1497, and the target's two calls of append(const char*, size_t) appear, where -O2 has two
+# of __grow_by_and_replace and none of append; -std=c++23 adds nothing. So part of it is the level, which is not this unit's
+# to change, and part is unexplained: at -O3 it still has 4 __init_copy_ctor_external to the target's 3, 5 operator new to
+# its 6 and 2 __throw_out_of_range to its 1. It stays written though unexplained, because two matches need it and it holds
+# no slot a trap could take: a trap would be inlined into 10929 and 10931. Neither reads its body. What carries their
+# match is its line in splat/symbol_addrs.txt, `evidence:call by:10929`, and the record 68:21 is what says that line
+# names the right function: without the line both go `unresolved`. Tried with no gain: one return (632),
 # std::make_tuple for the braces (the same bytes). The literal "" for the second string is evidence: a default string
 # stores 12 bytes of 0, the target two bytes. m_linha1.x, m_linha2.x and m_maxX are read at the top and the widths computed
 # where they are used, or the two share a maxX + 1 the target does not have. The layout is the ctor's stores (60 B, the

@@ -1778,8 +1778,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1912	-	-	-	no-candidate	no symbol and no ledger pair	11	none	app	0	-
 1913	-	-	-	no-candidate	no symbol and no ledger pair	101	none	unknown	0	-
 1914	-	-	-	no-candidate	no symbol and no ledger pair	127	none	ecourna	0	-
-1915	_ZN3api5SRect4MoveERKNS_6SPointE	2706	symbol	match	-	70	byte	api	1	app/uenux2/src/api/gui/primitives.cpp.o
-1916	_ZNK3api5SRect5UnionERKS0_	2705	symbol	match	-	150	byte	app	1	app/uenux2/src/api/gui/primitives.cpp.o
+1915	_ZN3api5SRect4MoveERKNS_6SPointE	2705	symbol	match	-	70	byte	api	1	app/uenux2/src/api/gui/primitives.cpp.o
+1916	_ZNK3api5SRect5UnionERKS0_	2706	symbol	match	-	150	byte	app	1	app/uenux2/src/api/gui/primitives.cpp.o
 1917	_ZNSt3__27getlineB8ne210108IcNS_11char_traitsIcEENS_9allocatorIcEEEERNS_13basic_istreamIT_T0_EES9_RNS_12basic_stringIS6_S7_T1_EES6_	1813	symbol	match	-	648	none	app	1	app/asn1/AVNDecoder.o
 1918	_ZN3api10CTextFieldC2ERKNS_6SPointERKNSt3__210shared_ptrINS_5ITextEEERKNS_5SFontENS_6TColorESD_	3872	symbol	match	readings: address symbol,address string,address srcloc,table slot	201	none	api	1	app/uenux2/src/api/gui/ctextfield.cpp.o
 1919	-	-	-	no-candidate	no symbol and no ledger pair	897	none	ecourna	0	-

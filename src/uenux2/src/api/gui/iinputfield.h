@@ -24,7 +24,7 @@
 //   +56/+60  a std::shared_ptr of api::ITimer: the constructor gets it from slot 0 of ITimerScheduler::GetInst() (fn
 //            1259), with 600 ms and the lambda, and the body calls slots 2, 3 and 4 (Start, Stop, IsRunning)
 //
-// Names: every data member, the five parameters, Clear and the enumerators of EInputResult are chosen. The records
+// Names: every data member, the five parameters, Clear, GetLength and the enumerators of EInputResult are chosen. The records
 // print EInputResult unqualified, so its scope is chosen too (docs/reference/facts/reading.md §R11), and its values are
 // the ones Read returns. The bools' names say what Read does with each; keys 66, 67 and 68 are the ones fn 653 maps to
 // the bits of CInputFieldControl's constructor. A reading of Read's body, not a recovered text.
