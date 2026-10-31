@@ -130,20 +130,38 @@
     }
   },
   {
+    "key": "rhvoice-ignore",
+    "title": "RHVoice 1.14.0, the core objects built at -fignore-exceptions (userdict.cpp)",
+    "flags": {
+      "c++": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions"
+    },
+    "image": "urna-emsdk:6.0.0",
+    "source": "tools/libs/rhvoice/build.sh COMMON + the --only flags src/Makefile passes (variant cxx14-O3-ndebug-nsa-nocatch-userdict-ign)",
+    "truth": {
+      "kind": "artefact",
+      "vars": [
+        "RHVOICE_IGNORE_OBJS"
+      ],
+      "file": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/flags/userdict.cpp.nul",
+      "format": "nul"
+    },
+    "note": "Listed before rhvoice: an artefact setup takes the objects of its variables that no earlier setup covers."
+  },
+  {
     "key": "rhvoice",
     "title": "RHVoice 1.14.0 core (+ hts_engine and sonic in C)",
     "flags": {
-      "c": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
-      "c++": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]"
+      "c": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+      "c++": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -sEXCEPTION_CATCHING_ALLOWED=[nothing]"
     },
     "image": "urna-emsdk:6.0.0",
-    "source": "tools/libs/rhvoice/build.sh COMMON + the flags src/Makefile passes (variant cxx14-O3-ndebug-nocatch)",
+    "source": "tools/libs/rhvoice/build.sh COMMON + the flags src/Makefile passes (variant cxx14-O3-ndebug-nsa-nocatch-userdict-ign)",
     "truth": {
       "kind": "artefact",
       "vars": [
         "RHVOICE_OBJS"
       ],
-      "file": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/flags.nul",
+      "file": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/flags.nul",
       "format": "nul"
     }
   },

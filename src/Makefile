@@ -32,7 +32,9 @@ SEVENZIP_SRC := third_party/7zip
 # RHVoice at -DNDEBUG: the target imports no __assert_fail, and hts_labeller/phoneme_set/userdict assert without it
 # and with no landing pads: an allow-list that names no function, so clang keeps exception semantics and each invoke
 # becomes a call in the backend. The spelling is a measured choice (docs/reference/facts/libraries.md B6).
-RHVOICE_DIR  := build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch
+# Every object without strict aliasing, and userdict.cpp at -fignore-exceptions in place of the allow-list: the per-object
+# build of B6 that loses no row. A new flag set takes a new variant directory, which `make -C src libs` builds.
+RHVOICE_DIR  := build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign
 RHVOICE_SRC  := third_party/RHVoice
 BOOST_HDR    := third_party/boost
 
@@ -43,7 +45,8 @@ $(ROOT)/$(LIBCRYPTO):
 $(ROOT)/$(SEVENZIP_DIR)/probe.wasm:
 	$(H) tools/libs/7zip/build.sh 21.02 st-O3 -O3
 $(ROOT)/$(RHVOICE_DIR)/probe.wasm:
-	$(H) tools/libs/rhvoice/build.sh 1.14.0 cxx14-O3-ndebug-nocatch -O3 -std=c++14 -DNDEBUG '-sEXCEPTION_CATCHING_ALLOWED=[nothing]'
+	$(H) tools/libs/rhvoice/build.sh 1.14.0 cxx14-O3-ndebug-nsa-nocatch-userdict-ign -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing \
+	  '-sEXCEPTION_CATCHING_ALLOWED=[nothing]' --only userdict.cpp -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions
 $(ROOT)/$(BOOST_HDR)/boost/version.hpp:
 	@echo "missing $(BOOST_HDR): tools/setup/bootstrap.sh --sources fetches the Boost 1.89.0 headers"; exit 2
 
@@ -61,6 +64,8 @@ libs: $(LIBS)
 # src/app/stubs_7zip.cpp supplies the four symbols the set needs and emscripten has not.
 SEVENZIP_OBJS := $(wildcard $(addprefix $(ROOT)/$(SEVENZIP_DIR)/obj/,$(addsuffix .o,$(subst /,_,$(shell awk '!/^\#/ && NF==1 && $$1!="CPP/7zip/UI/Console/MainAr.cpp"{print $$1}' $(ROOT)/tools/libs/7zip/sources.txt)))))   # wildcard: build.sh skips sources a release lacks (LzFindPrepare.cpp is 21.03+)
 RHVOICE_OBJS  := $(filter-out %/driver.o,$(sort $(wildcard $(ROOT)/$(RHVOICE_DIR)/obj/*.o)))
+# the objects the RHVoice rule above builds with its --only flags (asmlift-wasm/benchmark/dataset/setups.json reads it)
+RHVOICE_IGNORE_OBJS := $(filter %/userdict.cpp.o,$(RHVOICE_OBJS))
 
 # ---- app stubs ----------------------------------------------------------------------------------------------
 APP := build/out/app
