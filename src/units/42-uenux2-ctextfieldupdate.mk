@@ -25,13 +25,9 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTEXTFIELDUPDATE_SRCS := src/api/gui/ctextfieldupdate.cpp
 UENUX2_SRCS += $(CTEXTFIELDUPDATE_SRCS)
-# Rect (10913) is not reconstructed:
-# 42-uenux2-ctextfieldupdate-pending.cpp gives the vtable a trapping body, compiled with the unit's flags; it reads only
-# api/gui headers
-$(ROOT)/$(APP)/42-uenux2-ctextfieldupdate-pending.o: $(ROOT)/src/units/42-uenux2-ctextfieldupdate-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/42-uenux2-ctextfieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/42-uenux2-ctextfieldupdate-pending.cpp -o $(R)
+# Rect (10913) is a thunk of fn 3889: 27-uenux2-ctextfield.mk has it.
 # the constructor, the vtable's only user in the target, is not reconstructed: 42-uenux2-ctextfieldupdate-roots.cpp takes
 # the vtable's address, which keeps both destructors in the table as the target has them
 $(ROOT)/$(APP)/42-uenux2-ctextfieldupdate-roots.o: $(ROOT)/src/units/42-uenux2-ctextfieldupdate-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/42-uenux2-ctextfieldupdate.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/42-uenux2-ctextfieldupdate-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/42-uenux2-ctextfieldupdate-pending.o $(APP)/42-uenux2-ctextfieldupdate-roots.o
+override EXTRA_OBJS += $(APP)/42-uenux2-ctextfieldupdate-roots.o

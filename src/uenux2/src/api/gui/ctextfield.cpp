@@ -1,10 +1,9 @@
-// api::CTextField (/home/rubio/tse/uenux2/src/api/gui/ctextfield.cpp).
-// Target functions of this file:
+// api::CTextField (/home/rubio/tse/uenux2/src/api/gui/ctextfield.cpp). Target functions of this file:
 //   1918  CTextField(const SPoint&, const SharedIText&, const SFont&, TColor, TColor)  (here; record at line 30, col 15)
 //   10947 GetTypeName() const                                   (here)
 //   10950 / 10948  ~CTextField() (complete / deleting; implicit, emitted with the vtable)
 //   10952 Draw(IScreen&) const                                  (here)
-//   10951 Rect() const  record at line 55, col 21; calls fn 3889, not named yet; in 27-uenux2-ctextfield-pending.cpp
+//   10951 Rect() const  record at line 55, col 21; a thunk of fn 3889, its body and two other classes'   (here)
 //   2241  Move(const SPoint&)  one body binaryen shares with four other fields   (here, below Rect's line: a choice)
 
 #include "api/gui/ctextfield.h"
@@ -12,6 +11,7 @@
 #include "api/gui/eueguierror.h"
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
+#include "api/pattern/cpolysingleton.h"
 
 namespace api {
 
@@ -46,16 +46,19 @@ void CTextField::Draw(IScreen& screen) const
     m_apagar = false;
 }
 
+// (original lines 49-52: content not recovered)
+#line 53
+SRect CTextField::Rect() const
+{
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    SPoint posicao = m_posicao;
+    TPosition largura;
+    TPosition altura;
+    tela.GetFontMetrics(largura, altura, m_font, m_text->GetText());
+    AlinhaPosicao(posicao, m_text->GetAlignment(), largura);
 
-
-
-
-
-
-
-
-
-
+    return SRect::Normalized(posicao.x, posicao.y, posicao.x + largura, posicao.y + altura);
+}
 
 void CTextField::Move(const SPoint& posicao)
 {

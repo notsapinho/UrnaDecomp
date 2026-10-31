@@ -4,6 +4,7 @@
 // two places. Compiled as uenux2 code (APP_CXXFLAGS).
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "api/io/cinikey.h"
@@ -84,6 +85,20 @@ __attribute__((noinline)) void LancaIpc2(int c, const std::string& m) { throw ap
 void urna_insere_doubles(std::vector<double>& valores, const double* inicio, const double* fim)
 {
     valores.insert(valores.end(), inicio, fim);
+}
+
+// std::operator+(std::string&&, std::string&&) (target fn 252): the first object on the target's link line, the
+// executable TU at -Oz, holds the instance every api::CPolySingleton<T>::instance calls, so its body is one call of
+// append (fn 3717) and a move. A uenux2 object instantiates it at -O2 with append inlined, score 105 over 120 rows, and links
+// ahead of libc++.a, whose copy has the target's rows, so this object, ahead of uenux2's, holds the copy: a specialization
+// because an instance here would be -O2 as well. Its object rows are the target's fn 252's. append is called through a
+// label so that this object emits no copy of it: fn 3717 stays libc++.a's.
+std::string& urna_string_append(std::string&, const std::string&) __asm__("_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendB8ne210108ERKS5_");
+
+template <>
+std::string std::operator+<char, std::char_traits<char>, std::allocator<char>>(std::string&& a, std::string&& b)
+{
+    return std::move(urna_string_append(a, b));
 }
 
 int urna_roots_uenux2(int a)

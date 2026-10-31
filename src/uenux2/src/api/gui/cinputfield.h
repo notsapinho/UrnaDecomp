@@ -8,18 +8,17 @@
 // object). That constructor's parameters are read from fn 2383, their names are chosen, and no function of this tree's
 // link holds it, as IInputField's cannot be reached.
 //
-// Draw (fn 12438) is written, and so are Rect and Move. GetTypeName is written and stays `differs`: fn 12411 is a thunk
-// of binaryen's fn 2904, which takes more functions of its shape than this tree's link holds. SetLength is inline in
-// the original (its record is a class's member at line 148): it needs api::CPolySingleton<IScreen>, so it is declared
-// here without a body and trapped in src/units/92-uenux2-iinputfield-pending.cpp, and it moves into the class with its
-// body.
+// Draw (fn 12438) is written, and so are Rect and Move. GetTypeName (fn 12411) is a thunk of binaryen's fn 2904.
+// SetLength (fn 12387) is the record's, a member defined in the class at line 148.
 
 #include <memory>
 #include <string>
 
 #include "api/gui/iinputfield.h"
+#include "api/gui/iscreen.h"
 #include "api/gui/itext.h"
 #include "api/gui/primitives.h"
+#include "api/pattern/cpolysingleton.h"
 
 namespace api {
 
@@ -59,8 +58,16 @@ public:
         this->Invalidate();
     }
 
-    void SetLength(size_t length) override;
-
+    // (original lines 61-144: content not recovered)
+#line 145
+    void SetLength(size_t length) override
+    {
+        if (length != this->m_length) {
+            CPolySingleton<IScreen>::instance().FillRect(this->Rect(), static_cast<TColor>(1));
+            m_mask.SetLength(length);
+            IInputField<IScreen>::SetLength(length);
+        }
+    }
 protected:
     MASK m_mask;
 };

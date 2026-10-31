@@ -11,14 +11,16 @@
 # first swaps the two calls. Same object code, by the function's disassembly with the object-local numbers masked: the
 # test of m_imagem as an outer `if` around the rest, `!m_imagem` and `!m_tamanho`, and a `return` after the first call in
 # place of the `else`; so those spellings are choices.
+# Rect (11101) is at its record's line. `!m_imagem` and `return SRect{};` give the same object code, so those are choices.
+# GetTypeName (11097, a thunk of binaryen's 2904, which forms with CMovieField's 11059, CInputField<CFramedText>'s 12411 and
+# RHVoice's 9690) is in the class: the band puts it after the destructors, as CTextFieldBlinking's. Draw is then the key
+# function, and this object emits the vtable and the destructors (11099, 11098). SetImage (5533) has no record: by
+# value, as Update's copy into a temporary shows (trivial-ABI, facts/reading.md R12); its name, its class and its file are
+# chosen: its place in the uses-2 band, between cgrayedframedtext.cpp's fn 5534 and cimagefieldupdate.cpp's 5531, fits this file.
 UENUX2_SRCS += src/api/gui/cimagefield.cpp
-# the class's members not reconstructed yet (trapping bodies the vtable needs; GetTypeName is the key function, so the
-# vtable and the implicit destructors, target fns 11099 and 11098, are emitted there; see the file header), and two
-# callers of the ctor (29-uenux2-cimagefield-roots.cpp, two make_shared<CImageField> as the target's callers do) so
+# two callers of the ctor (29-uenux2-cimagefield-roots.cpp, two make_shared<CImageField> as the target's callers do) so
 # binaryen neither inlines it nor folds its anchor argument; the control block they instantiate,
 # __shared_ptr_emplace<CImageField> (target fns 12639, 12640), matches from the roots object until its callers land
-$(ROOT)/$(APP)/29-uenux2-cimagefield-pending.o: $(ROOT)/src/units/29-uenux2-cimagefield-pending.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/29-uenux2-cimagefield-pending.cpp -o $(R)
 $(ROOT)/$(APP)/29-uenux2-cimagefield-roots.o: $(ROOT)/src/units/29-uenux2-cimagefield-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/29-uenux2-cimagefield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/29-uenux2-cimagefield-pending.o $(APP)/29-uenux2-cimagefield-roots.o
+override EXTRA_OBJS += $(APP)/29-uenux2-cimagefield-roots.o

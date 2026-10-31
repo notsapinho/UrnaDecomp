@@ -21,7 +21,8 @@ class IScreen;
 // the value and which the lower limit is chosen here, as is every member and parameter name. The destructor is
 // declared out of line (the deleting one, fn 10978, calls it) and first, so it is the key function and
 // cprogressbar.cpp emits the vtable; the other members are declared in the order the target emits them (D0 10978,
-// then Draw 10977, Move 10976, GetTypeName 10975, Rect 10974: reverse index order in their use band).
+// then Draw 10977, Move 10976, GetTypeName 10975, Rect 10974: reverse index order in their use band). SetValor (fn 3667)
+// and Incrementa (fn 5508) are the setter and the increment above; their names and Limita's are chosen.
 /**
  * Barra de progresso desenhada na tela, entre um limite inferior e um superior.
  */
@@ -41,7 +42,17 @@ public:
 
     SRect Rect() const override;
 
+    void SetValor(const uedword valor);
+
+    void Incrementa();
+
+    uedword GetLimiteInferior() const { return m_limiteInferior; }
+
+    uedword GetLimiteSuperior() const { return m_limiteSuperior; }
+
 private:
+    void Limita();
+
     uedword m_valor;
     uedword m_limiteInferior;
     uedword m_limiteSuperior;

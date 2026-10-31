@@ -15,12 +15,18 @@
 # and y read into locals before the test, and `if (m_form == nullptr || !m_form->IsVisible()) return;` before the
 # notification. So the early return and the test's spelling are choices. A SPoint operator== changes the object: it adds
 # a mask on the second compare, as 65-uenux2-ctextbox.mk says, and primitives.h declares none.
+# Rect (target fn 10951, slot 8) is a thunk of fn 3889 with its record as the argument: binaryen forms 3889 from this
+# class's, CTextFieldUpdate's and CTextFieldBlinking's Rect, written alike in each class's file, so no file holds it
+# alone (10913 and 10943 are the other two thunks). The instance call at col 21 is the record's; the local's type and
+# name that put it there are a choice. The target reads the point once, as one 32-bit load after instance() and before
+# GetText, and shifts it: a local read by its members gives two 16-bit loads (62 of 160 rows in a whole link), and a
+# local whose address goes to an inlined callee gives the target's, which is why AlinhaPosicao (api/gui/itext.h, a chosen
+# name) takes it by reference. Same object code: largura and altura declared on one line or above `tela`, and that
+# callee as a file-static function with an if chain. Other bytes: the chain written in place (62 lines), and locals for
+# the four coordinates with a braced SRect in place of SRect::Normalized (10 lines).
 UENUX2_SRCS += src/api/gui/ctextfield.cpp
-# the class's members not reconstructed yet (trapping bodies the vtable needs; see the file header), and two callers of
-# the ctor (27-uenux2-ctextfield-roots.cpp) so binaryen does not inline it and keeps both TColor parameters, as the
+# two callers of the ctor (27-uenux2-ctextfield-roots.cpp) so binaryen does not inline it and keeps both TColor parameters, as the
 # target's six callers do
-$(ROOT)/$(APP)/27-uenux2-ctextfield-pending.o: $(ROOT)/src/units/27-uenux2-ctextfield-pending.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/27-uenux2-ctextfield-pending.cpp -o $(R)
 $(ROOT)/$(APP)/27-uenux2-ctextfield-roots.o: $(ROOT)/src/units/27-uenux2-ctextfield-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/27-uenux2-ctextfield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/27-uenux2-ctextfield-pending.o $(APP)/27-uenux2-ctextfield-roots.o
+override EXTRA_OBJS += $(APP)/27-uenux2-ctextfield-roots.o

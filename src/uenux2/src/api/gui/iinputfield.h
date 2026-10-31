@@ -130,6 +130,8 @@ public:
 
     const std::string& GetTexto() const { return m_texto; }
 
+    size_t GetLength() const { return m_length; }
+
 protected:
     std::string m_texto;
     std::shared_ptr<IInputValidation> m_validation;

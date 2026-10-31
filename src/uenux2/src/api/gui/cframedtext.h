@@ -14,7 +14,7 @@
 // fn 1385 and those inline. All three names are chosen, and Largura's and CellRect's operand orders are free. What the bytes decide:
 // - Espaco reads the quotient into a local and tests that: `i32.div_s` with the test on the size, with no extend16 and
 //   no shift, comes from that form. `std::max(size / 8, 1)` (compares the quotient) and `size < 8 ? 1 : size / 8`
-//   (`std::max(size, 8) >> 3`) compile to other code. A TPosition local gives the same functions; the int is chosen.
+//   (`std::max(size, 8) >> 3`) compile to other code. The TPosition is SetLength's: fn 12387 holds an extend16 of the result, which `int` drops.
 // - CellRect and Rect read locals and build the SRect as CLineField::Rect does. Reading m_position in place gives the
 //   same functions, and `std::minmax` does not. CellRect with `inline` gives the same, as does Largura returning int.
 
@@ -43,12 +43,14 @@ public:
 
     void Move(const SPoint& position);
 
+    void SetLength(size_t length);
+
     void DrawFrame(size_t index, TColor color, IScreen& screen) const;
 
 protected:
-    int Espaco() const
+    TPosition Espaco() const
     {
-        const int espaco = m_font.size / 8;
+        const TPosition espaco = m_font.size / 8;
         return espaco > 0 ? espaco : 1;
     }
 

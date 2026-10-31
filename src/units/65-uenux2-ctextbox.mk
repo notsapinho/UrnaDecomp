@@ -35,13 +35,13 @@
 # the parameter first), y tested first, a local copy of the point (a second load).
 CTEXTBOX_SRCS := src/api/gui/ctextbox.cpp
 UENUX2_SRCS += $(CTEXTBOX_SRCS)
-# Rect is not reconstructed: 65-uenux2-ctextbox-pending.cpp defines it with a trapping body (see its header). The
-# constructor's caller is not reconstructed either: 65-uenux2-ctextbox-roots.cpp builds the box with std::make_shared as
+# Rect (10956): the record's col 9 is a statement in a block, and the assignment of a temporary gives the target's one
+# i64 store. The tests in `m_largura != 0 && m_altura != 0`, the known size first, are evidence: the other way round
+# differs in 125 lines. The tail calls SRect::MoveX, 108-uenux2-api-gui-primitives.mk says why it is out of line.
+# The constructor's caller is not reconstructed: 65-uenux2-ctextbox-roots.cpp builds the box with std::make_shared as
 # fn 11805 does, which keeps the vtable and brings the control block's D2 and D0 (target fns 11115, 11114). Both rules
 # list the headers by directory: every header ctextbox.h includes, transitively, is in api/gui/ ($(UENUX2_HDRS) is still
 # empty when the fragments are read)
-$(ROOT)/$(APP)/65-uenux2-ctextbox-pending.o: $(ROOT)/src/units/65-uenux2-ctextbox-pending.cpp $(ROOT)/src/units/65-uenux2-ctextbox.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/65-uenux2-ctextbox-pending.cpp -o $(R)
 $(ROOT)/$(APP)/65-uenux2-ctextbox-roots.o: $(ROOT)/src/units/65-uenux2-ctextbox-roots.cpp $(ROOT)/src/units/65-uenux2-ctextbox.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/65-uenux2-ctextbox-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/65-uenux2-ctextbox-pending.o $(APP)/65-uenux2-ctextbox-roots.o
+override EXTRA_OBJS += $(APP)/65-uenux2-ctextbox-roots.o

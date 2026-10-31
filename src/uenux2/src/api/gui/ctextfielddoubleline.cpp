@@ -4,23 +4,23 @@
 //         (here; its three throws are the records at lines 40, 43 and 46, column 15, so its position is fixed)
 //   10926 GetTypeName() const                                                     (here; no record: placed after the ctor)
 //   10928 / 10927  ~CTextFieldDoubleLine() (implicit; the target's are thunks into binaryen's merges 6022 / 6021)
-//   5499  GetTextLines() const   record at line 68, col 21                         (not reconstructed)
-//   10931 Draw(IScreen&) const and 10929 Rect() const (record at line 133, col 21: the inlined CalcLineRect), which call
-//   GetTextLines, are pending: they trap, in src/units/28-uenux2-ctextfielddoubleline-pending.cpp.
+//   5499  GetTextLines() const   record at line 68, col 21                         (here)
+//   10931 Draw(IScreen&) const, 10929 Rect() const with CalcLineRect, record at line 133, col 21, inlined twice  (here)
 //   5527  Move(const SPoint&)    one body binaryen shares with CLineField's   (here, below line 133: a choice)
 
 #include "api/gui/ctextfielddoubleline.h"
 
+#include "api/gui/cfixedtext.h"
 #include "api/gui/eueguierror.h"
 #include "api/gui/iform.h"
+#include "api/gui/iscreen.h"
+#include "api/pattern/cpolysingleton.h"
 
 namespace api {
 
 /**
  * Cria um campo de texto em duas linhas.
- *
- * @param linha1 posição da primeira linha; maxX não pode ser menor que o seu x
- * @param linha2 posição da segunda linha; maxX não pode ser menor que o seu x
+ * @param linha1, linha2 posição de cada linha; maxX não pode ser menor que o x de nenhuma
  * @param maxX posição x até onde as linhas podem ir
  * @param text texto do campo; não pode ser nulo
  * @param font fonte do texto; corTexto e corFundo, as cores do texto e do fundo
@@ -52,80 +52,100 @@ std::string CTextFieldDoubleLine::GetTypeName() const
     return "CTextFieldDoubleLine";
 }
 
-// (original lines 55-64: content not recovered)
-#line 65
-// <stubs>
-// f5499 · 2912 B · unmatched · name unknown
-// void f5499(i32, i32) { ... }
-// </stubs>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// (original lines 55-60: content not recovered)
+#line 61
+std::tuple<std::string, std::string> CTextFieldDoubleLine::GetTextLines() const
+{
+    const TPosition x1 = m_linha1.x;
+    const TPosition x2 = m_linha2.x;
+    const TPosition maxX = m_maxX;
+    std::string linha1 = m_text->GetText();
+    std::string linha2 = "";
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    const TPosition largura1 = maxX - x1 + 1;
+
+    if (tela.GetTextWidth(linha1, m_font) <= largura1) {
+        return {linha1, linha2};
+    }
+
+    size_t espaco = linha1.rfind(' ');
+
+    if (espaco < linha1.size()) {
+        linha2 = linha1.substr(espaco + 1);
+        linha1.resize(espaco);
+
+        bool separa = true;
+
+        while (tela.GetTextWidth(linha1, m_font) > largura1) {
+            espaco = linha1.rfind(' ');
+
+            if (espaco < linha1.size()) {
+                linha2 = linha1.substr(espaco + 1) + " " + linha2;
+                linha1.resize(espaco);
+                separa = true;
+            } else {
+                if (separa) {
+                    linha2 = ' ' + linha2;
+                }
+
+                linha2 = linha1.back() + linha2;
+                linha1.erase(linha1.size() - 1);
+                separa = false;
+            }
+        }
+    } else {
+        linha2 = linha1.back();
+        linha1.erase(linha1.size() - 1);
+
+        while (tela.GetTextWidth(linha1, m_font) > largura1) {
+            linha2 = linha1.back() + linha2;
+            linha1.erase(linha1.size() - 1);
+        }
+    }
+
+    const TPosition largura2 = maxX - x2 + 1;
+
+    while (!linha2.empty() && tela.GetTextWidth(linha2, m_font) > largura2) {
+        linha2.erase(linha2.size() - 1);
+    }
+
+    return {linha1, linha2};
+}
+
+void CTextFieldDoubleLine::Draw(IScreen& screen) const
+{
+    const auto [linha1, linha2] = GetTextLines();
+
+    screen.DrawText(m_linha1, CFixedText(linha1, m_text->GetAlignment()), m_font, m_corTexto, m_corFundo);
+
+    if (!linha2.empty()) {
+        screen.DrawText(m_linha2, CFixedText(linha2, m_text->GetAlignment()), m_font, m_corTexto, m_corFundo);
+    }
+}
+
+
+SRect CTextFieldDoubleLine::CalcLineRect(const std::string& linha, SPoint posicao) const
+{
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    TPosition largura;
+    TPosition altura;
+    tela.GetFontMetrics(largura, altura, m_font, linha);
+    AlinhaPosicao(posicao, m_text->GetAlignment(), largura);
+
+    return SRect::Normalized(posicao.x, posicao.y, posicao.x + largura, posicao.y + altura);
+}
+
+SRect CTextFieldDoubleLine::Rect() const
+{
+    const auto [linha1, linha2] = GetTextLines();
+    SRect rect = CalcLineRect(linha1, m_linha1);
+
+    if (!linha2.empty()) {
+        rect = rect.Union(CalcLineRect(linha2, m_linha2));
+    }
+
+    return rect;
+}
 
 void CTextFieldDoubleLine::Move(const SPoint& posicao)
 {

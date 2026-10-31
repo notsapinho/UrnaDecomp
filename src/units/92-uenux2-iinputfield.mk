@@ -22,8 +22,11 @@
 #   11155 CInputFieldControl<IScreen>::GetTypeName and 12411 CInputField's: thunks in the target of binaryen's 3891 and
 #         2904, which form with three and four functions of the shape. Two 18-byte names are in this link (with 11014) and one
 #         of 11 bytes. With one and three scratch functions of those shapes added to the roots, both turned thunks and
-#         `pnpm wasm score` gave operand rows only, so they wait for CTextFieldBlinking's GetTypeName (10940) and for
-#         CImageField's and CMovieField's (11097, 11059) and fn 9690.
+#         `pnpm wasm score` gave operand rows only; both match since the merges formed with units 29, 44 and 52.
+# CInputField<CFramedText>::SetLength (12387, 148:13) is in the class. Its width is size_t: the target halves it with an
+#   unsigned shift, and a TPosition from Largura() differs in 21 lines. CFramedText::SetLength has no target function:
+#   binaryen inlined it, and keeps the mask's address in a local, so it is out of line in cframedtext.cpp, and its name is
+#   chosen. Espaco returns TPosition for the extend16 12387 holds.
 #   12438, 12593, 12708 the Draws: they call MaskText directly, which is a trap (the pending file says what it waits for).
 #   the constructors, in the headers: only dropped functions reach them, so nothing has measured them.
 # Not reconstructed: CInputMenuField's own members, among them 10893 (GetTypeName) and 5491: its vtable needs CMenuItem and

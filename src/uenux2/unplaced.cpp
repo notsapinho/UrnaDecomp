@@ -806,11 +806,6 @@
 // f5474 · 12 B · unmatched · placement: link order · name unknown
 // void f5474(i32, i32) { ... }
 
-// link-order cluster 776 · uses=2 · neighbours' file uenux2/src/api/gui/cprogressbar.cpp
-
-// f5508 · 110 B · unmatched · placement: link order · name unknown
-// void f5508(i32) { ... }
-
 // link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
 
 // f5521 · 72 B · unmatched · placement: link order · name unknown
@@ -1263,11 +1258,6 @@
 
 // f3646 · 666 B · unmatched · placement: link order · name unknown
 // void f3646(i32, i32) { ... }
-
-// link-order cluster 987 · uses=3 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f3667 · 112 B · unmatched · placement: link order · name unknown
-// void f3667(i32, i32) { ... }
 
 // link-order cluster 992 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp
 
@@ -3282,11 +3272,6 @@
 // f5529 · 78 B · unmatched · placement: link order · name unknown
 // void f5529(i32, i32) { ... }
 
-// link-order cluster 788 · uses=2 · neighbours' file uenux2/src/api/gui/cgrayedframedtext.cpp
-
-// f5533 · 201 B · unmatched · placement: link order · name unknown
-// void f5533(i32, i32) { ... }
-
 // link-order cluster 789 · uses=2 · neighbours' file uenux2/src/api/gui/primitives.cpp
 
 // f5536 · 164 B · unmatched · placement: link order · name unknown
@@ -3401,14 +3386,6 @@
 // f3673 · 441 B · unmatched · placement: link order · name unknown
 // ? f3673(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1032 · uses=3 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmclp.cpp
-
-// f3891 · 67 B · unmatched · placement: link order · name unknown
-// void f3891(i32, i32, i32, i32, i32) { ... }
-
-// f3889 · 285 B · unmatched · placement: link order · name unknown
-// void f3889(i32, i32, i32) { ... }
-
 // link-order cluster 1036 · uses=3
 
 // f3941 · 269 B · unmatched · placement: link order · name unknown
@@ -3479,11 +3456,6 @@
 
 // f1904 · 22 B · unmatched · placement: link order · name unknown
 // void f1904(i32) { ... }
-
-// link-order cluster 1181 · uses=6 · neighbours' file uenux2/src/api/util/cdirreader.cpp
-
-// f1915 · 70 B · unmatched · placement: link order · name unknown
-// void f1915(i32, i32) { ... }
 
 // link-order cluster 1197 · uses=6
 

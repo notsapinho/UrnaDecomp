@@ -11,6 +11,8 @@
 #include <memory>
 #include <string>
 
+#include "api/gui/primitives.h"
+
 namespace api {
 
 enum ETextAlignment {
@@ -38,5 +40,22 @@ private:
 };
 
 using SharedIText = std::shared_ptr<IText>;
+
+// Moves a text's anchor to where its first character goes. Fns 3889 and 10929 hold this switch: in 3889 the point is one
+// 32-bit load that the code shifts, which a local whose address went to an inlined callee gives and a local read
+// by its members does not (the fragment has the measurement). That this is a function of its own, and its name, are chosen.
+inline void AlinhaPosicao(SPoint& posicao, ETextAlignment alinhamento, TPosition largura)
+{
+    switch (alinhamento) {
+        case ALINHAMENTO_DIREITA:
+            posicao.x -= largura;
+            break;
+        case ALINHAMENTO_CENTRO:
+            posicao.x -= largura / 2;
+            break;
+        default:
+            break;
+    }
+}
 
 } // namespace api
