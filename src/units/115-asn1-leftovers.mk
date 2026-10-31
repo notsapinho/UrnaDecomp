@@ -75,9 +75,9 @@
 # The roots file: 859 and 5731 are template instances from the roots object. At APP_CXXFLAGS and at UENUX2_CXXFLAGS the object's
 # functions are the same but __split_buffer<AbstractData*>::emplace_back, which the link takes from ecourna's object.
 #
-# splat/symbol_addrs.txt holds hand edits for this unit: 1076, 1519, 1843, 2650, 3323, 3552, 5731, 7731, 8851 and
-# defaultVisitors, each with what it rests on. 1843, 2650, 3552, 1076 and 7731 name a body of ours that is not the
-# target's, which is why no match can name them.
+# splat/symbol_addrs.txt holds hand edits for this unit: 1519, 1843, 2650, 3323, 3552, 7731 and defaultVisitors, each with
+# what it rests on. 1843, 2650, 3552 and 7731 name a body of ours that is not the target's, which is why no match can name
+# them.
 #
 # Reading rule for the words below: a function stays in the roots if the target holds it. These are the functions the
 # target holds nowhere, either inlined or never reached: BIT_STRING, BMPString, OpenData, Null and IntegerWithNamedNumber

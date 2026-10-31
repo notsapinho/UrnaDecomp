@@ -58,8 +58,7 @@
 # cidentificacaosecaoeleitoral.hpp and cconfiguracaomunicipio.hpp replace the layout stand-ins of units 10 and 07.
 #
 # Names. Hand edits in splat/symbol_addrs.txt, each with its evidence: 9029 and 9043 (one holder of the slot), 3813 and
-# 5842 (one written caller, and 11616 not written), 516, which matches with unit 115's edits, 1076 (a name only: our body
-# differs, so that row does not match), and five theInfo records by the type name each holds
+# 5842 (one written caller, and 11616 not written), and five theInfo records by the type name each holds
 # (docs/reference/facts/asn1.md A3). The thunks 9098 9100
 # 9123 9140 9183 9210 and 9099 9122 9139 9160, their merges 1970 and 2926 and 9209 need no line: the scan pairs them by
 # content, each alone and all together.

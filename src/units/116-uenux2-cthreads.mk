@@ -58,11 +58,9 @@
 #   Each 16-bit store is two byte members: 7787 reads and writes +0 and +8 as bytes, 6734 +1, 11804 and 12903 +9 and +10.
 #
 # Names. 316 and 270 are named by `vptr-anchor`, which needs the symbol tool that casts .bss votes. Their statics follow from
-# them and the pair of static destructors. Three data lines are hand edits of kind callers+content, for objects no vote
-# reaches: CMonitoraAlimentacao::s_inst, whose only voter is 1898 (10226 throws beside GetInst's record when it is null, and
-# 10231 is its static destructor), and fn 509's two statics. With those, 509 and 13685 pair by content, with no line of
-# their own in the symbol file. Since 10231 matched, the build holds CMonitoraAlimentacao::s_inst with no line, so that
-# one is left over.
+# them and the pair of static destructors. Two data lines are hand edits of kind callers+content, for objects no vote
+# reaches: fn 509's two statics. With those, 509 and 13685 pair by content, with no line of their own in the symbol file.
+# CMonitoraAlimentacao::s_inst's only voter is 1898, and it needs no line: its static destructor, 10231, holds the address.
 #
 # Chosen, no evidence names them: GetInst for the three threads and fn 509 (the tree's accessors are spelled so); Stop,
 # TrataErro, ParaOutrasThreads, Espera; the class and path of fn 509's CEstadoAudio, its members' names and bool for its three flags; m_contexto,
