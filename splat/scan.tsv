@@ -2135,7 +2135,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2269	_ZN5comum7CCargos5ResetEv	2414	symbol	match	-	9	byte	app	1	app/uenux2/src/app/comum/dados/ccargos.cpp.o
 2270	-	-	-	no-candidate	no symbol and no ledger pair	109	none	app	0	-
 2271	_ZNK5comum13CCandidaturas15ExisteCandidatoEh	5363	symbol	match	-	105	byte	app	1	app/uenux2/src/app/comum/dados/ccandidaturas.cpp.o
-2272	_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht	5364	ledger	match	-	269	shape	app	1	app/uenux2/src/app/comum/dados/ccandidaturas.cpp.o
+2272	_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht	5364	symbol	match	-	269	shape	app	1	app/uenux2/src/app/comum/dados/ccandidaturas.cpp.o
 2273	-	-	-	no-candidate	no symbol and no ledger pair	35	none	app	0	-
 2274	_ZN5comum13CGravadorUtil12ConverteFaseEc	3612	symbol	match	readings: address string,table slot,address srcloc,address symbol	506	none	ecourna	1	app/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o
 2275	_ZNK5comum3asn13IConversorASNIN21ModuloTiposEleitorais17CabecalhoEntidadeENS_2md18CCabecalhoEntidadeEE8ConverteERKS5_	3372	symbol	match	readings: address srcloc,address symbol	20	none	app	1	app/uenux2/src/app/comum/dados/asn/cconversorentidadepartidos.cpp.o
@@ -2739,7 +2739,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2873	-	-	-	no-candidate	no symbol and no ledger pair	169	none	libc++	0	-
 2874	-	-	-	no-candidate	no symbol and no ledger pair	321	none	app	0	-
 2875	_ZNSt3__26vectorINS_10shared_ptrIN7RHVoice8userdict10correctionEEENS_9allocatorIS5_EEE18__insert_with_sizeB8ne210108INS_11__wrap_iterIPKS5_EESD_EENSA_IPS5_EESD_T_T0_l	4210	symbol	match	-	1093	none	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o
-2876	_ZN5comum16CParteCandidatosD2Ev	2417	ledger	match	-	256	fingerprint	comum	1	app/uenux2/src/app/comum/relatorios/cpartecandidatos.cpp.o
+2876	_ZN5comum16CParteCandidatosD2Ev	2417	symbol	match	-	256	fingerprint	comum	1	app/uenux2/src/app/comum/relatorios/cpartecandidatos.cpp.o
 2877	_ZNSt3__26__treeINS_12__value_typeIhN5comum2md6CVotosEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	3228	symbol	match	-	135	addr	libc++	1	app/140-uenux2-app-comum-converters-roots.o
 2878	-	-	-	no-candidate	no symbol and no ledger pair	37	none	libc++	0	-
 2879	-	-	-	no-candidate	no symbol and no ledger pair	56	none	vota	0	-

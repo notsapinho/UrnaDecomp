@@ -29,8 +29,8 @@ public:
 
     const std::string RecuperaVersaoPacote(TCargoID cargo) const;
 
-    // Target fns 2272, 2271, 2840 and 1273, in this order in the band and the file (ld_index). No record names them,
-    // and their names are chosen from what they return. The first three walk the candidacies (the base's map) and keep
+    // Target fns 2272, 2271, 2840 and 1273. 2272 and 2271 share a use band, and the file defines them in its order
+    // (ld_index). No record names them, and their names are chosen from what they return. The first three walk the candidacies (the base's map) and keep
     // those of one post whose holder's situation is 0, the value of an ESituacao enumerator not recovered;
     // GetCandidatosPartido keeps those of one party too when the party is not 0 (the target holds the loop twice, one
     // copy for each value of that test). Busca looks a candidacy up by the base's key, the post times 1000000 plus the

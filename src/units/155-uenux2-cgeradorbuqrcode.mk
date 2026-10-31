@@ -31,9 +31,9 @@
 # name) for 3696's read of +8.
 #
 # Not reconstructed: CGeradorBUQRCodeVota's Slot2 (fn 11242), a trap in 155-uenux2-cgeradorbuqrcode-pending.cpp, whose
-# header says what it waits for; the constructor of CGeradorBUQRCodeVota (fn 5603, which holds the base's); the members
-# that hold RetornaBlocoAssinado (record cgeradorbuqrcode.cpp:405, inlined into fn 5604) and fns 5604 and 5606, the
-# callers of GetCamposAptos; their stubs stay.
+# header says what it waits for; CGeradorBUQRCodeVota's constructor (fn 5603, which holds the base's; its stub is in
+# cgeradorbuqrcodevota.cpp); RetornaBlocoAssinado (record cgeradorbuqrcode.cpp:405), inlined into fn 5604, whose stub
+# app/comum/dados/ccargos.cpp holds by another of its records; and fn 5606, which calls GetCamposAptos as 5604 does.
 CGERADORBUQRCODE_SRCS := src/app/comum/relatorios/cgeradorbuqrcode.cpp src/app/comum/relatorios/cgeradorbuqrcodevota.cpp
 UENUX2_SRCS += $(CGERADORBUQRCODE_SRCS)
 W155_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

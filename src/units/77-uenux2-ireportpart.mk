@@ -28,8 +28,8 @@
 #
 # 11215 and 11214, measured in the whole link with `pnpm wasm score` against our plain link's body:
 # - 11215's first test, whether the post has candidates' details and no candidacy to print, is a value in the target
-#   (`hv ? !ExisteCandidato(...) : false`, then one branch): code binaryen inlined from a function of its own with no
-#   frame (docs/how-to-decompile.md step 3). Written in place, `score 24 over 74 rows` (4 inserted, 7 deleted); as an
+#   (`hv ? !ExisteCandidato(...) : false`, then one branch), which reads as code binaryen inlined from a function of its
+#   own with no frame (docs/how-to-decompile.md step 3); the measurements agree. Written in place, `score 24 over 74 rows` (4 inserted, 7 deleted); as an
 #   out-of-line CargoSemCandidatos in ccandidaturas.cpp, clang inlines ExisteCandidato into it and 11215 scores `100 over
 #   150 rows` (80 inserted); in cparterdv.cpp, `3 over 70 rows`, all operand-only. So it is in another object than both,
 #   cparterdv.cpp by choice. Its name and its being a free function are chosen.
