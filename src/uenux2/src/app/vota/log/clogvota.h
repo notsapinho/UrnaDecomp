@@ -23,6 +23,7 @@ public:
     void LogaMesarioJaRegistrado(const std::string& titulo);
     void LogaIndagaRegistroMesarios();
     void LogaTituloInvalidoRegistroMesario();
+    void LogaVotacaoEncerrada();
 
 private:
     CLogVota();

@@ -81,6 +81,13 @@ void CDateTime::operator+=(int segundos)
     }
 }
 
+CDateTime CDateTime::operator+(time_t segundos) const
+{
+    CDateTime resultado(*this);
+    resultado += segundos;
+    return resultado;
+}
+
 std::strong_ordering CDateTime::operator<=>(const CDateTime& dataHora) const
 {
     if (auto comparacao = m_data <=> dataHora.m_data; comparacao != 0) {
@@ -89,7 +96,7 @@ std::strong_ordering CDateTime::operator<=>(const CDateTime& dataHora) const
     return m_hora <=> dataHora.m_hora;
 }
 
-// (original lines 101-202: content not recovered)
+// (original lines 108-202: content not recovered)
 #line 203
 CDateTime CDateTime::ConvertFromTimestamp(const std::string& timestamp)
 {

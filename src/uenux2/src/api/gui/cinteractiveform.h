@@ -33,20 +33,11 @@ class CInteractiveForm : public IForm<MEDIA> {};
 // f11920 · 168 B · unmatched · name unknown
 // void f11920(i32) { ... }
 
-// f11874 · 352 B · unmatched · name unknown
-// void f11874(i32) { ... }
-
-// f11869 · 861 B · unmatched · name unknown
-// void f11869(i32) { ... }
-
 // f11848 · 349 B · unmatched · name unknown
 // void f11848(i32) { ... }
 
 // f11838 · 242 B · unmatched · name unknown
 // void f11838(i32) { ... }
-
-// f11834 · 448 B · unmatched · name unknown
-// void f11834(i32) { ... }
 
 // f11812 · 1108 B · unmatched · name unknown
 // void f11812(i32) { ... }

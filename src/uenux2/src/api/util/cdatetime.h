@@ -34,6 +34,7 @@ public:
 
     time_t ConvertToLocalTime() const;
     void operator+=(int segundos);
+    CDateTime operator+(time_t segundos) const;
 
     std::strong_ordering operator<=>(const CDateTime& dataHora) const;
 

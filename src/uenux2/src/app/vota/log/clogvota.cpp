@@ -49,6 +49,11 @@ void CLogVota::LogaTituloInvalidoRegistroMesario()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
 }
 
+void CLogVota::LogaVotacaoEncerrada()
+{
+    loga("Votação encerrada");
+}
+
 } // namespace vota
 
 // <stubs>
