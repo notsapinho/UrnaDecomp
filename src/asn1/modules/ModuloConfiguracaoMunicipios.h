@@ -28,7 +28,7 @@ public:
     class emissaoZeresima
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -38,13 +38,11 @@ public:
     emissaoZeresima::const_reference get_emissaoZeresima () const { return *static_cast<emissaoZeresima::const_pointer>(fields[0]); }
     emissaoZeresima::reference ref_emissaoZeresima () { return *static_cast<emissaoZeresima::pointer>(fields[0]); }
     emissaoZeresima::reference set_emissaoZeresima () { return *static_cast<emissaoZeresima::pointer>(fields[0]); }
-    emissaoZeresima::reference set_emissaoZeresima (const ASN1_STD string& v)
-    { return *static_cast<emissaoZeresima::pointer>(fields[0]) = v; }
 
     class inicioVotacao
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -54,13 +52,11 @@ public:
     inicioVotacao::const_reference get_inicioVotacao () const { return *static_cast<inicioVotacao::const_pointer>(fields[1]); }
     inicioVotacao::reference ref_inicioVotacao () { return *static_cast<inicioVotacao::pointer>(fields[1]); }
     inicioVotacao::reference set_inicioVotacao () { return *static_cast<inicioVotacao::pointer>(fields[1]); }
-    inicioVotacao::reference set_inicioVotacao (const ASN1_STD string& v)
-    { return *static_cast<inicioVotacao::pointer>(fields[1]) = v; }
 
     class encerramentoVotacao
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -70,13 +66,11 @@ public:
     encerramentoVotacao::const_reference get_encerramentoVotacao () const { return *static_cast<encerramentoVotacao::const_pointer>(fields[2]); }
     encerramentoVotacao::reference ref_encerramentoVotacao () { return *static_cast<encerramentoVotacao::pointer>(fields[2]); }
     encerramentoVotacao::reference set_encerramentoVotacao () { return *static_cast<encerramentoVotacao::pointer>(fields[2]); }
-    encerramentoVotacao::reference set_encerramentoVotacao (const ASN1_STD string& v)
-    { return *static_cast<encerramentoVotacao::pointer>(fields[2]) = v; }
 
     class terminoVotacao
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -86,8 +80,6 @@ public:
     terminoVotacao::const_reference get_terminoVotacao () const { return *static_cast<terminoVotacao::const_pointer>(fields[3]); }
     terminoVotacao::reference ref_terminoVotacao () { return *static_cast<terminoVotacao::pointer>(fields[3]); }
     terminoVotacao::reference set_terminoVotacao () { return *static_cast<terminoVotacao::pointer>(fields[3]); }
-    terminoVotacao::reference set_terminoVotacao (const ASN1_STD string& v)
-    { return *static_cast<terminoVotacao::pointer>(fields[3]) = v; }
     void swap(HorariosUrna& that) { Inherited::swap(that); }
     HorariosUrna * clone() const
     { return static_cast<HorariosUrna*> (Inherited::clone()); }
@@ -192,27 +184,8 @@ public:
     class configuracoes
     {
     public:
-        //
-        // ModuloConfiguracaoMunicipios::EntidadeConfiguracaoMunicipios::configuracoes::value_type
-        //
-
-        class value_type : public ASN1::SEQUENCE_OF<ModuloConfiguracaoMunicipios::ConfiguracaoMunicipio>
-        {
-            typedef ASN1::SEQUENCE_OF<ModuloConfiguracaoMunicipios::ConfiguracaoMunicipio> Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type(size_type n=0) : Inherited(n) {}
-            value_type(size_type n, const ModuloConfiguracaoMunicipios::ConfiguracaoMunicipio& val) : Inherited(n, val) {}
-            value_type(const_iterator first, const_iterator last) : Inherited(first, last) {}
-            value_type(const value_type& that) : Inherited(that) {}
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        }; // end class value_type
+        // the target has no class of its own here: SEQUENCE_OF<ConfiguracaoMunicipio>'s template theInfo and vtable are what fns 9140 and 9139 use
+        typedef ASN1::SEQUENCE_OF<ModuloConfiguracaoMunicipios::ConfiguracaoMunicipio> value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;

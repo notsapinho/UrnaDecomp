@@ -2,12 +2,11 @@
 #include <string>
 #include <vector>
 
-#include "ecourna/api/uetypes.hpp"
 #include "ecourna/app/dados/tiposbasicos.hpp"
 
 namespace ecourna::app::dados {
 
-using TVectorNumeroPartido = std::vector<uebyte>;
+using TVectorNumeroPartido = std::vector<TPartidoID>;
 
 // A party federation: its id, acronym, name and the numbers of its parties (never empty). 40 bytes.
 class CFederacao {

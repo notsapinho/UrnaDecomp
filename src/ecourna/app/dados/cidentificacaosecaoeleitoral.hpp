@@ -1,27 +1,22 @@
 #pragma once
+#include "ecourna/app/dados/cmunicipiozona.hpp"
 #include "ecourna/app/dados/tiposbasicos.hpp"
 
 namespace ecourna::app::dados {
 
-// LAYOUT-ONLY STAND-IN (R-RUC-DATA): what CComparecimentoSecao needs - 16 bytes, 4-byte aligned, trivially copyable
-// (fn 3485 copies it as two align=2 i64 pairs). Members follow ModuloTiposEleitorais::IdentificacaoSecaoEleitoral
-// (municipioZona, local, secao); their order and types are not recovered. The class's reconstruction (its
-// converter converts CComparecimentoSecao, fn 9101) replaces this file.
+// An electoral section: its municipality and zone (@0, 8 B), its polling place (@8) and its number (@12). 16 bytes.
+// The layout and the constructor's parameters are the converter's (fns 9129, 9127) and fn 5110's; the names follow
+// ModuloTiposEleitorais::IdentificacaoSecaoEleitoral.
 class CIdentificacaoSecaoEleitoral {
 public:
-    CIdentificacaoSecaoEleitoral(TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao)
-        : m_municipio(municipio), m_zona(zona), m_local(local), m_secao(secao)
-    {
-    }
+    CIdentificacaoSecaoEleitoral(const CMunicipioZona& municipioZona, TLocalID local, TSecaoID secao);
 
-    TMunicipioID GetMunicipio() const { return m_municipio; }
-    TZonaID GetZona() const { return m_zona; }
+    CMunicipioZona GetMunicipioZona() const { return m_municipioZona; }
     TLocalID GetLocal() const { return m_local; }
     TSecaoID GetSecao() const { return m_secao; }
 
 private:
-    TMunicipioID m_municipio;
-    TZonaID m_zona;
+    CMunicipioZona m_municipioZona;
     TLocalID m_local;
     TSecaoID m_secao;
 };

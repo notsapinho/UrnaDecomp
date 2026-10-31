@@ -7,13 +7,10 @@
 namespace ecourna::app::dados {
 
 // A justified absence: the voter (@0, 20 B) and the voter's birth year (@20). 24 bytes (the vector element the
-// converters destroy in 24-byte steps). Header-only: no function of the class exists in the target.
+// converters destroy in 24-byte steps).
 class CIdentificacaoJustificativa {
 public:
-    CIdentificacaoJustificativa(const CRegistroIdentificacaoEleitor& identificacaoEleitor, TAno anoNascimentoEleitor)
-        : m_identificacaoEleitor(identificacaoEleitor), m_anoNascimentoEleitor(anoNascimentoEleitor)
-    {
-    }
+    CIdentificacaoJustificativa(const CRegistroIdentificacaoEleitor& identificacaoEleitor, TAno anoNascimentoEleitor);
 
     const CRegistroIdentificacaoEleitor& GetIdentificacaoEleitor() const { return m_identificacaoEleitor; }
     TAno GetAnoNascimentoEleitor() const { return m_anoNascimentoEleitor; }

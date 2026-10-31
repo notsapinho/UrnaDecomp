@@ -19,11 +19,6 @@
 // f8951 · 137 B · unmatched · placement: link order · name unknown
 // ? f8951(i32) { ... }
 
-// link-order cluster 160 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversordadoscomparecimento.cpp
-
-// f9098 · 26 B · unmatched · placement: link order · name unknown
-// void f9098(i32, i32, i32) { ... }
-
 // link-order cluster 235 · uses=1
 
 // f9770 · 621 B · unmatched · placement: link order · name unknown
@@ -76,11 +71,6 @@
 
 // f1928 · 16 B · unmatched · placement: link order · name unknown
 // ? f1928(i32) { ... }
-
-// link-order cluster 1194 · uses=6
-
-// f1970 · 267 B · unmatched · placement: link order · name unknown
-// void f1970(i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1226 · uses=8
 

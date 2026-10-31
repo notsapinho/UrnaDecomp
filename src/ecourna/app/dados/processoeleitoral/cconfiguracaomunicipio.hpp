@@ -1,19 +1,21 @@
 #pragma once
-#include "ecourna/api/uetypes.hpp"
+#include "ecourna/app/dados/processoeleitoral/chorariosurna.hpp"
 #include "ecourna/app/dados/tiposbasicos.hpp"
 
 namespace ecourna::app::dados {
 
-// LAYOUT-ONLY STAND-IN (R-DADOS): what CConfiguracaoMunicipios needs - 40 bytes, 8-byte aligned, trivially copyable,
-// the municipality code first (fn 9028 compares it with the map key; std::map node value at +24, key at +16). The
-// other members are not recovered; the class's reconstruction replaces this file.
+// A municipality's configuration: its code (@0) and the urna's schedule there (@8, 32 B). 40 bytes, trivially copyable
+// (fn 9141 copies it by words). Layout from the converter (fns 9144, 9142).
 class CConfiguracaoMunicipio {
 public:
+    CConfiguracaoMunicipio(const TMunicipioID& codigoMunicipio, const CHorariosUrna& horariosUrna);
+
     TMunicipioID GetCodigoMunicipio() const { return m_codigoMunicipio; }
+    const CHorariosUrna& GetHorariosUrna() const { return m_horariosUrna; }
 
 private:
     TMunicipioID m_codigoMunicipio;
-    ueint64 m_naoRecuperado[4];
+    CHorariosUrna m_horariosUrna;
 };
 
 } // namespace ecourna::app::dados
