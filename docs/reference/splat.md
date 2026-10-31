@@ -78,13 +78,13 @@ integer) comes from a second link of the same objects, with the data and the tab
 - `call`, `table`: aligned call operands and function-pointer constants. They name a function only when
   every vote agrees and our function has the target function's signature. The votes come from aligning the census
   seed pairs (`pair-fingerprint`, `pair-addr`), the pairs those votes form when the two bodies agree up to callees and
-  addresses, and the `srcloc-anchor` pairs
+  addresses, and the anchor pairs below
   (`seeds`, the propagation loop and `anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`). A function named by
   `vtable` alone casts none: a callback that only such a function passes by its table slot stays unnamed, and the
-  try link's one `UNRESOLVED` operand there does not become a match at step 8. Anchors take one step: a function an
-  anchor's vote names casts no votes in turn. A thunk with a record can name its merged body, and the body's own
-  callees stay unnamed unless another pair names them (8360 and 8341 named 6133, whose callee waited for 10881's
-  vote).
+  try link's one `UNRESOLVED` operand there does not become a match at step 8. A function an anchor's vote names votes
+  in turn when its two bodies are the same instructions, until no name is added: 5158, a `content-anchor`, names
+  `std::set<int>`'s constructor 5157, whose unwind path names `__tree<int>::destroy`, 1522, which no pair reaches and
+  whose recursive call waits for its own name.
 - `vote:N`: aligned address operands of the seed pairs and of the pairs their votes form. An anchor votes for `.bss`
   objects alone, and so does any other pair that `vtable`, `call` or `table` evidence names, when its two bodies are
   the same instructions: content cannot place a `.bss` object, and a name for a read-only or `.data` object would hide
@@ -107,6 +107,12 @@ integer) comes from a second link of the same objects, with the data and the tab
   address. A record it holds at several has no line, since no one place is its own (§3).
 - `srcloc-anchor`: a function pair whose bodies are the same instructions and load the same
   `std::source_location` record, one the target holds at one address.
+- `vptr-anchor`, `content-anchor`: the same rule over another operand, a class's vptr (a constant at the address point
+  of a vtable the ledger's RTTI names on both sides) or a read-only object of at least 16 bytes placed by its exact
+  bytes. Such an operand can have other holders: a class's destructor loads the vptr its constructor does, and a sibling
+  function can share a constant table. So of its holders on both sides the one pair of the same shape anchors, and two
+  such pairs anchor nothing. Strings do not anchor, so no scan of every string constant runs at this step. 5158,
+  `CStringUtils::ToLower`, is `content-anchor`: its 76-byte table has a second holder, 3509, of another shape.
 - `vtable`: the function in a slot of a vtable both links name by `rtti`, where the target's same slot holds the
   target function. A vtable is one table of slots per base with virtual functions, and a table pairs only when the
   target's table at the same offset has as many slots: a base that declares other members in the target's version

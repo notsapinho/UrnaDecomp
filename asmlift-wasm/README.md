@@ -524,6 +524,11 @@ differently from the target's, so no unique pair ever reaches them. An anchor's 
 alone, and so do those of any other pair a vtable slot or an anchor's call names, when its bodies are the same
 instructions.
 
+`vptrAnchors` and `contentAnchors` do the same over a class's vptr and a read-only object placed by its bytes
+(`evidence:vptr-anchor`, `content-anchor`). Those operands can have other holders, so of a vptr's holders on both
+sides the pair of one shape anchors: a singleton's thunk, whose destructor loads the same vptr. A function the votes
+name votes in turn when its body is the same instructions, until no name is added.
+
 **`ctorVotes`** names the `.bss` objects `__wasm_call_ctors` builds (`evidence:ctors:N by:<its index>`). The two bodies
 hold different translation units, so each object is aligned alone: a run of ours, from the object's first operand to
 the next object's or the next stack prologue, votes when every row through its last telling row or string chunk fits

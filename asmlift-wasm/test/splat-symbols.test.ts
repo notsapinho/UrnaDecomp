@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { type Instr, disassemble } from '../src/disasm';
-import { normalizeModule } from '../src/normalize';
+import { type NormalizedFn, normalizeModule } from '../src/normalize';
 import { parseModule } from '../src/parse';
 import { defaultKindsPath, readOperandKinds } from '../src/splat-kinds';
 import { matchesTarget, remapBody } from '../src/splat-remap';
@@ -29,6 +29,7 @@ import {
   loadTargetSide,
   memoryImage,
   objectPattern,
+  operandAnchors,
   parseLinkMap,
   parseSymbolFile,
   refuteDataNames,
@@ -375,6 +376,56 @@ describe('a source_location record the target holds more than once', { timeout: 
 const AUDIO_COLLECTOR_VTABLE = 0x18336c;
 const OID_VTABLE = '_ZTVN4ASN117OBJECT_IDENTIFIERE';
 const STRINGSTREAM = 'NSt3__218basic_stringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEEE';
+
+describe('operandAnchors', () => {
+  const fn = (index: number, shape: string, ...consts: number[]): NormalizedFn =>
+    ({
+      index,
+      shape,
+      instrs: consts.map((value) => ({ opcode: 0x41, imms: [{ kind: 's32', value }] })),
+    }) as unknown as NormalizedFn;
+  const places = new Set([5000]);
+  const read = (v: number): number | null => (v === 1500 ? 5000 : null);
+
+  it('pairs the one holder on each side, whatever their shapes', () => {
+    expect(operandAnchors([fn(7, 'a', 5000)], [fn(70, 'b', 1500)], places, read)).toEqual([[7, 70]]);
+  });
+
+  it('asks for one holder on each side unless told to read shapes', () => {
+    const tn = [fn(7, 'a', 5000), fn(8, 'b', 5000)];
+    const on = [fn(70, 'a', 1500)];
+    expect(operandAnchors(tn, on, places, read)).toEqual([]);
+    expect(operandAnchors(tn, on, places, read, true)).toEqual([[7, 70]]);
+  });
+
+  it('anchors nothing when two pairs of holders have one shape', () => {
+    const tn = [fn(7, 'a', 5000), fn(8, 'a', 5000)];
+    expect(operandAnchors(tn, [fn(70, 'a', 1500)], places, read, true)).toEqual([]);
+  });
+
+  it('anchors nothing to two functions of the other side', () => {
+    const more = new Set([5000, 5004]);
+    const both = (v: number): number | null => (v === 1500 ? 5000 : v === 1504 ? 5004 : null);
+    const tn = [fn(7, 'a', 5000), fn(8, 'b', 5004)];
+    expect(operandAnchors(tn, [fn(70, 'c', 1500, 1504)], more, both)).toEqual([]);
+  });
+
+  it.skipIf(!real)('agrees with the match list wherever a vptr or a table anchors a function', () => {
+    const matched = new Map(
+      readFileSync(`${URNA}/splat/matched.txt`, 'latin1')
+        .split('\n')
+        .filter((l) => l !== '' && !l.startsWith('#'))
+        .map((l) => [Number(l.split(' ')[0]), l.split(' ')[1].split('@')[0]]),
+    );
+    const anchored = parseSymbolFile(readFileSync(SYMBOLS, 'utf8')).generated.filter(
+      (e) => e.at.kind === 'func' && /^(vptr|content)-anchor$/.test(e.evidence),
+    );
+    const checked = anchored.filter((e) => matched.has((e.at as { index: number }).index));
+    expect(checked.length).toBeGreaterThan(300);
+    const named = (e: { name: string }): string => e.name.split('@')[0];
+    expect(checked.filter((e) => matched.get((e.at as { index: number }).index) !== named(e))).toEqual([]);
+  });
+});
 
 describe('ctorVotes', () => {
   // ours: strings from 1024, .bss from 2000. The target: strings from 1024 at another offset, .bss from 3000.

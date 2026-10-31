@@ -159,7 +159,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 293	OSSL_PARAM_set_uint32	246	symbol	match	-	544	byte	openssl	1	openssl/O3/crypto/libcrypto-lib-params.o
 294	gf_mul	250	symbol	match	-	2522	fingerprint	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-f_impl64.o)
 295	BN_CTX_new_ex	247	symbol	match	readings: address string	92	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_ctx.o
-296	-	-	-	no-candidate	no symbol and no ledger pair	123	none	unknown	0	-
+296	_ZNSt3__29to_stringEi	2327	symbol	match	-	123	none	unknown	1	sysroot:libc++.a(string.o)
 297	_ZNSt13runtime_errorC2EPKc	363	symbol	match	readings: address symbol	14	addr	libc++	1	sysroot:libc++.a(stdexcept.o)
 298	-	-	-	no-candidate	no symbol and no ledger pair	630	none	RHVoice	0	-
 299	-	-	-	no-candidate	no symbol and no ledger pair	303	none	RHVoice	0	-
@@ -190,7 +190,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 324	_ZNSt3__29basic_iosIcNS_11char_traitsIcEEED2Ev	245	symbol	match	-	8	addr	unknown	1	sysroot:libc++.a(ios.instantiations.o)
 325	signature_mismatch:HTS_Audio_initialize	253	symbol	match	-	3	byte	libc++abi	1	<internal>
 326	-	-	-	no-candidate	no symbol and no ledger pair	24	none	app	0	-
-327	_ZNSt3__29to_stringEj	586	symbol	unresolved	ours +0x21 call 1590: _ZNSt3__28to_charsB8ne210108IjTnNS_9enable_ifIXsr11is_integralIT_EE5valueEiE4typeELi0EEENS_15to_chars_resultEPcS6_S2_ has no target function	53	none	unknown	1	sysroot:libc++.a(string.o)
+327	_ZNSt3__29to_stringEj	586	symbol	match	-	53	none	unknown	1	sysroot:libc++.a(string.o)
 328	-	-	-	no-candidate	no symbol and no ledger pair	228	none	libc++	0	-
 329	-	-	-	no-candidate	no symbol and no ledger pair	272	none	boost	0	-
 330	OBJ_NAME_add	269	symbol	match	readings: address symbol,table slot,address string	247	addr	openssl	1	openssl/O3/crypto/objects/libcrypto-lib-o_names.o
@@ -227,7 +227,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 361	OSSL_PARAM_get_uint32	287	symbol	match	-	518	byte	openssl	1	openssl/O3/crypto/libcrypto-lib-params.o
 362	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE20__throw_out_of_rangeB8ne210108Ev	477	symbol	match	readings: address string	10	none	libc++	1	app/roots_rhvoice.o
 363	_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E9consumeIfENSt3__217basic_string_viewIcNS6_11char_traitsIcEEEE	289	symbol	match	-	114	fingerprint	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
-364	-	-	-	no-candidate	no symbol and no ledger pair	19	none	libc++	0	-
+364	_ZNSt3__220__throw_format_errorB8ne210108EPKc	352	symbol	differs	+0x1 target +0x1 local.get 0 | ours +0x1 i32.const 8	19	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 365	-	-	-	no-candidate	no symbol and no ledger pair	369	none	unknown	0	-
 366	EVP_MD_CTX_free	291	symbol	match	readings: address string	62	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-digest.o
 367	ERR_clear_last_mark	292	symbol	match	-	105	none	openssl	1	openssl/O3/crypto/err/libcrypto-lib-err.o
@@ -265,7 +265,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 399	valueBytes	316	symbol	match	-	21	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 400	OPENSSL_sk_new_null	311	symbol	match	readings: address string	64	addr	openssl	1	openssl/O3/crypto/stack/libcrypto-lib-stack.o
 401	-	-	-	no-candidate	no symbol and no ledger pair	85	none	unknown	0	-
-402	-	-	-	no-candidate	no symbol and no ledger pair	263	none	libc++	0	-
+402	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE11__push_charEc	510	symbol	differs	+0x1 target the locals | ours the locals	263	none	libc++	1	app/ecourna/api_compression_icompressor.cpp.o
 403	_ZNSt3__28literals15string_literalsli1sB8ne210108EPKcm	608	symbol	match	-	121	none	unknown	1	app/100-uenux2-cpolysingleton-roots.o
 404	BN_zero_ex	318	symbol	match	-	16	byte	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 405	-	-	-	no-candidate	no symbol and no ledger pair	111	none	7zip	0	-
@@ -379,7 +379,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 513	gf_sub	408	symbol	match	-	593	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-f_generic.o)
 514	_ZNSt3__26locale2id5__getEv	417	symbol	differs	+0x1 target the locals | ours the locals	80	none	libc++	1	sysroot:libc++.a(locale.o)
 515	_ZN4ASN18SEQUENCE20includeOptionalFieldEjj	1805	symbol	match	-	233	addr	app	1	app/asn1/asn1.o
-516	-	-	-	no-candidate	no symbol and no ledger pair	35	none	ASN1	0	-
+516	_ZN4ASN116SEQUENCE_OF_BaseC2EPKv	1804	symbol	unresolved	ours +0x9 call 3114: byn$mgfn-shared$_ZN4ASN114AbstractStringC2EPKv has no target function	35	none	ASN1	1	app/asn1/asn1.o
 517	-	-	-	no-candidate	no symbol and no ledger pair	137	none	unknown	0	-
 518	-	-	-	no-candidate	no symbol and no ledger pair	155	none	unknown	0	-
 519	_ZN5boost6detail18sp_counted_impl_pdIPNS_8signals26detail11signal_implIFvmmRKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEENS2_19optional_last_valueIvEEiNS5_4lessIiEENS_8functionISE_EENSJ_IFvRKNS2_10connectionEmmSD_EEENS2_5mutexEE16invocation_stateENS0_13sp_ms_deleterISS_EEE17get_local_deleterERKSt9type_info	258	symbol	match	-	4	byte	libc++abi	1	app/roots_boost.o
@@ -595,7 +595,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 729	_ZN5comum14IInterfaceInit11GetDemoModeEv	3733	symbol	match	readings: address string,table slot,address srcloc,address symbol	736	none	libc++	1	app/uenux2/src/app/comum/iinterfaceinit.cpp.o
 730	-	-	-	no-candidate	no symbol and no ledger pair	170	none	unknown	0	-
 731	-	-	-	no-candidate	no symbol and no ledger pair	410	none	ecourna	0	-
-732	-	-	-	no-candidate	no symbol and no ledger pair	259	none	RHVoice	0	-
+732	_ZNKSt3__213__format_spec8__parserIcE31__get_parsed_std_specificationsB8ne210108INS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEEENS0_23__parsed_specificationsIcEERT_	579	symbol	unresolved	ours +0x115 call 4112: _ZNSt3__218__visit_format_argB8ne210108IZNS_13__format_spec19__substitute_arg_idB8ne210108INS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEEEjNS_16basic_format_argIT_EEEUlSB_E_S9_EEDcOSB_NSA_IT0_EE has no target function	259	none	RHVoice	1	app/uenux2/src/api/util/cwait.cpp.o
 733	__ashlti3	569	symbol	match	-	80	byte	unknown	1	sysroot:libcompiler_rt.a(ashlti3.o)
 734	emscripten_builtin_calloc	570	symbol	match	-	92	addr	sqlite	1	sysroot:libdlmalloc.a(dlmalloc.o)
 735	wmemcpy	571	symbol	match	-	43	byte	unknown	1	sysroot:libc.a(wmemcpy.o)
@@ -647,7 +647,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 781	-	-	-	no-candidate	no symbol and no ledger pair	60	none	app	0	-
 782	_ZNK5comum6CLocal12VerificaLidoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	1122	symbol	match	readings: address string,table slot,address srcloc,address symbol	517	none	ecourna	1	app/uenux2/src/app/comum/dados/clocal.cpp.o
 783	-	-	-	no-candidate	no symbol and no ledger pair	404	none	comum	0	-
-784	-	-	-	no-candidate	no symbol and no ledger pair	219	none	sqlite	0	-
+784	_ZNSt3__211__formatter7__writeB8ne210108IccTkNS_15output_iteratorIRKT_EENS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEEEDtfp0_ENS_17basic_string_viewIS3_NS_11char_traitsIS3_EEEET1_NS_13__format_spec23__parsed_specificationsIT0_EEl	561	symbol	unresolved	ours +0x146 call 906: _ZNSt3__211__formatter6__fillB8ne210108ITkNS_15__fmt_char_typeEcTkNS_15output_iteratorIRKT_EENS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEQ7same_asIS3_cEEET0_SB_mNS_13__format_spec12__code_pointIS3_EE has no target function	219	none	sqlite	1	app/uenux2/src/api/util/cwait.cpp.o
 785	_ZN4vota12testeteclado20CErroTesteTecladoFimD2Ev	5226	symbol	match	-	56	fingerprint	vota	1	app/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cerrotestetecladofim.cpp.o
 786	byn$mgfn-shared$_ZNK7RHVoice5value18concrete_containerINS_14break_strengthEE5cloneEv	1102	symbol	match	-	28	none	unknown	1	<binaryen>
 787	byn$mgfn-shared$blake2s256_dupctx	610	symbol	match	-	33	addr	openssl	1	<binaryen>
@@ -939,7 +939,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1073	-	-	-	no-candidate	no symbol and no ledger pair	24	none	app	0	-
 1074	_ZN7ecourna3api9exception10CBaseErrorINS0_3asn12EApiAsnErrorEXtlNS1_12SErrorLimitsELi1900ELi1910EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	11253	symbol	differs	+0xf target +0xe call 710 | ours +0xe call 1011	18	shape	ecourna	2	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 1075	_ZNKRSt3__218basic_stringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEE3strB8ne210108Ev	11254	symbol	differs	+0x15 target +0x15 i32.load align=2 offset=56 | ours +0x15 i32.const 56	223	none	app	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
-1076	-	-	-	no-candidate	no symbol and no ledger pair	496	none	app	0	-
+1076	_ZNSt3__26vectorIPN4ASN112AbstractDataENS_9allocatorIS3_EEE6insertENS_11__wrap_iterIPKS3_EEOS3_	3096	symbol	unresolved	ours +0x132 i32.const 1579: a table slot of ours: _ZNSt3__214__split_bufferIPN4ASN112AbstractDataERNS_9allocatorIS3_EEE12emplace_backIJS3_EEEvDpOT_ has no target function	496	none	app	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 1077	_ZNK5comum6CLocal16GetNomeMunicipioEv	5484	symbol	match	readings: address string	122	none	unknown	1	app/uenux2/src/app/comum/dados/clocal.cpp.o
 1078	_ZNK5comum6CLocal10GetSecaoIDEv	5490	symbol	match	readings: address string,address srcloc,address symbol,table slot	167	none	ecourna	1	app/uenux2/src/app/comum/dados/clocal.cpp.o
 1079	_ZNSt3__26__treeIN5boost13re_detail_6007digraphIcEENS_4lessIS4_EENS_9allocatorIS4_EEE7destroyEPNS_11__tree_nodeIS4_PvEE	996	ledger	differs	+0xd target +0xc call 1079 | ours +0xc call 1242	32	addr	comum	1	app/roots_boost.o
@@ -1006,7 +1006,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1140	_ZN7UStringC2EPKc	1732	symbol	match	-	274	none	7zip	1	7zip/21.02-st-O3/obj/CPP_Common_MyString.cpp.o
 1141	_ZN7ecourna3api4util12CStringUtils7ToQWordERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	1006	symbol	match	readings: address string,address srcloc	62	none	comum	1	app/ecourna/api_util_cstringutils.cpp.o
 1142	_ZN7ecourna3api4util12CStringUtils6ToByteERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	1227	symbol	match	readings: address srcloc	18	none	app	1	app/ecourna/api_util_cstringutils.cpp.o
-1143	_ZN7ecourna3api9exception6CErrorC2EiNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS3_15source_locationE	2295	symbol	unresolved	ours +0x280 i32.const 1423: a table slot of ours: _ZNSt3__29to_stringEi has no target function	1778	shape	ecourna	1	app/ecourna/api_exception_cerror.cpp.o
+1143	_ZN7ecourna3api9exception6CErrorC2EiNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS3_15source_locationE	2295	symbol	differs	+0x333 target +0x332 i32.const 445460 | ours +0x332 i32.const 445455 [ours 234851 = <internal>:(.rodata)+233827: address string → 0x6cc0f]	1778	shape	ecourna	1	app/ecourna/api_exception_cerror.cpp.o
 1144	-	-	-	no-candidate	no symbol and no ledger pair	153	none	RHVoice	0	-
 1145	-	-	-	no-candidate	no symbol and no ledger pair	792	none	RHVoice	0	-
 1146	-	-	-	no-candidate	no symbol and no ledger pair	1047	none	unknown	0	-
@@ -1016,7 +1016,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1150	-	-	-	no-candidate	no symbol and no ledger pair	1768	none	vota	0	-
 1151	-	-	-	no-candidate	no symbol and no ledger pair	330	none	api	0	-
 1152	-	-	-	no-candidate	no symbol and no ledger pair	444	none	api	0	-
-1153	-	-	-	no-candidate	no symbol and no ledger pair	719	none	RHVoice	0	-
+1153	_ZN7RHVoice13bool_propertyC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEb	5308	symbol	unresolved	self-voted ours +ab: _ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEbEENS_19__map_value_compareIS7_NS_4pairIKS7_bEEN7RHVoice3str4lessELb1EEENS5_ISC_EEE25__emplace_unique_key_argsIS7_JSC_EEENSA_INS_15__tree_iteratorIS8_PNS_11__tree_nodeIS8_PvEElEEbEERKT_DpOT0_ = func:1538 (evidence:call by:1153) comes from this function's own operand and no other match re-points through it	719	none	RHVoice	1	app/roots_rhvoice.o
 1154	_ZNSt3__26__treeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN7RHVoice3str4lessENS4_IS6_EEE7destroyEPNS_11__tree_nodeIS6_PvEE	479	symbol	match	-	57	addr	unknown	2	app/roots_rhvoice.o
 1155	-	-	-	no-candidate	no symbol and no ledger pair	1944	none	api	0	-
 1156	-	-	-	no-candidate	no symbol and no ledger pair	169	none	unknown	0	-
@@ -1121,7 +1121,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1255	-	-	-	no-candidate	no symbol and no ledger pair	612	none	comum	0	-
 1256	-	-	-	no-candidate	no symbol and no ledger pair	109	none	vota	0	-
 1257	-	-	-	no-candidate	no symbol and no ledger pair	12	none	vota	0	-
-1258	-	-	-	no-candidate	no symbol and no ledger pair	262	none	RHVoice	0	-
+1258	_ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN7RHVoice9quality_tEEENS_19__map_value_compareIS7_NS_4pairIKS7_S9_EENS8_3str4lessELb1EEENS5_ISE_EEE25__emplace_unique_key_argsIS7_JSE_EEENSC_INS_15__tree_iteratorISA_PNS_11__tree_nodeISA_PvEElEEbEERKT_DpOT0_	1015	symbol	unresolved	ours +0x30 call 388: _ZNK7RHVoice3str4lessclERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_ has no target function	262	none	RHVoice	1	app/roots_rhvoice.o
 1259	-	-	-	no-candidate	no symbol and no ledger pair	70	none	app	0	-
 1260	_ZN3api10CDirReader9NextEntryEv	3900	symbol	match	readings: address string,address srcloc,address symbol,table slot	87	none	ecourna	1	app/uenux2/src/api/util/cdirreader.cpp.o
 1261	-	-	-	no-candidate	no symbol and no ledger pair	80	none	unknown	0	-
@@ -1272,7 +1272,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1406	-	-	-	no-candidate	no symbol and no ledger pair	72	none	ecourna	0	-
 1407	-	-	-	no-candidate	no symbol and no ledger pair	40	none	7zip	0	-
 1408	-	-	-	no-candidate	no symbol and no ledger pair	37	none	7zip	0	-
-1409	-	-	-	no-candidate	no symbol and no ledger pair	242	none	libc++	0	-
+1409	_ZNSt3__213__format_spec33__throw_invalid_type_format_errorB8ne210108EPKc	907	symbol	differs	+0x1 target the locals | ours the locals	242	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 1410	_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E17parseTemplateArgsEb	1105	symbol	match	readings: address symbol	738	none	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
 1411	_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E4makeINS0_8NameTypeEJRNSt3__217basic_string_viewIcNS8_11char_traitsIcEEEEEEEPNS0_4NodeEDpOT0_	1106	symbol	match	readings: address symbol	16	addr	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
 1412	_ZN12_GLOBAL__N_116itanium_demangle14PODSmallVectorIPNS0_24ForwardTemplateReferenceELm4EEixEm	1107	symbol	match	readings: address string	86	addr	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
@@ -1280,7 +1280,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1414	wcslen	1118	symbol	match	-	35	byte	unknown	1	sysroot:libc.a(wcslen.o)
 1415	wcrtomb	1117	symbol	match	readings: address symbol	267	addr	libc++	1	sysroot:libc.a(wcrtomb.o)
 1416	vsnprintf	1119	symbol	match	readings: table slot	126	addr	sqlite	1	sysroot:libc.a(vsnprintf.o)
-1417	-	-	-	no-candidate	no symbol and no ledger pair	1477	none	libc++	0	-
+1417	_ZNSt3__213__format_spec8__parserIcE7__parseB8ne210108INS_26basic_format_parse_contextIcEEEENT_8iteratorERS6_NS0_8__fieldsB8ne210108E	625	symbol	unresolved	ours +0x74 call 2745: _ZNSt3__29__unicode17__code_point_viewIcE9__consumeB8ne210108Ev has no target function	1477	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 1418	scalbn	1121	symbol	match	-	168	addr	RHVoice	1	sysroot:libc.a(scalbn.o)
 1419	lstat	1599	symbol	match	-	15	addr	unknown	1	sysroot:libc.a(lstat.o)
 1420	__fstat	1025	symbol	match	readings: address same-content	30	addr	openssl	1	sysroot:libc.a(fstat.o)
@@ -1385,7 +1385,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1519	-	-	-	no-candidate	no symbol and no ledger pair	114	none	ASN1	0	-
 1520	_ZN4ASN1L9read_dec2ERNSt3__213basic_istreamIcNS0_11char_traitsIcEEEE	1213	symbol	match	-	123	shape	libc++	1	app/asn1/asn1.o
 1521	_ZN4ASN114AbstractStringC2EPKvRKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10069	symbol	match	readings: address symbol	89	addr	ASN1	1	app/asn1/asn1.o
-1522	_ZNSt3__26__treeINS_12__value_typeINS_4pairIN5boost8signals26detail15slot_meta_groupENS3_8optionalIiEEEENS_15__list_iteratorINS3_10shared_ptrINS5_15connection_bodyIS9_NS4_4slotIFiiENS3_8functionISE_EEEENS4_5mutexEEEEEPvEEEENS_19__map_value_compareIS9_NS2_IKS9_SM_EENS5_14group_key_lessIiNS_4lessIiEEEELb0EEENS_9allocatorISQ_EEE7destroyEPNS_11__tree_nodeISN_SL_EE	2084	ledger	unresolved	ours +0xc call 2084: _ZNSt3__26__treeINS_12__value_typeINS_4pairIN5boost8signals26detail15slot_meta_groupENS3_8optionalIiEEEENS_15__list_iteratorINS3_10shared_ptrINS5_15connection_bodyIS9_NS4_4slotIFiiENS3_8functionISE_EEEENS4_5mutexEEEEEPvEEEENS_19__map_value_compareIS9_NS2_IKS9_SM_EENS5_14group_key_lessIiNS_4lessIiEEEELb0EEENS_9allocatorISQ_EEE7destroyEPNS_11__tree_nodeISN_SL_EE has no target function	32	addr	ecourna	1	app/roots_boost.o
+1522	_ZNSt3__26__treeIiNS_4lessIiEENS_9allocatorIiEEE7destroyEPNS_11__tree_nodeIiPvEE	2266	symbol	match	-	32	addr	ecourna	2	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
 1523	_ZN7ecourna3api4util12CStringUtils7ToDWordERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	3103	symbol	match	readings: address string,address srcloc	67	none	vota	1	app/ecourna/api_util_cstringutils.cpp.o
 1524	-	-	-	no-candidate	no symbol and no ledger pair	705	none	simulador	0	-
 1525	_ZN7ecourna3api3sql6sqlite13CSqlResultSet18IndexForColumnNameERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE	1225	symbol	match	readings: address symbol,address string,table slot,address srcloc	964	none	ecourna	1	app/ecourna/api_sql_sqlite_csqlresultset.cpp.o
@@ -1401,7 +1401,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1535	-	-	-	no-candidate	no symbol and no ledger pair	20	none	sqlite	0	-
 1536	-	-	-	no-candidate	no symbol and no ledger pair	22	none	vota	0	-
 1537	-	-	-	no-candidate	no symbol and no ledger pair	106	none	comum	0	-
-1538	-	-	-	no-candidate	no symbol and no ledger pair	262	none	RHVoice	0	-
+1538	_ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEbEENS_19__map_value_compareIS7_NS_4pairIKS7_bEEN7RHVoice3str4lessELb1EEENS5_ISC_EEE25__emplace_unique_key_argsIS7_JSC_EEENSA_INS_15__tree_iteratorIS8_PNS_11__tree_nodeIS8_PvEElEEbEERKT_DpOT0_	1232	symbol	unresolved	ours +0x30 call 388: _ZNK7RHVoice3str4lessclERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_ has no target function	262	none	RHVoice	1	app/roots_rhvoice.o
 1539	-	-	-	no-candidate	no symbol and no ledger pair	803	none	ecourna	0	-
 1540	_ZN5comum12CSigVerifierC2ENS_10ESavdAplicENSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES8_S8_	3873	symbol	match	readings: address symbol	123	addr	comum	1	app/uenux2/src/app/comum/relatorios/csigverifier.cpp.o
 1541	-	-	-	no-candidate	no symbol and no ledger pair	197	none	app	0	-
@@ -1463,7 +1463,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1597	-	-	-	no-candidate	no symbol and no ledger pair	7	none	libc++	0	-
 1598	-	-	-	no-candidate	no symbol and no ledger pair	198	none	libc++	0	-
 1599	-	-	-	no-candidate	no symbol and no ledger pair	7	none	libc++	0	-
-1600	-	-	-	no-candidate	no symbol and no ledger pair	7	none	libc++	0	-
+1600	_ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE6EEEvv	2281	symbol	unresolved	ours +0x3 call 875: byn$mgfn-shared$_ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE17EEEvv has no target function	7	none	libc++	1	app/ecourna/api_compression_icompressor.cpp.o
 1601	SHA1_Update	1247	symbol	match	-	253	fingerprint	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-sha1dgst.o)
 1602	RSA_X931_hash_id	1140	symbol	match	-	52	byte	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_x931.o
 1603	ossl_rsa_oaeppss_nid2name	1248	symbol	match	readings: address symbol	117	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-rsa_schemes.o)
@@ -1592,7 +1592,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1726	byn$mgfn-shared$dsa_to_PrivateKeyInfo_der_encode	1364	symbol	match	readings: address string	183	none	openssl	1	<binaryen>
 1727	byn$mgfn-shared$_ZN3api10CFixedTextD2Ev	1844	symbol	match	-	36	addr	unknown	1	<binaryen>
 1728	byn$mgfn-shared$_ZNK7RHVoice25brazilian_portuguese_info11get_countryEv	1359	symbol	match	-	36	byte	RHVoice	1	<binaryen>
-1729	-	-	-	no-candidate	no symbol and no ledger pair	392	none	libc++	0	-
+1729	_ZNSt3__211__formatter16__format_integerB8ne210108ITkNS_17unsigned_integralEjcNS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEEENT1_8iteratorET_RS9_NS_13__format_spec23__parsed_specificationsIT0_EEb	1305	symbol	unresolved	self-voted ours +61: _ZNSt3__211__formatter16__format_integerB8ne210108ITkNS_17unsigned_integralEjTkNS_19contiguous_iteratorENS_11__wrap_iterIPcEEcNS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEQ7same_asIcNS_11conditionalIXsr21__is_primary_templateINS_15iterator_traitsIu14__remove_cvrefIT0_EEEEE5valueENS_26indirectly_readable_traitsISF_EESG_E4type10value_typeEEEENT2_8iteratorET_RSM_NS_13__format_spec23__parsed_specificationsIT1_EEbSE_SE_PKci = func:1955 (evidence:call by:1729) comes from this function's own operand and no other match re-points through it	392	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 1730	_ZNK12_GLOBAL__N_116itanium_demangle4Node11hasFunctionERNS0_12OutputBufferE	1368	symbol	match	-	42	byte	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
 1731	_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E16parseTemplateArgEv	1369	symbol	match	readings: address symbol	547	none	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
 1732	__lshrti3	1374	symbol	match	-	80	byte	RHVoice	1	sysroot:libcompiler_rt.a(lshrti3.o)
@@ -1710,7 +1710,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1844	_ZNSt3__214__num_get_base10__get_baseERNS_8ios_baseE	1581	symbol	match	-	46	byte	libc++	1	sysroot:libc++.a(locale.o)
 1845	_ZNSt3__215basic_streambufIcNS_11char_traitsIcEEE5sgetcB8ne210108Ev	1586	symbol	match	-	39	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 1846	_ZNSt3__213basic_ostreamIcNS_11char_traitsIcEEE5flushEv	2349	symbol	match	readings: table slot	10	shape	unknown	1	sysroot:libc++.a(ios.instantiations.o)
-1847	-	-	-	no-candidate	no symbol and no ledger pair	54	none	unknown	0	-
+1847	_ZNSt3__28to_charsB8ne210108IjTnNS_9enable_ifIXsr11is_integralIT_EE5valueEiE4typeELi0EEENS_15to_chars_resultEPcS6_S2_	1590	symbol	match	-	54	none	unknown	1	sysroot:libc++.a(charconv.o)
 1848	flush_pending	1455	symbol	match	-	147	fingerprint	ecourna	1	zlib/O3pic/deflate.o
 1849	zip64local_getLong64	1454	symbol	match	-	600	fingerprint	ecourna	1	zlib/O3pic/minizip_zip.o
 1850	-	-	-	no-candidate	no symbol and no ledger pair	90	none	7zip	0	-
@@ -1742,7 +1742,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1876	_ZN7ecourna3app5dados29CRegistroIdentificacaoEleitorD2Ev	3081	symbol	match	-	114	fingerprint	ecourna	1	app/ecourna/app_dados_asn_resultadournacadastro_cconversorcomparecimentomesario.cpp.o
 1877	_ZN7ecourna3app5dados3asn19DesconverteDataHoraERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	1358	symbol	unresolved	ours +0x313 i32.const 1512: a table slot of ours: _ZN5boost9date_time14parse_iso_timeINS_10posix_time5ptimeEEET_RKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEc has no target function	897	none	ecourna	1	app/ecourna/app_dados_asn_datahoraasn.cpp.o
 1878	_ZN7ecourna3app5dados29CRegistroIdentificacaoEleitorC2ENSt3__210shared_ptrINS1_21IIdentificadorEleitorEEES6_	11125	symbol	match	readings: address symbol,table slot,address string,address srcloc	480	shape	ecourna	1	app/ecourna/app_dados_cregistroidentificacaoeleitor.cpp.o
-1879	_ZN7ecourna3api4util12CStringUtils7ToLowerERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	3072	symbol	unresolved	ours +0x3e i32.const 2073: a table slot of ours: _ZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE has no target function	12	none	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
+1879	_ZN7ecourna3api4util12CStringUtils7ToLowerERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	3072	symbol	differs	+0x1 target +0x1 local.get 0 | ours +0x1 block	12	none	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
 1880	-	-	-	no-candidate	no symbol and no ledger pair	1037	none	app	0	-
 1881	-	-	-	no-candidate	no symbol and no ledger pair	171	none	app	0	-
 1882	_ZNK7ecourna3api3sql6sqlite13CSqlStatement20VerifyParameterIndexEi	1558	symbol	match	readings: address symbol,table slot,address string,address srcloc	267	shape	ecourna	1	app/ecourna/api_sql_sqlite_csqlstatement.cpp.o
@@ -1814,11 +1814,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1948	-	-	-	no-candidate	no symbol and no ledger pair	15	none	app	0	-
 1949	-	-	-	no-candidate	no symbol and no ledger pair	2384	none	libc++	0	-
 1950	-	-	-	no-candidate	no symbol and no ledger pair	72	none	vota	0	-
-1951	-	-	-	no-candidate	no symbol and no ledger pair	852	none	libc++	0	-
+1951	_ZNSt3__211__formatter16__format_integerB8ne210108ITkNS_17unsigned_integralEyTkNS_19contiguous_iteratorENS_11__wrap_iterIPcEEcNS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEQ7same_asIcNS_11conditionalIXsr21__is_primary_templateINS_15iterator_traitsIu14__remove_cvrefIT0_EEEEE5valueENS_26indirectly_readable_traitsISF_EESG_E4type10value_typeEEEENT2_8iteratorET_RSM_NS_13__format_spec23__parsed_specificationsIT1_EEbSE_SE_PKci	1465	symbol	unresolved	ours +0x9e call 1720: _ZNSt3__219__to_chars_integralB8ne210108IyTnNS_9enable_ifIXntsr9is_signedIT_EE5valueEiE4typeELi0EEENS_17__to_chars_resultEPcS6_S2_i has no target function	852	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 1952	-	-	-	no-candidate	no symbol and no ledger pair	12	none	vota	0	-
 1953	-	-	-	no-candidate	no symbol and no ledger pair	243	none	ecourna	0	-
 1954	_ZN3api18CPolySingletonList3hasIN5comum10CCalculaCVEEEbRKNS_19TPolySingletonsInfoE	4972	symbol	differs	+0x0 target the locals | ours the locals	19	none	app	1	app/100-uenux2-cpolysingleton-roots.o
-1955	-	-	-	no-candidate	no symbol and no ledger pair	816	none	libc++	0	-
+1955	_ZNSt3__211__formatter16__format_integerB8ne210108ITkNS_17unsigned_integralEjTkNS_19contiguous_iteratorENS_11__wrap_iterIPcEEcNS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEQ7same_asIcNS_11conditionalIXsr21__is_primary_templateINS_15iterator_traitsIu14__remove_cvrefIT0_EEEEE5valueENS_26indirectly_readable_traitsISF_EESG_E4type10value_typeEEEENT2_8iteratorET_RSM_NS_13__format_spec23__parsed_specificationsIT1_EEbSE_SE_PKci	1466	symbol	unresolved	ours +0x102 call 1185: _ZNSt3__26__itoa13__base_10_u32B8ne210108EPcj has no target function	816	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 1956	-	-	-	no-candidate	no symbol and no ledger pair	5663	none	vota	0	-
 1957	byn$mgfn-shared$_ZN7RHVoice12_GLOBAL__N_124phoneme_feature_functionD0Ev	1570	symbol	match	readings: address symbol	74	addr	RHVoice	1	<binaryen>
 1958	byn$mgfn-shared$_ZN7RHVoice12_GLOBAL__N_124phoneme_feature_functionD2Ev	1571	symbol	match	readings: address symbol	71	addr	RHVoice	1	<binaryen>
@@ -1900,7 +1900,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2034	ed448_to_EncryptedPrivateKeyInfo_der_import_object	1396	symbol	match	readings: address content-repointed	19	addr	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-encode_key2any.o
 2035	ed25519_to_EncryptedPrivateKeyInfo_der_import_object	1397	symbol	match	readings: address content-repointed	19	addr	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-encode_key2any.o
 2036	type_specific_der2dsa_does_selection	1398	symbol	match	-	15	byte	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-decode_der2key.o
-2037	-	-	-	no-candidate	no symbol and no ledger pair	7	none	libc++	0	-
+2037	_ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE4EEEvv	2278	symbol	unresolved	ours +0x3 call 875: byn$mgfn-shared$_ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE17EEEvv has no target function	7	none	libc++	1	app/ecourna/api_compression_icompressor.cpp.o
 2038	ossl_prov_macctx_load_from_params	1601	symbol	match	readings: address string	206	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
 2039	ossl_prov_cipher_load_from_params	1602	symbol	match	readings: address string	207	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
 2040	X509_PUBKEY_get0_param	1402	symbol	match	-	49	byte	openssl	1	openssl/O3/crypto/x509/libcrypto-lib-x_pubkey.o
@@ -2256,7 +2256,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2390	key_to_pubkey	1622	symbol	match	readings: address symbol,address string	147	addr	openssl	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-encode_key2any.o
 2391	-	-	-	no-candidate	no symbol and no ledger pair	7	none	libc++	0	-
 2392	aes_wrap_final	1624	symbol	match	-	11	byte	unknown	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes_wrp.o
-2393	-	-	-	no-candidate	no symbol and no ledger pair	249	none	libc++	0	-
+2393	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE15__push_back_refEi	3095	symbol	differs	+0xc6 target +0xc6 i32.load align=2 offset=4 | ours +0xc6 i32.const 4	249	none	libc++	1	app/ecourna/api_compression_icompressor.cpp.o
 2394	aes_128_ofb_get_params	1625	symbol	match	-	19	addr	unknown	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes.o
 2395	aes_128_cbc_get_params	1626	symbol	match	-	20	addr	unknown	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes.o
 2396	aes_128_ecb_get_params	1627	symbol	match	-	19	addr	unknown	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_aes.o
@@ -2279,7 +2279,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2413	PEM_write_bio_PKCS8	1896	symbol	match	readings: table slot,address string	23	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-pem_pk8.o)
 2414	ocb_lookup_l	1652	symbol	match	readings: address string	471	addr	openssl	1	openssl/O3/crypto/modes/libcrypto-lib-ocb128.o
 2415	CRYPTO_ocb128_aad	1653	symbol	match	-	430	addr	openssl	1	openssl/O3/crypto/modes/libcrypto-lib-ocb128.o
-2416	-	-	-	no-candidate	no symbol and no ledger pair	123	none	vota	0	-
+2416	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEEC2B8ne210108EPKcNS_15regex_constants18syntax_option_typeE	5025	symbol	unresolved	ours +0x57 i32.const 1535732: an address of ours: _ZNSt3__27collateIcE2idE (.bss) has no target symbol	123	none	vota	1	app/ecourna/app_dados_cserialmidia.cpp.o
 2417	CRYPTO_gcm128_aad	1897	symbol	match	-	437	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-gcm128.o)
 2418	CRYPTO_cfb128_8_encrypt	1898	symbol	match	-	238	fingerprint	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-cfb128.o)
 2419	CRYPTO_ccm128_decrypt_ccm64	1899	symbol	match	-	701	fingerprint	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-ccm128.o)
@@ -2752,7 +2752,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2886	-	-	-	no-candidate	no symbol and no ledger pair	19	none	app	0	-
 2887	_ZNSt3__29use_facetB8ne210108INS_8numpunctIcEEEERKT_RKNS_6localeE	3178	symbol	match	readings: address symbol	12	none	libc++	1	sysroot:libc++.a(locale.o)
 2888	-	-	-	no-candidate	no symbol and no ledger pair	104	none	vota	0	-
-2889	-	-	-	no-candidate	no symbol and no ledger pair	221	none	libc++	0	-
+2889	_ZNKSt3__213__format_spec8__parserIcE10__validateB8ne210108ENS0_8__fieldsB8ne210108EPKcj	908	symbol	unresolved	ours +0x9b call 1722: _ZNSt3__213__format_spec35__throw_invalid_option_format_errorB8ne210108EPKcS2_ has no target function	221	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 2890	-	-	-	no-candidate	no symbol and no ledger pair	1886	none	ecourna	0	-
 2891	-	-	-	no-candidate	no symbol and no ledger pair	255	none	app	0	-
 2892	-	-	-	no-candidate	no symbol and no ledger pair	172	none	app	0	-
@@ -2944,7 +2944,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3078	BN_BLINDING_is_current_thread	3922	ledger	differs	+0x5 target +0x3 i32.load align=2 offset=4 | ours +0x3 i32.load align=2 offset=16	10	shape	vota	1	openssl/O3/crypto/bn/libcrypto-lib-bn_blind.o
 3079	prepare_ec_params	1922	symbol	match	readings: address string	245	addr	openssl	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-encode_key2any.o
 3080	prepare_dsa_params	1923	symbol	match	readings: address string	168	addr	openssl	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-encode_key2any.o
-3081	-	-	-	no-candidate	no symbol and no ledger pair	124	none	libc++	0	-
+3081	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE19__parse_QUOTED_CHARIPKcEET_S7_S7_	5015	symbol	match	-	124	none	libc++	1	app/ecourna/app_dados_cserialmidia.cpp.o
 3082	do_i2b	1950	symbol	match	readings: address string	1281	addr	openssl	1	openssl/O3/crypto/pem/libcrypto-lib-pvkfmt.o
 3083	-	-	-	no-candidate	no symbol and no ledger pair	338	none	libc++	0	-
 3084	-	-	-	no-candidate	no symbol and no ledger pair	574	none	libc++	0	-
@@ -3215,8 +3215,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3349	_ZNSt3__29use_facetB8ne210108INS_8numpunctIwEEEERKT_RKNS_6localeE	3174	symbol	match	readings: address symbol	12	none	libc++	1	sysroot:libc++.a(locale.o)
 3350	_ZNSt3__29__num_getIcE19__stage2_float_prepERNS_8ios_baseEPcRcS5_	3175	symbol	match	readings: address symbol,table slot	358	shape	libc++	1	sysroot:libc++.a(locale.o)
 3351	_ZNSt3__29__num_getIcE17__stage2_int_prepB8ne210108ERNS_8ios_baseERc	3177	symbol	match	readings: address symbol,table slot	204	shape	libc++	1	sysroot:libc++.a(locale.o)
-3352	-	-	-	no-candidate	no symbol and no ledger pair	12	none	libc++	0	-
-3353	_ZNSt3__211stream_dataINS_13basic_ostreamIwNS_11char_traitsIwEEEENS_11__stdoutbufIwEEE4initEP8_IO_FILE	3181	ledger	unresolved	ours +0x49 i32.const 10757: a table slot of ours: _ZNSt3__29use_facetB8ne210108INS_7codecvtIwc11__mbstate_tEEEERKT_RKNS_6localeE has no target function	274	addr	libc++	1	sysroot:libc++.a(iostream.o)
+3352	_ZNSt3__29use_facetB8ne210108INS_7codecvtIwc11__mbstate_tEEEERKT_RKNS_6localeE	3180	symbol	match	readings: address symbol	12	none	libc++	1	sysroot:libc++.a(iostream.o)
+3353	_ZNSt3__211stream_dataINS_13basic_ostreamIwNS_11char_traitsIwEEEENS_11__stdoutbufIwEEE4initEP8_IO_FILE	3181	symbol	match	readings: address symbol,table slot,address content-repointed	274	addr	libc++	1	sysroot:libc++.a(iostream.o)
 3354	_ZNSt3__211stream_dataINS_13basic_ostreamIcNS_11char_traitsIcEEEENS_11__stdoutbufIcEEE4initEP8_IO_FILE	3182	symbol	match	readings: address symbol,table slot,address content-repointed	274	addr	libc++	1	sysroot:libc++.a(iostream.o)
 3355	-	-	-	no-candidate	no symbol and no ledger pair	67	none	libc++	0	-
 3356	_ZNSt3__28ios_base7failureD2Ev	3185	symbol	match	-	7	addr	libc++	1	sysroot:libc++.a(ios.o)
@@ -3249,15 +3249,15 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3383	_ZNK3api5teste9CUrnaMock5Slot3Ev	3069	symbol	match	-	7	byte	api	1	app/75-uenux2-api-hwil-roots.o
 3384	_ZN9NCompress10CCopyCoder4CodeEP19ISequentialInStreamP20ISequentialOutStreamPKyS6_P21ICompressProgressInfo	8605	symbol	match	-	854	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_CopyCoder.cpp.o
 3385	-	-	-	no-candidate	no symbol and no ledger pair	438	none	7zip	0	-
-3386	_ZN3api18CPolySingletonList3hasINS_5IBeepEEEbRKNS_19TPolySingletonsInfoE	4982	symbol	unresolved	ours +0xb call 5142: byn$mgfn-shared$_ZN3api18CPolySingletonList3hasINS_5IBeepEEEbRKNS_19TPolySingletonsInfoE has no target function	15	none	app	1	app/100-uenux2-cpolysingleton-roots.o
+3386	_ZN3api18CPolySingletonList3hasINS_5IBeepEEEbRKNS_19TPolySingletonsInfoE	4982	symbol	match	readings: address symbol	15	none	app	1	app/100-uenux2-cpolysingleton-roots.o
 3387	_ZN3api18CPolySingletonList3hasINS_7IScreenEEEbRKNS_19TPolySingletonsInfoE	4984	symbol	differs	+0xd8 target +0xd7 call 608 | ours +0xd7 call 305	345	none	libc++	1	app/100-uenux2-cpolysingleton-roots.o
 3388	_ZN17CSeqOutStreamWrap4InitEP20ISequentialOutStream	1471	symbol	match	readings: table slot	31	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_CWrappers.cpp.o
 3389	_ZN21CCompressProgressWrap4InitEP21ICompressProgressInfo	1729	symbol	match	readings: table slot	24	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_CWrappers.cpp.o
 3390	-	-	-	no-candidate	no symbol and no ledger pair	1435	none	libc++	0	-
-3391	_ZN3api18CPolySingletonList3hasINS_12CEscritorLogEEEbRKNS_19TPolySingletonsInfoE	4962	symbol	unresolved	ours +0x8 call 5141: byn$mgfn-shared$_ZN3api18CPolySingletonList3hasINS_12CEscritorLogEEEbRKNS_19TPolySingletonsInfoE has no target function	12	none	7zip	1	app/100-uenux2-cpolysingleton-roots.o
+3391	_ZN3api18CPolySingletonList3hasINS_12CEscritorLogEEEbRKNS_19TPolySingletonsInfoE	4962	symbol	match	readings: address symbol	12	none	7zip	1	app/100-uenux2-cpolysingleton-roots.o
 3392	-	-	-	no-candidate	no symbol and no ledger pair	12	none	7zip	0	-
 3393	-	-	-	no-candidate	no symbol and no ledger pair	266	none	7zip	0	-
-3394	_ZN3api18CPolySingletonList3hasIN5comum14IInterfaceInitEEEbRKNS_19TPolySingletonsInfoE	4960	symbol	unresolved	ours +0x8 call 5141: byn$mgfn-shared$_ZN3api18CPolySingletonList3hasINS_12CEscritorLogEEEbRKNS_19TPolySingletonsInfoE has no target function	12	none	7zip	1	app/100-uenux2-cpolysingleton-roots.o
+3394	_ZN3api18CPolySingletonList3hasIN5comum14IInterfaceInitEEEbRKNS_19TPolySingletonsInfoE	4960	symbol	match	readings: address symbol	12	none	7zip	1	app/100-uenux2-cpolysingleton-roots.o
 3395	_ZN8NArchive3N7z16CUInt32DefVector11ReserveDownEv	2752	symbol	match	-	15	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zUpdate.cpp.o
 3396	-	-	-	no-candidate	no symbol and no ledger pair	326	none	7zip	0	-
 3397	-	-	-	no-candidate	no symbol and no ledger pair	1208	none	7zip	0	-
@@ -3383,7 +3383,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3517	_ZNSt3__27__stateIcED2Ev	1356	ledger	differs	+0x7 target +0x5 i32.load align=2 offset=16 | ours +0x5 i32.load align=2 offset=28	60	shape	ecourna	1	app/ecourna/api_compression_icompressor.cpp.o
 3518	_ZN7ecourna3api8security4CSha6FinishEv	11003	symbol	differs	+0x3d target +0x3d block | ours +0x3d local.get 2	533	none	ecourna	1	app/ecourna/api_security_csha.cpp.o
 3519	_ZN7ecourna3api8security4CSha6UpdateERKNSt3__26vectorIhNS3_9allocatorIhEEEE	11004	symbol	match	readings: address symbol,table slot,address string,address srcloc	489	shape	ecourna	1	app/ecourna/api_security_csha.cpp.o
-3520	_ZN7ecourna3api2io8CIoErrorC2ENS1_8EIoErrorENS1_14EFileOperationERKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEiNS5_15source_locationE	11306	symbol	unresolved	ours +0x1b2 i32.const 1423: a table slot of ours: _ZNSt3__29to_stringEi has no target function	1810	none	ecourna	1	app/ecourna/api_io_cioerror.cpp.o
+3520	_ZN7ecourna3api2io8CIoErrorC2ENS1_8EIoErrorENS1_14EFileOperationERKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEiNS5_15source_locationE	11306	symbol	match	readings: address string,address content-repointed,address symbol,table slot,address same-content	1810	none	ecourna	1	app/ecourna/api_io_cioerror.cpp.o
 3521	_ZN7ecourna3api2io5CFile14ReadFileBinaryERKNSt3__210filesystem4pathE	11308	symbol	differs	+0x324 target +0x323 call 306 | ours +0x323 call 2671	1180	none	ecourna	1	app/ecourna/api_io_cfile.cpp.o
 3522	_ZN7ecourna3api2io5CFile15ReadFileContentERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	11309	symbol	match	readings: address string,address symbol,table slot,address srcloc	413	shape	ecourna	1	app/ecourna/api_io_cfile.cpp.o
 3523	-	-	-	no-candidate	no symbol and no ledger pair	2161	none	libc++	0	-
@@ -3411,8 +3411,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3545	-	-	-	no-candidate	no symbol and no ledger pair	822	none	RHVoice	0	-
 3546	-	-	-	no-candidate	no symbol and no ledger pair	405	none	RHVoice	0	-
 3547	-	-	-	no-candidate	no symbol and no ledger pair	454	none	RHVoice	0	-
-3548	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
-3549	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
+3548	_ZN7RHVoice8userdict4rule6appendINS0_12end_of_tokenEEEvv	7787	symbol	match	readings: address symbol,address content-repointed	17	none	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/userdict.cpp.o
+3549	_ZN7RHVoice8userdict4rule6appendINS0_14start_of_tokenEEEvv	7786	symbol	match	readings: address symbol	17	none	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/userdict.cpp.o
 3550	-	-	-	no-candidate	no symbol and no ledger pair	331	none	RHVoice	0	-
 3551	-	-	-	no-candidate	no symbol and no ledger pair	135	none	RHVoice	0	-
 3552	-	-	-	no-candidate	no symbol and no ledger pair	80	none	ASN1	0	-
@@ -3570,7 +3570,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3704	-	-	-	no-candidate	no symbol and no ledger pair	2126	none	ecourna	0	-
 3705	-	-	-	no-candidate	no symbol and no ledger pair	12	none	vota	0	-
 3706	-	-	-	no-candidate	no symbol and no ledger pair	82	none	libc++	0	-
-3707	_ZN5comum2md12_GLOBAL__N_110GetEleicaoEN3api11EUeRdvErrorEhRKNSt3__23mapIhjNS4_4lessIhEENS4_9allocatorINS4_4pairIKhjEEEEEENS4_15source_locationE	2702	symbol	unresolved	ours +0x68 call 2327: _ZNSt3__29to_stringEi has no target function	173	none	ecourna	1	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o
+3707	_ZN5comum2md12_GLOBAL__N_110GetEleicaoEN3api11EUeRdvErrorEhRKNSt3__23mapIhjNS4_4lessIhEENS4_9allocatorINS4_4pairIKhjEEEEEENS4_15source_locationE	2702	symbol	match	readings: address string,address symbol,table slot	173	none	ecourna	1	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o
 3708	-	-	-	no-candidate	no symbol and no ledger pair	173	none	ecourna	0	-
 3709	-	-	-	no-candidate	no symbol and no ledger pair	32	none	vota	0	-
 3710	_ZN5comum2md21CComplementoMunicipioC2EjsRKNS0_13CHorarioVeraoE	5403	symbol	match	-	60	none	app	1	app/uenux2/src/app/comum/dados/md/municipiozona/ccomplementomunicipio.cpp.o
@@ -3698,7 +3698,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3832	_ZN5comum14IInterfaceInit25DesmontarMRSemDesabilitarEv	3744	symbol	match	readings: address string,table slot,address srcloc,address symbol	581	none	ecourna	1	app/uenux2/src/app/comum/iinterfaceinit.cpp.o
 3833	_ZN5comum14IInterfaceInit23EnviarMensagemThrowVoidEiRKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	3775	symbol	match	readings: address string,table slot,address srcloc,address symbol	1100	none	ecourna	1	app/uenux2/src/app/comum/iinterfaceinit.cpp.o
 3834	-	-	-	no-candidate	no symbol and no ledger pair	64	none	app	0	-
-3835	-	-	-	no-candidate	no symbol and no ledger pair	238	none	libc++	0	-
+3835	_ZNSt3__211__formatter34__format_floating_point_non_finiteB8ne210108INS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEET_S7_NS_13__format_spec23__parsed_specificationsIT0_EEbb	2726	symbol	match	readings: address string	238	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 3836	-	-	-	no-candidate	no symbol and no ledger pair	292	none	api	0	-
 3837	-	-	-	no-candidate	no symbol and no ledger pair	12	none	api	0	-
 3838	-	-	-	no-candidate	no symbol and no ledger pair	120	none	libc++	0	-
@@ -3711,7 +3711,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3845	-	-	-	no-candidate	no symbol and no ledger pair	109	none	unknown	0	-
 3846	-	-	-	no-candidate	no symbol and no ledger pair	51	none	unknown	0	-
 3847	-	-	-	no-candidate	no symbol and no ledger pair	72	none	app	0	-
-3848	-	-	-	no-candidate	no symbol and no ledger pair	393	none	libc++	0	-
+3848	_ZNSt3__211__formatter16__format_integerB8ne210108ITkNS_17unsigned_integralEycNS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEEENT1_8iteratorET_RS9_NS_13__format_spec23__parsed_specificationsIT0_EEb	2737	symbol	unresolved	self-voted ours +61: _ZNSt3__211__formatter16__format_integerB8ne210108ITkNS_17unsigned_integralEyTkNS_19contiguous_iteratorENS_11__wrap_iterIPcEEcNS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEQ7same_asIcNS_11conditionalIXsr21__is_primary_templateINS_15iterator_traitsIu14__remove_cvrefIT0_EEEEE5valueENS_26indirectly_readable_traitsISF_EESG_E4type10value_typeEEEENT2_8iteratorET_RSM_NS_13__format_spec23__parsed_specificationsIT1_EEbSE_SE_PKci = func:1951 (evidence:call by:3848) comes from this function's own operand and no other match re-points through it	393	none	libc++	1	app/uenux2/src/api/util/cwait.cpp.o
 3849	-	-	-	no-candidate	no symbol and no ledger pair	20	none	vota	0	-
 3850	-	-	-	no-candidate	no symbol and no ledger pair	41	none	libc++	0	-
 3851	-	-	-	no-candidate	no symbol and no ledger pair	781	none	libc++	0	-
@@ -3721,7 +3721,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3855	-	-	-	no-candidate	no symbol and no ledger pair	143	none	vota	0	-
 3856	-	-	-	no-candidate	no symbol and no ledger pair	58	none	libc++	0	-
 3857	_ZN4vota12testeteclado20CErroTesteTecladoFim10StartStateEv	11339	symbol	match	-	27	byte	vota	1	app/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cerrotestetecladofim.cpp.o
-3858	-	-	-	no-candidate	no symbol and no ledger pair	89	none	app	0	-
+3858	_ZNSt3__215__to_chars_itoaB8ne210108IjEENS_17__to_chars_resultEPcS2_T_NS_17integral_constantIbLb0EEE	3202	symbol	unresolved	ours +0x43 call 1185: _ZNSt3__26__itoa13__base_10_u32B8ne210108EPcj has no target function	89	none	app	1	sysroot:libc++.a(charconv.o)
 3859	-	-	-	no-candidate	no symbol and no ledger pair	189	none	app	0	-
 3860	-	-	-	no-candidate	no symbol and no ledger pair	177	none	app	0	-
 3861	-	-	-	no-candidate	no symbol and no ledger pair	44	none	libc++	0	-
@@ -3767,7 +3767,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3901	byn$mgfn-shared$_ZN5boost15throw_exceptionISt11logic_errorEEvRKT_	2296	symbol	match	readings: address symbol	82	addr	boost	1	<binaryen>
 3902	-	-	-	no-candidate	no symbol and no ledger pair	145	none	vota	0	-
 3903	-	-	-	no-candidate	no symbol and no ledger pair	44	none	app	0	-
-3904	-	-	-	no-candidate	no symbol and no ledger pair	113	none	unknown	0	-
+3904	byn$mgfn-shared$_ZN7RHVoice13resource_infoINS_8languageEED2Ev	5123	symbol	differs	+0xa target +0xa block | ours +0xa i32.const 1936852 [ours 1534408 = __THREW__+0: address symbol __THREW__ → 0x1d8dd4]	113	none	unknown	1	<binaryen>
 3905	byn$mgfn-shared$_ZNK12_GLOBAL__N_116itanium_demangle24ForwardTemplateReference19hasRHSComponentSlowERNS0_12OutputBufferE	3116	symbol	match	readings: address symbol	95	addr	libc++abi	1	<binaryen>
 3906	byn$mgfn-shared$_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E4makeINS0_22ParameterPackExpansionEJRPNS0_4NodeEEEES9_DpOT0_	3117	symbol	match	-	64	addr	libc++abi	1	<binaryen>
 3907	_ZN4vota22CProgressoEncerramentoD2Ev	3655	symbol	match	-	114	addr	vota	1	app/uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp.o
@@ -3791,7 +3791,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3925	byn$mgfn-shared$_ZNKSt3__27num_getIcNS_19istreambuf_iteratorIcNS_11char_traitsIcEEEEE6do_getES4_S4_RNS_8ios_baseERjRl	3119	symbol	match	readings: address symbol,table slot	908	shape	libc++	1	<binaryen>
 3926	byn$mgfn-shared$_ZTv0_n12_NSt3__213basic_istreamIcNS_11char_traitsIcEEED1Ev	3120	symbol	match	-	27	addr	libc++	1	<binaryen>
 3927	byn$mgfn-shared$_ZNSt3__211make_sharedB8ne210108INS_10filesystem16filesystem_error8_StorageEJNS1_4pathES4_ETnNS_9enable_ifIXntsr8is_arrayIT_EE5valueEiE4typeELi0EEENS_10shared_ptrIS6_EEDpOT0_	3121	symbol	match	readings: address symbol	151	addr	unknown	1	<binaryen>
-3928	-	-	-	no-candidate	no symbol and no ledger pair	413	none	libc++	0	-
+3928	byn$mgfn-shared$_ZN3api18CPolySingletonList3hasINS_12CEscritorLogEEEbRKNS_19TPolySingletonsInfoE	5141	symbol	differs	+0x11b target +0x11a call 608 | ours +0x11a call 305	413	none	libc++	1	<binaryen>
 3929	-	-	-	no-candidate	no symbol and no ledger pair	52	none	7zip	0	-
 3930	-	-	-	no-candidate	no symbol and no ledger pair	49	none	7zip	0	-
 3931	-	-	-	no-candidate	no symbol and no ledger pair	47	none	7zip	0	-
@@ -3807,7 +3807,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3941	-	-	-	no-candidate	no symbol and no ledger pair	269	none	api	0	-
 3942	-	-	-	no-candidate	no symbol and no ledger pair	123	none	ecourna	0	-
 3943	byn$mgfn-shared$_ZNSt3__25dequeIN7RHVoice19prosodic_attributesENS_9allocatorIS2_EEED2B8ne210108Ev	3137	symbol	match	-	207	addr	RHVoice	1	<binaryen>
-3944	-	-	-	no-candidate	no symbol and no ledger pair	276	none	libc++	0	-
+3944	byn$mgfn-shared$_ZN7RHVoice8userdict4rule6appendINS0_12end_of_tokenEEEvv	1365	symbol	unresolved	ours +0x7a i32.const 7469: a table slot of ours: _ZNSt3__26vectorINS_10shared_ptrIN7RHVoice5dtree9conditionEEENS_9allocatorIS5_EEE9push_backB8ne210108EOS5_ has no target function	276	none	libc++	1	<binaryen>
 3945	_ZNSt8bad_castC2Ev	1367	symbol	match	readings: address symbol	14	addr	libc++	1	sysroot:libc++abi.a(stdlib_typeinfo.o)
 3946	_ZNK10__cxxabiv122__base_class_type_info16search_above_dstEPNS_19__dynamic_cast_infoEPKvS4_ib	3139	symbol	match	-	75	byte	libc++	1	sysroot:libc++abi.a(private_typeinfo.o)
 3947	_ZNK10__cxxabiv117__class_type_info29process_static_type_above_dstEPNS_19__dynamic_cast_infoEPKvS4_i	3140	symbol	match	-	154	byte	libc++	1	sysroot:libc++abi.a(private_typeinfo.o)
@@ -4100,7 +4100,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4234	ossl_rsa_check_key	2484	symbol	match	readings: address string	172	addr	openssl	1	openssl/O3/providers/common/libdefault-lib-securitycheck.o
 4235	ossl_prov_digest_copy	3245	symbol	match	-	94	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
 4236	ossl_prov_cipher_copy	3246	symbol	match	-	94	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-provider_util.o)
-4237	-	-	-	no-candidate	no symbol and no ledger pair	2688	none	libc++	0	-
+4237	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE26__parse_bracket_expressionIPKcEET_S7_S7_	3084	symbol	unresolved	ours +0x53 i32.const 1761: a table slot of ours: _ZNSt3__220__bracket_expressionIcNS_12regex_traitsIcEEEC2B8ne210108ERKS2_PNS_6__nodeIcEEbbb has no target function	2688	none	libc++	1	app/ecourna/app_dados_cserialmidia.cpp.o
 4238	X509_SIG_INFO_set	3247	symbol	match	-	30	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-x509_set.o)
 4239	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE16__push_lookaheadERKS3_bj	11222	symbol	match	readings: address symbol	170	none	libc++	1	app/ecourna/api_compression_icompressor.cpp.o
 4240	read_string_inner	2489	symbol	unresolved	self-voted +0x17 i32.const 1927764: read_string_inner.ps = 0x1d6a54 (evidence:vote:5 by:4240) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	1427	addr	openssl	1	openssl/O3/crypto/ui/libcrypto-lib-ui_openssl.o
@@ -4666,10 +4666,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4800	_ZZNSt3__236_Floating_to_chars_general_precisionB8ne210108IfEENS_15to_chars_resultEPcS2_T_iENKUlvE_clEv	5424	symbol	match	-	59	byte	libc++	1	sysroot:libc++.a(charconv.o)
 4801	_ZNSt3__234_Floating_to_chars_fixed_precisionB8ne210108IdEENS_15to_chars_resultEPcS2_T_i	5426	symbol	match	readings: address symbol	103	addr	libc++	1	sysroot:libc++.a(charconv.o)
 4802	_ZNSt3__239_Floating_to_chars_scientific_precisionB8ne210108IdEENS_15to_chars_resultEPcS2_T_i	5427	symbol	match	readings: address symbol	103	addr	libc++	1	sysroot:libc++.a(charconv.o)
-4803	-	-	-	no-candidate	no symbol and no ledger pair	1399	none	libc++	0	-
+4803	_ZNSt3__218_Floating_to_charsB8ne210108ILNS_27_Floating_to_chars_overloadE2EdEENS_15to_chars_resultEPcS3_T0_NS_12chars_formatEi	1116	symbol	match	readings: address string-tail,address string,address symbol	1399	none	libc++	1	sysroot:libc++.a(charconv.o)
 4804	_ZNSt3__234_Floating_to_chars_fixed_precisionB8ne210108IfEENS_15to_chars_resultEPcS2_T_i	5428	symbol	match	readings: address symbol	104	addr	libc++	1	sysroot:libc++.a(charconv.o)
 4805	_ZNSt3__239_Floating_to_chars_scientific_precisionB8ne210108IfEENS_15to_chars_resultEPcS2_T_i	5429	symbol	match	readings: address symbol	104	addr	libc++	1	sysroot:libc++.a(charconv.o)
-4806	-	-	-	no-candidate	no symbol and no ledger pair	560	none	libc++	0	-
+4806	_ZNSt3__218_Floating_to_charsB8ne210108ILNS_27_Floating_to_chars_overloadE1EdEENS_15to_chars_resultEPcS3_T0_NS_12chars_formatEi	3203	symbol	match	readings: address string-tail,address string,address symbol	560	none	libc++	1	sysroot:libc++.a(charconv.o)
 4807	_ZNSt3__218_Floating_to_charsB8ne210108ILNS_27_Floating_to_chars_overloadE0EdEENS_15to_chars_resultEPcS3_T0_NS_12chars_formatEi	5433	symbol	match	readings: address string-tail,address string,address symbol	294	addr	libc++	1	sysroot:libc++.a(charconv.o)
 4808	_ZNSt3__228__exception_guard_exceptionsIZNS_11__call_onceERVmPvPFvS3_EE3$_0ED2B8ne210108Ev	5364	symbol	match	readings: address symbol	134	addr	libc++	1	sysroot:libc++.a(call_once.o)
 4809	-	-	-	no-candidate	no symbol and no ledger pair	269	none	comum	0	-
@@ -4734,7 +4734,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4868	_ZThn4_N9NCompress6NLzma28CDecoder14QueryInterfaceERK4GUIDPPv	4131	symbol	match	-	14	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
 4869	_ZN9NCompress6NLzma28CDecoder7ReleaseEv	4132	symbol	match	-	40	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
 4870	_ZN9NCompress5NLzma8CDecoder4ReadEPvjPj	4109	symbol	unresolved	ours +0x13c call 2140: LzmaDec_DecodeToDic has no target function	562	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-4871	_ZN3api18CPolySingletonList3hasINS_5IUrnaEEEbRKNS_19TPolySingletonsInfoE	4978	symbol	unresolved	ours +0xb call 5142: byn$mgfn-shared$_ZN3api18CPolySingletonList3hasINS_5IBeepEEEbRKNS_19TPolySingletonsInfoE has no target function	15	none	app	1	app/100-uenux2-cpolysingleton-roots.o
+4871	_ZN3api18CPolySingletonList3hasINS_5IUrnaEEEbRKNS_19TPolySingletonsInfoE	4978	symbol	match	readings: address symbol	15	none	app	1	app/100-uenux2-cpolysingleton-roots.o
 4872	_ZN3api18CPolySingletonList3hasINS_9IResourceEEEbRKNS_19TPolySingletonsInfoE	4976	symbol	differs	+0x0 target the locals | ours the locals	15	none	app	1	app/100-uenux2-cpolysingleton-roots.o
 4873	_ZN3api18CPolySingletonList3hasINS_8IInputMTEEEbRKNS_19TPolySingletonsInfoE	4974	symbol	differs	+0xd8 target +0xd7 call 608 | ours +0xd7 call 305	345	none	libc++	1	app/100-uenux2-cpolysingleton-roots.o
 4874	_ZThn12_N9NCompress6NLzma28CEncoder14QueryInterfaceERK4GUIDPPv	4113	symbol	match	-	14	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
@@ -5020,8 +5020,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5154	-	-	-	no-candidate	no symbol and no ledger pair	387	none	unknown	0	-
 5155	_ZN7ecourna3api4util12_GLOBAL__N_116ConverteComSinalERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEPKcxxNS3_15source_locationE	5073	symbol	unresolved	ours +0x4f i32.const 1432: a table slot of ours: _ZN7ecourna3api4util12CStringUtils4TrimERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE has no target function	1382	none	ecourna	1	app/ecourna/api_util_cstringutils.cpp.o
 5156	-	-	-	no-candidate	no symbol and no ledger pair	12	none	comum	0	-
-5157	_ZNSt3__23setIiNS_4lessIiEENS_9allocatorIiEEEC2B8ne210108ESt16initializer_listIiERKS2_	4988	ledger	unresolved	ours +0x11a call 2266: _ZNSt3__26__treeIiNS_4lessIiEENS_9allocatorIiEEE7destroyEPNS_11__tree_nodeIiPvEE has no target function	288	shape	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
-5158	_ZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10940	ledger	unresolved	ours +0x3a i32.const 1496400: an address of ours: _ZGVZZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEENK3$_0clEcE10acentuadas (.bss) has no target symbol	291	shape	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
+5157	_ZNSt3__23setIiNS_4lessIiEENS_9allocatorIiEEEC2B8ne210108ESt16initializer_listIiERKS2_	4988	symbol	match	readings: address symbol,table slot	288	shape	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
+5158	_ZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10940	symbol	unresolved	self-voted +0x3a i32.const 1911848: _ZGVZZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEENK3$_0clEcE10acentuadas = 0x1d2c28 (evidence:vote:2 by:5158) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	291	shape	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
 5159	-	-	-	no-candidate	no symbol and no ledger pair	283	none	app	0	-
 5160	_ZN7ecourna3api3sql6sqlite13CSqlStatement6SetIntEii	4990	symbol	match	readings: address symbol,table slot,address srcloc	275	shape	ecourna	1	app/ecourna/api_sql_sqlite_csqlstatement.cpp.o
 5161	_ZN7ecourna3api3sql6sqlite13CSqlResultSet7GetBlobEi	4991	symbol	differs	+0x1c8 target +0x1c7 call 306 | ours +0x1c7 call 2671	476	none	ecourna	1	app/ecourna/api_sql_sqlite_csqlresultset.cpp.o
@@ -5131,7 +5131,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5265	-	-	-	no-candidate	no symbol and no ledger pair	356	none	RHVoice	0	-
 5266	-	-	-	no-candidate	no symbol and no ledger pair	552	none	RHVoice	0	-
 5267	-	-	-	no-candidate	no symbol and no ledger pair	600	none	RHVoice	0	-
-5268	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
+5268	_ZN7RHVoice8userdict4rule6appendINS0_10word_breakEEEvv	7785	symbol	match	readings: address symbol	17	none	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/userdict.cpp.o
 5269	-	-	-	no-candidate	no symbol and no ledger pair	1502	none	RHVoice	0	-
 5270	-	-	-	no-candidate	no symbol and no ledger pair	9073	none	RHVoice	0	-
 5271	_ZN7RHVoice9ukrainianD2Ev	4006	symbol	match	readings: address symbol	248	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/ukrainian.cpp.o
@@ -5296,7 +5296,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5430	-	-	-	no-candidate	no symbol and no ledger pair	948	none	vota	0	-
 5431	_ZN3api18CPolySingletonList3hasIN7ecourna3api8security4IRngEEEbRKNS_19TPolySingletonsInfoE	4964	symbol	differs	+0x0 target the locals | ours the locals	11	none	ecourna	1	app/100-uenux2-cpolysingleton-roots.o
 5432	_ZNSt3__28distanceB8ne210108IN7RHVoice3utf13text_iteratorINS_11__wrap_iterIPKcEEEEEENS_15iterator_traitsIT_E15difference_typeESA_SA_	4062	symbol	match	readings: address symbol,table slot	1278	shape	utf8cpp	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/english.cpp.o
-5433	-	-	-	no-candidate	no symbol and no ledger pair	943	none	RHVoice	0	-
+5433	_ZN7RHVoice15quality_settingC2Ev	5332	symbol	unresolved	self-voted ours +97: _ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN7RHVoice9quality_tEEENS_19__map_value_compareIS7_NS_4pairIKS7_S9_EENS8_3str4lessELb1EEENS5_ISE_EEE25__emplace_unique_key_argsIS7_JSE_EEENSC_INS_15__tree_iteratorISA_PNS_11__tree_nodeISA_PvEElEEbEERKT_DpOT0_ = func:1258 (evidence:call by:5433) comes from this function's own operand and no other match re-points through it	943	none	RHVoice	1	app/roots_rhvoice.o
 5434	-	-	-	no-candidate	no symbol and no ledger pair	11	none	ecourna	0	-
 5435	_ZN7RHVoice13enum_propertyI24RHVoice_punctuation_modeED0Ev	5671	symbol	match	readings: address symbol	65	addr	RHVoice	2	app/roots_rhvoice.o
 5436	-	-	-	no-candidate	no symbol and no ledger pair	11	none	app	0	-
@@ -5994,7 +5994,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6128	byn$mgfn-shared$_ZN13CInFileStream14QueryInterfaceERK4GUIDPPv	3111	symbol	match	readings: address symbol	960	addr	7zip	1	<binaryen>
 6129	-	-	-	no-candidate	no symbol and no ledger pair	466	none	vota	0	-
 6130	byn$mgfn-shared$_ZN8NArchive3N7z16CUInt32DefVector11ReserveDownEv	5095	symbol	match	-	205	none	7zip	1	<binaryen>
-6131	-	-	-	no-candidate	no symbol and no ledger pair	341	none	libc++	0	-
+6131	byn$mgfn-shared$_ZN3api18CPolySingletonList3hasINS_5IBeepEEEbRKNS_19TPolySingletonsInfoE	5142	symbol	differs	+0xd4 target +0xd3 call 608 | ours +0xd3 call 305	341	none	libc++	1	<binaryen>
 6132	-	-	-	no-candidate	no symbol and no ledger pair	341	none	libc++	0	-
 6133	byn$mgfn-shared$_ZN3api11IImpressora14DisableSensorsEh	5152	symbol	match	readings: table slot,address string,address symbol	415	none	api	1	<binaryen>
 6134	-	-	-	no-candidate	no symbol and no ledger pair	59	none	7zip	0	-
@@ -6725,10 +6725,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6859	RSA_verify_PKCS1_PSS_mgf1	2494	symbol	match	readings: address string,address symbol	1049	addr	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_pss.o
 6860	check_padding_md	3523	symbol	match	readings: address string	205	addr	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_pmeth.o
 6861	pkey_rsa_verifyrecover	3524	symbol	match	readings: address string	402	addr	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_pmeth.o
-6862	-	-	-	no-candidate	no symbol and no ledger pair	1244	none	libc++	0	-
+6862	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE22__parse_RE_dupl_symbolIPKcEET_S7_S7_PNS_16__owns_one_stateIcEEjj	5020	symbol	unresolved	ours +0x2a call 664: _ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE11__push_loopEmmPNS_16__owns_one_stateIcEEmmb has no target function	1244	none	libc++	1	app/ecourna/app_dados_cserialmidia.cpp.o
 6863	rsa_multiprime_keygen	3536	symbol	match	readings: address string,table slot,address symbol	2112	addr	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_gen.o
 6864	RSA_generate_multi_prime_key	3537	symbol	match	readings: address string,address symbol	1478	none	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_gen.o
-6865	-	-	-	no-candidate	no symbol and no ledger pair	637	none	libc++	0	-
+6865	_ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE18__parse_nondupl_REIPKcEET_S7_S7_	5021	symbol	unresolved	self-voted ours +bf: _ZNSt3__211basic_regexIcNS_12regex_traitsIcEEE26__parse_bracket_expressionIPKcEET_S7_S7_ = func:4237 (evidence:call by:6865) comes from this function's own operand and no other match re-points through it	637	none	libc++	1	app/ecourna/app_dados_cserialmidia.cpp.o
 6866	rsa_blinding_convert	3525	symbol	match	-	49	addr	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_ossl.o
 6867	-	-	-	no-candidate	no symbol and no ledger pair	110	none	openssl	0	-
 6868	RSA_padding_add_none	3527	symbol	match	readings: address string	97	addr	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_none.o
@@ -7711,7 +7711,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7845	_ZNSt3__26locale5__imp7installINS_10moneypunctIcLb1EEEEEvPT_	11585	symbol	match	readings: address symbol	17	none	libc++	1	sysroot:libc++.a(locale.o)
 7846	_ZNSt3__26locale5__imp7installINS_10moneypunctIcLb0EEEEEvPT_	11586	symbol	match	readings: address symbol	17	none	libc++	1	sysroot:libc++.a(locale.o)
 7847	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
-7848	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
+7848	_ZNSt3__26locale5__imp7installINS_7num_putIcNS_19ostreambuf_iteratorIcNS_11char_traitsIcEEEEEEEEvPT_	11589	symbol	match	readings: address symbol	17	none	libc++	1	sysroot:libc++.a(locale.o)
 7849	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 7850	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 7851	_ZNSt3__220__shared_ptr_emplaceIN9simulador10CWasmTimerENS_9allocatorIS2_EEED0Ev	10843	symbol	match	readings: address symbol	17	addr	libc++	2	app/49-uenux2-cwasmtimer-roots.o
@@ -7721,7 +7721,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7855	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 7856	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 7857	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
-7858	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
+7858	_ZNSt3__26locale5__imp7installINS_7codecvtIwc11__mbstate_tEEEEvPT_	11598	symbol	match	readings: address symbol	17	none	libc++	1	sysroot:libc++.a(locale.o)
 7859	_ZNSt3__27codecvtIwc11__mbstate_tEC2Em	11599	symbol	match	readings: address symbol,table slot	81	addr	libc++	1	sysroot:libc++.a(locale.o)
 7860	_ZNSt3__26locale5__imp7installINS_7codecvtIcc11__mbstate_tEEEEvPT_	11600	symbol	match	readings: address symbol	17	none	libc++	1	sysroot:libc++.a(locale.o)
 7861	_ZNSt3__26locale5__imp7installINS_5ctypeIwEEEEvPT_	11601	symbol	match	readings: address symbol	17	none	libc++	1	sysroot:libc++.a(locale.o)
@@ -7837,11 +7837,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7971	_ZNKSt3__27collateIcE10do_compareEPKcS3_S3_S3_	11709	symbol	match	-	94	byte	libc++	1	sysroot:libc++.a(locale.o)
 7972	_ZNSt3__211__stdoutbufIwE8overflowEi	11712	symbol	match	readings: address symbol	501	addr	libc++	1	sysroot:libc++.a(iostream.o)
 7973	_ZNSt3__211__stdoutbufIwE6xsputnEPKwl	11713	symbol	match	-	102	fingerprint	libc++	1	sysroot:libc++.a(iostream.o)
-7974	_ZNSt3__211__stdoutbufIwE5imbueERKNS_6localeE	11714	symbol	unresolved	ours +0x13 call 3180: _ZNSt3__29use_facetB8ne210108INS_7codecvtIwc11__mbstate_tEEEERKT_RKNS_6localeE has no target function	46	addr	libc++	1	sysroot:libc++.a(iostream.o)
+7974	_ZNSt3__211__stdoutbufIwE5imbueERKNS_6localeE	11714	symbol	match	-	46	addr	libc++	1	sysroot:libc++.a(iostream.o)
 7975	_ZNSt3__210__stdinbufIwE9pbackfailEi	11715	symbol	match	-	293	addr	libc++	1	sysroot:libc++.a(iostream.o)
 7976	_ZNSt3__210__stdinbufIwE5uflowEv	11716	symbol	match	-	9	addr	libc++	1	sysroot:libc++.a(iostream.o)
 7977	_ZNSt3__210__stdinbufIwE9underflowEv	11717	symbol	match	-	9	addr	libc++	1	sysroot:libc++.a(iostream.o)
-7978	_ZNSt3__210__stdinbufIwE5imbueERKNS_6localeE	11718	symbol	unresolved	ours +0x5 call 3180: _ZNSt3__29use_facetB8ne210108INS_7codecvtIwc11__mbstate_tEEEERKT_RKNS_6localeE has no target function	74	none	libc++	1	sysroot:libc++.a(iostream.o)
+7978	_ZNSt3__210__stdinbufIwE5imbueERKNS_6localeE	11718	symbol	unresolved	ours +0x44 call 2329: _ZNSt3__221__throw_runtime_errorEPKc has no target function	74	none	libc++	1	sysroot:libc++.a(iostream.o)
 7979	_ZNSt3__211__stdoutbufIcE8overflowEi	11719	symbol	match	-	290	fingerprint	libc++	1	sysroot:libc++.a(iostream.o)
 7980	_ZNSt3__211__stdoutbufIcE6xsputnEPKcl	11720	symbol	match	-	102	fingerprint	libc++	1	sysroot:libc++.a(iostream.o)
 7981	_ZNSt3__211__stdoutbufIcE5imbueERKNS_6localeE	11721	symbol	match	-	46	addr	libc++	1	sysroot:libc++.a(iostream.o)
@@ -7904,7 +7904,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8038	_ZThn8_NSt3__214basic_iostreamIcNS_11char_traitsIcEEED1Ev	11779	symbol	match	-	16	addr	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8039	_ZNSt3__214basic_iostreamIcNS_11char_traitsIcEEED1Ev	11780	symbol	match	-	13	addr	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8040	-	-	-	no-candidate	no symbol and no ledger pair	583	none	unknown	0	-
-8041	_ZNSt3__29use_facetB8ne210108INS_7num_putIcNS_19ostreambuf_iteratorIcNS_11char_traitsIcEEEEEEEERKT_RKNS_6localeE	11784	symbol	unresolved	ours +0x3 i32.const 1535764: an address of ours: _ZNSt3__27num_putIcNS_19ostreambuf_iteratorIcNS_11char_traitsIcEEEEE2idE (.bss) has no target symbol	12	none	unknown	1	sysroot:libc++.a(ios.instantiations.o)
+8041	_ZNSt3__29use_facetB8ne210108INS_7num_putIcNS_19ostreambuf_iteratorIcNS_11char_traitsIcEEEEEEEERKT_RKNS_6localeE	11784	symbol	match	readings: address symbol	12	none	unknown	1	sysroot:libc++.a(ios.instantiations.o)
 8042	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict14start_of_tokenENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info	7777	ledger	differs	+0xb target +0xa i32.const 469663 | ours +0xa i32.const 1101953 [ours 921840 = _ZTSNSt3__210shared_ptrIN7RHVoice8userdict10correctionEE27__shared_ptr_default_deleteIS3_NS2_14start_of_tokenEEE+0: address symbol _ZTSNSt3__210shared_ptrIN7RHVoice8userdict10correctionEE27__shared_ptr_default_deleteIS3_NS2_14start_of_tokenEEE → 0x10d081]	17	addr	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/userdict.cpp.o
 8043	_ZNSt3__215basic_streambufIcNS_11char_traitsIcEEE9sputbackcB8ne210108Ec	11786	symbol	match	-	74	byte	app	1	sysroot:libc++.a(ios.instantiations.o)
 8044	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict12end_of_tokenENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info	7780	ledger	differs	+0xb target +0xa i32.const 469505 | ours +0xa i32.const 1101650 [ours 921454 = _ZTSNSt3__210shared_ptrIN7RHVoice8userdict10correctionEE27__shared_ptr_default_deleteIS3_NS2_12end_of_tokenEEE+0: address symbol _ZTSNSt3__210shared_ptrIN7RHVoice8userdict10correctionEE27__shared_ptr_default_deleteIS3_NS2_12end_of_tokenEEE → 0x10cf52]	17	addr	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/userdict.cpp.o
@@ -8894,9 +8894,9 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9028	_ZN7ecourna3app5dados23CConfiguracaoMunicipiosC2ERKNS1_18CCabecalhoEntidadeERKNSt3__23mapI9CBaseTypeIjLj0ELj99999ELi6EENS1_22CConfiguracaoMunicipioENS6_4lessIS9_EENS6_9allocatorINS6_4pairIKS9_SA_EEEEEE	11112	symbol	match	readings: address symbol,table slot,address string,address srcloc	672	shape	ecourna	1	app/ecourna/app_dados_processoeleitoral_cconfiguracaomunicipios.cpp.o
 9029	-	-	-	no-candidate	no symbol and no ledger pair	34	none	unknown	0	-
 9030	_ZNK7ecourna3app5dados16CInformacaoMidia14GetAplicativosEv	11063	symbol	match	readings: address symbol,table slot,address string,address srcloc	260	shape	ecourna	1	app/ecourna/app_dados_midias_cinformacaomidia.cpp.o
-9031	_ZN7ecourna3app5dados16CInformacaoMidiaC2ENS2_10ETipoMidiaENS1_7CFaseIDE9CBaseTypeIjLj0ELj99999ELi0EERKNSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEES5_ItLt1ELt2ELi11EERKNS1_18CDadosGeracaoMidiaE	11064	symbol	unresolved	self-voted ours +6c: _ZN7ecourna3app5dados18CDadosGeracaoMidiaC2ERKS2_ = func:9032 (evidence:table by:9031) comes from this function's own operand and no other match re-points through it	457	shape	ecourna	1	app/ecourna/app_dados_midias_cinformacaomidia.cpp.o
-9032	_ZN7ecourna3app5dados18CDadosGeracaoMidiaC2ERKS2_	11065	symbol	unresolved	ours +0x156 i32.const 1863: a table slot of ours: _ZN7ecourna3app5dados26CIdentificadorGeradorMidiaC2ERKS2_ has no target function	477	none	unknown	1	app/ecourna/app_dados_midias_cinformacaomidia.cpp.o
-9033	_ZN7ecourna3app5dados16CInformacaoMidiaC2ENS1_7CFaseIDE9CBaseTypeIjLj0ELj99999ELi0EERKNSt3__212basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEES4_ItLt1ELt2ELi11EERKNS1_18CDadosGeracaoMidiaERKNS6_6vectorINS1_11CAplicativoENSA_ISK_EEEE	11066	ledger	unresolved	ours +0x15b i32.const 1841: a table slot of ours: _ZNSt3__235__uninitialized_allocator_copy_implB8ne210108INS_9allocatorIN7ecourna3app5dados11CAplicativoEEEPS5_S7_S7_EET2_RT_T0_T1_S8_ has no target function	474	shape	unknown	1	app/ecourna/app_dados_midias_cinformacaomidia.cpp.o
+9031	_ZN7ecourna3app5dados16CInformacaoMidiaC2ENS2_10ETipoMidiaENS1_7CFaseIDE9CBaseTypeIjLj0ELj99999ELi0EERKNSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEES5_ItLt1ELt2ELi11EERKNS1_18CDadosGeracaoMidiaE	11064	symbol	match	readings: address symbol,table slot,address string,address srcloc	457	shape	ecourna	1	app/ecourna/app_dados_midias_cinformacaomidia.cpp.o
+9032	_ZN7ecourna3app5dados18CDadosGeracaoMidiaC2ERKS2_	11065	symbol	differs	+0x10b target +0x10a call 306 | ours +0x10a call 2671	477	none	unknown	1	app/ecourna/app_dados_midias_cinformacaomidia.cpp.o
+9033	_ZN7ecourna3app5dados16CInformacaoMidiaC2ENS1_7CFaseIDE9CBaseTypeIjLj0ELj99999ELi0EERKNSt3__212basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEES4_ItLt1ELt2ELi11EERKNS1_18CDadosGeracaoMidiaERKNS6_6vectorINS1_11CAplicativoENSA_ISK_EEEE	11066	symbol	match	readings: address symbol,table slot	474	shape	unknown	1	app/ecourna/app_dados_midias_cinformacaomidia.cpp.o
 9034	-	-	-	no-candidate	no symbol and no ledger pair	474	none	unknown	0	-
 9035	_ZNK7ecourna3app5dados13CAutenticacao16GetDataHoraFinalEv	11069	symbol	match	readings: address symbol,table slot,address string,address srcloc	272	shape	ecourna	1	app/ecourna/app_dados_midias_cautenticacao.cpp.o
 9036	_ZNK7ecourna3app5dados13CAutenticacao18GetDataHoraInicialEv	11070	symbol	match	readings: address symbol,table slot,address string,address srcloc	269	shape	ecourna	1	app/ecourna/app_dados_midias_cautenticacao.cpp.o
@@ -9023,11 +9023,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9157	_ZNK7ecourna3api3asn13IConversorASNIN24ModuloParametrizacaoUrna15TituloRelatorioENS_3app5dados16CTituloRelatorioEE8ConverteERKS7_	11256	symbol	match	readings: address srcloc,address symbol	21	none	app	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 9158	_ZN7ecourna3api9exception10CBaseErrorINS_3app5dados3asn27EAsnParametrizacaoUrnaErrorEXtlNS1_12SErrorLimitsELi2560ELi2585EEEEC2ES6_NSt3__212basic_stringIcNS9_11char_traitsIcEENS9_9allocatorIcEEEENS9_15source_locationE	11273	symbol	match	readings: address symbol	18	shape	ecourna	2	app/ecourna/app_dados_asn_parametrizacaourna_cconversorlabelparametrizado.cpp.o
 9159	_ZNK7ecourna3api3asn13IConversorASNIN24ModuloParametrizacaoUrna18LabelParametrizadoENS_3app5dados19CLabelParametrizadoEE8ConverteERKS7_	11258	symbol	match	readings: address srcloc,address symbol	21	none	app	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
-9160	-	-	-	no-candidate	no symbol and no ledger pair	26	none	asn1-modules	0	-
-9161	-	-	-	no-candidate	no symbol and no ledger pair	309	none	ASN1	0	-
+9160	_ZN4ASN111SEQUENCE_OFIN24ModuloParametrizacaoUrna15TituloRelatorioENS_15EmptyConstraintEEC2INS4_14const_iteratorEEET_S7_	11259	symbol	differs	+0x0 target the locals | ours the locals	26	none	asn1-modules	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
+9161	_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna18ConverterCabecalhoERKNSt3__26vectorINS1_16CTituloRelatorioENS4_9allocatorIS6_EEEE	11260	symbol	match	readings: address content-repointed,address symbol,table slot	309	none	ASN1	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 9162	_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna30ConverterFormaSuspenderComVotoENS1_15CParametrosUrna22EFormaSuspenderComVotoE	11261	symbol	match	readings: address symbol,address content-repointed,address srcloc,table slot,address string	41	shape	asn1-modules	2	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 9163	_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna30ConverterFormaSuspenderSemVotoENS1_15CParametrosUrna22EFormaSuspenderSemVotoE	11262	symbol	match	readings: address symbol,address content-repointed,address srcloc,table slot,address string	41	shape	asn1-modules	2	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
-9164	-	-	-	no-candidate	no symbol and no ledger pair	3821	none	asn1-modules	0	-
+9164	_ZNK7ecourna3app5dados3asn24CConversorParametrosUrna10DoConverteERKNS1_15CParametrosUrnaE	11263	symbol	unresolved	self-voted ours +2af: _ZN4ASN111SEQUENCE_OFIN24ModuloParametrizacaoUrna15TituloRelatorioENS_15EmptyConstraintEEC2INS4_14const_iteratorEEET_S7_ = func:9160 (evidence:table by:9164) comes from this function's own operand and no other match re-points through it	3821	none	asn1-modules	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 9165	_ZN9simulador11CWasmScreen12DrawTriangleERKN3api6SPointES4_S4_NS1_6TColorEi	6481	symbol	match	-	65	byte	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp.o
 9166	__cxx_global_array_dtor@app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o	11264	symbol	match	readings: address symbol	36	addr	app	2	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 9167	_ZNK7ecourna3app5dados3asn28CConversorLabelParametrizado12DoDeconverteERKN24ModuloParametrizacaoUrna18LabelParametrizadoE	11272	symbol	differs	+0x37 target +0x32 br_table [1 2 4 0 3] 2 | ours +0x32 br_table [1 2 4 3 0] 2	1131	none	ecourna	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorlabelparametrizado.cpp.o
@@ -9045,15 +9045,15 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9179	_ZNK7ecourna3app5dados3asn25CConversorInformacaoMidia12DoDeconverteERKN21ModuloInformacaoMidia15InformacaoMidiaE	11082	symbol	unresolved	ours +0xbf i32.const 287612: an address of ours: source_location not in the target	2247	none	ecourna	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9180	_ZNK7ecourna3api3asn13IConversorASNIN21ModuloInformacaoMidia10AplicativoENS_3app5dados11CAplicativoEE8ConverteERKS7_	11083	symbol	match	readings: address srcloc,address symbol	21	none	app	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9181	_ZN7ecourna3api9exception10CBaseErrorINS_3app5dados3asn15EAsnMidiasErrorEXtlNS1_12SErrorLimitsELi2485ELi2510EEEEC2ES6_NSt3__212basic_stringIcNS9_11char_traitsIcEENS9_9allocatorIcEEEENS9_15source_locationE	11101	symbol	match	readings: address symbol	18	shape	ecourna	2	app/ecourna/app_dados_asn_midias_cconversoraplicativo.cpp.o
-9182	-	-	-	no-candidate	no symbol and no ledger pair	492	none	asn1-modules	0	-
-9183	-	-	-	no-candidate	no symbol and no ledger pair	27	none	app	0	-
+9182	_ZN21ModuloInformacaoMidia15InformacaoMidia15set_aplicativosERKN4ASN111SEQUENCE_OFINS_10AplicativoENS1_15EmptyConstraintEEE	11085	symbol	unresolved	self-voted ours +e9: _ZNSt3__26vectorIPN4ASN112AbstractDataENS_9allocatorIS3_EEE6insertENS_11__wrap_iterIPKS3_EEOS3_ = func:1076 (evidence:table by:9182) comes from this function's own operand and no other match re-points through it	492	none	asn1-modules	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
+9183	_ZN7ecourna3app5dados3asn25CConversorInformacaoMidia19ConverteAplicativosERKNSt3__26vectorINS1_11CAplicativoENS4_9allocatorIS6_EEEERKNS2_20CConversorAplicativoE	11086	symbol	differs	+0x0 target the locals | ours the locals	27	none	app	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9184	_ZN9simulador11CWasmScreen13DrawRoundRectERKN3api5SRectEiNS1_6TColorEi	6503	symbol	match	readings: address string,address content-repointed	202	addr	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp.o
-9185	-	-	-	no-candidate	no symbol and no ledger pair	560	none	app	0	-
+9185	_ZNSt3__235__uninitialized_allocator_copy_implB8ne210108INS_9allocatorIN7ecourna3app5dados11CAplicativoEEEPS5_S7_S7_EET2_RT_T0_T1_S8_	11087	symbol	differs	+0x19b target +0x19a call 306 | ours +0x19a call 2671	560	none	app	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9186	_ZNK7ecourna3api3asn13IConversorASNIN21ModuloInformacaoMidia17DadosGeracaoMidiaENS_3app5dados18CDadosGeracaoMidiaEE8ConverteERKS7_	11088	symbol	match	readings: address srcloc,address symbol	21	none	app	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9187	_ZNK7ecourna3api3asn13IConversorASNIN21ModuloTiposEleitorais5TurnoE9CBaseTypeItLt1ELt2ELi11EEE8ConverteERKS6_	11089	symbol	match	readings: address srcloc,address symbol	20	none	app	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9188	_ZNK7ecourna3api3asn13IConversorASNIN21ModuloTiposEleitorais4FaseENS_3app5dados7CFaseIDEE8ConverteERKS7_	11090	symbol	match	readings: address srcloc,address symbol	20	none	app	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9189	_ZNK7ecourna3app5dados3asn25CConversorInformacaoMidia17ConverteTipoMidiaENS1_16CInformacaoMidia10ETipoMidiaE	11091	symbol	match	readings: address symbol,address content-repointed,address srcloc,table slot,address string	41	shape	asn1-modules	2	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
-9190	_ZNK7ecourna3app5dados3asn25CConversorInformacaoMidia10DoConverteERKNS1_16CInformacaoMidiaE	11092	symbol	unresolved	ours +0x48a i32.const 1841: a table slot of ours: _ZNSt3__235__uninitialized_allocator_copy_implB8ne210108INS_9allocatorIN7ecourna3app5dados11CAplicativoEEEPS5_S7_S7_EET2_RT_T0_T1_S8_ has no target function	1731	none	ecourna	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
+9190	_ZNK7ecourna3app5dados3asn25CConversorInformacaoMidia10DoConverteERKNS1_16CInformacaoMidiaE	11092	symbol	unresolved	self-voted +0x185 i32.const 1913072: _ZN21ModuloTiposEleitorais7SiglaUF7theInfoE = 0x1d30f0 (evidence:vote:1 by:9190) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	1731	none	ecourna	1	app/ecourna/app_dados_asn_midias_cconversorinformacaomidia.cpp.o
 9191	_ZNK7ecourna3app5dados3asn15CConversorTurno12DoDeconverteERKN21ModuloTiposEleitorais5TurnoE	11302	symbol	match	readings: address symbol,table slot,address string,address srcloc	274	shape	ecourna	1	app/ecourna/app_dados_asn_cconversorturno.cpp.o
 9192	_ZNK7ecourna3app5dados3asn15CConversorTurno10DoConverteERK9CBaseTypeItLt1ELt2ELi11EE	11304	symbol	match	readings: address symbol,table slot,address string,address srcloc,address content-repointed	301	shape	ecourna	1	app/ecourna/app_dados_asn_cconversorturno.cpp.o
 9193	_ZNK7ecourna3app5dados3asn14CConversorFase12DoDeconverteERKN21ModuloTiposEleitorais4FaseE	11300	symbol	unresolved	ours +0x7c i32.const 277680: an address of ours: source_location not in the target	478	shape	ecourna	1	app/ecourna/app_dados_asn_cconversorfase.cpp.o
@@ -9121,8 +9121,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9255	__cxx_global_array_dtor@app/ecourna/app_dados_tiposbasicos.cpp.o	11145	symbol	match	readings: address symbol	36	addr	unknown	2	app/ecourna/app_dados_tiposbasicos.cpp.o
 9256	-	-	-	no-candidate	no symbol and no ledger pair	1295	none	ecourna	0	-
 9257	_ZNK7ecourna3app5dados12CSerialMidia8ToStringEv	11120	symbol	match	-	9	shape	app	1	app/ecourna/app_dados_cserialmidia.cpp.o
-9258	_ZN7ecourna3app5dados12CSerialMidia12ValidaSerialERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	11123	symbol	unresolved	ours +0x16 call 5025: _ZNSt3__211basic_regexIcNS_12regex_traitsIcEEEC2B8ne210108EPKcNS_15regex_constants18syntax_option_typeE has no target function	319	none	app	1	app/ecourna/app_dados_cserialmidia.cpp.o
-9259	_ZN7ecourna3app5dados12CSerialMidiaC2ERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	11121	symbol	unresolved	self-voted ours +25: _ZN7ecourna3app5dados12CSerialMidia12ValidaSerialERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE = func:9258 (evidence:table by:9259) comes from this function's own operand and no other match re-points through it	1057	none	ecourna	1	app/ecourna/app_dados_cserialmidia.cpp.o
+9258	_ZN7ecourna3app5dados12CSerialMidia12ValidaSerialERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	11123	symbol	unresolved	self-voted ours +16: _ZNSt3__211basic_regexIcNS_12regex_traitsIcEEEC2B8ne210108EPKcNS_15regex_constants18syntax_option_typeE = func:2416 (evidence:call by:9258) comes from this function's own operand and no other match re-points through it	319	none	app	1	app/ecourna/app_dados_cserialmidia.cpp.o
+9259	_ZN7ecourna3app5dados12CSerialMidiaC2ERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	11121	symbol	unresolved	self-voted ours +37e: _ZN7ecourna3api4util12CStringUtils16HexStringToBytesERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE = func:3506 (evidence:table by:9259) comes from this function's own operand and no other match re-points through it	1057	none	ecourna	1	app/ecourna/app_dados_cserialmidia.cpp.o
 9260	_ZNK7ecourna3app5dados29CRegistroIdentificacaoEleitor25GetIdentificadorPrincipalEv	11124	symbol	match	readings: address symbol,table slot,address string,address srcloc	295	shape	ecourna	1	app/ecourna/app_dados_cregistroidentificacaoeleitor.cpp.o
 9261	_ZN9simulador11CWasmScreen14GetFontMetricsERsS1_RKN3api5SFontERKNSt3__212basic_stringIcNS6_11char_traitsIcEENS6_9allocatorIcEEEE	6590	symbol	match	-	45	fingerprint	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp.o
 9262	_ZNK7ecourna3app5dados25CNumeroInscricaoEleitoral9FormatadoEv	11312	symbol	match	readings: address symbol,table slot,address string	289	addr	ecourna	1	app/ecourna/app_dados_cnumeroinscricaoeleitoral.cpp.o
@@ -9265,7 +9265,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9399	-	-	-	no-candidate	no symbol and no ledger pair	77	none	boost	0	-
 9400	-	-	-	no-candidate	no symbol and no ledger pair	572	none	unknown	0	-
 9401	-	-	-	no-candidate	no symbol and no ledger pair	777	none	libc++	0	-
-9402	__cxx_global_array_dtor@app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o	10939	ledger	unresolved	ours +0x1 i32.const 1496388: an address of ours: _ZZZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEENK3$_0clEcE10acentuadas (.bss) has no target symbol	18	addr	unknown	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
+9402	__cxx_global_array_dtor@app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o	10939	symbol	match	readings: address symbol	18	addr	unknown	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
 9403	__cxx_global_array_dtor@app/ecourna/api_security_caescipher.cpp.o	10990	ledger	unresolved	ours +0x1 i32.const 1496352: an address of ours: _ZN7ecourna3api8security12_GLOBAL__N_16CIFRASE (.bss) has no target symbol	18	addr	unknown	1	app/ecourna/api_security_caescipher.cpp.o
 9404	-	-	-	no-candidate	no symbol and no ledger pair	608	none	unknown	0	-
 9405	-	-	-	no-candidate	no symbol and no ledger pair	706	none	simulador	0	-
@@ -9460,7 +9460,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9594	_ZNK7RHVoice20enum_string_property11check_valueERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERS7_	7709	symbol	unresolved	ours +0x30 call 388: _ZNK7RHVoice3str4lessclERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_ has no target function	211	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/voice.cpp.o
 9595	_ZN7RHVoice20enum_string_propertyD0Ev	7710	symbol	match	readings: address symbol	125	addr	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/voice.cpp.o
 9596	_ZN7RHVoice13enum_propertyI21RHVoice_capitals_modeED2Ev	3433	ledger	differs	+0x4 target +0x3 i32.const 1618740 | ours +0x3 i32.const 1585880 [ours 1268772 = _ZTVN7RHVoice13enum_propertyI21RHVoice_capitals_modeEE+8: address symbol _ZTVN7RHVoice13enum_propertyI21RHVoice_capitals_modeEE → 0x1832d8]	62	addr	RHVoice	2	app/roots_rhvoice.o
-9597	_ZN7RHVoice13resource_infoINS_5voiceEED2Ev	2678	symbol	unresolved	ours +0x7 call 5123: byn$mgfn-shared$_ZN7RHVoice13resource_infoINS_8languageEED2Ev has no target function	12	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/voice.cpp.o
+9597	_ZN7RHVoice13resource_infoINS_5voiceEED2Ev	2678	symbol	match	readings: address symbol	12	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/voice.cpp.o
 9598	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice19str_hts_engine_implENS_10shared_ptrINS1_15hts_engine_implEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7838	symbol	match	readings: address symbol	18	addr	libc++	2	rhvoice/1.14.0-cxx14-O3-ndebug/obj/str_hts_engine_impl.cpp.o
 9599	_ZNK7RHVoice10voice_info15create_instanceEv	7711	symbol	unresolved	ours +0x22 i32.const 7585: a table slot of ours: _ZN7RHVoice15hts_engine_poolC2ERKNS_10voice_infoE has no target function	227	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/voice.cpp.o
 9600	_ZNK7RHVoice10voice_info10is_enabledEv	7713	symbol	match	-	86	byte	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/voice.cpp.o
@@ -9673,7 +9673,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9807	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_115feat_pos_in_sylENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info	10402	symbol	match	readings: address symbol	17	addr	libc++	2	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 9808	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_126syl_vowel_feature_functionENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info	10403	symbol	match	readings: address symbol	17	addr	libc++	2	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 9809	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_124phoneme_feature_functionENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info	10404	symbol	match	readings: address symbol	17	addr	libc++	2	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
-9810	_ZN7RHVoice13resource_infoINS_8languageEED2Ev	3055	symbol	unresolved	ours +0x7 call 5123: byn$mgfn-shared$_ZN7RHVoice13resource_infoINS_8languageEED2Ev has no target function	12	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
+9810	_ZN7RHVoice13resource_infoINS_8languageEED2Ev	3055	symbol	match	readings: address symbol	12	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 9811	_ZNK7RHVoice5dtree13item_features4evalERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE	10409	symbol	unresolved	ours +0x24 i32.const 2891: a table slot of ours: _ZNK7RHVoice4item4evalERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_5valueE has no target function	71	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 9812	_ZNK7RHVoice12_GLOBAL__N_113feat_utt_type4evalERKNS_4itemE	10410	symbol	differs	+0x1 target the locals | ours the locals	97	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 9813	_ZN7RHVoice16feature_functionD2Ev	10411	symbol	match	readings: address symbol	12	addr	RHVoice	2	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
@@ -9735,7 +9735,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9869	_ZNK7RHVoice8language25decode_as_known_characterERNS_4itemERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10507	symbol	unresolved	ours +0x4c i32.const 2777: a table slot of ours: the target function is in no table slot	563	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 9870	_ZNK7RHVoice8language25decode_as_letter_sequenceERNS_4itemERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10509	symbol	unresolved	ours +0x12 call 4910: _ZNK7RHVoice8language22default_decode_as_wordERNS_4itemERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE has no target function	216	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 9871	_ZNK7RHVoice8language14decode_as_wordERNS_4itemERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10510	symbol	unresolved	ours +0x7 call 4910: _ZNK7RHVoice8language22default_decode_as_wordERNS_4itemERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE has no target function	11	none	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
-9872	-	-	-	no-candidate	no symbol and no ledger pair	153	none	unknown	0	-
+9872	_ZN7ecourna3app5dados26CIdentificadorGeradorMidiaC2ERKS2_	11067	symbol	differs	+0x1 target the locals | ours the locals	153	none	unknown	1	app/ecourna/app_dados_midias_cdadosgeracaomidia.cpp.o
 9873	-	-	-	no-candidate	no symbol and no ledger pair	54	none	unknown	0	-
 9874	__cxx_global_array_dtor@rhvoice/1.14.0-cxx14-O3-ndebug/obj/item.cpp.o	7956	ledger	unresolved	ours +0x1 i32.const 1525244: an address of ours: _ZN7RHVoice4item11empty_valueE (.bss) has no target symbol	28	addr	unknown	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/item.cpp.o
 9875	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice18data_only_languageENS_10shared_ptrINS1_8languageEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	8383	symbol	match	readings: address symbol	17	addr	libc++	2	rhvoice/1.14.0-cxx14-O3-ndebug/obj/data_only_language.cpp.o
@@ -13903,7 +13903,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 14037	null_freectx	6684	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_null.o
 14038	null_newctx	6685	symbol	match	readings: address string	13	addr	openssl	1	openssl/O3/providers/implementations/ciphers/libdefault-lib-cipher_null.o
 14039	ossl_cipher_cbc_cts_block_update	5549	symbol	match	-	1216	fingerprint	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_cts.o)
-14040	_ZNKSt3__210__back_refIcE6__execERNS_7__stateIcEE	11193	symbol	unresolved	ours +0x94 call 2278: _ZNSt3__219__throw_regex_errorB8ne210108ILNS_15regex_constants10error_typeE4EEEvv has no target function	153	none	libc++	1	app/ecourna/api_compression_icompressor.cpp.o
+14040	_ZNKSt3__210__back_refIcE6__execERNS_7__stateIcEE	11193	symbol	match	-	153	none	libc++	1	app/ecourna/api_compression_icompressor.cpp.o
 14041	ossl_cipher_cbc_cts_mode_id2name	5550	symbol	match	readings: address content-repointed	32	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_cts.o)
 14042	chacha_poly1305_tls_iv_set_fixed	11939	symbol	match	-	80	byte	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_chacha20_poly1305_hw.o)
 14043	chacha_poly1305_tls_init	11940	symbol	match	-	178	addr	openssl	1	openssl/O3/libcrypto.a(libdefault-lib-cipher_chacha20_poly1305_hw.o)
