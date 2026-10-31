@@ -37,6 +37,34 @@
 
 namespace ASN1 {
 
+int lexicographic_compare_bytes(const char* first1, size_t size1,
+                const char* first2, size_t size2)
+{
+  if(size1 > size2)
+    return 1;
+  if(size1 < size2)
+    return -1;
+
+  if (first1 == 0 && first2 == 0)
+    return 0;
+  if (first1 == first2)
+    return 0;
+
+  int r;
+  for (; size1; ++first1, --size1, ++first2)
+  {
+    r = *first1 - *first2;
+    if (r != 0) return r;
+  }
+
+  return 0;
+}
+
+bool INTEGER::isValid() const
+{
+  return getConstraintType() == ExtendableConstraint || isStrictlyValid();
+}
+
 bool INTEGER::isStrictlyValid() const
 {
   if (getConstraintType() == Unconstrained)
