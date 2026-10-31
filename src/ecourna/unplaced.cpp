@@ -706,9 +706,6 @@
 
 // link-order cluster 1361 · uses=78
 
-// f283 · 18 B · unmatched · placement: link order · name unknown
-// ? f283(i32, i32, i32, i32) { ... }
-
 // f282 · 340 B · unmatched · placement: link order · name unknown
 // void f282(i32, i32) { ... }
 

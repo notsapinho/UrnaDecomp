@@ -19,10 +19,16 @@ namespace comum {
 // 12092); one defined in the class gives the same bytes, one defined out of line a call in the deleting one.
 // They store no vptr of this class, which clang leaves out of a destructor that destroys members only when the class
 // is final. Slots 4, 5 and 7 hold the target's empty bodies (fns 218 and 425, shared by many classes); that they are
-// defined in the class is a choice. The constructor, ValidaTipoBiometria and GetCaminhoCorretoInternal/External (fn
-// 5821) are not reconstructed, so not declared. The types of +68 and +84 and every member name are chosen.
+// defined in the class is a choice. The constructor (fn 3796) and ValidaTipoBiometria, which clang inlines into it, are
+// in cgravadorwsq.cpp; GetCaminhoCorretoInternal/External (fn 5821) are not reconstructed, so not declared. The
+// constructor's parameter types beyond the record's IResultado ones, the types of +68 and +84 and every member name
+// are chosen.
 class CGravadorWSQ final : public IGravador {
 public:
+    CGravadorWSQ(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao,
+        char fase, EExtensaoArquivoResultado extensao, ESavdArquivoUE arquivoSavd, unsigned int tipoBiometria,
+        bool gravaMidiaExterna);
+
     virtual void Slot2() override;
     virtual void Slot3() override;
     virtual void Slot4() override {}
@@ -31,6 +37,8 @@ public:
     virtual void GravaResultado(api::CFile&) const override {}
 
 private:
+    void ValidaTipoBiometria() const;
+
     api::CDateTime m_dataHora;
     EUrnaFase m_faseUrna;
     std::string m_arquivoChave;

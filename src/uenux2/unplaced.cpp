@@ -1761,23 +1761,6 @@
 // f11626 · 1508 B · unmatched · placement: link order · name unknown
 // void f11626(i32, i32) { ... }
 
-// link-order cluster 524 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgravadorenvelopearquivo.cpp
-
-// f11634 · 438 B · unmatched · placement: link order · name unknown
-// void f11634(i32) { ... }
-
-// f11633 · 438 B · unmatched · placement: link order · name unknown
-// void f11633(i32) { ... }
-
-// f11632 · 608 B · unmatched · placement: link order · name unknown
-// void f11632(i32) { ... }
-
-// f11631 · 608 B · unmatched · placement: link order · name unknown
-// void f11631(i32) { ... }
-
-// f11630 · 1207 B · unmatched · placement: link order · name unknown
-// void f11630(i32) { ... }
-
 // link-order cluster 525 · uses=1 · neighbours' file uenux2/src/app/comum/dados/ccopiadorwsqmr.cpp
 
 // f11638 · 12 B · unmatched · placement: link order · name unknown

@@ -24,8 +24,9 @@ enum EExtensaoArquivoResultado : int;
 // Recovered: the layout (40 bytes) and the virtual members. The vtable (@1541020) is the destructors and two pure
 // slots; comum::IGravador derives from the class and fills both. The constructor (record iresultado.cpp:40) is inlined
 // into IGravador's, fn 1396, which stores its arguments, in the record's order, at +4, +8, +12, +16, the fase at +18,
-// the file name fn 3798 (CGravadorUtil::DeterminaNomeArquivoSemLetra) builds from them at +20, then +32 and +36; it
-// is not reconstructed, so not declared. The destructor is defined in the class: every derived class's destructor
+// the file name fn 3798 (CGravadorUtil::DeterminaNomeArquivo) builds from them at +20, then +32 and +36, and then
+// throws when the fase is not 'o', 's' or 't'; binaryen inlined it there (its stack frame ends before IGravador's vptr
+// store), so it is out of line in iresultado.cpp. The destructor is defined in the class: every derived class's destructor
 // inlines it (fn 11576: the vptr store of 1541028 and the free of the string at +20; defined out of line, it is a
 // call there), so the class has no key function: its vtable and typeinfo lie among those of vota::CGravaResultado's
 // TU, which builds the recorders. Its own body is fn 12090, slot 0 of this vtable, of IGravador's and of
@@ -33,6 +34,8 @@ enum EExtensaoArquivoResultado : int;
 // in the target.
 class IResultado {
 public:
+    IResultado(TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao, char fase,
+        EExtensaoArquivoResultado extensao, ESavdArquivoUE arquivoSavd);
     virtual ~IResultado() = default;
 
     virtual void Slot2() = 0;
