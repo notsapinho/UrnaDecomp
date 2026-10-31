@@ -374,9 +374,11 @@ Each was compiled, not guessed:
 2. **An out-of-line ctor keeps its returned `this`.** Every caller of `CIoError`'s ctor keeps the returned `this`
    (`local.set`); a same-TU or inline definition makes LLVM drop it. Hence `api/io/cioerror.cpp` is its own TU (its
    data sits between `cfile.cpp`'s records and `base64.cpp`'s).
-3. **An inline ctor can win the link from a uenux2 TU.** `CFile`'s ctor (func 517) is a branchy
-   `if (!nome.empty())` with no load speculation: the COMDAT copy of a uenux2 user won the link, not the ecourna
-   one. It is inline in `cfile.hpp`, and the skeleton gets that copy from `src/units/03-ecourna-api-io-util-roots.cpp`.
+3. **A landing pad says which tree compiled a body.** `CFile`'s ctor (func 517) calls `Open` through
+   `invoke_iiiii` and destroys `m_nome` in its landing pad, which only an `-fexceptions` object gives, and uenux2's
+   callers (2767) call it rather than inline it: it is out of line in `cfile.cpp`. Its branches on the two size words
+   come from `if (nome != "")`; `!nome.empty()`, `size() > 0`, `length() != 0` and an early return each compile to a
+   `select` at ecourna's flags, and `!nome.empty()` does at `-O2`, `-Os` and `-Oz` too (unit 03's fragment).
 4. **A validator called through a slot is external.** `CSerialMidia`'s validator (func 9258) is a static member; a
    file-local one is inlined. Its body is `std::regex formato("([A-Fa-f0-9]{8})"); return
    std::regex_match(serial, formato);`, the overload without a caller `smatch` (the target's frame zeroes the
