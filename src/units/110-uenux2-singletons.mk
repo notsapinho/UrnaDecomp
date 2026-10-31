@@ -72,9 +72,10 @@
 # Names: 407, 555, 187, 1073, 1926 and 2817 are srcloc-anchors. Their mutexes hold through their exit destructors, which
 # the content pass pairs once the name is voted, and through the thunk. A record held by a function that inlines GetInst
 # anchors nothing, so 273, 326 and 2812 have hand edits of `s_mutex`, and CRespostas's pointer one too, with 1929, whose
-# twin 1932 stops the census; the content pass then pairs 5730. 555's and 2817's pointers have one voter, since 555's
-# destructor cannot land and 2817's, 11510, is a thunk of fn 349 that casts no vote, so they have hand edits too. Each line in splat/symbol_addrs.txt cites what the thunk's own body holds
-# and the other holders.
+# twin 1932 stops the census; the content pass then pairs 5730. 555's and 2817's pointers have one voter each, so they have
+# hand edits too. 555's destructor cannot land, and the build refuses the name without its line. 2817's, 11510, has matched
+# since fn 349's merge formed, and the build holds that name with no line, so CHV's is left over. Each line in
+# splat/symbol_addrs.txt cites what the thunk's own body holds and the other holders.
 #
 # 5805, ~CCargos, has two target callers: 11561, written here, and 7787, which is not. The roots' d5805 stands for 7787 and
 # goes when 7787 lands: with 11561 alone binaryen inlines the destructor, 11561 changes shape, CCargos's pointer loses its

@@ -61,7 +61,8 @@
 # them and the pair of static destructors. Three data lines are hand edits of kind callers+content, for objects no vote
 # reaches: CMonitoraAlimentacao::s_inst, whose only voter is 1898 (10226 throws beside GetInst's record when it is null, and
 # 10231 is its static destructor), and fn 509's two statics. With those, 509 and 13685 pair by content, with no line of
-# their own in the symbol file.
+# their own in the symbol file. Since 10231 matched, the build holds CMonitoraAlimentacao::s_inst with no line, so that
+# one is left over.
 #
 # Chosen, no evidence names them: GetInst for the three threads and fn 509 (the tree's accessors are spelled so); Stop,
 # TrataErro, ParaOutrasThreads, Espera; the class and path of fn 509's CEstadoAudio, its members' names and bool for its three flags; m_contexto,
