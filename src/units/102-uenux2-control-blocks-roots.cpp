@@ -50,7 +50,6 @@
 #include "api/gui/ctextfieldupdate.h"
 #include "api/gui/iinputvalidation.h"
 #include "api/persistencia/idao.h"
-#include "api/util/ctimer.h"
 #include "app/comum/ccopiadormr.h"
 #include "app/comum/comparecimentomesario/dao/icomparecimentomesariodao.h"
 #include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
@@ -91,7 +90,6 @@ extern const char w102_vt_cimagefieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr
 extern const char w102_vt_ctextfieldblinking[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api18CTextFieldBlinkingENS_9allocatorIS2_EEEE");
 extern const char w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api21BatteryIconDataSourceILNS1_17CPowerInformation15IconOrientationE0EEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cmovie[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CMovieENS_9allocatorIS2_EEEE");
-extern const char w102_vt_ctimer[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CTimerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cwavfile[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cdatatext_crespostasdsnumero[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIN5comum18CRespostasDSNumeroEEENS_9allocatorIS5_EEEE");
@@ -273,10 +271,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<comum::CCopiadorWSQMR> w102_c
 {
     return std::make_shared<comum::CCopiadorWSQMR>();
 }
-__attribute__((optnone, noinline)) std::shared_ptr<api::CTimer> w102_timer(std::chrono::milliseconds intervalo)
-{
-    return std::make_shared<api::CTimer>(intervalo);
-}
 __attribute__((optnone, noinline)) std::shared_ptr<api::Logger> w102_logger()
 {
     return std::make_shared<api::Logger>();
@@ -315,7 +309,6 @@ struct SW102Roots {
         w102_sink = w102_vt_ctextfieldblinking;
         w102_sink = w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0;
         w102_sink = w102_vt_cmovie;
-        w102_sink = w102_vt_ctimer;
         w102_sink = w102_vt_logger;
         w102_sink = w102_vt_cwavfile;
         w102_sink = w102_vt_cdatatext_crespostasdsnumero;

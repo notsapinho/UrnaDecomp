@@ -33,6 +33,15 @@ struct SRect {
         return SRect{std::min(x1, x2), std::min(y1, y2), std::max(x1, x2), std::max(y1, y2)};
     }
 
+    // the setters of one edge (records primitives.cpp 20, 26, 32 and 38, which name them and their parameter type): each
+    // asserts first that the edge does not pass the opposite one (api/util/eueasserterror.h), and the parameters' names are
+    // the ones the asserts' texts spell. Left (fn 5488) and Right (fn 5487) are written; Top and Bottom, which binaryen
+    // inlined into fn 5537, are not
+    void Left(TPosition l);
+    void Top(TPosition t);
+    void Right(TPosition r);
+    void Bottom(TPosition b);
+
     // to a new top-left corner, keeping the size: target fn 1915, in primitives.cpp. The name is chosen
     void Move(const SPoint& posicao);
 
@@ -42,6 +51,9 @@ struct SRect {
 
     // the smallest rectangle that holds this one and @p outro: target fn 1916, in primitives.cpp. The name is chosen
     SRect Union(const SRect& outro) const;
+
+    // this one with each edge moved by its own amount, in order again: target fn 2768, in primitives.cpp. The name is chosen
+    SRect Adjust(TPosition dLeft, TPosition dTop, TPosition dRight, TPosition dBottom) const;
 };
 
 struct SFont {

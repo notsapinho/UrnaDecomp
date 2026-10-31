@@ -38,7 +38,7 @@
 #   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578, which match from unit 127's cwasmresource.cpp.o, whose
 #   GetImage (8633) builds the block; the dropped builder here stands for 1263. CPreShowProgressBar (ten builders, 1591
 #   first): 12813,
-#   12812. CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. CTimer 10846: 10844, 10843. api::Logger
+#   12812. CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. api::Logger
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.
 #   CDataText<CCandidaturasDSNumero> 4185: 12760, 12752. <CCandidaturasDSNome> 4185: 12654, 12650.
 #   <CCargoDSNomeSexoCandidato> 6528: 12637, 12636. <CRespostasDSNumero> 6652: 12625, 12622.

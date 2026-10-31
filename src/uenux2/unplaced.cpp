@@ -2462,23 +2462,6 @@
 // f10842 · 23822 B · unmatched · placement: link order · name unknown
 // ? f10842(i32, i32) { ... }
 
-// link-order cluster 356 · uses=1 · neighbours' file uenux2/src/api/gui/ctimer.cpp
-
-// f10852 · 13 B · unmatched · placement: link order · name unknown
-// void f10852(i32) { ... }
-
-// f10851 · 7 B · unmatched · placement: link order · name unknown
-// ? f10851(i32) { ... }
-
-// f10850 · 80 B · unmatched · placement: link order · name unknown
-// void f10850(i32) { ... }
-
-// f10848 · 9 B · unmatched · placement: link order · name unknown
-// void f10848(i32, i64) { ... }
-
-// f10847 · 45 B · unmatched · placement: link order · name unknown
-// void f10847(i32) { ... }
-
 // link-order cluster 358 · uses=1 · neighbours' file uenux2/src/api/gui/cdefaultgenericfactory.cpp
 
 // f10854 · 67 B · unmatched · placement: link order · name unknown
@@ -2516,14 +2499,6 @@
 
 // f11247 · 904 B · unmatched · placement: link order · name unknown
 // void f11247(i32, i32) { ... }
-
-// link-order cluster 527 · uses=1 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f11651 · 102 B · unmatched · placement: link order · name unknown
-// ? f11651(i32) { ... }
-
-// f11650 · 105 B · unmatched · placement: link order · name unknown
-// void f11650(i32) { ... }
 
 // link-order cluster 645 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
 
@@ -2584,9 +2559,6 @@
 // f4662 · 38 B · unmatched · placement: link order · name unknown
 // void f4662() { ... }
 
-// f4653 · 26 B · unmatched · placement: link order · name unknown
-// void f4653(i32) { ... }
-
 // link-order cluster 737 · uses=2
 
 // f5254 · 1114 B · unmatched · placement: link order · name unknown
@@ -2619,16 +2591,6 @@
 
 // f5441 · 184 B · unmatched · placement: link order · name unknown
 // ? f5441(i32) { ... }
-
-// link-order cluster 760 · uses=2 · neighbours' file uenux2/src/api/gui/ctimer.cpp
-
-// f5445 · 144 B · unmatched · placement: link order · name unknown
-// ? f5445(i32) { ... }
-
-// link-order cluster 768 · uses=2 · neighbours' file uenux2/src/api/gui/primitives.cpp
-
-// f5489 · 333 B · unmatched · placement: link order · name unknown
-// void f5489(i32, i32) { ... }
 
 // link-order cluster 769 · uses=2 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
 
