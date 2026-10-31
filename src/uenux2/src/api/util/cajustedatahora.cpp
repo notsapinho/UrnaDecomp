@@ -4,20 +4,26 @@
 // slot (118) reaches it.
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/cajustedatahora.h"
+#include "api/util/cdatetime.h"
 #include "api/util/isystemdatetime.h"
 
 namespace api {
-
-void CAjusteDataHora::Ajusta(const time_t& agora)
-{
-    ISystemDateTime::GetInst().SetTime(agora);
-}
 
 void CAjusteDataHora::Registra()
 {
     if (!CPolySingletonList::has<IAjusteDataHora>()) {
         CPolySingleton<IAjusteDataHora>::set(std::unique_ptr<IAjusteDataHora>(new CAjusteDataHora));
     }
+}
+
+void CAjusteDataHora::Ajusta(const CDateTime& dataHora)
+{
+    ISystemDateTime::GetInst().SetTime(dataHora.ConvertToLocalTime());
+}
+
+void CAjusteDataHora::Ajusta(const time_t& agora)
+{
+    ISystemDateTime::GetInst().SetTime(agora);
 }
 
 } // namespace api

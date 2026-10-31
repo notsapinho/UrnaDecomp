@@ -5,6 +5,14 @@
 namespace api {
 
 enum EUeUtilError {
+    // 7001 to 7008: the codes api::CDate's and api::CDateTime's throws pass (cdate.cpp, cdatetime.cpp); each name is
+    // chosen from its message and what the throw tests: no evidence names them
+    EUE_UTIL_DATA_INVALIDA = 7001,
+    EUE_UTIL_DATA_NAO_CONVERTIDA = 7002,
+    EUE_UTIL_DIA_SEMANA_INVALIDO = 7003,
+    EUE_UTIL_DATAHORA_INVALIDA = 7005,
+    EUE_UTIL_DATAHORA_NAO_CONVERTIDA = 7006,
+    EUE_UTIL_TIMESTAMP_INVALIDO = 7008,
     EUE_UTIL_DIRETORIO_NAO_ABERTO = 7010,
     EUE_UTIL_TAG_NAO_MAPEADA = 7016,
     EUE_UTIL_FALHA_OBTER_TAMANHO_ARQUIVO = 7038,

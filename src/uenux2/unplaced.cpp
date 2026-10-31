@@ -1273,11 +1273,6 @@
 // f2946 · 718 B · unmatched · placement: link order · name unknown
 // void f2946(i32, i32, i32) { ... }
 
-// link-order cluster 1125 · uses=4
-
-// f2961 · 9 B · unmatched · placement: link order · name unknown
-// ? f2961(i32) { ... }
-
 // link-order cluster 1129 · uses=4
 
 // f3054 · 290 B · unmatched · placement: link order · name unknown
@@ -1320,11 +1315,6 @@
 
 // f2225 · 757 B · unmatched · placement: link order · name unknown
 // void f2225(i32) { ... }
-
-// link-order cluster 1148 · uses=5 · neighbours' file uenux2/src/api/gui/ctextfieldupdate.cpp
-
-// f2233 · 222 B · unmatched · placement: link order · name unknown
-// void f2233(i32, i32) { ... }
 
 // link-order cluster 1149 · uses=5 · neighbours' file uenux2/src/api/gui/cfixedimage.cpp
 
