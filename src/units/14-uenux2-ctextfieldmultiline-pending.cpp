@@ -4,8 +4,8 @@
 // here; its record is 116:21). These stay traps because the real body costs matches, as measured: GetTextLines, written with
 // std::getline over a std::istringstream as 5497's rows read, gives this uenux2 object an instance of std::getline, which
 // links ahead of app/asn1/AVNDecoder.o, whose copy is the target's. fns 1917, 2649, 5055, 8877, 8878, 8883 and 8884 then
-// leave `match`, 376 and 1108 reach it, and 10924 and 10925 stay `unresolved`: a net loss of five. So they wait for that
-// instance to be the target's. With the three written, Rect scored 3 over 151 rows, all operand-only, and Draw 17 over 276,
+// leave `match`, 1108 reaches it, as 376 did before unit 109 matched it, and 10924 and 10925 stay `unresolved`: a net
+// loss. So they wait for that instance to be the target's. With the three written, Rect scored 3 over 151 rows, all operand-only, and Draw 17 over 276,
 // the height's load at the loop's test; 5497 scored 578 over 1051: the target holds the stream's constructor inline, and our
 // link keeps it in app/roots_rhvoice.o. Their source, as measured, with GetTextLines's `IScreen& tela` on its record's line
 // and <sstream>, <algorithm>, api/gui/cfixedtext.h, iscreen.h and api/pattern/cpolysingleton.h added to the includes:

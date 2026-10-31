@@ -487,7 +487,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -579,6 +579,14 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     ```sh
     awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
+
+12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's hand edit.** Each holds a table slot
+    of 536, the one body of the enums' format handles, at the aligned site. Our link merges `EUrnaTurno`'s handle into
+    it, so the votes disagree and only a hand edit names it ([../splat.md](../splat.md) §2, "A name kept by hand when
+    votes disagree"). The line names the surviving symbol, the handle of the first object in link order that makes one,
+    today `cappinfo.cpp.o`. When a unit adds an enum's handle ahead of it, the eleven go `unresolved` and `status.py`
+    stops on `matched.txt only:`: take the new name from `build/out/wasm-map/vota_web/names.tsv`, rewrite the name on
+    the line and keep its evidence, and run step 9 again, as for 2924 above.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

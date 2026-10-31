@@ -5,8 +5,8 @@
 // - comum::CParteCandidatos::Imprime, fn 11215; CParteCandidatosMajoritarios::Imprime, fn 11214, record
 //   src/app/comum/relatorios/cpartecandidatos.cpp:75:19; CParteCandidatosConsultas::Imprime, fn 11212, record :174:19;
 //   CParteCandidatosProporcionais::Imprime, fn 11213; CParteRdv::Imprime, fn 11203; CParteEleitores::Imprime, fn 11206.
-//   They wait for callees no unit defines: fn 273 (comum::CCargos::GetInst by its record), fns 332, 521, 2271,
-//   2272, 2812, 4816, 2840, 1273, 819, 1283, 3697, 326 and 5601, and their throws' error constructors 170 and 580.
+//   They wait for callees no unit defines: fn 273 (comum::CCargos::GetInst by its record), fns 332, 2271,
+//   2272, 2812, 4816, 2840, 1273, 1283, 3697, 326 and 5601, and their throws' error constructors 170 and 580.
 // f11213's stub, in app/comum/dados/ccandidaturas.cpp (the file of a record its body holds), went with this trap.
 #include "app/comum/relatorios/cpartecandidatos.h"
 #include "app/comum/relatorios/cparteeleitores.h"

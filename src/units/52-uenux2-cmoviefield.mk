@@ -11,7 +11,7 @@
 # destructor, Draw, Show and the constructor (inlined into fn 5543, with std::make_shared) give; the member names and the
 # types of +40 (an int: 32-bit stores) and +44 (a bool) are chosen. The movie and the timer are std::shared_ptrs to the
 # forward-declared api::CMovie and api::ITimer; cmoviefield.cpp includes api/util/itimer.h for Hide's Stop. The
-# constructor is not reconstructed: it calls api::ITimerScheduler::GetInst (fn 1259), which has no body of ours.
+# constructor is not reconstructed. It calls api::ITimerScheduler::GetInst (fn 1259), which unit 101 holds.
 # Move and Show (fns 11062, 11061, slots 9 and 3) are written in the band's order, below line 53, at lines that are a
 # choice. Move is CTextField's (27-uenux2-ctextfield.mk lists the forms) with the position at +32: binaryen keeps it
 # apart, as the target does. Show stores 1 at +40, rewinds the movie and redraws as Move does; CMovie::Rewind, a member

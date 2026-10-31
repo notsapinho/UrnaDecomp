@@ -7,8 +7,8 @@
 # GetTypeName: their lines are a choice, in the target's order (the uses-1 band 10912-10917 of ledger/ordinals.tsv
 # gives D0, Draw, Show, Hide, Rect, GetTypeName). The class header (api/gui/ctextfieldupdate.h) has the layout the
 # constructor (fn 3658) and Draw (fn 10916) store; the member names are chosen and the timer at +72 is a
-# std::shared_ptr to a forward-declared api::ITimer. The constructor (3658) is not reconstructed: it calls
-# api::ITimerScheduler::GetInst (fn 1259), which has no body of ours, and keeps its stub; line 38 stays free for it.
+# std::shared_ptr to a forward-declared api::ITimer. The constructor (3658) is not reconstructed and keeps its stub; line
+# 38 stays free for it. It calls api::ITimerScheduler::GetInst (fn 1259), which unit 101 holds.
 # Show and Hide (fns 10915, 10914, slots 3 and 4) are Start and Stop of the timer, whose class the source includes
 # (api/util/itimer.h); their lines are a choice, above Rect's line 73, in the band's order. Move (one of the five
 # functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) is below line 73, a choice.

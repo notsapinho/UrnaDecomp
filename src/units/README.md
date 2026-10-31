@@ -490,7 +490,7 @@ In the generated files the trap stands for the member. `make -C src splat-symbol
 after ours (`evidence:vtable`), so when the trap is a function of its own the symbol file names the target function
 after the trap's declaration, and the scan lists it as `differs` with the `-pending.o` as its object (11442, unit
 36's). binaryen merges the traps of one wasm type into one body that fills several vtables' slots;
-then no name is given and the member stays `no-candidate` (9130, 9133, 11097; §U5). A trap a unit adds can merge with
+then no name is given and the member stays `no-candidate` (9130, 9133; §U5). A trap a unit adds can merge with
 another unit's that was alone, and that member then loses its name and its `differs` row. When a member lands, the trap
 it shared a body with is alone again and gains them: 10900, unit 84's `CMenuValidation::isValid`, shared a body with
 11366 until 11366 landed (§U5). So declare the trap with

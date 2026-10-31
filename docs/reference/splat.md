@@ -91,7 +91,10 @@ parser drops any other line without a word, below the hand-edit marker too, and 
   and no value), until no name is added: 5158, a `content-anchor`, names
   `std::set<int>`'s constructor 5157, whose unwind path names `__tree<int>::destroy`, 1522, which no pair reaches and
   whose recursive call waits for its own name. A name the later votes contradict then goes and the loop runs again with
-  its index free, so which function a map yields first decides no name (`settleAnchorVotes`); the votes it had cast stay.
+  its index free (`settleAnchorVotes`). The votes it had cast stay, and of two bodies that want one index the first
+  takes it, so which function a map yields first decides no name only while no dropped name aligned and no two bodies
+  want one index. That holds in this link, by measurement and not by construction: the one name any order drops is
+  `find`, whose two bodies do not align, and the anchors, the loop and the recheck in other orders print one symbol file.
 - `vote:N`: aligned address operands of the seed pairs and of the pairs their votes form. An anchor votes for `.bss`
   objects alone, and so does any other pair that `vtable`, `call` or `table` evidence names, when its two bodies are
   the same opcodes: content cannot place a `.bss` object, and a name for a read-only or `.data` object would hide
@@ -155,10 +158,7 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   hash is the only one on both sides.
 - `callers+content`: the target callers and the loaded content single the function out. Each caller counts when other
   evidence names it, its vtable slot say, and the aligned calls pair the two functions one to one with no disagreement
-  ([facts/asn1.md](facts/asn1.md) §A5 has the tally). One line stands on a disagreement it states:
-  `CPolySingletonList::find` is one body of ours for two of the target's, 305 and 608, the executable TU's instantiations
-  (unit 100's fragment). The 16 matched `instance<T>` bodies call 305 and `has<T>` calls 608, so the votes disagree, no
-  generated line can name it, and without this line those 16 leave `match`.
+  ([facts/asn1.md](facts/asn1.md) §A5 has the tally).
 - `content`: a data line, the bytes the object holds.
 - `merged-body`: the target merged this function's body into the index, its callers there call it, and our own body of
   that name is not equal, so no match can name it. §3 says what it does. The comment must cite a caller the line does
@@ -166,6 +166,23 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   when our body differs because our source is wrong, this is not the case. Only a line under the marker that stands for
   its name and whose evidence is exactly this word on a `func:` has that effect: a longer word, the word later in a
   comment, a generated line or a data line does not, and a typo fails loudly, since the callers leave `match`.
+
+**A name kept by hand when votes disagree.** Our link can merge what the target keeps apart, and no source form fixes
+that ([../how-to-decompile.md](../how-to-decompile.md) step 3). The votes for our one body then disagree, a name with
+conflicting evidence is left out, and the matches that reach the body under that name leave `match`. A hand edit keeps
+the name, under the kind its voters give. Two lines stand so:
+
+- `CPolySingletonList::find`, `callers+content`: one body of ours for the target's 305 and 608, the executable TU's
+  instantiations (unit 100's fragment). The 16 `instance<T>` bodies that are `srcloc-anchor`s call 305, and `has<T>`
+  calls 608. Its `content` leg is empty: 305 and 608 are one shape that differs in a slot literal, so only the callers
+  single 305 out.
+- 536, `table`: the one body of the enums' format handles, in 31 target slots. Our link merges `EUrnaTurno`'s handle
+  into it and the target keeps that apart as 9868, so 1553's anchor votes 9868 and the others 536 (unit 109's fragment).
+
+Each such line meets three conditions. Its voters are the evidence, and they read records and aligned operands, not a
+match, so the line passes the removal check of "Reviewing a match". Its comment names the dissenters. A dissenter's row
+stays out of `match`. The line names the body's surviving symbol, so a landing that changes that symbol takes its
+matches out until the line follows ([facts/splat.md](facts/splat.md) §S10).
 
 A data name takes a hand edit under the same burden: `_ZN4ASN1L14badEndOfStreamE` (`callers+content`: the static
 constructors build it from a literal only it has, and five functions read it) and `_ZN3api20g_polySingletonsInfoE`
@@ -304,7 +321,9 @@ function you took out of the source), delete the match line by hand in the same 
 message; `splat/matched.txt` is a list people edit, unlike `splat/scan.tsv`. While the line names a function our link
 no longer has, `make -C src splat-match` fails after it writes the status files and before it runs `make -C src
 stubs`, so run it again once the line is gone. Never edit a piece, and never add a symbol-file hand edit to make a
-match pass. A `merged-body` line (§3) is not one: its name stands on a caller it does not rescue.
+match pass. A `merged-body` line (§3) is not one: its name stands on a caller it does not rescue. Nor is a name kept by
+hand when votes disagree (§2): our link merges what the target keeps apart, its voters read no match, and its dissenters
+stay out of `match`.
 
 One failure is not drift: `our link has no function <symbol>` for a byte-identical twin whose surviving name moved,
 because a new unit's identical body comes first in the link. The body still verifies under the new name, and

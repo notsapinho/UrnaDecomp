@@ -531,8 +531,10 @@ instructions.
 (`evidence:vptr-anchor`, `content-anchor`). Those operands can have other holders, so of a vptr's holders on both
 sides the pair of one shape anchors: a singleton's thunk, whose destructor loads the same vptr. A function the votes
 name votes in turn when its two bodies are the same opcodes (`alignVotes` compares each row's opcode and number of
-immediates, and no value), until no name is added. A name later votes contradict then goes, and its index is free, so
-which function a map yields first decides no name (`settleAnchorVotes`).
+immediates, and no value), until no name is added. A name later votes contradict then goes, and its index is free
+(`settleAnchorVotes`). So which function a map yields first decides no name while no dropped name aligned and no two
+bodies want one index: the votes a dropped name cast stay, and the first of two such bodies takes the name. Both hold in
+this link, by measurement and not by construction (`docs/reference/splat.md` §2).
 
 **`ctorVotes`** names the `.bss` objects `__wasm_call_ctors` builds (`evidence:ctors:N by:<its index>`). The two bodies
 hold different translation units, so each object is aligned alone: a run of ours, from the object's first operand to
