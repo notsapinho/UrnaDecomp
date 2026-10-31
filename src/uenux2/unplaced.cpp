@@ -1629,14 +1629,6 @@
 // f5649 · 257 B · unmatched · placement: link order · name unknown
 // void f5649(i32, i32, i32) { ... }
 
-// link-order cluster 812 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/eleitor/celeitor.cpp
-
-// f5668 · 583 B · unmatched · placement: link order · name unknown
-// ? f5668(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f5666 · 477 B · unmatched · placement: link order · name unknown
-// ? f5666(i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 817 · uses=2 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralgap.cpp
 
 // f5685 · 725 B · unmatched · placement: link order · name unknown

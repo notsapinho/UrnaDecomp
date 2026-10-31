@@ -8,14 +8,14 @@
 // The objects are built in place, by guaranteed elision, so this TU calls no constructor or destructor of an entity or
 // a data class: those are the ASN.1 runtime's and the units', and an instance here would be a copy ahead of them.
 // The callers each instance stands for:
-//   3726: 11390, 11394. 3727: 11391, 11395. 3730: 10270, 11411. 3736: 11424, 11451.
+//   3726: 11390, 11394. 3727: 11391, 11395. 3730: 10270, 11411. 3736: 11424 (11451 is written).
 //   3737: 11423, 11452 (11381 is written). 3738: 10270, 11411 (11457 is written). 3799: 10271, 10273, 11587.
 //   2275: 10266, 10271, 10273, 11587 (11458 is written). 5688: 11375 (11359 is written).
 //   5691: 11394 (11397 is written). 5692: 11395, 11398. 5696: 11399 (11403 is written). 5697: 11400 (11404 is written).
-//   5705: 5706, 11423. 5711: 11448. 5713, 5714: 11424, 11451. 5715, 5716: 11423, 11452.
+//   5705: 5706, 11423. 5711: 11448. 5713, 5714: 11424 (11451 is written). 5715, 5716: 11423, 11452.
 //   5828: 11373, 11445.
-// w107_dados gives a constructor its second call site, each stands for: 3712 11424 and 11451, 5672 5741, 3823 2725 and
-// 11629. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
+// w107_dados gives a constructor its second call site, each stands for: 3712 11424 (11451 is written), 5672 5741, 3823
+// 2725 and 11629. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.
 //
 // The vtables are what the target keeps the converters by: slots 2 and 3, no direct caller. Every converter's data is

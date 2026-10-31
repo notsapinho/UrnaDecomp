@@ -25,7 +25,9 @@ public:
 
     uedword GetCodigo() const { return m_codigo; }
     const std::string& GetNome() const { return m_nome; }
+    short GetFusoHorario() const { return m_fusoHorario; }
     bool EhUrnaBiometrica() const { return m_urnaBiometrica; }
+    bool TemHorarioVerao() const { return m_horarioVerao.has_value(); }
     const CHorarioVerao& GetHorarioVerao() const;
 
 private:
