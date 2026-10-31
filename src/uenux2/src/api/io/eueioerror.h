@@ -12,6 +12,11 @@ enum EUeIoError {
     EUE_IO_SEEDER_POSICAO_INVALIDA = 5959,   // seek: the position is past the size
     EUE_IO_SEEDER_FALHA_REPOSICIONAR = 5960, // seek: CFile::Seek failed
     EUE_IO_SEEDER_SALTO_INVALIDO = 5961,
+    // the codes of api::CDataMap's four throws (target fns 2919, 3892, 5725 and 5377, 5378); chosen from the messages
+    EUE_IO_REGISTRO_CORRENTE_INVALIDO = 5976,
+    EUE_IO_OPERACAO_INVALIDA = 5977,
+    EUE_IO_REGISTRO_DUPLICADO = 5978,
+    EUE_IO_REGISTRO_NAO_ENCONTRADO = 5979,
     EUE_IO_NOME_CHAVE_MODIFICADO = 6005,
 };
 
