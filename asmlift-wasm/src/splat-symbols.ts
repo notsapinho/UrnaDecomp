@@ -33,9 +33,9 @@ import { dirname, join, resolve } from 'node:path';
 import { type Instr, immText } from './disasm';
 import { glueNamesFor } from './glue-file';
 import { importResolver } from './imports';
-import { GLOBAL_BASE, type NormalizedFn, normalizeModule } from './normalize';
+import { GLOBAL_BASE, type HashedFn, hashModule } from './normalize';
 import { type Module, parseModule, typeText } from './parse';
-import type { OperandKinds } from './splat-kinds';
+import type { DataWordKind, OperandKinds } from './splat-kinds';
 
 // ---------------------------------------------------------------------------------------------------------------
 // wasm-ld --Map
@@ -199,6 +199,10 @@ export interface OurSide {
   tableSize: number;
   /** table slot → function index */
   elem: Map<number, number>;
+  /** what the shifted link says each aligned data word that reads as an address or a table slot of ours is
+   *  (splat-kinds.ts classifyDataWords; symbolMaps sets it from the operand-kind table): a word not listed is what it
+   *  reads as. Without it such a word keeps every reading. */
+  dataKinds?: ReadonlyMap<number, DataWordKind>;
 }
 
 /** The scratch link beside a plain link: `<root>/build/out/wasm/vota_web/x.wasm` → `<root>/build/out/wasm-map/vota_web`. */
@@ -235,6 +239,13 @@ export function tableOf(m: Module): Map<number, number> {
   return out;
 }
 
+/** Where our data ends: the end of .bss, else of the last data symbol. */
+export function dataEndOf(map: LinkMap): number {
+  const bss = map.outputs.find((o) => o.name === '.bss');
+  const lastData = map.data[map.data.length - 1];
+  return bss !== undefined && bss.addr !== null ? bss.addr + bss.size : lastData.addr + lastData.size;
+}
+
 /** Our plain link with its names and data map; throws when the map's scratch link is not the plain module. */
 export function loadOurSide(plainPath: string, mapDir = defaultMapDir(plainPath)): OurSide {
   const bytes = new Uint8Array(readFileSync(plainPath));
@@ -250,9 +261,7 @@ export function loadOurSide(plainPath: string, mapDir = defaultMapDir(plainPath)
   const fns = new Map(list.map((f) => [f.index, f]));
   const fnByKey = new Map(list.map((f) => [f.key, f.index]));
   const glue = glueNamesFor(plainPath);
-  const bss = map.outputs.find((o) => o.name === '.bss');
-  const lastData = map.data[map.data.length - 1];
-  const dataEnd = bss !== undefined && bss.addr !== null ? bss.addr + bss.size : lastData.addr + lastData.size;
+  const dataEnd = dataEndOf(map);
   const sp = module.globals[0]?.init.match(/^i32\.const (\d+)$/);
   return {
     path: plainPath,
@@ -863,6 +872,19 @@ export function vtableTypeinfoOffset(
 export type ObjectCheck = { verdict: 'agrees' | 'unknown' } | { verdict: 'differs'; at: number; why: string };
 
 /**
+ * Whether the aligned data word `w` of ours at `addr` reads as one of our addresses and as one of our table slots. A
+ * small integer can read as both, and the bytes do not say which it is; the shifted link does (`dataKinds`): a plain
+ * integer is neither, and an address or a slot is that one alone. `unverified`, or no kinds, keeps both.
+ */
+export function pointerReadings(ours: OurSide, addr: number, w: number): [address: boolean, slot: boolean] {
+  const kind = ours.dataKinds?.get(addr);
+  return [
+    w >= GLOBAL_BASE && w < ours.dataEnd && kind !== 'literal' && kind !== 'slot',
+    w >= 1 && w < ours.tableSize && ours.elem.has(w) && kind !== 'literal' && kind !== 'address',
+  ];
+}
+
+/**
  * Whether our data object `obj` and the target's bytes at `addr` are the same object: equal byte for byte, except
  * that a word of ours that is one of our addresses or table slots may be its re-pointed value. 'unknown' when our
  * object is all zeros (a .bss object says nothing) or a word differs only where our pointer does not resolve.
@@ -893,20 +915,21 @@ export function compareObject(maps: SymbolMaps, obj: DataObject, addr: number): 
     const ow = ob.readUInt32LE(k);
     const tw = tb.readUInt32LE(k);
     if (ow !== tw) {
-      // our table overlaps our data: a word in both ranges may be either
+      // our table overlaps our data: a word in both ranges may be either, unless the shifted link says which
+      const [isAddress, isSlot] = pointerReadings(ours, obj.addr + k, ow);
       const resolved: number[] = [];
       let open = false;
-      if (ow >= GLOBAL_BASE && ow < ours.dataEnd) {
+      if (isAddress) {
         const r = resolveDataAddress(ours, ourImage, target, ow);
         resolved.push(...(r.ok ? [r.addr] : []), ...(r.same ?? []));
         open ||= !r.ok;
       }
-      if (ow >= 1 && ow < ours.tableSize && ours.elem.has(ow)) {
+      if (isSlot) {
         const r = resolveFunction(maps, ours.elem.get(ow)!);
         resolved.push(...(r.ok ? (target.slots.get(r.index!) ?? []) : []));
         open ||= !r.ok;
       }
-      const str = ow >= GLOBAL_BASE && ow < ours.dataEnd ? dataObjectAt(ours.map.data, ow) : null;
+      const str = isAddress ? dataObjectAt(ours.map.data, ow) : null;
       if (str !== null && (str.section === '<merged strings>' || str.name.startsWith('.L.str'))) {
         // the same C string, whichever copy the target's tail merging points at
         const a = cStringAt(ourImage, GLOBAL_BASE, ow);
@@ -948,7 +971,8 @@ export interface ObjectPattern {
  * Our object `obj` as the target must hold it: equal byte for byte, except that each aligned word that is one of our
  * addresses or table slots must be its re-pointed value (any copy, for content found at several places) or the plain
  * integer it also is, and a word whose pointer does not resolve, or that points past our data into the stack or the
- * heap, may be anything.
+ * heap, may be anything. A word that reads as a pointer is read by its kind when our side has them (`dataKinds`): a
+ * plain integer is its bytes, an address or a slot that reading alone.
  */
 export function objectPattern(maps: SymbolMaps, obj: DataObject): ObjectPattern {
   const { ours, ourImage, target } = maps;
@@ -962,8 +986,7 @@ export function objectPattern(maps: SymbolMaps, obj: DataObject): ObjectPattern 
       continue;
     }
     const w = bytes.readUInt32LE(k);
-    const isAddress = w >= GLOBAL_BASE && w < ours.dataEnd;
-    const isSlot = w >= 1 && w < ours.tableSize && ours.elem.has(w);
+    const [isAddress, isSlot] = pointerReadings(ours, obj.addr + k, w);
     if (!isAddress && !isSlot) {
       if (w >= ours.dataEnd && w < memoryEnd) {
         fixed.fill(null, k, k + 4);
@@ -1132,9 +1155,11 @@ export interface SymbolMaps {
   kinds?: OperandKinds;
 }
 
+/** The maps of `ours` and `target`; with the operand-kind table, our side reads its data words by it too (`ours` is
+ *  copied with `dataKinds` set, so use the maps' `ours`). */
 export function symbolMaps(ours: OurSide, target: TargetSide, kinds?: OperandKinds): SymbolMaps {
   return {
-    ours,
+    ours: kinds === undefined ? ours : { ...ours, dataKinds: kinds.data },
     ourImage: memoryImage(ours.module).image,
     target,
     types: typeMap(ours.module, target.module),
@@ -1422,13 +1447,13 @@ interface GroupKeyed {
 }
 
 function uniquePairs(
-  tn: NormalizedFn[],
-  on: NormalizedFn[],
+  tn: readonly HashedFn[],
+  on: readonly HashedFn[],
   key: (n: GroupKeyed) => string,
   skipT: Set<number>,
   skipO: Set<number>,
 ): [number, number][] {
-  const group = (ns: NormalizedFn[], skip: Set<number>): Map<string, number[]> => {
+  const group = (ns: readonly HashedFn[], skip: Set<number>): Map<string, number[]> => {
     const g = new Map<string, number[]>();
     for (const n of ns) {
       if (skip.has(n.index)) {
@@ -1456,6 +1481,9 @@ function uniquePairs(
   return out;
 }
 
+/** What an anchor reads of a function: its index, its shape hash and its instructions. */
+export type AnchorFn = Pick<HashedFn, 'index' | 'shape' | 'instrs'>;
+
 /**
  * Function pairs anchored by an operand: an i32.const that names one object on both sides, held by exactly one target
  * function and exactly one of ours, or with `byShape` by one pair of the same shape among its holders: a class's
@@ -1464,8 +1492,8 @@ function uniquePairs(
  * anchor, `placeOf` reads an operand of ours as one of them.
  */
 export function operandAnchors(
-  tn: readonly NormalizedFn[],
-  on: readonly NormalizedFn[],
+  tn: readonly AnchorFn[],
+  on: readonly AnchorFn[],
   places: ReadonlySet<number>,
   placeOf: (v: number) => number | null,
   byShape = false,
@@ -1479,7 +1507,7 @@ export function operandAnchors(
     }
     u[side].add(fn);
   };
-  const consts = (n: NormalizedFn): number[] =>
+  const consts = (n: AnchorFn): number[] =>
     n.instrs.flatMap((i) => (i.opcode === 0x41 && i.imms[0]?.kind === 's32' ? [i.imms[0].value] : []));
   for (const n of tn) {
     for (const v of consts(n)) {
@@ -1521,8 +1549,8 @@ export function srclocAnchors(
   ours: OurSide,
   ourImage: Buffer,
   target: TargetSide,
-  tn: readonly NormalizedFn[],
-  on: readonly NormalizedFn[],
+  tn: readonly AnchorFn[],
+  on: readonly AnchorFn[],
 ): [number, number][] {
   // a record the target holds at several addresses anchors nothing: which copy a function loads is no name
   const records = new Set([...target.srcloc.values()].flatMap((a) => (a.length === 1 ? a : [])));
@@ -1546,8 +1574,8 @@ export function vptrAnchors(
   ours: OurSide,
   ourImage: Buffer,
   ledgerDir: string,
-  tn: readonly NormalizedFn[],
-  on: readonly NormalizedFn[],
+  tn: readonly AnchorFn[],
+  on: readonly AnchorFn[],
 ): [number, number][] {
   const vptrs = new Map<number, number>();
   const ourByKey = new Map(ours.map.data.map((d) => [d.key, d]));
@@ -1567,8 +1595,8 @@ export function contentAnchors(
   ours: OurSide,
   ourImage: Buffer,
   target: TargetSide,
-  tn: readonly NormalizedFn[],
-  on: readonly NormalizedFn[],
+  tn: readonly AnchorFn[],
+  on: readonly AnchorFn[],
 ): [number, number][] {
   const at = new Map<number, number>();
   for (const obj of ours.map.data) {
@@ -1789,10 +1817,11 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   const om = ours.module;
   const tOpts = { importName: importResolver(target.importNames) };
   const oOpts = { importName: importResolver(ours.importNames) };
-  const tn2 = normalizeModule(tm, { ...tOpts, depth: 2 });
-  const on2 = normalizeModule(om, { ...oOpts, depth: 2 });
-  const tn0 = normalizeModule(tm, { ...tOpts, depth: 0 });
-  const on0 = normalizeModule(om, { ...oOpts, depth: 0 });
+  // the hashes at depth 2 pick the seeds, those at depth 0 and the instructions align and anchor: one disassembly
+  // per module, without normalizeModule's rows, which nothing here reads
+  const th = hashModule(tm, tOpts, [0, 2]);
+  const oh = hashModule(om, oOpts, [0, 2]);
+  const [tn2, tn0, on2, on0] = [th.get(2)!, th.get(0)!, oh.get(2)!, oh.get(0)!];
   const tFirst = tm.importedFuncCount;
   const oFirst = om.importedFuncCount;
   const sizeT = (i: number): number => tm.funcs[i - tFirst].size;

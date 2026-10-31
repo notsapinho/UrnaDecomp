@@ -131,13 +131,15 @@ plain link and the matches of `splat/matched.txt`, after `make -C src splat`, fr
 mkdir -p ../build/out/splat-check
 pnpm --silent wasm splat-kinds ../build/out/wasm/vota_web/vota_web_wasm.wasm -o ../build/out/splat-check/kinds.json \
   --matches ../splat/matched.txt
-# prints, for example:
-# ../build/out/splat-check/kinds.json: data moved by 1048576, table by 20000; 10854 functions in 0.6 s
-#   every function: 10854/10854 kind-verified; operands: 527074 literal, 68835 address, 9890 table slot, 2 table base + 6 relative to it
-#   the 7217 matches: 7217/7217 kind-verified; operands: 261150 literal, 26256 address, 1518 table slot, 1 table base + 3 relative to it
+# prints, on acf4f84's link with 9536 matches:
+# ../build/out/splat-check/kinds.json: data moved by 1048576, table by 20000; 12394 functions in 0.5 s
+#   data words the table lists: 139848 literal (reading as an address or a table slot of ours), 354 address and 13774 table slot (reading as both), 0 moved by neither shift
+#   every function: 12394/12394 kind-verified; operands: 539564 literal, 61021 address, 6876 table slot, 2 table base + 6 relative to it
+#   the 9536 matches: 9536/9536 kind-verified; operands: 314695 literal, 33891 address, 2979 table slot, 1 table base + 3 relative to it
 ```
 
-The counts grow with the link and the match list; what holds is `N/N kind-verified` on both lines.
+The counts grow with the link and the match list; what holds is `N/N kind-verified` on the last two lines and `0
+moved by neither shift` on the data words' line.
 
 1. **The shifted link is the plain link with two bases moved.** `tools/round/link-kinds.sh` checks that its wasm-ld
    map lists the same input sections, in the same order and of the same sizes, as link-map's map of the plain link;
@@ -620,8 +622,10 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     7787. With 11561 alone binaryen inlines it, and 273, 11203, 11209 and 11561 fall with it; `d5805` in
     `src/units/110-uenux2-singletons-roots.cpp` is the second call site. It goes when 7787 lands.
 15. **4505 and 8750, by the data's layout.** 4505 holds while no object of ours starts at 0x100000
-    ([codegen.md](codegen.md) §C7). 8750 holds through the `content` hand edit of `ASN1::UTCTime::theInfo`, whose
-    tag word reads as a table slot of ours and loosens the object's pattern when that slot's function has no target name.
+    ([codegen.md](codegen.md) §C7). 8750 rests on `ASN1::UTCTime::theInfo`'s place by its re-pointed bytes: the slot
+    of its create function, which that function's match names, and its tag 23, which the operand-kind table reads as
+    the integer it is (§3 of [../splat.md](../splat.md)). Read as our table slot 23, whose function had no target name
+    at acf4f84, the tag goes open, and the object fits wherever the create slot does: two places there.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -776,6 +780,14 @@ END
 ```
 
 The one other is `iostream_category`'s, whose object is not `.bss`. So a guard one body reads alone, which §3's rule
-refuses as self-voted (5158, `CStringUtils::ToLower`, reads `acentuadas`'s guard), has evidence outside that body: its
-object's address, when another match holds the object, plus our link's distance. No line or rule uses it yet: 5158 is
-`unresolved self-voted` (`awk -F'\t' '$1==5158 {print $5, $6}' splat/scan.tsv`).
+would refuse as self-voted, has evidence outside that body: its object's address, when another match holds the object,
+plus our link's distance. §3's rule reads it (`guardedObject` in `asmlift-wasm/src/splat-sub.ts`), and eight rows
+match by it that were `unresolved self-voted` on a guard: 5158 (`CStringUtils::ToLower`, `acentuadas`'s guard, held by
+the object's static destructor 9402), six libc++ `__time_get_c_storage` accessors, 7752, 7754, 7756, 7758, 7760 and 7764
+(each object voted by its accessor alone and held by its static destructor: 7751, 7753, 7755, 7757, 7759 and 7763),
+and 9281 (boost's `perl_matcher::unwind_extra_block`, whose `mem_block_cache` object 3496 and 9329 vote for):
+
+```sh
+awk -F'\t' '$1==5158 || $1==7752 || $1==7754 || $1==7756 || $1==7758 || $1==7760 || $1==7764 || $1==9281 {print $1, $5}' splat/scan.tsv
+# every one of the eight prints match
+```

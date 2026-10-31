@@ -33,13 +33,13 @@ pnpm bench <command> …               # the lifter benchmark, benchmark/README.
 | `pnpm bench run [--label <l>] [--setup k,…]` / `pnpm bench diff <a> <b>`                                    | lift, compile at each row's own setup flags and score; `benchmark/results/<l>.{json,md}`; compare two runs                                                                        |
 | `splat-split <wasm> -o <dir> [--names <functions.tsv>] [--attribution <tsv>] [--no-wat]`                    | the module as pieces (function bodies, data segments, manifest), then proves they reassemble to the input's bytes                                                                 |
 | `splat-assemble <dir> -o <wasm> [--substitute <dir\|<index>[-<name>].bin>]…`                                | the module from the pieces alone, with replacement bodies for some functions                                                                                                      |
-| `splat-symbols <target> <plain> [-o <symbol_addrs.txt>]`                                                    | the target's symbol file (function indices and data addresses → names) from our link's maps and the evidence                                                                      |
-| `splat-maps <target> <plain> (--fn <ours> \| --data <addr> \| --target-fn <n> \| --summary)`                | one entry of the symbol maps                                                                                                                                                      |
+| `splat-symbols <target> <plain> [-o <symbol_addrs.txt>] [--kinds f \| --no-kinds]`                         | the target's symbol file (function indices and data addresses → names) from our link's maps and the evidence                                                                      |
+| `splat-maps <target> <plain> (--fn <ours> \| --data <addr> \| --target-fn <n> \| --summary) [--kinds f \| --no-kinds]` | one entry of the symbol maps, re-pointed with no match applied                                                                                                          |
 | `splat-remap <target> <plain> <ours> [--against <target fn>] [--kinds f \| --no-kinds]`                     | one body of ours re-pointed into the target, and whether it is the target body                                                                                                    |
 | `splat-sym-coverage <target> <plain> [--smoke N] [--kinds f \| --no-kinds]` / `splat-twin-check <plain> <twin>` | symbol coverage; the `--emit-symbol-map` twin against the plain link                                                                                                       |
 | `splat-scan <target> <plain> [-o scan.tsv] [--match [<matches>]] [--kinds f \| --no-kinds]`                 | every target function against our re-pointed candidate; `--match` appends new matches to the match list                                                                           |
 | `splat-build <target> <plain> [--matches f] [-o out.wasm] [--expect <sha256>] [--kinds f \| --no-kinds] [--max-kind-unverified n]` | the split with our bytes for every match; fails on a match that does not verify, or on more than n kind-unverified matches; prints the meter, the kind-unverified matches and the review warnings |
-| `splat-kinds <plain> [--shifted <dir>] [-o kinds.json] [--matches f]`                                       | the operand-kind table: which constants of our link are addresses, table slots or integers, from a relink with data and table moved                                             |
+| `splat-kinds <plain> [--shifted <dir>] [-o kinds.json] [--matches f]`                                       | the operand-kind table: which constants and data words of our link are addresses, table slots or integers, from a relink with data and table moved                              |
 | `splat-review <target> <plain> <index> [--matches f] [--symbols f] [-o <dir>] [--kinds f \| --no-kinds]`    | the blanked-target check of one match: its piece blanked, the split assembled with the match's own bytes (the gate, the exit status) and with every operand at its first reading |
 
 `<fn>` is a function index (function index space: imports first, so the target's first defined
@@ -573,8 +573,8 @@ slot reading.
 
 | command                                                                                        | does                                                                       |
 | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `splat-symbols <target> <plain> [-o f]`                                                        | gather the evidence and write the symbol file, keeping its hand edits      |
-| `splat-maps <target> <plain> --fn <i\|sym:n> \| --data <addr> \| --target-fn <i> \| --summary` | one entry of the maps                                                      |
+| `splat-symbols <target> <plain> [-o f] [--kinds f \| --no-kinds]`                              | gather the evidence and write the symbol file, keeping its hand edits      |
+| `splat-maps <target> <plain> --fn <i\|sym:n> \| --data <addr> \| --target-fn <i> \| --summary` | one entry of the maps, with no match applied (takes `--kinds` too)         |
 | `splat-remap <target> <plain> <i\|sym:n> [--against <t>] [--kinds f \| --no-kinds]`             | one body re-pointed: unresolved operands, or whether it is the target body |
 | `splat-sym-coverage <target> <plain> [--smoke N] [--kinds f \| --no-kinds]`                     | named target functions, and the ledger's pairs re-pointed                  |
 | `splat-twin-check <plain> <twin>`                                                              | the twin's bodies against the plain link's through a name/body pairing     |
@@ -659,12 +659,16 @@ applied first (`withMatches`), as `splat-build` does:
   in a kind-unverified function which kind) fails it legitimately: the command lists each such operand, the reading
   the target body picked and the first one.
 
-`splat-scan`, `splat-build`, `splat-review`, `splat-remap` and `splat-sym-coverage` take `--kinds <kinds.json>`, default
-`build/out/wasm-kinds/<name>/kinds.json` beside the plain link; they refuse to run without a table unless given
-`--no-kinds`, and refuse a table that describes another plain module (sha256) or another format. With it, each
-`i32.const`, `i64.const` and memarg offset is offered only the readings of its kind: a literal its own bytes, an
-address the target address(es) of what it points at, a table slot the target slot(s) of its function; an address or
-slot with no target image is unresolved. `splat-kinds` (`splat-kinds.ts`) writes the table: urna's
+`splat-scan`, `splat-build`, `splat-review`, `splat-remap`, `splat-sym-coverage`, `splat-symbols` and `splat-maps` take
+`--kinds <kinds.json>`, default `build/out/wasm-kinds/<name>/kinds.json` beside the plain link; they refuse to run
+without a table unless given `--no-kinds`, and refuse a table that describes another plain module (sha256) or another
+format. With it, each `i32.const`, `i64.const` and memarg offset is offered only the readings of its kind: a literal
+its own bytes, an address the target address(es) of what it points at, a table slot the target slot(s) of its
+function; an address or slot with no target image is unresolved. The table's `data` gives our data words the same
+kinds (`classifyDataWords`): an aligned word whose value reads as one of our addresses or slots is an integer if the
+relink did not move it, and a word that reads as both is the one it moved as. Placing a data object by its re-pointed
+bytes (`objectPattern`) and comparing it with the target's (`compareObject`) read each word so: an integer keeps its
+bytes, so an ASN.1 tag that equals a slot number of ours does not read as that slot. `splat-kinds` (`splat-kinds.ts`) writes the table: urna's
 `tools/round/link-kinds.sh` relinks the plain link's objects with `-sGLOBAL_BASE=1024+D` and `-sTABLE_BASE=1+T` and
 names that link's functions like `link-map.sh` (recording the sha256 of the wasm it named, which `splat-kinds`
 checks, as it checks that the map dir describes the plain link); the two links are aligned by name, and in a function

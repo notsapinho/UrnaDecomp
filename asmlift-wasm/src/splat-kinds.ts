@@ -25,12 +25,17 @@
 // followed too, loosely: added to constants (or to another slot) → KIND-UNVERIFIED, since nothing tells which part is
 // the base; anywhere else it is a pointer used as one, and is not followed further.
 // splat-remap.ts offers an operand only the readings of its kind; a kind-unverified function keeps every reading.
+// The data is compared the same way, word by word (classifyDataWords): an aligned word of ours whose value reads as one
+// of our addresses or table slots is an ADDRESS if the relink holds it moved by D, a SLOT if moved by T (both slots
+// holding functions of one name), a LITERAL if not moved (an ASN.1 tag that equals a slot number), and UNVERIFIED if
+// moved by another amount. splat-symbols.ts's objectPattern and compareObject read a data object's words by these kinds.
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
 import { type Imm, type Instr, disassemble } from './disasm';
 import { UNARY } from './fold';
+import { GLOBAL_BASE } from './normalize';
 import { type Func, type Module, funcAt, importedFunc } from './parse';
 import { readOurNames } from './splat-symbols';
 
@@ -43,6 +48,10 @@ export type MovedKind = Exclude<OperandKind, 'literal'>;
  *  every other i32.const, i64.const and memarg offset is a literal. */
 export type FunctionKinds = { verified: true; ops: Map<number, MovedKind> } | { verified: false; why: string };
 
+/** What an aligned word of our data is, when its value reads as one of our addresses or table slots: `literal` a plain
+ *  integer, `unverified` a word the relink moved by neither shift. */
+export type DataWordKind = 'literal' | 'address' | 'slot' | 'unverified';
+
 export interface OperandKinds {
   /** sha256 of the plain module the table describes */
   plainSha256: string;
@@ -51,6 +60,9 @@ export interface OperandKinds {
   tableShift: number;
   /** our defined function index (the plain link's) → its kinds */
   functions: Map<number, FunctionKinds>;
+  /** the plain link's address of each aligned data word that reads as an address or a table slot of ours → its kind,
+   *  but for a word that reads as one of the two and is it, which is left out (classifyDataWords) */
+  data: Map<number, DataWordKind>;
 }
 
 /** One link: its module and the name of every function (names.tsv key for ours, `import:<module>.<field>` for an
@@ -68,8 +80,8 @@ export interface LinkShifts {
   tableBase: number;
 }
 
-// /2: the table-base and table-rel kinds
-const FORMAT = 'urna-operand-kinds/2';
+// /2: the table-base and table-rel kinds; /3: the data words
+const FORMAT = 'urna-operand-kinds/3';
 
 export function sha256Of(bytes: Uint8Array): string {
   return createHash('sha256').update(bytes).digest('hex');
@@ -591,8 +603,73 @@ function activeElemOf(m: Module): Map<number, number> {
   return e;
 }
 
-/** Every defined function of the plain link, aligned by name with the shifted link and classified. */
-export function classifyOperands(plain: KindsSide, shifted: KindsSide): OperandKinds {
+/** A link's data from `base` up: every active segment at its offset, the gaps zeros. */
+function dataImage(m: Module, base: number): Buffer {
+  let hi = base;
+  for (const d of m.datas) {
+    if (d.mode === 'active' && d.offset !== null) {
+      hi = Math.max(hi, d.offset + d.bytes.length);
+    }
+  }
+  const image = Buffer.alloc(hi - base);
+  for (const d of m.datas) {
+    if (d.mode === 'active' && d.offset !== null) {
+      image.set(d.bytes, d.offset - base);
+    }
+  }
+  return image;
+}
+
+/**
+ * Every aligned word of the plain link's data whose value reads as one of its addresses (GLOBAL_BASE up to `dataEnd`,
+ * the end of .bss) or table slots, against the same word of the shifted link, keyed by its plain address: moved by the
+ * data shift an address, by the table shift a slot (when the two links' slots hold functions of one name), not moved a
+ * plain integer, else unverified. The bytes say none of this: a small integer that equals a slot number (an ASN.1 tag)
+ * reads as both. A word that reads as one of the two and is it is left out, so the table lists the integers, the words
+ * that read as both, and the unverified ones.
+ */
+export function classifyDataWords(
+  plain: KindsSide,
+  shifted: KindsSide,
+  shifts: LinkShifts,
+  dataEnd: number,
+): Map<number, DataWordKind> {
+  const p = dataImage(plain.module, GLOBAL_BASE);
+  const s = dataImage(shifted.module, GLOBAL_BASE + shifts.dataShift);
+  const pe = activeElemOf(plain.module);
+  const se = activeElemOf(shifted.module);
+  const out = new Map<number, DataWordKind>();
+  for (let k = 0; k + 4 <= p.length; k += 4) {
+    const w = p.readUInt32LE(k);
+    const isAddress = w >= GLOBAL_BASE && w < dataEnd;
+    const isSlot = pe.has(w);
+    if (!isAddress && !isSlot) {
+      continue;
+    }
+    const v = k + 4 <= s.length ? s.readUInt32LE(k) : null;
+    const sameFunction = (): boolean => {
+      const a = plain.names.get(pe.get(w)!);
+      return a !== undefined && a === shifted.names.get(se.get(v!) ?? -1);
+    };
+    const kind: DataWordKind =
+      v === w
+        ? 'literal'
+        : v === w + shifts.dataShift && isAddress
+          ? 'address'
+          : v === w + shifts.tableShift && isSlot && sameFunction()
+            ? 'slot'
+            : 'unverified';
+    if ((kind === 'address' && !isSlot) || (kind === 'slot' && !isAddress)) {
+      continue;
+    }
+    out.set(GLOBAL_BASE + k, kind);
+  }
+  return out;
+}
+
+/** Every defined function of the plain link, aligned by name with the shifted link and classified, and the data words
+ *  that read as pointers (classifyDataWords; `dataEnd` is the plain link's end of .bss). */
+export function classifyOperands(plain: KindsSide, shifted: KindsSide, dataEnd: number): OperandKinds {
   const shifts = linkShifts(plain.module, shifted.module);
   const byName = new Map<string, number[]>();
   for (const f of shifted.module.funcs) {
@@ -620,6 +697,7 @@ export function classifyOperands(plain: KindsSide, shifted: KindsSide): OperandK
     dataShift: shifts.dataShift,
     tableShift: shifts.tableShift,
     functions,
+    data: classifyDataWords(plain, shifted, shifts, dataEnd),
   };
 }
 
@@ -634,6 +712,8 @@ const KEYS = { address: 'a', slot: 's', 'table-base': 'b', 'table-rel': 'r' } as
   MovedKind,
   string
 >;
+/** kinds.json's key per data word kind: `data` lists the words' plain addresses of each */
+const DATA_KEYS = { literal: 'l', address: 'a', slot: 's', unverified: 'u' } as const satisfies Record<DataWordKind, string>;
 
 export function renderOperandKinds(k: OperandKinds): string {
   const functions: Record<string, Partial<Record<(typeof KEYS)[MovedKind], number[]>> | { unverified: string }> = {};
@@ -651,8 +731,12 @@ export function renderOperandKinds(k: OperandKinds): string {
     }
     functions[index] = row;
   }
+  const data: Partial<Record<string, number[]>> = {};
+  for (const [kind, key] of Object.entries(DATA_KEYS)) {
+    data[key] = [...k.data].filter(([, x]) => x === kind).map(([a]) => a).sort((a, b) => a - b);
+  }
   const { plainSha256: plain, shiftedSha256: shifted, dataShift, tableShift } = k;
-  return `${JSON.stringify({ format: FORMAT, plain, shifted, dataShift, tableShift, functions })}\n`;
+  return `${JSON.stringify({ format: FORMAT, plain, shifted, dataShift, tableShift, functions, data })}\n`;
 }
 
 export function parseOperandKinds(text: string): OperandKinds {
@@ -677,12 +761,19 @@ export function parseOperandKinds(text: string): OperandKinds {
           },
     );
   }
+  const words = j.data as Partial<Record<string, number[]>>;
+  const data = new Map(
+    (Object.entries(DATA_KEYS) as [DataWordKind, string][]).flatMap(([kind, key]) =>
+      (words[key] ?? []).map((a): [number, DataWordKind] => [a, kind]),
+    ),
+  );
   return {
     plainSha256: j.plain,
     shiftedSha256: j.shifted,
     dataShift: j.dataShift,
     tableShift: j.tableShift,
     functions,
+    data,
   };
 }
 

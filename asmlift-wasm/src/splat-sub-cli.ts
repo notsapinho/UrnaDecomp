@@ -58,9 +58,11 @@ import {
   scanSplit,
 } from './splat-sub';
 import {
+  dataEndOf,
   defaultMapDir,
   loadOurSide,
   loadTargetSide,
+  parseLinkMap,
   parseSymbolFile,
   readOurNames,
   symbolMaps,
@@ -410,11 +412,16 @@ function kinds(args: string[]): void {
   const k = classifyOperands(
     kindsSide(plain, join(plainMapDir, 'names.tsv')),
     kindsSide(shifted, join(shiftedDir, 'names.tsv')),
+    dataEndOf(parseLinkMap(readFileSync(join(plainMapDir, 'vota_web_wasm.map'), 'utf8'))),
   );
   writeFileSync(outPath, renderOperandKinds(k));
   const w = (x: string): boolean => process.stdout.write(`${x}\n`);
   w(
     `${outPath}: data moved by ${k.dataShift}, table by ${k.tableShift}; ${k.functions.size} functions in ${((Date.now() - t0) / 1000).toFixed(1)} s`,
+  );
+  const words = (kind: string): number => [...k.data.values()].filter((x) => x === kind).length;
+  w(
+    `  data words the table lists: ${words('literal')} literal (reading as an address or a table slot of ours), ${words('address')} address and ${words('slot')} table slot (reading as both), ${words('unverified')} moved by neither shift`,
   );
   const show = (label: string, among?: number[]): void => {
     const s = kindsSummary(k, plain, among);

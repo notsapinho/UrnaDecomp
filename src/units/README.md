@@ -576,7 +576,7 @@ with virtual members": try-tu has no rule for a path under `src/units/`.
 functions (5158, 1879, 9398) and compiled with the ecourna flags (listed in `ECOURNA_SRCS` as `../units/…`). Unlike a
 pending member, an extern is a real reconstruction; it moves into the owning source (`api/util/cstringutils.cpp`)
 when that unit lands. They are in our link once unit 12's roots file reaches the DAO that calls them. `Replace`
-(9398) matches; the two `ToLower` do not, and the file's header says what each waits for. Unit 00 already compiles
+(9398) and the two `ToLower` (5158, 1879) match, and the file's header says what each rests on. Unit 00 already compiles
 `api/util/cstringutils.cpp`, so by "Landing a unit" item 2 these belong in that source, as an extension of unit 00.
 The externs file holds them until a unit moves them there. A new unit adds no extern for a file a landed unit
 compiles: it extends that unit.

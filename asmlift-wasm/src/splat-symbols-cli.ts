@@ -1,16 +1,20 @@
 // The splat symbol commands (cli.ts dispatches here):
 //   splat-symbols  <target.wasm> <plain.wasm> [-o <symbol_addrs.txt>] [--map-dir <d>] [--ledger <d>]
+//                  [--kinds <kinds.json> | --no-kinds]
 //   splat-maps     <target.wasm> <plain.wasm> [--symbols <f>] [--map-dir <d>] [--ledger <d>]
+//                  [--kinds <kinds.json> | --no-kinds]
 //                  (--fn <our index|sym:name> | --data <our address> | --target-fn <index> | --summary)
 //   splat-remap    <target.wasm> <plain.wasm> <our index|sym:name> [--against <target index>] [--symbols <f>]
 //                  [--ledger <d>] [--kinds <kinds.json> | --no-kinds]
 //   splat-sym-coverage <target.wasm> <plain.wasm> [--symbols <f>] [--ledger <d>] [--smoke N]
 //                  [--kinds <kinds.json> | --no-kinds]
-//   (splat-remap and splat-sym-coverage refuse to run without the table unless given --no-kinds)
+//   (these commands refuse to run without the table unless given --no-kinds)
 //   splat-twin-check   <plain.wasm> <twin.wasm> [--map-dir <d>]   (the --emit-symbol-map twin against the plain link)
 // Defaults follow the urna layout: <root>/target/x.wasm, <root>/splat/symbol_addrs.txt, <root>/ledger, and the
-// plain link's scratch map dir build/out/wasm-map/<name> (tools/round/link-map.sh); the commands that re-point a
-// body read the operand-kind table build/out/wasm-kinds/<name>/kinds.json (splat-kinds.ts).
+// plain link's scratch map dir build/out/wasm-map/<name> (tools/round/link-map.sh); every command but
+// splat-twin-check reads the operand-kind table build/out/wasm-kinds/<name>/kinds.json (splat-kinds.ts): the commands
+// that re-point a body for its constants, and all of them for the kinds of our data words, which place a data object
+// by its re-pointed bytes (splat-symbols.ts objectPattern).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
@@ -68,8 +72,8 @@ interface Loaded {
   ledgerDir: string;
 }
 
-/** `kinds`: the command re-points bodies, and reads the operand-kind table (--kinds, the default one, or --no-kinds) */
-function load(args: string[], needSymbols = true, kinds = false): Loaded {
+/** Reads the operand-kind table too (--kinds, the default one, or none with --no-kinds) */
+function load(args: string[], needSymbols = true): Loaded {
   const symbolsArg = take(args, '--symbols');
   const mapDir = take(args, '--map-dir');
   const ledgerArg = take(args, '--ledger');
@@ -89,7 +93,7 @@ function load(args: string[], needSymbols = true, kinds = false): Loaded {
   }
   const ours = loadOurSide(plainPath, mapDir ?? defaultMapDir(plainPath));
   const target = loadTargetSide(targetPath, needSymbols ? symbolsPath : null, ledgerDir, ours.stackSize);
-  const kindsPath = kinds ? kindsPathOf(plainPath, kindsArg, noKinds >= 0) : null;
+  const kindsPath = kindsPathOf(plainPath, kindsArg, noKinds >= 0);
   const table = kindsPath === null ? undefined : readOperandKinds(kindsPath, ours.module.bytes);
   return { maps: symbolMaps(ours, target, table), symbolsPath, ledgerDir };
 }
@@ -111,6 +115,7 @@ function ourFunction(ours: OurSide, sel: string): number {
 function generate(args: string[]): void {
   const out = take(args, '-o');
   const { maps, symbolsPath, ledgerDir } = load(args, false);
+  noMoreArgs('splat-symbols', args);
   const path = out ?? symbolsPath;
   const previous = existsSync(path) ? parseSymbolFile(readFileSync(path, 'utf8')) : null;
   const ev = gatherEvidence({ ours: maps.ours, target: maps.target, ledgerDir });
@@ -189,7 +194,7 @@ function inspect(args: string[]): void {
 
 function remap(args: string[]): void {
   const against = take(args, '--against');
-  const { maps } = load(args, true, true);
+  const { maps } = load(args);
   const sel = args.shift();
   if (sel === undefined) {
     throw new Error('splat-remap needs <our index|sym:name>');
@@ -233,7 +238,7 @@ function remap(args: string[]): void {
 
 function coverage(args: string[]): void {
   const smoke = Number(take(args, '--smoke') ?? 0);
-  const { maps, ledgerDir } = load(args, true, true);
+  const { maps, ledgerDir } = load(args);
   noMoreArgs('splat-sym-coverage', args);
   const { ours, target } = maps;
   const w = (s: string): boolean => process.stdout.write(`${s}\n`);
