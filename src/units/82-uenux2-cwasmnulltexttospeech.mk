@@ -33,18 +33,18 @@
 #   gives the same object.
 # - ITextToSpeech's D2 (target fn 11489, slot 9, `differs`), the executable TU's copy too: at -Oz -fexceptions this
 #   header gives the target's rows, with the string's destructor as a call (fn 149), which the uenux2 flags inline.
-# - this class's D0 (target fn 9427, slot 10, `differs`). The target's holds the D2 with the string's destructor inlined
+# - this class's D0 (target fn 9427, slot 10, `unresolved` at the tree's -O3, `differs` at -O2). The target's holds the
+#   D2 with the string's destructor inlined
 #   and the cache's destructor (fn 3764) as a call, as fn 5441 does. At -O2 clang inlines that destructor into the D2
 #   (cost=210, threshold=325: it is implicit, so hinted; `= default` in the class prints the same cost, threshold=225),
 #   and the D2 is then too big for the D0 (cost=320, threshold=225). No form of the class changes that at -O2: the
 #   cache's destructor implicit or `= default`, the cache a class or a template, a pair or a struct in the list;
-#   `inline` on ITextToSpeech's only inlines the D2, cache and all, into the D0. At -O3
+#   `inline` on ITextToSpeech's only inlines the D2, cache and all, into the D0. At the tree's -O3
 #   this header gives the target's rows, with `= default`, `{}` or `inline` on ITextToSpeech's destructor (the same
 #   object): std::list's clear goes inline into the cache's destructor (cost=240, threshold=250), and that one stays a
-#   call (cost=450, threshold=325). The whole tree at UENUX2_EXTRA=-O3 (the private link of
-#   docs/reference/facts/app-flags.md F9 item 6) verifies every match of this commit, and 9427 is then `unresolved` on
-#   its two calls only: its callees, 3746 and 3764, have no target name, and 3764 is the executable TU's copy
-#   (invoke_vii). -O3 is a decision for the tree, not for this unit.
+#   call (cost=450, threshold=325). 9427 is then 5 over 27 rows, all operand-only, and `unresolved self-voted` on its two
+#   calls: its callees, 3746 and 3764, are named by its own votes alone, and 3764 is the executable TU's copy
+#   (invoke_vii).
 # Pending: Synthesize (target fn 11530, slot 0): 82-uenux2-cwasmnulltexttospeech-pending.cpp says what it waits for.
 # Not written: the implicit constructor (fn 13877), the executable TU's (std::make_unique through invoke_ii in fn 7840).
 # `std::make_unique<simulador::CWasmNullTextToSpeech>()` at -Oz -fexceptions compiles this header's default member

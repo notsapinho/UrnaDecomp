@@ -3,7 +3,7 @@
 # (api/gui/cmovie.h: the std::vector<CMovieFrame>, the current frame and the SPoint, at +0, +12 and +16; no header of
 # CMovie or CMovieFrame existed) and the 4943 enumerator of api/gui/eueguierror.h. CMovieFrame's constructor is in
 # cmovie.cpp too: it has no target function (binaryen inlines it into its one caller, simulador::CWasmResource's slot
-# 4, fn 8605, unit 127's), so it is compared with nothing but through 8605, which waits for -O3 (unit 127's fragment).
+# 4, fn 8605, unit 127's), so it is compared with nothing but through 8605 (unit 127's fragment says what it lacks).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CMOVIE_SRCS := src/api/gui/cmovie.cpp
 UENUX2_SRCS += $(CMOVIE_SRCS)

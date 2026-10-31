@@ -6,7 +6,8 @@ two forms, a switch over virtual members, when a member's body is inlined, the o
 a TU emitted first does to a frame, a C1 or D1 call `-fPIC` keeps, `-Oz`'s subtract of 0x100000, and how many copies
 binaryen merges. `docs/how-to-decompile.md` steps 1 to 5 and 9 rely on these;
 [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors, linkage). Each probe
-compiles with the uenux2 flags (`-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, `docs/reference/app-flags.md`) in
+compiles with the uenux2 flags of the time, at `-O2` (`-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`; the tree builds
+at `-O3` since, `docs/reference/app-flags.md`) in
 the pinned image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the
 host's (wabt); `em++` and `llvm-nm` are the image's.
 

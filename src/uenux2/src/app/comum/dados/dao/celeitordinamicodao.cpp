@@ -102,8 +102,3 @@ api::persistencia::IDAO* CEleitorDinamicoDAO::Clone() const
 }
 
 } // namespace comum::dao
-
-// <stubs>
-// f3768 · 618 B · unmatched · placement: link order · name unknown
-// ? f3768(i32, i32) { ... }
-// </stubs>

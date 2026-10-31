@@ -2,7 +2,7 @@
 // (target fn 5544) is a record of the target (line 372, column 11), so its position in this file is fixed. The file's
 // other records, AddStatusHeader's throws at lines 292 and 305 (target fn 502, not reconstructed), fall on blank lines.
 //   203   CFormBuilder()
-//   426   AddField                 written, differs: it needs -O3, src/units/31-uenux2-cformbuilder.mk has the measurement
+//   426   AddField                 written, differs at the tree's -O3: src/units/31-uenux2-cformbuilder.mk has the measurement
 //   202, 1191  AddTextField        over a CFixedText, over a CDataText of a function
 //   3068  AddDoubleLineField
 //   5547  AddImage

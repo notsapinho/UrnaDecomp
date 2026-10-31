@@ -29,15 +29,15 @@
 # literals only 2626 loads), and 8600, 8611 and 8633 match through it.
 #
 # Written and not matched:
-# - Caminho (2626): 200 over 1934 rows. The target loads the path's size, its long-string flag and its data again after
+# - Caminho (2626): 200 over 1934 rows at the tree's -O3 (202 at -O2, d4cbc1a). The target loads the path's size, its long-string flag and its data again after
 #   each rfind, for the substr, where ours keeps the values from before the search. With the existence test written in
 #   the loop (an std::ifstream temporary in the condition) the frame's shared slot sits at the bottom, 391 rows; Existe,
 #   the test as a helper, gives the target's frame. Scored the same, 200: a non-const path, the prefix test as a helper
 #   (ComecaCom). Further: Candidatos written into Caminho (928), Normaliza into Candidatos (365), the normalised path as
-#   Candidatos' parameter (293). With this object at -O3 it is 200 too.
-# - GetMovie (8605): it needs -O3. In a link with this object compiled at -O3 it is 16 over 507 rows, all operand-only;
-#   here clang leaves std::vector<CMovieFrame>'s __init_with_size out of line (cost 230 against 225, -Rpass-missed) and
-#   the body differs (172 over 562). std::vector<CMovieFrame>(1, ...) is inlined at -O2 and gives 41 over 518 rows, but
+#   Candidatos' parameter (293).
+# - GetMovie (8605): at the tree's -O3 it is 16 over 507 rows, all operand-only, and `differs` in one store's alignment
+#   (+0x9e: `i32.store align=1 offset=52` in the target, `align=2` here), not read further. At -O2 clang left
+#   std::vector<CMovieFrame>'s __init_with_size out of line (cost 230 against 225, -Rpass-missed), 172 over 562 rows. std::vector<CMovieFrame>(1, ...) is inlined at -O2 and gives 41 over 518 rows, but
 #   64 over 522 at -O3: of the two forms tried, the initializer list is the one that gives the target's rows. That
 #   CMovieFrame's constructor is out of line is read from 8605, which holds code as binaryen inlines a call (the moved
 #   vector stored to the frame and read back, the member zeroed before it is overwritten:

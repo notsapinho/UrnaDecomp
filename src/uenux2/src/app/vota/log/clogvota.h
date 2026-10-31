@@ -7,7 +7,11 @@
 // member not written here. The four Loga members have no record: each is held inlined by its one caller, a slot of
 // vota::CControladorRegistraMesariosVota that calls GetInst first and then runs the member in a stack frame of its own
 // (fns 6017, 10779, 10776), so they are members of the object GetInst returns, and their names are chosen from their
-// messages. This header's path is chosen, beside clogvota.cpp, and only the members written are declared.
+// messages. LogaJustificativaRecebida, LogaEleitorJaJustificou and LogaPedidoTituloSuspensao are the same shape: each is
+// held inlined by one state's slot, which calls GetInst before the member's own stack frame opens (fn 10594, of
+// vota::CJustificativaEfetuada, holds the first two; fn 10421, of vota::CPerguntaCodigoSuspensao, the third, which calls
+// comum::IEventosLog::loga, fn 233). Their names are chosen from their messages too. This header's path is chosen,
+// beside clogvota.cpp, and only the members written are declared.
 
 #include <string>
 
@@ -23,6 +27,9 @@ public:
     void LogaMesarioJaRegistrado(const std::string& titulo);
     void LogaIndagaRegistroMesarios();
     void LogaTituloInvalidoRegistroMesario();
+    void LogaJustificativaRecebida();
+    void LogaEleitorJaJustificou();
+    void LogaPedidoTituloSuspensao();
 
 private:
     CLogVota();

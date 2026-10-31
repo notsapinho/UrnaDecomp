@@ -1,7 +1,7 @@
 {
-  "version": 9,
+  "version": 10,
   "per": 12,
-  "commit": "19005249a4631f9631b2f086672dbbd1e5c3dc03",
+  "commit": "b714993ac83ce187b619bdadbde82c4392ccec3f",
   "inputs": {
     "target": {
       "path": "target/vota_web_wasm.wasm",
@@ -13,11 +13,11 @@
     },
     "ledger": {
       "path": "ledger/functions.tsv",
-      "blob": "63210eda95f766dac4b508ac13b76f271ca0837f"
+      "blob": "010b2179d6e942a6bb94d83f9d1095bdaca55bdf"
     },
     "setups": {
       "path": "asmlift-wasm/benchmark/dataset/setups.json",
-      "blob": "f44e423639150de2f3fc516699447c109d153295"
+      "blob": "20a208a05f6aea8a7499fc4e5fff32df09362efa"
     },
     "sources": {
       "src/asn1/AVNDecoder.cxx": "763af3ce5d6453b479effd0ed4fc6daf438332d7",
@@ -34,17 +34,17 @@
       "src/ecourna/app/dados/resultadournacadastro/cidentificacaojustificativa.cpp": "818cf9c9a5e80cc89cb8d63d9e90250e581ab8de",
       "src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp": "f6658856a9cbcdf1b727a4169f2c9faab752c5d1",
       "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp": "f3f9b596d7a001fbf60c7fb3221ce1d90c04abac",
-      "src/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp": "c53e52efc4a6ab7b6f9e0063581c81bd42b52cdd",
       "src/uenux2/src/api/gui/ctextfieldblinking.cpp": "c7ee6e34f3ef92e370f9a846661ac3919b9db1af",
       "src/uenux2/src/api/gui/primitives.cpp": "670db2aa00912509161f9d13551d1b23cf664dca",
+      "src/uenux2/src/api/util/cdate.cpp": "1cbf90b73d71a121535ec775baefe7fe8e476189",
       "src/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp": "d601c3c6a12a0c512307298994258439eef780e2",
       "tools/libs/7zip/sources.txt": "de7f5cdbcc930f24960d18ab7e1631df01d330b4"
     },
     "definitions": {
       "path": "asmlift-wasm/benchmark/dataset/selection-definitions.json",
-      "sha256": "35cfe714daae2fdcd49f64ca5a6f02d94f02cbc0ddec13548c3bbddd84b60a61",
-      "names": 7360,
-      "build": "19005249a4631f9631b2f086672dbbd1e5c3dc03"
+      "sha256": "7e4ac86688cff0c947f181895a215433ae60dcbf33d78693c585787fc0ac006f",
+      "names": 7444,
+      "build": "b714993ac83ce187b619bdadbde82c4392ccec3f"
     }
   }
 }

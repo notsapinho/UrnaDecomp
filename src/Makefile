@@ -79,22 +79,25 @@ GEN := $(APP)/gen
 ECOURNA_PREFIX_MAP := -ffile-prefix-map=/work/src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna \
                       -ffile-prefix-map=src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna
 ECOURNA_CXXFLAGS   := -O3 -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP) -Isrc -Isrc/asn1
-# uenux2 (the app itself, /home/rubio/tse/uenux2, tree mirrored under src/uenux2 so the records' paths map): -O2 -fPIC,
+# uenux2 (the app itself, /home/rubio/tse/uenux2, tree mirrored under src/uenux2 so the records' paths map): -O3 -fPIC,
 # NO -fexceptions (emcc's default -fignore-exceptions: throw sites call __cxa_throw directly, no landing pads),
 # -DNDEBUG, -fno-strict-aliasing (no TBAA: comum's converters reload a vector's begin after an int store, fn 10289);
-# measured on the api/util, api/io, api/ipc/posix and comum units (docs/reference/facts/app-flags.md §F6). The
+# measured on the api/util, api/io, api/ipc/posix and comum units (docs/reference/facts/app-flags.md §F6), the level on
+# the whole tree (docs/reference/facts/levels.md §V3: every match holds and the bodies that call
+# std::string::append where -O2 inlines it match). The
 # include root of the app's own headers is src/uenux2/src ("api/util/cwait.h"); ecourna headers come from -Isrc, and a
 # uenux2 object's records of them name the conan package's installed headers, p/include (the third map).
 UENUX2_PREFIX_MAP  := -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -ffile-prefix-map=src/uenux2=/home/rubio/tse/uenux2 \
                       -ffile-prefix-map=src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/p/include/ecourna
-UENUX2_CXXFLAGS    := -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
+UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
-# no __assert_fail) but keep strict aliasing: the library templates they instantiate (roots_rhvoice.o's std::__tree and
-# __split_buffer, roots_boost.o's __tree_remove) win the link, and the target's copies have TBAA (6 matches need it)
-APP_CXXFLAGS := $(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS))
-APP_CFLAGS   := $(filter-out -std=% -fno-strict-aliasing,$(UENUX2_CXXFLAGS))
+# no __assert_fail) but keep -O2, the level they were measured at, and strict aliasing: the library templates they
+# instantiate (roots_rhvoice.o's std::__tree and __split_buffer, roots_boost.o's __tree_remove) win the link, and the
+# target's copies have TBAA (6 matches need it)
+APP_CXXFLAGS := $(patsubst -O3,-O2,$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS)))
+APP_CFLAGS   := $(patsubst -O3,-O2,$(filter-out -std=% -fno-strict-aliasing,$(UENUX2_CXXFLAGS)))
 # Measuring a flag set: UENUX2_EXTRA and ECOURNA_EXTRA (empty here) are added to a tree's flags after the stand-ins'
 # are derived, so a private link adds a flag to that tree's objects alone, the fragments' own additions kept
 # (docs/reference/facts/app-flags.md §F9 item 6). make keeps an object whose flags changed: use a new APP directory.

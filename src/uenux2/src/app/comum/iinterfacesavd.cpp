@@ -28,10 +28,7 @@ bool IInterfaceSavd::EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& requisi
 {
     m_mensagem = "";
 
-    requisicao.marca = MARCA_SAVD;
-    requisicao.tamanho = dados.size();
-
-    std::vector<uebyte> resposta = ConverteHeader(requisicao);
+    std::vector<uebyte> resposta = ConverteHeader(requisicao, dados);
     Escreve(resposta);
     if (!dados.empty()) {
         Escreve(std::vector<uebyte>(dados.begin(), dados.end()));
@@ -59,8 +56,11 @@ bool IInterfaceSavd::EnviarRequisicao(ueint32& codigo, ueRequisicaoSavd& requisi
     return !erro;
 }
 
-std::vector<uebyte> IInterfaceSavd::ConverteHeader(const ueRequisicaoSavd& requisicao)
+std::vector<uebyte> IInterfaceSavd::ConverteHeader(ueRequisicaoSavd& requisicao, const std::string& dados)
 {
+    requisicao.marca = MARCA_SAVD;
+    requisicao.tamanho = dados.size();
+
     std::vector<uebyte> buffer;
     buffer.reserve(sizeof(requisicao));
     const uebyte* bytes = reinterpret_cast<const uebyte*>(&requisicao);

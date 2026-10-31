@@ -6,16 +6,16 @@
 #   8 and 11, one body), Led1 (5036, slots 9 and 10, one body), GetWidth (8743, slot 17), GetHeight (8742, slot 18), the
 #   three Draws (11053, 11049, 11048), PreShow (11047), and the empty slots 4, 5, 13, 15 and 16 (the shared 1870 and 218).
 #   std::string::assign(size_type, char), target fn 1355, is libc++'s: Clear calls it and the roots keep its result.
-# - written, and `differs` at the tree's flags: ShowText (8799, slot 3) and Refresh (8746, slot 14). These are the
-#   sources measured right, and each needs one flag uenux2 does not have; a private whole link with
-#   UENUX2_EXTRA='-O3 -std=c++23' (docs/reference/facts/app-flags.md section F9 item 6) gives both target bodies.
+# - Refresh (8746, slot 14) matches at the tree's -O3, and ShowText (8799, slot 3) is written and `differs` at the
+#   tree's flags: it needs -std=c++23, which uenux2 does not have; a private whole link with
+#   UENUX2_EXTRA='-O3 -std=c++23' (docs/reference/facts/app-flags.md section F9 item 6) gave both target bodies.
 #   ShowText needs -std=c++23: `text.GetText().substr(0, 40)` on an rvalue is C++23's `substr() &&`, which moves the
 #   string into place. At -std=c++20 it copies, and no public string call in C++20 gives the moved form: a helper
 #   that moves and then resizes reads the size after the move, and one that reads it first keeps resize's append path.
 #   Its object is the same at -O2 and -O3. Refresh needs -O3: libc++'s push_back costs 225 against -O2's threshold of
 #   225 and inlines at -O3's 250, and -O3 unrolls the loop; at -O2 it stays a call. Its object is the same under
-#   both standards, once the object-local indices are normalised. Both stay as written, so the rows match with no edit
-#   if the tree's flags change.
+#   both standards, once the object-local indices are normalised. ShowText stays as written, so the row matches with no
+#   edit if the tree's -std changes.
 # - pending: ShowClock (8757, slot 12) and ~IScreenMT (8741), with CWasmScreenMT's implicit D2 and D0 (8745, 8744) waiting
 #   on the second: 78-uenux2-cwasmscreenmt-pending.cpp says for what.
 # Choices, no evidence decides them:

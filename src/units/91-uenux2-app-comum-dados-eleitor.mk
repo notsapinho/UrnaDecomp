@@ -15,10 +15,11 @@
 #   store (clang inlines the insert). Eight spellings of the insert keep the reload at the tree's flags, at -O2 and -O3,
 #   c++20 and c++23. With this object alone compiled without -fno-strict-aliasing in a whole link, `splat-remap` prints
 #   `target 2799: IDENTICAL`.
-# - CEleitorDinamicoDAO's constructor, Inserir and Atualizar (3768, 5776, 5775): clang inlines string::append(const
-#   char*, size_t) at -O2, and the target calls it (fn 160). With this one object at -O3 (c++20 or c++23) in a whole
-#   link, `pnpm wasm score` gives 22 over 267, 18 over 404 and 18 over 400 rows, operands only. What then remains is the
-#   name of the .bss string NOME_TABELA (1838780, built in __wasm_call_ctors, freed by fn 11545), which no vote gives.
+# - CEleitorDinamicoDAO's constructor, Inserir and Atualizar (3768, 5776, 5775) match at the tree's -O3: clang inlines
+#   string::append(const char*, size_t) at -O2, and the target calls it (fn 160). With this one object at -O3 in the -O2
+#   link they scored 22 over 267, 18 over 404 and 18 over 400 rows, operands only, short of the name of the .bss string
+#   NOME_TABELA (1838780, built in __wasm_call_ctors, freed by fn 11545), which the three bodies' votes now give
+#   (splat/symbol_addrs.txt: `evidence:vote:13 by:3768,5775,5776,14478`).
 #
 # Read from the bytes:
 # - The throws of 1548 and 708 stand at column 11, at the function's own indent, so each is the fall-through after an

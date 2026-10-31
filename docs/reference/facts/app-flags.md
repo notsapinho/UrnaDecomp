@@ -5,7 +5,7 @@ one. The current flag sets live in `src/Makefile` (`ECOURNA_CXXFLAGS`, `UENUX2_C
 `src/mk/ecourna-flags.mk`; [../app-flags.md](../app-flags.md) gives them with their evidence. The ASN.1 runtime's
 flags are in [asn1.md §A1–A2](asn1.md), the libraries' in [libraries.md](libraries.md), the link line in
 [toolchain.md §T3](toolchain.md). What a level does at one site is in [levels.md](levels.md): the executable TU's
-flags, LLVM's inlining remarks and the deferred `-O3 -std=c++23`.
+flags, LLVM's inlining remarks and the measurement of uenux2's `-O3`.
 
 How a flag is measured: compile the reconstructed TU under each flag set in `urna-emsdk:6.0.0`, link, and score
 each function against the target with `pnpm wasm score <target> <fn> <candidate.wasm> <index> --depth 0` (from
@@ -17,7 +17,7 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, not reconstructed) | `-Oz -fexceptions` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -275,7 +275,7 @@ So a table read with an `i32.add` proves nothing, and neither does one function'
 12's externs included. The `-roots.cpp` files are stand-ins and compile with `APP_CXXFLAGS`. Why the package differs from conan's default
 `fPIC=True` ([libraries.md](libraries.md) §B1) is not known: the target shows the result, not the reason.
 
-## F6. uenux2: `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`
+## F6. uenux2: `-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`
 
 Compared on three reconstructed units (`api/util/cwait.cpp`, `api/io/cinikey.cpp`,
 `api/ipc/posix/cposixmutex.cpp` + `cposixsemaphore.cpp`; 13 target functions), each flag set in a private
@@ -293,12 +293,13 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   looks like -Oz code, but it comes from the **first** object defining it (the executable TU,
   [levels.md](levels.md) §V1), not from the uenux2 library trees: it says nothing about uenux2's level.
 - **Not -Os.** -Os loses `CIniKey::operator=` (string `operator==` stays a call).
-- **-O2, kept; -O3 is not the same.** The four functions of the table are the same at both, but the two levels'
+- **-O3, decided on the whole tree.** The four functions of the table are the same at -O2 and -O3, but the two levels'
   inlining thresholds differ, so a body can separate them with no loop ([levels.md](levels.md) §V2 has the remarks and
-  what to read first on a body that differs in what is inlined).
+  what to read first on a body that differs in what is inlined). With the tree at -O3 every match holds and 25 rows more
+  match, among them the bodies that call `std::string::append` where -O2 inlines it ([levels.md](levels.md) §V3).
 - **`-std=c++20` is ecourna's measurement, carried over.** F1's 3703 is an ecourna function; no uenux2 function decided
   uenux2's `-std`.
-- **-O3 with `-std=c++23` is a deferred decision, not the tree's setting** ([levels.md](levels.md) §V3).
+- **`-std=c++23` is not the tree's setting**: one written body, 8799, needs it ([levels.md](levels.md) §V3).
 - **The executable TU is not uenux2's set.** `wasm/vota_web/vota_web_wasm.cpp`, not reconstructed, is compiled
   `-Oz -fexceptions`, and the linkonce copies it emits are the ones the target kept ([levels.md](levels.md) §V1).
 - **-fPIC** removes the last structural rows of all three ctors.
@@ -337,9 +338,10 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   reloads at the flag too, since the first insert stores its address in a node. The sites with no call to explain the
   reload are 10276, 10289 and 11383. 11383 matches, unit 107's, and the other two are `no-candidate`: writing 10289 and
   measuring it both ways is the test.
-- **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots and pending
-  files) is uenux2's set without the flag. With it, six matches stop verifying: 152, 1383, 1527, 3501, 3639 and 5150,
-  libc++ templates (`std::__tree`, `__split_buffer`, `operator>>`) whose winning copy comes from
+- **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
+  without the flag, and at -O2, the level the stand-ins were measured at, where the tree builds at -O3; the units'
+  pending files build at `UENUX2_CXXFLAGS`, the tree's own set. With the flag, six matches stop verifying: 152, 1383,
+  1527, 3501, 3639 and 5150, libc++ templates (`std::__tree`, `__split_buffer`, `operator>>`) whose winning copy comes from
   `app/roots_rhvoice.o` or `app/roots_boost.o` (`build/out/wasm-map/vota_web/names.tsv`'s object column). The target's
   copies were compiled with TBAA, as the library TUs that instantiate them are. Letting the library objects win
   instead does not reproduce the target: a private link with `roots_rhvoice.o` and `roots_boost.o` at uenux2's flags

@@ -5,7 +5,7 @@
 #   symbol file names it by that vptr.
 # - The anonymous-namespace helpers, at their records' lines: FormataFase (target fn 2828, record :38), FormataNumero
 #   (fn 1161, record :48, written and not matched: below) and FormataUF (fn 3773, record :73).
-# - Two name builders, CNomeArquivo::NomeArquivoUF (fn 1705) and NomeArquivoSecao (fn 3772), written and not matched
+# - Two name builders, CNomeArquivo::NomeArquivoUF (fn 1705) and NomeArquivoSecao (fn 3772), matched at the tree's -O3
 #   (below). They are the helpers' callers in the object: FormataFase and FormataUF have two call sites there and
 #   FormataNumero five, and all three are functions of their own in the link (build/out/wasm-map/vota_web/names.tsv), as
 #   in the target, where 2828 has 4 callers, 1161 5 and 3773 3 (ledger/callgraph.tsv).
@@ -38,12 +38,11 @@
 #   DetalheCandidatoZE, no-candidate). With a scratch object that holds that literal added to this link
 #   (tools/round/try-tu.sh), splat-remap prints `target 1161: IDENTICAL`. It waits for 11973, or another holder of the
 #   literal, to land.
-# - 1705 and 3772 call std::string::append(const char*, size_t) (fn 160) 5 and 8 times in the target. At the tree's -O2
-#   clang inlines it and the objects call __grow_by_and_replace instead; compiled with -O3 added they call append 5 and
-#   8 times. In this link they score 551 over 805 rows and 877 over 1285; with cnomearquivo.cpp.o compiled at -O3 in a
-#   copy of the link command (docs/reference/facts/workflow.md W13) they score 14 over 370 and 23 over 566, all
-#   operand-only, and splat-remap prints IDENTICAL for both. uenux2 at -O3 is the user's decision. Their rows stay
-#   no-candidate: nothing names them, so this fragment is the note.
+# - 1705 and 3772 call std::string::append(const char*, size_t) (fn 160) 5 and 8 times in the target, as the tree's -O3
+#   does, and match there; the scan pairs them by content, since nothing else names them. At -O2 clang inlines append
+#   and the objects call __grow_by_and_replace instead: in the -O2 link they scored 551 over 805 rows and 877 over 1285,
+#   and with cnomearquivo.cpp.o compiled at -O3 in a copy of the link command (docs/reference/facts/workflow.md W13)
+#   14 over 370 and 23 over 566, all operand-only, splat-remap printing IDENTICAL for both.
 # - Not written: fn 3744, which holds the record at :208 (ajustaAbrangenciaUFMunicipio, code 8953) and the helpers'
 #   calls inside a second stack frame, under code that copies what comum::md::CPleito::GetEleicao (fn 5651) returns and
 #   inserts what reads as the name into a std::map keyed by a word (32-byte nodes, rebalanced by fn 152); it calls

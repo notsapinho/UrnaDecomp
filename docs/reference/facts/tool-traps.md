@@ -89,7 +89,8 @@ target files were fetched through a browser.
 The rank template of `--single` compiles and links in one `em++ -Oz -fexceptions …` (the build's link has
 `-fexceptions` too). A uenux2 TU is compiled without it (app-flags.md §F6), so `--single` adds `-fignore-exceptions`
 to a TU whose own flags lack `-fexceptions`. Without it a uenux2 TU scored alone grows landing pads. With the
-reconstructed `api::CDirReader::NextEntry`:
+reconstructed `api::CDirReader::NextEntry`, measured while uenux2 built at `-O2` (at `-O3` the score line is the
+same but for `[5 operand-only]`):
 
 ```sh
 TMPDIR=/tmp tools/round/try-tu.sh --single 1260 --extract export:_ZN3api10CDirReader9NextEntryEv \
@@ -105,7 +106,7 @@ into a body linked alone; the splat build matches this source.
 The same line also sets the lone link's level, and not to the build link's `-Oz` ([workflow.md](workflow.md) §W2
 item 5 has what that changes in a body). The TU's flags come after the
 template's `-Oz -fexceptions`, and emcc takes the last `-O` for the compile and the link alike, so binaryen runs at the
-TU's level, `-O2` for uenux2 and `-O3` for ecourna:
+TU's level, `-O3` for uenux2 and ecourna:
 
 ```sh
 P=build/out/try-facts/olevel; mkdir -p $P; printf 'extern "C" int f(int x) { return x * 3; }\n' > $P/a.cpp

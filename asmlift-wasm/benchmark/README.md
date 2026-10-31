@@ -106,7 +106,7 @@ share it.
   setup whose objects instantiate it (`instantiatedBy`). Where only the Boost probe stand-in
   (`roots_boost.o`) instantiates it, the row takes the setup whose flags the probe compiles with,
   `app-stand-ins`, and is selected only when the ledger pairs it at byte or fingerprint. The stand-ins
-  compile with uenux2's flags without `-fno-strict-aliasing`: they come first on the link line, the
+  compile with uenux2's flags at `-O2` and without `-fno-strict-aliasing`: they come first on the link line, the
   libc++ templates they instantiate win the link, and the target's copies of those have TBAA
   (urna's `docs/reference/facts/app-flags.md` §F6).
 - **uenux2** has few reconstructed units, so its rows also come from the ledger's attribution

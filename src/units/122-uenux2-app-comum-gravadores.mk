@@ -6,7 +6,7 @@
 #   DeterminaNomeArquivo (fn 3798, a chosen name) with DeterminaNomeArquivoSemLetra (records :28, :33, :38), which
 #   binaryen inlines into it (its second stack frame), is written and does not match (below).
 # - comum::asn::ConverteSerialFlash (target fn 3605, records :26 and :31) and DesconverteSerialFlash (fn 3604, record
-#   :54, written, not matched) in src/app/comum/gravadores/asn/util.cpp, with the header util.h beside it.
+#   :54, matched at the tree's -O3: below) in src/app/comum/gravadores/asn/util.cpp, with the header util.h beside it.
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
 #   inlines into it, in md/cversoesarquivos.cpp, the class header beside it; libc++'s hinted emplace into its
 #   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346,
@@ -52,12 +52,12 @@
 #   target frees it before: 68 over 367 rows with both, a match with neither. Each was not measured alone.
 # No other spelling was measured, so no form here is listed as giving the same bytes.
 #
-# Not matched, and what each waits for:
+# Not matched, and what each waits for (3604 matches since the tree took -O3):
 # - 3798 DeterminaNomeArquivo and 3604 DesconverteSerialFlash call std::string::append(const char*, size_t) in the
-#   target (fn 160), which clang inlines at this tree's -O2 and calls at -O3: compiled by tools/round/try-tu.sh
-#   --symbols, the objects of cgravadorutil.cpp and gravadores/asn/util.cpp call __grow_by_and_replace in both
-#   functions, and with --flags -O3 they call append(const char*, size_t). They score 200 over 954 rows and 121 over 346
-#   in this link. -O3 for uenux2 is the user's decision. 3798 differs in one more way: the target compares the zone and
+#   target (fn 160), which clang inlines at -O2 and calls at -O3: compiled by tools/round/try-tu.sh --symbols at -O2,
+#   the objects of cgravadorutil.cpp and gravadores/asn/util.cpp call __grow_by_and_replace in both functions, and
+#   with --flags -O3 they call append(const char*, size_t). At -O2 they scored 200 over 954 rows and 121 over 346. At the
+#   tree's -O3 3604 matches and 3798 scores 82 over 862 (72 operand-only, 10 inserted). 3798 differs in one more way: the target compares the zone and
 #   the section it takes with no mask, and ours, over iresultado.h's CBaseType aliases, masks each with 65535 first.
 #   Plain unsigned short aliases in iresultado.h, md/cidentificacaourna.h and md/cidentificacaosecao.h add a mask to
 #   CLocal::GetSecaoID (fn 1078, matched) in clocal.cpp.o (its object before and after), and what they give 3798 was not

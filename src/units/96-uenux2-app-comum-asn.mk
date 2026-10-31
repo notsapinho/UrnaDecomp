@@ -33,7 +33,7 @@
 #   src/asn1/modules/ModuloTiposEleitorais.h does not declare, and calls fn 2276, whose callees 2765 and 3649 (api::CDate's
 #   constructors) have no body of ours.
 # - 731, the base's default DoConverte and DoDesconverte merged, and 11418, IConversorBiometriaASN's default DoConverte,
-#   need -O3, which uenux2's flags do not have (docs/reference/facts/levels.md §V3). Their format strings are 44 and 47
+#   need -O3, the tree's level since the measurement below (docs/reference/facts/levels.md §V3). Their format strings are 44 and 47
 #   bytes. In a body that is only such a throw, the object at -O2 keeps libc++'s search of the format string for a brace
 #   (__try_constant_folding, inlined by clang) as a loop: a probe folds up to 36 bytes, and at -O3 up to 74. The target has
 #   no such loop for these and keeps one for its strings of 79 bytes and more (10226, 11514, 10772). In a
