@@ -1,6 +1,6 @@
 // Roots: api::CFillField, api::CRectField and api::CTextRectField are built only with std::make_shared in the target
-// (the __shared_ptr_emplace vptrs 1578224, 1578184 and 1578344), by fns 2245, 3680 and 7787, and 5546, none of them
-// reconstructed. These stand-ins build them the same way, so each class's vtable is kept by the vptr store of its
+// (the __shared_ptr_emplace vptrs 1578224, 1578184 and 1578344), by fns 2245, 3680 and 7787, and 5546. 2245 is
+// api::CFormBuilder::AddFill, written, so it has no stand-in here: CFillField's constructor needs its one caller. These stand-ins build the others the same way, so each class's vtable is kept by the vptr store of its
 // constructor, as in the target, and the control blocks are the target's: __shared_ptr_emplace<CFillField>'s D2 and D0
 // (fns 11124, 11123), <CRectField>'s (11126, 11125) and <CTextRectField>'s (11118, 11117). Fn 5546 builds its text with
 // std::make_shared<CFixedText>, alignment 2, and its stand-in does too: <CFixedText>'s D2 and D0 (11120, 11119).
@@ -11,7 +11,6 @@
 #include <memory>
 #include <string>
 
-#include "api/gui/cfillfield.h"
 #include "api/gui/cfixedtext.h"
 #include "api/gui/crectfield.h"
 #include "api/gui/ctextrectfield.h"
@@ -19,11 +18,6 @@
 namespace {
 
 using SharedField = std::shared_ptr<api::IFormField<api::IScreen>>;
-
-__attribute__((noinline)) SharedField CampoPreenchido(const api::SRect& rect, api::TColor cor)
-{
-    return std::make_shared<api::CFillField>(rect, cor);
-}
 
 __attribute__((noinline)) SharedField CampoRetanguloA(const api::SRect& rect)
 {
@@ -47,7 +41,6 @@ void* volatile u90_sink;
 struct SU90Roots {
     SU90Roots()
     {
-        u90_sink = reinterpret_cast<void*>(&CampoPreenchido);
         u90_sink = reinterpret_cast<void*>(&CampoRetanguloA);
         u90_sink = reinterpret_cast<void*>(&CampoRetanguloB);
         u90_sink = reinterpret_cast<void*>(&CampoTextoRetangulo);

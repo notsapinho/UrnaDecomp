@@ -8,14 +8,15 @@
 
 namespace api {
 
+CBuzzFieldMT::CBuzzFieldMT(int primeiro, int segundo)
+    : m_primeiro(primeiro)
+    , m_segundo(segundo)
+{
+}
+
 void CBuzzFieldMT::Draw(IScreenMT& screen) const
 {
     screen.Buzz(m_primeiro, m_segundo);
 }
 
 } // namespace api
-
-// <stubs>
-// f941 · 385 B · unmatched · placement: link order · name unknown
-// void f941(i32, i32, i32) { ... }
-// </stubs>

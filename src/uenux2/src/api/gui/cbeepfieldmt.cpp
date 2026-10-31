@@ -8,6 +8,11 @@
 
 namespace api {
 
+CBeepFieldMT::CBeepFieldMT(int vezes)
+    : m_vezes(vezes)
+{
+}
+
 void CBeepFieldMT::Draw(IScreenMT& screen) const
 {
     screen.Beep(m_vezes);

@@ -3195,14 +3195,8 @@
 
 // link-order cluster 757 · uses=2 · neighbours' file uenux2/src/api/gui/ctextfieldupdatemt.cpp
 
-// f5419 · 423 B · unmatched · placement: link order · name unknown
-// void f5419(i32, i32, i32, i32) { ... }
-
 // f5413 · 20 B · unmatched · placement: link order · name unknown
 // void f5413() { ... }
-
-// f5409 · 356 B · unmatched · placement: link order · name unknown
-// void f5409(i32, i32, i32, i32) { ... }
 
 // link-order cluster 758 · uses=2 · neighbours' file uenux2/src/api/gui/crhvoicetexttospeech.cpp
 
@@ -3492,26 +3486,8 @@
 
 // link-order cluster 1268 · uses=11 · neighbours' file uenux2/src/api/util/isystemdatetime.cpp
 
-// f1152 · 444 B · unmatched · placement: link order · name unknown
-// void f1152(i32, i32, i32, i32, i32, i32) { ... }
-
 // f1151 · 330 B · unmatched · placement: link order · name unknown
 // void f1151(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1312 · uses=23 · neighbours' file uenux2/src/api/gui/cinteractiveformbuilder.cpp
-
-// f651 · 265 B · unmatched · placement: link order · name unknown
-// void f651(i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1317 · uses=25 · neighbours' file uenux2/src/app/vota/eleitor/comum/climitedcachedinstream.cpp
-
-// f619 · 207 B · unmatched · placement: link order · name unknown
-// void f619(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1320 · uses=26 · neighbours' file uenux2/src/api/util/csynchronizer.cpp
-
-// f604 · 490 B · unmatched · placement: link order · name unknown
-// void f604(i32, i32, i32) { ... }
 
 // link-order cluster 1324 · uses=30 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
 
@@ -3532,16 +3508,6 @@
 
 // f301 · 545 B · unmatched · placement: link order · name unknown
 // void f301(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1377 · uses=160
-
-// f193 · 541 B · unmatched · placement: link order · name unknown
-// void f193(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1381 · uses=202
-
-// f180 · 258 B · unmatched · placement: link order · name unknown
-// void f180(i32, i32, i32, i32, i32) { ... }
 
 // component simulador
 

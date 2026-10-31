@@ -15,7 +15,12 @@
 
 namespace api {
 
-// (original lines 18-29: content not recovered)
+CLedFieldMT::CLedFieldMT(ELedOperacao operacao)
+    : m_operacao(operacao)
+{
+}
+
+// (original lines 23-29: content not recovered)
 #line 30
 void CLedFieldMT::Draw(IScreenMT& screen) const
 {

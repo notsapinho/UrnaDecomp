@@ -14,8 +14,3 @@ void CCutFieldPaper::Draw(IPaper& paper) const
 }
 
 } // namespace api
-
-// <stubs>
-// f1264 · 371 B · unmatched · placement: link order · name unknown
-// void f1264(i32) { ... }
-// </stubs>
