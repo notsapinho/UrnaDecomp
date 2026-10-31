@@ -93,7 +93,7 @@ the next run.
   commit what is worth having first.
 - **Copy out what the board cites first.** The clean-up check sees tracked and untracked files only, and the worktree's
   ignored `build/out/` goes with it, with every script and log a post names. Copy the worktree's scratch roots to the
-  board's `shared/from-<worktree>/`, which the coordinator copies between machines, each file of 5 MB or less, and write
+  board's `shared/from-<lane>/`, which the coordinator copies between machines, each file of 5 MB or less, and write
   what stayed out and why in a `SKIPPED.txt` there. Name the new path in your result. Check the copy against the names the
   lane's posts give, relative ones too: a posts' search for `build/out/…` misses `p/run.sh` under "in build/out/<handle>/"
   and still reports nothing unresolved. A script worth keeping past the run belongs in `tools/`.

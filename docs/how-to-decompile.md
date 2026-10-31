@@ -456,14 +456,14 @@ units do, and say why in the fragment's header comment (step 6):
    whose only records are in another class's file has no evidence for its header: declare it in that file's header or in
    its own lower-case header beside it, and mark the path as chosen ("Names no evidence gives", below).
 
-Before you create the file rule 4 names, read the class's vtable and typeinfo in the data: the class may share an
-object with another, have its key function in another class's file, or have left the file upstream gave it
-([facts/placing.md](reference/facts/placing.md) §P2). The `unplaced.cpp` comment over a cluster is a stretch's label, and
-its file name counts only as a `class-convention` guess for this class (§P3). Read a function's link neighbours by band
-position, never by the `ordinal` column, and confirm them from the data, which has no digit scramble (§P4). When the
-recorded neighbours on two sides disagree, compare file names only where the data show a run in name order, and when
+Before you create the file rule 4 names, read the class's vtable and typeinfo in the data: the class may share an object
+with another, have its key function in another class's file, or have left the file upstream gave it
+([facts/placing.md](reference/facts/placing.md) §P2). The `unplaced.cpp` comment over a cluster is a stretch's label,
+and its file name counts only as a `class-convention` guess for this class (§P3). Read a function's link neighbours by
+band position, never by the `ordinal` column, and confirm them from the data, which has no digit scramble (§P4). When
+the recorded neighbours on two sides disagree, compare file names only where the data show a run in name order, and when
 unrecorded objects lie between them take the adjacent side and call it a choice (§P5). A function that calls an `EM_JS`
-import has that order as evidence (§P6).
+import is placed by the glue's order ([facts/link-order.md](reference/facts/link-order.md) §L7 item 16).
 
 **Keep every throw on its record's line.** A decompiled function's `std::source_location` records are bytes of the
 target, so each throw site must sit at the line and column its record gives; above it, blank lines and *gaps* hold
@@ -509,9 +509,10 @@ caller's body: a call in the caller's own code, or in code binaryen inlined from
 makes it external; only code inlined from the callee's own file fits a file-static callee (§R8, with 5449, where no byte
 says which, so its linkage is a choice). A function-local static's guard shows linkage as well (§R17).
 
-**The order of two members.** Inside one use band and one object, a higher target index must have a lower `ld_index`
-in `build/out/wasm-map/vota_web/names.tsv`. Compare `ld_index`, not the scan's `ours`: `ours` follows the final order,
-whose digit zones sort as text (`998` above `1002`), so a pair across ordinal 999 and 1000 reads the wrong way round.
+**The order of two members.** Inside one use band and one object, a higher target index must have a lower `ld_index` in
+`build/out/wasm-map/vota_web/names.tsv` ([reference/splat.md](reference/splat.md) "Reviewing a match" holds a reviewer
+to it). Compare `ld_index`, not the scan's `ours`: `ours` follows the final order, whose digit zones sort as text (`998`
+above `1002`), so a pair across ordinal 999 and 1000 reads the wrong way round.
 
 ```sh
 for i in 5742 5743; do s=$(awk -v i=$i '$1==i {print $2}' splat/matched.txt); printf '%s %s\n' $i "$(awk -F'\t' -v s="$s" '$2==s {print $4}' build/out/wasm-map/vota_web/names.tsv)"; done
@@ -1108,13 +1109,14 @@ callee whose callers are all named by `vtable` (those cast no votes), a callee w
 body's own callee, a `.bss` object or a small pointer no vote reaches. The kinds and what each rests on are in
 [reference/splat.md](reference/splat.md) §2. A hand line with one caller is the case §3's self-vote rule refuses in a
 generated line, and that rule does not read hand lines, so the line's comment must cite evidence from the callee's own
-body. `pair-depth0` says the two bodies are the only pair with that hash at depth 0 (`pnpm --silent wasm fingerprint
-<wasm> --depth 0`, on both sides): its `fingerprint` where an inlined callee alone differs deeper, or, for a body that
-holds its own table slot, its `shape`, with the one differing row in the comment. Say which, since the label alone does
-not.
+body. `pair-depth0` is the only pair with that hash at depth 0, where a callee's body does not count (`pnpm --silent
+wasm fingerprint <wasm> --depth 0`, on both sides). The hash is `fingerprint`, or `shape` for a body that holds its own
+table slot, whose constant cannot be equal, and the comment says which. The uniqueness reads no match, but it compares
+the same two bodies a match would, so a verifier weighs such a line too.
 
-A verifier weighs each line by removing it. On a copy of the symbol file without the line, and a copy of the match list
-without the range's lines (a match names its function, §3, so the list must lose them too), scan and say what falls:
+A verifier weighs each line by removing it ([reference/splat.md](reference/splat.md) "Reviewing a match"). On a copy of
+the symbol file without the line, and a copy of the match list without the range's lines (a match names its function,
+§3, so the list must lose them too), scan and say what falls:
 
 ```sh
 pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../build/out/wasm/vota_web/vota_web_wasm.wasm --kinds ../build/out/wasm-kinds/vota_web/kinds.json --symbols <copy> --match <list copy> -o <scratch.tsv>

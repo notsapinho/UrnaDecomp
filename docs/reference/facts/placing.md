@@ -1,10 +1,10 @@
 # Facts: where a function goes
 
 What the evidence says of a function's file, tree and neighbours, beyond the record that names them: what a stub's place
-is worth, a class with no file of its own, what a stretch's label says, how to read link neighbours and the data, two
-lists a target gives that nothing else does, how to lay out a file and the headers a class needs, and how to find a
-slot's callers. `docs/how-to-decompile.md` steps 1 to 3 rely on these, and its rules are there; this page holds their
-cases. Commands run from the repository root, at 0b5f410 where a number moves.
+is worth, a class with no file of its own, what a stretch's label says, how to read link neighbours and the data, an
+error enum's codes, how to lay out a file and the headers a class needs, and how to find a slot's callers.
+`docs/how-to-decompile.md` steps 1 to 3 rely on these, and its rules are there; this page holds their cases. Commands
+run from the repository root, at 0b5f410 where a number moves.
 
 ## P1. What a stub's place is worth
 
@@ -125,26 +125,14 @@ and call it a choice. `vota::CEleitorVotouNaoVotou`'s vtable (1592928) has four 
 out: every `CInteractiveForm<IScreen, IInputKbd>` record lies among `app/vota/eleitor/` records, and none of
 `<IScreenMT, IInputMT>` does.
 
-## P6. Two lists only the target gives
+## P6. An error enum's codes
 
-**An error enum's codes.** A shared enum generated from the codes the target passes misses every thrower binaryen
+A shared enum generated from the codes the target passes misses every thrower binaryen
 merged: a merge thunk passes the code to the shared body as a constant parameter, and the body's constructor call has no
 constant to read. 3724 is `f6029(p0, 124, 1571724, 362126, 8013)`, and 8013 is in no `f170` call
 (`pnpm --silent wasm fn ../target/vota_web_wasm.wasm 3724`, from `asmlift-wasm/`). So read the `i32.const` arguments of
 each thunk of a `byn$mgfn-shared` body whose parameter reaches the error constructor's code argument too. A code the list
 missed is a `static_cast<E>(8013)` at the throw, and the shared header stays one blob.
-
-**`EM_JS` order.** A function that loads no string and no vptr and calls an `EM_JS` import has one placing evidence: the
-glue lists `EM_JS` functions in the link order of their sections (the head of `src/web/wasm_shim.cpp`). At the seam
-between `cwasmthread.cpp` and `cwasmwebsound.cpp`:
-
-```sh
-/usr/bin/grep -oE '\b(js_thread_log|js_emit_event|js_push_key|js_console_error|js_wasm_web_sound_play_wav)\b' target/vota_web_wasm.js | awk '!s[$0]++' | tr '\n' ' '; echo
-# js_thread_log js_emit_event js_push_key js_console_error js_wasm_web_sound_play_wav
-```
-
-`ledger/ordinals.tsv` gives no help there: 3533's window is 5 to 9642. Unit 99's fragment marks its file as a choice from
-this order.
 
 ## P7. Declaring what a class needs, and laying out a file
 
