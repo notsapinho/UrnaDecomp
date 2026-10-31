@@ -325,7 +325,8 @@ beside the matched one is not reported (`docs/reference/splat.md` "Reviewing a m
 ## S8. What every landing changes besides its matches
 
 `make -C src splat-symbols` and the scan re-pick some names and pairs at every landing, whatever the unit adds. None
-of it is evidence from the unit, and only the last kind below can cost a match. The function lines of the symbol file each landing of
+of it is evidence from the unit. The first kind below could cost a match until the generator stopped casting most of
+it, and the last kind can. The function lines of the symbol file each landing of
 `main` changed, leaving out the indices it matched:
 
 ```sh
@@ -354,8 +355,9 @@ nothing), four kinds of line:
    python3 -I -c "import sys; sys.path.insert(0, 'tools/extract'); import wasmmod; base, b = wasmmod.Module('target/vota_web_wasm.wasm').memory_image(); print(bytes(b[9039 - base:9041 - base]))"   # b'}\x00'
    ```
 
-   Whenever our copy of `"}"` lands on a table slot of ours, the name of the function in that slot is voted onto
-   7530; 615's votes were not traced. At ee595de neither 615 nor 7530 has a second name (`/usr/bin/grep -E '= func:(615|7530);'
+   Whenever our copy of `"}"` landed on a table slot of ours, the name of the function in that slot was voted onto
+   7530. On 6bc2a12's link `jsonObjectCompute` (6315) votes onto 615 the same way: it passes `"{}"` at 8150, the
+   target's slot of 615. At ee595de neither 615 nor 7530 has a second name (`/usr/bin/grep -E '= func:(615|7530);'
    splat/symbol_addrs.txt`). The name need not be one the file held before, so no line need lose it: one landing
    gave 615 `CAesKey`'s destructor, a function of our link the symbol file had never named, and the next took it
    away again:
@@ -372,7 +374,35 @@ nothing), four kinds of line:
    moved `differs` to `no-candidate`. The stray vote can take a matched name out of the file: on a link where `"}"` lay
    on a slot of the shared empty function, seventeen right votes for 218 lost to one for 7530, and at bb97df6 84 call
    votes for 256 lost to one table vote for 615. The match stands, because a scan applies the match list. A command that
-   reads the symbol file alone (`splat-remap`, a test) then says `has no target function`.
+   reads the symbol file alone (`splat-remap`, a test) then says `has no target function`. The name it takes can cost
+   a match, when it is an unmatched function's that a matched caller needs. The target's `__months` (7775) passes
+   `"July"` at 10969, the slot of 1030. On a link where our `"July"` lay on our slot of `CompressProgress` (8263), that
+   name got two contradicting votes and went, and 3389 (`CCompressProgressWrap::Init`, which passes `CompressProgress`)
+   read `unresolved` on `a table slot of ours: _ZL16CompressProgressPK17ICompressProgressyy has no target function`.
+
+   The generator no longer casts these votes. `constVote` (`alignVotes` in `asmlift-wasm/src/splat-symbols.ts`) reads a
+   constant inside both tables as an address, and votes it as data, when the target's constant addresses our
+   address's content: where it resolves, or at another place holding the same content (`resolveDataAddress`'s `same`,
+   which `splat-remap` prints as `address same-content`). A constant the operand-kind table (§S5) calls a slot of ours
+   stays a function pointer whatever it addresses, since two slots can address copies of one string: sqlite's 1994
+   passes `sqlite3ExprDeleteGeneric` at the target's 11969, a `"y"`, and on 6bc2a12's link at our 5141, a `"y"` too.
+   The target keeps `"July"` twice, so ours resolved to neither copy, and the vote was cast:
+
+   ```sh
+   python3 -I -c "import re, sys; sys.path.insert(0, 'tools/extract'); import wasmmod; base, b = wasmmod.Module('target/vota_web_wasm.wasm').memory_image(); print([m.start() + base for m in re.finditer(rb'(?<=\x00)July\x00', b)])"
+   # [10969, 1508107]
+   wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[(8150|10293|10969|11969)\] '
+   # - elem[8150] = ref.func:615
+   # - elem[10293] = ref.func:14030
+   # - elem[10969] = ref.func:1030
+   # - elem[11969] = ref.func:12547
+   ```
+
+   On 6bc2a12's link, reading them so moves two lines of the symbol file: 1030 loses `_ZN13CSha256Hasher4InitEv …
+   evidence:table` (the `"July"` vote), and 12318 gets back `atanh … evidence:pair-addr`. `sqlite3Pragma` (2352) passes
+   `"memory"` at 10293, and our `"memory"` lay on our slot of `atanh`: a vote for 14030 that contradicted the pair, so
+   step 8 dropped it. The empty string still votes, since the target holds `""` in too many places for `same` to list
+   them (`STRING_COPY_LIMIT`).
 2. **A matched function's `pair-*` line that drops out and comes back.** Each landing from 1c3d9f9 on removes the line
    of one matched SQLite function and restores the one the landing before removed: 12427 `rankValueFunc`, then 12432,
    12443, 12447, 12288, 12466, 12479, 12485, 12492, 12500 and 12510 `statInit`, which 9127880 restores. The match lines

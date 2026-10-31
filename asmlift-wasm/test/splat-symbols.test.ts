@@ -19,6 +19,7 @@ import {
   SAME_CONTENT_LIMIT,
   type SymbolMaps,
   type TargetSide,
+  alignVotes,
   cStringAt,
   castBssVotes,
   castCtorVotes,
@@ -813,6 +814,87 @@ describe('ctorVotes', () => {
     expect([...placed.get('_ZN4ASN1L14badEndOfStreamE')!]).toEqual([1914448]);
     // an object the census cannot name: its 36-B destructor reads this address + 11 and loads nothing else
     expect([...placed.get('_ZN9CBaseTypeItLt0ELt99ELi10EE4NOMEE')!]).toEqual([0x1d2cd0]);
+  });
+});
+
+describe('alignVotes', () => {
+  // ours: strings from 1024, and a table of 2000 slots over them. The target: the same strings and "July" once more,
+  // under a table of 2000 slots too. A string's address below both table sizes is a slot number on either side.
+  const i32 = (value: number): Instr => ({
+    offset: 0,
+    end: 0,
+    opcode: 0x41,
+    name: 'i32.const',
+    imms: [{ kind: 's32', value, at: 0, role: 's32' }],
+  });
+  const ourImage = Buffer.from('\0January\0July\0August\0', 'latin1');
+  const targetImage = Buffer.from('\0\0\0January\0July\0August\0Sunday\0July\0', 'latin1');
+  const at = (img: Buffer, text: string, from = 0): number => 1024 + img.indexOf(`\0${text}\0`, from) + 1;
+  const ourJuly = at(ourImage, 'July');
+  const targetJuly = at(targetImage, 'July', targetImage.indexOf('Sunday'));
+  const ours = {
+    map: {
+      data: [
+        {
+          addr: 1024,
+          size: ourImage.length,
+          key: 'strs',
+          name: '<internal>:(.rodata)',
+          object: '<internal>',
+          section: '<merged strings>',
+          out: '.rodata',
+        },
+      ],
+    },
+    dataEnd: 3000,
+    tableSize: 2000,
+    elem: new Map([
+      [ourJuly, 200],
+      [ourJuly + 1, 201],
+    ]),
+  } as unknown as OurSide;
+  const target = {
+    module: { tables: [{ min: 2000 }] },
+    image: targetImage,
+    imageBase: 1024,
+    dataEnd: 4000,
+    elem: new Map([
+      [targetJuly, 100],
+      [targetJuly + 2, 101],
+    ]),
+    symbols: emptySymbols(),
+    srcloc: new Map(),
+  } as unknown as TargetSide;
+  // as gatherEvidence reads our address: where its content resolves, and every other place holding it
+  const addressOf = (v: number): number[] => {
+    const r = resolveDataAddress(ours, ourImage, target, v);
+    return [...(r.ok ? [r.addr] : []), ...(r.same ?? [])];
+  };
+  /** our side with the shifted link's word on our function 1's one constant */
+  const known = (kind: 'address' | 'slot'): OurSide => ({
+    ...ours,
+    fnKinds: new Map([[1, { verified: true as const, ops: new Map([[0, kind]]) }]]),
+  });
+  const tableVotes = (vo: number, vt: number, side = ours): [number, [number, number][]][] => {
+    const votes = emptyVoteBox();
+    expect(alignVotes(side, target, addressOf, [i32(vo)], [i32(vt)], votes, 7775, 1)).toBe(true);
+    return [...votes.table].map(([o, m]) => [o, [...m]]);
+  };
+
+  it('votes no table slot for two addresses of one string, wherever the target keeps its copies', () => {
+    // the target holds "July" twice, so ours resolves to neither copy: both are the same content
+    expect(resolveDataAddress(ours, ourImage, target, ourJuly).ok).toBe(false);
+    expect(tableVotes(ourJuly, targetJuly)).toEqual([]);
+    expect(tableVotes(ourJuly, targetJuly, known('address'))).toEqual([]);
+  });
+
+  it('votes the slot when the two addresses hold other content: a function pointer', () => {
+    // "uly" against "ly": no copy of our content sits at the target's constant
+    expect(tableVotes(ourJuly + 1, targetJuly + 2)).toEqual([[201, [[101, 1]]]]);
+  });
+
+  it('votes the slot of a constant our link knows as a slot, though both slots address one string', () => {
+    expect(tableVotes(ourJuly, targetJuly, known('slot'))).toEqual([[200, [[100, 1]]]]);
   });
 });
 

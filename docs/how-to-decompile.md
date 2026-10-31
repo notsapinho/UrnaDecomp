@@ -1124,9 +1124,10 @@ A second name beside the matched one is not reported, so read step 8's `git diff
 that gained a name, and for a matched index that lost its line: a vtable slot your unit fills with a body that is not
 the target's (a defaulted or implicit member of an earlier unit) votes that slot's index onto the body, and the function
 the body is matched as can lose its line. The match stands, and the range says why. Other lines move at every landing
-whatever the unit and are not evidence: a matched index gains an `evidence:table` name while the name's owner loses any
-line it had, an anchor included, and the lines voted `by:` it go too; an anchor drops when our record lands on a round
-address that plain integers hold; and one matched function's `pair-addr` line drops as another comes back. The match
+whatever the unit and are not evidence: an anchor drops when our record lands on a round address that plain integers
+hold, and one matched function's `pair-addr` line drops as another comes back. Less often, now that step 8 reads an
+aligned constant whose two values address one string as an address, a matched index gains an `evidence:table` name
+while the name's owner loses any line it had, an anchor included, and the lines voted `by:` it go too. The match
 lines are right and the lines are generated; [facts/splat.md](reference/facts/splat.md) §S8 lists them, with the command
 that prints a landing's lines without its own matches. Keep the file as step 8 wrote it. A gained name on another index
 is the range's to explain.
@@ -1163,7 +1164,9 @@ link's data layout:
 The next landing that moves the data clears it. Never add or drop a string to move it: a verdict that turns on
 layout is a tool defect to report (`src/units/README.md`). At a landing, land the next lane first and retry (step 10).
 A small integer in a data object that equals a table slot of ours is not such a case: the operand-kind table reads
-it as the integer it is ([reference/splat.md](reference/splat.md) §3).
+it as the integer it is ([reference/splat.md](reference/splat.md) §3). Nor is a string whose address equals a table
+slot of ours, where the target's constant addresses the same string: step 8 reads it as an address
+([facts/splat.md](reference/facts/splat.md) §S8 item 1).
 
 The scan's first pass can also leave a new match `match` that the build's fixed point refuses: `make -C src splat` then
 stops on `UNCONFIRMED: self-voted`. Read it as `unresolved self-voted`: the callee's name has no voter but the match.

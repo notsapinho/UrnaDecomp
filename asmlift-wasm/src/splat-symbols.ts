@@ -15,8 +15,9 @@
 //                operand may have other holders as long as one pair of them has one shape
 //   call         a call operand of an aligned pair (same instructions modulo callees and addresses): our callee ↔
 //                the target's callee, every vote agreeing
-//   table        an i32.const of an aligned pair inside both tables that its address reading does not explain:
-//                our slot's function ↔ the target slot's function
+//   table        an i32.const of an aligned pair inside both tables that its address reading does not explain (the
+//                target's constant addresses no copy of our content) or our operand kinds call a slot: our slot's
+//                function ↔ the target slot's function
 //   vote         an address operand of an aligned pair: our data symbol + offset ↔ the target address. A pair that
 //                only a record, a vtable slot or an anchor's call names votes for .bss objects alone
 //   ctors        a .bss object of ours whose run of __wasm_call_ctors the target's holds, by its literals (ctorVotes)
@@ -35,7 +36,7 @@ import { glueNamesFor } from './glue-file';
 import { importResolver } from './imports';
 import { GLOBAL_BASE, type HashedFn, hashModule } from './normalize';
 import { type Module, parseModule, typeText } from './parse';
-import type { DataWordKind, OperandKinds } from './splat-kinds';
+import type { DataWordKind, FunctionKinds, OperandKinds } from './splat-kinds';
 
 // ---------------------------------------------------------------------------------------------------------------
 // wasm-ld --Map
@@ -203,6 +204,9 @@ export interface OurSide {
    *  (splat-kinds.ts classifyDataWords; symbolMaps sets it from the operand-kind table): a word not listed is what it
    *  reads as. Without it such a word keeps every reading. */
   dataKinds?: ReadonlyMap<number, DataWordKind>;
+  /** our function index → what the shifted link says each of its constants is (splat-kinds.ts; symbolMaps sets it
+   *  from the operand-kind table) */
+  fnKinds?: ReadonlyMap<number, FunctionKinds>;
 }
 
 /** The scratch link beside a plain link: `<root>/build/out/wasm/vota_web/x.wasm` → `<root>/build/out/wasm-map/vota_web`. */
@@ -1155,11 +1159,11 @@ export interface SymbolMaps {
   kinds?: OperandKinds;
 }
 
-/** The maps of `ours` and `target`; with the operand-kind table, our side reads its data words by it too (`ours` is
- *  copied with `dataKinds` set, so use the maps' `ours`). */
+/** The maps of `ours` and `target`; with the operand-kind table, our side reads its data words and votes its
+ *  constants by it too (`ours` is copied with `dataKinds` and `fnKinds` set, so use the maps' `ours`). */
 export function symbolMaps(ours: OurSide, target: TargetSide, kinds?: OperandKinds): SymbolMaps {
   return {
-    ours: kinds === undefined ? ours : { ...ours, dataKinds: kinds.data },
+    ours: kinds === undefined ? ours : { ...ours, dataKinds: kinds.data, fnKinds: kinds.functions },
     ourImage: memoryImage(ours.module).image,
     target,
     types: typeMap(ours.module, target.module),
@@ -1354,16 +1358,20 @@ export function listedVoters(
   return list.length > 0 && list.length <= VOTERS_LISTED && list.every((v) => anchoredT.has(v)) ? list : undefined;
 }
 
-function alignVotes(
+/** Votes from two bodies that are the same instructions, into `votes`; false when they are not. */
+export function alignVotes(
   ours: OurSide,
   target: TargetSide,
-  /** our address → the target address content identity gives it, when it does */
-  addressOf: (vo: number) => number | null,
+  /** our address → the target addresses content identity gives it: the one it resolves to, and the others holding
+   *  the same content */
+  addressOf: (vo: number) => number[],
   oi: Instr[],
   ti: Instr[],
   votes: VoteBox,
   /** the target function `ti` is */
   voter: number,
+  /** our function `oi` is */
+  ourFn: number,
 ): boolean {
   const targetEnd = target.dataEnd;
   const targetTable = target.module.tables[0]?.min ?? 0;
@@ -1402,10 +1410,15 @@ function alignVotes(
       votes.voters.set(obj.key, who.add(voter));
     }
   };
-  // a constant inside both tables is a function pointer unless its address reading already explains it
-  const constVote = (vo: number, vt: number): void => {
+  const kinds = ours.fnKinds?.get(ourFn);
+  // a constant inside both tables is a function pointer unless its address reading already explains it: the target's
+  // constant addresses our content, where it resolves or in another copy (a string the target keeps twice). One our
+  // link knows as a slot stays a pointer, since two slots can address equal strings too.
+  const constVote = (vo: number, vt: number, at: number): void => {
     if (vo !== vt && vo >= 1 && vo < ours.tableSize && vt >= 1 && vt < targetTable) {
-      if (vo >= GLOBAL_BASE && addressOf(vo) === vt) {
+      const slot = kinds?.verified === true && kinds.ops.get(at) === 'slot';
+      if (vo >= GLOBAL_BASE && !slot && addressOf(vo).includes(vt)) {
+        dataVote(vo, vt);
         return;
       }
       const fo = ours.elem.get(vo);
@@ -1432,7 +1445,7 @@ function alignVotes(
           votes.fnVoters.set(im.value, (votes.fnVoters.get(im.value) ?? new Set()).add(voter));
         }
       } else if (im.kind === 's32' && tm.kind === 's32' && o.opcode === 0x41) {
-        constVote(im.value, tm.value);
+        constVote(im.value, tm.value, o.offset);
       } else if (im.kind === 'memarg' && tm.kind === 'memarg') {
         dataVote(im.offset, tm.offset);
       }
@@ -1838,9 +1851,9 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   // propagate: align every pair and vote callees and table constants; a voted pair whose bodies agree at depth 0
   // (modulo callees and addresses) is aligned in turn
   const ourImage = memoryImage(om).image;
-  const addressOf = (vo: number): number | null => {
+  const addressOf = (vo: number): number[] => {
     const r = resolveDataAddress(ours, ourImage, target, vo);
-    return r.ok ? r.addr : null;
+    return [...(r.ok ? [r.addr] : []), ...(r.same ?? [])];
   };
   const tTypes = typeMap(om, tm);
   const sameSignature = (o: number, t: number): boolean =>
@@ -1863,7 +1876,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
         continue;
       }
       aligned.add(key);
-      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, votes, t);
+      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, votes, t, o);
     }
     for (const o of new Set([...votes.fn.keys(), ...votes.table.keys()])) {
       if (pairOf.has(o)) {
@@ -1910,11 +1923,11 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
       if (namedT.has(t) || pairOf.has(o)) {
         if (pairOf.get(o) === t && !aligned.has(`${t}:${o}`)) {
           namedAnchors.add(`${t}:${o}`);
-          alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, namedAnchorVotes, t);
+          alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, namedAnchorVotes, t, o);
         }
         continue;
       }
-      if (alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t)) {
+      if (alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t, o)) {
         pairOf.set(o, t);
         namedT.add(t);
         anchoredT.add(t);
@@ -1928,7 +1941,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     sameSignature,
     (t, o) =>
       sizeT(t) > trivial &&
-      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t),
+      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t, o),
   );
 
   const fnNames: Evidence['fnNames'] = new Map();
@@ -2157,7 +2170,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     const o = ours.fnByKey.get(name);
     if (o !== undefined && t >= tFirst && o >= oFirst && sizeT(t) > trivial && !aligned.has(`${t}:${o}`) &&
         !anchoredT.has(t) && !namedAnchors.has(`${t}:${o}`)) {
-      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, lateVotes, t);
+      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, lateVotes, t, o);
     }
   }
   stats.dataLateVote = 0;
