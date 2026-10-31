@@ -91,23 +91,6 @@ unsigned getIntegerDataLength(INT_TYPE value)
   return (shift+9)/8;
 }
 
-int lexicographic_compare_bytes(const char* first1, size_t size1,
-                const char* first2, size_t size2)
-{
-  if(size1 > size2)
-    return 1;
-  if(size1 < size2)
-    return -1;
-
-  int r;
-  for (; size1; ++first1, --size1, ++first2)
-  {
-    r = *first1 - *first2;
-    if (r != 0) return r;
-  }
-
-  return 0;
-}
 
 /////////////////////////////////////////////////////////////////////
 
@@ -1107,15 +1090,17 @@ AbstractData* GeneralizedTime::create(const void* info)
 }
 
 GeneralizedTime::GeneralizedTime(const void* info)
-: UTCTime(info), millisec(0), valid(true)
+: AbstractData(info), year(1), month(1), day(1), hour(0), minute(0), second(0), mindiff(0)
+, utc(false), millisec(0), valid(true)
 {}
 
 GeneralizedTime::GeneralizedTime()
-: UTCTime(&theInfo),  millisec(0), valid(true)
+: AbstractData(&theInfo), year(1), month(1), day(1), hour(0), minute(0), second(0), mindiff(0)
+, utc(false), millisec(0), valid(true)
 {}
 
 GeneralizedTime::GeneralizedTime(const char* value)
-: UTCTime(&theInfo)
+: AbstractData(&theInfo)
 {
     set(value);
 }
@@ -1123,40 +1108,166 @@ GeneralizedTime::GeneralizedTime(const char* value)
 GeneralizedTime::GeneralizedTime(int yr, int mon, int dy,
     int hr , int mn, int sc,
     int ms , int md, bool u )
-: UTCTime(yr, mon, dy, hr, mn, sc, md, u), millisec(ms), valid(true)
+: AbstractData(&theInfo), year(yr), month(mon), day(dy), hour(hr), minute(mn), second(sc), mindiff(md)
+, utc(u), millisec(ms), valid(true)
 {
 }
 
 GeneralizedTime& GeneralizedTime::operator = (const GeneralizedTime& other )
 {
-  UTCTime::operator==(other);
+  year = other.year; month = other.month; day = other.day;
+  hour = other.hour; minute = other.minute; second = other.second;
+  mindiff = other.mindiff; utc = other.utc;
   millisec = other.millisec;
   valid = other.valid;
   return *this;
 }
 
 GeneralizedTime::GeneralizedTime(const GeneralizedTime& other)
-: UTCTime(other), millisec(other.millisec), valid(other.valid)
+: AbstractData(other), year(other.year), month(other.month), day(other.day)
+  , hour(other.hour), minute(other.minute), second(other.second)
+  , mindiff(other.mindiff), utc(other.utc), millisec(other.millisec), valid(other.valid)
 {}
+
+bool GeneralizedTime::checkFields() const
+{
+  if (year <= 0 || month < 1 || month > 12 || day <= 0)
+    return false;
+
+  switch (month)
+  {
+    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+      if (day > 31)
+        return false;
+      break;
+
+    case 4: case 6: case 9: case 11:
+      if (day > 30)
+        return false;
+      break;
+
+    case 2:
+      if (((year % 4) == 0 && (year % 100) != 0) || (year % 400) == 0)
+      {
+        if (day > 29)
+          return false;
+      }
+      else if (day > 28)
+        return false;
+      break;
+  }
+
+  if (hour > 23 || hour < 0 || minute > 59 || minute < 0 || second > 59 || second < 0)
+    return false;
+  if (millisec >= 20000000 || millisec < 0)
+    return false;
+  if (mindiff > 1200 || mindiff < -1200)
+    return false;
+  if ((mindiff < 0 ? -mindiff : mindiff) % 100 > 59)
+    return false;
+  return mindiff == 0 || !utc;
+}
+
+static int toInt(const ASN1_STD string& text, size_t pos, size_t len, int value)
+{
+  if (pos + len <= text.size())
+  {
+    ASN1_STD string digits = text.substr(pos, len);
+    if (digits.find_first_not_of("0123456789") == ASN1_STD string::npos)
+      value = ASN1_STD stoi(digits);
+  }
+  return value;
+}
 
 void GeneralizedTime::set(const char* valueNotion)
 {
-  sscanf(valueNotion, "%4d%2d%2d%2d%2d%2d",&year, &month, &day, &hour, &minute, &second);
-  int len = strlen(valueNotion);
-  if (len > 15 && valueNotion[14] == '.')
+  ASN1_STD string text(valueNotion);
+  ASN1_STD string::size_type pos = text.find_first_not_of("0123456789");
+  ASN1_STD string date = pos == ASN1_STD string::npos ? text : text.substr(0, pos);
+  ASN1_STD string rest = pos == ASN1_STD string::npos ? ASN1_STD string("") : text.substr(pos);
+
+  int yr = toInt(date, 0, 4, -1);
+  int mon = toInt(date, 4, 2, -1);
+  int dy = toInt(date, 6, 2, -1);
+  int hr = toInt(date, 8, 2, -1);
+  int mn = 0;
+  if (date.size() >= 11)
+    mn = toInt(date, 10, 2, -1);
+  int sc = 0;
+  if (date.size() >= 13)
+    sc = toInt(date, 12, 2, -1);
+
+  int precision = date.size() < 11 ? 0 : (date.size() < 13 ? 1 : 2);
+  int fraction = 0, md = 0, nFractions = 0, nZones = 0, nOffsets = 0;
+  bool z = false;
+  bool ok = true;
+  while (!rest.empty())
   {
-    float f;
-    sscanf(&valueNotion[14], "%f",&f);
-    millisec = (int) f*1000;
+    char c = rest.at(0);
+    rest = rest.substr(1);
+    ASN1_STD string::size_type next = rest.find_first_not_of("0123456789");
+    ASN1_STD string token = next == ASN1_STD string::npos ? rest : rest.substr(0, next);
+
+    bool good = false;
+    if (c == '.' || c == ',')
+    {
+      if (token.empty())
+        ok = false;
+      else
+      {
+        ASN1_STD string digits = token;
+        if (digits.size() < 7)
+          digits.append(7 - digits.size(), '0');
+        if (digits.size() > 7)
+          digits.erase(7);
+        fraction = toInt(digits, 0, digits.size(), -1);
+        switch (precision)
+        {
+        case 0:
+          mn = fraction * 60 / 10000000;
+          fraction = fraction * 60 % 10000000;
+        case 1:
+          sc = fraction * 60 / 10000000;
+          fraction = fraction * 60 % 10000000;
+        }
+      }
+      good = nFractions <= 0 && nZones <= 0 && nOffsets <= 0 && ok;
+      ++nFractions;
+    }
+    else if (c == '+' || c == '-')
+    {
+      int value = token.size() <= 4 ? toInt(token, 0, 4, 9999) : 9999;
+      md = c == '-' ? -value : value;
+      good = !z && nOffsets <= 0 && ok;
+      ++nOffsets;
+    }
+    else if (c == 'Z')
+    {
+      z = true;
+      good = nZones <= 0 && nOffsets <= 0 && ok;
+      ++nZones;
+    }
+
+    if (next == ASN1_STD string::npos)
+      rest.clear();
+    else
+      rest = rest.substr(next);
+    ok = good;
   }
 
-  int pos = len - 5;
-  if (valueNotion[len-1] == 'Z')
-    utc = true;
-  else if (valueNotion[pos] == '+' || valueNotion[pos] == '-' ) {
-    sscanf(&valueNotion[pos], "%d", &mindiff);
-    mindiff = mindiff/100*60 + mindiff%100;
-  }
+  year = yr;
+  month = mon;
+  day = dy;
+  hour = hr;
+  minute = mn;
+  second = sc;
+  millisec = fraction;
+  mindiff = md;
+  utc = (nOffsets == 0 && nZones == 0) || z;
+  valid = ok;
+
+  if (valid)
+    valid = checkFields();
 }
 
 ASN1_STD string GeneralizedTime::get() const
@@ -1197,7 +1308,14 @@ bool GeneralizedTime::do_accept(ConstVisitor& visitor) const
 
 void GeneralizedTime::swap(GeneralizedTime& other)
 {
-  UTCTime::swap(other);
+  ASN1_STD swap(year, other.year);
+  ASN1_STD swap(month, other.month);
+  ASN1_STD swap(day, other.day);
+  ASN1_STD swap(hour, other.hour);
+  ASN1_STD swap(minute, other.minute);
+  ASN1_STD swap(second, other.second);
+  ASN1_STD swap(mindiff, other.mindiff);
+  ASN1_STD swap(utc, other.utc);
   ASN1_STD swap(millisec, other.millisec);
   ASN1_STD swap(valid, other.valid);
 }
@@ -1543,6 +1661,12 @@ INT_TYPE SEQUENCE::do_compare(const AbstractData& other) const
 
 ///////////////////////////////////////////////////////
 
+ASN1_STD string SEQUENCE_OF_Base::getTypeName() const
+{
+  const char* name = static_cast<const InfoType*>(info_)->typeName;
+  return !name ? AbstractData::getTypeName() : ASN1_STD string(name);
+}
+
 SEQUENCE_OF_Base::SEQUENCE_OF_Base(const void* info)
 : ConstrainedObject(info)
 {
@@ -1762,42 +1886,6 @@ bool Visitor::visit(SEQUENCE& value)
   }
 
   return visitUnknownExtensions(value);
-}
-
-bool ConstVisitor::visit(const SEQUENCE& value)
-{
-  if (!preVisitExtensionRoots(value))
-    return false;
-
-  unsigned i;
-  int lastOptionalId = -1;
-  for (i = 0; i < value.info()->numFields ; ++i)
-  {
-    int optionalId = value.info()->ids[i];
-    if (optionalId == -1 || value.hasOptionalField(optionalId))
-    {
-      if (value.fields[i] == NULL || !visitExtensionRoot(value, i))
-        return false;
-    }
-    lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
-  }
-
-  if (value.extensionMap.size())
-  {
-    assert(value.extendable());
-    if (!preVisitExtensions(value))
-      return false;
-
-    for (; i < value.fields.size(); ++i)
-    {
-      if (!value.hasOptionalField(++lastOptionalId))
-        continue;
-
-      if (value.fields[i] == NULL || !visitKnownExtension(value, i))
-        return false;
-    }
-  }
-  return afterVisitSequence(value);
 }
 
 } // namespace ASN1

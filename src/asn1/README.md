@@ -33,7 +33,8 @@ The generated roots take the address of every external function, which breaks th
 inlines into its one caller stays unrooted ([../units/README.md](../units/README.md) "Companion files"): binaryen then
 keeps it and its result, and a rooted function can keep dead code alive (facts §A6). So `ASN1_ROOTS_EXCLUDE` in
 `src/mk/asn1.mk` lists what the target only calls, and a unit's fragment adds to it with `+=`. Each word is part of a
-mangled name, and a symbol that holds it leaves the roots.
+mangled name, and a symbol that holds it leaves the roots. Functions the target does not hold at all leave too (unit 115,
+facts §A10): rooted, they count as callers and merge with bodies the target keeps apart.
 
 The headers are C++20-clean, because the ecourna TUs (`-std=c++20`) include `asn1.h` and the module headers:
 `asn_ptr<T>` is `std::unique_ptr<T>` (the target's `~CHOICE`, 997/8997, stores 0 before it deletes, which is

@@ -4,25 +4,13 @@
 # docs/how-to-decompile.md step 3 asks a fragment to say.
 #
 # Pending, each written and in its source, none a trap:
-# - 2182 notify: differs. The target holds three helpers wasm-opt inlined: a search of m_visitors behind a second
-#   prologue, the path's construction, by its result pointer (l8 = l10 + 4) and its second read of size() in erase, and
-#   a DataFree on a third prologue. The first two read private members, so they wait for two declarations in asn1.h. A
-#   link with all three, before notify called visit unconditionally, gives score 15 over 346 against 172 over 376. Its
-#   callers match by its name.
-# - 8976, 8987 INTEGER's visitors: unresolved. INTEGER::isValid is defined in its class, so clang inlines it into
-#   ValidChecker's visitor and isStrictlyValid keeps two callers, where the target holds the range check in both. Moved
-#   out of line, 8976 differs in operands only; 8987 stays at 21 over 52 until isValid's body is one that gives the
-#   target's br_table (an or of the two tests, or a switch: both do, in the object).
-# - 2183, 3469 BERDecoderPartial's destructor and constructor: one row, a drop. Target 424, shared_ptr<ISeeder>'s
-#   destructor among others, has no result; ours is one body with an RHVoice copy, and four of our RHVoice functions
-#   (item::append, append_child, prepend, relation::append) read its result. Target 388 is a second copy that reads +4
-#   and keeps its result, and 2650 calls it and drops that, so one body of ours cannot serve both. 8831 matches by their
-#   names.
+# - 2650 allocator<Visitante>::destroy: one call, 3 over 19 rows. Target 424, shared_ptr<ISeeder>'s destructor among
+#   others, has no result, and BERDecoderPartial's destructor and constructor (2183, 3469) match over it. Target 388 is a
+#   second copy that reads +4 and keeps its result, and 2650 calls it and drops that, so one body of ours cannot serve
+#   both. 8831 matches by their names.
 # - 8811 PERDecoder::do_visit(SEQUENCE_OF_Base&): differs. It calls 543, which no body of the runtime equals
 #   (docs/reference/facts/asn1.md A5), with one block more than the target around the vector growth wasm-opt inlined
 #   from SEQUENCE_OF_Base::resize, which asn1.cxx holds.
-# - 5034 DataFree's OpenData visitors: unresolved. The target holds default_delete<OpenBuf> inline, and it has three
-#   call sites in our link, two of them OpenData's destructors in asn1.cxx.
 #
 # What the target decided:
 # - BERDecoderPartial::decodeHeader (995) writes the type's name in the one << chain: the target builds the string
@@ -63,8 +51,9 @@
 #
 # splat/symbol_addrs.txt holds hand edits for this unit, by the method of docs/reference/facts/asn1.md A5: pair the
 # calls of every named function whose rows equal ours up to callees. 2182, 3464, 3469, 2247, 2650, 5054, 376, 220 and
-# 2706 each pair with one symbol, and that symbol with them alone. A name frees callers, not bodies: 2182, 3469, 2247,
-# 2650, 220 and 2706 stay unmatched, and 376 matches from unit 109. _ZN4ASN1L14badEndOfStreamE is .bss, so no content places it: 14478, the static
+# 2706 each pair with one symbol, and that symbol with them alone. A name frees callers, not bodies: 2247, 2650, 220 and
+# 2706 stay unmatched, 376 matches from unit 109, and 2182, 5034, 8976 and 8987 with unit 115's edits.
+# _ZN4ASN1L14badEndOfStreamE is .bss, so no content places it: 14478, the static
 # constructors, builds a string at 1914448 from the literal " bad end of stream", and five visitors read it there.
 ASN1_ROOTS_EXCLUDE += _ZN4ASN17UTCTimeC1EPKc _ZN4ASN17UTCTimeC2EPKc _ZN4ASN115GeneralizedTimeC1EPKc _ZN4ASN115GeneralizedTimeC2EPKc \
                       _ZNK4ASN17INTEGER15isStrictlyValidEv _ZNK4ASN18OpenData7isValidEv _ZNK4ASN18OpenData15isStrictlyValidEv

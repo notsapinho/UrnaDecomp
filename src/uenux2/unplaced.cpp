@@ -1097,9 +1097,6 @@
 // f3331 · 56 B · unmatched · placement: link order · name unknown
 // ? f3331(i32) { ... }
 
-// f3323 · 104 B · unmatched · placement: link order · name unknown
-// ? f3323(i32, i32, i32) { ... }
-
 // link-order cluster 967 · uses=3 · neighbours' file uenux2/src/app/vota/iexecucaovota.cpp
 
 // f3593 · 16 B · unmatched · placement: link order · name unknown

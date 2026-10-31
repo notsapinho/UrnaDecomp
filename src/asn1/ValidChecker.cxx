@@ -96,6 +96,11 @@ AbstractData::AbstractData(const void* information)
 {
 }
 
+ASN1_STD string AbstractData::getTypeName() const
+{
+  return "AbstractData";
+}
+
 bool AbstractData::isValid() const
 {
   ValidChecker checker;
@@ -106,6 +111,42 @@ bool AbstractData::isStrictlyValid() const
 {
   StrictlyValidChecker checker;
   return accept(checker);
+}
+
+bool ConstVisitor::visit(const SEQUENCE& value)
+{
+  if (!preVisitExtensionRoots(value))
+    return false;
+
+  unsigned i;
+  int lastOptionalId = -1;
+  for (i = 0; i < value.info()->numFields ; ++i)
+  {
+    int optionalId = value.info()->ids[i];
+    if (optionalId == -1 || value.hasOptionalField(optionalId))
+    {
+      if (value.fields[i] == NULL || !visitExtensionRoot(value, i))
+        return false;
+    }
+    lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
+  }
+
+  if (value.extensionMap.size())
+  {
+    assert(value.extendable());
+    if (!preVisitExtensions(value))
+      return false;
+
+    for (; i < value.fields.size(); ++i)
+    {
+      if (!value.hasOptionalField(++lastOptionalId))
+        continue;
+
+      if (value.fields[i] == NULL || !visitKnownExtension(value, i))
+        return false;
+    }
+  }
+  return afterVisitSequence(value);
 }
 
 }// namespace ASN1

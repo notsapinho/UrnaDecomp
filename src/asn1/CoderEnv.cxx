@@ -42,34 +42,51 @@
 #endif
 
 #include "asn1.h"
+#include "BufferSeeder.h"
 
 namespace ASN1 {
 
 bool CoderEnv::decode(const char* first, size_t size, AbstractData& val, bool defered)
 {
-  if (get_encodingRule() == per_Basic_Aligned)
+  switch (get_encodingRule())
   {
-    PERDecoder decoder(first, size, defered ? NULL : this);
-    return val.accept(decoder);
-  }
-  if (get_encodingRule() == ber)
-  {
-    BERDecoder decoder(first, size, defered ? NULL : this);
-    return val.accept(decoder);
-  }
-
-  if (get_encodingRule() == avn)
-  {
-#  if defined(HP_aCC_RW)
-    ASN1_STD istrstream strm(first, size);
-#else
-    ASN1_STD istringstream strm(ASN1_STD string(first, first+size));
-#endif
-
-    AVNDecoder decoder(strm);
-    return val.accept(decoder);
+  case per_Basic_Aligned:
+    {
+      PERDecoder decoder(first, size, defered ? NULL : this);
+      return val.accept(decoder);
+    }
+  case ber:
+    {
+      BERDecoder decoder(first, size, defered ? NULL : this);
+      return val.accept(decoder);
+    }
+  case ber_partial:
+    {
+      ASN1_STD shared_ptr<ISeeder> seeder(new BufferSeeder(first, size));
+      return decode(seeder, val);
+    }
+  case avn:
+    {
+      ASN1_STD istringstream strm(ASN1_STD string(first, first+size));
+      AVNDecoder decoder(strm);
+      return val.accept(decoder);
+    }
   }
   return false;
+}
+
+bool CoderEnv::decode(const ASN1_STD shared_ptr<ISeeder>& seeder, AbstractData& val)
+{
+  bool result = false;
+  if (get_encodingRule() == ber_partial)
+  {
+    BERDecoderPartial decoder(seeder, this);
+    decoder.setVisitors(visitors);
+    result = val.accept(decoder);
+    ASN1_STD string text = decoder.getLog().str();
+    log = text;
+  }
+  return result;
 }
 
 } //namespace

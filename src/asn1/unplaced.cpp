@@ -4,53 +4,20 @@
 // not evidence; inside a cluster they are in link order.
 
 // <stubs>
-// link-order cluster 128 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
-
-// f8851 · 36 B · unmatched · placement: link order · name unknown
-// void f8851(i32) { ... }
-
 // link-order cluster 129 · uses=1 · neighbours' file uenux2/src/api/gui/iscreen.cpp
 
 // f8902 · 193 B · unmatched · placement: link order · name unknown
 // void f8902(i32) { ... }
-
-// link-order cluster 130 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreen.cpp
-
-// f8951 · 137 B · unmatched · placement: link order · name unknown
-// ? f8951(i32) { ... }
 
 // link-order cluster 235 · uses=1
 
 // f9770 · 621 B · unmatched · placement: link order · name unknown
 // ? f9770(i32, i32, i32) { ... }
 
-// link-order cluster 721 · uses=2 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f5050 · 98 B · unmatched · placement: link order · name unknown
-// ? f5050(i32, i32, i32, i32) { ... }
-
-// f5049 · 81 B · unmatched · placement: link order · name unknown
-// void f5049(i32) { ... }
-
-// link-order cluster 722 · uses=2 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreen.cpp
-
-// f5058 · 95 B · unmatched · placement: link order · name unknown
-// ? f5058(i32, i32) { ... }
-
 // link-order cluster 738 · uses=2
 
 // f5282 · 70 B · unmatched · placement: link order · name unknown
 // ? f5282(i32, i32, i32, i32) { ... }
-
-// link-order cluster 822 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f5731 · 264 B · unmatched · placement: link order · name unknown
-// void f5731(i32, i32) { ... }
-
-// link-order cluster 954 · uses=3 · neighbours' file uenux2/src/api/gui/iobservable.cpp
-
-// f3476 · 443 B · unmatched · placement: link order · name unknown
-// void f3476(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
 
@@ -62,23 +29,8 @@
 // f2896 · 64 B · unmatched · placement: link order · name unknown
 // void f2896(i32, i32) { ... }
 
-// link-order cluster 1170 · uses=6 · neighbours' file uenux2/src/app/vota/comum/csincronizavota.cpp
-
-// f1843 · 116 B · unmatched · placement: link order · name unknown
-// ? f1843(i32, i32, i32) { ... }
-
 // link-order cluster 1186 · uses=6 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 
 // f1928 · 16 B · unmatched · placement: link order · name unknown
 // ? f1928(i32) { ... }
-
-// link-order cluster 1226 · uses=8
-
-// f1519 · 114 B · unmatched · placement: link order · name unknown
-// ? f1519(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1296 · uses=16 · neighbours' file uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp
-
-// f859 · 52 B · unmatched · placement: link order · name unknown
-// void f859(i32) { ... }
 // </stubs>
