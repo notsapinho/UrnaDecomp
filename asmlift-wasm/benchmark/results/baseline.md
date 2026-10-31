@@ -1,6 +1,6 @@
 # Benchmark: baseline
 
-Target `target/vota_web_wasm.wasm` (sha256 `8579ef8d1a938191…`), image `urna-emsdk:6.0.0`, 169 rows (rows.json `947fde4da4ad`, setups.json `4cbe3c07d2ef`), urna `f1ee3fb+dirty`, 2026-10-30T18:55:43.746Z. Lift 122 ms, compile and optimise 5.1 s, total 11.2 s.
+Target `target/vota_web_wasm.wasm` (sha256 `8579ef8d1a938191…`), image `urna-emsdk:6.0.0`, 169 rows (rows.json `22dc3021d1ee`, setups.json `4cbe3c07d2ef`), urna `7e4d88e+dirty`, 2026-10-31T05:58:28.427Z. Lift 92 ms, compile and optimise 3.4 s, total 9.8 s.
 
 Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored against the target at depth 0 with callees, data addresses, the stack pointer and the indirect table canonicalised on both sides (raw); then the object is linked alone and put through the target link's wasm-opt -Oz passes and scored again (-Oz). The ratio is differing rows over target rows; exact is a -Oz score of 0. An isolated function misses what the whole-program link does to it, so no score here means byte-identical.
 
@@ -8,17 +8,17 @@ Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored aga
 
 | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 169 | 169 | 169 | 169 | 30 | 81 | 47.9% | 0.398 | 0.019 | 0.181 |
+| 169 | 169 | 169 | 169 | 31 | 76 | 45.0% | 0.407 | 0.079 | 0.186 |
 
 ## By compile setup
 
 | setup | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz | failures |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `uenux2` uenux2, the TSE application | 12 | 12 | 12 | 12 | 3 | 5 | 41.7% | 0.457 | 0.191 | 0.196 | – |
-| `ecourna` ecourna (conan libecea1da310e5107) | 12 | 12 | 12 | 12 | 1 | 5 | 41.7% | 0.636 | 0.010 | 0.073 | – |
-| `asn1` TSE fork of the III ASN.1 runtime and its generated Modulo* modules | 12 | 12 | 12 | 12 | 4 | 10 | 83.3% | 0.184 | 0.000 | 0.018 | – |
+| `uenux2` uenux2, the TSE application | 12 | 12 | 12 | 12 | 3 | 4 | 33.3% | 0.457 | 0.191 | 0.200 | – |
+| `ecourna` ecourna (conan libecea1da310e5107) | 12 | 12 | 12 | 12 | 1 | 5 | 41.7% | 0.650 | 0.059 | 0.079 | – |
+| `asn1` TSE fork of the III ASN.1 runtime and its generated Modulo* modules | 12 | 12 | 12 | 12 | 4 | 8 | 66.7% | 0.317 | 0.000 | 0.049 | – |
 | `zlib` zlib 1.3.1 + minizip | 12 | 12 | 12 | 12 | 2 | 5 | 41.7% | 0.358 | 0.156 | 0.179 | – |
-| `sqlite` SQLite 3.50.4 amalgamation | 12 | 12 | 12 | 12 | 2 | 5 | 41.7% | 0.416 | 0.213 | 0.193 | – |
+| `sqlite` SQLite 3.50.4 amalgamation | 12 | 12 | 12 | 12 | 2 | 5 | 41.7% | 0.416 | 0.213 | 0.177 | – |
 | `openssl` OpenSSL 3.0.17 libcrypto | 12 | 12 | 12 | 12 | 3 | 5 | 41.7% | 0.423 | 0.082 | 0.178 | – |
 | `7zip` 7-Zip / LZMA SDK 21.02, single-threaded | 12 | 12 | 12 | 12 | 2 | 4 | 33.3% | 0.541 | 0.240 | 0.462 | – |
 | `rhvoice` RHVoice 1.14.0 core (+ hts_engine and sonic in C) | 12 | 12 | 12 | 12 | 4 | 8 | 66.7% | 0.271 | 0.000 | 0.112 | – |
@@ -27,18 +27,18 @@ Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored aga
 | `libc-optz` emscripten musl libc, the -Oz link's size-optimised members (libc_optz.a) | 5 | 5 | 5 | 5 | 0 | 1 | 20.0% | 0.417 | 0.222 | 0.200 | – |
 | `dlmalloc` emscripten dlmalloc (libdlmalloc.a) | 8 | 8 | 8 | 8 | 0 | 3 | 37.5% | 0.583 | 0.268 | 0.221 | – |
 | `compiler-rt` compiler-rt builtins (libcompiler_rt.a) | 12 | 12 | 12 | 12 | 0 | 2 | 16.7% | 0.641 | 0.522 | 0.415 | – |
-| `libcxx` libc++ (libc++.a) | 12 | 12 | 12 | 12 | 2 | 5 | 41.7% | 0.340 | 0.043 | 0.153 | – |
-| `libcxxabi` libc++abi (libc++abi.a) | 12 | 12 | 12 | 12 | 1 | 8 | 66.7% | 0.240 | 0.000 | 0.084 | – |
+| `libcxx` libc++ (libc++.a) | 12 | 12 | 12 | 12 | 2 | 5 | 41.7% | 0.433 | 0.159 | 0.173 | – |
+| `libcxxabi` libc++abi (libc++abi.a) | 12 | 12 | 12 | 12 | 2 | 6 | 50.0% | 0.326 | 0.051 | 0.110 | – |
 
 ## By size band
 
 | band | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| tiny | 46 | 46 | 46 | 46 | 27 | 40 | 87.0% | 0.000 | 0.000 | 0.052 |
-| small | 47 | 47 | 47 | 47 | 2 | 32 | 68.1% | 0.278 | 0.000 | 0.072 |
-| medium | 34 | 34 | 34 | 34 | 1 | 9 | 26.5% | 0.476 | 0.181 | 0.245 |
-| large | 27 | 27 | 27 | 27 | 0 | 0 | 0.0% | 0.634 | 0.317 | 0.343 |
-| huge | 15 | 15 | 15 | 15 | 0 | 0 | 0.0% | 0.708 | 0.359 | 0.482 |
+| tiny | 45 | 45 | 45 | 45 | 28 | 39 | 86.7% | 0.000 | 0.000 | 0.053 |
+| small | 47 | 47 | 47 | 47 | 2 | 30 | 63.8% | 0.278 | 0.000 | 0.073 |
+| medium | 33 | 33 | 33 | 33 | 1 | 7 | 21.2% | 0.529 | 0.200 | 0.257 |
+| large | 27 | 27 | 27 | 27 | 0 | 0 | 0.0% | 0.634 | 0.317 | 0.353 |
+| huge | 17 | 17 | 17 | 17 | 0 | 0 | 0.0% | 0.638 | 0.314 | 0.452 |
 
 ## By feature
 
@@ -46,19 +46,19 @@ A row counts under every feature it has.
 
 | feature | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| leaf | 85 | 85 | 85 | 85 | 22 | 44 | 51.8% | 0.333 | 0.000 | 0.185 |
-| loop | 56 | 56 | 56 | 56 | 0 | 7 | 12.5% | 0.612 | 0.302 | 0.343 |
-| switch | 21 | 21 | 21 | 21 | 0 | 0 | 0.0% | 0.617 | 0.287 | 0.297 |
-| call_indirect | 34 | 34 | 34 | 34 | 4 | 20 | 58.8% | 0.302 | 0.000 | 0.111 |
-| invoke | 7 | 7 | 7 | 7 | 0 | 3 | 42.9% | 0.638 | 0.015 | 0.114 |
-| throw | 9 | 9 | 9 | 9 | 1 | 3 | 33.3% | 0.614 | 0.182 | 0.160 |
-| frame | 43 | 43 | 43 | 43 | 0 | 6 | 14.0% | 0.638 | 0.300 | 0.309 |
+| leaf | 83 | 83 | 83 | 83 | 22 | 43 | 51.8% | 0.333 | 0.000 | 0.182 |
+| loop | 62 | 62 | 62 | 62 | 0 | 7 | 11.3% | 0.572 | 0.289 | 0.324 |
+| switch | 23 | 23 | 23 | 23 | 0 | 0 | 0.0% | 0.617 | 0.255 | 0.297 |
+| call_indirect | 34 | 34 | 34 | 34 | 4 | 19 | 55.9% | 0.299 | 0.000 | 0.108 |
+| invoke | 9 | 9 | 9 | 9 | 0 | 2 | 22.2% | 0.614 | 0.200 | 0.197 |
+| throw | 12 | 12 | 12 | 12 | 1 | 3 | 25.0% | 0.601 | 0.203 | 0.201 |
+| frame | 43 | 43 | 43 | 43 | 0 | 4 | 9.3% | 0.638 | 0.287 | 0.319 |
 | alloca | 2 | 2 | 2 | 2 | 0 | 0 | 0.0% | 0.688 | 0.385 | 0.385 |
-| inlined-frame | 10 | 10 | 10 | 10 | 0 | 0 | 0.0% | 0.847 | 0.300 | 0.312 |
-| i64 | 69 | 69 | 69 | 69 | 4 | 16 | 23.2% | 0.556 | 0.229 | 0.280 |
-| float | 12 | 12 | 12 | 12 | 2 | 2 | 16.7% | 0.630 | 0.300 | 0.307 |
-| bulk-memory | 22 | 22 | 22 | 22 | 0 | 4 | 18.2% | 0.579 | 0.271 | 0.257 |
-| select | 61 | 61 | 61 | 61 | 3 | 11 | 18.0% | 0.600 | 0.292 | 0.328 |
+| inlined-frame | 12 | 12 | 12 | 12 | 0 | 0 | 0.0% | 0.789 | 0.272 | 0.301 |
+| i64 | 73 | 73 | 73 | 73 | 6 | 16 | 21.9% | 0.556 | 0.229 | 0.275 |
+| float | 13 | 13 | 13 | 13 | 2 | 2 | 15.4% | 0.624 | 0.287 | 0.291 |
+| bulk-memory | 23 | 23 | 23 | 23 | 0 | 4 | 17.4% | 0.527 | 0.255 | 0.251 |
+| select | 66 | 66 | 66 | 66 | 3 | 10 | 15.2% | 0.605 | 0.272 | 0.323 |
 
 ## Failures
 
@@ -80,6 +80,6 @@ None: every row lifted, compiled, linked and was found.
 | 7zip/1859 | 366 | 195 | 152 | 0.779 | 121 | 0.621 | leaf loop |
 | uenux2/11270 | 571 | 309 | 292 | 0.945 | 183 | 0.592 | loop frame select |
 | libc/1169 | 65 | 34 | 20 | 0.588 | 20 | 0.588 | leaf i64 |
-| sqlite/1184 | 414 | 215 | 155 | 0.721 | 125 | 0.581 | leaf loop frame i64 |
 | openssl/2526 | 2088 | 1109 | 845 | 0.762 | 631 | 0.569 | loop frame alloca i64 bulk-memory select |
 | openssl/920 | 985 | 529 | 344 | 0.650 | 299 | 0.565 | leaf loop select |
+| compiler-rt/907 | 1236 | 588 | 379 | 0.645 | 326 | 0.554 | frame i64 select |

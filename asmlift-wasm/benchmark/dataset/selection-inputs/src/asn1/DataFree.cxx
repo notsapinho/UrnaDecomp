@@ -85,10 +85,8 @@ bool DataFree::do_visit(SEQUENCE_OF_Base& value)
 
 bool DataFree::do_visit(OpenData& value)
 {
-  AbstractData* data = value.release_data();
-  OpenBuf* buf = value.release_buf();
-  delete data;
-  delete buf;
+  asn_ptr<OpenBuf> buf(value.release_buf());
+  asn_ptr<AbstractData> data(value.release_data());
   return true;
 }
 
@@ -99,10 +97,8 @@ bool DataFree::do_revisit(OpenData& value)
 
 bool DataFree::do_visit(TypeConstrainedOpenData& value)
 {
-  AbstractData* data = value.release_data();
-  OpenBuf* buf = value.release_buf();
-  delete data;
-  delete buf;
+  asn_ptr<OpenBuf> buf(value.release_buf());
+  asn_ptr<AbstractData> data(value.release_data());
   return true;
 }
 
@@ -118,9 +114,10 @@ bool DataFree::do_visit(GeneralizedTime& value)
   return true;
 }
 
-}//namespace
+void freeData(AbstractData& data)
+{
+  DataFree dataFree;
+  data.accept(dataFree);
+}
 
-// <stubs>
-// f2182 · 683 B · unmatched · placement: link order · name unknown
-// void f2182(i32, i32, i32, i32, i32, i32, i32) { ... }
-// </stubs>
+}//namespace
