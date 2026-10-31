@@ -52,8 +52,8 @@
 #   inside the test is that function's.
 # - AtualizaMesarioSecao above Registra: below it 5378 and 5379 give the same rows, and the object's order then inverts
 #   5378 against 5377 and 5379 in their use band (how-to step 3, "The order of two members").
-# - IIdentificadorEleitor's m_tipo is unsigned: with the int the header had, find and __find_equal compare signed.
-#   Its ordering: an operator< written out, or over std::tie, differs.
+# - IIdentificadorEleitor's m_tipo is unsigned: with the int the header had, find compares signed.
+#   Its ordering: an operator< written out differs; one over std::tie gives the same object.
 # - CEleitorIdentidade's ordering: an operator< that tests compare()'s result differs.
 # - 3743 is out of line: an implicit copy constructor leaves no such function, and the pair's construction then has no
 #   call.
