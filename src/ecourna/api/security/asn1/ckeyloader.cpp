@@ -10,8 +10,8 @@ template <typename T>
 std::vector<uebyte> CKeyLoader::DecipherKeyIfNeeded(const T& entidade)
 {
     const bool cifrado = entidade.get_cifrado();
-    const ASN1::OCTET_STRING& octetos = entidade.get_chave();
-    const std::vector<uebyte> chave(octetos.begin(), octetos.end());
+    const std::vector<uebyte> chave(entidade.get_chave().begin(), entidade.get_chave().end());
+
     if (!cifrado) {
         return chave;
     }

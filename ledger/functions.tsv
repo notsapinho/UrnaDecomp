@@ -9336,7 +9336,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 9470	491	0	-	-	skeleton	11047	shape	17	ecourna::api::cepesc::CInfoSalt::CInfoSalt(ecourna::api::cepesc::CInfoSalt const&)
 9471	116	0	asn1	ASN1	-	-	none	-	
 9472	10	0	-	libc++	-	-	none	-	
-9473	866	0	app	ecourna	-	-	none	-	
+9473	866	0	app	ecourna	skeleton	11036	shape	43	std::__2::vector<unsigned char, std::__2::allocator<unsigned char>> ecourna::api::security::CKeyLoader::DecipherKeyIfNeeded<ModuloEnvelopeChave::EntidadeChave>(ModuloEnvelopeChave::EntidadeChave const&)
 9474	1721	0	app	ecourna	-	-	none	-	
 9475	20	0	app	ecourna	-	-	none	-	
 9476	105	0	app	ecourna	-	-	none	-	
