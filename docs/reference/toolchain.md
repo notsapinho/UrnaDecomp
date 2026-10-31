@@ -89,7 +89,7 @@ Each row is measured by reconstructing or building that component and scoring it
 | 7-Zip / LZMA SDK 21.02 | none | `-O3 -D_7ZIP_ST -DNDEBUG` |
 | RHVoice 1.14.0 (+ hts_engine, sonic) | none | `-O3 -fexceptions -sEXCEPTION_CATCHING_ALLOWED=[nothing] -std=c++14 -DNDEBUG` (no landing pads: [facts/libraries.md](facts/libraries.md) §B6) |
 | Boost 1.89.0 | header-only | instantiated by the including TU's flags |
-| zlib 1.3.1 + minizip | none | `-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1` (stopgap, not yet confirmed) |
+| zlib 1.3.1 + minizip | none | `-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1`; minizip's objects linked ahead of zlib's; `-D_LARGEFILE64_SOURCE=1` not decided ([facts/libraries.md](facts/libraries.md) §B8) |
 
 ### Evidence behind the application flags
 

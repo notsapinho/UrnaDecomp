@@ -75,14 +75,6 @@
 // f4787 · 13 B · unmatched · placement: link order · name unknown
 // ? f4787(i32) { ... }
 
-// link-order cluster 705 · uses=2
-
-// f4826 · 6899 B · unmatched · placement: link order · name unknown
-// ? f4826(i32, i32) { ... }
-
-// f4825 · 1801 B · unmatched · placement: link order · name unknown
-// ? f4825(i32, i32) { ... }
-
 // link-order cluster 706 · uses=2
 
 // f4852 · 42 B · unmatched · placement: link order · name unknown
@@ -342,11 +334,6 @@
 // f3334 · 86 B · unmatched · placement: link order · name unknown
 // void f3334(i32, i32, i32, i32) { ... }
 
-// link-order cluster 947 · uses=3
-
-// f3379 · 1534 B · unmatched · placement: link order · name unknown
-// ? f3379(i32) { ... }
-
 // link-order cluster 958 · uses=3 · neighbours' file ecourna/api/sql/sqlite/csqlstatement.cpp
 
 // f3512 · 59 B · unmatched · placement: link order · name unknown
@@ -465,9 +452,6 @@
 
 // f2584 · 16 B · unmatched · placement: link order · name unknown
 // ? f2584(i32) { ... }
-
-// f2581 · 1161 B · unmatched · placement: link order · name unknown
-// void f2581(i32) { ... }
 
 // link-order cluster 1074 · uses=4 · neighbours' file ecourna/api/security/cepesc/ccepesccipher.cpp
 
@@ -649,11 +633,6 @@
 
 // f1166 · 198 B · unmatched · placement: link order · name unknown
 // ? f1166(i32, i32) { ... }
-
-// link-order cluster 1291 · uses=15
-
-// f893 · 1871 B · unmatched · placement: link order · name unknown
-// ? f893(i32, i32, i32) { ... }
 
 // link-order cluster 1298 · uses=17
 

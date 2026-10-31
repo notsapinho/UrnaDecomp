@@ -756,7 +756,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 890	56	15	sqlite	openssl	skeleton	716	addr	5	BN_lshift
 891	29	15	openssl	-	skeleton	2439	addr	3	std::__2::system_category()
 892	192	14	libcxx	libc++	skeleton	736	fingerprint	0	std::__2::__check_grouping(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned int*, unsigned int*, unsigned int&)
-893	1871	15	sqlite	ecourna	-	-	none	-	
+893	1871	15	sqlite	ecourna	skeleton	720	addr	59	crc32_z
 894	11	15	7zip	7zip	skeleton	725	addr	1	CStdOutStream::Flush()
 895	1585	14	7zip	7zip	-	-	none	-	
 896	1524	14	rhvoice	RHVoice	skeleton	733	addr	69	RHVoice::language::~language()
@@ -1711,8 +1711,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1845	39	5	-	libc++	skeleton	1654	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::sgetc[abi:ne210108]()
 1846	10	5	-	-	skeleton	1948	shape	2	std::__2::basic_ostream<char, std::__2::char_traits<char>>::flush()
 1847	54	5	-	-	-	-	none	-	
-1848	147	6	app	ecourna	skeleton	1515	fingerprint	0	flush_pending
-1849	600	6	app	ecourna	skeleton	1514	fingerprint	0	zip64local_getLong64
+1848	147	6	app	ecourna	skeleton	1514	fingerprint	0	flush_pending
+1849	600	6	app	ecourna	skeleton	1515	fingerprint	0	zip64local_getLong64
 1850	90	6	7zip	7zip	-	-	none	-	
 1851	42	6	7zip	7zip	-	-	none	-	
 1852	37	5	7zip	7zip	-	-	none	-	
@@ -2443,9 +2443,9 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2577	281	4	-	libc++	-	-	none	-	
 2578	79	4	-	comum	-	-	none	-	
 2579	79	4	-	comum	-	-	none	-	
-2580	446	4	app	ecourna	skeleton	2118	addr	2	_tr_stored_block
-2581	1161	4	app	ecourna	-	-	none	-	
-2582	222	4	app	ecourna	skeleton	2117	fingerprint	0	zip64local_putValue
+2580	446	4	app	ecourna	skeleton	2117	addr	2	_tr_stored_block
+2581	1161	4	app	ecourna	skeleton	2118	addr	2	fill_window
+2582	222	4	app	ecourna	skeleton	2119	fingerprint	0	zip64local_putValue
 2583	69	4	7zip	7zip	-	-	none	-	
 2584	16	4	-	ecourna	-	-	none	-	
 2585	243	3	7zip	7zip	-	-	none	-	
@@ -3240,9 +3240,9 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3374	112	3	libcxx	-	skeleton	3396	fingerprint	0	std::__2::__mulShift[abi:ne210108](unsigned long long, unsigned long long const*, int)
 3375	237	3	libcxx	-	skeleton	3397	addr	9	std::__2::__append_d_digits[abi:ne210108](unsigned int, unsigned int, char*)
 3376	1348	2	libcxx	-	skeleton	3398	addr	16	std::__2::__d2exp_buffered_n(char*, char*, double, unsigned int)
-3377	2618	3	app	ecourna	skeleton	2810	addr	24	build_tree
-3378	326	3	app	ecourna	skeleton	2808	addr	2	zip64FlushWriteBuffer
-3379	1534	3	app	ecourna	-	-	none	-	
+3377	2618	3	app	ecourna	skeleton	2808	addr	24	build_tree
+3378	326	3	app	ecourna	skeleton	2809	addr	2	zip64FlushWriteBuffer
+3379	1534	3	app	ecourna	skeleton	2810	addr	14	zipCloseFileInZipRaw64
 3380	156	3	-	7zip	-	-	none	-	
 3381	297	3	7zip	libc++	-	-	none	-	
 3382	27	3	7zip	libc++	-	-	none	-	
@@ -4688,8 +4688,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 4822	1137	2	app	ecourna	skeleton	4143	addr	9	compress_block
 4823	474	2	app	ecourna	skeleton	4144	byte	0	init_block
 4824	548	2	app	-	skeleton	4145	byte	0	longest_match
-4825	1801	1	app	ecourna	-	-	none	-	
-4826	6899	2	app	ecourna	-	-	none	-	
+4825	1801	1	app	ecourna	skeleton	4146	addr	10	deflate_stored
+4826	6899	2	app	ecourna	skeleton	4147	addr	29	deflate
 4827	323	2	app	ecourna	skeleton	4148	fingerprint	0	deflateEnd
 4828	15	2	7zip	7zip	-	-	none	-	
 4829	70	2	7zip	7zip	skeleton	4409	byte	0	NWindows::NTime::FileTimeToUnixTime(_FILETIME const&, unsigned int&)
@@ -7975,22 +7975,22 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 8109	401	0	app	api	skeleton	10233	addr	14	api::IPower::Slot5()
 8110	6	0	libcxx	libc++	skeleton	10001	addr	1	boost::bad_lexical_cast::what() const
 8111	25	0	app	api	skeleton	10234	fingerprint	0	api::IPower::AcVoltage()
-8112	10	0	app	-	skeleton	7533	addr	1	zcalloc
+8112	10	0	app	-	skeleton	7522	addr	1	zcalloc
 8113	25	0	app	api	skeleton	10235	fingerprint	0	api::IPower::BatExtVoltage()
-8114	2065	0	app	-	-	-	none	-	
-8115	1598	0	app	-	-	-	none	-	
+8114	2065	0	app	-	skeleton	7523	addr	12	deflate_slow
+8115	1598	0	app	-	skeleton	7524	addr	10	deflate_fast
 8116	62	0	app	api	skeleton	10236	addr	1	api::IPower::BatCurrent()
-8117	540	0	app	-	-	-	none	-	
-8118	3497	0	app	-	-	-	none	-	
-8119	7	0	app	-	skeleton	7532	addr	1	zipCloseFileInZip
+8117	540	0	app	-	skeleton	7526	addr	5	zipWriteInFileInZip
+8118	3497	0	app	-	skeleton	7527	addr	45	zipOpenNewFileInZip2_64
+8119	7	0	app	-	skeleton	7528	addr	1	zipCloseFileInZip
 8120	25	0	app	api	skeleton	10237	fingerprint	0	api::IPower::BatIntVoltage()
-8121	81	0	app	-	skeleton	7522	addr	4	fopen64_file_func
-8122	7	0	app	-	skeleton	7523	fingerprint	0	ftell64_file_func
-8123	27	0	app	-	skeleton	7524	addr	1	fseek64_file_func
-8124	13	0	app	-	skeleton	7525	fingerprint	0	fread_file_func
-8125	13	0	app	-	skeleton	7526	fingerprint	0	fwrite_file_func
-8126	7	0	app	-	skeleton	7527	addr	1	fclose_file_func
-8127	7	0	app	-	skeleton	7528	fingerprint	0	ferror_file_func
+8121	81	0	app	-	skeleton	7530	addr	4	fopen64_file_func
+8122	7	0	app	-	skeleton	7531	fingerprint	0	ftell64_file_func
+8123	27	0	app	-	skeleton	7532	addr	1	fseek64_file_func
+8124	13	0	app	-	skeleton	7533	fingerprint	0	fread_file_func
+8125	13	0	app	-	skeleton	7534	fingerprint	0	fwrite_file_func
+8126	7	0	app	-	skeleton	7535	addr	1	fclose_file_func
+8127	7	0	app	-	skeleton	7536	fingerprint	0	ferror_file_func
 8128	29	0	app	api	skeleton	10238	fingerprint	0	api::IPower::Slot0()
 8129	47	0	app	api	skeleton	10219	addr	3	api::teste::CUrnaMock::~CUrnaMock()_5134
 8130	44	0	app	api	skeleton	10220	addr	2	api::teste::CUrnaMock::~CUrnaMock()

@@ -146,7 +146,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `03-ecourna-api-io-util` | `CFile` (its constructor out of line), `CIoError`, `CBitArray`, `CSynchronizer`; `CFile::Sync` and `CBitArray::GetValor(uebyte)` are written and do not match |
 | `04-ecourna-app-dados-asn` | the core ASN.1 converters and the data classes they build; puts the generated ASN.1 modules in the link |
 | `05-ecourna-api-security-cepesc` | the CEPESC envelope classes and `CKeyLoader` |
-| `06-ecourna-api-compression` | `ICompressor`, `CZip`, `CLzmaCompress`, and the zlib + minizip build they need |
+| `06-ecourna-api-compression` | `ICompressor`, `CZip`, `CLzmaCompress`, and the zlib + minizip build they need, minizip's objects ahead of zlib's (which keeps `crc32_z` as the target does); `CZip::CreateZipFile` and `CZip::DoAdd` are written and do not match |
 | `07-ecourna-app-dados` | `app/dados` value types: `tiposbasicos`, `CRegistroIdentificacaoEleitor`, `CSerialMidia`, `CFederacao`, `CConfiguracaoMunicipios` |
 | `08-ecourna-app-dados-midias` | the media descriptor classes and their converters |
 | `09-ecourna-app-dados-asn-resultadournacadastro` | the voter-register result converters |
