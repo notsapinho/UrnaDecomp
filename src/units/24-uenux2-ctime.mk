@@ -29,9 +29,8 @@
 # at the end of the file, both places chosen, with operator<=>'s name and std::strong_ordering result; and the inline
 # getters ctime.h describes.
 # operator<=>'s body is fn 5448's, the one the target keeps for OpenSSL's err_string_data_cmp as well, so that match line
-# now names ours (ctime.cpp.o links ahead of libcrypto). Format is written and does not match: its appends call
-# std::string::append (fn 160) in the target and inline it at this tree's -O2; at -O3 a try link gives 16 over 596 rows, all
-# operand-only (unit 125's fragment has the command).
+# now names ours (ctime.cpp.o links ahead of libcrypto). Format matches at the tree's -O3: its appends call
+# std::string::append (fn 160) in the target, which -O2 inlines (unit 125's fragment has the -O2 measurement).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTIME_SRCS := src/api/util/ctime.cpp
 UENUX2_SRCS += $(CTIME_SRCS)

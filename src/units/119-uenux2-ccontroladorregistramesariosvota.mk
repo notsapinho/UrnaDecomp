@@ -43,11 +43,12 @@
 #   (slot 17) above 10787 (slot 15), and those slots are pending here.
 #
 # Written, not matching, and what each waits for:
-# - 10771, slot 31: its literal is 44 bytes, and at -O2 its std::format keeps the search of the literal for a brace
+# - 10771, slot 31: its literal is 44 bytes, and at -O2 its std::format kept the search of the literal for a brace
 #   (`score 253 over 255 rows (same 2, replaced 4 [1 operand-only], inserted 249, deleted 0)`); the target has none, which
-#   is -O3's limit (docs/reference/facts/reading.md R13). Slots 32 and 33 form 3887 without it, with the same parameters.
-# - 10800, slot 2: `unresolved`, its call names no target function: CTickManager::AddTick (3644) is `no-candidate` at -O2
-#   (unit 02's fragment).
+#   is -O3's limit (docs/reference/facts/reading.md R13). At the tree's -O3 it matches, a thunk into 3887 with slots 32
+#   and 33, and binaryen names 3887 after it (the rename of 3887's line in splat/matched.txt).
+# - 10800, slot 2: `unresolved`, its call names no target function: CTickManager::AddTick (3644) is `no-candidate` at the
+#   tree's -O3 too (unit 02's fragment).
 #
 # Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): slots 5, 6, 7, 9,
 # 10, 11, 13, 14, 15, 16 and 28 (fns 10797, 10796, 10795, 10794, 10792, 10793, 10790, 10789, 10787, 10786, 10774), and

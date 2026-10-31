@@ -3,7 +3,7 @@
     "key": "uenux2",
     "title": "uenux2, the TSE application",
     "flags": {
-      "c++": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing"
+      "c++": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing"
     },
     "image": "urna-emsdk:6.0.0",
     "source": "src/Makefile UENUX2_CXXFLAGS; docs/reference/toolchain.md §3",
@@ -193,7 +193,7 @@
         "c": "APP_CFLAGS"
       }
     },
-    "note": "No row of its own: only the `instantiatedBy` of a Boost function that only the probe stand-in (roots_boost.o) instantiates. uenux2's flags without -fno-strict-aliasing: the stand-ins come first on the link line, their libc++ template copies win, and the target's copies have TBAA (matches 152, 1383, 1527, 3501, 3639, 5150)."
+    "note": "No row of its own: only the `instantiatedBy` of a Boost function that only the probe stand-in (roots_boost.o) instantiates. uenux2's flags at -O2 and without -fno-strict-aliasing: the stand-ins come first on the link line, their libc++ template copies win, and the target's copies have TBAA (matches 152, 1383, 1527, 3501, 3639, 5150)."
   },
   {
     "key": "libc",

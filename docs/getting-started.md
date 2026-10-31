@@ -165,17 +165,17 @@ TMPDIR=/tmp tools/round/try-tu.sh --single 1931 --extract export:_ZNK5comum8CRdv
 ```
 
 ```
-flags: -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -I/work/src …
+flags: -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -I/work/src …
 names for vota_web_wasm.wasm: …/target/vota_web_wasm.js
-  2899 / 2993   crdvvota.cpp
+  2868 / 2963   crdvvota.cpp
 
 winner crdvvota.cpp
-score 2899 over 2993 rows (same 94, replaced 79 [28 operand-only], inserted 2820, deleted 0)
+score 2868 over 2963 rows (same 95, replaced 78 [27 operand-only], inserted 2790, deleted 0)
 target                                                     candidate
 ;; (i32 i32 i32 i32)->(i32) locals(i32 i32 i32 i32)      ~ ;; (i32 i32 i32 i32)->(i32) locals(i32 i32 i32 i32 i32 i32 i32 …
 global.get 0                                             | global.get 0
 ...
-single mode: 4 s
+single mode: 5 s
 ```
 
 The first line is the compile command's flags, read from the recipe `src/Makefile` has for this source's object
@@ -184,7 +184,7 @@ same instruction for instruction, and lower is closer. `|` marks a row that is t
 in an operand, `>` and `<` rows only one side has.
 
 The score is high although 1931 is matched. Compiled alone, the TU gets other inlining decisions than inside the whole
-program: here the candidate holds 2,820 inserted rows, libc++ code the program shares and the lone link inlines. That is
+program: here the candidate holds 2,790 inserted rows, libc++ code the program shares and the lone link inlines. That is
 the normal case for TSE code, not a broken setup: the matched `CStringUtils::ToQWord` (target 1141) scores 982 over 999
 alone, because its template helper is inlined. Use `--single` to iterate on one function's shape; conclude with the
 whole-link mode ([how-to-decompile.md](how-to-decompile.md) step 5), because only the whole link decides a match. For a

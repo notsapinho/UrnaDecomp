@@ -2114,9 +2114,6 @@
 // f3775 · 573 B · unmatched · placement: link order · name unknown
 // void f3775(i32, i32, i32, i32) { ... }
 
-// f3772 · 1233 B · unmatched · placement: link order · name unknown
-// void f3772(i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1013 · uses=3 · neighbours' file uenux2/src/app/comum/appinfo/cappinfo.cpp
 
 // f3785 · 85 B · unmatched · placement: link order · name unknown
@@ -2294,11 +2291,6 @@
 // f1941 · 21 B · unmatched · placement: link order · name unknown
 // ? f1941(i32, i32) { ... }
 
-// link-order cluster 1213 · uses=7 · neighbours' file uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp
-
-// f1705 · 787 B · unmatched · placement: link order · name unknown
-// void f1705(i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1223 · uses=8
 
 // f1501 · 318 B · unmatched · placement: link order · name unknown
@@ -2369,6 +2361,11 @@
 
 // f921 · 584 B · unmatched · placement: link order · name unknown
 // void f921(i32, i32) { ... }
+
+// link-order cluster 1296 · uses=16 · neighbours' file uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp
+
+// f857 · 38 B · unmatched · placement: link order
+// comum::md::estadoaplicacao::CDadoCorrespondencia::~CDadoCorrespondencia() { ... }
 
 // link-order cluster 1300 · uses=18 · neighbours' file uenux2/src/app/comum/dados/clocal.cpp
 

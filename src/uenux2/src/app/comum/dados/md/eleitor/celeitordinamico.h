@@ -51,7 +51,7 @@ public:
     // enabling stores the state 2, its kind and its own set of the members after them, in reverse member order, from
     // values read before the first store: the shape of a call clang inlined (docs/reference/facts/codegen.md C1). The
     // mesario's kind with a title reads as a call binaryen inlined (2825 keeps this object's address in a local across
-    // GetTituloMesario); the inline member here gives that shape at -O3 (src/units/110-uenux2-singletons.mk has the
+    // GetTituloMesario); the inline member here gives that shape at the tree's -O3 (src/units/110-uenux2-singletons.mk has the
     // measurement). The members, their names, their parameters and the four-way split are chosen, and so are the setters.
     void HabilitaSemBiometria()
     {

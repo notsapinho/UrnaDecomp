@@ -14,7 +14,7 @@
 //     throw CUeComumAsnError(7655, std::format("Método DoConverte() não implementado para {}", typeid(TEntidade).name()));
 // Fn 731 is binaryen's merge of those two defaults, 20 thunks over it, so it forms only with both in the link (one
 // inherited DoDesconverte: comum::asn::CConversorHistoricoVotoImpresso, CConversorEntidadeBU or CConversorEntidadeHashes)
-// and it waits for -O3: 96-uenux2-app-comum-asn.mk has the measurement.
+// and 96-uenux2-app-comum-asn.mk has its measurement at -O3, the tree's level.
 #include "app/comum/dados/asn/processoeleitoral/cconversorsituacoeseleicoes.h"
 
 namespace comum::asn {

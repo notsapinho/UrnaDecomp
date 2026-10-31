@@ -1,5 +1,31 @@
 [
   {
+    "id": "uenux2/1261",
+    "index": 1261,
+    "size": 80,
+    "band": "small",
+    "component": "unknown",
+    "owner": "-",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "api::CDate::operator<=>(api::CDate const&) const",
+    "symbol": "_ZNK3api5CDatessERKS0_",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/util/cdate.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/util/cdate.cpp"
+    }
+  },
+  {
     "id": "uenux2/1915",
     "index": 1915,
     "size": 70,
@@ -16,7 +42,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": "api::SRect::Move(api::SPoint const&)",
     "symbol": "_ZN3api5SRect4MoveERKNS_6SPointE",
     "evidence": "symbol",
@@ -47,7 +73,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -71,7 +97,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": "simulador::CWasmScreenMT::Led1()",
     "symbol": "_ZN9simulador13CWasmScreenMT4Led1Ev",
     "evidence": "symbol",
@@ -98,7 +124,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": "vota::CTelasVota::~CTelasVota()",
     "symbol": "_ZN4vota10CTelasVotaD1Ev",
     "evidence": "symbol",
@@ -122,7 +148,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": "simulador::CWasmTimer::IsRunning() const",
     "symbol": "_ZNK9simulador10CWasmTimer9IsRunningEv",
     "evidence": "symbol",
@@ -130,33 +156,6 @@
     "reference": {
       "path": "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp",
       "line": 37
-    }
-  },
-  {
-    "id": "uenux2/9523",
-    "index": 9523,
-    "size": 38,
-    "band": "small",
-    "component": "simulador",
-    "owner": "boost",
-    "features": [
-      "call_indirect"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "simulador::CWasmWebSound::Wait(std::__2::function<bool ()>)",
-    "symbol": "_ZN9simulador13CWasmWebSound4WaitENSt3__28functionIFbvEEE",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp.o",
-    "reference": {
-      "path": "src/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp",
-      "line": 136
     }
   },
   {
@@ -183,7 +182,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -208,7 +207,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": "vota::impl::CInformacaoThreadOperador::CancelaHabilitacao()",
     "symbol": "_ZN4vota4impl25CInformacaoThreadOperador18CancelaHabilitacaoEv",
     "evidence": "symbol",
@@ -242,7 +241,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -268,7 +267,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": "api::CTextFieldBlinking::Draw(api::IScreen&) const",
     "symbol": "_ZNK3api18CTextFieldBlinking4DrawERNS_7IScreenE",
     "evidence": "symbol",
@@ -299,7 +298,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -328,7 +327,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -2512,8 +2511,33 @@
     "setup": "rhvoice-ignore",
     "lang": "c++",
     "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
-    "name": "std::__2::__shared_ptr_pointer<RHVoice::userdict::start_of_token*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::start_of_token>, std::__2::allocator<RHVoice::userdict::start_of_token>>::__get_deleter(std::type_info const&) const",
-    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict14start_of_tokenENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info",
+    "name": "std::__2::__shared_ptr_pointer<RHVoice::userdict::empty_string*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::empty_string>, std::__2::allocator<RHVoice::userdict::empty_string>>::__get_deleter(std::type_info const&) const",
+    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict12empty_stringENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "rhvoice-ignore/9658",
+    "index": 9658,
+    "size": 34,
+    "band": "small",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 3
+    },
+    "origin": "selected",
+    "setup": "rhvoice-ignore",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
+    "name": "RHVoice::userdict::initialism_flag::describe() const",
+    "symbol": "_ZNK7RHVoice8userdict15initialism_flag8describeEv",
     "evidence": "symbol",
     "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
     "reference": null
@@ -2590,31 +2614,6 @@
     "reference": null
   },
   {
-    "id": "rhvoice-ignore/9692",
-    "index": 9692,
-    "size": 40,
-    "band": "small",
-    "component": "RHVoice",
-    "owner": "rhvoice",
-    "features": [
-      "leaf",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 2
-    },
-    "origin": "selected",
-    "setup": "rhvoice-ignore",
-    "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
-    "name": "RHVoice::userdict::word_break::describe() const",
-    "symbol": "_ZNK7RHVoice8userdict10word_break8describeEv",
-    "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
-    "reference": null
-  },
-  {
     "id": "rhvoice-ignore/9699",
     "index": 9699,
     "size": 34,
@@ -2633,8 +2632,8 @@
     "setup": "rhvoice-ignore",
     "lang": "c++",
     "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
-    "name": "RHVoice::userdict::stress_mark::describe() const",
-    "symbol": "_ZNK7RHVoice8userdict11stress_mark8describeEv",
+    "name": "RHVoice::userdict::end_of_token::describe() const",
+    "symbol": "_ZNK7RHVoice8userdict12end_of_token8describeEv",
     "evidence": "symbol",
     "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
     "reference": null

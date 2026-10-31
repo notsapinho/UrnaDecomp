@@ -535,8 +535,8 @@ api::SRect CWasmScreen::DrawText(const api::SPoint& posicao, const api::IText& t
     return DrawText(rect, texto, font, cor, fundo);
 }
 
-// not the target's yet (fn 9104): its substr(0, 40) of a temporary is C++23's rvalue substr there, and its appends stay
-// calls, as at -O3; the fragment has the measurement
+// not the target's yet (fn 9104): its substr(0, 40) of a temporary is C++23's rvalue substr there, which the tree's
+// -std=c++20 does not give; the fragment has the measurement
 api::SRect CWasmScreen::DrawText(const api::SRect& rect, const api::IText& texto, const api::SFont& font, api::TColor cor,
                                  api::TColor fundo)
 {

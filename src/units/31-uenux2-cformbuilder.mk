@@ -20,12 +20,12 @@
 #                      (IForm<IScreenMT>'s vtable @1579936 before the adders' control blocks @1580040 to @1580240, and
 #                      CInteractiveForm<IScreenMT, IInputMT>'s @1580280 after them)
 #
-# 426, AddField, waits for -O3, which is the tree's flag and not this unit's: it stays written (docs/how-to-decompile.md
-# step 5). At -O2 it scores 292 over 449 rows: clang inlines std::string::append into operator+, and one loop compares the
-# name. The target calls append (fn 160) and holds two copies of that loop, one for a long name and one for a short one,
-# which only -O3's loop unswitching gives. The object alone at -O3 in the plain link, by docs/reference/facts/workflow.md
-# W13: 18 over 334 rows, 14 of them operand-only; the other four are one add's operand order, n + (it != end), which the
-# object has and our link swaps. -O2 with -std=c++23 changes nothing (292 over 449), and -O3 with -std=c++23 gives the same
+# 426, AddField, is written and `differs` (docs/how-to-decompile.md step 5). At -O2 it scored 292 over 449 rows: clang
+# inlines std::string::append into operator+, and one loop compares the name. The target calls append (fn 160) and holds
+# two copies of that loop, one for a long name and one for a short one, which only -O3's loop unswitching gives. At the
+# tree's -O3 it is 18 over 334 rows, 14 of them operand-only; the other four are one add's operand order, n + (it !=
+# end), which the object has and our link swaps (the object alone at -O3 in the -O2 link, by
+# docs/reference/facts/workflow.md W13, gave the same 18). -O2 with -std=c++23 changes nothing (292 over 449), and -O3 with -std=c++23 gives the same
 # 18. The rows that pinned the form, each at -O3: the name is a temporary, destroyed before the push (`SetName(GeraNome(...))`:
 # with a named local the push comes first), and `sufixo += repetido` gives the target's add where `if (repetido) ++sufixo`
 # gives an add under the test. Its name reaches 202 and the rest by the hand edit of splat/symbol_addrs.txt, whose comment

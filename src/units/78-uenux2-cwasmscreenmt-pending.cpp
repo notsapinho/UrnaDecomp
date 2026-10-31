@@ -4,8 +4,8 @@
 //     class gives the name and the parameter. It calls fn 479 (a date and time now, 12 bytes on the stack) and fn 779
 //     (a member that formats the time of day at that value's +8, with the std::string "hh:mm"), builds a local class
 //     WasmText : api::IText on the stack (alignment 0, the formatted string moved to +8; vtable @1530040, slots 8748, 8680,
-//     1139, 1661) and calls ShowText. It waits for fn 779 (api::CTime::Format, written in unit 24, which waits for -O3);
-//     479 matches (unit 125). Slots 0 and 1 of WasmText are thunks into binaryen's 1727 and 1969, so they need that merge.
+//     1139, 1661) and calls ShowText. Its callees match: fn 779 (api::CTime::Format, unit 24) and 479 (unit 125).
+//     Slots 0 and 1 of WasmText are thunks into binaryen's 1727 and 1969, so they need that merge.
 //   api::IScreenMT::~IScreenMT(), target fn 8741 (slot 0 of its vtable, 17 B), the vptr store and a call of fn 3461. Inline
 //     in the original: api/gui/iscreenmt.h says why, and it moves into the class with its body. The trap makes it the key
 //     function of our link only, so this object emits IScreenMT's vtable and typeinfo, which CWasmScreenMT's typeinfo

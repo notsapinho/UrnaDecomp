@@ -5,25 +5,26 @@
 # 7006 and 7008 enumerators of api/util/eueutilerror.h, named from their messages and what their throws test.
 # api::CTime's new members are unit 24's (ctime.cpp), and CAjusteDataHora's Ajusta(const CDateTime &) unit 101's.
 # Target functions:
-#   matched    5479 IsValidDate, 1382 CDate(), 2765 CDate(dia, mes, ano), 1261 CDate::operator<=>;
+#   matched    706 Format, 3649 CDate(const std::string &), 2764 ConvertFromTimestamp (and unit 24's 779 CTime::Format),
+#              at the tree's -O3 (below);
+#              5479 IsValidDate, 1382 CDate(), 2765 CDate(dia, mes, ano), 1261 CDate::operator<=>;
 #              479 CDateTime::Now, 1000 CDateTime(time_t), 5475 CDateTime(const std::string &), 1381 ConvertToLocalTime,
 #              2233 operator+=(int), 759 CDateTime::operator<=>; libc's timegm (2961), which 1381 and 2233 call; and,
 #              with units 24 and 101, 2230 CTime() and 10875 Ajusta(const CDateTime &)
-#   written    706 Format, 3649 CDate(const std::string &), 2764 ConvertFromTimestamp (and unit 24's 779 CTime::Format):
-#              each appends to a std::string outside a throw, a call to std::string::append (fn 160) in the target, which
-#              clang inlines at this tree's -O2. With -O3 for the three files (tools/round/try-tu.sh cdate.cpp cdatetime.cpp
-#              ctime.cpp --flags -O3 --skip-units 24-uenux2-ctime.mk, the two roots files as one --roots) each scores
-#              operand-only: 706 38 over 923 rows, 3649 33 over 363, 2764 28 over 576, 779 16 over 596
-#              (pnpm wasm score against the try's link-map names); at -O2 985 over 1772, 191 over 469, 328 over 698 and
-#              938 over 1355. -O3 for uenux2 is open, so they stay as written. 3649 is `differs`; it is named by the call
-#              votes of 2765 and 5475.
+#              Those four append to a std::string outside a throw, a call to std::string::append (fn 160) in the
+#              target, which clang inlines at -O2. Before the tree took -O3, with -O3 for the three files
+#              (tools/round/try-tu.sh cdate.cpp cdatetime.cpp ctime.cpp --flags -O3 --skip-units 24-uenux2-ctime.mk, the
+#              two roots files as one --roots) each scored operand-only: 706 38 over 923 rows, 3649 33 over 363, 2764 28
+#              over 576, 779 16 over 596 (pnpm wasm score against the try's link-map names); at -O2 985 over 1772, 191 over
+#              469, 328 over 698 and 938 over 1355. 3649 is named by the call votes of 2765 and 5475.
+#   written    the rest below.
 #              5476 ConvertFromLocalTime is operand-only (14 over 90 rows) and `unresolved self-voted`: it calls
 #              std::to_string(long long) (fn 4658), whose other target caller, 3612, is not written, so the name has 5476
 #              alone as voter. The roots' TempoEmTexto keeps to_string out of line for it, standing in for 3612.
 #              3648 CDate::operator- is operand-only (1 over 9) and `no-candidate`: nothing names it, and its callee
 #              operator-= (5477) is not matched.
-#              5478 operator+= and 5477 operator-= do not match at -O2 (291 over 558, 271 over 543 rows) nor at -O3 (86
-#              over 550, 30 over 530): the target splits the day-of-the-year loop on `ano % 4` (two copies, one over a
+#              5478 operator+= and 5477 operator-= do not match at -O2 (291 over 558, 271 over 543 rows) nor at the tree's
+#              -O3 (86 over 550, 30 over 530): the target splits the day-of-the-year loop on `ano % 4` (two copies, one over a
 #              lookup table), which our -O3 build gives and our -O2 build does not, and keeps the month's store inside
 #              the month loop, where ours sinks it after the loop (and in += nests the month loop in the year loop's
 #              exit). The rest of that remainder is not explained. They stay written: operator- (3648) calls

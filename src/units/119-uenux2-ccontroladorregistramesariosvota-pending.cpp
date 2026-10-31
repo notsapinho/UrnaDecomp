@@ -17,8 +17,8 @@
 // - slot 16, fn 10786: calls fn 4662; waits for fn 4662;
 // - slot 28, fn 10774: CLogVota::GetInst() and fn 1398 (api::CLoga::loga of +4 with severity 2, not written) over
 //   std::format("Limite de mesarios registrados atingido. Limite maximo: {}", 6u) (the literal has its accents); waits for
-//   fn 1398, and for the level: the literal is 58 bytes and the target has no search of it for a brace, which -O2 keeps
-//   past 36 bytes (docs/reference/facts/reading.md R13).
+//   fn 1398. Its literal is 58 bytes and the target has no search of it for a brace, which -O2 keeps past 36 bytes and
+//   the tree's -O3 past 74 (docs/reference/facts/reading.md R13).
 #include "app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.h"
 
 namespace vota {

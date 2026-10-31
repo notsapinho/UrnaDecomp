@@ -28,7 +28,7 @@
 # 2838's external linkage is chosen too: the roots stand in for its callers 5807, 12641 and 12742, and for 5806's 13101.
 # 5807 (CCandidaturasDSNome's operator) is not written.
 #
-# 1709, __tree::destroy over md::CCandidatura, stays `differs` at -O2:
+# 1709, __tree::destroy over md::CCandidatura, matches at the tree's -O3 and not at -O2:
 # __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.
 # 1719, vector<md::CDadosCandidato>::__destroy_vector, stays `differs` for another reason, TBAA, not the level: at the tree's flags the
 # store of __end_ comes ahead of the reload of __begin_, -O3 leaves that as it is, and the same compile without -fno-strict-aliasing
@@ -123,8 +123,8 @@
 #   __uninitialized_allocator_copy_impl out of line (cost 225 against 225), and at -O3 the threshold is 250, which keeps
 #   __init_with_size (2870) out of line as the target does. Measured: a try link of this unit at -O3 with a second caller
 #   of 2870, which the target has and this link does not, differs from the target in operand rows only (63 of 519 for
-#   5660, 5 of 155 for 2870), against 236 of 667 rows at -O2. It stays written, and its row stays `no-candidate`
-#   (docs/how-to-decompile.md step 4, "When only a flag closes the gap").
+#   5660, 5 of 155 for 2870), against 236 of 667 rows at -O2. It stays written, and its row stays `no-candidate`: at the
+#   tree's -O3 this link has no second caller of 2870, and 5660 scores 220 over 669 rows.
 #
 # Not written:
 # - CMunicipio's constructor (3712) and CEleitor::ValidaCriacao (5667) call 1374, a copying wrapper of the trim body 9406

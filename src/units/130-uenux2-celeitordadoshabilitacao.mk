@@ -5,9 +5,9 @@
 # CEleitorDetalhe::MarcaHabilitado (unit 98's celeitordetalhe.cpp), which CEleitores::MarcaEleitorFoiHabilitado (target
 # fn 2825, unit 110's celeitores.cpp) holds inlined, and it holds this function inlined in turn (a second stack-pointer
 # prologue at +0x1ae of 2825, the throw's record 1572476). It has no target index of its own, so this unit matches nothing
-# yet: 2825 waits for uenux2 at -O3, and fragment 110 has that measurement. With celeitores.cpp.o and celeitordetalhe.cpp.o
-# compiled at -O3 in a copy of the link (this object at -O2, in this unit's place), 2825 scores 41 over 440 rows, all
-# operand-only.
+# by itself: 2825 matches at the tree's -O3, and fragment 110 has its -O2 measurement. Before the tree took -O3, with
+# celeitores.cpp.o and celeitordetalhe.cpp.o compiled at -O3 in a copy of the link (this object at -O2, in this unit's
+# place), 2825 scored 41 over 440 rows, all operand-only.
 #
 # What the bytes decide:
 # - GetTituloMesario tests the optional's flag and returns its value, else throws: the order of 2825's rows at +0x1ae.

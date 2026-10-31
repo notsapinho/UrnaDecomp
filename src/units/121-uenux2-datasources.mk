@@ -23,7 +23,8 @@
 #   the target. With crespostas.cpp.o compiled at -O3 in a copy of the plain link (docs/reference/facts/workflow.md W13),
 #   12621 scores `20 over 190 rows`, all operand-only, and splat-remap stops at one operand: the end of the format string
 #   "{:0{}}", which in the target is the tail of "  {}{}{:0{}}" (address 1042, loaded by fn 11973, not written) and in our
-#   link a string of its own. So it waits for uenux2 at -O3, the user's decision, and for that literal in the link.
+#   link a string of its own. At the tree's -O3 it reads the same, `20 over 190 rows`, all operand-only, and stays
+#   `unresolved` on that operand alone: it waits for that literal in the link.
 # Members the unit brings with no target body of their own:
 # - 10688 and 10686, CDataText<COpcaoDS>'s D2 and D0: the implicit destructor cdatatext.h gives, as compiled here. In
 #   the target each is a 12-B thunk into fns 6053 and 6052, binaryen's merges of them with the D2 and D0 of

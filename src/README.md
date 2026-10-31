@@ -190,7 +190,7 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
   libc++'s formatting code, so target 5468 (`api::CGenericTags::TagSize`, unit 33) scores `10836 over 10850 rows (…
   inserted 10622 …)` alone and is matched in the whole link. How-to step 4 says when to skip to the whole link. The
   compile and the lone link are one `em++` line, `-Oz -fexceptions` and then the TU's own flags, and emcc takes the
-  last `-O`: binaryen runs at the TU's level (`-O2` for uenux2), not at the build link's `-Oz`
+  last `-O`: binaryen runs at the TU's level (`-O3` for uenux2), not at the build link's `-Oz`
   ([../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X6). `--single` compiles every TU
   as a copy named `cand.cpp` in a directory of its own, tracked TUs included, so a TU that includes a header beside it
   by a bare quoted name (`#include "cwasmtimer.h"` in `uenux2/mock/app/simulador/wasm/`) fails with `file not found`
