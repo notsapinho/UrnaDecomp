@@ -118,9 +118,10 @@ parts, the ones declared `final` have one (5966, 5969, 11958), and `CParteCargos
 slot 2 (`ledger/vtables.json`).
 
 A block's census pair is arbitrary among blocks alike but for the vptr: the D2s and D0s differ only there, so the census
-takes any of them. Of the 12 pairs of units 54, 65 and 90, none sits at the index its match line gives (`9483 10434
-__shared_ptr_emplace<api::CTextRectField>…` is a pair, and the match line is 11118). The check on a pair is its kind. The
-index comes from the vtable line: each match is slot 0 or 1 of its class's vptr in `ledger/vtables.json`, `evidence:vtable`.
+takes any of them. At 4487d6b it pairs 9483, matched as `CTrng`'s block's D2, with ours 10211, `CMenuValidation`'s, whose
+D2 the match list gives 10892 (`awk -F'\t' '$1==9483 {print $7, $10}' ledger/functions.tsv`). The check on a pair is its
+kind. The index comes from the vtable line: each match is slot 0 or 1 of its class's vptr in `ledger/vtables.json`,
+`evidence:vtable`.
 
 ## U4. The matches compiled in a companion object
 
@@ -221,7 +222,7 @@ awk -F'\t' '$1==11442 || $1==11469 || $1==11470 {print $1, $5, $11}' splat/scan.
 ```
 
 Which case a trap is shows in the plain link: the functions of the pending objects other than destructors, with the
-number of table slots that hold each (at 0b5f410; the indices move with the link):
+number of table slots that hold each (at 4487d6b; the indices move with the link, and the objects with the landings):
 
 ```sh
 python3 -I -c "
@@ -232,18 +233,16 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
     if obj.endswith('-pending.o') and 'D0Ev' not in name and 'D2Ev' not in name:
         print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
 "
-# 334 42 _ZNK3api19CTextFieldMultiLine4DrawERNS_7IScreenE 14-uenux2-ctextfieldmultiline-pending.o
-# 872 12 _ZNK7ecourna3app5dados3asn22CConversorHorariosUrna10DoConverteERKNS1_1 15-ecourna-cconversorhorariosurna-pending.o
-# 2265 4 _ZNK4vota4impl25CInformacaoThreadOperador14IsAudioAtivadoEv 50-uenux2-cinformacaothreadoperador-pending.o
-# 4953 2 _ZN3api12CEscritorLog4logaENS_15ELogAplicativosENS_11ESeveridadeERKNSt 62-uenux2-cwasmlogd-pending.o
-# 10660 1 _ZNK3api15CMenuValidation7isValidERKNSt3__212basic_stringIcNS1_11char_ 84-uenux2-cinputmenufield-pending.o
-# 10849 1 _ZN5comum3asn14CVisitanteFoto5visitEiRKNSt3__212basic_stringIcNS2_11ch 36-uenux2-cvisitantefoto-pending.o
+# 508 25 _ZN3api15CAjusteDataHora6AjustaERKNS_9CDateTimeE 101-uenux2-api-util-singletons-pending.o
+# 962 11 _ZNK5comum3asn22CConversorHorarioVerao10DoConverteERKNS_2md13CHorarioV 107-uenux2-iconversorasn-pending.o
+# 1596 6 _ZN4vota29CItemVisualizarCandidatosVota5Slot2Ev 102-uenux2-control-blocks-pending.o
+# 3176 3 _ZN3api15CTimerScheduler11CreateTimerERKNSt3__26chrono8durationIxNS1_5 101-uenux2-api-util-singletons-pending.o
+# 10346 1 _ZN5comum3asn14CVisitanteFoto5visitEiRKNSt3__212basic_stringIcNS2_11ch 36-uenux2-cvisitantefoto-pending.o
 ```
 
-Unit 14's `Draw` trap is one body in 42 table slots: binaryen merged the pending traps of its wasm type into it, and the
-merged ones have no name in `names.tsv` (`/usr/bin/grep -c CTextFieldDoubleLine4Draw
-build/out/wasm-map/vota_web/names.tsv` prints 0). None of them gets a name. The trap of 11442 is alone in its slot, so it
-is named after its trap. Which case a member is can change in a function its unit never touched. A trap a
+Unit 101's `Ajusta` trap is one body in 25 table slots: binaryen merged the pending traps of its wasm type into it, and
+the merged ones have no name in `names.tsv`. None of them gets a name. The trap of 11442 is alone in its slot, so it is
+named after its trap. Which case a member is can change in a function its unit never touched. A trap a
 unit adds merges with one of its wasm type and takes that member's name and `differs` row. A member that lands leaves its
 partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and 10900 turned `differs` when
 11366 matched. The name the symbol file gives 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`,
@@ -281,14 +280,20 @@ vtable, and no link error points at it.
 
 A fragment's own rules name their prerequisites by hand, unlike the generic rules of `src/Makefile`, which depend on
 every header of their tree (`ECOURNA_HDRS`, and `UENUX2_HDRS`, which holds the uenux2 and the ecourna headers).
-Counted with `make -n` at 9271d74:
+The objects an edit of a fragment rebuilds, at 4487d6b (name them: `roots_asn1.o` rebuilds on any fragment, so a count
+says nothing, and a companion's compile line does not end in `.o`):
 
 ```sh
-for f in src/units/26-uenux2-csigverifier.mk src/units/27-uenux2-ctextfield.mk src/units/19-uenux2-iscreen.mk; do
-  printf '%s ' $f; make -n -C src link -W $PWD/$f | /usr/bin/grep -c 'em++.* -c '; done
-# src/units/26-uenux2-csigverifier.mk 1     (its pending rule names the fragment)
-# src/units/27-uenux2-ctextfield.mk 0       (neither of its companion rules does)
-# src/units/19-uenux2-iscreen.mk 1          (its roots rule does)
+for f in 26-uenux2-csigverifier 30-uenux2-ctextfieldmt 19-uenux2-iscreen; do
+  echo "$f:"; make -n -C src link -W "$PWD/src/units/$f.mk" | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -oE -- '-o [^ ]+'; done
+# 26-uenux2-csigverifier:
+# -o build/out/app/26-uenux2-csigverifier-pending.o     (its pending rule names the fragment; its roots rule does not)
+# -o build/out/app/asn1/roots_asn1.o
+# 30-uenux2-ctextfieldmt:
+# -o build/out/app/asn1/roots_asn1.o                    (its roots rule does not name it)
+# 19-uenux2-iscreen:
+# -o build/out/app/19-uenux2-iscreen-roots.o            (its roots rule does)
+# -o build/out/app/asn1/roots_asn1.o
 for h in src/asn1/asn1.h src/asn1/asn1_useful.h; do
   printf '%s ' $h; make -n -C src link -W $PWD/$h | /usr/bin/grep -c -- '-o [^ ]*36-uenux2-cvisitantefoto-pending.o'; done
 # src/asn1/asn1.h 1
@@ -297,25 +302,36 @@ make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -c -- '-o [^ ]*cvisi
 # 0                                         (the generic uenux2 rule depends on no src/asn1 header)
 ```
 
-So an edit of `src/asn1/asn1.h` rebuilds the ASN.1 runtime, the converters whose rules name `src/asn1` (units 04, 09
-and 16) and the companions that name it, and misses two kinds of object that include it. At bb6f018 the rebuild list
-holds 82 objects, no uenux2 object among them, and not unit 15's `cconversorhorariosurna.cpp.o`, whose rule names its
-fragment and the ecourna headers only, though the source includes `asn1.h`:
+So an edit of `src/asn1/asn1.h` rebuilds the ASN.1 runtime, the objects whose rules name `src/asn1` and the companions
+that name it, and misses the other objects that include it. At 4487d6b the rebuild list holds 135 objects, 24 of them
+uenux2's, and not unit 15's `cconversorhorariosurna.cpp.o`, whose rule names its fragment and the ecourna headers only,
+though the source includes `asn1.h`:
 
 ```sh
 make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -c 'em++.* -c '
-# 82
+# 135
 make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE -- '-o [^ ]+\.o' | /usr/bin/grep -c 'app/uenux2/'
-# 0
+# 24
 make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -c -- '-o [^ ]*cconversorhorariosurna.cpp.o'
 # 0
 TMPDIR=/tmp build/docker-build.sh sh -c "$(tools/round/try-tu.sh --print-flags src/ecourna/app/dados/asn/cconversorhorariosurna.cpp | sed -E 's/^[^:]*: //; s/ -c / -M /')" | tr ' ' '\n' | /usr/bin/grep -c '^src/asn1/asn1\.h$'
 # 1
 ```
 
-After an edit of `asn1.h`, touch those sources and the companions that include it
-(`/usr/bin/grep -ln asn1 src/units/*-roots.cpp src/units/*-pending.cpp`), and compare the objects before and after
-([workflow.md](workflow.md) §W15).
+The objects of the link that hold a symbol of the `ASN1` namespace and that edit leaves alone, each a candidate to
+link stale, are the ones to move aside by name before the rebuild ([workflow.md](workflow.md) §W15). The byte search
+sees every object whose code the header reaches:
+
+```sh
+mkdir -p build/out/units-facts
+make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE -- '-o [^ ]+\.o' | cut -c4- | sort > build/out/units-facts/rebuilt.txt
+make -s -C src print-LINK_OBJS | tr ' ' '\n' | sed "s#^$PWD/##" | /usr/bin/grep '\.o$' | sort > build/out/units-facts/linked.txt
+comm -13 build/out/units-facts/rebuilt.txt build/out/units-facts/linked.txt | while read -r o; do
+  LC_ALL=C /usr/bin/grep -q -a '4ASN1' "$o" && echo "$o"; done | wc -l
+# 8      (cconversorhorariosurna.cpp.o, 87-asn1-avn-roots.o and six uenux2 objects of app/comum)
+```
+
+For a module header, search for the module's namespace in place of `4ASN1`.
 
 The two header lists are empty inside a fragment. `src/Makefile` reads the fragments before it sets them, and make
 expands a rule's prerequisites when it reads the rule (GNU Make 3.81, this machine's `make`):
@@ -404,3 +420,98 @@ diff $P/pending.bodies $P/user.bodies | /usr/bin/grep -oE '^[<>] <[^>]*>'
 The bodies, with object-local call indices dropped, differ only in `ImprimeParte` (the trap against the inline body)
 and the user's own function: `TemParte`, the D2 and the D0 are the same code from either object. So a trap that
 stands for an inline member decides which object of ours emits the vtable's members, not their bytes.
+
+## U11. How many members binaryen needs to form a merge body
+
+`--merge-similar-functions` merges functions that differ only in constants into one body and thunks, and it does not
+merge two copies of a small body. The two shapes of the exit destructors: a pointer destructor over a class with an
+implicit destructor (fn 349's shape, one call) and one that calls a D2 (fn 389's, two calls), N copies each, differing
+in the address they clear, through the image's `wasm-opt`:
+
+```sh
+mkdir -p build/out/units-facts/mgfn
+for k in free d2; do for n in 2 3 4 5; do
+  { printf '(module\n (import "e" "d2" (func $d2 (param i32) (result i32)))\n (import "e" "free" (func $free (param i32)))\n (memory 1)\n'
+    for i in $(seq 1 $n); do
+      c='(call $free (local.get 0))'; [ $k = d2 ] && c="(drop (call \$d2 (local.get 0))) $c"
+      printf ' (func $f%d (export "f%d") (param i32)\n  (local.set 0 (i32.load (i32.const %d)))\n  (i32.store (i32.const %d) (i32.const 0))\n  (if (local.get 0) (then %s)))\n' $i $i $((1000 + 8 * i)) $((1000 + 8 * i)) "$c"
+    done; printf ')\n'; } > build/out/units-facts/mgfn/$k$n.wat
+  printf '%s N=%s ' $k $n
+  TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/wasm-opt --enable-bulk-memory build/out/units-facts/mgfn/$k$n.wat --merge-similar-functions -S -o - | /usr/bin/grep -c 'func .byn.mgfn-shared'
+done; done
+# free N=2 0
+# free N=3 0
+# free N=4 1
+# free N=5 1
+# d2 N=2 0
+# d2 N=3 1
+# d2 N=4 1
+# d2 N=5 1
+```
+
+So fn 349's shape forms from 4 members and fn 389's from 3, and two of either stay whole bodies where the target has
+12-B thunks. The whole link agrees: unit 104's third member, `vota::CQuerReimprimirZeresima`, is what formed fn 389.
+A target body with 49 callers gives no bound on what forms it in our link; count its members in ours.
+
+## U12. Who reaches a function through an `invoke_*` table slot
+
+`ledger/callgraph.tsv` holds direct calls only, so a function an `invoke_*` thunk calls has no caller there, and
+`pnpm wasm fn` lists its table slots without their users. The disassembly prints an import by its minified name
+(`call 8 <a.i>`), and `ledger/import-names.json` gives the real one. A use of slot S is an `i32.const S` whose next call
+is an `invoke_*` import:
+
+```sh
+python3 -I - target/vota_web_wasm.wasm 448 <<'END'
+import json, re, subprocess, sys
+wasm, slot = sys.argv[1], sys.argv[2]
+names = json.load(open('ledger/import-names.json'))
+invoke = {n for n, real in names.items() if real.startswith('invoke_')}
+f, last = None, None
+for line in subprocess.run(['wasm-objdump', '-d', wasm], capture_output=True, text=True).stdout.splitlines():
+    if m := re.search(r' func\[(\d+)\]', line): f, last = m[1], None
+    elif m := re.search(r'\| *i32\.const (\d+)$', line): last = m[1]
+    elif (m := re.search(r'\| *call \d+ <a\.(\S+)>', line)) and last == slot and m[1] in invoke:
+        print('func', f, '->', names[m[1]]); last = None
+    elif '| call' in line: last = None
+END
+# func 1525 -> invoke_iii
+# func 9256 -> invoke_iii
+# func 9259 -> invoke_iii
+# func 9538 -> invoke_iii
+# func 9543 -> invoke_iii
+# func 10205 -> invoke_iiiii
+```
+
+Slot 448 holds 5632 (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[448\] '`), which
+takes four parameters and returns one, so only `invoke_iiiii` fits: 10205 is its caller. The other five pass 448 as
+an integer that happens to equal the slot.
+
+## U13. A class with no row in `ledger/vtables.json` can have a vtable
+
+The extraction misses classes: 406 of the 2162 classes of `ledger/classes.json` have no row, and some of them have a
+vtable in the target.
+
+```sh
+python3 -I -c "import json; c=json.load(open('ledger/classes.json'))['classes']; n={e['class'] for e in json.load(open('ledger/vtables.json'))}; print(len(c), sum(x['name'] not in n for x in c))"
+# 2162 406
+```
+
+A vtable is a zero offset-to-top word, then the typeinfo's address, then the slots, and its address point is 8 bytes
+in. So the words equal to a class's typeinfo after a zero word find it. `ASN1::GeneralizedTime`'s typeinfo is 1149228
+(`_ZTIN4ASN115GeneralizedTimeE = 0x11892c` in `splat/symbol_addrs.txt`):
+
+```sh
+python3 -I - target/vota_web_wasm.wasm 1149228 <<'END'
+import struct, sys
+sys.path.insert(0, 'tools/extract'); import wasmmod
+base, img = wasmmod.Module(sys.argv[1]).memory_image(); t = int(sys.argv[2])
+for o in range(4, len(img) - 3, 4):
+    if struct.unpack_from('<I', img, o)[0] == t and struct.unpack_from('<I', img, o - 4)[0] == 0:
+        print('vtable', base + o - 4, 'address point', base + o + 4)
+END
+# vtable 1149192 address point 1149200
+```
+
+Its slots then come from the words after the typeinfo and `wasm-objdump -x -j Elem target/vota_web_wasm.wasm`
+([asn1.md](asn1.md) §A9 lists them). A class missing its row gets no `vtable` evidence for its slots, so its members wait
+for a census pair or a hand edit.

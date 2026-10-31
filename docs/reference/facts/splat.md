@@ -171,6 +171,9 @@ The counts grow with the link and the match list; what holds is `N/N kind-verifi
    of `make -C src splat`; without them the cases are skipped). The numbers of our link in a case (its addresses and
    table slots) are read from the link the suite runs on, from the target's number for the same thing or from a symbol
    name, so a landing that moves our data or our table changes none of them: at 9271d74 the file passes its 36 tests.
+   A target number is a literal, but where a case needs one past our data or our table, the comparison with our end is
+   the link's, so that number is chosen from the link too (`pastOurData`, `relativePastOurTable` in the file): a
+   landing that grew our data or table past a fixed one failed c9 and V1, V2 ([workflow.md](workflow.md) §W12).
    Each case patches one operand, at a body offset of one
    function, in a copy of our plain link and its shifted link (the `plain` and `shifted` values of the case), and
    builds that function's match:
@@ -491,7 +494,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -577,11 +580,12 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     `std::string::append` that leaves 3717 to `libc++.a` (`src/units/README.md` "Companion files"). So
     `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match app/roots_uenux2.o` and
     `3717 match sysroot:libc++.a(directory_entry.o)`.
-11. **14072, 14073, 14241 and 14242, by their corrected names (§S11).** Step 9 can swap the two pairs, since no name of the
-    symbol file disagrees, and the check above cannot see a swap: each name's prefix must agree with its neighbours.
+11. **14072, 14073, 14241, 14242 and 12991, by their corrected names (§S11).** Step 9 can swap the two pairs, or give
+    12991 another table's name, since no name of the symbol file disagrees, and the check above cannot see a swap: each
+    name's prefix must agree with its neighbours.
 
     ```sh
-    awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ {print $1, $2}' splat/scan.tsv     # prints nothing
+    awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ || $1==12991 && $2 !~ /^kdf_pbkdf1_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
 
 12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's hand edit.** Each holds a table slot
@@ -591,6 +595,18 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     today `cappinfo.cpp.o`. When a unit adds an enum's handle ahead of it, the eleven go `unresolved` and `status.py`
     stops on `matched.txt only:`: take the new name from `build/out/wasm-map/vota_web/names.tsv`, rewrite the name on
     the line and keep its evidence, and run step 9 again, as for 2924 above.
+13. **349 and 389, and the thunks 11510, 13695, 10231, 11640 and 11660, by the exit destructors that form them.** Each
+    body forms only from enough members, 4 of fn 349's shape and 3 of fn 389's ([units.md](units.md) §U11): the
+    singletons' pointer destructors of units 104, 110, 111 and 116. The thunks are `f349(p0, <pointer>)`, so each also
+    names its class's pointer as a second holder (§3 of [../splat.md](../splat.md)). A landing that removes members can
+    unform a body. A merge body's match line is `byn$mgfn-shared$__cxx_global_array_dtor@<first member's object>`, and
+    step 9 renames it when the first member moves, so read the row, not the line.
+14. **5805, by unit 110's stand-in for 7787.** `comum::CCargos::~CCargos` has two target callers, 11561 and the unwritten
+    7787. With 11561 alone binaryen inlines it, and 273, 11203, 11209 and 11561 fall with it; `d5805` in
+    `src/units/110-uenux2-singletons-roots.cpp` is the second call site. It goes when 7787 lands.
+15. **4505 and 8750, by the data's layout.** 4505 holds while no object of ours starts at 0x100000
+    ([tool-traps.md](tool-traps.md) §X11). 8750 holds through the `content` hand edit of `ASN1::UTCTime::theInfo`, whose
+    tag word reads as a table slot of ours and loosens the object's pattern when that slot's function has no target name.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -716,3 +732,35 @@ object. 84 of the 98 differ elsewhere as well (6319 and 11024 at byte 279, `offs
 groups of 12 or 14 B, are byte-equal but for the record's address, key `cinteractiveform.h` 57:25: 10342=10347=10352,
 10493=10641, 10496=10504=10508, 10598=10601, 10604=10667=10709=10757. Each is slot 7 of its own class's vtable, and only
 that slot can name it.
+
+## S13. A guard sits at our link's distance from its object
+
+A function-local static's `_ZGV` guard and its object are emitted together, and the target keeps the distance between
+them that our link has. Of the 27 guards the symbol file names, 25 have an object it names too, and 24 of those sit at
+our distance from it:
+
+```sh
+python3 -I - <<'END'
+import re
+sym, ours = {}, {}
+for line in open('splat/symbol_addrs.txt', encoding='utf-8'):
+    if m := re.match(r'(\S+) = 0x([0-9a-f]+);', line): sym[m[1]] = int(m[2], 16)
+for line in open('build/out/wasm-map/vota_web/vota_web_wasm.map', encoding='latin-1'):
+    f = line.split()
+    if len(f) >= 4 and re.fullmatch(r'[0-9a-f]+', f[0]): ours.setdefault(f[-1], int(f[0], 16))
+n = {'same': 0, 'other': 0, 'no object': 0}
+for g in (s for s in sym if s.startswith('_ZGV')):
+    o = '_Z' + g[4:]
+    if o not in sym or g not in ours or o not in ours: n['no object'] += 1
+    elif sym[g] - sym[o] == ours[g] - ours[o]: n['same'] += 1
+    else: n['other'] += 1; print(g, sym[g] - sym[o], ours[g] - ours[o])
+print(n)
+END
+# _ZGVZNSt3__217iostream_categoryEvE6helper 292077 60600
+# {'same': 24, 'other': 1, 'no object': 2}
+```
+
+The one other is `iostream_category`'s, whose object is not `.bss`. So a guard one body reads alone, which §3's rule
+refuses as self-voted (5158, `CStringUtils::ToLower`, reads `acentuadas`'s guard), has evidence outside that body: its
+object's address, when another match holds the object, plus our link's distance. No line or rule uses it yet: 5158 is
+`unresolved self-voted` (`awk -F'\t' '$1==5158 {print $5, $6}' splat/scan.tsv`).
