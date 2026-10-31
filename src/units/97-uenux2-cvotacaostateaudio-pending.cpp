@@ -32,7 +32,14 @@
 // Its stub sat in app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp, where the record of the GetInst it holds inlined
 // lies (:45); with these traps in the vtables the stub generator writes it no more.
 //
+// vota::IConfereVotoEmCargo, slots 9, 10 and 12 (ProcessInputAudio 11791, record cconferevotoemcargo.cpp:80, 71 B;
+// StartStateAudio 11793, 333 B, which holds the record :41 of an anonymous-namespace GetCargoID; ProcessTickAudio 11790,
+// 131 B): 11791 waits for fn 455, CPolySingleton<api::IInputKbd>::instance, which has no name, and fn 1455
+// (CVotacaoStateAudio's, not written); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
+// std::function it builds; 11793 is not read here. ProcessInputAudio is the class's key function here.
+//
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
+#include "app/vota/eleitor/cconferevotoemcargo.h"
 #include "app/vota/eleitor/cestadocomdesligamentoautomatico.h"
 #include "app/vota/eleitor/votamajoritario/cmajoritariovalido.h"
 #include "app/vota/eleitor/votamajoritario/cpedemajoritario.h"
@@ -129,6 +136,21 @@ void CMajoritarioValido::AoConcluirEntrada(api::EInputResult)
 }
 
 void CConfirmaVotoNominal::AoConcluirEntrada(api::EInputResult)
+{
+    __builtin_trap();
+}
+
+void IConfereVotoEmCargo::ProcessInputAudio()
+{
+    __builtin_trap();
+}
+
+void IConfereVotoEmCargo::StartStateAudio()
+{
+    __builtin_trap();
+}
+
+void IConfereVotoEmCargo::ProcessTickAudio(uebyte)
 {
     __builtin_trap();
 }

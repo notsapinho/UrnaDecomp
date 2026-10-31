@@ -9704,3 +9704,6 @@
 5921 _ZN4vota16CPedeMajoritario7GetInstEv
 11686 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/votamajoritario/cpedemajoritario.cpp.o
 11714 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
+1717 _ZN4vota19IConfereVotoEmCargoD2Ev
+11789 _ZNK4vota19IConfereVotoEmCargo11GetMensagemEv
+11792 _ZN4vota19IConfereVotoEmCargo16FinishStateAudioEv

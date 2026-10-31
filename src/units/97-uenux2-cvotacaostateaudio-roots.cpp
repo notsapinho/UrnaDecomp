@@ -6,6 +6,8 @@
 // 10388 for the CPedeTituloMesario* states). Taking the vtables' address keeps every slot. None of those direct callers
 // of the destructors is stood in for: the destructors are in the table, so binaryen keeps them out of line. The ten
 // confirmation states' vtables are referenced by their constructors, inlined into their GetInst.
+// vota::IConfereVotoEmCargo's vtable, with its in-class destructor (fn 1717) and slots 11 and 15 (fns 11792, 11789), is
+// referenced in the target by its constructor (fn 1165, not reconstructed) and by that destructor; its address is taken.
 //
 // api::CPosixRWMutex's constructor (target fn 10245) is reached only by its table slot 244, which fn 10864 passes to fn
 // 6023, so its own address is taken; its vptr store keeps that class's vtable, and with it slots 0 to 4.
@@ -46,6 +48,7 @@ int w97_inst_6() __asm__("_ZN4vota18CMajoritarioValido7GetInstEv");
 int w97_inst_7() __asm__("_ZN4vota20CMajoritarioRepetido7GetInstEv");
 int w97_inst_8() __asm__("_ZN4vota16CMajoritarioNulo7GetInstEv");
 int w97_inst_9() __asm__("_ZN4vota18CMajoritarioBranco7GetInstEv");
+extern const char iconferevotoemcargo_vt[] __asm__("_ZTVN4vota19IConfereVotoEmCargoE");
 extern const char cpedenulo_vt[] __asm__("_ZTVN4vota9CPedeNuloE");
 extern const char cpedenominal_vt[] __asm__("_ZTVN4vota12CPedeNominalE");
 int w97_desligamento(void*, int) __asm__("_ZN4vota32CEstadoComDesligamentoAutomaticoC2Ei");
@@ -107,6 +110,7 @@ struct SCVotacaoStateAudioRoots {
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&PedeProporcional);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&PedeMajoritario);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DezSingletons);
+        cvotacaostateaudio_sink = iconferevotoemcargo_vt;
         cvotacaostateaudio_sink = cpedenulo_vt;
         cvotacaostateaudio_sink = cpedenominal_vt;
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DoisDesligamentos);
