@@ -28,11 +28,13 @@
 #   name on the line under the marker, keeps its evidence, and runs step 9 again.
 # - 631, emplace_back's slow path, and 14476, 321 and 871, which the roots keep (their comments there). 631's second arg is
 #   the typeinfo by reference, so m_tipo is a std::reference_wrapper here, one of the same-bytes forms below.
-# - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7506 7962 7966
+# - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7962 7966
 #   7982 7989 7994 8000 8019 8024 8029 8042 8044 8047 8055 10308 10413 10455 10498 10538 10550 10575 10596 10632 10668 10702
 #   10741 10780 10873 11164 11801 12048, and __on_zero_shared 4739 4772 5381 8009 8051. Each is reached by a never-called
 #   w100_bloco<T>, the shape units 78 and 79 use: the target's builder is push<T> or the shared_ptr constructor over fn 1010,
 #   and each stores that vtable (the grep of the vptr finds it, or 10335's thunk constant). 10413 had read `unresolved`.
+#   7506, comum::IEventosLog's __get_deleter, comes from clogvota.cpp.o, whose CLogVota::GetInst builds the block through
+#   set (unit 119), so it has no w100_bloco.
 #   New heads, a virtual destructor alone: vota::IExecucaoVota, vota::IAjusteInicial, vota::impl::IPoliticaExecucaoEleitor,
 #   vota::impl::ISincronismoVotoEleitor, vota::testeteclado::impl::IGeradorTeclas, comum::impl::IValidaMidia,
 #   api::IFingerPrepare and ecourna::api::security::ISymmetricCipherFactory, each path chosen, beside the file whose record
