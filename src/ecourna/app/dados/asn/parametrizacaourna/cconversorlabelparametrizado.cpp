@@ -50,10 +50,10 @@ CLabelParametrizado::EGeneroLabel CConversorLabelParametrizado::DesconverterGene
     switch (entidade.get_genero()) {
         case ModuloParametrizacaoUrna::GeneroLabel::neutro:
             return CLabelParametrizado::EGL_NEUTRO;
-        case ModuloParametrizacaoUrna::GeneroLabel::masculino:
-            return CLabelParametrizado::EGL_MASCULINO;
         case ModuloParametrizacaoUrna::GeneroLabel::feminino:
             return CLabelParametrizado::EGL_FEMININO;
+        case ModuloParametrizacaoUrna::GeneroLabel::masculino:
+            return CLabelParametrizado::EGL_MASCULINO;
         case ModuloParametrizacaoUrna::GeneroLabel::unknownEnumeration_:
             throw CAsnParametrizacaoUrnaError(EAPUE_GENERO_LABEL_DESCONHECIDO, ERRO_GENERO_LABEL);
         default:

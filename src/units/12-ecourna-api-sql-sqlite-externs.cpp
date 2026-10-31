@@ -4,8 +4,8 @@
 // Replace matches. It reads the replacement's size once, before the loop, as the target does; a loop that adds
 // para.size() each time gives other code, a while loop over the same hoisted size the same object code.
 // ToLower in place maps each character through std::transform: a range-for over the string gives other code (39 rows
-// against the target, 8 inserted and 12 deleted), this form 8 rows, all operand-only. It does not match: the scan
-// finds no target name for the function-local static set or its guard variable (.bss, target 1911836 and 1911848).
+// against the target, 8 inserted and 12 deleted), this form 8 rows, all operand-only. It does not match: its
+// `content-anchor` pair votes the static set and the guard (.bss, 1911836 and 1911848), and no other body reads the guard.
 // The copying ToLower does not match either: CSqlResultSet::IndexForColumnName (unit 12's fragment) says why.
 #include "ecourna/api/util/cstringutils.hpp"
 
