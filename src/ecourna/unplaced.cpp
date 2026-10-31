@@ -813,9 +813,6 @@
 
 // link-order cluster 1238 · uses=8 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp
 
-// f1563 · 572 B · unmatched · placement: link order · name unknown
-// void f1563(i32, i32, i32, i32, i32) { ... }
-
 // f1561 · 215 B · unmatched · placement: link order · name unknown
 // ? f1561(i32, i32, i32, i32, i32) { ... }
 
@@ -868,11 +865,6 @@
 
 // f1166 · 198 B · unmatched · placement: link order · name unknown
 // ? f1166(i32, i32) { ... }
-
-// link-order cluster 1282 · uses=13 · neighbours' file uenux2/src/app/comum/gravadores/cassinador.cpp
-
-// f1008 · 572 B · unmatched · placement: link order · name unknown
-// void f1008(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1291 · uses=15
 

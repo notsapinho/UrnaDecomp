@@ -6,9 +6,10 @@
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each. The
 //   constructors of CDadoCarga (fn 5633, 10167 and 11402) and CEstadoGeralVota (fn 5628, 10067 and 11391), GetFaseChar
 //   (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's DefineHistoricoCarga
-//   and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) have none, and neither do the four converter
-//   helpers each of which its class's unwritten slot calls twice (fns 5693, 5694, 5689, 5690), so one stand-in that
-//   calls each twice.
+//   and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) have none, and neither do the two converter
+//   helpers each of which its class's unwritten slot calls twice (fns 5689, 5690), so one stand-in that calls each
+//   twice. CDadoCarga's constructor has one real caller now, its converter's DoDesconverte (11402), and the stand-in
+//   stands for 10167.
 // - CDadoCorrespondencia's constructor (fn 5630) has one direct caller in the target (11400) and a table slot (450), so
 //   one stand-in and its address.
 // - ValidaCriacao, ValidaModelo, ConverteEstadoSA, DesconverteEstadoSA and the two *TipoAjusteDataHora helpers have one
@@ -21,15 +22,13 @@ extern const char estadoaplicacao_ajuste_vt[] __asm__("_ZTVN5comum3asn24CConvers
 extern const char estadoaplicacao_sa_vt[] __asm__("_ZTVN5comum3asn23CConversorEstadoGeralSAE");
 void* estadoaplicacao_localidade(void*, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao20CLocalidadeEleitoralC1Ejtt");
 void* estadoaplicacao_sa(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao14CEstadoGeralSAC1ENS_9EEstadoSAEbjtt");
-void* estadoaplicacao_carga(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoCargaC1EiNS_9EUrnaTipoES3_NS_11EUrnaModeloENS_9EUrnaFaseE");
+void* estadoaplicacao_carga(void*, int, int, int, int, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoCargaC1ENS_10EUrnaTurnoENS_9EUrnaTipoES4_NS_11EUrnaModeloENS_9EUrnaFaseE");
 int estadoaplicacao_fase(const void*) __asm__("_ZNK5comum2md15estadoaplicacao10CDadoCarga11GetFaseCharEv");
 void estadoaplicacao_delta(void*, int) __asm__("_ZN5comum2md15estadoaplicacao15CAjusteDataHora14AdicionaDeltaTEi");
 void estadoaplicacao_historico(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder20DefineHistoricoCargaERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
 void estadoaplicacao_idcarga(void*, const void*) __asm__("_ZN5comum23CCabecalhoQRCodeBuilder17DefineCodigoCargaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void* estadoaplicacao_vota(void*, int, int, int, void*, void*, void*, int, int, void*, int, void*, void*, int) __asm__("_ZN5comum2md15estadoaplicacao16CEstadoGeralVotaC1ENS_11EEstadoVotaENS_19EEstadoEncerramentoEhNSt3__28optionalIjEENS6_IN3api9CDateTimeEEESA_ttSA_bNS1_27CNumViasImpressasRelatoriosESA_b");
 void* estadoaplicacao_corresp(void*, int, void*, void*, void*, void*, void*, void*) __asm__("_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaC1EjNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEN3api9CDateTimeES9_NS1_20CLocalidadeEleitoralENS3_6vectorIhNS7_IhEEEEN7ecourna3app5dados26CIdentificadorGeradorMidiaE");
-void estadoaplicacao_tipo(void*, const void*, int) __asm__("_ZNK5comum3asn19CConversorDadoCarga16ConverteTipoUrnaENS_9EUrnaTipoE");
-int estadoaplicacao_destipo(const void*, const void*) __asm__("_ZNK5comum3asn19CConversorDadoCarga19DesconverteTipoUrnaERKN21ModuloEstadoGeralUrna16TipoUrnaOperacaoE");
 void estadoaplicacao_app(void*, const void*, int) __asm__("_ZNK5comum3asn24CConversorEstadoGeralGap22ConverteUrnaAplicativoENS_15EUrnaAplicativoE");
 int estadoaplicacao_desapp(const void*, const void*) __asm__("_ZNK5comum3asn24CConversorEstadoGeralGap25DesconverteUrnaAplicativoERKN20ModuloEstadoGeralGap14UrnaAplicativoE");
 }
@@ -63,17 +62,6 @@ __attribute__((noinline)) void estadoaplicacao_use_delta(void* a, void* b, int d
 {
     estadoaplicacao_delta(a, delta);
     estadoaplicacao_delta(b, delta + 2);
-}
-
-__attribute__((noinline)) void estadoaplicacao_use_tipo(void* a, void* b, const void* conversor, int t1, int t2)
-{
-    estadoaplicacao_tipo(a, conversor, t1);
-    estadoaplicacao_tipo(b, conversor, t2);
-}
-
-__attribute__((noinline)) int estadoaplicacao_use_destipo(const void* conversor, const void* a, const void* b)
-{
-    return estadoaplicacao_destipo(conversor, a) - estadoaplicacao_destipo(conversor, b);
 }
 
 __attribute__((noinline)) void estadoaplicacao_use_app(void* a, void* b, const void* conversor, int atual, int anterior)
@@ -121,8 +109,6 @@ struct SEstadoAplicacaoRoots {
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_build_carga);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_fase);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_delta);
-        estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_tipo);
-        estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_destipo);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_app);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_desapp);
         estadoaplicacao_sink = reinterpret_cast<const void*>(&estadoaplicacao_use_historico);

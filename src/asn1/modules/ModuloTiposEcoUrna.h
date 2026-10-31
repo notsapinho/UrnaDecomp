@@ -309,6 +309,65 @@ private:
     static const char * nameList[];
 }; // end class SituacaoArquivo
 
+//
+// ModuloTiposEcoUrna::ModeloEquipamento
+//
+
+class ModeloEquipamento : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    ModeloEquipamento(const void* info) : Inherited(info) {}
+public:
+    ModeloEquipamento() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        tpm20 = 2,
+        ue2013 = 13,
+        ue2015 = 15,
+        ue2020 = 20,
+        ue2022 = 22
+    };
+
+    bool is_tpm20() const { return value == tpm20; }
+    void set_tpm20() { value = tpm20; }
+
+    bool is_ue2013() const { return value == ue2013; }
+    void set_ue2013() { value = ue2013; }
+
+    bool is_ue2015() const { return value == ue2015; }
+    void set_ue2015() { value = ue2015; }
+
+    bool is_ue2020() const { return value == ue2020; }
+    void set_ue2020() { value = ue2020; }
+
+    bool is_ue2022() const { return value == ue2022; }
+    void set_ue2022() { value = ue2022; }
+
+    ModeloEquipamento(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    ModeloEquipamento & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const ModeloEquipamento &rhs) const { return value == rhs.value; }
+    bool operator != (const ModeloEquipamento &rhs) const { return value != rhs.value; }
+
+    void swap (ModeloEquipamento & that) { Inherited::swap(that); }
+    ModeloEquipamento * clone() const
+    { return static_cast<ModeloEquipamento*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class ModeloEquipamento
+
 } // namespace ModuloTiposEcoUrna
 
 #endif // __MODULOTIPOSECOURNA_H

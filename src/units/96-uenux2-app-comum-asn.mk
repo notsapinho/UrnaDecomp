@@ -1,6 +1,6 @@
 # uenux2 comum::asn::Utils in src/app/comum/asn/util.cpp, the records' file: ConverteFase, DesconverteFase,
 # ConverteTipoLocalVotacao and DesconverteTipoLocalVotacao (target fns 1712, 2843, 3801, 3800), and DesconverteAbrangencia
-# (5827), written and not matched. The class header app/comum/asn/util.h, the error header euecomumasnerror.h and the
+# (5827), written and not matched; CConversorDadoCarga (below). The class header app/comum/asn/util.h, the error header euecomumasnerror.h and the
 # enum EUrnaFase (app/comum/eurnafase.h, which unit 60's cgravadorwsq.h includes in place of its opaque `: int`
 # declaration: the target formats EUrnaFase through fn 536, formatter<unsigned int>).
 #
@@ -41,14 +41,33 @@
 #   in operands only and its first difference is the record, which a scratch file cannot hold; and every match of the
 #   tree still verifies, sha256 the target's. The defaults stay as unit 47's specialization with their source in its
 #   header, since the target's body is a merge thunk (src/units/README.md "An inherited template default").
-# - 11437, 11438 and 11401 hold other members of this file inlined. 11437 and 11438 need fn 591, and 11438 needs fn 339
-#   as well, neither with a name, and 2654, which differs. 11401 calls fn 5693, which has no body of ours.
+# - 11437 and 11438 hold other members of this file inlined, and 11438 calls fn 2654, which differs.
+#
+# ConverteAbrangencia (inlined by binaryen into 11462), ConverteTurno and DesconverteTurno (into 11401 and 11402) are
+# here too, at their records' lines; their callers are in fragment 107 and in cconversordadocarga.cpp. No default in the
+# first two switches: a `default: break;` gives the same bytes (measured on ConverteTurno's object).
+#
+# cconversordadocarga.cpp (CConversorDadoCarga, target fns 11401, 11402, 5693, 5694; it moved here from unit 93's list)
+# comes after util.cpp in this list, and that order is measured: with the converter's object ahead of util.cpp's, as
+# in unit 93's list, 11402 scores 74 over 652 rows with 3 inserted and 5 deleted and 11401 71 over 513 with 3 and 4,
+# binaryen keeping the out-parameter and the `| 48` of DesconverteTurno in other places; in this order both are
+# operand-only (docs/reference/facts/codegen.md C4). 11402 matches. The cases of DesconverteModelo run from ue2022 down:
+# in ascending order the block of 2013 comes first and 11402 is `differs` at +0x24a.
+# - 11401 is written and `differs` at +0x38. ConverteTurno's throw in the target passes the turn as a handle, table
+#   slot 474, fn 9868, whose body calls formatter<unsigned int>::format out of line (fn 5906, called by 4027 too). The
+#   form with std::format("...", turno) over util.h's template compiles to fn 536's body, one of the 31 slots of that
+#   function, and the two slots then vote for two target functions: 536 loses its name, and 1712, 2253, 3702, 275 and
+#   680 leave `match`. So the source passes static_cast<int>(turno), the one difference, until a formatter is found
+#   that gives 9868. An explicit `std::formatter<EUrnaTurno> : std::formatter<unsigned int> {}` does not compile:
+#   libc++'s format takes an integral.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
-COMUM_ASN_SRCS := src/app/comum/asn/util.cpp
+COMUM_ASN_SRCS := src/app/comum/asn/util.cpp src/app/comum/dados/asn/estadoaplicacao/cconversordadocarga.cpp
 UENUX2_SRCS += $(COMUM_ASN_SRCS)
 # the converters that call these members are not reconstructed yet: 96-uenux2-app-comum-asn-roots.cpp gives each its
 # second call site, the way the target reaches them
+# the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
+$(foreach u,$(COMUM_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 $(ROOT)/$(APP)/96-uenux2-app-comum-asn-roots.o: $(ROOT)/src/units/96-uenux2-app-comum-asn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/96-uenux2-app-comum-asn.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/96-uenux2-app-comum-asn-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/96-uenux2-app-comum-asn-roots.o

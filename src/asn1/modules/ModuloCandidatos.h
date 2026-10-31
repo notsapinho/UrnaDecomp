@@ -9,6 +9,17 @@
 namespace ModuloCandidatos {
 
 //
+// ModuloCandidatos::DadosCandidato
+//
+// No theInfo of the target names it and no object of it is built, so the schema has no entry: the name is the
+// typeid text comum::asn::IConversorASN<ModuloCandidatos::DadosCandidato, ...>::Desconverte passes (fn 5711). A class
+// and not a typedef, since a typedef would print ModuloTiposResultadosEcoUrna::DadosCandidato. The base is chosen.
+
+class DadosCandidato : public ModuloTiposResultadosEcoUrna::DadosCandidato
+{
+};
+
+//
 // ModuloCandidatos::CandidatosPorCargos
 //
 

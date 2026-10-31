@@ -6,8 +6,6 @@
 
 namespace comum::asn {
 
-// DoConverte and DoDesconverte (target fns 11401, 11402, slots 2 and 3) are not reconstructed, so nothing here emits the
-// vtable: ConverteTipoUrna and DesconverteTipoUrna, which each calls twice, are reached from the roots file.
 class CConversorDadoCarga : public IConversorASN<ModuloEstadoGeralUrna::DadoCarga, md::estadoaplicacao::CDadoCarga> {
 protected:
     TEntidade DoConverte(const TDado& dado) const override;
@@ -16,6 +14,8 @@ protected:
 private:
     ModuloEstadoGeralUrna::TipoUrnaOperacao ConverteTipoUrna(const EUrnaTipo tipo) const;
     EUrnaTipo DesconverteTipoUrna(const ModuloEstadoGeralUrna::TipoUrnaOperacao& tipo) const;
+    ModuloTiposEcoUrna::ModeloEquipamento ConverteModelo(const EUrnaModelo modelo) const;
+    EUrnaModelo DesconverteModelo(const ModuloTiposEcoUrna::ModeloEquipamento& modelo) const;
 };
 
 } // namespace comum::asn

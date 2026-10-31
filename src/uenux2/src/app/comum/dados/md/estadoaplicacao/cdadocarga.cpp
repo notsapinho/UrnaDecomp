@@ -8,7 +8,7 @@
 
 namespace comum::md::estadoaplicacao {
 
-CDadoCarga::CDadoCarga(int turno, EUrnaTipo tipoUrnaT1, EUrnaTipo tipoUrnaT2, EUrnaModelo modelo, EUrnaFase fase)
+CDadoCarga::CDadoCarga(EUrnaTurno turno, EUrnaTipo tipoUrnaT1, EUrnaTipo tipoUrnaT2, EUrnaModelo modelo, EUrnaFase fase)
     : m_turno(turno), m_tipoUrnaT1(tipoUrnaT1), m_tipoUrnaT2(tipoUrnaT2), m_modelo(modelo), m_fase(fase)
 {
     ValidaModelo(m_modelo);

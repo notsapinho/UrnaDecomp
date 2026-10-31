@@ -1,5 +1,10 @@
 #pragma once
 
+#include <format>
+#include <sstream>
+#include <typeinfo>
+
+#include "app/comum/asn/euecomumasnerror.h"
 #include "asn1/asn1.h"
 
 namespace comum::asn {
@@ -14,7 +19,32 @@ public:
 
     virtual ~IConversorASN() {}
 
-// (original lines 17-84: content not recovered)
+    // (original lines 22-49: content not recovered)
+#line 50
+    TEntidade Converte(const TDado& dado) const
+    {
+        TEntidade entidade = DoConverte(dado);
+        if (!entidade.isValid() || !entidade.isStrictlyValid()) {
+            std::ostringstream erro;
+            ASN1::trace_invalid(erro, typeid(TEntidade).name(), entidade);
+            throw CUeComumAsnError(EUE_COMUM_ASN_ENTIDADE_ESTADO_INVALIDO, std::format("Entidade deixada em estado inválido: {}", erro.str()));
+        }
+        return entidade;
+    }
+
+    // (original lines 61-65: content not recovered)
+#line 66
+    TDado Desconverte(const TEntidade& entidade) const
+    {
+        if (!entidade.isValid() || !entidade.isStrictlyValid()) {
+            std::ostringstream erro;
+            ASN1::trace_invalid(erro, typeid(TEntidade).name(), entidade);
+            throw CUeComumAsnError(EUE_COMUM_ASN_ENTIDADE_INVALIDA, std::format("Entidade está inválida: {}", erro.str()));
+        }
+        return DoDesconverte(entidade);
+    }
+
+// (original lines 76-84: content not recovered)
 #line 85
 protected:
     virtual TEntidade DoConverte(const TDado& dado) const;
@@ -27,45 +57,6 @@ protected:
 } // namespace comum::asn
 
 // <stubs>
-// f11483 · 1181 B · unmatched · placement: link order · name unknown
-// void f11483(i32, i32, i32) { ... }
-
-// f11482 · 594 B · unmatched · placement: link order · name unknown
-// void f11482(i32, i32, i32) { ... }
-
-// f11457 · 2011 B · unmatched · placement: link order · name unknown
-// void f11457(i32, i32, i32) { ... }
-
-// f11383 · 753 B · unmatched · placement: link order · name unknown
-// void f11383(i32, i32, i32) { ... }
-
-// f11382 · 691 B · unmatched · placement: link order · name unknown
-// void f11382(i32, i32, i32) { ... }
-
-// f5711 · 20 B · unmatched · placement: link order · name unknown
-// void f5711(i32, i32, i32) { ... }
-
-// f5692 · 20 B · unmatched · placement: link order · name unknown
-// void f5692(i32, i32, i32) { ... }
-
-// f5688 · 20 B · unmatched · placement: link order · name unknown
-// void f5688(i32, i32, i32) { ... }
-
-// f3730 · 20 B · unmatched · placement: link order · name unknown
-// void f3730(i32, i32, i32) { ... }
-
-// f5828 · 575 B · unmatched · placement: link order · name unknown
-// ? f5828(i32, i32) { ... }
-
-// f3799 · 20 B · unmatched · placement: link order · name unknown
-// void f3799(i32, i32, i32) { ... }
-
-// f11458 · 1955 B · unmatched · placement: link order · name unknown
-// void f11458(i32, i32, i32) { ... }
-
-// f11454 · 1522 B · unmatched · placement: link order · name unknown
-// void f11454(i32, i32, i32) { ... }
-
 // f11449 · 29 B · unmatched · placement: link order · name unknown
 // void f11449(i32, i32, i32) { ... }
 
@@ -90,51 +81,6 @@ protected:
 // f11362 · 29 B · unmatched · placement: link order · name unknown
 // void f11362(i32, i32, i32) { ... }
 
-// f10266 · 1338 B · unmatched · placement: link order · name unknown
-// void f10266(i32, i32, i32) { ... }
-
-// f5721 · 20 B · unmatched · placement: link order · name unknown
-// void f5721(i32, i32, i32) { ... }
-
-// f5716 · 20 B · unmatched · placement: link order · name unknown
-// void f5716(i32, i32, i32) { ... }
-
-// f5715 · 20 B · unmatched · placement: link order · name unknown
-// void f5715(i32, i32, i32) { ... }
-
-// f5710 · 1431 B · unmatched · placement: link order · name unknown
-// void f5710(i32, i32, i32) { ... }
-
-// f5697 · 20 B · unmatched · placement: link order · name unknown
-// void f5697(i32, i32, i32) { ... }
-
-// f5696 · 20 B · unmatched · placement: link order · name unknown
-// void f5696(i32, i32, i32) { ... }
-
-// f5691 · 20 B · unmatched · placement: link order · name unknown
-// void f5691(i32, i32, i32) { ... }
-
-// f5686 · 20 B · unmatched · placement: link order · name unknown
-// void f5686(i32, i32, i32) { ... }
-
-// f5684 · 574 B · unmatched · placement: link order · name unknown
-// ? f5684(i32, i32) { ... }
-
-// f5680 · 739 B · unmatched · placement: link order · name unknown
-// void f5680(i32, i32, i32) { ... }
-
-// f3738 · 20 B · unmatched · placement: link order · name unknown
-// void f3738(i32, i32, i32) { ... }
-
-// f3737 · 20 B · unmatched · placement: link order · name unknown
-// void f3737(i32, i32, i32) { ... }
-
-// f3727 · 20 B · unmatched · placement: link order · name unknown
-// void f3727(i32, i32, i32) { ... }
-
-// f3726 · 20 B · unmatched · placement: link order · name unknown
-// void f3726(i32, i32, i32) { ... }
-
 // f11446 · 29 B · unmatched · placement: link order · name unknown
 // void f11446(i32, i32, i32) { ... }
 
@@ -143,9 +89,6 @@ protected:
 
 // f11439 · 29 B · unmatched · placement: link order · name unknown
 // void f11439(i32, i32, i32) { ... }
-
-// f11424 · 3377 B · unmatched · placement: link order · name unknown
-// void f11424(i32, i32, i32) { ... }
 
 // f11409 · 29 B · unmatched · placement: link order · name unknown
 // void f11409(i32, i32, i32) { ... }

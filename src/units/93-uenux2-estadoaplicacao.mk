@@ -8,8 +8,7 @@
 # CCabecalhoQRCodeBuilder::DefineCodigoCarga (5623, found by the scan's content pass, which fns 1956 and 12110 call).
 # Converters: CConversorAjusteDataHora (11405, 11406), CConversorEstadoGeralSA (11392, 11393),
 # CConversorLocalidadeEleitoral (11388, 11389; 11388 rests on ASN1::INTEGER's constructor, fn 553, being matched),
-# CConversorDadoCarga::ConverteTipoUrna and DesconverteTipoUrna (5693, 5694),
-# CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
+# # CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
 #
 # Written and not matched:
 # - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`. At the tree's -O2 clang inlines
@@ -18,9 +17,9 @@
 #   link") ours is 942 B with the call, and differs from the target only in 5 rows inserted and 5 deleted, all
 #   `local.get`. uenux2's level stays -O2 (docs/reference/facts/levels.md), so the row stays.
 #
-# Not reconstructed: the slots of CConversorDadoCarga (11401, 11402: 11402 throws the EUeComumAsnError of
-# comum::asn::Utils::DesconverteTurno, record util.cpp:581), of CConversorEstadoGeralGap (11394, 11395) and of the other
-# converters here, CEstadoGeral, the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624),
+# CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
+#
+# Not reconstructed: the slots of CConversorEstadoGeralGap (11394, 11395) and of the other converters here, CEstadoGeral, the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624),
 # its other setters (5618, 5620, 5621) and preBuild(), fns 5626, 5627.
 #
 # What decides the form, measured:
@@ -69,8 +68,7 @@
 # eAlterarDataSistema, which 3702's message spells; the files eurna.h and enumeradoasn.h; the data members' names (the
 # ASN.1 fields' where one exists, and in CCabecalhoQRCodeBuilder the labels fn 5604 passes) and the types the bodies only
 # store; the setters' names DefineCodigoCarga and DefineHistoricoCarga; the inline getters' names (GetTipoDeltaT,
-# GetDeltaT, GetEstadoSA, GetAtualizacaoBloqueada, GetMunicipio, GetZona, GetSecao), which no record names; int for
-# CDadoCarga's turn, whose type the record of Utils::DesconverteTurno names and no header here defines. No
+# GetDeltaT, GetEstadoSA, GetAtualizacaoBloqueada, GetMunicipio, GetZona, GetSecao), which no record names. No
 # record names cconversorlocalidadeeleitoral.*, cestadogeralsa.* or cdadocorrespondencia.*: each name is the
 # class's, whose RTTI is the converter's base, and the directory the family's. The constructors' lines are chosen. The
 # rename of TipoUrnaT1 is not a choice: ledger/classes.json and the record of 5693 spell TipoUrnaOperacao. Nor is
@@ -78,7 +76,6 @@
 # class's preBuild() in app/comum/relatorios/ccabecalhoqrcodebuilder.cpp; its header says the rest.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 ESTADOAPLICACAO_SRCS := src/app/comum/dados/asn/estadoaplicacao/cconversorajustedatahora.cpp \
-  src/app/comum/dados/asn/estadoaplicacao/cconversordadocarga.cpp \
   src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralgap.cpp \
   src/app/comum/dados/asn/estadoaplicacao/cconversorestadogeralsa.cpp \
   src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp \
