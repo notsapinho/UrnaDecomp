@@ -2409,11 +2409,6 @@
 
 // component api
 
-// link-order cluster 127 · uses=1 · neighbours' file uenux2/src/api/gui/iscreenmt.cpp
-
-// f8741 · 17 B · unmatched · placement: link order · name unknown
-// ? f8741(i32) { ... }
-
 // link-order cluster 274 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
 
 // f10377 · 12 B · unmatched · placement: link order · name unknown
@@ -2809,11 +2804,6 @@
 
 // f2548 · 778 B · unmatched · placement: link order · name unknown
 // ? f2548(i32, i32) { ... }
-
-// link-order cluster 1227 · uses=8 · neighbours' file ecourna/api/sql/sqlite/csqlresultset.cpp
-
-// f1524 · 705 B · unmatched · placement: link order · name unknown
-// void f1524(i32, i32) { ... }
 
 // component vota-web
 

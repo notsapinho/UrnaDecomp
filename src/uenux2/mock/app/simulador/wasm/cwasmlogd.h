@@ -16,8 +16,8 @@ namespace simulador {
 // The destructors store no vptr, so the class is final. The destructor is implicit: the deleting destructor (fn 8316)
 // holds the base-object one's body (fn 8318), so it is not defined out of line, and the class needs no destructor of
 // its own for a mutex and a string (one defined in the class with `= default` gives the same bytes). The member and
-// parameter names are chosen: no record, symbol or string names them. Neither the constructor nor the writer is
-// reconstructed (src/units/62-uenux2-cwasmlogd-pending.cpp).
+// parameter names are chosen: no record, symbol or string names them. The writer is in cwasmlogd.cpp; the constructor
+// is not reconstructed.
 class CWasmLogd final : public api::CEscritorLog {
 public:
     CWasmLogd(std::string arquivo);

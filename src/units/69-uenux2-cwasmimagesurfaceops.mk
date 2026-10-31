@@ -43,8 +43,16 @@
 #   frame and loads it back. Each of these also brought the rows closer: one exit with both sizes in locals, altura
 #   declared first, `i += 2` before the length is read, and largura assigned first.
 # - pending, in 69-uenux2-cwasmimagesurfaceops-pending.cpp with what it waits for: Refresh of a rectangle (slot 28: 9018).
-# - not reconstructed: the destructors in slots 0 and 1 (api::IScreen's 5071 and the deleting 8963 around it), which
-#   call fn 5069 (iscreen.h, the -pending.cpp header). The constructor's being out of line is evidence (the data order,
+# - matched: the destructors in slots 0 and 1, CWasmScreen's implicit D2 (5071, one function with api::IScreen's D2,
+#   which holds slot 0 of both vtables) and D0 (8963), over IScreen's inline destructor (api/gui/iscreen.h, defined in
+#   api/gui/iform.h after CFormStack), and the function that destructor calls, api::CFormStack<api::IScreen>::Limpa
+#   (5069), which this object emits: cwasmscreen.cpp includes iform.h. Limpa's body is evidence: it hides the form on
+#   top of the stack and pops it until the stack is empty (the target stores the new end on each pass), unlocks the
+#   stack's mutex and calls Notifica (2651); its name and its place in CFormStack are chosen. 5071 and 8963 are named by
+#   vtable alone and cast no votes; the scan's content pass finds 5069, whose re-pointed bytes occur once (a
+#   `callers+content` hand line, weighed as docs/reference/splat.md "Reviewing a match" says, carried nothing).
+#   IScreenMT's destructor has the same shape over CFormStack<IScreenMT>'s Limpa (3461, unit 78's fragment).
+# - not reconstructed: the constructor. Its being out of line is evidence (the data order,
 #   below); its body is not checked by any match: binaryen inlined it into fn 8302, and our link drops it for want of a
 #   caller. It differs from 8302's in two known places: 8302 builds the log as std::string("CWasmScreen this=") and then
 #   appends to_string's result, where the written `"CWasmScreen this=" + std::to_string(...)` compiles to an insert;

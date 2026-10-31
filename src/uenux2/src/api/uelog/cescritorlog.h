@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <format>
 #include <string>
 
 namespace api {
@@ -38,3 +39,25 @@ public:
 };
 
 } // namespace api
+
+// The throws of cescritorlog.cpp format the application and the operation through a handle (argument type 15, table
+// slots 4522 and 4521 of fns 10260 and 10262), whose function is fn 536, formatter<unsigned int>'s, as for
+// app/comum/eurnaturno.h's EUrnaTurno. Their form is chosen, that header's; our link merges their handles into the body
+// of EUrnaTurno's, whose slots the target's 4521 and 4522 read as copies (splat-review of 10262 and 10260).
+template <>
+struct std::formatter<api::ELogAplicativos> : std::formatter<unsigned int> {
+    template <typename FormatContext>
+    auto format(api::ELogAplicativos valor, FormatContext& contexto) const
+    {
+        return std::formatter<unsigned int>::format(static_cast<unsigned int>(valor), contexto);
+    }
+};
+
+template <>
+struct std::formatter<api::ELogOperacoesLogD> : std::formatter<unsigned int> {
+    template <typename FormatContext>
+    auto format(api::ELogOperacoesLogD valor, FormatContext& contexto) const
+    {
+        return std::formatter<unsigned int>::format(static_cast<unsigned int>(valor), contexto);
+    }
+};

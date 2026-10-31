@@ -1,29 +1,12 @@
-// Pending members: what the vtables of src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp's class and of api::IScreenMT
-// need and no source holds yet. Their bodies are NOT the target's, they trap.
+// Pending member: what the vtable of src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp's class needs and no source
+// holds yet. Its body is NOT the target's, it traps.
 //   simulador::CWasmScreenMT::ShowClock(const api::SPoint&), target fn 8757 (slot 12, 250 B). The RTTI name of its local
 //     class gives the name and the parameter. It calls fn 479 (a date and time now, 12 bytes on the stack) and fn 779
 //     (a member that formats the time of day at that value's +8, with the std::string "hh:mm"), builds a local class
 //     WasmText : api::IText on the stack (alignment 0, the formatted string moved to +8; vtable @1530040, slots 8748, 8680,
 //     1139, 1661) and calls ShowText. It waits for fn 779 (api::CTime::Format, written in unit 24, which waits for -O3);
 //     479 matches (unit 125). Slots 0 and 1 of WasmText are thunks into binaryen's 1727 and 1969, so they need that merge.
-//   api::IScreenMT::~IScreenMT(), target fn 8741 (slot 0 of its vtable, 17 B), the vptr store and a call of fn 3461. Inline
-//     in the original: api/gui/iscreenmt.h says why, and it moves into the class with its body. The trap makes it the key
-//     function of our link only, so this object emits IScreenMT's vtable and typeinfo, which CWasmScreenMT's typeinfo
-//     names. It waits for fn 3461 (148 B, no body of ours): that function empties a stack of forms in .bss (the vector at
-//     1832892 and the mutex at 1832864, CFormStack<IScreenMT>'s s_forms and s_mutex, which fn 2776's votes name), then
-//     calls fn 2631, CFormStack<IScreenMT>::Notifica (unit 120), which notifies the observers at 1529940.
-//     CWasmScreenMT's D2 and D0 (fns 8745, 8744) are the implicit ones, emitted with its vtable by cwasmscreenmt.cpp; they
-//     hold this body inlined in the target, so they differ from the target's, in that call only, until it lands.
 #include "uenux2/mock/app/simulador/wasm/cwasmscreenmt.h"
-
-namespace api {
-
-IScreenMT::~IScreenMT()
-{
-    __builtin_trap();
-}
-
-} // namespace api
 
 namespace simulador {
 
