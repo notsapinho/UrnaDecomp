@@ -1,8 +1,8 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// The members with no record sit at lines the reconstruction chose; unit 119's fragment says why and has the other
-// notes, and unit 142's fragment for the three it added after LogaTituloInvalidoRegistroMesario.
+// The members with no record sit at lines the reconstruction chose; units 119's, 142's and 152's fragments say why,
+// each for the members it added (152's: the seven after LogaTituloInvalidoRegistroMesario).
 
 #include "app/vota/log/clogvota.h"
 
@@ -49,8 +49,6 @@ void CLogVota::LogaTituloInvalidoRegistroMesario()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
 }
 
-// The members from here to LogaJustificativaRecebida: src/units/152-uenux2-app-vota-operador-estados.mk says what each
-// rests on.
 void CLogVota::LogaIndagaEleitorVotando()
 {
     logaAlerta("Mesário indagado se eleitor está votando");
