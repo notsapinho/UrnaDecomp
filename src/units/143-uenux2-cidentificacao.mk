@@ -28,8 +28,10 @@
 #   and the throw that tests it goes. The constructors test the type there, so the records stay at their lines, and
 #   unit 143's roots pass the same constants, so our link folds them too; 5888 keeps the 480-byte frame of a
 #   std::format throw, as the target's does (1 over 16 rows, the call). The tests (a switch that takes eUrnaVota, and
-#   eUrnaContingencia), their codes, 8915 and 8914, the only two of 8900 to 8927 that no call of fn 591 passes, and
-#   their messages are chosen.
+#   eUrnaContingencia) and their codes, 8915 and 8914, the only two of 8900 to 8927 that no call of fn 591 passes,
+#   are chosen. Their messages are the target's: two strings of the data no function reads, each naming its urn's
+#   type, "Tipo inválido para urna de seção." (at 361994) and "Tipo inválido para urna de contingência: {}" (at
+#   6328), plain and formatted as the two frames, 48 and 480 bytes, want.
 # - CSecaoEleitoral's constructor (unit 107's csecaoeleitoral.cpp, inlined into 11453 by binaryen) inserts each number
 #   before it tests it (the call order), reads the parameter vector by index, re-reading its begin each pass, and
 #   compares with the parameter's section, not the member's.
