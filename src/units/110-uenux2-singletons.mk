@@ -95,6 +95,46 @@
 #   for the decision on uenux2's level, and no source form here closes it.
 # - CEleitores's one slot, 2824, has no body and no vtable of ours: the stub went with the class (src/units/README.md
 #   "Pending members"). CreateInst of each class is inlined into 7787 or 2787 and is not written.
+#
+# CEleitores's members in celeitores.cpp, each throw on its record's line; every other line is blank, and where each member
+# starts is chosen:
+# - ValidaIdentidadesEleitor (target fn 5765, line 738), matched. It looks for the type at +100 of CEleitores among the
+#   voter's identities and throws code 7852 with std::format when none has it. The member at +100 is compared with the
+#   identities' type, so it is written with that type (unit 50's header chose it); its name is chosen. Its formatted
+#   enum's handle is binaryen's 536 (the formatter<unsigned int> body), which the formatter template in
+#   app/comum/asn/util.h gives: the file includes that header for it. std::none_of is written; !std::any_of and
+#   std::ranges::none_of print IDENTICAL too (splat-remap on a link with only this object rebuilt), and
+#   std::find_if(...) == end() differs, 32 over 262 rows.
+# - MarcaEleitorFoiHabilitado (2825, lines 435, 439 and 447) and the Text of four data sources, CEleitorDadoNomeParaUrna,
+#   CEleitorDadoSequencial, CEleitorDadoSecao and CEleitorDadoTTE (11529, 11528, 11527, 11526, lines 756, 772, 784, 796;
+#   reached only by table slots 3906, 4055, 4056 and 4113, which fn 5401 passes), are written and wait for uenux2 at -O3:
+#   - the four Text hold GetInst inlined (record 44 lists them), which -O2 keeps out of line: `try-tu.sh --symbols --flags
+#     '-Rpass-missed=inline'` on this file prints `cost=230, threshold=225` at each call. In the plain link they score 41
+#     over 93, 41 over 251 (twice) and 43 over 371, each with GetInst's 23 rows deleted.
+#   - 2825 holds CEleitorDetalhe::MarcaHabilitado (unit 98) inlined by binaryen, and that holds the mesario's member of
+#     CEleitorDinamico as a call binaryen inlined. At -O2 clang inlines that member and keeps
+#     std::optional<CEleitorIdentidade>::operator= out of line inside it (`cost=235, threshold=225`); at -O3 it inlines
+#     operator= (threshold 250) and keeps the member (`cost=250, threshold=250`), the target's shape. 2825 scores 101 over
+#     446 rows in the plain link.
+#   With this object and celeitordetalhe.cpp.o compiled at -O3 in a copy of the link (each make compile line with -O2
+#   turned to -O3), the four Text score 24 over 93, 26 over 251 (twice) and 28 over 371, and 2825 41 over 440, all
+#   operand-only; splat-remap prints IDENTICAL for the four Text and stops on 2825 only at the call of 1271, which has no
+#   name before this unit lands. ValidaIdentidadesEleitor scores 19 over 255, operand-only, at both levels.
+#   Forms measured on them: TTE tests !IsTTE() first and returns "" there (the other order: 41 over 101 rows at -O3, 8
+#   inserted, 9 deleted); its literal is the tail of the target's "TTE: Transferência Temporária". 2825's third test is
+#   an if/else with the call in the if, which lays the three throws out ahead of the call as the target does; with an early
+#   throw the object has the call first (compared in the object). The voter's data come from accessors of
+#   md::CEleitorDecorator (unit 91's header, which says what each reads); NomeParaUrna's argument is a local string, as
+#   std::make_format_args takes lvalues.
+# - Not written. LoadEleitorDetalhe (5764, line 719): a body written over a 104-byte md::CEleitor base (fn 946 is its copy:
+#   it copies 104 bytes and 5764 copies CEleitorDecorator's +104 after it), CImpedido::GetImpedimentoP2 (cimpedido.cpp:46)
+#   and CEleitorDetalhe's two constructors (celeitordetalhe.cpp:49) scored 96 over 834 rows, its 6 inserted and 6 deleted
+#   rows all local numbers. Moving cimpedido.cpp.o, celeitordetalhe.cpp.o or both after this object, -O3 on this object and
+#   celeitordetalhe.cpp.o, and twelve source forms (of the impediments, the returns, the constructors and CEleitorDinamico's
+#   copy) left them or made more, so it stays a stub (docs/how-to-decompile.md step 5). MarcaVotou (lines 456, 460) is
+#   held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which also calls fn 501,
+#   no name. CompleteLoad (6734), DynamicCreate (5761) and GetCurrentAbrangenciaEleitor (7377, which holds GetInst inlined
+#   and calls 501) are not written.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

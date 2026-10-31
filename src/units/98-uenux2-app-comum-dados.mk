@@ -3,13 +3,14 @@
 # - comum::md::CTradutorFrase::RecuperaLabel (target fn 5658, md/parametrizacaourna/ctradutorfrase.cpp line 95) and its
 #   std::map<char, CLabelParametrizado>: the map's global destructor (11341) and __tree::destroy (1706) match with it;
 # - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344);
-# - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224);
+# - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224), and below it two members no record
+#   names, GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's two members" below);
 # - comum::asn::CConversorTipoIdentificadorEleitor::DoConverte and DoDesconverte (11357 and 11356, slots 2 and 3 of the
 #   vtable @1570668, lines 32 and 51 of asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp); 11356 is a thunk
 #   into binaryen's body 6030, which it forms with unit 17's DoDesconverte (11366);
 # - comum::asn::CConversorImpedido::DesconverteTipoImpedimento (5699, asn/eleitor/cconversorimpedido.cpp line 109).
-# Only the record's function is written in each file; every other line of it is blank, and where the function starts is
-# chosen so that the throw lands on its record's line.
+# Only the record's function is written in each file but celeitordetalhe.cpp; every other line of it is blank, and where
+# the function starts is chosen so that the throw lands on its record's line.
 #
 # What the bytes decide, measured in the whole link with `pnpm wasm score` against each target function:
 # - RecuperaLabel reads the key into a char local before find: 12 rows over 91, all operand-only. find(label.at(0)) gives
@@ -35,6 +36,16 @@
 # paths follow step 3's rule 4; CEleitorDetalhe's 192 bytes before its flag are not recovered. Codes 8184 and unit 17's
 # 7953 are not in the shared enum header, which lists what the target passes to fn 170 directly: each .cpp names its code
 # with a local constant, which goes when the header gains it.
+#
+# CEleitorDetalhe's two members below ConfereDadosDinamicos have no record, so their lines and their order are a choice:
+# - GetDinamico, target fn 1271, matched: it passes "GetDinamico" (the literal at 141141, its only name evidence) to
+#   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
+#   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its target callers
+#   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616; in the link 2825 (unit 110) and a stand-in of unit 110's roots.
+# - MarcaHabilitado, named from the "MarcaHabilitado" it passes to ConfereDadosDinamicos (138114): 2825 holds it inlined by
+#   binaryen (a second stack-pointer prologue at +0xaa) and it has no index of its own. Each kind of enabling calls one of
+#   CEleitorDinamico's inline members (md/eleitor/celeitordinamico.h), and its types are fragment 130's. 2825 waits for
+#   uenux2 at -O3, which fragment 110 measures.
 #
 # ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
 # called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it. The target's data do not

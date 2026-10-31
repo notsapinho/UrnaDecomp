@@ -2,7 +2,9 @@
 // reconstructed yet, and each has direct callers only: RecuperaLabel (5658) two call sites in fn 654, Lanca (2263) fns
 // 2543 and 7787, ConfereDadosDinamicos (3770) fns 1271, 2825 and 10210, DesconverteTipoImpedimento (5699) two call sites
 // in fn 11410 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`). binaryen inlines a function with one call site, so
-// each gets two here, and the stand-ins' bodies differ from each other's and from every target function. The converter's
+// each gets two here, and the stand-ins' bodies differ from each other's and from every target function. 3770's callers
+// 1271 (CEleitorDetalhe::GetDinamico) and 2825 (which holds CEleitorDetalhe::MarcaHabilitado inlined) are in the link
+// now; its stand-in waits for 10210. The converter's
 // users are not reconstructed either: its vtable (@1570668) is what the target keeps it by (slots 2 and 3, table
 // slots 2773 and 2774, no direct caller). Declared through asm labels with the object's signatures, so this TU needs no
 // uenux2 or ASN.1 header and instantiates nothing; DesconverteTipoImpedimento takes this, unused, and the address of a

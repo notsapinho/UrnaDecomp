@@ -13,6 +13,8 @@
 
 namespace comum {
 
+class CEleitorDadosHabilitacao;
+
 // RTTI: comum::CEleitores has two bases, api::CDataMap<CEleitorIdentidade, CEleitorDetalhe> at +4 and
 // comum::IDataSourceAptos at +0, listed in that order, and its vtable has one slot, fn 2824. Slot 0's name is chosen.
 class IDataSourceAptos {
@@ -23,8 +25,9 @@ public:
 // Recovered: the layout, from the destructor (fn 5773), which is out of line and frees, in this order, a tree of strings
 // at +112 (fn 2265), three vectors of strings at +88, +76 and +64, a tree at +52 (fn 1594, the tree CConfiguracaoEleicao
 // holds at +604), strings at +32 and +20 and the tree at +4. No vptr store opens it, so the class is final. The base's
-// 28 bytes end at +32, so what lies above them is this class's own. The map's mapped type at +112 and the members' names
-// are chosen; the words between them have no reader here.
+// 28 bytes end at +32, so what lies above them is this class's own. ValidaIdentidadesEleitor (fn 5765) compares the word
+// at +100 with the voter's identities' type, so it has that type. The map's mapped type at +112 and the members' names
+// are chosen; the other words between them have no reader here.
 class CEleitores final : public api::CDataMap<md::CEleitorIdentidade, CEleitorDetalhe>, public IDataSourceAptos {
 public:
     ~CEleitores();
@@ -33,6 +36,9 @@ public:
 
     void Slot0() const override;
 
+    void MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados);
+    void ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const;
+
 private:
     std::string m_arquivoDinamico;
     int m_naoRecuperado2[2];
@@ -40,11 +46,35 @@ private:
     std::vector<std::string> m_lista1;
     std::vector<std::string> m_lista2;
     std::vector<std::string> m_lista3;
-    int m_naoRecuperado3[3];
+    ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
+    int m_naoRecuperado3[2];
     std::map<std::string, std::pair<int, std::string>> m_impedidos;
 
     static std::unique_ptr<CEleitores> s_instance;
     static std::mutex s_mutex;
+};
+
+// The voter's data a screen formats, each read from CEleitores's current record (target fns 11529, 11528, 11527, 11526,
+// reached by table slot only). Their records in celeitores.cpp name the classes and Text's signatures; that the classes
+// hold nothing else, that they are declared here and the parameter's name are chosen.
+class CEleitorDadoNomeParaUrna {
+public:
+    static std::string Text(const std::string& formato);
+};
+
+class CEleitorDadoSequencial {
+public:
+    static std::string Text(const std::string& formato);
+};
+
+class CEleitorDadoSecao {
+public:
+    static std::string Text(const std::string& formato);
+};
+
+class CEleitorDadoTTE {
+public:
+    static std::string Text();
 };
 
 } // namespace comum
