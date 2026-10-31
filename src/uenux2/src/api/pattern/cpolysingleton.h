@@ -4,6 +4,7 @@
 // 78, column 19, in 44 instantiations. The reconstruction's notes are in unit 100's fragment. T must be complete: typeid
 // does not take an incomplete type. The parameters are the records'; their names, local among them, are chosen.
 
+#include <memory>
 #include <source_location>
 #include <string>
 #include <typeinfo>
@@ -11,9 +12,13 @@
 #include "api/pattern/cpolysingletonlist.h"
 #include "ecourna/api/pattern/epatternerror.hpp"
 
+// Not TSE's text: fn 252 is the executable TU's copy in the target and libc++.a's in our link. A uenux2 object's copy would
+// come first in the link and differ, so every TU here leaves the operator to the library. The fragment has the measurement.
+extern template std::string std::operator+<char, std::char_traits<char>, std::allocator<char>>(std::string&&, std::string&&);
+
 namespace api {
 
-// (original lines 16-70: content not recovered)
+// (original lines 21-70: content not recovered)
 #line 71
 template <typename T>
 class CPolySingleton {
@@ -26,6 +31,12 @@ public:
                 "PolySingleton - solicitada uma instancia nao criada "s + typeid(T).name() + " ["s + local.file_name() + ":" + std::to_string(local.line()) + "]");
         }
         return CPolySingletonList::instance<T>(info);
+    }
+
+    static void set(std::unique_ptr<T> instancia, TPolySingletonsInfo& info = g_polySingletonsInfo())
+    {
+        CPolySingletonList::remove<T>(info);
+        CPolySingletonList::push(std::move(instancia), info);
     }
 };
 

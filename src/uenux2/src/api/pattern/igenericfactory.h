@@ -1,13 +1,20 @@
 #pragma once
 
 // api::IGenericFactory<AP>: the head alone. RTTI gives the instances and no base, and AP is the records' name for the
-// parameter. No member is reconstructed (the records of Create are at lines 44 and 50), so its sizeof is wrong and
-// nothing may construct it. Only typeid in api::CPolySingleton<T> needs an instance complete.
+// parameter. Slot 2 is Create with no argument: api::CThread's constructor (fn 3598) calls it for the
+// std::unique_ptr it stores, and slots 3 and 4 are the two overloads whose records are at lines 44 and 50, not written. Only typeid in api::CPolySingleton<T> needs an instance complete. The virtual destructor is in the first slot, as the control block's __on_zero_shared shows (fn 172 calls vtable + 4).
+
+#include <memory>
 
 namespace api {
 
 template <typename AP>
-class IGenericFactory {};
+class IGenericFactory {
+public:
+    virtual ~IGenericFactory() = default;
+
+    virtual std::unique_ptr<AP> Create() = 0;
+};
 
 } // namespace api
 

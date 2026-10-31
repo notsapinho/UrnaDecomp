@@ -561,9 +561,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    moves to `-O3`.
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
    `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
-10. **252, by an `extern template`.** It is matched from `libc++.a` while the first definer is the roots file, which
-    declares it `extern template` (`src/units/README.md` "Companion files"). The first real uenux2 TU that instantiates
-    `std::operator+(string&&, string&&)` takes it.
+10. **252, by an `extern template`.** It is matched from `libc++.a` while every TU that instantiates
+    `std::operator+(string&&, string&&)` declares it `extern template`, as `api/pattern/cpolysingleton.h` does
+    (`src/units/README.md` "Companion files"). A TU without the line takes it, with its object in the row.
 11. **14072, 14073, 14241 and 14242, by their corrected names (§S11).** Step 9 can swap the two pairs, since no name of the
     symbol file disagrees, and the check above cannot see a swap: each name's prefix must agree with its neighbours.
 

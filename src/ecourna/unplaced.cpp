@@ -266,11 +266,6 @@
 // f5379 · 309 B · unmatched · placement: link order · name unknown
 // void f5379(i32, i32, i32, i32) { ... }
 
-// link-order cluster 758 · uses=2 · neighbours' file uenux2/src/api/gui/crhvoicetexttospeech.cpp
-
-// f5434 · 11 B · unmatched · placement: link order · name unknown
-// ? f5434(i32) { ... }
-
 // link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
 
 // f5460 · 73 B · unmatched · placement: link order · name unknown

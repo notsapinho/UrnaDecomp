@@ -1,13 +1,33 @@
-# uenux2 api::CPolySingleton<T>::instance (api/pattern/cpolysingleton.h), one template, 16 of its 32 plain instantiations,
-# with api::CPolySingletonList's has<T> and instance<T> (cpolysingletonlist.h), their lock (cmutexcompartilhado.h) and
-# api::EUePatternError (euepatternerror.h). All 16 match from the roots object, which stands in for the real callers:
+# uenux2 api::CPolySingleton<T>::instance (api/pattern/cpolysingleton.h), one template, 17 of its 32 plain instantiations,
+# set, its wrapper of push, with api::CPolySingletonList's has<T>, instance<T>, push<T> and remove (cpolysingletonlist.h),
+# their lock (cmutexcompartilhado.h), api::EUePatternError (euepatternerror.h) and the singletons' control blocks. The 16
+# below and 1822 (comum::IInterfaceSavd) match from the roots object, which stands in for the real callers:
 #   512 IScreen, 925 IBeep, 862 IPower, 923 IUrna, 3075 IResource, 383 IInputMT, 905 IPaperRelatorios, 3204 IAjusteDataHora,
 #   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 3164 IGenericFactory<ISyncCtl>,
 #   1282 comum::CCalculaCV, 837 comum::IEventosLog, 611 comum::IInterfaceInit, 356 comum::IControladorRegistraMesarios.
-# Nine of the 16 classes are in landed headers. IResource, IAjusteDataHora, CCalculaCV, IEventosLog,
-# IControladorRegistraMesarios and IGenericFactory get their heads alone (each header says so): typeid needs a complete
-# class and nothing here needs more. The type name is a constant in each target body but 11157's and 611's, so those
-# 14 classes have no key function in the TUs that compiled them, and CEscritorLog and IInterfaceInit have one.
+# Nine of the 16 classes are in landed headers. IResource, CCalculaCV, IEventosLog, IControladorRegistraMesarios and
+# IGenericFactory get their heads alone (each header says so): typeid needs a complete class, and a control block needs a
+# virtual destructor at the slot its __on_zero_shared calls. The type name is a constant in each target body but 11157's and
+# 611's, so those 14 classes have no key function in the TUs that compiled them, and CEscritorLog and IInterfaceInit have one.
+#
+# push and what it brought:
+# - 10876 (unit 101's CAjusteDataHora::Registra) holds set<IAjusteDataHora> and push<IAjusteDataHora>, and matches. It is
+#   the evidence for push's body: record 1584200 on line 129 column 19, code 6756, the two std::format calls.
+# - 5443 ITimerScheduler (callers 1259 and 5444, unit 101), and 1155 and 3598, which hold instance<T> inlined by binaryen:
+#   ISystemDateTime::GetInst (unit 81) and CThread's constructor (unit 18). They need no stand-in.
+# - has<T> 1654, 2160 and 2469 are 19-B thunks of one merged body in both links (the type names are 23 bytes), so they match
+#   with that body's name, a hand edit. 2924 itself stays `differs`: its find is 608, the merge below.
+# - 631, emplace_back's slow path, and 14476, 321 and 871, which the roots keep (their comments there). 631's second arg is
+#   the typeinfo by reference, so m_tipo is a std::reference_wrapper here, one of the same-bytes forms below.
+# - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7506 7962 7966
+#   7982 7989 7994 8000 8019 8024 8029 8042 8044 8047 8055 10308 10413 10455 10498 10538 10550 10575 10596 10632 10668 10702
+#   10741 10780 10873 11164 11801 12048, and __on_zero_shared 4739 4772 5381 8009 8051. Each is reached by a never-called
+#   w100_bloco<T>, the shape units 78 and 79 use: the target's builder is push<T> or the shared_ptr constructor over fn 1010,
+#   and each stores that vtable (the grep of the vptr finds it, or 10335's thunk constant). 10413 had read `unresolved`.
+#   New heads, a virtual destructor alone: vota::IExecucaoVota, vota::IAjusteInicial, vota::impl::IPoliticaExecucaoEleitor,
+#   vota::impl::ISincronismoVotoEleitor, vota::testeteclado::impl::IGeradorTeclas, comum::impl::IValidaMidia,
+#   api::IFingerPrepare and ecourna::api::security::ISymmetricCipherFactory, each path chosen, beside the file whose record
+#   names the class where one does. The destructor's slot is __on_zero_shared's offset: 4 for most, so they declare it first.
 # The same objects give 403 (std::operator""s), 429 and 430 (__format_arg_store); libc++ gives 251
 # (condition_variable::wait), and __cxa_demangle, which demangle calls, brings in the libc++abi demangler. 6222 is the
 # target's __cxa_demangle, called by 212 and 5521: it has no name and stays `no-candidate`, because our link has one caller
@@ -20,9 +40,22 @@
 # - 1714 IScreenMT, 2079 ITextToSpeech: our headers give each a key function, a trap of units 78 and 82 that the original
 #   does not have, so `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 48 and 44 rows
 #   more (pnpm wasm score). They wait for those members, inline in the original.
-# - 5443 ITimerScheduler, 1822 comum::IInterfaceSavd: wait for an instance in the roots: their classes are in
-#   api/util/itimerscheduler.h and app/comum/iinterfacesavd.h. With a head in a scratch header each scores 86 rows, all
-#   operand-only.
+# - 4879 and 4890, set<ITimerScheduler> and set<ISystemDateTime>: written and `differs` in frame offsets alone, a body right
+#   apart from something outside it (how-to step 5). Their records (1531292, 1531932) lie in fn 8302's object, so the target's
+#   copies are that TU's, and it is not written. Which stack slots push's temporaries take depends on what was emitted first
+#   in the TU: the first std::format body of a TU declares vformat, so with push first (itimerscheduler.cpp, where CreateInst
+#   is instantiated before instance, as in 10876's TU) both of push's format calls inline before vformat, and with an earlier
+#   std::format body (8302's) each comes with its vformat. A scratch `template class CPolySingleton<ITimerScheduler>;` above
+#   GetInst gives 4879 `score 64 over 895 rows (... [64 operand-only] ...)`, every frame offset the target's. That line steers
+#   the compiler and does not land. 10876 is the same source in the other order and matches. They wait for fn 8302.
+# - Bodies with landing pads, which only the executable TU's flags give (levels.md §V1): 1166 and its 11-B has<T> thunks
+#   3281 3343 5417 5423 5425 5427 5434 5436, 6147 with 642 and 1322, 3095, 1126, 624, 640, 3895, 5774, 5786, 13621, 1009 with
+#   its per-T thunks, and the push bodies 3882, 5384, 7667, 8758, 8834, 8911, 8986, 9039, 9135, 9233, 10090, 1091, 455 with
+#   5395, 5398 and 5407. 1010 with its thunks, 1113, 1119, 2270, 5646, 5650, 1549, 6700, 13540 and 13876 have no landing pad,
+#   but they are its -Oz outlined copies, and uenux2's level inlines them. 388 (~shared_ptr) is too: our copy is `score 6 over
+#   28 rows`, with an early exit where -Oz nests the ifs. Only their names matter to their callers.
+# - 11262, 11263 and 11635, 11636, the control blocks of CCalculaCV and CGeracaoVersoesContratos: their __on_zero_shared
+#   calls a destructor out of line (5614, 5866), and neither class is written.
 # - has<T>: written, and `differs` or `unresolved`. The target's 3387 calls 608 and instance's 512 calls 305: the
 #   executable TU's two find instantiations, kept apart by the two table slots their landing pads hold (fn 6161, the merged
 #   body, takes the slot as its last argument). Ours have no landing pads, so the two are byte-identical and binaryen
@@ -31,8 +64,7 @@
 #   themselves (11004 and 2279). 1155 and 3876 call has<T> as a callee and hold other code besides; tried, they stay far
 #   from the target's rows, and they are not read further.
 # - trace 212, find 305 and 608, debug 13156, the error thunks 235 and 331: the executable TU's copies (levels.md §V1),
-#   written and not matching, as 212's and 6161's landing pads show. Only their names are needed. 14476, the test of
-#   m_depuracao around 212, and push are not written: only push calls them.
+#   written and not matching, as 212's and 6161's landing pads show. Only their names are needed.
 # - 11265: `unresolved`, self-voted: the two .bss names only its own vote gives. fn 10620 holds the object's address and
 #   not the guard's, and is not reached.
 #
@@ -58,9 +90,11 @@
 # lambda capturing by value (fn 6161's string copy).
 #
 # Chosen, no byte decides: the operator of the name compare; m_escritor's type, bool (the wait tests it as a byte, and
-# unsigned char gives the same object); every name but those of the records and the message's unlock_shared (enumerators,
-# members, CMutexCompartilhado, lock_shared, CTravaLeitura, SPolySingletonInfo, g_polySingletonsInfo,
-# polySingletonsInfoPadrao, m_depuracao, has, trace, demangle, debug, find); the
+# unsigned char gives the same object); every name but those of the records and the messages' unlock_shared and unlock
+# (enumerators, members, CMutexCompartilhado, lock_shared, lock, promove, CTravaLeitura, SPolySingletonInfo,
+# g_polySingletonsInfo, polySingletonsInfoPadrao, m_depuracao, has, set, remove, depura, trace, demangle, debug, find); that
+# set is a member of CPolySingleton and remove<T> a template over the name's remove: the frame says only that a helper
+# clang inlined holds the temporary name, since a form written in set puts it above the unique_ptr; the
 # paths of cmutexcompartilhado.h, iajustedatahora.h, icontroladorregistramesarios.h and cpolysingletonlist.cpp (its header
 # says why); TPolySingletonsInfo as a struct and not a typedef; a template on the info's constness for the two finds,
 # where the target shows two instantiations and not what tells them; has<T>'s const; std::ranges::find_if, which
@@ -89,11 +123,22 @@
 #   a by-reference capture; `std::string(…)` or the two-argument constructor for the first literal; `std::string(" [")`
 #   or a plain " ["; `":"s`; std::to_string(int); `it->m_tipo != &typeid(INTERFACE)`.
 #
-# The extern template in the roots file. fn 252, operator+(string&&, string&&), is matched from libc++.a. Measured with
-# the line taken out: the roots object has `W` for the operator instead of `U`, its copy wins the link since roots objects
-# come before the libraries, and exactly 252 leaves `match`. None of the 16 instances does. The line emits nothing
-# and adds no body. It holds until a real uenux2 TU instantiates that operator, whose object links before libc++.a too.
-# So after a merge read `awk -F'\t' '$1==252 {print $5, $11}' splat/scan.tsv`, which prints `match` and a libc++.a member.
+# Forms of push, set and lock measured the same way, against CAjusteDataHora's object:
+# - the same bytes: std::unique_lock or std::scoped_lock for the std::lock_guard; `const auto&` or no const on the structured
+#   binding, or a local pair and .first; static_cast<void*> for the const void*; the literal "push" for __func__ in the hot
+#   call; `== false` for the ! in Registra; std::make_unique for the unique_ptr of a new. A const on nome or none on the
+#   shared_ptr changes one row, the symbol of the slow path, whose instances binaryen merges.
+# - other bytes: find(...).first in the if or in a local bool (read before the temporary name dies, where the target reads
+#   after); a temporary shared_ptr, which moves where the target copies; the debug text in a local; m_escritor set before the
+#   decrement, 4 rows in the fast path; `<= 0` in the wait's predicate; a while loop for it; `inline` on unlock, which the
+#   target keeps as a call, cost 255 against 225; remove<T> written out in set; set's parameter as `&&`.
+#
+# The extern template, now in cpolysingleton.h. fn 252, operator+(string&&, string&&), is matched from libc++.a, and the
+# target's is the executable TU's. Every TU that instantiates instance<T> would have `W` for the operator, its object
+# links before the library, and 252 reads `differs +0x0 ... the locals`, with api/util/itimerscheduler.cpp.o as its object
+# (measured). The line emits nothing and adds no body, and it is not TSE's text: the header says so. It holds for every TU
+# that includes the header, so after a merge read `awk -F'\t' '$1==252 {print $5, $11}' splat/scan.tsv`, which prints `match`
+# and a libc++.a member.
 #
 # The roots object compiles with APP_CXXFLAGS. With uenux2's -fno-strict-aliasing 9 of its 165 functions differ, all
 # libc++ format internals, and the link takes none of the nine from it: its 40 functions in the link are the same.

@@ -5,7 +5,8 @@
 #   so the two classes' bodies are written twice and binaryen merges them in our link too, under CWasmInputKbd's symbols,
 #   the first in link order.
 # - simulador::CWasmSystemDateTime over api::ISystemDateTime (src/api/util/isystemdatetime.h): GetTime and SetTime (7954,
-#   7945), and api::CSystemDateTime (src/api/util/isystemdatetime.cpp): GetTime and SetTime (10855, 10853).
+#   7945), and api::CSystemDateTime (src/api/util/isystemdatetime.cpp): GetTime and SetTime (10855, 10853). That file's
+#   ISystemDateTime::GetInst (1155) and the header's CreateInst are unit 101's fragment's shape: it says what 1155 holds.
 # - simulador::CWasmNullSound, the whole vtable: Play(std::shared_ptr<CWavFile>) (8487) is its own, its other members are
 #   the shared empty bodies, and slots 2, 4, 8 and 9 are api::ISound's defaults (src/api/audio/isound.h), emitted with its
 #   vtable: Play(const std::string &, EModo) 8479, Play(std::shared_ptr<CWavFile>, EModo) 8472, Wait 8461, WaitAsync 8450.
