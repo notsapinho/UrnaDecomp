@@ -39,6 +39,7 @@
 #include "api/gui/cmoviefield.h"
 #include "api/gui/cnewlinefieldpaper.h"
 #include "api/gui/cnumbervalidation.h"
+#include "api/gui/cpaperformbuilder.h"
 #include "api/gui/coptionvalidation.h"
 #include "api/gui/cpowerinformation.h"
 #include "api/gui/cpreshowclearscreen.h"
@@ -49,8 +50,8 @@
 #include "api/gui/ctextfieldpaper.h"
 #include "api/gui/ctextfieldupdate.h"
 #include "api/gui/iform.h"
-#include "api/gui/iformimpressao.h"
 #include "api/gui/iinputvalidation.h"
+#include "api/gui/ipaperrelatorios.h"
 #include "api/persistencia/idao.h"
 #include "api/util/ctimer.h"
 #include "app/comum/ccopiadormr.h"
@@ -157,7 +158,6 @@ extern const char w102_vt_item_visualizar[] __asm__("_ZTVN4vota29CItemVisualizar
 namespace api {
 class IInputKbd;
 class IInputMT;
-class IPaperRelatorios;
 class IScreenMT;
 } // namespace api
 

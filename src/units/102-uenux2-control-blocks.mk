@@ -31,7 +31,7 @@
 #   CMovie 1593, 3076: 12835, 12830, 12823. FormControlBlock 5515, 6024: 11131, 11130, 11128. CProgressoEncerramento
 #   12098: 12087, 12086, 12085. CProgressBar 5545: 11111, 11110. CMovieField 5543: 11104, 11103. CTextFieldBlinking
 #   1265: 11113, 11112. CTextFieldUpdate 502, 3058, 5936: 12316, 12314. CImageFieldUpdate 3059: 12541, 12535. CWavFile
-#   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578. CPreShowProgressBar (twelve builders, 1591 first): 12813,
+#   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578. CPreShowProgressBar (ten builders, 1591 first): 12813,
 #   12812. CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. CTimer 10846: 10844, 10843. api::Logger
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.
 #   CDataText<CCandidaturasDSNumero> 4185: 12760, 12752. <CCandidaturasDSNome> 4185: 12654, 12650.
@@ -72,7 +72,8 @@
 #   csha.cpp and in the roots object. Written implicit.
 # - CItemMenu's `virtual ~CItemMenu() = default;`, `inline` with it, or `{}`: the same. Written `= default`.
 # - every class head's path, each said in its header, and every name the head says is chosen; and that the three
-#   CNumero* destructors are declared after the constructor.
+#   CNumero* destructors are declared after the constructor. Not chosen: api::IFormImpressao's file and parameter, which
+#   record 1581300 gives (api/gui/cpaperformbuilder.h, CLASS); the class's lines span that record's line 51.
 # Flags: the roots object compiles with APP_CXXFLAGS, and with UENUX2_CXXFLAGS its 427 functions compare equal. The
 # blocks of ecourna's classes: at ECOURNA_CXXFLAGS, brought into a private link ahead of the roots object, 9480 and
 # 11466 give the target's rows (score 4 over 38 and 1 over 60, operand rows only), and 10279 does not (25 over 56, 19
