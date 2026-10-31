@@ -9,7 +9,7 @@
 # StartState and destructors (3857, one body with CEnviarManutencao's and CTesteFalhou's, 785 and 1560, bodies of eight
 # states), over the head of vota::CEstadoComDesligamentoAutomatico. api::CPosixRWMutex: constructor and destructors
 # (10245, 5353, 10244) and slots 2 to 4, which binaryen merges into 2219, api::IRWSyncCtl and six enumerators of
-# EUeIpcError. The class headers say what each layout and name rests on. The eight members not written are in
+# EUeIpcError. The class headers say what each layout and name rests on. The eighteen members not written are in
 # 97-uenux2-cvotacaostateaudio-pending.cpp, with what each waits for.
 #
 # The constructors and two slots, over unit 02's tick names: CVotacaoStateAudio's constructor (1785), StartState (7028)
@@ -30,6 +30,29 @@
 # std::chrono::milliseconds(1000), whose rows std::chrono::seconds(1) gives as well (compiled); the event bits with CAppState's
 # chosen enumerators (EVENTO_TICK, and EVENTO_ENTRADA | EVENTO_TICK for the 6 fn 11752 passes); that 6 written in
 # CConfirmaProporcional's constructor, not passed to it.
+#
+# The voting states over them. vota::CPedeProporcional and vota::CPedeMajoritario: slot 15 (11710, 11682), out-of-line
+# destructors (884, 883), and the singletons' GetInst (3849, 5921), constructors and statics, in unit 104's form; final,
+# as fn 6051 deletes through CVotacaoStateAudio's D2. Our link merges the two GetInst into one shared body as the target
+# does, and 6051 matches; so do the two mutexes' exit-time destructors (11713, 11685). 3849 and 5921 stay `unresolved
+# self-voted` on their s_inst: the other reader of each, the std::unique_ptr's exit-time destructor (11714, 11686), is
+# a thunk into fn 906, a body of docs/reference/facts/codegen.md C8's `m` shape, which forms from three copies there,
+# and this link has two. vota::CCompletaProporcional: its head and constructor (5932). vota::CPedeNulo and CPedeNominal
+# (11745, 11725), vota::CMajoritarioValido, Repetido, Nulo and Branco (11687, 11690, 11693, 11696) and
+# vota::CConfirmaVotoNominal (11728): slot 15 and out-of-line destructors. vota::CConfirmaMajoritario: its head,
+# constructor (11700) and slot 16 (11699), and CConfirmaProporcional's slot 16 (11751), each `return &X::GetInst();`.
+# The four majority states' slot 15 and CPedeMajoritario's test comum::CCargos::GetInst().GetCurrent().IsConsulta(),
+# the byte +136 of the current cargo (ccargo.h), compared with 1, and return one literal or the other: the if and its
+# two returns are a choice. Files: cpedeproporcional.cpp, cpedenulo.cpp, ccompletaproporcional.cpp and
+# cpedemajoritario.cpp are named by records; cpedenominal.cpp and cconfirmavotonominal.cpp (votaproporcional/) and
+# cconfirmamajoritario.cpp and cmajoritario*.cpp (votamajoritario/) are chosen, the class-name convention in the family's
+# directory, as for the leaf states above (and for CConfirmaMajoritario: its vtable lies between CProporcionalNulo's
+# and the majority states', before cpedemajoritario.cpp's records). Lines: in use band 1 the higher index is linked
+# first, so GetMensagem comes after ProcessInputAudio in cpedeproporcional.cpp (11712, 11711, 11710; record :84) and
+# cpedemajoritario.cpp (11684, 11683, 11682; record :64), before GetProximoEstado in cpedenulo.cpp (11745, 11744; record
+# :44), and each constructor above the slot it is linked before (11700 above 11699, 11752 above 11751, 5932 above
+# 5931); the exact lines, the singletons' code at the head of their files and the destructors' places are chosen. The
+# twins 883 and 884 are now CPedeProporcional's D0 and D2, the first of the fifteen bodies in link order.
 #
 # Destructor forms, read from the bytes and measured. Fn 884 is one call of fn 1035, so each of the fifteen states over
 # fn 1035 defines its destructor out of line: an implicit one leaves the base's D2 itself in the slot, as
@@ -73,6 +96,17 @@ CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
     src/app/vota/eleitor/cconfirmavotoemcargo.cpp \
     src/app/vota/eleitor/votaproporcional/cconfirmaproporcional.cpp \
     src/app/vota/eleitor/cestadocomdesligamentoautomatico.cpp \
+    src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp \
+    src/app/vota/eleitor/votaproporcional/ccompletaproporcional.cpp \
+    src/app/vota/eleitor/votaproporcional/cpedenulo.cpp \
+    src/app/vota/eleitor/votaproporcional/cpedenominal.cpp \
+    src/app/vota/eleitor/votaproporcional/cconfirmavotonominal.cpp \
+    src/app/vota/eleitor/votamajoritario/cpedemajoritario.cpp \
+    src/app/vota/eleitor/votamajoritario/cconfirmamajoritario.cpp \
+    src/app/vota/eleitor/votamajoritario/cmajoritariovalido.cpp \
+    src/app/vota/eleitor/votamajoritario/cmajoritariorepetido.cpp \
+    src/app/vota/eleitor/votamajoritario/cmajoritarionulo.cpp \
+    src/app/vota/eleitor/votamajoritario/cmajoritariobranco.cpp \
     src/app/vota/eleitor/votaproporcional/ccandidatoinapto.cpp \
     src/app/vota/eleitor/votaproporcional/cconfirmavotolegenda.cpp \
     src/app/vota/eleitor/votaproporcional/ccandidatoinexistente.cpp \
@@ -84,9 +118,9 @@ CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesariovotacao.cpp \
     src/api/ipc/posix/cposixrwmutex.cpp
 UENUX2_SRCS += $(CVOTACAOSTATEAUDIO_SRCS)
-# eight members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
+# eighteen members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
-$(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-pending.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
+$(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-pending.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-pending.cpp -o $(R)
 # nothing reconstructed references the unit's vtables or CPosixRWMutex's constructor yet:
 # 97-uenux2-cvotacaostateaudio-roots.cpp takes their addresses

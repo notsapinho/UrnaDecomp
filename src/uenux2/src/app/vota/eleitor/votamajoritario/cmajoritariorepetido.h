@@ -1,0 +1,19 @@
+#pragma once
+
+#include "app/vota/eleitor/votamajoritario/cconfirmamajoritario.h"
+
+namespace vota {
+
+// vota::CMajoritarioRepetido (RTTI: si_class of vota::CConfirmaMajoritario; vtable @1550096): overrides slot 15 (fn 11690, which
+// returns one of two messages by comum::CCargos::GetInst().GetCurrent().IsConsulta()) and the destructors (fns 884
+// and 883, the bodies of fifteen states, whose out-of-line form unit 97's fragment reads). Its singleton builder is not
+// reconstructed, so sizeof is wrong and nothing may construct the class. The name of slot 15 and this header's path are
+// chosen (src/units/97-uenux2-cvotacaostateaudio.mk).
+class CMajoritarioRepetido : public CConfirmaMajoritario {
+public:
+    virtual ~CMajoritarioRepetido() override;
+
+    virtual std::string GetMensagem() const override;
+};
+
+} // namespace vota

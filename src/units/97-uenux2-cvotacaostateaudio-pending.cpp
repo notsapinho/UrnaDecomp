@@ -13,14 +13,33 @@
 // cconfirmavotoemcargo.cpp:71), which calls fn 3921, and for CInteractiveForm's members. ProcessInputAudio is the class's
 // key function here, so this object emits its vtable, its typeinfo and nothing else of it; its real key function is not
 // recorded.
-// vota::CConfirmaProporcional::GetProximoEstado (slot 16, fn 11751, a chosen name): it returns fn 3849, the
-// vota::CPedeProporcional singleton, built by fn 6051, which has no name. It emits that class's vtable the same way.
 // vota::CEstadoComDesligamentoAutomatico::ProcessTick (slot 8, fn 12061, record cestadocomdesligamentoautomatico.cpp:44 of
-// its lambda): it waits for fns 5474 and 5979 (479, 759 and 1000, unit 125's, and vota::CLogVota::GetInst, fn 184, match).
+// its lambda): it waits for fn 5474, not written, and fn 5979, vota::CExibeAlertaDesligamento::GetInst, which waits for
+// a way to vota::CTelasVota's +44 member (cexibealertadesligamento.h); 479, 759 and 1000, unit 125's, and
+// vota::CLogVota::GetInst, fn 184, match.
+// vota::CPedeProporcional, slots 9 and 10 (ProcessInputAudio 11711, record cpedeproporcional.cpp:84, 811 B, and
+// StartStateAudio 11712, 103 B), and vota::CPedeMajoritario's (ProcessInputAudio 11683, records cpedemajoritario.cpp:64
+// and :125, 1210 B, and StartStateAudio 11684, 103 B): each calls its class's GetTelaCargoAtual (fns 5923 and 5920,
+// records :42 and :44), a thunk into fn 6050, which has no name, and the form's members.
+// vota::CCompletaProporcional, slots 9, 10 and 13 (ProcessInputAudio 11756, 786 B, StartStateAudio 11757, 267 B, and
+// EmiteEcoComInputField 5930, record ccompletaproporcional.cpp:60, 522 B): slots 9 and 10 call GetTelaCargoAtual (fn
+// 5931, record :83), which calls fn 3921, which has no name; slot 13 is not read here. ProcessInputAudio is the class's
+// key function here, as CConfirmaVotoEmCargo's is.
+// vota::CPedeNulo::GetProximoEstado and vota::CPedeNominal::GetProximoEstado (slot 16, fns 11744, record cpedenulo.cpp:44,
+// 433 B, and 11724, 495 B): both call fn 1273 (116 B), which has no name.
+// vota::CMajoritarioValido::AoConcluirEntrada and vota::CConfirmaVotoNominal::AoConcluirEntrada (slot 17, one target
+// body, fn 5925, 2141 B): it logs and runs a vota::impl::IPoliticaExecucaoEleitor through fn 5407, which has no name.
+// Its stub sat in app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp, where the record of the GetInst it holds inlined
+// lies (:45); with these traps in the vtables the stub generator writes it no more.
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/cestadocomdesligamentoautomatico.h"
-#include "app/vota/eleitor/votaproporcional/cconfirmaproporcional.h"
+#include "app/vota/eleitor/votamajoritario/cmajoritariovalido.h"
+#include "app/vota/eleitor/votamajoritario/cpedemajoritario.h"
+#include "app/vota/eleitor/votaproporcional/cconfirmavotonominal.h"
+#include "app/vota/eleitor/votaproporcional/cpedenominal.h"
+#include "app/vota/eleitor/votaproporcional/cpedenulo.h"
+#include "app/vota/eleitor/votaproporcional/cpedeproporcional.h"
 
 namespace vota {
 
@@ -54,12 +73,62 @@ void CConfirmaVotoEmCargo::StartStateAudio()
     __builtin_trap();
 }
 
-comum::CAppState* CConfirmaProporcional::GetProximoEstado() const
+void CEstadoComDesligamentoAutomatico::ProcessTick(uebyte)
 {
     __builtin_trap();
 }
 
-void CEstadoComDesligamentoAutomatico::ProcessTick(uebyte)
+void CPedeProporcional::ProcessInputAudio()
+{
+    __builtin_trap();
+}
+
+void CPedeProporcional::StartStateAudio()
+{
+    __builtin_trap();
+}
+
+void CPedeMajoritario::ProcessInputAudio()
+{
+    __builtin_trap();
+}
+
+void CPedeMajoritario::StartStateAudio()
+{
+    __builtin_trap();
+}
+
+void CCompletaProporcional::ProcessInputAudio()
+{
+    __builtin_trap();
+}
+
+void CCompletaProporcional::StartStateAudio()
+{
+    __builtin_trap();
+}
+
+std::pair<api::EInputResult, std::string> CCompletaProporcional::EmiteEcoComInputField(const CFormInterativoTelaVota&) const
+{
+    __builtin_trap();
+}
+
+comum::CAppState* CPedeNulo::GetProximoEstado(const std::string&) const
+{
+    __builtin_trap();
+}
+
+comum::CAppState* CPedeNominal::GetProximoEstado(const std::string&) const
+{
+    __builtin_trap();
+}
+
+void CMajoritarioValido::AoConcluirEntrada(api::EInputResult)
+{
+    __builtin_trap();
+}
+
+void CConfirmaVotoNominal::AoConcluirEntrada(api::EInputResult)
 {
     __builtin_trap();
 }
