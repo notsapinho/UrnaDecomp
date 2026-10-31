@@ -11,9 +11,11 @@
 //   CCalculaCV::IncluiString (unit 121). It waits for fns 2786 and 357, which have no body or name of ours
 //   (`no-candidate` in splat/scan.tsv, no line in splat/symbol_addrs.txt).
 // - CGeradorBUBase<...>::ImprimeProporcionalPartido, slot 3, fn 11255 (1749 B, records cgeradorbubase.h:187 and
-//   ImprimeVotosCandidatos' 222), and ImprimeMajoritario, slot 4, fn 11254 (1443 B, record :246). Both call fn 942 and
-//   fn 2271; 11255 calls fns 2272 and 1273 as well. 2271, 2272 and 1273 have no body or name of ours, so both wait for
-//   them.
+//   ImprimeVotosCandidatos' 222), and ImprimeMajoritario, slot 4, fn 11254 (1443 B, record :246). Both call fn 942,
+//   CCandidaturas::ExisteCandidato (2271) and fn 1930, CRdvVota's slot 10 (CRdvVota::Cargo), which our sources declare
+//   and do not define: our match line for 1930 names CVotosEleicoesVota::Cargo, a body of the same bytes, so a call of
+//   CRdvVota::Cargo has no symbol to link to. 11255 calls GetCandidatosPartido (2272) and Busca (1273) as well. Both
+//   wait for CRdvVota::Cargo.
 // - CGeradorBUBase<...>::ImprimeConsulta, slot 5, fn 11253 (2730 B, record :286): it calls fn 160 too, and fn 942
 //   twice, and waits for fns 357, 1881, 1923 and 5610, which have no body or name of ours.
 #include "app/comum/relatorios/cgeradorbu.h"

@@ -1,12 +1,52 @@
-// Reconstruction notes, not TSE's text: this file holds the constructors of cpartecandidatos.h's four classes, which
-// binaryen inlined into fn 11946 (no target function). Its records, lines 75 and 174, are the Imprime throws of
-// CParteCandidatosMajoritarios and CParteCandidatosConsultas. That it holds the other two classes is chosen: the four
-// vtables interleave with the records at 1576388-1576484. Imprime is in src/units/77-uenux2-ireportpart-pending.cpp.
+// Reconstruction notes, not TSE's text: this file holds CParteCandidatos::Imprime (fn 11215),
+// CParteCandidatosMajoritarios::Imprime (fn 11214), whose throw is the file's record at line 75, and the constructors of
+// cpartecandidatos.h's four classes, which binaryen inlined into fn 11946 (no target function). The record at line 174,
+// CParteCandidatosConsultas::Imprime's, is not written. That the file holds the other two classes is chosen: the four
+// vtables interleave with the records at 1576388-1576484. The lines of the functions with no record are a choice. The
+// two other Imprime are in src/units/77-uenux2-ireportpart-pending.cpp.
 #include "app/comum/relatorios/cpartecandidatos.h"
 
+#include <format>
 #include <utility>
+#include <vector>
+
+#include "app/comum/dados/ccandidaturas.h"
+#include "app/comum/dados/ccargos.h"
+#include "app/comum/relatorios/euecomumrelatorioserror.h"
 
 namespace comum {
+
+void CParteCandidatos::Imprime() const
+{
+    const md::CCargo& cargo = CCargos::GetInst().GetCurrent();
+    m_cabecalho->Imprime();
+    if (CargoSemCandidatos(cargo)) {
+        m_parte1->Imprime();
+    } else if (cargo.IsMajoritario()) {
+        m_parte2->Imprime();
+    } else if (cargo.IsProporcional()) {
+        m_parte3->Imprime();
+    } else if (cargo.IsConsulta()) {
+        m_parte4->Imprime();
+    }
+}
+
+// (original lines 34-66: content not recovered)
+#line 67
+void CParteCandidatosMajoritarios::Imprime() const
+{
+    const TCargoID cargo = CCargos::GetInst().GetCurrentCargoID();
+    CCandidaturas& candidaturas = CCandidaturas::GetInst();
+    const std::vector<TCandidatoID> candidatos = candidaturas.GetCandidatos(cargo);
+    m_cabecalho->Imprime();
+    for (const TCandidatoID& candidato : candidatos) {
+        if (candidaturas.Busca(cargo, candidato) == nullptr) {
+            throw CUeComumRelatoriosError(EUE_COMUM_RELATORIOS_9081, std::format("Candidato não encontrado: {}/{}", cargo, candidato));
+        }
+        m_candidato->Imprime();
+    }
+    m_rodape->Imprime();
+}
 
 CParteCandidatos::CParteCandidatos(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> parte1,
                                    std::shared_ptr<api::IReportPart> parte2, std::shared_ptr<api::IReportPart> parte3,

@@ -41,6 +41,10 @@ int w5661(int, int, int, int, int) __asm__("_ZN5comum2md9CImpedidoC1EtRKNS0_18CE
 int w5662(int, int, int, int) __asm__("_ZN5comum2md9CImpedidoC1EtRKNS0_18CEleitorIdentidadeENS0_16ETipoImpedimentoE");
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
+void w2272(int, int, int, int) __asm__("_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht");
+int w2271(int, int) __asm__("_ZNK5comum13CCandidaturas15ExisteCandidatoEh");
+void w2840(int, int, int) __asm__("_ZNK5comum13CCandidaturas13GetCandidatosEh");
+int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
 }
 
 namespace {
@@ -130,6 +134,17 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
     w5810(r, a, b);
     w5810(s, a, b + 1);
 }
+// Stands for the callers of four CCandidaturas members that are not in our link, beside unit 77's: GetCandidatosPartido
+// (2272: 3819, 5604, 11213, 11255 and 11976), ExisteCandidato (2271: 3819, 4442, 11254 and 11255, beside 11215),
+// GetCandidatos (2840: 4459 and 5604, beside 11214) and Busca (1273: 3820, 5604, 11212, 11255, 11683, 11724, 11744 and
+// 11891, beside 11214).
+__attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
+{
+    w2272(r, c, cargo, partido);
+    w2272(s, c, cargo + 1, partido);
+    w2840(r, c, cargo);
+    return w2271(c, cargo) + w1273(c, cargo, candidato);
+}
 
 struct SCLocalRoots {
     SCLocalRoots()
@@ -167,6 +182,7 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Candidaturas);
         clocal_sink = reinterpret_cast<const void*>(&Suplentes);
         clocal_sink = reinterpret_cast<const void*>(&Versoes);
+        clocal_sink = reinterpret_cast<const void*>(&Consultas);
     }
 } clocal_roots;
 

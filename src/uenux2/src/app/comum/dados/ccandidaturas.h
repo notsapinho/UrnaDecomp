@@ -4,6 +4,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <vector>
 
 #include "api/io/cdatamap.h"
 #include "app/comum/dados/md/candidatura/ccandidatura.h"
@@ -27,6 +28,17 @@ public:
     ~CCandidaturas();
 
     const std::string RecuperaVersaoPacote(TCargoID cargo) const;
+
+    // Target fns 2272, 2271, 2840 and 1273, in this order in the band and the file (ld_index). No record names them,
+    // and their names are chosen from what they return. The first three walk the candidacies (the base's map) and keep
+    // those of one post whose holder's situation is 0, the value of an ESituacao enumerator not recovered;
+    // GetCandidatosPartido keeps those of one party too when the party is not 0 (the target holds the loop twice, one
+    // copy for each value of that test). Busca looks a candidacy up by the base's key, the post times 1000000 plus the
+    // candidate, as Localiza (record line 56, not written) does, and moves the cursor to it: the base's Find, inlined.
+    std::vector<TCandidatoID> GetCandidatosPartido(TCargoID cargo, TPartidoID partido) const;
+    bool ExisteCandidato(TCargoID cargo) const;
+    std::vector<TCandidatoID> GetCandidatos(TCargoID cargo) const;
+    md::CCandidatura* Busca(TCargoID cargo, TCandidatoID candidato);
 
 private:
     static std::unique_ptr<CCandidaturas> s_inst;

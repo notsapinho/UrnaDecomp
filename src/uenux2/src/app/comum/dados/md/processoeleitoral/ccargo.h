@@ -38,6 +38,8 @@ public:
     TQtdEscolha GetQtdeEscolhas() const { return m_qtdeEscolhas; }
     // The name is chosen: comum::CGeradorBUQRCode::GetCamposAptos (fn 3696) reads the field.
     ETipoAbrangencia GetAbrangencia() const { return m_abrangencia; }
+    // The name is chosen: comum::CParteCandidatos::Imprime (fn 11215) tests the flag alone.
+    bool HasDetalheCandidato() const { return m_detalheCandidato.has_value(); }
     // The names are chosen. CParteRdv::Imprime (fn 11203) reads the flag before the type (src/units/110-uenux2-singletons.mk).
     bool IsMajoritario() const { return m_detalheCandidato.has_value() && m_tipo == MAJORITARIO; }
     bool IsProporcional() const { return m_detalheCandidato.has_value() && m_tipo == PROPORCIONAL; }

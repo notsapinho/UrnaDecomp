@@ -1,11 +1,14 @@
 // Reconstruction notes, not TSE's text: this file holds the comum::CParteRdv constructor, which has no target function
-// (binaryen inlined it into its one caller, fn 5971), and Imprime (fn 11203), the key function. No record names the file
-// or gives any of its lines.
+// (binaryen inlined it into its one caller, fn 5971), Imprime (fn 11203), the key function, and CargoSemCandidatos,
+// which has none either (binaryen inlined it into its one caller, fn 11215; cpartecandidatos.h says why it is here). No
+// record names the file or gives any of its lines.
 #include "app/comum/relatorios/cparterdv.h"
 
 #include <utility>
 
+#include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargos.h"
+#include "app/comum/relatorios/cpartecandidatos.h"
 
 namespace comum {
 
@@ -32,6 +35,11 @@ void CParteRdv::Imprime() const
         m_parte3->Imprime();
     }
     m_rodape->Imprime();
+}
+
+bool CargoSemCandidatos(const md::CCargo& cargo)
+{
+    return cargo.HasDetalheCandidato() && !CCandidaturas::GetInst().ExisteCandidato(cargo.GetID());
 }
 
 } // namespace comum

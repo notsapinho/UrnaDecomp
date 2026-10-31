@@ -1,7 +1,8 @@
 # uenux2 api::IReportPart's parts: comum::CParteCandidatos, CParteCandidatosMajoritarios, CParteCandidatosProporcionais,
 # CParteCandidatosConsultas, CParteRdv, CParteEleitores and api::CFormPart (comum::CParteCargos is unit 58). Matched:
 # - the implicit destructors, the compiler's code for the class definitions, emitted with the vtables in the pending
-#   object, or for CFormPart in cformpart.cpp and for CParteEleitores in cparteeleitores.cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590), CParteCandidatosMajoritarios's and
+#   object, or for CFormPart, CParteRdv, CParteEleitores, CParteCandidatos and CParteCandidatosMajoritarios in their
+#   Imprime's .cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590), CParteCandidatosMajoritarios's and
 #   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210), and
 #   CParteEleitores's (11205, 11204) and CFormPart's (10888, 10887), four thunks into binaryen's two merged bodies 2899
 #   and 6026, which match too under the byn$mgfn-shared$ names our link gives them: CParteEleitores's D2 and D0 since its
@@ -18,10 +19,23 @@
 #   already matched.
 # Imprime, the key function of every class, is pending (the pending file's header lists what each waits for), but for
 # api::CFormPart's (10889, a call of its form's slot 2), in cformpart.cpp, which brings that class's vtable and destructors,
-# CParteRdv's (11203), in cparterdv.cpp, and CParteEleitores's (11206), in cparteeleitores.cpp, whose objects now emit
-# those classes' vtables and destructors. CParteEleitores::Imprime calls its part's slot 2 once per record of
+# CParteRdv's (11203), in cparterdv.cpp, CParteEleitores's (11206), in cparteeleitores.cpp, and CParteCandidatos's (11215)
+# and CParteCandidatosMajoritarios's (11214), in cpartecandidatos.cpp, whose objects now emit those classes' vtables and
+# destructors. 11214's throw is on its record's line (cpartecandidatos.cpp:75:19), with the target's code 9081 and
+# message; the lines of 11215 and of the constructors, which now follow 11214, are a choice. CParteEleitores::Imprime calls its part's slot 2 once per record of
 # comum::CEleitores: the target moves the base CDataMap's cursor to the map's first record inline (CDataMap::Reset in
 # api/io/cdatamap.h, a chosen name), tests it against the map's end inline (IsFim) and calls Next (fn 5601).
+#
+# 11215 and 11214, measured in the whole link with `pnpm wasm score` against our plain link's body:
+# - 11215's first test, whether the post has candidates' details and no candidacy to print, is a value in the target
+#   (`hv ? !ExisteCandidato(...) : false`, then one branch): code binaryen inlined from a function of its own with no
+#   frame (docs/how-to-decompile.md step 3). Written in place, `score 24 over 74 rows` (4 inserted, 7 deleted); as an
+#   out-of-line CargoSemCandidatos in ccandidaturas.cpp, clang inlines ExisteCandidato into it and 11215 scores `100 over
+#   150 rows` (80 inserted); in cparterdv.cpp, `3 over 70 rows`, all operand-only. So it is in another object than both,
+#   cparterdv.cpp by choice. Its name and its being a free function are chosen.
+# - 11214 reads the candidate again after Busca returns on its throw's path: the loop variable is a reference.
+#   `const TCandidatoID&` scores `22 over 267 rows`, all operand-only; by value, `44 over 274 rows` (7 inserted, 7
+#   deleted).
 #
 # Evidence. RTTI names the classes and gives api::IReportPart as each one's only base. The D2s give the layouts, and the
 # allocations of fns 5971, 11908 and 11946 the sizes (44, 28, 88, 12 bytes). RTTI gives the std::function's signature:
