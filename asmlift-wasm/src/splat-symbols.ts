@@ -9,7 +9,7 @@
 // The target side is evidence, written to a splat-style symbol file (`splat/symbol_addrs.txt`):
 //   glue, export the target glue's import and export names
 //   pair         a function pair that is unique on BOTH sides at the census' fingerprint (then addr) tier
-//   srcloc-anchor a function pair whose bodies are the same instructions and reference the same std::source_location
+//   srcloc-anchor a function pair whose bodies are the same opcodes and reference the same std::source_location
 //                record, which no other function of either side references; it votes like a pair
 //   vptr-anchor, content-anchor  the same over a class's vptr or a read-only object placed by its bytes, where the
 //                operand may have other holders as long as one pair of them has one shape
@@ -1187,7 +1187,7 @@ function preview(b: Buffer): string {
 const ALIGNABLE_IMM = new Set(['func', 's32', 'memarg']);
 
 /** Votes from two bodies that are the same instructions: our callee/data symbol ↔ the target's operand. */
-interface VoteBox {
+export interface VoteBox {
   fn: Map<number, Map<number, number>>;
   /** our function ↔ target function through a constant both sides keep in their tables */
   table: Map<number, Map<number, number>>;
@@ -1198,8 +1198,135 @@ interface VoteBox {
   fnVoters: Map<number, Set<number>>;
 }
 
-function emptyVoteBox(): VoteBox {
+export function emptyVoteBox(): VoteBox {
   return { fn: new Map(), table: new Map(), data: new Map(), voters: new Map(), fnVoters: new Map() };
+}
+
+function castVote(box: VoteBox, key: string, addr: number, n: number, voters: Iterable<number>): void {
+  const places = box.data.get(key) ?? box.data.set(key, new Map()).get(key)!;
+  places.set(addr, (places.get(addr) ?? 0) + n);
+  const who = box.voters.get(key) ?? box.voters.set(key, new Set()).get(key)!;
+  for (const v of voters) {
+    who.add(v);
+  }
+}
+
+/**
+ * The data votes of `from` that join `votes`: those for .bss objects alone. A name there places what content cannot,
+ * and a name for a read-only or .data object would hide the copies content finds. Returns how many objects only
+ * `from` voted for.
+ */
+export function castBssVotes(votes: VoteBox, from: VoteBox, objects: ReadonlyMap<string, DataObject>): number {
+  let added = 0;
+  for (const [key, vs] of from.data) {
+    if (objects.get(key)?.out !== '.bss') {
+      continue;
+    }
+    added += votes.data.has(key) ? 0 : 1;
+    for (const [addr, n] of vs) {
+      castVote(votes, key, addr, n, from.voters.get(key) ?? []);
+    }
+  }
+  return added;
+}
+
+/** What ctorVotes placed joins `votes`, with `ctors`, __wasm_call_ctors' index, as its voter: §3 reads it there. Returns
+ *  the objects nothing else voted for. */
+export function castCtorVotes(
+  votes: VoteBox,
+  placed: ReadonlyMap<string, ReadonlySet<number>>,
+  ctors: number,
+): Set<string> {
+  const only = new Set<string>();
+  for (const [key, addrs] of placed) {
+    if (!votes.data.has(key)) {
+      only.add(key);
+    }
+    for (const addr of addrs) {
+      castVote(votes, key, addr, 1, [ctors]);
+    }
+  }
+  return only;
+}
+
+/** The names the anchors' votes work on, as gatherEvidence holds them. */
+export interface AnchorNames {
+  /** the seed pairs' votes: a function they reach is not the anchors' to name */
+  votes: VoteBox;
+  anchorVotes: VoteBox;
+  /** our function → target function */
+  pairOf: Map<number, number>;
+  namedT: Set<number>;
+  anchoredT: Set<number>;
+  /** our function → the evidence of its anchored name */
+  evidence: Map<number, string>;
+}
+
+/**
+ * Name each function the anchors' call and table votes agree on. A function so named votes in turn when `align` finds
+ * its two bodies the same opcodes, until no name is added. A name the later votes contradict then goes and the loop runs
+ * again, with its index free and its target function off every other name's voters: which function a map yields first
+ * must not decide a name. The votes such a name already cast stay. Returns how many names stand.
+ */
+export function settleAnchorVotes(
+  { votes, anchorVotes, pairOf, namedT, anchoredT, evidence }: AnchorNames,
+  sameSignature: (o: number, t: number) => boolean,
+  align: (t: number, o: number) => boolean,
+): number {
+  const agreed = (o: number): number | null => {
+    const all = new Set([...(anchorVotes.fn.get(o)?.keys() ?? []), ...(anchorVotes.table.get(o)?.keys() ?? [])]);
+    return all.size === 1 ? [...all][0] : null;
+  };
+  const named = new Set<number>();
+  for (let changed = true; changed;) {
+    changed = false;
+    for (const o of new Set([...anchorVotes.fn.keys(), ...anchorVotes.table.keys()])) {
+      const t = agreed(o);
+      if (pairOf.has(o) || votes.fn.has(o) || votes.table.has(o) || t === null || namedT.has(t) || !sameSignature(o, t)) {
+        continue;
+      }
+      pairOf.set(o, t);
+      namedT.add(t);
+      named.add(o);
+      votes.fnVoters.set(o, anchorVotes.fnVoters.get(o) ?? new Set());
+      if (align(t, o)) {
+        anchoredT.add(t);
+        changed = true;
+      }
+    }
+    if (!changed) {
+      for (const o of named) {
+        const t = pairOf.get(o)!;
+        if (agreed(o) === t) {
+          continue;
+        }
+        named.delete(o);
+        pairOf.delete(o);
+        namedT.delete(t);
+        anchoredT.delete(t);
+        votes.fnVoters.delete(o);
+        for (const who of anchorVotes.fnVoters.values()) {
+          who.delete(t);
+        }
+        changed = true;
+      }
+    }
+  }
+  for (const o of named) {
+    evidence.set(o, anchorVotes.fn.has(o) ? 'call' : 'table');
+  }
+  return named.size;
+}
+
+/** The voters a function name lists in `by:`: when anchored pairs alone voted for it and few did, never the function
+ *  itself. A recursive body's call votes for its own name, and §3 would read that as a voter besides its caller. */
+export function listedVoters(
+  voters: Iterable<number>,
+  t: number,
+  anchoredT: ReadonlySet<number>,
+): number[] | undefined {
+  const list = [...voters].filter((v) => v !== t).sort((a, b) => a - b);
+  return list.length > 0 && list.length <= VOTERS_LISTED && list.every((v) => anchoredT.has(v)) ? list : undefined;
 }
 
 function alignVotes(
@@ -1333,7 +1460,7 @@ function uniquePairs(
  * Function pairs anchored by an operand: an i32.const that names one object on both sides, held by exactly one target
  * function and exactly one of ours, or with `byShape` by one pair of the same shape among its holders: a class's
  * constructor and destructor both load its vptr, and at most one of them is a body of ours so far. Whether the two
- * bodies are the same instructions is left to the caller (alignVotes). `places` are the target's addresses that
+ * bodies are the same opcodes is left to the caller (alignVotes). `places` are the target's addresses that
  * anchor, `placeOf` reads an operand of ours as one of them.
  */
 export function operandAnchors(
@@ -1731,7 +1858,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   }
 
   // anchors fill what the pairs left: a pair a source_location record names, kept when the bodies are the same
-  // instructions, and the names its call and table votes agree on. Neither side may be named already, the
+  // opcodes, and the names its call and table votes agree on. Neither side may be named already, the
   // signatures must agree, and anchors' data votes count for .bss objects alone.
   const anchorVotes = emptyVoteBox();
   const namedT = new Set(pairOf.values());
@@ -1767,30 +1894,13 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
       }
     }
   }
-  const anchorAgreed = (o: number): number | null => {
-    const all = new Set([...(anchorVotes.fn.get(o)?.keys() ?? []), ...(anchorVotes.table.get(o)?.keys() ?? [])]);
-    return all.size === 1 ? [...all][0] : null;
-  };
-  stats.fnAnchorVote = 0;
-  // a function the votes name, whose body is the same instructions, votes in turn
-  for (let changed = true; changed;) {
-    changed = false;
-    for (const o of new Set([...anchorVotes.fn.keys(), ...anchorVotes.table.keys()])) {
-      const t = anchorAgreed(o);
-      if (pairOf.has(o) || votes.fn.has(o) || votes.table.has(o) || t === null || namedT.has(t) || !sameSignature(o, t)) {
-        continue;
-      }
-      pairOf.set(o, t);
-      namedT.add(t);
-      anchorEvidence.set(o, anchorVotes.fn.has(o) ? 'call' : 'table');
-      votes.fnVoters.set(o, anchorVotes.fnVoters.get(o) ?? new Set());
-      stats.fnAnchorVote++;
-      if (sizeT(t) > trivial && alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t)) {
-        anchoredT.add(t);
-        changed = true;
-      }
-    }
-  }
+  stats.fnAnchorVote = settleAnchorVotes(
+    { votes, anchorVotes, pairOf, namedT, anchoredT, evidence: anchorEvidence },
+    sameSignature,
+    (t, o) =>
+      sizeT(t) > trivial &&
+      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t),
+  );
 
   const fnNames: Evidence['fnNames'] = new Map();
   const pairEvidence = new Map<number, string>();
@@ -1814,10 +1924,9 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
       continue;
     }
     const evidence = pairEvidence.get(o) ?? (viaTable.has(o) ? 'table' : 'call');
-    const voters = [...(votes.fnVoters.get(o) ?? [])].sort((a, b) => a - b);
     // a name only anchored pairs voted for lists them, so a match can tell when it is its own sole voter
-    const anchored = voters.length > 0 && voters.every((v) => anchoredT.has(v));
-    fnNames.set(f.key, { index: t, evidence, ...(anchored && voters.length <= VOTERS_LISTED ? { voters } : {}) });
+    const voters = listedVoters(votes.fnVoters.get(o) ?? [], t, anchoredT);
+    fnNames.set(f.key, { index: t, evidence, ...(voters === undefined ? {} : { voters }) });
   }
   stats.fnTable = [...fnNames.values()].filter((v) => v.evidence === 'table').length;
   stats.fnCall = [...fnNames.values()].filter((v) => v.evidence === 'call').length;
@@ -1847,29 +1956,11 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   const dataNames: Evidence['dataNames'] = new Map();
   const ourByKey = new Map(ours.map.data.map((d) => [d.key, d]));
   stats.dataVoteConflicts = 0;
-  const castVote = (key: string, addr: number, n: number, voter: Iterable<number>): void => {
-    const box = votes.data.get(key) ?? votes.data.set(key, new Map()).get(key)!;
-    box.set(addr, (box.get(addr) ?? 0) + n);
-    const who = votes.voters.get(key) ?? votes.voters.set(key, new Set()).get(key)!;
-    for (const v of voter) {
-      who.add(v);
-    }
-  };
-  // anchors vote for .bss objects alone: a name there places what content cannot, and a name for a read-only or .data
-  // object would hide the copies content finds
   stats.dataAnchorVote = 0;
   for (const box of [anchorVotes, namedAnchorVotes]) {
-    for (const [key, vs] of box.data) {
-      if (ourByKey.get(key)?.out !== '.bss') {
-        continue;
-      }
-      stats.dataAnchorVote += votes.data.has(key) ? 0 : 1;
-      for (const [addr, n] of vs) {
-        castVote(key, addr, n, box.voters.get(key) ?? []);
-      }
-    }
+    stats.dataAnchorVote += castBssVotes(votes, box, ourByKey);
   }
-  const ctorOnly = new Set<string>();
+  let ctorOnly = new Set<string>();
   const ctorsO = ours.fnByKey.get(CALL_CTORS);
   const ctorsT = tm.exports.find((e) => e.kind === 'func' && glue?.exports[e.name] === CALL_CTORS)?.index;
   if (ctorsO !== undefined && ctorsT !== undefined) {
@@ -1877,21 +1968,11 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
       co < oFirst || ct < tFirst
         ? co < oFirst && ct < tFirst && importName(ours, co) === importName(target, ct)
         : sameSignature(co, ct);
-    for (const [key, addrs] of ctorVotes(
-      ours,
-      ourImage,
-      target,
-      on0[ctorsO - oFirst].instrs,
-      tn0[ctorsT - tFirst].instrs,
-      sameCallee,
-    )) {
-      if (!votes.data.has(key)) {
-        ctorOnly.add(key);
-      }
-      for (const addr of addrs) {
-        castVote(key, addr, 1, [ctorsT]);
-      }
-    }
+    ctorOnly = castCtorVotes(
+      votes,
+      ctorVotes(ours, ourImage, target, on0[ctorsO - oFirst].instrs, tn0[ctorsT - tFirst].instrs, sameCallee),
+      ctorsT,
+    );
   }
   stats.dataCtorVote = ctorOnly.size;
   for (const [key, vs] of votes.data) {
@@ -2040,7 +2121,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     }
   }
 
-  // every other named body that is the same instructions reads its .bss operands too: a vtable slot or an anchor's
+  // every other named body of the same opcodes reads its .bss operands too: a vtable slot or an anchor's
   // call says which function it is, and that evidence owes nothing to the object
   const lateVotes = emptyVoteBox();
   for (const [name, { index: t }] of fnNames) {

@@ -445,7 +445,7 @@ What the vtable needs, slot by slot:
   while it also waits for a flag: the default written at the tree's level gives a whole body where the target has a
   thunk, gains no match, and reaches every converter of the template (unit 96's fragment has the measurement). The
   shared body's own callees need names from elsewhere, since a function an anchor's vote names votes in turn only when
-  its body is the same instructions (`docs/reference/splat.md` §2): a `CBaseError` constructor thunk has its name from
+  its body is the same opcodes (`docs/reference/splat.md` §2): a `CBaseError` constructor thunk has its name from
   `rtti-vptr`, the hand edits for 406
   and 1715. The other way round, a
   member whose source gives the target's body can become a merge thunk in our link alone, when binaryen merges it with

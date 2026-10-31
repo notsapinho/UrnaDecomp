@@ -37,7 +37,7 @@
 #   not the guard's, and is not reached.
 #
 # How the names hold. instance<T> pair only by srcloc-anchor: at the census's depth 2 their fingerprints take in 212's and
-# 305's bodies, which differ. An anchor casts no data vote, and its call vote for has<T> has that one voter, which the
+# 305's bodies, which differ. An anchor votes for .bss data alone, and its call vote for has<T> has that one voter, which the
 # scan refuses (reference/splat.md "No circular evidence"). Two kinds of hand edit in splat/symbol_addrs.txt carry the
 # rest, with their evidence there: _ZN3api20g_polySingletonsInfoE from the table slot its word holds (a slot below 1024
 # counts two telling bytes, and placing by content takes four), and each has<T> from T's type name. Neither reads a match.

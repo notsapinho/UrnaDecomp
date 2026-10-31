@@ -80,18 +80,21 @@ parser drops any other line without a word, below the hand-edit marker too, and 
 - `call`, `table`: aligned call operands and function-pointer constants. They name a function only when
   every vote agrees and our function has the target function's signature. Such a line has a `by:` list only when every
   voter is an anchored pair and at most 4 voted, and §3's self-vote rule can refuse only a name that has one, so no
-  `by:` means the rule cannot fire, not that no one voted. The votes come from aligning the census
+  `by:` means the rule cannot fire, not that no one voted. A function is never listed as its own voter: a recursive
+  body's call votes for its own name, and §3 would read that as a second voter. The votes come from aligning the census
   seed pairs (`pair-fingerprint`, `pair-addr`), the pairs those votes form when the two bodies agree up to callees and
   addresses, and the anchor pairs below
   (`seeds`, the propagation loop and `anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`). A function named by
   `vtable` alone casts none: a callback that only such a function passes by its table slot stays unnamed, and the
   try link's one `UNRESOLVED` operand there does not become a match at step 8. A function an anchor's vote names votes
-  in turn when its two bodies are the same instructions, until no name is added: 5158, a `content-anchor`, names
+  in turn when its two bodies are the same opcodes (`alignVotes` compares each row's opcode and number of immediates,
+  and no value), until no name is added: 5158, a `content-anchor`, names
   `std::set<int>`'s constructor 5157, whose unwind path names `__tree<int>::destroy`, 1522, which no pair reaches and
-  whose recursive call waits for its own name.
+  whose recursive call waits for its own name. A name the later votes contradict then goes and the loop runs again with
+  its index free, so which function a map yields first decides no name (`settleAnchorVotes`); the votes it had cast stay.
 - `vote:N`: aligned address operands of the seed pairs and of the pairs their votes form. An anchor votes for `.bss`
   objects alone, and so does any other pair that `vtable`, `call` or `table` evidence names, when its two bodies are
-  the same instructions: content cannot place a `.bss` object, and a name for a read-only or `.data` object would hide
+  the same opcodes: content cannot place a `.bss` object, and a name for a read-only or `.data` object would hide
   the copies content finds (§3). `by:` lists up to 4 target functions that cast a vote. `vote:N+rtti` is a vote that
   the RTTI decoding agrees with. A `.N` suffix on a data symbol is a piece of a
   global LLVM's GlobalOpt split, because the global is internal and it sees every use: `.2` can stay unnamed, and the
@@ -103,8 +106,10 @@ parser drops any other line without a word, below the hand-edit marker too, and 
   `.bss` object's or the next stack prologue. A row of it *tells* when the target's body holds its literal, or the place
   its address resolves to by content, in one row only: the bytes of a short string, a capacity and size, a chunk of a
   literal. A run with a telling row votes when every row through its last telling row or string chunk fits the
-  target's: the same opcode and literals, a string of the same content, a `.bss` address, any callee of the signature,
-  any local. A literal two statics of the target build tells nothing, so no vote picks between them, and two objects
+  target's: the same opcode, with an i64, an offset or a label of the same value; an `i32.const` of the same value, a
+  string of the same content, a `.bss` address on both sides or a table slot on both sides, whichever slot; any callee
+  of the signature; any local. So a small literal both tables hold fits any other, and it is the telling rows that
+  place a run. A literal two statics of the target build tells nothing, so no vote picks between them, and two objects
   of ours built alike at one target address lose their votes. A name another pair votes for as well reads `vote:N`,
   with the function in `by:`. The evidence is what the object is built from, which owes nothing to the bodies that read
   it, so §3 asks a second user of `__wasm_call_ctors` alone. `_ZN4ASN1L14badEndOfStreamE`'s `callers+content` hand edit
@@ -112,7 +117,7 @@ parser drops any other line without a word, below the hand-edit marker too, and 
 - `rtti`: vtables and typeinfos decoded from the target's bytes.
 - `content`, `string`, `srcloc`: unique bytes, a C string, or a `std::source_location` record the target holds at one
   address. A record it holds at several has no line, since no one place is its own (§3).
-- `srcloc-anchor`: a function pair whose bodies are the same instructions and load the same
+- `srcloc-anchor`: a function pair whose bodies are the same opcodes and load the same
   `std::source_location` record, one the target holds at one address.
 - `vptr-anchor`, `content-anchor`: the same rule over another operand, a class's vptr (a constant at the address point
   of a vtable the ledger's RTTI names on both sides) or a read-only object of at least 16 bytes placed by its exact
@@ -150,7 +155,10 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   hash is the only one on both sides.
 - `callers+content`: the target callers and the loaded content single the function out. Each caller counts when other
   evidence names it, its vtable slot say, and the aligned calls pair the two functions one to one with no disagreement
-  ([facts/asn1.md](facts/asn1.md) §A5 has the tally).
+  ([facts/asn1.md](facts/asn1.md) §A5 has the tally). One line stands on a disagreement it states:
+  `CPolySingletonList::find` is one body of ours for two of the target's, 305 and 608, the executable TU's instantiations
+  (unit 100's fragment). The 16 matched `instance<T>` bodies call 305 and `has<T>` calls 608, so the votes disagree, no
+  generated line can name it, and without this line those 16 leave `match`.
 - `content`: a data line, the bytes the object holds.
 - `merged-body`: the target merged this function's body into the index, its callers there call it, and our own body of
   that name is not equal, so no match can name it. §3 says what it does. The comment must cite a caller the line does

@@ -20,11 +20,15 @@ import {
   type SymbolMaps,
   type TargetSide,
   cStringAt,
+  castBssVotes,
+  castCtorVotes,
   compareObject,
   ctorVotes,
   dataObjectAt,
   emptySymbols,
+  emptyVoteBox,
   isSourceLocationRecord,
+  listedVoters,
   loadOurSide,
   loadTargetSide,
   memoryImage,
@@ -40,6 +44,7 @@ import {
   readSourceLocations,
   resolveRepointed,
   rttiClassAt,
+  settleAnchorVotes,
   soleFnVoters,
   soleVoters,
   srclocAnchors,
@@ -424,6 +429,234 @@ describe('operandAnchors', () => {
     expect(checked.length).toBeGreaterThan(300);
     const named = (e: { name: string }): string => e.name.split('@')[0];
     expect(checked.filter((e) => matched.get((e.at as { index: number }).index) !== named(e))).toEqual([]);
+  });
+});
+
+describe('settleAnchorVotes', () => {
+  /** A call vote our `o` gets for target `t`, cast by target function `by`. */
+  const vote = (box: ReturnType<typeof emptyVoteBox>, o: number, t: number, by: number): void => {
+    const places = box.fn.get(o) ?? box.fn.set(o, new Map()).get(o)!;
+    places.set(t, (places.get(t) ?? 0) + 1);
+    (box.fnVoters.get(o) ?? box.fnVoters.set(o, new Set()).get(o)!).add(by);
+  };
+  const state = () => ({
+    votes: emptyVoteBox(),
+    anchorVotes: emptyVoteBox(),
+    pairOf: new Map<number, number>(),
+    namedT: new Set<number>(),
+    anchoredT: new Set<number>(),
+    evidence: new Map<number, string>(),
+  });
+
+  it('lets a function the votes name vote in turn, down a chain of callees', () => {
+    const s = state();
+    vote(s.anchorVotes, 1, 100, 900);
+    const next = new Map([
+      [100, () => vote(s.anchorVotes, 2, 200, 100)],
+      [200, () => vote(s.anchorVotes, 3, 300, 200)],
+    ]);
+    const n = settleAnchorVotes(s, () => true, (t) => {
+      next.get(t)?.();
+      return next.has(t);
+    });
+    expect([...s.pairOf]).toEqual([
+      [1, 100],
+      [2, 200],
+      [3, 300],
+    ]);
+    expect(n).toBe(3);
+    expect([...s.anchoredT]).toEqual([100, 200]);
+  });
+
+  it('names no function across signatures, so its chain stops there', () => {
+    const s = state();
+    vote(s.anchorVotes, 1, 100, 900);
+    const align = (): boolean => {
+      vote(s.anchorVotes, 2, 200, 100);
+      return true;
+    };
+    expect(settleAnchorVotes(s, (o) => o !== 1, align)).toBe(0);
+    expect(s.pairOf.size).toBe(0);
+    expect(s.namedT.size).toBe(0);
+  });
+
+  it('leaves a function the seed pairs reach, and an index already named, alone', () => {
+    const s = state();
+    vote(s.anchorVotes, 1, 100, 900);
+    vote(s.votes, 1, 100, 800);
+    vote(s.anchorVotes, 2, 200, 900);
+    s.namedT.add(200);
+    expect(settleAnchorVotes(s, () => true, () => false)).toBe(0);
+  });
+
+  // the order the two calls take is the order a Map yields: find, ours 452, is named 305 or not by it alone
+  it.each([
+    ['named before the vote against it', [5, 1]],
+    ['named after it', [1, 5]],
+  ])('drops a name a later vote contradicts: %s', (_, order) => {
+    const s = state();
+    for (const o of order) {
+      vote(s.anchorVotes, o, o * 100, 900);
+    }
+    const n = settleAnchorVotes(s, () => true, (t) => {
+      if (t === 100) {
+        vote(s.anchorVotes, 5, 600, 100);
+      }
+      return t === 100;
+    });
+    expect(s.pairOf.has(5)).toBe(false);
+    expect(s.namedT.has(500)).toBe(false);
+    expect(s.evidence.has(5)).toBe(false);
+    expect(n).toBe(1);
+  });
+
+  it('gives the index of a dropped name to the function it blocked', () => {
+    const s = state();
+    vote(s.anchorVotes, 5, 500, 900);
+    vote(s.anchorVotes, 6, 500, 900);
+    vote(s.anchorVotes, 1, 100, 900);
+    settleAnchorVotes(s, () => true, (t) => {
+      if (t === 100) {
+        vote(s.anchorVotes, 5, 600, 100);
+      }
+      return t === 100;
+    });
+    expect(s.pairOf.get(6)).toBe(500);
+    expect(s.pairOf.has(5)).toBe(false);
+  });
+
+  it('takes a dropped name off the voters of the rest', () => {
+    const s = state();
+    vote(s.anchorVotes, 5, 500, 900);
+    vote(s.anchorVotes, 1, 100, 900);
+    settleAnchorVotes(s, () => true, (t) => {
+      if (t === 500) {
+        vote(s.anchorVotes, 7, 700, 500);
+      } else if (t === 100) {
+        vote(s.anchorVotes, 5, 600, 100);
+      }
+      return t === 500 || t === 100;
+    });
+    expect(s.pairOf.has(5)).toBe(false);
+    expect([...(s.anchorVotes.fnVoters.get(7) ?? [])]).toEqual([]);
+  });
+
+  it('reads call or table from the final votes, not from the first', () => {
+    const s = state();
+    const table = (o: number, t: number, by: number): void => {
+      s.anchorVotes.table.set(o, new Map([[t, 1]]));
+      s.anchorVotes.fnVoters.set(o, new Set([by]));
+    };
+    table(5, 500, 900);
+    vote(s.anchorVotes, 1, 100, 900);
+    table(8, 800, 900);
+    settleAnchorVotes(s, () => true, (t) => {
+      if (t === 100) {
+        vote(s.anchorVotes, 5, 500, 100);
+      }
+      return t === 100;
+    });
+    expect(s.evidence.get(5)).toBe('call');
+    expect(s.evidence.get(8)).toBe('table');
+  });
+});
+
+describe('the hand line of CPolySingletonList::find', () => {
+  const FIND =
+    '_ZN3api18CPolySingletonList4findIKNS_19TPolySingletonsInfoEEEDaRKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERT_';
+
+  it('names 305 below the marker, and no generated line names it: votes for 305 and 608 disagree', () => {
+    const file = parseSymbolFile(readFileSync(SYMBOLS, 'utf8'));
+    expect(file.generated.filter((e) => e.name === FIND)).toEqual([]);
+    expect(file.hand.filter((e) => e.name === FIND)).toMatchObject([
+      { at: { kind: 'func', index: 305 }, evidence: 'callers+content' },
+    ]);
+  });
+});
+
+describe('listedVoters', () => {
+  const anchored = new Set([1522, 5157, 9028, 1, 2, 3, 4, 5]);
+
+  it('leaves a recursive function out of its own by: list', () => {
+    expect(listedVoters([1522, 5157], 1522, anchored)).toEqual([5157]);
+    expect(listedVoters([1522], 1522, anchored)).toBeUndefined();
+  });
+
+  it('lists a caller alone on a recursive callee, so that §3 sees it alone', () => {
+    const syms = { ...emptySymbols(), fnEvidence: new Map([['f', { evidence: 'call', voters: [5157] }]]) };
+    expect(listedVoters([1522, 5157], 1522, anchored)).toEqual(soleFnVoters(syms, 'f'));
+  });
+
+  it('lists only anchored voters, sorted, and at most four', () => {
+    expect(listedVoters([4, 2], 1522, anchored)).toEqual([2, 4]);
+    expect(listedVoters([4, 77], 1522, anchored)).toBeUndefined();
+    expect(listedVoters([1, 2, 3, 4, 5], 1522, anchored)).toBeUndefined();
+    expect(listedVoters([1, 2, 3, 4, 1522], 1522, anchored)).toEqual([1, 2, 3, 4]);
+  });
+});
+
+describe('castBssVotes', () => {
+  const object = (key: string, out: string): DataObject => ({
+    addr: 2000,
+    size: 12,
+    key,
+    name: key,
+    object: 'o',
+    section: `${out}.${key}`,
+    out,
+  });
+  const objects = new Map([
+    ['X', object('X', '.bss')],
+    ['R', object('R', '.rodata')],
+    ['D', object('D', '.data')],
+  ]);
+  const from = (): ReturnType<typeof emptyVoteBox> => {
+    const box = emptyVoteBox();
+    for (const key of ['X', 'R', 'D', 'gone']) {
+      box.data.set(key, new Map([[3100, 2]]));
+      box.voters.set(key, new Set([9148]));
+    }
+    return box;
+  };
+
+  it('takes .bss objects alone: a name for read-only or .data content would hide its copies', () => {
+    const votes = emptyVoteBox();
+    expect(castBssVotes(votes, from(), objects)).toBe(1);
+    expect([...votes.data.keys()]).toEqual(['X']);
+    expect([...votes.data.get('X')!]).toEqual([[3100, 2]]);
+    expect([...votes.voters.get('X')!]).toEqual([9148]);
+  });
+
+  it('adds to what the pairs voted, and counts only what they did not', () => {
+    const votes = emptyVoteBox();
+    votes.data.set('X', new Map([[3100, 1]]));
+    votes.voters.set('X', new Set([137]));
+    expect(castBssVotes(votes, from(), objects)).toBe(0);
+    expect([...votes.data.get('X')!]).toEqual([[3100, 3]]);
+    expect([...votes.voters.get('X')!].sort((a, b) => a - b)).toEqual([137, 9148]);
+  });
+});
+
+describe('castCtorVotes', () => {
+  it('casts its votes by __wasm_call_ctors, which is what §3 reads', () => {
+    const votes = emptyVoteBox();
+    expect([...castCtorVotes(votes, new Map([['X', new Set([3100])]]), 14478)]).toEqual(['X']);
+    expect([...votes.data.get('X')!]).toEqual([[3100, 1]]);
+    expect([...votes.voters.get('X')!]).toEqual([14478]);
+  });
+
+  it('adds to a name another pair voted for, which stays a vote', () => {
+    const votes = emptyVoteBox();
+    votes.data.set('X', new Map([[3100, 2]]));
+    votes.voters.set('X', new Set([9148]));
+    expect(castCtorVotes(votes, new Map([['X', new Set([3100])]]), 14478).size).toBe(0);
+    expect([...votes.voters.get('X')!].sort((a, b) => a - b)).toEqual([9148, 14478]);
+  });
+
+  it('leaves two places in the votes, so the name conflicts', () => {
+    const votes = emptyVoteBox();
+    castCtorVotes(votes, new Map([['X', new Set([3100, 3200])]]), 14478);
+    expect(votes.data.get('X')!.size).toBe(2);
   });
 });
 

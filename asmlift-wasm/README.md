@@ -519,7 +519,7 @@ at its first virtual-base offset, as many words ahead of the typeinfo pointer as
 
 What the pairs leave unnamed, **anchors** may fill (`srclocAnchors`): a target function and one of ours that both
 reference a `std::source_location` record (resolved by what it records, and held at one target address) that no other
-function of either side references, and whose bodies are the same instructions, are a pair
+function of either side references, and whose bodies are the same opcodes, are a pair
 (`evidence:srcloc-anchor`). Their call and table
 votes name a function only when neither side is named yet, the votes agree and the signatures match. A name only
 anchors voted for lists them in `by:`. This reaches std::format throwers, whose format helpers our link inlines
@@ -530,7 +530,9 @@ instructions.
 `vptrAnchors` and `contentAnchors` do the same over a class's vptr and a read-only object placed by its bytes
 (`evidence:vptr-anchor`, `content-anchor`). Those operands can have other holders, so of a vptr's holders on both
 sides the pair of one shape anchors: a singleton's thunk, whose destructor loads the same vptr. A function the votes
-name votes in turn when its body is the same instructions, until no name is added.
+name votes in turn when its two bodies are the same opcodes (`alignVotes` compares each row's opcode and number of
+immediates, and no value), until no name is added. A name later votes contradict then goes, and its index is free, so
+which function a map yields first decides no name (`settleAnchorVotes`).
 
 **`ctorVotes`** names the `.bss` objects `__wasm_call_ctors` builds (`evidence:ctors:N by:<its index>`). The two bodies
 hold different translation units, so each object is aligned alone: a run of ours, from the object's first operand to
