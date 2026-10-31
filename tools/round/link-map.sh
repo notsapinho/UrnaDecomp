@@ -16,7 +16,8 @@
 #    each replay checked against emcc's own intermediate / the plain module.
 # Writes build/out/wasm-map/vota_web/{vota_web_wasm.map,names.tsv,replay.log} for the default plain link; names.tsv is
 # final function index → mangled wasm-ld name, object, wasm-ld index, post-Oz index, demangled name (a binaryen
-# merged-function thunk is byn$mgfn-shared$<the first merged function's name>).
+# merged-function thunk is byn$mgfn-shared$<the first merged function's name>, with @<its object> when two such names
+# would repeat).
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$ROOT"
