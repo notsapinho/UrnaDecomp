@@ -3381,7 +3381,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3515	1562	3	app	ecourna	skeleton	3235	shape	87	ecourna::api::sql::sqlite::CSqlConnection::CSqlConnection(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 3516	105	2	libcxx	libc++	skeleton	3198	addr	7	std::__2::basic_istringstream<char, std::__2::char_traits<char>, std::__2::allocator<char>>::~basic_istringstream()
 3517	60	3	-	ecourna	skeleton	3236	addr	2	ecourna::api::security::CAesKey::~CAesKey()
-3518	533	2	app	ecourna	-	-	none	-	
+3518	533	2	app	ecourna	skeleton	10570	shape	33	ecourna::api::security::CSha::Finish()
 3519	489	2	app	ecourna	skeleton	10571	shape	40	ecourna::api::security::CSha::Update(std::__2::vector<unsigned char, std::__2::allocator<unsigned char>> const&)
 3520	1810	2	app	ecourna	-	-	none	-	
 3521	1180	3	app	ecourna	skeleton	10948	shape	68	ecourna::api::io::CFile::ReadFileBinary(std::__2::filesystem::path const&)

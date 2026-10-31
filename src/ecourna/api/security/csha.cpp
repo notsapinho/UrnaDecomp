@@ -40,8 +40,8 @@ const std::vector<uebyte> CSha::Finish()
 {
     std::vector<uebyte> hash(m_tamanho);
 
-
-    if (!EVP_DigestFinal_ex(m_ctx.get(), hash.data(), nullptr)) {
+    const int resultado = EVP_DigestFinal_ex(m_ctx.get(), hash.data(), nullptr);
+    if (!resultado) {
         throw CSecurityError(ESE_SHA_FALHA_FINALIZAR, "Falha ao finalizar o hash.");
     }
 
