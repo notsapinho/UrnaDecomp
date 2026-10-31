@@ -66,6 +66,11 @@ void CLogVota::LogaPedidoTituloSuspensao()
     loga("Solicitado título eleitoral para suspensão do eleitor");
 }
 
+void CLogVota::LogaVotacaoEncerrada()
+{
+    loga("Votação encerrada");
+}
+
 } // namespace vota
 
 // <stubs>

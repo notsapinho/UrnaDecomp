@@ -30,6 +30,7 @@ public:
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
+    void LogaVotacaoEncerrada();
 
 private:
     CLogVota();

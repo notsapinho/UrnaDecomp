@@ -64,7 +64,9 @@
 
 namespace api {
 
-enum EInputResult {
+// The underlying type is fixed, int, to agree with the opaque declaration in app/vota/eleitor/cvotacaostateaudio.h: a TU
+// that includes both headers does not compile otherwise. int is chosen there.
+enum EInputResult : int {
     INPUT_BRANCO = 3,
     INPUT_CORRIGE = 5,
     INPUT_CONFIRMA = 9,

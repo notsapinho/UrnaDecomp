@@ -14,12 +14,15 @@ namespace vota {
 // comum::TCargoID, const ETelaVotacao), held by fn 4135, gives the map's types: 4135 walks the map at +0 comparing a
 // one-byte key at node+16 with its first argument, and it holds record 1536624 too, CTelasCargo::GetTela, with its `this`
 // at node+20, so that is the element. The members' names are chosen, and so is the 30 members' type: only their
-// destruction shows, which any std::shared_ptr gives.
+// destruction shows, which any std::shared_ptr gives. vota::CReinicioVotacao's constructor (inlined into fn 5938) copies
+// the one at +148: GetTelaReinicioVotacao's name, and that it is a getter, are chosen.
 class CTelasVota {
 public:
     ~CTelasVota();
 
     static CTelasVota& GetInst();
+
+    const CFormInterativoTelaVota& GetTelaReinicioVotacao() const { return m_tela18; }
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
