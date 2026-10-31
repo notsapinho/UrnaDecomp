@@ -1,9 +1,10 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 60 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Six come from the objects of units 31 and 120, whose
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 59 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Seven come from the objects of units 31, 120 and 101, whose
 # builders are written, so the roots no longer instantiate them: IFormImpressao<IPaperRelatorios>'s and
 # CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CInteractiveForm<IScreen, IInputKbd>'s (554),
-# CInteractiveForm<IScreenMT, IInputMT>'s (301) and FormControlBlock's (5515, 6024). Each block below: the T, the
+# CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515, 6024) and api::CTimer's (10846, unit 101's
+# itimerscheduler.cpp, from which 10844, 10843 and 2967 match). Each block below: the T, the
 # function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are shared
 # bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):

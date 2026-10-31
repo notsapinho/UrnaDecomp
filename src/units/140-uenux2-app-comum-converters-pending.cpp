@@ -3,10 +3,10 @@
 // - The base's default DoConverte of CConversorPleito (slot 2, target fn 11364) and of CConversorProcessoEleitoral
 //   (slot 2, fn 11362): comum::asn::IConversorASN<ENTIDADE, DADO>::DoConverte, 29-byte thunks of fn 731.
 //   iconversorasn.h does not define that default yet (47-uenux2-cconversorsituacoeseleicoes-pending.cpp says why, and
-//   96-uenux2-app-comum-asn.mk has the measurement: fn 731 waits for -O3), so this file defines each instantiation's
-//   member as an explicit specialization, with the symbol the vtable references. Delete them when iconversorasn.h
-//   defines the default DoConverte: a specialization is a strong symbol with the name of that template's instantiation,
-//   so the link would keep the trap without a word.
+//   96-uenux2-app-comum-asn.mk has the measurement: fn 731 needs -O3, the tree's level), so this file defines each
+//   instantiation's member as an explicit specialization, with the symbol the vtable references. Delete them when
+//   iconversorasn.h defines the default DoConverte: a specialization is a strong symbol with the name of that template's
+//   instantiation, so the link would keep the trap without a word.
 // - CConversorEleicoesVota::DoDesconverte (slot 3, fn 11349, records cconversoreleicoesvota.cpp:69, :74, :94 and :104),
 //   not written: it builds md::CVotosEleicoesVota's maps from the entity (5054 B); its direct callees 3869, 5640, 5643
 //   and 5681 are not matched.

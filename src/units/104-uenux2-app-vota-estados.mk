@@ -18,8 +18,8 @@
 # record, cgestordadomesario.cpp:35 column 32, is the controller's instance() bound to a reference, a chosen spelling of
 # that length). 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for. vota::CQuerReimprimirZeresima lands its head, destructor and statics only: its GetInst (fn 5940) and
 # destructors (11850, 11851) stay unmatched, and the header says why. The heads say what each layout rests on. Fn 10793,
-# vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; it waits
-# for that class's 37-slot head.
+# vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; unit 119
+# writes that class and matches it.
 #
 # Evidence, each measured with a probe of the class's shape at the tree's flags:
 # - The statics are not local to GetInst: a local static's guard byte puts the pointer at mutex + 28, and the target

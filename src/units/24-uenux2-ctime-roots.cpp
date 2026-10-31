@@ -1,8 +1,9 @@
 // Roots: keep api::CTime's constructor from a string (target fn 3643) and CTime::operator-(int) (target fn 3641) in the
 // skeleton link. The target calls each directly, never through the table (ledger/callgraph.tsv): 3643 from 1713, 5475 and
-// 7787, of which cdatetime.cpp reconstructs 5475 (unit 125); 3641 from 7160, 7306 and 10710, none reconstructed yet. One
-// noinline caller of 3643 (for 1713 and 7787) and two of 3641 give each more than one call site, so binaryen keeps its body
-// out of line as the target does. The constructor from hours, minutes and seconds (fn 3642) needs no stand-in now:
+// 7787, of which 5475 (cdatetime.cpp, unit 125) and 1713 (util.cpp, unit 96) are reconstructed; 3641 from 7160, 7306
+// and 10710, none reconstructed yet. One noinline caller of 3643 (for 7787, which still waits) and two of 3641 give
+// each more than one call site, so binaryen keeps its body out of line as the target does. The constructor from hours,
+// minutes and seconds (fn 3642) needs no stand-in now:
 // cdatetime.cpp's ConvertFromLocalTime (5476) and operator+= (2233) call it, two of its three target callers (the third is
 // 2725). Neither does api::IsValidTime (fn 5449): its two target callers are 3643, in ctime.cpp, and the check 5475 inlines,
 // which cdatetime.cpp defines. Every caller reads the result, as the target's do (3641's callers use the returned word, 5475

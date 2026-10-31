@@ -24,12 +24,13 @@
 #   callback as an lvalue, so the constructor's by-value parameter is a copy (the target calls the function's __clone())
 #   that then moves into the member.
 #   Written and not matched: the destructor (5445, 25 over 76 rows: it inlines Stop, and the target computes the second
-#   mutex's address after the join, where ours computes it for the lock at the start and keeps it; not explained) and
-#   CreateTimer (10846, 59 over 190 rows: the target keeps make_shared out of line, binaryen's second frame, with the
-#   control block's constructor inside it, where clang at -O2 inlines make_shared, cost 35 at threshold 337, and leaves the
-#   constructor out, cost 225 at threshold 225, per -Rpass=inline on the file; std::atomic<bool> for the flag, the flag
-#   in the constructor's list, the constructor defined after the class and the file without -fno-strict-aliasing keep
-#   225; with std::move(callback) the score is 31 over 201 rows, and the rows that differ build the parameter).
+#   mutex's address after the join, where ours computes it for the lock at the start and keeps it; not explained).
+#   CreateTimer (10846) matches at the tree's -O3 in the whole link. At -O2 it scored 59 over 190 rows: the target keeps
+#   make_shared out of line, binaryen's second frame, with the control block's constructor inside it, where clang at -O2
+#   inlines make_shared, cost 35 at threshold 337, and leaves the constructor out, cost 225 at threshold 225, per
+#   -Rpass=inline on the file; std::atomic<bool> for the flag, the flag in the constructor's list, the constructor
+#   defined after the class and the file without -fno-strict-aliasing keep 225; with std::move(callback) the score was
+#   31 over 201 rows, and the rows that differ build the parameter.
 #   libc++'s thread::join (4653) and std::__thread_struct's constructor (2541) come in with Stop and Start; the roots file
 #   gives 2541 the second call site the target has. Chosen: the data members' names and the flag's type, the
 #   constructor's parameters, the lambda (the proxy's tuple holds one pointer, this), and defining Stop's lock with

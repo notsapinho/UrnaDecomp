@@ -52,8 +52,9 @@
 #
 # Written, not matching:
 # - 10380, CEncerraRegistroMesarios::StartState: the scan says `the locals`. The target stores m_pNextState before its
-#   stack prologue: read as a frameless StartState with an out-of-line member binaryen inlined (how-to step 3), so the
-#   switch is in DefineProximoEstado (chosen name), its cases in the target's block order (2, 3, then 0 and 1). Measured
+#   stack prologue. It is read as a frameless StartState with an out-of-line member binaryen inlined, a reading: how-to
+#   step 3 does not list a store before the only prologue among binaryen's tells. So the switch is in
+#   DefineProximoEstado (chosen name), its cases in the target's block order (2, 3, then 0 and 1). Measured
 #   with `pnpm wasm score`: the switch in StartState in case order, `117 over 203 rows (same 86 ... inserted 35, deleted
 #   36)`; as written, `42 over 174 rows (same 132, replaced 27 [27 operand-only], inserted 6, deleted 9)`, the target's
 #   blocks. Left: the object (wasm-objdump -d of cencerraregistromesarios.cpp.o) keeps each case's last instance() call

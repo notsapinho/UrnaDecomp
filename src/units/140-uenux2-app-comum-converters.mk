@@ -13,8 +13,9 @@
 #   SCargoInfo at +4 and a CConversorVoto at +16 (that class's vptr, @1570816).
 # - CConversorEleicoesVota's D2 and D0 (fns 11348, 11347), in app/comum/dados/asn/rdv/cconversoreleicoesvota.{h,cpp}:
 #   implicit, the class final (the D2 does not begin with its vptr store), and fn 1160, the destroy of its map from each
-#   election to a vector of md::CCargo. 1160's callers in our link are those two destructors, which vtable evidence names
-#   and which cast no votes, so 1160 has a callers+content hand line in splat/symbol_addrs.txt (how-to step 9).
+#   election to a vector of md::CCargo. Five functions call 1160 in our link: those two destructors, the
+#   CConversorRegistroDigitalVoto<CConversorEleicoesVota> ones (11484, 11485) and ~CRdvVota (5734, unit 13); 5734, named
+#   by `call`, casts the vote that names 1160 in the generated part of splat/symbol_addrs.txt, so it has no hand line.
 # - CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s D2 and D0 (fns 11485, 11484), implicit, emitted with
 #   comum::CRdvVota's destructor (unit 13, fn 5734), whose member at +44 the class is, in
 #   app/comum/dados/asn/rdv/cconversorregistrodigitalvoto.h.
@@ -34,19 +35,22 @@
 #   against 250, and 225 against 225 at -O2, where the call merges with vector<long>::push_back); the object of
 #   emplace_back at -O2 and push_back at -O3 is the same, masked.
 # - 11352 and 11351, CConversorVotosCargo::DoConverte and DoDesconverte, and 11350, CConversorEleicoesVota::DoConverte,
-#   wait for uenux2 at -O3. Ecourna's IConversorASN Converte and Deconverte, which 11352 and 11351 hold for
+#   waited for uenux2 at -O3; at the tree's -O3 11352 matches, and 11351 and 11350 differ by the scores the private
+#   -O3 link below gave, which the plain link gives too (pnpm wasm score): what is left is not explained. What was
+#   measured at -O2 and -O3: ecourna's IConversorASN Converte and Deconverte, which 11352 and 11351 hold for
 #   CConversorCargoID, append ": " with std::string::operator+=(const char*), which clang leaves out of line in that cold
 #   path at both levels; at -O2 it inlines append into it, and binaryen folds the literal into our copy, which no target
 #   function holds (the rows are `unresolved` on that call); at -O3 operator+= is the append the target calls (fn 678).
 #   11350's inner loop pushes each converted VotosCargo into the SEQUENCE_OF: the target holds that
 #   vector<AbstractData*>::push_back inlined and the outer loop's called; -Rpass=inline gives both cost 260 against 225
 #   at -O2, and at -O3 the inner one inlined (threshold 787) and the outer not (250). In a private link with this unit's
-#   three converter objects compiled with UENUX2_EXTRA=-O3 and every other object as here: 11352 is 53 over 421 rows,
+#   three converter objects compiled with UENUX2_EXTRA=-O3 and every other object at -O2: 11352 is 53 over 421 rows,
 #   operand-only; 11351 94 over 1235 (89 operand-only, 2 inserted, 3 deleted); 11350 99 over 870 (96 operand-only, 3
 #   deleted).
 #
 # Pending (this unit's -pending.cpp traps them): 11364 and 11362, the base's default DoConverte of CConversorPleito and
-# CConversorProcessoEleitoral (fn 731, -O3: 96-uenux2-app-comum-asn.mk); 11349, CConversorEleicoesVota::DoDesconverte
+# CConversorProcessoEleitoral (fn 731: 96-uenux2-app-comum-asn.mk says what it waits for); 11349,
+# CConversorEleicoesVota::DoDesconverte
 # (records :69, :74, :94 and :104, not written); 11483 and 11482, CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s
 # DoConverte and DoDesconverte (not written; 11483 holds Converte<Eleicoes, ...> inlined, iconversorasn.h:56).
 #
@@ -68,7 +72,12 @@
 #   ModuloRegistroDigitalVoto::VotosCargo, std::pair<md::CVotosCargos::SCargoInfo, md::CVotos>); written as TDado,
 #   11363's row was `unresolved` on its record (`an address of ours: source_location not in the target`);
 # - 11352 builds each entity Voto into a local before set_votos() is read: in one expression the field's address is
-#   read first, 62 over 424 rows (3 inserted, 5 deleted), against 55 over 421 (2 deleted, the append above);
+#   read first, 62 over 424 rows (3 inserted, 5 deleted), against 55 over 421 (2 deleted, the append above), both at
+#   -O2; as written it matches at the tree's -O3;
+# - ModuloRegistroDigitalVoto::EleicaoVota::set_idEleicao takes const_reference (src/asn1/modules, a hand edit, the
+#   per-field form units 93 and 124 measured): the target's 11350 builds the field's temporary, ASN1::INTEGER's
+#   constructor (call 553 with the info 1556824), the vptr 1560492 and the value at +40, then stores the value
+#   (build/out/splat/pieces/asm/comum/11350.wat, offsets 0x8c to 0xae);
 # - read from the target's rows, not measured against another form: 11363 copies the name with a 4-byte alignment
 #   (i64.load align=2), a reference's, where its own copy into a local is 8-byte aligned, so the DTO's constructors are
 #   out of line in another TU; two constructors, since the branch with the second pleito copies the result of

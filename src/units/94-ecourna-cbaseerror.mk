@@ -39,10 +39,11 @@
 #   - CBaseError taking `std::string&&`: the constructor's bytes, but its callers' frames shrink by 16 B (api::truncate
 #     480 B against 496 B), which drifts matched 5457, 2759 and 5498. So the by-value parameter is evidence.
 #
-# Left as they are. 1074 (CBaseError<EApiAsnError, {1900, 1910}>) is written and `differs`: the target's copy is
-# uenux2's, on 710, and all nine target callers are unwritten, so ours comes from ecourna objects, on 1011. With one
-# uenux2-flags instantiation first in a clone of the objects (facts/workflow.md §W13) its body scores 2 over 8 rows,
-# both operands, the vptr and the call into the 710 body: it waits for its first uenux2 caller. 170 210 235 255 331 wait
+# 1074 (CBaseError<EApiAsnError, {1900, 1910}>) matches: the target's copy is uenux2's, on 710, and ours comes from
+# cconversorvotoscargo.cpp.o (unit 140), the first uenux2 object to instantiate it. While all nine target callers were
+# unwritten, ours came from ecourna objects, on 1011, and one uenux2-flags instantiation first in a clone of the objects
+# (facts/workflow.md §W13) scored 2 over 8 rows, both operands, the vptr and the call into the 710 body.
+# Left as they are. 170 210 235 255 331 wait
 # for the executable TU, src/uenux2/wasm/vota_web/vota_web_wasm.cpp, since ours are uenux2's copies (210: target
 # `i32.const 483`, ours `call 710`). 1143, CError's constructor, is 787 rows with 67 operand-only: unit 112's fragment says
 # what it waits for.

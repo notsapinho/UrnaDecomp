@@ -16,13 +16,15 @@
 # Files: the order here is the data's, ieventoslog.cpp's records (@1552880) before clogcomum.cpp's (@1552996). Chosen
 # paths: cloga.h, clogcomum.h, euecomumlogerror.h, cinformacaoeleicao.h, each beside the .cpp its records name.
 #
-# logaAlerta (1398) is loga with severity 2: `f433(i32.load[p0+4], 2, p1)`. Its target callers (6115, 10415, 10416,
-# 10420, 10512, 10642, 10676, 10774) call it on vota::CLogVota::GetInst()'s result (fn 184), so the class is IEventosLog
-# or CLogVota. Its band (uses 9) puts it between 1399 (app/comum/cpath.cpp's GetPathResult, record 189) and 1396
-# (app/comum/gravadores/iresultado.cpp's constructor, record 40); in the data, ieventoslog.cpp's records (@1552880) lie
-# between those two files' (@1552104, @1553632), and clogvota.cpp's (@1532800) do not, so it is IEventosLog's, in this
+# logaAlerta (1398) is loga with severity 2: `f433(i32.load[p0+4], 2, p1)`. Seven of its eight target callers (10415,
+# 10416, 10420, 10512, 10642, 10676, 10774) call it on vota::CLogVota::GetInst()'s result (fn 184), so the class is
+# IEventosLog or CLogVota; the eighth, 6115, a merged body reached from 2495 and 4556, calls it on its first parameter.
+# Its band (uses 9) puts it between 1399 (app/comum/cpath.cpp's GetPathResult, record 189) and 1396
+# (app/comum/gravadores/iresultado.cpp's constructor, record 40). In the data, the run between those two files' records
+# (@1552104, @1553632) holds records of 19 files, ieventoslog.cpp's (@1552880) among them, and clogvota.cpp's
+# (@1532800) lie outside it: that rules out clogvota.cpp only, and with the class above it is IEventosLog's, in this
 # file. No other function of the file is in its band, so its place in the file, above the constructor, is a choice.
-# One caller is in the link, unit 119's slot 28 (10774, written, not matching at -O2); the roots file stands in for
+# One caller is in the link, unit 119's slot 28 (10774, which matches at the tree's -O3); the roots file stands in for
 # the other seven. The census pairs it (`shape`), and step 9 matches it by that pair.
 #
 # Written, not matching, and what each waits for:

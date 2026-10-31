@@ -9,10 +9,11 @@ namespace api {
 // own (3400 to 3485, one per site) and the text of a condition: "Assert (", the condition as the source spells it, and
 // ")". "Assert (right >= l)" goes with 3400 in api::SRect::Left (fn 5488, record primitives.cpp 20:37). A record made
 // inside a macro expansion holds the invocation's closing parenthesis (docs/reference/facts/reading.md R19), so each of
-// the four SRect records at column 37 is a macro invocation that closes there; how the 36 columns before it are shared
-// out between the indent, the macro's name, the condition and the code is not evidence. The condition's text is: the
-// macro stringizes its argument. Chosen: the macro's name and its two parameters, the enumerators' names and this file's
-// path. The values are the codes the target throws.
+// the four SRect records at column 37 is a macro invocation that closes there. The conditions differ in length (10,
+// 11, 9 and 8 characters for Left, Top, Right and Bottom), so the four close at one column only if the codes differ the
+// other way, as the suffixes LEFT, TOP, RIGHT and BOTTOM do after one prefix: that is evidence for the suffixes. The
+// condition's text is: the macro stringizes its argument. Chosen: the macro's name and its two parameters, the
+// enumerators' prefix and this file's path. The values are the codes the target throws.
 enum EUeAssertError {
     // api::SRect's setters (records primitives.cpp 20, 26, 32 and 38): Left in fn 5488, Right in fn 5487, Top and Bottom
     // inlined into fn 5537

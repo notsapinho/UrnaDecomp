@@ -7,8 +7,8 @@
 # - the controller's 37 slots (10800 down to 10766, with 434 in slot 8), and the bodies binaryen merged some of them into:
 #   3887 (slots 31 to 33 in the target, 32 and 33 here: below), 3888 (slots 29, 34 and 36), 6017 (slots 19 and 27);
 # - CRegistroMesarioEncerrado's two exit-time destructors, 10765 (the pointer's) and 10764 (the mutex's).
-# Matched: 184, 3887, 3888, 6017, 10764 to 10770, 10772, 10773, 10775 to 10779, 10781 to 10785, 10788, 10791, 10793,
-# 10796 and 10798 to 10800. Slot 8 is the shared 434 (`return true`), matched before. Unit 02 matches 422 and 5451, which
+# Matched: 184, 3887, 3888, 6017, 10764 to 10779, 10781 to 10785, 10788, 10791, 10793, 10796 and 10798 to 10800.
+# Slot 8 is the shared 434 (`return true`), matched before. Unit 02 matches 422 and 5451, which
 # slot 3 reaches, and names CTickManager::AddTick (3644), which slot 2 (10800) calls, by a `callers+content` hand line.
 #
 # clogvota.cpp:

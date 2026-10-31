@@ -27,8 +27,8 @@
 #         to take a record's address from among its copies; no source change can close this.
 #   12438, 12593, 12708 the Draws: they call MaskText directly, which is a trap (the pending file says what it waits for).
 #   the constructors, in the headers: only dropped functions reach them, so nothing has measured them.
-# Not reconstructed: CInputMenuField's own members, among them 10893 (GetTypeName) and 5491: its vtable needs CMenuItem and
-#   a list of them at +140. CInputFieldMT.
+# CInputMenuField's own members, among them 10893 (GetTypeName) and 5491, are unit 84's, with CMenuItem and the list of
+#   them at +140. Not reconstructed: CInputFieldMT.
 # Evidence for the forms is in the headers; what follows is what the bytes do not decide, measured by compiling each variant
 # and comparing the functions with the object-local numbers masked (docs/how-to-decompile.md step 3).
 # - m_alterado as a std::atomic<bool>, the best reading: api/gui/iformfield.h. Measured: a plain bool gives `i32.eq 1` where 4118 has

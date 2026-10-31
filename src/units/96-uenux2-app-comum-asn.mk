@@ -36,13 +36,13 @@
 # (year, month, day) and CDate(ToByte(dia), ToByte(mes), ToWord(ano)).
 # - 1713 DesconverteDataHoraJE is written and `unresolved self-voted`: ModuloTiposEleitorais::DataJE::theInfo (1913204)
 #   and HoraJE::theInfo (1913248), the info words of the two temporaries it builds, are named by its own votes alone.
-#   The other target functions that load them are 3802 (DataJE's, not written: it waits for fn 706, which needs -O3) and
-#   the static initializer 14478 (both). Its body is 21 over 272 rows from the target, all operand-only (pnpm wasm
-#   score). The two substrings are named locals (the target destroys them at the end and each DataJE or HoraJE temporary
-#   right after its call): with the substrings as temporaries in the calls, 73 over 284 rows, 12 inserted, 18 deleted.
-#   DesconverteHoraJE (no record; name and line chosen) is api::CTime(hora), which clang inlines into 1713, where the
-#   target builds the CTime in a local of its own; the result is api::CDateTime's (CDate, CTime) constructor, inline in
-#   api/util/cdatetime.h (a choice). 7671 is its throw's code (EUE_COMUM_ASN_FORMATO_DATA_INVALIDO, a chosen name).
+#   The other target functions that load them are 3802 (DataJE's, not written; its callee 706 matches at the tree's
+#   -O3) and the static initializer 14478 (both). Its body is 21 over 272 rows from the target, all operand-only (pnpm
+#   wasm score). The two substrings are named locals (the target destroys them at the end and each DataJE or HoraJE
+#   temporary right after its call): with the substrings as temporaries in the calls, 73 over 284 rows, 12 inserted,
+#   18 deleted. DesconverteHoraJE (no record; name and line chosen) is api::CTime(hora), which clang inlines into 1713,
+#   where the target builds the CTime in a local of its own; the result is api::CDateTime's (CDate, CTime) constructor,
+#   inline in api/util/cdatetime.h (a choice). 7671 is its throw's code (EUE_COMUM_ASN_FORMATO_DATA_INVALIDO, a chosen name).
 #   ModuloTiposEleitorais::DataJE and HoraJE are new in src/asn1/modules/ModuloTiposEleitorais.{h,cxx}: RTTI gives the
 #   names and NumericString bases, 14478 fills their theInfo (8 to 8 and 6 to 6 characters, before DataHoraJE's), and
 #   ModuloProcessoEleitoral::Pleito's data field is a DataJE (CConversorPleito, fragment 140, reads it).

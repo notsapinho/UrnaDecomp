@@ -51,12 +51,12 @@
 # Measured: clang leaves std::vector<ASN1::AbstractData*>::push_back(&&) out of line in ConverteArquivos, cost 260
 # against a threshold of 225 (-O2) and 250 (-O3) (-Rpass-missed=inline), and the target's 10264 calls it (fn 543).
 #
-# Written and not matched: 11458, `no-candidate` (nothing names our body). At the tree's -O2 it scores 388 over 871
-# rows (130 deleted): clang leaves the same push_back out of line in DoConverte, cost 225 against 225, and the target
-# holds it inlined. With this unit's two objects compiled at -O3 in a copy of the plain link
-# (docs/reference/facts/codegen.md C5's way), 11458 scores 76 over 851, all operand rows, and `pnpm wasm splat-remap …
-# --against 11458 --no-kinds` prints `target 11458: IDENTICAL`; 10264, 10263 and 11457 score there as at -O2 (22/427,
-# 12/505, 49/926, operand rows). So 11458 waits for uenux2 at -O3.
+# 11458 matches at the tree's -O3. At -O2 it was `no-candidate` (nothing named our body) and scored 388 over 871 rows
+# (130 deleted): clang leaves the same push_back out of line in DoConverte, cost 225 against 225, and the target holds
+# it inlined. With this unit's two objects compiled at -O3 in a copy of the -O2 link
+# (docs/reference/facts/codegen.md C5's way), 11458 scored 76 over 851, all operand rows, and `pnpm wasm splat-remap …
+# --against 11458 --no-kinds` printed `target 11458: IDENTICAL`; 10264, 10263 and 11457 scored there as at -O2 (22/427,
+# 12/505, 49/926, operand rows).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 ENTIDADE_CONVERTERS_SRCS := src/app/comum/gravadores/asn/cconversorversoesarquivos.cpp \
