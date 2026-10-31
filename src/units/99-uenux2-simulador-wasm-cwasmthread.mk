@@ -10,7 +10,8 @@
 #   the only target functions that load 1832648 and 1832652, and 9655 and 9662 the only ones that load 1832656.
 # - Create (fn 9655, slot 2) is written and `unresolved`. It waits for two things: uenux2 at -O3, since the tree's -O2
 #   inlines its std::string appends, which stay calls in the target (249 over 458 rows, 160 inserted), and a name of
-#   s_proximoId (1832660): only 9655 loads it, 9655 is named by `vtable`, and that kind casts no data vote. In a scratch
+#   s_proximoId (1832660): only 9655 loads it, so that name needs a second user even once 9655's `vtable` pair is the same
+#   instructions and votes (docs/reference/splat.md "No circular evidence"). In a scratch
 #   link with the simulator's three objects at -O3 it scores 79 over 313 rows, 46 of them operand-only, most of the rest
 #   other locals in the vector's growth. Its throw is on its record's line, 31:15. `emplace_back` is measured, not free:
 #   `push_back`, whose body is target fn 543, leaves a call and a frame slot for the pointer at both levels (172 over

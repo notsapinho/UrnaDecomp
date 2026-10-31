@@ -399,8 +399,8 @@ wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk '/ func\[[0-9]+
 # 18     (at 0b5f410, where no record lies on it; one more makes the 19 of 04b1599)
 ```
 
-A seventh can cost matches: **a stronger pair demotes a name.** An anchor casts votes only while nothing else names its
-function, and casts no data votes; a pair casts data votes. Matching 181 made 9075, 9086, 9110 and 9114 census pairs, and
+A seventh can cost matches: **a stronger pair demotes a name.** An anchor casts call and table votes only while nothing else
+names its function, and data votes for `.bss` objects alone; a pair casts them all. Matching 181 made 9075, 9086, 9110 and 9114 census pairs, and
 `splat-match` then stopped on `matched.txt only: [8979, 9074, 9083, 9108, 9111]`, with none of those bodies changed. 9108
 and 9113 went from `srcloc-anchor` to `table`: `theInfo` got `vote:1` by its only reader, which is self-voted, and 9113
 stopped casting the votes that named `CHOICE::isValid` (1068). `git diff splat/symbol_addrs.txt` shows each change of

@@ -5,7 +5,7 @@
 # (11540, 11467, 10398, 10397, 10396, thunks of 2297), and the three DAOs' Clone with theirs (11541, 11468, 10399, thunks
 # of 3894), and CBaseError<api::EUePersistenciaError>'s and CBaseError<comum::EUeComumJustificativaError>'s constructors
 # (1715, 2260), thunks of fn 710, with unit 94's constructor. 1715's name is a hand edit, evidence:rtti-vptr (the only
-# target function holding that vptr); 2297 calls it and has no other way to name it, since an anchor's vote casts none.
+# target function holding that vptr); 2297 calls it, and the line is older than the votes of what an anchor's vote names.
 # All three DAOs must be in the link: binaryen forms 2297 and 3894 from those members, and unit 66's file holds
 # the third of each. The sources are the files the records name: md/eleitor/{celeitordinamico,cbiometriaeleitor,
 # celeitordecorator}.cpp, dados/dao/celeitordinamicodao.cpp, comparecimentomesario/dao/ccomparecimentomesariodao.cpp.

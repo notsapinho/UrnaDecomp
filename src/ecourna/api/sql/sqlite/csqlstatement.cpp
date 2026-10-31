@@ -123,12 +123,12 @@ void CSqlStatement::Reset()
     }
 }
 
-// (original lines 137-138: content not recovered)
-#line 139
+
 void CSqlStatement::Close()
 {
     try {
-        if (sqlite3_finalize(m_stmt) != SQLITE_OK) {
+        const int resultado = sqlite3_finalize(m_stmt);
+        if (resultado != SQLITE_OK) {
             throw CSqlError(ESE_FECHAR_COMANDO, ObterMensagemErro(m_db));
         }
 

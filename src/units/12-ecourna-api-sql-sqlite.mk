@@ -1,4 +1,9 @@
 # ecourna::api::sql::sqlite DAO (csqlconnection / csqlresultset / csqlstatement) + the shared sqlite error helper.
+# CSqlStatement::Close (fn 9429) and s_mutex's destructor (fn 9431) match. Close keeps sqlite3_finalize's result in a local
+# as Reset does. Evidence: with the call in the `if`, wherever the two statements after it sit, clang puts the success
+# path after the handler, with one __cxa_free_exception; with the local it comes before, with two, as in 9429 (measured on
+# the object). `const int`, `int` and `auto` give the same rows, and `const int` is chosen, from Reset. s_mutex's name is a
+# vote of 9429, a `srcloc-anchor`, and 9431 holds it as the second user.
 # (sqlite3.h and boost come from the include dirs src/mk/ecourna-flags.mk adds)
 #
 # What matches (target fns): CSqlConnection's constructor 3515, D2 5167, D0 9456, BeginTransaction 9455,

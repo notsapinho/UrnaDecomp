@@ -173,7 +173,7 @@ The generated headers are `src/asn1/modules/<Modulo>.h` + `.cxx`.
 ## A5. Names the census cannot give the runtime
 
 A census pair fails while a leaf differs (the runtime's rows pair at depth 2 only when every callee does), and a function
-named by `vtable` casts no votes (`docs/reference/splat.md` §2). So a runtime visitor and its callee wait for each other:
+named by `vtable` casts no call or table votes (`docs/reference/splat.md` §2). So a runtime visitor and its callee wait for each other:
 8866 is `unresolved` on `decodeCommon`, and `decodeCommon` has no name. `splat/symbol_addrs.txt` holds hand edits for them,
 below its marker. Each rests on evidence the match does not supply, and none of the bodies below is matched by naming it
 alone: a name says which function sits there, and the scan still compares the bytes.
@@ -215,8 +215,8 @@ More of the same kind, from the same tally of aligned calls:
 - `callers+content`: 220, 2247, 2249, 2706, 5306, 1497, 5076, 1067 and 1068. A probe object at the
   executable TU's `-Oz -fexceptions`, first on the link line, matches 2247 and 2249, so those two are that flag set's. 220
   stays `differs` at the locals there, so for it the flag set is a lead. Our bodies differ, but for 1497's, which matches, and
-  their callers need only the name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair. An anchor casts votes
-  only while nothing else names it (`anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`).
+  their callers need only the name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair. An anchor casts call and
+  table votes only while nothing else names it (`anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`).
 - 8041, `use_facet<num_put>`: one of twelve thunks of 453. Its one slot is the `invoke` operand at +0xa2 of 446 and 541,
   whose rows equal `__put_num_integer_promote` but for table slots, and the `id` lies 16 B above `num_get`'s (8046) on both
   sides. With it 446 and 541 match, as they could not by name alone.

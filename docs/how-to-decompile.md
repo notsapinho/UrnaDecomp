@@ -1061,7 +1061,7 @@ It prints `<index> <verdict before> <verdict now>` for each row that moved; on a
 `splat/scan.tsv has N match rows but splat/matched.txt has M matches (… matched.txt only: [i, j])` from `status.py` is a
 lost match, not a stale scan, though its advice reads so: running `splat-match` again changes nothing. The row left
 `match` while its line stayed, and `status.py` stops before `stubs.py`. A body need not have changed. Better evidence can
-do it: a new census pair takes a function from `srcloc-anchor` to `table`, an anchor casts no data votes and a pair does,
+do it: a new census pair takes a function from `srcloc-anchor` to `table`, an anchor votes for `.bss` data alone and a pair for all of it,
 so a data name becomes `vote:1` by its only reader, which is `self-voted`, and the function stops casting the anchor votes
 that named its callee (matching 181 took 8979, 9074, 9083, 9108 and 9111 out so). `git diff splat/symbol_addrs.txt` shows
 each evidence change. Fix it with the name's own evidence, not by withdrawing a line. A row can also leave because an

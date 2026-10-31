@@ -200,14 +200,6 @@
 // f5153 · 82 B · unmatched · placement: link order · name unknown
 // void f5153(i32) { ... }
 
-// link-order cluster 728 · uses=2 · neighbours' file ecourna/api/sql/sqlite/csqlstatement.cpp
-
-// f5158 · 291 B · unmatched · placement: link order · name unknown
-// void f5158(i32) { ... }
-
-// f5157 · 288 B · unmatched · placement: link order · name unknown
-// ? f5157(i32, i32) { ... }
-
 // link-order cluster 732 · uses=2 · neighbours' file ecourna/api/security/cepesc/ccepesccipher.cpp
 
 // f5171 · 221 B · unmatched · placement: link order · name unknown
@@ -800,11 +792,6 @@
 
 // f1710 · 18 B · unmatched · placement: link order · name unknown
 // ? f1710(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1226 · uses=8
-
-// f1522 · 32 B · unmatched · placement: link order · name unknown
-// void f1522(i32, i32) { ... }
 
 // link-order cluster 1230 · uses=8 · neighbours' file uenux2/src/app/vota/operador/leidentidade/cpedeidentidade.cpp
 

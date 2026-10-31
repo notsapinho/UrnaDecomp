@@ -229,6 +229,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | `98-uenux2-app-comum-dados` | `comum` throwers over `EUeComumDadosError` (`app/comum/dados/euecomumdadoserror.h`): `comum::md::CTradutorFrase::RecuperaLabel` (target fn 5658), with the global destructor of its map (11341) and that map's `__tree::destroy` (1706), `comum::CIntegridadeReferencial::Lanca` (2263), `comum::CEleitorDetalhe::ConfereDadosDinamicos` (3770), `comum::asn::CConversorTipoIdentificadorEleitor::DoConverte` and `DoDesconverte` (11357, 11356, with unit 17's 11366 the callers of binaryen's body 6030, which matches too), `comum::asn::CConversorImpedido::DesconverteTipoImpedimento` (5699), the class headers and `md::ETipoImpedimento`; `ModuloImpedidos::TipoImpedimento` moved out of `ModuloHashes`, where it had a synthesized name; `CConversorImpedido::DoDesconverte` (11410) waits for fns 566, 5661 and 5662, and `CHV`'s member 5745 for `md/chorarioveraomunicipio.{h,cpp}` |
 | `99-uenux2-simulador-wasm-cwasmthread` | `simulador::CWasmThread` (`mock/app/simulador/wasm/`): `Wait` and `Yield` (target fns 9652, 9651, names read from what they log) and the global destructor of its static vector (9662), the class header and the three other slots of `api::IThreadImpl`; `Create` (9655) written and unresolved, needing `-O3` and a name of the `.bss` id; `wasmjs.cpp`, in a TU of its own by choice: `EmitEvent`, `PushKey` and `ConsoleError` (3533, 9649, 9646, chosen names), the wrappers of three EM_JS functions the executable TU reaches by table slot; the roots file keeps the vtable and the three addresses |
 | `100-uenux2-cpolysingleton` | `api::CPolySingleton<T>::instance`, 16 of its 32 plain instantiations, from the roots object, over `api::CPolySingletonList`'s `has<T>` and `instance<T>` (`api/pattern/cpolysingletonlist.h`), their lock (`cmutexcompartilhado.h`), `api::EUePatternError` and class heads for the `T`s that had none; `cpolysingletonlist.cpp` holds the pointer the default arguments call through; hand edits in `splat/symbol_addrs.txt` name that pointer and each `has<T>`, and the fragment says what they rest on. 1714 and 2079 wait for the key functions of units 78's and 82's traps to go, 5443 and 1822 for their class heads, and `has<T>` for the executable TU |
+| `106-ecourna-ctitulorelatorio` | `ecourna::app::dados::CTituloRelatorio`'s constructor, out of line, which target fn 9145 holds inlined by binaryen |
 
 ## Companion files
 
@@ -443,8 +444,9 @@ What the vtable needs, slot by slot:
   header its source, with the message and the typeid name its call passes (unit 47's 11360). It stays a specialization
   while it also waits for a flag: the default written at the tree's level gives a whole body where the target has a
   thunk, gains no match, and reaches every converter of the template (unit 96's fragment has the measurement). The
-  shared body's own callees need names from elsewhere, since a function an anchor's vote names casts no vote
-  (`docs/reference/splat.md` §2): a `CBaseError` constructor thunk has its name from `rtti-vptr`, the hand edits for 406
+  shared body's own callees need names from elsewhere, since a function an anchor's vote names votes in turn only when
+  its body is the same opcodes (`docs/reference/splat.md` §2): a `CBaseError` constructor thunk has its name from
+  `rtti-vptr`, the hand edits for 406
   and 1715. The other way round, a
   member whose source gives the target's body can become a merge thunk in our link alone, when binaryen merges it with
   bodies of like shape that the target keeps apart: `splat-remap` then reports `UNRESOLVED` on its one `call`, into a
