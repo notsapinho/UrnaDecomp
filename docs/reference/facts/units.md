@@ -212,10 +212,10 @@ traps of one wasm type into one body, which then sits in the slots of several of
 so no name is given and the member stays `no-candidate`.
 
 ```sh
-awk -F'\t' '$1==9130 || $1==9133 || $1==11442 {print $1, $5, $11}' splat/scan.tsv
-# 9130 no-candidate -
-# 9133 no-candidate -
+awk -F'\t' '$1==11442 || $1==11469 || $1==11470 {print $1, $5, $11}' splat/scan.tsv
 # 11442 differs app/36-uenux2-cvisitantefoto-pending.o
+# 11469 no-candidate -
+# 11470 no-candidate -
 /usr/bin/grep -cE 'func:11442;.*evidence:vtable' splat/symbol_addrs.txt
 # 1
 ```

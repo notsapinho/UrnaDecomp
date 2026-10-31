@@ -29,7 +29,7 @@ BERDecoderPartial::~BERDecoderPartial()
 {
 }
 
-void BERDecoderPartial::notify(int index, const ASN1_STD string& name, AbstractData* data, unsigned position, unsigned length, bool mayFree)
+ASN1_STD string BERDecoderPartial::makePath(const ASN1_STD string& name)
 {
   ASN1_STD string path;
   for (unsigned i = 0; i < m_path.size(); ++i) {
@@ -42,20 +42,27 @@ void BERDecoderPartial::notify(int index, const ASN1_STD string& name, AbstractD
   else
     path += name;
 
+  return path;
+}
+
+BERDecoderPartial::Visitantes::iterator BERDecoderPartial::findVisitor(const ASN1_STD string& path)
+{
   Visitantes::iterator it = m_visitors.begin();
-  while (it != m_visitors.end()) {
-    if (it->getName() == path)
-      break;
+  while (it != m_visitors.end() && ASN1_STD string(it->first) != path)
     ++it;
-  }
+  return it;
+}
+
+void BERDecoderPartial::notify(int index, const ASN1_STD string& name, AbstractData* data, unsigned position, unsigned length, bool mayFree)
+{
+  ASN1_STD string path = makePath(name);
+  Visitantes::iterator it = findVisitor(path);
 
   if (it != m_visitors.end()) {
-    ASN1_STD shared_ptr<IAbstractVisitor> visitor = it->getVisitor();
+    ASN1_STD shared_ptr<IAbstractVisitor> visitor = it->second;
     bool consumed = visitor->visit(index, path, data, position, length) == 1;
-    if (mayFree && consumed) {
-      DataFree dataFree;
-      data->accept(dataFree);
-    }
+    if (mayFree && consumed)
+      freeData(*data);
   }
 }
 

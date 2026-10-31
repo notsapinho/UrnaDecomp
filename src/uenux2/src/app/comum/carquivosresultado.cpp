@@ -10,7 +10,23 @@
 
 namespace comum {
 
-// (original lines 13-53: content not recovered)
+CArquivosResultado& CArquivosResultado::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_instancia) {
+        s_instancia.reset(new CArquivosResultado);
+    }
+    return *s_instancia;
+}
+
+std::unique_ptr<CArquivosResultado> CArquivosResultado::s_instancia;
+std::mutex CArquivosResultado::s_mutex;
+
+CArquivosResultado::CArquivosResultado() = default;
+
+CArquivosResultado::~CArquivosResultado() = default;
+
+// (original lines 29-53: content not recovered)
 #line 54
 const std::string CArquivosResultado::operator[](EExtensaoArquivoResultado extensao) const
 {

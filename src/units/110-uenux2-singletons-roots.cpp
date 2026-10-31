@@ -5,7 +5,7 @@
 //   DestroiTodos        each class's destructor, beside the exit destructor in the link: fn 2787 for 5598, fn 7787 for
 //                       5671, 5730, 5734, 5773, 5792, 6548 and ~CCargos 5805, and each goes when that caller lands;
 //                       ~CProcessoEleitoral 2830: 2787, 5598, 7787;
-//                       ~CParametrosUrna 2267: 5792, 7787, 9171;
+//                       ~CParametrosUrna 2267: 7787, beside 5792's and 9171's calls in the link;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
 //                       5604, 7377, 11209, 12098, 12110
 //   DestroiDecoradores  ~CEleitorDecorator 379: 15 callers, some read its result, so this stand-in reads it (R18)

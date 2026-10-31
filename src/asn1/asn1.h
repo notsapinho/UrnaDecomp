@@ -225,6 +225,7 @@ namespace std {
 
 namespace ASN1 {
 	ASN1_API unsigned CountBits(UINT_TYPE range);
+	ASN1_API int lexicographic_compare_bytes(const char* first1, size_t size1, const char* first2, size_t size2);
 } 
 
 #include "AssocVector.h"
@@ -431,7 +432,7 @@ namespace ASN1 {
     virtual bool do_accept(Visitor&) = 0;
     virtual bool do_accept(ConstVisitor&) const =0;
   public:
-    virtual ASN1_STD string getTypeName() const { return "AbstractData"; }
+    virtual ASN1_STD string getTypeName() const;
   private:
 
   protected:
@@ -617,7 +618,7 @@ namespace ASN1 {
     INTEGER& operator = (int_type val) { setValue(val); return *this;}
     int_type getValue() const { return static_cast<int_type>(value);}
 
-    bool isValid() const { return isStrictlyValid() || getConstraintType() == ExtendableConstraint;  }
+    bool isValid() const;
     bool isStrictlyValid() const;
 
     INTEGER* clone() const { return static_cast<INTEGER*>(do_clone()); }
@@ -1706,9 +1707,9 @@ namespace ASN1 {
     bool utc;
   };
 
-  class ASN1_API GeneralizedTime : public UTCTime
+  // AbstractData, not upstream's UTCTime: the typeinfo at 1149228 names AbstractData's as its base.
+  class ASN1_API GeneralizedTime : public AbstractData
   {
-  public:
   protected:
     GeneralizedTime(const void* info);
   public:
@@ -1735,6 +1736,24 @@ namespace ASN1 {
     time_t get_time_t() const;
     void set_time_t(time_t gmt);
 
+    int get_year() const { return year; }
+    int get_month() const { return month; }
+    int get_day() const { return day; }
+    int get_hour() const { return hour; }
+    int get_minute() const { return minute;}
+    int get_second() const { return second; }
+    int get_mindiff() const { return mindiff; }
+    bool get_utc() const { return utc;}
+
+    void set_year(int yr) { year = yr; }
+    void set_month(int mon) { month = mon; }
+    void set_day(int dy) { day = dy; }
+    void set_hour(int hr) { hour = hr; }
+    void set_minute(int min) { minute = min;}
+    void set_second(int sec) { second = sec; }
+    void set_mindiff(int mdiff) { utc = false; mindiff = mdiff; }
+    void set_utc(bool tc =true) { if(tc) mindiff = 0; utc = tc; }
+
     int get_millisec() const { return millisec; }
     void set_millisec(int milsec) { millisec = milsec ;}
 
@@ -1755,6 +1774,10 @@ namespace ASN1 {
     virtual bool do_accept(Visitor&);
     virtual bool do_accept(ConstVisitor&) const;
 
+    bool checkFields() const;
+
+    int year, month, day, hour, minute, second, mindiff;
+    bool utc;
     int millisec;
     bool valid;     // the name is chosen: 5072 and 8928 read this byte, 8951 copies it, 8956 sets it, 2185 computes it
   }; // end class ASN1::GeneralizedTime
@@ -2071,11 +2094,7 @@ namespace ASN1 {
       const void* elementInfo;
       const char* typeName;
     };
-    virtual ASN1_STD string getTypeName() const
-    {
-      const char* name = static_cast<const InfoType*>(info_)->typeName;
-      return name ? ASN1_STD string(name) : AbstractData::getTypeName();
-    }
+    virtual ASN1_STD string getTypeName() const;
 
   protected:
     void insert(iterator position, Container::size_type n, const AbstractData& x);
@@ -3227,20 +3246,15 @@ namespace ASN1 {
     virtual void resize(unsigned size) = 0;
   };
 
+  ASN1_API void freeData(AbstractData& data);
+
   /** BER decoder over an ISeeder that reports every decoded node to the registered visitors and logs errors. */
   class ASN1_API BERDecoderPartial : public Visitor
   {
   public:
-    class Visitante
-    {
-    public:
-      Visitante(const ASN1_STD string& name, const ASN1_STD shared_ptr<IAbstractVisitor>& visitor) : m_name(name), m_visitor(visitor) {}
-      ASN1_STD string getName() const { return m_name; }
-      ASN1_STD shared_ptr<IAbstractVisitor> getVisitor() const { return m_visitor; }
-    private:
-      ASN1_STD string m_name;
-      ASN1_STD shared_ptr<IAbstractVisitor> m_visitor;
-    };
+    // The element is a type libc++ marks trivially relocatable: 8846 and 8847 relocate the vector with memory.copy, and a
+    // class of these two members does not. std::tuple gives the same bytes; pair is chosen, as are the typedefs' names.
+    typedef ASN1_STD pair<ASN1_STD string, ASN1_STD shared_ptr<IAbstractVisitor> > Visitante;
     typedef ASN1_STD vector<Visitante> Visitantes;
 
     BERDecoderPartial(ASN1_STD shared_ptr<ISeeder> seeder, CoderEnv* coder = 0);
@@ -3287,6 +3301,8 @@ namespace ASN1 {
     virtual bool do_visit(UTCTime& value);
     virtual bool do_visit(GeneralizedTime& value);
 
+    ASN1_STD string makePath(const ASN1_STD string& name);
+    Visitantes::iterator findVisitor(const ASN1_STD string& path);
     void notify(int index, const ASN1_STD string& name, AbstractData* data, unsigned position, unsigned length, bool mayFree);
     template <class TIME> bool decodeTime(TIME& value, unsigned& len);
 
@@ -3704,15 +3720,16 @@ namespace ASN1 {
     Module* find(const char* moduleName)
     {
       Modules::iterator i = modules.find(moduleName);
-      return i != modules.end() ? i->second : 0;
+      return i != modules.end() ? i->second.get() : 0;
     }
-    void insert(Module* module) { assert(module!=0); modules[module->name()] = module;}
+    void insert(Module* module) { assert(module!=0); modules[module->name()].reset(module);}
     void erase(Module* module) { assert(module!=0); modules.erase(module->name()); }
     void erase(const char* moduleName) { modules.erase(moduleName); }
 
     enum EncodingRules {
       avn,
       ber,
+      ber_partial,    // the name is chosen: 679's br_table builds BERDecoderPartial for 2 and PERDecoder for 3
       per_Basic_Aligned
     };
 
@@ -3738,6 +3755,7 @@ namespace ASN1 {
     }
 
     bool decode(const char* first, size_t size, AbstractData& val, bool defered);
+    bool decode(const ASN1_STD shared_ptr<ISeeder>& seeder, AbstractData& val);
     bool decode(const unsigned char* first, size_t size, AbstractData& val, bool defered)
     {
       return decode(reinterpret_cast<const char*>(first), size, val, defered);
@@ -3772,9 +3790,12 @@ namespace ASN1 {
       { return strcmp(lhs, rhs) < 0 ; }
     };
 
-    typedef AssocVector<const char*, Module*, StringLiteralCmp> Modules;
+    typedef AssocVector<const char*, ASN1_STD shared_ptr<Module>, StringLiteralCmp> Modules;
 
     Modules modules;
+    // 518 destroys both, and 5060 reads the one and writes the other. The names are chosen.
+    BERDecoderPartial::Visitantes visitors;
+    ASN1_STD string log;
 
     template <class OutputIterator>
     bool encodePER(const AbstractData& val, OutputIterator begin)

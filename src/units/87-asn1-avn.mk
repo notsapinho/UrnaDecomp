@@ -19,11 +19,8 @@
 #   at -O3 -fexceptions, ecourna's level, and 3559 at -Oz -fexceptions, the executable TU's (facts/levels.md V1), with
 #   8873 and 8903, the D0s, still from the -Os objects. So they wait for the TUs that hold 679 and 9770. That those are
 #   CoderEnv's decode and encode templates is a reading of their calls.
-# - GeneralizedTime::set (2185, 1698 B, not listed) is not written, so the bool at +44 keeps the constructors' true.
 # - 1497 is libc++'s substring constructor, named for its caller 2184. It matches, the sysroot's body, since unit 100's
 #   instances are other callers of 403: without them binaryen inlines 403 here, 193 B against the target's 71.
-# - 8956 and 8951, GeneralizedTime's create and do_clone, allocate the target's 48 B and store their members in another
-#   order than the target's. 8749 stays unresolved on GeneralizedTime::theInfo, which reads as waiting for create's name.
 #
 # Not this class: 10840 and 10822 are api::AudioCollector's destructors, not OBJECT_IDENTIFIER's (facts/splat.md S4).
 #

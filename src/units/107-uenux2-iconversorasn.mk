@@ -6,7 +6,7 @@
 # instances of another shape, 5828 and 5684; std::ostringstream::str() const& (230), which clang leaves out of line and
 # which two instances form. Converters: CConversorComplementoMunicipio (11383, 11382), CConversorAbrangencia (11462,
 # 11461), CConversorDadoLocal's DoDesconverte (11404), CConversorIdentificacaoAgregada (11456, 11455), CConversorMunicipio's
-# DoConverte (11379), CConversorSeguranca's DoDesconverte (11412). Data classes: the constructors of CAbrangencia (3739),
+# DoConverte (11379), CConversorSeguranca's DoDesconverte and DoConverte (11412, 11413). Data classes: the constructors of CAbrangencia (3739),
 # CSeguranca (3823), CIdentificacaoAgregada (5672), CDadoLocal (5632), and fn 591, the thunk of
 # CBaseError<comum::EUeComumMdError, {8900, 8950}>'s constructor, which 3739 and 3823 name. CConversorDadoCarga (11402)
 # is in unit 96's list, CConversorPartido (11459) in unit 45's.
@@ -70,9 +70,9 @@
 #   slot 6416 is fn 9406, the in-place CStringUtils::Trim), with 1879, the copying ToLower, and 5156 over 3942. Unit 112
 #   declares that overload in api/util/cstringutils.hpp; the constructor here copies the string, the one difference. 11378,
 #   its caller, is 3 operand rows from the target and stays `unresolved` on that one call: an anchor needs the same body.
-# - 11413, CConversorSeguranca::DoConverte, `unresolved` on fn 1158, std::vector<char>::__assign_with_size with
-#   __wrap_iter<const char*>. Ours merges with roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the
-#   target's 1158 (the compare's operands and the locals). The body is operand-only (7 over 77).
+# - 1158, std::vector<char>::__assign_with_size with __wrap_iter<const char*>, `differs`. Ours merges with
+#   roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the target's (the compare's operands and the
+#   locals). 11413 matches over the name, which unit 105's 9060 and 9062 use too.
 # - 11401: unit 96's fragment.
 # Not written:
 # - 11385 and 11384, CConversorHorarioVerao: this unit's -pending.cpp.

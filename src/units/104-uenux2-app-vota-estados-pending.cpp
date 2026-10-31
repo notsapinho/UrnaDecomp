@@ -34,8 +34,7 @@
 
 namespace vota {
 
-// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 184, 185, 233, 261, 407, 491, 2376, 3229, 6129,
-// 6557.
+// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 184, 185, 261, 407, 491, 2376, 3229, 6129, 6557.
 void CAguardaMensagem::ProcessKey(uebyte)
 {
     __builtin_trap();
@@ -49,10 +48,10 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 183, 185, 187, 202, 203, 233, 261, 273, 283, 291, 326, 332, 378, 401, 436, 457, 463, 479, 491, 502,
-// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 948, 1164, 1221, 1249, 1269, 1274, 1396, 1405, 1485, 1822,
-// 1933, 1935, 1960, 2274, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782, 3784, 3788, 3796, 3825, 3826, 3828, 3829,
-// 3834, 5094, 5462, 5480, 5545, 5824, 5856, 5866, 5867, 5869, 5870, 5876, 5878, 5887, 5888, 5889, 5891, 5899, 5905,
+// with no name: 183, 185, 187, 202, 203, 261, 273, 283, 291, 326, 332, 378, 401, 436, 457, 463, 479, 491, 502,
+// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1221, 1249, 1269, 1274, 1396, 1405, 1485, 1822,
+// 1933, 1935, 1960, 2274, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782, 3784, 3788, 3796, 3825, 3826, 3829,
+// 3834, 5462, 5480, 5545, 5824, 5856, 5866, 5867, 5869, 5870, 5876, 5887, 5888, 5889, 5891, 5899, 5905,
 // 6174.
 void CGravaResultado::StartState()
 {
@@ -66,24 +65,23 @@ void CEmitirMaisBU::StartState()
     __builtin_trap();
 }
 
-// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 184, 185, 233,
-// 261, 407, 455, 491, 903, 1127, 2888, 2890, 3701, 4556, 4557, 4563, 4582, 5987.
+// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 184, 185, 261,
+// 407, 455, 491, 903, 1127, 2888, 2890, 3701, 4556, 4557, 4563, 4582, 5987.
 void CEmitirMaisBU::ProcessInput()
 {
     __builtin_trap();
 }
 
 // CImprimindoBim::StartState: fn 12071 (1074 B), records cimprimindobim.cpp:50, cimprimindobim.cpp:51,
-// cimprimindobim.cpp:66, callees with no name: 183, 184, 185, 187, 261, 401, 436, 463, 603, 1127, 1487, 1488, 2286,
-// 2291.
+// cimprimindobim.cpp:66, callees with no name: 183, 184, 185, 187, 261, 401, 436, 463, 1127, 1487, 1488, 2291.
 void CImprimindoBim::StartState()
 {
     __builtin_trap();
 }
 
 // CImprimirBUOutrasObrigatorias::StartState: fn 12065 (1790 B), records cimprimirbuoutrasobrigatorias.cpp:50,
-// cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 184, 185, 187,
-// 202, 203, 261, 407, 463, 491, 502, 603, 886, 1127, 1191, 1880, 1950, 2244, 2291, 2890, 3701, 3847, 5918.
+// cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 184, 185, 187, 202,
+// 203, 261, 407, 463, 491, 502, 886, 1127, 1191, 1880, 2244, 2291, 2890, 3701, 5918.
 void CImprimirBUOutrasObrigatorias::StartState()
 {
     __builtin_trap();
@@ -141,7 +139,7 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 }
 
 // CMenuVisualizarCandidatos::StartState: fn 11881 (2561 B), records cmenuvisualizarcandidatos.cpp:55, callees with no
-// name: 184, 202, 203, 233, 455, 502, 576, 653, 1279, 1693, 1763, 3675, 3861.
+// name: 184, 202, 203, 455, 502, 576, 653, 1279, 1693, 1763, 3675, 3861.
 void CMenuVisualizarCandidatos::StartState()
 {
     __builtin_trap();

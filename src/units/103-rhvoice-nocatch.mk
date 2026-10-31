@@ -22,9 +22,8 @@
 # - The roots' stand-in names and bodies.
 #
 # What waits, and for what:
-# - 2183 and 3552 (BERDecoderPartial's D2, vector<Visitante>::__destroy_vector): 3552 has 6 rows fewer than ours, and 8824,
-#   8846, 8847 and 2650 hold the rest of that vector. 2650 calls 388 where ours calls 424: two ~shared_ptr bodies in the
-#   target, one in our link, and 388 keeps a result no caller of ours reads.
+# - 2650 calls 388 where ours calls 424: two ~shared_ptr bodies in the target, one in our link, and 388 keeps a result no
+#   caller of ours reads. 3552 is unit 115's.
 # - 3473 (decodeCommon): calls 543, a body none of ours equals. document.cpp.o, the object that defines
 #   vector<unsigned>::push_back(&&), ahead of the runtime moves the row to `call 938` and matches nothing.
 # - 9682: the target holds word_editor::delete_char inline, 53 rows ours has behind a call. Ours keeps that in-class member

@@ -12,16 +12,11 @@ extern const char midias_vt_dadosgeracao[] __asm__("_ZTVN7ecourna3app5dados3asn2
 extern const char midias_vt_gerador[] __asm__("_ZTVN7ecourna3app5dados3asn35CConversorIdentificadorGeradorMidiaE");
 void midias_bytes_hex(int, int) __asm__("_ZN7ecourna3api4util12CStringUtils16BytesToHexStringERKNSt3__26vectorIhNS3_9allocatorIhEEEE");
 int midias_gerador_dtor(int) __asm__("_ZN7ecourna3app5dados26CIdentificadorGeradorMidiaD2Ev");
-int midias_fase_deconverte(int, int) __asm__("_ZNK7ecourna3api3asn13IConversorASNIN21ModuloTiposEleitorais4FaseENS_3app5dados7CFaseIDEE10DeconverteERKS4_");
 }
 
 namespace {
 
 const void* volatile midias_sink;
-
-// IConversorASN<Fase, CFaseID>::Deconverte (fn 5103) has a second direct caller in the target (fn 9052, a
-// resultadournacadastro converter); with one caller binaryen would inline it into fn 9179.
-__attribute__((noinline)) int UsaFaseDeconverte(int conversor, int entidade) { return midias_fase_deconverte(conversor + 4, entidade) * 3; }
 
 // CStringUtils::BytesToHexString (fn 1243) has eight callers in the target; CSerialMidia::ToString (fn 9257) is the
 // only one linked so far, and binaryen would inline it there.
@@ -40,7 +35,6 @@ struct SMidiasRoots {
         midias_sink = midias_vt_autenticacao;
         midias_sink = midias_vt_dadosgeracao;
         midias_sink = midias_vt_gerador;
-        midias_sink = reinterpret_cast<const void*>(&UsaFaseDeconverte);
         midias_sink = reinterpret_cast<const void*>(&UsaBytesToHex);
         midias_sink = reinterpret_cast<const void*>(&UsaGeradorDtor);
     }

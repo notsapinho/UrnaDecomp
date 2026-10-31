@@ -23,7 +23,7 @@ ModuloInformacaoMidia::InformacaoMidia CConversorInformacaoMidia::DoConverte(con
     entidade.set_dadosGeracaoMidia() = conversorDadosGeracaoMidia.Converte(dado.GetDadosGeracaoMidia());
     if (dado.GetTipoMidia() == TDado::TM_MR) {
         auto aplicativos = dado.GetAplicativos();
-        entidade.set_aplicativos(ConverteAplicativos(aplicativos, conversorAplicativo));
+        entidade.set_aplicativos(ConverteSequencia(aplicativos, conversorAplicativo));
     } else {
         entidade.omit_aplicativos();
     }
@@ -69,7 +69,7 @@ ModuloInformacaoMidia::TipoMidia CConversorInformacaoMidia::ConverteTipoMidia(TD
     throw CAsnMidiasError(EAME_TIPO_MIDIA_INVALIDO, "Tipo de mídia inválido.");
 }
 
-CInformacaoMidia::ETipoMidia CConversorInformacaoMidia::DeconverteTipoMidia(ModuloInformacaoMidia::TipoMidia tipoMidia) const
+CConversorInformacaoMidia::TDado::ETipoMidia CConversorInformacaoMidia::DeconverteTipoMidia(ModuloInformacaoMidia::TipoMidia tipoMidia) const
 {
     switch (tipoMidia) {
         case ModuloInformacaoMidia::TipoMidia::mr:
@@ -83,23 +83,6 @@ CInformacaoMidia::ETipoMidia CConversorInformacaoMidia::DeconverteTipoMidia(Modu
     }
 
     throw CAsnMidiasError(EAME_TIPO_MIDIA_ENTIDADE_INVALIDO, "Tipo de mídia inválido.");
-}
-
-
-
-
-
-
-
-
-ModuloInformacaoMidia::InformacaoMidia::aplicativos::value_type CConversorInformacaoMidia::ConverteAplicativos(
-    const TVectorAplicativo& aplicativos, const CConversorAplicativo& conversor)
-{
-    TEntidade::aplicativos::value_type resultado;
-    for (const auto& aplicativo : aplicativos) {
-        resultado.push_back(conversor.Converte(aplicativo));
-    }
-    return resultado;
 }
 
 } // namespace ecourna::app::dados::asn

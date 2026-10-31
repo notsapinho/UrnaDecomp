@@ -10,7 +10,11 @@
 //   usando bateria interna atingido" (vota::CLogVota::GetInst, fn 184, and api::CLoga::loga, fn 433) and calls
 //   comum::IInterfaceInit::DesligarUrna (fn 5894) on CPolySingleton<comum::IInterfaceInit>'s instance (fn 611); else
 //   goes to the +36 state when slot 15 of CPolySingleton<api::IPower>'s instance (fn 862) says so. Of those
-//   callees only the three instances are reconstructed.
+//   callees only the three instances and api::CLoga::loga are reconstructed.
+// StartState waits for that static: @1833312 is built at start-up by CDate's and CTime's default constructors (fns 1382
+// and 2230, called with 1833312 and 1833320 in __wasm_call_ctors), which read the clock through fn 1155, not written, and
+// it is written by CEstadoComDesligamentoAutomatico::ProcessTick (fn 12061) and read by fn 13012, not written either. So
+// the object cannot be defined yet, and its name needs a reader or a hand edit beside this one.
 // Move each into cexibealertadesligamento.cpp, at its records' lines, when it is reconstructed; delete this file with
 // the last one.
 #include "app/vota/eleitor/iniciovotacao/cexibealertadesligamento.h"

@@ -269,7 +269,7 @@ declares both. Neither `AbstractData`'s `asValueNotation`, `print_on`, `setFromV
 operators has a target body, so the roots leave them out (`src/units/87-asn1-avn.mk`).
 
 `GeneralizedTime` is 48 B, with a `bool` at +44 the fork added: 8951 and 8956 allocate 48, 5072 and 8928 read the byte, 8951
-copies it, 8956 sets it, and 2185 computes it.
+copies it, 8956 sets it, and 2185 computes it. It derives from `AbstractData` (§A9).
 
 **One row that is a callee's signature.** 208, 2653, 2186, 8890 and 8887 equal the target's rows but for one `drop` or one
 constant argument. In each the callee is in our table and not the target's: a `-fexceptions` object of ours calls it
@@ -330,3 +330,73 @@ awk -F'\t' 'NR>1 && $1>=8740 && $1<=9020 && $5=="match" && $11 ~ /asn1\/(asn1|Va
 # ValidChecker.o 8968-8984
 # asn1.o 8988-9012
 ```
+
+## A9. Three classes the data and the rows correct
+
+**`GeneralizedTime` is not a `UTCTime`.** Upstream derives it from `UTCTime`; the fork derives it from `AbstractData`. A
+single-inheritance typeinfo is `{vtable, name, base}`, so the third word names the base. The module holds each record's three
+words as written:
+
+```sh
+python3 -I - target/vota_web_wasm.wasm <<'END'
+import struct, sys
+b = open(sys.argv[1], 'rb').read()
+# GeneralizedTime's typeinfo is 1149228 and UTCTime's 1148516: both sit in the data segment whose words spell them
+for t in (1149228, 1148516):
+    p = b.find(struct.pack('<III', 1525604, t + 12, 1148580))
+    print(t, 'base 1148580' if p > 0 else 'other base')
+END
+# 1149228 base 1148580
+# 1148516 base 1148580
+```
+
+1148580 is `_ZTIN4ASN112AbstractDataE` in `splat/symbol_addrs.txt`. The bodies agree: 8951 and 8956 store the vptr where 8988
+and 8992, `UTCTime`'s, store theirs. Derived from `UTCTime` they store it after every field of the base, because the
+constructor of the base runs first. `ledger/vtables.json` has no row for the class, so its slots have no `vtable` evidence:
+its vtable is `[174 144 8952 8951 8955 8954 5075]` at 1149192.
+
+**`BERDecoderPartial::Visitante` is a type libc++ marks trivially relocatable, and `std::pair` is chosen.** 8846 and 8847
+grow the vector with `memory.copy`, in a body with no per-element loop. libc++ relocates by copy only for a type
+`__libcpp_is_trivially_relocatable`, which a class of a `std::string` and a `std::shared_ptr` is not, while `pair` declares
+itself so when its members are, and `tuple` declares it the same way. As a class with the same two members, 8846 scores
+`41 over 307`, a loop where the target has `memory.copy`; as a `pair`, `6 over 299`, operands only (`pnpm wasm score`). A
+`std::tuple` gives the same 115 functions of `BERDecoderPartial.o`, object-local numbers masked, and 1928's rows at `-Oz`, so
+the target does not separate the two, and `pair` is the plain choice. That is also why 5058, the copy constructor, stays out
+of line, and it fits 1928 (§A10).
+
+**`CoderEnv` has four rules and three more members.** 679 holds `decode` behind `br_table [3 1 2 0]` on the rule at +0, and its
+cases store the vptrs of `AVNDecoder` (0), `BERDecoder` 1150244 (1), `BERDecoderPartial` 1150380 (2) and `PERDecoder`
+1151016 (3): so `per_Basic_Aligned` is 3 and a rule the source had to name is 2. 518 is `~CoderEnv`: it destroys a string at
++28, a vector of 20-B elements at +16 and a vector of 12-B elements at +4, each element's `shared_ptr` at its +4, which is
+`Modules` over a `shared_ptr`. 5060 is `decode` over a seeder: it builds a `BERDecoderPartial`, assigns +16 into its visitors, and
+copies the log into +28 with `string::operator=(const string&)` (1700).
+
+## A10. What the generated roots kept, and what the rest waits for
+
+The roots take the address of every external function of the runtime. A function the target does not hold then does two
+things: it stays in the table, and it counts as a caller. `AbstractString(const void*)` and `BMPString(const void*)` kept bodies
+of the shape of `SEQUENCE_OF_Base(const void*)`, binaryen merged the three, and 516, whose rows are one function's in the target,
+was a thunk with 14 target callers waiting. `OpenData`'s destructors kept `default_delete<OpenBuf>` at three call sites, so
+5034 could not hold it. `ConstVisitor::visit` and `Visitor::visit` stayed out of 8960 and 8961. Which functions the target does
+not hold is read from two places: a class with no RTTI in `ledger/classes.json` has no vtable there, and a function of the
+runtime with no row in `splat/scan.tsv` was not paired by anything:
+
+```sh
+python3 -I -c "import json; print([c['name'] for c in json.load(open('ledger/classes.json'))['classes'] if c['name'].startswith('ASN1::') and '<' not in c['name']])"
+```
+
+`ASN1_ROOTS_EXCLUDE` in `src/units/115-asn1-leftovers.mk` lists them. Two stay rooted though the target has no body of their
+own. `CoderEnv::decode(const char*, …)` stands for 679, which holds it, and without it 1544, 2565, 3477, 5607, 7970, 8873, 8925
+and 8927 leave `match`, measured on the link that left it out. `OBJECT_IDENTIFIER`'s members have no vtable in the target, and
+the toolkit's tests of the AudioCollector trap ([splat.md](splat.md) §S4) read that vtable in our link; no row needs them out.
+
+Not every leftover is the runtime's. By their rows:
+
+| rows | what they are | what they wait for |
+| --- | --- | --- |
+| 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | the executable TU, whose flags are the user's decision ([levels.md](levels.md) §V1) |
+| 1843 | `string::find_first_not_of` at `-Oz`: it keeps `__str_find_first_not_of`'s loop, a compile of the member at `-Oz -fexceptions` shows it, and `-Os`, `-O2` and `-O3` do not | the executable TU, whose flags are the user's decision ([levels.md](levels.md) §V1) |
+| 1532 | BER encoding through `CoderEnv`, with landing pads, so an `-fexceptions` TU's | its callers, whose records name `api::CFileASN` |
+| 2706, 5282, 5290, 2704, 2896 | libc++ instances: 2706 is `vector<char>::reserve`, with landing pads, called by the runtime's own 3464, 3472 and 5055; 5282 is a `__split_buffer<char>` constructor and 2704 and 2896 its destructor, with no pad; 5290 holds pads too; 2896 is the merge body of 2704, 2545, 4675 and 5523 | the TU whose copy they are |
+| 8902 | calls 5056 and 1872, `api`'s, and no runtime symbol | a class of `api` |
+| 2650 | `allocator<Visitante>::destroy`: it calls 388, a `~shared_ptr` that keeps its result, where ours calls 424, the one that has none, over which 2183 and 3469 match | a second `~shared_ptr` body in our link |

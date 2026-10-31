@@ -395,15 +395,6 @@ const ModuloResultadoUrnaCadastro::EstadoComparecimento::InfoType ModuloResultad
     "EstadoComparecimento"
 };
 
-const ModuloResultadoUrnaCadastro::ComparecimentoSecao::eleitores::value_type::InfoType ModuloResultadoUrnaCadastro::ComparecimentoSecao::eleitores::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloResultadoUrnaCadastro::EstadoComparecimento::theInfo,
-    0
-};
-
 const void* ModuloResultadoUrnaCadastro::ComparecimentoSecao::fieldInfos[2] = {
     &identificacao::value_type::theInfo,
     &eleitores::value_type::theInfo
@@ -431,15 +422,6 @@ const ModuloResultadoUrnaCadastro::ComparecimentoSecao::InfoType ModuloResultado
     &ModuloResultadoUrnaCadastro::ComparecimentoSecao::defaultTag,
     ModuloResultadoUrnaCadastro::ComparecimentoSecao::fieldNames,
     "ComparecimentoSecao"
-};
-
-const ModuloResultadoUrnaCadastro::DadosComparecimento::justificativas::value_type::InfoType ModuloResultadoUrnaCadastro::DadosComparecimento::justificativas::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloResultadoUrnaCadastro::IdentificacaoJustificativa::theInfo,
-    0
 };
 
 const ModuloResultadoUrnaCadastro::DadosComparecimento::mesariosAbertura::value_type::InfoType ModuloResultadoUrnaCadastro::DadosComparecimento::mesariosAbertura::value_type::theInfo = {

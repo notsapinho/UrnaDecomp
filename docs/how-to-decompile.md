@@ -995,15 +995,15 @@ code of ours, and any virtual member of a class our sources define, with or with
 last name alone (`src/units/README.md` "Pending members" has the cases). So a stub can go with no body of ours. Such a
 row is still `no-candidate`: when your class leaves a slot with no body, name it in the fragment, the only note left. The
 scan lists a pending member one of two ways. When binaryen merged its trap with another trap of the same wasm type, the
-slot gets no name and the row stays `no-candidate` (9133 and 9130, units 15's and 16's). When the trap is a function of
+slot gets no name and the row stays `no-candidate` (11470 and 11469, unit 66's). When the trap is a function of
 its own, step 8 names the target function after the trap by `vtable` evidence, and the row is `differs` with the
 `-pending.o` as its object (11442, unit 36's). A landing moves these rows ("Pending members" says how).
 
 ```sh
-awk -F'\t' '$1==9130 || $1==9133 || $1==11442 {print $1, $4, $5, $11}' splat/scan.tsv
-# 9130 - no-candidate -
-# 9133 - no-candidate -
+awk -F'\t' '$1==11442 || $1==11469 || $1==11470 {print $1, $4, $5, $11}' splat/scan.tsv
 # 11442 symbol differs app/36-uenux2-cvisitantefoto-pending.o
+# 11469 - no-candidate -
+# 11470 - no-candidate -
 ```
 
 So declare a trap with the member's real signature, its record's, since that name can reach

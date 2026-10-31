@@ -1,5 +1,5 @@
-# ecourna: the urna-schedule converter CConversorHorariosUrna (app/dados/asn/cconversorhorariosurna.cpp, DoDeconverte =
-# target fn 9132) and the data class it builds, CHorariosUrna (app/dados/processoeleitoral/chorariosurna.cpp, whose
+# ecourna: the urna-schedule converter CConversorHorariosUrna (app/dados/asn/cconversorhorariosurna.cpp, DoConverte =
+# target fn 9133, DoDeconverte = target fn 9132) and the data class it builds, CHorariosUrna (app/dados/processoeleitoral/chorariosurna.cpp, whose
 # constructor binaryen inlines into fn 9132, its only caller).
 HORARIOS_SRCS := app/dados/asn/cconversorhorariosurna.cpp app/dados/processoeleitoral/chorariosurna.cpp
 ECOURNA_SRCS += $(HORARIOS_SRCS)
@@ -7,12 +7,3 @@ ECOURNA_SRCS += $(HORARIOS_SRCS)
 # processoeleitoral and api/asn headers, which src/Makefile's generic prerequisites (each object's source, every ecourna
 # header) cover as well
 $(foreach u,$(HORARIOS_SRCS),$(eval $(ROOT)/$(APP)/ecourna/$(subst /,_,$(u)).o: $(ROOT)/src/ecourna/$(u) $(ROOT)/src/units/15-ecourna-cconversorhorariosurna.mk $(wildcard $(ROOT)/src/ecourna/app/dados/asn/*.hpp $(ROOT)/src/ecourna/app/dados/processoeleitoral/*.hpp $(ROOT)/src/ecourna/api/asn/*.hpp)))
-# DoConverte (fn 9133, the key function: the vtable is emitted with it) is not reconstructed yet; it traps here, compiled
-# with the unit's flags (15-ecourna-cconversorhorariosurna-pending.cpp)
-$(ROOT)/$(APP)/15-ecourna-cconversorhorariosurna-pending.o: $(ROOT)/src/units/15-ecourna-cconversorhorariosurna-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/15-ecourna-cconversorhorariosurna.mk $(wildcard $(ROOT)/src/ecourna/app/dados/asn/*.hpp $(ROOT)/src/ecourna/app/dados/processoeleitoral/*.hpp $(ROOT)/src/ecourna/api/asn/*.hpp)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(ECOURNA_CXXFLAGS) -c /work/src/units/15-ecourna-cconversorhorariosurna-pending.cpp -o $(R)
-# the converter's user (the CConfiguracaoMunicipio converter) is not reconstructed yet: the roots file takes the vtable's
-# address, as the target's vtable data puts both slots in the table
-$(ROOT)/$(APP)/15-ecourna-cconversorhorariosurna-roots.o: $(ROOT)/src/units/15-ecourna-cconversorhorariosurna-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/15-ecourna-cconversorhorariosurna-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/15-ecourna-cconversorhorariosurna-pending.o $(APP)/15-ecourna-cconversorhorariosurna-roots.o

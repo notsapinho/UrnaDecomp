@@ -1,7 +1,7 @@
 # ecourna app/dados/resultadournacadastro - the voter-register result data classes (CResultadoUrnaCadastro,
 # CDadosComparecimento, CDadosComparecimentoCifrado, CDadosCifracao, CEstadoComparecimento, CHabilitacaoBiometrica,
-# CEstadoHabilitacaoPorCodigo, CComparecimentoMesario; CApresentacaoFotoEleitor/CIdentificacaoJustificativa/
-# CComparecimentoSecao are header-only). Their converters (app/dados/asn/resultadournacadastro) are in 09-ecourna-app-dados-asn-resultadournacadastro.mk.
+# CEstadoHabilitacaoPorCodigo, CComparecimentoMesario; CApresentacaoFotoEleitor is header-only; CIdentificacaoJustificativa
+# and CComparecimentoSecao are unit 105's). Their converters (app/dados/asn/resultadournacadastro) are in 09-ecourna-app-dados-asn-resultadournacadastro.mk.
 DADOS_RUC_SRCS := app/dados/resultadournacadastro/ccomparecimentomesario.cpp app/dados/resultadournacadastro/cdadoscifracao.cpp \
                  app/dados/resultadournacadastro/cdadoscomparecimento.cpp app/dados/resultadournacadastro/cdadoscomparecimentocifrado.cpp \
                  app/dados/resultadournacadastro/cestadocomparecimento.cpp app/dados/resultadournacadastro/cestadohabilitacaoporcodigo.cpp \

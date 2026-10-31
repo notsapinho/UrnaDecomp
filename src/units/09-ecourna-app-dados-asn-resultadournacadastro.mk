@@ -3,9 +3,7 @@
 # identification record (app/dados/asn/cconversorregistroidentificacaoeleitor.cpp, no record names its file) and two
 # out-of-line constructors their bodies call (CApresentacaoFotoEleitor, fn 1081 after binaryen's folding;
 # CIdentificadorEleitor(TSharedIdentificadorEleitor), fn 5172).
-# cconversorresultadournacadastro.cpp is NOT listed: it builds CConversorDadosComparecimento and
-# CConversorDadosComparecimentoCifrado locals, whose TUs (no source-location record) are not reconstructed yet, and
-# their vtables would be undefined.
+# cconversorresultadournacadastro.cpp is unit 105's, with the converters it builds.
 DADOS_RUC_ASN_SRCS := app/dados/asn/resultadournacadastro/cconversorapresentacaofotoeleitor.cpp \
                  app/dados/asn/resultadournacadastro/cconversorcomparecimentomesario.cpp \
                  app/dados/asn/resultadournacadastro/cconversorestadocomparecimento.cpp \

@@ -114,4 +114,10 @@ bool DataFree::do_visit(GeneralizedTime& value)
   return true;
 }
 
+void freeData(AbstractData& data)
+{
+  DataFree dataFree;
+  data.accept(dataFree);
+}
+
 }//namespace
