@@ -58,7 +58,9 @@ public:
     std::string ConverteFonteAlim(const uebyte fonte);
     inline std::string ConverteStatusBateria(const uebyte status);
 
-private:
+protected:
+    // protected: vota::CLogVota's members that fns 6017, 10776 and 10779 hold inlined read it and call api::CLoga::loga
+    // themselves. The access is chosen; that a derived class reads it is the evidence.
     api::ELogAplicativos m_aplicativo;
 };
 

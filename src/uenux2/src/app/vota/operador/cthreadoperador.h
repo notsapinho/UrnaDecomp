@@ -32,6 +32,12 @@ public:
 
     ~CThreadOperador() override;
 
+    // The titulo of the mesario being registered: vota::CControladorRegistraMesariosVota's slots 17 and 18 return and
+    // assign +96 with no call of a member of this class, and its slots 31 to 33 format it into their messages (fn 3887).
+    // The names are chosen.
+    const std::string& GetTituloMesario() const { return m_tituloMesario; }
+    void SetTituloMesario(const std::string& titulo) { m_tituloMesario = titulo; }
+
 protected:
     void Run() override;
     void ParaOutrasThreads() override;
@@ -41,7 +47,7 @@ private:
 
     CMessageOperador m_mensagens;
     std::string m_texto1;
-    std::string m_texto2;
+    std::string m_tituloMesario;
     std::string m_texto3;
     std::string m_texto4;
 

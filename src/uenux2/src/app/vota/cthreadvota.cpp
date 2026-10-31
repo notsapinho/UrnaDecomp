@@ -2,6 +2,11 @@
 
 namespace vota {
 
+uebyte CThreadVota::AddTick(size_t milissegundos)
+{
+    return m_ticks.AddTick(milissegundos);
+}
+
 void CThreadVota::StopTick(uebyte id)
 {
     m_ticks.StopTick(id);

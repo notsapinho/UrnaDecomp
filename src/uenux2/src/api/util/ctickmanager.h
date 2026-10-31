@@ -19,6 +19,8 @@ public:
 
 private:
     struct STick {
+        explicit STick(size_t milissegundos);
+
         ueint64 m_milissegundos;
         timeval m_proximo;
         ueint32 m_parado;
