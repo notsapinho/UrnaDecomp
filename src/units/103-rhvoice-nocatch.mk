@@ -23,9 +23,11 @@
 # Choices, each measured:
 # - The flags. -fno-strict-aliasing gives the reloads the target has (HTS_SStreamSet_clear, item::remove: B6). At the
 #   allow-list it costs the four get_key rows (4975, 9683, 9697, 9700), which userdict.cpp.o at -fignore-exceptions keeps,
-#   adding 2875, 3550, 5265, 9678 and 9682 (B6's per-object table). The other objects stay at the allow-list: as one flag
-#   set it is the closest build found that loses no row, and the evidence for it is the vector<T>::push_back family alone.
-#   B6 reads most objects better at -fignore-exceptions, and why that family has the target's shape is unknown.
+#   adding 2875, 3550, 5265, 9678 and 9682 (B6's per-object table). The other objects stay at the allow-list, a choice:
+#   one object off the default is the smallest step from the uniform build, the closest one flag set found that loses no
+#   row, whose evidence is the vector<T>::push_back family alone. B6 also measured a per-object build with
+#   -fignore-exceptions as the default that loses no row and adds more. B6 reads most objects better at
+#   -fignore-exceptions, and why that family has the target's shape is unknown.
 #   -sEXCEPTION_CATCHING_ALLOWED=[nothing] and -mllvm -enable-emscripten-cxx-exceptions=0 give the same 54 objects, by cmp,
 #   so between those two the spelling is a choice.
 # - HTS_Audio_initialize with one parameter, in the overlay of str_hts_engine_impl.cpp. Giving HTS_engine.c's call and

@@ -17,8 +17,8 @@ namespace comum {
 // clang puts in place of an inline destructor with an empty body and no member to destroy, and the recorders'
 // destructors inline it and store no vptr of this class (fn 11576; one defined in the class gives the same bytes, one
 // defined out of line a call there). The constructor (fn 1396) passes its arguments on to IResultado's and stores the
-// vptr; it is defined in iresultado.cpp, since the vtable (@1553648) follows that file's record (@1553632) in the data,
-// which puts the class's key function in its object. The five members are pending.
+// vptr; that it is defined in iresultado.cpp is a choice the data allows: the vtable (@1553648) follows that file's
+// record (@1553632), so that object can be the one that emits it (unit 122's fragment). The five members are pending.
 class IGravador : public IResultado {
 public:
     IGravador(TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao, char fase,

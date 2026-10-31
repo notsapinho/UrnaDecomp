@@ -9,8 +9,9 @@
 #   :54, written, not matched) in src/app/comum/gravadores/asn/util.cpp, with the header util.h beside it.
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
 #   inlines into it, in md/cversoesarquivos.cpp, the class header beside it; libc++'s hinted emplace into its
-#   std::map<std::string, std::string> (fn 1221) and the hinted __find_equal it calls (fn 1346, matched under the symbol
-#   of std::map<std::string, unsigned short>'s, a twin: the two compare only the key) come from that object.
+#   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346,
+#   matched under the symbol of std::map<std::string, unsigned short>'s, a twin: the two compare only the key) comes
+#   from the tree root app/roots_boost.o, whose byte-identical instance is ahead of that object's in the link.
 # - comum::IGravador's constructor (fn 1396) with IResultado's (record iresultado.cpp:40) inlined by binaryen, written in
 #   iresultado.cpp and not matched (below); comum::CGravadorWSQ's constructor (target fn 3796) with ValidaTipoBiometria
 #   (record cgravadorwsq.cpp:73) inlined by clang; comum::CGravadorRCSecao::CriaIdentidadeEleitor (target fn 5845,
@@ -19,6 +20,10 @@
 # - IResultado's destructor (fn 12090, unit 60's match): its copy in the link now comes from iresultado.cpp.o, which
 #   emits IResultado's vtable with the constructor, ahead of unit 102's roots object; the same symbol, and it still
 #   matches.
+# - CGravadorRCSecao's deleting destructor (fn 11615, slot 1, 42 B) has no body of ours, and its row stays
+#   `no-candidate`: its stub left cgravadorrcsecao.cpp once CriaIdentidadeEleitor was defined there (stubs.py counts a
+#   virtual member of a class our sources define). It waits for the class's vtable, which a written key function
+#   (GravaResultado, fn 11616, slot 7, or an out-of-line destructor) emits in cgravadorrcsecao.cpp's object.
 # - Two inline accessors under chosen names, CConfiguracaoEleicao::GetPleito() and md::CPleito::GetID(): fn 3798 formats
 #   the word at +28 of CConfiguracaoEleicao, its CPleito's identifier. With the unit's edits of headers (these two and
 #   unit 60's), every object the link held before is byte-identical (542 objects, sha1 before and after).
@@ -26,14 +31,16 @@
 # Evidence: the records give each member's name, file, line and column, and the signatures; the codes, the messages and
 # the bodies give the rest. The enum's values are the codes every thrower passes to fn 283 and the two that fns 3825 and
 # 3826 pass to their merged body 6044 (docs/reference/facts/placing.md P6). IGravador's constructor is in iresultado.cpp
-# because IGravador's vtable (@1553648) follows that file's record (@1553632) in the data, which puts the class's key
-# function in its object (docs/reference/facts/placing.md P4); its line there is a choice.
+# by choice, one the data allows: IGravador's vtable (@1553648) follows that file's record (@1553632), so the object
+# that emits it (the key function's, or the vtable's first user's: docs/reference/facts/placing.md P4) can be
+# iresultado.cpp's. The constructor has no record, and a record-less object between that record and
+# ccabecalhoentidade.cpp's (@1553700) would give the same order; its line there is a choice too.
 # Chosen: the enumerators' names, the header paths, DeterminaNomeArquivo's name, the two accessors' names, the
 # CVersoesArquivos map alias, the constructors' parameter types beyond what the records spell (CGravadorWSQ's tipo de
 # biometria as unsigned int and its last argument as bool, from the unsigned compare and the byte store), the lines of
 # the functions with no record (each above the function it calls, DeterminaNomeArquivo after the one it calls), that
-# CriaIdentidadeEleitor is private, `.Get()` where DeterminaNomeArquivoSemLetra formats the identifiers, and every
-# member and parameter name.
+# CriaIdentidadeEleitor, ValidaCriacao and ValidaTipoBiometria are private, `.Get()` where DeterminaNomeArquivoSemLetra
+# formats the identifiers, and every member and parameter name.
 #
 # Forms measured in this unit's link (pnpm wasm score against the target, then the scan):
 # - ConverteFase lists its cases 't', 's', 'o'. In the order 'o', 's', 't' the switch starts with 49 and sets 51 in a

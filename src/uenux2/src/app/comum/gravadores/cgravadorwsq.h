@@ -22,7 +22,7 @@ namespace comum {
 // defined in the class is a choice. The constructor (fn 3796) and ValidaTipoBiometria, which clang inlines into it, are
 // in cgravadorwsq.cpp; GetCaminhoCorretoInternal/External (fn 5821) are not reconstructed, so not declared. The
 // constructor's parameter types beyond the record's IResultado ones, the types of +68 and +84 and every member name
-// are chosen.
+// are chosen, and so is ValidaTipoBiometria's being private.
 class CGravadorWSQ final : public IGravador {
 public:
     CGravadorWSQ(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao,

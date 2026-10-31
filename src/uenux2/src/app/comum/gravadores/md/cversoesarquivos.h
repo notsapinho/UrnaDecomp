@@ -9,7 +9,7 @@ namespace comum::md {
 // two arguments there: the map's copy inserts each node of 40 bytes with libc++'s hinted emplace (fn 1221), a string
 // key and a string value. ValidaCriacao (records cversoesarquivos.cpp:28 and :33) tests the string's length and the
 // map's size. The map's alias, the member and parameter names are chosen, from the messages ("Versão da TAG
-// inválida", "Versões de arquivos inválida").
+// inválida", "Versões de arquivos inválida"). That ValidaCriacao is private is a choice too.
 class CVersoesArquivos {
 public:
     using TMapVersoes = std::map<std::string, std::string>;

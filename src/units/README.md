@@ -397,9 +397,10 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   tree root's copy is the same code; a control block the target's builder does not store (`make_shared` where the target
   stores `__shared_ptr_pointer`'s vptr, or the reverse); and any member of T beyond what the shape emits. A copy of a
   header's inline member may win over a later companion's, since both are a landed header's code, when the fragment shows
-  that the two objects' flags give the same function (12090, `IResultado`'s D2, comes from unit 102's roots ahead of unit
-  60's pending object). When the later object's copy is at another level than the target's (the runtime's `-Os`
-  `__destroy_vector` over `Visitante`, where the target's 3552 is `-Oz`), no shape gives the target's copy: the member
+  that the two objects' flags give the same function (12090, `IResultado`'s D2, came from unit 102's roots ahead of unit
+  60's pending object, until unit 122's `iresultado.cpp`, a real object linked ahead of both, emitted it). When the
+  later object's copy is at another level than the target's (the runtime's `-Os` `__destroy_vector` over `Visitante`,
+  where the target's 3552 is `-Oz`), no shape gives the target's copy: the member
   stays pending, a hand edit names it for its callers, and the fragment gives the probe (unit 115).
 
 `ledger/callgraph.tsv` and the elem segment give the target's call shapes; each roots file's header says which shape

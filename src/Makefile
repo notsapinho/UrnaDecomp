@@ -32,8 +32,9 @@ SEVENZIP_SRC := third_party/7zip
 # RHVoice at -DNDEBUG: the target imports no __assert_fail, and hts_labeller/phoneme_set/userdict assert without it
 # and with no landing pads: an allow-list that names no function, so clang keeps exception semantics and each invoke
 # becomes a call in the backend. The spelling is a measured choice (docs/reference/facts/libraries.md B6).
-# Every object without strict aliasing, and userdict.cpp at -fignore-exceptions in place of the allow-list: the per-object
-# build of B6 that loses no row. A new flag set takes a new variant directory, which `make -C src libs` builds.
+# Every object without strict aliasing, and userdict.cpp at -fignore-exceptions in place of the allow-list: one of the
+# per-object builds of B6 that lose no row (B6 lists three). A new flag set takes a new variant directory, which
+# `make -C src libs` builds.
 RHVOICE_DIR  := build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign
 RHVOICE_SRC  := third_party/RHVoice
 BOOST_HDR    := third_party/boost

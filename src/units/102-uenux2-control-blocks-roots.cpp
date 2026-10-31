@@ -17,10 +17,11 @@
 // (`/usr/bin/grep -cE 'w102_|6SBloco|6SFonte' build/out/wasm-map/vota_web/names.tsv` prints 0).
 //
 // The fragment's name sorts between 10- and 11-, ahead of most units, so this object is the first definition of what it
-// and a later companion both instantiate: comum::IResultado's D2 (fn 12090) comes from here, not from unit 60's pending
-// object. Compiled with APP_CXXFLAGS. Compiled with UENUX2_CXXFLAGS the object's 427 functions compare equal, by
-// function with the object-local numbers masked. The fragment says what ecourna's flags give for the ecourna classes'
-// blocks. The order of the sink lines is free (docs/reference/facts/splat.md section S9).
+// and a later companion both instantiate: comum::IResultado's D2 (fn 12090) came from here, not from unit 60's pending
+// object, until unit 122's iresultado.cpp.o, which uenux2's sources link ahead of it, emitted it. Compiled with
+// APP_CXXFLAGS. Compiled with UENUX2_CXXFLAGS the object's 427 functions compare equal, by function with the
+// object-local numbers masked. The fragment says what ecourna's flags give for the ecourna classes' blocks. The order of
+// the sink lines is free (docs/reference/facts/splat.md section S9).
 #include <memory>
 #include <string>
 #include <vector>

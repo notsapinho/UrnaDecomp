@@ -5,12 +5,12 @@
 # bodies binaryen shares for destructors that destroy nothing, so they say nothing of the declaration.
 #
 # No record names the converter's file (docs/how-to-decompile.md step 3, "When no record names the file"):
-# - the directory is rule 2's: in the uses-1 band of ledger/ordinals.tsv the two members come right before 11590 (a
-#   linkonce ASN1::AbstractString destructor) and 11589 and 11588, whose records are
-#   app/comum/asn/cconversorcabecalhoentidade.cpp:35 and :56. The data speak against it: the vtable and the two typeinfos
-#   (@1555728 to @1555775) lie between app/comum/md/cideleitoral.cpp's records (@1555680 to @1555712) and
-#   app/comum/md/cidpacote.cpp's (@1555844 on). The one function with records in cideleitoral.cpp, 11437, does not load
-#   the vptr; the target functions that do, 10273, 11373 and 11445, are the converter's users, and none has a record in
+# - the directory is the band's reading of rule 2, which the data do not confirm: in the uses-1 band of
+#   ledger/ordinals.tsv the two members come right before 11590 (a linkonce ASN1::AbstractString destructor) and 11589
+#   and 11588, whose records are app/comum/asn/cconversorcabecalhoentidade.cpp:35 and :56. The data speak against it:
+#   the vtable and the two typeinfos (@1555728 to @1555775) lie between app/comum/md/cideleitoral.cpp's records
+#   (@1555680 to @1555712) and app/comum/md/cidpacote.cpp's (@1555844 on). The one function with records in
+#   cideleitoral.cpp, 11437, does not load the vptr; the target functions that do, 10273, 11373 and 11445, are the converter's users, and none has a record in
 #   that file. So the directory is a choice between the band and the data;
 # - the file name is the class's in lower case (rule 4), and DoConverte and DoDesconverte are defined out of line, which
 #   makes DoConverte the key function and this .cpp the object that emits the vtable: a choice, as the members' order is.

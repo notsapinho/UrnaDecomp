@@ -1,6 +1,6 @@
-// Roots: reach unit 116's singletons the way the target does. No target function a stand-in stands for is written yet.
-// - CThreadOperador::GetInst (target fn 270, 54 callers, among them 652, 2740, 3887): 10225 is its one real caller
-//   here, and Stop stands for the callers' flag store.
+// Roots: reach unit 116's singletons the way the target does.
+// - CThreadOperador::GetInst (target fn 270, 54 callers, among them 652, 2740, 3887): its real callers here are 10225,
+//   and unit 119's 3887 and slots 10785, 10788, 10798 and 10799; Stop stands for the other callers' flag store.
 // - CThreadMonitor::GetInst (fn 1898, callers 10203, 10232, 10234, 10235, 10236): 10203 is its one real caller here.
 // - CEstadoAudio::GetInst (fn 509, 17 callers, among them 1455, 4349, 7028): no real caller here, so two stand-ins.
 // binaryen inlines a function with one call site, so each gets a second one. CThreadEleitor::GetInst (316) needs no
