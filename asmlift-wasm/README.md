@@ -518,9 +518,17 @@ What the pairs leave unnamed, **anchors** may fill (`srclocAnchors`): a target f
 reference a `std::source_location` record (resolved by what it records, and held at one target address) that no other
 function of either side references, and whose bodies are the same instructions, are a pair
 (`evidence:srcloc-anchor`). Their call and table
-votes name a function only when neither side is named yet, the votes agree and the signatures match; anchors cast
-no data votes. A name only anchors voted for lists them in `by:`. This reaches std::format throwers, whose format
-helpers our link inlines differently from the target's, so no unique pair ever reaches them.
+votes name a function only when neither side is named yet, the votes agree and the signatures match. A name only
+anchors voted for lists them in `by:`. This reaches std::format throwers, whose format helpers our link inlines
+differently from the target's, so no unique pair ever reaches them. An anchor's data votes count for `.bss` objects
+alone, and so do those of any other pair a vtable slot or an anchor's call names, when its bodies are the same
+instructions.
+
+**`ctorVotes`** names the `.bss` objects `__wasm_call_ctors` builds (`evidence:ctors:N by:<its index>`). The two bodies
+hold different translation units, so each object is aligned alone: a run of ours, from the object's first operand to
+the next object's or the next stack prologue, votes when every row through its last telling row or string chunk fits
+the target's. A row tells when the target's body holds its literal, or the place its address resolves to by content,
+once.
 
 **remapBody(maps, ourIndex)** rewrites calls, `ref.func`, type indices and globals; a reference that does not
 resolve makes the body `unresolved`, with the instruction and the reason. An `i32.const`, an `i64.const` and a memarg

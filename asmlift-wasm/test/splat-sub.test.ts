@@ -22,6 +22,7 @@ import {
   withMatches,
 } from '../src/splat-sub';
 import {
+  emptySymbols,
   HAND_EDIT_MARKER,
   loadOurSide,
   loadTargetSide,
@@ -127,6 +128,27 @@ describe('selfVoted', { timeout: 180_000 }, () => {
         ]),
       ).size,
     ).toBe(0);
+  });
+
+  it('lets __wasm_call_ctors vote a .bss name for any match but its own', () => {
+    // evidence:ctors keeps a vote's rule: the name rests on 14478, so it holds for a match of another function
+    const obj = { addr: 2000, size: 12, key: 'NOME', name: 'NOME', object: 'o', section: '.bss.NOME', out: '.bss' };
+    const symbols = {
+      ...emptySymbols(),
+      data: new Map([['NOME', 3000]]),
+      dataEvidence: new Map([['NOME', { evidence: 'ctors:1', voters: [14478] }]]),
+    };
+    const maps = {
+      ours: { map: { data: [obj] } },
+      ourImage: Buffer.alloc(2000),
+      target: { symbols, image: Buffer.alloc(0), imageBase: 1024 },
+    } as unknown as SymbolMaps;
+    const chosen = [{ reading: 'address symbol NOME', preferred: true, at: 0, oursAt: 0 }];
+    expect(selfVoted(maps, new Map([[9237, { chosen }]])).size).toBe(0);
+    expect(selfVoted(maps, new Map([[14478, { chosen }]])).get(14478)).toMatchObject({
+      symbol: 'NOME',
+      bytes: 'unknown',
+    });
   });
 
   it.skipIf(!real)('refuses a match whose callee name comes only from its own call operand', () => {

@@ -5,21 +5,25 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { disassemble } from '../src/disasm';
+import { type Instr, disassemble } from '../src/disasm';
 import { normalizeModule } from '../src/normalize';
 import { parseModule } from '../src/parse';
 import { defaultKindsPath, readOperandKinds } from '../src/splat-kinds';
 import { matchesTarget, remapBody } from '../src/splat-remap';
 import { attempt, readingKind, selfVoted } from '../src/splat-sub';
 import {
+  CALL_CTORS,
   type DataObject,
   HAND_EDIT_MARKER,
+  type OurSide,
   SAME_CONTENT_LIMIT,
   type SymbolMaps,
   type TargetSide,
   cStringAt,
   compareObject,
+  ctorVotes,
   dataObjectAt,
+  emptySymbols,
   isSourceLocationRecord,
   loadOurSide,
   loadTargetSide,
@@ -371,6 +375,150 @@ describe('a source_location record the target holds more than once', { timeout: 
 const AUDIO_COLLECTOR_VTABLE = 0x18336c;
 const OID_VTABLE = '_ZTVN4ASN117OBJECT_IDENTIFIERE';
 const STRINGSTREAM = 'NSt3__218basic_stringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEEE';
+
+describe('ctorVotes', () => {
+  // ours: strings from 1024, .bss from 2000. The target: strings from 1024 at another offset, .bss from 3000.
+  const row = (opcode: number, name: string, imms: Instr['imms']): Instr => ({ offset: 0, end: 0, opcode, name, imms });
+  const i32 = (value: number): Instr => row(0x41, 'i32.const', [{ kind: 's32', value, at: 0, role: 's32' }]);
+  const i64 = (value: bigint): Instr => row(0x42, 'i64.const', [{ kind: 's64', value, at: 0, role: 's64' }]);
+  const call = (value: number): Instr => row(0x10, 'call', [{ kind: 'u32', value, at: 0, role: 'func' }]);
+  const local = (value: number): Instr => row(0x20, 'local.get', [{ kind: 'u32', value, at: 0, role: 'local' }]);
+  const memarg = (offset: number) => [{ kind: 'memarg', align: 0, offset, memory: 0, at: 0, offsetAt: 0, role: 'memarg' }];
+  const load = (offset = 0): Instr => row(0x29, 'i64.load', memarg(offset) as Instr['imms']);
+  const store = (offset = 0): Instr => row(0x37, 'i64.store', memarg(offset) as Instr['imms']);
+  const prologue = row(0x23, 'global.get', [{ kind: 'u32', value: 0, at: 0, role: 'global' }]);
+  const CAP = -9223371865056083936n;
+  /** std::string X = <the two chunks at `head` and `head + 8`>, built in place as clang inlines it */
+  const build = (x: number, head: number, l = 0, malloc = 1): Instr[] => [
+    i32(x),
+    i32(32),
+    call(malloc),
+    i32(x + 4),
+    i64(CAP),
+    store(),
+    local(l),
+    i32(head + 8),
+    load(),
+    store(8),
+    local(l),
+    i32(head),
+    load(),
+    store(),
+  ];
+  const STRINGS = ['first static string!', 'other static string!', 'xxxxxxxxtatic string!', 'twice static string!'];
+  const image = (texts: string[], pad: number): Buffer =>
+    Buffer.concat([Buffer.alloc(pad, 1), Buffer.from(`\0${texts.join('\0')}\0`, 'latin1')]);
+  const object = (key: string, addr: number): DataObject => ({
+    addr,
+    size: 12,
+    key,
+    name: key,
+    object: 'o',
+    section: `.bss.${key}`,
+    out: '.bss',
+  });
+  const ourImage = image(STRINGS, 0);
+  const at = (text: string, img = ourImage, base = 1024): number => base + img.indexOf(`\0${text}\0`) + 1;
+  const ours = {
+    map: {
+      data: [
+        {
+          addr: 1024,
+          size: ourImage.length,
+          key: 'strs',
+          name: 'strs',
+          object: '<internal>',
+          section: '<merged strings>',
+          out: '.rodata',
+        },
+        object('X', 2000),
+        object('Y', 2012),
+      ],
+    },
+    dataEnd: 3000,
+    elem: new Map(),
+  } as unknown as OurSide;
+  const sideOf = (texts: string[]): TargetSide =>
+    ({
+      image: image(texts, 40),
+      imageBase: 1024,
+      dataEnd: 4000,
+      elem: new Map(),
+      symbols: emptySymbols(),
+      srcloc: new Map(),
+    }) as unknown as TargetSide;
+  const votes = (oi: Instr[], side: TargetSide, ti: Instr[]): Record<string, number[]> =>
+    Object.fromEntries(
+      [...ctorVotes(ours, ourImage, side, oi, ti, () => true)].map(([k, v]) => [k, [...v]]),
+    );
+  const first = at(STRINGS[0]);
+
+  it("votes an object's address from a run the target's body holds, whatever the locals", () => {
+    const side = sideOf(STRINGS);
+    const ti = [i32(9), ...build(3100, at(STRINGS[0], side.image), 3)];
+    expect(votes(build(2000, first), side, ti)).toEqual({ X: [3100] });
+  });
+
+  it("votes nothing for a run that shares only its string's tail with the target's", () => {
+    // the target's literal ends like ours and starts otherwise: the last chunk fits, the first cannot
+    const side = sideOf(['first static string!'.replace('first', 'FIRST')]);
+    const tail = side.image.indexOf('tatic string!');
+    const ti = build(3100, 1024 + tail - 7);
+    expect(votes(build(2000, first), side, ti)).toEqual({});
+  });
+
+  it('votes nothing for a literal two statics of the target build: it tells neither from the other', () => {
+    const side = sideOf(STRINGS);
+    const head = at(STRINGS[0], side.image);
+    expect(votes(build(2000, first), side, [...build(3100, head), ...build(3200, head)])).toEqual({});
+  });
+
+  it('drops both objects of ours built alike at one target address', () => {
+    const side = sideOf(STRINGS);
+    const ti = build(3100, at(STRINGS[0], side.image));
+    expect(votes([...build(2000, first), ...build(2012, first)], side, ti)).toEqual({});
+  });
+
+  it('ends a run at the next prologue: a telling row of the next initialiser does not break it', () => {
+    const side = sideOf(STRINGS);
+    const ti = [
+      ...build(3100, at(STRINGS[0], side.image)),
+      i32(7),
+      ...build(3200, at(STRINGS[1], side.image)),
+    ];
+    const oi = [...build(2000, first), prologue, ...build(2012, at(STRINGS[1]))];
+    expect(votes(oi, side, ti)).toEqual({ X: [3100], Y: [3200] });
+  });
+
+  it('votes nothing for a run whose address is not in the target .bss', () => {
+    const side = sideOf(STRINGS);
+    const inData = side.imageBase + 4;
+    expect(votes(build(2000, first), side, build(inData, at(STRINGS[0], side.image)))).toEqual({});
+  });
+
+  it.skipIf(!real)('reads the .bss places of the real bodies: one object, one place, and the hand-checked ones', () => {
+    const om = loadOurSide(PLAIN, MAP_DIR);
+    const side = loadTargetSide(TARGET, null, `${URNA}/ledger`, om.stackSize);
+    const body = (m: typeof om.module, index: number) => disassemble(m.funcs[index - m.importedFuncCount]);
+    const ctorsT = targetSymbolsOf(parseSymbolFile(readFileSync(SYMBOLS, 'utf8'))).fns.get(CALL_CTORS)!;
+    const placed = ctorVotes(
+      om,
+      memoryImage(om.module).image,
+      side,
+      body(om.module, om.fnByKey.get(CALL_CTORS)!),
+      body(side.module, ctorsT),
+      () => true,
+    );
+    expect(placed.size).toBeGreaterThan(25);
+    for (const addrs of placed.values()) {
+      expect(addrs.size).toBe(1);
+    }
+    // the hand edit's address, read from the same body by hand: 14478 builds it from " bad end of stream"
+    expect([...placed.get('_ZN4ASN1L14badEndOfStreamE')!]).toEqual([1914448]);
+    // an object the census cannot name: its 36-B destructor reads this address + 11 and loads nothing else
+    expect([...placed.get('_ZN9CBaseTypeItLt0ELt99ELi10EE4NOMEE')!]).toEqual([0x1d2cd0]);
+  });
+});
 
 describe('refuteDataNames', () => {
   const load = () => {
