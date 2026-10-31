@@ -2290,6 +2290,9 @@
 
 // link-order cluster 830 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargods.cpp
 
+// f5805 · 60 B · unmatched · placement: link order · name unknown
+// void f5805(i32) { ... }
+
 // f5800 · 60 B · unmatched · placement: link order · name unknown
 // void f5800(i32) { ... }
 

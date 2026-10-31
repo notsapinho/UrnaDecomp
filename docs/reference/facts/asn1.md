@@ -200,9 +200,9 @@ alone: a name says which function sits there, and the scan still compares the by
 
 Names free callers, not bodies. 3473 (`decodeCommon`) stays unmatched: it calls 543, a 239-B body with 28 callers, the
 `push_back(&&)` of a 4-byte element, and no body of the runtime equals it. The target's 543 is RHVoice's
-`vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`,
-which only takes the pads away, matches 543 by content from that object. A twin reaches the same bytes
-another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merges with `vector<long>`'s from
+`vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`
+matches 543 by content from that object, and that flag changes more than the pads ([libraries.md](libraries.md) §B6). A twin
+reaches the same bytes another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merges with `vector<long>`'s from
 `roots_boost.o`, and the content pass matches 543 through it, with no source written for it. So 543's match line names
 `vector<long>` by link order and not by evidence: neither `FillPath` nor `DrawPath` calls 543 in the target, which inlines
 it there. That twin goes if uenux2 moves to `-O3`, unless another caller lands.

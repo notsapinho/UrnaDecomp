@@ -12,7 +12,7 @@
 # DATA_PATH=/share/RHVoice are the target's strings; ENABLE_SONIC=1 (min_sonic_rate + no curl ⇒ ENABLE_PKG=0);
 # VERSION=<tag> (no version literal is in the target). They are written to <out>/cfg, and a clang VFS overlay
 # (<out>/cfg/overlay.yaml) shows them at src/core/config.h and src/include/core/config.h, so the checkout is never written.
-# The overlay also shows one corrected source (below).
+# The overlay also shows one source that differs from the tag (below).
 # voice.cpp needs Boost headers (boost/algorithm/string.hpp): BOOST=<dir holding boost/> (default third_party/boost, the
 # Boost 1.89.0 headers tools/setup/bootstrap.sh extracts). Defines: -DRHVOICE=1 -DPACKAGE="RHVoice" (SConstruct). Output: build/out/rhvoice/<tag>-<variant>/probe.{js,wasm,js.symbols}.
 # LINK_EXTRA="<flags>" in the environment is appended to the link line (e.g. LINK_EXTRA=-flto with -flto in the compile flags).
