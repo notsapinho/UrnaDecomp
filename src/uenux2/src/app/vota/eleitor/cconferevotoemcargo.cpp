@@ -1,19 +1,77 @@
+#include "app/vota/eleitor/cconferevotoemcargo.h"
+
+namespace vota {
+
+// (original lines 5-59: content not recovered)
+#line 60
+void IConfereVotoEmCargo::FinishStateAudio()
+{
+    CancelaEsperaConfere();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+std::string IConfereVotoEmCargo::GetMensagem() const
+{
+    return "Confira o seu voto.";
+}
+
+} // namespace vota
+
 // <stubs>
-// f11793 · 333 B · unmatched · name unknown
-// void f11793(i32) { ... }
-
-// f11792 · 86 B · unmatched · placement: link order · name unknown
-// void f11792(i32) { ... }
-
-// f11791 · 71 B · unmatched · name unknown
-// void f11791(i32) { ... }
-
-// f11790 · 131 B · unmatched · placement: link order · name unknown
-// void f11790(i32, i32) { ... }
-
-// f11789 · 73 B · unmatched · placement: link order · name unknown
-// void f11789(i32, i32) { ... }
-
 // f11739 · 26 B · unmatched · placement: link order · name unknown
 // ? f11739(i32) { ... }
 
@@ -43,9 +101,6 @@
 
 // f11670 · 28 B · unmatched · placement: link order · name unknown
 // ? f11670(i32) { ... }
-
-// f1717 · 151 B · unmatched · placement: link order · name unknown
-// ? f1717(i32) { ... }
 
 // f1165 · 91 B · unmatched · placement: link order · name unknown
 // ? f1165(i32, i32) { ... }

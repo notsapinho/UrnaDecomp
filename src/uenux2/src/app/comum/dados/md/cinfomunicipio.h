@@ -13,9 +13,10 @@ namespace comum::md {
 // GetHorarioVerao's and ValidaCriacao's, in cinfomunicipio.cpp. The parameter and member names are not in the target.
 // m_urnaBiometrica's name is chosen: comum::CLocal::UrnaBiometrica (fn 820, named by its own literal) reads the flag.
 // m_fusoHorario's type is a short: ValidaCriacao loads it signed and bounds it to ±720, and formats it as an int.
-// m_codigo is a plain uedword, not comum::TMunicipioID as iresultado.h declares it. That is measured against the forms
-// tried, not proved: ValidaCriacao's store order is what a member of that type gives, and two prvalues and a local
-// copy, over this tree's CBaseType and over the member, do not (the fragment has the measurement).
+// m_codigo is a plain uedword, the type of comum::TMunicipioID (app/comum/md/cidentificacaourna.h); which of the two
+// names the source spelled is a choice. That it is a plain word is measured against the forms tried, not proved:
+// ValidaCriacao's store order is what a member of that type gives, and two prvalues and a local copy, over ecourna's
+// CBaseType and over the member, do not (the fragment has the measurement).
 class CInfoMunicipio {
 public:
     CInfoMunicipio(uedword codigo, const std::string& nome, short fusoHorario, bool urnaBiometrica,

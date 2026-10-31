@@ -33,8 +33,3 @@ IGravador::IGravador(TMunicipioID municipio, TZonaID zona, TLocalID local, TSeca
 }
 
 } // namespace comum
-
-// <stubs>
-// f6043 · 55 B · unmatched · placement: link order · name unknown
-// ? f6043(i32, i32, i32) { ... }
-// </stubs>

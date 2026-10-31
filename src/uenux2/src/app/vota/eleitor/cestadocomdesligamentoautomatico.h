@@ -11,8 +11,10 @@ namespace vota {
 // cestadocomdesligamentoautomatico.cpp:44, its lambda) is pending. The vtable and typeinfo lie just before that record,
 // so a member is out of line in that file; ProcessTick, the one non-inline member declared, is the key function by
 // choice. Slot 9 is what ProcessTick calls for any other tick's id; its name is chosen. The layout is what ProcessTick
-// reads: +12 the limit, an api::CDateTime (fns 1000 and 759), +24 its tick id. The member names are chosen, and the
-// constructor is not reconstructed. This header's path is chosen, beside that file.
+// reads: +12 the limit, an api::CDateTime (fns 1000 and 759), +24 its tick id. The member names are chosen. The
+// constructor (fn 1285, ten callers) passes its argument with the tick bit set to the base's, builds the limit from the
+// time_t -1 and registers the 1000-ms tick on the CThreadEleitor (fn 4640 on fn 316's object). This header's path is
+// chosen, beside that file.
 class CEstadoComDesligamentoAutomatico : public comum::CAppState {
 public:
     virtual void ProcessTick(uebyte tick) override;
@@ -20,6 +22,8 @@ public:
     virtual void ProcessOutroTick(uebyte) {}
 
 protected:
+    explicit CEstadoComDesligamentoAutomatico(int eventos);
+
     api::CDateTime m_limite;
     uebyte m_tick;
 };

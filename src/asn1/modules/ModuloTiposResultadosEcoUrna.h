@@ -329,6 +329,73 @@ private:
 // ModuloTiposResultadosEcoUrna::ApuracaoMistaMR
 //
 
+//
+// MotivoApuracaoMistaComMR
+//
+
+class MotivoApuracaoMistaComMR : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    MotivoApuracaoMistaComMR(const void* info) : Inherited(info) {}
+public:
+    MotivoApuracaoMistaComMR() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        naoObteveExitoContingencia = 1,
+        indisponibilidadeUrnaContingencia,
+        indisponibilidadeFlashContingencia,
+        problemaEnergiaEletrica,
+        naoFoiPossivelTrocarUrna,
+        naoFoiSolicitadaTrocaUrna,
+        outros = 99
+    };
+
+    bool is_naoObteveExitoContingencia() const { return value == naoObteveExitoContingencia; }
+    void set_naoObteveExitoContingencia() { value = naoObteveExitoContingencia; }
+
+    bool is_indisponibilidadeUrnaContingencia() const { return value == indisponibilidadeUrnaContingencia; }
+    void set_indisponibilidadeUrnaContingencia() { value = indisponibilidadeUrnaContingencia; }
+
+    bool is_indisponibilidadeFlashContingencia() const { return value == indisponibilidadeFlashContingencia; }
+    void set_indisponibilidadeFlashContingencia() { value = indisponibilidadeFlashContingencia; }
+
+    bool is_problemaEnergiaEletrica() const { return value == problemaEnergiaEletrica; }
+    void set_problemaEnergiaEletrica() { value = problemaEnergiaEletrica; }
+
+    bool is_naoFoiPossivelTrocarUrna() const { return value == naoFoiPossivelTrocarUrna; }
+    void set_naoFoiPossivelTrocarUrna() { value = naoFoiPossivelTrocarUrna; }
+
+    bool is_naoFoiSolicitadaTrocaUrna() const { return value == naoFoiSolicitadaTrocaUrna; }
+    void set_naoFoiSolicitadaTrocaUrna() { value = naoFoiSolicitadaTrocaUrna; }
+
+    bool is_outros() const { return value == outros; }
+    void set_outros() { value = outros; }
+
+    MotivoApuracaoMistaComMR(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    MotivoApuracaoMistaComMR & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const MotivoApuracaoMistaComMR &rhs) const { return value == rhs.value; }
+    bool operator != (const MotivoApuracaoMistaComMR &rhs) const { return value != rhs.value; }
+
+    void swap (MotivoApuracaoMistaComMR & that) { Inherited::swap(that); }
+    MotivoApuracaoMistaComMR * clone() const
+    { return static_cast<MotivoApuracaoMistaComMR*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class MotivoApuracaoMistaComMR
+
 class ApuracaoMistaMR : public ASN1::SEQUENCE
 {
     typedef ASN1::SEQUENCE Inherited;
@@ -362,72 +429,7 @@ public:
     class motivoApuracao
     {
     public:
-        //
-        // ModuloTiposResultadosEcoUrna::ApuracaoMistaMR::motivoApuracao::value_type
-        //
-
-        class value_type : public ASN1::ENUMERATED
-        {
-            typedef ASN1::ENUMERATED Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum NamedNumber {
-                unknownEnumeration_ = -1,
-                naoObteveExitoContingencia = 1,
-                indisponibilidadeUrnaContingencia,
-                indisponibilidadeFlashContingencia,
-                problemaEnergiaEletrica,
-                naoFoiPossivelTrocarUrna,
-                naoFoiSolicitadaTrocaUrna,
-                outros = 99
-            };
-
-            bool is_naoObteveExitoContingencia() const { return value == naoObteveExitoContingencia; }
-            void set_naoObteveExitoContingencia() { value = naoObteveExitoContingencia; }
-
-            bool is_indisponibilidadeUrnaContingencia() const { return value == indisponibilidadeUrnaContingencia; }
-            void set_indisponibilidadeUrnaContingencia() { value = indisponibilidadeUrnaContingencia; }
-
-            bool is_indisponibilidadeFlashContingencia() const { return value == indisponibilidadeFlashContingencia; }
-            void set_indisponibilidadeFlashContingencia() { value = indisponibilidadeFlashContingencia; }
-
-            bool is_problemaEnergiaEletrica() const { return value == problemaEnergiaEletrica; }
-            void set_problemaEnergiaEletrica() { value = problemaEnergiaEletrica; }
-
-            bool is_naoFoiPossivelTrocarUrna() const { return value == naoFoiPossivelTrocarUrna; }
-            void set_naoFoiPossivelTrocarUrna() { value = naoFoiPossivelTrocarUrna; }
-
-            bool is_naoFoiSolicitadaTrocaUrna() const { return value == naoFoiSolicitadaTrocaUrna; }
-            void set_naoFoiSolicitadaTrocaUrna() { value = naoFoiSolicitadaTrocaUrna; }
-
-            bool is_outros() const { return value == outros; }
-            void set_outros() { value = outros; }
-
-            value_type(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-            value_type & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
-            operator NamedNumber() const { return NamedNumber(asInt()); }
-
-            bool operator == (NamedNumber rhs) const { return value == rhs; }
-            bool operator != (NamedNumber rhs) const { return value != rhs; }
-            bool operator <  (NamedNumber rhs) const { return value <  rhs; }
-            bool operator >  (NamedNumber rhs) const { return value >  rhs; }
-            bool operator <= (NamedNumber rhs) const { return value <= rhs; }
-            bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-            bool operator == (const value_type &rhs) const { return value == rhs.value; }
-            bool operator != (const value_type &rhs) const { return value != rhs.value; }
-
-            void swap (value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const char * nameList[];
-        }; // end class value_type
+        typedef ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComMR value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
@@ -454,6 +456,69 @@ private:
 //
 // ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE
 //
+
+//
+// MotivoApuracaoMistaComBU
+//
+
+class MotivoApuracaoMistaComBU : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    MotivoApuracaoMistaComBU(const void* info) : Inherited(info) {}
+public:
+    MotivoApuracaoMistaComBU() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        urnaDataHoraIncorreta = 1,
+        urnaComDefeito,
+        urnaOutrasecao,
+        urnaPreparadaIncorretamente,
+        urnaEncerradaComEleitoresNaFila,
+        outros = 99
+    };
+
+    bool is_urnaDataHoraIncorreta() const { return value == urnaDataHoraIncorreta; }
+    void set_urnaDataHoraIncorreta() { value = urnaDataHoraIncorreta; }
+
+    bool is_urnaComDefeito() const { return value == urnaComDefeito; }
+    void set_urnaComDefeito() { value = urnaComDefeito; }
+
+    bool is_urnaOutrasecao() const { return value == urnaOutrasecao; }
+    void set_urnaOutrasecao() { value = urnaOutrasecao; }
+
+    bool is_urnaPreparadaIncorretamente() const { return value == urnaPreparadaIncorretamente; }
+    void set_urnaPreparadaIncorretamente() { value = urnaPreparadaIncorretamente; }
+
+    bool is_urnaEncerradaComEleitoresNaFila() const { return value == urnaEncerradaComEleitoresNaFila; }
+    void set_urnaEncerradaComEleitoresNaFila() { value = urnaEncerradaComEleitoresNaFila; }
+
+    bool is_outros() const { return value == outros; }
+    void set_outros() { value = outros; }
+
+    MotivoApuracaoMistaComBU(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    MotivoApuracaoMistaComBU & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const MotivoApuracaoMistaComBU &rhs) const { return value == rhs.value; }
+    bool operator != (const MotivoApuracaoMistaComBU &rhs) const { return value != rhs.value; }
+
+    void swap (MotivoApuracaoMistaComBU & that) { Inherited::swap(that); }
+    MotivoApuracaoMistaComBU * clone() const
+    { return static_cast<MotivoApuracaoMistaComBU*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class MotivoApuracaoMistaComBU
 
 class ApuracaoMistaBUAE : public ASN1::SEQUENCE
 {
@@ -488,68 +553,7 @@ public:
     class motivoApuracao
     {
     public:
-        //
-        // ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE::motivoApuracao::value_type
-        //
-
-        class value_type : public ASN1::ENUMERATED
-        {
-            typedef ASN1::ENUMERATED Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum NamedNumber {
-                unknownEnumeration_ = -1,
-                urnaDataHoraIncorreta = 1,
-                urnaComDefeito,
-                urnaOutrasecao,
-                urnaPreparadaIncorretamente,
-                urnaEncerradaComEleitoresNaFila,
-                outros = 99
-            };
-
-            bool is_urnaDataHoraIncorreta() const { return value == urnaDataHoraIncorreta; }
-            void set_urnaDataHoraIncorreta() { value = urnaDataHoraIncorreta; }
-
-            bool is_urnaComDefeito() const { return value == urnaComDefeito; }
-            void set_urnaComDefeito() { value = urnaComDefeito; }
-
-            bool is_urnaOutrasecao() const { return value == urnaOutrasecao; }
-            void set_urnaOutrasecao() { value = urnaOutrasecao; }
-
-            bool is_urnaPreparadaIncorretamente() const { return value == urnaPreparadaIncorretamente; }
-            void set_urnaPreparadaIncorretamente() { value = urnaPreparadaIncorretamente; }
-
-            bool is_urnaEncerradaComEleitoresNaFila() const { return value == urnaEncerradaComEleitoresNaFila; }
-            void set_urnaEncerradaComEleitoresNaFila() { value = urnaEncerradaComEleitoresNaFila; }
-
-            bool is_outros() const { return value == outros; }
-            void set_outros() { value = outros; }
-
-            value_type(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-            value_type & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
-            operator NamedNumber() const { return NamedNumber(asInt()); }
-
-            bool operator == (NamedNumber rhs) const { return value == rhs; }
-            bool operator != (NamedNumber rhs) const { return value != rhs; }
-            bool operator <  (NamedNumber rhs) const { return value <  rhs; }
-            bool operator >  (NamedNumber rhs) const { return value >  rhs; }
-            bool operator <= (NamedNumber rhs) const { return value <= rhs; }
-            bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-            bool operator == (const value_type &rhs) const { return value == rhs.value; }
-            bool operator != (const value_type &rhs) const { return value != rhs.value; }
-
-            void swap (value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const char * nameList[];
-        }; // end class value_type
+        typedef ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComBU value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
@@ -576,6 +580,61 @@ private:
 //
 // ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE
 //
+
+//
+// MotivoApuracaoManual
+//
+
+class MotivoApuracaoManual : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    MotivoApuracaoManual(const void* info) : Inherited(info) {}
+public:
+    MotivoApuracaoManual() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        urnaComDefeito = 1,
+        urnaIndisponivelInicio,
+        urnaOutraSecao,
+        outros = 99
+    };
+
+    bool is_urnaComDefeito() const { return value == urnaComDefeito; }
+    void set_urnaComDefeito() { value = urnaComDefeito; }
+
+    bool is_urnaIndisponivelInicio() const { return value == urnaIndisponivelInicio; }
+    void set_urnaIndisponivelInicio() { value = urnaIndisponivelInicio; }
+
+    bool is_urnaOutraSecao() const { return value == urnaOutraSecao; }
+    void set_urnaOutraSecao() { value = urnaOutraSecao; }
+
+    bool is_outros() const { return value == outros; }
+    void set_outros() { value = outros; }
+
+    MotivoApuracaoManual(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    MotivoApuracaoManual & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const MotivoApuracaoManual &rhs) const { return value == rhs.value; }
+    bool operator != (const MotivoApuracaoManual &rhs) const { return value != rhs.value; }
+
+    void swap (MotivoApuracaoManual & that) { Inherited::swap(that); }
+    MotivoApuracaoManual * clone() const
+    { return static_cast<MotivoApuracaoManual*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class MotivoApuracaoManual
 
 class ApuracaoTotalmenteManualDigitacaoAE : public ASN1::SEQUENCE
 {
@@ -610,60 +669,7 @@ public:
     class motivoApuracao
     {
     public:
-        //
-        // ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE::motivoApuracao::value_type
-        //
-
-        class value_type : public ASN1::ENUMERATED
-        {
-            typedef ASN1::ENUMERATED Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum NamedNumber {
-                unknownEnumeration_ = -1,
-                urnaComDefeito = 1,
-                urnaIndisponivelInicio,
-                urnaOutraSecao,
-                outros = 99
-            };
-
-            bool is_urnaComDefeito() const { return value == urnaComDefeito; }
-            void set_urnaComDefeito() { value = urnaComDefeito; }
-
-            bool is_urnaIndisponivelInicio() const { return value == urnaIndisponivelInicio; }
-            void set_urnaIndisponivelInicio() { value = urnaIndisponivelInicio; }
-
-            bool is_urnaOutraSecao() const { return value == urnaOutraSecao; }
-            void set_urnaOutraSecao() { value = urnaOutraSecao; }
-
-            bool is_outros() const { return value == outros; }
-            void set_outros() { value = outros; }
-
-            value_type(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-            value_type & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
-            operator NamedNumber() const { return NamedNumber(asInt()); }
-
-            bool operator == (NamedNumber rhs) const { return value == rhs; }
-            bool operator != (NamedNumber rhs) const { return value != rhs; }
-            bool operator <  (NamedNumber rhs) const { return value <  rhs; }
-            bool operator >  (NamedNumber rhs) const { return value >  rhs; }
-            bool operator <= (NamedNumber rhs) const { return value <= rhs; }
-            bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-            bool operator == (const value_type &rhs) const { return value == rhs.value; }
-            bool operator != (const value_type &rhs) const { return value != rhs.value; }
-
-            void swap (value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const char * nameList[];
-        }; // end class value_type
+        typedef ModuloTiposResultadosEcoUrna::MotivoApuracaoManual value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
@@ -690,6 +696,61 @@ private:
 //
 // ModuloTiposResultadosEcoUrna::ApuracaoEletronica
 //
+
+//
+// MotivoApuracaoEletronica
+//
+
+class MotivoApuracaoEletronica : public ASN1::ENUMERATED
+{
+    typedef ASN1::ENUMERATED Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    MotivoApuracaoEletronica(const void* info) : Inherited(info) {}
+public:
+    MotivoApuracaoEletronica() : Inherited(&theInfo) {}
+    enum NamedNumber {
+        unknownEnumeration_ = -1,
+        naoFoiPossivelReuperarResultado = 1,
+        urnaNaoChegouMidiaDefeituosa,
+        urnaNaoChegouMidiaExtraviada,
+        outros = 99
+    };
+
+    bool is_naoFoiPossivelReuperarResultado() const { return value == naoFoiPossivelReuperarResultado; }
+    void set_naoFoiPossivelReuperarResultado() { value = naoFoiPossivelReuperarResultado; }
+
+    bool is_urnaNaoChegouMidiaDefeituosa() const { return value == urnaNaoChegouMidiaDefeituosa; }
+    void set_urnaNaoChegouMidiaDefeituosa() { value = urnaNaoChegouMidiaDefeituosa; }
+
+    bool is_urnaNaoChegouMidiaExtraviada() const { return value == urnaNaoChegouMidiaExtraviada; }
+    void set_urnaNaoChegouMidiaExtraviada() { value = urnaNaoChegouMidiaExtraviada; }
+
+    bool is_outros() const { return value == outros; }
+    void set_outros() { value = outros; }
+
+    MotivoApuracaoEletronica(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    MotivoApuracaoEletronica & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    operator NamedNumber() const { return NamedNumber(asInt()); }
+
+    bool operator == (NamedNumber rhs) const { return value == rhs; }
+    bool operator != (NamedNumber rhs) const { return value != rhs; }
+    bool operator <  (NamedNumber rhs) const { return value <  rhs; }
+    bool operator >  (NamedNumber rhs) const { return value >  rhs; }
+    bool operator <= (NamedNumber rhs) const { return value <= rhs; }
+    bool operator >= (NamedNumber rhs) const { return value >= rhs; }
+    bool operator == (const MotivoApuracaoEletronica &rhs) const { return value == rhs.value; }
+    bool operator != (const MotivoApuracaoEletronica &rhs) const { return value != rhs.value; }
+
+    void swap (MotivoApuracaoEletronica & that) { Inherited::swap(that); }
+    MotivoApuracaoEletronica * clone() const
+    { return static_cast<MotivoApuracaoEletronica*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const char * nameList[];
+}; // end class MotivoApuracaoEletronica
 
 class ApuracaoEletronica : public ASN1::SEQUENCE
 {
@@ -724,60 +785,7 @@ public:
     class motivoApuracao
     {
     public:
-        //
-        // ModuloTiposResultadosEcoUrna::ApuracaoEletronica::motivoApuracao::value_type
-        //
-
-        class value_type : public ASN1::ENUMERATED
-        {
-            typedef ASN1::ENUMERATED Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum NamedNumber {
-                unknownEnumeration_ = -1,
-                naoFoiPossivelReuperarResultado = 1,
-                urnaNaoChegouMidiaDefeituosa,
-                urnaNaoChegouMidiaExtraviada,
-                outros = 99
-            };
-
-            bool is_naoFoiPossivelReuperarResultado() const { return value == naoFoiPossivelReuperarResultado; }
-            void set_naoFoiPossivelReuperarResultado() { value = naoFoiPossivelReuperarResultado; }
-
-            bool is_urnaNaoChegouMidiaDefeituosa() const { return value == urnaNaoChegouMidiaDefeituosa; }
-            void set_urnaNaoChegouMidiaDefeituosa() { value = urnaNaoChegouMidiaDefeituosa; }
-
-            bool is_urnaNaoChegouMidiaExtraviada() const { return value == urnaNaoChegouMidiaExtraviada; }
-            void set_urnaNaoChegouMidiaExtraviada() { value = urnaNaoChegouMidiaExtraviada; }
-
-            bool is_outros() const { return value == outros; }
-            void set_outros() { value = outros; }
-
-            value_type(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-            value_type & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
-            operator NamedNumber() const { return NamedNumber(asInt()); }
-
-            bool operator == (NamedNumber rhs) const { return value == rhs; }
-            bool operator != (NamedNumber rhs) const { return value != rhs; }
-            bool operator <  (NamedNumber rhs) const { return value <  rhs; }
-            bool operator >  (NamedNumber rhs) const { return value >  rhs; }
-            bool operator <= (NamedNumber rhs) const { return value <= rhs; }
-            bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-            bool operator == (const value_type &rhs) const { return value == rhs.value; }
-            bool operator != (const value_type &rhs) const { return value != rhs.value; }
-
-            void swap (value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const char * nameList[];
-        }; // end class value_type
+        typedef ModuloTiposResultadosEcoUrna::MotivoApuracaoEletronica value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
@@ -804,6 +812,149 @@ private:
 //
 // ModuloTiposResultadosEcoUrna::Urna
 //
+
+//
+// TipoApuracaoSA
+//
+
+class TipoApuracaoSA : public ASN1::CHOICE
+{
+    typedef ASN1::CHOICE Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    TipoApuracaoSA(const void* info) : Inherited(info) {}
+public:
+    TipoApuracaoSA() : Inherited(&theInfo) {}
+    enum Choice_Ids {
+      unknownSelection_ = -2,
+      unselected_ = -1,
+      apuracaoMistaMR0 = 0,
+      apuracaoMistaBUAE1 = 1,
+      apuracaoTotalmenteManual2 = 2,
+      apuracaoEletronica3 = 3
+    };
+
+    class apuracaoMistaMR
+    {
+    public:
+        enum Id { eid = 0 };
+        typedef ModuloTiposResultadosEcoUrna::ApuracaoMistaMR value_type;
+        typedef value_type&        reference;
+        typedef const value_type&  const_reference;
+        typedef value_type*        pointer;
+        typedef const value_type*  const_pointer;
+    }; // end class apuracaoMistaMR
+
+    apuracaoMistaMR::const_reference get_apuracaoMistaMR () const
+    {
+        assert(currentSelection() == apuracaoMistaMR::eid);
+        return *static_cast<apuracaoMistaMR::const_pointer>(choice.get());
+    }
+    apuracaoMistaMR::reference ref_apuracaoMistaMR ()
+    {
+        assert(currentSelection() == apuracaoMistaMR::eid);
+        return *static_cast<apuracaoMistaMR::pointer>(choice.get());
+    }
+    apuracaoMistaMR::reference select_apuracaoMistaMR ()
+    {
+        return *static_cast<apuracaoMistaMR::pointer>(setSelection(apuracaoMistaMR::eid, ASN1::AbstractData::create(&apuracaoMistaMR::value_type::theInfo)));
+    }
+    bool apuracaoMistaMR_isSelected () const { return currentSelection() == apuracaoMistaMR::eid; }
+
+    class apuracaoMistaBUAE
+    {
+    public:
+        enum Id { eid = 1 };
+        typedef ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE value_type;
+        typedef value_type&        reference;
+        typedef const value_type&  const_reference;
+        typedef value_type*        pointer;
+        typedef const value_type*  const_pointer;
+    }; // end class apuracaoMistaBUAE
+
+    apuracaoMistaBUAE::const_reference get_apuracaoMistaBUAE () const
+    {
+        assert(currentSelection() == apuracaoMistaBUAE::eid);
+        return *static_cast<apuracaoMistaBUAE::const_pointer>(choice.get());
+    }
+    apuracaoMistaBUAE::reference ref_apuracaoMistaBUAE ()
+    {
+        assert(currentSelection() == apuracaoMistaBUAE::eid);
+        return *static_cast<apuracaoMistaBUAE::pointer>(choice.get());
+    }
+    apuracaoMistaBUAE::reference select_apuracaoMistaBUAE ()
+    {
+        return *static_cast<apuracaoMistaBUAE::pointer>(setSelection(apuracaoMistaBUAE::eid, ASN1::AbstractData::create(&apuracaoMistaBUAE::value_type::theInfo)));
+    }
+    bool apuracaoMistaBUAE_isSelected () const { return currentSelection() == apuracaoMistaBUAE::eid; }
+
+    class apuracaoTotalmenteManual
+    {
+    public:
+        enum Id { eid = 2 };
+        typedef ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE value_type;
+        typedef value_type&        reference;
+        typedef const value_type&  const_reference;
+        typedef value_type*        pointer;
+        typedef const value_type*  const_pointer;
+    }; // end class apuracaoTotalmenteManual
+
+    apuracaoTotalmenteManual::const_reference get_apuracaoTotalmenteManual () const
+    {
+        assert(currentSelection() == apuracaoTotalmenteManual::eid);
+        return *static_cast<apuracaoTotalmenteManual::const_pointer>(choice.get());
+    }
+    apuracaoTotalmenteManual::reference ref_apuracaoTotalmenteManual ()
+    {
+        assert(currentSelection() == apuracaoTotalmenteManual::eid);
+        return *static_cast<apuracaoTotalmenteManual::pointer>(choice.get());
+    }
+    apuracaoTotalmenteManual::reference select_apuracaoTotalmenteManual ()
+    {
+        return *static_cast<apuracaoTotalmenteManual::pointer>(setSelection(apuracaoTotalmenteManual::eid, ASN1::AbstractData::create(&apuracaoTotalmenteManual::value_type::theInfo)));
+    }
+    bool apuracaoTotalmenteManual_isSelected () const { return currentSelection() == apuracaoTotalmenteManual::eid; }
+
+    class apuracaoEletronica
+    {
+    public:
+        enum Id { eid = 3 };
+        typedef ModuloTiposResultadosEcoUrna::ApuracaoEletronica value_type;
+        typedef value_type&        reference;
+        typedef const value_type&  const_reference;
+        typedef value_type*        pointer;
+        typedef const value_type*  const_pointer;
+    }; // end class apuracaoEletronica
+
+    apuracaoEletronica::const_reference get_apuracaoEletronica () const
+    {
+        assert(currentSelection() == apuracaoEletronica::eid);
+        return *static_cast<apuracaoEletronica::const_pointer>(choice.get());
+    }
+    apuracaoEletronica::reference ref_apuracaoEletronica ()
+    {
+        assert(currentSelection() == apuracaoEletronica::eid);
+        return *static_cast<apuracaoEletronica::pointer>(choice.get());
+    }
+    apuracaoEletronica::reference select_apuracaoEletronica ()
+    {
+        return *static_cast<apuracaoEletronica::pointer>(setSelection(apuracaoEletronica::eid, ASN1::AbstractData::create(&apuracaoEletronica::value_type::theInfo)));
+    }
+    bool apuracaoEletronica_isSelected () const { return currentSelection() == apuracaoEletronica::eid; }
+
+    TipoApuracaoSA(const TipoApuracaoSA & that) : Inherited(that) {}
+    TipoApuracaoSA & operator=(const TipoApuracaoSA & that)
+    { Inherited::operator=(that); return *this; }
+    void swap(TipoApuracaoSA & that) { Inherited::swap(that); }
+    TipoApuracaoSA * clone() const
+    { return static_cast<TipoApuracaoSA*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+private:
+    static const void* selectionInfos[4];
+    static const char* selectionNames[4];
+}; // end class TipoApuracaoSA
 
 class Urna : public ASN1::SEQUENCE
 {
@@ -903,148 +1054,7 @@ public:
     class motivoUtilizacaoSA
     {
     public:
-        //
-        // ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type
-        //
-
-        class value_type : public ASN1::CHOICE
-        {
-            typedef ASN1::CHOICE Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum Choice_Ids {
-              unknownSelection_ = -2,
-              unselected_ = -1,
-              apuracaoMistaMR0 = 0,
-              apuracaoMistaBUAE1 = 1,
-              apuracaoTotalmenteManual2 = 2,
-              apuracaoEletronica3 = 3
-            };
-
-            class apuracaoMistaMR
-            {
-            public:
-                enum Id { eid = 0 };
-                typedef ModuloTiposResultadosEcoUrna::ApuracaoMistaMR value_type;
-                typedef value_type&        reference;
-                typedef const value_type&  const_reference;
-                typedef value_type*        pointer;
-                typedef const value_type*  const_pointer;
-            }; // end class apuracaoMistaMR
-
-            apuracaoMistaMR::const_reference get_apuracaoMistaMR () const
-            {
-                assert(currentSelection() == apuracaoMistaMR::eid);
-                return *static_cast<apuracaoMistaMR::const_pointer>(choice.get());
-            }
-            apuracaoMistaMR::reference ref_apuracaoMistaMR ()
-            {
-                assert(currentSelection() == apuracaoMistaMR::eid);
-                return *static_cast<apuracaoMistaMR::pointer>(choice.get());
-            }
-            apuracaoMistaMR::reference select_apuracaoMistaMR ()
-            {
-                return *static_cast<apuracaoMistaMR::pointer>(setSelection(apuracaoMistaMR::eid, ASN1::AbstractData::create(&apuracaoMistaMR::value_type::theInfo)));
-            }
-            bool apuracaoMistaMR_isSelected () const { return currentSelection() == apuracaoMistaMR::eid; }
-
-            class apuracaoMistaBUAE
-            {
-            public:
-                enum Id { eid = 1 };
-                typedef ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE value_type;
-                typedef value_type&        reference;
-                typedef const value_type&  const_reference;
-                typedef value_type*        pointer;
-                typedef const value_type*  const_pointer;
-            }; // end class apuracaoMistaBUAE
-
-            apuracaoMistaBUAE::const_reference get_apuracaoMistaBUAE () const
-            {
-                assert(currentSelection() == apuracaoMistaBUAE::eid);
-                return *static_cast<apuracaoMistaBUAE::const_pointer>(choice.get());
-            }
-            apuracaoMistaBUAE::reference ref_apuracaoMistaBUAE ()
-            {
-                assert(currentSelection() == apuracaoMistaBUAE::eid);
-                return *static_cast<apuracaoMistaBUAE::pointer>(choice.get());
-            }
-            apuracaoMistaBUAE::reference select_apuracaoMistaBUAE ()
-            {
-                return *static_cast<apuracaoMistaBUAE::pointer>(setSelection(apuracaoMistaBUAE::eid, ASN1::AbstractData::create(&apuracaoMistaBUAE::value_type::theInfo)));
-            }
-            bool apuracaoMistaBUAE_isSelected () const { return currentSelection() == apuracaoMistaBUAE::eid; }
-
-            class apuracaoTotalmenteManual
-            {
-            public:
-                enum Id { eid = 2 };
-                typedef ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE value_type;
-                typedef value_type&        reference;
-                typedef const value_type&  const_reference;
-                typedef value_type*        pointer;
-                typedef const value_type*  const_pointer;
-            }; // end class apuracaoTotalmenteManual
-
-            apuracaoTotalmenteManual::const_reference get_apuracaoTotalmenteManual () const
-            {
-                assert(currentSelection() == apuracaoTotalmenteManual::eid);
-                return *static_cast<apuracaoTotalmenteManual::const_pointer>(choice.get());
-            }
-            apuracaoTotalmenteManual::reference ref_apuracaoTotalmenteManual ()
-            {
-                assert(currentSelection() == apuracaoTotalmenteManual::eid);
-                return *static_cast<apuracaoTotalmenteManual::pointer>(choice.get());
-            }
-            apuracaoTotalmenteManual::reference select_apuracaoTotalmenteManual ()
-            {
-                return *static_cast<apuracaoTotalmenteManual::pointer>(setSelection(apuracaoTotalmenteManual::eid, ASN1::AbstractData::create(&apuracaoTotalmenteManual::value_type::theInfo)));
-            }
-            bool apuracaoTotalmenteManual_isSelected () const { return currentSelection() == apuracaoTotalmenteManual::eid; }
-
-            class apuracaoEletronica
-            {
-            public:
-                enum Id { eid = 3 };
-                typedef ModuloTiposResultadosEcoUrna::ApuracaoEletronica value_type;
-                typedef value_type&        reference;
-                typedef const value_type&  const_reference;
-                typedef value_type*        pointer;
-                typedef const value_type*  const_pointer;
-            }; // end class apuracaoEletronica
-
-            apuracaoEletronica::const_reference get_apuracaoEletronica () const
-            {
-                assert(currentSelection() == apuracaoEletronica::eid);
-                return *static_cast<apuracaoEletronica::const_pointer>(choice.get());
-            }
-            apuracaoEletronica::reference ref_apuracaoEletronica ()
-            {
-                assert(currentSelection() == apuracaoEletronica::eid);
-                return *static_cast<apuracaoEletronica::pointer>(choice.get());
-            }
-            apuracaoEletronica::reference select_apuracaoEletronica ()
-            {
-                return *static_cast<apuracaoEletronica::pointer>(setSelection(apuracaoEletronica::eid, ASN1::AbstractData::create(&apuracaoEletronica::value_type::theInfo)));
-            }
-            bool apuracaoEletronica_isSelected () const { return currentSelection() == apuracaoEletronica::eid; }
-
-            value_type(const value_type & that) : Inherited(that) {}
-            value_type & operator=(const value_type & that)
-            { Inherited::operator=(that); return *this; }
-            void swap(value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const void* selectionInfos[4];
-            static const char* selectionNames[4];
-        }; // end class value_type
+        typedef ModuloTiposResultadosEcoUrna::TipoApuracaoSA value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;

@@ -14,6 +14,8 @@
 //   std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 3689, 4625, 5867 and
 //   12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns nothing);
 // - comum::CGravadorRCSecao::CriaIdentidadeEleitor (fn 5845): fn 11616, GravaResultado.
+// - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
+//   it: the constructor that stores it (inlined into fn 12098) is not written, so its address goes into a sink.
 // IGravador and CGravadorRCSecao are abstract, so IGravador's constructor (declared with the object's int result) and
 // the private CriaIdentidadeEleitor are called through asm labels.
 #include <map>
@@ -28,10 +30,12 @@
 
 extern "C" int w122_igravador(void* objeto, unsigned int municipio, unsigned int zona, unsigned int local,
     unsigned int secao, int fase, int extensao, int arquivoSavd)
-    __asm__("_ZN5comum9IGravadorC2E9CBaseTypeIjLj0ELj99999ELi6EES1_ItLt0ELt9999ELi7EES1_IjLj0ELj9999ELi8EES1_ItLt0ELt9999ELi9EEcNS_25EExtensaoArquivoResultadoENS_14ESavdArquivoUEE");
+    __asm__("_ZN5comum9IGravadorC2EjtjtcNS_25EExtensaoArquivoResultadoENS_14ESavdArquivoUEE");
 
 extern "C" void w122_cria(void* resultado, const void* gravador, const void* identidade)
     __asm__("_ZNK5comum16CGravadorRCSecao21CriaIdentidadeEleitorERKNS_2md18CEleitorIdentidadeE");
+
+extern "C" const char w122_vt_rcsecao[] __asm__("_ZTVN5comum16CGravadorRCSecaoE");
 
 namespace {
 
@@ -97,6 +101,7 @@ int (*volatile w122_sink_nome)(comum::TMunicipioID, comum::TZonaID, comum::TSeca
 int (*volatile w122_sink_serial)(const std::string&, const std::string&, const std::vector<char>&, const std::vector<char>&);
 int (*volatile w122_sink_identidade)(const void*, const void*, const void*);
 int (*volatile w122_sink_versoes)(const std::string&, const comum::md::CVersoesArquivos::TMapVersoes&, const std::string&);
+const void* volatile w122_sink_vt_rcsecao;
 
 struct SW122Roots {
     SW122Roots()
@@ -107,6 +112,7 @@ struct SW122Roots {
         w122_sink_serial = w122_serial;
         w122_sink_versoes = w122_versoes;
         w122_sink_identidade = w122_identidade;
+        w122_sink_vt_rcsecao = w122_vt_rcsecao;
     }
 } w122_roots;
 

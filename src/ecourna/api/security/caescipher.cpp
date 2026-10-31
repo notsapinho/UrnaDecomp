@@ -54,7 +54,7 @@ void CAesCipher::SetKey(const CAesKey& chave)
 
     // (original lines 64-68: content not recovered)
 #line 69
-    if (EVP_CIPHER_get_key_length(m_cipher) != static_cast<int>(chave.GetBytes().size())) {
+    if (static_cast<int>(chave.GetBytes().size()) != EVP_CIPHER_get_key_length(m_cipher)) {
         throw CSecurityError(ESE_AES_CHAVE_TAMANHO_SETKEY, "Chave AES de tamanho inválido.");
     }
 
@@ -67,9 +67,9 @@ void CAesCipher::Encrypt(const std::vector<uebyte>& entrada, std::vector<uebyte>
         throw CSecurityError(ESE_AES_CONTEXTO_ENCRYPT, "Erro ao alocar contexto de cifra OpenSSL.");
     }
 
+    std::unique_ptr<uebyte[]> buffer(new uebyte[m_tamanhoBloco + entrada.size()]());
     int tamanho = 0;
     int tamanhoFinal = 0;
-    std::unique_ptr<uebyte[]> buffer(new uebyte[m_tamanhoBloco + entrada.size()]());
     std::vector<uebyte> iv(TAMANHO_IV);
     if (m_chave.GetIV().empty()) {
         m_rng->Generate(iv, TAMANHO_IV);
@@ -107,9 +107,9 @@ void CAesCipher::Decrypt(const std::vector<uebyte>& entrada, std::vector<uebyte>
         throw CSecurityError(ESE_AES_CONTEXTO_DECRYPT, "Erro ao alocar contexto de cifra OpenSSL.");
     }
 
+    std::unique_ptr<uebyte[]> buffer(new uebyte[m_tamanhoBloco + entrada.size()]());
     int tamanho = 0;
     int tamanhoFinal = 0;
-    std::unique_ptr<uebyte[]> buffer(new uebyte[m_tamanhoBloco + entrada.size()]());
     std::vector<uebyte> iv(TAMANHO_IV);
     std::vector<uebyte> dados(entrada.size());
     if (m_chave.GetIV().empty()) {

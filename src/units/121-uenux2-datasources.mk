@@ -1,5 +1,5 @@
 # uenux2 data sources of api::CDataText, and control blocks of this tree's classes: vota::CEscolheOpcao::COpcaoDS's call
-# operator (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's destructor
+# operator (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's destructor and DestroyInst
 # (src/app/comum/relatorios/ccalculacv.cpp), and the roots file 121-uenux2-datasources-roots.cpp, whose header says which
 # vtables it keeps and from which dropped builders. Both files are the ones the classes' records name (cescolheopcao.cpp:150
 # to 152, StartState's; ccalculacv.cpp:58 to 109, the constructor's and IncluiString's); neither of those functions is
@@ -10,6 +10,8 @@
 #   __shared_ptr_emplace<std::string> D2, D0, __on_zero_shared        10675, 10674, 10673
 #   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069
 #   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o
+# CCalculaCV::DestroyInst has no target function: unit 139's ~CGeradorBU (fn 3698) holds it inlined by binaryen, and
+# that fragment has the evidence for its body and for its TU. It needs no root: its one caller is that destructor.
 # Two forms of the operator give 10685 the same instructions in the whole link (`score 10 over 216 rows`, all
 # operand-only, both): out of line in cescolheopcao.cpp, which binaryen inlines into its one caller, and defined in the
 # class, with cescolheopcao.cpp.o left out of a copy of the plain link. Written out of line, a choice. The vtable

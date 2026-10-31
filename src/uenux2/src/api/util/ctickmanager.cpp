@@ -38,7 +38,14 @@ uebyte CTickManager::AddTick(size_t milissegundos)
     return id;
 }
 
-// (original lines 41-50: content not recovered)
+uebyte CTickManager::AddStoppedTick(size_t milissegundos)
+{
+    const uebyte id = AddTick(milissegundos);
+    StopTick(id);
+    return id;
+}
+
+// (original lines 48-50: content not recovered)
 #line 51
 /**
  * Para um tick: ele deixa de disparar até ser iniciado de novo.

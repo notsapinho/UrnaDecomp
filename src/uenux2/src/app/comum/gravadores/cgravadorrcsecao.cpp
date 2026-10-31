@@ -16,14 +16,7 @@
 
 namespace comum {
 
-// (original lines 19-61: content not recovered)
-#line 62
-// <stubs>
-// f11616 · 15849 B · unmatched · name unknown
-// void f11616(i32, i32) { ... }
-// </stubs>
-
-// (original lines 67-209: content not recovered)
+// (original lines 19-209: content not recovered)
 #line 210
 ecourna::app::dados::TSharedIdentificadorEleitor CGravadorRCSecao::CriaIdentidadeEleitor(
     const comum::md::CEleitorIdentidade& identidade) const

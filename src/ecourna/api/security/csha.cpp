@@ -11,7 +11,7 @@ CSha::CSha(std::string algoritmo, size_t tamanho)
     , m_tamanho(tamanho)
     , m_ctx(EVP_MD_CTX_new(), EVP_MD_CTX_free)
 {
-    Reset();
+    CSha::Reset();
 }
 
 // (original lines 17-18: content not recovered)

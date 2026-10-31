@@ -22,7 +22,7 @@ it generates (`tools/libs/openssl/configure.sh`).
 | `zlib/` | zlib | 1.3.1 | full clone https://github.com/madler/zlib, checked out `v1.3.1` | 51b7f2a |
 | `7zip/` | 7-Zip / LZMA SDK (C++ 7z archive + LZMA/LZMA2 codecs + console update callbacks) | **21.02** (alpha, 2021-05-06; compile-diff, see below) | the source release `7z2102-src.7z` (https://sourceforge.net/projects/sevenzip/files/7-Zip/21.02/7z2102-src.7z/download) extracted whole: `Asm/ C/ CPP/ DOC/`, 1236 files, no git repository | archive sha256 ee9755feaa034e7075712bc6b1fad25440bd0a8f21f106a16e37bc4b409f1122 |
 | `RHVoice/` | RHVoice TTS (+ bundled hts_engine fork, rapidxml, sonic, utf8cpp) | **1.14.0** (strings + compile-diff, see below) | full clone https://github.com/RHVoice/RHVoice checked out at tag `1.14.0`, with the one submodule the build compiles, `external/libs/sonic` (waywardgeek/sonic), at the commit 1.14.0 records | d1d5fc6c; sonic ba331411 |
-| `boost/` | Boost (header-only use: regex, date_time, signals2, function, lexical_cast, optional, smart_ptr) | **1.89.0** (compile-diff of the signals2 control blocks, medium confidence; see below) | the release https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.bz2, of which its `boost/` header tree and `LICENSE_1_0.txt` are extracted (15,965 files) | tarball sha256 85a33fa22621b4f314f8e85e1a5e2a9363d22e4f4992925d4bb3bc631b5a0c7a |
+| `boost/` | Boost (header-only use: regex, date_time, signals2, function, lexical_cast, optional, smart_ptr, random, dynamic_bitset) | **1.89.0** (compile-diff of the signals2 control blocks, medium confidence; see below) | the release https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.bz2, of which its `boost/` header tree and `LICENSE_1_0.txt` are extracted (15,965 files) | tarball sha256 85a33fa22621b4f314f8e85e1a5e2a9363d22e4f4992925d4bb3bc631b5a0c7a |
 | `III-ASN.1/` | III ASN.1 runtime (namespace `ASN1`: BER/PER/AVN), TSE fork | upstream last commit 66e5d48 (2016) — TSE's copy is MODIFIED | full clone https://github.com/Kampbell/III-ASN.1 | 66e5d48 |
 | — | libc++ / libc++abi / musl / compiler-rt / dlmalloc, `std::format` | ship with the emsdk (`docs/reference/toolchain.md`) | in the image's sysroot, not fetched | — |
 | — | xz / liblzma | NOT LINKED (`docs/reference/facts/libraries.md` §B5) | — | — |
@@ -171,7 +171,9 @@ Build inference (matches conan-center `openssl/3.x.x` recipe for os=Emscripten: 
   1.76–1.88, 600 from boost-1.89.0.
   Regex error texts `Invalid regex for POSIX-style matching`, `Expression complexity exceeded.` also appear only ≥ 1.89.
 - Used (header-only) parts: regex, date_time (gregorian/posix_time: `boost::gregorian::bad_{year,month,day_of_month}`),
-  signals2, function (`call to empty boost::function`), lexical_cast (`bad lexical cast: …`), optional, smart_ptr.
+  signals2, function (`call to empty boost::function`), lexical_cast (`bad lexical cast: …`), optional, smart_ptr,
+  random (`mt19937`'s twist, target fn 5179, which `ecourna/api/security/cprng.cpp` instantiates) and dynamic_bitset
+  (RTTI `__shared_ptr_emplace<boost::dynamic_bitset<unsigned char>>`; `ecourna/api/util/cbitarray.hpp` includes it).
 - 1.89.0 (2025-08), 1.90.0 (2025-12), 1.91.0 (2026-04) all in conan-center; nothing in the binary separates them → compile-diff.
 - **Compile-diff (`docs/reference/facts/libraries.md` §B7, method §B9; `tools/libs/boost/build.sh <v> O3 -O3` on `tools/libs/boost/probe.cpp`
   over each release's headers, results in `tools/libs/boost/census.json`)**: `boost/regex` headers are byte-identical
