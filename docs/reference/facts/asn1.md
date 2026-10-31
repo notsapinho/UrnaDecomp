@@ -355,11 +355,14 @@ and 8992, `UTCTime`'s, store theirs. Derived from `UTCTime` they store it after 
 constructor of the base runs first. `ledger/vtables.json` has no row for the class, so its slots have no `vtable` evidence:
 its vtable is `[174 144 8952 8951 8955 8954 5075]` at 1149192.
 
-**`BERDecoderPartial::Visitante` is a `std::pair`.** 8846 and 8847 grow the vector with `memory.copy`, in a body with no
-per-element loop. libc++ relocates by copy only for a type `__libcpp_is_trivially_relocatable`, which a class of a
-`std::string` and a `std::shared_ptr` is not, while `pair` declares itself so when its members are. As a class with the
-same two members, 8846 scores `41 over 307`, a loop where the target has `memory.copy`; as a `pair`, `6 over 299`, operands only
-(`pnpm wasm score`). That is also why 5058, the copy constructor, stays out of line, and it fits 1928 (§A10).
+**`BERDecoderPartial::Visitante` is a type libc++ marks trivially relocatable, and `std::pair` is chosen.** 8846 and 8847
+grow the vector with `memory.copy`, in a body with no per-element loop. libc++ relocates by copy only for a type
+`__libcpp_is_trivially_relocatable`, which a class of a `std::string` and a `std::shared_ptr` is not, while `pair` declares
+itself so when its members are, and `tuple` declares it the same way. As a class with the same two members, 8846 scores
+`41 over 307`, a loop where the target has `memory.copy`; as a `pair`, `6 over 299`, operands only (`pnpm wasm score`). A
+`std::tuple` gives the same 115 functions of `BERDecoderPartial.o`, object-local numbers masked, and 1928's rows at `-Oz`, so
+the target does not separate the two, and `pair` is the plain choice. That is also why 5058, the copy constructor, stays out
+of line, and it fits 1928 (§A10).
 
 **`CoderEnv` has four rules and three more members.** 679 holds `decode` behind `br_table [3 1 2 0]` on the rule at +0, and its
 cases store the vptrs of `AVNDecoder` (0), `BERDecoder` 1150244 (1), `BERDecoderPartial` 1150380 (2) and `PERDecoder`
@@ -391,8 +394,9 @@ Not every leftover is the runtime's. By their rows:
 
 | rows | what they are | what they wait for |
 | --- | --- | --- |
-| 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is a reading of the same copy | the executable TU, whose flags are the user's decision ([levels.md](levels.md) §V1) |
+| 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | the executable TU, whose flags are the user's decision ([levels.md](levels.md) §V1) |
 | 1843 | `string::find_first_not_of` at `-Oz`: it keeps `__str_find_first_not_of`'s loop, a compile of the member at `-Oz -fexceptions` shows it, and `-Os`, `-O2` and `-O3` do not | the executable TU, whose flags are the user's decision ([levels.md](levels.md) §V1) |
-| 1532, 2706, 5282, 5290, 2704, 2896 | BER encoding through `CoderEnv`, with landing pads, so an `-fexceptions` TU's | their callers, `api::CFileASN`'s; 2896 is the merge body of 2704, 2545, 4675 and 5523 |
+| 1532 | BER encoding through `CoderEnv`, with landing pads, so an `-fexceptions` TU's | its callers, whose records name `api::CFileASN` |
+| 2706, 5282, 5290, 2704, 2896 | libc++ instances: 2706 is `vector<char>::reserve`, with landing pads, called by the runtime's own 3464, 3472 and 5055; 5282 is a `__split_buffer<char>` constructor and 2704 and 2896 its destructor, with no pad; 5290 holds pads too; 2896 is the merge body of 2704, 2545, 4675 and 5523 | the TU whose copy they are |
 | 8902 | calls 5056 and 1872, `api`'s, and no runtime symbol | a class of `api` |
 | 2650 | `allocator<Visitante>::destroy`: it calls 388, a `~shared_ptr` that keeps its result, where ours calls 424, the one that has none, over which 2183 and 3469 match | a second `~shared_ptr` body in our link |

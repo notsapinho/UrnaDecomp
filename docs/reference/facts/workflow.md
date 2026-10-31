@@ -306,13 +306,13 @@ variable needs braces. `=word` expands to the path of the command `word`; quote 
 
 ## W11. A match line whose symbol our link lacks stops `make -C src splat-match` before the stubs
 
-With a line `9130 _ZN3api15NotOurFunctionEv` appended to `splat/matched.txt` (9130 is a `no-candidate` row):
+With a line `11470 _ZN3api15NotOurFunctionEv` appended to `splat/matched.txt` (11470 is a `no-candidate` row):
 
     TMPDIR=/tmp make -C src splat-match                         # exit 2
       …/splat/matched.txt: 0 matches added, 0 renamed
-        line 7433: function 9130 matched to _ZN3api15NotOurFunctionEv: our link has no function _ZN3api15NotOurFunctionEv, and the scan matches 9130 with no other symbol; left as written, so the splat build fails on it
+        line 7433: function 11470 matched to _ZN3api15NotOurFunctionEv: our link has no function _ZN3api15NotOurFunctionEv, and the scan matches 11470 with no other symbol; left as written, so the splat build fails on it
       cd … && python3 -I -B tools/round/status.py
-      splat/scan.tsv has 7428 match rows but splat/matched.txt has 7429 matches (scan only: [], matched.txt only: [9130]); run TMPDIR=/tmp make -C src splat-match
+      splat/scan.tsv has 7428 match rows but splat/matched.txt has 7429 matches (scan only: [], matched.txt only: [11470]); run TMPDIR=/tmp make -C src splat-match
       make: *** [splat-match] Error 1
 
 The recipe is the scan, then `status.py`, then `stubs.py` (`src/mk/splat-sub.mk`, `splat-match:`): the scan writes
@@ -321,7 +321,7 @@ file that differs from what the new scan gives, and only then reports the disagr
 (`tools/round/status.py`, the end of `main`), so after a scan that changed, README.md, docs/status.md and the waffles
 are rewritten while the stubs are not. Deleting that one line and running the target again:
 
-    /usr/bin/grep -v -x -F '9130 _ZN3api15NotOurFunctionEv' splat/matched.txt > build/out/workflow-facts/matched.txt && mv build/out/workflow-facts/matched.txt splat/matched.txt
+    /usr/bin/grep -v -x -F '11470 _ZN3api15NotOurFunctionEv' splat/matched.txt > build/out/workflow-facts/matched.txt && mv build/out/workflow-facts/matched.txt splat/matched.txt
     TMPDIR=/tmp make -C src splat-match                         # exit 0
       …/splat/matched.txt: 0 matches added, 0 renamed
       7428 matches (0 kind-unverified); README.md, docs/status.md and the waffles agree with splat/scan.tsv

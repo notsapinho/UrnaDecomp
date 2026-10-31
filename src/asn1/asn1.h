@@ -3252,8 +3252,8 @@ namespace ASN1 {
   class ASN1_API BERDecoderPartial : public Visitor
   {
   public:
-    // A pair, by evidence: 8846 and 8847 relocate the vector with memory.copy, which pair allows and a class of these two
-    // members does not. The two typedefs' names are chosen.
+    // The element is a type libc++ marks trivially relocatable: 8846 and 8847 relocate the vector with memory.copy, and a
+    // class of these two members does not. std::tuple gives the same bytes; pair is chosen, as are the typedefs' names.
     typedef ASN1_STD pair<ASN1_STD string, ASN1_STD shared_ptr<IAbstractVisitor> > Visitante;
     typedef ASN1_STD vector<Visitante> Visitantes;
 

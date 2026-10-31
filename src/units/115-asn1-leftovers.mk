@@ -19,9 +19,10 @@
 # What the target decided (evidence):
 # - GeneralizedTime derives from AbstractData, not from UTCTime as upstream's does: its typeinfo (1149228) names base
 #   1148580, AbstractData's, as UTCTime's does, and 8956 stores the vptr where UTCTime's create stores its own.
-# - BERDecoderPartial::Visitante is std::pair<std::string, std::shared_ptr<IAbstractVisitor>>, not a class. 8846 and 8847
-#   relocate the vector with memory.copy, which libc++ does only for a type that declares itself trivially relocatable,
-#   and pair does; a class with these two members goes element by element, 41 over 307 against 6 over 299.
+# - BERDecoderPartial::Visitante is a type libc++ marks trivially relocatable, not a plain class. 8846 and 8847 relocate
+#   the vector with memory.copy, which libc++ does only for such a type; a class with these two members goes element by
+#   element, 41 over 307 against 6 over 299. std::tuple gives the same bytes, so
+#   std::pair<std::string, std::shared_ptr<IAbstractVisitor>> is chosen.
 # - CoderEnv holds four rules and three more members. 679's br_table builds BERDecoder for 1, BERDecoderPartial for 2 and
 #   PERDecoder for 3, so per_Basic_Aligned is 3. 5060 and 518 read +16, a vector of 20-B elements, and +28, a string, and
 #   518 frees +4 with elements of 12 B whose shared_ptr sits at +4, so Modules' value is a shared_ptr.
@@ -43,11 +44,15 @@
 # Pending, none a trap, each with what it waits for (facts/asn1.md A10 has the measurements):
 # - 1928, 3552: pair::~pair and vector<Visitante>::__destroy_vector at -Oz. A compile at -Oz -fexceptions holds pair::~pair as
 #   a function of 1928's rows, and __destroy_vector calling it; -O2 and -O3 inline the destructor and -Os holds
-#   allocator::destroy. So they are the executable TU's copies, and that TU's flags are the user's decision. 518, ~CoderEnv,
-#   which calls 3552, reads the same way. 3552 carries a hand edit for 2183's and 8851's sake.
+#   allocator::destroy. So they are the executable TU's copies, and that TU's flags are the user's decision. 518 is
+#   ~CoderEnv: 5706 stores the rule at +0 and passes that address to 679 and to 518. That it is the same -Oz copy, as its
+#   call of 3552 suggests, is a reading. 3552 carries a hand edit for 2183's and 8851's sake.
 # - 1843 find_first_not_of: the same, the rows -Oz gives; -Os, -O2 and -O3 do not. A hand edit names it for 2185 and 1519.
-# - 1532, 2706, 5282, 5290, 2704 and 2896: BER encoding through CoderEnv with landing pads, so an -fexceptions TU's, not
-#   the -Os runtime's. Their callers are CFileASN's. 2896 is the body of a merge of 2704, 2545, 4675 and 5523.
+# - 1532: BER encoding through CoderEnv with landing pads, so an -fexceptions TU's, not the -Os runtime's. Its callers'
+#   records name api::CFileASN.
+# - 2706, 5282, 5290, 2704 and 2896: libc++ instances. 2706 is vector<char>::reserve, with landing pads, called by the
+#   runtime's own 3464, 3472 and 5055. 5282 is a __split_buffer<char> constructor and 2704 and 2896 its destructor, with no
+#   pad, whose copy came with 2706's. 5290 holds pads too. 2896 is the body of a merge of 2704, 2545, 4675 and 5523.
 # - 2650 differs on one call: target 388, ours 424. Our link keeps one ~shared_ptr body where the target has two, and 2183
 #   and 3469 match over it (unit 86's note).
 # - 8902: calls 5056 and 1872, api's, and no runtime symbol.

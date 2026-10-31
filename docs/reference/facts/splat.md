@@ -620,7 +620,10 @@ awk '$1>=14071 && $1<=14075 || $1>=14240 && $1<=14244 {print $1, $2}' splat/matc
 ```
 
 So a new match whose readings say `address same-content` or `table slot copy`, and one the scan found by `content`,
-is checked against its neighbours and the data it uses before it is listed, at a landing as in a lane.
+is checked against its neighbours and the data it uses before it is listed, at a landing as in a lane. 12991 is another:
+step 9 wrote `kdf_tls1_prf_gettable_ctx_params`, and the dispatch table at 1795712, which holds the slots of 12996 to 12992,
+holds 12991's one slot, 11864, under id 7, `OSSL_FUNC_KDF_GETTABLE_CTX_PARAMS`. So the table is pbkdf1's, and the line is
+corrected to `kdf_pbkdf1_gettable_ctx_params`.
 
 The scan's content pass can make the same kind of match. It pairs one of our functions that no match uses with an
 unmatched target body when, re-pointed, it equals exactly that one body and no other function of ours equals it

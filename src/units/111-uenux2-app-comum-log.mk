@@ -6,7 +6,8 @@
 #   thunks of binaryen's 6045, records 76:18, 84:18), LogaNivelBateria (5875, record 106:18, holding the ieventoslog.cpp
 #   records 440:19 and 456:19), GetInst (948);
 # - comum::CArquivosResultado::GetInst (348, in unit 95's files) and 2900, binaryen's body of the two GetInst, with the
-#   mutex destructors 11659 and 11639, which the content pass pairs once the statics have names;
+#   mutex destructors 11659 and 11639 and the pointers' 11660 and 11640, thunks of 349, which the content pass pairs once
+#   the statics have names;
 # - comum::CInformacaoEleicao in src/app/comum/informacao/cinformacaoeleicao.cpp: the constructor (603), EhModoDemonstracao
 #   (2286, record 40:36) and seven members clang inlined it into (1950, 2865, 3847, 5914, 5915, 5916, 5917).
 # Files: the order here is the data's, ieventoslog.cpp's records (@1552880) before clogcomum.cpp's (@1552996). Chosen
@@ -19,13 +20,11 @@
 #   three members at -O2 and none at -O3. std::format stays as the source: the other 19-byte literal (5875) matches, and
 #   the tree's evidence is the level (docs/reference/facts/levels.md V3), which is reserved. With this unit's four TUs at
 #   -O3 alone and the tree's -std=c++20, a try link reads `13 over 230` and `19 over 292`, all operand-only, and
-#   `splat-remap --against` prints IDENTICAL for both, operand kinds verified (`tools/round/try-tu.sh --flags -O3`, with
-#   233's name in a copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
+#   `splat-remap --against` prints IDENTICAL for both, operand kinds verified (`tools/round/try-tu.sh --flags -O3
+#   --skip-units 111-uenux2-app-comum-log.mk --roots src/units/111-uenux2-app-comum-log-roots.cpp`, with 233's name in a
+#   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
 #   those thunks.
-# - 11660, 11640 (the pointers' destructors, no-candidate): the target's are thunks of 349, binaryen's merge of 57 such
-#   destructors. Our two stay whole bodies: two are not enough for binaryen to form it (`__cxx_global_array_dtor` of both
-#   objects, 13 rows each, in this link).
 # - vota::CExibeAlertaDesligamento::StartState (12018) stays pending in unit 61: its pending file says why.
 # - not reconstructed: 184 (CLogVota::GetInst, a CPolySingletonList::push), 5372 (needs 816, 1686, 1903, 2224), 10226,
 #   12098 and the other CLogComum members, 2742 and 3603 (the other thunks of 2900: their classes are not named).
@@ -55,8 +54,8 @@
 #   constructor defined out of line stays a call, in its own TU too, with no remark from clang, which keeps that reload,
 #   and binaryen removes the empty call at link. Why -fPIC does this is not measured. Declared `= default` in the class,
 #   or implicit, it folds: 18 rows where the form written has 37, `load, new, store, unlock`.
-# - The destructor out of line is a choice. Implicit, GetInst's object loses one call that binaryen removes anyway (34 rows,
-#   13 of them differ on the masked compare); that form was not linked.
+# - The destructor out of line is a choice. Implicit, GetInst's object loses one call that binaryen removes anyway (34 rows
+#   against 37: `local.get 2; call ~T; drop` go, the rest stays in order); that form was not linked.
 # - Both empty bodies are `= default` below the statics, a choice: `{}` gives the same rows, and their lines are free.
 #
 # Columns. A default-argument std::source_location takes the begin of the call expression (probe: `S::inst().f();` at 4
@@ -79,7 +78,8 @@
 # std::lock_guard, `== nullptr` for `!`, `s_instancia = std::unique_ptr<T>(new T)` for reset, a `T*` result with
 # s_instancia.get() for the reference, which every caller drops, and `{}` for either `= default`; std::make_unique for
 # reset in the shape probe, not in this class, whose constructor is private. GetInst in the class with no `inline` gives
-# the same rows at -O2 only, with both special members out of line (cost=225, threshold=225), and not the target's orders.
+# the same linked bytes at -O2 only, with both special members out of line (cost=225, threshold=225), and not the target's
+# orders; its object reads 35 rows against 37, since the constructor's call differs by what the TU sees.
 #
 # Chosen, no byte decides: every name but the records' (loga 233, LogaCargaBateria, GetInst, s_instancia, s_mutex,
 # m_aplicativo, the seven members, SDadosInformacaoEleicao and its members, the enumerators of ERelatoriosUE,

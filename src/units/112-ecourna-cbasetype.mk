@@ -84,10 +84,9 @@
 #   - HexCharToInt takes int: the compares are on the sign-extended byte. With `char` 305 of 670 rows differ.
 #
 # Left, each measured:
-#   - 9215, TPartidoID's constructor, is ecourna's copy (b/src record) with table slot 6695, and its users 3649, 9064, 9216
-#     are not in this link, so it stays no-candidate. An instance in a scratch TU gives its rows but for NOME: that TU was
-#     tiposbasicos.cpp, where NOME's definition folds, 25 rows, which a converter's TU does not see. Not measured over such a
-#     TU. It waits for those callers.
+#   - 9215, TPartidoID's constructor, is ecourna's copy (b/src record) with table slot 6695. It left this list when its
+#     users landed: it matches from cconversorfederacao.cpp's object, unit 105's. In tiposbasicos.cpp NOME's definition
+#     folds, 25 rows, which a converter's TU does not see.
 #   - 1143, CError's constructor, stays `differs`, written and right. All 67 of its 787 rows that differ are operands, and the
 #     first the scan cannot re-point is the literal " - ": the target's lies in the tail of ") - ", which fn 690 holds, a helper
 #     of vota/eleitor/comum/ctelasvota.cpp that builds `prefixo + " - cargo " + ... + ") - " + sufixo`. Ours lies in the tail

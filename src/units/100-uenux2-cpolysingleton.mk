@@ -1,13 +1,14 @@
 # uenux2 api::CPolySingleton<T>::instance (api/pattern/cpolysingleton.h), one template, 18 of its 32 plain instantiations,
 # set, its wrapper of push, with api::CPolySingletonList's has<T>, instance<T>, push<T> and remove (cpolysingletonlist.h),
-# their lock (cmutexcompartilhado.h), api::EUePatternError (euepatternerror.h) and the singletons' control blocks. 16 of the
-# 18 match from the roots object, which stands in for the real callers:
+# their lock (cmutexcompartilhado.h), api::EUePatternError (euepatternerror.h) and the singletons' control blocks. The roots
+# object instantiates 16 of the 18 and stands in for the real callers, and the link keeps the first copy, so a copy moves
+# to a real object as its users land (the object column of splat/scan.tsv):
 #   512 IScreen, 925 IBeep, 862 IPower, 923 IUrna, 3075 IResource, 383 IInputMT, 905 IPaperRelatorios, 3204 IAjusteDataHora,
 #   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 1282 comum::CCalculaCV,
 #   837 comum::IEventosLog, 611 comum::IInterfaceInit, 356 comum::IControladorRegistraMesarios, 1822 comum::IInterfaceSavd.
-# The other two come from real objects: 3164 IGenericFactory<ISyncCtl> from cthread.cpp.o, 5443 ITimerScheduler from
-# itimerscheduler.cpp.o.
-# Nine of the 16 classes are in landed headers. IResource, CCalculaCV, IEventosLog, IControladorRegistraMesarios and
+# Of those, 512, 925, 862, 11157, 4356, 837 and 611 come from real objects now. The other two come from real objects
+# alone: 3164 IGenericFactory<ISyncCtl>, 5443 ITimerScheduler from itimerscheduler.cpp.o.
+# Ten of the 16 classes are in landed headers. IResource, CCalculaCV, IControladorRegistraMesarios and
 # IGenericFactory get their heads alone (each header says so): typeid needs a complete class, and a control block needs a
 # virtual destructor at the slot its __on_zero_shared calls. The type name is a constant in each target body but 11157's and
 # 611's, so those 14 classes have no key function in the TUs that compiled them, and CEscritorLog and IInterfaceInit have one.
