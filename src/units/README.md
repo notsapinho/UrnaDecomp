@@ -319,7 +319,7 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   has a root of its own at that tree's flags, since an instance also brings its callees' linkonce copies to the head of
   the link: `src/app/roots_cbasetype.cpp`, at `UENUX2_CXXFLAGS`, holds eight explicit instantiations of an ecourna
   template whose target copies are uenux2's (unit 112), and leaves no stand-in to drop. The executable TU's copies can
-  need that tree's flags too: it compiles without strict aliasing (`docs/reference/facts/levels.md` §V1). And an
+  need uenux2's flags too: it compiles without strict aliasing (`docs/reference/facts/levels.md` §V1). And an
   instance's out-of-line callee is counted like any function: with one caller in our link binaryen inlines it back. So
   `src/app/roots_vector.cpp`, at `UENUX2_CXXFLAGS`, holds the `vector<unsigned char>` guard's destructor (306) and
   `~vector` (520) with `minsize`, the two callers the target's `__destroy_vector::operator()` (4967) has, and a stand-in
