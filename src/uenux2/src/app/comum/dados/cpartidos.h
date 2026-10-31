@@ -13,7 +13,7 @@ namespace comum {
 // map at +0, an iterator of it at +12, and a std::string at +16 that 3751 builds from the literal "CPartidos". The class's
 // name is that literal; the path, the lower-case rule beside the other sets, is chosen, and so are GetInst and the data
 // members' names. The records of api::CDataMap<unsigned short, CPartido> and the same three members at the same offsets
-// say that these 28 bytes are that class; its header is not in this tree yet, so they are written out here.
+// say that these 28 bytes are that class. Its header has no constructor taking the name yet, so they are written out here.
 class CPartidos {
 public:
     static CPartidos& GetInst();

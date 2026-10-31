@@ -14,10 +14,9 @@
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685.
 # Not matched, and why: slots 2, 3 and 4 and 7030 are traps, listed in the -pending.cpp with what they wait for.
 # ProcessarEntrada 4349 has a record, no slot and 12 unnamed callees, so it is unwritten: its stub stays. 13695 and 10231,
-# the pointer destructors of fn 509's object and of CMonitoraAlimentacao, are thunks of fn 349 in the target, f349(p0, addr),
-# and whole bodies here: 349 is binaryen's merge of the trivial unique_ptr destructors, and these two alone do not form it
-# (`/usr/bin/grep -c 'mgfn-shared\$__cxx_global' build/out/wasm-map/vota_web/names.tsv` prints 0). They wait for that merge's
-# other members. The D2s of CMessageOperador are one body with CMessageEleitor's (3162, 3157), which the link names by the
+# the pointer destructors of fn 509's object and of CMonitoraAlimentacao, match with no text of their own: each is a thunk
+# of fn 349, f349(p0, addr), binaryen's merge of the trivial unique_ptr destructors, which unit 104's states form and these
+# two alone do not. The D2s of CMessageOperador are one body with CMessageEleitor's (3162, 3157), which the link names by the
 # first; their match lines moved from CPriorityMessageQueue's names.
 #
 # What the evidence gives:

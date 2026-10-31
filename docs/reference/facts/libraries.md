@@ -212,9 +212,10 @@ with a stand-in for 5805, which the roots no longer hold (below). The third row 
 of 402, 590, 798, 950, 2210, 3858 and 5267, whose names would otherwise rest on the matches they enable. Removing any one of the
 21 drops nothing. 5 of the 66 have one caller (1227, 2210, 2237, 2714, 4760).
 
-5805 is withdrawn, so the count against the base prints it. It matched at the base as `RHVoice::text_token::~text_token` through
-a twin: its target callers, 7787 and 11561, are not RHVoice's, and only landing pads reached that destructor in our link. A
-stand-in for them would reach a function the target does not reach. The row waits for the class those callers hold.
+5805 left the list here, so the count against the base prints it. It matched at the base as `RHVoice::text_token::~text_token`
+through a twin: its target callers, 7787 and 11561, are not RHVoice's, and only landing pads reached that destructor in our
+link. A stand-in for them would reach a function the target does not reach. It is `comum::CCargos::~CCargos`, and it matches
+under that name in unit 110, whose roots stand in for 7787.
 
 `-fignore-exceptions` and emcc's default, with no `-fexceptions` on the line, give the same 54 objects (`cmp`): clang gets
 `-fcxx-exceptions -fignore-exceptions -fexceptions` either way and drops the `invoke`s itself. On that build

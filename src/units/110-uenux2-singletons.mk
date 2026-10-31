@@ -72,8 +72,8 @@
 # Names: 407, 555, 187, 1073, 1926 and 2817 are srcloc-anchors. Their mutexes hold through their exit destructors, which
 # the content pass pairs once the name is voted, and through the thunk. A record held by a function that inlines GetInst
 # anchors nothing, so 273, 326 and 2812 have hand edits of `s_mutex`, and CRespostas's pointer one too, with 1929, whose
-# twin 1932 stops the census; the content pass then pairs 5730. 555's and 2817's pointers have one voter and a destructor
-# that cannot land, so they have hand edits too. Each line in splat/symbol_addrs.txt cites what the thunk's own body holds
+# twin 1932 stops the census; the content pass then pairs 5730. 555's and 2817's pointers have one voter, since 555's
+# destructor cannot land and 2817's, 11510, is a thunk of fn 349 that casts no vote, so they have hand edits too. Each line in splat/symbol_addrs.txt cites what the thunk's own body holds
 # and the other holders.
 #
 # 5805, ~CCargos, has two target callers: 11561, written here, and 7787, which is not. The roots' d5805 stands for 7787 and
@@ -85,10 +85,8 @@
 # - 5734 and 11495: CRdvVota's destructor holds comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota> at +44
 #   (vptr 1560304), and that class is not in this tree; its slots 2 and 3 are 11483 and 11482. ~CRdvVota here destroys the
 #   members crdvvota.h has, 67 rows over 115 from fn 5734, and both rows are no-candidate.
-# - 11510: f349(p0, 1838872). 349 is binaryen's merge of the exit destructors of pointers to trivial classes, and it needs
-#   a second such destructor in the link; ours is a whole body until then.
-# - 11206, CParteEleitores::Imprime, waits for api/io/cdatamap.h, whose Next is 5601; 11215, CParteCandidatos::Imprime, for
-#   521 and 2271. Both stay traps in unit 77's pending file.
+# - 11206, CParteEleitores::Imprime, has both its callees matched and is only not written; 11215, CParteCandidatos::Imprime,
+#   waits for 2271. Both stay traps in unit 77's pending file.
 # - 242, ~CDetalheCandidato, is written (implicit) and differs, and it is the level: __destroy_at<CSuplencia> costs 245,
 #   over -O2's threshold of 225 and under -O3's 250 (-Rpass-missed=inline on cpe.cpp). At -O2 it stays out of line and the
 #   small loop goes into the D2; at -O3 it goes into the loop, fn 1135, which is then too costly for the D2. So 242 waits

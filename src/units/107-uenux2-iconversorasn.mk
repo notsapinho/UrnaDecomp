@@ -67,8 +67,8 @@
 # Written and not matched, and what each waits for:
 # - 3712, CMunicipio's constructor, `no-candidate`: the target's calls fn 1374, a copying Trim (`f3942(p0, p1, table
 # slot 6416)`,
-#   slot 6416 is fn 9406, the in-place CStringUtils::Trim), with 1879, the copying ToLower, and 5156 over 3942. No such
-#   overload is declared in api/util/cstringutils.hpp. The constructor here copies the string, the one difference. 11378,
+#   slot 6416 is fn 9406, the in-place CStringUtils::Trim), with 1879, the copying ToLower, and 5156 over 3942. Unit 112
+#   declares that overload in api/util/cstringutils.hpp; the constructor here copies the string, the one difference. 11378,
 #   its caller, is 3 operand rows from the target and stays `unresolved` on that one call: an anchor needs the same body.
 # - 11413, CConversorSeguranca::DoConverte, `unresolved` on fn 1158, std::vector<char>::__assign_with_size with
 #   __wrap_iter<const char*>. Ours merges with roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the

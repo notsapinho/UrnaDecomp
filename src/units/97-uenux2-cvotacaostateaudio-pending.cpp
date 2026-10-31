@@ -2,12 +2,12 @@
 // NOT the target's, they trap. All are reached only through the vtables.
 //
 // vota::CVotacaoStateAudio, in src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:
-// - StartState 7028 (slot 2), 55 B: sets +11 from fn 509's +4, calls slot 10 and registers the +13 tick. It waits for fns
-//   509 and 316 (the queue singleton fn 700 is called on), which have no name.
+// - StartState 7028 (slot 2), 55 B: sets +11 from fn 509's +4, calls slot 10 and registers the +13 tick. Its callees are
+//   matched, 509 and 316 (the queue singleton fn 700 is called on) among them: it is only not written.
 // - FinishState 7022 (slot 5), 132 B: cancels the wait, stops both ticks through fns 422 and 316, calls slot 11. It waits
-//   for fns 316 and 422.
+//   for fn 422.
 // - ProcessInput 7029 (slot 7, record :69), 282 B, and ProcessTick 7010 (slot 8, records :120 and :388), 683 B: both
-//   also wait for fns 316 and 422; 7010 holds IniciarEsperaFimAudio and its two lambdas (the __func vtables @1536140 and
+//   also wait for fns 422 and 1091; 7010 holds IniciarEsperaFimAudio and its two lambdas (the __func vtables @1536140 and
 //   @1536204), and calls PlayInterruptibleMessage (fn 3143).
 // - EmiteEcoComInputField 3139 (slot 13, record :188), 525 B: waits for api::CInteractiveForm::Read() (record
 //   cinteractiveform.h:57), which this tree does not hold, and for a definition of api::EInputResult.
