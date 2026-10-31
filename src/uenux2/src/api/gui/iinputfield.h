@@ -39,6 +39,13 @@
 // with the `B` test's order changed, and with the two branches of the `D` case the other way round; so those orders are
 // evidence.
 //
+// SetAtivo and ApagaCursor are inlined into api::CInteractiveForm's SetFocus (fn 1401), once with false for the field
+// losing the focus and once with true for the one taking it: one member with a bool, not two, is what the bytes give.
+// Its test `m_ativo != ativo` compiles to i32.eqz for false and a bare br_if for true, where `!m_ativo` gives the
+// i32.const 1 / i32.ne of a bool (docs/reference/facts/reading.md R14), and with true it tail-merges the timer's Start
+// and the form's Refresh into one call through a computed slot, as fn 1401 does; Ativa and Desativa written apart give
+// neither (src/units/120-uenux2-iform.mk has the scores). The names are chosen.
+//
 // The constructor is written and no function of this tree's link holds it: it calls ITimerScheduler::GetInst, which has
 // no body here, so only functions the link drops reach it. Nothing has compared it with fns 2024 and 3673. Read
 // (fns 6319, 11024) stays `unresolved` although its bytes are the target's: see src/units/92-uenux2-iinputfield.mk.
@@ -132,7 +139,28 @@ public:
 
     size_t GetLength() const { return m_length; }
 
+    void SetAtivo(bool ativo)
+    {
+        if (m_ativo != ativo && m_length != 0) {
+            m_ativo = ativo;
+            if (ativo && !m_timer->IsRunning()) {
+                m_timer->Start();
+            } else {
+                ApagaCursor();
+            }
+        }
+    }
+
 protected:
+    void ApagaCursor()
+    {
+        if (m_timer->IsRunning()) {
+            m_timer->Stop();
+            m_cursor = true;
+            this->Invalidate();
+        }
+    }
+
     std::string m_texto;
     std::shared_ptr<IInputValidation> m_validation;
     size_t m_length;

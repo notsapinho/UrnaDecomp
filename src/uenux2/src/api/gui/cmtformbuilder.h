@@ -14,17 +14,26 @@
 // and have no parameter for it. The field's std::shared_ptr is the result of the text adders (each takes the address of
 // its result) and they push it through the out-of-line push_back, fn 1400; the four other adders return nothing and clang
 // inlines push_back, whose reference argument is then a local (src/units/31-uenux2-cformbuilder.mk).
+//
+// GetForm (fn 1694) and GetInteractiveForm (fn 301) build the form of the fields added with a api::CPreShowClearMT,
+// name it and clear the vector. Each public one calls a private overload that takes the pre-show: binaryen inlines
+// that overload into its one caller, which the second stack frame in the middle of fns 1694 and 301 shows, and clang
+// leaves it out of line in the object. The names, the overloads and their parameters are chosen.
 
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "api/gui/cinteractiveform.h"
 #include "api/gui/cledfieldmt.h"
 #include "api/gui/ctextsource.h"
+#include "api/gui/iform.h"
 #include "api/gui/iformfield.h"
 #include "api/gui/itext.h"
+#include "api/gui/ipreshow.h"
 #include "api/gui/primitives.h"
+#include "api/hwil/iinput.h"
 
 namespace api {
 
@@ -60,7 +69,16 @@ public:
 
     void AddClock(const SPoint& posicao);
 
+    std::shared_ptr<IForm<IScreenMT>> GetForm(const std::string& nome);
+
+    std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> GetInteractiveForm(const std::string& nome, bool limpaTeclado);
+
 private:
+    std::shared_ptr<IForm<IScreenMT>> GetForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow, const std::string& nome);
+
+    std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> GetInteractiveForm(const std::shared_ptr<IPreShow<IScreenMT>>& preShow,
+                                                                          const std::string& nome, bool limpaTeclado);
+
     SharedField AddTextField(const SharedIText& texto, const SPoint& posicao);
 
     std::vector<SharedField> m_campos;
