@@ -1,4 +1,5 @@
 #pragma once
+#include <compare>
 #include <memory>
 #include <string>
 
@@ -18,8 +19,12 @@ public:
     std::string GetNumero() const;
     uebyte GetTamanho() const { return m_tamanho; }
 
+    // What std::map<CNumeroInscricaoEleitoral, ...>'s find (target fn 3741) compares: the type as unsigned, which is why
+    // m_tipo is the enum, then the text, then the size. operator< written out and over std::tie give other bytes.
+    auto operator<=>(const IIdentificadorEleitor&) const = default;
+
 private:
-    int m_tipo;
+    ETipoIdentificadorEleitor m_tipo;
     std::string m_numero;
     uebyte m_tamanho;
 };

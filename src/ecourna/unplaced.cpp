@@ -261,11 +261,6 @@
 // f5369 · 18 B · unmatched · placement: link order · name unknown
 // ? f5369(i32, i32, i32, i32) { ... }
 
-// link-order cluster 749 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp
-
-// f5379 · 309 B · unmatched · placement: link order · name unknown
-// void f5379(i32, i32, i32, i32) { ... }
-
 // link-order cluster 758 · uses=2 · neighbours' file uenux2/src/api/gui/crhvoicetexttospeech.cpp
 
 // f5434 · 11 B · unmatched · placement: link order · name unknown
@@ -606,9 +601,6 @@
 // f3896 · 223 B · unmatched · placement: link order · name unknown
 // void f3896(i32, i32, i32, i32, i32, i32) { ... }
 
-// f3892 · 577 B · unmatched · placement: link order · name unknown
-// void f3892(i32, i32) { ... }
-
 // link-order cluster 1035 · uses=3
 
 // f3921 · 97 B · unmatched · placement: link order · name unknown
@@ -714,11 +706,6 @@
 
 // f2893 · 1021 B · unmatched · placement: link order · name unknown
 // void f2893(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1121 · uses=4
-
-// f2919 · 527 B · unmatched · placement: link order · name unknown
-// ? f2919(i32, i32, i32) { ... }
 
 // link-order cluster 1122 · uses=4
 

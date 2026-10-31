@@ -1,3 +1,11 @@
+#include "app/comum/justificativa/cjustificadordetalhe.h"
+
+namespace comum {
+
+CJustificadorDetalhe::CJustificadorDetalhe(const CJustificadorDetalhe& outro) = default;
+
+} // namespace comum
+
 // <stubs>
 // f10590 · 4305 B · unmatched · name unknown
 // void f10590(i32) { ... }
