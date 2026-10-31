@@ -14,6 +14,8 @@ namespace api {
 class CTickManager {
 public:
     uebyte AddTick(size_t milissegundos);
+    // Fn 5452: AddTick, then StopTick of the new id, which it returns. No record names it: the name is chosen from that.
+    uebyte AddStoppedTick(size_t milissegundos);
     void StopTick(uebyte id);
     void StartTick(uebyte id);
 

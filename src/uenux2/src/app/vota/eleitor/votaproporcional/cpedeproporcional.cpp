@@ -1,16 +1,87 @@
+#include "app/vota/eleitor/votaproporcional/cpedeproporcional.h"
+
+namespace vota {
+
+CPedeProporcional::CPedeProporcional()
+    : CVotacaoStateAudio(EVENTO_ENTRADA)
+{
+}
+
+CPedeProporcional::~CPedeProporcional() = default;
+
+CPedeProporcional& CPedeProporcional::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CPedeProporcional());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CPedeProporcional> CPedeProporcional::s_inst;
+std::mutex CPedeProporcional::s_mutex;
+
+// (original lines 24-38: content not recovered)
+#line 39
 // <stubs>
 // f5923 · 16 B · unmatched · name unknown
 // void f5923(i32) { ... }
-
-// f11712 · 103 B · unmatched · placement: link order · name unknown
-// void f11712(i32) { ... }
-
-// f11711 · 811 B · unmatched · name unknown
-// void f11711(i32) { ... }
-
-// f11710 · 51 B · unmatched · placement: link order · name unknown
-// void f11710(i32, i32) { ... }
-
-// f3849 · 20 B · unmatched · placement: link order · name unknown
-// ? f3849() { ... }
 // </stubs>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+std::string CPedeProporcional::GetMensagem() const
+{
+    return "Você está votando para {cargo-atual}. {quantidade-digitos}. Voto {progresso}.";
+}
+
+} // namespace vota

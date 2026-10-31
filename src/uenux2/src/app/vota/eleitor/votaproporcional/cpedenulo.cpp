@@ -1,7 +1,12 @@
-// <stubs>
-// f11745 · 52 B · unmatched · placement: link order · name unknown
-// void f11745(i32, i32) { ... }
+#include "app/vota/eleitor/votaproporcional/cpedenulo.h"
 
-// f11744 · 433 B · unmatched · name unknown
-// ? f11744(i32, i32) { ... }
-// </stubs>
+namespace vota {
+
+CPedeNulo::~CPedeNulo() = default;
+
+std::string CPedeNulo::GetMensagem() const
+{
+    return "Você está votando para {cargo-atual} no candidato {voto}. Número errado. Aperte confirma para prosseguir, ou corrige para reiniciar este voto.";
+}
+
+} // namespace vota

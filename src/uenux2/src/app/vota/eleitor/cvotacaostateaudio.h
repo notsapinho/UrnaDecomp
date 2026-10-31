@@ -39,11 +39,12 @@ public:
 // the names of slots 11 (FinishState calls it last), 12 (ProcessTick calls it with any other tick's id), 14 and 15, and
 // slots 14 and 15's const. ProcessTick (fn 7010) calls slot 15 and hands the result to slot 14: slot 15 is the message, with
 // {cargo-atual}-style tags, and slot 14 fills them in (fn 6999 holds those tags and returns a string).
-// Slots 2, 5, 7, 8, 13 and 14 are pending (src/units/97-uenux2-cvotacaostateaudio-pending.cpp).
+// Slots 7, 8, 13 and 14 are pending (src/units/97-uenux2-cvotacaostateaudio-pending.cpp).
 //
-// The layout is what the constructor (fn 1785, not reconstructed: it calls fns 316 and 807, with no name yet) stores:
-// +11 a flag read before every use of audio (fn 7028 stores a comparison's result there, and the readers compare it with
-// 1: the width is evidence, the bool is chosen), +12 and +13 two tick ids, +16 a std::unique_ptr (the destructor deletes
+// The layout is what the constructor (fn 1785) stores: +11 a flag read before every use of audio (fn 7028 stores a
+// comparison's result there, and the readers compare it with 1: the width is evidence, the bool is chosen), +12 and +13
+// two tick ids, of 2000 and 1500 ms, which the constructor creates stopped on the CThreadEleitor (StartState starts +13
+// and FinishState stops both), +16 a std::unique_ptr (the destructor deletes
 // it through slot 1), +20 the wait for the end of the audio. The wait's type follows
 // api::ISound::WaitAsync, which IniciarEsperaFimAudio (record :388, inlined into fn 7010) calls and whose result it
 // stores there. All member names, and the name of the private member the destructor calls, are chosen. That member's
@@ -76,6 +77,9 @@ public:
     virtual std::string FormataMensagem(const std::string& mensagem) const;
 
     virtual std::string GetMensagem() const = 0;
+
+protected:
+    explicit CVotacaoStateAudio(int eventos);
 
 private:
     void CancelaEsperaFimAudio()

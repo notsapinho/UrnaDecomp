@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <cstddef>
 #include <exception>
 #include <memory>
@@ -16,6 +17,14 @@ namespace vota {
 class CThreadVota : public api::CThread {
 public:
     uebyte AddTick(size_t milissegundos);
+    // Fn 4640: the target's callers (fns 1285 and 5979) store the i64 1000 in their frame and pass its address, and
+    // the body reads its low word as CTickManager::AddTick's size_t. So the parameter is a reference to a 64-bit
+    // count of milliseconds; std::chrono::milliseconds is chosen, the type records of this tree spell for an interval
+    // (`const std::chrono::milliseconds &`, api::CTextFieldUpdate's constructor). No record names the member: the name
+    // is AddTick's, a choice.
+    uebyte AddTick(const std::chrono::milliseconds& tempo);
+    // Fn 807: CTickManager::AddStoppedTick of m_ticks (fn 5452), named with it.
+    uebyte AddStoppedTick(size_t milissegundos);
     void StopTick(uebyte id);
     void StartTick(uebyte id);
 
