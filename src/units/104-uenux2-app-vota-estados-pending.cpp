@@ -86,7 +86,8 @@ void CImprimirBUOutrasObrigatorias::StartState()
     __builtin_trap();
 }
 
-// CInicioBU::StartState: fn 12062 (189 B), callees with no name: 185, 261, 291, 407, 5986.
+// CInicioBU::StartState: fn 12062 (189 B): it holds vota::CQuerImprimirBU's GetInst inlined, whose constructor copies a
+// member of CTelasVota (+236) that app/vota/eleitor/comum/ctelasvota.h has no accessor for.
 void CInicioBU::StartState()
 {
     __builtin_trap();

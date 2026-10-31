@@ -20,18 +20,28 @@ IQRCodeBUDS::IQRCodeBUDS(std::vector<std::string> partes) : m_partes(std::move(p
     }
 }
 
+CMostraQRCodeBU::CMostraQRCodeBU()
+    : CEstadoComDesligamentoAutomatico(EVENTO_ENTRADA)
+{
+}
+
+CMostraQRCodeBU::~CMostraQRCodeBU() = default;
+
+CMostraQRCodeBU& CMostraQRCodeBU::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CMostraQRCodeBU());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CMostraQRCodeBU> CMostraQRCodeBU::s_inst;
+std::mutex CMostraQRCodeBU::s_mutex;
+
 } // namespace vota
 
 // <stubs>
-// f12055 · 5287 B · unmatched · name unknown
-// void f12055(i32) { ... }
-
-// f12051 · 446 B · unmatched · name unknown
-// void f12051(i32) { ... }
-
 // f5982 · 1514 B · unmatched · name unknown
 // void f5982(i32) { ... }
-
-// f2888 · 104 B · unmatched · placement: link order · name unknown
-// ? f2888() { ... }
 // </stubs>

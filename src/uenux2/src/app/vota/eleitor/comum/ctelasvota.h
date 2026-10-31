@@ -21,6 +21,10 @@ public:
 
     static CTelasVota& GetInst();
 
+    // vota::CImprimindoBU's constructor (inlined into fn 5986) copies the member at +100: the getter's name, and that it
+    // is a getter, are chosen.
+    const CFormInterativoTelaVota& GetTelaImprimindoBU() const { return m_tela12; }
+
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;
     CFormInterativoTelaVota m_tela1, m_tela2, m_tela3, m_tela4, m_tela5, m_tela6, m_tela7, m_tela8, m_tela9, m_tela10;
