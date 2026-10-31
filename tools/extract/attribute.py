@@ -1,12 +1,12 @@
 """Attribute every defined function to a component.
-usage: python3 -I tools/extract/attribute.py <func-strings.tsv> <vtables.json> <classes.json> <wasm> <func-attribution.tsv> <functions-by-file.tsv>
+usage: python3 -I tools/extract/attribute.py <func-strings.tsv> <vtables.json> <classes.json> <wasm> <func-attribution.tsv>
 Evidence order (first hit wins): file = a __FILE__ string the function loads; vtable = the function sits in a class's
 vtable; vptr = the function stores a class's vptr (ctor/dtor); pretty = a __PRETTY_FUNCTION__ string; str = another
 string with a recognisable owner (sqlite/openssl/rhvoice/...). Unattributed functions are listed with component '-'."""
 import sys, os, re, json, collections
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from wasmmod import Module
-refs_tsv, vtables_json, classes_json, wasm, out_attr, out_byfile = sys.argv[1:7]
+refs_tsv, vtables_json, classes_json, wasm, out_attr = sys.argv[1:6]
 
 SEVENZIP = re.compile(r'^(N(Archive|Compress|Crypto|Windows|7z|Lzma)|I(Compress|Crypto|Sequential|InStream|OutStream|Archive|Stream|Progress|Unknown|Folder|Set|Get)|C(Filter|Limited|Local|Aligned|Tail|StdIn|StdOut|Out(File|Buffer|Handler)|In(File|Buffer)|Open|Extract|ArchiveOpen|Lzma|Bcj|My|Multi|Dec|Enc|Sequential|Byte|Copy|Coder|Mixer|Hash|Bufferer|Base|Buf|Record|Object|Prop|Un|Crc)|Z7_)')
 def component_of_class(name):
@@ -54,7 +54,7 @@ with open(refs_tsv, encoding='utf-8') as f:
 FILE_RE = re.compile(r'^(/|[a-z]+/)[A-Za-z0-9_./+-]*\.(c|cpp|h|hpp|cc|cxx|inl)$')
 PRETTY_RE = re.compile(r'^[^%]*::[^%]*\(')
 mod = Module(wasm)
-rows = []; byfile = collections.defaultdict(set); census = collections.Counter(); evidence_count = collections.Counter()
+rows = []; census = collections.Counter(); evidence_count = collections.Counter()
 for fi in range(mod.n_imported_funcs, mod.n_imported_funcs + len(mod.func_types)):
     r = refs.get(fi, [])
     # exact-start refs only: an i32.const that lands INSIDE a string is almost always a plain integer constant
@@ -68,8 +68,6 @@ for fi in range(mod.n_imported_funcs, mod.n_imported_funcs + len(mod.func_types)
     if files:
         comps = collections.Counter(component_of_file(p) for p in files)
         comp, ev, det = comps.most_common(1)[0][0], 'file', ';'.join(sorted(set(files)))
-        for p in files:
-            for pf in pretties: byfile[p].add(pf)
     elif fi in func_class:
         cls = sorted(func_class[fi]); comp, ev, det = component_of_class(cls[0]), 'vtable', ';'.join(cls)
     elif vptrs:
@@ -112,10 +110,6 @@ for k in range(0, len(rows), B):
 with open(out_attr, 'w', encoding='utf-8') as o:
     o.write('func\tcomponent\tevidence\tdetail\n')
     for fi, comp, ev, det in rows: o.write(f'{fi}\t{comp}\t{ev}\t{det}\n')
-with open(out_byfile, 'w', encoding='utf-8') as o:
-    o.write('file\tpretty_function\n')
-    for p in sorted(byfile):
-        for pf in sorted(byfile[p]): o.write(f'{p}\t{pf}\n')
 print('functions', len(rows))
 print('evidence', dict(evidence_count))
 for c, n in census.most_common(): print(f'{n:6d}  {c}')

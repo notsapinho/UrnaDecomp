@@ -17,6 +17,7 @@ import {
   ledgerSummary,
   namesViaTwin,
   readAttribution,
+  parseLedgerTsv,
   readLedgerTsv,
   readOwners,
   renderLedgerTsv,
@@ -37,7 +38,15 @@ import {
 import { type NormalizeOptions, normalizeModule, signature } from './normalize';
 import { type Extract, extractFunction, findFunction } from './object';
 import { type Module, funcAt, parseModule, typeText } from './parse';
-import { type GroupBy, movements, renderMovements, renderProgress, snapshots, takeSnapshot } from './progress';
+import {
+  committedLedger,
+  type GroupBy,
+  movements,
+  renderMovements,
+  renderProgress,
+  snapshots,
+  takeSnapshot,
+} from './progress';
 import { DEFAULT_IMAGE, DEFAULT_LINK_FLAGS, candidatesFrom, compileLifted, defaultTemplate, rankWasm } from './rank';
 import { type Ledger, loadLedger } from './readout';
 import { renderBundle, renderFunctionReport } from './report';
@@ -69,8 +78,9 @@ function usage(): never {
                                              one row per target function with its best pair (the census);
                                              a plain link gets its names from its --emit-symbol-map twin via @
   progress [--ledger <dir>] [--tsv <functions.tsv>] [--against <prev.tsv>] [--by owner|component] [--moves N]
-           [--snapshot [<label>]]            the census tiers per owner (or component) with the delta since the previous
-                                             snapshot (<ledger>/history/<stamp>.tsv); --snapshot saves the current one
+           [--snapshot [<label>]]            the census tiers per owner (or component) with the delta since the newest
+                                             local snapshot (<ledger>/history/<stamp>.tsv, ignored by git), else the ledger
+                                             committed at HEAD; --snapshot saves the current one
   targets <target.wasm> --tsv <new.tsv> [--against <prev.tsv>] [--file <indices.txt>] [--rows N] [--depth N]
          [<label>=<candidate.wasm>…] <fn>…   per listed function: previous → new kind/score and the first differing
                                              rows against the best candidate function
@@ -471,9 +481,11 @@ async function main(argv: string[]): Promise<void> {
       const history = snapshots(historyDir);
       const against = flag(args, '--against') ?? history[history.length - 1];
       const cur = readLedgerTsv(tsvPath);
-      const prev = against === undefined ? null : readLedgerTsv(against);
+      const committed = against === undefined ? committedLedger(tsvPath) : null;
+      const prev = against !== undefined ? readLedgerTsv(against) : committed === null ? null : parseLedgerTsv(committed);
+      const base = against ?? (committed === null ? undefined : 'the ledger at HEAD');
       process.stdout.write(
-        `ledger ${tsvPath} (${cur.size} rows)${against === undefined ? ' — no previous snapshot' : ` vs ${against}`}\n\n`,
+        `ledger ${tsvPath} (${cur.size} rows)${base === undefined ? ' — nothing to compare it with' : ` vs ${base}`}\n\n`,
       );
       process.stdout.write(`${renderProgress(cur, prev, by)}\n`);
       if (prev !== null && moves > 0) {

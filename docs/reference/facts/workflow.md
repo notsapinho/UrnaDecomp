@@ -1,7 +1,7 @@
 # Workflow: the shell, git, Node and the round tools
 
 How the tools a decompile round runs behave where the obvious reading of a command is wrong: Node versions, the
-lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed snapshot, the checks
+lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed file, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
 rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec and a
 table's rows, `-j` on the link, and leaving a merge after step 9. `docs/how-to-decompile.md`,
@@ -246,7 +246,7 @@ new:
     git show --stat --oneline HEAD
       a.txt | 2 +-   new.tsv | 1 +   old.tsv | 1 -
 
-So the census snapshot step 7 `git rm`s goes after `git commit --` and not into `git add`.
+So a stub file step 9 removed goes after `git commit --` and not into `git add`.
 
 ## W8. `check_encoding.py` reads the index, so a tracked file the generator deleted makes it fail with a traceback
 
@@ -623,33 +623,7 @@ of the two lists neither among its conflicts (at ee595de):
 So a merge commits everything staged: stage the merge's files, read `git status --short` for a ` M` or `??` line
 that is not the merge's, and commit with a bare `git commit -F -`. Nothing else may be staged in that checkout then.
 
-## W19. The census snapshot merges as rename/rename, or as rename/delete when `main` has replaced it since
-
-Every census run renames `ledger/history/<stamp>-census.tsv` (how-to step 7). git pairs a branch's snapshot with
-`main`'s by rename only while the two are similar enough to the base's. A scratch repository, `h/s0.tsv` the base's
-snapshot, `lane` and `main` each renaming it with one line changed:
-
-    mkdir build/out/snapshot-probe && cd build/out/snapshot-probe && git init -q -b main && git config user.email p@p && git config user.name p
-    mkdir h && seq 1 200 > h/s0.tsv && git add h && git commit -qm base
-    git switch -qc lane && git mv h/s0.tsv h/s1.tsv && seq 1 199 > h/s1.tsv && echo x >> h/s1.tsv && git commit -qam lane
-    git switch -q main && git mv h/s0.tsv h/s2.tsv && seq 1 199 > h/s2.tsv && echo y >> h/s2.tsv && git commit -qam main1
-    git merge --no-ff --no-commit lane 2>&1 | /usr/bin/grep CONFLICT; git status --short -- h
-      CONFLICT (rename/rename): h/s0.tsv renamed to h/s2.tsv in HEAD and to h/s1.tsv in lane.
-      DD h/s0.tsv
-      UA h/s1.tsv
-      AU h/s2.tsv
-    git merge --abort
-    git rm -q h/s2.tsv && mkdir -p h && seq 1000 1200 > h/s3.tsv && git add h/s3.tsv && git commit -qm main2     # main's next census
-    git merge --no-ff --no-commit lane 2>&1 | /usr/bin/grep CONFLICT; git status --short -- h
-      CONFLICT (rename/delete): h/s0.tsv renamed to h/s1.tsv in lane, but deleted in HEAD.
-      CONFLICT (modify/delete): h/s1.tsv deleted in HEAD and modified in lane.  Version lane of h/s1.tsv left in tree.
-      DU h/s1.tsv
-    git rm -q -f h/s1.tsv; git status --short -- h; git ls-files h
-      h/s3.tsv
-
-In the second shape `main`'s snapshot is in no conflict and the branch's is `DU`, left in the tree: the first
-shape's `git rm --cached <the old snapshot>` names a path that is in neither the index nor the tree. A branch whose
-base `main` has run several censuses on since gives the second shape; one a census or two behind gives the first.
+## W19. Withdrawn: the census snapshot is no longer tracked
 
 ## W20. Two branches that change adjacent rows of a table conflict in one hunk that holds every row on both sides
 

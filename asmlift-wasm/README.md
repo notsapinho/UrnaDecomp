@@ -177,12 +177,13 @@ identical bodies pair positionally, so a thunk's name is one of its identical tw
 probe + skeleton@twin.
 
 **progress** (`progress.ts`) reads `functions.tsv` (default `<ledger>/functions.tsv`, `--tsv` otherwise)
-and the newest `<ledger>/history/*.tsv` (or `--against <prev.tsv>`), prints one Markdown table per
+and what it compares with: `--against <prev.tsv>`, else the newest `<ledger>/history/*.tsv`, else that file as
+committed at `HEAD`, else nothing (it says so and prints no delta). It prints one Markdown table per
 `--by owner` (cls2 class, default) or `--by component` (attribution): functions, count per kind with
 the delta in parentheses, the byte-exact share by count and by bytes; then the functions that moved
 kind or score, improvements first (`--moves N`, 0 hides the list). `--snapshot [label]` copies the
-current ledger into `history/<stamp>[-label].tsv` after printing, so the next run's delta is against
-it. `tools/round/census.sh` in urna does exactly that at the end of every census.
+current ledger into `history/<stamp>[-label].tsv` (ignored by git) after printing, so the next run's delta is
+against it. `tools/round/census.sh` in urna runs `progress` without it, against the committed ledger.
 
 **targets** prints, for each listed target function (arguments or `--file`): `<index> <size> <owner>/
 <component>: <prev kind/score> → <new kind/score> <label>:<index> <name>`, and when the new pair is an

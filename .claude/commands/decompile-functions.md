@@ -73,7 +73,7 @@ Put this list in every brief, word for word. It is the standard a match is judge
    says. Nothing else changes to make a match land.
 6. **Generated files are regenerated, never edited**: stubs and gaps, `splat/scan.tsv`, `splat/symbol_addrs.txt`
    above its hand-edit marker, the status blocks of `docs/status.md` and `README.md` and the waffles
-   `docs/img/progress-*.svg`, `ledger/functions.tsv` and its snapshot. The commands that write them are how-to steps
+   `docs/img/progress-*.svg`, `ledger/functions.tsv`. The commands that write them are how-to steps
    7 to 9.
 7. **House rules** ([docs/agents.md](../../docs/agents.md)): `TMPDIR=/tmp` on every docker command, no wildcard
    `rm`, no `git stash`, `/usr/bin/grep` over the Latin-1 sources, never push. Commit messages end with the
@@ -431,8 +431,8 @@ what exists), tell the user:
   **MATCH B** matches 9131. Its stretch goal 9130 stays pending: it needs constructor thunks that binaryen merged and
   that have no names yet, which the lane reports as a `facts/` post.
 - **VERIFY** confirms both lanes, the blanked-target check included.
-- **LAND** fast-forwards lane A and merges lane B. The merge conflicts in every generated file and in the census
-  snapshot both lanes renamed, and is resolved as how-to step 10 "Landing onto a moved main" says. After the
+- **LAND** fast-forwards lane A and merges lane B. The merge conflicts in every generated file,
+  and is resolved as how-to step 10 "Landing onto a moved main" says. After the
   regeneration the splat build prints the target's sha256 with every lane's matches plus 6122, a libc++ function
   that neither lane had: the merged link drops a self-voted vtable name, and the vtable is then placed by its
   content. No match is lost.

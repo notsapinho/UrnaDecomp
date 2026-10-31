@@ -108,7 +108,7 @@ point away from the code's tree too: a uenux2 function that throws ecourna's `CB
 uenux2 enum `E` has an ecourna typeinfo reference, so it is component `ecourna` (238 such functions, among them
 `1708 comum::CCargos::Next`), while its source and its stub are in `src/uenux2/`.
 *Where:* `ledger/func-attribution.tsv`, `ledger/functions.tsv` column `component`, `docs/reference/appmap.md` §1, the splat
-pieces and meter (`docs/reference/splat.md`), `docs/reference/link-order.md` §7.4, `docs/reference/tu-slices.md`, lift-eval sampling and the
+pieces and meter (`docs/reference/splat.md`), `docs/reference/link-order.md` §7.4, lift-eval sampling and the
 benchmark rows' `component` field.
 
 **owner** — the coarser library class of `tools/libs/classify.py`, stored in `tools/libs/cls2.json`: `app`,
@@ -167,7 +167,7 @@ does; otherwise it is `f<index>` with the wasm types. A stub is a comment, not c
 (see **INCLUDE_ASM**). *Where:*
 `src/README.md` "Stubs", `docs/how-to-decompile.md` steps 1, 3 and 9. (2) A hand-written
 stand-in for an exported function whose body is not reconstructed: `src/app/vota_init.cpp`, `vota_api.cpp`,
-`main.cpp`, `wasm_sound.cpp` (signatures from the target's export types; their order on the link line fixes the
+`main.cpp` (signatures from the target's export types; their order on the link line fixes the
 export order). `src/app/stubs_7zip.cpp` supplies four symbols 7-Zip needs and emscripten lacks. *Where:*
 `src/README.md`, `docs/reference/toolchain.md` §2 "Export order".
 
@@ -275,7 +275,7 @@ the evidence that pinned it.
 
 **census** — three related things. The toolkit command `census` pairs every function of one module with one of
 another by fingerprint, then addr, then shape (`asmlift-wasm/README.md` "census"). `make -C src census`
-(`tools/round/census.sh`) runs it on the skeleton, rewrites `ledger/functions.tsv` and writes a snapshot and
+(`tools/round/census.sh`) runs it on the skeleton, rewrites `ledger/functions.tsv` and writes
 `build/out/census/{report,progress}.md`.
 
 **census tiers, pairing tiers** (the ledger's `best_kind`) — how a target function pairs with a candidate function,
@@ -321,13 +321,13 @@ written by `make -C src status`, which also draws it in the README's waffles. *W
 
 **progress** — two things with the one name. (1) The toolkit command `pnpm wasm progress` (also the end of
 `make -C src census`, and its `build/out/census/progress.md`): the census tiers per owner or component with the delta
-since the last snapshot. Despite its name it is a diagnostic, not the meter. *Where:* `asmlift-wasm/README.md`
+since the ledger committed at `HEAD`. Despite its name it is a diagnostic, not the meter. *Where:* `asmlift-wasm/README.md`
 "progress". (2) The README's progress waffles: squares coloured by verdict, a 10 x 10 waffle per origin and per
 component and one square per function of TSE code, drawn by `make -C src status` from `splat/scan.tsv`. *Where:*
 `README.md` "Status", `tools/round/progress_waffles.py`. "Progress" alone, and "the progress number", mean the meter.
 
-**snapshot** — a copy of `ledger/functions.tsv` saved as `ledger/history/<stamp>[-label].tsv` by
-`progress --snapshot`, so the next run can print what moved. *Where:* `tools/round/census.sh`, `ledger/history/`.
+**snapshot** — a copy of `ledger/functions.tsv` saved as `ledger/history/<stamp>[-label].tsv` (ignored by git) by
+`progress --snapshot`, so the next run can print what moved since it. *Where:* `asmlift-wasm/README.md` "progress".
 
 **match, matched, match list** — a match is a line `<target index> <our symbol>` in `splat/matched.txt` (the match
 list): a promise that our build produces exactly that target body, which the splat build verifies on every run (see
@@ -443,7 +443,7 @@ in a lower band: 5898 is `uses 1` there and 2 in `ledger/ordinals.tsv` (`docs/re
 
 **band** — all functions with the same use count; the `uses=1` band is the largest and the most informative.
 (The benchmark and lift-eval also use "size band": tiny ≤ 32, small ≤ 128, medium ≤ 512, large ≤ 2048 bytes, huge.)
-*Where:* `docs/reference/link-order.md`, `docs/reference/tu-slices.md`, `asmlift-wasm/benchmark/README.md` (size band).
+*Where:* `docs/reference/link-order.md`, `asmlift-wasm/benchmark/README.md` (size band).
 
 **ordinal** (link ordinal) — a function's defined index after `wasm-opt -Oz`: wasm-ld's input order (each object's
 live functions in the object's own order, then archive members) compacted by inlining and merging, with the mgfn
@@ -500,7 +500,7 @@ different thing: target/ours pairs that share a unique `source_location` record.
 ordinals differ by 1 to q − p. It lets an anchor be placed from the `.o` alone. *Where:* `docs/reference/link-order.md` §7.1.
 
 **stretch, TU slice** — a run of functions inside one band that probably come from one source file, found by
-`tools/linkorder/tu_slices.py` from `source_location` records and vtable classes. *Where:* `docs/reference/tu-slices.md`,
+`tools/linkorder/tu_slices.py` from `source_location` records and vtable classes. *Where:*
 `ledger/tu-clusters.tsv`, `docs/reference/link-order.md` §7.5.
 
 **link line** — the ordered list of objects passed to `em++` at link time. Ours is `LINK_OBJS` in `src/Makefile`,

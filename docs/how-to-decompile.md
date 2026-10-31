@@ -31,7 +31,7 @@ short.
 | 4. iterate alone | `tools/round/try-tu.sh --single` | the body is close enough to try in the whole program (a function that throws with `std::format` skips to step 5: step 4 says why) |
 | 5. conclude in the whole link | `tools/round/try-tu.sh <tu> --targets …` | the report pairs the target function with your symbol, or `splat-remap` against the try link says `IDENTICAL` |
 | 6. land | sources under `src/`, a fragment in `src/units/` and its row in the README's table, `make -C src link` | the skeleton links with the unit |
-| 7. census | `make -C src census` | `ledger/functions.tsv` and its snapshot are rewritten |
+| 7. census | `make -C src census` | `ledger/functions.tsv` is rewritten |
 | 8. symbols | `make -C src splat-symbols` | the symbol file names the unit's new functions and data |
 | 9. match | `make -C src splat-match` | `git diff splat/matched.txt` shows your function, and its stub is gone |
 | 10. build and commit | `make -C src splat`, `git commit` | the build prints the target's sha256 with the new match count |
@@ -930,10 +930,9 @@ compile runs from the source's `/work/src/…` path, which the tree's `-ffile-pr
 TMPDIR=/tmp make -C src census
 ```
 
-This rewrites `ledger/functions.tsv` and saves a new snapshot in `ledger/history/` (about a minute). It prints
-the paths of its reports; the target functions whose census tier moved are under `moved:` in
-`build/out/census/progress.md`. Commit the new snapshot and `git rm` the previous one by name
-(`ledger/README.md`); step 10's commit names the removed one after `--`. Expect thousands of changed lines in
+This rewrites `ledger/functions.tsv` (about a minute). It prints the paths of its reports; the target functions
+whose census tier moved since the committed ledger are under `moved:` in `build/out/census/progress.md`. Expect
+thousands of changed lines in
 `ledger/functions.tsv` for a small unit: its `best_index` column holds our function indices, and every function
 after the unit's place in the link shifts. The census also re-picks a pair among byte-identical bodies of ours once
 the indices shift, so `best_name` changes on rows that have nothing to do with the unit, and step 9 carries that into
@@ -1185,7 +1184,7 @@ the status files the new scan changed, and `stubs.py` does not run, so the funct
 ([facts/workflow.md](reference/facts/workflow.md) §W11).
 
 Commit in one commit: the sources, the fragment and its companion files, the fragment's row in
-`src/units/README.md`, the ledger files the census rewrote (the new snapshot, and the previous one step 7 removed),
+`src/units/README.md`, the `ledger/functions.tsv` the census rewrote,
 `splat/symbol_addrs.txt`, `splat/matched.txt`, `splat/scan.tsv`, the status files step 9 wrote (`README.md`,
 `docs/status.md`, `docs/img/progress-*.svg`) and the stub and gap files it rewrote (`git status src/`). A stub-only
 file step 9 removed shows as ` D` there: `git rm` it before the checks below, because `check_encoding.py` reads the
@@ -1198,7 +1197,7 @@ only (§W7):
 git rm -q <each stub-only file step 9 removed>
 git add <the sources, fragment, companion, ledger, splat and status files>
 # the checks below
-git commit -F - -- <the same files> ledger/history/<the previous snapshot> <the removed stub files> <<'EOF'
+git commit -F - -- <the same files> <the removed stub files> <<'EOF'
 <subject>
 
 <body>
@@ -1233,7 +1232,7 @@ before the commit, with:
   that commit. And `4 skipped` means the `emscripten/emsdk:6.0.0` tag is missing (§W12).
 
 **Landing onto a moved main.** When another unit landed after your branch started, merging conflicts in generated
-files and in the census snapshot, which both branches renamed. Resolve only the files people write:
+files. Resolve only the files people write:
 `src/units/README.md` keeps one row per fragment, both sides' new rows in fragment order. Git joins changes to adjacent
 rows into one hunk that holds every row on both sides, so "keep both" gives a row twice with one copy stale: for a row
 both sides hold, keep the side that changed it from the merge base (`git show :1:src/units/README.md`), and resolve a
@@ -1263,20 +1262,6 @@ edits, which step 8 cannot bring back, so first compare what each side holds bel
 by hand any line only the other side has. A name both sides hold keeps one line, with the stronger evidence or the
 larger voter set: two lines for one name pass every check.
 
-The census snapshot conflicts as a rename/rename when your base's snapshot is still the one `main` renamed (`DD` on the
-old name, `AU` and `UA` on the two new ones), and git has already merged both snapshots into your side's name, markers
-included. Keep one name and drop the others from the index:
-
-```sh
-git checkout HEAD -- ledger/history/<your snapshot>
-git rm -q --cached ledger/history/<the old snapshot>
-git rm -q ledger/history/<the other branch's snapshot>
-```
-
-When `main` has replaced that snapshot since, it is a rename/delete instead: `git status --short -- ledger/history`
-lists only the branch's snapshot, `DU`, left in the tree, and `main`'s is in no conflict. Remove the branch's, `git rm
--q -f ledger/history/<the branch's snapshot>` ([facts/workflow.md](reference/facts/workflow.md) §W19).
-
 A header your unit needs that `main` gained after your branch started is an add/add conflict: create it from `main`'s
 text (`git show main:<path> > <path>`) and only add to it, so the merge is one hunk, and say so in the commit. A
 header that is not on `main` yet but on a branch that lands before yours: copy it from that branch byte for byte
@@ -1292,7 +1277,7 @@ Your branch was written against the docs of the commit it started from. When `ma
 unit's choices against `main`'s docs too before the merge (`git diff "$(git merge-base main HEAD)" main -- docs
 src/README.md src/units/README.md`), since the merge lands under them.
 
-Then run steps 6 to 10 again on the merge: link, census (`git rm` the snapshot you kept, add the new one), symbols,
+Then run steps 6 to 10 again on the merge: link, census, symbols,
 match, build and the checks, and count lost matches against `main`. Some matches rest on the whole link and not on a
 source, so a merge that touches none of them can drop them: after step 9 run the check of
 [facts/splat.md](reference/facts/splat.md) §S10, which lists them, and stop if one left `match`. Read each roots file's

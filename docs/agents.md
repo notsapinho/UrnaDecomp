@@ -55,7 +55,7 @@ merge steps ran in the background read as done with nothing committed.
   as chosen, so that an add/add merges clean ([facts/workflow.md](reference/facts/workflow.md) §W17). An error enum read
   from the target's codes needs the merge thunks too ([facts/placing.md](reference/facts/placing.md) §P6).
 - **Commit only your own paths**: `git add <paths> && git commit -m "…" -- <paths>`. The `-- <paths>` keeps other
-  agents' staged changes out of your commit. A path you removed with `git rm` (the previous census snapshot, a stub
+  agents' staged changes out of your commit. A path you removed with `git rm` (a stub
   file step 9 deleted) goes after `--` only: `git add` refuses it, and then adds nothing at all
   ([facts/workflow.md](reference/facts/workflow.md) §W7; `docs/how-to-decompile.md` step 10 has the whole command).
   Read `git log -1 --stat` after every commit.

@@ -1,11 +1,11 @@
 #!/bin/bash
-# publish.sh <ordinals.tsv> <blocks.tsv>: ledger/ordinals.tsv, ledger/tu-clusters.tsv, docs/reference/tu-slices.md,
+# publish.sh <ordinals.tsv> <blocks.tsv>: ledger/ordinals.tsv, ledger/tu-clusters.tsv,
 # build/out/LINKORDER2/linkline.md, and the window statistics of docs/reference/link-order.md §7.4
 set -e
 cd "$(dirname "$0")/../.."
 ORD=$1; BLK=$2; L=build/out/LINKORDER2
 cp "$ORD" ledger/ordinals.tsv
-python3 -I tools/linkorder/tu_slices.py ledger/ordinals.tsv ledger/func-attribution.tsv ledger/source-locations.tsv ledger/vtables.json ledger/tu-clusters.tsv docs/reference/tu-slices.md
+python3 -I tools/linkorder/tu_slices.py ledger/ordinals.tsv ledger/func-attribution.tsv ledger/source-locations.tsv ledger/vtables.json ledger/tu-clusters.tsv
 python3 -I tools/linkorder/linkline.py "$BLK" ledger/ordinals.tsv > $L/linkline.md
 python3 - "$ORD" <<'PY'
 import sys, collections, statistics
