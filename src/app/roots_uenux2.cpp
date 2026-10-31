@@ -15,7 +15,6 @@
 #include "api/ipc/posix/cposixsemaphore.h"
 #include "api/util/cwait.h"
 #include "api/util/eueutilerror.h"
-#include "ecourna/app/dados/tiposbasicos.hpp"
 
 namespace {
 
@@ -86,20 +85,6 @@ void urna_insere_doubles(std::vector<double>& valores, const double* inicio, con
 {
     valores.insert(valores.end(), inicio, fim);
 }
-
-// CBaseType's constructors whose target copies are uenux2's: their records name the conan package's installed header
-// (p/include/ecourna/api/pattern/cbasetype.hpp) and they have no landing pad, though ecourna's converters call them too.
-// The first uenux2 object that used one kept the copy, and ecourna's objects emit their own, so only an object ahead of
-// ecourna's can hold them (a fragment's roots link after both trees). The explicit instantiations add no function of
-// their own to the link. src/units/112-ecourna-cbasetype.mk has the measurement at uenux2's flags and the real callers.
-template CBaseType<unsigned short, 0, 9999, 15>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 9999, 36>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 999, 38>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 9999, 9>::CBaseType(unsigned short);
-template CBaseType<unsigned short, 0, 9999, 7>::CBaseType(unsigned short);
-template CBaseType<unsigned int, 0, 99999, 6>::CBaseType(unsigned int);
-template CBaseType<unsigned int, 0, 9999, 8>::CBaseType(unsigned int);
-template CBaseType<unsigned short, 1, 99, 3>::CBaseType(unsigned short);
 
 int urna_roots_uenux2(int a)
 {

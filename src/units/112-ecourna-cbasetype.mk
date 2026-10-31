@@ -4,7 +4,7 @@
 # holds the evidence and the roots rule. The bodies of src/ecourna/api/util/cstringutils.cpp stay unit 00's.
 #
 # Matches, 22 target functions:
-#   - uenux2's copies, from app/roots_uenux2.o: 2299, binaryen's merge of the 16-bit constructors, with its thunks 1960
+#   - uenux2's copies, from app/roots_cbasetype.o: 2299, binaryen's merge of the 16-bit constructors, with its thunks 1960
 #     (TQtdEleitor) 2277 (TAno) 2850 (TScoreHabilitacao) 5848 (TSecaoID) 5850 (TZonaID); 6042, the 32-bit merge, with 2851
 #     (TMunicipioID) 5849 (TLocalID); 5682 (TCargoID), a body of its own, since MIN_VAL 1 gives it another range test.
 #   - ecourna's copies, from app_dados_tiposbasicos.cpp.o: 2666 (TTipoIdentificadorEleitor), and 2668,
@@ -21,18 +21,13 @@
 # and 5 under .../b/src/ecourna/, ecourna's own (`awk -F'\t' '$2 ~ /cbasetype/ {print $1, $2, $6}' ledger/source-locations.tsv`).
 # The bodies agree: the eight have no landing pad, and 9215, 2666 and 2668 have. ecourna's callers (9066 9127 9130 9142
 # 9221 9228) call the uenux2 copies directly, because uenux2's objects come first in the link and the linkonce copy of the
-# first object wins. So src/Makefile's UENUX2_PREFIX_MAP gains the third spelling, and src/app/roots_uenux2.cpp, ahead of both
-# trees, instantiates the eight constructors explicitly: no real uenux2 caller of them is written (11616 calls six), and a
-# fragment's roots link after ecourna's objects, which would keep their own copies (`source_location not in the target`,
-# 5682's row before this unit). This unit's roots file only calls them. The map changes no other object: `LC_ALL=C
-# /usr/bin/grep -rl src/ecourna/ build/out/app/uenux2` printed nothing before it.
+# first object wins. So src/Makefile's UENUX2_PREFIX_MAP gains the third spelling (facts/app-flags.md F6 has its evidence),
+# and src/app/roots_cbasetype.cpp, ahead of both trees, instantiates the eight constructors explicitly: no real uenux2 caller
+# of them is written (11616 calls six), and a fragment's roots link after ecourna's objects, which would keep their own copies
+# (`source_location not in the target`, 5682's row before this unit). This unit's roots file only calls them.
 #
-# roots_uenux2.o compiles with TBAA and uenux2 with -fno-strict-aliasing. The nine constructors compare the same at both
-# flag sets with the object's numbers masked (9 same of 9; the rest of a probe TU that holds them: 105 same, 9 differ, all
-# libc++ format internals: __handle_replacement_field's lambda, __parse_type, __format_floating_point ...). The object now
-# comes first in the link for those format internals too: 43 scan rows name it, 14 at the commit before this unit (`awk
-# -F'\t' '$11=="app/roots_uenux2.o"' splat/scan.tsv`). No verdict of those rows moved and no match left. A real uenux2 caller
-# lands the constructors at the tree's flags, and the eight lines then go.
+# roots_cbasetype.o compiles at UENUX2_CXXFLAGS, not APP_CXXFLAGS: the constructors are the same at both, but the libc++
+# format bodies the instances bring to the head of the link are not, and those stay the tree's code this way.
 #
 # The range test, evidence. 5682 is `(p1 - 1) & 0xffff >= 99`, and 2666 the same over 1 and 3. `valor < MIN_VAL || valor >
 # MAX_VAL`, the form before this unit, gives `(p1 - 100) & 0xffff <= 65436`, 3 rows off. Same object as the form written:
@@ -53,21 +48,22 @@
 #
 # CStringUtils::Trim(std::string&), evidence, each measured on the whole TU (16 functions, same-length paths, numbers masked):
 #   - the first test is a select over both sizes, loaded before it. `!std::empty(valor)` is written, and `std::size(valor) >
-#     0` and `valor.compare("") != 0` give the same object. `!valor.empty()`, the form before this unit, and `valor != ""`
-#     branch on the long bit first (188 rows of 186). Without -fno-delete-null-pointer-checks `!valor.empty()` gives the
-#     select too, so that flag is what the three forms get round (facts/app-flags.md F3 has the flag). Which of the three is
-#     a choice.
-#   - the second erase is inside the `if` (the target returns from the empty case with no erase) and is the iterator form
-#     (one begin for find_if and the difference, then erase's npos test before the short and long paths).
-#     `erase(0, find_if(...) - begin())` splits the difference over the two paths.
+#     0`, `std::size(valor) != 0` and `valor.compare("") != 0` give the same functions. `!valor.empty()`, the form before this
+#     unit, `valor.size() > 0`, `valor.length() > 0` and `valor != ""` branch on the long bit first (188 rows of 186). Without
+#     -fno-delete-null-pointer-checks `!valor.empty()` gives the select too, so that flag is what those forms get round
+#     (facts/app-flags.md F3 has the flag). Which of them is a choice.
+#   - the empty path holds no erase. The `if` around both erases is a choice: `if (std::empty(valor)) { return; }` ahead of
+#     them gives the same object.
+#   - the second erase is the iterator form (one begin for find_if and the difference, then erase's npos test before the
+#     short and long paths). `erase(0, find_if(...) - begin())` splits the difference over the two paths.
 #   - the first erase takes a position: `erase(ultimo.base(), end())` gives another object (138 of 186 rows).
 #     `std::distance(rbegin, ultimo)` for the difference gives the same one.
 #   - a lambda for NaoEhBranco gives the same object. The named function is a choice.
 #
 # Trim(const std::string&): 1374 is `f3942(p0, p1, slot 6416)`, and elem[6416] is 9406, so a copy of the string, Trim, and
 # the copy returned; 1879 and 5156 are the same over 5158 and 3509. It has no record: that it is a static member called Trim,
-# and its line beside the other Trim, are choices. 3509, the ToUpper-like body, and 5156 stay unwritten, and the merge forms
-# from 1374 and 1879 alone.
+# and its line beside the other Trim, are choices, and `std::string resultado(valor);` gives the same object. 3509, the
+# ToUpper-like body, and 5156 stay unwritten, and the merge forms from 1374 and 1879 alone.
 #
 # The converters and HexStringToBytes, evidence. All three call the copying Trim, and clang inlines it (the object has the
 # invoke and no call of 1374): `invoke` of slot 6416 with a landing pad of its own, that frees the copy and resumes, apart
@@ -75,10 +71,11 @@
 # texto(valor); Trim(texto);` has one pad for both: 609 of 3506's 670 rows move, and 2202 scored 13 rows inserted and 31
 # deleted.
 #   - 2202 and 5155 throw EUE_VALOR_INVALIDO on an empty string (br 2 out of the size test, to the first throw), so `texto.empty() ||`
-#     stands before find_first_not_of. Without it 602 of 681 rows differ.
+#     stands before find_first_not_of. Without it 602 of 681 rows differ, with `std::empty(texto)` 590: the member is
+#     evidence here. `texto` without `const` gives the same object.
 #   - 3506's throw is 808:15, one level deep, so the check is one `if`, not a loop with an `if` inside. `std::all_of` over a
-#     lambda is written, and `[](char c) { return isxdigit(c); }` gives the same object. `std::find_if_not(...) != end()` does
-#     not (577 of 670 rows).
+#     lambda is written. `[](char c) { return isxdigit(c); }`, `std::any_of` over the negation and `!std::none_of` give the same
+#     object, and `std::find_if_not(...) != end()` does not (577 of 670 rows).
 #   - 3506 has no test of its own for an empty string: without one the object has the target's, the size test as the check
 #     loop's entry and the vector's two stores on the empty path. `if (texto.empty()) return {};` gives another (575 of 670).
 #   - the loop's bound is computed once, ahead of the loop: `i < static_cast<int>(texto.size()) - 1` in the `for` reloads it,
@@ -107,8 +104,7 @@
 # Hand line: CSerialMidia::ValidaSerial (9258), a callee with one user, the slot 9259's constructor takes, or 9259 stays
 # `self-voted`: the literal only it loads is its own evidence, and the line says so. 9258 itself stays `unresolved` (above).
 #
-# Renames at this unit: 454 to CError's D0 and 556 to std::format_error's D0, twins whose first copy moved to roots_uenux2.o,
-# and 710's merge body, named after its first member.
+# Rename at this unit: 556 to std::format_error's D0, a twin whose first copy moved to roots_cbasetype.o.
 $(ROOT)/$(APP)/112-ecourna-cbasetype-roots.o: $(ROOT)/src/units/112-ecourna-cbasetype-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/112-ecourna-cbasetype.mk $(shell find $(ROOT)/src/ecourna -name '*.hpp')
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c /work/src/units/112-ecourna-cbasetype-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/112-ecourna-cbasetype-roots.o

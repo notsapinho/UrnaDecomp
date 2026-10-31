@@ -18,10 +18,7 @@ public:
     // static initialiser). No primary definition: an instantiation without a specialization fails to link.
     static const std::string NOME;
 
-    // The range test is positive, !(a && b), and the limits reach std::format as named ints: both are forms the target's
-    // bytes ask for. src/units/112-ecourna-cbasetype.mk has the measurements and the forms that give the same bytes.
-
-    // (original lines 24-33: content not recovered)
+    // (original lines 21-33: content not recovered)
 #line 34
     CBaseType(TYPE valor) : m_valor(valor)
     {

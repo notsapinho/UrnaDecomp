@@ -1,5 +1,5 @@
 // Roots: reach CBaseType's constructors, CStringUtils::Trim's copying overload and std::string's erase the way the target's
-// callers do, until they land. The constructors' bodies come from src/app/roots_uenux2.cpp, ahead of both trees; this file
+// callers do, until they land. The constructors' bodies come from src/app/roots_cbasetype.cpp, ahead of both trees; this file
 // only calls them, since a constructor with one call site is inlined, and a thunk into binaryen's merge with it.
 //
 // w112_usa stands for each constructor's target callers, which a real caller ends when it lands (search the indices in

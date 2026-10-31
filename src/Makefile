@@ -150,6 +150,9 @@ $(ROOT)/$(APP)/uenux2/%.cpp.o: $(ROOT)/src/uenux2/%.cpp $(ROOT)/src/Makefile $(U
 	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c /work/src/uenux2/$*.cpp -o $(R)
 $(ROOT)/$(APP)/roots_uenux2.o: $(ROOT)/src/app/roots_uenux2.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/app/roots_uenux2.cpp -o $(R)
+# instances of ecourna's templates that are uenux2's code in the target, ahead of ecourna's objects and at the tree's flags
+$(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_cbasetype.cpp -o $(R)
 
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
 # arguments; compiled with -Dmain=<name> so it becomes a plain function urna_roots() calls.
@@ -175,7 +178,7 @@ $(ROOT)/$(OSSL_OBJS_FILE): $(ROOT)/tools/libs/ossl_files.txt $(ROOT)/$(LIBCRYPTO
 APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_SRC) -I$(RHVOICE_SRC)/src/include $(RHVOICE_CFG)
 
 # ---- link order (first object exports votaInit alone; app before libraries; libraries in this order) --------
-APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
+APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=

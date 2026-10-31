@@ -159,8 +159,9 @@ on a line of a file it does not edit is the base's. Any other needs the base's o
 A function that loads a record with the wrong file name does not match: most of the functions that need the mapped
 records are `ecourna::api::asn::IConversorASN<…>::Converte` and `Deconverte` instantiations. A uenux2 TU that
 includes an ecourna header needs a third spelling: the target names those `…/libecea1da310e5107/p/include/ecourna/…`,
-the conan package's installed headers (13 records in `ledger/source-locations.tsv`). No uenux2 TU in `src/uenux2`
-holds such a record, so no map has that spelling.
+the conan package's installed headers (23 records in `ledger/source-locations.tsv`). `UENUX2_PREFIX_MAP` has that
+spelling as its third map, for any object compiled with uenux2's flags or `APP_CXXFLAGS`: the headers come through `-Isrc`
+as `src/ecourna/…`. `src/app/roots_cbasetype.cpp` holds the first such records ([app-flags.md](app-flags.md) §F6).
 
 ## X8. `try-tu.sh --flags "-I<dir>"` loses to a tracked header of the same name
 

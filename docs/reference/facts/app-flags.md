@@ -350,7 +350,13 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   theirs; F9.6), adding `-fno-delete-null-pointer-checks` loses 3 matches (5194, 11321 and 11326, the
   `CVotos::Partido`/`Legenda` lambdas) and `-fno-strict-overflow` loses 1 (3663 `CBmpConversor::InvertColors`).
 - `-std=c++17` does not compile (`source_location`, class NTTPs).
-- Paths: `-ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2`.
+- Paths: `-ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2`, and a third map for ecourna's headers:
+  `-ffile-prefix-map=src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/p/include/ecourna`. A uenux2 object reaches them
+  through `-Isrc`, spelled `src/ecourna/…`, and 23 target records name the conan package's installed copies (`awk -F'\t' '$2 ~
+  /p\/include/ {print $2}' ledger/source-locations.tsv | sort | uniq -c` prints 13 `iconversorasn.hpp`, 8 `cbasetype.hpp`, 2
+  `serialization.hpp`). Built without the map, 424 of 426 objects are `cmp`-equal and two differ in the record's file name
+  only; exactly the eight constructors that load such a record fall, 1960 2277 2850 2851 5682 5848 5849 5850, each
+  `unresolved … source_location not in the target` (unit 112's fragment).
 
 ## F7. `-DNDEBUG` everywhere
 
