@@ -57,17 +57,11 @@ protected:
 } // namespace comum::asn
 
 // <stubs>
-// f11449 · 29 B · unmatched · placement: link order · name unknown
-// void f11449(i32, i32, i32) { ... }
-
 // f11421 · 29 B · unmatched · placement: link order · name unknown
 // void f11421(i32, i32, i32) { ... }
 
 // f11415 · 29 B · unmatched · placement: link order · name unknown
 // void f11415(i32, i32, i32) { ... }
-
-// f11380 · 29 B · unmatched · placement: link order · name unknown
-// void f11380(i32, i32, i32) { ... }
 
 // f11374 · 29 B · unmatched · placement: link order · name unknown
 // void f11374(i32, i32, i32) { ... }
@@ -98,9 +92,6 @@ protected:
 
 // f11364 · 29 B · unmatched · placement: link order · name unknown
 // void f11364(i32, i32, i32) { ... }
-
-// f11358 · 29 B · unmatched · placement: link order · name unknown
-// void f11358(i32, i32, i32) { ... }
 
 // f10275 · 29 B · unmatched · name unknown
 // void f10275(i32, i32, i32) { ... }

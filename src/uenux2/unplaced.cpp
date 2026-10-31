@@ -1535,33 +1535,15 @@
 // f11241 · 16 B · unmatched · placement: link order · name unknown
 // void f11241(i32, i32, i32) { ... }
 
-// link-order cluster 433 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorsuplencia.cpp
-
-// f11359 · 419 B · unmatched · placement: link order · name unknown
-// void f11359(i32, i32, i32) { ... }
-
 // link-order cluster 436 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorpleito.cpp
 
 // f11365 · 214 B · unmatched · placement: link order · name unknown
 // void f11365(i32, i32, i32) { ... }
 
-// link-order cluster 458 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.cpp
-
-// f11400 · 1107 B · unmatched · placement: link order · name unknown
-// void f11400(i32, i32, i32) { ... }
-
-// f11399 · 594 B · unmatched · placement: link order · name unknown
-// void f11399(i32, i32, i32) { ... }
-
 // link-order cluster 477 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorfotocandidato.cpp
 
 // f11440 · 346 B · unmatched · placement: link order · name unknown
 // void f11440(i32, i32, i32) { ... }
-
-// link-order cluster 478 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cindexadorfotos.cpp
-
-// f11441 · 922 B · unmatched · placement: link order · name unknown
-// void f11441(i32, i32, i32, i32) { ... }
 
 // link-order cluster 480 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidaturas.cpp
 

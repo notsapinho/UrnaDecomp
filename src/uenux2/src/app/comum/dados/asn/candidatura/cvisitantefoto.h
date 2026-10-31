@@ -23,6 +23,9 @@ public:
 
     int visit(int index, const std::string& path, ASN1::AbstractData* data, unsigned position, unsigned length) override;
 
+    // What comum::asn::CIndexadorFotos::DoDesconverte (target fn 11441) reads at +16; the name is chosen.
+    const std::vector<md::CIndiceFoto>& GetIndices() const { return m_indices; }
+
 private:
     // +4: 0 or 1, which of the two fields of a photo visit expects next (its throws: "Sequenciador com valor errado ...")
     int m_sequenciador;
