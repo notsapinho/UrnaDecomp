@@ -13,10 +13,13 @@ namespace md {
 
 // Recovered: the layout, 28 bytes: fn 11373 copies a std::vector of them with that stride, and the records of its
 // constructor (crespostaconsulta.cpp:29 and :32) give a TCandidatoID and two strings. The constructor and the members'
-// names are not recovered beyond that.
+// names are not recovered beyond that. GetNumero reads the number at +0, as the inlined code of fns 12621 and 11478 does
+// from what GetCurrent returns; no record names it, so its name is chosen, and so is its being inline in the class.
 class CRespostaConsulta {
 public:
     CRespostaConsulta(TCandidatoID numero, const std::string& resposta, const std::string& textoFonetico);
+
+    TCandidatoID GetNumero() const { return m_numero; }
 
 private:
     TCandidatoID m_numero;

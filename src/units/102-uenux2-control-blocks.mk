@@ -83,14 +83,14 @@
 # Pending, each with what it waits for:
 # - 12244, vota::CItemVisualizarCandidatosVota's slot 2, a trap in 102-uenux2-control-blocks-pending.cpp, the one slot
 #   this unit leaves with no body, and no stub.
-# - 11070, 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>: a constructor to name in the builder.
-#   cinputmenufield.h declares none, and make_shared of a copy does not compile.
 # - 11109, 11108, CDataText<AddStatusHeader's lambda>, and 12530, 12529,
 #   CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>: a lambda is spelled only in its function, so they
 #   land with fns 502 and 6561.
 # - 12592, 12591, CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>, and 10373, 10367, 10361, three
 #   blocks of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>: no roots file can spell a T of
 #   another TU's anonymous namespace, so they land with fns 6627 and 10388.
+# 11070 and 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>, which waited here for a constructor to name
+# in the builder, match since from unit 121's roots, which name the one cinputmenufield.h declares now.
 # Paths relative to src/uenux2. citensmenuvota.cpp holds the out-of-line destructor the block of the fifth item needs.
 W102_SRCS := src/app/vota/operador/outrasopcoes/citensmenuvota.cpp
 UENUX2_SRCS += $(W102_SRCS)

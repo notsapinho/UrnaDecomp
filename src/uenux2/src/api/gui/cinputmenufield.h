@@ -12,9 +12,17 @@
 //
 // CInputMenuField is declared as far as its base (RTTI: an si_class of CInputField<CFramedText>; fn 3675 stores its vptr
 // after calling IInputField<IScreen>'s constructor, fn 2024) and its list of items, so that isValid and isValidChar can
-// read them. Its own slots are not recovered, nor is its constructor, so nothing builds one. Its members up to the list,
+// read them. Its own slots are not recovered, nor is its constructor's body (declared below), so nothing builds one. Its members up to the list,
 // and CMenuItem's, hold the offsets the bodies read (fns 1693 and 3655 build and read an item, 112 B, and the list's nodes
 // are 120 B); every name is chosen but CMenuItem's, a record's, and only the two accessors isValid calls are declared.
+//
+// The constructor is declared and not defined. fn 3675 builds the menu with std::make_shared, a 184-byte block, and holds
+// the constructor inlined, its second prologue among the block's stores: it stores the position's four bytes at +92, the
+// font's eight at +96, and its last argument (32767 from fn 11881, 310 from 11884 and 11888) as 16 bits at +156, then
+// sets the instruction text (SetInstructionText, record 477:9) after the constructor. So the constructor reads those
+// three; a parameter every caller passes as the same constant would leave no trace there (docs/how-to-decompile.md step
+// 2). The declaration lets src/units/121-uenux2-datasources-roots.cpp name it in the dropped builder of
+// __shared_ptr_emplace<CInputMenuField>. The parameters' names and order and TPosition for the last are chosen.
 
 #include <functional>
 #include <list>
@@ -53,6 +61,8 @@ private:
 
 class CInputMenuField : public CInputField<CFramedText> {
 public:
+    CInputMenuField(const SPoint& posicao, const SFont& font, TPosition largura);
+
     const std::list<CMenuItem>& GetItens() const { return m_itens; }
 
 private:
