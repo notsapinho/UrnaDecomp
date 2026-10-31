@@ -22,7 +22,7 @@ namespace vota {
 // and stores what the layout below holds. The destructor is out of line: the deleting one (fn 765) calls it and frees
 // `this`, and it stores no vptr, as a final class's; 19 states share the two bodies, fns 448 and 765. Not recovered: the
 // constructor and GetInst (fn 1150, whose callees all have names, but which passes the form's builder the table slots
-// of fns 11529, 10586, 11528, 11527 and 10539, which have no body here).
+// of fns 11529, 10586, 11528, 11527 and 10539, of which 10586 and 10539 have no body here).
 //
 // The layout: +12 a std::shared_ptr<std::string>, which fn 1150 builds empty with std::make_shared (control block vptr
 // 1588328, __shared_ptr_emplace<std::string>) and StartState fills from vota::CThreadOperador's string at +108; +20 the

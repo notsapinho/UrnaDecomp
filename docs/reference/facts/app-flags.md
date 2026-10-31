@@ -338,9 +338,10 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   reloads at the flag too, since the first insert stores its address in a node. The sites with no call to explain the
   reload are 10276, 10289 and 11383. 11383 matches, unit 107's, and the other two are `no-candidate`: writing 10289 and
   measuring it both ways is the test.
-- **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots and pending
-  files) is uenux2's set without the flag, and at -O2, the level the stand-ins were measured at. With it, six matches stop verifying: 152, 1383, 1527, 3501, 3639 and 5150,
-  libc++ templates (`std::__tree`, `__split_buffer`, `operator>>`) whose winning copy comes from
+- **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
+  without the flag, and at -O2, the level the stand-ins were measured at, where the tree builds at -O3; the units'
+  pending files build at `UENUX2_CXXFLAGS`, the tree's own set. With the flag, six matches stop verifying: 152, 1383,
+  1527, 3501, 3639 and 5150, libc++ templates (`std::__tree`, `__split_buffer`, `operator>>`) whose winning copy comes from
   `app/roots_rhvoice.o` or `app/roots_boost.o` (`build/out/wasm-map/vota_web/names.tsv`'s object column). The target's
   copies were compiled with TBAA, as the library TUs that instantiate them are. Letting the library objects win
   instead does not reproduce the target: a private link with `roots_rhvoice.o` and `roots_boost.o` at uenux2's flags

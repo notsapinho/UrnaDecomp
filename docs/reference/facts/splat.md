@@ -585,10 +585,10 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    where our record lands (§S8, the sixth kind), and their match lines hold them meanwhile.
 7. **1497, `string`'s substring constructor, by unit 100's roots.** The 16 instances are the other callers of 403, so
    binaryen keeps 403 out of line. With the roots reaching nothing, 1497 holds 403 inline, 193 B against the target's 71.
-8. **543, 2656 and 5066, by a twin and a hand edit.** 543's match line names `vector<long>` by link order: `roots_boost.o`'s
-   body merges with `FillPath`'s and `DrawPath`'s `vector<int>` (§A5 of [asn1.md](asn1.md)). 2656 and 5066 call
-   `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand edit keeps on 543. That twin goes if uenux2
-   moves to `-O3`.
+8. **543, 2656 and 5066, by `roots_boost.o`'s body and a hand edit.** 543's match line names `vector<long>`,
+   `roots_boost.o`'s body, which merged with `FillPath`'s and `DrawPath`'s `vector<int>` while uenux2 built at `-O2`; at
+   the tree's `-O3` both inline that one, and our link holds `roots_boost.o`'s body alone (§A5 of [asn1.md](asn1.md)).
+   2656 and 5066 call `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand edit keeps on 543.
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
    `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
 10. **252 and 3717, by `src/app/roots_uenux2.cpp`.** The target's 252, `std::operator+(string&&, string&&)`, is the

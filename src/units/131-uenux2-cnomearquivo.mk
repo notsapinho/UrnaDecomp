@@ -5,7 +5,7 @@
 #   symbol file names it by that vptr.
 # - The anonymous-namespace helpers, at their records' lines: FormataFase (target fn 2828, record :38), FormataNumero
 #   (fn 1161, record :48, written and not matched: below) and FormataUF (fn 3773, record :73).
-# - Two name builders, CNomeArquivo::NomeArquivoUF (fn 1705) and NomeArquivoSecao (fn 3772), written and not matched
+# - Two name builders, CNomeArquivo::NomeArquivoUF (fn 1705) and NomeArquivoSecao (fn 3772), matched at the tree's -O3
 #   (below). They are the helpers' callers in the object: FormataFase and FormataUF have two call sites there and
 #   FormataNumero five, and all three are functions of their own in the link (build/out/wasm-map/vota_web/names.tsv), as
 #   in the target, where 2828 has 4 callers, 1161 5 and 3773 3 (ledger/callgraph.tsv).

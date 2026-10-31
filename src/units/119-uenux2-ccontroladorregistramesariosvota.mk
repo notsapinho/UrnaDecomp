@@ -24,6 +24,9 @@
 #   moves push's frame slots (unit 100's fragment has the effect on 4879). With no such body above GetInst the link gave
 #   184 `score 158 over 947 rows (same 789, replaced 158 [153 operand-only], inserted 0, deleted 0)`, its first slot at
 #   +120 of push's frame where the target has +172; with them above it, every row but operands is the target's.
+# - Three more members, after LogaTituloInvalidoRegistroMesario and so below GetInst, belong to unit 142's states, which
+#   hold them inlined (10594 two, 10421 one); src/units/142-uenux2-app-vota-estados-448.mk has their evidence. They have
+#   no target function of their own, and 184 matches with them in the file.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses

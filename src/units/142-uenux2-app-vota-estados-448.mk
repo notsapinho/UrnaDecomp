@@ -15,7 +15,7 @@
 # - The members' offsets and types: the constructors that fns 11797, 2747, 10500, 1150 and 10415 hold inlined (the class
 #   headers list what each stores). They stay unwritten here: fns 11797, 2747, 10500 and 10415 call functions with no
 #   name (ledger/callgraph.tsv against splat/symbol_addrs.txt; each header names them), and fn 1150, whose callees all
-#   have names, passes table slots of functions with no body here.
+#   have names, passes the table slots of fns 10586 and 10539, which have no body here.
 # - The log members: fns 10594 and 10421 call vota::CLogVota::GetInst (fn 184) and then open a stack frame of their own
 #   (docs/reference/facts/reading.md R10) that builds the message and calls api::CLoga::loga (fn 433) on CLogVota's +4,
 #   or comum::IEventosLog::loga (fn 233), as unit 119's four Loga members do.
@@ -47,7 +47,8 @@
 #   vota::CPerguntaEleitorVotando's (no record) and csuspensaoautomaticaeleitor.cpp's records (@1593320): both sides name
 #   the directory.
 #
-# Same bytes, each compiled and compared by function with the object-local numbers masked (how-to step 3): in
+# Same bytes, each compiled at -O2, the tree's level when they were measured, and compared by function with the
+# object-local numbers masked (how-to step 3): in
 # ProcessKey an early return and `13 == tecla`; in CMostraEleitorVotando::ProcessInput an early return, and the local
 # typed api::IInput&; in CJustificativaEfetuada::StartState assign() for either assignment and a local reference to the
 # string; in LogaPedidoTituloSuspensao the message in a const local; the destructor as `{}`, and final on the

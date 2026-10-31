@@ -11,7 +11,7 @@
 // - vota::CMostraEleitorVotando::StartState (target fn 10427, slot 2): it copies vota::CThreadOperador's string at +108
 //   into +12's string, shows the form and calls fn 5903 on what fn 2284 returns; those two have no name.
 // - vota::CMostraEleitorVotando::ProcessKey (target fn 10425, slot 6, 4809 B, records cmostraeleitorvotando.cpp:127 and
-//   159): it calls fn 160, which the round's -O3 screen lists, and 19 functions with no name, among them fn 1901.
+//   159): it calls 20 functions with no name, among them fn 1901.
 // - vota::CPerguntaCodigoSuspensao::ProcessKey (target fn 10419, slot 6): on keys 2, 5 and 13 it goes to
 //   vota::CEleitorVotouNaoVotou::GetInst() (fn 1901), vota::CMostraEleitorVotando::GetInst() (fn 1150) or
 //   vota::CSincronismoOperador::GetInst() (fn 1897). It waits for the first two, which have no body.

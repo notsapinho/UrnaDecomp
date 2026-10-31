@@ -24,7 +24,15 @@
 # declared: every enumerator's name, ESavdChaveValidar's and EExtensaoArquivoResultado's enumerator names, the two
 # request and response structs' members, IInterfaceSavd's slot and member names, EnviarRequisicao and ConverteHeader
 # (no record: their roles), the maps' names and every header's path. EExtensaoArquivoResultado's enumerators are defined
-# in carquivosresultado.h, the one reader of its values; iresultado.h keeps its opaque declaration.
+# in carquivosresultado.h, the one reader of its values; iresultado.h keeps its opaque declaration. Chosen too, for its
+# inline cost at the tree's -O3: that ConverteHeader fills in the request's mark and size from the data. Taking the
+# request and the data, it costs 255 at its call and stays a call (-Rpass=inline -Rpass-missed=inline on this file), and
+# 3830 scores 81 over 1168 rows in the whole link, all operand-only, and matches. With the two stores in
+# EnviarRequisicao it costs 230 (3830: 331 over 1335 rows, 167 inserted), with the size passed for the data 235 (328
+# over 1332): both are inlined at -O3, and both stayed calls at -O2's 225. No target body shows where the two stores
+# belong: binaryen inlined the helper into 3830, where either form puts them. 3829 holds the same two stores where
+# clang inlined them, the size taken from a std::vector, right before the same copy: a helper over a std::string cannot
+# serve it, so 3829's landing decides the helper's real signature.
 # What the bytes decide, measured on this unit's objects at -O2, the tree's level then, function by function with
 # object-local numbers masked:
 # - the `case` order of 347 and 5900: moving 347's first case or 5900's first or SEINT's case changes the br_table (the
@@ -33,12 +41,8 @@
 # - EnviarRequisicao's `m_mensagem = ""`: the size is stored before the terminator; clear() stores them the other way;
 # - ConverteHeader's std::copy into a std::back_inserter keeps the vector in memory through the loop, with the one
 #   store of 0 before the allocation, as the target does; a push_back loop promotes it to locals (146 lines against 132);
-# - ConverteHeader fills in the request's mark and size from the data, at the tree's -O3: the target keeps it out of
-#   3830 for binaryen, and clang inlines it when its cost at the call is at most -O3's threshold of 250
-#   (-Rpass=inline -Rpass-missed=inline on this file). Taking the request and the data, it costs 255 and stays a call,
-#   and 3830 scores 81 over 1168 rows in the whole link, all operand-only, and matches. With the two stores in
-#   EnviarRequisicao it costs 230 (3830: 331 over 1335 rows, 167 inserted), with the size passed for the data 235 (328
-#   over 1332): both are inlined at -O3, and both stayed calls at -O2's 225;
+# - ConverteHeader stays a call in 3830, at the tree's -O3: the target keeps it out of 3830 for binaryen, and clang
+#   inlines it when its cost at the call is at most -O3's threshold of 250 (the chosen form above says how it stays out);
 # - DesconverteMensagem's std::copy: an index loop and an iterator loop give other code;
 # - the order of `if (header->tamanho)`'s two branches: the other gives other code;
 # - the order of the definitions, measured in the whole link (pnpm wasm score, rows that differ of the body's rows):

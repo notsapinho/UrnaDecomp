@@ -35,11 +35,11 @@
 # and ConverteStatusBateria into LogaCargaBateria (no prologue, the throw's string in that frame, the length folded into
 # the format argument: `i64.const 30064771072`). binaryen: LogaCargaBateria into LogaNivelBateria (a second prologue,
 # i32.sub(g0, 432), so a function of its own, out of line in ieventoslog.cpp: it reads +4 of the instance and holds
-# ConverteStatusBateria) and ConverteFonteAlim into LogaCargaBateria (a third prologue). -Rpass=inline at this tree's
-# level: ConverteFonteAlim cost=305, ConverteStatusBateria cost=225, threshold=225. So the plain form leaves
-# ConverteStatusBateria out of line by one tick (`168 over 502`, a third prologue where the target has none), and `inline`,
-# which raises the threshold to 325, gives the target (`52 over 464`, all operand-only, now a match). Those costs are
-# -O2's; at the tree's -O3 the threshold is 250, over that cost, so the keyword is a choice there (not measured without it). Left without `inline`, ConverteFonteAlim
+# ConverteStatusBateria) and ConverteFonteAlim into LogaCargaBateria (a third prologue). -Rpass=inline at -O2, the tree's
+# level when this was measured: ConverteFonteAlim cost=305, ConverteStatusBateria cost=225, threshold=225. So the plain
+# form left ConverteStatusBateria out of line by one tick (`168 over 502`, a third prologue where the target has none), and
+# `inline`, which raises the threshold to 325, gives the target (`52 over 464`, all operand-only, now a match). At the
+# tree's -O3 the threshold is 250, over that cost, so the keyword is a choice there (not measured without it). Left without `inline`, ConverteFonteAlim
 # stays binaryen's as the target has it. binaryen also removes GetInst's empty constructor and destructor calls.
 #
 # GetInst, what the bytes decide (objects at uenux2's flags, rows masked, unless a link is named):

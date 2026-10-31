@@ -156,8 +156,9 @@
 # for it. After a merge read `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv`, which prints `252 match
 # app/roots_uenux2.o` and `3717 match sysroot:libc++.a(directory_entry.o)`.
 #
-# The roots object compiles with APP_CXXFLAGS. With uenux2's -fno-strict-aliasing 9 of its 165 functions differ, all
-# libc++ format internals, and the link takes none of the nine from it: its 40 functions in the link are the same.
+# The roots object compiles with APP_CXXFLAGS, at -O2. Measured when the tree built at -O2 too: with uenux2's
+# -fno-strict-aliasing 9 of its 165 functions differ, all libc++ format internals, and the link takes none of the nine
+# from it: its 40 functions in the link are the same.
 #
 # EPE_INSTANCIA_NAO_CRIADA extends the landed ecourna::api::pattern::EPatternError. The rename of match 150 from
 # std::mutex::unlock to std::condition_variable::notify_one comes from this unit: mutex::unlock left the link for its twin.

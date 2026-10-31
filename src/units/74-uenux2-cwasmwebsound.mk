@@ -22,8 +22,8 @@
 #   uenux_wasm_web_sound_wait_finished (fn 9604), CEsperaAudioWasm::Cancela (fn 2680) with the D2, the D0 and
 #   __on_zero_shared that call it (9459, 9448, 9472). The target inlines std::map's erase into 9604 and 2680 (the same
 #   code in two functions, so clang did), and Cancela is then too large to inline into its three callers; at -O2 erase
-#   stays a call and Cancela goes into them. In a scratch link with the simulator's three objects at -O3 (the tree's
-#   -O2 flags otherwise), 2680 scored 8 over 157 rows, 9604 9 over 223, 9459 1 over 5, 9448 2 over 6 and 9472 1 over 6,
+#   stays a call and Cancela goes into them. In a scratch link with the simulator's three objects at -O3 (the rest at
+#   -O2, the tree's level then), 2680 scored 8 over 157 rows, 9604 9 over 223, 9459 1 over 5, 9448 2 over 6 and 9472 1 over 6,
 #   all operand-only. WaitAsync (fn 9515) is written and `unresolved`, and needs more: `-fno-strict-aliasing` off as well, since the tree's insert reloads __child
 #   where the target does not (23 over 459 rows then, 20 operand-only; 49 over 464 with the flag), and the 3 rows left
 #   are CEsperaAudio's flag store, which ours merges into the object's first i64; and a name of s_proximaEspera (.data

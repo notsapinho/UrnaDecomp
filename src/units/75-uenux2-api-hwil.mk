@@ -54,7 +54,8 @@
 # - std::vector<char> for m_dados; IUrna's members without const; ModeloAbreviado with a local for `m_modelo - 2000`, or
 #   as std::vformat over std::make_format_args;
 # - CUrnaMock's destructor in the class, with or without `inline`; IPower's and IUrna's destructors as `{}`;
-# - compiling the roots with UENUX2_CXXFLAGS (-fno-strict-aliasing) instead of APP_CXXFLAGS.
+# - compiling the roots with UENUX2_CXXFLAGS (-fno-strict-aliasing) instead of APP_CXXFLAGS, measured when both were at
+#   -O2, the tree's level then.
 # Forms measured not to, each linked with the variant's roots object in the plain link's place and remapped against its
 # target (`splat-remap --no-kinds`; the chosen form, linked the same way, prints IDENTICAL): uint16_t members in the
 # block (slots 2, 5, 7), `final` on CUrnaMock (its destructors), Slot0 returning int, BatLevel returning int or written

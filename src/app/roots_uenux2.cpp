@@ -88,10 +88,10 @@ void urna_insere_doubles(std::vector<double>& valores, const double* inicio, con
 
 // std::operator+(std::string&&, std::string&&) (target fn 252): every api::CPolySingleton<T>::instance calls it, and the
 // first object on the target's link line, the executable TU at -Oz, holds the instance: one call of append (fn 3717) and a
-// move. A uenux2 object's instance at -O2 inlined append, score 105 over 120 rows, and links ahead of libc++.a, whose copy
-// has the target's rows. So this object, ahead of uenux2's, instantiates it: minsize gives that one function the level
-// that explains the target's rows, and the body is the header's own code. The extern template leaves append to libc++.a,
-// since this object's -O2 copy would take 3717.
+// move. A uenux2 object's instance inlined append at -O2 (105 over 120 rows), differs at the tree's -O3 too (clogvota's:
+// 33 rows, append(const char*, size_t)), and links ahead of libc++.a, whose copy has the target's rows. So this object,
+// ahead of uenux2's, instantiates it: minsize gives that one function the level that explains the target's rows, and the
+// body is the header's own code. The extern template leaves append to libc++.a; this object's -O2 copy would take 3717.
 extern template std::string& std::string::append(const std::string&);
 template __attribute__((minsize)) std::string std::operator+<char, std::char_traits<char>, std::allocator<char>>(std::string&&, std::string&&);
 
