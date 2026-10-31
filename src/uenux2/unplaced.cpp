@@ -459,11 +459,6 @@
 // f4633 · 675 B · unmatched · placement: link order · name unknown
 // void f4633() { ... }
 
-// link-order cluster 699 · uses=2
-
-// f4640 · 15 B · unmatched · placement: link order · name unknown
-// ? f4640(i32, i32) { ... }
-
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 
 // f4682 · 549 B · unmatched · placement: link order · name unknown
@@ -587,9 +582,6 @@
 // void f5446(i32) { ... }
 
 // link-order cluster 762 · uses=2 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
-
-// f5452 · 18 B · unmatched · placement: link order · name unknown
-// ? f5452(i32, i32) { ... }
 
 // f5450 · 625 B · unmatched · placement: link order · name unknown
 // void f5450(i32, i32) { ... }
@@ -1475,11 +1467,6 @@
 
 // f977 · 140 B · unmatched · placement: link order · name unknown
 // ? f977(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1297 · uses=17
-
-// f807 · 12 B · unmatched · placement: link order · name unknown
-// ? f807(i32, i32) { ... }
 
 // link-order cluster 1310 · uses=22 · neighbours' file uenux2/src/api/gui/capplicationcontextstack.cpp
 

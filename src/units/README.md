@@ -142,7 +142,7 @@ A file compiled through `ECOURNA_SRCS` cannot have `_` in its name: the ecourna 
 | --- | --- |
 | `00-ecourna-app-dados-identificadoreleitor` | the voter-identifier classes of `app/dados` and the `CError`, base64 and `CStringUtils` code they call, the units the ecourna flags were measured on; `src/app/roots_ecourna.cpp` calls them; `CStringUtils::Trim`'s evidence is in fragment 112 |
 | `01-uenux2-api-util-io-ipc` | `CWait`, `CIniKey`, `CPosixMutex`, `CPosixSemaphore` and the wasm semaphore shim, the units the uenux2 flags were measured on |
-| `02-uenux2-cthreadvota` | `vota::CThreadVota` and `api::CTickManager` (target fns 700, 422 and 5451); `CTickManager::AddTick` (3644) written and `no-candidate`, its search loop -O3's |
+| `02-uenux2-cthreadvota` | `vota::CThreadVota` and `api::CTickManager` (target fns 700, 422, 5451, 4640, 807 and 5452); `CTickManager::AddTick` (3644) written and `differs`, named by a hand line for its callers, its search loop -O3's |
 | `03-ecourna-api-io-util` | `CFile` (its constructor out of line), `CIoError`, `CBitArray`, `CSynchronizer`; `CFile::Sync` and `CBitArray::GetValor(uebyte)` are written and do not match |
 | `04-ecourna-app-dados-asn` | the core ASN.1 converters and the data classes they build; puts the generated ASN.1 modules in the link |
 | `05-ecourna-api-security-cepesc` | the CEPESC envelope classes and `CKeyLoader` |
