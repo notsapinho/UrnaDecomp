@@ -54,6 +54,19 @@
 # 5931); the exact lines, the singletons' code at the head of their files and the destructors' places are chosen. The
 # twins 883 and 884 are now CPedeProporcional's D0 and D2, the first of the fifteen bodies in link order.
 #
+# The ten confirmation states' singletons: GetInst, a private constructor and the two statics of
+# CProporcionalBranco, CProporcionalNulo, CCandidatoInapto, CCandidatoInexistente, CConfirmaVotoLegenda,
+# CConfirmaVotoNominal and the four CMajoritario* states, each in its class's .cpp, final, in unit 104's form. The target
+# holds each GetInst inlined in slot 16 of the CConfereVotoEmCargo instance over its class, and binaryen shares those
+# slots as fns 1961 (six) and 2901 (four); the thunks pass the statics' addresses, the vptr and the constructor's
+# arguments, which the constructors here write (fns 11670 to 11673, 11707, 11715 to 11717, 11738, 11739). Those
+# instances are not written, so the GetInst are written out of line with a stand-in caller, and they match nothing of
+# their own. Their std::unique_ptr's exit-time destructors give fn 906 the copies it forms from: 906 matches, and with it
+# CPedeProporcional's and CPedeMajoritario's (11714, 11686), whose second reader of s_inst lets 3849 and 5921 hold. The
+# ten states' own (11689, 11692, ...) read `unresolved self-voted`: their s_inst's other reader is the slot-16 thunk.
+# Placement: each state's statics come before its slot 15 (11750, 11749 and 11748 for CCandidatoInapto, in the band
+# order), so they are defined above it; the constructor, destructor and GetInst above them are a choice.
+#
 # Destructor forms, read from the bytes and measured. Fn 884 is one call of fn 1035, so each of the fifteen states over
 # fn 1035 defines its destructor out of line: an implicit one leaves the base's D2 itself in the slot, as
 # CConfirmaVotoEmCargo's and CConfirmaProporcional's slot 0 do, so those two are implicit. Fn 1035 is not inline with the

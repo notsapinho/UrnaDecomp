@@ -15,8 +15,9 @@ namespace vota {
 // vota::CPedeMajoritario::GetInst, fn 5921) builds the one 28-byte object, the base's size, under a static std::mutex
 // (@1838084) and keeps it in a static std::unique_ptr (@1838108); the constructor, inlined there, passes 2 to the
 // base's. final: fn 6051 deletes the old object through CVotacaoStateAudio's D2 (fn 1035), with no call through the
-// vtable. GetInst, its statics and the constructor follow unit 104's singletons (src/units/104-uenux2-app-vota-estados.mk
-// has the evidence for that form); the names of slot 15 and the statics, and this header's path, are chosen.
+// vtable. GetInst, its statics and the constructor follow unit 104's singletons
+// (src/units/104-uenux2-app-vota-estados.mk has the evidence for that form); the names of slot 15 and the statics, and
+// this header's path, are chosen.
 class CPedeProporcional final : public CVotacaoStateAudio {
 public:
     virtual ~CPedeProporcional() override;

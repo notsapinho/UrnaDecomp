@@ -4,7 +4,24 @@
 
 namespace vota {
 
+CMajoritarioValido::CMajoritarioValido()
+    : CConfirmaMajoritario(EVENTO_ENTRADA, 1, 2)
+{
+}
+
 CMajoritarioValido::~CMajoritarioValido() = default;
+
+CMajoritarioValido& CMajoritarioValido::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CMajoritarioValido());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CMajoritarioValido> CMajoritarioValido::s_inst;
+std::mutex CMajoritarioValido::s_mutex;
 
 std::string CMajoritarioValido::GetMensagem() const
 {

@@ -9699,3 +9699,8 @@
 13360 blake2_gettable_ctx_params@openssl/O3/libcrypto.a(libdefault-lib-blake2s_mac.o)
 13367 blake2_mac_settable_ctx_params@openssl/O3/libcrypto.a(libdefault-lib-blake2b_mac.o)
 13369 blake2_gettable_ctx_params@openssl/O3/libcrypto.a(libdefault-lib-blake2b_mac.o)
+906 byn$mgfn-shared$__cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o
+3849 _ZN4vota17CPedeProporcional7GetInstEv
+5921 _ZN4vota16CPedeMajoritario7GetInstEv
+11686 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/votamajoritario/cpedemajoritario.cpp.o
+11714 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp.o

@@ -4,7 +4,24 @@
 
 namespace vota {
 
+CMajoritarioNulo::CMajoritarioNulo()
+    : CConfirmaMajoritario(EVENTO_ENTRADA | EVENTO_TICK, 6, 4)
+{
+}
+
 CMajoritarioNulo::~CMajoritarioNulo() = default;
+
+CMajoritarioNulo& CMajoritarioNulo::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CMajoritarioNulo());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CMajoritarioNulo> CMajoritarioNulo::s_inst;
+std::mutex CMajoritarioNulo::s_mutex;
 
 std::string CMajoritarioNulo::GetMensagem() const
 {
