@@ -79,6 +79,12 @@ public:
     virtual void PrintQRCode(const std::vector<uebyte>& imagem, size_t tamanho, uebyte escala) = 0;
     virtual int Slot13(int a) = 0;
     virtual void Slot14(int a, int b) = 0;
+
+    // Not a slot: api::IForm<IPaper>'s Refresh and Slot7 (fns 11007, 11005) call GetRenderForm where the screens' call
+    // it and then their media's Refresh, and do nothing with the paper it returns. So the paper's Refresh is empty and
+    // not virtual: a virtual one would be a sixteenth slot, and simulador::CWasmNullPaper's vtable has 15. That it is a
+    // member of this class, and its name, are chosen.
+    void Refresh() {}
 };
 
 } // namespace api

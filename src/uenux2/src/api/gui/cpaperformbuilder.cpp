@@ -13,6 +13,8 @@
 #include "api/gui/cdatatext.h"
 #include "api/gui/cfixedtext.h"
 #include "api/gui/cnewlinefieldpaper.h"
+#include "api/gui/ipaperrelatorios.h"
+#include "api/gui/cpreshownothing.h"
 #include "api/gui/ctextfieldpaper.h"
 
 namespace api {
@@ -41,6 +43,12 @@ void CPaperFormBuilder::AddNewLine(size_t linhas)
 {
     const SharedField campo(new CNewLineFieldPaper(linhas));
     m_campos.push_back(campo);
+}
+
+std::shared_ptr<IForm<IPaper>> CPaperFormBuilder::GetForm()
+{
+    const std::shared_ptr<IPreShow<IPaper>> preShow(new CPreShowNothing<IPaper>);
+    return std::shared_ptr<IForm<IPaper>>(new IFormImpressao<IPaperRelatorios>(m_campos, preShow));
 }
 
 } // namespace api

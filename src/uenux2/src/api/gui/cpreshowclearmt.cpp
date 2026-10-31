@@ -14,8 +14,3 @@ void CPreShowClearMT::PreShow(IScreenMT& screen)
 }
 
 } // namespace api
-
-// <stubs>
-// f1694 · 423 B · unmatched · placement: link order · name unknown
-// void f1694(i32, i32, i32) { ... }
-// </stubs>

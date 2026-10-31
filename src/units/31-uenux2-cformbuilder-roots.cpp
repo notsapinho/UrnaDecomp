@@ -19,6 +19,7 @@
 //   RelatorioA        5579, 5580, 5591 and the other callers of 193, 604, 198, 1264. Its form is a parameter: their callers
 //                     zero the vector in line, and it takes no constructor of ours. The EStyle and alignments vary as theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
+// The getters' stand-ins (FormMTA to FormPapelB, below) are listed beside them.
 #include <functional>
 #include <string>
 
@@ -128,6 +129,51 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
     return static_cast<int>(linhas);
 }
 
+// The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
+// sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
+//   FormMTA, FormMTB      callers of 1694 (1150, 4633, 5341, 5343, 10204, 10214, 10676) and of 301 (652, 1901, 1905, 2734,
+//                         2735 and the other 44)
+//   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
+//   FormPapelA, FormPapelB  callers of 5515: 357 and 10997
+__attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
+{
+    const auto simples = form.GetForm(nome);
+    const auto interativo = form.GetInteractiveForm(nome, limpa);
+    return simples.use_count() + interativo.use_count();
+}
+
+__attribute__((noinline)) int FormMTB(api::CMTFormBuilder& form, const std::string& nome, int vezes)
+{
+    const auto interativo = form.GetInteractiveForm(nome, true);
+    form.AddBeep(vezes);
+    const auto simples = form.GetForm(std::string());
+    return vezes - simples.use_count();
+}
+
+__attribute__((noinline)) int FormA(api::CFormBuilder& form, const std::shared_ptr<api::IPreShow<api::IScreen>>& preShow,
+                                    const std::string& nome)
+{
+    return form.GetForm(preShow, nome).use_count();
+}
+
+__attribute__((noinline)) int FormB(api::CFormBuilder& form, const std::shared_ptr<api::IPreShow<api::IScreen>>& preShow,
+                                    const api::SPoint& posicao, api::TColor cor)
+{
+    form.AddLine(posicao, posicao, cor);
+    return form.GetForm(preShow, std::string()).use_count() + posicao.x;
+}
+
+__attribute__((noinline)) int FormPapelA(api::CPaperFormBuilder& form)
+{
+    return form.GetForm().use_count();
+}
+
+__attribute__((noinline)) int FormPapelB(api::CPaperFormBuilder& form, size_t linhas)
+{
+    form.AddNewLine(linhas);
+    return form.GetForm().use_count() + 2;
+}
+
 void* volatile w5544_sink;
 
 struct SW5544Roots {
@@ -139,6 +185,12 @@ struct SW5544Roots {
         w5544_sink = reinterpret_cast<void*>(&TelaA);
         w5544_sink = reinterpret_cast<void*>(&TelaB);
         w5544_sink = reinterpret_cast<void*>(&RelatorioA);
+        w5544_sink = reinterpret_cast<void*>(&FormMTA);
+        w5544_sink = reinterpret_cast<void*>(&FormMTB);
+        w5544_sink = reinterpret_cast<void*>(&FormA);
+        w5544_sink = reinterpret_cast<void*>(&FormB);
+        w5544_sink = reinterpret_cast<void*>(&FormPapelA);
+        w5544_sink = reinterpret_cast<void*>(&FormPapelB);
     }
 } w5544_roots;
 

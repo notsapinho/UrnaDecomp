@@ -4,11 +4,6 @@
 // not evidence; inside a cluster they are in link order.
 
 // <stubs>
-// link-order cluster 129 · uses=1 · neighbours' file uenux2/src/api/gui/iscreen.cpp
-
-// f8902 · 193 B · unmatched · placement: link order · name unknown
-// void f8902(i32) { ... }
-
 // link-order cluster 235 · uses=1
 
 // f9770 · 621 B · unmatched · placement: link order · name unknown
