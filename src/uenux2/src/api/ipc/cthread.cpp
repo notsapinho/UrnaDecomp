@@ -14,7 +14,7 @@ CThread::~CThread() = default;
 #line 28
 CThread::CThread()
     : m_estado(ESTADO_CRIADA)
-    , m_iniciada(false), m_parar(false)
+    , m_parar(false), m_iniciada(false)
     , m_pImpl(CPolySingleton<IGenericFactory<IThreadImpl>>::instance().Create())
     , m_sync(CPolySingleton<IGenericFactory<ISyncCtl>>::instance().Create())
 {
@@ -30,7 +30,7 @@ CThread::CThread()
 void CThread::Start()
 {
     if (m_estado != ESTADO_EXECUTANDO) {
-        m_iniciada = false;
+        m_parar = false;
         m_estado = ESTADO_EXECUTANDO;
 
         if (m_pImpl == nullptr) {

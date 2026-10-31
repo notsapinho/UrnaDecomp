@@ -1,8 +1,9 @@
 # uenux2 api::CPriorityMessageQueue<api::SMessage>, a class template in the new header api/ipc/cmessagequeue.h: Remove
 # (target fn 2073, record cmessagequeue.h:153:19) and the destructor's D2 and D0 (3162, 3157; slots 0 and 1 of the
-# vtable @1534764), with api::SMessage and the 6228 enumerator of EUeIpcError. The unit has no source of its own: the
-# roots file instantiates the template (see its header). Remove's callers (4337, 4343, 4349, 10204) and the constructor
-# (inlined into 316 and 270, records at lines 113-114, which stay blank) are not reconstructed.
+# vtable @1534764), with api::SMessage and the 6228 enumerator of EUeIpcError. The unit has no source of its own and no
+# companion: unit 116's vota::CMessageEleitor and CMessageOperador instantiate the template, with its constructor
+# (inlined into 316 and 270, records at lines 113-114), and call Remove from 4337 and 4343. Its callers 4349 and 10204 are
+# not reconstructed. The D2 and D0 match under vota::CMessageEleitor's names, the twin that links first.
 #
 # What the evidence gives:
 # - +4: std::priority_queue, the +16 byte its empty comparator. The constructor in 316 stores the vector's three words
@@ -32,12 +33,12 @@
 # SItem, its fields and that it is nested; m_fila, m_semaforo, m_sync, m_ordem. Every line of the header but 153 is a
 # choice too.
 #
-# Forms measured against this one, comparing the object's Remove, pop, D2 and D0 (em++ with uenux2's flags); a body
-# byte is where the form, linked in the roots object's place, first differs from 2073:
+# Forms measured against this one when a roots object held the instances, comparing the object's Remove, pop, D2 and D0
+# (em++ with uenux2's flags); a body byte is where the form, linked in that object's place, first differs from 2073:
 # - the same bytes: a functor as priority_queue's third argument for operator< with std::less (only pop's symbol
 #   differs, and it is inlined); the comparator as if/else if/else or as nested ?:; size_t for the two unsigned; a
 #   reference, or an RAII guard that holds the reference, for the pointer `sync`; with -fno-strict-aliasing or without
-#   it, so the roots object takes APP_CXXFLAGS as every roots object does. No evidence names a guard class, so none
+#   it, and these bodies now compile at uenux2's flags in cthreadeleitor.cpp.o. No evidence names a guard class, so none
 #   is invented, although one would explain why the throw path does not Unlock: uenux2 compiles no landing pads, so a
 #   guard's destructor leaves no code on that path.
 # - other bytes: `a < b || (a == b && c > d)`, `>` tested before `<`, and `a > b` written `b < a`: pop stays out of line
@@ -46,6 +47,3 @@
 #
 # The header's includes need no extra path: UENUX2_PREFIX_MAP rewrites the relative src/uenux2 spelling too, so the
 # record's file is /home/rubio/tse/uenux2/src/api/ipc/cmessagequeue.h.
-$(ROOT)/$(APP)/64-uenux2-cmessagequeue-roots.o: $(ROOT)/src/units/64-uenux2-cmessagequeue-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/64-uenux2-cmessagequeue.mk $(wildcard $(ROOT)/src/uenux2/src/api/ipc/*.h $(ROOT)/src/ecourna/api/exception/*.hpp)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/64-uenux2-cmessagequeue-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/64-uenux2-cmessagequeue-roots.o

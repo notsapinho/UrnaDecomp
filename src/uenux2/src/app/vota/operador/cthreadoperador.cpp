@@ -1,13 +1,35 @@
-// <stubs>
-// f10206 · 13 B · unmatched · placement: link order · name unknown
-// void f10206(i32) { ... }
+#include "app/vota/operador/cthreadoperador.h"
 
-// f10204 · 1873 B · unmatched · name unknown
-// void f10204(i32) { ... }
+#include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/monitor/cthreadmonitor.h"
 
-// f10203 · 18 B · unmatched · placement: link order · name unknown
-// void f10203(i32) { ... }
+namespace vota {
 
-// f2717 · 268 B · unmatched · placement: link order · name unknown
-// ? f2717(i32) { ... }
-// </stubs>
+CThreadOperador& CThreadOperador::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CThreadOperador());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CThreadOperador> CThreadOperador::s_inst;
+std::mutex CThreadOperador::s_mutex;
+
+CThreadOperador::CThreadOperador()
+    : m_texto1("")
+    , m_texto2("")
+    , m_texto3(" ")
+{
+}
+
+CThreadOperador::~CThreadOperador() = default;
+
+void CThreadOperador::ParaOutrasThreads()
+{
+    CThreadEleitor::GetInst().Stop();
+    CThreadMonitor::GetInst().Stop();
+}
+
+} // namespace vota

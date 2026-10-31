@@ -505,24 +505,6 @@
 // f4307 · 478 B · unmatched · placement: link order · name unknown
 // ? f4307(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 670 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmessageoperador.cpp
-
-// f4338 · 135 B · unmatched · placement: link order · name unknown
-// void f4338(i32) { ... }
-
-// f4337 · 79 B · unmatched · placement: link order · name unknown
-// void f4337(i32, i32) { ... }
-
-// link-order cluster 671 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmessageoperador.cpp
-
-// f4341 · 132 B · unmatched · placement: link order · name unknown
-// ? f4341(i32) { ... }
-
-// link-order cluster 672 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmessageoperador.cpp
-
-// f4343 · 73 B · unmatched · placement: link order · name unknown
-// void f4343(i32, i32) { ... }
-
 // link-order cluster 682 · uses=2
 
 // f4464 · 1272 B · unmatched · placement: link order · name unknown
@@ -1449,11 +1431,6 @@
 
 // f2097 · 187 B · unmatched · placement: link order · name unknown
 // void f2097(i32) { ... }
-
-// link-order cluster 1141 · uses=5 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cthreadvota.cpp
-
-// f2125 · 32 B · unmatched · placement: link order · name unknown
-// void f2125(i32, i32) { ... }
 
 // link-order cluster 1147 · uses=5 · neighbours' file uenux2/src/api/ipc/posix/cposixrwmutex.cpp
 
