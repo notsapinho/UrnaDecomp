@@ -4,38 +4,6 @@
 // not evidence; inside a cluster they are in link order.
 
 // <stubs>
-// link-order cluster 217 · uses=1 · neighbours' file ecourna/api/security/ctrng.cpp
-
-// f9477 · 90 B · unmatched · placement: link order · name unknown
-// ? f9477(i32) { ... }
-
-// f9476 · 105 B · unmatched · placement: link order · name unknown
-// ? f9476(i32) { ... }
-
-// f9475 · 20 B · unmatched · placement: link order · name unknown
-// ? f9475(i32, i32) { ... }
-
-// link-order cluster 219 · uses=1 · neighbours' file ecourna/api/security/cblockcipher.cpp
-
-// f9488 · 75 B · unmatched · placement: link order · name unknown
-// void f9488(i32) { ... }
-
-// link-order cluster 220 · uses=1 · neighbours' file ecourna/api/security/csymmetriccipherfactory.cpp
-
-// f9489 · 282 B · unmatched · placement: link order · name unknown
-// void f9489(i32, i32, i32) { ... }
-
-// link-order cluster 223 · uses=1 · neighbours' file ecourna/api/security/cprng.cpp
-
-// f9502 · 332 B · unmatched · placement: link order · name unknown
-// ? f9502(i32) { ... }
-
-// f9500 · 370 B · unmatched · placement: link order · name unknown
-// ? f9500(i32) { ... }
-
-// f9499 · 20 B · unmatched · placement: link order · name unknown
-// ? f9499(i32, i32) { ... }
-
 // link-order cluster 236 · uses=1
 
 // f9843 · 88 B · unmatched · placement: link order · name unknown
@@ -105,24 +73,6 @@
 
 // f5153 · 82 B · unmatched · placement: link order · name unknown
 // void f5153(i32) { ... }
-
-// link-order cluster 732 · uses=2 · neighbours' file ecourna/api/security/cepesc/ccepesccipher.cpp
-
-// f5171 · 221 B · unmatched · placement: link order · name unknown
-// void f5171(i32, i32, i32) { ... }
-
-// link-order cluster 733 · uses=2 · neighbours' file ecourna/api/security/ctrng.cpp
-
-// f5173 · 233 B · unmatched · placement: link order · name unknown
-// ? f5173(i32, i32, i32) { ... }
-
-// link-order cluster 735 · uses=2 · neighbours' file ecourna/api/security/cprng.cpp
-
-// f5179 · 680 B · unmatched · placement: link order · name unknown
-// void f5179(i32) { ... }
-
-// f5178 · 1059 B · unmatched · placement: link order · name unknown
-// ? f5178(i32, i32, i32) { ... }
 
 // link-order cluster 742 · uses=2 · neighbours' file uenux2/src/api/audio/alsa/cwavfile.cpp
 
@@ -458,9 +408,6 @@
 // f2547 · 60 B · unmatched · placement: link order · name unknown
 // void f2547(i32) { ... }
 
-// f2544 · 124 B · unmatched · placement: link order · name unknown
-// ? f2544(i32, i32) { ... }
-
 // link-order cluster 1064 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
 
 // f2584 · 16 B · unmatched · placement: link order · name unknown
@@ -468,16 +415,6 @@
 
 // f2581 · 1161 B · unmatched · placement: link order · name unknown
 // void f2581(i32) { ... }
-
-// link-order cluster 1074 · uses=4 · neighbours' file ecourna/api/security/cepesc/ccepesccipher.cpp
-
-// f2681 · 345 B · unmatched · placement: link order · name unknown
-// void f2681(i32, i32, i32) { ... }
-
-// link-order cluster 1075 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
-
-// f2684 · 276 B · unmatched · placement: link order · name unknown
-// ? f2684(i32) { ... }
 
 // link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
 
@@ -574,11 +511,6 @@
 
 // f2283 · 57 B · unmatched · placement: link order · name unknown
 // void f2283(i32, i32) { ... }
-
-// link-order cluster 1176 · uses=6 · neighbours' file ecourna/api/security/csymmetriccipherfactory.cpp
-
-// f1884 · 1167 B · unmatched · placement: link order · name unknown
-// void f1884(i32, i32, i32) { ... }
 
 // link-order cluster 1178 · uses=6 · neighbours' file uenux2/src/app/comum/util/cmonitoraalimentacao.cpp
 

@@ -23,7 +23,7 @@ enum ESymmetricCipherKeySize {
 class CAesKey {
 public:
     CAesKey() = default;
-    CAesKey(const std::vector<uebyte>& bytes, ESymmetricCipherKeySize tamanho, const std::vector<uebyte>& iv = std::vector<uebyte>())
+    inline CAesKey(const std::vector<uebyte>& bytes, ESymmetricCipherKeySize tamanho, const std::vector<uebyte>& iv = std::vector<uebyte>())
         : m_bytes(bytes), m_tamanho(tamanho), m_iv(iv)
     {
     }
