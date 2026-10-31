@@ -9,6 +9,9 @@
 namespace vota {
 
 enum EUeVotaError {
+    // the value is the code vota::NomeTela (target fn 6718) throws; the name is chosen from its message, "Tela
+    // inválida {}": no evidence names it
+    EUE_VOTA_TELA_INVALIDA = 9327,
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,

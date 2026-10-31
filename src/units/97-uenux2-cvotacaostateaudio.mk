@@ -60,22 +60,42 @@
 # CConfirmaVotoNominal and the four CMajoritario* states, each in its class's .cpp, final, in unit 104's form. The target
 # holds each GetInst inlined in slot 16 of the CConfereVotoEmCargo instance over its class, and binaryen shares those
 # slots as fns 1961 (six) and 2901 (four); the thunks pass the statics' addresses, the vptr and the constructor's
-# arguments, which the constructors here write (fns 11670 to 11673, 11707, 11715 to 11717, 11738, 11739). Those
-# instances are not written, so the GetInst are written out of line with a stand-in caller, and they match nothing of
-# their own. Their std::unique_ptr's exit-time destructors give fn 906 the copies it forms from: 906 matches, and with it
+# arguments, which the constructors here write (fns 11670 to 11673, 11707, 11715 to 11717, 11738, 11739). The GetInst
+# match nothing of their own: slot 16 is their one caller, and binaryen inlines them there as in the target. Their
+# std::unique_ptr's exit-time destructors give fn 906 the copies it forms from: 906 matches, and with it
 # CPedeProporcional's and CPedeMajoritario's (11714, 11686), whose second reader of s_inst lets 3849 and 5921 hold. The
-# ten states' own (11689, 11692, ...) read `unresolved self-voted`: their s_inst's other reader is the slot-16 thunk.
+# ten states' own, the mutex's and the pointer's (11688 and 11689 for CMajoritarioValido, 11691, 11692, 11694, 11695,
+# 11697, 11698, 11702, 11703, 11705, 11706, 11729, 11730, 11732, 11734, 11736, 11737, 11749, 11750), match since the
+# slot-16 thunks match: those read the statics too, so the names are no longer voted by the destructors alone.
 # Placement: each state's statics come before its slot 15 (11750, 11749 and 11748 for CCandidatoInapto, in the band
 # order), so they are defined above it; the constructor, destructor and GetInst above them are a choice.
 #
+# The class template vota::CConfereVotoEmCargo<ESTADO, TELA> (cconferevotoemcargo.h; its RTTI names ten instances, the
+# header's comment gives what each part rests on): final, a singleton whose GetInst the target inlines into the four
+# functions that build the instances (fns 11683, 11711, 11724, 11744, not reconstructed), slot 16 returning
+# &ESTADO::GetInst(), the destructor implicit. The roots stand in for those four builders and call the instances'
+# GetInst as they do, so the roots object instantiates the template, as unit 79's roots instantiate theirs, and is
+# compiled with UENUX2_CXXFLAGS. From it match the D0 every instance shares (1278), slot 16 (the thunks above, and 1961
+# and 2901, which our link forms from the same six and four bodies) and 1286, the body binaryen shares for the ten
+# std::unique_ptr statics' exit-time destructors. Those destructors (11674, 11676, 11678, 11680, 11708, 11718, 11720,
+# 11722, 11740, 11742) read `unresolved`, the static's address having no target symbol, and the mutexes' (11743 for
+# CCandidatoInapto's, 11675 and the other odd neighbours) `no-candidate`: the statics' readers in the target are the
+# four builders, not written, and the roots' stand-ins cast no vote.
+#
 # vota::IConfereVotoEmCargo (cconferevotoemcargo.h, new, and cconferevotoemcargo.cpp, named by its records): the head,
-# the destructor in the class (fn 1717), FinishStateAudio (11792) and GetMensagem (11789). Its key function,
-# ProcessInputAudio, is pending, so the -pending.o emits the vtable and with it the destructor, the compiler's code for
-# the class definition, and 1717 matches from there; the roots take the vtable's address, as the constructor (fn 1165)
-# that stores it in the target is not written. Lines: in use band 1 the slots are linked 11793, 11792, 11791, 11790,
-# 11789, so FinishStateAudio sits between StartStateAudio (record :41 of its inlined helper) and ProcessInputAudio
-# (record :80), and GetMensagem after ProcessTickAudio, past ExecutarAposAudioAtual's record :95; lines 60 and 120 are a
-# choice.
+# the constructor (fn 1165), the destructor (fn 1717), FinishStateAudio (11792) and GetMensagem (11789). The destructor
+# is out of line, the key function, and cconferevotoemcargo.o emits the vtable: with the destructor in the class, as
+# this unit first had it, the instances' D0 inlines it at the tree's -O3 (63 rows inserted against 1278, whole link),
+# where the target's 1278 calls 1717; out of line, 1278 and 1717 give operand rows only, and 1717 matches from
+# cconferevotoemcargo.o. The constructor reads the confirmation time through
+# CConfiguracaoEleicao::GetParametrosUrna().GetTempoConfirmacaoVoto() and creates the tick only when it is positive, in a
+# std::optional<uebyte> (+28, +29) a helper of the file's anonymous namespace returns; that helper, its name and the
+# optional are chosen, and give the target's rows. cconferevotoemcargo.cpp includes cconfiguracaoeleicao.h, whose
+# ecourna headers include Boost: an include path, not a flag of the code (the rule below). Lines: in use band 1 the
+# slots are linked 11793, 11792, 11791, 11790, 11789, so FinishStateAudio sits between StartStateAudio (record :41 of
+# its inlined helper) and ProcessInputAudio (record :80), and GetMensagem after ProcessTickAudio, past
+# ExecutarAposAudioAtual's record :95; lines 60 and 120 are a choice, and so are the constructor's and the destructor's
+# above line 41.
 #
 # Destructor forms, read from the bytes and measured. Fn 884 is one call of fn 1035, so each of the fifteen states over
 # fn 1035 defines its destructor out of line: an implicit one leaves the base's D2 itself in the slot, as
@@ -142,12 +162,16 @@ CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesariovotacao.cpp \
     src/api/ipc/posix/cposixrwmutex.cpp
 UENUX2_SRCS += $(CVOTACAOSTATEAUDIO_SRCS)
+# cconferevotoemcargo.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit
+# 122's cgravadorutil.cpp does)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # twenty-one members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-pending.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-pending.cpp -o $(R)
 # nothing reconstructed references the unit's vtables or CPosixRWMutex's constructor yet:
-# 97-uenux2-cvotacaostateaudio-roots.cpp takes their addresses
-$(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-roots.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-roots.cpp -o $(R)
+# 97-uenux2-cvotacaostateaudio-roots.cpp takes their addresses, and builds the CConfereVotoEmCargo instances as their
+# callers do; it instantiates that class template, so it compiles with the tree's flags
+$(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-roots.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/comum/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/dados/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/97-uenux2-cvotacaostateaudio-pending.o $(APP)/97-uenux2-cvotacaostateaudio-roots.o

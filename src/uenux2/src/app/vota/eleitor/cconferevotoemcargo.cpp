@@ -1,8 +1,35 @@
 #include "app/vota/eleitor/cconferevotoemcargo.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/vota/eleitor/cthreadeleitor.h"
 
 namespace vota {
 
-// (original lines 5-59: content not recovered)
+namespace {
+
+std::optional<uebyte> CriaTickConfere()
+{
+    const int tempo = comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetTempoConfirmacaoVoto();
+    if (tempo <= 0) {
+        return std::nullopt;
+    }
+    return CThreadEleitor::GetInst().AddStoppedTick(tempo);
+}
+
+} // namespace
+
+IConfereVotoEmCargo::IConfereVotoEmCargo(ETelaVotacao tela)
+    : CVotacaoStateAudio(EVENTO_ENTRADA | EVENTO_TICK),
+      m_tickConfere(CriaTickConfere()),
+      m_tela(tela)
+{
+}
+
+IConfereVotoEmCargo::~IConfereVotoEmCargo()
+{
+    CancelaEsperaConfere();
+}
+
+// (original lines 32-59: content not recovered)
 #line 60
 void IConfereVotoEmCargo::FinishStateAudio()
 {
@@ -70,38 +97,3 @@ std::string IConfereVotoEmCargo::GetMensagem() const
 }
 
 } // namespace vota
-
-// <stubs>
-// f11739 · 26 B · unmatched · placement: link order · name unknown
-// ? f11739(i32) { ... }
-
-// f11738 · 26 B · unmatched · placement: link order · name unknown
-// ? f11738(i32) { ... }
-
-// f11717 · 26 B · unmatched · placement: link order · name unknown
-// ? f11717(i32) { ... }
-
-// f11716 · 26 B · unmatched · placement: link order · name unknown
-// ? f11716(i32) { ... }
-
-// f11715 · 26 B · unmatched · placement: link order · name unknown
-// ? f11715(i32) { ... }
-
-// f11707 · 26 B · unmatched · placement: link order · name unknown
-// ? f11707(i32) { ... }
-
-// f11673 · 28 B · unmatched · placement: link order · name unknown
-// ? f11673(i32) { ... }
-
-// f11672 · 28 B · unmatched · placement: link order · name unknown
-// ? f11672(i32) { ... }
-
-// f11671 · 28 B · unmatched · placement: link order · name unknown
-// ? f11671(i32) { ... }
-
-// f11670 · 28 B · unmatched · placement: link order · name unknown
-// ? f11670(i32) { ... }
-
-// f1165 · 91 B · unmatched · placement: link order · name unknown
-// ? f1165(i32, i32) { ... }
-// </stubs>
