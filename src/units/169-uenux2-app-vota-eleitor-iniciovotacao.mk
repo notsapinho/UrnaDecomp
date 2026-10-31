@@ -17,7 +17,8 @@
 # api::CDateTime at +544 of comum::CConfiguracaoEleicao, which that head leaves unrecovered; their statics are not
 # written either. vota::CRegerarZeresima's statics are written, and their exit-time destructors (11844, 11843) do not
 # match: its GetInst has no index (fn 11838 holds it inlined), so no matched body names the two objects; 11844 is
-# `unresolved` on them.
+# `unresolved` on them. Its GetInst and constructor are written and compared with nothing: the roots' stand-in holds
+# them inlined, as fn 11838 does in the target.
 #
 # Evidence, each read in the target (pnpm wasm fn) or measured on this unit's links:
 # - The destructors' forms (docs/reference/facts/reading.md R4, R5). CInformacaoZeresimaTardia's is out of line and the
@@ -61,6 +62,9 @@
 #   CInformacaoZeresimaTardia's .cpp the destructor and StartState come before ProcessInput (its records, lines 48 and
 #   51): fns 11984, 11983 and 11982 run in that link order in band 1 (reading.md R9). StartState's call of the form
 #   comes before the store of the next state in fns 11983 and 5958.
+#
+# Same bytes by unit 97's fragment (not compiled for these classes): `{}` for a destructor's `= default`, and final on
+# the destructor instead of the class; the forms written here are chosen.
 #
 # Chosen, no evidence names them: every data member's name (m_form, m_espera, m_limite, s_mutex, s_inst); the three
 # CTelasVota getters' names, that they are getters, and their place first in the class; the slots' names AposGeracao (9)

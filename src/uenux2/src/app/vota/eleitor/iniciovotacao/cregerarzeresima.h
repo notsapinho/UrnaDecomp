@@ -8,7 +8,7 @@
 namespace vota {
 
 // vota::CRegerarZeresima (RTTI: si_class of vota::CGeraZeresimaBase; vtable @1546492 [5961, 5960, 11946, 7480, 1661,
-// 218, 425, 11842, 11841]): it overrides slots 9 and 10 and adds no data member (the object fn 11838 builds is the
+// 218, 425, 218, 425, 11842, 11841]): it overrides slots 9 and 10 and adds no data member (what fn 11838 builds is the
 // base's 20 bytes). Slot 10 (fn 11841) returns vota::CRegeraResumoZeresima::GetInst(), which it holds inlined (a thunk
 // into binaryen's fn 6056, with vota::CGeraZeresima's slot 10). Slot 9 (fn 11842) calls fn 2882, which has no name
 // (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp). The destructors are vota::CGeraZeresima's bodies
