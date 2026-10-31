@@ -73,7 +73,7 @@
 # The class template vota::CConfereVotoEmCargo<ESTADO, TELA> (cconferevotoemcargo.h; its RTTI names ten instances, the
 # header's comment gives what each part rests on): final, a singleton whose GetInst the target inlines into the four
 # functions that build the instances (fns 11683, 11711, 11724, 11744, not reconstructed), slot 16 returning
-# &ESTADO::GetInst(), the destructor implicit. The roots stand in for those four builders and call the instances'
+# &ESTADO::GetInst(), the destructor not out of line (implicit, a choice). The roots stand in for those four builders and call the instances'
 # GetInst as they do, so the roots object instantiates the template, as unit 79's roots instantiate theirs, and is
 # compiled with UENUX2_CXXFLAGS. From it match the D0 every instance shares (1278), slot 16 (the thunks above, and 1961
 # and 2901, which our link forms from the same six and four bodies) and 1286, the body binaryen shares for the ten
@@ -110,7 +110,8 @@
 # the whole link, and an out-of-line one in another object gives a D2 of one call, which is not slot 0's body (compiled). Fn 785 stores no
 # vptr and CErroTesteTecladoFim is final: without final the D2 gains the store (compiled).
 #
-# Same bytes, each compiled and compared by function with the object-local numbers masked (how-to step 3). Slot 15:
+# Same bytes, each compiled and compared by function with the object-local numbers masked (how-to step 3).
+# CConfereVotoEmCargo<ESTADO, TELA>'s destructor: implicit, `= default` in the class, or `{}` in the class (object cmp-identical). Slot 15:
 # `return std::string("...");`, a local std::string returned, and the body in the class. The leaf states: `{}` for
 # `= default`, final, and slot 15 declared before the destructor. Fn 1035: `= nullptr` for reset(), the helper declared
 # inline, its statements written in the destructor, and another pointee type for the +16 member. CErroTesteTecladoFim:

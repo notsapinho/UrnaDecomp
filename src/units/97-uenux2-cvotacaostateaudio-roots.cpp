@@ -72,7 +72,7 @@ namespace {
 
 const void* volatile cvotacaostateaudio_sink;
 
-// stands for fns 1165, 4420 and 4459
+// stands for fns 4420 and 4459 (1165 is written now)
 __attribute__((noinline)) int EstadoAudio(void* estado, int eventos)
 {
     return w97_estado_audio(estado, eventos + 1);

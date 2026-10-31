@@ -17,7 +17,7 @@ namespace vota {
 // (src/units/97-uenux2-cvotacaostateaudio-pending.cpp); slot 11 (fn 11792) cancels the wait at +32, slot 15 (fn 11789)
 // returns its message. fn 1717, the D2, cancels the +32 wait as slot 11 does, then releases it and calls
 // CVotacaoStateAudio's D2. The destructor is out of line: fn 1278, the D0 of every CConfereVotoEmCargo instance, calls fn
-// 1717 and frees what it returns, the implicit destructor of a class that adds no member over an out-of-line base D2
+// 1717 and frees what it returns, a destructor not out of line in a class that adds no member over an out-of-line base D2
 // (docs/reference/facts/reading.md R5); defined in the class, the destructor is inlined there at the tree's -O3 (measured
 // in the whole link: 63 rows inserted against 1278, and operand rows only out of line). Declared first, it is the key
 // function, a choice. The layout is what the constructor (fn 1165) stores: +28 a tick id it creates stopped and +29 a
@@ -68,7 +68,8 @@ private:
 // base's but for slot 1, fn 1278, the D0 binaryen keeps once for all ten, and slot 16, GetProximoEstado: a thunk that
 // passes ESTADO's statics, vptr and constructor arguments to fn 1961 (the six CConfirmaProporcional states) or fn 2901
 // (the four CConfirmaMajoritario ones), the bodies binaryen shares for ESTADO::GetInst() inlined there. Slot 0 is the
-// base's D2 (fn 1717): the destructor is implicit. A singleton: fns 11683, 11711, 11724 and 11744 hold GetInst inlined,
+// base's D2 (fn 1717): the destructor is not out of line; implicit is a choice (an in-class `= default` or `{}` gives a
+// cmp-identical object). A singleton: fns 11683, 11711, 11724 and 11744 hold GetInst inlined,
 // in unit 104's form: a lock of the class's std::mutex, the std::unique_ptr built on first use with a 40-B object whose
 // constructor calls fn 1165 with TELA and stores the vptr, the old object deleted through a direct call of fn 1717 and a
 // free, so the class is final. The statics are a class template's: for the instance over CCandidatoInapto the mutex is
