@@ -237,11 +237,6 @@
 // f11728 · 51 B · unmatched · placement: link order · name unknown
 // void f11728(i32, i32) { ... }
 
-// link-order cluster 553 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cproporcionalbranco.cpp
-
-// f11752 · 25 B · unmatched · placement: link order · name unknown
-// ? f11752(i32, i32, i32) { ... }
-
 // link-order cluster 558 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/curnainspecionada.cpp
 
 // f11794 · 36 B · unmatched · placement: link order · name unknown

@@ -2,10 +2,6 @@
 // NOT the target's, they trap. All are reached only through the vtables.
 //
 // vota::CVotacaoStateAudio, in src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:
-// - StartState 7028 (slot 2), 55 B: sets +11 from fn 509's +4, calls slot 10 and registers the +13 tick. Its callees are
-//   matched, 509 and 316 (the queue singleton fn 700 is called on) among them: it is only not written.
-// - FinishState 7022 (slot 5), 132 B: cancels the wait, stops both ticks through fns 422 and 316, calls slot 11. It
-//   waited for fn 422, CThreadVota::StopTick, which unit 02 matches now.
 // - ProcessInput 7029 (slot 7, record :69), 282 B, and ProcessTick 7010 (slot 8, records :120 and :388), 683 B: both
 //   wait for fn 1091 (and waited for 422); 7010 holds IniciarEsperaFimAudio and its two lambdas (the __func vtables
 //   @1536140 and @1536204), and calls PlayInterruptibleMessage (fn 3143).
@@ -27,16 +23,6 @@
 #include "app/vota/eleitor/votaproporcional/cconfirmaproporcional.h"
 
 namespace vota {
-
-void CVotacaoStateAudio::StartState()
-{
-    __builtin_trap();
-}
-
-void CVotacaoStateAudio::FinishState()
-{
-    __builtin_trap();
-}
 
 void CVotacaoStateAudio::ProcessInput()
 {

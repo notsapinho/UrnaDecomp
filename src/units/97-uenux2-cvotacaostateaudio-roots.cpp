@@ -10,6 +10,15 @@
 // api::CPosixRWMutex's constructor (target fn 10245) is reached only by its table slot 244, which fn 10864 passes to fn
 // 6023, so its own address is taken; its vptr store keeps that class's vtable, and with it slots 0 to 4.
 //
+// The constructors, with direct callers in the target that are not reconstructed: CVotacaoStateAudio's (fn 1785) has
+// six, of which fn 5929 is written, so EstadoAudio stands for the other five (1165, 4420, 4459, 5932, 6051).
+// CConfirmaVotoEmCargo's (fn 5929) has two, fn 11752, written, and fn 11700, CConfirmaMajoritario's, which ConfirmaEmCargo
+// stands for. CConfirmaProporcional's (fn 11752) has one, fn 1961, the body binaryen shares for six singletons'
+// builders: DoisConfirmaProporcional stands for it with two calls. None of CEstadoComDesligamentoAutomatico's (fn 1285)
+// ten callers is written (2888, 3855, 3877, 5936, 5947, 5948, 11804, 11809, 11812, 12051): DoisDesligamentos stands for
+// them with two calls. Each stand-in passes what the target's callers vary (the events, the two stored arguments) as a
+// variable, so binaryen folds none of them, and adds a constant somewhere, so no two are alike.
+//
 // Declared through asm labels (a constructor returns `this` before binaryen runs), so this TU needs no uenux2 header and
 // instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
@@ -23,11 +32,39 @@ extern const char cpedetitulomesariofinal_vt[] __asm__("_ZTVN5comum23CPedeTitulo
 extern const char cpedetitulomesariovotacao_vt[] __asm__("_ZTVN5comum25CPedeTituloMesarioVotacaoE");
 extern const char cerrotestetecladofim_vt[] __asm__("_ZTVN4vota12testeteclado20CErroTesteTecladoFimE");
 int w10245_root_0(int) __asm__("_ZN3api13CPosixRWMutexC2Ev");
+int w97_estado_audio(void*, int) __asm__("_ZN4vota18CVotacaoStateAudioC2Ei");
+int w97_confirma_cargo(void*, int, int, int) __asm__("_ZN4vota20CConfirmaVotoEmCargoC2Eihi");
+int w97_confirma_proporcional(void*, int, int) __asm__("_ZN4vota21CConfirmaProporcionalC2Ehi");
+int w97_desligamento(void*, int) __asm__("_ZN4vota32CEstadoComDesligamentoAutomaticoC2Ei");
 }
 
 namespace {
 
 const void* volatile cvotacaostateaudio_sink;
+
+// stands for fns 1165, 4420, 4459, 5932 and 6051
+__attribute__((noinline)) int EstadoAudio(void* estado, int eventos)
+{
+    return w97_estado_audio(estado, eventos + 1);
+}
+
+// stands for fn 11700
+__attribute__((noinline)) int ConfirmaEmCargo(void* estado, int eventos, int tela, int tipoVoto)
+{
+    return w97_confirma_cargo(estado, eventos, tela + 1, tipoVoto);
+}
+
+// stands for fn 1961
+__attribute__((noinline)) int DoisConfirmaProporcional(void* estado, void* outro, int tela, int tipoVoto)
+{
+    return w97_confirma_proporcional(estado, tela, tipoVoto) + w97_confirma_proporcional(outro, tela + 2, tipoVoto);
+}
+
+// stands for fn 1285's ten callers
+__attribute__((noinline)) int DoisDesligamentos(void* estado, void* outro, int eventos)
+{
+    return w97_desligamento(estado, eventos) + w97_desligamento(outro, eventos + 3);
+}
 
 struct SCVotacaoStateAudioRoots {
     SCVotacaoStateAudioRoots()
@@ -42,6 +79,10 @@ struct SCVotacaoStateAudioRoots {
         cvotacaostateaudio_sink = cpedetitulomesariovotacao_vt;
         cvotacaostateaudio_sink = cerrotestetecladofim_vt;
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&w10245_root_0);
+        cvotacaostateaudio_sink = reinterpret_cast<const void*>(&EstadoAudio);
+        cvotacaostateaudio_sink = reinterpret_cast<const void*>(&ConfirmaEmCargo);
+        cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DoisConfirmaProporcional);
+        cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DoisDesligamentos);
     }
 } cvotacaostateaudio_roots;
 

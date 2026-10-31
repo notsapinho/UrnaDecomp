@@ -1,12 +1,14 @@
 // Roots: vota::CThreadVota::StartTick (target fn 700) is called on the CThreadEleitor and CThreadOperador
-// singletons from 16 sites in vota TUs not reconstructed yet. Address-taken from a static constructor (as in
+// singletons by 16 target functions; two are reconstructed (fn 10798, unit 119's slot 4, and fn 7028, unit 97's
+// CVotacaoStateAudio::StartState), the others not. Address-taken from a static constructor (as in
 // 06-ecourna-api-compression-roots.cpp) so the link keeps it out of line.
-// CThreadVota::StopTick (fn 422) has 23 callers in the target, one of them reconstructed (fn 10799, unit 119's slot 3):
-// ParaDoisTicks stands for the others (4454, 7010, 7022, 10451, ...), so it stays out of line.
-// CThreadVota::AddTick(const std::chrono::milliseconds&) (fn 4640) has two callers in the target, fns 1285 and 5979,
-// neither reconstructed: DoisTicksDeTempo stands for them. CThreadVota::AddStoppedTick (fn 807) has 11 (652, 1165, 1785,
-// 2740, ...), none reconstructed: DoisTicksParados stands for them. CTickManager::AddStoppedTick (fn 5452) has fn 807
-// and fn 5947, not reconstructed: TickParado stands for 5947. CTickManager::AddTick (fn 3644) and StopTick (fn 5451)
+// CThreadVota::StopTick (fn 422) has 23 callers in the target; two are reconstructed (fn 10799, unit 119's slot 3, and
+// fn 7022, unit 97's CVotacaoStateAudio::FinishState): ParaDoisTicks stands for the others (4454, 7010, 10451, ...).
+// CThreadVota::AddTick(const std::chrono::milliseconds&) (fn 4640) has two callers in the target, fns 1285 and 5979;
+// unit 97 reconstructs 1285, and TickDeTempo stands for 5979. CThreadVota::AddStoppedTick (fn 807) has 11, of which unit
+// 97's fn 1785 calls it twice: DoisTicksParados stands for the other ten (652, 1165, 2740, 2880, ...), which still wait.
+// CTickManager::AddStoppedTick (fn 5452) has fn 807 and fn 5947, not reconstructed: TickParado stands for 5947.
+// CTickManager::AddTick (fn 3644) and StopTick (fn 5451)
 // have all their target callers in the link (4640, 5452 and unit 119's slot 2, which holds CThreadVota::AddTick inlined;
 // 422 and 5452). Each stand-in adds a constant to an argument, so no two are alike, and the census pairs none with a
 // target function.
@@ -43,11 +45,11 @@ __attribute__((noinline)) void ParaDoisTicks(void* thread, int id)
     w02_para_thread(thread, id + 1);
 }
 
-// stands for fns 1285 and 5979
-__attribute__((noinline)) int DoisTicksDeTempo(void* thread, long long milissegundos)
+// stands for fn 5979
+__attribute__((noinline)) int TickDeTempo(void* thread, long long milissegundos)
 {
-    const long long tempos[2] = {milissegundos, milissegundos + 2};
-    return w02_adiciona_tempo(thread, &tempos[0]) + w02_adiciona_tempo(thread, &tempos[1]);
+    const long long tempo = milissegundos + 2;
+    return w02_adiciona_tempo(thread, &tempo);
 }
 
 // stands for fn 807's callers
@@ -68,7 +70,7 @@ struct SFive700Roots {
         five700_sink = reinterpret_cast<void*>(&five700_root_0);
         five700_sink = reinterpret_cast<void*>(&EsperaUsando);
         five700_sink = reinterpret_cast<void*>(&ParaDoisTicks);
-        five700_sink = reinterpret_cast<void*>(&DoisTicksDeTempo);
+        five700_sink = reinterpret_cast<void*>(&TickDeTempo);
         five700_sink = reinterpret_cast<void*>(&DoisTicksParados);
         five700_sink = reinterpret_cast<void*>(&TickParado);
     }
