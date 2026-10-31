@@ -95,11 +95,11 @@ scan's `object` column):
 | SQLite | 248 / 250 | 37 / 38 |
 | our ecourna units | 11 / 41 | 45 / 62 |
 | emscripten sysroot: libc (musl) | 54 / 56 | 9 / 9 |
-| emscripten sysroot: libc++ | 45 / 54 | 7 / 8 |
-| our stand-ins (src/app, src/web) | 24 / 31 | 0 / 10 |
+| emscripten sysroot: libc++ | 44 / 53 | 7 / 8 |
+| our stand-ins (src/app, src/web) | 25 / 32 | 0 / 11 |
 | our uenux2 units | 7 / 15 | 19 / 26 |
 | binaryen (functions the optimizer creates) | 16 / 17 | 6 / 6 |
-| RHVoice | 4 / 11 | 1 / 7 |
+| RHVoice | 4 / 11 | 1 / 6 |
 | our ASN.1 runtime and modules | 9 / 12 | 5 / 5 |
 | 7-Zip | 11 / 14 | 0 / 1 |
 | zlib | 0 / 0 | 9 / 10 |

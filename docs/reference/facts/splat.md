@@ -487,7 +487,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 14072 14073 14241 14242", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -540,6 +540,12 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    `api::CDataTextFmt<…>` D0s from unit 79's roots object, and 10539 to 10542 unit 77's pending object
    (`build/out/wasm-map/vota_web/names.tsv`). When such a set changes, the bodies stop verifying, or the merged body
    takes another member's name and step 9 renames its line (how-to step 10, "A twin whose name moved").
+
+   **1654, 2160 and 2469** are thunks of a fourth such body, 2924, which does not match: their matches rest on a hand edit
+   that names our merged body `byn$mgfn-shared$<first member>` (`src/units/100-uenux2-cpolysingleton.mk`). That name follows
+   the first member in link order, and no step renames a hand line. When the three go `unresolved` and `status.py` stops on
+   `matched.txt only:`, take the new name from `build/out/wasm-map/vota_web/names.tsv`, rewrite the name on the line and keep
+   its evidence, and run step 9 again.
 3. **10881, by the order of two objects of unit 80.** `api::IImpressoraRelatorios::SetStyle` matches with
    `iimpressorarelatorios.cpp` before `eueprintererror.cpp` in the fragment's list and differs in its locals the other
    way (`src/units/README.md` "Names").
@@ -561,9 +567,12 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    moves to `-O3`.
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
    `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
-10. **252, by an `extern template`.** It is matched from `libc++.a` while every TU that instantiates
-    `std::operator+(string&&, string&&)` declares it `extern template`, as `api/pattern/cpolysingleton.h` does
-    (`src/units/README.md` "Companion files"). A TU without the line takes it, with its object in the row.
+10. **252 and 3717, by `src/app/roots_uenux2.cpp`.** The target's 252, `std::operator+(string&&, string&&)`, is the
+    executable TU's `-Oz` copy, and every real TU that instantiates `CPolySingleton<T>::instance` emits an `-O2` one. That
+    tree root, first on the link line, holds an explicit instantiation with `minsize`, and an `extern template` of
+    `std::string::append` that leaves 3717 to `libc++.a` (`src/units/README.md` "Companion files"). So
+    `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match app/roots_uenux2.o` and
+    `3717 match sysroot:libc++.a(directory_entry.o)`.
 11. **14072, 14073, 14241 and 14242, by their corrected names (§S11).** Step 9 can swap the two pairs, since no name of the
     symbol file disagrees, and the check above cannot see a swap: each name's prefix must agree with its neighbours.
 

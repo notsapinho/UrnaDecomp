@@ -1,10 +1,12 @@
-# uenux2 api::CPolySingleton<T>::instance (api/pattern/cpolysingleton.h), one template, 17 of its 32 plain instantiations,
+# uenux2 api::CPolySingleton<T>::instance (api/pattern/cpolysingleton.h), one template, 18 of its 32 plain instantiations,
 # set, its wrapper of push, with api::CPolySingletonList's has<T>, instance<T>, push<T> and remove (cpolysingletonlist.h),
-# their lock (cmutexcompartilhado.h), api::EUePatternError (euepatternerror.h) and the singletons' control blocks. The 16
-# below and 1822 (comum::IInterfaceSavd) match from the roots object, which stands in for the real callers:
+# their lock (cmutexcompartilhado.h), api::EUePatternError (euepatternerror.h) and the singletons' control blocks. 16 of the
+# 18 match from the roots object, which stands in for the real callers:
 #   512 IScreen, 925 IBeep, 862 IPower, 923 IUrna, 3075 IResource, 383 IInputMT, 905 IPaperRelatorios, 3204 IAjusteDataHora,
-#   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 3164 IGenericFactory<ISyncCtl>,
-#   1282 comum::CCalculaCV, 837 comum::IEventosLog, 611 comum::IInterfaceInit, 356 comum::IControladorRegistraMesarios.
+#   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 1282 comum::CCalculaCV,
+#   837 comum::IEventosLog, 611 comum::IInterfaceInit, 356 comum::IControladorRegistraMesarios, 1822 comum::IInterfaceSavd.
+# The other two come from real objects: 3164 IGenericFactory<ISyncCtl> from cthread.cpp.o, 5443 ITimerScheduler from
+# itimerscheduler.cpp.o.
 # Nine of the 16 classes are in landed headers. IResource, CCalculaCV, IEventosLog, IControladorRegistraMesarios and
 # IGenericFactory get their heads alone (each header says so): typeid needs a complete class, and a control block needs a
 # virtual destructor at the slot its __on_zero_shared calls. The type name is a constant in each target body but 11157's and
@@ -16,7 +18,12 @@
 # - 5443 ITimerScheduler (callers 1259 and 5444, unit 101), and 1155 and 3598, which hold instance<T> inlined by binaryen:
 #   ISystemDateTime::GetInst (unit 81) and CThread's constructor (unit 18). They need no stand-in.
 # - has<T> 1654, 2160 and 2469 are 19-B thunks of one merged body in both links (the type names are 23 bytes), so they match
-#   with that body's name, a hand edit. 2924 itself stays `differs`: its find is 608, the merge below.
+#   with that body's name, a hand edit. 2924 itself stays `differs`: its find is 608, the merge below. That name is unstable:
+#   byn$mgfn-shared$... carries the first member in link order, and the target has a fourth member, 2450 (has<vota::
+#   IAjusteInicial>). When a landing moves the first member, 1654, 2160 and 2469 go `unresolved` and status.py stops on
+#   `matched.txt only:`. The landing then takes the new name from build/out/wasm-map/vota_web/names.tsv (`awk -F'\t' '$2 ~
+#   /mgfn-shared.*3hasI/ {print $1, $2}'` lists the has<T> bodies, and the one those thunks call is the one), rewrites the
+#   name on the line under the marker, keeps its evidence, and runs step 9 again.
 # - 631, emplace_back's slow path, and 14476, 321 and 871, which the roots keep (their comments there). 631's second arg is
 #   the typeinfo by reference, so m_tipo is a std::reference_wrapper here, one of the same-bytes forms below.
 # - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7506 7962 7966
@@ -72,7 +79,8 @@
 # 305's bodies, which differ. An anchor casts no data vote, and its call vote for has<T> has that one voter, which the
 # scan refuses (reference/splat.md "No circular evidence"). Two kinds of hand edit in splat/symbol_addrs.txt carry the
 # rest, with their evidence there: _ZN3api20g_polySingletonsInfoE from the table slot its word holds (a slot below 1024
-# counts two telling bytes, and placing by content takes four), and each has<T> from T's type name. Neither reads a match.
+# counts two telling bytes, and placing by content takes four), and each has<T> whose call has one voter from T's type
+# name. 1654 and 2160 have two voters and need no such line. Neither kind reads a match.
 #
 # Inlining. binaryen inlined CPolySingletonList::instance<T> into CPolySingleton<T>::instance: each target body has a
 # second stack prologue (i32.sub(g0, 576)), our object has two functions, and the link has one caller of the second, so
@@ -90,9 +98,12 @@
 # lambda capturing by value (fn 6161's string copy).
 #
 # Chosen, no byte decides: the operator of the name compare; m_escritor's type, bool (the wait tests it as a byte, and
-# unsigned char gives the same object); every name but those of the records and the messages' unlock_shared and unlock
-# (enumerators, members, CMutexCompartilhado, lock_shared, lock, promove, CTravaLeitura, SPolySingletonInfo,
-# g_polySingletonsInfo, polySingletonsInfoPadrao, m_depuracao, has, set, remove, depura, trace, demangle, debug, find); that
+# unsigned char gives the same object); every name but those of the records and the messages' unlock_shared, unlock and
+# unlock_shared_and_lock (enumerators, members, CMutexCompartilhado, lock_shared, lock, CTravaLeitura and its promove,
+# SPolySingletonInfo, g_polySingletonsInfo, polySingletonsInfoPadrao, m_depuracao, has, set, remove, depura, trace, demangle,
+# debug, find); depura's access: public, a keyword that is there for the roots, which take 14476's address, and no byte or
+# record gives this member's access; CTravaLeitura::promove as the caller's way up: 13621 takes the result, the mutex and the
+# guard, so the target's unlock_shared_and_lock takes the guard itself, a shape that gates no match while 640 is pending; that
 # set is a member of CPolySingleton and remove<T> a template over the name's remove: the frame says only that a helper
 # clang inlined holds the temporary name, since a form written in set puts it above the unique_ptr; the
 # paths of cmutexcompartilhado.h, iajustedatahora.h, icontroladorregistramesarios.h and cpolysingletonlist.cpp (its header
@@ -133,12 +144,12 @@
 #   decrement, 4 rows in the fast path; `<= 0` in the wait's predicate; a while loop for it; `inline` on unlock, which the
 #   target keeps as a call, cost 255 against 225; remove<T> written out in set; set's parameter as `&&`.
 #
-# The extern template, now in cpolysingleton.h. fn 252, operator+(string&&, string&&), is matched from libc++.a, and the
-# target's is the executable TU's. Every TU that instantiates instance<T> would have `W` for the operator, its object
-# links before the library, and 252 reads `differs +0x0 ... the locals`, with api/util/itimerscheduler.cpp.o as its object
-# (measured). The line emits nothing and adds no body, and it is not TSE's text: the header says so. It holds for every TU
-# that includes the header, so after a merge read `awk -F'\t' '$1==252 {print $5, $11}' splat/scan.tsv`, which prints `match`
-# and a libc++.a member.
+# fn 252, operator+(string&&, string&&). The target's copy is the executable TU's, at -Oz. Every TU that instantiates
+# instance<T> emits an -O2 copy, its object links before libc++.a, and with nothing else 252 reads `differs +0x0 ... the
+# locals`, with api/util/itimerscheduler.cpp.o as its object (measured). So src/app/roots_uenux2.cpp, ahead of both trees,
+# holds the instance at the level of the target's rows, and its comment says how; no file of this unit declares anything
+# for it. After a merge read `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv`, which prints `252 match
+# app/roots_uenux2.o` and `3717 match sysroot:libc++.a(directory_entry.o)`.
 #
 # The roots object compiles with APP_CXXFLAGS. With uenux2's -fno-strict-aliasing 9 of its 165 functions differ, all
 # libc++ format internals, and the link takes none of the nine from it: its 40 functions in the link are the same.

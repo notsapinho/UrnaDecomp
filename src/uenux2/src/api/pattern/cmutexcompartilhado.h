@@ -10,7 +10,7 @@
 // signals +72 when it was the last and a writer waits. A mutex lock leaves no call in this build (reading.md §R15).
 //
 // lock takes the mutex in a std::unique_lock, counts itself among the waiting writers, waits on +72 and sets the flag.
-// unlock clears the flag and signals +72 when a writer waits, else +24. promove trades a reader for the flag.
+// unlock clears the flag and signals +72 when a writer waits, else +24. unlock_shared_and_lock trades a reader for the flag.
 //
 // The target holds unlock_shared's throw inlined in 57 functions, so clang inlines it (how-to step 3). `inline` on
 // unlock_shared and on ~CTravaLeitura gives that, and each without it gives a call: the forms are in unit 100's fragment.
@@ -64,7 +64,7 @@ public:
         }
     }
 
-    void promove()
+    void unlock_shared_and_lock()
     {
         std::unique_lock<std::mutex> trava(m_mutex);
         if (m_leitores <= 0) {
@@ -98,7 +98,7 @@ public:
 
     std::unique_lock<CMutexCompartilhado> promove()
     {
-        m_mutex.promove();
+        m_mutex.unlock_shared_and_lock();
         m_ativa = false;
         return std::unique_lock<CMutexCompartilhado>(m_mutex, std::adopt_lock);
     }

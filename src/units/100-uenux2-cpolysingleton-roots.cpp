@@ -118,9 +118,14 @@ long w100_bloco(std::unique_ptr<T> instancia)
     return bloco.use_count();
 }
 
-// Three libc++ destructors the target keeps out of line, 321 (__allocating_buffer<char>), 388 (shared_ptr<void>) and 871
-// (unique_lock<mutex>): its callers are the executable TU's, at -Oz, and uenux2's objects inline them. Two call sites each,
-// in optnone functions where clang leaves the calls, stand for those callers.
+// Libc++ destructors the target keeps out of line, and uenux2's objects inline: two call sites each, in optnone functions
+// where clang leaves the calls. None of these target callers is matched, so a search of them in splat/matched.txt says when
+// a stand-in can go.
+// - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233 10090 10212.
+// - 871, unique_lock<mutex>: 624 1126 3095 3328 4771 5560 8059 13621 13974.
+// - 388, shared_ptr<void>: 455 518 640 1091 1928 2154 2584 2650 3373 3882 4180 4774 5384 5707 5750 7667 8089 8090 8092 8096
+//   8101 8758 8834 8911 8986 9039 9135 9233 9495 10090 11530. These calls hold no match: 388 stays no-candidate, since this
+//   copy has an early exit where the target nests the ifs.
 __attribute__((optnone, noinline)) void w100_destroi_a(std::shared_ptr<void>* ponteiro, std::unique_lock<std::mutex>* trava, std::__format::__allocating_buffer<char>* buffer)
 {
     ponteiro->~shared_ptr();

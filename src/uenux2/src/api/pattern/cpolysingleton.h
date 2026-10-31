@@ -12,13 +12,9 @@
 #include "api/pattern/cpolysingletonlist.h"
 #include "ecourna/api/pattern/epatternerror.hpp"
 
-// Not TSE's text: fn 252 is the executable TU's copy in the target and libc++.a's in our link. A uenux2 object's copy would
-// come first in the link and differ, so every TU here leaves the operator to the library. The fragment has the measurement.
-extern template std::string std::operator+<char, std::char_traits<char>, std::allocator<char>>(std::string&&, std::string&&);
-
 namespace api {
 
-// (original lines 21-70: content not recovered)
+// (original lines 17-70: content not recovered)
 #line 71
 template <typename T>
 class CPolySingleton {
