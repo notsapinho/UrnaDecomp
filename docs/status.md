@@ -92,7 +92,7 @@ scan's `object` column):
 | our candidate is compiled from | `unknown` matched / total | `app` matched / total |
 | --- | ---: | ---: |
 | OpenSSL | 655 / 668 | 157 / 157 |
-| our uenux2 units | 49 / 70 | 164 / 246 |
+| our uenux2 units | 49 / 70 | 164 / 245 |
 | SQLite | 248 / 250 | 37 / 38 |
 | our ecourna units | 46 / 53 | 88 / 98 |
 | emscripten sysroot: libc++ | 57 / 61 | 7 / 10 |
@@ -106,7 +106,7 @@ scan's `object` column):
 | emscripten sysroot: libc++abi | 4 / 5 | 2 / 2 |
 | emscripten sysroot: compiler-rt | 1 / 1 | 4 / 5 |
 | emscripten sysroot: dlmalloc | 4 / 5 | 0 / 0 |
-| no candidate in our link | 0 / 240 | 0 / 642 |
+| no candidate in our link | 0 / 240 | 0 / 643 |
 <!-- /status:unattributed-origin -->
 
 Most of these are OpenSSL, SQLite and emscripten's own system libraries (musl libc, libc++, dlmalloc and
@@ -121,13 +121,13 @@ candidate are not placed by anything yet.
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
 | `match` | 10,018 | 2,679,866 | matched |
-| `differs` | 485 | 115,787 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 559 | 514,816 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 3,281 | 2,573,434 | our link has no body for it yet |
+| `differs` | 484 | 115,568 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `unresolved` | 558 | 514,561 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `no-candidate` | 3,283 | 2,573,908 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 1,817 `match`, 92 `differs`, 45 `unresolved` and 1,331 `no-candidate`.
+For TSE code alone: 1,817 `match`, 92 `differs`, 44 `unresolved` and 1,332 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -183,7 +183,7 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | `fingerprint` | 679 | 678 | 0 | 1 | 0 |
 | `addr` | 6,758 | 6,425 | 185 | 146 | 2 |
 | `shape` | 442 | 397 | 28 | 16 | 1 |
-| `none` | 5,367 | 1,421 | 272 | 396 | 3,278 |
+| `none` | 5,367 | 1,421 | 271 | 395 | 3,280 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

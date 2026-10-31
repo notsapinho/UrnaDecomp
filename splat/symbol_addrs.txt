@@ -2126,7 +2126,6 @@ _ZN3api5CDateC2Ehhs = func:2765; // size:0x1a8 evidence:call by:2276,5475,5476
 _ZNK3api14CEncryptedFile4SaveERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:2767; // size:0x386 evidence:srcloc-anchor
 _ZNK3api5SRect6AdjustEssss = func:2768; // size:0x6a evidence:pair-fingerprint
 _ZNSt3__26vectorIcNS_9allocatorIcEEE11__vallocateB8ne210108Em = func:2769; // size:0x2d evidence:call
-_ZN3api15CInputMenuField11ReposicionaEv = func:2770; // size:0xdb evidence:call by:10895
 _ZN3api15CTextFieldPaperC2ERKNSt3__210shared_ptrINS_5ITextEEENS_6IPaper6EStyleE = func:2771; // size:0x9a evidence:srcloc-anchor
 _ZN3api5IFormINS_9IScreenMTEED2Ev = func:2776; // size:0x2f9 evidence:vtable
 _ZN3api11CLedFieldMTD0Ev = func:2777; // size:0xc evidence:vtable
@@ -7581,7 +7580,6 @@ _ZNSt3__220__shared_ptr_emplaceIN3api15CMenuValidationENS_9allocatorIS2_EEED0Ev 
 _ZNSt3__220__shared_ptr_emplaceIN3api15CMenuValidationENS_9allocatorIS2_EEED2Ev = func:10892; // size:0xe evidence:vtable
 _ZNK3api15CInputMenuField11GetTypeNameEv = func:10893; // size:0x3d evidence:vtable
 _ZN3api15CInputMenuField4ReadERNS_6IInputE = func:10894; // size:0x30f evidence:srcloc-anchor
-_ZN3api15CInputMenuField4MoveERKNS_6SPointE = func:10895; // size:0xff evidence:srcloc-anchor
 _ZNK3api15CInputMenuField4RectEv = func:10896; // size:0x3d evidence:pair-fingerprint
 _ZN3api15CInputMenuFieldD0Ev = func:10898; // size:0xd evidence:vtable
 _ZNK3api15CMenuValidation11isValidCharEc = func:10899; // size:0xfd evidence:pair-addr
