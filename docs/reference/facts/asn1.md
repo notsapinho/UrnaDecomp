@@ -70,7 +70,9 @@ So `ASN1_CXXFLAGS` in `src/mk/asn1.mk` holds `-Os -fexceptions -fignore-exceptio
 runtime TU and module: a `throw` compiles to a direct `__cxa_throw`, as the fork's `BufferSeeder` needs
 (`std::runtime_error("BufferSeed: no more buffer")`), with no landing pads. Plain `-Os -std=c++17 -DNDEBUG`, emcc's
 default, gives the same 47 objects, the 15 runtime TUs and the 32 modules (`cmp`), so the spelling is a choice and not
-evidence. `-DNDEBUG` alone is worth 15
+evidence. That equality is between the two spellings of one build, the one where clang drops the `invoke`s. The other
+build with no pads, `-fexceptions -sEXCEPTION_CATCHING_ALLOWED=[nothing]`, keeps the `invoke`s to the backend and gives
+other bodies on RHVoice ([libraries.md](libraries.md) §B6); it has not been measured on the runtime. `-DNDEBUG` alone is worth 15
 more functions: the `assert()`s in `asn1.h`'s inline accessors kept them out of line.
 
 **What it moves in the link.** Measured on the base 0cb0ebc (7,935 matches) with steps 6 to 10 of
@@ -148,6 +150,15 @@ Consequences:
   ledger/classes.json` gives the RTTI. The data do not place a class: its `nameList` at 1623648 sits straight after
   `EntidadeHashes`' `fieldNames`, between the two modules. `gen_modules.py` uses neither yet, so a run of `run.sh`
   prints the old name.
+- It yields when a match holds through it too. The date fields of the modules share one record, 0x1d31cc, which
+  `splat/symbol_addrs.txt` names `ModuloTiposEleitorais::DataHoraJE::theInfo`; the generator gave most of them a made-up
+  `DataGeracao`, and RTTI holds no such class (`/usr/bin/grep -c DataGeracao ledger/classes.json` prints 0). The two
+  classes' vtables hold the same slots, so 9203, which built a `DataGeracao` temporary, matched through
+  `DataHoraJE`'s vtable as `address same-content`, a reading `splat-review` calls `legitimately`. The fields 9201 and
+  9203 fill are `DataHoraJE` now, and neither row's readings say `same-content` (`awk -F'\t' '$1==9201 || $1==9203
+  {print $1, $6}' splat/scan.tsv`). Eleven fields still say `DataGeracao` (`/usr/bin/grep -c 'DataGeracao value_type'
+  src/asn1/modules/*.h`); nothing measured says they differ, and 1080, the fifth function that stores `DataHoraJE`'s vptr
+  (1556172), is still `no-candidate`.
 - A setter's form is per field. 11388 builds a `Constrained_INTEGER` temporary for `municipio` and `zona`
   (`f553(l4, 1567660)`, `f553(l4, 1561600)`) and stores `secao` directly: 38 over 57 rows against the generated setters,
   8 over 56 with those two on `const_reference`. A bound does not decide it: 9131 sets `<1, 99999>` and `<1, 9999>`

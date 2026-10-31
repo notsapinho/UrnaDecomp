@@ -7,10 +7,10 @@ rebuilds, a match line two branches add, a header two branches add, what a merge
 table's rows, `-j` on the link, and leaving a merge after step 9. `docs/how-to-decompile.md`,
 `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
-and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, on macOS (zsh 5.9, wabt 1.0.42), with Node 24
-first on PATH unless a section says otherwise.
+and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, on macOS
+(zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
 
-## W1. Every command that runs the toolkit needs Node 24 first on PATH; Node 26 aborts with no message
+## W1. Every command that runs the toolkit needs Node 24 first on PATH, and the symbol file a larger heap
 
 `tools/round/try-tu.sh` runs the toolkit itself (`kit()`, line 47: `pnpm exec tsx src/cli.ts "$@"`), and so do
 `tools/round/census.sh` (`make -C src census`, its `kit()` on line 14) and every splat make target
@@ -28,6 +28,19 @@ line:
 
 The same command with that PATH scores the function (W2). `tools/setup/bootstrap.sh --check` names the cause:
 `WRONG node v26.11.1: the toolkit is tested on Node 24`.
+
+**The heap.** Node 24's default heap limit is 4288 MB here (`node -e "console.log(Math.round(require('v8').getHeapStatistics().heap_size_limit/2**20))"`),
+and `make -C src splat-symbols` at 4487d6b peaks at a resident set of 4.46 GB (`/usr/bin/time -l make -s -C src
+splat-symbols` prints `4456546304  maximum resident set size`), so a larger link passes the limit. A run that does
+stops with no symbol file written, which a smaller limit shows:
+
+    NODE_OPTIONS=--max-old-space-size=1500 TMPDIR=/tmp make -C src splat-symbols > build/out/workflow-facts/sym-low.log 2>&1; echo "rc=$?"
+      rc=2
+    /usr/bin/grep -m1 'heap out of memory' build/out/workflow-facts/sym-low.log
+      FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+    git status --short splat/symbol_addrs.txt                      # (nothing)
+
+Run steps 7 to 9 with `NODE_OPTIONS=--max-old-space-size=8000`.
 
 Set PATH inside a `#!/bin/zsh` script, not around it: a login profile can reset it. On one of two Macs a script that
 ran `pnpm --silent wasm splat-review` under an exported PATH exited 134 in 0.9 s, with an empty log, and passed with the
@@ -302,7 +315,21 @@ Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"
 
 zsh reads `:s`, `:h`, `:t` … after a bare parameter as history modifiers, so git's `<rev>:<path>` with the rev in a
 variable needs braces. `=word` expands to the path of the command `word`; quote it. `docs/reference/facts/tool-traps.md`
-§X3 has zsh's word splitting and globs.
+§X3 has zsh's word splitting and globs. Three more, each of which reads as a result when nothing ran (4487d6b):
+
+    zsh -c 'S=/x; echo $S:splat'
+      zsh:1: bad substitution
+    zsh -c 'L="a b c"; for i in $L; do echo "[$i]"; done'
+      [a b c]                                  # one pass: zsh does not split $L; write ${=L}
+    zsh -c 'F="-O2 -fPIC"; printf "<%s>\n" $F; printf "<%s>\n" ${=F}'
+      <-O2 -fPIC>                              # one argument: em++ $F stops on it
+      <-O2>
+      <-fPIC>
+
+The first inside an unquoted heredoc stops after `cat > <file>` has truncated the file, and a `printf … >> INDEX.md`
+later on the line still runs: quote the heredoc (`<<'EOF'`) or write `${S}:path`. A `grep` whose file argument is an
+empty variable reads stdin and waits until the tool's timeout: pass `</dev/null`. Test that a file was written before
+you read a count from it: an empty `join` or a `wc -l` of 0 says nothing until then.
 
 ## W11. A match line whose symbol our link lacks stops `make -C src splat-match` before the stubs
 
@@ -376,6 +403,10 @@ check failed these, each a different case or none, with `splat` printing the tar
 | `splat-kinds.test.ts` c9, and LZMA's bounds in "reports the kind-unverified matches" | a target number past the end of our data | our data passed 1569340 and 1572864 with unit 107; c9 now takes the first match with such an address, and the bounds are warnings only while they are past ours |
 | `splat-symbols.test.ts`, "re-points bodies the census paired by address", "offers each of its slots" | the symbol file alone | a [splat.md](splat.md) §S8 line drops a name the match list still holds: `BN_CTX_get` fails on `HTS_GStreamSet_initialize`, 84 call votes lost to one stray table vote |
 | `splat-sub.test.ts`, "renames 246 back to the survivor" | 246's line of `splat/matched.txt`; until unit 107 it read one symbol spelled in the test | a twin of 246 linked ahead of the survivor (`cconversormunicipio.cpp.o`): the case now takes the survivor from the list, so a rename no longer fails it |
+| `splat-kinds.test.ts`, "V1, V2: an integer over vdbeSorterSort's relative slots" | the target's slots 11883 and 11885 as past our table | our table grew past them (`wasm-objdump -x -j Table` read `initial=11915`): the case now takes a value past our table from the link, `relativePastOurTable` |
+
+Any case that holds a target number as past our data or our table ends so once a landing grows ours past it; such a
+case takes the number from the link ([splat.md](splat.md) §S5 item 3).
 
 So a failure is the branch's only if the commit it started from passes. A real-link case reads `build/out/wasm*`, so
 that takes a build of that commit, not a copy of the tree: `git archive` plus a copied `build/out/` stops on the
@@ -399,6 +430,18 @@ One more way a run alone can mislead (bb6f018):
   `urna-emsdk:6.0.0`. A BuildKit build of `urna-emsdk:6.0.0` can pull its base without tagging it, and the run then
   reads `189 passed | 4 skipped` and exits 0. `docker image ls --format '{{.Repository}}:{{.Tag}}' | /usr/bin/grep
   emsdk` should list both images; `docker pull emscripten/emsdk:6.0.0` adds the tag from the layers already there.
+- **An RPC timeout under load exits 1 with every case passed.** `Errors  1 error` with `Error: [vitest-worker]: Timeout
+  calling "onTaskUpdate"` beside `Tests  218 passed (218)` is vitest's worker, not a case; the same tree's next run
+  alone exited 0. Vitest says such an error may hide a false positive, so ask for one clean run and report both.
+- **A suite with no build outputs fails three cases unmutated.** So a mutant run that takes a non-zero exit as
+  "caught" cannot lose. Take the failing names of the clean tool first, and count a mutant caught only by a name outside
+  them (4487d6b, from `asmlift-wasm/`):
+
+      URNA_SPLAT_ROOT=/nonexistent/urna pnpm --silent exec vitest run test/splat-symbols.test.ts test/splat-sub.test.ts 2>&1 | /usr/bin/grep -E 'Tests +[0-9]'
+        Tests  3 failed | 39 passed | 48 skipped (90)
+
+A new case gated on `build/out/` or the image skips in CI, whose budget per suite is in `.github/CI.md` "Skipped
+tests": raise it in `.github/workflows/ci.yml` and there in the same commit.
 
 A record the target holds twice no longer fails a case. A header-inline function two TUs inline has its record twice
 in the target (a `CTextSource`'s constructor, at 1587008 and 1590592: `awk -F'\t' '$2 ~ /ctextsource/ {print $1, $3}'
@@ -479,6 +522,33 @@ offset. A control with an unchanged object gives the plain link's sha256, so com
 once. Take the index of ours from that link's `names.tsv`: a variant can shift the band, and `pnpm wasm score` at the
 plain link's index reads another function (`1150 over 1168 rows`, against `81` at the right one). To put a copy ahead of
 every tree, add the object before `app/vota_init.o` instead ([levels.md](levels.md) §V4).
+
+A match line whose symbol is local, `<name>@<object>`, names the object's path, so a swapped object under another path
+loses it: `splat-build` on such a link needs a copy of the list with those keys rewritten to the new path.
+
+**Scan a variant with the committed symbol file.** `splat-symbols` reads the committed census, whose pairs are the
+plain link's indices, so a symbol file regenerated from a variant names the wrong functions. On [codegen.md](codegen.md)
+§C5's variant (4487d6b), from the repository root:
+
+    V=build/out/codegen-facts/frame
+    TMPDIR=/tmp tools/round/link-map.sh $V/wasm/f && TMPDIR=/tmp tools/round/link-kinds.sh $V/wasm/f
+    (cd asmlift-wasm && pnpm --silent wasm splat-kinds ../$V/wasm/f/vota_web_wasm.wasm)
+    cp splat/matched.txt $V/m1.txt
+    (cd asmlift-wasm && pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../$V/wasm/f/vota_web_wasm.wasm --kinds ../$V/wasm-kinds/f/kinds.json --match ../$V/m1.txt -o ../$V/scan-cs.tsv)
+    join -t "$(printf '\t')" <(cut -f1,5 splat/scan.tsv | sort) <(cut -f1,5 $V/scan-cs.tsv | sort) | awk -F'\t' '($2=="match") != ($3=="match")'
+      5443	match	unresolved
+      5444	match	unresolved
+
+The same scan with `--symbols` on a file `splat-symbols -o` wrote from the variant takes 230 rows out of `match`, none
+of them a real loss. Read only the rows that enter or leave `match`: unmatched rows trade `unresolved` and `differs`
+between the two links for the same reason. A symbol file of the variant's own needs a census of the variant first.
+
+**A header for the whole link.** `UENUX2_EXTRA="-iquote <overlay>"` reaches the tree's objects and not the roots:
+`src/Makefile` sets `APP_CXXFLAGS` from `UENUX2_CXXFLAGS` with `:=` (line 90) before it adds `UENUX2_EXTRA` (line 97).
+Pass `APP_CXXFLAGS="$(make -s -C src print-APP_CXXFLAGS) -iquote /work/<overlay>"` beside it, with a fresh `APP`, and
+write the overlay header's `#line N` as `#line N "/work/src/uenux2/src/<path>"`, so that its records keep the tracked
+file's name, which the prefix map rewrites. Without that, every record of the header names the overlay and reads
+`source_location not in the target`.
 
 The clone route suits an edit that rebuilds several objects, and it goes through make. A private link with a fresh
 `APP` compiles every app object (347 at bb6f018); one whose `APP` is a copy of `build/out/app` with its mtimes compiles
@@ -571,7 +641,21 @@ only for the objects `build/out/wasm/vota_web/link.cmd` names.
   directory's wildcard to the rule that lacks it.
 - **`UENUX2_HDRS` holds no `src/asn1` header** (`src/Makefile` line 145). `make -n -C src link -W
   $PWD/src/asn1/modules/ModuloImpedidos.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | /usr/bin/grep -c cconversorimpedido`
-  prints 0, although that TU includes the header. After a module-header edit, move those uenux2 objects aside by hand.
+  prints 0, although that TU includes the header. After an edit of `asn1.h` or a module header, list the link's objects
+  make will not rebuild that hold the header's mangled name (`4ASN1` for `asn1.h`, `16ModuloImpedidos` for that
+  module), move them aside by name and rebuild (4487d6b):
+
+      mkdir -p build/out/workflow-facts
+      make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE -- '-o [^ ]+\.o' | cut -c4- | sort > build/out/workflow-facts/rebuilt.txt
+      make -s -C src print-LINK_OBJS | tr ' ' '\n' | sed "s#^$PWD/##" | /usr/bin/grep '\.o$' | sort | comm -13 build/out/workflow-facts/rebuilt.txt - | while read -r o; do LC_ALL=C /usr/bin/grep -q -a 4ASN1 "$o" && echo "$o"; done
+        build/out/app/87-asn1-avn-roots.o
+        build/out/app/ecourna/app_dados_asn_cconversorhorariosurna.cpp.o
+        …                                  (8 objects: those two and six uenux2 objects of app/comum, 6 converters in all)
+
+  Any of them can change with the header while `make` reports the link current, so a link without the move can hold
+  stale converters. The byte search finds only an object that holds the name, which is every object whose
+  code the header reaches; a looser pattern (`ASN1` alone) also lists OpenSSL's `openssl_roots.o`, which comes back
+  `cmp`-equal.
 
 ## W16. A match line both branches add stops the splat build until one goes
 

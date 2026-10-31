@@ -717,7 +717,12 @@ The splat tests (`splat.test.ts`, `splat-symbols.test.ts`, `splat-sub.test.ts`, 
 target, split, plain link, link map, operand kinds and `splat/` files, and skip what needs them when they are absent.
 They decide that when they are collected, so a run beside a census or a `splat-*` step that is rewriting `build/out/`
 in the same checkout skips real-link tests and still exits 0: run `pnpm test` after every build of that checkout has
-finished, and read the summary's `skipped` count as well as its exit status. `splat-kinds.test.ts` and
+finished, and read the summary's `skipped` count as well as its exit status. With `URNA_SPLAT_ROOT` pointing nowhere,
+three cases of `splat-symbols.test.ts` fail on the clean tool (`URNA_SPLAT_ROOT=/nonexistent/urna pnpm --silent exec
+vitest run test/splat-symbols.test.ts test/splat-sub.test.ts` prints `Tests  3 failed | 39 passed | 48 skipped (90)`
+at 4487d6b), so a mutant run that reads a
+non-zero exit as "caught" cannot lose: run the clean tool that way first and count a mutant caught only by a case
+outside that baseline. `splat-kinds.test.ts` and
 `splat-review.test.ts` read the addresses and table slots of our link from the link they run on, so a landing that
 moves our data or table leaves them passing. `splat-symbols.test.ts`'s `srclocAnchors > names a callee its anchored
 callers vote for` reads urna's committed `splat/symbol_addrs.txt` and checks that `std::__format::__vformat_to` (146)

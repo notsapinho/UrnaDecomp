@@ -11,8 +11,8 @@
 # 1. Re-runs the plain link's own em++ line (<plain>/link.cmd) into <plain>/../../wasm-kinds/<name>/ with
 #    -sGLOBAL_BASE=1024+D and -sTABLE_BASE=1+T (emcc passes them to wasm-ld as --global-base / --table-base),
 #    wasm-ld's --Map, --no-demangle and EMCC_DEBUG=1 (every intermediate module kept under …/wasm-kinds/tmp/).
-#    D (1 MiB) and T (20,000) are larger than our data (1.4 MB) and table (10,007 slots), and differ, so a moved
-#    constant says which of the two it is.
+#    D (1 MiB) and T (20,000) differ, so a moved constant says which of the two it is; splat-kinds asks no more
+#    (docs/reference/splat.md §3).
 #    It refuses to start while an object or archive on that line is newer than the plain wasm (the relink would read
 #    other objects than the plain link did), and FAILS unless its map lists the same input sections, each the same size,
 #    in the same order, as the plain link's map (<plain>/../../wasm-map/<name>/, which link-map.sh proved describes the

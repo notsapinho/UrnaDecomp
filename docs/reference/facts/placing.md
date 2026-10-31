@@ -32,7 +32,9 @@ callers' records and from the landing pads: a call that can throw while a local 
 
 ## P2. A class with no file of its own, or out of its upstream file
 
-Read the class's vtable and typeinfo in the data before you create the file the class's name gives. Three shapes:
+Read the class's vtable and typeinfo in the data before you create the file the class's name gives, not from
+`ledger/vtables.json` alone, which misses classes that have a vtable ([units.md](units.md) §U12 counts them, finds a
+vtable by its typeinfo and reads its words). Three shapes:
 
 - **Two classes in one object.** A typeinfo of class A after the vtable of class B, with A's vtable between B's
   vtable and B's typeinfo, puts both in one object: `simulador::CWasmImageSurfaceOps`'s vtable (1528980) and typeinfo
@@ -47,7 +49,9 @@ Read the class's vtable and typeinfo in the data before you create the file the 
   between `PrimitiveChecker`'s (1151276) and `DataLengthCounter`'s (1151548) in `ledger/vtables.json`'s address order, so
   the target's `BEREncoder` object does not hold it. The data separate it from `BEREncoder` only; `PEREncoder.cxx`'s end
   gives the same module, so its file name is chosen. The sign that sent the search there: a call the target keeps and
-  clang inlines at a low cost, with no flag to explain it, means the callee is in another TU.
+  clang inlines at a low cost, with no flag to explain it, means the callee is in another TU. An out-of-line constructor
+  or destructor is the exception: at `-fPIC` its call stays beside the definition, with no remark
+  ([codegen.md](codegen.md) §C6), so it is no sign at uenux2's flags.
 
 ## P3. What a stretch's label says
 
@@ -170,7 +174,10 @@ prints the line a record names; after a `--strip` of a file that has gaps, it do
 A record of a function you do not write (a constructor its only caller inlines) keeps its line blank. Put the
 functions you write after it, or before it where the evidence says so, and say in the fragment's header comment that
 their lines are a choice. Step 9 then puts that caller's stub over the record's line when that line is at namespace
-level, and writes no gap over a run of blank lines with no record below it. A record inside a class body (a template
+level, and writes no gap over a run of blank lines with no record below it. A record past the file's last line needs
+no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
+`src/uenux2/src/app/comum/comparecimentomesario/cregistradormesario.cpp` is 33 lines, its record of 10337 is line 85,
+and f10337's stub is line 31 (`LC_ALL=C /usr/bin/grep -n '^// f10337 ' <file>`); `stubs.py --check` passes. A record inside a class body (a template
 member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,
 though a record names the function: `stubs.py` takes only blank lines outside every function and class
 (`LC_ALL=C /usr/bin/grep -n '^// f316 ' src/uenux2/src/api/ipc/cmessagequeue.h`).

@@ -15,7 +15,7 @@ shows it, as for `-fPIC`; the per-flag measurements are in
 | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` | not reconstructed | `-Oz -fexceptions` | nowhere: no setup has these flags | [facts/levels.md](facts/levels.md) §V1: the inline members of a class whose typeinfo sits in its data are its copies |
 | ecourna | `src/ecourna/` | `-O3 -fexceptions -std=c++20 -DNDEBUG`, no `-fPIC` | `ECOURNA_CXXFLAGS` in `src/Makefile` | facts §F1, §F5 |
 | ecourna, every unit | | `+ -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow` | `src/mk/ecourna-flags.mk` | facts §F2, §F3, §F4 |
-| the stand-in and roots TUs (`src/app/`, `src/web/`, the units' `-roots.cpp`), but for `src/app/roots_cbasetype.cpp`, at `UENUX2_CXXFLAGS` | | `APP_CXXFLAGS` = `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`; `APP_CFLAGS` for the generated C roots | `src/Makefile` | they stand in for app code; the library templates they instantiate win the link, and the target's copies have TBAA (facts §F6) |
+| the stand-in and roots TUs (`src/app/`, `src/web/`, the units' `-roots.cpp`), but for `src/app/roots_cbasetype.cpp` and unit 113's roots, at `UENUX2_CXXFLAGS` | | `APP_CXXFLAGS` = `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`; `APP_CFLAGS` for the generated C roots | `src/Makefile` | they stand in for app code; the library templates they instantiate win the link, and the target's copies have TBAA (facts §F6) |
 
 Both trees also take a `-ffile-prefix-map` that puts the original build directory into their `std::source_location`
 records (below). `make -C src print-ECOURNA_CXXFLAGS` and `print-UENUX2_CXXFLAGS` print the values in effect;
@@ -70,7 +70,10 @@ log macro: nothing in the target calls a logger with `__FILE__`/`__LINE__`.
 `-fmacro-prefix-map`) gives an object byte-identical to compiling the file at the real path (checked with `cmp` on three
 objects, and `strings` on `source_location::file_name()`). The build runs from `/work` (the urna root mounted by
 `build/docker-build.sh`), so no extra mounts are needed; the ecourna include root is `-Isrc` (`#include
-"ecourna/api/..."`, matching the package's `b/src` layout).
+"ecourna/api/..."`, matching the package's `b/src` layout). uenux2 has `/work/src/uenux2` and `src/uenux2` mapped to
+`/home/rubio/tse/uenux2`, and a third map, `src/ecourna` to the conan package's installed headers `…/p/include/ecourna`,
+for an ecourna header a uenux2 object or a stand-in includes (`UENUX2_PREFIX_MAP` in `src/Makefile`; facts §F6,
+[facts/tool-traps.md](facts/tool-traps.md) §X7).
 
 ## Exceptions: the uenux2 library trees are throw-only
 

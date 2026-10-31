@@ -223,8 +223,10 @@ declares what it calls instead of instantiating what a unit's object or a later 
 
 **D0, D1, D2** (in mangled names `…D0Ev`, `…D1Ev`, `…D2Ev`) — the Itanium C++ ABI's destructor variants: D0 the
 deleting destructor (destroys, then frees), D1 the complete-object destructor, D2 the base-object destructor. clang
-often makes D1 an alias of D2, so the link carries only the D2 name. The constructors' C1 and C2 are the same pair.
-*Where:* `splat/symbol_addrs.txt` hand edits.
+often makes D1 an alias of D2, so the link carries one name for both, the one its object mentions first. The
+constructors' C1 and C2 are the same pair. *Where:* `splat/symbol_addrs.txt` hand edits,
+`docs/reference/facts/splat.md` §S6 (an alias that looks like a rename), `docs/reference/facts/codegen.md` §C6 (the
+call `-fPIC` keeps).
 
 **compile setup, component flags** — one set of compile flags that produced target code (uenux2, ecourna, asn1,
 the libraries, emscripten's system libraries). The benchmark registry `asmlift-wasm/benchmark/dataset/setups.json`
@@ -471,10 +473,12 @@ ordinals (189 in the frozen skeleton of `docs/reference/link-order.md` §7.1). `
 scan's `object` column says `<binaryen>`. A target function whose whole body is a call into such a shared body (11097,
 `f2904(p0, p1, 197764, 197771)`) matches when our link merges enough of those functions for binaryen to form the same
 shared body: the same operands must differ among them, so that its parameters agree, and the pass must find the merge
-worthwhile. Two can be enough: 1565 has eight callers in the target and forms from any two of its deleting destructors
-(`docs/reference/facts/splat.md` §S10, which also lists the matches such a body holds up); `pnpm wasm fn <target>
-<body>` lists the callers, and a unit that lands a second caller should read its siblings' rows in the scan. Whether
-a smaller body needs more than two was not measured. The other way round,
+worthwhile. Two can be enough for a large body: 1565 has eight callers in the target and forms from any two of its
+deleting destructors (`docs/reference/facts/splat.md` §S10, which also lists the matches such a body holds up). A small
+one needs more: three copies form 389's shape and four 349's (`docs/reference/facts/codegen.md` §C8). `pnpm wasm fn
+<target> <body>` lists the callers, and a unit that lands another caller should read its siblings' rows in the scan.
+The shared body's name, `byn$mgfn-shared$<first member>`, is our link's and moves with link order; an internal first
+member's carries `@<object>`. The other way round,
 an `unresolved` row or a `splat-remap` whose operand is a call into `byn$mgfn-shared$…` "has no target function" means
 our link merged a set the target did not; the shared body's callers (`pnpm wasm fn`) name its members, and the set can
 span components (the target's 3904 has two RHVoice destructors and one of `api::CSubReport` as callers). *Where:*
@@ -514,7 +518,8 @@ it `kit`. *Where:* `asmlift-wasm/README.md`, `README.md`, `tools/round/census.sh
 
 **readout, folded readout** — `pnpm wasm fn` prints a function's disassembly beside its normalised rows and a folded
 readout: the operand stack replayed into expressions. It is a reading aid, not a decompiler: it hoists a `tee` and a
-call out of a nested expression, so read an order from the disassembly. *Where:* `asmlift-wasm/README.md` "What is what".
+call out of a nested expression, and a parameter's local can be written on a path that throws, so read an order or a
+value from the disassembly. *Where:* `asmlift-wasm/README.md` "What is what", `docs/how-to-decompile.md` step 2.
 
 **bundle** — the same readout for a group of functions in one Markdown file, `ledger/bundles/<name>.md`.
 *Where:* `asmlift-wasm/README.md` "The decompile loop", `ledger/bundles/`.

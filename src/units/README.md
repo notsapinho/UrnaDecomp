@@ -49,16 +49,19 @@ item 3 as well:
 
    The generic ecourna rule in `src/Makefile` makes each object depend on its own source, at any depth, and on every
    `src/ecourna` header, as the generic uenux2 rule does for its tree. Neither generic rule depends on a `src/asn1`
-   header, the modules' included: an edit of `asn1/asn1.h` rebuilds no uenux2 object that includes it (§U7), so touch such a unit's sources
-   after one, or do what units 04, 09 and 16 do: a rule with prerequisites and no recipe, which adds the `src/asn1`
-   headers to the objects and leaves the generic rule to compile them. Unit 15's rule of that kind names its fragment
-   and the ecourna headers but no `src/asn1` header, so an `asn1.h` edit misses its converter too, which includes it
-   (§U7 lists what such an edit rebuilds). The other way round, a header a unit edits or adds rebuilds every object of
-   its tree, whether it includes the header or not, with `src/app/roots_uenux2.o` and every companion whose rule names
-   the header's directory: an edit of `api/gui/cimagefieldupdate.h`, or a new empty header beside it, recompiles 189
-   objects at 0b5f410 (153 uenux2 sources, `roots_uenux2.o` and 35 companions; `docs/reference/facts/workflow.md` §W15). A
-   check that the unit's objects are fresh moves all of them aside, not only the unit's own: in the unit's worktree,
-   `find build/out/app -name '*.o' -newer .git` lists every object it built.
+   header, the modules' included: an edit of `asn1/asn1.h` rebuilds an object that includes it only through a rule
+   that names `src/asn1` (§U7), so touch such a unit's sources after one, or do what units 04, 09 and 16 do: a rule
+   with prerequisites and no recipe, which adds the `src/asn1` headers to the objects and leaves the generic rule to
+   compile them. Unit 15's rule of that kind names its fragment and the ecourna headers but no `src/asn1` header, so an
+   `asn1.h` edit misses its converter too, which includes it (§U7 lists what such an edit rebuilds, and the command
+   that lists the objects it misses). The other way round, a header a unit edits or adds rebuilds every object of its
+   tree, whether it includes the header or not, with `src/app/roots_uenux2.o` and every companion whose rule names the
+   header's directory: an edit of `api/gui/cimagefieldupdate.h`, or a new empty header beside it, recompiles 189
+   objects at 0b5f410 (153 uenux2 sources, `roots_uenux2.o` and 35 companions; `docs/reference/facts/workflow.md` §W15).
+   `src/app/roots_ecourna.o` is not among them: its rule names no header, so after an edit of an ecourna header it
+   includes (`final` on a class it `make_shared`s), touch `src/app/roots_ecourna.cpp`, or its old copy links on and a
+   clean build disagrees with yours. A check that the unit's objects are fresh moves all of them aside, not only the
+   unit's own: in the unit's worktree, `find build/out/app -name '*.o' -newer .git` lists every object it built.
 
    Check it with `make -n -C src link -W $PWD/src/ecourna/<source> | grep -c 'em++.* -c '`: 1 means an edit
    rebuilds the source's object. For a header or a fragment, count the object you care about: `make -n -C src link
@@ -93,7 +96,10 @@ An include path is not a flag of the code (`asmlift-wasm/benchmark/README.md` "T
 headers reach a library path its tree's flags lack adds the path to its own objects with a target-specific variable:
 unit 66's uenux2 TU includes ecourna's SQL headers, which include Boost, so its fragment has
 `$(ROOT)/$(APP)/uenux2/$(CJUSTIFICADORDAO_SRCS).o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)` and the same path on its pending
-rule. Its objects keep their tree's setup.
+rule. Its objects keep their tree's setup. A merge can bring the need with no conflict: a header one side turns from a
+layout stand-in into the real class can reach a library the other side's objects lack (unit 88 gives `ccargos.cpp` and
+`cconfiguracaoeleicao.cpp` Boost's path, which they reach through `CConfiguracaoMunicipio`'s `CHorariosUrna`). The fix
+is the fragment's include path, not the header.
 
 A flag a fragment does add gives its objects a flag set, and
 the benchmark's registry `asmlift-wasm/benchmark/dataset/setups.json` must have a setup with exactly that set.
@@ -120,7 +126,8 @@ the commit. A new setup is a new entry in `setups.json` and a re-selection of th
   said in the pull request or issue that announces the work. Whoever lands second has a link the first never measured:
   it runs link, census, symbols, match and the splat build again on top of the first (`docs/how-to-decompile.md` step
   10, "Landing onto a moved main").
-- `<component>` is the `src/` tree the sources live in: `ecourna`, `uenux2` or `asn1`.
+- `<component>` is the `src/` tree the sources live in: `ecourna`, `uenux2` or `asn1`, or the library's name for a unit
+  that holds no tree's source (`103-rhvoice-nocatch`: a flag, a roots file and names, all RHVoice's).
 - `<what>` is the source directory the unit's files share, with `/` as `-` (`api-security`, `app-dados-midias`), or
   the class when the unit is one class and what it calls (`cthreadvota`, `crdvvota`, `ctextfieldmultiline`). When
   the shared directory is already another fragment's name (`app/dados/asn/` and `app/dados/processoeleitoral/`
@@ -257,12 +264,18 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   static constructor (units 15, 16, 17, 20 and 36). That is the reference the target has, the vptr store of a
   constructor not written yet, and it keeps every slot. A function reached through another kind of slot (an
   `invoke_*` thunk, a callback passed by its slot) has its own address taken, and so can a vtable member that also has
-  direct callers: unit 18 takes `~CThread`'s, which keeps the vtable its vptr store names;
+  direct callers: unit 18 takes `~CThread`'s, which keeps the vtable its vptr store names. `ledger/callgraph.tsv` holds
+  direct calls only, so such a function can look like one with a single caller; `docs/reference/facts/units.md` §U11
+  lists who passes its slot to an `invoke_*`;
 - a function with direct calls in the target gets at least two call sites in our link, because binaryen inlines a
   function called once: two callers, or one caller that calls it twice (the target's 2761 calls 5457 twice, and unit
   32's one stand-in does the same). The reconstructed callers count: the roots TU adds `noinline` ones for the rest.
   Each stand-in's comment names the target callers it stands for. A stand-in beside a real caller compiles, links and
-  passes every check, so a search of those indices in `splat/matched.txt` is what says it can go, at a merge too.
+  passes every check, so a search of those indices is what says it can go, at a merge too: in `splat/matched.txt`, and in
+  the scan for a caller written but not matched, since a caller in the link ends a stand-in whether or not its row
+  matches (unit 08's `UsaFaseDeconverte` stood for 9052, written and `differs`). A stand-in for one named caller of a
+  function the target calls from two (unit 110's `d5805`, for 7787 beside the real 11561) goes when that caller lands.
+  One whose callers landed in part stays, and its comment says which still wait.
   5629 has two direct callers in the target (`awk -F'\t' '$2==5629' ledger/callgraph.tsv` prints 5324 and 11387);
   unit 20 reconstructs 11387, so `20-…-roots.cpp` adds one caller standing in for 5324. binaryen inlines a function
   for having one call only when no table entry or export refers to it (`docs/reference/facts/tool-traps.md` §X1), so a
@@ -293,15 +306,19 @@ way the target does, because binaryen's inlining and dead-argument removal depen
 - the roots TU declares what it calls through `__asm__` labels with the object's signatures, before binaryen:
   `extern "C" int f(int, int) __asm__("_ZN7ecourna…")`. A constructor and a non-deleting destructor return `this`
   there, so they are declared `int` whatever the target's type or the stub says, and a caller that drops the result
-  lets binaryen remove it as the target's did (unit 23). Declared `void`, the link prints `wasm-ld: warning: function
-  signature mismatch: <symbol>` among its other warnings, routes the calls to a trap stub (`signature_mismatch:` in
-  the try link's names) and drops the function (§U1);
+  lets binaryen remove it as the target's did (unit 23). A label whose result differs from the object's, a constructor
+  declared `void` or a `void` member declared `int`, links with `wasm-ld: warning: function signature mismatch: <symbol>`
+  among the link's other warnings, routes the calls to a trap stub and can leave the function one caller, which
+  binaryen inlines (§U1). The stub is a `signature_mismatch:` row of `build/out/wasm-map/vota_web/names.tsv`: count them
+  before and after (`/usr/bin/grep -c 'signature_mismatch:' build/out/wasm-map/vota_web/names.tsv` prints 0 at
+  4487d6b);
 - the roots TU supplies no copy of a template or an inline member that should come from another object: wasm-ld keeps
   the first object's copy of a linkonce (COMDAT) function, and the roots objects come after the units' sources and
   before the ASN.1 runtime's objects and the libraries (`EXTRA_OBJS` in `LINK_OBJS`, `src/Makefile`). So what a roots
   file instantiates that a unit's object instantiates too still comes from the unit's object, and what the roots file
   instantiates first is its copy. A stand-in that has to call a template a later object or a library owns declares
-  it `extern template`: the object then has `U` for it and emits nothing. `roots_uenux2.cpp` does so for
+  it `extern template`: the object then has `U` for it and emits nothing. That line belongs in the roots file, never in
+  a TSE header, where it would be text whose only purpose is to steer the compiler. `roots_uenux2.cpp` does so for
   `std::string::append`, whose copy there would take 3717 from `libc++.a`. That keeps a roots file's copy out of the link,
   and nothing more: a real TU that instantiates `std::operator+(string&&, string&&)`, as every
   `CPolySingleton<T>::instance` does, takes 252 from `libc++.a` too, so a tree root holds it (below), and a landing reads
@@ -313,12 +330,16 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   `-fno-strict-aliasing` objects, for RHVoice's 2209 and 5255. A fragment's roots cannot do this: `EXTRA_OBJS` link
   after both trees. Add such a stand-in only to keep the copy the target has: its body must equal the library object's
   (compare the rows, masked), and the stand-in itself must leave the link
-  (`/usr/bin/grep -c urna_insere_doubles build/out/wasm-map/vota_web/names.tsv` prints 0). When the copy the target has is
-  the executable TU's `-Oz` code, an explicit instantiation with `__attribute__((minsize))` gives that one function the
-  level, with the header's own body (fn 252 in `roots_uenux2.cpp`). An instance of a tree's own code is the same case and
+  (`/usr/bin/grep -c urna_insere_doubles build/out/wasm-map/vota_web/names.tsv` prints 0). The copy is an instance of the
+  header's template, never a body written in the root: a specialization's body is a stand-in's own, and it outlives a
+  real copy with no word from the link. An explicit instantiation emits the instance and leaves no stand-in. When the
+  copy the target has is the executable TU's `-Oz` code, an explicit instantiation with `__attribute__((minsize))` gives
+  that one function the level, with the header's own body (fn 252 in `roots_uenux2.cpp`); read each callee's row after,
+  since the copy brings its callees too (3717 is why `append` is `extern template` there). An instance of a tree's own code is the same case and
   has a root of its own at that tree's flags, since an instance also brings its callees' linkonce copies to the head of
-  the link: `src/app/roots_cbasetype.cpp`, at `UENUX2_CXXFLAGS`, holds eight explicit instantiations of an ecourna
-  template whose target copies are uenux2's (unit 112), and leaves no stand-in to drop.
+  the link: `src/app/roots_cbasetype.cpp`, at `UENUX2_CXXFLAGS` and right after `roots_uenux2.o` in `APP_OBJS`, holds
+  eight explicit instantiations of an ecourna template whose target copies are uenux2's (unit 112), and leaves no
+  stand-in to drop. Its rule depends on the ecourna headers (`src/Makefile`).
 
   A roots file includes a unit's header for the declarations its stand-ins call (unit
   02), to give an inline member a uenux2 caller (unit 03's `CFile` constructor, `docs/reference/facts/app-flags.md`
@@ -338,7 +359,11 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     depends on the constructor. Check each vtable with the grep for its address point below: the target's own code must
     store it, and the kind must be the one its builder stores. A dropped builder needs T's constructor declared, not
     defined, so it lifts "waits for the unit that writes it" (unit 92's masks). Its constructors are then compared with
-    nothing, and the fragment says so. Either way the roots object stores the control block's
+    nothing, and the fragment says so. The two cross for a `__shared_ptr_pointer`: an unrooted `optnone` member of a
+    class template that takes the `T*` and returns the `std::shared_ptr<U>`, one `template struct SBloco<U, T>;` per
+    block (a template alone is instantiated by nothing), needs a head of T only and leaves nothing in the link (unit
+    102, every pointer block). A `final` T whose destructor is out of line keeps a call to that D1 in the block, so the
+    destructor must be in the link. Either way the roots object stores the control block's
     vtable, the one the target's builder stores. T's own inline members still come from the unit's object, which is
     earlier on the link line. The control block's members are the target's and match from the roots object until T's
     real callers land. For `__shared_ptr_emplace<T>` those are the D0 and the D2, and `__on_zero_shared` too when the
@@ -358,12 +383,21 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     template's instantiations are emitted the same way, each built as the target's callers build it (unit 79).
   - **An inline default of a virtual member.** A qualified call in an `optnone` function emits it, and an `__asm__`
     label takes its address (unit 19).
+  - **A member of a class template the target calls directly** (`CPolySingleton<T>::instance`, unit 100;
+    `IConversorASN<E, D>::Converte`, unit 107). The stand-ins call it as the target's callers do, twice, and build the
+    result in place, `::new (destino) ENTIDADE(conversor.Converte(dado));`, which by guaranteed elision emits no
+    constructor or destructor of the result's type, inline members a later object defines.
 
   Still forbidden: a stand-in whose body is a target function's (the stand-ins bullet above, §U2); a template or
-  inline member a later object defines too (the ASN.1 runtime's objects and the libraries come after the roots, so the
-  roots' copy would win the link), unless `extern template` keeps it out or a tree root's copy is the same code; a
-  control block the target's builder does not store (`make_shared` where the target
-  stores `__shared_ptr_pointer`'s vptr, or the reverse); and any member of T beyond what the shape emits.
+  inline member a later object defines too, when the roots' copy would take the place of the ASN.1 runtime's or a
+  library's (they come after the roots, so the roots' copy wins the link), unless `extern template` keeps it out or a
+  tree root's copy is the same code; a control block the target's builder does not store (`make_shared` where the target
+  stores `__shared_ptr_pointer`'s vptr, or the reverse); and any member of T beyond what the shape emits. A copy of a
+  header's inline member may win over a later companion's, since both are a landed header's code, when the fragment shows
+  that the two objects' flags give the same function (12090, `IResultado`'s D2, comes from unit 102's roots ahead of unit
+  60's pending object). When the later object's copy is at another level than the target's (the runtime's `-Os`
+  `__destroy_vector` over `Visitante`, where the target's 3552 is `-Oz`), no shape gives the target's copy: the member
+  stays pending, a hand edit names it for its callers, and the fragment gives the probe (unit 115).
 
 `ledger/callgraph.tsv` and the elem segment give the target's call shapes; each roots file's header says which shape
 it reproduces for which function. A vtable is data: no call edge leads to it. Its users are the functions that store
@@ -376,7 +410,14 @@ Roots TUs compile with `APP_CXXFLAGS`, like the other stand-ins in `src/app/`: u
 `-fno-strict-aliasing` (`docs/reference/app-flags.md`). A roots object that emits TSE inline code meant to match
 therefore compiles it with other flags than its tree's. Compile that code with the tree's flags too, compare the
 functions, and say in the fragment's header that they are the same (unit 75's fragment does: `-fno-strict-aliasing`
-changes none of its functions). A body a companion object supplies
+changes none of its functions). When they differ, the tree's flags decide: a match that holds only through the flag its
+tree lacks is not sanctioned (`docs/how-to-decompile.md` step 4, "When only a flag closes the gap"). Deleting its line
+does nothing while the roots' copy equals the target, since the content pass adds it back, so take the instance out of
+the roots and keep the stand-ins' other call sites: the row is then `no-candidate` until a tree object instantiates it,
+and the fragment says so with the measurement (5725, unit 113). A unit may also compile its roots at its tree's flags,
+`$(UENUX2_CXXFLAGS)` on the rule (unit 113, and the tree root `roots_cbasetype.cpp`); then no match can rest on a flag its
+tree lacks, and the fragment says so. Taking an instance out is a withdrawal, so measure the fragment's "differs" forms
+for that object again (`docs/how-to-decompile.md` step 10, "Withdrawing a match"). A body a companion object supplies
 can match only when it is code a landed header defines: an implicit or inline member, or a template instance such as
 `__shared_ptr_emplace<T>`'s destructors. A stand-in's own body or a trap never can. `docs/reference/facts/units.md`
 §U4 lists the matches that come from companion objects today, and `docs/reference/splat.md` "Reviewing a match" says
@@ -432,15 +473,16 @@ What the vtable needs, slot by slot:
   `-Oz -fexceptions` (`docs/reference/facts/levels.md` §V1). An inline member that this level compiles otherwise
   than the uenux2 flags cannot match from an object of ours: unit 82's `ITextToSpeech::SetVoice` (11518) and
   destructor (11489) stay written and `differs`.
-- **A default of an interface with no vtable.** A class with no vtable of its own in the target (`ledger/vtables.json`
-  has no row for it) shows its inline defaults only in a derived class's vtable, in a slot no override explains (a
+- **A default of an interface with no vtable.** A class with no vtable of its own in the target shows its inline
+  defaults only in a derived class's vtable, in a slot no override explains (a
   body that builds a lambda whose RTTI is named after the base's member is the base's). Write each default the
   evidence gives as an inline body in the base's header: it emits nothing until a derived class inherits it. A default
   whose body needs a name not recovered yet stays `= 0`, and the base's header says which slot it is, what the target
   shows and what it waits for, so that the unit that writes the derived class writes it in the base and not as an
   override. Neither a trap in the header nor a member declared out of line: either gives the base a key function, and
   with it a vtable and a typeinfo the target does not have. Unit 74 left `api::ISound`'s slots 8 and 9 `= 0`, and
-  unit 81 wrote their bodies in `api/audio/isound.h`.
+  unit 81 wrote their bodies in `api/audio/isound.h`. A missing row in `ledger/vtables.json` does not say the class has
+  no vtable: read the data for one (`docs/reference/facts/units.md` §U12).
 - **A pure slot.** A slot that holds `__cxa_pure_virtual` (12143) is a pure member. Declare it `= 0` at its slot even
   when no evidence names it: name it from its callers, else after its slot, and say in the class header that the name
   is chosen. Left out, it makes the class concrete, which gives it a deleting destructor the target does not have and
@@ -457,9 +499,11 @@ What the vtable needs, slot by slot:
   merge-similar-functions body, with its own constants as arguments (the glossary's mgfn: `CImageField::GetTypeName`,
   11097, is `f2904(p0, p1, 197764, 197771)`), matches when our link merges enough of those functions for binaryen to
   form the same shared body. The merged functions can be other classes' and libraries', and the same operands must
-  differ among them, so that the shared body takes the same parameters. Two can be enough: the target's 1565 has eight
-  callers, and our link formed it from units 54's and 56's deleting destructors (3681, 2777). `pnpm wasm fn <target>
-  2904` lists a body's callers, and a unit that lands another caller reads its siblings' rows in the scan. Until the
+  differ among them, so that the shared body takes the same parameters. Two can be enough for a large body: the
+  target's 1565 has eight callers, and our link formed it from units 54's and 56's deleting destructors (3681, 2777). A
+  small one needs more: the exit destructors' shapes form from 3 and 4 members (`docs/reference/facts/codegen.md` §C8,
+  which has the `wasm-opt` probe to run on N copies before reading the row). `pnpm wasm fn <target> 2904` lists a body's
+  callers, and a unit that lands another caller reads its siblings' rows in the scan. Until the
   body forms, the member stays pending, with its source written in the `-pending.cpp` header (unit 29). A template
   default (the bullet above) whose target body is a merge thunk takes both: the explicit specialization, and in the
   header its source, with the message and the typeid name its call passes (unit 47's 11360). It stays a specialization
