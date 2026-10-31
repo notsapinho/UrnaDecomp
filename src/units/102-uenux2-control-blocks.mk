@@ -31,7 +31,9 @@
 #   CMovie 1593, 3076: 12835, 12830, 12823. FormControlBlock 5515, 6024: 11131, 11130, 11128. CProgressoEncerramento
 #   12098: 12087, 12086, 12085. CProgressBar 5545: 11111, 11110. CMovieField 5543: 11104, 11103. CTextFieldBlinking
 #   1265: 11113, 11112. CTextFieldUpdate 502, 3058, 5936: 12316, 12314. CImageFieldUpdate 3059: 12541, 12535. CWavFile
-#   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578. CPreShowProgressBar (ten builders, 1591 first): 12813,
+#   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578, which match from unit 127's cwasmresource.cpp.o, whose
+#   GetImage (8633) builds the block; the dropped builder here stands for 1263. CPreShowProgressBar (ten builders, 1591
+#   first): 12813,
 #   12812. CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. CTimer 10846: 10844, 10843. api::Logger
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.
 #   CDataText<CCandidaturasDSNumero> 4185: 12760, 12752. <CCandidaturasDSNome> 4185: 12654, 12650.

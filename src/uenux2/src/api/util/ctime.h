@@ -18,8 +18,8 @@ bool IsValidTime(const std::string& hora);
 // CTime() (fn 2230) is now, read from ISystemDateTime's clock through gmtime_r. Format (fn 779) has no record; its name is
 // chosen after CDate::Format's, whose record names it, as it formats the h, m and s codes the same way. operator<=> is out
 // of line: fn 759 calls it, and the target's body for it is the one binaryen keeps for OpenSSL's err_string_data_cmp too
-// (fn 5448, the same bytes). The getters are inline: fns 1381 and 2233 compute the hour, the minute and the second from
-// the word as they do; their names are chosen.
+// (fn 5448, the same bytes); its name and its std::strong_ordering result are chosen. The getters are inline: fns 1381
+// and 2233 compute the hour, the minute and the second from the word as they do; their names are chosen.
 
 /**
  * Hora do dia, guardada em segundos desde a meia-noite.

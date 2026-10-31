@@ -41,14 +41,14 @@ void CAguardaMensagem::ProcessKey(uebyte)
 }
 
 // CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61, callees with no
-// name: 185, 187, 261, 291, 479, 491, 1381, 1823, 2880, 3333, 3705.
+// name: 185, 187, 261, 291, 491, 1823, 2880, 3333, 3705.
 void CIniciodeCiclo::StartState()
 {
     __builtin_trap();
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 183, 185, 187, 202, 203, 261, 273, 291, 326, 332, 378, 401, 436, 457, 463, 479, 491, 502,
+// with no name: 183, 185, 187, 202, 203, 261, 273, 291, 326, 332, 378, 401, 436, 457, 463, 491, 502,
 // 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1249, 1269, 1274, 1405, 1485, 1822,
 // 1933, 1935, 1960, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782, 3784, 3788, 3825, 3826, 3829,
 // 3834, 5462, 5480, 5545, 5824, 5856, 5866, 5869, 5870, 5876, 5887, 5888, 5889, 5891, 5899, 5905,

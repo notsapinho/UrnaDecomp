@@ -4,14 +4,14 @@
 //   7  11542  RecuperarID (a chosen name): SELECT by the key; waits for fn 566, no-candidate
 //   8   3766  RecuperarTodos (a chosen name): SELECT of every row; fns 566 and 5759, no-candidate
 // comum::dao::CComparecimentoMesarioDAO (@1593352), emitted by ccomparecimentomesariodao.cpp with the destructor:
-//   3  10403  Inserir (a chosen name), the INSERT into comparecimento_mesario: waits for fn 1381, no-candidate, the
-//             function that turns data_hora_registro (a CDate and a CTime) into a time_t through mktime (fn 2961), which
-//             no source holds and no record names. Its source, as the bytes read: the literal into a local std::string,
+//   3  10403  Inserir (a chosen name), the INSERT into comparecimento_mesario, not written; fn 1381 (unit 125's
+//             CDateTime::ConvertToLocalTime), which turns data_hora_registro into a time_t through timegm (fn 2961),
+//             matches now. Its source, as the bytes read: the literal into a local std::string,
 //             stmt = m_conexao->Prepare(sql); SetInt64(1, CStringUtils::ToQWord(identificador at +0)); SetInt of 2 to 6
 //             with +12, +16, the byte at +20, +24 and +28; SetDateTime(7, ptime from fn 1381's result, in microseconds);
 //             SetInt(8, id_arquivo at +44) when the flag at +48 is set, else SetNull(8); Execute(); Close();
-//   7  10402  RecuperarID (a chosen name): waits for fns 566, 1000, 2730, 2731, 5390 and 5391, no-candidate
-//   8  10401  RecuperarTodos (a chosen name): the same six
+//   7  10402  RecuperarID (a chosen name): waits for fns 566, 2730, 2731, 5390 and 5391, no-candidate (1000 matches)
+//   8  10401  RecuperarTodos (a chosen name): the same five
 // Move each member into its class's .cpp when it is written; delete this file with the last one.
 #include "app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.h"
 #include "app/comum/dados/dao/celeitordinamicodao.h"

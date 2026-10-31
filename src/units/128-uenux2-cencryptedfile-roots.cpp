@@ -13,8 +13,9 @@ __attribute__((noinline)) void w128_salva(const api::CEncryptedFile& arquivo, co
 
 // std::vector<uebyte>'s range insert, which Save calls (target fn 1927), is in the target's table (slot 6666) besides its
 // five direct callers (2767, 5360, 10967, 11397, 11399): its address is taken here, so binaryen keeps it out of line and
-// keeps its result, as the target's table entry does. cencryptedfile.cpp's object instantiates it, and that copy is the
-// link's: the label only refers to it.
+// keeps its result, as the target's table entry does. cencryptedfile.cpp's object instantiates it, and binaryen merges
+// that copy with std::vector<char>'s, which unit 124's cconversorestadogeral.cpp.o links first (fragment 128): the label
+// only refers to it.
 extern "C" int w128_insere(int, int, int, int, int) __asm__(
     "_ZNSt3__26vectorIhNS_9allocatorIhEEE18__insert_with_sizeB8ne210108INS_11__wrap_iterIPKhEES8_EENS5_IPhEES8_T_T0_l");
 

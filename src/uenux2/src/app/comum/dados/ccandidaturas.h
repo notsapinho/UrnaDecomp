@@ -12,11 +12,11 @@ namespace comum {
 
 // Recovered: the layout, 44 bytes, from the constructor and destructor (target fns 5811, 3786): an
 // api::CDataMap<uedword, md::CCandidatura> at +0 (the candidacies by candidate, the cursor at +12, the name at +16, which
-// 5811 builds from the literal "CCandidaturas"), a flag at +28, and the package versions by post at +32. That the first 28
-// bytes are the base is evidence: fns 2268 and 2838 pass the singleton's own pointer to that CDataMap's GetCurrent (fn
-// 1200). What the flag is for is not read. RecuperaVersaoPacote's record spells the parameter TCargoID, and the records of
-// LoadFromFile the map's types (CCandidaturas::Container is the base's alias here, a choice). The other members are not
-// reconstructed, and the data members' names are chosen.
+// 5811 builds from the literal "CCandidaturas"), a flag at +28, and the package versions by post at +32. The CDataMap at
+// +0 is evidence (fns 2268 and 2838 pass the singleton's own pointer to its GetCurrent, fn 1200); that it is the base and
+// not a member is a choice, read from siblings such as CEleitores, whose RTTI lists CDataMap as a base. The flag's use is
+// not read. RecuperaVersaoPacote's record spells the parameter TCargoID, and the records of LoadFromFile the map's types
+// (CCandidaturas::Container is the base's alias, a choice). Other members: not reconstructed; data members' names: chosen.
 class CCandidaturas : public api::CDataMap<uedword, md::CCandidatura> {
 public:
     using TCargoID = md::TCargoID;

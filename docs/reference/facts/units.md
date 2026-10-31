@@ -11,12 +11,13 @@ that run the toolkit; the try links write only under `build/out/try/<name>/`.
 In the WebAssembly C++ ABI a constructor and a non-deleting destructor return `this`. The target's type for 5526,
 `(i32 i32 i32)->()` (`pnpm wasm fn ../target/vota_web_wasm.wasm 5526`, from `asmlift-wasm/`), is binaryen's
 dead-argument elimination removing a result no caller used.
-Unit 23's roots declare the `api::CMovie` constructor `int (int, int, int)` and drop the result in both callers, and
-5526 matches. Declared `void`, the same try links with a warning and loses the constructor:
+At 1885fb2c, unit 23's roots declared the `api::CMovie` constructor `int (int, int, int)` and dropped the result in both
+their callers, and 5526 matched (one of the two went when unit 127 wrote a real caller, 8605). Declared `void`, the same
+try, on a checkout at that commit, links with a warning and loses the constructor:
 
 ```sh
 mkdir -p build/out/units-facts
-sed 's/^int w5526_root_0(int, int, int)/void w5526_root_0(int, int, int)/' src/units/23-uenux2-cmovie-roots.cpp > build/out/units-facts/void-roots.cpp
+git show 1885fb2c:src/units/23-uenux2-cmovie-roots.cpp | sed 's/^int w5526_root_0(int, int, int)/void w5526_root_0(int, int, int)/' > build/out/units-facts/void-roots.cpp
 printf '5526\n' > build/out/units-facts/t5526.txt
 TMPDIR=/tmp tools/round/try-tu.sh --name units-void-roots src/uenux2/src/api/gui/cmovie.cpp \
   --roots build/out/units-facts/void-roots.cpp --targets build/out/units-facts/t5526.txt --skip-units 23-uenux2-cmovie.mk
@@ -32,19 +33,19 @@ miss.
 ## U2. Stand-in callers must differ from each other and from every target function
 
 **Identical stand-ins merge.** binaryen merges byte-identical functions, so two stand-ins with the same body become
-one caller, and the function they both call is inlined into the survivor. Unit 23's second caller passes `bloco + 12`;
-passing `bloco`, as the first passes `filme`, makes the two bodies the same:
+one caller, and the function they both call is inlined into the survivor. At 1885fb2c unit 23's second caller passed
+`bloco + 12`; passing `bloco`, as the first passed `filme`, made the two bodies the same (on a checkout at that commit):
 
 ```sh
-sed 's/w5526_root_0(bloco + 12, quadros, tamanho)/w5526_root_0(bloco, quadros, tamanho)/' src/units/23-uenux2-cmovie-roots.cpp > build/out/units-facts/same-roots.cpp
+git show 1885fb2c:src/units/23-uenux2-cmovie-roots.cpp | sed 's/w5526_root_0(bloco + 12, quadros, tamanho)/w5526_root_0(bloco, quadros, tamanho)/' > build/out/units-facts/same-roots.cpp
 TMPDIR=/tmp tools/round/try-tu.sh --name units-same-roots src/uenux2/src/api/gui/cmovie.cpp \
   --roots build/out/units-facts/same-roots.cpp --targets build/out/units-facts/t5526.txt --skip-units 23-uenux2-cmovie.mk
 /usr/bin/grep -E 'CMovie|CriaFilme' build/out/try/units-same-roots/wasm-named/vota_web/vota_web_wasm.js.symbols
 # 4605:(anonymous namespace)::CriaFilme(int, int, int)
 ```
 
-The plain link has three functions there (`/usr/bin/grep -E 'CMovie|CriaFilme' build/out/wasm-map/vota_web/names.tsv`:
-the constructor's C2 and both stand-ins); the try link keeps one stand-in and no constructor.
+The plain link had three functions there (`/usr/bin/grep -E 'CMovie|CriaFilme' build/out/wasm-map/vota_web/names.tsv`:
+the constructor's C2 and both stand-ins); the try link kept one stand-in and no constructor.
 
 **A stand-in that only forwards is a target function.** `int B(int p) { return D2(p); }` compiles to
 `local.get 0; call D2; end`, the D2 of a derived class that adds no member: vota::CAssinadorVota's 7766 (7 B, a call of
@@ -156,7 +157,7 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/roots_[a-z0-9]+\.o$/) r[$2]=$3; next } ($
 # 9 app/roots_7zip.o
 ```
 
-- the members of the control blocks the roots files build, from units 12, 14, 28, 29, 49, 58, 65, 77, 78, 79,
+- the members of the control blocks the roots files build, from units 12, 14, 28, 29, 58, 65, 77, 78, 79,
   83, 84, 90 and 92 (U3);
 - code of a header the roots files emit in the shapes of `src/units/README.md` "Companion files": an inline default
   of a virtual member (`api::IScreen::GetFontMetrics`, 8938, unit 19), and the members of classes and class templates

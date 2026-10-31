@@ -6,7 +6,8 @@
 //   of the +24 form, copies a 12-byte static api::CDateTime (@1833312) into +12 and calls slot 1 (2000, 100) of the
 //   api::IBeep that api::CPolySingleton<api::IBeep>::instance (fn 925) returns;
 // - ProcessTick 12017 (slot 8, records cexibealertadesligamento.cpp:53:13 and 54:24): on its own tick, compares +12 with
-//   the current time (fns 479 and 759, api::CDateTime::Now and operator<=>, unit 125); past it, logs "Tempo limite de espera
+//   the current time (fns 479 and 759, unit 125's names, chosen there: api::CDateTime::Now and operator<=>); past it, logs
+//   "Tempo limite de espera
 //   usando bateria interna atingido" (vota::CLogVota::GetInst, fn 184, and api::CLoga::loga, fn 433) and calls
 //   comum::IInterfaceInit::DesligarUrna (fn 5894) on CPolySingleton<comum::IInterfaceInit>'s instance (fn 611); else
 //   goes to the +36 state when slot 15 of CPolySingleton<api::IPower>'s instance (fn 862) says so. Of those

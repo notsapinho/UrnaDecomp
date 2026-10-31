@@ -20,7 +20,7 @@
 // vota::CConfirmaProporcional::GetProximoEstado (slot 16, fn 11751, a chosen name): it returns fn 3849, the
 // vota::CPedeProporcional singleton, built by fn 6051, which has no name. It emits that class's vtable the same way.
 // vota::CEstadoComDesligamentoAutomatico::ProcessTick (slot 8, fn 12061, record cestadocomdesligamentoautomatico.cpp:44 of
-// its lambda): it waits for fns 479, 759, 1000, 5474 and 5979 (vota::CLogVota::GetInst, fn 184, matches now).
+// its lambda): it waits for fns 5474 and 5979 (479, 759 and 1000, unit 125's, and vota::CLogVota::GetInst, fn 184, match).
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/cestadocomdesligamentoautomatico.h"

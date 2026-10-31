@@ -99,8 +99,9 @@ __attribute__((noinline)) void w100_define(std::unique_ptr<T> instancia, int vez
     }
 }
 
-// Stands for the callers of the two GetInst, none of them landed: 502, 652, 1265, 2024, 3059, 3658, 3673, 5543, 5904 and
-// 8302 for fn 1259, and 479, 1382, 1898, 2230, 5472, 5473, 10226, 10870, 10874, 10875 and 11862 for fn 1155.
+// Stands for the callers of the two GetInst that have not landed: 502, 652, 1265, 2024, 3059, 3658, 3673, 5543, 5904 and
+// 8302 for fn 1259, none of which has, and 5472, 5473, 10226, 10870 and 11862 for fn 1155, whose 479, 1382, 1898, 2230,
+// 10874 and 10875 are in the link.
 __attribute__((noinline)) int w100_getinst()
 {
     int soma = &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;

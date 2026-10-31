@@ -26,7 +26,8 @@
 # - the 7080 enumerator's name (eueutilerror.h says so beside it).
 # Added with unit 125 (api::CDate and api::CDateTime): CTime's default constructor (target fn 2230, matched), now from
 # ISystemDateTime's clock, at lines 13-19, a choice (it has no record); Format (fn 779) at lines 76-135 and operator<=>
-# at the end of the file, both choices; and the inline getters ctime.h describes.
+# at the end of the file, both places chosen, with operator<=>'s name and std::strong_ordering result; and the inline
+# getters ctime.h describes.
 # operator<=>'s body is fn 5448's, the one the target keeps for OpenSSL's err_string_data_cmp as well, so that match line
 # now names ours (ctime.cpp.o links ahead of libcrypto). Format is written and does not match: its appends call
 # std::string::append (fn 160) in the target and inline it at this tree's -O2; at -O3 a try link gives 16 over 596 rows, all

@@ -48,9 +48,12 @@
 # converter's flag to it; the files no record names: asn/candidatura/cconversordadoscandidato.* and cindexadorfotos.*,
 # asn/processoeleitoral/cconversorsuplencia.*, asn/estadoaplicacao/cconversordadocorrespondencia.h, csuplencia.cpp and
 # ccomplementosmunicipiosuf.h, each by docs/how-to-decompile.md step 3's rules 3 and 4 (the data class's directory
-# mirrored, the class's name); the parameters' order of the constructors no record names; the lines of every function
-# no throw of which has a record; IConversorParcialASN's slot (its name, and the visitor by reference) and typedefs'
-# names; the typedef ModuloTiposEleitorais::CodigoSexo's place (ModuloCandidatos.h says why it is a typedef); the
+# mirrored, the class's name); for cconversordadoscandidato.* rule 2 comes first, and 11450's link neighbours
+# disagree: asn/cconversorlocal.cpp (11451) on one side, asn/candidatura/cvisitantefoto.cpp (11442, behind 11444 to
+# 11449, which have no record) on the other, so its directory is a choice (placing.md §P5), beside the data that puts
+# its vtable among the candidatura converters'; the parameters' order of the constructors no record names; the lines
+# of every function no throw of which has a record; IConversorParcialASN's slot (its name, and the visitor by
+# reference) and TEntidade's name (the record prints TDado and TVisitor); the typedef ModuloTiposEleitorais::CodigoSexo's place (ModuloCandidatos.h says why it is a typedef); the
 # order of this list (with each data class ahead of its converter 11381 and 11359 score the same, 56 and 10 rows, all
 # operand-only).
 #

@@ -56,7 +56,7 @@
 # 208), w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro can go when a
 # second thrower of EUeComumRelatoriosError lands (CCalculaCV::IncluiString, fn 942, is one), w123_separador when one of
-# 2785, 11943, 11946, 12105 or 12110 does.
+# 2785, 11943, 11946, 12105 or 12110 does, and w123_copia when one of 5637, 5740, 5856, 11395 or 12098 does.
 #
 # Not kept: an inline static setter of comum::md::CTradutorFrase's map (ctradutorfrase.h) for InicializaTradutorFrase,
 # which stays pending (the -pending.cpp header has the measurement).

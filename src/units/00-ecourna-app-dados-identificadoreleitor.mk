@@ -7,8 +7,8 @@
 # IIdentificadorEleitor's constructor (9256) matches. Its zero string is a temporary in the condition, destroyed before the
 # throw as in the target; as a named local it lives across the throw (241 rows against 52 in try-tu.sh --single, with the
 # record's line right in both). iidentificadoreleitor.cpp is Latin-1: the target's literal is 60 bytes of Latin-1
-# (ledger/strings.tsv row 377803), and the UTF-8 file gave 64. The blank lines above the constructor put its throw on
-# its record's line, 28; where the constructor starts is chosen.
+# (ledger/strings.tsv row 377803), and the UTF-8 file gave 64. The gap above the constructor (the comment of original
+# lines 10-23 and `#line 24`) puts its throw on its record's line, 28; where the constructor starts is chosen.
 # Target fn 3703, which holds EncodeBase64's two records, is not EncodeBase64: it is a caller that binaryen inlined
 # EncodeBase64 into, returning `.substr(0, 8)` of the result for an object with a std::vector<uebyte> at +168 (callers
 # 3059, 7787, 11222); roots_ecourna.cpp's ResumoBase64 has that shape, and the class is not identified, so 3703 waits for

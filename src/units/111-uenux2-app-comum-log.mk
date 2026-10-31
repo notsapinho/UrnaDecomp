@@ -85,7 +85,8 @@
 #
 # Chosen, no byte decides: every name but the records' (loga 233, LogaCargaBateria, GetInst, s_instancia, s_mutex,
 # m_aplicativo, the seven members and m_parametros, the enumerators of ERelatoriosUE,
-# EStatusOperacaoRelatorio and EUeComumLogError); the namespace of ERelatoriosUE and EStatusOperacaoRelatorio; the
+# EStatusOperacaoRelatorio and EUeComumLogError); 603's parameter taken by `const &` and held as a reference member,
+# where a pointer is the same address; the namespace of ERelatoriosUE and EStatusOperacaoRelatorio; the
 # severities as bare casts, as ESeveridade has no enumerator; the lines of every function but the throws' and the lines the
 # column records hold. The definition above the Converte members gave the match, and no other order
 # was linked.

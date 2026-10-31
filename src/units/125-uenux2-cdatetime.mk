@@ -29,8 +29,10 @@
 #              exit). The rest of that remainder is not explained. They stay written: operator- (3648) calls
 #              operator-=, and they call each other.
 #              Their stubs stay in src/ecourna/unplaced.cpp, since nothing names their bodies.
-# The 16-bit static 2000 that IsValidDate and CDate(const std::string &) add to a two-digit year is api::g_seculo, at the
-# head of cdate.cpp's data (1584256, before its first record at 1584260); its name is a hand edit of splat/symbol_addrs.txt
+# The 16-bit static 2000 that IsValidDate and CDate(const std::string &) add to a two-digit year is an object of
+# namespace api, named g_seculo here (a chosen name), at the head of cdate.cpp's data (1584256, before its first record at
+# 1584260). Its external linkage is the bytes': a const or file-static object nothing writes would fold into the code;
+# that it is a namespace global and not a static member is chosen. Its name is a hand edit of splat/symbol_addrs.txt
 # (callers+content): 3649, CDate's constructor by its records, and 5479 are the only target functions that read the word
 # (`grep -rlE 'i32\.const 1584256($|[^0-9])' build/out/splat/pieces/asm`), each as an i32.load16_u added to the year when
 # the string has 6 characters. Without it 5479 is `unresolved` on that operand, and 5475 is `unresolved self-voted` on 5479.

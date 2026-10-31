@@ -1,6 +1,7 @@
-// Roots: keep the comum::md process-election functions in the skeleton link the way the target keeps them. None of their
-// target callers is reconstructed, except where a comment says so, and only 1547 and 1938 are in the table (elems 97, 89), so each gets
-// noinline stand-in callers with at least two call sites and stays out of line, as the target has it (ledger/callgraph.tsv):
+// Roots: keep the comum::md process-election functions in the skeleton link the way the target keeps them. Of their
+// target callers only 2268 and 5803 (unit 129), 11191 (unit 123) and those a comment names are reconstructed, and only
+// 1547 and 1938 are in the table (elems 97, 89), so each gets noinline stand-in callers for the others, with at least two
+// call sites, and stays out of line, as the target has it (ledger/callgraph.tsv):
 //   1708  CCargos::Next               4442 5604 7352 11209 12098 12110
 //   1938  GetCurrentCargoID           11212 11213 11214 11793 13550
 //   2835  GetCurrentEleicaoID         5604 11209 13550
