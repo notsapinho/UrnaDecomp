@@ -1,5 +1,7 @@
 # uenux2 comum::CRdvVota::Candidato (target fn 1931, CRdvVota vtable slot 3) with the CVotosEleicoesVota totals it
 # calls; wasm-opt inlines CVotosEleicoesVota::Candidato (one caller) into it, as in the target. Paths relative to src/uenux2.
+# CRdvVota::GetInst (target fn 555, record crdvvota.cpp:87), its statics and their exit destructors are in crdvvota.cpp;
+# src/units/110-uenux2-singletons.mk says what shows them. ~CRdvVota is written and short of its converter member (fn 5734).
 #
 # comum::CRdvPosicionadorVota::Posicao (target fn 11496, slot 2 of the class's vtable; slots 0 and 1 are the shared 174
 # and 144), with the comum::md::CRdvPosicionador header and CVoto::operator<=>, which wasm-opt inlines into it (its one

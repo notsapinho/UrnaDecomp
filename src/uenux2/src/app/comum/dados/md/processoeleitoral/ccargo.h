@@ -30,6 +30,13 @@ public:
         CONSULTA,
     };
 
+    // The name is chosen: no record names this accessor.
+    TCargoID GetID() const { return m_id; }
+    // The names are chosen. CParteRdv::Imprime (fn 11203) reads the flag before the type (src/units/110-uenux2-singletons.mk).
+    bool IsMajoritario() const { return m_detalheCandidato.has_value() && m_tipo == MAJORITARIO; }
+    bool IsProporcional() const { return m_detalheCandidato.has_value() && m_tipo == PROPORCIONAL; }
+    bool IsConsulta() const { return m_detalheConsulta.has_value(); }
+
     const CDetalheCandidato& GetDetalheCandidato() const;
     const CDetalheConsulta& GetDetalheConsulta() const;
 

@@ -15,6 +15,8 @@ public:
     CHorarioVeraoMunicipio(uedword codigo, const CHorarioVerao& horarioVerao);
     explicit CHorarioVeraoMunicipio(uedword codigo);
 
+    // The name is chosen: CHV's message reads "nao entra em horario de verao" (fn 5745).
+    bool TemHorarioVerao() const { return m_horarioVerao.has_value(); }
     const CHorarioVerao& GetHorarioVerao() const;
 
 private:

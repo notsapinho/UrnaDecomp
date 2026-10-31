@@ -1,5 +1,6 @@
-# uenux2 comum::CParteCargos: its constructor (target fn 5587) in src/uenux2/src/app/comum/relatorios/cpartecargos.cpp,
-# and the implicit destructors emitted with its vtable (target fns 11208 and 11207, vtable slots 0 and 1), the
+# uenux2 comum::CParteCargos: its constructor (target fn 5587) and Imprime (11209, the key function, slot 2) in
+# src/uenux2/src/app/comum/relatorios/cpartecargos.cpp, and the implicit destructors emitted with its vtable (target fns
+# 11208 and 11207, vtable slots 0 and 1), the
 # compiler's code for the class definition in cpartecargos.h beside it. With them, the api::IReportPart interface the
 # class implements (src/api/gui/reports/ireportpart.h); the roots' make_shared brings the control block
 # __shared_ptr_emplace<comum::CParteCargos>'s D2 and D0 (target fns 11948 and 11947).
@@ -22,12 +23,8 @@
 # uenux2 header.
 CPARTECARGOS_SRCS := src/app/comum/relatorios/cpartecargos.cpp
 UENUX2_SRCS += $(CPARTECARGOS_SRCS)
-# Imprime (target fn 11209), the key function, is not reconstructed: 58-uenux2-cpartecargos-pending.cpp gives the
-# vtable a trapping body, compiled with the unit's flags, and its header says what Imprime waits for
-$(ROOT)/$(APP)/58-uenux2-cpartecargos-pending.o: $(ROOT)/src/units/58-uenux2-cpartecargos-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/58-uenux2-cpartecargos.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/relatorios/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/gui/reports/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/58-uenux2-cpartecargos-pending.cpp -o $(R)
 # the constructor's two callers (fns 5971 and 11946) are not reconstructed yet: 58-uenux2-cpartecargos-roots.cpp gives
 # it two direct callers that build the class with std::make_shared, as the target's do
 $(ROOT)/$(APP)/58-uenux2-cpartecargos-roots.o: $(ROOT)/src/units/58-uenux2-cpartecargos-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/58-uenux2-cpartecargos.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/relatorios/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/gui/reports/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/58-uenux2-cpartecargos-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/58-uenux2-cpartecargos-pending.o $(APP)/58-uenux2-cpartecargos-roots.o
+override EXTRA_OBJS += $(APP)/58-uenux2-cpartecargos-roots.o

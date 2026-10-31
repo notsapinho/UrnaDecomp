@@ -337,7 +337,7 @@ round. Why, binaryen's source in the image does not show; the effect is measured
   1191`, `130 over 1178`, and with the caller first `81 over 1168`, a match, where the first order also keeps a pointer
   argument in a local that the last folds into the loads (unit 95's fragment). 11405 goes from `34 over 247` to `24 over
   244` with `DoConverte` and `DoDesconverte` above their helpers (unit 93's), and 5745 from `47 over 298` to `29 over 293`
-  (unit 98's).
+  (unit 110's).
 
 A function with no record has a free line to do this with, and a function with records may move while each throw stays
 on its record's line. Say in the fragment that the order is measured.
