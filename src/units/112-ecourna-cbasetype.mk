@@ -98,7 +98,8 @@
 #   - 9258 waits for 2416, std::regex's constructor, whose row stops at std::collate<char>::id (.bss), no target symbol.
 #   - 1877 and 5162 wait for the slot of parse_iso_time, 5851 (9824 B), whose one direct caller is uenux2's 11616. Instantiated
 #     in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scores 2708 over 4726 rows, 1764 deleted: not the target's body.
-#   - 9032 waits for 306, the executable TU's. 2204 is a Boost body whose callers (5204 9570 9576 9578 9583) are not written.
+#   - 2204 is a Boost body whose callers (5204 9570 9576 9578 9583) are not written. 9032, which waited for 306, matches
+#     since src/app/roots_vector.cpp holds it.
 #
 # Hand line: CSerialMidia::ValidaSerial (9258), a callee with one user, the slot 9259's constructor takes, or 9259 stays
 # `self-voted`: the literal only it loads is its own evidence, and the line says so. 9258 itself stays `unresolved` (above).

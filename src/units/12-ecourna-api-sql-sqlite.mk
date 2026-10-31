@@ -78,8 +78,9 @@
 #   -fexceptions; the target's 1376 is an -fexceptions copy, and its ymd_to_string has this one caller.
 # - CSqlResultSet::GetDateTime (5162): its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B) is the copy of
 #   app/dados/asn/datahoraasn.cpp in our link, a different body (fn 6004, whose folded readout is 290 lines against the target's 1568).
-# - CSqlResultSet::GetBlob (5161): the vector's exception guard destructor is the separate 306 in the target, inlined
-#   into ours (`call 306 | call 2671`), the blocker of 5111, 9226, 9467, 3521 and 5169 too.
+# - CSqlResultSet::GetBlob (5161) stopped at `call 306 | call 2671`: the target's vector exception guard destructor
+#   calls __destroy_vector out of line, and ours inlined it and merged with 2671. It matches since
+#   src/app/roots_vector.cpp holds the target's copy.
 # - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
