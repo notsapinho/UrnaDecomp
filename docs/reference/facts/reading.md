@@ -5,7 +5,8 @@ the parameters a wasm type hides, how a class returns or takes a class by value,
 whether its class is `final`, whether a class is abstract or has a key function, a free function's linkage, code
 binaryen inlined from another function, the format string, argument types and shape of a `std::format` throw, a
 `bool`'s reads, an `invoke` around a callee that cannot throw, several table slots of one function, a local static's
-guard, and one row more than the target at a call. `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
+guard, one row more than the target at a call, and where a record's line and column fall when no `throw` makes it.
+`docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
 source form compiles to (the order of a body's stores, a switch over virtual slots, an in-class member against an
 `inline` one) is in [codegen.md](codegen.md).
 
@@ -13,7 +14,7 @@ The probes are short TUs compiled by the pinned em++ with uenux2's flags, `-O2 -
 -fno-strict-aliasing` (`docs/reference/facts/app-flags.md` §F6); their sources are given in full, and each runs under
 `build/out/reading-probe/`. R1–R3 and R7–R11 were measured at 7bf701e, R4–R6, R12 and R13 at ee595de, and the parts
 marked bb6f018 (R14 and R15 among them) at bb6f018; every probe prints the same at 0b5f410, where R13's shapes and
-R16–R18 were measured. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
+R16–R18 were measured, and the parts marked 4487d6b and R19 at 4487d6b. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
 `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
 ## R1. A parameter every caller passes as the same constant is gone from the wasm type
@@ -251,6 +252,55 @@ vtable):
 | in the class without `inline` (`= default` or `{}`: the same object) | `call D2` and `operator delete` of its result | `f136(f5531(p0))`, 11086 (10 B, `api::CImageFieldUpdate`, unit 43) |
 | out of line in the `.cpp` | `call D1` (D2's alias), `drop`, `operator delete(this)` | `f5709(p0); f136(p0);`, 11443 (13 B, `comum::asn::CVisitanteFoto`, unit 36) |
 
+These shapes are `-fPIC`'s, uenux2's. Without `-fPIC`, ecourna's flags, the third row's D0 can take the second row's
+shape. Probe `dtorpic.cpp`, a `final` class whose out-of-line destructor has only an out-of-line base's to call:
+
+    // A final class with an out-of-line destructor over a base whose destructor is out of line in another object.
+    #include <memory>
+    #include <string>
+    struct B {
+        B(int, const std::string&);
+        virtual ~B();
+        virtual std::string F() const = 0;
+        int t;
+        std::string n;
+    };
+    struct D final : B {
+        explicit D(const std::string&);
+        ~D() override;
+        std::string F() const override;
+    };
+    D::D(const std::string& s) : B(1, s) {}
+    D::~D() = default;
+    std::string D::F() const { return n; }
+    std::shared_ptr<B> Make(const std::string& s) { return std::make_shared<D>(s); }
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/reading-probe; em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c dtorpic.cpp -o dtorpic-pic.o; em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c dtorpic.cpp -o dtorpic-pic3.o; em++ -O2 -std=c++20 -DNDEBUG -fno-strict-aliasing -c dtorpic.cpp -o dtorpic-nopic.o; em++ -O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -c dtorpic.cpp -o dtorpic-nopic3.o'
+    for v in pic pic3 nopic nopic3; do printf '%s D0: ' $v; wasm-objdump -d build/out/reading-probe/dtorpic-$v.o | awk '/<_ZN1DD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^(call|drop)/ {c = c " " $1 " " $3} END {print n " lines:" c}'; done
+      pic D0: 7 lines: call <_ZN1DD1Ev> drop  call <env._ZdlPvm>
+      pic3 D0: 7 lines: call <_ZN1DD1Ev> drop  call <env._ZdlPvm>
+      nopic D0: 5 lines: call <env._ZN1BD2Ev> call <env._ZdlPvm>
+      nopic3 D0: 5 lines: call <env._ZN1BD2Ev> call <env._ZdlPvm>
+
+So the level does not decide it, `-fPIC` does. In ecourna's code `f136(f778(p0))` (3491, 10 B, `CNumeroCPF`'s) is
+that out-of-line form, its D1 one call of the base's D2: read the classes' other destructors (the D1 and the control
+block's `__on_zero_shared`) before taking it for the in-class form. That the D1 alias is what `-fPIC` keeps as a call
+is a reading ([codegen.md](codegen.md) §C6 measures the same for a constructor).
+
+`wasm-objdump -d -r` prints a function's name beside a relocation, not the relocation symbol's, so on a destructor
+with an alias a call of D1 reads as one of D2. Read the symbol's number against the symbol table, or the link map,
+which lists the kept name first:
+
+    wasm-objdump -d -r build/out/app/uenux2/src/app/comum/dados/ccargos.cpp.o | /usr/bin/grep -m1 -E 'R_WASM_FUNCTION_INDEX_LEB [0-9]+ <_ZN5comum7CCargosD[12]Ev>'
+      000880: R_WASM_FUNCTION_INDEX_LEB 22 <_ZN5comum7CCargosD2Ev>
+    wasm-objdump -x -j Linking build/out/app/uenux2/src/app/comum/dados/ccargos.cpp.o | /usr/bin/grep -E '_ZN5comum7CCargosD[12]Ev'
+       - 22: F <_ZN5comum7CCargosD1Ev> func=24 [ binding=global vis=default ]
+       - 26: F <_ZN5comum7CCargosD2Ev> func=24 [ binding=global vis=default ]
+
+A class with no D0 (no vtable, or no destructor slot in it) shows the form in a caller instead: at `-fPIC` a caller in
+the destructor's own TU keeps a call of an out-of-line D1 (C6), where an implicit or in-class destructor of a small
+body is inlined. `comum::CCargos`'s exit destructor calls `~CCargos` (5805) so, which `ccargos.cpp` defines `= default`.
+
 What separates the first two rows is the inline hint. Only an implicit destructor and one declared `inline` carry it
 before optimization:
 
@@ -382,6 +432,11 @@ below. The target's readouts:
       11443 _ZN5comum3asn14CVisitanteFotoD0Ev
       12049 _ZN4vota11IQRCodeBUDSD0Ev
       11086 _ZN3api17CImageFieldUpdateD0Ev
+
+"No member of its own" here means no member whose destruction emits code: a class can hold scalars and still show these
+shapes. `vota::CThreadMonitor`'s vtable starts `[2126, 10227]`, its base's D2 and `f2126(p0); f136(p0)`, and its
+singleton 1898 allocates 48 bytes and stores a byte at +36 and an i64 at +40 (`pnpm --silent wasm fn
+../target/vota_web_wasm.wasm 1898`): read the size from the allocation, not from the slots.
 
 **A derived class with no member of its own.** Its D0 and its slot 0 together say where each destructor is. Probe
 `d0.cpp` (0b5f410), `B` with two `shared_ptr` members, `BASE` where `B`'s destructor is (0 out of line in another TU,
@@ -760,6 +815,20 @@ The first tell has a variant, and there are two more (bb6f018):
 
   Unit 77 defines the comum constructors out of line, by value, one caller each.
 
+Three more signs. Each was read on a body that differed, and moving the callee out of line closed it; at 4487d6b
+`awk -F'\t' '$1==9145 || $1==728 || $1==3890 || $1==5181 {print $1, $5}' splat/scan.tsv` prints `match` for the first
+three and `unresolved` for 5181, which waits for a name:
+
+- **An outer `block` that opens where the arguments are set and is left with `br 1` where clang would `return`.**
+  binaryen wraps an inlined callee in a block and sets its parameters inside it. 9145 holds it from its first row, and
+  matches with `CTituloRelatorio`'s constructor out of line (unit 106).
+- **An `if (result i32) … else 0 end` tested again with `i32.eqz; br_if`,** which clang, inlining, folds into one
+  branch. `CSynchronizer::Sync` out of line took 5181 to one row from the target.
+- **Locals alone.** A body that differs from the target in local numbers only, whose callee has no frame, shows none of
+  the signs above: binaryen re-optimizes the caller after inlining. 728 and 3890 match with a field's constructor moved
+  from its header to its `.cpp`. Try such a callee out of line, unrooted, before a source form, beside
+  [codegen.md](codegen.md) §C4's order.
+
 Such a function is a member in its class's `.cpp` when it reads the class's state; one that reads none (8533's tone
 sequences) is a free function, and its file is a choice as long as it is not the caller's TU.
 
@@ -924,6 +993,17 @@ second holder matches.
 - An unconditional throw is folded up to the loop unroller's limit, 36 bytes at `-O2` and 74 at `-O3`: no call and no loop.
 - Past the limit it keeps a `br_table` loop, the search of the literal for a brace.
 
+A statement that only builds a string, a log message, is a site of the same kind: run unconditionally, it folds and
+loops at the same limits (4487d6b):
+
+    python3 -I -c "print('#include <format>\n#include <string>'); [print(f'std::string G{n}(int v) {{ return std::format(\"{\"x\"*(n-2)}{{}}\", v); }}') for n in (36, 40, 74, 75)]" > build/out/reading-probe/fmtplain.cpp
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for l in O2 O3; do em++ -$l -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/fmtplain.cpp -o /work/build/out/reading-probe/fmtplain-$l.o; done'
+    for l in O2 O3; do wasm-objdump -d build/out/reading-probe/fmtplain-$l.o | awk -v l=$l '/ func\[/ {n=$3} /br_table/ {b[n]++} END {for (s in b) print l, s, "loop"}' | /usr/bin/grep -E '_Z[0-9]+G' | sort; done
+      O2 <_Z3G40i>: loop
+      O2 <_Z3G74i>: loop
+      O2 <_Z3G75i>: loop
+      O3 <_Z3G75i>: loop
+
 The target has all three, and the 37 to 74 bytes between the limits with no loop are the level's evidence
 ([levels.md](levels.md) §V3):
 
@@ -1053,6 +1133,48 @@ The callee has no slot in the target and slot 7473 in ours. Find what holds the 
 
 Fix the reference, not the caller: a roots address goes out of the roots (unit 87's exclusions took 5067 out, and 181
 and 339 matched); a library's `invoke` is a library flag question.
+
+The other direction: the target keeps a result that ours dropped, our callee `(i32 i32)->()` against the target's
+`(i32 i32)->(i32)`, and neither side's table holds the callee. Then one target caller reads the result, and that
+caller is in the target's table and not reachable in ours. 276 is `string::assign(const char*)`'s body, called at 79
+sites, and one of them reads the result:
+
+    wasm-objdump -d target/vota_web_wasm.wasm | awk '/ func\[/ {f=$2} p && !/drop/ {print f} {p = / call 276$/}' | sort | uniq -c
+       1 func[12979]:
+
+12979 is a 9-byte forwarder whose only reference is table slot 168 (`pnpm wasm fn`'s `;; table slots 168`). Taking its
+address in a roots file (unit 103) gives ours the result.
+
+## R19. A record's line and column where no `throw` makes it
+
+A `std::source_location` record from a default argument holds the start of the call expression that takes the default,
+and one made inside a macro expansion holds the line and column of the invocation's closing `)`. Probe `reccol.cpp`
+(4487d6b):
+
+    // Where a std::source_location record's line and column fall.
+    #include <source_location>
+    struct S { static S& inst(std::source_location l = std::source_location::current()); void f(); };
+    #define INST(C) S& C##Get() { return S::inst(); }
+    void Plain() {
+        S::inst().f();
+        auto& v = S::inst();
+        v.f();
+    }
+    INST(CCargos)
+    INST(CConfiguracaoEleicao)
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/reading-probe; em++ -O0 -std=c++20 -S -emit-llvm reccol.cpp -o reccol.ll'
+    /usr/bin/grep -oE 'i32 [1-9][0-9]*, i32 [1-9][0-9]* \}' build/out/reading-probe/reccol.ll
+      i32 6, i32 5 }
+      i32 7, i32 15 }
+      i32 10, i32 13 }
+      i32 11, i32 26 }
+
+`S::inst().f();` at four spaces is column 5 and `auto& v = S::inst();` column 15, so a long column on a record with no
+throw reads as a declaration's initializer, and a local of the right length is one way to give it, a choice. The two
+macro lines differ by 13, the difference of the two class names' lengths: a column that grows by one per character of a
+name across classes is a macro that takes the name once, and the column fixes only the invocation's total length, not
+how its text is shared out.
 
 **Read a constant in the shifted link, never the plain one.** A constant equal to a slot number can be an integer, and
 the plain link cannot say. The shifted link moves the table by 20,000 ([splat.md](../splat.md) §3 "Operand kinds"), so

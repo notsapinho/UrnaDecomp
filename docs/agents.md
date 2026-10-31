@@ -38,8 +38,15 @@ The board is a folder **outside** the repository, created for one run; the run's
 ## An agent's turn
 
 A delegated agent that ends its turn reports as finished, whatever is still running. So run a long step in the
-foreground or wait for it, and end a turn only when the stage's post is written. A landing whose turn ended while its
-merge steps ran in the background read as done with nothing committed.
+foreground, and end a turn only when the stage's post is written. A registered background wait does not keep a turn
+alive either: a landing whose turn ended while its merge steps ran in the background read as done with nothing
+committed.
+
+A command the harness's shell parser cannot rule out stops at a permission prompt, and in a delegated agent nobody is
+there to approve it. Such a stall prints nothing, so it reads as an agent that is quiet, and a verifier stalled for two
+hours looks like one that is thinking. Write anything beyond a plain command to a script file with the file tool and
+run it with one short command: no zsh array or `${(@f)…}` expansion, no heredoc chained with other commands, no
+`eval`. A coordinator that sees no post and no new file for a long while asks the agent where it stands.
 
 ## Working in one shared checkout
 
@@ -94,7 +101,9 @@ the next run.
 - **Copy out what the board cites first.** The clean-up check sees tracked and untracked files only, and the worktree's
   ignored `build/out/` goes with it, with every script and log a post names. Copy the worktree's scratch roots to the
   board's `shared/from-<lane>/`, which the coordinator copies between machines, each file of 5 MB or less, and write
-  what stayed out and why in a `SKIPPED.txt` there. Name the new path in your result. Check the copy against the names the
+  what stayed out and why in a `SKIPPED.txt` there. A private clone or `APP` tree under a scratch root is thousands of
+  small files that each pass the limit, and its commit and script make it again: copy its logs and row lists, leave the
+  tree out, and name it in `SKIPPED.txt`. Keep a verifier's logs one level above any tree it makes. Name the new path in your result. Check the copy against the names the
   lane's posts give, relative ones too: a posts' search for `build/out/…` misses `p/run.sh` under "in build/out/<handle>/"
   and still reports nothing unresolved. A script worth keeping past the run belongs in `tools/`.
 - **At a round's end `git worktree list` shows only the main checkout.** Read it before you report the round.
@@ -152,7 +161,11 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   splat check of such a link. To measure one variant object in the whole link (a companion file against an overlay
   header, a source with one more flag), clone the objects with their mtimes (`cp -Rp build/out/app
   build/out/<handle>/app`), replace that one object, and pass the clone as `APP`: `make -n` then counts 0 compiles
-  against the 347 of a fresh `APP` ([facts/workflow.md](reference/facts/workflow.md) §W13).
+  against the 347 of a fresh `APP` ([facts/workflow.md](reference/facts/workflow.md) §W13). A header overlay for the
+  whole link needs `APP_CXXFLAGS` passed too, since `UENUX2_EXTRA` does not reach the roots, and a variant's scan reads
+  the committed symbol file (both §W13). `make` compares times, not paths: an override such as `RHVOICE_DIR=<dir>`
+  over an existing link whose inputs are older relinks nothing, and the census and scan then measure the old link, so
+  delete the two link outputs by name first, or use a private `OUT`.
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
   fragment rebuilds that fragment's companions and `roots_asn1.o`, whose rules name it.
@@ -230,8 +243,11 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - In zsh, pass flag lists as arrays ([facts/tool-traps.md §X3](reference/facts/tool-traps.md)). zsh does not split an
   unquoted `$list` into words, and it expands an unquoted glob in an argument (`--include=*.hpp` fails with "no
   matches found"): quote it. It also reads `:` after a bare parameter as a modifier, so `git show $rev:path` fails
-  with `bad substitution`: write `"${rev}:path"`. And a word that starts with `=` is a command's path: `echo ======`
-  fails with `===== not found` ([facts/workflow.md](reference/facts/workflow.md) §W10).
+  with `bad substitution`: write `"${rev}:path"`; in an unquoted heredoc the same stops after the file was truncated. A
+  word that starts with `=` is a command's path: `echo ======` fails with `===== not found`. `for i in $L` runs once,
+  over the whole list, and `em++ $F` passes the flags as one argument: write `${=L}` and `${=F}`. Each of these ends
+  with no output that reads like a result, so check that a file was written before you count it
+  ([facts/workflow.md](reference/facts/workflow.md) §W10).
 - In an agent's shell, `grep` can be a shell function that prints nothing for a search over the Latin-1 sources, with
   `LC_ALL=C` in front too, and exits as if nothing matched, so a negative from it is no evidence.
   Use `/usr/bin/grep` (or `command grep`) there. Run every text tool of a pipe over those sources or a stub line
