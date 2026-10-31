@@ -16,6 +16,8 @@ CNumeroCPF::CNumeroCPF(const std::string& numeroCPF) : IIdentificadorEleitor(TTi
     }
 }
 
+CNumeroCPF::~CNumeroCPF() = default;
+
 std::string CNumeroCPF::Formatado() const
 {
     std::string numero = GetNumero();

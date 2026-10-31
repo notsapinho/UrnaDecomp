@@ -506,11 +506,6 @@
 // f3509 · 530 B · unmatched · placement: link order · name unknown
 // void f3509(i32) { ... }
 
-// link-order cluster 961 · uses=3 · neighbours' file ecourna/api/security/csha.cpp
-
-// f3517 · 60 B · unmatched · placement: link order · name unknown
-// void f3517(i32) { ... }
-
 // link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
 
 // f3527 · 104 B · unmatched · placement: link order · name unknown

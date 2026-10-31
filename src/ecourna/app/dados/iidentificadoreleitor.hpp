@@ -10,7 +10,7 @@ namespace ecourna::app::dados {
 class IIdentificadorEleitor {
 public:
     IIdentificadorEleitor(TTipoIdentificadorEleitor tipo, const std::string& numero, uebyte tamanho);
-    virtual ~IIdentificadorEleitor() = default;
+    virtual ~IIdentificadorEleitor();
 
     virtual std::string Formatado() const = 0;
 

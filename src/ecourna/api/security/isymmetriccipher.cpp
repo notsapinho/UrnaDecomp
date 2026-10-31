@@ -6,8 +6,8 @@
 
 namespace ecourna::api::security {
 
-CAesKey::~CAesKey() = default;
-
+// (original lines 9-10: content not recovered)
+#line 11
 ISymmetricCipher::ISymmetricCipher(const CAesKey& chave)
     : m_chave(chave)
 {

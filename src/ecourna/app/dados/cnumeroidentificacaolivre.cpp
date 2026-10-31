@@ -18,6 +18,8 @@ CNumeroIdentificacaoLivre::CNumeroIdentificacaoLivre(const std::string& numeroId
     }
 }
 
+CNumeroIdentificacaoLivre::~CNumeroIdentificacaoLivre() = default;
+
 std::string CNumeroIdentificacaoLivre::Formatado() const
 {
     return GetNumero();

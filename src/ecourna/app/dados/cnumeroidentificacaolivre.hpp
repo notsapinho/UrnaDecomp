@@ -5,9 +5,11 @@
 
 namespace ecourna::app::dados {
 
-class CNumeroIdentificacaoLivre : public IIdentificadorEleitor {
+class CNumeroIdentificacaoLivre final : public IIdentificadorEleitor {
 public:
     explicit CNumeroIdentificacaoLivre(const std::string& numero);
+
+    ~CNumeroIdentificacaoLivre() override;
 
     std::string Formatado() const override;
 };
