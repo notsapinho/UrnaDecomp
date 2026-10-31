@@ -2,6 +2,7 @@
 
 #include "api/gui/cinteractiveform.h"
 #include "app/vota/log/clogvota.h"
+#include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 
 namespace vota {
 
@@ -18,6 +19,13 @@ void CJustificativaEfetuada::StartState()
     }
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CJustificativaEfetuada::ProcessInput()
+{
+    if (m_form->Read() == api::INPUT_CONFIRMA) {
+        m_pNextState = &CCancelaHabilitacaoEleitor::GetInst();
+    }
 }
 
 } // namespace vota

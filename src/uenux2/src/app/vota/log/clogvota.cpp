@@ -49,6 +49,44 @@ void CLogVota::LogaTituloInvalidoRegistroMesario()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
 }
 
+// The members from here to LogaJustificativaRecebida: src/units/152-uenux2-app-vota-operador-estados.mk says what each
+// rests on.
+void CLogVota::LogaIndagaEleitorVotando()
+{
+    logaAlerta("Mesário indagado se eleitor está votando");
+}
+
+void CLogVota::LogaPedidoDesconexaoFone()
+{
+    loga("Solicitado ao mesário que desconecte o fone de ouvido");
+}
+
+void CLogVota::LogaPedidoConexaoFone()
+{
+    loga("Solicitado ao mesário que conecte o fone de ouvido");
+}
+
+void CLogVota::LogaHorarioVotacaoTerminou()
+{
+    const std::string mensagem = "Horário de votação terminou";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaInspecaoIniciada()
+{
+    loga("Inspeção da urna iniciada");
+}
+
+void CLogVota::LogaAudioDesativadoFimVotacao()
+{
+    loga("Áudio desativado pelo fim da votação");
+}
+
+void CLogVota::LogaSuspensaoAbortada()
+{
+    loga("Mesário abortou processo de suspensão");
+}
+
 void CLogVota::LogaJustificativaRecebida()
 {
     const std::string mensagem = "Justificativa recebida";

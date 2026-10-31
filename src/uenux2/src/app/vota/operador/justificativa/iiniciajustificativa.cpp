@@ -1,7 +1,16 @@
-// <stubs>
-// f3624 · 92 B · unmatched · name unknown
-// ? f3624(i32, i32) { ... }
+#include "app/vota/operador/justificativa/iiniciajustificativa.h"
 
-// f10587 · 210 B · unmatched · placement: link order · name unknown
-// void f10587(i32) { ... }
-// </stubs>
+#include "app/vota/euevotaerror.h"
+
+namespace vota {
+
+// (original lines 7-23: content not recovered)
+#line 24
+IIniciaJustificativa::IIniciaJustificativa(IConfirmaJustificativa* confirma) : m_confirma(confirma)
+{
+    if (!confirma) {
+        throw CUeVotaError(EUE_VOTA_CONFIRMACAO_JUSTIFICATIVA_NULA, "Confirmação de justificativa nula");
+    }
+}
+
+} // namespace vota

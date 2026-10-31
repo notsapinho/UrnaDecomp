@@ -12,6 +12,9 @@ enum EUeVotaError {
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,
+    // the value is the code vota::IIniciaJustificativa's constructor (target fn 3624) throws; the name is chosen from
+    // its message, "Confirmação de justificativa nula": no evidence names it
+    EUE_VOTA_CONFIRMACAO_JUSTIFICATIVA_NULA = 9396,
     // the values are the codes CInformacaoThreadOperador's four getters throw (target fns 10562, 10561, 10560, 10559);
     // the names are chosen from their messages and their getters, "Identidade não registrada" and "Tipo de identidade
     // não registrado": no evidence names them

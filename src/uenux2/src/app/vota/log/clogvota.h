@@ -27,6 +27,13 @@ public:
     void LogaMesarioJaRegistrado(const std::string& titulo);
     void LogaIndagaRegistroMesarios();
     void LogaTituloInvalidoRegistroMesario();
+    void LogaIndagaEleitorVotando();
+    void LogaPedidoDesconexaoFone();
+    void LogaPedidoConexaoFone();
+    void LogaHorarioVotacaoTerminou();
+    void LogaInspecaoIniciada();
+    void LogaAudioDesativadoFimVotacao();
+    void LogaSuspensaoAbortada();
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
