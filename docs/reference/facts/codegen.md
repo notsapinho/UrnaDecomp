@@ -2,8 +2,9 @@
 
 Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them,
 and what it says of the class that holds a member), what an object's disassembly does not settle and how to compare
-two forms, a switch over virtual members, when a member's body is inlined, and the order of a caller and its callee.
-`docs/how-to-decompile.md` step 3 relies on these;
+two forms, a switch over virtual members, when a member's body is inlined, the order of a caller and its callee, what
+a TU emitted first does to a frame, a constructor call `-fPIC` keeps, `-Oz`'s subtract of 0x100000, and how many copies
+binaryen merges. `docs/how-to-decompile.md` steps 3, 4 and 9 rely on these;
 [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors, linkage). Each probe
 compiles with the uenux2 flags (`-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, `docs/reference/app-flags.md`) in
 the pinned image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the
@@ -344,3 +345,106 @@ on its record's line. Say in the fragment that the order is measured.
 
 The same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals
 swapped, with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
+
+## C5. What a TU emitted first decides an inlined template's stack slots
+
+`CPolySingleton<T>::set` (4879 for `api::ITimerScheduler`, 4890 for `api::ISystemDateTime`) inlines `std::format`,
+whose parts are `always_inline`, and differs from the target in frame offsets alone, while 10876, the same template
+over another class, matches. The source of `set` is not the cause. One line that makes the TU emit `instance()`'s format
+code first, above `GetInst`, gives every frame offset of the target's (at 4487d6b, a variant object in a copy of the
+link, [workflow.md](workflow.md) §W13):
+
+    V=build/out/codegen-facts/frame; mkdir -p $V/src/uenux2/src/api/util $V/obj $V/wasm/f
+    LC_ALL=C sed 's|^#line 18$|template class CPolySingleton<ITimerScheduler>;\n#line 18|' src/uenux2/src/api/util/itimerscheduler.cpp > $V/src/uenux2/src/api/util/itimerscheduler.cpp
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/$V/src/uenux2=/home/rubio/tse/uenux2 -Isrc -Isrc/uenux2/src -Isrc/asn1 -c /work/$V/src/uenux2/src/api/util/itimerscheduler.cpp -o $V/obj/its.o
+    sed -e "s# app/uenux2/src/api/util/itimerscheduler.cpp.o # codegen-facts/frame/obj/its.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o codegen-facts/frame/wasm/f/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $V/wasm/f/link.cmd
+    TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $V/wasm/f/link.cmd)" > $V/wasm/f/link.log 2>&1
+    cd asmlift-wasm
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 4879 ../build/out/wasm/vota_web/vota_web_wasm.wasm 2843 | /usr/bin/grep '^score'
+      score 146 over 895 rows (same 749, replaced 146 [141 operand-only], inserted 0, deleted 0)
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 4879 ../build/out/codegen-facts/frame/wasm/f/vota_web_wasm.wasm 2843 | /usr/bin/grep '^score'
+      score 64 over 895 rows (same 831, replaced 64 [64 operand-only], inserted 0, deleted 0)
+
+The 64 rows left are operands a full link re-points (the variant has no kinds table here); a private link with its own
+kinds re-points both 4879 and 4890 `IDENTICAL`. The line only steers the compiler, so it never lands: the two rows stay
+`differs` until a TU that emits a format body before them holds the instance. Which TU's copy the target keeps, its
+records say: `awk -F'\t' '$2 ~ /cpolysingletonlist.h/ && $3==129 {print $1, $6}' ledger/source-locations.tsv` lists
+4879's record, 1531292, right after 8302's, 1531180, in another object's run. That clang declares a callee at its first
+mention, so that the inlined parts' allocas come in another order, is the reading; the scores are the measurement.
+
+## C6. At `-fPIC` an out-of-line constructor or destructor stays a call in its own TU, and no remark says so
+
+Probe `ctorcall.cpp`:
+
+    // An out-of-line constructor and destructor and their caller, all in one TU.
+    struct T { T(); ~T(); int a[5]; };
+    T::T() : a{1, 2, 3, 4, 5} {}
+    T::~T() { a[0] = 0; }
+    int Use() { T t; return t.a[1]; }
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/codegen-facts; em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Rpass=inline -Rpass-missed=inline -c ctorcall.cpp -o ctorcall-pic.o 2> ctorcall-pic.rpass; em++ -O2 -std=c++20 -DNDEBUG -fno-strict-aliasing -Rpass=inline -Rpass-missed=inline -c ctorcall.cpp -o ctorcall-nopic.o 2> ctorcall-nopic.rpass'
+    /usr/bin/grep -cE '_ZN1T[CD][12]Ev' build/out/codegen-facts/ctorcall-pic.rpass
+      0
+    wasm-objdump -d build/out/codegen-facts/ctorcall-pic.o | /usr/bin/grep -E 'call .*_ZN1T'
+      0000ed: 10 80 80 80 80 00          | call 0 <_ZN1TC1Ev>
+      000100: 10 81 80 80 80 00          | call 1 <_ZN1TD1Ev>
+    /usr/bin/grep -oE "'_ZN1T[CD][12]Ev' inlined into '_Z3Usev' with \(cost=-?[0-9]+, threshold=[0-9]+\)" build/out/codegen-facts/ctorcall-nopic.rpass
+      '_ZN1TC2Ev' inlined into '_Z3Usev' with (cost=-30, threshold=337)
+      '_ZN1TD2Ev' inlined into '_Z3Usev' with (cost=-35, threshold=337)
+
+So at uenux2's flags a constructor or destructor of a cheap body, defined out of line beside its only caller, stays a
+call of C1 or D1, and a caller's reload after it says nothing of the callee's TU. Without `-fPIC` (ecourna's flags) both
+are inlined at a cost below zero. That the call names C1 while the definition is C2, an alias, is what stops clang is a
+reading. binaryen may still inline or remove such a callee in the link.
+
+## C7. `-Oz` turns an add of 0x100000 into a subtract
+
+binaryen at `-Oz` writes `x + 1048576` as `x - (-1048576)`, since the negative constant's LEB is one byte shorter, and
+leaves any other address alone:
+
+    mkdir -p build/out/codegen-facts && printf '(module (memory 1) (func (export "f") (param i32) (result i32) (i32.add (local.get 0) (i32.const 1048576))) (func (export "g") (param i32) (result i32) (i32.add (local.get 0) (i32.const 1048580))))' > build/out/codegen-facts/add.wat
+    TMPDIR=/tmp build/docker-build.sh sh -c '/emsdk/upstream/bin/wasm-opt /work/build/out/codegen-facts/add.wat -Oz -S -o - | grep -E "i32\.(add|sub)|i32\.const"'
+        (i32.sub
+         (i32.const -1048576)
+        (i32.add
+         (i32.const 1048580)
+
+So a data object that one link places at exactly 0x100000 takes the match of every body that adds its address, and the
+row reads `differs` with `i32.const -1048576` on our side. Below 2^20 the positive form is as short, so it is one object
+per link at most. At 4487d6b no row reads so (`awk -F'\t' '$6 ~ /-1048576/' splat/scan.tsv | wc -l` prints 0), and
+`k25519Precomp` lies at 0x108c80 (`/usr/bin/grep -n 'k25519Precomp' build/out/wasm-map/vota_web/vota_web_wasm.map`).
+
+## C8. How many copies `--merge-similar-functions` needs
+
+binaryen merges functions that differ in constants into one shared body only when enough of them share the shape. A
+static pointer's destructor, `N` copies that differ in the address, with a D2 call before the free (`m`) or without
+(`t`):
+
+    mkdir -p build/out/codegen-facts && cat > build/out/codegen-facts/mgfn.py <<'EOF'
+    # N copies of a static pointer's destructor, differing in the address only; "m" calls a D2 before the free, "t" does not.
+    import sys
+    kind, n = sys.argv[1], int(sys.argv[2])
+    d2 = kind == 'm'
+    print('(module')
+    if d2:
+        print(' (import "e" "d2" (func $d2 (param i32) (result i32)))')
+    print(' (import "e" "free" (func $free (param i32)))')
+    print(' (memory 1)')
+    for i in range(n):
+        a = 1000 + 8 * i
+        call = '(drop (call $d2 (local.get 0))) ' if d2 else ''
+        print(f' (func $f{i} (export "f{i}") (param i32)')
+        print(f'  (local.set 0 (i32.load (i32.const {a})))')
+        print(f'  (i32.store (i32.const {a}) (i32.const 0))')
+        print(f'  (if (local.get 0) (then {call}(call $free (local.get 0)))))')
+    print(')')
+    EOF
+    for k in m t; do for n in 2 3 4 5; do python3 -I -B build/out/codegen-facts/mgfn.py $k $n > build/out/codegen-facts/$k$n.wat; done; done
+    TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/codegen-facts; for k in m t; do printf "%s:" $k; for n in 2 3 4 5; do printf " N=%s %s" $n $(/emsdk/upstream/bin/wasm-opt --enable-bulk-memory $k$n.wat --merge-similar-functions -S -o - | grep -c "func .byn.mgfn-shared"); done; echo; done'
+      m: N=2 0 N=3 1 N=4 1 N=5 1
+      t: N=2 0 N=3 0 N=4 1 N=5 1
+
+`m` is fn 389's shape and `t` fn 349's: three copies form 389's shared body and four 349's, and two form neither, so
+two singletons of a kind leave their destructors whole bodies where the target has thunks. A large body can merge from
+two (1565). The members need not be matched; count a target shared body's callers and our link's copies before reading
+its `unresolved` rows.

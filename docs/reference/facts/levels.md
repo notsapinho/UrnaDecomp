@@ -93,6 +93,27 @@ cache's destructor goes into the D2, which is then too costly for the D0. A call
 at cost 225 (unit 78's fragment). So when a body differs in what is inlined, run the remarks first: a cost above the
 threshold at the tree's level says that no source form of the caller changes the decision.
 
+`-O3` has a third threshold, 525, for a call site in a loop, so a callee inlined in a loop and kept as a call outside
+one, beside the same callee, reads as `-O3` (4487d6b):
+
+    TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -Isrc -Isrc/uenux2/src -Isrc/asn1 -Rpass=inline -Rpass-missed=inline -c /work/src/uenux2/src/app/comum/appinfo/cappinfosingleton.cpp -o build/out/levels-probe/cappinfo-O3.o 2>&1 | /usr/bin/grep -oE "CDadoCorrespondenciaD2Ev' inlined into '_ZN5comum8CAppInfoD2Ev' with \(cost=[0-9]+, threshold=[0-9]+\) at callsite [_a-z]+"
+      CDadoCorrespondenciaD2Ev' inlined into '_ZN5comum8CAppInfoD2Ev' with (cost=385, threshold=525) at callsite __destroy_at
+
+A loop held twice, one copy for each value of a test that does not change inside it, is loop unswitching, which LLVM
+runs at `-O3` only and no inlining remark prints. Probe `unswitch.cpp`:
+
+    // A test that does not change inside the loop, with a call in each arm so that no select can replace it.
+    int a(int); int b(int);
+    int Soma(int n, bool escolha) { int s = 0; for (int i = 0; i < n; ++i) { if (escolha) s += a(i); else s += b(i); s ^= i; } return s; }
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/levels-probe; for l in O2 O3; do em++ -$l -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c unswitch.cpp -o unswitch-$l.o; done'
+    for l in O2 O3; do printf '%s: ' $l; wasm-objdump -d build/out/levels-probe/unswitch-$l.o | /usr/bin/grep -cE '\| +loop'; done
+      O2: 1
+      O3: 2
+
+426 (`AddField`), whose target holds one compare loop twice, chosen by a string's `__is_long()`, is this case, and it
+stays written and `differs` at the tree's `-O2` (unit 31's fragment).
+
 ## V3. uenux2 at `-O3 -std=c++23`: every match verifies, and sites under both `mock/` and `src/` need the level
 
 Evidence for a decision about uenux2's flags. They stay `-O2 -std=c++20` ([app-flags.md](app-flags.md) §F6), since a
