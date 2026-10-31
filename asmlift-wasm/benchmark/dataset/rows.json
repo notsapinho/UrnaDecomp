@@ -78,7 +78,34 @@
     "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp.o",
     "reference": {
       "path": "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp",
-      "line": 28
+      "line": 37
+    }
+  },
+  {
+    "id": "uenux2/9523",
+    "index": 9523,
+    "size": 38,
+    "band": "small",
+    "component": "simulador",
+    "owner": "boost",
+    "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "simulador::CWasmWebSound::Wait(std::__2::function<bool ()>)",
+    "symbol": "_ZN9simulador13CWasmWebSound4WaitENSt3__28functionIFbvEEE",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp.o",
+    "reference": {
+      "path": "src/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp",
+      "line": 136
     }
   },
   {
@@ -172,6 +199,35 @@
     "reference": null
   },
   {
+    "id": "uenux2/10946",
+    "index": 10946,
+    "size": 74,
+    "band": "small",
+    "component": "api",
+    "owner": "app",
+    "features": [
+      "call_indirect",
+      "frame",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "api::CTextFieldBlinking::Draw(api::IScreen&) const",
+    "symbol": "_ZNK3api18CTextFieldBlinking4DrawERNS_7IScreenE",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/gui/ctextfieldblinking.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/gui/ctextfieldblinking.cpp",
+      "line": 53
+    }
+  },
+  {
     "id": "uenux2/10949",
     "index": 10949,
     "size": 160,
@@ -228,34 +284,6 @@
     }
   },
   {
-    "id": "uenux2/11067",
-    "index": 11067,
-    "size": 86,
-    "band": "small",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "select"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CLineField::Rect() const",
-    "symbol": "_ZNK3api10CLineField4RectEv",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/gui/clinefield.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/gui/clinefield.cpp",
-      "line": 24
-    }
-  },
-  {
     "id": "uenux2/11270",
     "index": 11270,
     "size": 571,
@@ -295,32 +323,6 @@
       "inlined-frame",
       "i64",
       "bulk-memory"
-    ],
-    "ledger": {
-      "kind": "none",
-      "score": null
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": null,
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
-    "reference": null
-  },
-  {
-    "id": "uenux2/11668",
-    "index": 11668,
-    "size": 106,
-    "band": "small",
-    "component": "comum",
-    "owner": "app",
-    "features": [
-      "call_indirect",
-      "frame",
-      "select"
     ],
     "ledger": {
       "kind": "none",
@@ -446,31 +448,32 @@
     }
   },
   {
-    "id": "ecourna/9112",
-    "index": 9112,
-    "size": 613,
+    "id": "ecourna/9117",
+    "index": 9117,
+    "size": 1268,
     "band": "large",
     "component": "ecourna",
     "owner": "app",
     "features": [
-      "call_indirect",
+      "switch",
       "invoke",
       "throw",
       "frame",
-      "i64"
+      "i64",
+      "select"
     ],
     "ledger": {
       "kind": "addr",
-      "score": 20
+      "score": 73
     },
     "origin": "selected",
     "setup": "ecourna",
     "lang": "c++",
     "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "ecourna::app::dados::asn::CConversorRegistroIdentificacaoEleitor::DoDeconverte(ModuloTiposEcoUrna::RegistroIdentificacaoEleitor const&) const",
-    "symbol": "_ZNK7ecourna3app5dados3asn38CConversorRegistroIdentificacaoEleitor12DoDeconverteERKN18ModuloTiposEcoUrna28RegistroIdentificacaoEleitorE",
+    "name": "ecourna::app::dados::asn::CConversorIdentificadorEleitor::DoConverte(ecourna::app::dados::CIdentificadorEleitor const&) const",
+    "symbol": "_ZNK7ecourna3app5dados3asn30CConversorIdentificadorEleitor10DoConverteERKNS1_21CIdentificadorEleitorE",
     "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_asn_cconversorregistroidentificacaoeleitor.cpp.o",
+    "object": "build/out/app/ecourna/app_dados_asn_cconversoridentificadoreleitor.cpp.o",
     "reference": null
   },
   {
@@ -626,15 +629,14 @@
     "reference": null
   },
   {
-    "id": "ecourna/14295",
-    "index": 14295,
+    "id": "ecourna/14153",
+    "index": 14153,
     "size": 104,
     "band": "small",
     "component": "libc++",
     "owner": "libcxx",
     "features": [
-      "leaf",
-      "switch"
+      "call_indirect"
     ],
     "ledger": {
       "kind": "byte",
@@ -644,8 +646,8 @@
     "setup": "ecourna",
     "lang": "c++",
     "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "std::__2::__r_anchor_multiline<char>::__exec(std::__2::__state<char>&) const",
-    "symbol": "_ZNKSt3__220__r_anchor_multilineIcE6__execERNS_7__stateIcEE",
+    "name": "std::__2::__match_char_icase<char, std::__2::regex_traits<char>>::__exec(std::__2::__state<char>&) const",
+    "symbol": "_ZNKSt3__218__match_char_icaseIcNS_12regex_traitsIcEEE6__execERNS_7__stateIcEE",
     "evidence": "symbol",
     "object": "build/out/app/ecourna/api_compression_icompressor.cpp.o",
     "reference": null
@@ -674,7 +676,7 @@
     "object": "build/out/app/asn1/asn1.o",
     "reference": {
       "path": "src/asn1/asn1.cxx",
-      "line": 1263
+      "line": 1292
     }
   },
   {
@@ -732,34 +734,6 @@
     }
   },
   {
-    "id": "asn1/2187",
-    "index": 2187,
-    "size": 133,
-    "band": "medium",
-    "component": "ASN1",
-    "owner": "asn1",
-    "features": [
-      "call_indirect",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "asn1",
-    "lang": "c++",
-    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::CHOICE::createSelection()",
-    "symbol": "_ZN4ASN16CHOICE15createSelectionEv",
-    "evidence": "symbol",
-    "object": "build/out/app/asn1/asn1.o",
-    "reference": {
-      "path": "src/asn1/asn1.cxx",
-      "line": 1301
-    }
-  },
-  {
     "id": "asn1/2191",
     "index": 2191,
     "size": 97,
@@ -785,32 +759,34 @@
     "object": "build/out/app/asn1/asn1.o",
     "reference": {
       "path": "src/asn1/asn1.cxx",
-      "line": 1618
+      "line": 1647
     }
   },
   {
-    "id": "asn1/5051",
-    "index": 5051,
-    "size": 95,
+    "id": "asn1/8753",
+    "index": 8753,
+    "size": 51,
     "band": "small",
     "component": "ASN1",
     "owner": "asn1",
     "features": [
-      "i64"
+      "leaf"
     ],
     "ledger": {
-      "kind": "addr",
-      "score": 1
+      "kind": "byte",
+      "score": 0
     },
     "origin": "selected",
     "setup": "asn1",
     "lang": "c++",
     "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
-    "name": "ASN1::BERDecoderPartial::Visitante::Visitante(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::shared_ptr<ASN1::IAbstractVisitor> const&)",
-    "symbol": "_ZN4ASN117BERDecoderPartial9VisitanteC2ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS2_10shared_ptrINS_16IAbstractVisitorEEE",
+    "name": "ASN1::DataFree::do_visit(ASN1::AbstractString&)",
+    "symbol": "_ZN4ASN18DataFree8do_visitERNS_14AbstractStringE",
     "evidence": "symbol",
-    "object": "build/out/app/asn1/BERDecoderPartial.o",
-    "reference": null
+    "object": "build/out/app/asn1/DataFree.o",
+    "reference": {
+      "path": "src/asn1/DataFree.cxx"
+    }
   },
   {
     "id": "asn1/8755",
@@ -837,6 +813,34 @@
     "reference": {
       "path": "src/asn1/DataFree.cxx"
     }
+  },
+  {
+    "id": "asn1/8812",
+    "index": 8812,
+    "size": 393,
+    "band": "medium",
+    "component": "ASN1",
+    "owner": "asn1",
+    "features": [
+      "call_indirect",
+      "frame",
+      "inlined-frame",
+      "i64",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 4
+    },
+    "origin": "selected",
+    "setup": "asn1",
+    "lang": "c++",
+    "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
+    "name": "ASN1::PERDecoder::do_visit(ASN1::CHOICE&)",
+    "symbol": "_ZN4ASN110PERDecoder8do_visitERNS_6CHOICEE",
+    "evidence": "symbol",
+    "object": "build/out/app/asn1/PERDecoder.o",
+    "reference": null
   },
   {
     "id": "asn1/8815",
@@ -942,8 +946,8 @@
     }
   },
   {
-    "id": "asn1/9972",
-    "index": 9972,
+    "id": "asn1/9973",
+    "index": 9973,
     "size": 17,
     "band": "tiny",
     "component": "libc++",
@@ -2338,33 +2342,6 @@
     }
   },
   {
-    "id": "rhvoice/394",
-    "index": 394,
-    "size": 123,
-    "band": "small",
-    "component": "RHVoice",
-    "owner": "rhvoice",
-    "features": [
-      "frame"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 8
-    },
-    "origin": "selected",
-    "setup": "rhvoice",
-    "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
-    "name": "HTS_error",
-    "symbol": "HTS_error",
-    "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_misc.c.o",
-    "reference": {
-      "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
-      "line": 601
-    }
-  },
-  {
     "id": "rhvoice/755",
     "index": 755,
     "size": 198,
@@ -2382,40 +2359,15 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_get_token_from_string_with_separator",
     "symbol": "HTS_get_token_from_string_with_separator",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_misc.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_misc.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
       "line": 496
     }
-  },
-  {
-    "id": "rhvoice/902",
-    "index": 902,
-    "size": 16,
-    "band": "tiny",
-    "component": "RHVoice",
-    "owner": "libcxx",
-    "features": [
-      "leaf",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "rhvoice",
-    "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG",
-    "name": "RHVoice::language_info::get_country() const",
-    "symbol": "_ZNK7RHVoice13language_info11get_countryEv",
-    "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/esperanto.cpp.o",
-    "reference": null
   },
   {
     "id": "rhvoice/1069",
@@ -2435,43 +2387,41 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_get_pattern_token",
     "symbol": "HTS_get_pattern_token",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_misc.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_misc.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
       "line": 352
     }
   },
   {
-    "id": "rhvoice/1680",
-    "index": 1680,
-    "size": 312,
+    "id": "rhvoice/1252",
+    "index": 1252,
+    "size": 183,
     "band": "medium",
-    "component": "RHVoice",
+    "component": "unknown",
     "owner": "rhvoice",
     "features": [
-      "switch",
-      "bulk-memory"
+      "call_indirect",
+      "frame",
+      "i64"
     ],
     "ledger": {
-      "kind": "addr",
-      "score": 19
+      "kind": "fingerprint",
+      "score": 0
     },
     "origin": "selected",
     "setup": "rhvoice",
-    "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
-    "name": "HTS_fopen_from_fp",
-    "symbol": "HTS_fopen_from_fp",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "RHVoice::resource_info<RHVoice::language>::get_instance() const",
+    "symbol": "_ZNK7RHVoice13resource_infoINS_8languageEE12get_instanceEv",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_misc.c.o",
-    "reference": {
-      "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
-      "line": 117
-    }
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/document.cpp.o",
+    "reference": null
   },
   {
     "id": "rhvoice/2697",
@@ -2492,43 +2442,42 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_Label_get_parsed",
     "symbol": "HTS_Label_get_parsed",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_label.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_label.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_label.c",
       "line": 250
     }
   },
   {
-    "id": "rhvoice/3544",
-    "index": 3544,
-    "size": 211,
+    "id": "rhvoice/2701",
+    "index": 2701,
+    "size": 136,
     "band": "medium",
     "component": "RHVoice",
     "owner": "rhvoice",
     "features": [
-      "leaf",
       "loop",
-      "switch"
+      "bulk-memory"
     ],
     "ledger": {
-      "kind": "byte",
-      "score": 0
+      "kind": "addr",
+      "score": 6
     },
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
-    "name": "HTS_get_token_from_string",
-    "symbol": "HTS_get_token_from_string",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "HTS_alloc_matrix",
+    "symbol": "HTS_alloc_matrix",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_misc.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_misc.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_misc.c",
-      "line": 470
+      "line": 575
     }
   },
   {
@@ -2549,11 +2498,11 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_Engine_set_fperiod",
     "symbol": "HTS_Engine_set_fperiod",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_engine.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_engine.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_engine.c",
       "line": 207
@@ -2576,11 +2525,11 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_SStreamSet_get_gv_switch",
     "symbol": "HTS_SStreamSet_get_gv_switch",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_sstream.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_sstream.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_sstream.c",
       "line": 519
@@ -2604,14 +2553,42 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "HTS_SStreamSet_get_vari",
     "symbol": "HTS_SStreamSet_get_vari",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_sstream.c.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_sstream.c.o",
     "reference": {
       "path": "third_party/RHVoice/src/hts_engine/HTS_sstream.c",
       "line": 489
+    }
+  },
+  {
+    "id": "rhvoice/5247",
+    "index": 5247,
+    "size": 58,
+    "band": "small",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "rhvoice",
+    "lang": "c",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "HTS_ModelSet_initialize",
+    "symbol": "HTS_ModelSet_initialize",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/HTS_model.c.o",
+    "reference": {
+      "path": "third_party/RHVoice/src/hts_engine/HTS_model.c",
+      "line": 829
     }
   },
   {
@@ -2632,14 +2609,39 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "RHVoice::(anonymous namespace)::notifier::on_finished()",
     "symbol": "_ZN7RHVoice12_GLOBAL__N_18notifier11on_finishedEv",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/hts_engine_call.cpp.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/hts_engine_call.cpp.o",
     "reference": {
       "path": "third_party/RHVoice/src/core/hts_engine_call.cpp"
     }
+  },
+  {
+    "id": "rhvoice/9630",
+    "index": 9630,
+    "size": 20,
+    "band": "tiny",
+    "component": "RHVoice",
+    "owner": "rhvoice",
+    "features": [
+      "leaf",
+      "float"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "rhvoice",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+    "name": "RHVoice::speech_processor::get_desired_input_size() const",
+    "symbol": "_ZNK7RHVoice16speech_processor22get_desired_input_sizeEv",
+    "evidence": "symbol",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/hts_engine_call.cpp.o",
+    "reference": null
   },
   {
     "id": "rhvoice/10196",
@@ -2658,11 +2660,11 @@
     "origin": "selected",
     "setup": "rhvoice",
     "lang": "c++",
-    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG",
+    "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
     "name": "RHVoice::sentence::append_token::set_eos()",
     "symbol": "_ZN7RHVoice8sentence12append_token7set_eosEv",
     "evidence": "symbol",
-    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/obj/document.cpp.o",
+    "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/document.cpp.o",
     "reference": {
       "path": "third_party/RHVoice/src/core/document.cpp"
     }
@@ -4046,34 +4048,6 @@
     }
   },
   {
-    "id": "libcxx/2561",
-    "index": 2561,
-    "size": 539,
-    "band": "large",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "switch",
-      "frame",
-      "select"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxx",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -DLIBCXX_BUILDING_LIBCXXABI=1 -D_LIBCPP_BUILDING_LIBRARY -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -std=c++23 -DLIBC_NAMESPACE=__llvm_libc -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0",
-    "name": "std::__2::__num_get<char>::__stage2_float_loop(char, bool&, char&, char*, char*&, char, char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned int*, unsigned int*&, unsigned int&, char*)",
-    "symbol": "_ZNSt3__29__num_getIcE19__stage2_float_loopEcRbRcPcRS4_ccRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPjRSE_RjS4_",
-    "evidence": "symbol",
-    "object": "emsdk:libc++.a:locale.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxx/src/locale.cpp"
-    }
-  },
-  {
     "id": "libcxx/2566",
     "index": 2566,
     "size": 49,
@@ -4215,6 +4189,36 @@
     }
   },
   {
+    "id": "libcxx/7870",
+    "index": 7870,
+    "size": 925,
+    "band": "large",
+    "component": "unknown",
+    "owner": "libcxx",
+    "features": [
+      "loop",
+      "switch",
+      "call_indirect",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libcxx",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -DLIBCXX_BUILDING_LIBCXXABI=1 -D_LIBCPP_BUILDING_LIBRARY -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -std=c++23 -DLIBC_NAMESPACE=__llvm_libc -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0",
+    "name": "std::__2::__money_put<wchar_t>::__format(wchar_t*, wchar_t*&, wchar_t*&, unsigned int, wchar_t const*, wchar_t const*, std::__2::ctype<wchar_t> const&, bool, std::__2::money_base::pattern const&, wchar_t, wchar_t, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>> const&, std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>> const&, int)",
+    "symbol": "_ZNSt3__211__money_putIwE8__formatEPwRS2_S3_jPKwS5_RKNS_5ctypeIwEEbRKNS_10money_base7patternEwwRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKNSE_IwNSF_IwEENSH_IwEEEESQ_i",
+    "evidence": "symbol",
+    "object": "emsdk:libc++.a:locale.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxx/src/locale.cpp"
+    }
+  },
+  {
     "id": "libcxx/7882",
     "index": 7882,
     "size": 3602,
@@ -4330,17 +4334,45 @@
     "reference": null
   },
   {
-    "id": "libcxxabi/188",
-    "index": 188,
-    "size": 405,
-    "band": "medium",
-    "component": "unknown",
-    "owner": "-",
+    "id": "libcxxabi/544",
+    "index": 544,
+    "size": 5354,
+    "band": "huge",
+    "component": "libc++abi",
+    "owner": "libcxx",
     "features": [
+      "loop",
       "switch",
-      "call_indirect",
+      "frame",
+      "inlined-frame",
       "i64",
       "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 222
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "(anonymous namespace)::itanium_demangle::AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator>::parseType()",
+    "symbol": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E9parseTypeEv",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
+    }
+  },
+  {
+    "id": "libcxxabi/1567",
+    "index": 1567,
+    "size": 39,
+    "band": "small",
+    "component": "libc++abi",
+    "owner": "libcxx",
+    "features": [
+      "call_indirect"
     ],
     "ledger": {
       "kind": "byte",
@@ -4350,12 +4382,38 @@
     "setup": "libcxxabi",
     "lang": "c++",
     "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__dynamic_cast",
-    "symbol": "__dynamic_cast",
+    "name": "(anonymous namespace)::itanium_demangle::Node::hasArray((anonymous namespace)::itanium_demangle::OutputBuffer&) const",
+    "symbol": "_ZNK12_GLOBAL__N_116itanium_demangle4Node8hasArrayERNS0_12OutputBufferE",
     "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
     "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
+    }
+  },
+  {
+    "id": "libcxxabi/1971",
+    "index": 1971,
+    "size": 39,
+    "band": "small",
+    "component": "libc++abi",
+    "owner": "libcxx",
+    "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "(anonymous namespace)::itanium_demangle::Node::hasRHSComponent((anonymous namespace)::itanium_demangle::OutputBuffer&) const",
+    "symbol": "_ZNK12_GLOBAL__N_116itanium_demangle4Node15hasRHSComponentERNS0_12OutputBufferE",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
     }
   },
   {
@@ -4386,132 +4444,66 @@
     }
   },
   {
-    "id": "libcxxabi/2930",
-    "index": 2930,
-    "size": 160,
-    "band": "medium",
-    "component": "unknown",
+    "id": "libcxxabi/2942",
+    "index": 2942,
+    "size": 3703,
+    "band": "huge",
+    "component": "libc++abi",
     "owner": "libcxx",
     "features": [
-      "invoke"
+      "loop",
+      "switch",
+      "invoke",
+      "throw",
+      "frame",
+      "i64",
+      "select"
     ],
     "ledger": {
       "kind": "addr",
-      "score": 15
+      "score": 188
     },
     "origin": "selected",
     "setup": "libcxxabi",
     "lang": "c++",
     "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "std::terminate()",
-    "symbol": "_ZSt9terminatev",
+    "name": "(anonymous namespace)::itanium_demangle::AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator>::parseEncoding(bool)",
+    "symbol": "_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E13parseEncodingEb",
     "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:cxa_handlers.o",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
     "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_handlers.cpp"
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
     }
   },
   {
-    "id": "libcxxabi/3947",
-    "index": 3947,
-    "size": 154,
+    "id": "libcxxabi/6184",
+    "index": 6184,
+    "size": 386,
     "band": "medium",
-    "component": "libc++",
+    "component": "libc++abi",
     "owner": "libcxx",
     "features": [
-      "leaf"
+      "loop",
+      "switch",
+      "invoke",
+      "throw",
+      "frame",
+      "i64"
     ],
     "ledger": {
-      "kind": "byte",
-      "score": 0
+      "kind": "addr",
+      "score": 13
     },
     "origin": "selected",
     "setup": "libcxxabi",
     "lang": "c++",
     "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__class_type_info::process_static_type_above_dst(__cxxabiv1::__dynamic_cast_info*, void const*, void const*, int) const",
-    "symbol": "_ZNK10__cxxabiv117__class_type_info29process_static_type_above_dstEPNS_19__dynamic_cast_infoEPKvS4_i",
+    "name": "(anonymous namespace)::itanium_demangle::ParameterPackExpansion::printLeft((anonymous namespace)::itanium_demangle::OutputBuffer&) const",
+    "symbol": "_ZNK12_GLOBAL__N_116itanium_demangle22ParameterPackExpansion9printLeftERNS0_12OutputBufferE",
     "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
     "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
-    }
-  },
-  {
-    "id": "libcxxabi/3948",
-    "index": 3948,
-    "size": 118,
-    "band": "small",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__class_type_info::process_found_base_class(__cxxabiv1::__dynamic_cast_info*, void*, int) const",
-    "symbol": "_ZNK10__cxxabiv117__class_type_info24process_found_base_classEPNS_19__dynamic_cast_infoEPvi",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
-    }
-  },
-  {
-    "id": "libcxxabi/12128",
-    "index": 12128,
-    "size": 67,
-    "band": "small",
-    "component": "unknown",
-    "owner": "app",
-    "features": [
-      "call_indirect",
-      "frame"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxa_can_catch",
-    "symbol": "__cxa_can_catch",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
-    }
-  },
-  {
-    "id": "libcxxabi/12129",
-    "index": 12129,
-    "size": 28,
-    "band": "tiny",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__class_type_info::search_above_dst(__cxxabiv1::__dynamic_cast_info*, void const*, void const*, int, bool) const",
-    "symbol": "_ZNK10__cxxabiv117__class_type_info16search_above_dstEPNS_19__dynamic_cast_infoEPKvS4_ib",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
     }
   },
   {
@@ -4542,85 +4534,6 @@
     }
   },
   {
-    "id": "libcxxabi/12136",
-    "index": 12136,
-    "size": 660,
-    "band": "large",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "loop",
-      "call_indirect",
-      "bulk-memory",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 24
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__pointer_type_info::can_catch(__cxxabiv1::__shim_type_info const*, void*&) const",
-    "symbol": "_ZNK10__cxxabiv119__pointer_type_info9can_catchEPKNS_16__shim_type_infoERPv",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
-    }
-  },
-  {
-    "id": "libcxxabi/12139",
-    "index": 12139,
-    "size": 28,
-    "band": "tiny",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__class_type_info::has_unambiguous_public_base(__cxxabiv1::__dynamic_cast_info*, void*, int) const",
-    "symbol": "_ZNK10__cxxabiv117__class_type_info27has_unambiguous_public_baseEPNS_19__dynamic_cast_infoEPvi",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
-    }
-  },
-  {
-    "id": "libcxxabi/12141",
-    "index": 12141,
-    "size": 13,
-    "band": "tiny",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "libcxxabi",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
-    "name": "__cxxabiv1::__fundamental_type_info::can_catch(__cxxabiv1::__shim_type_info const*, void*&) const",
-    "symbol": "_ZNK10__cxxabiv123__fundamental_type_info9can_catchEPKNS_16__shim_type_infoERPv",
-    "evidence": "symbol",
-    "object": "emsdk:libc++abi.a:private_typeinfo.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/private_typeinfo.cpp"
-    }
-  },
-  {
     "id": "libcxxabi/12144",
     "index": 12144,
     "size": 25,
@@ -4644,6 +4557,120 @@
     "object": "emsdk:libc++abi.a:cxa_exception_emscripten.o",
     "reference": {
       "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_exception_emscripten.cpp"
+    }
+  },
+  {
+    "id": "libcxxabi/12147",
+    "index": 12147,
+    "size": 587,
+    "band": "large",
+    "component": "libc++abi",
+    "owner": "libcxx",
+    "features": [
+      "loop",
+      "invoke",
+      "throw",
+      "i64",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 14
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "(anonymous namespace)::itanium_demangle::ReferenceType::collapse((anonymous namespace)::itanium_demangle::OutputBuffer&) const",
+    "symbol": "_ZNK12_GLOBAL__N_116itanium_demangle13ReferenceType8collapseERNS0_12OutputBufferE",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
+    }
+  },
+  {
+    "id": "libcxxabi/12234",
+    "index": 12234,
+    "size": 230,
+    "band": "medium",
+    "component": "libc++abi",
+    "owner": "libcxx",
+    "features": [
+      "loop",
+      "i64",
+      "float",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 2
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "(anonymous namespace)::itanium_demangle::FloatLiteralImpl<float>::printLeft((anonymous namespace)::itanium_demangle::OutputBuffer&) const",
+    "symbol": "_ZNK12_GLOBAL__N_116itanium_demangle16FloatLiteralImplIfE9printLeftERNS0_12OutputBufferE",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
+    }
+  },
+  {
+    "id": "libcxxabi/12262",
+    "index": 12262,
+    "size": 12,
+    "band": "tiny",
+    "component": "libc++abi",
+    "owner": "libcxx",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "(anonymous namespace)::itanium_demangle::NameType::getBaseName() const",
+    "symbol": "_ZNK12_GLOBAL__N_116itanium_demangle8NameType11getBaseNameEv",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
+    }
+  },
+  {
+    "id": "libcxxabi/12265",
+    "index": 12265,
+    "size": 9,
+    "band": "tiny",
+    "component": "libc++abi",
+    "owner": "libcxx",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libcxxabi",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -D_LIBCXXABI_USE_FUTEX -D_LIBCPP_BUILDING_LIBRARY -D_LIBCXXABI_BUILDING_LIBRARY -DLIBCXXABI_NON_DEMANGLING_TERMINATE -std=c++23 -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0 -D_LIBCXXABI_HAS_NO_THREADS -D__EMSCRIPTEN_EXCEPTIONS__ -DLIBCXXABI_SILENT_TERMINATE",
+    "name": "(anonymous namespace)::itanium_demangle::Node::getBaseName() const",
+    "symbol": "_ZNK12_GLOBAL__N_116itanium_demangle4Node11getBaseNameEv",
+    "evidence": "symbol",
+    "object": "emsdk:libc++abi.a:cxa_demangle.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxxabi/src/cxa_demangle.cpp"
     }
   }
 ]
