@@ -301,7 +301,7 @@ beside the matched one is not reported (`docs/reference/splat.md` "Reviewing a m
 ## S8. What every landing changes besides its matches
 
 `make -C src splat-symbols` and the scan re-pick some names and pairs at every landing, whatever the unit adds. None
-of it is evidence from the unit, and none of it loses a match. The function lines of the symbol file each landing of
+of it is evidence from the unit, and only the last kind below can cost a match. The function lines of the symbol file each landing of
 `main` changed, leaving out the indices it matched:
 
 ```sh
@@ -342,6 +342,13 @@ nothing), four kinds of line:
    # 6fc7107 1
    # 1a6f1e2 0
    ```
+
+   The name's owner can lose any line, not only a `vtable` one, and lines voted `by:` that owner go with it: at 25a3a0e
+   7530 took `CCipheredOut`'s C2, 9466 lost its `srcloc-anchor` line and 9470 its `table by:9466` one, and both rows
+   moved `differs` to `no-candidate`. The stray vote can take a matched name out of the file: on a link where `"}"` lay
+   on a slot of the shared empty function, seventeen right votes for 218 lost to one for 7530, and at bb97df6 84 call
+   votes for 256 lost to one table vote for 615. The match stands, because a scan applies the match list. A command that
+   reads the symbol file alone (`splat-remap`, a test) then says `has no target function`.
 2. **A matched function's `pair-*` line that drops out and comes back.** Each landing from 1c3d9f9 on removes the line
    of one matched SQLite function and restores the one the landing before removed: 12427 `rankValueFunc`, then 12432,
    12443, 12447, 12288, 12466, 12479, 12485, 12492, 12500 and 12510 `statInit`, which 9127880 restores. The match lines
@@ -380,6 +387,24 @@ python3 -I -c "import json; print([e['functions'][:2] for e in json.load(open('l
 ```
 
 So a reviewer reads the lines a range drops for matched indices too, not only the ones it gains.
+
+A sixth kind involves no vote: **a `srcloc-anchor` line lost to a round address.** `srclocAnchors` keeps a record only when
+one function of ours holds its address as an `i32.const`. At 04b1599 `cfederacao.cpp`'s record 29:15 lay at 262144, an integer
+18 other functions hold, so it anchored nothing: 9047 lost its line, and 9046 its `table by:9047`. Both stayed matched, and
+the next landing that moved the data brought them back, so do not pin a record's place to bring such a line back. To
+check, count the functions of ours that hold the address:
+
+```sh
+wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk '/ func\[[0-9]+\]/ {f=$2} / i32\.const 262144$/ {print f}' | sort -u | wc -l
+# 18     (at 0b5f410, where no record lies on it; one more makes the 19 of 04b1599)
+```
+
+A seventh can cost matches: **a stronger pair demotes a name.** An anchor casts votes only while nothing else names its
+function, and casts no data votes; a pair casts data votes. Matching 181 made 9075, 9086, 9110 and 9114 census pairs, and
+`splat-match` then stopped on `matched.txt only: [8979, 9074, 9083, 9108, 9111]`, with none of those bodies changed. 9108
+and 9113 went from `srcloc-anchor` to `table`: `theInfo` got `vote:1` by its only reader, which is self-voted, and 9113
+stopped casting the votes that named `CHOICE::isValid` (1068). `git diff splat/symbol_addrs.txt` shows each change of
+evidence. A name with evidence of its own brings the rows back: a named callee, or a hand edit.
 
 Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- splat/symbol_addrs.txt | /usr/bin/grep
 -E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses).
@@ -459,10 +484,10 @@ object's alignment (`contentAlignment`):
 
 Some matches rest on how the whole link comes out, not on a source of the range that matched them. A landing can
 take them away without touching their sources, and how-to step 10's `comm` then reports them lost. So a landing checks
-these sixteen after its step 9, and stops if one left `match`:
+these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 14072 14073 14241 14242", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -519,7 +544,32 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    `iimpressorarelatorios.cpp` before `eueprintererror.cpp` in the fragment's list and differs in its locals the other
    way (`src/units/README.md` "Names").
 4. **7722, by the scan's content pass (§S11).** No symbol-file line names it: `/usr/bin/grep -c '= func:7722;'
-   splat/symbol_addrs.txt` prints 0, so its match line alone does.
+   splat/symbol_addrs.txt` prints 0, so its match line alone does. 7282 and 7283, `ossl_dhx_pkey_method` and
+   `ossl_dh_pkey_method`, are the same: the content pass found them by `address content-repointed`, and each loads a table
+   whose first word is its `EVP_PKEY` number (920 at 1652612, 28 at 1652480; `evp.h`, `obj_mac.h`).
+5. **480, 1715 and 2260, thunks of 710.** Each is `f710(p0, p1, p2, p3, <vptr>)`, so each needs unit 94's constructor,
+   which forms 710, and throws of its own enum in the same link: 480 unit 95's `EUeComumError`, 1715 and 2260 units 66's
+   and 91's. No lane had both, so each came at a merge. The vptr is the class's address point in `ledger/vtables.json`.
+   1715's name is the `rtti-vptr` hand edit; 2260's is `evidence:call by:11471,11472`.
+6. **9046 and 9047, `CBaseError<EDadosFederacoesError>`'s thunk and `CFederacao`'s constructor.** Their lines depend on
+   where our record lands (§S8, the sixth kind), and their match lines hold them meanwhile.
+7. **1497, `string`'s substring constructor, by unit 100's roots.** The 16 instances are the other callers of 403, so
+   binaryen keeps 403 out of line. With the roots reaching nothing, 1497 holds 403 inline, 193 B against the target's 71.
+8. **543, 2656 and 5066, by a twin and a hand edit.** 543's match line names `vector<long>` by link order: `roots_boost.o`'s
+   body merges with `FillPath`'s and `DrawPath`'s `vector<int>` (§A5 of [asn1.md](asn1.md)). 2656 and 5066 call
+   `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand edit keeps on 543. That twin goes if uenux2
+   moves to `-O3`.
+9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
+   `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
+10. **252, by an `extern template`.** It is matched from `libc++.a` while the first definer is the roots file, which
+    declares it `extern template` (`src/units/README.md` "Companion files"). The first real uenux2 TU that instantiates
+    `std::operator+(string&&, string&&)` takes it.
+11. **14072, 14073, 14241 and 14242, by their corrected names (§S11).** Step 9 can swap the two pairs, since no name of the
+    symbol file disagrees, and the check above cannot see a swap: each name's prefix must agree with its neighbours.
+
+    ```sh
+    awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ {print $1, $2}' splat/scan.tsv     # prints nothing
+    ```
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -632,5 +682,13 @@ LC_ALL=C awk -F'\t' 'NR>1 && $1>=1538968-48 && $1<=1538968+48 {f=$2; sub(/.*\//,
 
 `test/splat-symbols.test.ts`, "a source_location record the target holds more than once", pins all of this whichever
 keys our link holds: it copies target 700's record over another in a copy of the target's image, and the ledger's rows
-read that image. Our link at b7fcb05 holds 342 records and none is such a key, so this rule moved no line of
-`splat/symbol_addrs.txt` or `splat/scan.tsv` there.
+read that image. The no-anchor case copies it above the body's own record, so a rule that anchored a first place would
+fail it. On our link the rule is live through unit 92: 6319 and 11024 match, `awk -F'\t' '$1==6319 || $1==11024 {print $1,
+$5}' splat/scan.tsv`.
+
+What the target holds around such records: 98 target functions load one of the 106 addresses, each key's copies are the
+same 16 bytes, and no aligned word of its data points at one, so a landing that adds such a pointer is not the target's
+object. 84 of the 98 differ elsewhere as well (6319 and 11024 at byte 279, `offset=36` against `44`). The other 14, in 5
+groups of 12 or 14 B, are byte-equal but for the record's address, key `cinteractiveform.h` 57:25: 10342=10347=10352,
+10493=10641, 10496=10504=10508, 10598=10601, 10604=10667=10709=10757. Each is slot 7 of its own class's vtable, and only
+that slot can name it.

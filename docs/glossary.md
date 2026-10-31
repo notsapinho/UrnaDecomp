@@ -158,11 +158,11 @@ byte-identical, and names every final function (`build/out/wasm-map/vota_web/nam
 `src/mk/splat-map.mk`, `docs/reference/splat.md` §2.
 
 **stub** — two meanings. (1) A generated comment for a TSE function not decompiled yet, where the evidence says it
-sat in TSE's file: `// f7010 · 683 B · unmatched · name unknown` over its signature, between `// <stubs>` and
+sat in TSE's file: `// f1455 · 496 B · unmatched · name unknown` over its signature, between `// <stubs>` and
 `// </stubs>` markers. `tools/round/stubs.py` writes them (`make -C src stubs`, run by `splat-match`, so a matched
 function's stub goes) and CI checks them (`stubs.py --check`); a function no evidence places is in its tree's
 `unplaced.cpp`. A function the generator finds code of ours for has none, and a pending member counts as code of
-ours, so it loses its stub when its unit lands. The signature line names the function only when the symbol file
+ours, so it loses its stub when its unit lands, as does any virtual member of a class our sources define. The signature line names the function only when the symbol file
 does; otherwise it is `f<index>` with the wasm types. A stub is a comment, not code: it puts nothing into the link
 (see **INCLUDE_ASM**). *Where:*
 `src/README.md` "Stubs", `docs/how-to-decompile.md` steps 1, 3 and 9. (2) A hand-written
@@ -367,7 +367,8 @@ marker survive regeneration; a hand edit needs evidence that does not come from 
 `pair-fingerprint` and `pair-addr` (a census pair unique on both sides), `call` and `table` (aligned callees and
 function pointers), `vote:N` (aligned address operands; `by:` lists up to four voters), `rtti`, `content`, `string`,
 `srcloc`, `srcloc-anchor`, `vtable` (the same slot of a vtable both sides name by RTTI); the hand edits name their own (`vtable-slot`, `rtti-vptr`, `rtti-operand`,
-`pair-depth0`, `callers+content`). *Where:* `docs/reference/splat.md` §2, `asmlift-wasm/src/splat-symbols.ts`.
+`pair-depth0`, `callers+content`, `merged-body`), and how a hand edit is weighed is `docs/how-to-decompile.md` step 9.
+*Where:* `docs/reference/splat.md` §2, `asmlift-wasm/src/splat-symbols.ts`.
 
 **re-pointing** (`splat-remap`) — rewriting one of our function bodies into the target's index and address spaces:
 callees, `call_indirect` types, globals, imports, table slots and data addresses, through our link map, the
@@ -456,8 +457,9 @@ nothing orders them. So a band reads as reverse link order with lower digit coun
 exceptions on the skeleton. *Where:* `docs/reference/link-order.md` §1, `src/Makefile` header comment, `docs/reference/appmap.md` §6.
 
 **digit zone, zone twin** — the ordinals with the same number of digits; a zone twin is an ordinal that sorts next to
-one of another zone ("293" sits right after "2936"), so a placement can flip between the two. *Where:*
-`docs/reference/link-order.md` §1 and §7.4, `docs/reference/tu-slices.md`.
+one of another zone ("293" sits right after "2936"), so a placement can flip between the two, and the scan's `ours` reads
+two members across ordinal 999 and 1000 the wrong way round: compare `names.tsv`'s `ld_index`, which has no zones
+(`docs/how-to-decompile.md` step 3). *Where:* `docs/reference/link-order.md` §1 and §7.4.
 
 **rank** — here, the position of an ordinal's decimal string in the descending string order of all ordinals; the
 solver's sound windows are rank ranges (`rank_lo`, `rank_hi`). Not to be confused with the toolkit's compile-and-rank
@@ -511,8 +513,8 @@ changed only on evidence; the recovered TSE order is in `docs/reference/link-ord
 it `kit`. *Where:* `asmlift-wasm/README.md`, `README.md`, `tools/round/census.sh`.
 
 **readout, folded readout** — `pnpm wasm fn` prints a function's disassembly beside its normalised rows and a folded
-readout: the operand stack replayed into expressions. It is a reading aid, not a decompiler. *Where:*
-`asmlift-wasm/README.md` "What is what".
+readout: the operand stack replayed into expressions. It is a reading aid, not a decompiler: it hoists a `tee` and a
+call out of a nested expression, so read an order from the disassembly. *Where:* `asmlift-wasm/README.md` "What is what".
 
 **bundle** — the same readout for a group of functions in one Markdown file, `ledger/bundles/<name>.md`.
 *Where:* `asmlift-wasm/README.md` "The decompile loop", `ledger/bundles/`.
@@ -600,7 +602,7 @@ and `build/out/`, and in commit messages:
 The `src/units/` fragments are named by their content, not by a handle (`src/units/README.md` "Names").
 
 **board** — the folder outside the repository through which a run's agents coordinate (append-only facts, traps,
-round posts and frictions, plus the user's inbox). A `rounds/` *claim* there is a post reserving the paths a stage
+round posts and frictions, the user's inbox, and `shared/` for files posts cite and headers lanes hand each other). A `rounds/` *claim* there is a post reserving the paths a stage
 owns (`docs/agents.md`), unrelated to a match. Facts that tracked files cite are kept in `docs/reference/facts/`.
 
 **friction** — a board post about a point where a doc was missing, wrong, ambiguous or misleading: what the doc led

@@ -1,9 +1,10 @@
 # Facts: optimisation levels measured on single sites
 
 What a compile level does to a site, where the level of a tree is not the question: the flags of the executable TU
-whose copies of inline code the target keeps, how to read LLVM's inlining decisions, and the evidence for uenux2 at
-`-O3 -std=c++23`. This file is the one home of those three. The trees' flag sets and their evidence are in
-[app-flags.md](app-flags.md); nothing here changes a flag. Measured at bb6f018, on the pinned image
+whose copies of inline code the target keeps, how to read LLVM's inlining decisions, the evidence for uenux2 at
+`-O3 -std=c++23`, and how to measure which flags a linkonce copy has. This file is the one home of those four. The
+trees' flag sets and their evidence are in [app-flags.md](app-flags.md); nothing here changes a flag. Measured at
+bb6f018, the parts marked so at 0b5f410, on the pinned image
 (`TMPDIR=/tmp build/docker-build.sh …`), from the repository root, or from `asmlift-wasm/` with Node 24 first on PATH
 for `pnpm` ([workflow.md](workflow.md) §W1).
 
@@ -62,11 +63,11 @@ The target's two bodies are the `-Oz` ones. `SetVoice` keeps `std::string::opera
 
 `CError::~CError` (4636) reads the same way: the copy that wins the link is `-Oz` code from this TU, so it says nothing
 of uenux2's level. Not measured for this TU: `-fPIC`, aliasing and `-std`. No setup of
-`asmlift-wasm/benchmark/dataset/setups.json` has `-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups are 7-Zip's and RHVoice's, each ending in
-`-O3`), so no fragment may compile a TSE object so (`pnpm bench setups --check` refuses one), and
-`src/uenux2/wasm/vota_web/vota_web_wasm.cpp` is a stub-only file. A uenux2 object's copy of such a member is right
-source with the wrong level, so it matches only when its body is the same at uenux2's flags: 11489 and 11518 stay
-`differs` with unit 82's source as written (how-to steps 4 and 5).
+`asmlift-wasm/benchmark/dataset/setups.json` has `-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups
+are 7-Zip's and RHVoice's, each ending in `-O3`), so no fragment may compile a TSE object so (`pnpm bench setups
+--check` refuses one), and `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` is a stub-only file. A uenux2 object's copy of
+such a member is right source with the wrong level, so it matches only when its body is the same at uenux2's flags:
+11489 and 11518 stay `differs` with unit 82's source as written (how-to steps 4 and 5).
 
 ## V2. LLVM's inlining remarks give the cost and the threshold, and the thresholds are what separate the levels
 
@@ -92,12 +93,12 @@ cache's destructor goes into the D2, which is then too costly for the D0. A call
 at cost 225 (unit 78's fragment). So when a body differs in what is inlined, run the remarks first: a cost above the
 threshold at the tree's level says that no source form of the caller changes the decision.
 
-## V3. uenux2 at `-O3 -std=c++23`: every match verifies, and four sites need it, all in `mock/app/simulador/wasm/`
+## V3. uenux2 at `-O3 -std=c++23`: every match verifies, and sites under both `mock/` and `src/` need the level
 
 Evidence for a decision about uenux2's flags. They stay `-O2 -std=c++20` ([app-flags.md](app-flags.md) §F6), since a
 level is a tree's setting (how-to step 4). The private link of [app-flags.md](app-flags.md) §F9 item 6 with
-`P=build/out/flags-o3-cxx23` and `UENUX2_EXTRA='-O3 -std=c++23'` (the stand-ins keep their flags, ecourna keeps `-O3 -std=c++20`) links in 224 s and
-ends:
+`P=build/out/flags-o3-cxx23` and `UENUX2_EXTRA='-O3 -std=c++23'` (the stand-ins keep their flags, ecourna keeps `-O3
+-std=c++20`) links in 224 s and ends:
 
     splat.wasm: 7713699 bytes, sha256 8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2 (expected, 7935 matches from ../splat/matched.txt)
     kind-unverified: 0/7935 matches (0 B) whose operand kinds the shifted link could not tell; their operands kept every reading
@@ -134,8 +135,27 @@ unrolled). 9427 needs `-O3` (V2); its two calls then lack target names, so it is
 is its rectangle's `select`s. The units that hold these bodies say what each needs in their fragments: 69 (9104), 78
 (8746, 8799) and 82 (9427).
 
-**The limit.** Every site is in `mock/app/simulador/wasm/`. 16 of the 91 uenux2 objects change, 4 there and 12 under
-`src/`:
+**Sites under `src/`.** These bodies are written and stay `differs`, `unresolved` or `no-candidate` at `-O2`. The first
+row was built at 0b5f410: the object alone at `-O3` in the plain link (the recipe of [workflow.md](workflow.md) §W13,
+"One variant object in the whole link"), scored with `pnpm wasm score`.
+
+| site | what `-O2` does | at `-O3` |
+| --- | --- | --- |
+| `CEleitorDinamicoDAO`'s 5776, 5775, 3768 | inlines `std::string::append` at every `operator+(string&&, const char*)`, and no TSE function of the target calls the grow helper that leaves (`awk -F'\t' '$2==1838 {print $1}' ledger/callgraph.tsv \| sort -un` prints only libc++'s string.o functions) | 5776 is `18 over 404`, 5775 `18 over 400`, all operand-only, and `splat-remap` stops only at `NOME_TABELA`'s name; with that name in a copy of the symbol file all three were `IDENTICAL` |
+| `IConversorASN`'s default `DoConverte` (731), `IConversorBiometriaASN`'s default (11418) | keeps a loop in a `std::format` throw of 44 and 47 bytes ([reading.md](reading.md) §R13) | `target 731: IDENTICAL`. The target holds 53 unconditional sites of 37 to 73 bytes with no loop and none with one, so the sign is the binary's, in 36 bodies. Unit 47's pending header holds the source and unit 96's fragment the measurement |
+| `comum::md::CCandidatura`'s constructor (5660) | `UAC_IMPL` not inlined at cost 225, threshold 225, so the copy loop folds in | `63 over 519`, all operand-only, with a scratch second caller of 2870 (unit 89's fragment) |
+| `comum::md::CPleito`'s constructor (5652) | `__init_with_size` at cost 230, threshold 225 | `103 over 438` with scratch second callers, and its remainder is not explained: unwritten, unit 88's fragment |
+| `CCabecalhoQRCodeBuilder::DefineHistoricoCarga` (5622) | inlines `append` | keeps `append`, `89 over 431`, operand-only but for five local pairs (unit 93's fragment) |
+
+**Sites under `mock/`, more.** With `cwasmthread.cpp.o`, `cwasmwebsound.cpp.o` and `cwasmscreen.cpp.o` at `-O3` as well
+(0b5f410), 2680, 9459, 9448, 9472 and 9604 print `IDENTICAL`, 9146 and 9125 are `13 over 307` and `13 over 313`, all
+operand-only, and the units that hold them say what is left (69, 74).
+
+**What the whole tree does.** All of uenux2 at `-O3` loses no match (7953 at f6826bc, `-std` unchanged): 19 of 96 objects
+change and 8746 turns `match`. The rest of this section is bb6f018's first whole-tree run.
+
+**What it does not decide.** 2799 and 9515 need `-fno-strict-aliasing` off, not `-O3` ([app-flags.md](app-flags.md)
+§F6). At bb6f018, 16 of the 91 uenux2 objects change, 4 under `mock/` and 12 under `src/`:
 
     for o in $(cd build/out/app && find uenux2 -name '*.o' | sort); do cmp -s build/out/app/$o $P/app/$o || echo $o; done | awk -F/ '{print $2}' | sort | uniq -c
        4 mock
@@ -169,7 +189,34 @@ row, 4118, that scores the same in both links:
     pnpm --silent wasm score ../target/vota_web_wasm.wasm 4118 ../$P/wasm/vota_web/vota_web_wasm.wasm 2599
       score 4 over 21 rows (same 17, replaced 1 [0 operand-only], inserted 2, deleted 1)
 
-So the `src/` matches are compatible with the two flags without supporting them, and two readings fit every
-measurement: uenux2 at `-O3 -std=c++23` throughout, or `mock/app/simulador/wasm/` built with its own set, as
-`docs/reference/app-flags.md` "Exceptions" already splits `mock/` by file. A built `src/` site that separates the two
-decides. The `-std` reading rests on one kind of site (the rvalue `substr`), with a handful of C++20 forms tried.
+So the matches of `src/` hold under both levels, and the written `src/` bodies above need the higher one. That rules
+out `-O3` for `mock/app/simulador/wasm/` alone, and leaves uenux2 at `-O3` throughout. No site shows the rest of `-O3`
+from its unroll threshold, and per-directory flags are not excluded. The `-std` reading rests on one kind of site (the
+rvalue `substr`), with a handful of C++20 forms tried; every site above reads the same at `c++20` and `c++23`. The flag
+is the user's decision (how-to step 4), and a body that waits for it stays written.
+
+## V4. Which flags a linkonce copy has: put a probe object first on the link line
+
+Rows of a probe's object compared with the target, before binaryen, are a lead and no verdict: they ranked one
+destructor nearest at two levels and another at four. wasm-ld keeps the first object's copy, so an object that only
+uses the class, first on the link line, wins each linkonce symbol, wasm-ld drops the probe's own functions, and the scan
+says what that copy gives. About a minute at 0b5f410, from the repository root, with `$V` under `build/out/`:
+
+    V=build/out/variant-probe; n=d2; d=$V/wasm/$n; mkdir -p $d $V/obj
+    printf '%s\n' '#include <istream>' '#include <ostream>' '#include "asn1.h"' 'void probe_dec(std::istream& s, ASN1::AbstractData& d) { ASN1::AVNDecoder dec(s); d.accept(dec); }' > $V/obj/$n.cpp
+    TMPDIR=/tmp build/docker-build.sh sh -c "em++ -O3 -fexceptions -std=c++20 -DNDEBUG -Isrc -Isrc/asn1 -c /work/$V/obj/$n.cpp -o $V/obj/$n.o"
+    sed -e "s# app/vota_init.o # variant-probe/obj/$n.o app/vota_init.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o variant-probe/wasm/$n/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $d/link.cmd
+    TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $d/link.cmd)" > $d/link.log 2>&1
+    TMPDIR=/tmp tools/round/link-map.sh $d; TMPDIR=/tmp tools/round/link-kinds.sh $d
+    cp splat/matched.txt $V/$n-matched.txt
+    (cd asmlift-wasm && pnpm --silent wasm splat-kinds ../$d/vota_web_wasm.wasm && pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../$d/vota_web_wasm.wasm --map-dir ../$V/wasm-map/$n --kinds ../$V/wasm-kinds/$n/kinds.json --match ../$V/$n-matched.txt -o ../$V/$n-scan.tsv)
+    awk -F'\t' '$1==9471 || $1==8873 {print $1, $5, $11}' $V/$n-scan.tsv
+      8873 match app/asn1/AVNDecoder.o
+      9471 match variant-probe/obj/d2.o
+
+`~AVNDecoder`'s D2 (9471) is `differs` from the runtime's object, and it matches at `-O3 -fexceptions`, ecourna's level,
+while its D0 stays the runtime's `-Os` code. So the row's `object` column is the verdict, the D2 is another TU's copy,
+and the fragment that lands it names that TU. The same probe with `AVNEncoder` matched 3559 at `-Oz -fexceptions
+-std=c++20 -DNDEBUG`, the executable TU's level (§V1), and neither at uenux2's flags. Each such scan keeps the committed
+symbol file and ledger, so other rows move and it is a lead for them ([app-flags.md](app-flags.md) §F9). It names no
+name, and a probe object lands nowhere.
