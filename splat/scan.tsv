@@ -1177,7 +1177,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1311	sqlite3_result_text64	924	symbol	match	readings: address string,table slot,address symbol	421	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 1312	sqlite3_column_int64	926	symbol	match	readings: address symbol	324	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 1313	sqlite3StrAccumEnlarge	998	symbol	match	readings: address symbol	737	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-1314	_ZNSt3__26__treeINS_12__value_typeIiNS_10shared_ptrIN4vota10CTelasVota5CTelaEEEEENS_19__map_value_compareIiNS_4pairIKiS6_EENS_4lessIiEELb1EEENS_9allocatorISB_EEE7destroyEPNS_11__tree_nodeIS7_PvEE	2704	symbol	match	-	84	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+1314	_ZNSt3__26__treeINS_12__value_typeIN4vota12ETelaVotacaoENS_10shared_ptrIN3api16CInteractiveFormINS5_7IScreenENS5_9IInputKbdEEEEEEENS_19__map_value_compareIS3_NS_4pairIKS3_SA_EENS_4lessIS3_EELb1EEENS_9allocatorISF_EEE7destroyEPNS_11__tree_nodeISB_PvEE	2704	symbol	match	-	84	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 1315	ossl_DER_w_end_sequence	1032	symbol	match	-	115	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-der_writer.o)
 1316	ossl_DER_w_begin_sequence	1033	symbol	match	-	10	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-der_writer.o)
 1317	key_to_encp8	943	symbol	differs	+0xb8 target +0xb8 block | ours +0xb8 i32.const 0	2129	none	openssl	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-encode_key2any.o
@@ -1792,7 +1792,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1926	_ZN5comum2md20CValidadorIdentidade7GetInstEv	4051	symbol	match	readings: address symbol,address srcloc,address string	24	none	app	1	app/uenux2/src/app/comum/dados/md/cvalidadoridentidade.cpp.o
 1927	_ZNSt3__26vectorIcNS_9allocatorIcEEE18__insert_with_sizeB8ne210108INS_11__wrap_iterIPKhEES8_EENS5_IPcEENS5_IPKcEET_T0_l	11275	symbol	differs	+0x16 target +0x15 local.tee 7 | ours +0x15 local.tee 8	1172	none	app	1	app/ecourna/app_dados_asn_cconversorfoto.cpp.o
 1928	-	-	-	no-candidate	no symbol and no ledger pair	16	none	ASN1	0	-
-1929	_ZNSt3__26__treeINS_12__value_typeIhN5comum2md17CRespostaConsultaEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	2708	symbol	match	-	82	addr	comum	1	app/uenux2/src/app/comum/dados/crespostas.cpp.o
+1929	_ZNSt3__26__treeINS_12__value_typeIjN5comum2md17CRespostaConsultaEEENS_19__map_value_compareIjNS_4pairIKjS4_EENS_4lessIjEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	2708	symbol	match	-	82	addr	comum	1	app/uenux2/src/app/comum/dados/crespostas.cpp.o
 1930	_ZNK5comum2md18CVotosEleicoesVota5CargoEh	7822	symbol	match	readings: address srcloc,address symbol	22	none	comum	1	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o
 1931	_ZNK5comum8CRdvVota9CandidatoEhjh	7952	symbol	match	readings: address symbol,address srcloc	343	none	comum	1	app/uenux2/src/app/comum/dados/crdvvota.cpp.o
 1932	-	-	-	no-candidate	no symbol and no ledger pair	82	none	comum	0	-
@@ -4000,7 +4000,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4134	sqlite3_column_blob	2230	symbol	match	readings: address symbol	187	addr	app	1	sqlite/O3pic2/sqlite3.o
 4135	-	-	-	no-candidate	no symbol and no ledger pair	1190	none	ecourna	0	-
 4136	sqlite3BtreeFirst	3017	symbol	match	-	150	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-4137	_ZNSt3__26__treeINS_12__value_typeINS_4pairIiiEENS_3mapIiNS_10shared_ptrIN4vota10CTelasVota5CTelaEEENS_4lessIiEENS_9allocatorINS2_IKiS9_EEEEEEEENS_19__map_value_compareIS3_NS2_IKS3_SG_EENSA_IS3_EELb1EEENSC_ISK_EEE7destroyEPNS_11__tree_nodeISH_PvEE	2705	symbol	match	-	45	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
+4137	_ZNSt3__26__treeINS_12__value_typeIhN4vota10CTelasVota11STelasCargoEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	2705	symbol	match	-	45	addr	comum	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
 4138	sqlite3OomFault	3018	symbol	match	readings: address string	150	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4139	sqlite3_result_error_nomem	2232	symbol	match	readings: address string	203	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 4140	sqlite3_result_zeroblob64	2233	symbol	match	readings: address string	265	addr	sqlite	1	sqlite/O3pic2/sqlite3.o

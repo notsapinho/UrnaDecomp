@@ -22,8 +22,8 @@ int w1926(void) __asm__("_ZN5comum2md20CValidadorIdentidade7GetInstEv");
 int w2812(void) __asm__("_ZN5comum10CRespostas7GetInstEv");
 int w2817(void) __asm__("_ZN5comum3CHV7GetInstEv");
 
-int d242(int) __asm__("_ZN5comum2md16CDetalheConsultaD2Ev");
-int d267(int) __asm__("_ZN5comum2md17CDetalheCandidatoD2Ev");
+int d267(int) __asm__("_ZN5comum2md16CDetalheConsultaD2Ev");
+int d242(int) __asm__("_ZN5comum2md17CDetalheCandidatoD2Ev");
 int d2267(int) __asm__("_ZN7ecourna3app5dados15CParametrosUrnaD2Ev");
 
 int d379(int) __asm__("_ZN5comum2md17CEleitorDecoratorD2Ev");
@@ -62,8 +62,8 @@ __attribute__((noinline)) void DestroiTodos(int p)
     d6548(p + 24);
     d2830(p + 28);
     d2267(p + 32);
-    d242(p + 36);
-    d267(p + 40);
+    d267(p + 36);
+    d242(p + 40);
     w2269(p + 44);
 }
 

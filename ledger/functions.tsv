@@ -1177,7 +1177,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1311	421	9	sqlite	sqlite	skeleton	924	addr	10	sqlite3_result_text64
 1312	324	9	-	-	skeleton	926	addr	7	sqlite3_column_int64
 1313	737	10	sqlite	sqlite	skeleton	998	addr	6	sqlite3StrAccumEnlarge
-1314	84	10	-	comum	skeleton	2704	addr	1	std::__2::__tree<std::__2::__value_type<int, std::__2::shared_ptr<vota::CTelasVota::CTela>>, std::__2::__map_value_compare<int, std::__2::pair<int const, std::__2::shared_ptr<vota::CTelasVota::CTela>>, std::__2::less<int>, true>, std::__2::allocator<std::__2::pair<int const, std::__2::shared_ptr<vota::CTelasVota::CTela>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<int, std::__2::shared_ptr<vota::CTelasVota::CTela>>, void*>*)
+1314	84	10	-	comum	skeleton	2704	addr	1	std::__2::__tree<std::__2::__value_type<vota::ETelaVotacao, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>, std::__2::__map_value_compare<vota::ETelaVotacao, std::__2::pair<vota::ETelaVotacao const, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>, std::__2::less<vota::ETelaVotacao>, true>, std::__2::allocator<std::__2::pair<vota::ETelaVotacao const, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<vota::ETelaVotacao, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>, void*>*)
 1315	115	10	-	openssl	skeleton	1032	addr	2	ossl_DER_w_end_sequence
 1316	10	10	-	openssl	skeleton	1033	addr	1	ossl_DER_w_begin_sequence
 1317	2129	10	openssl	openssl	-	-	none	-	
@@ -1792,7 +1792,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1926	24	6	app	-	-	-	none	-	
 1927	1172	5	app	-	-	-	none	-	
 1928	16	6	app	ASN1	-	-	none	-	
-1929	82	6	app	comum	skeleton	2708	addr	3	std::__2::__tree<std::__2::__value_type<unsigned char, comum::md::CRespostaConsulta>, std::__2::__map_value_compare<unsigned char, std::__2::pair<unsigned char const, comum::md::CRespostaConsulta>, std::__2::less<unsigned char>, true>, std::__2::allocator<std::__2::pair<unsigned char const, comum::md::CRespostaConsulta>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned char, comum::md::CRespostaConsulta>, void*>*)
+1929	82	6	app	comum	skeleton	2708	addr	3	std::__2::__tree<std::__2::__value_type<unsigned int, comum::md::CRespostaConsulta>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, comum::md::CRespostaConsulta>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, comum::md::CRespostaConsulta>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned int, comum::md::CRespostaConsulta>, void*>*)
 1930	22	5	app	comum	-	-	none	-	
 1931	343	5	app	comum	-	-	none	-	
 1932	82	6	app	comum	-	-	none	-	
@@ -4000,7 +4000,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 4134	187	2	app	-	skeleton	2230	addr	8	sqlite3_column_blob
 4135	1190	3	app	ecourna	-	-	none	-	
 4136	150	3	sqlite	sqlite	skeleton	3017	addr	2	sqlite3BtreeFirst
-4137	45	3	sqlite	comum	skeleton	2705	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::pair<int, int>, std::__2::map<int, std::__2::shared_ptr<vota::CTelasVota::CTela>, std::__2::less<int>, std::__2::allocator<std::__2::pair<int const, std::__2::shared_ptr<vota::CTelasVota::CTela>>>>>, std::__2::__map_value_compare<std::__2::pair<int, int>, std::__2::pair<std::__2::pair<int, int> const, std::__2::map<int, std::__2::shared_ptr<vota::CTelasVota::CTela>, std::__2::less<int>, std::__2::allocator<std::__2::pair<int const, std::__2::shared_ptr<vota::CTelasVota::CTela>>>>>, std::__2::less<std::__2::pair<int, int>>, true>, std::__2::allocator<std::__2::pair<std::__2::pair<int, int> const, std::__2::map<int, std::__2::shared_ptr<vota::CTelasVota::CTela>, std::__2::less<int>, std::__2::allocator<std::__2::pair<int const, std::__2::shared_ptr<vota::CTelasVota::CTela>>>>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::pair<int, int>, std::__2::map<int, std::__2::shared_ptr<vota::CTelasVota::CTela>, std::__2::less<int>, std::__2::allocator<std::__2::pair<int const, std::__2::shared_ptr<vota::CTelasVota::CTela>>>>>, void*>*)
+4137	45	3	sqlite	comum	skeleton	2705	addr	2	std::__2::__tree<std::__2::__value_type<unsigned char, vota::CTelasVota::STelasCargo>, std::__2::__map_value_compare<unsigned char, std::__2::pair<unsigned char const, vota::CTelasVota::STelasCargo>, std::__2::less<unsigned char>, true>, std::__2::allocator<std::__2::pair<unsigned char const, vota::CTelasVota::STelasCargo>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned char, vota::CTelasVota::STelasCargo>, void*>*)
 4138	150	3	sqlite	sqlite	skeleton	3018	addr	2	sqlite3OomFault
 4139	203	2	sqlite	sqlite	skeleton	2232	addr	3	sqlite3_result_error_nomem
 4140	265	2	sqlite	-	skeleton	2233	addr	6	sqlite3_result_zeroblob64
