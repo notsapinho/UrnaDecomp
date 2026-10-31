@@ -28,10 +28,10 @@
 # - 9217 is std::transform over a back_inserter: the range-for keeps the field's load inside the loop, and with a
 #   reference taken once the frame holds the vector at +16 where 9217 has +4.
 # - 9141 calls ParaVetor, inlined: written in place, the transform's cleanup and the outer one are one block.
-# - 9120 binds the vector to a const reference. A by-value local, a temporary or a copy of the sequence first give one
-#   block for the two exception paths (94 over 389); the reference gives the target's two, each with its call of ~vector,
-#   which keeps 5100 out of line. The form is this function's: 9217's vector goes from 506 rows to 381 with it, and
-#   9102's justificativas from 1741 to 1455.
+# - 9120 binds the vector to a const reference. A by-value local or a temporary gives one block for the two exception
+#   paths (94 over 389), and a copy of the sequence first one block for three (187 over 442); the reference gives the
+#   target's two, each with its call of ~vector, which keeps 5100 out of line. The form is this function's: 9217's
+#   vector goes from 506 rows to 381 with it, and 9102's justificativas from 1741 to 1455.
 # - 9129 holds the converted MunicipioZona in a named local, destroyed after the two stores; a temporary goes first.
 # - 9129, 9173: the entity is declared before the converter, and 9173's second converter after the first assignment:
 #   the other declaration orders give other rows.
