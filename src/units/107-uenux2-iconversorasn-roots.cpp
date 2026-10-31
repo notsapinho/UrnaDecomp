@@ -9,11 +9,11 @@
 // a data class: those are the ASN.1 runtime's and the units', and an instance here would be a copy ahead of them.
 // The callers each instance stands for:
 //   3726: 11390, 11394. 3727: 11391, 11395. 3730: 10270, 11411. 3736: 11424, 11451.
-//   3737: 11423, 11452 (11381 is written). 3738: 10270, 11411, 11457. 3799: 10271, 10273, 11587.
-//   2275: 10266, 10271, 10273, 11458, 11587. 5688: 11375 (11359 is written).
+//   3737: 11423, 11452 (11381 is written). 3738: 10270, 11411 (11457 is written). 3799: 10271, 10273, 11587.
+//   2275: 10266, 10271, 10273, 11587 (11458 is written). 5688: 11375 (11359 is written).
 //   5691: 11394 (11397 is written). 5692: 11395, 11398. 5696: 11399 (11403 is written). 5697: 11400 (11404 is written).
 //   5705: 5706, 11423. 5711: 11448. 5713, 5714: 11424, 11451. 5715, 5716: 11423, 11452.
-//   5721: 11457 (11441 is written). 5828: 11373, 11445.
+//   5828: 11373, 11445.
 // w107_dados gives a constructor its second call site, each stands for: 3712 11424 and 11451, 5672 5741, 3823 2725 and
 // 11629. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.
@@ -33,7 +33,6 @@
 #include "app/comum/dados/md/municipiozona/ccomplementomunicipio.h"
 #include "app/comum/dados/md/municipiozona/cmunicipio.h"
 #include "app/comum/dados/md/processoeleitoral/cnomescargo.h"
-#include "app/comum/md/cabrangencia.h"
 #include "app/comum/md/ccabecalhoentidade.h"
 #include "app/comum/md/ccabecalhopacote.h"
 #include "app/comum/md/cseguranca.h"
@@ -103,7 +102,6 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
     d = w107_desconverte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CabecalhoPacote, CCabecalhoPacote>(d, e);
     d = w107_desconverte<ModuloTiposCadastro::Municipio, CMunicipio>(d, e);
-    d = w107_desconverte<ModuloTiposEleitorais::Abrangencia, CAbrangencia>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
     d = w107_converte<ModuloEstadoGeralDefs::NumViasImpressasRelatorios, CNumViasImpressasRelatorios>(d, e);
     d = w107_converte<ModuloComplementosMunicipios::ComplementoMunicipio, CComplementoMunicipio>(d, e);

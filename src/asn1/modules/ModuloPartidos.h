@@ -182,27 +182,9 @@ public:
     class partidos
     {
     public:
-        //
-        // ModuloPartidos::EntidadePartidos::partidos::value_type
-        //
-
-        class value_type : public ASN1::SEQUENCE_OF<ModuloPartidos::Partido>
-        {
-            typedef ASN1::SEQUENCE_OF<ModuloPartidos::Partido> Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type(size_type n=0) : Inherited(n) {}
-            value_type(size_type n, const ModuloPartidos::Partido& val) : Inherited(n, val) {}
-            value_type(const_iterator first, const_iterator last) : Inherited(first, last) {}
-            value_type(const value_type& that) : Inherited(that) {}
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        }; // end class value_type
+        // the target has no class of its own here: SEQUENCE_OF<Partido>'s template theInfo (@1561304, the word
+        // theInfo's fieldInfos[2] holds) and vtable are what fn 11458 uses
+        typedef ASN1::SEQUENCE_OF<ModuloPartidos::Partido> value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;

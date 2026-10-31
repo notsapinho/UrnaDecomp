@@ -52,15 +52,6 @@ const ModuloPartidos::Partido::InfoType ModuloPartidos::Partido::theInfo = {
     "Partido"
 };
 
-const ModuloPartidos::EntidadePartidos::partidos::value_type::InfoType ModuloPartidos::EntidadePartidos::partidos::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloPartidos::Partido::theInfo,
-    0
-};
-
 const void* ModuloPartidos::EntidadePartidos::fieldInfos[3] = {
     &cabecalho::value_type::theInfo,
     &abrangencia::value_type::theInfo,

@@ -44,7 +44,9 @@ public:
     class arquivos
     {
     public:
-        typedef ModuloHashes::HashesArquivos value_type;
+        // the target has no class of its own here: SEQUENCE_OF<ArquivoAssinatura>'s template theInfo (@1599256, the
+        // word theInfo's fieldInfos[1] holds) and vtable are what fn 10264 uses
+        typedef ASN1::SEQUENCE_OF<ModuloTiposEleitorais::ArquivoAssinatura> value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
