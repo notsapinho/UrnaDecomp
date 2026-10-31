@@ -8,8 +8,8 @@
 //   the vtable is the copy of ieventoslog.cpp's object, before its records, emitted by the constructor. The destructor's
 //   form is chosen: an empty one gives these shared bodies however it is written.
 // - The constructor is defined in ieventoslog.cpp: fn 184 keeps this class's vptr store under CLogVota's, which reads as
-//   binaryen's inlining of an out-of-line constructor, since clang drops such a store from one it inlines (fn 184 is not
-//   written, so this is a reading). It has no target function.
+//   binaryen's inlining of an out-of-line constructor, since clang drops such a store from one it inlines (a reading:
+//   fn 184, in vota/log/clogvota.cpp, matches with it out of line). It has no target function.
 // - +4 is the application code: fn 184 stores 1, and fn 233 and every inlined copy pass it as api::CLoga::loga's first
 //   argument. The member's name is chosen.
 // - loga, 233: no record names it. Its class is read from its callers, which call it on what fn 837 returns (fns 5876,
@@ -58,7 +58,9 @@ public:
     std::string ConverteFonteAlim(const uebyte fonte);
     inline std::string ConverteStatusBateria(const uebyte status);
 
-private:
+protected:
+    // protected: vota::CLogVota's members that fns 6017, 10776 and 10779 hold inlined read it and call api::CLoga::loga
+    // themselves. The access is chosen; that a derived class reads it is the evidence.
     api::ELogAplicativos m_aplicativo;
 };
 

@@ -1,10 +1,12 @@
 #!/bin/bash
 # Probe build of RHVoice's core library (RHVoice_core + bundled hts_engine + sonic) from third_party/RHVoice, pinned toolchain.
-#   tools/libs/rhvoice/build.sh <tag> [<variant>] [extra compile flags...]      (from the urna root)
+#   tools/libs/rhvoice/build.sh <tag> [<variant>] [extra compile flags...] [--only <source>[,<source>...] <flags...>]...
 # <tag>     the RHVoice tag third_party/RHVoice is checked out at (1.14.0, tools/setup/bootstrap.sh); the script refuses
 #           another commit, a sonic submodule off the commit the tag records, and local changes to what it compiles.
 # <variant> free name for the output dir build/out/rhvoice/<tag>-<variant>; the extra flags go after the common
 #           ones (a later -O3 overrides the -Oz of the compile step; -std=c++NN is given to C++ files only).
+# --only    the sources it names (base names, e.g. userdict.cpp) compile with the flags after it, up to the next --only,
+#           in place of the extra flags; every other source, and the driver, keeps the extra flags.
 # What the app links (docs/reference/facts/libraries.md §B6): src/core/*.cpp (minus the #included data files
 # emoji_data.cpp, unidata.cpp, userdict_parser.c and the MAGE impl), src/hts_engine/HTS_*.c, sonic (the
 # external/libs/sonic submodule, waywardgeek/sonic @ ba331411f17702e01f6c2d7016eefebaa695871f in 1.14.0).
@@ -54,9 +56,7 @@ printf '{ "version": 0, "roots": [\n  { "type": "file", "name": "%s", "external-
   "$PWD/$SRC/src/core/config.h" "$PWD/$OUT/cfg/config.h" "$PWD/$SRC/src/include/core/config.h" "$PWD/$OUT/cfg/core/config.h" \
   "$PWD/$SRC/src/core/str_hts_engine_impl.cpp" "$PWD/$OUT/cfg/str_hts_engine_impl.cpp" > "$OUT/cfg/overlay.yaml"
 
-COMMON=(-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE="RHVoice"' -I"$SRC/src/include" -I"$SRC/src/hts_engine" -I"$SRC/src/third-party/utf8" -I"$SRC/src/third-party/rapidxml" -I"$SONIC" -I"${BOOST:-third_party/boost}" -ivfsoverlay "$OUT/cfg/overlay.yaml")
-COMMON+=(${EXTRA[@]+"${EXTRA[@]}"})
-echo "compile flags: ${COMMON[*]}"
+BASE=(-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE="RHVoice"' -I"$SRC/src/include" -I"$SRC/src/hts_engine" -I"$SRC/src/third-party/utf8" -I"$SRC/src/third-party/rapidxml" -I"$SONIC" -I"${BOOST:-third_party/boost}" -ivfsoverlay "$OUT/cfg/overlay.yaml")
 
 LIST=$(mktemp)
 for f in "$SRC"/src/core/*.cpp "$SRC"/src/hts_engine/HTS_*.c "$SONIC"/sonic.c; do
@@ -64,19 +64,48 @@ for f in "$SRC"/src/core/*.cpp "$SRC"/src/hts_engine/HTS_*.c "$SONIC"/sonic.c; d
   echo "$f"
 done > "$LIST"
 
+# The extra flags up to the first --only are every source's; each --only group's flags are its sources' instead,
+# recorded beside the default flags.nul as flags/<source>.nul.
+rm -rf "$OUT/flags"
+mkdir -p "$OUT/flags"
+DEFAULT=() names=() group=() state=default
+flush() {
+  local n
+  for n in ${names[@]+"${names[@]}"}; do
+    grep -q "/$n\$" "$LIST" || { echo "--only $n: no such source" >&2; exit 2; }
+    printf '%s\0' "${BASE[@]}" ${group[@]+"${group[@]}"} > "$OUT/flags/$n.nul"
+    echo "compile flags of $n: ${BASE[*]} ${group[*]-}"
+  done
+}
+for a in ${EXTRA[@]+"${EXTRA[@]}"}; do
+  case "$state:$a" in
+    *:--only) flush; names=(); group=(); state=names ;;
+    names:*) IFS=, read -r -a names <<< "$a"; state=group ;;
+    default:*) DEFAULT+=("$a") ;;
+    group:*) group+=("$a") ;;
+  esac
+done
+[ "$state" != names ] || { echo "--only needs a list of sources" >&2; exit 2; }
+flush
+COMMON=("${BASE[@]}" ${DEFAULT[@]+"${DEFAULT[@]}"})
+echo "compile flags: ${COMMON[*]}"
+
 compile_one() {
-  local path=$1 obj f CFLAGS=()
+  local path=$1 obj f nul FLAGS=() CFLAGS=()
   obj="$OUT/obj/$(basename "$path").o"
+  nul="$OUT/flags/$(basename "$path").nul"
+  [ -f "$nul" ] || nul="$OUT/flags.nul"
+  while IFS= read -r -d "" f; do FLAGS+=("$f"); done < "$nul"
   if [ "$path" != "${path%.c}" ]; then
-    for f in "${COMMON[@]}"; do case "$f" in -std=c++*|-std=gnu++*) ;; *) CFLAGS+=("$f") ;; esac; done
+    for f in "${FLAGS[@]}"; do case "$f" in -std=c++*|-std=gnu++*) ;; *) CFLAGS+=("$f") ;; esac; done
     emcc "${CFLAGS[@]}" -c "$path" -o "$obj"
   else
-    em++ "${COMMON[@]}" -c "$path" -o "$obj"
+    em++ "${FLAGS[@]}" -c "$path" -o "$obj"
   fi
 }
 export -f compile_one; export OUT
 printf '%s\0' "${COMMON[@]}" > "$OUT/flags.nul"
-xargs -P4 -I{} bash -c 'COMMON=(); while IFS= read -r -d "" f; do COMMON+=("$f"); done < "$OUT/flags.nul"; compile_one "$1"' _ {} < "$LIST"
+xargs -P4 -I{} bash -c 'compile_one "$1"' _ {} < "$LIST"
 rm -f "$LIST"
 # the keep-alive driver (see driver.cpp); DRIVER=none builds the bare library
 if [ "${DRIVER:-driver}" != none ]; then

@@ -8,7 +8,8 @@
 # of line a call (docs/reference/facts/reading.md R5). IResultado's destructor is defined in the class, since
 # CGravadorWSQ's inlines it (out of line in iresultado.cpp, measured in a try link, it is a call there and 11576 does
 # not match); it is emitted with IResultado's vtable, which the inlined vptr store keeps. Fn 12090's copy in the link is
-# unit 102's roots object's, the same code: that fragment's name sorts first (src/units/README.md "Names").
+# unit 122's iresultado.cpp.o's, which emits the vtable with IResultado's constructor, the same code: uenux2's sources
+# link ahead of every companion object.
 # With it: the comum::IGravador and comum::IResultado interfaces (igravador.h and iresultado.h beside it),
 # EExtensaoArquivoResultado (iresultado.h), EUrnaFase (app/comum/eurnafase.h), ESavdArquivoUE (app/comum/iinterfacesavd.h,
 # beside ESavdAplic) and the layouts of api::CDateTime and api::CDate (src/api/util/cdatetime.h and cdate.h, beside
@@ -18,9 +19,9 @@
 # name is chosen (the headers say what each holds).
 # The unit has no source of its own yet: CGravadorWSQ's Slot2 (its key function), Slot3 and Slot6 are pending, so the
 # vtable and with it the implicit destructors are emitted in the pending object (as unit 26's are); they move to
-# cgravadorwsq.o when Slot2 moves there. The file's other functions keep their stubs in the stub-only
-# cgravadorwsq.cpp: the constructor (fn 3796, with ValidaTipoBiometria inlined, record line 73) and fn 5821 (records
-# of GetCaminhoCorretoInternal/External, lines 175 and 192). Paths relative to src/uenux2.
+# cgravadorwsq.o when Slot2 moves there. The constructor (fn 3796, with ValidaTipoBiometria inlined, record line 73)
+# is unit 122's, in cgravadorwsq.cpp, which unit 122 compiles; fn 5821 (records of GetCaminhoCorretoInternal/External,
+# lines 175 and 192) keeps its stub there. Paths relative to src/uenux2.
 # CGravadorWSQ's Slot2, Slot3 and Slot6 (fns 11579, 11577, 11578) and IGravador's five members (fns 11632, 11630,
 # 11634, 11633, 11631, which IGravador's typeinfo needs) are not reconstructed:
 # 60-uenux2-cgravadorwsq-pending.cpp defines them with trapping bodies, compiled with the unit's flags, and its header

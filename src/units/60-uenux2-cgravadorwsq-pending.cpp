@@ -11,10 +11,11 @@
 // - CGravadorWSQ's typeinfo names IGravador's, which is emitted only with IGravador's key function (its first
 //   out-of-line virtual member): without a definition of it the link stops on an undefined `typeinfo for
 //   comum::IGravador`. IGravador's vtable (@1553648) needs its five members defined: Slot2 fn 11632, Slot3 fn 11630,
-//   Slot4 fn 11634, Slot5 fn 11633, Slot6 fn 11631 (608, 1207, 438, 438 and 608 B, stubs in src/uenux2/unplaced.cpp,
-//   no record). Nothing in our link stores IGravador's vptr (its constructor, fn 1396, is not reconstructed), so the
-//   link drops that vtable and these traps with it; only the typeinfo stays. They go in IGravador's source (no record
-//   names its file) when they are reconstructed.
+//   Slot4 fn 11634, Slot5 fn 11633, Slot6 fn 11631 (608, 1207, 438, 438 and 608 B, no record). IGravador's
+//   constructor (fn 1396, unit 122's, in iresultado.cpp) stores its vptr, so the link keeps that vtable and these
+//   traps, and the five stubs went from src/uenux2/unplaced.cpp; the scan lists the five `no-candidate`. They go in
+//   the file of IGravador's key function when they are reconstructed: iresultado.cpp, where unit 122 put the
+//   constructor, is a choice the vtable's place in the data allows (that unit's fragment), not evidence.
 // Delete this file with the last of them.
 #include "app/comum/gravadores/cgravadorwsq.h"
 

@@ -178,7 +178,6 @@ struct SW100Roots {
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IUrna>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::CEscritorLog>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IControladorRegistraMesarios>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IEventosLog>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IInterfaceInit>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IInterfaceSavd>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::impl::IValidaMidia>);

@@ -33,21 +33,13 @@ uebyte CTickManager::AddTick(size_t milissegundos)
 
     const uebyte id = SearchNextId();
 
-    STick tick;
-    tick.m_parado = 0;
-    tick.m_milissegundos = milissegundos;
-
-    timeval agora;
-    gettimeofday(&agora, nullptr);
-    tick.m_proximo.tv_sec = agora.tv_sec + tick.m_milissegundos / MILISSEGUNDOS_POR_SEGUNDO;
-    tick.m_proximo.tv_usec = agora.tv_usec + (tick.m_milissegundos % MILISSEGUNDOS_POR_SEGUNDO) * MICROSSEGUNDOS_POR_MILISSEGUNDO;
-    tick.m_proximo.tv_sec += tick.m_proximo.tv_usec / MICROSSEGUNDOS_POR_SEGUNDO;
-    tick.m_proximo.tv_usec %= MICROSSEGUNDOS_POR_SEGUNDO;
-
+    const STick tick(milissegundos);
     m_ticks.emplace(id, tick);
     return id;
 }
 
+// (original lines 41-50: content not recovered)
+#line 51
 /**
  * Para um tick: ele deixa de disparar até ser iniciado de novo.
  *
@@ -79,7 +71,22 @@ void CTickManager::StartTick(uebyte id)
     tick.m_proximo.tv_usec %= MICROSSEGUNDOS_POR_SEGUNDO;
 }
 
-uebyte CTickManager::SearchNextId()
+CTickManager::STick::STick(size_t milissegundos)
+{
+    m_parado = 0;
+    m_milissegundos = milissegundos;
+
+    timeval agora;
+    gettimeofday(&agora, nullptr);
+    m_proximo.tv_sec = agora.tv_sec + m_milissegundos / MILISSEGUNDOS_POR_SEGUNDO;
+    m_proximo.tv_usec = agora.tv_usec + (m_milissegundos % MILISSEGUNDOS_POR_SEGUNDO) * MICROSSEGUNDOS_POR_MILISSEGUNDO;
+    m_proximo.tv_sec += m_proximo.tv_usec / MICROSSEGUNDOS_POR_SEGUNDO;
+    m_proximo.tv_usec %= MICROSSEGUNDOS_POR_SEGUNDO;
+}
+
+// (original lines 95-120: content not recovered)
+#line 121
+inline uebyte CTickManager::SearchNextId()
 {
     for (unsigned id = 0; id <= 0xff; ++id) {
         if (m_ticks.find(id) == m_ticks.end()) {

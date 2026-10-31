@@ -27,6 +27,10 @@ public:
     const md::CEleicaoPE& GetEleicao(const TEleicaoID eleicao) const;
     const md::CCargo& GetCargo(const TCargoID cargo) const;
 
+    // The name is chosen: CGravadorUtil::DeterminaNomeArquivoSemLetra (inlined into target fn 3798) reads the pleito's
+    // identifier at +28 of the instance, and no record names an accessor.
+    const md::CPleito& GetPleito() const { return m_pleito; }
+
 private:
     unsigned m_naoRecuperado1[2];
     std::string m_nome;

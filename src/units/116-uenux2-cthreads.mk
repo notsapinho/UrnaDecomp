@@ -64,7 +64,7 @@
 #
 # Chosen, no evidence names them: GetInst for the three threads and fn 509 (the tree's accessors are spelled so); Stop,
 # TrataErro, ParaOutrasThreads, Espera; the class and path of fn 509's CEstadoAudio, its members' names and bool for its three flags; m_contexto,
-# m_mensagens, m_mensagem, m_resultado, m_texto1 to 4 (what the strings hold is not read), m_fonePlugado, m_ultimoLog,
+# m_mensagens, m_mensagem, m_resultado, m_texto1, m_texto3 and m_texto4 (what the strings hold is not read; the second is unit 119's m_tituloMesario), m_fonePlugado, m_ultimoLog,
 # m_aplicativo, m_estado, s_inst, s_mutex; the enumerator 9156 and the headers' paths; CreateInst's body order, below;
 # which of the class's virtual members is declared first: the destructor, so that each class's .cpp emits its vtable.
 # CThreadVota's destructor is left implicit. +8's name moved with Stop (unit 18).
