@@ -20,15 +20,6 @@ const ModuloFederacoes::Federacao::nome::value_type::InfoType ModuloFederacoes::
     ASN1::GeneralString::theInfo.charSetUnalignedBits, ASN1::GeneralString::theInfo.charSetAlignedBits
 };
 
-const ModuloFederacoes::Federacao::partidos::value_type::InfoType ModuloFederacoes::Federacao::partidos::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ASN1::Constrained_INTEGER<ASN1::FixedConstraint, 0, 99>::theInfo,
-    0
-};
-
 const void* ModuloFederacoes::Federacao::fieldInfos[4] = {
     &identificador::value_type::theInfo,
     &sigla::value_type::theInfo,
@@ -62,15 +53,6 @@ const ModuloFederacoes::Federacao::InfoType ModuloFederacoes::Federacao::theInfo
     &ModuloFederacoes::Federacao::defaultTag,
     ModuloFederacoes::Federacao::fieldNames,
     "Federacao"
-};
-
-const ModuloFederacoes::EntidadeFederacoes::federacoes::value_type::InfoType ModuloFederacoes::EntidadeFederacoes::federacoes::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloFederacoes::Federacao::theInfo,
-    0
 };
 
 const void* ModuloFederacoes::EntidadeFederacoes::fieldInfos[2] = {

@@ -19,16 +19,6 @@
 // f8951 · 137 B · unmatched · placement: link order · name unknown
 // ? f8951(i32) { ... }
 
-// link-order cluster 160 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversordadoscomparecimento.cpp
-
-// f9098 · 26 B · unmatched · placement: link order · name unknown
-// void f9098(i32, i32, i32) { ... }
-
-// link-order cluster 174 · uses=1 · neighbours' file ecourna/app/dados/asn/parametrizacaourna/cconversorparametrosurna.cpp
-
-// f9161 · 309 B · unmatched · placement: link order · name unknown
-// void f9161(i32, i32, i32) { ... }
-
 // link-order cluster 235 · uses=1
 
 // f9770 · 621 B · unmatched · placement: link order · name unknown
@@ -87,11 +77,6 @@
 // f1928 · 16 B · unmatched · placement: link order · name unknown
 // ? f1928(i32) { ... }
 
-// link-order cluster 1194 · uses=6
-
-// f1970 · 267 B · unmatched · placement: link order · name unknown
-// void f1970(i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1226 · uses=8
 
 // f1519 · 114 B · unmatched · placement: link order · name unknown
@@ -101,9 +86,4 @@
 
 // f859 · 52 B · unmatched · placement: link order · name unknown
 // void f859(i32) { ... }
-
-// link-order cluster 1327 · uses=33 · neighbours' file uenux2/src/app/vota/eleitor/comum/cextractcallback_to_opencallback.cpp
-
-// f516 · 35 B · unmatched · placement: link order · name unknown
-// ? f516(i32, i32) { ... }
 // </stubs>

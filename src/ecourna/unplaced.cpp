@@ -4,84 +4,6 @@
 // not evidence; inside a cluster they are in link order.
 
 // <stubs>
-// link-order cluster 148 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversordadoscomparecimentocifrado.cpp
-
-// f9060 · 394 B · unmatched · placement: link order · name unknown
-// void f9060(i32, i32, i32) { ... }
-
-// link-order cluster 150 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversordadoscifracao.cpp
-
-// f9062 · 634 B · unmatched · placement: link order · name unknown
-// void f9062(i32, i32, i32) { ... }
-
-// f9061 · 1204 B · unmatched · placement: link order · name unknown
-// void f9061(i32, i32, i32) { ... }
-
-// link-order cluster 151 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversoridentificacaojustificativa.cpp
-
-// f9065 · 268 B · unmatched · placement: link order · name unknown
-// void f9065(i32, i32, i32) { ... }
-
-// f9064 · 343 B · unmatched · placement: link order · name unknown
-// void f9064(i32, i32, i32) { ... }
-
-// link-order cluster 160 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversordadoscomparecimento.cpp
-
-// f9102 · 3374 B · unmatched · placement: link order · name unknown
-// void f9102(i32, i32, i32) { ... }
-
-// f9095 · 3926 B · unmatched · placement: link order · name unknown
-// void f9095(i32, i32, i32) { ... }
-
-// link-order cluster 167 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversorcomparecimentosecao.cpp
-
-// f9126 · 592 B · unmatched · placement: link order · name unknown
-// void f9126(i32, i32, i32) { ... }
-
-// link-order cluster 168 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversoridentificacaosecaoeleitoral.cpp
-
-// f9129 · 251 B · unmatched · placement: link order · name unknown
-// void f9129(i32, i32, i32) { ... }
-
-// link-order cluster 171 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversorconfiguracaomunicipios.cpp
-
-// f9141 · 1272 B · unmatched · placement: link order · name unknown
-// void f9141(i32, i32, i32) { ... }
-
-// f9137 · 833 B · unmatched · placement: link order · name unknown
-// void f9137(i32, i32, i32) { ... }
-
-// link-order cluster 172 · uses=1 · neighbours' file ecourna/app/dados/asn/parametrizacaourna/cconversortitulorelatorio.cpp
-
-// f9144 · 297 B · unmatched · placement: link order · name unknown
-// void f9144(i32, i32, i32) { ... }
-
-// link-order cluster 177 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversorparametrizacaourna.cpp
-
-// f9173 · 349 B · unmatched · placement: link order · name unknown
-// void f9173(i32, i32, i32) { ... }
-
-// link-order cluster 188 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversorfederacoes.cpp
-
-// f9212 · 492 B · unmatched · placement: link order · name unknown
-// void f9212(i32, i32, i32) { ... }
-
-// f9207 · 410 B · unmatched · placement: link order · name unknown
-// void f9207(i32, i32, i32) { ... }
-
-// link-order cluster 190 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversorfederacao.cpp
-
-// f9217 · 1048 B · unmatched · placement: link order · name unknown
-// void f9217(i32, i32, i32) { ... }
-
-// link-order cluster 192 · uses=1 · neighbours' file ecourna/app/dados/asn/cconversordetalhamentocomparecimento.cpp
-
-// f9222 · 307 B · unmatched · placement: link order · name unknown
-// void f9222(i32, i32, i32) { ... }
-
-// f9221 · 104 B · unmatched · placement: link order · name unknown
-// void f9221(i32, i32, i32) { ... }
-
 // link-order cluster 217 · uses=1 · neighbours' file ecourna/api/security/ctrng.cpp
 
 // f9477 · 90 B · unmatched · placement: link order · name unknown
@@ -179,21 +101,10 @@
 // f5009 · 606 B · unmatched · placement: link order · name unknown
 // void f5009(i32, i32) { ... }
 
-// link-order cluster 724 · uses=2 · neighbours' file ecourna/app/dados/resultadournacadastro/cdadoscifracao.cpp
-
-// f5097 · 75 B · unmatched · placement: link order · name unknown
-// void f5097(i32) { ... }
-
-// f5095 · 221 B · unmatched · placement: link order · name unknown
-// void f5095(i32, i32) { ... }
-
 // link-order cluster 725 · uses=2 · neighbours' file ecourna/app/dados/cnumeroidentificacaolivre.cpp
 
 // f5100 · 75 B · unmatched · placement: link order · name unknown
 // void f5100(i32) { ... }
-
-// f5099 · 15 B · unmatched · placement: link order · name unknown
-// void f5099(i32) { ... }
 
 // link-order cluster 727 · uses=2
 
@@ -448,12 +359,6 @@
 // f6147 · 71 B · unmatched · placement: link order · name unknown
 // void f6147(i32, i32) { ... }
 
-// f6146 · 188 B · unmatched · placement: link order · name unknown
-// void f6146(i32, i32, i32, i32, i32) { ... }
-
-// f6145 · 192 B · unmatched · placement: link order · name unknown
-// void f6145(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 886 · uses=2
 
 // f6272 · 13 B · unmatched · placement: link order · name unknown
@@ -486,14 +391,6 @@
 
 // f3379 · 1534 B · unmatched · placement: link order · name unknown
 // ? f3379(i32) { ... }
-
-// link-order cluster 955 · uses=3 · neighbours' file ecourna/app/dados/cnumeroinscricaoeleitoral.cpp
-
-// f3488 · 15 B · unmatched · placement: link order · name unknown
-// void f3488(i32) { ... }
-
-// f3487 · 116 B · unmatched · placement: link order · name unknown
-// void f3487(i32) { ... }
 
 // link-order cluster 958 · uses=3 · neighbours' file ecourna/api/sql/sqlite/csqlstatement.cpp
 
@@ -640,17 +537,6 @@
 // f2581 · 1161 B · unmatched · placement: link order · name unknown
 // void f2581(i32) { ... }
 
-// link-order cluster 1070 · uses=4
-
-// f2661 · 15 B · unmatched · placement: link order · name unknown
-// void f2661(i32) { ... }
-
-// f2660 · 15 B · unmatched · placement: link order · name unknown
-// void f2660(i32) { ... }
-
-// f2659 · 88 B · unmatched · placement: link order · name unknown
-// void f2659(i32) { ... }
-
 // link-order cluster 1074 · uses=4 · neighbours' file ecourna/api/security/cepesc/ccepesccipher.cpp
 
 // f2681 · 345 B · unmatched · placement: link order · name unknown
@@ -764,9 +650,6 @@
 // f2302 · 483 B · unmatched · placement: link order · name unknown
 // void f2302(i32, i32, i32, i32) { ... }
 
-// f2299 · 535 B · unmatched · placement: link order · name unknown
-// ? f2299(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // f2294 · 129 B · unmatched · placement: link order · name unknown
 // ? f2294(i32, i32, i32, i32, i32, i32) { ... }
 
@@ -787,9 +670,6 @@
 
 // f1944 · 282 B · unmatched · placement: link order · name unknown
 // void f1944(i32, i32) { ... }
-
-// f1943 · 201 B · unmatched · placement: link order · name unknown
-// void f1943(i32) { ... }
 
 // link-order cluster 1191 · uses=6 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgeraresumozeresimabase.cpp
 

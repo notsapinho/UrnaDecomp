@@ -66,15 +66,6 @@ const ModuloConfiguracaoMunicipios::ConfiguracaoMunicipio::InfoType ModuloConfig
     "ConfiguracaoMunicipio"
 };
 
-const ModuloConfiguracaoMunicipios::EntidadeConfiguracaoMunicipios::configuracoes::value_type::InfoType ModuloConfiguracaoMunicipios::EntidadeConfiguracaoMunicipios::configuracoes::value_type::theInfo = {
-    ASN1::SEQUENCE_OF_Base::create,
-    0x00000010,
-    0,
-    ASN1::Unconstrained, 0, UINT_MAX,
-    &ModuloConfiguracaoMunicipios::ConfiguracaoMunicipio::theInfo,
-    0
-};
-
 const void* ModuloConfiguracaoMunicipios::EntidadeConfiguracaoMunicipios::fieldInfos[2] = {
     &cabecalho::value_type::theInfo,
     &configuracoes::value_type::theInfo

@@ -126,27 +126,9 @@ public:
     class partidos
     {
     public:
-        //
-        // ModuloFederacoes::Federacao::partidos::value_type
-        //
-
-        class value_type : public ASN1::SEQUENCE_OF<ASN1::Constrained_INTEGER<ASN1::FixedConstraint, 0, 99>>
-        {
-            typedef ASN1::SEQUENCE_OF<ASN1::Constrained_INTEGER<ASN1::FixedConstraint, 0, 99>> Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type(size_type n=0) : Inherited(n) {}
-            value_type(size_type n, const ASN1::Constrained_INTEGER<ASN1::FixedConstraint, 0, 99>& val) : Inherited(n, val) {}
-            value_type(const_iterator first, const_iterator last) : Inherited(first, last) {}
-            value_type(const value_type& that) : Inherited(that) {}
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        }; // end class value_type
+        // the target has no class of its own here: SEQUENCE_OF<INTEGER>'s template theInfo and vtable are what fns 9217
+        // and 9216 use
+        typedef ASN1::SEQUENCE_OF<ASN1::Constrained_INTEGER<ASN1::FixedConstraint, 0, 99>> value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
@@ -206,27 +188,8 @@ public:
     class federacoes
     {
     public:
-        //
-        // ModuloFederacoes::EntidadeFederacoes::federacoes::value_type
-        //
-
-        class value_type : public ASN1::SEQUENCE_OF<ModuloFederacoes::Federacao>
-        {
-            typedef ASN1::SEQUENCE_OF<ModuloFederacoes::Federacao> Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type(size_type n=0) : Inherited(n) {}
-            value_type(size_type n, const ModuloFederacoes::Federacao& val) : Inherited(n, val) {}
-            value_type(const_iterator first, const_iterator last) : Inherited(first, last) {}
-            value_type(const value_type& that) : Inherited(that) {}
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        }; // end class value_type
+        // the target has no class of its own here: SEQUENCE_OF<Federacao>'s template theInfo and vtable are what fns 9210 and 9209 use
+        typedef ASN1::SEQUENCE_OF<ModuloFederacoes::Federacao> value_type;
 
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
@@ -248,6 +211,11 @@ public:
     {
       includeOptionalField( e_federacoes, 1);
       return *static_cast<federacoes::pointer>(fields[1]);
+    }
+    federacoes::reference set_federacoes (federacoes::const_reference v)
+    {
+      includeOptionalField( e_federacoes, 1);
+      return *static_cast<federacoes::pointer>(fields[1]) = v;
     }
     void omit_federacoes () { removeOptionalField( e_federacoes); }
     bool federacoes_isPresent () const { return hasOptionalField( e_federacoes); }
