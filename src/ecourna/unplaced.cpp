@@ -101,11 +101,6 @@
 // f5009 · 606 B · unmatched · placement: link order · name unknown
 // void f5009(i32, i32) { ... }
 
-// link-order cluster 725 · uses=2 · neighbours' file ecourna/app/dados/cnumeroidentificacaolivre.cpp
-
-// f5100 · 75 B · unmatched · placement: link order · name unknown
-// void f5100(i32) { ... }
-
 // link-order cluster 727 · uses=2
 
 // f5153 · 82 B · unmatched · placement: link order · name unknown

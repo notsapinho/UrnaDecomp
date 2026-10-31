@@ -1531,7 +1531,7 @@ private:
 }; // end class Foto
 
 //
-// ModuloTiposEleitorais::DataGeracao   // SYNTHESIZED name (field ['dataGeracao', 'dataHoraCarga', 'dataHoraAbertura', 'dataHoraEncerramento', 'dataHoraDesligamentoVotoImpresso', 'dataHoraLigamento', 'dataHoraEmissao', 'data', 'dataInicial', 'dataFinal', 'dhIniAquisicao', 'dhFimAquisicao', 'dhUltimoVoto', 'dhEmissao', 'emissaoZeresima', 'inicioVotacao', 'encerramentoVotacao', 'terminoVotacao', 'dataHoraColeta'])
+// ModuloTiposEleitorais::DataGeracao   // SYNTHESIZED name (field ['dataGeracao', 'dataHoraCarga', 'dataHoraAbertura', 'dataHoraEncerramento', 'dataHoraDesligamentoVotoImpresso', 'dataHoraLigamento', 'dataHoraEmissao', 'dhIniAquisicao', 'dhFimAquisicao', 'dhUltimoVoto', 'dhEmissao'])
 //
 
 class DataGeracao : public ASN1::GeneralString

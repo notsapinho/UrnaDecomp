@@ -128,7 +128,7 @@ public:
     class data
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -243,7 +243,7 @@ public:
     class dataInicial
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -276,7 +276,7 @@ public:
     class dataFinal
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;

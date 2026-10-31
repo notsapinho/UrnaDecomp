@@ -21,7 +21,8 @@ CConversorComparecimentoSecao::TDado CConversorComparecimentoSecao::DoDeconverte
     CConversorEstadoComparecimento conversorEstado;
     CConversorIdentificacaoSecaoEleitoral conversorIdentificacao;
     const CIdentificacaoSecaoEleitoral identificacao = conversorIdentificacao.Deconverte(entidade.get_identificacao());
-    return TDado(identificacao, DeconverteSequencia(entidade.get_eleitores(), conversorEstado));
+    const auto& eleitores = DeconverteSequencia(entidade.get_eleitores(), conversorEstado);
+    return TDado(identificacao, eleitores);
 }
 
 } // namespace ecourna::app::dados::asn
