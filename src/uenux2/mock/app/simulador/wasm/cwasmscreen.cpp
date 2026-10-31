@@ -10,6 +10,7 @@
 
 #include "api/gui/cmovie.h"
 #include "api/gui/cstepsprogressbar.h"
+#include "api/gui/iform.h"
 #include "api/gui/itext.h"
 #include "wasmjs.h"
 

@@ -7,10 +7,14 @@
 // every other member name and every parameter type no body fixes is chosen, from what simulador::CWasmScreen's
 // overrides (vtable @1528816, the one implementation) and the fields' Draws that call them show; the comments say what.
 // Slot 2 is declared above slot 3, as the vtable's order needs; that it sits right under the destructor, above the
-// file's lines 40 to 61, which are not recovered, is chosen. CWasmScreen overrides slot 3 (fn 9261), so no target
+// file's lines up to 61 that are not recovered, is chosen. CWasmScreen overrides slot 3 (fn 9261), so no target
 // function calls this GetFontMetrics: it is reached only through IScreen's vtable. Slot 0, the destructor (fn 5071),
-// stores the vptr and calls fn 5069, a function of no parameters that walks a global list and that nothing names;
-// `= default` below does not, so 5071 and CWasmScreen's deleting destructor (8963) are not reconstructed.
+// stores the vptr and calls fn 5069, which hides every form of CFormStack<IScreen> and empties it (its statics at
+// 1832604 and 1832632), then calls Notifica (fn 2651): api/gui/iform.h writes it as CFormStack<MEDIA>::Limpa. The
+// destructor is inline: CWasmScreen's implicit D2 is the same body (one function in both vtables' slot 0) and its D0
+// (fn 8963) holds it inlined (docs/reference/facts/reading.md R5). iform.h includes this header and its body needs
+// CFormStack, so it is declared inline here and defined in iform.h after CFormStack: that place is a choice. A TU that
+// deletes a screen through the vtable without iform.h (unit 100's roots) warns -Wundefined-inline and links.
 
 #include <cstdint>
 #include <string>
@@ -32,12 +36,12 @@ struct SPathCommand;
  */
 class IScreen {
 public:
-    virtual ~IScreen() = default;
+    inline virtual ~IScreen();
 
     // slot 2: the width and height of a character of a font, as bytes (fn 9265, with no text to measure)
     virtual void GetFontMetrics(uint8_t& largura, uint8_t& altura, const SFont& font) = 0;
 
-    // (original lines 40-61: content not recovered)
+    // (original lines 44-61: content not recovered)
 #line 62
     /**
      * Obtém a largura e a altura que @p texto ocupa escrito com a fonte @p font.

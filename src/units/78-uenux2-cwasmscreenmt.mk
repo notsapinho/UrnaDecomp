@@ -16,8 +16,12 @@
 #   225 and inlines at -O3's 250, and -O3 unrolls the loop; at -O2 it stays a call. Its object is the same under
 #   both standards, once the object-local indices are normalised. ShowText stays as written, so the row matches with no
 #   edit if the tree's -std changes.
-# - pending: ShowClock (8757, slot 12) and ~IScreenMT (8741), with CWasmScreenMT's implicit D2 and D0 (8745, 8744) waiting
-#   on the second: 78-uenux2-cwasmscreenmt-pending.cpp says for what.
+# - matched: api::IScreenMT's destructor (8741), inline (iscreenmt.h; defined in api/gui/iform.h after CFormStack, as
+#   IScreen's is, unit 69's fragment), CWasmScreenMT's implicit D2 and D0 (8745, 8744), which hold it, and the function
+#   it calls, api::CFormStack<api::IScreenMT>::Limpa (3461), which this object emits: cwasmscreenmt.cpp includes
+#   iform.h. 8741, 8745 and 8744 are named by vtable alone and cast no votes; the scan's content pass finds 3461 (a
+#   `callers+content` hand line, weighed as docs/reference/splat.md "Reviewing a match" says, carried nothing).
+# - pending: ShowClock (8757, slot 12): 78-uenux2-cwasmscreenmt-pending.cpp says for what.
 # Choices, no evidence decides them:
 # - the paths. No record names any of these files. cwasmscreenmt.cpp is the probable_file of cluster 128 in
 #   ledger/tu-clusters.tsv (class-convention), in the directory where simulador's other wasm classes have records. The
@@ -51,8 +55,8 @@
 CWASMSCREENMT_SRCS := mock/app/simulador/wasm/cwasmscreenmt.cpp src/api/gui/cbeepfieldmt.cpp src/api/gui/cbuzzfieldmt.cpp \
     src/api/gui/cclockfieldmt.cpp src/api/gui/cpreshowclearmt.cpp
 UENUX2_SRCS += $(CWASMSCREENMT_SRCS)
-# ShowClock and ~IScreenMT are not reconstructed: 78-uenux2-cwasmscreenmt-pending.cpp gives the vtables trapping bodies,
-# compiled with the unit's flags
+# ShowClock is not reconstructed: 78-uenux2-cwasmscreenmt-pending.cpp gives the vtable a trapping body, compiled with
+# the unit's flags
 $(ROOT)/$(APP)/78-uenux2-cwasmscreenmt-pending.o: $(ROOT)/src/units/78-uenux2-cwasmscreenmt-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/78-uenux2-cwasmscreenmt.mk $(ROOT)/src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.h $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/78-uenux2-cwasmscreenmt-pending.cpp -o $(R)
 # nothing reconstructed creates the screen yet (unit 31's CMTFormBuilder creates CPreShowClearMT, fns 1694 and 301):
