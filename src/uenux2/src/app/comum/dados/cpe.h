@@ -17,6 +17,9 @@ public:
 
     static CPE& GetInst();
 
+    // The name is chosen: comum::CRelatorioTesteImpressora's slot 14 (fn 11191) calls GetPleito2 on +0.
+    const md::CProcessoEleitoral& GetProcessoEleitoral() const { return m_processo; }
+
 private:
     md::CProcessoEleitoral m_processo;
     int m_origem;

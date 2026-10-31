@@ -681,11 +681,6 @@
 // f642 · 10 B · unmatched · placement: link order · name unknown
 // void f642(i32) { ... }
 
-// link-order cluster 1322 · uses=28
-
-// f580 · 18 B · unmatched · placement: link order · name unknown
-// ? f580(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1330 · uses=35
 
 // f493 · 298 B · unmatched · placement: link order · name unknown
