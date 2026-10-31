@@ -99,12 +99,11 @@ It prints `index verdict size group file:line` for each stub of 40 to 600 B, sma
 unmatched body of ours re-points into it. `no-candidate` is not the same as unwritten. A function can be written and
 still have no body in our link, two ways:
 
-- **Compiled and dropped.** Nothing in our link reaches it, so wasm-ld leaves it out. Target 2767,
-  `ecourna::api::io::CFile::Flush`, is defined at line 82 of `src/ecourna/api/io/cfile.cpp`, whose object the link
-  holds, and its three target callers (5736, 5737, 7174) are not written: `awk -F'\t' '$1==2767 {print $1, $5}'
-  splat/scan.tsv` prints `2767 no-candidate`, and `LC_ALL=C /usr/bin/grep -c CFile5Flush
-  build/out/wasm-map/vota_web/names.tsv` prints 0. A whole unit can sit so: what its objects define minus the link's
-  names (`wasm-objdump -x -j linking <object>` against column 2 of `names.tsv`) lists them. Such a function pairs once a
+- **Compiled and dropped.** Nothing in our link reaches it, so wasm-ld leaves it out, though its object is on the link
+  line: its symbol is not in `build/out/wasm-map/vota_web/names.tsv`. A whole unit can sit so: what its objects define
+  minus the link's names (`wasm-objdump -x -j linking <object>` against column 2 of `names.tsv`) lists them. (This
+  item once gave target 2767 as `ecourna::api::io::CFile::Flush` dropped so; 2767 is `api::CEncryptedFile::Save`,
+  which holds `Flush` inlined, and unit 128 matches it.) Such a function pairs once a
   caller lands or the unit's `-roots.cpp` reaches it the way the target does (step 6).
 - **Inlined into the one caller our link gives it.** binaryen inlines a function with one call site (step 3), so it
   has no index of ours until a second caller lands. A library function is the usual case: libc's `round` (2953) was

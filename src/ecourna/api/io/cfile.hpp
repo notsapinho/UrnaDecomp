@@ -17,14 +17,10 @@ enum FileMode {
 
 class CFile {
 public:
-    // Both defined here: the target's CFile ctor (fn 517) is a uenux2-flavoured COMDAT copy and the dtor is inlined
-    // into every caller as `if (m_file) Close();`.
-    CFile(const std::string& nome, const std::string& modo, FileMode fileMode = FM_NORMAL) : m_file(nullptr), m_nome(), m_escrita(false)
-    {
-        if (!nome.empty()) {
-            Open(nome, modo, fileMode);
-        }
-    }
+    // The constructor is out of line in cfile.cpp: its target body (fn 517) has the landing pad of an -fexceptions
+    // object, and uenux2 callers such as api::CEncryptedFile::Save (2767) call it where an inline one would be inlined.
+    // The destructor is inline: every caller holds it as `if (m_file) Close();`.
+    CFile(const std::string& nome, const std::string& modo, FileMode fileMode = FM_NORMAL);
     ~CFile()
     {
         if (m_file != nullptr) {

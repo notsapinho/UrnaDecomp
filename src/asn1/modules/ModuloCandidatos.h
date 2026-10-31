@@ -13,11 +13,28 @@ namespace ModuloCandidatos {
 //
 // No theInfo of the target names it and no object of it is built, so the schema has no entry: the name is the
 // typeid text comum::asn::IConversorASN<ModuloCandidatos::DadosCandidato, ...>::Desconverte passes (fn 5711). A class
-// and not a typedef, since a typedef would print ModuloTiposResultadosEcoUrna::DadosCandidato. The base is chosen.
+// and not a typedef, since a typedef would print ModuloTiposResultadosEcoUrna::DadosCandidato. The base's layout is what
+// comum::asn::CConversorDadosCandidato::DoDesconverte (fn 11450) reads: fields 0, 3, 5, 7 and 11 (codigo, nomeUrna,
+// nomeFonetico, sexo, ordemSuplencia) and optional fields 2 and 4 (nomeFonetico, ordemSuplencia). The base's name is chosen.
 
 class DadosCandidato : public ModuloTiposResultadosEcoUrna::DadosCandidato
 {
 };
+
+} // namespace ModuloCandidatos
+
+namespace ModuloTiposEleitorais {
+
+// ModuloTiposEleitorais::CodigoSexo: the name comum::asn::Utils::DesconverteSexo's record spells for the type of the
+// sexo field the base above reads (fn 11450 passes fields[7] of the entity; schema info 1140544, sexoNaoInformado 0,
+// sexoMasculino 2, sexoFeminino 4, an enumeration with no name of its own that the module generated nested). A typedef,
+// as for the other names the app's source spells; which module declares the type is the record's, its definition's
+// place is not recovered.
+typedef ModuloTiposResultadosEcoUrna::DadosCandidato::sexo::value_type CodigoSexo;
+
+} // namespace ModuloTiposEleitorais
+
+namespace ModuloCandidatos {
 
 //
 // ModuloCandidatos::CandidatosPorCargos

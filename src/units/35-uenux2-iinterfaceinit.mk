@@ -27,8 +27,8 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 IINTERFACEINIT_SRCS := src/app/comum/iinterfaceinit.cpp
 UENUX2_SRCS += $(IINTERFACEINIT_SRCS)
-# the members' callers are not reconstructed yet: 35-uenux2-iinterfaceinit-roots.cpp takes the destructor's address,
-# as the two vtables do, and gives the others call sites
+# the destructor's reachers are in the link (CWasmInit's vtable and deleting destructor, unit 127); the other members'
+# callers are not reconstructed yet, and 35-uenux2-iinterfaceinit-roots.cpp gives them call sites
 $(ROOT)/$(APP)/35-uenux2-iinterfaceinit-roots.o: $(ROOT)/src/units/35-uenux2-iinterfaceinit-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/35-uenux2-iinterfaceinit.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/35-uenux2-iinterfaceinit-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/35-uenux2-iinterfaceinit-roots.o

@@ -170,6 +170,59 @@ std::string ParaUtf8(const std::string& texto)
     return saida;
 }
 
+// an image's width and height from its GIF, PNG or JPEG header, 1 by 1 when none gives them (slot 12 of
+// CWasmImageSurfaceOps, fn 3493, calls it)
+api::SPoint TamanhoImagem(const std::vector<uint8_t>& dados)
+{
+    const uint8_t* bytes = dados.data();
+    const size_t tamanho = dados.size();
+    if (tamanho >= 10 && bytes[0] == 'G' && bytes[1] == 'I' && bytes[2] == 'F') {
+        api::SPoint ponto;
+        std::memcpy(&ponto, bytes + 6, sizeof(ponto));
+        return ponto;
+    }
+    api::TPosition altura = 1;
+    api::TPosition largura = 1;
+    const uint8_t assinaturaPng[8] = {0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'};
+    if (tamanho >= 24 && std::equal(assinaturaPng, assinaturaPng + 8, bytes)) {
+        largura = Le16(bytes + 18);
+        altura = Le16(bytes + 22);
+    } else if (tamanho >= 4 && bytes[0] == 0xFF && bytes[1] == 0xD8) {
+        size_t i = 2;
+        while (i + 9 < tamanho) {
+            if (bytes[i] != 0xFF) {
+                ++i;
+                continue;
+            }
+            if (i + 4 > tamanho) {
+                break;
+            }
+            const uint8_t* segmento = bytes + i;
+            const uint8_t marcador = segmento[1];
+            if (marcador == 0xD9 || marcador == 0xDA) {
+                break;
+            }
+            i += 2;
+            const size_t comprimento = Le16(bytes + i);
+            if (comprimento < 2) {
+                break;
+            }
+            i += comprimento;
+            if (i > tamanho) {
+                break;
+            }
+            if ((marcador >= 0xC0 && marcador <= 0xC3) || (marcador >= 0xC5 && marcador <= 0xC7) ||
+                (marcador >= 0xC9 && marcador <= 0xCB) || (marcador >= 0xCD && marcador <= 0xCF)) {
+                largura = Le16(segmento + 7);
+                altura = Le16(segmento + 5);
+                break;
+            }
+        }
+    }
+    return api::SPoint{largura, altura};
+}
+
+
 } // namespace
 
 namespace simulador {
@@ -231,52 +284,7 @@ api::SPoint CWasmImageSurfaceOps::ImageSize(const std::vector<uint8_t>& dados) c
     if (dados.empty()) {
         return api::SPoint{1, 1};
     }
-    const uint8_t* bytes = dados.data();
-    const size_t tamanho = dados.size();
-    if (tamanho >= 10 && bytes[0] == 'G' && bytes[1] == 'I' && bytes[2] == 'F') {
-        api::SPoint ponto;
-        std::memcpy(&ponto, bytes + 6, sizeof(ponto));
-        return ponto;
-    }
-    api::TPosition altura = 1;
-    api::TPosition largura = 1;
-    const uint8_t assinaturaPng[8] = {0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'};
-    if (tamanho >= 24 && std::equal(assinaturaPng, assinaturaPng + 8, bytes)) {
-        largura = Le16(bytes + 18);
-        altura = Le16(bytes + 22);
-    } else if (tamanho >= 4 && bytes[0] == 0xFF && bytes[1] == 0xD8) {
-        size_t i = 2;
-        while (i + 9 < tamanho) {
-            if (bytes[i] != 0xFF) {
-                ++i;
-                continue;
-            }
-            if (i + 4 > tamanho) {
-                break;
-            }
-            const uint8_t* segmento = bytes + i;
-            const uint8_t marcador = segmento[1];
-            if (marcador == 0xD9 || marcador == 0xDA) {
-                break;
-            }
-            i += 2;
-            const size_t comprimento = Le16(bytes + i);
-            if (comprimento < 2) {
-                break;
-            }
-            i += comprimento;
-            if (i > tamanho) {
-                break;
-            }
-            if ((marcador >= 0xC0 && marcador <= 0xC3) || (marcador >= 0xC5 && marcador <= 0xC7) ||
-                (marcador >= 0xC9 && marcador <= 0xCB) || (marcador >= 0xCD && marcador <= 0xCF)) {
-                largura = Le16(segmento + 7);
-                altura = Le16(segmento + 5);
-                break;
-            }
-        }
-    }
-    return api::SPoint{largura, altura};
+    return TamanhoImagem(dados);
 }
 
 api::SRect CWasmImageSurfaceOps::ImageRect(api::TPosition largura, api::TPosition altura, const api::SPoint& posicao,

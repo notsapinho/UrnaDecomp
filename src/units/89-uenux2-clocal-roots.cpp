@@ -10,7 +10,8 @@
 extern "C" {
 int w401() __asm__("_ZN5comum6CLocal7GetInstEv");
 int w521() __asm__("_ZN5comum13CCandidaturas7GetInstEv");
-int w5811(int) __asm__("_ZN5comum13CCandidaturasC1Ev");
+int w2838(int) __asm__("_ZN5comum19GetCandidaturaAtualERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+int w5806(int) __asm__("_ZNK5comum19CCandidaturasDSSexoclEv");
 void w1719(int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vectorclB8ne210108Ev");
 int w2262(int) __asm__("_ZN5comum6CLocalC1Ev");
 int w2261(int) __asm__("_ZN5comum6CLocalD1Ev");
@@ -49,7 +50,9 @@ const void* volatile clocal_sink;
 // Stands for fn 401's callers: 1543, 2725, 2753, 3798, 4160, 4161, 5579, 5584, 5591, 5604, 5977, 6599, 7787, 10313,
 // 10500, 10689, 10699, 10700, 10701, 11188, 11223, 11242, 11902, 11908, 12071, 12098, 12105, 12110, 12134.
 __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
-__attribute__((noinline)) void ConstroiCandidaturas(int a) { w5811(a + 12); } // stands for 2838
+// 2838 and 5806: one call each, beside the written caller (5806 for 2838, 2268 for 5806).
+__attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 5807, 12641 and 12742
+__attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
 __attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // stands for 2871, 5710, 5950, 7787 and 11448
 __attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) + 2 * w2262(b); }
 __attribute__((noinline)) void Destrutores(int a, int b)
@@ -133,7 +136,8 @@ struct SCLocalRoots {
     {
         clocal_sink = reinterpret_cast<const void*>(&Instancias);
         clocal_sink = reinterpret_cast<const void*>(&w521);
-        clocal_sink = reinterpret_cast<const void*>(&ConstroiCandidaturas);
+        clocal_sink = reinterpret_cast<const void*>(&CandidaturasAtuais);
+        clocal_sink = reinterpret_cast<const void*>(&Sexos);
         clocal_sink = reinterpret_cast<const void*>(&DestroiSuplentes);
         clocal_sink = reinterpret_cast<const void*>(&Construtores);
         clocal_sink = reinterpret_cast<const void*>(&Destrutores);

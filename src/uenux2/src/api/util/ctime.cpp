@@ -1,6 +1,7 @@
 #include "api/util/ctime.h"
 
 #include "api/util/eueutilerror.h"
+#include "api/util/isystemdatetime.h"
 #include "ecourna/api/util/cstringutils.hpp"
 
 using ecourna::api::util::CStringUtils;
@@ -9,8 +10,15 @@ namespace api {
 
 static const size_t SEGUNDOS_POR_DIA = 24 * 60 * 60;
 
-// (original lines 12-21: content not recovered)
-#line 22
+CTime::CTime()
+{
+    time_t agora = ISystemDateTime::GetInst().GetTime();
+    struct tm tm;
+    gmtime_r(&agora, &tm);
+    m_segundos = (tm.tm_hour * 3600) + (tm.tm_min * 60) + tm.tm_sec;
+}
+
+
 bool IsValidTime(const std::string& hora)
 {
     if ((hora.size() != 4) && (hora.size() != 6)) {
@@ -65,7 +73,68 @@ CTime::CTime(uebyte hora, uebyte minuto, uebyte segundo)
 {
 }
 
-// (original lines 76-139: content not recovered)
+std::string CTime::Format(const std::string& formato) const
+{
+    uebyte horas = m_segundos / 3600;
+    uebyte minutos = (m_segundos / 60) % 60;
+    uebyte segundos = m_segundos % 60;
+    std::string hora;
+    for (size_t i = 0; i < formato.size(); i++) {
+        switch (formato[i]) {
+            case 'h':
+                if ((i + 1 < formato.size()) && (formato[i + 1] == 'h')) {
+                    std::string texto = std::to_string(horas);
+                    if (texto.size() < 2) {
+                        hora += "0" + texto;
+                    }
+                    else {
+                        hora += texto;
+                    }
+                    i++;
+                }
+                else {
+                    hora += std::to_string(horas);
+                }
+                break;
+            case 'm':
+                if ((i + 1 < formato.size()) && (formato[i + 1] == 'm')) {
+                    std::string texto = std::to_string(minutos);
+                    if (texto.size() < 2) {
+                        hora += "0" + texto;
+                    }
+                    else {
+                        hora += texto;
+                    }
+                    i++;
+                }
+                else {
+                    hora += std::to_string(minutos);
+                }
+                break;
+            case 's':
+                if ((i + 1 < formato.size()) && (formato[i + 1] == 's')) {
+                    std::string texto = std::to_string(segundos);
+                    if (texto.size() < 2) {
+                        hora += "0" + texto;
+                    }
+                    else {
+                        hora += texto;
+                    }
+                    i++;
+                }
+                else {
+                    hora += std::to_string(segundos);
+                }
+                break;
+            default:
+                hora += formato[i];
+                break;
+        }
+    }
+    return hora;
+}
+
+// (original lines 137-139: content not recovered)
 #line 140
 void CTime::operator+=(int segundos)
 {
@@ -99,6 +168,11 @@ CTime CTime::operator-(int segundos) const
     CTime tempo(*this);
     tempo -= segundos;
     return tempo;
+}
+
+std::strong_ordering CTime::operator<=>(const CTime& hora) const
+{
+    return m_segundos <=> hora.m_segundos;
 }
 
 } // namespace api

@@ -23,7 +23,7 @@ namespace vota {
 // it is the key function and cexibealertadesligamento.cpp emits the vtable: a choice, as StartState and ProcessTick are
 // out of line in the same file too and the target does not show the declaration order. It stores no vptr, which clang
 // leaves out of a destructor that destroys members only when the class is final. Not recovered: the constructor,
-// GetInst (fn 5979; its name follows the project's other singletons, its callees 1000, 316 and 4640 have no name yet)
+// GetInst (fn 5979; its name follows the project's other singletons; of its callees 1000 and 316 match, 4640 has no name)
 // and the two overriders (pending, src/units/61-uenux2-cexibealertadesligamento-pending.cpp).
 //
 // The layout: +12 an api::CDateTime (fn 1000, CDateTime's constructor from a time_t, which calls ConvertFromLocalTime,

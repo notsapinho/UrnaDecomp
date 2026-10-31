@@ -17,6 +17,8 @@ enum EUeIoError {
     EUE_IO_OPERACAO_INVALIDA = 5977,
     EUE_IO_REGISTRO_DUPLICADO = 5978,
     EUE_IO_REGISTRO_NAO_ENCONTRADO = 5979,
+    // the code api::CEncryptedFile::Save throws (target fn 2767); chosen from its message, "Nome de arquivo vazio"
+    EUE_IO_NOME_ARQUIVO_VAZIO = 5994,
     EUE_IO_NOME_CHAVE_MODIFICADO = 6005,
 };
 

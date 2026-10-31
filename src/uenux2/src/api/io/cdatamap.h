@@ -2,9 +2,11 @@
 // the errors print. The layout is the bodies' (target fns 2919, 3892, 5377, 5725): the map at +0, the cursor at +12, the
 // name at +16, 28 bytes, no vptr. The lines of the four throws, 98, 117, 143 and 158, are their records'; column 19 is
 // `throw` at 12 spaces (class, body, if), which the class's own definitions fit; every other line is a choice, and so
-// is where Find sits. The constructor is not written: the target holds it inlined (fn 815 for comum::CRegistradorMesario).
-// Chosen, no evidence names them: Find, m_registros, m_corrente, m_nome. Add(KeyType, RecordType) has no record: its
-// body is fn 5377's. src/units/113-uenux2-cdatamap.mk lists what the bytes decide and what they do not.
+// is where Find sits. The constructor from a name is the one comum::CCandidaturas's constructor (fn 5811) holds inlined,
+// with the cursor at the map's end; const std::string& for its parameter is chosen (by value is not tried). IsFim is
+// the cursor test fn 2268 holds inline. Chosen, no evidence names them: Find, IsFim, m_registros, m_corrente, m_nome.
+// Add(KeyType, RecordType) has no record: its body is fn 5377's. src/units/113-uenux2-cdatamap.mk lists what the
+// bytes decide and what they do not.
 #pragma once
 
 #include <format>
@@ -20,7 +22,12 @@ class CDataMap {
 public:
     using Container = std::map<KeyType, RecordType>;
 
-    // (original lines 23-94: content not recovered)
+    CDataMap() = default;
+    explicit CDataMap(const std::string& nome) : m_corrente(m_registros.end()), m_nome(nome) {}
+
+    bool IsFim() const { return m_corrente == m_registros.end(); }
+
+    // (original lines 30-94: content not recovered)
 #line 95
     RecordType* GetCurrent() const
     {

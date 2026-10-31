@@ -13,8 +13,15 @@ using namespace std::string_literals;
 
 namespace ecourna::api::io {
 
-// (original lines 16-55: content not recovered)
-#line 56
+// (original lines 16-48: content not recovered)
+#line 49
+CFile::CFile(const std::string& nome, const std::string& modo, FileMode fileMode) : m_file(nullptr), m_nome(), m_escrita(false)
+{
+    if (nome != "") {
+        Open(nome, modo, fileMode);
+    }
+}
+
 bool CFile::Open(const std::string& nome, const std::string& modo, FileMode fileMode)
 {
     FILE* arquivo = fopen(nome.c_str(), modo.c_str());
@@ -59,7 +66,7 @@ void CFile::Close()
 bool CFile::SetFileMode(FileMode fileMode)
 {
     if (m_file == nullptr) {
-        throw CIoError(EIO_MODO_NAO_ABERTO, EFileOperation::None, "arquivo nao estava aberto");
+        throw CIoError(EIO_MODO_NAO_ABERTO, EFileOperation::None, "arquivo nao estava aberto", errno);
     }
     int descritor = fileno(m_file);
     int flags = fcntl(descritor, F_GETFD);

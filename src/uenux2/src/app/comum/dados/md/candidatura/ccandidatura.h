@@ -21,6 +21,10 @@ public:
     CCandidatura(const TCargoID cargo, const TPartidoID partido, const TCandidatoID candidato,
         const CDadosCandidato& titular, const std::vector<CDadosCandidato>& suplentes);
 
+    // The names are chosen: comum::CCargoDSNomeSexoCandidato's call operator (fn 2268) compares the byte at +0 with the
+    // current post's id, and CCandidaturasDSSexo's (fn 5806) reads the holder at +8 when it asks for no substitute.
+    TCargoID GetCargoID() const { return m_cargo; }
+    const CDadosCandidato& GetTitular() const { return m_titular; }
     const CDadosCandidato& GetSuplente(uebyte ordem) const;
 
 private:

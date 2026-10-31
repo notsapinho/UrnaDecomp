@@ -5,7 +5,7 @@
 //   format "YYYYMMDD" through fn 706, which has no name, and builds it with ASN1::AbstractString's constructor (fn 2190);
 //   api::CDate has no such member here.
 // - DoDesconverte, target fn 11384 (218 B), calls fn 2276 twice and compares through fn 1261; 2276 calls fns 2765 and 2201,
-//   and 2765 is an api::CDate constructor with no body of ours. It holds CHorarioVerao's constructor inlined, with the
+//   and 2765 is the api::CDate constructor unit 125 matches. It holds CHorarioVerao's constructor inlined, with the
 //   record src/app/comum/dados/md/chorarioverao.cpp:29. That file held only 11384's stub, so it went with the stub.
 // Move them into a cconversorhorarioverao.cpp when they are reconstructed; delete this file with them.
 #include "app/comum/dados/asn/cconversorhorarioverao.h"

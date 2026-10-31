@@ -591,7 +591,7 @@ public:
     idPE::const_reference get_idPE () const { return *static_cast<idPE::const_pointer>(fields[0]); }
     idPE::reference ref_idPE () { return *static_cast<idPE::pointer>(fields[0]); }
     idPE::reference set_idPE () { return *static_cast<idPE::pointer>(fields[0]); }
-    idPE::reference set_idPE (ASN1::INTEGER::int_type v)
+    idPE::reference set_idPE (idPE::const_reference v)
     { return *static_cast<idPE::pointer>(fields[0]) = v; }
 
     class estadoUrna

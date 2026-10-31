@@ -31,12 +31,17 @@
 #   only, since the target's callers inline it, and at -O3 543 needs another caller. 5113 itself differs at both levels (86 over 273 rows): the target reads each
 #   command's values first and stores the type, then y, then x; the locals above are the nearest form found, and the
 #   `SPathCommand` aggregate stands in for a header whose constructors, if any, are not known.
-# - slot 12 of CWasmImageSurfaceOps, ImageSize (3493): written and `differs`, 11 over 256 rows, 5 of them operand-only. Every
-#   form tried leaves one thing: the target tests the size against 12, the guard of the JPEG loop, before bytes[1] == 0xD8,
-#   ours after it. Writing that test ahead lets LLVM thread the short path past bytes[0] and drops the target's test of
-#   4. std::equal is measured: std::memcmp, over a const or a plain array, folds the signature into the compare, where the
-#   target stores it to the frame and loads it back. Each of these also brought the rows closer: one exit with both
-#   sizes in locals, altura declared first, `i += 2` before the length is read, and largura assigned first.
+# - slot 12 of CWasmImageSurfaceOps, ImageSize (3493): the member tests for no data and calls TamanhoImagem, a
+#   file-static helper clang inlines, with the GIF, PNG and JPEG reading. Written in the member itself, every form tried
+#   left one thing (11 over 256 rows, 5 of them operand-only): the target tests the size against 12, the guard of the
+#   JPEG loop, before bytes[1] == 0xD8, and those forms after it (writing that test ahead lets LLVM thread the short
+#   path past bytes[0] and drops the target's test of 4). Through the helper the test comes first and the function
+#   matches; cwasmresource.cpp (unit 127) has the same helper, which simulador::CWasmResource's slot 4 (fn 8605) holds
+#   with the same test order. Both target functions hold the code, so neither copy is a call; two file-static copies,
+#   one per file, are chosen over one internal function in a shared header, which nothing shows. std::equal is measured:
+#   std::memcmp, over a const or a plain array, folds the signature into the compare, where the target stores it to the
+#   frame and loads it back. Each of these also brought the rows closer: one exit with both sizes in locals, altura
+#   declared first, `i += 2` before the length is read, and largura assigned first.
 # - pending, in 69-uenux2-cwasmimagesurfaceops-pending.cpp with what it waits for: Refresh of a rectangle (slot 28: 9018).
 # - not reconstructed: the destructors in slots 0 and 1 (api::IScreen's 5071 and the deleting 8963 around it), which
 #   call fn 5069 (iscreen.h, the -pending.cpp header). The constructor's being out of line is evidence (the data order,

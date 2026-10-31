@@ -15,6 +15,8 @@ public:
     static CHV& GetInst();
 
     const md::CHorarioVerao& GetHorarioVerao() const;
+    // The name is chosen: comum::CRelatorioTesteImpressora's slot 3 (fn 11202) reads the optional's flag at +24.
+    bool TemHorarioVerao() const { return m_horarioVerao.TemHorarioVerao(); }
 
 private:
     void VerificaEntraEmHorarioVerao(const std::string& funcao) const;

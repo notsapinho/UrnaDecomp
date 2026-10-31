@@ -13,31 +13,21 @@
 // - 1950 (the byte at +400): tested before vota::CImprimirBJust prints, false in demonstration mode.
 // Each of the six counts is 1 in demonstration mode. They read 32 bits and their sums compare signed (fn 12023), so they
 // are `int`, a choice as far as the bodies go.
-// SDadosInformacaoEleicao: the layout alone, the offsets these bodies read. Its name and its members' are chosen. Fn 187
-// has a record, static CConfiguracaoEleicao &comum::CConfiguracaoEleicao::GetInst() at cconfiguracaoeleicao.cpp:36, so the
-// object is a member of that class, at +88; its type is not recovered, and the real one renames fn 603's parameter and
-// symbol when it lands.
+// Fn 187 has a record, static CConfiguracaoEleicao &comum::CConfiguracaoEleicao::GetInst() at cconfiguracaoeleicao.cpp:36,
+// so the object is a member of that class, at +88: the urna's parameters, ecourna::app::dados::CParametrosUrna
+// (cconfiguracaoeleicao.h), whose fields at those offsets are the counts of copies numBUVotaObrigatorios,
+// numBUVotaAdicionais, numRelatorioEstado, numRelatorioEleitores, numRelatorioVersoesDados and numRelatorioPU, and
+// at +400 the flag that header calls registrarMesarios. The constructor's parameter type is that class: the slots
+// of comum::CRelatorioTesteImpressora (fn 11193) and CRelUtil::GetSeparadorFase (fn 1919) hand it
+// CConfiguracaoEleicao::GetParametrosUrna().
 
-#include "ecourna/api/uetypes.hpp"
+#include "ecourna/app/dados/parametrizacaourna/cparametrosurna.hpp"
 
 namespace comum {
 
-struct SDadosInformacaoEleicao {
-    char m_inicio[12];
-    int m_numViasBU;
-    int m_numViasBUAdicionais;
-    char m_meio1[36];
-    int m_numViasEstadoUrna;
-    int m_numViasEleitores;
-    int m_numViasVersoesDados;
-    int m_numViasPU;
-    char m_meio2[328];
-    bool m_imprimeBJust;
-};
-
 class CInformacaoEleicao {
 public:
-    explicit CInformacaoEleicao(const SDadosInformacaoEleicao& dados);
+    explicit CInformacaoEleicao(const ecourna::app::dados::CParametrosUrna& parametros);
 
     bool EhModoDemonstracao() const;
     bool ImprimeBJust() const;
@@ -49,7 +39,7 @@ public:
     int GetNumViasPU() const;
 
 private:
-    const SDadosInformacaoEleicao& m_dados;
+    const ecourna::app::dados::CParametrosUrna& m_parametros;
 };
 
 } // namespace comum

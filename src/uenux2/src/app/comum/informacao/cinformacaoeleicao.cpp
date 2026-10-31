@@ -10,7 +10,7 @@
 
 namespace comum {
 
-CInformacaoEleicao::CInformacaoEleicao(const SDadosInformacaoEleicao& dados) : m_dados(dados) {}
+CInformacaoEleicao::CInformacaoEleicao(const ecourna::app::dados::CParametrosUrna& parametros) : m_parametros(parametros) {}
 
 // (original lines 15-37: content not recovered)
 #line 38
@@ -22,37 +22,37 @@ bool CInformacaoEleicao::EhModoDemonstracao() const
 
 bool CInformacaoEleicao::ImprimeBJust() const
 {
-    return !EhModoDemonstracao() && m_dados.m_imprimeBJust;
+    return !EhModoDemonstracao() && m_parametros.GetRegistrarMesarios();
 }
 
 int CInformacaoEleicao::GetNumViasBU() const
 {
-    return EhModoDemonstracao() ? 1 : m_dados.m_numViasBU;
+    return EhModoDemonstracao() ? 1 : m_parametros.GetNumBUVotaObrigatorios();
 }
 
 int CInformacaoEleicao::GetNumViasBUAdicionais() const
 {
-    return EhModoDemonstracao() ? 1 : m_dados.m_numViasBUAdicionais;
+    return EhModoDemonstracao() ? 1 : m_parametros.GetNumBUVotaAdicionais();
 }
 
 int CInformacaoEleicao::GetNumViasEstadoUrna() const
 {
-    return EhModoDemonstracao() ? 1 : m_dados.m_numViasEstadoUrna;
+    return EhModoDemonstracao() ? 1 : m_parametros.GetNumRelatorioEstado();
 }
 
 int CInformacaoEleicao::GetNumViasEleitores() const
 {
-    return EhModoDemonstracao() ? 1 : m_dados.m_numViasEleitores;
+    return EhModoDemonstracao() ? 1 : m_parametros.GetNumRelatorioEleitores();
 }
 
 int CInformacaoEleicao::GetNumViasVersoesDados() const
 {
-    return EhModoDemonstracao() ? 1 : m_dados.m_numViasVersoesDados;
+    return EhModoDemonstracao() ? 1 : m_parametros.GetNumRelatorioVersoesDados();
 }
 
 int CInformacaoEleicao::GetNumViasPU() const
 {
-    return EhModoDemonstracao() ? 1 : m_dados.m_numViasPU;
+    return EhModoDemonstracao() ? 1 : m_parametros.GetNumRelatorioPU();
 }
 
 } // namespace comum

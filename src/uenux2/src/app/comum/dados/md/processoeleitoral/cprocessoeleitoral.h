@@ -18,6 +18,8 @@ namespace comum::md {
 class CProcessoEleitoral {
 public:
     const CPleito& GetPleito2() const;
+    // The name is chosen: comum::CRelatorioTesteImpressora's slot 14 (fn 11191) tests the flag at +156 first.
+    bool TemPleito2() const { return m_pleito2.has_value(); }
 
 private:
     uedword m_codigo;

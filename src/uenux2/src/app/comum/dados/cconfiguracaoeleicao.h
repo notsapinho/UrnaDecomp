@@ -27,9 +27,14 @@ public:
     const md::CEleicaoPE& GetEleicao(const TEleicaoID eleicao) const;
     const md::CCargo& GetCargo(const TCargoID cargo) const;
 
-    // The name is chosen: CGravadorUtil::DeterminaNomeArquivoSemLetra (inlined into target fn 3798) reads the pleito's
-    // identifier at +28 of the instance, and no record names an accessor.
+    // The names are chosen: CGravadorUtil::DeterminaNomeArquivoSemLetra (inlined into target fn 3798) reads the pleito's
+    // identifier at +28 of the instance, and no record names an accessor; comum::CRelatorioTesteImpressora's slots read
+    // the name at +8 (fn 11192), the origin at +20 (fn 11194), the pleito at +28 (fn 11191) and the parameters' header at
+    // +188 (fn 11195).
+    const std::string& GetNome() const { return m_nome; }
+    md::EOrigemConfiguracao GetOrigem() const { return m_origem; }
     const md::CPleito& GetPleito() const { return m_pleito; }
+    const ecourna::app::dados::CParametrosUrna& GetParametrosUrna() const { return m_parametros; }
 
 private:
     unsigned m_naoRecuperado1[2];

@@ -185,9 +185,6 @@
 
 // link-order cluster 766 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
 
-// f5479 · 723 B · unmatched · placement: link order · name unknown
-// ? f5479(i32) { ... }
-
 // f5478 · 945 B · unmatched · placement: link order · name unknown
 // void f5478(i32, i32) { ... }
 
@@ -290,9 +287,6 @@
 
 // f6044 · 571 B · unmatched · placement: link order · name unknown
 // void f6044(i32, i32, i32, i32, i32) { ... }
-
-// f6038 · 229 B · unmatched · placement: link order · name unknown
-// void f6038(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // f6032 · 151 B · unmatched · placement: link order · name unknown
 // void f6032(i32, i32, i32, i32, i32) { ... }
@@ -521,11 +515,6 @@
 // f2820 · 189 B · unmatched · placement: link order · name unknown
 // void f2820(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1108 · uses=4 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
-
-// f2827 · 18 B · unmatched · placement: link order · name unknown
-// ? f2827(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1112 · uses=4 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
 
 // f2856 · 39 B · unmatched · placement: link order · name unknown
@@ -683,11 +672,6 @@
 
 // f642 · 10 B · unmatched · placement: link order · name unknown
 // void f642(i32) { ... }
-
-// link-order cluster 1322 · uses=28
-
-// f580 · 18 B · unmatched · placement: link order · name unknown
-// ? f580(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1330 · uses=35
 

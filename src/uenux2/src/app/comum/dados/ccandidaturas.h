@@ -5,22 +5,20 @@
 #include <mutex>
 #include <string>
 
+#include "api/io/cdatamap.h"
 #include "app/comum/dados/md/candidatura/ccandidatura.h"
 
 namespace comum {
 
-// Recovered: the layout, 44 bytes, from the constructor and destructor (target fns 5811, 3786): the candidacies by
-// candidate at +0, an iterator of them at +12, a std::string at +16 that 5811 builds from the literal "CCandidaturas",
-// a flag at +28, and the package versions by post at +32. What the string is for is not read: the name m_nome only
-// says what it holds. RecuperaVersaoPacote's record spells the parameter TCargoID, and the records of LoadFromFile the map's
-// types. The other members are not reconstructed, and the data members' names and the alias's place are chosen. The first
-// 28 bytes read as api::CDataMap<uedword, md::CCandidatura> (its records and the same three members at the same offsets).
-// api/io/cdatamap.h's class has no constructor taking the name yet, so they are written out here, and the private
-// constructor stands for one: 5811 frees the temporary name before +28, which only a base class's or a
-// member's initializer does.
-class CCandidaturas {
+// Recovered: the layout, 44 bytes, from the constructor and destructor (target fns 5811, 3786): an
+// api::CDataMap<uedword, md::CCandidatura> at +0 (the candidacies by candidate, the cursor at +12, the name at +16, which
+// 5811 builds from the literal "CCandidaturas"), a flag at +28, and the package versions by post at +32. The CDataMap at
+// +0 is evidence (fns 2268 and 2838 pass the singleton's own pointer to its GetCurrent, fn 1200); that it is the base and
+// not a member is a choice, read from siblings such as CEleitores, whose RTTI lists CDataMap as a base. The flag's use is
+// not read. RecuperaVersaoPacote's record spells the parameter TCargoID, and the records of LoadFromFile the map's types
+// (CCandidaturas::Container is the base's alias, a choice). Other members: not reconstructed; data members' names: chosen.
+class CCandidaturas : public api::CDataMap<uedword, md::CCandidatura> {
 public:
-    using Container = std::map<uedword, md::CCandidatura>;
     using TCargoID = md::TCargoID;
 
     static CCandidaturas& GetInst();
@@ -34,14 +32,13 @@ private:
     static std::unique_ptr<CCandidaturas> s_inst;
     static std::mutex s_mutex;
 
-    explicit CCandidaturas(const std::string& nome)
-        : m_atual(m_candidaturas.end()), m_nome(nome), m_carregado(true) {}
-
-    Container m_candidaturas;
-    Container::iterator m_atual;
-    std::string m_nome;
     bool m_carregado;
     std::map<uedword, std::string> m_versoesPacote;
 };
+
+// Record ccandidaturas.cpp:261 names it. Its target callers are CCandidaturasDSSexo's and CCandidaturasDSNome's call
+// operators and the texts that hold CCandidaturasDSNumero's and CCandidaturasDSFoto's (fns 5806, 5807, 12742, 12641).
+// The record does not show the linkage: external is chosen, and so is this declaration's place.
+const md::CCandidatura& GetCandidaturaAtual(const std::string& funcao);
 
 } // namespace comum

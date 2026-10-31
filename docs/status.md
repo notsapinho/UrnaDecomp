@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**9,593 of 14,343 functions matched (66.88%), 2,548,368 of 5,883,903 code bytes (43.31%).**
+**9,667 of 14,343 functions matched (67.40%), 2,576,588 of 5,883,903 code bytes (43.79%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -28,10 +28,10 @@ name ([Not attributed](#not-attributed)).
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 1,517 / 3,285 | 46.18% | 357,340 / 2,168,476 | 16.48% |
-| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,442 / 8,294 | 77.67% | 1,952,749 / 3,145,292 | 62.08% |
-| not attributed | `unknown`, `app` | 1,634 / 2,764 | 59.12% | 238,279 / 570,135 | 41.79% |
-| **total** | | **9,593 / 14,343** | **66.88%** | **2,548,368 / 5,883,903** | **43.31%** |
+| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 1,569 / 3,285 | 47.76% | 381,442 / 2,168,476 | 17.59% |
+| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,451 / 8,294 | 77.78% | 1,954,401 / 3,145,292 | 62.14% |
+| not attributed | `unknown`, `app` | 1,647 / 2,764 | 59.59% | 240,745 / 570,135 | 42.23% |
+| **total** | | **9,667 / 14,343** | **67.40%** | **2,576,588 / 5,883,903** | **43.79%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -45,13 +45,13 @@ come from getting the version, the flags and the link order right, not from writ
 <!-- status:tse -->
 | component | what it is | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| `vota` | uenux2 `src/app/vota`: the voting application | 130 / 780 | 16.67% | 12,824 / 470,204 | 2.73% |
-| `comum` | uenux2 `src/app/comum`: shared urna code (domain model, converters, reports) | 157 / 599 | 26.21% | 29,739 / 606,487 | 4.90% |
-| `api` | uenux2 `src/api`: GUI toolkit, io, ipc, util, logging, audio | 309 / 516 | 59.88% | 40,314 / 214,120 | 18.83% |
-| `simulador` | the web simulator's `CWasm*` devices | 104 / 144 | 72.22% | 12,407 / 58,157 | 21.33% |
+| `vota` | uenux2 `src/app/vota`: the voting application | 132 / 780 | 16.92% | 13,055 / 470,204 | 2.78% |
+| `comum` | uenux2 `src/app/comum`: shared urna code (domain model, converters, reports) | 178 / 599 | 29.72% | 42,018 / 606,487 | 6.93% |
+| `api` | uenux2 `src/api`: GUI toolkit, io, ipc, util, logging, audio | 313 / 516 | 60.66% | 40,834 / 214,120 | 19.07% |
+| `simulador` | the web simulator's `CWasm*` devices | 112 / 144 | 77.78% | 13,900 / 58,157 | 23.90% |
 | `vota-web` | the web engine (`CVotaWebEngine`, …) | 4 / 11 | 36.36% | 17 / 2,808 | 0.61% |
-| **uenux2** | the five rows above | **704 / 2,050** | **34.34%** | **95,301 / 1,351,776** | **7.05%** |
-| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 415 / 799 | 51.94% | 200,634 / 721,680 | 27.80% |
+| **uenux2** | the five rows above | **739 / 2,050** | **36.05%** | **109,824 / 1,351,776** | **8.12%** |
+| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 432 / 799 | 54.07% | 210,213 / 721,680 | 29.13% |
 | `asn1-modules` | the generated `Modulo*` ASN.1 types | 39 / 59 | 66.10% | 12,230 / 41,909 | 29.18% |
 | `ASN1` | TSE's fork of the III ASN.1 runtime | 359 / 377 | 95.23% | 49,175 / 53,111 | 92.59% |
 <!-- /status:tse -->
@@ -62,8 +62,8 @@ come from getting the version, the flags and the link order right, not from writ
 | component | functions | | code bytes | |
 | --- | ---: | ---: | ---: | ---: |
 | `openssl` | 3,135 / 3,258 | 96.22% | 943,687 / 1,014,603 | 93.01% |
-| `libc++` | 1,232 / 1,957 | 62.95% | 138,038 / 439,879 | 31.38% |
-| `sqlite` | 889 / 927 | 95.90% | 702,697 / 772,965 | 90.91% |
+| `libc++` | 1,240 / 1,957 | 63.36% | 139,558 / 439,879 | 31.73% |
+| `sqlite` | 890 / 927 | 96.01% | 702,829 / 772,965 | 90.93% |
 | `7zip` | 479 / 970 | 49.38% | 44,681 / 292,539 | 15.27% |
 | `RHVoice` | 416 / 740 | 56.22% | 63,533 / 450,027 | 14.12% |
 | `libc++abi` | 230 / 234 | 98.29% | 51,256 / 53,263 | 96.23% |
@@ -79,8 +79,8 @@ The library versions and the evidence for them are in `third_party/MANIFEST.md`.
 <!-- status:unattributed -->
 | component | functions | | code bytes | |
 | --- | ---: | ---: | ---: | ---: |
-| `unknown` | 1,167 / 1,508 | 77.39% | 181,436 / 258,975 | 70.06% |
-| `app` | 467 / 1,256 | 37.18% | 56,843 / 311,160 | 18.27% |
+| `unknown` | 1,174 / 1,508 | 77.85% | 181,935 / 258,975 | 70.25% |
+| `app` | 473 / 1,256 | 37.66% | 58,810 / 311,160 | 18.90% |
 <!-- /status:unattributed -->
 
 `unknown` holds functions that `ledger/func-attribution.tsv` gives no component, and `app` holds functions the
@@ -91,22 +91,22 @@ scan's `object` column):
 <!-- status:unattributed-origin -->
 | our candidate is compiled from | `unknown` matched / total | `app` matched / total |
 | --- | ---: | ---: |
-| OpenSSL | 651 / 666 | 158 / 158 |
-| SQLite | 248 / 252 | 37 / 38 |
-| our uenux2 units | 37 / 55 | 124 / 167 |
-| our ecourna units | 39 / 49 | 85 / 101 |
+| OpenSSL | 651 / 668 | 157 / 157 |
+| SQLite | 248 / 250 | 37 / 38 |
+| our uenux2 units | 43 / 62 | 133 / 176 |
+| our ecourna units | 40 / 50 | 85 / 100 |
 | emscripten sysroot: libc++ | 54 / 58 | 7 / 9 |
 | emscripten sysroot: libc (musl) | 54 / 56 | 8 / 8 |
-| our stand-ins (src/app, src/web) | 27 / 36 | 19 / 28 |
+| our stand-ins (src/app, src/web) | 27 / 36 | 17 / 26 |
 | binaryen (functions the optimizer creates) | 21 / 22 | 7 / 7 |
 | our ASN.1 runtime and modules | 10 / 12 | 6 / 6 |
 | 7-Zip | 11 / 14 | 0 / 1 |
-| RHVoice | 6 / 11 | 1 / 1 |
+| RHVoice | 6 / 10 | 1 / 1 |
 | zlib | 0 / 0 | 9 / 10 |
 | emscripten sysroot: libc++abi | 4 / 5 | 2 / 2 |
 | emscripten sysroot: compiler-rt | 1 / 1 | 4 / 5 |
 | emscripten sysroot: dlmalloc | 4 / 5 | 0 / 0 |
-| no candidate in our link | 0 / 266 | 0 / 715 |
+| no candidate in our link | 0 / 259 | 0 / 710 |
 <!-- /status:unattributed-origin -->
 
 Most of these are OpenSSL, SQLite and emscripten's own system libraries (musl libc, libc++, dlmalloc and
@@ -120,14 +120,14 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 9,593 | 2,548,368 | matched |
-| `differs` | 501 | 121,214 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 526 | 510,861 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 3,723 | 2,703,460 | our link has no body for it yet |
+| `match` | 9,667 | 2,576,588 | matched |
+| `differs` | 496 | 125,867 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `unresolved` | 530 | 510,828 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `no-candidate` | 3,650 | 2,670,620 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 1,517 `match`, 94 `differs`, 46 `unresolved` and 1,628 `no-candidate`.
+For TSE code alone: 1,569 `match`, 95 `differs`, 47 `unresolved` and 1,574 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -150,7 +150,7 @@ the component tables), and three lines about readings:
 because binaryen merges identical bodies and the target keeps one copy under one index:
 
 <!-- status:twins -->
-316 matches are bodies of 8 B or less, and 54 matches have a byte-identical twin in the target. 0 matches are kind-unverified: the operand-kind table cannot vouch for their constants, so the check offered each one every reading (`make -C src splat` names them).
+319 matches are bodies of 8 B or less, and 55 matches have a byte-identical twin in the target. 0 matches are kind-unverified: the operand-kind table cannot vouch for their constants, so the check offered each one every reading (`make -C src splat` names them).
 <!-- /status:twins -->
 
 A meter that does not show the target's sha256 is not a meter: the build failed, and its output lists the matches
@@ -179,11 +179,11 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,078 | 1,078 | 0 | 0 | 0 |
-| `fingerprint` | 684 | 683 | 0 | 1 | 0 |
-| `addr` | 6,517 | 6,218 | 190 | 107 | 2 |
-| `shape` | 372 | 322 | 31 | 17 | 2 |
-| `none` | 5,692 | 1,292 | 280 | 401 | 3,719 |
+| `byte` | 1,079 | 1,079 | 0 | 0 | 0 |
+| `fingerprint` | 687 | 686 | 0 | 1 | 0 |
+| `addr` | 6,534 | 6,241 | 182 | 109 | 2 |
+| `shape` | 379 | 330 | 31 | 17 | 1 |
+| `none` | 5,664 | 1,331 | 283 | 403 | 3,647 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

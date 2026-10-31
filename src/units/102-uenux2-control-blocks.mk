@@ -31,7 +31,9 @@
 #   CMovie 1593, 3076: 12835, 12830, 12823. FormControlBlock 5515, 6024: 11131, 11130, 11128. CProgressoEncerramento
 #   12098: 12087, 12086, 12085. CProgressBar 5545: 11111, 11110. CMovieField 5543: 11104, 11103. CTextFieldBlinking
 #   1265: 11113, 11112. CTextFieldUpdate 502, 3058, 5936: 12316, 12314. CImageFieldUpdate 3059: 12541, 12535. CWavFile
-#   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578. CPreShowProgressBar (ten builders, 1591 first): 12813,
+#   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578, which match from unit 127's cwasmresource.cpp.o, whose
+#   GetImage (8633) builds the block; the dropped builder here stands for 1263. CPreShowProgressBar (ten builders, 1591
+#   first): 12813,
 #   12812. CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. CTimer 10846: 10844, 10843. api::Logger
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.
 #   CDataText<CCandidaturasDSNumero> 4185: 12760, 12752. <CCandidaturasDSNome> 4185: 12654, 12650.
@@ -83,14 +85,14 @@
 # Pending, each with what it waits for:
 # - 12244, vota::CItemVisualizarCandidatosVota's slot 2, a trap in 102-uenux2-control-blocks-pending.cpp, the one slot
 #   this unit leaves with no body, and no stub.
-# - 11070, 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>: a constructor to name in the builder.
-#   cinputmenufield.h declares none, and make_shared of a copy does not compile.
 # - 11109, 11108, CDataText<AddStatusHeader's lambda>, and 12530, 12529,
 #   CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>: a lambda is spelled only in its function, so they
 #   land with fns 502 and 6561.
 # - 12592, 12591, CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>, and 10373, 10367, 10361, three
 #   blocks of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>: no roots file can spell a T of
 #   another TU's anonymous namespace, so they land with fns 6627 and 10388.
+# 11070 and 11069, the D2 and D0 of __shared_ptr_emplace<api::CInputMenuField>, which waited here for a constructor to name
+# in the builder, match since from unit 121's roots, which name the one cinputmenufield.h declares now.
 # Paths relative to src/uenux2. citensmenuvota.cpp holds the out-of-line destructor the block of the fifth item needs.
 W102_SRCS := src/app/vota/operador/outrasopcoes/citensmenuvota.cpp
 UENUX2_SRCS += $(W102_SRCS)

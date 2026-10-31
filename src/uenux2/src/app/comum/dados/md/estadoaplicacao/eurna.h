@@ -1,7 +1,7 @@
 #pragma once
 
 // The urna's state enums the comum::md::estadoaplicacao classes and their converters hold. The records print them
-// unqualified (const EUrnaModelo, const EUrnaTipo, const EUrnaAplicativo, const EEstadoSA), and app/comum/eurnafase.h
+// unqualified (const EUrnaModelo, const EUrnaTipo, const EUrnaAplicativo, const EEstadoSA, const EEstadoUrna), and app/comum/eurnafase.h
 // keeps EUrnaFase in comum, so the scope is chosen, like this file's path. Every enumerator's value comes from the bodies
 // named below it; every enumerator's name is chosen, from the generated ASN.1 enumerator of the same position.
 
@@ -78,6 +78,15 @@ enum EEstadoSA {
     eSAUltimoID,
 };
 
+// CConversorEstadoGeral::ConverteEstadoUrna (target fn 11397): 49 to 51 are ModuloEstadoGeralUrna::EstadoUrna's values 1
+// to 3, 52 is the end marker it refuses.
+enum EEstadoUrna {
+    eEstadoUrnaCarregando = 49,
+    eEstadoUrnaCarregada,
+    eEstadoUrnaTestada,
+    eEstadoUrnaUltimoID,
+};
+
 } // namespace comum
 
 namespace comum {
@@ -108,3 +117,5 @@ template <>
 struct std::formatter<comum::EUrnaAplicativo> : comum::SFormatoEnum {};
 template <>
 struct std::formatter<comum::EEstadoSA> : comum::SFormatoEnum {};
+template <>
+struct std::formatter<comum::EEstadoUrna> : comum::SFormatoEnum {};

@@ -1,6 +1,7 @@
 # uenux2 comum::asn::Utils in src/app/comum/asn/util.cpp, the records' file: ConverteFase, DesconverteFase,
 # ConverteTipoLocalVotacao and DesconverteTipoLocalVotacao (target fns 1712, 2843, 3801, 3800), and DesconverteAbrangencia
-# (5827), written and not matched; CConversorDadoCarga (below). The class header app/comum/asn/util.h, the error header
+# (5827), and DesconverteSexo, which binaryen inlines into CConversorDadosCandidato::DoDesconverte (11450, below);
+# CConversorDadoCarga (below). The class header app/comum/asn/util.h, the error header
 # euecomumasnerror.h and the enum EUrnaFase (app/comum/eurnafase.h, which unit 60's cgravadorwsq.h includes in place of
 # its opaque `: int`
 # declaration: the target formats EUrnaFase through fn 536, formatter<unsigned int>).
@@ -25,9 +26,9 @@
 # the check. So the switch returns.
 #
 # Not matched, and what each waits for:
-# - 5827 DesconverteAbrangencia is right apart from one name: it formats a generated `int` enum, so its handle is fn 1711,
-#   formatter<int>, and the name 1711 has only this body's vote (`unresolved self-voted`). It matches when another
-#   function that stores a slot of 1711 matches: 11450, 11416, 11373, 10284 or 10270.
+# 5827 DesconverteAbrangencia formats a generated `int` enum, so its handle is fn 1711, formatter<int>; it matched when
+# 11450 below, which stores another slot of 1711 (DesconverteSexo's handle), gave the name a second voter.
+#
 # - 1713 DesconverteDataHoraJE is not written. It builds ModuloTiposEleitorais::DataJE and HoraJE, which RTTI names and
 #   src/asn1/modules/ModuloTiposEleitorais.h does not declare, and calls fn 2276, whose callees 2765 and 3649 (api::CDate's
 #   constructors) have no body of ours.
@@ -42,7 +43,8 @@
 #   in operands only and its first difference is the record, which a scratch file cannot hold; and every match of the
 #   tree still verifies, sha256 the target's. The defaults stay as unit 47's specialization with their source in its
 #   header, since the target's body is a merge thunk (src/units/README.md "An inherited template default").
-# - 11437 and 11438 hold other members of this file inlined, and 11438 calls fn 2654, which differs.
+# - 11437 and 11438 hold other members of this file inlined, with members of app/comum/md/'s CIDEleitoral, CIDPacote
+#   and CCabecalhoPacote (their records), which are not written.
 #
 # ConverteAbrangencia (inlined by binaryen into 11462), ConverteTurno and DesconverteTurno (into 11401 and 11402) are
 # here too, at their records' lines; their callers are in fragment 107 and in cconversordadocarga.cpp. No default in the
@@ -63,13 +65,29 @@
 #   An explicit `std::formatter<EUrnaTurno> : std::formatter<unsigned int> {}` does not compile: libc++'s format takes an
 #   integral.
 #
+# comum::asn::CConversorDadosCandidato::DoDesconverte (target fn 11450, slot 3 of the class's vtable @1562224) in
+# app/comum/dados/asn/candidatura/cconversordadoscandidato.cpp comes after util.cpp in this list, and that order is
+# measured: it inlines Utils::DesconverteSexo (record util.cpp:483) and CDadosCandidato's constructors, out of line in
+# 124-uenux2-app-comum-dados-asn.mk's cdadoscandidato.cpp. Linked ahead of util.cpp (in fragment 124, which sorts
+# before 96), 11450 scores 108 over 1389 rows with 2 inserted and 4 deleted, the inlined switch's result copied into
+# another local; after it, 80 over 1387, all operand-only, and it matches. The rest of 11450's evidence and choices are
+# fragment 124's, with its data class. DesconverteSexo's cases run sexoMasculino, sexoFeminino, sexoNaoInformado: the
+# target's switch table, [0 1 3 1 2] with 1 set before it, is that order's alone of the six (measured on a probe), and
+# its throw comes after a `default: break;`, as in DesconverteAbrangencia (column 11). Its parameter's type is the
+# record's spelling, ModuloTiposEleitorais::CodigoSexo (src/asn1/modules/ModuloCandidatos.h).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
-COMUM_ASN_SRCS := src/app/comum/asn/util.cpp src/app/comum/dados/asn/estadoaplicacao/cconversordadocarga.cpp
+COMUM_ASN_SRCS := src/app/comum/asn/util.cpp src/app/comum/dados/asn/estadoaplicacao/cconversordadocarga.cpp \
+  src/app/comum/dados/asn/candidatura/cconversordadoscandidato.cpp
 UENUX2_SRCS += $(COMUM_ASN_SRCS)
 # the converters that call these members are not reconstructed yet: 96-uenux2-app-comum-asn-roots.cpp gives each its
 # second call site, the way the target reaches them
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(COMUM_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
+# CConversorDadosCandidato's slot 2 is the base's default DoConverte, which iconversorasn.h does not define yet:
+# 96-uenux2-app-comum-asn-pending.cpp gives the vtable a trapping explicit specialization, compiled with the tree's flags
+$(ROOT)/$(APP)/96-uenux2-app-comum-asn-pending.o: $(ROOT)/src/units/96-uenux2-app-comum-asn-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/96-uenux2-app-comum-asn.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/96-uenux2-app-comum-asn-pending.cpp -o $(R)
 $(ROOT)/$(APP)/96-uenux2-app-comum-asn-roots.o: $(ROOT)/src/units/96-uenux2-app-comum-asn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/96-uenux2-app-comum-asn.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/96-uenux2-app-comum-asn-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/96-uenux2-app-comum-asn-roots.o
+override EXTRA_OBJS += $(APP)/96-uenux2-app-comum-asn-pending.o $(APP)/96-uenux2-app-comum-asn-roots.o
