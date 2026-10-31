@@ -89,10 +89,10 @@
 #   members crdvvota.h has, 67 rows over 115 from fn 5734, and both rows are no-candidate.
 # - 11206, CParteEleitores::Imprime, has both its callees matched and is only not written; 11215, CParteCandidatos::Imprime,
 #   waits for 2271. Both stay traps in unit 77's pending file.
-# - 242, ~CDetalheCandidato, is written (implicit) and differs, and it is the level: __destroy_at<CSuplencia> costs 245,
-#   over -O2's threshold of 225 and under -O3's 250 (-Rpass-missed=inline on cpe.cpp). At -O2 it stays out of line and the
-#   small loop goes into the D2; at -O3 it goes into the loop, fn 1135, which is then too costly for the D2. So 242 waits
-#   for the decision on uenux2's level, and no source form here closes it.
+# - 242, ~CDetalheCandidato, is written (implicit) and differs: __destroy_at<CSuplencia> costs 245, over -O2's threshold
+#   of 225 and under -O3's 250 (-Rpass-missed=inline on cpe.cpp). At -O2 it stays out of line and the small loop goes into
+#   the D2; at -O3 it goes into the loop, fn 1135, which is then too costly for the D2. At the tree's -O3 242 scores 96
+#   over 152 rows (86 inserted; 79 over 134 at -O2), so the level does not close it, and no source form here does.
 # - CEleitores's one slot, 2824, has no body and no vtable of ours: the stub went with the class (src/units/README.md
 #   "Pending members"). CreateInst of each class is inlined into 7787 or 2787 and is not written.
 # - crespostas.cpp also holds comum::CRespostasDSNumero's call operator, which inlines GetInst in the target (fn 12621,
@@ -111,15 +111,15 @@
 #   std::find_if(...) == end() differs, 32 over 262 rows.
 # - MarcaEleitorFoiHabilitado (2825, lines 435, 439 and 447) and the Text of four data sources, CEleitorDadoNomeParaUrna,
 #   CEleitorDadoSequencial, CEleitorDadoSecao and CEleitorDadoTTE (11529, 11528, 11527, 11526, lines 756, 772, 784, 796;
-#   reached only by table slots 3906, 4055, 4056 and 4113, which fn 5401 passes), are written and wait for uenux2 at -O3:
+#   reached only by table slots 3906, 4055, 4056 and 4113, which fn 5401 passes), match at the tree's -O3 and did not at -O2:
 #   - the four Text hold GetInst inlined (record 44 lists them), which -O2 keeps out of line: `try-tu.sh --symbols --flags
-#     '-Rpass-missed=inline'` on this file prints `cost=230, threshold=225` at each call. In the plain link they score 41
+#     '-Rpass-missed=inline'` on this file prints `cost=230, threshold=225` at each call. In the -O2 link they scored 41
 #     over 93, 41 over 251 (twice) and 43 over 371, each with GetInst's 23 rows deleted.
 #   - 2825 holds CEleitorDetalhe::MarcaHabilitado (unit 98) inlined by binaryen, and that holds the mesario's member of
 #     CEleitorDinamico as a call binaryen inlined. At -O2 clang inlines that member and keeps
 #     std::optional<CEleitorIdentidade>::operator= out of line inside it (`cost=235, threshold=225`); at -O3 it inlines
-#     operator= (threshold 250) and keeps the member (`cost=250, threshold=250`), the target's shape. 2825 scores 101 over
-#     446 rows in the plain link.
+#     operator= (threshold 250) and keeps the member (`cost=250, threshold=250`), the target's shape. 2825 scored 101 over
+#     446 rows in the -O2 link.
 #   With this object and celeitordetalhe.cpp.o compiled at -O3 in a copy of the link (each make compile line with -O2
 #   turned to -O3), the four Text score 24 over 93, 26 over 251 (twice) and 28 over 371, and 2825 41 over 440, all
 #   operand-only; splat-remap prints IDENTICAL for the four Text and stops on 2825 only at the call of 1271, which has no

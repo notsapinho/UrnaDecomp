@@ -592,7 +592,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
    `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
 10. **252 and 3717, by `src/app/roots_uenux2.cpp`.** The target's 252, `std::operator+(string&&, string&&)`, is the
-    executable TU's `-Oz` copy, and every real TU that instantiates `CPolySingleton<T>::instance` emits an `-O2` one. That
+    executable TU's `-Oz` copy, and every real TU that instantiates `CPolySingleton<T>::instance` emits one at uenux2's level. That
     tree root, first on the link line, holds an explicit instantiation with `minsize`, and an `extern template` of
     `std::string::append` that leaves 3717 to `libc++.a` (`src/units/README.md` "Companion files"). So
     `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match app/roots_uenux2.o` and

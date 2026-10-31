@@ -18,13 +18,13 @@
 #   std::map's __tree::destroy (fn 3530), the export uenux_wasm_web_sound_wait_cancel_requested (fn 9614) and
 #   CEsperaAudioWasm::Cancelada (fn 9445, slot 3), which match; s_esperas's name is a vote of 9614 and 9631. The control
 #   block's D2 and D0 (9490, 9481) match too, from this object.
-# - written and `unresolved`, at the tree's -O2 (docs/reference/facts/levels.md V2 and V3): the export
+# - matched at the tree's -O3 and `unresolved` at -O2 (docs/reference/facts/levels.md V2 and V3): the export
 #   uenux_wasm_web_sound_wait_finished (fn 9604), CEsperaAudioWasm::Cancela (fn 2680) with the D2, the D0 and
-#   __on_zero_shared that call it (9459, 9448, 9472), and WaitAsync (fn 9515). The target inlines std::map's erase into
-#   9604 and 2680 (the same code in two functions, so clang did), and Cancela is then too large to inline into its three
-#   callers; at -O2 erase stays a call and Cancela goes into them. In a scratch link with the simulator's three objects at
-#   -O3 (the tree's flags otherwise), 2680 scores 8 over 157 rows, 9604 9 over 223, 9459 1 over 5, 9448 2 over 6 and 9472 1 over 6,
-#   all operand-only. WaitAsync needs more: `-fno-strict-aliasing` off as well, since the tree's insert reloads __child
+#   __on_zero_shared that call it (9459, 9448, 9472). The target inlines std::map's erase into 9604 and 2680 (the same
+#   code in two functions, so clang did), and Cancela is then too large to inline into its three callers; at -O2 erase
+#   stays a call and Cancela goes into them. In a scratch link with the simulator's three objects at -O3 (the tree's
+#   -O2 flags otherwise), 2680 scored 8 over 157 rows, 9604 9 over 223, 9459 1 over 5, 9448 2 over 6 and 9472 1 over 6,
+#   all operand-only. WaitAsync (fn 9515) is written and `unresolved`, and needs more: `-fno-strict-aliasing` off as well, since the tree's insert reloads __child
 #   where the target does not (23 over 459 rows then, 20 operand-only; 49 over 464 with the flag), and the 3 rows left
 #   are CEsperaAudio's flag store, which ours merges into the object's first i64; and a name of s_proximaEspera (.data
 #   1528464, value 1 in the target's data): too little content to place, and only 9515 reads it.

@@ -41,7 +41,7 @@ simulator's scenario list `manifest.json`, and `fs/` + `fs-manifest.tsv` (the pa
 
 **uenux2** — the TSE application source tree; its paths in the binary start `/home/rubio/tse/uenux2/src/…` and
 `…/uenux2/wasm/vota_web/`. Our reconstruction mirrors it under `src/uenux2/`, compiled with `UENUX2_CXXFLAGS`
-(`-O2 -fPIC`, no `-fexceptions`). It splits into the components `vota`, `comum`, `api`, `simulador` and `vota-web`.
+(`-O3 -fPIC`, no `-fexceptions`). It splits into the components `vota`, `comum`, `api`, `simulador` and `vota-web`.
 *Where:* `src/uenux2/`, `src/Makefile`, `docs/reference/appmap.md` §2, `docs/reference/app-flags.md`.
 
 **ecourna** — a TSE library shipped as the conan package `libecea1da310e5107` (security, SQLite wrapper, compression,

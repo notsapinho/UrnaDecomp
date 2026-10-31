@@ -150,8 +150,8 @@
 #   target keeps as a call, cost 255 against 225; remove<T> written out in set; set's parameter as `&&`.
 #
 # fn 252, operator+(string&&, string&&). The target's copy is the executable TU's, at -Oz. Every TU that instantiates
-# instance<T> emits an -O2 copy, its object links before libc++.a, and with nothing else 252 reads `differs +0x0 ... the
-# locals`, with api/util/itimerscheduler.cpp.o as its object (measured). So src/app/roots_uenux2.cpp, ahead of both trees,
+# instance<T> emits a copy at its tree's level, its object links before libc++.a, and with nothing else 252 read
+# `differs +0x0 ... the locals` at -O2, with api/util/itimerscheduler.cpp.o as its object (measured). So src/app/roots_uenux2.cpp, ahead of both trees,
 # holds the instance at the level of the target's rows, and its comment says how; no file of this unit declares anything
 # for it. After a merge read `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv`, which prints `252 match
 # app/roots_uenux2.o` and `3717 match sysroot:libc++.a(directory_entry.o)`.

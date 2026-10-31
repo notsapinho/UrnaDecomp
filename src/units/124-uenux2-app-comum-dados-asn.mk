@@ -64,7 +64,7 @@
 # - 11399 and 11400, CConversorDadoCorrespondencia's slots (11397 builds the class on its stack): the correspondence's
 #   dates through api::CDateTime.
 # - The base's default DoConverte of each converter that overrides only DoDesconverte (11380, 11358): fn 731 waits for
-#   -O3 (96-uenux2-app-comum-asn.mk).
+#   the defaults in iconversorasn.h (96-uenux2-app-comum-asn.mk).
 # Not written: 11363 (CConversorProcessoEleitoral::DoDesconverte) builds a comum::asn::CConversorPleito on its stack,
 # whose class and slots (11364, 11365) are not in this tree; 11352, 11351 and 2794 (CConversorVotosCargo) need
 # md::CVotosCargos::SCargoInfo at its 12 bytes, which moves the map body unit 13 matches as fn 2877; 10266

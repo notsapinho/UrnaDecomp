@@ -80,7 +80,7 @@ Each row is measured by reconstructing or building that component and scoring it
 
 | component | source root embedded in the binary | compile flags |
 | --- | --- | --- |
-| uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` |
+| uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` |
 | the executable TU (not reconstructed) | `/home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp` | `-Oz -fexceptions` (facts/levels.md §V1) |
 | ecourna (conan package `libecea1da310e5107`) | `/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna/...` | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks`; no `-fPIC` |
 | III ASN.1 runtime (TSE fork) | none | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` |
@@ -94,7 +94,7 @@ Each row is measured by reconstructing or building that component and scoring it
 ### Evidence behind the application flags
 
 **uenux2.** A whole-link sweep over reconstructed units decides these flags.
-- `-O2` and `-O3` give the same bodies on the units of the sweep and differ on others, with no loop in them ([facts/levels.md](facts/levels.md) §V2). `-Os` loses `CIniKey::operator=`, and `-Oz` loses all the units.
+- `-O2` and `-O3` give the same bodies on the units of the sweep and differ on others, with no loop in them ([facts/levels.md](facts/levels.md) §V2); the whole tree decides for `-O3`: every match holds and 25 rows more match (§V3). `-Os` loses `CIniKey::operator=`, and `-Oz` loses all the units.
 - `-fPIC` removes the last structural differences in the constructors.
 - `-fno-strict-aliasing`: comum's converters reload a vector's begin right after storing a constant, which only code without TBAA does (fn 10289).
 - None of the 1,645 uenux2 functions that load an error record call an `invoke_*` thunk. Their `throw` sites call `__cxa_throw` directly, so the code was built without `-fexceptions`.

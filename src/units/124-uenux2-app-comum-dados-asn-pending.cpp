@@ -2,7 +2,7 @@
 // Each class overrides only DoDesconverte (slot 3); slot 2 is the base's default DoConverte,
 // comum::asn::IConversorASN<ENTIDADE, DADO>::DoConverte, a 29-byte thunk of fn 731 in the target, whose record puts a
 // throw on line 89 col 15 of src/app/comum/asn/iconversorasn.h. iconversorasn.h does not define that default yet (unit
-// 47's pending file says why, and 96-uenux2-app-comum-asn.mk has the measurement: fn 731 waits for -O3), so this file
+// 47's pending file says why, and 96-uenux2-app-comum-asn.mk has the measurement of fn 731 at -O3), so this file
 // defines each instantiation's member as an explicit specialization, with the symbol the vtable references; its body is
 // NOT the target's, it traps. Delete these when iconversorasn.h defines the default DoConverte: a specialization is a
 // strong symbol with the name of that template's instantiation, so the link would keep the trap without a word.

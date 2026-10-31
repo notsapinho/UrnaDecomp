@@ -4,10 +4,9 @@
 # (api/gui/ctextfielddoubleline.h) and the three enumerators of api/gui/eueguierror.h. Paths relative to src/uenux2;
 # the generic uenux2 rule depends on the source and every uenux2 header. Draw (10931) and Rect (10929) are here too, Rect
 # with CalcLineRect, which clang inlines twice: both copies are in its frame, with no second prologue. GetTextLines (5499,
-# record 68:21) is written and `differs`, score 577 over 1672 rows at this tree's level. With this object alone at -O3 in a
-# private link it scores 375 over 1497, and the target's two calls of append(const char*, size_t) appear, where -O2 has two
-# of __grow_by_and_replace and none of append; -std=c++23 adds nothing. So part of it is the level, which is not this unit's
-# to change, and part is unexplained: at -O3 it still has 4 __init_copy_ctor_external to the target's 3, 5 operator new to
+# record 68:21) is written and `differs`: 375 over 1497 rows at the tree's -O3 (577 over 1672 at -O2), where the target's
+# two calls of append(const char*, size_t) appear, where -O2 has two of __grow_by_and_replace and none of append;
+# -std=c++23 adds nothing. So part of it was the level, and part is unexplained: at -O3 it still has 4 __init_copy_ctor_external to the target's 3, 5 operator new to
 # its 6 and 2 __throw_out_of_range to its 1. It stays written though unexplained, because two matches need it and it holds
 # no slot a trap could take: a trap would be inlined into 10929 and 10931. Neither reads its body. What carries their
 # match is its line in splat/symbol_addrs.txt, `evidence:call by:10929`, and the record 68:21 is what says that line

@@ -16,13 +16,13 @@
 # paths: cloga.h, clogcomum.h, euecomumlogerror.h, cinformacaoeleicao.h, each beside the .cpp its records name.
 #
 # Written, not matching, and what each waits for:
-# - 6045 (`differs`) and 5876 (`no-candidate`, no anchor without equal instructions): uenux2's level. Their literals are 43
-#   and 40 bytes, and the target has no search of the literal for a brace, which -O2 keeps past 36 bytes and -O3 past 74
+# - 6045 and 5876 match at the tree's -O3; at -O2 they were `differs` and `no-candidate`. Their literals are 43 and 40
+#   bytes, and the target has no search of the literal for a brace, which -O2 keeps past 36 bytes and -O3 past 74
 #   (docs/reference/facts/reading.md R13): `wasm-objdump -d` of clogcomum.cpp's object counts 4, 4 and 5 br_table rows in the
-#   three members at -O2 and none at -O3. std::format stays as the source: the other 19-byte literal (5875) matches, and
-#   the tree's evidence is the level (docs/reference/facts/levels.md V3), which is reserved. With this unit's four TUs at
-#   -O3 alone and the tree's -std=c++20, a try link reads `13 over 230` and `19 over 292`, all operand-only, and
-#   `splat-remap --against` prints IDENTICAL for both, operand kinds verified (`tools/round/try-tu.sh --flags -O3
+#   three members at -O2 and none at -O3. std::format stays as the source: the other 19-byte literal (5875) matches at
+#   both levels. Before the tree took -O3, with this unit's four TUs at
+#   -O3 alone and the tree's -std=c++20, a try link read `13 over 230` and `19 over 292`, all operand-only, and
+#   `splat-remap --against` printed IDENTICAL for both, operand kinds verified (`tools/round/try-tu.sh --flags -O3
 #   --skip-units 111-uenux2-app-comum-log.mk --roots src/units/111-uenux2-app-comum-log-roots.cpp`, with 233's name in a
 #   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
@@ -38,8 +38,8 @@
 # ConverteStatusBateria) and ConverteFonteAlim into LogaCargaBateria (a third prologue). -Rpass=inline at this tree's
 # level: ConverteFonteAlim cost=305, ConverteStatusBateria cost=225, threshold=225. So the plain form leaves
 # ConverteStatusBateria out of line by one tick (`168 over 502`, a third prologue where the target has none), and `inline`,
-# which raises the threshold to 325, gives the target (`52 over 464`, all operand-only, now a match). That keyword is a
-# choice of this level: at -O3 the threshold is 250 and the plain form would do. Left without `inline`, ConverteFonteAlim
+# which raises the threshold to 325, gives the target (`52 over 464`, all operand-only, now a match). Those costs are
+# -O2's; at the tree's -O3 the threshold is 250, over that cost, so the keyword is a choice there (not measured without it). Left without `inline`, ConverteFonteAlim
 # stays binaryen's as the target has it. binaryen also removes GetInst's empty constructor and destructor calls.
 #
 # GetInst, what the bytes decide (objects at uenux2's flags, rows masked, unless a link is named):
@@ -100,7 +100,7 @@
 # the calls and not on the census.
 #
 # src/app/roots_uenux2.cpp holds std::operator+(string&&, string&&): the first real uenux2 TU that instantiates
-# CPolySingleton<T>::instance links ahead of libc++.a, and its -O2 copy took 252 (docs/reference/facts/splat.md S10 item
+# CPolySingleton<T>::instance links ahead of libc++.a, and its copy at -O2 took 252 (docs/reference/facts/splat.md S10 item
 # 10). Its comment says how the copy stays the target's. 837, 11157 and 611 now come from this unit's objects, at uenux2's
 # flags, and stay matched; the 13 other instances stay in unit 100's roots object.
 #

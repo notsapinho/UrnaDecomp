@@ -2,9 +2,9 @@
 
 What a compile level does to a site, where the level of a tree is not the question: the flags of the executable TU
 whose copies of inline code the target keeps, how to read LLVM's inlining decisions, the evidence for uenux2 at
-`-O3 -std=c++23`, and how to measure which flags a linkonce copy has. This file is the one home of those four. The
-trees' flag sets and their evidence are in [app-flags.md](app-flags.md); nothing here changes a flag. Measured at
-bb6f018, the parts marked so at 0b5f410, on the pinned image
+`-O3`, and how to measure which flags a linkonce copy has. This file is the one home of those four. The trees' flag
+sets are in [app-flags.md](app-flags.md), and §V3 is the evidence of uenux2's level. Measured at bb6f018, the parts
+marked so at 0b5f410 and d4cbc1a, on the pinned image
 (`TMPDIR=/tmp build/docker-build.sh …`), from the repository root, or from `asmlift-wasm/` with Node 24 first on PATH
 for `pnpm` ([workflow.md](workflow.md) §W1).
 
@@ -129,13 +129,33 @@ runs at `-O3` only and no inlining remark prints. Probe `unswitch.cpp`:
       O2: 1
       O3: 2
 
-426 (`AddField`), whose target holds one compare loop twice, chosen by a string's `__is_long()`, is this case, and it
-stays written and `differs` at the tree's `-O2` (unit 31's fragment).
+426 (`AddField`), whose target holds one compare loop twice, chosen by a string's `__is_long()`, is this case: at the
+tree's `-O3` it holds both copies, and 18 of its 334 rows still differ (unit 31's fragment).
 
-## V3. uenux2 at `-O3 -std=c++23`: every match verifies, and sites under both `mock/` and `src/` need the level
+## V3. uenux2 builds at `-O3`: every match verifies, and sites under both `mock/` and `src/` need the level
 
-Evidence for a decision about uenux2's flags. They stay `-O2 -std=c++20` ([app-flags.md](app-flags.md) §F6), since a
-level is a tree's setting (how-to step 4). The private link of [app-flags.md](app-flags.md) §F9 item 6 with
+uenux2 compiles at `-O3` ([app-flags.md](app-flags.md) §F6), a level being a tree's setting (how-to step 4); its `-std`
+stays `-std=c++20`, and the stand-ins' `APP_CXXFLAGS` and `APP_CFLAGS` stay at `-O2`. Measured at d4cbc1a (9783
+matches), by how-to steps 6 to 10 with `UENUX2_CXXFLAGS` at `-O3`: one row left `match`, 3830
+(`comum::IInterfaceSavd::EnviarRequisicao`), whose helper `ConverteHeader` clang then inlines (`-Rpass=inline`: cost
+230 against `-O3`'s 250; `-O2`'s 225 kept it a call), where the target keeps it for binaryen. Compiled with the helper
+kept out of line, 3830 reads `81 over 1168` rows, all operand-only, as at `-O2`; the helper written to fill in the
+request's mark and size from the data costs 255 and gives that (unit 95's fragment). With it, 25 rows turned `match`
+and none left:
+
+    join -t "$(printf '\t')" <(git show d4cbc1a:splat/scan.tsv | cut -f1,5 | sort) <(cut -f1,5 splat/scan.tsv | sort) | awk -F'\t' '$3 == "match" && $2 != "match" {print $1}' | sort -n | tr '\n' ' '
+      706 779 1705 1709 2680 2764 2825 3604 3649 3768 3772 5775 5776 5876 6045 8746 9448 9459 9472 9604 10771 11526 11527 11528 11529
+    TMPDIR=/tmp make -C src splat
+      …/splat/vota_web_wasm.wasm: 7713699 bytes, sha256 8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2 (expected, 9808 matches from …/splat/matched.txt)
+      kind-unverified: 0/9808 matches (0 B) whose operand kinds the shifted link could not tell; their operands kept every reading
+
+Six rows that matched at both levels change shape in the object that wins the link: 708, 1706, 3828, 5765, 5878 and
+11337, and 3830 with its source (each function's instructions in the `-O2` and the `-O3` object, call, global and
+`call_indirect` type indices masked). 252, `std::operator+(string&&, string&&)`, changes in every uenux2 object that emits it and holds,
+since `src/app/roots_uenux2.cpp`'s copy wins ([splat.md](splat.md) §S10 item 10). The rest of this section is the
+evidence measured before the decision, with the tree at `-O2`: there "the plain link" is the `-O2` one.
+
+The private link of [app-flags.md](app-flags.md) §F9 item 6 with
 `P=build/out/flags-o3-cxx23` and `UENUX2_EXTRA='-O3 -std=c++23'` (the stand-ins keep their flags, ecourna keeps `-O3
 -std=c++20`) links in 224 s and ends:
 
@@ -186,6 +206,10 @@ row was built at 0b5f410: the object alone at `-O3` in the plain link (the recip
 | `comum::md::CPleito`'s constructor (5652) | `__init_with_size` at cost 230, threshold 225 | `103 over 438` with scratch second callers, and its remainder is not explained: unwritten, unit 88's fragment |
 | `CCabecalhoQRCodeBuilder::DefineHistoricoCarga` (5622) | inlines `append` | keeps `append`, `89 over 431`, operand-only but for five local pairs (unit 93's fragment) |
 
+At the tree's `-O3` (d4cbc1a, the link of the measurement above, `pnpm wasm score`): 3768, 5775 and 5776 match; 5622
+is `89 over 431`, its 5 inserted and 5 deleted rows `local.get`; 5660 is `220 over 669`, since no second caller keeps
+2870 out of line in this link; 731 and 11418 stay traps (unit 47's pending file), and 5652 is unwritten.
+
 **Sites under `mock/`, more.** With `cwasmthread.cpp.o`, `cwasmwebsound.cpp.o` and `cwasmscreen.cpp.o` at `-O3` as well
 (0b5f410), 2680, 9459, 9448, 9472 and 9604 print `IDENTICAL`, 9146 and 9125 are `13 over 307` and `13 over 313`, all
 operand-only, and the units that hold them say what is left (69, 74).
@@ -231,8 +255,8 @@ row, 4118, that scores the same in both links:
 So the matches of `src/` hold under both levels, and the written `src/` bodies above need the higher one. That rules
 out `-O3` for `mock/app/simulador/wasm/` alone, and leaves uenux2 at `-O3` throughout. No site shows the rest of `-O3`
 from its unroll threshold, and per-directory flags are not excluded. The `-std` reading rests on one kind of site (the
-rvalue `substr`), with a handful of C++20 forms tried; every site above reads the same at `c++20` and `c++23`. The flag
-is the user's decision (how-to step 4), and a body that waits for it stays written.
+rvalue `substr`), with a handful of C++20 forms tried; every site above reads the same at `c++20` and `c++23`.
+`-std=c++23` is not taken, and 8799, which needs it, stays written.
 
 ## V4. Which flags a linkonce copy has: put a probe object first on the link line
 

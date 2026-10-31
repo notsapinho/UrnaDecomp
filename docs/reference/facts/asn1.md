@@ -216,7 +216,8 @@ matches 543 by content from that object, and that flag changes more than the pad
 reaches the same bytes another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merges with `vector<long>`'s from
 `roots_boost.o`, and the content pass matches 543 through it, with no source written for it. So 543's match line names
 `vector<long>` by link order and not by evidence: neither `FillPath` nor `DrawPath` calls 543 in the target, which inlines
-it there. That twin goes if uenux2 moves to `-O3`, unless another caller lands.
+it there. At uenux2's `-O3` both inline it, and 543 still matches from `roots_boost.o`
+(`awk -F'\t' '$1==543 {print $5, $11}' splat/scan.tsv` prints `match app/roots_boost.o`).
 
 `vector<AbstractData*>::push_back(&&)` is a `merged-body` hand edit on 543 ([../splat.md](../splat.md) §3): 2656 and 5066
 call it, the target merged that body into 543, and our own body of that name differs from 543 (263 B against 239, 3 `block`s and 3

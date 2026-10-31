@@ -11,11 +11,11 @@
 # CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
 #
 # Written and not matched:
-# - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`. At the tree's -O2 clang inlines
-#   std::string::append(const char*, size_t) into the loop and the target has `call 160`, so ours is 1108 B against 942.
+# - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`. At -O2 clang inlines
+#   std::string::append(const char*, size_t) into the loop and the target has `call 160`, so ours was 1108 B against 942.
 #   With this one object at -O3 in a private link (docs/reference/facts/workflow.md "One variant object in the whole
-#   link") ours is 942 B with the call, and differs from the target only in 5 rows inserted and 5 deleted, all
-#   `local.get`. uenux2's level stays -O2 (docs/reference/facts/levels.md), so the row stays.
+#   link") ours was 942 B with the call, and differed from the target only in 5 rows inserted and 5 deleted, all
+#   `local.get`. At the tree's -O3 it scores 89 over 431 rows (5 inserted, 5 deleted), so the row stays.
 #
 # CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
 #

@@ -46,7 +46,7 @@
 # - MarcaHabilitado, named from the "MarcaHabilitado" it passes to ConfereDadosDinamicos (138114): 2825 holds it inlined by
 #   binaryen (a second stack-pointer prologue at +0xaa) and it has no index of its own. Each kind of enabling calls one of
 #   CEleitorDinamico's inline members (md/eleitor/celeitordinamico.h), and its types are fragment 130's. 2825 waits for
-#   uenux2 at -O3, which fragment 110 measures.
+#   the tree's -O3, at which it matches (fragment 110).
 #
 # ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
 # called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it. The target's data do not

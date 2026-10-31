@@ -7,8 +7,8 @@
 //   app/comum/relatorios/cimprimirextratocarga.cpp, not written (cimprimirextratocarga.h says why it is there). It prints
 //   "EMISSAO DO RELATORIO" and std::format("DATA: {:.10}       HORA: {:.8}", <now as DD/MM/YYYY>, <now as hh:mm:ss>)
 //   through two helpers, fns 5472 and 5473, which build api::CDateTime's "now" (fns 1155, 1000) and format it with
-//   fns 706 and 779 (api::CDate::Format and api::CTime::Format, written in units 125 and 24, both waiting for -O3). It
-//   waits for those two helpers, which no evidence names, and for 706 and 779.
+//   fns 706 and 779 (api::CDate::Format and api::CTime::Format, units 125 and 24, both matched). It waits for those two
+//   helpers, which no evidence names.
 // - GetConteudoQRCode, slot 5, fn 11200 (330 B): builds a vector of string pairs from the general state (fn 5636, 3903 B),
 //   copies it (fn 1300), adds one tag of two by a switch on 1 (fn 5783) and turns it into the string (fn 5782, 2390 B).
 //   It waits for 5636, 5782 and 5783, none named or written.

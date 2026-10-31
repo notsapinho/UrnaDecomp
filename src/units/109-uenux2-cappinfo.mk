@@ -20,10 +20,10 @@
 #   of m_geral calls it. At -O2 all three stay calls, at cost 385 against threshold 325, and ours is 343 B against 702. At -O3
 #   one loop site goes in at threshold 525 and the member's site stays out, which is the target's split; that compile keeps
 #   one loop's call, so the array's form is not settled. -Rpass=inline -Rpass-missed=inline on cappinfosingleton.cpp prints
-#   it. uenux2's level is not this unit's to change (docs/reference/facts/levels.md V3), so the row stays.
+#   it. At the tree's -O3 the row stays `differs`, 88 over 416 rows (68 of them inserted).
 # - CAppInfo::IndiceTurno (1553): one operand, `differs +0x3f target i32.const 474`. Slot 474 is 9868, EUrnaTurno's
 #   format handle, and the target keeps it apart from the 31 slots of 536 because its copy has parse and format out of line
-#   (calls 1558 and 5906, whose other caller 4027 is in invoke form): not a body this tree's level gives. Our link merges
+#   (calls 1558 and 5906, whose other caller 4027 is in invoke form): not a body this tree gave at -O2. Our link merges
 #   the handle into 536's body, so no name can tell them apart. 1553's anchor votes 9868 and the other anchors 536, which
 #   drops the generated name of 536 and eleven matches with it (275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392,
 #   11405), so splat/symbol_addrs.txt holds a hand line for 536. That line names the surviving symbol: a unit that adds an

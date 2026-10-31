@@ -18,7 +18,7 @@
 //   so binaryen inlined an out-of-line function; it reads +4 of the instance, so it is a member of this class, and it
 //   holds ConverteStatusBateria in its own frame, with the string's length folded into the format argument (clang
 //   inlined it, the same TU), so it is in ieventoslog.cpp. ConverteFonteAlim has a prologue of its own there: binaryen's.
-// - ConverteStatusBateria is declared `inline`, a choice at this tree's level: unit 111's fragment has the measurement.
+// - ConverteStatusBateria is declared `inline`, which -O2 needed: unit 111's fragment has the measurement.
 // - The three Converte members: the records' text has no `static`, so they are members, with `this` removed by binaryen.
 // ERelatoriosUE and its values: the record names the type, unqualified, so the namespace is chosen; the values are the
 // cases of fn 5879 and each name is chosen from the text its case returns. The parameter types are the records'.

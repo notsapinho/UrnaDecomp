@@ -4,13 +4,13 @@
 # CThreadVota::AddTick has one caller, unit 119's slot 2, which holds it inlined.
 # CTickManager::AddTick (3644, record 31:15) is written and `no-candidate`. Its STick is built by STick's constructor, out of
 # line: the target holds it after a second stack prologue around gettimeofday. SearchNextId (record 128:11) is `inline`,
-# a choice at this tree's level: the target holds its loop in AddTick's own frame, and at -O2 the plain definition
-# stayed a call in the object, which binaryen inlined with a second prologue (the earlier source), while at -O3 clang
-# inlines the plain definition as well (measured), so the frame does not tell the two spellings apart. With both, the
-# link reads `score 109 over 441 rows (same 332, replaced 68 [64 operand-only], inserted 20, deleted 21)` against
-# `229 over 493` before. What is left is the search loop's shape: compiled at -O3 the object has the target's (the test
-# of the tree's root hoisted out of the loop over ids, the id's mask once per id, `node < id`), at -O2 not; so it waits
-# for the level. Five spellings of SearchNextId's loop give the same object for AddTick (wasm-objdump -d, compared row by
+# a choice: the target holds its loop in AddTick's own frame; at -O2 the plain definition stayed a call in the object,
+# which binaryen inlined with a second prologue (the earlier source), and at -O3 clang inlines the plain definition as
+# well (measured), so the frame does not tell the two spellings apart. With both, the -O2 link read `score 109 over 441
+# rows (same 332, replaced 68 [64 operand-only], inserted 20, deleted 21)` against `229 over 493` before. Compiled at -O3
+# the object has the target's search loop (the test of the tree's root hoisted out of the loop over ids, the id's mask
+# once per id, `node < id`), and at the tree's -O3 the link reads `score 83 over 432 rows (same 349, replaced 63 [63
+# operand-only], inserted 11, deleted 9)`; what is left is not read yet. Five spellings of SearchNextId's loop give the same object for AddTick (wasm-objdump -d, compared row by
 # row): an unsigned, int or size_t counter, `<= 0xff` or `< 256`, and static_cast<uebyte> on the key and the result or
 # none.
 UENUX2_SRCS += src/api/util/ctickmanager.cpp src/app/vota/cthreadvota.cpp

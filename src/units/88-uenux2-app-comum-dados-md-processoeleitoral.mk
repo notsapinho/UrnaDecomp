@@ -63,8 +63,8 @@
 #   give it. The row stays unresolved.
 # - CPleito's constructor (fn 5652, records 64, 67 and 70) is not written. The target calls fn 1953, the uninitialized
 #   copy of CEleicaoPE, and fn 2289 calls no __init_with_size. At -O2 clang keeps __init_with_size<CCargo> out of line
-#   (-Rpass-missed=inline: cost=230, threshold=225) and inlines the copy into the constructor; at -O3 cpleito.cpp gives the
-#   target's calls. With that object and second callers for 1953 and 3870 in a scratch link, it scores 103 over 438 rows
+#   (-Rpass-missed=inline: cost=230, threshold=225) and inlines the copy into the constructor; at -O3, the tree's level,
+#   cpleito.cpp gives the target's calls. With that object and second callers for 1953 and 3870 in a scratch link, it scores 103 over 438 rows
 #   against 1150 over 1448 (3 of them the tree's reload: without -fno-strict-aliasing, 100 over 435); what is left includes the placement of its three throws, so no body here is shown right.
 # - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
 #   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their

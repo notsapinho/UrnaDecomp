@@ -21,7 +21,7 @@ line:
 
     node --version                                    # v26.11.1
     TMPDIR=/tmp tools/round/try-tu.sh --single 5468 --extract 'export:_ZNK3api12CGenericTags7TagSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE' src/uenux2/src/api/util/cgenerictags.cpp
-      flags: -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing … -fignore-exceptions
+      flags: -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing … -fignore-exceptions
       tools/round/try-tu.sh: line 47: 67368 Abort trap: 6           pnpm exec tsx src/cli.ts "$@"
     brew --prefix node@24                             # /opt/homebrew/opt/node@24
     PATH="/opt/homebrew/opt/node@24/bin:$PATH" node --version    # v24.22.2
@@ -134,7 +134,7 @@ ran `pnpm --silent wasm splat-review` under an exported PATH exited 134 in 0.9 s
    (item 5).
 5. **The lone link runs binaryen at the TU's level, and inlines what only the program shares.** The `--single`
    template is `em++ -Oz -fexceptions … {{flags}} {{inputPath}} …` (`tools/round/try-tu.sh` line 194), and
-   `{{flags}}` carries the TU's own level (`-O2` for uenux2, `-O3` for ecourna), which em++ takes as the last `-O`:
+   `{{flags}}` carries the TU's own level (`-O3` for uenux2 and ecourna), which em++ takes as the last `-O`:
    the one `em++` compiles and links at that level, while the build links at `-Oz`. At `-Oz` binaryen joins two
    `br_if` to one label into an `i32.or`; the lone link keeps both. `api::CTextBox::Move` (10957) is matched as written,
    and alone (bb6f018):
