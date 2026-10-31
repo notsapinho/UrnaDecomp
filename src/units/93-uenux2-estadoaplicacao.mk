@@ -7,13 +7,11 @@
 # the constructors of CEstadoGeralSA, CEstadoGeralVota and CDadoCorrespondencia (5625, 5628, 5630) and
 # CCabecalhoQRCodeBuilder::DefineCodigoCarga (5623, found by the scan's content pass, which fns 1956 and 12110 call).
 # Converters: CConversorAjusteDataHora (11405, 11406), CConversorEstadoGeralSA (11392, 11393),
-# CConversorLocalidadeEleitoral::DoDesconverte (11389), CConversorDadoCarga::ConverteTipoUrna and DesconverteTipoUrna
-# (5693, 5694), CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
+# CConversorLocalidadeEleitoral (11388, 11389; 11388 rests on ASN1::INTEGER's constructor, fn 553, being matched),
+# CConversorDadoCarga::ConverteTipoUrna and DesconverteTipoUrna (5693, 5694),
+# CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
 #
 # Written and not matched:
-# - CConversorLocalidadeEleitoral::DoConverte (11388): 8 rows of 56 differ, all operands. It is `unresolved` on its calls of
-#   ASN1::INTEGER's constructor (fn 553), which has no target name: no caller of 553 holds a match, and our 553 inlines
-#   the base constructor the target calls (fn 669), so no body pairs it either.
 # - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`. At the tree's -O2 clang inlines
 #   std::string::append(const char*, size_t) into the loop and the target has `call 160`, so ours is 1108 B against 942.
 #   With this one object at -O3 in a private link (docs/reference/facts/workflow.md "One variant object in the whole

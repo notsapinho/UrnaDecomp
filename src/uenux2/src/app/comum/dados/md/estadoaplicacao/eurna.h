@@ -86,7 +86,7 @@ namespace comum {
 // unsigned for the char presentation, so formatter<unsigned int>, as ecourna/app/dados/tiposbasicos.hpp writes it for one
 // enum. This base and the explicit specializations below are chosen: a template constrained on std::is_enum_v gives the
 // same bodies (measured on EUrnaModelo and EUrnaFase), and an explicit specialization stays valid beside such a template.
-// EUrnaFase's stays here, not in app/comum/asn/util.h's template, since this tree's TUs do not include that header; with
+// EUrnaFase's stays here, not in app/comum/asn/util.h's template, since unit 93's TUs do not include that header; with
 // it, which is what sends the enum through fn 536, `: int` and `: unsigned int` give the same cdadocarga.cpp object.
 // CDadoCarga::GetFaseChar (target fn 2253) gives 'o', 's' and 't' for its 49, 50 and 51, and CGravadorUtil::ConverteFase
 // (fn 2274) takes those three chars back.
