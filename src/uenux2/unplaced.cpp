@@ -2169,11 +2169,6 @@
 // f12587 · 467 B · unmatched · placement: link order · name unknown
 // void f12587(i32, i32) { ... }
 
-// link-order cluster 656 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f12632 · 12 B · unmatched · placement: link order · name unknown
-// void f12632(i32, i32) { ... }
-
 // link-order cluster 657 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
 
 // f12641 · 544 B · unmatched · placement: link order · name unknown
@@ -2278,9 +2273,6 @@
 
 // link-order cluster 869 · uses=2
 
-// f6049 · 159 B · unmatched · placement: link order · name unknown
-// ? f6049(i32, i32) { ... }
-
 // f6023 · 64 B · unmatched · placement: link order · name unknown
 // ? f6023(i32, i32, i32) { ... }
 
@@ -2303,11 +2295,6 @@
 
 // f3528 · 530 B · unmatched · placement: link order · name unknown
 // void f3528(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 985 · uses=3 · neighbours' file uenux2/src/api/gui/cbmpconversor.cpp
-
-// f3661 · 423 B · unmatched · placement: link order · name unknown
-// void f3661(i32, i32, i32, i32) { ... }
 
 // link-order cluster 988 · uses=3 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
 

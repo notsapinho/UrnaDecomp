@@ -6,12 +6,16 @@
 //     so), const std::string& (*)() (3060) and std::function<std::string()> (12055), CDataTextFmt over std::string
 //     (*)(const std::string&) (3058), const std::string (*)(const std::string&) (2028) and
 //     std::function<std::string(const std::string&)> (5936), CDataImage over std::vector<unsigned char> (*)() (6689),
-//     and CQRCodeImage (12040, 12055);
+//     and CQRCodeImage (12040, 12055), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
+//     the source's matched call operator (2268) and whose block unit 102's object already holds;
 //   SharedIText(new X), where the target has __shared_ptr_pointer<X*, shared_ptr<IText>::__shared_ptr_default_delete<IText, X>, ...>:
 //     CDataText over CTextSource (5409), std::string (*)() (604) and std::function<std::string()> (5419), CDataTextFmt
 //     over CTextSource (652) and std::string (*)(const std::string&) (651);
 //   SharedIImage(new X): CQRCodeImage (3059);
 //   std::shared_ptr<X>(new X): CDataTextFmt over const std::string (*)(const std::string&) (7787).
+// And one member of a class template the target calls directly (src/units/README.md "Companion files"): the fill insert
+// of std::vector<unsigned char>, fn 3661, which CQRCodeImage::GetData (fn 10967, pending) calls three times; one
+// stand-in calls it twice, so that it stays a function of its own, as in the target.
 // So this object instantiates the classes, as the sanctioned exception for std::make_shared does (src/units/README.md
 // "Companion files"), and it is where their vtables, slots and control blocks come from until those callers land: they
 // are template instances of landed headers, compiled with APP_CXXFLAGS like the other stand-ins. The destructors have no
@@ -37,6 +41,7 @@
 #include "api/gui/cdatatextfmt.h"
 #include "api/gui/cqrcodeimage.h"
 #include "api/gui/ctextsource.h"
+#include "app/comum/dados/ccargods.h"
 
 namespace {
 
@@ -124,6 +129,20 @@ __attribute__((noinline)) SharedIImage ImagemDaFonte(FonteImagem fonte)
     return std::make_shared<CDataImage<FonteImagem>>(fonte);
 }
 
+// Stands for fn 6528, which builds CDataText<comum::CCargoDSNomeSexoCandidato> with std::make_shared (vptr 1537644).
+__attribute__((noinline)) SharedIText TextoCargoSexo(const comum::CCargoDSNomeSexoCandidato& fonte)
+{
+    return std::make_shared<CDataText<comum::CCargoDSNomeSexoCandidato>>(fonte);
+}
+
+// Stands for fn 10967, CQRCodeImage::GetData (pending), which calls std::vector<unsigned char>::insert(const_iterator,
+// size_type, const value_type&), fn 3661, three times with a byte of 255. Two calls, so binaryen keeps it a function.
+__attribute__((noinline)) void BordaImagem(std::vector<unsigned char>& imagem, std::size_t tamanho)
+{
+    imagem.insert(imagem.begin(), tamanho, 255);
+    imagem.insert(imagem.end(), tamanho + 1, 255);
+}
+
 __attribute__((noinline)) SharedIImage ImagemQRCodeCompartilhada(api::TPosition tamanho, const FuncaoTexto& fonte)
 {
     return std::make_shared<api::CQRCodeImage>(tamanho, fonte);
@@ -154,6 +173,8 @@ struct SW79Roots {
         w79_sink = reinterpret_cast<void*>(&TextoReferencia);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoFuncao);
         w79_sink = reinterpret_cast<void*>(&TextoProprio);
+        w79_sink = reinterpret_cast<void*>(&TextoCargoSexo);
+        w79_sink = reinterpret_cast<void*>(&BordaImagem);
     }
 } w79_roots;
 
