@@ -1,4 +1,12 @@
 # ecourna api/compression (ICompressor, CZip over zlib/minizip, CLzmaCompress over the 7-Zip wrapper).
+# CZip::Close (2691) is unresolved on its call of zipCloseFileInZipRaw64, which no name gives a target function: the
+# target's is 3379, 14 operand rows over 712 from ours, and splat-remap's one unresolved operand of ours is its call of
+# deflate (4826, 29 operand rows over 3256). deflate's are crc32 (893), deflate_stored (4825) and fill_window (2581), which
+# no name reaches either; crc32 is 66 rows over 960 with 3 inserted and 2 deleted: the target returns early for a null
+# buffer with an `if ... return`, ours with a block result. So CZip waits for zlib's code (ZLIB_CFLAGS are not confirmed,
+# below). CreateZipFile (9543, with ConvertToOpen and minizip's zipOpen inlined) is 380 rows over 2051, 15 inserted and 21
+# deleted: the target pushes `this` first for its store of m_zip, and the inlined minizip code has an `if ... br` where ours
+# has a `br_if`. DoAdd (9538) is unresolved on std::system_category and not looked into.
 # The ecourna compile rule has only -Isrc; these TUs include <boost/signals2/...> and <minizip/zip.h> (zlib contrib).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp

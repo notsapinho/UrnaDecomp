@@ -5,8 +5,8 @@ root = true
 [src/{uenux2,ecourna}/**]
 charset = latin1
 
-# these TSE files hold UTF-8 string literals
-[{src/ecourna/app/dados/iidentificadoreleitor.cpp,src/ecourna/app/dados/asn/cconversorturno.cpp}]
+# this TSE file holds a UTF-8 string literal
+[src/ecourna/app/dados/asn/cconversorturno.cpp]
 charset = utf-8
 
 # Latin-1 literals outside the TSE trees
