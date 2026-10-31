@@ -21,6 +21,8 @@ enum EUeUtilError {
     EUE_UTIL_HORA_OVERFLOW = 7081,
     EUE_UTIL_HORA_UNDERFLOW = 7082,
     EUE_UTIL_TEMPO_EXCESSIVO = 7083,
+    EUE_UTIL_SYSTEMDATETIME_RECRIADO = 7084, // the name is chosen from its message: no evidence names it
+    EUE_UTIL_TIMERSCHEDULER_RECRIADO = 7085, // the name is chosen from its message: no evidence names it
 };
 
 using CUeUtilError = ecourna::api::exception::CBaseError<EUeUtilError, ecourna::api::exception::SErrorLimits{7000, 7200}>;

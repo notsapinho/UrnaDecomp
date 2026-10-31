@@ -4,6 +4,7 @@
 
 namespace api {
 
+class ISyncCtl;
 class IThreadImpl;
 
 /**
@@ -31,8 +32,8 @@ private:
     EEstado m_estado;
     bool m_iniciada;
     bool m_parar;
-    std::unique_ptr<IThreadImpl> m_impl;
-    std::unique_ptr<IThreadImpl> m_implEspera;
+    std::unique_ptr<IThreadImpl> m_pImpl;
+    std::unique_ptr<ISyncCtl> m_sync;
 };
 
 } // namespace api

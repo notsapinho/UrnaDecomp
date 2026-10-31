@@ -12,6 +12,7 @@
 extern "C" {
 int w2721_root_0(int) __asm__("_ZN3api7CThreadD2Ev");
 void w1684_root_0(int) __asm__("_ZN3api7CThread5StartEv");
+int w3598_root_0(int) __asm__("_ZN3api7CThreadC2Ev");
 }
 
 namespace {
@@ -28,12 +29,19 @@ __attribute__((noinline)) void IniciaThreads(int primeira, int segunda, int terc
     w1684_root_0(terceira);
 }
 
+// CThread's constructor (target fn 3598): its callers 270, 316 and 1898 are not reconstructed. Two call sites keep it.
+__attribute__((noinline)) int ConstroiThreads(int primeira, int segunda)
+{
+    return w3598_root_0(primeira) ^ w3598_root_0(segunda);
+}
+
 void* volatile w18_sink;
 
 struct SW18Roots {
     SW18Roots()
     {
         w18_sink = reinterpret_cast<void*>(&w2721_root_0);
+        w18_sink = reinterpret_cast<void*>(&ConstroiThreads);
         w18_sink = reinterpret_cast<void*>(&IniciaThread);
         w18_sink = reinterpret_cast<void*>(&IniciaThreads);
     }

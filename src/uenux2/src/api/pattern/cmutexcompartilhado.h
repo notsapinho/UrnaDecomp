@@ -9,7 +9,8 @@
 // lock_shared takes the mutex in a std::unique_lock, waits on +24 and adds a reader; unlock_shared drops a reader and
 // signals +72 when it was the last and a writer waits. A mutex lock leaves no call in this build (reading.md §R15).
 //
-// The writers' side (fn 1126, which api::CPolySingletonList::push calls) is not written: nothing here takes it.
+// lock takes the mutex in a std::unique_lock, counts itself among the waiting writers, waits on +72 and sets the flag.
+// unlock clears the flag and signals +72 when a writer waits, else +24. unlock_shared_and_lock trades a reader for the flag.
 //
 // The target holds unlock_shared's throw inlined in 57 functions, so clang inlines it (how-to step 3). `inline` on
 // unlock_shared and on ~CTravaLeitura gives that, and each without it gives a call: the forms are in unit 100's fragment.
@@ -40,6 +41,42 @@ public:
         }
     }
 
+    void lock()
+    {
+        std::unique_lock<std::mutex> trava(m_mutex);
+        ++m_escritoresAguardando;
+        m_escritoresCv.wait(trava, [this] { return !m_escritor && m_leitores == 0; });
+        --m_escritoresAguardando;
+        m_escritor = true;
+    }
+
+    void unlock()
+    {
+        std::unique_lock<std::mutex> trava(m_mutex);
+        if (!m_escritor) {
+            throw std::runtime_error("unlock() called when no writer is active");
+        }
+        m_escritor = false;
+        if (m_escritoresAguardando > 0) {
+            m_escritoresCv.notify_one();
+        } else {
+            m_leitoresCv.notify_all();
+        }
+    }
+
+    void unlock_shared_and_lock()
+    {
+        std::unique_lock<std::mutex> trava(m_mutex);
+        if (m_leitores <= 0) {
+            throw std::runtime_error("unlock_shared_and_lock() requires an active shared owner");
+        }
+        --m_leitores;
+        ++m_escritoresAguardando;
+        m_escritoresCv.wait(trava, [this] { return !m_escritor && m_leitores == 0; });
+        m_escritor = true;
+        --m_escritoresAguardando;
+    }
+
 private:
     std::mutex m_mutex;
     std::condition_variable m_leitoresCv;
@@ -52,10 +89,23 @@ private:
 class CTravaLeitura {
 public:
     explicit CTravaLeitura(CMutexCompartilhado& mutex) : m_mutex(mutex) { m_mutex.lock_shared(); }
-    inline ~CTravaLeitura() { m_mutex.unlock_shared(); }
+    inline ~CTravaLeitura()
+    {
+        if (m_ativa) {
+            m_mutex.unlock_shared();
+        }
+    }
+
+    std::unique_lock<CMutexCompartilhado> promove()
+    {
+        m_mutex.unlock_shared_and_lock();
+        m_ativa = false;
+        return std::unique_lock<CMutexCompartilhado>(m_mutex, std::adopt_lock);
+    }
 
 private:
     CMutexCompartilhado& m_mutex;
+    bool m_ativa = true;
 };
 
 } // namespace api

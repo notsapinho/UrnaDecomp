@@ -2949,11 +2949,6 @@
 // f10842 · 23822 B · unmatched · placement: link order · name unknown
 // ? f10842(i32, i32) { ... }
 
-// link-order cluster 355 · uses=1 · neighbours' file uenux2/src/api/gui/ctimerscheduler.cpp
-
-// f10846 · 403 B · unmatched · placement: link order · name unknown
-// void f10846(i32, i32, i32, i32) { ... }
-
 // link-order cluster 356 · uses=1 · neighbours' file uenux2/src/api/gui/ctimer.cpp
 
 // f10852 · 13 B · unmatched · placement: link order · name unknown
