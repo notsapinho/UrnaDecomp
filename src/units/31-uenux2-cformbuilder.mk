@@ -44,21 +44,35 @@
 # - AddRect from two points calls an AddRect of a SRect that clang inlines: 3680's frame has the temporary of the AddField
 #   call above the rectangle, which puts the temporary in a callee (an inlined callee's allocas come first), and 2245's has
 #   them the other way. Written in one function, 3680 scores 12 over 94 with the frame the other way, and four spellings
-#   of that one function give the same frame. 7787 holds the same make_shared<CRectField> and a call of AddField, so the inner one has a
-#   caller of its own in the target; `inline` in the .cpp and private are chosen, for a header that would need CRectField.
+#   of that one function give the same frame. The inner one is a plain member, above its caller: with `inline` 18 of band
+#   1's 136 pairs below are inverted, and clang still inlines it. So 7787's own make_shared<CRectField> is not a call of it.
+# - RectEntre reads the four coordinates into locals before it builds the SRect: 2245 and 3680 store it +6, +4, +2, +0, which
+#   docs/reference/facts/codegen.md C1 gives for values read first. Written as `SRect{std::min(canto.x, oposto.x), ...}`, 2245
+#   scores 38 over 121 and 3680 36 over 105. SRect is an aggregate of ours (api/gui/primitives.h), so these locals stand in
+#   for whatever the original reads them with: its header's form is not recovered.
+# - The order of the definitions, by the use bands of ledger/ordinals.tsv. The members of the control blocks and of the
+#   CDataText instantiations an adder brings are linkonce and have one use each, and each takes its place at its first
+#   mention, so a run of consecutive target indices in band 1 orders the adders that mention them (docs/how-to-decompile.md
+#   step 3, "The order of two members", over every matched row of each object). Inverted pairs of band 1: 0 of 136 in
+#   cformbuilder.cpp.o, 0 of 3 in cpaperformbuilder.cpp.o, 38 of 231 in cmtformbuilder.cpp.o. Each of the 38 involves 12301-12323,
+#   the class members of CDataText<std::function> and of CDataTextFmt of a function, which can be another object's copies, a
+#   reading, and band 2's two pairs against 6404 stay inverted with them. The other bands' pairs in one object agree: 203
+#   above 202, 2245 above 2244, 5419 above 5409.
 #
 # Chosen, the bytes do not decide:
-# - Every adder's name, GeraNome, every parameter name, the name and the file of CMTFormBuilder, and that the classes share
-#   no base. Which overloads share a name. That the adders are plain members of the .cpp files and not templates of a header:
-#   each has one body in the target either way, and this is the form no stand-in has to instantiate. The order of the
-#   definitions in the .cpp files, but for what the use bands of ledger/ordinals.tsv give (203 above 202, 2245 above 2244,
-#   5419 above 5409), and all of cformbuilder.cpp's lines above 348.
+# - Every adder's name, GeraNome, RectEntre and that it is a free function of the file, every parameter name, the name and
+#   the file of CMTFormBuilder, and that the classes share no base. Which overloads share a name. That the private members
+#   are private. IFormFieldBase's GetName and SetName (api/gui/iformfield.h), name and being members: 426 reads and assigns
+#   the string at +12 of the field, in line. That the adders are plain members of the .cpp files and not templates of a
+#   header: each has one body in the target either way, and this is the form no stand-in has to instantiate. The lines of
+#   cformbuilder.cpp's definitions above 348.
 # - The colours 2 and 1 of 1191, the 2 of 3068 and 3680, the alignment 0 of 3068, 5409 and 5419, the EStyle 1 of 604 and the
 #   anchor 1 of 5547 are constants in the body or defaults of a parameter: binaryen folds a parameter every caller passes
 #   (docs/how-to-decompile.md step 2), and each is written as the first, but for the alignment of 5409 and 5419, a default
 #   argument. ANCHOR_TOP_RIGHT is api/gui/iimage.h's name for 1.
 # - In each pair below the two forms give the function's rows, by the function's disassembly with the object-local numbers
-#   masked: the private CMTFormBuilder::AddTextField, or its statements written in place, or the member without `inline`; `text`
+#   masked: the private CMTFormBuilder::AddTextField, or its statements written in place, or the member `inline`, which only
+#   band 1 tells apart (cmtformbuilder.cpp's header has the count); `text`
 #   and `campo` const or not; `m_campos.push_back(campo)` or `emplace_back(campo)` in the four adders with a const local (not
 #   in the text adders, whose non-const `campo` picks another instantiation); `std::function` by value or by const
 #   reference; the constructors `= default` or `{}`.

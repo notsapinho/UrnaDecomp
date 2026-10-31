@@ -49,7 +49,7 @@ public:
     static SPoint GetLabeledKeyPos(const SRect& area, ETextAlignment alinhamento, TPosition deslocamento);
 
 private:
-    inline SharedField AddRect(const SRect& rect);
+    SharedField AddRect(const SRect& rect);
 
     std::string GeraNome(const IFormField<IScreen>& campo) const;
 

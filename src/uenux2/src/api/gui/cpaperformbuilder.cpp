@@ -31,15 +31,15 @@ void CPaperFormBuilder::AddTextField(std::string (*fonte)(), ETextAlignment alin
     m_campos.push_back(campo);
 }
 
-void CPaperFormBuilder::AddNewLine(size_t linhas)
-{
-    const SharedField campo(new CNewLineFieldPaper(linhas));
-    m_campos.push_back(campo);
-}
-
 void CPaperFormBuilder::AddCut()
 {
     const SharedField campo(new CCutFieldPaper());
+    m_campos.push_back(campo);
+}
+
+void CPaperFormBuilder::AddNewLine(size_t linhas)
+{
+    const SharedField campo(new CNewLineFieldPaper(linhas));
     m_campos.push_back(campo);
 }
 

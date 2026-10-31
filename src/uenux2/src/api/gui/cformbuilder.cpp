@@ -7,8 +7,8 @@
 //   3068  AddDoubleLineField
 //   5547  AddImage
 //   2244, 2245, 3680  AddLine, AddFill, AddRect
-// GeraNome has no target function: binaryen inlined it into 426, which shows its second prologue. The lines of everything
-// before line 348 are a choice.
+// GeraNome has no target function: binaryen inlined it into 426, which shows its second prologue. The order of the
+// definitions above line 348 is read from band 1 (src/units/31-uenux2-cformbuilder.mk); their lines are a choice.
 
 #include "api/gui/cformbuilder.h"
 
@@ -69,24 +69,6 @@ void CFormBuilder::AddField(SharedField campo)
     m_campos.push_back(campo);
 }
 
-CFormBuilder::SharedField CFormBuilder::AddTextField(const std::string& texto, const SPoint& posicao, const SFont& fonte,
-                                                     ETextAlignment alinhamento, TColor corTexto, TColor corFundo)
-{
-    const auto text = std::make_shared<CFixedText>(texto, alinhamento);
-    SharedField campo = std::make_shared<CTextField>(posicao, text, fonte, corTexto, corFundo);
-    AddField(campo);
-    return campo;
-}
-
-CFormBuilder::SharedField CFormBuilder::AddTextField(std::string (*fonte)(), const SPoint& posicao, const SFont& font,
-                                                     ETextAlignment alinhamento)
-{
-    const auto text = std::make_shared<CDataText<std::string (*)()>>(fonte, alinhamento);
-    SharedField campo = std::make_shared<CTextField>(posicao, text, font, static_cast<TColor>(2), static_cast<TColor>(1));
-    AddField(campo);
-    return campo;
-}
-
 CFormBuilder::SharedField CFormBuilder::AddDoubleLineField(std::string (*fonte)(), const SPoint& linha1, const SPoint& linha2,
                                                            TPosition maxX, const SFont& font, TColor corFundo)
 {
@@ -103,6 +85,27 @@ CFormBuilder::SharedField CFormBuilder::AddImage(SharedIImage imagem, const SPoi
     return campo;
 }
 
+CFormBuilder::SharedField CFormBuilder::AddTextField(std::string (*fonte)(), const SPoint& posicao, const SFont& font,
+                                                     ETextAlignment alinhamento)
+{
+    const auto text = std::make_shared<CDataText<std::string (*)()>>(fonte, alinhamento);
+    SharedField campo = std::make_shared<CTextField>(posicao, text, font, static_cast<TColor>(2), static_cast<TColor>(1));
+    AddField(campo);
+    return campo;
+}
+
+CFormBuilder::SharedField CFormBuilder::AddRect(const SRect& rect)
+{
+    SharedField campo = std::make_shared<CRectField>(rect, static_cast<TColor>(2));
+    AddField(campo);
+    return campo;
+}
+
+CFormBuilder::SharedField CFormBuilder::AddRect(const SPoint& canto, const SPoint& oposto)
+{
+    return AddRect(RectEntre(canto, oposto));
+}
+
 CFormBuilder::SharedField CFormBuilder::AddFill(const SPoint& canto, const SPoint& oposto, TColor cor)
 {
     SharedField campo = std::make_shared<CFillField>(RectEntre(canto, oposto), cor);
@@ -117,16 +120,13 @@ CFormBuilder::SharedField CFormBuilder::AddLine(const SPoint& inicio, const SPoi
     return campo;
 }
 
-inline CFormBuilder::SharedField CFormBuilder::AddRect(const SRect& rect)
+CFormBuilder::SharedField CFormBuilder::AddTextField(const std::string& texto, const SPoint& posicao, const SFont& fonte,
+                                                     ETextAlignment alinhamento, TColor corTexto, TColor corFundo)
 {
-    SharedField campo = std::make_shared<CRectField>(rect, static_cast<TColor>(2));
+    const auto text = std::make_shared<CFixedText>(texto, alinhamento);
+    SharedField campo = std::make_shared<CTextField>(posicao, text, fonte, corTexto, corFundo);
     AddField(campo);
     return campo;
-}
-
-CFormBuilder::SharedField CFormBuilder::AddRect(const SPoint& canto, const SPoint& oposto)
-{
-    return AddRect(RectEntre(canto, oposto));
 }
 
 // (original lines 132-347: content not recovered)

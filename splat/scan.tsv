@@ -43,7 +43,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 177	BN_free	173	symbol	match	readings: address string	99	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 178	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendB8ne210108IPKcTnNS_9enable_ifIXsr31__has_forward_iterator_categoryIT_EE5valueEiE4typeELi0EEERS5_SA_SA_	5055	symbol	differs	+0x1 target the locals | ours the locals	323	none	unknown	1	app/ecourna/api_compression_icompressor.cpp.o
 179	_ZSt28__throw_bad_array_new_lengthB8ne210108v	252	symbol	match	readings: address symbol,table slot	32	shape	libc++	1	app/roots_uenux2.o
-180	_ZN3api14CMTFormBuilder12AddTextFieldERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_6SPointENS_14ETextAlignmentE	3722	symbol	match	readings: address symbol	258	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+180	_ZN3api14CMTFormBuilder12AddTextFieldERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_6SPointENS_14ETextAlignmentE	3715	symbol	match	readings: address symbol	258	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 181	_ZN4ASN18SEQUENCED2Ev	305	symbol	match	readings: address symbol	80	addr	asn1-modules	1	app/asn1/asn1.o
 182	OPENSSL_cleanse	174	symbol	match	readings: address symbol	20	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-mem_clr.o)
 183	-	-	-	no-candidate	no symbol and no ledger pair	46	none	unknown	0	-
@@ -61,11 +61,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 195	OPENSSL_sk_num	182	symbol	match	-	16	byte	openssl	1	openssl/O3/crypto/stack/libcrypto-lib-stack.o
 196	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE17__assign_no_aliasILb0EEERS5_PKcm	486	symbol	match	-	101	addr	unknown	1	sysroot:libc++.a(string.o)
 197	_ZN12_GLOBAL__N_116itanium_demangle12OutputBufferpLENSt3__217basic_string_viewIcNS2_11char_traitsIcEEEE	184	symbol	match	-	63	addr	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
-198	_ZN3api17CPaperFormBuilder10AddNewLineEm	3653	symbol	match	readings: address symbol	19	shape	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
+198	_ZN3api17CPaperFormBuilder10AddNewLineEm	3650	ledger	match	readings: address symbol	19	shape	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
 199	sqlite3VdbeAddOp2	185	symbol	match	-	99	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 200	_ZN4utf84nextINSt3__211__wrap_iterIPKcEEEEjRT_S6_	206	symbol	match	readings: address symbol,table slot	779	shape	utf8cpp	1	app/roots_rhvoice.o
 201	CRYPTO_THREAD_lock_free	188	symbol	match	readings: address string	19	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-threads_pthread.o
-202	_ZN3api12CFormBuilder12AddTextFieldERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_6SPointERKNS_5SFontENS_14ETextAlignmentENS_6TColorESH_	3826	symbol	match	readings: address symbol	347	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+202	_ZN3api12CFormBuilder12AddTextFieldERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_6SPointERKNS_5SFontENS_14ETextAlignmentENS_6TColorESH_	3801	symbol	match	readings: address symbol	347	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 203	_ZN3api12CFormBuilderC2Ev	2011	symbol	match	-	18	byte	unknown	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 204	gf_sqr	190	symbol	match	-	1753	fingerprint	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-f_impl64.o)
 205	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE17__assign_no_aliasILb1EEERS5_PKcm	468	symbol	match	-	80	addr	unknown	1	sysroot:libc++.a(string.o)
@@ -298,7 +298,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 432	_ZN4ASN18SEQUENCE19removeOptionalFieldEj	701	symbol	match	-	72	byte	unknown	1	app/asn1/asn1.o
 433	-	-	-	no-candidate	no symbol and no ledger pair	68	none	app	0	-
 434	_ZNK7RHVoice8sentence16abstract_command8has_textEv	384	symbol	match	-	4	byte	vota-web	1	app/roots_rhvoice.o
-435	_ZN3api14CMTFormBuilder6AddLedENS_12ELedOperacaoE	3704	symbol	match	readings: address symbol	19	shape	libc++	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+435	_ZN3api14CMTFormBuilder6AddLedENS_12ELedOperacaoE	3710	ledger	match	readings: address symbol	19	shape	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 436	-	-	-	no-candidate	no symbol and no ledger pair	18	none	unknown	0	-
 437	__shgetc	339	symbol	match	-	211	fingerprint	RHVoice	1	sysroot:libc.a(shgetc.o)
 438	jsonbPayloadSize	338	symbol	match	-	361	byte	sqlite	1	sqlite/O3pic2/sqlite3.o
@@ -482,7 +482,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 616	_ZeqRK4GUIDS1_	431	symbol	match	-	217	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 617	-	-	-	no-candidate	no symbol and no ledger pair	593	none	unknown	0	-
 618	-	-	-	no-candidate	no symbol and no ledger pair	907	none	libc++	0	-
-619	_ZN3api14CMTFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointENS_14ETextAlignmentE	3717	symbol	match	readings: address symbol	207	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+619	_ZN3api14CMTFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointENS_14ETextAlignmentE	3722	symbol	match	readings: address symbol	207	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 620	-	-	-	no-candidate	no symbol and no ledger pair	8	none	unknown	0	-
 621	_ZN4ASN116SEQUENCE_OF_BaseD2Ev	744	symbol	differs	+0xd target +0xd local.get 0 | ours +0xd i32.const 1936852 [ours 1535384 = __THREW__+0: address symbol __THREW__ → 0x1d8dd4]	49	none	ASN1	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 622	sqlite3ExprCodeTemp	493	symbol	match	readings: table slot	343	addr	7zip	1	sqlite/O3pic2/sqlite3.o
@@ -514,7 +514,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 648	_ZNSt3__225__throw_bad_function_callB8ne210108Ev	1182	symbol	match	readings: address symbol,table slot	32	shape	libc++	1	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o
 649	-	-	-	no-candidate	no symbol and no ledger pair	310	none	boost	0	-
 650	-	-	-	no-candidate	no symbol and no ledger pair	336	none	RHVoice	0	-
-651	_ZN3api14CMTFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_ERKNS_6SPointES9_NS_14ETextAlignmentE	3715	symbol	match	readings: address symbol	265	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+651	_ZN3api14CMTFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_ERKNS_6SPointES9_NS_14ETextAlignmentE	3717	symbol	match	readings: address symbol	265	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 652	-	-	-	no-candidate	no symbol and no ledger pair	4609	none	vota	0	-
 653	-	-	-	no-candidate	no symbol and no ledger pair	1531	none	libc++	0	-
 654	-	-	-	no-candidate	no symbol and no ledger pair	4752	none	ecourna	0	-
@@ -591,7 +591,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 725	-	-	-	no-candidate	no symbol and no ledger pair	126	none	7zip	0	-
 726	_ZN7AStringC2ERKS_	2795	symbol	match	-	91	none	7zip	1	7zip/21.02-st-O3/obj/CPP_Common_MyString.cpp.o
 727	-	-	-	no-candidate	no symbol and no ledger pair	175	none	unknown	0	-
-728	_ZN3api14CMTFormBuilder8AddClockERKNS_6SPointE	3699	symbol	match	readings: address symbol	381	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+728	_ZN3api14CMTFormBuilder8AddClockERKNS_6SPointE	3704	symbol	match	readings: address symbol	381	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 729	_ZN5comum14IInterfaceInit11GetDemoModeEv	3612	symbol	match	readings: address string,table slot,address srcloc,address symbol	736	none	libc++	1	app/uenux2/src/app/comum/iinterfaceinit.cpp.o
 730	-	-	-	no-candidate	no symbol and no ledger pair	170	none	unknown	0	-
 731	-	-	-	no-candidate	no symbol and no ledger pair	410	none	ecourna	0	-
@@ -804,7 +804,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 938	_ZNSt3__26vectorIjNS_9allocatorIjEEE9push_backB8ne210108ERKj	743	symbol	match	-	230	none	openssl	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 939	-	-	-	no-candidate	no symbol and no ledger pair	769	none	app	0	-
 940	-	-	-	no-candidate	no symbol and no ledger pair	77	none	app	0	-
-941	_ZN3api14CMTFormBuilder7AddBuzzEii	3700	symbol	match	readings: address symbol	385	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+941	_ZN3api14CMTFormBuilder7AddBuzzEii	3706	symbol	match	readings: address symbol	385	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 942	-	-	-	no-candidate	no symbol and no ledger pair	107	none	ecourna	0	-
 943	_ZNK5comum2md6CLocal8GetSecaoEv	5322	symbol	match	readings: address string,address srcloc,address symbol,table slot	74	none	ecourna	1	app/uenux2/src/app/comum/dados/md/clocal.cpp.o
 944	-	-	-	no-candidate	no symbol and no ledger pair	1216	none	app	0	-
@@ -935,7 +935,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1069	HTS_get_pattern_token	841	symbol	match	readings: address string	923	addr	RHVoice	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/HTS_misc.c.o
 1070	-	-	-	no-candidate	no symbol and no ledger pair	27	none	comum	0	-
 1071	-	-	-	no-candidate	no symbol and no ledger pair	2048	none	ecourna	0	-
-1072	_ZN3api14CMTFormBuilder7AddBeepEi	3701	symbol	match	readings: address symbol	19	shape	libc++	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+1072	_ZN3api14CMTFormBuilder7AddBeepEi	3713	ledger	match	readings: address symbol	19	shape	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 1073	-	-	-	no-candidate	no symbol and no ledger pair	24	none	app	0	-
 1074	_ZN7ecourna3api9exception10CBaseErrorINS0_3asn12EApiAsnErrorEXtlNS1_12SErrorLimitsELi1900ELi1910EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	11217	symbol	differs	+0xf target +0xe call 710 | ours +0xe call 1011	18	shape	ecourna	2	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
 1075	_ZNKRSt3__218basic_stringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEE3strB8ne210108Ev	11218	symbol	differs	+0x15 target +0x15 i32.load align=2 offset=56 | ours +0x15 i32.const 56	223	none	app	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversorparametrosurna.cpp.o
@@ -1015,7 +1015,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1149	-	-	-	no-candidate	no symbol and no ledger pair	252	none	app	0	-
 1150	-	-	-	no-candidate	no symbol and no ledger pair	1768	none	vota	0	-
 1151	-	-	-	no-candidate	no symbol and no ledger pair	330	none	api	0	-
-1152	_ZN3api14CMTFormBuilder12AddTextFieldENS_11CTextSourceERKNS_6SPointERKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEENS_14ETextAlignmentE	3713	symbol	match	readings: address symbol	444	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+1152	_ZN3api14CMTFormBuilder12AddTextFieldENS_11CTextSourceERKNS_6SPointERKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEENS_14ETextAlignmentE	3701	symbol	match	readings: address symbol	444	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 1153	-	-	-	no-candidate	no symbol and no ledger pair	719	none	RHVoice	0	-
 1154	_ZNSt3__26__treeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEN7RHVoice3str4lessENS4_IS6_EEE7destroyEPNS_11__tree_nodeIS6_PvEE	479	symbol	match	-	57	addr	unknown	2	app/roots_rhvoice.o
 1155	-	-	-	no-candidate	no symbol and no ledger pair	1944	none	api	0	-
@@ -1054,7 +1054,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1188	sqlite3_errmsg	864	symbol	match	readings: address string,address same-content,address symbol	427	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 1189	sqlite3_exec	865	symbol	match	readings: address string,address same-content,address symbol	2249	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 1190	-	-	-	no-candidate	no symbol and no ledger pair	305	none	sqlite	0	-
-1191	_ZN3api12CFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointERKNS_5SFontENS_14ETextAlignmentE	3819	symbol	match	readings: address symbol	292	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+1191	_ZN3api12CFormBuilder12AddTextFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointERKNS_5SFontENS_14ETextAlignmentE	3815	symbol	match	readings: address symbol	292	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 1192	-	-	-	no-candidate	no symbol and no ledger pair	1027	none	libc++	0	-
 1193	ossl_DER_w_precompiled	940	symbol	match	-	148	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-der_writer.o)
 1194	ossl_prov_free_key	883	symbol	match	-	59	byte	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-endecoder_common.o
@@ -1127,7 +1127,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1261	-	-	-	no-candidate	no symbol and no ledger pair	80	none	unknown	0	-
 1262	_ZN3api12CTextFieldMTC2ERKNS_6SPointERKNSt3__210shared_ptrINS_5ITextEEE	1052	symbol	match	readings: address symbol,address string,address srcloc,table slot	171	none	api	1	app/uenux2/src/api/gui/ctextfieldmt.cpp.o
 1263	-	-	-	no-candidate	no symbol and no ledger pair	235	none	libc++	0	-
-1264	_ZN3api17CPaperFormBuilder6AddCutEv	3650	symbol	match	readings: address symbol	371	none	api	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
+1264	_ZN3api17CPaperFormBuilder6AddCutEv	3653	symbol	match	readings: address symbol	371	none	api	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
 1265	-	-	-	no-candidate	no symbol and no ledger pair	692	none	libc++	0	-
 1266	-	-	-	no-candidate	no symbol and no ledger pair	15	none	libc++	0	-
 1267	_ZNK5comum2md18CProcessoEleitoral10GetPleito2Ev	5386	symbol	match	readings: address string,address srcloc,address symbol,table slot	75	none	ecourna	1	app/uenux2/src/app/comum/dados/md/processoeleitoral/cprocessoeleitoral.cpp.o
@@ -2931,7 +2931,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3065	hash_df	1918	symbol	match	-	803	addr	openssl	1	openssl/O3/providers/implementations/rands/libdefault-lib-drbg_hash.o
 3066	ctr_BCC_update	1919	symbol	match	-	702	addr	app	1	openssl/O3/providers/implementations/rands/libdefault-lib-drbg_ctr.o
 3067	-	-	-	no-candidate	no symbol and no ledger pair	507	none	vota	0	-
-3068	_ZN3api12CFormBuilder18AddDoubleLineFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointESC_sRKNS_5SFontENS_6TColorE	3815	symbol	match	readings: address symbol	294	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+3068	_ZN3api12CFormBuilder18AddDoubleLineFieldEPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvERKNS_6SPointESC_sRKNS_5SFontENS_6TColorE	3826	symbol	match	readings: address symbol	294	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 3069	mac_gen_set_params	1921	symbol	match	readings: address string	167	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
 3070	ossl_mac_key_free	1922	symbol	match	readings: address string	103	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-mac_legacy_kmgmt.o
 3071	-	-	-	no-candidate	no symbol and no ledger pair	336	none	openssl	0	-
@@ -3543,7 +3543,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3677	_ZNK3api11CFramedText4RectEv	5169	symbol	match	-	133	byte	api	1	app/uenux2/src/api/gui/cframedtext.cpp.o
 3678	-	-	-	no-candidate	no symbol and no ledger pair	564	none	app	0	-
 3679	-	-	-	no-candidate	no symbol and no ledger pair	38	none	app	0	-
-3680	_ZN3api12CFormBuilder7AddRectERKNS_6SPointES3_	3801	symbol	match	readings: address symbol	200	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+3680	_ZN3api12CFormBuilder7AddRectERKNS_6SPointES3_	3809	symbol	match	readings: address symbol	200	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 3681	_ZN3api10CLineFieldD0Ev	2456	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/clinefield.cpp.o
 3682	-	-	-	no-candidate	no symbol and no ledger pair	333	none	app	0	-
 3683	-	-	-	no-candidate	no symbol and no ledger pair	253	none	libc++	0	-
@@ -3753,7 +3753,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3887	-	-	-	no-candidate	no symbol and no ledger pair	458	none	vota	0	-
 3888	-	-	-	no-candidate	no symbol and no ledger pair	151	none	vota	0	-
 3889	-	-	-	no-candidate	no symbol and no ledger pair	285	none	api	0	-
-3890	byn$mgfn-shared$_ZN3api14CMTFormBuilder6AddLedENS_12ELedOperacaoE	3132	symbol	match	-	372	none	libc++	1	<binaryen>
+3890	byn$mgfn-shared$_ZN3api14CMTFormBuilder7AddBeepEi	3132	content	match	-	372	none	libc++	1	<binaryen>
 3891	-	-	-	no-candidate	no symbol and no ledger pair	67	none	api	0	-
 3892	-	-	-	no-candidate	no symbol and no ledger pair	577	none	ecourna	0	-
 3893	-	-	-	no-candidate	no symbol and no ledger pair	444	none	libc++	0	-
@@ -5272,7 +5272,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5406	-	-	-	no-candidate	no symbol and no ledger pair	105	none	ecourna	0	-
 5407	-	-	-	no-candidate	no symbol and no ledger pair	30	none	vota	0	-
 5408	-	-	-	no-candidate	no symbol and no ledger pair	55	none	vota	0	-
-5409	_ZN3api14CMTFormBuilder12AddTextFieldENS_11CTextSourceERKNS_6SPointENS_14ETextAlignmentE	3706	symbol	match	readings: address symbol	356	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+5409	_ZN3api14CMTFormBuilder12AddTextFieldENS_11CTextSourceERKNS_6SPointENS_14ETextAlignmentE	3699	symbol	match	readings: address symbol	356	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 5410	-	-	-	no-candidate	no symbol and no ledger pair	1258	none	libc++	0	-
 5411	_ZN3api18CTextFieldUpdateMTD2Ev	3464	symbol	match	readings: address symbol	176	addr	api	1	app/uenux2/src/app/vota/operador/comum/ctextfieldupdatemt.cpp.o
 5412	-	-	-	no-candidate	no symbol and no ledger pair	766	none	vota	0	-
@@ -5282,7 +5282,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5416	-	-	-	no-candidate	no symbol and no ledger pair	20	none	vota	0	-
 5417	-	-	-	no-candidate	no symbol and no ledger pair	11	none	app	0	-
 5418	-	-	-	no-candidate	no symbol and no ledger pair	1000	none	vota	0	-
-5419	_ZN3api14CMTFormBuilder12AddTextFieldENSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEERKNS_6SPointENS_14ETextAlignmentE	3710	symbol	match	readings: address symbol	423	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+5419	_ZN3api14CMTFormBuilder12AddTextFieldENSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEERKNS_6SPointENS_14ETextAlignmentE	3700	symbol	match	readings: address symbol	423	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 5420	-	-	-	no-candidate	no symbol and no ledger pair	788	none	vota	0	-
 5421	-	-	-	no-candidate	no symbol and no ledger pair	22	none	vota	0	-
 5422	-	-	-	no-candidate	no symbol and no ledger pair	99	none	app	0	-
@@ -5410,7 +5410,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5544	_ZN3api12CFormBuilder16GetLabeledKeyPosERKNS_5SRectENS_14ETextAlignmentEs	3799	symbol	match	readings: address string,table slot,address srcloc,address symbol	559	none	ecourna	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 5545	-	-	-	no-candidate	no symbol and no ledger pair	2040	none	libc++	0	-
 5546	-	-	-	no-candidate	no symbol and no ledger pair	534	none	libc++	0	-
-5547	_ZN3api12CFormBuilder8AddImageENSt3__210shared_ptrINS_6IImageEEERKNS_6SPointE	3809	symbol	match	readings: address symbol	166	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+5547	_ZN3api12CFormBuilder8AddImageENSt3__210shared_ptrINS_6IImageEEERKNS_6SPointE	3819	symbol	match	readings: address symbol	166	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 5548	-	-	-	no-candidate	no symbol and no ledger pair	16	none	api	0	-
 5549	-	-	-	no-candidate	no symbol and no ledger pair	38	none	app	0	-
 5550	-	-	-	no-candidate	no symbol and no ledger pair	296	none	libc++	0	-
@@ -6961,19 +6961,19 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7095	camellia_ofb_cipher	7262	symbol	match	-	76	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_camellia.o
 7096	camellia_ecb_cipher	7263	symbol	match	-	75	fingerprint	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_camellia.o
 7097	camellia_cbc_cipher	7264	symbol	match	-	104	fingerprint	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_camellia.o
-7098	camellia_init_key	7265	symbol	match	readings: address string,table slot	140	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_camellia.o
+7098	camellia_init_key	7266	symbol	match	readings: address string,table slot	140	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_camellia.o
 7099	Camellia_cbc_encrypt	5705	symbol	match	readings: table slot	42	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-cmll_cbc.o)
 7100	Camellia_decrypt	5702	symbol	match	readings: address symbol	1591	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-cmll_misc.o)
 7101	Camellia_encrypt	5703	symbol	match	readings: address symbol	1552	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-cmll_misc.o)
-7102	aria_ccm_ctrl	7266	symbol	match	-	536	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7103	aria_ccm_cipher	7267	symbol	match	-	793	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7104	aria_ccm_init_key	7268	symbol	match	readings: table slot,address string	163	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7105	aria_gcm_ctrl	7269	symbol	match	readings: address string	1245	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7106	aria_gcm_cleanup	7270	symbol	match	readings: address string	38	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7107	aria_gcm_cipher	7271	symbol	match	-	424	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7108	aria_gcm_init_key	7272	symbol	match	readings: table slot,address string	227	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7109	aria_ctr_cipher	7273	symbol	match	readings: table slot	17	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
-7110	aria_init_key	7275	symbol	match	readings: address string	110	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7102	aria_ccm_ctrl	7267	symbol	match	-	536	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7103	aria_ccm_cipher	7268	symbol	match	-	793	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7104	aria_ccm_init_key	7269	symbol	match	readings: table slot,address string	163	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7105	aria_gcm_ctrl	7270	symbol	match	readings: address string	1245	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7106	aria_gcm_cleanup	7271	symbol	match	readings: address string	38	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7107	aria_gcm_cipher	7272	symbol	match	-	424	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7108	aria_gcm_init_key	7273	symbol	match	readings: table slot,address string	227	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7109	aria_ctr_cipher	7274	symbol	match	readings: table slot	17	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
+7110	aria_init_key	7276	symbol	match	readings: address string	110	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aria.o
 7111	cast5_ecb_cipher	12116	symbol	match	-	71	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-e_cast.o)
 7112	cast5_ofb_cipher	12117	symbol	match	-	184	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-e_cast.o)
 7113	cast5_cfb64_cipher	12118	symbol	match	-	138	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-e_cast.o)
@@ -7000,7 +7000,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7134	sm4_ofb_cipher	12086	symbol	match	readings: table slot	17	addr	app	1	openssl/O3/libcrypto.a(libcrypto-lib-e_sm4.o)
 7135	sm4_cfb128_cipher	12088	symbol	match	readings: table slot	17	addr	app	1	openssl/O3/libcrypto.a(libcrypto-lib-e_sm4.o)
 7136	sm4_cbc_cipher	12089	symbol	match	readings: table slot	21	addr	app	1	openssl/O3/libcrypto.a(libcrypto-lib-e_sm4.o)
-7137	_ZNKSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7182	ledger	differs	+0xb target +0xa i32.const 472912 | ours +0xa i32.const 529116 [ours 273688 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_14CCutFieldPaperEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_14CCutFieldPaperEEE → 0x812dc]	17	addr	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
+7137	_ZNKSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7182	ledger	differs	+0xb target +0xa i32.const 472912 | ours +0xa i32.const 529391 [ours 273684 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_18CNewLineFieldPaperEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_18CNewLineFieldPaperEEE → 0x813ef]	17	addr	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
 7138	sm4_init_key	12090	symbol	match	-	14	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_sm4.o)
 7139	seed_ecb_cipher	12091	symbol	match	-	71	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_seed.o)
 7140	seed_ofb_cipher	12092	symbol	match	-	184	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-e_seed.o)
@@ -7251,10 +7251,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7385	-	-	-	no-candidate	no symbol and no ledger pair	13	none	vota	0	-
 7386	evp_cipher_from_algorithm	7230	symbol	match	readings: address string,table slot	2017	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-evp_enc.o
 7387	engine_unregister_all_ciphers	7343	symbol	match	readings: address symbol	10	addr	unknown	2	openssl/O3/crypto/engine/libcrypto-lib-tb_cipher.o
-7388	aes_ocb_ctrl	7276	symbol	match	-	323	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
-7389	aes_ocb_cleanup	7277	symbol	match	-	16	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
-7390	aes_ocb_cipher@openssl/O3/crypto/evp/libcrypto-lib-e_aes.o	7278	symbol	match	readings: address string	689	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
-7391	aes_ocb_init_key	7279	symbol	match	-	236	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
+7388	aes_ocb_ctrl	7277	symbol	match	-	323	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
+7389	aes_ocb_cleanup	7278	symbol	match	-	16	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
+7390	aes_ocb_cipher@openssl/O3/crypto/evp/libcrypto-lib-e_aes.o	7279	symbol	match	readings: address string	689	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
+7391	aes_ocb_init_key	7280	symbol	match	-	236	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
 7392	aes_wrap_cipher@openssl/O3/crypto/evp/libcrypto-lib-e_aes.o	7281	symbol	match	readings: address string,table slot	285	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
 7393	aes_wrap_init_key	7282	symbol	match	-	151	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
 7394	aes_ccm_ctrl	7283	symbol	match	-	536	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-e_aes.o
@@ -7369,7 +7369,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7503	ec_bits	7468	symbol	match	-	13	fingerprint	unknown	1	openssl/O3/crypto/ec/libcrypto-lib-ec_ameth.o
 7504	int_ec_size	7469	symbol	match	-	10	addr	unknown	1	openssl/O3/crypto/ec/libcrypto-lib-ec_ameth.o
 7505	-	-	-	no-candidate	no symbol and no ledger pair	16	none	unknown	0	-
-7506	_ZNKSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7185	ledger	differs	+0xb target +0xa i32.const 472374 | ours +0xa i32.const 529391 [ours 273413 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_18CNewLineFieldPaperEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_18CNewLineFieldPaperEEE → 0x813ef]	17	addr	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
+7506	_ZNKSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7185	ledger	differs	+0xb target +0xa i32.const 472374 | ours +0xa i32.const 529116 [ours 273409 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_14CCutFieldPaperEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS4_NS1_14CCutFieldPaperEEE → 0x812dc]	17	addr	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
 7507	eckey_priv_encode	7471	symbol	match	readings: address string	356	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_ameth.o
 7508	-	-	-	no-candidate	no symbol and no ledger pair	16	none	unknown	0	-
 7509	eckey_pub_cmp	7473	symbol	match	-	71	addr	unknown	1	openssl/O3/crypto/ec/libcrypto-lib-ec_ameth.o
@@ -7825,11 +7825,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7959	_ZNSt3__225__num_get_signed_integralB8ne210108IxEET_PKcS3_Rji	11675	symbol	match	readings: address symbol	177	addr	libc++	1	sysroot:libc++.a(locale.o)
 7960	_ZNKSt3__27num_getIcNS_19istreambuf_iteratorIcNS_11char_traitsIcEEEEE6do_getES4_S4_RNS_8ios_baseERjRx	11676	symbol	match	readings: table slot	21	shape	libc++	1	sysroot:libc++.a(locale.o)
 7961	_ZNSt3__225__num_get_signed_integralB8ne210108IlEET_PKcS3_Rji	11677	symbol	match	readings: address symbol	226	addr	unknown	1	sysroot:libc++.a(locale.o)
-7962	_ZNKSt3__220__shared_ptr_pointerIPN3api13CClockFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7197	ledger	differs	+0xb target +0xa i32.const 471105 | ours +0xa i32.const 526548 [ours 272863 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_13CClockFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_13CClockFieldMTEEE → 0x808d4]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+7962	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7197	ledger	differs	+0xb target +0xa i32.const 471105 | ours +0xa i32.const 538933 [ours 272871 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS1_11CTextSourceEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS1_11CTextSourceEEEEE → 0x83935]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 7963	_ZNKSt3__27num_getIcNS_19istreambuf_iteratorIcNS_11char_traitsIcEEEEE6do_getES4_S4_RNS_8ios_baseERjRl	11678	symbol	match	readings: table slot	21	shape	libc++	1	sysroot:libc++.a(locale.o)
 7964	_ZNKSt3__27num_getIcNS_19istreambuf_iteratorIcNS_11char_traitsIcEEEEE6do_getES4_S4_RNS_8ios_baseERjRb	11679	symbol	match	readings: table slot	27	shape	libc++	1	sysroot:libc++.a(locale.o)
 7965	_ZNKSt3__27collateIwE7do_hashEPKwS3_	11680	symbol	match	-	64	byte	libc++	1	sysroot:libc++.a(locale.o)
-7966	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBuzzFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7201	ledger	differs	+0xb target +0xa i32.const 470957 | ours +0xa i32.const 526274 [ours 272589 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBuzzFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBuzzFieldMTEEE → 0x807c2]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+7966	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISF_SC_EENS7_ISC_EEE13__get_deleterERKSt9type_info	7207	ledger	differs	+0xb target +0xa i32.const 470957 | ours +0xa i32.const 537235 [ours 272518 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEEEE → 0x83293]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 7967	_ZNKSt3__27collateIwE12do_transformEPKwS3_	11681	symbol	match	-	11	addr	libc++	1	sysroot:libc++.a(locale.o)
 7968	_ZNKSt3__27collateIwE10do_compareEPKwS3_S3_S3_	11682	symbol	match	-	84	byte	libc++	1	sysroot:libc++.a(locale.o)
 7969	_ZNKSt3__27collateIcE7do_hashEPKcS3_	11683	symbol	match	-	64	byte	libc++	1	sysroot:libc++.a(locale.o)
@@ -7845,25 +7845,25 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7979	_ZNSt3__211__stdoutbufIcE8overflowEi	11695	symbol	match	-	290	fingerprint	libc++	1	sysroot:libc++.a(iostream.o)
 7980	_ZNSt3__211__stdoutbufIcE6xsputnEPKcl	11696	symbol	match	-	102	fingerprint	libc++	1	sysroot:libc++.a(iostream.o)
 7981	_ZNSt3__211__stdoutbufIcE5imbueERKNS_6localeE	11697	symbol	match	-	46	addr	libc++	1	sysroot:libc++.a(iostream.o)
-7982	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBeepFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7203	ledger	differs	+0xb target +0xa i32.const 470800 | ours +0xa i32.const 525730 [ours 272316 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBeepFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBeepFieldMTEEE → 0x805a2]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+7982	_ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7218	ledger	differs	+0xb target +0xa i32.const 470800 | ours +0xa i32.const 535355 [ours 272104 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_12CDataTextFmtINS1_11CTextSourceEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_12CDataTextFmtINS1_11CTextSourceEEEEE → 0x82b3b]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 7983	_ZNSt3__210__stdinbufIcE9pbackfailEi	11698	symbol	match	-	293	fingerprint	libc++	1	sysroot:libc++.a(iostream.o)
 7984	_ZNSt3__210__stdinbufIcE5uflowEv	11699	symbol	match	-	9	addr	libc++	1	sysroot:libc++.a(iostream.o)
 7985	_ZNSt3__210__stdinbufIcE9underflowEv	11701	symbol	match	-	9	addr	libc++	1	sysroot:libc++.a(iostream.o)
 7986	_ZNSt3__210__stdinbufIcE5imbueERKNS_6localeE	11702	symbol	unresolved	ours +0x44 call 2337: _ZNSt3__221__throw_runtime_errorEPKc has no target function	74	none	libc++	1	sysroot:libc++.a(iostream.o)
 7987	__cxx_global_array_dtor.1	11703	symbol	unresolved	self-voted +0x11 i32.const 1923544: _ZNSt3__24coutE = 0x1d59d8 (evidence:vote:1 by:7987) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	202	addr	unknown	1	sysroot:libc++.a(iostream.o)
 7988	_ZNSt3__28ios_base33__set_badbit_and_consider_rethrowEv	11705	symbol	match	-	29	fingerprint	unknown	1	sysroot:libc++.a(ios.o)
-7989	_ZNKSt3__220__shared_ptr_pointerIPN3api11CLedFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7205	ledger	differs	+0xb target +0xa i32.const 470642 | ours +0xa i32.const 526002 [ours 272044 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_11CLedFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_11CLedFieldMTEEE → 0x806b2]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+7989	_ZNKSt3__220__shared_ptr_pointerIPN3api13CClockFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7229	ledger	differs	+0xb target +0xa i32.const 470642 | ours +0xa i32.const 526548 [ours 271793 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_13CClockFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_13CClockFieldMTEEE → 0x808d4]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 7990	_ZNSt3__28ios_baseD0Ev	11706	symbol	match	-	10	addr	libc++	1	sysroot:libc++.a(ios.o)
 7991	_ZNSt3__28ios_base16__call_callbacksENS0_5eventE	11707	symbol	match	-	60	fingerprint	libc++	1	sysroot:libc++.a(ios.o)
 7992	_ZNSt3__28ios_base7failureC2EPKcRKNS_10error_codeE	11708	symbol	match	readings: address symbol	62	none	libc++	1	sysroot:libc++.a(ios.o)
 7993	_ZNKSt3__219__iostream_category7messageEi	11709	symbol	match	readings: address string	28	none	libc++	1	sysroot:libc++.a(ios.o)
-7994	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7207	ledger	differs	+0xb target +0xa i32.const 470501 | ours +0xa i32.const 538933 [ours 271779 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS1_11CTextSourceEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS1_11CTextSourceEEEEE → 0x83935]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+7994	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBuzzFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7231	ledger	differs	+0xb target +0xa i32.const 470501 | ours +0xa i32.const 526274 [ours 271519 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBuzzFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBuzzFieldMTEEE → 0x807c2]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 7995	_ZNKSt3__219__iostream_category4nameEv	11710	symbol	match	readings: address string	6	addr	libc++	2	sysroot:libc++.a(ios.o)
 7996	_ZTv0_n12_NSt3__214basic_ifstreamIcNS_11char_traitsIcEEED0Ev	11714	ledger	differs	+0x10 target +0xf call 4747 | ours +0xf call 4748	19	shape	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 7997	_ZTv0_n12_NSt3__214basic_ifstreamIcNS_11char_traitsIcEEED1Ev	11715	ledger	differs	+0x10 target +0xf call 1697 | ours +0xf call 3357	19	shape	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 7998	_ZTv0_n12_NSt3__214basic_ifstreamIcNS_11char_traitsIcEEED0Ev	11714	symbol	match	-	19	none	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 7999	_ZTv0_n12_NSt3__214basic_ifstreamIcNS_11char_traitsIcEEED1Ev	11715	symbol	match	-	19	none	libc++	1	sysroot:libc++.a(ios.instantiations.o)
-8000	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISF_SC_EENS7_ISC_EEE13__get_deleterERKSt9type_info	7218	ledger	differs	+0xb target +0xa i32.const 470358 | ours +0xa i32.const 537235 [ours 271426 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEEEE → 0x83293]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+8000	_ZNKSt3__220__shared_ptr_pointerIPN3api11CLedFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7234	ledger	differs	+0xb target +0xa i32.const 470358 | ours +0xa i32.const 526002 [ours 271247 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_11CLedFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_11CLedFieldMTEEE → 0x806b2]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 8001	_ZTv0_n12_NSt3__219basic_istringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEED0Ev	11717	symbol	match	-	19	addr	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8002	_ZTv0_n12_NSt3__219basic_istringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev	11718	symbol	match	-	19	addr	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8003	_ZTv0_n12_NSt3__219basic_ostringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEED0Ev	11719	symbol	match	-	19	none	libc++	1	sysroot:libc++.a(ios.instantiations.o)
@@ -7882,17 +7882,17 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8016	_ZNSt3__213basic_filebufIcNS_11char_traitsIcEEE6setbufEPcl	11732	symbol	match	-	316	none	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8017	_ZNSt3__213basic_filebufIcNS_11char_traitsIcEEE8overflowEi	11734	symbol	match	-	712	shape	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8018	_ZNSt3__213basic_filebufIcNS_11char_traitsIcEEE9pbackfailEi	11735	symbol	match	-	109	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
-8019	_ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7229	ledger	differs	+0xb target +0xa i32.const 470224 | ours +0xa i32.const 535355 [ours 271012 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_12CDataTextFmtINS1_11CTextSourceEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_12CDataTextFmtINS1_11CTextSourceEEEEE → 0x82b3b]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+8019	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBeepFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7245	ledger	differs	+0xb target +0xa i32.const 470224 | ours +0xa i32.const 525730 [ours 270975 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBeepFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CBeepFieldMTEEE → 0x805a2]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 8020	_ZNSt3__213basic_filebufIcNS_11char_traitsIcEEE9underflowEv	11736	symbol	match	-	691	shape	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8021	_ZNSt3__213basic_filebufIcNS_11char_traitsIcEEED0Ev	11737	symbol	match	-	13	shape	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8022	_ZNSt3__213basic_filebufIcNS_11char_traitsIcEEE5closeEv	11738	symbol	match	readings: table slot,address symbol	202	addr	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8023	_ZNSt3__215basic_stringbufIcNS_11char_traitsIcEENS_9allocatorIcEEE7seekoffExNS_8ios_base7seekdirEj	11741	symbol	match	-	277	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
-8024	_ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKS8_EEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISG_SD_EENS6_ISD_EEE13__get_deleterERKSt9type_info	7255	ledger	differs	+0xb target +0xa i32.const 470088 | ours +0xa i32.const 518373 [ours 270657 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_12CDataTextFmtIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKSB_EEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_12CDataTextFmtIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKSB_EEEEE → 0x7e8e5]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+8024	_ZNKSt3__220__shared_ptr_pointerIPN3api12CTextFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7255	ledger	differs	+0xb target +0xa i32.const 470088 | ours +0xa i32.const 525457 [ours 270702 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CTextFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CTextFieldMTEEE → 0x80491]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 8025	_ZNSt3__215basic_stringbufIcNS_11char_traitsIcEENS_9allocatorIcEEE8overflowEi	11742	symbol	match	readings: address symbol,table slot	378	shape	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8026	_ZNSt3__215basic_stringbufIcNS_11char_traitsIcEENS_9allocatorIcEEE9pbackfailEi	11743	symbol	match	-	142	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8027	_ZNSt3__215basic_stringbufIcNS_11char_traitsIcEENS_9allocatorIcEEE9underflowEv	11744	symbol	match	-	95	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8028	_ZNSt3__213basic_ostreamIwNS_11char_traitsIwEEE6sentryC1ERS3_	11747	symbol	match	-	64	shape	unknown	1	sysroot:libc++.a(ios.instantiations.o)
-8029	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISE_SB_EENS6_ISB_EEE13__get_deleterERKSt9type_info	7291	ledger	differs	+0xb target +0xa i32.const 469952 | ours +0xa i32.const 487319 [ours 270216 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEE → 0x76f97]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+8029	_ZNKSt3__220__shared_ptr_pointerIPN3api10CFixedTextENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7265	ledger	differs	+0xb target +0xa i32.const 469952 | ours +0xa i32.const 525209 [ours 270454 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_10CFixedTextEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_10CFixedTextEEE → 0x80399]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 8030	_ZNSt3__215basic_streambufIwNS_11char_traitsIwEEE6xsputnEPKwl	11749	symbol	match	-	164	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8031	_ZNSt3__215basic_streambufIwNS_11char_traitsIwEEE5uflowEv	11750	symbol	match	-	51	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8032	_ZNSt3__215basic_streambufIwNS_11char_traitsIwEEE6xsgetnEPwl	11751	symbol	match	-	164	byte	libc++	1	sysroot:libc++.a(ios.instantiations.o)
@@ -7905,7 +7905,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8039	_ZNSt3__214basic_iostreamIcNS_11char_traitsIcEEED1Ev	11758	symbol	match	-	13	addr	libc++	1	sysroot:libc++.a(ios.instantiations.o)
 8040	-	-	-	no-candidate	no symbol and no ledger pair	583	none	unknown	0	-
 8041	_ZNSt3__29use_facetB8ne210108INS_7num_putIcNS_19ostreambuf_iteratorIcNS_11char_traitsIcEEEEEEEERKT_RKNS_6localeE	11763	symbol	unresolved	ours +0x3 i32.const 1536740: an address of ours: _ZNSt3__27num_putIcNS_19ostreambuf_iteratorIcNS_11char_traitsIcEEEEE2idE (.bss) has no target symbol	12	none	unknown	1	sysroot:libc++.a(ios.instantiations.o)
-8042	_ZNKSt3__220__shared_ptr_pointerIPN3api12CTextFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7313	ledger	differs	+0xb target +0xa i32.const 469663 | ours +0xa i32.const 525457 [ours 269692 = _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CTextFieldMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_12CTextFieldMTEEE → 0x80491]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+8042	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISE_SB_EENS6_ISB_EEE13__get_deleterERKSt9type_info	7313	ledger	differs	+0xb target +0xa i32.const 469663 | ours +0xa i32.const 487319 [ours 269720 = _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api5ITextEE27__shared_ptr_default_deleteIS2_NS1_9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEE → 0x76f97]	17	addr	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 8043	_ZNSt3__215basic_streambufIcNS_11char_traitsIcEEE9sputbackcB8ne210108Ec	11765	symbol	match	-	74	byte	app	1	sysroot:libc++.a(ios.instantiations.o)
 8044	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice10voice_infoENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7705	ledger	differs	+0xb target +0xa i32.const 469505 | ours +0xa i32.const 1108356 [ours 927725 = _ZTSNSt3__210shared_ptrIN7RHVoice10voice_infoEE27__shared_ptr_default_deleteIS2_S2_EE+0: address symbol _ZTSNSt3__210shared_ptrIN7RHVoice10voice_infoEE27__shared_ptr_default_deleteIS2_S2_EE → 0x10e984]	17	addr	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/voice.cpp.o
 8045	-	-	-	no-candidate	no symbol and no ledger pair	471	none	app	0	-
@@ -8441,14 +8441,14 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8575	_ZThn4_N16COpenCallbackImpD0Ev	9427	symbol	match	-	13	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8576	_ZThn4_N16COpenCallbackImpD1Ev	9428	symbol	match	-	10	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8577	_ZThn4_N16COpenCallbackImp14QueryInterfaceERK4GUIDPPv	9429	symbol	match	-	14	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
-8578	_ZNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEED0Ev	7368	ledger	differs	+0x4 target +0x3 i32.const 1530232 | ours +0x3 i32.const 1578224 [ours 1279176 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEEE → 0x1814f0]	17	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+8578	_ZNSt3__220__shared_ptr_emplaceIN3api10CLineFieldENS_9allocatorIS2_EEED0Ev	7368	ledger	differs	+0x4 target +0x3 i32.const 1530232 | ours +0x3 i32.const 1578264 [ours 1279176 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CLineFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CLineFieldENS_9allocatorIS2_EEEE → 0x181518]	17	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 8579	_ZN16COpenCallbackImp17SetSubArchiveNameEPKw	9430	symbol	unresolved	ours +0x10 call 1068: _ZN7UStringaSEPKw has no target function	22	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8580	_ZN16COpenCallbackImpD0Ev	9431	symbol	match	-	10	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8581	_ZThn12_N16COpenCallbackImp21CryptoGetTextPasswordEPPw	9432	symbol	differs	+0x0 target the locals | ours the locals	170	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8582	_ZN16COpenCallbackImp21CryptoGetTextPasswordEPPw	4295	symbol	differs	+0x1 target the locals | ours the locals	170	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8583	_ZThn4_N16COpenCallbackImp9GetStreamEPKwPP9IInStream	9433	symbol	match	-	14	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8584	_ZThn4_N16COpenCallbackImp11GetPropertyEjP14tagPROPVARIANT	9436	symbol	differs	+0xd target +0xd drop | ours +0xd end	17	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
-8585	_ZNSt3__220__shared_ptr_emplaceIN3api11CImageFieldENS_9allocatorIS2_EEED2Ev	7381	ledger	differs	+0x4 target +0x3 i32.const 1530232 | ours +0x3 i32.const 1537564 [ours 1279136 = _ZTVNSt3__220__shared_ptr_emplaceIN3api11CImageFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api11CImageFieldENS_9allocatorIS2_EEEE → 0x17761c]	14	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+8585	_ZNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEED2Ev	7381	ledger	differs	+0x4 target +0x3 i32.const 1530232 | ours +0x3 i32.const 1578224 [ours 1279136 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEEE → 0x1814f0]	14	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 8586	_ZN16COpenCallbackImp12SetCompletedEPKyS1_	9437	symbol	unresolved	ours +0xb call 5145: byn$mgfn-shared$_ZN16COpenCallbackImp8SetTotalEPKyS1_ has no target function	15	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8587	_ZN16COpenCallbackImp8SetTotalEPKyS1_	9438	symbol	unresolved	ours +0xb call 5145: byn$mgfn-shared$_ZN16COpenCallbackImp8SetTotalEPKyS1_ has no target function	15	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8588	_ZThn4_N8NArchive5NLzma8CHandler14QueryInterfaceERK4GUIDPPv	8936	ledger	unresolved	ours +0xa call 4203: _ZN8NArchive5NLzma8CHandler14QueryInterfaceERK4GUIDPPv has no target function	14	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_LzmaHandler.cpp.o
@@ -9099,7 +9099,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9233	-	-	-	no-candidate	no symbol and no ledger pair	2186	none	ecourna	0	-
 9234	-	-	-	no-candidate	no symbol and no ledger pair	18	none	unknown	0	-
 9235	__cxx_global_array_dtor.68@app/roots_boost.o	10079	ledger	unresolved	ours +0x1 i32.const 1496743: an address of ours: _ZZN5boost16cpp_regex_traitsIcE21get_catalog_name_instEvE6s_name (.bss) has no target symbol	36	addr	unknown	1	app/roots_boost.o
-9236	__cxx_global_array_dtor.2@app/asn1/BERDecoderPartial.o	10266	ledger	differs	+0x2 target +0x1 i32.const 1912207 | ours +0x1 i32.const 1914459 [ours 1499591 = _ZN4ASN1L14badEndOfStreamE+11: address symbol _ZN4ASN1L14badEndOfStreamE → 0x1d365b]	36	addr	unknown	1	app/asn1/BERDecoderPartial.o
+9236	__cxx_global_array_dtor.2@app/asn1/BERDecoderPartial.o	10266	ledger	differs	+0x2 target +0x1 i32.const 1912207 | ours +0x1 i32.const 1914459 [ours 1499587 = _ZN4ASN1L14badEndOfStreamE+11: address symbol _ZN4ASN1L14badEndOfStreamE → 0x1d365b]	36	addr	unknown	1	app/asn1/BERDecoderPartial.o
 9237	__cxx_global_array_dtor.54	11088	ledger	unresolved	ours +0x1 i32.const 1497327: an address of ours: _ZN9CBaseTypeIN7ecourna3app5dados25ETipoIdentificadorEleitorELS3_1ELS3_3ELi40EE4NOMEE (.bss) has no target symbol	36	addr	unknown	1	app/ecourna/app_dados_tiposbasicos.cpp.o
 9238	__cxx_global_array_dtor.51	11089	ledger	unresolved	ours +0x1 i32.const 1497315: an address of ours: _ZN9CBaseTypeItLt100ELt999ELi39EE4NOMEE (.bss) has no target symbol	36	addr	unknown	1	app/ecourna/app_dados_tiposbasicos.cpp.o
 9239	__cxx_global_array_dtor.48	11090	ledger	unresolved	ours +0x1 i32.const 1497303: an address of ours: _ZN9CBaseTypeItLt0ELt999ELi38EE4NOMEE (.bss) has no target symbol	36	addr	unknown	1	app/ecourna/app_dados_tiposbasicos.cpp.o
@@ -9271,8 +9271,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9405	-	-	-	no-candidate	no symbol and no ledger pair	706	none	simulador	0	-
 9406	-	-	-	no-candidate	no symbol and no ledger pair	326	none	unknown	0	-
 9407	-	-	-	no-candidate	no symbol and no ledger pair	425	none	unknown	0	-
-9408	_ZNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEED0Ev	7392	ledger	differs	+0x4 target +0x3 i32.const 1117744 | ours +0x3 i32.const 1537124 [ours 1279096 = _ZTVNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEEE → 0x177464]	17	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
-9409	_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISB_EEED2Ev	7421	ledger	differs	+0x4 target +0x3 i32.const 1117744 | ours +0x3 i32.const 1537048 [ours 1279020 = _ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISB_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISB_EEEE → 0x177418]	14	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+9408	_ZNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEED0Ev	7392	ledger	differs	+0x4 target +0x3 i32.const 1117744 | ours +0x3 i32.const 1578184 [ours 1279096 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEEE → 0x1814c8]	17	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+9409	_ZNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEED2Ev	7420	ledger	differs	+0x4 target +0x3 i32.const 1117744 | ours +0x3 i32.const 1537680 [ours 1279056 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEEE → 0x177690]	14	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 9410	_ZN7ecourna3api9exception10CBaseErrorINS0_4util10EUtilErrorEXtlNS1_12SErrorLimitsELi1875ELi1900EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	11280	symbol	match	readings: address symbol	18	shape	ecourna	2	app/ecourna/api_util_cstringutils.cpp.o
 9411	_ZN7ecourna3api3sql6sqlite17ObterMensagemErroEP7sqlite3	10904	symbol	match	readings: address string	222	none	sqlite	1	app/ecourna/api_sql_sqlite_sqliteutils.cpp.o
 9412	_ZNKSt3__220__shared_ptr_pointerIPN7ecourna3api3sql6sqlite13CSqlResultSetENS_10shared_ptrINS3_13ISqlResultSetEE27__shared_ptr_default_deleteIS8_S5_EENS_9allocatorIS5_EEE13__get_deleterERKSt9type_info	10905	symbol	match	readings: address symbol	18	addr	libc++	2	app/ecourna/api_sql_sqlite_csqlstatement.cpp.o
@@ -9345,8 +9345,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9479	_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict10word_breakENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info	7774	ledger	differs	+0xb target +0xa i32.const 1114510 | ours +0xa i32.const 1102250 [ours 923052 = _ZTSNSt3__210shared_ptrIN7RHVoice8userdict10correctionEE27__shared_ptr_default_deleteIS3_NS2_10word_breakEEE+0: address symbol _ZTSNSt3__210shared_ptrIN7RHVoice8userdict10correctionEE27__shared_ptr_default_deleteIS3_NS2_10word_breakEEE → 0x10d1aa]	18	addr	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/userdict.cpp.o
 9480	-	-	-	no-candidate	no symbol and no ledger pair	85	none	libc++	0	-
 9481	_ZNSt3__220__shared_ptr_emplaceIN9simulador12_GLOBAL__N_116CEsperaAudioWasmENS_9allocatorIS3_EEED0Ev	12026	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp.o
-9482	_ZNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEED0Ev	7425	ledger	differs	+0x4 target +0x3 i32.const 1114140 | ours +0x3 i32.const 1578304 [ours 1278940 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEEE → 0x181540]	17	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
-9483	_ZNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEED2Ev	7427	ledger	differs	+0x4 target +0x3 i32.const 1114140 | ours +0x3 i32.const 1578304 [ours 1278940 = _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEEE → 0x181540]	14	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+9482	_ZNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEED0Ev	7423	ledger	differs	+0x4 target +0x3 i32.const 1114140 | ours +0x3 i32.const 1537124 [ours 1278976 = _ZTVNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEEE → 0x177464]	17	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+9483	_ZNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEED2Ev	7425	ledger	differs	+0x4 target +0x3 i32.const 1114140 | ours +0x3 i32.const 1537124 [ours 1278976 = _ZTVNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEEE+8: address symbol _ZTVNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEEE → 0x177464]	14	addr	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 9484	_ZN7ecourna3api8security16ISymmetricCipherD2Ev	10957	symbol	match	readings: address symbol	72	addr	ecourna	1	app/ecourna/api_security_isymmetriccipher.cpp.o
 9485	-	-	-	no-candidate	no symbol and no ledger pair	26	none	ecourna	0	-
 9486	-	-	-	no-candidate	no symbol and no ledger pair	110	none	libc++	0	-
@@ -10032,7 +10032,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10166	_ZNSt3__220__shared_ptr_pointerIPN7RHVoice4item11shared_dataENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEE16__on_zero_sharedEv	7945	symbol	match	-	40	addr	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/item.cpp.o
 10167	-	-	-	no-candidate	no symbol and no ledger pair	32	none	unknown	0	-
 10168	-	-	-	no-candidate	no symbol and no ledger pair	12	none	unknown	0	-
-10169	__cxx_global_array_dtor@rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o	10532	ledger	unresolved	ours +0x1 i32.const 1499564: an address of ours: _ZN7RHVoice12_GLOBAL__N_14zeroE@rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o (.bss) has no target symbol	28	addr	unknown	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
+10169	__cxx_global_array_dtor@rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o	10532	ledger	unresolved	ours +0x1 i32.const 1499560: an address of ours: _ZN7RHVoice12_GLOBAL__N_14zeroE@rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o (.bss) has no target symbol	28	addr	unknown	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/language.cpp.o
 10170	-	-	-	no-candidate	no symbol and no ledger pair	20	none	app	0	-
 10171	votaGetStateJson	8374	symbol	unresolved	ours +0xa call 1425: _Z10urna_rootsi has no target function	73	none	app	1	app/vota_api.o
 10172	__cxx_global_array_dtor@app/ecourna/app_dados_asn_parametrizacaourna_cconversortitulorelatorio.cpp.o	11233	ledger	unresolved	ours +0x1 i32.const 1497047: an address of ours: _ZN7ecourna3app5dados3asn12_GLOBAL__N_118ERRO_ESTILO_TITULOE (.bss) has no target symbol	36	addr	unknown	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversortitulorelatorio.cpp.o
@@ -10225,7 +10225,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10359	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 10360	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
 10361	_ZNKSt3__220__shared_ptr_pointerIPN3api12CQRCodeImageENS_10shared_ptrINS1_6IImageEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	10687	ledger	differs	+0xb target +0xa i32.const 541861 | ours +0xa i32.const 477883 [ours 305911 = _ZTSNSt3__210shared_ptrIN3api6IImageEE27__shared_ptr_default_deleteIS2_NS1_12CQRCodeImageEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api6IImageEE27__shared_ptr_default_deleteIS2_NS1_12CQRCodeImageEEE → 0x74abb]	17	addr	libc++	1	app/79-uenux2-cdatatext-roots.o
-10362	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED0Ev	7274	ledger	differs	+0x4 target +0x3 i32.const 1594340 | ours +0x3 i32.const 1539168 [ours 1279376 = _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE+8: address symbol _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE → 0x177c60]	12	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10362	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED0Ev	7291	ledger	differs	+0x4 target +0x3 i32.const 1594340 | ours +0x3 i32.const 1539168 [ours 1279296 = _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE+8: address symbol _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE → 0x177c60]	12	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 10363	_ZN3api14IFormFieldBaseINS_6IPaperEED2Ev	7101	ledger	differs	+0x4 target +0x3 i32.const 1594340 | ours +0x3 i32.const 1580868 [ours 1280508 = _ZTVN3api14IFormFieldBaseINS_6IPaperEEE+8: address symbol _ZTVN3api14IFormFieldBaseINS_6IPaperEEE → 0x181f44]	12	addr	api	1	app/uenux2/src/api/gui/ctextfieldpaper.cpp.o
 10364	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 10365	dsa_gettable_params	6068	ledger	differs	+0x2 target +0x1 i32.const 1528020 | ours +0x1 i32.const 1773216 [ours 1412528 = dsa_params+0: address content-repointed → 0x1b0ea0]	7	addr	libc++	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-dsa_kmgmt.o
@@ -10233,7 +10233,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10367	_ZNKSt3__220__shared_ptr_pointerIPN3api9IScreenMTENS_14default_deleteIS2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	10706	ledger	differs	+0xb target +0xa i32.const 541424 | ours +0xa i32.const 469815 [ours 305693 = _ZTSNSt3__214default_deleteIN3api9IScreenMTEEE+0: address symbol _ZTSNSt3__214default_deleteIN3api9IScreenMTEEE → 0x72b37]	17	addr	libc++	1	app/78-uenux2-cwasmscreenmt-roots.o
 10368	-	-	-	no-candidate	no symbol and no ledger pair	454	none	api	0	-
 10369	_ZN3api12CDataTextFmtIPFKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERS8_EED0Ev	10681	ledger	differs	+0x4 target +0x3 i32.const 1594188 | ours +0x3 i32.const 1538280 [ours 1293672 = _ZTVN3api12CDataTextFmtIPFKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERS8_EEE+8: address symbol _ZTVN3api12CDataTextFmtIPFKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERS8_EEE → 0x1778e8]	12	addr	api	1	app/79-uenux2-cdatatext-roots.o
-10370	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED2Ev	7280	ledger	differs	+0x4 target +0x3 i32.const 1594188 | ours +0x3 i32.const 1539168 [ours 1279376 = _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE+8: address symbol _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE → 0x177c60]	12	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10370	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED2Ev	7302	ledger	differs	+0x4 target +0x3 i32.const 1594188 | ours +0x3 i32.const 1539168 [ours 1279296 = _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE+8: address symbol _ZTVN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EEE → 0x177c60]	12	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 10371	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 10372	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
 10373	_ZNKSt3__220__shared_ptr_pointerIPN3api15CPreShowClearMTENS_10shared_ptrINS1_8IPreShowINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	10707	ledger	differs	+0xb target +0xa i32.const 540989 | ours +0xa i32.const 524703 [ours 305488 = _ZTSNSt3__210shared_ptrIN3api8IPreShowINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_15CPreShowClearMTEEE+0: address symbol _ZTSNSt3__210shared_ptrIN3api8IPreShowINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS4_NS1_15CPreShowClearMTEEE → 0x8019f]	17	addr	libc++	1	app/78-uenux2-cwasmscreenmt-roots.o
@@ -10396,10 +10396,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10530	-	-	-	no-candidate	no symbol and no ledger pair	701	none	vota	0	-
 10531	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 10532	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
-10533	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7207	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-10534	_ZNK3api9CDataTextINS_11CTextSourceEE7GetTextEv	7209	symbol	match	-	54	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-10535	_ZN3api9CDataTextINS_11CTextSourceEED0Ev	7212	symbol	match	readings: address symbol	69	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-10536	_ZN3api9CDataTextINS_11CTextSourceEED2Ev	7217	symbol	match	readings: address symbol	66	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10533	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7197	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10534	_ZNK3api9CDataTextINS_11CTextSourceEE7GetTextEv	7201	symbol	match	-	54	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10535	_ZN3api9CDataTextINS_11CTextSourceEED0Ev	7203	symbol	match	readings: address symbol	69	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10536	_ZN3api9CDataTextINS_11CTextSourceEED2Ev	7205	symbol	match	readings: address symbol	66	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 10537	_ZNKSt3__220__shared_ptr_pointerIPN3api18CTextFieldUpdateMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	10709	symbol	match	readings: address symbol	17	addr	libc++	2	app/78-uenux2-cwasmscreenmt-roots.o
 10538	_ZNKSt3__220__shared_ptr_pointerIPN7ecourna3api3sql6sqlite13CSqlStatementENS_10shared_ptrINS3_13ISqlStatementEE27__shared_ptr_default_deleteIS8_S5_EENS_9allocatorIS5_EEE13__get_deleterERKSt9type_info	10937	ledger	differs	+0xb target +0xa i32.const 465581 | ours +0xa i32.const 1116492 [ours 299180 = _ZTSNSt3__210shared_ptrIN7ecourna3api3sql13ISqlStatementEE27__shared_ptr_default_deleteIS4_NS3_6sqlite13CSqlStatementEEE+0: address symbol _ZTSNSt3__210shared_ptrIN7ecourna3api3sql13ISqlStatementEE27__shared_ptr_default_deleteIS4_NS3_6sqlite13CSqlStatementEEE → 0x11094c]	17	addr	libc++	1	app/ecourna/api_sql_sqlite_csqlconnection.cpp.o
 10539	-	-	-	no-candidate	no symbol and no ledger pair	124	none	app	0	-
@@ -10486,7 +10486,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10620	-	-	-	no-candidate	no symbol and no ledger pair	96	none	ecourna	0	-
 10621	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 10622	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
-10623	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISF_SC_EENS7_ISC_EEE13__get_deleterERKSt9type_info	7218	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10623	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISF_SC_EENS7_ISC_EEE13__get_deleterERKSt9type_info	7207	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 10624	-	-	-	no-candidate	no symbol and no ledger pair	167	none	vota	0	-
 10625	-	-	-	no-candidate	no symbol and no ledger pair	45	none	vota	0	-
 10626	-	-	-	no-candidate	no symbol and no ledger pair	1004	none	vota	0	-
@@ -10608,10 +10608,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10742	-	-	-	no-candidate	no symbol and no ledger pair	173	none	app	0	-
 10743	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 10744	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
-10745	_ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7229	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-10746	_ZNK3api12CDataTextFmtINS_11CTextSourceEE7GetTextEv	7231	symbol	match	-	216	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-10747	_ZN3api12CDataTextFmtINS_11CTextSourceEED0Ev	7234	symbol	match	readings: address symbol	94	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-10748	_ZN3api12CDataTextFmtINS_11CTextSourceEED2Ev	7245	symbol	match	readings: address symbol	91	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10745	_ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtINS1_11CTextSourceEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	7218	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10746	_ZNK3api12CDataTextFmtINS_11CTextSourceEE7GetTextEv	7219	symbol	match	-	216	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10747	_ZN3api12CDataTextFmtINS_11CTextSourceEED0Ev	7224	symbol	match	readings: address symbol	94	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+10748	_ZN3api12CDataTextFmtINS_11CTextSourceEED2Ev	7228	symbol	match	readings: address symbol	91	addr	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 10749	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 10750	-	-	-	no-candidate	no symbol and no ledger pair	16	none	unknown	0	-
 10751	-	-	-	no-candidate	no symbol and no ledger pair	370	none	vota	0	-
@@ -10856,8 +10856,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10990	-	-	-	no-candidate	no symbol and no ledger pair	10	none	api	0	-
 10991	-	-	-	no-candidate	no symbol and no ledger pair	18	none	app	0	-
 10992	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
-10993	_ZNKSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7185	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
-10994	_ZNKSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7182	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
+10993	_ZNKSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7182	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
+10994	_ZNKSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7185	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
 10995	_ZNKSt3__210__function6__funcIZNK5comum2md6CVotos8TotalQueEMNS3_5CVotoEKFbvEE3$_0FbRKS5_EE11target_typeEv	7679	ledger	differs	+0x2 target +0x1 i32.const 1581412 | ours +0x1 i32.const 1573500 [ours 1277924 = _ZTIZNK5comum2md6CVotos8TotalQueEMNS0_5CVotoEKFbvEE3$_0+0: address symbol _ZTIZNK5comum2md6CVotos8TotalQueEMNS0_5CVotoEKFbvEE3$_0 → 0x18027c]	7	addr	libc++	1	app/uenux2/src/app/comum/dados/md/rdv/cvotos.cpp.o
 10996	_ZNKSt3__210__function6__funcIZN3api11IInputFieldINS2_9IScreenMTEEC1ERKNS_10shared_ptrINS2_16IInputValidationEEEmbbbbbEUlvE_FvvEE6targetERKSt9type_info	10577	ledger	differs	+0xe target +0xd i32.const 528848 | ours +0xd i32.const 527249 [ours 308982 = _ZTSZN3api11IInputFieldINS_9IScreenMTEEC1ERKNSt3__210shared_ptrINS_16IInputValidationEEEmbbbbbEUlvE_+0: address symbol _ZTSZN3api11IInputFieldINS_9IScreenMTEEC1ERKNSt3__210shared_ptrINS_16IInputValidationEEEmbbbbbEUlvE_ → 0x80b91]	20	addr	libc++	1	app/92-uenux2-iinputfield-roots.o
 10997	-	-	-	no-candidate	no symbol and no ledger pair	101	none	libc++	0	-
@@ -10897,12 +10897,12 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11031	-	-	-	no-candidate	no symbol and no ledger pair	50	none	api	0	-
 11032	-	-	-	no-candidate	no symbol and no ledger pair	47	none	api	0	-
 11033	-	-	-	no-candidate	no symbol and no ledger pair	14	none	app	0	-
-11034	_ZNKSt3__220__shared_ptr_pointerIPN3api13CClockFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7197	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-11035	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBuzzFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7201	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-11036	_ZNKSt3__220__shared_ptr_pointerIPN3api11CLedFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7205	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-11037	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBeepFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7203	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-11038	_ZNKSt3__220__shared_ptr_pointerIPN3api12CTextFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7313	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-11039	_ZNKSt3__220__shared_ptr_pointerIPN3api10CFixedTextENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7302	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11034	_ZNKSt3__220__shared_ptr_pointerIPN3api13CClockFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7229	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11035	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBuzzFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7231	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11036	_ZNKSt3__220__shared_ptr_pointerIPN3api11CLedFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7234	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11037	_ZNKSt3__220__shared_ptr_pointerIPN3api12CBeepFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7245	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11038	_ZNKSt3__220__shared_ptr_pointerIPN3api12CTextFieldMTENS_10shared_ptrINS1_10IFormFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7255	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11039	_ZNKSt3__220__shared_ptr_pointerIPN3api10CFixedTextENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7265	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 11040	_ZNKSt3__220__shared_ptr_pointerIPN3api5IFormINS1_9IScreenMTEEENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEE13__get_deleterERKSt9type_info	10708	symbol	match	readings: address symbol	17	none	libc++	1	app/78-uenux2-cwasmscreenmt-roots.o
 11041	-	-	-	no-candidate	no symbol and no ledger pair	49	none	api	0	-
 11042	-	-	-	no-candidate	no symbol and no ledger pair	118	none	api	0	-
@@ -10982,14 +10982,14 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11116	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 11117	_ZNSt3__220__shared_ptr_emplaceIN3api14CTextRectFieldENS_9allocatorIS2_EEED0Ev	10601	symbol	match	readings: address symbol	17	addr	libc++	2	app/90-uenux2-api-gui-roots.o
 11118	_ZNSt3__220__shared_ptr_emplaceIN3api14CTextRectFieldENS_9allocatorIS2_EEED2Ev	10602	symbol	match	readings: address symbol	14	addr	libc++	2	app/90-uenux2-api-gui-roots.o
-11119	_ZNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEED0Ev	7425	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
-11120	_ZNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEED2Ev	7427	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
-11121	_ZNSt3__220__shared_ptr_emplaceIN3api10CLineFieldENS_9allocatorIS2_EEED0Ev	7354	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
-11122	_ZNSt3__220__shared_ptr_emplaceIN3api10CLineFieldENS_9allocatorIS2_EEED2Ev	7362	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
-11123	_ZNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEED0Ev	7368	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
-11124	_ZNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEED2Ev	7370	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
-11125	_ZNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEED0Ev	7431	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
-11126	_ZNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEED2Ev	7440	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11119	_ZNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEED0Ev	7354	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11120	_ZNSt3__220__shared_ptr_emplaceIN3api10CFixedTextENS_9allocatorIS2_EEED2Ev	7362	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11121	_ZNSt3__220__shared_ptr_emplaceIN3api10CLineFieldENS_9allocatorIS2_EEED0Ev	7368	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11122	_ZNSt3__220__shared_ptr_emplaceIN3api10CLineFieldENS_9allocatorIS2_EEED2Ev	7370	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11123	_ZNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEED0Ev	7372	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11124	_ZNSt3__220__shared_ptr_emplaceIN3api10CFillFieldENS_9allocatorIS2_EEED2Ev	7381	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11125	_ZNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEED0Ev	7392	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
+11126	_ZNSt3__220__shared_ptr_emplaceIN3api10CRectFieldENS_9allocatorIS2_EEED2Ev	7402	symbol	match	readings: address symbol	14	addr	libc++	2	app/uenux2/src/api/gui/cformbuilder.cpp.o
 11127	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 11128	-	-	-	no-candidate	no symbol and no ledger pair	27	none	libc++	0	-
 11129	-	-	-	no-candidate	no symbol and no ledger pair	16	none	app	0	-
@@ -11108,7 +11108,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11242	-	-	-	no-candidate	no symbol and no ledger pair	10017	none	comum	0	-
 11243	-	-	-	no-candidate	no symbol and no ledger pair	13	none	comum	0	-
 11244	-	-	-	no-candidate	no symbol and no ledger pair	7	none	comum	0	-
-11245	_ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKS8_EEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISG_SD_EENS6_ISD_EEE13__get_deleterERKSt9type_info	7255	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11245	_ZNKSt3__220__shared_ptr_pointerIPN3api12CDataTextFmtIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKS8_EEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISG_SD_EENS6_ISD_EEE13__get_deleterERKSt9type_info	7275	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 11246	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 11247	-	-	-	no-candidate	no symbol and no ledger pair	904	none	api	0	-
 11248	_ZNKSt3__210__function6__funcIZNK5comum2md18CVotosEleicoesVota8NominaisEhE3$_0FtRKNS3_12CVotosCargosEhEE11target_typeEv	7980	ledger	differs	+0x2 target +0x1 i32.const 1575292 | ours +0x1 i32.const 1574380 [ours 1277404 = _ZTIZNK5comum2md18CVotosEleicoesVota8NominaisEhE3$_0+0: address symbol _ZTIZNK5comum2md18CVotosEleicoesVota8NominaisEhE3$_0 → 0x1805ec]	7	addr	libc++	1	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o
@@ -11861,7 +11861,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11995	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 11996	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
 11997	_ZNKSt3__220__shared_ptr_pointerIPN3api15CTextFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info	7190	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cpaperformbuilder.cpp.o
-11998	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISE_SB_EENS6_ISB_EEE13__get_deleterERKSt9type_info	7291	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+11998	_ZNKSt3__220__shared_ptr_pointerIPN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISE_SB_EENS6_ISB_EEE13__get_deleterERKSt9type_info	7313	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 11999	-	-	-	no-candidate	no symbol and no ledger pair	7	none	libc++	0	-
 12000	-	-	-	no-candidate	no symbol and no ledger pair	20	none	libc++	0	-
 12001	-	-	-	no-candidate	no symbol and no ledger pair	12	none	libc++	0	-
@@ -12164,11 +12164,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12298	_ZNSt3__220__shared_ptr_emplaceIN3api19CTextFieldMultiLineENS_9allocatorIS2_EEED0Ev	10863	symbol	match	readings: address symbol	17	none	libc++	1	app/14-uenux2-ctextfieldmultiline-roots.o
 12299	-	-	-	no-candidate	no symbol and no ledger pair	433	none	libc++	0	-
 12300	_ZNSt3__220__shared_ptr_emplaceIN3api19CTextFieldMultiLineENS_9allocatorIS2_EEED2Ev	10864	symbol	match	readings: address symbol	14	none	libc++	1	app/14-uenux2-ctextfieldmultiline-roots.o
-12301	_ZNK3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEE7GetTextEv	7219	symbol	match	-	32	shape	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+12301	_ZNK3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEE7GetTextEv	7209	symbol	match	-	32	shape	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 12302	posix_fallocate	11833	symbol	match	-	15	fingerprint	libc++	1	sysroot:libc.a(posix_fallocate.o)
-12303	_ZN3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEED0Ev	7224	symbol	match	readings: address symbol	12	addr	api	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+12303	_ZN3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEED0Ev	7212	symbol	match	readings: address symbol	12	addr	api	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 12304	__mmap	11834	symbol	match	readings: address symbol	293	addr	libc++	1	sysroot:libc.a(mmap.o)
-12305	_ZN3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEED2Ev	7228	symbol	match	readings: address symbol	12	addr	api	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+12305	_ZN3api9CDataTextINSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEEED2Ev	7217	symbol	match	readings: address symbol	12	addr	api	2	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 12306	_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextINS_8functionIFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEEEENS7_ISC_EEED0Ev	10673	symbol	match	readings: address symbol	17	none	libc++	1	app/79-uenux2-cdatatext-roots.o
 12307	__isxdigit_l	11835	symbol	match	-	7	fingerprint	libc++	1	sysroot:libc.a(isxdigit.o)
 12308	__isdigit_l	11687	symbol	match	-	7	fingerprint	libc++	1	sysroot:libc.a(isdigit.o)
@@ -12180,13 +12180,13 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12314	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 12315	-	-	-	no-candidate	no symbol and no ledger pair	155	none	libc++	0	-
 12316	-	-	-	no-candidate	no symbol and no ledger pair	14	none	libc++	0	-
-12317	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED0Ev	7274	symbol	match	readings: address symbol	12	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+12317	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED0Ev	7291	symbol	match	readings: address symbol	12	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 12318	atanh	11850	symbol	match	-	123	addr	libc++	1	sysroot:libc.a(atanh.o)
 12319	atan2	11851	symbol	match	readings: address content	423	addr	libc++	1	sysroot:libc.a(atan2.o)
 12320	asinh	11852	symbol	match	-	166	addr	libc++	1	sysroot:libc.a(asinh.o)
 12321	asin	11853	symbol	match	-	313	fingerprint	libc++	1	sysroot:libc.a(asin.o)
 12322	acosh	11854	symbol	match	-	118	addr	libc++	1	sysroot:libc.a(acosh.o)
-12323	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED2Ev	7280	symbol	match	readings: address symbol	12	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+12323	_ZN3api12CDataTextFmtIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_EED2Ev	7302	symbol	match	readings: address symbol	12	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 12324	__stdio_write	11841	symbol	match	-	358	addr	libc++	1	sysroot:libc.a(__stdio_write.o)
 12325	__stdio_seek	11842	symbol	match	-	14	addr	libc++	1	sysroot:libc.a(__stdio_seek.o)
 12326	__stdio_read	11840	symbol	match	-	215	addr	libc++	1	sysroot:libc.a(__stdio_read.o)
@@ -12491,10 +12491,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12625	-	-	-	no-candidate	no symbol and no ledger pair	14	none	libc++	0	-
 12626	vdbeRecordCompareString	9861	symbol	match	readings: address string	373	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12627	vdbeRecordCompareInt	9862	symbol	match	-	384	addr	unknown	1	sqlite/O3pic2/sqlite3.o
-12628	_ZNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEED0Ev	7422	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12628	_ZNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEED0Ev	7413	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12629	sqlite3VdbeRecordCompare	9864	symbol	match	-	13	addr	libc++	1	sqlite/O3pic2/sqlite3.o
 12630	pageReinit	9865	symbol	match	-	43	addr	libc++	1	sqlite/O3pic2/sqlite3.o
-12631	_ZNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEED2Ev	7423	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12631	_ZNSt3__220__shared_ptr_emplaceIN3api10CTextFieldENS_9allocatorIS2_EEED2Ev	7420	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12632	-	-	-	no-candidate	no symbol and no ledger pair	12	none	api	0	-
 12633	vdbeSorterCompare	9868	symbol	match	-	55	addr	libc++	1	sqlite/O3pic2/sqlite3.o
 12634	vdbeSorterCompareText	9869	symbol	match	-	434	addr	libc++	1	sqlite/O3pic2/sqlite3.o
@@ -12502,8 +12502,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12636	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 12637	-	-	-	no-candidate	no symbol and no ledger pair	14	none	libc++	0	-
 12638	sqlite3VdbeFrameMemDel	9873	symbol	match	-	28	byte	unknown	1	sqlite/O3pic2/sqlite3.o
-12639	_ZNSt3__220__shared_ptr_emplaceIN3api11CImageFieldENS_9allocatorIS2_EEED0Ev	7372	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
-12640	_ZNSt3__220__shared_ptr_emplaceIN3api11CImageFieldENS_9allocatorIS2_EEED2Ev	7381	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12639	_ZNSt3__220__shared_ptr_emplaceIN3api11CImageFieldENS_9allocatorIS2_EEED0Ev	7421	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12640	_ZNSt3__220__shared_ptr_emplaceIN3api11CImageFieldENS_9allocatorIS2_EEED2Ev	7422	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12641	-	-	-	no-candidate	no symbol and no ledger pair	544	none	api	0	-
 12642	-	-	-	no-candidate	no symbol and no ledger pair	17	none	libc++	0	-
 12643	-	-	-	no-candidate	no symbol and no ledger pair	14	none	libc++	0	-
@@ -12630,7 +12630,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12764	sqlite3_close_v2	9945	symbol	match	-	9	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12765	sqlite3_txn_state	4682	symbol	match	readings: address symbol,address string	525	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12766	sqlite3_total_changes	9946	symbol	match	-	7	byte	unknown	1	sqlite/O3pic2/sqlite3.o
-12767	_ZNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEED0Ev	7392	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12767	_ZNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEED0Ev	7423	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12768	sqlite3_total_changes64	9947	symbol	match	-	7	byte	libc++	1	sqlite/O3pic2/sqlite3.o
 12769	sqlite3_changes64	9949	symbol	match	-	7	byte	libc++	1	sqlite/O3pic2/sqlite3.o
 12770	sqlite3_set_last_insert_rowid	4683	symbol	match	readings: address symbol	66	addr	libc++	1	sqlite/O3pic2/sqlite3.o
@@ -12638,7 +12638,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12772	sqlite3_db_config	4685	symbol	match	readings: address symbol	630	addr	libc++	1	sqlite/O3pic2/sqlite3.o
 12773	sqlite3_db_cacheflush	4687	symbol	match	readings: address symbol	266	addr	libc++	1	sqlite/O3pic2/sqlite3.o
 12774	sqlite3_libversion_number	9952	symbol	match	-	7	byte	libc++	1	sqlite/O3pic2/sqlite3.o
-12775	_ZNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEED2Ev	7402	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12775	_ZNSt3__220__shared_ptr_emplaceIN3api20CTextFieldDoubleLineENS_9allocatorIS2_EEED2Ev	7425	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12776	ASN1_PRINTABLE_it	12156	ledger	differs	+0x2 target +0x1 i32.const 1479978 | ours +0x1 i32.const 1632296 [ours 1430048 = ASN1_PRINTABLE_it.local_it+0: address content-repointed → 0x18e828]	7	addr	unknown	1	openssl/O3/libcrypto.a(libcrypto-lib-tasn_typ.o)
 12777	sqlite3_complete16	4688	symbol	match	-	199	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12778	sqlite3_keyword_check	4689	symbol	match	-	60	addr	unknown	1	sqlite/O3pic2/sqlite3.o
@@ -12647,11 +12647,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12781	sqlite3_vtab_distinct	9955	symbol	match	-	7	byte	unknown	1	sqlite/O3pic2/sqlite3.o
 12782	sqlite3_vtab_rhs_value	4691	symbol	match	readings: address string	250	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 12783	sqlite3_vtab_in	4692	symbol	match	-	82	byte	unknown	1	sqlite/O3pic2/sqlite3.o
-12784	_ZNK3api9CDataTextIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEE7GetTextEv	7413	symbol	match	-	12	byte	api	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12784	_ZNK3api9CDataTextIPFNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEE7GetTextEv	7427	symbol	match	-	12	byte	api	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12785	sqlite3_vtab_collation	4693	symbol	match	readings: address string	261	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12786	sqlite3_vtab_on_conflict	4694	symbol	match	readings: address symbol	16	fingerprint	unknown	1	sqlite/O3pic2/sqlite3.o
 12787	sqlite3_drop_modules	4696	symbol	match	readings: address symbol	279	addr	unknown	1	sqlite/O3pic2/sqlite3.o
-12788	_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISB_EEED0Ev	7420	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12788	_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISB_EEED0Ev	7431	symbol	match	readings: address symbol	17	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12789	sqlite3_create_module_v2	4697	symbol	match	readings: address symbol	107	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12790	sqlite3_create_module	4698	symbol	match	readings: address symbol	87	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12791	sqlite3_get_table_cb	9956	symbol	match	readings: address string,address symbol	579	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
@@ -12659,7 +12659,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 12793	sqlite3_prepare16_v3	4700	symbol	match	-	24	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12794	sqlite3_prepare16_v2	4701	symbol	match	-	18	addr	unknown	1	sqlite/O3pic2/sqlite3.o
 12795	sqlite3_prepare16	4702	symbol	match	-	17	addr	unknown	1	sqlite/O3pic2/sqlite3.o
-12796	_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISB_EEED2Ev	7421	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
+12796	_ZNSt3__220__shared_ptr_emplaceIN3api9CDataTextIPFNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEvEEENS6_ISB_EEED2Ev	7440	symbol	match	readings: address symbol	14	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 12797	sqlite3_prepare_v3	4703	symbol	match	-	26	addr	libc++	1	sqlite/O3pic2/sqlite3.o
 12798	sqlite3_prepare	4704	symbol	match	-	19	addr	libc++	1	sqlite/O3pic2/sqlite3.o
 12799	sqlite3_reset_auto_extension	4705	symbol	match	readings: address symbol	266	addr	libc++	1	sqlite/O3pic2/sqlite3.o

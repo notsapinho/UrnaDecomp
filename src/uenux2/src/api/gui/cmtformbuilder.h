@@ -61,7 +61,7 @@ public:
     void AddClock(const SPoint& posicao);
 
 private:
-    inline SharedField AddTextField(const SharedIText& texto, const SPoint& posicao);
+    SharedField AddTextField(const SharedIText& texto, const SPoint& posicao);
 
     std::vector<SharedField> m_campos;
 };
