@@ -1,8 +1,9 @@
 # uenux2 api::CPriorityMessageQueue<api::SMessage>, a class template in the new header api/ipc/cmessagequeue.h: Remove
 # (target fn 2073, record cmessagequeue.h:153:19) and the destructor's D2 and D0 (3162, 3157; slots 0 and 1 of the
-# vtable @1534764), with api::SMessage and the 6228 enumerator of EUeIpcError. The unit has no source of its own: the
-# roots file instantiates the template (see its header). Remove's callers (4337, 4343, 4349, 10204) and the constructor
-# (inlined into 316 and 270, records at lines 113-114, which stay blank) are not reconstructed.
+# vtable @1534764), with api::SMessage and the 6228 enumerator of EUeIpcError. The unit has no source of its own and no
+# companion: unit 116's vota::CMessageEleitor and CMessageOperador instantiate the template, with its constructor
+# (inlined into 316 and 270, records at lines 113-114), and call Remove from 4337 and 4343. Its callers 4349 and 10204 are
+# not reconstructed. The D2 and D0 match under vota::CMessageEleitor's names, the twin that links first.
 #
 # What the evidence gives:
 # - +4: std::priority_queue, the +16 byte its empty comparator. The constructor in 316 stores the vector's three words
@@ -46,6 +47,3 @@
 #
 # The header's includes need no extra path: UENUX2_PREFIX_MAP rewrites the relative src/uenux2 spelling too, so the
 # record's file is /home/rubio/tse/uenux2/src/api/ipc/cmessagequeue.h.
-$(ROOT)/$(APP)/64-uenux2-cmessagequeue-roots.o: $(ROOT)/src/units/64-uenux2-cmessagequeue-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/64-uenux2-cmessagequeue.mk $(wildcard $(ROOT)/src/uenux2/src/api/ipc/*.h $(ROOT)/src/ecourna/api/exception/*.hpp)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/64-uenux2-cmessagequeue-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/64-uenux2-cmessagequeue-roots.o

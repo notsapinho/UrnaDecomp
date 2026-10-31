@@ -159,7 +159,7 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/roots_[a-z0-9]+\.o$/) r[$2]=$3; next } ($
   83, 84, 90 and 92 (U3);
 - code of a header the roots files emit in the shapes of `src/units/README.md` "Companion files": an inline default
   of a virtual member (`api::IScreen::GetFontMetrics`, 8938, unit 19), and the members of classes and class templates
-  with no key function that the roots build (units 64, 67, 75, 79, 83, 92 and 100);
+  with no key function that the roots build (units 67, 75, 79, 83, 92 and 100);
 - the implicit and inline members of a class whose key function is pending, from the pending objects of units 26,
   29, 58, 59, 60, 62, 77 and 79. The pending member there is the class's key function (its first
   non-inline virtual member), so the vtable is emitted in the pending object, and with it every implicit or inline

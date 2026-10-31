@@ -1,8 +1,4 @@
 // Roots: keep unit 18's api::CThread members in the skeleton link, reached the way the target reaches them.
-// - ~CThread (target fn 2721): the target reaches it through slot 0 of the CThread vtable and from the destructors of
-//   CThreadVota, CThreadEleitor and CThreadOperador (fns 2126, 2438, 2717), none of them reconstructed yet; it is
-//   address-taken from a static constructor (body intact, `this` result kept as a table entry keeps it), which also
-//   brings in the vtable its vptr store names.
 // - Start (target fn 1684): the target calls it directly, seven times from three slots of vota::CExecucaoVota (fns
 //   10233, 10235, 10236; ledger/callgraph.tsv), none reconstructed yet and none through the table. Two noinline
 //   callers give it more than one call site, so binaryen keeps its body out of line as the target does. Its thread
@@ -10,9 +6,7 @@
 // The callers are address-taken from a static constructor. Declared through asm labels with the wasm-level signatures;
 // compiled as uenux2 code.
 extern "C" {
-int w2721_root_0(int) __asm__("_ZN3api7CThreadD2Ev");
 void w1684_root_0(int) __asm__("_ZN3api7CThread5StartEv");
-int w3598_root_0(int) __asm__("_ZN3api7CThreadC2Ev");
 }
 
 namespace {
@@ -29,19 +23,11 @@ __attribute__((noinline)) void IniciaThreads(int primeira, int segunda, int terc
     w1684_root_0(terceira);
 }
 
-// CThread's constructor (target fn 3598): its callers 270, 316 and 1898 are not reconstructed. Two call sites keep it.
-__attribute__((noinline)) int ConstroiThreads(int primeira, int segunda)
-{
-    return w3598_root_0(primeira) ^ w3598_root_0(segunda);
-}
-
 void* volatile w18_sink;
 
 struct SW18Roots {
     SW18Roots()
     {
-        w18_sink = reinterpret_cast<void*>(&w2721_root_0);
-        w18_sink = reinterpret_cast<void*>(&ConstroiThreads);
         w18_sink = reinterpret_cast<void*>(&IniciaThread);
         w18_sink = reinterpret_cast<void*>(&IniciaThreads);
     }
