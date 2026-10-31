@@ -1,0 +1,60 @@
+# uenux2: two platform classes of the wasm simulator, each in a file of its own under mock/app/simulador/wasm/, with the
+# interface and data members they need:
+# - simulador::CWasmInit (cwasminit.cpp, cwasminit.h), over comum::IInterfaceInit: Slot4 (target fn 9418, slot 4, the
+#   key function) and the implicit deleting destructor (9388, slot 1, which frees what IInterfaceInit's out-of-line D2,
+#   5898, returns); slots 2, 3, 6 and 7 are shared bodies (434, 434, 340, 425). EnviarMensagem (9405, slot 5) is pending
+#   in 127-uenux2-simulador-wasm-platform-pending.cpp, which says what it waits for.
+# - simulador::CWasmResource (cwasmresource.cpp, cwasmresource.h), over api::IResource, whose slots 2 to 6 this unit
+#   declares (api/gui/iresource.h): GetImage (8633, slot 2), GetFile (8611, slot 3), Exists (8600, slot 5) and
+#   IsResource (8591, slot 6); the file-static helpers ComMulher (4996) and Le (3452), and Caminho (2626), with
+#   Normaliza, Candidatos and Existe, which clang inlines into Caminho, and TamanhoImagem, which it inlines into
+#   GetMovie. The std::ifstream of Le and Existe brings libc++'s basic_filebuf<char>::open (2145), which matches from
+#   libc++.a. Written and not matched: Caminho (2626) and GetMovie (8605, slot 4), below.
+# - api::CFixedImage (api/gui/cfixedimage.h): its vector member, GetData (4975, already matched as an RHVoice twin; its
+#   line is renamed to this class's) and the implicit destructors, which binaryen merges into the shared bodies the
+#   target has: 8563 and 8554, the D2 and D0, are thunks of 3937 and 3936, whose two match lines are renamed to this
+#   class's too. The vector constructor GetImage inlines has no target function: it is compared with nothing.
+# - api::CMovieFrame's constructor (api/gui/cmovie.cpp, unit 23's file), which GetMovie calls.
+#
+# Where the code is. No record names a file of either class. That each has an object of its own is the data's:
+# CWasmInit's vtable and typeinfo (1528764, 1528804) lie between simulador::CWasmNullTextToSpeech's and CWasmScreen's,
+# and CWasmResource's (1530176, 1530212) between CWasmInputMT's and the std::__shared_ptr_emplace<api::CFixedImage> and
+# CFixedImage vtable (1530224, 1530264) that its slot 2 instantiates; the names cwasminit.cpp and cwasmresource.cpp are
+# the classes' in lower case, the class-convention guess ledger/tu-clusters.tsv gives stretches 207 (9405, 9388) and 91,
+# 97, 100 and 108 (8591, 8600, 8605, 8633): chosen. The order of the members in each file is their use band's (Slot4
+# before EnviarMensagem, CWasmResource's slots in slot order). The helpers take no `this`, so they are free functions;
+# their linkage (file-static) and where they sit in the file are chosen: each is alone in its use band (2626 uses 4,
+# 3452 uses 3, 4996 uses 2). Each of the four slots that call Caminho is named by `vtable` alone, so nothing votes a
+# name for 2626; its name is the hand edit under splat/symbol_addrs.txt's marker (`callers+content`, the callers and the
+# literals only 2626 loads), and 8600, 8611 and 8633 match through it.
+#
+# Written and not matched:
+# - Caminho (2626): 200 over 1934 rows. The target loads the path's size, its long-string flag and its data again after
+#   each rfind, for the substr, where ours keeps the values from before the search. With the existence test written in
+#   the loop (an std::ifstream temporary in the condition) the frame's shared slot sits at the bottom, 391 rows; Existe,
+#   the test as a helper, gives the target's frame. Scored the same, 200: a non-const path, the prefix test as a helper
+#   (ComecaCom). Further: Candidatos written into Caminho (928), Normaliza into Candidatos (365), the normalised path as
+#   Candidatos' parameter (293). With this object at -O3 it is 200 too.
+# - GetMovie (8605): it needs -O3. In a link with this object compiled at -O3 it is 16 over 507 rows, all operand-only;
+#   here clang leaves std::vector<CMovieFrame>'s __init_with_size out of line (cost 230 against 225, -Rpass-missed) and
+#   the body differs (172 over 562). std::vector<CMovieFrame>(1, ...) is inlined at -O2 and gives 41 over 518 rows, but
+#   64 over 522 at -O3: of the two forms tried, the initializer list is the one that gives the target's rows. That
+#   CMovieFrame's constructor is out of line is read from 8605, which holds code as binaryen inlines a call (the moved
+#   vector stored to the frame and read back, the member zeroed before it is overwritten:
+#   docs/reference/facts/reading.md R10); a CMovieFrame aggregate built in GetMovie, with the vector moved through a
+#   local, gives 221 over 516 rows at -O3.
+#
+# Names and types. RTTI names the classes. The slots' names are chosen (iresource.h and cwasminit.h say from what), and
+# so are the helpers', the data members', the constructors' parameters, GetImage's two int parameters, which no body
+# reads, and that no member is const. "Mulher4", "resolve", "missing" and the paths are the target's literals. Paths
+# relative to src/uenux2; the generic uenux2 rule compiles mock/ too and depends on each source and every uenux2 header.
+SIMULADOR_PLATFORM_SRCS := mock/app/simulador/wasm/cwasminit.cpp mock/app/simulador/wasm/cwasmresource.cpp
+UENUX2_SRCS += $(SIMULADOR_PLATFORM_SRCS)
+# CWasmInit's slot 5, trapping, compiled with the unit's flags; the header set is the generic rule's
+$(ROOT)/$(APP)/127-uenux2-simulador-wasm-platform-pending.o: $(ROOT)/src/units/127-uenux2-simulador-wasm-platform-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/127-uenux2-simulador-wasm-platform.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/127-uenux2-simulador-wasm-platform-pending.cpp -o $(R)
+# nothing reconstructed creates these classes yet: 127-uenux2-simulador-wasm-platform-roots.cpp keeps their vtables,
+# the reference the target's vptr stores (fn 8302) give
+$(ROOT)/$(APP)/127-uenux2-simulador-wasm-platform-roots.o: $(ROOT)/src/units/127-uenux2-simulador-wasm-platform-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/127-uenux2-simulador-wasm-platform.mk
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/127-uenux2-simulador-wasm-platform-roots.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/127-uenux2-simulador-wasm-platform-pending.o $(APP)/127-uenux2-simulador-wasm-platform-roots.o
