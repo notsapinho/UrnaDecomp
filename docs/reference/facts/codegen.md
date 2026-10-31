@@ -1,8 +1,9 @@
 # Facts: what a source form compiles to
 
 Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them,
-and what it says of the class that holds a member), what an object's disassembly does not settle, a switch over
-virtual members, and when a member's body is inlined. `docs/how-to-decompile.md` step 3 relies on these;
+and what it says of the class that holds a member), what an object's disassembly does not settle and how to compare
+two forms, a switch over virtual members, when a member's body is inlined, and the order of a caller and its callee.
+`docs/how-to-decompile.md` step 3 relies on these;
 [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors, linkage). Each probe
 compiles with the uenux2 flags (`-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, `docs/reference/app-flags.md`) in
 the pinned image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the
@@ -180,8 +181,38 @@ paste -d'|' $P/literals-0.txt $P/literals-1.txt
 
 Mask those offsets (and the object-local `call` and `global.get` indices) before calling two objects different, and
 compare function by function, not with `cmp` of the whole object ([reading.md](reading.md) §R5 has a template whose
-spellings move a function within the object). A load that only moves across a stretch with no store can also be one
-binaryen sinks at link; when a form's object differs only there, link both before calling it evidence.
+spellings move a function within the object). A function that throws often reads `__memory_base` once into a local, and
+adds each offset to the local: `local.get 0; i32.const 220; i32.add`, with no `global.get` beside the constant. Mask
+that `i32.const` as well, and a function that differs on one row per record it loads has not changed.
+
+**Five ways a form comparison lies.**
+
+- **A copy's path moves every offset.** A record holds its file name, so a copy under another path has other offsets in
+  every later row, and a variant compares as different with nothing changed. Compile the copy with
+  `-ffile-prefix-map=/work/<the copy>=/home/rubio/tse/uenux2/<its tracked path>`, after the tree's flags. The unchanged
+  copy is then `cmp`-equal to the landed object (0b5f410, with `F` the compile line of `make -n -C src link -W`):
+
+  ```sh
+  P=build/out/codegen-facts; cp src/uenux2/src/api/util/ctime.cpp $P/ctime-copy.cpp
+  F='-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -ffile-prefix-map=src/uenux2=/home/rubio/tse/uenux2 -Isrc -Isrc/uenux2/src -Isrc/asn1'
+  TMPDIR=/tmp build/docker-build.sh sh -c "em++ $F -ffile-prefix-map=/work/$P/ctime-copy.cpp=/home/rubio/tse/uenux2/src/api/util/ctime.cpp -c /work/$P/ctime-copy.cpp -o /work/$P/ctime-mapped.o 2>/dev/null"
+  cmp $P/ctime-mapped.o build/out/app/uenux2/src/api/util/ctime.cpp.o && echo same
+  # same
+  ```
+
+  Without the flag the same `cmp` differs. Compile every variant of a comparison from one directory, with one name
+  length, when you do not map them.
+- **A constructor's C2 and a destructor's D2 compare zero rows.** `wasm-objdump -d` names one body by its `C1` or `D1`
+  symbol, so a slice on `…C2…` is empty on both sides, and two empty lists compare equal. Treat 0 rows as a failed
+  comparison, never as equal.
+- **The edit may sit in a callee.** A template or helper is its own symbol in the object even when wasm-opt inlines it
+  at link, so the caller compares `SAME`, with rows, while the edit moved `decodeTime` beside it. List the object's
+  symbols first (`wasm-objdump -x <object>`), and compare the symbol the edit is in.
+- **A compare's operand order is the link's.** binaryen can swap the operands of a symmetric compare, so an object that
+  equals the target's rows says nothing. 995's `tag == makePrimitive(obj.getTag())` differs in the object and matches at
+  link; swapping the source to equal the object gave `36 over 165 rows`. Read operand order in a link only.
+- **A load can sink.** A load that only moves across a stretch with no store can be one binaryen sinks at link; when a
+  form's object differs only there, link both before calling it evidence.
 
 ## C2. A switch whose cases call consecutive virtual members is one call through a computed slot
 
@@ -285,3 +316,31 @@ done
 So the in-class form gives an inlined detach only while one function in the whole link calls it, and a second caller
 leaves it out of line in both. When the target holds the same inlined code in two functions, a form clang inlines in
 each TU is the one that keeps matching both; a form only binaryen inlines matches until the second caller lands.
+
+The two copies need not be alike, and then this does not apply. `comum::IInterfaceSavd::ConverteHeader`'s loop is in
+3829 and 3830: 3830 keeps the result pointer in a local through the loop (`l5 = i32.add(l4, 52); i32.store[l5+4] = 0`),
+and 3829 folds it into the offsets (`i32.store[l5+24] = 0`), so one is binaryen's inlining and the other clang's. The
+out-of-line form matches 3830 at `81 over 1168`, all operand-only, the `inline` form gives `166 over 1188`, and a scratch
+second call site keeps the call at `227 over 1172`. So measure `inline` before writing it, and re-read the form when the
+second caller lands (unit 95's fragment).
+
+## C4. The order of a caller and its callee decides what binaryen makes of them
+
+When two bodies differ in locals, or in what a pointer folds into, the order of the caller and the function binaryen
+inlines into it can be the cause, with no difference in the object. A caller first gives binaryen's inliner another
+round. Why, binaryen's source in the image does not show; the effect is measured:
+
+- **Across objects.** `api::IImpressoraRelatorios::SetStyle` (10881) differs in local numbers only with
+  `eueprintererror.cpp` before `iimpressorarelatorios.cpp` in its fragment's sources, and matches with the caller's
+  object first; the objects between them are free (unit 80's fragment).
+- **Inside one `.cpp`.** Only the order of the definitions moves. 3830 and the three functions it inlines: `379 over
+  1191`, `130 over 1178`, and with the caller first `81 over 1168`, a match, where the first order also keeps a pointer
+  argument in a local that the last folds into the loads (unit 95's fragment). 11405 goes from `34 over 247` to `24 over
+  244` with `DoConverte` and `DoDesconverte` above their helpers (unit 93's), and 5745 from `47 over 298` to `29 over 293`
+  (unit 98's).
+
+A function with no record has a free line to do this with, and a function with records may move while each throw stays
+on its record's line. Say in the fragment that the order is measured.
+
+The same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals
+swapped, with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
