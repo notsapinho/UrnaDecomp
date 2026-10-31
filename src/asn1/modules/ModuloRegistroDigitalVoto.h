@@ -334,7 +334,7 @@ public:
     idEleicao::const_reference get_idEleicao () const { return *static_cast<idEleicao::const_pointer>(fields[0]); }
     idEleicao::reference ref_idEleicao () { return *static_cast<idEleicao::pointer>(fields[0]); }
     idEleicao::reference set_idEleicao () { return *static_cast<idEleicao::pointer>(fields[0]); }
-    idEleicao::reference set_idEleicao (ASN1::INTEGER::int_type v)
+    idEleicao::reference set_idEleicao (idEleicao::const_reference v)
     { return *static_cast<idEleicao::pointer>(fields[0]) = v; }
 
     class votosCargos

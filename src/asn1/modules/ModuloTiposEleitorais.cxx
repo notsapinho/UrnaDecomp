@@ -535,6 +535,24 @@ const ModuloTiposEleitorais::DataGeracao::InfoType ModuloTiposEleitorais::DataGe
     ASN1::GeneralString::theInfo.charSetUnalignedBits, ASN1::GeneralString::theInfo.charSetAlignedBits
 };
 
+const ModuloTiposEleitorais::DataJE::InfoType ModuloTiposEleitorais::DataJE::theInfo = {
+    ASN1::AbstractString::create,
+    0x00000012,
+    &ASN1::NumericString::theInfo,
+    ASN1::FixedConstraint, 8, 8,
+    ASN1::NumericString::theInfo.characterSet, ASN1::NumericString::theInfo.characterSetSize, ASN1::NumericString::theInfo.canonicalSetBits,
+    ASN1::NumericString::theInfo.charSetUnalignedBits, ASN1::NumericString::theInfo.charSetAlignedBits
+};
+
+const ModuloTiposEleitorais::HoraJE::InfoType ModuloTiposEleitorais::HoraJE::theInfo = {
+    ASN1::AbstractString::create,
+    0x00000012,
+    &ASN1::NumericString::theInfo,
+    ASN1::FixedConstraint, 6, 6,
+    ASN1::NumericString::theInfo.characterSet, ASN1::NumericString::theInfo.characterSetSize, ASN1::NumericString::theInfo.canonicalSetBits,
+    ASN1::NumericString::theInfo.charSetUnalignedBits, ASN1::NumericString::theInfo.charSetAlignedBits
+};
+
 const ModuloTiposEleitorais::DataHoraJE::InfoType ModuloTiposEleitorais::DataHoraJE::theInfo = {
     ASN1::AbstractString::create,
     0x0000001b,

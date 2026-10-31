@@ -14,8 +14,12 @@ using TQtdVoto = ueword;
 
 class CVotos {
 public:
+    CVotos() = default;
+    explicit CVotos(std::vector<CVoto> votos);
+
     void Insere(const CVoto& voto, size_t posicao);
 
+    const std::vector<CVoto>& GetVotos() const { return m_votos; }
     TQtdVoto Total() const { return static_cast<TQtdVoto>(m_votos.size()); }
     TQtdVoto Candidato(const std::string& numero) const;
     TQtdVoto Legenda(const std::string& numero) const;

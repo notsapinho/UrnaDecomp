@@ -29,9 +29,23 @@
 # 5827 DesconverteAbrangencia formats a generated `int` enum, so its handle is fn 1711, formatter<int>; it matched when
 # 11450 below, which stores another slot of 1711 (DesconverteSexo's handle), gave the name a second voter.
 #
-# - 1713 DesconverteDataHoraJE is not written. It builds ModuloTiposEleitorais::DataJE and HoraJE, which RTTI names and
-#   src/asn1/modules/ModuloTiposEleitorais.h does not declare, and calls fn 2276, whose callees 2765 and 3649 (api::CDate's
-#   constructors) have no body of ours.
+# DesconverteDataJE (fn 2276) is matched: a DataJE's "YYYYMMDD" into api::CDate through CStringUtils::ToByte and ToWord.
+# No record names it (it throws nothing): its name, its place in util.cpp, its line and its being a Utils member are
+# chosen, from DesconverteDataHoraJE's record (util.cpp:41) and its callers (1713 and the converters 11365, 11384, 11395).
+# The target takes the three substrings before the first call and destroys them after the last: three named locals
+# (year, month, day) and CDate(ToByte(dia), ToByte(mes), ToWord(ano)).
+# - 1713 DesconverteDataHoraJE is written and `unresolved self-voted`: ModuloTiposEleitorais::DataJE::theInfo (1913204)
+#   and HoraJE::theInfo (1913248), the info words of the two temporaries it builds, are named by its own votes alone.
+#   The other target functions that load them are 3802 (DataJE's, not written: it waits for fn 706, which needs -O3) and
+#   the static initializer 14478 (both). Its body is 21 over 272 rows from the target, all operand-only (pnpm wasm
+#   score). The two substrings are named locals (the target destroys them at the end and each DataJE or HoraJE temporary
+#   right after its call): with the substrings as temporaries in the calls, 73 over 284 rows, 12 inserted, 18 deleted.
+#   DesconverteHoraJE (no record; name and line chosen) is api::CTime(hora), which clang inlines into 1713, where the
+#   target builds the CTime in a local of its own; the result is api::CDateTime's (CDate, CTime) constructor, inline in
+#   api/util/cdatetime.h (a choice). 7671 is its throw's code (EUE_COMUM_ASN_FORMATO_DATA_INVALIDO, a chosen name).
+#   ModuloTiposEleitorais::DataJE and HoraJE are new in src/asn1/modules/ModuloTiposEleitorais.{h,cxx}: RTTI gives the
+#   names and NumericString bases, 14478 fills their theInfo (8 to 8 and 6 to 6 characters, before DataHoraJE's), and
+#   ModuloProcessoEleitoral::Pleito's data field is a DataJE (CConversorPleito, fragment 140, reads it).
 # - 731, the base's default DoConverte and DoDesconverte merged, and 11418, IConversorBiometriaASN's default DoConverte,
 #   need -O3, which uenux2's flags do not have (docs/reference/facts/levels.md §V3). Their format strings are 44 and 47
 #   bytes. In a body that is only such a throw, the object at -O2 keeps libc++'s search of the format string for a brace
@@ -44,7 +58,8 @@
 #   tree still verifies, sha256 the target's. The defaults stay as unit 47's specialization with their source in its
 #   header, since the target's body is a merge thunk (src/units/README.md "An inherited template default").
 # - 11437 and 11438 hold other members of this file inlined, with members of app/comum/md/'s CIDEleitoral, CIDPacote
-#   and CCabecalhoPacote (their records), which are not written.
+#   and CCabecalhoPacote (their records), which are not written: comum::asn::CConversorCabecalhoPacote's two slots
+#   (140-uenux2-app-comum-converters.mk says what they hold).
 #
 # ConverteAbrangencia (inlined by binaryen into 11462), ConverteTurno and DesconverteTurno (into 11401 and 11402) are
 # here too, at their records' lines; their callers are in fragment 107 and in cconversordadocarga.cpp. No default in the

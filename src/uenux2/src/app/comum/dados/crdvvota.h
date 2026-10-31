@@ -3,6 +3,8 @@
 #include <memory>
 #include <mutex>
 
+#include "app/comum/dados/asn/rdv/cconversoreleicoesvota.h"
+#include "app/comum/dados/asn/rdv/cconversorregistrodigitalvoto.h"
 #include "app/comum/dados/crdv.h"
 #include "app/comum/dados/md/rdv/crdvposicionador.h"
 #include "app/comum/dados/md/rdv/cvotoseleicoesvota.h"
@@ -40,6 +42,8 @@ public:
 
 private:
     md::CVotosEleicoesVota m_votos;
+    // Recovered: the RDV's converter at +44, which the destructor (fn 5734) destroys first; the name is chosen.
+    asn::CConversorRegistroDigitalVoto<asn::CConversorEleicoesVota> m_conversor;
 
     static std::mutex s_mutex;
     static std::unique_ptr<CRdvVota> s_instancia;

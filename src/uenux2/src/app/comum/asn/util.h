@@ -11,6 +11,7 @@
 #include <format>
 #include <type_traits>
 
+#include "api/util/cdatetime.h"
 #include "app/comum/dados/md/candidatura/cdadoscandidato.h"
 #include "app/comum/etipolocalvotacao.h"
 #include "app/comum/eurnafase.h"
@@ -35,6 +36,9 @@ namespace asn {
 
 class Utils {
 public:
+    static api::CDate DesconverteDataJE(const ModuloTiposEleitorais::DataJE& data);
+    static api::CDateTime DesconverteDataHoraJE(const ModuloTiposEleitorais::DataHoraJE& dataHora);
+    static api::CTime DesconverteHoraJE(const ModuloTiposEleitorais::HoraJE& hora);
     static ModuloTiposEleitorais::Fase ConverteFase(const EUrnaFase& fase);
     static EUrnaFase DesconverteFase(const ModuloTiposEleitorais::Fase& fase);
     static md::ETipoAbrangencia DesconverteAbrangencia(ModuloTiposEleitorais::TipoAbrangencia::NamedNumber abrangencia);
