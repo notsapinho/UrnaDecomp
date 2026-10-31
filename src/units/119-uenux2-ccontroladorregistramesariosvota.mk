@@ -32,7 +32,10 @@
 #   function would have it (docs/reference/facts/reading.md R6). Which member is first is chosen (AddTick).
 # - comum::IControladorRegistraMesarios declares the 35 slots pure: the target has no vtable of the interface, and its one
 #   implementer gives the order and the wasm types. Every name is chosen (the interface header says from what); a slot
-#   with nothing to name it is SlotN.
+#   with nothing to name it is SlotN. Every slot but SetTituloMesario is const, here as in the interface, whose header
+#   gives the evidence (comum's mesario states call 28 of them through a const reference, unit 135); the const changes
+#   the members' symbols and no byte: step 9 renamed the match lines of the 20 const slots matched here and of fns
+#   3887, 3888 and 6017 to their _ZNK names.
 # - Slots 2 to 4 call the ticks of vota::CThreadOperador (fn 270). CThreadVota::AddTick is out of line in cthreadvota.cpp
 #   beside StopTick and StartTick (a choice); binaryen inlines it into slot 2, its one caller. Slots 17 and 18 return and
 #   assign +96 of CThreadOperador, unit 116's second string, now m_tituloMesario with an inline getter and setter (chosen:

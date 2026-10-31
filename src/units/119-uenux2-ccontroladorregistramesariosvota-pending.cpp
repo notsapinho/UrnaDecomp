@@ -23,57 +23,57 @@
 
 namespace vota {
 
-void CControladorRegistraMesariosVota::Slot5()
+void CControladorRegistraMesariosVota::Slot5() const
 {
     __builtin_trap();
 }
 
-int CControladorRegistraMesariosVota::Slot6()
+int CControladorRegistraMesariosVota::Slot6() const
 {
     __builtin_trap();
 }
 
-bool CControladorRegistraMesariosVota::Slot7()
+bool CControladorRegistraMesariosVota::Slot7() const
 {
     __builtin_trap();
 }
 
-comum::CAppState& CControladorRegistraMesariosVota::Slot9()
+comum::CAppState& CControladorRegistraMesariosVota::Slot9() const
 {
     __builtin_trap();
 }
 
-void CControladorRegistraMesariosVota::Slot10()
+void CControladorRegistraMesariosVota::Slot10() const
 {
     __builtin_trap();
 }
 
-comum::CAppState& CControladorRegistraMesariosVota::Slot11()
+comum::CAppState& CControladorRegistraMesariosVota::Slot11() const
 {
     __builtin_trap();
 }
 
-bool CControladorRegistraMesariosVota::Slot13()
+bool CControladorRegistraMesariosVota::Slot13() const
 {
     __builtin_trap();
 }
 
-comum::md::CComparecimentoMesario* CControladorRegistraMesariosVota::Slot14()
+comum::md::CComparecimentoMesario* CControladorRegistraMesariosVota::Slot14() const
 {
     __builtin_trap();
 }
 
-void CControladorRegistraMesariosVota::Slot15()
+void CControladorRegistraMesariosVota::Slot15() const
 {
     __builtin_trap();
 }
 
-void CControladorRegistraMesariosVota::Slot16()
+void CControladorRegistraMesariosVota::Slot16() const
 {
     __builtin_trap();
 }
 
-void CControladorRegistraMesariosVota::LogaLimiteMesariosAtingido()
+void CControladorRegistraMesariosVota::LogaLimiteMesariosAtingido() const
 {
     __builtin_trap();
 }

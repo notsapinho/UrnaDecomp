@@ -28,7 +28,6 @@
 #include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 #include "app/vota/operador/leidentidade/cprocuraeleitor.h"
 #include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
-#include "app/comum/comparecimentomesario/estados/cgestordadomesario.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
 
@@ -206,13 +205,6 @@ namespace comum {
 // cpedetitulomesariofinal.cpp:45, cpedetitulomesarioinicial.cpp:44, cpedetitulomesariovotacao.cpp:44, callees with no
 // name: 180, 203, 301, 728, 1151, 1255.
 void CPedeTituloMesario::StartState()
-{
-    __builtin_trap();
-}
-
-// CGestorDadoMesario::StartState: fn 10327 (403 B), records cgestordadomesario.cpp:35, callees with no name: none; not
-// reconstructed.
-void CGestorDadoMesario::StartState()
 {
     __builtin_trap();
 }
