@@ -53,10 +53,14 @@ that only binaryen inlines matches until the other caller is written: link with 
 4. In `until for h in …; do grep -q … || exit 1; done; do sleep 5; done` the `exit` leaves the whole script at
    the first miss; it is not a loop break.
 5. A `:` after a parameter is a history modifier: `git show $E:src/…` takes `:s` and prints `fatal: ambiguous argument`
-   over a path that names no file. Brace it: `git show "${E}:src/…"`.
+   over a path that names no file. Brace it: `git show "${E}:src/…"`. The same holds in an unquoted heredoc, where
+   `$F:asmlift-wasm/…` stops with `bad substitution` after the `cat > file` has emptied the file: write `<<'EOF'`.
+   With `2>/dev/null` the error goes and the result is empty.
 6. A `#!/bin/zsh` script can lose an exported Node 24 `PATH`, and then each `pnpm` exits 134 in under a second with an
    empty log: set `PATH` on the script's first line, and read a loop's exit statuses.
 7. `LC_ALL=C grep …` can print nothing where `/usr/bin/grep …` prints matches. A bare `grep`'s silence is no evidence.
+8. Each of these fails quietly when a chain goes on: an empty `join`, a `wc -l` of 0 or a `grep -c` of 0 proves
+   nothing until the file it reads is known to be written, and `grep` on an empty variable waits on stdin.
 
 ## X4. Fetching from the TSE site
 
@@ -169,23 +173,9 @@ try-tu appends `--flags` after the tree's own `-Isrc -Isrc/uenux2/src -Isrc/asn1
 passed through `-I` is never read: the try compiles the tracked header, links, and reports as usual. A quoted
 `#include` searches the including file's directory, then the `-iquote` directories, then the `-I` ones; the tree's
 headers include each other by their path under the tree (`#include "api/gui/iformfield.h"`), which is not beside
-the including file, so a `-iquote` directory holding the variant at that path wins at any include depth. A variant
-of unit 43's class header that declares the destructor without defining it:
-
-```sh
-mkdir -p build/out/variant-facts/inc/api/gui
-LC_ALL=C sed 's/~CImageFieldUpdate() override = default;/~CImageFieldUpdate() override;/' src/uenux2/src/api/gui/cimagefieldupdate.h > build/out/variant-facts/inc/api/gui/cimagefieldupdate.h
-for f in "-I/work/build/out/variant-facts/inc" "-iquote /work/build/out/variant-facts/inc"; do
-  TMPDIR=/tmp tools/round/try-tu.sh --symbols --name variant-facts --component uenux2/src/api/gui --flags "$f" src/units/43-uenux2-cimagefieldupdate-pending.cpp | /usr/bin/grep -c 'CImageFieldUpdateD[02]Ev'; done
-# 2      (-I: the tracked header, whose in-class destructor the pending object emits with the vtable)
-# 0      (-iquote: the variant, whose destructor is now the key function and is defined nowhere)
-TMPDIR=/tmp tools/round/try-tu.sh --print-flags --component uenux2/src/api/gui --flags "-iquote /work/build/out/variant-facts/inc" src/units/43-uenux2-cimagefieldupdate-pending.cpp | /usr/bin/grep -oE -- '-I[^ ]+|-iquote [^ ]+' | tr '\n' ' '
-# -Isrc -Isrc/uenux2/src -Isrc/asn1 -iquote /work/build/out/variant-facts/inc
-```
-
-A variant that only another tracked header includes is reached the same way. A copy of `api/gui/iformfield.h` with
-one `#define` added, and a TU that includes only the tracked `api/gui/cimagefieldupdate.h`, whose line 29 is
-`#include "api/gui/iformfield.h"`:
+the including file, so a `-iquote` directory holding the variant at that path wins at any include depth. A copy of
+`api/gui/iformfield.h` with one `#define` added, and a TU that includes only the tracked `api/gui/cimagefieldupdate.h`,
+which includes `api/gui/iformfield.h`:
 
 ```sh
 mkdir -p build/out/variant-facts/inc/api/gui
@@ -197,9 +187,9 @@ for f in "-I/work/build/out/variant-facts/inc" "-iquote /work/build/out/variant-
 # 1      (-iquote: the variant, one include down)
 ```
 
-After a try with a variant header, check that the object holds the variant's symbols
-(`TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/try/variant-facts/obj/43-uenux2-cimagefieldupdate-pending.o`
-for the last try above lists no `CImageFieldUpdateD` symbol).
+After a try with a variant header, check that the object holds the variant's symbols: for the last try above,
+`TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/try/variant-deep/obj/deep.o | /usr/bin/grep -c VariantSeen`
+prints 1.
 
 ## X9. `try-tu.sh --single` can differ for a function with no callee
 
@@ -244,3 +234,39 @@ concludes.
 `link.cmd` as they are given it: the normalised `build/out/try-facts/…` fails with `link.cmd does not write …`, and
 the spelling try-tu prints, `build/out/try/../try-facts/clinha/wasm/vota_web`, works. `splat-kinds` and `splat-remap`
 take either.
+
+## X11. An object of ours at 0x100000 rewrites the add of its address
+
+`-Oz`'s optimizer writes `x + 1048576` as `x - (-1048576)`, since the negated constant is one LEB byte shorter (3 bytes
+against 4). So a body that adds the address of an object our link puts exactly at 0x100000 has `i32.const -1048576;
+i32.sub` where the target has `i32.const <address>; i32.add`, and is one byte shorter: OpenSSL's `table_select` (4505)
+left `match` on one merge's link when `k25519Precomp` started there. The shifted link's address is no power of two, so
+`splat-kinds` sees nothing. Below 2^20 the positive constant is as short, so only this one address does it inside our
+data, one object per link at most. What starts there, and the rows it hits (both print nothing at 4487d6b):
+
+```sh
+awk '$1 == "100000"' build/out/wasm-map/vota_web/vota_web_wasm.map
+awk -F'\t' '$5=="differs" && $6 ~ /ours [^|]*i32\.const -1048576/ {print $1}' splat/scan.tsv
+```
+
+No source is at fault, and moving data on purpose is tuning (`src/units/README.md` "Companion files", the order of a
+roots file's lines): the next landing that moves the data clears it, and can bring it back on another object.
+
+## X12. `wasm-objdump -d -r` names a relocation by the function, not by the symbol
+
+On a constructor or destructor whose C1 and C2, or D1 and D2, are aliases of one function, the disassembly prints the
+function's first name beside the call and beside its relocation, whichever symbol the relocation holds. The symbol
+table says which:
+
+```sh
+O=build/out/app/uenux2/src/app/comum/dados/ccargos.cpp.o
+wasm-objdump -d -r $O | /usr/bin/grep -m2 -E 'CCargosD[12]Ev'
+#  00087f: 10 98 80 80 80 00          |   call 24 <_ZN5comum7CCargosD2Ev>
+#            000880: R_WASM_FUNCTION_INDEX_LEB 22 <_ZN5comum7CCargosD2Ev>
+wasm-objdump -x -j Linking $O | /usr/bin/grep -E 'CCargosD[12]Ev'
+#    - 22: F <_ZN5comum7CCargosD1Ev> func=24 [ binding=global vis=default ]
+#    - 26: F <_ZN5comum7CCargosD2Ev> func=24 [ binding=global vis=default ]
+```
+
+Symbol 22 is D1, so the object calls D1. The link map lists both names on the one function, the kept one first
+(`/usr/bin/grep -n '_ZN5comum7CCargosD[12]Ev' build/out/wasm-map/vota_web/vota_web_wasm.map`).

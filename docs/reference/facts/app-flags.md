@@ -445,7 +445,8 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    five steps take about 9 minutes on a loaded machine. With `-fno-delete-null-pointer-checks` the build ends
    `3 matched functions no longer verify` (the tool's message), listing 5194, 11321 and 11326, as F6 says.
 
-   A match line keyed by object names `build/out/app` (`/usr/bin/grep -c '@app/' splat/matched.txt` prints 4), and a
+   A match line keyed by object names `build/out/app` (`/usr/bin/grep -c '@app/' splat/matched.txt` prints 104 at
+   4487d6b: a local symbol's static destructor, `__cxx_global_array_dtor@<object>`, is such a line), and a
    private link's keys hold `$P`, so `splat-build` stops on such a line with `our link has no function …` and checks
    nothing else. Re-key a copy of the list, and pass that to `--matches`:
    `sed -E 's#@app/#@flags-nodelnull/app/#' splat/matched.txt > $P/matched.txt`. Read the "no longer verify" list by

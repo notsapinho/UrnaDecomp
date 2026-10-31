@@ -33,8 +33,12 @@ The generated roots take the address of every external function, which breaks th
 inlines into its one caller stays unrooted ([../units/README.md](../units/README.md) "Companion files"): binaryen then
 keeps it and its result, and a rooted function can keep dead code alive (facts §A6). So `ASN1_ROOTS_EXCLUDE` in
 `src/mk/asn1.mk` lists what the target only calls, and a unit's fragment adds to it with `+=`. Each word is part of a
-mangled name, and a symbol that holds it leaves the roots. Functions the target does not hold at all leave too (unit 115,
-facts §A10): rooted, they count as callers and merge with bodies the target keeps apart.
+mangled name, and a symbol that holds it leaves the roots: `tools/round/gen_try_roots.py` matches it as a substring,
+so a word takes out every symbol that contains it. `_ZN4ASN114AbstractStringC1EPKv` is a prefix of the constructors of
+1521 and 2190, and unit 115's roots file takes those two back. Functions the target does not hold at all leave too (unit
+115, facts §A10): rooted, they count as callers and merge with bodies the target keeps apart. An exclusion can also take
+a real caller with it, a function the target holds inline in a body that has its row (`CoderEnv::decode`, facts §A10):
+run how-to step 9's `join` and `pnpm test` after each one.
 
 The headers are C++20-clean, because the ecourna TUs (`-std=c++20`) include `asn1.h` and the module headers:
 `asn_ptr<T>` is `std::unique_ptr<T>` (the target's `~CHOICE`, 997/8997, stores 0 before it deletes, which is
@@ -53,16 +57,26 @@ asnparser appends the type's name to it (facts §A3). The 297 records give the f
 optionality, the enumerators and the constraints exactly. Class names come from RTTI, from the names the app's
 `std::source_location` records spell, or are made up from the field name. A made-up one says `SYNTHESIZED` in its
 header comment (`/usr/bin/grep -h SYNTHESIZED src/asn1/modules/*.h | wc -l` counts them), and it yields to RTTI or a
-record: rename the class by hand, in the module those give (facts §A3), and take the word out. A generated class has no code of its own (all `SEQUENCE` classes share seven vtable functions),
-so the modules place data, not functions.
+record: rename the class by hand, in the module those give (facts §A3), and take the word out. It yields when the bytes
+agree as well: two generated classes with the same slots have vtables of the same content, so a field of the made-up
+type matches through the real one's vtable, and the review calls it `legitimately` (`DataGeracao`, which RTTI calls
+`DataHoraJE`, facts §A3). A generated class has no code of its own (all `SEQUENCE` classes share seven vtable
+functions), so the modules place data, not functions.
 
 `tools/extract/asn1/run.sh` regenerates them from the target into `build/out/asn1-schema/modules/` (about 15 s;
 it needs `build/dump/vota.objdump.txt`). `diff -rq build/out/asn1-schema/modules src/asn1/modules` then lists the files
 that carry hand edits made after generation: setters that take `x::const_reference`, a form that is per field, not per
-file (facts §A3); generated classes that the target does not have
-(`Cabecalho`, nested `value_type`s) replaced by a `typedef` of the type it uses; an inline enumeration turned into
-the named type the target's RTTI shows (`ModuloTiposEcoUrna::SituacaoArquivo`) and a string type added
-(`ModuloTiposEleitorais::DataHoraJE`); typedefs for the names the app's source spells (`EstiloTitulo`,
-`GeneroLabel`, …); a made-up class name replaced by the one RTTI shows (`ModuloEstadoGeralUrna::TipoUrnaOperacao`,
-`ModuloImpedidos::TipoImpedimento`, moved out of `ModuloHashes`); and the `#include` C++20 needs. So diff a regeneration against this
-directory before copying anything over.
+file (facts §A3); generated classes that the target does not have (`Cabecalho`, nested `value_type`s) replaced by a
+`typedef` of the type it uses, which RTTI decides: `ledger/classes.json` holds five nested `value_type`s, among them
+`mesariosAbertura`'s and `mesariosEncerramento`'s, which stay classes, and a field whose `value_type` it does not hold
+takes the typedef; an inline enumeration turned into the named type the target's RTTI shows
+(`ModuloTiposEcoUrna::SituacaoArquivo`) and a string type added (`ModuloTiposEleitorais::DataHoraJE`); typedefs for the
+names the app's source spells (`EstiloTitulo`, `GeneroLabel`, …); a class head for a name only a record or a typeid text
+spells, where a typedef would print the other module's name, its base a choice the header marks
+(`ModuloCandidatos::DadosCandidato`); a made-up class name replaced by the one RTTI shows
+(`ModuloEstadoGeralUrna::TipoUrnaOperacao`, `ModuloImpedidos::TipoImpedimento`, moved out of `ModuloHashes`); and the
+`#include` C++20 needs. So diff a regeneration against this directory before copying anything over.
+
+The fork's own types are read the same way, and a form the bytes do not separate is a choice the source marks:
+`BERDecoderPartial::Visitante` is a `std::pair`, since the target relocates it as a trivially relocatable type and
+`std::tuple` gives the same bytes (facts §A9).

@@ -49,7 +49,11 @@ are `splat/symbol_addrs.txt`, `splat/matched.txt` and `splat/scan.tsv`, with the
   index, table and elem, memory, globals, exports, data offsets, and each piece's size and sha256.
 
 `<group>` is the function's component. `<name>`, when there is one, is the ledger's best guess, so it can be wrong:
-target 10822's piece says `OBJECT_IDENTIFIER`, but the function is `api::AudioCollector`'s destructor. It is spelled
+target 10822's piece says `OBJECT_IDENTIFIER`, but the function is `api::AudioCollector`'s destructor. The `;; name`
+comments after a `call` in a `.wat` are the same guess, the census's `best_name`, and between bodies that tie the
+census pairs by position (`pairUp` in `asmlift-wasm/src/census.ts`), so a piece can carry its twin's name: 348's piece
+has said `CLogComum::GetInst`, which is 948. Take a function's name from `splat/symbol_addrs.txt` or
+`splat/matched.txt`, and a thunk's from the slot it passes. It is spelled
 for a file name, which drops a destructor's `~`: `api/2721-api_CThread_CThread.bin` is `~CThread`. The split
 re-runs after every census, so a piece's path can change. Always key a function by its target index, never by its
 path.
@@ -121,7 +125,9 @@ parser drops any other line without a word, below the hand-edit marker too, and 
 - `content`, `string`, `srcloc`: unique bytes, a C string, or a `std::source_location` record the target holds at one
   address. A record it holds at several has no line, since no one place is its own (§3).
 - `srcloc-anchor`: a function pair whose bodies are the same opcodes and load the same
-  `std::source_location` record, one the target holds at one address.
+  `std::source_location` record, one the target holds at one address and one function loads on each side
+  (`srclocAnchors`). One address is not one function: a record of a member clang inlines elsewhere in its TU has two
+  loaders and anchors nothing (273's record is loaded by 273 and 11556).
 - `vptr-anchor`, `content-anchor`: the same rule over another operand, a class's vptr (a constant at the address point
   of a vtable the ledger's RTTI names on both sides) or a read-only object of at least 16 bytes placed by its exact
   bytes. Such an operand can have other holders: a class's destructor loads the vptr its constructor does, and a sibling
@@ -157,8 +163,12 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 - `vptr+shape`: the function stores a class's vtable address point, which other functions store too, and its `shape`
   hash is the only one on both sides.
 - `callers+content`: the target callers and the loaded content single the function out. Each caller counts when other
-  evidence names it, its vtable slot say, and the aligned calls pair the two functions one to one with no disagreement
-  ([facts/asn1.md](facts/asn1.md) §A5 has the tally).
+  evidence names it, its vtable slot or its record say, and the aligned calls pair the two functions one to one with no
+  disagreement ([facts/asn1.md](facts/asn1.md) §A5 has the tally; no tool runs it). A body written and one flag from
+  the target takes this kind too: its comment gives the score at that flag and what the callee's own rows show, and
+  counts only the callers that hold without the line (426, unit 31's `AddField`). A `.bss` object has no content and
+  often no aligned call: its line leads with the target functions other than the match that read the address, its
+  static destructor first, as the `CEstadoAudio` statics' do.
 - `content`: a data line, the bytes the object holds.
 - `merged-body`: the target merged this function's body into the index, its callers there call it, and our own body of
   that name is not equal, so no match can name it. §3 says what it does. The comment must cite a caller the line does
@@ -186,7 +196,14 @@ matches out until the line follows ([facts/splat.md](facts/splat.md) §S10).
 
 A data name takes a hand edit under the same burden: `_ZN4ASN1L14badEndOfStreamE` (`callers+content`: the static
 constructors build it from a literal only it has, and five functions read it) and `_ZN3api20g_polySingletonsInfoE`
-(`content`: the word holds the one slot of 11265, paired on its own).
+(`content`: the word holds the one slot of 11265, paired on its own). A `_ZGV` guard that one body reads has such
+evidence in its object: the target keeps our link's distance between the two ([facts/splat.md](facts/splat.md) §S13),
+so the object's address, held by another match, places the guard. No line uses it yet.
+
+Step 8 reads no hand line: `gatherEvidence` takes the two maps and the ledger, not the file it rewrites
+(`splat-symbols-cli.ts`). So a function named by hand casts no vote, and the objects its body reads need names of their
+own; and votes that disagree drop a name without a word in the stats line, which step 8's diff of the symbol file is
+the only place to see.
 
 A hand edit needs evidence that does not come from the match it enables. A name whose only use is to make a
 function match proves nothing; see the AudioCollector trap in [facts/splat.md](facts/splat.md) §S4. §3's self-vote rule
@@ -209,8 +226,9 @@ A target function is **matched** when four things hold:
 of ours may be an address, a table slot or a plain integer, and the bytes do not say which. Our side learns it from
 a second link. `tools/round/link-kinds.sh` (`make -C src link-kinds`) reruns the plain link's own command with
 `-sGLOBAL_BASE=1024+D` and `-sTABLE_BASE=1+T` (emcc passes them to wasm-ld as `--global-base` and `--table-base`),
-with D = 1 MiB and T = 20,000: each larger than our data (1.46 MB) and our table (10,007 slots), and different from
-each other. It names that *shifted link*'s functions the way link-map names the plain one. It refuses to start while
+with D = 1 MiB and T = 20,000. `splat-kinds` asks only that the two be positive and differ (`linkShifts`), so a moved
+constant says which it is; neither need exceed our data or table, and D does not (our data ends at 0x1889b0, 1.61 MB,
+and our table holds 11,805 slots: `wasm-objdump -x -j Table build/out/wasm/vota_web/vota_web_wasm.wasm`). It names that *shifted link*'s functions the way link-map names the plain one. It refuses to start while
 an object or archive on the link line is newer than the plain wasm, and fails unless its map lists the same input
 sections as link-map's map of the plain link, in the same order and of the same sizes. The toolkit's `splat-kinds`
 then aligns the two links by function name, not index, and writes `build/out/wasm-kinds/vota_web/kinds.json`. In a
@@ -271,7 +289,11 @@ the object's content places it:
   fixed bytes, 4 per pointer word at or above 1024, the non-zero bytes of a smaller one). Read-only content
   (`.rodata`, `.data.rel.ro`) found at several places offers each as a copy; a writable object found at
   several places stays unresolved. Placing one object can re-point a word of another, so the placement
-  repeats until nothing more resolves. It reads only the two images and the names, never a function body.
+  repeats until nothing more resolves. It reads only the two images and the names, never a function body. The
+  pattern reads the plain link, so a small integer that is also a slot of ours (an ASN.1 tag) reads as both, and
+  goes open while that slot's function has no target name: a landing that moves the table's first slots can loosen
+  an object past 64 places and take a match from a unit it never touched (8750, through `UTCTime::theInfo`, which a
+  `content` hand edit now holds). Look at what the word lands on, not for a C++ cause.
   The matches count among the names, and a scan pass re-points with the previous pass's matches applied, so
   a function is first matched before its own name re-points any word of the objects it uses.
 
@@ -326,7 +348,8 @@ hand when votes disagree (§2): our link merges what the target keeps apart, its
 stay out of `match`.
 
 One failure is not drift: `our link has no function <symbol>` for a byte-identical twin whose surviving name moved,
-because a new unit's identical body comes first in the link. The body still verifies under the new name, and
+because a new unit's identical body comes first in the link, or for a C1 and C2 (D1 and D2) that are aliases of one
+function, when its object now mentions the other name first. The body still verifies under the new name, and
 `make -C src splat-match` rewrites the line to it in place and prints the rename; say so in the commit
 ([../how-to-decompile.md](../how-to-decompile.md) step 10, "A twin whose name moved").
 
@@ -431,8 +454,10 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   whose content also sits at the place the target body uses gives the target's bytes. Calls through any slot of a
   function are the same, but pointer identity differs. The same holds for a whole match: two bodies that differ only
   in which of two tables of the same bytes they return can take each other's names, and `splat-match` reports nothing,
-  since no name of the symbol file disagrees ([facts/splat.md](facts/splat.md) §S11). Check such a match against the
-  functions around its index in `splat/matched.txt` and the data that points at it;
+  since no name of the symbol file disagrees ([facts/splat.md](facts/splat.md) §S11). Among bodies that tie, the census
+  pairs by position, so the name step 9 writes is the tie's pick. Check such a match against the functions around its
+  index in `splat/matched.txt` and the data that points at it, and correct the line by hand when they disagree (12991,
+  by the dispatch table that holds its slot, §S11);
 - a number equal to the target's number of another kind: the target's slot number written as an integer inside our
   table (every small integer is some target slot), a pointer of ours whose re-pointed value equals an integer the
   target holds, or a target address written as an integer that lies inside our data range and is not the start of a
@@ -447,7 +472,10 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   `::CMovieFrame`, which mangle differently), a free function's linkage (a record prints `static` only for a member;
   [../how-to-decompile.md](../how-to-decompile.md) step 3). "No evidence" is said of the object, not only of the
   function: before a class is chosen, follow `this` from the callers to the next functions that take the object, and
-  read their vptr stores, strings and records (5622's class is named one hop on, by 5604's callee 2791);
+  read their vptr stores, strings and records (5622's class is named one hop on, by 5604's callee 2791). A template
+  argument is a name too: a container's key or element type ends up in the match's symbol, and the bytes are the same
+  whichever it is. Before writing one as chosen, read the records of the class's other members, of its base's, and of
+  the functions that take the object (1929's key, `unsigned int`, is record 1536124's);
 - the order of a file's members that have no record: compare `ld_index`, not the `ours` of `splat/scan.tsv`
   ([../how-to-decompile.md](../how-to-decompile.md) step 3, "The order of two members", has the rule, the command and
   when an inverted pair is two definitions swapped). A swapped order gives the same bytes and matches all the same;
@@ -496,8 +524,8 @@ in `ledger/callgraph.tsv`; check such a claim with the grep for its address poin
 
 Re-running the generators on the committed state is the check that they wrote it: `make -C src splat-symbols` leaves
 `git status` clean, and a rescan changes `splat/scan.tsv` only in the `source` column, to `symbol`, since the match
-now names the function: from `content` for a new match the scan found by content, and from `ledger` for a match line
-step 9 renamed to a twin. A new match step 8 already named
+now names the function: from `content` or `ledger` for a new match the scan found by its body or by the census's pair,
+and from `ledger` for a match line step 9 renamed to a twin. A new match step 8 already named
 (`srcloc-anchor`, `pair-*`, `call`, `vtable`) is `symbol` from the start, and the rescan leaves its line alone: 5526
 (`evidence:srcloc-anchor`) reads `symbol` in the committed scan (`awk -F'\t' '$1==5526' splat/scan.tsv | cut -f1,3-5`).
 
@@ -515,8 +543,9 @@ The two ways differ in what picks the readings of the ambiguous operands:
 
 - **The match's own bytes.** `verifyMatches` on the real split gives the bytes the build substitutes, with the
   readings the target body picked. This checks that the build's output comes from our link, under the match rule.
-  It is the gate: the command exits non-zero only when this way does not give the target's sha256 (or when the
-  build would refuse the match: it differs, is unresolved, or is `UNCONFIRMED`).
+  It is the gate: the command exits non-zero only when this way does not give the target's sha256, when the build
+  would refuse the match (it differs, is unresolved, or is `UNCONFIRMED`), or when the index is not in the match list
+  (`function N is not in the match list`, a withdrawn row: read its state in `splat/scan.tsv`).
 - **Preferred readings.** The blanked split, assembled into a module with `target/vota_web_wasm.js` copied beside
   it, is loaded as the target side (`loadTargetSide` takes the import names from the glue next to the wasm it reads;
   without it every `invoke_*` call is `UNRESOLVED`), and `remapBody(...).bytes` sets every operand at its preferred
@@ -561,9 +590,21 @@ join -t "$(printf '\t')" <(cut -f1,5 ../splat/scan.tsv | sort) <(cut -f1,5 ../bu
 ```
 
 What falls is what the line carries. Then rule on whether the evidence in its comment stands without those matches: the
-two rows above are the line's own, and its uniqueness reads neither of them. The same line rewritten `evidence:call
-by:<its caller>` shows what the self-vote rule would refuse, and a line it refuses is sound only on evidence from the
-callee's own body.
+two rows above are the line's own, and its uniqueness reads neither of them. Three things make the scan say less than
+it seems to:
+
+- **One pass.** A pass re-points with the previous pass's matches, so one scan can leave out a row the next brings
+  back (8749 waits for 8951's and 8956's matches). Run the scan a second time over the same `--match` copy, as
+  `splat-match` passes until its count stops, and beside a control that removes nothing.
+- **Lines.** `--match` appends and renames and never removes, so the copy keeps a line whose row left `match`: count
+  the rows (`awk -F'\t' 'NR>1 && $5=="match"' <tsv> | wc -l`), not the lines.
+- **A census tie.** A row that stays with `ledger` in its `source` column can rest on a pair the census made by position
+  among bodies that tie (`pairUp` in `asmlift-wasm/src/census.ts`): check that its `addr` hash has one body on each side
+  (the `addr` column of `pnpm wasm fingerprint <wasm>`, on each wasm) before reading the line as idle.
+
+The same line rewritten `evidence:call by:<its caller>` shows what the self-vote rule would refuse, and a line it refuses
+is sound only on evidence from the callee's own body. With two or more callers the line carries, the rewrite refuses
+nothing, since each is the others' holding match: count only the callers that hold without the line.
 
 `make -C src splat-symbols` says nothing of a hand edit a generated line has caught up with. These are the names on both
 sides of the marker, each with its two targets:
@@ -572,8 +613,11 @@ sides of the marker, each with its two targets:
 awk '/^# ---- hand edits below/ {h=1; next} /^#/ || !NF {next} h {if ($1 in g) print $3, g[$1], substr($1, 1, 60)} !h {g[$1]=$3}' splat/symbol_addrs.txt
 ```
 
-Such a line can go, unless its generated twin is a `vote:1` the match would then vote for itself, or the line is
-`merged-body`: run the scan above without it.
+Such a line can go, unless its generated twin has one voter, the match itself, by any kind (`vote:N`, `table`, `call`,
+with `by:<this index>`) and no other match holds the name, or the line is `merged-body`. Run the scan above without it,
+then `splat-build --symbols <that copy>`: the scan can add the match back where the build's fixed point refuses it as
+`UNCONFIRMED: self-voted`. A hand line no generated line repeats can carry nothing too, since a body whose re-pointed
+bytes occur once comes back by content: run the same two on every new hand line before it lands.
 
 In both ways the maps get the matches of `splat/matched.txt` first (`withMatches(maps, matches)` with the `matches` of
 `parseMatchList`, both in `splat-sub.ts`), as the build does (`buildSplat`): each matched symbol then names its
@@ -612,6 +656,13 @@ pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/v
 
 A preferred-readings failure with no such operand listed (`NOT explained by a reading the target picked`) is not
 legitimate: report it. Say which way gave which result.
+
+`legitimately` speaks of the reading, not of the object. Two vtables of different classes that hold the same slots are
+`same-content` too, so a match that builds the wrong class reads as a copy: 9203 stored `ModuloTiposEleitorais::DataGeracao`'s
+vtable, a made-up class, where the target stores `DataHoraJE`'s ([facts/asn1.md](facts/asn1.md) §A3). For each listed
+operand, look up our address in `build/out/wasm-map/vota_web/vota_web_wasm.map` and the target's in
+`splat/symbol_addrs.txt` or `ledger/vtables.json`: a vtable or typeinfo of another RTTI class is a wrong class, and the
+match does not land on it.
 
 ## The meter
 

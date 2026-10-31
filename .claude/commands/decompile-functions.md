@@ -41,8 +41,8 @@ The round has six stages, each run by its own agent:
 Never run more than `agents` (default 2) of them at once, counting every stage. Two whole links at once take
 about 7 minutes each against one minute alone (how-to step 5), so a third agent mostly makes the other two slower.
 A lane's VERIFY may start as soon as its MATCH returns, while the other lane is still matching, and LAND may take
-the confirmed lanes in batches while others still match. DOCS runs every few rounds, on the friction posts since the
-last DOCS stage. A round on two machines follows [docs/agents.md](../../docs/agents.md) "Two machines": Stage 0 runs on
+the confirmed lanes in batches while others still match. DOCS runs every second round, on the friction posts since the
+last DOCS stage, alongside the next round: no lane waits for it. A round on two machines follows [docs/agents.md](../../docs/agents.md) "Two machines": Stage 0 runs on
 each, a lane matches and verifies on one machine, its build being there, and LAND runs on one.
 
 A delegate tool reports an agent as finished when it ends its turn, even with a build still running. So every brief
@@ -181,9 +181,11 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   python3 -I -B tools/round/pick_pool.py --differs      # the TSE differs rows (how-to step 1)
   ```
 
-  The first lists the stubs of 40 to 600 B (`--min`/`--max` change it), smallest first. The `differs` rows of TSE
-  code (the second) are the other pool: a body of ours exists and the work is fixing its C++. A third pool is in
-  neither listing: the pending members of landed units. They have no stub, each row is `no-candidate` or `differs` with
+  The first lists the stubs of 40 to 600 B, smallest first; a pick by class reads them all (`--min 0 --max 1000000`
+  gives 1511 rows for `--tse` at 4487d6b, against 757). The `differs` rows of TSE code (the second) are the other pool:
+  a body of ours exists and the work is fixing its C++. The static destructors of a class's statics are in no pool:
+  a 10-B or 12-B body with no stub and no reader but the table, whose `.bss` address names its singleton, so it goes
+  to the lane of that class. A third pool is in neither listing: the pending members of landed units. They have no stub, each row is `no-candidate` or `differs` with
   the `-pending.o` as its object (how-to step 9), and the class's vtable and layout are already on `main`, so a whole
   class can be taken at once. Each `src/units/*-pending.cpp`
   header names its members and what each waits for (`ls src/units/*-pending.cpp`). The scan's
@@ -221,8 +223,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
 - **The stub may sit over code we have**: search our sources for the class before choosing (step 1).
 - **The name and the file**: from the records, the vtable slot, `ledger/vtables.json` and `ledger/classes.json`;
   for an `unplaced.cpp` stub, the file rules of how-to step 3.
-- **Lanes must not overlap.** Different classes and different files, so no two lanes edit one file or emit one
-  vtable. Two virtual members of one class belong to one lane (the second can be that lane's stretch goal). A header
+- **Lanes must not overlap.** A lane takes a whole class or family where it can: its vtable, its file, its pending
+  members and its statics' destructors. Different classes and different files, so no two lanes edit one file or emit
+  one vtable. A header
   several lanes need (a shared enum, a type a record names) is listed in the pick post, with one copy on the board's
   `shared/` that every lane takes byte for byte.
 
@@ -276,7 +279,9 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
 2. **The splat build** prints the target's sha256, and no index the branch's base matches is lost (how-to step 10's
    `comm`, against `<base>`). A
    line removed and its index added back under another symbol is a twin rename: check that the old symbol is gone
-   from the link (`build/out/wasm-map/vota_web/names.tsv`) and the new one is a byte-identical body. Compare the
+   from the link (`build/out/wasm-map/vota_web/names.tsv`) and the new one is a byte-identical body in the final link
+   (two D0s that pass different sizes to sized delete differ in their objects and are one function there), or the
+   other alias of one constructor or destructor (how-to step 10). Compare the
    range's `splat/scan.tsv` with the base's on the index and verdict columns: only the lane's matches, and verdicts
    with a reason in the range, may move. The symbol of `unresolved` and `differs` rows among identical bodies, and
    some lines of the symbol file, change at every landing whatever the unit
@@ -300,7 +305,7 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
    exits 0, so read its `skipped` count, and a failure the base has as well is not the lane's.
 5. **Generated files are what the generators write.** Re-running `make -C src splat-symbols` leaves
    `git status` clean. A rescan changes `splat/scan.tsv` in one way only, the `source` column, to `symbol`: of a new
-   match the scan found by content, and of a match line step 9 renamed to a twin. A new match step 8 already named is
+   match the scan found by content or by the census's pair, and of a match line step 9 renamed to a twin. A new match step 8 already named is
    `symbol` from the start, and the rescan leaves its line alone (`docs/reference/splat.md` "Reviewing a match").
    Restore anything a re-run rewrote with `git checkout -- <file>`, and report it.
 6. **The source**, against rules 3 to 5: the real mangled name and where its evidence comes from (a name no record,
@@ -310,7 +315,9 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
    [docs/reference/splat.md](../../docs/reference/splat.md) "Reviewing a match" says.
 
 A REFUTED lane does not land. Send its finding back to the lane's matcher once, as a new MATCH run, then to a new
-VERIFY. If it is refuted again, report it to the user.
+VERIFY, which is narrow: the refuted points and the range since the commit the first verdict judged, with the first
+verdict's other checks standing. If it is refuted again on comment text alone, fix the text yourself, as a commit on
+the lane's branch, and say so in the landing's brief and your report. Any other second refutation goes to the user.
 
 ---
 
@@ -321,7 +328,10 @@ confirmed, and the match count and commit of `main` before the batch. Land in ba
 batch is a LAND stage of its own, and it touches no lane its brief does not name. It posts a `rounds/` claim of `main`
 first, naming the lanes, their commits and the worktrees it will remove, and keeps its logs under `build/out/land/`. A
 batch that meets a lost match stops before committing that merge and posts it. A toolkit fix the merge needs is a commit
-of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there.
+of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there. A row lost to
+one link's data layout, the cause shown (an object at 0x100000, `docs/reference/facts/tool-traps.md` §X11), may wait for
+the next lane of the batch: land that lane first, retry, stop if the row is still out, and say so at the top of the
+result.
 
 The commit to land is the one the verdict confirmed. A lane branch's tip can differ from it: a pause can leave the
 worktree on another branch (`wip/<lane>`), and the lane branch then points at an older commit. Check
@@ -340,7 +350,9 @@ lands ("Pausing and resuming" below).
    --short` shows no unstaged or untracked line, and commit with a bare `git commit -F -`. That is safe only because
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
    stubs` on the merge before step 9, each index once in `splat/matched.txt`, both sides' hand edits with one line per
-   name, and which side of a twin's line to keep, with the check after step 9.
+   name, and which side of a twin's line to keep, with the check after step 9. A stand-in whose every target caller is
+   now in the link goes in the merge; one whose callers landed in part stays, with its comment saying which still wait
+   (`src/units/README.md` "Companion files").
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The
@@ -363,10 +375,11 @@ lands ("Pausing and resuming" below).
 
 ---
 
-## Stage 5: DOCS (every few rounds, in worktrees of its own)
+## Stage 5: DOCS (every second round, in worktrees of its own)
 
-Brief: the rules above, the board paths, the docs it may edit (rule 1's list, the help text of the tools they
-describe, and this command file), and the cut-off: every `board/friction/` post since the last DOCS stage. It reads
+It runs alongside the next round, and no lane waits for it. Brief: the rules above, the board paths, the docs it may
+edit (rule 1's list, the help text of the tools they describe, and this command file), and the cut-off: every
+`board/friction/` post since the last DOCS stage. It reads
 each one, every post that corrects it, and the verdicts that judged a doc question, and changes the docs so the next
 contributor does not hit it. It runs every command it writes into a doc, as written, before committing.
 Facts that an edited doc depends on move into `docs/reference/facts/` (no doc cites the board). A fix that needs code
