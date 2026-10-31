@@ -1807,9 +1807,6 @@
 // f6011 · 227 B · unmatched · placement: link order · name unknown
 // void f6011(i32, i32, i32) { ... }
 
-// f6010 · 102 B · unmatched · placement: link order · name unknown
-// void f6010(i32, i32) { ... }
-
 // link-order cluster 876 · uses=2
 
 // f6155 · 1623 B · unmatched · placement: link order · name unknown
@@ -1849,11 +1846,6 @@
 
 // f3607 · 12 B · unmatched · placement: link order · name unknown
 // ? f3607(i32) { ... }
-
-// link-order cluster 976 · uses=3 · neighbours' file uenux2/src/app/vota/operador/leidentidade/cpedeidentidade.cpp
-
-// f3629 · 13 B · unmatched · placement: link order · name unknown
-// void f3629(i32) { ... }
 
 // link-order cluster 991 · uses=3 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
@@ -2061,9 +2053,6 @@
 
 // link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
 
-// f2895 · 127 B · unmatched · placement: link order · name unknown
-// void f2895(i32, i32, i32) { ... }
-
 // f2894 · 260 B · unmatched · placement: link order · name unknown
 // void f2894(i32, i32, i32, i32, i32) { ... }
 
@@ -2100,11 +2089,6 @@
 // f1506 · 53 B · unmatched · placement: link order · name unknown
 // void f1506(i32, i32, i32) { ... }
 
-// link-order cluster 1230 · uses=8 · neighbours' file uenux2/src/app/vota/operador/leidentidade/cpedeidentidade.cpp
-
-// f1537 · 106 B · unmatched · placement: link order · name unknown
-// ? f1537(i32) { ... }
-
 // link-order cluster 1236 · uses=8 · neighbours' file uenux2/src/app/comum/appinfo/cappinfo.cpp
 
 // f1552 · 254 B · unmatched · placement: link order · name unknown
@@ -2134,11 +2118,6 @@
 
 // f1135 · 175 B · unmatched · placement: link order · name unknown
 // void f1135(i32, i32) { ... }
-
-// link-order cluster 1273 · uses=12 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ctentativacapturadigitalesgotada.cpp
-
-// f1070 · 27 B · unmatched · placement: link order · name unknown
-// void f1070(i32) { ... }
 
 // link-order cluster 1283 · uses=14
 

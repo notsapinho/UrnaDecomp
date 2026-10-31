@@ -12,9 +12,11 @@
 # classes with no data member are thunks into binaryen's fn 764, which they form, with the mutex, the pointer, the vptr
 # and the base's argument as parameters. The pointer destructors are thunks into fn 349, or fn 389 for a state with a
 # std::shared_ptr. Also fn 244 and fn 387, the D2 and D0 that 49 states share (vota::CMaisInformacoes's symbols, the
-# first of ours in the link), fn 3243 (StartState of CAguardaMensagem and CDefineRotaPosReinicio) and fn 5974
-# (CDefineRotaPosReinicio::ProcessInput). 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it
-# waits for. vota::CQuerReimprimirZeresima lands its head, destructor and statics only: its GetInst (fn 5940) and
+# first of ours in the link), fn 3243 (StartState of CAguardaMensagem and CDefineRotaPosReinicio), fn 5974
+# (CDefineRotaPosReinicio::ProcessInput) and fn 10327 (comum::CGestorDadoMesario::StartState, which builds unit 135's
+# three comum::IGestorDadoMesario states through their GetInst, inlined: that unit's fragment has the evidence; its
+# record, cgestordadomesario.cpp:35 column 32, is the controller's instance() bound to a reference, a chosen spelling of
+# that length). 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for. vota::CQuerReimprimirZeresima lands its head, destructor and statics only: its GetInst (fn 5940) and
 # destructors (11850, 11851) stay unmatched, and the header says why. The heads say what each layout rests on. Fn 10793,
 # vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; it waits
 # for that class's 37-slot head.

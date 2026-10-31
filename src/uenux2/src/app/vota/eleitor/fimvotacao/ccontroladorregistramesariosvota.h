@@ -6,7 +6,8 @@
 // the class declares no destructor: its implicit ones merge into those bodies in our link (build/out/wasm-map/vota_web/
 // names.tsv has no D0 or D2 of the class). The vtable lies in this class's own run of the data, away from fn 7160's records, so a virtual member is
 // out of line in this class's .cpp; which one is first is chosen (AddTick, slot 2). No member has a record, and the class
-// is declared here and nowhere else; the path is chosen (unit 119's fragment says from what).
+// is declared here and nowhere else; the path is chosen (unit 119's fragment says from what). The slots are const but
+// SetTituloMesario, as the interface's are (its header says why).
 
 #include "app/comum/comparecimentomesario/estados/icontroladorregistramesarios.h"
 
@@ -14,41 +15,41 @@ namespace vota {
 
 class CControladorRegistraMesariosVota : public comum::IControladorRegistraMesarios {
 public:
-    uebyte AddTick(size_t milissegundos) override;
-    void StopTick(uebyte id) override;
-    void StartTick(uebyte id) override;
-    void Slot5() override;
-    int Slot6() override;
-    bool Slot7() override;
-    bool Slot8() override;
-    comum::CAppState& Slot9() override;
-    void Slot10() override;
-    comum::CAppState& Slot11() override;
-    comum::CAppState& Slot12() override;
-    bool Slot13() override;
-    comum::md::CComparecimentoMesario* Slot14() override;
-    void Slot15() override;
-    void Slot16() override;
-    const std::string& GetTituloMesario() override;
+    uebyte AddTick(size_t milissegundos) const override;
+    void StopTick(uebyte id) const override;
+    void StartTick(uebyte id) const override;
+    void Slot5() const override;
+    int Slot6() const override;
+    bool Slot7() const override;
+    bool Slot8() const override;
+    comum::CAppState& Slot9() const override;
+    void Slot10() const override;
+    comum::CAppState& Slot11() const override;
+    comum::CAppState& Slot12() const override;
+    bool Slot13() const override;
+    comum::md::CComparecimentoMesario* Slot14() const override;
+    void Slot15() const override;
+    void Slot16() const override;
+    const std::string& GetTituloMesario() const override;
     void SetTituloMesario(const std::string& titulo) override;
-    void LogaMesarioRegistrado(const std::string& titulo) override;
-    void LogaRegistrandoMesariosAntesVotacao() override;
-    void LogaRegistrandoMesariosDuranteVotacao() override;
-    void LogaRegistrandoMesariosAposVotacao() override;
-    void LogaIndagaRegistroMesarios() override;
-    void LogaConfirmouRegistroMesarios() override;
-    void LogaCancelouRegistroMesarios() override;
-    void LogaTituloInvalidoRegistroMesario() override;
-    void LogaMesarioJaRegistrado(const std::string& titulo) override;
-    void LogaLimiteMesariosAtingido() override;
-    void LogaEncerrouCicloRegistro() override;
-    void LogaDigitalNaoCorresponde(const std::vector<int>& scores) override;
-    void LogaPedidoBiometriaMesario() override;
-    void LogaMesarioEleitorDaSecao() override;
-    void LogaMesarioNaoEleitorDaSecao() override;
-    void LogaConferenciaBiometriaMesario() override;
-    void LogaIndagaContinuaRegistro() override;
-    void LogaIndagaFinalizaRegistro() override;
+    void LogaMesarioRegistrado(const std::string& titulo) const override;
+    void LogaRegistrandoMesariosAntesVotacao() const override;
+    void LogaRegistrandoMesariosDuranteVotacao() const override;
+    void LogaRegistrandoMesariosAposVotacao() const override;
+    void LogaIndagaRegistroMesarios() const override;
+    void LogaConfirmouRegistroMesarios() const override;
+    void LogaCancelouRegistroMesarios() const override;
+    void LogaTituloInvalidoRegistroMesario() const override;
+    void LogaMesarioJaRegistrado(const std::string& titulo) const override;
+    void LogaLimiteMesariosAtingido() const override;
+    void LogaEncerrouCicloRegistro() const override;
+    void LogaDigitalNaoCorresponde(const std::vector<int>& scores) const override;
+    void LogaPedidoBiometriaMesario() const override;
+    void LogaMesarioEleitorDaSecao() const override;
+    void LogaMesarioNaoEleitorDaSecao() const override;
+    void LogaConferenciaBiometriaMesario() const override;
+    void LogaIndagaContinuaRegistro() const override;
+    void LogaIndagaFinalizaRegistro() const override;
 };
 
 } // namespace vota

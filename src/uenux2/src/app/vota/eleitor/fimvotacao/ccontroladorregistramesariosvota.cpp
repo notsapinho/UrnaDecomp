@@ -13,32 +13,32 @@
 
 namespace vota {
 
-uebyte CControladorRegistraMesariosVota::AddTick(size_t milissegundos)
+uebyte CControladorRegistraMesariosVota::AddTick(size_t milissegundos) const
 {
     return CThreadOperador::GetInst().AddTick(milissegundos);
 }
 
-void CControladorRegistraMesariosVota::StopTick(uebyte id)
+void CControladorRegistraMesariosVota::StopTick(uebyte id) const
 {
     CThreadOperador::GetInst().StopTick(id);
 }
 
-void CControladorRegistraMesariosVota::StartTick(uebyte id)
+void CControladorRegistraMesariosVota::StartTick(uebyte id) const
 {
     CThreadOperador::GetInst().StartTick(id);
 }
 
-bool CControladorRegistraMesariosVota::Slot8()
+bool CControladorRegistraMesariosVota::Slot8() const
 {
     return true;
 }
 
-comum::CAppState& CControladorRegistraMesariosVota::Slot12()
+comum::CAppState& CControladorRegistraMesariosVota::Slot12() const
 {
     return CFinalizaOperador::GetInst();
 }
 
-const std::string& CControladorRegistraMesariosVota::GetTituloMesario()
+const std::string& CControladorRegistraMesariosVota::GetTituloMesario() const
 {
     return CThreadOperador::GetInst().GetTituloMesario();
 }
@@ -48,89 +48,89 @@ void CControladorRegistraMesariosVota::SetTituloMesario(const std::string& titul
     CThreadOperador::GetInst().SetTituloMesario(titulo);
 }
 
-void CControladorRegistraMesariosVota::LogaMesarioRegistrado(const std::string& titulo)
+void CControladorRegistraMesariosVota::LogaMesarioRegistrado(const std::string& titulo) const
 {
     CLogVota::GetInst().LogaMesarioRegistrado(titulo);
 }
 
-void CControladorRegistraMesariosVota::LogaRegistrandoMesariosAntesVotacao()
+void CControladorRegistraMesariosVota::LogaRegistrandoMesariosAntesVotacao() const
 {
     CLogVota::GetInst().loga("Registrando mesários antes da votação");
 }
 
-void CControladorRegistraMesariosVota::LogaRegistrandoMesariosDuranteVotacao()
+void CControladorRegistraMesariosVota::LogaRegistrandoMesariosDuranteVotacao() const
 {
     CLogVota::GetInst().loga("Registrando mesários durante a votação");
 }
 
-void CControladorRegistraMesariosVota::LogaRegistrandoMesariosAposVotacao()
+void CControladorRegistraMesariosVota::LogaRegistrandoMesariosAposVotacao() const
 {
     CLogVota::GetInst().loga("Registrando mesários após a votação");
 }
 
-void CControladorRegistraMesariosVota::LogaIndagaRegistroMesarios()
+void CControladorRegistraMesariosVota::LogaIndagaRegistroMesarios() const
 {
     CLogVota::GetInst().LogaIndagaRegistroMesarios();
 }
 
-void CControladorRegistraMesariosVota::LogaConfirmouRegistroMesarios()
+void CControladorRegistraMesariosVota::LogaConfirmouRegistroMesarios() const
 {
     CLogVota::GetInst().loga("Operador confirmou o registro de mesários");
 }
 
-void CControladorRegistraMesariosVota::LogaCancelouRegistroMesarios()
+void CControladorRegistraMesariosVota::LogaCancelouRegistroMesarios() const
 {
     CLogVota::GetInst().loga("Operador cancelou o registro de mesários");
 }
 
-void CControladorRegistraMesariosVota::LogaTituloInvalidoRegistroMesario()
+void CControladorRegistraMesariosVota::LogaTituloInvalidoRegistroMesario() const
 {
     CLogVota::GetInst().LogaTituloInvalidoRegistroMesario();
 }
 
-void CControladorRegistraMesariosVota::LogaMesarioJaRegistrado(const std::string& titulo)
+void CControladorRegistraMesariosVota::LogaMesarioJaRegistrado(const std::string& titulo) const
 {
     CLogVota::GetInst().LogaMesarioJaRegistrado(titulo);
 }
 
-void CControladorRegistraMesariosVota::LogaEncerrouCicloRegistro()
+void CControladorRegistraMesariosVota::LogaEncerrouCicloRegistro() const
 {
     CLogVota::GetInst().loga("Operador encerrou ciclo de registro de mesários");
 }
 
-void CControladorRegistraMesariosVota::LogaDigitalNaoCorresponde(const std::vector<int>& scores)
+void CControladorRegistraMesariosVota::LogaDigitalNaoCorresponde(const std::vector<int>& scores) const
 {
     CLogVota::GetInst().loga(std::format("Digital capturada não corresponde a digital do eleitor: Polegar Direito [score {}], "
                                          "Polegar Esquerdo [score {}], Indicador Direito [score {}], Indicador Esquerdo [score {}]",
                                          scores[0], scores[1], scores[2], scores[3]));
 }
 
-void CControladorRegistraMesariosVota::LogaPedidoBiometriaMesario()
+void CControladorRegistraMesariosVota::LogaPedidoBiometriaMesario() const
 {
     CLogVota::GetInst().loga(std::format("Pedido de leitura da biometria do mesário {}", CThreadOperador::GetInst().GetTituloMesario()));
 }
 
-void CControladorRegistraMesariosVota::LogaMesarioEleitorDaSecao()
+void CControladorRegistraMesariosVota::LogaMesarioEleitorDaSecao() const
 {
     CLogVota::GetInst().loga(std::format("Mesário {} é eleitor da seção", CThreadOperador::GetInst().GetTituloMesario()));
 }
 
-void CControladorRegistraMesariosVota::LogaMesarioNaoEleitorDaSecao()
+void CControladorRegistraMesariosVota::LogaMesarioNaoEleitorDaSecao() const
 {
     CLogVota::GetInst().loga(std::format("Mesário {} não é eleitor da seção", CThreadOperador::GetInst().GetTituloMesario()));
 }
 
-void CControladorRegistraMesariosVota::LogaConferenciaBiometriaMesario()
+void CControladorRegistraMesariosVota::LogaConferenciaBiometriaMesario() const
 {
     CLogVota::GetInst().loga("Realizada a conferência da biometria do mesário");
 }
 
-void CControladorRegistraMesariosVota::LogaIndagaContinuaRegistro()
+void CControladorRegistraMesariosVota::LogaIndagaContinuaRegistro() const
 {
     CLogVota::GetInst().loga("Operador indagado se continua registrando mesários");
 }
 
-void CControladorRegistraMesariosVota::LogaIndagaFinalizaRegistro()
+void CControladorRegistraMesariosVota::LogaIndagaFinalizaRegistro() const
 {
     CLogVota::GetInst().loga("Operador indagado se finaliza registro mesários");
 }

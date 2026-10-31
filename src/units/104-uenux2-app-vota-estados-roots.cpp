@@ -12,8 +12,9 @@
 // 12023, 12030, 12077; 5985: 12065, 12068; 5984: 7160, 12134; 5983: 7160, 12105; 5973: 7160, 11939; 3865: 7160, 11870,
 // 11871; 3864: 7160, 11848, 11858; 1280: 11834, 11838, 11848, 11869, 11881, 11902, 11905, 11908, 11911, 11927; 5954:
 // 11881, 11888; 2288: 11876, 11884, 11888, 11891, 11896; 5943: 11834, 11855; 5942: 11848, 11852; 5941: 11845, 11848;
-// 5428: 10217, 10734; 1536: 6015, 10466, 10473, 10477, 10485, 10489, 10500, 10593; 5421: 10626, 10627; 2729: 2895, 6011,
-// 10317, 10383; 5383: 10313, 10316; 5342: 10737 (10791 is in the link); 1897: 10404, 10419, 10425
+// 5428: 10217, 10734; 1536: 6015, 10466, 10473, 10477, 10485, 10489, 10500, 10593; 5421: 10626, 10627; 5383: 10313,
+// 10316; 5342: 10737 (10791 is in the link); 1897: 10404, 10419, 10425. comum::CPedeTituloMesario::GetInst (fn 2729)
+// has no stand-in: three of its target callers, 2895, 10317 and 10383, are in the link (unit 135).
 //
 // vota::CMaisInformacoes::GetInst (fn 1280) takes the state to go back to: its target callers pass 0 and their own
 // `this`, so one call passes 0 and the other the stand-in's argument, and binaryen folds no constant into the body.
@@ -41,7 +42,6 @@ int w5941_getinst(void) __asm__("_ZN4vota21CReimprimindoZeresima7GetInstEv");
 int w5428_getinst(void) __asm__("_ZN4vota18CFimAquisicaoVotos7GetInstEv");
 int w1536_getinst(void) __asm__("_ZN4vota26CCancelaHabilitacaoEleitor7GetInstEv");
 int w5421_getinst(void) __asm__("_ZN4vota15CProcuraEleitor7GetInstEv");
-int w2729_getinst(void) __asm__("_ZN5comum18CPedeTituloMesario7GetInstEv");
 int w5383_getinst(void) __asm__("_ZN5comum18CGestorDadoMesario7GetInstEv");
 int w5342_getinst(void) __asm__("_ZN4vota17CFinalizaOperador7GetInstEv");
 int w1897_getinst(void) __asm__("_ZN4vota20CSincronismoOperador7GetInstEv");
@@ -71,7 +71,6 @@ __attribute__((noinline)) int ChamaGetInstDosEstados(int n)
     total += w5428_getinst() + w5428_getinst();
     total += w1536_getinst() + w1536_getinst();
     total += w5421_getinst() + w5421_getinst();
-    total += w2729_getinst() + w2729_getinst();
     total += w5383_getinst() + w5383_getinst();
     total += w5342_getinst() + w5342_getinst();
     total += w1897_getinst() + w1897_getinst();

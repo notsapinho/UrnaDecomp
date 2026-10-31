@@ -1,10 +1,23 @@
-// <stubs>
-// f10318 · 257 B · unmatched · name unknown
-// void f10318(i32) { ... }
+#include "app/comum/comparecimentomesario/estados/cpededigitalmesario.h"
 
-// f10316 · 3808 B · unmatched · name unknown
-// void f10316(i32, i32) { ... }
+#include "api/gui/cinteractiveform.h"
+#include "api/gui/iform.h"
+#include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 
-// f10315 · 17 B · unmatched · name unknown
-// void f10315(i32) { ... }
-// </stubs>
+namespace comum {
+
+CPedeDigitalMesario::~CPedeDigitalMesario() = default;
+
+std::unique_ptr<CPedeDigitalMesario> CPedeDigitalMesario::s_inst;
+std::mutex CPedeDigitalMesario::s_mutex;
+
+// (original lines 14-114: content not recovered)
+#line 115
+void CPedeDigitalMesario::ProcessInput()
+{
+    if (m_form->Read() == api::INPUT_CORRIGE) {
+        m_pNextState = &CPedeTituloMesario::GetInst();
+    }
+}
+
+} // namespace comum
