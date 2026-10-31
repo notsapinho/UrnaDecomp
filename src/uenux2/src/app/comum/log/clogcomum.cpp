@@ -15,6 +15,15 @@
 
 namespace comum {
 
+CLogComum& CLogComum::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_instancia) {
+        s_instancia.reset(new CLogComum);
+    }
+    return *s_instancia;
+}
+
 std::unique_ptr<CLogComum> CLogComum::s_instancia;
 std::mutex CLogComum::s_mutex;
 
@@ -22,7 +31,7 @@ CLogComum::CLogComum() = default;
 
 CLogComum::~CLogComum() = default;
 
-// (original lines 25-40: content not recovered)
+// (original lines 34-40: content not recovered)
 #line 41
 // <stubs>
 // f12098 · 26731 B · unmatched · name unknown

@@ -13,8 +13,10 @@
 // - 1950 (the byte at +400): tested before vota::CImprimirBJust prints, false in demonstration mode.
 // Each of the six counts is 1 in demonstration mode. They read 32 bits and their sums compare signed (fn 12023), so they
 // are `int`, a choice as far as the bodies go.
-// SDadosInformacaoEleicao: the layout alone, the offsets these bodies read. Its name and its members' are chosen; which
-// class the object at +88 of fn 187's result is, is not recovered here.
+// SDadosInformacaoEleicao: the layout alone, the offsets these bodies read. Its name and its members' are chosen. Fn 187
+// has a record, static CConfiguracaoEleicao &comum::CConfiguracaoEleicao::GetInst() at cconfiguracaoeleicao.cpp:36, so the
+// object is a member of that class, at +88; its type is not recovered, and the real one renames fn 603's parameter and
+// symbol when it lands.
 
 #include "ecourna/api/uetypes.hpp"
 

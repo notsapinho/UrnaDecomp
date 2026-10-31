@@ -17,10 +17,12 @@
 #   and 40 bytes, and the target has no search of the literal for a brace, which -O2 keeps past 36 bytes and -O3 past 74
 #   (docs/reference/facts/reading.md R13): `wasm-objdump -d` of clogcomum.cpp's object counts 4, 4 and 5 br_table rows in the
 #   three members at -O2 and none at -O3. std::format stays as the source: the other 19-byte literal (5875) matches, and
-#   the tree's evidence is the level (docs/reference/facts/levels.md V3), which is reserved. In a try link at
-#   -O3 -std=c++23 the rows are `41 over 254` and `47 over 316`, 24 of each inserted being GetInst's body, which clang
-#   inlines there at cost 225 under threshold 250. So GetInst's form below is to re-read if the level moves.
-#   3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are those thunks.
+#   the tree's evidence is the level (docs/reference/facts/levels.md V3), which is reserved. With this unit's four TUs at
+#   -O3 alone and the tree's -std=c++20, a try link reads `13 over 230` and `19 over 292`, all operand-only, and
+#   `splat-remap --against` prints IDENTICAL for both, operand kinds verified (`tools/round/try-tu.sh --flags -O3`, with
+#   233's name in a copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
+#   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
+#   those thunks.
 # - 11660, 11640 (the pointers' destructors, no-candidate): the target's are thunks of 349, binaryen's merge of 57 such
 #   destructors. Our two stay whole bodies: two are not enough for binaryen to form it (`__cxx_global_array_dtor` of both
 #   objects, 13 rows each, in this link).
@@ -39,19 +41,22 @@
 # choice of this level: at -O3 the threshold is 250 and the plain form would do. Left without `inline`, ConverteFonteAlim
 # stays binaryen's as the target has it. binaryen also removes GetInst's empty constructor and destructor calls.
 #
-# GetInst, what the bytes decide (probe of the shape at uenux2's flags, object rows):
-# - 2900 reads the pointer again after `new` and tests the old value. reset(new T) with a constructor the TU can see
-#   folds that away, and the store goes straight after new: `load, new, store, unlock`. Only a constructor the TU cannot
-#   see keeps it: `load, new, ctor, load, store, delete, load, unlock`. So GetInst does not see the constructor.
-# - With the constructor alone out of line, a GetInst in the class is inlined by clang into 6045's and 5876's members.
-#   With the destructor out of line too its cost is 225 and it stays a call, which the target's 348 is. Declared `inline`
-#   after the class, the hint inlines it (threshold 325, no symbol in the object). So: in the class, no `inline`, and
-#   both special members declared in the class and defined in the .cpp. That is one form that gives these bytes, and the
-#   target does not say the class holds GetInst: a function of another TU that does not see them would give the same.
-# - Both empty bodies are `= default` in the .cpp, a choice: no byte holds them.
-# - The statics' .cpp: their destructors' table slots lie in that object's run (slots 2140 and 2141 before 347's handle
-#   slots 2142 and 2143). 948 is emitted by this unit's roots object, the only TU that calls it, an inline member of a
-#   landed header: compiled with -fno-strict-aliasing its rows are the same (35 rows, `wasm-objdump -d` masked).
+# GetInst, what the bytes decide (objects at uenux2's flags, rows masked, unless a link is named):
+# - Where it is defined. In all four thunks of 2900 (348, 948, 2742, 3603) the mutex lies 24 bytes below the pointer, and
+#   the pointer's destructor has the lower table slot of the two (11660 2140, 11659 2141; 11640 2171, 11639 2172; 10522 4087,
+#   10521 4088; 10281 4466, 10280 4467). Seven shapes were probed, GetInst in the class or in the .cpp, above or below the
+#   statics, the statics in either order, and only GetInst in the .cpp above statics written pointer then mutex gives both
+#   orders. This link holds both: mutex 1497676, pointer 1497700, the pointer's destructor in slot 1355 and the mutex's in
+#   1356. Why is a reading: a body above the definitions names the mutex first, and the definitions set the destructors'
+#   order. The statics' .cpp: their destructors' slots lie in that object's run (2140 and 2141 before 347's handle slots
+#   2142 and 2143), and 348 sits beside 347 in that object (ld_index 2149 and 2154) as their indices do in the target.
+# - The constructor is out of line. 2900 reads the pointer again after `new` and tests the old value. At -fPIC a
+#   constructor defined out of line stays a call, in its own TU too, with no remark from clang, which keeps that reload,
+#   and binaryen removes the empty call at link. Why -fPIC does this is not measured. Declared `= default` in the class,
+#   or implicit, it folds: 18 rows where the form written has 37, `load, new, store, unlock`.
+# - The destructor out of line is a choice. Implicit, GetInst's object loses one call that binaryen removes anyway (34 rows,
+#   13 of them differ on the masked compare); that form was not linked.
+# - Both empty bodies are `= default` below the statics, a choice: `{}` gives the same rows, and their lines are free.
 #
 # Columns. A default-argument std::source_location takes the begin of the call expression (probe: `S::inst().f();` at 4
 # spaces records column 5, `auto& v = S::inst();` column 15), so instance() begins at column 36, 18, 25 and 36 on those
@@ -67,21 +72,26 @@
 # The same bytes, measured per function: the severity in a local, or an `if` over two calls (LogaCargaBateria); `const` or
 # not on `mensagem` and `etapa`; `status == STATUS_OPERACAO_INICIO ? "Inicio" : "Termino"` for the test of `status`;
 # integer `case` labels; instance() chained into the call instead of a local (433, 5875, 2286), at another column;
-# `if` and `return` for ?: (the seven members); the counts `unsigned` for `int`; m_dados a pointer for a reference (the
-# members and 603); std::unique_lock or std::scoped_lock for the std::lock_guard, `== nullptr` for `!`, and
-# `s_instancia = std::unique_ptr<T>(new T)` for reset (GetInst); std::make_unique for reset in the shape probe, not in this
-# class, whose constructor is private.
+# `if` and `return` for the six counts' ?: (measured on GetNumViasPU); `EhModoDemonstracao() ? false : m_dados.m_imprimeBJust`
+# or `if` and `return` for ImprimeBJust's `&&`; the counts `unsigned` for `int`; m_dados a pointer for a reference (the
+# members and 603); in GetInst, measured on CArquivosResultado's, std::unique_lock or std::scoped_lock for the
+# std::lock_guard, `== nullptr` for `!`, `s_instancia = std::unique_ptr<T>(new T)` for reset, a `T*` result with
+# s_instancia.get() for the reference, which every caller drops, and `{}` for either `= default`; std::make_unique for
+# reset in the shape probe, not in this class, whose constructor is private. GetInst in the class with no `inline` gives
+# the same rows at -O2 only, with both special members out of line (cost=225, threshold=225), and not the target's orders.
 #
 # Chosen, no byte decides: every name but the records' (loga 233, LogaCargaBateria, GetInst, s_instancia, s_mutex,
 # m_aplicativo, the seven members, SDadosInformacaoEleicao and its members, the enumerators of ERelatoriosUE,
 # EStatusOperacaoRelatorio and EUeComumLogError); the namespace of ERelatoriosUE and EStatusOperacaoRelatorio; the
 # severities as bare casts, as ESeveridade has no enumerator; the lines of every function but the throws' and the lines the
-# column records hold; 603's parameter type; the statics' order in the .cpp. The definition above the Converte members
-# gave the match, and no other order was linked.
+# column records hold; 603's parameter type. The definition above the Converte members gave the match, and no other order
+# was linked.
 #
 # Hand edits in splat/symbol_addrs.txt: GetInst's two names and four statics, `callers+content`, from the calls aligned
 # with fn 347 and the CLogComum members and from the table slots of the destructors that load the same addresses. None
-# reads a match. Removing them leaves 348 and 948 `unresolved` and 11659 and 11639 `no-candidate`.
+# reads a match. Taking out the four statics' lines leaves 348 and 948 `unresolved` and 11659 and 11639 `no-candidate`.
+# Taking out the two GetInst lines, with 348, 948 and 2900's match lines, moves no row: the census pairs the two tied bodies
+# by position, in the right order in this link, so those two names rest on the calls and not on a scan.
 #
 # src/app/roots_uenux2.cpp holds std::operator+(string&&, string&&): the first real uenux2 TU that instantiates
 # CPolySingleton<T>::instance links ahead of libc++.a, and its -O2 copy took 252 (docs/reference/facts/splat.md S10 item

@@ -7,7 +7,6 @@
 // - comum::IEventosLog::ConverteERelatoriosUE: the target's fns 1047 and 1127;
 // - comum::CInformacaoEleicao's constructor and members: fn 603 has 22 callers in the target; each member's own callers
 //   are listed in the class header.
-// CLogComum::GetInst (fn 948) is emitted here, the one TU that calls it: an inline member of a landed header.
 #include <string>
 
 #include "app/comum/informacao/cinformacaoeleicao.h"

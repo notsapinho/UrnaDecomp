@@ -5,9 +5,10 @@
 // not reconstructed. The header's path is chosen. A one-byte singleton: fn 348, called just before each operator[] with
 // its result dropped (fns 1164, 3798, 5876, 6045), is GetInst, one of the four thunks of fn 2900 that allocate one byte
 // and keep it in a static std::unique_ptr under a static std::mutex. The statics are defined in carquivosresultado.cpp:
-// their destructors' table slots 2140 and 2141 lie in that object's run. The constructor and the destructor are out of
-// line and GetInst is in the class: unit 111's fragment has the measurement. GetInst and its statics' names are chosen,
-// from the project's other singletons.
+// their destructors' table slots 2140 and 2141 lie in that object's run. GetInst is defined there too, above them: the
+// target's .bss and table orders say so, and unit 111's fragment has the measurement. That the constructor and the
+// destructor are out of line is what the reload in fn 2900 shows of the constructor and a choice of the destructor.
+// GetInst and its statics' names are chosen, from the project's other singletons.
 
 #include <memory>
 #include <mutex>
@@ -46,14 +47,7 @@ class CArquivosResultado {
 public:
     ~CArquivosResultado();
 
-    static CArquivosResultado& GetInst()
-    {
-        std::lock_guard<std::mutex> trava(s_mutex);
-        if (!s_instancia) {
-            s_instancia.reset(new CArquivosResultado);
-        }
-        return *s_instancia;
-    }
+    static CArquivosResultado& GetInst();
 
     const std::string operator[](EExtensaoArquivoResultado extensao) const;
 

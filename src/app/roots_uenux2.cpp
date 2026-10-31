@@ -88,8 +88,9 @@ void urna_insere_doubles(std::vector<double>& valores, const double* inicio, con
 
 // std::operator+(string&&, string&&) (target fn 252, in every api::CPolySingleton<T>::instance): a uenux2 object that
 // instantiates one links ahead of libc++.a, and its -O2 copy holds append inlined, 124 rows to the target's 18, so this
-// object, ahead of uenux2's on the link line, holds the instance. minsize, an attribute a stand-in may have, gives the
-// body of libc++.a's -Oz copy, which is the target's; an explicit instantiation leaves no stand-in of its own in the
+// object, ahead of uenux2's on the link line, holds the instance. minsize gives the body of libc++.a's -Oz copy, which
+// is the target's. No doc names this attribute for a stand-in: a specialization that calls append needs none, and is the
+// better form of this line. An explicit instantiation leaves no stand-in of its own in the
 // link (docs/reference/facts/splat.md S10 item 10). It calls string::append(const string&), target fn 3717, which stays
 // libc++.a's: the extern template keeps it out of this object, and this object's -O2 copy would take the match.
 extern template std::string& std::string::append(const std::string&);
