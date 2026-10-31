@@ -7,6 +7,10 @@
 //   in the target (awk -F'\t' '$2==1249' ledger/callgraph.tsv: 5637, 5740, 5856, 11197, 11395, 12098). None of the
 //   others is reconstructed, so w123_copia stands for them: with one caller binaryen inlines the copy into 11197, as the
 //   target does not.
+// - InicializaTradutorFrase (slot 10, fn 11196) hands its map to comum::md::CTradutorFrase::SetLabels, inline, which
+//   calls the tree's __assign_multi, fn 5794, with the static map's address. 5794 has two callers in the target
+//   (awk -F'\t' '$2==5794' ledger/callgraph.tsv: 7787, 11196); w123_labels stands for 7787, not reconstructed, so that
+//   it keeps two call sites here, as src/units/README.md "Companion files" asks. It goes when 7787 lands.
 // - GetSeparadorFase (slot 20, fn 11183) calls CRelUtil::GetSeparadorFase, fn 1919, which has six callers in the target
 //   (awk -F'\t' '$2==1919' ledger/callgraph.tsv: 2785, 11183, 11943, 11946, 12105, 12110). w123_separador stands for the
 //   five not reconstructed: with one caller binaryen inlines 1919 into 11183.
@@ -19,6 +23,7 @@
 #include <string>
 
 #include "app/comum/dados/md/estadoaplicacao/cdadocorrespondencia.h"
+#include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/comum/relatorios/crelutil.h"
 #include "app/comum/relatorios/euecomumrelatorioserror.h"
 
@@ -36,6 +41,12 @@ __attribute__((noinline)) unsigned w123_copia(const CDadoCorrespondencia& corres
     return copia.GetNumeroInternoUrna() + 123;
 }
 
+__attribute__((noinline)) unsigned w123_labels(const std::map<char, ecourna::app::dados::CLabelParametrizado>& labels)
+{
+    comum::md::CTradutorFrase::SetLabels(labels);
+    return labels.size() + 123;
+}
+
 __attribute__((noinline)) unsigned w123_separador(comum::EUrnaFase fase)
 {
     return comum::CRelUtil::GetSeparadorFase(fase).size() + 123;
@@ -49,6 +60,7 @@ __attribute__((noinline)) void w123_erro(int codigo, const std::string& mensagem
 
 const void* volatile relatoriotesteimpressora_sink;
 unsigned (*volatile w123_sink_copia)(const CDadoCorrespondencia&);
+unsigned (*volatile w123_sink_labels)(const std::map<char, ecourna::app::dados::CLabelParametrizado>&);
 unsigned (*volatile w123_sink_separador)(comum::EUrnaFase);
 void (*volatile w123_sink_erro)(int, const std::string&);
 
@@ -57,6 +69,7 @@ struct SRelatorioTesteImpressoraRoots {
     {
         relatoriotesteimpressora_sink = relatoriotesteimpressora_vt;
         w123_sink_copia = w123_copia;
+        w123_sink_labels = w123_labels;
         w123_sink_separador = w123_separador;
         w123_sink_erro = w123_erro;
     }

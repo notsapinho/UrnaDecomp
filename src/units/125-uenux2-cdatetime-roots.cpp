@@ -3,18 +3,21 @@
 // yet (ledger/callgraph.tsv and the element section, read at the commit this unit starts from):
 // - the constructors from a string, CDate's (target fn 3649) and CDateTime's (fn 5475), each fill one slot of the table
 //   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm`): their addresses are taken. 3649's direct callers 2765 and 5475
-//   and 5475's direct caller 2764 are this unit's.
+//   and 5475's direct caller 2764 are this unit's. So are FormatCurrentDate's and FormatCurrentTime's (fns 5472, 5473):
+//   5343 and 7787, not reconstructed, pass their slots 1103 and 1104 to api::CMTFormBuilder::AddTextField (fn 651) and
+//   to fn 3058, and their one direct caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
-//   counted: Format (fn 706, 15 target callers, none reconstructed: two stand-ins), CDate() (fn 1382: 1000 and a
-//   stand-in for 1543, 5586, 5626, ...), CDateTime::ConvertFromLocalTime (fn 5476: 1000 and a stand-in for 11862),
-//   CDateTime(time_t) (fn 1000: Now and a stand-in for 5472, 5473, 10870, ...), CDateTime::Now (fn 479, 33 target
-//   callers: two stand-ins), ConvertToLocalTime (fn 1381: unit 101's Ajusta, 10875, and a stand-in for 5841, 7160, 7306,
-//   10403, 10710), CDateTime's operator+= (fn 2233, callers 5412, 5474, 5959, 10566, 11825: two stand-ins),
-//   std::to_string(long long) (fn 4658: ConvertFromLocalTime and a stand-in for 3612, so it stays out of line as the
-//   target's does), ConvertFromTimestamp (fn 2764: its only caller 7787 calls it four times, one stand-in calls it
-//   twice), CDate's operator<=> (fn 1261: 759 and a stand-in for 1543, 11198, ...), CDateTime's (fn 759, 15 target
-//   callers: two stand-ins), CTime::Format (fn 779, 13 target callers: two stand-ins), CDate's operator+= (fn 5478:
-//   operator-= and a stand-in for 654) and operator- (fn 3648, callers 654, 11861, 11862: two stand-ins).
+//   and the other units' counted: Format (fn 706, 15 target callers: 5472, and two stand-ins for the others), CDate()
+//   (fn 1382: 1000 and a stand-in for 1543, 5586, 5626, ...), CDateTime::ConvertFromLocalTime (fn 5476: 1000 and a
+//   stand-in for 11862), CDateTime(time_t) (fn 1000: Now, 5472 and 5473, and a stand-in for 10870, ...),
+//   CDateTime::Now (fn 479, 33 target callers: 11198, and two stand-ins for the others), ConvertToLocalTime (fn 1381:
+//   unit 101's Ajusta, 10875, and a stand-in for 5841, 7160, 7306, 10403, 10710), CDateTime's operator+= (fn 2233,
+//   callers 5412, 5474, 5959, 10566, 11825: two stand-ins), std::to_string(long long) (fn 4658: ConvertFromLocalTime and
+//   a stand-in for 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller
+//   7787 calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: 759, 11198 through
+//   comum::md::CHorarioVerao::Contem, and a stand-in for 1543, ...), CDateTime's (fn 759, 15 target callers: two
+//   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and two stand-ins for the others), CDate's operator+=
+//   (fn 5478: operator-= and a stand-in for 654) and operator- (fn 3648, callers 654, 11861, 11862: two stand-ins).
 // - the rest have two callers in the unit already and no stand-in: IsValidDate (fn 5479: 3649 and the check 5475
 //   inlines), CDate(dia, mes, ano) (fn 2765: 5475, 5476 and 2233), CTime() (fn 2230: 1000 and 5475), operator-= (fn 5477:
 //   operator+= and operator-). IsValidDateTime is left unrooted: its only caller is 5475, into which the target's
@@ -41,6 +44,8 @@ int w759_compara(const void*, const void*) __asm__("_ZNK3api9CDateTimessERKS0_")
 long long w1381_tempo(const void*) __asm__("_ZNK3api9CDateTime18ConvertToLocalTimeEv");
 void w2233_soma(void*, int) __asm__("_ZN3api9CDateTimepLEi");
 void w779_format(void*, const void*, const void*) __asm__("_ZNK3api5CTime6FormatERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+void w5472_data(void*, const void*) __asm__("_ZN3api9CDateTime17FormatCurrentDateERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+void w5473_hora(void*, const void*) __asm__("_ZN3api9CDateTime17FormatCurrentTimeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 }
 
 namespace {
@@ -157,6 +162,8 @@ struct SW125Roots {
     {
         w125_sink = reinterpret_cast<void*>(&w3649_data);
         w125_sink = reinterpret_cast<void*>(&w5475_texto);
+        w125_sink = reinterpret_cast<void*>(&w5472_data);
+        w125_sink = reinterpret_cast<void*>(&w5473_hora);
         w125_sink = reinterpret_cast<void*>(&DataFormatada);
         w125_sink = reinterpret_cast<void*>(&DataFormatadaDuasVezes);
         w125_sink = reinterpret_cast<void*>(&DiaDeHoje);
