@@ -44,5 +44,5 @@
 # uenux2-flags instantiation first in a clone of the objects (facts/workflow.md §W13) its body scores 2 over 8 rows,
 # both operands, the vptr and the call into the 710 body: it waits for its first uenux2 caller. 170 210 235 255 331 wait
 # for the executable TU, src/uenux2/wasm/vota_web/vota_web_wasm.cpp, since ours are uenux2's copies (210: target
-# `i32.const 483`, ours `call 710`). 1143, CError's constructor, is 787 rows with 67 operand-only, and stops on the name
-# of 296, std::to_string(int), which equals our body up to callees.
+# `i32.const 483`, ours `call 710`). 1143, CError's constructor, is 787 rows with 67 operand-only: unit 112's fragment says
+# what it waits for.
