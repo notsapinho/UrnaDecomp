@@ -18,7 +18,8 @@
 # each, against `7 over 170` and `6 over 170`, every row an operand, pnpm wasm score on the whole link). The members' order in the file: the target's use bands put the
 # constructor before the destructor and IsDir (band 6), Close before IsFile (band 5) and Open before IsLink (band 2), a
 # higher index linking first, which this order gives as each takes its place at its first mention; the lines of the
-# members after NextEntry are a choice. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and
+# destructor (original 35-38) and of the members after NextEntry are a choice.
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and
 # every uenux2 header.
 CDIRREADER_SRCS := src/api/util/cdirreader.cpp
 UENUX2_SRCS += $(CDIRREADER_SRCS)

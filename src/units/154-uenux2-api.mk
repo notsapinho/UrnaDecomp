@@ -17,8 +17,8 @@
 # switch, it scored `72 over 282 rows` (24 inserted, 24 deleted); with the digits as case labels of the switch, `21 over
 # 258`, all operand-only (pnpm wasm score on the whole link, and on a whole-link try of the roots object against the
 # header in an -iquote overlay). The keys are spelled as character literals, a choice: the target holds only their
-# values. The target keeps the copy of cinstrucaovotacaoacessibilidade.cpp's object, which is not reconstructed; until
-# it is, the roots object emits the copy.
+# values. The target's copy reads as cinstrucaovotacaoacessibilidade.cpp's object's (its record 1533820 follows that
+# file's records), which is not reconstructed; until it is, the roots object emits the copy.
 API154_SRCS := src/api/util/csynchronizer.cpp
 UENUX2_SRCS += $(API154_SRCS)
 # KeyName is a header's inline code and none of its five callers (fns 653, 1455, 2243, 7787 and 12903) is reconstructed:

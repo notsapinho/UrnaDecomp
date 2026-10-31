@@ -1,10 +1,10 @@
-// api::CSystem (/home/rubio/tse/uenux2/src/api/util/csystem.cpp): two functions whose throws are records of the
-// target, so their positions in this file are fixed:
-//   2759  CSystem::GetFileSize(const std::string&)               record at line 334, column 15
-//   5457  api::truncate(int, off_t, const std::string&)          record at line 1024, column 15
-// The file's other functions are not reconstructed yet; the lines their records name are left blank. One of them,
-// api::ExistResource (1690, record at line 64), is file-static (its record comes after the external functions'
-// records of this file): it is emitted out of line only once its callers here (2762, 5455, 2761) are written.
+// api::CSystem (/home/rubio/tse/uenux2/src/api/util/csystem.cpp). Records fix the lines of GetFileSize (2759, 334:15),
+// api::ExistResource (1690, 64:15; file-static: its record follows the external functions'), api::truncate (5457,
+// 1024:15) and ZeroFill (2761, 1039:15). ExistFile and ExistDir (412, 5459; binaryen merges them as 6019) have no
+// record: their names and lines are chosen (csystem.h says from what). CScopeGuard (lines 990-1011, an anonymous
+// namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in a std::function. The file's
+// other functions are not reconstructed yet; the lines their records name are left blank.
+//
 
 #include "api/util/csystem.h"
 
