@@ -29,8 +29,9 @@
 # - The pointer is a std::unique_ptr: each exit destructor nulls it, then destroys and frees the old value.
 # - Every destructor but CHV's is out of line in its class's .cpp: the exit destructor keeps a call of 37 bytes around
 #   5805, 5792, 5773, 5730, 5671, 5598 or 6548, and a non-virtual class shows no D0 to read. Measured on CCargos: implicit,
-#   clang inlines the D2 and the destructor is 114 B; defined in the .cpp the call goes through the D1 alias, which clang
-#   does not inline, and it is 48 B, the target's. CHV's calls no destructor: f349(p0, 1838872) only frees.
+#   clang inlines the D2 and the object's exit destructor is 114 B; defined in the .cpp the call goes through the D1 alias,
+#   which clang does not inline, and it is 51 B there and 37 B in the link, the target's. CHV's calls no destructor:
+#   f349(p0, 1838872) only frees.
 # - CEleitores is final: fn 5773 opens with no vptr store (R4), though its vtable has one slot. Its tree at +52 is fn
 #   1594, the function CConfiguracaoEleicao's tree at +604 calls, so the two share an element type.
 # - The caller's object first: cconfiguracaoeleicao.cpp links after ccargos.cpp, as the records' addresses have it, with

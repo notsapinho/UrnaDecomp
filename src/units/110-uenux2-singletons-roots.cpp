@@ -1,10 +1,10 @@
 // Roots: keep the singletons' GetInst, the destructors of their classes and the members written with them in the skeleton
-// link the way the target reaches them. None of their callers is reconstructed, and each has direct callers, so each gets
-// two call sites here. Stand-ins and the target callers they stand for:
+// link the way the target reaches them. Each has direct callers and needs two call sites in the link, the reconstructed
+// callers counted, and this file adds what the link lacks. Stand-ins and the target callers they stand for:
 //   TodasAsInstancias   GetInst: fns 187, 273, 326, 407, 555, 1073, 1926, 2812, 2817 have 4 to 105 direct callers each
-//   DestroiTodos        each class's destructor: its exit destructor and fn 7787 or 2787 (5598, 5671, 5730, 5734, 5773,
-//                       5792, 6548); ~CCargos 5805: 7787 alone, whose call this stands for, beside its real caller
-//                       11561, and it goes when 7787 lands; ~CProcessoEleitoral 2830: 2787, 5598, 7787;
+//   DestroiTodos        each class's destructor, beside the exit destructor in the link: fn 2787 for 5598, fn 7787 for
+//                       5671, 5730, 5734, 5773, 5792, 6548 and ~CCargos 5805, and each goes when that caller lands;
+//                       ~CProcessoEleitoral 2830: 2787, 5598, 7787;
 //                       ~CParametrosUrna 2267: 5792, 7787, 9171;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
 //                       5604, 7377, 11209, 12098, 12110
