@@ -792,6 +792,7 @@ match: the row falls when a tree object first instantiates the
 template and wins the linkonce, and withdrawing the line changes nothing while that copy links, since the content pass
 adds it back. Take the instance out of the roots and keep the stand-ins' other call sites; the row is then
 `no-candidate` until a tree object instantiates it, and the fragment says so with the measurement (5725, unit 113).
+`src/units/README.md` "Companion files" has the roots' flags, and the forms such a removal takes away to measure again.
 
 ## 5. Conclude in the whole link
 
@@ -1200,10 +1201,10 @@ A row of another unit can turn `match` for a reason you can name:
   `std::source_location` record the target holds more than once reads so too: it matches like any other, and the
   target body picks the copy ([facts/splat.md](reference/facts/splat.md) §S12).
 
-A match the scan found by body has `content` in the `source` column of `splat/scan.tsv`, in the first scan only. Once
-the match names the function, a later scan writes `symbol` there, so a rescan of the committed state differs from the
-committed `scan.tsv` in one such line per new match the scan found by content, and a renamed twin's row can go from
-`ledger` to `symbol` the same way. So the check that survives a rescan is a new match whose symbol has no line in the
+A match the scan found by its body or by the census's pair has `content` or `ledger` in the `source` column of
+`splat/scan.tsv`, in the first scan only. Once the match names the function, a later scan writes `symbol` there, so a
+rescan of the committed state differs from the committed `scan.tsv` in one such line per new match the scan found that
+way, and a renamed twin's row can go from `ledger` to `symbol` the same way. So the check that survives a rescan is a new match whose symbol has no line in the
 symbol file: `comm -13 <(cut -d' ' -f2 <old matched.txt> | sort) <(cut -d' ' -f2 splat/matched.txt | sort)`, then
 `/usr/bin/grep -c -F "$s = " splat/symbol_addrs.txt` for each. A new match that step 8 had already named
 (`evidence:srcloc-anchor`, `pair-*`, `call`, …) has `symbol` from the start, and then a rescan changes nothing: on an
