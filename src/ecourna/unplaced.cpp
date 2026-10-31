@@ -183,14 +183,6 @@
 // f5605 · 5436 B · unmatched · placement: link order · name unknown
 // void f5605(i32, i32, i32, i32) { ... }
 
-// link-order cluster 801 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorbubase.cpp
-
-// f5617 · 13 B · unmatched · placement: link order · name unknown
-// ? f5617(i32) { ... }
-
-// f5616 · 13 B · unmatched · placement: link order · name unknown
-// ? f5616(i32) { ... }
-
 // link-order cluster 822 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 
 // f5723 · 22 B · unmatched · placement: link order · name unknown
@@ -246,9 +238,6 @@
 
 // f6029 · 68 B · unmatched · placement: link order · name unknown
 // ? f6029(i32, i32, i32, i32, i32) { ... }
-
-// f6028 · 478 B · unmatched · placement: link order · name unknown
-// ? f6028(i32, i64) { ... }
 
 // f6019 · 43 B · unmatched · placement: link order · name unknown
 // ? f6019(i32, i32) { ... }

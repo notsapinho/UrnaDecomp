@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "ecourna/api/uetypes.hpp"
+
 namespace comum {
 
 // The header of the boletim de urna's QR code. The class and its file come from the record of fn 2791, the lambda of
@@ -13,12 +15,20 @@ namespace comum {
 // The layout: fn 5608 copies 33 std::strings at a stride of 12 and fn 5624, which those two callers construct it with,
 // zeroes 396 bytes, so nothing else fits. 25 of the strings are named after the labels 5604 passes with them, in the four
 // tables it gives fn 2791; no label comes with +132 or with the 7 strings from +264, so those names are chosen. The
-// setters' names are chosen from the same labels: no record names them. preBuild(), the constructor and the other
-// setters are not reconstructed.
+// setters' names are chosen from the same labels: no record names them. The two tests (fns 5617, 5616, which fn 5604
+// calls on its copy of the object) compare m_origem with "ORIG:{} " over "SA" and over "RED"; their names are chosen
+// from those texts. The setters' integer types are chosen beyond their widths: fn 12110 loads zona and secao as 16-bit
+// values. preBuild(), the constructor and the other setters are not reconstructed.
 class CCabecalhoQRCodeBuilder {
 public:
     void DefineCodigoCarga(const std::string& codigoCarga);
     void DefineHistoricoCarga(const std::vector<std::string>& cargas);
+    void DefineIdUrna(uedword idUrna);
+    void DefineSecao(ueword secao);
+    void DefineZona(ueword zona);
+
+    bool IsOrigemSA() const;
+    bool IsOrigemRED() const;
 
 private:
     std::string m_origem;

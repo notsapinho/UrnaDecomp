@@ -1,11 +1,17 @@
 # uenux2 comum::md::estadoaplicacao and its converters, in src/app/comum/dados/md/estadoaplicacao/ and
-# src/app/comum/dados/asn/estadoaplicacao/, and two setters of comum::CCabecalhoQRCodeBuilder, in
+# src/app/comum/dados/asn/estadoaplicacao/, and five setters and two tests of comum::CCabecalhoQRCodeBuilder, in
 # src/app/comum/relatorios/.
 #
 # Matched. Data classes: CLocalidadeEleitoral's constructor (target fn 5631), CDadoCarga's constructor and GetFaseChar
 # (5633, 2253), CAjusteDataHora::AdicionaDeltaT (3702) and its constructor (a twin of the two-word constructors, fn 1081),
 # the constructors of CEstadoGeralSA, CEstadoGeralVota and CDadoCorrespondencia (5625, 5628, 5630) and
 # CCabecalhoQRCodeBuilder::DefineCodigoCarga (5623, found by the scan's content pass, which fns 1956 and 12110 call).
+# CCabecalhoQRCodeBuilder's DefineIdUrna, DefineSecao and DefineZona (5621, 5620, 5618), which fns 1956 and 12110 call
+# too, and IsOrigemSA and IsOrigemRED (5617, 5616), each called twice by fn 5604: 13-byte thunks into binaryen's merge of
+# the two, fn 6028, which our link forms too and which matches under its link name, byn$mgfn-shared$ followed by
+# IsOrigemSA's symbol. The scan's content pass found all six (none has a line in splat/symbol_addrs.txt): each loads its
+# own label ("IDUE:{} ", "SECA:{} ", "ZONA:{} "; "SA" and "RED" in the thunks) and stores the field the class's header
+# names after that label, so the content and the names agree.
 # Converters: CConversorAjusteDataHora (11405, 11406), CConversorEstadoGeralSA (11392, 11393),
 # CConversorLocalidadeEleitoral (11388, 11389; 11388 rests on ASN1::INTEGER's constructor, fn 553, being matched),
 # CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
@@ -20,8 +26,9 @@
 # CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
 #
 # Not reconstructed: the slots of CConversorEstadoGeralGap (11394, 11395) and of the other converters here, CEstadoGeral,
-# the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624),
-# its other setters (5618, 5620, 5621) and preBuild(), fns 5626, 5627.
+# the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624), its other setters (fn
+# 11242 stores "ORIG:{} " over "RED" or "VOTA" into the origin field, each in a frame of its own) and preBuild(), fns
+# 5626, 5627.
 #
 # What decides the form, measured:
 # - Who inlined what. ValidaCriacao, ValidaModelo, ConverteEstadoSA, DesconverteEstadoSA, ConverteTipoAjusteDataHora and
@@ -52,8 +59,14 @@
 # - CDadoCorrespondencia moves its CIdentificadorGeradorMidia: a copy gives 161 rows for 114. Each by-value parameter of
 #   5628 and 5630 is a copy the target's caller makes (11391, 11400); the constructors' own bytes do not decide that.
 #
+# - The QR-code setters take plain integers: with TZonaID and TSecaoID (ecourna's CBaseType<unsigned short, ...>, the
+#   types CriaQRCode's record gives in cgeradorbu.cpp) and .Get() in the format, DefineZona and DefineSecao gain an
+#   `i32.const 65535; i32.and` before the store, which 5618 and 5620 do not have. The tests' argument is a
+#   std::string_view: fns 5616 and 5617 pass the label as one i64, length and address, the std::format argument type 13.
+#
 # Choices the bytes do not decide, each measured the same by comparing the function with the object-local numbers
-# masked (docs/how-to-decompile.md step 3): assignments in the body for CLocalidadeEleitoral's member initializers;
+# masked (docs/how-to-decompile.md step 3): ueword or unsigned for the setters' zona and secao, and uedword for idUrna's;
+# "SA"sv or std::string_view("SA") in the tests; assignments in the body for CLocalidadeEleitoral's member initializers;
 # `> 99999` for `>= 100000` in ValidaCriacao; ValidaModelo(modelo) for ValidaModelo(m_modelo); `default: break;` and the
 # throw after the switch in GetFaseChar and ConverteTipoUrna (the records' column 19 puts it in the switch); `default:
 # break;` in ConverteTipoAjusteDataHora; m_deltaT = m_deltaT + deltaT; static_cast<int>(tipo) for tipo.asInt() and
@@ -69,8 +82,10 @@
 # Chosen, no evidence names them: the scope comum of the record's unqualified enums; every enumerator but
 # eAlterarDataSistema, which 3702's message spells; the files eurna.h and enumeradoasn.h; the data members' names (the
 # ASN.1 fields' where one exists, and in CCabecalhoQRCodeBuilder the labels fn 5604 passes) and the types the bodies only
-# store; the setters' names DefineCodigoCarga and DefineHistoricoCarga; the inline getters' names (GetTipoDeltaT,
-# GetDeltaT, GetEstadoSA, GetAtualizacaoBloqueada, GetMunicipio, GetZona, GetSecao), which no record names. No
+# store; the setters' names DefineCodigoCarga, DefineHistoricoCarga, DefineIdUrna, DefineSecao and DefineZona, and the
+# tests' IsOrigemSA and IsOrigemRED (their order in the .cpp is the target's: in use band 2 the higher target index has
+# the lower ld_index); the inline getters' names (GetTipoDeltaT, GetDeltaT, GetEstadoSA, GetAtualizacaoBloqueada,
+# GetMunicipio, GetZona, GetSecao), which no record names. No
 # record names cconversorlocalidadeeleitoral.*, cestadogeralsa.* or cdadocorrespondencia.*: each name is the
 # class's, whose RTTI is the converter's base, and the directory the family's. The constructors' lines are chosen. The
 # rename of TipoUrnaT1 is not a choice: ledger/classes.json and the record of 5693 spell TipoUrnaOperacao. Nor is

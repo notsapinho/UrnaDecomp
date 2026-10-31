@@ -1,5 +1,5 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 67 blocks, with what a block's slot 2 said of its class's destructor. 61 come from
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 60 come from
 # 102-uenux2-control-blocks-roots.cpp (its header says how). Six come from the objects of units 31 and 120, whose
 # builders are written, so the roots no longer instantiate them: IFormImpressao<IPaperRelatorios>'s and
 # CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CInteractiveForm<IScreen, IInputKbd>'s (554),
@@ -12,7 +12,8 @@
 #   IFormField<IScreen>: CDSImageField 502: 11116
 #   IInputValidation: COptionValidation 5913: 11665. CNumberValidation 1151, 2383, 7787: 12463
 #   IInputField<IScreenMT>: CInputFieldMT 1151: 10683
-#   IText: CDataText<CPadDS<CToUpperDS<CCargoDSNome>>> 5613: 11246. CDataText<vota::CEscolheOpcao::COpcaoDS> 2753: 10684
+#   IText: CDataText<vota::CEscolheOpcao::COpcaoDS> 2753: 10684 (CDataText<CPadDS<CToUpperDS<CCargoDSNome>>>'s, 11246,
+#     comes from its builder, fn 5613, which unit 139 matches)
 #   IForm<IPaper>: IFormImpressao<IPaperRelatorios> 5515: 11001
 #   IPreShow<IScreen>: vota::CPreShowFormVota 576, 886: 7660. CPreShowClearScreen 11140: 11138.
 #     CPreShowNothing<IScreen> 11891: 11137

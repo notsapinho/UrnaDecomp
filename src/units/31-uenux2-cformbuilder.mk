@@ -8,7 +8,9 @@
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
 #                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField), written and differs
 #   CMTFormBuilder     180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728 (AddClock)
-#   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut)
+#   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut); the member template AddTextField<FONTE>
+#                      in cpaperformbuilder.h, below the classes so that line 51 stays in IFormImpressao: its instance
+#                      over CPadDS<CToUpperDS<CCargoDSNome>> (5613) is unit 139's, whose fragment says what shows it
 #   binaryen's         3890, the one body of 435, 1072 and 198; 1400, vector<shared_ptr<IFormField<...>>>::emplace_back(const
 #                      value_type&), one body of the media's instantiations, under the first in the link
 #   the getters        5550 (CFormBuilder::GetForm), 1694 and 301 (CMTFormBuilder::GetForm and GetInteractiveForm, each

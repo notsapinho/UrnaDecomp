@@ -588,17 +588,6 @@
 // f5600 · 6076 B · unmatched · placement: link order · name unknown
 // void f5600(i32, i32, i32, i32) { ... }
 
-// link-order cluster 801 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorbubase.cpp
-
-// f5621 · 419 B · unmatched · placement: link order · name unknown
-// void f5621(i32, i32) { ... }
-
-// f5620 · 417 B · unmatched · placement: link order · name unknown
-// void f5620(i32, i32) { ... }
-
-// f5618 · 414 B · unmatched · placement: link order · name unknown
-// void f5618(i32, i32) { ... }
-
 // link-order cluster 802 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.cpp
 
 // f5627 · 72 B · unmatched · placement: link order · name unknown
@@ -1645,14 +1634,6 @@
 // f5610 · 5599 B · unmatched · placement: link order · name unknown
 // void f5610(i32, i32, i32, i32, i32) { ... }
 
-// f5609 · 216 B · unmatched · placement: link order · name unknown
-// ? f5609(i32) { ... }
-
-// link-order cluster 801 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorbubase.cpp
-
-// f5612 · 519 B · unmatched · placement: link order · name unknown
-// ? f5612(i32) { ... }
-
 // link-order cluster 802 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.cpp
 
 // f5626 · 267 B · unmatched · placement: link order · name unknown
@@ -2337,11 +2318,6 @@
 // f11156 · 4 B · unmatched · placement: link order · name unknown
 // ? f11156(i32) { ... }
 
-// link-order cluster 423 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f11247 · 904 B · unmatched · placement: link order · name unknown
-// void f11247(i32, i32) { ... }
-
 // link-order cluster 527 · uses=1 · neighbours' file uenux2/src/api/gui/iobservable.cpp
 
 // f11651 · 102 B · unmatched · placement: link order · name unknown
@@ -2482,11 +2458,6 @@
 
 // f5565 · 193 B · unmatched · placement: link order · name unknown
 // ? f5565(i32, i32) { ... }
-
-// link-order cluster 801 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorbubase.cpp
-
-// f5613 · 503 B · unmatched · placement: link order · name unknown
-// void f5613(i32, i32) { ... }
 
 // link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
 

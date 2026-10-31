@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#include "api/gui/cdatatext.h"
+#include "api/gui/ctextfieldpaper.h"
 #include "api/gui/iform.h"
 #include "api/gui/iformfield.h"
 #include "api/gui/ipaper.h"
@@ -26,13 +28,11 @@ namespace api {
 class CPaperFormBuilder {
 public:
     using SharedField = std::shared_ptr<IFormField<IPaper>>;
-
     void AddTextField(const std::string& texto, IPaper::EStyle estilo, ETextAlignment alinhamento);
-
     void AddTextField(std::string (*fonte)(), ETextAlignment alinhamento);
-
+    template <typename FONTE>
+    void AddTextField(FONTE fonte);
     void AddNewLine(size_t linhas);
-
     void AddCut();
 
     std::shared_ptr<IForm<IPaper>> GetForm();
@@ -50,5 +50,16 @@ public:
         : IForm<IPaper>(campos, preShow) {}
     IPaper& GetRenderForm() const override  { return CPolySingleton<CLASS>::instance(); }
 };
+
+// fn 5613 is the instance over comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>: 604's body over a source passed
+// by value (fn 3699 passes the address of a copy). The alignment, the constant 0 in that body, is CDataText's default
+// here by choice, and the template's name and its definition below the classes are chosen too.
+template <typename FONTE>
+void CPaperFormBuilder::AddTextField(FONTE fonte)
+{
+    const SharedIText text(new CDataText<FONTE>(fonte));
+    const SharedField campo(new CTextFieldPaper(text, static_cast<IPaper::EStyle>(1)));
+    m_campos.push_back(campo);
+}
 
 } // namespace api
