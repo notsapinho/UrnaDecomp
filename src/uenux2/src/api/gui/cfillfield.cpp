@@ -1,7 +1,7 @@
 // api::CFillField; the file is chosen, no record names it: see src/units/90-uenux2-api-gui.mk. This comment is the
 // reconstruction's. Target functions of this file:
-//   the constructor   no target function of its own: fn 2245 holds it inlined, and its bytes do not say which inliner did
-//                     it. Out of line is chosen, as CRectField's is (fn 5501)
+//   the constructor   no target function of its own: fn 2245 holds it inlined. Out of line is measured: in the class 2245
+//                     scores 93 over 138 rows, and out of line it matches
 //   11142 Draw(IScreen&) const   calls IScreen slot 6, FillRect in api/gui/iscreen.h
 //   5551  Rect() const           one body binaryen keeps for this class's and CRectField's
 //   11141 GetTypeName() const    in the class

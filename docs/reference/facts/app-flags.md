@@ -335,7 +335,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   and neither target body does. The other side is in the target too: 4454, in `md/rdv/`, reloads, and 5725 and
   5377, one template at one record line, split, so which TU's linkonce copy won may decide it. A local or `sret` tree
   reloads at the flag too, since the first insert stores its address in a node. The sites with no call to explain the
-  reload, 10276, 10289 and 11383, are all `no-candidate`: writing 10289 and measuring it both ways is the test.
+  reload are 10276, 10289 and 11383. 11383 matches, unit 107's, and the other two are `no-candidate`: writing 10289 and
+  measuring it both ways is the test.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots and pending
   files) is uenux2's set without the flag. With it, six matches stop verifying: 152, 1383, 1527, 3501, 3639 and 5150,
   libc++ templates (`std::__tree`, `__split_buffer`, `operator>>`) whose winning copy comes from

@@ -231,12 +231,12 @@ takes `NumViasImpressasRelatorios`' name (`names.tsv`'s object column names the 
 `_ZN21ModuloTiposEleitorais4FotoD0Ev` is not in our link. Unit 107 later brought a third twin ahead of it,
 `ModuloTiposCadastro::Municipio`'s, from `cconversormunicipio.cpp.o`, so the line names that one now:
 
-- `/usr/bin/grep -c FotoD0Ev build/out/wasm-map/vota_web/names.tsv` prints 0, and
+- `/usr/bin/grep -c _ZN21ModuloTiposEleitorais4FotoD0Ev build/out/wasm-map/vota_web/names.tsv` prints 0, and
   `awk -v n=246 '$(1) == n' splat/matched.txt` prints `246 _ZN19ModuloTiposCadastro9MunicipioD0Ev`;
 - a match line that names the merged-away symbol, `246 _ZN21ModuloTiposEleitorais4FotoD0Ev`, makes
   `TMPDIR=/tmp make -C src splat` fail with `function 246 matched to _ZN21ModuloTiposEleitorais4FotoD0Ev: our link has no function
   _ZN21ModuloTiposEleitorais4FotoD0Ev`, while the scan pairs 246 with
-  `_ZN19ModuloTiposCadastro9MunicipioD0Ev` by content.
+  `_ZN19ModuloTiposCadastro9MunicipioD0Ev` through the census's pair.
 
 `splat-match` renames such a line itself (`addMatches` in `asmlift-wasm/src/splat-sub.ts`): a listed line whose
 symbol is not in our link, while the scan matches the same index under another symbol, is rewritten in place to that
@@ -259,7 +259,7 @@ _ZN21ModuloTiposEleitorais4FotoD0Ev → _ZN19ModuloTiposCadastro9MunicipioD0Ev:
 _ZN21ModuloTiposEleitorais4FotoD0Ev left our link, and the scan matches 246 with
 _ZN19ModuloTiposCadastro9MunicipioD0Ev, its byte-identical twin (…)` (the line number is 246's
 line in the list), and the second `diff` prints `same`: the list is the committed one again. The stale scan's row for
-246 has `content` in its `source` column: the scan pairs 246 by content, not through the listed line.
+246 has `ledger` in its `source` column: the scan pairs 246 through the census, not through the listed line.
 
 So a diff of `splat/matched.txt` across such a rename shows a `-246 …FotoD0Ev` line and a `+246 …` line although no
 match was lost, as the first `diff` above does; count lost matches by index (`docs/how-to-decompile.md` step 10). The

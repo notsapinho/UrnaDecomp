@@ -155,7 +155,7 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/roots_[a-z0-9]+\.o$/) r[$2]=$3; next } ($
 # 9 app/roots_7zip.o
 ```
 
-- the members of the control blocks the roots files build, from units 12, 14, 27, 28, 29, 49, 54, 58, 65, 77, 78, 79,
+- the members of the control blocks the roots files build, from units 12, 14, 28, 29, 49, 58, 65, 77, 78, 79,
   83, 84, 90 and 92 (U3);
 - code of a header the roots files emit in the shapes of `src/units/README.md` "Companion files": an inline default
   of a virtual member (`api::IScreen::GetFontMetrics`, 8938, unit 19), and the members of classes and class templates

@@ -24,4 +24,6 @@
 # name) takes it by reference. Same object code: largura and altura declared on one line or above `tela`, and that
 # callee as a file-static function with an if chain. Other bytes: the chain written in place (62 lines), and locals for
 # the four coordinates with a braced SRect in place of SRect::Normalized (10 lines).
+# 202 and 1191 (unit 31) are two callers of the ctor, of the two kinds the target's six have, so binaryen does not inline it
+# and keeps both TColor parameters
 UENUX2_SRCS += src/api/gui/ctextfield.cpp

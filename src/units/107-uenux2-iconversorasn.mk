@@ -70,8 +70,6 @@
 #   slot 6416 is fn 9406, the in-place CStringUtils::Trim), with 1879, the copying ToLower, and 5156 over 3942. No such
 #   overload is declared in api/util/cstringutils.hpp. The constructor here copies the string, the one difference. 11378,
 #   its caller, is 3 operand rows from the target and stays `unresolved` on that one call: an anchor needs the same body.
-# - 11403, CConversorDadoLocal::DoConverte, `unresolved` on ModuloTiposEleitorais::SiglaUF::theInfo (.bss), which no vote
-#   names: the body is operand-only (12 over 136).
 # - 11413, CConversorSeguranca::DoConverte, `unresolved` on fn 1158, std::vector<char>::__assign_with_size with
 #   __wrap_iter<const char*>. Ours merges with roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the
 #   target's 1158 (the compare's operands and the locals). The body is operand-only (7 over 77).

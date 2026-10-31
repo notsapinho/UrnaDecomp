@@ -1,18 +1,20 @@
 // Roots: keep unit 78's classes in the skeleton link, reached the way the target reaches them.
 // - simulador::CWasmScreenMT, api::CBeepFieldMT, CBuzzFieldMT, CClockFieldMT and api::CPreShowClearMT: every member is
 //   reached through its vtable only (`awk -F'\t' '$2==8746' ledger/callgraph.tsv` and the same for the other slots print
-//   nothing). The one reference is a vptr store in code not reconstructed (fn 8302 for the screen, fns 1072, 941, 728
-//   and the callers of the factory that holds CPreShowClearMT's), so this file takes each vtable's address, which keeps
-//   every slot. The constructors have no caller here, as they have no function of their own in the target.
+//   nothing). The one reference is a vptr store: fns 1072, 941 and 728 (unit 31) hold the fields', and code not
+//   reconstructed the others' (fn 8302 for the screen, the callers of the factory that holds CPreShowClearMT's), so this
+//   file takes each vtable's address, which keeps every slot. The constructors have no caller here, as they have no
+//   function of their own in the target.
 // - std::string::assign(size_type, char), target fn 1355: the table holds it (elem[6489]: fn 2672, a TU with exceptions,
 //   reaches it through invoke_*), so binaryen keeps its result, and CWasmScreenMT::Clear's calls hold a `drop`. Its
 //   address is taken here for the same reason; without it our link has only direct callers that drop the result, and
 //   binaryen removes it.
 // - the control blocks of the classes the target builds with std::shared_ptr<U>(new T), the __shared_ptr_pointer<T*, ...>
 //   whose __get_deleter are target fns 11034-11040, 11046 and 10537 (vtables @1579896-1580240 and @1590608; the other
-//   slots are the shared 174, 144 and 172), and fn 8036 (@1531492), std::shared_ptr<IScreenMT>(std::unique_ptr)'s. The
-//   builders are not reconstructed. Each CompartilhaX below instantiates one and nothing else: it takes a T* it never
-//   gets, so it uses no constructor, and no vtable, of T. As with std::make_shared, the control blocks' members come from
+//   slots are the shared 174, 144 and 172), and fn 8036 (@1531492), std::shared_ptr<IScreenMT>(std::unique_ptr)'s. 11034
+//   to 11039 come from cmtformbuilder.cpp.o now, ahead of this object; the other builders are not reconstructed. Each
+//   CompartilhaX below instantiates one and nothing else: it takes a T* it never gets, so it uses no constructor, and no
+//   vtable, of T. As with std::make_shared, the control blocks' members come from
 //   this object until the builders land; T's own inline members stay the units' objects', first on the link line. Their
 //   addresses are taken so they stay in the link; nothing calls them. The lines' order is free: it changes no function's
 //   re-pointed bytes, and splat-symbols' resolveBytes finds a typeinfo name string by its content at any alignment

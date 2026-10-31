@@ -93,8 +93,8 @@ CWASMNULLPRINTER_SRCS := src/api/hwil/iimpressorarelatorios.cpp src/api/hwil/eue
 	mock/app/simulador/wasm/cwasmnullprinter.cpp mock/app/simulador/wasm/cwasmnullpaper.cpp \
 	src/api/gui/ccutfieldpaper.cpp src/api/gui/cnewlinefieldpaper.cpp
 UENUX2_SRCS += $(CWASMNULLPRINTER_SRCS)
-# nothing reconstructed creates these classes yet: 80-uenux2-cwasmnullprinter-roots.cpp keeps their vtables the way the
-# target reaches them
+# fn 8302, which creates the paper and the printer, is not reconstructed: 80-uenux2-cwasmnullprinter-roots.cpp keeps
+# their vtables the way the target reaches them
 $(ROOT)/$(APP)/80-uenux2-cwasmnullprinter-roots.o: $(ROOT)/src/units/80-uenux2-cwasmnullprinter-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/80-uenux2-cwasmnullprinter.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/80-uenux2-cwasmnullprinter-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/80-uenux2-cwasmnullprinter-roots.o

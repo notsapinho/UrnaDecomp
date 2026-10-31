@@ -1,5 +1,5 @@
-// Roots: keep the unit's members in the skeleton link the way the target reaches them. Compiled as uenux2 code, and it
-// emits none of them: each stand-in calls members its unit's objects define.
+// Roots: keep the unit's members in the skeleton link the way the target reaches them. Compiled with APP_CXXFLAGS, like the
+// other stand-ins, and it emits none of them: each stand-in calls members its unit's objects define.
 //
 // api::CFormBuilder::GetLabeledKeyPos (target fn 5544): the target calls it from one function, 3678 (not reconstructed
 // yet), at two call sites (ledger/callgraph.tsv lists 3678 twice), and never through the table (no elem slot holds it); two

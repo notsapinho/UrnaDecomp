@@ -20,7 +20,7 @@
 UENUX2_SRCS += src/api/gui/cimagefield.cpp
 # two callers of the ctor (29-uenux2-cimagefield-roots.cpp, two make_shared<CImageField> as the target's callers do) so
 # binaryen neither inlines it nor folds its anchor argument; the control block they instantiate,
-# __shared_ptr_emplace<CImageField> (target fns 12639, 12640), matches from the roots object until its callers land
+# __shared_ptr_emplace<CImageField> (target fns 12639, 12640), matches from cformbuilder.cpp.o, which 5547 instantiates it in
 $(ROOT)/$(APP)/29-uenux2-cimagefield-roots.o: $(ROOT)/src/units/29-uenux2-cimagefield-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/29-uenux2-cimagefield-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/29-uenux2-cimagefield-roots.o
