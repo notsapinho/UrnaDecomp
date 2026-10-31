@@ -95,6 +95,10 @@
 #   for the decision on uenux2's level, and no source form here closes it.
 # - CEleitores's one slot, 2824, has no body and no vtable of ours: the stub went with the class (src/units/README.md
 #   "Pending members"). CreateInst of each class is inlined into 7787 or 2787 and is not written.
+# - crespostas.cpp also holds comum::CRespostasDSNumero's call operator, which inlines GetInst in the target (fn 12621,
+#   CDataText<CRespostasDSNumero>::GetText, holds this file's record 28): it is written, not matched, and
+#   src/units/121-uenux2-datasources.mk, whose roots keep that text's vtable, says what it waits for. Its line is a
+#   choice, after the destructor.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

@@ -2475,17 +2475,6 @@
 // f10362 · 12 B · unmatched · placement: link order · name unknown
 // void f10362(i32) { ... }
 
-// link-order cluster 327 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f10688 · 12 B · unmatched · placement: link order · name unknown
-// ? f10688(i32) { ... }
-
-// f10686 · 12 B · unmatched · placement: link order · name unknown
-// void f10686(i32) { ... }
-
-// f10685 · 473 B · unmatched · placement: link order · name unknown
-// void f10685(i32, i32) { ... }
-
 // link-order cluster 335 · uses=1 · neighbours' file uenux2/src/api/gui/cinputfieldmt.cpp
 
 // f10726 · 643 B · unmatched · placement: link order · name unknown

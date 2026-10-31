@@ -9,9 +9,9 @@
 # Of those, 512, 925, 862, 11157, 4356, 837 and 611 come from real objects now. The other two come from real objects
 # alone: 3164 IGenericFactory<ISyncCtl>, 5443 ITimerScheduler from itimerscheduler.cpp.o.
 # Ten of the 16 classes are in landed headers. IResource, CCalculaCV, IControladorRegistraMesarios and
-# IGenericFactory got their heads here (unit 119 adds IControladorRegistraMesarios' slots; the other three headers say they
-# are heads alone): typeid needs a complete class, and a control block needs a
-# virtual destructor at the slot its __on_zero_shared calls. The type name is a constant in each target body but 11157's and
+# IGenericFactory got their heads here (unit 119 adds IControladorRegistraMesarios' slots, CCalculaCV's header has its
+# layout and destructor since unit 121, and the other two headers say they are heads alone): typeid needs a complete
+# class, and a control block needs a virtual destructor at the slot its __on_zero_shared calls. The type name is a constant in each target body but 11157's and
 # 611's, so those 14 classes have no key function in the TUs that compiled them, and CEscritorLog and IInterfaceInit have one.
 #
 # push and what it brought:
@@ -65,8 +65,9 @@
 #   5395, 5398 and 5407. 1010 with its thunks, 1113, 1119, 2270, 5646, 5650, 1549, 6700, 13540 and 13876 have no landing pad,
 #   but they are its -Oz outlined copies, and uenux2's level inlines them. 388 (~shared_ptr) is too: our copy is `score 6 over
 #   28 rows`, with an early exit where -Oz nests the ifs. Only their names matter to their callers.
-# - 11262, 11263 and 11635, 11636, the control blocks of CCalculaCV and CGeracaoVersoesContratos: their __on_zero_shared
-#   calls a destructor out of line (5614, 5866), and neither class is written.
+# - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
+#   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
+#   unit 121's fragment says why no roots builder stands in for it.
 # - has<T>: written, and `differs` or `unresolved`. The target's 3387 calls 608 and instance's 512 calls 305: the
 #   executable TU's two find instantiations, kept apart by the two table slots their landing pads hold (fn 6161, the merged
 #   body, takes the slot as its last argument). Ours have no landing pads, so the two are byte-identical and binaryen

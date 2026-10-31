@@ -24,7 +24,8 @@
 #   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546
 # GetData (10967) is pending: the fragment's -pending.cpp names what it waits for. The other instantiations (over
 # comum's and vota's classes, and the three of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>) wait
-# for those classes.
+# for those classes, but for two that unit 121 brings: CDataText<vota::CEscolheOpcao::COpcaoDS>, whose GetText (10685)
+# matches, and CDataText<comum::CRespostasDSNumero>; its fragment says what their other rows wait for.
 #
 # Measured by compiling each form as an overlay of the header and comparing the object's functions, 87 of them, with
 # call targets and object-local indices masked. Forms that change no function of this unit:
