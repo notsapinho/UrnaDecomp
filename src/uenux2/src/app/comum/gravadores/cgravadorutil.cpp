@@ -23,21 +23,21 @@ std::string CGravadorUtil::DeterminaNomeArquivoSemLetra(TMunicipioID municipio, 
 {
 
     if (municipio >= 100000) {
-        throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8645, std::format("Município inválido: {}", municipio.Get()));
+        throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8645, std::format("Município inválido: {}", municipio));
     }
 
 
     if (zona >= 10000) {
-        throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8646, std::format("Zona inválida: {}", zona.Get()));
+        throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8646, std::format("Zona inválida: {}", zona));
     }
 
 
     if (secao >= 10000) {
-        throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8647, std::format("Seção inválida: {}", secao.Get()));
+        throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8647, std::format("Seção inválida: {}", secao));
     }
 
     return std::format("{:c}{:05}{}{:05}{:04}{:04}-", fase, CConfiguracaoEleicao::GetInst().GetPleito().GetID(),
-        CLocal::GetInst().GetUFMinuscula(), municipio.Get(), zona.Get(), secao.Get());
+        CLocal::GetInst().GetUFMinuscula(), municipio, zona, secao);
 }
 
 std::string CGravadorUtil::DeterminaNomeArquivo(TMunicipioID municipio, TZonaID zona, TSecaoID secao, char fase,

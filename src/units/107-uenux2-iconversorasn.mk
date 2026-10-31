@@ -74,6 +74,8 @@
 #   roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the target's (the compare's operands and the
 #   locals). 11413 matches over the name, which unit 105's 9060 and 9062 use too.
 # - 11401: unit 96's fragment.
+# - CSecaoEleitoral's constructor in csecaoeleitoral.cpp (records :34 to :41), which binaryen inlines into 11453,
+#   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what it waits for.
 # Not written:
 # - 11385 and 11384, CConversorHorarioVerao: this unit's -pending.cpp.
 # - 11482, 11483, 11484, 11485, comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota>: a class template over a

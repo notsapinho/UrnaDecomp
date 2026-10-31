@@ -10,8 +10,8 @@ namespace comum::md {
 
 // The layout, 8 bytes, from comum::asn::CConversorIdentificacaoAgregada::DoConverte (target fn 11456), which reads the
 // type at +0 and a 16-bit word at +4 and hands them to the entity's tipoLocalOrigem and numero: the member and getter
-// names are chosen from those fields. CConversorLocal::DoDesconverte's push_back (fn 11453) copies its elements with one
-// i64.store. The class is named by the base of its converter, IConversorASN<ModuloLocal::IdentificacaoAgregada,
+// names are chosen from those fields. CConversorSecaoEleitoral::DoDesconverte's push_back (fn 11453) copies its elements
+// with one i64.store. The class is named by the base of its converter, IConversorASN<ModuloLocal::IdentificacaoAgregada,
 // comum::md::CIdentificacaoAgregada>. The constructor (fn 5672) is out of line, called by fns 5741 and 11455; its file is
 // chosen, the file of the class beside it.
 class CIdentificacaoAgregada {
@@ -28,20 +28,21 @@ private:
 
 using TVectorIdentificacaoAgregada = std::vector<CIdentificacaoAgregada>;
 
-// Recovered: the layout only, 36 bytes, read from fn 11453, which holds the constructor (records
-// csecaoeleitoral.cpp:34 to :41), inlined by binaryen (a second stack-pointer prologue): the type at +0, the
-// CIdentificacaoSecao at +4, the vector at +24. The file's only
-// function is that constructor, so no csecaoeleitoral.cpp is written yet; GetIdentificacao's name is chosen.
-// m_tipo is the ETipoLocalVotacao the constructor's record spells. The bodies give it 4 bytes and read no value, so it
-// is the plainest type of that width, chosen, and this header declares no such enum: a plain enum of that name belongs
-// with the conversions that read its values, and an opaque `: int` here could not stand beside it. The member takes
-// the enum's type when the constructor is written.
+// Recovered: the layout, 36 bytes, and the constructor (records csecaoeleitoral.cpp:34 to :41), which fn 11453,
+// comum::asn::CConversorSecaoEleitoral::DoDesconverte, holds inlined by binaryen (a second stack-pointer prologue): it
+// stores the type at +0, copies the CIdentificacaoSecao to +4 and the vector to +24, and checks the aggregated sections
+// it is given. GetIdentificacao's name is chosen.
 class CSecaoEleitoral {
 public:
+    CSecaoEleitoral(ETipoLocalVotacao tipo, const CIdentificacaoSecao& identificacao,
+        const TVectorIdentificacaoAgregada& agregadas);
+
+    ETipoLocalVotacao GetTipo() const { return m_tipo; }
     const CIdentificacaoSecao& GetIdentificacao() const { return m_identificacao; }
+    const TVectorIdentificacaoAgregada& GetAgregadas() const { return m_agregadas; }
 
 private:
-    int m_tipo;
+    ETipoLocalVotacao m_tipo;
     CIdentificacaoSecao m_identificacao;
     TVectorIdentificacaoAgregada m_agregadas;
 };

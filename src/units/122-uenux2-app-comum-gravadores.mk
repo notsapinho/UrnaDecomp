@@ -57,11 +57,10 @@
 #   target (fn 160), which clang inlines at -O2 and calls at -O3: compiled by tools/round/try-tu.sh --symbols at -O2,
 #   the objects of cgravadorutil.cpp and gravadores/asn/util.cpp call __grow_by_and_replace in both functions, and
 #   with --flags -O3 they call append(const char*, size_t). At -O2 they scored 200 over 954 rows and 121 over 346. At the
-#   tree's -O3 3604 matches and 3798 scores 82 over 862 (72 operand-only, 10 inserted). 3798 differs in one more way: the target compares the zone and
-#   the section it takes with no mask, and ours, over iresultado.h's CBaseType aliases, masks each with 65535 first.
-#   Plain unsigned short aliases in iresultado.h, md/cidentificacaourna.h and md/cidentificacaosecao.h add a mask to
-#   CLocal::GetSecaoID (fn 1078, matched) in clocal.cpp.o (its object before and after), and what they give 3798 was not
-#   measured, so the aliases stay as landed and the type the target has is not settled.
+#   tree's -O3 3604 matches, and 3798 scored 82 over 862 (72 operand-only, 10 inserted) while comum's ID names were
+#   iresultado.h's CBaseType aliases, which masked the zone and the section it takes with 65535 where the target
+#   compares them with no mask. Since those names are plain integers (143-uenux2-cidentificacao.mk has the
+#   measurement), 3798 compares them with no mask, as the target does, and matches at the tree's -O3.
 # - 1396 IGravador's constructor equals the target's but for operands (20 over 239 rows), and the scan reads it
 #   `unresolved self-voted`: its call of 3798 is the only vote for 3798's name. It matches when 3798 does, or when
 #   another caller of 3798 (fns 1276, 12134) lands.

@@ -66,10 +66,9 @@
 # - m_codigo is a plain uedword lvalue where it is formatted (5675, 5678). std::format over such a member stores the pair
 #   +24 then +16, the target's order; a prvalue (.Get() over a CBaseType member, a static_cast) stores +16 then +24, and a
 #   local copy of the member differs in 28 rows. Of the forms measured only the plain member gives the target's bytes, so
-#   these two classes do not hold ecourna's CBaseType, the type the using-declaration in iresultado.h gives
-#   comum::TMunicipioID; CComplementoMunicipio's member follows them by choice, as no body of it tells. The identification
-#   classes keep all four of iresultado.h's using-declarations, TMunicipioID, TZonaID, TLocalID and TSecaoID, by choice:
-#   the records spell the names, these bodies read only widths, and another declaration would not compile beside those.
+#   these two classes do not hold ecourna's CBaseType; CComplementoMunicipio's member follows them by choice, as no body
+#   of it tells. The identification classes' four names, TMunicipioID, TZonaID, TLocalID and TSecaoID, are comum's plain
+#   integers (143-uenux2-cidentificacao.mk has the measurement).
 # - UrnaBiometrica tests the section as a statement of its own, so the temporary string dies before +58 is read: 820 frees
 #   it between the two reads, and `return EhSecao(...) && ...`, which keeps it alive, differs in 37 rows. EhSecao is
 #   defined in the class because 820, 5738 and 5741 hold the same inlined code, so clang inlined it (how-to step 3).

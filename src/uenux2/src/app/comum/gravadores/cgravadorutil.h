@@ -3,15 +3,15 @@
 #include <string>
 
 #include "app/comum/eurnafase.h"
-#include "ecourna/app/dados/tiposbasicos.hpp"
+#include "ecourna/api/uetypes.hpp"
 
 namespace comum {
 
-// The section identifiers as app/comum/gravadores/iresultado.h brings them into comum (the records spell them
-// unqualified); that this header repeats its using-declarations is a choice.
-using ecourna::app::dados::TMunicipioID;
-using ecourna::app::dados::TSecaoID;
-using ecourna::app::dados::TZonaID;
+// The section identifiers as app/comum/gravadores/iresultado.h declares them in comum (the records spell them
+// unqualified); that this header repeats its aliases is a choice.
+using TMunicipioID = uedword;
+using TSecaoID = ueword;
+using TZonaID = ueword;
 
 // Declared in iresultado.h; its enumerators are in app/comum/carquivosresultado.h.
 enum EExtensaoArquivoResultado : int;
