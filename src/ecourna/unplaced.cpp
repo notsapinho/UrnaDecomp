@@ -515,11 +515,6 @@
 // f2820 · 189 B · unmatched · placement: link order · name unknown
 // void f2820(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1108 · uses=4 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
-
-// f2827 · 18 B · unmatched · placement: link order · name unknown
-// ? f2827(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1112 · uses=4 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
 
 // f2856 · 39 B · unmatched · placement: link order · name unknown
