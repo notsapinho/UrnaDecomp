@@ -191,9 +191,6 @@ private:
 // f10598 · 12 B · unmatched · placement: link order · name unknown
 // void f10598(i32) { ... }
 
-// f10593 · 130 B · unmatched · placement: link order · name unknown
-// void f10593(i32) { ... }
-
 // f10588 · 1112 B · unmatched · placement: link order · name unknown
 // void f10588(i32) { ... }
 
@@ -217,9 +214,6 @@ private:
 
 // f10493 · 12 B · unmatched · placement: link order · name unknown
 // void f10493(i32) { ... }
-
-// f10489 · 2040 B · unmatched · placement: link order · name unknown
-// void f10489(i32) { ... }
 
 // f10485 · 172 B · unmatched · placement: link order · name unknown
 // void f10485(i32) { ... }
@@ -253,9 +247,6 @@ private:
 
 // f10435 · 200 B · unmatched · placement: link order · name unknown
 // void f10435(i32) { ... }
-
-// f10420 · 1917 B · unmatched · placement: link order · name unknown
-// void f10420(i32) { ... }
 
 // f10415 · 2081 B · unmatched · placement: link order · name unknown
 // void f10415(i32) { ... }

@@ -1,10 +1,26 @@
-// <stubs>
-// f10427 · 158 B · unmatched · placement: link order · name unknown
-// void f10427(i32) { ... }
+// vota::CMostraEleitorVotando (/home/rubio/tse/uenux2/src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp).
+// Reconstruction's note, not TSE's text. Its records are records of the target:
+//   10426  virtual void ProcessInput()   record at line 64, column 22 (the default argument of CPolySingleton's instance)
+//   10425  ProcessKey (slot 6)           records at lines 127 and 159, column 31 (not written)
+// The destructor's line is a choice; src/units/142-uenux2-app-vota-estados-448.mk has the other notes.
 
-// f10426 · 155 B · unmatched · name unknown
-// void f10426(i32) { ... }
+#include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 
-// f10425 · 4809 B · unmatched · name unknown
-// void f10425(i32, i32) { ... }
-// </stubs>
+#include "api/hwil/iinput.h"
+#include "api/pattern/cpolysingleton.h"
+
+namespace vota {
+
+CMostraEleitorVotando::~CMostraEleitorVotando() = default;
+
+// (original lines 16-61: content not recovered)
+#line 62
+void CMostraEleitorVotando::ProcessInput()
+{
+    auto& terminal = api::CPolySingleton<api::IInputMT>::instance();
+    if (terminal.HasKey()) {
+        terminal.GetKey();
+    }
+}
+
+} // namespace vota
