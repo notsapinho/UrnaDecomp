@@ -1,12 +1,14 @@
 #include "app/vota/eleitor/iniciovotacao/cgerazeresimabase.h"
 
+#include "app/vota/eleitor/comum/ctelasvota.h"
+
 namespace vota {
+
+CGeraZeresimaBase::CGeraZeresimaBase()
+    : comum::CAppState(EVENTO_NENHUM), m_form(CTelasVota::GetInst().GetTelaGeraZeresima())
+{
+}
 
 CGeraZeresimaBase::~CGeraZeresimaBase() = default;
 
 } // namespace vota
-
-// <stubs>
-// f5965 · 68 B · unmatched · placement: link order · name unknown
-// ? f5965(i32) { ... }
-// </stubs>

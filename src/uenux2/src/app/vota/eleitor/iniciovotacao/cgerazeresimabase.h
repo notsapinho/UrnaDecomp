@@ -21,9 +21,9 @@ namespace vota {
 // +12 a std::shared_ptr copied from vota::CTelasVota::GetInst()'s +212 (fn 407), whose slot 2 StartState calls; the
 // pointee's type is chosen, the type of vota::CTelasVota's members. The destructor is out of line, in another object
 // than the derived classes': their destructors (fns 5961 and 5960) call fn 1720, which stores this class's vptr and
-// releases +12 (through binaryen's fn 2902). Not recovered: the constructor (it reads a private member of
-// vota::CTelasVota, whose head has no accessor for it) and StartState (6878 B; it calls fns 183, 436 and 491, which
-// have no name; src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// releases +12 (through binaryen's fn 2902). The constructor reads the member through a getter chosen for it
+// (ctelasvota.h). Not recovered: StartState (6878 B; it calls fns 183, 436 and 491, which have no name;
+// src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CGeraZeresimaBase : public comum::CAppState {
 public:

@@ -17,6 +17,12 @@ namespace vota {
 // destruction shows, which any std::shared_ptr gives.
 class CTelasVota {
 public:
+    // The zeresima states' constructors copy the members at +212, +220 and +228 (fns 5965, 11945 and 5957): the getters'
+    // names, and that they are getters, are chosen.
+    const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
+    const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
+    const CFormInterativoTelaVota& GetTelaQuerImprimirZeresima() const { return m_tela28; }
+
     ~CTelasVota();
 
     static CTelasVota& GetInst();

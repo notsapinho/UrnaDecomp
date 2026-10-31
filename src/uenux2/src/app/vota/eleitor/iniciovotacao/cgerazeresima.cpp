@@ -1,12 +1,30 @@
 #include "app/vota/eleitor/iniciovotacao/cgerazeresima.h"
 
+#include "app/vota/eleitor/iniciovotacao/cgeraresumozeresima.h"
+
 namespace vota {
+
+CGeraZeresima::CGeraZeresima()
+{
+}
+
+CGeraZeresima& CGeraZeresima::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CGeraZeresima());
+    }
+    return *s_inst;
+}
 
 CGeraZeresima::~CGeraZeresima() = default;
 
-} // namespace vota
+std::unique_ptr<CGeraZeresima> CGeraZeresima::s_inst;
+std::mutex CGeraZeresima::s_mutex;
 
-// <stubs>
-// f5962 · 93 B · unmatched · placement: link order · name unknown
-// ? f5962() { ... }
-// </stubs>
+comum::CAppState* CGeraZeresima::GetProximoEstado()
+{
+    return &CGeraResumoZeresima::GetInst();
+}
+
+} // namespace vota

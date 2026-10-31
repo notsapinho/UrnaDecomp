@@ -14,7 +14,7 @@ namespace vota {
 // and 5963): out of line, as that class's are. final, as that class is: fn 6056 is their two GetInst, merged. A
 // singleton: GetInst, held inlined by vota::CRegerarZeresima's slot 10 (fn 11841, a thunk into fn 6056), keeps the
 // object in a static std::unique_ptr (@1834884, destroyed at exit by fn 11847) under a static std::mutex (@1834860, by
-// fn 11846). Not recovered: the constructor, GetInst and the statics (they wait for the base's constructor).
+// fn 11846). The constructor is out of line, as vota::CGeraResumoZeresima's is.
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CRegeraResumoZeresima final : public CGeraResumoZeresimaBase {
 public:
@@ -24,6 +24,9 @@ public:
 
 private:
     CRegeraResumoZeresima();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CRegeraResumoZeresima> s_inst;
 
     virtual comum::CAppState* GetProximoEstado() override;
 

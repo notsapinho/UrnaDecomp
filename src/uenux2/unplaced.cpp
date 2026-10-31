@@ -213,14 +213,6 @@
 // f11835 · 712 B · unmatched · placement: link order · name unknown
 // void f11835(i32) { ... }
 
-// link-order cluster 568 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregerarzeresima.cpp
-
-// f11842 · 5 B · unmatched · placement: link order · name unknown
-// void f11842(i32) { ... }
-
-// f11841 · 22 B · unmatched · placement: link order · name unknown
-// ? f11841(i32) { ... }
-
 // link-order cluster 577 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp
 
 // f11875 · 188 B · unmatched · placement: link order · name unknown
@@ -240,11 +232,6 @@
 
 // f11911 · 565 B · unmatched · placement: link order · name unknown
 // void f11911(i32) { ... }
-
-// link-order cluster 591 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cquerimprimirzeresima.cpp
-
-// f11921 · 35 B · unmatched · placement: link order · name unknown
-// void f11921(i32) { ... }
 
 // link-order cluster 594 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimpressaozeresimatardia.cpp
 
@@ -685,9 +672,6 @@
 
 // link-order cluster 862 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmaregerarzeresima.cpp
 
-// f5957 · 142 B · unmatched · placement: link order · name unknown
-// ? f5957() { ... }
-
 // f5953 · 527 B · unmatched · placement: link order · name unknown
 // void f5953(i32) { ... }
 
@@ -708,9 +692,6 @@
 
 // f6058 · 60 B · unmatched · placement: link order · name unknown
 // void f6058(i32, i32) { ... }
-
-// f6056 · 75 B · unmatched · placement: link order · name unknown
-// ? f6056(i32, i32, i32, i32) { ... }
 
 // f6018 · 52 B · unmatched · placement: link order · name unknown
 // void f6018(i32, i32) { ... }

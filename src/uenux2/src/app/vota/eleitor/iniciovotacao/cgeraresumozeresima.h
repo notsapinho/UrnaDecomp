@@ -17,8 +17,9 @@ namespace vota {
 // body inlined. final: fn 6056 calls fn 1952 for the object it replaces, with no call through the vtable (unit 104's
 // fragment measures that a state that is not final deletes through it). A singleton: GetInst, held inlined by
 // vota::CGeraZeresima's slot 10 (fn 11935, a thunk into binaryen's fn 6056), keeps the object in a static
-// std::unique_ptr (@1834184, destroyed at exit by fn 11942) under a static std::mutex (@1834160, by fn 11941). Not
-// recovered: the constructor, GetInst and the statics (they wait for the base's constructor).
+// std::unique_ptr (@1834184, destroyed at exit by fn 11942) under a static std::mutex (@1834160, by fn 11941). The
+// constructor is out of line: fn 6056 stores what operator new returned and stores the vptr on the base constructor's
+// result (fn 11945), the shape unit 104's fragment measures for an out-of-line constructor that binaryen inlined.
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CGeraResumoZeresima final : public CGeraResumoZeresimaBase {
 public:
@@ -28,6 +29,9 @@ public:
 
 private:
     CGeraResumoZeresima();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CGeraResumoZeresima> s_inst;
 
     virtual comum::CAppState* GetProximoEstado() override;
 
