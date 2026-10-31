@@ -65,7 +65,7 @@ std::vector<std::string> CAppInfo::GetCodigosCarga(EUrnaTurno turno) const
 bool CAppInfo::EhTreinamentoEleitor()
 {
     if (GetInst().GetGeral().GetDadoCarga().GetFase() == FASE_TREINAMENTO) {
-        return GetInst().GetVota(TURNO_ATUAL).GetTreinamentoEleitor();
+        return GetInst().GetVota().GetTreinamentoEleitor();
     }
     return false;
 }

@@ -34514,29 +34514,22 @@ __cxa_new_handler = 0x1d8ddc; // type:data size:0x4 evidence:vote:1 by:137
 _ZN12_GLOBAL__N_18freelistE = 0x1d8de0; // type:data size:0x4 evidence:vote:3 by:6175
 _ZN12_GLOBAL__N_14heapE = 0x1d8df0; // type:data size:0x200 evidence:vote:4 by:6175
 # ---- hand edits below this line: kept by regeneration, they win over generated lines ----
-# The singletons' .bss objects: zeros, so no content places them, and a hand-named accessor casts no vote (docs/reference/splat.md section 2). Each accessor's body pairs its two
-# addresses with its unlock and its pointer: the address the body tests and allocates into is the pointer, the one it passes to fn 150 is the mutex. The readers are every target body
-# that loads the address (grep of the split's pieces): the accessor, the same code inlined in its class's file, and the object's static destructor.
+# The singletons' .bss objects: zeros, so no content places them, and the accessors have no written caller, so no named body votes for them (docs/reference/splat.md section 2). Each
+# accessor's body pairs its two addresses with its unlock and its pointer: the address the body tests and allocates into is the pointer, the one it passes to fn 150 is the mutex. The readers
+# are every target body that loads the address: the accessor, the same code inlined in its class's file, and the object's static destructor. CLocal's and CFotos's pointers need no line here:
+# their pointer destructors pair by address and vote them.
 _ZN5comum6CLocal7s_mutexE = 0x1c0f1c; // type:data size:0x18 evidence:callers+content CLocal's mutex, unlocked by 401, 1543, 4160, 5738, 11506
-_ZN5comum6CLocal6s_instE = 0x1c0f34; // type:data size:0x4 evidence:callers+content CLocal's pointer, read by 401, 1543, 4160, 5738, 11508
 _ZN5comum13CCandidaturas7s_mutexE = 0x1c0e4c; // type:data size:0x18 evidence:callers+content CCandidaturas's mutex, unlocked by 521, 2838, 11563
 _ZN5comum13CCandidaturas6s_instE = 0x1c0e64; // type:data size:0x4 evidence:callers+content CCandidaturas's pointer, read by 521, 2838, 11564
 _ZN5comum9CPartidos7s_mutexE = 0x1c0f38; // type:data size:0x18 evidence:callers+content CPartidos's mutex, unlocked by 819, 11499, 11501, 11502
 _ZN5comum9CPartidos6s_instE = 0x1c0f50; // type:data size:0x4 evidence:callers+content CPartidos's pointer, read by 819, 11499, 11501, 11503
 _ZN5comum6CFotos7s_mutexE = 0x1c0ee4; // type:data size:0x18 evidence:callers+content CFotos's mutex, unlocked by 2819, 3755, 11512, 12641
-_ZN5comum6CFotos6s_instE = 0x1c0efc; // type:data size:0x4 evidence:callers+content CFotos's pointer, read by 2819, 3755, 11513, 12641
 # std::map's __tree::destroy of three element types. Each is a recursive body, so its only name would come from its own call, and its caller's row stops on it. Each body reads the
 # element it destroys: 1932 frees two strings at +24 and +36 of a node (md::CPartido: its word at +20, then the strings); 681 one string at +20 (the map of uedword to std::string);
 # 1709 calls 1719 at +80 and frees the strings at +28 and +40 and, under a flag at +64, at +52 (md::CCandidatura). 2815 and 3786 are their callers, their destructors' last calls.
 _ZNSt3__26__treeINS_12__value_typeItN5comum2md8CPartidoEEENS_19__map_value_compareItNS_4pairIKtS4_EENS_4lessItEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE = func:1932; // evidence:callers+content the tail call of 2815, ~CPartidos, on the root at +4; the node holds CPartido's two strings
 _ZNSt3__26__treeINS_12__value_typeIjNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEENS_19__map_value_compareIjNS_4pairIKjS7_EENS_4lessIjEELb1EEENS5_ISC_EEE7destroyEPNS_11__tree_nodeIS8_PvEE = func:681; // evidence:callers+content 3786, ~CCandidaturas, calls it on the map at +32; the node holds one string at +20
 _ZNSt3__26__treeINS_12__value_typeIjN5comum2md12CCandidaturaEEENS_19__map_value_compareIjNS_4pairIKjS4_EENS_4lessIjEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE = func:1709; // evidence:callers+content the tail call of 3786, ~CCandidaturas, on the root at +4; the node holds md::CCandidatura
-# 401: comum::CLocal's singleton. Its own shape, depth 0, is the only one of its hash on each side (fp0 of `pnpm wasm fingerprint --depth 0`: target [401], ours one), and
-# its body allocates 4 bytes and calls CLocal's constructor and destructor (2262, 2261, matched). No caller of ours exists to name it: 29 target callers are unwritten.
-_ZN5comum6CLocal7GetInstEv = func:401; // evidence:pair-depth0 shape: the only target and the only ours with this depth-0 shape; calls 2262 and 2261
-# 521, 819, 2819: the singletons of CCandidaturas, CPartidos, CFotos. One depth-0 shape holds 185, 521, 819, 1391 and 2819 (185 is named by call, 1391 is unwritten here). Each
-# is told apart by what it allocates and calls, read from its own body: 521 allocates 44 and calls 5811 and 3786; 819 allocates 28 and calls 3751 and 2815; 2819 allocates 28 and calls
-# 3756 and 2818. 3751, 3756 and 2818 are named by pair-fingerprint and matched, and no caller of ours exists to name the three.
 # 5811: its body holds the literal "CCandidaturas" (string at 77694, 13 B) and is 521's and 2838's constructor call; written, and two rows from the target's until api::CDataMap has its constructor.
 _ZN5comum13CCandidaturasC1Ev = func:5811; // evidence:callers+content the literal CCandidaturas it builds and stores at +16; called by 521 before its pointer is stored
 # 1719: vector<md::CDadosCandidato>'s __destroy_vector. Its body walks elements of 52 bytes, freeing the strings at -40 and -52 of each end and, under the flag at -16, the one at -28: CDadosCandidato's
@@ -34547,14 +34540,12 @@ _ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vec
 # Our bodies inline ~basic_string at the tree's level, the target's are the executable TU's -Oz copies, so neither row can match: the lines are for their callers.
 _ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaD2Ev = func:857; // evidence:callers+content the calls and offsets above; 11395 destroys a vector of 96-byte elements through it
 _ZN7ecourna3app5dados26CIdentificadorGeradorMidiaD2Ev = func:2240; // evidence:callers+content three strings at +0, +12, +24; 857 calls it on the member at +60
-_ZN5comum13CCandidaturas7GetInstEv = func:521; // evidence:shape+callees the one body of its shape that allocates 44 and calls 5811 and 3786
-_ZN5comum9CPartidos7GetInstEv = func:819; // evidence:shape+callees the one body of its shape that calls 3751 (matched) and 2815, with the literal CPartidos in 3751
-_ZN5comum6CFotos7GetInstEv = func:2819; // evidence:shape+callees the one body of its shape that calls 3756 and 2818 (both matched), with the literal CFotos in 3756
-# 536: the one body of the enums' format handles, 31 table slots in the target. Our link merges EUrnaTurno's handle into it, and that object links first, so
-# the body carries this name. The target keeps EUrnaTurno's apart as 9868, slot 474, a copy with parse and format left out of line (calls 1558 and 5906, whose
-# other callers are 4027, in invoke form), so 1553's anchor votes 9868 and every other anchor votes 536, and the generated `table` line goes. 275, 680, 1712, 2253
-# and 3702 hold slots of 536 at the aligned sites, the five were matched with that name before EUrnaTurno's handle existed, and 1553 is not rescued: it stays differs.
-_ZZNSt3__224__basic_format_arg_valueINS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEE8__handleC1B8ne210108IN5comum10EUrnaTurnoEEERT_ENUlRNS_26basic_format_parse_contextIcEERS7_PKvE_8__invokeESH_SI_SK_ = func:536; // evidence:table 536 fills 31 slots; anchors 275, 680, 1712, 2253, 3702 vote it; 1553's slot is 9868's (target keeps it apart)
+# 536: the one body of the enums' format handles, 31 table slots in the target. Our link merges EUrnaTurno's handle into it, and cappinfo.cpp.o links first, so the body carries this name. The
+# target keeps EUrnaTurno's apart as 9868, slot 474, a copy with parse and format left out of line (calls 1558 and 5906, whose other caller 4027 is in invoke form), so 1553's anchor votes 9868,
+# every other anchor votes 536, and the generated `table` line goes. Eleven matches stand on this line: 275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392, 11405, each holding a slot of
+# 536 at the aligned site. 1553 is not rescued: it stays differs. Landing risk: the line names the surviving symbol. A unit that adds an enum's handle ahead of cappinfo.cpp.o changes that symbol,
+# and the eleven rows leave match until this line follows it.
+_ZZNSt3__224__basic_format_arg_valueINS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEE8__handleC1B8ne210108IN5comum10EUrnaTurnoEEERT_ENUlRNS_26basic_format_parse_contextIcEERS7_PKvE_8__invokeESH_SI_SK_ = func:536; // evidence:table 536 fills 31 slots; the anchors of 275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392, 11405 vote it; 1553's slot is 9868's (target keeps it apart)
 _ZNK5comum8CRdvVota9CandidatoEhjh = func:1931; // evidence:vtable comum::CRdvVota _ZTV 0x17ce64 (ledger/vtables.json, RTTI-decoded) slot 3 = func:1931, whose own source_location operand (srcloc 0x180434) names the inlined callee "CVotosEleicoesVota::Candidato(TCargoID, const std::string &)"; ours the one CRdvVota::Candidato
 _ZNSt3__29to_stringEj = func:327; // evidence:pair-depth0 the only target and the only ours with this depth-0 fingerprint (normalizeModule depth 0: target [327], ours [_ZNSt3__29to_stringEj]); depth 1-2 differ only by the inlined string::__init (docs/reference/facts/tool-traps.md §X5)
 _ZNSt3__225__throw_bad_function_callB8ne210108Ev = func:648; // evidence:rtti-operand the only target function holding _ZTV/_ZTI std::bad_function_call (vptr i32.const 0x13bd7c and typeinfo 0x13bd88, 1 target function each); ours likewise the only one holding them

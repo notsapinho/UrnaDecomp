@@ -97,11 +97,11 @@ scan's `object` column):
 | emscripten sysroot: libc (musl) | 54 / 56 | 9 / 9 |
 | emscripten sysroot: libc++ | 51 / 56 | 7 / 9 |
 | our uenux2 units | 12 / 19 | 35 / 42 |
-| our stand-ins (src/app, src/web) | 23 / 31 | 2 / 12 |
+| our stand-ins (src/app, src/web) | 23 / 31 | 2 / 13 |
 | binaryen (functions the optimizer creates) | 16 / 18 | 6 / 6 |
 | our ASN.1 runtime and modules | 9 / 11 | 5 / 5 |
 | 7-Zip | 11 / 14 | 0 / 1 |
-| RHVoice | 6 / 11 | 1 / 3 |
+| RHVoice | 6 / 11 | 1 / 2 |
 | zlib | 0 / 0 | 9 / 10 |
 | emscripten sysroot: libc++abi | 4 / 5 | 2 / 2 |
 | emscripten sysroot: compiler-rt | 1 / 1 | 4 / 5 |

@@ -1,7 +1,7 @@
 // Roots: keep the comum::md locality, municipality and candidacy members and comum::CLocal's in the skeleton link the
-// way the target keeps them. Their users are not reconstructed yet. Every function below has direct callers in the
-// target and no table slot (ledger/callgraph.tsv), so each noinline stand-in gives it two call sites and binaryen keeps
-// its body out of line. The stand-ins differ in their operators, so binaryen merges none of them, and they take their
+// way the target keeps them. Their users are not reconstructed yet. Fn 521 holds table slot 99, so it has its own address
+// taken. Every other function below has direct callers in the target and no table slot (ledger/callgraph.tsv), so each
+// noinline stand-in gives it two call sites and binaryen keeps its body out of line. The stand-ins differ in their operators, so binaryen merges none of them, and they take their
 // arguments as parameters, so dead-argument elimination folds none in. A constructor's result is kept where the target's
 // wasm type keeps it (fns 5674, 5676, 5677, 5679, 3710, 3711) and dropped where it does not (5660). Declared through asm
 // labels with the object's signatures; address-taken from a static constructor. md::CLocal's destructor (5744) is declared
@@ -46,8 +46,9 @@ namespace {
 
 const void* volatile clocal_sink;
 
+// Stands for fn 401's callers: 1543, 2725, 2753, 3798, 4160, 4161, 5579, 5584, 5591, 5604, 5977, 6599, 7787, 10313,
+// 10500, 10689, 10699, 10700, 10701, 11188, 11223, 11242, 11902, 11908, 12071, 12098, 12105, 12110, 12134.
 __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
-__attribute__((noinline)) int InstanciasCandidaturas() { return (w521() + 5) ^ w521(); }
 __attribute__((noinline)) void ConstroiCandidaturas(int a) { w5811(a + 12); } // stands for 2838
 __attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // stands for 2871, 5710, 5950, 7787 and 11448
 __attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) + 2 * w2262(b); }
@@ -131,7 +132,7 @@ struct SCLocalRoots {
     SCLocalRoots()
     {
         clocal_sink = reinterpret_cast<const void*>(&Instancias);
-        clocal_sink = reinterpret_cast<const void*>(&InstanciasCandidaturas);
+        clocal_sink = reinterpret_cast<const void*>(&w521);
         clocal_sink = reinterpret_cast<const void*>(&ConstroiCandidaturas);
         clocal_sink = reinterpret_cast<const void*>(&DestroiSuplentes);
         clocal_sink = reinterpret_cast<const void*>(&Construtores);

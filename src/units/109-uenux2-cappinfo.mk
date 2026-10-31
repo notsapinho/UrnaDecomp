@@ -11,6 +11,9 @@
 # Names from evidence: GetGeral, GetVota and GetGap are the literals the three pass to their throws; IndiceTurno and
 # GetEstado<ESTADO> are records (cappinfo.cpp:472, :42, :57); EUeComumAppInfoError and its limits are RTTI; CFotos and
 # CPartidos are the literals their constructors store as the set's name (CFotos is also the record cfotos.cpp:111).
+# CAppInfo::GetInst is the text of an Assert the target holds, `comum::CAppInfo::GetInst().GetVota().GetEstadoVota() ==
+# EAVENCERRADA` (ledger/strings.tsv, 401161). GetVota's default argument: that text and nine like it call it with no
+# argument, and all 86 direct calls of 261, in 60 functions, pass 51; the slot keeps 261's parameter, and 903's is folded.
 #
 # Written and not matched, each with its measurement:
 # - CAppInfo::~CAppInfo (3792): -O3. The two vector loops of m_gap hold CDadoCorrespondencia's destructor inlined, the one
@@ -22,8 +25,9 @@
 #   format handle, and the target keeps it apart from the 31 slots of 536 because its copy has parse and format out of line
 #   (calls 1558 and 5906, whose other caller 4027 is in invoke form): not a body this tree's level gives. Our link merges
 #   the handle into 536's body, so no name can tell them apart. 1553's anchor votes 9868 and the other anchors 536, which
-#   drops the generated name of 536 and five matches with it (275, 680, 1712, 2253, 3702), so splat/symbol_addrs.txt holds a
-#   hand line for 536.
+#   drops the generated name of 536 and eleven matches with it (275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392,
+#   11405), so splat/symbol_addrs.txt holds a hand line for 536. That line names the surviving symbol: a unit that adds an
+#   enum's handle ahead of cappinfo.cpp.o changes it, and the eleven rows leave until the line follows.
 # - CDadoCorrespondencia's destructor (857) and CIdentificadorGeradorMidia's (2240): the target's copies call ~basic_string
 #   out of line, 38 and 26 B, where 857's in our object is 222 B. A compile of the same class at -Oz -fexceptions gives the
 #   target's calls in order (2240, the vector, two strings; three strings), which reads as the executable TU's copy (levels.md
@@ -59,9 +63,11 @@
 # - GetCodigosCarga is out of line and unrooted: 3788 opens a second frame after CAppInfo's code, so binaryen inlined it.
 #   push_back(c.GetCodigoCarga()), a getter by value: emplace_back gives 268 rows for 111.
 #
-# Chosen, no evidence names them: every data member's name; every parameter's; GetInst for these five (the records give it
-# to CRespostas and CEleitores); GetCodigosCarga, EhTreinamentoEleitor and GetIdentificacaoUrna, from their bodies and the
-# literal "Codigo identificacao UE"; cappinfosingleton.cpp, cestadogeralgap.cpp, cpartidos.*, cfotos.h, cappinfo.h,
+# Chosen, no evidence names them: every data member's name but those the ASN.1 fields give; every parameter's; GetInst for
+# CLocal, CCandidaturas, CFotos and CPartidos (the records give it to CRespostas and CEleitores); GetCodigosCarga,
+# EhTreinamentoEleitor and GetIdentificacaoUrna, from their bodies and the literal "Codigo identificacao UE"; the getters GetTurno,
+# GetFase, GetNumeroInternoUrna, GetCodigoCarga, GetTreinamentoEleitor, GetDadoCarga and GetCorrespondencia, from the members
+# they read, which no target string names; cappinfosingleton.cpp, cestadogeralgap.cpp, cpartidos.*, cfotos.h, cappinfo.h,
 # euecomumappinfoerror.h, eurnaturno.h and every enumerator's name; EUrnaTurno's values' spelling; CFotos::SFotoIndexada and
 # that its first 20 bytes are an md::CIndiceFoto; the types of the CEstadoGeral members no body reads; that 697 and 1942 are a
 # static member and a free function; m_turnoCarregado's name and type. The member order of CAppInfo is the offsets'.

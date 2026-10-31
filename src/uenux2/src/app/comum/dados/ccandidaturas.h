@@ -15,8 +15,9 @@ namespace comum {
 // says what it holds. RecuperaVersaoPacote's record spells the parameter TCargoID, and the records of LoadFromFile the map's
 // types. The other members are not reconstructed, and the data members' names and the alias's place are chosen. The first
 // 28 bytes read as api::CDataMap<uedword, md::CCandidatura> (its records and the same three members at the same offsets).
-// That class's header takes no name yet, so they are written out here, and the private constructor stands for its
-// constructor: 5811 frees the temporary name before +28, which only a base class's or a member's initializer does.
+// api/io/cdatamap.h holds no class in this tree, so they are written out here, and the private constructor stands for a
+// constructor of that class taking the name: 5811 frees the temporary name before +28, which only a base class's or a
+// member's initializer does.
 class CCandidaturas {
 public:
     using Container = std::map<uedword, md::CCandidatura>;
