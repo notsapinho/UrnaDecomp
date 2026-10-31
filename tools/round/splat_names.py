@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 from wasmmod import Module, read_uleb  # noqa: E402
 
 BIN = '/emsdk/upstream/bin'
+MERGED = re.compile(r'^(byn\$mgfn-shared\$)(\d+)$')
 
 
 def uleb(v):
@@ -163,6 +164,36 @@ def replay_script(out, tmp):
     print('\n'.join(lines))
 
 
+def name_rows(functions, entries):
+    """The rows of names.tsv. `functions` holds (final index, post-Oz index, post-Oz symbol) per function, the symbol
+    being a wasm-ld index or a name binaryen gave, and `entries` holds (name, object) per wasm-ld index.
+
+    merge-similar-functions names its shared body after the first merged function's (default) name. An internal symbol
+    repeats across objects (__cxx_global_array_dtor), and two bodies named after it would be one name to every tool, as
+    name@object cannot part two <binaryen> rows: those two also spell the member's object. Any other name stays bare,
+    and a name two <binaryen> rows still share stops here, since the symbol file could name only one of them.
+    """
+    merged = (MERGED.match(ld) for _, _, ld in functions)
+    shared = collections.Counter(entries[int(m.group(2))][0] for m in merged if m)
+    rows = []
+    for fi, oz, ld in functions:
+        m = MERGED.match(ld)
+        if ld.isdigit():
+            name, obj = entries[int(ld)]
+            rows.append((fi, name, obj, ld, oz))
+        elif m:
+            first, first_obj = entries[int(m.group(2))]
+            name = m.group(1) + first + (f'@{first_obj}' if shared[first] > 1 else '')
+            rows.append((fi, name, '<binaryen>', '-', oz))
+        else:
+            rows.append((fi, ld, '<binaryen>', '-', oz))
+    names = collections.Counter(r[1] for r in rows if r[2] == '<binaryen>')
+    repeated = sorted(n for n, count in names.items() if count > 1)
+    if repeated:
+        raise SystemExit(f'two binaryen bodies take one name, which can name only one of them: {repeated}')
+    return rows
+
+
 def compose(out, tmp, plain_path):
     e = f'{tmp}/emscripten_temp'
     plain = Module(plain_path)
@@ -182,23 +213,7 @@ def compose(out, tmp, plain_path):
         raise SystemExit(f'--Map lists {len(objects)} functions, wasm-ld wrote {len(base.func_types)}')
     # the name section's spelling (the map calls a signature_mismatch:f stub plain f), the map's object
     entries = [(ld_names[base.n_imported_funcs + k], obj) for k, (_, obj) in enumerate(objects)]
-    # merge-similar-functions names its shared body after the first merged function's (default) name. An internal
-    # symbol repeats across objects (__cxx_global_array_dtor), and two bodies named after it would be one name to every
-    # tool, as name@object cannot part two <binaryen> rows: those two also spell the member's object.
-    merged = (re.match(r'^byn\$mgfn-shared\$(\d+)$', oz_to_ld[final_to_oz[fi]]) for fi, _, _ in plain.code)
-    shared = collections.Counter(entries[int(m.group(1))][0] for m in merged if m)
-    rows = []
-    for fi, _, _ in plain.code:
-        oz = final_to_oz[fi]
-        ld = oz_to_ld[oz]
-        if ld.isdigit():
-            name, obj = entries[int(ld)]
-            rows.append((fi, name, obj, ld, oz))
-        else:
-            m = re.match(r'^(byn\$mgfn-shared\$)(\d+)$', ld)
-            first, first_obj = entries[int(m.group(2))] if m else (None, None)
-            name = ld if not m else m.group(1) + first + (f'@{first_obj}' if shared[first] > 1 else '')
-            rows.append((fi, name, '<binaryen>', '-', oz))
+    rows = name_rows([(fi, final_to_oz[fi], oz_to_ld[final_to_oz[fi]]) for fi, _, _ in plain.code], entries)
     with open(f'{out}/names.tsv', 'w') as f:
         f.write('index\tname\tobject\tld_index\tpost_oz_index\n')
         for r in rows:

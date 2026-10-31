@@ -21,7 +21,10 @@ These hold on the plain skeleton link (`build/out/wasm/vota_web`), whose functio
    wasm-metadce and the final wasm-opt rerun with index names and `-g` reproduce the plain code section (final
    index → post-Oz index). So every function of the link is named (`build/out/wasm-map/vota_web/names.tsv`, one row
    per function), the bodies binaryen merged as `byn$mgfn-shared$<first merged function>`
-   (`grep -c 'byn\$mgfn-shared' build/out/wasm-map/vota_web/names.tsv` counts them).
+   (`grep -c 'byn\$mgfn-shared' build/out/wasm-map/vota_web/names.tsv` counts them). An internal symbol repeats across
+   objects, so two bodies over one such symbol also spell the first member's object,
+   `byn$mgfn-shared$__cxx_global_array_dtor@<object>`, and `tools/round/splat_names.py` stops on a name two of
+   binaryen's bodies still share.
 4. **The `--emit-symbol-map` twin is the plain link, permuted.** `pnpm wasm splat-twin-check <plain> <twin>`
    pairs most functions by a name unique on both sides and the rest by body; every twin body equals its plain body
    once function, type and import indices are re-pointed (`different: 0`); the table and the data agree.

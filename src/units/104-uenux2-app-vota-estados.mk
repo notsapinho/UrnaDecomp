@@ -29,8 +29,8 @@
 #   emits the destructors in definition order. The match lines agree: 7485 is the object's __cxx_global_array_dtor,
 #   7482 its .2. A file static has to be defined before its use, so it cannot give this order.
 # - final: without it GetInst and the pointer's destructor delete through the vtable, and the target calls the
-#   destructor or nothing. Slot 0 of a class with no member holds the base's D2 (fn 174), so its destructor is
-#   implicit.
+#   destructor or nothing. Slot 0 of a class with no member holds the base's D2 (fn 174), which rules out only an
+#   out-of-line destructor.
 # - The constructor is out of line in the .cpp, and binaryen inlines it into GetInst, its one caller. In the class,
 #   clang inlines it and GetInst stores the base constructor's result into the pointer. Fn 764 stores what operator
 #   new returned, and takes the vptr store's address from the result: the shape of `call T::T; drop`. Fn 5979 shows
@@ -53,28 +53,33 @@
 # without 8750.
 #
 # Chosen, no evidence names them: GetInst (the name the project's recorded singletons use) and its reference result,
-# which unit 61 wrote; every data member's name, s_mutex and s_inst among them; GetInst's parameter pRetorno; the
-# pointee of the std::shared_ptr members, the one unit 61 chose; the +12 pointer's type in CDefineRotaPosReinicio, read
-# from a call of slot 7; the +11 byte's bool; the base's argument spelled with its chosen enumerators; StartState as key
-# function, except for the out-of-line destructors, declared first; the constructor's line and the definitions' place
-# above the records of members not written (their lines stay blank); each header's path, beside its .cpp. The order of
-# the statics is measured for GetInst's users; CQuerReimprimirZeresima has no GetInst to mention them first, so its .bss
-# order is not the target's, which no byte of a matched function shows. Records name 13 of the .cpp files. The other 11
-# are chosen, by how-to step 3's rule 2, then rule 4, from the data and the band: CAguardaMensagem in vota/eleitor/
-# (before cconfirmavotosemcandidato.cpp); CInicioBU in fimvotacao/ (after cimprimirbuoutrasobrigatorias.cpp);
-# CInicioZeresima and CReinicioComparecimentoMesario in iniciovotacao/ (before cverificaeleicaopassou.cpp);
-# CMaisInformacoes and CMenuFiltrarCandidatosPorNumero in auxiliares/ (before cmenuvisualizarcandidatos.cpp);
-# CCancelaHabilitacaoEleitor and CProcuraEleitor in leidentidade/ (beside celeitorencontrado.cpp and
-# cpedeidentidade.cpp); CFinalizaOperador and CSincronismoOperador in vota/operador/ (before cthreadoperador.cpp);
-# CFimAquisicaoVotos in outrasopcoes/, the nearest recorded directory, its neighbours having no record.
+# which unit 61 wrote; every data member's name, s_mutex and s_inst among them; the local trava; the implicit destructor
+# of a class with no member; GetInst's parameter pRetorno, and its default in cmaisinformacoes.h (fn 1280's target
+# callers pass both values, so nothing shows a default); the pointee of the std::shared_ptr members, the one unit 61
+# chose; the +12 pointer's type in CDefineRotaPosReinicio, read from a call of slot 7; the +11 byte's bool; the base's
+# argument spelled with its chosen enumerators; StartState as key function, except for the out-of-line destructors,
+# declared first; the constructor's line and the definitions' place above the records of members not written (their
+# lines stay blank); each header's path, beside its .cpp. The order of the statics is measured for GetInst's users;
+# CQuerReimprimirZeresima has no GetInst to mention them first, so its .bss order is not the target's, which no byte of
+# a matched function shows. Records name 13 of the .cpp files. The other 11 are chosen, by how-to step 3's rule 2, then
+# rule 4, from the data and the band: CAguardaMensagem in vota/eleitor/ (before cconfirmavotosemcandidato.cpp);
+# CInicioBU in fimvotacao/ (after cimprimirbuoutrasobrigatorias.cpp); CInicioZeresima and CReinicioComparecimentoMesario
+# in iniciovotacao/ (before cverificaeleicaopassou.cpp); CMaisInformacoes and CMenuFiltrarCandidatosPorNumero in
+# auxiliares/ (before cmenuvisualizarcandidatos.cpp); CCancelaHabilitacaoEleitor and CProcuraEleitor in leidentidade/
+# (beside celeitorencontrado.cpp and cpedeidentidade.cpp); CFinalizaOperador and CSincronismoOperador in vota/operador/
+# (before cthreadoperador.cpp); CFimAquisicaoVotos in outrasopcoes/, the nearest recorded directory, its neighbours
+# having no record.
 #
 # Same bytes, each compiled and compared by function with the object-local numbers masked (how-to step 3): GetInst
 # returning a pointer; std::unique_lock or std::scoped_lock for std::lock_guard; `s_inst = std::unique_ptr<T>(new T())`,
 # and std::make_unique with a public constructor, for reset; `== nullptr` and `new T` for the test and the new; final on
-# the destructor instead of the class; the constructor above or below GetInst. The out-of-line destructor as `{}`; a
-# local reference in fn 1280 and `if (pRetorno)`; the data members' default member initializers for the
-# mem-initializers; `if (m_pEstado)`; uebyte for the +11 bool. Statics defined before GetInst give the same functions
-# and the other .bss order.
+# the destructor instead of the class; `virtual ~T() override = default;` in the class of a state with no member, whose
+# object is the implicit form's; the constructor above or below GetInst; `std::lock_guard trava(s_mutex)` with its
+# argument deduced; a const guard initialised with braces; `s_inst.get() == nullptr`; no braces on the if;
+# `*s_inst.get()`; `= nullptr` and `{}` on the statics' definitions. The out-of-line destructor as `{}`; a local
+# reference in fn 1280 and `if (pRetorno)`; the data members' default member initializers for the mem-initializers; `if
+# (m_pEstado)`; uebyte for the +11 bool. Statics defined before GetInst give the same functions and the other .bss
+# order.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
