@@ -1573,48 +1573,6 @@
 // f11569 · 176 B · unmatched · placement: link order · name unknown
 // void f11569(i32, i32) { ... }
 
-// link-order cluster 513 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgravadorversoesarquivos.cpp
-
-// f11581 · 87 B · unmatched · placement: link order · name unknown
-// ? f11581(i32) { ... }
-
-// f11580 · 90 B · unmatched · placement: link order · name unknown
-// void f11580(i32) { ... }
-
-// link-order cluster 514 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgravadorlog.cpp
-
-// f11583 · 10 B · unmatched · placement: link order · name unknown
-// void f11583(i32) { ... }
-
-// link-order cluster 516 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgravadorrdv.cpp
-
-// f11586 · 14 B · unmatched · placement: link order · name unknown
-// ? f11586(i32) { ... }
-
-// f11585 · 61 B · unmatched · placement: link order · name unknown
-// void f11585(i32) { ... }
-
-// link-order cluster 520 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgravadorenvelopearquivo.cpp
-
-// f11623 · 226 B · unmatched · placement: link order · name unknown
-// void f11623(i32, i32) { ... }
-
-// f11622 · 97 B · unmatched · placement: link order · name unknown
-// ? f11622(i32) { ... }
-
-// f11621 · 100 B · unmatched · placement: link order · name unknown
-// void f11621(i32) { ... }
-
-// link-order cluster 521 · uses=1 · neighbours' file uenux2/src/app/comum/dados/igravadorenvelope.cpp
-
-// f11625 · 15 B · unmatched · placement: link order · name unknown
-// ? f11625(i32) { ... }
-
-// link-order cluster 522 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgravadorenvelopearquivo.cpp
-
-// f11626 · 1508 B · unmatched · placement: link order · name unknown
-// void f11626(i32, i32) { ... }
-
 // link-order cluster 525 · uses=1 · neighbours' file uenux2/src/app/comum/dados/ccopiadorwsqmr.cpp
 
 // f11638 · 12 B · unmatched · placement: link order · name unknown
@@ -1934,11 +1892,6 @@
 // f5808 · 501 B · unmatched · placement: link order · name unknown
 // void f5808(i32, i32, i32) { ... }
 
-// link-order cluster 833 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgravadorlog.cpp
-
-// f5823 · 124 B · unmatched · placement: link order · name unknown
-// ? f5823(i32) { ... }
-
 // link-order cluster 834 · uses=2 · neighbours' file uenux2/src/app/comum/asn/util.cpp
 
 // f5832 · 284 B · unmatched · placement: link order · name unknown
@@ -1972,14 +1925,6 @@
 
 // f5856 · 176 B · unmatched · placement: link order · name unknown
 // ? f5856(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 839 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/curna.cpp
-
-// f5861 · 289 B · unmatched · placement: link order · name unknown
-// ? f5861(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f5860 · 488 B · unmatched · placement: link order · name unknown
-// void f5860(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 841 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccopiadorwsqmr.cpp
 
@@ -2256,12 +2201,6 @@
 // void f2839(i32, i32) { ... }
 
 // link-order cluster 1112 · uses=4 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
-
-// f2855 · 206 B · unmatched · placement: link order · name unknown
-// void f2855(i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f2854 · 197 B · unmatched · placement: link order · name unknown
-// void f2854(i32, i32, i32, i32, i32, i32) { ... }
 
 // f2853 · 423 B · unmatched · placement: link order · name unknown
 // ? f2853(i32, i32, i32) { ... }

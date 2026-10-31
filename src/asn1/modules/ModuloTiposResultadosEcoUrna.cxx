@@ -104,7 +104,7 @@ const ModuloTiposResultadosEcoUrna::TipoApuracao::InfoType ModuloTiposResultados
     4, nameList
 };
 
-const char * ModuloTiposResultadosEcoUrna::ApuracaoMistaMR::motivoApuracao::value_type::nameList[] = {
+const char * ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComMR::nameList[] = {
     "<undefined>=0",
     "naoObteveExitoContingencia",
     "indisponibilidadeUrnaContingencia",
@@ -207,7 +207,7 @@ const char * ModuloTiposResultadosEcoUrna::ApuracaoMistaMR::motivoApuracao::valu
     "outros"
   };
 
-const ModuloTiposResultadosEcoUrna::ApuracaoMistaMR::motivoApuracao::value_type::InfoType ModuloTiposResultadosEcoUrna::ApuracaoMistaMR::motivoApuracao::value_type::theInfo = {
+const ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComMR::InfoType ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComMR::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,
@@ -244,7 +244,7 @@ const ModuloTiposResultadosEcoUrna::ApuracaoMistaMR::InfoType ModuloTiposResulta
     "ApuracaoMistaMR"
 };
 
-const char * ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE::motivoApuracao::value_type::nameList[] = {
+const char * ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComBU::nameList[] = {
     "<undefined>=0",
     "urnaDataHoraIncorreta",
     "urnaComDefeito",
@@ -347,7 +347,7 @@ const char * ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE::motivoApuracao::va
     "outros"
   };
 
-const ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE::motivoApuracao::value_type::InfoType ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE::motivoApuracao::value_type::theInfo = {
+const ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComBU::InfoType ModuloTiposResultadosEcoUrna::MotivoApuracaoMistaComBU::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,
@@ -384,7 +384,7 @@ const ModuloTiposResultadosEcoUrna::ApuracaoMistaBUAE::InfoType ModuloTiposResul
     "ApuracaoMistaBUAE"
 };
 
-const char * ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE::motivoApuracao::value_type::nameList[] = {
+const char * ModuloTiposResultadosEcoUrna::MotivoApuracaoManual::nameList[] = {
     "<undefined>=0",
     "urnaComDefeito",
     "urnaIndisponivelInicio",
@@ -487,7 +487,7 @@ const char * ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE::
     "outros"
   };
 
-const ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE::motivoApuracao::value_type::InfoType ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE::motivoApuracao::value_type::theInfo = {
+const ModuloTiposResultadosEcoUrna::MotivoApuracaoManual::InfoType ModuloTiposResultadosEcoUrna::MotivoApuracaoManual::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,
@@ -524,7 +524,7 @@ const ModuloTiposResultadosEcoUrna::ApuracaoTotalmenteManualDigitacaoAE::InfoTyp
     "ApuracaoTotalmenteManualDigitacaoAE"
 };
 
-const char * ModuloTiposResultadosEcoUrna::ApuracaoEletronica::motivoApuracao::value_type::nameList[] = {
+const char * ModuloTiposResultadosEcoUrna::MotivoApuracaoEletronica::nameList[] = {
     "<undefined>=0",
     "naoFoiPossivelReuperarResultado",
     "urnaNaoChegouMidiaDefeituosa",
@@ -627,7 +627,7 @@ const char * ModuloTiposResultadosEcoUrna::ApuracaoEletronica::motivoApuracao::v
     "outros"
   };
 
-const ModuloTiposResultadosEcoUrna::ApuracaoEletronica::motivoApuracao::value_type::InfoType ModuloTiposResultadosEcoUrna::ApuracaoEletronica::motivoApuracao::value_type::theInfo = {
+const ModuloTiposResultadosEcoUrna::MotivoApuracaoEletronica::InfoType ModuloTiposResultadosEcoUrna::MotivoApuracaoEletronica::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,
@@ -664,29 +664,29 @@ const ModuloTiposResultadosEcoUrna::ApuracaoEletronica::InfoType ModuloTiposResu
     "ApuracaoEletronica"
 };
 
-const void* ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type::selectionInfos[4] = {
+const void* ModuloTiposResultadosEcoUrna::TipoApuracaoSA::selectionInfos[4] = {
     &apuracaoMistaMR::value_type::theInfo,
     &apuracaoMistaBUAE::value_type::theInfo,
     &apuracaoTotalmenteManual::value_type::theInfo,
     &apuracaoEletronica::value_type::theInfo
 };
 
-const char* ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type::selectionNames[4] = {
+const char* ModuloTiposResultadosEcoUrna::TipoApuracaoSA::selectionNames[4] = {
     "apuracaoMistaMR",
     "apuracaoMistaBUAE",
     "apuracaoTotalmenteManual",
     "apuracaoEletronica"
 };
 
-const ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type::InfoType ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type::theInfo = {
-    ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type::create,
+const ModuloTiposResultadosEcoUrna::TipoApuracaoSA::InfoType ModuloTiposResultadosEcoUrna::TipoApuracaoSA::theInfo = {
+    ModuloTiposResultadosEcoUrna::TipoApuracaoSA::create,
     0x00000000,
     0,
     false,
-    ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type::selectionInfos,
+    ModuloTiposResultadosEcoUrna::TipoApuracaoSA::selectionInfos,
     4, 4,
     NULL,
-    ModuloTiposResultadosEcoUrna::Urna::motivoUtilizacaoSA::value_type::selectionNames
+    ModuloTiposResultadosEcoUrna::TipoApuracaoSA::selectionNames
 };
 
 const void* ModuloTiposResultadosEcoUrna::Urna::fieldInfos[6] = {

@@ -20,10 +20,10 @@
 # - IResultado's destructor (fn 12090, unit 60's match): its copy in the link now comes from iresultado.cpp.o, which
 #   emits IResultado's vtable with the constructor, ahead of unit 102's roots object; the same symbol, and it still
 #   matches.
-# - CGravadorRCSecao's deleting destructor (fn 11615, slot 1, 42 B) has no body of ours, and its row stays
-#   `no-candidate`: its stub left cgravadorrcsecao.cpp once CriaIdentidadeEleitor was defined there (stubs.py counts a
-#   virtual member of a class our sources define). It waits for the class's vtable, which a written key function
-#   (GravaResultado, fn 11616, slot 7, or an out-of-line destructor) emits in cgravadorrcsecao.cpp's object.
+# - CGravadorRCSecao's implicit deleting destructor (fn 11615, slot 1): its vtable is emitted in
+#   122-uenux2-app-comum-gravadores-pending.cpp, whose trap of GravaResultado (fn 11616, slot 7, record
+#   cgravadorrcsecao.cpp:110) is the class's key function; the roots keep that vtable. cgravadorrcsecao.h gives the
+#   class its layout (60 bytes, from fn 12098, which builds it); slot 0 holds IResultado's destructor (fn 12090).
 # - Two inline accessors under chosen names, CConfiguracaoEleicao::GetPleito() and md::CPleito::GetID(): fn 3798 formats
 #   the word at +28 of CConfiguracaoEleicao, its CPleito's identifier. With the unit's edits of headers (these two and
 #   unit 60's), every object the link held before is byte-identical (542 objects, sha1 before and after).
@@ -65,12 +65,8 @@
 # - 1396 IGravador's constructor equals the target's but for operands (20 over 239 rows), and the scan reads it
 #   `unresolved self-voted`: its call of 3798 is the only vote for 3798's name. It matches when 3798 does, or when
 #   another caller of 3798 (fns 1276, 12134) lands.
-# - Not written: CEnvelopeGenerico::ValidaCriacao (3822), CEntidadeHashes::ValidaCriacao (5855), CUrna::ValidaCriacao
-#   and constructors (5862, 2854, 2855), the converters of CConversorEnvelopeGenerico, CConversorTipoApuracaoSA,
-#   CConversorCorrespResultado and CConversorUrna (10270, 10271, 10282, 10283, 10288, 10289, 10284, 10287) and
-#   CCorrespondenciaResultado (2801): each needs its data class's layout, which no header of ours has (CUrna's
-#   constructors copy an 88-byte identification at +16 whose 76-byte part fn 1557 copies). CVersoesContratos::GetValor
-#   and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) wait for the class whose constructor
+# - The gravadores/md data classes, CConversorTipoApuracaoSA and the other recorders' destructors are unit 136's.
+#   CVersoesContratos::GetValor and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) wait for the class whose constructor
 #   (fn 5480) both build and whose map their find (fn 10877) and end (fn 5481) read; 6044 and 10877 wait for them.
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \
 	src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
@@ -84,3 +80,8 @@ $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFL
 $(ROOT)/$(APP)/122-uenux2-app-comum-gravadores-roots.o: $(ROOT)/src/units/122-uenux2-app-comum-gravadores-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/122-uenux2-app-comum-gravadores.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -c src/units/122-uenux2-app-comum-gravadores-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/122-uenux2-app-comum-gravadores-roots.o
+# CGravadorRCSecao::GravaResultado is not reconstructed: 122-uenux2-app-comum-gravadores-pending.cpp gives it a trapping
+# body, compiled with the tree's flags, and emits the class's vtable and implicit deleting destructor
+$(ROOT)/$(APP)/122-uenux2-app-comum-gravadores-pending.o: $(ROOT)/src/units/122-uenux2-app-comum-gravadores-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/122-uenux2-app-comum-gravadores.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/122-uenux2-app-comum-gravadores-pending.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/122-uenux2-app-comum-gravadores-pending.o

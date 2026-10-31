@@ -20,12 +20,6 @@
 // f5825 · 1308 B · unmatched · name unknown
 // void f5825(i32, i32) { ... }
 
-// f11587 · 2707 B · unmatched · name unknown
-// void f11587(i32, i32) { ... }
-
-// f11582 · 1668 B · unmatched · name unknown
-// void f11582(i32, i32) { ... }
-
 // f11488 · 1661 B · unmatched · name unknown
 // void f11488(i32, i32) { ... }
 
