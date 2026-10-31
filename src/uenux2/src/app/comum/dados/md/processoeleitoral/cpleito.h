@@ -26,6 +26,8 @@ public:
 
     // The name is chosen: no record names this accessor.
     const TVectorEleicaoPE& GetEleicoes() const { return m_eleicoes; }
+    // The name is chosen too: CGravadorUtil::DeterminaNomeArquivoSemLetra formats the word at +0.
+    TPleitoID GetID() const { return m_id; }
     const CEleicaoPE& GetEleicao(const TEleicaoID id) const;
     const CSituacoesEleicoes& GetSituacoesEleicoes(const TEleicaoID id) const;
 
