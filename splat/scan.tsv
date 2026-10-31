@@ -1348,7 +1348,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1482	ossl_asn1_template_free	1241	symbol	match	-	154	addr	openssl	1	openssl/O3/crypto/asn1/libcrypto-lib-tasn_fre.o
 1483	ASN1_INTEGER_to_BN	1244	symbol	match	readings: address string	127	addr	openssl	1	openssl/O3/crypto/asn1/libcrypto-lib-a_int.o
 1484	ASN1_INTEGER_get	1245	symbol	match	readings: address string	548	addr	openssl	1	openssl/O3/crypto/asn1/libcrypto-lib-a_int.o
-1485	_ZN4vota13EhTreinamentoEv	5724	content	match	-	14	none	vota	1	app/uenux2/src/app/vota/comum/votadefs.cpp.o
+1485	_ZN4vota13EhTreinamentoEv	5724	symbol	match	-	14	none	vota	1	app/uenux2/src/app/vota/comum/votadefs.cpp.o
 1486	DH_test_flags	1228	symbol	match	-	11	addr	openssl	1	openssl/O3/crypto/dh/libcrypto-lib-dh_lib.o
 1487	-	-	-	no-candidate	no symbol and no ledger pair	587	none	app	0	-
 1488	-	-	-	no-candidate	no symbol and no ledger pair	405	none	app	0	-

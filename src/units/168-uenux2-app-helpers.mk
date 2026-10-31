@@ -13,7 +13,8 @@
 #   passes its argument unmasked: with an int parameter the object adds `i32.const 255; i32.and` before the call, so
 #   the parameter is 8 bits wide, the slot's uebyte. The class's typeinfo (@1551320) is a __si_class_type_info over
 #   api::CStateContext<comum::CAppState>'s (@1551332): declaring that base leaves both functions as they were and gives
-#   our typeinfo the same kind (cstatecontext.h says what else it implies).
+#   our typeinfo the same kind. Same bytes, listed: the base empty and the virtual destructor in CAppStateContext
+#   alone; the base's inline virtual destructor (cstatecontext.h) is chosen.
 # - Both are out of line, in a file of their own: their callers keep the calls (3843: 4349 and 10204, whose records are
 #   cthreadeleitor.cpp:134 and cthreadoperador.cpp:87; 3844: 4713, 7061 and 10204), and clang inlines members this
 #   small in a TU that defines them, so a reading: no caller's file defines them. The file: in use band 3
