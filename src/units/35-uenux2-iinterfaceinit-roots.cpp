@@ -5,7 +5,8 @@
 // here. The others are called directly in the target, by functions not reconstructed
 // yet (ledger/callgraph.tsv: 2863 from 7160 and 12134, 2862 from 7160 12031 12134, 5897 and 3832 from 7160 and 12134,
 // 729 from 17 functions): two noinline callers with different bodies give each two call sites, so binaryen keeps it out
-// of line. DesabilitarMR has one call site, the one binaryen inlines it into in the target (7160).
+// of line. DesabilitarMR has one call site, the one binaryen inlines it into in the target (7160). DesligarUrna (fn
+// 5894) has two callers in the target, 11982 and 12017, not reconstructed: one stand-in calls it twice.
 // Declared through asm labels with the object's signatures (a destructor returns `this`); compiled with APP_CXXFLAGS,
 // like the other stand-ins.
 extern "C" {
@@ -15,6 +16,7 @@ int w2862_root_0(int) __asm__("_ZN5comum14IInterfaceInit24IsMRPresenteSemHabilit
 int w5897_root_0(int) __asm__("_ZN5comum14IInterfaceInit23IsMRMontadoSemHabilitarEv");
 void w3832_root_0(int) __asm__("_ZN5comum14IInterfaceInit25DesmontarMRSemDesabilitarEv");
 int w729_root_0(int) __asm__("_ZN5comum14IInterfaceInit11GetDemoModeEv");
+void w5894_root_0(int) __asm__("_ZN5comum14IInterfaceInit12DesligarUrnaEv");
 }
 
 namespace {
@@ -42,6 +44,14 @@ __attribute__((noinline)) int VerificaMR(int init, int vezes)
     return vezes + 1;
 }
 
+// stands for fns 11982 and 12017
+__attribute__((noinline)) int Desliga(int init, int outra)
+{
+    w5894_root_0(init);
+    w5894_root_0(outra);
+    return 6;
+}
+
 void* volatile w5898_sink;
 
 struct SW5898Roots {
@@ -49,6 +59,7 @@ struct SW5898Roots {
     {
         w5898_sink = reinterpret_cast<void*>(&PreparaMR);
         w5898_sink = reinterpret_cast<void*>(&VerificaMR);
+        w5898_sink = reinterpret_cast<void*>(&Desliga);
     }
 } w5898_roots;
 

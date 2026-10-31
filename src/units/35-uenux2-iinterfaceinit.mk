@@ -8,8 +8,11 @@
 # GetDemoMode (729, 753:15, 757:15) with __shared_ptr_pointer<bool*, ...>::__get_deleter (11644), and HabilitarMR (2863,
 # a chosen name) with DesabilitarMR (a chosen name, no target function: binaryen inlines it into 7160). With them the
 # class header (src/app/comum/iinterfaceinit.h) and the out-of-line constructor, which no target function holds (binaryen
-# inlined it into its one caller, fn 8302). DesligarUrna (5894) is not reconstructed: it calls fn 837, a
-# CPolySingleton instance no unit has, and fn 233; MontarMRSemHabilitar (5896) and LogDiskInfo (10226) neither.
+# inlined it into its one caller, fn 8302). DesligarUrna (5894, records 522:18, 527:15, 531:15) was added after the unit
+# landed, once unit 111 gave fn 837 (CPolySingleton<IEventosLog>::instance) and fn 233 (IEventosLog::loga) their
+# bodies: it logs "Urna desligada a pedido do aplicativo", sends message 48 and throws codes 7268 and 7269
+# (euecomumerror.h). The instance in a local named `logs`, as unit 111's clogcomum.cpp has it, fills column 18; the
+# local's name and `auto&` are chosen. MontarMRSemHabilitar (5896) and LogDiskInfo (10226) are not reconstructed.
 # Evidence and choices. The records fix each throw's line; EnviarMensagemThrowVoid's `inline` is read from where its
 # records lie (iinterfaceinit.h). HabilitarMR's place before line 137 is read from fn 2863 sitting before fn 2862 in
 # their use band, with fn 3833 after it and before fn 3832 in theirs (docs/reference/facts/reading.md R8, an inline

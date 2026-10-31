@@ -25,6 +25,11 @@ bool CInformacaoEleicao::ImprimeBJust() const
     return !EhModoDemonstracao() && m_parametros.GetRegistrarMesarios();
 }
 
+bool CInformacaoEleicao::AceitaJustificativa() const
+{
+    return m_parametros.GetAceitarJustificativa();
+}
+
 int CInformacaoEleicao::GetNumViasBU() const
 {
     return EhModoDemonstracao() ? 1 : m_parametros.GetNumBUVotaObrigatorios();

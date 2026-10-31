@@ -48,9 +48,12 @@ std::string CPacoteArquivos::RetornaNomeChave(ESavdChaveValidar chave)
     throw CUeComumError(EUE_COMUM_CHAVE_DESCONHECIDA, std::format("Chave desconhecida: {}", chave));
 }
 
-} // namespace comum
+// (original lines 165-166: content not recovered)
+#line 167
+void CPacoteArquivos::TrataErroPacote(const IInterfaceSavd& savd) const
+{
+    throw CUeComumError(EUE_COMUM_VALIDAR_ASSINATURA_PACOTE, std::format("Falha ao validar assinatura {}\npacote: ({})\nErro SAVD: ({} - {})",
+                                                                         RetornaNomeChave(m_chave), m_nome, savd.GetCodigo(), savd.GetMensagem()));
+}
 
-// <stubs>
-// f5901 · 594 B · unmatched · name unknown
-// void f5901(i32, i32) { ... }
-// </stubs>
+} // namespace comum

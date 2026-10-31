@@ -16,7 +16,7 @@
 //       back, and the builder of the "Mais informa\xE7\xF5es" menu (fn 6599) adds five items through fn 2285, each a
 //       std::shared_ptr<comum::CItemMenu> (the RTTI names of the control blocks it makes);
 //   +16 the std::string that MontaMenu copies into the api::COptionValidation of the menu's input field: the keys of
-//       the options;
+//       the options, which AdicionaItem (fn 2285) appends to;
 //   +28 the api::CFormBuilder the menu is built into: fn 6599 stores there the address of the builder it calls
 //       AddStatusHeader (fn 502) on, and MontaMenu passes it to fn 202 for each line it adds, as fn 6599 does. A
 //       pointer would give the same bytes.
@@ -30,7 +30,14 @@
 //   iinterfaceinit.cpp, iinterfacesavd.cpp: stretches 851, 850, 849, 847), where a cmenubase.cpp would come after
 //   cinfomtlcd.cpp; after cinformacaoeleicao.cpp in informacao/ it is in name order. The file name is the class's in
 //   lower case.
-// - CItemMenu is only declared here: the destructor needs no more of it.
+// - AdicionaItem (fn 2285): fn 6599 calls it for each of the five items, with a std::shared_ptr<CItemMenu> it copies
+//   for the call (by value: the body releases it). It pushes the item onto +4 (fn 1400, the push_back body unit 31
+//   names for the forms' vectors of shared_ptr, a twin) and, when the item's slot 2 is true, appends the item's key to
+//   +16. That append sits after a stack prologue of its own inside the body, so binaryen inlined an out-of-line
+//   function there (docs/reference/facts/reading.md R10): AdicionaOpcao, which formats the key with std::format("{}")
+//   and appends it, out of line in cmenubase.cpp. Both names are chosen. Their place in the link (band 5, between
+//   cinformacaoeleicao.cpp's 2286 and cinfomtlcd.cpp's GetInst, 2284) fits cmenubase.cpp in informacao/.
+// - CItemMenu is only declared here: the destructor needs no more of it. cmenubase.cpp includes citemmenu.h.
 
 #include <memory>
 #include <string>
@@ -51,10 +58,15 @@ public:
 
     virtual void MontaMenu();
 
+    void AdicionaItem(std::shared_ptr<CItemMenu> item);
+
 protected:
     std::vector<std::shared_ptr<CItemMenu>> m_itens;
     std::string m_opcoes;
     api::CFormBuilder& m_form;
+
+private:
+    void AdicionaOpcao(unsigned int chave);
 };
 
 inline CMenuBase::~CMenuBase() = default;

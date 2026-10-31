@@ -25,6 +25,17 @@
 //   inlined it, the same TU), so it is in ieventoslog.cpp. ConverteFonteAlim has a prologue of its own there: binaryen's.
 // - ConverteStatusBateria is declared `inline`, which -O2 needed: unit 111's fragment has the measurement.
 // - The three Converte members: the records' text has no `static`, so they are members, with `this` removed by binaryen.
+// - logaErro, 2282: no record names it. It is loga with severity 3 (`f433(i32.load[p0+4], 3, p1)`); fn 4459 calls it on
+//   fn 184's result, as logaAlerta's callers do. Its band (uses 5) puts it after cinformacaoeleicao.cpp's
+//   EhModoDemonstracao (2286), so after that file's records (@1550764), which follow clogvota.cpp's (@1532800): a member
+//   of this class, as for logaAlerta. Its name is chosen beside logaAlerta's.
+// - The five members that log one fixed text, 5885, 5883, 5882, 5881 and 5880 (in link order): no record names them.
+//   Each holds loga or logaErro inlined, the text's std::string built in its own frame and api::CLoga::loga called with
+//   +4 of `this` and severity 1 (5882, 5880) or 3 (5885, 5883, 5881), and their callers call them on fn 184's result.
+//   Their band (uses 2) puts them between md/cidentificacaourna.cpp's constructor (5886, records @1552804 to @1552836)
+//   and ConverteERelatoriosUE (5879, @1552880), so they are defined above line 396. 5885, 5881 and 5880, whose texts are
+//   38 bytes each, are thunks of binaryen's fn 3902, which takes the severity and the text's five words. Each name is
+//   chosen from the text it logs.
 // ERelatoriosUE and its values: the record names the type, unqualified, so the namespace is chosen; the values are the
 // cases of fn 5879 and each name is chosen from the text its case returns. The parameter types are the records'.
 
@@ -58,7 +69,13 @@ public:
 
     void loga(const std::string& mensagem);
     void logaAlerta(const std::string& mensagem);
+    void logaErro(const std::string& mensagem);
     void LogaCargaBateria(uebyte fonte, uebyte status);
+    void LogaMidiaResultadoAusente();
+    void LogaMidiaResultadoInvalida();
+    void LogaMesarioIndagadoImprimirZeresima();
+    void LogaErroEstadoAplicativo();
+    void LogaImprimindoRelatorioEstadoUrna();
 
     std::string ConverteERelatoriosUE(const ERelatoriosUE relatorio);
     std::string ConverteFonteAlim(const uebyte fonte);
