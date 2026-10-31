@@ -1,7 +1,8 @@
 # uenux2 comum::asn::Utils in src/app/comum/asn/util.cpp, the records' file: ConverteFase, DesconverteFase,
 # ConverteTipoLocalVotacao and DesconverteTipoLocalVotacao (target fns 1712, 2843, 3801, 3800), and DesconverteAbrangencia
-# (5827), written and not matched; CConversorDadoCarga (below). The class header app/comum/asn/util.h, the error header euecomumasnerror.h and the
-# enum EUrnaFase (app/comum/eurnafase.h, which unit 60's cgravadorwsq.h includes in place of its opaque `: int`
+# (5827), written and not matched; CConversorDadoCarga (below). The class header app/comum/asn/util.h, the error header
+# euecomumasnerror.h and the enum EUrnaFase (app/comum/eurnafase.h, which unit 60's cgravadorwsq.h includes in place of
+# its opaque `: int`
 # declaration: the target formats EUrnaFase through fn 536, formatter<unsigned int>).
 #
 # Evidence: the records give each member's name and signature, the throws' lines and columns (19 is a throw inside the
@@ -48,17 +49,20 @@
 # first two switches: a `default: break;` gives the same bytes (measured on ConverteTurno's object).
 #
 # cconversordadocarga.cpp (CConversorDadoCarga, target fns 11401, 11402, 5693, 5694; it moved here from unit 93's list)
-# comes after util.cpp in this list, and that order is measured: with the converter's object ahead of util.cpp's, as
-# in unit 93's list, 11402 scores 74 over 652 rows with 3 inserted and 5 deleted and 11401 71 over 513 with 3 and 4,
-# binaryen keeping the out-parameter and the `| 48` of DesconverteTurno in other places; in this order both are
-# operand-only (docs/reference/facts/codegen.md C4). 11402 matches. The cases of DesconverteModelo run from ue2022 down:
-# in ascending order the block of 2013 comes first and 11402 is `differs` at +0x24a.
+# comes after util.cpp in this list, and that order is measured (docs/reference/facts/codegen.md C4), with pnpm wasm
+# score. As written, after util.cpp: 11402 matches, and 11401 is 69 over 512 rows, 54 of them operand-only, 2 inserted
+# and 10 deleted. The same body in unit 93's list, the converter's object ahead of util.cpp's: 11402 is 73 over 652 with
+# 3 inserted and 5 deleted, and 11401 83 over 513 with 3 and 12. So the order is what makes 11402 match. With `turno` in
+# place of the cast below, after util.cpp, 11401 is 50 over 510, all operand-only. The cases of DesconverteModelo run
+# from ue2022 down: in ascending order the block of 2013 comes first and 11402 is `differs` at +0x24a.
 # - 11401 is written and `differs` at +0x38. ConverteTurno's throw in the target passes the turn as a handle, table
 #   slot 474, fn 9868, whose body calls formatter<unsigned int>::format out of line (fn 5906, called by 4027 too). The
 #   form with std::format("...", turno) over util.h's template compiles to fn 536's body, one of the 31 slots of that
-#   function, and the two slots then vote for two target functions: 536 loses its name, and 1712, 2253, 3702, 275 and
-#   680 leave `match`. So the source passes static_cast<int>(turno), the one difference, until a formatter is found
-#   that gives 9868. An explicit `std::formatter<EUrnaTurno> : std::formatter<unsigned int> {}` does not compile:
+#   function, and the two slots then vote for two target functions. With no hand line for 536 it loses its name and
+#   turns `no-candidate`, eleven rows leave `match` (1712, 2253, 3702, 275, 680, 3801, 5633, 5689, 5900, 11392 and 11405)
+#   and 11401 turns `unresolved`. So the source passes static_cast<int>(turno), the one difference, and that alone
+#   justifies the cast: it goes when 536 has a hand line, with which `turno` moves no row and 11401 stays `differs`, first
+#   at +0x52 on that slot. An explicit `std::formatter<EUrnaTurno> : std::formatter<unsigned int> {}` does not compile:
 #   libc++'s format takes an integral.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.

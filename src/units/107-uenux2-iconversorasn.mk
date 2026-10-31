@@ -22,10 +22,16 @@
 # - !a || !b against !(a && b) in both checks of the header, and `TEntidade entidade = DoConverte(dado);` against
 #   `TEntidade entidade(DoConverte(dado));`: over the roots object, 0 of 134 functions differ;
 # - `default: break;` before the throw after the switch in CConversorAbrangencia::DoConverte, against no default;
-# - idCriptografia < 1 against == 0 in CSeguranca's constructor.
-# The roots object compiles with APP_CXXFLAGS. With -fno-strict-aliasing, the tree's flag, 9 of its 134 functions differ,
-# all libc++'s __format_* for floating point, none an IConversorASN member nor str(): the instances that match are
-# the same under the tree's flags.
+# - idCriptografia < 1 against == 0 in CSeguranca's constructor, and m_idTipoArquivo and m_idCriptografia against the
+#   parameters in its first two tests. m_chave.empty() in the third differs, so the parameter there is evidence;
+# - `const int fuso` against `const short fuso` in CConversorComplementoMunicipio::DoDesconverte: i32.load, then
+#   i32.extend16_s at each call, in both. int is a choice;
+# - the local reference `chave` in CConversorSeguranca::DoDesconverte against the getter called twice;
+# - `&&` against `? :` in CConversorMunicipio::DoDesconverte's last argument.
+# The roots object compiles with APP_CXXFLAGS. With -fno-strict-aliasing, the tree's flag, 9 of its 134 functions differ:
+# six of libc++'s __format_* functions for floating point, __handle_replacement_field's lambda, __parser::__parse_type
+# and __estimate_column_width_grapheme_clustering. None is matched from this object, and none is an IConversorASN member
+# or str(): the instances that match are the same under the tree's flags.
 #
 # Forms measured to differ, so what is written is evidence:
 # - CAbrangencia's constructor keeps uf.empty() in a local (`semUF`): three uf.empty() give 115 over 382 rows, and the
@@ -33,9 +39,8 @@
 # - Its last message has no placeholder, and the target's string is 30 bytes: std::format("Tipo de abrangencia invalido: ",
 #   value) with the accented letters, an argument the format ignores. With "{}" the row is `differs` at +0x130.
 # - TDado(tipo, "", 0) in CConversorAbrangencia::DoDesconverte: std::string() gives 72 over 259 rows.
-# - The inverted test in CConversorComplementoMunicipio::DoConverte changes the object; DoDesconverte's two words are read
-#   into locals, the code first and the zone as an int (`i32.load`, then i32.extend16_s at each call: a short local
-#   gives i32.load16_s), and in the other order the two loads swap.
+# - The inverted test in CConversorComplementoMunicipio::DoConverte changes the object. DoDesconverte reads its two words
+#   into locals, the code first: in the other order the two loads swap.
 # - CConversorMunicipio::DoDesconverte copies the name into a local before the call: 11378 is 3 over 72 so, 53 over 77
 #   with the expression in the argument.
 # - Module setters that take const_reference (src/asn1/README.md, per field): ModuloLocal::IdentificacaoAgregada::
@@ -60,7 +65,8 @@
 # CSeguranca's vector is uebyte, the record's, and DoConverte makes a std::vector<char> of it for the OCTET_STRING.
 #
 # Written and not matched, and what each waits for:
-# - 3712, CMunicipio's constructor, `differs`: the target's calls fn 1374, a copying Trim (`f3942(p0, p1, table slot 6416)`,
+# - 3712, CMunicipio's constructor, `no-candidate`: the target's calls fn 1374, a copying Trim (`f3942(p0, p1, table
+# slot 6416)`,
 #   slot 6416 is fn 9406, the in-place CStringUtils::Trim), with 1879, the copying ToLower, and 5156 over 3942. No such
 #   overload is declared in api/util/cstringutils.hpp. The constructor here copies the string, the one difference. 11378,
 #   its caller, is 3 operand rows from the target and stays `unresolved` on that one call: an anchor needs the same body.

@@ -8,7 +8,7 @@
 # CCabecalhoQRCodeBuilder::DefineCodigoCarga (5623, found by the scan's content pass, which fns 1956 and 12110 call).
 # Converters: CConversorAjusteDataHora (11405, 11406), CConversorEstadoGeralSA (11392, 11393),
 # CConversorLocalidadeEleitoral (11388, 11389; 11388 rests on ASN1::INTEGER's constructor, fn 553, being matched),
-# # CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
+# CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
 #
 # Written and not matched:
 # - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`. At the tree's -O2 clang inlines
@@ -19,7 +19,8 @@
 #
 # CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
 #
-# Not reconstructed: the slots of CConversorEstadoGeralGap (11394, 11395) and of the other converters here, CEstadoGeral, the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624),
+# Not reconstructed: the slots of CConversorEstadoGeralGap (11394, 11395) and of the other converters here, CEstadoGeral,
+# the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624),
 # its other setters (5618, 5620, 5621) and preBuild(), fns 5626, 5627.
 #
 # What decides the form, measured:
@@ -35,8 +36,9 @@
 # - DoDesconverte comes above DoConverte in the three complete converters. Either order gives the same bytes; this one is
 #   the target's: inside a use band a higher target index has a lower ld_index in build/out/wasm-map/vota_web/names.tsv,
 #   and all seven vtables of this family hold the lower index in slot 2. It also explains why 5693 and 5694 read inverted
-#   against their records: a function takes its place at its first mention, and the unwritten DoDesconverte mentions 5694
-#   first.
+#   against their records: a function takes its place at its first mention, and DoDesconverte, above them in the file,
+#   mentions
+#   5694 first.
 # - CAjusteDataHora's constructor is out of line: inline in the class (measured with the helpers first), 11406 scores 167
 #   over 415 rows and has no `call 1081`, the target's call.
 # - ModuloEstadoGeralUrna::DadoSecao::set_municipio and set_zona take const_reference (src/asn1/modules, a hand edit):

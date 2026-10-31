@@ -225,14 +225,15 @@ body once: `build/out/wasm-map/vota_web/names.tsv` lists one name per function. 
 `ModuloTiposEleitorais::Foto`'s. The converter's object instantiates it, and the uenux2 objects come before the
 ASN.1 modules on the link line (`LINK_OBJS` in `src/Makefile`; the modules ride in `EXTRA_OBJS`). So the merged body
 takes `NumViasImpressasRelatorios`' name (`names.tsv`'s object column names the converter's object), and
-`_ZN21ModuloTiposEleitorais4FotoD0Ev` is not in our link:
+`_ZN21ModuloTiposEleitorais4FotoD0Ev` is not in our link. Unit 107 later brought a third twin ahead of it,
+`ModuloTiposCadastro::Municipio`'s, from `cconversormunicipio.cpp.o`, so the line names that one now:
 
 - `/usr/bin/grep -c FotoD0Ev build/out/wasm-map/vota_web/names.tsv` prints 0, and
-  `awk -v n=246 '$(1) == n' splat/matched.txt` prints `246 _ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev`;
+  `awk -v n=246 '$(1) == n' splat/matched.txt` prints `246 _ZN19ModuloTiposCadastro9MunicipioD0Ev`;
 - a match line that names the merged-away symbol, `246 _ZN21ModuloTiposEleitorais4FotoD0Ev`, makes
   `TMPDIR=/tmp make -C src splat` fail with `function 246 matched to _ZN21ModuloTiposEleitorais4FotoD0Ev: our link has no function
   _ZN21ModuloTiposEleitorais4FotoD0Ev`, while the scan pairs 246 with
-  `_ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev` by content.
+  `_ZN19ModuloTiposCadastro9MunicipioD0Ev` by content.
 
 `splat-match` renames such a line itself (`addMatches` in `asmlift-wasm/src/splat-sub.ts`): a listed line whose
 symbol is not in our link, while the scan matches the same index under another symbol, is rewritten in place to that
@@ -251,9 +252,9 @@ diff splat/matched.txt build/out/stale-matched.txt && echo same
 
 The first `diff` shows 246's line changed: the committed name as `<`, the stale one as `>`. The scan prints
 `../build/out/stale-matched.txt: 0 matches added, 1 renamed`, then `line 7218: function 246 renamed
-_ZN21ModuloTiposEleitorais4FotoD0Ev → _ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev:
+_ZN21ModuloTiposEleitorais4FotoD0Ev → _ZN19ModuloTiposCadastro9MunicipioD0Ev:
 _ZN21ModuloTiposEleitorais4FotoD0Ev left our link, and the scan matches 246 with
-_ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev, its byte-identical twin (…)` (the line number is 246's
+_ZN19ModuloTiposCadastro9MunicipioD0Ev, its byte-identical twin (…)` (the line number is 246's
 line in the list), and the second `diff` prints `same`: the list is the committed one again. The stale scan's row for
 246 has `content` in its `source` column: the scan pairs 246 by content, not through the listed line.
 

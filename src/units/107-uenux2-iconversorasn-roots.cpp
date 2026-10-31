@@ -14,8 +14,8 @@
 //   5697: 11400 (11404 is written). 5705: 5706, 11423. 5711: 11448. 5713, 5714: 11424, 11451. 5715, 5716: 11423, 11452.
 //   5721: 11441, 11457. 5828: 11373, 11445.
 // w107_dados gives a constructor its second call site, each stands for: 3712 11424 and 11451, 5672 5741, 3823 2725 and
-// 11629, 5632 a caller the target does not show (one direct caller, 11404, and yet a function of its own, so binaryen's
-// inliner saw two).
+// 11629. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
+// the reference the target has.
 //
 // The vtables are what the target keeps the converters by: slots 2 and 3, no direct caller. Every converter's data is
 // reached that way, so the sink is the reference the target has.
@@ -121,7 +121,7 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
 
 __attribute__((noinline)) int w107_dados(char* d, int a, int b, const char* e)
 {
-    return w3712(d, a, e, b) + w5672(d + 32, a + 1, b + 2) + w3823(d + 64, b, a, e + 16) + w5632(d + 96, d + 128, e + 24, a);
+    return w3712(d, a, e, b) + w5672(d + 32, a + 1, b + 2) + w3823(d + 64, b, a, e + 16);
 }
 
 char* (*volatile w107_sink)(char*, const char*);
@@ -133,6 +133,7 @@ struct SIConversorRoots {
     {
         w107_sink = &w107_todos;
         w107_sink_dados = &w107_dados;
+        w107_sink_vt = reinterpret_cast<const void*>(&w5632);
         w107_sink_vt = w107_municipio_vt;
         w107_sink_vt = w107_agregada_vt;
         w107_sink_vt = w107_complemento_vt;
