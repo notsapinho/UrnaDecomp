@@ -1989,7 +1989,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2123	BN_mod_word	1913	symbol	match	-	138	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-bn_word.o)
 2124	BN_mod_lshift_quick	1700	symbol	match	readings: address string	195	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_mod.o
 2125	_ZNSt3__26__treeINS_12__value_typeIhN3api12CTickManager5STickEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	1714	symbol	match	-	32	addr	vota	2	app/uenux2/src/app/vota/eleitor/cthreadeleitor.cpp.o
-2126	_ZN4vota14CThreadMonitorD1Ev	1712	ledger	match	readings: address symbol	64	addr	vota	1	app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o
+2126	_ZN4vota14CThreadMonitorD1Ev	1712	symbol	match	readings: address symbol	64	addr	vota	1	app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o
 2127	bn_mul_normal	1915	symbol	match	-	241	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-bn_mul.o)
 2128	bn_mul_words	1916	symbol	match	-	533	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-bn_asm.o)
 2129	ERR_add_error_data	1673	symbol	match	readings: address string	476	none	openssl	1	openssl/O3/crypto/err/libcrypto-lib-err.o
@@ -2301,7 +2301,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2435	sh_clearbit	1968	symbol	match	readings: address symbol,address string	200	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-mem_sec.o
 2436	sh_add_to_list	1969	symbol	match	readings: address symbol,address string	221	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-mem_sec.o
 2437	sh_setbit	1970	symbol	match	readings: address symbol,address string	196	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-mem_sec.o
-2438	_ZN4vota14CThreadEleitorD1Ev	2065	ledger	match	readings: address symbol	166	addr	vota	1	app/uenux2/src/app/vota/eleitor/cthreadeleitor.cpp.o
+2438	_ZN4vota14CThreadEleitorD1Ev	2065	symbol	match	readings: address symbol	166	addr	vota	1	app/uenux2/src/app/vota/eleitor/cthreadeleitor.cpp.o
 2439	CAST_ofb64_encrypt	2416	symbol	match	-	433	addr	app	1	openssl/O3/libcrypto.a(libcrypto-lib-c_ofb64.o)
 2440	CAST_cbc_encrypt	2417	symbol	match	-	1272	addr	app	1	openssl/O3/libcrypto.a(libcrypto-lib-c_enc.o)
 2441	BF_ofb64_encrypt	2418	symbol	match	-	433	fingerprint	app	1	openssl/O3/libcrypto.a(libcrypto-lib-bf_ofb64.o)
@@ -2580,7 +2580,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2714	_ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPN7RHVoice4itemEEENS_19__map_value_compareIS7_NS_4pairIKS7_SA_EENS_4lessIS7_EELb1EEENS5_ISF_EEE7destroyEPNS_11__tree_nodeISB_PvEE	2063	ledger	differs	+0xd target +0xc call 2714 | ours +0xc call 3583	57	addr	app	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/item.cpp.o
 2715	_ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_10shared_ptrIN7RHVoice8relationEEEEENS_19__map_value_compareIS7_NS_4pairIKS7_SB_EENS_4lessIS7_EELb1EEENS5_ISG_EEE7destroyEPNS_11__tree_nodeISC_PvEE	1461	ledger	unresolved	ours +0xe call 1461: _ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_10shared_ptrIN7RHVoice8relationEEEEENS_19__map_value_compareIS7_NS_4pairIKS7_SB_EENS_4lessIS7_EELb1EEENS5_ISG_EEE7destroyEPNS_11__tree_nodeISC_PvEE has no target function	109	addr	api	1	rhvoice/1.14.0-cxx14-O3-ndebug/obj/document.cpp.o
 2716	-	-	-	no-candidate	no symbol and no ledger pair	704	none	api	0	-
-2717	_ZN4vota15CThreadOperadorD1Ev	2057	ledger	match	readings: address symbol	268	addr	vota	1	app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o
+2717	_ZN4vota15CThreadOperadorD1Ev	2057	symbol	match	readings: address symbol	268	addr	vota	1	app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o
 2718	-	-	-	no-candidate	no symbol and no ledger pair	1524	none	ecourna	0	-
 2719	-	-	-	no-candidate	no symbol and no ledger pair	56	none	ecourna	0	-
 2720	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-
@@ -10070,7 +10070,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10204	-	-	-	no-candidate	no symbol and no ledger pair	1873	none	vota	0	-
 10205	-	-	-	no-candidate	no symbol and no ledger pair	682	none	unknown	0	-
 10206	_ZN4vota15CThreadOperadorD0Ev	7808	symbol	match	-	13	addr	vota	1	app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o
-10207	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o	7827	content	match	readings: address symbol	10	none	unknown	1	app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o
+10207	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o	7827	symbol	match	readings: address symbol	10	none	unknown	1	app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o
 10208	__cxx_global_array_dtor@app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o	7829	symbol	match	readings: address symbol	38	addr	unknown	1	app/uenux2/src/app/vota/operador/cthreadoperador.cpp.o
 10209	-	-	-	no-candidate	no symbol and no ledger pair	120	none	vota	0	-
 10210	-	-	-	no-candidate	no symbol and no ledger pair	334	none	vota	0	-
@@ -10091,7 +10091,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10225	_ZN4vota14CThreadMonitor17ParaOutrasThreadsEv	7841	symbol	match	-	18	shape	vota	1	app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o
 10226	-	-	-	no-candidate	no symbol and no ledger pair	7171	none	vota	0	-
 10227	_ZN4vota14CThreadMonitorD0Ev	7851	symbol	match	-	13	addr	vota	1	app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o
-10228	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o	7881	content	match	readings: address symbol	10	none	app	1	app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o
+10228	__cxx_global_array_dtor.2@app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o	7881	symbol	match	readings: address symbol	10	none	app	1	app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o
 10229	__cxx_global_array_dtor@app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o	7890	symbol	match	readings: address symbol	38	addr	app	1	app/uenux2/src/app/vota/monitor/cthreadmonitor.cpp.o
 10230	-	-	-	no-candidate	no symbol and no ledger pair	10	none	app	0	-
 10231	-	-	-	no-candidate	no symbol and no ledger pair	12	none	app	0	-

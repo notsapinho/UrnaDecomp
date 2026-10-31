@@ -22,7 +22,7 @@
 #   swapped their chosen names there: +8 is the flag the Run loops test, so it is m_parar.
 CTHREAD_SRCS := src/api/ipc/cthread.cpp
 UENUX2_SRCS += $(CTHREAD_SRCS)
-# the roots that keep the destructor and Start linked (see the file header)
+# the roots that keep Start linked (see the file header)
 $(ROOT)/$(APP)/18-uenux2-cthread-roots.o: $(ROOT)/src/units/18-uenux2-cthread-roots.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/18-uenux2-cthread-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/18-uenux2-cthread-roots.o

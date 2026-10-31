@@ -33,12 +33,12 @@
 # SItem, its fields and that it is nested; m_fila, m_semaforo, m_sync, m_ordem. Every line of the header but 153 is a
 # choice too.
 #
-# Forms measured against this one, comparing the object's Remove, pop, D2 and D0 (em++ with uenux2's flags); a body
-# byte is where the form, linked in the roots object's place, first differs from 2073:
+# Forms measured against this one when a roots object held the instances, comparing the object's Remove, pop, D2 and D0
+# (em++ with uenux2's flags); a body byte is where the form, linked in that object's place, first differs from 2073:
 # - the same bytes: a functor as priority_queue's third argument for operator< with std::less (only pop's symbol
 #   differs, and it is inlined); the comparator as if/else if/else or as nested ?:; size_t for the two unsigned; a
 #   reference, or an RAII guard that holds the reference, for the pointer `sync`; with -fno-strict-aliasing or without
-#   it, so the roots object takes APP_CXXFLAGS as every roots object does. No evidence names a guard class, so none
+#   it, and these bodies now compile at uenux2's flags in cthreadeleitor.cpp.o. No evidence names a guard class, so none
 #   is invented, although one would explain why the throw path does not Unlock: uenux2 compiles no landing pads, so a
 #   guard's destructor leaves no code on that path.
 # - other bytes: `a < b || (a == b && c > d)`, `>` tested before `<`, and `a > b` written `b < a`: pop stays out of line

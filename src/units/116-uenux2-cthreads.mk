@@ -1,6 +1,6 @@
 # uenux2 vota::CThreadEleitor, CThreadOperador, CThreadMonitor and the heads they need: the three threads' singletons and
 # destructors, vota::CMessageEleitor and CMessageOperador, api::CMessageInterface, CThreadVota's D2, the 12-byte singleton
-# of fn 509 and comum::util::CMonitoraAlimentacao::CreateInst. The sources are the four named below; the headers are
+# of fn 509 and comum::util::CMonitoraAlimentacao::CreateInst. The sources are the five named below; the headers are
 # api/ipc/cmessagequeue.h (the queue's constructor, CMessageInterface), api/ipc/cthread.h (slots 3 and 4, Stop),
 # api/hwil/ipower.h (FoneDesconectado), app/vota/cthreadvota.h, and the new app/comum/cappstatecontext.h,
 # app/comum/util/euecomumutilerror.h, cmonitoraalimentacao.h, and the three threads' heads.
@@ -13,7 +13,7 @@
 #   D2 that CThreadVota and CThreadMonitor share.
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685.
 # Not matched, and why: slots 2, 3 and 4 and 7030 are traps, listed in the -pending.cpp with what they wait for.
-# ProcessarEntrada 4349 has a record, no slot and 13 unnamed callees, so it is unwritten: its stub stays. 13695 and 10231,
+# ProcessarEntrada 4349 has a record, no slot and 12 unnamed callees, so it is unwritten: its stub stays. 13695 and 10231,
 # the pointer destructors of fn 509's object and of CMonitoraAlimentacao, are thunks of fn 349 in the target, f349(p0, addr),
 # and whole bodies here: 349 is binaryen's merge of the trivial unique_ptr destructors, and these two alone do not form it
 # (`/usr/bin/grep -c 'mgfn-shared\$__cxx_global' build/out/wasm-map/vota_web/names.tsv` prints 0). They wait for that merge's
@@ -55,7 +55,8 @@
 #   0; CreateInst comes last. Column 22 of the record at cthreadmonitor.cpp:52 is `api::` after `    : m_fonePlugado(!`,
 #   so the column gives the name's length and no more. The 1 stored at +0 of CMonitoraAlimentacao is CreateInst's argument,
 #   which binaryen folded: the record has the parameter.
-# - 509: 12 B, reload after new, out-of-line constructor. Its stores are 0 at +10, +8 and +0 and 2 at +4.
+# - 509: 12 B, reload after new, out-of-line constructor. Its stores are a byte at +10, 16 bits at +8 and +0, and 2 at +4.
+#   Each 16-bit store is two byte members: 7787 reads and writes +0 and +8 as bytes, 6734 +1, 11804 and 12903 +9 and +10.
 #
 # Names. 316 and 270 are named by `vptr-anchor`, which needs the symbol tool that casts .bss votes. Their statics follow from
 # them and the pair of static destructors. Three data lines are hand edits of kind callers+content, for objects no vote
@@ -64,7 +65,7 @@
 # their own in the symbol file.
 #
 # Chosen, no evidence names them: GetInst for the three threads and fn 509 (the tree's accessors are spelled so); Stop,
-# TrataErro, ParaOutrasThreads, Espera; the class and path of fn 509's CEstadoAudio and all its members; m_contexto,
+# TrataErro, ParaOutrasThreads, Espera; the class and path of fn 509's CEstadoAudio, its members' names and bool for its three flags; m_contexto,
 # m_mensagens, m_mensagem, m_resultado, m_texto1 to 4 (what the strings hold is not read), m_fonePlugado, m_ultimoLog,
 # m_aplicativo, m_estado, s_inst, s_mutex; the enumerator 9156 and the headers' paths; CreateInst's body order, below;
 # which of the class's virtual members is declared first: the destructor, so that each class's .cpp emits its vtable.
@@ -78,8 +79,8 @@
 #   `s_inst = std::unique_ptr<T>(new T())`; `s_inst == nullptr`; `new T`; a pointer result; a final CMessageEleitor; its
 #   destructor in the class; CMessageInterface's destructor as `{}` or `inline`; default member initializers on SMessage
 #   for `m_mensagem{}`; `m_ordem = 0` in the class; default member initializers for Operador's strings; an inline
-#   IPower::FoneDesconectado, or a member that returns the status block; fn 509's fields as two chars at +0, or a char at
-#   +8, or default member initializers.
+#   IPower::FoneDesconectado, or a member that returns the status block; fn 509's flags as char, or its fields
+#   with default member initializers.
 # - the same functions, other literals or records: Espera out of line; std::string(1, ' '); the queue's constructor after
 #   the class; assignments in CThreadMonitor's constructor's body, or FoneConectado() in place of `!`, each of which moves
 #   the record's column; `if (!s_inst) { ...; return; } throw` and if/else in CreateInst; GetInst below the statics.
