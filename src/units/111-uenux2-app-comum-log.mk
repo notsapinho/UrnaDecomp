@@ -48,8 +48,9 @@
 #   statics, the statics in either order, and only GetInst in the .cpp above statics written pointer then mutex gives both
 #   orders. This link holds both: mutex 1497676, pointer 1497700, the pointer's destructor in slot 1355 and the mutex's in
 #   1356. Why is a reading: a body above the definitions names the mutex first, and the definitions set the destructors'
-#   order. The statics' .cpp: their destructors' slots lie in that object's run (2140 and 2141 before 347's handle slots
-#   2142 and 2143), and 348 sits beside 347 in that object (ld_index 2149 and 2154) as their indices do in the target.
+#   order. The statics' .cpp: their destructors' slots lie in that object's run (2140 and 2141 just before 2142 and 2143,
+#   which 275 and 680 of the next object, carquivossavd.cpp, load; this link has the same run, 1355 and 1356 before 1357
+#   and 1358), and 348 sits beside 347 in that object (ld_index 2149 and 2154) as their indices do in the target.
 # - The constructor is out of line. 2900 reads the pointer again after `new` and tests the old value. At -fPIC a
 #   constructor defined out of line stays a call, in its own TU too, with no remark from clang, which keeps that reload,
 #   and binaryen removes the empty call at link. Why -fPIC does this is not measured. Declared `= default` in the class,
@@ -91,7 +92,9 @@
 # with fn 347 and the CLogComum members and from the table slots of the destructors that load the same addresses. None
 # reads a match. Taking out the four statics' lines leaves 348 and 948 `unresolved` and 11659 and 11639 `no-candidate`.
 # Taking out the two GetInst lines, with 348, 948 and 2900's match lines, moves no row: the census pairs the two tied bodies
-# by position, in the right order in this link, so those two names rest on the calls and not on a scan.
+# by position, the wrong way round in this link (348 `CLogComum::GetInst`, 948 `CArquivosResultado::GetInst`), so each
+# partner differs and the content pass takes the right body through the four statics' lines; those two names rest on
+# the calls and not on the census.
 #
 # src/app/roots_uenux2.cpp holds std::operator+(string&&, string&&): the first real uenux2 TU that instantiates
 # CPolySingleton<T>::instance links ahead of libc++.a, and its -O2 copy took 252 (docs/reference/facts/splat.md S10 item
