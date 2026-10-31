@@ -102,21 +102,25 @@ for e in json.load(open('ledger/vtables.json')):
 
 A roots file that builds the same `std::shared_ptr` stores the same vtable, and that template's members match from
 the roots object as the `make_shared` ones do: `__get_deleter`, and for `CSqlConnection` `__on_zero_shared`. The
-control-block members the roots objects supply, by kind, at bb6f018:
+control-block members the roots objects supply, by kind, at 0b5f410:
 
 ```sh
 awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-roots\.o$/) r[$2]=$3; next } ($2 in r) && $2 ~ /__shared_ptr_(emplace|pointer)/ {k = ($2 ~ /emplace/) ? "emplace" : "pointer"; m = ($2 ~ /D0Ev$/) ? "D0" : ($2 ~ /D2Ev$/) ? "D2" : ($2 ~ /__on_zero_shared/) ? "__on_zero_shared" : ($2 ~ /__get_deleter/) ? "__get_deleter" : "other"; n[k " " m]++} END {for (x in n) print n[x], x}' \
   FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt | sort -k2
-# 21 emplace D0
-# 21 emplace D2
+# 31 emplace D0
+# 31 emplace D2
 # 5 emplace __on_zero_shared
-# 19 pointer __get_deleter
-# 1 pointer __on_zero_shared
+# 22 pointer __get_deleter
 ```
 
 `__on_zero_shared` of `__shared_ptr_emplace<T>` is a target function of its own only for some classes: of unit 77's
 parts, the ones declared `final` have one (5966, 5969, 11958), and `CParteCargos` and `CParteEleitores` share 411 in
 slot 2 (`ledger/vtables.json`).
+
+A block's census pair is arbitrary among blocks alike but for the vptr: the D2s and D0s differ only there, so the census
+takes any of them. Of the 12 pairs of units 54, 65 and 90, none sits at the index its match line gives (`9483 10434
+__shared_ptr_emplace<api::CTextRectField>…` is a pair, and the match line is 11118). The check on a pair is its kind. The
+index comes from the vtable line: each match is slot 0 or 1 of its class's vptr in `ledger/vtables.json`, `evidence:vtable`.
 
 ## U4. The matches compiled in a companion object
 
@@ -127,21 +131,35 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-(roots|pending)\.o$/) r[$2]=$3;
   FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt
 ```
 
-prints 155 lines at bb6f018 (17 at 9271d74). Each is code a landed header defines, never a stand-in's own body:
+prints 218 lines at 0b5f410. Each is code a landed header defines, never a stand-in's own body:
 
 ```sh
 awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-(roots|pending)\.o$/) r[$2]=$3; next } ($2 in r) {k = (r[$2] ~ /pending/) ? "pending" : ($2 ~ /__shared_ptr_(emplace|pointer)/) ? "roots, control block" : "roots, other"; n[k]++} END {for (x in n) print n[x], x}' \
   FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt | sort -k2
-# 33 pending
-# 67 roots, control block
-# 55 roots, other
+# 25 pending
+# 89 roots, control block
+# 104 roots, other
+```
+
+The tree roots, `src/app/roots_*.o`, have no `-roots.o` suffix, so that filter misses them. They hold 162 match lines at
+0b5f410, and the same rule applies: code a landed header or a library defines, compiled at `APP_CXXFLAGS` like a
+fragment's roots (`src/units/README.md` "Companion files"):
+
+```sh
+awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/roots_[a-z0-9]+\.o$/) r[$2]=$3; next } ($2 in r) {n[r[$2]]++} END {for (x in n) print n[x], x}' \
+  FS='\t' build/out/wasm-map/vota_web/names.tsv FS=' ' splat/matched.txt | sort -rn
+# 71 app/roots_boost.o
+# 63 app/roots_rhvoice.o
+# 10 app/roots_ecourna.o
+# 9 app/roots_uenux2.o
+# 9 app/roots_7zip.o
 ```
 
 - the members of the control blocks the roots files build, from units 12, 14, 27, 28, 29, 49, 54, 58, 65, 77, 78, 79,
-  83, 84 and 90 (U3);
+  83, 84, 90 and 92 (U3);
 - code of a header the roots files emit in the shapes of `src/units/README.md` "Companion files": an inline default
   of a virtual member (`api::IScreen::GetFontMetrics`, 8938, unit 19), and the members of classes and class templates
-  with no key function that the roots build (units 64, 67, 75, 79 and 83);
+  with no key function that the roots build (units 64, 67, 75, 79, 83, 92 and 100);
 - the implicit and inline members of a class whose key function is pending, from the pending objects of units 26,
   29, 58, 59, 60, 62, 77 and 79. The pending member there is the class's key function (its first
   non-inline virtual member), so the vtable is emitted in the pending object, and with it every implicit or inline
@@ -156,31 +174,31 @@ awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && o
   build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv
 ```
 
-prints 110 pairs at bb6f018 (8 at 9271d74): 67 control-block members and 43 members of the headers the roots emit,
-none an `(anonymous namespace)` stand-in:
+prints 162 pairs at 0b5f410: 89 control-block members and 73 members of the headers the roots emit, none an
+`(anonymous namespace)` stand-in:
 
 ```sh
 awk -F'\t' 'NR==FNR { if (FNR>1) obj[$1]=$3; next } FNR>1 && $6=="skeleton" && obj[$7] ~ /app\/[0-9]+-.*-roots\.o$/ {print ($10 ~ /^\(anonymous/) ? "stand-in" : ($10 ~ /__shared_ptr_(emplace|pointer)/) ? "control block" : "header member"}' \
   build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv | sort | uniq -c
-#   67 control block
-#   43 header member
+#   89 control block
+#   73 header member
 ```
 
 Neither command sees a stand-in that binaryen merged with another: the merged body's object in `names.tsv` is
 `<binaryen>`, and its name is `byn$mgfn-shared$` and the first member's symbol. A roots file's stand-ins live in an
-anonymous namespace, so search for that prefix as well. At bb6f018 five such bodies exist, and none is matched or
-paired:
+anonymous namespace, so search for that prefix as well, leaving out libc++abi's demangler, which lives in one too. At
+0b5f410 five such bodies exist, and none is matched or paired (the indices move with the link):
 
 ```sh
-awk -F'\t' '$3=="<binaryen>" && $2 ~ /^byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1/ {print $1, substr($2, 1, 60)}' build/out/wasm-map/vota_web/names.tsv
-# 1068 byn$mgfn-shared$_ZN12_GLOBAL__N_111CompartilhaIN3api5ITextEN
-# 5065 byn$mgfn-shared$_ZN12_GLOBAL__N_118TextoCompartilhadoEPFNSt3
-# 5066 byn$mgfn-shared$_ZN12_GLOBAL__N_112TextoFormatoEPFNSt3__212b
-# 5069 byn$mgfn-shared$_ZN12_GLOBAL__N_121CriaParteMajoritariosENSt
-# 5070 byn$mgfn-shared$_ZN12_GLOBAL__N_119CriaParteCandidatosENSt3_
-/usr/bin/grep -cE 'byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1' splat/matched.txt
+awk -F'\t' '$3=="<binaryen>" && $2 ~ /^byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1/ && $2 !~ /itanium_demangle/ {print $1, substr($2, 1, 60)}' build/out/wasm-map/vota_web/names.tsv
+# 1103 byn$mgfn-shared$_ZN12_GLOBAL__N_111CompartilhaIN3api5ITextEN
+# 5131 byn$mgfn-shared$_ZN12_GLOBAL__N_118TextoCompartilhadoEPFNSt3
+# 5132 byn$mgfn-shared$_ZN12_GLOBAL__N_112TextoFormatoEPFNSt3__212b
+# 5135 byn$mgfn-shared$_ZN12_GLOBAL__N_121CriaParteMajoritariosENSt
+# 5136 byn$mgfn-shared$_ZN12_GLOBAL__N_119CriaParteCandidatosENSt3_
+/usr/bin/grep -E 'byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1' splat/matched.txt | /usr/bin/grep -cv itanium_demangle
 # 0
-awk -F'\t' 'NR==FNR { if ($3=="<binaryen>" && $2 ~ /^byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1/) b[$1]; next } FNR>1 && $6=="skeleton" && ($7 in b)' build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv | wc -l
+awk -F'\t' 'NR==FNR { if ($3=="<binaryen>" && $2 ~ /^byn\$mgfn-shared\$_ZNK?12_GLOBAL__N_1/ && $2 !~ /itanium_demangle/) b[$1]; next } FNR>1 && $6=="skeleton" && ($7 in b)' build/out/wasm-map/vota_web/names.tsv ledger/functions.tsv | wc -l
 # 0
 ```
 
@@ -194,21 +212,19 @@ traps of one wasm type into one body, which then sits in the slots of several of
 so no name is given and the member stays `no-candidate`.
 
 ```sh
-awk -F'\t' '$1==9130 || $1==9133 || $1==10931 || $1==11097 || $1==11366 || $1==11442 || $1==11646 {print $1, $5, $11}' splat/scan.tsv
-# at ee595de:
+awk -F'\t' '$1==9130 || $1==9133 || $1==10900 || $1==10931 || $1==11097 || $1==11442 {print $1, $5, $11}' splat/scan.tsv
 # 9130 no-candidate -
 # 9133 no-candidate -
+# 10900 differs app/84-uenux2-cinputmenufield-pending.o
 # 10931 no-candidate -
 # 11097 no-candidate -
-# 11366 differs app/17-uenux2-cconversororigemconfiguracao-pending.o
 # 11442 differs app/36-uenux2-cvisitantefoto-pending.o
-# 11646 no-candidate -
-/usr/bin/grep -cE 'func:(11442|11366|11646);.*evidence:vtable' splat/symbol_addrs.txt
+/usr/bin/grep -cE 'func:(10900|11442);.*evidence:vtable' splat/symbol_addrs.txt
 # 2
 ```
 
 Which case a trap is shows in the plain link: the functions of the pending objects other than destructors, with the
-number of table slots that hold each (at ee595de):
+number of table slots that hold each (at 0b5f410; the indices move with the link):
 
 ```sh
 python3 -I -c "
@@ -219,44 +235,23 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
     if obj.endswith('-pending.o') and 'D0Ev' not in name and 'D2Ev' not in name:
         print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
 "
-# 330 40 _ZNK3api19CTextFieldMultiLine4DrawERNS_7IScreenE 14-uenux2-ctextfieldmultiline-pending.o
-# 887 11 _ZN5comum14IInterfaceInit17CurrentBootDeviceEv 35-uenux2-iinterfaceinit-pending.o
-# 1794 5 _ZNK7ecourna3app5dados3asn22CConversorHorariosUrna10DoConverteERKNS1_1 15-ecourna-cconversorhorariosurna-pending.o
-# 10501 1 _ZNK3api17CImageFieldUpdate11GetTypeNameEv 43-uenux2-cimagefieldupdate-pending.o
-# 10506 1 _ZN5comum3asn14CVisitanteFoto5visitEiRKNSt3__212basic_stringIcNS2_11ch 36-uenux2-cvisitantefoto-pending.o
-# 10520 1 _ZNK3api10IFormFieldINS_9IScreenMTEE11GetTypeNameEv 30-uenux2-ctextfieldmt-pending.o
-# 10558 1 _ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23Modul 17-uenux2-cconversororigemconfiguracao-pending.o
+# 334 42 _ZNK3api19CTextFieldMultiLine4DrawERNS_7IScreenE 14-uenux2-ctextfieldmultiline-pending.o
+# 872 12 _ZNK7ecourna3app5dados3asn22CConversorHorariosUrna10DoConverteERKNS1_1 15-ecourna-cconversorhorariosurna-pending.o
+# 2265 4 _ZNK4vota4impl25CInformacaoThreadOperador14IsAudioAtivadoEv 50-uenux2-cinformacaothreadoperador-pending.o
+# 4953 2 _ZN3api12CEscritorLog4logaENS_15ELogAplicativosENS_11ESeveridadeERKNSt 62-uenux2-cwasmlogd-pending.o
+# 10660 1 _ZNK3api15CMenuValidation7isValidERKNSt3__212basic_stringIcNS1_11char_ 84-uenux2-cinputmenufield-pending.o
+# 10849 1 _ZN5comum3asn14CVisitanteFoto5visitEiRKNSt3__212basic_stringIcNS2_11ch 36-uenux2-cvisitantefoto-pending.o
 ```
 
-Unit 14's `Draw` trap is one body in 40 table slots: binaryen merged the pending traps of its wasm type into it, and the
+Unit 14's `Draw` trap is one body in 42 table slots: binaryen merged the pending traps of its wasm type into it, and the
 merged ones have no name in `names.tsv` (`/usr/bin/grep -c CTextFieldDoubleLine4Draw
-build/out/wasm-map/vota_web/names.tsv` prints 0). 9133's trap shares its body with 9130's (unit 16). None of them gets a
-name. The traps of 11366 (`(i32 i32)->(i32)`, an enum by value) and 11442 are alone in their slot, so each is named
-after its trap. 11646's trap had a slot of its own at 9271d74 (and the name and the `differs` row that gave it); at
-ee595de it is one body in 11 slots, merged with traps of its wasm type, and 11646 has neither. So a pending member a
-unit adds can take another unit's trap name away, in a function the unit never touched. 10501 and 10520 are no traps:
-they are `CImageFieldUpdate::GetTypeName` and `IFormField<IScreenMT>::GetTypeName`, matched as 11085 (unit 43) and 11051
-(U4). So the name the symbol file gives 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`, is
-the one `src/asn1/asn1.h` declares, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
+build/out/wasm-map/vota_web/names.tsv` prints 0). None of them gets a name. The traps of 10900 and 11442 are alone in their
+slot, so each is named after its trap. Which case a member is can change in a function its unit never touched. A trap a
+unit adds merges with one of its wasm type and takes that member's name and `differs` row. A member that lands leaves its
+partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and 10900 turned `differs` when
+11366 matched. The name the symbol file gives 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`,
+is the one `src/asn1/asn1.h` declares, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
 ledger/source-locations.tsv | sort -u`).
-
-At bb6f018 11366 is the merged case too. Unit 84's `CMenuValidation::isValid` trap has its wasm type, binaryen merged
-the two, and the merged body, named after unit 17's trap, sits in two slots:
-
-```sh
-awk -F'\t' '$1==11366 || $1==11442 {print $1, $5, $11}' splat/scan.tsv
-# 11366 no-candidate -
-# 11442 differs app/36-uenux2-cvisitantefoto-pending.o
-python3 -I -c "
-import sys; sys.path.insert(0, 'tools/extract'); import wasmmod
-d = wasmmod.Module('build/out/wasm/vota_web/vota_web_wasm.wasm')._elem()
-for line in open('build/out/wasm-map/vota_web/names.tsv'):
-    i, name, obj = line.split('\t')[:3]
-    if obj.endswith('-pending.o') and 'DoDesconverte' in name:
-        print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
-"
-# 4941 2 _ZNK5comum3asn28CConversorOrigemConfiguracao13DoDesconverteERKN23Modul 17-uenux2-cconversororigemconfiguracao-pending.o
-```
 
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word
 

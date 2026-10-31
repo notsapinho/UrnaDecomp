@@ -1154,7 +1154,8 @@ class Plan:
         cls = self._owner_class(i)
         f = self._class_file(cls) if cls else None
         if f and facts.vtable_classes.get(i) and f in self.member_files.get(class_key(cls).split('::')[-1], ()):
-            # a virtual member of a class our sources define: its vtable, and so this slot, has a body of ours
+            # a virtual member of a class our sources define, by the class's last name alone: this slot may have
+            # no body in our link (src/units/README.md "Pending members")
             self.defined[i] = 'class'
             return None
         if f:

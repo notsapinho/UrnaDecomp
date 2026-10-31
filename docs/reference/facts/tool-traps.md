@@ -52,6 +52,11 @@ that only binaryen inlines matches until the other caller is written: link with 
 3. A word starting with `=` is `=cmd` expansion: `echo ====` fails with `=== not found`. Quote it.
 4. In `until for h in …; do grep -q … || exit 1; done; do sleep 5; done` the `exit` leaves the whole script at
    the first miss; it is not a loop break.
+5. A `:` after a parameter is a history modifier: `git show $E:src/…` takes `:s` and prints `fatal: ambiguous argument`
+   over a path that names no file. Brace it: `git show "${E}:src/…"`.
+6. A `#!/bin/zsh` script can lose an exported Node 24 `PATH`, and then each `pnpm` exits 134 in under a second with an
+   empty log: set `PATH` on the script's first line, and read a loop's exit statuses.
+7. `LC_ALL=C grep …` can print nothing where `/usr/bin/grep …` prints matches. A bare `grep`'s silence is no evidence.
 
 ## X4. Fetching from the TSE site
 

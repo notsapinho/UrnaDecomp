@@ -96,11 +96,22 @@ Component runs seen there (`tools/extract/attribute.py`, exact-start string refe
 | 12375–12975 | mostly unattributed (sqlite/musl by string refs) |
 | 12975–14478 | libcrypto providers, then x509, ui, rsa, rand, property, pem, objects, then `__wasm_call_ctors` |
 
-`LINK_OBJS` in `src/Makefile` does not follow this order: it holds the uenux2 objects, ecourna, the units' companions
-and the ASN.1 runtime, SQLite, 7-Zip, then RHVoice. One object moves towards it: `language.cpp.o` sits just before the
-runtime (`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk`), because the runtime's `vector<unsigned>::push_back(const&)` has to be
-RHVoice's copy. That is a measured choice, not this table's order: the rest of RHVoice cannot follow.
-[asn1.md](asn1.md) §A2 has the links tried.
+`LINK_OBJS` in `src/Makefile` does not follow this order. At 0b5f410 `build/out/wasm/vota_web/link.cmd` holds the stand-ins
+of `src/app/`, the uenux2 objects, ecourna, `EXTRA_OBJS`, SQLite, 7-Zip, RHVoice, then libcrypto's objects and archive.
+`EXTRA_OBJS` is the units' companions in fragment order, with the modules where unit 04 adds them, `language.cpp.o`, the
+ASN.1 runtime and `roots_asn1.o`. Where that differs from the table, and what is known to turn on it:
+
+- **The runtime against RHVoice.** The table has RHVoice first; ours has one object first. `language.cpp.o` sits just
+  before the runtime (`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk`), because the runtime's
+  `vector<unsigned>::push_back(const&)` has to be RHVoice's copy. That is a measured choice: moving all of RHVoice, as the
+  table reads, loses rows ([asn1.md](asn1.md) §A2 has the links).
+- **The stand-ins first.** They define templates the target took from code with TBAA that precedes both trees
+  ([app-flags.md](app-flags.md) §F6, "The stand-ins keep strict aliasing"), and a throw there picks which tree's linkonce
+  copy wins (`src/units/README.md` "Companion files").
+- **A flag that changes an ABI tag changes who owns an inline symbol.** Symbols of two tags never collide, so the order
+  did not matter while the runtime's `nn` copies stood apart. With `ne` on both sides the first definer wins.
+- **Fragments sort as text.** `100-…` links between `10-…` and `11-…`. Nothing turns on it: with unit 100's objects last,
+  no row leaves `match`.
 
 ## L4. Ordinal recovery from the bands: what anchors can and cannot give
 
@@ -331,3 +342,8 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     #   confirmaidentidade/cpededigital.cpp confirmaidentidade/cregistradigitaloperador.cpp aguardaeleitor/cmostraeleitorvotando.cpp
     #   aguardaeleitor/csuspensaoautomaticaeleitor.cpp cthreadoperador.cpp
     ```
+16. **A function that calls an EM_JS import can be placed by the glue.** The glue lists the EM_JS functions in link order
+    of the `em_js` sections (`/usr/bin/grep -oE 'function (js|wasm)_[a-z0-9_]+\(' target/vota_web_wasm.js`). The run
+    `js_thread_log`, `js_emit_event`, `js_push_key`, `js_console_error`, `js_wasm_web_sound_play_wav` puts the wrappers of
+    3533, 9649 and 9646, which have no record and no RTTI, at or next to the seam of `cwasmthread.cpp` and
+    `cwasmwebsound.cpp`. `ledger/ordinals.tsv` gives 3533 a window of 5 to 9642.
