@@ -1,26 +1,21 @@
-// Pending members: the api::CProgressBar members src/uenux2/src/api/gui/cprogressbar.cpp does not hold yet. The
-// class's vtable is emitted there with the destructor, its key function, and needs them defined; their bodies are NOT
-// the target's, they trap. Target functions, both reached only through the vtable and named by their slot (the
-// IFormField<IScreen> member each slot holds, api/gui/iformfield.h):
-// - Draw 10977 (slot 2, 1914 B): calls the SRect setters 5487 and 5488 (api/gui/primitives.cpp, not reconstructed),
-//   fn 2768 (the rect moved in by an offset, no name), fn 2677 (no name) and the screen through its vtable;
-// - GetTypeName 10975 (slot 7, 61 B): `return "CProgressBar";` in cprogressbar.cpp compiles to the target's body, but
-//   binaryen's merge-similar-functions folded three bodies of that shape into one shared body and three thunks, when
-//   our copy of the inline ASN1::AbstractData::getTypeName (src/asn1/asn1.h, target fn 5075) returned its 12-character
-//   name the same way: it, that copy and RHVoice's userdict::start_of_token::describe (target fn 9696, "StartOfToken",
-//   matched, which would drift). The target has 10975 and 9696 unmerged, and its 5075 calls the std::string constructor
-//   (fn 148). Ours matches now, which ends that reason as far as the rows say; the member has not been measured since.
+// Pending members: the api::CProgressBar member src/uenux2/src/api/gui/cprogressbar.cpp does not hold yet. The class's
+// vtable is emitted there with the destructor, its key function, and needs it defined; its body is NOT the target's, it
+// traps. Target function, reached only through the vtable and named by its slot (the IFormField<IScreen> member the slot
+// holds, api/gui/iformfield.h):
+// - Draw 10977 (slot 2, 1914 B): it calls SRect::Left, Right and Adjust (fns 5488, 5487, 2768, primitives.cpp, written
+//   and matched), the screen through its vtable, and fn 2677 twice. 2677 (128 B, no name, no stub) copies a std::string
+//   and calls table slot 6413 (fn 9407, 425 B, not written) on the copy through invoke_viii, so it is code compiled with
+//   exceptions, not uenux2's. Draw passes it the label at +68, a two-character string ("%p", then "%v") and the
+//   percentage or the value formatted with "{}": that 2677 replaces the one with the other in the label is a reading.
+//   Draw waits for 2677 and 9407.
+// GetTypeName (10975) is in cprogressbar.cpp now and matches, with 5075 (ASN1::AbstractData::getTypeName, with which
+// binaryen once merged it) and 9696 still matched.
 // Move each into cprogressbar.cpp when it is reconstructed; delete this file with the last one.
 #include "api/gui/cprogressbar.h"
 
 namespace api {
 
 void CProgressBar::Draw(IScreen&) const
-{
-    __builtin_trap();
-}
-
-std::string CProgressBar::GetTypeName() const
 {
     __builtin_trap();
 }

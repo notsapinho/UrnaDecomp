@@ -91,6 +91,11 @@ void CProgressBar::Move(const SPoint& posicao)
     }
 }
 
+std::string CProgressBar::GetTypeName() const
+{
+    return "CProgressBar";
+}
+
 SRect CProgressBar::Rect() const
 {
     return m_rect;
