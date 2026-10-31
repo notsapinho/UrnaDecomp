@@ -164,9 +164,10 @@ $(ROOT)/$(APP)/roots_uenux2.o: $(ROOT)/src/app/roots_uenux2.cpp $(ROOT)/src/Make
 # instances of ecourna's templates that are uenux2's code in the target, ahead of ecourna's objects and at the tree's flags
 $(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_cbasetype.cpp -o $(R)
-# the executable TU's copies of vector<unsigned char>'s destruction (fns 306, 520, 4967), ahead of ecourna's objects and
-# without strict aliasing, which 4967 needs (src/app/roots_vector.cpp)
-$(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile
+# the executable TU's copies of vector<unsigned char>'s destruction (fns 306, 520, 4967) and vector<CDadoCorrespondencia>'s
+# (5294, 1698, 5532, 9873), ahead of both trees' objects and without strict aliasing, which 4967 needs
+# (src/app/roots_vector.cpp)
+$(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_vector.cpp -o $(R)
 
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy

@@ -179,7 +179,6 @@ _ZN7ecourna3api9exception10CBaseErrorIN5comum18EUeComumDadosErrorEXtlNS1_12SErro
 __cxa_free_exception = func:171; // size:0x35 evidence:pair-addr
 _ZNSt3__220__shared_ptr_pointerIPN3api11CPosixMutexENS_10shared_ptrINS1_8ISyncCtlEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE16__on_zero_sharedEv = func:172; // size:0x19 evidence:pair-fingerprint
 sqlite3_log = func:173; // size:0xbc evidence:pair-addr
-_ZN7RHVoice6clientD2Ev = func:174; // size:0x4 evidence:table by:648,5328
 sqlite3Malloc = func:175; // size:0x1ad evidence:pair-addr
 _ZNSt3__2plB8ne210108IcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EEOS9_PKS6_ = func:176; // size:0x2b evidence:call
 BN_free = func:177; // size:0x63 evidence:pair-addr
@@ -743,6 +742,7 @@ _ZN7UStringC2EPKw = func:850; // size:0x4d evidence:call
 _Z21ConvertUInt64ToStringyPc = func:851; // size:0x1f1 evidence:pair-fingerprint
 _ZN4ASN18SEQUENCEC2ERKS0_ = func:853; // size:0x5c evidence:call
 _ZN7RHVoice7unicode7tolowerEj = func:854; // size:0x87 evidence:call
+_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaD2Ev = func:857; // size:0x26 evidence:call by:3792
 _ZNSt3__218basic_stringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEEC1B8ne210108Ev = func:858; // size:0x130 evidence:table
 _ZN4ASN111SEQUENCE_OFIN11ModuloLocal21IdentificacaoAgregadaENS_15EmptyConstraintEED0Ev = func:859; // size:0x34 evidence:pair-addr
 _ZNSt3__26__treeINS_12__value_typeIN5comum2md18CEleitorIdentidadeENS3_22CComparecimentoMesarioEEENS_19__map_value_compareIS4_NS_4pairIKS4_S5_EENS_4lessIS4_EELb1EEENS_9allocatorISA_EEE12__find_equalIS4_EERPNS_16__tree_node_baseIPvEERPNS_15__tree_end_nodeISL_EERKT_ = func:860; // size:0x114 evidence:pair-fingerprint
@@ -1335,7 +1335,7 @@ DH_bits = func:1648; // size:0x15 evidence:pair-fingerprint
 BN_mul_word = func:1649; // size:0x69 evidence:pair-addr
 bn_mul_comba8 = func:1650; // size:0x19b0 evidence:pair-addr
 _ZN3api18CPolySingletonList3hasINS_15ITimerSchedulerEEEbRKNS_19TPolySingletonsInfoE = func:1654; // size:0x13 evidence:call by:5443,5444
-_ZThn4_N8NArchive7NParser8CHandler7ReleaseEv = func:1657; // size:0x9 evidence:vtable
+_ZThn4_N8NArchive7NParser8CHandler7ReleaseEv = func:1657; // size:0x9 evidence:pair-fingerprint
 _ZN8NArchive7NParser8CHandler7ReleaseEv = func:1658; // size:0x28 evidence:pair-fingerprint
 _ZN8NWindows5NFile3NIO9CFileBase5CloseEv = func:1659; // size:0x29 evidence:pair-addr
 _ZN27CLimitedSequentialOutStream14QueryInterfaceERK4GUIDPPv = func:1660; // size:0x5b evidence:vtable
@@ -1355,6 +1355,7 @@ _ZNSt3__26__treeINS_12__value_typeINS_12basic_stringIcNS_11char_traitsIcEENS_9al
 HTS_fopen_from_fp = func:1680; // size:0x138 evidence:pair-addr
 _ZN7RHVoice6config4loadERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:1683; // size:0x9e9 evidence:call by:3545
 _ZN3api7CThread5StartEv = func:1684; // size:0x74 evidence:srcloc-anchor
+_ZN3api14CEncryptedFileD2Ev = func:1691; // size:0x52 evidence:pair-addr
 _ZN3api14CMTFormBuilder7GetFormERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:1694; // size:0x1a7 evidence:vptr-anchor
 _ZZNSt3__224__basic_format_arg_valueINS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEE8__handleC1B8ne210108IKN20ModuloEstadoGeralGap14UrnaAplicativoEEERT_ENUlRNS_26basic_format_parse_contextIcEERS7_PKvE_8__invokeESI_SJ_SL_ = func:1699; // size:0x19b evidence:table by:5690,5694,11393,11402
 _ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_ = func:1700; // size:0x6b evidence:pair-fingerprint
@@ -2111,6 +2112,7 @@ _ZN5comum18CPedeTituloMesario7GetInstEv = func:2729; // size:0x16 evidence:vptr-
 _ZN3api7CSystem11GetFileSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:2759; // size:0x23d evidence:srcloc-anchor
 _ZN3api9CDateTime20ConvertFromTimestampERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:2764; // size:0x503 evidence:srcloc-anchor
 _ZN3api5CDateC2Ehhs = func:2765; // size:0x1a8 evidence:call by:5475,5476
+_ZN3api14CEncryptedFile5WriteERKNSt3__26vectorIhNS1_9allocatorIhEEEE = func:2766; // size:0x17f evidence:srcloc-anchor
 _ZNK3api14CEncryptedFile4SaveERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:2767; // size:0x386 evidence:srcloc-anchor
 _ZNSt3__26vectorIcNS_9allocatorIcEEE11__vallocateB8ne210108Em = func:2769; // size:0x2d evidence:call
 _ZN3api15CTextFieldPaperC2ERKNSt3__210shared_ptrINS_5ITextEEENS_6IPaper6EStyleE = func:2771; // size:0x9a evidence:srcloc-anchor
@@ -2665,6 +2667,7 @@ _ZN3api5CTimeC2Ehhh = func:3642; // size:0x67 evidence:srcloc-anchor
 _ZN3api5CTimeC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:3643; // size:0x1c4 evidence:srcloc-anchor
 _ZN3api12CTickManager7AddTickEm = func:3644; // size:0x3ab evidence:call
 _ZN3api5CDateC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:3649; // size:0x301 evidence:srcloc-anchor
+_ZN3api14CEncryptedFile4ReadERNSt3__26vectorIhNS1_9allocatorIhEEEE = func:3652; // size:0x202 evidence:srcloc-anchor
 _ZN3api20CTextFieldDoubleLineC2ERKNS_6SPointES3_sRKNSt3__210shared_ptrINS_5ITextEEERKNS_5SFontENS_6TColorESD_ = func:3659; // size:0x132 evidence:srcloc-anchor
 _ZN3api10CSubReportC2ENSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_b = func:3660; // size:0x74 evidence:pair-addr
 _ZN3api12CQRCodeImageC2EsRKNSt3__28functionIFNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEvEEE = func:3662; // size:0x67 evidence:pair-addr
@@ -3797,7 +3800,6 @@ _ZN7RHVoice15quality_settingC2Ev = func:5433; // size:0x3af evidence:pair-addr
 _ZN3api18CPolySingletonList3hasIN5comum14IInterfaceSavdEEEbRKNS_19TPolySingletonsInfoE = func:5434; // size:0xb evidence:call by:1822
 _ZN7RHVoice13enum_propertyI24RHVoice_punctuation_modeED0Ev = func:5435; // size:0x41 evidence:vtable
 _ZN7RHVoice13enum_propertyI21RHVoice_capitals_modeED0Ev = func:5437; // size:0x41 evidence:vtable
-_ZN7RHVoice13enum_propertyINS_9quality_tEED0Ev = func:5438; // size:0x41 evidence:vtable
 _ZN7RHVoice13enum_propertyIbED0Ev = func:5439; // size:0x41 evidence:pair-addr
 _ZN7RHVoice16verbosity_paramsD2Ev = func:5440; // size:0xc0 evidence:pair-addr
 _ZN3api14CPolySingletonINS_15ITimerSchedulerEE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE = func:5443; // size:0x6f8 evidence:srcloc-anchor
@@ -3967,7 +3969,6 @@ _ZN4vota15CGravaResultado7GetInstEv = func:6037; // size:0x16 evidence:vptr-anch
 byn$mgfn-shared$_ZN5comum22CCargoDSLabelRelatorio13HeaderDetalheEv = func:6038; // size:0xe5 evidence:call by:5802,11555
 byn$mgfn-shared$_ZN5comum8CAppInfo8GetGeralEv = func:6040; // size:0x204 evidence:call by:291,457
 byn$mgfn-shared$_ZN9CBaseTypeIjLj0ELj99999ELi6EEC2Ej = func:6042; // size:0x217 evidence:call by:2851,5849
-byn$mgfn-shared$_ZN5comum12CGravadorRDVD2Ev = func:6043; // size:0x37 evidence:call by:11586,11625
 byn$mgfn-shared$_ZN5comum9CLogComum24LogaCopiandoArqResParaFIENS_25EExtensaoArquivoResultadoE = func:6045; // size:0x1fc evidence:call by:3828,5878
 byn$mgfn-shared$_ZN5comum14IInterfaceInit24IsMRPresenteSemHabilitarEv = func:6046; // size:0x73 evidence:call by:2862,5897
 byn$mgfn-shared$_ZN4vota17CPedeProporcional7GetInstEv = func:6051; // size:0x4d evidence:call by:3849,5921
@@ -7484,6 +7485,7 @@ _ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8sentence10append_keyENS_10shared_ptr
 _ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8sentence13append_phonesENS_10shared_ptrINS2_16abstract_commandEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info = func:10804; // size:0x11 evidence:content-anchor
 _ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8sentence12append_emojiENS_10shared_ptrINS2_16abstract_commandEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info = func:10805; // size:0x11 evidence:content-anchor
 _ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8sentence12append_tokenENS_10shared_ptrINS2_16abstract_commandEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info = func:10806; // size:0x11 evidence:content-anchor
+_ZN7RHVoice17abstract_propertyD2Ev = func:10808; // size:0xc evidence:vtable
 _ZNK7RHVoice8propertyINSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEE11check_valueERKS7_RS7_ = func:10809; // size:0x6f evidence:pair-fingerprint
 _ZN7RHVoice8propertyINSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEE5resetEv = func:10810; // size:0x7d evidence:pair-fingerprint
 _ZN7RHVoice8propertyINSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEED2Ev = func:10811; // size:0x63 evidence:pair-addr
@@ -7908,7 +7910,7 @@ _ZN5comum24CGravadorVersoesArquivosD0Ev = func:11580; // size:0x5a evidence:pair
 _ZN5comum24CGravadorVersoesArquivosD2Ev = func:11581; // size:0x57 evidence:pair-addr
 _ZN5comum12CGravadorLogD0Ev = func:11583; // size:0xa evidence:pair-addr
 _ZN5comum12CGravadorRDVD0Ev = func:11585; // size:0x3d evidence:vtable
-_ZN5comum12CGravadorRDVD2Ev = func:11586; // size:0xe evidence:vptr-anchor
+_ZN5comum12CGravadorRDVD2Ev = func:11586; // size:0xe evidence:vtable
 _ZN4ASN114AbstractStringD2Ev = func:11590; // size:0x1d evidence:pair-addr
 _ZNK5comum3asn29CConversorCodigoCargoConsulta13DoDesconverteERKN21ModuloTiposEleitorais19CodigoCargoConsultaE = func:11591; // size:0xa evidence:pair-fingerprint
 _ZNK5comum3asn29CConversorCodigoCargoConsulta10DoConverteERKh = func:11592; // size:0x54 evidence:pair-addr
@@ -7939,7 +7941,7 @@ _ZNKSt3__220__shared_ptr_pointerIPN5comum2md19CIdentificacaoSecaoENS_10shared_pt
 _ZN5comum15CGravadorHashesD0Ev = func:11619; // size:0xa evidence:pair-addr
 _ZN5comum24CGravadorEnvelopeArquivoD0Ev = func:11621; // size:0x64 evidence:vtable
 _ZN5comum24CGravadorEnvelopeArquivoD2Ev = func:11622; // size:0x61 evidence:vtable
-_ZN5comum17IGravadorEnvelopeD2Ev = func:11625; // size:0xf evidence:vptr-anchor
+_ZN5comum17IGravadorEnvelopeD2Ev = func:11625; // size:0xf evidence:vtable
 _ZNK4ASN18SEQUENCE11getTypeNameEv = func:11627; // size:0x86 evidence:vtable
 _ZNKSt3__220__shared_ptr_pointerIPbNS_10shared_ptrIbE27__shared_ptr_default_deleteIbbEENS_9allocatorIbEEE13__get_deleterERKSt9type_info = func:11644; // size:0x11 evidence:content-anchor
 _ZN5comum14IInterfaceInit17CurrentBootDeviceEv = func:11646; // size:0x8a evidence:srcloc-anchor
@@ -8316,6 +8318,7 @@ piFunc = func:12445; // size:0x2f evidence:pair-addr
 radToDeg = func:12446; // size:0xe evidence:pair-fingerprint
 degToRad = func:12447; // size:0xe evidence:pair-fingerprint
 math2Func = func:12448; // size:0xf3 evidence:pair-addr
+math1Func = func:12449; // size:0x9e evidence:pair-addr
 ceilingFunc = func:12452; // size:0x15a evidence:pair-addr
 groupConcatInverse = func:12454; // size:0x22e evidence:pair-addr
 groupConcatValue = func:12455; // size:0x21f evidence:pair-addr
@@ -9397,7 +9400,7 @@ sha512_256_dupctx = func:13910; // size:0x11 evidence:pair-addr
 sha512_256_freectx = func:13911; // size:0x11 evidence:pair-addr
 sha512_256_internal_final = func:13912; // size:0xf evidence:pair-fingerprint
 sha512_256_newctx = func:13913; // size:0xf evidence:pair-addr
-Bt4_MatchFinder_GetMatches = func:13914; // size:0xa evidence:table
+Bt3_MatchFinder_GetMatches = func:13914; // size:0xa evidence:table
 sha512_224_internal_init = func:13914; // size:0xa evidence:pair-fingerprint
 sha512_224_get_params = func:13915; // size:0xe evidence:pair-addr
 sha512_224_dupctx = func:13916; // size:0x11 evidence:pair-addr
@@ -34395,11 +34398,11 @@ _ZTINSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_120feat_seg_pos_in_word
 _ZTVNSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_123feat_seg_pos_in_word_bwENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189de8; // type:data size:0x1c evidence:rtti
 _ZTINSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_123feat_seg_pos_in_word_bwENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189e04; // type:data size:0xc evidence:rtti
 _ZTVNSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_117feat_word_numsylsENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189e10; // type:data size:0x1c evidence:rtti
-g_Alloc = 0x189e1c; // type:data size:0x8 evidence:content
-g_MidAlloc = 0x189e24; // type:data size:0x8 evidence:content
+g_Alloc = 0x189e24; // type:data size:0x8 evidence:content
 _ZTINSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_117feat_word_numsylsENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189e2c; // type:data size:0xc evidence:rtti
 _ZTVNSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_111feat_syl_inENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189e38; // type:data size:0x1c evidence:rtti
-g_BigAlloc = 0x189e44; // type:data size:0x8 evidence:content
+g_MidAlloc = 0x189e44; // type:data size:0x8 evidence:content
+g_BigAlloc = 0x189e4c; // type:data size:0x8 evidence:content
 _ZTINSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_111feat_syl_inENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189e54; // type:data size:0xc evidence:rtti
 _ZTVNSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_112feat_syl_outENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189e60; // type:data size:0x1c evidence:rtti
 _ZTINSt3__220__shared_ptr_pointerIPN7RHVoice12_GLOBAL__N_112feat_syl_outENS_10shared_ptrINS1_16feature_functionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEEE = 0x189e7c; // type:data size:0xc evidence:rtti
@@ -35671,10 +35674,9 @@ _ZNSt3__26__treeINS_12__value_typeIjN5comum2md12CCandidaturaEEENS_19__map_value_
 # 1719: vector<md::CDadosCandidato>'s __destroy_vector. Its body walks elements of 52 bytes, freeing the strings at -40 and -52 of each end and, under the flag at -16, the one at -28: CDadosCandidato's
 # layout (unit 89's header). 1709, named above, calls it on +80 of a node, the suplentes' vector of md::CCandidatura; 2871, 5710, 5950, 7787 and 11448 are its other callers, none written.
 _ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vectorclB8ne210108Ev = func:1719; // evidence:callers+content the 52-byte element of CDadosCandidato, reached from 1709 on the suplentes at +80
-# 857 and 2240: the destructors of comum::md::estadoaplicacao::CDadoCorrespondencia and ecourna::app::dados::CIdentificadorGeradorMidia. 2240 destroys three strings at +0, +12, +24: the class's three
-# members. 857 calls 2240 at +60, 520 (a vector's) at +48 and two strings at +28 and +4: the members' offsets of CDadoCorrespondencia (fn 5630's constructor), and 11395 walks a vector of it calling 857 with a stride of 96.
-# Our bodies inline ~basic_string at the tree's level, the target's are the executable TU's -Oz copies, so neither row can match: the lines are for their callers.
-_ZN5comum2md15estadoaplicacao20CDadoCorrespondenciaD2Ev = func:857; // evidence:callers+content the calls and offsets above; 11395 destroys a vector of 96-byte elements through it
+# 2240: the destructor of ecourna::app::dados::CIdentificadorGeradorMidia. It destroys three strings at +0, +12, +24: the class's three members. 857,
+# comum::md::estadoaplicacao::CDadoCorrespondencia's destructor, calls 2240 at +60, 520 (a vector's) at +48 and two strings at +28 and +4: the members' offsets of CDadoCorrespondencia (fn 5630's constructor).
+# Our body inlines ~basic_string at the tree's level, the target's is the executable TU's -Oz copy, so the row cannot match: the line is for its callers.
 _ZN7ecourna3app5dados26CIdentificadorGeradorMidiaD2Ev = func:2240; // evidence:callers+content three strings at +0, +12, +24; 857 calls it on the member at +60
 # 536: the one body of the enums' format handles, 31 table slots in the target. Our link merges EUrnaTurno's handle into it, and cappinfo.cpp.o links first, so the body carries this name. The
 # target keeps EUrnaTurno's apart as 9868, slot 474, a copy with parse and format left out of line (calls 1558 and 5906, whose other caller 4027 is in invoke form), so 1553's anchor votes 9868,

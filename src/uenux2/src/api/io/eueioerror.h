@@ -19,6 +19,13 @@ enum EUeIoError {
     EUE_IO_REGISTRO_NAO_ENCONTRADO = 5979,
     // the code api::CEncryptedFile::Save throws (target fn 2767); chosen from its message, "Nome de arquivo vazio"
     EUE_IO_NOME_ARQUIVO_VAZIO = 5994,
+    // the codes of api::CEncryptedFile::MemWrite and MemRead (held by target fns 2766 and 3652); chosen from the messages
+    // and the member that throws them
+    EUE_IO_MEMWRITE_TAMANHO_INVALIDO = 5996,
+    EUE_IO_MEMWRITE_BUFFER_INVALIDO = 5997,
+    EUE_IO_MEMREAD_TAMANHO_INVALIDO = 5998,
+    EUE_IO_MEMREAD_BUFFER_INVALIDO = 5999,
+    EUE_IO_MEMREAD_NADA_PARA_LER = 6000,
     EUE_IO_NOME_CHAVE_MODIFICADO = 6005,
 };
 
