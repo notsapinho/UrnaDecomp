@@ -27,7 +27,6 @@ public:
         : m_bytes(bytes), m_tamanho(tamanho), m_iv(iv)
     {
     }
-    ~CAesKey();
 
     const std::vector<uebyte>& GetBytes() const { return m_bytes; }
     ESymmetricCipherKeySize GetTamanho() const { return m_tamanho; }

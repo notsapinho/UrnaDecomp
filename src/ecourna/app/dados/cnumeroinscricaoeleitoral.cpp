@@ -18,6 +18,8 @@ CNumeroInscricaoEleitoral::CNumeroInscricaoEleitoral(const std::string& numeroIn
     }
 }
 
+CNumeroInscricaoEleitoral::~CNumeroInscricaoEleitoral() = default;
+
 std::string CNumeroInscricaoEleitoral::Formatado() const
 {
     std::string numero = GetNumero();

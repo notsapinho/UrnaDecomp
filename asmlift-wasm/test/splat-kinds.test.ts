@@ -186,6 +186,12 @@ function relativeSlotOf(l: Loaded, name: string): number {
   return slotOf(l, name) - tableBase(l.plain.module);
 }
 
+/** An operand relative to the base whose slot is `past` slots after the end of our table: the base plus it is no slot
+ *  of ours, and that holds however far our table grows, which a target slot's number does not promise. */
+function relativePastOurTable(l: Loaded, past: number): number {
+  return l.maps.ours.tableSize + past - tableBase(l.plain.module);
+}
+
 /** Our table slot of the function the target keeps in its slot `targetSlot` (the function the symbol file gives that
  *  target function's name): the one slot our table gives it. */
 function ourSlotOf(l: Loaded, targetSlot: number): number {
@@ -693,17 +699,17 @@ const CASES: Case[] = [
     plain: ourSlot7010,
     shifted: (l) => ourSlot7010(l) + T,
   },
-  // the target's relative slots of vdbeSorterSort (11883 at +0xa8, 11885 at +0xae) written as integers: the table
-  // reads them as table-rel, relative to the base, and the slots that makes of them (our base + each) are past our
-  // table. Ours are vdbeSorterCompare's slot (+0xae) and vdbeSorterCompareInt's (+0xa8), relative to the base.
+  // vdbeSorterSort's relative slots (+0xa8, +0xae) written as integers past our table: the table reads them as
+  // table-rel, relative to the base, and the slots that makes of them (our base + each) are no slots of ours. Ours are
+  // vdbeSorterCompare's slot (+0xae) and vdbeSorterCompareInt's (+0xa8), relative to the base.
   {
     name: 'V1 a relative slot as an integer',
     symbol: 'vdbeSorterSort',
     target: 6458,
     at: 0xae,
     was: (l) => relativeSlotOf(l, 'vdbeSorterCompare'),
-    plain: 11885,
-    shifted: 11885,
+    plain: (l) => relativePastOurTable(l, 2),
+    shifted: (l) => relativePastOurTable(l, 2),
   },
   {
     name: 'V2 another',
@@ -711,8 +717,8 @@ const CASES: Case[] = [
     target: 6458,
     at: 0xa8,
     was: (l) => relativeSlotOf(l, 'vdbeSorterCompareInt'),
-    plain: 11883,
-    shifted: 11883,
+    plain: (l) => relativePastOurTable(l, 0),
+    shifted: (l) => relativePastOurTable(l, 0),
   },
   {
     name: 'U c2 in a function the relink does not name',
@@ -891,11 +897,12 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
   it.skipIf(!real)("V1, V2: an integer over vdbeSorterSort's relative slots is read relative to the base and rejected", () => {
     const unchanged = build(byName('V1'), load().maps);
     expect([unchanged.assembled.sha256, unchanged.kindUnverified]).toEqual([TARGET_SHA, []]);
-    for (const [name, at, value] of [
-      ['V1', 0xae, 11885],
-      ['V2', 0xa8, 11883],
+    for (const [name, at, past] of [
+      ['V1', 0xae, 2],
+      ['V2', 0xa8, 0],
     ] as const) {
       const c = byName(name);
+      const value = relativePastOurTable(load(), past);
       const { maps, kinds } = caseMaps(c);
       expect(kinds, name).toEqual({ verified: true, ops: expect.any(Map) });
       expect(operandKind(kinds, at), name).toBe('table-rel');

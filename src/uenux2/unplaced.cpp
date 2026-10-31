@@ -535,14 +535,6 @@
 // f12113 · 9 B · unmatched · placement: link order · name unknown
 // void f12113(i32) { ... }
 
-// link-order cluster 628 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemvisualizarcandidatosvota.cpp
-
-// f12251 · 13 B · unmatched · placement: link order · name unknown
-// void f12251(i32) { ... }
-
-// f12244 · 248 B · unmatched · placement: link order · name unknown
-// ? f12244(i32) { ... }
-
 // link-order cluster 629 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemparametrosurnavota.cpp
 
 // f12255 · 11 B · unmatched · placement: link order · name unknown
@@ -2691,11 +2683,6 @@
 
 // f2894 · 260 B · unmatched · placement: link order · name unknown
 // void f2894(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1123 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemparametrosurnavota.cpp
-
-// f2937 · 12 B · unmatched · placement: link order · name unknown
-// ? f2937(i32) { ... }
 
 // link-order cluster 1142 · uses=5
 
