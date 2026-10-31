@@ -95,24 +95,27 @@ function usage(): never {
                                              its function's piece
   splat-symbols <target.wasm> <plain.wasm> [-o <symbol_addrs.txt>]   the target's symbol file from our link's maps
   splat-maps <target.wasm> <plain.wasm> (--fn <ours> | --data <addr> | --target-fn <n> | --summary)
-  splat-remap <target.wasm> <plain.wasm> <ours> [--against <target fn>] [--kinds <kinds.json> | --no-kinds]
+  splat-remap <target.wasm> <plain.wasm> <ours> [--against <target fn>] [--symbols <f>] [--ledger <dir>]
+              [--kinds <kinds.json> | --no-kinds]
                                              one body re-pointed into the target
   splat-sym-coverage <target.wasm> <plain.wasm> [--smoke N] [--kinds <kinds.json> | --no-kinds]
                                              symbol coverage and ledger pairs re-pointed
   splat-twin-check <plain.wasm> <twin.wasm>   the --emit-symbol-map twin's bodies against the plain link's
                                              (src/splat-symbols-cli.ts; urna layout defaults)
-  splat-scan <target.wasm> <plain.wasm> [-o <scan.tsv>] [--match [<matches>]]   every target function against our
+  splat-scan <target.wasm> <plain.wasm> [-o <scan.tsv>] [--match [<matches>]] [--symbols <f>]   every target function against our
                                              re-pointed candidate: match / differs / unresolved / no-candidate
-  splat-build <target.wasm> <plain.wasm> [--matches <f>] [-o <wasm>] [--expect <sha256>]
+  splat-build <target.wasm> <plain.wasm> [--matches <f>] [--symbols <f>] [-o <wasm>] [--expect <sha256>]
               [--max-kind-unverified <n>]    the split assembled with our bytes for every match; fails on a match
                                              that does not verify, or on more than <n> kind-unverified matches;
                                              prints the kind-unverified matches and the review warnings
-  splat-review <target.wasm> <plain.wasm> <target index> [--matches <f>] [-o <dir>]
+  splat-review <target.wasm> <plain.wasm> <target index> [--matches <f>] [--symbols <f>] [-o <dir>]
                                              the blanked-target check of one match: its piece blanked in a copy of
                                              the split, assembled with our body two ways, the match's own bytes (the
                                              gate: it alone sets the exit status) and every operand at its first
                                              reading against the blanked module (written to <dir>, default
                                              build/out/splat-review/<index>); prints whether each is the target
+    splat-scan, splat-build, splat-review and splat-remap take --symbols <f> (default splat/symbol_addrs.txt) and
+    --ledger <dir> (default ledger/).
     splat-scan, splat-build, splat-review, splat-remap and splat-sym-coverage take --kinds <kinds.json> (default
     build/out/wasm-kinds/<name>/kinds.json, and they refuse to run without it): each constant and memarg offset is
     offered only the readings of its kind (literal, address, table slot, an unfolded __table_base sum's base and

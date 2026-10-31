@@ -12,7 +12,8 @@ census; this file holds the measurements that decided its flags and its generate
 Huang-Ming Huang; https://github.com/Kampbell/III-ASN.1, fetched into `third_party/III-ASN.1` (gitignored), last upstream commit
 66e5d48). TSE's copy is a fork: `BERDecoderPartial`, `BufferSeeder`, `ISeeder`, `IAbstractVisitor` and `DataFree`
 exist in the binary but not upstream, and the fork's error texts are Portuguese. The `Modulo*` classes
-(`ModuloBoletimUrna`, `ModuloRegistroDigitalVoto`, …) are asnparser output.
+(`ModuloBoletimUrna`, `ModuloRegistroDigitalVoto`, …) are asnparser output. The fork does not keep upstream's files:
+`DataLengthCounter` lies outside `BEREncoder`'s object (§A6), and `AbstractData`'s constructor outside `asn1.cxx` (§A7).
 
 ## A1. The runtime TUs were compiled at -Os
 
@@ -80,23 +81,32 @@ census, which has no pair for it (§A5).
 **One symbol, so the first definer wins.** With both sides `ne`, the runtime and RHVoice define the same
 `vector<unsigned>::push_back`, and the runtime's objects come first in our link. In the target RHVoice's copy won, and
 the bands put RHVoice before the runtime ([link-order.md](link-order.md) §L3). The whole of RHVoice cannot follow,
-because our RHVoice objects emit bodies the target does not have. The measurements, with each row's lost indices the
-`comm -23` of step 10 joined with the rows that left `match` in `splat/scan.tsv`:
+because our RHVoice objects emit bodies the target does not have. The rows that leave `match` in a private link of the
+same objects at 0b5f410, 8648 matches. Each is the scan `join` of [app-flags.md](app-flags.md) §F9 item 6, so a lead,
+since the symbol file and the ledger stay committed; each compiles nothing:
 
-| RHVoice objects | added | lost | why |
-| --- | --- | --- | --- |
-| all last, as before | 24 | 9672 | it calls `push_back(const&)`, now the runtime's `-Os` copy |
-| all before ecourna, as §L3 reads | 22 | 777, 1837, 8814, 8891, 8892, 10983 | `operator>>(istream&, char&)` and the row below |
-| `language`, `document` before ecourna | 24 | 1837, 8814, 10983 | `language`'s `basic_ostringstream()` calls `string::resize` through `invoke_viii`, so `resize` keeps a table slot and the constant argument 1837's type has lost |
-| `language`, `document` just before the runtime | 24 | none | |
-| `language` just before the runtime | the same | none | the line `src/mk/asn1.mk` holds; measured on the runtime's sources as they stand after §A6 |
+| RHVoice objects | on the `make` line | leave `match` |
+| --- | --- | --- |
+| `language` just before the runtime | nothing, as `src/mk/asn1.mk` holds it | none |
+| all last | `RHVOICE_BEFORE_ASN1=` | 8827, 9672 |
+| all just before the runtime | `'RHVOICE_BEFORE_ASN1=$(RHVOICE_OBJS)'` | 777, 1917 |
+| all before ecourna, as §L3 reads | none: `link.cmd` edited | 777, 1837, 1917, 8814, 8838, 8863, 10983 |
+
+```sh
+P=build/out/order-last; mkdir -p $P; cp -cpR build/out/app $P/app
+TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web RHVOICE_BEFORE_ASN1=
+```
+
+9672 calls `push_back(const&)`, which is then the runtime's `-Os` copy. 777 is `operator>>(istream&, char&)`, below. 1837
+loses to `language`'s `basic_ostringstream()`, which calls `string::resize` through `invoke_viii`, so `resize` keeps a
+table slot and the constant argument 1837's type has lost.
 
 `language.cpp.o` is the first object that defines `push_back(const&)`. `data_only_language.cpp.o`, `equalizer.cpp.o`
 and `pitch.cpp.o` emit a 354-B `operator>>` with a landing pad, which cannot be the target's: only 777, 1383, 1917,
 2149, 3557, 5254, 9741 and 10841 call both `sentry` (722) and `ios_base::clear` (702), and 777, the body the runtime's
-callers reach, is 163 B. Why our RHVoice objects hold these calls differently is not known. `RHVOICE_BEFORE_ASN1` in
-`src/mk/asn1.mk` is the smallest set and place that loses nothing: a measured choice, not the target's link line, and a
-later change to the RHVoice build may let it go.
+callers reach, is 163 B. The lead on why our RHVoice objects hold these calls differently is their landing pads (§A7).
+`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk` is the smallest set and place that loses nothing: a measured choice, not the
+target's link line, and a later change to the RHVoice build may let it go.
 
 ## A3. The whole schema of the 32 `Modulo*` modules is in the target's data
 
@@ -129,6 +139,16 @@ Consequences:
   RTTI, name only in the record); ENUMERATED/CHOICE/string class names come from vtable co-reference in app code
   (a ctor stores vptr and info as one `i64.const`: split `i64` constants when scanning), from
   `ledger/source-locations.tsv`, or are synthesised from the field name (marked "SYNTHESIZED" in the headers).
+- A `SYNTHESIZED` name yields to RTTI or a record, and those two give the module. `ModuloHashes.h` held `ImpedimentoP1`;
+  5699's record needs `ModuloImpedidos::TipoImpedimento` by value, and `/usr/bin/grep -n TipoImpedimento
+  ledger/classes.json` gives the RTTI. The data do not place a class: its `nameList` at 1623648 sits straight after
+  `EntidadeHashes`' `fieldNames`, between the two modules. `gen_modules.py` uses neither yet, so a run of `run.sh`
+  prints the old name.
+- A setter's form is per field. 11388 builds a `Constrained_INTEGER` temporary for `municipio` and `zona`
+  (`f553(l4, 1567660)`, `f553(l4, 1561600)`) and stores `secao` directly: 38 over 57 rows against the generated setters,
+  8 over 56 with those two on `const_reference`. A bound does not decide it: 9131 sets `<1, 99999>` and `<1, 9999>`
+  fields directly, and 11392 sets `<0, …>` fields directly. A temporary of the field's type in a converter is what
+  shows `const_reference`.
 
 The generated headers are `src/asn1/modules/<Modulo>.h` + `.cxx`.
 
@@ -251,6 +271,59 @@ copies it, 8956 sets it, and 2185 computes it.
 constant argument. In each the callee is in our table and not the target's: a `-fexceptions` object of ours calls it
 through `invoke_*`. Measured by links that take those landing pads away with `-fignore-exceptions`, which says nothing of the
 target's flags: with `userdict.cpp` so compiled, 208, 2653, 2186 and 8890 match, and with `app_dados_asn_datahoraasn` 8887
-does. Of 770 rows with a candidate from `rhvoice/…`, 3 target bodies call `__cxa_find_matching_catch_*` and 192 of ours do,
-which is a lead on §A2's open question. The whole library so compiled, at unchanged symbols, gains 43 rows and loses 28: a
-lead too, not a run of the pipeline.
+does.
+
+**The target's RHVoice bodies have no landing pads, and ours do.** Of the 680 rows of `splat/scan.tsv` at 0b5f410 whose
+candidate comes from an `rhvoice/…` object, 2 target bodies call `__cxa_find_matching_catch_*` (9769 and 9774) and 127 of
+ours do, and of those 127 only 2 match. `tools/libs/rhvoice/build.sh` compiles with `-fexceptions`. The whole library
+compiled with `-fignore-exceptions`, at unchanged symbols, gains 43 rows and loses 28 (measured on an older link). That is
+a lead on §A2's open question and no run of the pipeline: the flag says nothing of the target's. The count:
+
+```sh
+python3 -I -B - <<'END'
+import re, subprocess
+def callers(wasm, js):
+    names = set(re.findall(r'([A-Za-z_$]+):___cxa_find_matching_catch_\d+', open(js, encoding='latin-1').read()))
+    run = lambda *a: subprocess.run(['wasm-objdump', *a, wasm], capture_output=True, text=True).stdout
+    imports = {m[1] for m in re.finditer(r'func\[(\d+)\].*<- [^.]*\.(\S+)', run('-x', '-j', 'Import')) if m[2] in names}
+    f, out = None, set()
+    for line in run('-d').splitlines():
+        if m := re.search(r' func\[(\d+)\]:$', line): f = m[1]
+        if (m := re.search(r'\| *call (\d+)', line)) and m[1] in imports: out.add(f)
+    return out
+t = callers('target/vota_web_wasm.wasm', 'target/vota_web_wasm.js')
+o = callers('build/out/wasm/vota_web/vota_web_wasm.wasm', 'build/out/wasm/vota_web/vota_web_wasm.js')
+rows = [l.split('\t') for l in open('splat/scan.tsv', encoding='latin-1') if 'rhvoice/' in l.split('\t')[10]]
+print(len(rows), sum(r[0] in t for r in rows), sum(r[2] in o for r in rows), sum(r[2] in o and r[4] == 'match' for r in rows))
+END
+# 680 2 127 2
+```
+
+## A8. The checkers and `ValidChecks.cxx`
+
+The data classes' `isValid` and `isStrictlyValid` are in no TU with the checkers that call them: clang inlines them in a
+caller that sees them, and the target calls them. From `asmlift-wasm/`:
+
+```sh
+pnpm --silent wasm fn ../target/vota_web_wasm.wasm 8970 2>/dev/null | /usr/bin/grep -c 'call 1067'
+# 1
+```
+
+No byte says which file holds them. Private links at 6c4885a, each scanned against the committed symbol file, so leads:
+
+| layout | leave `match` | turn `match` |
+| --- | --- | --- |
+| checkers in `ValidChecker.cxx`, members in `ValidChecks.cxx`, as the tree has them | | |
+| members in `ValidChecker.cxx`, checkers at the end of `asn1.cxx`, no new file | 0 | 12506, 12776: SQLite rows the moved data released |
+| checkers kept, members at the end of `asn1.cxx`, no new file | 0 | 0 |
+
+1067, 1068, 8968, 8969, 8970, 8977 and 8978 stay `match` in both. So `ValidChecks.cxx` is a choice. The lead on which TU is
+`asn1.cxx` is the order: the checkers' twenty visitors lie inside the run our tree keeps in `asn1.cxx`, so either that TU
+holds them or two TUs lie around them:
+
+```sh
+awk -F'\t' 'NR>1 && $1>=8740 && $1<=9020 && $5=="match" && $11 ~ /asn1\/(asn1|ValidChecker)\.o$/ {o=$11; sub(/.*\//,"",o); if (o!=p) {if (p!="") print p, a"-"b; p=o; a=$1} b=$1} END {print p, a"-"b}' <(sort -n splat/scan.tsv)
+# asn1.o 8941-8967
+# ValidChecker.o 8968-8984
+# asn1.o 8988-9012
+```
