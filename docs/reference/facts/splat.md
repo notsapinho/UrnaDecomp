@@ -21,7 +21,10 @@ These hold on the plain skeleton link (`build/out/wasm/vota_web`), whose functio
    wasm-metadce and the final wasm-opt rerun with index names and `-g` reproduce the plain code section (final
    index → post-Oz index). So every function of the link is named (`build/out/wasm-map/vota_web/names.tsv`, one row
    per function), the bodies binaryen merged as `byn$mgfn-shared$<first merged function>`
-   (`grep -c 'byn\$mgfn-shared' build/out/wasm-map/vota_web/names.tsv` counts them).
+   (`grep -c 'byn\$mgfn-shared' build/out/wasm-map/vota_web/names.tsv` counts them). An internal symbol repeats across
+   objects, so two bodies over one such symbol also spell the first member's object,
+   `byn$mgfn-shared$__cxx_global_array_dtor@<object>`, and `tools/round/splat_names.py` stops on a name two of
+   binaryen's bodies still share.
 4. **The `--emit-symbol-map` twin is the plain link, permuted.** `pnpm wasm splat-twin-check <plain> <twin>`
    pairs most functions by a name unique on both sides and the rest by body; every twin body equals its plain body
    once function, type and import indices are re-pointed (`different: 0`); the table and the data agree.
@@ -117,7 +120,7 @@ of the function in our table slot. The target's bytes then pick the reading, so 
 target. Patch one operand of a copy of our link and run `splat-build` that way, and these wrong values pass: an
 integer of ours equal to one of our table slots whose function the target keeps in the target's slot of that number
 (c2); an address written as the target's number for the right string (c5); a function-pointer slot written as the
-target's slot number (c8); and a vtable address written as the target's, past the end of our data (c9). The case
+target's slot number (c8); and an address written as the target's, past the end of our data (c9). The case
 names are those of `asmlift-wasm/test/splat-kinds.test.ts` (item 3).
 
 `make -C src link-kinds` learns the kinds from a second link (`docs/reference/splat.md` §3 "Operand kinds"). On the
@@ -225,14 +228,15 @@ body once: `build/out/wasm-map/vota_web/names.tsv` lists one name per function. 
 `ModuloTiposEleitorais::Foto`'s. The converter's object instantiates it, and the uenux2 objects come before the
 ASN.1 modules on the link line (`LINK_OBJS` in `src/Makefile`; the modules ride in `EXTRA_OBJS`). So the merged body
 takes `NumViasImpressasRelatorios`' name (`names.tsv`'s object column names the converter's object), and
-`_ZN21ModuloTiposEleitorais4FotoD0Ev` is not in our link:
+`_ZN21ModuloTiposEleitorais4FotoD0Ev` is not in our link. Unit 107 later brought a third twin ahead of it,
+`ModuloTiposCadastro::Municipio`'s, from `cconversormunicipio.cpp.o`, so the line names that one now:
 
-- `/usr/bin/grep -c FotoD0Ev build/out/wasm-map/vota_web/names.tsv` prints 0, and
-  `awk -v n=246 '$(1) == n' splat/matched.txt` prints `246 _ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev`;
+- `/usr/bin/grep -c _ZN21ModuloTiposEleitorais4FotoD0Ev build/out/wasm-map/vota_web/names.tsv` prints 0, and
+  `awk -v n=246 '$(1) == n' splat/matched.txt` prints `246 _ZN19ModuloTiposCadastro9MunicipioD0Ev`;
 - a match line that names the merged-away symbol, `246 _ZN21ModuloTiposEleitorais4FotoD0Ev`, makes
   `TMPDIR=/tmp make -C src splat` fail with `function 246 matched to _ZN21ModuloTiposEleitorais4FotoD0Ev: our link has no function
   _ZN21ModuloTiposEleitorais4FotoD0Ev`, while the scan pairs 246 with
-  `_ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev` by content.
+  `_ZN19ModuloTiposCadastro9MunicipioD0Ev` through the census's pair.
 
 `splat-match` renames such a line itself (`addMatches` in `asmlift-wasm/src/splat-sub.ts`): a listed line whose
 symbol is not in our link, while the scan matches the same index under another symbol, is rewritten in place to that
@@ -251,11 +255,11 @@ diff splat/matched.txt build/out/stale-matched.txt && echo same
 
 The first `diff` shows 246's line changed: the committed name as `<`, the stale one as `>`. The scan prints
 `../build/out/stale-matched.txt: 0 matches added, 1 renamed`, then `line 7218: function 246 renamed
-_ZN21ModuloTiposEleitorais4FotoD0Ev → _ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev:
+_ZN21ModuloTiposEleitorais4FotoD0Ev → _ZN19ModuloTiposCadastro9MunicipioD0Ev:
 _ZN21ModuloTiposEleitorais4FotoD0Ev left our link, and the scan matches 246 with
-_ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev, its byte-identical twin (…)` (the line number is 246's
+_ZN19ModuloTiposCadastro9MunicipioD0Ev, its byte-identical twin (…)` (the line number is 246's
 line in the list), and the second `diff` prints `same`: the list is the committed one again. The stale scan's row for
-246 has `content` in its `source` column: the scan pairs 246 by content, not through the listed line.
+246 has `ledger` in its `source` column: the scan pairs 246 through the census, not through the listed line.
 
 So a diff of `splat/matched.txt` across such a rename shows a `-246 …FotoD0Ev` line and a `+246 …` line although no
 match was lost, as the first `diff` above does; count lost matches by index (`docs/how-to-decompile.md` step 10). The

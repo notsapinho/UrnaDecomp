@@ -57,11 +57,6 @@
 // f3476 · 443 B · unmatched · placement: link order · name unknown
 // void f3476(i32, i32, i32, i32) { ... }
 
-// link-order cluster 964 · uses=3
-
-// f3552 · 80 B · unmatched · placement: link order · name unknown
-// void f3552(i32) { ... }
-
 // link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
 
 // f2704 · 9 B · unmatched · placement: link order · name unknown

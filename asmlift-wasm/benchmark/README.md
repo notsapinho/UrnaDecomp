@@ -193,7 +193,7 @@ definitions snapshot and the copies in `dataset/selection-inputs/`. It refuses w
 uncommitted changes, since it records HEAD as their commit. Then `pnpm bench run --label baseline`, and
 commit `rows.json`, `selection.json`, `selection-definitions.json`, `selection-inputs/` and
 `results/baseline.{json,md}` together, with the `rows` column of "The compile setups" table updated from
-`rows.json` (no test reads the table). `test/run.test.ts` takes three rows by id (`uenux2/11067`, `zlib/4824`,
+`rows.json` (no test reads the table). `test/run.test.ts` takes three rows by id (`uenux2/10946`, `zlib/4824`,
 `libc-optz/504`): when a re-selection drops one, give the test a row of the same setup, size band and features.
 
 A setup retired or merged into another is the same steps after the change to `setups.json`. Commit `setups.json`

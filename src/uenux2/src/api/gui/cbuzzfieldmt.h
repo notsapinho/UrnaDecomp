@@ -4,10 +4,11 @@
 // The header's path, the constructor's parameters and the members' names are chosen: no evidence names them, and
 // nothing shows what the two ints mean (the callers of fn 941 pass 51 and 10 at 11 sites, 52 and 5 at 3; CWasmScreenMT
 // ignores them).
-// The layout (32 bytes: IFormFieldBase's 24, then two ints) is read from Draw (target fn 11049) and from fn 941, the
-// template instance that builds the field: it allocates 32 bytes, clears the base's members and stores its arguments at
-// +24 and +28. The constructor has no target function of its own (941 holds it inlined), so it is declared only. The
-// destructor is implicit, as api::CLedFieldMT's.
+// The layout (32 bytes: IFormFieldBase's 24, then two ints) is read from Draw (target fn 11049) and from fn 941,
+// api::CMTFormBuilder::AddBuzz, which builds the field: it allocates 32 bytes, clears the base's members and stores its
+// arguments at +24 and +28. The constructor has no target function of its own: 941 holds it inlined. It is defined in
+// cbuzzfieldmt.cpp, as its siblings' are, by choice: in the class gives 941 the same rows (src/units/31-uenux2-cformbuilder.mk
+// has the measurement). The destructor is implicit, as api::CLedFieldMT's.
 
 #include "api/gui/iformfield.h"
 

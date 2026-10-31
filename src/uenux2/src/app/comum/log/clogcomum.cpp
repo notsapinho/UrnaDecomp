@@ -1,7 +1,4 @@
 // <stubs>
-// f12098 · 26731 B · unmatched · name unknown
-// void f12098(i32) { ... }
-
 // f5878 · 20 B · unmatched · name unknown
 // void f5878(i32) { ... }
 

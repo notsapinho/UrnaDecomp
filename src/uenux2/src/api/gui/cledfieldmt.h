@@ -3,11 +3,12 @@
 // api::CLedFieldMT: the class is named by RTTI (an si_class of api::IFormField<api::IScreenMT>,
 // ledger/classes.json), Draw by its record (cledfieldmt.cpp:46:19). The header's path, the enum and its enumerators,
 // the constructor's parameter and the member's name are chosen: no evidence names them. The layout (28 bytes:
-// IFormFieldBase's 24, then the operation at +24) is read from Draw and from the merged factory body 3890 (reached
-// through fn 435, which passes it this class's vtable): it allocates 28 bytes, clears the base's members and stores
-// its argument at +24. The constructor has no target function of its own (3890 holds it inlined), so it is declared
-// only. The destructor is implicit: the deleting destructor (fn 2777, through 1565) holds its body, and slot 0 of the
-// class's vtable is IFormFieldBase<IScreenMT>'s own (target fn 11052).
+// IFormFieldBase's 24, then the operation at +24) is read from Draw and from the merged body 3890, reached through fn
+// 435, api::CMTFormBuilder::AddLed, which passes it this class's vtable: it allocates 28 bytes, clears the base's members
+// and stores its argument at +24. The constructor has no target function of its own: binaryen inlined it into its one
+// caller, so it is defined out of line, in cledfieldmt.cpp (src/units/31-uenux2-cformbuilder.mk has the measurement). The
+// destructor is implicit: the deleting destructor (fn 2777, through 1565) holds its body, and slot 0 of the class's vtable
+// is IFormFieldBase<IScreenMT>'s own (target fn 11052).
 
 #include "api/gui/iformfield.h"
 

@@ -26,9 +26,6 @@
 // f2824 · 2557 B · unmatched · placement: link order · name unknown
 // void f2824(i32, i32) { ... }
 
-// f10210 · 334 B · unmatched · name unknown
-// void f10210(i32) { ... }
-
 // f5765 · 597 B · unmatched · name unknown
 // void f5765(i32, i32) { ... }
 // </stubs>

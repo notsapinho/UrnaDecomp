@@ -1,10 +1,22 @@
-// <stubs>
-// f12082 · 250 B · unmatched · name unknown
-// void f12082(i32) { ... }
+#include "app/vota/eleitor/fimvotacao/cemitirmaisbu.h"
 
-// f12081 · 1543 B · unmatched · name unknown
-// void f12081(i32) { ... }
+namespace vota {
 
-// f3879 · 22 B · unmatched · placement: link order · name unknown
-// ? f3879() { ... }
-// </stubs>
+CEmitirMaisBU::CEmitirMaisBU()
+    : comum::CAppState(EVENTO_ENTRADA)
+{
+}
+
+CEmitirMaisBU& CEmitirMaisBU::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CEmitirMaisBU());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CEmitirMaisBU> CEmitirMaisBU::s_inst;
+std::mutex CEmitirMaisBU::s_mutex;
+
+} // namespace vota

@@ -8,14 +8,14 @@
 
 namespace api {
 
+CClockFieldMT::CClockFieldMT(const SPoint& posicao)
+    : m_posicao(posicao)
+{
+}
+
 void CClockFieldMT::Draw(IScreenMT& screen) const
 {
     screen.ShowClock(m_posicao);
 }
 
 } // namespace api
-
-// <stubs>
-// f728 · 381 B · unmatched · placement: link order · name unknown
-// void f728(i32, i32) { ... }
-// </stubs>

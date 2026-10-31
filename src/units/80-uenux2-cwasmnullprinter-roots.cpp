@@ -1,7 +1,7 @@
 // Roots: keep unit 80's classes in the skeleton link, reached the way the target reaches them. The target creates its
 // one CWasmNullPaper and CWasmNullPrinter in simulador's init (fn 8302, not reconstructed), into which the constructors
 // are inlined: operator new(4) or (8), the vptr store and, for the printer, 0 at +4. CCutFieldPaper's vptr is stored in
-// fn 1264 and CNewLineFieldPaper's reaches fn 3890 through thunk 198, neither reconstructed. Every virtual member here
+// fn 1264 and CNewLineFieldPaper's reaches fn 3890 through thunk 198, both written (unit 31). Every virtual member here
 // is reached through those vtables only (`awk -F'\t' '$2==8365' ledger/callgraph.tsv` and the same for the other slots
 // print nothing). So this file takes the four vtables' addresses, the reference the constructors' vptr stores give,
 // which keeps every slot and through them api::IImpressora's two defaults, api::CUePrinterError's vtable and the

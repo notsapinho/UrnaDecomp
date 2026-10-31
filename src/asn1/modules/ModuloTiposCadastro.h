@@ -95,7 +95,7 @@ public:
     codigo::const_reference get_codigo () const { return *static_cast<codigo::const_pointer>(fields[0]); }
     codigo::reference ref_codigo () { return *static_cast<codigo::pointer>(fields[0]); }
     codigo::reference set_codigo () { return *static_cast<codigo::pointer>(fields[0]); }
-    codigo::reference set_codigo (ASN1::INTEGER::int_type v)
+    codigo::reference set_codigo (codigo::const_reference v)
     { return *static_cast<codigo::pointer>(fields[0]) = v; }
 
     class nome

@@ -253,11 +253,6 @@
 // f5369 · 18 B · unmatched · placement: link order · name unknown
 // ? f5369(i32, i32, i32, i32) { ... }
 
-// link-order cluster 749 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp
-
-// f5379 · 309 B · unmatched · placement: link order · name unknown
-// void f5379(i32, i32, i32, i32) { ... }
-
 // link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
 
 // f5460 · 73 B · unmatched · placement: link order · name unknown
@@ -485,11 +480,6 @@
 // f3509 · 530 B · unmatched · placement: link order · name unknown
 // void f3509(i32) { ... }
 
-// link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
-
-// f3527 · 104 B · unmatched · placement: link order · name unknown
-// void f3527(i32) { ... }
-
 // link-order cluster 966 · uses=3
 
 // f3564 · 120 B · unmatched · placement: link order · name unknown
@@ -574,9 +564,6 @@
 
 // f3896 · 223 B · unmatched · placement: link order · name unknown
 // void f3896(i32, i32, i32, i32, i32, i32) { ... }
-
-// f3892 · 577 B · unmatched · placement: link order · name unknown
-// void f3892(i32, i32) { ... }
 
 // link-order cluster 1035 · uses=3
 
@@ -684,11 +671,6 @@
 // f2893 · 1021 B · unmatched · placement: link order · name unknown
 // void f2893(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1121 · uses=4
-
-// f2919 · 527 B · unmatched · placement: link order · name unknown
-// ? f2919(i32, i32, i32) { ... }
-
 // link-order cluster 1122 · uses=4
 
 // f2927 · 1275 B · unmatched · placement: link order · name unknown
@@ -772,9 +754,6 @@
 
 // link-order cluster 1238 · uses=8 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp
 
-// f1563 · 572 B · unmatched · placement: link order · name unknown
-// void f1563(i32, i32, i32, i32, i32) { ... }
-
 // f1561 · 215 B · unmatched · placement: link order · name unknown
 // ? f1561(i32, i32, i32, i32, i32) { ... }
 
@@ -827,11 +806,6 @@
 
 // f1166 · 198 B · unmatched · placement: link order · name unknown
 // ? f1166(i32, i32) { ... }
-
-// link-order cluster 1282 · uses=13 · neighbours' file uenux2/src/app/comum/gravadores/cassinador.cpp
-
-// f1008 · 572 B · unmatched · placement: link order · name unknown
-// void f1008(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1291 · uses=15
 

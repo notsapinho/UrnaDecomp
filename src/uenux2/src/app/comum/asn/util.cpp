@@ -78,8 +78,21 @@ md::ETipoAbrangencia Utils::DesconverteAbrangencia(ModuloTiposEleitorais::TipoAb
     throw CUeComumAsnError(EUE_COMUM_ASN_ABRANGENCIA_INVALIDA, std::format("Abrangência inválida: {}", abrangencia));
 }
 
-// (original lines 501-515: content not recovered)
-#line 516
+// (original lines 501-502: content not recovered)
+#line 503
+ModuloTiposEleitorais::TipoAbrangencia::NamedNumber Utils::ConverteAbrangencia(md::ETipoAbrangencia abrangencia)
+{
+    switch (abrangencia) {
+        case md::ABRANGENCIA_MUNICIPAL:
+            return ModuloTiposEleitorais::TipoAbrangencia::municipal;
+        case md::ABRANGENCIA_ESTADUAL:
+            return ModuloTiposEleitorais::TipoAbrangencia::estadual;
+        case md::ABRANGENCIA_FEDERAL:
+            return ModuloTiposEleitorais::TipoAbrangencia::federal;
+    }
+    throw CUeComumAsnError(EUE_COMUM_ASN_ABRANGENCIA_INVALIDA_CONVERTE, std::format("Abrangência inválida: {}", static_cast<int>(abrangencia)));
+}
+
 ModuloTiposCadastro::TipoLocalVotacao Utils::ConverteTipoLocalVotacao(ETipoLocalVotacao tipo)
 {
     switch (tipo) {
@@ -116,9 +129,36 @@ ETipoLocalVotacao Utils::DesconverteTipoLocalVotacao(ModuloTiposCadastro::TipoLo
     throw CUeComumAsnError(EUE_COMUM_ASN_TIPO_LOCAL_INVALIDO_DESCONVERTE, std::format("Tipo de local de votação inválido: {}", tipo.asInt()));
 }
 
-} // namespace comum::asn
+// (original lines 552-555: content not recovered)
+#line 556
+ModuloTiposEleitorais::Turno Utils::ConverteTurno(EUrnaTurno turno)
+{
+    switch (turno) {
+        case SEM_TURNO:
+            return ModuloTiposEleitorais::Turno::semTurno;
+        case TURNO_1:
+            return ModuloTiposEleitorais::Turno::turno1;
+        case TURNO_2:
+            return ModuloTiposEleitorais::Turno::turno2;
+    }
+    throw CUeComumAsnError(EUE_COMUM_ASN_TURNO_INVALIDO_CONVERTE, std::format("Turno inválido: {}", turno));
+}
 
-// <stubs>
-// f11401 · 1227 B · unmatched · name unknown
-// void f11401(i32, i32, i32) { ... }
-// </stubs>
+// (original lines 569-570: content not recovered)
+#line 571
+EUrnaTurno Utils::DesconverteTurno(ModuloTiposEleitorais::Turno turno)
+{
+    switch (turno) {
+        case ModuloTiposEleitorais::Turno::semTurno:
+            return SEM_TURNO;
+        case ModuloTiposEleitorais::Turno::turno1:
+            return TURNO_1;
+        case ModuloTiposEleitorais::Turno::turno2:
+            return TURNO_2;
+    }
+    throw CUeComumAsnError(EUE_COMUM_ASN_TURNO_INVALIDO_DESCONVERTE, std::format("Turno inválido: {}", turno.asInt()));
+}
+
+
+
+} // namespace comum::asn

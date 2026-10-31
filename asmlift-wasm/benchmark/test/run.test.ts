@@ -16,7 +16,7 @@ const baseline = JSON.parse(readFileSync(join(RESULTS_DIR, 'baseline.json'), 'ut
 
 describe.skipIf(!hasImage)('runBench', () => {
   it('lifts, compiles at each setup flags, links and scores a C++, a C and a system-library row', () => {
-    const rows = readRows().filter((r) => ['uenux2/11067', 'zlib/4824', 'libc-optz/504'].includes(r.id));
+    const rows = readRows().filter((r) => ['uenux2/10946', 'zlib/4824', 'libc-optz/504'].includes(r.id));
     expect(rows).toHaveLength(3);
     const r = runBench({ label: 'test-run', rows, image: IMAGE, log: () => {} });
     expect(r.rows.map((x) => x.id)).toEqual(rows.map((x) => x.id));

@@ -55,8 +55,8 @@ UENUX2_SRCS += $(CWASMSCREENMT_SRCS)
 # compiled with the unit's flags
 $(ROOT)/$(APP)/78-uenux2-cwasmscreenmt-pending.o: $(ROOT)/src/units/78-uenux2-cwasmscreenmt-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/78-uenux2-cwasmscreenmt.mk $(ROOT)/src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.h $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/78-uenux2-cwasmscreenmt-pending.cpp -o $(R)
-# nothing reconstructed creates these objects yet: 78-uenux2-cwasmscreenmt-roots.cpp keeps the vtables, std::string::assign
-# and the control blocks the way the target reaches them; it reads the classes' headers
+# nothing reconstructed creates the screen or CPreShowClearMT yet: 78-uenux2-cwasmscreenmt-roots.cpp keeps the vtables,
+# std::string::assign and the control blocks the way the target reaches them; it reads the classes' headers
 $(ROOT)/$(APP)/78-uenux2-cwasmscreenmt-roots.o: $(ROOT)/src/units/78-uenux2-cwasmscreenmt-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/78-uenux2-cwasmscreenmt.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(ROOT)/src/uenux2/src/app/vota/operador/comum/ctextfieldupdatemt.h
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/78-uenux2-cwasmscreenmt-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/78-uenux2-cwasmscreenmt-pending.o $(APP)/78-uenux2-cwasmscreenmt-roots.o

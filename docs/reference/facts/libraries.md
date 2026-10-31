@@ -181,8 +181,115 @@ the two generated `config.h` (`CONFIG_PATH=/etc/RHVoice`, `DATA_PATH=/share/RHVo
 app drives the C++ core. `voice.cpp` needs Boost headers.
 
 Build facts: RHVoice uses `std::unary_function`/`std::not1`, so with the image's libc++ it compiles at
-`-std=c++14` (or C++17 with `-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION`), not at C++20 although CMake
-asks for it: TSE compiled RHVoice at ≤ C++17. Objects at -O3.
+`-std=c++14`, at C++17 with `-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION`, and at C++20 with that and
+`-D_LIBCPP_ENABLE_CXX20_REMOVED_BINDER_TYPEDEFS`, `…_NEGATORS` and `…_TYPE_TRAITS`. C++17 changes 13 of the 54 objects.
+`-std=c++11`, upstream's SConstruct, compiles and loses 120 rows (2217 reads +24 where ours reads +16). Objects at -O3.
+
+**No landing pads: the closest build found that loses no row.** [asn1.md](asn1.md) §A7 counts the target's pads and ours. What
+`src/Makefile` holds is one flag set for every object, the closest found with no row lost. It is not shown to be the library's
+build, and the per-object table below reads better. Steps 7 to 9 on each build, from 173cfb3 (8648 matches), with each link's
+census and symbols, by `splat/scan.tsv`'s verdicts:
+
+| RHVoice objects, on top of `-O3 -std=c++14 -DNDEBUG` | added | lost |
+| --- | ---: | ---: |
+| `-fexceptions -fignore-exceptions` | 53 | 31 |
+| same, with `HTS_Audio_initialize` fixed (below) | 55 | 23 |
+| `-fexceptions -sEXCEPTION_CATCHING_ALLOWED=[nothing]`, fixed | 36 | 13 |
+| same, with unit 103's roots | 41 | 0 |
+
+The same roots with 77 names under the hand-edit marker, from the tally of [asn1.md](asn1.md) §A5. These tables were measured
+with a stand-in for 5805, which the roots no longer hold (below). The third row leaves it out, since that build emits no
+`text_token::~text_token`:
+
+| the allow-list build above, and | added | lost |
+| --- | ---: | ---: |
+| nothing more | 167 | 0 |
+| `-fno-strict-aliasing` | 191 | 4 |
+| `-fignore-exceptions` for the allow-list, `-fno-strict-aliasing` | 211 | 12 |
+| `-fno-strict-aliasing -fno-sized-deallocation` | 162 | 97 |
+
+`src/Makefile` holds the first row. With 66 names it lands 172, for 8819 matches: 45 names carry rows, and 21 anchor the callers
+of 402, 590, 798, 950, 2210, 3858 and 5267, whose names would otherwise rest on the matches they enable. Removing any one of the
+21 drops nothing. 5 of the 66 have one caller (1227, 2210, 2237, 2714, 4760).
+
+5805 is withdrawn, so the count against the base prints it. It matched at the base as `RHVoice::text_token::~text_token` through
+a twin: its target callers, 7787 and 11561, are not RHVoice's, and only landing pads reached that destructor in our link. A
+stand-in for them would reach a function the target does not reach. The row waits for the class those callers hold.
+
+`-fignore-exceptions` and emcc's default, with no `-fexceptions` on the line, give the same 54 objects (`cmp`): clang gets
+`-fcxx-exceptions -fignore-exceptions -fexceptions` either way and drops the `invoke`s itself. On that build
+`vector<double>::push_back(&&)` gains an `n ? new : 0` the target lacks (130 rows against 119 in `hts_engine_call.cpp.o`). The
+allow-list keeps `invoke`s through -O3, and the backend turns each into a call, since no function is on the list.
+`-mllvm -enable-emscripten-cxx-exceptions=0` gives the same 54 objects, so those two spellings are one build, and which of them
+to write is a choice. The evidence for that build is the `vector<T>::push_back` family alone.
+
+**`HTS_Audio_initialize`.** `HTS_engine.c` calls it with one argument, `str_hts_engine_impl.cpp` defines it with three, and
+wasm-ld routes the call to a trap, `signature_mismatch:HTS_Audio_initialize`. The target has no trap and no call there:
+`pnpm wasm fn ../target/vota_web_wasm.wasm 9647` runs from the stores of `HTS_Engine_initialize` straight into `f5247(l3+116)`,
+`HTS_ModelSet_initialize`. A pad hid it: with `invoke_vi` binaryen could not see the trap, and without one the inlined trap
+makes the rest of `do_initialize` dead (161 B against the target's 15034 B) and takes HTS_fclose, HTS_fseek and six more
+out of the link. So TSE's source differs from the tag here. `tools/libs/rhvoice/build.sh` overlays a one-parameter
+definition, a choice: giving the call three arguments instead changes two objects and leaves the link byte for byte the same.
+
+**What the pads held.** An `invoke_*` takes a table slot for its callee, and a table entry stops binaryen inlining the
+callee or changing its type. Without RHVoice's pads the callees the target keeps by other means leave or change: 276 lost
+its result, which only 12979 reads, and that took 2184, 8920, 10431, 3558 and 3830 with it. `src/units/103-rhvoice-nocatch-roots.cpp`
+stands in for those means.
+
+**A lead, not landed: the build reads per object, without TBAA, and better at C++20.** `-fno-strict-aliasing` adds the reloads
+the target has, in C and in C++: `HTS_SStreamSet_clear` 181 to 184 rows, `item::remove` 108 to 112, and 24 more matches (681,
+756, 896, 915, 1199, 1530, 2211, 2215, 2705, 3535, 3537, 3560, 3566, 3568, 5219, 5224, 5245, 5246, 5256, 5257, 5286, 5320,
+9591, 9625). It loses `get_key` of `symbol`, `substring`, `start_of_token` and `end_of_token` (9683, 4975, 9697, 9700): at the
+allow-list the guard of `vector<unsigned>`'s copy stays on the frame, because clang leaves its destructor out of line in the
+landing pad (`-Rpass-missed=inline`: `too costly to inline (cost=45, threshold=45)`). `-fno-sized-deallocation` removes the
+guard too, and it loses 97, since the target's rows read the capacity. `-fno-delete-null-pointer-checks`,
+`-fno-strict-overflow`, `-fPIC`, `-O2`, C++17 and C++20 keep the guard at the allow-list.
+
+Those four rows are all `userdict.cpp.o`, and the object says more than the inline cost does. `T` is `-fno-strict-aliasing`, `I`
+`-fignore-exceptions`, `A` the allow-list, all at `-O3 -DNDEBUG`. Counts are against the landed build at 8820 matches, before 5805
+was withdrawn, with its symbol file and match list held fixed. No census or symbols pass ran, so each is a floor for what steps
+7 to 9 would give:
+
+| RHVoice objects | matches | added | lost |
+| --- | ---: | ---: | ---: |
+| landed: `A`, C++14 | 8820 | 0 | 0 |
+| `A T`, C++14 | 8836 | 20 | 4: 4975 9683 9697 9700 |
+| `I T`, C++14 | 8852 | 42 | 10: 938 1246 1682 3516 3546 3590 5280 5805 8827 9672 |
+| `A T`, with `userdict.cpp.o` from `I T` | 8845 | 25 | **0** |
+| `I T`, with language, hts_engine_call, engine, pitch, document, limiter from `A T` | 8851 | 31 | **0** |
+| the same without limiter | 8852 | 32 | **0** |
+| `I T`, C++20 | 8889 | **82** | 13: the ten above and 678 2184 7726 |
+| `A T`, C++20 | 8847 | 34 | 7 |
+| `I T` C++20, with language, hts_engine_call, engine, pitch, document from `A T` C++20 | 8882 | 65 | 3: 678 2184 7726 |
+
+C++17 changes no row of `I T` against C++14. `userdict.cpp.o` at `I` brings back the four `get_key` rows and adds 2875, 3550,
+5265, 9678 and 9682. Swapping each object back one at a time says who needs `A`: language (938, 1682, 3546, 8827, 9672),
+hts_engine_call (5215, 9634), engine (3590), pitch (5280), document (5805, the twin above). limiter needs nothing.
+
+So `I T` fits most objects better than `A`, and what `A` buys is one libc++ template and its callers. **The unknown is why the
+`vector<T>::push_back` family has the target's shape, with no `n ? new : 0`, while the rest of the library reads as `I T` at
+C++20,** and what 678, 2184 and 7726 need at C++20. Run steps 7 to 9 on `I T` at C++20 first, since the names here are the C++14
+link's. One row, `A T` with `userdict.cpp.o` from `I T`:
+
+```sh
+R=build/out/rhvoice/1.14.0
+TMPDIR=/tmp tools/libs/rhvoice/build.sh 1.14.0 at -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing '-sEXCEPTION_CATCHING_ALLOWED=[nothing]'
+TMPDIR=/tmp tools/libs/rhvoice/build.sh 1.14.0 it -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions
+cp -cpR $R-at $R-mix; cp -p $R-it/obj/userdict.cpp.o $R-mix/obj/
+P=build/out/mix; mkdir -p $P; cp -cpR build/out/app $P/app     # a private OUT: make compares times, not the RHVOICE_DIR path
+TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web RHVOICE_DIR=$R-mix
+TMPDIR=/tmp tools/round/link-map.sh $P/wasm/vota_web
+TMPDIR=/tmp tools/round/link-kinds.sh $P/wasm/vota_web
+cd asmlift-wasm
+pnpm --silent wasm splat-kinds ../$P/wasm/vota_web/vota_web_wasm.wasm
+cp ../splat/matched.txt ../$P/matched.txt
+pnpm --silent wasm splat-scan ../target/vota_web_wasm.wasm ../$P/wasm/vota_web/vota_web_wasm.wasm --kinds ../$P/wasm-kinds/vota_web/kinds.json --match ../$P/matched.txt -o ../$P/scan.tsv
+```
+
+`--match` appends to the list it is given, so give it a copy, and `--symbols` defaults to the committed file: that is what holds
+the names fixed. Compare column 5 of `$P/scan.tsv` with `splat/scan.tsv`: at this commit this row prints 25 turned `match` and
+none left it. For C++20 use `-std=c++20` and the four macros above. A copy of `build.sh` does not change the build: outside
+docker it re-executes the tracked script.
 
 ## B7. Boost 1.89.0 (medium confidence), header-only
 

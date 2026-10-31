@@ -133,17 +133,17 @@
     "key": "rhvoice",
     "title": "RHVoice 1.14.0 core (+ hts_engine and sonic in C)",
     "flags": {
-      "c": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG",
-      "c++": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG"
+      "c": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]",
+      "c++": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -sEXCEPTION_CATCHING_ALLOWED=[nothing]"
     },
     "image": "urna-emsdk:6.0.0",
-    "source": "tools/libs/rhvoice/build.sh COMMON + the flags src/Makefile passes (variant cxx14-O3-ndebug)",
+    "source": "tools/libs/rhvoice/build.sh COMMON + the flags src/Makefile passes (variant cxx14-O3-ndebug-nocatch)",
     "truth": {
       "kind": "artefact",
       "vars": [
         "RHVOICE_OBJS"
       ],
-      "file": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug/flags.nul",
+      "file": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/flags.nul",
       "format": "nul"
     }
   },

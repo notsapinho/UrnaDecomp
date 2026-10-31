@@ -115,4 +115,38 @@ const ModuloTiposEcoUrna::SituacaoArquivo::InfoType ModuloTiposEcoUrna::Situacao
     2, nameList
 };
 
+const char * ModuloTiposEcoUrna::ModeloEquipamento::nameList[] = {
+    "<undefined>=0",
+    "<undefined>=1",
+    "tpm20",
+    "<undefined>=3",
+    "<undefined>=4",
+    "<undefined>=5",
+    "<undefined>=6",
+    "<undefined>=7",
+    "<undefined>=8",
+    "<undefined>=9",
+    "<undefined>=10",
+    "<undefined>=11",
+    "<undefined>=12",
+    "ue2013",
+    "<undefined>=14",
+    "ue2015",
+    "<undefined>=16",
+    "<undefined>=17",
+    "<undefined>=18",
+    "<undefined>=19",
+    "ue2020",
+    "<undefined>=21",
+    "ue2022"
+  };
+
+const ModuloTiposEcoUrna::ModeloEquipamento::InfoType ModuloTiposEcoUrna::ModeloEquipamento::theInfo = {
+    ASN1::ENUMERATED::create,
+    0x0000000a,
+    0,
+    0,
+    22, nameList
+};
+
 } // namespace ModuloTiposEcoUrna

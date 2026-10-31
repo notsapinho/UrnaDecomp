@@ -523,7 +523,7 @@ for i in 5742 5743; do s=$(awk -v i=$i '$1==i {print $2}' splat/matched.txt); pr
 
 An inverted pair is two definitions swapped only when no earlier function of the TU can mention either: a function takes
 its place at its first mention, not at its definition (a callee sits between its two constructors in three objects of
-unit 89, and 5693 and 5694 read inverted because the unwritten `DoDesconverte` mentions 5694 first). Such a swap gives the
+unit 89, and 5693 and 5694 read inverted because `DoDesconverte` mentions 5694 first). Such a swap gives the
 same bytes, so it is a question of source order, not of a match.
 
 **Names no evidence gives.** A record gives a function's qualified name and how its types are spelled, a vtable slot or

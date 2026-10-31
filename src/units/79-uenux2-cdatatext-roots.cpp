@@ -1,4 +1,5 @@
-// Roots: nothing written calls this unit's classes. Each is built where the target's callers build it, none of which is
+// Roots: each of this unit's classes is built where the target's callers build it. 3068, 604, 651, 5409 and 5419 are
+// written (unit 31), and what they instantiate comes from their objects, ahead of this one. The others are not
 // reconstructed, so these stand-ins build each instantiation the way those callers do, with the exact template arguments
 // the RTTI spells:
 //   std::make_shared<X>, where the target has __shared_ptr_emplace<X>: CDataText over std::string (*)() (fn 3068 builds it

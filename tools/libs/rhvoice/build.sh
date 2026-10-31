@@ -12,6 +12,7 @@
 # DATA_PATH=/share/RHVoice are the target's strings; ENABLE_SONIC=1 (min_sonic_rate + no curl ⇒ ENABLE_PKG=0);
 # VERSION=<tag> (no version literal is in the target). They are written to <out>/cfg, and a clang VFS overlay
 # (<out>/cfg/overlay.yaml) shows them at src/core/config.h and src/include/core/config.h, so the checkout is never written.
+# The overlay also shows one source that differs from the tag (below).
 # voice.cpp needs Boost headers (boost/algorithm/string.hpp): BOOST=<dir holding boost/> (default third_party/boost, the
 # Boost 1.89.0 headers tools/setup/bootstrap.sh extracts). Defines: -DRHVOICE=1 -DPACKAGE="RHVoice" (SConstruct). Output: build/out/rhvoice/<tag>-<variant>/probe.{js,wasm,js.symbols}.
 # LINK_EXTRA="<flags>" in the environment is appended to the link line (e.g. LINK_EXTRA=-flto with -flto in the compile flags).
@@ -43,8 +44,15 @@ printf 'const char CONFIG_PATH[] = "/etc/RHVoice";\nconst char DATA_PATH[] = "/s
 printf '#pragma once\n#ifndef RHVOICE_GLOBAL_CONFIG_INCLUDED\n#define RHVOICE_GLOBAL_CONFIG_INCLUDED\n#define ENABLE_SONIC 1\n#define ENABLE_PKG 0\nconst char VERSION[] = "%s";\n#endif\n' "$TAG" > "$OUT/cfg/core/config.h"
 # Both headers are config.h and both are included as "config.h" (src/core/engine.cpp its own, src/include/core/engine.hpp
 # its own), so no include path tells them apart: the overlay puts each in its directory. Its paths are the container's.
-printf '{ "version": 0, "roots": [\n  { "type": "file", "name": "%s", "external-contents": "%s" },\n  { "type": "file", "name": "%s", "external-contents": "%s" }\n] }\n' \
-  "$PWD/$SRC/src/core/config.h" "$PWD/$OUT/cfg/config.h" "$PWD/$SRC/src/include/core/config.h" "$PWD/$OUT/cfg/core/config.h" > "$OUT/cfg/overlay.yaml"
+# The third entry is the one source that differs from the tag. str_hts_engine_impl.cpp defines HTS_Audio_initialize with
+# three parameters, HTS_engine.c calls it with one, and wasm-ld routes that call to a trap stub. The target has no such
+# trap: docs/reference/facts/libraries.md B6.
+sed 's/void HTS_Audio_initialize(HTS_Audio \* audio, int sampling_rate, int max_buff_size)/void HTS_Audio_initialize(HTS_Audio * audio)/' \
+  "$SRC/src/core/str_hts_engine_impl.cpp" > "$OUT/cfg/str_hts_engine_impl.cpp"
+grep -q 'void HTS_Audio_initialize(HTS_Audio \* audio)$' "$OUT/cfg/str_hts_engine_impl.cpp"
+printf '{ "version": 0, "roots": [\n  { "type": "file", "name": "%s", "external-contents": "%s" },\n  { "type": "file", "name": "%s", "external-contents": "%s" },\n  { "type": "file", "name": "%s", "external-contents": "%s" }\n] }\n' \
+  "$PWD/$SRC/src/core/config.h" "$PWD/$OUT/cfg/config.h" "$PWD/$SRC/src/include/core/config.h" "$PWD/$OUT/cfg/core/config.h" \
+  "$PWD/$SRC/src/core/str_hts_engine_impl.cpp" "$PWD/$OUT/cfg/str_hts_engine_impl.cpp" > "$OUT/cfg/overlay.yaml"
 
 COMMON=(-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE="RHVoice"' -I"$SRC/src/include" -I"$SRC/src/hts_engine" -I"$SRC/src/third-party/utf8" -I"$SRC/src/third-party/rapidxml" -I"$SONIC" -I"${BOOST:-third_party/boost}" -ivfsoverlay "$OUT/cfg/overlay.yaml")
 COMMON+=(${EXTRA[@]+"${EXTRA[@]}"})
