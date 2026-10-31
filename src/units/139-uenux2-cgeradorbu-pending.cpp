@@ -7,14 +7,15 @@
 // template's member is written in cgeradorbubase.h.
 // - CGeradorBU::ImprimePreTexto, slot 2, target fn 11256 (1733 B, record cgeradorbu.cpp:257): it walks the vector at
 //   +116 after loading the load-code history's title, and it calls fn 160, std::string::append, which this tree's code
-//   calls at its -O3 (units 31 and 93 measure it on AddField and DefineHistoricoCarga), and fn 942, which has no body
-//   or name of ours (below), so it waits for 942.
+//   calls at its -O3 (units 31 and 93 measure it on AddField and DefineHistoricoCarga), and fn 942,
+//   CCalculaCV::IncluiString (unit 121). It waits for fns 2786 and 357, which have no body or name of ours
+//   (`no-candidate` in splat/scan.tsv, no line in splat/symbol_addrs.txt).
 // - CGeradorBUBase<...>::ImprimeProporcionalPartido, slot 3, fn 11255 (1749 B, records cgeradorbubase.h:187 and
-//   ImprimeVotosCandidatos' 222), and ImprimeMajoritario, slot 4, fn 11254 (1443 B, record :246). Both call fn 942, which
-//   holds CCalculaCV::IncluiString's record and calls fn 160, and fn 2271; 11255 calls fns 2272 and 1273 as well. None
-//   of the four has a body or a name of ours (`no-candidate` in splat/scan.tsv), so both wait for them.
+//   ImprimeVotosCandidatos' 222), and ImprimeMajoritario, slot 4, fn 11254 (1443 B, record :246). Both call fn 942 and
+//   fn 2271; 11255 calls fns 2272 and 1273 as well. 2271, 2272 and 1273 have no body or name of ours, so both wait for
+//   them.
 // - CGeradorBUBase<...>::ImprimeConsulta, slot 5, fn 11253 (2730 B, record :286): it calls fn 160 too, and fn 942
-//   twice, and waits for 942.
+//   twice, and waits for fns 357, 1881, 1923 and 5610, which have no body or name of ours.
 #include "app/comum/relatorios/cgeradorbu.h"
 
 namespace comum {

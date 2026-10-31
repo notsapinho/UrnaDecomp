@@ -1,10 +1,12 @@
 # uenux2 api::IReportPart's parts: comum::CParteCandidatos, CParteCandidatosMajoritarios, CParteCandidatosProporcionais,
 # CParteCandidatosConsultas, CParteRdv, CParteEleitores and api::CFormPart (comum::CParteCargos is unit 58). Matched:
 # - the implicit destructors, the compiler's code for the class definitions, emitted with the vtables in the pending
-#   object, or for CFormPart in cformpart.cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590), CParteCandidatosMajoritarios's and
+#   object, or for CFormPart in cformpart.cpp and for CParteEleitores in cparteeleitores.cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590), CParteCandidatosMajoritarios's and
 #   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210), and
 #   CParteEleitores's (11205, 11204) and CFormPart's (10888, 10887), four thunks into binaryen's two merged bodies 2899
-#   and 6026, which match too under the byn$mgfn-shared$ names our link gives them. In the target 2899 has two more
+#   and 6026, which match too under the byn$mgfn-shared$ names our link gives them: CParteEleitores's D2 and D0 since its
+#   Imprime is written in cparteeleitores.cpp, which this fragment lists ahead of cformpart.cpp (step 9 renamed the two
+#   match lines from CFormPart's). In the target 2899 has two more
 #   callers, the D2s 3607 and 3740 of comum::servico::CComparecimentoMesarioServico and CJustificadorServico, which no
 #   unit defines: the two classes here give the same shared body and the same thunks;
 # - CFormPart's constructor (fn 601), in api/gui/reports/cformpart.cpp;
@@ -16,7 +18,10 @@
 #   already matched.
 # Imprime, the key function of every class, is pending (the pending file's header lists what each waits for), but for
 # api::CFormPart's (10889, a call of its form's slot 2), in cformpart.cpp, which brings that class's vtable and destructors,
-# and CParteRdv's (11203), in cparterdv.cpp, whose object now emits that class's vtable and destructors.
+# CParteRdv's (11203), in cparterdv.cpp, and CParteEleitores's (11206), in cparteeleitores.cpp, whose objects now emit
+# those classes' vtables and destructors. CParteEleitores::Imprime calls its part's slot 2 once per record of
+# comum::CEleitores: the target moves the base CDataMap's cursor to the map's first record inline (CDataMap::Reset in
+# api/io/cdatamap.h, a chosen name), tests it against the map's end inline (IsFim) and calls Next (fn 5601).
 #
 # Evidence. RTTI names the classes and gives api::IReportPart as each one's only base. The D2s give the layouts, and the
 # allocations of fns 5971, 11908 and 11946 the sizes (44, 28, 88, 12 bytes). RTTI gives the std::function's signature:

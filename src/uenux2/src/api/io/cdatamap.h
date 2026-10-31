@@ -4,7 +4,9 @@
 // `throw` at 12 spaces (class, body, if), which the class's own definitions fit; every other line is a choice, and so
 // is where Find sits. The constructor from a name is the one comum::CCandidaturas's constructor (fn 5811) holds inlined,
 // with the cursor at the map's end; const std::string& for its parameter is chosen (by value is not tried). IsFim is
-// the cursor test fn 2268 holds inline. Chosen, no evidence names them: Find, IsFim, m_registros, m_corrente, m_nome.
+// the cursor test fn 2268 holds inline, and Reset the cursor's move to the first record, which fn 11206
+// (comum::CParteEleitores::Imprime) holds inline. Chosen, no evidence names them: Find, IsFim, Reset, m_registros,
+// m_corrente, m_nome.
 // Add(KeyType, RecordType) has no record: its body is fn 5377's. src/units/113-uenux2-cdatamap.mk lists what the
 // bytes decide and what they do not.
 #pragma once
@@ -27,7 +29,9 @@ public:
 
     bool IsFim() const { return m_corrente == m_registros.end(); }
 
-    // (original lines 30-94: content not recovered)
+    void Reset() { m_corrente = m_registros.begin(); }
+
+    // (original lines 34-94: content not recovered)
 #line 95
     RecordType* GetCurrent() const
     {

@@ -1,15 +1,17 @@
 # uenux2 data sources of api::CDataText, and control blocks of this tree's classes: vota::CEscolheOpcao::COpcaoDS's call
-# operator (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's destructor and DestroyInst
-# (src/app/comum/relatorios/ccalculacv.cpp), and the roots file 121-uenux2-datasources-roots.cpp, whose header says which
-# vtables it keeps and from which dropped builders. Both files are the ones the classes' records name (cescolheopcao.cpp:150
-# to 152, StartState's; ccalculacv.cpp:58 to 109, the constructor's and IncluiString's); neither of those functions is
-# written, and the lines of the two functions here are a choice, after the records. Paths relative to src/uenux2.
+# operator (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's IncluiString, destructor and
+# DestroyInst (src/app/comum/relatorios/ccalculacv.cpp), and the roots file 121-uenux2-datasources-roots.cpp, whose
+# header says which vtables it keeps and from which dropped builders. Both files are the ones the classes' records name
+# (cescolheopcao.cpp:150 to 152, StartState's; ccalculacv.cpp:58 to 74, the constructor's, and 109, IncluiString's).
+# IncluiString's throw is on its record's line; StartState and the constructor are not written, and the lines of the
+# functions here that have no record are a choice, after the records. Paths relative to src/uenux2.
 #
 # Target functions matched:
 #   CDataText<vota::CEscolheOpcao::COpcaoDS>::GetText                 10685, with the source's call operator inlined
 #   __shared_ptr_emplace<std::string> D2, D0, __on_zero_shared        10675, 10674, 10673
 #   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069
 #   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o
+#   comum::CCalculaCV::IncluiString                                   942, from ccalculacv.cpp.o
 # CCalculaCV::DestroyInst has no target function: unit 139's ~CGeradorBU (fn 3698) holds it inlined by binaryen, and
 # that fragment has the evidence for its body and for its TU. It needs no root: its one caller is that destructor.
 # Two forms of the operator give 10685 the same instructions in the whole link (`score 10 over 216 rows`, all
@@ -37,13 +39,20 @@
 # __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...>) and fn 12110; neither is in our link, and the
 # roots file's stand-in calls it twice for them, so it stays a function of its own. The block itself, its __get_deleter
 # 11262 and __on_zero_shared 11263, waits for its real builder in ccalculacv.cpp: push<CCalculaCV>, inlined into fn 12110,
-# which holds the constructor's records and throws comum::EUeComumRelatoriosError, an enum no header of this tree
-# declares yet. A dropped builder in the roots file does not stand in for it. Measured with one: 11262 matched, and the
+# which holds the constructor's records and is not reconstructed (17349 B, `no-candidate` in splat/scan.tsv). A dropped
+# builder in the roots file does not stand in for it. Measured with one: 11262 matched, and the
 # block's __on_zero_shared, compiled where the destructor is only declared, freed what the destructor returns, so
 # binaryen kept the destructor's result and 5614 scored `6 over 52 rows` (5 operand-only, 1 inserted) and did not match;
 # without the builder, 5614 matches. A probe of `delete p` at -O2 frees the destructor's result when the TU only
 # declares the destructor, and drops it and frees p when the TU defines it, which is the shape of the target's 11263 and
 # of fn 12110's release of the std::unique_ptr, which reads as both compiled where the destructor is defined.
+#
+# IncluiString (942): its record (ccalculacv.cpp:109:15, `void comum::CCalculaCV::IncluiString(const std::string &)`)
+# gives the name and signature, its throw code 9054 and message "String vazia" are the target's, and its body appends
+# the argument to the string at +16 with fn 160, `append(const char*, size_t)`, after testing the size it passes there.
+# `m_texto.append(str)` is what is written; `m_texto += str` and `m_texto.append(str.data(), str.size())` give the same
+# function (compared in ccalculacv.cpp's object with the object-local numbers masked). Its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
+# 11981) are none of them in our link: the roots file's stand-in calls it twice.
 #
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions
