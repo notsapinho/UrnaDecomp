@@ -34,10 +34,11 @@
 # The voting states over them. vota::CPedeProporcional and vota::CPedeMajoritario: slot 15 (11710, 11682), out-of-line
 # destructors (884, 883), and the singletons' GetInst (3849, 5921), constructors and statics, in unit 104's form; final,
 # as fn 6051 deletes through CVotacaoStateAudio's D2. Our link merges the two GetInst into one shared body as the target
-# does, and 6051 matches; so do the two mutexes' exit-time destructors (11713, 11685). 3849 and 5921 stay `unresolved
-# self-voted` on their s_inst: the other reader of each, the std::unique_ptr's exit-time destructor (11714, 11686), is
-# a thunk into fn 906, a body of docs/reference/facts/codegen.md C8's `m` shape, which forms from three copies there,
-# and this link has two. vota::CCompletaProporcional: its head and constructor (5932). vota::CPedeNulo and CPedeNominal
+# does, and 6051 matches; so do the two mutexes' exit-time destructors (11713, 11685). 3849 and 5921 read `unresolved
+# self-voted` on their s_inst until the other reader of each, the std::unique_ptr's exit-time destructor (11714, 11686),
+# matches: a thunk into fn 906, a body of docs/reference/facts/codegen.md C8's `m` shape, which forms from three copies
+# there; with these two alone it did not form, and the next paragraph's singletons give it the copies.
+# vota::CCompletaProporcional: its head and constructor (5932). vota::CPedeNulo and CPedeNominal
 # (11745, 11725), vota::CMajoritarioValido, Repetido, Nulo and Branco (11687, 11690, 11693, 11696) and
 # vota::CConfirmaVotoNominal (11728): slot 15 and out-of-line destructors. vota::CConfirmaMajoritario: its head,
 # constructor (11700) and slot 16 (11699), and CConfirmaProporcional's slot 16 (11751), each `return &X::GetInst();`.
