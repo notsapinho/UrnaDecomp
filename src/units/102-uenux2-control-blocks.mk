@@ -55,8 +55,8 @@
 #   calls through the vtable (172).
 # - CAesKey's destructor is implicit, and unit 11's root of it is gone: 3517 is its D2, called by 1884, 9474 and 9495,
 #   and 9480 holds it inlined, which the former out-of-line definition (62 B, in isymmetriccipher.cpp) could not give.
-#   Two blank lines keep that file's records in place. ISymmetricCipher's constructor 9474 reads `differs` at last,
-#   at its call 306, the executable TU's copy.
+#   Two blank lines keep that file's records in place. ISymmetricCipher's constructor 9474 read `differs` at last, at its
+#   call 306, and matches since src/app/roots_vector.cpp holds that copy.
 # - CSha's destructor is implicit and CSha512 is final. Evidence: 10279 holds CSha's destructor inlined. Measured: with
 #   the destructor out of line, even in one TU with its builder at ecourna's flags, the block calls it. The destructor's
 #   D2 and D0 (5175, 5176) stay matched, emitted with the vtable in csha.cpp, since Reset is now the first virtual

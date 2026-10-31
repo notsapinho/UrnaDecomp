@@ -62,7 +62,24 @@ The target's two bodies are the `-Oz` ones. `SetVoice` keeps `std::string::opera
         f1700(i32.sub(p0, -64), p1);
 
 `CError::~CError` (4636) reads the same way: the copy that wins the link is `-Oz` code from this TU, so it says nothing
-of uenux2's level. Not measured for this TU: `-fPIC`, aliasing and `-std`. No setup of
+of uenux2's level. Not measured for this TU: `-fPIC` and `-std`.
+
+Aliasing is off in this TU, as in uenux2's set. `votaInit` (7840) calls `~vector<unsigned char>` (520), which calls
+`__destroy_vector::operator()` (4967; `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 4967` prints `callers (2): 306
+520`). After its store to `__end_`, 4967 loads `__vec_` and `__begin_` again: four `i32.load` at offset 0, where strict
+aliasing keeps the two values in locals and loads twice:
+
+    P=build/out/levels-probe; mkdir -p $P
+    printf '%s\n' '#include <vector>' 'template __attribute__((minsize)) std::vector<unsigned char>::~vector();' > $P/dv.cpp
+    for a in -fstrict-aliasing -fno-strict-aliasing; do
+      TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG $a -c /work/$P/dv.cpp -o /work/$P/dv$a.o
+      printf '%s: ' $a; wasm-objdump -d $P/dv$a.o | awk '/<_ZNSt3__26vectorIhNS_9allocatorIhEEE16__destroy_vectorclB8ne210108Ev>:/ {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -c 'i32.load 2 0'
+    done
+      -fstrict-aliasing: 2
+      -fno-strict-aliasing: 4
+
+So `src/app/roots_vector.cpp`, which holds 306, 520 and 4967, compiles at `UENUX2_CXXFLAGS` and not at the roots'
+`APP_CXXFLAGS` (`src/units/README.md` "Companion files"). No setup of
 `asmlift-wasm/benchmark/dataset/setups.json` has `-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups
 are 7-Zip's and RHVoice's, each ending in `-O3`), so no fragment may compile a TSE object so (`pnpm bench setups
 --check` refuses one), and `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` is a stub-only file. A uenux2 object's copy of

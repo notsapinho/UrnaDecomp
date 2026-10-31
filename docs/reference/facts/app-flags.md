@@ -266,7 +266,7 @@ and they found the setting directory by directory, so they are supporting eviden
 | `app/dados/resultadournacadastro` | 9024: 39 rows with -fPIC, 20 without (both operand-only) |
 | `app/dados/asn` converters | 9192 / 9191: 23 / 20 rows operand-only without -fPIC, 34 / 29 with 3 / 2 structural rows with it |
 | `api/security/csha.cpp` | `CSha::Reset` 5177, compiled with the TU's flags and linked alone at `-Oz`: with -fPIC 44 rows operand-only, 22 of them local indices (`local.tee 2` vs `1`, …); with -fno-PIC 22 rows, none a local, and the whole link re-points it `IDENTICAL`. `CSha::Update` 3519 is 40 rows operand-only either way |
-| `api/security/ckey.cpp` | `CKey::CKey` 9504 differs at +0x1dd on `local.set 4 | local.set 3` with -fPIC. Without it the first difference is +0x42e, `call 306 | call 2671`, where 9466, 9470, 9497 and 9498 stop too |
+| `api/security/ckey.cpp` | `CKey::CKey` 9504 differs at +0x1dd on `local.set 4 | local.set 3` with -fPIC. Without it the first difference was +0x42e, `call 306 | call 2671`, where 9466, 9470, 9497 and 9498 stopped too; all five match since `src/app/roots_vector.cpp` holds 306 ([splat.md](splat.md) §S10) |
 | `api/security/base64.cpp` | says nothing: func 3703's `encoding_table`/`mod_table` reads are `i32.const 1112848; i32.add; i32.load8_u`, but under `-fno-strict-overflow` (F4) a non-PIC object keeps the address added too. This row is why the file was once called PIC. Its 2 records sit in `.rodata` |
 
 So a table read with an `i32.add` proves nothing, and neither does one function's locals. Read the data first.
