@@ -124,10 +124,17 @@ std::string CStringUtils::PreencheAEsquerda(const std::string& valor, char preen
     return preenchido;
 }
 
+void CStringUtils::PreencheADireita(std::string& valor, char preenchimento, size_t tamanho)
+{
+    if (valor.size() < tamanho) {
+        valor.append(tamanho - valor.size(), preenchimento);
+    }
+}
+
 // Blank lines below keep each std::source_location call site (the To* conversions and the throw) on
 // the line the target records (ledger/source-locations.tsv).
 
-// (original lines 130-711: content not recovered)
+// (original lines 137-711: content not recovered)
 #line 712
 uebyte CStringUtils::ToByte(const std::string& valor)
 {

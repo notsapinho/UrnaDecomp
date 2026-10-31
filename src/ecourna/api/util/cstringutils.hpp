@@ -11,6 +11,9 @@ public:
     static void Trim(std::string& valor);
     static std::string Trim(const std::string& valor);
     static std::string PreencheAEsquerda(const std::string& valor, char preenchimento, size_t tamanho);
+    // fn 3511: pads in place on the right up to a length (callers 10726, 11972, 11973); no record names it, so the name,
+    // after PreencheAEsquerda's, and its being a member of this class are chosen (src/units/00-*.mk says why this file)
+    static void PreencheADireita(std::string& valor, char preenchimento, size_t tamanho);
 
     static uebyte ToByte(const std::string& valor);
     static ueint16 ToInt16(const std::string& valor);

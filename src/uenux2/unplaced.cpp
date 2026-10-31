@@ -2437,11 +2437,6 @@
 // f10362 · 12 B · unmatched · placement: link order · name unknown
 // void f10362(i32) { ... }
 
-// link-order cluster 335 · uses=1 · neighbours' file uenux2/src/api/gui/cinputfieldmt.cpp
-
-// f10726 · 643 B · unmatched · placement: link order · name unknown
-// void f10726(i32, i32) { ... }
-
 // link-order cluster 347 · uses=1 · neighbours' file uenux2/src/api/gui/logger.cpp
 
 // f10815 · 187 B · unmatched · placement: link order · name unknown
