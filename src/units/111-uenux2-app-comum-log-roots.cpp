@@ -1,10 +1,12 @@
 // Roots: reach comum's log calls and comum::CInformacaoEleicao's members the way the target's callers do, until they land.
-// Every stand-in here has a body no target function has: each makes more than one call and folds their results, and
-// none is called. Each function below has direct callers in the target, none reconstructed, so each gets two call sites
-// and stays out of line:
+// Every stand-in here has a body no target function has: each makes more than one call (and folds their results, where
+// they have one), and none is called. Each function below has direct callers in the target, none reconstructed unless
+// said, so each gets two call sites and stays out of line:
 // - comum::CLogComum's LogaCopiandoArqResParaFI, LogaResultadoCopiadoResFE, LogaGerandoResultados, LogaNivelBateria:
 //   the target's fns 12098 and 10226 call them, on GetInst's result, which they drop;
 // - comum::IEventosLog::ConverteERelatoriosUE: the target's fns 1047 and 1127;
+// - comum::IEventosLog::logaAlerta (fn 1398): the target's fns 6115, 10415, 10416, 10420, 10512, 10642 and 10676 (its
+//   eighth, 10774, unit 119's slot 28, is in the link);
 // - comum::CInformacaoEleicao's constructor and members: fn 603 has 22 callers in the target; each member's own callers
 //   are listed in the class header.
 #include <string>
@@ -43,6 +45,14 @@ __attribute__((noinline)) int w111_relatorio(comum::IEventosLog& log, comum::ERe
     return static_cast<int>(log.ConverteERelatoriosUE(relatorio).size() + log.ConverteERelatoriosUE(outro).size());
 }
 
+// stands for fns 6115, 10415, 10416, 10420, 10512, 10642 and 10676
+__attribute__((noinline)) int w111_alerta(comum::IEventosLog& log, const std::string& mensagem, const std::string& outra)
+{
+    log.logaAlerta(mensagem);
+    log.logaAlerta(outra);
+    return 2;
+}
+
 // stands for the callers of fn 603, among them 12023, 6599, 11666 to 11669
 __attribute__((noinline)) int w111_informacao(const ecourna::app::dados::CParametrosUrna& dados)
 {
@@ -58,6 +68,7 @@ int (*volatile w111_sink_copia)(comum::EExtensaoArquivoResultado, comum::EExtens
 int (*volatile w111_sink_gera)(comum::EExtensaoArquivoResultado, uebyte, uebyte);
 int (*volatile w111_sink_relatorio)(comum::IEventosLog&, comum::ERelatoriosUE, comum::ERelatoriosUE);
 int (*volatile w111_sink_informacao)(const ecourna::app::dados::CParametrosUrna&);
+int (*volatile w111_sink_alerta)(comum::IEventosLog&, const std::string&, const std::string&);
 
 struct SW111Roots {
     SW111Roots()
@@ -66,6 +77,7 @@ struct SW111Roots {
         w111_sink_gera = w111_gera;
         w111_sink_relatorio = w111_relatorio;
         w111_sink_informacao = w111_informacao;
+        w111_sink_alerta = w111_alerta;
     }
 } w111_roots;
 

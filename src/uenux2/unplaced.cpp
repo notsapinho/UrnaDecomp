@@ -186,14 +186,6 @@
 // f10758 · 169 B · unmatched · placement: link order · name unknown
 // void f10758(i32) { ... }
 
-// link-order cluster 345 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
-
-// f10763 · 59 B · unmatched · placement: link order · name unknown
-// void f10763(i32) { ... }
-
-// f10762 · 18 B · unmatched · placement: link order · name unknown
-// void f10762(i32, i32) { ... }
-
 // link-order cluster 536 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmajoritariovalido.cpp
 
 // f11687 · 104 B · unmatched · placement: link order · name unknown
@@ -1427,11 +1419,6 @@
 
 // f1393 · 15 B · unmatched · placement: link order · name unknown
 // void f1393(i32, i32) { ... }
-
-// link-order cluster 1249 · uses=9 · neighbours' file uenux2/src/app/comum/cpath.cpp
-
-// f1398 · 14 B · unmatched · placement: link order · name unknown
-// void f1398(i32, i32) { ... }
 
 // link-order cluster 1250 · uses=10
 

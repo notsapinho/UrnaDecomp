@@ -14,6 +14,11 @@
 //   argument. The member's name is chosen.
 // - loga, 233: no record names it. Its class is read from its callers, which call it on what fn 837 returns (fns 5876,
 //   6045) and on fn 184's result; its name and its severity 1 are chosen from CLoga::loga, its one callee.
+// - logaAlerta, 1398: no record names it either. It is loga with severity 2 (`f433(i32.load[p0+4], 2, p1)`), which
+//   LogaCargaBateria passes for a battery status 2, the critical one; its name is chosen from that. Its callers call it
+//   on fn 184's result (fns 10416, 10642), and its band puts it among app/comum/'s objects, between cpath.cpp (fn 1399)
+//   and gravadores/iresultado.cpp (fn 1396), where ieventoslog.cpp's records lie and clogvota.cpp's do not, so it is a
+//   member of this class and not of vota::CLogVota (unit 111's fragment).
 // - LogaCargaBateria: no record names it. Fn 5875, CLogComum::LogaNivelBateria, holds it after a second stack prologue,
 //   so binaryen inlined an out-of-line function; it reads +4 of the instance, so it is a member of this class, and it
 //   holds ConverteStatusBateria in its own frame, with the string's length folded into the format argument (clang
@@ -52,6 +57,7 @@ public:
     virtual ~IEventosLog() = default;
 
     void loga(const std::string& mensagem);
+    void logaAlerta(const std::string& mensagem);
     void LogaCargaBateria(uebyte fonte, uebyte status);
 
     std::string ConverteERelatoriosUE(const ERelatoriosUE relatorio);

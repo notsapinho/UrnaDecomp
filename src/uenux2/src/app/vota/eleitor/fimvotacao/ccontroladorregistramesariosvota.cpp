@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/cthreadoperador.h"
@@ -28,9 +30,28 @@ void CControladorRegistraMesariosVota::StartTick(uebyte id)
     CThreadOperador::GetInst().StartTick(id);
 }
 
+int CControladorRegistraMesariosVota::Slot6()
+{
+    switch (comum::CAppInfo::GetInst().GetVota().GetEstadoVota()) {
+        case 55:
+            return 1;
+        case 56:
+            return 2;
+        case 58:
+            return 3;
+        default:
+            return 0;
+    }
+}
+
 bool CControladorRegistraMesariosVota::Slot8()
 {
     return true;
+}
+
+comum::CAppState& CControladorRegistraMesariosVota::Slot11()
+{
+    return CRegistroMesarioEncerrado::GetInst();
 }
 
 comum::CAppState& CControladorRegistraMesariosVota::Slot12()
@@ -91,6 +112,11 @@ void CControladorRegistraMesariosVota::LogaTituloInvalidoRegistroMesario()
 void CControladorRegistraMesariosVota::LogaMesarioJaRegistrado(const std::string& titulo)
 {
     CLogVota::GetInst().LogaMesarioJaRegistrado(titulo);
+}
+
+void CControladorRegistraMesariosVota::LogaLimiteMesariosAtingido()
+{
+    CLogVota::GetInst().logaAlerta(std::format("Limite de mesários registrados atingido. Limite máximo: {}", 6u));
 }
 
 void CControladorRegistraMesariosVota::LogaEncerrouCicloRegistro()

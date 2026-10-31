@@ -12,8 +12,13 @@
 
 namespace comum {
 
-// (original lines 15-379: content not recovered)
-#line 380
+// (original lines 15-374: content not recovered)
+#line 375
+void IEventosLog::logaAlerta(const std::string& mensagem)
+{
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
 IEventosLog::IEventosLog(api::ELogAplicativos aplicativo) : m_aplicativo(aplicativo) {}
 
 void IEventosLog::loga(const std::string& mensagem)
