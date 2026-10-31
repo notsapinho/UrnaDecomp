@@ -116,7 +116,7 @@ public:
     uf::const_reference get_uf () const { return *static_cast<uf::const_pointer>(fields[0]); }
     uf::reference ref_uf () { return *static_cast<uf::pointer>(fields[0]); }
     uf::reference set_uf () { return *static_cast<uf::pointer>(fields[0]); }
-    uf::reference set_uf (const ASN1_STD string& v)
+    uf::reference set_uf (uf::const_reference v)
     { return *static_cast<uf::pointer>(fields[0]) = v; }
 
     class secaoCarga
@@ -461,65 +461,7 @@ public:
     class modelo
     {
     public:
-        //
-        // ModuloEstadoGeralUrna::DadoCarga::modelo::value_type
-        //
-
-        class value_type : public ASN1::ENUMERATED
-        {
-            typedef ASN1::ENUMERATED Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            enum NamedNumber {
-                unknownEnumeration_ = -1,
-                tpm20 = 2,
-                ue2013 = 13,
-                ue2015 = 15,
-                ue2020 = 20,
-                ue2022 = 22
-            };
-
-            bool is_tpm20() const { return value == tpm20; }
-            void set_tpm20() { value = tpm20; }
-
-            bool is_ue2013() const { return value == ue2013; }
-            void set_ue2013() { value = ue2013; }
-
-            bool is_ue2015() const { return value == ue2015; }
-            void set_ue2015() { value = ue2015; }
-
-            bool is_ue2020() const { return value == ue2020; }
-            void set_ue2020() { value = ue2020; }
-
-            bool is_ue2022() const { return value == ue2022; }
-            void set_ue2022() { value = ue2022; }
-
-            value_type(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-            value_type & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
-            operator NamedNumber() const { return NamedNumber(asInt()); }
-
-            bool operator == (NamedNumber rhs) const { return value == rhs; }
-            bool operator != (NamedNumber rhs) const { return value != rhs; }
-            bool operator <  (NamedNumber rhs) const { return value <  rhs; }
-            bool operator >  (NamedNumber rhs) const { return value >  rhs; }
-            bool operator <= (NamedNumber rhs) const { return value <= rhs; }
-            bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-            bool operator == (const value_type &rhs) const { return value == rhs.value; }
-            bool operator != (const value_type &rhs) const { return value != rhs.value; }
-
-            void swap (value_type & that) { Inherited::swap(that); }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        private:
-            static const char * nameList[];
-        }; // end class value_type
-
+        typedef ModuloTiposEcoUrna::ModeloEquipamento value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;

@@ -4,25 +4,20 @@
 // records name the class and show every member static; the path is util.cpp's, whose records name it. No record names
 // this header, so its path is chosen.
 //
-// The enumerators of ETipoLocalVotacao and md::ETipoAbrangencia are chosen: only their values are evidence (the ranges
-// the members accept), and so is where each is declared. The records print ETipoLocalVotacao unqualified and
-// ETipoAbrangencia as md::, from inside comum::asn.
+// The enumerators of md::ETipoAbrangencia are chosen: only their values are evidence (the range DesconverteAbrangencia
+// accepts), and so is where it is declared. The records print ETipoLocalVotacao unqualified and ETipoAbrangencia as
+// md::, from inside comum::asn.
 
 #include <format>
 #include <type_traits>
 
+#include "app/comum/etipolocalvotacao.h"
 #include "app/comum/eurnafase.h"
+#include "app/comum/eurnaturno.h"
 #include "asn1/modules/ModuloTiposCadastro.h"
 #include "asn1/modules/ModuloTiposEleitorais.h"
 
 namespace comum {
-
-enum ETipoLocalVotacao {
-    LOCAL_VOTACAO_NORMAL = 1,
-    LOCAL_VOTACAO_EM_TRANSITO,
-    LOCAL_VOTACAO_PRESO_PROVISORIO,
-    LOCAL_VOTACAO_TEMPORARIO,
-};
 
 namespace md {
 
@@ -41,6 +36,9 @@ public:
     static ModuloTiposEleitorais::Fase ConverteFase(const EUrnaFase& fase);
     static EUrnaFase DesconverteFase(const ModuloTiposEleitorais::Fase& fase);
     static md::ETipoAbrangencia DesconverteAbrangencia(ModuloTiposEleitorais::TipoAbrangencia::NamedNumber abrangencia);
+    static ModuloTiposEleitorais::TipoAbrangencia::NamedNumber ConverteAbrangencia(md::ETipoAbrangencia abrangencia);
+    static ModuloTiposEleitorais::Turno ConverteTurno(EUrnaTurno turno);
+    static EUrnaTurno DesconverteTurno(ModuloTiposEleitorais::Turno turno);
     static ModuloTiposCadastro::TipoLocalVotacao ConverteTipoLocalVotacao(ETipoLocalVotacao tipo);
     static ETipoLocalVotacao DesconverteTipoLocalVotacao(ModuloTiposCadastro::TipoLocalVotacao tipo);
 };

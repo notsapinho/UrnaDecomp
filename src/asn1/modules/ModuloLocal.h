@@ -82,7 +82,7 @@ public:
     numero::const_reference get_numero () const { return *static_cast<numero::const_pointer>(fields[0]); }
     numero::reference ref_numero () { return *static_cast<numero::pointer>(fields[0]); }
     numero::reference set_numero () { return *static_cast<numero::pointer>(fields[0]); }
-    numero::reference set_numero (ASN1::INTEGER::int_type v)
+    numero::reference set_numero (numero::const_reference v)
     { return *static_cast<numero::pointer>(fields[0]) = v; }
 
     class tipoLocalOrigem

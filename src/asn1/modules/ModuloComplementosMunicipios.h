@@ -143,7 +143,7 @@ public:
     codigoMunicipio::const_reference get_codigoMunicipio () const { return *static_cast<codigoMunicipio::const_pointer>(fields[0]); }
     codigoMunicipio::reference ref_codigoMunicipio () { return *static_cast<codigoMunicipio::pointer>(fields[0]); }
     codigoMunicipio::reference set_codigoMunicipio () { return *static_cast<codigoMunicipio::pointer>(fields[0]); }
-    codigoMunicipio::reference set_codigoMunicipio (ASN1::INTEGER::int_type v)
+    codigoMunicipio::reference set_codigoMunicipio (codigoMunicipio::const_reference v)
     { return *static_cast<codigoMunicipio::pointer>(fields[0]) = v; }
 
     class fuso

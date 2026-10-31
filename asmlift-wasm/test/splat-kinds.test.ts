@@ -599,7 +599,8 @@ describe('remapBody with operand kinds', { timeout: 180_000 }, () => {
 // relative slots (V1, V2), and a function the relink does not name. Each case: our function, the instruction, the
 // original value, the value in the plain link and the value the shifted relink would have (by the operand's kind in
 // the source). A value of our link (an original address or slot, a slot or address of ours a case writes) is a
-// function of the links, found as the helpers above say; the target's numbers are literals.
+// function of the links, found as the helpers above say; the target's numbers are literals, but c9's, which has to stay
+// past our data and is chosen from the link (pastOurData).
 type Value = number | bigint | ((l: Loaded) => number | bigint);
 interface Case {
   name: string;
@@ -654,8 +655,6 @@ const CASES: Case[] = [
   },
   // 69 is the target's slot of the destructor
   { name: 'c8 slot 69, the target number', symbol: NEXT_ENTRY, target: 1260, at: 0x37, was: ourDtorSlot, plain: 69, shifted: 69 + T },
-  // the target's vtable address written as an integer: past our data, so no reading of ours names it
-  { name: 'c9 the target vtable address', symbol: DO_CONVERTE, target: 11386, at: 0xc, was: ourVtable, plain: 1569340, shifted: 1569340 },
   {
     name: 'c10 vtable + 4',
     symbol: DO_CONVERTE,
@@ -732,6 +731,41 @@ const CASES: Case[] = [
   },
 ];
 
+/** c9: the target's address of an object written as an integer. The first listed match that builds alone, with no
+ *  review warning of its own, and holds an address the target keeps past the end of our data, where no reading of ours
+ *  names it. Our data grows with every landing, so no one target number stays past it. */
+function pastOurData(l: Loaded): Case {
+  const { ours, target } = l.maps;
+  const named = new Set(l.shifted.names.values());
+  const bodies = readPieceBodies(PIECES);
+  const value = (i: Instr | undefined): number | undefined => {
+    const im = i?.imms[0];
+    return i?.opcode === 0x41 && im?.kind === 's32' ? im.value : undefined;
+  };
+  for (const match of parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8')).matches) {
+    const p = ours.fnByKey.get(match.symbol);
+    if (p === undefined || !named.has(match.symbol)) {
+      continue;
+    }
+    const mine = disassemble(funcOf(ours.module, p));
+    const theirs = disassemble(funcOf(target.module, match.index));
+    const fk = l.kinds.functions.get(p);
+    const k = mine.findIndex((i, n) => {
+      const v = value(theirs[n]);
+      return v !== undefined && v >= ours.dataEnd && v < target.dataEnd! && operandKind(fk, i.offset) === 'address';
+    });
+    if (
+      k >= 0 &&
+      attempt(l.maps, { ours: p, symbol: match.symbol, source: 'symbol' }, match.index, bodies.get(match.index)!).verdict === 'match' &&
+      reviewWarnings(l.maps, new Map([[match.index, { match, ours: p }]])).length === 0
+    ) {
+      const v = value(theirs[k])!;
+      return { name: 'c9 an address of the target', symbol: match.symbol, target: match.index, at: mine[k].offset, was: value(mine[k]), plain: v, shifted: v };
+    }
+  }
+  throw new Error('no match holds an address past our data');
+}
+
 /** The maps of the case: our module patched, and its function's kinds from the patched pair of links. */
 function caseMaps(c: Case): { maps: SymbolMaps; kinds: FunctionKinds } {
   const l = load();
@@ -801,9 +835,10 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
     const c2 = caseMaps(byName('c2'));
     const slot = ourSlot7010(l);
     expect(operandKind(c2.kinds, 0x1b)).toBe('literal');
+    // the first differing byte is either of the literal's two, by the low bits of our slot
     expect(failure(byName('c2'), c2.maps)).toMatch(
       new RegExp(
-        `function 1260 .* DIFFERS at \\+0x1c target \\+0x1b i32\\.const 7010 \\| ours \\+0x1b i32\\.const ${slot} \\[ours ${slot}: an integer`,
+        `function 1260 .* DIFFERS at \\+0x1[cd] target \\+0x1b i32\\.const 7010 \\| ours \\+0x1b i32\\.const ${slot} \\[ours ${slot}: an integer`,
       ),
     );
     // c5: an address whose literal is the target's number for the right string; re-pointed, it is the target's
@@ -840,14 +875,15 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
 
   it.skipIf(!real)('c9, c5L, I2, TH2: the target number written as an integer builds, and is a review warning', () => {
     // an integer is compared as itself, so the bytes agree: the check cannot reject these, it lists them
-    const expected: Record<string, [string, number]> = {
-      c9: ['past-data', 1569340],
-      c5L: ['target-object', 124328],
-      I2: ['target-object', 3395],
-      TH2: ['target-object', 187586],
-    };
-    for (const [name, [why, value]] of Object.entries(expected)) {
-      const c = byName(name);
+    const c9 = pastOurData(load());
+    const expected: [Case, string, number][] = [
+      [c9, 'past-data', c9.plain as number],
+      [byName('c5L'), 'target-object', 124328],
+      [byName('I2'), 'target-object', 3395],
+      [byName('TH2'), 'target-object', 187586],
+    ];
+    for (const [c, why, value] of expected) {
+      const { name } = c;
       const { maps, kinds } = caseMaps(c);
       expect(operandKind(kinds, c.at!), name).toBe('literal');
       const r = build(c, maps);
@@ -859,11 +895,12 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
       ).toEqual([[c.target, c.at, why, value]]);
     }
     // the same value where the source wrote an address (the relink moved it): no target address of ours, rejected
-    const c9 = byName('c9');
-    const address = { ...c9, shifted: 1569340 + D };
+    const address = { ...c9, shifted: (c9.plain as number) + D };
     const a = caseMaps(address);
-    expect(operandKind(a.kinds, 0xc)).toBe('address');
-    expect(failure(address, a.maps)).toMatch(/function 11386 .* is UNRESOLVED: ours \+0xc i32\.const 1569340: an address of ours/);
+    expect(operandKind(a.kinds, c9.at!)).toBe('address');
+    expect(failure(address, a.maps)).toMatch(
+      new RegExp(`function ${c9.target} .* is UNRESOLVED: ours \\+0x${c9.at!.toString(16)} i32\\.const ${c9.plain as number}: an address of ours`),
+    );
   });
 
   it.skipIf(!real)('an integer in the target table past ours is a review warning', () => {
@@ -983,15 +1020,12 @@ describe('buildSplat with operand kinds', { timeout: 300_000 }, () => {
     const r = buildSplat(maps, PIECES, matches, TARGET_SHA);
     expect(r.matched).toBe(3);
     expect(r.kindUnverified).toEqual([]);
-    // LZMA's dictionary-size bounds: 3 << 12 (+ 1) past our table, 3 << 19 (+ 1) past our data (the source's
-    // integers, so literals; past ours while our table has at most 12288 slots and our data ends by 1572864)
-    expect(maps.ours.tableSize).toBeLessThanOrEqual(12288);
-    expect(maps.ours.dataEnd).toBeLessThanOrEqual(1572864);
-    expect(r.reviewWarnings.map((w) => [w.match.index, w.why, w.value])).toEqual([
-      [3418, 'past-table', 12288],
-      [3418, 'past-table', 12289],
-      [3418, 'past-data', 1572864],
-      [3418, 'past-data', 1572865],
+    // LZMA's dictionary-size bounds, the source's integers, so literals: 3 << 12 (+ 1) and 3 << 19 (+ 1). Each is a
+    // warning while it is past our table or our data, and a landing moves both ends
+    const past = (why: string, end: number, values: number[]) => values.filter((v) => v >= end).map((v) => [3418, why, v]);
+    expect(r.reviewWarnings.filter((w) => w.why !== 'target-object').map((w) => [w.match.index, w.why, w.value])).toEqual([
+      ...past('past-table', maps.ours.tableSize, [12288, 12289]),
+      ...past('past-data', maps.ours.dataEnd, [1572864, 1572865]),
     ]);
     // without a table every match is kind-unverified, and still builds; a limit below their count fails the build
     const none = buildSplat({ ...maps, kinds: undefined }, PIECES, matches, TARGET_SHA);

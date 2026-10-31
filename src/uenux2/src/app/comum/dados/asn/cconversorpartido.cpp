@@ -11,4 +11,11 @@ CConversorPartido::TEntidade CConversorPartido::DoConverte(const TDado& dado) co
     return entidade;
 }
 
+CConversorPartido::TDado CConversorPartido::DoDesconverte(const TEntidade& entidade) const
+{
+    const std::string nome = entidade.get_nome();
+    const std::string sigla = entidade.get_sigla();
+    return md::CPartido(entidade.get_numero().getValue(), sigla, nome);
+}
+
 } // namespace comum::asn

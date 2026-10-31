@@ -2,16 +2,28 @@
 
 #include <vector>
 
+#include "app/comum/etipolocalvotacao.h"
 #include "app/comum/md/cidentificacaosecao.h"
+#include "ecourna/api/uetypes.hpp"
 
 namespace comum::md {
 
-// Recovered: the size only, 8 bytes: CConversorLocal::DoDesconverte's push_back (fn 11453) copies its elements with one
+// The layout, 8 bytes, from comum::asn::CConversorIdentificacaoAgregada::DoConverte (target fn 11456), which reads the
+// type at +0 and a 16-bit word at +4 and hands them to the entity's tipoLocalOrigem and numero: the member and getter
+// names are chosen from those fields. CConversorLocal::DoDesconverte's push_back (fn 11453) copies its elements with one
 // i64.store. The class is named by the base of its converter, IConversorASN<ModuloLocal::IdentificacaoAgregada,
-// comum::md::CIdentificacaoAgregada>. The members are not recovered.
+// comum::md::CIdentificacaoAgregada>. The constructor (fn 5672) is out of line, called by fns 5741 and 11455; its file is
+// chosen, the file of the class beside it.
 class CIdentificacaoAgregada {
+public:
+    CIdentificacaoAgregada(ueword numero, ETipoLocalVotacao tipoLocalOrigem);
+
+    ueword GetNumero() const { return m_numero; }
+    ETipoLocalVotacao GetTipoLocalOrigem() const { return m_tipoLocalOrigem; }
+
 private:
-    int m_palavras[2];
+    ETipoLocalVotacao m_tipoLocalOrigem;
+    ueword m_numero;
 };
 
 using TVectorIdentificacaoAgregada = std::vector<CIdentificacaoAgregada>;

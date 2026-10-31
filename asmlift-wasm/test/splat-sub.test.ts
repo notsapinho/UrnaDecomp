@@ -444,10 +444,11 @@ describe('addMatches', () => {
       // body linked ahead of it
       const { maps } = load();
       const FOTO = '_ZN21ModuloTiposEleitorais4FotoD0Ev';
-      const SURVIVOR = '_ZN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosD0Ev';
       const inOurLink = (s: string): boolean => (maps.ours.fnByKey.get(s) ?? -1) >= maps.ours.module.importedFuncCount;
       expect(inOurLink(FOTO)).toBe(false);
       const list = readFileSync(`${URNA}/splat/matched.txt`, 'utf8');
+      const SURVIVOR = /\n246 (\S+)\n/.exec(list)![1];
+      expect(inOurLink(SURVIVOR)).toBe(true);
       expect(list).toContain(`\n246 ${SURVIVOR}\n`);
       const stale = list.replace(`\n246 ${SURVIVOR}\n`, `\n246 ${FOTO}\n`);
       const { matches } = parseMatchList(stale);

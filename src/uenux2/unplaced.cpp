@@ -1707,19 +1707,6 @@
 // f11365 · 214 B · unmatched · placement: link order · name unknown
 // void f11365(i32, i32, i32) { ... }
 
-// link-order cluster 446 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversormunicipio.cpp
-
-// f11379 · 257 B · unmatched · placement: link order · name unknown
-// void f11379(i32, i32, i32) { ... }
-
-// f11378 · 153 B · unmatched · placement: link order · name unknown
-// void f11378(i32, i32, i32) { ... }
-
-// link-order cluster 451 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhorarioverao.cpp
-
-// f11385 · 391 B · unmatched · placement: link order · name unknown
-// void f11385(i32, i32, i32) { ... }
-
 // link-order cluster 458 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.cpp
 
 // f11400 · 1107 B · unmatched · placement: link order · name unknown
@@ -1727,22 +1714,6 @@
 
 // f11399 · 594 B · unmatched · placement: link order · name unknown
 // void f11399(i32, i32, i32) { ... }
-
-// link-order cluster 461 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversordadolocal.cpp
-
-// f11404 · 274 B · unmatched · placement: link order · name unknown
-// void f11404(i32, i32, i32) { ... }
-
-// f11403 · 295 B · unmatched · placement: link order · name unknown
-// void f11403(i32, i32, i32) { ... }
-
-// link-order cluster 466 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorseguranca.cpp
-
-// f11413 · 167 B · unmatched · placement: link order · name unknown
-// void f11413(i32, i32, i32) { ... }
-
-// f11412 · 203 B · unmatched · placement: link order · name unknown
-// void f11412(i32, i32, i32) { ... }
 
 // link-order cluster 477 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorfotocandidato.cpp
 
@@ -1763,14 +1734,6 @@
 
 // f11448 · 1570 B · unmatched · placement: link order · name unknown
 // void f11448(i32, i32, i32) { ... }
-
-// link-order cluster 486 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversoridentificacaoagregada.cpp
-
-// f11456 · 116 B · unmatched · placement: link order · name unknown
-// void f11456(i32, i32, i32) { ... }
-
-// f11455 · 71 B · unmatched · placement: link order · name unknown
-// void f11455(i32, i32, i32) { ... }
 
 // link-order cluster 490 · uses=1 · neighbours' file uenux2/src/app/comum/asn/util.cpp
 
@@ -2037,11 +2000,6 @@
 // f5626 · 267 B · unmatched · placement: link order · name unknown
 // ? f5626(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 803 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/cdadocarga.cpp
-
-// f5632 · 61 B · unmatched · placement: link order · name unknown
-// ? f5632(i32, i32, i32, i32) { ... }
-
 // link-order cluster 805 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 
 // f5638 · 598 B · unmatched · placement: link order · name unknown
@@ -2070,11 +2028,6 @@
 
 // f5671 · 101 B · unmatched · placement: link order · name unknown
 // void f5671(i32) { ... }
-
-// link-order cluster 814 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/clocal.cpp
-
-// f5672 · 18 B · unmatched · placement: link order · name unknown
-// ? f5672(i32, i32, i32) { ... }
 
 // link-order cluster 816 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/chorarioveraomunicipio.cpp
 

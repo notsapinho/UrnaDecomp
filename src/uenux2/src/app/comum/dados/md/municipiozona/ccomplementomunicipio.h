@@ -15,6 +15,9 @@ public:
     CComplementoMunicipio(uedword codigo, short fusoHorario, const CHorarioVerao& horarioVerao);
     CComplementoMunicipio(uedword codigo, short fusoHorario);
 
+    uedword GetCodigo() const { return m_codigo; }
+    short GetFusoHorario() const { return m_fusoHorario; }
+    bool TemHorarioVerao() const { return m_horarioVerao.has_value(); }
     const CHorarioVerao& GetHorarioVerao() const;
 
 private:

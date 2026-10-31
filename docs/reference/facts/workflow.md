@@ -372,7 +372,10 @@ check failed these, each a different case or none, with `splat` printing the tar
 | `splat-kinds.test.ts` c5, `DIFFERS at +0x24` | the string our data holds at a fixed address | a string with another tail lands there, and the best reading matches one byte further |
 | `splat-kinds.test.ts`, "offers a table slot every target slot" | a slot of ours read as an address | it lands in a string the target lacks, so the operand has no piece |
 | `splat-kinds.test.ts`, the unfolded `__table_base` case | an instruction's offset | a table slot past 8191 takes a third LEB byte |
+| `splat-kinds.test.ts` c2, `DIFFERS at +0x1c` | the first byte our slot of target slot 7010 differs from 7010 | a slot with 7010's low 7 bits differs one byte further, at +0x1d (2274, unit 107) |
+| `splat-kinds.test.ts` c9, and LZMA's bounds in "reports the kind-unverified matches" | a target number past the end of our data | our data passed 1569340 and 1572864 with unit 107; c9 now takes the first match with such an address, and the bounds are warnings only while they are past ours |
 | `splat-symbols.test.ts`, "re-points bodies the census paired by address", "offers each of its slots" | the symbol file alone | a [splat.md](splat.md) §S8 line drops a name the match list still holds: `BN_CTX_get` fails on `HTS_GStreamSet_initialize`, 84 call votes lost to one stray table vote |
+| `splat-sub.test.ts`, "renames 246 back to the survivor" | 246's line of `splat/matched.txt`; until unit 107 it read one symbol spelled in the test | a twin of 246 linked ahead of the survivor (`cconversormunicipio.cpp.o`): the case now takes the survivor from the list, so a rename no longer fails it |
 
 So a failure is the branch's only if the commit it started from passes. A real-link case reads `build/out/wasm*`, so
 that takes a build of that commit, not a copy of the tree: `git archive` plus a copied `build/out/` stops on the

@@ -144,40 +144,6 @@ const ModuloEstadoGeralUrna::TipoAjusteDataHora::InfoType ModuloEstadoGeralUrna:
     3, nameList
 };
 
-const char * ModuloEstadoGeralUrna::DadoCarga::modelo::value_type::nameList[] = {
-    "<undefined>=0",
-    "<undefined>=1",
-    "tpm20",
-    "<undefined>=3",
-    "<undefined>=4",
-    "<undefined>=5",
-    "<undefined>=6",
-    "<undefined>=7",
-    "<undefined>=8",
-    "<undefined>=9",
-    "<undefined>=10",
-    "<undefined>=11",
-    "<undefined>=12",
-    "ue2013",
-    "<undefined>=14",
-    "ue2015",
-    "<undefined>=16",
-    "<undefined>=17",
-    "<undefined>=18",
-    "<undefined>=19",
-    "ue2020",
-    "<undefined>=21",
-    "ue2022"
-  };
-
-const ModuloEstadoGeralUrna::DadoCarga::modelo::value_type::InfoType ModuloEstadoGeralUrna::DadoCarga::modelo::value_type::theInfo = {
-    ASN1::ENUMERATED::create,
-    0x0000000a,
-    0,
-    0,
-    22, nameList
-};
-
 const void* ModuloEstadoGeralUrna::DadoCarga::fieldInfos[5] = {
     &turno::value_type::theInfo,
     &tipoUrnaT1::value_type::theInfo,

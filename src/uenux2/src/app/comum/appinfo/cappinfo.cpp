@@ -74,7 +74,7 @@ bool CAppInfo::EhTreinamentoEleitor()
 #line 463
 size_t CAppInfo::IndiceTurno(const std::string& nome, EUrnaTurno turno)
 {
-    const EUrnaTurno efetivo = turno == TURNO_ATUAL ? static_cast<EUrnaTurno>(GetInst().GetGeral().GetDadoCarga().GetTurno()) : turno;
+    const EUrnaTurno efetivo = turno == TURNO_ATUAL ? GetInst().GetGeral().GetDadoCarga().GetTurno() : turno;
     switch (efetivo) {
         case TURNO_1:
             return 0;
