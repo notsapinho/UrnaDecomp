@@ -18,6 +18,9 @@ public:
     EUrnaModelo GetModelo() const { return m_modelo; }
     EUrnaFase GetFase() const { return m_fase; }
     char GetFaseChar() const;
+    // The name is chosen: the urna's type in the load's turn. comum::CRelatorioTesteImpressora's slot 17 (fn 11190)
+    // and its constructor (fn 5586) hold it inlined.
+    EUrnaTipo GetTipoUrna() const { return m_turno == TURNO_1 ? m_tipoUrnaT1 : m_tipoUrnaT2; }
 
 private:
     void ValidaModelo(const EUrnaModelo modelo);

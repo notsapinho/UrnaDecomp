@@ -15,6 +15,10 @@ namespace comum::md::estadoaplicacao {
 // comum::asn::CConversorDadoLocal's RTTI. CEstadoGeral's constructor (target fn 5637) moves the string and copies the two
 // words and the word after it; only the layout is recovered, and the member names follow the ASN.1 fields.
 class CDadoLocal {
+public:
+    // The name is chosen: comum::CRelatorioTesteImpressora's slot 16 (fn 11189) copies the string at +8.
+    const std::string& GetUF() const { return m_uf; }
+
 private:
     std::string m_uf;
     CLocalidadeEleitoral m_secaoCarga;
@@ -27,6 +31,8 @@ private:
 // bodies read.
 class CEstadoGeral {
 public:
+    // The name is chosen, like GetUF's.
+    const CDadoLocal& GetDadoLocal() const { return m_dadoLocal; }
     const CDadoCarga& GetDadoCarga() const { return m_dadoCarga; }
     const CDadoCorrespondencia& GetCorrespondencia() const { return m_correspondencia; }
 

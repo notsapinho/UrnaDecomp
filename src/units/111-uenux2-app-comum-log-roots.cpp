@@ -44,7 +44,7 @@ __attribute__((noinline)) int w111_relatorio(comum::IEventosLog& log, comum::ERe
 }
 
 // stands for the callers of fn 603, among them 12023, 6599, 11666 to 11669
-__attribute__((noinline)) int w111_informacao(const comum::SDadosInformacaoEleicao& dados)
+__attribute__((noinline)) int w111_informacao(const ecourna::app::dados::CParametrosUrna& dados)
 {
     comum::CInformacaoEleicao a(dados);
     comum::CInformacaoEleicao b(dados);
@@ -57,7 +57,7 @@ __attribute__((noinline)) int w111_informacao(const comum::SDadosInformacaoEleic
 int (*volatile w111_sink_copia)(comum::EExtensaoArquivoResultado, comum::EExtensaoArquivoResultado);
 int (*volatile w111_sink_gera)(comum::EExtensaoArquivoResultado, uebyte, uebyte);
 int (*volatile w111_sink_relatorio)(comum::IEventosLog&, comum::ERelatoriosUE, comum::ERelatoriosUE);
-int (*volatile w111_sink_informacao)(const comum::SDadosInformacaoEleicao&);
+int (*volatile w111_sink_informacao)(const ecourna::app::dados::CParametrosUrna&);
 
 struct SW111Roots {
     SW111Roots()

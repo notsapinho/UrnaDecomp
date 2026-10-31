@@ -9,7 +9,9 @@
 #   mutex destructors 11659 and 11639 and the pointers' 11660 and 11640, thunks of 349, which the content pass pairs once
 #   the statics have names;
 # - comum::CInformacaoEleicao in src/app/comum/informacao/cinformacaoeleicao.cpp: the constructor (603), EhModoDemonstracao
-#   (2286, record 40:36) and seven members clang inlined it into (1950, 2865, 3847, 5914, 5915, 5916, 5917).
+#   (2286, record 40:36) and seven members clang inlined it into (1950, 2865, 3847, 5914, 5915, 5916, 5917). The
+#   constructor takes the ecourna::app::dados::CParametrosUrna that CConfiguracaoEleicao holds at +88 (the offsets the
+#   members read are that class's fields; cinformacaoeleicao.h).
 # Files: the order here is the data's, ieventoslog.cpp's records (@1552880) before clogcomum.cpp's (@1552996). Chosen
 # paths: cloga.h, clogcomum.h, euecomumlogerror.h, cinformacaoeleicao.h, each beside the .cpp its records name.
 #
@@ -82,10 +84,10 @@
 # orders; its object reads 35 rows against 37, since the constructor's call differs by what the TU sees.
 #
 # Chosen, no byte decides: every name but the records' (loga 233, LogaCargaBateria, GetInst, s_instancia, s_mutex,
-# m_aplicativo, the seven members, SDadosInformacaoEleicao and its members, the enumerators of ERelatoriosUE,
+# m_aplicativo, the seven members and m_parametros, the enumerators of ERelatoriosUE,
 # EStatusOperacaoRelatorio and EUeComumLogError); the namespace of ERelatoriosUE and EStatusOperacaoRelatorio; the
 # severities as bare casts, as ESeveridade has no enumerator; the lines of every function but the throws' and the lines the
-# column records hold; 603's parameter type. The definition above the Converte members gave the match, and no other order
+# column records hold. The definition above the Converte members gave the match, and no other order
 # was linked.
 #
 # Hand edits in splat/symbol_addrs.txt: GetInst's two names and four statics, `callers+content`, from the calls aligned
@@ -105,6 +107,6 @@
 APP_COMUM_LOG_SRCS := src/api/uelog/cloga.cpp src/app/comum/log/ieventoslog.cpp src/app/comum/log/clogcomum.cpp src/app/comum/informacao/cinformacaoeleicao.cpp
 UENUX2_SRCS += $(APP_COMUM_LOG_SRCS)
 # nothing reconstructed calls these yet: 111-uenux2-app-comum-log-roots.cpp stands in for the target's callers
-$(ROOT)/$(APP)/111-uenux2-app-comum-log-roots.o: $(ROOT)/src/units/111-uenux2-app-comum-log-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/111-uenux2-app-comum-log.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/*.h) $(wildcard $(ROOT)/src/uenux2/src/app/comum/log/*.h) $(wildcard $(ROOT)/src/uenux2/src/app/comum/informacao/*.h) $(ROOT)/src/uenux2/src/api/uelog/cescritorlog.h
+$(ROOT)/$(APP)/111-uenux2-app-comum-log-roots.o: $(ROOT)/src/units/111-uenux2-app-comum-log-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/111-uenux2-app-comum-log.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/*.h) $(wildcard $(ROOT)/src/uenux2/src/app/comum/log/*.h) $(wildcard $(ROOT)/src/uenux2/src/app/comum/informacao/*.h) $(ROOT)/src/uenux2/src/api/uelog/cescritorlog.h $(wildcard $(ROOT)/src/ecourna/app/dados/parametrizacaourna/*.hpp) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/111-uenux2-app-comum-log-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/111-uenux2-app-comum-log-roots.o
