@@ -842,17 +842,21 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
       ),
     );
     // c5: an address whose literal is the target's number for the right string; re-pointed, it is the target's
-    // address of what our data holds at 124328
+    // address of what our data holds at 124328. Every landing moves our data, and a string the target lacks can land
+    // there: then the address has no reading, and the build rejects it as unresolved instead
     const c5 = caseMaps(byName('c5'));
     const there = resolveDataAddress(l.maps.ours, l.maps.ourImage, l.maps.target, 124328);
-    expect(there.ok).toBe(true);
-    const addr = there.ok ? there.addr : Number.NaN;
     expect(operandKind(c5.kinds, 0x23)).toBe('address');
     // the first differing byte is any of the literal's three, by what our data holds at 124328
     expect(failure(byName('c5'), c5.maps)).toMatch(
-      new RegExp(
-        `function 1260 .* DIFFERS at \\+0x2[4-6] target \\+0x23 i32\\.const 124328 \\| ours \\+0x23 i32\\.const ${addr} \\[ours 124328 = .*: address string`,
-      ),
+      there.ok
+        ? new RegExp(
+            `function 1260 .* DIFFERS at \\+0x2[4-6] target \\+0x23 i32\\.const 124328 \\| ours \\+0x23 i32\\.const ${there.addr} \\[ours 124328 = .*: address string`,
+          )
+        : new RegExp(
+            `function 1260 .* is UNRESOLVED: ours \\+0x23 i32\\.const 124328: an address of ours: ${there.reason.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
+            'm',
+          ),
     );
     // c8: a table slot whose literal is the target's slot number; re-pointed, it is the target's slot of the function
     // in our slot 69

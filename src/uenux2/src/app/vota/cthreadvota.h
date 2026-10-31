@@ -15,6 +15,7 @@ namespace vota {
  */
 class CThreadVota : public api::CThread {
 public:
+    uebyte AddTick(size_t milissegundos);
     void StopTick(uebyte id);
     void StartTick(uebyte id);
 

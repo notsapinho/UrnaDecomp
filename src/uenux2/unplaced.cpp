@@ -194,110 +194,6 @@
 // f10762 · 18 B · unmatched · placement: link order · name unknown
 // void f10762(i32, i32) { ... }
 
-// link-order cluster 346 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp
-
-// f10800 · 13 B · unmatched · placement: link order · name unknown
-// ? f10800(i32, i32) { ... }
-
-// f10799 · 10 B · unmatched · placement: link order · name unknown
-// void f10799(i32, i32) { ... }
-
-// f10798 · 10 B · unmatched · placement: link order · name unknown
-// void f10798(i32, i32) { ... }
-
-// f10797 · 105 B · unmatched · placement: link order · name unknown
-// void f10797(i32) { ... }
-
-// f10796 · 46 B · unmatched · placement: link order · name unknown
-// ? f10796(i32) { ... }
-
-// f10795 · 64 B · unmatched · placement: link order · name unknown
-// ? f10795(i32) { ... }
-
-// f10794 · 5 B · unmatched · placement: link order · name unknown
-// ? f10794(i32) { ... }
-
-// f10793 · 89 B · unmatched · placement: link order · name unknown
-// ? f10793(i32) { ... }
-
-// f10792 · 9 B · unmatched · placement: link order · name unknown
-// void f10792(i32) { ... }
-
-// f10791 · 5 B · unmatched · placement: link order · name unknown
-// ? f10791(i32) { ... }
-
-// f10790 · 20 B · unmatched · placement: link order · name unknown
-// ? f10790(i32) { ... }
-
-// f10789 · 17 B · unmatched · placement: link order · name unknown
-// ? f10789(i32) { ... }
-
-// f10788 · 9 B · unmatched · placement: link order · name unknown
-// ? f10788(i32) { ... }
-
-// f10787 · 9 B · unmatched · placement: link order · name unknown
-// void f10787(i32) { ... }
-
-// f10786 · 5 B · unmatched · placement: link order · name unknown
-// void f10786(i32) { ... }
-
-// f10785 · 116 B · unmatched · placement: link order · name unknown
-// void f10785(i32, i32) { ... }
-
-// f10784 · 17 B · unmatched · placement: link order · name unknown
-// void f10784(i32, i32) { ... }
-
-// f10783 · 151 B · unmatched · placement: link order · name unknown
-// void f10783(i32) { ... }
-
-// f10782 · 151 B · unmatched · placement: link order · name unknown
-// void f10782(i32) { ... }
-
-// f10781 · 151 B · unmatched · placement: link order · name unknown
-// void f10781(i32) { ... }
-
-// f10779 · 180 B · unmatched · placement: link order · name unknown
-// void f10779(i32) { ... }
-
-// f10778 · 163 B · unmatched · placement: link order · name unknown
-// void f10778(i32) { ... }
-
-// f10777 · 151 B · unmatched · placement: link order · name unknown
-// void f10777(i32) { ... }
-
-// f10776 · 180 B · unmatched · placement: link order · name unknown
-// void f10776(i32) { ... }
-
-// f10775 · 17 B · unmatched · placement: link order · name unknown
-// void f10775(i32, i32) { ... }
-
-// f10774 · 409 B · unmatched · placement: link order · name unknown
-// void f10774(i32) { ... }
-
-// f10773 · 31 B · unmatched · placement: link order · name unknown
-// void f10773(i32) { ... }
-
-// f10772 · 570 B · unmatched · placement: link order · name unknown
-// void f10772(i32, i32) { ... }
-
-// f10771 · 13 B · unmatched · placement: link order · name unknown
-// void f10771(i32) { ... }
-
-// f10770 · 15 B · unmatched · placement: link order · name unknown
-// void f10770(i32) { ... }
-
-// f10769 · 15 B · unmatched · placement: link order · name unknown
-// void f10769(i32) { ... }
-
-// f10768 · 31 B · unmatched · placement: link order · name unknown
-// void f10768(i32) { ... }
-
-// f10767 · 175 B · unmatched · placement: link order · name unknown
-// void f10767(i32) { ... }
-
-// f10766 · 31 B · unmatched · placement: link order · name unknown
-// void f10766(i32) { ... }
-
 // link-order cluster 536 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmajoritariovalido.cpp
 
 // f11687 · 104 B · unmatched · placement: link order · name unknown
@@ -971,9 +867,6 @@
 // f6018 · 52 B · unmatched · placement: link order · name unknown
 // void f6018(i32, i32) { ... }
 
-// f6017 · 460 B · unmatched · placement: link order · name unknown
-// void f6017(i32, i32, i32, i32) { ... }
-
 // f6015 · 127 B · unmatched · placement: link order · name unknown
 // void f6015(i32, i32) { ... }
 
@@ -1232,12 +1125,6 @@
 // void f3872(i32, i32) { ... }
 
 // link-order cluster 1032 · uses=3 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmclp.cpp
-
-// f3888 · 151 B · unmatched · placement: link order · name unknown
-// void f3888(i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f3887 · 458 B · unmatched · placement: link order · name unknown
-// void f3887(i32, i32, i32) { ... }
 
 // f3883 · 173 B · unmatched · placement: link order · name unknown
 // void f3883(i32, i32) { ... }
@@ -1618,11 +1505,6 @@
 
 // f501 · 217 B · unmatched · placement: link order · name unknown
 // void f501(i32, i32, i32) { ... }
-
-// link-order cluster 1340 · uses=42 · neighbours' file uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp
-
-// f422 · 12 B · unmatched · placement: link order · name unknown
-// void f422(i32, i32) { ... }
 
 // link-order cluster 1358 · uses=65
 

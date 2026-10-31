@@ -9,7 +9,8 @@
 # Of those, 512, 925, 862, 11157, 4356, 837 and 611 come from real objects now. The other two come from real objects
 # alone: 3164 IGenericFactory<ISyncCtl>, 5443 ITimerScheduler from itimerscheduler.cpp.o.
 # Ten of the 16 classes are in landed headers. IResource, CCalculaCV, IControladorRegistraMesarios and
-# IGenericFactory get their heads alone (each header says so): typeid needs a complete class, and a control block needs a
+# IGenericFactory got their heads here (unit 119 adds IControladorRegistraMesarios' slots; the other three headers say they
+# are heads alone): typeid needs a complete class, and a control block needs a
 # virtual destructor at the slot its __on_zero_shared calls. The type name is a constant in each target body but 11157's and
 # 611's, so those 14 classes have no key function in the TUs that compiled them, and CEscritorLog and IInterfaceInit have one.
 #

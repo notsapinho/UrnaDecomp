@@ -19,7 +19,7 @@ std::mutex CThreadOperador::s_mutex;
 
 CThreadOperador::CThreadOperador()
     : m_texto1("")
-    , m_texto2("")
+    , m_tituloMesario("")
     , m_texto3(" ")
 {
 }
