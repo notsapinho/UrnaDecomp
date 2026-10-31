@@ -20,14 +20,15 @@ namespace comum {
 // md::estadoaplicacao::CDadoCorrespondencia to +76 (fn 1249). The base-object destructor (fn 11625, slot 0) destroys
 // the correspondencia (fn 857) only: binaryen merged it with CGravadorRDV's (fn 6043). The destructor is not declared
 // (implicit); slot 1 holds the abstract class's trap (fn 325). GravaResultado (slot 7, fn 11626) is out of line, so it
-// is the key function; it is not reconstructed. Slot 8 is pure; no evidence names it, so it is named after its slot.
+// is the key function; it is not reconstructed. Slot 8 is pure; no evidence names it, so it is named after its slot,
+// and its one parameter (fn 11623 is (i32 i32)->()) is an int by choice.
 // The path is chosen, beside igravador.h: no record names it. Chosen: +56 as comum::EUrnaTipo (49 is eUrnaVota), +60
 // as a std::optional<md::CTipoApuracaoSA>, +72 as md::CEnvelopeGenerico::Tipo (2 and 4 are its BU impresso and
 // zeresima impressa), and every member name; the constructor is not declared.
 class IGravadorEnvelope : public IGravador {
 public:
     virtual void GravaResultado(api::CFile& arquivo) const override;
-    virtual void Slot8() = 0;
+    virtual void Slot8(int) = 0;
 
 protected:
     api::CDateTime m_dataHora;

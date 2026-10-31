@@ -17,7 +17,7 @@ namespace comum {
 // The constructor is not declared; the string's role and the member name are chosen.
 class CGravadorEnvelopeArquivo : public IGravadorEnvelope {
 public:
-    virtual void Slot8() override;
+    virtual void Slot8(int) override;
 
 private:
     std::string m_nomeArquivoEnvelope;

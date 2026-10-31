@@ -10,7 +10,8 @@
 // - comum::CGravadorVersoesArquivos::GravaResultado, fn 11582 (slot 7);
 // - comum::IGravadorEnvelope::GravaResultado, fn 11626 (slot 7): it builds a md::CEnvelopeGenerico (fn 5860) over a
 //   md::CUrna, and calls slot 8;
-// - comum::CGravadorEnvelopeArquivo's slot 8, fn 11623, named Slot8 after its slot (no evidence names it).
+// - comum::CGravadorEnvelopeArquivo's slot 8, fn 11623, named Slot8 after its slot (no evidence names it); its one
+//   parameter's type, int, is chosen (fn 11623 is (i32 i32)->()).
 // They go in cgravadorhashes.cpp (the record's file) and in the recorders' own .cpp files, which no record names,
 // when they are reconstructed; the vtables and the implicit destructors move with them, under the same symbols.
 // cgravadorhashes.cpp was a stub-only file, and it went with its stubs (fns 11620, 11619, 5853): its one record is
@@ -49,7 +50,7 @@ void IGravadorEnvelope::GravaResultado(api::CFile&) const
     __builtin_trap();
 }
 
-void CGravadorEnvelopeArquivo::Slot8()
+void CGravadorEnvelopeArquivo::Slot8(int)
 {
     __builtin_trap();
 }
