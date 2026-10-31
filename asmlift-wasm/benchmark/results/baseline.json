@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-31T10:42:32.954Z",
+ "createdAt": "2026-10-31T15:30:44.720Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
@@ -9,14 +9,14 @@
  "image": "urna-emsdk:6.0.0",
  "dataset": {
   "rows": 181,
-  "rowsSha256": "7823066bfafbf673fd0edcad0ac5b44ea4b3907eb4594bc60ee0d38a3ec5cbe2",
-  "setupsSha256": "cba43edf564858681446c5c04ab30f73ab4ac3829d8421925cbed33d1feddb65"
+  "rowsSha256": "4bfc1ad3947199eb0d0ca3b55d49aedae0b6293e51c03c69c822a0481c9af912",
+  "setupsSha256": "cfece17df3e722ba13a6bb4f29b1a25054d386a44d779676f5249defb6572e1e"
  },
- "commit": "1900524+dirty",
+ "commit": "b714993a+dirty",
  "durationMs": {
-  "lift": 113,
-  "compileAndOptimise": 4298,
-  "total": 10823
+  "lift": 132,
+  "compileAndOptimise": 6625,
+  "total": 13893
  },
  "totals": {
   "overall": {
@@ -25,13 +25,13 @@
    "compiled": 181,
    "optimised": 181,
    "exactRaw": 35,
-   "exact": 83,
-   "medianRatio": 0.4069,
-   "medianOptRatio": 0.0682,
-   "meanOptRatio": 0.1778,
+   "exact": 82,
+   "medianRatio": 0.4043,
+   "medianOptRatio": 0.0738,
+   "meanOptRatio": 0.1787,
    "outcomes": {
-    "differs": 98,
-    "exact": 83
+    "exact": 82,
+    "differs": 99
    }
   },
   "bySetup": {
@@ -42,12 +42,12 @@
     "optimised": 12,
     "exactRaw": 3,
     "exact": 5,
-    "medianRatio": 0.3468,
+    "medianRatio": 0.1444,
     "medianOptRatio": 0.119,
     "meanOptRatio": 0.1407,
     "outcomes": {
-     "differs": 7,
-     "exact": 5
+     "exact": 5,
+     "differs": 7
     }
    },
    "ecourna": {
@@ -146,13 +146,13 @@
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 4,
-    "exact": 7,
+    "exact": 6,
     "medianRatio": 0.289,
-    "medianOptRatio": 0,
-    "meanOptRatio": 0.1009,
+    "medianOptRatio": 0.05,
+    "meanOptRatio": 0.1148,
     "outcomes": {
-     "differs": 5,
-     "exact": 7
+     "differs": 6,
+     "exact": 6
     }
    },
    "rhvoice": {
@@ -278,6 +278,31 @@
   }
  },
  "rows": [
+  {
+   "id": "uenux2/1261",
+   "index": 1261,
+   "setup": "uenux2",
+   "size": 80,
+   "band": "small",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 42,
+   "raw": {
+    "score": 4,
+    "ratio": 0.0952
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
   {
    "id": "uenux2/1915",
    "index": 1915,
@@ -410,33 +435,6 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
-  },
-  {
-   "id": "uenux2/9523",
-   "index": 9523,
-   "setup": "uenux2",
-   "size": 38,
-   "band": "small",
-   "features": [
-    "call_indirect"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 19,
-   "raw": {
-    "score": 12,
-    "ratio": 0.6316
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "goto"
-   ]
   },
   {
    "id": "uenux2/10451",
@@ -2839,6 +2837,34 @@
    "standIns": []
   },
   {
+   "id": "rhvoice-ignore/9658",
+   "index": 9658,
+   "setup": "rhvoice-ignore",
+   "size": 34,
+   "band": "small",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 12,
+   "raw": {
+    "score": 11,
+    "ratio": 0.9167
+   },
+   "opt": {
+    "score": 2,
+    "ratio": 0.1667
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "constant address hidden from alignment inference"
+   ]
+  },
+  {
    "id": "rhvoice-ignore/9659",
    "index": 9659,
    "setup": "rhvoice-ignore",
@@ -2911,34 +2937,6 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
-  },
-  {
-   "id": "rhvoice-ignore/9692",
-   "index": 9692,
-   "setup": "rhvoice-ignore",
-   "size": 40,
-   "band": "small",
-   "features": [
-    "leaf",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 15,
-   "raw": {
-    "score": 7,
-    "ratio": 0.4667
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "constant address hidden from alignment inference"
-   ]
   },
   {
    "id": "rhvoice-ignore/9699",
