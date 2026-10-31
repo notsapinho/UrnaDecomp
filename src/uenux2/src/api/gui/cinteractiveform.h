@@ -116,9 +116,6 @@ private:
 // f11931 · 655 B · unmatched · placement: link order · name unknown
 // void f11931(i32) { ... }
 
-// f11927 · 337 B · unmatched · placement: link order · name unknown
-// void f11927(i32) { ... }
-
 // f11920 · 168 B · unmatched · placement: link order · name unknown
 // void f11920(i32) { ... }
 

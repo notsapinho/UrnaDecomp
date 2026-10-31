@@ -1,13 +1,15 @@
-// <stubs>
-// f11984 · 13 B · unmatched · placement: link order · name unknown
-// void f11984(i32) { ... }
+#include "app/vota/eleitor/iniciovotacao/cinformacaozeresimatardia.h"
 
-// f11983 · 29 B · unmatched · placement: link order · name unknown
-// void f11983(i32) { ... }
+#include "api/gui/cinteractiveform.h"
 
-// f11982 · 479 B · unmatched · name unknown
-// void f11982(i32) { ... }
+namespace vota {
 
-// f2879 · 56 B · unmatched · placement: link order · name unknown
-// ? f2879(i32) { ... }
-// </stubs>
+CInformacaoZeresimaTardia::~CInformacaoZeresimaTardia() = default;
+
+void CInformacaoZeresimaTardia::StartState()
+{
+    m_form->Slot2();
+    m_pNextState = this;
+}
+
+} // namespace vota

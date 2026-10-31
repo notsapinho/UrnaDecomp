@@ -10,8 +10,10 @@
 // messages. LogaJustificativaRecebida, LogaEleitorJaJustificou and LogaPedidoTituloSuspensao are the same shape: each is
 // held inlined by one state's slot, which calls GetInst before the member's own stack frame opens (fn 10594, of
 // vota::CJustificativaEfetuada, holds the first two; fn 10421, of vota::CPerguntaCodigoSuspensao, the third, which calls
-// comum::IEventosLog::loga, fn 233). Their names are chosen from their messages too. This header's path is chosen,
-// beside clogvota.cpp, and only the members written are declared.
+// comum::IEventosLog::loga, fn 233). Their names are chosen from their messages too. LogaAguardandoConfirmacaoZeresima
+// is the same shape again: fn 5958, the StartState of vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima
+// (one body for both), calls GetInst before the member's own stack frame opens and calls fn 233; its name is chosen from
+// its message. This header's path is chosen, beside clogvota.cpp, and only the members written are declared.
 
 #include <string>
 
@@ -30,6 +32,7 @@ public:
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
+    void LogaAguardandoConfirmacaoZeresima();
 
 private:
     CLogVota();

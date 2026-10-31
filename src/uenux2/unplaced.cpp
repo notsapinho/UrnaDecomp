@@ -221,11 +221,6 @@
 // f11841 · 22 B · unmatched · placement: link order · name unknown
 // ? f11841(i32) { ... }
 
-// link-order cluster 569 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregeraresumozeresima.cpp
-
-// f11845 · 5 B · unmatched · placement: link order · name unknown
-// ? f11845(i32) { ... }
-
 // link-order cluster 577 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp
 
 // f11875 · 188 B · unmatched · placement: link order · name unknown
@@ -255,32 +250,6 @@
 
 // f11932 · 188 B · unmatched · placement: link order · name unknown
 // void f11932(i32) { ... }
-
-// link-order cluster 595 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresima.cpp
-
-// f11935 · 22 B · unmatched · placement: link order · name unknown
-// ? f11935(i32) { ... }
-
-// link-order cluster 596 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgeraresumozeresima.cpp
-
-// f11940 · 18 B · unmatched · placement: link order · name unknown
-// void f11940(i32) { ... }
-
-// f11939 · 5 B · unmatched · placement: link order · name unknown
-// ? f11939(i32) { ... }
-
-// link-order cluster 597 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregeraresumozeresima.cpp
-
-// f11943 · 1731 B · unmatched · placement: link order · name unknown
-// void f11943(i32) { ... }
-
-// link-order cluster 598 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresimabase.cpp
-
-// f11946 · 6878 B · unmatched · placement: link order · name unknown
-// void f11946(i32) { ... }
-
-// f11945 · 68 B · unmatched · placement: link order · name unknown
-// ? f11945(i32) { ... }
 
 // link-order cluster 600 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ciniciovotacao.cpp
 
@@ -716,9 +685,6 @@
 
 // link-order cluster 862 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmaregerarzeresima.cpp
 
-// f5958 · 188 B · unmatched · placement: link order · name unknown
-// void f5958(i32) { ... }
-
 // f5957 · 142 B · unmatched · placement: link order · name unknown
 // ? f5957() { ... }
 
@@ -727,31 +693,6 @@
 
 // f5952 · 284 B · unmatched · placement: link order · name unknown
 // void f5952(i32, i32) { ... }
-
-// link-order cluster 863 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresima.cpp
-
-// f5961 · 7 B · unmatched · placement: link order · name unknown
-// ? f5961(i32) { ... }
-
-// f5960 · 13 B · unmatched · placement: link order · name unknown
-// void f5960(i32) { ... }
-
-// f5959 · 177 B · unmatched · placement: link order · name unknown
-// ? f5959() { ... }
-
-// link-order cluster 864 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregeraresumozeresima.cpp
-
-// f5965 · 68 B · unmatched · placement: link order · name unknown
-// ? f5965(i32) { ... }
-
-// f5964 · 7 B · unmatched · placement: link order · name unknown
-// ? f5964(i32) { ... }
-
-// f5963 · 13 B · unmatched · placement: link order · name unknown
-// void f5963(i32) { ... }
-
-// f5962 · 93 B · unmatched · placement: link order · name unknown
-// ? f5962() { ... }
 
 // link-order cluster 866 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.cpp
 
@@ -1158,9 +1099,6 @@
 
 // link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
 
-// f2902 · 63 B · unmatched · placement: link order · name unknown
-// ? f2902(i32, i32) { ... }
-
 // f2901 · 81 B · unmatched · placement: link order · name unknown
 // ? f2901(i32, i32, i32, i32, i32, i32, i32) { ... }
 
@@ -1262,11 +1200,6 @@
 // f1905 · 1239 B · unmatched · placement: link order · name unknown
 // ? f1905(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1191 · uses=6 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgeraresumozeresimabase.cpp
-
-// f1952 · 12 B · unmatched · placement: link order · name unknown
-// ? f1952(i32) { ... }
-
 // link-order cluster 1193 · uses=6
 
 // f1961 · 79 B · unmatched · placement: link order · name unknown
@@ -1291,11 +1224,6 @@
 
 // f1695 · 354 B · unmatched · placement: link order · name unknown
 // void f1695(i32) { ... }
-
-// link-order cluster 1218 · uses=7 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresimabase.cpp
-
-// f1720 · 12 B · unmatched · placement: link order · name unknown
-// ? f1720(i32) { ... }
 
 // link-order cluster 1219 · uses=7
 

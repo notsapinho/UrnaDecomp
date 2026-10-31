@@ -66,6 +66,11 @@ void CLogVota::LogaPedidoTituloSuspensao()
     loga("Solicitado título eleitoral para suspensão do eleitor");
 }
 
+void CLogVota::LogaAguardandoConfirmacaoZeresima()
+{
+    loga("Aguardando confirmação para emissão da zerésima");
+}
+
 } // namespace vota
 
 // <stubs>
