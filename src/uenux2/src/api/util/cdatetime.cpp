@@ -89,7 +89,21 @@ std::strong_ordering CDateTime::operator<=>(const CDateTime& dataHora) const
     return m_hora <=> dataHora.m_hora;
 }
 
-// (original lines 101-202: content not recovered)
+std::string CDateTime::FormatCurrentTime(const std::string& formato)
+{
+    const CDateTime agora = Now();
+    const CTime hora = agora.GetHora();
+    return hora.Format(formato);
+}
+
+std::string CDateTime::FormatCurrentDate(const std::string& formato)
+{
+    const CDateTime agora = Now();
+    const CDate data = agora.GetData();
+    return data.Format(formato);
+}
+
+// (original lines 115-202: content not recovered)
 #line 203
 CDateTime CDateTime::ConvertFromTimestamp(const std::string& timestamp)
 {
