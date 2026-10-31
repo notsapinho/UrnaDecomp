@@ -2,8 +2,16 @@
 
 // comum::CArquivosResultado: the file name of each kind of result file. operator[] reads nothing of the object (fn 347
 // has lost `this`: binaryen removed the unused parameter), so no member is recovered and the class's other members are
-// not reconstructed. The header's path is chosen.
+// not reconstructed. The header's path is chosen. A one-byte singleton: fn 348, called just before each operator[] with
+// its result dropped (fns 1164, 3798, 5876, 6045), is GetInst, one of the four thunks of fn 2900 that allocate one byte
+// and keep it in a static std::unique_ptr under a static std::mutex. The statics are defined in carquivosresultado.cpp:
+// their destructors' table slots 2140 and 2141 lie in that object's run. GetInst is defined there too, above them: the
+// target's .bss and table orders say so, and unit 111's fragment has the measurement. That the constructor and the
+// destructor are out of line is what the reload in fn 2900 shows of the constructor and a choice of the destructor.
+// GetInst and its statics' names are chosen, from the project's other singletons.
 
+#include <memory>
+#include <mutex>
 #include <string>
 
 namespace comum {
@@ -37,7 +45,17 @@ enum EExtensaoArquivoResultado : int {
 
 class CArquivosResultado {
 public:
+    ~CArquivosResultado();
+
+    static CArquivosResultado& GetInst();
+
     const std::string operator[](EExtensaoArquivoResultado extensao) const;
+
+private:
+    CArquivosResultado();
+
+    static std::unique_ptr<CArquivosResultado> s_instancia;
+    static std::mutex s_mutex;
 };
 
 } // namespace comum

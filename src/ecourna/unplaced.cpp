@@ -528,9 +528,6 @@
 
 // link-order cluster 1112 · uses=4 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
 
-// f2861 · 18 B · unmatched · placement: link order · name unknown
-// ? f2861(i32, i32, i32, i32) { ... }
-
 // f2856 · 39 B · unmatched · placement: link order · name unknown
 // ? f2856(i32, i32, i32, i32) { ... }
 
@@ -706,11 +703,6 @@
 
 // f463 · 18 B · unmatched · placement: link order · name unknown
 // ? f463(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1350 · uses=57 · neighbours' file uenux2/src/app/comum/carquivosresultado.cpp
-
-// f348 · 15 B · unmatched · placement: link order · name unknown
-// ? f348() { ... }
 
 // link-order cluster 1361 · uses=78
 

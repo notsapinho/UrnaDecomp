@@ -27,8 +27,8 @@ UENUX2_SRCS += $(CEXIBEALERTADESLIGAMENTO_SRCS)
 # gives the vtable trapping bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/61-uenux2-cexibealertadesligamento-pending.o: $(ROOT)/src/units/61-uenux2-cexibealertadesligamento-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/61-uenux2-cexibealertadesligamento.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/61-uenux2-cexibealertadesligamento-pending.cpp -o $(R)
-# nothing reconstructed references the CExibeAlertaDesligamento vtable or calls the CAppState constructor yet:
-# 61-uenux2-cexibealertadesligamento-roots.cpp takes the vtable's address and stands in for the constructor's callers
+# nothing reconstructed references the CExibeAlertaDesligamento vtable yet: 61-uenux2-cexibealertadesligamento-roots.cpp
+# takes its address
 $(ROOT)/$(APP)/61-uenux2-cexibealertadesligamento-roots.o: $(ROOT)/src/units/61-uenux2-cexibealertadesligamento-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/61-uenux2-cexibealertadesligamento.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/61-uenux2-cexibealertadesligamento-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/61-uenux2-cexibealertadesligamento-pending.o $(APP)/61-uenux2-cexibealertadesligamento-roots.o

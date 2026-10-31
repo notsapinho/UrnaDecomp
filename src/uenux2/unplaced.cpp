@@ -968,9 +968,6 @@
 // f6051 · 77 B · unmatched · placement: link order · name unknown
 // ? f6051(i32, i32, i32) { ... }
 
-// f6045 · 508 B · unmatched · placement: link order · name unknown
-// void f6045(i32, i32, i32, i32) { ... }
-
 // f6018 · 52 B · unmatched · placement: link order · name unknown
 // void f6018(i32, i32) { ... }
 
@@ -1604,11 +1601,6 @@
 
 // f977 · 140 B · unmatched · placement: link order · name unknown
 // ? f977(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1289 · uses=14 · neighbours' file uenux2/src/app/comum/dados/md/clocal.cpp
-
-// f948 · 15 B · unmatched · placement: link order · name unknown
-// ? f948() { ... }
 
 // link-order cluster 1297 · uses=17
 
