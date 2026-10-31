@@ -9,7 +9,7 @@
 namespace comum {
 
 // What the records of comum::asn::CConversorEstadoGeralVota say: the types' names, and 4 bytes wide in CEstadoGeralVota's
-// first two members. That they are declared here is a choice, and `: int` is only what the opaque declaration needed:
+// first two members. That they are declared here is a choice, and so is `: int`, now that they are defined here:
 // which formatter body the target uses for them is not read. The enumerators are recovered only where a body compares
 // with one and an Assert text names it: EAVIMPRIMIRBU is 61, which vota::CQuerImprimirBU::StartState (target fn 12035)
 // compares GetEstadoVota() with before it throws "Assert (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)"

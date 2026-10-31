@@ -17,8 +17,8 @@
 //   SetFocus's name, the data members', parameters' and Read's local's names, how the record's column 25 is spelled, and
 //   Slot6's parameter type (a pointer, which the base's empty body, fn 425, takes as one word).
 // - GetEntradas: vota::CMostraQRCodeBU::ProcessInput and CMostraQRCodeCertificado::ProcessInput (fns 12051, 12038) read
-//   the input fields' vector (+72, +76) and throw when it does not hold one field. Its name and its const reference
-//   result are chosen.
+//   the input fields' vector (+72, +76) and throw when it does not hold one field. Its name, its const reference
+//   result and its lines (original 112-115) are chosen.
 
 #include <algorithm>
 #include <cstddef>
