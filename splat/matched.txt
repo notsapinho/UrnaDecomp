@@ -10020,3 +10020,14 @@
 14424 do_rand_init_ossl_
 14428 ossl_rand_get_nonce
 10846 _ZN3api15CTimerScheduler11CreateTimerERKNSt3__26chrono8durationIxNS1_5ratioILx1ELx1000EEEEENS1_8functionIFvvEEE
+893 crc32_z
+2581 fill_window
+2691 _ZN7ecourna3api11compression4CZip5CloseEv
+3379 zipCloseFileInZipRaw64
+4825 deflate_stored
+4826 deflate
+8114 deflate_slow
+8115 deflate_fast
+8117 zipWriteInFileInZip
+8118 zipOpenNewFileInZip2_64
+8119 zipCloseFileInZip
