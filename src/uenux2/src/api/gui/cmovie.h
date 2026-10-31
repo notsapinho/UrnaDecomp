@@ -14,8 +14,13 @@ namespace api {
  */
 // 24 bytes, as the target's callers copy it (fn 1593, api::getResourceMovie: a std::vector<CMovieFrame> copied
 // element by element, the bytes with memcpy and an 8-byte field at +16; fn 8605, simulador::CWasmResource slot 4:
-// one frame built from a resource's bytes and the integer 80)
+// one frame built from a resource's bytes and the integer 80). The constructor is read from fn 8605, which holds it as
+// binaryen inlines a call (the vector moved into a frame temporary, read back and moved into the member): it takes the
+// vector by value. It has no target function of its own, and its being in cmovie.cpp, the parameters' names and that
+// the duration is a uint64_t are chosen
 struct CMovieFrame {
+    CMovieFrame(std::vector<uebyte> imagem, uint64_t duracao);
+
     std::vector<uebyte> imagem;
     uint64_t duracao;
 };

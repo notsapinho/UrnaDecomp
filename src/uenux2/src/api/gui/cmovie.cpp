@@ -28,4 +28,8 @@ CMovie::CMovie(std::vector<CMovieFrame> frames, const SPoint& tamanho)
     }
 }
 
+CMovieFrame::CMovieFrame(std::vector<uebyte> imagem, uint64_t duracao) : imagem(std::move(imagem)), duracao(duracao)
+{
+}
+
 } // namespace api

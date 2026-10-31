@@ -3162,36 +3162,6 @@
 
 // component simulador
 
-// link-order cluster 36 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmtimerscheduler.cpp
-
-// f7871 · 498 B · unmatched · placement: link order · name unknown
-// void f7871(i32, i32, i32, i32) { ... }
-
-// link-order cluster 91 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmresource.cpp
-
-// f8591 · 50 B · unmatched · placement: link order · name unknown
-// ? f8591(i32, i32) { ... }
-
-// link-order cluster 97 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmresource.cpp
-
-// f8600 · 67 B · unmatched · placement: link order · name unknown
-// ? f8600(i32, i32) { ... }
-
-// link-order cluster 100 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmresource.cpp
-
-// f8605 · 1029 B · unmatched · placement: link order · name unknown
-// void f8605(i32, i32, i32) { ... }
-
-// link-order cluster 102 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/comum/climitedcachedinstream.cpp
-
-// f8611 · 185 B · unmatched · placement: link order · name unknown
-// void f8611(i32, i32, i32) { ... }
-
-// link-order cluster 108 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmresource.cpp
-
-// f8633 · 189 B · unmatched · placement: link order · name unknown
-// void f8633(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 123 · uses=1
 
 // f8680 · 12 B · unmatched · placement: link order · name unknown
@@ -3201,19 +3171,6 @@
 
 // f8748 · 12 B · unmatched · placement: link order · name unknown
 // ? f8748(i32) { ... }
-
-// link-order cluster 207 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasminit.cpp
-
-// f9405 · 706 B · unmatched · placement: link order · name unknown
-// void f9405(i32, i32, i32) { ... }
-
-// f9388 · 10 B · unmatched · placement: link order · name unknown
-// void f9388(i32) { ... }
-
-// link-order cluster 208 · uses=1 · neighbours' file ecourna/api/sql/sqlite/csqlstatement.cpp
-
-// f9418 · 7 B · unmatched · placement: link order · name unknown
-// ? f9418(i32) { ... }
 
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 
