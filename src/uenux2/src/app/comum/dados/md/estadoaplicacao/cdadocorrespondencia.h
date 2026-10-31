@@ -19,6 +19,9 @@ public:
                          std::string codigoCarga, CLocalidadeEleitoral secaoCarga, std::vector<uebyte> assinatura,
                          ecourna::app::dados::CIdentificadorGeradorMidia identificadorGeradorMidia);
 
+    uedword GetNumeroInternoUrna() const { return m_numeroInternoUrna; }
+    std::string GetCodigoCarga() const { return m_codigoCarga; }
+
 private:
     uedword m_numeroInternoUrna;
     std::string m_numeroSerieFC;

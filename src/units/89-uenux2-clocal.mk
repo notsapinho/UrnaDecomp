@@ -7,6 +7,21 @@
 # (5678); md::CCandidatura::GetSuplente (1389); comum::CCandidaturas::RecuperaVersaoPacote (5810). Each throw is on its
 # record's line; the lines of everything else are a choice.
 #
+# Singletons, read from the body: comum::CLocal's accessor (401) and its static destructors (11506, 11508), and comum::CCandidaturas's
+# accessor, destructor and static destructors (521, 3786, 11563, 11564) with the __tree::destroy they call (681). Each class's statics
+# are members defined after the accessor; unit 109's fragment has why, the form's measurements and the same-code forms. GetInst
+# is chosen, as there. No target caller of either accessor is written: 401 has 29, and the roots stand in for them; 521 has 25
+# and holds table slot 99, so the roots take its address.
+# CCandidaturas's constructor (5811) stays `differs`: the target frees the temporary name before it stores the flag at +28 and builds
+# the map at +32, so the name's owner is a base class or member object at +0, and the records name api::CDataMap<K, V>
+# there. A delegating constructor frees it last (8 rows of 48). A scratch class with a base taking const std::string& gives the
+# target's order of calls and stores exactly. 1709, __tree::destroy over md::CCandidatura, stays `differs` at -O2:
+# __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.
+# 1719, vector<md::CDadosCandidato>::__destroy_vector, stays `differs` for another reason, TBAA, not the level: at the tree's flags the
+# store of __end_ comes ahead of the reload of __begin_, -O3 leaves that as it is, and the same compile without -fno-strict-aliasing
+# gives the target's order. That flag is its tree's (docs/reference/facts/app-flags.md F6), and the copy in roots_uenux2.cpp how-to step 3
+# describes is not tried.
+#
 # Read from the body, no record names them:
 # - The constructors of CInfoMunicipio (5674, 5676), CHorarioVeraoMunicipio (5677, 5679) and CComplementoMunicipio (3710,
 #   3711): each stores the members and calls its class's ValidaCriacao, and the three pairs are that function's only
@@ -23,8 +38,8 @@
 #   the definitions the other way round. Nothing read shows one: none of 1078's ten callers has a record in this file, and
 #   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 4161, 11223, 11902 and 11908 have no record, so
 #   they cannot be ruled out.
-# - comum::CLocal's constructor and destructor (2262, 2261): the singleton's builder (5738) allocates 4 bytes and calls
-#   them. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
+# - comum::CLocal's constructor and destructor (2262, 2261): the accessor (401) allocates 4 bytes and calls them, and
+#   so does 5738, which holds it inlined. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
 #   std::unique_ptr; both are defined out of line because the target calls them.
 # - md::CIndiceFoto's constructor (5659), declared by unit 36. The file is the one the record of CIndicesFotos::at names
 #   (cindicesfotos.cpp:30, a function not written, whose line stays blank).
@@ -59,6 +74,7 @@
 # because euecomumdadoserror.h holds only the codes passed to fn 170 directly, and 3724 passes it to binaryen's merge 6029.
 #
 # Measured, the same code (the function's disassembly with object-local numbers masked):
+# - 3786: = default or {}.
 # - 943, 3724, 3725, 2795: !m_x.has_value() or !m_x; *m_x or m_x.value(), since the earlier test folds the check.
 # - 5673, 5675: .empty() or .size() == 0; .size() or .length(); m_secao-> or GetSecao(). (clang folds its check); has_value()
 #   or TemSecao().
@@ -101,7 +117,9 @@
 #   would be self-voted on it.
 #
 # 2262 is one body with ASN1::ABSTRACT_SYNTAX::info_type's constructor, and this object comes first, so its match line
-# carries comum::CLocal's symbol. 3753 is a second caller of the copying ToLower (1879), which releases unit 12's
+# carries comum::CLocal's symbol. Its line and 2261's read C1 and D1 and not C2 and D2 since GetInst was written, and that is
+# no twin: C1 and C2 are aliases of one function in clocal.cpp.o (wasm-objdump -x prints one func= for both), and GetInst mentions C1
+# first, so the link map holds no C2 or D2 of this class. 3751, 3756, 5813, 2815, 2818 and 3786 read so for the same reason. 3753 is a second caller of the copying ToLower (1879), which releases unit 12's
 # IndexForColumnName (1525).
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/dados/clocal.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \

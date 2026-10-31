@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "app/comum/dados/md/clocal.h"
@@ -13,6 +14,8 @@ namespace comum {
 // GetUFMinuscula it is GetUF's (the fragment lists them). The data member's name is not in the target.
 class CLocal {
 public:
+    static CLocal& GetInst();
+
     CLocal();
     ~CLocal();
 
@@ -28,6 +31,9 @@ public:
     void VerificaEhSecao(const std::string& funcao) const;
 
 private:
+    static std::unique_ptr<CLocal> s_inst;
+    static std::mutex s_mutex;
+
     void VerificaLido(const std::string& funcao) const;
     bool EhSecao(const std::string& funcao) const
     {
