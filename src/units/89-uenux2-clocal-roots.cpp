@@ -8,6 +8,10 @@
 // here too: clocal.cpp's object emits it, and without this second caller binaryen would inline it into ~CLocal, where the
 // target calls it.
 extern "C" {
+int w401() __asm__("_ZN5comum6CLocal7GetInstEv");
+int w521() __asm__("_ZN5comum13CCandidaturas7GetInstEv");
+int w5811(int) __asm__("_ZN5comum13CCandidaturasC1Ev");
+void w1719(int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9allocatorIS3_EEE16__destroy_vectorclB8ne210108Ev");
 int w2262(int) __asm__("_ZN5comum6CLocalC1Ev");
 int w2261(int) __asm__("_ZN5comum6CLocalD1Ev");
 int w5744(int) __asm__("_ZN5comum2md6CLocalD2Ev");
@@ -42,6 +46,10 @@ namespace {
 
 const void* volatile clocal_sink;
 
+__attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
+__attribute__((noinline)) int InstanciasCandidaturas() { return (w521() + 5) ^ w521(); }
+__attribute__((noinline)) void ConstroiCandidaturas(int a) { w5811(a + 12); } // stands for 2838
+__attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // stands for 2871, 5710, 5950, 7787 and 11448
 __attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) + 2 * w2262(b); }
 __attribute__((noinline)) void Destrutores(int a, int b)
 {
@@ -122,6 +130,10 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
 struct SCLocalRoots {
     SCLocalRoots()
     {
+        clocal_sink = reinterpret_cast<const void*>(&Instancias);
+        clocal_sink = reinterpret_cast<const void*>(&InstanciasCandidaturas);
+        clocal_sink = reinterpret_cast<const void*>(&ConstroiCandidaturas);
+        clocal_sink = reinterpret_cast<const void*>(&DestroiSuplentes);
         clocal_sink = reinterpret_cast<const void*>(&Construtores);
         clocal_sink = reinterpret_cast<const void*>(&Destrutores);
         clocal_sink = reinterpret_cast<const void*>(&LocaisDados);

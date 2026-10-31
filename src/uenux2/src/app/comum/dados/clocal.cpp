@@ -1,6 +1,7 @@
 #include "app/comum/dados/clocal.h"
 
 #include <format>
+#include <mutex>
 
 #include "app/comum/dados/euecomumdadoserror.h"
 #include "ecourna/api/util/cstringutils.hpp"
@@ -8,6 +9,18 @@
 namespace comum {
 
 using ecourna::api::util::CStringUtils;
+
+CLocal& CLocal::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst = std::make_unique<CLocal>();
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CLocal> CLocal::s_inst;
+std::mutex CLocal::s_mutex;
 
 CLocal::CLocal() = default;
 
@@ -37,7 +50,7 @@ const md::CLocal& CLocal::GetLocalData() const
     return *m_local;
 }
 
-// (original lines 40-76: content not recovered)
+// (original lines 53-76: content not recovered)
 #line 77
 TZonaID CLocal::GetZonaID() const
 {

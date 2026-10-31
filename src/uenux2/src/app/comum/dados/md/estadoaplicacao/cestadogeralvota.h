@@ -32,6 +32,8 @@ public:
                      CNumViasImpressasRelatorios numViasImpressasRelatorios, std::optional<api::CDateTime> dhEmissao,
                      bool tecladoTestadoPosConversao);
 
+    bool GetTreinamentoEleitor() const { return m_treinamentoEleitor; }
+
 private:
     EEstadoVota m_estadoVota;
     EEstadoEncerramento m_estadoEncerramento;

@@ -7,6 +7,16 @@
 # (5678); md::CCandidatura::GetSuplente (1389); comum::CCandidaturas::RecuperaVersaoPacote (5810). Each throw is on its
 # record's line; the lines of everything else are a choice.
 #
+# Singletons, read from the body: comum::CLocal's accessor (401) and its static destructors (11506, 11508), and comum::CCandidaturas's
+# accessor, destructor and static destructors (521, 3786, 11563, 11564) with the __tree::destroy they call (681). Each class's statics
+# are members defined after the accessor; unit 109's fragment has why, the form's measurements and the same-code forms. GetInst
+# is chosen, as there. 89's roots stand in for callers none of which are written: 401 has 29, 521 has 25.
+# CCandidaturas's constructor (5811) stays `differs`: the target frees the temporary name before it stores the flag at +28 and builds
+# the map at +32, so the name's owner is a base class or member object at +0, and the records name api::CDataMap<K, V>
+# there. A delegating constructor frees it last (8 rows of 48). A scratch class with a base taking const std::string& gives the
+# target's order of calls and stores exactly. 1709, __tree::destroy over md::CCandidatura, stays `differs` at -O2:
+# __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.
+#
 # Read from the body, no record names them:
 # - The constructors of CInfoMunicipio (5674, 5676), CHorarioVeraoMunicipio (5677, 5679) and CComplementoMunicipio (3710,
 #   3711): each stores the members and calls its class's ValidaCriacao, and the three pairs are that function's only
@@ -23,8 +33,8 @@
 #   the definitions the other way round. Nothing read shows one: none of 1078's ten callers has a record in this file, and
 #   the comum::CLocal bodies read (3752, 5738, 5741, 5743) do not call it. 4161, 11223, 11902 and 11908 have no record, so
 #   they cannot be ruled out.
-# - comum::CLocal's constructor and destructor (2262, 2261): the singleton's builder (5738) allocates 4 bytes and calls
-#   them. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
+# - comum::CLocal's constructor and destructor (2262, 2261): the accessor (401) allocates 4 bytes and calls them, and
+#   so does 5738, which holds it inlined. 2261 frees a md::CLocal through md::CLocal's destructor (5744), written by the compiler, so the member is a
 #   std::unique_ptr; both are defined out of line because the target calls them.
 # - md::CIndiceFoto's constructor (5659), declared by unit 36. The file is the one the record of CIndicesFotos::at names
 #   (cindicesfotos.cpp:30, a function not written, whose line stays blank).

@@ -11,11 +11,15 @@
 //   pair         a function pair that is unique on BOTH sides at the census' fingerprint (then addr) tier
 //   srcloc-anchor a function pair whose bodies are the same instructions and reference the same std::source_location
 //                record, which no other function of either side references; it votes like a pair
+//   vptr-anchor, content-anchor  the same over a class's vptr or a read-only object placed by its bytes, where the
+//                operand may have other holders as long as one pair of them has one shape
 //   call         a call operand of an aligned pair (same instructions modulo callees and addresses): our callee ↔
 //                the target's callee, every vote agreeing
 //   table        an i32.const of an aligned pair inside both tables that its address reading does not explain:
 //                our slot's function ↔ the target slot's function
-//   vote         an address operand of an aligned pair: our data symbol + offset ↔ the target address
+//   vote         an address operand of an aligned pair: our data symbol + offset ↔ the target address. A pair that
+//                only a record, a vtable slot or an anchor's call names votes for .bss objects alone
+//   ctors        a .bss object of ours whose run of __wasm_call_ctors the target's holds, by its literals (ctorVotes)
 //   rtti         typeinfo, typeinfo-name and vtable symbols from the ledger's classes.json / vtables.json
 //   content      a read-only object of ours whose exact bytes occur once in the target's data
 //   string       a string from the ledger's strings.tsv, named by its content (`str.<hash>`)
@@ -26,7 +30,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
-import type { Instr } from './disasm';
+import { type Instr, immText } from './disasm';
 import { glueNamesFor } from './glue-file';
 import { importResolver } from './imports';
 import { GLOBAL_BASE, type NormalizedFn, normalizeModule } from './normalize';
@@ -393,7 +397,7 @@ export function targetSymbolsOf(file: SymbolFile): TargetSymbols {
  *  alone); null when the name has evidence of another kind or more voters than the symbol file lists. */
 export function soleVoters(symbols: TargetSymbols, name: string): number[] | null {
   const e = symbols.dataEvidence.get(name);
-  return e !== undefined && /^vote:\d+$/.test(e.evidence) && e.voters !== undefined ? e.voters : null;
+  return e !== undefined && /^(vote|ctors):\d+$/.test(e.evidence) && e.voters !== undefined ? e.voters : null;
 }
 
 /** The target functions whose call or table operands are the only evidence for function name `name`; null when
@@ -1194,6 +1198,10 @@ interface VoteBox {
   fnVoters: Map<number, Set<number>>;
 }
 
+function emptyVoteBox(): VoteBox {
+  return { fn: new Map(), table: new Map(), data: new Map(), voters: new Map(), fnVoters: new Map() };
+}
+
 function alignVotes(
   ours: OurSide,
   target: TargetSide,
@@ -1322,10 +1330,66 @@ function uniquePairs(
 }
 
 /**
- * Pairs anchored by a std::source_location record: the record (resolved by what it records) is referenced by an
- * i32.const in exactly one target function and exactly one of ours. Whether the two bodies are the same
- * instructions is left to the caller (alignVotes).
+ * Function pairs anchored by an operand: an i32.const that names one object on both sides, held by exactly one target
+ * function and exactly one of ours, or with `byShape` by one pair of the same shape among its holders: a class's
+ * constructor and destructor both load its vptr, and at most one of them is a body of ours so far. Whether the two
+ * bodies are the same instructions is left to the caller (alignVotes). `places` are the target's addresses that
+ * anchor, `placeOf` reads an operand of ours as one of them.
  */
+export function operandAnchors(
+  tn: readonly NormalizedFn[],
+  on: readonly NormalizedFn[],
+  places: ReadonlySet<number>,
+  placeOf: (v: number) => number | null,
+  byShape = false,
+): [number, number][] {
+  const users = new Map<number, { t: Set<number>; o: Set<number> }>();
+  const use = (place: number, side: 't' | 'o', fn: number): void => {
+    let u = users.get(place);
+    if (u === undefined) {
+      u = { t: new Set(), o: new Set() };
+      users.set(place, u);
+    }
+    u[side].add(fn);
+  };
+  const consts = (n: NormalizedFn): number[] =>
+    n.instrs.flatMap((i) => (i.opcode === 0x41 && i.imms[0]?.kind === 's32' ? [i.imms[0].value] : []));
+  for (const n of tn) {
+    for (const v of consts(n)) {
+      if (places.has(v)) {
+        use(v, 't', n.index);
+      }
+    }
+  }
+  for (const n of on) {
+    for (const v of consts(n)) {
+      const place = placeOf(v);
+      if (place !== null) {
+        use(place, 'o', n.index);
+      }
+    }
+  }
+  const byOurs = new Map<number, Set<number>>();
+  const byTarget = new Map<number, Set<number>>();
+  const tByIndex = new Map(tn.map((n) => [n.index, n]));
+  const oByIndex = new Map(on.map((n) => [n.index, n]));
+  for (const { t, o } of users.values()) {
+    const pairs = [...t].flatMap((tf) =>
+      [...o].flatMap((of) => (tByIndex.get(tf)?.shape === oByIndex.get(of)?.shape ? [[tf, of]] : [])),
+    );
+    if ((t.size === 1 && o.size === 1) || (byShape && pairs.length === 1)) {
+      const [tf, of] = t.size === 1 && o.size === 1 ? [[...t][0], [...o][0]] : pairs[0];
+      byOurs.set(of, (byOurs.get(of) ?? new Set()).add(tf));
+      byTarget.set(tf, (byTarget.get(tf) ?? new Set()).add(of));
+    }
+  }
+  // a function anchored to two different functions of the other side anchors nothing
+  return [...byOurs]
+    .filter(([o, ts]) => ts.size === 1 && byTarget.get([...ts][0])?.size === 1 && byTarget.get([...ts][0])?.has(o))
+    .map(([o, ts]) => [[...ts][0], o]);
+}
+
+/** Pairs anchored by a std::source_location record, resolved by what it records. */
 export function srclocAnchors(
   ours: OurSide,
   ourImage: Buffer,
@@ -1335,54 +1399,252 @@ export function srclocAnchors(
 ): [number, number][] {
   // a record the target holds at several addresses anchors nothing: which copy a function loads is no name
   const records = new Set([...target.srcloc.values()].flatMap((a) => (a.length === 1 ? a : [])));
-  const users = new Map<number, { t: Set<number>; o: Set<number> }>();
-  const use = (record: number, side: 't' | 'o', fn: number): void => {
-    let u = users.get(record);
-    if (u === undefined) {
-      u = { t: new Set(), o: new Set() };
-      users.set(record, u);
+  return operandAnchors(tn, on, records, (v) => {
+    if (v < GLOBAL_BASE || v >= ours.dataEnd) {
+      return null;
     }
-    u[side].add(fn);
+    const obj = dataObjectAt(ours.map.data, v);
+    if (obj === null || obj.addr !== v || !isSourceLocationRecord(obj)) {
+      return null;
+    }
+    const key = srclocKey(ourImage, GLOBAL_BASE, obj.addr);
+    const places = key === null ? undefined : target.srcloc.get(key);
+    return places?.length === 1 ? places[0] : null;
+  });
+}
+
+/** Pairs anchored by a class's vptr: a constant at the address point of a vtable that RTTI names on both sides. A
+ *  singleton's body builds its class in place, and in a class with no key function nothing else may load it. */
+export function vptrAnchors(
+  ours: OurSide,
+  ourImage: Buffer,
+  ledgerDir: string,
+  tn: readonly NormalizedFn[],
+  on: readonly NormalizedFn[],
+): [number, number][] {
+  const vptrs = new Map<number, number>();
+  const ourByKey = new Map(ours.map.data.map((d) => [d.key, d]));
+  for (const { vtable, typeinfoAt } of readPrimaryVtables(ledgerDir)) {
+    const key = `_ZTV${vtable}`;
+    const obj = ourByKey.get(key);
+    if (obj !== undefined) {
+      vptrs.set(obj.addr + vtableTypeinfoOffset(ourByKey, ourImage, key) + 4, typeinfoAt + 4);
+    }
+  }
+  return operandAnchors(tn, on, new Set(vptrs.values()), (v) => vptrs.get(v) ?? null, true);
+}
+
+/** Pairs anchored by a read-only object of ours, of more than a few words, whose exact bytes the target holds once:
+ *  a function-local constant table says which body it is, as a record does. */
+export function contentAnchors(
+  ours: OurSide,
+  ourImage: Buffer,
+  target: TargetSide,
+  tn: readonly NormalizedFn[],
+  on: readonly NormalizedFn[],
+): [number, number][] {
+  const at = new Map<number, number>();
+  for (const obj of ours.map.data) {
+    if (isReadOnly(obj) && obj.size >= CONTENT_ANCHOR && obj.section !== '<merged strings>' && !obj.name.startsWith('.L.str')) {
+      const r = resolveBytes(ourImage, target, obj);
+      if (r.ok) {
+        at.set(obj.addr, r.addr);
+      }
+    }
+  }
+  return operandAnchors(tn, on, new Set(at.values()), (v) => at.get(v) ?? null, true);
+}
+
+/** the function that runs every translation unit's static initialisers: binaryen inlines them into it */
+export const CALL_CTORS = '__wasm_call_ctors';
+
+const GLOBAL_GET = 0x23;
+const I32_CONST = 0x41;
+const I64_CONST = 0x42;
+/** below this a literal is a size or a flag, whatever the body holds */
+const TELLING_LITERAL = 256;
+
+/**
+ * Where each .bss object of ours that __wasm_call_ctors builds sits in the target: our object → the addresses voted.
+ * The two bodies are not the same instructions, since each runs another set of translation units, so nothing aligns
+ * them whole; each object is aligned alone, by what it is built from. Our body is cut into runs: a run starts at the
+ * first operand of a .bss object and ends at the next .bss object's or at a stack prologue, the next initialiser. A
+ * row of a run tells when the target's body holds its literal, or the place its address resolves to by content, in
+ * one row only: the bytes of a short string, a capacity and size, a chunk of a literal. A run with a telling row is
+ * set against the target at that row, and it votes only if every row from its start through its last telling row or
+ * string chunk fits: a run that shares only the tail of its string with the target's breaks on the next chunk. A
+ * literal two statics of the target build tells nothing, so a vote never picks between them, and two objects of ours
+ * built alike at one target address lose their votes.
+ */
+export function ctorVotes(
+  ours: OurSide,
+  ourImage: Buffer,
+  target: TargetSide,
+  oi: readonly Instr[],
+  ti: readonly Instr[],
+  /** whether our callee and the target's may be one function */
+  sameCallee: (ours: number, target: number) => boolean,
+): Map<string, Set<number>> {
+  const bssOf = (v: number): DataObject | null => {
+    const obj = v < GLOBAL_BASE || v >= ours.dataEnd ? null : dataObjectAt(ours.map.data, v);
+    return obj?.out === '.bss' && !isAnonymous(obj) ? obj : null;
   };
-  const consts = (n: NormalizedFn): number[] =>
-    n.instrs.flatMap((i) => (i.opcode === 0x41 && i.imms[0]?.kind === 's32' ? [i.imms[0].value] : []));
-  for (const n of tn) {
-    for (const v of consts(n)) {
-      if (records.has(v)) {
-        use(v, 't', n.index);
+  const targetBss = target.imageBase + target.image.length;
+  const inTargetBss = (v: number): boolean => v >= targetBss && (target.dataEnd === null || v < target.dataEnd);
+  const places = (v: number): number[] => {
+    if (v < GLOBAL_BASE || v >= ours.dataEnd) {
+      return [];
+    }
+    const r = resolveDataAddress(ours, ourImage, target, v);
+    return [...(r.ok ? [r.addr] : []), ...(r.same ?? [])];
+  };
+  // a row's address operand: an i32.const, or a memarg offset binaryen folded an address into
+  const addressOf = (i: Instr): number | null => {
+    const m = i.imms[0];
+    return i.opcode === I32_CONST && m?.kind === 's32'
+      ? m.value
+      : m?.kind === 'memarg' && m.offset >= GLOBAL_BASE
+        ? m.offset
+        : null;
+  };
+  const fits = (k: number, j: number): boolean => {
+    const o = oi[k];
+    const t = ti[j];
+    if (o.opcode !== t.opcode || o.imms.length !== t.imms.length) {
+      return false;
+    }
+    const vo = addressOf(o);
+    const vt = addressOf(t);
+    if (vo !== null && vt !== null && vo !== vt) {
+      return bssOf(vo) !== null ? inTargetBss(vt) : places(vo).includes(vt) || (ours.elem.has(vo) && target.elem.has(vt));
+    }
+    return o.imms.every((im, n) => {
+      const tm = t.imms[n];
+      return im.kind === 'u32' && im.role === 'func' && tm.kind === 'u32'
+        ? sameCallee(im.value, tm.value)
+        : im.kind === 'u32' && im.role === 'local'
+          ? true
+          : immText(im) === immText(tm);
+    });
+  };
+  const literal = (i: Instr): bigint | null => {
+    const m = i.imms[0];
+    return (i.opcode === I32_CONST && m?.kind === 's32') || (i.opcode === I64_CONST && m?.kind === 's64')
+      ? BigInt(m.value)
+      : null;
+  };
+  const targetRows = new Map<string, number[]>();
+  ti.forEach((i, j) => {
+    const v = literal(i);
+    if (v !== null) {
+      const key = `${i.opcode} ${v}`;
+      (targetRows.get(key) ?? targetRows.set(key, []).get(key)!).push(j);
+    }
+  });
+  /** the one row of the target's body holding what row k of ours holds, else null */
+  const tellingRow = (k: number): number | null => {
+    const i = oi[k];
+    const v = literal(i);
+    if (v === null) {
+      return null;
+    }
+    const address = i.opcode === I32_CONST ? places(Number(v)) : [];
+    const big = v >= TELLING_LITERAL || v <= -TELLING_LITERAL;
+    const held = address.length > 0 ? address.map(BigInt) : big ? [v] : [];
+    const rows = i.opcode === I32_CONST && bssOf(Number(v)) !== null ? [] : held.flatMap((h) => targetRows.get(`${i.opcode} ${h}`) ?? []);
+    return rows.length === 1 ? rows[0] : null;
+  };
+  const runs: { from: number; to: number; obj: DataObject }[] = [];
+  oi.forEach((i, k) => {
+    const v = addressOf(i);
+    const obj = v === null ? null : bssOf(v);
+    const open = runs[runs.length - 1];
+    const closed = open === undefined || open.to < oi.length;
+    if (!closed && (i.opcode === GLOBAL_GET || (obj !== null && obj !== open.obj))) {
+      open.to = k;
+    }
+    if (obj !== null && (closed || open.to < oi.length)) {
+      runs.push({ from: k, to: oi.length, obj });
+    }
+  });
+  const out = new Map<string, Set<number>>();
+  for (const { from, to, obj } of runs) {
+    const telling = new Map<number, number>();
+    for (let k = from; k < to; k++) {
+      const j = tellingRow(k);
+      if (j !== null) {
+        telling.set(k, j);
+      }
+    }
+    if (telling.size === 0) {
+      continue;
+    }
+    const [[k0, j0]] = telling;
+    const shift = j0 - k0;
+    // a chunk of a string the target does not hold tells nothing and still has to fit; a table slot reads as an
+    // address of the first strings, and is none
+    let last = Math.max(...telling.keys());
+    for (let k = to - 1; k > last; k--) {
+      const v = addressOf(oi[k]);
+      const obj = v === null || v < GLOBAL_BASE || v >= ours.dataEnd || ours.elem.has(v) ? null : dataObjectAt(ours.map.data, v);
+      if (obj !== null && (obj.section === '<merged strings>' || obj.name.startsWith('.L.str'))) {
+        last = k;
+      }
+    }
+    let aligned = from + shift >= 0 && last + shift < ti.length;
+    for (let k = from; aligned && k <= last; k++) {
+      aligned = fits(k, k + shift) && (telling.get(k) ?? k + shift) === k + shift;
+    }
+    for (let k = from; aligned && k <= last; k++) {
+      const vo = addressOf(oi[k]);
+      const vt = addressOf(ti[k + shift]);
+      if (vo !== null && vt !== null && bssOf(vo) === obj) {
+        (out.get(obj.key) ?? out.set(obj.key, new Set()).get(obj.key)!).add(vt - (vo - obj.addr));
       }
     }
   }
-  for (const n of on) {
-    for (const v of consts(n)) {
-      if (v < GLOBAL_BASE || v >= ours.dataEnd) {
-        continue;
-      }
-      const obj = dataObjectAt(ours.map.data, v);
-      if (obj === null || obj.addr !== v || !isSourceLocationRecord(obj)) {
-        continue;
-      }
-      const key = srclocKey(ourImage, GLOBAL_BASE, obj.addr);
-      const places = key === null ? undefined : target.srcloc.get(key);
-      if (places?.length === 1) {
-        use(places[0], 'o', n.index);
-      }
+  const claims = new Map<number, string[]>();
+  for (const [name, addrs] of out) {
+    for (const addr of addrs) {
+      (claims.get(addr) ?? claims.set(addr, []).get(addr)!).push(name);
     }
   }
-  const byOurs = new Map<number, Set<number>>();
-  const byTarget = new Map<number, Set<number>>();
-  for (const { t, o } of users.values()) {
-    if (t.size === 1 && o.size === 1) {
-      const [tf] = t;
-      const [of] = o;
-      byOurs.set(of, (byOurs.get(of) ?? new Set()).add(tf));
-      byTarget.set(tf, (byTarget.get(tf) ?? new Set()).add(of));
+  for (const names of claims.values()) {
+    if (names.length > 1) {
+      names.forEach((n) => out.delete(n));
     }
   }
-  // a function anchored to two different functions of the other side anchors nothing
-  return [...byOurs]
-    .filter(([o, ts]) => ts.size === 1 && byTarget.get([...ts][0])?.size === 1 && byTarget.get([...ts][0])?.has(o))
-    .map(([o, ts]) => [[...ts][0], o]);
+  return out;
+}
+
+/** a read-only object smaller than this says too little to anchor a function */
+const CONTENT_ANCHOR = 16;
+
+/** The ledger's primary vtables: the mangled class, and where the target's vtable keeps its typeinfo pointer. */
+function readPrimaryVtables(ledgerDir: string): { vtable: string; typeinfoAt: number }[] {
+  const classesPath = join(ledgerDir, 'classes.json');
+  const vtablesPath = join(ledgerDir, 'vtables.json');
+  if (!existsSync(classesPath) || !existsSync(vtablesPath)) {
+    return [];
+  }
+  const classes = (JSON.parse(readFileSync(classesPath, 'utf8')) as { classes: { typeinfo: number; mangled: string }[] })
+    .classes;
+  const mangled = new Map(classes.map((c) => [c.typeinfo, c.mangled]));
+  const vtables = JSON.parse(readFileSync(vtablesPath, 'utf8')) as {
+    address: number;
+    offset_to_top: number;
+    typeinfo: number;
+  }[];
+  return vtables.flatMap((v) => {
+    const m = mangled.get(v.typeinfo);
+    return v.offset_to_top === 0 && m !== undefined ? [{ vtable: m, typeinfoAt: v.address + 4 }] : [];
+  });
+}
+
+/** The real name of a side's imported function. */
+function importName(side: { module: Module; importNames: Record<string, string> }, index: number): string {
+  const imp = side.module.imports.filter((i) => i.kind === 'func')[index];
+  return side.importNames[imp.name] ?? imp.name;
 }
 
 export interface GenerateInputs {
@@ -1427,7 +1689,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   const tTypes = typeMap(om, tm);
   const sameSignature = (o: number, t: number): boolean =>
     t >= tFirst && tTypes.get(om.funcs[o - oFirst].typeIndex) === tm.funcs[t - tFirst].typeIndex;
-  const votes: VoteBox = { fn: new Map(), table: new Map(), data: new Map(), voters: new Map(), fnVoters: new Map() };
+  const votes = emptyVoteBox();
   const aligned = new Set<string>();
   const pairOf = new Map<number, number>(pairs.map(([t, o]) => [o, t]));
   const viaTable = new Set<number>();
@@ -1470,28 +1732,39 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
 
   // anchors fill what the pairs left: a pair a source_location record names, kept when the bodies are the same
   // instructions, and the names its call and table votes agree on. Neither side may be named already, the
-  // signatures must agree, and anchors cast no data votes.
-  const anchorVotes: VoteBox = {
-    fn: new Map(),
-    table: new Map(),
-    data: new Map(),
-    voters: new Map(),
-    fnVoters: new Map(),
-  };
+  // signatures must agree, and anchors' data votes count for .bss objects alone.
+  const anchorVotes = emptyVoteBox();
   const namedT = new Set(pairOf.values());
   const anchoredT = new Set<number>();
   const anchorEvidence = new Map<number, string>();
-  stats.pairSrclocAnchor = 0;
-  for (const [t, o] of srclocAnchors(ours, ourImage, target, tn0, on0)) {
-    if (namedT.has(t) || pairOf.has(o) || sizeT(t) <= trivial || !sameSignature(o, t)) {
-      continue;
-    }
-    if (alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t)) {
-      pairOf.set(o, t);
-      namedT.add(t);
-      anchoredT.add(t);
-      anchorEvidence.set(o, 'srcloc-anchor');
-      stats.pairSrclocAnchor++;
+  // an anchor of a pair named otherwise and never aligned still has operands to read: its data votes alone count
+  const namedAnchorVotes = emptyVoteBox();
+  const namedAnchors = new Set<string>();
+  const anchorKinds = [
+    ['srcloc-anchor', 'pairSrclocAnchor', srclocAnchors(ours, ourImage, target, tn0, on0)],
+    ['vptr-anchor', 'pairVptrAnchor', vptrAnchors(ours, ourImage, ledgerDir, tn0, on0)],
+    ['content-anchor', 'pairContentAnchor', contentAnchors(ours, ourImage, target, tn0, on0)],
+  ] as const;
+  for (const [evidence, stat, anchors] of anchorKinds) {
+    stats[stat] = 0;
+    for (const [t, o] of anchors) {
+      if (sizeT(t) <= trivial || !sameSignature(o, t)) {
+        continue;
+      }
+      if (namedT.has(t) || pairOf.has(o)) {
+        if (pairOf.get(o) === t && !aligned.has(`${t}:${o}`)) {
+          namedAnchors.add(`${t}:${o}`);
+          alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, namedAnchorVotes, t);
+        }
+        continue;
+      }
+      if (alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t)) {
+        pairOf.set(o, t);
+        namedT.add(t);
+        anchoredT.add(t);
+        anchorEvidence.set(o, evidence);
+        stats[stat]++;
+      }
     }
   }
   const anchorAgreed = (o: number): number | null => {
@@ -1499,16 +1772,24 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     return all.size === 1 ? [...all][0] : null;
   };
   stats.fnAnchorVote = 0;
-  for (const o of new Set([...anchorVotes.fn.keys(), ...anchorVotes.table.keys()])) {
-    const t = anchorAgreed(o);
-    if (pairOf.has(o) || votes.fn.has(o) || votes.table.has(o) || t === null || namedT.has(t) || !sameSignature(o, t)) {
-      continue;
+  // a function the votes name, whose body is the same instructions, votes in turn
+  for (let changed = true; changed;) {
+    changed = false;
+    for (const o of new Set([...anchorVotes.fn.keys(), ...anchorVotes.table.keys()])) {
+      const t = anchorAgreed(o);
+      if (pairOf.has(o) || votes.fn.has(o) || votes.table.has(o) || t === null || namedT.has(t) || !sameSignature(o, t)) {
+        continue;
+      }
+      pairOf.set(o, t);
+      namedT.add(t);
+      anchorEvidence.set(o, anchorVotes.fn.has(o) ? 'call' : 'table');
+      votes.fnVoters.set(o, anchorVotes.fnVoters.get(o) ?? new Set());
+      stats.fnAnchorVote++;
+      if (sizeT(t) > trivial && alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, anchorVotes, t)) {
+        anchoredT.add(t);
+        changed = true;
+      }
     }
-    pairOf.set(o, t);
-    namedT.add(t);
-    anchorEvidence.set(o, anchorVotes.fn.has(o) ? 'call' : 'table');
-    votes.fnVoters.set(o, anchorVotes.fnVoters.get(o) ?? new Set());
-    stats.fnAnchorVote++;
   }
 
   const fnNames: Evidence['fnNames'] = new Map();
@@ -1566,6 +1847,53 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   const dataNames: Evidence['dataNames'] = new Map();
   const ourByKey = new Map(ours.map.data.map((d) => [d.key, d]));
   stats.dataVoteConflicts = 0;
+  const castVote = (key: string, addr: number, n: number, voter: Iterable<number>): void => {
+    const box = votes.data.get(key) ?? votes.data.set(key, new Map()).get(key)!;
+    box.set(addr, (box.get(addr) ?? 0) + n);
+    const who = votes.voters.get(key) ?? votes.voters.set(key, new Set()).get(key)!;
+    for (const v of voter) {
+      who.add(v);
+    }
+  };
+  // anchors vote for .bss objects alone: a name there places what content cannot, and a name for a read-only or .data
+  // object would hide the copies content finds
+  stats.dataAnchorVote = 0;
+  for (const box of [anchorVotes, namedAnchorVotes]) {
+    for (const [key, vs] of box.data) {
+      if (ourByKey.get(key)?.out !== '.bss') {
+        continue;
+      }
+      stats.dataAnchorVote += votes.data.has(key) ? 0 : 1;
+      for (const [addr, n] of vs) {
+        castVote(key, addr, n, box.voters.get(key) ?? []);
+      }
+    }
+  }
+  const ctorOnly = new Set<string>();
+  const ctorsO = ours.fnByKey.get(CALL_CTORS);
+  const ctorsT = tm.exports.find((e) => e.kind === 'func' && glue?.exports[e.name] === CALL_CTORS)?.index;
+  if (ctorsO !== undefined && ctorsT !== undefined) {
+    const sameCallee = (co: number, ct: number): boolean =>
+      co < oFirst || ct < tFirst
+        ? co < oFirst && ct < tFirst && importName(ours, co) === importName(target, ct)
+        : sameSignature(co, ct);
+    for (const [key, addrs] of ctorVotes(
+      ours,
+      ourImage,
+      target,
+      on0[ctorsO - oFirst].instrs,
+      tn0[ctorsT - tFirst].instrs,
+      sameCallee,
+    )) {
+      if (!votes.data.has(key)) {
+        ctorOnly.add(key);
+      }
+      for (const addr of addrs) {
+        castVote(key, addr, 1, [ctorsT]);
+      }
+    }
+  }
+  stats.dataCtorVote = ctorOnly.size;
   for (const [key, vs] of votes.data) {
     if (vs.size !== 1) {
       stats.dataVoteConflicts++;
@@ -1577,7 +1905,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     dataNames.set(key, {
       addr,
       ...(obj ? { size: obj.size } : {}),
-      evidence: `vote:${n}`,
+      evidence: `${ctorOnly.has(key) ? 'ctors' : 'vote'}:${n}`,
       ...(voters.length <= VOTERS_LISTED ? { voters } : {}),
     });
   }
@@ -1712,6 +2040,42 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
     }
   }
 
+  // every other named body that is the same instructions reads its .bss operands too: a vtable slot or an anchor's
+  // call says which function it is, and that evidence owes nothing to the object
+  const lateVotes = emptyVoteBox();
+  for (const [name, { index: t }] of fnNames) {
+    const o = ours.fnByKey.get(name);
+    if (o !== undefined && t >= tFirst && o >= oFirst && sizeT(t) > trivial && !aligned.has(`${t}:${o}`) &&
+        !anchoredT.has(t) && !namedAnchors.has(`${t}:${o}`)) {
+      alignVotes(ours, target, addressOf, on0[o - oFirst].instrs, tn0[t - tFirst].instrs, lateVotes, t);
+    }
+  }
+  stats.dataLateVote = 0;
+  for (const [key, vs] of lateVotes.data) {
+    const obj = ourByKey.get(key);
+    const prev = dataNames.get(key);
+    if (obj?.out !== '.bss' || (votes.data.has(key) && prev === undefined)) {
+      continue;
+    }
+    const addrs = new Set([...vs.keys(), ...(prev === undefined ? [] : [prev.addr])]);
+    if (addrs.size !== 1) {
+      stats.dataVoteConflicts++;
+      dataNames.delete(key);
+      continue;
+    }
+    const [addr] = addrs;
+    const n = [...vs.values()].reduce((a, b) => a + b, 0);
+    const voters = [...new Set([...(prev?.voters ?? []), ...(lateVotes.voters.get(key) ?? [])])].sort((a, b) => a - b);
+    const many = prev !== undefined && prev.voters === undefined;
+    dataNames.set(key, {
+      addr,
+      size: obj.size,
+      evidence: `vote:${n + Number(prev?.evidence.split(':')[1] ?? 0)}`,
+      ...(!many && voters.length <= VOTERS_LISTED ? { voters } : {}),
+    });
+    stats.dataLateVote += prev === undefined ? 1 : 0;
+  }
+
   // our named read-only objects found by content
   stats.dataContent = 0;
   for (const obj of ours.map.data) {
@@ -1771,7 +2135,7 @@ export function gatherEvidence({ ours, target, ledgerDir, trivial = 8 }: Generat
   return { fnNames, dataNames, stats };
 }
 
-const isVote = (evidence: string): boolean => /^vote:\d+$/.test(evidence);
+const isVote = (evidence: string): boolean => /^(vote|ctors):\d+$/.test(evidence);
 
 /**
  * Drop the data names the target's own bytes contradict: an RTTI symbol whose bytes describe another class, a
