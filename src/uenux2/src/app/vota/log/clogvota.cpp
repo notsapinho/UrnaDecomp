@@ -2,7 +2,7 @@
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
 // The members with no record sit at lines the reconstruction chose; unit 119's fragment says why and has the other
-// notes.
+// notes, and unit 142's fragment for the three it added after LogaTituloInvalidoRegistroMesario.
 
 #include "app/vota/log/clogvota.h"
 
@@ -47,6 +47,23 @@ void CLogVota::LogaTituloInvalidoRegistroMesario()
 {
     const std::string mensagem = "Digitado título inválido para o registro de mesário";
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaJustificativaRecebida()
+{
+    const std::string mensagem = "Justificativa recebida";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaEleitorJaJustificou()
+{
+    const std::string mensagem = "Eleitor já justificou";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaPedidoTituloSuspensao()
+{
+    loga("Solicitado título eleitoral para suspensão do eleitor");
 }
 
 } // namespace vota
