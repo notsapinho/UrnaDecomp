@@ -10,7 +10,14 @@
 
 namespace comum {
 
-// (original lines 13-53: content not recovered)
+std::unique_ptr<CArquivosResultado> CArquivosResultado::s_instancia;
+std::mutex CArquivosResultado::s_mutex;
+
+CArquivosResultado::CArquivosResultado() = default;
+
+CArquivosResultado::~CArquivosResultado() = default;
+
+// (original lines 20-53: content not recovered)
 #line 54
 const std::string CArquivosResultado::operator[](EExtensaoArquivoResultado extensao) const
 {

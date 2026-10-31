@@ -10,6 +10,9 @@
 # 480, CBaseError<comum::EUeComumError, ...>'s constructor, is named by the calls and matches with this header's enum:
 # it is a thunk of 710, the body unit 94's form gives (the constructor in ecourna/api/exception/cbaseerror.hpp).
 #
+# comum::CArquivosResultado::GetInst (348), its out-of-line constructor and destructor and its two statics are in this
+# unit's files and belong to unit 111's measurement: its fragment says why the header holds GetInst.
+#
 # Not written: IInterfaceSavd's destructor (5503, slot 0 of its vtable and of the executable TU's CWasmSavd): its body
 # calls the string's destructor, which -Oz gives and uenux2's -O2 does not (a probe of the class's shape at both levels,
 # docs/reference/facts/levels.md V1), so the copy the target kept is the executable TU's and no object here can
