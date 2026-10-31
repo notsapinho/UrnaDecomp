@@ -223,8 +223,10 @@ declares what it calls instead of instantiating what a unit's object or a later 
 
 **D0, D1, D2** (in mangled names `…D0Ev`, `…D1Ev`, `…D2Ev`) — the Itanium C++ ABI's destructor variants: D0 the
 deleting destructor (destroys, then frees), D1 the complete-object destructor, D2 the base-object destructor. clang
-often makes D1 an alias of D2, so the link carries only the D2 name. The constructors' C1 and C2 are the same pair.
-*Where:* `splat/symbol_addrs.txt` hand edits.
+often makes D1 an alias of D2, so the link carries one name for both, the one its object mentions first. The
+constructors' C1 and C2 are the same pair. *Where:* `splat/symbol_addrs.txt` hand edits,
+`docs/reference/facts/splat.md` §S6 (an alias that looks like a rename), `docs/reference/facts/codegen.md` §C6 (the
+call `-fPIC` keeps).
 
 **compile setup, component flags** — one set of compile flags that produced target code (uenux2, ecourna, asn1,
 the libraries, emscripten's system libraries). The benchmark registry `asmlift-wasm/benchmark/dataset/setups.json`

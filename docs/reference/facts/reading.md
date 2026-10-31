@@ -284,18 +284,10 @@ shape. Probe `dtorpic.cpp`, a `final` class whose out-of-line destructor has onl
 
 So the level does not decide it, `-fPIC` does. In ecourna's code `f136(f778(p0))` (3491, 10 B, `CNumeroCPF`'s) is
 that out-of-line form, its D1 one call of the base's D2: read the classes' other destructors (the D1 and the control
-block's `__on_zero_shared`) before taking it for the in-class form. That the D1 alias is what `-fPIC` keeps as a call
-is a reading ([codegen.md](codegen.md) §C6 measures the same for a constructor).
-
-`wasm-objdump -d -r` prints a function's name beside a relocation, not the relocation symbol's, so on a destructor
-with an alias a call of D1 reads as one of D2. Read the symbol's number against the symbol table, or the link map,
-which lists the kept name first:
-
-    wasm-objdump -d -r build/out/app/uenux2/src/app/comum/dados/ccargos.cpp.o | /usr/bin/grep -m1 -E 'R_WASM_FUNCTION_INDEX_LEB [0-9]+ <_ZN5comum7CCargosD[12]Ev>'
-      000880: R_WASM_FUNCTION_INDEX_LEB 22 <_ZN5comum7CCargosD2Ev>
-    wasm-objdump -x -j Linking build/out/app/uenux2/src/app/comum/dados/ccargos.cpp.o | /usr/bin/grep -E '_ZN5comum7CCargosD[12]Ev'
-       - 22: F <_ZN5comum7CCargosD1Ev> func=24 [ binding=global vis=default ]
-       - 26: F <_ZN5comum7CCargosD2Ev> func=24 [ binding=global vis=default ]
+block's `__on_zero_shared`) before taking it for the in-class form. What `-fPIC` keeps is the call of the D1 alias, at
+the default visibility it gives ([codegen.md](codegen.md) §C6 measures it against a plain function and hidden
+visibility). `wasm-objdump -d -r` names such a call D2 whichever alias it holds; the symbol table says which
+([tool-traps.md](tool-traps.md) §X11).
 
 A class with no D0 (no vtable, or no destructor slot in it) shows the form in a caller instead: at `-fPIC` a caller in
 the destructor's own TU keeps a call of an out-of-line D1 (C6), where an implicit or in-class destructor of a small

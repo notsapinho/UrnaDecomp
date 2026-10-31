@@ -473,9 +473,8 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   [../how-to-decompile.md](../how-to-decompile.md) step 3). "No evidence" is said of the object, not only of the
   function: before a class is chosen, follow `this` from the callers to the next functions that take the object, and
   read their vptr stores, strings and records (5622's class is named one hop on, by 5604's callee 2791). A template
-  argument is a name too: a container's key or element type ends up in the match's symbol, and the bytes are the same
-  whichever it is. Before writing one as chosen, read the records of the class's other members, of its base's, and of
-  the functions that take the object (1929's key, `unsigned int`, is record 1536124's);
+  argument is a name too, which the match's symbol holds whatever the bytes say: check it against the records
+  [../how-to-decompile.md](../how-to-decompile.md) step 3 lists (1929's key, `unsigned int`, is record 1536124's);
 - the order of a file's members that have no record: compare `ld_index`, not the `ours` of `splat/scan.tsv`
   ([../how-to-decompile.md](../how-to-decompile.md) step 3, "The order of two members", has the rule, the command and
   when an inverted pair is two definitions swapped). A swapped order gives the same bytes and matches all the same;
@@ -590,8 +589,12 @@ join -t "$(printf '\t')" <(cut -f1,5 ../splat/scan.tsv | sort) <(cut -f1,5 ../bu
 ```
 
 What falls is what the line carries. Then rule on whether the evidence in its comment stands without those matches: the
-two rows above are the line's own, and its uniqueness reads neither of them. Three things make the scan say less than
-it seems to:
+two rows above are the line's own, and its uniqueness reads neither of them. A hand line is weighed two ways: with its
+name out on both sides of the marker, which shows what the name carries, and with the hand line alone out, which shows
+what the line adds to the generated section. The second decides whether the line stays; the copy needs no new run of
+`splat-symbols`, since step 8 reads no hand line (§2). Follow each scan with `splat-build` on the same two copies: a
+scan that moves no row shows neither that the build accepts them nor that it refuses them. Three things make the scan
+say less than it seems to:
 
 - **One pass.** A pass re-points with the previous pass's matches, so one scan can leave out a row the next brings
   back (8749 waits for 8951's and 8956's matches). Run the scan a second time over the same `--match` copy, as

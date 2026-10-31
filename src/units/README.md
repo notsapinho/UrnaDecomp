@@ -265,7 +265,7 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   constructor not written yet, and it keeps every slot. A function reached through another kind of slot (an
   `invoke_*` thunk, a callback passed by its slot) has its own address taken, and so can a vtable member that also has
   direct callers: unit 18 takes `~CThread`'s, which keeps the vtable its vptr store names. `ledger/callgraph.tsv` holds
-  direct calls only, so such a function can look like one with a single caller; `docs/reference/facts/units.md` §U12
+  direct calls only, so such a function can look like one with a single caller; `docs/reference/facts/units.md` §U11
   lists who passes its slot to an `invoke_*`;
 - a function with direct calls in the target gets at least two call sites in our link, because binaryen inlines a
   function called once: two callers, or one caller that calls it twice (the target's 2761 calls 5457 twice, and unit
@@ -416,8 +416,8 @@ does nothing while the roots' copy equals the target, since the content pass add
 the roots and keep the stand-ins' other call sites: the row is then `no-candidate` until a tree object instantiates it,
 and the fragment says so with the measurement (5725, unit 113). A unit may also compile its roots at its tree's flags,
 `$(UENUX2_CXXFLAGS)` on the rule (unit 113, and the tree root `roots_cbasetype.cpp`); then no match can rest on a flag its
-tree lacks, and the fragment says so. Taking an instance out takes out what a fragment's forms were measured on as
-well: measure each "differs" it lists for that object again. A body a companion object supplies
+tree lacks, and the fragment says so. Taking an instance out is a withdrawal, so measure the fragment's "differs" forms
+for that object again (`docs/how-to-decompile.md` step 10, "Withdrawing a match"). A body a companion object supplies
 can match only when it is code a landed header defines: an implicit or inline member, or a template instance such as
 `__shared_ptr_emplace<T>`'s destructors. A stand-in's own body or a trap never can. `docs/reference/facts/units.md`
 §U4 lists the matches that come from companion objects today, and `docs/reference/splat.md` "Reviewing a match" says
@@ -482,7 +482,7 @@ What the vtable needs, slot by slot:
   override. Neither a trap in the header nor a member declared out of line: either gives the base a key function, and
   with it a vtable and a typeinfo the target does not have. Unit 74 left `api::ISound`'s slots 8 and 9 `= 0`, and
   unit 81 wrote their bodies in `api/audio/isound.h`. A missing row in `ledger/vtables.json` does not say the class has
-  no vtable: read the data for one (`docs/reference/facts/units.md` §U13).
+  no vtable: read the data for one (`docs/reference/facts/units.md` §U12).
 - **A pure slot.** A slot that holds `__cxa_pure_virtual` (12143) is a pure member. Declare it `= 0` at its slot even
   when no evidence names it: name it from its callers, else after its slot, and say in the class header that the name
   is chosen. Left out, it makes the class concrete, which gives it a deleting destructor the target does not have and
@@ -501,7 +501,7 @@ What the vtable needs, slot by slot:
   form the same shared body. The merged functions can be other classes' and libraries', and the same operands must
   differ among them, so that the shared body takes the same parameters. Two can be enough for a large body: the
   target's 1565 has eight callers, and our link formed it from units 54's and 56's deleting destructors (3681, 2777). A
-  small one needs more: the exit destructors' shapes form from 3 and 4 members (`docs/reference/facts/units.md` §U11,
+  small one needs more: the exit destructors' shapes form from 3 and 4 members (`docs/reference/facts/codegen.md` §C8,
   which has the `wasm-opt` probe to run on N copies before reading the row). `pnpm wasm fn <target> 2904` lists a body's
   callers, and a unit that lands another caller reads its siblings' rows in the scan. Until the
   body forms, the member stays pending, with its source written in the `-pending.cpp` header (unit 29). A template

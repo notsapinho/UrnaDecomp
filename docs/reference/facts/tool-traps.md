@@ -235,24 +235,7 @@ concludes.
 the spelling try-tu prints, `build/out/try/../try-facts/clinha/wasm/vota_web`, works. `splat-kinds` and `splat-remap`
 take either.
 
-## X11. An object of ours at 0x100000 rewrites the add of its address
-
-`-Oz`'s optimizer writes `x + 1048576` as `x - (-1048576)`, since the negated constant is one LEB byte shorter (3 bytes
-against 4). So a body that adds the address of an object our link puts exactly at 0x100000 has `i32.const -1048576;
-i32.sub` where the target has `i32.const <address>; i32.add`, and is one byte shorter: OpenSSL's `table_select` (4505)
-left `match` on one merge's link when `k25519Precomp` started there. The shifted link's address is no power of two, so
-`splat-kinds` sees nothing. Below 2^20 the positive constant is as short, so only this one address does it inside our
-data, one object per link at most. What starts there, and the rows it hits (both print nothing at 4487d6b):
-
-```sh
-awk '$1 == "100000"' build/out/wasm-map/vota_web/vota_web_wasm.map
-awk -F'\t' '$5=="differs" && $6 ~ /ours [^|]*i32\.const -1048576/ {print $1}' splat/scan.tsv
-```
-
-No source is at fault, and moving data on purpose is tuning (`src/units/README.md` "Companion files", the order of a
-roots file's lines): the next landing that moves the data clears it, and can bring it back on another object.
-
-## X12. `wasm-objdump -d -r` names a relocation by the function, not by the symbol
+## X11. `wasm-objdump -d -r` names a relocation by the function, not by the symbol
 
 On a constructor or destructor whose C1 and C2, or D1 and D2, are aliases of one function, the disassembly prints the
 function's first name beside the call and beside its relocation, whichever symbol the relocation holds. The symbol

@@ -32,19 +32,9 @@ callers' records and from the landing pads: a call that can throw while a local 
 
 ## P2. A class with no file of its own, or out of its upstream file
 
-Read the class's vtable and typeinfo in the data before you create the file the class's name gives. Do not take them
-from `ledger/vtables.json` alone: it misses classes that have a vtable, `ASN1::GeneralizedTime` and
-`ecourna::app::dados::asn::CConversorConfiguracaoMunicipio` among them (4487d6b):
-
-    python3 -I -c "import json; c=json.load(open('ledger/classes.json'))['classes']; n={e['class'] for e in json.load(open('ledger/vtables.json'))}; print(len(c), sum(x['name'] not in n for x in c))"
-      2162 406
-    python3 -I -B tools/libs/memimg.py target/vota_web_wasm.wasm build/out/placing-facts/mem.bin > /dev/null
-    python3 -I -c "import struct; d=open('build/out/placing-facts/mem.bin','rb').read(); print(struct.unpack('<6I', d[1129456-8:1129456+16]))"
-      (0, 1129472, 6840, 6841, 6842, 6843)
-
-`memimg.py` writes the memory image to its second argument. The words at the vptr less 8 are the offset to top, the
-typeinfo (`CConversorConfiguracaoMunicipio`'s, 1129472 in `ledger/classes.json`) and the slots, which `wasm-objdump -x
--j Elem target/vota_web_wasm.wasm` resolves to functions. Three shapes:
+Read the class's vtable and typeinfo in the data before you create the file the class's name gives, not from
+`ledger/vtables.json` alone, which misses classes that have a vtable ([units.md](units.md) §U12 counts them, finds a
+vtable by its typeinfo and reads its words). Three shapes:
 
 - **Two classes in one object.** A typeinfo of class A after the vtable of class B, with A's vtable between B's
   vtable and B's typeinfo, puts both in one object: `simulador::CWasmImageSurfaceOps`'s vtable (1528980) and typeinfo

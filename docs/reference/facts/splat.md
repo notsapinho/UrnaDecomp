@@ -280,6 +280,21 @@ twice), which passed the same constant both times, and dead-argument elimination
 caller that passes another mutex keeps the parameter; the two bodies are then byte-identical, binaryen keeps one under
 the first name in link order, and `splat-match` renames 150's line to `_ZNSt3__25mutex6unlockEv` as it renamed 246's.
 
+Three cases look like a rename and are not one:
+
+- **A symbol that stays while its body moves.** A twin's name can stay in the link with another body: once a class is
+  `final`, its `__on_zero_shared` stays with the new body, so `splat-match` prints `1 matches added, 0 renamed`, one
+  symbol stands on two lines, and the build stops with `no longer verifies`. The scan's `symbol` column for the old
+  index has the survivor: edit that line to it. `cut -d' ' -f2 splat/matched.txt | /usr/bin/grep -v '^#' | sort | uniq
+  -d` prints a symbol listed twice.
+- **An alias.** A constructor or destructor of a class with no virtual base has C1 and C2 (D1 and D2) on one function,
+  and `names.tsv` shows the name its object mentions first, so a new member earlier in the object renames it, and the
+  old symbol is still defined there (`wasm-objdump -x -j Linking build/out/app/uenux2/src/app/comum/dados/clocal.cpp.o`
+  lists `_ZN5comum6CLocalC1Ev` and `C2Ev` on `func=43`).
+- **Twins that differ in their objects.** Two D0s of classes of different sizes pass different sizes to sized delete
+  in their objects, and binaryen drops that argument only later. Compare twins in the final link: the old symbol gone
+  from `names.tsv`, the new one there once, the build verifying it.
+
 ## S7. A match that verifies under a twin class's name; vtable slots name functions
 
 Target 11611 is `boost::wrapexcept<boost::gregorian::bad_month>::rethrow`, yet a match of it under
@@ -596,7 +611,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     stops on `matched.txt only:`: take the new name from `build/out/wasm-map/vota_web/names.tsv`, rewrite the name on
     the line and keep its evidence, and run step 9 again, as for 2924 above.
 13. **349 and 389, and the thunks 11510, 13695, 10231, 11640 and 11660, by the exit destructors that form them.** Each
-    body forms only from enough members, 4 of fn 349's shape and 3 of fn 389's ([units.md](units.md) §U11): the
+    body forms only from enough members, 4 of fn 349's shape and 3 of fn 389's ([codegen.md](codegen.md) §C8): the
     singletons' pointer destructors of units 104, 110, 111 and 116. The thunks are `f349(p0, <pointer>)`, so each also
     names its class's pointer as a second holder (§3 of [../splat.md](../splat.md)). A landing that removes members can
     unform a body. A merge body's match line is `byn$mgfn-shared$__cxx_global_array_dtor@<first member's object>`, and
@@ -605,7 +620,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     7787. With 11561 alone binaryen inlines it, and 273, 11203, 11209 and 11561 fall with it; `d5805` in
     `src/units/110-uenux2-singletons-roots.cpp` is the second call site. It goes when 7787 lands.
 15. **4505 and 8750, by the data's layout.** 4505 holds while no object of ours starts at 0x100000
-    ([tool-traps.md](tool-traps.md) §X11). 8750 holds through the `content` hand edit of `ASN1::UTCTime::theInfo`, whose
+    ([codegen.md](codegen.md) §C7). 8750 holds through the `content` hand edit of `ASN1::UTCTime::theInfo`, whose
     tag word reads as a table slot of ours and loosens the object's pattern when that slot's function has no target name.
 
 ## S11. A match among bodies of the same content can take the other one's name

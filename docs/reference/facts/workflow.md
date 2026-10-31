@@ -405,7 +405,8 @@ check failed these, each a different case or none, with `splat` printing the tar
 | `splat-sub.test.ts`, "renames 246 back to the survivor" | 246's line of `splat/matched.txt`; until unit 107 it read one symbol spelled in the test | a twin of 246 linked ahead of the survivor (`cconversormunicipio.cpp.o`): the case now takes the survivor from the list, so a rename no longer fails it |
 | `splat-kinds.test.ts`, "V1, V2: an integer over vdbeSorterSort's relative slots" | the target's slots 11883 and 11885 as past our table | our table grew past them (`wasm-objdump -x -j Table` read `initial=11915`): the case now takes a value past our table from the link, `relativePastOurTable` |
 
-Any case that holds a target number as past our data or our table ends so once a landing grows ours past it.
+Any case that holds a target number as past our data or our table ends so once a landing grows ours past it; such a
+case takes the number from the link ([splat.md](splat.md) §S5 item 3).
 
 So a failure is the branch's only if the commit it started from passes. A real-link case reads `build/out/wasm*`, so
 that takes a build of that commit, not a copy of the tree: `git archive` plus a copied `build/out/` stops on the
@@ -644,11 +645,12 @@ only for the objects `build/out/wasm/vota_web/link.cmd` names.
   make will not rebuild that hold the header's mangled name (`4ASN1` for `asn1.h`, `16ModuloImpedidos` for that
   module), move them aside by name and rebuild (4487d6b):
 
-      make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//; s|.*build/out/|build/out/|' | sort > build/out/workflow-facts/listed.txt
-      make -s -C src print-LINK_OBJS | tr ' ' '\n' | /usr/bin/grep '\.o$' | sed 's|.*build/out/|build/out/|' | sort | comm -23 - build/out/workflow-facts/listed.txt | while read o; do [ -f "$o" ] && LC_ALL=C /usr/bin/grep -q 4ASN1 "$o" && echo "$o"; done
+      mkdir -p build/out/workflow-facts
+      make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE -- '-o [^ ]+\.o' | cut -c4- | sort > build/out/workflow-facts/rebuilt.txt
+      make -s -C src print-LINK_OBJS | tr ' ' '\n' | sed "s#^$PWD/##" | /usr/bin/grep '\.o$' | sort | comm -13 build/out/workflow-facts/rebuilt.txt - | while read -r o; do LC_ALL=C /usr/bin/grep -q -a 4ASN1 "$o" && echo "$o"; done
         build/out/app/87-asn1-avn-roots.o
         build/out/app/ecourna/app_dados_asn_cconversorhorariosurna.cpp.o
-        …                                  (8 objects, 6 of them converters)
+        …                                  (8 objects: those two and six uenux2 objects of app/comum, 6 converters in all)
 
   Any of them can change with the header while `make` reports the link current, so a link without the move can hold
   stale converters. The byte search finds only an object that holds the name, which is every object whose

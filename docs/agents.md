@@ -71,7 +71,8 @@ run it with one short command: no zsh array or `${(@f)…}` expansion, no heredo
   another agent's file of the same name by the time you read it back: a commit message written there was replaced
   that way before a retry committed it.
 - A branch follows the docs of the commit it started from, and a reviewer of it says which version it judged by.
-  When `main`'s docs change while the branch runs, its landing reads the branch's choices against `main`'s docs too,
+  When `main`'s docs change while the branch runs (a docs pass runs alongside a round, and no lane waits for it:
+  `.claude/commands/decompile-functions.md` Stage 5), its landing reads the branch's choices against `main`'s docs too,
   since the merge lands under them (`docs/how-to-decompile.md` step 10, "Landing onto a moved main"). Read `main`'s
   text with `git show main:<path>`, not from another checkout.
 - If `.git/index.lock` exists, wait and retry. Remove it only when it is older than ten minutes and no git process

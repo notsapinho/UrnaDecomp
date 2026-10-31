@@ -319,19 +319,8 @@ TMPDIR=/tmp build/docker-build.sh sh -c "$(tools/round/try-tu.sh --print-flags s
 ```
 
 The objects of the link that hold a symbol of the `ASN1` namespace and that edit leaves alone, each a candidate to
-link stale, are the ones to move aside by name before the rebuild ([workflow.md](workflow.md) §W15). The byte search
-sees every object whose code the header reaches:
-
-```sh
-mkdir -p build/out/units-facts
-make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE -- '-o [^ ]+\.o' | cut -c4- | sort > build/out/units-facts/rebuilt.txt
-make -s -C src print-LINK_OBJS | tr ' ' '\n' | sed "s#^$PWD/##" | /usr/bin/grep '\.o$' | sort > build/out/units-facts/linked.txt
-comm -13 build/out/units-facts/rebuilt.txt build/out/units-facts/linked.txt | while read -r o; do
-  LC_ALL=C /usr/bin/grep -q -a '4ASN1' "$o" && echo "$o"; done | wc -l
-# 8      (cconversorhorariosurna.cpp.o, 87-asn1-avn-roots.o and six uenux2 objects of app/comum)
-```
-
-For a module header, search for the module's namespace in place of `4ASN1`.
+link stale, are the ones to move aside by name before the rebuild: [workflow.md](workflow.md) §W15 has the byte search
+that lists them (8 at 4487d6b, unit 15's converter among them), and its pattern for a module header.
 
 The two header lists are empty inside a fragment. `src/Makefile` reads the fragments before it sets them, and make
 expands a rule's prerequisites when it reads the rule (GNU Make 3.81, this machine's `make`):
@@ -421,39 +410,7 @@ The bodies, with object-local call indices dropped, differ only in `ImprimeParte
 and the user's own function: `TemParte`, the D2 and the D0 are the same code from either object. So a trap that
 stands for an inline member decides which object of ours emits the vtable's members, not their bytes.
 
-## U11. How many members binaryen needs to form a merge body
-
-`--merge-similar-functions` merges functions that differ only in constants into one body and thunks, and it does not
-merge two copies of a small body. The two shapes of the exit destructors: a pointer destructor over a class with an
-implicit destructor (fn 349's shape, one call) and one that calls a D2 (fn 389's, two calls), N copies each, differing
-in the address they clear, through the image's `wasm-opt`:
-
-```sh
-mkdir -p build/out/units-facts/mgfn
-for k in free d2; do for n in 2 3 4 5; do
-  { printf '(module\n (import "e" "d2" (func $d2 (param i32) (result i32)))\n (import "e" "free" (func $free (param i32)))\n (memory 1)\n'
-    for i in $(seq 1 $n); do
-      c='(call $free (local.get 0))'; [ $k = d2 ] && c="(drop (call \$d2 (local.get 0))) $c"
-      printf ' (func $f%d (export "f%d") (param i32)\n  (local.set 0 (i32.load (i32.const %d)))\n  (i32.store (i32.const %d) (i32.const 0))\n  (if (local.get 0) (then %s)))\n' $i $i $((1000 + 8 * i)) $((1000 + 8 * i)) "$c"
-    done; printf ')\n'; } > build/out/units-facts/mgfn/$k$n.wat
-  printf '%s N=%s ' $k $n
-  TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/wasm-opt --enable-bulk-memory build/out/units-facts/mgfn/$k$n.wat --merge-similar-functions -S -o - | /usr/bin/grep -c 'func .byn.mgfn-shared'
-done; done
-# free N=2 0
-# free N=3 0
-# free N=4 1
-# free N=5 1
-# d2 N=2 0
-# d2 N=3 1
-# d2 N=4 1
-# d2 N=5 1
-```
-
-So fn 349's shape forms from 4 members and fn 389's from 3, and two of either stay whole bodies where the target has
-12-B thunks. The whole link agrees: unit 104's third member, `vota::CQuerReimprimirZeresima`, is what formed fn 389.
-A target body with 49 callers gives no bound on what forms it in our link; count its members in ours.
-
-## U12. Who reaches a function through an `invoke_*` table slot
+## U11. Who reaches a function through an `invoke_*` table slot
 
 `ledger/callgraph.tsv` holds direct calls only, so a function an `invoke_*` thunk calls has no caller there, and
 `pnpm wasm fn` lists its table slots without their users. The disassembly prints an import by its minified name
@@ -486,10 +443,11 @@ Slot 448 holds 5632 (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/b
 takes four parameters and returns one, so only `invoke_iiiii` fits: 10205 is its caller. The other five pass 448 as
 an integer that happens to equal the slot.
 
-## U13. A class with no row in `ledger/vtables.json` can have a vtable
+## U12. A class with no row in `ledger/vtables.json` can have a vtable
 
 The extraction misses classes: 406 of the 2162 classes of `ledger/classes.json` have no row, and some of them have a
-vtable in the target.
+vtable in the target, `ASN1::GeneralizedTime` and `ecourna::app::dados::asn::CConversorConfiguracaoMunicipio` among
+them. So no row is no evidence of no vtable.
 
 ```sh
 python3 -I -c "import json; c=json.load(open('ledger/classes.json'))['classes']; n={e['class'] for e in json.load(open('ledger/vtables.json'))}; print(len(c), sum(x['name'] not in n for x in c))"
@@ -512,6 +470,15 @@ END
 # vtable 1149192 address point 1149200
 ```
 
-Its slots then come from the words after the typeinfo and `wasm-objdump -x -j Elem target/vota_web_wasm.wasm`
-([asn1.md](asn1.md) §A9 lists them). A class missing its row gets no `vtable` evidence for its slots, so its members wait
-for a census pair or a hand edit.
+The words from the address point less 8 are the offset to top, the typeinfo and the slots, which `wasm-objdump -x -j
+Elem target/vota_web_wasm.wasm` resolves to functions ([asn1.md](asn1.md) §A9 lists these). `tools/libs/memimg.py`
+writes the memory image, from address 0, to its second argument:
+
+```sh
+mkdir -p build/out/units-facts && python3 -I -B tools/libs/memimg.py target/vota_web_wasm.wasm build/out/units-facts/mem.bin > /dev/null
+python3 -I -c "import struct; d=open('build/out/units-facts/mem.bin','rb').read(); print(struct.unpack('<6I', d[1149200-8:1149200+16]))"
+# (0, 1149228, 2299, 7110, 7111, 7112)
+```
+
+The same read at a vptr a constructor stores gives the class's typeinfo, and so its name. A class missing its row gets
+no `vtable` evidence for its slots, so its members wait for a census pair or a hand edit.

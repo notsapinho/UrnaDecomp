@@ -312,7 +312,8 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
    slot or RTTI gives is marked as chosen), real classes, no scaffolding in the landed TSE files, Latin-1, throws on
    their record lines, and roots and pending files in the shapes `src/units/README.md` sanctions. A match compiled in
    a `-roots.o` or `-pending.o`, and a census pair with a roots stand-in, are checked as
-   [docs/reference/splat.md](../../docs/reference/splat.md) "Reviewing a match" says.
+   [docs/reference/splat.md](../../docs/reference/splat.md) "Reviewing a match" says, and so is each hand line the
+   range adds to the symbol file: removed, scanned twice beside a control, then built.
 
 A REFUTED lane does not land. Send its finding back to the lane's matcher once, as a new MATCH run, then to a new
 VERIFY, which is narrow: the refuted points and the range since the commit the first verdict judged, with the first
@@ -329,9 +330,9 @@ batch is a LAND stage of its own, and it touches no lane its brief does not name
 first, naming the lanes, their commits and the worktrees it will remove, and keeps its logs under `build/out/land/`. A
 batch that meets a lost match stops before committing that merge and posts it. A toolkit fix the merge needs is a commit
 of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there. A row lost to
-one link's data layout, the cause shown (an object at 0x100000, `docs/reference/facts/tool-traps.md` §X11), may wait for
-the next lane of the batch: land that lane first, retry, stop if the row is still out, and say so at the top of the
-result.
+one link's data layout, the cause shown (how-to step 9's two cases: an object at 0x100000, a data word read as a slot),
+may wait for the next lane of the batch: land that lane first, retry, stop if the row is still out, and say so at the
+top of the result.
 
 The commit to land is the one the verdict confirmed. A lane branch's tip can differ from it: a pause can leave the
 worktree on another branch (`wip/<lane>`), and the lane branch then points at an older commit. Check
@@ -377,7 +378,9 @@ lands ("Pausing and resuming" below).
 
 ## Stage 5: DOCS (every second round, in worktrees of its own)
 
-It runs alongside the next round, and no lane waits for it. Brief: the rules above, the board paths, the docs it may
+It runs alongside the next round, and no lane waits for it: its docs land on `main` while lanes run, and each lane is
+judged by its base's docs and landed under `main`'s ([docs/agents.md](../../docs/agents.md) "Working in one shared
+checkout"). Brief: the rules above, the board paths, the docs it may
 edit (rule 1's list, the help text of the tools they describe, and this command file), and the cut-off: every
 `board/friction/` post since the last DOCS stage. It reads
 each one, every post that corrects it, and the verdicts that judged a doc question, and changes the docs so the next

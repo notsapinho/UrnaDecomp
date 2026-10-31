@@ -3,8 +3,8 @@
 Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them,
 and what it says of the class that holds a member), what an object's disassembly does not settle and how to compare
 two forms, a switch over virtual members, when a member's body is inlined, the order of a caller and its callee, what
-a TU emitted first does to a frame, a constructor call `-fPIC` keeps, `-Oz`'s subtract of 0x100000, and how many copies
-binaryen merges. `docs/how-to-decompile.md` steps 3, 4 and 9 rely on these;
+a TU emitted first does to a frame, a C1 or D1 call `-fPIC` keeps, `-Oz`'s subtract of 0x100000, and how many copies
+binaryen merges. `docs/how-to-decompile.md` steps 1 to 5 and 9 rely on these;
 [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors, linkage). Each probe
 compiles with the uenux2 flags (`-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, `docs/reference/app-flags.md`) in
 the pinned image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the
@@ -372,35 +372,39 @@ records say: `awk -F'\t' '$2 ~ /cpolysingletonlist.h/ && $3==129 {print $1, $6}'
 4879's record, 1531292, right after 8302's, 1531180, in another object's run. That clang declares a callee at its first
 mention, so that the inlined parts' allocas come in another order, is the reading; the scores are the measurement.
 
-## C6. At `-fPIC` an out-of-line constructor or destructor stays a call in its own TU, and no remark says so
+## C6. At `-fPIC` a call of an out-of-line C1 or D1 stays a call in its own TU, and no remark says so
 
-Probe `ctorcall.cpp`:
+Probe `ctorcall.cpp`, compiled at uenux2's flags, with `-fvisibility=hidden` added, and without `-fPIC`:
 
-    // An out-of-line constructor and destructor and their caller, all in one TU.
+    // An out-of-line constructor and destructor, a plain function of the same cost, and their callers, all in one TU.
     struct T { T(); ~T(); int a[5]; };
     T::T() : a{1, 2, 3, 4, 5} {}
     T::~T() { a[0] = 0; }
     int Use() { T t; return t.a[1]; }
+    int G(int* a) { a[0] = 0; return a[1]; }
+    int UseG(int* a) { return G(a) + 1; }
 
-    TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/codegen-facts; em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Rpass=inline -Rpass-missed=inline -c ctorcall.cpp -o ctorcall-pic.o 2> ctorcall-pic.rpass; em++ -O2 -std=c++20 -DNDEBUG -fno-strict-aliasing -Rpass=inline -Rpass-missed=inline -c ctorcall.cpp -o ctorcall-nopic.o 2> ctorcall-nopic.rpass'
-    /usr/bin/grep -cE '_ZN1T[CD][12]Ev' build/out/codegen-facts/ctorcall-pic.rpass
-      0
-    wasm-objdump -d build/out/codegen-facts/ctorcall-pic.o | /usr/bin/grep -E 'call .*_ZN1T'
-      0000ed: 10 80 80 80 80 00          | call 0 <_ZN1TC1Ev>
-      000100: 10 81 80 80 80 00          | call 1 <_ZN1TD1Ev>
-    /usr/bin/grep -oE "'_ZN1T[CD][12]Ev' inlined into '_Z3Usev' with \(cost=-?[0-9]+, threshold=[0-9]+\)" build/out/codegen-facts/ctorcall-nopic.rpass
+    TMPDIR=/tmp build/docker-build.sh sh -c 'cd /work/build/out/codegen-facts; for v in "pic -fPIC" "hidden -fPIC -fvisibility=hidden" "nopic"; do set -- $v; n=$1; shift; em++ -O2 "$@" -std=c++20 -DNDEBUG -fno-strict-aliasing -Rpass=inline -Rpass-missed=inline -c ctorcall.cpp -o ctorcall-$n.o 2> ctorcall-$n.rpass; done'
+    for n in pic hidden nopic; do printf '%s: inlined' $n; /usr/bin/grep -oE "'_Z[A-Za-z0-9_]+' inlined into" build/out/codegen-facts/ctorcall-$n.rpass | cut -d"'" -f2 | sed 's/^/ /' | tr -d '\n'; printf '; calls'; wasm-objdump -d build/out/codegen-facts/ctorcall-$n.o | /usr/bin/grep -oE 'call [0-9]+ <_Z[^>]+>' | cut -d' ' -f3 | sed 's/^/ /' | tr -d '\n'; echo; done
+      pic: inlined _Z1GPi; calls <_ZN1TC1Ev> <_ZN1TD1Ev>
+      hidden: inlined _ZN1TC2Ev _ZN1TD2Ev _Z1GPi; calls
+      nopic: inlined _ZN1TC2Ev _ZN1TD2Ev _Z1GPi; calls
+    /usr/bin/grep -oE "'_ZN1T[CD]2Ev' inlined into '_Z3Usev' with \(cost=-?[0-9]+, threshold=[0-9]+\)" build/out/codegen-facts/ctorcall-nopic.rpass
       '_ZN1TC2Ev' inlined into '_Z3Usev' with (cost=-30, threshold=337)
       '_ZN1TD2Ev' inlined into '_Z3Usev' with (cost=-35, threshold=337)
 
 So at uenux2's flags a constructor or destructor of a cheap body, defined out of line beside its only caller, stays a
-call of C1 or D1, and a caller's reload after it says nothing of the callee's TU. Without `-fPIC` (ecourna's flags) both
-are inlined at a cost below zero. That the call names C1 while the definition is C2, an alias, is what stops clang is a
-reading. binaryen may still inline or remove such a callee in the link.
+call of C1 or D1 and neither remark names it, while a plain function of the same cost beside it is inlined. Hidden
+visibility, or no `-fPIC` (ecourna's flags), inlines all three at a cost below zero. What keeps the call is the C1 or D1
+alias at the default visibility `-fPIC` gives ([app-flags.md](app-flags.md) §F5 has the same on a D1, by visibility
+alone). So a caller's reload after such a call says nothing of the callee's TU. binaryen may still inline or remove the
+callee in the link. Which of the two names an object's call holds, the disassembly does not say
+([tool-traps.md](tool-traps.md) §X11).
 
 ## C7. `-Oz` turns an add of 0x100000 into a subtract
 
-binaryen at `-Oz` writes `x + 1048576` as `x - (-1048576)`, since the negative constant's LEB is one byte shorter, and
-leaves any other address alone:
+binaryen at `-Oz` writes `x + 1048576` as `x - (-1048576)`, since the negative constant's LEB is one byte shorter (3
+bytes against 4), and leaves any other address alone:
 
     mkdir -p build/out/codegen-facts && printf '(module (memory 1) (func (export "f") (param i32) (result i32) (i32.add (local.get 0) (i32.const 1048576))) (func (export "g") (param i32) (result i32) (i32.add (local.get 0) (i32.const 1048580))))' > build/out/codegen-facts/add.wat
     TMPDIR=/tmp build/docker-build.sh sh -c '/emsdk/upstream/bin/wasm-opt /work/build/out/codegen-facts/add.wat -Oz -S -o - | grep -E "i32\.(add|sub)|i32\.const"'
@@ -409,10 +413,18 @@ leaves any other address alone:
         (i32.add
          (i32.const 1048580)
 
-So a data object that one link places at exactly 0x100000 takes the match of every body that adds its address, and the
-row reads `differs` with `i32.const -1048576` on our side. Below 2^20 the positive form is as short, so it is one object
-per link at most. At 4487d6b no row reads so (`awk -F'\t' '$6 ~ /-1048576/' splat/scan.tsv | wc -l` prints 0), and
-`k25519Precomp` lies at 0x108c80 (`/usr/bin/grep -n 'k25519Precomp' build/out/wasm-map/vota_web/vota_web_wasm.map`).
+So a body that adds the address of an object our link puts exactly at 0x100000 has `i32.const -1048576; i32.sub` where
+the target has `i32.const <address>; i32.add`, and its row reads `differs`: OpenSSL's `table_select` (4505) left
+`match` on one merge's link when `k25519Precomp` started there. The shifted link's address is no power of two, so
+`splat-kinds` sees nothing. Below 2^20 the positive constant is as short, so inside our data only this one address does
+it, one object per link at most. What starts there, and the rows it hits (both print nothing at 4487d6b, where
+`k25519Precomp` lies at 0x108c80):
+
+    awk '$1 == "100000"' build/out/wasm-map/vota_web/vota_web_wasm.map
+    awk -F'\t' '$5=="differs" && $6 ~ /ours [^|]*i32\.const -1048576/ {print $1}' splat/scan.tsv
+
+No source is at fault, and moving data on purpose is tuning (`src/units/README.md` "Companion files", the order of a
+roots file's lines): the next landing that moves the data clears it, and can bring it back on another object.
 
 ## C8. How many copies `--merge-similar-functions` needs
 
@@ -444,7 +456,9 @@ static pointer's destructor, `N` copies that differ in the address, with a D2 ca
       m: N=2 0 N=3 1 N=4 1 N=5 1
       t: N=2 0 N=3 0 N=4 1 N=5 1
 
-`m` is fn 389's shape and `t` fn 349's: three copies form 389's shared body and four 349's, and two form neither, so
-two singletons of a kind leave their destructors whole bodies where the target has thunks. A large body can merge from
-two (1565). The members need not be matched; count a target shared body's callers and our link's copies before reading
-its `unresolved` rows.
+`m` is fn 389's shape and `t` fn 349's (`pnpm --silent wasm fn ../target/vota_web_wasm.wasm 389` lists `call 244` and
+`call 136`, 349's `call 136` alone): three copies form 389's shared body and four 349's, and two form neither, so two
+singletons of a kind leave their destructors whole bodies where the target has 12-B thunks. The whole link agrees: unit
+104's third member, `vota::CQuerReimprimirZeresima`, is what formed fn 389. A large body can merge from two (1565). The
+target's callers give no bound on what forms the body in our link (389 has 49), and the members need not be matched:
+count our link's copies before reading a thunk's `unresolved` row.
