@@ -72,9 +72,6 @@ protected:
 // f11370 · 29 B · unmatched · placement: link order · name unknown
 // void f11370(i32, i32, i32) { ... }
 
-// f11362 · 29 B · unmatched · placement: link order · name unknown
-// void f11362(i32, i32, i32) { ... }
-
 // f11446 · 29 B · unmatched · placement: link order · name unknown
 // void f11446(i32, i32, i32) { ... }
 
@@ -89,9 +86,6 @@ protected:
 
 // f11376 · 29 B · unmatched · placement: link order · name unknown
 // void f11376(i32, i32, i32) { ... }
-
-// f11364 · 29 B · unmatched · placement: link order · name unknown
-// void f11364(i32, i32, i32) { ... }
 
 // f10275 · 29 B · unmatched · name unknown
 // void f10275(i32, i32, i32) { ... }

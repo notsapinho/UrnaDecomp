@@ -32,6 +32,10 @@ public:
 
     // The name is chosen: no record names this accessor.
     TCargoID GetID() const { return m_id; }
+    // The names are chosen: comum::asn::CConversorEleicoesVota::DoConverte (fn 11350) reads the three fields.
+    ETipo GetTipo() const { return m_tipo; }
+    uebyte GetNumeroDigitos() const { return m_numeroDigitos; }
+    TQtdEscolha GetQtdeEscolhas() const { return m_qtdeEscolhas; }
     // The names are chosen. CParteRdv::Imprime (fn 11203) reads the flag before the type (src/units/110-uenux2-singletons.mk).
     bool IsMajoritario() const { return m_detalheCandidato.has_value() && m_tipo == MAJORITARIO; }
     bool IsProporcional() const { return m_detalheCandidato.has_value() && m_tipo == PROPORCIONAL; }

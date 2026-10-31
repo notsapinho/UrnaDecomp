@@ -1557,6 +1557,56 @@ public:
 }; // end class DataGeracao
 
 //
+// ModuloTiposEleitorais::DataJE   // name from the target's RTTI (vptr 1556232); theInfo at 1913204, which fn 14478
+// fills as a NumericString of 8 to 8 characters, ahead of HoraJE's and DataHoraJE's; comum::asn::Utils::
+// DesconverteDataHoraJE, fn 1713, builds it from a std::string through a temporary. The generator gave the date
+// fields that point at this record a made-up ModuloComplementosMunicipios::InicioHV; ModuloProcessoEleitoral::Pleito's
+// data, which comum::asn::CConversorPleito::DoDesconverte (fn 11365) reads, is DataJE, and the other fields still say
+// InicioHV
+//
+
+class DataJE : public ASN1::NumericString
+{
+    typedef ASN1::NumericString Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    DataJE(const void* info) : Inherited(info) {}
+public:
+    DataJE() : Inherited(&theInfo) {}
+    DataJE(const base_string& str, const void* info = &theInfo) : Inherited(str, info) {}
+    DataJE(const char* str, const void* info = &theInfo) : Inherited(str, info) {}
+    DataJE(const DataJE& that) : Inherited(that) {}
+    DataJE * clone() const
+    { return static_cast<DataJE*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+}; // end class DataJE
+
+//
+// ModuloTiposEleitorais::HoraJE   // name from the target's RTTI (vptr 1556292); theInfo at 1913248, a NumericString
+// of 6 to 6 characters (fn 14478); fn 1713 builds it as it builds DataJE
+//
+
+class HoraJE : public ASN1::NumericString
+{
+    typedef ASN1::NumericString Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    HoraJE(const void* info) : Inherited(info) {}
+public:
+    HoraJE() : Inherited(&theInfo) {}
+    HoraJE(const base_string& str, const void* info = &theInfo) : Inherited(str, info) {}
+    HoraJE(const char* str, const void* info = &theInfo) : Inherited(str, info) {}
+    HoraJE(const HoraJE& that) : Inherited(that) {}
+    HoraJE * clone() const
+    { return static_cast<HoraJE*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+}; // end class HoraJE
+
+//
 // ModuloTiposEleitorais::DataHoraJE   // name from the target's RTTI (vtable 1556172); the converters build it from a
 // std::string through a temporary (no operator=(string)): CConversorComparecimentoMesario::DoConverte, fn 9110
 //

@@ -78,10 +78,11 @@
 #   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what it waits for.
 # Not written:
 # - 11385 and 11384, CConversorHorarioVerao: this unit's -pending.cpp.
-# - 11482, 11483, 11484, 11485, comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota>: a class template over a
-#   member at +4, which needs CConversorEleicoesVota's slots (11350, 11349) and destructors (fn 1160).
+# - 11482, 11483, comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s slots: fragment 140 traps them
+#   (its destructors 11484 and 11485 match with unit 13's CRdvVota).
 # - 5680, Desconverte<EntidadeRegistroDigitalVoto, ...> with api::CFileASN<T>'s decode inlined: calls fn 5825.
-# - 11588, 11589 (CConversorCabecalhoEntidade): fns 1713 and 1080, the dates; 1945, its constructor, can then land.
+# - 11588, 11589 (CConversorCabecalhoEntidade): fns 1713 (written, unit 96) and 1080, the dates; 1945, its constructor,
+#   can then land.
 # - 11399, 11400 (CConversorDadoCorrespondencia): the same dates, 3604, 3733, 3734 (3605 matches, unit 122).
 # - The default DoConverte and DoDesconverte stay out of the header: unit 96's fragment. 5710, 11457, 11458, 11454, 11453,
 #   11424, 11483 and 10266 hold instances of Converte or Desconverte inlined by binaryen, one call site each.

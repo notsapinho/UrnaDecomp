@@ -18,6 +18,8 @@ public:
     explicit CVotosEleicoesVota(TMapa mapa);
 
     const CVotosCargos& GetVotos(TEleicaoID eleicao) const;
+    // The name is chosen: comum::asn::CConversorEleicoesVota::DoConverte (fn 11350) walks the map.
+    const TMapa& GetMapa() const { return m_votos; }
     TQtdVoto Comparecimento(TEleicaoID eleicao) const;
     TQtdVoto Candidato(TCargoID cargo, const std::string& numero) const;
     TQtdVoto Legenda(TCargoID cargo, const std::string& numero) const;

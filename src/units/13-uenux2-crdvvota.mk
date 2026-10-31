@@ -30,9 +30,29 @@
 # a first parameter `const CVotos&` with an accessor of the vector, a hand-written size_t bisection in place of
 # std::upper_bound, std::less<>{} passed to it, the iterator in a local, a non-const Posicao, a body on the base's slot 2,
 # operator<=> written by hand or over std::tie, and a friend operator<=> (its symbol differs).
+#
+# md::CVotosCargos::SCargoInfo is 12 bytes: comum::asn::CConversorVotosCargo's constructor (fn 5683, fragment 140) copies
+# them, CConversorEleicoesVota::DoConverte (11350) builds one from a md::CCargo, and the map's nodes hold the CVotos at
+# +28 (fn 3893's search, fn 1268, the map's destroy, matched since). The 1-byte form matched fn 2877 under this map's name:
+# 2877 is the destroy of another map, std::map<md::TCargoID, md::CVotos> (32-byte nodes, the CVotos at +20), which the
+# target's CRdvVota slot 0 (fn 5733, not written) builds from the SCargoInfos' cargo bytes and fns 5971 and 11514 (not
+# written) destroy; fragment 140's roots hold that instance, and 2877's line names it. 1159 (the map of CVotosCargos'
+# destroy) and 11277 (a CVotosEleicoesVota::Cargo lambda) match over the 12-byte map too.
+# md::CVotos' constructor (fn 2794) takes the vector by value, moves it in and reserves 1000 votes (the body's 16000-byte
+# allocation); by value and its line, after Insere's record line (40), are chosen. CVotos::GetVotos and
+# CVotosEleicoesVota::GetMapa are accessors fragment 140's converters need (names chosen); CVotosCargos::GetVotos(TCargoID)
+# (record cvotoscargos.cpp:91, code 4671, EUE_RDV_CARGO_NAO_ENCONTRADO a chosen name) is out of line, and binaryen inlines
+# it into its one caller in our link, 11350, as in the target: a second stack prologue there. Its message is a named
+# local, since the target copies it into the constructor's by-value parameter.
+# CRdvVota holds comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota> at +44 (app/comum/dados/asn/rdv/
+# cconversorregistrodigitalvoto.h), which ~CRdvVota (fn 5734) destroys first, and with it 5734 matches, as do the exit
+# destructor of the instance (11495), the converter's destructors (11485, 11484, emitted here) and fn 1550 (the
+# destroy of CVotosEleicoesVota's map of cargos to elections). The member's name is chosen.
 CRDVVOTA_SRCS := src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp \
   src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvoto.cpp
 UENUX2_SRCS += $(CRDVVOTA_SRCS)
+# crdvvota.h holds the RDV's converter, which includes generated ASN.1 modules: the generic uenux2 rule does not depend on them
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/crdvvota.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 # the roots that keep the units linked (see the file header)
 $(ROOT)/$(APP)/13-uenux2-crdvvota-roots.o: $(ROOT)/src/units/13-uenux2-crdvvota-roots.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/13-uenux2-crdvvota-roots.cpp -o $(R)

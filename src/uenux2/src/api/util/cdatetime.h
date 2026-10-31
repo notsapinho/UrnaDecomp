@@ -21,6 +21,8 @@ bool IsValidDateTime(const std::string& dataHora);
 //   chosen. Written as a delegating default constructor instead, clang inlines fn 1000 into it in this TU
 //   (-Rpass=inline: cost 70, threshold 337), where the target calls 1000; as a static returning CDateTime(...), the
 //   call stays.
+// - CDateTime(const CDate&, const CTime&) is what comum::asn::Utils::DesconverteDataHoraJE (fn 1713) builds its result
+//   with: the date's 8 bytes and the time's word stored into the result. That it is a constructor, inline, is a choice.
 // - ConvertToLocalTime (fn 1381) is the time_t of the date and time, by timegm; operator+=(int) (fn 2233) adds seconds
 //   through it and gmtime_r. Both names are chosen from what the bodies do; no record names either.
 class CDateTime {
@@ -28,6 +30,7 @@ public:
     CDateTime() = default;
     explicit CDateTime(time_t tempo);
     CDateTime(const std::string& dataHora);
+    CDateTime(const CDate& data, const CTime& hora) : m_data(data), m_hora(hora) {}
 
     static CDateTime Now();
     static CDateTime ConvertFromTimestamp(const std::string& timestamp);
