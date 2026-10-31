@@ -3,11 +3,12 @@
 How the tools a decompile round runs behave where the obvious reading of a command is wrong: Node versions, the
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed snapshot, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
-rebuilds, a match line two branches add, a header two branches add, and what a merge does to a commit's pathspec,
-the census snapshot and a table's rows. `docs/how-to-decompile.md`,
+rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec, the
+census snapshot and a table's rows, `-j` on the link, and leaving a merge after step 9. `docs/how-to-decompile.md`,
 `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
-and W18–W20 at bb6f018, on macOS (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
+and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, on macOS (zsh 5.9, wabt 1.0.42), with Node 24
+first on PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH; Node 26 aborts with no message
 
@@ -27,6 +28,10 @@ line:
 
 The same command with that PATH scores the function (W2). `tools/setup/bootstrap.sh --check` names the cause:
 `WRONG node v26.11.1: the toolkit is tested on Node 24`.
+
+Set PATH inside a `#!/bin/zsh` script, not around it: a login profile can reset it. On one of two Macs a script that
+ran `pnpm --silent wasm splat-review` under an exported PATH exited 134 in 0.9 s, with an empty log, and passed with the
+`export` as its first line. Read a loop's exit statuses: 134 for every index reads like 250 failed reviews.
 
 ## W2. The lone link of `try-tu.sh --single` differs from the build in ways a source change cannot explain
 
@@ -55,22 +60,15 @@ The same command with that PATH scores the function (W2). `tools/setup/bootstrap
    disassembly: identical).
 2. **Library callees resolve to the toolchain's own libraries, not the build's.** The lone link is one `em++` of the
    TU (`tools/round/try-tu.sh` line 32: `--single: no link of the skeleton`), so no library object of `build/out/`
-   is in it. `std::mutex::~mutex` is a 45-byte body in the target (150, `_ZNSt3__25mutexD2Ev`, matched: `pnpm
-   --silent wasm fn ../target/vota_web_wasm.wasm 150 | sed -n 1p` prints `… size 45 instrs 18`), and the lone link
-   drops the call to it. `vota::CProgressoEncerramento`'s destructor (3907), its source and two new headers taken
-   from commit 01a2157 (branch `decomp/decomp3-j`, unit 48) with `git show` into `build/out/DOCS-A/j/`, the headers
-   under `inc/` at their tree paths:
+   is in it. `std::mutex::~mutex` is a 45-byte body in the target (150: `pnpm --silent wasm fn
+   ../target/vota_web_wasm.wasm 150 | sed -n 1p` prints `… size 45 instrs 18`), and the lone link drops the call to it.
+   `vota::CProgressoEncerramento`'s destructor (3907, matched, unit 48), at 0b5f410:
 
-       TMPDIR=/tmp tools/round/try-tu.sh --single 3907 --extract export:_ZN4vota22CProgressoEncerramentoD2Ev --component uenux2/src/app/vota/eleitor/fimvotacao --flags "-I/work/build/out/DOCS-A/j/inc" build/out/DOCS-A/j/cprogressoencerramento.cpp
+       TMPDIR=/tmp tools/round/try-tu.sh --single 3907 --extract export:_ZN4vota22CProgressoEncerramentoD2Ev src/uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp
          score 4 over 53 rows (same 49, replaced 0 [0 operand-only], inserted 0, deleted 4)
          local.get 0 / i32.const 20 / i32.add / call fn:d44d8ce5a31bd6d4        (target only)
-       TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -Isrc -Isrc/uenux2/src -Isrc/asn1 -Ibuild/out/DOCS-A/j/inc -c /work/build/out/DOCS-A/j/cprogressoencerramento.cpp -o build/out/DOCS-A/j/cprogressoencerramento.o
-       wasm-objdump -d build/out/DOCS-A/j/cprogressoencerramento.o | /usr/bin/grep -E 'func\[|call ' | head -2
-         00017d func[6] <_ZN4vota22CProgressoEncerramentoD1Ev>:
-          000185: 10 80 80 80 80 00          | call 0 <env._ZNSt3__25mutexD1Ev>
-
-   The whole link of the same TU matches 3907: unit 48 lands it, and `git show 01a2157:splat/matched.txt | awk
-   '$1==3907'` lists it.
+       wasm-objdump -d build/out/app/uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp.o | /usr/bin/grep -m1 -E 'mutexD1Ev'
+          … | call 0 <env._ZNSt3__25mutexD1Ev>
 
 3. **Where try-tu compiles a TU, and where `--flags` go.** A whole-link try and `--symbols` compile a TU that sits at
    the path it would land in where it is. A TU outside `src/`, or any TU under `--component`, is first copied to
@@ -169,11 +167,18 @@ of one file rebuilds anything, name it: `make -n -C src link -W $PWD/<file> | /u
 
 A try of a file a landed unit already compiles, without `--skip-units` for that unit, links the object twice:
 
-    echo 1684 > build/out/DOCS-A/targets.txt
-    TMPDIR=/tmp tools/round/try-tu.sh --name docsa-noskip src/uenux2/src/api/ipc/cthread.cpp --roots none --targets build/out/DOCS-A/targets.txt
+    mkdir -p build/out/workflow-facts; echo 1684 > build/out/workflow-facts/targets.txt
+    TMPDIR=/tmp tools/round/try-tu.sh --name noskip src/uenux2/src/api/ipc/cthread.cpp --roots none --targets build/out/workflow-facts/targets.txt
       wasm-ld: error: duplicate symbol: api::CThread::~CThread()
       >>> defined in app/uenux2/src/api/ipc/cthread.cpp.o
-      >>> defined in try/docsa-noskip/obj/cthread.o
+      >>> defined in try/noskip/obj/cthread.o
+
+try-tu names each object by the TU's base name, so two TUs of one base name are one object, and the second overwrites
+the first. `src/…/dados/clocal.cpp` and `src/…/dados/md/clocal.cpp` in one try stop with the same `duplicate symbol`,
+both sides naming `try/<name>/obj/clocal.o`. Copy the TUs to a scratch directory under distinct names and pass
+`--component`, which moves their record paths: such a try gives a row score, not a records check. A try's objects also
+link after both trees (`EXTRA_OBJS`, last in `LINK_OBJS` in `src/Makefile`), so a linkonce copy that must come first
+needs the overlay of W13, "One variant object in the whole link", on a landed object.
 
 ## W4. A `build/out/` cloned from a checkout at another commit can pass `make -n` and still hold that checkout's link
 
@@ -232,7 +237,7 @@ is the right one and must print nothing. zsh and bash both take `<(…)`.
 
 ## W7. `git add` refuses a path already removed with `git rm`; `git commit -- <path>` records it
 
-In a scratch repository (`build/out/DOCS-A/gitprobe`), after `git rm -q old.tsv` with `a.txt` modified and `new.tsv`
+In a scratch repository (`build/out/workflow-facts/gitprobe`), after `git rm -q old.tsv` with `a.txt` modified and `new.tsv`
 new:
 
     git add a.txt new.tsv old.tsv
@@ -316,7 +321,7 @@ file that differs from what the new scan gives, and only then reports the disagr
 (`tools/round/status.py`, the end of `main`), so after a scan that changed, README.md, docs/status.md and the waffles
 are rewritten while the stubs are not. Deleting that one line and running the target again:
 
-    /usr/bin/grep -v -x -F '9130 _ZN3api15NotOurFunctionEv' splat/matched.txt > build/out/DOCS-A/matched.txt && mv build/out/DOCS-A/matched.txt splat/matched.txt
+    /usr/bin/grep -v -x -F '9130 _ZN3api15NotOurFunctionEv' splat/matched.txt > build/out/workflow-facts/matched.txt && mv build/out/workflow-facts/matched.txt splat/matched.txt
     TMPDIR=/tmp make -C src splat-match                         # exit 0
       …/splat/matched.txt: 0 matches added, 0 renamed
       7428 matches (0 kind-unverified); README.md, docs/status.md and the waffles agree with splat/scan.tsv
@@ -329,8 +334,8 @@ The real-link suites skip their cases when build outputs are missing at collecti
 (`asmlift-wasm/test/splat-sub.test.ts` line 34, `const real = existsSync(\`${MAP_DIR}/names.tsv\`) && …`; likewise
 `splat-review.test.ts` and `splat-symbols.test.ts`), so a run beside a census or `splat-match` in the same checkout,
 which rewrite those files, can exit 0 with cases skipped. A run alone counts every test with none skipped: `193` at
-ee595de (below), `Tests  195 passed (195)` at bb6f018, `Tests  202 passed (202)` with the record cases of
-[splat.md](splat.md) §S12. CI has no build outputs and always skips them.
+ee595de (below), `Tests  195 passed (195)` at bb6f018, `Tests  203 passed (203)` at 0b5f410. CI has no build outputs and
+always skips them.
 
 `test/splat-kinds.test.ts` and `test/splat-review.test.ts` read our link's numbers from the link since 74604f5, and
 `test/splat-symbols.test.ts`'s "names a callee its anchored callers vote for, listing them as its voters" checks
@@ -356,7 +361,32 @@ On ee595de, which holds 04a718a, every case passes, run alone:
       Test Files  17 passed (17)
            Tests  193 passed (193)
 
-So on a commit that holds 04a718a no case is known to fail.
+So on a commit that holds 04a718a no case is known to fail on `main`.
+
+**A branch can fail a case it did not touch.** Some real-link cases read what our link holds at a number, or the symbol
+file without the match list, and a landing that adds strings or table slots moves those. Lanes that passed every other
+check failed these, each a different case or none, with `splat` printing the target's sha256:
+
+| case | what it reads | what moves it |
+| --- | --- | --- |
+| `splat-kinds.test.ts` c5, `DIFFERS at +0x24` | the string our data holds at a fixed address | a string with another tail lands there, and the best reading matches one byte further |
+| `splat-kinds.test.ts`, "offers a table slot every target slot" | a slot of ours read as an address | it lands in a string the target lacks, so the operand has no piece |
+| `splat-kinds.test.ts`, the unfolded `__table_base` case | an instruction's offset | a table slot past 8191 takes a third LEB byte |
+| `splat-symbols.test.ts`, "re-points bodies the census paired by address", "offers each of its slots" | the symbol file alone | a [splat.md](splat.md) §S8 line drops a name the match list still holds: `BN_CTX_get` fails on `HTS_GStreamSet_initialize`, 84 call votes lost to one stray table vote |
+
+So a failure is the branch's only if the commit it started from passes. A real-link case reads `build/out/wasm*`, so
+that takes a build of that commit, not a copy of the tree: `git archive` plus a copied `build/out/` stops on the
+ignored inputs, and a run there reads the branch's link and fails the way the branch does. `tools/round/build-at.sh`
+makes the tree, from a checkout whose build is current (W5):
+
+    tools/round/build-at.sh <base> ../<worktree>-base
+    TMPDIR=/tmp make -C ../<worktree>-base/src splat
+    (cd ../<worktree>-base/asmlift-wasm && TMPDIR=/tmp pnpm test)
+    git worktree remove --force ../<worktree>-base
+
+Its `splat` must print the target's sha256 with the base's count first: a stale link fails as the branch does. Do not
+change a test to suit one link. A landing changes the case that fails on its merge, to read the rule and not the number,
+in the merge commit.
 
 One more way a run alone can mislead (bb6f018):
 
@@ -382,14 +412,16 @@ The splat build checks matched functions only; an edit of a shared header can ch
 inline member another lane builds on. Before the edit, keep the objects the edit will rebuild; after relinking, compare
 each:
 
-    make -n -C src link -W $PWD/src/uenux2/src/api/gui/iformfield.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' > build/out/DOCS-A/rebuilt.txt
-    wc -l < build/out/DOCS-A/rebuilt.txt                         # 42
-    tar -cf build/out/DOCS-A/before.tar -T build/out/DOCS-A/rebuilt.txt
+    make -n -C src link -W $PWD/src/uenux2/src/api/gui/iformfield.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' > build/out/workflow-facts/rebuilt.txt
+    wc -l < build/out/workflow-facts/rebuilt.txt                 # 189 at 0b5f410
+    tar -cf build/out/workflow-facts/before.tar -T build/out/workflow-facts/rebuilt.txt
     (edit the header; TMPDIR=/tmp make -C src link)
-    while read o; do tar -xOf build/out/DOCS-A/before.tar "$o" | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/DOCS-A/rebuilt.txt
+    while read o; do tar -xOf build/out/workflow-facts/before.tar "$o" 2>/dev/null | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/workflow-facts/rebuilt.txt
 
-Without an edit the loop prints nothing. The list is what make would rebuild, so it holds no object that the edit
-leaves alone: such an object would compare equal with itself and prove nothing. The same holds for a comparison with
+Without an edit the loop prints nothing. `2>/dev/null` is there because `cmp -s` stops at the first difference and tar
+then prints `Write error: Broken pipe` for that object, 28 of 87 in one run; the `DIFFER` lines are right either way.
+The list is what make would rebuild, so it holds no object that the edit leaves alone: such an object would compare
+equal with itself and prove nothing. The same holds for a comparison with
 a `tools/round/build-at.sh` base, whose `build/out/` is a clone of this one (W5): only the objects the base rebuilt
 are its own. A whole-link try rebuilds the objects of the list (W3), so take the copy before the first try.
 
@@ -421,9 +453,34 @@ through `build/docker-build.sh`, which mounts the current directory at `/work`: 
     cmp build/out/base-probe/cwait.cpp.o build/out/app/uenux2/src/api/util/cwait.cpp.o && echo same      # from the root
       same
 
-**One variant object in the whole link.** A private link with a fresh `APP` compiles every app object (347 at
-bb6f018); one whose `APP` is a copy of `build/out/app` with its mtimes compiles none, so a single replaced object (a
-companion file compiled against an overlay header, a source with one more flag) relinks alone:
+A TU that reads `third_party/` cannot compile so: `build/docker-build.sh` mounts only the current directory at `/work`,
+and a symlink out of it does not help. Pass that directory as a second mount, with an empty directory of the name in
+the scratch tree, in a loop that tests the compile's exit status before it reads a `cmp`, since a failed compile prints
+`DIFFER` too:
+
+    mkdir -p third_party/boost
+    docker run --rm -v "$PWD:/work" -v "<checkout>/third_party/boost:/work/third_party/boost:ro" -w /work urna-emsdk:6.0.0 em++ <the compile line> && cmp <the new object> <the landed object>
+
+**One variant object in the whole link.** The plain link's own command needs no clone, no named link and no compile,
+and writes nothing shared: swap the object in a copy of `link.cmd` and run it (5 s, at 0b5f410). With `V=build/out/variant-probe`,
+an object `$V/obj/dao.o` compiled from `make -n`'s line at `-O3`, and `n=o3`:
+
+    d=$V/wasm/$n; mkdir -p $d
+    sed -e "s# app/uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp.o # variant-probe/obj/dao.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o variant-probe/wasm/$n/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $d/link.cmd
+    TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $d/link.cmd)" > $d/link.log 2>&1
+    TMPDIR=/tmp tools/round/link-map.sh $d                  # writes $V/wasm-map/$n/names.tsv
+    TMPDIR=/tmp tools/round/link-kinds.sh $d                # for splat-remap; then pnpm wasm splat-kinds on its wasm
+
+Compile a variant from a copy with the `-ffile-prefix-map` of [codegen.md](codegen.md) §C1, or its records move every
+offset. A control with an unchanged object gives the plain link's sha256, so comparing sha256 says "the same module" at
+once. Take the index of ours from that link's `names.tsv`: a variant can shift the band, and `pnpm wasm score` at the
+plain link's index reads another function (`1150 over 1168 rows`, against `81` at the right one). To put a copy ahead of
+every tree, add the object before `app/vota_init.o` instead ([levels.md](levels.md) §V4).
+
+The clone route suits an edit that rebuilds several objects, and it goes through make. A private link with a fresh
+`APP` compiles every app object (347 at bb6f018); one whose `APP` is a copy of `build/out/app` with its mtimes compiles
+none, so a single replaced object (a companion file compiled against an overlay header, a source with one more flag)
+relinks alone:
 
     mkdir -p build/out/variant-probe && cp -Rp build/out/app build/out/variant-probe/app
     make -n -C src link APP=build/out/variant-probe/app OUT=build/out/variant-probe/wasm/vota_web OUT_NAMED=build/out/variant-probe/wasm-named/vota_web | /usr/bin/grep -c 'em++.* -c '
@@ -486,7 +543,29 @@ was made: its `.git` file dates from `git worktree add`, and a cloned `build/out
 so `find build/out/app -name '*.o' -newer .git` lists them. That prints nothing in a worktree that has rebuilt
 nothing, and 48, 37, 38 and 48 objects in four lane worktrees whose units added headers, each the set that moving the
 objects aside and rebuilding recompiled. `find build/out/app -newer <header>` compares with that header's last edit
-and misses an object of the unit built before it (a roots object that includes nothing).
+and misses an object of the unit built before it (a roots object that includes nothing). An object that does not come
+back from the rebuild is a deleted file's (a lane removed its `-pending.cpp`): it is on no link line, and `cmp` is owed
+only for the objects `build/out/wasm/vota_web/link.cmd` names.
+
+**What the `-W` list misses.** At 0b5f410:
+
+- **A fragment is an input too.** A companion's rule names its fragment, and `roots_asn1.cpp` depends on every fragment
+  (`src/mk/asn1.mk` line 45), so a comment edit in a `.mk` rebuilds them. Pass every edited file to `-W`, fragments included:
+
+      make -n -C src link -W $PWD/src/units/91-uenux2-app-comum-dados-eleitor.mk | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//; s|.*build/out/app/||'
+        91-uenux2-app-comum-dados-eleitor-pending.o
+        91-uenux2-app-comum-dados-eleitor-roots.o
+        asn1/roots_asn1.o
+
+  Only a flag change in a fragment rebuilds nothing, since a rule's mtime is not its flags: touch the sources.
+- **A companion can hold a header its rule omits.** A roots file that includes `api/gui/eueguierror.h` holds `CBaseError`
+  code from `cbaseerror.hpp`, and its rule named only `api/gui/*.h`, so the list for that header missed it. Check that the
+  list covers every object holding the header's symbol: `find build/out/app -name '*.o' | while read o; do LC_ALL=C
+  /usr/bin/grep -q 10CBaseError "$o" && echo "$o"; done | sort`, then `comm -13` against the sorted list, and add the
+  directory's wildcard to the rule that lacks it.
+- **`UENUX2_HDRS` holds no `src/asn1` header** (`src/Makefile` line 145). `make -n -C src link -W
+  $PWD/src/asn1/modules/ModuloImpedidos.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | /usr/bin/grep -c cconversorimpedido`
+  prints 0, although that TU includes the header. After a module-header edit, move those uenux2 objects aside by hand.
 
 ## W16. A match line both branches add stops the splat build until one goes
 
@@ -594,3 +673,36 @@ it did not change:
 Keeping both sides gives each row twice, one copy stale, and taking one side loses the other's change. Per row, keep
 the side that changed it from the base, which a merge in progress shows with `git show :1:src/units/README.md`; a row
 both sides changed is resolved by hand.
+
+## W21. `-j` on `link` or `splat` runs the link twice and corrupts the named wasm
+
+`src/Makefile`'s link is one recipe with two targets, `$(OUT)/vota_web_wasm.wasm` and `$(OUT_NAMED)/vota_web_wasm.wasm`,
+and make treats that as two rules with one recipe, so `-j` starts it twice over the same files:
+
+    TMPDIR=/tmp make -j4 -C src link
+      [parse exception: Section extends beyond end of input (at 0:5717071)]
+      Fatal: error parsing wasm (try --debug for more info)
+      make: *** […/build/out/wasm-named/vota_web/vota_web_wasm.wasm] Error 1
+
+The failure leaves a wasm behind, newer than every object, so `make -n -C src link` then prints `Nothing to be done`. The
+plain wasm can keep the right sha256, beside a `vota_web_wasm.js` of 67 KB against the good 118 KB, and `splat` does not
+read the named wasm, so nothing says so until a census reads it (`tools/round/census.sh` line 11). Delete both by name and
+link serially:
+
+    rm build/out/wasm/vota_web/vota_web_wasm.wasm build/out/wasm-named/vota_web/vota_web_wasm.wasm
+    TMPDIR=/tmp make -C src link
+
+`-j` is safe on the object list, and only there (`docs/getting-started.md` §2):
+
+    TMPDIR=/tmp make -C src -j4 $(make -s -C src print-LINK_OBJS)
+
+## W22. `git merge --abort` refuses after step 9 of a merge
+
+The generators leave unstaged edits over staged paths:
+
+    git merge --abort
+      error: Entry 'splat/matched.txt' not uptodate. Cannot merge.
+      fatal: Could not reset index file to revision 'HEAD'.          (exit 128; the merge stays open)
+    git add -A -- . && git merge --abort                             # exit 0
+
+This also drops the census's new untracked snapshot, so save what you want first. Then `git diff --quiet <head>` exits 0.
