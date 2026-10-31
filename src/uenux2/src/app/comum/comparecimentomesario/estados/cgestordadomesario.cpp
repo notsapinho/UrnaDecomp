@@ -1,7 +1,22 @@
-// <stubs>
-// f10327 · 403 B · unmatched · name unknown
-// void f10327(i32) { ... }
+#include "app/comum/comparecimentomesario/estados/cgestordadomesario.h"
 
-// f5383 · 22 B · unmatched · placement: link order · name unknown
-// ? f5383() { ... }
-// </stubs>
+namespace comum {
+
+CGestorDadoMesario::CGestorDadoMesario()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CGestorDadoMesario& CGestorDadoMesario::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CGestorDadoMesario());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CGestorDadoMesario> CGestorDadoMesario::s_inst;
+std::mutex CGestorDadoMesario::s_mutex;
+
+} // namespace comum

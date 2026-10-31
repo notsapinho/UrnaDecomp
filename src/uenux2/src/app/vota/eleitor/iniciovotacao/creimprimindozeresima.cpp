@@ -1,7 +1,22 @@
-// <stubs>
-// f11852 · 1153 B · unmatched · name unknown
-// void f11852(i32) { ... }
+#include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 
-// f5941 · 22 B · unmatched · placement: link order · name unknown
-// ? f5941() { ... }
-// </stubs>
+namespace vota {
+
+CReimprimindoZeresima::CReimprimindoZeresima()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CReimprimindoZeresima& CReimprimindoZeresima::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CReimprimindoZeresima());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CReimprimindoZeresima> CReimprimindoZeresima::s_inst;
+std::mutex CReimprimindoZeresima::s_mutex;
+
+} // namespace vota

@@ -1,7 +1,22 @@
-// <stubs>
-// f12065 · 1790 B · unmatched · name unknown
-// void f12065(i32) { ... }
+#include "app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.h"
 
-// f5984 · 22 B · unmatched · placement: link order · name unknown
-// ? f5984() { ... }
-// </stubs>
+namespace vota {
+
+CImprimirBUOutrasObrigatorias::CImprimirBUOutrasObrigatorias()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CImprimirBUOutrasObrigatorias& CImprimirBUOutrasObrigatorias::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CImprimirBUOutrasObrigatorias());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CImprimirBUOutrasObrigatorias> CImprimirBUOutrasObrigatorias::s_inst;
+std::mutex CImprimirBUOutrasObrigatorias::s_mutex;
+
+} // namespace vota

@@ -1,7 +1,22 @@
-// <stubs>
-// f10388 · 4789 B · unmatched · name unknown
-// void f10388(i32) { ... }
+#include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 
-// f2729 · 22 B · unmatched · placement: link order · name unknown
-// ? f2729() { ... }
-// </stubs>
+namespace comum {
+
+CPedeTituloMesario::CPedeTituloMesario()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CPedeTituloMesario& CPedeTituloMesario::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CPedeTituloMesario());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CPedeTituloMesario> CPedeTituloMesario::s_inst;
+std::mutex CPedeTituloMesario::s_mutex;
+
+} // namespace comum

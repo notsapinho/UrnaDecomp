@@ -1,7 +1,22 @@
-// <stubs>
-// f12071 · 1074 B · unmatched · name unknown
-// void f12071(i32) { ... }
+#include "app/vota/eleitor/fimvotacao/cimprimindobim.h"
 
-// f5985 · 22 B · unmatched · placement: link order · name unknown
-// ? f5985() { ... }
-// </stubs>
+namespace vota {
+
+CImprimindoBim::CImprimindoBim()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CImprimindoBim& CImprimindoBim::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CImprimindoBim());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CImprimindoBim> CImprimindoBim::s_inst;
+std::mutex CImprimindoBim::s_mutex;
+
+} // namespace vota

@@ -1,7 +1,22 @@
-// <stubs>
-// f7306 · 251 B · unmatched · name unknown
-// void f7306(i32) { ... }
+#include "app/vota/eleitor/ciniciodeciclo.h"
 
-// f4433 · 22 B · unmatched · placement: link order · name unknown
-// ? f4433() { ... }
-// </stubs>
+namespace vota {
+
+CIniciodeCiclo::CIniciodeCiclo()
+    : comum::CAppState(EVENTO_NENHUM)
+{
+}
+
+CIniciodeCiclo& CIniciodeCiclo::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CIniciodeCiclo());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CIniciodeCiclo> CIniciodeCiclo::s_inst;
+std::mutex CIniciodeCiclo::s_mutex;
+
+} // namespace vota
