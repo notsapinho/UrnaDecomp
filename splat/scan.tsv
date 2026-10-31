@@ -5021,7 +5021,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5155	_ZN7ecourna3api4util12_GLOBAL__N_116ConverteComSinalERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEPKcxxNS3_15source_locationE	5236	symbol	match	readings: address symbol,table slot,address string	1382	shape	ecourna	1	app/ecourna/api_util_cstringutils.cpp.o
 5156	-	-	-	no-candidate	no symbol and no ledger pair	12	none	comum	0	-
 5157	_ZNSt3__23setIiNS_4lessIiEENS_9allocatorIiEEEC2B8ne210108ESt16initializer_listIiERKS2_	5142	symbol	match	readings: address symbol,table slot	288	shape	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
-5158	_ZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10657	symbol	unresolved	self-voted +0x3a i32.const 1911848: _ZGVZZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEENK3$_0clEcE10acentuadas = 0x1d2c28 (evidence:vote:2 by:5158) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	291	shape	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
+5158	_ZN7ecourna3api4util12CStringUtils7ToLowerERNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE	10657	symbol	match	readings: address symbol,address content	291	shape	ecourna	1	app/ecourna/.._units_12-ecourna-api-sql-sqlite-externs.cpp.o
 5159	-	-	-	no-candidate	no symbol and no ledger pair	283	none	app	0	-
 5160	_ZN7ecourna3api3sql6sqlite13CSqlStatement6SetIntEii	5143	symbol	match	readings: address symbol,table slot,address srcloc	275	shape	ecourna	1	app/ecourna/api_sql_sqlite_csqlstatement.cpp.o
 5161	_ZN7ecourna3api3sql6sqlite13CSqlResultSet7GetBlobEi	5144	symbol	differs	+0x1c8 target +0x1c7 call 306 | ours +0x1c7 call 2671	476	none	ecourna	1	app/ecourna/api_sql_sqlite_csqlresultset.cpp.o
@@ -6554,7 +6554,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 6688	ed25519_gettable_params	6004	symbol	match	readings: address content-repointed	7	addr	unknown	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ecx_kmgmt.o
 6689	-	-	-	no-candidate	no symbol and no ledger pair	281	none	api	0	-
 6690	ecx_gen_set_params	6006	symbol	match	readings: address string	188	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ecx_kmgmt.o
-6691	x25519_settable_params	6007	symbol	match	readings: address same-content	7	addr	unknown	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ecx_kmgmt.o
+6691	x25519_settable_params	6007	symbol	match	readings: address content-repointed	7	addr	unknown	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ecx_kmgmt.o
 6692	x25519_set_params	6008	symbol	match	readings: address string	257	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ecx_kmgmt.o
 6693	x25519_gettable_params	6009	symbol	match	readings: address content-repointed	7	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ecx_kmgmt.o
 6694	otherparams_to_params	3465	symbol	match	readings: address symbol,address string	229	addr	openssl	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-ec_kmgmt.o
@@ -7615,19 +7615,19 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7749	-	-	-	no-candidate	no symbol and no ledger pair	458	none	libc++	0	-
 7750	_Znam	11558	symbol	match	-	7	none	libc++	1	sysroot:libc++.a(new.o)
 7751	__cxx_global_array_dtor.40	11561	symbol	match	readings: address symbol	11	addr	libc++	1	sysroot:libc++.a(locale.o)
-7752	_ZNKSt3__220__time_get_c_storageIwE3__rEv	11562	symbol	unresolved	self-voted +0x1 i32.const 1925132: _ZGVZNKSt3__220__time_get_c_storageIwE3__rEvE1s = 0x1d600c (evidence:vote:2 by:7752) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	42	addr	libc++	1	sysroot:libc++.a(locale.o)
+7752	_ZNKSt3__220__time_get_c_storageIwE3__rEv	11562	symbol	match	readings: address symbol,address same-content	42	addr	libc++	1	sysroot:libc++.a(locale.o)
 7753	__cxx_global_array_dtor.38	11563	symbol	match	readings: address symbol	11	addr	libc++	1	sysroot:libc++.a(locale.o)
-7754	_ZNKSt3__220__time_get_c_storageIcE3__rEv	11564	symbol	unresolved	self-voted +0x1 i32.const 1925116: _ZGVZNKSt3__220__time_get_c_storageIcE3__rEvE1s = 0x1d5ffc (evidence:vote:2 by:7754) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	42	none	libc++	1	sysroot:libc++.a(locale.o)
+7754	_ZNKSt3__220__time_get_c_storageIcE3__rEv	11564	symbol	match	readings: address symbol,address same-content	42	none	libc++	1	sysroot:libc++.a(locale.o)
 7755	__cxx_global_array_dtor.36@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++.a(locale.o)	11565	symbol	match	readings: address symbol	11	addr	libc++	1	sysroot:libc++.a(locale.o)
-7756	_ZNKSt3__220__time_get_c_storageIwE3__cEv	11566	symbol	unresolved	self-voted +0x1 i32.const 1925100: _ZGVZNKSt3__220__time_get_c_storageIwE3__cEvE1s = 0x1d5fec (evidence:vote:2 by:7756) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	42	addr	libc++	1	sysroot:libc++.a(locale.o)
+7756	_ZNKSt3__220__time_get_c_storageIwE3__cEv	11566	symbol	match	readings: address symbol,address same-content	42	addr	libc++	1	sysroot:libc++.a(locale.o)
 7757	__cxx_global_array_dtor.34	11567	symbol	match	readings: address symbol	11	addr	libc++	1	sysroot:libc++.a(locale.o)
-7758	_ZNKSt3__220__time_get_c_storageIcE3__cEv	11568	symbol	unresolved	self-voted +0x1 i32.const 1925084: _ZGVZNKSt3__220__time_get_c_storageIcE3__cEvE1s = 0x1d5fdc (evidence:vote:2 by:7758) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	42	none	libc++	1	sysroot:libc++.a(locale.o)
+7758	_ZNKSt3__220__time_get_c_storageIcE3__cEv	11568	symbol	match	readings: address symbol,address string	42	none	libc++	1	sysroot:libc++.a(locale.o)
 7759	__cxx_global_array_dtor.32	11569	symbol	match	readings: address symbol	11	addr	unknown	1	sysroot:libc++.a(locale.o)
-7760	_ZNKSt3__220__time_get_c_storageIwE3__XEv	11570	symbol	unresolved	self-voted +0x1 i32.const 1925068: _ZGVZNKSt3__220__time_get_c_storageIwE3__XEvE1s = 0x1d5fcc (evidence:vote:2 by:7760) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	42	addr	libc++	1	sysroot:libc++.a(locale.o)
+7760	_ZNKSt3__220__time_get_c_storageIwE3__XEv	11570	symbol	match	readings: address symbol,address same-content	42	addr	libc++	1	sysroot:libc++.a(locale.o)
 7761	__cxx_global_array_dtor.30@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++.a(locale.o)	11571	symbol	match	readings: address content-repointed	11	addr	unknown	1	sysroot:libc++.a(locale.o)
 7762	_ZNKSt3__220__time_get_c_storageIcE3__XEv	11572	symbol	unresolved	self-voted +0x1 i32.const 1925053: _ZGVZNKSt3__220__time_get_c_storageIcE3__XEvE1s = 0x1d5fbd (evidence:vote:2 by:7762) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	29	addr	libc++	1	sysroot:libc++.a(locale.o)
 7763	__cxx_global_array_dtor.29	11573	symbol	match	readings: address symbol	11	addr	unknown	1	sysroot:libc++.a(locale.o)
-7764	_ZNKSt3__220__time_get_c_storageIwE3__xEv	11574	symbol	unresolved	self-voted +0x1 i32.const 1925052: _ZGVZNKSt3__220__time_get_c_storageIwE3__xEvE1s = 0x1d5fbc (evidence:vote:2 by:7764) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	42	addr	libc++	1	sysroot:libc++.a(locale.o)
+7764	_ZNKSt3__220__time_get_c_storageIwE3__xEv	11574	symbol	match	readings: address symbol,address same-content	42	addr	libc++	1	sysroot:libc++.a(locale.o)
 7765	__cxx_global_array_dtor@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc++.a(locale.o)	11575	symbol	match	readings: address content-repointed	11	addr	unknown	1	sysroot:libc++.a(locale.o)
 7766	-	-	-	no-candidate	no symbol and no ledger pair	7	none	vota	0	-
 7767	_ZNKSt3__220__time_get_c_storageIcE3__xEv	11576	symbol	unresolved	self-voted +0x1 i32.const 1925037: _ZGVZNKSt3__220__time_get_c_storageIcE3__xEvE1s = 0x1d5fad (evidence:vote:2 by:7767) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	29	addr	libc++	1	sysroot:libc++.a(locale.o)
@@ -7973,7 +7973,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8107	_ZN3api5teste10CPowerMock8BatLevelEv	10312	symbol	match	-	47	addr	api	1	app/75-uenux2-api-hwil-roots.o
 8108	_ZN3api6IPower5Slot6Ev	10313	symbol	match	-	25	fingerprint	api	1	app/75-uenux2-api-hwil-roots.o
 8109	_ZN3api6IPower5Slot5Ev	10314	symbol	match	-	401	addr	api	1	app/75-uenux2-api-hwil-roots.o
-8110	dh_settable_params	6068	ledger	differs	+0x3 target +0x1 i32.const 51128 | ours +0x1 i32.const 1738916 [ours 1478928 = dh_known_settable_params+0: dh_known_settable_params (.data) has no target symbol; re-pointed bytes occur 38 times]	6	addr	libc++	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-dh_kmgmt.o
+8110	dh_settable_params	6068	ledger	differs	+0x2 target +0x1 i32.const 51128 | ours +0x1 i32.const 1771952 [ours 1478928 = dh_known_settable_params+0: dh_known_settable_params (.data) has no target symbol; re-pointed bytes occur 2 times]	6	addr	libc++	1	openssl/O3/providers/implementations/keymgmt/libdefault-lib-dh_kmgmt.o
 8111	_ZN3api6IPower9AcVoltageEv	10315	symbol	match	-	25	fingerprint	api	1	app/75-uenux2-api-hwil-roots.o
 8112	zcalloc	7617	symbol	match	-	10	addr	app	1	zlib/O3pic/zutil.o
 8113	_ZN3api6IPower13BatExtVoltageEv	10316	symbol	match	-	25	fingerprint	api	1	app/75-uenux2-api-hwil-roots.o
@@ -8612,8 +8612,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8746	_ZN9simulador13CWasmScreenMT7RefreshEv	11246	symbol	differs	+0x1 target the locals | ours the locals	1371	none	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp.o
 8747	_ZN4ASN18DataFree8do_visitERNS_16SEQUENCE_OF_BaseE	9824	symbol	match	-	65	fingerprint	ASN1	1	app/asn1/DataFree.o
 8748	_ZN7RHVoice10mark_eventD2Ev	7969	ledger	differs	+0x4 target +0x3 i32.const 1530048 | ours +0x3 i32.const 1618340 [ours 454632 = _ZTVN7RHVoice10mark_eventE+8: address symbol _ZTVN7RHVoice10mark_eventE → 0x18b1a4]	12	addr	simulador	1	rhvoice/1.14.0-cxx14-O3-ndebug-nocatch/obj/hts_engine_call.cpp.o
-8749	_ZN4ASN18DataFree8do_visitERNS_15GeneralizedTimeE	9822	symbol	match	readings: address same-content,address content-repointed	151	none	ASN1	1	app/asn1/DataFree.o
-8750	_ZN4ASN18DataFree8do_visitERNS_7UTCTimeE	9823	symbol	match	readings: address symbol,address content-repointed,address same-content	134	none	ASN1	1	app/asn1/DataFree.o
+8749	_ZN4ASN18DataFree8do_visitERNS_15GeneralizedTimeE	9822	symbol	match	readings: address content-repointed,address same-content	151	none	ASN1	1	app/asn1/DataFree.o
+8750	_ZN4ASN18DataFree8do_visitERNS_7UTCTimeE	9823	symbol	match	readings: address content-repointed,address same-content	134	none	ASN1	1	app/asn1/DataFree.o
 8751	_ZN4ASN18DataFree8do_visitERNS_6CHOICEE	9825	symbol	match	-	36	byte	ASN1	1	app/asn1/DataFree.o
 8752	_ZN4ASN18DataFree8do_visitERNS_9BMPStringE	9826	symbol	match	-	51	byte	ASN1	1	app/asn1/DataFree.o
 8753	_ZN4ASN18DataFree8do_visitERNS_14AbstractStringE	9827	symbol	match	-	51	byte	ASN1	1	app/asn1/DataFree.o
@@ -9007,7 +9007,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9141	_ZNK7ecourna3app5dados3asn32CConversorConfiguracaoMunicipios10DoConverteERKNS1_23CConfiguracaoMunicipiosE	10784	symbol	match	readings: address symbol,address content-repointed,table slot	1272	none	ecourna	1	app/ecourna/app_dados_asn_cconversorconfiguracaomunicipios.cpp.o
 9142	_ZNK7ecourna3app5dados3asn31CConversorConfiguracaoMunicipio12DoDeconverteERKN28ModuloConfiguracaoMunicipios21ConfiguracaoMunicipioE	10775	symbol	match	readings: address symbol,table slot,address string,address srcloc	643	none	ecourna	1	app/ecourna/app_dados_asn_cconversorconfiguracaomunicipio.cpp.o
 9143	_ZNK7ecourna3api3asn13IConversorASNIN28ModuloConfiguracaoMunicipios12HorariosUrnaENS_3app5dados13CHorariosUrnaEE8ConverteERKS7_	10776	symbol	match	readings: address srcloc,address symbol	21	shape	app	2	app/ecourna/app_dados_asn_cconversorconfiguracaomunicipio.cpp.o
-9144	_ZNK7ecourna3app5dados3asn31CConversorConfiguracaoMunicipio10DoConverteERKNS1_22CConfiguracaoMunicipioE	10777	symbol	match	readings: address symbol,address content-repointed,address same-content,table slot	297	none	ecourna	1	app/ecourna/app_dados_asn_cconversorconfiguracaomunicipio.cpp.o
+9144	_ZNK7ecourna3app5dados3asn31CConversorConfiguracaoMunicipio10DoConverteERKNS1_22CConfiguracaoMunicipioE	10777	symbol	match	readings: address symbol,address content-repointed,table slot	297	none	ecourna	1	app/ecourna/app_dados_asn_cconversorconfiguracaomunicipio.cpp.o
 9145	_ZNK7ecourna3app5dados3asn25CConversorTituloRelatorio12DoDeconverteERKN24ModuloParametrizacaoUrna15TituloRelatorioE	11066	symbol	match	readings: address symbol,table slot,address srcloc	1314	shape	ecourna	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversortitulorelatorio.cpp.o
 9146	_ZN9simulador11CWasmScreen8FillPathERKNSt3__26vectorIN3api12SPathCommandENS1_9allocatorIS4_EEEENS3_6TColorE	11316	symbol	unresolved	ours +0x17 call 5338: _ZNK9simulador11CWasmScreen13EscalaCaminhoERKNSt3__26vectorIN3api12SPathCommandENS1_9allocatorIS4_EEEE has no target function	617	none	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp.o
 9147	_ZNK7ecourna3app5dados3asn25CConversorTituloRelatorio21ConverterEstiloTituloENS1_16CTituloRelatorio13EEstiloTituloE	11067	symbol	match	readings: address symbol,table slot,address srcloc	325	shape	ecourna	1	app/ecourna/app_dados_asn_parametrizacaourna_cconversortitulorelatorio.cpp.o
@@ -9144,7 +9144,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9278	-	-	-	no-candidate	no symbol and no ledger pair	318	none	unknown	0	-
 9279	-	-	-	no-candidate	no symbol and no ledger pair	394	none	unknown	0	-
 9280	-	-	-	no-candidate	no symbol and no ledger pair	275	none	unknown	0	-
-9281	_ZN5boost13re_detail_60012perl_matcherIPKcNSt3__29allocatorINS_9sub_matchIS3_EEEENS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE18unwind_extra_blockEb	4553	symbol	unresolved	self-voted +0x2e i32.const 1911960: _ZGVZN5boost13re_detail_60015mem_block_cache8instanceEvE11block_cache = 0x1d2c98 (evidence:vote:2 by:9281) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	77	addr	unknown	1	app/roots_boost.o
+9281	_ZN5boost13re_detail_60012perl_matcherIPKcNSt3__29allocatorINS_9sub_matchIS3_EEEENS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE18unwind_extra_blockEb	4553	symbol	match	readings: address symbol	77	addr	unknown	1	app/roots_boost.o
 9282	_ZN5boost13re_detail_60012perl_matcherIPKcNSt3__29allocatorINS_9sub_matchIS3_EEEENS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE23unwind_repeater_counterEb	4554	symbol	match	-	41	byte	unknown	1	app/roots_boost.o
 9283	_ZN5boost13re_detail_60012perl_matcherIPKcNSt3__29allocatorINS_9sub_matchIS3_EEEENS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE10unwind_altEb	4555	symbol	match	-	59	byte	unknown	1	app/roots_boost.o
 9284	_ZN5boost13re_detail_60012perl_matcherIPKcNSt3__29allocatorINS_9sub_matchIS3_EEEENS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE16unwind_assertionEb	4556	symbol	match	-	71	byte	unknown	1	app/roots_boost.o
@@ -11242,16 +11242,16 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11376	-	-	-	no-candidate	no symbol and no ledger pair	29	none	comum	0	-
 11377	-	-	-	no-candidate	no symbol and no ledger pair	2542	none	comum	0	-
 11378	_ZNK5comum3asn19CConversorMunicipio13DoDesconverteERKN19ModuloTiposCadastro9MunicipioE	7587	symbol	unresolved	ours +0x74 call 4085: _ZN5comum2md10CMunicipioC2EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEb has no target function	153	none	comum	1	app/uenux2/src/app/comum/dados/asn/municipiozona/cconversormunicipio.cpp.o
-11379	_ZNK5comum3asn19CConversorMunicipio10DoConverteERKNS_2md10CMunicipioE	7589	symbol	match	readings: address content-repointed,address symbol,address same-content	257	none	comum	1	app/uenux2/src/app/comum/dados/asn/municipiozona/cconversormunicipio.cpp.o
+11379	_ZNK5comum3asn19CConversorMunicipio10DoConverteERKNS_2md10CMunicipioE	7589	symbol	match	readings: address content-repointed,address symbol	257	none	comum	1	app/uenux2/src/app/comum/dados/asn/municipiozona/cconversormunicipio.cpp.o
 11380	-	-	-	no-candidate	no symbol and no ledger pair	29	none	comum	0	-
 11381	-	-	-	no-candidate	no symbol and no ledger pair	1912	none	comum	0	-
 11382	_ZNK5comum3asn30CConversorComplementoMunicipio13DoDesconverteERKN28ModuloComplementosMunicipios20ComplementoMunicipioE	7536	symbol	match	readings: address symbol,address string,table slot,address srcloc	691	none	comum	1	app/uenux2/src/app/comum/dados/asn/municipiozona/cconversorcomplementomunicipio.cpp.o
-11383	_ZNK5comum3asn30CConversorComplementoMunicipio10DoConverteERKNS_2md21CComplementoMunicipioE	7560	symbol	match	readings: address content-repointed,address symbol,address same-content,address string,table slot,address srcloc	753	none	comum	1	app/uenux2/src/app/comum/dados/asn/municipiozona/cconversorcomplementomunicipio.cpp.o
+11383	_ZNK5comum3asn30CConversorComplementoMunicipio10DoConverteERKNS_2md21CComplementoMunicipioE	7560	symbol	match	readings: address content-repointed,address symbol,address string,table slot,address srcloc	753	none	comum	1	app/uenux2/src/app/comum/dados/asn/municipiozona/cconversorcomplementomunicipio.cpp.o
 11384	-	-	-	no-candidate	no symbol and no ledger pair	218	none	comum	0	-
 11385	-	-	-	no-candidate	no symbol and no ledger pair	391	none	comum	0	-
 11386	_ZNK5comum3asn36CConversorNumViasImpressasRelatorios10DoConverteERKNS_2md15estadoaplicacao27CNumViasImpressasRelatoriosE	6133	symbol	match	readings: address content-repointed,address symbol	86	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversornumviasimpressasrelatorios.cpp.o
 11387	_ZNK5comum3asn36CConversorNumViasImpressasRelatorios13DoDesconverteERKN21ModuloEstadoGeralDefs26NumViasImpressasRelatoriosE	6124	symbol	match	-	44	fingerprint	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversornumviasimpressasrelatorios.cpp.o
-11388	_ZNK5comum3asn29CConversorLocalidadeEleitoral10DoConverteERKNS_2md15estadoaplicacao20CLocalidadeEleitoralE	11139	symbol	match	readings: address content-repointed,address symbol,address same-content	143	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp.o
+11388	_ZNK5comum3asn29CConversorLocalidadeEleitoral10DoConverteERKNS_2md15estadoaplicacao20CLocalidadeEleitoralE	11139	symbol	match	readings: address content-repointed,address symbol	143	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp.o
 11389	_ZNK5comum3asn29CConversorLocalidadeEleitoral13DoDesconverteERKN21ModuloEstadoGeralUrna9DadoSecaoE	11140	symbol	match	-	36	none	comum	1	app/uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp.o
 11390	-	-	-	no-candidate	no symbol and no ledger pair	3335	none	comum	0	-
 11391	-	-	-	no-candidate	no symbol and no ledger pair	3356	none	comum	0	-
@@ -11319,7 +11319,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11453	-	-	-	no-candidate	no symbol and no ledger pair	1694	none	asn1-modules	0	-
 11454	-	-	-	no-candidate	no symbol and no ledger pair	1522	none	asn1-modules	0	-
 11455	_ZNK5comum3asn31CConversorIdentificacaoAgregada13DoDesconverteERKN11ModuloLocal21IdentificacaoAgregadaE	7561	symbol	match	readings: address symbol	71	none	comum	1	app/uenux2/src/app/comum/dados/asn/cconversoridentificacaoagregada.cpp.o
-11456	_ZNK5comum3asn31CConversorIdentificacaoAgregada10DoConverteERKNS_2md22CIdentificacaoAgregadaE	7562	symbol	match	readings: address content-repointed,address symbol,address same-content	116	none	comum	1	app/uenux2/src/app/comum/dados/asn/cconversoridentificacaoagregada.cpp.o
+11456	_ZNK5comum3asn31CConversorIdentificacaoAgregada10DoConverteERKNS_2md22CIdentificacaoAgregadaE	7562	symbol	match	readings: address content-repointed,address symbol	116	none	comum	1	app/uenux2/src/app/comum/dados/asn/cconversoridentificacaoagregada.cpp.o
 11457	-	-	-	no-candidate	no symbol and no ledger pair	2011	none	comum	0	-
 11458	-	-	-	no-candidate	no symbol and no ledger pair	1955	none	asn1-modules	0	-
 11459	_ZNK5comum3asn17CConversorPartido13DoDesconverteERKN14ModuloPartidos7PartidoE	11720	symbol	match	readings: address string,address srcloc,address symbol,table slot	535	none	comum	1	app/uenux2/src/app/comum/dados/asn/cconversorpartido.cpp.o

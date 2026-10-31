@@ -6,11 +6,11 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { type Instr, disassemble } from '../src/disasm';
-import { type NormalizedFn, normalizeModule } from '../src/normalize';
-import { parseModule } from '../src/parse';
+import { type NormalizedFn, hashModule, normalizeModule } from '../src/normalize';
+import { type Func, type Module, parseModule } from '../src/parse';
 import { defaultKindsPath, readOperandKinds } from '../src/splat-kinds';
 import { matchesTarget, remapBody } from '../src/splat-remap';
-import { attempt, readingKind, selfVoted } from '../src/splat-sub';
+import { attempt, parseMatchList, readingKind, selfVoted, withMatches } from '../src/splat-sub';
 import {
   CALL_CTORS,
   type DataObject,
@@ -35,6 +35,7 @@ import {
   objectPattern,
   operandAnchors,
   parseLinkMap,
+  pointerReadings,
   parseSymbolFile,
   refuteDataNames,
   renderSymbolEntry,
@@ -893,6 +894,39 @@ describe('compareObject', () => {
   });
 });
 
+describe('pointerReadings', () => {
+  // our data ends at 4096, our table holds slots 1 to 2000
+  const ours = (dataKinds?: Map<number, 'literal' | 'address' | 'slot' | 'unverified'>): OurSide =>
+    ({
+      dataEnd: 4096,
+      tableSize: 2001,
+      elem: new Map(Array.from({ length: 2000 }, (_, k) => [k + 1, 0])),
+      ...(dataKinds === undefined ? {} : { dataKinds }),
+    }) as unknown as OurSide;
+
+  it('reads a word by its value alone without kinds: from 1024 to the table end, both', () => {
+    expect(pointerReadings(ours(), 1024, 23)).toEqual([false, true]);
+    expect(pointerReadings(ours(), 1024, 1500)).toEqual([true, true]);
+    expect(pointerReadings(ours(), 1024, 3000)).toEqual([true, false]);
+    expect(pointerReadings(ours(), 1024, 5000)).toEqual([false, false]);
+  });
+
+  it('reads a word by the kind the shifted link gave it at its address', () => {
+    const kinds = new Map([
+      [1024, 'literal' as const],
+      [1028, 'address' as const],
+      [1032, 'slot' as const],
+      [1036, 'unverified' as const],
+    ]);
+    expect(pointerReadings(ours(kinds), 1024, 23)).toEqual([false, false]);
+    expect(pointerReadings(ours(kinds), 1028, 1500)).toEqual([true, false]);
+    expect(pointerReadings(ours(kinds), 1032, 1500)).toEqual([false, true]);
+    expect(pointerReadings(ours(kinds), 1036, 1500)).toEqual([true, true]);
+    // a word the table does not list reads as what its value says: one of the two, which it is
+    expect(pointerReadings(ours(kinds), 1040, 3000)).toEqual([true, false]);
+  });
+});
+
 describe('resolveRepointed', { timeout: 180_000 }, () => {
   const load = () => {
     const ours = loadOurSide(PLAIN, MAP_DIR);
@@ -928,6 +962,28 @@ describe('resolveRepointed', { timeout: 180_000 }, () => {
     expect(r.ok).toBe(false);
     expect(r.same?.length).toBeGreaterThan(1);
   });
+
+  it.skipIf(!real || !existsSync(defaultKindsPath(PLAIN)))(
+    "places ASN1::UTCTime::theInfo by its words, the tag 23 an integer, though it equals our slot 23's",
+    () => {
+      // (create, 23, 0). Without the data words' kinds, 23 reads as a pointer, our table slot 23: while that slot's
+      // function has no target name the word goes open, and the pattern fits wherever the create slot does (two
+      // places when this case was written), or past SAME_CONTENT_LIMIT after a landing that moves the table
+      // (docs/reference/splat.md §3, 8750). Read as the integer it is, the tag leaves the object one place, 0x118634,
+      // which a hand line gave it until the kinds did.
+      const ours = loadOurSide(PLAIN, MAP_DIR);
+      const target = loadTargetSide(TARGET, SYMBOLS, `${URNA}/ledger`, ours.stackSize);
+      const kinds = readOperandKinds(defaultKindsPath(PLAIN), ours.module.bytes);
+      const { matches } = parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8'));
+      const withKinds = withMatches(symbolMaps(ours, target, kinds), matches);
+      const without = withMatches(symbolMaps(ours, target, { ...kinds, data: new Map() }), matches);
+      const o = obj(withKinds, '_ZN4ASN17UTCTime7theInfoE');
+      expect(withKinds.target.symbols.data.has(o.key)).toBe(false);
+      expect(objectPattern(withKinds, o).fixed.slice(4, 8)).toEqual([23, 0, 0, 0]);
+      expect(resolveRepointed(withKinds, o)).toMatchObject({ ok: true, addr: 0x118634, how: 'content-repointed' });
+      expect(objectPattern(without, o).fixed.slice(4, 8)).toEqual([null, null, null, null]);
+    },
+  );
 
   it.skipIf(!real)('does not offer the places of a writable object it finds more than once', () => {
     const maps = load();
@@ -1022,6 +1078,41 @@ describe('remapBody on a packed string_view', { timeout: 180_000 }, () => {
       expect(m.match).toBe(true);
       expect(m.readings?.filter((x) => x.endsWith('(string_view)')).length).toBe(2);
     }
+  });
+});
+
+describe('hashModule', () => {
+  // f0 calls f1, f1 calls f2, f2 holds a constant and calls itself; f3 is f2 with another constant. So f2 and f3 part at
+  // depth 0, f1's twin would part at depth 1 and f0's at depth 2
+  const fn = (index: number, code: number[]): Func => {
+    const bodyBytes = Uint8Array.from([0, ...code, 0x0b]);
+    return { index, typeIndex: 0, params: [], results: [], locals: [], bodyOffset: 0, size: bodyBytes.length, bodyBytes, codeStart: 1 };
+  };
+  const call = (f: number): number[] => [0x10, f];
+  const m = {
+    types: [{ params: [], results: [] }],
+    imports: [],
+    importedFuncCount: 0,
+    datas: [],
+    funcs: [fn(0, call(1)), fn(1, call(2)), fn(2, [0x41, 7, 0x1a, ...call(2)]), fn(3, [0x41, 9, 0x1a, ...call(3)])],
+  } as unknown as Module;
+
+  it("gives normalizeModule's hashes at each depth, from one disassembly, without the rows", () => {
+    const h = hashModule(m, {}, [0, 2]);
+    for (const depth of [0, 2]) {
+      const want = normalizeModule(m, { depth }).map(({ index, fingerprint, addr, shape, instrs }) => ({
+        index,
+        fingerprint,
+        addr,
+        shape,
+        instrs,
+      }));
+      expect(h.get(depth)).toEqual(want);
+    }
+    expect(h.get(0)![2].instrs).toBe(h.get(2)![2].instrs);
+    expect(h.get(0)![2].fingerprint).not.toBe(h.get(0)![3].fingerprint);
+    expect(h.get(0)![0].fingerprint).not.toBe(h.get(2)![0].fingerprint);
+    expect(Object.keys(h.get(2)![0]).sort()).toEqual(['addr', 'fingerprint', 'index', 'instrs', 'shape']);
   });
 });
 

@@ -235,9 +235,23 @@ function immSymbol(
   }
 }
 
-/** Normalise every defined function of a module and compute both hashes. */
-export function normalizeModule(m: Module, opts: NormalizeOptions = {}): NormalizedFn[] {
-  const depth = opts.depth ?? 2;
+interface Round {
+  rows: string[][];
+  addrRows: string[][];
+  shapeRows: string[][];
+  fps: string[];
+  addrs: string[];
+  shapes: string[];
+}
+
+/** Every defined function's instructions, and the rounds 0 to `depth` of its rows and hashes: `each` sees each round
+ *  while it is the last one computed. */
+function normalizeRounds(
+  m: Module,
+  opts: NormalizeOptions,
+  depth: number,
+  each: (round: number, r: Round) => void,
+): Instr[][] {
   const ranges = dataRanges(m);
   const dataHashByIndex = m.datas.map((d) => hash(Buffer.from(d.bytes).toString('latin1')));
   const templates: RowTemplate[][] = [];
@@ -260,31 +274,72 @@ export function normalizeModule(m: Module, opts: NormalizeOptions = {}): Normali
       return src.replace(CALLEE_HOLE, `fn:${sym}`);
     });
 
-  let fps: string[] | null = null;
-  let addrs: string[] | null = null;
-  let shapes: string[] | null = null;
-  let rows: string[][] = [];
-  let addrRows: string[][] = [];
-  let shapeRows: string[][] = [];
+  let prev: Round | null = null;
   const hashAll = (rs: string[][]): string[] => rs.map((r, k) => hash(`${signature(m.funcs[k])}\n${r.join('\n')}`));
   for (let round = 0; round <= depth; round++) {
-    rows = templates.map((t) => fill(t, 'text', fps));
-    addrRows = templates.map((t) => fill(t, 'addrText', addrs));
-    shapeRows = templates.map((t) => fill(t, 'shapeText', shapes));
-    fps = hashAll(rows);
-    addrs = hashAll(addrRows);
-    shapes = hashAll(shapeRows);
+    const rows = templates.map((t) => fill(t, 'text', prev?.fps ?? null));
+    const addrRows = templates.map((t) => fill(t, 'addrText', prev?.addrs ?? null));
+    const shapeRows = templates.map((t) => fill(t, 'shapeText', prev?.shapes ?? null));
+    prev = { rows, addrRows, shapeRows, fps: hashAll(rows), addrs: hashAll(addrRows), shapes: hashAll(shapeRows) };
+    each(round, prev);
   }
+  return instrsAll;
+}
+
+/** Normalise every defined function of a module and compute both hashes. */
+export function normalizeModule(m: Module, opts: NormalizeOptions = {}): NormalizedFn[] {
+  let last: Round | null = null;
+  const instrsAll = normalizeRounds(m, opts, opts.depth ?? 2, (_round, r) => {
+    last = r;
+  });
+  const { rows, addrRows, shapeRows, fps, addrs, shapes } = last as unknown as Round;
   return m.funcs.map((fn, k) => ({
     index: fn.index,
     rows: rows[k],
     addrRows: addrRows[k],
     shapeRows: shapeRows[k],
-    fingerprint: fps![k],
-    addr: addrs![k],
-    shape: shapes![k],
+    fingerprint: fps[k],
+    addr: addrs[k],
+    shape: shapes[k],
     instrs: instrsAll[k],
   }));
+}
+
+/** A normalized function without its rows: its three hashes at one depth, and its instructions. */
+export type HashedFn = Omit<NormalizedFn, 'rows' | 'addrRows' | 'shapeRows'>;
+
+/**
+ * normalizeModule's hashes at each depth of `depths`, from one disassembly, and without the rows: depth d's hashes are
+ * round d's, which do not depend on how many rounds follow. The functions of every depth share one instruction array
+ * each. A caller that only groups functions by hash and reads their instructions (splat-symbols' pairs and anchors)
+ * holds a fraction of what normalizeModule's rows take, which for the target and our link is gigabytes.
+ */
+export function hashModule(
+  m: Module,
+  opts: Omit<NormalizeOptions, 'depth'>,
+  depths: readonly number[],
+): Map<number, HashedFn[]> {
+  const hashes = new Map<number, Pick<Round, 'fps' | 'addrs' | 'shapes'>>();
+  const instrsAll = normalizeRounds(m, opts, Math.max(...depths), (round, r) => {
+    if (depths.includes(round)) {
+      hashes.set(round, { fps: r.fps, addrs: r.addrs, shapes: r.shapes });
+    }
+  });
+  return new Map(
+    depths.map((d) => {
+      const { fps, addrs, shapes } = hashes.get(d)!;
+      return [
+        d,
+        m.funcs.map((fn, k) => ({
+          index: fn.index,
+          fingerprint: fps[k],
+          addr: addrs[k],
+          shape: shapes[k],
+          instrs: instrsAll[k],
+        })),
+      ];
+    }),
+  );
 }
 
 /** The type signature and locals, which the body's rows do not state but a match must agree on. */

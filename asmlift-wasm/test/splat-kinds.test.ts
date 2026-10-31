@@ -22,6 +22,7 @@ import {
   type KindsSide,
   type OperandKinds,
   baseSums,
+  classifyDataWords,
   classifyFunction,
   classifyOperands,
   defaultKindsPath,
@@ -395,6 +396,53 @@ describe('classifyFunction on hand-written links', () => {
   });
 });
 
+describe('classifyDataWords on hand-written links', () => {
+  // a link's data at `base` (its words), its table at `table` of 2100 slots, slot k holding function k % 2 named f or g
+  const link = (words: number[], base: number, table: number, names = ['f', 'g']): KindsSide => {
+    const bytes = new Uint8Array(words.length * 4);
+    words.forEach((w, k) => new DataView(bytes.buffer).setUint32(k * 4, w, true));
+    const module = {
+      datas: [{ mode: 'active', offset: base, bytes }],
+      elems: [{ mode: 'active', tableIndex: 0, offset: { value: table }, funcIndices: Array.from({ length: 2100 }, (_, k) => k % 2) }],
+    } as unknown as Module;
+    return { module, names: new Map(names.map((n, k) => [k, n])) };
+  };
+  const shifts = { dataShift: D, tableShift: T, dataBase: 1024, tableBase: 1 };
+  const classify = (plain: number[], shifted: number[], names?: string[]) =>
+    classifyDataWords(link(plain, 1024, 1), link(shifted, 1024 + D, 1 + T, names), shifts, 4096);
+
+  it('reads a word the relink did not move as an integer, one moved by D as an address, by T as a table slot', () => {
+    // 23 and 3000 read as a slot and as an address of ours, and are integers: an ASN.1 tag, a size. 2500 and 16 are
+    // an address and a slot, each of which reads as that one alone, so the table leaves them out; 0 and 5000 read as
+    // neither (past the table and past dataEnd)
+    const k = classify([23, 3000, 2500, 16, 0, 5000], [23, 3000, 2500 + D, 16 + T, 0, 5000]);
+    expect(k).toEqual(
+      new Map([
+        [1024, 'literal'],
+        [1028, 'literal'],
+      ]),
+    );
+  });
+
+  it('says which of the two a word that reads as both is', () => {
+    // from 1024 to the table's end a value is both one of our addresses and one of our slots
+    const k = classify([1500, 1504, 1508], [1500 + T, 1504 + D, 1508]);
+    expect(k).toEqual(
+      new Map([
+        [1024, 'slot'],
+        [1028, 'address'],
+        [1032, 'literal'],
+      ]),
+    );
+  });
+
+  it('leaves a word unverified when it moved by neither shift, or its two slots hold functions of other names', () => {
+    expect(classify([2052], [2052 + D + 4])).toEqual(new Map([[1024, 'unverified']]));
+    // slot 31 holds f in the plain link; the relink's slot 31 + T holds the function the relink names h
+    expect(classify([31], [31 + T], ['h', 'g'])).toEqual(new Map([[1024, 'unverified']]));
+  });
+});
+
 describe('the table argument', () => {
   it('is required unless --no-kinds says to check without one', () => {
     const dir = mkdtempSync(join(tmpdir(), 'kinds-'));
@@ -545,7 +593,7 @@ describe('classifyFunction', { timeout: 180_000 }, () => {
 describe('classifyOperands', { timeout: 180_000 }, () => {
   it.skipIf(!real)('classifies every function of the link, every match kind-verified', () => {
     const { plain, shifted, kinds, maps } = load();
-    const k = classifyOperands(plain, shifted);
+    const k = classifyOperands(plain, shifted, maps.ours.dataEnd);
     expect(renderOperandKinds(k)).toBe(readFileSync(KINDS, 'utf8'));
     expect(k.functions.size).toBe(plain.module.funcs.length);
     const { matches } = parseMatchList(readFileSync(`${URNA}/splat/matched.txt`, 'utf8'));
@@ -555,6 +603,19 @@ describe('classifyOperands', { timeout: 180_000 }, () => {
     expect(s.operands.slot).toBeGreaterThan(1_000);
     // vdbeSorterSort's
     expect([s.operands['table-base'], s.operands['table-rel']]).toEqual([1, 3]);
+  });
+
+  it.skipIf(!real)("reads ASN1::UTCTime::theInfo's tag 23 as an integer, which also reads as our table slot 23", () => {
+    // (create, 23, 0): the tag equals a slot number of ours, the create function's slot is a slot
+    const { kinds, maps } = load();
+    const obj = maps.ours.map.data.find((d) => d.key === '_ZN4ASN17UTCTime7theInfoE')!;
+    expect(maps.ourImage.readUInt32LE(obj.addr + 4 - GLOBAL_BASE)).toBe(23);
+    expect(maps.ours.elem.has(23)).toBe(true);
+    expect(kinds.data.get(obj.addr + 4)).toBe('literal');
+    expect(maps.ours.dataKinds).toBe(kinds.data);
+    const create = maps.ourImage.readUInt32LE(obj.addr - GLOBAL_BASE);
+    // a slot past 1024 reads as an address too, and the table says which
+    expect(kinds.data.get(obj.addr)).toBe(create >= GLOBAL_BASE ? 'slot' : undefined);
   });
 
   it.skipIf(!real)('writes a table that reads back the same, and refuses it for another plain link', () => {
@@ -786,7 +847,7 @@ function caseMaps(c: Case): { maps: SymbolMaps; kinds: FunctionKinds } {
     names.delete(s);
   }
   const kinds = c.unnamed
-    ? classifyOperands(pair, { module: shiftedModule, names }).functions.get(p)!
+    ? classifyOperands(pair, { module: shiftedModule, names }, l.maps.ours.dataEnd).functions.get(p)!
     : classifyFunction(pair, { ...l.shifted, module: shiftedModule }, linkShifts(l.plain.module, l.shifted.module), p, s);
   const functions = new Map(l.kinds.functions);
   functions.set(p, kinds);

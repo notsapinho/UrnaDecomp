@@ -8,7 +8,7 @@
 #   make -C src link-kinds      # the operand-kind table build/out/wasm-kinds/vota_web/kinds.json (below)
 #   make -C src splat-scan      # every target function against our candidate → splat/scan.tsv, then `status` and `stubs`
 #   make -C src splat-match     # splat-scan, then append its new matches to splat/matched.txt, then `status` and `stubs`
-#   make -C src splat-symbols   # regenerate splat/symbol_addrs.txt from the current link (hand edits below the marker kept)
+#   make -C src splat-symbols   # link-kinds, then regenerate splat/symbol_addrs.txt from the current link (hand edits below the marker kept)
 #   make -C src status          # the progress numbers in docs/status.md, from splat/scan.tsv
 #   make -C src stubs           # the comment stub of every TSE function with no match and no code of ours, and the gaps (src/README.md)
 #   make -C src stubs-check     # fails on a stub or gap that is missing, extra, stale or out of place (CI runs it)
@@ -74,5 +74,6 @@ stubs:
 stubs-check:
 	$(H) python3 -I -B tools/round/stubs.py --check
 
-splat-symbols: $(ROOT)/$(SPLAT_PLAIN) $(ROOT)/$(SPLAT_NAMES)
-	$(SPLAT_KIT) splat-symbols $(ROOT)/target/vota_web_wasm.wasm $(ROOT)/$(SPLAT_PLAIN) -o $(ROOT)/$(SPLAT_SYMBOLS)
+# (the operand-kind table says which of our data words are pointers: content places a data object by them)
+splat-symbols: $(ROOT)/$(SPLAT_PLAIN) $(ROOT)/$(SPLAT_NAMES) $(ROOT)/$(SPLAT_KINDS)
+	$(SPLAT_KIT) splat-symbols $(ROOT)/target/vota_web_wasm.wasm $(ROOT)/$(SPLAT_PLAIN) --kinds $(ROOT)/$(SPLAT_KINDS) -o $(ROOT)/$(SPLAT_SYMBOLS)

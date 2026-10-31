@@ -29,10 +29,22 @@ line:
 The same command with that PATH scores the function (W2). `tools/setup/bootstrap.sh --check` names the cause:
 `WRONG node v26.11.1: the toolkit is tested on Node 24`.
 
-**The heap.** Node 24's default heap limit is 4288 MB here (`node -e "console.log(Math.round(require('v8').getHeapStatistics().heap_size_limit/2**20))"`),
-and `make -C src splat-symbols` at 4487d6b peaks at a resident set of 4.46 GB (`/usr/bin/time -l make -s -C src
-splat-symbols` prints `4456546304  maximum resident set size`), so a larger link passes the limit. A run that does
-stops with no symbol file written, which a smaller limit shows:
+**The heap.** Node 24's default heap limit is 4288 MB here (`node -e "console.log(Math.round(require('v8').getHeapStatistics().heap_size_limit/2**20))"`).
+The limit counts V8's heap, not the resident set `/usr/bin/time -l` prints, which counts memory outside the heap too.
+`node --trace-gc` prints the heap at each collection, and `NODE_OPTIONS` refuses it (`node: --trace-gc is not allowed
+in NODE_OPTIONS`), so run the command itself from `asmlift-wasm/`:
+
+    /usr/bin/time -l node --trace-gc --import tsx src/cli.ts splat-symbols ../target/vota_web_wasm.wasm \
+      ../build/out/wasm/vota_web/vota_web_wasm.wasm -o <copy> > gc.log 2> time.log
+
+and read the largest heap a line of `gc.log` shows before its collection (`Scavenge 2752.5 (2821.6) -> 2669.1 …`).
+On acf4f84's link `splat-symbols` peaked at 2752 MB so in one run (resident set `2948497408` from `/usr/bin/time -l
+make -s -C src splat-symbols`), and passes with `NODE_OPTIONS=--max-old-space-size=2048`. The generator kept every row
+of four normalizations of the two modules until `gatherEvidence` took `hashModule`'s hashes alone
+(`asmlift-wasm/src/normalize.ts`): it peaked at 4016 MB on the same link, a resident set of 4.40 GB, passed at the
+default limit and failed at 4000 MB. Steps 7 and 9 fit as well: the census's largest step, `ledger`, peaks at 3068 MB
+(resident set 3.75 GB), and `make -C src splat-match` at a resident set of 0.70 GB. A run past the limit stops with no
+file written, which a smaller limit shows:
 
     NODE_OPTIONS=--max-old-space-size=1500 TMPDIR=/tmp make -C src splat-symbols > build/out/workflow-facts/sym-low.log 2>&1; echo "rc=$?"
       rc=2
@@ -40,7 +52,7 @@ stops with no symbol file written, which a smaller limit shows:
       FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
     git status --short splat/symbol_addrs.txt                      # (nothing)
 
-Run steps 7 to 9 with `NODE_OPTIONS=--max-old-space-size=8000`.
+A run that stops so goes again with `NODE_OPTIONS=--max-old-space-size=8000` on that command.
 
 Set PATH inside a `#!/bin/zsh` script, not around it: a login profile can reset it. On one of two Macs a script that
 ran `pnpm --silent wasm splat-review` under an exported PATH exited 134 in 0.9 s, with an empty log, and passed with the

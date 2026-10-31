@@ -15,6 +15,7 @@ import { type Piece, type RemapResult, matchesTarget, remapBody } from './splat-
 import {
   type DataObject,
   type SymbolMaps,
+  type TargetSymbols,
   compareObject,
   dataObjectAt,
   resolveDataAddress,
@@ -433,10 +434,37 @@ export interface SelfVoted {
 const ourDataByKey = new WeakMap<object, Map<string, DataObject>>();
 
 /**
+ * The object a `_ZGV` guard guards, when the target holds the guard at our link's distance from it: `_ZGV<x>` guards
+ * `_Z<x>`, the two are emitted together, and both names have a target address that keeps our distance
+ * (docs/reference/facts/splat.md §S13). Then the guard's place is the object's place plus that distance, which owes
+ * nothing to the body that reads the guard. Else undefined.
+ */
+export function guardedObject(
+  symbols: TargetSymbols,
+  byKey: ReadonlyMap<string, DataObject>,
+  guard: string,
+): string | undefined {
+  if (!guard.startsWith('_ZGV')) {
+    return undefined;
+  }
+  const object = `_Z${guard.slice(4)}`;
+  const tg = symbols.data.get(guard);
+  const to = symbols.data.get(object);
+  const og = byKey.get(guard);
+  const oo = byKey.get(object);
+  return tg === undefined || to === undefined || og === undefined || oo === undefined || tg - to !== og.addr - oo.addr
+    ? undefined
+    : object;
+}
+
+/**
  * A data name whose only evidence is a vote cast by target function T came from T's own operand, so it cannot
  * confirm that operand: a match of T that re-points an address through such a name holds only when our object's
  * bytes agree with the target's there (pointers re-pointed, splat-symbols compareObject), or another match that
- * is not refused itself re-points through the same name. Returns every refused match with the operand.
+ * is not refused itself re-points through the same name. A guard at our link's distance from its object
+ * (guardedObject) is placed by the object: it is not T's own when the object's name has evidence besides T's vote,
+ * and else it holds as the object does, through another match that re-points through the object. Returns every refused
+ * match with the operand.
  */
 export function selfVoted(
   maps: SymbolMaps,
@@ -451,6 +479,8 @@ export function selfVoted(
   const users = new Map<string, Set<number>>();
   const suspects = new Map<number, SelfVoted[]>();
   const verdicts = new Map<string, string>();
+  /** a self-voted guard → its object, whose holders hold it */
+  const heldBy = new Map<string, string>();
   for (const [t, m] of matches) {
     for (const c of m.chosen) {
       const symbol = SYMBOL_READING.exec(c.reading)?.[1];
@@ -461,6 +491,14 @@ export function selfVoted(
       const voters = soleVoters(symbols, symbol);
       if (voters === null || voters.some((v) => v !== t)) {
         continue;
+      }
+      const object = guardedObject(symbols, byKey, symbol);
+      if (object !== undefined) {
+        const objectVoters = soleVoters(symbols, object);
+        if (objectVoters === null || objectVoters.some((v) => v !== t)) {
+          continue;
+        }
+        heldBy.set(symbol, object);
       }
       let bytes = verdicts.get(symbol);
       if (bytes === undefined) {
@@ -497,12 +535,16 @@ export function selfVoted(
     }
   }
   const refused = new Map<number, SelfVoted>();
+  const holders = (symbol: string): number[] => {
+    const object = heldBy.get(symbol);
+    return [...(users.get(symbol) ?? []), ...(object === undefined ? [] : (users.get(object) ?? []))];
+  };
   for (let changed = true; changed;) {
     changed = false;
     for (const [t, list] of suspects) {
       const alone = refused.has(t)
         ? undefined
-        : list.find((x) => ![...(users.get(x.symbol) ?? [])].some((u) => u !== t && !refused.has(u)));
+        : list.find((x) => !holders(x.symbol).some((u) => u !== t && !refused.has(u)));
       if (alone !== undefined) {
         refused.set(t, alone);
         changed = true;
