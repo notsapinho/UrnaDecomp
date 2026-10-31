@@ -66,11 +66,12 @@
 #   (-Rpass-missed=inline: cost=230, threshold=225) and inlines the copy into the constructor; at -O3 cpleito.cpp gives the
 #   target's calls. With that object and second callers for 1953 and 3870 in a scratch link, it scores 103 over 438 rows
 #   against 1150 over 1448 (3 of them the tree's reload: without -fno-strict-aliasing, 100 over 435); what is left includes the placement of its three throws, so no body here is shown right.
-# - CCargos::GetCurrent and GetCurrentEleicao (fns 332, 2836, records 59 and 76), and the file's other records (lines 24,
-#   25 and 93), wait for comum::CConfiguracaoEleicao: GetInst (187), GetCargo (861), and GetEleicao, inlined into 2836.
-#   GetInst throws pattern error 1303, which ecourna::api::pattern::EPatternError does not have yet.
+# - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
+#   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their
+#   evidence and why that object links right after ccargos.cpp. The file's other records, lines 25 and 93, are not written.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 PROCESSOELEITORAL_SRCS := src/app/comum/dados/ccargos.cpp \
+  src/app/comum/dados/cconfiguracaoeleicao.cpp \
   src/app/comum/dados/md/processoeleitoral/ccargo.cpp \
   src/app/comum/dados/md/processoeleitoral/cdetalhecandidato.cpp \
   src/app/comum/dados/md/processoeleitoral/celeicaope.cpp \

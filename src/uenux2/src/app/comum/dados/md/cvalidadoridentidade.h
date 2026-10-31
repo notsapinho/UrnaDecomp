@@ -1,0 +1,29 @@
+#pragma once
+
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
+
+#include "app/comum/dados/md/iregraidentidade.h"
+
+namespace comum::md {
+
+// Recovered: the layout, 12 bytes: CreateInst (inlined into fn 7787) allocates 12; the destructor (fn 5671) walks one
+// vector of pointers backwards, nulls each and deletes it through slot 1, so its elements are unique_ptrs to a class
+// with a virtual destructor. That the class is IRegraIdentidade comes from Valida's body (fn 566), which holds the
+// loop over them. The member's name is chosen.
+class CValidadorIdentidade {
+public:
+    ~CValidadorIdentidade();
+
+    static CValidadorIdentidade& GetInst();
+
+private:
+    std::vector<std::unique_ptr<IRegraIdentidade>> m_regras;
+
+    static std::unique_ptr<CValidadorIdentidade> s_instance;
+    static std::mutex s_mutex;
+};
+
+} // namespace comum::md

@@ -14,7 +14,8 @@
 #   for CParteCandidatos and CParteRdv) and 11958 call the D2, and 5966 (one body for the two three-part classes) holds
 #   it: clang inlined it there, as the roots object shows. The classes that are not final use the virtual fn 411,
 #   already matched.
-# Imprime, the key function of every class, is pending (the pending file's header lists what each waits for).
+# Imprime, the key function of every class, is pending (the pending file's header lists what each waits for), but for
+# CParteRdv's (11203), in cparterdv.cpp, whose object now emits that class's vtable and destructors.
 #
 # Evidence. RTTI names the classes and gives api::IReportPart as each one's only base. The D2s give the layouts, and the
 # allocations of fns 5971, 11908 and 11946 the sizes (44, 28, 88, 12 bytes). RTTI gives the std::function's signature:

@@ -1,10 +1,21 @@
-// <stubs>
-// f12621 · 442 B · unmatched · name unknown
-// void f12621(i32, i32) { ... }
+#include "app/comum/dados/crespostas.h"
 
-// f11479 · 137 B · unmatched · name unknown
-// void f11479(i32) { ... }
+#include "ecourna/api/pattern/singleton.hpp"
 
-// f11478 · 721 B · unmatched · name unknown
-// void f11478(i32) { ... }
-// </stubs>
+namespace comum {
+
+// (original lines 7-27: content not recovered)
+#line 28
+SINGLETON_IMPL_GET_INST(CRespostas, s_mutex, s_instancia)
+
+
+
+
+
+
+std::unique_ptr<CRespostas> CRespostas::s_instancia;
+std::mutex CRespostas::s_mutex;
+
+CRespostas::~CRespostas() = default;
+
+} // namespace comum

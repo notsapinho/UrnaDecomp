@@ -15,6 +15,7 @@ public:
     CHorarioVeraoMunicipio(uedword codigo, const CHorarioVerao& horarioVerao);
     explicit CHorarioVeraoMunicipio(uedword codigo);
 
+    bool TemHorarioVerao() const { return m_horarioVerao.has_value(); }
     const CHorarioVerao& GetHorarioVerao() const;
 
 private:

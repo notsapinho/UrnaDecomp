@@ -1,21 +1,29 @@
-// Reconstruction notes: comum::CCargos's Next, GetCurrentCargoID and GetCurrentEleicaoID (target fns 1708, 1938 and
-// 2835), each throw on its record's line. The lines left blank hold the file's other members, whose records are lines
-// 24, 25, 59, 76, 93 and 249; the fragment's header comment says what they wait for.
+// Reconstruction notes: comum::CCargos's GetInst, Next, GetCurrent, GetCurrentCargoID, GetCurrentEleicao and
+// GetCurrentEleicaoID (target fns 273, 1708, 332, 1938, 2836 and 2835), each throw on its record's line, with Reset and
+// IsFim (fns 2269 and 602). The lines left blank hold the file's other members, whose records are lines 25, 93 and 249.
 #include "app/comum/dados/ccargos.h"
 
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/euecomumdadoserror.h"
-
+#include "ecourna/api/pattern/singleton.hpp"
 namespace comum {
 
-// (original lines 10-20: content not recovered)
-#line 21
-// <stubs>
-// f11556 · 137 B · unmatched · name unknown
-// void f11556(i32) { ... }
-// </stubs>
+// (original lines 11-23: content not recovered)
+#line 24
+SINGLETON_IMPL_GET_INST(CCargos, s_mutex, s_instancia)
 
-// (original lines 26-42: content not recovered)
-#line 43
+std::unique_ptr<CCargos> CCargos::s_instancia;
+std::mutex CCargos::s_mutex;
+
+// (original lines 29-35: content not recovered)
+#line 36
+void CCargos::Reset()
+{
+    m_atual = 0;
+}
+
+CCargos::~CCargos() = default;
+
 void CCargos::Next()
 {
     if (m_atual == m_cargos.size()) {
@@ -24,15 +32,20 @@ void CCargos::Next()
     ++m_atual;
 }
 
-// (original lines 51-55: content not recovered)
-#line 56
-// <stubs>
-// f332 · 107 B · unmatched · name unknown
-// ? f332(i32) { ... }
-// </stubs>
 
-// (original lines 61-64: content not recovered)
-#line 65
+bool CCargos::IsFim() const
+{
+    return m_atual >= m_cargos.size();
+}
+const md::CCargo& CCargos::GetCurrent() const
+{
+    if (m_atual >= m_cargos.size()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7816, "Cargo não posicionado.");
+    }
+    const TCargoID cargo = m_cargos[m_atual].second;
+    return CConfiguracaoEleicao::GetInst().GetCargo(cargo);
+}
+
 comum::TCargoID CCargos::GetCurrentCargoID() const
 {
     if (m_atual >= m_cargos.size()) {
@@ -41,13 +54,15 @@ comum::TCargoID CCargos::GetCurrentCargoID() const
     return m_cargos[m_atual].second;
 }
 
-// <stubs>
-// f2836 · 639 B · unmatched · name unknown
-// ? f2836(i32) { ... }
-// </stubs>
+const md::CEleicaoPE& CCargos::GetCurrentEleicao() const
+{
+    if (m_atual >= m_cargos.size()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7818, "Cargo não posicionado.");
+    }
+    const TEleicaoID eleicao = m_cargos[m_atual].first;
+    return CConfiguracaoEleicao::GetInst().GetEleicao(eleicao);
+}
 
-// (original lines 78-81: content not recovered)
-#line 82
 comum::TEleicaoID CCargos::GetCurrentEleicaoID() const
 {
     if (m_atual >= m_cargos.size()) {

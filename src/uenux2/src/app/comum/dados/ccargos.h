@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
+#include <mutex>
 #include <utility>
 #include <vector>
 
@@ -8,6 +10,10 @@
 #include "app/comum/dados/md/rdv/cvotoscargos.h"
 
 namespace comum {
+
+namespace md {
+class CEleicaoPE;
+}
 
 // TCargoID, TEleicaoID: the records of CCargos::GetCurrentCargoID and GetCurrentEleicaoID spell them comum::. The
 // project declares them in comum::md (md/rdv/cvotoscargos.h), so these aliases give the records' spelling.
@@ -22,14 +28,26 @@ class CCargos {
 public:
     using TCargoEleicao = std::pair<TEleicaoID, TCargoID>;
 
+    ~CCargos();
+
+    static CCargos& GetInst();
+
+    void Reset();
+    bool IsFim() const;
     void Next();
+    const md::CCargo& GetCurrent() const;
     comum::TCargoID GetCurrentCargoID() const;
+    const md::CEleicaoPE& GetCurrentEleicao() const;
     comum::TEleicaoID GetCurrentEleicaoID() const;
+    comum::TEleicaoID GetUltimaEleicaoID() const { return m_cargos.back().first; }
 
 private:
     size_t m_atual;
     std::vector<TCargoEleicao> m_todos;
     std::vector<TCargoEleicao> m_cargos;
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CCargos> s_instancia;
 };
 
 } // namespace comum
