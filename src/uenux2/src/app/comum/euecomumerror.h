@@ -19,6 +19,8 @@ enum EUeComumError {
     EUE_COMUM_ARQUIVO_ASSINADO_NAO_ENCONTRADO = 7203,
     // CPacoteArquivos::RetornaNomeChave (fn 5900), "Chave desconhecida: {}"
     EUE_COMUM_CHAVE_DESCONHECIDA = 7221,
+    // CPacoteArquivos::TrataErroPacote (fn 5901), "Falha ao validar assinatura {}\npacote: ({})\nErro SAVD: ({} - {})"
+    EUE_COMUM_VALIDAR_ASSINATURA_PACOTE = 7222,
     // IInterfaceInit::CurrentBootDevice (fn 11646), "Resposta nula"
     EUE_COMUM_BOOT_DEVICE_RESPOSTA_NULA = 7231,
     // IInterfaceInit::IsMRPresenteSemHabilitar and IsMRMontadoSemHabilitar (fns 2862, 5897), "Resposta nula"
@@ -27,6 +29,9 @@ enum EUeComumError {
     // IInterfaceInit::DesmontarMRSemDesabilitar (fn 3832), "Resposta nula" and "Falha ao desmontar mídia de resultado ({})"
     EUE_COMUM_DESMONTAR_MR_RESPOSTA_NULA = 7241,
     EUE_COMUM_DESMONTAR_MR_FALHA = 7242,
+    // IInterfaceInit::DesligarUrna (fn 5894), "Resposta nula" and "Erro ao desligar urna: {}"
+    EUE_COMUM_DESLIGAR_URNA_RESPOSTA_NULA = 7268,
+    EUE_COMUM_DESLIGAR_URNA_FALHA = 7269,
     // IInterfaceInit::EnviarMensagemThrowVoid (fn 3833), "{}: Resposta nula" and "Falha ao enviar mensagem {}, {}: {}"
     EUE_COMUM_ENVIAR_MENSAGEM_RESPOSTA_NULA = 7293,
     EUE_COMUM_ENVIAR_MENSAGEM_FALHA = 7294,

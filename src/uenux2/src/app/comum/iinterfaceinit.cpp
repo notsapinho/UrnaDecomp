@@ -5,8 +5,10 @@
 
 #include <format>
 
+#include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
 #include "app/comum/euecomumerror.h"
+#include "app/comum/log/ieventoslog.h"
 
 namespace comum {
 
@@ -14,7 +16,7 @@ IInterfaceInit::IInterfaceInit() = default;
 
 IInterfaceInit::~IInterfaceInit() = default;
 
-// (original lines 17-42: content not recovered)
+// (original lines 19-42: content not recovered)
 #line 43
 EBootDeviceId IInterfaceInit::CurrentBootDevice()
 {
@@ -89,14 +91,24 @@ void IInterfaceInit::DesmontarMRSemDesabilitar()
     }
 }
 
-// (original lines 192-518: content not recovered)
-#line 519
-// <stubs>
-// f5894 · 741 B · unmatched · name unknown
-// void f5894(i32) { ... }
-// </stubs>
+// (original lines 192-519: content not recovered)
+#line 520
+void IInterfaceInit::DesligarUrna()
+{
+    auto& logs = api::CPolySingleton<IEventosLog>::instance();
+    logs.loga("Urna desligada a pedido do aplicativo");
 
-// (original lines 524-726: content not recovered)
+    const std::vector<int> resposta = EnviarMensagem(48);
+    if (resposta.empty()) {
+        throw CUeComumError(EUE_COMUM_DESLIGAR_URNA_RESPOSTA_NULA, "Resposta nula");
+    }
+
+    if (resposta[0] < 0) {
+        throw CUeComumError(EUE_COMUM_DESLIGAR_URNA_FALHA, std::format("Erro ao desligar urna: {}", resposta[0]));
+    }
+}
+
+// (original lines 535-726: content not recovered)
 #line 727
 inline void IInterfaceInit::EnviarMensagemThrowVoid(ueint32 mensagem, const std::string& descricao)
 {
