@@ -885,9 +885,6 @@
 // f5624 · 14 B · unmatched · placement: link order · name unknown
 // ? f5624(i32) { ... }
 
-// f5623 · 463 B · unmatched · placement: link order · name unknown
-// void f5623(i32, i32) { ... }
-
 // f5622 · 942 B · unmatched · placement: link order · name unknown
 // void f5622(i32, i32) { ... }
 
@@ -1853,14 +1850,6 @@
 // f11385 · 391 B · unmatched · placement: link order · name unknown
 // void f11385(i32, i32, i32) { ... }
 
-// link-order cluster 453 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorlocalidadeeleitoral.cpp
-
-// f11389 · 36 B · unmatched · placement: link order · name unknown
-// void f11389(i32, i32, i32) { ... }
-
-// f11388 · 143 B · unmatched · placement: link order · name unknown
-// void f11388(i32, i32, i32) { ... }
-
 // link-order cluster 458 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.cpp
 
 // f11400 · 1107 B · unmatched · placement: link order · name unknown
@@ -2175,17 +2164,8 @@
 
 // link-order cluster 802 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/clocalidadeeleitoral.cpp
 
-// f5630 · 275 B · unmatched · placement: link order · name unknown
-// ? f5630(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f5628 · 151 B · unmatched · placement: link order · name unknown
-// void f5628(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // f5626 · 267 B · unmatched · placement: link order · name unknown
 // ? f5626(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f5625 · 37 B · unmatched · placement: link order · name unknown
-// void f5625(i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 803 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/cdadocarga.cpp
 

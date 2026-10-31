@@ -40,7 +40,7 @@ public:
     municipio::const_reference get_municipio () const { return *static_cast<municipio::const_pointer>(fields[0]); }
     municipio::reference ref_municipio () { return *static_cast<municipio::pointer>(fields[0]); }
     municipio::reference set_municipio () { return *static_cast<municipio::pointer>(fields[0]); }
-    municipio::reference set_municipio (ASN1::INTEGER::int_type v)
+    municipio::reference set_municipio (municipio::const_reference v)
     { return *static_cast<municipio::pointer>(fields[0]) = v; }
 
     class zona
@@ -56,7 +56,7 @@ public:
     zona::const_reference get_zona () const { return *static_cast<zona::const_pointer>(fields[1]); }
     zona::reference ref_zona () { return *static_cast<zona::pointer>(fields[1]); }
     zona::reference set_zona () { return *static_cast<zona::pointer>(fields[1]); }
-    zona::reference set_zona (ASN1::INTEGER::int_type v)
+    zona::reference set_zona (zona::const_reference v)
     { return *static_cast<zona::pointer>(fields[1]) = v; }
 
     class secao
@@ -283,17 +283,17 @@ private:
 }; // end class EstadoUrna
 
 //
-// ModuloEstadoGeralUrna::TipoUrnaT1   // SYNTHESIZED name (field ['tipoUrnaT1', 'tipoUrnaT2'])
+// ModuloEstadoGeralUrna::TipoUrnaOperacao
 //
 
-class TipoUrnaT1 : public ASN1::ENUMERATED
+class TipoUrnaOperacao : public ASN1::ENUMERATED
 {
     typedef ASN1::ENUMERATED Inherited;
 protected:
     typedef Inherited::InfoType InfoType;
-    TipoUrnaT1(const void* info) : Inherited(info) {}
+    TipoUrnaOperacao(const void* info) : Inherited(info) {}
 public:
-    TipoUrnaT1() : Inherited(&theInfo) {}
+    TipoUrnaOperacao() : Inherited(&theInfo) {}
     enum NamedNumber {
         unknownEnumeration_ = -1,
         semtipo,
@@ -318,8 +318,8 @@ public:
     bool is_contingenciavotarecupera() const { return value == contingenciavotarecupera; }
     void set_contingenciavotarecupera() { value = contingenciavotarecupera; }
 
-    TipoUrnaT1(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-    TipoUrnaT1 & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    TipoUrnaOperacao(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    TipoUrnaOperacao & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
     operator NamedNumber() const { return NamedNumber(asInt()); }
 
     bool operator == (NamedNumber rhs) const { return value == rhs; }
@@ -328,18 +328,18 @@ public:
     bool operator >  (NamedNumber rhs) const { return value >  rhs; }
     bool operator <= (NamedNumber rhs) const { return value <= rhs; }
     bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-    bool operator == (const TipoUrnaT1 &rhs) const { return value == rhs.value; }
-    bool operator != (const TipoUrnaT1 &rhs) const { return value != rhs.value; }
+    bool operator == (const TipoUrnaOperacao &rhs) const { return value == rhs.value; }
+    bool operator != (const TipoUrnaOperacao &rhs) const { return value != rhs.value; }
 
-    void swap (TipoUrnaT1 & that) { Inherited::swap(that); }
-    TipoUrnaT1 * clone() const
-    { return static_cast<TipoUrnaT1*> (Inherited::clone()); }
+    void swap (TipoUrnaOperacao & that) { Inherited::swap(that); }
+    TipoUrnaOperacao * clone() const
+    { return static_cast<TipoUrnaOperacao*> (Inherited::clone()); }
     static bool equal_type(const ASN1::AbstractData& type)
     { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
     static const InfoType theInfo;
 private:
     static const char * nameList[];
-}; // end class TipoUrnaT1
+}; // end class TipoUrnaOperacao
 
 //
 // ModuloEstadoGeralUrna::TipoAjusteDataHora   // named by exact field/RTTI match
@@ -429,7 +429,7 @@ public:
     class tipoUrnaT1
     {
     public:
-        typedef ModuloEstadoGeralUrna::TipoUrnaT1 value_type;
+        typedef ModuloEstadoGeralUrna::TipoUrnaOperacao value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -439,13 +439,13 @@ public:
     tipoUrnaT1::const_reference get_tipoUrnaT1 () const { return *static_cast<tipoUrnaT1::const_pointer>(fields[1]); }
     tipoUrnaT1::reference ref_tipoUrnaT1 () { return *static_cast<tipoUrnaT1::pointer>(fields[1]); }
     tipoUrnaT1::reference set_tipoUrnaT1 () { return *static_cast<tipoUrnaT1::pointer>(fields[1]); }
-    tipoUrnaT1::reference set_tipoUrnaT1 (ModuloEstadoGeralUrna::TipoUrnaT1::NamedNumber v)
+    tipoUrnaT1::reference set_tipoUrnaT1 (ModuloEstadoGeralUrna::TipoUrnaOperacao::NamedNumber v)
     { return *static_cast<tipoUrnaT1::pointer>(fields[1]) = v; }
 
     class tipoUrnaT2
     {
     public:
-        typedef ModuloEstadoGeralUrna::TipoUrnaT1 value_type;
+        typedef ModuloEstadoGeralUrna::TipoUrnaOperacao value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -455,7 +455,7 @@ public:
     tipoUrnaT2::const_reference get_tipoUrnaT2 () const { return *static_cast<tipoUrnaT2::const_pointer>(fields[2]); }
     tipoUrnaT2::reference ref_tipoUrnaT2 () { return *static_cast<tipoUrnaT2::pointer>(fields[2]); }
     tipoUrnaT2::reference set_tipoUrnaT2 () { return *static_cast<tipoUrnaT2::pointer>(fields[2]); }
-    tipoUrnaT2::reference set_tipoUrnaT2 (ModuloEstadoGeralUrna::TipoUrnaT1::NamedNumber v)
+    tipoUrnaT2::reference set_tipoUrnaT2 (ModuloEstadoGeralUrna::TipoUrnaOperacao::NamedNumber v)
     { return *static_cast<tipoUrnaT2::pointer>(fields[2]) = v; }
 
     class modelo
