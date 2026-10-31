@@ -1,8 +1,8 @@
 # Link order: inverting the function-order scramble
 
 Tools: `tools/linkorder/wasmcode.py` (code decoder, use counts), `tools/linkorder/linkorder.py` (solver),
-`tools/linkorder/tu_slices.py` and `tools/linkorder/tu_clusters.py` (runs of the recovered order),
-`tools/linkorder/*.py` (skeleton ground truth). Outputs: `ledger/ordinals.tsv`, `ledger/tu-clusters.tsv`.
+`tools/linkorder/tu_slices.py` (runs of the recovered order). Outputs: `ledger/ordinals.tsv`,
+`ledger/tu-clusters.tsv`. The scripts of the skeleton's ground truth and of the anchors are not in the tree (§6).
 
 The solver has two modes. The *offsets* mode (§3 to §5) anchors chunks by their offsets in the skeleton's live
 function list. The *positions* mode (§7) anchors them by their positions in each object's full function list and
@@ -37,7 +37,7 @@ So the "link ordinal" of the law is the **post-Oz defined index** (link order co
 thunks at the end), a permutation of 0..N+h-1 where h = metadce's removals (2 in the skeleton). Proof:
 replaying stage 3 on a copy of `emcc-05-wasm-opt.wasm` with a synthetic name section ("k" per function) and
 `-g` reproduces the code byte for byte and names every final function with its ordinal; sorting the final
-module by (uses desc, str(ordinal) desc) puts 0 of 10,212 functions out of place (`tools/linkorder/truth.py`).
+module by (uses desc, str(ordinal) desc) puts 0 of 10,212 functions out of place.
 Exports count as uses: leaving them out gives one apparent violation, index 3118, which is export `Mb`.
 
 Within a band, same-digit-count ordinals descend numerically; a 3-digit c sits right after the 4-digit 10c
@@ -82,7 +82,7 @@ anchors in 694 objects, split into 1,265 chunks because the target's live sets d
 
 Result: 4,860 anchored point estimates; rank windows ≤ 10 for 536 anchored functions, the rest wide (median
 window of all functions ≈ the whole range: the unanchored app code is NOT placed). Confident objects (≥ 5 members,
-≤ 10 feasible bases): 55, listed below; the grouping by `tools/linkorder/tu_clusters.py … 100` holds only the 580
+≤ 10 feasible bases): 55, listed below; a grouping by window holds only the 580
 functions with window ≤ 100. The ledger holds the positions solve instead (§7.4).
 
 Confident placements (ordinal range, members): libcrypto members `dso_lib` 86–90?, `cipher_aes_xts/wrp`
@@ -112,10 +112,8 @@ SQLite most likely sits in the 5-digit zone (12xxx) after the app, consistent wi
 
 ## 6. Commands
 
-Run from the repository root. The solve and its publication are scripted end to end; the anchors and the skeleton's
-ground truth start from intermediate files that one-off commands produce, which are described here but are not in
-the repository.
-Every path under `build/out/` is gitignored scratch.
+Run from the repository root. Every path under `build/out/` is gitignored scratch, and the solve's inputs are not in
+a clone: `ledger/ordinals.tsv` and `ledger/tu-clusters.tsv` are frozen results.
 
 The positions solve (§7) and what it publishes:
 
@@ -124,49 +122,23 @@ python3 -I tools/linkorder/linkorder.py solve target/vota_web_wasm.wasm --anchor
         --positions --top build/out/LINKORDER2/mgfn-target.txt --top-max 600 --holes 2 --repair 2 \
         -o build/out/LINKORDER2/ordinals.tsv --blocks build/out/LINKORDER2/blocks.tsv
 tools/linkorder/publish.sh build/out/LINKORDER2/ordinals.tsv build/out/LINKORDER2/blocks.tsv
-        # ledger/ordinals.tsv, ledger/tu-clusters.tsv and docs/reference/tu-slices.md (tu_slices.py),
+        # ledger/ordinals.tsv and ledger/tu-clusters.tsv (tu_slices.py),
         # build/out/LINKORDER2/linkline.md (linkline.py), and the window statistics of §7.4
 ```
 
-The anchors (§7.2):
-
-```
-python3 -I tools/linkorder/ident.py         # build/out/LINKORDER2/{pairs-target-skeleton,anchors-target,mgfn-target}.tsv
-python3 -I tools/linkorder/repair.py <anchors.tsv> <badlinks.tsv> <out.tsv>   # drop the smaller chunk of every inconsistent link
-python3 -I tools/linkorder/holdout_eval.py  # the hold-out check of §7.4
-```
-
-`ident.py` reads the frozen skeleton (`build/out/LINKORDER2/frozen/plain.wasm` and `functions.tsv`, copies of one
-plain link and its `ledger/functions.tsv`), its ground truth (`skeleton-truth.tsv`, below), the census outputs
-`build/out/census/census-d0.json` and `wasmfn-cmp.txt`, and `tools/libs/sqlite/attribution.tsv`; run against another
-census it pairs a slightly different set of functions. Three steps are one-off commands that are not in the
-repository: the §7.2 filters (no anchors in the roots and stub objects, none in COMDAT functions, none in libc++
-instantiations) that turn `anchors-target.tsv` into `anchors-target-f2.tsv`; `mgfn-target.txt`, the first column of
-`mgfn-target.tsv`; and the random 10 % split into `anchors-target-holdin.tsv` / `anchors-target-heldout.tsv` that
-`holdout_eval.py` reads (with the solve of the held-in set as `ordinals-target-holdout.tsv`).
-
-The skeleton's ground truth (§1, §7.1) needs a stage replay of one link. The link is run with `em++ -v`,
-`EMCC_DEBUG=1` and `EMCC_TEMP_DIR=<dir>` added to its own command (`build/out/wasm/vota_web/link.cmd`), which keeps
-emcc's intermediates (`emcc-01-base.wasm`, …) and prints each stage's command line. Then `stripnames.py` drops the
-name section of the wasm-ld output, the printed `wasm-opt` command is rerun on it with `--symbolmap`
-(`step05n.symbols`), `addnames.py` names every function by its index, and the printed `wasm-metadce` command is rerun
-with `-g` (`step10-named-g.wasm`). The scripts that run this hard-code one link's object list and emcc's temporary
-file names and are not in the repository; neither are the one-off lists `base-names.tsv`, `link-objects.txt`,
-`demangle-map.tsv`, `objfn/<k>.tsv` (`wasm-objdump -x -j Function` of each object) and the offsets mode's `arfn/`
-(the same per archive member). With those in place:
-
-```
-python3 -I tools/linkorder/truth2.py        # build/out/LINKORDER2/skeleton-truth.tsv, skeleton-objects.tsv, and the law check
-python3 -I tools/linkorder/truth.py         # the offsets mode's truth, on build/out/linkorder/ (segment.py assigns objects)
-```
-
-The offsets solve (§3, §4) and its grouping by `tu_clusters.py`, whose output format is not the one
-`ledger/tu-clusters.tsv` holds (`tu_slices.py` writes that file):
+The offsets solve (§3, §4):
 
 ```
 python3 -I tools/linkorder/linkorder.py solve MODULE.wasm --anchors A.tsv [--offsets] --holes 2 [--truth T.tsv] -o ordinals.tsv --blocks blocks.tsv
-python3 -I tools/linkorder/tu_clusters.py ledger/ordinals.tsv ledger/func-attribution.tsv ledger/vtables.json ledger/func-strings.tsv tu-clusters.tsv 100
 ```
+
+The anchors (§7.2) and the skeleton's ground truth (§1, §7.1) came from scripts that read a frozen skeleton and
+one-off lists no clone has, so they left the tree: `git show 0b5f410:tools/linkorder/<script>` has `ident.py`,
+`repair.py`, `holdout_eval.py`, `truth.py`, `truth2.py`, `segment.py`, `stripnames.py`, `addnames.py` and
+`tu_clusters.py`. The ground truth is a stage replay of one link: run it with `em++ -v`, `EMCC_DEBUG=1` and
+`EMCC_TEMP_DIR=<dir>` added to its own command (`build/out/wasm/vota_web/link.cmd`), which keeps emcc's intermediates
+(`emcc-01-base.wasm`, …) and prints each stage's command line, then rerun the printed `wasm-opt` on a name-stripped
+copy with `--symbolmap` and the printed `wasm-metadce` with `-g`.
 
 ## 7. Positions mode: full-list positions, sound windows, TU slices
 
@@ -177,7 +149,7 @@ Its scratch files are under `build/out/LINKORDER2/`.
 
 ### 7.1 Ground truth on a second frozen skeleton
 
-The stage replay of §1 on the frozen skeleton `build/out/LINKORDER2/frozen/` (`tools/linkorder/truth2.py`, §6):
+The stage replay of §1 on the frozen skeleton `build/out/LINKORDER2/frozen/` (§6):
 16,033 wasm-ld functions → 9,942 after -Oz (189 mgfn bodies appended at 9753..9941) → metadce removes 2 (ntohs,
 htonl) → 9,940; sorting by (uses desc, str(post-Oz index) desc) puts **0 of 9,940 out of place**. The same truth
 gives the *position-gap law* — for two live functions of one object at
@@ -188,7 +160,7 @@ only the .o.
 
 ### 7.2 Anchors
 
-`tools/linkorder/ident.py` identifies target functions with skeleton functions (the numbers are in
+Target functions are identified with skeleton functions (the numbers are in
 [facts/link-order.md](facts/link-order.md) §L5): ledger byte/fingerprint/addr pairs, census depth-0 pairs, wasmfn EXACT
 by unique name, the SQLite attribution (`tools/libs/sqlite/attribution.tsv`), OPENSSL_FUNC own-name strings, and callee-structure propagation (two
 paired functions with equal call counts pair their callees positionally). Gates: unique normalised body on both sides
@@ -253,7 +225,7 @@ has 536 / … / 580 at ≤10 / ≤50 / ≤100, for anchored functions only):
 | component openssl | 2,381 | 318 | 593 | 690 | 966 | 1,638 |
 | component 7zip / RHVoice / boost | 878 / 666 / 125 | 3 / 0 / 0 | 3 / 2 / 0 | 3 / 4 / 0 | 47 / 130 / 15 | 2,494 / 823 / 2,577 |
 
-Hold-out check on the target itself (no truth needed; `tools/linkorder/holdout_eval.py`): 465 of the 4,730 final anchors held out
+Hold-out check on the target itself (no truth needed): 465 of the 4,730 final anchors held out
 (10 %), solve repeated without them, then each held-out function's window tested against the windows of its object's nearest
 held-in members below and above its .o position: 423 consistent, 13 inconsistent, 29 without a neighbour; of the 90 held-out
 functions that got a window ≤ 50, 6 are inconsistent. So about 7 % of the tight windows are wrong (a lower bound: the test
@@ -276,7 +248,7 @@ anchored through their byte pairs) are the only anchors inside the app region; t
 elimination: everything between the first libcrypto members and the 9xxx libcrypto run) is placed by the band walk (§7.5),
 not by the solver.
 
-### 7.5 TU slices (`tools/linkorder/tu_slices.py` → `ledger/tu-clusters.tsv`, `docs/reference/tu-slices.md`)
+### 7.5 TU slices (`tools/linkorder/tu_slices.py` → `ledger/tu-clusters.tsv`)
 
 `tools/linkorder/tu_slices.py` walks every use-count band: anchored (library) functions bound the segments, each segment is
 sliced into runs of one *probable file* — the std::source_location records the function references (1,009 functions,
@@ -291,8 +263,7 @@ reads as clean reverse link order: e.g. band positions 11,047–11,066 = 20 func
 `uenux2/src/app/comum/relatorios/crelatoriotesteimpressora.cpp` (18 by class, 1 by record), then `cparterdv.cpp`,
 `cparteeleitores.cpp`, `cpartecargos.cpp`, …, then the `dados/asn/estadoaplicacao/cconversor*.cpp` converters one or two
 functions each. Each stretch row carries the band, the exact band-position range, the (loose) zone-major ordinal
-window, the component mix, the file and the evidence kinds; `docs/reference/tu-slices.md` is the table, `ledger/tu-clusters.tsv`
-the machine-readable form (one row per band stretch; a TU appears once per band it has functions in).
+window, the component mix, the file and the evidence kinds; `ledger/tu-clusters.tsv` is the table (one row per band stretch; a TU appears once per band it has functions in).
 
 A stretch is a run of band positions, which the order law makes reverse link order except where a function of
 another digit zone sorts in (a 3- or 2-digit ordinal sorts right after the 4-digit ones it begins). The twin rule takes

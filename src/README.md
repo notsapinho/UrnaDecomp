@@ -3,7 +3,7 @@
 ```
 TMPDIR=/tmp make -C src libs     # the upstream libraries, through tools/libs/*/build.sh
 TMPDIR=/tmp make -C src link     # the app objects, the plain link and its --emit-symbol-map twin
-TMPDIR=/tmp make -C src census   # census of the plain link → ledger/functions.tsv and a snapshot in ledger/history/
+TMPDIR=/tmp make -C src census   # census of the plain link → ledger/functions.tsv
 TMPDIR=/tmp make -C src splat    # the official check: the target's sha256 and the meter (docs/reference/splat.md)
 make -C src status               # README.md's headline, docs/status.md's progress blocks and docs/img/progress-*.svg, from splat/scan.tsv
 make -C src stubs                # the stub of every TSE function not decompiled yet, and the gaps (below); stubs-check checks them
@@ -22,7 +22,7 @@ byte-compare it).
 | `mk/` | the build machinery the unit fragments rely on: `ecourna-flags.mk`, `asn1.mk` (the ASN.1 runtime and modules), `splat-*.mk` (the splat build) |
 | `units/` | one fragment per landed unit, `<NN>-<component>-<what>.mk`, with its roots, pending and externs files (`units/README.md`) |
 | `ecourna/`, `uenux2/`, `asn1/` | the reconstructed TUs: ecourna mirrors the conan package's `b/src/ecourna`, uenux2 mirrors `/home/rubio/tse/uenux2` (`src/…`, `wasm/…`), asn1 the III ASN.1 fork. TSE's sources are Latin-1 (`.editorconfig`) |
-| `app/vota_init.cpp` … `wasm_sound.cpp` | the 8 exported functions as hand-written stand-ins (the glossary's second meaning of *stub*), signatures from the target export types; TU order = export order |
+| `app/vota_init.cpp`, `vota_api.cpp`, `main.cpp` | the exported functions not decompiled yet as hand-written stand-ins (the glossary's second meaning of *stub*), signatures from the target export types; TU order = export order |
 | `app/roots.cpp` | one function the stubs call that reaches every library entry point once (keeps the app's reachable set without exporting) |
 | `app/roots_ecourna.cpp`, `app/roots_uenux2.cpp` | callers of the reconstructed ecourna / uenux2 units with the target's call-site counts (binaryen inlines a function it sees called once); they link first, so what they instantiate is the copy the link keeps (`units/README.md` "Companion files") |
 | `app/roots_{7zip,rhvoice,boost}.cpp`, `stubs_7zip.cpp` | the library probes' drivers compiled as app code; definitions 7-Zip needs that emscripten lacks |

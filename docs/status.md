@@ -21,7 +21,9 @@ Never edit the numbers or the waffles by hand.
 
 The meter groups each target function by its [component](glossary.md#component-and-owner). A component records
 who calls a function, not which library its code comes from: libc's `pad` (target 788) counts as `RHVoice`, and a
-library function with no evidence of its own that only TSE code calls counts as that TSE component.
+library function with no evidence of its own that only TSE code calls counts as that TSE component. So `not
+attributed` is mostly OpenSSL, SQLite and emscripten's own system libraries whose callers the attribution could not
+name ([Not attributed](#not-attributed)).
 
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
@@ -185,4 +187,4 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved
-since the snapshot in `ledger/history/`.
+since the committed ledger.

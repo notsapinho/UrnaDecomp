@@ -1,8 +1,8 @@
 #!/bin/bash
 # Whole-module census of the skeleton link against the target. Run from the urna root (make -C src census).
 # Writes build/out/census/{census-d2.json,census-d0.json,census-d2-pairs.txt,ledger.log,skeleton-named.fns.jsonl,
-# wasmfn-cmp.txt,report.md,progress.md}, ledger/functions.tsv and a snapshot ledger/history/<stamp>.tsv (the toolkit's
-# `progress` prints the census tiers and their delta against the previous snapshot). Needs the vendored toolkit asmlift-wasm/ (pnpm install there once; WASM_KIT points at another copy) and wabt.
+# wasmfn-cmp.txt,report.md,progress.md} and ledger/functions.tsv (the toolkit's `progress` prints the census tiers and
+# their delta against the ledger committed at HEAD). Needs the vendored toolkit asmlift-wasm/ (pnpm install there once; WASM_KIT points at another copy) and wabt.
 set -euo pipefail
 ROOT=$(pwd)
 WASM_KIT=${WASM_KIT:-$ROOT/asmlift-wasm}
@@ -50,9 +50,9 @@ for l in open(sys.argv[1]):
 print(f"EXACT {ex} (bodies of ≥ 8 instructions: {big}, of which exactly one target function has that body: {uniq}), NO {no}")
 PY
 } > "$OUT/report.md"
-# the census tiers per owner and per component with the delta since the previous snapshot, then snapshot this ledger
+# the census tiers per owner and per component with the delta since the ledger committed at HEAD
 {
-  kit progress --ledger "$ROOT/ledger" --by owner --moves 40 --snapshot census 2>/dev/null
+  kit progress --ledger "$ROOT/ledger" --by owner --moves 40 2>/dev/null
   echo
   kit progress --ledger "$ROOT/ledger" --by component --moves 0 2>/dev/null | sed -n '3,$p'
 } > "$OUT/progress.md"

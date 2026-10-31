@@ -42,8 +42,8 @@ Consequences:
 
 ## L2. The mechanism: the ordinal is the post-Oz index, and wasm-metadce sorts
 
-Replaying the stages of the skeleton link (`em++ -v` with `EMCC_DEBUG=1`, intermediate `emcc-NN-*.wasm`; scripts
-`tools/linkorder/{truth,segment,stripnames,addnames}.py`):
+Replaying the stages of the skeleton link (`em++ -v` with `EMCC_DEBUG=1`, intermediate `emcc-NN-*.wasm`;
+[link-order.md](../link-order.md) §6):
 
 1. **wasm-ld** (`--strip-debug`) output still has a name section (15,966 names): `--strip-debug` drops DWARF only.
    Defined functions in input order: `__wasm_call_ctors` = 0, the `signature_mismatch:*` stubs, each object's live
@@ -143,7 +143,7 @@ puts 0 of 9,940 out of place.
 **full** function list (`wasm-objdump -x -j Function` on the `.o`), 1 ≤ Δordinal ≤ Δposition: 8,737 pairs, 0
 violations. Dead functions between them occupy no ordinal; nothing else can sit between them.
 
-**Identification** (`tools/linkorder/ident.py`): sources are the ledger's byte/fingerprint/addr pairs, census
+**Identification**: sources are the ledger's byte/fingerprint/addr pairs, census
 depth-0 pairs, exact bodies by unique name, the SQLite attribution, OpenSSL own-name strings, then callee-structure
 propagation (paired functions with equal call counts pair their callees positionally). Gates: the normalised body
 is unique on both sides (or the name is unique), ≥ 6 instructions, no function paired twice. Result: 5,611 pairs (exact
@@ -177,7 +177,7 @@ removal count is not decidable from this data; 2 is kept.
 zone confirmed); a 7-Zip object at 14058–14068; mgfn bodies above everything. By elimination, the app code sits at
 ordinals ≈ 300–9200.
 
-**TU slices** (`tools/linkorder/tu_slices.py` → `ledger/tu-clusters.tsv`, `docs/reference/tu-slices.md`): in each use band the
+**TU slices** (`tools/linkorder/tu_slices.py` → `ledger/tu-clusters.tsv`): in each use band the
 unanchored functions between library anchors are sliced into runs of one probable file, labelled by
 `source_location` records, else by the vtable class's file. 1,385 stretches over 7,339 functions; 1,732 of 3,270
 app functions labelled. The uses==1 band's app region is clean reverse link order (e.g. band 11047–11066 = 20
@@ -187,8 +187,8 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
 ## L7. Traps when inverting the order
 
 1. `wasm-opt … --symbolmap=f` makes wasm-opt read the name section, so the output differs from the plain build.
-   To see the names binaryen uses in the plain pipeline, strip the name section first
-   (`tools/linkorder/stripnames.py`), then add `--symbolmap`: the map reads "0".."N" plus `byn$` names.
+   To see the names binaryen uses in the plain pipeline, strip the name section first,
+   then add `--symbolmap`: the map reads "0".."N" plus `byn$` names.
 2. The order is decided in wasm-metadce, not in `wasm-opt -Oz`: a module taken after the first wasm-opt is still
    in link order. Compare orders only on the final module.
 3. The shared skeleton output (`build/out/wasm/vota_web/vota_web_wasm.wasm`) is relinked by every build: tie each
