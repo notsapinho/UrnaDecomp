@@ -24,13 +24,19 @@ namespace vota {
 // calls fns 5410 and 1903, which have no name, deletes the old object through fn 244 and, before it returns, calls fn
 // 150 (one body with std::mutex::unlock) on @1908732.
 //
-// The statics are what the slots and the static members read and write: in .data, three 32-bit counters that hold 1
-// and that StartState sets to 1 again (@1590924, @1590928, @1590932, in that order); in .bss, a byte that StartState
-// and AvancaTentativa clear (@1908668). AvancaTentativa compares the first with the byte CConfiguracaoEleicao holds at
-// +136 (its CParametrosUrna's numTentativasHabilitacao), AvancaVerificacao the second with the one at +140
-// (numTentativasVerificacao). StartState also writes other .bss words of the file (@1908672 to @1908728) that are not
-// declared here. src/units/161-uenux2-app-vota-operador-identidade.mk says which of this is evidence and which is
-// chosen.
+// The statics are what the slots and the static members read and write: in .data, three 32-bit words that hold 1 and
+// that StartState sets to 1 again (@1590924, @1590928, @1590932, in that order); in .bss, a byte (@1908668).
+// AvancaTentativa compares the first with the byte CConfiguracaoEleicao holds at +136 (its CParametrosUrna's
+// numTentativasHabilitacao), AvancaVerificacao the second with the one at +140 (numTentativasVerificacao); fn 10465
+// copies the first into the third, and fn 10425 reads the third's low byte. The .bss byte is the index of the finger
+// being captured: StartState and AvancaTentativa set it to 0; AvancaProximoDedo1x4, inlined into fn 10465 under
+// record 187, adds 1 to it while it is not 4 and otherwise throws EUeVotaError 9399 ("Fim da verificação 1x4
+// atingido."); fn 10465 also tests it against 4 at +0xe62, a `br_if` out of a loop, and fns 10465 and 10425 read the
+// word at @1590944 + 4 * byte, a table whose words are 1, 6, 2, 7, 3, 4, 5, 8, 9, 10. So it is an unsigned byte
+// counter (each read is i32.load8_u), not a flag; uebyte, the tree's spelling of that type, is a choice. StartState
+// also writes other .bss words of the file (@1908672 to @1908728) that are not declared here. The statics' names are
+// chosen: s_indiceDedo from the byte's role, s_tentativaRegistrada from 10465's copy.
+// src/units/161-uenux2-app-vota-operador-identidade.mk says which of this is evidence and which is chosen.
 class CControlaReconhecimento final : public comum::CAppState {
 public:
     virtual ~CControlaReconhecimento() override;
@@ -51,8 +57,8 @@ private:
 
     static int s_tentativa;
     static int s_verificacao;
-    static int s_dedo;
-    static bool s_bCapturou;
+    static int s_tentativaRegistrada;
+    static uebyte s_indiceDedo;
 
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };

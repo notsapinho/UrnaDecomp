@@ -9,8 +9,8 @@ namespace vota {
 
 int CControlaReconhecimento::s_tentativa = 1;
 int CControlaReconhecimento::s_verificacao = 1;
-int CControlaReconhecimento::s_dedo = 1;
-bool CControlaReconhecimento::s_bCapturou = false;
+int CControlaReconhecimento::s_tentativaRegistrada = 1;
+uebyte CControlaReconhecimento::s_indiceDedo = 0;
 
 CControlaReconhecimento::~CControlaReconhecimento() = default;
 
@@ -19,7 +19,7 @@ CControlaReconhecimento::~CControlaReconhecimento() = default;
 void CControlaReconhecimento::AvancaTentativa()
 {
     if (!AtingiuLimiteTentativas()) {
-        s_bCapturou = false;
+        s_indiceDedo = 0;
         ++s_tentativa;
     } else {
         throw CUeVotaError(EUE_VOTA_LIMITE_TENTATIVAS_ATINGIDO, "Limite de tentativas atingido.");
