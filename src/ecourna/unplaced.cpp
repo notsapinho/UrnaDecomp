@@ -302,11 +302,6 @@
 // f3596 · 304 B · unmatched · placement: link order · name unknown
 // ? f3596(i32, i32, i32) { ... }
 
-// link-order cluster 970 · uses=3 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpedetitulomesariovotacao.cpp
-
-// f3611 · 18 B · unmatched · placement: link order · name unknown
-// ? f3611(i32, i32, i32, i32) { ... }
-
 // link-order cluster 978 · uses=3 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
 
 // f3645 · 608 B · unmatched · placement: link order · name unknown

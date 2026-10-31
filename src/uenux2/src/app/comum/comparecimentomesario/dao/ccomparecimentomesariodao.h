@@ -20,6 +20,9 @@ public:
     std::vector<TDado> RecuperarTodos() const override;
 
 private:
+    comum::md::CComparecimentoMesario::EstadoReconhecimentoBiometrico ConverteEstadoBiometria(ueint32 estado) const;
+    comum::md::CDedo::TipoDedo ConverteDedoHabilitacao(const ueint32 dedo) const;
+
     ecourna::api::sql::TSharedSqlConnection m_conexao;
 };
 

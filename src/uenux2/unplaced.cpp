@@ -1330,11 +1330,6 @@
 // f10276 · 241 B · unmatched · placement: link order · name unknown
 // void f10276(i32, i32, i32) { ... }
 
-// link-order cluster 264 · uses=1 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp
-
-// f10312 · 13 B · unmatched · placement: link order · name unknown
-// void f10312(i32) { ... }
-
 // link-order cluster 420 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
 // f11224 · 13 B · unmatched · placement: link order · name unknown
@@ -1371,11 +1366,6 @@
 
 // f11448 · 1570 B · unmatched · placement: link order · name unknown
 // void f11448(i32, i32, i32) { ... }
-
-// link-order cluster 490 · uses=1 · neighbours' file uenux2/src/app/comum/asn/util.cpp
-
-// f11464 · 13 B · unmatched · placement: link order · name unknown
-// void f11464(i32) { ... }
 
 // link-order cluster 511 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cservicoestadogeral.cpp
 
@@ -1759,11 +1749,6 @@
 // f3603 · 15 B · unmatched · placement: link order · name unknown
 // ? f3603() { ... }
 
-// link-order cluster 970 · uses=3 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpedetitulomesariovotacao.cpp
-
-// f3607 · 12 B · unmatched · placement: link order · name unknown
-// ? f3607(i32) { ... }
-
 // link-order cluster 991 · uses=3 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
 // f3685 · 159 B · unmatched · placement: link order · name unknown
@@ -1793,9 +1778,6 @@
 // void f3728(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1005 · uses=3 · neighbours' file uenux2/src/app/comum/md/cabrangencia.cpp
-
-// f3740 · 12 B · unmatched · placement: link order · name unknown
-// ? f3740(i32) { ... }
 
 // f3732 · 767 B · unmatched · placement: link order · name unknown
 // ? f3732(i32, i32) { ... }

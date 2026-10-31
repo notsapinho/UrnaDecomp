@@ -1,8 +1,13 @@
+#include "app/comum/justificativa/cjustificador.h"
 #include "app/comum/justificativa/cjustificadordetalhe.h"
 
 namespace comum {
 
 CJustificadorDetalhe::CJustificadorDetalhe(const CJustificadorDetalhe& outro) = default;
+
+CJustificador::CJustificador() : CDataMap("CJustificador")
+{
+}
 
 } // namespace comum
 
