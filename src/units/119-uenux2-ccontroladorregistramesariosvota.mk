@@ -1,12 +1,15 @@
 # uenux2 vota::CLogVota (src/app/vota/log/clogvota.cpp, the file its std::source_location records name) and
 # vota::CControladorRegistraMesariosVota (src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp), with the
-# slots of their interface comum::IControladorRegistraMesarios (unit 100's head). Target fns:
+# slots of their interface comum::IControladorRegistraMesarios (unit 100's head), and the state its slot 11 returns,
+# vota::CRegistroMesarioEncerrado (src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp). Target fns:
 # - 184, CLogVota::GetInst: CPolySingletonList::has<comum::IEventosLog>, then CPolySingleton<comum::IEventosLog>::set with
 #   push, both inlined by binaryen (two more stack prologues), then the instance through dynamic_cast to CLogVota&;
 # - the controller's 37 slots (10800 down to 10766, with 434 in slot 8), and the bodies binaryen merged some of them into:
-#   3887 (slots 31 to 33 in the target, 32 and 33 here: below), 3888 (slots 29, 34 and 36), 6017 (slots 19 and 27).
-# Matched: 184, 3887, 3888, 6017, 10766 to 10770, 10772, 10773, 10775 to 10779, 10781 to 10785, 10788, 10791, 10798 and
-# 10799. Slot 8 is the shared 434 (`return true`), matched before. Unit 02 matches 422 and 5451, which slot 3 reaches.
+#   3887 (slots 31 to 33 in the target, 32 and 33 here: below), 3888 (slots 29, 34 and 36), 6017 (slots 19 and 27);
+# - CRegistroMesarioEncerrado's two exit-time destructors, 10765 (the pointer's) and 10764 (the mutex's).
+# Matched: 184, 3887, 3888, 6017, 10764 to 10779, 10781 to 10785, 10788, 10791, 10793, 10796 and 10798 to 10800.
+# Slot 8 is the shared 434 (`return true`), matched before. Unit 02 matches 422 and 5451, which
+# slot 3 reaches, and names CTickManager::AddTick (3644), which slot 2 (10800) calls, by a `callers+content` hand line.
 #
 # clogvota.cpp:
 # - GetInst's one record, line 37 column 37, is instance()'s default std::source_location: four spaces of indent and
@@ -35,30 +38,70 @@
 #   function would have it (docs/reference/facts/reading.md R6). Which member is first is chosen (AddTick).
 # - comum::IControladorRegistraMesarios declares the 35 slots pure: the target has no vtable of the interface, and its one
 #   implementer gives the order and the wasm types. Every name is chosen (the interface header says from what); a slot
-#   with nothing to name it is SlotN.
+#   with nothing to name it is SlotN. Every slot but SetTituloMesario is const, here as in the interface, whose header
+#   gives the evidence (comum's mesario states call 28 of them through a const reference, unit 135); the const changes
+#   the members' symbols and no byte: step 9 renamed the match lines of the 20 const slots matched here and of fns
+#   3887, 3888 and 6017 to their _ZNK names.
 # - Slots 2 to 4 call the ticks of vota::CThreadOperador (fn 270). CThreadVota::AddTick is out of line in cthreadvota.cpp
 #   beside StopTick and StartTick (a choice); binaryen inlines it into slot 2, its one caller. Slots 17 and 18 return and
 #   assign +96 of CThreadOperador, unit 116's second string, now m_tituloMesario with an inline getter and setter (chosen:
 #   an out-of-line pair was not measured); slots 31 to 33 format it.
 # - Slot 30 takes the four scores as a const std::vector<int>& (chosen: it loads a data pointer and four ints, each of
 #   type code 3). Slot 12 returns CFinalizaOperador::GetInst() (fn 5342) as comum::CAppState&, a chosen type.
+# - Slot 6 (10796) reads the first word of comum::CAppInfo::GetInst().GetVota() (fns 185, 261 with 51), the vote state,
+#   and returns 1, 2, 0 and 3 for 55, 56, 57 and 58 (a table at 534720), else 0. The getter's name, GetEstadoVota, is the
+#   target's Assert texts' (cestadogeralvota.h says which). No text or record names EEstadoVota's 52 to 58 (the Assert
+#   holders compare with 49 to 51 and 59 to 64), so the cases are bare numbers, and the switch is a choice. Same rows,
+#   measured on objects at this tree's flags with the call, global and __memory_base numbers masked: the switch with or
+#   without `case 57: return 0;`, an if chain over a local, a local set in the switch and returned, and a static table
+#   of the four values indexed by the state less 55. The target's dead `local.set 0` of 0 at the entry is the switch's
+#   default held in a local, which each of those objects has too (a reading). A --single try returns that local where the
+#   target has `i32.const 0` (`score 4 over 23 rows`, 3 of them operand-only); the link gives the target's bytes.
+# - Slot 11 (10793) returns CRegistroMesarioEncerrado::GetInst(), which binaryen inlined into its one caller: the 12-byte
+#   new, comum::CAppState's constructor (fn 224) with 1 and the vptr store, the old object freed with no call through
+#   the vtable, the mutex's unlock (fn 150). The class is written as unit 104's states with no member are (unit 104's
+#   fragment has the measurements behind that shape): final, a private constructor out of line, GetInst with a
+#   std::lock_guard in the .cpp, and the statics defined below it, pointer first. The target fits it: the mutex
+#   (@1904864) 24 bytes below the pointer (@1904888), the pointer's destructor (10765) ahead of the mutex's (10764) in
+#   link order. Evidence: the class, its base and its vtable (RTTI, @1586768); its slots 2 and 6 (10763, 10762), its
+#   own, and the base's slots 3 to 5, 7 and 8; the base constructor's argument 1, bit 0, the flag the context reads
+#   before it calls slot 6 (cappstate.h), spelled EVENTO_TECLA, that header's chosen name. Each static's other user is
+#   its destructor, so the two destructors and 10793 hold each other (docs/reference/splat.md "No circular evidence").
+#   Chosen: the path, the guess
+#   of ledger/tu-clusters.tsv's stretch 345 (`class-convention`), which lies between this class's stretch 346 and
+#   CHorarioVotacaoTerminou's 344, and beside this .cpp, whose own path is chosen; GetInst's name, the statics' names, the
+#   local, and ProcessKey's name (cappstate.h's).
+# - Slot 28 (10774), LogaLimiteMesariosAtingido, calls comum::IEventosLog::logaAlerta (fn 1398, unit 111's file) on
+#   CLogVota::GetInst() with std::format of the target's literal (ledger/strings.tsv 4576, 58 bytes, with its accents)
+#   and one argument of type code 6, libc++'s __arg_t::__unsigned: an unsigned type of 32 bits or less, so `6u` is a
+#   choice among those.
 # - The members are defined in slot order, a choice: the band puts 10793 (slot 11) above 10792 (slot 10) and 10788
 #   (slot 17) above 10787 (slot 15), and those slots are pending here.
 #
-# Written, and what each waited for (both match now):
+# Written, and what each waited for (all three match now):
 # - 10771, slot 31: its literal is 44 bytes, and at -O2 its std::format kept the search of the literal for a brace
 #   (`score 253 over 255 rows (same 2, replaced 4 [1 operand-only], inserted 249, deleted 0)`); the target has none, which
 #   is -O3's limit (docs/reference/facts/reading.md R13). At the tree's -O3 it matches, a thunk into 3887 with slots 32
 #   and 33, and binaryen names 3887 after it (the rename of 3887's line in splat/matched.txt).
 # - 10800, slot 2: it was `unresolved` while its call named no target function, and matches since CTickManager::AddTick
 #   (3644) is named (unit 02's fragment); 3644 itself is written and `differs`.
+# - 10774, slot 28: the same limit. At -O2 its std::format keeps the search of the 58-byte literal for a brace (a loop
+#   and two br_table over `i32.const 123`; the target has none): `pnpm wasm score` against our link reads `52 over 216
+#   rows (same 164, replaced 11 [11 operand-only], inserted 35, deleted 6)`. With this unit's four files at -O3 in a
+#   whole-link try (`tools/round/try-tu.sh --flags -O3 --skip-units 119-uenux2-ccontroladorregistramesariosvota.mk
+#   --component uenux2/src/app/vota/eleitor/fimvotacao --roots <this unit's -roots.cpp>` over clogvota.cpp,
+#   ccontroladorregistramesariosvota.cpp, cregistromesarioencerrado.cpp and the -pending.cpp), the
+#   score is `11 over 181 rows (same 170, replaced 11 [11 operand-only], inserted 0, deleted 0)`, and `pnpm wasm
+#   splat-remap --against 10774` prints IDENTICAL, operand kinds verified, with logaAlerta's name for 1398 added to a
+#   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
-# Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): slots 5, 6, 7, 9,
-# 10, 11, 13, 14, 15, 16 and 28 (fns 10797, 10796, 10795, 10794, 10792, 10793, 10790, 10789, 10787, 10786, 10774), and
-# behind them fns 6018 and 2264.
+# Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
+# slots 5, 7, 9, 10, 13, 14, 15 and 16 (fns 10797, 10795, 10794, 10792, 10790, 10789, 10787, 10786), and behind them fns
+# 6018, 2264, 4662 and 5343; CRegistroMesarioEncerrado's StartState and ProcessKey (fns 10763, 10762).
 #
-# Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). GetInst's callers are the slots.
-CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp
+# Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the
+# slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in.
+CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 CCONTROLADORREGISTRAMESARIOSVOTA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/119-uenux2-ccontroladorregistramesariosvota-pending.o: $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota.mk $(CCONTROLADORREGISTRAMESARIOSVOTA_HDRS)

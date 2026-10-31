@@ -654,8 +654,8 @@ only for the objects `build/out/wasm/vota_web/link.cmd` names.
 - **`UENUX2_HDRS` holds no `src/asn1` header** (`src/Makefile` line 145). `make -n -C src link -W
   $PWD/src/asn1/modules/ModuloImpedidos.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | /usr/bin/grep -c cconversorimpedido`
   prints 0, although that TU includes the header. After an edit of `asn1.h` or a module header, list the link's objects
-  make will not rebuild that hold the header's mangled name (`4ASN1` for `asn1.h`, `16ModuloImpedidos` for that
-  module), move them aside by name and rebuild (4487d6b):
+  make will not rebuild that hold the header's mangled name (`4ASN1` for `asn1.h`, `15ModuloImpedidos` for that
+  module: the number is the name's length in characters), move them aside by name and rebuild (4487d6b):
 
       mkdir -p build/out/workflow-facts
       make -n -C src link -W $PWD/src/asn1/asn1.h | /usr/bin/grep -oE -- '-o [^ ]+\.o' | cut -c4- | sort > build/out/workflow-facts/rebuilt.txt

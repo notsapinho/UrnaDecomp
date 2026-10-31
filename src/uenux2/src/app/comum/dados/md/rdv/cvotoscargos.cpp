@@ -1,5 +1,5 @@
 #include "app/comum/dados/md/rdv/cvotoscargos.h"
-
+#include "app/comum/dados/euerdverror.h"
 namespace comum::md {
 
 TQtdVoto CVotosCargos::Candidato(TCargoID cargo, std::string numero) const
@@ -50,12 +50,28 @@ TQtdVoto CVotosCargos::Cargo(TCargoID cargo) const
     return it == m_mapa.end() ? 0 : it->second.Total();
 }
 
-} // namespace comum::md
-
+// (original lines 53-54: content not recovered)
+#line 55
 // <stubs>
 // f5643 · 665 B · unmatched · name unknown
 // ? f5643(i32, i32) { ... }
+// </stubs>
 
+// (original lines 60-85: content not recovered)
+#line 86
+const CVotos& CVotosCargos::GetVotos(TCargoID cargo) const
+{
+    const auto it = m_mapa.find(SCargoInfo{cargo});
+    if (it == m_mapa.end()) {
+        const std::string mensagem = "Cargo " + std::to_string(cargo) + " nao encontrado";
+        throw api::CUeRdvError(api::EUE_RDV_CARGO_NAO_ENCONTRADO, mensagem);
+    }
+    return it->second;
+}
+
+} // namespace comum::md
+
+// <stubs>
 // f4454 · 5617 B · unmatched · name unknown
 // void f4454(i32) { ... }
 // </stubs>

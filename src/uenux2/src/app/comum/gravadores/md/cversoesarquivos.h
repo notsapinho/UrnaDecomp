@@ -10,11 +10,16 @@ namespace comum::md {
 // key and a string value. ValidaCriacao (records cversoesarquivos.cpp:28 and :33) tests the string's length and the
 // map's size. The map's alias, the member and parameter names are chosen, from the messages ("Versão da TAG
 // inválida", "Versões de arquivos inválida"). That ValidaCriacao is private is a choice too.
+// comum::asn::CConversorVersoesArquivos::DoConverte (target fn 10264) reads the two members in place, the getters'
+// code inlined: their names are chosen, and so is their being inline here.
 class CVersoesArquivos {
 public:
     using TMapVersoes = std::map<std::string, std::string>;
 
     CVersoesArquivos(const std::string& versaoTag, const TMapVersoes& versoes);
+
+    const std::string& GetVersaoTag() const { return m_versaoTag; }
+    const TMapVersoes& GetVersoes() const { return m_versoes; }
 
 private:
     void ValidaCriacao() const;

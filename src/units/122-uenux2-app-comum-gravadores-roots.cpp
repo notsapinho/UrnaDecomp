@@ -10,9 +10,10 @@
 // - comum::CGravadorUtil::DeterminaNomeArquivo (fn 3798): fns 1276, 1396 and 12134; 1396 is written;
 // - comum::asn::ConverteSerialFlash and DesconverteSerialFlash (fns 3605, 3604): fns 10287, 10291 and 11399, and 10284,
 //   10290 and 11400;
-// - comum::md::CVersoesArquivos's constructor (fn 5867): fns 10263 and 12098; and libc++'s hinted emplace into a
-//   std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 3689, 4625, 5867 and
-//   12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns nothing);
+// - comum::md::CVersoesArquivos's constructor (fn 5867): fn 12098 (10263 is in the link); and libc++'s hinted emplace
+//   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 3689, 4625,
+//   5867 and 12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns
+//   nothing);
 // - comum::CGravadorRCSecao::CriaIdentidadeEleitor (fn 5845): fn 11616, GravaResultado.
 // - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
 //   it: the constructor that stores it (inlined into fn 12098) is not written, so its address goes into a sink.
@@ -73,8 +74,8 @@ __attribute__((noinline)) int w122_serial(const std::string& serial, const std::
         comum::asn::DesconverteSerialFlash(flash).size() + comum::asn::DesconverteSerialFlash(outra).size());
 }
 
-// stands for fns 10263 and 12098, and, with its copy of a map, for fns 3689 and 4625, which call libc++'s hinted emplace
-// into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
+// stands for fn 12098 (10263 is in the link), and, with its copy of a map, for fns 3689 and 4625, which call libc++'s
+// hinted emplace into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
 __attribute__((noinline)) int w122_versoes(const std::string& tag, const comum::md::CVersoesArquivos::TMapVersoes& versoes,
     const std::string& outra)
 {

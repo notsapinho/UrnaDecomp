@@ -36,4 +36,11 @@ TQtdVoto CVotos::TotalQue(bool (CVoto::*criterio)() const) const
     return Conta([&criterio](const CVoto& voto) { return (voto.*criterio)(); });
 }
 
+
+
+CVotos::CVotos(std::vector<CVoto> votos) : m_votos(std::move(votos))
+{
+    m_votos.reserve(1000);
+}
+
 } // namespace comum::md

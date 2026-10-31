@@ -860,11 +860,11 @@ its callers 10929 and 10931 match by its record (`ctextfielddoubleline.cpp` 68:2
 
 A trap in a `-pending.cpp` is right for a member that cannot be written yet (a callee or a type the tree lacks), that
 cannot match until other code lands (a merge thunk: `src/units/README.md` "Pending members"), or whose real body would
-cost a match: `return "CProgressBar";` compiles to the target's 10975 and stays a trap because the real body would drift
-matched 9696 (unit 40). A member the compiler writes from the class definition has no body to trap at all (an implicit
-destructor), so there the class stays as it is and the fragment says what differs. Do not replace a right body with a
-trap to clear a row. A member a constructor would bring waits for the unit that writes that constructor, unless a
-builder the link drops can emit it (`src/units/README.md` "A control block").
+cost a match: `return "CProgressBar";` compiles to the target's 10975 and stayed a trap while the real body would drift
+matched 9696 (unit 40; written since, it matches with 9696). A member the compiler writes from the class definition has
+no body to trap at all (an implicit destructor), so there the class stays as it is and the fragment says what differs.
+Do not replace a right body with a trap to clear a row. A member a constructor would bring waits for the unit that
+writes that constructor, unless a builder the link drops can emit it (`src/units/README.md` "A control block").
 
 **The destructors say how the class is declared.** Read the D2 and D0 in the vtable's slots 0 and 1 before you write
 the class head. The D2's bytes are the same in every form of the destructor, so a D2 that matches settles nothing; the

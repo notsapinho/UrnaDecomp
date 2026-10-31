@@ -25,6 +25,11 @@
 // which the context reads before calling slots 6, 7 and 8 (fns 3842, 5909 and 5908 load +8, +9 and +10). The member
 // names, the enumeration of the bits and the argument's type are chosen; the target's callers pass every value from 0
 // to 7 (`awk -F'\t' '$2==224' ledger/callgraph.tsv`, 97 callers).
+// That it can be called with no argument, and then passes 0, is evidence: fn 10327 clears 11 bytes of each
+// comum::IGestorDadoMesario it builds at the base's alignment and then calls fn 224 with 0, the value-initialization of
+// a base whose default constructor is not user-provided (src/units/135-uenux2-comum-mesario-estados.mk has the forms
+// measured). A default argument rather than an inline `CAppState()` that delegates (the same bytes), and its spelling,
+// are chosen.
 //
 // Out of line, in app/comum/cappstate.cpp: the constructor (97 derived constructors call fn 224 before storing their
 // own vptr) and the destructor. A member of the class is out of line, as the key function: the typeinfo (@1551284) is
@@ -66,7 +71,7 @@ public:
     virtual void ProcessTick(uebyte) {}
 
 protected:
-    explicit CAppState(int eventos);
+    explicit CAppState(int eventos = EVENTO_NENHUM);
 
     CAppState* m_pNextState;
 

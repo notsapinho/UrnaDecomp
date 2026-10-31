@@ -2,18 +2,20 @@
 // the target keeps them.
 //
 // Each is called directly in the target, from two to ten callers (ledger/callgraph.tsv), none of which is reconstructed
-// but 10791 (5342's, slot 12 of unit 119's controller) and 11794 (1337's, unit 142's), and binaryen inlines a function
-// with one call site. So one noinline stand-in calls each twice, which is one caller that calls it twice
-// (src/units/README.md "Companion files"). It adds the results, so binaryen keeps every result (the target's wasm type
-// is ()->(i32), and (i32)->(i32) for fn 1280), and its body is no target function's. It can go, a line at a time, when
-// two of a state's callers are in splat/matched.txt. The target callers each pair stands for:
+// but 10791 (5342's, slot 12 of unit 119's controller), 11794 (1337's, unit 142's) and 2895, 10317 and 10383 (2729's,
+// unit 135's), and binaryen inlines a function with one call site. So one noinline stand-in calls each twice, which is
+// one caller that calls it twice (src/units/README.md "Companion files"). It adds the results, so binaryen keeps every
+// result (the target's wasm type is ()->(i32), and (i32)->(i32) for fn 1280), and its body is no target function's. A
+// line goes when every target caller it stands for is in the link, and stays while some still wait, the callers already
+// in the link in parentheses (src/units/README.md "Companion files"). The target callers each pair stands for:
 //
 // 1337: 4449, 6058, 7198, 7221, 11987, 11988, 11994 (11794 is in the link); 4433: 7481, 11994; 6037: 7160, 12077; 3879:
 // 12023, 12030, 12077; 5985: 12065, 12068; 5984: 7160, 12134; 5983: 7160, 12105; 5973: 7160, 11939; 3865: 7160, 11870,
 // 11871; 3864: 7160, 11848, 11858; 1280: 11834, 11838, 11848, 11869, 11881, 11902, 11905, 11908, 11911, 11927; 5954:
 // 11881, 11888; 2288: 11876, 11884, 11888, 11891, 11896; 5943: 11834, 11855; 5942: 11848, 11852; 5941: 11845, 11848;
-// 5428: 10217, 10734; 1536: 6015, 10466, 10473, 10477, 10485, 10489, 10500, 10593; 5421: 10626, 10627; 2729: 2895, 6011,
-// 10317, 10383; 5383: 10313, 10316; 5342: 10737 (10791 is in the link); 1897: 10404, 10419, 10425
+// 5428: 10217, 10734; 1536: 6015, 10466, 10473, 10477, 10485, 10489, 10500, 10593; 5421: 10626, 10627; 2729: 6011,
+// which still waits (2895, 10317 and 10383 are in the link); 5383: 10313, 10316; 5342: 10737 (10791 is in the link);
+// 1897: 10404, 10419, 10425.
 //
 // vota::CMaisInformacoes::GetInst (fn 1280) takes the state to go back to: its target callers pass 0 and their own
 // `this`, so one call passes 0 and the other the stand-in's argument, and binaryen folds no constant into the body.

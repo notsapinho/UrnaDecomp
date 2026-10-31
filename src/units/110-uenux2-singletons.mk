@@ -83,10 +83,11 @@
 # voter, and 273, 11203 and 11209 go with it. 5805's line in splat/matched.txt is no hand edit: step 9 writes it from the
 # census's pair.
 #
+# 5734 and 11495, CRdvVota's destructor and its pointer's exit destructor, match from unit 13's crdvvota.cpp.o: CRdvVota
+# holds comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota> at +44 (vptr 1560304), which unit 140 writes;
+# its slots 2 and 3 (11483 and 11482) are traps there. The roots' d5734 stands for 7787, which is not written.
+#
 # Not reconstructed:
-# - 5734 and 11495: CRdvVota's destructor holds comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota> at +44
-#   (vptr 1560304), and that class is not in this tree; its slots 2 and 3 are 11483 and 11482. ~CRdvVota here destroys the
-#   members crdvvota.h has, 67 rows over 115 from fn 5734, and both rows are no-candidate.
 # - 11206, CParteEleitores::Imprime, has both its callees matched and is only not written; 11215, CParteCandidatos::Imprime,
 #   waits for 2271. Both stay traps in unit 77's pending file.
 # - 242, ~CDetalheCandidato, is written (implicit) and differs: __destroy_at<CSuplencia> costs 245, over -O2's threshold

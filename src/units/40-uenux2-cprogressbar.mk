@@ -1,5 +1,5 @@
 # uenux2 api::CProgressBar::~CProgressBar (target fn 5509, the base-object destructor in slot 0 of the CProgressBar
-# vtable @1581760, and fn 10978, the deleting one in slot 1) and Rect (fn 10974, slot 8) in
+# vtable @1581760, and fn 10978, the deleting one in slot 1), Rect (fn 10974, slot 8) and GetTypeName (10975, slot 7) in
 # src/uenux2/src/api/gui/cprogressbar.cpp, the file the constructor's three std::source_location records name
 # (cprogressbar.cpp:52, 58 and 67, column 15: api::CProgressBar::CProgressBar(const uedword, const uedword, const
 # uedword, const SRect &, TColor, TColor, TColor, TColor, const std::string &, TFontSize, uebyte, const TColor)). The
@@ -11,11 +11,13 @@
 # emits the vtable. Move (10976) is here, over SRect::Move, and SetValor and Incrementa (3667, 5508, chosen names, with the
 # chosen helper Limita): the increment and the setter differ only in the setter's first test. Limita's statements in
 # place give the same object code; std::clamp differs (27 lines). `m_valor == valor` is the operand order the link
-# gives the target's compare. The roots stand in for fn 2369, the second caller of Incrementa. Draw (10977) and GetTypeName
-# (10975) are pending (40-uenux2-cprogressbar-pending.cpp says why each). Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# gives the target's compare. The roots stand in for fn 2369, the second caller of Incrementa. GetTypeName (10975,
+# `return "CProgressBar";`) is defined between Move and Rect, the order of their target indices in the use band (10976,
+# 10975, 10974), which names.tsv's ld_index follows. Draw (10977) is pending (40-uenux2-cprogressbar-pending.cpp says
+# what it waits for). Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CPROGRESSBAR_SRCS := src/api/gui/cprogressbar.cpp
 UENUX2_SRCS += $(CPROGRESSBAR_SRCS)
-# Draw and GetTypeName are not reconstructed: 40-uenux2-cprogressbar-pending.cpp gives the vtable trapping bodies,
+# Draw is not reconstructed: 40-uenux2-cprogressbar-pending.cpp gives the vtable a trapping body,
 # compiled with the unit's flags. Its prerequisites are every header the compile reads (cprogressbar.h includes
 # api/gui/iformfield.h, which includes api/gui/primitives.h, and ecourna/api/uetypes.hpp); $(UENUX2_HDRS) is not set
 # yet when src/Makefile reads the fragments

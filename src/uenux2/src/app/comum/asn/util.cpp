@@ -7,17 +7,43 @@
 #include <format>
 
 #include "app/comum/asn/euecomumasnerror.h"
-
+#include "ecourna/api/util/cstringutils.hpp"
 namespace comum::asn {
 
-// (original lines 13-37: content not recovered)
-#line 38
-// <stubs>
-// f1713 · 556 B · unmatched · name unknown
-// void f1713(i32, i32) { ... }
-// </stubs>
+using ecourna::api::util::CStringUtils;
 
-// (original lines 43-91: content not recovered)
+// (original lines 15-24: content not recovered)
+#line 25
+api::CDate Utils::DesconverteDataJE(const ModuloTiposEleitorais::DataJE& data)
+{
+    const std::string ano = data.substr(0, 4);
+    const std::string mes = data.substr(4, 2);
+    const std::string dia = data.substr(6, 2);
+    return api::CDate(CStringUtils::ToByte(dia), CStringUtils::ToByte(mes), CStringUtils::ToWord(ano));
+}
+
+// (original lines 33-34: content not recovered)
+#line 35
+api::CDateTime Utils::DesconverteDataHoraJE(const ModuloTiposEleitorais::DataHoraJE& dataHora)
+{
+    const std::string strData = dataHora.substr(0, 8);
+    const api::CDate data = DesconverteDataJE(ModuloTiposEleitorais::DataJE(strData));
+
+    if (dataHora.substr(8, 1) != "T") {
+        throw CUeComumAsnError(EUE_COMUM_ASN_FORMATO_DATA_INVALIDO, "Formato de data inválido.");
+    }
+
+    const std::string strHora = dataHora.substr(9, 6);
+    const api::CTime hora = DesconverteHoraJE(ModuloTiposEleitorais::HoraJE(strHora));
+    return api::CDateTime(data, hora);
+}
+
+api::CTime Utils::DesconverteHoraJE(const ModuloTiposEleitorais::HoraJE& hora)
+{
+    return api::CTime(hora);
+}
+
+// (original lines 54-91: content not recovered)
 #line 92
 ModuloTiposEleitorais::Fase Utils::ConverteFase(const EUrnaFase& fase)
 {

@@ -32,6 +32,11 @@ public:
                      CNumViasImpressasRelatorios numViasImpressasRelatorios, std::optional<api::CDateTime> dhEmissao,
                      bool tecladoTestadoPosConversao);
 
+    // GetEstadoVota: twelve Assert texts of the target call it (`vota.GetEstadoVota() == EAVENCERRADA`, ledger/strings.tsv
+    // 398594 to 401161), so the name is evidence, and their holders show what it returns: fn 12078 compares the first
+    // word of GetVota()'s result with 61 and throws `Assert (vota.GetEstadoVota() == EAVIMPRIMIRBU)` when it differs.
+    // Defined in the class: a choice.
+    EEstadoVota GetEstadoVota() const { return m_estadoVota; }
     bool GetTreinamentoEleitor() const { return m_treinamentoEleitor; }
 
 private:
