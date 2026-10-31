@@ -1,16 +1,17 @@
 """Write tools/libs/openssl/census.json: the libcrypto block's match counts against the target from a probe dir
 (census.json = depth 2, census-d0.json = depth 0, probe.names.tsv), per class and per tier, plus the commands.
-usage: write-census-json.py <probe-dir> <variant> <roots.txt> <out.json>
+usage: write-census-json.py <probe-dir> <variant> <roots.txt> <out.json> <funcs.json>
+<funcs.json> is what tools/libs/funcs.py writes.
 """
 import json, sys, collections, subprocess
-pdir, variant, roots_f, out = sys.argv[1:5]
+pdir, variant, roots_f, out, funcs_json = sys.argv[1:6]
 urna = __file__.rsplit('/tools/libs/', 1)[0]
 cls = {int(k): v for k, v in json.load(open(f'{urna}/tools/libs/cls2.json')).items()}
 attr = {}
 for l in open(f'{urna}/ledger/func-attribution.tsv'):
     p = (l.rstrip('\n').split('\t') + ['', ''])[:4]
     if p[0].isdigit(): attr[int(p[0])] = p[1:]
-fj = {d['idx']: d for d in json.load(open(f'{urna}/tools/libs/funcs.json'))}
+fj = {d['idx']: d for d in json.load(open(funcs_json))}
 names = {}
 for l in open(f'{pdir}/probe.names.tsv'):
     i, n, s = l.rstrip('\n').split('\t'); names[int(i)] = (n, int(s))

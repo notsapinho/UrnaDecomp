@@ -2,7 +2,7 @@
 #
 #   make -C src            # libs (through tools/libs/*/build.sh), then `link`: the app objects and the two links
 #   make -C src libs       # the pinned library builds alone
-#   make -C src census     # toolkit census, ledger/functions.tsv, wasmfn, the progress snapshot in ledger/history/
+#   make -C src census     # toolkit census, ledger/functions.tsv, wasmfn, the tiers against the committed ledger
 #   make -C src check-srcloc  # the std::source_location records of the app objects against the target's
 #   make -C src splat …    # the splat build, scan, match, status and stubs targets: src/mk/splat-sub.mk
 #
@@ -173,7 +173,7 @@ $(ROOT)/$(OSSL_OBJS_FILE): $(ROOT)/tools/libs/ossl_files.txt $(ROOT)/$(LIBCRYPTO
 APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_SRC) -I$(RHVOICE_SRC)/src/include $(RHVOICE_CFG)
 
 # ---- link order (first object exports votaInit alone; app before libraries; libraries in this order) --------
-APP_OBJS := vota_init.o vota_api.o main.o wasm_sound.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
+APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=

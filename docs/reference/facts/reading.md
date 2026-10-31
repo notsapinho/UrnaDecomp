@@ -3,22 +3,24 @@
 What a target body says about the C++ that compiled to it, beyond the name its `std::source_location` record gives:
 the parameters a wasm type hides, how a class returns or takes a class by value, how a destructor is declared and
 whether its class is `final`, whether a class is abstract or has a key function, a free function's linkage, code
-binaryen inlined from another function, the format string and argument types of a `std::format` throw, a `bool`'s
-reads, and an `invoke` around a callee that cannot throw. `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a source form compiles to (the order of a body's stores, a switch over virtual slots,
-an in-class member against an `inline` one) is in [codegen.md](codegen.md).
+binaryen inlined from another function, the format string, argument types and shape of a `std::format` throw, a
+`bool`'s reads, an `invoke` around a callee that cannot throw, several table slots of one function, a local static's
+guard, and one row more than the target at a call. `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
+source form compiles to (the order of a body's stores, a switch over virtual slots, an in-class member against an
+`inline` one) is in [codegen.md](codegen.md).
 
 The probes are short TUs compiled by the pinned em++ with uenux2's flags, `-O2 -fPIC -std=c++20 -DNDEBUG
--fno-strict-aliasing` (`docs/reference/facts/app-flags.md` §F6); their sources are given in full. R1–R3 and R7–R11
-were measured under `build/out/DOCS-A/probe/` of a checkout at 7bf701e, R4–R6, R12 and R13 under
-`build/out/DOCS2-A/probe/` at ee595de, and the parts marked bb6f018 (R14 and R15 among them) under
-`build/out/reading-probe/` at bb6f018. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run
-from `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
+-fno-strict-aliasing` (`docs/reference/facts/app-flags.md` §F6); their sources are given in full, and each runs under
+`build/out/reading-probe/`. R1–R3 and R7–R11 were measured at 7bf701e, R4–R6, R12 and R13 at ee595de, and the parts
+marked bb6f018 (R14 and R15 among them) at bb6f018; every probe prints the same at 0b5f410, where R13's shapes and
+R16–R18 were measured. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
+`asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
 ## R1. A parameter every caller passes as the same constant is gone from the wasm type
 
 binaryen's dead-argument elimination removes a parameter that every call site passes as the same constant and puts
 the constant into the body. So a wasm type can have fewer parameters than the C++ function, and a constant the body
-stores can be an argument of the source. `comum::ValidarUE` has three parameters in its record and two in wasm:
+stores can be an argument of the source (R18 is the same pass seen from the caller). `comum::ValidarUE` has three parameters in its record and two in wasm:
 
     awk -F'\t' '$6 ~ /(^|,)5890(,|$)/ {print $5}' ledger/source-locations.tsv
       void comum::ValidarUE(IInterfaceSavd &, ESavdAplic, const std::string &)
@@ -79,8 +81,8 @@ members. It skips the store when no derived class can exist: the class (or the d
     struct NoCtor : B { ~NoCtor() override = default; int f(); std::string s; };
     int NoCtor::f() { return 1; }
 
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS-A/probe/dtor.cpp -o build/out/DOCS-A/probe/dtor.o
-    wasm-objdump -d build/out/DOCS-A/probe/dtor.o | awk '/D2Ev>:|D1Ev>:/ {print; n=6; next} n-- > 0' | /usr/bin/grep -E 'func\[|i32.store|GOT'
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/dtor.cpp -o build/out/reading-probe/dtor.o
+    wasm-objdump -d build/out/reading-probe/dtor.o | awk '/D2Ev>:|D1Ev>:/ {print; n=6; next} n-- > 0' | /usr/bin/grep -E 'func\[|i32.store|GOT'
       0000c3 func[1] <_ZN3OolD1Ev>:
        0000c6: 23 80 80 80 80 00          | global.get 0 <GOT.mem._ZTV3Ool>
        0000cf: 36 02 00                   | i32.store 2 0
@@ -119,8 +121,8 @@ base's vptr where the base's part begins, `final` or not, and a class with no me
     void Q3::f() {}
     void Q4::f() {}
 
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/dtorbase.cpp -o /work/build/out/DOCS2-A/probe/dtorbase.o
-    for s in _ZN1QD2Ev _ZN2Q2D2Ev _ZN2Q3D2Ev; do printf '%s: ' $s; wasm-objdump -d build/out/DOCS2-A/probe/dtorbase.o | awk -v s="<$s>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -E 'call |GOT.mem' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | tr '\n' ';'; echo; done
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/dtorbase.cpp -o /work/build/out/reading-probe/dtorbase.o
+    for s in _ZN1QD2Ev _ZN2Q2D2Ev _ZN2Q3D2Ev; do printf '%s: ' $s; wasm-objdump -d build/out/reading-probe/dtorbase.o | awk -v s="<$s>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | /usr/bin/grep -E 'call |GOT.mem' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| *//' | tr '\n' ';'; echo; done
       _ZN1QD2Ev: global.get 0 <GOT.mem._ZTV1Q>;call 0 <env._ZdlPvm>;call 1 <env._ZN1PD2Ev>;
       _ZN2Q2D2Ev: global.get 1 <GOT.mem._ZTV2Q2>;call 0 <env._ZdlPvm>;global.get 2 <GOT.mem._ZTV2P2>;call 0 <env._ZdlPvm>;
       _ZN2Q3D2Ev: call 0 <env._ZdlPvm>;global.get 2 <GOT.mem._ZTV2P2>;call 0 <env._ZdlPvm>;
@@ -128,7 +130,7 @@ base's vptr where the base's part begins, `final` or not, and a class with no me
 `Q3`'s D2 begins with its string and stores `P2`'s vptr before `P2`'s string; `Q2`'s stores its own vptr first. `Q`
 calls `P`'s out-of-line D2 instead of inlining it (R5). The symbols (R6 reads them too):
 
-    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/DOCS2-A/probe/dtorbase.o | /usr/bin/grep -E 'D[012]Ev|_ZTV'
+    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/reading-probe/dtorbase.o | /usr/bin/grep -E 'D[012]Ev|_ZTV'
                U _ZN1PD2Ev
       0000004a W _ZN1QD0Ev
       0000000d W _ZN1QD2Ev
@@ -142,7 +144,7 @@ calls `P`'s out-of-line D2 instead of inlining it (R5). The symbols (R6 reads th
 
 The base's vptr store says less than the class's own. clang marks a destructor's `this` dead on return, so LLVM
 deletes the store of an inlined base destructor when nothing after it can read the vptr: only a call in the base
-destructor's body keeps it. Probe `basevptr.cpp` (bb6f018, under `build/out/reading-probe/`):
+destructor's body keeps it. Probe `basevptr.cpp` (bb6f018):
 
     // Whether a derived class's destructor keeps the vptr store of the base destructor it inlines.
     #include <string>
@@ -232,15 +234,15 @@ vtable):
     #endif
     void X::key() {}
 
-    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 2 3 4 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/DOCS2-A/probe/dtorform.cpp -o /work/build/out/DOCS2-A/probe/dtorform-$f.o; done'
-    for f in 0 1 2 3 4 5; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/DOCS2-A/probe/dtorform-$f.o | awk '/<_ZN1XD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} END {print n " lines, calls at depth 0:" c}'; done
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 2 3 4 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/reading-probe/dtorform.cpp -o /work/build/out/reading-probe/dtorform-$f.o; done'
+    for f in 0 1 2 3 4 5; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/reading-probe/dtorform-$f.o | awk '/<_ZN1XD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} END {print n " lines, calls at depth 0:" c}'; done
       FORM 0: 87 lines, calls at depth 0: <env._ZdlPvm>
       FORM 1: 5 lines, calls at depth 0: <_ZN1XD2Ev> <env._ZdlPvm>
       FORM 2: 5 lines, calls at depth 0: <_ZN1XD2Ev> <env._ZdlPvm>
       FORM 3: 87 lines, calls at depth 0: <env._ZdlPvm>
       FORM 4: 87 lines, calls at depth 0: <env._ZdlPvm>
       FORM 5: 7 lines, calls at depth 0: <_ZN1XD1Ev> <env._ZdlPvm>
-    cmp build/out/DOCS2-A/probe/dtorform-0.o build/out/DOCS2-A/probe/dtorform-3.o && cmp build/out/DOCS2-A/probe/dtorform-3.o build/out/DOCS2-A/probe/dtorform-4.o && cmp build/out/DOCS2-A/probe/dtorform-1.o build/out/DOCS2-A/probe/dtorform-2.o && echo 'FORM 0 = 3 = 4, FORM 1 = 2'
+    cmp build/out/reading-probe/dtorform-0.o build/out/reading-probe/dtorform-3.o && cmp build/out/reading-probe/dtorform-3.o build/out/reading-probe/dtorform-4.o && cmp build/out/reading-probe/dtorform-1.o build/out/reading-probe/dtorform-2.o && echo 'FORM 0 = 3 = 4, FORM 1 = 2'
       FORM 0 = 3 = 4, FORM 1 = 2
 
 | form | D0 | in the target |
@@ -252,8 +254,8 @@ vtable):
 What separates the first two rows is the inline hint. Only an implicit destructor and one declared `inline` carry it
 before optimization:
 
-    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 3 4 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -S -emit-llvm -Xclang -disable-llvm-passes /work/build/out/DOCS2-A/probe/dtorform.cpp -o /work/build/out/DOCS2-A/probe/dtorform-$f.ll; done'
-    for f in 0 1 3 4 5; do a=$(/usr/bin/grep -E '^define .*@_ZN1XD2Ev\(' build/out/DOCS2-A/probe/dtorform-$f.ll | /usr/bin/grep -oE '#[0-9]+'); printf 'FORM %s: %s\n' $f "$(/usr/bin/grep -E "^attributes $a " build/out/DOCS2-A/probe/dtorform-$f.ll | /usr/bin/grep -oE 'inlinehint' || echo no inlinehint)"; done
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 0 1 3 4 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -S -emit-llvm -Xclang -disable-llvm-passes /work/build/out/reading-probe/dtorform.cpp -o /work/build/out/reading-probe/dtorform-$f.ll; done'
+    for f in 0 1 3 4 5; do a=$(/usr/bin/grep -E '^define .*@_ZN1XD2Ev\(' build/out/reading-probe/dtorform-$f.ll | /usr/bin/grep -oE '#[0-9]+'); printf 'FORM %s: %s\n' $f "$(/usr/bin/grep -E "^attributes $a " build/out/reading-probe/dtorform-$f.ll | /usr/bin/grep -oE 'inlinehint' || echo no inlinehint)"; done
       FORM 0: inlinehint
       FORM 1: no inlinehint
       FORM 3: inlinehint
@@ -290,8 +292,8 @@ to it. Probe `dtorroot.cpp`, the same members in a root class `R`:
     #endif
     void R::key() {}
 
-    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 1 3 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/DOCS2-A/probe/dtorroot.cpp -o /work/build/out/DOCS2-A/probe/dtorroot-$f.o; done'
-    for f in 1 3 5; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/DOCS2-A/probe/dtorroot-$f.o | awk '/<_ZN1RD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} END {print n " lines, calls at depth 0:" c}'; done
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for f in 1 3 5; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/build/out/reading-probe/dtorroot.cpp -o /work/build/out/reading-probe/dtorroot-$f.o; done'
+    for f in 1 3 5; do printf 'FORM %s: ' $f; wasm-objdump -d build/out/reading-probe/dtorroot-$f.o | awk '/<_ZN1RD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} END {print n " lines, calls at depth 0:" c}'; done
       FORM 1: 5 lines, calls at depth 0: <_ZN1RD2Ev> <env._ZdlPvm>
       FORM 3: 87 lines, calls at depth 0: <env._ZdlPvm>
       FORM 5: 7 lines, calls at depth 0: <_ZN1RD1Ev> <env._ZdlPvm>
@@ -300,7 +302,7 @@ So a root class whose D0 holds a D2 too costly for the plain in-class form decla
 
 The hint raises the threshold, not without limit (LLVM's remarks give 325 against 225: [levels.md](levels.md) §V2).
 Above it an implicit destructor gives the in-class shape as well, a D0 that calls the D2, so that shape alone does not
-separate the two forms. Probe `dtorcost.cpp` (bb6f018, under `build/out/reading-probe/`), two `final` classes of three
+separate the two forms. Probe `dtorcost.cpp` (bb6f018), two `final` classes of three
 and five `std::shared_ptr` members:
 
     // An implicit (hinted) destructor whose D2 costs more than the hinted threshold: the D0 calls the D2 as the in-class form does.
@@ -352,10 +354,10 @@ So compare such forms by function, not by `cmp` of the object.
 
 The D2 is the same in every form: its body differs only in the object-local type index of a `call_indirect`.
 
-    for f in 0 1 5; do wasm-objdump -d build/out/DOCS2-A/probe/dtorform-$f.o | awk '/<_ZN1XD[12]Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //; s/(call|global.get) [0-9]+ /\1 /' > build/out/DOCS2-A/probe/d2-$f.txt; done
-    diff build/out/DOCS2-A/probe/d2-0.txt build/out/DOCS2-A/probe/d2-1.txt && echo 'D2: FORM 0 = 1'
+    for f in 0 1 5; do wasm-objdump -d build/out/reading-probe/dtorform-$f.o | awk '/<_ZN1XD[12]Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //; s/(call|global.get) [0-9]+ /\1 /' > build/out/reading-probe/d2-$f.txt; done
+    diff build/out/reading-probe/d2-0.txt build/out/reading-probe/d2-1.txt && echo 'D2: FORM 0 = 1'
       D2: FORM 0 = 1
-    diff build/out/DOCS2-A/probe/d2-0.txt build/out/DOCS2-A/probe/d2-5.txt
+    diff build/out/reading-probe/d2-0.txt build/out/reading-probe/d2-5.txt
       58c58
       <         call_indirect 0 <env.__indirect_function_table> (type 0)
       ---
@@ -366,7 +368,8 @@ with the hint or defined in the class and calls one defined out of line (R4's `Q
 has the base's D2 in its slot (R4's `Q4`). When that D2 is out of line, the class's D0 is the 10-B shape around it:
 `simulador::CWasmInit`'s vtable starts `[5898, 9388]`, 5898 being `comum::IInterfaceInit`'s out-of-line D2 (R9), and
 9388 is `f136(f5898(p0))`. Whether the destructor is out of line decides the key function, and so the TU that emits
-the vtable, the D2 and the D0 (R6). The target's readouts:
+the vtable, the D2 and the D0 (R6). A derived class with no member of its own, whose destructor is out of line, is
+below. The target's readouts:
 
     for i in 11176 11086 11443 12049 12050; do pnpm --silent wasm fn ../target/vota_web_wasm.wasm $i | /usr/bin/grep -m1 '^;; function'; done
       ;; function 11176 (i32)->() locals() body@0x4e5988 size 82 instrs 39
@@ -380,13 +383,74 @@ the vtable, the D2 and the D0 (R6). The target's readouts:
       12049 _ZN4vota11IQRCodeBUDSD0Ev
       11086 _ZN3api17CImageFieldUpdateD0Ev
 
+**A derived class with no member of its own.** Its D0 and its slot 0 together say where each destructor is. Probe
+`d0.cpp` (0b5f410), `B` with two `shared_ptr` members, `BASE` where `B`'s destructor is (0 out of line in another TU,
+1 in the class, 3 out of line in this TU), `DER` where `D`'s is (0 implicit, 2 out of line here):
+
+    // A derived destructor over its base's: BASE 0 out of line in another TU, 1 in the class, 3 out of line here; DER 0 implicit, 2 out of line here.
+    #include <memory>
+    struct R { virtual ~R(); virtual void key(); };
+    struct B : R {
+        std::shared_ptr<int> a, b;
+    #if BASE == 1
+        ~B() override = default;
+    #else
+        ~B() override;
+    #endif
+        void key() override;
+    };
+    #if BASE == 3
+    B::~B() = default;
+    #endif
+    struct D : B {
+    #if DER == 2
+        ~D() override;
+    #endif
+        void key() override;
+    };
+    #if DER == 2
+    D::~D() = default;
+    #endif
+    void D::key() {}
+
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for b in 0 1 3; do for d in 0 2; do em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DBASE=$b -DDER=$d -c /work/build/out/reading-probe/d0.cpp -o /work/build/out/reading-probe/d0-$b-$d.o; done; done'
+    for b in 0 1 3; do for d in 0 2; do printf 'BASE %s DER %s D0: ' $b $d; wasm-objdump -d build/out/reading-probe/d0-$b-$d.o | awk '/<_ZN1DD0Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} /^call/ {c = c " " $3} /^drop/ {c = c " drop"} END {print n " lines:" c}'; done; done
+      BASE 0 DER 0 D0: 5 lines: <env._ZN1BD2Ev> <env._ZdlPvm>
+      BASE 0 DER 2 D0: 7 lines: <_ZN1DD1Ev> drop <env._ZdlPvm>
+      BASE 1 DER 0 D0: 57 lines: <env._ZN1RD2Ev> <env._ZdlPvm>
+      BASE 1 DER 2 D0: 7 lines: <_ZN1DD1Ev> drop <env._ZdlPvm>
+      BASE 3 DER 0 D0: 57 lines: <env._ZN1RD2Ev> <env._ZdlPvm>
+      BASE 3 DER 2 D0: 7 lines: <_ZN1DD2Ev> drop <env._ZdlPvm>
+    for b in 0 1 3; do printf 'BASE %s DER 2: ' $b; TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only build/out/reading-probe/d0-$b-2.o | /usr/bin/grep -E '_ZN1[BD]D[12]Ev' | tr -s ' ' | cut -d' ' -f1,3 | tr '\n' ';'; echo; done
+      BASE 0 DER 2: 00000001 _ZN1DD1Ev;00000001 _ZN1DD2Ev;
+      BASE 1 DER 2: 00000001 _ZN1DD1Ev;00000001 _ZN1DD2Ev;
+      BASE 3 DER 2: 00000001 _ZN1BD1Ev;00000001 _ZN1BD2Ev;00000001 _ZN1DD1Ev;00000001 _ZN1DD2Ev;
+    for b in 0 1; do printf 'BASE %s DER 2, D1: ' $b; wasm-objdump -d build/out/reading-probe/d0-$b-2.o | awk '/<_ZN1DD1Ev>:/ {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | awk 'NF {n++} END {print n " lines"}'; done
+      BASE 0 DER 2, D1: 3 lines
+      BASE 1 DER 2, D1: 55 lines
+
+| the base's destructor, the derived one out of line | the derived D2 | in the target |
+| --- | --- | --- |
+| out of line, in another object | one call of the base's D2 | 884 (7 B) over 1035, `vota::CCandidatoInapto` over `CVotacaoStateAudio` |
+| inline or in the class | the base's body, which binaryen's duplicate-function elimination merges with the base's own D2, so slot 0 holds the base's D2 under a D0 with a `drop` | 3609 (13 B) over 1378, `comum::CPedeTituloMesarioInicial` over `IPedeTituloMesario`; 5946 over 1559 |
+| out of line, in the same TU | no body: an alias of the base's, and the D0 has the same `drop` shape | not told from the row above by any byte: only the classes' files do |
+
+The last two rows need the files: 3609's class is not in its base's object, since each derived class's vtable lies just
+before its own records and the base's before its file's (`ledger/vtables.json`, `ledger/source-locations.tsv`). With the
+derived destructor implicit and the base's out of line, `splat-remap` stops at 3609's `drop`.
+
+A base destructor in the class without `inline` is inlined only under the plain threshold (225, [levels.md](levels.md)
+§V2). `CVotacaoStateAudio`'s D2 is 180 B: `CProporcionalBranco`'s out-of-line destructor over the in-class form stays
+one call, of a weak copy, and `inline` gives 85 lines. So "defined in the class" does not always show as the base's
+body.
+
 ## R6. A class whose only virtual members are inline has no key function: only a TU that uses its vtable emits it
 
 With no non-inline virtual member, the vtable, D2 and D0 are linkonce_odr, emitted only by a TU that references the
 vtable, which a constructor defined there does. In the probe of R4, `NoCtor` (destructor in the class, one
 non-virtual member defined) gets nothing; `Inl` (the same with a constructor defined) gets a weak vtable:
 
-    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only /work/build/out/DOCS-A/probe/dtor.o | /usr/bin/grep -E '_ZTV|NoCtor'
+    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only /work/build/out/reading-probe/dtor.o | /usr/bin/grep -E '_ZTV|NoCtor'
       000000ae T _ZN6NoCtor1fEv
       00000040 D _ZTV3Fin
       00000010 W _ZTV3Inl
@@ -414,8 +478,8 @@ derived class overrides every slot. Probe `typeinfo.cpp`:
     void D1::f() {}
     void D2::f() {}
 
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/typeinfo.cpp -o /work/build/out/DOCS2-A/probe/typeinfo.o
-    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/DOCS2-A/probe/typeinfo.o | /usr/bin/grep -E '_ZT[IV][0-9]'
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/typeinfo.cpp -o /work/build/out/reading-probe/typeinfo.o
+    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm build/out/reading-probe/typeinfo.o | /usr/bin/grep -E '_ZT[IV][0-9]'
       0000004c D _ZTI2D1
       00000014 D _ZTI2D2
       00000024 W _ZTI7InlBase
@@ -482,13 +546,13 @@ Probe `pure.cpp`, an abstract class beside the same class without its five pure 
     Con::~Con() {}
     void Con::f() {}
 
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS-A/probe/pure.cpp -o /work/build/out/DOCS-A/probe/pure.o
-    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm -S --defined-only /work/build/out/DOCS-A/probe/pure.o | /usr/bin/grep -E '_ZTV|D0Ev'
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/pure.cpp -o /work/build/out/reading-probe/pure.o
+    TMPDIR=/tmp build/docker-build.sh /emsdk/upstream/bin/llvm-nm -S --defined-only /work/build/out/reading-probe/pure.o | /usr/bin/grep -E '_ZTV|D0Ev'
       00000006 00000004 T _ZN3AbsD0Ev
       00000012 00000016 T _ZN3ConD0Ev
       00000000 00000028 D _ZTV3Abs
       00000038 00000014 D _ZTV3Con
-    wasm-objdump -d build/out/DOCS-A/probe/pure.o | awk '/D0Ev>:/ {print; n=4; next} n-- > 0'
+    wasm-objdump -d build/out/reading-probe/pure.o | awk '/D0Ev>:/ {print; n=4; next} n-- > 0'
       0000bb func[3] <_ZN3AbsD0Ev>:
        0000bc: 00                         | unreachable
        …
@@ -517,8 +581,8 @@ void a()`:
     void b() { use(std::source_location::current()); a(); }
     void c() { use(std::source_location::current()); a(); }
 
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -S -emit-llvm /work/build/out/DOCS-A/probe/<v>.cpp -o /work/build/out/DOCS-A/probe/<v>.ll
-    /usr/bin/grep -oE 'i32 [345], i32 [0-9]+ \}' build/out/DOCS-A/probe/<v>.ll | awk '{print $2}' | tr -d ',' | tr '\n' ' '
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -S -emit-llvm /work/build/out/reading-probe/<v>.cpp -o /work/build/out/reading-probe/<v>.ll
+    /usr/bin/grep -oE 'i32 [345], i32 [0-9]+ \}' build/out/reading-probe/<v>.ll | awk '{print $2}' | tr -d ',' | tr '\n' ' '
       order_ext:    3 4 5                 # the records' lines, in module order
       order_static: 4 5 3
 
@@ -593,7 +657,7 @@ Three limits to this reading:
   and its merge-thunk body cannot tell which.
 - **A deferred function sits after its first caller in the object, not at its end.** clang creates a function in the
   module where it is first referenced, and emits the body (and its records, R8) at the end of the TU; the object's
-  function order is the module's. Probe `deferorder.cpp` (bb6f018, under `build/out/reading-probe/`):
+  function order is the module's. Probe `deferorder.cpp` (bb6f018):
 
       // A file-static function: its record is emitted after the external functions' (R8), its body sits after its first caller.
       #include <source_location>
@@ -718,12 +782,12 @@ same from any scope, while the scope is part of the mangled name. Probe `scope.c
     C::C(std::vector<GFrame>) { use(std::source_location::current()); }
     }
 
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -S -emit-llvm /work/build/out/DOCS-A/probe/scope.cpp -o /work/build/out/DOCS-A/probe/scope.ll
-    /usr/bin/grep -oE 'c"api::[ABC]::[ABC]\([^"]*\\00"' build/out/DOCS-A/probe/scope.ll
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -S -emit-llvm /work/build/out/reading-probe/scope.cpp -o /work/build/out/reading-probe/scope.ll
+    /usr/bin/grep -oE 'c"api::[ABC]::[ABC]\([^"]*\\00"' build/out/reading-probe/scope.ll
       c"api::A::A(std::vector<CMovieFrame>)\00"
       c"api::B::B(std::vector<GFrame>)\00"
       c"api::C::C(std::vector<GFrame>)\00"
-    /usr/bin/grep -oE 'define [^@]*@_ZN3api1[ABC]C2E[A-Za-z0-9_]+' build/out/DOCS-A/probe/scope.ll | sed 's/.*@//'
+    /usr/bin/grep -oE 'define [^@]*@_ZN3api1[ABC]C2E[A-Za-z0-9_]+' build/out/reading-probe/scope.ll | sed 's/.*@//'
       _ZN3api1AC2ENSt3__26vectorINS_11CMovieFrameENS1_9allocatorIS3_EEEE
       _ZN3api1BC2ENSt3__26vectorI6GFrameNS1_9allocatorIS3_EEEE
       _ZN3api1CC2ENSt3__26vectorINS0_6GFrameENS1_9allocatorIS3_EEEE
@@ -756,14 +820,14 @@ callee owns the copy and destroys it, so a parameter moved into a member leaves 
     struct URef { virtual ~URef(); URef(std::unique_ptr<I> &&a); std::unique_ptr<I> m_a; };
     URef::URef(std::unique_ptr<I> &&a) : m_a(std::move(a)) {}
 
-    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/DOCS2-A/probe/byvalue.cpp -o /work/build/out/DOCS2-A/probe/byvalue.o
-    wasm-objdump -d build/out/DOCS2-A/probe/byvalue.o | awk '/ func\[/ {name=$3} /store/ {c[name]++} END {for (k in c) print c[k], k}' | sort -k2
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/byvalue.cpp -o /work/build/out/reading-probe/byvalue.o
+    wasm-objdump -d build/out/reading-probe/byvalue.o | awk '/ func\[/ {name=$3} /store/ {c[name]++} END {for (k in c) print c[k], k}' | sort -k2
       5 <_ZN3ValC1ENSt3__210shared_ptrI1IEES3_>:                           # the vptr and four words copied
       7 <_ZN4CRefC1ERKNSt3__210shared_ptrI1IEES5_>:                        # and a count increment per source
       7 <_ZN4RRefC1EONSt3__210shared_ptrI1IEES4_>:                         # and an i64.store 0 per source
       3 <_ZN4URefC1EONSt3__210unique_ptrI1INS0_14default_deleteIS2_EEEE>:
       2 <_ZN4UValC1ENSt3__210unique_ptrI1INS0_14default_deleteIS2_EEEE>:
-    for s in _ZN4UValC1 _ZN4URefC1; do printf '%s: ' $s; wasm-objdump -d build/out/DOCS2-A/probe/byvalue.o | awk -v s="<$s" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -vE '^$|^end$|^local\[' | tr '\n' ';'; echo; done
+    for s in _ZN4UValC1 _ZN4URefC1; do printf '%s: ' $s; wasm-objdump -d build/out/reading-probe/byvalue.o | awk -v s="<$s" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -vE '^$|^end$|^local\[' | tr '\n' ';'; echo; done
       _ZN4UValC1: local.get 0;local.get 1;i32.store 2 4;local.get 0;global.get 3 <GOT.mem._ZTV4UVal>;i32.const 8;i32.add;i32.store 2 0;local.get 0;
       _ZN4URefC1: local.get 0;global.get 4 <GOT.mem._ZTV4URef>;i32.const 8;i32.add;i32.store 2 0;local.get 1;i32.load 2 0;local.set 2;local.get 1;i32.const 0;i32.store 2 0;local.get 0;local.get 2;i32.store 2 4;local.get 0;
 
@@ -825,15 +889,55 @@ each, the first argument lowest (libc++'s `__packed_arg_t_bits`). The type codes
       7089 42 Falha ao obter tamanho do arquivo [{}]: {}
 
 So 2759 formats a `std::string` (13, `__string_view`) and a `const char*` (12), and 11050 one `int` (3). The code is
-the type `std::format` sees after its own conversions, not the variable's: `std::format` has no formatter for an
-enum, so the source casts one, and the code is the cast's type.
+the type `std::format` sees after its own conversions, not the variable's. An enum cast to an integer shows the cast's
+code. An enum with a `std::formatter` of its own shows 15, `__handle`: 1712 stores the value's address at +48 and a
+table slot, its format function, at +52:
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 1712 | /usr/bin/grep -E 'i64.store\[l2\+64\]|i32.store\[l2\+(48|52)\]'
+          i32.store[l2+52] = 2285;
+          i32.store[l2+48] = p1;
+          i64.store[l2+64] = 15;
+    wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[(2285|2289)\] '      # from the repository root
+      - elem[2285] = ref.func:536
+      - elem[2289] = ref.func:1711
+
+`fn` lists such a slot as a string ("2285 (+4 into 2281)"), and it is a callee no direct-call table lists. 536 is
+`formatter<unsigned int>` (`i32.ge_u(p0, 128)`) in 31 slots, and 1711 `formatter<int>` in 7, so the handle says which of
+the two the value goes through, not the enum's underlying type: `: int` with a formatter that casts to `unsigned`
+gives 536's rows. The slot needs a target name, so a body that alone votes for it stays `unresolved self-voted` until a
+second holder matches.
+
+**A site has three shapes**, and only one depends on the level. Probe `fmtsite.cpp` (0b5f410), unconditional throws of
+36, 37, 74 and 75 bytes of literal and one conditional throw of 44:
+
+    python3 -I -c "print('#include <format>\n#include <string>'); [print(f'void F{n}(int v) {{ throw std::format(\"{\"x\"*(n-2)}{{}}\", v); }}') for n in (36, 37, 74, 75)]; print('void C(int v) { if (v > 3) throw std::format(\"' + 'x' * 42 + '{}\", v); }')" > build/out/reading-probe/fmtsite.cpp
+    TMPDIR=/tmp build/docker-build.sh sh -c 'for l in O2 O3; do em++ -$l -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/fmtsite.cpp -o /work/build/out/reading-probe/fmtsite-$l.o; done'
+    for l in O2 O3; do wasm-objdump -d build/out/reading-probe/fmtsite-$l.o | awk -v l=$l '/ func\[/ {n=$3} /br_table/ {b[n]++} /__try_constant_folding/ {c[n]++} END {for (s in b) print l, s, "loop"; for (s in c) print l, s, "call"}' | /usr/bin/grep -E '_Z[0-9]+[FC]' | sort; done
+      O2 <_Z1Ci>: call
+      O2 <_Z3F37i>: loop
+      O2 <_Z3F74i>: loop
+      O2 <_Z3F75i>: loop
+      O3 <_Z1Ci>: call
+      O3 <_Z3F75i>: loop
+
+- A conditional throw is a cold site: it keeps `call 154` (`__try_constant_folding`) at both levels, so a `call 154` says nothing of the level.
+- An unconditional throw is folded up to the loop unroller's limit, 36 bytes at `-O2` and 74 at `-O3`: no call and no loop.
+- Past the limit it keeps a `br_table` loop, the search of the literal for a brace.
+
+The target has all three, and the 37 to 74 bytes between the limits with no loop are the level's evidence
+([levels.md](levels.md) §V3):
+
+    for i in 1712 731 10772; do printf '%s: ' $i; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $i | sed -n '/disassembly/,/folded readout/p' | awk '/call 154( |$)/ {c++} /br_table/ {b++} END {print "call 154:", c+0, "br_table:", b+0}'; done
+      1712: call 154: 1 br_table: 0
+      731: call 154: 0 br_table: 0
+      10772: call 154: 0 br_table: 4
 
 ## R14. A `bool` tested in a condition can read as a compare with 1; a loop tells a `bool` from a byte
 
 LLVM tests a `bool` by its value 0 or 1, so a read in a condition can be `i32.load8_u; i32.const 1; i32.eq` (or
 `i32.ne`) as often as a bare `br_if` on the byte, and that `1` is no literal of the source. One read says nothing of the
 type: a byte compared with 1 gives the same rows. A loop that tests a global at its entry and on its back edge does
-tell them apart. Probe `boolread.cpp` (bb6f018, under `build/out/reading-probe/`):
+tell them apart. Probe `boolread.cpp` (bb6f018):
 
     // How a one-byte global's reads look in a loop: the first test and the back edge.
     #if FORM == 0
@@ -889,3 +993,73 @@ the invoke is made, and in this single-threaded build it is a stub that returns 
 vanish. `src/ecourna/api/sql/sqlite/csqlstatement.cpp` (unit 12) locks a file-level mutex there, and 9430 and 9460
 match (`awk '$1==9430 || $1==9460' splat/matched.txt`). The reverse case, a direct call inside a cleanup scope, is
 [app-flags.md](app-flags.md) §F9 item 5.
+
+## R16. Several table slots of one function are several symbols of identical code
+
+wasm-ld gives each address-taken symbol its own slot before binaryen merges bodies, so one final function in several
+slots was several source functions. A merge body that takes a slot as a parameter calls an instantiation-specific
+callee. `CBaseError`'s constructor thunks each pass one slot to the shared 2294, and all five slots are one function:
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 170 | /usr/bin/grep -E 'push f2294'
+        push f2294(p0, p1, p2, p3, 1528096, 469);
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 2379 | /usr/bin/grep -E '^;; table'
+      ;; table slots 144, 159, 469, 477, 483
+
+So step 2's lookup of one slot is not the whole reading. 2379 sits between `CBaseError`'s constructor and `CError`'s and
+stores no vptr, so five slots mean one such function per enum: the delegating template constructor of
+`src/ecourna/api/exception/cerror.hpp` (unit 94's fragment has the forms measured).
+
+## R17. A function-local static's guard says whether the variable has internal linkage
+
+A guard read as a plain byte belongs to a static with internal linkage, and one read with `i32.const 1; i32.and` to one
+that does not. So a function with no record shows its linkage here. Probe `guard.cpp`:
+
+    // A function-local static's guard, in an inline function and in a static one.
+    struct T { T(); int v; };
+    inline T& Inline() { static T t; return t; }
+    static __attribute__((noinline)) T& Interno() { static T t; return t; }
+    int Le() { return Inline().v + Interno().v; }
+
+    TMPDIR=/tmp build/docker-build.sh em++ -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/build/out/reading-probe/guard.cpp -o /work/build/out/reading-probe/guard.o
+    for f in _Z2Lev _ZL7Internov; do printf '%s: ' $f; wasm-objdump -d build/out/reading-probe/guard.o | awk -v s="<$f>:" 'index($0, s) {p=1; next} / func\[/ {p=0} p' | sed -E 's/^ *[0-9a-f]+: [0-9a-f ]+\| //' | /usr/bin/grep -E -A2 'load8_u' | /usr/bin/grep -vE '^--' | tr -s ' ' | tr '\n' ';'; echo; done
+      _Z2Lev:  i32.load8_u 0 0; i32.const 1; i32.and;
+      _ZL7Internov:  i32.load8_u 0 0; br_if 0; global.get 0 <env.__memory_base>;
+
+11265 reads its guard as `i32.eqz(i32.load8_u[1832596])`, so `api::polySingletonsInfoPadrao` is a `static` function of a
+`.cpp`, though the pointer to it reads from a header (unit 100, `src/uenux2/src/api/pattern/cpolysingletonlist.cpp`).
+
+## R18. One row more than the target at a call is the callee's signature, not the caller
+
+Dead-argument elimination (R1, R2) leaves alone a function the table holds. So a body whose only structural row is a
+`drop` after a call, or a constant argument before it, has a right source: the callee lost its result or a parameter in
+the target and kept it in ours, because something of ours takes its address. 208 and 2653 hold one such `drop`:
+
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 208 ../build/out/wasm/vota_web/vota_web_wasm.wasm 796 | /usr/bin/grep -E '^score|> drop'
+      score 19 over 116 rows (same 97, replaced 18 [18 operand-only], inserted 1, deleted 0)
+                                                               > drop
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 2567 | /usr/bin/grep -E '^;; (function|table)'
+      ;; function 2567 (i32 i32)->() locals(i32 i32) body@0x13627b size 383 instrs 167
+    pnpm --silent wasm fn ../build/out/wasm/vota_web/vota_web_wasm.wasm 3190 | /usr/bin/grep -E '^;; (function|table)'
+      ;; function 3190 (i32 i32)->(i32) locals(i32 i32) body@0x18397c size 389 instrs 168
+      ;; table slots 7473
+
+The callee has no slot in the target and slot 7473 in ours. Find what holds the slot: `ours` numbers are the link's at
+0b5f410, and the commands read it as it stands.
+
+    wasm-objdump -d build/out/wasm-kinds/vota_web/vota_web_wasm.wasm | awk '/ func\[/ {f=$2} / i32\.const 27473$/ {print f}'     # from the repository root
+      func[7739]:
+    awk -F'\t' '$1==7739 {print $2}' build/out/wasm-map/vota_web/names.tsv
+      _ZNK7RHVoice8userdict19stressed_syl_number8describeEv
+
+Fix the reference, not the caller: a roots address goes out of the roots (unit 87's exclusions took 5067 out, and 181
+and 339 matched); a library's `invoke` is a library flag question.
+
+**Read a constant in the shifted link, never the plain one.** A constant equal to a slot number can be an integer, and
+the plain link cannot say. The shifted link moves the table by 20,000 ([splat.md](../splat.md) §3 "Operand kinds"), so
+a slot reads 20,000 higher there and an integer does not. At 0b5f410 seven bodies hold `i32.const 1176`, the slot of
+`CUePrinterError`'s destructor, and two of them mean the slot:
+
+    wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk '/ func\[/ {f=$2} / i32\.const 1176$/ {print f}' | tr '\n' ' '; echo
+      func[1026]: func[3978]: func[5061]: func[5152]: func[5725]: func[7702]: func[7703]:
+    wasm-objdump -d build/out/wasm-kinds/vota_web/vota_web_wasm.wasm | awk '/ func\[/ {f=$2} / i32\.const 21176$/ {print f}' | tr '\n' ' '; echo
+      func[5152]: func[5725]:

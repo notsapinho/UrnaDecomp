@@ -10,3 +10,5 @@ build/probe/target.fns.jsonl
 ledger/bundles/
 __pycache__/
 ledger/lift-eval/
+ledger/history/
+ledger/func-strings.tsv

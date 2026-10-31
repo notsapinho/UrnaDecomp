@@ -36,8 +36,7 @@
 # member, variable and parameter name of this block, that s_esperas and s_proximaEspera are file-local, and that the
 # two exports are plain extern "C" functions here (EMSCRIPTEN_KEEPALIVE adds nothing to the bodies: src/Makefile's
 # EXPORTS lists them). Their place above the class's members is read from the target's indices, 9631, 9614 and 9604
-# above Pause's 9589 (higher is earlier in a band), which is weak evidence in this digit zone. src/app/wasm_sound.cpp held stand-ins of the exports and stays on the link line,
-# empty, so that src/Makefile, on which every object depends, does not change.
+# above Pause's 9589 (higher is earlier in a band), which is weak evidence in this digit zone.
 # Forms that give the same 9614: the test inverted around the call, a bool local, `== nullptr` for the function's test.
 # The class, its base and the members Wait() and WaitAsync are RTTI's (isound.h says which typeinfo names them); every
 # other name is chosen: the members' (Pause, Play, Stop, Mute, GetStatus, Wait(std::function<bool ()>)), the

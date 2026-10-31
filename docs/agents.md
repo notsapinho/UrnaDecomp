@@ -16,6 +16,7 @@ The board is a folder **outside** the repository, created for one run; the run's
 | `board/friction/` | one post per point where a doc was missing, wrong, ambiguous or misleading |
 | `queue/` | requests to the coordinator (blocked on something outside one's area, a question the board does not answer); the reply is `<same name>.reply.md` |
 | `inbox/` | the user's notes; the coordinator acknowledges each in `inbox/ack/` |
+| `shared/` | files posts cite, copied out of removed worktrees, and headers lanes publish for each other |
 
 - A post is `<stamp>-<HANDLE>-<slug>.md`, with `<stamp>` the output of `date -u +%Y%m%d-%H%M%SZ` **run as a
   command**. It opens with `from:`, `date:`, `tags:`, and `corrects: <file>` when it corrects another post.
@@ -34,14 +35,27 @@ The board is a folder **outside** the repository, created for one run; the run's
   waits for in the tree's terms (`api/util/itimer.h defines it`, a header that is not in this tree yet), not who is
   making it.
 
+## An agent's turn
+
+A delegated agent that ends its turn reports as finished, whatever is still running. So run a long step in the
+foreground or wait for it, and end a turn only when the stage's post is written. A landing whose turn ended while its
+merge steps ran in the background read as done with nothing committed.
+
 ## Working in one shared checkout
 
 - **Claim before editing.** Post a `rounds/` claim listing the files or directories you own. Do not edit a path
   another active stage claimed; file a `queue/` request instead. A header you derive from is one you depend on, claimed
   or not: when another stage claims it, read that claim's layout and link against it before you commit, since a base's
   moved member breaks your matches at the merge and no check shows it earlier.
+- **A type no lane owns.** Before you declare a type a record names, look for it on the other lanes' branches: no check
+  sees two definitions until the first TU that includes both stops on a redefinition. `for b in $(git branch --list
+  'decomp/*' --format='%(refname:short)'); do LC_ALL=C git grep -n -E 'class <T>|enum( class)? <T>' "$b" --
+  'src/uenux2/*.h'; done` lists them; take the first one byte for byte (`docs/how-to-decompile.md` step 10). A type
+  several lanes of a round need is the pick's to generate whole, once, for every lane to copy as one blob, names marked
+  as chosen, so that an add/add merges clean ([facts/workflow.md](reference/facts/workflow.md) §W17). An error enum read
+  from the target's codes needs the merge thunks too ([facts/placing.md](reference/facts/placing.md) §P6).
 - **Commit only your own paths**: `git add <paths> && git commit -m "…" -- <paths>`. The `-- <paths>` keeps other
-  agents' staged changes out of your commit. A path you removed with `git rm` (the previous census snapshot, a stub
+  agents' staged changes out of your commit. A path you removed with `git rm` (a stub
   file step 9 deleted) goes after `--` only: `git add` refuses it, and then adds nothing at all
   ([facts/workflow.md](reference/facts/workflow.md) §W7; `docs/how-to-decompile.md` step 10 has the whole command).
   Read `git log -1 --stat` after every commit.
@@ -78,28 +92,36 @@ the next run.
   `<commit>` the one that landed, which need not be the branch's tip. A dropped lane's branch keeps its commits, so
   commit what is worth having first.
 - **Copy out what the board cites first.** The clean-up check sees tracked and untracked files only, and the worktree's
-  ignored `build/out/` goes with it, with every script and log a post names. Copy the files posts cite (top-level
-  scripts and logs, not scratch clones) to `build/out/land/<lane>/` of the main checkout, and name the new path in your
-  result. A script worth keeping past the run belongs in `tools/`.
+  ignored `build/out/` goes with it, with every script and log a post names. Copy the worktree's scratch roots to the
+  board's `shared/from-<lane>/`, which the coordinator copies between machines, each file of 5 MB or less, and write
+  what stayed out and why in a `SKIPPED.txt` there. Name the new path in your result. Check the copy against the names the
+  lane's posts give, relative ones too: a posts' search for `build/out/…` misses `p/run.sh` under "in build/out/<handle>/"
+  and still reports nothing unresolved. A script worth keeping past the run belongs in `tools/`.
 - **At a round's end `git worktree list` shows only the main checkout.** Read it before you report the round.
 
 ## Two machines
 
 A round can run on two machines. Each has its own checkout, its own worktrees and its own copy of the board, at the
-same paths on both, and its own limit of agents, sized to its CPUs.
+same paths on both, and its own limit of agents. Size the limit to the machine's CPUs and memory, the census's 3.4 GB
+each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 
 - **One index per machine.** Agents on the first machine append to `INDEX.md`, and agents on the second to
   `INDEX-<machine>.md`, so the two copies never overwrite each other. A post's stamp and handle make its name unique,
   so posts from both machines merge with no conflict.
-- **The coordinator copies the board,** both ways, adding and updating and never deleting. A post from the other
-  machine is on yours only after the next copy.
+- **The coordinator copies the board,** both ways, adding and updating and never deleting, in a loop for as long as
+  agents run (every two minutes worked). A post from the other machine is on yours only after the next copy, and the
+  inbox and `shared/` travel the same way.
 
   ```sh
   rsync -au <board>/ <host>:<board>/
   rsync -au <host>:<board>/ <board>/
   ```
 
-- **Lanes never push.** A lane commits on its branch in its own machine's checkout, and its VERIFY runs on that machine.
+- **What lanes share goes through the board.** A branch is on its own machine until the coordinator fetches it, so
+  `git show <branch>:<path>` fails on the other. A header a lane publishes for others goes into the board's `shared/`,
+  and a lane that needs one from the other machine takes it from there.
+- **Lanes never push.** A lane commits on its branch in its own machine's checkout, and its VERIFY runs on that machine,
+  on the lane's worktree.
 - **One machine lands.** The coordinator fetches the other machine's branches over ssh, then merges each confirmed
   commit by its id as usual:
 
@@ -107,6 +129,13 @@ same paths on both, and its own limit of agents, sized to its CPUs.
   git fetch <host>:<checkout> decomp/<lane>:decomp/<lane>
   ```
 
+- **One coordinator owns `main`.** A second machine can carry on when the first goes offline, and then it has a
+  coordinator of its own. Two must never own `main` at once. The one that hands over finishes or stops what it holds and
+  starts nothing new. It writes the line `HANDBACK: <origin's main>, <matches>, <its pull requests>, <what is left>` in
+  its state file and a `rounds/` post, when `origin` holds its work and its worktrees are gone. The other starts no
+  landing until it reads that line and the inbox, then takes `main` from `origin` and runs Stage 0 step 1's checks
+  (`.claude/commands/decompile-functions.md`). A worktree's `build/out/` stays on its machine, so the first link after a
+  move recompiles what the commits changed.
 - **A worktree is deleted on the machine that holds it,** as "Worktrees" says, cited files included. At a round's end
   `git worktree list` shows only the main checkout on both machines.
 
@@ -125,13 +154,15 @@ same paths on both, and its own limit of agents, sized to its CPUs.
   build/out/<handle>/app`), replace that one object, and pass the clone as `APP`: `make -n` then counts 0 compiles
   against the 347 of a fresh `APP` ([facts/workflow.md](reference/facts/workflow.md) §W13).
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
-  source or a header does: each object depends on its own source and on every header of its tree.
+  source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
+  fragment rebuilds that fragment's companions and `roots_asn1.o`, whose rules name it.
+- `-j` goes on the object list only, never on `link` or `splat` ([facts/workflow.md](reference/facts/workflow.md) §W21).
 - Two units landing in one run each need their own fragment number: the coordinator assigns them before the
   matchers start, and the unit that lands second re-runs link, census, symbols, match and the splat build on top of
   the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
 - An edit to a header, or a new header, recompiles every object of its tree, whether it includes the header or not
   (the generic rules depend on every header there), the tree's roots object, and the companions whose rules name it:
-  46 compiles for `src/uenux2/src/api/util/cdatetime.h`, 60 for a new header in `src/uenux2/src/api/gui/`
+  164 compiles for `src/uenux2/src/api/util/cdatetime.h`, 189 for a new header in `src/uenux2/src/api/gui/`, at 0b5f410
   ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link
   until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the
   matched functions of those units; to show that a restructure left them as they were (a vtable, an inline member a
@@ -143,20 +174,22 @@ same paths on both, and its own limit of agents, sized to its CPUs.
   while read o; do [ ! -f "$o" ] || echo "$o"; done < build/out/<handle>/rebuilt.txt > build/out/<handle>/existing.txt
   tar -cf build/out/<handle>/before.tar -T build/out/<handle>/existing.txt
   # edit the header, then TMPDIR=/tmp make -C src link
-  while read o; do tar -xOf build/out/<handle>/before.tar "$o" | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/<handle>/rebuilt.txt
+  while read o; do tar -xOf build/out/<handle>/before.tar "$o" 2>/dev/null | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/<handle>/rebuilt.txt
   ```
 
   The list names the objects of sources a unit adds too; they are not built yet, so the filter keeps them out of the
   archive (`tar -T` would report each one and exit 1), and the loop prints `DIFFER` for them, which is right. An object
-  that is not in the list compares equal with itself and proves nothing. A reviewer with no copy from before the edit
+  that is not in the list compares equal with itself and proves nothing, and the list can miss one: a fragment, a
+  companion that holds a header its rule omits, and an edit of an `src/asn1` module header
+  ([facts/workflow.md](reference/facts/workflow.md) §W15 has the check). A reviewer with no copy from before the edit
   compiles the base's objects from `git archive <commit> src` in scratch
-  ([facts/workflow.md](reference/facts/workflow.md) §W13). Before a link, the same list
-  taken for each file a unit added or changed gives, as their union, what the unit's headers will rebuild. To check a
-  unit's objects fresh afterwards (move them aside, rebuild, compare), move aside every object its worktree built:
-  `find build/out/app -name '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file
-  dates from its creation and a cloned `build/out/` keeps older mtimes ([facts/workflow.md](reference/facts/workflow.md)
-  §W15). `find build/out/app -newer <header>` compares with the header's last edit and misses an object of the unit
-  built before it.
+  ([facts/workflow.md](reference/facts/workflow.md) §W13). Before a link, the same list taken for each file a unit added
+  or changed, fragments too, gives, as their union, what the unit's edits will rebuild. To check a unit's objects fresh
+  afterwards (move them aside, rebuild, compare), move aside every object its worktree built: `find build/out/app -name
+  '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file dates from its creation and a
+  cloned `build/out/` keeps older mtimes ([facts/workflow.md](reference/facts/workflow.md) §W15). `find build/out/app
+  -newer <header>` compares with the header's last edit and misses an object of the unit built before it. Rebuild with
+  `TMPDIR=/tmp make -C src splat`, serially; an object listed that does not come back is a deleted file's.
 - A header your unit needs that `main` gained after your branch started: start your copy from `main`'s text and only
   add to it. One that a branch landing before yours adds: copy it from that branch byte for byte, claim it, and do
   not edit it (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
@@ -166,19 +199,20 @@ same paths on both, and its own limit of agents, sized to its CPUs.
 - A splat build or scan runs the toolkit's **working tree** (`asmlift-wasm/`). If another agent is editing the
   toolkit, a measurement can depend on code nobody committed; measure against a committed tree (`git archive
   <commit> asmlift-wasm | tar -x -C <dir>`) when that matters.
-- To build an earlier commit, run `tools/round/build-at.sh <commit> <dir>` from a checkout whose build is current,
-  then `TMPDIR=/tmp make -C <dir>/src splat`. `<dir>` is a new directory outside the checkout, a sibling of the
-  worktree (`../<worktree>-base`): the script clones the checkout's whole `build/out/` into it, so a `<dir>` under
-  `build/out/` would hold a copy of itself ([facts/workflow.md](reference/facts/workflow.md) §W5). A `cmp` against
-  the base's objects means something only for the objects the base's build rebuilt; every other one is a clone of
-  yours. A bare `git worktree add` or `git archive` of the commit cannot build:
-  it lacks every ignored input (`third_party/*`, `target/fs/`, `asmlift-wasm/node_modules/`, the library outputs
-  under `build/out/`; without node_modules the split fails right after `splat-split` with no message), and every
-  file gets a time newer than any object, so the first link recompiles everything. The script clones those inputs
-  in, copies this checkout's mtimes, and touches the files the commit has differently, so make rebuilds exactly
-  what depends on them; it prints how many objects the link will recompile. Remove the tree with
-  `git worktree remove <dir>`. To compare a few objects with an earlier commit you need no tree: `git archive <commit>
-  src` into scratch and the compile lines of `make -n` there ([facts/workflow.md](reference/facts/workflow.md) §W13).
+- To build an earlier commit, run `tools/round/build-at.sh <commit> <dir>` from a checkout whose build is current, then
+  `TMPDIR=/tmp make -C <dir>/src splat` (a test on that commit needs this too:
+  [facts/workflow.md](reference/facts/workflow.md) §W12). `<dir>` is a new directory outside the checkout, a sibling of
+  the worktree (`../<worktree>-base`): the script clones the checkout's whole `build/out/` into it, so a `<dir>` under
+  `build/out/` would hold a copy of itself ([facts/workflow.md](reference/facts/workflow.md) §W5). A `cmp` against the
+  base's objects means something only for the objects the base's build rebuilt; every other one is a clone of yours. A
+  bare `git worktree add` or `git archive` of the commit cannot build: it lacks every ignored input (`third_party/*`,
+  `target/fs/`, `asmlift-wasm/node_modules/`, the library outputs under `build/out/`; without node_modules the split
+  fails right after `splat-split` with no message), and every file gets a time newer than any object, so the first link
+  recompiles everything. The script clones those inputs in, copies this checkout's mtimes, and touches the files the
+  commit has differently, so make rebuilds exactly what depends on them; it prints how many objects the link will
+  recompile. Remove the tree with `git worktree remove <dir>`. To compare a few objects with an earlier commit you need
+  no tree: `git archive <commit> src` into scratch and the compile lines of `make -n` there
+  ([facts/workflow.md](reference/facts/workflow.md) §W13).
 - `make -C src splat-symbols` after a new link re-picks the arbitrary name of byte-identical twins, so two runs'
   symbol files conflict on such lines: regenerate after merging rather than pick a side. `splat-scan` and
   `splat-match` can disagree on a count; trust the splat build's verification, and read `git diff
@@ -198,7 +232,8 @@ same paths on both, and its own limit of agents, sized to its CPUs.
   matches found"): quote it. It also reads `:` after a bare parameter as a modifier, so `git show $rev:path` fails
   with `bad substitution`: write `"${rev}:path"`. And a word that starts with `=` is a command's path: `echo ======`
   fails with `===== not found` ([facts/workflow.md](reference/facts/workflow.md) §W10).
-- In an agent's shell, `grep` can be a shell function that prints nothing for a search over the Latin-1 sources.
+- In an agent's shell, `grep` can be a shell function that prints nothing for a search over the Latin-1 sources, with
+  `LC_ALL=C` in front too, and exits as if nothing matched, so a negative from it is no evidence.
   Use `/usr/bin/grep` (or `command grep`) there. Run every text tool of a pipe over those sources or a stub line
   under `LC_ALL=C` (`sed`, `cut`, `tr`, `awk` with a regex, `git grep`), or convert with `iconv -f latin1 -t utf-8`
   first: in a UTF-8 locale macOS `sed` and `cut` stop with `illegal byte sequence` at a stub's middle dot, and

@@ -3,7 +3,7 @@
 ```
 TMPDIR=/tmp make -C src libs     # the upstream libraries, through tools/libs/*/build.sh
 TMPDIR=/tmp make -C src link     # the app objects, the plain link and its --emit-symbol-map twin
-TMPDIR=/tmp make -C src census   # census of the plain link → ledger/functions.tsv and a snapshot in ledger/history/
+TMPDIR=/tmp make -C src census   # census of the plain link → ledger/functions.tsv
 TMPDIR=/tmp make -C src splat    # the official check: the target's sha256 and the meter (docs/reference/splat.md)
 make -C src status               # README.md's headline, docs/status.md's progress blocks and docs/img/progress-*.svg, from splat/scan.tsv
 make -C src stubs                # the stub of every TSE function not decompiled yet, and the gaps (below); stubs-check checks them
@@ -22,9 +22,9 @@ byte-compare it).
 | `mk/` | the build machinery the unit fragments rely on: `ecourna-flags.mk`, `asn1.mk` (the ASN.1 runtime and modules), `splat-*.mk` (the splat build) |
 | `units/` | one fragment per landed unit, `<NN>-<component>-<what>.mk`, with its roots, pending and externs files (`units/README.md`) |
 | `ecourna/`, `uenux2/`, `asn1/` | the reconstructed TUs: ecourna mirrors the conan package's `b/src/ecourna`, uenux2 mirrors `/home/rubio/tse/uenux2` (`src/…`, `wasm/…`), asn1 the III ASN.1 fork. TSE's sources are Latin-1 (`.editorconfig`) |
-| `app/vota_init.cpp` … `wasm_sound.cpp` | the 8 exported functions as hand-written stand-ins (the glossary's second meaning of *stub*), signatures from the target export types; TU order = export order |
+| `app/vota_init.cpp`, `vota_api.cpp`, `main.cpp` | the exported functions not decompiled yet as hand-written stand-ins (the glossary's second meaning of *stub*), signatures from the target export types; TU order = export order |
 | `app/roots.cpp` | one function the stubs call that reaches every library entry point once (keeps the app's reachable set without exporting) |
-| `app/roots_ecourna.cpp`, `app/roots_uenux2.cpp` | callers of the reconstructed ecourna / uenux2 units with the target's call-site counts (binaryen inlines a function it sees called once) |
+| `app/roots_ecourna.cpp`, `app/roots_uenux2.cpp` | callers of the reconstructed ecourna / uenux2 units with the target's call-site counts (binaryen inlines a function it sees called once); they link first, so what they instantiate is the copy the link keeps (`units/README.md` "Companion files") |
 | `app/roots_{7zip,rhvoice,boost}.cpp`, `stubs_7zip.cpp` | the library probes' drivers compiled as app code; definitions 7-Zip needs that emscripten lacks |
 | `web/wasm_shim.cpp` | the 34 EM_JS functions (generated: `../tools/extract/gen_wasm_shim.py` from `web/library_vota.pretty.js` + the target import types). A reconstructed TSE source that calls one declares it `extern "C"` with this file's signature and never defines it again: the glue lists them in the order of this file's `em_js` sections (`uenux2/mock/app/simulador/wasm/cwasmbeep.cpp` declares three) |
 
@@ -36,8 +36,9 @@ The scripts the build calls are in `../tools/round/` (`census.sh`, `census_repor
 Every unmatched TSE function that `tools/round/stubs.py` finds no code of ours for has a stub in `ecourna/`,
 `uenux2/` or `asn1/`: two comment lines generated where the evidence says the function sat, between `// <stubs>`
 and `// </stubs>` markers. Code of ours, to the generator, is a body in our link that is the function, a record that
-falls on a line of our code or names a function our file defines, or a slot of a vtable our link holds
-(`stubs.py --report` counts each reason). A body is the function when the symbol file names the function by it. A
+falls on a line of our code or names a function our file defines, a slot of a vtable our link holds, or a virtual
+member of a class our sources define (`stubs.py --report` counts each reason; `units/README.md` "Pending members" has
+the limits of the last one). A body is the function when the symbol file names the function by it. A
 body the census only paired with the function (`splat/scan.tsv` source `ledger`) is the function only when its
 symbol names the class and member of one of the function's records or symbol-file names, or the class of a vtable
 that holds the function or of a vptr it stores; a sibling class's destructor one vptr apart, or a library body of
@@ -51,8 +52,8 @@ record that is. Name such functions in the fragment's header, as for a stub-only
 
 ```
 // <stubs>
-// f7010 · 683 B · unmatched · name unknown
-// void f7010(i32, i32) { ... }
+// f1455 · 496 B · unmatched · name unknown
+// void f1455(i32, i32) { ... }
 // </stubs>
 ```
 

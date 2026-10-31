@@ -137,7 +137,9 @@ default themselves; the summary on stderr tallies kinds per owner and sets trivi
 **fn** prints the disassembly beside the normalised rows, the export names (real names in
 parentheses) and table slots that reach the function, and a **folded readout** (`fold.ts`): the
 stack replayed into expressions, `if (i32.lt_s(l8, 0)) {`, `i32.store[l7+12] = 0;`,
-`return helper(…)`. It is a reading aid (block results show as `<block result>`), not a decompiler.
+`return helper(…)`. It is a reading aid (block results show as `<block result>`), not a decompiler: it hoists a `tee`
+and a call out of a nested expression, so an order of evaluation, or a value a later `tee` overwrites, is read from the
+disassembly beside it.
 With a ledger directory (`--ledger`, defaulting to `<root>/ledger` beside `<root>/target/`;
 `readout.ts`) it adds the function's owner and component, its best pair from `functions.tsv`, its
 callers (`callgraph.tsv`), the vtable class and slot it fills (`vtables.json`), every string an
@@ -175,12 +177,13 @@ identical bodies pair positionally, so a thunk's name is one of its identical tw
 probe + skeleton@twin.
 
 **progress** (`progress.ts`) reads `functions.tsv` (default `<ledger>/functions.tsv`, `--tsv` otherwise)
-and the newest `<ledger>/history/*.tsv` (or `--against <prev.tsv>`), prints one Markdown table per
+and what it compares with: `--against <prev.tsv>`, else the newest `<ledger>/history/*.tsv`, else that file as
+committed at `HEAD`, else nothing (it says so and prints no delta). It prints one Markdown table per
 `--by owner` (cls2 class, default) or `--by component` (attribution): functions, count per kind with
 the delta in parentheses, the byte-exact share by count and by bytes; then the functions that moved
 kind or score, improvements first (`--moves N`, 0 hides the list). `--snapshot [label]` copies the
-current ledger into `history/<stamp>[-label].tsv` after printing, so the next run's delta is against
-it. `tools/round/census.sh` in urna does exactly that at the end of every census.
+current ledger into `history/<stamp>[-label].tsv` (ignored by git) after printing, so the next run's delta is
+against it. `tools/round/census.sh` in urna runs `progress` without it, against the committed ledger.
 
 **targets** prints, for each listed target function (arguments or `--file`): `<index> <size> <owner>/
 <component>: <prev kind/score> → <new kind/score> <label>:<index> <name>`, and when the new pair is an
@@ -578,7 +581,8 @@ table slot at or above 1024 and resolves to neither, on a line under it), then `
 operands read as <readings>)` or `differs at body byte <k>` with the target instruction there. The readings are the
 ones `matchesTarget` chose for the operands re-pointed as an address or a table slot (and, in a kind-unverified
 function, the literals); the first reading of each is the preferred one (`RemapResult.bytes`), so it needed no
-choice. It loads the symbol file (`--symbols`, default
+choice. `differs at body byte <k>` is the first difference only: the local declarations come first, so a low `<k>` says
+nothing of the rest (`score` does). It loads the symbol file (`--symbols`, default
 `<root>/splat/symbol_addrs.txt`), the ledger (`--ledger`, default `<root>/ledger`) and the map directory beside the
 plain module (`--map-dir`), and applies no matches, unlike `splat-scan` and `splat-build` (`withMatches`). `<ours>` is
 our index or `sym:<names.tsv name>`; run

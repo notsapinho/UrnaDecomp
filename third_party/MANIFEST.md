@@ -106,7 +106,7 @@ Build inference (matches conan-center `openssl/3.x.x` recipe for os=Emscripten: 
 - RTTI: `NArchive::N7z::{CHandler,COutHandler,CFolderInStream,…}`, `NArchive::NParser::CHandler`,
   `NCompress::NLzma::{CEncoder,CDecoder}`, `NCompress::NLzma2::{CEncoder,CDecoder}`, `NCompress::NBcj::CCoder`,
   `NCompress::CCopyCoder`, `NCoderMixer2::{CMixer,CMixerST}`, `NWindows::NFile::NIO::*`, `CUpdateCallbackConsole`,
-  `COpenCallbackConsole`, `CArchiveUpdateCallback`, `CFilterCoder` … (`grep -E '^(NCompress|NArchive|…)' tools/libs/rtti.tsv`).
+  `COpenCallbackConsole`, `CArchiveUpdateCallback`, `CFilterCoder` … (`ledger/classes.json`).
   This is the C++ 7z writer/reader of the LZMA SDK "Alone7z/7zr" subset (UI/Common/Update.cpp + UI/Console callbacks),
   not xz/liblzma. The app wrapper is `ecourna::api::compression::CLzmaCompress` (clzmacompress.cpp).
 - Version bounds (`python3 -I tools/libs/finediff.py <clone of https://github.com/ip7z/7zip> C,CPP 21.07,22.00,22.01,23.01,24.05`):
@@ -194,7 +194,7 @@ exactly one library's source literal set (literal sets extracted from the vendor
 (b) vtable slots: RTTI typeinfo → vtables → elem-table → function, class namespace → library (2398 functions);
 then propagate along the call graph (callee called only by one class) and smooth within use-count strata
 (binaryen's reorder-functions sorts by use count, stable, so link order survives inside each stratum; use-count
-increases happen only 1936/14342 times along the index). Output `cls2.json`. The table below (`tools/libs/budget.tsv`)
+increases happen only 1936/14342 times along the index). Output `cls2.json`. The table below
 counts the classes without `classify.py`'s last step, which makes every function that loads a TSE `std::source_location`
 record `app` (4,469 in `cls2.json`); `classify.py` prints the counts with it.
 

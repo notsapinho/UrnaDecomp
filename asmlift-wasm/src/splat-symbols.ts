@@ -1581,11 +1581,12 @@ export function ctorVotes(
     }
     const [[k0, j0]] = telling;
     const shift = j0 - k0;
-    // a chunk of a string the target does not hold tells nothing and still has to fit
+    // a chunk of a string the target does not hold tells nothing and still has to fit; a table slot reads as an
+    // address of the first strings, and is none
     let last = Math.max(...telling.keys());
     for (let k = to - 1; k > last; k--) {
       const v = addressOf(oi[k]);
-      const obj = v === null || v < GLOBAL_BASE || v >= ours.dataEnd ? null : dataObjectAt(ours.map.data, v);
+      const obj = v === null || v < GLOBAL_BASE || v >= ours.dataEnd || ours.elem.has(v) ? null : dataObjectAt(ours.map.data, v);
       if (obj !== null && (obj.section === '<merged strings>' || obj.name.startsWith('.L.str'))) {
         last = k;
       }

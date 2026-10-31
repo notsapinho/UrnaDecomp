@@ -1,8 +1,9 @@
 // The census meter: functions.tsv tallied per owner (or per component) and by
-// match kind, with the delta since a previous ledger. Snapshots live in `<ledger>/history/<stamp>.tsv`
-// so every census leaves the number it was compared against.
+// match kind, with the delta since a previous ledger: the one committed at HEAD, or a local snapshot in
+// `<ledger>/history/<stamp>.tsv` (ignored by git) when `--snapshot` left one.
+import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 
 import { type LedgerRow, type PairKind } from './ledger';
 
@@ -126,6 +127,16 @@ export function renderMovements(ms: readonly Movement[], limit: number): string 
     lines.push(`  … ${ms.length - limit} more`);
   }
   return lines.join('\n');
+}
+
+/** `ledgerTsv` as committed at HEAD; null outside a checkout or when the file is not tracked. */
+export function committedLedger(ledgerTsv: string): string | null {
+  const r = spawnSync('git', ['show', `HEAD:./${basename(ledgerTsv)}`], {
+    cwd: dirname(ledgerTsv),
+    encoding: 'utf8',
+    maxBuffer: 1 << 28,
+  });
+  return r.status === 0 ? r.stdout : null;
 }
 
 /** `history/<stamp>.tsv` files, newest last (stamps sort lexically). */

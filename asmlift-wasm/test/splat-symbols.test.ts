@@ -541,6 +541,17 @@ describe('ctorVotes', () => {
     expect(votes(oi, side, ti)).toEqual({ X: [3100], Y: [3200] });
   });
 
+  it('does not read a table slot after the last telling row as a chunk of a string', () => {
+    // the slot's number is an address inside the strings; a function pointer the two tables number otherwise
+    const slot = first + 3;
+    const withSlot = { ...ours, elem: new Map([[slot, 200]]) } as unknown as OurSide;
+    const side = { ...sideOf(STRINGS), elem: new Map([[7, 100]]) } as unknown as TargetSide;
+    const run = build(2000, first);
+    const ti = [...build(3100, at(STRINGS[0], side.image)), i32(5000)];
+    const placed = ctorVotes(withSlot, ourImage, side, [...run, i32(slot)], ti, () => true);
+    expect([...placed.get('X')!]).toEqual([3100]);
+  });
+
   it('votes nothing for a run whose address is not in the target .bss', () => {
     const side = sideOf(STRINGS);
     const inData = side.imageBase + 4;

@@ -20,6 +20,8 @@
 # needs --component, the directory under src/ it would land in (ecourna/app/dados, uenux2/src/api/util, asn1, app), which
 # also overrides the path of every TU inside src/ (so it is how a src/units/*-pending.cpp, which has no rule here, gets
 # compiled with the unit's flags). Library objects are the prebuilt ones (make rebuilds nothing of theirs).
+# The try's objects go in EXTRA_OBJS, after both trees on the link line, so a linkonce copy a landed object defines stays
+# that object's. An object takes its TU's base name, so two TUs of one base name overwrite each other.
 # The candidate's functions are kept alive by a generated roots TU (tools/round/gen_try_roots.py, compiled with
 # APP_CXXFLAGS) unless --roots gives your own callers (APP_CXXFLAGS + APP_INCLUDES + --flags) or `none`.
 # Target functions the report details: --targets <file of target indices>, else every target function whose best pair

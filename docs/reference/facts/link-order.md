@@ -42,8 +42,8 @@ Consequences:
 
 ## L2. The mechanism: the ordinal is the post-Oz index, and wasm-metadce sorts
 
-Replaying the stages of the skeleton link (`em++ -v` with `EMCC_DEBUG=1`, intermediate `emcc-NN-*.wasm`; scripts
-`tools/linkorder/{truth,segment,stripnames,addnames}.py`):
+Replaying the stages of the skeleton link (`em++ -v` with `EMCC_DEBUG=1`, intermediate `emcc-NN-*.wasm`;
+[link-order.md](../link-order.md) §6):
 
 1. **wasm-ld** (`--strip-debug`) output still has a name section (15,966 names): `--strip-debug` drops DWARF only.
    Defined functions in input order: `__wasm_call_ctors` = 0, the `signature_mismatch:*` stubs, each object's live
@@ -96,11 +96,22 @@ Component runs seen there (`tools/extract/attribute.py`, exact-start string refe
 | 12375–12975 | mostly unattributed (sqlite/musl by string refs) |
 | 12975–14478 | libcrypto providers, then x509, ui, rsa, rand, property, pem, objects, then `__wasm_call_ctors` |
 
-`LINK_OBJS` in `src/Makefile` does not follow this order: it holds the uenux2 objects, ecourna, the units' companions
-and the ASN.1 runtime, SQLite, 7-Zip, then RHVoice. One object moves towards it: `language.cpp.o` sits just before the
-runtime (`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk`), because the runtime's `vector<unsigned>::push_back(const&)` has to be
-RHVoice's copy. That is a measured choice, not this table's order: the rest of RHVoice cannot follow.
-[asn1.md](asn1.md) §A2 has the links tried.
+`LINK_OBJS` in `src/Makefile` does not follow this order. At 0b5f410 `build/out/wasm/vota_web/link.cmd` holds the stand-ins
+of `src/app/`, the uenux2 objects, ecourna, `EXTRA_OBJS`, SQLite, 7-Zip, RHVoice, then libcrypto's objects and archive.
+`EXTRA_OBJS` is the units' companions in fragment order, with the modules where unit 04 adds them, `language.cpp.o`, the
+ASN.1 runtime and `roots_asn1.o`. Where that differs from the table, and what is known to turn on it:
+
+- **The runtime against RHVoice.** The table has RHVoice first; ours has one object first. `language.cpp.o` sits just
+  before the runtime (`RHVOICE_BEFORE_ASN1` in `src/mk/asn1.mk`), because the runtime's
+  `vector<unsigned>::push_back(const&)` has to be RHVoice's copy. That is a measured choice: moving all of RHVoice, as the
+  table reads, loses rows ([asn1.md](asn1.md) §A2 has the links).
+- **The stand-ins first.** They define templates the target took from code with TBAA that precedes both trees
+  ([app-flags.md](app-flags.md) §F6, "The stand-ins keep strict aliasing"), and a throw there picks which tree's linkonce
+  copy wins (`src/units/README.md` "Companion files").
+- **A flag that changes an ABI tag changes who owns an inline symbol.** Symbols of two tags never collide, so the order
+  did not matter while the runtime's `nn` copies stood apart. With `ne` on both sides the first definer wins.
+- **Fragments sort as text.** `100-…` links between `10-…` and `11-…`. Nothing turns on it: with unit 100's objects last,
+  no row leaves `match`.
 
 ## L4. Ordinal recovery from the bands: what anchors can and cannot give
 
@@ -132,7 +143,7 @@ puts 0 of 9,940 out of place.
 **full** function list (`wasm-objdump -x -j Function` on the `.o`), 1 ≤ Δordinal ≤ Δposition: 8,737 pairs, 0
 violations. Dead functions between them occupy no ordinal; nothing else can sit between them.
 
-**Identification** (`tools/linkorder/ident.py`): sources are the ledger's byte/fingerprint/addr pairs, census
+**Identification**: sources are the ledger's byte/fingerprint/addr pairs, census
 depth-0 pairs, exact bodies by unique name, the SQLite attribution, OpenSSL own-name strings, then callee-structure
 propagation (paired functions with equal call counts pair their callees positionally). Gates: the normalised body
 is unique on both sides (or the name is unique), ≥ 6 instructions, no function paired twice. Result: 5,611 pairs (exact
@@ -166,7 +177,7 @@ removal count is not decidable from this data; 2 is kept.
 zone confirmed); a 7-Zip object at 14058–14068; mgfn bodies above everything. By elimination, the app code sits at
 ordinals ≈ 300–9200.
 
-**TU slices** (`tools/linkorder/tu_slices.py` → `ledger/tu-clusters.tsv`, `docs/reference/tu-slices.md`): in each use band the
+**TU slices** (`tools/linkorder/tu_slices.py` → `ledger/tu-clusters.tsv`): in each use band the
 unanchored functions between library anchors are sliced into runs of one probable file, labelled by
 `source_location` records, else by the vtable class's file. 1,385 stretches over 7,339 functions; 1,732 of 3,270
 app functions labelled. The uses==1 band's app region is clean reverse link order (e.g. band 11047–11066 = 20
@@ -176,8 +187,8 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
 ## L7. Traps when inverting the order
 
 1. `wasm-opt … --symbolmap=f` makes wasm-opt read the name section, so the output differs from the plain build.
-   To see the names binaryen uses in the plain pipeline, strip the name section first
-   (`tools/linkorder/stripnames.py`), then add `--symbolmap`: the map reads "0".."N" plus `byn$` names.
+   To see the names binaryen uses in the plain pipeline, strip the name section first,
+   then add `--symbolmap`: the map reads "0".."N" plus `byn$` names.
 2. The order is decided in wasm-metadce, not in `wasm-opt -Oz`: a module taken after the first wasm-opt is still
    in link order. Compare orders only on the final module.
 3. The shared skeleton output (`build/out/wasm/vota_web/vota_web_wasm.wasm`) is relinked by every build: tie each
@@ -331,3 +342,8 @@ functions of `app/comum/relatorios/crelatoriotesteimpressora.cpp`). A stretch is
     #   confirmaidentidade/cpededigital.cpp confirmaidentidade/cregistradigitaloperador.cpp aguardaeleitor/cmostraeleitorvotando.cpp
     #   aguardaeleitor/csuspensaoautomaticaeleitor.cpp cthreadoperador.cpp
     ```
+16. **A function that calls an EM_JS import can be placed by the glue.** The glue lists the EM_JS functions in link order
+    of the `em_js` sections (`/usr/bin/grep -oE 'function (js|wasm)_[a-z0-9_]+\(' target/vota_web_wasm.js`). The run
+    `js_thread_log`, `js_emit_event`, `js_push_key`, `js_console_error`, `js_wasm_web_sound_play_wav` puts the wrappers of
+    3533, 9649 and 9646, which have no record and no RTTI, at or next to the seam of `cwasmthread.cpp` and
+    `cwasmwebsound.cpp`. `ledger/ordinals.tsv` gives 3533 a window of 5 to 9642.

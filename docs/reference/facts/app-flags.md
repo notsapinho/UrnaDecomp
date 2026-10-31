@@ -298,8 +298,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   what to read first on a body that differs in what is inlined).
 - **`-std=c++20` is ecourna's measurement, carried over.** F1's 3703 is an ecourna function; no uenux2 function decided
   uenux2's `-std`.
-- **-O3 with `-std=c++23` is a deferred decision, not the tree's setting.** Every match verifies there, and the bodies
-  that gain are all in `mock/app/simulador/wasm/` ([levels.md](levels.md) §V3).
+- **-O3 with `-std=c++23` is a deferred decision, not the tree's setting** ([levels.md](levels.md) §V3).
 - **The executable TU is not uenux2's set.** `wasm/vota_web/vota_web_wasm.cpp`, not reconstructed, is compiled
   `-Oz -fexceptions`, and the linkonce copies it emits are the ones the target kept ([levels.md](levels.md) §V1).
 - **-fPIC** removes the last structural rows of all three ctors.
@@ -327,9 +326,16 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   store and a pointer load are disjoint in clang's TBAA tree; `-fno-strict-aliasing` emits no TBAA at all). Every
   comum converter with two or more field stores reloads the same way (10276, 10289, 11383, 11386, 11388, …), as
   ecourna's do (F2). comum is uenux2: all 755 `app/comum` records are `/home/rubio/tse/uenux2/…`
-  (`ledger/source-locations.tsv`). On every uenux2 object the flag changes the bytes of four api objects (`cwait`,
-  `cposixmutex`, `cposixsemaphore`, `ctickmanager`) and keeps every match: with it in `UENUX2_CXXFLAGS`,
-  `make -C src splat` gives the target's sha256 on every match.
+  (`ledger/source-locations.tsv`). With the flag `make -C src splat` gives the target's sha256 on every match.
+
+  That is what the flag has measured, and not every uenux2 site agrees. Off the whole tree at 0b5f410 (F9 item 6's
+  `flags-tbaa` link), `splat-build` ends `3 matched functions no longer verify`, 11386, 11388 and 11392, and the scan
+  turns 2799 and 3714 `match`. Those two are open evidence against the flag: a `std::map` or `std::set` insert reloads
+  `__child` after the begin-node store, before `__tree_balance_after_insert` (fn 152), at the flag, in every spelling,
+  and neither target body does. The other side is in the target too: 4454, in `md/rdv/`, reloads, and 5725 and
+  5377, one template at one record line, split, so which TU's linkonce copy won may decide it. A local or `sret` tree
+  reloads at the flag too, since the first insert stores its address in a node. The sites with no call to explain the
+  reload, 10276, 10289 and 11383, are all `no-candidate`: writing 10289 and measuring it both ways is the test.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots and pending
   files) is uenux2's set without the flag. With it, six matches stop verifying: 152, 1383, 1527, 3501, 3639 and 5150,
   libc++ templates (`std::__tree`, `__split_buffer`, `operator>>`) whose winning copy comes from
@@ -338,7 +344,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   instead does not reproduce the target: a private link with `roots_rhvoice.o` and `roots_boost.o` at uenux2's flags
   and moved after the RHVoice objects loses dozens of matches, 152 among them, whose first definer becomes uenux2's
   `ctickmanager.cpp.o` (no TBAA). So in the TSE link some code with TBAA that defines these templates precedes the
-  uenux2 and ecourna objects that also define them, as our stand-ins do.
+  uenux2 and ecourna objects that also define them, as our stand-ins do. `src/app/roots_uenux2.cpp` holds
+  `vector<double>`'s range insert (2662) that way (`src/units/README.md` "Companion files").
 - **Not ecourna's other two.** In a private whole link (the flags through `UENUX2_EXTRA`, so the stand-ins keep
   theirs; F9.6), adding `-fno-delete-null-pointer-checks` loses 3 matches (5194, 11321 and 11326, the
   `CVotos::Partido`/`Legenda` lambdas) and `-fno-strict-overflow` loses 1 (3663 `CBmpConversor::InvertColors`).
@@ -431,6 +438,24 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    five steps take about 9 minutes on a loaded machine. With `-fno-delete-null-pointer-checks` the build ends
    `3 matched functions no longer verify` (the tool's message), listing 5194, 11321 and 11326, as F6 says.
 
+   A match line keyed by object names `build/out/app` (`/usr/bin/grep -c '@app/' splat/matched.txt` prints 4), and a
+   private link's keys hold `$P`, so `splat-build` stops on such a line with `our link has no function …` and checks
+   nothing else. Re-key a copy of the list, and pass that to `--matches`:
+   `sed -E 's#@app/#@flags-nodelnull/app/#' splat/matched.txt > $P/matched.txt`. Read the "no longer verify" list by
+   symbol before counting it as lost: a link that moves objects also moves the surviving names of twins, so one such
+   link listed 20 with one row lost. The `join` below gives the loss.
+
+   To take a uenux2 flag off, add its opposite: `UENUX2_EXTRA` comes last on the line, and for a flag em++ does not read
+   that is the same as the flag off the line (five objects, `cmp`-equal to the same sources compiled with
+   `-fno-strict-aliasing` off the line; item 9 is the exception). A clone without the objects that change compiles only
+   those, 190 of them here:
+
+   ```sh
+   P=build/out/flags-tbaa; mkdir -p $P/app
+   rsync -a --exclude='/uenux2/' --exclude='*-uenux2-*-pending.o' build/out/app/ $P/app/
+   TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web UENUX2_EXTRA=-fstrict-aliasing
+   ```
+
    That answers whether a flag set keeps every match. It does not say what the flag set adds: steps 7 to 9 read the
    plain link's fixed paths (`/usr/bin/grep -n 'build/out/wasm' tools/round/census.sh` prints `M=` and `N=` under
    `build/out/wasm/` and `build/out/wasm-named/`). The scan of the private link is a lead, not a verdict. It takes the
@@ -465,7 +490,7 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    (`/emsdk/upstream/emscripten/tools/compile.py` in the image), and a later `-fno-PIC` leaves it there. The code comes out
    non-PIC, but the visibility is not the hidden a line without `-fPIC` gets, and the objects differ: a default-visibility
    vtable address loads as `i32.const 524; i32.const 8; i32.add`, and the functions around it change size. So `ECOURNA_EXTRA` can
-   measure adding a flag, never removing one. To measure a tree without a flag, take the flag off the line.
+   measure adding a flag, never removing this one: take it off the line.
 
    ```sh
    P=build/out/flags-visibility; mkdir -p $P; printf 'int f(int x) { return x + 1; }\n' > $P/a.cpp

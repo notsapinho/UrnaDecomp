@@ -34,7 +34,7 @@ The round has six stages, each run by its own agent:
 | 0. board | you | `$HOME/.cache/urna-board/<run-id>` | the board |
 | 1. PICK | 1 | the urna checkout, read-only | a pick post |
 | 2. MATCH | 1 per lane | the lane's worktree | the lane's branch |
-| 3. VERIFY | 1 per lane, not the matcher | the lane's worktree, read-only | a verdict post |
+| 3. VERIFY | 1 per lane, not the matcher | the lane's worktree, on the lane's machine, read-only | a verdict post |
 | 4. LAND | 1 per batch of confirmed lanes | the urna checkout's `main` | merge commits on `main` |
 | 5. DOCS | 1, or 2 split by file and 1 to reconcile them | a worktree each | a docs branch |
 
@@ -43,7 +43,10 @@ about 7 minutes each against one minute alone (how-to step 5), so a third agent 
 A lane's VERIFY may start as soon as its MATCH returns, while the other lane is still matching, and LAND may take
 the confirmed lanes in batches while others still match. DOCS runs every few rounds, on the friction posts since the
 last DOCS stage. A round on two machines follows [docs/agents.md](../../docs/agents.md) "Two machines": Stage 0 runs on
-each, and LAND runs on one.
+each, a lane matches and verifies on one machine, its build being there, and LAND runs on one.
+
+A delegate tool reports an agent as finished when it ends its turn, even with a build still running. So every brief
+carries rule 9, and a stage's result is its post, not its last message.
 
 ---
 
@@ -70,7 +73,7 @@ Put this list in every brief, word for word. It is the standard a match is judge
    says. Nothing else changes to make a match land.
 6. **Generated files are regenerated, never edited**: stubs and gaps, `splat/scan.tsv`, `splat/symbol_addrs.txt`
    above its hand-edit marker, the status blocks of `docs/status.md` and `README.md` and the waffles
-   `docs/img/progress-*.svg`, `ledger/functions.tsv` and its snapshot. The commands that write them are how-to steps
+   `docs/img/progress-*.svg`, `ledger/functions.tsv`. The commands that write them are how-to steps
    7 to 9.
 7. **House rules** ([docs/agents.md](../../docs/agents.md)): `TMPDIR=/tmp` on every docker command, no wildcard
    `rm`, no `git stash`, `/usr/bin/grep` over the Latin-1 sources, never push. Commit messages end with the
@@ -78,6 +81,8 @@ Put this list in every brief, word for word. It is the standard a match is judge
 8. **The board**: read its `README.md` and `inbox/` at the start of your stage (the inbox is the user's word and
    outranks your brief), post a `rounds/` claim of the paths you own before editing, and post what you learned as
    `facts/` and `traps/`, with the command behind every number.
+9. **Stay in your turn.** Run a long build in the foreground or wait for it, and end your turn only when your stage's
+   post is written.
 
 ### The friction log
 
@@ -105,7 +110,7 @@ Post it when you hit it, not at the end of your stage.
    Create, folders first:
 
    ```
-   board/facts/  board/traps/  board/rounds/  board/friction/  queue/  inbox/ack/
+   board/facts/  board/traps/  board/rounds/  board/friction/  queue/  inbox/ack/  shared/
    README.md     INDEX.md
    ```
 
@@ -116,8 +121,8 @@ Post it when you hit it, not at the end of your stage.
    you. Every later word of the user's that changes the round goes there too, before you act on it.
 4. **Run PICK** (Stage 1) when the arguments give a component; when they give indices, PICK still checks each one
    (stub, file, callees) and assigns files, but chooses nothing.
-5. **Assign each lane a fragment number** before any matcher starts: the next free `NN` after the last
-   `src/units/<NN>-*.mk`, one per lane in lane order (A 15, B 16). Two lanes that each take "the next free
+5. **Assign each lane a fragment number** before any matcher starts: the next free number after the highest in
+   `src/units/`, read as a number (`100-` sorts between `10-` and `11-`), one per lane in lane order (A 15, B 16). Two lanes that each take "the next free
    number" collide ([src/units/README.md](../../src/units/README.md) "Names"). A lane whose target lives in a file a
    landed unit already compiles takes no number: it extends that unit's fragment ("Landing a unit" item 2 there), and
    its brief names the fragment it extends.
@@ -153,6 +158,10 @@ Post it when you hit it, not at the end of your stage.
    add -b` starts it at `main`: use `tools/round/build-at.sh <the branch's commit> <dir>`, which touches the files
    that differ so make rebuilds what depends on them, then `git -C <dir> switch -c decomp/<lane>`.
 
+   A lane that builds on another lane's unlanded work is cut the same way, from that lane's commit once its verdict is
+   CONFIRMED, and lands after it. Its base is that commit: the brief names it, and the commands written with
+   `git merge-base main HEAD` take it literally, since that command then gives the older commit `main` shares.
+
 ---
 
 ## Stage 1: PICK (one agent, read-only)
@@ -179,10 +188,8 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   class can be taken at once. Each `src/units/*-pending.cpp`
   header names its members and what each waits for (`ls src/units/*-pending.cpp`). The scan's
   `unresolved` rows are in neither (`tools/round/pick_pool.py`'s docstring has the command that lists the TSE ones):
-  a body of ours calls something the target has no function for, which the row's `detail` names. Either the target
-  inlined that callee (fix our source so ours inlines it too), or it is a binaryen merge body whose target
-  counterpart has other members, which can be another component's: `pnpm wasm fn` on the target body lists its
-  callers, and writing the missing member is what fixes the row.
+  a body of ours calls something no target function is named for, which the row's `detail` names, and how-to step 1
+  tells the three cases apart.
 
   Claude Code replaces a `$` followed by a digit in this file with one of the command's argument words before the
   session reads it (a dollar and 0 become the first word; Claude Code's skills docs, "Available string substitutions"), fenced code
@@ -215,7 +222,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
 - **The name and the file**: from the records, the vtable slot, `ledger/vtables.json` and `ledger/classes.json`;
   for an `unplaced.cpp` stub, the file rules of how-to step 3.
 - **Lanes must not overlap.** Different classes and different files, so no two lanes edit one file or emit one
-  vtable. Two virtual members of one class belong to one lane (the second can be that lane's stretch goal).
+  vtable. Two virtual members of one class belong to one lane (the second can be that lane's stretch goal). A header
+  several lanes need (a shared enum, a type a record names) is listed in the pick post, with one copy on the board's
+  `shared/` that every lane takes byte for byte.
 
 Check the pick yourself before launching the matchers: each target's stub is where the post says, and no two lanes
 share a file.
@@ -253,17 +262,19 @@ commit range, the target index and the match line. Not the matcher's transcript.
 It changes no tracked file, works in scratch under `build/out/verify/` (ignored), and posts a verdict,
 **CONFIRMED** or **REFUTED** with the check that failed. It judges by the docs of the branch's base, and where `main`
 has changed them since (`git diff "$(git merge-base main HEAD)" main -- docs src/README.md src/units/README.md`), by
-`main`'s too, since the branch lands under them; the verdict says which text it read:
+`main`'s too, since the branch lands under them; the verdict says which text it read. Below, `<base>` is the commit the
+branch started from, `git merge-base main HEAD` for a branch cut from `main`:
 
 1. **Fresh objects.** Move aside, by name (into `build/out/verify/old-objs/`), every object the lane built:
    `find build/out/app -name '*.o' -newer .git` lists them, since the worktree's `.git` file dates from its creation
    and the cloned objects keep the checkout's older mtimes. A header the lane added or edited rebuilds every object of
    its tree and the companions that name its directory, not only the unit's (`src/units/README.md` "What a fragment
    holds" item 3; `docs/reference/facts/workflow.md` §W15), and `-newer <header>` misses an object built before that
-   header's last edit. Run `TMPDIR=/tmp make -C src splat`, check that it compiled exactly those objects, and `cmp`
-   each with its old copy. A stale object means the source edits never rebuilt.
+   header's last edit. Run `TMPDIR=/tmp make -C src splat`, with no `-j`, check that it compiled exactly those objects, and `cmp`
+   each with its old copy. A stale object means the source edits never rebuilt. An object that does not come back is a
+   deleted file's: `cmp` is owed for the objects the link names.
 2. **The splat build** prints the target's sha256, and no index the branch's base matches is lost (how-to step 10's
-   `comm`, against `git merge-base main HEAD`). A
+   `comm`, against `<base>`). A
    line removed and its index added back under another symbol is a twin rename: check that the old symbol is gone
    from the link (`build/out/wasm-map/vota_web/names.tsv`) and the new one is a byte-identical body. Compare the
    range's `splat/scan.tsv` with the base's on the index and verdict columns: only the lane's matches, and verdicts
@@ -308,7 +319,9 @@ VERIFY. If it is refuted again, report it to the user.
 Brief: the rules above, the board path, the batch's CONFIRMED lanes in landing order, each with the commit its verdict
 confirmed, and the match count and commit of `main` before the batch. Land in batches as the verdicts arrive: each
 batch is a LAND stage of its own, and it touches no lane its brief does not name. It posts a `rounds/` claim of `main`
-first, naming the lanes, their commits and the worktrees it will remove, and keeps its logs under `build/out/land/`.
+first, naming the lanes, their commits and the worktrees it will remove, and keeps its logs under `build/out/land/`. A
+batch that meets a lost match stops before committing that merge and posts it. A toolkit fix the merge needs is a commit
+of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there.
 
 The commit to land is the one the verdict confirmed. A lane branch's tip can differ from it: a pause can leave the
 worktree on another branch (`wip/<lane>`), and the lane branch then points at an older commit. Check
@@ -326,8 +339,8 @@ lands ("Pausing and resuming" below).
    merge commit takes no pathspec (`docs/reference/facts/workflow.md` §W18): stage everything, check that `git status
    --short` shows no unstaged or untracked line, and commit with a bare `git commit -F -`. That is safe only because
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
-   stubs` on the merge before step 9, each index once in `splat/matched.txt`, and which side of a twin's line to keep,
-   with the check after step 9.
+   stubs` on the merge before step 9, each index once in `splat/matched.txt`, both sides' hand edits with one line per
+   name, and which side of a twin's line to keep, with the check after step 9.
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The
@@ -341,11 +354,8 @@ lands ("Pausing and resuming" below).
    run the checks of VERIFY step 4, and from `asmlift-wasm/` `pnpm test`, `pnpm typecheck` and `pnpm test:bench`.
 4. **Clean up**, which is not optional: no worktree outlives its lane. Read the inbox again first. Then, for each lane
    of the batch and each lane dropped since the last batch:
-   - copy every file a board post cites out of the worktree's `build/out/` (scripts, logs, small outputs) into the
-     checkout's `build/out/land/<lane>/`, since `git worktree remove` deletes the ignored `build/out/` with the
-     worktree;
-   - check that `git -C <worktree> status --porcelain` prints nothing (a dropped lane commits what it has first, so
-     its branch keeps it) and that a landed lane's commit is in `main` (`git merge-base --is-ancestor <commit> main`);
+   - copy what the board cites to its `shared/from-<lane>/`, and check that nothing is lost, as
+     [docs/agents.md](../../docs/agents.md) "Worktrees" says, since `git worktree remove` deletes the ignored `build/out/`;
    - run `git worktree remove <worktree>`.
 
    Keep the branches. Never push. The result post quotes `git worktree list`. A worktree on the other machine of a
@@ -370,6 +380,9 @@ give each post to the part whose file it names first. A third agent then merges 
 home, and re-runs what the two halves disagree on. Its branch is what the coordinator opens a pull request for, and
 the DOCS worktrees are removed as Stage 4 step 4 removes a lane's, the branches kept.
 
+Its result states its cut-off, and it continues the follow-up list of the DOCS stage before it, with what landed marked
+done.
+
 ---
 
 ## Pausing and resuming
@@ -381,6 +394,10 @@ brief a new one with the lane's brief and the post of where it stood. Either way
 the WIP commit into its result commit (`git commit --amend`) or resets its branch to its base and commits again, and
 says in its claim when it rebased onto a newer `main`. Its result names the commit, which VERIFY and LAND then use by
 id (Stage 4).
+
+One coordinator owns `main` at a time. To hand a round to a coordinator on the other machine, the owner writes one
+`HANDBACK:` line, and the next owner checks Stage 0 step 1 before it starts anything
+([docs/agents.md](../../docs/agents.md) "Two machines").
 
 ---
 
@@ -414,8 +431,8 @@ what exists), tell the user:
   **MATCH B** matches 9131. Its stretch goal 9130 stays pending: it needs constructor thunks that binaryen merged and
   that have no names yet, which the lane reports as a `facts/` post.
 - **VERIFY** confirms both lanes, the blanked-target check included.
-- **LAND** fast-forwards lane A and merges lane B. The merge conflicts in every generated file and in the census
-  snapshot both lanes renamed, and is resolved as how-to step 10 "Landing onto a moved main" says. After the
+- **LAND** fast-forwards lane A and merges lane B. The merge conflicts in every generated file,
+  and is resolved as how-to step 10 "Landing onto a moved main" says. After the
   regeneration the splat build prints the target's sha256 with every lane's matches plus 6122, a libc++ function
   that neither lane had: the merged link drops a self-voted vtable name, and the vtable is then placed by its
   content. No match is lost.

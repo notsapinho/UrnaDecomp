@@ -108,7 +108,7 @@ point away from the code's tree too: a uenux2 function that throws ecourna's `CB
 uenux2 enum `E` has an ecourna typeinfo reference, so it is component `ecourna` (238 such functions, among them
 `1708 comum::CCargos::Next`), while its source and its stub are in `src/uenux2/`.
 *Where:* `ledger/func-attribution.tsv`, `ledger/functions.tsv` column `component`, `docs/reference/appmap.md` §1, the splat
-pieces and meter (`docs/reference/splat.md`), `docs/reference/link-order.md` §7.4, `docs/reference/tu-slices.md`, lift-eval sampling and the
+pieces and meter (`docs/reference/splat.md`), `docs/reference/link-order.md` §7.4, lift-eval sampling and the
 benchmark rows' `component` field.
 
 **owner** — the coarser library class of `tools/libs/classify.py`, stored in `tools/libs/cls2.json`: `app`,
@@ -158,16 +158,16 @@ byte-identical, and names every final function (`build/out/wasm-map/vota_web/nam
 `src/mk/splat-map.mk`, `docs/reference/splat.md` §2.
 
 **stub** — two meanings. (1) A generated comment for a TSE function not decompiled yet, where the evidence says it
-sat in TSE's file: `// f7010 · 683 B · unmatched · name unknown` over its signature, between `// <stubs>` and
+sat in TSE's file: `// f1455 · 496 B · unmatched · name unknown` over its signature, between `// <stubs>` and
 `// </stubs>` markers. `tools/round/stubs.py` writes them (`make -C src stubs`, run by `splat-match`, so a matched
 function's stub goes) and CI checks them (`stubs.py --check`); a function no evidence places is in its tree's
 `unplaced.cpp`. A function the generator finds code of ours for has none, and a pending member counts as code of
-ours, so it loses its stub when its unit lands. The signature line names the function only when the symbol file
+ours, so it loses its stub when its unit lands, as does any virtual member of a class our sources define. The signature line names the function only when the symbol file
 does; otherwise it is `f<index>` with the wasm types. A stub is a comment, not code: it puts nothing into the link
 (see **INCLUDE_ASM**). *Where:*
 `src/README.md` "Stubs", `docs/how-to-decompile.md` steps 1, 3 and 9. (2) A hand-written
 stand-in for an exported function whose body is not reconstructed: `src/app/vota_init.cpp`, `vota_api.cpp`,
-`main.cpp`, `wasm_sound.cpp` (signatures from the target's export types; their order on the link line fixes the
+`main.cpp` (signatures from the target's export types; their order on the link line fixes the
 export order). `src/app/stubs_7zip.cpp` supplies four symbols 7-Zip needs and emscripten lacks. *Where:*
 `src/README.md`, `docs/reference/toolchain.md` §2 "Export order".
 
@@ -275,7 +275,7 @@ the evidence that pinned it.
 
 **census** — three related things. The toolkit command `census` pairs every function of one module with one of
 another by fingerprint, then addr, then shape (`asmlift-wasm/README.md` "census"). `make -C src census`
-(`tools/round/census.sh`) runs it on the skeleton, rewrites `ledger/functions.tsv` and writes a snapshot and
+(`tools/round/census.sh`) runs it on the skeleton, rewrites `ledger/functions.tsv` and writes
 `build/out/census/{report,progress}.md`.
 
 **census tiers, pairing tiers** (the ledger's `best_kind`) — how a target function pairs with a candidate function,
@@ -321,13 +321,13 @@ written by `make -C src status`, which also draws it in the README's waffles. *W
 
 **progress** — two things with the one name. (1) The toolkit command `pnpm wasm progress` (also the end of
 `make -C src census`, and its `build/out/census/progress.md`): the census tiers per owner or component with the delta
-since the last snapshot. Despite its name it is a diagnostic, not the meter. *Where:* `asmlift-wasm/README.md`
+since the ledger committed at `HEAD`. Despite its name it is a diagnostic, not the meter. *Where:* `asmlift-wasm/README.md`
 "progress". (2) The README's progress waffles: squares coloured by verdict, a 10 x 10 waffle per origin and per
 component and one square per function of TSE code, drawn by `make -C src status` from `splat/scan.tsv`. *Where:*
 `README.md` "Status", `tools/round/progress_waffles.py`. "Progress" alone, and "the progress number", mean the meter.
 
-**snapshot** — a copy of `ledger/functions.tsv` saved as `ledger/history/<stamp>[-label].tsv` by
-`progress --snapshot`, so the next run can print what moved. *Where:* `tools/round/census.sh`, `ledger/history/`.
+**snapshot** — a copy of `ledger/functions.tsv` saved as `ledger/history/<stamp>[-label].tsv` (ignored by git) by
+`progress --snapshot`, so the next run can print what moved since it. *Where:* `asmlift-wasm/README.md` "progress".
 
 **match, matched, match list** — a match is a line `<target index> <our symbol>` in `splat/matched.txt` (the match
 list): a promise that our build produces exactly that target body, which the splat build verifies on every run (see
@@ -367,7 +367,8 @@ marker survive regeneration; a hand edit needs evidence that does not come from 
 `pair-fingerprint` and `pair-addr` (a census pair unique on both sides), `call` and `table` (aligned callees and
 function pointers), `vote:N` (aligned address operands; `by:` lists up to four voters), `rtti`, `content`, `string`,
 `srcloc`, `srcloc-anchor`, `vptr-anchor`, `content-anchor`, `ctors`, `vtable` (the same slot of a vtable both sides name by RTTI); the hand edits name their own (`vtable-slot`, `rtti-vptr`, `rtti-operand`,
-`pair-depth0`, `callers+content`). *Where:* `docs/reference/splat.md` §2, `asmlift-wasm/src/splat-symbols.ts`.
+`pair-depth0`, `callers+content`, `merged-body`), and how a hand edit is weighed is `docs/how-to-decompile.md` step 9.
+*Where:* `docs/reference/splat.md` §2, `asmlift-wasm/src/splat-symbols.ts`.
 
 **re-pointing** (`splat-remap`) — rewriting one of our function bodies into the target's index and address spaces:
 callees, `call_indirect` types, globals, imports, table slots and data addresses, through our link map, the
@@ -442,7 +443,7 @@ in a lower band: 5898 is `uses 1` there and 2 in `ledger/ordinals.tsv` (`docs/re
 
 **band** — all functions with the same use count; the `uses=1` band is the largest and the most informative.
 (The benchmark and lift-eval also use "size band": tiny ≤ 32, small ≤ 128, medium ≤ 512, large ≤ 2048 bytes, huge.)
-*Where:* `docs/reference/link-order.md`, `docs/reference/tu-slices.md`, `asmlift-wasm/benchmark/README.md` (size band).
+*Where:* `docs/reference/link-order.md`, `asmlift-wasm/benchmark/README.md` (size band).
 
 **ordinal** (link ordinal) — a function's defined index after `wasm-opt -Oz`: wasm-ld's input order (each object's
 live functions in the object's own order, then archive members) compacted by inlining and merging, with the mgfn
@@ -456,8 +457,9 @@ nothing orders them. So a band reads as reverse link order with lower digit coun
 exceptions on the skeleton. *Where:* `docs/reference/link-order.md` §1, `src/Makefile` header comment, `docs/reference/appmap.md` §6.
 
 **digit zone, zone twin** — the ordinals with the same number of digits; a zone twin is an ordinal that sorts next to
-one of another zone ("293" sits right after "2936"), so a placement can flip between the two. *Where:*
-`docs/reference/link-order.md` §1 and §7.4, `docs/reference/tu-slices.md`.
+one of another zone ("293" sits right after "2936"), so a placement can flip between the two, and the scan's `ours` reads
+two members across ordinal 999 and 1000 the wrong way round: compare `names.tsv`'s `ld_index`, which has no zones
+(`docs/how-to-decompile.md` step 3). *Where:* `docs/reference/link-order.md` §1 and §7.4.
 
 **rank** — here, the position of an ordinal's decimal string in the descending string order of all ordinals; the
 solver's sound windows are rank ranges (`rank_lo`, `rank_hi`). Not to be confused with the toolkit's compile-and-rank
@@ -498,7 +500,7 @@ different thing: target/ours pairs that share a unique `source_location` record.
 ordinals differ by 1 to q − p. It lets an anchor be placed from the `.o` alone. *Where:* `docs/reference/link-order.md` §7.1.
 
 **stretch, TU slice** — a run of functions inside one band that probably come from one source file, found by
-`tools/linkorder/tu_slices.py` from `source_location` records and vtable classes. *Where:* `docs/reference/tu-slices.md`,
+`tools/linkorder/tu_slices.py` from `source_location` records and vtable classes. *Where:*
 `ledger/tu-clusters.tsv`, `docs/reference/link-order.md` §7.5.
 
 **link line** — the ordered list of objects passed to `em++` at link time. Ours is `LINK_OBJS` in `src/Makefile`,
@@ -511,8 +513,8 @@ changed only on evidence; the recovered TSE order is in `docs/reference/link-ord
 it `kit`. *Where:* `asmlift-wasm/README.md`, `README.md`, `tools/round/census.sh`.
 
 **readout, folded readout** — `pnpm wasm fn` prints a function's disassembly beside its normalised rows and a folded
-readout: the operand stack replayed into expressions. It is a reading aid, not a decompiler. *Where:*
-`asmlift-wasm/README.md` "What is what".
+readout: the operand stack replayed into expressions. It is a reading aid, not a decompiler: it hoists a `tee` and a
+call out of a nested expression, so read an order from the disassembly. *Where:* `asmlift-wasm/README.md` "What is what".
 
 **bundle** — the same readout for a group of functions in one Markdown file, `ledger/bundles/<name>.md`.
 *Where:* `asmlift-wasm/README.md` "The decompile loop", `ledger/bundles/`.
@@ -600,7 +602,7 @@ and `build/out/`, and in commit messages:
 The `src/units/` fragments are named by their content, not by a handle (`src/units/README.md` "Names").
 
 **board** — the folder outside the repository through which a run's agents coordinate (append-only facts, traps,
-round posts and frictions, plus the user's inbox). A `rounds/` *claim* there is a post reserving the paths a stage
+round posts and frictions, the user's inbox, and `shared/` for files posts cite and headers lanes hand each other). A `rounds/` *claim* there is a post reserving the paths a stage
 owns (`docs/agents.md`), unrelated to a match. Facts that tracked files cite are kept in `docs/reference/facts/`.
 
 **friction** — a board post about a point where a doc was missing, wrong, ambiguous or misleading: what the doc led

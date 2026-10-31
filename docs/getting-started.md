@@ -29,9 +29,9 @@ node --version                                       # v24.22.2
 ```
 
 Under another Node (26, say) every command that runs the toolkit stops with `Abort trap: 6` and no other message:
-`pnpm wasm …`, `tools/round/try-tu.sh`, `make -C src census` and the splat targets
-([facts/workflow.md](reference/facts/workflow.md) §W1). `tools/setup/bootstrap.sh --check` names the cause:
-`WRONG node v26.11.1: the toolkit is tested on Node 24`.
+`pnpm wasm …`, `tools/round/try-tu.sh`, `make -C src census` and the splat targets. `tools/setup/bootstrap.sh --check`
+names the cause: `WRONG node v26.11.1: the toolkit is tested on Node 24`. Set PATH inside a script of your own, not around
+it ([facts/workflow.md](reference/facts/workflow.md) §W1).
 
 About 4 GB of disk is needed: a bootstrapped and linked clone takes 1.8 GB (0.45 GB of `third_party/` sources,
 0.15 GB of downloads, 1 GB of `build/out/`), and the image 2.2 GB.
@@ -90,16 +90,17 @@ emscripten/emsdk:6.0.0` adds the tag from the layers already there.
 Then link the skeleton and run the splat build once:
 
 ```sh
-TMPDIR=/tmp make -C src -j4 $(make -s -C src print-LINK_OBJS)   # the app objects, 4 at a time   (5 min)
+TMPDIR=/tmp make -C src -j4 $(make -s -C src print-LINK_OBJS)   # the objects, 4 at a time   (403 took 61 s at -j6)
 TMPDIR=/tmp make -C src link                                    # the plain link and its named twin   (31 s)
 TMPDIR=/tmp make -C src splat                                   # the link map, the split, the build   (71 s)
 ```
 
 `make -C src link` builds the *plain link* `build/out/wasm/vota_web/vota_web_wasm.wasm` and the *named twin*
-beside it in `build/out/wasm-named/`. It would compile the objects too, but one at a time: about 180 compiles, each
-a docker run. Do not pass `-j` to the link itself: its two outputs share one recipe, and under `-j` make runs that
-recipe twice at once into the same directories. The plain link is reproducible too: a fresh clone links it byte for
-byte as any other checkout at the same commit does. The splat build is section 5.
+beside it in `build/out/wasm-named/`. It would compile the objects too, but one at a time, each a docker run. Never pass
+`-j` to `link` or `splat`: the link's two outputs share one recipe, and under `-j` make runs that recipe twice at once
+into the same directories, which can leave a corrupt named wasm that `make` then calls up to date
+([facts/workflow.md](reference/facts/workflow.md) §W21). The plain link is reproducible too: a fresh clone links it byte
+for byte as any other checkout at the same commit does. The splat build is section 5.
 
 ## 3. Read and lift a function
 
@@ -132,12 +133,12 @@ function f1931(i32 p0, i32 p1, i32 p2, i32 p3) -> (i32) {
 Then the lifter:
 
 ```sh
-TMPDIR=/tmp pnpm wasm lift ../target/vota_web_wasm.wasm 1931 -o /tmp/lift --check
+TMPDIR=/tmp pnpm wasm lift ../target/vota_web_wasm.wasm 1931 -o ../build/out/lift --check
 ```
 
 ```
-names: 6998 (glue ../target/vota_web_wasm.js, ledger 6928), mangled pairs: 15375, attribution: 14343
-lifted 1/1 in 12 ms, 0 threw
+names: 7763 (glue ../target/vota_web_wasm.js, ledger 7735), mangled pairs: 17668, attribution: 14343
+lifted 1/1 in 5 ms, 0 threw
        1 functions: goto
        1 functions: arm tail kept from the join
        1 functions: frame object escapes at entry
@@ -145,7 +146,7 @@ lifted 1/1 in 12 ms, 0 threw
 compiled 1/1 with em++ -c
 ```
 
-`/tmp/lift/1931.cpp` is C++ that em++ compiles, written in wasm terms (`int32_t` parameters, `volatile` stores,
+`build/out/lift/1931.cpp` is C++ that em++ compiles, written in wasm terms (`int32_t` parameters, `volatile` stores,
 empty `asm` barriers that steer clang). It is a starting point to rewrite into the original source, not code to
 commit. The indented lines name the workarounds it contains; `asmlift-wasm/README.md` "lift" explains each.
 The `mangled pairs:` count comes from the symbol lists `make -C src link` writes beside the plain link
@@ -166,15 +167,15 @@ TMPDIR=/tmp tools/round/try-tu.sh --single 1931 --extract export:_ZNK5comum8CRdv
 ```
 flags: -O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -I/work/src …
 names for vota_web_wasm.wasm: …/target/vota_web_wasm.js
-   458 / 520    crdvvota.cpp
+  2899 / 2993   crdvvota.cpp
 
 winner crdvvota.cpp
-score 458 over 520 rows (same 62, replaced 76 [14 operand-only], inserted 347, deleted 35)
+score 2899 over 2993 rows (same 94, replaced 79 [28 operand-only], inserted 2820, deleted 0)
 target                                                     candidate
-;; (i32 i32 i32 i32)->(i32) locals(i32 i32 i32 i32)      ~ ;; (i32 i32 i32 i32)->(i32) locals(i32 i32 i32 i32 i32 i32 i32 i32 i32)
+;; (i32 i32 i32 i32)->(i32) locals(i32 i32 i32 i32)      ~ ;; (i32 i32 i32 i32)->(i32) locals(i32 i32 i32 i32 i32 i32 i32 …
 global.get 0                                             | global.get 0
 ...
-single mode: 35 s
+single mode: 4 s
 ```
 
 The first line is the compile command's flags, read from the recipe `src/Makefile` has for this source's object
@@ -182,19 +183,17 @@ The first line is the compile command's flags, read from the recipe `src/Makefil
 same instruction for instruction, and lower is closer. `|` marks a row that is the same, `~` one that differs only
 in an operand, `>` and `<` rows only one side has.
 
-The score is high although 1931 is matched. Compiled alone, the TU gets other inlining decisions than inside the
-whole program: here the candidate opens two more stack frames (inlined callees) and ends in an exception landing
-pad (`call import:__resumeException`) that the target's body does not have. That is the normal case
-for TSE code, not a broken setup: the matched `CStringUtils::ToQWord` (target 1141) scores 982 over 999 alone, because
-its template helper is inlined. Use `--single` to iterate on one function's shape; conclude with the whole-link mode
-([how-to-decompile.md](how-to-decompile.md) step 5), because only the whole link decides a match. For a function that
-throws with a `std::format` message, the lone score is mostly libc++ inlined into it (thousands of rows), and
-how-to step 4 says what to read instead.
+The score is high although 1931 is matched. Compiled alone, the TU gets other inlining decisions than inside the whole
+program: here the candidate holds 2,820 inserted rows, libc++ code the program shares and the lone link inlines. That is
+the normal case for TSE code, not a broken setup: the matched `CStringUtils::ToQWord` (target 1141) scores 982 over 999
+alone, because its template helper is inlined. Use `--single` to iterate on one function's shape; conclude with the
+whole-link mode ([how-to-decompile.md](how-to-decompile.md) step 5), because only the whole link decides a match. For a
+function that throws with a `std::format` message, the lone score is mostly libc++ inlined into it (thousands of rows),
+and how-to step 4 says what to read instead.
 
-It takes about 7 s on an idle machine. The 35 s above is a run with other builds going on, and heavy load
-stretches its docker runs to several minutes. A file outside `src/` needs `--component <dir under src/>`
-(for example `--component uenux2/src/app/comum/dados`), which picks the same flags, and `--print-flags` prints the
-compile command without running it.
+It takes about 4 s on an idle machine, and heavy load stretches its docker runs to several minutes. A file outside
+`src/` needs `--component <dir under src/>` (for example `--component uenux2/src/app/comum/dados`), which picks the same
+flags, and `--print-flags` prints the compile command without running it.
 
 ## 5. Run the splat build
 
@@ -247,7 +246,7 @@ function.
 | --- | --- |
 | a compile through docker cannot find its input or output files | `TMPDIR` is not `/tmp` (section 1) |
 | `pnpm`, `try-tu.sh`, `make -C src census` or a splat target dies with `Abort trap: 6` | another Node than 24 is first on PATH (section 1) |
-| `make -C src link` fails with `assert names`, or says "Nothing to be done" after a failure | a `-j` run; delete `build/out/wasm/vota_web/vota_web_wasm.wasm` and `build/out/wasm-named/vota_web/vota_web_wasm.wasm` by name and link again without `-j` |
+| `make -C src link` fails with `assert names` or `parse exception: Section extends beyond end of input`, says "Nothing to be done" after a failure, or a census fails on the named wasm | a `-j` run; delete `build/out/wasm/vota_web/vota_web_wasm.wasm` and `build/out/wasm-named/vota_web/vota_web_wasm.wasm` by name and link again without `-j` |
 | a flag change in `src/units/*.mk` does not change the link | make does not rebuild objects when only a fragment's flags change; touch the sources (each object depends on its own source and every header of its tree, so an edit of either rebuilds it) |
 | the bootstrap refuses a `third_party/` checkout | that directory is at another commit; it is never reset for you, so move it aside and run the bootstrap again |
 | a step takes many times longer than the table says | the host is loaded; every compile is a docker run |

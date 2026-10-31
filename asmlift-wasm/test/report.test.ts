@@ -1,5 +1,8 @@
 // The bundle (one Markdown file per TU cluster) and the progress meter over functions.tsv.
-import { existsSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { census } from '../src/census';
@@ -8,7 +11,7 @@ import { importResolver } from '../src/imports';
 import { type LedgerRow, type PairKind, readLedgerTsv } from '../src/ledger';
 import { normalizeModule } from '../src/normalize';
 import { funcAt, parseModule } from '../src/parse';
-import { movements, renderProgress, tally } from '../src/progress';
+import { committedLedger, movements, renderProgress, tally } from '../src/progress';
 import { loadLedger } from '../src/readout';
 import { renderBundle, renderFunctionReport } from '../src/report';
 import { TARGET, target, URNA_ROOT } from './helpers';
@@ -95,6 +98,26 @@ describe('progress', () => {
     expect(t).toMatchObject({ total: 3, totalBytes: 60 });
     expect(t.n).toEqual({ byte: 2, fingerprint: 0, addr: 1, shape: 0, none: 0 });
     expect(t.bytes.byte).toBe(40);
+  });
+
+  it('compares with the ledger committed at HEAD when there is no snapshot', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'progress-'));
+    try {
+      const tsv = join(dir, 'functions.tsv');
+      writeFileSync(tsv, 'committed\n');
+      expect(committedLedger(tsv)).toBeNull(); // not a checkout: nothing to compare with
+      const git = (...args: string[]): void => {
+        execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', ...args], { cwd: dir, stdio: 'ignore' });
+      };
+      git('init', '-q');
+      expect(committedLedger(tsv)).toBeNull(); // not committed yet
+      git('add', 'functions.tsv');
+      git('commit', '-qm', 'ledger');
+      writeFileSync(tsv, 'this census\n');
+      expect(committedLedger(tsv)).toBe('committed\n');
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it('renders the per-owner table with deltas against the previous ledger', () => {

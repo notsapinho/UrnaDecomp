@@ -12,7 +12,7 @@ another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap
 | directory | what the scripts do |
 | --- | --- |
 | `setup/` | turn a fresh checkout into a working one |
-| `extract/` | read facts out of the target into `ledger/`, `docs/reference/appmap.md` and `src/web/` |
+| `extract/` | read facts out of the target into `ledger/` and `src/web/` |
 | `round/` | the decompile loop: compile a candidate, link the whole module, measure it, name the link for splat, write the progress numbers |
 | `linkorder/` | recover the order of the objects on the TSE link line from the target's function order |
 | `libs/` | identify the upstream libraries and their versions, build each one with the pinned toolchain, and score the builds |
@@ -31,11 +31,9 @@ another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap
 | `wasmmod.py` | minimal wasm reader (sections, imports, types, data segments as a memory image, the funcref table) the other scripts import |
 | `extract_strings.py` | every NUL-terminated string of the data segments → `ledger/strings.tsv` |
 | `rtti.py` | typeinfo objects and vtables → `ledger/classes.json`, `ledger/vtables.json` |
-| `func_refs.py` | per function: the strings, vtables and source-location records it loads, and its callees → `ledger/func-strings.tsv`, `ledger/callgraph.tsv` |
+| `func_refs.py` | per function: the strings, vtables and source-location records it loads, and its callees → `ledger/func-strings.tsv` (ignored: `attribute.py` reads it), `ledger/callgraph.tsv` |
 | `source_locations.py` | every `std::source_location` record and the functions that load it → `ledger/source-locations.tsv` |
-| `attribute.py` | the component of every defined function → `ledger/func-attribution.tsv`, `ledger/functions-by-file.tsv` |
-| `ui_strings.py` | the user-facing (pt-BR) strings of the TSE code → `ledger/ui-strings.tsv` |
-| `appmap_data.py` | the summaries in `docs/reference/appmap.md` |
+| `attribute.py` | the component of every defined function → `ledger/func-attribution.tsv` |
 | `gen_wasm_shim.py` | writes `src/web/wasm_shim.cpp`, the app's EM_JS functions, from `src/web/library_vota.pretty.js` and the target's import types |
 | `jsdefs.py` | compares the same-named top-level definitions of two prettier-formatted glues |
 | `asn1/` | `run.sh` recovers the ASN.1 schema of the `Modulo*` types from the target's data (`consts.py`, `bssinit.py`, `schema.py`, `schema2.py`) and writes asnparser-style modules (`gen_modules.py`) into `build/out/asn1-schema/modules/`; `src/asn1/README.md` says how they relate to `src/asn1/modules/` |
@@ -46,7 +44,7 @@ another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap
 | --- | --- |
 | `try-tu.sh` | compiles candidate TUs with their component's flags, links the whole module with them and reports what moved; `--single` scores one function alone; `--symbols` lists the function symbols a TU defines (`llvm-nm`'s `T` and `W`: not a class's own vtable or typeinfo, which are strong data; `src/README.md` "Trying a candidate"). A variant of a tracked header goes in with `--flags "-iquote /work/<dir>"`: `-I` loses to the tree's own (`docs/reference/facts/tool-traps.md` §X8) |
 | `gen_try_roots.py` | the roots TU that keeps a candidate's functions in the link (also used for the ASN.1 runtime by `src/mk/asn1.mk`) |
-| `census.sh` | `make -C src census`: the census of the plain link against the target, the ledger and the progress snapshot |
+| `census.sh` | `make -C src census`: the census of the plain link against the target, the ledger and the tiers against the committed ledger |
 | `census_report.py` | the structural report of that census (anatomy, imports, exports, glue diff) |
 | `wasmfn.py` | normalises `wasm-objdump -d` bodies into per-function opcode hashes and pairs equal bodies |
 | `link-map.sh` | `make -C src link-map`: relinks the plain link with wasm-ld's map and names every function, for the splat build; `link-map.sh build/out/try/<name>/wasm/vota_web` maps a try-tu link the same way, so `splat-remap` can read it; the path is matched against the try's `link.cmd` as given, so a try made with `--name ../verify/x` is mapped as `build/out/try/../verify/x/wasm/vota_web` (`docs/reference/facts/tool-traps.md` §X10) |
@@ -68,14 +66,9 @@ another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap
 | --- | --- |
 | `wasmcode.py` | decodes the code section far enough to count uses the way binaryen's reorder-functions does |
 | `linkorder.py` | inverts binaryen's function-order scramble: each target function's window of link ordinals and a point estimate in it (the window's middle for an unanchored function, `docs/reference/facts/link-order.md` §L7 item 14) → `ledger/ordinals.tsv` |
-| `tu_clusters.py` | groups the recovered ordinals into anchored objects and the stretches between them; `publish.sh` writes `ledger/tu-clusters.tsv` with `tu_slices.py` instead |
-| `tu_slices.py` | slices the order into translation-unit stretches → `docs/reference/tu-slices.md` |
+| `tu_slices.py` | slices the order into translation-unit stretches → `ledger/tu-clusters.tsv` |
 | `linkline.py` | the recovered link line, one anchored object per row |
-| `truth.py`, `segment.py`, `addnames.py`, `stripnames.py` | the skeleton's ground truth (final index → binaryen ordinal → wasm-ld ordinal → object), used to test the solver on a link whose order is known; they read `build/out/linkorder/` |
-| `truth2.py` | the same ground truth on the frozen skeleton in `build/out/LINKORDER2/`, with the law check |
-| `ident.py` | pairs target functions with skeleton functions and writes the solver's anchors (object, position in the object) |
-| `repair.py`, `holdout_eval.py` | drop the anchors of inconsistent chain links; check a solve against held-out anchors (the inputs come from one-off steps, `docs/reference/link-order.md` §6) |
-| `publish.sh` | copies a solve into `ledger/ordinals.tsv` and regenerates `ledger/tu-clusters.tsv`, `docs/reference/tu-slices.md` and the link line |
+| `publish.sh` | copies a solve into `ledger/ordinals.tsv` and regenerates `ledger/tu-clusters.tsv` and the link line |
 
 `docs/reference/link-order.md` has the commands and the results.
 
@@ -94,9 +87,9 @@ The classification and string-probe scripts below (`memimg.py`, `funcs.py`, `vta
 scratch directory holding `mem.bin` (`python3 -I tools/libs/memimg.py target/vota_web_wasm.wasm mem.bin`, with the
 path adjusted) and `strings4.txt` (`strings -n 4 target/vota_web_wasm.wasm`), as `third_party/MANIFEST.md` says.
 They find the repository from their own path. `classify-seed.py` also reads `funcs.json` and source trees from the
-scratch directory (its docstring lists them). `funcs.json`, `table.json`, `vtables.json`, `seed.json` and
-`cls2.json` in `tools/libs/` are their committed outputs; `funcs.py`, `vtables.py` and `memimg.py` reproduce the first
-three byte for byte.
+scratch directory (its docstring lists them). `cls2.json` and `vtables.json` in `tools/libs/` are their committed
+outputs (`tools/extract/asn1/` and `vtable_compare.ts` read the second): `memimg.py`, `funcs.py`, `vtables.py`,
+`classify-seed.py` and `classify.py`, in that order, reproduce `cls2.json` byte for byte.
 
 | file | does |
 | --- | --- |
@@ -104,6 +97,6 @@ three byte for byte.
 | `census_summary.py` | folds the census JSONs of several builds of one library into its `census.json` |
 | `discriminate.py` | lists the target functions that tell two builds (versions, flags) apart |
 | `vtable_compare.ts` | scores the target's vtable slots of one class against the same class in probe builds |
-| `classify-seed.py`, `classify.py` | the owner class of every target function: the seed from library strings, then vtables and call-graph propagation, then `app` for every function that loads a TSE `std::source_location` record (`ledger/source-locations.tsv`) → `cls2.json` (`classify.py` reproduces the committed one from the four committed JSON inputs); `budget.tsv` is a per-class table in another format (functions, code bytes, instructions) without `classify.py`'s last step, which no script rewrites |
+| `classify-seed.py`, `classify.py` | the owner class of every target function: the seed from library strings, then vtables and call-graph propagation, then `app` for every function that loads a TSE `std::source_location` record (`ledger/source-locations.tsv`) → `cls2.json` |
 | `funcs.py`, `vtables.py`, `memimg.py` | the inputs of the classification: per-function constants and calls (`funcs.json`), vtables and the table (`vtables.json`, `table.json`), the memory image |
-| `dumpstr.py`, `ptrarray.py`, `tails.py`, `finediff.py`, `opts.c` | the string and version probes `third_party/MANIFEST.md` cites |
+| `ptrarray.py`, `tails.py`, `finediff.py`, `opts.c` | the string and version probes `third_party/MANIFEST.md` cites |

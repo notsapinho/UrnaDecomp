@@ -17,7 +17,7 @@ configure.sh O3                      # URNA_OSSL_CFLAGS=-O3 → the build direct
 build.sh O3                          # make build_generated, make -j4 libcrypto.a   (~3 min)
 ROOTS=tools/libs/openssl/roots.txt EXTRA_EXPORTS=tools/libs/openssl/roots/empty.txt census.sh O3 <tag>
                                      # link-probe (main() calls each root), dumps, names, census at depth 2 and depth 0
-write-census-json.py build/out/openssl/O3-probe-<tag> O3 roots.txt census.json
+write-census-json.py build/out/openssl/O3-probe-<tag> O3 roots.txt census.json <funcs.json from tools/libs/funcs.py>
 ```
 
 `roots.txt` (258 symbols) is the libcrypto API the app calls, derived from the target (`derive-roots.py`: probe functions with ≤ 1

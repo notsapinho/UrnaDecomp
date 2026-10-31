@@ -3,7 +3,7 @@
 //   splat-maps     <target.wasm> <plain.wasm> [--symbols <f>] [--map-dir <d>] [--ledger <d>]
 //                  (--fn <our index|sym:name> | --data <our address> | --target-fn <index> | --summary)
 //   splat-remap    <target.wasm> <plain.wasm> <our index|sym:name> [--against <target index>] [--symbols <f>]
-//                  [--kinds <kinds.json> | --no-kinds]
+//                  [--ledger <d>] [--kinds <kinds.json> | --no-kinds]
 //   splat-sym-coverage <target.wasm> <plain.wasm> [--symbols <f>] [--ledger <d>] [--smoke N]
 //                  [--kinds <kinds.json> | --no-kinds]
 //   (splat-remap and splat-sym-coverage refuse to run without the table unless given --no-kinds)
