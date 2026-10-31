@@ -1,5 +1,5 @@
 // Roots: keep api::CTextBox's members (target fns 10958 Draw, 10957 Move, 10955 and 10954 the destructors, 10953
-// GetTypeName, and the pending Rect 10956) in the skeleton link the way the target keeps them. In the target the vtable
+// GetTypeName, and Rect 10956) in the skeleton link the way the target keeps them. In the target the vtable
 // (@1582232) is referenced by the constructor, which binaryen inlined with std::make_shared<CTextBox> into fn 11805, not
 // reconstructed; its slots put every member in the table, and no target function calls one directly
 // (ledger/callgraph.tsv has no caller of 10953 to 10958). This stand-in builds the box the same way, with the status,

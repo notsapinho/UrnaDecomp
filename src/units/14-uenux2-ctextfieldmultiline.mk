@@ -1,5 +1,7 @@
 # uenux2 api::CTextFieldMultiLine ctor (target fn 5498) in src/uenux2/src/api/gui/ctextfieldmultiline.cpp, with the
-# gui headers it needs (primitives.h, itext.h, iformfield.h, eueguierror.h); paths relative to src/uenux2.
+# gui headers it needs (primitives.h, itext.h, iformfield.h, eueguierror.h), and Move (one of the four functions of fn 2783,
+# 90-uenux2-api-gui.mk); paths relative to src/uenux2. Draw, Rect and GetTextLines stay out: the pending file says what
+# writing them costs.
 UENUX2_SRCS += src/api/gui/ctextfieldmultiline.cpp
 # the class's members not reconstructed yet (trapping bodies the vtable needs; see the file header), and two callers of
 # the ctor plus two more CUeGuiError throw sites (14-uenux2-ctextfieldmultiline-roots.cpp) so binaryen neither inlines the ctor nor the

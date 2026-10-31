@@ -11,6 +11,7 @@
 // (line 39) or when the two text colours are equal (line 42).
 
 #include <memory>
+#include <string>
 
 #include "api/gui/iformfield.h"
 #include "api/gui/itext.h"
@@ -35,7 +36,7 @@ public:
 
     void Hide() override;
 
-    std::string GetTypeName() const override;
+    std::string GetTypeName() const override { return "CTextFieldBlinking"; }
 
     SRect Rect() const override;
 

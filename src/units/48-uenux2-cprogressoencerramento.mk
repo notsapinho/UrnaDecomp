@@ -9,16 +9,14 @@
 # stores no vptr); it holds a std::shared_ptr to the form (+4), one to the api::CProgressBar (+12) and a std::mutex
 # (+20), which the destructor destroys in reverse order. The destructor is out of line, as the deleting one calling it
 # shows, and declared first, so it is the key function and cprogressoencerramento.o emits the vtable. The constructor
-# (inlined into fn 12098) is not reconstructed. Paths relative to src/uenux2; the generic uenux2 rule depends on the
+# (inlined into fn 12098) is not reconstructed. Inicia, Finaliza and Incrementa (12103, 12102, 12101, slots 2 to 4, names
+# chosen in the base's header) hold the mutex over CProgressBar's SetValor and Incrementa; a std::unique_lock or
+# std::scoped_lock for the std::lock_guard gives the same object code in Inicia, the one measured. Paths relative to src/uenux2; the generic uenux2 rule depends on the
 # source and every uenux2 header.
 CPROGRESSOENCERRAMENTO_SRCS := src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp
 UENUX2_SRCS += $(CPROGRESSOENCERRAMENTO_SRCS)
-# slots 2 to 4 (target fns 12103, 12102, 12101) are not reconstructed: 48-uenux2-cprogressoencerramento-pending.cpp
-# gives the vtable trapping bodies, compiled with the unit's flags
-$(ROOT)/$(APP)/48-uenux2-cprogressoencerramento-pending.o: $(ROOT)/src/units/48-uenux2-cprogressoencerramento-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/48-uenux2-cprogressoencerramento.mk $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.h $(ROOT)/src/uenux2/src/app/comum/cabstracttelaprogresso.h
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/48-uenux2-cprogressoencerramento-pending.cpp -o $(R)
 # nothing reconstructed references the vtable yet: 48-uenux2-cprogressoencerramento-roots.cpp takes its address, which
 # keeps both destructors in the table as the target has them
 $(ROOT)/$(APP)/48-uenux2-cprogressoencerramento-roots.o: $(ROOT)/src/units/48-uenux2-cprogressoencerramento-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/48-uenux2-cprogressoencerramento.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/48-uenux2-cprogressoencerramento-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/48-uenux2-cprogressoencerramento-pending.o $(APP)/48-uenux2-cprogressoencerramento-roots.o
+override EXTRA_OBJS += $(APP)/48-uenux2-cprogressoencerramento-roots.o

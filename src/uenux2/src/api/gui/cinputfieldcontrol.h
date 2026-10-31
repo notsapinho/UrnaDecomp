@@ -20,8 +20,8 @@
 // link holds these constructors (api/gui/iinputfield.h says why), and nothing has compared them with the target.
 //
 // CControlValidation::isValid is COptionValidation's loop: the vtable @1577476 holds the same fn 4022 in slot 2.
-// GetTypeName (fn 11155) is written and stays `differs`: the target's is a thunk of binaryen's fn 3891, which needs a
-// third function of its shape in the link (src/units/92-uenux2-iinputfield.mk has the measurement).
+// GetTypeName (fn 11155) is written: the target's is a thunk of binaryen's fn 3891, which needs all three functions of
+// its shape in the link, with api::CTextFieldBlinking's and api::CTextFieldPaper's (src/units/39-uenux2-ctextfieldpaper.mk).
 // `return {};` for Rect gives the same function; SRect{} is written by choice.
 
 #include <memory>

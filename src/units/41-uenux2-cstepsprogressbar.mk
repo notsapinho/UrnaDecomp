@@ -15,12 +15,12 @@
 # (std::vector<std::string>) +28, the SRect +40 (what Rect returns), seven TColors +48 .. +72, a flag +76, an SFont
 # +80 and the segments Draw builds +88 (a std::vector of 28-byte elements: a std::vector of 56-byte path commands, an
 # SPoint, a std::string). The D2 destroys +88, then +28, then the IFormFieldBase<IScreen> part (its vptr store and
-# m_nome). The member, parameter and type names are not evidenced. Draw (5504) and Move (10970, which calls the unnamed
-# fn 1915) are pending. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2
+# m_nome). The member, parameter and type names are not evidenced. Move (10970) is here, over SRect::Move, with the
+# segments' clear; Draw (5504) is pending. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2
 # header.
 CSTEPSPROGRESSBAR_SRCS := src/api/gui/cstepsprogressbar.cpp
 UENUX2_SRCS += $(CSTEPSPROGRESSBAR_SRCS)
-# Draw and Move are not reconstructed: 41-uenux2-cstepsprogressbar-pending.cpp gives the vtable trapping bodies,
+# Draw is not reconstructed: 41-uenux2-cstepsprogressbar-pending.cpp gives the vtable trapping bodies,
 # compiled with the unit's flags; it depends on every header its compile reads (cstepsprogressbar.h, iformfield.h and
 # primitives.h in api/gui, and ecourna's uetypes.hpp; UENUX2_HDRS is not set yet where src/Makefile reads the fragments)
 $(ROOT)/$(APP)/41-uenux2-cstepsprogressbar-pending.o: $(ROOT)/src/units/41-uenux2-cstepsprogressbar-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/41-uenux2-cstepsprogressbar.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

@@ -18,7 +18,7 @@ class CImageField : public IFormField<IScreen> {
 public:
     CImageField(const SPoint& posicao, const SharedIImage& imagem, EAnchorPoint ancora);
 
-    std::string GetTypeName() const override;
+    std::string GetTypeName() const override { return "CImageField"; }
 
     void Draw(IScreen& screen) const override;
 
@@ -27,6 +27,8 @@ public:
     void Move(const SPoint& posicao) override;
 
 protected:
+    void SetImage(SharedIImage imagem);
+
     SPoint m_posicao;
     SharedIImage m_imagem;
     std::unique_ptr<SPoint> m_tamanho;

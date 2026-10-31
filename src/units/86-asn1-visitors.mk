@@ -64,7 +64,7 @@
 # splat/symbol_addrs.txt holds hand edits for this unit, by the method of docs/reference/facts/asn1.md A5: pair the
 # calls of every named function whose rows equal ours up to callees. 2182, 3464, 3469, 2247, 2650, 5054, 376, 220 and
 # 2706 each pair with one symbol, and that symbol with them alone. A name frees callers, not bodies: 2182, 3469, 2247,
-# 2650, 376, 220 and 2706 stay unmatched. _ZN4ASN1L14badEndOfStreamE is .bss, so no content places it: 14478, the static
+# 2650, 220 and 2706 stay unmatched, and 376 matches from unit 109. _ZN4ASN1L14badEndOfStreamE is .bss, so no content places it: 14478, the static
 # constructors, builds a string at 1914448 from the literal " bad end of stream", and five visitors read it there.
 ASN1_ROOTS_EXCLUDE += _ZN4ASN17UTCTimeC1EPKc _ZN4ASN17UTCTimeC2EPKc _ZN4ASN115GeneralizedTimeC1EPKc _ZN4ASN115GeneralizedTimeC2EPKc \
                       _ZNK4ASN17INTEGER15isStrictlyValidEv _ZNK4ASN18OpenData7isValidEv _ZNK4ASN18OpenData15isStrictlyValidEv

@@ -7,15 +7,15 @@
 //   5497  GetTextLines() const   record at line 116, col 21: CPolySingleton<IScreen>::instance()  (pending)
 //   10925 Draw(IScreen&) const                                                              (pending)
 //   10924 Rect() const                                                                      (pending)
-//   2783  Move(const SPoint&)    one body binaryen shares with CFillField/CRectField/CTextRectField (pending)
-// The pending members are defined in src/units/14-uenux2-ctextfieldmultiline-pending.cpp until GetTextLines' dependencies
-// (api/pattern/cpolysingleton.h, fn 512) and primitives.cpp (SRect, fns 1915/1916) are reconstructed.
+//   2783  Move(const SPoint&)    one body binaryen shares with CFillField/CRectField/CTextRectField (here)
+// The pending members are defined in src/units/14-uenux2-ctextfieldmultiline-pending.cpp, whose header says why.
 
 #include "api/gui/ctextfieldmultiline.h"
 
 #include <cmath>
 
 #include "api/gui/eueguierror.h"
+#include "api/gui/iform.h"
 
 namespace api {
 
@@ -75,6 +75,20 @@ CTextFieldMultiLine::CTextFieldMultiLine(const SRect& rect, const SharedIText& t
 std::string CTextFieldMultiLine::GetTypeName() const
 {
     return "CTextFieldMultiLine";
+}
+
+void CTextFieldMultiLine::Move(const SPoint& posicao)
+{
+    if (posicao.x == m_rect.left && posicao.y == m_rect.top) {
+        return;
+    }
+
+    m_rect.Move(posicao);
+
+    if (m_form != nullptr && m_form->IsVisible()) {
+        m_alterado = true;
+        m_form->Refresh();
+    }
 }
 
 } // namespace api

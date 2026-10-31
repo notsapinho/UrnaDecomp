@@ -79,7 +79,7 @@ awk -F'\t' '$2 ~ /shared_ptr_emplaceIN3api(10CTextField|11CImageField|19CTextFie
 
 prints the eight emplace D0 and D2 with `app/14-…-roots.o`, `app/27-…-roots.o`, `app/28-…-roots.o` and
 `app/29-…-roots.o`, and the classes' D2 with `app/uenux2/src/api/gui/ctextfield.cpp.o`, `ctextfielddoubleline.cpp.o`
-and `ctextfieldmultiline.cpp.o`; `CImageField`'s D2 comes from `app/29-uenux2-cimagefield-pending.o`, where the vtable
+and `ctextfieldmultiline.cpp.o`; `CImageField`'s D2 comes from `app/uenux2/src/api/gui/cimagefield.cpp.o`, where the vtable
 is emitted (U4). The constructor itself does not need `make_shared`: the target builds a CMovie inside a
 `make_shared` block too (unit 23's roots header, fn 1593), and unit 23's `__asm__`-label stand-ins match 5526.
 
@@ -212,15 +212,12 @@ traps of one wasm type into one body, which then sits in the slots of several of
 so no name is given and the member stays `no-candidate`.
 
 ```sh
-awk -F'\t' '$1==9130 || $1==9133 || $1==10900 || $1==10931 || $1==11097 || $1==11442 {print $1, $5, $11}' splat/scan.tsv
+awk -F'\t' '$1==9130 || $1==9133 || $1==11442 {print $1, $5, $11}' splat/scan.tsv
 # 9130 no-candidate -
 # 9133 no-candidate -
-# 10900 differs app/84-uenux2-cinputmenufield-pending.o
-# 10931 no-candidate -
-# 11097 no-candidate -
 # 11442 differs app/36-uenux2-cvisitantefoto-pending.o
-/usr/bin/grep -cE 'func:(10900|11442);.*evidence:vtable' splat/symbol_addrs.txt
-# 2
+/usr/bin/grep -cE 'func:11442;.*evidence:vtable' splat/symbol_addrs.txt
+# 1
 ```
 
 Which case a trap is shows in the plain link: the functions of the pending objects other than destructors, with the
@@ -245,8 +242,8 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
 
 Unit 14's `Draw` trap is one body in 42 table slots: binaryen merged the pending traps of its wasm type into it, and the
 merged ones have no name in `names.tsv` (`/usr/bin/grep -c CTextFieldDoubleLine4Draw
-build/out/wasm-map/vota_web/names.tsv` prints 0). None of them gets a name. The traps of 10900 and 11442 are alone in their
-slot, so each is named after its trap. Which case a member is can change in a function its unit never touched. A trap a
+build/out/wasm-map/vota_web/names.tsv` prints 0). None of them gets a name. The trap of 11442 is alone in its slot, so it
+is named after its trap. Which case a member is can change in a function its unit never touched. A trap a
 unit adds merges with one of its wasm type and takes that member's name and `differs` row. A member that lands leaves its
 partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and 10900 turned `differs` when
 11366 matched. The name the symbol file gives 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`,

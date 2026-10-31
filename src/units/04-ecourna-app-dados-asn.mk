@@ -4,6 +4,9 @@
 # cconversorturno.cpp is saved as UTF-8, not Latin-1 (.editorconfig's UTF-8 section): the target holds the
 # "Turno inválido." both converters throw (9192/9191) as UTF-8 bytes at 367628, the one UTF-8 text string
 # ledger/strings.tsv lists (its other `utf8` rows are binary data), and has no Latin-1 copy of it.
+# CConversorLabelParametrizado::DesconverterGeneroLabel's cases run neutro, feminino, masculino. Evidence: 9167's br_table
+# is [1 2 4 0 3] 2, and of the six orders of the three cases only this one gives it (measured on the object: the enum's
+# order, for one, gives [1 2 4 3 0] 2).
 DADOS_ASN_SRCS := app/dados/asn/cconversorturno.cpp app/dados/asn/cconversorfase.cpp app/dados/asn/cconversorcargoid.cpp \
                  app/dados/asn/cconversorfoto.cpp app/dados/asn/cconversorcabecalhoentidade.cpp \
                  app/dados/asn/cconversoridentificadoreleitor.cpp app/dados/asn/datahoraasn.cpp \

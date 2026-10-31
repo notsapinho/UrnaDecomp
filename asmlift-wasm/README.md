@@ -519,11 +519,28 @@ at its first virtual-base offset, as many words ahead of the typeinfo pointer as
 
 What the pairs leave unnamed, **anchors** may fill (`srclocAnchors`): a target function and one of ours that both
 reference a `std::source_location` record (resolved by what it records, and held at one target address) that no other
-function of either side references, and whose bodies are the same instructions, are a pair
+function of either side references, and whose bodies are the same opcodes, are a pair
 (`evidence:srcloc-anchor`). Their call and table
-votes name a function only when neither side is named yet, the votes agree and the signatures match; anchors cast
-no data votes. A name only anchors voted for lists them in `by:`. This reaches std::format throwers, whose format
-helpers our link inlines differently from the target's, so no unique pair ever reaches them.
+votes name a function only when neither side is named yet, the votes agree and the signatures match. A name only
+anchors voted for lists them in `by:`. This reaches std::format throwers, whose format helpers our link inlines
+differently from the target's, so no unique pair ever reaches them. An anchor's data votes count for `.bss` objects
+alone, and so do those of any other pair a vtable slot or an anchor's call names, when its bodies are the same
+instructions.
+
+`vptrAnchors` and `contentAnchors` do the same over a class's vptr and a read-only object placed by its bytes
+(`evidence:vptr-anchor`, `content-anchor`). Those operands can have other holders, so of a vptr's holders on both
+sides the pair of one shape anchors: a singleton's thunk, whose destructor loads the same vptr. A function the votes
+name votes in turn when its two bodies are the same opcodes (`alignVotes` compares each row's opcode and number of
+immediates, and no value), until no name is added. A name later votes contradict then goes, and its index is free
+(`settleAnchorVotes`). So which function a map yields first decides no name while no dropped name aligned and no two
+bodies want one index: the votes a dropped name cast stay, and the first of two such bodies takes the name. Both hold in
+this link, by measurement and not by construction (`docs/reference/splat.md` §2).
+
+**`ctorVotes`** names the `.bss` objects `__wasm_call_ctors` builds (`evidence:ctors:N by:<its index>`). The two bodies
+hold different translation units, so each object is aligned alone: a run of ours, from the object's first operand to
+the next object's or the next stack prologue, votes when every row through its last telling row or string chunk fits
+the target's. A row tells when the target's body holds its literal, or the place its address resolves to by content,
+once.
 
 **remapBody(maps, ourIndex)** rewrites calls, `ref.func`, type indices and globals; a reference that does not
 resolve makes the body `unresolved`, with the instruction and the reason. An `i32.const`, an `i64.const` and a memarg

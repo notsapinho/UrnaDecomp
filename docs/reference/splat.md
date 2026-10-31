@@ -80,26 +80,54 @@ parser drops any other line without a word, below the hand-edit marker too, and 
 - `call`, `table`: aligned call operands and function-pointer constants. They name a function only when
   every vote agrees and our function has the target function's signature. Such a line has a `by:` list only when every
   voter is an anchored pair and at most 4 voted, and §3's self-vote rule can refuse only a name that has one, so no
-  `by:` means the rule cannot fire, not that no one voted. The votes come from aligning the census
+  `by:` means the rule cannot fire, not that no one voted. A function is never listed as its own voter: a recursive
+  body's call votes for its own name, and §3 would read that as a second voter. The votes come from aligning the census
   seed pairs (`pair-fingerprint`, `pair-addr`), the pairs those votes form when the two bodies agree up to callees and
-  addresses, and the `srcloc-anchor` pairs
+  addresses, and the anchor pairs below
   (`seeds`, the propagation loop and `anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`). A function named by
   `vtable` alone casts none: a callback that only such a function passes by its table slot stays unnamed, and the
-  try link's one `UNRESOLVED` operand there does not become a match at step 8. Anchors take one step: a function an
-  anchor's vote names casts no votes in turn. A thunk with a record can name its merged body, and the body's own
-  callees stay unnamed unless another pair names them (8360 and 8341 named 6133, whose callee waited for 10881's
-  vote).
-- `vote:N`: aligned address operands of the seed pairs and of the pairs their votes form; an anchor casts no data
-  vote, so a `.bss` object only anchored functions use stays unnamed. `by:` lists up to 4 target functions that cast
-  a vote. `vote:N+rtti` is a vote that the RTTI decoding agrees with. A `.N` suffix on a data symbol is a piece of a
+  try link's one `UNRESOLVED` operand there does not become a match at step 8. A function an anchor's vote names votes
+  in turn when its two bodies are the same opcodes (`alignVotes` compares each row's opcode and number of immediates,
+  and no value), until no name is added: 5158, a `content-anchor`, names
+  `std::set<int>`'s constructor 5157, whose unwind path names `__tree<int>::destroy`, 1522, which no pair reaches and
+  whose recursive call waits for its own name. A name the later votes contradict then goes and the loop runs again with
+  its index free (`settleAnchorVotes`). The votes it had cast stay, and of two bodies that want one index the first
+  takes it, so which function a map yields first decides no name only while no dropped name aligned and no two bodies
+  want one index. That holds in this link, by measurement and not by construction: the one name any order drops is
+  `find`, whose two bodies do not align, and the anchors, the loop and the recheck in other orders print one symbol file.
+- `vote:N`: aligned address operands of the seed pairs and of the pairs their votes form. An anchor votes for `.bss`
+  objects alone, and so does any other pair that `vtable`, `call` or `table` evidence names, when its two bodies are
+  the same opcodes: content cannot place a `.bss` object, and a name for a read-only or `.data` object would hide
+  the copies content finds (§3). `by:` lists up to 4 target functions that cast a vote. `vote:N+rtti` is a vote that
+  the RTTI decoding agrees with. A `.N` suffix on a data symbol is a piece of a
   global LLVM's GlobalOpt split, because the global is internal and it sees every use: `.2` can stay unnamed, and the
   function that reads it `unresolved`. A file-static aggregate may need external linkage to have one name (unit 99's
   `s_contextos`, a static member).
+- `ctors:N`: a `.bss` object of ours that `__wasm_call_ctors` builds, at the address the target's body builds it, `by:`
+  that function (`ctorVotes`). The two bodies are not the same instructions, since each runs another set of translation
+  units, so each object is aligned alone. A *run* of our body starts at the object's first operand and ends at the next
+  `.bss` object's or the next stack prologue. A row of it *tells* when the target's body holds its literal, or the place
+  its address resolves to by content, in one row only: the bytes of a short string, a capacity and size, a chunk of a
+  literal. A run with a telling row votes when every row through its last telling row or string chunk fits the
+  target's: the same opcode, with an i64, an offset or a label of the same value; an `i32.const` of the same value, a
+  string of the same content, a `.bss` address on both sides or a table slot on both sides, whichever slot; any callee
+  of the signature; any local. So a small literal both tables hold fits any other, and it is the telling rows that
+  place a run. A literal two statics of the target build tells nothing, so no vote picks between them, and two objects
+  of ours built alike at one target address lose their votes. A name another pair votes for as well reads `vote:N`,
+  with the function in `by:`. The evidence is what the object is built from, which owes nothing to the bodies that read
+  it, so §3 asks a second user of `__wasm_call_ctors` alone. `_ZN4ASN1L14badEndOfStreamE`'s `callers+content` hand edit
+  read the same address from the same body by hand.
 - `rtti`: vtables and typeinfos decoded from the target's bytes.
 - `content`, `string`, `srcloc`: unique bytes, a C string, or a `std::source_location` record the target holds at one
   address. A record it holds at several has no line, since no one place is its own (§3).
-- `srcloc-anchor`: a function pair whose bodies are the same instructions and load the same
+- `srcloc-anchor`: a function pair whose bodies are the same opcodes and load the same
   `std::source_location` record, one the target holds at one address.
+- `vptr-anchor`, `content-anchor`: the same rule over another operand, a class's vptr (a constant at the address point
+  of a vtable the ledger's RTTI names on both sides) or a read-only object of at least 16 bytes placed by its exact
+  bytes. Such an operand can have other holders: a class's destructor loads the vptr its constructor does, and a sibling
+  function can share a constant table. So of its holders on both sides the one pair of the same shape anchors, and two
+  such pairs anchor nothing. Strings do not anchor, so no scan of every string constant runs at this step. 5158,
+  `CStringUtils::ToLower`, is `content-anchor`: its 76-byte table has a second holder, 3509, of another shape.
 - `vtable`: the function in a slot of a vtable both links name by `rtti`, where the target's same slot holds the
   target function. A vtable is one table of slots per base with virtual functions, and a table pairs only when the
   target's table at the same offset has as many slots: a base that declares other members in the target's version
@@ -138,6 +166,23 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   when our body differs because our source is wrong, this is not the case. Only a line under the marker that stands for
   its name and whose evidence is exactly this word on a `func:` has that effect: a longer word, the word later in a
   comment, a generated line or a data line does not, and a typo fails loudly, since the callers leave `match`.
+
+**A name kept by hand when votes disagree.** Our link can merge what the target keeps apart, and no source form fixes
+that ([../how-to-decompile.md](../how-to-decompile.md) step 3). The votes for our one body then disagree, a name with
+conflicting evidence is left out, and the matches that reach the body under that name leave `match`. A hand edit keeps
+the name, under the kind its voters give. Two lines stand so:
+
+- `CPolySingletonList::find`, `callers+content`: one body of ours for the target's 305 and 608, the executable TU's
+  instantiations (unit 100's fragment). The 16 `instance<T>` bodies that are `srcloc-anchor`s call 305, and `has<T>`
+  calls 608. Its `content` leg is empty: 305 and 608 are one shape that differs in a slot literal, so only the callers
+  single 305 out.
+- 536, `table`: the one body of the enums' format handles, in 31 target slots. Our link merges `EUrnaTurno`'s handle
+  into it and the target keeps that apart as 9868, so 1553's anchor votes 9868 and the others 536 (unit 109's fragment).
+
+Each such line meets three conditions. Its voters are the evidence, and they read records and aligned operands, not a
+match, so the line passes the removal check of "Reviewing a match". Its comment names the dissenters. A dissenter's row
+stays out of `match`. The line names the body's surviving symbol, so a landing that changes that symbol takes its
+matches out until the line follows ([facts/splat.md](facts/splat.md) §S10).
 
 A data name takes a hand edit under the same burden: `_ZN4ASN1L14badEndOfStreamE` (`callers+content`: the static
 constructors build it from a literal only it has, and five functions read it) and `_ZN3api20g_polySingletonsInfoE`
@@ -235,7 +280,9 @@ Two rules guard the evidence:
 - **No circular evidence.** A data name whose only vote came from the function being matched checks
   nothing there. Such a match holds only if our object's bytes agree with the target's at that address,
   or if another holding match uses the same name. Otherwise it is `unresolved (self-voted)` in the scan
-  and `UNCONFIRMED` in the build. For an object of a few bytes that agreement is thin (`api::CSystem::s_dorme`, one
+  and `UNCONFIRMED` in the build. An object of zeros never agrees, so a `.bss` name that one body votes for alone holds
+  only through a second match that uses it, such as the object's static destructor, or a vote of another function
+  (`ctors:N`). For an object of a few bytes that agreement is thin (`api::CSystem::s_dorme`, one
   byte, voted by 8461 alone): say in the fragment what else ties the operand to the object, such as the other
   target functions that read the same address. The rule asks this only of an `address symbol …` reading. A copy (the
   same string, read-only bytes or `source_location` record at another address) is no name and no vote: our side
@@ -274,7 +321,9 @@ function you took out of the source), delete the match line by hand in the same 
 message; `splat/matched.txt` is a list people edit, unlike `splat/scan.tsv`. While the line names a function our link
 no longer has, `make -C src splat-match` fails after it writes the status files and before it runs `make -C src
 stubs`, so run it again once the line is gone. Never edit a piece, and never add a symbol-file hand edit to make a
-match pass. A `merged-body` line (§3) is not one: its name stands on a caller it does not rescue.
+match pass. A `merged-body` line (§3) is not one: its name stands on a caller it does not rescue. Nor is a name kept by
+hand when votes disagree (§2): our link merges what the target keeps apart, its voters read no match, and its dissenters
+stay out of `match`.
 
 One failure is not drift: `our link has no function <symbol>` for a byte-identical twin whose surviving name moved,
 because a new unit's identical body comes first in the link. The body still verifies under the new name, and

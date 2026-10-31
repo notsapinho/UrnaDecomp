@@ -17,6 +17,8 @@ IIdentificadorEleitor::IIdentificadorEleitor(TTipoIdentificadorEleitor tipo, con
     }
 }
 
+IIdentificadorEleitor::~IIdentificadorEleitor() = default;
+
 std::string IIdentificadorEleitor::GetNumero() const
 {
     return m_numero;

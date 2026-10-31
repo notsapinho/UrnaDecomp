@@ -4,8 +4,8 @@
 namespace ecourna::app::dados {
 
 // A report title line: alignment, style and text. 20 bytes. Layout from its converter
-// (app/dados/asn/parametrizacaourna/cconversortitulorelatorio.cpp, fns 9149/9145, which inline the constructor);
-// enumerator names synthesised.
+// (app/dados/asn/parametrizacaourna/cconversortitulorelatorio.cpp, fns 9149/9145; binaryen inlines the constructor,
+// out of line in ctitulorelatorio.cpp, into 9145, its one caller); enumerator names synthesised.
 class CTituloRelatorio {
 public:
     enum EAlinhamentoTitulo {
@@ -19,10 +19,7 @@ public:
         EET_EXPANDIDO,
     };
 
-    CTituloRelatorio(EAlinhamentoTitulo alinhamento, EEstiloTitulo estilo, const std::string& texto)
-        : m_alinhamento(alinhamento), m_estilo(estilo), m_texto(texto)
-    {
-    }
+    CTituloRelatorio(EAlinhamentoTitulo alinhamento, EEstiloTitulo estilo, const std::string& texto);
 
     EAlinhamentoTitulo GetAlinhamento() const { return m_alinhamento; }
     EEstiloTitulo GetEstilo() const { return m_estilo; }

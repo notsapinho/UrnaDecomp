@@ -7,8 +7,8 @@
 # GetTypeName: their lines are a choice, in the target's order (the uses-1 band 10912-10917 of ledger/ordinals.tsv
 # gives D0, Draw, Show, Hide, Rect, GetTypeName). The class header (api/gui/ctextfieldupdate.h) has the layout the
 # constructor (fn 3658) and Draw (fn 10916) store; the member names are chosen and the timer at +72 is a
-# std::shared_ptr to a forward-declared api::ITimer. The constructor (3658) is not reconstructed: it calls
-# api::ITimerScheduler::GetInst (fn 1259), which has no body of ours, and keeps its stub; line 38 stays free for it.
+# std::shared_ptr to a forward-declared api::ITimer. The constructor (3658) is not reconstructed and keeps its stub; line
+# 38 stays free for it. It calls api::ITimerScheduler::GetInst (fn 1259), which unit 101 holds.
 # Show and Hide (fns 10915, 10914, slots 3 and 4) are Start and Stop of the timer, whose class the source includes
 # (api/util/itimer.h); their lines are a choice, above Rect's line 73, in the band's order. Move (one of the five
 # functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) is below line 73, a choice.
@@ -25,13 +25,9 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTEXTFIELDUPDATE_SRCS := src/api/gui/ctextfieldupdate.cpp
 UENUX2_SRCS += $(CTEXTFIELDUPDATE_SRCS)
-# Rect (10913) is not reconstructed:
-# 42-uenux2-ctextfieldupdate-pending.cpp gives the vtable a trapping body, compiled with the unit's flags; it reads only
-# api/gui headers
-$(ROOT)/$(APP)/42-uenux2-ctextfieldupdate-pending.o: $(ROOT)/src/units/42-uenux2-ctextfieldupdate-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/42-uenux2-ctextfieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/42-uenux2-ctextfieldupdate-pending.cpp -o $(R)
+# Rect (10913) is a thunk of fn 3889: 27-uenux2-ctextfield.mk has it.
 # the constructor, the vtable's only user in the target, is not reconstructed: 42-uenux2-ctextfieldupdate-roots.cpp takes
 # the vtable's address, which keeps both destructors in the table as the target has them
 $(ROOT)/$(APP)/42-uenux2-ctextfieldupdate-roots.o: $(ROOT)/src/units/42-uenux2-ctextfieldupdate-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/42-uenux2-ctextfieldupdate.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/42-uenux2-ctextfieldupdate-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/42-uenux2-ctextfieldupdate-pending.o $(APP)/42-uenux2-ctextfieldupdate-roots.o
+override EXTRA_OBJS += $(APP)/42-uenux2-ctextfieldupdate-roots.o

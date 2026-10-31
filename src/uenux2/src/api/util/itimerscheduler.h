@@ -5,14 +5,16 @@
 // class with no base, and its two implementers simulador::CWasmTimerScheduler (vtable @1532172) and
 // api::CTimerScheduler (@1585396): slot 0 is the member that makes a timer and slots 1 and 2 the destructor. Slot 0's
 // shape is what fn 2024 passes: the result's address, this, a pointer to the 64-bit interval and a pointer to a
-// std::function<void ()> it destroys after the call. Its name is chosen. This header declares what the input fields
-// call and no more: CreateInst is not written, and GetInst (fn 1259) has no body in this tree, as it needs
-// api::CPolySingleton.
+// std::function<void ()> it destroys after the call. Its name is chosen. CreateInst's throw is the record at line 40; the
+// other lines of the class are a choice. CreateInst returns what GetInst returns: fn 5444 tail-calls fn 5443 and its
+// result is gone only because no caller reads it (how-to step 2).
 
 #include <chrono>
 #include <functional>
 #include <memory>
 
+#include "api/pattern/cpolysingleton.h"
+#include "api/util/eueutilerror.h"
 #include "api/util/itimer.h"
 
 namespace api {
@@ -25,6 +27,18 @@ public:
     virtual ~ITimerScheduler() = default;
 
     static ITimerScheduler& GetInst();
+
+    // (original lines 31-35: content not recovered)
+#line 36
+    template <typename T>
+    static ITimerScheduler& CreateInst()
+    {
+        if (CPolySingletonList::has<ITimerScheduler>()) {
+            throw CUeUtilError(EUE_UTIL_TIMERSCHEDULER_RECRIADO, "Tentativa de recriar o singleton");
+        }
+        CPolySingleton<ITimerScheduler>::set(std::unique_ptr<ITimerScheduler>(new T));
+        return GetInst();
+    }
 };
 
 } // namespace api

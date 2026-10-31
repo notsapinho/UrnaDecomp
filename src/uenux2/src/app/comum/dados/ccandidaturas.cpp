@@ -1,12 +1,29 @@
 #include "app/comum/dados/ccandidaturas.h"
 
 #include <format>
+#include <mutex>
 
 #include "app/comum/dados/euecomumdadoserror.h"
 
 namespace comum {
 
-// (original lines 9-84: content not recovered)
+CCandidaturas& CCandidaturas::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst = std::make_unique<CCandidaturas>();
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CCandidaturas> CCandidaturas::s_inst;
+std::mutex CCandidaturas::s_mutex;
+
+CCandidaturas::CCandidaturas() : CCandidaturas("CCandidaturas") {}
+
+CCandidaturas::~CCandidaturas() = default;
+
+// (original lines 26-84: content not recovered)
 #line 85
 const std::string CCandidaturas::RecuperaVersaoPacote(TCargoID cargo) const
 {

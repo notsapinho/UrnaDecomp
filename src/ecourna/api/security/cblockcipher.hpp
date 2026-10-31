@@ -8,7 +8,7 @@
 namespace ecourna::api::security {
 
 template <typename ALGO, typename RANDOM>
-class CBlockCipher : public ISymmetricCipher {
+class CBlockCipher final : public ISymmetricCipher {
 public:
     explicit CBlockCipher(const CAesKey& chave)
         : ISymmetricCipher(chave)

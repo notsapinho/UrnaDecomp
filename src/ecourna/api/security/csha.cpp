@@ -14,8 +14,8 @@ CSha::CSha(std::string algoritmo, size_t tamanho)
     Reset();
 }
 
-CSha::~CSha() = default;
-
+// (original lines 17-18: content not recovered)
+#line 19
 void CSha::Reset()
 {
     const int resultado = EVP_DigestInit_ex2(m_ctx.get(), EVP_get_digestbyname(m_algoritmo.c_str()), nullptr);

@@ -7,7 +7,8 @@
 # deleter of the std::shared_ptr<IGravador> (fn 12092); one defined in the class gives the same bytes, one defined out
 # of line a call (docs/reference/facts/reading.md R5). IResultado's destructor is defined in the class, since
 # CGravadorWSQ's inlines it (out of line in iresultado.cpp, measured in a try link, it is a call there and 11576 does
-# not match); it is emitted with IResultado's vtable, which the inlined vptr store keeps.
+# not match); it is emitted with IResultado's vtable, which the inlined vptr store keeps. Fn 12090's copy in the link is
+# unit 102's roots object's, the same code: that fragment's name sorts first (src/units/README.md "Names").
 # With it: the comum::IGravador and comum::IResultado interfaces (igravador.h and iresultado.h beside it),
 # EExtensaoArquivoResultado (iresultado.h), EUrnaFase (app/comum/eurnafase.h), ESavdArquivoUE (app/comum/iinterfacesavd.h,
 # beside ESavdAplic) and the layouts of api::CDateTime and api::CDate (src/api/util/cdatetime.h and cdate.h, beside

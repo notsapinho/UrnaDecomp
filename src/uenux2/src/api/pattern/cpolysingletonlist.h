@@ -3,11 +3,10 @@
 // api::CPolySingletonList, the registry behind api::CPolySingleton (/home/rubio/tse/uenux2/src/api/pattern/
 // cpolysingletonlist.h; the records' lines are 99, 105 and 129). The reconstruction's notes are in unit 100's fragment.
 //
-// Only has and instance are written, and what they call. push (record at line 129; fn 3882 is one of its bodies) is not:
-// trace's debug call sits on that line, and writing push moves it. TPolySingletonsInfo is the records' name; the
-// fragment lists the chosen ones. The bytes give a vector of 24-byte entries at +0 (fns 6161, 6779), a byte at +12 that
-// fn 11265 sets and fn 14476 reads, the lock at +16, 148 bytes in all (fn 11265's guard follows). An entry is a string
-// at +0, a std::type_info pointer at +12 (fn 512 reads the name through it), a std::shared_ptr at +16.
+// TPolySingletonsInfo is the records' name; the fragment lists the chosen ones. The bytes give a vector of 24-byte
+// entries at +0 (fns 6161, 6779), a byte at +12 that fn 11265 sets and fn 14476 reads, the lock at +16, 148 bytes in all
+// (fn 11265's guard follows). An entry is a string at +0, a std::type_info pointer at +12 (fn 512 reads the name through
+// it, fn 631 takes it by reference), a std::shared_ptr at +16.
 
 #include <algorithm>
 #include <cstdarg>
@@ -15,8 +14,10 @@
 #include <cstdlib>
 #include <format>
 #include <memory>
+#include <mutex>
 #include <ranges>
 #include <string>
+#include <functional>
 #include <typeinfo>
 #include <utility>
 #include <vector>
@@ -32,7 +33,7 @@ namespace api {
 
 struct SPolySingletonInfo {
     std::string m_nome;
-    const std::type_info* m_tipo;
+    std::reference_wrapper<const std::type_info> m_tipo;
     std::shared_ptr<void> m_instancia;
 };
 
@@ -44,7 +45,7 @@ struct TPolySingletonsInfo {
 
 extern TPolySingletonsInfo& (*g_polySingletonsInfo)();
 
-// (original lines 47-88: content not recovered)
+// (original lines 48-88: content not recovered)
 #line 89
 class CPolySingletonList {
 public:
@@ -60,7 +61,7 @@ public:
                 std::format("{}: solicitada uma instância não criada de {}", __func__, nome));
         }
 
-        if (*it->m_tipo != typeid(INTERFACE)) {
+        if (it->m_tipo.get() != typeid(INTERFACE)) {
             trace(__func__, nome, "typeid");
             throw CUePatternError(EUE_PATTERN_INSTANCIA_INCOMPATIVEL,
                 std::format("{}: instância {} não corresponde a interface solicitada de {}", __func__, it->m_nome, nome));
@@ -75,6 +76,32 @@ public:
         const std::string nome = typeid(INTERFACE).name();
         CTravaLeitura trava(info.m_mutex);
         return find(nome, info).first;
+    }
+
+    template <typename INTERFACE>
+    static void push(std::unique_ptr<INTERFACE>&& instancia, TPolySingletonsInfo& info)
+    {
+        const char* nome = typeid(INTERFACE).name();
+        std::lock_guard<CMutexCompartilhado> trava(info.m_mutex);
+
+        const auto [existe, it] = find(nome, info);
+        if (existe) {
+            trace(__func__, nome, "find");
+            throw CUePatternError(EUE_PATTERN_INSTANCIA_JA_CRIADA,
+                std::format("{}: instância já criada de {}", __func__, nome));
+        }
+        depura(__func__, nome, std::format("sz[{}] ptr[{}]", info.m_lista.size(), static_cast<const void*>(&info)));
+        const std::shared_ptr<INTERFACE> ponteiro(std::move(instancia));
+        info.m_lista.emplace_back(nome, typeid(INTERFACE), ponteiro);
+    }
+
+    // fn 14476, which the push bodies hold inlined: only the table slot the executable TU's invoke uses keeps a body of it.
+    // Public for the roots file, a choice
+    static void depura(const std::string& funcao, const std::string& nome, const std::string& acao)
+    {
+        if (g_polySingletonsInfo().m_depuracao) {
+            trace(funcao, nome, acao);
+        }
     }
 
 private:
@@ -127,6 +154,26 @@ private:
     {
         const auto it = std::ranges::find_if(info.m_lista, [nome](const SPolySingletonInfo& e) { return e.m_nome == nome; });
         return std::make_pair(it != info.m_lista.end(), it);
+    }
+
+public:
+    template <typename INTERFACE>
+    static void remove(TPolySingletonsInfo& info)
+    {
+        if (has<INTERFACE>(info)) {
+            remove(typeid(INTERFACE).name(), info);
+        }
+    }
+
+    static void remove(const std::string& nome, TPolySingletonsInfo& info)
+    {
+        CTravaLeitura trava(info.m_mutex);
+        const auto [encontrada, it] = find(nome, info);
+        if (encontrada) {
+            const std::unique_lock<CMutexCompartilhado> escrita = trava.promove();
+            const auto instancia = it->m_instancia;
+            info.m_lista.erase(it);
+        }
     }
 };
 

@@ -1,5 +1,4 @@
 #pragma once
-#include <unistd.h>
 
 namespace ecourna::api::util {
 
@@ -16,7 +15,7 @@ public:
         return *s_instancia;
     }
 
-    int Sync(int descritor) const { return m_habilitado ? fsync(descritor) : 0; }
+    int Sync(int descritor) const;
 
 private:
     explicit CSynchronizer(bool habilitado) : m_habilitado(habilitado) {}

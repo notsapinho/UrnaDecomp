@@ -20,8 +20,8 @@
 # std::shared_ptr to a forward-declared api::ITimer, whose Start and Stop (chosen names, api/util/itimer.h) Show and
 # Hide call. The destructor is user-declared and defined out of line, declared first among the class's virtual
 # members, so it is the key function and ctextfieldupdatemt.o emits the vtable, the D2 and the D0; GetTypeName (slot 7,
-# fn 11051) is IFormField<IScreenMT>'s inline one. The constructor is not reconstructed: it calls
-# api::ITimerScheduler::GetInst (fn 1259), which has no body of ours, and binaryen inlined it into fn 652, so it has no
+# fn 11051) is IFormField<IScreenMT>'s inline one. The constructor is not reconstructed. It calls
+# api::ITimerScheduler::GetInst (fn 1259), which unit 101 holds, and binaryen inlined it into fn 652, so it has no
 # target function and no stub. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every
 # uenux2 header.
 CTEXTFIELDUPDATEMT_SRCS := src/app/vota/operador/comum/ctextfieldupdatemt.cpp

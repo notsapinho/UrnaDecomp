@@ -5,9 +5,11 @@
 
 namespace ecourna::app::dados {
 
-class CNumeroCPF : public IIdentificadorEleitor {
+class CNumeroCPF final : public IIdentificadorEleitor {
 public:
     explicit CNumeroCPF(const std::string& numero);
+
+    ~CNumeroCPF() override;
 
     std::string Formatado() const override;
 };

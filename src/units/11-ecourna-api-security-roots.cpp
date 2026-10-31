@@ -21,7 +21,6 @@ void rsec_root_14(int, int, int, int) __asm__("_ZNK7ecourna3api8security11CSipha
 int rsec_root_15(int, int, int, int) __asm__("_ZNK7ecourna3api8security11CSiphashMac8DoVerifyERKNSt3__26vectorIhNS3_9allocatorIhEEEES9_S9_");
 void rsec_root_16(int, int, int, int) __asm__("_ZNK7ecourna3api8security13IMacAlgorithm3MacERKNSt3__26vectorIhNS3_9allocatorIhEEEERS7_S9_");
 int rsec_root_17(int, int) __asm__("_ZN7ecourna3api8security16ISymmetricCipherC2ERKNS1_7CAesKeyE");
-int rsec_root_18(int) __asm__("_ZN7ecourna3api8security7CAesKeyD1Ev");
 }
 
 namespace {
@@ -49,7 +48,6 @@ struct SRsecRoots {
         rsec_sink = reinterpret_cast<void*>(&rsec_root_15);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_16);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_17);
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_18);
     }
 } rsec_roots;
 
