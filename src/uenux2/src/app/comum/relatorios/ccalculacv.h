@@ -15,6 +15,10 @@
 // push<CCalculaCV> builds (fn 12110), calls fn 5614 and then frees, and fn 12110 calls 5614 too. The constructor and
 // IncluiString are not reconstructed, so nothing in our link constructs one. typeid in api::CPolySingleton<T> needs the
 // class complete.
+//
+// DestroyInst removes the class's api::CPolySingleton instance: fn 3698 holds it inlined by binaryen (a frame of its own
+// that gets the singletons' info, then builds the type's name and calls CPolySingletonList::remove, fn 640, with no
+// has<T> test). Its name and its being a static member are chosen; unit 139's fragment has the measurements.
 
 #include <cstddef>
 #include <cstdint>
@@ -26,6 +30,8 @@ namespace comum {
 class CCalculaCV {
 public:
     ~CCalculaCV();
+
+    static void DestroyInst();
 
 private:
     std::string m_identificacao;  // +0

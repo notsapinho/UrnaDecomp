@@ -124,7 +124,6 @@ extern const char w102_vt_cpreshowclearscreen[] __asm__("_ZTVNSt3__220__shared_p
 extern const char w102_vt_cqrcodeimagefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api22CQRCodeImageFieldPaperENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_iform_iscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api5IFormINS1_7IScreenEEENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_cdatatext_cescolheopcao_copcaods[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS9_S6_EENS_9allocatorIS6_EEEE");
-extern const char w102_vt_cdatatext_cpadds_ctoupperds_ccargodsnome[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api9CDataTextIN5comum6CPadDSINS3_10CToUpperDSINS3_12CCargoDSNomeEEEEEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteISC_S9_EENS_9allocatorIS9_EEEE");
 extern const char w102_vt_cpreshowformvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota16CPreShowFormVotaENS_10shared_ptrIN3api8IPreShowINS5_7IScreenEEEE27__shared_ptr_default_deleteIS8_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_citemparametrosurnavota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemParametrosUrnaVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_citemversoespacotesvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemVersoesPacotesVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
@@ -277,7 +276,6 @@ template struct SBloco<api::IInputValidation, api::CNumberValidation>;
 template struct SBloco<api::IInputField<api::IScreenMT>, api::CInputFieldMT>;
 template struct SBloco<api::IForm<api::IPaper>, api::IFormImpressao<api::IPaperRelatorios>>;
 template struct SBloco<comum::asn::CVisitanteEleitor, comum::asn::CVisitanteEleitor>;
-template struct SBloco<api::IText, api::CDataText<comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>>>;
 template struct SBloco<api::IText, api::CDataText<vota::CEscolheOpcao::COpcaoDS>>;
 
 __attribute__((optnone, noinline)) std::shared_ptr<api::CFixedImage> w102_imagem_fixa(const std::string& arquivo)
@@ -367,7 +365,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cqrcodeimagefieldpaper;
         w102_sink = w102_vt_iform_iscreen;
         w102_sink = w102_vt_cdatatext_cescolheopcao_copcaods;
-        w102_sink = w102_vt_cdatatext_cpadds_ctoupperds_ccargodsnome;
         w102_sink = w102_vt_cpreshowformvota;
         w102_sink = w102_vt_citemparametrosurnavota;
         w102_sink = w102_vt_citemversoespacotesvota;
