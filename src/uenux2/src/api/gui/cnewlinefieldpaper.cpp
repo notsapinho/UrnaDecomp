@@ -8,6 +8,11 @@
 
 namespace api {
 
+CNewLineFieldPaper::CNewLineFieldPaper(size_t linhas)
+    : m_linhas(linhas)
+{
+}
+
 void CNewLineFieldPaper::Draw(IPaper& paper) const
 {
     for (size_t linha = 0; linha < m_linhas; ++linha) {

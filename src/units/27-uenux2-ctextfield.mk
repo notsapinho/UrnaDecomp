@@ -25,8 +25,3 @@
 # callee as a file-static function with an if chain. Other bytes: the chain written in place (62 lines), and locals for
 # the four coordinates with a braced SRect in place of SRect::Normalized (10 lines).
 UENUX2_SRCS += src/api/gui/ctextfield.cpp
-# two callers of the ctor (27-uenux2-ctextfield-roots.cpp) so binaryen does not inline it and keeps both TColor parameters, as the
-# target's six callers do
-$(ROOT)/$(APP)/27-uenux2-ctextfield-roots.o: $(ROOT)/src/units/27-uenux2-ctextfield-roots.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/27-uenux2-ctextfield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/27-uenux2-ctextfield-roots.o

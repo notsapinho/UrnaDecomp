@@ -69,6 +69,10 @@ public:
 
     virtual std::string GetTypeName() const = 0;
 
+    const std::string& GetName() const { return m_nome; }
+
+    void SetName(const std::string& nome) { m_nome = nome; }
+
 protected:
     void Invalidate()
     {

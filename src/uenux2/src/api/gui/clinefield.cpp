@@ -1,6 +1,7 @@
 // api::CLineField (/home/rubio/tse/uenux2/src/api/gui/clinefield.cpp; the file is chosen, no record names it: see
 // src/units/54-uenux2-clinefield.mk).
 // Target functions of this file:
+//   the constructor   no target function of its own: binaryen inlined it into fn 2244, api::CFormBuilder::AddLine
 //   11067 Rect() const          (here)
 //   11066 GetTypeName() const   (here)
 //   12658 / 3681  ~CLineField() (complete / deleting; implicit, emitted with the vtable). The class's members are
@@ -20,6 +21,13 @@
 #include "api/gui/iscreen.h"
 
 namespace api {
+
+CLineField::CLineField(const SPoint& inicio, const SPoint& fim, TColor cor)
+    : m_inicio(inicio)
+    , m_fim(fim)
+    , m_cor(cor)
+{
+}
 
 void CLineField::Draw(IScreen& screen) const
 {

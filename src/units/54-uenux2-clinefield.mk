@@ -16,10 +16,6 @@
 # src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CLINEFIELD_SRCS := src/api/gui/clinefield.cpp
 UENUX2_SRCS += $(CLINEFIELD_SRCS)
-# nothing reconstructed references the vtable yet: 54-uenux2-clinefield-roots.cpp builds the field with
-# std::make_shared, as fn 2244 does, which keeps every member in the table as the target has them and brings the
-# control block's D2 and D0 (target fns 11122, 11121). The rule lists the headers by directory: every header
-# clinefield.h includes, transitively, is in api/gui/ ($(UENUX2_HDRS) is still empty when the fragments are read)
-$(ROOT)/$(APP)/54-uenux2-clinefield-roots.o: $(ROOT)/src/units/54-uenux2-clinefield-roots.cpp $(ROOT)/src/units/54-uenux2-clinefield.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/54-uenux2-clinefield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/54-uenux2-clinefield-roots.o
+# api::CFormBuilder::AddLine (target fn 2244, src/api/gui/cformbuilder.cpp) builds the field with std::make_shared: that
+# object keeps every member in the table as the target has them and brings the control block's D2 and D0 (target fns
+# 11122, 11121).
