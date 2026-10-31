@@ -19,8 +19,9 @@ public:
     std::string GetNumero() const;
     uebyte GetTamanho() const { return m_tamanho; }
 
-    // What std::map<CNumeroInscricaoEleitoral, ...>'s find (target fn 3741) compares: the type as unsigned, which is why
-    // m_tipo is the enum, then the text, then the size. operator< written out and over std::tie give other bytes.
+    // What std::map<CNumeroInscricaoEleitoral, ...>'s find (target fn 3741) compares: the type as unsigned, then the text,
+    // then the size. operator< written out and over std::tie give other bytes. m_tipo as the enum is a choice: the
+    // constructor's type holds it, and unsigned int gives the same object; int compares signed.
     auto operator<=>(const IIdentificadorEleitor&) const = default;
 
 private:

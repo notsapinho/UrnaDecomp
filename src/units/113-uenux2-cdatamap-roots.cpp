@@ -1,14 +1,14 @@
 // Roots: api::CDataMap<KeyType, RecordType> (api/io/cdatamap.h), a class template whose users are not reconstructed yet,
 // instantiated as the target's records spell it and reached the way the target reaches it. The bodies are the template's
-// instances (src/units/README.md, "A body a companion object supplies"). This object compiles without the tree's
-// -fno-strict-aliasing, which fragment 113 measures member by member. Each function here has two call sites or more, as
-// each has in the target, so binaryen keeps it out of line:
+// instances (src/units/README.md, "A body a companion object supplies"). This object compiles at the tree's flags, so no
+// match rests on a flag its tree lacks; fragment 113 says what that decides. Each function here has two call sites or
+// more, as each has in the target, so binaryen keeps it out of line:
 // - GetCurrent, four instantiations: 656 (19 callers), 1200 (7), 1283 (9), 3125 (4). All four in the link are what makes
 //   binaryen form 2919: the second parameter of that body is the pair's second member's offset, 32 or 20.
 // - Next, three: 3697 (5604, 11213, 11255), 5601 (11206, 12105), 5611 (5604, 11254), which form 3892. The fourth record's
 //   instance is inlined into 12105 and is not instantiated here, nor is a Next for CRespostaConsulta, which has no record.
-// - Add(value_type) for CNumeroInscricaoEleitoral, 5725 (6734, 10590), through the inline Add(KeyType, RecordType), which
-//   clang inlines as those two callers show. 5725 stays here on purpose: the fragment says why.
+// - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590), through Find, and the copy of the pair's second member, 3743
+//   (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
 // - CRegistradorMesario::Registra, 5378 (10337, twice). Add(KeyType, RecordType), 5377 (5378, 6734), and the insert of
 //   the second map, 5379 (5378, 6734): cregistradormesario.cpp's object is ahead of this one on the link line, so its
 //   copies are the link's; a stand-in here only adds their second call site.
@@ -17,6 +17,7 @@
 //   mapped type, so a std::map<CEleitorIdentidade, int> gives each its second call site, and binaryen merges the copies.
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
+#include <new>
 
 #include "api/io/cdatamap.h"
 #include "app/comum/comparecimentomesario/cregistradormesario.h"
@@ -90,21 +91,30 @@ __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidad
     return 23;
 }
 
-// Stands for 10590, which searches and then adds, or throws with the cursor on the key.
-__attribute__((noinline)) bool Justifica(TMapaJustificados& mapa, const ecourna::app::dados::CNumeroInscricaoEleitoral& numero, ueword ano)
+// Stands for 10590's search.
+__attribute__((noinline)) bool Justifica(TMapaJustificados& mapa, const ecourna::app::dados::CNumeroInscricaoEleitoral& numero)
 {
-    if (mapa.Find(numero) != nullptr) {
-        return false;
-    }
-    mapa.Add(numero, comum::CJustificadorDetalhe(ano));
-    return true;
+    return mapa.Find(numero) != nullptr;
 }
 
-// Stands for 6734's other loop, which adds with no search.
-__attribute__((noinline)) int JustificaDois(TMapaJustificados& mapa, const ecourna::app::dados::CNumeroInscricaoEleitoral& numero, ueword ano)
+// Stands for 10587's search.
+__attribute__((noinline)) int JustificaDois(TMapaJustificados& mapa, const ecourna::app::dados::CNumeroInscricaoEleitoral& numero)
 {
-    mapa.Add(numero, comum::CJustificadorDetalhe(ano + 1));
-    return ano + 9;
+    return mapa.Find(numero) != nullptr ? 29 : 31;
+}
+
+// Stand for 6734 and 10590, which copy the detail into the pair they build.
+__attribute__((noinline)) int CopiaDetalhe(void* destino, const comum::CJustificadorDetalhe& origem)
+{
+    new (destino) comum::CJustificadorDetalhe(origem);
+    return 37;
+}
+
+__attribute__((noinline)) int CopiaDetalheDois(void* primeiro, void* segundo, const comum::CJustificadorDetalhe& origem)
+{
+    new (primeiro) comum::CJustificadorDetalhe(origem);
+    new (segundo) comum::CJustificadorDetalhe(origem);
+    return 41;
 }
 
 const void* volatile w113_sink;
@@ -124,6 +134,8 @@ struct SW113Roots {
         w113_sink = reinterpret_cast<const void*>(&ContaEleitor);
         w113_sink = reinterpret_cast<const void*>(&Justifica);
         w113_sink = reinterpret_cast<const void*>(&JustificaDois);
+        w113_sink = reinterpret_cast<const void*>(&CopiaDetalhe);
+        w113_sink = reinterpret_cast<const void*>(&CopiaDetalheDois);
     }
 } w113_roots;
 
