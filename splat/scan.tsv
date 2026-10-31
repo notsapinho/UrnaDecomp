@@ -2782,7 +2782,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2916	byn$mgfn-shared$ec_to_type_specific_no_pub_der_encode	2423	symbol	match	readings: address string	475	addr	openssl	1	<binaryen>
 2917	byn$mgfn-shared$rsa_to_type_specific_keypair_der_encode	2424	symbol	match	readings: address string,table slot	150	addr	openssl	1	<binaryen>
 2918	byn$mgfn-shared$sha384_internal_final	2426	symbol	match	-	37	addr	openssl	1	<binaryen>
-2919	byn$mgfn-shared$_ZNK3api8CDataMapIN5comum2md18CEleitorIdentidadeENS1_15CEleitorDetalheEE10GetCurrentEv	2425	content	match	readings: address string,table slot,address symbol	527	none	ecourna	1	<binaryen>
+2919	byn$mgfn-shared$_ZNK3api8CDataMapIN5comum2md18CEleitorIdentidadeENS1_15CEleitorDetalheEE10GetCurrentEv	2425	symbol	match	readings: address string,table slot,address symbol	527	none	ecourna	1	<binaryen>
 2920	byn$mgfn-shared$base_get_params	2412	symbol	match	readings: address string	124	addr	openssl	1	<binaryen>
 2921	-	-	-	no-candidate	no symbol and no ledger pair	118	none	app	0	-
 2922	byn$mgfn-shared$sha512_224_init	2413	symbol	match	-	82	byte	app	1	<binaryen>
