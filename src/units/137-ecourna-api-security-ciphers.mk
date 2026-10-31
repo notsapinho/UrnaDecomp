@@ -5,7 +5,9 @@
 # and Boost's mt19937::twist (5179); CTrng's GetByte (9477), GetInt (9476), Generate (9475, 5173) and the exit
 # destructor of its device name (9478), with libc++'s std::random_device constructor (2544) and operator() (3331), which
 # libc++.a brings once these call them; CSymmetricCipherFactory::Create(const CAesKey&) (9489), and from its object
-# CBlockCipher's D0 (9488) and CAesCipher's implicit destructor (9486, the unwind path of the cipher's Encrypt).
+# CBlockCipher's D0 (9488) and CAesCipher's implicit destructor (9486, the unwind path of the cipher's Encrypt);
+# CCepescCipher::Encrypt (2681) and Decrypt (5171), whose call of the executable TU's vector<uebyte> exception-guard
+# destructor (306) src/app/roots_vector.cpp gives the link.
 # No record names any of these files. What the target shows:
 # - The classes, their bases and their slots are RTTI's and the vtables' (1113168 CPrng, 1114660 CTrng, 1113832 the
 #   factory, 1114996 CCepescCipher). The data place the first three in api/security/: CPrng's vtable lies between
@@ -35,8 +37,9 @@
 #   written is BYTE-EXACT alone and matches in the link.
 # - CPrng and CTrng are final: 9499 and 9475 call slot 5 directly; without final, 9499 calls through the vtable (lone, 3
 #   rows inserted: the load of slot 5 and call_indirect in the object). A qualified call would be direct as well (a
-#   reading, not measured); final is written. CPrng's constructor is out of line: it is table slot 114, which the
-#   executable TU's main (10307) passes to invoke_iii with a seed of 0. The member's name and its int type are chosen (the constructor stores its 32-bit argument at +4).
+#   reading, not measured), so CPrng's final is a choice; CTrng's is its control block's (ctrng.hpp). CPrng's
+#   constructor is out of line: it is table slot 114, which the executable TU's main (10307) passes to invoke_iii with a
+#   seed of 0. The member's name and its int type are chosen (the constructor stores its 32-bit argument at +4).
 # - The factory is not final: 1884 calls slot 3 through the vtable. 9489 allocates a 36-byte CBlockCipher and wraps it
 #   in a shared_ptr<ISymmetricCipher>, whose __shared_ptr_pointer vptr it stores. Both slots' names, and that slot 2
 #   takes a password, are chosen; 1884 hashes it with CSha512 and takes the digest's bytes 16 to 48 as an AES-256 key.
@@ -48,13 +51,12 @@
 #   engine's index where the target keeps the seeding loop's in a local (a reading: binaryen does not forward a store
 #   to a load, so the target's copy is clang's inlining). Out of line in every form tried: the distribution named or
 #   temporary, through variate_generator, over long, and libc++'s (cost 325). No form that clang inlines is found.
-# - Create(const std::string&) (1884) and CCepescCipher's two slots (2681, 5171) call the executable TU's vector<uebyte>
-#   exception-guard destructor (306), which src/app/roots_vector.cpp of branch decomp/decomp9-b holds. In a scratch
-#   link of this tree with that file (and its call in roots.cpp), 2681 and 5171 score operand rows only, their call
-#   going to that root's copy. 1884 keeps 3 rows: the target loads the digest's address before the key vector's zero
-#   stores, ours after them (the object has the same order). A data() + 16 range gives the same object function; the
-#   key built in the return, or over a temporary vector, scores worse alone (155 over 582 and 213 over 603, against 125
-#   over 582 as written).
+# - Create(const std::string&) (1884) calls the executable TU's vector<uebyte> exception-guard destructor (306), which
+#   src/app/roots_vector.cpp holds, as 2681 and 5171 do, which match with it in the link. 1884 keeps 3 rows (53 over 515
+#   at the tree's flags, the rest operand-only): the target loads the digest's address before the key vector's zero
+#   stores, ours after them (the object has the same order). A data() + 16 range gives the same object function; the key
+#   built in the return, or over a temporary vector, scores worse alone (155 over 582 and 213 over 603, against 125 over
+#   582 as written).
 # - CBlockCipher's Encrypt and Decrypt (9487, 9485) are thunks into a merged body (6154), and our link forms the same
 #   merge (byn$mgfn-shared$ of Encrypt, called by both). They are `unresolved self-voted`: the names of CAesCipher's
 #   Encrypt and Decrypt (9493, 9491), which they pass by slot, have no voter but them (fragment 11 says what those wait

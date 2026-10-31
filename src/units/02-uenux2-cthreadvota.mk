@@ -11,10 +11,11 @@
 # in that order (ld_index, build/out/wasm-map/vota_web/names.tsv). Where before StopTick is a choice: after AddTick, line 41.
 # So is the order of 4640 and 807 in cthreadvota.cpp, which no band ties to the other members.
 # CTickManager::AddTick (3644, record 31:15) is written and `differs`. The census pairs it and its three callers (4640,
-# 5452, 10800) with nothing, so no call vote names it: a callers+content hand line of splat/symbol_addrs.txt does, from
-# the two records 3644 alone loads, and 4640, 5452, 807 and 10800 match through it (with the line out of copies of the
-# symbol file and the match list, a scan run twice leaves the four `no-candidate` and `unresolved`, 9667 match rows
-# against the control's 9671, and splat-build gives the target's sha256 with 9667 matches).
+# 5452, 10800) with nothing, and two lines of splat/symbol_addrs.txt name it: a generated `evidence:call` line, since
+# 1285's vptr anchor names 4640 (`call by:1285`) and 4640 and 5452 vote for 3644, and a callers+content hand line from
+# the two records 3644 alone loads, which stays for that evidence. Measured at -O2 with unit 97's states written,
+# scans run twice on copies of the symbol file and the match list: with the hand line alone out every match holds;
+# with 3644's name out on both sides of the marker 10800, 1285, 4640 and 5452 fall.
 # AddTick's STick is built by STick's constructor, out of line: the target holds it after a second stack prologue around
 # gettimeofday. SearchNextId (record 128:11) is `inline`, a choice: the target holds its loop in AddTick's own frame;
 # at -O2 the plain definition stayed a call in the object, which binaryen inlined with a second prologue (the earlier

@@ -1,14 +1,16 @@
 #pragma once
 
 // api::CPaperFormBuilder. A record names this class (comum::CRelUtil::IncluiCabecalhoEleicoesMZS takes
-// `api::CPaperFormBuilder &`), RTTI its member Show, and a record this header (cpaperformbuilder.h, line 51, a member of
-// api::IFormImpressao, below; that line falls past this class, whose lines are a choice). The layout
-// is a reading: fns 193, 604, 198 and 1264 push to a vector at this + 0, and fn 5579 zeroes the 12 bytes in line, so the
-// constructor is implicit, unlike api::CFormBuilder's. The adders' names, and which overloads share a name, are chosen
-// from the field each builds. That they are defined in a .cpp is chosen too: no evidence says where they are.
-//
-// GetForm (fn 5515) builds an IFormImpressao<IPaperRelatorios> of the fields with a CPreShowNothing<IPaper>; it names
-// nothing and keeps the vector. Its name is chosen.
+// `api::CPaperFormBuilder &`), RTTI its member Show, and record 1581300 this header: line 51, column 54,
+// api::IFormImpressao<CLASS>'s GetRenderForm (fn 11006), below, a line past this class, whose lines are a choice (RTTI:
+// an si_class of IForm<IPaper>; notes in src/units/120-uenux2-iform.mk). The layout is a reading: fns 193, 604, 198 and
+// 1264 push to a vector at this + 0, and fn 5579 zeroes the 12 bytes in line, so the constructor is implicit, unlike
+// api::CFormBuilder's. The adders' names, and which overloads share a name, are chosen from the field each builds. That
+// they are defined in a .cpp, and the member template AddTextField<FONTE> below the classes, is chosen too: no evidence
+// says where they are. Its instance fn 5613, over comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>, is 604's body
+// over a source passed by value (fn 3699 passes a copy's address); its alignment, the constant 0, is CDataText's
+// default by choice. GetForm (fn 5515) builds an IFormImpressao<IPaperRelatorios> of the fields with a
+// CPreShowNothing<IPaper>; it names nothing and keeps the vector. Its name is chosen.
 
 #include <cstddef>
 #include <memory>
@@ -41,8 +43,6 @@ private:
     std::vector<SharedField> m_campos;
 };
 
-// api::IFormImpressao<CLASS>: RTTI, an si_class of IForm<IPaper>; record 1581300 puts GetRenderForm (fn 11006) on line
-// 51, column 54. Notes in src/units/120-uenux2-iform.mk.
 template <typename CLASS>
 class IFormImpressao : public IForm<IPaper> {
 public:
@@ -51,9 +51,6 @@ public:
     IPaper& GetRenderForm() const override  { return CPolySingleton<CLASS>::instance(); }
 };
 
-// fn 5613 is the instance over comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>: 604's body over a source passed
-// by value (fn 3699 passes the address of a copy). The alignment, the constant 0 in that body, is CDataText's default
-// here by choice, and the template's name and its definition below the classes are chosen too.
 template <typename FONTE>
 void CPaperFormBuilder::AddTextField(FONTE fonte)
 {

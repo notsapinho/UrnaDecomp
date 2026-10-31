@@ -21,9 +21,9 @@ namespace comum {
 // function pointer at +20 on it (slot 2920 is fn 3509, an in-place upper-casing of ecourna's with a table of accented
 // letters), and when the text is shorter than the size_t at +8 returns it with the char at +12 repeated before it
 // (half the difference, rounded down) and after it (the rest). So CPadDS holds a width, a fill char and its source, and
-// CToUpperDS its source and that pointer. Recovered: the layout and the bodies; the member names, the width's type
-// beyond its 32 bits and the pointer's type beyond the call 11247 makes are chosen. The operators are inline here
-// because 11247 holds them; 11247 differs in our link (src/units/129-uenux2-ccargods.mk says how).
+// CToUpperDS its source and that pointer. Read from 11247, which still differs: the layout and the bodies; the member
+// names, the width's type beyond its 32 bits and the pointer's type beyond the call 11247 makes are chosen. The
+// operators are inline here because 11247 holds them (src/units/129-uenux2-ccargods.mk says how it differs).
 class CCargoDSNome {
 public:
     std::string operator()() const;

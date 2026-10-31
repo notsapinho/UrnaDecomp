@@ -4,7 +4,7 @@
 #   that passes the vptr 1552984), which the header's alias instantiates; the symbol file names it by that vptr.
 # - comum::CGravadorUtil (src/app/comum/gravadores/cgravadorutil.{h,cpp}): ConverteFase (target fn 2274, record :97).
 #   DeterminaNomeArquivo (fn 3798, a chosen name) with DeterminaNomeArquivoSemLetra (records :28, :33, :38), which
-#   binaryen inlines into it (its second stack frame), is written and does not match (below).
+#   binaryen inlines into it (its second stack frame), matches at the tree's -O3 (below).
 # - comum::asn::ConverteSerialFlash (target fn 3605, records :26 and :31) and DesconverteSerialFlash (fn 3604, record
 #   :54, matched at the tree's -O3: below) in src/app/comum/gravadores/asn/util.cpp, with the header util.h beside it.
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
@@ -12,11 +12,12 @@
 #   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346,
 #   matched under the symbol of std::map<std::string, unsigned short>'s, a twin: the two compare only the key) comes
 #   from the tree root app/roots_boost.o, whose byte-identical instance is ahead of that object's in the link.
-# - comum::IGravador's constructor (fn 1396) with IResultado's (record iresultado.cpp:40) inlined by binaryen, written in
-#   iresultado.cpp and not matched (below); comum::CGravadorWSQ's constructor (target fn 3796) with ValidaTipoBiometria
-#   (record cgravadorwsq.cpp:73) inlined by clang; comum::CGravadorRCSecao::CriaIdentidadeEleitor (target fn 5845,
-#   record cgravadorrcsecao.cpp:230). The class heads are unit 60's (igravador.h, iresultado.h, cgravadorwsq.h) and the
-#   head-only cgravadorrcsecao.h; this unit declares there the constructors and members it writes.
+# - comum::IGravador's constructor (fn 1396) with IResultado's (record iresultado.cpp:40) inlined by binaryen, written
+#   in iresultado.cpp and matched at the tree's -O3 (below); comum::CGravadorWSQ's constructor (target fn 3796) with
+#   ValidaTipoBiometria (record cgravadorwsq.cpp:73) inlined by clang; comum::CGravadorRCSecao::CriaIdentidadeEleitor
+#   (target fn 5845, record cgravadorrcsecao.cpp:230). The class heads are unit 60's (igravador.h, iresultado.h,
+#   cgravadorwsq.h) and the head-only cgravadorrcsecao.h; this unit declares there the constructors and members it
+#   writes.
 # - IResultado's destructor (fn 12090, unit 60's match): its copy in the link now comes from iresultado.cpp.o, which
 #   emits IResultado's vtable with the constructor, ahead of unit 102's roots object; the same symbol, and it still
 #   matches.
@@ -52,7 +53,7 @@
 #   target frees it before: 68 over 367 rows with both, a match with neither. Each was not measured alone.
 # No other spelling was measured, so no form here is listed as giving the same bytes.
 #
-# Not matched, and what each waits for (3604 matches since the tree took -O3):
+# Matched only at the tree's -O3:
 # - 3798 DeterminaNomeArquivo and 3604 DesconverteSerialFlash call std::string::append(const char*, size_t) in the
 #   target (fn 160), which clang inlines at -O2 and calls at -O3: compiled by tools/round/try-tu.sh --symbols at -O2,
 #   the objects of cgravadorutil.cpp and gravadores/asn/util.cpp call __grow_by_and_replace in both functions, and
@@ -61,9 +62,10 @@
 #   iresultado.h's CBaseType aliases, which masked the zone and the section it takes with 65535 where the target
 #   compares them with no mask. Since those names are plain integers (143-uenux2-cidentificacao.mk has the
 #   measurement), 3798 compares them with no mask, as the target does, and matches at the tree's -O3.
-# - 1396 IGravador's constructor equals the target's but for operands (20 over 239 rows), and the scan reads it
-#   `unresolved self-voted`: its call of 3798 is the only vote for 3798's name. It matches when 3798 does, or when
-#   another caller of 3798 (fns 1276, 12134) lands.
+# - 1396 IGravador's constructor equalled the target's but for operands (20 over 239 rows), and the scan read it
+#   `unresolved self-voted`: its call of 3798 was the only vote for 3798's name. It matches since 3798 does.
+#
+# Not matched, and what each waits for:
 # - The gravadores/md data classes, CConversorTipoApuracaoSA and the other recorders' destructors are unit 136's.
 #   CVersoesContratos::GetValor and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) wait for the class whose constructor
 #   (fn 5480) both build and whose map their find (fn 10877) and end (fn 5481) read; 6044 and 10877 wait for them.

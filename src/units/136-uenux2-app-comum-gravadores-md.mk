@@ -1,7 +1,8 @@
 # uenux2 comum's result data classes, the converter of one of them, and the recorders' destructors, in the files the
 # records name (paths relative to src/uenux2/src/app/comum):
-# - md::CCarga (dados/md/correspondencia/ccarga.h, layout only): its implicit copy constructor (target fn 1557), emitted
-#   with md::CCorrespondenciaResultado's constructor (fn 2801, ValidaCriacao inlined by binaryen) in
+# - md::CCarga (dados/md/correspondencia/ccarga.h, layout only): its implicit copy constructor (target fn 1557), which
+#   the objects of curna.cpp, cenvelopegenerico.cpp and ccorrespondenciaresultado.cpp hold, the link keeping
+#   curna.cpp.o's; md::CCorrespondenciaResultado's constructor (fn 2801, ValidaCriacao inlined by binaryen) in
 #   dados/md/correspondencia/ccorrespondenciaresultado.cpp.
 # - md::CUrna (gravadores/md/curna.{h,cpp}): both constructors (fns 2854, 2855), ValidaCriacao (fn 5862) and the implicit
 #   destructor (fn 1394), which this unit's roots object emits; comum::ETipoArquivo is declared in curna.h.
@@ -50,11 +51,13 @@
 # - CTipoApuracaoSA::ValidaMotivoApuracao's cases run 1, 3, 4, 2: in the order 1, 2, 3, 4 the br_table differs.
 # - CGravadorLog's destructor is declared in the class: implicit, its deleting destructor inlines the base-object body
 #   (53 rows inserted), where the target calls it. CGravadorHashes's implicit destructor gives the target's call
-#   shape (a reading: its base-object body, two shared_ptr releases more, costs more to inline); the in-class form
-#   was not measured for it.
+#   shape (a reading: its base-object body, two shared_ptr releases more, costs more to inline), and so does
+#   `~CGravadorHashes() override = default;` in the class: the pending object is byte-identical either way at the
+#   tree's -O3. Implicit is the choice.
 # - The phase tests of CEnvelopeGenerico and CEntidadeHashes are written `m_fase == '0' || m_fase > FASE_TREINAMENTO`,
 #   the target's two compares (48 and 52, signed); no other spelling was measured.
-# No other spelling was measured, so no form here is listed as giving the same bytes.
+# Same bytes: CGravadorHashes's destructor implicit or declared `= default` in the class (above); no other form here
+# was measured to give the same bytes.
 #
 # Not matched, and what each waits for:
 # - CGravadorEnvelopeArquivo's destructors (fns 11622, 11621), CGravadorRDV's deleting destructor (11585) and the merge
@@ -69,7 +72,7 @@
 #   slots of a local converter of ModuloTiposEcoUrna::Carga (vtable @1596140, slots fns 10291 and 10290), a class no
 #   header of ours has; 10287 builds a CConversorCorrespResultado and sets numeroSerieFV through a temporary of the
 #   field's type, which Urna's generated setter does not take (docs/reference/facts/asn1.md A3); 10284 calls
-#   DesconverteSerialFlash (fn 3604, unit 122's, which matches only at -O3 and has no name); 10271 builds local
+#   DesconverteSerialFlash (fn 3604, unit 122's, matched at the tree's -O3, so it is named); 10271 builds local
 #   CConversorUrna and CConversorCabecalhoEntidade objects (vptrs @1596460 and @1556740), whose slots (fns 10287 and
 #   10284, 11589 and 11588) are not written, and 10270 holds IConversorASN<Urna, CUrna>::Desconverte inlined (record
 #   iconversorasn.h:71), which calls CConversorUrna's DoDesconverte (fn 10284); 10266 needs CEntidadeHashes's members

@@ -21,11 +21,11 @@ class CIdentificacaoUrnaContingencia;
 // stores ConverteFase(fase) at +52, copies a string to +56, leaves one std::shared_ptr of +68 and +76 empty and fills
 // the other with a CIdentificacaoSecao or a CIdentificacaoUrnaContingencia (the control blocks @1554668 and
 // @1554708 name the two types), and copies a string to +84; the base-object destructor (fn 5853, slot 0) destroys
-// those four members in reverse. The destructor is not declared (implicit): the deleting one (fn 11619, slot 1) calls
-// the base-object one and frees what it returns, the shape of a destructor that is not out of line and too costly to
-// inline there. GravaResultado (slot 7, fn 11620, record cgravadorhashes.cpp:112) is out of line, so it is the key
-// function; it is not reconstructed. The constructor is not declared; the strings' roles and every member name are
-// chosen.
+// those four members in reverse. The destructor is not declared (implicit, a choice: `~CGravadorHashes() override =
+// default;` in the class gives the same object): the deleting one (fn 11619, slot 1) calls the base-object one and
+// frees what it returns, the shape of a destructor that is not out of line and too costly to inline there.
+// GravaResultado (slot 7, fn 11620, record cgravadorhashes.cpp:112) is out of line, so it is the key function; it is
+// not reconstructed. The constructor is not declared; the strings' roles and every member name are chosen.
 class CGravadorHashes : public IGravador {
 public:
     virtual void GravaResultado(api::CFile& arquivo) const override;

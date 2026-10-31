@@ -9,8 +9,8 @@
 // function has.
 //
 // comum::asn::CConversorSecaoEleitoral's slots have no direct caller: the target reaches them through the vtable, whose
-// address point fn 11452 (CConversorLocal::DoDesconverte, not written) stores (i32.const 1561712), so the vtable's
-// address is the reference the target has.
+// address point fns 11423, 11424, 11451 and 11452 (CConversorLocal::DoDesconverte; none of the four written) store
+// (i32.const 1561712), so the vtable's address is the reference the target has.
 #include "app/comum/md/cidentificacaosecao.h"
 #include "app/comum/md/cidentificacaournacontingencia.h"
 
