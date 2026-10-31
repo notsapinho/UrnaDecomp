@@ -396,8 +396,9 @@ signal, date_time, lexical_cast, function, optional.
   `-O3` without `-fPIC` deletes 2 rows each in `deflate`, `deflate_slow`, `deflate_fast` and `_tr_flush_block`, and
   inserts 3 and deletes 13 in `compress_block`. Leaving out `-D_LARGEFILE64_SOURCE=1` changes none of the 18 scores, so
   that define is not decided. That small link does not stand in for the whole link's order: the driver's direct calls
-  inline `zip.c`'s functions into it, and in fragment 06's order it keeps `crc32`, not `crc32_z` (with `deflate.o` and
-  `trees.o` ahead of `crc32.o` as well, it keeps `crc32_z`). It ranks flags; the whole link measures the order.
+  inline `zip.c`'s functions into it, and in fragment 06's order it keeps `crc32`, not `crc32_z` (in a second order, with
+  `deflate.o` and `trees.o` ahead of `crc32.o` and `zip.o` ahead of `ioapi.o`, it keeps `crc32_z`; which of the two
+  changes decides is not measured). It ranks flags; the whole link measures the order.
 - **`std::format` is libc++'s**, not fmt: the error texts are libc++'s ("The format string contains an invalid
   escape sequence"); fmt's are absent.
 - **Absent** (no strings, no RTTI): nlohmann/json, rapidjson, libpng, libjpeg, freetype, pcre, libsodium, xz.

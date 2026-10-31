@@ -5,7 +5,7 @@
 // vota::testeteclado::CBase, in src/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp:
 // - ProcessInput 11874 (slot 7), 352 B: fn 455 (CPolySingleton<api::IInputKbd>::instance, with no name) and
 //   api::CInteractiveForm's Read() (record cinteractiveform.h:57), which this tree's head of that class lacks; and
-//   CTesteTeclado::GetInst (fn 3855), which calls the base's constructor (fn 1285), not declared in this tree.
+//   CTesteTeclado::GetInst (fn 3855), which calls the base's constructor (fn 1285, unit 97's) and is not written.
 // vota::testeteclado::CPreZeresima, in cprezeresima.cpp:
 // - GetTela 11862 (slot 10): fns 3648, 6580 and 6581, with no name, and api::CDateTime's ConvertFromLocalTime (fn 5476),
 //   private in api/util/cdatetime.h.

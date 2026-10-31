@@ -8,7 +8,7 @@
 // - GetDadosLocal, slot 15, fn 11188 (3304 B), with ConverteTipoAlimentacao's record at line 173 of
 //   crelatoriotesteimpressora.cpp inlined: not reconstructed; its callees 654, 1881, 1933, 2816 and 5738 have no name
 //   (no match line and no line in splat/symbol_addrs.txt), and it calls std::string::append, fn 160 (ledger/callgraph.tsv),
-//   which this tree's -O2 inlines (docs/reference/facts/levels.md V3), so it waits for -O3 too.
+//   which -O2 inlines and the tree's -O3 calls (docs/reference/facts/levels.md V3).
 #include "app/comum/relatorios/crelatoriotesteimpressora.h"
 
 namespace comum {

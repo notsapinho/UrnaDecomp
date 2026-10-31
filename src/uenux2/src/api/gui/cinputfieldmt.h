@@ -18,8 +18,9 @@
 // Draw is declared out of line, so it is the key function and cinputfieldmt.cpp emits the vtable. Evidence: the
 // target's vtable lies in the data away from the control block that 1151 instantiates
 // (__shared_ptr_pointer<CInputFieldMT*, ...> @1588176, with other classes' data between), so the TU that emitted the
-// vtable is not 1151's, and since 1151 alone stores the vptr, that TU builds no CInputFieldMT. A reading: it emitted
-// the vtable with the key function, and Draw, the class's one member of its own, is that function. In use band 1
+// vtable is not 1151's. A reading: since 1151 alone stores the vptr, that TU builds no CInputFieldMT (a builder the
+// target dropped would leave its vtable there too); it emitted the vtable with the key function, and Draw, the
+// class's one member of its own, is that function. In use band 1
 // (ledger/ordinals.tsv), fn 10726 is next to fn 10727, vota::CTituloEncerramentoInvalido's slot 7, and four indices
 // from 10722 and 10721, vota::CPedeTituloEncerramento's slots 2 and 7: the two classes whose data surround the vtable.
 // The destructor is implicit: slot 0 is IInputField's D2 (fn 5517), and slot 1 is fn 3672, the D0 that

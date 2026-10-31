@@ -6,14 +6,16 @@
 #   741: one internal copy per object, cwasminit.cpp's and cwasmlogd.cpp's, which binaryen merges, so our link holds
 #   it in two slots too), and libc++'s std::deque<std::string> D2 (fn 3503), which it calls. The static's name has the
 #   votes of 5154 and 8327.
-# - written and `unresolved`: Escreve (fn 5152), with Agora and Adiciona, which binaryen inlines into it as into the
-#   target's (each has one caller). It needs uenux2 at -O3, the user's decision: at the tree's -O2 clang inlines
-#   std::string::append into `Agora() + " " + texto`, where the target calls it (fn 160) twice, and the body differs
-#   (833 over 1995 rows); with cwasmcanaislog.cpp alone at -O3 in a copy of the link (docs/reference/facts/workflow.md
-#   W13), 78 over 1787 rows, all operand-only. Its callers are 8327, named by vtable alone, and 1524, which the content
-#   pass finds; neither casts a vote, so a `callers+content` hand edit under splat/symbol_addrs.txt's marker names 5152
-#   for them. Weighed by removal (docs/reference/splat.md "Reviewing a match"), the line carries 1524's match, and the
-#   line gives what it rests on.
+# - written and `differs`: Escreve (fn 5152), with Agora and Adiciona, which binaryen inlines into it as into the
+#   target's (each has one caller). At -O2 clang inlines std::string::append into `Agora() + " " + texto`, where the
+#   target calls it (fn 160) twice, and the body differs (833 over 1995 rows). At the tree's -O3 it is 78 over 1787
+#   rows, all operand-only: among them, its calls of std::__split_buffer<std::string*>'s emplace_back and emplace_front
+#   go to the bodies matched as fns 915 and 1199, where the target's go to 3501 and 5150, the bodies matched as
+#   RHVoice's language_search_criteria instances. A generated vptr-anchor line names 5152. Its callers are 8327, named
+#   by vtable alone, and 1524, which the content pass finds, and 1524's caller is 9405: with 5152's name out on both
+#   sides of splat/symbol_addrs.txt's marker (docs/reference/splat.md "Reviewing a match"), 1524 and 9405 leave match.
+#   Its body also casts the vote that names std::time_put<char>'s id (0x1d5e18), which only 5152 and libc++'s
+#   locale::__imp::install<time_put<char>> (fn 7833) load in the target, and 7833 matches by that name.
 # Forms: the target's body holds two more stack frames, the sign of functions binaryen inlined
 #   (docs/reference/facts/reading.md R10), and Agora and Adiciona, out of line, give ours the same frames; that they are
 #   members with external linkage is chosen. Agora's std::tm is value-initialized: the target zeroes it before

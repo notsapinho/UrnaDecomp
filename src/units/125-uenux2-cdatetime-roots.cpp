@@ -12,7 +12,8 @@
 //   stand-in for 11862), CDateTime(time_t) (fn 1000: Now, 5472 and 5473, and a stand-in for 10870, ...),
 //   CDateTime::Now (fn 479, 33 target callers: 11198, and two stand-ins for the others), ConvertToLocalTime (fn 1381:
 //   unit 101's Ajusta, 10875, and a stand-in for 5841, 7160, 7306, 10403, 10710), CDateTime's operator+= (fn 2233,
-//   callers 5412, 5474, 5959, 10566, 11825: two stand-ins), std::to_string(long long) (fn 4658: ConvertFromLocalTime and
+//   callers 5412, 5474, 5959, 10566 and 11825, which is in the link: two stand-ins), std::to_string(long long) (fn
+//   4658: ConvertFromLocalTime and
 //   a stand-in for 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller
 //   7787 calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: 759, 11198 through
 //   comum::md::CHorarioVerao::Contem, and a stand-in for 1543, ...), CDateTime's (fn 759, 15 target callers: two

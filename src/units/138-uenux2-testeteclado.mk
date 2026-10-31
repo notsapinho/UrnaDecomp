@@ -46,7 +46,7 @@
 # - every constructor of a class over CEstadoComDesligamentoAutomatico, and so their GetInst (CBase's 5948;
 #   CAplicacaoEncerrada's 3877, CMostraQRCodeBU's 2888, CVerificaHorarioZeresima's 5947, CTesteTeclado's 3855,
 #   CEsperaRetestar's 5936) and the exit destructors of their statics (the 1564 group): the base's constructor (fn 1285)
-#   is not declared in this tree;
+#   was not declared where they were measured; unit 97 declares and matches it now, and they are not written;
 # - CVerificaHorarioZeresima's slot 9 (fn 11870, record :80) and CEsperaRetestar's (fn 11823): the base's header names
 #   slot 9 ProcessOutroTick, a chosen name, where the record names it ProcessTickNaoDesligamento; so the base's empty
 #   body, fn 425, fills both slots here and their stubs go. 11870 also throws through the assert macro (next item),
@@ -61,8 +61,9 @@
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data
-# member, of s_fimEspera, LogaVotacaoEncerrada and GetTelaReinicioVotacao; operator+'s parameter type (time_t: the target
-# shows a 64-bit parameter); s_fimEspera's internal linkage; CRetomada's final; +36 of CRetomada as uebyte and +40 of
+# member, of s_fimEspera, LogaVotacaoEncerrada, GetTelaReinicioVotacao and CReinicioVotacao::GetInst (unit 104's
+# convention for the states' singletons); operator+'s parameter type (time_t: the target shows a 64-bit parameter),
+# that it is a member and const, and its line in cdatetime.cpp; s_fimEspera's internal linkage; CRetomada's final; +36 of CRetomada as uebyte and +40 of
 # CEsperaRetestar as unsigned int (11829 compares the byte with 1, 11825 zero-extends the word); GetTelaReinicioVotacao
 # as an inline getter returning a const reference; the out-of-line destructors declared first as key functions, and
 # CBase's StartState as its; the paths of the files no record names, cbase, cretomada, cesperaretestar, creiniciovotacao,
@@ -70,7 +71,8 @@
 # between cestadocomdesligamentoautomatico.cpp's record and cmostraqrcodebu.cpp's objects, and its GetInst's callers
 # are fimvotacao/'s; CBase's between auxiliares/cvisualizarcandidatos.cpp's and cverificahorariozeresima.cpp's;
 # CReinicioVotacao's after cquerreimprimirzeresima.cpp's, with three unrecorded classes between); the lines of the
-# functions written in cverificahorariozeresima.cpp, after its records' lines 64 and 80, which stay blank.
+# functions written in cverificahorariozeresima.cpp, after its records' lines 64 and 80, which stay blank, and of
+# CPreZeresima's destructor in cprezeresima.cpp, ahead of its record's line 56 (GetEstadoPassouNoTeste, pending).
 TESTETECLADO_SRCS := src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp \
     src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp \

@@ -24,21 +24,20 @@
 #   11197's call; 11197 (3 over 9 rows, all operand-only, with the roots' stand-in for 1249's other callers) matches over
 #   it, and with the line out it is `unresolved` again.
 # - ImprimeDataHoraEmissao (11216) prints "EMISSAO DO RELATORIO" and one std::format line of the date and the time, from
-#   api::CDateTime::FormatCurrentDate and FormatCurrentTime (fns 5472, 5473, unit 125's callbacks, named by pair-depth0
-#   hand lines while their callees 706 and 779 wait for -O3). With either line out 11216 is `unresolved`. The four
+#   api::CDateTime::FormatCurrentDate and FormatCurrentTime (fns 5472, 5473, unit 125's callbacks, which match at the
+#   tree's -O3 with their callees 706 and 779). The four
 #   strings of the second line (the two formats and the two results) are destroyed after its call, the last built first,
 #   which reads as one statement holding the format and both calls, as written; other forms were not linked. The style 1
 #   and the alignments 2 and 0 are the constants the target passes (IPaper::EStyle has no enumerators, ipaper.h).
 #
 # Written and not matched: InicializaTradutorFrase (11196, slot 10) builds a std::map<char, CLabelParametrizado> of the
 # four labels of CConfiguracaoEleicao's CParametrosUrna ('M' municipio, 'Z' zona, 'S' secao, 'P' partido) and hands it
-# to CTradutorFrase::SetLabels (ctradutorfrase.h). It differs at this tree's -O2 and is operand-only at -O3, the user's
-# decision for uenux2: the target calls the map's initializer-list constructor (fn 5795, which holds the insertion
+# to CTradutorFrase::SetLabels (ctradutorfrase.h). It differs at -O2 and at the tree's -O3: the target calls the map's initializer-list constructor (fn 5795, which holds the insertion
 # inlined), and at -O2 clang inlines that constructor into 11196, 281 over 345 rows (`unresolved` on the insertion's
 # __emplace_hint_unique_extract_key, which the target has inside 5795). In a private link with this TU at -O3 and a
 # scratch second caller of the constructor in it (standing for 7787, the target's other caller), 11196 scores 20 over
 # 289 and 5795 1 over 172, all operand-only; without that second caller binaryen inlines the constructor into 11196 (212
-# over 453). So at -O3 5795 needs a stand-in for 7787 here. The list handed straight to the setter keeps the constructor
+# over 453, as in the whole link at the tree's -O3). So 5795 needs a stand-in for 7787 here. The list handed straight to the setter keeps the constructor
 # out of line at -O3 too, in a probe object; it was not linked.
 #
 # Pending, in the -pending.cpp, whose header says what each waits for: GetConteudoQRCode (11200), GetDadosLocal (11188).

@@ -124,8 +124,8 @@ Where that differs from the table, and what is known to turn on it:
   no row leaves `match`.
 - **minizip ahead of zlib.** In the target's uses==1 band, minizip's `ioapi.c` functions (8121–8127) sit above its `zip.c`
   functions (8117–8119), zlib's `deflate_slow` and `deflate_fast` (8114, 8115) and `zcalloc` (8112). That reads as
-  `ioapi.o`, `zip.o`, `deflate.o`, `zutil.o` in link order, with no decimal-digit boundary inside the group. Fragment 06
-  links them so. The order decides which body binaryen keeps of `crc32` and `crc32_z`, and with it eleven matches
+  `ioapi.o`, `zip.o`, `deflate.o`, `zutil.o` in link order, with no decimal-digit boundary inside the group: the group
+  sits in a tight run of the band, which a split across a boundary would put far apart. Fragment 06 links them so. The order decides which body binaryen keeps of `crc32` and `crc32_z`, and with it eleven matches
   ([libraries.md](libraries.md) §B8).
 
 ## L4. Ordinal recovery from the bands: what anchors can and cannot give

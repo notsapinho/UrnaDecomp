@@ -2,7 +2,7 @@
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
 // The members with no record sit at lines the reconstruction chose; unit 119's fragment says why and has the other
-// notes, and unit 142's fragment for the three it added after LogaTituloInvalidoRegistroMesario.
+// notes, unit 142's for the three after LogaTituloInvalidoRegistroMesario, unit 138's for LogaVotacaoEncerrada.
 
 #include "app/vota/log/clogvota.h"
 

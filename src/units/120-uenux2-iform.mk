@@ -79,7 +79,7 @@
 #   std::shared_ptr lives in 395's own frame (+8): 395 holds CInputFieldControlBase's constructor inlined, in one frame
 #   and with no store of the base's vptr. Measured on a scratch copy of cmtformbuilder.cpp with 395 written as a member
 #   that pushes a local std::shared_ptr<IInputField<IScreenMT>> (`m_campos.push_back(campo)`), by -Rpass=inline and
-#   -Rpass-missed=inline: at this tree's -O2 clang leaves that constructor out of line (cost=240, threshold=225); at -O3
+#   -Rpass-missed=inline: at -O2 clang leaves that constructor out of line (cost=240, threshold=225); at the tree's -O3
 #   it inlines it into the member (cost=240, threshold=250), and not into CInputFieldControl's own constructor
 #   (cost=260), which fits 5565 (IScreen's, out of line) and the copy with a frame of its own that binaryen inlined into
 #   5410, a reading. At both levels clang also inlines vector::emplace_back(&&) into the member (cost=300,

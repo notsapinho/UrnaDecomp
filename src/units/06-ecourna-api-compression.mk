@@ -26,11 +26,14 @@ endif
 # that -O3 -fPIC gives with operand rows only, and leaving out -D_LARGEFILE64_SOURCE=1 changes none of the 18 scored
 # (docs/reference/facts/libraries.md B8).
 # minizip's objects link ahead of zlib's, ioapi.o first. Measured: crc32.c defines crc32 as a 14-byte call of crc32_z.
-# With crc32.o ahead of zip.o, our link keeps crc32 with crc32_z inlined, its null-buffer return a block result, and 893,
-# 4825 and the rest of the chain do not pair. With zip.o ahead, it keeps crc32_z with the target's `if ... return 0`,
-# and the chain matches. Evidence: in the target's uses==1 band ioapi.c's functions (8121-8127) sit above zip.c's
-# (8117-8119), deflate.c's (8114, 8115) and zutil.c's zcalloc (8112), which reads as ioapi.o, zip.o, deflate.o,
-# zutil.o in link order (docs/reference/facts/link-order.md L1), with no decimal-digit boundary inside the group. zlib's
+# Two whole-link orders were measured. With zlib's objects first and then zip.o and ioapi.o, the order this fragment
+# had, our link keeps crc32 with crc32_z inlined, its null-buffer return a block result, and 893, 4825 and the rest of
+# the chain do not pair. With ioapi.o and zip.o first, it keeps crc32_z with the target's `if ... return 0`, and the
+# chain matches. Between the two, zip.o moves past every zlib object, deflate.o and trees.o as well as crc32.o, so
+# which object's place decides is not measured. Evidence: in the target's uses==1 band ioapi.c's functions (8121-8127)
+# sit above zip.c's (8117-8119), deflate.c's (8114, 8115) and zutil.c's zcalloc (8112), which reads as ioapi.o, zip.o,
+# deflate.o, zutil.o in link order (docs/reference/facts/link-order.md L1), with no decimal-digit boundary inside the
+# group: it sits in a tight run of the band, which a split across a boundary would put far apart. zlib's
 # own objects keep the order they had; trees.o after deflate.o agrees with the uses==2 band (4821-4823 under
 # 4824-4827), and the places of adler32.o and crc32.o among them are not measured.
 ZLIB_DIR := build/out/zlib/O3pic

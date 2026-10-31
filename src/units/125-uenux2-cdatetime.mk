@@ -19,10 +19,9 @@
 #              469, 328 over 698 and 938 over 1355. 3649 is named by the call votes of 2765 and 5475.
 #              5472 FormatCurrentDate and 5473 FormatCurrentTime, the callbacks cdatetime.h describes, match at the
 #              tree's -O3 with 706 and 779, which they call; at -O2 they were operand-only (3 over 32 and 3 over 30 rows,
-#              the callee rows) and `unresolved`. Each is named by a pair-depth0 hand line of splat/symbol_addrs.txt (its
-#              depth-0 fingerprint is unique on both sides, and no vote reaches it: its one direct caller, 11216, has
-#              its name by vtable evidence, and 5343 and 7787 are not written); the lines hold 11216's match (taking
-#              either out takes 11216 out of match and the callback to no-candidate). They sit in band 2 of
+#              the callee rows) and `unresolved`, named by pair-depth0 hand lines. No vote reaches them (their one
+#              direct caller, 11216, has its name by vtable evidence, and 5343 and 7787 are not written): the scan's
+#              content pass finds each, and 11216 matches over them. They sit in band 2 of
 #              ledger/ordinals.tsv between 5475 and 5471 (cluster 765, labelled cdatetime.cpp), and are defined after
 #              ConvertFromLocalTime, 5473 first (names.tsv's ld_index); their lines are chosen. The forms, each object
 #              against the target's frame offsets: a named CDateTime and a copy of its date

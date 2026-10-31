@@ -25,6 +25,10 @@ bool IsValidDateTime(const std::string& dataHora);
 //   with: the date's 8 bytes and the time's word stored into the result. That it is a constructor, inline, is a choice.
 // - ConvertToLocalTime (fn 1381) is the time_t of the date and time, by timegm; operator+=(int) (fn 2233) adds seconds
 //   through it and gmtime_r. Both names are chosen from what the bodies do; no record names either.
+// - operator+(time_t) returns a copy moved by a count of seconds through operator+=; no target function holds it:
+//   binaryen inlines it into vota::testeteclado::CEsperaRetestar::StartState (fn 11825), which passes operator+= (fn
+//   2233) the low word of a 64-bit value. That it is a member, const and takes time_t, and its line in cdatetime.cpp,
+//   after FormatCurrentDate, are chosen (src/units/138-uenux2-testeteclado.mk has the forms measured).
 // - FormatCurrentDate and FormatCurrentTime (fns 5472, 5473) are `std::string (*)(const std::string &)` callbacks: fn
 //   5343 passes their table slots with "DD/MM/YYYY" and "hh:mm:ss" to api::CMTFormBuilder::AddTextField (fn 651), and
 //   fn 7787 to fn 3058, each building an api::CDataTextFmt<std::string (*)(const std::string &)> over the pointer; and
@@ -32,9 +36,9 @@ bool IsValidDateTime(const std::string& dataHora);
 //   Now (inlined, fns 1155 and 1000) through a copy of it. Their names, and that they are static members and not free
 //   functions, are chosen; src/units/125-uenux2-cdatetime.mk has the forms measured.
 // - GetData and GetHora return the members by reference: comum::CRelatorioTesteImpressora::EstaEmHorarioVerao (fn 11198)
-//   hands the date of a local CDateTime to CDate::operator<=> (fn 1261) with no copy. With getters that return by value,
-//   a form of 11198 that compares in its own body copies the date into its frame for each compare (its object). Their
-//   names are chosen.
+//   hands the date of a local CDateTime to CDate::operator<=> (fn 1261) with no copy, which is the evidence. By-value
+//   getters were measured only in a form of 11198 that compares in its own body, not the one landed, where they copy
+//   the date into its frame for each compare (its object). Their names are chosen.
 class CDateTime {
 public:
     CDateTime() = default;

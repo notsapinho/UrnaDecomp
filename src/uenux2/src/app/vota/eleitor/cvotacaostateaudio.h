@@ -12,8 +12,8 @@ class IScreen;
 class IInputKbd;
 template <typename MEDIA, typename INPUT>
 class CInteractiveForm;
-// The record of fn 3139 qualifies it (std::pair<api::EInputResult, std::string>). Its enumerators are not recovered
-// and no header of this tree defines it yet: declared opaque, 4 bytes by fn 3139, signedness chosen.
+// The record of fn 3139 qualifies it (std::pair<api::EInputResult, std::string>). api/gui/iinputfield.h defines it,
+// with this fixed type and chosen enumerators: declared opaque here, 4 bytes by fn 3139, signedness chosen.
 enum EInputResult : int;
 } // namespace api
 

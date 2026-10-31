@@ -11,7 +11,7 @@
 #   so the string_view's end is that string's end, 1140. Our link holds no such string, and the scan cannot place our
 #   end pointer, a pointer to a NUL (`string tail occurs 4098 times`). In a copy of the link with one more object that
 #   holds that literal, `splat-remap` prints `target 8327: IDENTICAL` (operand kinds verified). Its call of fn 5152 is
-#   named by a hand edit (unit 141's fragment).
+#   named by a generated line (unit 141's fragment).
 # The destructors: the class is final (they store no vptr) and they destroy its two members, the std::string at +28 and
 # the std::mutex at +4. The destructor is not out of line: the deleting one holds the base-object body inlined. It is
 # implicit, as the class needs no destructor of its own; `virtual ~CWasmLogd() override = default;` in the class gives
@@ -26,7 +26,10 @@
 # record lies after the records of lines 38 and 44, so it is internal or inline (docs/reference/facts/reading.md R8);
 # `static` is chosen. fazOperacao is defined before loga: their use band runs in reverse link order, and 10262 is above
 # 10260 in it.
-# Chosen: the names of loga, escreve, the constants and the enumerators, the members and the parameters; std::uint8_t
+# loga's name is evidence: fn 10260 passes the string "loga" to confereAppValida as the function's name
+# (cescritorlog.h); written as that literal, and confereAppValida(__func__, aplicativo) gives the same code and data, the
+# .L.str numbers aside. Chosen: the names of escreve, the constants and the enumerators, the members and the
+# parameters; std::uint8_t
 # for the limits; the enums' namespace; the formatters' form (cescritorlog.h); the severity 1 that fazOperacao passes,
 # written as a cast for want of an enumerator; the lines between the records, which are blank. In escreve: the scope of
 # the lock (the target holds no code for std::mutex's lock, and the unlock, fn 150, comes after fclose and before the

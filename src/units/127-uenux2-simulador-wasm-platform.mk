@@ -7,7 +7,7 @@
 #   "CWasmInit::{} {}" and writes it to channel 0 of simulador::CWasmCanaisLog (unit 141). Slots 2, 3, 6 and 7 are
 #   shared bodies (434, 434, 340, 425). 9405 is named by vtable alone, so no vote names 1524; the scan's content pass
 #   finds it (a `callers+content` hand line, weighed as docs/reference/splat.md "Reviewing a match" says, carried
-#   nothing), once 5152, which it calls, has its hand line (unit 141's fragment).
+#   nothing), once 5152, which it calls, has its name (unit 141's fragment).
 #   Loga builds CWasmCanaisLog's static through the inline GetInst, so this object also emits the static's destructor,
 #   fn 5154 (unit 141's fragment), and std::deque<std::string>'s D2, fn 3503, which that destructor calls.
 # - simulador::CWasmResource (cwasmresource.cpp, cwasmresource.h), over api::IResource, whose slots 2 to 6 this unit

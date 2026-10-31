@@ -385,10 +385,11 @@ nothing), four kinds of line:
 
 A fifth kind comes from a range, not from every landing: **a matched function's line that the range's own vtable
 takes away.** Unit 69's commit ab51b8d dropped `_ZN7RHVoice6clientD2Ev = func:174; … evidence:vtable`, a line since
-fe861ad, and the match line stays. Our `CWasmScreen` vtable's slots 0 and 1 hold the shared empty destructors, 208 and
-148 in our link, because `api::IScreen`'s `~IScreen() = default` makes the D2 a `return this` body that binaryen merges
-with the others (`src/units/README.md` "Pending members"). 208 is matched as 174. The target's slots hold 5071 and
-8963, so the vtables vote 208 for both 174 and 5071, and step 8 gives it no name:
+fe861ad, and the match line stays. There our `CWasmScreen` vtable's slots 0 and 1 held the shared empty destructors,
+208 and 148 in that link, because `api::IScreen`'s `~IScreen() = default` made the D2 a `return this` body that
+binaryen merged with the others (`src/units/README.md` "Pending members"). 208 was matched as 174. The target's slots
+hold 5071 and 8963, so the vtables voted 208 for both 174 and 5071, and step 8 gave it no name (5071 and 8963 match
+since, over `IScreen`'s destructor inline in `api/gui/iform.h`):
 
 ```sh
 git log --format=%h -S'_ZN7RHVoice6clientD2Ev = func:174' -- splat/symbol_addrs.txt
