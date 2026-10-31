@@ -436,8 +436,9 @@ const ourDataByKey = new WeakMap<object, Map<string, DataObject>>();
 /**
  * The object a `_ZGV` guard guards, when the target holds the guard at our link's distance from it: `_ZGV<x>` guards
  * `_Z<x>`, the two are emitted together, and both names have a target address that keeps our distance
- * (docs/reference/facts/splat.md §S13). Then the guard's place is the object's place plus that distance, which owes
- * nothing to the body that reads the guard. Else undefined.
+ * (docs/reference/facts/splat.md §S13). Then the guard's place is the object's place plus that distance. The distance
+ * owes nothing to the body that reads the guard; the object's place can be that body's own vote, which selfVoted
+ * weighs. Else undefined.
  */
 export function guardedObject(
   symbols: TargetSymbols,

@@ -135,7 +135,8 @@
 #   and CEleitorDetalhe's two constructors (celeitordetalhe.cpp:49) scored 96 over 834 rows, its 6 inserted and 6 deleted
 #   rows all local numbers. Moving cimpedido.cpp.o, celeitordetalhe.cpp.o or both after this object, -O3 on this object and
 #   celeitordetalhe.cpp.o, and twelve source forms (of the impediments, the returns, the constructors and CEleitorDinamico's
-#   copy) left them or made more, so it stays a stub (docs/how-to-decompile.md step 5). MarcaVotou (lines 456, 460) is
+#   copy) left them or made more, so it stays unwritten (docs/how-to-decompile.md step 5); it has no stub, since the scan
+#   groups it under libc++, and stubs.py writes none there. MarcaVotou (lines 456, 460) is
 #   held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which also calls fn 501,
 #   no name. CompleteLoad (6734), DynamicCreate (5761) and GetCurrentAbrangenciaEleitor (7377, which holds GetInst inlined
 #   and calls 501) are not written.

@@ -26,8 +26,8 @@ public:
     static std::string BytesToHexString(const std::vector<uebyte>& valor);
 
     // The api/sql/sqlite callers' helpers: ToLower in place (fn 5158, Latin-1 aware), its copying form (fn 1879) and
-    // Replace of a char by a string (fn 9398). They are defined in src/units/12-ecourna-api-sql-sqlite-externs.cpp
-    // until api/util/cstringutils.cpp is reconstructed around them.
+    // Replace of a char by a string (fn 9398); no record names ToLower, a chosen name. They are defined in
+    // src/units/12-ecourna-api-sql-sqlite-externs.cpp until api/util/cstringutils.cpp is reconstructed around them.
     static void ToLower(std::string& valor);
     static std::string ToLower(const std::string& valor);
     static void Replace(std::string& valor, char de, const std::string& para);

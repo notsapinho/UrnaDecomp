@@ -25,7 +25,8 @@
 #   CInteractiveFormBuilder::GetInteractiveForm 554
 #   libc++ that the forms reach: std::__shared_mutex_base's lock 3328, unlock 3327 and constructor 4670
 #                     (FormControlBlock's std::shared_mutex), std::__call_once 2577, which the forms' callers keep out
-#                     of line, and with it std::locale::id::__get (514), which calls it and matches since
+#                     of line, and with it std::locale::id::__get (514), which calls it and matches since __call_once
+#                     has that second caller and stays out of line
 #
 # What the bytes fix:
 # - SetFocus (1401) inlines one IInputField member twice, with false and with true (iinputfield.h's SetAtivo). Written
@@ -49,12 +50,13 @@
 #
 # Chosen, the bytes do not decide (each header says which of its names): CFormStack's member names and that the stack
 # and its mutex are static data members; FormHandle's members; CObservable's Inicia and Atualiza (that they are its and
-# not IObservable's); IForm's Hide, Desenha, Redesenha, SetName and the names Slot2, Slot3, Slot6 and Slot7, which the
-# landed callers use; Slot6's parameter type; IPaper::Refresh, an empty non-virtual member (ipaper.h says why); the
-# spacing that puts GetRenderForm's call on its records' columns (iform.h 178:52, cpaperformbuilder.h 51:54);
-# CInteractiveFormBuilder deriving from CFormBuilder, its header's path and GetInteractiveForm's name and place after
-# the records' lines 76 and 86 of cinteractiveformbuilder.cpp, which stay blank (AddLabeledInputControl, fn 653, is not
-# written); SetFocus, SetAtivo, ApagaCursor and every data member's and parameter's name.
+# not IObservable's); that IForm's members are defined in the class; IForm's Hide, Desenha, Redesenha, SetName and the
+# names Slot2, Slot3, Slot6 and Slot7, which the landed callers use; Slot6's parameter type; IPaper::Refresh, an empty
+# non-virtual member (ipaper.h says why); the spacing that puts GetRenderForm's call on its records' columns (iform.h
+# 178:52, cpaperformbuilder.h 51:54); CInteractiveFormBuilder deriving from CFormBuilder, its header's path and
+# GetInteractiveForm's name and place after the records' lines 76 and 86 of cinteractiveformbuilder.cpp, which stay
+# blank (AddLabeledInputControl, fn 653, is not written); SetFocus, SetAtivo, ApagaCursor and every data member's and
+# parameter's name.
 #
 # splat/symbol_addrs.txt gets ten hand lines, each `callers+content`, each shown needed by the scan without it and
 # without its own match line (docs/reference/splat.md "Reviewing a match"; the matches each removal takes out are
@@ -66,13 +68,15 @@
 # guard byte and the std::once_flag of GetObservable's statics, which only their media's Notifica reads: IScreen's (1
 # out each, 2651, whose own vote is their generated name), IScreenMT's (8 each) and IPaper's (4 each). The functions of
 # the chain (Exibe, Empilha, Notifica, the proxies and the GetHandles thunks, 3941) have no line: the content pass finds
-# them once these are in (the scan without any line for them and without their match lines leaves every row as it is).
+# them once these are in: the scan without any line for them and without their match lines, run again until it adds
+# nothing, leaves every row as it is (the first run brings back all but 11029, 11030, 11043 and 11044, the second those).
 #
 # Not matched:
-# - 395 (an MT builder member that adds an input field of api::CInputFieldControl<IScreenMT>) allocates the
-#   CControlValidation and its control block before the field's 64 bytes, and releases the validation right after the
-#   IInputField constructor (3673), before the field's vptr: `new CInputFieldControl<IScreenMT>` with
-#   api/gui/cinputfieldcontrol.h's constructor, which builds the validation, allocates the field first (lone object).
+# - 395 (an MT builder member that adds an input field of api::CInputFieldControl<IScreenMT>) allocates the field's 64
+#   bytes first, then the CControlValidation and its control block, and releases the validation right after the
+#   IInputField constructor (3673), before the field's vptr. That order is the one `new CInputFieldControl<IScreenMT>`
+#   gives with api/gui/cinputfieldcontrol.h's constructor, which builds the validation (lone object). What may differ is
+#   where the validation's std::shared_ptr lives: in 395's own frame (+8), a reading not measured.
 #   The constructor 395 calls is not recovered, so 395 is not written, and 3673 and 3674 (the IInputField<IScreenMT>
 #   constructor and vector<shared_ptr<IFormField<IScreenMT>>>::push_back(&&)), which only 395, 1151 and 5410 call, have
 #   no caller in this link.

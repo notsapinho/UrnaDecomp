@@ -1,8 +1,8 @@
 # uenux2 vota::CEleitorVotouNaoVotou::StartState (target fn 10431, slot 2 of its vtable @1592928) with its destructor
 # and deleting destructor (fns 1284, 2884, slots 0 and 1), and comum::IPedeTituloMesario's StartState, constructor and
 # implicit destructor (fns 10314, 3608, 1378). The class headers say what the layout rests on; ProcessInput of each (fns 10430,
-# 10313) is pending. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) is declared
-# as far as these states need it, its base api::IForm<MEDIA> (api/gui/iform.h).
+# 10313) is pending. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) and its base
+# api::IForm<MEDIA> (api/gui/iform.h) are unit 120's.
 #
 # The file of vota::CEleitorVotouNaoVotou: no record names it, and the path is chosen, on this evidence. Its cluster's
 # comment, app/vota/eleitor/fimvotacao/celeitorvotounaovotou.cpp, is the tool's class-convention guess, and the data
@@ -43,8 +43,8 @@
 # which); Slot9, its name and its int result (no record, symbol or caller
 # names it, and the derived classes return 1 and 2); the member and parameter names.
 #
-# Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 65's, byte
-# for byte: this unit adds nothing to it.
+# Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 120's now
+# (unit 65 wrote its first form): this unit adds nothing to it.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CELEITORVOTOUNAOVOTOU_SRCS := src/app/vota/operador/aguardaeleitor/celeitorvotounaovotou.cpp src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp

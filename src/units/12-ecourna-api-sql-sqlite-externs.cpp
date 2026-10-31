@@ -1,6 +1,6 @@
 // Definitions the api/sql/sqlite units call that belong to api/util/cstringutils.cpp (CStringUtils), until that file
 // is reconstructed around them: target fns 5158 (ToLower in place), 1879 (ToLower copy) and 9398 (Replace), compiled
-// with the ecourna flags through src/units/12-ecourna-api-sql-sqlite.mk.
+// with the ecourna flags through src/units/12-ecourna-api-sql-sqlite.mk. No record names ToLower or acentuadas: chosen.
 // Replace matches. It reads the replacement's size once, before the loop, as the target does; a loop that adds
 // para.size() each time gives other code, a while loop over the same hoisted size the same object code.
 // ToLower in place maps each character through std::transform: a range-for over the string gives other code (39 rows

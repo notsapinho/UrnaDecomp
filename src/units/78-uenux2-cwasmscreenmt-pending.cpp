@@ -10,8 +10,8 @@
 //     in the original: api/gui/iscreenmt.h says why, and it moves into the class with its body. The trap makes it the key
 //     function of our link only, so this object emits IScreenMT's vtable and typeinfo, which CWasmScreenMT's typeinfo
 //     names. It waits for fn 3461 (148 B, no body of ours): that function empties a stack of forms in .bss (the vector at
-//     1832892, a mutex at 1832864, reading as CFormStack<IScreenMT>'s from the forms' layout in api/gui/iform.h, which is a
-//     reading, not evidence), then calls fn 2631, which notifies the observers at 1529940.
+//     1832892 and the mutex at 1832864, CFormStack<IScreenMT>'s s_forms and s_mutex, which fn 2776's votes name), then
+//     calls fn 2631, CFormStack<IScreenMT>::Notifica (unit 120), which notifies the observers at 1529940.
 //     CWasmScreenMT's D2 and D0 (fns 8745, 8744) are the implicit ones, emitted with its vtable by cwasmscreenmt.cpp; they
 //     hold this body inlined in the target, so they differ from the target's, in that call only, until it lands.
 #include "uenux2/mock/app/simulador/wasm/cwasmscreenmt.h"

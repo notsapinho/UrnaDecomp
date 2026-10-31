@@ -12,10 +12,7 @@ A stub marked `placement: link order` has no record that gives it a line: its fi
 or vptr. A stub in a tree's `unplaced.cpp` has no evidence for any file. In `src/ecourna/` every stub is one of these
 two kinds, since most ecourna functions that have records are written, so the record leads to code, not to a stub.
 
-A stub can sit over code we have: `stubs.py` cannot see a non-virtual function that has no record. The stub f5158 in
-`src/ecourna/unplaced.cpp` is `ecourna::api::util::CStringUtils::ToLower(std::string&)`, which
-`src/units/12-ecourna-api-sql-sqlite-externs.cpp` defines (its header comment names fn 5158); the scan's row is a census
-pair with that body, `unresolved` on a static of ours.
+A stub can sit over code we have: `stubs.py` cannot see a non-virtual function that has no record.
 
 A stub in `unplaced.cpp` has no evidence for any file only while no file is named after its class: `stubs.py` puts a
 class's stubs in `<class in lower case>.cpp` of the tree as soon as that file exists, so a unit that creates
@@ -155,10 +152,12 @@ whose target body you can read (`api::CFixedText`'s two `IText` overrides are on
 [src/units/README.md](../../../src/units/README.md)). With the slots declared only, the object references an undefined
 `_ZTVN3api10CFixedTextE`.
 
-A class your bodies need complete only to call a base's virtual slot through a pointer (a `std::shared_ptr` member
-whose `Slot2()` you call) gets its head alone: the class and the base clause RTTI gives, with a comment that no member
-is reconstructed, as `src/uenux2/src/api/gui/cinteractiveform.h` does. Its `sizeof` is then wrong, so nothing may
-construct it; the first unit that needs a member adds the data members and the records' declarations as above.
+A class your bodies need complete only to call a virtual slot through a pointer (a `std::shared_ptr` member whose
+`Slot2()` you call, a control block that deletes through the destructor's slot) gets its head alone: the class, the
+base clause RTTI gives and that slot, with a comment that no member is reconstructed, as
+`src/uenux2/src/app/vota/iexecucaovota.h` does for its control block's call of the deleting destructor. Its `sizeof`
+is then wrong, so nothing may construct it; the first unit that needs a member adds the data members and the records'
+declarations as above.
 
 **A stub-only file.** A file the evidence names that does not exist yet holds its stubs only, written from line 2
 on, not at their records' lines ([src/README.md](../../../src/README.md) "Stubs"). `--strip` leaves next to nothing of

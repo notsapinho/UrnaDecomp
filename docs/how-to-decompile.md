@@ -1424,10 +1424,10 @@ reasons again too: a stand-in caller beside its real caller compiles, links and 
 comment names the target callers it stands for; one whose every caller is now in the link goes in this merge, before
 these steps, and one whose callers landed in part stays, its comment saying which still wait. A caller in the link
 counts whether its row matches or not: search `splat/matched.txt` for the callers, and our link for their calls
-(`src/units/README.md` "Companion files"). 9052 is `differs` and calls 5103 in our link (ours 10728 is one of the two
-callers `wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5178 '/ func\[/ {f=$2} $0 ~ " call " c
-"( |$)" {print f}'` prints), so the stand-in for it went. Commit it all as the merge commit. A merge commit takes no
-pathspec (`fatal: cannot do a partial commit during a merge`): stage everything,
+(`src/units/README.md` "Companion files"). When the stand-in for 9052 went, 9052 was `differs` and called 5103 in our
+link (ours 10728 was one of the two callers `wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v c=5178
+'/ func\[/ {f=$2} $0 ~ " call " c "( |$)" {print f}'` printed then); it matches since. Commit it all as the merge
+commit. A merge commit takes no pathspec (`fatal: cannot do a partial commit during a merge`): stage everything,
 read `git status --short`, and commit with a bare `git commit -F -`, owning the checkout while you do, since nothing
 else may be staged ([facts/workflow.md](reference/facts/workflow.md) §W18). To leave a merge after step 9, `git merge
 --abort` needs everything staged first (§W22). Two branches that each took "the next free

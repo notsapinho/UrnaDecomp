@@ -12,12 +12,12 @@
 # 3513, D0 9426, SetInt 5160, SetInt64 9425, SetDouble 9424, SetText 9423, SetBool 9421, SetBlob 9420, SetNull 9419,
 # Execute 9417, Reset 9416, IsClosed 9428 and VerifyParameterIndex 1882; CSqlResultSet's constructor 9449, D2 9443, D0
 # 9442, the GetInt/GetInt64/GetDouble/GetText/IsNull/GetBool pairs (2679 9441, 5165 9440, 5164 9439, 3514 9438, 5163
-# 9435, 9446 9433), GetDateTime(const std::string &) 9434, GetBlob(const std::string &) 9432, Next 9444 and
-# VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer control blocks' __get_deleter and
+# 9435, 9446 9433), GetDateTime(const std::string &) 9434, the GetBlob pair (5161 9432), IndexForColumnName 1525,
+# Next 9444 and VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer control blocks' __get_deleter and
 # __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from
 # celeitordinamicodao.cpp.o, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
-# externs' Replace 9398; and library code these bodies call: std::map<std::string, int>'s tree members 1677, 2678,
-# 9447, std::set<int>'s __find_equal 2676 and string::replace 4667.
+# externs' ToLower in place 5158, copying ToLower 1879 and Replace 9398; and library code these bodies call:
+# std::map<std::string, int>'s tree members 1677, 2678, 9447, std::set<int>'s __find_equal 2676 and string::replace 4667.
 #
 # Names: records name the connection's constructor, Prepare and Close; the statement's SetInt, SetInt64, SetDouble,
 # SetText, SetBlob, SetNull, Reset, Close and VerifyParameterIndex; the result set's GetInt(int), GetInt64(int),
@@ -69,24 +69,27 @@
 # (`return {};` gives the same bytes; `if (tamanho > 0)` around the copy does not).
 #
 # Not matched, each with what blocks it:
-# - CSqlStatement::Close (9429): the scan finds no target name for the file-static std::mutex it unlocks (our .bss
-#   `s_mutex`; the target's is at 1911796). Every byte before that operand is the target's. A .bss object gets a name
-#   only from a vote of a census-paired function, and the census pairs neither 9429 nor 9431, the mutex's exit-time
-#   destructor.
 # - CSqlStatement::SetDateTime (9422): its callees boost::date_time's from_day_number (1376) and ymd_to_string are
 #   linkonce copies the link takes from src/app/roots_boost.o, which comes first and compiles at -O2 without
 #   -fexceptions; the target's 1376 is an -fexceptions copy, and its ymd_to_string has this one caller.
 # - CSqlResultSet::GetDateTime (5162): its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B) is the copy of
 #   app/dados/asn/datahoraasn.cpp in our link, a different body (fn 6004, whose folded readout is 290 lines against the target's 1568).
-# - CSqlResultSet::GetBlob (5161) stopped at `call 306 | call 2671`: the target's vector exception guard destructor
-#   calls __destroy_vector out of line, and ours inlined it and merged with 2671. It matches since
-#   src/app/roots_vector.cpp holds the target's copy.
 # - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
+# Matched later, with what held each:
+# - CSqlStatement::Close (9429) waited for a target name of the file-static std::mutex it unlocks (our .bss `s_mutex`;
+#   the target's is at 1911796): a .bss object gets a name only from a vote of a census-paired function, and the census
+#   paired neither 9429 nor 9431, the mutex's exit-time destructor. 9429 is a `srcloc-anchor` now, and its vote names
+#   the mutex (above).
+# - CSqlResultSet::GetBlob (5161) stopped at `call 306 | call 2671`: the target's vector exception guard destructor
+#   calls __destroy_vector out of line, and ours inlined it and merged with 2671. It matches since
+#   src/app/roots_vector.cpp holds the target's copy.
 # - The copying ToLower (1879) is a thunk into binaryen's merge 3942 in the target, with fns 1374 and 5156, copying
 #   wrappers of Trim and of 3509, a ToUpper-like body. It matches since unit 112 brought 1374. CSqlResultSet::IndexForColumnName
 #   (1525), which calls it, matches since unit 89's comum::CLocal::GetUFMinuscula (3753) is a second holding caller.
+# - ToLower in place (5158) was `unresolved`, self-voted on acentuadas's guard, which only its own pair votes for. It
+#   matches since the self-vote rule places a guard by its object at our link's distance (the externs file's header).
 ECOURNA_SRCS += api/sql/sqlite/csqlconnection.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlresultset.cpp
 ECOURNA_SRCS += api/sql/sqlite/csqlstatement.cpp

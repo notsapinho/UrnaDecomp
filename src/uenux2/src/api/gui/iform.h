@@ -8,7 +8,7 @@
 // - IForm<MEDIA>: the layout is the constructor's (fn 6024, binaryen's one body of the IScreen and IScreenMT ones) and
 //   the destructors' (fns 2781, 2776, 5514): +4 the visible flag, +8 the fields, +20 the pre-show (the
 //   IPreShow<MEDIA> fns 301, 1694 and 5515 build), +28 a mutex, +52 the control block, +60 the name. Every member is
-//   defined in the class; the destructor's D0 (fns 11136, 11045, 5513) calls the D2 and frees its result.
+//   defined in the class, a choice; the destructor's D0 (fns 11136, 11045, 5513) calls the D2 and frees its result.
 // - CFormStack<MEDIA>: the stack of the forms shown, per media two static members (guarded in __wasm_call_ctors) and two
 //   function-local statics of GetObservable (a guard byte and a std::once_flag beside them). RTTI names the class only
 //   through CObservable, whose base is api::IObservable<std::vector<FormHandle<MEDIA>>> (api/pattern/iobservable.h).

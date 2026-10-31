@@ -63,9 +63,11 @@
 # 9123 9140 9183 9210 and 9099 9122 9139 9160, their merges 1970 and 2926 and 9209 need no line: the scan pairs them by
 # content, each alone and all together.
 #
-# 9226, 9200, 9061, 9057, 9052, 9054 and 5095 stopped at `target call 306 | ours call 2671`: 306 is
+# 9226, 9061, 9057, 9052, 9054 and 5095 stopped at `target call 306 | ours call 2671`: 306 is
 # __exception_guard_exceptions<vector<uebyte>::__destroy_vector>'s destructor with __destroy_vector out of line (call
 # 4967), and ours inlined it and joined 2671. They match since src/app/roots_vector.cpp holds the target's copies.
+# 9200 was `unresolved` on the table slot of CAutenticacao(unsigned, unsigned, const vector&) (9037); it matches since
+# the content pass names 9037, which it does once 306 is the target's.
 #
 # Written, and not a match yet:
 # - 9056 gets past that call and is `unresolved` at ours +0x2ed, on the table slot of 5365,
