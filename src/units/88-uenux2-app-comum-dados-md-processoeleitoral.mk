@@ -1,7 +1,7 @@
 # uenux2 comum::md process-election classes and comum::CCargos, the first unit that throws comum::CUeComumDadosError
 # (src/app/comum/dados/euecomumdadoserror.h, a header several units share: its enumerators are named by value).
 # comum::CCargos (src/app/comum/dados/ccargos.cpp): Next, GetCurrentCargoID, GetCurrentEleicaoID (target fns 1708, 1938,
-# 2835). In md/processoeleitoral/: CCargo's GetDetalheCandidato (1388), GetNomeNeutro, GetNomeMasculino, GetNomeAbreviado
+# 2835), and the free comum::NomeEleicaoCorrente (11556) in the same file. In md/processoeleitoral/: CCargo's GetDetalheCandidato (1388), GetNomeNeutro, GetNomeMasculino, GetNomeAbreviado
 # (1547, 3716, 2797), GetNome (2796), GetNomeSuplente (3715), GetOrdinalEscolha (2258) and Valida (5657);
 # CDetalheCandidato::GetSuplente (1545); CEleicaoPE::GetCargos (2257); CPleito::GetEleicao and GetSituacoesEleicoes (5651,
 # 5648); CProcessoEleitoral::GetPleito2 (1267). comum::asn::CConversorNomesCargo::DoDesconverte (11369), with
@@ -52,6 +52,14 @@
 # - CNomesCargo's constructor: it tests the members, and testing the parameters differs; .empty() = size() == 0.
 # - DoDesconverte: four named std::string copies, const or not. Temporaries in the call, direct references and const auto
 #   (the ASN.1 type) each differ.
+# comum::NomeEleicaoCorrente (fn 11556), the name of the current position's election, is in ccargos.cpp: it holds
+# GetInst's code (record 24), which only that TU can inline, then calls GetCurrentEleicao (2836) and copies the string at
+# +12 of the CEleicaoPE it returns (md/processoeleitoral/celeicaope.h's GetNome). The target reaches it only through
+# table slot 3049, which fn 5580 passes to api::CPaperFormBuilder::AddTextField (604): the roots take its address. In
+# band 1 (ledger/ordinals.tsv) it follows ccargos.cpp's exit destructors (11561, 11560) and two comparators of the
+# cargo pairs, 11559 and 11558, whose table slots fns 7377 (which holds code of this file's line 249) and 3782 store: so
+# it is defined after the statics, and its line, after record 249, is a choice. Chosen: its name and GetNome's, its
+# being a free function, ccargos.h as its header, GetNome's being inline in the class.
 # Not matched:
 # - CEleicaoPE::ValidaOrdem (fn 3714, written, no-candidate). Its one difference is three rows: at this tree's
 #   -fno-strict-aliasing the object reloads __child after __insert_node_at's store of the begin node. insert, emplace and a
@@ -68,7 +76,7 @@
 #   against 1150 over 1448 (3 of them the tree's reload: without -fno-strict-aliasing, 100 over 435); what is left includes the placement of its three throws, so no body here is shown right.
 # - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
 #   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their
-#   evidence and why that object links after ccargos.cpp. The file's other records, lines 25 and 93, are not written.
+#   evidence and why that object links after ccargos.cpp. The file's other records, lines 25, 93 and 249, are not written.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 PROCESSOELEITORAL_SRCS := src/app/comum/dados/ccargos.cpp \
   src/app/comum/dados/cconfiguracaoeleicao.cpp \

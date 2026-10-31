@@ -25,8 +25,12 @@
 # 2838, picks the holder or the substitute, frees the literal and only then reads the ESexo at +40: the file-static
 # GetCandidatoAtual, which takes the order as its parameter and which clang inlines, gives that order (measured: 5806
 # matches). Its name, its linkage and the form are chosen; a form that picks after the full expression is not tried.
-# 2838's external linkage is chosen too: the roots stand in for its callers 5807, 12641 and 12742, and for 5806's 13101.
-# 5807 (CCandidaturasDSNome's operator) is not written.
+# 2838's external linkage is chosen too: the roots stand in for its callers 12641 and 12742, and for 5806's 13101.
+# CCandidaturasDSNome's call operator (5807) is 5806's shape with its literal, "CCandidaturasDSNome", and the string at +12 of
+# the candidate, md::CDadosCandidato::GetNomeUrna, for the ESexo: written alike, after GetCandidatoAtual and before 5806's,
+# since the band puts 5807 ahead of 5806 (ld_index 3398 against 3399 in this link). The class gets the byte 5807 reads as
+# a member, with a constructor like CCandidaturasDSSexo's (chosen). Its target callers, 6076 and 12649, are not written;
+# the roots stand in for them.
 #
 # 1709, __tree::destroy over md::CCandidatura, matches at the tree's -O3 and not at -O2:
 # __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.

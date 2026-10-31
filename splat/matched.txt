@@ -10065,3 +10065,14 @@
 11868 _ZN4vota24CVerificaHorarioZeresima11FinishStateEv
 11875 _ZN4vota12testeteclado5CBase10StartStateEv
 12058 _ZN4vota19CAplicacaoEncerrada10StartStateEv
+5799 _ZNK5comum11CFederacoes12GetFederacaoEt
+5800 _ZN5comum11CFederacoesD1Ev
+5807 _ZNK5comum19CCandidaturasDSNomeclEv
+11479 _ZN5comum16RespostaCorrenteEv
+11556 _ZN5comum19NomeEleicaoCorrenteEv
+13334 hmac_gettable_ctx_params
+2832 _ZN5comum11CFederacoes7GetInstEv
+11552 __cxx_global_array_dtor.2@app/uenux2/src/app/comum/dados/cfederacoes.cpp.o
+11553 __cxx_global_array_dtor@app/uenux2/src/app/comum/dados/cfederacoes.cpp.o
+13325 kmac_gettable_ctx_params
+3769 _ZNK5comum15CEleitorDetalhe14GetImpedimentoEv

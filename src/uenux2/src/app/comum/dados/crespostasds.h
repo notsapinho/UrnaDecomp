@@ -32,4 +32,11 @@ private:
     uebyte m_digitos;
 };
 
+// The current answer's text, a screen's text field: fn 6652 passes it to api::CFormBuilder::AddTextField (fn 1191) by
+// table slot 1096, and no direct call reaches it. Its body, fn 11479, holds CRespostas::GetInst's code (record
+// crespostas.cpp:28), which only that file can inline, so it is defined there, after CRespostasDSNumero's call
+// operator: the target links it after the file's statics (11481, 11480 are their exit destructors). Its name, its being
+// a free function, this header and its line are chosen.
+std::string RespostaCorrente();
+
 } // namespace comum

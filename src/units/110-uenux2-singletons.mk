@@ -87,6 +87,14 @@
 # holds comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota> at +44 (vptr 1560304), which unit 140 writes;
 # its slots 2 and 3 (11483 and 11482) are traps there. The roots' d5734 stands for 7787, which is not written.
 #
+# comum::RespostaCorrente (fn 11479), the current answer's text, is in crespostas.cpp: it holds GetInst's code (record 28),
+# which only that TU can inline, then calls CDataMap<unsigned int, CRespostaConsulta>::GetCurrent (3125) and copies the
+# string at +4 of the answer (md/processoeleitoral/crespostaconsulta.h's GetResposta). The target reaches it only through
+# table slot 1096, which fn 6652 passes to api::CFormBuilder::AddTextField (1191): the roots take its address. In band 1
+# (ledger/ordinals.tsv) it follows the file's exit destructors (11481, 11480), so it is defined after the statics, here
+# after CRespostasDSNumero's call operator, a choice. Chosen: its name and GetResposta's, its being a free function,
+# crespostasds.h as its header, GetResposta's being inline in the class. fn 11478, the file's other function passed by a
+# table slot (3051, by fn 11946), waits for fn 1881, which nothing names.
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, has both its callees matched and is only not written; 11215, CParteCandidatos::Imprime,
 #   waits for 2271. Both stay traps in unit 77's pending file.
