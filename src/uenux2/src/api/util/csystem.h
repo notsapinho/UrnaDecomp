@@ -12,7 +12,12 @@ namespace api {
  */
 class CSystem {
 public:
+    // ExistFile and ExistDir (target fns 412 and 5459) have no record: their names are chosen from what they test
+    // (S_IFREG, S_IFDIR) after api::ExistResource, whose record names it.
+    static bool ExistFile(const std::string& arquivo);
+    static bool ExistDir(const std::string& diretorio);
     static uedword GetFileSize(const std::string& arquivo);
+    static void ZeroFill(const std::string& arquivo);
 
     // Reconstruction's note. The flag is evidence: the target reads the byte at 1584624 30 times, in 24 functions, and
     // nothing stores it, a word of .data that starts as 1 between csynchronizer.cpp's one record and csystem.cpp's

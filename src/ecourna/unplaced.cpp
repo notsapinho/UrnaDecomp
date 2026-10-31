@@ -114,19 +114,8 @@
 // f5460 · 73 B · unmatched · placement: link order · name unknown
 // void f5460(i32, i32, i32) { ... }
 
-// f5459 · 11 B · unmatched · placement: link order · name unknown
-// ? f5459(i32) { ... }
-
 // f5458 · 1367 B · unmatched · placement: link order · name unknown
 // ? f5458(i32) { ... }
-
-// link-order cluster 764 · uses=2 · neighbours' file uenux2/src/api/util/cgenerictags.cpp
-
-// f5470 · 224 B · unmatched · placement: link order · name unknown
-// ? f5470(i32, i32) { ... }
-
-// f5469 · 352 B · unmatched · placement: link order · name unknown
-// ? f5469(i32) { ... }
 
 // link-order cluster 765 · uses=2 · neighbours' file uenux2/src/api/util/cdatetime.cpp
 
@@ -238,9 +227,6 @@
 
 // f6029 · 68 B · unmatched · placement: link order · name unknown
 // ? f6029(i32, i32, i32, i32, i32) { ... }
-
-// f6019 · 43 B · unmatched · placement: link order · name unknown
-// ? f6019(i32, i32) { ... }
 
 // f6013 · 2101 B · unmatched · placement: link order · name unknown
 // ? f6013(i32, i32, i32, i32, i32, i32, i32, i32) { ... }

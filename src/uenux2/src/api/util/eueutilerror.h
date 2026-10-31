@@ -13,9 +13,25 @@ enum EUeUtilError {
     EUE_UTIL_DATAHORA_INVALIDA = 7005,
     EUE_UTIL_DATAHORA_NAO_CONVERTIDA = 7006,
     EUE_UTIL_TIMESTAMP_INVALIDO = 7008,
+    // the code api::CDirReader's constructor throws (cdirreader.cpp); the name is chosen from its message, "Não foi
+    // possível ler o diretório ": no evidence names it
+    EUE_UTIL_FALHA_LER_DIRETORIO = 7009,
     EUE_UTIL_DIRETORIO_NAO_ABERTO = 7010,
+    // 7013 to 7015: the codes api::CGenericTags::insert throws (cgenerictags.cpp); each name is chosen from its message
+    // and what the throw tests (the tag's size, a tag already in the map, a length-field size outside 1 to 4): no
+    // evidence names them
+    EUE_UTIL_TAG_TAMANHO_INVALIDO = 7013,
+    EUE_UTIL_TAG_JA_MAPEADA = 7014,
+    EUE_UTIL_TAG_TAMANHO_CAMPO_INVALIDO = 7015,
     EUE_UTIL_TAG_NAO_MAPEADA = 7016,
+    // the code api::CSynchronizer::CreateInst throws (csynchronizer.cpp); the name is chosen from its message, "Instância já
+    // criada": no evidence names it
+    EUE_UTIL_SINCRONIZADOR_JA_CRIADO = 7030,
+    // 7031 and 7069: the codes api::ExistResource and api::CSystem::ZeroFill throw (csystem.cpp); each name is chosen
+    // from its message, "Falha ao validar a existência do recurso" and "Falha ao abrir arquivo": no evidence names them
+    EUE_UTIL_FALHA_VALIDAR_RECURSO = 7031,
     EUE_UTIL_FALHA_OBTER_TAMANHO_ARQUIVO = 7038,
+    EUE_UTIL_FALHA_ABRIR_ARQUIVO = 7069,
     EUE_UTIL_FALHA_TRUNCAR_ARQUIVO = 7070,
     EUE_UTIL_TICK_TEMPO_INVALIDO = 7072,
     EUE_UTIL_TICK_NAO_EXISTE_PARAR = 7074,
