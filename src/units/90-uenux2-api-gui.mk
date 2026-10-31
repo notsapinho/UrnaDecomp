@@ -5,7 +5,9 @@
 #   CTextRectField  Draw 10906, GetTypeName 10902, the implicit destructors 10904 and 10903, thunks into binaryen's 6022
 #                   and 6021, which form with CTextFieldDoubleLine's (10928, 10927: unit 28's, matched since this unit)
 #   the control blocks the roots build: 11124, 11123, 11126, 11125, 11118, 11117, 11120, 11119
-# Pending, in the -pending.cpp, whose header says what each waits for: Move (2783), CTextRectField::Rect (10905).
+#   Move 2783, one body in all three and CTextFieldMultiLine, over SRect::Move (unit 108), which the first of the
+#   four in link order names; CTextRectField::Rect 10905, at its record's line, with no alignment: the point is the
+#   rectangle's corner, read after the text is measured
 #
 # Evidence. The classes and their base are RTTI's; ctextrectfield.cpp and its constructor's and Rect's lines are the
 # records' (51:15, 71:21), and the constructor's code 4976 and message are bytes of fn 5546, which binaryen inlined it
@@ -38,8 +40,6 @@
 # CTextField::Draw (27-uenux2-ctextfield.mk).
 API_GUI_SRCS := src/api/gui/cfillfield.cpp src/api/gui/crectfield.cpp src/api/gui/ctextrectfield.cpp
 UENUX2_SRCS += $(API_GUI_SRCS)
-$(ROOT)/$(APP)/90-uenux2-api-gui-pending.o: $(ROOT)/src/units/90-uenux2-api-gui-pending.cpp $(ROOT)/src/units/90-uenux2-api-gui.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/90-uenux2-api-gui-pending.cpp -o $(R)
 $(ROOT)/$(APP)/90-uenux2-api-gui-roots.o: $(ROOT)/src/units/90-uenux2-api-gui-roots.cpp $(ROOT)/src/units/90-uenux2-api-gui.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/90-uenux2-api-gui-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/90-uenux2-api-gui-pending.o $(APP)/90-uenux2-api-gui-roots.o
+override EXTRA_OBJS += $(APP)/90-uenux2-api-gui-roots.o

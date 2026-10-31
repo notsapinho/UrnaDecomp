@@ -1,7 +1,7 @@
 # uenux2 api::IReportPart's parts: comum::CParteCandidatos, CParteCandidatosMajoritarios, CParteCandidatosProporcionais,
 # CParteCandidatosConsultas, CParteRdv, CParteEleitores and api::CFormPart (comum::CParteCargos is unit 58). Matched:
 # - the implicit destructors, the compiler's code for the class definitions, emitted with the vtables in the pending
-#   object: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590), CParteCandidatosMajoritarios's and
+#   object, or for CFormPart in cformpart.cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590), CParteCandidatosMajoritarios's and
 #   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210), and
 #   CParteEleitores's (11205, 11204) and CFormPart's (10888, 10887), four thunks into binaryen's two merged bodies 2899
 #   and 6026, which match too under the byn$mgfn-shared$ names our link gives them. In the target 2899 has two more
@@ -14,7 +14,8 @@
 #   for CParteCandidatos and CParteRdv) and 11958 call the D2, and 5966 (one body for the two three-part classes) holds
 #   it: clang inlined it there, as the roots object shows. The classes that are not final use the virtual fn 411,
 #   already matched.
-# Imprime, the key function of every class, is pending (the pending file's header lists what each waits for).
+# Imprime, the key function of every class, is pending (the pending file's header lists what each waits for), but for
+# api::CFormPart's (10889, a call of its form's slot 2), in cformpart.cpp, which brings that class's vtable and destructors.
 #
 # Evidence. RTTI names the classes and gives api::IReportPart as each one's only base. The D2s give the layouts, and the
 # allocations of fns 5971, 11908 and 11946 the sizes (44, 28, 88, 12 bytes). RTTI gives the std::function's signature:

@@ -17,15 +17,12 @@
 # at lines that are a choice, so that object emits the vtable and with it the destructors and GetTypeName. Testing
 # m_tamanho for null first is evidence: testing it != nullptr first swaps the two calls. Same object code, by the
 # function's disassembly with the object-local numbers masked: `!m_tamanho`, and a `return` after the first call in
-# place of the `else`; so those spellings are choices. Rect is not reconstructed:
-# 43-uenux2-cimagefieldupdate-pending.cpp defines it with a trapping body and names its target function. Every header of
-# ours it reads is in src/uenux2/src/api/gui.
+# place of the `else`; so those spellings are choices. Rect (11087) is CImageField's without the null test: the
+# constructor throws on a null image.
 CIMAGEFIELDUPDATE_SRCS := src/api/gui/cimagefieldupdate.cpp
 UENUX2_SRCS += $(CIMAGEFIELDUPDATE_SRCS)
-$(ROOT)/$(APP)/43-uenux2-cimagefieldupdate-pending.o: $(ROOT)/src/units/43-uenux2-cimagefieldupdate-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/43-uenux2-cimagefieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/43-uenux2-cimagefieldupdate-pending.cpp -o $(R)
 # nothing reconstructed references the vtable yet: 43-uenux2-cimagefieldupdate-roots.cpp takes its address, which keeps
 # both destructors in the table and the base-object one called from the deleting one, as the target has them
 $(ROOT)/$(APP)/43-uenux2-cimagefieldupdate-roots.o: $(ROOT)/src/units/43-uenux2-cimagefieldupdate-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/43-uenux2-cimagefieldupdate.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/43-uenux2-cimagefieldupdate-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/43-uenux2-cimagefieldupdate-pending.o $(APP)/43-uenux2-cimagefieldupdate-roots.o
+override EXTRA_OBJS += $(APP)/43-uenux2-cimagefieldupdate-roots.o

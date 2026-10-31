@@ -13,17 +13,18 @@
 #   CControlValidation (11152) and CInputFieldControl<IScreenMT> (11019); and IInputField's constructor's lambda, the
 #   __func members 12381, 12374, 12361, 12355 for IScreen and 11023, 11022, 11021, 11020 for IScreenMT, with
 #   operator() 6306, one body for both.
+#   11155 CInputFieldControl<IScreen>::GetTypeName and 12411 CInputField's: thunks of binaryen's 3891 and 2904, which form
+#   with three and four functions of the shape, the others units 39's and 44's, and units 29's and 52's and RHVoice's 9690.
+#   12387 CInputField<CFramedText>::SetLength, 148:13, in the class. Its width is size_t: the target halves it with an
+#   unsigned shift, and a TPosition from Largura() differs in 21 lines. CFramedText::SetLength has no target function:
+#   binaryen inlined it, and keeps the mask's address in a local, so it is out of line in cframedtext.cpp, and its name is
+#   chosen. Espaco returns TPosition for the extend16 12387 holds.
 # Written, and not matched:
 #   6319, 11024 IInputField's Read: the bodies are the target's. Both load IInput::GetKey's record, which the target holds
 #         four times (1538968, 1547328, 1580692, 1593104), and the scan calls such a record `ambiguous` and leaves the row
 #         `unresolved`: no function that loads such a record has matched. In a copy of the ledger that keeps only the
 #         function's own row of the record, splat-remap prints IDENTICAL for both. They wait for the toolkit
 #         to take a record's address from among its copies; no source change can close this.
-#   11155 CInputFieldControl<IScreen>::GetTypeName and 12411 CInputField's: thunks in the target of binaryen's 3891 and
-#         2904, which form with three and four functions of the shape. Two 18-byte names are in this link (with 11014) and one
-#         of 11 bytes. With one and three scratch functions of those shapes added to the roots, both turned thunks and
-#         `pnpm wasm score` gave operand rows only, so they wait for CTextFieldBlinking's GetTypeName (10940) and for
-#         CImageField's and CMovieField's (11097, 11059) and fn 9690.
 #   12438, 12593, 12708 the Draws: they call MaskText directly, which is a trap (the pending file says what it waits for).
 #   the constructors, in the headers: only dropped functions reach them, so nothing has measured them.
 # Not reconstructed: CInputMenuField's own members, among them 10893 (GetTypeName) and 5491: its vtable needs CMenuItem and
@@ -44,7 +45,8 @@
 #   cinputmenufield.cpp, in band 3 next to fn 3675, which the record of another function gives: it can be a neighbour's
 #   label (docs/how-to-decompile.md step 3). Their lines are chosen too.
 # - The two masks in their own headers beside the recorded .cpp, and cmaskedtextfield.h, are chosen paths.
-# - The roots compile with APP_CXXFLAGS; their 145 functions compare equal under UENUX2_CXXFLAGS.
+# - The roots compile with APP_CXXFLAGS. Under UENUX2_CXXFLAGS 9 of their 257 functions differ, all libc++ format
+#   functions, and the link keeps none of the 9 from this object; the others compare equal, 12387, 11155 and 12411 among them.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
 # The control-block roots are builders the link drops, with the block's vtable kept in the sink: the shape of unit 83's

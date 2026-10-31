@@ -16,12 +16,9 @@
 # on the source and every uenux2 header.
 CDSIMAGEFIELD_SRCS := src/api/gui/cdsimagefield.cpp
 UENUX2_SRCS += $(CDSIMAGEFIELD_SRCS)
-# Update (target fn 11093, slot 10) and its thunk (fn 11092) are not reconstructed: 55-uenux2-cdsimagefield-pending.cpp
-# gives the vtable a trapping body, compiled with the unit's flags
-$(ROOT)/$(APP)/55-uenux2-cdsimagefield-pending.o: $(ROOT)/src/units/55-uenux2-cdsimagefield-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/55-uenux2-cdsimagefield.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/55-uenux2-cdsimagefield-pending.cpp -o $(R)
+# Update (target fn 11093, slot 10) and its thunk (fn 11092) pass a copy of the image by value to CImageField::SetImage.
 # the constructor's caller (fn 502) is not reconstructed: 55-uenux2-cdsimagefield-roots.cpp keeps the vtable the way the
 # target reaches it
 $(ROOT)/$(APP)/55-uenux2-cdsimagefield-roots.o: $(ROOT)/src/units/55-uenux2-cdsimagefield-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/55-uenux2-cdsimagefield.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/55-uenux2-cdsimagefield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/55-uenux2-cdsimagefield-pending.o $(APP)/55-uenux2-cdsimagefield-roots.o
+override EXTRA_OBJS += $(APP)/55-uenux2-cdsimagefield-roots.o

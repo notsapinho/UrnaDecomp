@@ -5,10 +5,11 @@
 //   11142 Draw(IScreen&) const   calls IScreen slot 6, FillRect in api/gui/iscreen.h
 //   5551  Rect() const           one body binaryen keeps for this class's and CRectField's
 //   11141 GetTypeName() const    in the class
-//   2783  Move(const SPoint&)    calls fn 1915, which has no name; in 90-uenux2-api-gui-pending.cpp
+//   2783  Move(const SPoint&)    one body with three other classes'
 
 #include "api/gui/cfillfield.h"
 
+#include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
 
 namespace api {
@@ -27,6 +28,20 @@ void CFillField::Draw(IScreen& screen) const
 SRect CFillField::Rect() const
 {
     return m_rect;
+}
+
+void CFillField::Move(const SPoint& posicao)
+{
+    if (posicao.x == m_rect.left && posicao.y == m_rect.top) {
+        return;
+    }
+
+    m_rect.Move(posicao);
+
+    if (m_form != nullptr && m_form->IsVisible()) {
+        m_alterado = true;
+        m_form->Refresh();
+    }
 }
 
 } // namespace api

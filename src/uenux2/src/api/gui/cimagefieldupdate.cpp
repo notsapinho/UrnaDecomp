@@ -3,22 +3,24 @@
 //   the constructor   record at line 32, column 15; binaryen inlined it into fn 3059; not reconstructed
 //   11090 Draw(IScreen&) const                                                                 (here)
 //   11089 Show(), 11088 Hide()                                                                 (here)
-//   11087 Rect() const   record at line 80, column 12; calls fn 512, not named yet             (pending)
+//   11087 Rect() const   record at line 80, column 12                                          (here)
 //   2241  Move(const SPoint&)  one body binaryen shares with four other fields                 (here)
 // The destructors and GetTypeName are in the class; Draw, the key function, makes this object emit them with the vtable.
 // Draw, Show and Hide follow the target's order (the uses-1 band 11085-11090 of ledger/ordinals.tsv: Draw, Show, Hide,
 // Rect, the deleting destructor, GetTypeName); no record falls in them, so their lines are a choice. Move shares its
-// body, so the band does not place it: below Rect's line is a choice. Rect is in 43-uenux2-cimagefieldupdate-pending.cpp.
+// body, so the band does not place it: below Rect's line is a choice.
 
 #include "api/gui/cimagefieldupdate.h"
 
 #include "api/gui/iform.h"
+#include "api/gui/iimagesurfaceops.h"
 #include "api/gui/iscreen.h"
+#include "api/pattern/cpolysingleton.h"
 #include "api/util/itimer.h"
 
 namespace api {
 
-// (original lines 21-57: content not recovered)
+// (original lines 23-57: content not recovered)
 #line 58
 void CImageFieldUpdate::Draw(IScreen& screen) const
 {
@@ -40,10 +42,10 @@ void CImageFieldUpdate::Hide()
     m_timer->Stop();
 }
 
-
-
-
-
+SRect CImageFieldUpdate::Rect() const
+{
+    return CPolySingleton<IScreen>::instance().GetImageSurfaceOps().ImageRect(*m_imagem, m_posicao, m_ancora);
+}
 
 
 

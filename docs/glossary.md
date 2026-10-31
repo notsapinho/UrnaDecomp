@@ -203,8 +203,8 @@ when its sources are under `src/` and a fragment `src/units/<name>.mk` adds them
 (or adds its own rule and appends to `EXTRA_OBJS`), so the skeleton links it. *Where:* `src/units/README.md`,
 `src/Makefile` (the comment above `SKIP_UNITS`).
 
-**placeholder, pending TU** — a landed TU that holds definitions belonging elsewhere. `src/units/14-uenux2-ctextfieldmultiline-pending.cpp`
-defines the `CTextFieldMultiLine` members not reconstructed yet with `__builtin_trap()` bodies, because the class's
+**placeholder, pending TU** — a landed TU that holds definitions belonging elsewhere. `src/units/40-uenux2-cprogressbar-pending.cpp`
+defines the `CProgressBar` members not reconstructed yet with `__builtin_trap()` bodies, because the class's
 vtable needs them defined; each moves into the real source when reconstructed. Such a member has no stub, so its
 pending file's header is the note that it is left to do. When the pending member is the class's key function, the
 vtable and the implicit members it names are emitted in the pending object, and those can match there. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds

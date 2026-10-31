@@ -2,20 +2,21 @@
 // Target functions of this file:
 //   10958 Draw(IScreen&) const   record at line 69, column 19   (here)
 //   10957 Move(const SPoint&)    record at line 90, column 15   (here)
-//   10956 Rect() const           record at line 110, column 9   (pending)
+//   10956 Rect() const           record at line 110, column 9   (here)
 // The constructor (record at line 41, column 15, code 4961) has no target function: binaryen inlined it into fn 11805.
 // The lines around the throws are a choice. Draw is the key function, so this object emits the vtable, the destructors
-// and GetTypeName. Rect is defined in src/units/65-uenux2-ctextbox-pending.cpp.
+// and GetTypeName.
 
 #include "api/gui/ctextbox.h"
 
 #include "api/gui/eueguierror.h"
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
+#include "api/pattern/cpolysingleton.h"
 
 namespace api {
 
-// (original lines 18-28: content not recovered)
+// (original lines 19-28: content not recovered)
 #line 29
 CTextBox::CTextBox(const std::string& texto, ETextStatus status, SPoint posicao, TFontSize tamanhoFonte,
                    ETextAlignment alinhamento, SPoint tamanho, TColor corTexto, TColor corFundo)
@@ -81,6 +82,35 @@ void CTextBox::Move(const SPoint& posicao)
         m_alterado = true;
         m_form->Refresh();
     }
+}
+
+
+SRect CTextBox::Rect() const
+{
+    SRect rect;
+
+    if (m_largura != 0 && m_altura != 0) {
+        rect = SRect::Normalized(m_posicao.x, m_posicao.y, m_posicao.x + m_largura, m_posicao.y + m_altura);
+    } else {
+        TPosition largura;
+        TPosition altura;
+
+        CPolySingleton<IScreen>::instance().GetFontMetrics(largura, altura, SFont{m_tamanhoFonte, 0}, m_texto.GetText());
+        rect = SRect::Normalized(m_posicao.x, m_posicao.y, m_posicao.x + largura + 20, m_posicao.y + altura + 8);
+    }
+
+    switch (m_texto.GetAlignment()) {
+        case ALINHAMENTO_DIREITA:
+            rect.MoveX(rect.left - rect.Width());
+            break;
+        case ALINHAMENTO_CENTRO:
+            rect.MoveX(rect.left - rect.Width() / 2);
+            break;
+        default:
+            break;
+    }
+
+    return rect;
 }
 
 } // namespace api

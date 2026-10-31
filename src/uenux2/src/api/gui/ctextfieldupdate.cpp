@@ -5,22 +5,23 @@
 //   5495 / 10917  ~CTextFieldUpdate() (base-object / deleting)   (here; out of line: the D0 calls the D2)
 //   10916 Draw(IScreen&) const                                   (here)
 //   10915 Show(), 10914 Hide()                                   (here)
-//   10913 Rect() const     record at line 73, col 21; calls fn 3889, not named yet   (pending)
+//   10913 Rect() const     record at line 73, col 21; a thunk of fn 3889             (here)
 //   10912 GetTypeName() const                                    (here)
 //   2241  Move(const SPoint&)  one body binaryen shares with four other fields   (here, below Rect's line: a choice)
 // The definitions follow the target's order (the uses-1 band 10912-10917 in ledger/ordinals.tsv: D0, Draw, Show, Hide,
 // Rect, GetTypeName; a shared body has no place in a band); no record falls in the members written here, so their lines
-// are a choice. Rect is in 42-uenux2-ctextfieldupdate-pending.cpp.
+// are a choice.
 
 #include "api/gui/ctextfieldupdate.h"
 
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
+#include "api/pattern/cpolysingleton.h"
 #include "api/util/itimer.h"
 
 namespace api {
 
-// (original lines 23-34: content not recovered)
+// (original lines 24-34: content not recovered)
 #line 35
 // <stubs>
 // f3658 · 303 B · unmatched · name unknown
@@ -55,13 +56,17 @@ void CTextFieldUpdate::Hide()
 }
 
 
+SRect CTextFieldUpdate::Rect() const
+{
+    IScreen& tela = CPolySingleton<IScreen>::instance();
+    SPoint posicao = m_posicao;
+    TPosition largura;
+    TPosition altura;
+    tela.GetFontMetrics(largura, altura, m_font, m_text->GetText());
+    AlinhaPosicao(posicao, m_text->GetAlignment(), largura);
 
-
-
-
-
-
-
+    return SRect::Normalized(posicao.x, posicao.y, posicao.x + largura, posicao.y + altura);
+}
 
 void CTextFieldUpdate::Move(const SPoint& posicao)
 {

@@ -48,6 +48,28 @@ void CFramedText::Move(const SPoint& position)
     m_position = position;
 }
 
+void CFramedText::SetLength(size_t length)
+{
+    if (length == m_length) {
+        return;
+    }
+
+    m_length = length;
+
+    const size_t largura = (m_length - 1) * Espaco() + m_length * m_largura;
+
+    switch (m_alignment) {
+        case ALINHAMENTO_DIREITA:
+            m_position.x -= largura;
+            break;
+        case ALINHAMENTO_CENTRO:
+            m_position.x -= largura / 2;
+            break;
+        default:
+            break;
+    }
+}
+
 void CFramedText::DrawFrame(size_t index, TColor color, IScreen& screen) const
 {
     screen.DrawRect(CellRect(index), color, 1);
