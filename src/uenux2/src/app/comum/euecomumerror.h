@@ -21,6 +21,12 @@ enum EUeComumError {
     EUE_COMUM_CHAVE_DESCONHECIDA = 7221,
     // CPacoteArquivos::TrataErroPacote (fn 5901), "Falha ao validar assinatura {}\npacote: ({})\nErro SAVD: ({} - {})"
     EUE_COMUM_VALIDAR_ASSINATURA_PACOTE = 7222,
+    // CPath::GetPathRootSemSA (fn 634), "Mídia inválida: {}"
+    EUE_COMUM_PATH_MIDIA_INVALIDA = 7224,
+    // CPath::GetPathResult (fn 1399), "Turno invalido: {}"
+    EUE_COMUM_PATH_RESULT_TURNO_INVALIDO = 7226,
+    // CPath::GetPathTrab (fn 358), "Turno invalido: {}"
+    EUE_COMUM_PATH_TRAB_TURNO_INVALIDO = 7227,
     // IInterfaceInit::CurrentBootDevice (fn 11646), "Resposta nula"
     EUE_COMUM_BOOT_DEVICE_RESPOSTA_NULA = 7231,
     // IInterfaceInit::IsMRPresenteSemHabilitar and IsMRMontadoSemHabilitar (fns 2862, 5897), "Resposta nula"
