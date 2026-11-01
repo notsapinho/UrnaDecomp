@@ -65,8 +65,8 @@
 #   reset before the vector's construction or between it and the swap). As written: 109 over 1645, every row an operand
 #   of a call, a data address, a table slot or a packed format string.
 # - Same object code (wasm-objdump -d of the object, local and relocation numbers masked): the size test in either order
-#   (`tamanho == 0 || tamanho % 16 != 0` is written), `dados.back()` or `dados[dados.size() - 1]`, and
-#   `conteudo.swap(m_dados)` for `m_dados.swap(conteudo)`. Different code: `*(dados.end() - 1 - i)` for
+#   (`tamanho == 0 || tamanho % 16 != 0` is written), `dados.back()` (written) or `dados[dados.size() - 1]`, and
+#   `conteudo.swap(m_dados)` for `m_dados.swap(conteudo)` (written). Different code: `*(dados.end() - 1 - i)` for
 #   `dados[dados.size() - 1 - i]`, the read's size as `cifrado.size()`, and std::swap.
 # - Chosen: the enumerator names of 5987 to 5993 (api/io/eueioerror.h, from the messages), the loop counter's int, the
 #   locals' names, and the lines between the records.

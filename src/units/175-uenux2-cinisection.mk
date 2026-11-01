@@ -12,8 +12,9 @@
 # inserted, 1 deleted): ours reloads the inserted node's pointer (*__child) after __insert_node_at's begin-node store
 # and the target does not (3 rows), the split unit 113 measured for 5377 to 5379 and 5725, and one argument comes from
 # the other local. With -fstrict-aliasing added to this object alone (a scratch link) it scores 8 over 238, every row a
-# call or data operand. The row waits for uenux2's
-# src/api objects with strict aliasing, a flag decision (docs/reference/facts/app-flags.md F6); this unit adds no flag.
+# call or data operand, and `splat-remap --no-kinds` prints IDENTICAL against 5482 there. The row waits for
+# uenux2's src/api objects with strict aliasing, a flag decision (docs/reference/facts/app-flags.md F6); this unit
+# adds no flag.
 #
 # Evidence for the forms (the whole link, pnpm wasm score at the tree's flags):
 # - CIniKey's copy and move constructors, declared in api/io/cinikey.h: the target moves the pair's three strings into
