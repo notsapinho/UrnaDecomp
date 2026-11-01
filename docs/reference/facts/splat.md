@@ -356,8 +356,9 @@ nothing), four kinds of line:
    ```
 
    Whenever our copy of `"}"` landed on a table slot of ours, the name of the function in that slot was voted onto
-   7530. On 6bc2a12's link `jsonObjectCompute` (6315) votes onto 615 the same way: it passes `"{}"` at 8150, the
-   target's slot of 615. At ee595de neither 615 nor 7530 has a second name (`/usr/bin/grep -E '= func:(615|7530);'
+   7530. On 6bc2a12's link `jsonObjectCompute` (6315) voted onto 615 the same way, until the change below: it
+   passes `"{}"` at 8150, the target's slot of 615. At ee595de neither 615 nor 7530 has a second name
+   (`/usr/bin/grep -E '= func:(615|7530);'
    splat/symbol_addrs.txt`). The name need not be one the file held before, so no line need lose it: one landing
    gave 615 `CAesKey`'s destructor, a function of our link the symbol file had never named, and the next took it
    away again:
@@ -401,8 +402,10 @@ nothing), four kinds of line:
    On 6bc2a12's link, reading them so moves two lines of the symbol file: 1030 loses `_ZN13CSha256Hasher4InitEv …
    evidence:table` (the `"July"` vote), and 12318 gets back `atanh … evidence:pair-addr`. `sqlite3Pragma` (2352) passes
    `"memory"` at 10293, and our `"memory"` lay on our slot of `atanh`: a vote for 14030 that contradicted the pair, so
-   step 8 dropped it. The empty string still votes, since the target holds `""` in too many places for `same` to list
-   them (`STRING_COPY_LIMIT`).
+   step 8 dropped it. A constant at a string's closing NUL still votes: its content is the empty string, which the
+   target holds in too many places for `same` to list (`STRING_COPY_LIMIT`). On 6bc2a12's link four such votes are
+   cast, each at the end of a format string (`"{:0{}}"`, `"{}|{}|{}"`, `"{:04}{:02}{:02}T{:02}{:02}{:02}"`), and
+   none changes the file.
 2. **A matched function's `pair-*` line that drops out and comes back.** Each landing from 1c3d9f9 on removes the line
    of one matched SQLite function and restores the one the landing before removed: 12427 `rankValueFunc`, then 12432,
    12443, 12447, 12288, 12466, 12479, 12485, 12492, 12500 and 12510 `statInit`, which 9127880 restores. The match lines

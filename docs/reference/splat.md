@@ -82,8 +82,9 @@ parser drops any other line without a word, below the hand-edit marker too, and 
   function's; the name is our symbol's, carried over, so it is only as good as our source's name for the function
   (`srcloc-anchor` below is the same).
 - `call`, `table`: aligned call operands and function-pointer constants. A constant inside both tables is an address,
-  not a pointer, when the target's constant addresses a copy of our content, unless the operand-kind table (§3) calls
-  ours a slot ([facts/splat.md](facts/splat.md) §S8 item 1). They name a function only when
+  not a pointer, when the target's constant addresses a copy of our content that the address reading lists (not the
+  empty string at a string's closing NUL, which the target holds in too many places), unless the operand-kind table
+  (§3) calls ours a slot ([facts/splat.md](facts/splat.md) §S8 item 1). They name a function only when
   every vote agrees and our function has the target function's signature. Such a line has a `by:` list only when every
   voter is an anchored pair and at most 4 voted, and §3's self-vote rule can refuse only a name that has one, so no
   `by:` means the rule cannot fire, not that no one voted. A function is never listed as its own voter: a recursive

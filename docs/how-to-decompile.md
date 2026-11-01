@@ -1165,7 +1165,8 @@ The next landing that moves the data clears it. Never add or drop a string to mo
 layout is a tool defect to report (`src/units/README.md`). At a landing, land the next lane first and retry (step 10).
 A small integer in a data object that equals a table slot of ours is not such a case: the operand-kind table reads
 it as the integer it is ([reference/splat.md](reference/splat.md) §3). Nor is a string whose address equals a table
-slot of ours, where the target's constant addresses the same string: step 8 reads it as an address
+slot of ours, where the target's constant addresses the same string: step 8 reads it as an address. A constant at
+a string's closing NUL is still read as a slot, and a row it costs is such a case
 ([facts/splat.md](reference/facts/splat.md) §S8 item 1).
 
 The scan's first pass can also leave a new match `match` that the build's fixed point refuses: `make -C src splat` then

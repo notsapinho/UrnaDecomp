@@ -16,7 +16,7 @@
 //   call         a call operand of an aligned pair (same instructions modulo callees and addresses): our callee ↔
 //                the target's callee, every vote agreeing
 //   table        an i32.const of an aligned pair inside both tables that its address reading does not explain (the
-//                target's constant addresses no copy of our content) or our operand kinds call a slot: our slot's
+//                target's constant is no place it lists for our content) or our operand kinds call a slot: our slot's
 //                function ↔ the target slot's function
 //   vote         an address operand of an aligned pair: our data symbol + offset ↔ the target address. A pair that
 //                only a record, a vtable slot or an anchor's call names votes for .bss objects alone

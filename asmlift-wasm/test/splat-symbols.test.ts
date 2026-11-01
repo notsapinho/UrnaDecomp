@@ -821,11 +821,11 @@ describe('alignVotes', () => {
   // ours: strings from 1024, and a table of 2000 slots over them. The target: the same strings and "July" once more,
   // under a table of 2000 slots too. A string's address below both table sizes is a slot number on either side.
   const i32 = (value: number): Instr => ({
-    offset: 0,
-    end: 0,
+    offset: 0x10,
+    end: 0x13,
     opcode: 0x41,
     name: 'i32.const',
-    imms: [{ kind: 's32', value, at: 0, role: 's32' }],
+    imms: [{ kind: 's32', value, at: 0x11, role: 's32' }],
   });
   const ourImage = Buffer.from('\0January\0July\0August\0', 'latin1');
   const targetImage = Buffer.from('\0\0\0January\0July\0August\0Sunday\0July\0', 'latin1');
@@ -873,7 +873,7 @@ describe('alignVotes', () => {
   /** our side with the shifted link's word on our function 1's one constant */
   const known = (kind: 'address' | 'slot'): OurSide => ({
     ...ours,
-    fnKinds: new Map([[1, { verified: true as const, ops: new Map([[0, kind]]) }]]),
+    fnKinds: new Map([[1, { verified: true as const, ops: new Map([[0x10, kind]]) }]]),
   });
   const tableVotes = (vo: number, vt: number, side = ours): [number, [number, number][]][] => {
     const votes = emptyVoteBox();
