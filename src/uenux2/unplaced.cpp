@@ -622,11 +622,6 @@
 // f1823 · 39 B · unmatched · placement: link order · name unknown
 // ? f1823() { ... }
 
-// link-order cluster 1178 · uses=6 · neighbours' file uenux2/src/app/comum/util/cmonitoraalimentacao.cpp
-
-// f1902 · 82 B · unmatched · placement: link order · name unknown
-// void f1902(i32, i32) { ... }
-
 // link-order cluster 1179 · uses=6 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitoroptouporvotaremtransito.cpp
 
 // f1906 · 57 B · unmatched · placement: link order · name unknown
@@ -781,11 +776,6 @@
 
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
-
-// link-order cluster 749 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp
-
-// f5380 · 59 B · unmatched · placement: link order · name unknown
-// void f5380(i32) { ... }
 
 // link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
 

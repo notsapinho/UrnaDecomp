@@ -249,11 +249,6 @@
 // f2584 · 16 B · unmatched · placement: link order · name unknown
 // ? f2584(i32) { ... }
 
-// link-order cluster 1079 · uses=4 · neighbours' file uenux2/src/app/comum/reconhecimentobiometrico/ccontrolaarmazenamentodeimagens.cpp
-
-// f2728 · 82 B · unmatched · placement: link order · name unknown
-// void f2728(i32, i32) { ... }
-
 // link-order cluster 1103 · uses=4 · neighbours' file uenux2/src/app/comum/dados/md/correspondencia/ccorrespondenciaresultado.cpp
 
 // f2800 · 193 B · unmatched · placement: link order · name unknown
