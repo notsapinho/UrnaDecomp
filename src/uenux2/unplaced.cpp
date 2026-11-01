@@ -64,26 +64,6 @@
 // f11803 · 958 B · unmatched · placement: link order · name unknown
 // void f11803(i32, i32, i32) { ... }
 
-// link-order cluster 585 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimpressaopu.cpp
-
-// f11902 · 6548 B · unmatched · placement: link order · name unknown
-// void f11902(i32) { ... }
-
-// link-order cluster 587 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimpressaolistaeleitores.cpp
-
-// f11908 · 4670 B · unmatched · placement: link order · name unknown
-// void f11908(i32) { ... }
-
-// link-order cluster 588 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimpressaoestadourna.cpp
-
-// f11911 · 565 B · unmatched · placement: link order · name unknown
-// void f11911(i32) { ... }
-
-// link-order cluster 594 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimpressaozeresimatardia.cpp
-
-// f11932 · 188 B · unmatched · placement: link order · name unknown
-// void f11932(i32) { ... }
-
 // link-order cluster 600 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ciniciovotacao.cpp
 
 // f11988 · 117 B · unmatched · placement: link order · name unknown

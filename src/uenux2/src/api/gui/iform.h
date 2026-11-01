@@ -160,9 +160,7 @@ public:
 
     void SetName(std::string nome) { m_nome = std::move(nome); }
 
-protected:
-    friend class CFormStack<MEDIA>;
-
+    // Public: vota::testeteclado::CEsperaRetestar::FinishState (fn 11824) holds this body inlined on its form.
     void Hide()
     {
         {
@@ -173,6 +171,9 @@ protected:
             campo->Hide();
         }
     }
+
+protected:
+    friend class CFormStack<MEDIA>;
 
     void Desenha()
     {

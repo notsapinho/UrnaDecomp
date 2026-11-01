@@ -25,9 +25,8 @@ namespace vota {
 // The destructor is out of line: slots 0 and 1 hold the D2 and D0 that 49 states share (fns 244 and 387), and fn 387 is
 // `f244(p0); f136(p0)`, the 13-B shape of docs/reference/facts/reading.md R5; fn 244 releases +12 and stores no vptr,
 // as a final class's (R4). A singleton: GetInst keeps the object in a static std::unique_ptr (@1834268, destroyed at
-// exit by fn 11930) under a static std::mutex (@1834244, by fn 11929). Not recovered: the constructor, GetInst and the
-// statics (the constructor reads a private member of vota::CTelasVota, whose head has no accessor for it, and +544 of
-// comum::CConfiguracaoEleicao, which its head leaves unrecovered), and ProcessInput
+// exit by fn 11930) under a static std::mutex (@1834244, by fn 11929); the constructor, inlined there, adds the 10800
+// seconds to its copy of the date and time in its body. Not recovered: ProcessInput
 // (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CConfirmaImpressaoZeresima final : public comum::CAppState {
@@ -42,6 +41,9 @@ public:
 
 private:
     CConfirmaImpressaoZeresima();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CConfirmaImpressaoZeresima> s_inst;
 
     std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
     api::CDateTime m_limite;

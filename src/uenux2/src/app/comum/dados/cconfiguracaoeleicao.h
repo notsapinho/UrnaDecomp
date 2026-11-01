@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "api/util/cdatetime.h"
 #include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/md/processoeleitoral/eorigemconfiguracao.h"
 #include "app/comum/dados/md/processoeleitoral/cpleito.h"
@@ -36,6 +37,14 @@ public:
     const md::CPleito& GetPleito() const { return m_pleito; }
     const ecourna::app::dados::CParametrosUrna& GetParametrosUrna() const { return m_parametros; }
 
+    // Two api::CDateTime of 12 bytes inside the bytes after the municipality: vota::CConfirmaImpressaoZeresima::GetInst
+    // (fn 5959) and vota::CVerificaHorarioZeresima::GetInst (fn 5947) copy +544 (`i64.load[+544]`, `i32.load[+552]`),
+    // the time the zerésima waits for (fn 11870 compares the current time with the copy); vota::CInicioVotacao::GetInst
+    // (fn 2880) copies +556, formats the copy's time (fn 779, CTime::Format) and builds a form with "Votação a partir
+    // das ", the start of the voting by a reading. The names are chosen from those uses.
+    const api::CDateTime& GetDataHoraZeresima() const { return m_dataHoraZeresima; }
+    const api::CDateTime& GetDataHoraInicioVotacao() const { return m_dataHoraInicioVotacao; }
+
 private:
     unsigned m_naoRecuperado1[2];
     std::string m_nome;
@@ -44,7 +53,10 @@ private:
     md::CPleito m_pleito;
     ecourna::app::dados::CParametrosUrna m_parametros;
     ecourna::app::dados::CConfiguracaoMunicipio m_municipio;
-    unsigned char m_naoRecuperado2[56];
+    unsigned char m_naoRecuperado2[8];
+    api::CDateTime m_dataHoraZeresima;
+    api::CDateTime m_dataHoraInicioVotacao;
+    unsigned char m_naoRecuperado6[24];
     std::set<TCargoID> m_cargos;
     std::set<ecourna::app::dados::ETipoIdentificadorEleitor> m_tipos;
     unsigned m_naoRecuperado3[3];

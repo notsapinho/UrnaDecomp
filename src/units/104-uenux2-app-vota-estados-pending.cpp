@@ -112,14 +112,8 @@ void CReinicioComparecimentoMesario::StartState()
     __builtin_trap();
 }
 
-// CMaisInformacoes::StartState: fn 11897 (182 B), callees with no name: 407, 6599.
+// CMaisInformacoes::StartState: fn 11897 (182 B), callee with no name: 6599.
 void CMaisInformacoes::StartState()
-{
-    __builtin_trap();
-}
-
-// CMaisInformacoes::ProcessInput: fn 11896 (717 B), callees with no name: 455.
-void CMaisInformacoes::ProcessInput()
 {
     __builtin_trap();
 }
@@ -213,12 +207,6 @@ void CPedeTituloMesario::StartState()
 } // namespace comum
 
 namespace vota {
-
-// CFinalizaOperador::StartState: fn 10214 (685 B), callees with no name: 180, 435, 1694.
-void CFinalizaOperador::StartState()
-{
-    __builtin_trap();
-}
 
 // CSincronismoOperador::StartState: fn 10210 (334 B), callees with no name: 185, 261, 291, 316, 326, 656, 1271 (501 is
 // named: unit 174).
