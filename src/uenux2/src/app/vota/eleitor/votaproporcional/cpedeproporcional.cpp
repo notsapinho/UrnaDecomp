@@ -1,5 +1,10 @@
 #include "app/vota/eleitor/votaproporcional/cpedeproporcional.h"
 
+#include "api/gui/cinteractiveform.h"
+#include "app/comum/dados/ccargos.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/euevotaerror.h"
+
 namespace vota {
 
 CPedeProporcional::CPedeProporcional()
@@ -21,22 +26,23 @@ CPedeProporcional& CPedeProporcional::GetInst()
 std::unique_ptr<CPedeProporcional> CPedeProporcional::s_inst;
 std::mutex CPedeProporcional::s_mutex;
 
-// (original lines 24-38: content not recovered)
-#line 39
-// <stubs>
-// f5923 · 16 B · unmatched · name unknown
-// void f5923(i32) { ... }
-// </stubs>
+// (original lines 29-37: content not recovered)
+#line 38
+CFormInterativoTelaVota CPedeProporcional::GetTelaCargoAtual()
+{
+    const auto& cargos = comum::CCargos::GetInst();
+    if (cargos.IsFim()) {
+        throw CUeVotaError(EUE_VOTA_PEDE_PROPORCIONAL_CARGO_NAO_POSICIONADO, "O cargo atual nao esta posicionado");
+    }
+    const auto& cargo = cargos.GetCurrent();
+    return CTelasVota::GetInst().GetTelaCargo(cargo.GetID(), ETelaVotacao::TELA_INICIAL);
+}
 
-
-
-
-
-
-
-
-
-
+void CPedeProporcional::StartStateAudio()
+{
+    GetTelaCargoAtual()->Slot2();
+    m_pNextState = this;
+}
 
 
 

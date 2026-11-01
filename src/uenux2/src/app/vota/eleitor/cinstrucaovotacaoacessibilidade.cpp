@@ -1,17 +1,30 @@
 #include "app/vota/eleitor/cinstrucaovotacaoacessibilidade.h"
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
 
 namespace vota {
 
+CInstrucaoVotacaoAcessibilidade::CInstrucaoVotacaoAcessibilidade()
+    : CVotacaoStateAudio(EVENTO_ENTRADA), m_tela(CTelasVota::GetInst().GetTelaInstrucaoVotacaoAcessibilidade())
+{
+}
+
+CInstrucaoVotacaoAcessibilidade& CInstrucaoVotacaoAcessibilidade::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CInstrucaoVotacaoAcessibilidade());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CInstrucaoVotacaoAcessibilidade> CInstrucaoVotacaoAcessibilidade::s_inst;
+std::mutex CInstrucaoVotacaoAcessibilidade::s_mutex;
+
 CInstrucaoVotacaoAcessibilidade::~CInstrucaoVotacaoAcessibilidade() = default;
 
-// <stubs>
-// f4420 · 141 B · unmatched · placement: link order · name unknown
-// ? f4420() { ... }
-// </stubs>
-
-// (original lines 14-172: content not recovered)
+// (original lines 27-172: content not recovered)
 #line 173
 std::string CInstrucaoVotacaoAcessibilidade::GetKeyboardPosition() const
 {

@@ -57,16 +57,17 @@ std::string NomeTela(const ETelaVotacao tela)
 // void f2386(i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 69-76: content not recovered)
-#line 77
-// <stubs>
-// f4135 · 1190 B · unmatched · name unknown
-// void f4135(i32, i32, i32, i32) { ... }
-// </stubs>
-
-
-
-
+// (original lines 69-75: content not recovered)
+#line 76
+CFormInterativoTelaVota CTelasCargo::GetTela(const ETelaVotacao tela) const
+{
+    const auto it = m_telas.find(tela);
+    if (it == m_telas.end()) {
+        throw CUeVotaError(EUE_VOTA_CARGO_NAO_POSSUI_TELA,
+                           std::format("Cargo {} não possui [{}]", m_id, NomeTela(tela)));
+    }
+    return it->second;
+}
 
 
 

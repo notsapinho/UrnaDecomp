@@ -9,7 +9,7 @@
 # StartState and destructors (3857, one body with CEnviarManutencao's and CTesteFalhou's, 785 and 1560, bodies of eight
 # states), over the head of vota::CEstadoComDesligamentoAutomatico. api::CPosixRWMutex: constructor and destructors
 # (10245, 5353, 10244) and slots 2 to 4, which binaryen merges into 2219, api::IRWSyncCtl and six enumerators of
-# EUeIpcError. The class headers say what each layout and name rests on. The twenty-one members not written are in
+# EUeIpcError. The class headers say what each layout and name rests on. The seventeen members not written are in
 # 97-uenux2-cvotacaostateaudio-pending.cpp, with what each waits for.
 #
 # The constructors and two slots, over unit 02's tick names: CVotacaoStateAudio's constructor (1785), StartState (7028)
@@ -97,6 +97,28 @@
 # ExecutarAposAudioAtual's record :95; lines 60 and 120 are a choice, and so are the constructor's and the destructor's
 # above line 41.
 #
+# GetTelaCargoAtual and StartStateAudio of vota::CPedeMajoritario, CPedeProporcional, CConfirmaVotoEmCargo and
+# CCompletaProporcional (target fns 5920, 5923, 5928, 5931 and 11684, 11712, 11755, 11757), each throw on its record's
+# line (cpedemajoritario.cpp:44, cpedeproporcional.cpp:42, cconfirmavotoemcargo.cpp:71, ccompletaproporcional.cpp:83).
+# GetTelaCargoAtual throws when comum::CCargos is past its last post, else asks vota::CTelasVota::GetTelaCargo (fn
+# 4135, unit 110) for the current post's form: the screen 0 for the two Pede states, the byte at +28 for the others,
+# whose parameter is the caller's signature, "<caller> - o cargo atual nao esta posicionado" being the message. The
+# target holds GetCurrent's call before CTelasVota::GetInst's and the post's id read after it (pnpm wasm fn 6050, at
+# +0x3c, +0x43 and +0x48), the order a reference local gives; the call in the argument place would come after GetInst
+# in C++17's order (a reading, not compiled). binaryen shares the bodies as the target does: the two Pede members form
+# fn 6050 and the three others, with unit 150's CConfirmaVotoSemCandidato's, fn 3921 (each thunk passes its record and
+# its code). StartStateAudio shows the form (slot 2, Slot2 in api/gui/cinteractiveform.h) and sets the next state to
+# this one; the three with a parameter pass __PRETTY_FUNCTION__, whose text the target holds and no record does. The
+# target's second caller of each GetTelaCargoAtual is the class's ProcessInputAudio, pending: with StartStateAudio its
+# only caller binaryen inlined GetTelaCargoAtual into it and merged the two Pede StartStateAudio into one shared body
+# (the first link of this change, names.tsv), so the roots stand in for the four ProcessInputAudio. Measured before
+# step 8 (pnpm wasm score, whole link): every one of these rows and 6050 and 3921 operand-only (3 of 6 to 11 of 107
+# rows), matched at step 9. EUeVotaError's 9306, 9380, 9384 and 9386 are their codes (euevotaerror.h). Chosen: the
+# parameter's name, GetTelaCargoAtual's being private, the reference locals' form, the cast of +28's uebyte to
+# ETelaVotacao, and the lines: StartStateAudio after GetTelaCargoAtual, except in ccompletaproporcional.cpp, where it is
+# above EmiteEcoComInputField's record (:60), as fn 5931 is linked before fn 5930 in use band 2 and so is first
+# mentioned above :60 (a reading of the band). Other forms are not measured.
+#
 # Destructor forms, read from the bytes and measured. Fn 884 is one call of fn 1035, so each of the fifteen states over
 # fn 1035 defines its destructor out of line: an implicit one leaves the base's D2 itself in the slot, as
 # CConfirmaVotoEmCargo's and CConfirmaProporcional's slot 0 do, so those two are implicit. Fn 1035 is not inline with the
@@ -166,7 +188,7 @@ UENUX2_SRCS += $(CVOTACAOSTATEAUDIO_SRCS)
 # cconferevotoemcargo.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit
 # 122's cgravadorutil.cpp does)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# twenty-one members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
+# seventeen members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-pending.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-pending.cpp -o $(R)
