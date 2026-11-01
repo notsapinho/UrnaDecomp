@@ -35,6 +35,9 @@
 // 233) are out of line, each called with GetInst's result: 3279 twice by fn 7160 and once by
 // vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858), 4511 twice by fn 11804. Their names are chosen from their
 // messages.
+// LogaTesteTecladoNaoExecutado is the shape of the members held inlined above: vota::testeteclado::CBase::ProcessInput
+// (fn 11874) calls GetInst before the member's own stack frame opens and calls fn 233; its name is chosen from its
+// message.
 // LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
 // vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
 // member's own stack frame opens and calls fn 233; its name is chosen from its message. LogaMesarioConfirmouReinicioVotacao
@@ -89,6 +92,7 @@ public:
     void LogaDataEleicaoInvalida();
     void LogaErroEstadoAplicativoDesconhecido();
     void LogaFimTesteTecladoSucesso();
+    void LogaTesteTecladoNaoExecutado();
     void LogaMesarioConfirmouReinicioVotacao();
     void LogaMesarioSelecionouOutrasOpcoes();
     void LogaMesarioIndagadoHorarioUrna();

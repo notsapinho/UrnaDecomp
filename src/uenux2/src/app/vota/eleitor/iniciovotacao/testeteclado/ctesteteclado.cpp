@@ -1,16 +1,26 @@
-// <stubs>
-// f11806 · 13 B · unmatched · placement: link order · name unknown
-// void f11806(i32) { ... }
+#include "app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.h"
 
-// f11805 · 10638 B · unmatched · name unknown
-// void f11805(i32) { ... }
+namespace vota::testeteclado {
 
-// f11804 · 1437 B · unmatched · name unknown
-// void f11804(i32) { ... }
+CTesteTeclado::CTesteTeclado()
+    : CEstadoComDesligamentoAutomatico(EVENTO_ENTRADA)
+    , m_indice(0)
+    , m_pEstadoPassouNoTeste(nullptr)
+{
+}
 
-// f3855 · 143 B · unmatched · placement: link order · name unknown
-// ? f3855() { ... }
+CTesteTeclado& CTesteTeclado::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CTesteTeclado());
+    }
+    return *s_inst;
+}
 
-// f2868 · 171 B · unmatched · placement: link order · name unknown
-// ? f2868(i32) { ... }
-// </stubs>
+std::unique_ptr<CTesteTeclado> CTesteTeclado::s_inst;
+std::mutex CTesteTeclado::s_mutex;
+
+CTesteTeclado::~CTesteTeclado() = default;
+
+} // namespace vota::testeteclado

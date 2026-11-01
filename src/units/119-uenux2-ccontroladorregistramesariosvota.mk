@@ -49,6 +49,8 @@
 #   callers are not written (3279: fn 7160 twice and vota::CDefineRotaPosReinicio::NeedChangeState, fn 11858; 4511:
 #   fn 11804 twice), so the roots stand in for them. They call fns 2282 and 233 out of line, as unit 156's 1127 and
 #   4551 do; their names and their place are chosen.
+# - One more, after LogaFimTesteTecladoSucesso: unit 138's LogaTesteTecladoNaoExecutado, held inlined by fn 11874
+#   (unit 138's fragment has the evidence); its place is chosen.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses

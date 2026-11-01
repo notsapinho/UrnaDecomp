@@ -2,6 +2,7 @@
 
 #include "api/gui/cinteractiveform.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.h"
 
 namespace vota::testeteclado {
 
@@ -26,6 +27,13 @@ void CEsperaRetestar::FinishState()
 {
     CThreadEleitor::GetInst().StopTick(m_tickEspera);
     m_form->Hide();
+}
+
+void CEsperaRetestar::ProcessTickNaoDesligamento(uebyte tick)
+{
+    if (tick == m_tickEspera && api::CDateTime::Now() >= s_fimEspera) {
+        m_pNextState = &CTesteTeclado::GetInst();
+    }
 }
 
 } // namespace vota::testeteclado

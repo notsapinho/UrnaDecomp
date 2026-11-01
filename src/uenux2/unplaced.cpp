@@ -663,11 +663,6 @@
 // f1906 · 57 B · unmatched · placement: link order · name unknown
 // void f1906(i32, i32) { ... }
 
-// link-order cluster 1197 · uses=6
-
-// f2023 · 109 B · unmatched · placement: link order · name unknown
-// void f2023(i32, i32) { ... }
-
 // link-order cluster 1212 · uses=7 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
 
 // f1695 · 354 B · unmatched · placement: link order · name unknown
