@@ -60,14 +60,6 @@ __attribute__((noinline)) std::string UsaPreenche1(const std::string& s) { retur
 __attribute__((noinline)) std::string UsaPreenche2(const std::string& s) { return CStringUtils::PreencheAEsquerda(s, ' ', 20) + "x"; }
 __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { return "y" + CStringUtils::PreencheAEsquerda(s, '*', 5); }
 
-// CStringUtils::PreencheADireita (target fn 3511) has three callers in the target: api::CInputFieldMT::Draw (fn 10726, in the
-// link) and fns 11972 and 11973 (not reconstructed), which pad with ' ' to 23 and to 31 characters. This stands for those two.
-__attribute__((noinline)) std::string UsaPreencheADireita(std::string a, std::string b)
-{
-    CStringUtils::PreencheADireita(a, ' ', 23);
-    CStringUtils::PreencheADireita(b, ' ', 31);
-    return a + b;
-}
 __attribute__((noinline)) std::string UsaBase64A(const SComResumo& v) { return ResumoBase64(v) + "A"; }
 __attribute__((noinline)) std::string UsaBase64B(const SComResumo& v) { return "B" + ResumoBase64(v); }
 __attribute__((noinline)) std::string UsaBase64C(const SComResumo& v) { return ResumoBase64(v); }
@@ -88,7 +80,7 @@ int urna_roots_ecourna(int a)
     v.dados.assign(s.begin(), s.end());
     unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s);
     std::string out = UsaBase64A(v) + UsaBase64B(v) + UsaBase64C(v);
-    out += UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s) + UsaPreencheADireita(s, out);
+    out += UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     return static_cast<int>(acc) + static_cast<int>(out.size());
 }

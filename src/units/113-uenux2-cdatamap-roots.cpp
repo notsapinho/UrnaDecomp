@@ -3,8 +3,8 @@
 // instances (src/units/README.md, "A body a companion object supplies"). This object compiles at the tree's flags, so no
 // match rests on a flag its tree lacks; fragment 113 says what that decides. Each function here has two call sites or
 // more, as each has in the target, so binaryen keeps it out of line:
-// - GetCurrent, four instantiations: 656 (19 callers), 1200 (7: 2268 and 2838 are in the link, 5604, 6999, 11254, 11972
-//   and 11973 wait), 1283 (9), 3125 (4). All four in the link are what makes
+// - GetCurrent, four instantiations: 656 (19 callers), 1200 (7: 2268, 2838, 11972 and 11973 are in the link, 5604, 6999
+//   and 11254 wait), 1283 (9), 3125 (4). All four in the link are what makes
 //   binaryen form 2919: the second parameter of that body is the pair's second member's offset, 32 or 20.
 // - Next, three: 3697 (5604, 11213, 11255), 5601 (12105; 11206 is in the link), 5611 (5604, 11254), which form 3892.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).

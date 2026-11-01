@@ -420,7 +420,8 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     say, and its calls stay in whichever function binaryen left them (`roots_vector.cpp`'s `~vector` callers): check
     it by the calls, not by its name.
   - **`roots_ecourna.cpp`** is also unit 00's call-site roots, older than the companion files: a function added to
-    unit 00's sources takes its stand-ins there (`UsaPreencheADireita`).
+    unit 00's sources takes its stand-ins there (`UsaPreenche1` to `UsaPreenche3` for `CStringUtils::PreencheAEsquerda`;
+    `UsaPreencheADireita` stood there for `PreencheADireita`'s callers until they were in the link).
 
   A roots file includes a unit's header for the declarations its stand-ins call (unit
   02), to give an inline member or function a uenux2 caller, and to emit code a landed header defines in one of the

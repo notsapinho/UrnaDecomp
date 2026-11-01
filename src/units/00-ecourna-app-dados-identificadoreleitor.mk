@@ -5,8 +5,9 @@
 # CStringUtils::Trim, the two converters and HexStringToBytes match since src/units/112-ecourna-cbasetype.mk, which has their
 # evidence and the stand-ins for their other callers.
 # CStringUtils::PreencheADireita (target fn 3511) pads a string in place on the right with a character up to a length.
-# Its callers are api::CInputFieldMT::Draw (fn 10726, src/units/146-uenux2-cinputfieldmt.mk) and fns 11972 and 11973 (not
-# reconstructed; roots_ecourna.cpp's UsaPreencheADireita stands for them). No record names it. Its use band, 3, puts it
+# Its callers are api::CInputFieldMT::Draw (fn 10726, src/units/146-uenux2-cinputfieldmt.mk) and fns 11972 and 11973
+# (CDataSourcesRelatorio's DetalheCandidato and DetalheCandidatoZE, src/units/183-uenux2-relatorios.mk), all in the link,
+# so roots_ecourna.cpp no longer stands for them. No record names it. Its use band, 3, puts it
 # between fn 3513 (api/sql/sqlite/csqlstatement.cpp) and this file's ToInt16 (fn 3508), with fns 3509, 3510 and 3512
 # (`awk -F'\t' 'NR>1 && $2==3 && $1>=3505 && $1<=3514' ledger/ordinals.tsv`), unwritten; 3512 pads a string on the left
 # with '0' and 3510 strips its leading '0's, for other callers. That it is this file's is a reading of that, and its
