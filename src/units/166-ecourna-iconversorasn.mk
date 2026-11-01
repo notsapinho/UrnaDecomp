@@ -20,7 +20,10 @@
 # IdentificadorGeradorMidia pair, 11422 11440 for Foto, 11616 for DadosComparecimento); ecourna's converters reach them
 # through table slots (9203 slot 6731, 9202 slot 6734, 9056 and 2772 slot 7027). A fragment's roots link after ecourna's
 # objects, which would keep their own copies, so the instances are explicit instantiations in a tree root ahead of both
-# trees, at UENUX2_CXXFLAGS, as for CBaseType.
+# trees, at UENUX2_CXXFLAGS, as for CBaseType. Fragment 172 writes 10290, 10291, 11399, 11400 and 11440, whose objects
+# link ahead of ecourna's: the root's lines for IdentificadorGeradorMidia's Converte and Deconverte and Foto's
+# Deconverte went with them, and those three members match from those objects; DadosComparecimento's Converte stays
+# for 11616, and the Foto stand-in for 11422.
 #
 # Measured on the whole link (pnpm wasm score): 6031 and 6032 against our merges, 12 over 70 rows, operand-only; each
 # thunk 3 over 8, operand-only. Without urna_roots_iconversorasn, the stand-in for 5708's callers that urna_roots calls

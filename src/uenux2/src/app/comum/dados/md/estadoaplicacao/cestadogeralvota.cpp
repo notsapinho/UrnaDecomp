@@ -1,5 +1,5 @@
-// Reconstruction: comum::md::estadoaplicacao::CEstadoGeralVota's constructor (target fn 5628). Its line is chosen, above
-// MarcaFimAquisicao's records at lines 108 and 113, which are not reconstructed.
+// Reconstruction: comum::md::estadoaplicacao::CEstadoGeralVota's constructor (target fn 5628) and IncrementaQtdBU (fn
+// 3701). Their lines are chosen, above MarcaFimAquisicao's records at lines 108 and 113, which are not reconstructed.
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 
 namespace comum::md::estadoaplicacao {
@@ -25,6 +25,11 @@ CEstadoGeralVota::CEstadoGeralVota(EEstadoVota estadoVota, EEstadoEncerramento e
       m_dhEmissao(dhEmissao),
       m_tecladoTestadoPosConversao(tecladoTestadoPosConversao)
 {
+}
+
+void CEstadoGeralVota::IncrementaQtdBU()
+{
+    ++m_qtdBU;
 }
 
 } // namespace comum::md::estadoaplicacao

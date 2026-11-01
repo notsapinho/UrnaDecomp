@@ -61,8 +61,8 @@
 # - 11354, CConversorVoto::DoDesconverte: CVoto's constructor, fn 2256 (cvoto.cpp:80), is not written; the
 #   -pending.cpp header has 11354's source and what was measured.
 # - 11398, CConversorEstadoGeral::DoDesconverte: CEstadoGeral's constructor, fn 5637, which calls fn 1249 (no name).
-# - 11399 and 11400, CConversorDadoCorrespondencia's slots (11397 builds the class on its stack): the correspondence's
-#   dates through api::CDateTime.
+# CConversorDadoCorrespondencia's slots (11399, 11400; 11397 builds the class on its stack) were traps here: fragment
+# 172 writes and matches them, and its object emits the class's vtable now.
 # The base's default DoConverte of the two converters that override only DoDesconverte (11380, 11358) is emitted with
 # their vtables in their objects and matches: fragment 159's row.
 # Not written: 10266 (CConversorEntidadeHashes) converts comum::md::CEntidadeHashes of app/comum/gravadores/. The

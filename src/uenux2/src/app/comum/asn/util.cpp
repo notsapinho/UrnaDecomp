@@ -43,7 +43,20 @@ api::CTime Utils::DesconverteHoraJE(const ModuloTiposEleitorais::HoraJE& hora)
     return api::CTime(hora);
 }
 
-// (original lines 54-91: content not recovered)
+ModuloTiposEleitorais::DataJE Utils::ConverteDataJE(const api::CDate& data)
+{
+    const std::string strData = data.Format("YYYYMMDD");
+    return ModuloTiposEleitorais::DataJE(strData).c_str();
+}
+
+ModuloTiposEleitorais::DataHoraJE Utils::ConverteDataHoraJE(const api::CDateTime& dataHora)
+{
+    const std::string strData = dataHora.GetData().Format("YYYYMMDD");
+    const std::string strHora = dataHora.GetHora().Format("hhmmss");
+    return ModuloTiposEleitorais::DataHoraJE(strData + "T" + strHora).c_str();
+}
+
+// (original lines 67-91: content not recovered)
 #line 92
 ModuloTiposEleitorais::Fase Utils::ConverteFase(const EUrnaFase& fase)
 {

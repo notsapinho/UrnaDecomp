@@ -1,6 +1,7 @@
 # uenux2 comum::md::CHorarioVerao, in src/app/comum/dados/md/chorarioverao.cpp, the file its constructor's records name
-# (chorarioverao.cpp:29 and :32, which fn 11384 holds with the constructor inlined; the constructor is not written and the
-# two lines stay blank). The layout is unit 89's, in chorarioverao.h.
+# (chorarioverao.cpp:29 and :32, which fn 11384 holds with the constructor inlined). The layout is unit 89's, in
+# chorarioverao.h. The constructor is written at those records' lines, where it begins is chosen, and Contem moved two
+# lines down with it (its line is chosen too); fragment 172 matches 11384, which holds it.
 #
 # Written: Contem, whether a date lies in [m_inicio, m_fim). It has no target function of its own: fn 11198,
 # comum::CRelatorioTesteImpressora::EstaEmHorarioVerao (unit 123), holds its two CDate::operator<=> calls, and 11198 is

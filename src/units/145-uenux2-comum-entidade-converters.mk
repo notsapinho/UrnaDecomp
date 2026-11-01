@@ -3,8 +3,9 @@
 # comum::md::CVersoesArquivos; comum::asn::CConversorEntidadePartidos (fns 11458 and 11457; vtable @1561336) in
 # src/app/comum/dados/asn/cconversorentidadepartidos.{h,cpp}, with its data class comum::md::CEntidadePartidos
 # (src/app/comum/dados/md/centidadepartidos.h, header only); and the head of comum::asn::CConversorCabecalhoEntidade
-# (src/app/comum/asn/cconversorcabecalhoentidade.h), which 11458 and 11457 build, whose two slots are this unit's
-# pending members.
+# (src/app/comum/asn/cconversorcabecalhoentidade.h), which 11458 and 11457 build. Its two slots (11589, 11588) were
+# this unit's pending members; fragment 172 writes and matches them in cconversorcabecalhoentidade.cpp, which emits the
+# class's vtable now, and this unit's -pending.cpp went.
 #
 # Matched: 10264, 10263, 11457. With them two instances whose copy our link now takes from
 # cconversorversoesarquivos.cpp.o (the scan's object column): ASN1::SEQUENCE_OF_Base's D2 (621, slot 0 of
@@ -64,12 +65,8 @@ ENTIDADE_CONVERTERS_SRCS := src/app/comum/gravadores/asn/cconversorversoesarquiv
 UENUX2_SRCS += $(ENTIDADE_CONVERTERS_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(ENTIDADE_CONVERTERS_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# CConversorCabecalhoEntidade's two slots are not reconstructed: 145-uenux2-comum-entidade-converters-pending.cpp gives
-# its vtable trapping bodies, compiled with the tree's flags
-$(ROOT)/$(APP)/145-uenux2-comum-entidade-converters-pending.o: $(ROOT)/src/units/145-uenux2-comum-entidade-converters-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/145-uenux2-comum-entidade-converters.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/145-uenux2-comum-entidade-converters-pending.cpp -o $(R)
 # the converters' users are not reconstructed yet: 145-uenux2-comum-entidade-converters-roots.cpp keeps their vtables
 # the way the target reaches them
 $(ROOT)/$(APP)/145-uenux2-comum-entidade-converters-roots.o: $(ROOT)/src/units/145-uenux2-comum-entidade-converters-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/145-uenux2-comum-entidade-converters.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/145-uenux2-comum-entidade-converters-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/145-uenux2-comum-entidade-converters-pending.o $(APP)/145-uenux2-comum-entidade-converters-roots.o
+override EXTRA_OBJS += $(APP)/145-uenux2-comum-entidade-converters-roots.o

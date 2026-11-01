@@ -16,8 +16,24 @@ namespace comum::md {
 // ModuloTiposEcoUrna::Carga's, whose types fit those widths: numeroInternoUrna, numeroSerieFC, dataHoraCarga (12 bytes,
 // an api::CDateTime), codigoCarga and identificadorGeradorMidia. ValidaCriacao (fn 5670, records ccarga.cpp:36 to :51)
 // tests the string at +4 as the MC's serial and the one at +28 as the load's code (its messages say so); the rest of
-// the placing among the strings, the types and the member names are chosen. The constructor is not reconstructed.
+// the placing among the strings, the types and the member names are chosen. The constructor (target fn 2802, no
+// record) copies its five arguments into the members in that order and calls ValidaCriacao; its parameters' order is
+// the fields', and their types (a reference for each class) are chosen. The getters are what
+// comum::asn::CConversorCarga::DoConverte (fn 10291) reads, by reference for the classes; their names are chosen.
 class CCarga {
+public:
+    CCarga(uedword numeroInternoUrna, const std::string& numeroSerieFC, const api::CDateTime& dataHoraCarga,
+           const std::string& codigoCarga, const ecourna::app::dados::CIdentificadorGeradorMidia& identificadorGeradorMidia);
+
+    uedword GetNumeroInternoUrna() const { return m_numeroInternoUrna; }
+    const std::string& GetNumeroSerieFC() const { return m_numeroSerieFC; }
+    const api::CDateTime& GetDataHoraCarga() const { return m_dataHoraCarga; }
+    const std::string& GetCodigoCarga() const { return m_codigoCarga; }
+    const ecourna::app::dados::CIdentificadorGeradorMidia& GetIdentificadorGeradorMidia() const
+    {
+        return m_identificadorGeradorMidia;
+    }
+
 private:
     void ValidaCriacao() const;
 
