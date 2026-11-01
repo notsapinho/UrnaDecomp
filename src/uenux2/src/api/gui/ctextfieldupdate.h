@@ -8,9 +8,11 @@
 // +72 receives the timer that slot 0 of ITimerScheduler::GetInst() (fn 1259, record itimerscheduler.cpp:23:12) creates
 // with the interval and a lambda; Draw (fn 10916) erases +64 with +48 when it is not empty, draws the text at +24 with
 // +36, +44 and +48, stores the drawn rectangle at +64 and the text it drew at +52; Show and Hide (fns 10915, 10914)
-// call slots 2 and 3 of the timer; the destructor (fn 5495) releases +72, +52 and +28 in that order. The member names
-// are chosen; the timer's type is only declared here, though api/util/itimer.h defines it (simulador::CWasmTimer
-// and api::CTimer, the classes the schedulers create, derive from api::ITimer, ledger/classes.json).
+// call slots 2 and 3 of the timer; the destructor (fn 5495) releases +72, +52 and +28 in that order. The timer's lambda
+// calls Atualiza, a private member out of line that binaryen inlines into the lambda's operator() (fn 10909), its one
+// caller (src/units/42-uenux2-ctextfieldupdate.mk); its name is chosen. The member names are chosen; the timer's type
+// is only declared here, though api/util/itimer.h defines it (simulador::CWasmTimer and api::CTimer, the classes the
+// schedulers create, derive from api::ITimer, ledger/classes.json).
 
 #include <chrono>
 #include <memory>
@@ -49,6 +51,8 @@ public:
     void Move(const SPoint& posicao) override;
 
 private:
+    void Atualiza();
+
     SPoint m_posicao;
     SharedIText m_text;
     SFont m_font;

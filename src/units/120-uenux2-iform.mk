@@ -11,7 +11,7 @@
 #   IForm<MEDIA>      constructor: 6024, binaryen's body of I's and M's, with the thunks 5548 and 5522 passing the vptr
 #                     (P's is inlined into 5515); D2 2781 I, 2776 M, 5514 P; D0 11136, 11045, 5513 (IFormImpressao's
 #                     slot, the same body); Slot2 11135, 11044, 11009; Slot3 11134, 11043, 11008; Refresh 11133, 11042,
-#                     11007; GetRenderForm 11132, 11041 (P's 11004 differs, below); Slot7 5539, 5518, 11005
+#                     11007; GetRenderForm 11132, 11041 (P's 11004, below); Slot7 5539, 5518, 11005
 #   IFormImpressao<IPaperRelatorios>  GetRenderForm 11006 (cpaperformbuilder.h, record line 51)
 #   CFormStack<MEDIA> Exibe 5541 I, 5520 M (P's inlined into 11009); Empilha 5540, 5519 (P's into 11008); Remove 5987 I
 #                     (M's and P's inlined into their D2); Notifica 2651, 2631, 3670; GetHandles 5056, 5022, 5512,
@@ -58,11 +58,13 @@
 # blank (AddLabeledInputControl, fn 653, is not written); SetFocus, SetAtivo, ApagaCursor and every data member's and
 # parameter's name.
 #
-# splat/symbol_addrs.txt gets ten hand lines, each `callers+content`, each shown needed by the scan without it and
+# splat/symbol_addrs.txt gets nine hand lines, each `callers+content`, each shown needed by the scan without it and
 # without its own match line (docs/reference/splat.md "Reviewing a match"; the matches each removal takes out are
-# counted on the committed state). __assign_with_size of vector<FormHandle> (1872, 16 matches out) and its
-# __emplace_back_slow_path (8872, 20), whose bodies of ours differ (106 over 434 rows and 36 over 186, pnpm wasm
-# score), are named for their callers. CPolySingleton<IScreenMT>::instance (1714; 11041 out) and <IInputKbd> (455;
+# counted on the committed state). vector<FormHandle>'s __emplace_back_slow_path (8872, 20 matches out), whose body of
+# ours differs (36 over 186, pnpm wasm score), is named for its caller. Its __assign_with_size (1872) had a tenth line
+# while our body differed (106 over 434 rows at -std=c++20; 16 matches out): it matches at the tree's -std=c++23, and
+# the scan without the line and without the match lines of 1872 and its six callers brings all seven back, every row as
+# it was, so the line went. CPolySingleton<IScreenMT>::instance (1714; 11041 out) and <IInputKbd> (455;
 # 11077 and 11075 out) differ too (393 over 992 and 1176 over 1459): each loads a record no other target function
 # loads, 1714's generated name is `call by:11041`, a vote of the one caller it would release, and 455 has none. The
 # guard byte and the std::once_flag of GetObservable's statics, which only their media's Notifica reads: IScreen's (1
@@ -101,8 +103,8 @@
 #   make_shared<CInputFieldControl<IScreenMT>> inlined, whose control block's vtable (@1580748) lies in the MT
 #   builder's data, and waits for 395's family; 2024 (IInputField<IScreen>'s constructor) has no written caller (901,
 #   2383, 3675, 5565, 5913, 7787).
-# - 1872 and 8872 differ (above); 11004 (IForm<IPaper>::GetRenderForm, CPolySingleton<IPaper>::instance inlined)
-#   differs at `call 608 | ours call 305`, CPolySingletonList::find, which our link merges (unit 100's fragment).
+# - 8872 differs (above). 11004 (IForm<IPaper>::GetRenderForm, CPolySingleton<IPaper>::instance inlined) matches
+#   since unit 170, whose copies of CPolySingletonList::find keep 305 and 608 apart (unit 100's fragment).
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)
 # no caller of GetInteractiveForm, of CFormStack<IScreen>::Remove's other one or of

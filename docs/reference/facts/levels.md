@@ -27,8 +27,8 @@ uses has its typeinfo and vtable in this TU's data, between its records:
 
 So `api::ITextToSpeech`'s inline members in the target (its D2 11489, `SetVoice` 11518) are that TU's code, and
 `CWasmNullTextToSpeech`, which has a key function, has its vtable elsewhere. The TU has landing pads: `votaInit`
-(7840, record `vota_web_wasm.cpp:515`) calls through `invoke_*` 228 times (`pnpm --silent wasm fn
-../target/vota_web_wasm.wasm 7840 | /usr/bin/grep -c invoke_`), where uenux2's `src/` has none
+(7840, record `vota_web_wasm.cpp:515`) calls through `invoke_*` at 109 sites (`pnpm --silent wasm fn
+../target/vota_web_wasm.wasm 7840 | sed -n '/--- disassembly/,/folded readout/p' | /usr/bin/grep -c 'import:invoke_'`), where uenux2's `src/` has none
 ([app-flags.md](app-flags.md) §F6).
 
 Its level is `-Oz`. The header of unit 82 compiled with `-fexceptions` at each level, and the callees of the D2 and of
@@ -80,12 +80,38 @@ reload below, and that 4967 is this TU's copy is read from link order (the first
       -fno-strict-aliasing: 4
 
 So `src/app/roots_vector.cpp`, which holds 306, 520 and 4967, compiles at `UENUX2_CXXFLAGS` and not at the roots'
-`APP_CXXFLAGS` (`src/units/README.md` "Companion files"). No setup of
-`asmlift-wasm/benchmark/dataset/setups.json` has `-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups
-are 7-Zip's and RHVoice's, each ending in `-O3`), so no fragment may compile a TSE object so (`pnpm bench setups
---check` refuses one), and `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` is a stub-only file. A uenux2 object's copy of
-such a member is right source with the wrong level, so it matches only when its body is the same at uenux2's flags:
-11489 and 11518 stay `differs` with unit 82's source as written (how-to steps 4 and 5).
+`APP_CXXFLAGS` (`src/units/README.md` "Companion files"). It stays while the TU's code that calls 520 (`votaInit`, 7840)
+is not written.
+
+**The TU's own rule.** `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` compiles at `VOTA_WEB_CXXFLAGS` in `src/Makefile`,
+`-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` (the setup `vota-web` of
+`asmlift-wasm/benchmark/dataset/setups.json`), and its object is first on the link line, ahead of the stand-ins. What
+unit 170 writes of it (the engine's getter, `votaPressKey`, `votaSetAudioEnabled`) instantiates
+`api::CPolySingleton<api::ISound>::instance`, and with it libc++'s `std::format` code at the TU's level: the link at
+84f5d8d with the unit gains 119 matches and loses none, nearly all of them that code, with unit 100's hand lines as they
+stood (the unit's fragment lists them, and the eight that removing two of those lines adds). Each flag is measured on
+that link by taking it out or changing it, the TU's object alone rebuilt, with the counts by index of how-to step 10
+against 84f5d8d:
+
+    touch src/uenux2/wasm/vota_web/vota_web_wasm.cpp
+    F="<flags> $(make -s -C src print-UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1"
+    TMPDIR=/tmp make -C src link census splat-symbols splat-match "VOTA_WEB_CXXFLAGS=$F"
+      -Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing   119 added, 0 lost
+      without -fPIC                                                     89 added, 9 rows leave match
+      without -fno-strict-aliasing                                      117 added: 1549 and 5646 do not match
+      -std=c++23 for -std=c++20                                         130 added, 0 lost
+
+So `-fPIC`, the records' place in `.data` ([app-flags.md](app-flags.md) §F5), and the TU's want of strict aliasing are
+measured, and the reading above holds for the TU. `-std=c++23` matches eleven more rows, libc++'s format code that the
+C++23 escaped-string formatter brings (`__escape` 11769, `__write_escaped_code_unit` 5927, the parser 1417, ...), and
+loses none. The same change on the link that holds unit 170 and the tree at `-std=c++23` (§V3) adds exactly those
+eleven, 1417 1729 1955 5814 5820 5926 5927 5933 5944 11753 11769, loses none and changes no object but the TU's, and
+13229 becomes `std::string::substr`'s C++23 `const&` overload. So the rule takes `-std=c++23`, as the tree does: this
+TU is uenux2's (`/home/rubio/tse/uenux2/wasm/...`), and that flag was decided for uenux2 on the condition that it
+gains rows and loses none. A uenux2 object's copy of a member
+whose copy the target keeps from this TU is right source with the wrong level, so it matches only when its body is the
+same at uenux2's flags, or once the TU's code that uses it is written: 11489 and 11518 stay `differs` with unit 82's
+source as written (how-to steps 4 and 5).
 
 ## V2. LLVM's inlining remarks give the cost and the threshold, and the thresholds are what separate the levels
 
@@ -132,10 +158,11 @@ runs at `-O3` only and no inlining remark prints. Probe `unswitch.cpp`:
 426 (`AddField`), whose target holds one compare loop twice, chosen by a string's `__is_long()`, is this case: at the
 tree's `-O3` it holds both copies, and 18 of its 334 rows still differ (unit 31's fragment).
 
-## V3. uenux2 builds at `-O3`: every match verifies, and sites under both `mock/` and `src/` need the level
+## V3. uenux2 builds at `-O3 -std=c++23`: every match verifies, and sites under both `mock/` and `src/` need the level
 
-uenux2 compiles at `-O3` ([app-flags.md](app-flags.md) §F6), a level being a tree's setting (how-to step 4); its `-std`
-stays `-std=c++20`, and the stand-ins' `APP_CXXFLAGS` and `APP_CFLAGS` stay at `-O2`. Measured at d4cbc1a (9783
+uenux2 compiles at `-O3` ([app-flags.md](app-flags.md) §F6), a level being a tree's setting (how-to step 4), and at
+`-std=c++23` since 84f5d8d's measurement (the end of this section); the stand-ins' `APP_CXXFLAGS` and `APP_CFLAGS` stay
+at `-O2`, and `APP_CXXFLAGS` at `-std=c++20`. The level was measured at d4cbc1a (9783
 matches), by how-to steps 6 to 10 with `UENUX2_CXXFLAGS` at `-O3`: one row left `match`, 3830
 (`comum::IInterfaceSavd::EnviarRequisicao`), whose helper `ConverteHeader` clang then inlines (`-Rpass=inline`: cost
 230 against `-O3`'s 250; `-O2`'s 225 kept it a call), where the target keeps it for binaryen. Compiled with the helper
@@ -152,8 +179,9 @@ and none left:
 Six rows that matched at both levels change shape in the object that wins the link: 708, 1706, 3828, 5765, 5878 and
 11337, and 3830 with its source (each function's instructions in the `-O2` and the `-O3` object, call, global and
 `call_indirect` type indices masked). 252, `std::operator+(string&&, string&&)`, changes in every uenux2 object that emits it and holds,
-since `src/app/roots_uenux2.cpp`'s copy wins ([splat.md](splat.md) §S10 item 10). The rest of this section is the
-evidence measured before the decision, with the tree at `-O2`: there "the plain link" is the `-O2` one.
+since `src/app/roots_uenux2.cpp`'s copy wins ([splat.md](splat.md) §S10 item 10). The rest of this section, up to
+the `-std=c++23` measurement at its end, is the evidence measured before the decision, with the tree at `-O2`: there
+"the plain link" is the `-O2` one.
 
 The private link of [app-flags.md](app-flags.md) §F9 item 6 with
 `P=build/out/flags-o3-cxx23` and `UENUX2_EXTRA='-O3 -std=c++23'` (the stand-ins keep their flags, ecourna keeps `-O3
@@ -255,9 +283,83 @@ row, 4118, that scores the same in both links:
 
 So the matches of `src/` hold under both levels, and the written `src/` bodies above need the higher one. That rules
 out `-O3` for `mock/app/simulador/wasm/` alone, and leaves uenux2 at `-O3` throughout. No site shows the rest of `-O3`
-from its unroll threshold, and per-directory flags are not excluded. The `-std` reading rests on one kind of site (the
-rvalue `substr`), with a handful of C++20 forms tried; every site above reads the same at `c++20` and `c++23`.
-`-std=c++23` is not taken, and 8799, which needs it, stays written.
+from its unroll threshold, and per-directory flags are not excluded. The `-std` reading rested on one kind of site (the
+rvalue `substr`), with a handful of C++20 forms tried; every site above reads the same at `c++20` and `c++23`. The
+whole-tree measurement below took the tree to `-std=c++23`.
+
+**`-std=c++23`, measured on the whole tree at 84f5d8d (10186 matches).** A private link by
+[app-flags.md](app-flags.md) §F9 item 6 with `UENUX2_EXTRA=-std=c++23`, from a clone without every object that
+compiles at `UENUX2_CXXFLAGS`: the tree's sources, the `-pending.cpp` files, and `src/app/roots_cbasetype.cpp`,
+`src/app/roots_vector.cpp` and the roots of units 113, 128, 134, 136, 139 and 140, 395 objects. F9's exclude pattern
+keeps the last eight, which then link at their old flags. The dry run lists the objects whose command changes:
+
+    P=build/out/flags-cxx23; mkdir -p $P/app
+    make -n -C src link APP=$P/dry OUT=$P/dry/wasm OUT_NAMED=$P/dry/named UENUX2_EXTRA=-std=c++23 | /usr/bin/grep -F -- '-std=c++23' \
+      | /usr/bin/grep -oE -- "-o [^ ]+\.o" | sed "s#^-o .*$P/dry/#/#" | sort -u > $P/exclude.txt
+    wc -l < $P/exclude.txt
+      395
+    rsync -a --exclude-from=$P/exclude.txt build/out/app/ $P/app/
+    TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web UENUX2_EXTRA=-std=c++23
+
+Then F9's map, kinds, `splat-kinds` and `splat-build` with the re-keyed list:
+
+    Error: …/matched.txt: 3 matched functions no longer verify:
+      … function 9060 … is UNRESOLVED: ours +0xe3 i32.const 3044: a table slot of ours: _ZNSt3__26vectorIcNS_9allocatorIcEEE18__assign_with_sizeB8ne210108INS_11__wrap_iterIPKcEES8_EEvT_T0_l has no target function
+      (9062 and 11413 the same)
+
+The three are one callee's name. 9060 and 9062 (ecourna) and 11413 (comum) all call
+`std::vector<char>::__assign_with_size<__wrap_iter<const char*>>`, and in the plain link that copy (from
+`cconversorseguranca.cpp.o`) merged with `src/app/roots_ecourna.o`'s `vector<unsigned char>` instance from a string's
+iterators, whose name the symbol file gave target 1158 by `call` evidence. At `-std=c++23` the uenux2 copy changes
+(libc++'s `__assign_with_size` moves one add), stops merging, and is the target's body (from `asmlift-wasm/`; 2145 is
+the plain link's index at 84f5d8d, 4225 the private one's):
+
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 1158 ../build/out/wasm/vota_web/vota_web_wasm.wasm 2145
+      score 39 over 175 rows (same 136, replaced 26 [25 operand-only], inserted 7, deleted 6)
+    pnpm --silent wasm score ../target/vota_web_wasm.wasm 1158 ../$P/wasm/vota_web/vota_web_wasm.wasm 4225
+      score 3 over 168 rows (same 165, replaced 3 [3 operand-only], inserted 0, deleted 0)
+
+The private link's scan, joined with the committed one, turns three rows `match` and none out of it: 1158 (by the
+scan's content pass), 1872 (`std::vector<api::FormHandle<api::IScreen>>::__assign_with_size`, in
+`cinteractiveformbuilder.cpp.o`, 106 over 434 rows at `-std=c++20`) and 8799. With the three lines `splat-scan
+--match` adds to a copy of the re-keyed list, `splat-build` on that copy prints the target's sha256 with 10189 matches,
+0 kind-unverified.
+
+The stand-ins at `-std=c++23` as well (the 134 objects at `APP_CXXFLAGS`, given on the command line as
+`"APP_CXXFLAGS=$(make -s -C src print-APP_CXXFLAGS) -std=c++23"`, 529 objects in all) turn the same three rows and lose
+none, and `splat-build` passes on the committed list (10186): `roots_ecourna.o`'s instance then compiles to the same
+body, merges with the uenux2 copy again and keeps its name, and the scan matches 1158 under `app/roots_ecourna.o`. That
+is a stand-in's own instance where every caller's object calls the `vector<char>` one, so `APP_CXXFLAGS` keeps
+`-std=c++20` (a `patsubst` in `src/Makefile`).
+
+With the flag in `UENUX2_CXXFLAGS`, how-to steps 6 to 10 at 84f5d8d compile every app object `cmp`-equal to the private
+link's and link the same wasm. The census moves 18 rows up (8799 `none → addr`); `splat-symbols` renames 1158's
+`call` line to the `vector<char>` copy, takes 8799 from `vtable` to `pair-addr`, and adds one data name,
+`_ZNSt3__222__escaped_output_table9__entriesB8ne210108E = 0x702b0; // type:data size:0xb7c evidence:content`;
+`splat-match` adds 1158, 1872 and 8799; the join with 84f5d8d's scan prints those three `differs → match` and 11109
+`unresolved → differs` (a census re-pick among `__shared_ptr_emplace` destructors), none out of `match`; and
+
+    TMPDIR=/tmp make -C src splat
+      …/splat/vota_web_wasm.wasm: 7713699 bytes, sha256 8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2 (expected, 10189 matches from …/splat/matched.txt)
+      kind-unverified: 0/10189 matches (0 B) whose operand kinds the shifted link could not tell; their operands kept every reading
+
+The data name is a second kind of evidence for C++23. libc++ defines the table only from C++23, for `std::format`'s
+escaped output, which every formatter of a string or a character argument then emits, and the target holds its 2940
+bytes and reads them in fn 11769 (640 B, `no-candidate`):
+
+    TMPDIR=/tmp build/docker-build.sh grep -n '_LIBCPP_STD_VER\|__entries\[' /emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__format/escaped_output_table.h
+      75:#if _LIBCPP_STD_VER >= 23
+      112:_LIBCPP_HIDE_FROM_ABI inline constexpr uint32_t __entries[735] = {
+      876:  uint32_t __upper_bound = (__entries[__i] >> 14) + (__entries[__i] & 0x3fffu);
+      883:#endif // _LIBCPP_STD_VER >= 23
+    wasm-objdump -x build/out/app/uenux2/src/app/comum/carquivossavd.cpp.o | /usr/bin/grep -c 'escaped_output_table\|format_escaped'
+      19                                                    # 0 for the same object compiled with UENUX2_EXTRA=-std=c++20
+    wasm-objdump -d target/vota_web_wasm.wasm | awk '/ func\[[0-9]+\]/ {f=$2} / i32.const 459440$/ {print f}' | sort -u
+      func[11769]:
+
+It says some TU of the target formats at C++23, not which: the executable TU's `-std` is not measured (§V1). What is
+still a reading: `-std` is one setting for the whole tree, as the level is; no site tells one directory from another.
+9104 (`CWasmScreen::DrawText`) reads `97 over 747` at the tree's flags now, its rectangle's `select`s (unit 69).
 
 **The text a level change makes false.** Sentences that call the old level the tree's, and sentences written as
 conditions on the new one (`if uenux2 moves to -O3`, `waits for -O3`). A search for the old flag finds the first kind
@@ -272,14 +374,15 @@ the change or a comments-only one after it.
 ## V4. Which flags a linkonce copy has: put a probe object first on the link line
 
 Rows of a probe's object compared with the target, before binaryen, are a lead and no verdict: they ranked one
-destructor nearest at two levels and another at four. wasm-ld keeps the first object's copy, so an object that only
-uses the class, first on the link line, wins each linkonce symbol, wasm-ld drops the probe's own functions, and the scan
-says what that copy gives. About a minute at 0b5f410, from the repository root, with `$V` under `build/out/`:
+destructor nearest at two levels and another at four. wasm-ld keeps the first object's copy, so an object that only uses
+the class, first on the link line, wins each linkonce symbol, wasm-ld drops the probe's own functions, and the scan says
+what that copy gives. The first object of `link.cmd` is the executable TU's (unit 170), so the probe goes before it.
+About a minute at 0b5f410, from the repository root, with `$V` under `build/out/`:
 
     V=build/out/variant-probe; n=d2; d=$V/wasm/$n; mkdir -p $d $V/obj
     printf '%s\n' '#include <istream>' '#include <ostream>' '#include "asn1.h"' 'void probe_dec(std::istream& s, ASN1::AbstractData& d) { ASN1::AVNDecoder dec(s); d.accept(dec); }' > $V/obj/$n.cpp
     TMPDIR=/tmp build/docker-build.sh sh -c "em++ -O3 -fexceptions -std=c++20 -DNDEBUG -Isrc -Isrc/asn1 -c /work/$V/obj/$n.cpp -o $V/obj/$n.o"
-    sed -e "s# app/vota_init.o # variant-probe/obj/$n.o app/vota_init.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o variant-probe/wasm/$n/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $d/link.cmd
+    sed -e "s# app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o # variant-probe/obj/$n.o app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o variant-probe/wasm/$n/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $d/link.cmd
     TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $d/link.cmd)" > $d/link.log 2>&1
     TMPDIR=/tmp tools/round/link-map.sh $d; TMPDIR=/tmp tools/round/link-kinds.sh $d
     cp splat/matched.txt $V/$n-matched.txt

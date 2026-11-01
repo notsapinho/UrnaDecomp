@@ -34,8 +34,9 @@
 # `outro.right < right ? right : outro.right` (2 lines), which has the load order and not the compare, and with
 # std::max(right, outro.right) (6 lines).
 #
-# std::operator+(string&&, string&&) (fn 252) stays matched through a stand-in in src/app/roots_uenux2.cpp, whose comment
-# says why: the first real callers of CPolySingleton<T>::instance came with these fields, and each instantiates it.
+# std::operator+(string&&, string&&) (fn 252), which the first real callers of CPolySingleton<T>::instance brought with
+# these fields, matches from the executable TU's object (unit 170), first on the link line at -Oz;
+# src/app/roots_uenux2.cpp held it until that unit.
 UENUX2_SRCS += src/api/gui/primitives.cpp
 # second call sites of Union, Left, Right and Adjust (108-uenux2-api-gui-primitives-roots.cpp says for which callers)
 $(ROOT)/$(APP)/108-uenux2-api-gui-primitives-roots.o: $(ROOT)/src/units/108-uenux2-api-gui-primitives-roots.cpp $(ROOT)/src/units/108-uenux2-api-gui-primitives.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)

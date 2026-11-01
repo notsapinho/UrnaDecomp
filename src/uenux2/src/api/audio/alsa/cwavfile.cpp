@@ -4,12 +4,47 @@
 
 namespace api {
 
-// (original lines 7-43: content not recovered)
-#line 44
-// <stubs>
-// f10841 · 75081 B · unmatched · name unknown
-// void f10841(i32, i32, i32, i32) { ... }
-// </stubs>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

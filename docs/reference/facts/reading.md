@@ -11,11 +11,12 @@ source form compiles to (the order of a body's stores, a switch over virtual slo
 `inline` one) is in [codegen.md](codegen.md).
 
 The probes are short TUs compiled by the pinned em++ with uenux2's flags of the time, `-O2 -fPIC -std=c++20 -DNDEBUG
--fno-strict-aliasing`, or `-O3` where they say so (the tree's level since: [app-flags.md](app-flags.md) §F6); their
-sources are given in full, and each runs under `build/out/reading-probe/`. R1–R3 and R7–R11 were measured at 7bf701e,
-R4–R6, R12 and R13 at ee595de, and the parts marked bb6f018 (R14 and R15 among them) at bb6f018; every probe prints the
-same at 0b5f410, where R13's shapes and R16–R18 were measured, and the parts marked 4487d6b and R19 at 4487d6b; the
-`-O3` probes and R20 at c1b2630. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
+-fno-strict-aliasing`, or `-O3` where they say so (the tree builds at `-O3 -std=c++23` since:
+[app-flags.md](app-flags.md) §F6); their sources are given in full, and each runs under `build/out/reading-probe/`.
+R1–R3 and R7–R11 were measured at 7bf701e, R4–R6, R12 and R13 at ee595de, and the parts marked bb6f018 (R14 and R15
+among them) at bb6f018; every probe prints the same at 0b5f410, where R13's shapes and R16–R18 were measured, and the
+parts marked 4487d6b and R19 at 4487d6b; the `-O3` probes and R20 at c1b2630. Readouts are
+`pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
 `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
 ## R1. A parameter every caller passes as the same constant is gone from the wasm type
@@ -1238,7 +1239,8 @@ that does not. So a function with no record shows its linkage here. Probe `guard
       _ZL7Internov:  i32.load8_u 0 0; br_if 0; global.get 0 <env.__memory_base>;
 
 11265 reads its guard as `i32.eqz(i32.load8_u[1832596])`, so `api::polySingletonsInfoPadrao` is a `static` function of a
-`.cpp`, though the pointer to it reads from a header (unit 100, `src/uenux2/src/api/pattern/cpolysingletonlist.cpp`).
+`.cpp`, though the pointer to it reads from a header (unit 170, `src/uenux2/wasm/vota_web/vota_web_wasm.cpp`, whose
+engine pointer, which fn 2094 reads, is the next word, 1832600).
 
 ## R18. One row more than the target at a call is the callee's signature, not the caller
 

@@ -29,7 +29,7 @@ namespace api {
 // this header and `virtual ~BatteryIconDataSource() {}` give the same object; the implicit destructor and one declared
 // `inline` give a D0 holding the D2's body. `{}` is written, one of four. The constructor and UpdateBatteryIcon are
 // declared only, and cpowerinformation.cpp stays a stub file: both call fn 2773, which fills a std::map of the icons
-// through fn 1263, whose std::make_shared<CFixedImage> calls CFixedImage's string constructor, fn 2246, not written.
+// through fn 1263, whose std::make_shared<CFixedImage> calls CFixedImage's string constructor, fn 2246 (unit 158).
 class CPowerInformation {
 public:
     enum class IconOrientation { Horizontal, Vertical };

@@ -436,9 +436,6 @@
 // f2302 · 483 B · unmatched · placement: link order · name unknown
 // void f2302(i32, i32, i32, i32) { ... }
 
-// f2294 · 129 B · unmatched · placement: link order · name unknown
-// ? f2294(i32, i32, i32, i32, i32, i32) { ... }
-
 // f2283 · 57 B · unmatched · placement: link order · name unknown
 // void f2283(i32, i32) { ... }
 

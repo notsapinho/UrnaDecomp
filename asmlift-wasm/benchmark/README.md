@@ -45,6 +45,7 @@ them (`truth`).
 | setup | what | flags from | rows |
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
+| `vota-web` | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` (one object, first on the link line) | `src/Makefile` `VOTA_WEB_CXXFLAGS` | 12 |
 | `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
 | `zlib` | zlib 1.3.1 + minizip | `src/units/06-ecourna-api-compression.mk` `ZLIB_CFLAGS` | 12 |
@@ -110,7 +111,7 @@ share it.
   setup whose objects instantiate it (`instantiatedBy`). Where only the Boost probe stand-in
   (`roots_boost.o`) instantiates it, the row takes the setup whose flags the probe compiles with,
   `app-stand-ins`, and is selected only when the ledger pairs it at byte or fingerprint. The stand-ins
-  compile with uenux2's flags at `-O2` and without `-fno-strict-aliasing`: they come first on the link line, the
+  compile with uenux2's flags at `-O2`, at `-std=c++20` and without `-fno-strict-aliasing`: they come first on the link line, the
   libc++ templates they instantiate win the link, and the target's copies of those have TBAA
   (urna's `docs/reference/facts/app-flags.md` §F6).
 - **uenux2** has few reconstructed units, so its rows also come from the ledger's attribution
@@ -177,7 +178,9 @@ reason. Fix the row's cause, or retire it deliberately: a re-selection.
 **Adding a row**: `pnpm bench add <index>…` builds the row from today's inputs, marks it `manual` and
 keeps it across re-selections; then `pnpm bench run --label baseline` and commit both. A function no
 setup covers is refused with the reason; reconstruct or link its object first. A new setup is a new
-entry in `setups.json` with a `truth` the check can re-derive, then a re-selection.
+entry in `setups.json` with a `truth` the check can re-derive, then a re-selection: `test/dataset.test.ts` wants
+at least 5 rows of every setup but the stand-ins', and the re-selection gives them (`vota-web`, the executable TU's,
+took 12 so; `bench add` refuses 10703, `no strong ledger name`, and 9832, 1940 and 4636, `name unresolved`).
 
 **Updating the references** (a library's source tree or build output moved, the rows did not): `pnpm bench select
 --references` runs selection again on the recorded inputs, as the test does, and prints the rows whose reference it

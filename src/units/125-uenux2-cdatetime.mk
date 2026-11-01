@@ -31,9 +31,10 @@
 #              `const CDate data = Now().GetData();`, put the CDateTime at +8 and the copy at +24 (5472), +0 and +12
 #              (5473). GetData's and GetHora's return by reference is 11198's (cdatetime.h).
 #   written    the rest below.
-#              5476 ConvertFromLocalTime is operand-only (14 over 90 rows) and `unresolved self-voted`: it calls
-#              std::to_string(long long) (fn 4658), whose other target caller, 3612, is not written, so the name has 5476
-#              alone as voter. The roots' TempoEmTexto keeps to_string out of line for it, standing in for 3612.
+#              5476 ConvertFromLocalTime is operand-only (14 over 90 rows) and read `unresolved self-voted` until unit
+#              170: it calls std::to_string(long long) (fn 4658), whose other target caller, 3612, is not written, so
+#              5476 was the name's one voter; unit 170's object names 4658's callee __itoa (2869), and both match
+#              since. The roots' TempoEmTexto keeps to_string out of line for it, standing in for 3612.
 #              3648 CDate::operator- is operand-only (1 over 9) and `no-candidate`: nothing names it, and its callee
 #              operator-= (5477) is not matched.
 #              5478 operator+= and 5477 operator-= do not match at -O2 (291 over 558, 271 over 543 rows) nor at the tree's

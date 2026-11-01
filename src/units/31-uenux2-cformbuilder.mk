@@ -8,7 +8,7 @@
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
 #                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField), written and differs
 #   CMTFormBuilder     180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728 (AddClock)
-#   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut); the member template AddTextField<FONTE>
+#   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut), 2775 (AddQRCode); the member template AddTextField<FONTE>
 #                      in cpaperformbuilder.h, below the classes so that line 51 stays in IFormImpressao: its instance
 #                      over CPadDS<CToUpperDS<CCargoDSNome>> (5613) is unit 139's, whose fragment says what shows it
 #   binaryen's         3890, the one body of 435, 1072 and 198; 1400, vector<shared_ptr<IFormField<...>>>::emplace_back(const
@@ -51,6 +51,11 @@
 #   72) and 2245 93 over 138 (4 over 110). The rows that differ for 728 and 3890 are locals only. CBuzzFieldMT's
 #   gives 941 the same 8 over 179 both ways: out of line is a choice there, as its siblings have it.
 # - `new CCutFieldPaper()`, with the parentheses: 1264 zeroes the object first; without them the rows differ in the object.
+# - AddQRCode (2775) builds a std::shared_ptr<CQRCodeImageFieldPaper> (its control block's type, @1581500) and copies it
+#   into a SharedField before push_back: the target increments the count in both of the vector's paths. Measured in the
+#   link (pnpm wasm score): with CQRCodeImageFieldPaper's constructor inline, push_back of the first pointer scores 118
+#   over 270 rows and emplace_back of it 84 over 265; with the constructor out of line (unit 53), push_back of it 103
+#   over 263, and the copy first gives operand-only rows. The name AddQRCode is chosen.
 # - AddRect from two points calls an AddRect of a SRect that clang inlines: 3680's frame has the temporary of the AddField
 #   call above the rectangle, which puts the temporary in a callee (an inlined callee's allocas come first), and 2245's has
 #   them the other way. Written in one function, 3680 scores 12 over 94 with the frame the other way, and four spellings

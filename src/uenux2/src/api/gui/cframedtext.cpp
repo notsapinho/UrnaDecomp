@@ -1,26 +1,61 @@
 // Reconstruction's note, not TSE's text. The file's records are the constructor's, line 28, and MaskText's, line 66,
-// which are not written, so both lines stay blank. Rect, Move and DrawFrame have no record: that they are in this file,
-// and their lines, are chosen (src/units/92-uenux2-iinputfield.mk).
+// which is not written, so its line stays blank. The constructor's other lines, and Rect, Move and DrawFrame, which have
+// no record, their being in this file and their lines, are chosen (src/units/92-uenux2-iinputfield.mk).
 #include <algorithm>
 
 #include "api/gui/cframedtext.h"
 #include "api/gui/iscreen.h"
+#include "api/pattern/cpolysingleton.h"
 
 namespace api {
 
-// (original lines 11-24: content not recovered)
-#line 25
-// <stubs>
-// f1385 · 260 B · unmatched · name unknown
-// ? f1385(i32, i32, i32, i32, i32) { ... }
-// </stubs>
+// (original lines 12-21: content not recovered)
+#line 22
+CFramedText::CFramedText(size_t length, const SPoint& position, const SFont& font, ETextAlignment alignment)
+    : m_length(length)
+    , m_position(position)
+    , m_font(font)
+    , m_alignment(alignment)
+{
+    IScreen& monitor = CPolySingleton<IScreen>::instance();
+    monitor.GetFontMetrics(m_largura, m_altura, m_font);
 
-// (original lines 30-62: content not recovered)
-#line 63
-// <stubs>
-// f2780 · 766 B · unmatched · name unknown
-// void f2780(i32, i32, i32) { ... }
-// </stubs>
+    m_largura += 2 * Espaco();
+
+    const TPosition espacoVertical = m_font.size / 10;
+    m_altura += 2 * (espacoVertical > 0 ? espacoVertical : 1);
+
+    const size_t largura = (m_length - 1) * Espaco() + m_length * m_largura;
+
+    switch (m_alignment) {
+        case ALINHAMENTO_DIREITA:
+            m_position.x -= largura;
+            break;
+        case ALINHAMENTO_CENTRO:
+            m_position.x -= largura / 2;
+            break;
+        default:
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

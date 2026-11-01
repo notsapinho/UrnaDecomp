@@ -16,8 +16,9 @@
 //                     (1150, 2734), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
 //                     target callers all pass it, and they have no parameter for it
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426
-//   RelatorioA        5579, 5580, 5591 and the other callers of 193, 604, 198, 1264. Its form is a parameter: their callers
-//                     zero the vector in line, and it takes no constructor of ours. The EStyle and alignments vary as theirs do
+//   RelatorioA        5579, 5580, 5591 and the other callers of 193, 604, 198, 1264, and of 2775 (5591 and 12110). Its
+//                     form is a parameter: their callers zero the vector in line, and it takes no constructor of ours. The
+//                     EStyle and alignments vary as theirs do
 // The bodies differ from each other and from every target function's: each is a list of calls no screen makes.
 // The getters' stand-ins (FormMTA to FormPapelB, below) are listed beside them.
 #include <functional>
@@ -116,8 +117,10 @@ __attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint&
 }
 
 __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std::string& texto, std::string (*fonte)(), size_t linhas,
-                                         api::IPaper::EStyle estilo, api::ETextAlignment alinhamento)
+                                         api::IPaper::EStyle estilo, api::ETextAlignment alinhamento,
+                                         const api::CQRCodeImagePaper::QrcodeData& qrcode)
 {
+    form.AddQRCode(qrcode);
     form.AddTextField(texto, estilo, alinhamento);
     form.AddTextField(fonte, alinhamento);
     form.AddNewLine(linhas);
@@ -126,6 +129,7 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
     form.AddTextField(texto, static_cast<api::IPaper::EStyle>(2), api::ALINHAMENTO_CENTRO);
     form.AddTextField(fonte, api::ALINHAMENTO_DIREITA);
     form.AddCut();
+    form.AddQRCode(qrcode);
     return static_cast<int>(linhas);
 }
 

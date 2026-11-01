@@ -51,6 +51,7 @@ import {
 } from '../src/splat-sub';
 import { runSplatSubCommand } from '../src/splat-sub-cli';
 import {
+  SAME_CONTENT_LIMIT,
   type SymbolMaps,
   cStringAt,
   loadOurSide,
@@ -651,7 +652,7 @@ describe('remapBody with operand kinds', { timeout: 180_000 }, () => {
 // original value, the value in the plain link and the value the shifted relink would have (by the operand's kind in
 // the source). A value of our link (an original address or slot, a slot or address of ours a case writes) is a
 // function of the links, found as the helpers above say; the target's numbers are literals, but c9's, which has to stay
-// past our data and is chosen from the link (pastOurData).
+// past our data and is chosen from the link (pastOurData), and I2's offset (stringViewCase).
 type Value = number | bigint | ((l: Loaded) => number | bigint);
 interface Case {
   name: string;
@@ -719,16 +720,7 @@ const CASES: Case[] = [
   // (length 9 << 32 | the target's address 3395) and a string's address in a binaryen thunk
   { name: 'c5L the string address as an integer', symbol: NEXT_ENTRY, target: 1260, at: 0x23, was: ourString, plain: 124328, shifted: 124328 },
   { name: 'c8L the slot as an integer', symbol: NEXT_ENTRY, target: 1260, at: 0x37, was: ourDtorSlot, plain: 69, shifted: 69 },
-  {
-    name: 'I2 the string view as an integer',
-    symbol: RAW_READ,
-    target: 598,
-    at: 0x25f,
-    // our "size = {}", the string the target keeps at 3395
-    was: (l) => (9n << 32n) | BigInt(ourStringOf(l, 3395)),
-    plain: (9n << 32n) | 3395n,
-    shifted: (9n << 32n) | 3395n,
-  },
+  // I2, the string view, is stringViewCase below: its offset is our link's
   // our "key2any_encode", the string the target keeps at 187586
   {
     name: 'TH2 a thunk string as an integer',
@@ -815,6 +807,28 @@ function pastOurData(l: Loaded): Case {
     }
   }
   throw new Error('no match holds an address past our data');
+}
+
+/** I2: the target's string view, `(9 << 32) | 3395` ("size = {}", length 9 and the target's address), written as an
+ *  integer in CFile::RawRead, at the first i64.const of ours that packs our address of that string. The offset is our
+ *  link's: a constant ahead of it that takes another LEB length moves it, as the executable TU's object did (+0x25f to
+ *  +0x259). */
+function stringViewCase(l: Loaded): Case {
+  const p = indexOf(l.plain, RAW_READ);
+  const was = (9n << 32n) | BigInt(ourStringOf(l, 3395));
+  const i = disassemble(funcOf(l.plain.module, p)).find(
+    (x) => x.opcode === 0x42 && x.imms[0]?.kind === 's64' && x.imms[0].value === was,
+  );
+  expect(i, `our string view ${was} in ${RAW_READ}`).toBeDefined();
+  return {
+    name: 'I2 the string view as an integer',
+    symbol: RAW_READ,
+    target: 598,
+    at: i!.offset,
+    was,
+    plain: (9n << 32n) | 3395n,
+    shifted: (9n << 32n) | 3395n,
+  };
 }
 
 /** The maps of the case: our module patched, and its function's kinds from the patched pair of links. */
@@ -910,15 +924,19 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
           ),
     );
     // c8: a table slot whose literal is the target's slot number; re-pointed, it is the target's slot of the function
-    // in our slot 69, which a landing that takes an address ahead of it moves: when that function has no target slot
-    // of its own, the build rejects the operand as unresolved instead
+    // in our slot 69, which a landing that takes an address ahead of it moves. A function the target holds in several
+    // slots (binaryen merged identical functions) has each as a reading, up to SAME_CONTENT_LIMIT, and the build shows
+    // the first; when that function has no target slot, or more than that, the build rejects the operand as unresolved
     const c8 = caseMaps(byName('c8'));
     expect(operandKind(c8.kinds, 0x37)).toBe('slot');
     const f69 = l.maps.target.symbols.fns.get(l.maps.ours.fns.get(l.maps.ours.elem.get(69) ?? -1)?.key ?? '');
     const theirs = f69 === undefined ? [] : (l.maps.target.slots.get(f69) ?? []);
+    // a wrong slot: 69 is none of that function's target slots, or the case would build
+    expect(theirs).not.toContain(69);
+    // the first differing byte is either of the literal's two, by the low bits of the slots read
     expect(failure(byName('c8'), c8.maps)).toMatch(
-      theirs.length === 1
-        ? new RegExp(`function 1260 .* DIFFERS at \\+0x38 target \\+0x37 i32\\.const 69 \\| ours \\+0x37 i32\\.const ${theirs[0]}$`, 'm')
+      theirs.length >= 1 && theirs.length <= SAME_CONTENT_LIMIT
+        ? new RegExp(`function 1260 .* DIFFERS at \\+0x3[89] target \\+0x37 i32\\.const 69 \\| ours \\+0x37 i32\\.const ${theirs[0]}$`, 'm')
         : new RegExp('function 1260 .* is UNRESOLVED: ours \\+0x37 i32\\.const 69: a table slot of ours: ', 'm'),
     );
   });
@@ -938,7 +956,7 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
     const expected: [Case, string, number][] = [
       [c9, 'past-data', c9.plain as number],
       [byName('c5L'), 'target-object', 124328],
-      [byName('I2'), 'target-object', 3395],
+      [stringViewCase(load()), 'target-object', 3395],
       [byName('TH2'), 'target-object', 187586],
     ];
     for (const [c, why, value] of expected) {

@@ -23,7 +23,7 @@ line:
 
     node --version                                    # v26.11.1
     TMPDIR=/tmp tools/round/try-tu.sh --single 5468 --extract 'export:_ZNK3api12CGenericTags7TagSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE' src/uenux2/src/api/util/cgenerictags.cpp
-      flags: -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing … -fignore-exceptions
+      flags: -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing … -fignore-exceptions
       tools/round/try-tu.sh: line 47: 67368 Abort trap: 6           pnpm exec tsx src/cli.ts "$@"
     brew --prefix node@24                             # /opt/homebrew/opt/node@24
     PATH="/opt/homebrew/opt/node@24/bin:$PATH" node --version    # v24.22.2
@@ -433,6 +433,10 @@ check failed these, each a different case or none, with `splat` printing the tar
 | `splat-sub.test.ts`, "renames 246 back to the survivor" | 246's line of `splat/matched.txt`; until unit 107 it read one symbol spelled in the test | a twin of 246 linked ahead of the survivor (`cconversormunicipio.cpp.o`): the case now takes the survivor from the list, so a rename no longer fails it |
 | `splat-kinds.test.ts`, "V1, V2: an integer over vdbeSorterSort's relative slots" | the target's slots 11883 and 11885 as past our table | our table grew past them (`wasm-objdump -x -j Table` read `initial=11915`): the case now takes a value past our table from the link, `relativePastOurTable` |
 | `splat-kinds.test.ts` c8, `DIFFERS at +0x38` | the target slot of the function in our table slot 69 (the target's 69, `CError::~CError`'s slot, read as ours) | an object ahead of it on the link line that takes an address: `roots_vector.o` took 9873's, and our slot 69 then held a function with no target name. The case keeps 69 and expects `UNRESOLVED … a table slot of ours:` when that function has no target slot |
+| `splat-kinds.test.ts` c8, a function in several target slots | the target slots of the function in our slot 69 | binaryen-merged bodies the target keeps in several slots (the executable TU's `CBaseError` D0, six): the remap offers each, and the build prints the first; the case expects `DIFFERS` at the first of up to `SAME_CONTENT_LIMIT` slots |
+| `splat-kinds.test.ts` I2 | the offset of the string view in our `CFile::RawRead` | a constant ahead of it that takes another LEB length (+0x25f to +0x259 with the executable TU's object): the case takes the first `i64.const` that packs our address of the string |
+| `splat-symbols.test.ts`, "drops a voted name that shares its target address" | whether `stdout`'s bytes can refute it there | the re-pointed bytes of `__stdout_FILE`, which place it in the target once since the executable TU's object and three times at 84f5d8d: the case takes a `.bss` word of ours (zeros, as the vtable's offset-to-top word is) |
+| `splat-kinds.test.ts`, "an integer in the target table past ours is a review warning" | an integer between the end of our table and the end of the target's | our table grew past the target's (12881 slots against 12855 with unit 165's address-taken functions), which leaves no such integer: the case gives the target's table an end two slots past ours when the link leaves none, and expects the `past-table` warning there |
 
 Any case that holds a target number as past our data or our table ends so once a landing grows ours past it; such a
 case takes the number from the link ([splat.md](splat.md) §S5 item 3).
@@ -568,7 +572,8 @@ Compile a variant from a copy with the `-ffile-prefix-map` of [codegen.md](codeg
 offset. A control with an unchanged object gives the plain link's sha256, so comparing sha256 says "the same module" at
 once. Take the index of ours from that link's `names.tsv`: a variant can shift the band, and `pnpm wasm score` at the
 plain link's index reads another function (`1150 over 1168 rows`, against `81` at the right one). To put a copy ahead of
-every tree, add the object before `app/vota_init.o` instead ([levels.md](levels.md) §V4).
+every tree, add the object before `app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o`, the first object, instead
+([levels.md](levels.md) §V4).
 
 A match line whose symbol is local, `<name>@<object>`, names the object's path, so a swapped object under another path
 loses it: `splat-build` on such a link needs a copy of the list with those keys rewritten to the new path.

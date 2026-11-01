@@ -46,7 +46,7 @@
 # function for having one call only when the table does not hold it (the target's table does, slot 59).
 CWASMTHREAD_SRCS := mock/app/simulador/wasm/cwasmthread.cpp mock/app/simulador/wasm/wasmjs.cpp
 UENUX2_SRCS += $(CWASMTHREAD_SRCS)
-# nothing reconstructed builds a thread or calls the wrappers from the executable TU yet:
+# nothing reconstructed builds a thread, and of the wrappers the executable TU calls only PushKey yet (unit 170):
 # 99-uenux2-simulador-wasm-cwasmthread-roots.cpp keeps them (see the file header)
 $(ROOT)/$(APP)/99-uenux2-simulador-wasm-cwasmthread-roots.o: $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/99-uenux2-simulador-wasm-cwasmthread.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/99-uenux2-simulador-wasm-cwasmthread-roots.cpp -o $(R)

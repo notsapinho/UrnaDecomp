@@ -12,6 +12,9 @@ enum EUeGuiError {
     // the value is the code api::CBmpConversor::InvertColors (target fn 3663) throws; the name is chosen from its message,
     // "Dado de entrada nulo": no evidence names it
     EUE_GUI_INVERTCOLORS_DADO_NULO = 4903,
+    // the value is the code api::CFixedImage::CFixedImage(const std::string &) (target fn 2246) throws; the name is chosen
+    // from its message, "Nome do arquivo vazio": no evidence names it
+    EUE_GUI_FIXEDIMAGE_NOME_VAZIO = 4913,
     // the value is the code api::CFormBuilder::GetLabeledKeyPos (target fn 5544) throws; the name is chosen from its
     // message, "Alinhamento desconhecido ({})": no evidence names it
     EUE_GUI_GETLABELEDKEYPOS_ALINHAMENTO_DESCONHECIDO = 4914,
@@ -46,6 +49,9 @@ enum EUeGuiError {
     // the value is the code api::CTextFieldPaper::CTextFieldPaper (target fn 2771) throws; the name is chosen from its
     // message, "Campo estava com o texto nulo": no evidence names it
     EUE_GUI_TEXTFIELDPAPER_TEXTO_NULO = 4973,
+    // the value is the code api::CTextFieldUpdate::CTextFieldUpdate (target fn 3658) throws; the name is chosen from its
+    // message, "Campo estava com o texto nulo": no evidence names it
+    EUE_GUI_TEXTFIELDUPDATE_TEXTO_NULO = 4974,
     // the value is the code api::CTextRectField's constructor throws (record ctextrectfield.cpp 51:15, inlined into
     // fn 5546); the name is chosen from its message, "Campo estava com o texto nulo": no evidence names it
     EUE_GUI_TEXTRECTFIELD_TEXTO_NULO = 4976,

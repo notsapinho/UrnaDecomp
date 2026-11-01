@@ -84,19 +84,21 @@ ECOURNA_CXXFLAGS   := -O3 -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP)
 # -DNDEBUG, -fno-strict-aliasing (no TBAA: comum's converters reload a vector's begin after an int store, fn 10289);
 # measured on the api/util, api/io, api/ipc/posix and comum units (docs/reference/facts/app-flags.md §F6), the level on
 # the whole tree (docs/reference/facts/levels.md §V3: every match holds and the bodies that call
-# std::string::append where -O2 inlines it match). The
+# std::string::append where -O2 inlines it match), and -std=c++23 on the whole tree too (§V3: every match holds, and
+# CWasmScreenMT::ShowText's rvalue substr and two of libc++'s vector __assign_with_size copies match). The
 # include root of the app's own headers is src/uenux2/src ("api/util/cwait.h"); ecourna headers come from -Isrc, and a
 # uenux2 object's records of them name the conan package's installed headers, p/include (the third map).
 UENUX2_PREFIX_MAP  := -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -ffile-prefix-map=src/uenux2=/home/rubio/tse/uenux2 \
                       -ffile-prefix-map=src/ecourna=/home/rubio/.conan2/p/b/libecea1da310e5107/p/include/ecourna
-UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
+UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
 # no __assert_fail) but keep -O2, the level they were measured at, and strict aliasing: the library templates they
 # instantiate (roots_rhvoice.o's std::__tree and __split_buffer, roots_boost.o's __tree_remove) win the link, and the
-# target's copies have TBAA (6 matches need it)
-APP_CXXFLAGS := $(patsubst -O3,-O2,$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS)))
+# target's copies have TBAA (6 matches need it). They keep -std=c++20: at c++23 no match moves, but roots_ecourna.o's
+# vector<unsigned char> copy of __assign_with_size merges again with comum's and takes fn 1158's name from it
+APP_CXXFLAGS := $(patsubst -O3,-O2,$(patsubst -std=c++23,-std=c++20,$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS))))
 APP_CFLAGS   := $(patsubst -O3,-O2,$(filter-out -std=% -fno-strict-aliasing,$(UENUX2_CXXFLAGS)))
 # Measuring a flag set: UENUX2_EXTRA and ECOURNA_EXTRA (empty here) are added to a tree's flags after the stand-ins'
 # are derived, so a private link adds a flag to that tree's objects alone, the fragments' own additions kept
@@ -173,6 +175,17 @@ $(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(
 $(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_vector.cpp -o $(R)
 
+# The executable TU, /home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the TSE link line
+# (docs/reference/toolchain.md "Export order"), so wasm-ld keeps its copy of every linkonce function and vtable it emits.
+# Its own flags, not UENUX2_CXXFLAGS, each measured on the whole link (docs/reference/facts/levels.md V1): -Oz
+# -fexceptions, -fPIC (its records sit in .data too: docs/reference/facts/app-flags.md F5), -DNDEBUG (F7) and no strict
+# aliasing; -std=c++23, the tree's too, which V1 measures matching eleven more rows than -std=c++20 and losing none.
+# The benchmark's setup `vota-web` names VOTA_WEB_OBJS.
+VOTA_WEB_CXXFLAGS := -Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
+VOTA_WEB_OBJS := $(ROOT)/$(APP)/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
+$(VOTA_WEB_OBJS): $(ROOT)/src/uenux2/wasm/vota_web/vota_web_wasm.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
+	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c /work/src/uenux2/wasm/vota_web/vota_web_wasm.cpp -o $(R)
+
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
 # arguments; compiled with -Dmain=<name> so it becomes a plain function urna_roots() calls.
 $(ROOT)/$(GEN)/sqlite_roots.c: $(ROOT)/$(SQLITE_O) $(ROOT)/tools/libs/sqlite/attribution.tsv $(ROOT)/tools/libs/openssl/gen-probe-main.py
@@ -196,14 +209,15 @@ $(ROOT)/$(OSSL_OBJS_FILE): $(ROOT)/tools/libs/ossl_files.txt $(ROOT)/$(LIBCRYPTO
 # include paths an app TU may need (the libraries' headers at their pinned builds); tools/round/try-tu.sh adds them
 APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_SRC) -I$(RHVOICE_SRC)/src/include $(RHVOICE_CFG)
 
-# ---- link order (first object exports votaInit alone; app before libraries; libraries in this order) --------
+# ---- link order (the executable TU first, VOTA_WEB_OBJS above; then the stand-ins, votaInit's first; app before
+# libraries; libraries in this order) --------
 APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=
 # app-side objects (the uenux2 units) precede the conan libraries (ecourna first); the ASN.1 runtime rides in EXTRA_OBJS (src/mk/asn1.mk),
 # with the one RHVoice object a measured choice puts before it (RHVOICE_BEFORE_ASN1 there)
-LINK_OBJS := $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS))
+LINK_OBJS := $(VOTA_WEB_OBJS) $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS))
 EXPORTS := _main,_votaInit,_votaPressKey,_votaTick,_votaSetAudioEnabled,_votaGetStateJson,_uenux_wasm_web_sound_wait_cancel_requested,_uenux_wasm_web_sound_wait_finished
 LINK_FLAGS := -Oz -fexceptions -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8MB -sEXPORTED_FUNCTIONS=$(EXPORTS) -sEXPORTED_RUNTIME_METHODS=ccall,FS,callMain
 OUT := build/out/wasm/vota_web

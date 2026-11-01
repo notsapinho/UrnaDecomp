@@ -135,8 +135,8 @@ Measured twice:
   `vota_init.o` import the table and gives the target's order exactly: `Cb memory, Db ctors, Eb votaInit, Fb TABLE,
   Gb votaPressKey, … Kb main, Lb, Mb`.
 
-So in the target, votaInit's TU is the first object on the link line, exports only `votaInit` and makes an
-indirect call.
+So in the target, votaInit's TU is the first object on the link line, exports `votaInit` first and makes an indirect
+call. It exports more than `votaInit`: [../toolchain.md](../toolchain.md) "Export order" gives the records that say so.
 
 Two more facts from the same links:
 

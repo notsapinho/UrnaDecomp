@@ -119,10 +119,11 @@
 # partner differs and the content pass takes the right body through the four statics' lines; those two names rest on
 # the calls and not on the census.
 #
-# src/app/roots_uenux2.cpp holds std::operator+(string&&, string&&): the first real uenux2 TU that instantiates
-# CPolySingleton<T>::instance links ahead of libc++.a, and its copy at -O2 took 252 (docs/reference/facts/splat.md S10 item
-# 10). Its comment says how the copy stays the target's. 837, 11157 and 611 now come from this unit's objects, at uenux2's
-# flags, and stay matched; the 13 other instances stay in unit 100's roots object.
+# std::operator+(string&&, string&&): the first real uenux2 TU that instantiates CPolySingleton<T>::instance links ahead
+# of libc++.a, and its copy at -O2 took 252 (docs/reference/facts/splat.md S10 item 10). The executable TU's object
+# (unit 170), first on the link line at -Oz, holds the target's copy, where src/app/roots_uenux2.cpp held one before.
+# 837, 11157 and 611 now come from this unit's objects, at uenux2's flags, and stay matched; the 13 other instances stay
+# in unit 100's roots object.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_COMUM_LOG_SRCS := src/api/uelog/cloga.cpp src/app/comum/log/ieventoslog.cpp src/app/comum/log/clogcomum.cpp src/app/comum/informacao/cinformacaoeleicao.cpp

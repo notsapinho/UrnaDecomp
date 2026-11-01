@@ -68,7 +68,7 @@
 #   is a tree's, so the body stays and the row waits for that decision. The caller is the constructor fn 11371 inlines.
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes
-#   give it. The row stays unresolved.
+#   give it. The row stays `differs`.
 # - CPleito's constructor (fn 5652, records 64, 67 and 70) is not written. The target calls fn 1953, the uninitialized
 #   copy of CEleicaoPE, and fn 2289 calls no __init_with_size. At -O2 clang keeps __init_with_size<CCargo> out of line
 #   (-Rpass-missed=inline: cost=230, threshold=225) and inlines the copy into the constructor; at -O3, the tree's level,

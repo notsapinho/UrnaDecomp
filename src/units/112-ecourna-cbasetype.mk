@@ -91,10 +91,9 @@
 #     first the scan cannot re-point is the literal " - ": the target's lies in the tail of ") - ", which fn 690 holds, a helper
 #     of vota/eleitor/comum/ctelasvota.cpp that builds `prefixo + " - cargo " + ... + ") - " + sufixo`. Ours lies in the tail
 #     of "] - ". With that literal in a scratch link, `pnpm wasm splat-remap ... --against 1143 --no-kinds` prints IDENTICAL.
-#   - 3858, __to_chars_itoa<unsigned>, is not ours to match from libc++.a: the target loads its power table through an
-#     i32.add of the address and ours folds the address into the load's offset, one row no name changes, so it has no hand
-#     line. It calls 2869, which keeps its digit helpers out of line (3856 3852 2867 3850) where ours inlines them, 357 over
-#     486 rows. Which object's copy the target has is not measured; the executable TU's level, -Oz, is the lead.
+#   - 3858, __to_chars_itoa<unsigned>, is the executable TU's copy: libc++.a's loads its power table with the address
+#     folded into the load's offset where the target adds it, and its 2869 inlines the digit helpers (3856 3852 2867
+#     3850) that the target keeps out of line. All six match from that TU's object at -Oz (unit 170).
 #   - 9258 waits for 2416, std::regex's constructor, whose row stops at std::collate<char>::id (.bss), no target symbol.
 #   - 1877 and 5162 wait for the slot of parse_iso_time, 5851 (9824 B), whose one direct caller is uenux2's 11616. Instantiated
 #     in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scores 2708 over 4726 rows, 1764 deleted: not the target's body.
