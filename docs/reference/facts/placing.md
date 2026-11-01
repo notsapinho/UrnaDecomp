@@ -192,7 +192,7 @@ whose target body you can read (`api::CFixedText`'s two `IText` overrides are on
 A class your bodies need complete only to call a virtual slot through a pointer (a `std::shared_ptr` member whose
 `Slot2()` you call, a control block that deletes through the destructor's slot) gets its head alone: the class, the
 base clause RTTI gives and that slot, with a comment that no member is reconstructed, as
-`src/uenux2/src/app/vota/iexecucaovota.h` does for its control block's call of the deleting destructor. Its `sizeof`
+`src/uenux2/src/app/vota/eleitor/iajusteinicial.h` does for its control block's call of the deleting destructor. Its `sizeof`
 is then wrong, so nothing may construct it; the first unit that needs a member adds the data members and the records'
 declarations as above.
 

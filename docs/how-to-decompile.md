@@ -119,9 +119,10 @@ code of ours for, and `python3 -I -B tools/round/stubs.py --report` counts those
 counts only when its symbol names the function's own class ([src/README.md](../src/README.md) "Stubs" has the rule). So a
 `no-candidate` row with a stub is usually unwritten. A row without one usually has code to fix, or is a pending
 member (steps 5 and 9), or one of the two kinds above. Two kinds break the rule
-([facts/placing.md](reference/facts/placing.md) §P1 has each): a function whose only records are an inline member of a
-header another unit writes loses its stub unwritten, and a library's code that TSE calls has a stub though no TSE
-source writes it (read the row's `owner` in `ledger/functions.tsv`, and a template instance's callers).
+([facts/placing.md](reference/facts/placing.md) §P1 has each, [src/README.md](../src/README.md) "Stubs" the rule): a
+function whose only records are an inline member of a header another unit writes loses its stub unwritten, and a
+library's code that TSE calls has a stub though no TSE source writes it (read the row's `owner` in
+`ledger/functions.tsv`, and a template instance's callers).
 
 The `group` column is the function's *component*, and a component says who uses a function, not where its code
 lives: 238 uenux2 functions are in group `ecourna`, because they throw ecourna's `CBaseError<…>` template with a uenux2
@@ -481,15 +482,16 @@ emitted before the function: an inlined `always_inline` template takes its stack
 its callees in, and the copy the target keeps can be another TU's; read where the target's record of the copy lies
 first (both §C5).
 
-binaryen inlines a function with one call site only, so the same inlined code in
-two target functions means clang inlined it in at least one TU: an observer's detach (a lock over an erase of the
-observer, `call 736` and `call 150`) is inlined in both 2778 and 5902, the destructors of `api::CDSImageField` and
-`comum::CInfoMTLCD`. Write such a member so that clang inlines it, with the `inline` keyword, which raises the cost
-up to which clang inlines (§R5); a form clang leaves out of line matches only while it has one caller, and drifts when
-the second lands ([facts/codegen.md](reference/facts/codegen.md) §C3 links such a detach both ways, with one caller and
-with two). The copies can differ, one clang's and one binaryen's, which the result pointer shows (3829 and 3830, §C3):
-measure `inline` before writing it. And a body of ours with a `call` where the target has a second prologue can be a
-merge with a twin that only a root keeps alive, so look for that twin before a source form.
+binaryen inlines a function with one call site only (counted before its merge passes,
+[facts/tool-traps.md](reference/facts/tool-traps.md) §X1), so the same inlined code in two target functions means clang
+inlined it in at least one TU: an observer's detach (a lock over an erase of the observer, `call 736` and `call 150`) is
+inlined in both 2778 and 5902, the destructors of `api::CDSImageField` and `comum::CInfoMTLCD`. Write such a member so
+that clang inlines it, with the `inline` keyword, which raises the cost up to which clang inlines (§R5); a form clang
+leaves out of line matches only while it has one caller, and drifts when the second lands
+([facts/codegen.md](reference/facts/codegen.md) §C3 links such a detach both ways, with one caller and with two). The
+copies can differ, one clang's and one binaryen's, which the result pointer shows (3829 and 3830, §C3): measure `inline`
+before writing it. And a body of ours with a `call` where the target has a second prologue can be a merge with a twin
+that only a root keeps alive, so look for that twin before a source form.
 
 **When no record names the file**, as for every stub in `unplaced.cpp`, choose the path the way the landed
 units do, and say why in the fragment's header comment (step 6):
@@ -615,17 +617,17 @@ slot's callers, else its slot (`Slot3`). Before you choose a class for an object
 next functions that take it, and read their vptr stores, their strings and their callees' records: "no evidence" may be
 said of the object only then. 5622 and 5623 have no record, slot or RTTI of their own, and their callers hand the same
 object to 5604, whose lambda 2791 has the record `comum::CCabecalhoQRCodeBuilder::preBuild()`. A template argument is
-a name too, and it ends up in a match's symbol, where no check sees it: before you write a container's key or element
-type as chosen, read the records of the class's other members, of its base's and of the functions that take the
-object (`awk -F'\t' '$5 ~ /<Class>/' ledger/source-locations.tsv`, and `<Class>::` in `ledger/strings.tsv`). Put a type in the
-namespace of the class that uses it, and make a function a member only when it reads private state or helps a singleton
-class (above). Look for a type a
-record names on the other lanes' branches first ([agents.md](agents.md) "A type no lane owns"). Then mark the choice
-where it is declared, as `src/uenux2/src/api/gui/eueguierror.h` does for each enumerator (`the name is chosen from its
-message, "Dado de entrada nulo": no evidence names it`), and list the chosen names, paths and linkages in the fragment's
-header comment with any other choice that gives the same bytes (a free `operator-` for a member one). Parameter and
-local names need no mark: no record holds one. The symbol file then names the function by `pair-*` or `srcloc-anchor`
-evidence, which says that our body is the target's, not what the function was called.
+a name too, a class's or a member function's, and it ends up in a match's symbol, where no check sees it: before you
+write a container's key or element type as chosen, read the records of the class's other members, of its base's and of
+the functions that take the object (`awk -F'\t' '$5 ~ /<Class>/' ledger/source-locations.tsv`, and `<Class>::` in
+`ledger/strings.tsv`). Put a type in the namespace of the class that uses it, and make a function a member only when it
+reads private state or helps a singleton class (above). Look for a type a record names on the other lanes' branches
+first ([agents.md](agents.md) "A type no lane owns"). Then mark the choice where it is declared, as
+`src/uenux2/src/api/gui/eueguierror.h` does for each enumerator (`the name is chosen from its message, "Dado de entrada
+nulo": no evidence names it`), and list the chosen names, paths and linkages in the fragment's header comment with any
+other choice that gives the same bytes (a free `operator-` for a member one). Parameter and local names need no mark: no
+record holds one. The symbol file then names the function by `pair-*` or `srcloc-anchor` evidence, which says that our
+body is the target's, not what the function was called.
 
 A slot's callers are not in `ledger/callgraph.tsv`, which holds direct calls: search the folded readout of each function
 that holds an instance for the vtable load ([facts/placing.md](reference/facts/placing.md) §P8). "No caller" means that
@@ -1282,12 +1284,13 @@ A row of another unit can turn `match` for a reason you can name:
 A match the scan found by its body or by the census's pair has `content` or `ledger` in the `source` column of
 `splat/scan.tsv`, in the first scan only. Once the match names the function, a later scan writes `symbol` there, so a
 rescan of the committed state differs from the committed `scan.tsv` in one such line per new match the scan found that
-way, and a renamed twin's row can go from `ledger` to `symbol` the same way. So the check that survives a rescan is a new match whose symbol has no line in the
-symbol file: `comm -13 <(cut -d' ' -f2 <old matched.txt> | sort) <(cut -d' ' -f2 splat/matched.txt | sort)`, then
-`/usr/bin/grep -c -F "$s = " splat/symbol_addrs.txt` for each. A new match that step 8 had already named
+way (its `detail` can shorten too: [reference/splat.md](reference/splat.md) "Reviewing a match"), and a renamed twin's
+row can go from `ledger` to `symbol` the same way. So the check that survives a rescan is a new match whose symbol has
+no line in the symbol file: `comm -13 <(cut -d' ' -f2 <old matched.txt> | sort) <(cut -d' ' -f2 splat/matched.txt |
+sort)`, then `/usr/bin/grep -c -F "$s = " splat/symbol_addrs.txt` for each. A new match that step 8 had already named
 (`evidence:srcloc-anchor`, `pair-*`, `call`, …) has `symbol` from the start, and then a rescan changes nothing: on an
-unchanged tree `TMPDIR=/tmp make -C src splat-match` ends with `0 files written` and `git status` shows nothing.
-Neither is drift; commit what the generator writes.
+unchanged tree `TMPDIR=/tmp make -C src splat-match` ends with `0 files written` and `git status` shows nothing. Neither
+is drift; commit what the generator writes.
 
 An edit after this step that leaves the plain link byte-identical (a comment; `shasum -a 256
 build/out/wasm/vota_web/vota_web_wasm.wasm` before and after the link) changes nothing steps 7 and 8 read: run

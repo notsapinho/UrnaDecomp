@@ -408,7 +408,9 @@ ahead of minizip's our link kept `crc32` with `crc32_z` inlined (a block result 
 with minizip's first it keeps `crc32_z` whole, and eleven rows matched ([libraries.md](libraries.md) §B8, fragment 06).
 
 A function with no record has a free line to do this with, and a function with records may move while each throw stays
-on its record's line. Say in the fragment that the order is measured.
+on its record's line. Say in the fragment that the order is measured. A new file whose order against a landed unit's
+file decides a body goes into that unit, so the order cannot move with a fragment number (`src/units/README.md`
+"Names").
 
 The same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals
 swapped, with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
