@@ -16,7 +16,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "api::CDate::operator<=>(api::CDate const&) const",
     "symbol": "_ZNK3api5CDatessERKS0_",
     "evidence": "symbol",
@@ -42,7 +42,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "api::SRect::Move(api::SPoint const&)",
     "symbol": "_ZN3api5SRect4MoveERKNS_6SPointE",
     "evidence": "symbol",
@@ -53,17 +53,16 @@
     }
   },
   {
-    "id": "uenux2/4793",
-    "index": 4793,
-    "size": 412,
-    "band": "medium",
-    "component": "comum",
-    "owner": "libcxx",
+    "id": "uenux2/2662",
+    "index": 2662,
+    "size": 821,
+    "band": "large",
+    "component": "simulador",
+    "owner": "-",
     "features": [
       "loop",
-      "invoke",
-      "throw",
-      "i64",
+      "float",
+      "bulk-memory",
       "select"
     ],
     "ledger": {
@@ -73,11 +72,33 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
     "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2/2885",
+    "index": 2885,
+    "size": 895,
+    "band": "large",
+    "component": "unknown",
+    "owner": "libcxx",
+    "features": [],
+    "ledger": {
+      "kind": "addr",
+      "score": 33
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "comum::CCabecalhoQRCodeBuilder::~CCabecalhoQRCodeBuilder()",
+    "symbol": "_ZN5comum23CCabecalhoQRCodeBuilderD2Ev",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp.o",
     "reference": null
   },
   {
@@ -97,38 +118,41 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "simulador::CWasmScreenMT::Led1()",
     "symbol": "_ZN9simulador13CWasmScreenMT4Led1Ev",
     "evidence": "symbol",
     "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp.o",
     "reference": {
       "path": "src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp",
-      "line": 73
+      "line": 74
     }
   },
   {
-    "id": "uenux2/6548",
-    "index": 6548,
-    "size": 1530,
-    "band": "large",
-    "component": "comum",
-    "owner": "sqlite",
+    "id": "uenux2/5719",
+    "index": 5719,
+    "size": 4179,
+    "band": "huge",
+    "component": "asn1-modules",
+    "owner": "app",
     "features": [
-      "call_indirect"
+      "loop",
+      "switch",
+      "i64",
+      "select"
     ],
     "ledger": {
       "kind": "addr",
-      "score": 1
+      "score": 19
     },
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": "vota::CTelasVota::~CTelasVota()",
-    "symbol": "_ZN4vota10CTelasVotaD1Ev",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "void std::__2::__introsort<std::__2::_ClassicAlgPolicy, comum::asn::CConversorSecaoEleitoral::DoDesconverte(ModuloLocal::SecaoEleitoral const&) const::$_0&, comum::md::CIdentificacaoAgregada*, false>(comum::md::CIdentificacaoAgregada*, comum::md::CIdentificacaoAgregada*, comum::asn::CConversorSecaoEleitoral::DoDesconverte(ModuloLocal::SecaoEleitoral const&) const::$_0&, std::__2::iterator_traits<comum::md::CIdentificacaoAgregada*>::difference_type, bool)",
+    "symbol": "_ZNSt3__211__introsortINS_17_ClassicAlgPolicyERZNK5comum3asn24CConversorSecaoEleitoral13DoDesconverteERKN11ModuloLocal14SecaoEleitoralEE3$_0PNS2_2md22CIdentificacaoAgregadaELb0EEEvT1_SE_T0_NS_15iterator_traitsISE_E15difference_typeEb",
     "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o",
+    "object": "build/out/app/uenux2/src/app/comum/dados/asn/cconversorsecaoeleitoral.cpp.o",
     "reference": null
   },
   {
@@ -148,7 +172,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "simulador::CWasmTimer::IsRunning() const",
     "symbol": "_ZNK9simulador10CWasmTimer9IsRunningEv",
     "evidence": "symbol",
@@ -159,21 +183,45 @@
     }
   },
   {
-    "id": "uenux2/10451",
-    "index": 10451,
-    "size": 6996,
-    "band": "huge",
-    "component": "vota",
+    "id": "uenux2/10282",
+    "index": 10282,
+    "size": 369,
+    "band": "medium",
+    "component": "comum",
     "owner": "app",
     "features": [
-      "loop",
-      "call_indirect",
+      "switch",
+      "throw",
       "frame",
-      "inlined-frame",
-      "i64",
-      "float",
-      "bulk-memory",
-      "select"
+      "inlined-frame"
+    ],
+    "ledger": {
+      "kind": "shape",
+      "score": 22
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2/10307",
+    "index": 10307,
+    "size": 2480,
+    "band": "huge",
+    "component": "vota-web",
+    "owner": "app",
+    "features": [
+      "call_indirect",
+      "invoke",
+      "throw",
+      "frame",
+      "i64"
     ],
     "ledger": {
       "kind": "none",
@@ -182,7 +230,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -207,46 +255,15 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "vota::impl::CInformacaoThreadOperador::CancelaHabilitacao()",
     "symbol": "_ZN4vota4impl25CInformacaoThreadOperador18CancelaHabilitacaoEv",
     "evidence": "symbol",
     "object": "build/out/app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o",
     "reference": {
       "path": "src/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp",
-      "line": 395
+      "line": 385
     }
-  },
-  {
-    "id": "uenux2/10713",
-    "index": 10713,
-    "size": 1389,
-    "band": "large",
-    "component": "vota",
-    "owner": "app",
-    "features": [
-      "loop",
-      "switch",
-      "call_indirect",
-      "frame",
-      "inlined-frame",
-      "i64",
-      "bulk-memory",
-      "select"
-    ],
-    "ledger": {
-      "kind": "none",
-      "score": null
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": null,
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
-    "reference": null
   },
   {
     "id": "uenux2/10946",
@@ -267,7 +284,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "api::CTextFieldBlinking::Draw(api::IScreen&) const",
     "symbol": "_ZNK3api18CTextFieldBlinking4DrawERNS_7IScreenE",
     "evidence": "symbol",
@@ -298,7 +315,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -306,32 +323,328 @@
     "reference": null
   },
   {
-    "id": "uenux2/11620",
-    "index": 11620,
-    "size": 4622,
-    "band": "huge",
-    "component": "comum",
-    "owner": "app",
+    "id": "vota-web/1395",
+    "index": 1395,
+    "size": 74,
+    "band": "small",
+    "component": "unknown",
+    "owner": "-",
     "features": [
+      "leaf",
       "loop",
-      "throw",
-      "frame",
-      "inlined-frame",
-      "i64",
-      "bulk-memory"
+      "select"
     ],
     "ledger": {
-      "kind": "none",
-      "score": null
+      "kind": "byte",
+      "score": 0
     },
     "origin": "selected",
-    "setup": "uenux2",
+    "setup": "vota-web",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": null,
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::__formatter::__find_exponent[abi:ne210108](char*, char*)",
+    "symbol": "_ZNSt3__211__formatter15__find_exponentB8ne210108EPcS1_",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/1549",
+    "index": 1549,
+    "size": 200,
+    "band": "medium",
+    "component": "unknown",
+    "owner": "sqlite",
+    "features": [
+      "leaf",
+      "frame",
+      "i64",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "void std::__2::__format::__create_packed_storage[abi:ne210108]<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, char const [9], std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const>(unsigned long long&, std::__2::__basic_format_arg_value<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>>*, char const (&) [9], std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)::'lambda'()::operator()() const",
+    "symbol": "_ZZNSt3__28__format23__create_packed_storageB8ne210108INS_20basic_format_contextINS_20back_insert_iteratorINS0_15__output_bufferIcEEEEcEEJA9_KcKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEEEvRyPNS_24__basic_format_arg_valueIT_EEDpRT0_ENKUlvE_clEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/2857",
+    "index": 2857,
+    "size": 1367,
+    "band": "large",
+    "component": "unknown",
+    "owner": "libcxx",
+    "features": [
+      "loop",
+      "switch",
+      "frame",
+      "inlined-frame",
+      "float",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 22
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "char* std::__2::__formatter::__to_buffer[abi:ne210108]<float>(char*, char*, float, std::__2::chars_format, int)",
+    "symbol": "_ZNSt3__211__formatter11__to_bufferB8ne210108ITkNS_14floating_pointEfEEPcS2_S2_T_NS_12chars_formatEi",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "vota-web/2878",
+    "index": 2878,
+    "size": 37,
+    "band": "small",
+    "component": "unknown",
+    "owner": "libcxx",
+    "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::__format::__output_buffer<char>::__prepare_write[abi:ne210108](unsigned long)",
+    "symbol": "_ZNSt3__28__format15__output_bufferIcE15__prepare_writeB8ne210108Em",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/4124",
+    "index": 4124,
+    "size": 143,
+    "band": "medium",
+    "component": "unknown",
+    "owner": "sqlite",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::basic_format_args<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>>::get[abi:ne210108](unsigned long) const",
+    "symbol": "_ZNKSt3__217basic_format_argsINS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEE3getB8ne210108Em",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/5871",
+    "index": 5871,
+    "size": 703,
+    "band": "large",
+    "component": "unknown",
+    "owner": "libcxx",
+    "features": [
+      "loop",
+      "frame",
+      "inlined-frame",
+      "float",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 11
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::__formatter::__float_result std::__2::__formatter::__format_buffer_hexadecimal_lower_case[abi:ne210108]<float, float>(std::__2::__formatter::__float_buffer<float> const&, float, int, char*)",
+    "symbol": "_ZNSt3__211__formatter38__format_buffer_hexadecimal_lower_caseB8ne210108IffEENS0_14__float_resultERKNS0_14__float_bufferIT_EET0_iPc",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "vota-web/5926",
+    "index": 5926,
+    "size": 15,
+    "band": "tiny",
+    "component": "unknown",
+    "owner": "app",
+    "features": [],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::back_insert_iterator<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>::operator=[abi:ne210108](char const&)",
+    "symbol": "_ZNSt3__220back_insert_iteratorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEaSB8ne210108ERKc",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/5939",
+    "index": 5939,
+    "size": 53,
+    "band": "small",
+    "component": "unknown",
+    "owner": "app",
+    "features": [
+      "frame",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "decltype(fp1) std::__2::__formatter::__copy[abi:ne210108]<std::__2::__wrap_iter<char*>, char, char, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>>(std::__2::__wrap_iter<char*>, unsigned long, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>)",
+    "symbol": "_ZNSt3__211__formatter6__copyB8ne210108ITkNS_19contiguous_iteratorENS_11__wrap_iterIPcEETkNS_15__fmt_char_typeEcTkNS_15__fmt_char_typeEcTkNS_15output_iteratorIRKT1_EENS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEEEDtfp1_ET_mT2_",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/5944",
+    "index": 5944,
+    "size": 599,
+    "band": "large",
+    "component": "unknown",
+    "owner": "libcxx",
+    "features": [
+      "loop",
+      "switch",
+      "frame"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 5
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::to_chars_result std::__2::to_chars[abi:ne210108]<unsigned int, 0>(char*, char*, unsigned int, int)",
+    "symbol": "_ZNSt3__28to_charsB8ne210108IjTnNS_9enable_ifIXsr11is_integralIT_EE5valueEiE4typeELi0EEENS_15to_chars_resultEPcS6_S2_i",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "vota-web/11645",
+    "index": 11645,
+    "size": 446,
+    "band": "medium",
+    "component": "unknown",
+    "owner": "libcxx",
+    "features": [
+      "leaf",
+      "loop",
+      "frame",
+      "inlined-frame",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "char* std::__2::rotate[abi:ne210108]<char*>(char*, char*, char*)",
+    "symbol": "_ZNSt3__26rotateB8ne210108IPcEET_S2_S2_S2_",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/12979",
+    "index": 12979,
+    "size": 9,
+    "band": "tiny",
+    "component": "unknown",
+    "owner": "openssl",
+    "features": [],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::assign(char const*)",
+    "symbol": "_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6assignEPKc",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/13229",
+    "index": 13229,
+    "size": 32,
+    "band": "tiny",
+    "component": "unknown",
+    "owner": "openssl",
+    "features": [
+      "frame"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::substr[abi:ne210108](unsigned long, unsigned long) const &",
+    "symbol": "_ZNKRSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6substrB8ne210108Emm",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
     "reference": null
   },
   {
@@ -443,6 +756,33 @@
     }
   },
   {
+    "id": "ecourna/5173",
+    "index": 5173,
+    "size": 233,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "invoke",
+      "throw",
+      "frame"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 11
+    },
+    "origin": "selected",
+    "setup": "ecourna",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "name": "ecourna::api::security::CTrng::Generate(std::__2::vector<unsigned char, std::__2::allocator<unsigned char>>&, unsigned long)",
+    "symbol": "_ZN7ecourna3api8security5CTrng8GenerateERNSt3__26vectorIhNS3_9allocatorIhEEEEm",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/api_security_ctrng.cpp.o",
+    "reference": null
+  },
+  {
     "id": "ecourna/5174",
     "index": 5174,
     "size": 610,
@@ -500,57 +840,30 @@
     "reference": null
   },
   {
-    "id": "ecourna/9264",
-    "index": 9264,
-    "size": 339,
-    "band": "medium",
-    "component": "ecourna",
-    "owner": "app",
+    "id": "ecourna/9546",
+    "index": 9546,
+    "size": 63,
+    "band": "small",
+    "component": "libc++",
+    "owner": "libcxx",
     "features": [
-      "invoke",
-      "throw",
-      "frame",
+      "call_indirect",
       "i64"
     ],
     "ledger": {
-      "kind": "addr",
-      "score": 21
-    },
-    "origin": "selected",
-    "setup": "ecourna",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "ecourna::app::dados::CNumeroCPF::Formatado() const",
-    "symbol": "_ZNK7ecourna3app5dados10CNumeroCPF9FormatadoEv",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_cnumerocpf.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "ecourna/9529",
-    "index": 9529,
-    "size": 105,
-    "band": "small",
-    "component": "unknown",
-    "owner": "-",
-    "features": [
-      "loop",
-      "call_indirect"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
+      "kind": "byte",
       "score": 0
     },
     "origin": "selected",
     "setup": "ecourna",
     "lang": "c++",
     "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "name": "ecourna::api::compression::ICompressor::Add(std::__2::map<std::__2::filesystem::path, std::__2::filesystem::path, std::__2::less<std::__2::filesystem::path>, std::__2::allocator<std::__2::pair<std::__2::filesystem::path const, std::__2::filesystem::path>>> const&)",
-    "symbol": "_ZN7ecourna3api11compression11ICompressor3AddERKNSt3__23mapINS3_10filesystem4pathES6_NS3_4lessIS6_EENS3_9allocatorINS3_4pairIKS6_S6_EEEEEE",
+    "name": "std::__2::__function::__func<std::__2::__bind<void (ecourna::api::compression::CLzmaCompress::*)(unsigned long long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), ecourna::api::compression::CLzmaCompress*, std::__2::placeholders::__ph<1> const&, std::__2::placeholders::__ph<2> const&>, void (unsigned long long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::operator()(unsigned long long&&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)",
+    "symbol": "_ZNSt3__210__function6__funcINS_6__bindIMN7ecourna3api11compression13CLzmaCompressEFvyRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEJPS6_RKNS_12placeholders4__phILi1EEERKNSJ_ILi2EEEEEEFvySE_EEclEOySE_",
     "evidence": "symbol",
-    "object": "build/out/app/ecourna/api_compression_icompressor.cpp.o",
+    "object": "build/out/app/ecourna/api_compression_clzmacompress.cpp.o",
     "reference": {
-      "path": "src/ecourna/api/compression/icompressor.cpp"
+      "path": "src/ecourna/api/compression/clzmacompress.cpp"
     }
   },
   {
@@ -948,8 +1261,8 @@
     }
   },
   {
-    "id": "asn1/9973",
-    "index": 9973,
+    "id": "asn1/9971",
+    "index": 9971,
     "size": 17,
     "band": "tiny",
     "component": "libc++",
@@ -971,6 +1284,33 @@
     "evidence": "symbol",
     "object": "build/out/app/asn1/BERDecoderPartial.o",
     "reference": null
+  },
+  {
+    "id": "zlib/704",
+    "index": 704,
+    "size": 166,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "zlib",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
+    "name": "_tr_flush_bits",
+    "symbol": "_tr_flush_bits",
+    "evidence": "symbol",
+    "object": "build/out/zlib/O3pic/trees.o",
+    "reference": {
+      "path": "third_party/zlib/trees.c",
+      "line": 878
+    }
   },
   {
     "id": "zlib/931",
@@ -1001,34 +1341,6 @@
     }
   },
   {
-    "id": "zlib/990",
-    "index": 990,
-    "size": 2434,
-    "band": "huge",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "loop",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 25
-    },
-    "origin": "selected",
-    "setup": "zlib",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
-    "name": "_tr_flush_block",
-    "symbol": "_tr_flush_block",
-    "evidence": "symbol",
-    "object": "build/out/zlib/O3pic/trees.o",
-    "reference": {
-      "path": "third_party/zlib/trees.c",
-      "line": 995
-    }
-  },
-  {
     "id": "zlib/1508",
     "index": 1508,
     "size": 55,
@@ -1055,64 +1367,6 @@
     "reference": {
       "path": "third_party/zlib/contrib/minizip/ioapi.c",
       "line": 53
-    }
-  },
-  {
-    "id": "zlib/1848",
-    "index": 1848,
-    "size": 147,
-    "band": "medium",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "bulk-memory",
-      "select"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "zlib",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
-    "name": "flush_pending",
-    "symbol": "flush_pending",
-    "evidence": "symbol",
-    "object": "build/out/zlib/O3pic/deflate.o",
-    "reference": {
-      "path": "third_party/zlib/deflate.c",
-      "line": 915
-    }
-  },
-  {
-    "id": "zlib/1849",
-    "index": 1849,
-    "size": 600,
-    "band": "large",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "call_indirect",
-      "frame",
-      "i64",
-      "select"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "zlib",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
-    "name": "zip64local_getLong64",
-    "symbol": "zip64local_getLong64",
-    "evidence": "symbol",
-    "object": "build/out/zlib/O3pic/minizip_zip.o",
-    "reference": {
-      "path": "third_party/zlib/contrib/minizip/zip.c",
-      "line": 401
     }
   },
   {
@@ -1201,6 +1455,67 @@
     "object": "build/out/zlib/O3pic/deflate.o",
     "reference": {
       "path": "third_party/zlib/deflate.c"
+    }
+  },
+  {
+    "id": "zlib/4825",
+    "index": 4825,
+    "size": 1801,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 10
+    },
+    "origin": "selected",
+    "setup": "zlib",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
+    "name": "deflate_stored",
+    "symbol": "deflate_stored",
+    "evidence": "symbol",
+    "object": "build/out/zlib/O3pic/deflate.o",
+    "reference": {
+      "path": "third_party/zlib/deflate.c",
+      "line": 1627
+    }
+  },
+  {
+    "id": "zlib/4826",
+    "index": 4826,
+    "size": 6899,
+    "band": "huge",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "call_indirect",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 29
+    },
+    "origin": "selected",
+    "setup": "zlib",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
+    "name": "deflate",
+    "symbol": "deflate",
+    "evidence": "symbol",
+    "object": "build/out/zlib/O3pic/deflate.o",
+    "reference": {
+      "path": "third_party/zlib/deflate.c",
+      "line": 946
     }
   },
   {
@@ -1660,6 +1975,34 @@
     }
   },
   {
+    "id": "openssl/294",
+    "index": 294,
+    "size": 2522,
+    "band": "huge",
+    "component": "openssl",
+    "owner": "-",
+    "features": [
+      "frame",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "openssl",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG",
+    "name": "gf_mul",
+    "symbol": "gf_mul",
+    "evidence": "symbol",
+    "object": "build/out/openssl/O3/libcrypto.a:libcrypto-lib-f_impl64.o",
+    "reference": {
+      "path": "third_party/openssl/crypto/ec/curve448/arch_64/f_impl64.c",
+      "line": 24
+    }
+  },
+  {
     "id": "openssl/920",
     "index": 920,
     "size": 985,
@@ -1831,34 +2174,6 @@
     "reference": {
       "path": "third_party/openssl/crypto/bn/bn_exp.c",
       "line": 609
-    }
-  },
-  {
-    "id": "openssl/3094",
-    "index": 3094,
-    "size": 8190,
-    "band": "huge",
-    "component": "unknown",
-    "owner": "openssl",
-    "features": [
-      "leaf",
-      "loop"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "openssl",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG",
-    "name": "ossl_sm3_block_data_order",
-    "symbol": "ossl_sm3_block_data_order",
-    "evidence": "symbol",
-    "object": "build/out/openssl/O3/libcrypto.a:libcrypto-lib-sm3.o",
-    "reference": {
-      "path": "third_party/openssl/crypto/sm3/sm3.c",
-      "line": 29
     }
   },
   {
@@ -2511,8 +2826,8 @@
     "setup": "rhvoice-ignore",
     "lang": "c++",
     "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
-    "name": "std::__2::__shared_ptr_pointer<RHVoice::userdict::empty_string*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::empty_string>, std::__2::allocator<RHVoice::userdict::empty_string>>::__get_deleter(std::type_info const&) const",
-    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict12empty_stringENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info",
+    "name": "std::__2::__shared_ptr_pointer<RHVoice::userdict::start_of_token*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::start_of_token>, std::__2::allocator<RHVoice::userdict::start_of_token>>::__get_deleter(std::type_info const&) const",
+    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict14start_of_tokenENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info",
     "evidence": "symbol",
     "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
     "reference": null
@@ -3012,6 +3327,33 @@
     "reference": null
   },
   {
+    "id": "boost/5179",
+    "index": 5179,
+    "size": 680,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "loop",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 10
+    },
+    "origin": "selected",
+    "setup": "boost",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "instantiatedBy": "ecourna",
+    "name": "boost::random::mersenne_twister_engine<unsigned int, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u>::twist()",
+    "symbol": "_ZN5boost6random23mersenne_twister_engineIjLm32ELm624ELm397ELm31ELj2567483615ELm11ELj4294967295ELm7ELj2636928640ELm15ELj4022730752ELm18ELj1812433253EE5twistEv",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/api_security_cprng.cpp.o",
+    "reference": null
+  },
+  {
     "id": "boost/9285",
     "index": 9285,
     "size": 24,
@@ -3239,29 +3581,6 @@
     "reference": {
       "path": "src/ecourna/api/compression/icompressor.cpp"
     }
-  },
-  {
-    "id": "boost/11614",
-    "index": 11614,
-    "size": 27,
-    "band": "tiny",
-    "component": "boost",
-    "owner": "boost",
-    "features": [],
-    "ledger": {
-      "kind": "addr",
-      "score": 5
-    },
-    "origin": "selected",
-    "setup": "boost",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "instantiatedBy": "ecourna",
-    "name": "boost::wrapexcept<boost::gregorian::bad_day_of_month>::clone() const",
-    "symbol": "_ZNK5boost10wrapexceptINS_9gregorian16bad_day_of_monthEE5cloneEv",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_asn_datahoraasn.cpp.o",
-    "reference": null
   },
   {
     "id": "libc/390",
@@ -4289,6 +4608,34 @@
     }
   },
   {
+    "id": "libcxx/988",
+    "index": 988,
+    "size": 2578,
+    "band": "huge",
+    "component": "libc++",
+    "owner": "openssl",
+    "features": [
+      "invoke",
+      "throw",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 309
+    },
+    "origin": "selected",
+    "setup": "libcxx",
+    "lang": "c++",
+    "flags": "-O2 -fno-unroll-loops -Oz -DLIBCXX_BUILDING_LIBCXXABI=1 -D_LIBCPP_BUILDING_LIBRARY -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -std=c++23 -DLIBC_NAMESPACE=__llvm_libc -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0",
+    "name": "std::__2::locale::classic()",
+    "symbol": "_ZNSt3__26locale7classicEv",
+    "evidence": "symbol",
+    "object": "emsdk:libc++.a:locale.o",
+    "reference": {
+      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxx/src/locale.cpp"
+    }
+  },
+  {
     "id": "libcxx/2137",
     "index": 2137,
     "size": 11,
@@ -4506,38 +4853,6 @@
     "flags": "-O2 -fno-unroll-loops -Oz -DLIBCXX_BUILDING_LIBCXXABI=1 -D_LIBCPP_BUILDING_LIBRARY -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -std=c++23 -DLIBC_NAMESPACE=__llvm_libc -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0",
     "name": "std::__2::__money_put<wchar_t>::__format(wchar_t*, wchar_t*&, wchar_t*&, unsigned int, wchar_t const*, wchar_t const*, std::__2::ctype<wchar_t> const&, bool, std::__2::money_base::pattern const&, wchar_t, wchar_t, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>> const&, std::__2::basic_string<wchar_t, std::__2::char_traits<wchar_t>, std::__2::allocator<wchar_t>> const&, int)",
     "symbol": "_ZNSt3__211__money_putIwE8__formatEPwRS2_S3_jPKwS5_RKNS_5ctypeIwEEbRKNS_10money_base7patternEwwRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKNSE_IwNSF_IwEENSH_IwEEEESQ_i",
-    "evidence": "symbol",
-    "object": "emsdk:libc++.a:locale.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxx/src/locale.cpp"
-    }
-  },
-  {
-    "id": "libcxx/7882",
-    "index": 7882,
-    "size": 3602,
-    "band": "huge",
-    "component": "unknown",
-    "owner": "libcxx",
-    "features": [
-      "loop",
-      "switch",
-      "invoke",
-      "throw",
-      "frame",
-      "i64",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 166
-    },
-    "origin": "selected",
-    "setup": "libcxx",
-    "lang": "c++",
-    "flags": "-O2 -fno-unroll-loops -Oz -DLIBCXX_BUILDING_LIBCXXABI=1 -D_LIBCPP_BUILDING_LIBRARY -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -std=c++23 -DLIBC_NAMESPACE=__llvm_libc -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0",
-    "name": "std::__2::money_get<wchar_t, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>>::__do_get(std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>&, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, bool, std::__2::locale const&, unsigned int, unsigned int&, bool&, std::__2::ctype<wchar_t> const&, std::__2::unique_ptr<wchar_t, void (*)(void*)>&, wchar_t*&, wchar_t*)",
-    "symbol": "_ZNSt3__29money_getIwNS_19istreambuf_iteratorIwNS_11char_traitsIwEEEEE8__do_getERS4_S4_bRKNS_6localeEjRjRbRKNS_5ctypeIwEERNS_10unique_ptrIwPFvPvEEERPwSM_",
     "evidence": "symbol",
     "object": "emsdk:libc++.a:locale.o",
     "reference": {

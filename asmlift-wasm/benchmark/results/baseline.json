@@ -1,37 +1,37 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-31T15:30:44.720Z",
+ "createdAt": "2026-11-01T12:03:41.204Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
  },
  "image": "urna-emsdk:6.0.0",
  "dataset": {
-  "rows": 181,
-  "rowsSha256": "4bfc1ad3947199eb0d0ca3b55d49aedae0b6293e51c03c69c822a0481c9af912",
-  "setupsSha256": "cfece17df3e722ba13a6bb4f29b1a25054d386a44d779676f5249defb6572e1e"
+  "rows": 193,
+  "rowsSha256": "ccb19fec6475a01c540e8d5a12904d7a49e6b18683b96a09f39e6f5a72e5700f",
+  "setupsSha256": "d32618a5c629695fd6288951be23c1dc2df815ce1f88116cb582e054dd408bc7"
  },
- "commit": "b714993a+dirty",
+ "commit": "ed71dfdd+dirty",
  "durationMs": {
-  "lift": 132,
-  "compileAndOptimise": 6625,
-  "total": 13893
+  "lift": 75,
+  "compileAndOptimise": 3683,
+  "total": 8614
  },
  "totals": {
   "overall": {
-   "rows": 181,
-   "lifted": 181,
-   "compiled": 181,
-   "optimised": 181,
-   "exactRaw": 35,
-   "exact": 82,
-   "medianRatio": 0.4043,
-   "medianOptRatio": 0.0738,
-   "meanOptRatio": 0.1787,
+   "rows": 193,
+   "lifted": 193,
+   "compiled": 193,
+   "optimised": 193,
+   "exactRaw": 36,
+   "exact": 85,
+   "medianRatio": 0.4069,
+   "medianOptRatio": 0.0682,
+   "meanOptRatio": 0.184,
    "outcomes": {
-    "exact": 82,
-    "differs": 99
+    "exact": 85,
+    "differs": 108
    }
   },
   "bySetup": {
@@ -42,9 +42,24 @@
     "optimised": 12,
     "exactRaw": 3,
     "exact": 5,
-    "medianRatio": 0.1444,
-    "medianOptRatio": 0.119,
-    "meanOptRatio": 0.1407,
+    "medianRatio": 0.263,
+    "medianOptRatio": 0.005,
+    "meanOptRatio": 0.1477,
+    "outcomes": {
+     "exact": 5,
+     "differs": 7
+    }
+   },
+   "vota-web": {
+    "rows": 12,
+    "lifted": 12,
+    "compiled": 12,
+    "optimised": 12,
+    "exactRaw": 2,
+    "exact": 5,
+    "medianRatio": 0.1727,
+    "medianOptRatio": 0.0429,
+    "meanOptRatio": 0.2213,
     "outcomes": {
      "exact": 5,
      "differs": 7
@@ -56,13 +71,13 @@
     "compiled": 12,
     "optimised": 12,
     "exactRaw": 1,
-    "exact": 6,
-    "medianRatio": 0.6505,
-    "medianOptRatio": 0.003,
-    "meanOptRatio": 0.0701,
+    "exact": 5,
+    "medianRatio": 0.7115,
+    "medianOptRatio": 0.0632,
+    "meanOptRatio": 0.0896,
     "outcomes": {
-     "differs": 6,
-     "exact": 6
+     "differs": 7,
+     "exact": 5
     }
    },
    "asn1": {
@@ -87,9 +102,9 @@
     "optimised": 12,
     "exactRaw": 2,
     "exact": 5,
-    "medianRatio": 0.3582,
-    "medianOptRatio": 0.1563,
-    "meanOptRatio": 0.1792,
+    "medianRatio": 0.3912,
+    "medianOptRatio": 0.1161,
+    "meanOptRatio": 0.1698,
     "outcomes": {
      "exact": 5,
      "differs": 7
@@ -119,7 +134,7 @@
     "exact": 5,
     "medianRatio": 0.4233,
     "medianOptRatio": 0.0824,
-    "meanOptRatio": 0.1782,
+    "meanOptRatio": 0.216,
     "outcomes": {
      "differs": 7,
      "exact": 5
@@ -175,14 +190,14 @@
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 4,
-    "exact": 11,
-    "medianRatio": 0.0995,
+    "exactRaw": 3,
+    "exact": 10,
+    "medianRatio": 0.1995,
     "medianOptRatio": 0,
-    "meanOptRatio": 0.0158,
+    "meanOptRatio": 0.0309,
     "outcomes": {
-     "exact": 11,
-     "differs": 1
+     "exact": 10,
+     "differs": 2
     }
    },
    "libc": {
@@ -253,11 +268,11 @@
     "exactRaw": 2,
     "exact": 5,
     "medianRatio": 0.4329,
-    "medianOptRatio": 0.1588,
-    "meanOptRatio": 0.1728,
+    "medianOptRatio": 0.0698,
+    "meanOptRatio": 0.1446,
     "outcomes": {
-     "exact": 5,
-     "differs": 7
+     "differs": 7,
+     "exact": 5
     }
    },
    "libcxxabi": {
@@ -329,37 +344,57 @@
    "standIns": []
   },
   {
-   "id": "uenux2/4793",
-   "index": 4793,
+   "id": "uenux2/2662",
+   "index": 2662,
    "setup": "uenux2",
-   "size": 412,
-   "band": "medium",
+   "size": 821,
+   "band": "large",
    "features": [
     "loop",
-    "invoke",
-    "throw",
-    "i64",
+    "float",
+    "bulk-memory",
     "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 192,
+   "targetRows": 432,
    "raw": {
-    "score": 96,
-    "ratio": 0.5
+    "score": 412,
+    "ratio": 0.9537
    },
    "opt": {
-    "score": 35,
-    "ratio": 0.1823
+    "score": 327,
+    "ratio": 0.7569
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
-    "arm tail kept from the join",
-    "frame object escapes at entry",
     "goto"
    ]
+  },
+  {
+   "id": "uenux2/2885",
+   "index": 2885,
+   "setup": "uenux2",
+   "size": 895,
+   "band": "large",
+   "features": [],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 397,
+   "raw": {
+    "score": 132,
+    "ratio": 0.3325
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "uenux2/5036",
@@ -387,29 +422,35 @@
    "standIns": []
   },
   {
-   "id": "uenux2/6548",
-   "index": 6548,
+   "id": "uenux2/5719",
+   "index": 5719,
    "setup": "uenux2",
-   "size": 1530,
-   "band": "large",
+   "size": 4179,
+   "band": "huge",
    "features": [
-    "call_indirect"
+    "loop",
+    "switch",
+    "i64",
+    "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 695,
+   "targetRows": 2049,
    "raw": {
-    "score": 60,
-    "ratio": 0.0863
+    "score": 1444,
+    "ratio": 0.7047
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 1139,
+    "ratio": 0.5559
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
-   "standIns": []
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
    "id": "uenux2/7902",
@@ -437,39 +478,65 @@
    "standIns": []
   },
   {
-   "id": "uenux2/10451",
-   "index": 10451,
+   "id": "uenux2/10282",
+   "index": 10282,
    "setup": "uenux2",
-   "size": 6996,
-   "band": "huge",
+   "size": 369,
+   "band": "medium",
    "features": [
-    "loop",
-    "call_indirect",
+    "switch",
+    "throw",
     "frame",
-    "inlined-frame",
-    "i64",
-    "float",
-    "bulk-memory",
-    "select"
+    "inlined-frame"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 3253,
+   "targetRows": 171,
    "raw": {
-    "score": 2712,
-    "ratio": 0.8337
+    "score": 137,
+    "ratio": 0.8012
    },
    "opt": {
-    "score": 1021,
-    "ratio": 0.3139
+    "score": 1,
+    "ratio": 0.0058
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "goto",
+    "inlined callee outlined"
+   ]
+  },
+  {
+   "id": "uenux2/10307",
+   "index": 10307,
+   "setup": "uenux2",
+   "size": 2480,
+   "band": "huge",
+   "features": [
+    "call_indirect",
+    "invoke",
+    "throw",
+    "frame",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 942,
+   "raw": {
+    "score": 940,
+    "ratio": 0.9979
+   },
+   "opt": {
+    "score": 4,
+    "ratio": 0.0042
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
-    "constant address hidden from alignment inference",
-    "frame object escapes at entry",
     "goto",
     "inlined callee outlined"
    ]
@@ -499,44 +566,6 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
-  },
-  {
-   "id": "uenux2/10713",
-   "index": 10713,
-   "setup": "uenux2",
-   "size": 1389,
-   "band": "large",
-   "features": [
-    "loop",
-    "switch",
-    "call_indirect",
-    "frame",
-    "inlined-frame",
-    "i64",
-    "bulk-memory",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 610,
-   "raw": {
-    "score": 525,
-    "ratio": 0.8607
-   },
-   "opt": {
-    "score": 217,
-    "ratio": 0.3557
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "constant address hidden from alignment inference",
-    "frame object escapes at entry",
-    "goto",
-    "inlined callee outlined"
-   ]
   },
   {
    "id": "uenux2/10946",
@@ -598,39 +627,347 @@
    ]
   },
   {
-   "id": "uenux2/11620",
-   "index": 11620,
-   "setup": "uenux2",
-   "size": 4622,
-   "band": "huge",
+   "id": "vota-web/1395",
+   "index": 1395,
+   "setup": "vota-web",
+   "size": 74,
+   "band": "small",
    "features": [
+    "leaf",
     "loop",
-    "throw",
-    "frame",
-    "inlined-frame",
-    "i64",
-    "bulk-memory"
+    "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 2052,
+   "targetRows": 41,
    "raw": {
-    "score": 1773,
-    "ratio": 0.864
+    "score": 3,
+    "ratio": 0.0732
    },
    "opt": {
-    "score": 796,
-    "ratio": 0.3879
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "goto"
+   ]
+  },
+  {
+   "id": "vota-web/1549",
+   "index": 1549,
+   "setup": "vota-web",
+   "size": 200,
+   "band": "medium",
+   "features": [
+    "leaf",
+    "frame",
+    "i64",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 94,
+   "raw": {
+    "score": 50,
+    "ratio": 0.5319
+   },
+   "opt": {
+    "score": 43,
+    "ratio": 0.4574
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
-    "constant address hidden from alignment inference",
-    "frame object escapes at entry",
+    "goto"
+   ]
+  },
+  {
+   "id": "vota-web/2857",
+   "index": 2857,
+   "setup": "vota-web",
+   "size": 1367,
+   "band": "large",
+   "features": [
+    "loop",
+    "switch",
+    "frame",
+    "inlined-frame",
+    "float",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 695,
+   "raw": {
+    "score": 482,
+    "ratio": 0.6935
+   },
+   "opt": {
+    "score": 342,
+    "ratio": 0.4921
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "vota-web/2878",
+   "index": 2878,
+   "setup": "vota-web",
+   "size": 37,
+   "band": "small",
+   "features": [
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 19,
+   "raw": {
+    "score": 3,
+    "ratio": 0.1579
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "vota-web/4124",
+   "index": 4124,
+   "setup": "vota-web",
+   "size": 143,
+   "band": "medium",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 68,
+   "raw": {
+    "score": 6,
+    "ratio": 0.0882
+   },
+   "opt": {
+    "score": 3,
+    "ratio": 0.0441
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join"
+   ]
+  },
+  {
+   "id": "vota-web/5871",
+   "index": 5871,
+   "setup": "vota-web",
+   "size": 703,
+   "band": "large",
+   "features": [
+    "loop",
+    "frame",
+    "inlined-frame",
+    "float",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 351,
+   "raw": {
+    "score": 305,
+    "ratio": 0.8689
+   },
+   "opt": {
+    "score": 135,
+    "ratio": 0.3846
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
     "goto",
     "inlined callee outlined"
+   ]
+  },
+  {
+   "id": "vota-web/5926",
+   "index": 5926,
+   "setup": "vota-web",
+   "size": 15,
+   "band": "tiny",
+   "features": [],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 6,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "vota-web/5939",
+   "index": 5939,
+   "setup": "vota-web",
+   "size": 53,
+   "band": "small",
+   "features": [
+    "frame",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 24,
+   "raw": {
+    "score": 1,
+    "ratio": 0.0417
+   },
+   "opt": {
+    "score": 1,
+    "ratio": 0.0417
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "vota-web/5944",
+   "index": 5944,
+   "setup": "vota-web",
+   "size": 599,
+   "band": "large",
+   "features": [
+    "loop",
+    "switch",
+    "frame"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 315,
+   "raw": {
+    "score": 245,
+    "ratio": 0.7778
+   },
+   "opt": {
+    "score": 187,
+    "ratio": 0.5937
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "vota-web/11645",
+   "index": 11645,
+   "setup": "vota-web",
+   "size": 446,
+   "band": "medium",
+   "features": [
+    "leaf",
+    "loop",
+    "frame",
+    "inlined-frame",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 243,
+   "raw": {
+    "score": 182,
+    "ratio": 0.749
+   },
+   "opt": {
+    "score": 156,
+    "ratio": 0.642
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto",
+    "inlined callee outlined"
+   ]
+  },
+  {
+   "id": "vota-web/12979",
+   "index": 12979,
+   "setup": "vota-web",
+   "size": 9,
+   "band": "tiny",
+   "features": [],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 4,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "vota-web/13229",
+   "index": 13229,
+   "setup": "vota-web",
+   "size": 32,
+   "band": "tiny",
+   "features": [
+    "frame"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 16,
+   "raw": {
+    "score": 3,
+    "ratio": 0.1875
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "unused frame"
    ]
   },
   {
@@ -738,6 +1075,37 @@
    "standIns": []
   },
   {
+   "id": "ecourna/5173",
+   "index": 5173,
+   "setup": "ecourna",
+   "size": 233,
+   "band": "medium",
+   "features": [
+    "loop",
+    "invoke",
+    "throw",
+    "frame"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 107,
+   "raw": {
+    "score": 72,
+    "ratio": 0.6729
+   },
+   "opt": {
+    "score": 25,
+    "ratio": 0.2336
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
    "id": "ecourna/5174",
    "index": 5174,
    "setup": "ecourna",
@@ -801,23 +1169,21 @@
    ]
   },
   {
-   "id": "ecourna/9264",
-   "index": 9264,
+   "id": "ecourna/9546",
+   "index": 9546,
    "setup": "ecourna",
-   "size": 339,
-   "band": "medium",
+   "size": 63,
+   "band": "small",
    "features": [
-    "invoke",
-    "throw",
-    "frame",
+    "call_indirect",
     "i64"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 141,
+   "targetRows": 30,
    "raw": {
-    "score": 90,
-    "ratio": 0.6383
+    "score": 25,
+    "ratio": 0.8333
    },
    "opt": {
     "score": 0,
@@ -826,38 +1192,7 @@
    "exact": true,
    "outcome": "exact",
    "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "ecourna/9529",
-   "index": 9529,
-   "setup": "ecourna",
-   "size": 105,
-   "band": "small",
-   "features": [
-    "loop",
-    "call_indirect"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 54,
-   "raw": {
-    "score": 17,
-    "ratio": 0.3148
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": [
-    "goto"
-   ]
+   "standIns": []
   },
   {
    "id": "ecourna/13816",
@@ -1265,8 +1600,8 @@
    "standIns": []
   },
   {
-   "id": "asn1/9973",
-   "index": 9973,
+   "id": "asn1/9971",
+   "index": 9971,
    "setup": "asn1",
    "size": 17,
    "band": "tiny",
@@ -1289,6 +1624,34 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
+  },
+  {
+   "id": "zlib/704",
+   "index": 704,
+   "setup": "zlib",
+   "size": 166,
+   "band": "medium",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 73,
+   "raw": {
+    "score": 14,
+    "ratio": 0.1918
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
    "id": "zlib/931",
@@ -1317,35 +1680,6 @@
    "standIns": []
   },
   {
-   "id": "zlib/990",
-   "index": 990,
-   "setup": "zlib",
-   "size": 2434,
-   "band": "huge",
-   "features": [
-    "loop",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 1173,
-   "raw": {
-    "score": 601,
-    "ratio": 0.5124
-   },
-   "opt": {
-    "score": 343,
-    "ratio": 0.2924
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "zlib/1508",
    "index": 1508,
    "setup": "zlib",
@@ -1371,63 +1705,6 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
-  },
-  {
-   "id": "zlib/1848",
-   "index": 1848,
-   "setup": "zlib",
-   "size": 147,
-   "band": "medium",
-   "features": [
-    "bulk-memory",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 68,
-   "raw": {
-    "score": 28,
-    "ratio": 0.4118
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "zlib/1849",
-   "index": 1849,
-   "setup": "zlib",
-   "size": 600,
-   "band": "large",
-   "features": [
-    "call_indirect",
-    "frame",
-    "i64",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 302,
-   "raw": {
-    "score": 92,
-    "ratio": 0.3046
-   },
-   "opt": {
-    "score": 63,
-    "ratio": 0.2086
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
   },
   {
    "id": "zlib/3377",
@@ -1514,6 +1791,69 @@
    "outcome": "differs",
    "failure": null,
    "standIns": [
+    "goto"
+   ]
+  },
+  {
+   "id": "zlib/4825",
+   "index": 4825,
+   "setup": "zlib",
+   "size": 1801,
+   "band": "large",
+   "features": [
+    "loop",
+    "switch",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 870,
+   "raw": {
+    "score": 436,
+    "ratio": 0.5011
+   },
+   "opt": {
+    "score": 86,
+    "ratio": 0.0989
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "zlib/4826",
+   "index": 4826,
+   "setup": "zlib",
+   "size": 6899,
+   "band": "huge",
+   "features": [
+    "loop",
+    "switch",
+    "call_indirect",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 3255,
+   "raw": {
+    "score": 1921,
+    "ratio": 0.5902
+   },
+   "opt": {
+    "score": 943,
+    "ratio": 0.2897
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
     "goto"
    ]
   },
@@ -1968,6 +2308,32 @@
    "standIns": []
   },
   {
+   "id": "openssl/294",
+   "index": 294,
+   "setup": "openssl",
+   "size": 2522,
+   "band": "huge",
+   "features": [
+    "frame",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 1259,
+   "raw": {
+    "score": 890,
+    "ratio": 0.7069
+   },
+   "opt": {
+    "score": 806,
+    "ratio": 0.6402
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "openssl/920",
    "index": 920,
    "setup": "openssl",
@@ -2137,32 +2503,6 @@
     "arm tail kept from the join",
     "goto"
    ]
-  },
-  {
-   "id": "openssl/3094",
-   "index": 3094,
-   "setup": "openssl",
-   "size": 8190,
-   "band": "huge",
-   "features": [
-    "leaf",
-    "loop"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 5016,
-   "raw": {
-    "score": 2757,
-    "ratio": 0.5496
-   },
-   "opt": {
-    "score": 934,
-    "ratio": 0.1862
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": []
   },
   {
    "id": "openssl/6819",
@@ -3331,6 +3671,33 @@
    "standIns": []
   },
   {
+   "id": "boost/5179",
+   "index": 5179,
+   "setup": "boost",
+   "size": 680,
+   "band": "large",
+   "features": [
+    "leaf",
+    "loop",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 302,
+   "raw": {
+    "score": 199,
+    "ratio": 0.6589
+   },
+   "opt": {
+    "score": 55,
+    "ratio": 0.1821
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "boost/9285",
    "index": 9285,
    "setup": "boost",
@@ -3550,29 +3917,6 @@
    "raw": {
     "score": 21,
     "ratio": 1.1053
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "boost/11614",
-   "index": 11614,
-   "setup": "boost",
-   "size": 27,
-   "band": "tiny",
-   "features": [],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 7,
-   "raw": {
-    "score": 0,
-    "ratio": 0
    },
    "opt": {
     "score": 0,
@@ -4643,6 +4987,37 @@
    "standIns": []
   },
   {
+   "id": "libcxx/988",
+   "index": 988,
+   "setup": "libcxx",
+   "size": 2578,
+   "band": "huge",
+   "features": [
+    "invoke",
+    "throw",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 775,
+   "raw": {
+    "score": 745,
+    "ratio": 0.9613
+   },
+   "opt": {
+    "score": 47,
+    "ratio": 0.0606
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "constant address hidden from alignment inference",
+    "goto"
+   ]
+  },
+  {
    "id": "libcxx/2137",
    "index": 2137,
    "setup": "libcxx",
@@ -4868,41 +5243,6 @@
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "libcxx/7882",
-   "index": 7882,
-   "setup": "libcxx",
-   "size": 3602,
-   "band": "huge",
-   "features": [
-    "loop",
-    "switch",
-    "invoke",
-    "throw",
-    "frame",
-    "i64",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 1586,
-   "raw": {
-    "score": 1123,
-    "ratio": 0.7081
-   },
-   "opt": {
-    "score": 634,
-    "ratio": 0.3997
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "frame object escapes at entry",
     "goto"
    ]
   },
