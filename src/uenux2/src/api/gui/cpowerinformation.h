@@ -22,14 +22,14 @@ namespace api {
 // __func<BatteryIconDataSource<...>::BatteryIconDataSource()::{lambda()#1}, void ()>), and calls the timer's slot 2: an
 // ITimer. It stores at +56 the 32-bit value fn 2774 returns, which the lambda (fns 10981 and 10987, UpdateBatteryIcon
 // inlined) compares with a new one and uses as a signed key. The members' names and the int's type are chosen.
+// The constructor and UpdateBatteryIcon are defined in cpowerinformation.cpp, where their records are, with the map of
+// icons they read; that file and src/units/164-uenux2-cpowerinformation.mk say what each comes from.
 //
 // The destructor is declared in the class without `inline`. Evidence that its D2 is not inlined into its callers: the
 // D0s (10990, 11652) free what the D2 returns, and comum::CInfoMTLCD's destructor (fn 5902) calls the member's D2
 // (3837). Measured (src/units/164-uenux2-cpowerinformation.mk): `{}`, `= default`, a definition after the class in
 // this header and `virtual ~BatteryIconDataSource() {}` give the same object; the implicit destructor and one declared
-// `inline` give a D0 holding the D2's body. `{}` is written, one of four. The constructor and UpdateBatteryIcon are
-// declared only, and cpowerinformation.cpp stays a stub file: both call fn 2773, which fills a std::map of the icons
-// through fn 1263, whose std::make_shared<CFixedImage> calls CFixedImage's string constructor, fn 2246 (unit 158).
+// `inline` give a D0 holding the D2's body. `{}` is written, one of four.
 class CPowerInformation {
 public:
     enum class IconOrientation { Horizontal, Vertical };

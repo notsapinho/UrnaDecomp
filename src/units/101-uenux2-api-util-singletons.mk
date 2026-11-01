@@ -30,7 +30,10 @@
 #   inlines make_shared, cost 35 at threshold 337, and leaves the constructor out, cost 225 at threshold 225, per
 #   -Rpass=inline on the file; std::atomic<bool> for the flag, the flag in the constructor's list, the constructor
 #   defined after the class and the file without -fno-strict-aliasing keep 225; with std::move(callback) the score was
-#   31 over 201 rows, and the rows that differ build the parameter.
+#   31 over 201 rows, and the rows that differ build the parameter (measured while the callback was a by-value
+#   parameter). It is a const reference since api/util/itimerscheduler.h says why; 10846's body is the same with it
+#   (masked object compare: one difference, the name of the allocate_shared it calls, whose template arguments name the
+#   parameter's type), and it scores 4 over 187 rows, all operand-only, in the whole link.
 #   libc++'s thread::join (4653) and std::__thread_struct's constructor (2541) come in with Stop and Start; the roots file
 #   gives 2541 the second call site the target has. Chosen: the data members' names and the flag's type, the
 #   constructor's parameters, the lambda (the proxy's tuple holds one pointer, this), and defining Stop's lock with

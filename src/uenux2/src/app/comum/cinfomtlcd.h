@@ -22,8 +22,15 @@
 //   instance, with an image and a position; it detaches the instance from the battery icon, as the destructor does,
 //   and shows the image with `true` when the image's GetData() (IImage's slot 2) is not empty. Its name is chosen from
 //   that, and so is the name of MostrarImagemNoLCD's bool.
-// Not recovered: the constructor (fn 5904, over BatteryIconDataSource's constructor, which binaryen inlined into it),
-// GetInst (fn 2284) and CreateInst. The member's name and this header's path, beside cinfomtlcd.cpp, are chosen.
+// - The constructor (fn 5904): after the vptr store and the member's constructor (BatteryIconDataSource's, from
+//   cpowerinformation.cpp, which binaryen inlined: its own frame inside 5904's) it attaches `this` to the member,
+//   IObservable::Attach, in 5904's own frame, so clang inlined it in this file. The constructor calls MostraIconeBateria,
+//   which clang inlines; a constructor that calls Attach itself compiles to the same function (object compare, masked),
+//   so which of the two is written is a choice.
+// - MostraIconeBateria (fn 5903): Attach on the member with `this`, the counterpart of MostraImagem's detach. Its callers
+//   (fns 10427 and 10680, two vota states) call it on fn 2284's result. Its name is chosen from that role.
+// Not recovered: GetInst (fn 2284) and CreateInst. The member's name and this header's path, beside cinfomtlcd.cpp, are
+// chosen.
 
 #include <memory>
 
@@ -36,11 +43,13 @@ namespace comum {
 
 class CInfoMTLCD : public api::IObserver<api::SharedIImage> {
 public:
+    CInfoMTLCD();
     ~CInfoMTLCD() override;
 
     static void CreateInst();
 
     void Update(const api::SharedIImage& imagem) override;
+    void MostraIconeBateria();
     void MostraImagem(const api::IImage& imagem, const api::SPoint& posicao);
 
 private:

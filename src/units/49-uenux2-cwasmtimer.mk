@@ -8,8 +8,9 @@
 # - the constructor and State's, read from fn 7871, which inlines them; they are no target function. The constructor's
 #   make_shared<State> brings the control block std::__shared_ptr_emplace<CWasmTimer::State> (D2 7890, D0 7885,
 #   __on_zero_shared 7878), which matches from this TU.
-# - CWasmTimerScheduler's slot 0, CreateTimer (fn 7871): a make_shared<CWasmTimer> with a copy of its callback, which
-#   brings std::__shared_ptr_emplace<CWasmTimer> (D2 7862, D0 7851, __on_zero_shared 7839, the destructor's second
+# - CWasmTimerScheduler's slot 0, CreateTimer (fn 7871): a make_shared<CWasmTimer> with a copy of its callback (a const
+#   reference since api/util/itimerscheduler.h says why; with it 7871 scores 5 over 237 rows, all operand-only, in the
+#   whole link, and still matches), which brings std::__shared_ptr_emplace<CWasmTimer> (D2 7862, D0 7851, __on_zero_shared 7839, the destructor's second
 #   caller), matched from cwasmtimerscheduler.cpp.o. binaryen inlines CWasmTimer's constructor into it (its frame sits
 #   inside 7871), as it has one caller here too: the roots' make_shared<CWasmTimer> stand-in that stood for 7871 is
 #   gone. The scheduler's own object, after this one, is the band's: 7871 runs after cwasmtimer.cpp's deferred members

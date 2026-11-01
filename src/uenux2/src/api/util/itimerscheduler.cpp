@@ -59,7 +59,7 @@ void CTimer::Stop()
     }
 }
 
-std::shared_ptr<ITimer> CTimerScheduler::CreateTimer(const std::chrono::milliseconds& interval, std::function<void()> callback)
+std::shared_ptr<ITimer> CTimerScheduler::CreateTimer(const std::chrono::milliseconds& interval, const std::function<void()>& callback)
 {
     return std::make_shared<CTimer>(interval, callback);
 }

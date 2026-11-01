@@ -10,7 +10,7 @@ namespace api {
 
 class CTimerScheduler : public ITimerScheduler {
 public:
-    std::shared_ptr<ITimer> CreateTimer(const std::chrono::milliseconds& interval, std::function<void()> callback) override;
+    std::shared_ptr<ITimer> CreateTimer(const std::chrono::milliseconds& interval, const std::function<void()>& callback) override;
 };
 
 } // namespace api

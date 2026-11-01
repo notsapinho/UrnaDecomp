@@ -15,6 +15,8 @@
 #   CDataText<const string& (*)()>               GetText 12580 (the same)
 #   CDataText<comum::CCargoDSNomeSexoCandidato>  GetText 12632 (the same), a call of the source's operator, fn 2268 (unit 129)
 #                                                (linked from unit 102's roots object)
+#   CDataText<comum::CCandidaturasDSNome>        GetText 12649 (the same), a call of the source's operator, fn 5807 (unit 89),
+#                                                linked from unit 102's roots object
 #   CDataText<function<string()>>                D2 12305, D0 12303, GetText 12301
 #   CDataTextFmt<string (*)(const string&)>      D2 12323, D0 12317; GetText 6404, shared with the next
 #   CDataTextFmt<const string (*)(const string&)>  D2 12567, D0 12564, GetText 6404
@@ -31,6 +33,13 @@
 # vector's length error, fn 158), with the value GetData passes, 255; the roots object calls it twice for GetData.
 # CDataText<CCargoDSNomeSexoCandidato>'s control block (12637, 12636) is unit 102's; the roots' std::make_shared of it
 # instantiates the same block, which links from unit 102's object, ahead of this one, as 12632's GetText does.
+# The roots' stand-ins for fn 4185, which builds CDataText<comum::CCandidaturasDSNome> and
+# CDataText<comum::CCandidaturasDSNumero> with std::make_shared and is not written, keep both classes' vtables, which unit
+# 102's dropped builders emit and nothing stored until now: 12649 matches (pnpm wasm score 1 over 7 rows, operand-only,
+# in the whole link before steps 7 to 9), and 12742, CDataText<CCandidaturasDSNumero>::GetText, is written and
+# `unresolved` on the end of its format string, "{:0{}}": in the target that is the tail of "  {}{}{:0{}}" (address 1042),
+# the literal of fn 11973, which is not in our link, and in ours a string of its own. Its source's call operator is unit
+# 180's, and that fragment has the measurement. The control blocks of both (12654, 12650, 12760, 12752) are unit 102's.
 # The other instantiations (over comum's and vota's classes, and the three of
 # CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>) wait for those classes, but for two that unit
 # 121 brings: CDataText<vota::CEscolheOpcao::COpcaoDS>, whose GetText (10685) matches, and CDataText<comum::CRespostasDSNumero>;
@@ -44,10 +53,10 @@
 #   CQRCodeImage's std::function the same way (these three change only the stand-ins' own helpers, allocate_shared and
 #   construct_at); CQRCodeImage's first parameter without `const`; the roots compiled with -fno-strict-aliasing, which was
 #   UENUX2_CXXFLAGS's difference from APP_CXXFLAGS while the tree built at -O2.
-# The roots compiled with UENUX2_CXXFLAGS (-O3 -fno-strict-aliasing) and with APP_CXXFLAGS: 117 of the object's 119
-# functions compare equal; the two that differ are the stand-in TextoFuncao and the allocate_shared it inlines at -O3,
-# so every instance the object emits, 3661 among them, is the same at the tree's flags; 12632's GetText, which links
-# from unit 102's roots object, is the same code in both.
+# The roots compiled with UENUX2_CXXFLAGS (-O3 -fno-strict-aliasing -std=c++23) and with APP_CXXFLAGS: 131 of the 132
+# functions the two objects share compare equal (133 at APP_CXXFLAGS); what differs is the stand-in TextoFuncao and the
+# allocate_shared it inlines at -O3, so every instance the object emits, 3661 among them, is the same at the tree's
+# flags; 12632's and 12649's GetText, which link from unit 102's roots object, are the same code in both.
 # Forms measured not to:
 #   operator()(const std::string&) without `inline`: it stays out of line in the object and binaryen inlines it into 10746,
 #   whose row is then `differs` at +0x3, with an outer block and the string's address in a local;

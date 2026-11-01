@@ -14,7 +14,7 @@ namespace simulador {
 class CWasmTimerScheduler : public api::ITimerScheduler {
 public:
     virtual std::shared_ptr<api::ITimer> CreateTimer(const std::chrono::milliseconds& interval,
-                                                     std::function<void()> callback) override;
+                                                     const std::function<void()>& callback) override;
 };
 
 } // namespace simulador

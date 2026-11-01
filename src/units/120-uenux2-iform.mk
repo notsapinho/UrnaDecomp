@@ -99,7 +99,8 @@
 #   (and 2024, 5904, 1265) stores the interval first, right after ITimerScheduler::GetInst. cmtformbuilder.cpp's -O2 IR
 #   (-S -emit-llvm) has the 600 store first, so the backend moves it, and no spelling of the argument tried changes the
 #   object's order (milliseconds(600), {600}, 600LL, duration<int, std::milli>, an explicit std::function, [=]), nor
-#   -O3.
+#   -O3. CreateTimer's callback as a const reference does, in BatteryIconDataSource's constructor's object
+#   (api/util/itimerscheduler.h, which takes it so now); 3673 is not measured again with it.
 # - 5410, a screen built on a CMTFormBuilder ("ELEITOR(A) PODE VOTAR"), holds a
 #   make_shared<CInputFieldControl<IScreenMT>> inlined, whose control block's vtable (@1580748) lies in the MT
 #   builder's data, and waits for 395's family; 2024 (IInputField<IScreen>'s constructor) has no written caller (901,

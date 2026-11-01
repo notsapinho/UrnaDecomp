@@ -1,7 +1,16 @@
 # uenux2 comum::CInfoMTLCD in src/app/comum/cinfomtlcd.cpp, the file its records name (Update, lines 50 and 51;
 # MostrarImagemNoLCD, line 84): the destructor (target fn 5902, slot 0), the deleting destructor (11654, slot 1),
-# Update (11653, slot 2) and MostraImagem (3836, a chosen name). The header, cinfomtlcd.h (a chosen path, beside the
-# .cpp), says what each comes from.
+# Update (11653, slot 2), MostraImagem (3836, a chosen name), the constructor (5904) and MostraIconeBateria (5903, a
+# chosen name). The header, cinfomtlcd.h (a chosen path, beside the .cpp), says what each comes from.
+# The constructor and MostraIconeBateria have no record. Their lines (23 and 28) are a choice in the gap before the
+# destructor (36), which leaves CreateInst's record line, 33, blank; their order is the use band's (ledger/ordinals.tsv,
+# uses 2): 5904, 5903 and 5902 run down in link order, so the constructor comes first and the destructor last.
+# 5904 holds BatteryIconDataSource<Vertical>'s constructor (unit 164's cpowerinformation.cpp), which binaryen inlines
+# into it, its one caller, and 5904 and 5903 hold IObservable::Attach (api/pattern/iobservable.h), which clang inlines.
+# Both match: pnpm wasm score gave 15 over 301 rows (5904) and 2 over 56 (5903), all operand-only, in the whole link
+# before steps 7 to 9, with api::ITimerScheduler::CreateTimer's callback a const reference (api/util/itimerscheduler.h
+# says what 5904 shows of it); with the callback by value, 5904 was 24 over 306 rows (5 inserted, 3 deleted). The roots
+# file stands for the callers of both, none written.
 # The destructor (5902) matches since unit 164. The target's 5902 calls the member's destructor out of line, fn 3837, a
 # thunk of binaryen's 6049 (`f6049(p0, 1551916)`, the BatteryIconDataSource<Vertical> vptr), a merge with the other
 # orientation's destructor in api/gui/cpowerinformation.{h,cpp}. That header declares the destructor in the class since
