@@ -17,8 +17,8 @@
 #   binaryen) and DoDesconverte (fn 10282, the data class's constructor and checks inlined).
 # - The recorders' destructors, emitted with their vtables in 136-uenux2-app-comum-gravadores-md-pending.cpp, whose
 #   traps are the classes' key functions (src/units/README.md "The key function pending"): CGravadorEnvelopeArquivo's
-#   (fns 11622, 11621, written, below) over IGravadorEnvelope's (fn 11625), CGravadorHashes's (5853, 11619),
-#   CGravadorRDV's (11586, and 11585, written, below), CGravadorLog's (5823, 11583) and CGravadorVersoesArquivos's
+#   (fns 11622, 11621, matched, below) over IGravadorEnvelope's (fn 11625), CGravadorHashes's (5853, 11619),
+#   CGravadorRDV's (11586, and 11585, matched, below), CGravadorLog's (5823, 11583) and CGravadorVersoesArquivos's
 #   (11581, 11580), and binaryen's merge of the base-object destructors of CGravadorRDV and IGravadorEnvelope (fn 6043,
 #   written, below; our link forms the same two-member merge, byn$mgfn-shared$_ZN5comum12CGravadorRDVD2Ev). The class
 #   heads are unit 102's (gravadores/cgravador*.h, igravadorenvelope.h); this unit adds their layouts and virtual
@@ -59,14 +59,15 @@
 # Same bytes: CGravadorHashes's destructor implicit or declared `= default` in the class (above); no other form here
 # was measured to give the same bytes.
 #
+# CGravadorEnvelopeArquivo's destructors (fns 11622, 11621), CGravadorRDV's deleting destructor (11585) and the merge
+# 6043 call md::estadoaplicacao::CDadoCorrespondencia's base-object destructor (fn 857) and drop the this it returns.
+# They match while a function of our link uses that result, and with none they differ by that drop alone (pnpm wasm
+# score: deleted 1, every other row operand-only). At -O2, CAppInfo's destructor in appinfo/cappinfosingleton.cpp.o
+# used it at two of its three calls; at the tree's -O3 it calls the destructor once and drops it. The target's users of
+# the result are fns 5532, 7787, 9873 and 11395; src/app/roots_vector.cpp holds the executable TU's copies of 5532 and
+# 9873, which keep it (docs/reference/facts/splat.md §S10 item 17).
+#
 # Not matched, and what each waits for:
-# - CGravadorEnvelopeArquivo's destructors (fns 11622, 11621), CGravadorRDV's deleting destructor (11585) and the merge
-#   6043 call md::estadoaplicacao::CDadoCorrespondencia's base-object destructor (fn 857) and drop the this it returns.
-#   They matched at -O2 and differ at the tree's -O3 by that drop alone (pnpm wasm score: deleted 1, every other row
-#   operand-only): at -O2, CAppInfo's destructor in appinfo/cappinfosingleton.cpp.o used that result at two of its
-#   three calls, and at -O3 it calls the destructor once and drops it, so no function of our link uses the result and
-#   binaryen removes it. The target's users of it are fns 5532, 7787, 9873 and 11395, none in our link: the four wait
-#   for one of them.
 # - Not written: comum::asn::CConversorUrna (fns 10287, 10284), CConversorCorrespResultado (10289, 10288),
 #   CConversorEnvelopeGenerico (10271, 10270) and CConversorEntidadeHashes::DoConverte (10266). 10289 and 10288 call the
 #   slots of a local converter of ModuloTiposEcoUrna::Carga (vtable @1596140, slots fns 10291 and 10290), a class no
@@ -77,8 +78,8 @@
 #   10284, 11589 and 11588) are not written, and 10270 holds IConversorASN<Urna, CUrna>::Desconverte inlined (record
 #   iconversorasn.h:71), which calls CConversorUrna's DoDesconverte (fn 10284); 10266 needs CEntidadeHashes's members
 #   past +36.
-# - IGravador's slots 2 to 6 (fns 11630 to 11634, unit 60's traps) are not this unit's; CCarga::ValidaCriacao (fn 5670)
-#   is not written.
+# - IGravador's slots 2 to 6 (fns 11630 to 11634, unit 60's traps) are not this unit's. CCarga::ValidaCriacao (fn 5670)
+#   is unit 157's (dados/md/correspondencia/ccarga.cpp), and matches.
 GRAVADORES_MD_SRCS := src/app/comum/gravadores/md/curna.cpp src/app/comum/gravadores/md/cenvelopegenerico.cpp \
 	src/app/comum/gravadores/md/centidadehashes.cpp src/app/comum/gravadores/md/ctipoapuracaosa.cpp \
 	src/app/comum/dados/md/correspondencia/ccorrespondenciaresultado.cpp

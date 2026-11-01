@@ -7,7 +7,11 @@
 # libc++.a brings once these call them; CSymmetricCipherFactory::Create(const CAesKey&) (9489), and from its object
 # CBlockCipher's D0 (9488) and CAesCipher's implicit destructor (9486, the unwind path of the cipher's Encrypt);
 # CCepescCipher::Encrypt (2681) and Decrypt (5171), whose call of the executable TU's vector<uebyte> exception-guard
-# destructor (306) src/app/roots_vector.cpp gives the link.
+# destructor (306) src/app/roots_vector.cpp gives the link; CBlockCipher's Encrypt and Decrypt (9487, 9485), thunks
+# into a merged body (6154) our link forms too (byn$mgfn-shared$ of Encrypt, called by both), which pass CAesCipher's
+# Encrypt and Decrypt (9493, 9491) by table slot: those two names come from hand lines in splat/symbol_addrs.txt
+# (fragment 11 says what the lines rest on and what 9493 and 9491 wait for), and without them both thunks are
+# `unresolved self-voted`.
 # No record names any of these files. What the target shows:
 # - The classes, their bases and their slots are RTTI's and the vtables' (1113168 CPrng, 1114660 CTrng, 1113832 the
 #   factory, 1114996 CCepescCipher). The data place the first three in api/security/: CPrng's vtable lies between
@@ -57,10 +61,7 @@
 #   stores, ours after them (the object has the same order). A data() + 16 range gives the same object function; the key
 #   built in the return, or over a temporary vector, scores worse alone (155 over 582 and 213 over 603, against 125 over
 #   582 as written).
-# - CBlockCipher's Encrypt and Decrypt (9487, 9485) are thunks into a merged body (6154), and our link forms the same
-#   merge (byn$mgfn-shared$ of Encrypt, called by both). They are `unresolved self-voted`: the names of CAesCipher's
-#   Encrypt and Decrypt (9493, 9491), which they pass by slot, have no voter but them (fragment 11 says what those wait
-#   for), and the merged body waits for CAesCipher's constructor's name (9495).
+# - The merged body of CBlockCipher's Encrypt and Decrypt (6154) waits for CAesCipher's constructor's name (9495).
 # Roots: 137-ecourna-api-security-ciphers-roots.cpp (its header says how). Unit 100's roots include
 # isymmetriccipherfactory.hpp, which gains the two pure slots and its private NonCopyable base: unit 100's and unit
 # 102's objects are byte-identical before and after (cmp).

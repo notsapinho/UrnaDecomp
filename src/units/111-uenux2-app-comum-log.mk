@@ -12,7 +12,15 @@
 # - comum::CInformacaoEleicao in src/app/comum/informacao/cinformacaoeleicao.cpp: the constructor (603), EhModoDemonstracao
 #   (2286, record 40:36) and seven members clang inlined it into (1950, 2865, 3847, 5914, 5915, 5916, 5917). The
 #   constructor takes the ecourna::app::dados::CParametrosUrna that CConfiguracaoEleicao holds at +88 (the offsets the
-#   members read are that class's fields; cinformacaoeleicao.h).
+#   members read are that class's fields; cinformacaoeleicao.h). AceitaJustificativa (5918, a chosen name) reads the
+#   byte at +394 with no test of the demonstration mode; the class header says where its callers and band put it.
+# - comum::IEventosLog, added after the unit landed: logaErro (2282, severity 3) and the five members that log one fixed
+#   text, LogaMidiaResultadoAusente, LogaMidiaResultadoInvalida, LogaMesarioIndagadoImprimirZeresima,
+#   LogaErroEstadoAplicativo and LogaImprimindoRelatorioEstadoUrna (5885, 5883, 5882, 5881, 5880; every name chosen,
+#   ieventoslog.h says from what). 5885, 5881 and 5880 are thunks of binaryen's 3902, which this link forms from those
+#   three and no other function, as the target's does (its callers are those three). Their lines, 344 to 372, above
+#   logaAlerta's 375, are a choice; their order is the band's (uses 2), 5885 first. Each is written as a call of loga
+#   or logaErro on its text, which clang inlines there; a direct call of api::CLoga::loga was not tried.
 # Files: the order here is the data's, ieventoslog.cpp's records (@1552880) before clogcomum.cpp's (@1552996). Chosen
 # paths: cloga.h, clogcomum.h, euecomumlogerror.h, cinformacaoeleicao.h, each beside the .cpp its records name.
 #
@@ -96,12 +104,12 @@
 # orders; its object reads 35 rows against 37, since the constructor's call differs by what the TU sees.
 #
 # Chosen, no byte decides: every name but the records' (loga 233, logaAlerta 1398, LogaCargaBateria, GetInst,
-# s_instancia, s_mutex, m_aplicativo, the seven members and m_parametros, the enumerators of ERelatoriosUE,
-# EStatusOperacaoRelatorio and EUeComumLogError); 603's parameter taken by `const &` and held as a reference member,
-# where a pointer is the same address; the namespace of ERelatoriosUE and EStatusOperacaoRelatorio; the
-# severities as bare casts, as ESeveridade has no enumerator; the lines of every function but the throws' and the lines the
-# column records hold. The definition above the Converte members gave the match, and no other order
-# was linked.
+# s_instancia, s_mutex, m_aplicativo, the eight members and m_parametros, logaErro and the five fixed-text members, the
+# enumerators of ERelatoriosUE, EStatusOperacaoRelatorio and EUeComumLogError); 603's parameter taken by `const &` and
+# held as a reference member, where a pointer is the same address; the namespace of ERelatoriosUE and
+# EStatusOperacaoRelatorio; the severities as bare casts, as ESeveridade has no enumerator; the lines of every function
+# but the throws' and the lines the column records hold. The definition above the Converte members gave the match, and
+# no other order was linked.
 #
 # Hand edits in splat/symbol_addrs.txt: GetInst's two names and four statics, `callers+content`, from the calls aligned
 # with fn 347 and the CLogComum members and from the table slots of the destructors that load the same addresses. None

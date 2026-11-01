@@ -12,8 +12,39 @@
 
 namespace comum {
 
-// (original lines 15-374: content not recovered)
-#line 375
+// (original lines 15-343: content not recovered)
+#line 344
+void IEventosLog::logaErro(const std::string& mensagem)
+{
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(3), mensagem);
+}
+
+void IEventosLog::LogaMidiaResultadoAusente()
+{
+    logaErro("Mídia de resultado não estava presente");
+}
+
+void IEventosLog::LogaMidiaResultadoInvalida()
+{
+    logaErro("Mídia de resultado inválida para gravação de resultados");
+}
+
+void IEventosLog::LogaMesarioIndagadoImprimirZeresima()
+{
+    loga("Mesário indagado se quer imprimir a zerésima");
+}
+
+void IEventosLog::LogaErroEstadoAplicativo()
+{
+    logaErro("Erro estado do aplicativo não esperado");
+}
+
+void IEventosLog::LogaImprimindoRelatorioEstadoUrna()
+{
+    loga("Imprimindo relatório de estado da urna");
+}
+
+
 void IEventosLog::logaAlerta(const std::string& mensagem)
 {
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);

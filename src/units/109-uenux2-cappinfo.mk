@@ -15,12 +15,16 @@
 # EAVENCERRADA` (ledger/strings.tsv, 401161). GetVota's default argument: that text and nine like it call it with no
 # argument, and all 86 direct calls of 261, in 60 functions, pass 51; the slot keeps 261's parameter, and 903's is folded.
 #
+# CAppInfo::~CAppInfo (3792) matches at the tree's -O3. The two vector loops of m_gap hold CDadoCorrespondencia's
+# destructor inlined, the one of m_geral calls it. At -O2 all three stay calls, at cost 385 against threshold 325, and
+# ours is 343 B against 702. At -O3 one loop site goes in at threshold 525 and the member's site stays out, which is the
+# target's split; that compile keeps one loop's call, so the array's form is not settled. -Rpass=inline
+# -Rpass-missed=inline on cappinfosingleton.cpp prints it. The call drops the this that 857 returns, so the row matches
+# only while a function of our link reads that result: src/app/roots_vector.cpp's copies of 5532 and 9873 do
+# (docs/reference/facts/splat.md §S10 item 17). With no reader it differs by that drop alone, 19 over 348 rows (one
+# deleted, the rest operand-only).
+#
 # Written and not matched, each with its measurement:
-# - CAppInfo::~CAppInfo (3792): -O3. The two vector loops of m_gap hold CDadoCorrespondencia's destructor inlined, the one
-#   of m_geral calls it. At -O2 all three stay calls, at cost 385 against threshold 325, and ours is 343 B against 702. At -O3
-#   one loop site goes in at threshold 525 and the member's site stays out, which is the target's split; that compile keeps
-#   one loop's call, so the array's form is not settled. -Rpass=inline -Rpass-missed=inline on cappinfosingleton.cpp prints
-#   it. At the tree's -O3 the row stays `differs`, 88 over 416 rows (68 of them inserted).
 # - CAppInfo::IndiceTurno (1553): one operand, `differs +0x3f target i32.const 474`. Slot 474 is 9868, EUrnaTurno's
 #   format handle, and the target keeps it apart from the 31 slots of 536 because its copy has parse and format out of line
 #   (calls 1558 and 5906, whose other caller 4027 is in invoke form): not a body this tree gave at -O2. Our link merges
@@ -31,7 +35,8 @@
 # - CDadoCorrespondencia's destructor (857) and CIdentificadorGeradorMidia's (2240): the target's copies call ~basic_string
 #   out of line, 38 and 26 B, where 857's in our object is 222 B. A compile of the same class at -Oz -fexceptions gives the
 #   target's calls in order (2240, the vector, two strings; three strings), which reads as the executable TU's copy (levels.md
-#   V1). Named by hand, so their callers resolve, and `differs`.
+#   V1). 2240 is named by a hand line and 857 by a generated `call by:3792` line, so their callers resolve, and both
+#   `differs`. The link's copy of 857 is src/app/roots_vector.o's, which instantiates vector<CDadoCorrespondencia>.
 #
 # Not written: 436, which calls CPath::GetPathTrab (358, not written); CJustificador's singleton (1391, 2810, 3742, 11476,
 # 11477); 1903's, whose class no body read names. 5635 stays a stub in md/estadoaplicacao/cestadogeral.cpp.

@@ -19,14 +19,19 @@ namespace comum {
 // their slot. Slot 2 is (i32) -> (i32), and those four return an unsigned compare of slot 3's result, so bool is read
 // from them. Slot 3's fills (fns 12267, 12266, 12255, 12259) return a byte they load, so uebyte is the plainest type of
 // that width, and chosen.
+// The +4 word is the item's key: comum::CMenuBase::AdicionaItem (fn 2285) formats it into the menu's string of keys as
+// an unsigned (argument type 6 of its std::format) when slot 2 is true. Unsigned is that evidence; `unsigned int`, the
+// getter and both names are chosen.
 class CItemMenu {
 public:
     virtual ~CItemMenu() = default;
 
     virtual bool Slot2() = 0;
 
+    unsigned int GetChave() const { return m_chave; }
+
 private:
-    int m_slot4;
+    unsigned int m_chave;
     std::string m_texto;
 };
 

@@ -10,6 +10,16 @@
 # 480, CBaseError<comum::EUeComumError, ...>'s constructor, is named by the calls and matches with this header's enum:
 # it is a thunk of 710, the body unit 94's form gives (the constructor in ecourna/api/exception/cbaseerror.hpp).
 #
+# comum::CPacoteArquivos::TrataErroPacote (5901, record 169:11), added after the unit landed: it throws code 7222 with
+# the key's name (5900 on +24), the package's name (the std::string at +0) and IInterfaceSavd's code and text (+16, an
+# int: argument type 3; +4); the getters on IInterfaceSavd and their names are chosen. Fn 4625 (not reconstructed)
+# builds the object in its frame and gives the layout: +0 a std::string, +12 a std::vector (its begin and end compared,
+# its elements walked), +24 the ESavdChaveValidar, +28 and +32 words. The vector's element type and every member's name
+# are chosen; +28 and +32 are not declared, since nothing written reads them. The target's band (uses 2) has 5901
+# ahead of 5900 in the link. A reading: 4625, whose records lie at lines 85 to 116 and whose body calls 5901 before
+# 5900, is defined above both, and a function takes its place at its first mention; with 4625 not written our object
+# has them the other way round.
+#
 # comum::CArquivosResultado::GetInst (348), its out-of-line constructor and destructor and its two statics are in this
 # unit's files and belong to unit 111's measurement: its fragment says why GetInst sits above the statics.
 #

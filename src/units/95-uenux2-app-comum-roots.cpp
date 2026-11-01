@@ -1,7 +1,8 @@
 // Roots: keep the members src/units/95-uenux2-app-comum.mk lists in the skeleton link. The target calls each directly
 // from several functions (ledger/callgraph.tsv: 275 from 1501 1836 3333 4682 4687 6737 7174 12098, 680 from 1836 4657
-// 7174, 347 from 1164 3798 5876 6045, 5900 from 4625 5901, 3830 from 4625 5890 5892), none of them reconstructed yet and
-// none through the table.
+// 7174, 347 from 1164 3798 5876 6045, 5900 from 4625 5901, 3830 from 4625 5890 5892), none of them reconstructed yet but
+// 5901 (CPacoteArquivos::TrataErroPacote, written in cpacotearquivos.cpp: the stand-ins for 5900 stay for 4625),
+// and none through the table. TrataErroPacote (fn 5901) itself has one caller in the target, 4625, which calls it twice.
 // Two noinline callers with different bodies give each two call sites, so binaryen keeps its body out of line, and they
 // pass every argument through, so its dead-argument elimination folds none in. `this` of CArquivosResultado::operator[]
 // is passed too: the member does not read it, and binaryen drops the parameter as the target's (i32 i32)->() shows.
@@ -12,6 +13,7 @@ void w275_root_0(int, int, int) __asm__("_ZNK5comum13CArquivosSavdixENS_11ESavdP
 void w680_root_0(int, int, int) __asm__("_ZNK5comum13CArquivosSavdixENS_14ESavdArquivoUEE");
 void w347_root_0(int, int, int) __asm__("_ZNK5comum18CArquivosResultadoixENS_25EExtensaoArquivoResultadoE");
 void w5900_root_0(int, int) __asm__("_ZN5comum15CPacoteArquivos16RetornaNomeChaveENS_17ESavdChaveValidarE");
+void w5901_root_0(int, int) __asm__("_ZNK5comum15CPacoteArquivos15TrataErroPacoteERKNS_14IInterfaceSavdE");
 int w3830_root_0(int, int, int, int) __asm__("_ZN5comum14IInterfaceSavd16EnviarRequisicaoERiRNS_16ueRequisicaoSavdERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE");
 }
 
@@ -53,6 +55,13 @@ __attribute__((noinline)) void NomesChaves(int nome, int chave, int outra)
     w5900_root_0(nome, chave);
 }
 
+// stands for fn 4625, which calls TrataErroPacote twice
+__attribute__((noinline)) void ErrosPacote(int pacote, int savd, int outro)
+{
+    w5901_root_0(pacote, savd);
+    w5901_root_0(pacote + 28, outro);
+}
+
 __attribute__((noinline)) int EnviaUma(int savd, int codigo, int requisicao, int dados)
 {
     return w3830_root_0(savd, codigo, requisicao, dados);
@@ -76,6 +85,7 @@ struct SW95Roots {
         w95_sink = reinterpret_cast<void*>(&NomesChaves);
         w95_sink = reinterpret_cast<void*>(&EnviaUma);
         w95_sink = reinterpret_cast<void*>(&EnviaDuas);
+        w95_sink = reinterpret_cast<void*>(&ErrosPacote);
     }
 } w95_roots;
 

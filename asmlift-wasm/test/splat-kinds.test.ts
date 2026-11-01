@@ -205,16 +205,6 @@ function ourSlotOf(l: Loaded, targetSlot: number): number {
   return slots[0];
 }
 
-/** The target's slot of the function in our slot `slot` (the target function the symbol file gives its name): the
- *  one slot the target's table gives it. */
-function targetSlotOf(l: Loaded, slot: number): number {
-  const { ours, target } = l.maps;
-  const f = target.symbols.fns.get(ours.fns.get(ours.elem.get(slot) ?? -1)?.key ?? '');
-  const slots = f === undefined ? [] : (target.slots.get(f) ?? []);
-  expect(slots, `target slots of the function in our slot ${slot}`).toHaveLength(1);
-  return slots[0];
-}
-
 /** Our address of the C string the target keeps at `addr`: the one place our data holds those bytes as a whole
  *  string (a NUL before and after). */
 function ourStringOf(l: Loaded, addr: number): number {
@@ -920,12 +910,16 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
           ),
     );
     // c8: a table slot whose literal is the target's slot number; re-pointed, it is the target's slot of the function
-    // in our slot 69
+    // in our slot 69, which a landing that takes an address ahead of it moves: when that function has no target slot
+    // of its own, the build rejects the operand as unresolved instead
     const c8 = caseMaps(byName('c8'));
     expect(operandKind(c8.kinds, 0x37)).toBe('slot');
-    const theirs = targetSlotOf(l, 69);
+    const f69 = l.maps.target.symbols.fns.get(l.maps.ours.fns.get(l.maps.ours.elem.get(69) ?? -1)?.key ?? '');
+    const theirs = f69 === undefined ? [] : (l.maps.target.slots.get(f69) ?? []);
     expect(failure(byName('c8'), c8.maps)).toMatch(
-      new RegExp(`function 1260 .* DIFFERS at \\+0x38 target \\+0x37 i32\\.const 69 \\| ours \\+0x37 i32\\.const ${theirs}$`, 'm'),
+      theirs.length === 1
+        ? new RegExp(`function 1260 .* DIFFERS at \\+0x38 target \\+0x37 i32\\.const 69 \\| ours \\+0x37 i32\\.const ${theirs[0]}$`, 'm')
+        : new RegExp('function 1260 .* is UNRESOLVED: ours \\+0x37 i32\\.const 69: a table slot of ours: ', 'm'),
     );
   });
 

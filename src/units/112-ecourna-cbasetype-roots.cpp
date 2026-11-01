@@ -11,7 +11,7 @@
 // It calls each one twice, so each has two call sites here; 9066, 9127, 9130, 9142, 9221 and 9228 are written, the rest are
 // not. Its body is no target function's: two constructions and a difference.
 //
-// w112_apara stands for the callers of the copying Trim (1374): 2256 3712 5343 5604 5667 5896 11377. Two calls, for the same
+// w112_apara stands for the callers of the copying Trim (1374) not written: 2256 5343 5604 5896 11377. Two calls, for the same
 // reason. Without a second copying function 1879 stays a whole body: with this one binaryen forms the target's merge 3942.
 //
 // w112_apaga stands for the other callers of std::string::__erase_external_with_move (1136): 654 1880 2626 3510 5159 5497

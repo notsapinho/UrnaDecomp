@@ -14,11 +14,13 @@ namespace comum::md {
 // inline (our copy, with ecourna::app::dados::CIdentificadorGeradorMidia's copy constructor inlined there, matches; that
 // class's own is fn 9872). The fields follow
 // ModuloTiposEcoUrna::Carga's, whose types fit those widths: numeroInternoUrna, numeroSerieFC, dataHoraCarga (12 bytes,
-// an api::CDateTime), codigoCarga and identificadorGeradorMidia; which field sits where among the strings, the types
-// and the member names are chosen. The constructor and ValidaCriacao (fn 5670, records ccarga.cpp:36 to :51) are not
-// reconstructed.
+// an api::CDateTime), codigoCarga and identificadorGeradorMidia. ValidaCriacao (fn 5670, records ccarga.cpp:36 to :51)
+// tests the string at +4 as the MC's serial and the one at +28 as the load's code (its messages say so); the rest of
+// the placing among the strings, the types and the member names are chosen. The constructor is not reconstructed.
 class CCarga {
 private:
+    void ValidaCriacao() const;
+
     uedword m_numeroInternoUrna;
     std::string m_numeroSerieFC;
     api::CDateTime m_dataHoraCarga;

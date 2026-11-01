@@ -164,9 +164,10 @@ $(ROOT)/$(APP)/roots_uenux2.o: $(ROOT)/src/app/roots_uenux2.cpp $(ROOT)/src/Make
 # instances of ecourna's templates that are uenux2's code in the target, ahead of ecourna's objects and at the tree's flags
 $(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_cbasetype.cpp -o $(R)
-# the executable TU's copies of vector<unsigned char>'s destruction (fns 306, 520, 4967), ahead of ecourna's objects and
-# without strict aliasing, which 4967 needs (src/app/roots_vector.cpp)
-$(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile
+# the executable TU's copies of vector<unsigned char>'s destruction (fns 306, 520, 4967) and vector<CDadoCorrespondencia>'s
+# (5294, 1698, 5532, 9873), ahead of both trees' objects and without strict aliasing, which 4967 needs
+# (src/app/roots_vector.cpp)
+$(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_vector.cpp -o $(R)
 
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
@@ -208,13 +209,15 @@ OUT_NAMED := build/out/wasm-named/vota_web
 # linked from build/out so the packager embeds PACKAGE_NAME="wasm/vota_web/vota_web_wasm.data" like the target;
 # the named twin adds --emit-symbol-map, which changes the -Oz function ORDER (never byte-compare it) but names bodies
 # The link also writes the symbol lists the lifter names callees with ($(OUT)/symbols.{mangled,demangled}.txt).
+# Each em++ line runs in a docker run of its own, as in link-map.sh: one `bash -c` argument that held the object list
+# twice passed Linux's 128 KiB limit on one argument ("argument list too long"); a line holds it once.
 link: $(ROOT)/$(OUT)/vota_web_wasm.wasm $(ROOT)/$(OUT_NAMED)/vota_web_wasm.wasm
 $(ROOT)/$(OUT)/vota_web_wasm.wasm $(ROOT)/$(OUT_NAMED)/vota_web_wasm.wasm: $(LINK_OBJS) $(ROOT)/$(OSSL_OBJS_FILE) $(ROOT)/$(LIBCRYPTO) $(ROOT)/src/Makefile
 	@test -n "$(SEVENZIP_OBJS)" -a -n "$(RHVOICE_OBJS)" || { echo "no 7-Zip or RHVoice objects: run make -C src libs, then link again" >&2; exit 2; }
 	$(H) mkdir -p $(OUT) $(OUT_NAMED) && objs="$(patsubst $(ROOT)/build/out/%,%,$(LINK_OBJS)) $$(sed 's#^build/out/##' $(OSSL_OBJS_FILE) | tr '\n' ' ') $(patsubst build/out/%,%,$(LIBCRYPTO))" \
 	  && echo "em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT))/vota_web_wasm.js --preload-file ../../target/fs@/" > $(OUT)/link.cmd \
-	  && build/docker-build.sh bash -c "cd build/out && em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT))/vota_web_wasm.js --preload-file ../../target/fs@/ \
-	       && em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT_NAMED))/vota_web_wasm.js --preload-file ../../target/fs@/ --emit-symbol-map" \
+	  && build/docker-build.sh bash -c "cd build/out && em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT))/vota_web_wasm.js --preload-file ../../target/fs@/" \
+	  && build/docker-build.sh bash -c "cd build/out && em++ $(LINK_FLAGS) $$objs -o $(patsubst build/out/%,%,$(OUT_NAMED))/vota_web_wasm.js --preload-file ../../target/fs@/ --emit-symbol-map" \
 	  && ls -la $(OUT) $(OUT_NAMED) && tools/round/link-symbols.sh $(OUT)
 
 census: $(ROOT)/$(OUT)/vota_web_wasm.wasm

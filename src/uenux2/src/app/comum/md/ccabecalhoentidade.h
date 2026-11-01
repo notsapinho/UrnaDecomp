@@ -9,9 +9,8 @@ namespace comum::md {
 // accepts 0 to 2.
 enum ETipoCabecalho : int;
 
-// The layout, 20 bytes, from the constructor (target fn 1945, records ccabecalhoentidade.cpp:24, :27), which is
-// declared here and not written. It copies the date at +0 and stores the word at +12 and the type at +16. The member
-// names are not in the target.
+// The layout, 20 bytes, from the constructor (target fn 1945, records ccabecalhoentidade.cpp:24, :27): it copies the
+// date at +0 and stores the word at +12 and the type at +16. The member names are not in the target.
 class CCabecalhoEntidade {
 public:
     CCabecalhoEntidade(const api::CDateTime& dataGeracao, uedword codigo, ETipoCabecalho tipo);
