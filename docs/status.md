@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**10,692 of 14,343 functions matched (74.55%), 2,871,289 of 5,883,903 code bytes (48.80%).**
+**10,691 of 14,343 functions matched (74.54%), 2,869,753 of 5,883,903 code bytes (48.77%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -29,9 +29,9 @@ name ([Not attributed](#not-attributed)).
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
 | TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,177 / 3,285 | 66.27% | 589,506 / 2,168,476 | 27.19% |
-| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,627 / 8,294 | 79.90% | 2,000,586 / 3,145,292 | 63.61% |
+| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,626 / 8,294 | 79.89% | 1,999,050 / 3,145,292 | 63.56% |
 | not attributed | `unknown`, `app` | 1,888 / 2,764 | 68.31% | 281,197 / 570,135 | 49.32% |
-| **total** | | **10,692 / 14,343** | **74.55%** | **2,871,289 / 5,883,903** | **48.80%** |
+| **total** | | **10,691 / 14,343** | **74.54%** | **2,869,753 / 5,883,903** | **48.77%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -62,7 +62,7 @@ come from getting the version, the flags and the link order right, not from writ
 | component | functions | | code bytes | |
 | --- | ---: | ---: | ---: | ---: |
 | `openssl` | 3,166 / 3,258 | 97.18% | 948,214 / 1,014,603 | 93.46% |
-| `libc++` | 1,359 / 1,957 | 69.44% | 175,786 / 439,879 | 39.96% |
+| `libc++` | 1,358 / 1,957 | 69.39% | 174,250 / 439,879 | 39.61% |
 | `sqlite` | 902 / 927 | 97.30% | 705,806 / 772,965 | 91.31% |
 | `7zip` | 485 / 970 | 50.00% | 44,989 / 292,539 | 15.38% |
 | `RHVoice` | 423 / 740 | 57.16% | 65,100 / 450,027 | 14.47% |
@@ -120,9 +120,9 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 10,692 | 2,871,289 | matched |
+| `match` | 10,691 | 2,869,753 | matched |
 | `differs` | 454 | 109,325 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 524 | 498,319 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `unresolved` | 525 | 499,855 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
 | `no-candidate` | 2,673 | 2,404,970 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
@@ -183,7 +183,7 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | `fingerprint` | 722 | 721 | 0 | 1 | 0 |
 | `addr` | 7,054 | 6,711 | 196 | 145 | 2 |
 | `shape` | 677 | 642 | 29 | 5 | 1 |
-| `none` | 4,774 | 1,502 | 229 | 373 | 2,670 |
+| `none` | 4,774 | 1,501 | 229 | 374 | 2,670 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

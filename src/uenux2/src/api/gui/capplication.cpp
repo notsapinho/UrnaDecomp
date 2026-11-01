@@ -20,6 +20,8 @@ std::string CApplication::s_versao;
 ELogAplicativos CApplication::s_aplicativo;
 CApplicationContextStack CApplication::s_contextos;
 
+void PushContextoInicial(std::string titulo, std::string descricao);
+
 void CApplication::InitApplication(const std::string& aplicacao, const std::string& descricao, const std::string& versao,
                                    ELogAplicativos aplicativo)
 {
@@ -38,9 +40,9 @@ void CApplication::InitApplication(const std::string& aplicacao, const std::stri
     PushContextoInicial("Não é possível continuar a execução", "Erro inesperado");
 }
 
-void CApplication::PushContextoInicial(std::string titulo, std::string descricao)
+void PushContextoInicial(std::string titulo, std::string descricao)
 {
-    PushContext(CApplicationContext::CriaPadrao(std::move(titulo), std::move(descricao)));
+    CApplication::PushContext(CriaContextoPadrao(std::move(titulo), std::move(descricao)));
 }
 
 void CApplication::PushContext(CApplicationContext context)
@@ -56,10 +58,10 @@ CApplicationContextGuard CApplication::CriaContexto(CApplicationContext contexto
 CApplicationContextGuard CApplication::CriaContexto(int tipo, std::string titulo, std::string descricao,
                                                     std::string detalhe)
 {
-    return CriaContexto(CApplicationContext::Cria(tipo, std::move(titulo), std::move(descricao), std::move(detalhe)));
+    return CriaContexto(CriaContextoAplicacao(tipo, std::move(titulo), std::move(descricao), std::move(detalhe)));
 }
 
-// (original lines 62-497: content not recovered)
+// (original lines 64-497: content not recovered)
 #line 498
 void CApplication::EnterLoopDoingNothing()
 {

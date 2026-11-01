@@ -39,7 +39,6 @@ public:
     static CApplicationContextStack s_contextos;
 
 private:
-    static void PushContextoInicial(std::string titulo, std::string descricao);
     static CApplicationContextGuard CriaContexto(CApplicationContext contexto);
 };
 

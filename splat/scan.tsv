@@ -1704,7 +1704,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1838	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE21__grow_by_and_replaceEmmmmmmPKc	442	symbol	match	-	244	none	unknown	1	sysroot:libc++.a(string.o)
 1839	_ZNSt11logic_errorC2ERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE	1472	symbol	match	readings: address symbol	14	addr	libc++	1	sysroot:libc++.a(stdexcept.o)
 1840	-	-	-	no-candidate	no symbol and no ledger pair	316	none	unknown	0	-
-1841	_ZN3api19CApplicationContextC2ERKS0_	5558	symbol	match	-	351	none	unknown	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
+1841	_ZN3api19CApplicationContextC2ERKS0_	5557	symbol	match	-	351	none	unknown	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
 1842	-	-	-	no-candidate	no symbol and no ledger pair	344	none	unknown	0	-
 1843	_ZNKSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE17find_first_not_ofB8ne210108EPKcm	2489	symbol	match	-	116	fingerprint	ASN1	1	app/roots_vector.o
 1844	_ZNSt3__214__num_get_base10__get_baseERNS_8ios_baseE	1713	symbol	match	-	46	byte	libc++	1	sysroot:libc++.a(locale.o)
@@ -3545,7 +3545,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3679	-	-	-	no-candidate	no symbol and no ledger pair	38	none	app	0	-
 3680	_ZN3api12CFormBuilder7AddRectERKNS_6SPointES3_	5528	symbol	match	readings: address symbol	200	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 3681	_ZN3api10CLineFieldD0Ev	3413	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/clinefield.cpp.o
-3682	_ZN3api19CApplicationContext4CriaEiNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_S7_	5560	symbol	match	-	333	none	app	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
+3682	_ZN3api21CriaContextoAplicacaoEiNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_S6_	5559	symbol	match	-	333	none	app	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
 3683	-	-	-	no-candidate	no symbol and no ledger pair	253	none	libc++	0	-
 3684	_ZN3api12CApplication11PushContextENS_19CApplicationContextE	5572	symbol	match	readings: address symbol	628	shape	app	1	app/uenux2/src/api/gui/capplication.cpp.o
 3685	-	-	-	no-candidate	no symbol and no ledger pair	159	none	comum	0	-
@@ -5417,11 +5417,11 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5551	_ZNK3api10CFillField4RectEv	5397	symbol	match	-	12	byte	api	1	app/uenux2/src/api/gui/cfillfield.cpp.o
 5552	_ZN3api19CApplicationContextaSEOS0_	5554	symbol	match	-	349	addr	vota	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
 5553	-	-	-	no-candidate	no symbol and no ledger pair	204	none	vota	0	-
-5554	_ZNSt3__26vectorIN3api19CApplicationContextENS_9allocatorIS2_EEE24__emplace_back_slow_pathIJS2_EEEPS2_DpOT_	5557	symbol	match	-	561	none	ecourna	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
-5555	_ZN3api19CApplicationContext7ActionsEi	5561	symbol	match	readings: address string,table slot	3197	none	app	1	app/uenux2/src/api/gui/capplicationcontext.cpp.o
-5556	_ZNK3api19CApplicationContexteqERKS0_	5555	symbol	match	-	387	fingerprint	vota	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
+5554	_ZNSt3__26vectorIN3api19CApplicationContextENS_9allocatorIS2_EEE24__emplace_back_slow_pathIJS2_EEEPS2_DpOT_	5556	symbol	match	-	561	none	ecourna	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
+5555	_ZN3api7ActionsEi	5560	symbol	match	readings: address string,table slot	3197	none	app	1	app/uenux2/src/api/gui/capplicationcontext.cpp.o
+5556	_ZNK3api19CApplicationContexteqERKS0_	5561	symbol	match	-	387	fingerprint	vota	1	app/uenux2/src/api/gui/capplicationcontext.cpp.o
 5557	_ZN3api19CApplicationContextC2ENSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_S7_NS1_6vectorIS7_NS5_IS7_EEEEi	5562	symbol	match	-	169	byte	unknown	1	app/uenux2/src/api/gui/capplicationcontext.cpp.o
-5558	_ZN3api19CApplicationContext10CriaPadraoENSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_	5559	symbol	match	readings: address string	349	none	unknown	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
+5558	_ZN3api18CriaContextoPadraoENSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_	5558	symbol	match	readings: address string	349	none	unknown	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
 5559	-	-	-	no-candidate	no symbol and no ledger pair	38	none	libc++	0	-
 5560	-	-	-	no-candidate	no symbol and no ledger pair	118	none	libc++	0	-
 5561	-	-	-	no-candidate	no symbol and no ledger pair	41	none	libc++	0	-
@@ -11022,7 +11022,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 11156	_ZZN3api12CApplication15InitApplicationERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_15ELogAplicativosENK23commaAsDecimalSeparator16do_decimal_pointEv	11427	symbol	match	-	4	byte	api	1	app/uenux2/src/api/gui/capplication.cpp.o
 11157	_ZN3api14CPolySingletonINS_12CEscritorLogEE8instanceERNS_19TPolySingletonsInfoERKNSt3__215source_locationE	2719	symbol	match	readings: address symbol,address string,address same-content,address srcloc,table slot	1846	none	ecourna	1	app/uenux2/src/api/uelog/cloga.cpp.o
 11158	-	-	-	no-candidate	no symbol and no ledger pair	179	none	unknown	0	-
-11159	_ZN3api12CApplication15InitApplicationERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_15ELogAplicativos	11428	symbol	match	readings: address symbol,table slot,address string	1536	none	libc++	1	app/uenux2/src/api/gui/capplication.cpp.o
+11159	_ZN3api12CApplication15InitApplicationERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_15ELogAplicativos	11428	symbol	unresolved	self-voted +0x18d i32.const 1839204: _ZN3api12CApplication12s_aplicativoE = 0x1c1064 (evidence:vote:1 by:11159) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	1536	none	libc++	1	app/uenux2/src/api/gui/capplication.cpp.o
 11160	__cxx_global_array_dtor.6@app/uenux2/src/api/gui/capplication.cpp.o	11429	symbol	match	readings: address symbol	89	addr	unknown	1	app/uenux2/src/api/gui/capplication.cpp.o
 11161	__cxx_global_array_dtor.4@app/uenux2/src/api/gui/capplication.cpp.o	11430	symbol	match	readings: address symbol	36	addr	unknown	2	app/uenux2/src/api/gui/capplication.cpp.o
 11162	__cxx_global_array_dtor.2@app/uenux2/src/api/gui/capplication.cpp.o	11432	symbol	match	readings: address symbol	36	addr	unknown	2	app/uenux2/src/api/gui/capplication.cpp.o

@@ -1,7 +1,8 @@
-// Reconstruction's note, not TSE's text: api::CApplicationContextGuard, CApplicationContextStack and CApplicationContext
-// (/home/rubio/tse/uenux2/src/api/gui/capplicationcontextstack.cpp). The record fixes line 45 (the guard's constructor
-// from a stack and a context, inlined into target fn 676); every other line, the order of the definitions and the
-// include order are chosen: src/units/193-uenux2-capplicationcontextstack.mk has the rest.
+// Reconstruction's note, not TSE's text: api::CApplicationContextGuard, CApplicationContextStack and the factories of
+// CApplicationContext (/home/rubio/tse/uenux2/src/api/gui/capplicationcontextstack.cpp). The record fixes line 45 (the
+// guard's constructor from a stack and a context, inlined into target fn 676), and the target's use band puts the
+// factories ahead of the guard; every other line and the include order are chosen. The fragment,
+// src/units/193-uenux2-capplicationcontextstack.mk, has the rest.
 #include "api/gui/capplicationcontextstack.h"
 
 #include <algorithm>
@@ -13,12 +14,12 @@
 
 namespace api {
 
-CApplicationContext CApplicationContext::Cria(int tipo, std::string titulo, std::string descricao, std::string detalhe)
+CApplicationContext CriaContextoAplicacao(int tipo, std::string titulo, std::string descricao, std::string detalhe)
 {
     return CApplicationContext(std::move(titulo), std::move(descricao), std::move(detalhe), Actions(tipo), 0);
 }
 
-CApplicationContext CApplicationContext::CriaPadrao(std::string titulo, std::string descricao)
+CApplicationContext CriaContextoPadrao(std::string titulo, std::string descricao)
 {
     return CApplicationContext(std::move(titulo), std::move(descricao),
                                "Tire uma foto dessa tela em que apareça o QR Code ao lado e envie para a equipe de "
@@ -26,7 +27,7 @@ CApplicationContext CApplicationContext::CriaPadrao(std::string titulo, std::str
                                Actions(1), 1);
 }
 
-// (original lines 29-40: content not recovered)
+// (original lines 30-40: content not recovered)
 #line 41
 CApplicationContextGuard::CApplicationContextGuard(CApplicationContextStack& stack, CApplicationContext context)
     : m_stack(stack), m_context(std::move(context))

@@ -1,6 +1,7 @@
-// Reconstruction's note, not TSE's text: api::CApplicationContext's constructor from its five members (target fn 5557)
-// and Actions (fn 5555). No record names this file: its path, every line and the include order are chosen, and
-// src/units/193-uenux2-capplicationcontextstack.mk says why Actions is apart from the factories Cria and CriaPadrao.
+// Reconstruction's note, not TSE's text: api::CApplicationContext's constructor from its five members (target fn 5557),
+// its operator== (fn 5556) and Actions (fn 5555), in the order of the target's use band. No record names this file:
+// its path, every line and the include order are chosen, and src/units/193-uenux2-capplicationcontextstack.mk says why
+// Actions is apart from CriaContextoAplicacao and CriaContextoPadrao.
 #include "api/gui/capplicationcontext.h"
 
 #include <format>
@@ -14,7 +15,9 @@ CApplicationContext::CApplicationContext(std::string titulo, std::string descric
 {
 }
 
-std::vector<std::string> CApplicationContext::Actions(int tipo)
+bool CApplicationContext::operator==(const CApplicationContext&) const = default;
+
+std::vector<std::string> Actions(int tipo)
 {
     switch (tipo) {
     case 0:
