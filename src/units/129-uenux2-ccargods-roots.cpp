@@ -31,7 +31,7 @@ __attribute__((noinline)) void Totais(int a, int b)
     w5801(a);
     w5801(b + 24);
 }
-// Stands for fn 2268's callers 6075, 6076, 6999, 12632 and 12811.
+// Stands for fn 2268's callers 6075, 6076, 6999 and 12811 (12632 is in the link).
 __attribute__((noinline)) void NomesSexo(int r, int s, int a)
 {
     w2268(r, a + 4);
