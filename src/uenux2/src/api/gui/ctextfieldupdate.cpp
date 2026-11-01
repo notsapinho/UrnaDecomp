@@ -1,7 +1,7 @@
 // api::CTextFieldUpdate (/home/rubio/tse/uenux2/src/api/gui/ctextfieldupdate.cpp).
 // Target functions of this file:
 //   3658  CTextFieldUpdate(const SPoint&, const SharedIText&, const std::chrono::milliseconds&, const SFont&, TColor,
-//         TColor)  record at line 38, column 15; not reconstructed: it calls ITimerScheduler::GetInst (fn 1259)
+//         TColor)  record at line 38, column 15, with the timer's lambda   (here)
 //   5495 / 10917  ~CTextFieldUpdate() (base-object / deleting)   (here; out of line: the D0 calls the D2)
 //   10916 Draw(IScreen&) const                                   (here)
 //   10915 Show(), 10914 Hide()                                   (here)
@@ -9,29 +9,44 @@
 //   10912 GetTypeName() const                                    (here)
 //   2241  Move(const SPoint&)  one body binaryen shares with four other fields   (here, below Rect's line: a choice)
 // The definitions follow the target's order (the uses-1 band 10912-10917 in ledger/ordinals.tsv: D0, Draw, Show, Hide,
-// Rect, GetTypeName; a shared body has no place in a band); no record falls in the members written here, so their lines
-// are a choice.
-
+// Rect, GetTypeName; a shared body has no place in a band); the lines but the constructor's throw's are a choice.
 #include "api/gui/ctextfieldupdate.h"
 
+#include "api/gui/eueguierror.h"
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/itimer.h"
+#include "api/util/itimerscheduler.h"
 
 namespace api {
 
-// (original lines 24-34: content not recovered)
-#line 35
-// <stubs>
-// f3658 · 303 B · unmatched · name unknown
-// ? f3658(i32, i32, i32, i32, i32) { ... }
-// </stubs>
+CTextFieldUpdate::CTextFieldUpdate(const SPoint& posicao, const SharedIText& text, const std::chrono::milliseconds& intervalo,
+                                   const SFont& font, TColor corTexto, TColor corFundo)
+    : m_posicao(posicao)
+    , m_text(text)
+    , m_font(font)
+    , m_corTexto(corTexto)
+    , m_corFundo(corFundo)
+    , m_textoDesenhado("")
+    , m_timer(ITimerScheduler::GetInst().CreateTimer(intervalo,
+                                                     [this]() {
+                                                         Atualiza();
+                                                     }))
+{
+    if (!m_text) {
+        throw CUeGuiError(EUE_GUI_TEXTFIELDUPDATE_TEXTO_NULO, "Campo estava com o texto nulo");
+    }
+}
 
-// (original lines 40-41: content not recovered)
-#line 42
 CTextFieldUpdate::~CTextFieldUpdate() = default;
 
+void CTextFieldUpdate::Atualiza()
+{
+    if (m_text->GetText() != m_textoDesenhado) {
+        Invalidate();
+    }
+}
 
 void CTextFieldUpdate::Draw(IScreen& screen) const
 {
@@ -43,8 +58,6 @@ void CTextFieldUpdate::Draw(IScreen& screen) const
     m_textoDesenhado = m_text->GetText();
 }
 
-// (original lines 55-59: content not recovered)
-#line 60
 void CTextFieldUpdate::Show()
 {
     m_timer->Start();
@@ -54,7 +67,6 @@ void CTextFieldUpdate::Hide()
 {
     m_timer->Stop();
 }
-
 
 SRect CTextFieldUpdate::Rect() const
 {

@@ -2090,20 +2090,10 @@
 // f10362 · 12 B · unmatched · placement: link order · name unknown
 // void f10362(i32) { ... }
 
-// link-order cluster 347 · uses=1 · neighbours' file uenux2/src/api/gui/logger.cpp
-
-// f10815 · 187 B · unmatched · placement: link order · name unknown
-// void f10815(i32, i32, i32, i32) { ... }
-
 // link-order cluster 348 · uses=1 · neighbours' file uenux2/src/api/gui/audiocollector.cpp
 
 // f10820 · 830 B · unmatched · placement: link order · name unknown
 // ? f10820(i32, i32, i32) { ... }
-
-// link-order cluster 350 · uses=1 · neighbours' file uenux2/src/api/gui/crhvoicetexttospeech.cpp
-
-// f10838 · 10 B · unmatched · placement: link order · name unknown
-// void f10838(i32) { ... }
 
 // link-order cluster 353 · uses=1 · neighbours' file uenux2/src/api/audio/alsa/cwavfile.cpp
 
@@ -2132,11 +2122,6 @@
 
 // f11107 · 432 B · unmatched · placement: link order · name unknown
 // void f11107(i32, i32) { ... }
-
-// link-order cluster 404 · uses=1 · neighbours' file uenux2/src/api/gui/cpreshowclearscreen.cpp
-
-// f11139 · 17 B · unmatched · placement: link order · name unknown
-// void f11139(i32, i32) { ... }
 
 // link-order cluster 406 · uses=1 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
 
@@ -2231,9 +2216,6 @@
 
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
-
-// f5441 · 184 B · unmatched · placement: link order · name unknown
-// ? f5441(i32) { ... }
 
 // link-order cluster 769 · uses=2 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
 

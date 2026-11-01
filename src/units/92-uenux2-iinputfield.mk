@@ -6,7 +6,10 @@
 #   IFormFieldBase<IScreen>::Refresh 4118, IInputField's D2s 4021 and 5517 with binaryen's body 6061, Show 6327, Hide 6324,
 #   Clear 6317, SetLength 6312; CInputFieldControl's D0s 6328 and 3672 and IScreen's Rect 11153; CMaskedTextField's
 #   D2s 12604, 12719 and D0s 12595, 12713 with binaryen's bodies 6063 and 6062, GetTypeName 6507, Rect 6505, Move 6504;
-#   CInputField<CFramedText>'s Rect 12405 and Move 12402; CFramedText's Rect 3677, Move 3676 and DrawFrame 2779.
+#   CInputField<CFramedText>'s Rect 12405 and Move 12402; CFramedText's Rect 3677, Move 3676 and DrawFrame 2779, and its
+#   constructor 1385, whose record (cframedtext.cpp 28:24) is the default argument of CPolySingleton<IScreen>::instance():
+#   the local `IScreen& monitor` gives that column, and its name, the constructor's other lines and the vertical gap
+#   written in place (Espaco's form over size / 10) are chosen. The roots give 1385 two callers for its eight in the target.
 #   From the roots' control blocks: __shared_ptr_emplace<T>'s D2 and D0 for CInputFieldControl<IScreen> (11072, 11071),
 #   <IScreenMT> (11018, 11017), CMaskedTextField<CFramedText> (12618, 12613) and <CGrayedFramedText> (12735, 12727);
 #   __shared_ptr_pointer's __get_deleter for CInputField<CFramedText> (12350), CMaskedTextField<CFramedText> (12340),
@@ -26,6 +29,11 @@
 #         function's own row of the record, splat-remap prints IDENTICAL for both. They wait for the toolkit
 #         to take a record's address from among its copies; no source change can close this.
 #   12438, 12593, 12708 the Draws: they call MaskText directly, which is a trap (the pending file says what it waits for).
+# Not written: CGrayedFramedText's constructor (5535). It passes CFramedText's constructor the address of a constant
+#   SFont {40, 0} at 474880, which lies in the data of an app/vota object (after its typeinfo name
+#   N4vota19CPreShowProgressBarE, with {30, 0} and {20, 0} beside it), not in cgrayedframedtext.cpp's (its typeinfo name is
+#   at 523132): an object no source of ours defines. Measured: `SFont{40, 0}` written in the call compiles to a stack
+#   temporary, and a namespace-scope or function-local constant of this file lands in its own data.
 #   the constructors, in the headers: only dropped functions reach them, so nothing has measured them.
 # CInputMenuField's own members, among them 10893 (GetTypeName) and 5491, are unit 84's, with CMenuItem and the list of
 #   them at +140. CInputFieldMT is unit 146's.

@@ -2,6 +2,7 @@
 //   193, 604  AddTextField   over a CFixedText, over a CDataText of a function
 //   198       AddNewLine     thunk into 3890, binaryen's one body for this and CMTFormBuilder's AddLed and AddBeep
 //   1264      AddCut
+//   2775      AddQRCode      with CQRCodeImageFieldPaper's constructor inlined; the name is chosen
 // The EStyle 604 passes is a literal by choice: a parameter every caller passes as 1 gives the same body, since binaryen
 // folds it (docs/how-to-decompile.md step 2). `new CCutFieldPaper()` has its parentheses from the bytes: 1264 zeroes the
 // 24 bytes of the object before the vptr store, which the value-initialization of a class with an implicit constructor
@@ -15,6 +16,7 @@
 #include "api/gui/cnewlinefieldpaper.h"
 #include "api/gui/ipaperrelatorios.h"
 #include "api/gui/cpreshownothing.h"
+#include "api/gui/cqrcodeimagefieldpaper.h"
 #include "api/gui/ctextfieldpaper.h"
 
 namespace api {
@@ -36,6 +38,13 @@ void CPaperFormBuilder::AddTextField(std::string (*fonte)(), ETextAlignment alin
 void CPaperFormBuilder::AddCut()
 {
     const SharedField campo(new CCutFieldPaper());
+    m_campos.push_back(campo);
+}
+
+void CPaperFormBuilder::AddQRCode(const CQRCodeImagePaper::QrcodeData& qrcode)
+{
+    const std::shared_ptr<CQRCodeImageFieldPaper> qr(new CQRCodeImageFieldPaper(qrcode));
+    const SharedField campo = qr;
     m_campos.push_back(campo);
 }
 
