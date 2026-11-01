@@ -14,6 +14,10 @@ enum EUeVotaError {
     // from the message, "<caller> - o cargo atual nao esta posicionado", and the class: no evidence names them
     EUE_VOTA_CONFIRMA_VOTO_EM_CARGO_CARGO_NAO_POSICIONADO = 9306,
     EUE_VOTA_CONFIRMA_VOTO_SEM_CANDIDATO_CARGO_NAO_POSICIONADO = 9307,
+    // the value is the code vota::CEleitorVotando::ChamaEstadoProximoCargo (target fn 4459, record
+    // celeitorvotando.cpp:229) throws; the name is chosen from its message, "Tipo de cargo nao identificado": no evidence
+    // names it
+    EUE_VOTA_TIPO_CARGO_NAO_IDENTIFICADO = 9310,
     // the value is the code vota::NomeTela (target fn 6718) throws; the name is chosen from its message, "Tela
     // inválida {}": no evidence names it
     EUE_VOTA_TELA_INVALIDA = 9327,
@@ -31,6 +35,9 @@ enum EUeVotaError {
     // are chosen from the message, "O cargo atual nao esta posicionado", and the class: no evidence names them
     EUE_VOTA_PEDE_MAJORITARIO_CARGO_NAO_POSICIONADO = 9380,
     EUE_VOTA_COMPLETA_PROPORCIONAL_CARGO_NAO_POSICIONADO = 9384,
+    // the value is the code vota::CPedeNulo::GetProximoEstado (target fn 11744, record cpedenulo.cpp:44) throws; the
+    // name is chosen from its message, "O cargo atual nao esta posicionado", and the class: no evidence names it
+    EUE_VOTA_PEDE_NULO_CARGO_NAO_POSICIONADO = 9385,
     EUE_VOTA_PEDE_PROPORCIONAL_CARGO_NAO_POSICIONADO = 9386,
     // the value is the code vota::IIniciaJustificativa's constructor (target fn 3624) throws; the name is chosen from
     // its message, "Confirmação de justificativa nula": no evidence names it

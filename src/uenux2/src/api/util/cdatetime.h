@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <compare>
 #include <ctime>
 #include <string>
@@ -39,6 +40,13 @@ bool IsValidDateTime(const std::string& dataHora);
 //   hands the date of a local CDateTime to CDate::operator<=> (fn 1261) with no copy, which is the evidence. By-value
 //   getters were measured only in a form of 11198 that compares in its own body, not the one landed, where they copy
 //   the date into its frame for each compare (its object). Their names are chosen.
+// - operator+=(const std::chrono::seconds&) (fn 5474) passes the count's low word to operator+=(int) (fn 2233). Its one
+//   caller, vota::CEstadoComDesligamentoAutomatico::ProcessTick (fn 12061), calls it twice, each time with the address
+//   of a 64-bit value it sign-extends from 32 bits: a reference to a 64-bit count. It is out of line in cdatetime.cpp:
+//   in use band 2 of ledger/ordinals.tsv it sits between fns 5475 and 5473 (docs/reference/facts/reading.md R9). The
+//   parameter's type (std::chrono::seconds rather than a time_t), that it is an operator, and its void result are
+//   chosen.
+// - operator== (inline in 12061) compares the date's four words, then the time's word: defaulted is a choice.
 class CDateTime {
 public:
     CDateTime() = default;
@@ -56,8 +64,10 @@ public:
 
     time_t ConvertToLocalTime() const;
     void operator+=(int segundos);
+    void operator+=(const std::chrono::seconds& segundos);
     CDateTime operator+(time_t segundos) const;
 
+    bool operator==(const CDateTime& dataHora) const = default;
     std::strong_ordering operator<=>(const CDateTime& dataHora) const;
 
 private:

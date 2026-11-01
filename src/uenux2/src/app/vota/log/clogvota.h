@@ -27,8 +27,12 @@
 // LogaMesarioIndagadoHorarioUrna (by vota::CImpressaoZeresimaTardia::StartState, fn 11932) are the same shape: each
 // caller calls GetInst before the member's own stack frame opens; the first two call api::CLoga::loga (fn 433) with +4
 // and severity 1, the third calls fn 233. That they are members of this class and not of comum::IEventosLog follows the
-// members above, a reading; their names are chosen from their messages. This header's path is chosen, beside
-// clogvota.cpp, and only the members written are declared.
+// members above, a reading; their names are chosen from their messages. LogaTempoLimiteBateriaInterna (held inlined by
+// vota::CExibeAlertaDesligamento::ProcessTick, fn 12017: api::CLoga::loga with +4 and severity 2),
+// LogaErroIdentificacaoTipoCargo (by vota::CEleitorVotando::ChamaEstadoProximoCargo, fn 4459: logaErro, fn 2282) and
+// LogaEleitorVoltouADigitar (by vota::CEleitorVotando::ProcessInput, fn 7345: loga, fn 233) are that shape too, GetInst
+// called before the member's own stack frame opens; their names are chosen from their messages. This header's path is
+// chosen, beside clogvota.cpp, and only the members written are declared.
 
 #include <string>
 
@@ -65,6 +69,9 @@ public:
     void LogaMesarioConfirmouReinicioVotacao();
     void LogaMesarioSelecionouOutrasOpcoes();
     void LogaMesarioIndagadoHorarioUrna();
+    void LogaTempoLimiteBateriaInterna();
+    void LogaErroIdentificacaoTipoCargo();
+    void LogaEleitorVoltouADigitar();
 
 private:
     CLogVota();
