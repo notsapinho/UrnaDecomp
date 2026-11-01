@@ -12,7 +12,27 @@ A stub marked `placement: link order` has no record that gives it a line: its fi
 or vptr. A stub in a tree's `unplaced.cpp` has no evidence for any file. In `src/ecourna/` every stub is one of these
 two kinds, since most ecourna functions that have records are written, so the record leads to code, not to a stub.
 
-A stub can sit over code we have: `stubs.py` cannot see a non-virtual function that has no record.
+A stub can sit over code we have: `stubs.py` cannot see a non-virtual function that has no record. And a stub can go
+while its function is unwritten: a function whose only records are an inline member of a header another unit writes
+loses its stub at that unit's step 9, since the record's line is then code of ours. The vota states' slot-7
+`ProcessInput`s hold `CInteractiveForm<…>::Read()`, so search them by that record (`awk -F'\t' '$2 ~
+/cinteractiveform.h$/ && $3==57 {print $6}' ledger/source-locations.tsv`), not by their stubs.
+
+A stub is not always a TSE source to write. Its tree follows its callers' component, so a library's code that TSE calls
+gets one: the 7-Zip LZMA encoder (410, 2603, 3419, 4941) has stubs in `src/uenux2/unplaced.cpp` and libc's `chown`
+(6281) in `src/ecourna/unplaced.cpp`. Read the row's `owner` in `ledger/functions.tsv` (column 4) first: a library
+there means the library's build, not a source:
+
+```sh
+awk -F'\t' '$1==410 || $1==2603 || $1==6281 || $1==2578 {print $1, $4, $5}' ledger/functions.tsv
+# 410 7zip comum
+# 2578 - comum
+# 2603 7zip comum
+# 6281 libcxx ecourna
+```
+
+A libc++ template a TSE caller instantiates shows no owner: 2578 and 2579 read as `std::__sort3` over `unsigned` and
+`unsigned char`. Read its callers, since it lands with the caller that instantiates it.
 
 A stub in `unplaced.cpp` has no evidence for any file only while no file is named after its class: `stubs.py` puts a
 class's stubs in `<class in lower case>.cpp` of the tree as soon as that file exists, so a unit that creates
@@ -21,17 +41,21 @@ class's stubs in `<class in lower case>.cpp` of the tree as soon as that file ex
 The tree of an `unplaced.cpp` stub is no more evidence than its file: `stubs.py` takes it from the function's component
 (`tree_of` in `tools/round/stubs.py`), which says who calls the function. Decide the tree, and so the flags, from the
 callers' records and from the landing pads: a call that can throw while a local with a destructor is alive goes through
-`invoke_*` in ecourna's and the ASN.1 runtime's code and directly in uenux2's (`grep -c invoke_` of the `fn` readout,
-[app-flags.md](../app-flags.md) "Exceptions"). 5449 has group `ecourna`, because it calls ecourna's
-`CStringUtils::ToByte`; it calls it with a `substr` temporary alive and no `invoke_`, and its callers are
-`api::EncodeTime` (3643, `ctime.cpp`) and `api::CDateTime`'s constructor (5475, `cdatetime.cpp`): uenux2 code, which unit
-24 writes in `src/uenux2/src/api/util/ctime.cpp`.
+`invoke_*` in ecourna's and the ASN.1 runtime's code and directly in uenux2's (count `import:invoke_` in the `fn`
+readout, not `invoke_`, which libc++'s `std::__invoke` matches too; [app-flags.md](../app-flags.md) "Exceptions"). 5449
+has group `ecourna`, because it calls ecourna's `CStringUtils::ToByte`; it calls it with a `substr` temporary alive and
+no `invoke_`, and its callers are `api::EncodeTime` (3643, `ctime.cpp`) and `api::CDateTime`'s constructor (5475,
+`cdatetime.cpp`): uenux2 code, which unit 24 writes in `src/uenux2/src/api/util/ctime.cpp`. The other way, a row
+stubbed in a uenux2 tree whose own frame has a landing pad, its cleanup through `invoke_*` and `__resumeException`, is
+not uenux2's code: 501 (a message queue's push under a lock) is an `-fexceptions` TU's copy of an inline member, most
+likely the executable TU's ([levels.md](levels.md) §V1). It is no source to write, and gets its name from its
+callers' votes.
 
 ## P2. A class with no file of its own, or out of its upstream file
 
 Read the class's vtable and typeinfo in the data before you create the file the class's name gives, not from
 `ledger/vtables.json` alone, which misses classes that have a vtable ([units.md](units.md) §U12 counts them, finds a
-vtable by its typeinfo and reads its words). Three shapes:
+vtable by its typeinfo and reads its words). Three shapes, and a call that places its caller:
 
 - **Two classes in one object.** A typeinfo of class A after the vtable of class B, with A's vtable between B's
   vtable and B's typeinfo, puts both in one object: `simulador::CWasmImageSurfaceOps`'s vtable (1528980) and typeinfo
@@ -49,6 +73,13 @@ vtable by its typeinfo and reads its words). Three shapes:
   clang inlines at a low cost, with no flag to explain it, means the callee is in another TU. An out-of-line constructor
   or destructor is the exception: at `-fPIC` its call stays beside the definition, with no remark
   ([codegen.md](codegen.md) §C6), so it is no sign at uenux2's flags.
+- **A call of another file's internal function.** With no LTO, only that file's TU can call a function of internal
+  linkage (a `(anonymous namespace)::` or `static` name in a record), so a direct call of one puts the call site in that
+  TU: the caller is defined there, or binaryen inlined into it a function defined there. 5971, `vota::(anonymous
+  namespace)::CriaTituloExtratoRDV()` (`iniciovotacao/cgeradorresumozeresima.cpp:43`), is called by 11943 and 11946
+  alone (`awk -F'\t' '$2==5971 {print $1}' ledger/callgraph.tsv | sort -u`), the `StartState`s of two zeresima bases.
+  Read the caller's size and look for a one-caller function of that file to tell the two apart, and say which in the
+  fragment.
 
 ## P3. What a stretch's label says
 
@@ -108,6 +139,12 @@ object's neighbours' ([link-order.md](link-order.md) §L7 item 15 lists them in 
 `comum::CMenuBase`'s vtable (1550924) follows a record of `app/comum/informacao/cinformacaoeleicao.cpp` and four
 `comum::CItem*` vtables. A vtable or typeinfo of a class with no key function is a copy in its first user's object, as
 its linkonce functions are (how-to step 3, rule 2).
+
+When the band and the data name different directories, the data win: they have no digit scramble, and a class's
+vtable, its virtual members and its data come from one object whether it has a key function or not. Taking the band is
+a choice the fragment names with both neighbours. `comum::asn::CConversorCodigoCargoConsulta`'s band puts 11591 and
+11592 beside `app/comum/asn/cconversorcabecalhoentidade.cpp`'s functions, and its vtable, typeinfos and `theInfo`
+(1555728 to 1555820) lie between two `app/comum/md/` files' records (unit 126 took the band and says so).
 
 ## P5. When the two sides disagree
 
@@ -173,7 +210,26 @@ prints the line a record names; after a `--strip` of a file that has gaps, it do
 A record of a function you do not write (a constructor its only caller inlines) keeps its line blank. Put the
 functions you write after it, or before it where the evidence says so, and say in the fragment's header comment that
 their lines are a choice. Step 9 then puts that caller's stub over the record's line when that line is at namespace
-level, and writes no gap over a run of blank lines with no record below it. A record past the file's last line needs
+level, and writes no gap over a run of blank lines with no record below it. When the caller is a pending member, a
+slot of a vtable our link holds, it has no stub (how-to step 9), so the line stays blank with nothing over it: name the
+record and its function in the source's header comment and the `-pending.cpp` header (unit 123's
+`crelatoriotesteimpressora.cpp`, line 173 for 11188).
+
+Blank means blank. `stubs.py` takes any text on a record's line, a closing brace or a comment, for that function's
+code: it drops the stub at step 9 and `stubs.py --check` passes. A `} // namespace vota` on line 80 of
+`ctelascargo.cpp`, `CTelasCargo::GetTela`'s record (4135), took its stub; an edit above a record inside a class body
+moved line 51 of `cpaperformbuilder.h` onto a comment and took 11006's. After step 9, list the file's recorded
+functions against its stubs:
+
+```sh
+f=src/uenux2/src/app/vota/eleitor/comum/ctelascargo.cpp
+awk -F'\t' -v f="${f#src/uenux2/}" 'index($2, f) {print $3, $6}' ledger/source-locations.tsv | sort -n
+LC_ALL=C /usr/bin/grep -n '^// f' $f
+```
+
+On `main` the file is stub-only, and each of its three recorded functions (6718, 2386, 4135) has its stub. A recorded
+function that is neither written in the file nor stubbed there is such a case, or a match or a pending member (check
+`splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
 `src/uenux2/src/app/comum/comparecimentomesario/cregistradormesario.cpp` is 33 lines, its record of 10337 is line 85,
 and f10337's stub is line 31 (`LC_ALL=C /usr/bin/grep -n '^// f10337 ' <file>`); `stubs.py --check` passes. A record inside a class body (a template

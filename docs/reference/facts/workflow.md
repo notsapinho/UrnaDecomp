@@ -4,10 +4,11 @@ How the tools a decompile round runs behave where the obvious reading of a comma
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed file, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
 rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec and a
-table's rows, `-j` on the link, and leaving a merge after step 9. `docs/how-to-decompile.md`,
-`docs/getting-started.md` and `docs/agents.md` rely on these.
+table's rows, `-j` on the link, leaving a merge after step 9, and the notes a merge makes stale.
+`docs/how-to-decompile.md`, `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
-and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, on macOS
+and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, W23 and
+W2's items 6 and 7 at c1b2630, on macOS
 (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH, and the symbol file a larger heap
@@ -169,6 +170,20 @@ ran `pnpm --silent wasm splat-review` under an exported PATH exited 134 in 0.9 s
 
    To see the build's binaryen on one TU, compile it with `-c` at its flags and link the object at `-Oz -fexceptions`
    in a second `em++`.
+6. **The rank adapter reads the TU as UTF-8.** `asmlift-wasm/src/cli.ts` line 822 reads each `--single` TU with
+   `readFileSync(f, 'utf8')`, so each accented byte of a Latin-1 literal becomes the three bytes of U+FFFD. 5801's
+   literal 445749 (`Total de votos Válidos {:04}\n`, 40 bytes: `awk -F'\t' '$1==445749 {print $2, $3}'
+   ledger/strings.tsv` prints `40 latin1`) is copied as 42 alone; the whole link compiles the file as it is:
+
+       TMPDIR=/tmp tools/round/try-tu.sh --single 5801 --name d6l1 --extract export:_ZN5comum22CCargoDSLabelRelatorio16TotalVotoNominalEv src/uenux2/src/app/comum/dados/ccargods.cpp | /usr/bin/grep -E '^score|> i32.const 42$'
+         score 191 over 259 rows (same 68, replaced 28 [18 operand-only], inserted 163, deleted 0)
+                                                                  > i32.const 42
+
+7. **Forms that differ in a stack slot score alike.** With callees inlined around it, a slot's offset is a few rows
+   among hundreds: 4407 (`CInstrucaoVotacaoAcessibilidade` slot 15) scored `1123 over 1267` to `1225 over 1320` alone in
+   seven forms, the right one tied at the lowest with a wrong one, with and without `--export=free`. Read the frame
+   stores in the object instead (`wasm-objdump -d build/out/try/<name>/obj/<tu>.o` after a `--symbols` run, the first
+   `i32.store 2 <offset>` of each temporary) against `pnpm wasm fn`'s, or rank the forms in the whole link.
 
 `--symbols` lists the function symbols and weak data a TU defines (`llvm-nm` types `T` and `W`, line 164), not
 strong data. The class's own vtable and typeinfo are strong:
@@ -408,7 +423,7 @@ check failed these, each a different case or none, with `splat` printing the tar
 
 | case | what it reads | what moves it |
 | --- | --- | --- |
-| `splat-kinds.test.ts` c5, `DIFFERS at +0x24` | the string our data holds at a fixed address | a string with another tail lands there, and the best reading matches one byte further |
+| `splat-kinds.test.ts` c5, `DIFFERS at +0x24` | the string our data holds at a fixed address | a string with another tail lands there, and the best reading matches one byte further; or a string the target lacks lands there, and the build rejects the operand as `UNRESOLVED … string not in the target`: the case reads which |
 | `splat-kinds.test.ts`, "offers a table slot every target slot" | a slot of ours read as an address | it lands in a string the target lacks, so the operand has no piece |
 | `splat-kinds.test.ts`, the unfolded `__table_base` case | an instruction's offset | a table slot past 8191 takes a third LEB byte |
 | `splat-kinds.test.ts` c2, `DIFFERS at +0x1c` | the first byte our slot of target slot 7010 differs from 7010 | a slot with 7010's low 7 bits differs one byte further, at +0x1d (2274, unit 107) |
@@ -443,9 +458,11 @@ One more way a run alone can mislead (bb6f018):
   `urna-emsdk:6.0.0`. A BuildKit build of `urna-emsdk:6.0.0` can pull its base without tagging it, and the run then
   reads `189 passed | 4 skipped` and exits 0. `docker image ls --format '{{.Repository}}:{{.Tag}}' | /usr/bin/grep
   emsdk` should list both images; `docker pull emscripten/emsdk:6.0.0` adds the tag from the layers already there.
-- **An RPC timeout under load exits 1 with every case passed.** `Errors  1 error` with `Error: [vitest-worker]: Timeout
-  calling "onTaskUpdate"` beside `Tests  218 passed (218)` is vitest's worker, not a case; the same tree's next run
-  alone exited 0. Vitest says such an error may hide a false positive, so ask for one clean run and report both.
+- **An RPC timeout exits 1 with every case passed.** `Errors  1 error` with `Error: [vitest-worker]: Timeout calling
+  "onTaskUpdate"` beside `Tests  242 passed (242)` is vitest's worker, not a case. It is no load effect: two runs alone
+  at a load average of 2.5 failed so, and a rerun is often no cleaner. `test/splat-symbols.test.ts` is the long file
+  (about 62 s, two cases near 16 s each). Report the counts (every file and case passed, none skipped) and the error as
+  the harness's; a clean run, when one comes, is worth reporting beside them.
 - **A suite with no build outputs fails three cases unmutated.** So a mutant run that takes a non-zero exit as
   "caught" cannot lose. Take the failing names of the clean tool first, and count a mutant caught only by a name outside
   them (4487d6b, from `asmlift-wasm/`):
@@ -502,9 +519,10 @@ is right.
 
 **Without a copy taken before the edit** (a reviewer's case), compile the base's objects from its sources alone: no
 clone of `build/out/` is needed for a TU of `src/uenux2`, `src/ecourna` or `src/units`, only for one that reads
-`third_party/`. `git archive <commit> src` into a scratch directory, and run there the compile line `make -n` prints,
-through `build/docker-build.sh`, which mounts the current directory at `/work`: the source path and the
-`-ffile-prefix-map` are then the build's, and the object compares byte for byte. At bb6f018, against its own build:
+`third_party/` or a generated directory (below). `git archive <commit> src` into a scratch directory, and run there the
+compile line `make -n` prints, through `build/docker-build.sh`, which mounts the current directory at `/work`: the
+source path and the `-ffile-prefix-map` are then the build's, and the object compares byte for byte. At bb6f018, against
+its own build:
 
     mkdir -p build/out/base-probe && git archive HEAD src | tar -x -C build/out/base-probe
     make -n -C src link -W $PWD/src/uenux2/src/api/util/cwait.cpp | /usr/bin/grep 'em++.* -c '      # the line to copy
@@ -519,6 +537,21 @@ the scratch tree, in a loop that tests the compile's exit status before it reads
 
     mkdir -p third_party/boost
     docker run --rm -v "$PWD:/work" -v "<checkout>/third_party/boost:/work/third_party/boost:ro" -w /work urna-emsdk:6.0.0 em++ <the compile line> && cmp <the new object> <the landed object>
+
+Mount every `-I` directory of the line that is not under `src/` so, the generated ones under `build/out/` too: an
+OpenSSL user (ecourna's security TUs, unit 102's roots) reads `build/out/openssl/O3/include`, which holds
+`openssl/configuration.h`, and without it stops on `opensslconf.h:14:11: fatal error: 'openssl/configuration.h' file not
+found`. Unit 102's line, from `make -n -C src link -W $PWD/src/units/102-uenux2-control-blocks.mk`, reads `-Isrc
+-Isrc/uenux2/src -Isrc/asn1 -Ibuild/out/openssl/O3/include -Ithird_party/openssl/include
+-Ithird_party/RHVoice/src/include`. And `roots_asn1.o`, which every fragment edit rebuilds, compiles
+`build/out/app/asn1/roots_asn1.cpp`, a file `tools/round/gen_try_roots.py` writes: copy it from the checkout when the
+range changes no `ASN1_ROOTS_EXCLUDE`, else regenerate it with the base's excludes.
+
+When the range also edits a source that includes the header, the base object differs by that edit, and the question
+is today's source with the base's header. Compile today's sources with the base header put first, `-iquote <dir>` with
+the header at its tree path under `<dir>`, and `-ffile-prefix-map=<dir>=/home/rubio/tse/uenux2/src` beside the tree's
+maps, since a header that throws records its own path. A source that uses what only the new header has then fails to
+compile, which shows the overlay was read.
 
 **One variant object in the whole link.** The plain link's own command needs no clone, no named link and no compile,
 and writes nothing shared: swap the object in a copy of `link.cmd` and run it (5 s, at 0b5f410). With `V=build/out/variant-probe`,
@@ -650,8 +683,12 @@ only for the objects `build/out/wasm/vota_web/link.cmd` names.
 - **A companion can hold a header its rule omits.** A roots file that includes `api/gui/eueguierror.h` holds `CBaseError`
   code from `cbaseerror.hpp`, and its rule named only `api/gui/*.h`, so the list for that header missed it. Check that the
   list covers every object holding the header's symbol: `find build/out/app -name '*.o' | while read o; do LC_ALL=C
-  /usr/bin/grep -q 10CBaseError "$o" && echo "$o"; done | sort`, then `comm -13` against the sorted list, and add the
-  directory's wildcard to the rule that lacks it.
+  /usr/bin/grep -q 10CBaseError "$o" && echo "$o"; done | sort`, then `comm -13` against the sorted list. Then read each
+  listed source's `#include`s: add the directory's wildcard to its rule only when it includes the header, directly or
+  through another. A roots file that reaches a class through `__asm__` labels alone holds the name with no header
+  (`LC_ALL=C /usr/bin/grep -c '#include' src/units/152-uenux2-app-vota-operador-estados-roots.cpp` prints 0 beside 10
+  `__asm__` lines), and so does a TU that holds a forward declaration: move such an object aside and rebuild it, and
+  `cmp` is the check.
 - **`UENUX2_HDRS` holds no `src/asn1` header** (`src/Makefile` line 145). `make -n -C src link -W
   $PWD/src/asn1/modules/ModuloImpedidos.h | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | /usr/bin/grep -c cconversorimpedido`
   prints 0, although that TU includes the header. After an edit of `asn1.h` or a module header, list the link's objects
@@ -783,3 +820,18 @@ The generators leave unstaged edits over staged paths:
     git add -A -- . && git merge --abort                             # exit 0
 
 This also drops every untracked file it staged, so save what you want first. Then `git diff --quiet <head>` exits 0.
+
+## W23. The notes a merge makes stale
+
+A landing's new matches make other units' notes false: a pending header's list of callees "with no name", a fragment's
+"waits for fn N", a roots comment that names a stand-in's callers. And a stand-in can stand for references that are no
+call, such as unit 35's address of `IInterfaceInit`'s destructor for the slot 0 of two vtables, which a search of the
+link for calls does not find. The merge's new indices against the comments of `src/units/` find both, with `main` (or
+the merge's first parent) as the base:
+
+    comm -13 <(git show main:splat/matched.txt | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort) > build/out/<handle>/new.idx
+    LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/new.idx src/units/*.mk src/units/*.cpp
+
+Against 05fe923, c1b2630's 84 new indices give 140 lines, each to read: an index also matches a line number or a size.
+Search the trees' comments for the indices of the classes the merge touched too. A stand-in found so goes when a link
+without it moves no row (W13, "One variant object in the whole link").
