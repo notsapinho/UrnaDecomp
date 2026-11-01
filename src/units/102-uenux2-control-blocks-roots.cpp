@@ -57,7 +57,6 @@
 #include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/crespostasds.h"
-#include "app/comum/dados/md/eleitor/celeitordinamico.h"
 #include "app/comum/gravadores/ccopiadormr.h"
 #include "app/comum/gravadores/cgravadorbu.h"
 #include "app/comum/gravadores/cgravadorenvelopearquivo.h"
@@ -124,7 +123,6 @@ extern const char w102_vt_cgravadorhashes[] __asm__("_ZTVNSt3__220__shared_ptr_p
 extern const char w102_vt_cgravadorrcsecao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum16CGravadorRCSecaoENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorenvelopearquivo[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum24CGravadorEnvelopeArquivoENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorversoesarquivos[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum24CGravadorVersoesArquivosENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_celeitordinamico[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md16CEleitorDinamicoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cidentificacaosecao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md19CIdentificacaoSecaoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_ccomparecimentomesario[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md22CComparecimentoMesarioENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cidentificacaournacontingencia[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md30CIdentificacaoUrnaContingenciaENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
@@ -337,7 +335,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cgravadorrcsecao;
         w102_sink = w102_vt_cgravadorenvelopearquivo;
         w102_sink = w102_vt_cgravadorversoesarquivos;
-        w102_sink = w102_vt_celeitordinamico;
         w102_sink = w102_vt_cidentificacaosecao;
         w102_sink = w102_vt_ccomparecimentomesario;
         w102_sink = w102_vt_cidentificacaournacontingencia;
