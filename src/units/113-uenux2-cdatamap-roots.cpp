@@ -2,13 +2,15 @@
 // instantiated as the target's records spell it and reached the way the target reaches it. The bodies are the template's
 // instances (src/units/README.md, "A body a companion object supplies"). This object compiles at the tree's flags, so no
 // match rests on a flag its tree lacks; fragment 113 says what that decides. src/api/'s own objects drop
-// -fno-strict-aliasing (src/Makefile UENUX2_TBAA_DIRS); the four bodies this object supplies, 1283, 3697, 3741 and
-// 5611, are the same without it (wasm-objdump -d of the object compiled both ways). Each function here has two call
-// sites or more, as each has in the target, so binaryen keeps it out of line:
-// - GetCurrent, four instantiations: 656 (19 callers), 1200 (7: 2268, 2838, 11972 and 11973 are in the link, 5604, 6999
-//   and 11254 wait), 1283 (9), 3125 (4). All four in the link are what makes
+// -fno-strict-aliasing (src/Makefile UENUX2_TBAA_DIRS); the four bodies this object supplied, 1283, 3697, 3741 and
+// 5611, are the same without it (wasm-objdump -d of the object compiled both ways). Of them it supplies 3741 now: 1283,
+// 3697 and 5611 come from cgeradorbu.cpp's object, which instantiates them for unit 139's 11254 and 11255 and links
+// first. Each function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
+// - GetCurrent, four instantiations: 656 (19 callers), 1200 (7: 2268, 2838, 11254, 11972 and 11973 are in the link, 5604
+//   and 6999 wait), 1283 (9: 11213 and 11255 are in the link), 3125 (4). All four in the link are what makes
 //   binaryen form 2919: the second parameter of that body is the pair's second member's offset, 32 or 20.
-// - Next, three: 3697 (5604, 11213, 11255), 5601 (12105; 11206 is in the link), 5611 (5604, 11254), which form 3892.
+// - Next, three: 3697 (5604; 11213 and 11255 are in the link), 5601 (12105; 11206 is in the link), 5611 (5604; 11254 is
+//   in the link), which form 3892.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590), through Find, and the copy of the pair's second member, 3743
 //   (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
@@ -62,7 +64,7 @@ __attribute__((noinline)) bool AvancaDois(TMapa& mapa)
     return mapa.GetCurrent() != nullptr;
 }
 
-// Stands for 3125's callers 6999 and 11478 (11479 and 12621 are linked).
+// Stands for 3125's caller 6999 (11478, 11479 and 12621 are linked).
 __attribute__((noinline)) int ComparaRespostas(TMapaRespostas& primeiro, TMapaRespostas& segundo)
 {
     return primeiro.GetCurrent() == segundo.GetCurrent() ? 3 : 5;

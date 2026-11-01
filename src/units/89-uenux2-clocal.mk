@@ -44,12 +44,26 @@
 # GetCandidatosPartido (2272), ExisteCandidato (2271), GetCandidatos (2840) and Busca (1273), measured operand-only
 # against the target in the whole link (`pnpm wasm score`: 2272 2 of 139 rows, 2271 0 of 56, 2840 1 of 77, 1273 1 of 62).
 # The first three's `this` is CCandidaturas::GetInst()'s result (fn 521) at every target call, and they walk the
-# base's map, as Localiza (record ccandidaturas.cpp:56, held by fn 11213, not written) does, which also sets its
+# base's map, as Localiza (record ccandidaturas.cpp:56, held by fn 11213) does, which also sets its
 # cursor: so they are members, and api/io/cdatamap.h makes the map and cursor protected. Busca's one target body is
 # also called on CRespostas::GetInst()'s result (fn 2812: by 11212, and by 11683 on one of its two calls), a CDataMap
 # of the same layout giving the same bytes: CCandidaturas as its class is chosen between the two. They read three accessors added for them,
 # md::CCandidatura::GetPartidoID and GetCandidatoID and md::CDadosCandidato::GetSituacao (chosen names). Their callers in
-# our link are unit 77's 11215 (2271) and 11214 (2840, 1273); the roots' Consultas stands for the rest.
+# our link are unit 77's 11215 (2271), 11214 (2840, 1273) and 11213 (2272), and unit 139's 11254 (2271) and 11255 (2272,
+# 2271, 1273); the roots' Consultas stands for the rest, which its comment lists.
+#
+# comum::CCandidaturas::Localiza, named and typed by its record (ccandidaturas.cpp:56:15, its throw: code 7800 and the
+# 42-byte message at 440373 of ledger/strings.tsv, the candidate then the post): it finds the base's key, the post times
+# 1000000 plus the candidate, throws when the map holds none, and moves the base's cursor to it. Its one caller, unit
+# 77's CParteCandidatosProporcionais::Imprime (fn 11213), holds it inlined by binaryen (a frame of its own) and does not
+# read its result. Written with std::map::find, the end test, the throw and then the cursor's store, the order 11213's
+# rows show; its being public is chosen. cpartecandidatos.cpp, unit 77's file, is in this fragment's list right after
+# ccandidaturas.cpp: with its object ahead of ccandidaturas.cpp's, 11213 differs in local numbers (unit 77's fragment has
+# the scores of both orders).
+# comum::CLocal::GetLocalID (fn 1933; the name is its literal's, "GetLocalID", the reading of these literals below): it
+# calls VerificaEhSecao with that literal and returns the place's id, the word at +16 of md::CLocal::GetSecao() (the
+# CIdentificacaoSecao at +4, its TLocalID at +12). Its six callers (1543, 2725, 7787, 11188, 11242, 12098) are not
+# written; the roots' LocaisID stands for them. It has no record; its line, after UrnaBiometrica, is a choice.
 #
 # 3473, the ASN.1 runtime's OBJECT_IDENTIFIER::decodeCommon, matches with these members in the link, and rests on the
 # link order, not on a source here (docs/reference/facts/splat.md S10 item 19). ccandidaturas.cpp.o defines
@@ -167,7 +181,8 @@
 # no twin: C1 and C2 are aliases of one function in clocal.cpp.o (wasm-objdump -x prints one func= for both), and GetInst mentions C1
 # first, so the link map holds no C2 or D2 of this class. 3751, 3756, 5813, 2815, 2818 and 3786 read so for the same reason. 3753 is a second caller of the copying ToLower (1879), which releases unit 12's
 # IndexForColumnName (1525).
-CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/dados/clocal.cpp \
+CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
+  src/app/comum/dados/clocal.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \
   src/app/comum/dados/md/clocal.cpp src/app/comum/dados/md/eleitor/cimpedido.cpp \
   src/app/comum/dados/md/candidatura/ccandidatura.cpp src/app/comum/dados/md/candidatura/cindicesfotos.cpp \

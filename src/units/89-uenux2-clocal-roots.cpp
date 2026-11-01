@@ -26,6 +26,7 @@ void w3753(int, int) __asm__("_ZNK5comum6CLocal14GetUFMinusculaEv");
 int w5743(int) __asm__("_ZNK5comum6CLocal12GetLocalDataEv");
 int w820(int) __asm__("_ZNK5comum6CLocal14UrnaBiometricaEv");
 void w5742(int, int) __asm__("_ZNK5comum6CLocal15VerificaEhSecaoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+int w1933(int) __asm__("_ZNK5comum6CLocal10GetLocalIDEv");
 int w5676(int, int, int, int, int) __asm__("_ZN5comum2md14CInfoMunicipioC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEsb");
 int w5674(int, int, int, int, int, int) __asm__("_ZN5comum2md14CInfoMunicipioC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEsbRKNS0_13CHorarioVeraoE");
 int w3725(int) __asm__("_ZNK5comum2md14CInfoMunicipio15GetHorarioVeraoEv");
@@ -89,6 +90,8 @@ __attribute__((noinline)) void EhSecoes(int a, int b, int f)
     w5742(a, f);
     w5742(b, f + 12);
 }
+// Stands for fn 1933's callers 1543, 2725, 7787, 11188, 11242 and 12098.
+__attribute__((noinline)) int LocaisID(int a, int b) { return (w1933(a) << 2) - w1933(b); }
 __attribute__((noinline)) int Infos(int a, int b, int c, int d, int e, int f)
 {
     return w5676(a, c, d, e, f) * w5676(b, c + 1, d, e, f);
@@ -123,10 +126,11 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
     w5810(r, a, b);
     w5810(s, a, b + 1);
 }
-// Stands for the callers of four CCandidaturas members that are not in our link, beside unit 77's: GetCandidatosPartido
-// (2272: 3819, 5604, 11213, 11255 and 11976), ExisteCandidato (2271: 3819, 4442, 11254 and 11255, beside 11215),
-// GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 3820, 5604, 11212, 11255, 11683 and 11891, beside
-// 11214, 11724 and 11744; 11212's call and one of 11683's are on CRespostas::GetInst()'s result, fn 2812).
+// Stands for the callers of four CCandidaturas members that are not in our link, beside units 77's and 139's:
+// GetCandidatosPartido (2272: 3819, 5604 and 11976, beside 11213 and 11255), ExisteCandidato (2271: 3819 and 4442, beside
+// 11215, 11254 and 11255), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 3820, 5604, 11212, 11683
+// and 11891, beside 11214, 11255, 11724 and 11744; 11212's call and one of 11683's are on CRespostas::GetInst()'s
+// result, fn 2812).
 __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
 {
     w2272(r, c, cargo, partido);
@@ -163,6 +167,7 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Dados);
         clocal_sink = reinterpret_cast<const void*>(&Biometricas);
         clocal_sink = reinterpret_cast<const void*>(&EhSecoes);
+        clocal_sink = reinterpret_cast<const void*>(&LocaisID);
         clocal_sink = reinterpret_cast<const void*>(&Infos);
         clocal_sink = reinterpret_cast<const void*>(&InfosVerao);
         clocal_sink = reinterpret_cast<const void*>(&Horarios);

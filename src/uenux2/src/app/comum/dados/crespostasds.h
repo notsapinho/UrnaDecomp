@@ -39,4 +39,12 @@ private:
 // a free function, this header and its line are chosen.
 std::string RespostaCorrente();
 
+// The current answer's line of a list: two spaces, the answer's text padded on the right to 26 characters, and its number
+// with the post's digits (CCargo::GetNumeroDigitos, the byte at +12 of CCargos::GetCurrent()) padded on the left to 10.
+// Its body, fn 11478, holds CRespostas::GetInst's code (record crespostas.cpp:28), so it is defined in that file. No
+// direct call reaches it: its one user, fn 11946 (slot 2 of vota::CGeraZeresimaBase), passes it to AddTextField (fn 604)
+// by table slot 3051. It is defined after RespostaCorrente: the two share a use band, 11478 below 11479. Its name, its
+// being a free function, this declaration's place and its line are chosen.
+std::string LinhaRespostaCorrente();
+
 } // namespace comum

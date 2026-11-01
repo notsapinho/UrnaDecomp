@@ -34,11 +34,16 @@ public:
     // those of one post whose holder's situation is 0, the value of an ESituacao enumerator not recovered;
     // GetCandidatosPartido keeps those of one party too when the party is not 0 (the target holds the loop twice, one
     // copy for each value of that test). Busca looks a candidacy up by the base's key, the post times 1000000 plus the
-    // candidate, as Localiza (record line 56, not written) does, and moves the cursor to it: the base's Find, inlined.
+    // candidate, as Localiza does, and moves the cursor to it: the base's Find, inlined.
     std::vector<TCandidatoID> GetCandidatosPartido(TCargoID cargo, TPartidoID partido) const;
     bool ExisteCandidato(TCargoID cargo) const;
     std::vector<TCandidatoID> GetCandidatos(TCargoID cargo) const;
     md::CCandidatura* Busca(TCargoID cargo, TCandidatoID candidato);
+
+    // Record ccandidaturas.cpp:56 (its throw, code 7800) names it and spells its types. It finds the candidacy by the
+    // same key, throws when there is none and moves the cursor to it; fn 11213, CParteCandidatosProporcionais::Imprime,
+    // holds it inlined by binaryen (a frame of its own) and does not read its result. Its being public is chosen.
+    Container::iterator Localiza(TCargoID cargo, TCandidatoID candidato);
 
 private:
     static std::unique_ptr<CCandidaturas> s_inst;

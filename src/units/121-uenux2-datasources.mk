@@ -51,8 +51,8 @@
 # gives the name and signature, its throw code 9054 and message "String vazia" are the target's, and its body appends
 # the argument to the string at +16 with fn 160, `append(const char*, size_t)`, after testing the size it passes there.
 # `m_texto.append(str)` is what is written; `m_texto += str` and `m_texto.append(str.data(), str.size())` give the same
-# function (compared in ccalculacv.cpp's object with the object-local numbers masked). Its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
-# 11981) are none of them in our link: the roots file's stand-in calls it twice.
+# function (compared in ccalculacv.cpp's object with the object-local numbers masked). Of its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
+# 11981) unit 139's 11254 and 11255 are in our link: the roots file's stand-in calls it twice for the other six.
 #
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions

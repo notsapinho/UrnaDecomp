@@ -16,6 +16,7 @@ int w903(int, int) __asm__("_ZNK5comum8CAppInfo7GetVotaENS_10EUrnaTurnoE");
 int w697() __asm__("_ZN5comum8CAppInfo20EhTreinamentoEleitorEv");
 void w1942(int) __asm__("_ZN5comum20GetIdentificacaoUrnaEv");
 void w3788(int, int, int) __asm__("_ZNK5comum8CAppInfo15GetCodigosCargaENS_10EUrnaTurnoE");
+int w2841(int, int) __asm__("_ZNK5comum8CAppInfo7TemVotaENS_10EUrnaTurnoE");
 int w819() __asm__("_ZN5comum9CPartidos7GetInstEv");
 int w2819() __asm__("_ZN5comum6CFotos7GetInstEv");
 int w3751(int) __asm__("_ZN5comum9CPartidosC1Ev");
@@ -42,9 +43,11 @@ __attribute__((noinline)) void Codigos(int a, int b, int c)
     w3788(a, c, 51);
     w3788(b + 12, c, 51);
 }
+// Stands for fn 2841's callers 11242, 12105 (two calls) and 12110, which pass the turn they read (not a constant).
+__attribute__((noinline)) int Votos(int a, int t) { return w2841(a, t) + 2 * w2841(a + 4, t ^ 1); }
 
-// Stands for fn 819's callers: 2543, 3820, 5604, 5922, 6954, 7787, 11181, 11213, 11255, 11260, 11261, 11629, 11683,
-// 11711, 11976.
+// Stands for fn 819's callers: 2543, 3820, 5604, 5922, 6954, 7787, 11181, 11260, 11261, 11629, 11683, 11711, 11976
+// (11213 and 11255 are in the link).
 __attribute__((noinline)) int Partidos() { return w819() + 7 * w819(); }
 // Stands for fn 2819's callers: 7787, 12520, 12641.
 __attribute__((noinline)) int Fotos() { return w2819() - 9 * w2819(); }
@@ -64,6 +67,7 @@ struct SCAppInfoRoots {
         cappinfo_sink = reinterpret_cast<const void*>(&VotasConst);
         cappinfo_sink = reinterpret_cast<const void*>(&Treinamentos);
         cappinfo_sink = reinterpret_cast<const void*>(&Codigos);
+        cappinfo_sink = reinterpret_cast<const void*>(&Votos);
         cappinfo_sink = reinterpret_cast<const void*>(&Partidos);
         cappinfo_sink = reinterpret_cast<const void*>(&Fotos);
         cappinfo_sink = reinterpret_cast<const void*>(&ConstroiPartidos);

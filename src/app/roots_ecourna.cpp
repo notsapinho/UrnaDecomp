@@ -61,8 +61,9 @@ __attribute__((noinline)) std::string UsaPreenche1(const std::string& s) { retur
 __attribute__((noinline)) std::string UsaPreenche2(const std::string& s) { return CStringUtils::PreencheAEsquerda(s, ' ', 20) + "x"; }
 __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { return "y" + CStringUtils::PreencheAEsquerda(s, '*', 5); }
 
-// CStringUtils::PreencheADireita's copying form (target fn 1881) has five callers in the target, none reconstructed: fn
-// 1542 pads two strings to 28, fns 2248 and 11188 pad to 34, fns 11253 and 11478 to 26, all with ' '. These stand for them.
+// CStringUtils::PreencheADireita's copying form (target fn 1881) has five callers in the target: fn 1542 pads two strings
+// to 28, fns 2248 and 11188 pad to 34, fns 11253 and 11478 to 26, all with ' '. 11478 is in the link; these stand for the
+// other four.
 __attribute__((noinline)) std::string UsaPreencheCopiaA(const std::string& s) { return CStringUtils::PreencheADireita(s, ' ', 28) + "|"; }
 __attribute__((noinline)) std::string UsaPreencheCopiaB(const std::string& s) { return "|" + CStringUtils::PreencheADireita(s, ' ', 34); }
 

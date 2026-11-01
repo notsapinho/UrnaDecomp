@@ -24,7 +24,19 @@ CCandidaturas::CCandidaturas() : CDataMap("CCandidaturas"), m_carregado(true) {}
 
 CCandidaturas::~CCandidaturas() = default;
 
-// (original lines 27-84: content not recovered)
+// (original lines 27-51: content not recovered)
+#line 52
+CCandidaturas::Container::iterator CCandidaturas::Localiza(TCargoID cargo, TCandidatoID candidato)
+{
+    const Container::iterator it = m_registros.find(cargo * 1000000 + candidato);
+    if (it == m_registros.end()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7800, std::format("Candidato {} não encontrado para cargo {} ", candidato, cargo));
+    }
+    m_corrente = it;
+    return it;
+}
+
+// (original lines 62-84: content not recovered)
 #line 85
 const std::string CCandidaturas::RecuperaVersaoPacote(TCargoID cargo) const
 {

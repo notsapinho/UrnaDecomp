@@ -93,8 +93,17 @@
 # table slot 1096, which fn 6652 passes to api::CFormBuilder::AddTextField (1191): the roots take its address. In band 1
 # (ledger/ordinals.tsv) it follows the file's exit destructors (11481, 11480), so it is defined after the statics, here
 # after CRespostasDSNumero's call operator, a choice. Chosen: its name and GetResposta's, its being a free function,
-# crespostasds.h as its header, GetResposta's being inline in the class. fn 11478, the file's other function passed by a
-# table slot (3051, by fn 11946), is not written; fn 1881, which it calls, matches (unit 00).
+# crespostasds.h as its header, GetResposta's being inline in the class.
+# comum::LinhaRespostaCorrente (fn 11478), the file's other function passed by a table slot (3051, by fn 11946,
+# vota::CGeraZeresimaBase's slot 2, not written): the roots take its address. It holds GetInst's code too (record 28),
+# reads the post's digits (CCargos::GetInst().GetCurrent()'s byte at +12, GetNumeroDigitos) before it, formats the
+# current answer's number with them ("{:0{}}", as CRespostasDSNumero does) into a named local, and returns "  " +
+# CStringUtils::PreencheADireita(answer, ' ', 26) + CStringUtils::PreencheAEsquerda(number, ' ', 10) (fns 1881, 499, 753,
+# 160 in that order; the local is freed last). It shares band 1 with 11479 below it, so it is defined after
+# RespostaCorrente. PreencheADireita's fill character is not in 11478's call: binaryen folded the one every caller passes
+# into 1881, whose body holds the constant 32, ' '. Chosen: its name, its being a free function, its declaration in
+# crespostasds.h.
+# The includes it needed (ccargos.h, cstringutils.hpp) took two of the blank lines above GetInst's record line.
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both
 #   since.

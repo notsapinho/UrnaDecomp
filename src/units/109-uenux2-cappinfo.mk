@@ -3,12 +3,20 @@
 #
 # Matched. CAppInfo: the accessor (target fn 185), its static destructors (11573, 11574), the constructor (5813), GetGeral and
 # its const overload (291, 457, thunks of binaryen's merge 6040, the shared body, which the two form here too), GetVota and
-# its const overload (261, 903), GetCodigosCarga (3788), EhTreinamentoEleitor (697), GetIdentificacaoUrna (1942), and
-# CBaseError<EUeComumAppInfoError>'s constructor (1710, a thunk of 710). CFotos and CPartidos: the accessors (2819, 819), the
+# its const overload (261, 903), GetCodigosCarga (3788), EhTreinamentoEleitor (697), GetIdentificacaoUrna (1942), TemVota
+# (2841, below), and CBaseError<EUeComumAppInfoError>'s constructor (1710, a thunk of 710). CFotos and CPartidos: the accessors (2819, 819), the
 # static destructors (11512, 11513, 11502, 11503), the constructors (3756, 3751), the destructors (2818, 2815) and their
 # __tree::destroy (1934, 1932). 376, vector<string>::push_back(&&), comes with GetCodigosCarga.
 # cestadogeralgap.cpp also holds md::estadoaplicacao::CEstadoGeralGap's constructor (fn 5626), which unit 93's fragment
 # describes with its converter.
+#
+# CAppInfo::TemVota (2841) passes the literal "TemVota" and its turn to IndiceTurno and returns whether that turn's
+# m_vota holds a state (the byte at +380 + 104 * index, the optional's flag). Its name is the literal's, as GetVota's
+# is; that it is const and its line in cappinfo.cpp are chosen. Its callers (11242, 12105, 12110) are not written, and
+# the roots' Votos stands for them. It matched with the plain body; nothing else was tried.
+# CPartidos is an api::CDataMap<ueword, md::CPartido>, its base (cpartidos.h says why), and its constructor builds the
+# base from the name "CPartidos": cpartidos.cpp's object is cmp-equal to the one compiled with the layout written out as
+# members, the form before (both built at the tree's flags, before and after the change).
 #
 # Names from evidence: GetGeral, GetVota and GetGap are the literals the three pass to their throws; IndiceTurno and
 # GetEstado<ESTADO> are records (cappinfo.cpp:472, :42, :57); EUeComumAppInfoError and its limits are RTTI; CFotos and
