@@ -2,7 +2,8 @@
 # crelatoriotesteimpressora.cpp (the file of its records), the class in crelatoriotesteimpressora.h, its base
 # comum::CImprimirExtratoCarga in cimprimirextratocarga.h with its one out-of-line member in cimprimirextratocarga.cpp, and
 # the callee comum::CRelUtil::GetSeparadorFase in crelutil.cpp (its record's file) with crelutil.h and
-# euecomumrelatorioserror.h, the error it throws.
+# euecomumrelatorioserror.h, the error it throws; and CRelUtil's GetIDCargaFormatado and IncluiAvisoModoDemonstracao in
+# crelutil.cpp (below).
 #
 # Matched: the overrides TemHorarioVerao, EhTreinamento, GetHorarioVerao, EstaEmHorarioVerao, GetCorrespondencia,
 # GetCabecalho, EhEleicaoComunitaria, EhModoDemonstracao, GetNomeEleicao, GetPleito, GetTipoUrna, GetUF, GetTitulo,
@@ -78,11 +79,27 @@
 # stand-ins for callers not reconstructed, each of a function with several callers in the target that binaryen would
 # inline into its one caller here: w123_copia for 1249's (without it binaryen inlines the copy and 11197 scores 204 over
 # 208), w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
-# binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro can go when a
-# second thrower of EUeComumRelatoriosError lands (CCalculaCV::IncluiString, fn 942, is one), w123_separador when one of
+# binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
+# nine throwers not in the link (the roots file lists them; 942 and 2786 are in it) and goes with the last, w123_separador when one of
 # 2785, 11943, 11946, 12105 or 12110 does, and w123_copia when one of 5637, 5740, 5856, 11395 or 12098 does. The fourth,
 # w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
 # lands.
+#
+# CRelUtil's other written members, in crelutil.cpp (that file's note gives their lines):
+# - GetIDCargaFormatado (target fn 2786, record crelutil.cpp:69:15) joins seven three-character pieces of the load code
+#   with "." and the rest from position 21, and throws CUeComumRelatoriosError 9085 with the code between brackets when
+#   the code has 20 characters or fewer. The test comes first with the throw inside it: written as an else after the
+#   return, the compare came out as `i32.ge_u 21` where the target has `i32.gt_u 20`, and the success path's temporaries
+#   8 bytes higher in the frame (198 over 1144 rows, 3 not operand-only); as written, 40 over 1144, all operand-only, the one operand that is
+#   no call and no data address being the thrown object's destructor's table slot (69, fn 4636). Measured with
+#   `pnpm wasm score` against our plain link.
+# - IncluiAvisoModoDemonstracao (fn 5583, no record) reads as a CRelUtil member: its callers are IncluiCabecalhoEleicoesMZS
+#   (fn 1543, record crelutil.cpp:307) and fn 5591, and it tests CInformacaoEleicao::EhModoDemonstracao as
+#   GetSeparadorFase does. It adds the demonstration-mode line, centred in style 1, and two blank lines: 10 over 69,
+#   all operand-only. Its name, its lines and its being a static member are chosen.
+# Their callers are not reconstructed. w123_idcarga stands for 2786's four (5579, 11256, 12105, 12110) and
+# w123_demonstracao for 5583's two (1543, 5591): each calls its function twice, as the target's several callers do; each
+# goes when every caller it stands for is in the link.
 CRELATORIOTESTEIMPRESSORA_SRCS := src/app/comum/relatorios/crelatoriotesteimpressora.cpp src/app/comum/relatorios/crelutil.cpp \
                                   src/app/comum/relatorios/cimprimirextratocarga.cpp
 UENUX2_SRCS += $(CRELATORIOTESTEIMPRESSORA_SRCS)

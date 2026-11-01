@@ -15,13 +15,19 @@
 //   (awk -F'\t' '$2==1919' ledger/callgraph.tsv: 2785, 11183, 11943, 11946, 12105, 12110). w123_separador stands for the
 //   five not reconstructed: with one caller binaryen inlines 1919 into 11183.
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
-//   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); 1919 is the only one reconstructed, and with one caller binaryen
-//   inlines the constructor into it. w123_erro stands for ten of the other 13 (11181, 11212, 11233, 11968, 12110, 1543,
-//   2786, 2791, 3689, 5967; 11214, 3696 and 942 are in the link). It passes an empty std::source_location: a default
+//   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); with one caller binaryen inlines the constructor into it, as it
+//   did into 1919 alone. w123_erro stands for nine of the other 13 (11181, 11212, 11233, 11968, 12110, 1543,
+//   2791, 3689, 5967; 11214, 3696, 942 and 2786 are in the link). It passes an empty std::source_location: a default
 //   argument would make a record on this line, which is none of the target's.
+// - CRelUtil::GetIDCargaFormatado, fn 2786, has four callers in the target (awk -F'\t' '$2==2786' ledger/callgraph.tsv:
+//   5579, 11256, 12105, 12110), none reconstructed: w123_idcarga stands for them and calls it twice, or binaryen would
+//   inline it into its one caller.
+// - CRelUtil::IncluiAvisoModoDemonstracao, fn 5583, has two (awk -F'\t' '$2==5583' ledger/callgraph.tsv: 1543, 5591),
+//   neither reconstructed: w123_demonstracao stands for both and calls it twice.
 #include <source_location>
 #include <string>
 
+#include "api/gui/cpaperformbuilder.h"
 #include "app/comum/dados/md/estadoaplicacao/cdadocorrespondencia.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/comum/relatorios/crelutil.h"
@@ -58,11 +64,24 @@ __attribute__((noinline)) void w123_erro(int codigo, const std::string& mensagem
                                          std::source_location());
 }
 
+__attribute__((noinline)) unsigned w123_idcarga(const std::string& carga, const std::string& outra)
+{
+    return comum::CRelUtil::GetIDCargaFormatado(carga).size() + comum::CRelUtil::GetIDCargaFormatado(outra).size() + 123;
+}
+
+__attribute__((noinline)) void w123_demonstracao(api::CPaperFormBuilder& builder, api::CPaperFormBuilder& outro)
+{
+    comum::CRelUtil::IncluiAvisoModoDemonstracao(builder);
+    comum::CRelUtil::IncluiAvisoModoDemonstracao(outro);
+}
+
 const void* volatile relatoriotesteimpressora_sink;
 unsigned (*volatile w123_sink_copia)(const CDadoCorrespondencia&);
 unsigned (*volatile w123_sink_labels)(const std::map<char, ecourna::app::dados::CLabelParametrizado>&);
 unsigned (*volatile w123_sink_separador)(comum::EUrnaFase);
 void (*volatile w123_sink_erro)(int, const std::string&);
+unsigned (*volatile w123_sink_idcarga)(const std::string&, const std::string&);
+void (*volatile w123_sink_demonstracao)(api::CPaperFormBuilder&, api::CPaperFormBuilder&);
 
 struct SRelatorioTesteImpressoraRoots {
     SRelatorioTesteImpressoraRoots()
@@ -72,6 +91,8 @@ struct SRelatorioTesteImpressoraRoots {
         w123_sink_labels = w123_labels;
         w123_sink_separador = w123_separador;
         w123_sink_erro = w123_erro;
+        w123_sink_idcarga = w123_idcarga;
+        w123_sink_demonstracao = w123_demonstracao;
     }
 } relatoriotesteimpressora_roots;
 

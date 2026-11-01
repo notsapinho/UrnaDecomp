@@ -98,6 +98,14 @@
 # coordinates before the first store, as the target does (a constructor SPoint(TPosition, TPosition) would give the
 # same code from return SPoint(...)). The names of the three distances, of the parameters and of the enumerator are
 # chosen; the alignment is formatted as an int (the argument type 3 the throw stores).
+#
+# CPaperFormBuilder::Build (target fn 357, cpaperformbuilder.cpp): the form of GetForm (fn 5515), after which the
+# builder's vector is emptied, a clear() as the target's loop shows (each pointer released from the last, the end then
+# set to the start). The target passes its own result to 5515, which `return form;` of a named local gives by copy
+# elision. 16 target functions call it (2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,
+# 11946, 12005, 12105, 12110), none reconstructed: the stand-in FormPapelC calls it twice. In the whole link it scores
+# 1 over 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name is chosen: 5515 has GetForm, and the
+# screens' builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # no caller of the unit's members is reconstructed yet: 31-uenux2-cformbuilder-roots.cpp gives each the calls it has in the

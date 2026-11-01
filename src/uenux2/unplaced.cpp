@@ -914,11 +914,6 @@
 // f977 · 140 B · unmatched · placement: link order · name unknown
 // ? f977(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1310 · uses=22 · neighbours' file uenux2/src/api/gui/capplicationcontextstack.cpp
-
-// f677 · 223 B · unmatched · placement: link order · name unknown
-// void f677(i32, i32, i32) { ... }
-
 // link-order cluster 1328 · uses=34 · neighbours' file uenux2/src/api/gui/cformbuilder.cpp
 
 // f501 · 217 B · unmatched · placement: link order · name unknown
@@ -951,14 +946,6 @@
 
 // f11569 · 176 B · unmatched · placement: link order · name unknown
 // void f11569(i32, i32) { ... }
-
-// link-order cluster 584 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelpu.cpp
-
-// f11901 · 12 B · unmatched · placement: link order · name unknown
-// ? f11901(i32) { ... }
-
-// f11900 · 12 B · unmatched · placement: link order · name unknown
-// void f11900(i32) { ... }
 
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 

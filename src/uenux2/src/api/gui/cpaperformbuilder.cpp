@@ -3,6 +3,9 @@
 //   198       AddNewLine     thunk into 3890, binaryen's one body for this and CMTFormBuilder's AddLed and AddBeep
 //   1264      AddCut
 //   2775      AddQRCode      with CQRCodeImageFieldPaper's constructor inlined by binaryen; the name is chosen
+//   357       Build          GetForm's form, after which the builder's vector is emptied: the target calls GetForm (fn
+//                            5515) and then destroys the vector's elements from the last, as clear() does; the name is
+//                            chosen, and the copy elided into the result (the target passes its result to 5515)
 // The EStyle 604 passes is a literal by choice: a parameter every caller passes as 1 gives the same body, since binaryen
 // folds it (docs/how-to-decompile.md step 2). `new CCutFieldPaper()` has its parentheses from the bytes: 1264 zeroes the
 // 24 bytes of the object before the vptr store, which the value-initialization of a class with an implicit constructor
@@ -58,6 +61,13 @@ std::shared_ptr<IForm<IPaper>> CPaperFormBuilder::GetForm()
 {
     const std::shared_ptr<IPreShow<IPaper>> preShow(new CPreShowNothing<IPaper>);
     return std::shared_ptr<IForm<IPaper>>(new IFormImpressao<IPaperRelatorios>(m_campos, preShow));
+}
+
+std::shared_ptr<IForm<IPaper>> CPaperFormBuilder::Build()
+{
+    std::shared_ptr<IForm<IPaper>> form = GetForm();
+    m_campos.clear();
+    return form;
 }
 
 } // namespace api
