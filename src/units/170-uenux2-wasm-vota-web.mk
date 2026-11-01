@@ -86,7 +86,7 @@
 #   Only main builds the class (a 4-byte `new`, vptr 1527156, then 9507, which removes a
 #   vota::impl::IPoliticaExecucaoEleitor it finds and calls that push, 5407), so with main unwritten its vtable would
 #   not link.
-# - 7840, votaInit (CVotaWebEngine::Init inlined, 6669 B, 228 invoke_* calls): src/app/vota_init.cpp stands in. It
+# - 7840, votaInit (CVotaWebEngine::Init inlined, 6669 B, 109 invoke_* call sites): src/app/vota_init.cpp stands in. It
 #   invokes about 50 functions, most with no name and no stub: 14477, 11571 and 11546, which take votaInit's argument
 #   and a key string ("audioEleitorHabilitado", "municipio", ...), read as readers of its options, comum::CPath's
 #   GetPathTrab and GetPathRootSemSA (358, 634), a builder and its setters (10268, 10197, 10188, 10181, 10176), 11733,

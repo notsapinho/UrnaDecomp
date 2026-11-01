@@ -27,8 +27,8 @@ uses has its typeinfo and vtable in this TU's data, between its records:
 
 So `api::ITextToSpeech`'s inline members in the target (its D2 11489, `SetVoice` 11518) are that TU's code, and
 `CWasmNullTextToSpeech`, which has a key function, has its vtable elsewhere. The TU has landing pads: `votaInit`
-(7840, record `vota_web_wasm.cpp:515`) calls through `invoke_*` 228 times (`pnpm --silent wasm fn
-../target/vota_web_wasm.wasm 7840 | /usr/bin/grep -c invoke_`), where uenux2's `src/` has none
+(7840, record `vota_web_wasm.cpp:515`) calls through `invoke_*` at 109 sites (`pnpm --silent wasm fn
+../target/vota_web_wasm.wasm 7840 | sed -n '/--- disassembly/,/folded readout/p' | /usr/bin/grep -c 'import:invoke_'`), where uenux2's `src/` has none
 ([app-flags.md](app-flags.md) §F6).
 
 Its level is `-Oz`. The header of unit 82 compiled with `-fexceptions` at each level, and the callees of the D2 and of

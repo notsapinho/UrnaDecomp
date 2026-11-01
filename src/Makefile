@@ -96,7 +96,7 @@ UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
 # no __assert_fail) but keep -O2, the level they were measured at, and strict aliasing: the library templates they
 # instantiate (roots_rhvoice.o's std::__tree and __split_buffer, roots_boost.o's __tree_remove) win the link, and the
-# target's copies have TBAA (6 matches need it). They keep -std=c++20: at c++23 no row moves, but roots_ecourna.o's
+# target's copies have TBAA (6 matches need it). They keep -std=c++20: at c++23 no match moves, but roots_ecourna.o's
 # vector<unsigned char> copy of __assign_with_size merges again with comum's and takes fn 1158's name from it
 APP_CXXFLAGS := $(patsubst -O3,-O2,$(patsubst -std=c++23,-std=c++20,$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS))))
 APP_CFLAGS   := $(patsubst -O3,-O2,$(filter-out -std=% -fno-strict-aliasing,$(UENUX2_CXXFLAGS)))

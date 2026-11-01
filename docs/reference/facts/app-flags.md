@@ -307,7 +307,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   that uenux2 objects emit (1158, 1872). The target also holds libc++'s C++23-only `__escaped_output_table` (§V3 of
   [levels.md](levels.md) has the measurement and the commands). One `-std` for the whole tree is still a reading: no
   site tells one directory from another.
-- **The stand-ins keep `-std=c++20`.** At `-std=c++23` too they move no row, but `roots_ecourna.o`'s
+- **The stand-ins keep `-std=c++20`.** At `-std=c++23` too they move no row into or out of `match`, but `roots_ecourna.o`'s
   `vector<unsigned char>` instance of `__assign_with_size` then merges with comum's copy and gives 1158 its name
   ([levels.md](levels.md) §V3).
 - **The executable TU is not uenux2's set.** `wasm/vota_web/vota_web_wasm.cpp` (unit 170, in part) is compiled

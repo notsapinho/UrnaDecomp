@@ -25,7 +25,7 @@
 #   131:24, inlined into the lambda's operator(), fns 10981 and 10987, slot 6 of the two std::__function::__func
 #   vtables; their other slots, 10979, 10980, 10982, 10984, 10985, 10986, 10988 and 10989, come with them): they call
 #   fn 2773, which fills a std::map of ten keys, 0 to 9, each with a pair of icons it builds through fn 1263,
-#   std::make_shared<CFixedImage> of a path, whose constructor CFixedImage(const std::string&), fn 2246, is not written;
+#   std::make_shared<CFixedImage> of a path, whose constructor CFixedImage(const std::string&), fn 2246, is unit 158's;
 #   and fn 2774, the state read from IPower.
 # - 2773, 2774, 1263, and 2238 and 10991, which destroy the map's tree (10991 calls 2238 on the map's address, 1839232):
 #   no caller here until the constructor lands.

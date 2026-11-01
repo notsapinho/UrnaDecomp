@@ -77,7 +77,11 @@ It defines others too: `votaSetAudioEnabled` (`Ib`, fn 10240) holds the record o
 SetAudioEnabled(bool)` at `vota_web_wasm.cpp:592`, a class only that file can hold, and `main`'s
 `std::__function::__func<main::$_0, void ()>` has its typeinfo and vtable in that TU's data. As `Ib` follows `Gb`
 (`votaPressKey`) and `Hb` (`votaTick`), those two are that TU's as well; inside one object the table's export comes where
-the object's own symbol order puts it, which is not measured.
+the object's own symbol order puts it, which is not measured. Our link does not give the target's order until `votaInit`
+is written there: the executable TU's `votaPressKey` and `votaSetAudioEnabled` come first, then the table, then the
+stand-ins' `votaInit`, `votaTick`, `votaGetStateJson` and `main` (`wasm-objdump -x -j Export
+build/out/wasm/vota_web/vota_web_wasm.wasm`, named through the glue). The splat build takes the target's export
+section, so no match depends on it.
 
 ## 3. Compile flags per component
 

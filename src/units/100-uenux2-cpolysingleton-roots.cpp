@@ -99,9 +99,9 @@ __attribute__((noinline)) void w100_define(std::unique_ptr<T> instancia, int vez
     }
 }
 
-// Stands for the callers of the two GetInst that have not landed: 502, 652, 1265, 2024, 3059, 3658, 3673, 5543, 5904 and
-// 8302 for fn 1259, none of which has, and 10226, 10870 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472, 5473,
-// 10874 and 10875 are in the link.
+// Stands for the callers of the two GetInst that have not landed: 502, 652, 1265, 2024, 3059, 3673, 5543, 5904 and 8302
+// for fn 1259, whose 3658 is in the link, and 10226, 10870 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
+// 5473, 10874 and 10875 are in the link.
 __attribute__((noinline)) int w100_getinst()
 {
     int soma = &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;
@@ -120,8 +120,8 @@ long w100_bloco(std::unique_ptr<T> instancia)
 }
 
 // Libc++ destructors the target keeps out of line, and uenux2's objects inline: two call sites each, in optnone functions
-// where clang leaves the calls. None of these target callers is matched, so a search of them in splat/matched.txt says when
-// a stand-in can go.
+// where clang leaves the calls. A search of these target callers in splat/matched.txt says when a stand-in can go: of
+// them only 871's 3095, 3328 and 8059 match, and each calls it in our link.
 // - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233 10090 10212.
 // - 871, unique_lock<mutex>: 624 1126 3095 3328 4771 5560 8059 13621 13974.
 // - 388, shared_ptr<void>: 455 518 640 1091 1928 2154 2584 2650 3373 3882 4180 4774 5384 5707 5750 7667 8089 8090 8092 8096
