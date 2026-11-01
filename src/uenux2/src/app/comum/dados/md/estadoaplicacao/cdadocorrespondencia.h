@@ -19,8 +19,19 @@ public:
                          std::string codigoCarga, CLocalidadeEleitoral secaoCarga, std::vector<uebyte> assinatura,
                          ecourna::app::dados::CIdentificadorGeradorMidia identificadorGeradorMidia);
 
+    // The getters below GetNumeroInternoUrna are what comum::asn::CConversorDadoCorrespondencia::DoConverte (fn 11399)
+    // reads, each member by reference: the converter assigns or converts each from its place in the object with no copy.
+    // Their names are chosen.
     uedword GetNumeroInternoUrna() const { return m_numeroInternoUrna; }
-    std::string GetCodigoCarga() const { return m_codigoCarga; }
+    const std::string& GetNumeroSerieFC() const { return m_numeroSerieFC; }
+    const api::CDateTime& GetDataHoraCarga() const { return m_dataHoraCarga; }
+    const std::string& GetCodigoCarga() const { return m_codigoCarga; }
+    const CLocalidadeEleitoral& GetSecaoCarga() const { return m_secaoCarga; }
+    const std::vector<uebyte>& GetAssinatura() const { return m_assinatura; }
+    const ecourna::app::dados::CIdentificadorGeradorMidia& GetIdentificadorGeradorMidia() const
+    {
+        return m_identificadorGeradorMidia;
+    }
 
 private:
     uedword m_numeroInternoUrna;

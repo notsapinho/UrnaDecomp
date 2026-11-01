@@ -22,8 +22,3 @@ CIdentificadorGeradorMidia CConversorIdentificadorGeradorMidia::DoDeconverte(con
 }
 
 } // namespace ecourna::app::dados::asn
-
-// <stubs>
-// f10290 · 321 B · unmatched · placement: link order · name unknown
-// void f10290(i32, i32, i32) { ... }
-// </stubs>

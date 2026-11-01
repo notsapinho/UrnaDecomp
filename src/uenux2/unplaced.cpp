@@ -600,11 +600,6 @@
 // f3695 · 135 B · unmatched · placement: link order · name unknown
 // void f3695(i32, i32) { ... }
 
-// link-order cluster 997 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/estadoaplicacao/cajustedatahora.cpp
-
-// f3701 · 15 B · unmatched · placement: link order · name unknown
-// void f3701(i32) { ... }
-
 // link-order cluster 998 · uses=3 · neighbours' file ecourna/api/security/base64.cpp
 
 // f3705 · 12 B · unmatched · placement: link order · name unknown

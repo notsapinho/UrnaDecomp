@@ -5,8 +5,6 @@
 // The stub of each member here went when this file landed; where it was the last stub of a stub-only file, that file
 // went with it, and writing the member writes the file again at its records' lines (named below, under
 // src/uenux2/src/app/comum/dados/).
-// - comum::asn::CConversorHistoricoVotoImpresso::DoConverte (slot 2, target fn 10276): it builds the entity's
-//   dataHoraLigamento through fn 1080 (which stores ModuloTiposEleitorais::DataHoraJE's vptr), which has no name.
 // - comum::asn::CConversorCargo::DoDesconverte (slot 3, fn 11373, records asn/processoeleitoral/cconversorcargo.cpp:69
 //   and :83, the second DesconverteTipoCargo inlined; that stub-only file went), not written: fns 365 and 3018 have no
 //   name.
@@ -26,12 +24,11 @@
 // - comum::asn::CConversorBiometriaEleitorCifrada::DoDesconverte (slot 3, fn 11419, records of its inlined LeChave at
 //   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: fns 183, 518, 679 and others
 //   have no name (412 has one since, unit 32's).
+// - comum::asn::CConversorEntidadeHashes::DoConverte (slot 2, fn 10266, 1338 B), not written: md::CEntidadeHashes's
+//   members past +36 are not recovered (unit 160's fragment).
 // - comum::asn::CConversorCandidaturas::DoDesconverte (slot 3, fn 11445): it builds a comum::asn::CConversorCandidatura
 //   on its stack (constructor fn 5712), whose entity type ModuloCandidatos::Candidatura the generated module lacks.
-// - comum::asn::CConversorFotoCandidato::DoDesconverte (slot 3, fn 11440): it converts the photo through fn 5708,
-//   which matches from unit 166's tree root; every function it calls has a name, so it waits only to be written.
 #include "app/comum/dados/asn/candidatura/cconversorcandidaturas.h"
-#include "app/comum/dados/asn/candidatura/cconversorfotocandidato.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitor.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 #include "app/comum/dados/asn/eleitor/cconversordedo.h"
@@ -39,14 +36,9 @@
 #include "app/comum/dados/asn/processoeleitoral/cconversordetalhecandidato.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversordetalheconsulta.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversoreleicaope.h"
-#include "app/comum/gravadores/asn/cconversorhistoricovotoimpresso.h"
+#include "app/comum/gravadores/asn/cconversorentidadehashes.h"
 
 namespace comum::asn {
-
-CConversorHistoricoVotoImpresso::TEntidade CConversorHistoricoVotoImpresso::DoConverte(const TDado&) const
-{
-    __builtin_trap();
-}
 
 md::CCargo CConversorCargo::DoDesconverte(const TEntidade&) const
 {
@@ -89,7 +81,7 @@ CConversorCandidaturas::TDado CConversorCandidaturas::DoDesconverte(const TEntid
     __builtin_trap();
 }
 
-CConversorFotoCandidato::TDado CConversorFotoCandidato::DoDesconverte(const TEntidade&) const
+CConversorEntidadeHashes::TEntidade CConversorEntidadeHashes::DoConverte(const TDado&) const
 {
     __builtin_trap();
 }

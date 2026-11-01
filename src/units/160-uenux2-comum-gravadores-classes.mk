@@ -13,7 +13,7 @@
 # - comum::asn::CConversorCorrespResultado (gravadores/asn/cconversorcorrespresultado.{h,cpp}): DoConverte (fn 10289)
 #   and DoDesconverte (fn 10288), over the head of comum::asn::CConversorCarga (gravadores/asn/cconversorcarga.h,
 #   vtable @1596140, which ledger/vtables.json misses; its typeinfo name is the string at 543560), whose two slots (fns
-#   10291, 10290) are pending.
+#   10291, 10290) fragment 172 matches.
 # - comum::asn::CConversorUrna (gravadores/asn/cconversorurna.{h,cpp}): DoConverte (fn 10287) and DoDesconverte (fn
 #   10284), with ConverteTipoUrna, DesconverteTipoUrna, ConverteTipoArquivo and DesconverteTipoArquivo (records :77,
 #   :95, :117, :139), which binaryen inlines into them. Urna's generated setter of numeroSerieFV takes
@@ -67,8 +67,7 @@
 # found to give the same bytes.
 #
 # Not matched, and what each waits for:
-# - CCopiadorMR's slots 2 and 3 (fns 5874, 5873) and CConversorCarga's (10291, 10290) are pending (the -pending.cpp
-#   header says on what).
+# - CCopiadorMR's slots 2 and 3 (fns 5874, 5873) are pending (the -pending.cpp header says on what).
 # - Not attempted: comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266; md::CEntidadeHashes's members past +36
 #   are not recovered) and the constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn
 #   12098), whose class no evidence names. Not written:

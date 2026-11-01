@@ -3,7 +3,9 @@
 // (ledger/callgraph.tsv), so each noinline stand-in gives it two call sites and binaryen keeps its body out of line:
 //   CCabecalhoEntidade's constructor (fn 1945), called once each by fns 2725, 11587, 11588, 11620, 11626 and 11629;
 //   CEleitor's constructors (fns 5666 and 5668), each called twice by fn 11411;
-//   CCarga::ValidaCriacao (fn 5670), called twice by fn 2802.
+//   CCarga's constructor (fn 2802), called once each by fns 10290, 11587, 11626 and 11629: 10290 is written (fragment
+//   172), and the stand-in stands for the other three. CCarga::ValidaCriacao (fn 5670) needs none: the constructor,
+//   its one target caller, calls it twice.
 // CEleitor::ValidaCriacao (fn 5667) has its two callers in celeitor.cpp's object, the two constructors.
 // comum::asn::CConversorLocal (vtable @1561988; fn 11451 and the pending 11452) is reached through its vtable only, whose
 // vptr fn 5740 stores (not written): this TU takes the vtable's address, which keeps both slots. The stand-ins
@@ -17,7 +19,8 @@ int w5666(int, int, int, int, int, int, int, int, int) __asm__(
     "_ZN5comum2md8CEleitorC1EitRKNSt3__26vectorINS0_18CEleitorIdentidadeENS2_9allocatorIS4_EEEENS1_20ENecessidadeEspecialERKNS2_12basic_stringIcNS2_11char_traitsIcEENS5_IcEEEESH_RKNS0_24CTransferenciaTemporariaESH_");
 int w5668(int, int, int, int, int, int, int, int, int, int, int) __asm__(
     "_ZN5comum2md8CEleitorC1EitRKNSt3__26vectorINS0_18CEleitorIdentidadeENS2_9allocatorIS4_EEEENS1_20ENecessidadeEspecialERKNS2_12basic_stringIcNS2_11char_traitsIcEENS5_IcEEEESH_RKNS0_24CTransferenciaTemporariaESH_RKNS3_IhNS5_IhEEEERKNS0_8CIndexerE");
-void w5670(int) __asm__("_ZNK5comum2md6CCarga13ValidaCriacaoEv");
+int w2802(int, int, int, int, int, int) __asm__(
+    "_ZN5comum2md6CCargaC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKN3api9CDateTimeESA_RKN7ecourna3app5dados26CIdentificadorGeradorMidiaE");
 extern const char w157_local_vt[] __asm__("_ZTVN5comum3asn15CConversorLocalE");
 }
 
@@ -41,10 +44,9 @@ __attribute__((noinline)) int EleitoresBiometria(int a, int b, int secao, int id
     return w5668(a, 3, secao, identidades, 1, nome, social, transf, mae, biometria, offset) |
         (w5668(b, 4, secao, identidades, 0, nome, social, transf, mae, biometria, offset + 8) + 1);
 }
-__attribute__((noinline)) void Cargas(int a, int b)
+__attribute__((noinline)) int Cargas(int a, int numero, int serial, int data, int codigo, int identificador)
 {
-    w5670(a + 4);
-    w5670(b);
+    return w2802(a, numero, serial, data, codigo, identificador) * 3;
 }
 
 struct SRoots157 {

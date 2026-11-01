@@ -9,8 +9,8 @@
 // - comum::CGravadorUtil::ConverteFase (fn 2274): fns 3796, 5856 and 12098, the same way;
 // - comum::CGravadorUtil::DeterminaNomeArquivo (fn 3798): fns 1276, 1396 and 12134; 1396 and 1276 (unit 160) are
 //   written;
-// - comum::asn::ConverteSerialFlash and DesconverteSerialFlash (fns 3605, 3604): fns 10287, 10291 and 11399, and 10284,
-//   10290 and 11400; 10287 and 10284 are written (unit 160), the stand-in is for the others;
+// - comum::asn::ConverteSerialFlash and DesconverteSerialFlash (fns 3605, 3604) need none: their callers, fns 10287,
+//   10291 and 11399, and 10284, 10290 and 11400, are written (units 160 and 172);
 // - comum::md::CVersoesArquivos's constructor (fn 5867): fn 12098 (10263 is in the link); and libc++'s hinted emplace
 //   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 3689, 4625,
 //   5867 and 12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns
@@ -67,14 +67,6 @@ __attribute__((noinline)) int w122_nome(comum::TMunicipioID municipio, comum::TZ
     return static_cast<int>(comum::CGravadorUtil::DeterminaNomeArquivo(municipio, zona, secao, fase, extensao).size()) + 7;
 }
 
-// stands for fns 10291 and 11399, and 10290 and 11400
-__attribute__((noinline)) int w122_serial(const std::string& serial, const std::string& outro, const std::vector<char>& flash,
-    const std::vector<char>& outra)
-{
-    return static_cast<int>(comum::asn::ConverteSerialFlash(serial).size() + comum::asn::ConverteSerialFlash(outro).size() +
-        comum::asn::DesconverteSerialFlash(flash).size() + comum::asn::DesconverteSerialFlash(outra).size());
-}
-
 // stands for fn 12098 (10263 is in the link), and, with its copy of a map, for fns 3689 and 4625, which call libc++'s
 // hinted emplace into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
 __attribute__((noinline)) int w122_versoes(const std::string& tag, const comum::md::CVersoesArquivos::TMapVersoes& versoes,
@@ -100,7 +92,6 @@ int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum:
     char, bool);
 int (*volatile w122_sink_gravador)(void*, unsigned int, unsigned int, unsigned int, unsigned int, char);
 int (*volatile w122_sink_nome)(comum::TMunicipioID, comum::TZonaID, comum::TSecaoID, char, comum::EExtensaoArquivoResultado);
-int (*volatile w122_sink_serial)(const std::string&, const std::string&, const std::vector<char>&, const std::vector<char>&);
 int (*volatile w122_sink_identidade)(const void*, const void*, const void*);
 int (*volatile w122_sink_versoes)(const std::string&, const comum::md::CVersoesArquivos::TMapVersoes&, const std::string&);
 const void* volatile w122_sink_vt_rcsecao;
@@ -111,7 +102,6 @@ struct SW122Roots {
         w122_sink_wsq = w122_wsq;
         w122_sink_gravador = w122_gravador;
         w122_sink_nome = w122_nome;
-        w122_sink_serial = w122_serial;
         w122_sink_versoes = w122_versoes;
         w122_sink_identidade = w122_identidade;
         w122_sink_vt_rcsecao = w122_vt_rcsecao;

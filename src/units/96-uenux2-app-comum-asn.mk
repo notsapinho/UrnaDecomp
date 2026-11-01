@@ -35,9 +35,9 @@
 # The target takes the three substrings before the first call and destroys them after the last: three named locals
 # (year, month, day) and CDate(ToByte(dia), ToByte(mes), ToWord(ano)).
 # - 1713 DesconverteDataHoraJE is written and `unresolved self-voted`: ModuloTiposEleitorais::DataJE::theInfo (1913204)
-#   and HoraJE::theInfo (1913248), the info words of the two temporaries it builds, are named by its own votes alone.
-#   The other target functions that load them are 3802 (DataJE's, not written; its callee 706 matches at the tree's
-#   -O3) and the static initializer 14478 (both). Its body is 21 over 272 rows from the target, all operand-only (pnpm
+#   and HoraJE::theInfo (1913248), the info words of the two temporaries it builds, were named by its own votes alone.
+#   DataJE's has a second voter now, ConverteDataJE (3802, below); HoraJE's other reader is the static initializer
+#   14478 alone, so 1713 still waits for it. Its body is 21 over 272 rows from the target, all operand-only (pnpm
 #   wasm score). The two substrings are named locals (the target destroys them at the end and each DataJE or HoraJE
 #   temporary right after its call): with the substrings as temporaries in the calls, 73 over 284 rows, 12 inserted,
 #   18 deleted. DesconverteHoraJE (no record; name and line chosen) is api::CTime(hora), which clang inlines into 1713,
@@ -46,6 +46,14 @@
 #   ModuloTiposEleitorais::DataJE and HoraJE are new in src/asn1/modules/ModuloTiposEleitorais.{h,cxx}: RTTI gives the
 #   names and NumericString bases, 14478 fills their theInfo (8 to 8 and 6 to 6 characters, before DataHoraJE's), and
 #   ModuloProcessoEleitoral::Pleito's data field is a DataJE (CConversorPleito, fragment 140, reads it).
+# - ConverteDataJE and ConverteDataHoraJE (fns 3802 and 1080) are matched: an api::CDate formatted "YYYYMMDD", and an
+#   api::CDateTime's date so, "T" and its time formatted "hhmmss" (fns 706 and 779), into the entity's string type
+#   through a temporary of it, the result built from the temporary's characters (fns 1521 and 2190). No record names
+#   them (they throw nothing): their names, their being Utils members, their place in util.cpp (after
+#   DesconverteHoraJE) and their lines are chosen, from DesconverteDataHoraJE's record and their callers (1080: the
+#   converters 10273, 10276, 10291, 11390, 11399 and 11589; 3802: 11385 twice and 11394). The formatted strings are
+#   named locals: the target frees each format's literal string before the next call. Fragment 172 has the converters
+#   and what was measured; 96-uenux2-app-comum-asn-roots.cpp's utils_converte stands for the callers not written.
 # - 731, the base's default DoConverte and DoDesconverte merged, and 11418, IConversorBiometriaASN's default DoConverte,
 #   need -O3, the tree's level since the measurement below (docs/reference/facts/levels.md §V3). Their format strings are 44 and 47
 #   bytes. In a body that is only such a throw, the object at -O2 keeps libc++'s search of the format string for a brace

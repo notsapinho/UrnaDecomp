@@ -39,6 +39,8 @@ public:
     static api::CDate DesconverteDataJE(const ModuloTiposEleitorais::DataJE& data);
     static api::CDateTime DesconverteDataHoraJE(const ModuloTiposEleitorais::DataHoraJE& dataHora);
     static api::CTime DesconverteHoraJE(const ModuloTiposEleitorais::HoraJE& hora);
+    static ModuloTiposEleitorais::DataJE ConverteDataJE(const api::CDate& data);
+    static ModuloTiposEleitorais::DataHoraJE ConverteDataHoraJE(const api::CDateTime& dataHora);
     static ModuloTiposEleitorais::Fase ConverteFase(const EUrnaFase& fase);
     static EUrnaFase DesconverteFase(const ModuloTiposEleitorais::Fase& fase);
     static md::ETipoAbrangencia DesconverteAbrangencia(ModuloTiposEleitorais::TipoAbrangencia::NamedNumber abrangencia);
