@@ -88,8 +88,8 @@
 #   (set_appId(...)): `set_appId() = ...` calls ENUMERATED::operator= (asn1.cxx) where the target stores the value.
 #   The counts' getters return by value (the target copies 4 bytes before each Converte), the others by reference.
 #   The helper's linkage is a choice: external gives the same 35 rows.
-# - CConversorEstadoGeralGap::DoDesconverte (11395): DesconverteCorrespondencias defined below DoConverte; above
-#   DoDesconverte binaryen numbers two locals the other way (33 rows over 662, four of them locals), below it 29, calls
+# - CConversorEstadoGeralGap::DoDesconverte (11395): DesconverteCorrespondencias defined below DoDesconverte, above
+#   DoConverte; above DoDesconverte binaryen numbers two locals the other way (33 rows over 662, four of them locals), below it 29, calls
 #   and data only. The four flags are named locals before the counts' converter (the target reads them before its vptr
 #   store); the vector goes to the constructor as a copy and the counts and the optional by value, as the target's
 #   copies show (two of each count and of the optional: the argument temporary and wasm's copy of a byval argument, a

@@ -3,9 +3,9 @@
 // 476:19), Rename (692:15; binaryen inlines it into fn 11584), api::truncate (5457, 1024:15) and ZeroFill (2761,
 // 1039:15). ExistFile, ExistDir, RemoveFile, RemoveTree, GetFreeSpace, GetUsedSpace and GetMemInfo (412, 5459, 2760,
 // 5458, 5454, 5453, 5463; binaryen merges the first two as 6019) have no record: their names and lines are chosen,
-// and so is the namespace of the last four, free functions of api (csystem.h and unit 32's fragment say from what). AlteraDono and AlteraPermissoes, which binaryen inlines into
-// CopyFile, have no record and no target index: their names, lines and linkage are chosen (unit 32's fragment says what
-// the target shows).
+// and so is the namespace of the last four, free functions of api: RemoveTree, which only this file calls, and the
+// three csystem.h declares (unit 32's fragment says why). AlteraDono and AlteraPermissoes, inlined into CopyFile, have
+// no record and no target index: their names, lines and linkage are chosen (unit 32's fragment says what the target shows).
 // CScopeGuard (lines 990-1011, an anonymous namespace), its name, place and members' names are chosen: it holds
 // ZeroFill's lambda in a std::function. The file's other functions are not reconstructed yet; the lines their records
 // name are left blank.

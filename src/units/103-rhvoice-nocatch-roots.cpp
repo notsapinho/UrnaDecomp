@@ -12,7 +12,7 @@
 //   string::reserve (7735, elem[465]: 5360, 9963).
 // - Called directly in the target by callers not written yet, so two noinline callers stand in for them:
 //   the push_back of std::vector<std::pair<std::string, unsigned short>> (1682: 727, 855, 3577, 5298, 5318, 9869, 9911),
-//   and the D2 of std::__split_buffer<std::string, std::allocator<std::string>&> (5184: 9404, 9516).
+//   and the D2 of std::__split_buffer<std::string, std::allocator<std::string>&> (5184: 9516; 9404, unit 00's, is in the link).
 // Declared through asm labels with the objects' signatures, so this file instantiates nothing and every body comes from
 // the object that defines it. Compiled as uenux2 code.
 extern "C" {

@@ -83,7 +83,8 @@
 # EUE_GUI_MENUITEM_BUSCA_REPETIDA (4929, eueguierror.h) when another item of the menu has it, assigns it, calls
 # UpdateRect, gives the menu's SetLength (slot 12) the longest search text and refreshes the menu; the target reads
 # m_menu again after UpdateRect and after SetLength, so the body names m_menu at each use. Chosen: the name
-# GetTextoFormatado, the lambdas, std::find_if and std::max_element (their loops are inlined; a hand loop was not
+# GetTextoFormatado, the iterator type (std::sregex_token_iterator over the string, whose __wrap_iter<const char*>
+# names the six instances; std::cregex_* over const char* gives the same bytes), the lambdas, std::find_if and std::max_element (their loops are inlined; a hand loop was not
 # tried), CMenuItem::Draw's local corTexto (the target reads m_habilitado before the FillRect call), and the lines of
 # the members with no record (GetTextoFormatado's, 28 to 45).
 # Measured, by `pnpm wasm score` in the whole link with the companions below and src/app/roots_regex.cpp:

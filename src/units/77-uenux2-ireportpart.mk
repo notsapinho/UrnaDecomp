@@ -44,8 +44,11 @@
 #   scratch links of the same objects with ccandidaturas.cpp's object moved right before cpartecandidatos.cpp's, or
 #   cpartecandidatos.cpp's right after ccandidaturas.cpp's, `24 over 403 rows`, all operand-only, callees, addresses
 #   and table slots.
-#   The callee first is the target's order: its data hold every comum/dados object's records before every
-#   comum/relatorios object's (ccandidaturas.cpp's at 1558224, cpartecandidatos.cpp's at 1576428). So
+#   The callee first is the target's order for this pair: ccandidaturas.cpp's record (1558224) precedes
+#   cpartecandidatos.cpp's (1576428). The same data put cpartecandidatos.cpp before cparteeleitores.cpp and
+#   cparterdv.cpp (vtables 1576388, 1576588, 1576620), which this list inverts; the other form, ccandidaturas.cpp
+#   listed before it in this fragment, keeps both and moves the object 3473 rests on (fragment 89), and was not
+#   measured in the whole link. So
 #   cpartecandidatos.cpp is listed in fragment 89, right after ccandidaturas.cpp (the second form, measured), and
 #   this unit keeps its other files; docs/reference/facts/codegen.md C4 has the effect.
 #

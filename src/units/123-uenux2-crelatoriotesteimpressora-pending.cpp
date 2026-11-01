@@ -6,8 +6,8 @@
 //   copies it (fn 1300), adds one tag of two by a switch on 1 (fn 5783) and turns it into the string (fn 5782, 2390 B).
 //   It waits for 5636, 5782 and 5783, none named or written.
 // - GetDadosLocal, slot 15, fn 11188 (3304 B), with ConverteTipoAlimentacao's record at line 173 of
-//   crelatoriotesteimpressora.cpp inlined: not reconstructed; its callees 654, 2816 and 5738 have no name (1881 and
-//   1933 match: units 00 and 89)
+//   crelatoriotesteimpressora.cpp inlined: not reconstructed; its callees 2816 and 5738 have no name (654, 1881 and
+//   1933 match: units 98, 00 and 89)
 //   (no match line and no line in splat/symbol_addrs.txt), and it calls std::string::append, fn 160 (ledger/callgraph.tsv),
 //   which -O2 inlines and the tree's -O3 calls (docs/reference/facts/levels.md V3).
 #include "app/comum/relatorios/crelatoriotesteimpressora.h"

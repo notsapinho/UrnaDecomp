@@ -40,7 +40,8 @@
 #     at 1909908 by 815's vote alone; 2221 and 10309 read that address as well, and 10309 is the mutex's destructor.
 #   - QuantidadeMesariosInicio and QuantidadeMesariosFim, 3606 and 2727: each counts the map's records of one period, 1
 #     or 2, with std::count_if. binaryen merges the two into 6007, `byn$mgfn-shared$` of the first, called with 1 and 2,
-#     in our link as in the target (`pnpm wasm score ../target/vota_web_wasm.wasm 6007` against it: BYTE-EXACT).
+#     in our link as in the target (`pnpm wasm score ../target/vota_web_wasm.wasm 6007 ../build/out/wasm/vota_web/vota_web_wasm.wasm <our index of
+#     byn$mgfn-shared$_ZNK5comum19CRegistradorMesario24QuantidadeMesariosInicioEv in names.tsv>`: BYTE-EXACT).
 #   vota::CControladorRegistraMesariosVota's slot 7, 10795 (unit 119), calls GetInst and both counts. The roots'
 #   ConsultaRegistrador gives GetInst, the two counts and HasInst their second call site (its comment names the callers
 #   it stands for).
@@ -48,8 +49,10 @@
 #   Measured in the link (pnpm wasm score against the target, after make -C src link-map):
 #   - the order of the objects: ccomparecimentomesarioservico.cpp is in this unit's list ahead of
 #     cregistradormesario.cpp, moved from unit 163's. In the target's data the servico's vtable (1595668), Entregar's
-#     record (1595692) and the control block's vtable lie before cregistradormesario.cpp's first record (1595748): the
-#     servico's object comes first. With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396,
+#     record (1595692) and the control block's vtable lie between ipedetitulomesario.cpp's records (1595636, 1595652)
+#     and cregistradormesario.cpp's first (1595748): the servico's object comes right before cregistradormesario.cpp's.
+#     The move also puts it ahead of objects whose records lie before its data (cjustificador.cpp's, 1560664); no row
+#     moves for that. With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396,
 #     replaced 121 [121 operand-only], inserted 2, deleted 2)`, its locals permuted; with this order `55 over 519 rows
 #     (same 464, replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve.
 #   - the destructor's place: the first function of the .cpp. In use band 2 the target runs 5380, 5379, 5378, 5377

@@ -1,5 +1,5 @@
-// comum::md::CTradutorFrase: RecuperaLabel, TraduzLabel and TraduzTexto at their records' lines, then TraduzData and
-// Traduz. The reconstruction's own note; the blank lines stand for text not recovered.
+// comum::md::CTradutorFrase: Traduz and its file-static helper (a chosen place), then RecuperaLabel, TraduzLabel and
+// TraduzTexto at their records' lines, then TraduzData. Our own note; blank lines stand for text not recovered.
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 
 #include <utility>

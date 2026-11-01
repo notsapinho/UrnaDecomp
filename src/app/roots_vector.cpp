@@ -76,7 +76,7 @@ int urna_roots_vector_dado(int a)
     return reinterpret_cast<int>(&urna_desfaz_dado);
 }
 
-// The executable TU's -Oz copy of std::vector<std::string>::~vector() (target fn 2255): it passes the vector to
+// The -Oz copy of std::vector<std::string>::~vector() read as the executable TU's (target fn 2255): it passes the vector to
 // __destroy_vector::operator() (2249, below) through a frame slot, as 1698 does. Its target callers are ecourna's
 // CStringUtils::Split (1880, on its landing pad), 9586 and 11733; urna_roots_vector_cadeias stands for the two that are
 // not in our link. Instantiated ahead of the block below, it takes its place in this object before 2249 and 2247, the

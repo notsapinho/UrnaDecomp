@@ -64,8 +64,8 @@
 # ahead of TraduzTexto's switch and its default, TraduzData below TraduzTexto. s_dataReferencia (its name, its type and
 # its being a private static member) is hand-named in splat/symbol_addrs.txt (callers+content: 14478 builds it with
 # CDate's constructor right after s_labels, and 7787 stores to it right after it assigns s_labels; 654 is its one reader);
-# SetDataReferencia, like SetLabels, has no target function. 654's callees CDate::operator+= and operator-= (5478, 5477)
-# are hand-named by their own bodies (unit 125's fragment): 654 was 5478's one voter.
+# SetDataReferencia, like SetLabels, has no target function. 654's callee CDate::operator+= (5478) and operator-= (5477,
+# through operator-, 3648) are hand-named by their own bodies (unit 125's fragment): 654 was 5478's one voter.
 # CEleitorDetalhe's members below ConfereDadosDinamicos have no record, so their lines and their order are a choice:
 # - GetImpedimento, target fn 3769, matched: it calls CAppInfo::GetInst (185) and the const GetGeral (457), compares the
 #   load's turn (+32 of CEstadoGeral, CDadoCarga's first member) with TURNO_2 ('2', 50), and returns the word at +200 when

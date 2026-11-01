@@ -12,7 +12,8 @@
 # landed, once unit 111 gave fn 837 (CPolySingleton<IEventosLog>::instance) and fn 233 (IEventosLog::loga) their
 # bodies: it logs "Urna desligada a pedido do aplicativo", sends message 48 and throws codes 7268 and 7269
 # (euecomumerror.h). The instance in a local named `logs`, as unit 111's clogcomum.cpp has it, fills column 18; the
-# local's name and `auto&` are chosen. MontarMRSemHabilitar (5896) and LogDiskInfo (10226) are not reconstructed.
+# local's name and `auto&` are chosen. MontarMRSemHabilitar (5896) and LogDiskInfo (inlined into fn
+# 10226, vota::CThreadMonitor's slot 2) are not reconstructed.
 # Evidence and choices. The records fix each throw's line; EnviarMensagemThrowVoid's `inline` is read from where its
 # records lie (iinterfaceinit.h). HabilitarMR's place before line 137 is read from fn 2863 sitting before fn 2862 in
 # their use band, with fn 3833 after it and before fn 3832 in theirs (docs/reference/facts/reading.md R8, an inline

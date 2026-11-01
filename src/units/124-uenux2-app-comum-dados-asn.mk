@@ -70,7 +70,7 @@
 # their vtables in their objects and matches: fragment 159's row.
 # Not written: 10266 (CConversorEntidadeHashes) converts comum::md::CEntidadeHashes of app/comum/gravadores/. The
 # members this list held before, 11363, 11352, 11351, 2794, 11483, 11482, 11437 and 11438, are fragment 140's and unit
-# 13's now, and their fragments say what each waits for.
+# 13's now: 11482 matches from unit 13's crdvvota.cpp.o, and the fragments say what the others wait for.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 DADOS_ASN124_SRCS := src/app/comum/dados/md/candidatura/cdadoscandidato.cpp \

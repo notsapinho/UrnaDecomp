@@ -28,7 +28,7 @@
 # Divide, and Escolhe, CriaContorno and Fecha, which have no target function: Draw inlines them), with the private
 # Recalcula, which Draw calls and inlines. Chosen, and measured against no matching Draw: every name, the structs
 # SDisposicao and SSegmento's names, the lines, and the header's additions for them (SPathCommand's two constructors,
-# Recalcula, m_font mutable). Measured by `pnpm wasm score` in the whole link:
+# which take unit 69's 5113, EscalaCaminho, from 70 over 264 rows to 38 over 256; Recalcula, m_font mutable). Measured by `pnpm wasm score` in the whole link:
 # - 5507 (Tenta) and 5505 (std::vector<SSegmento>::__swap_out_circular_buffer, which Recalcula's reserve and push_back
 #   bring) differ in call and data operands only, and match.
 # - Draw 1162 over 5684 rows, CabeProporcional 665 over 1295, CabeEmUmaLinha 52 over 280, Divide 48 over 446. Their

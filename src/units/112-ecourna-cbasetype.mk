@@ -62,8 +62,8 @@
 #
 # Trim(const std::string&): 1374 is `f3942(p0, p1, slot 6416)`, and elem[6416] is 9406, so a copy of the string, Trim, and
 # the copy returned; 1879 and 5156 are the same over 5158 and 3509. It has no record: that it is a static member called Trim,
-# and its line beside the other Trim, are choices, and `std::string resultado(valor);` gives the same object. 3509, the
-# ToUpper-like body, and 5156 stay unwritten, and the merge forms from 1374 and 1879 alone.
+# and its line beside the other Trim, are choices, and `std::string resultado(valor);` gives the same object. 3509 and
+# 5156, ToUpper in place and its copying form, are unit 00's, and the merge forms from 1374, 1879 and 5156 (3942).
 #
 # The converters and HexStringToBytes, evidence. All three call the copying Trim, and clang inlines it (the object has the
 # invoke and no call of 1374): `invoke` of slot 6416 with a landing pad of its own, that frees the copy and resumes, apart
@@ -94,14 +94,15 @@
 #   - 3858, __to_chars_itoa<unsigned>, is the executable TU's copy: libc++.a's loads its power table with the address
 #     folded into the load's offset where the target adds it, and its 2869 inlines the digit helpers (3856 3852 2867
 #     3850) that the target keeps out of line. All six match from that TU's object at -Oz (unit 170).
-#   - 9258 waits for 2416, std::regex's constructor, whose row stops at std::collate<char>::id (.bss), no target symbol.
+#   - 9258 matches since unit 84's CMenuItem::GetTextoFormatado (5492) votes for 2416, std::regex's constructor, beside
+#     it (docs/reference/facts/splat.md S10 item 23).
 #   - 1877 and 5162 wait for the slot of parse_iso_time, 5851 (9824 B), whose one direct caller is uenux2's 11616. Instantiated
 #     in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scores 2708 over 4726 rows, 1764 deleted: not the target's body.
 #   - 2204 is a Boost body whose callers (5204 9570 9576 9578 9583) are not written. 9032, which waited for 306, matches
 #     since src/app/roots_vector.cpp holds it.
 #
 # Hand line: CSerialMidia::ValidaSerial (9258), a callee with one user, the slot 9259's constructor takes, or 9259 stays
-# `self-voted`: the literal only it loads is its own evidence, and the line says so. 9258 itself stays `unresolved` (above).
+# `self-voted`: the literal only it loads is its own evidence, and the line says so. 9258 itself matches (above).
 #
 # Rename at this unit: 556 to std::format_error's D0, a twin whose first copy moved to roots_cbasetype.o.
 $(ROOT)/$(APP)/112-ecourna-cbasetype-roots.o: $(ROOT)/src/units/112-ecourna-cbasetype-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/112-ecourna-cbasetype.mk $(shell find $(ROOT)/src/ecourna -name '*.hpp')

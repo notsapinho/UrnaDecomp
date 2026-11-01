@@ -86,7 +86,7 @@
 #   calls __destroy_vector out of line, and ours inlined it and merged with 2671. It matches since
 #   src/app/roots_vector.cpp holds the target's copy.
 # - The copying ToLower (1879) is a thunk into binaryen's merge 3942 in the target, with fns 1374 and 5156, copying
-#   wrappers of Trim and of 3509, a ToUpper-like body. It matches since unit 112 brought 1374. CSqlResultSet::IndexForColumnName
+#   wrappers of Trim and of ToUpper in place (3509, unit 00). It matches since unit 112 brought 1374. CSqlResultSet::IndexForColumnName
 #   (1525), which calls it, matches since unit 89's comum::CLocal::GetUFMinuscula (3753) is a second holding caller.
 # - ToLower in place (5158) was `unresolved`, self-voted on acentuadas's guard, which only its own pair votes for. It
 #   matches since the self-vote rule places a guard by its object at our link's distance (the externs file's header).

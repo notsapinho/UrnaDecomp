@@ -93,7 +93,10 @@
 # prologue of its own of 528 B, as ours has, and the same 13 calls in the same order, memcmp, rename,
 # __cxa_allocate_exception, __strerror_l, 5456, __try_constant_folding, __vformat_to, ~locale, a basic_string
 # constructor, emscripten_builtin_free, ~__optional_destruct_base, CBaseError<EUeUtilError>'s constructor (after
-# 7058, both) and __cxa_throw. The rest of the body, store by store, was not compared. It is written because its std::format of two
+# 7058, both) and __cxa_throw. Its store order is the same: `pnpm --silent wasm score ../target/vota_web_wasm.wasm
+# 11584 ../build/out/wasm/vota_web/vota_web_wasm.wasm <RenomeiaUma's index in names.tsv>` pairs each of our 30 stores
+# with an identical row of 11584's copy, in order; what differs is operands, local numbers and the first argument,
+# which 11584 reads out of its own frame. It is written because its std::format of two
 # strings and a char* shares the arguments' builder (fn 5456, a libc++ instance this object emits) with CopyFile, which
 # the target calls from both: binaryen inlines a function with one caller (docs/how-to-decompile.md step 3), so Rename
 # is what keeps 5456 out of line, a reading (a link without Rename was not measured). Rename also gives libc's rename

@@ -4,7 +4,7 @@
 // function pending"):
 // - comum::CCopiadorMR's slot 2, fn 5874, and slot 3, fn 5873 (606 B each, slots of CCopiadorWSQMR's vtable too): each
 //   builds paths from the file name at +4 with fn 183 (path::operator/=) and calls fns 1274 and 949 (comum::CPath's
-//   GetPathResult and GetPathMR, unit 190) and 378, which no evidence names yet. They are named after their slot.
+//   GetPathResult and GetPathMR, unit 190) and 378 (api::CSystem::CopyFile, unit 32). They are named after their slot.
 //   CCopiadorMR's destructors are emitted here and in ccopiadorwsqmr.cpp.o, whose copies our link keeps.
 // They go in app/comum/gravadores/ccopiadormr.cpp when they are reconstructed; the vtable and the destructors move
 // with them, under the same symbols. Delete this file with them. comum::asn::CConversorCarga's two slots (10291, 10290)

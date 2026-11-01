@@ -31,11 +31,12 @@
 #   9125 `unresolved` and 5113 `no-candidate`, and both copies build to the target's sha256. At -O2 their two
 #   push_backs stayed calls of one vector<int> body, a twin of vector<long>'s in roots_boost.o, which equals target fn
 #   543 by bytes; at -O3 543 still matches, from roots_boost.o.
-#   5113 itself differs (70 over 264 rows at the tree's flags): for MOVE_TO, LINE_TO and ARC the target reads every
+#   5113 itself differs (38 over 256 rows at the tree's flags; the rest of this paragraph was read at 70 over 264, before
+#   cstepsprogressbar.h gave SPathCommand its two constructors): for MOVE_TO, LINE_TO and ARC the target reads every
 #   value of the command before its first store and stores the type (and an arc's two angles) before the scaled
 #   coordinates; ours reads its last product's pair at that product's store, and stores the type (and the angles)
-#   after the products. The CLOSE case is the target's. The `SPathCommand` aggregate (cstepsprogressbar.h) stands in for a header whose constructors, if any,
-#   are not known. Measured alone (try-tu --single, which scored the body written before as the whole link did, 86 over
+#   after the products. The CLOSE case is the target's. `SPathCommand` (cstepsprogressbar.h), with the defaulted and 7-argument constructors unit 41
+#   chose, stands in for a header whose constructors, if any, are not known. Measured alone (try-tu --single, which scored the body written before as the whole link did, 86 over
 #   273): the products written `m_escalaX * comando.x`, which reads x before the scale as the target does, 75 over 264;
 #   with that, CLOSE built as a value-initialized SPathCommand whose type is then set (a zero over the whole temporary,
 #   padding included, then the type, as the target has), 70 over 264, the written form. Further from the target: the

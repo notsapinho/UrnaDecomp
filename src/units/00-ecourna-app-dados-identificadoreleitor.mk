@@ -25,7 +25,7 @@
 # - PreencheADireita(const std::string&, char, size_t) (fn 1881) pads a copy on the right; its five callers pass ' '
 #   (folded) and roots_ecourna.cpp's UsaPreencheCopiaA and B stand for them.
 # The bands give the order: in uses 3, read in link order, 3512, 3511, 3510, 3509, then ToInt16 (3508), so 3512 sits
-# above PreencheADireita and 3510 below it (3509, not written, reads as the upper-case counterpart of ToLower: a reading
+# above PreencheADireita and 3510 below it (3509, ToUpper in place, below, is the upper-case counterpart of ToLower: a reading
 # of its body). In uses 2, 5159 comes right before 5158, and in uses 6, 1881 before 1880 and 1879: 5158 and 1879 are the
 # two ToLower that src/units/12-ecourna-api-sql-sqlite-externs.cpp holds for this file, so neither band has a neighbour
 # in this object, and 5159 and 1881 sit beside their in-place forms by choice.
@@ -55,9 +55,9 @@
 #   ahead of the locals branches once per string form (each object's first rows; both forms otherwise alike). Its copying
 #   form (2677) copies, then calls it through invoke_viii, the copy having a landing pad.
 # - Split (1880) cuts a string at each separator: an empty piece is push_back(""), a non-empty one
-#   emplace_back(resto, 0, posicao), whose int argument is the 0 the target stores in its frame and whose
-#   __emplace_back_slow_path (9404) matches with it; the last piece is push_back(resto). Its landing pad calls the
-#   executable TU's -Oz ~vector<std::string> (2255), which src/app/roots_vector.cpp holds.
+#   emplace_back(resto, 0, posicao), whose 0 the target stores in its frame (the literal's type, int, is chosen: a
+#   plain 0) and whose __emplace_back_slow_path (9404) matches with it; the last piece is push_back(resto). Its landing pad calls the
+#   -Oz ~vector<std::string> read as the executable TU's (2255), which src/app/roots_vector.cpp holds.
 # - ToUpper in place (3509) is ToLower's counterpart over the same 19 accented capitals (the 76 bytes at 1118052, which
 #   5158 reads too): its static set is built by transforming the capitals with | 32 through std::inserter
 #   (insert_iterator::operator=, 9397, matches with it), each read as a char (the target's load8_s, a char parameter's),
@@ -80,8 +80,8 @@
 #   npos from its definition (the object's i32.load of _ZNSt3__212basic_string...4nposE; a reading: std::pair's
 #   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and 1539 match. It waits for Boost.Regex's
 #   -fexceptions copies: its callees do_assign (9401) and regex_search (9400), both with landing pads in the target, read
-#   as this file's instantiations (their band, above), and our link takes src/app/roots_boost.o's (APP_CXXFLAGS, no -fexceptions), which links
-#   first: `ours +0x5f i32.const 2875: a table slot of ours: ...do_assign... has no target function`
+#   as this file's instantiations (their band, above), and our link takes do_assign from src/app/roots_boost.o (APP_CXXFLAGS, no -fexceptions),
+#   which links first: `ours +0x5f i32.const 2875: a table slot of ours: ...do_assign... has no target function`
 #   (splat/scan.tsv). The same copies keep match_results<const char*>'s destructor (5153) inlined in our link: its other
 #   target caller, 5121, reads as the -fexceptions perl_matcher's push of a saved state with a copy of the results, which
 #   our link does not hold.

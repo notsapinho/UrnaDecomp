@@ -85,7 +85,7 @@
 #
 # 5734 and 11495, CRdvVota's destructor and its pointer's exit destructor, match from unit 13's crdvvota.cpp.o: CRdvVota
 # holds comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota> at +44 (vptr 1560304), which unit 140 writes;
-# its slots 2 and 3 (11483 and 11482) are traps there. The roots' d5734 stands for 7787, which is not written.
+# its slot 2 (11483) is a trap there, and slot 3 (11482, the template's member) matches from crdvvota.cpp.o. The roots' d5734 stands for 7787, which is not written.
 #
 # comum::RespostaCorrente (fn 11479), the current answer's text, is in crespostas.cpp: it holds GetInst's code (record 28),
 # which only that TU can inline, then calls CDataMap<unsigned int, CRespostaConsulta>::GetCurrent (3125) and copies the

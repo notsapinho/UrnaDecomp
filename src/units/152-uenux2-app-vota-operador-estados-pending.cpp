@@ -12,8 +12,8 @@
 // - vota::CPerguntaEleitorVotando::ProcessKey (fn 5394, slot 6, one body with vota::CEleitorDemorando's slot 6): fn
 //   1150.
 // - vota::CPerguntaEleitorVotando::ProcessInput (fn 10415, slot 7): fns 1150 and 1151.
-// - vota::CDesabilitaAudioEleitor::ProcessInput (fn 10435, slot 7): fns 652 and 3966 (it calls
-//   CLogVota::LogaAudioDesativadoFimVotacao, fn 4529, written).
+// - vota::CDesabilitaAudioEleitor::ProcessInput (fn 10435, slot 7): fn 652 (it calls
+//   CLogVota::LogaAudioDesativadoFimVotacao, fn 4529, written, and usleep, 3966, matched).
 // - vota::CPerguntaFilaEleitorVazia::ProcessInput (fn 10713, slot 7): fn 3631, CPedeTituloEncerramento's GetInst,
 //   which calls fn 1151.
 // - vota::CHorarioVotacaoTerminou::ProcessInput (fn 10757, slot 7): a thunk into binaryen's fn 2295, with the slots 7 of
