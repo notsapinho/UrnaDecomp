@@ -6,7 +6,7 @@
 
 namespace ecourna::api::util {
 
-CSynchronizer* CSynchronizer::s_instancia = nullptr;
+std::unique_ptr<CSynchronizer> CSynchronizer::s_instancia;
 
 // (original lines 11-55: content not recovered)
 #line 56
@@ -15,7 +15,7 @@ void CSynchronizer::CreateInst(bool habilitado)
     if (s_instancia != nullptr) {
         throw CUtilError(EUE_SYNCHRONIZER_INSTANCIA_JA_CRIADA, "Instância já criada");
     }
-    s_instancia = new CSynchronizer(habilitado);
+    s_instancia.reset(new CSynchronizer(habilitado));
 }
 
 int CSynchronizer::Sync(int descritor) const

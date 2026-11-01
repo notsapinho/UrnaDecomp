@@ -18,20 +18,23 @@
 # Its place in the file is chosen, after CreateInst's record. `?:` and an `if` give the same rows on the object.
 # 5181 is written and `unresolved`, one row from the target: `call 12310`, libc's fsync, where our link inlines fsync.
 # Why the target keeps fsync with one direct caller is not known: 12310 is in no table slot and no export, and SQLite's
-# sync is fdatasync (3992). And s_instancia needs a second holder (docs/reference/splat.md "No circular evidence"): fn
-# 9268, table slot 6618, is f349(p0, 1911988), a static std::unique_ptr's destructor, so the original's static is a
-# unique_ptr where csynchronizer.hpp declares a raw pointer. A unique_ptr with reset(new ...) or with operator= gives
-# CreateInst's object code the raw pointer gives (one store after operator new, no reload of the old value), so the
-# change costs nothing; it is not made while fsync keeps 5181 from matching. CFile::Close (336) matches: its call of
-# 5181 has two voters, 336 and 2767.
-# CBitArray::GetValor(uebyte) (1375) holds GetValor(ueqword, uebyte) inlined by binaryen and does not match: 192 rows over
-# 496 as written (pnpm wasm score, the whole link). Its loop has a 32-bit counter and a 64-bit position stepped apart.
-# Measured with try-tu.sh --single, where the as-written body scores the same 192: the bound written as `size() - posicao`,
-# zeroed when it exceeds size(), gives the target's select where the ternary gives a branch (189 with the uebyte index
-# kept), but a uebyte index added to posicao gives one 64-bit counter; stepping a position of its own (`++pos` in the for,
-# `pos++` in the call, 258) gives the target's loop and puts the bounds throw ahead of the loop in the object (wasm-objdump),
-# where the target has it after; an int index (279), counting down (257, 227 as a while) and, with ++pos, the bound computed
-# before the test, an early return for bits == 0 or `restantes < bits` do not move it. The body stays as it was.
+# sync is fdatasync (3992). s_instancia is a std::unique_ptr: fn 9268, table slot 6618, is f349(p0, 1911988), the
+# reset-and-free body of static unique_ptrs' destructors (CAguardaMensagem::s_inst's among them), and 1911988 is the word
+# 5181 tests. A unique_ptr with reset(new ...) or with operator= gives CreateInst's object code the raw pointer gives (one
+# store after operator new, no reload of the old value). The static's name waits for 5181 too: an anchor votes for a
+# .bss object only when its two bodies are the same opcodes (docs/reference/splat.md section 2), which fsync's row
+# breaks, so no vote names 1911988, and the census pairs 9268 at the addr tier with another static's destructor of its
+# shape (cpedetitulomesario.cpp.o's), so it stays `differs` with ours, csynchronizer.cpp.o's, in the link. CFile::Close
+# (336) matches: its call of 5181 has two voters, 336 and 2767.
+# CBitArray::GetValor(uebyte) (1375) holds GetValor(ueqword, uebyte) inlined by binaryen, and matches. The two-argument
+# member tests the bound first and throws in the else, after the loop as the target has it; the bound is `size() -
+# posicao`, zeroed when it exceeds size(); the loop steps a 64-bit position of its own in the call (`test(pos++)`) under a
+# signed int counter that counts down from bits. The form this unit wrote first (a ternary bound, a uebyte index added
+# to posicao, the throw ahead of the loop) scored 192 rows over 496 in the whole link (pnpm wasm score). Measured then with
+# try-tu.sh --single: the zeroed bound gives the target's select where the ternary gives a branch, and a position of its
+# own gives the target's loop, a 32-bit counter and a 64-bit position stepped apart, where an index added to posicao
+# gives one 64-bit counter.
+# The counter's type and direction and the order of the two locals ahead of the null test are chosen.
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR)
 ECOURNA_SRCS += api/io/cfile.cpp
 ECOURNA_SRCS += api/io/cioerror.cpp

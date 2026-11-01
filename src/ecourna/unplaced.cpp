@@ -405,9 +405,4 @@
 
 // f282 · 340 B · unmatched · placement: link order · name unknown
 // void f282(i32, i32) { ... }
-
-// link-order cluster 1364 · uses=82
-
-// f271 · 12 B · unmatched · placement: link order · name unknown
-// ? f271(i32, i32) { ... }
 // </stubs>

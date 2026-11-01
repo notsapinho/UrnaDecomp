@@ -48,4 +48,9 @@ const md::CCargo& CConfiguracaoEleicao::GetCargo(const TCargoID cargo) const
     throw CUeComumDadosError(EUE_COMUM_DADOS_7827, std::format("Cargo não encontrado {}", cargo));
 }
 
+const md::CSituacoesEleicoes& CConfiguracaoEleicao::GetSituacoesEleicoes(const TEleicaoID eleicao) const
+{
+    return m_pleito.GetSituacoesEleicoes(eleicao);
+}
+
 } // namespace comum

@@ -22,9 +22,11 @@ uebyte CPrng::GetByte()
 int CPrng::GetInt()
 {
     boost::random::mt19937 gerador(m_semente);
-    boost::random::uniform_int_distribution<int> distribuicao(std::numeric_limits<int>::min() + 1,
-                                                             std::numeric_limits<int>::max() - 1);
-    return distribuicao(gerador);
+    boost::random::mt19937::result_type valor;
+    do {
+        valor = gerador();
+    } while (valor > std::numeric_limits<boost::random::mt19937::result_type>::max() - 2);
+    return static_cast<int>(valor - std::numeric_limits<int>::max());
 }
 
 int CPrng::Generate(std::vector<uebyte>& dados)

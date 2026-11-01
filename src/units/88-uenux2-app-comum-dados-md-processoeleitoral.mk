@@ -89,6 +89,14 @@
 #   does. With -fno-strict-aliasing it differed from the target in the reload of __child after __insert_node_at's store
 #   of the begin node (`pnpm wasm score` against the plain link: 8 over 122 rows, the reload's three rows, the local
 #   numbers after it and one call operand).
+# - CConfiguracaoEleicao::GetSituacoesEleicoes (fn 271, a chosen name) is f5648(this + 28, eleicao): CPleito's
+#   GetSituacoesEleicoes on the pleito at +28 (cconfiguracaoeleicao.h's m_pleito). Its callers (1386,
+#   3687, 5577, 5578, 5582, 11558, 11559) each call GetInst (187), and 5578 and 11558 pass its result to 271, 11558 to
+#   GetCargo (861) as well (pnpm wasm fn), so it is the class's member, out of line in cconfiguracaoeleicao.cpp; its line
+#   there, after GetCargo's, and its parameter's TEleicaoID (5648's) are chosen. Its stub was an ecourna/unplaced.cpp
+#   row: the ledger's component for it is ecourna, which says which code calls it, not where it is written. The scan
+#   pairs it by content. None of its callers is written, so the roots give it two call sites, and the stand-in for 5648
+#   now stands for 3713 alone.
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes

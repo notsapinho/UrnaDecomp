@@ -1,10 +1,11 @@
 # ecourna api/security: CPrng, CTrng, CSymmetricCipherFactory with the CBlockCipher<CAesCipher, CTrng> it builds,
 # and cepesc::CCepescCipher, in api/security/{cprng,ctrng,csymmetriccipherfactory}.cpp and
 # api/security/cepesc/ccepesccipher.cpp.
-# Matched: CPrng's constructor (target fn 9503), GetByte (9502), Generate(dados) (9499), Generate(dados, tamanho) (5178)
-# and Boost's mt19937::twist (5179); CTrng's GetByte (9477), GetInt (9476), Generate (9475, 5173) and the exit
+# Matched: CPrng's constructor (target fn 9503), GetByte (9502), GetInt (9500), Generate(dados) (9499), Generate(dados,
+# tamanho) (5178) and Boost's mt19937::twist (5179); CTrng's GetByte (9477), GetInt (9476), Generate (9475, 5173) and the exit
 # destructor of its device name (9478), with libc++'s std::random_device constructor (2544) and operator() (3331), which
-# libc++.a brings once these call them; CSymmetricCipherFactory::Create(const CAesKey&) (9489), and from its object
+# libc++.a brings once these call them; CSymmetricCipherFactory::Create(const std::string&) (1884) and
+# Create(const CAesKey&) (9489), and from its object
 # CBlockCipher's D0 (9488) and CAesCipher's implicit destructor (9486, the unwind path of the cipher's Encrypt);
 # CCepescCipher::Encrypt (2681) and Decrypt (5171), whose call of the executable TU's vector<uebyte> exception-guard
 # destructor (306) src/app/roots_vector.cpp gives the link; CBlockCipher's Encrypt and Decrypt (9487, 9485), thunks
@@ -33,8 +34,17 @@
 #   distribution shifts by 24 instead. Its GetInt: libc++'s and Boost's distributions give the same object function.
 #   In Generate, libc++'s distribution and a plain cast give the same object function. libc++'s is written in all three.
 #   Generate's try catches std::exception (typeinfo 1525848) and returns -1; the device is built inside it (an invoke).
-# - GetInt's bounds, -2147483647 and 2147483646 (a rejection of words above 0xFFFFFFFD, then 0x7FFFFFFF subtracted),
-#   are the target's; their spelling through numeric_limits is chosen.
+# - GetInt's constants (a rejection of words above 0xFFFFFFFD, then 0x7FFFFFFF subtracted: the bounds -2147483647 and
+#   2147483646) are the target's; their spelling through numeric_limits is chosen.
+# - GetInt (9500) is written as the loop Boost's generate_uniform_int<mt19937, int> runs for those bounds: a reading of
+#   boost/random/uniform_int_distribution.hpp, where the engine's range 0xFFFFFFFF over 0xFFFFFFFE values gives a
+#   bucket of 1, so it draws until a word is at most 0xFFFFFFFD and adds the minimum. The distribution itself, as this
+#   unit wrote it first, gives `differs` in the locals (+0x1 in splat/scan.tsv at 0fe14b05): clang leaves
+#   generate_uniform_int out of line (-Rpass-missed=inline: cost 285, threshold 250) and binaryen inlines it into its one
+#   caller, so ours reloads the engine's index where the target keeps the seeding loop's in a local (a reading: binaryen
+#   does not forward a store to a load, so the target's copy is clang's inlining). It stays out of line in every form
+#   tried then: the distribution named or temporary, through variate_generator, over long, and libc++'s (cost 325). The
+#   loop written in place matches: a form chosen for the code it gives.
 # - Both Generate(dados, tamanho) return 1 for tamanho 0, 2 for a shorter vector, 0 otherwise, and build the generator
 #   before the tests. `tamanho > dados.size()`: `dados.size() < tamanho` puts the size after tamanho in both objects,
 #   and in the lone link (try-tu --single) of 5178 scores 7 over 486 with a row inserted and one deleted, where the form
@@ -49,18 +59,13 @@
 #   takes a password, are chosen; 1884 hashes it with CSha512 and takes the digest's bytes 16 to 48 as an AES-256 key.
 # - CCepescCipher::Encrypt (2681) returns a CCipheredOut over a zeroed 32-byte key and the plaintext's content, with
 #   its salt when it has one; Decrypt (5171) returns the ciphered content. The member names and their const are chosen.
-# Written and not matched yet, each with what it waits for:
-# - CPrng::GetInt (9500), `differs` in its locals: clang leaves Boost's generate_uniform_int<mt19937, int> out of line
-#   (-Rpass-missed=inline: cost 285, threshold 250) and binaryen inlines it into its one caller, so ours reloads the
-#   engine's index where the target keeps the seeding loop's in a local (a reading: binaryen does not forward a store
-#   to a load, so the target's copy is clang's inlining). Out of line in every form tried: the distribution named or
-#   temporary, through variate_generator, over long, and libc++'s (cost 325). No form that clang inlines is found.
-# - Create(const std::string&) (1884) calls the executable TU's vector<uebyte> exception-guard destructor (306), which
-#   src/app/roots_vector.cpp holds, as 2681 and 5171 do, which match with it in the link. 1884 keeps 3 rows (53 over 515
-#   at the tree's flags, the rest operand-only): the target loads the digest's address before the key vector's zero
-#   stores, ours after them (the object has the same order). A data() + 16 range gives the same object function; the key
-#   built in the return, or over a temporary vector, scores worse alone (155 over 582 and 213 over 603, against 125 over
-#   582 as written).
+# - Create(const std::string&) (1884) names the range's two iterators, the digest's bytes 16 and 48, before it builds
+#   the key vector, and matches so. Built from the two sums in the constructor's call, as this unit wrote it first, it
+#   kept 3 rows (53 over 515 at the tree's flags, the rest operand-only; `differs` at +0x17b in splat/scan.tsv at
+#   0fe14b05): the target loads the digest's address before the vector's zero stores, ours after them. A data() + 16
+#   range gave that first form's object function. Its call of the executable TU's vector<uebyte> exception-guard
+#   destructor (306) holds through src/app/roots_vector.cpp, as 2681's and 5171's do.
+# Written and not matched yet, with what it waits for:
 # - The merged body of CBlockCipher's Encrypt and Decrypt (6154) waits for CAesCipher's constructor's name (9495).
 # Roots: 137-ecourna-api-security-ciphers-roots.cpp (its header says how). Unit 100's roots include
 # isymmetriccipherfactory.hpp, which gains the two pure slots and its private NonCopyable base: unit 100's and unit
