@@ -35,15 +35,20 @@
 #              170: it calls std::to_string(long long) (fn 4658), whose other target caller, 3612, is not written, so
 #              5476 was the name's one voter; unit 170's object names 4658's callee __itoa (2869), and both match
 #              since. The roots' TempoEmTexto keeps to_string out of line for it, standing in for 3612.
-#              3648 CDate::operator- is operand-only (1 over 9) and `no-candidate`: nothing names it, and its callee
-#              operator-= (5477) is not matched.
 #              5478 operator+= and 5477 operator-= do not match at -O2 (291 over 558, 271 over 543 rows) nor at the tree's
 #              -O3 (86 over 550, 30 over 530): the target splits the day-of-the-year loop on `ano % 4` (two copies, one over a
 #              lookup table), which our -O3 build gives and our -O2 build does not, and keeps the month's store inside
 #              the month loop, where ours sinks it after the loop (and in += nests the month loop in the year loop's
 #              exit). The rest of that remainder is not explained. They stay written: operator- (3648) calls
-#              operator-=, and they call each other.
-#              Their stubs stay in src/ecourna/unplaced.cpp, since nothing names their bodies.
+#              operator-=, and they call each other. Both are hand-named in splat/symbol_addrs.txt by their own bodies
+#              (callers+content: the day, month, year and weekday words of CDate's layout, the days of each month at
+#              531859, which only they read, and the negated count each sends the other), since their one voter each was
+#              a caller that needs the name, 654 for 5478 and 3648 for 5477.
+#              3648 CDate::operator- matches since 5477 has that name (it was operand-only, 1 over 9 rows, and
+#              `no-candidate`); 654 (CTradutorFrase::Traduz, unit 98) calls it on the "-" sign.
+#              CDate::operator+(int) const, operator-'s counterpart (a copy, then operator+=), has no target function: 654
+#              holds it inlined by binaryen on the "+" sign (it copies the 8-byte date, then calls 5478). Its name, after
+#              operator-'s, and its being out of line in cdate.cpp, as operator- is, are chosen.
 # The 16-bit static 2000 that IsValidDate and CDate(const std::string &) add to a two-digit year is an object of
 # namespace api, named g_seculo here (a chosen name), at the head of cdate.cpp's data (1584256, before its first record at
 # 1584260). Its external linkage is the bytes': a const or file-static object nothing writes would fold into the code;

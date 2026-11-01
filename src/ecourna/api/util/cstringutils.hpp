@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "ecourna/api/uetypes.hpp"
@@ -22,6 +23,23 @@ public:
     // and 3723). No record names them: names, overloads and class are chosen as above
     static std::string& RemoveZerosAEsquerda(std::string& valor);
     static std::string RemoveZerosAEsquerda(const std::string& valor);
+    // fn 3509: ToLower's upper-case counterpart in place, over the same accented letters (callers 654 and 5604); fn
+    // 5156: its copying form (caller 6592, and table slot 29). No record names them: names and class are chosen, after
+    // ToLower's
+    static void ToUpper(std::string& valor);
+    static std::string ToUpper(const std::string& valor);
+    // fn 1880: the pieces of a string between the occurrences of a separator, an empty string for each empty piece
+    // (callers 654, 2380, 3689, 5869, 11377, 12065, of which 654 passes '|'). No record names it: name and class chosen
+    static std::vector<std::string> Split(const std::string& valor, char separador);
+    // fn 2199: where the first match of a regular expression starts and ends in a string, npos for both when either
+    // string is empty, nothing matches or the search throws (callers 654, 1539, 5465). No record names it: name, class
+    // and result type chosen
+    static std::pair<size_t, size_t> FindRegex(const std::string& expressao, const std::string& valor);
+    // fn 9407: replaces every occurrence of a string in place; fn 2677: the same on a copy (callers 3651, 3689 and
+    // api::CProgressBar::Draw, 10977). No record names them: the names and the overloads follow Replace(std::string&,
+    // char, const std::string&), unit 12's
+    static void Replace(std::string& valor, const std::string& de, const std::string& para);
+    static std::string Replace(const std::string& valor, const std::string& de, const std::string& para);
 
     static uebyte ToByte(const std::string& valor);
     static ueint16 ToInt16(const std::string& valor);

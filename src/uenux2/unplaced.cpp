@@ -805,11 +805,6 @@
 // f4809 · 269 B · unmatched · placement: link order · name unknown
 // void f4809(i32, i32, i32) { ... }
 
-// link-order cluster 728 · uses=2 · neighbours' file ecourna/api/sql/sqlite/csqlstatement.cpp
-
-// f5156 · 12 B · unmatched · placement: link order · name unknown
-// void f5156(i32, i32) { ... }
-
 // link-order cluster 736 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
 
 // f5180 · 36 B · unmatched · placement: link order · name unknown
