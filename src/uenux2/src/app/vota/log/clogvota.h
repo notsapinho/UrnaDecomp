@@ -26,7 +26,10 @@
 // vota::CLimiteCopiasBUAtingido::StartState (fn 12027) and fn 12081, and 2495 by four operador states' slots (unit 156's
 // fragment has them). 1127 and 4551 call fn 233, which ieventoslog.cpp's members hold inlined, so they are in another
 // TU, this one (a reading); 4556 and 2495 log through logaAlerta (fn 1398), and the target holds both as thunks of one
-// merged body, fn 6115. Their names are chosen from their messages.
+// merged body, fn 6115. Their names are chosen from their messages. LogaMesarioIndagadoQtdViasAdicionais and
+// LogaMesarioNaoSolicitouViasAdicionais (fns 4563 and 4557) are 4551's shape, out of line and calling fn 233, each
+// called with GetInst's result: 4563 by vota::CEmitirMaisBU::StartState (fn 12082) and ProcessInput (fn 12081), 4557
+// twice by 12081; their names are chosen from their messages.
 // LogaAguardandoHorarioZeresima (held inlined by vota::CVerificaHorarioZeresima::StartState, fn 11871) and
 // LogaDataEleicaoInvalida (by vota::CVerificaEleicaoPassou::StartState, fn 11914) are the shape of the members held
 // inlined above, GetInst called before the member's own stack frame opens, each calling api::CLoga::loga (fn 433) with
@@ -80,6 +83,8 @@ public:
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
     void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via);
+    void LogaMesarioIndagadoQtdViasAdicionais();
+    void LogaMesarioNaoSolicitouViasAdicionais();
     void LogaMesarioIndagadoQualidadeBU();
     void LogaQtdViasAdicionaisExcedeMaximo();
     void LogaHabilitacaoCanceladaReconhecimentoBiometrico();

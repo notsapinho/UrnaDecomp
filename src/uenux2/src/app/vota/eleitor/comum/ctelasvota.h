@@ -34,7 +34,8 @@ namespace vota {
 // measured); and vota::CSincronismoEleitor::StartState (fn 7178) calls slot 2 of +172 and api::CProgressBar::SetValor
 // (fn 3667) on +180 with that bar's +28, with no copy of either. So +180's pointee is an api::CProgressBar, and its
 // member's type says so; the other 29 stay the forms' type (ctelasvota.cpp.o compiles to the same object either way,
-// cmp).
+// cmp). vota::CEmitirMaisBU::StartState (fn 12082) copies +196 into a temporary and calls its slot 2 before the
+// temporary is released, as fn 11914 does with +76: GetTelaEmitirMaisBU returns it by value, the same choice.
 class CTelasVota {
 public:
     ~CTelasVota();
@@ -60,6 +61,7 @@ public:
     const std::shared_ptr<api::CProgressBar>& GetBarraSincronismo() const { return m_barraSincronismo; }
     const CFormInterativoTelaVota& GetTelaQuerImprimirBU() const { return m_tela29; }
     const CFormInterativoTelaVota& GetTelaQuerReimprimirZeresima() const { return m_tela30; }
+    CFormInterativoTelaVota GetTelaEmitirMaisBU() const { return m_tela24; }
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;

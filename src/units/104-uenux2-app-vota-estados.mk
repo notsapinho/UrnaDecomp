@@ -116,6 +116,17 @@
 #   GetInst (unit 156's file) binaryen inlines here, else to vota::CImprimindoBU. The target calls CAppInfo::GetInst
 #   (fn 185) twice, so the test is written with two calls; comum::CAppInfo::EhTreinamentoEleitor (fn 697) is the same
 #   test out of line, which the target does not call here. 16 over 76 rows, operand-only.
+# - vota::CEmitirMaisBU::StartState (fn 12082, records cemitirmaisbu.cpp 46:100 and 47:114): the two Assert texts
+#   (ledger/strings.tsv 401102 and 399061) spell the condition on appInfo.GetVota(), and the target calls the const
+#   GetVota (fn 903, not fn 261) on it, so the object is const: the local is written const comum::CAppInfo&. The codes
+#   3452 and 3453 are EUeAssertError's, their names chosen to the records' columns (api/util/eueasserterror.h). It then
+#   calls CLogVota::LogaMesarioIndagadoQtdViasAdicionais (fn 4563, unit 156's) and slot 2 of a copy of CTelasVota's
+#   +196, which ctelasvota.h's GetTelaEmitirMaisBU returns by value, a choice (fn 11914's), and stores this in
+#   m_pNextState. 20 over 106 rows, operand-only (calls, data addresses, and the exception's destructor slot in the two
+#   throws). StartState is the class's key function, so cemitirmaisbu.cpp's object emits CEmitirMaisBU's vtable now, no
+#   longer the pending object. Chosen: `using namespace comum;`, which lets the texts spell comum's EAVENCERRADA and
+#   EAEFIMDOSTRABALHOS unqualified, the local's name being the texts'; StartState's first line, 42, below the
+#   definitions written before it; ProcessInput's record line, 64, stays blank.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \

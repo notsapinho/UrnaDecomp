@@ -53,13 +53,6 @@ void CGravaResultado::StartState()
     __builtin_trap();
 }
 
-// CEmitirMaisBU::StartState: fn 12082 (250 B), records cemitirmaisbu.cpp:46, cemitirmaisbu.cpp:47, callees with no
-// name: 185, 407, 463, 903, 4563.
-void CEmitirMaisBU::StartState()
-{
-    __builtin_trap();
-}
-
 // CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 185, 261,
 // 407, 455, 491, 903, 1127, 2890, 4556, 4557, 4563, 4582, 5987 (2888 and 3701 are named: units 37 and 93).
 void CEmitirMaisBU::ProcessInput()
