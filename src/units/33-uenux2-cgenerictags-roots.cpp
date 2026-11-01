@@ -1,11 +1,12 @@
 // Roots: keep api::CGenericTags's functions in the skeleton link the way the target calls them. TagSize (target fn 5468)
 // needs none: its two target callers, the two-argument EncodeTLV (3647) and AppendTLV (5466), are in cgenerictags.cpp.
-// CGenericTags::insert (target fn 1071) is called directly by 3831 and 5892, neither reconstructed yet: two stand-ins
-// give it two call sites, one passing a varied length-field size, so dead-argument elimination folds no argument in.
-// The two-argument EncodeTLV (3647) is called directly by 3831 (twice) and 5892, and the three-argument AppendTLV (5466)
-// by 3831 and 5892 (ledger/callgraph.tsv), none reconstructed: four more stand-ins give the first three call sites and
-// the second two, every argument passed through. Each stand-in's body differs from the others' and is no target
-// function's; they are address-taken from a static constructor. Declared through asm labels with the wasm-level
+// CGenericTags::insert (target fn 1071) is called directly by 3831 and 5892: two stand-ins give it two call sites, one
+// passing a varied length-field size, so dead-argument elimination folds no argument in. The two-argument EncodeTLV
+// (3647) is called directly by 3831 (twice) and 5892, and the three-argument AppendTLV (5466) by 3831 and 5892
+// (ledger/callgraph.tsv): four more stand-ins give the first three call sites and the second two, every argument passed
+// through. 3831 is in the link (unit 95's iinterfacesavd.cpp); the stand-ins stay for 5892, not reconstructed yet. Each
+// stand-in's body differs from the others' and is no target function's; they are address-taken from a static
+// constructor. Declared through asm labels with the wasm-level
 // signatures (EncodeTLV's result is the hidden first parameter); compiled as uenux2 code.
 extern "C" {
 void w1071_root_0(int, int, unsigned long) __asm__("_ZN3api12CGenericTags6insertERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEm");

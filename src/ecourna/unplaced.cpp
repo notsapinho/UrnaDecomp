@@ -407,9 +407,6 @@
 // f2302 · 483 B · unmatched · placement: link order · name unknown
 // void f2302(i32, i32, i32, i32) { ... }
 
-// f2283 · 57 B · unmatched · placement: link order · name unknown
-// void f2283(i32, i32) { ... }
-
 // link-order cluster 1178 · uses=6 · neighbours' file uenux2/src/app/comum/util/cmonitoraalimentacao.cpp
 
 // f1899 · 25 B · unmatched · placement: link order · name unknown
