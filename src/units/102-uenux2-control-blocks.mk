@@ -8,8 +8,7 @@
 # vota::CPreShowFormVota's (576, unit 165's cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is
 # not written) and comum::md::CEleitorDinamico's (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's
 # celeitordinamicodao.cpp, from which 11536 and 11537 match) and api::CTextFieldBlinking's (1265,
-# CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, written and differing, from which 11113 and 11112
-# match) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
+# CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
 # which 8585 and 8578 match). Each block below: the T, the function that stores its vptr in the target, and the members
 # the unit matches. The vtable's other slots are shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):

@@ -5,8 +5,8 @@
 # api/hash/chasharquivo.h, is unit 46's, whose DoDesconverte (10269) is the constructor's one caller written.
 # The roots file also holds two template instances the target keeps from uenux2 objects not written, each matched from
 # the roots object as code a landed header defines (src/units/README.md "Companion files"):
-# - std::vector<comum::md::CComparecimentoMesario>::__emplace_back_slow_path (5375), which the scan's content pass
-#   matches (source `content`: no step-8 name). The target body moves a 52-byte element, a std::string at +0 (zeroed
+# - std::vector<comum::md::CComparecimentoMesario>::__emplace_back_slow_path (5375), found by the content pass (no
+#   step-8 name). The target body moves a 52-byte element, a std::string at +0 (zeroed
 #   after the move), words at +12 and +16 and 29 bytes from +20 copied as four i64 (+20, +28, +36, +41), the layout
 #   app/comum/comparecimentomesario/md/ccomparecimentomesario.h gives CComparecimentoMesario (that header's note says fn
 #   5377 holds the same 29-byte copy); its one caller, 11616, copies such an element into a temporary before each of its

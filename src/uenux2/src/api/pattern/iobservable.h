@@ -18,7 +18,8 @@
 // Detach is read from those two destructors. Attach is read from comum::CInfoMTLCD's fn 5903 and the end of its
 // constructor, fn 5904, which hold it inlined: under the mutex, a search of the vector for the observer (wmemchr, fn
 // 736), and only when it is not there a push_back (fn 543) and the observer's Update (IObserver's slot 2) with the
-// value; the observer is a by-value parameter, since push_back takes its address. SetValor is read from the operator()
+// value; the observer is a pointer taken by value (chosen: IObserver<T>* const& gives the same object). SetValor is
+// read from the operator()
 // of the lambda of api::BatteryIconDataSource's constructor (fns 10981 and 10987, UpdateBatteryIcon inlined): under the
 // mutex, the value's copy assignment (its count incremented, the old one released) and each observer's Update in
 // vector order, with the new value.

@@ -18,8 +18,9 @@
 //   not reconstructed), throws it twice, with codes 9000 and 9001, a message it builds and the records at
 //   ccontrolaarmazenamentodeimagens.cpp:117 and :135. w186_erro stands for 2725 and throws it twice too, with the codes
 //   9000 and 9001 and the message and the source_location from its own parameters: no argument is one constant at both
-//   calls, which dead-argument elimination would fold into the constructor, and no default argument makes a record on
-//   this file's lines. One message gets a suffix, a choice so that the two throws differ in more than the code (not
+//   calls, which dead-argument elimination would fold into the constructor (measured: with std::source_location() at
+//   both throws, 5369 scores 50 over 54 rows, the location folded into a (i32 i32 i32)->(i32) body), and no default
+//   argument makes a record on this file's lines. One message gets a suffix, a choice so that the two throws differ in more than the code (not
 //   measured without it); the object holds two calls of the constructor (wasm-objdump -d).
 #include <source_location>
 #include <string>

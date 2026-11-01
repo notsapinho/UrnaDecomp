@@ -36,10 +36,9 @@
 # The roots' stand-ins for fn 4185, which builds CDataText<comum::CCandidaturasDSNome> and
 # CDataText<comum::CCandidaturasDSNumero> with std::make_shared and is not written, keep both classes' vtables, which unit
 # 102's dropped builders emit and nothing stored until now: 12649 matches (pnpm wasm score 1 over 7 rows, operand-only,
-# in the whole link before steps 7 to 9), and 12742, CDataText<CCandidaturasDSNumero>::GetText, is written and
-# `unresolved` on the end of its format string, "{:0{}}": in the target that is the tail of "  {}{}{:0{}}" (address 1042),
-# the literal of fn 11973, which is not in our link, and in ours a string of its own. Its source's call operator is unit
-# 180's, and that fragment has the measurement. The control blocks of both (12654, 12650, 12760, 12752) are unit 102's.
+# in the whole link before steps 7 to 9), and so does 12742, CDataText<CCandidaturasDSNumero>::GetText, since fn
+# 11973 is in the link: the end of its format string, "{:0{}}", is in the target the tail of "  {}{}{:0{}}" (address
+# 1042), 11973's literal. Its source's call operator is unit 180's, and that fragment has the measurement. The control blocks of both (12654, 12650, 12760, 12752) are unit 102's.
 # The other instantiations (over comum's and vota's classes, and the three of
 # CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>) wait for those classes, but for two that unit
 # 121 brings: CDataText<vota::CEscolheOpcao::COpcaoDS>, whose GetText (10685) matches, and CDataText<comum::CRespostasDSNumero>;

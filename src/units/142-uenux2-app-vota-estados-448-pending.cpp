@@ -5,7 +5,8 @@
 // - vota::CPedeAnoNascimentoSemBiometria::ProcessInput (target fn 10489, slot 7, 2040 B): it calls fns 395, 5399 and
 //   5665, which have no name (ledger/callgraph.tsv against splat/symbol_addrs.txt), and 2097 and 4661 (unit 161's).
 // - vota::CMostraEleitorVotando::StartState (target fn 10427, slot 2): it copies vota::CThreadOperador's string at +108
-//   into +12's string, shows the form and calls fn 5903 on what fn 2284 returns; those two have no name.
+//   into +12's string, shows the form and calls comum::CInfoMTLCD::MostraIconeBateria (fn 5903, unit 153) on what fn
+//   2284 returns, which has no name.
 // - vota::CMostraEleitorVotando::ProcessKey (target fn 10425, slot 6, 4809 B, records cmostraeleitorvotando.cpp:127 and
 //   159): it calls 20 functions with no name, among them fn 1901.
 // - vota::CPerguntaCodigoSuspensao::ProcessKey (target fn 10419, slot 6): on keys 2, 5 and 13 it goes to

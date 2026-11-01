@@ -11,9 +11,9 @@
 # - comum::CItemImprimeEstadoUrna, CItemImprimeListaEleitores, CItemParametrosUrna and CItemVersoesPacotes: slot 2 (fns
 #   11669, 11668, 11667, 11666), in app/comum/informacao/citemmenu.cpp, whose note says what it rests on;
 # - four vota::CLogVota members these states and others call, in app/vota/log/clogvota.cpp (unit 119's file), after
-#   LogaPedidoTituloSuspensao: LogaImprimindoRelatorio (fn 1127), LogaMesarioIndagadoQualidadeBU (fn 4551),
-#   LogaQtdViasAdicionaisExcedeMaximo (fn 4556) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495), the last
-#   two thunks of the body binaryen merges from them (fn 6115).
+#   LogaPedidoTituloSuspensao: LogaImprimindoRelatorio (fn 1127), LogaQtdViasAdicionaisExcedeMaximo (fn 4556),
+#   LogaMesarioIndagadoQualidadeBU (fn 4551) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495), 4556 and
+#   2495 thunks of the body binaryen merges from them (fn 6115); 4556 sits above 4551, the order the target's band gives.
 # 156-uenux2-fimvotacao-bu-pending.cpp names the slots left as traps and what each waits for; the class heads say what
 # each layout rests on. The destructors are bodies other states share, so the match lines of 785 and 1560, and of 1284
 # and 2884, name this unit's symbols, the first in link order (docs/reference/facts/splat.md S6).
@@ -42,7 +42,7 @@
 # (build/out/wasm-map/vota_web/names.tsv names a byn$mgfn-shared$ body after LogaQtdViasAdicionaisExcedeMaximo).
 # Each is called on CLogVota::GetInst()'s result: 1127 by ten slots (12078 passes 3 and 1), 4551 by 12077 and 12078,
 # 4556 by 12027 and 12081, 2495 by 10466, 10473, 10477 and 10485. CRetirarMR::ProcessInput's record (78:19) is the
-# instance() call of CPolySingleton<comum::IInterfaceInit>: the 18 characters of ` bool ehDemo = ` before it are a
+# instance() call of CPolySingleton<comum::IInterfaceInit>: the 18 characters of `    bool ehDemo = ` before it are a
 # chosen spelling of that length.
 #
 # Not matched, with what it waits for:

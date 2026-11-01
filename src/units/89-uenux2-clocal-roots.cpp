@@ -52,8 +52,8 @@ const void* volatile clocal_sink;
 // Stands for fn 401's callers: 1543, 2725, 2753, 3798, 4160, 4161, 5579, 5584, 5591, 5604, 5977, 6599, 7787, 10313,
 // 10500, 10689, 10699, 10700, 10701, 11188, 11223, 11242, 11902, 11908, 12071, 12098, 12105, 12110, 12134.
 __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
-// 2838 and 5806: one call each, beside the written callers (5806 and 5807 for 2838, 2268 for 5806).
-__attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641 and 12742
+// 2838 and 5806: one call each, beside the written callers (5806, 5807 and 12742 for 2838, 2268 for 5806).
+__attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641
 __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
 __attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 5710, 5950, 7787, 11448 (2871 linked)
 __attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) + 2 * w2262(b); }
@@ -134,7 +134,7 @@ __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int part
     w2840(r, c, cargo);
     return w2271(c, cargo) + w1273(c, cargo, candidato);
 }
-// Stands for fn 5807's callers: 6076 and 12649 (CDataText<CCandidaturasDSNome>::GetText).
+// Stands for fn 5807's caller 6076 (its other, 12649, CDataText<CCandidaturasDSNome>::GetText, matches).
 __attribute__((noinline)) void NomesUrna(int r, int s, int a)
 {
     w5807(r, a);

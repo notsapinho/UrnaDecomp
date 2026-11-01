@@ -9,13 +9,12 @@
 # a file of its own beside the class's header, named after it (docs/how-to-decompile.md step 3, rule 4). Its siblings'
 # operators are in ccandidaturas.cpp, unit 89's, another choice; a definition there or in the class was not measured.
 #
-# Written and not matching (docs/how-to-decompile.md step 5): 12742 is `unresolved` on one operand, the end of
-# "{:0{}}", which in the target is the tail of "  {}{}{:0{}}" (address 1042, fn 11973's literal) and in our link a
-# string of its own. pnpm wasm score gave 16 over 214 rows, all operand-only, in the whole link before steps 7 to 9.
-# With that literal in a variant link (the plain link's command with one scratch object added that returns the
-# literal, docs/reference/facts/workflow.md W13 "One variant object in the whole link"), splat-remap of 12742 prints
-# `IDENTICAL` with its operand kinds verified, as it does for 12621 (unit 121's), which waits for the same literal. It
-# matches once fn 11973 is in the link.
+# 12742 matches since fn 11973 is in the link (unit 183): the end of its format string, "{:0{}}", is in the target the
+# tail of "  {}{}{:0{}}" (address 1042, 11973's literal). Without that literal it read `unresolved` on that one
+# operand, a string of its own in our link (pnpm wasm score: 16 over 214 rows, all operand-only, in the whole link
+# before steps 7 to 9), and a variant link that held the literal (docs/reference/facts/workflow.md W13 "One variant
+# object in the whole link") re-pointed it `IDENTICAL` with its operand kinds verified, as it did 12621 (unit 121's
+# row), which ends in the same literal.
 #
 # Chosen: the file's path, the local's name and type (uebyte, the byte the body reads).
 CCANDIDATURASDS_SRCS := src/app/comum/dados/ccandidaturasds.cpp

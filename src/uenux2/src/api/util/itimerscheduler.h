@@ -5,11 +5,11 @@
 // class with no base, and its two implementers simulador::CWasmTimerScheduler (vtable @1532172) and
 // api::CTimerScheduler (@1585396): slot 0 is the member that makes a timer and slots 1 and 2 the destructor. Slot 0's
 // shape is what fn 2024 passes: the result's address, this, a pointer to the 64-bit interval and a pointer to a
-// std::function<void ()> it destroys after the call. Its name is chosen. The callback is a const reference: fns 2024
-// and 5904 (IInputField's constructor, and BatteryIconDataSource's inlined into comum::CInfoMTLCD's) store the
-// interval's temporary before they build the std::function's, and 5904 then reuses the std::function's stack slot,
-// not the interval's, for the next temporary. Measured on api/gui/cpowerinformation.cpp's object: the const reference
-// gives both, and the parameter by value gives the other order and the other slot. The implementers' bodies are the
+// std::function<void ()> it destroys after the call. Its name is chosen. The callback is a reference: fns 2024 and
+// 5904 (IInputField's constructor, and BatteryIconDataSource's inlined into comum::CInfoMTLCD's) store the interval's
+// temporary before they build the std::function's, and 5904 then reuses the std::function's stack slot, not the
+// interval's, for the next temporary. Measured on api/gui/cpowerinformation.cpp's object: by value gives the other
+// order and slot; && gives the same object as const&, which is chosen. The implementers' bodies are the
 // same either way (fns 10846, 7871: they copy the callback into the timer). CreateInst's throw is the record at line 40; the
 // other lines of the class are a choice. CreateInst returns what GetInst returns: fn 5444 tail-calls fn 5443 and its
 // result is gone only because no caller reads it (how-to step 2).

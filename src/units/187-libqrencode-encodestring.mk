@@ -48,8 +48,8 @@
 #   api/ipc/posix/, before api/audio/alsa/cwavfile.cpp), where LINK_OBJS has no slot; it goes after RHVoice and zlib, as
 #   fragment 06 puts zlib. The companions' slot was measured too: with `override EXTRA_OBJS += $(QRENCODE_OBJS)` in
 #   place of the RHVOICE_OBJS line below (the objects between unit 17's roots and this unit's on the link line),
-#   make -C src link, census, splat-symbols and splat-match printed 10539 matches, the same 17 added and 0 renamed, so
-#   none left; there our .bss puts generator - 62 in unit 17's roots sink, which step 8 names at the target's 0x1d2510.
+#   make -C src link, census, splat-symbols and splat-match printed 10539 matches, 17 added and 0 renamed: the same 17
+#   as here, line for line, so none left; there our .bss puts generator - 62 in unit 17's roots sink, which step 8 names at the target's 0x1d2510.
 # - The roots. In the whole link binaryen's dead-argument pass folds 5502's constants down to Split_eat8, as in the
 #   target, whose 5348 has no hint parameter; the probe keeps it (117 over 315 rows there, 3 over 224 operand-only rows
 #   in the link).

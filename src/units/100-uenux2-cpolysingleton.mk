@@ -34,9 +34,10 @@
 #   7506, comum::IEventosLog's __get_deleter, comes from clogvota.cpp.o, whose CLogVota::GetInst builds the block through
 #   set (unit 119), so it has no w100_bloco.
 #   New heads, a virtual destructor alone: vota::IAjusteInicial, vota::impl::ISincronismoVotoEleitor,
-#   vota::testeteclado::impl::IGeradorTeclas, comum::impl::IValidaMidia, api::IFingerPrepare and
+#   vota::testeteclado::impl::IGeradorTeclas, api::IFingerPrepare and
 #   ecourna::api::security::ISymmetricCipherFactory (vota::IExecucaoVota and vota::impl::IPoliticaExecucaoEleitor were
-#   too, and unit 165 declares them whole), each path chosen, beside the file whose record
+#   too, and unit 165 declares them whole; so was comum::impl::IValidaMidia, and unit 179 gives it slots 2 to 9), each
+#   path chosen, beside the file whose record
 #   names the class where one does. The destructor's slot is __on_zero_shared's offset: 4 for most, so they declare it first.
 # The same objects give 403 (std::operator""s), 429 and 430 (__format_arg_store); libc++ gives 251
 # (condition_variable::wait), and __cxa_demangle, which demangle calls, brings in the libc++abi demangler. 6222 is the

@@ -8,8 +8,9 @@
 # 5904 holds BatteryIconDataSource<Vertical>'s constructor (unit 164's cpowerinformation.cpp), which binaryen inlines
 # into it, its one caller, and 5904 and 5903 hold IObservable::Attach (api/pattern/iobservable.h), which clang inlines.
 # Both match: pnpm wasm score gave 15 over 301 rows (5904) and 2 over 56 (5903), all operand-only, in the whole link
-# before steps 7 to 9, with api::ITimerScheduler::CreateTimer's callback a const reference (api/util/itimerscheduler.h
-# says what 5904 shows of it); with the callback by value, 5904 was 24 over 306 rows (5 inserted, 3 deleted). The roots
+# before steps 7 to 9, with api::ITimerScheduler::CreateTimer's callback a reference (api/util/itimerscheduler.h
+# says what 5904 shows of it; const& is chosen, && gives the same object); with the callback by value, 5904 was 24
+# over 306 rows (5 inserted, 3 deleted). The roots
 # file stands for the callers of both, none written.
 # The destructor (5902) matches since unit 164. The target's 5902 calls the member's destructor out of line, fn 3837, a
 # thunk of binaryen's 6049 (`f6049(p0, 1551916)`, the BatteryIconDataSource<Vertical> vptr), a merge with the other

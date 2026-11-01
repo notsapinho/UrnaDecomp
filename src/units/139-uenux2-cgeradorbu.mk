@@ -31,7 +31,7 @@
 # - fn 5613 is fn 604's body over a source passed by value: in the whole link pnpm wasm score gives it 12 rows over 232,
 #   all operand-only, before steps 7 to 9. Its definition outside the class or inside it gives the same rows (the roots
 #   object, masked). It needs CPadDS's and CToUpperDS's layout (app/comum/dados/ccargods.h, unit 129, says what gives
-#   it), and its instance brings CDataText<CPadDS<...>>'s vtable, so GetText (fn 11247) is in the link: it differs (unit
+#   it), and its instance brings CDataText<CPadDS<...>>'s vtable, so GetText (fn 11247) is in the link: it matches (unit
 #   129's fragment says how). The control block of that CDataText (11246) comes from this instance now: unit 102's
 #   dropped builder for it, which stood for 5613, is gone, and unit 129's stand-in for 11247 too.
 #

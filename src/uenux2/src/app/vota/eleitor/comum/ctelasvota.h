@@ -19,7 +19,8 @@ namespace vota {
 // one at +148, and the zeresima states' (fns 5965, 11945 and 5957) those at +212, +220 and +228. Four GetInst copy one
 // more each, right after CTelasVota::GetInst() (fn 407): vota::CAplicacaoEncerrada's (fn 3877) the one at +36,
 // vota::CExibeAlertaDesligamento's (fn 5979) +44, vota::CConfirmaImpressaoZeresima's (fn 5959) +52 and
-// vota::CInstrucaoVotacaoAcessibilidade's (fn 4420) +124. The getters' names, and that they are getters, are chosen.
+// vota::CInstrucaoVotacaoAcessibilidade's (fn 4420) +124. vota::CLimiteCopiasBUAtingido's constructor (its GetInst
+// inlined into fn 12023) copies the one at +108. The getters' names, and that they are getters, are chosen.
 // GetTelaCargo is the record's (1536832, ctelasvota.cpp:3534), defined in ctelasvota.cpp.
 class CTelasVota {
 public:
@@ -38,8 +39,6 @@ public:
     const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
     const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
     const CFormInterativoTelaVota& GetTelaQuerImprimirZeresima() const { return m_tela28; }
-    // vota::CLimiteCopiasBUAtingido's constructor (its GetInst inlined into fn 12023) copies the one at +108; the name is
-    // chosen, as the others' are.
     const CFormInterativoTelaVota& GetTelaLimiteCopiasBUAtingido() const { return m_tela13; }
 
 private:

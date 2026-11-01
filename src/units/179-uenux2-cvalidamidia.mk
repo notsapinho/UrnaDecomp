@@ -10,7 +10,7 @@
 #   so the class has no data member. Slots 0 and 1 are binaryen's shared bodies (a destructor that destroys nothing).
 # - fn 11173 calls slot 3 through the vtable (+12) with a 16-byte frame, its result's address (+8) first and its own two
 #   arguments after this, and returns the result's byte at +0: slot 3 returns an 8-byte class by value (fn 11172 stores
-#   a byte at +0 and a word at +4 of it).
+#   a byte at +0 and a word at +4 of it). EhValida is written as that one call; no other form was compiled.
 # - Slot 3's arguments: 11172 holds the record of CFabricaConteudoMidiaStart::ConteudoIncializacao(const
 #   EAplicativosDeUrna, const EUrnaTurno) and tests its first argument against 1 to 20 and its second against 49 and 50,
 #   so slots 2 and 3 are typed with those two types (a reading; no other type was compiled).

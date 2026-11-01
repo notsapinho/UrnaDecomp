@@ -15,8 +15,8 @@
 # destructors the states with no data member share, and fn 7160, which holds GetInst inlined, frees the old object with
 # no call through the vtable: final (src/units/104-uenux2-app-vota-estados.mk has the shape).
 #  Chosen, no evidence names them: the codes' names (the columns leave 45 characters for each with the invocations
-# indented four columns and the codes qualified api::); the local egVota's type (a const reference; the record gives its
-# name only) and the CInformacaoEleicao local's name; an if/else over m_pNextState, where the target stores once after
+# indented four columns and the codes qualified api::); the local egVota's type (a const reference; the Assert text gives
+# its name only) and the CInformacaoEleicao local's name; an if/else over m_pNextState, where the target stores once after
 # a value block: the if/else gives the target's rows (before step 8, `pnpm wasm score` against the plain link: 31 over
 # 132 rows, all operand-only), and no other spelling was tried; `using namespace comum;`, which lets the Assert texts
 # spell the enumerators unqualified; the lines of the body above its records; the header's path beside the .cpp.

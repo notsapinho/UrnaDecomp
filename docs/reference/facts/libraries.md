@@ -485,7 +485,8 @@ says otherwise:
   (`splat/symbol_addrs.txt`). Our link has no slot among uenux2's objects; fragment 187 puts the objects after RHVoice
   and zlib. In the companions' slot instead (`override EXTRA_OBJS += $(QRENCODE_OBJS)` in place of fragment 187's
   `RHVOICE_OBJS` line, which puts them between unit 17's roots and unit 187's), `make -C src link`, `census`,
-  `splat-symbols` and `splat-match` printed 10539 matches, the same 17 added and 0 renamed.
+  `splat-symbols` and `splat-match` printed 10539 matches, 17 added and 0 renamed, and `splat/matched.txt` came out
+  line for line as in fragment 187's slot.
 - **The order inside the library**, in link order, where the target reads it: the uses==2 band 5352 and 5351
   (`qrinput.o`), 5350 (`bitstream.o`), 5349 (`qrspec.o`), 5348 (`split.o`), 5347 and 5346 (`mqrspec.o`); the uses==3
   band 3597 and 3596 (`qrinput.o`), then 3595 (`rsecc.o`); the uses==10 band 1254, then 1253 (`mmask.o`), so `mmask.o`

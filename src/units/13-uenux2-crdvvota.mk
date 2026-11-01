@@ -90,14 +90,14 @@
 #   rows (6 inserted, 6 deleted); as written it is byte-identical.
 # - The constructor (fn 5640) with MontaMapa (records :33 and :40; the record spells two lambdas, the inner one taking
 #   `auto it`), the map from each cargo to its election, which throws 4723 on an empty map and 4724 on a cargo in two
-#   elections. Written; the scan finds no body of ours for it (`no-candidate`), and `pnpm wasm score` gives 97 over 561
-#   rows (13 inserted, 30 deleted) in this link: the target keeps the new map's size in a local across the inserts,
-#   which only type-based aliasing allows here. With strict aliasing on comum/dados/md it re-points identical: in a
-#   private link with the 48 objects of that directory compiled with UENUX2_EXTRA=-fstrict-aliasing the score is 17
-#   over 548 rows, each one an operand (operator new, __cxa_allocate_exception, std::to_string, the error's
-#   constructor and typeinfo, CError's destructor slot, three strings and MontaMapa's two records), `pnpm wasm
-#   splat-remap` re-points the body IDENTICAL to 5640, and the splat build of that link verifies the 10541 match lines
-#   (5640 not among them).
+#   elections. It matches since comum/dados/md builds with strict aliasing (src/Makefile UENUX2_TBAA_DIRS): the target
+#   keeps the new map's size in a local across the inserts, which only type-based aliasing allows here. With
+#   -fno-strict-aliasing the scan found no body of ours for it (`no-candidate`), and `pnpm wasm score` gave 97 over 561
+#   rows (13 inserted, 30 deleted); in a private link with the 48 objects of that directory compiled with
+#   UENUX2_EXTRA=-fstrict-aliasing the score was 17 over 548 rows, each one an operand (operator new,
+#   __cxa_allocate_exception, std::to_string, the error's constructor and typeinfo, CError's destructor slot, three
+#   strings, MontaMapa's two records and the two throw codes 4723 and 4724, which the score reads as data addresses),
+#   and `pnpm wasm splat-remap` re-pointed the body IDENTICAL to 5640.
 # GetEleicao sits above MontaMapa, whose lines are its records'; Votos and the two Total sit below the constructor,
 # before the gap above GetVotos (record :113). The lines of GetEleicao, the constructor, Votos and the two Total are
 # chosen (no record names one).
