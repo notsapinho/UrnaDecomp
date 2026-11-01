@@ -16,7 +16,6 @@ void w1719(int) __asm__("_ZNSt3__26vectorIN5comum2md15CDadosCandidatoENS_9alloca
 int w2262(int) __asm__("_ZN5comum6CLocalC1Ev");
 int w2261(int) __asm__("_ZN5comum6CLocalD1Ev");
 int w5744(int) __asm__("_ZN5comum2md6CLocalD2Ev");
-int w3724(int) __asm__("_ZNK5comum2md6CLocal15GetContingenciaEv");
 void w5673(int) __asm__("_ZNK5comum2md6CLocal13ValidaCriacaoEv");
 int w1003(int) __asm__("_ZNK5comum6CLocal9GetZonaIDEv");
 int w1078(int) __asm__("_ZNK5comum6CLocal10GetSecaoIDEv");
@@ -73,7 +72,6 @@ __attribute__((noinline)) int Impedidos(int a, int b, int c, int d, int e)
 {
     return w5662(a, c, d, e) | (w5662(b, c, d, e + 1) + 2);
 }
-__attribute__((noinline)) int Contingencias(int a, int b) { return w3724(a) < w3724(b); }
 __attribute__((noinline)) void Valida(int a, int b)
 {
     w5673(a);
@@ -145,7 +143,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&IndicesFoto);
         clocal_sink = reinterpret_cast<const void*>(&ImpedidosP2);
         clocal_sink = reinterpret_cast<const void*>(&Impedidos);
-        clocal_sink = reinterpret_cast<const void*>(&Contingencias);
         clocal_sink = reinterpret_cast<const void*>(&Valida);
         clocal_sink = reinterpret_cast<const void*>(&Zonas);
         clocal_sink = reinterpret_cast<const void*>(&Secoes);
