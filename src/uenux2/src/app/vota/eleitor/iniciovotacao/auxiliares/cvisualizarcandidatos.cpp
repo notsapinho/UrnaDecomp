@@ -1,13 +1,141 @@
-// <stubs>
-// f11877 · 13 B · unmatched · placement: link order · name unknown
-// void f11877(i32) { ... }
+#include "app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.h"
 
-// f11876 · 927 B · unmatched · name unknown
-// void f11876(i32) { ... }
+namespace vota {
 
-// f2871 · 217 B · unmatched · placement: link order · name unknown
-// ? f2871(i32) { ... }
+CVisualizarCandidatos::CVisualizarCandidatos()
+    : comum::CAppState(EVENTO_ENTRADA)
+{
+}
 
-// f1279 · 139 B · unmatched · placement: link order · name unknown
-// ? f1279() { ... }
-// </stubs>
+CVisualizarCandidatos::~CVisualizarCandidatos() = default;
+
+CVisualizarCandidatos& CVisualizarCandidatos::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CVisualizarCandidatos());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CVisualizarCandidatos> CVisualizarCandidatos::s_inst;
+std::mutex CVisualizarCandidatos::s_mutex;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+} // namespace vota

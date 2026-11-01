@@ -36,7 +36,8 @@
 // StartStateAudio 11793, 333 B, which holds the record :41 of an anonymous-namespace GetCargoID; ProcessTickAudio 11790,
 // 131 B): 11791 waits for fn 455, CPolySingleton<api::IInputKbd>::instance, which has no name, and fn 1455
 // (CVotacaoStateAudio's, not written); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
-// std::function it builds; 11793 is not read here. ProcessInputAudio is the class's key function here.
+// std::function it builds; 11793 is not read here. The class's key function is its destructor, in
+// cconferevotoemcargo.cpp, so that object emits the vtable.
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/cconferevotoemcargo.h"
