@@ -15,10 +15,9 @@
 # - slot 32, GetTextWidth (9009), and the file-static ParaUtf8 it calls (5098), which converts the text's Latin-1 to UTF-8
 #   for js_measure_text_width and js_text; its second caller is slot 20 (9104).
 # - slot 20, DrawText into a rectangle (9104), is written and differs: its log line's `substr(0, 40)` on a temporary is
-#   C++23's `substr() &&` in the target, and its std::string appends stay calls, which the tree's -O3 gives (224 over 794
-#   rows there); -std=c++23 is not taken. A scratch link with this object at -O3 -std=c++23 leaves 97 of 747 rows of 9104, the order of the
-#   screen rectangle's selects, and every other match of the object IDENTICAL (docs/reference/facts/app-flags.md has the
-#   tree's flags; the measurement is not in a tracked file).
+#   C++23's `substr() &&` in the target, and its std::string appends stay calls, which the tree's -O3 and -std=c++23
+#   give. At those flags 97 of 747 rows differ (`pnpm wasm score`; 224 over 794 at -std=c++20), the order of the screen
+#   rectangle's selects.
 # - slots 22 and 24, DrawImage (9079, 9058), DrawMovie's shape over ImageSize. Same functions: the data held by `const
 #   std::vector<uint8_t>&` or `const auto`, `!largura || !altura` for the two tests. Not free: 9058 scales the natural
 #   width before the height; the other order differs.

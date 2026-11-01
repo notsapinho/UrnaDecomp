@@ -9,7 +9,11 @@
 # DoConverte (11379), CConversorSeguranca's DoDesconverte and DoConverte (11412, 11413). Data classes: the constructors of CAbrangencia (3739),
 # CSeguranca (3823), CIdentificacaoAgregada (5672), CDadoLocal (5632), and fn 591, the thunk of
 # CBaseError<comum::EUeComumMdError, {8900, 8950}>'s constructor, which 3739 and 3823 name. CConversorDadoCarga (11402)
-# is in unit 96's list, CConversorPartido (11459) in unit 45's.
+# is in unit 96's list, CConversorPartido (11459) in unit 45's. And libc++'s std::vector<char>::__assign_with_size with
+# __wrap_iter<const char*> (1158), the copy cconversorseguranca.cpp emits, which 11413 and unit 105's 9060 and 9062
+# call: it matches at the tree's -std=c++23, found by the scan's content pass. At -std=c++20 it merged with
+# roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the target's (the compare's operands and the
+# locals), and took that copy's name.
 # CMunicipio's constructor (3712) builds m_nome as the copying ecourna::api::util::CStringUtils::Trim's result (fn 1374,
 # declared by unit 112 in api/util/cstringutils.hpp; the target's call writes the result in place at +4), and matches
 # since; CConversorMunicipio::DoDesconverte (11378), 3 operand rows from the target, matched with it, its one call now
@@ -69,9 +73,6 @@
 # CSeguranca's vector is uebyte, the record's, and DoConverte makes a std::vector<char> of it for the OCTET_STRING.
 #
 # Written and not matched, and what each waits for:
-# - 1158, std::vector<char>::__assign_with_size with __wrap_iter<const char*>, `differs`. Ours merges with
-#   roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the target's (the compare's operands and the
-#   locals). 11413 matches over the name, which unit 105's 9060 and 9062 use too.
 # - 11401: unit 96's fragment.
 # - CSecaoEleitoral's constructor in csecaoeleitoral.cpp (records :34 to :41), which binaryen inlines into 11453,
 #   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what it waits for.

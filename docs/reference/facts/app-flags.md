@@ -17,7 +17,7 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, not reconstructed) | `-Oz -fexceptions` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -275,7 +275,7 @@ So a table read with an `i32.add` proves nothing, and neither does one function'
 12's externs included. The `-roots.cpp` files are stand-ins and compile with `APP_CXXFLAGS`. Why the package differs from conan's default
 `fPIC=True` ([libraries.md](libraries.md) §B1) is not known: the target shows the result, not the reason.
 
-## F6. uenux2: `-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`
+## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`
 
 Compared on three reconstructed units (`api/util/cwait.cpp`, `api/io/cinikey.cpp`,
 `api/ipc/posix/cposixmutex.cpp` + `cposixsemaphore.cpp`; 13 target functions), each flag set in a private
@@ -297,9 +297,15 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   inlining thresholds differ, so a body can separate them with no loop ([levels.md](levels.md) §V2 has the remarks and
   what to read first on a body that differs in what is inlined). With the tree at -O3 every match holds and 25 rows more
   match, among them the bodies that call `std::string::append` where -O2 inlines it ([levels.md](levels.md) §V3).
-- **`-std=c++20` is ecourna's measurement, carried over.** F1's 3703 is an ecourna function; no uenux2 function decided
-  uenux2's `-std`.
-- **`-std=c++23` is not the tree's setting**: one written body, 8799, needs it ([levels.md](levels.md) §V3).
+- **`-std=c++23`, decided on the whole tree.** uenux2 first took `-std=c++20` from ecourna's measurement (F1's 3703 is
+  an ecourna function, and ecourna stays there). At 84f5d8d the whole tree at `-std=c++23` lost no match and matched
+  three rows more: 8799 (`CWasmScreenMT::ShowText`, an rvalue `substr`) and two of libc++'s `__assign_with_size` copies
+  that uenux2 objects emit (1158, 1872). The target also holds libc++'s C++23-only `__escaped_output_table` (§V3 of
+  [levels.md](levels.md) has the measurement and the commands). One `-std` for the whole tree is still a reading: no
+  site tells one directory from another.
+- **The stand-ins keep `-std=c++20`.** At `-std=c++23` too they move no row, but `roots_ecourna.o`'s
+  `vector<unsigned char>` instance of `__assign_with_size` then merges with comum's copy and gives 1158 its name
+  ([levels.md](levels.md) §V3).
 - **The executable TU is not uenux2's set.** `wasm/vota_web/vota_web_wasm.cpp`, not reconstructed, is compiled
   `-Oz -fexceptions`, and the linkonce copies it emits are the ones the target kept ([levels.md](levels.md) §V1).
 - **-fPIC** removes the last structural rows of all three ctors.
@@ -339,7 +345,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   reload are 10276, 10289 and 11383. 11383 matches, unit 107's, and the other two are `no-candidate`: writing 10289 and
   measuring it both ways is the test.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
-  without the flag, and at -O2, the level the stand-ins were measured at, where the tree builds at -O3; the units'
+  without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
+  (the bullet above); the units'
   pending files build at `UENUX2_CXXFLAGS`, the tree's own set. With the flag, six matches stop verifying: 152, 1383,
   1527, 3501, 3639 and 5150, libc++ templates (`std::__tree`, `__split_buffer`, `operator>>`) whose winning copy comes from
   `app/roots_rhvoice.o` or `app/roots_boost.o` (`build/out/wasm-map/vota_web/names.tsv`'s object column). The target's

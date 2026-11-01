@@ -11,11 +11,11 @@ shows it, as for `-fPIC`; the per-flag measurements are in
 
 | tree | sources | flags | set in | evidence |
 | --- | --- | --- | --- | --- |
-| uenux2 | `src/uenux2/` | `-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` | `UENUX2_CXXFLAGS` in `src/Makefile` | facts §F6 (PIC and aliasing); the level, measured on the whole tree: [facts/levels.md](facts/levels.md) §V3; `-std=c++23` is not taken; `-std` and `-DNDEBUG` are ecourna's measurement (§F1), carried over; exceptions below |
+| uenux2 | `src/uenux2/` | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` | `UENUX2_CXXFLAGS` in `src/Makefile` | facts §F6 (PIC and aliasing); the level and the `-std`, each measured on the whole tree: [facts/levels.md](facts/levels.md) §V3; `-DNDEBUG` is ecourna's measurement (§F1), carried over; exceptions below |
 | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` | not reconstructed | `-Oz -fexceptions` | nowhere: no setup has these flags | [facts/levels.md](facts/levels.md) §V1: the inline members of a class whose typeinfo sits in its data are its copies |
 | ecourna | `src/ecourna/` | `-O3 -fexceptions -std=c++20 -DNDEBUG`, no `-fPIC` | `ECOURNA_CXXFLAGS` in `src/Makefile` | facts §F1, §F5 |
 | ecourna, every unit | | `+ -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow` | `src/mk/ecourna-flags.mk` | facts §F2, §F3, §F4 |
-| the stand-in and roots TUs (`src/app/`, `src/web/`, the units' `-roots.cpp`), but for `src/app/roots_cbasetype.cpp` and unit 113's roots, at `UENUX2_CXXFLAGS` | | `APP_CXXFLAGS` = `UENUX2_CXXFLAGS` at `-O2` and without `-fno-strict-aliasing`; `APP_CFLAGS` for the generated C roots | `src/Makefile` | they stand in for app code; the library templates they instantiate win the link, and the target's copies have TBAA (facts §F6) |
+| the stand-in and roots TUs (`src/app/`, `src/web/`, the units' `-roots.cpp`), but for `src/app/roots_cbasetype.cpp` and unit 113's roots, at `UENUX2_CXXFLAGS` | | `APP_CXXFLAGS` = `UENUX2_CXXFLAGS` at `-O2`, `-std=c++20` and without `-fno-strict-aliasing`; `APP_CFLAGS` for the generated C roots | `src/Makefile` | they stand in for app code; the library templates they instantiate win the link, and the target's copies have TBAA (facts §F6) |
 
 Both trees also take a `-ffile-prefix-map` that puts the original build directory into their `std::source_location`
 records (below). `make -C src print-ECOURNA_CXXFLAGS` and `print-UENUX2_CXXFLAGS` print the values in effect;
@@ -27,9 +27,10 @@ an `assert`; the flag is pinned by the missing `__assert_fail` import, [facts/to
 recorded, changed 11 bytes of one libc helper and nothing of the units. Visibility on its own does change ecourna:
 with `ECOURNA_EXTRA=-fvisibility=default` all 82 of its objects differ and 4 matches break
 ([facts/app-flags.md](facts/app-flags.md) §F5, §F9 item 9). `-std=c++23` is excluded for ecourna: it changes
-`EncodeBase64(...).substr(0, 8)` in function 3703 through C++23's rvalue `substr() &&` overload. uenux2 takes
-`-std=c++20` from that ecourna measurement; its own function 8799 differs at the tree's flags and matches with
-`-std=c++23`, which the tree has not taken ([facts/levels.md](facts/levels.md) §V3). `-std=c++17` does not
+`EncodeBase64(...).substr(0, 8)` in function 3703 through C++23's rvalue `substr() &&` overload. uenux2 took
+`-std=c++20` from that ecourna measurement until the whole tree was measured at `-std=c++23`: no match lost, and its
+own function 8799 (the same rvalue `substr`) and two libc++ copies its objects emit match ([facts/levels.md](facts/levels.md)
+§V3). The stand-ins stay at `-std=c++20` (same section). `-std=c++17` does not
 compile the code (`std::source_location` and class-type template parameters are C++20).
 
 ## The error records are `std::source_location`, not a macro

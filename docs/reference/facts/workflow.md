@@ -21,7 +21,7 @@ line:
 
     node --version                                    # v26.11.1
     TMPDIR=/tmp tools/round/try-tu.sh --single 5468 --extract 'export:_ZNK3api12CGenericTags7TagSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE' src/uenux2/src/api/util/cgenerictags.cpp
-      flags: -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing … -fignore-exceptions
+      flags: -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing … -fignore-exceptions
       tools/round/try-tu.sh: line 47: 67368 Abort trap: 6           pnpm exec tsx src/cli.ts "$@"
     brew --prefix node@24                             # /opt/homebrew/opt/node@24
     PATH="/opt/homebrew/opt/node@24/bin:$PATH" node --version    # v24.22.2

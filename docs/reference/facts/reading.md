@@ -11,7 +11,7 @@ source form compiles to (the order of a body's stores, a switch over virtual slo
 `inline` one) is in [codegen.md](codegen.md).
 
 The probes are short TUs compiled by the pinned em++ with uenux2's flags of the time, `-O2 -fPIC -std=c++20 -DNDEBUG
--fno-strict-aliasing` (the tree builds at `-O3` since: `docs/reference/facts/app-flags.md` §F6); their sources are given in full, and each runs under
+-fno-strict-aliasing` (the tree builds at `-O3 -std=c++23` since: `docs/reference/facts/app-flags.md` §F6); their sources are given in full, and each runs under
 `build/out/reading-probe/`. R1–R3 and R7–R11 were measured at 7bf701e, R4–R6, R12 and R13 at ee595de, and the parts
 marked bb6f018 (R14 and R15 among them) at bb6f018; every probe prints the same at 0b5f410, where R13's shapes and
 R16–R18 were measured, and the parts marked 4487d6b and R19 at 4487d6b. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
