@@ -54,6 +54,11 @@ comum::CAppState& CControladorRegistraMesariosVota::Slot11() const
     return CRegistroMesarioEncerrado::GetInst();
 }
 
+void CControladorRegistraMesariosVota::Slot10() const
+{
+    EnviaMensagemEleitor(11);
+}
+
 comum::CAppState& CControladorRegistraMesariosVota::Slot12() const
 {
     return CFinalizaOperador::GetInst();
@@ -62,6 +67,11 @@ comum::CAppState& CControladorRegistraMesariosVota::Slot12() const
 const std::string& CControladorRegistraMesariosVota::GetTituloMesario() const
 {
     return CThreadOperador::GetInst().GetTituloMesario();
+}
+
+void CControladorRegistraMesariosVota::Slot15() const
+{
+    EnviaMensagemEleitor(7);
 }
 
 void CControladorRegistraMesariosVota::SetTituloMesario(const std::string& titulo)

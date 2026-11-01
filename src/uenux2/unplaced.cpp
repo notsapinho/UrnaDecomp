@@ -11,11 +11,6 @@
 // f7178 · 97 B · unmatched · placement: link order · name unknown
 // void f7178(i32) { ... }
 
-// link-order cluster 13 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmostratelacontinuavotacao.cpp
-
-// f7221 · 85 B · unmatched · placement: link order · name unknown
-// void f7221(i32) { ... }
-
 // link-order cluster 286 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
 
 // f10440 · 1876 B · unmatched · placement: link order · name unknown
@@ -918,11 +913,6 @@
 
 // f677 · 223 B · unmatched · placement: link order · name unknown
 // void f677(i32, i32, i32) { ... }
-
-// link-order cluster 1328 · uses=34 · neighbours' file uenux2/src/api/gui/cformbuilder.cpp
-
-// f501 · 217 B · unmatched · placement: link order · name unknown
-// void f501(i32, i32, i32) { ... }
 
 // link-order cluster 1358 · uses=65
 
