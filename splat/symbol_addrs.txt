@@ -35803,7 +35803,7 @@ _ZN5comum6CLocal7s_mutexE = 0x1c0f1c; // type:data size:0x18 evidence:callers+co
 _ZN5comum9CPartidos7s_mutexE = 0x1c0f38; // type:data size:0x18 evidence:callers+content CPartidos's mutex, unlocked by 819, 11499, 11501, 11502
 _ZN5comum9CPartidos6s_instE = 0x1c0f50; // type:data size:0x4 evidence:callers+content CPartidos's pointer, read by 819, 11499, 11501, 11503
 _ZN5comum6CFotos7s_mutexE = 0x1c0ee4; // type:data size:0x18 evidence:callers+content CFotos's mutex, unlocked by 2819, 3755, 11512, 12641
-_ZN5comum11CFederacoes7s_mutexE = 0x1c0e84; // type:data size:0x18 evidence:callers+content CFederacoes's mutex, unlocked by 2832 and 11552, the only target bodies that load 1838724
+_ZN5comum11CFederacoes7s_mutexE = 0x1c0e84; // type:data size:0x18 evidence:callers+content CFederacoes's mutex: GetInst (2832) unlocks it and its exit destructor (11552) destroys it, both through fn 150; no other target body loads 1838724
 # std::map's __tree::destroy of three element types. Each is a recursive body, so its only name would come from its own call, and its caller's row stops on it. Each body reads the
 # element it destroys: 1932 frees two strings at +24 and +36 of a node (md::CPartido: its word at +20, then the strings); 681 one string at +20 (the map of uedword to std::string);
 # 1709 calls 1719 at +80 and frees the strings at +28 and +40 and, under a flag at +64, at +52 (md::CCandidatura). 2815 and 3786 are their callers, their destructors' last calls.

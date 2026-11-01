@@ -21,7 +21,7 @@ namespace comum {
 // comum::CPartidos's and api::CDataMap's constructors take their name. GetFederacao (fn 5799) walks the vector by its
 // 40-byte stride and compares its argument, unmasked, with the 16-bit party numbers: a 16-bit integer parameter, not
 // ecourna's TPartidoID class, which the body would mask. Chosen: the word's type (size_t) and the data members' names,
-// GetFederacao's name, its parameter's type beyond those 16 bits (ueword), the singleton's statics' names, and a
+// GetFederacao's and GetInst's names, its parameter's type beyond those 16 bits (ueword), the statics' names, and a
 // private constructor from the name rather than a base class that holds the three members.
 class CFederacoes {
 public:
