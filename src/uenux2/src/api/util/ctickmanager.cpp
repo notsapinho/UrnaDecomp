@@ -1,5 +1,6 @@
 #include "api/util/ctickmanager.h"
 
+#include <cmath>
 #include <format>
 
 #include "api/util/eueutilerror.h"
@@ -7,7 +8,6 @@
 namespace api {
 
 namespace {
-
 // intervalo mínimo de um tick
 constexpr int MINIMO_MILISSEGUNDOS = 30;
 constexpr ueint64 MILISSEGUNDOS_POR_SEGUNDO = 1000;
@@ -101,6 +101,57 @@ inline uebyte CTickManager::SearchNextId()
         }
     }
     throw CUeUtilError(EUE_UTIL_TICK_SEM_ID_DISPONIVEL, "Não há mais id disponível para tick");
+}
+
+namespace {
+
+void NormalizaMicrossegundos(timeval& tempo)
+{
+    while (tempo.tv_usec >= MICROSSEGUNDOS_POR_SEGUNDO) {
+        tempo.tv_usec -= MICROSSEGUNDOS_POR_SEGUNDO;
+        ++tempo.tv_sec;
+    }
+}
+
+} // namespace
+
+std::vector<uebyte> CTickManager::GetExpiredTicks()
+{
+    std::vector<uebyte> vencidos;
+
+    timeval agora;
+    gettimeofday(&agora, nullptr);
+
+    for (auto& [id, tick] : m_ticks) {
+        if (tick.m_parado == 1) {
+            continue;
+        }
+        if (agora.tv_sec < tick.m_proximo.tv_sec || (agora.tv_sec <= tick.m_proximo.tv_sec && agora.tv_usec < tick.m_proximo.tv_usec)) {
+            continue;
+        }
+        vencidos.push_back(id);
+
+        timeval decorrido;
+        timersub(&agora, &tick.m_proximo, &decorrido);
+
+        const double intervalo = static_cast<double>(tick.m_milissegundos) / MILISSEGUNDOS_POR_SEGUNDO;
+        const double periodos = decorrido.tv_sec / intervalo;
+        const int periodosInteiros = static_cast<int>(periodos);
+        const double segundos = intervalo * periodosInteiros;
+
+        timeval incremento;
+        incremento.tv_sec = static_cast<int>(segundos);
+        const int restante = static_cast<int>(round(intervalo * (periodos - periodosInteiros) * MICROSSEGUNDOS_POR_SEGUNDO)) + decorrido.tv_usec;
+        const int intervaloMicro = tick.m_milissegundos * MICROSSEGUNDOS_POR_MILISSEGUNDO;
+        incremento.tv_usec = (restante / intervaloMicro + 1) * intervaloMicro + static_cast<int>(round((segundos - incremento.tv_sec) * MICROSSEGUNDOS_POR_SEGUNDO));
+        NormalizaMicrossegundos(incremento);
+
+        tick.m_proximo.tv_sec += incremento.tv_sec;
+        tick.m_proximo.tv_usec += incremento.tv_usec;
+        tick.m_proximo.tv_sec += tick.m_proximo.tv_usec / MICROSSEGUNDOS_POR_SEGUNDO;
+        tick.m_proximo.tv_usec %= MICROSSEGUNDOS_POR_SEGUNDO;
+    }
+    return vencidos;
 }
 
 } // namespace api

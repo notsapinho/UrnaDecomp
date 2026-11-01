@@ -14,10 +14,10 @@
 // w112_apara stands for the callers of the copying Trim (1374) not written: 2256 5343 5604 5896 11377. Two calls, for the same
 // reason. Without a second copying function 1879 stays a whole body: with this one binaryen forms the target's merge 3942.
 //
-// w112_apaga stands for the other callers of std::string::__erase_external_with_move (1136) not written: 654 1880 2626
-// 5497 5892. Trim alone is one call site, and binaryen then inlines the erase into Trim, 85 rows more than the target's
-// 9406. Two more callers, CStringUtils::RemoveZerosAEsquerda's two forms (3510, 5159), are in the link since unit 00
-// wrote them; the stand-in stays for the five that wait.
+// w112_apaga stands for the other callers of std::string::__erase_external_with_move (1136) not written: 2626 5497
+// 5892. Trim alone is one call site, and binaryen then inlines the erase into Trim, 85 rows more than the target's
+// 9406. Four more callers are in the link: CStringUtils::RemoveZerosAEsquerda's two forms (3510, 5159) and Split
+// (1880), unit 00's, and CTradutorFrase::Traduz (654), unit 98's; the stand-in stays for the three that wait.
 #include <string>
 
 #include "ecourna/api/util/cstringutils.hpp"

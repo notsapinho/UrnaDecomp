@@ -8,7 +8,7 @@
 //   to fn 3058, and their one direct caller, 11216, is unit 123's.
 // - every other function here is called directly, and gets more than one call site in our link, the unit's own callers
 //   and the other units' counted: Format (fn 706, 15 target callers: 5472, and two stand-ins for the others), CDate()
-//   (fn 1382: 1000 and a stand-in for 1543, 5586, 5626, ...), CDateTime::ConvertFromLocalTime (fn 5476: 1000 and a
+//   (fn 1382: 1000, 5626, unit 109's CEstadoGeralGap constructor, and a stand-in for 1543, 5586, ...), CDateTime::ConvertFromLocalTime (fn 5476: 1000 and a
 //   stand-in for 11862), CDateTime(time_t) (fn 1000: Now, 5472 and 5473, and a stand-in for 10870, ...),
 //   CDateTime::Now (fn 479, 33 target callers: 11198, and two stand-ins for the others), ConvertToLocalTime (fn 1381:
 //   unit 101's Ajusta, 10875, 10403, and a stand-in for 5841, 7160, 7306, 10710), CDateTime's operator+= (fn 2233,
@@ -18,12 +18,13 @@
 //   a stand-in for 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller
 //   7787 calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: 759, 11198 through
 //   comum::md::CHorarioVerao::Contem, and a stand-in for 1543, ...), CDateTime's (fn 759, 15 target callers: two
-//   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and two stand-ins for the others), CDate's operator+=
-//   (fn 5478: operator-= and a stand-in for 654) and operator- (fn 3648, callers 654, 11861, 11862: two stand-ins).
-// - the rest have two callers in the unit already and no stand-in: IsValidDate (fn 5479: 3649 and the check 5475
+//   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and two stand-ins for the others) and CDate's operator-
+//   (fn 3648, callers 654, 11861, 11862: 654, CTradutorFrase::Traduz, is in the link; two stand-ins for 11861 and 11862,
+//   which wait).
+// - the rest have two callers in the link already and no stand-in: IsValidDate (fn 5479: 3649 and the check 5475
 //   inlines), CDate(dia, mes, ano) (fn 2765: 5475, 5476 and 2233), CTime() (fn 2230: 1000 and 5475), operator-= (fn 5477:
-//   operator+= and operator-). IsValidDateTime is left unrooted: its only caller is 5475, into which the target's
-//   binaryen inlined it.
+//   operator+= and operator-), CDate's operator+= (fn 5478: operator-= and 654). IsValidDateTime is left unrooted: its
+//   only caller is 5475, into which the target's binaryen inlined it.
 // Each stand-in reads the result where a target caller does, passes its arguments through, and has a body no target
 // function has. Declared through asm labels with the object's signatures (a constructor returns `this`, a class returned
 // by value is the address of the result, a std::string passed by reference is its address); the callers are
@@ -34,7 +35,6 @@ extern "C" {
 void w706_format(void*, const void*, const void*) __asm__("_ZNK3api5CDate6FormatERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 int* w1382_hoje(void*) __asm__("_ZN3api5CDateC1Ev");
 int* w3649_data(void*, const void*) __asm__("_ZN3api5CDateC1ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void w5478_soma(void*, int) __asm__("_ZN3api5CDatepLEi");
 void w3648_menos(void*, const void*, int) __asm__("_ZNK3api5CDatemiEi");
 int w1261_compara(const void*, const void*) __asm__("_ZNK3api5CDatessERKS0_");
 void w479_agora(void*) __asm__("_ZN3api9CDateTime3NowEv");
@@ -67,11 +67,6 @@ __attribute__((noinline)) int DiaDeHoje()
 {
     int data[2];
     return *w1382_hoje(data) & 0xffff;
-}
-
-__attribute__((noinline)) void SomaDias(void* data, int dias)
-{
-    w5478_soma(data, dias + 1);
 }
 
 __attribute__((noinline)) void DiasAntes(void* resultado, const void* data, int dias)
@@ -169,7 +164,6 @@ struct SW125Roots {
         w125_sink = reinterpret_cast<void*>(&DataFormatada);
         w125_sink = reinterpret_cast<void*>(&DataFormatadaDuasVezes);
         w125_sink = reinterpret_cast<void*>(&DiaDeHoje);
-        w125_sink = reinterpret_cast<void*>(&SomaDias);
         w125_sink = reinterpret_cast<void*>(&DiasAntes);
         w125_sink = reinterpret_cast<void*>(&SemanaAntes);
         w125_sink = reinterpret_cast<void*>(&DataAnterior);

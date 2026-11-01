@@ -20,6 +20,8 @@
 //                       four): their addresses are taken
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
+//   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes
+//                       it): its address is taken
 // 273, 332 and 407 hold table slots 84, 86 and 108, so their addresses are taken. A destructor returns `this` in the object;
 // DestroiTodos drops it, which lets binaryen remove the result as the target's did. Bodies differ from every target
 // function's. Declared through asm labels with the object's signatures, so this TU instantiates nothing.
@@ -63,6 +65,7 @@ void w2825(int, int) __asm__("_ZN5comum10CEleitores25MarcaEleitorFoiHabilitadoER
 int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
 int w2264(int, int, int) __asm__("_ZN5comum10CEleitores15LocalizaEleitorERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
+void s11478(int) __asm__("_ZN5comum21LinhaRespostaCorrenteEv");
 }
 
 namespace {
@@ -145,6 +148,7 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);
         singletons_sink = reinterpret_cast<const void*>(&LocalizaEleitores);
+        singletons_sink = reinterpret_cast<const void*>(&s11478);
     }
 } singletons_roots;
 

@@ -4,7 +4,7 @@
 //
 // - vota::CInformacaoZeresimaTardia::ProcessInput (target fn 11982, slot 7, records cinformacaozeresimatardia.cpp:48
 //   and :51): reads the form through api::CInteractiveForm<api::IScreen, api::IInputKbd>::Read() (record
-//   cinteractiveform.h:57 @1543736, inlined) and calls fn 5446 (on the api::CWait at +16), which has no name.
+//   cinteractiveform.h:57 @1543736, inlined) and calls fn 5446 (api::CWait::Wait, unit 01, on the api::CWait at +16).
 // - vota::CConfirmaImpressaoZeresima::ProcessInput (target fn 11927, slot 7): the same Read() (record @1544768); it calls
 //   fn 491, which has no name, and holds vota::CImpressaoZeresimaTardia's GetInst inlined (unit 176's class, whose
 //   constructor copies a member of vota::CTelasVota that app/vota/eleitor/comum/ctelasvota.h has no accessor for).

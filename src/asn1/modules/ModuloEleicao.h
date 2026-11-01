@@ -984,7 +984,7 @@ public:
     class tipo
     {
     public:
-        typedef ModuloTiposEleitorais::Tipo value_type;
+        typedef ModuloTiposEleitorais::TipoCargoConsulta value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -994,7 +994,7 @@ public:
     tipo::const_reference get_tipo () const { return *static_cast<tipo::const_pointer>(fields[1]); }
     tipo::reference ref_tipo () { return *static_cast<tipo::pointer>(fields[1]); }
     tipo::reference set_tipo () { return *static_cast<tipo::pointer>(fields[1]); }
-    tipo::reference set_tipo (ModuloTiposEleitorais::Tipo::NamedNumber v)
+    tipo::reference set_tipo (ModuloTiposEleitorais::TipoCargoConsulta::NamedNumber v)
     { return *static_cast<tipo::pointer>(fields[1]) = v; }
 
     class numeroDigitos

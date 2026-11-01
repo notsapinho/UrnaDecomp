@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <emscripten/emscripten.h>
 #include <string>
 
@@ -17,6 +18,11 @@ public:
     static bool ExistFile(const std::string& arquivo);
     static bool ExistDir(const std::string& diretorio);
     static uedword GetFileSize(const std::string& arquivo);
+    // The record names four parameters, the target's type (fn 378) three: every caller passes the same value for one
+    // of the two bools, which binaryen's dead-argument elimination folds. Which bool that is, and both bools' names and
+    // meanings, are chosen (unit 32's fragment).
+    static void CopyFile(const std::string& origem, const std::string& destino, bool preservaAtributos, bool sobrescreve);
+    static void Rename(const std::string& origem, const std::string& destino);
     static void ZeroFill(const std::string& arquivo);
     // fn 2760 has no record: the name is chosen from what it does (ZeroFill unless the file is a symbolic link, then
     // remove).
@@ -36,5 +42,13 @@ public:
             emscripten_sleep(milissegundos);
     }
 };
+
+// Fns 5454, 5453 and 5463 have no record: their names are chosen from what they return (std::filesystem::space's free,
+// its capacity less its free, and the number on the line of /proc/meminfo that holds the field, MemTotal or MemFree in
+// 5463's one caller). They read no state of CSystem, so they are free functions; their namespace and this header are
+// chosen (unit 32's fragment says why).
+uintmax_t GetFreeSpace(const std::string& caminho);
+uintmax_t GetUsedSpace(const std::string& caminho);
+uedword GetMemInfo(const std::string& campo);
 
 } // namespace api

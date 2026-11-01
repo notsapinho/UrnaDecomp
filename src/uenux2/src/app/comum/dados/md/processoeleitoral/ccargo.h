@@ -31,6 +31,19 @@ public:
         CONSULTA,
     };
 
+    // comum::asn::CConversorCargo::DoDesconverte (target fn 11373) builds a CCargo in its result with one detail or the
+    // other, the other's flag cleared, then calls Valida (fn 5657) on it. Out of line (ccargo.cpp), each with one caller,
+    // which binaryen inlines: 11373 masks the bool with `& 1` where it stores it, and addresses the detail's copy from
+    // the optional's base, as a separate function's parameter and member give (in the class, 192 rows over 1026 differ).
+    // No record names them: two constructors, one per detail, and Valida called in their bodies are chosen, and so are
+    // the parameters' names.
+    CCargo(TCargoID id, ETipo tipo, ETipoAbrangencia abrangencia, uebyte numeroDigitos, TQtdEscolha qtdeEscolhas,
+           bool podeRepetir, uebyte ordemAquisicao, uebyte ordemImpressao, uebyte ordemApuracao,
+           uebyte paginaImpressaoVoto, const CDetalheCandidato& detalheCandidato);
+    CCargo(TCargoID id, ETipo tipo, ETipoAbrangencia abrangencia, uebyte numeroDigitos, TQtdEscolha qtdeEscolhas,
+           bool podeRepetir, uebyte ordemAquisicao, uebyte ordemImpressao, uebyte ordemApuracao,
+           uebyte paginaImpressaoVoto, const CDetalheConsulta& detalheConsulta);
+
     // The name is chosen: no record names this accessor.
     TCargoID GetID() const { return m_id; }
     // The names are chosen: comum::asn::CConversorEleicoesVota::DoConverte (fn 11350) reads the three fields.

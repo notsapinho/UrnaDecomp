@@ -45,9 +45,9 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 378, 491, 502, 620, 886, 1164, 1269, 1933, 1935, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782,
+// with no name: 491, 502, 886, 1164, 1269, 1935, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782,
 // 3825, 3826, 5462, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
-// 195's 5824 and 95's 3829, 5889, 5891 and 5905 among them).
+// 195's 5824, 95's 3829, 5889, 5891 and 5905, 32's 378 and 154's 620 among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
@@ -75,8 +75,8 @@ void CImprimindoBim::StartState()
 }
 
 // CImprimirBUOutrasObrigatorias::StartState: fn 12065 (1790 B), records cimprimirbuoutrasobrigatorias.cpp:50,
-// cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 185, 187, 202,
-// 203, 261, 407, 463, 491, 502, 886, 1127, 1191, 1880, 2244, 2291, 2890, 5918 (3701 is named: unit 93).
+// cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 491, 502, 886,
+// 2291, 2890; the others have names (3701 unit 93's, 1880 unit 00's).
 void CImprimirBUOutrasObrigatorias::StartState()
 {
     __builtin_trap();
@@ -107,15 +107,15 @@ void CMaisInformacoes::StartState()
     __builtin_trap();
 }
 
-// CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 187, 202, 203, 242, 267, 365,
-// 374, 502, 653, 861, 2383, 5951 (and unit 150's 1279; 576 has one since unit 165).
+// CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 374, 502, 653,
+// 2383; the others have names (365 since fragment 191, 1279 unit 150's, 576 unit 165's).
 void CMenuFiltrarCandidatosPorNumero::StartState()
 {
     __builtin_trap();
 }
 
-// CMenuFiltrarCandidatosPorNumero::ProcessInput: fn 11891 (999 B), callees with no name: 202, 203, 455, 521, 1401,
-// 2245, 5446, 5550, 5951 (and units 89's 1273 and 150's 1279).
+// CMenuFiltrarCandidatosPorNumero::ProcessInput: fn 11891 (999 B), every callee has a name (5446 unit 01's,
+// 1273 unit 89's, 1279 unit 150's).
 void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 {
     __builtin_trap();
@@ -174,8 +174,8 @@ void CCancelaHabilitacaoEleitor::StartState()
     __builtin_trap();
 }
 
-// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 654, 3625, 4578, 5424 (named: unit 152's 3624,
-// unit 174's 1688, unit 178's 2798, unit 110's 326 and 2264, unit 50's 1535).
+// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 3625, 4578, 5424 (named: unit 98's 654, unit
+// 152's 3624, unit 174's 1688, unit 178's 2798, unit 110's 326 and 2264, unit 50's 1535).
 void CProcuraEleitor::StartState()
 {
     __builtin_trap();

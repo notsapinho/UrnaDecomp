@@ -4,12 +4,12 @@ How the tools a decompile round runs behave where the obvious reading of a comma
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed file, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
 rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec and a
-table's rows, `-j` on the link, leaving a merge after step 9, the notes a merge makes stale, and a merge that fails to
-compile with no conflict.
+table's rows, `-j` on the link, leaving a merge after step 9, the notes a merge makes stale, a merge that fails to
+compile with no conflict, and what fails `pnpm test:bench`.
 `docs/how-to-decompile.md`, `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
 and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, W23 and
-W2's items 6 and 7 at c1b2630, W24 at the merges it names, on macOS
+W2's items 6 and 7 at c1b2630, W24 at the merges it names, W25 and the parts marked bbf27ac1 at bbf27ac1, on macOS
 (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH, and the symbol file a larger heap
@@ -179,6 +179,16 @@ ran `pnpm --silent wasm splat-review` under an exported PATH exited 134 in 0.9 s
        TMPDIR=/tmp tools/round/try-tu.sh --single 5801 --name d6l1 --extract export:_ZN5comum22CCargoDSLabelRelatorio16TotalVotoNominalEv src/uenux2/src/app/comum/dados/ccargods.cpp | /usr/bin/grep -E '^score|> i32.const 42$'
          score 191 over 259 rows (same 68, replaced 28 [18 operand-only], inserted 163, deleted 0)
                                                                   > i32.const 42
+
+   An accented character literal stops the compile, whichever function `--extract` names, since its three bytes do not
+   fit a `char` (bbf27ac1; `\307` is `Ç` in Latin-1):
+
+       mkdir -p build/out/lat && printf "int F() { return '\307'; }\n" > build/out/lat/c.cpp
+       TMPDIR=/tmp tools/round/try-tu.sh --name lat1 --single 9407 --extract export:_Z1Fv --component ecourna/api/util build/out/lat/c.cpp 2>&1 | /usr/bin/grep -m1 -o 'NoScorableCandidateError.*'
+         NoScorableCandidateError: no scorable candidate for 'fn9407': rejected: <compile-dir>/cand.cpp:1:18: error: character too large for enclosing character literal type
+
+   The same TU with `'\xC7'` compiles. Try a copy whose accented character literals are such escapes, and rank anything
+   else in the whole link.
 
 7. **Forms that differ in a stack slot score alike.** With callees inlined around it, a slot's offset is a few rows
    among hundreds: 4407 (`CInstrucaoVotacaoAcessibilidade` slot 15) scored `1123 over 1267` to `1225 over 1320` alone in
@@ -361,13 +371,13 @@ you read a count from it: an empty `join` or a `wc -l` of 0 says nothing until t
 
 ## W11. A match line whose symbol our link lacks stops `make -C src splat-match` before the stubs
 
-With a line `11470 _ZN3api15NotOurFunctionEv` appended to `splat/matched.txt` (11470 is a `no-candidate` row):
+With a line `7481 _ZN3api15NotOurFunctionEv` appended to `splat/matched.txt` (7481 is a `no-candidate` row):
 
     TMPDIR=/tmp make -C src splat-match                         # exit 2
       …/splat/matched.txt: 0 matches added, 0 renamed
-        line 7433: function 11470 matched to _ZN3api15NotOurFunctionEv: our link has no function _ZN3api15NotOurFunctionEv, and the scan matches 11470 with no other symbol; left as written, so the splat build fails on it
+        line 10952: function 7481 matched to _ZN3api15NotOurFunctionEv: our link has no function _ZN3api15NotOurFunctionEv, and the scan matches 7481 with no other symbol; left as written, so the splat build fails on it
       cd … && python3 -I -B tools/round/status.py
-      splat/scan.tsv has 7428 match rows but splat/matched.txt has 7429 matches (scan only: [], matched.txt only: [11470]); run TMPDIR=/tmp make -C src splat-match
+      splat/scan.tsv has 10947 match rows but splat/matched.txt has 10948 matches (scan only: [], matched.txt only: [7481]); run TMPDIR=/tmp make -C src splat-match
       make: *** [splat-match] Error 1
 
 The recipe is the scan, then `status.py`, then `stubs.py` (`src/mk/splat-sub.mk`, `splat-match:`): the scan writes
@@ -376,10 +386,10 @@ file that differs from what the new scan gives, and only then reports the disagr
 (`tools/round/status.py`, the end of `main`), so after a scan that changed, README.md, docs/status.md and the waffles
 are rewritten while the stubs are not. Deleting that one line and running the target again:
 
-    /usr/bin/grep -v -x -F '11470 _ZN3api15NotOurFunctionEv' splat/matched.txt > build/out/workflow-facts/matched.txt && mv build/out/workflow-facts/matched.txt splat/matched.txt
+    /usr/bin/grep -v -x -F '7481 _ZN3api15NotOurFunctionEv' splat/matched.txt > build/out/workflow-facts/matched.txt && mv build/out/workflow-facts/matched.txt splat/matched.txt
     TMPDIR=/tmp make -C src splat-match                         # exit 0
       …/splat/matched.txt: 0 matches added, 0 renamed
-      7428 matches (0 kind-unverified); README.md, docs/status.md and the waffles agree with splat/scan.tsv
+      10947 matches (0 kind-unverified); README.md, docs/status.md and the waffles agree with splat/scan.tsv
       0 files written
     git status --short                                          # (nothing)
 
@@ -466,8 +476,16 @@ One more way a run alone can mislead (bb6f018):
 - **An RPC timeout exits 1 with every case passed.** `Errors  1 error` with `Error: [vitest-worker]: Timeout calling
   "onTaskUpdate"` beside `Tests  242 passed (242)` is vitest's worker, not a case. It is no load effect: two runs alone
   at a load average of 2.5 failed so, and a rerun is often no cleaner. `test/splat-symbols.test.ts` is the long file
-  (about 62 s, two cases near 16 s each). Report the counts (every file and case passed, none skipped) and the error as
-  the harness's; a clean run, when one comes, is worth reporting beside them.
+  (about 62 s on the MacBook, 61 to 79 s on the Mac mini, two cases near 16 s each), and its cases do not yield to
+  the worker's 60 s RPC timer, so it errs alone on an idle machine. Report the counts (every file and case passed, none
+  skipped) and the error as the harness's. Its two halves by test name, each under 60 s, give a run with no error (at
+  bbf27ac1, from `asmlift-wasm/`):
+
+      A='^(resolveRepointed|compareObject|srclocAnchors|remapBody|loadOurSide|parseLinkMap) '
+      TMPDIR=/tmp pnpm --silent exec vitest run test/splat-symbols.test.ts -t "$A" 2>&1 | /usr/bin/grep -E 'Tests |Errors'
+            Tests  16 passed | 54 skipped (70)
+      TMPDIR=/tmp pnpm --silent exec vitest run test/splat-symbols.test.ts -t '^(?!(resolveRepointed|compareObject|srclocAnchors|remapBody|loadOurSide|parseLinkMap) )' 2>&1 | /usr/bin/grep -E 'Tests |Errors'
+            Tests  54 passed | 16 skipped (70)
 - **A suite with no build outputs fails three cases unmutated.** So a mutant run that takes a non-zero exit as
   "caught" cannot lose. Take the failing names of the clean tool first, and count a mutant caught only by a name outside
   them (4487d6b, from `asmlift-wasm/`):
@@ -548,7 +566,22 @@ OpenSSL user (ecourna's security TUs, unit 102's roots) reads `build/out/openssl
 `openssl/configuration.h`, and without it stops on `opensslconf.h:14:11: fatal error: 'openssl/configuration.h' file not
 found`. Unit 102's line, from `make -n -C src link -W $PWD/src/units/102-uenux2-control-blocks.mk`, reads `-Isrc
 -Isrc/uenux2/src -Isrc/asn1 -Ibuild/out/openssl/O3/include -Ithird_party/openssl/include
--Ithird_party/RHVoice/src/include`. And `roots_asn1.o`, which every fragment edit rebuilds, compiles
+-Ithird_party/RHVoice/src/include`. Mount `tools/` as well for three tree roots, which include a file of it by a path
+relative to the source that no `-I` names (bbf27ac1):
+
+    /usr/bin/grep -n '#include "\.\./\.\./tools' src/app/roots_*.cpp
+      src/app/roots_7zip.cpp:7:#include "../../tools/libs/7zip/driver.cpp"
+      src/app/roots_boost.cpp:5:#include "../../tools/libs/boost/probe.cpp"
+      src/app/roots_rhvoice.cpp:5:#include "../../tools/libs/rhvoice/driver.cpp"
+
+For a range that rebuilds many objects, `make -n -B` over the list prints every one's compile line at once, and the
+lines of their prerequisites (the `build/out/app/asn1/` objects) beside them; keep those whose `-o` is listed. With
+the list in `build/out/workflow-facts/many.txt`, one path per line from the root:
+
+    make -n -B -C src $(sed "s#^#$PWD/#" build/out/workflow-facts/many.txt) | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -c -F -f build/out/workflow-facts/many.txt
+      2                                  (cwait.cpp.o and 02-uenux2-cthreadvota-roots.o)
+
+And `roots_asn1.o`, which every fragment edit rebuilds, compiles
 `build/out/app/asn1/roots_asn1.cpp`, a file `tools/round/gen_try_roots.py` writes: copy it from the checkout when the
 range changes no `ASN1_ROOTS_EXCLUDE`, else regenerate it with the base's excludes.
 
@@ -577,6 +610,14 @@ every tree, add the object before `app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o`
 
 A match line whose symbol is local, `<name>@<object>`, names the object's path, so a swapped object under another path
 loses it: `splat-build` on such a link needs a copy of the list with those keys rewritten to the new path.
+
+A scratch object that adds a literal for another body to share a tail with (how-to step 5) adds nothing unless code
+the link keeps references it: wasm-ld drops an unreferenced global and its string, and the remap then measures the
+link without it. Store it from a static constructor into a `volatile` sink, as a roots file does, and check that its
+bytes are in the wasm before reading the remap (bbf27ac1; `[]` when it is gone):
+
+    python3 -I -c "import re, sys; d = open('build/out/wasm/vota_web/vota_web_wasm.wasm', 'rb').read(); print([m.start() for m in re.finditer(re.escape(sys.argv[1].encode('latin-1') + b'\0'), d)])" 'Tipo inválido para urna de seção.'
+      [4878539]
 
 **Scan a variant with the committed symbol file.** `splat-symbols` reads the committed census, whose pairs are the
 plain link's indices, so a symbol file regenerated from a variant names the wrong functions. On [codegen.md](codegen.md)
@@ -672,8 +713,11 @@ so `find build/out/app -name '*.o' -newer .git` lists them. That prints nothing 
 nothing, and 48, 37, 38 and 48 objects in four lane worktrees whose units added headers, each the set that moving the
 objects aside and rebuilding recompiled. `find build/out/app -newer <header>` compares with that header's last edit
 and misses an object of the unit built before it (a roots object that includes nothing). An object that does not come
-back from the rebuild is a deleted file's (a lane removed its `-pending.cpp`): it is on no link line, and `cmp` is owed
-only for the objects `build/out/wasm/vota_web/link.cmd` names.
+back from the rebuild is one no rule of the link makes: a deleted file's (a lane removed its `-pending.cpp`), or a
+probe's compiled by hand from a file no fragment lists (`build/out/app/uenux2/src/api/util/cstringutils.cpp.o`, whose
+stub-only source no rule compiles: `make -s -C src print-LINK_OBJS | tr ' ' '\n' | /usr/bin/grep -c
+uenux2/src/api/util/cstringutils` prints 0 at bbf27ac1). It is on no link line, and `cmp` is owed only for the objects
+`build/out/wasm/vota_web/link.cmd` names.
 
 **What the `-W` list misses.** At 0b5f410:
 
@@ -729,7 +773,15 @@ list that holds its line twice, at ee595de, from the repository root:
     /usr/bin/grep -v '^#' splat/matched.txt | cut -d' ' -f1 | sort | uniq -d
       (nothing)
 
-So a landing keeps one line per index, under the symbol the merged link names, and counts that match once.
+So a landing keeps one line per index, under the symbol the merged link names, and counts that match once. A local
+symbol's line, `<name>@<object>`, is two columns of `names.tsv`, so a search of the name column for the whole line
+finds nothing; the check joins them (bbf27ac1, after step 9's link map):
+
+    s='strtox@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc.a(strtol.o)'
+    awk -F'\t' -v s="$s" '$2 == s || $2 "@" $3 == s' build/out/wasm-map/vota_web/names.tsv | wc -l
+      1
+    awk -F'\t' -v s="$s" '$2 == s' build/out/wasm-map/vota_web/names.tsv | wc -l
+      0
 
 ## W17. A header added on two branches as the same blob merges with no conflict
 
@@ -836,11 +888,15 @@ link for calls does not find. The merge's new indices against the comments of `s
 the merge's first parent) as the base:
 
     comm -13 <(git show main:splat/matched.txt | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort) > build/out/<handle>/new.idx
-    LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/new.idx src/units/*.mk src/units/*.cpp
+    LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/units/*.mk src/units/*.cpp src/units/README.md src/app/*.cpp docs
 
-Against 05fe923, c1b2630's 84 new indices give 140 lines, each to read: an index also matches a line number or a size.
-Search the trees' comments for the indices of the classes the merge touched too. A stand-in found so goes when a link
-without it moves no row (W13, "One variant object in the whole link").
+The tree roots in `src/app/` hold stand-ins too (`roots_ecourna.cpp`'s for unit 00), and the units README's rows and
+the docs' examples name indices. With 9202406 as the base, bbf27ac1's 82 new indices give 228 lines in `src/units/`'s
+companions and fragments and 277 with the rest, each to read: an index also matches a line number or a size. Search
+the trees' comments for the indices of the classes the merge touched too. A stand-in whose callers are now all in the
+link goes in the merge; one found otherwise goes when a link without it moves no row (W13, "One variant object in the
+whole link"). A lane runs the same search on its own new indices before it commits, and fixes what it finds, comment
+lines only, in files it claims (how-to step 10).
 
 ## W24. A merge can fail to compile where no line of either side conflicts
 
@@ -861,3 +917,35 @@ Three ways, each met at a landing (the commits are the merged branch and the `ma
   `iinputfield.h` reads `enum EInputResult : int {`); of the 373 objects `make -n` listed, 362 compared equal with the
   build before the merge, and the 11 that differ are the branch's own and two that gain its members
   ([../../agents.md](../../agents.md) "Shared build outputs" has the comparison).
+
+## W25. `pnpm test:bench`: what fails it, and what each takes
+
+`pnpm test:bench` (from `asmlift-wasm/`) passes 41 cases at bbf27ac1. Besides a flag a fragment adds, the frozen
+dataset (`asmlift-wasm/benchmark/dataset/`) fails it on these, each named by its message:
+
+| what changed | what fails | what it takes |
+| --- | --- | --- |
+| a setup's own flags (a tree's flag, `setups.json` changed with the Makefile) | `finds every row's setup in the registry with its flags` on every row of the setup (`setup 'uenux2' compiles c++ with …, the row says …`) | a re-selection, in the commit after the flag's |
+| a flag that moves a row's object to another setup | the same case, `… now compiles under setup …, the row says …` | a re-selection |
+| a symbol a row names renamed | `finds every symbol row's symbol defined by its object` (`… no longer defines …`) | a re-selection |
+| a setup added | `has rows from every setup of the registry` (`<setup>: expected 0 to be greater than or equal to 5`) and `renderBenchReport > writes a table row for every setup` (`Cannot read properties of undefined (reading 'rows')`: the baseline has no totals for it) | a re-selection, or five rows by `pnpm bench add <index>` and a new baseline (`pnpm bench run --label baseline`) |
+| a setup retired or merged into another | the rows that still name it | a re-selection |
+
+`pnpm bench select --write` refuses an uncommitted ledger, registry or `src/`, so the re-selection is a commit of its
+own after the change, the change's commit fails those cases (its message says so), and a merge that takes `main`'s
+dataset fails them until one re-selection after the batch's last merge: the cases of a setup added, or the rows naming
+one retired ([asmlift-wasm/benchmark/README.md](../../../asmlift-wasm/benchmark/README.md) "Re-selecting" has the
+order of the commits).
+
+Two failures are no change of the branch's:
+
+- **`exec /emsdk/docker/entrypoint.sh: argument list too long`** (status 255), in `finds every symbol row's symbol`
+  and, with a definitions cache keyed on another registry, both `buildRow` cases too. Before f4a5ed0,
+  `buildDefinitions` put every link input's path twice into one `sh -c` string, which passed the 131072 bytes Linux
+  allows one argument once the link had about 985 inputs; since f4a5ed0 the list goes as the script's arguments. A
+  branch cut before it fails so on a merge that grows the link.
+- **A tree CI does not have.** CI runs `test:bench` and `pnpm bench setups --check` in a fresh clone that holds only
+  the `third_party/` trees `.github/workflows/ci.yml` fetches (zlib and libqrencode at bbf27ac1), and the benchmark's
+  `make -n -B` over the make setups' objects stops on a rule that reads another (`No rule to make target
+  '…/third_party/libqrencode/qrencode.h'`). Every local check passes, since the checkout holds every tree. The fetch
+  goes in the commit that reads the tree ([libraries.md](libraries.md) §B11 item 2).

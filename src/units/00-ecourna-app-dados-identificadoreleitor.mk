@@ -25,7 +25,7 @@
 # - PreencheADireita(const std::string&, char, size_t) (fn 1881) pads a copy on the right; its five callers pass ' '
 #   (folded) and roots_ecourna.cpp's UsaPreencheCopiaA and B stand for them.
 # The bands give the order: in uses 3, read in link order, 3512, 3511, 3510, 3509, then ToInt16 (3508), so 3512 sits
-# above PreencheADireita and 3510 below it (3509, not written, reads as the upper-case counterpart of ToLower: a reading
+# above PreencheADireita and 3510 below it (3509, ToUpper in place, below, is the upper-case counterpart of ToLower: a reading
 # of its body). In uses 2, 5159 comes right before 5158, and in uses 6, 1881 before 1880 and 1879: 5158 and 1879 are the
 # two ToLower that src/units/12-ecourna-api-sql-sqlite-externs.cpp holds for this file, so neither band has a neighbour
 # in this object, and 5159 and 1881 sit beside their in-place forms by choice.
@@ -41,6 +41,53 @@
 # (n << 2) - ((n / 3) << 3), and base64.cpp's `(n / 3 + n % 3) * 4` compiles to an i32.mul of n / 3 by 3 (so do
 # `4 * (...)`, the terms swapped, `n / 3 * 4 + n % 3 * 4` and `n % 3` written out); `(n - n / 3 * 2) * 4` computes both
 # without one (base64.cpp's object, instruction kinds only). base64.cpp stays as it was until 3703's class is written.
+#
+# CStringUtils' string members, all matched but FindRegex, none named by a record, so every name below, each being a
+# CStringUtils member and each one's line is chosen; the overloads follow Trim's pair and unit 12's Replace. That their
+# file is this one is a reading of the bands (ledger/ordinals.tsv), as for the zero helpers above: in uses 3, 3509 lies
+# between 3510 and 3508; in uses 6, 1880 between 1881 and 1879; in uses 5, 2199 right after 2200; in uses 1, 9407 right
+# before 9406 (Trim), and the Boost.Regex code 2199 calls (9399 to 9401) between 9402 and 9398, the static destructor and
+# Replace of unit 12's externs. ToUpper's static set and guard (1911820, 1911832) sit right before ToLower's (1911836,
+# 1911848) in the target's .bss.
+# - Replace in place (fn 9407) replaces every occurrence of a string, the search going on after each replacement; it reads
+#   both sizes into locals before the loop and returns at once when the searched string is empty. `const size_t
+#   tamanhoDe = de.size(); if (tamanhoDe == 0)` tests the size with one select, as the target does; `if (de.empty())`
+#   ahead of the locals branches once per string form (each object's first rows; both forms otherwise alike). Its copying
+#   form (2677) copies, then calls it through invoke_viii, the copy having a landing pad.
+# - Split (1880) cuts a string at each separator: an empty piece is push_back(""), a non-empty one
+#   emplace_back(resto, 0, posicao), whose 0 the target stores in its frame (the literal's type, int, is chosen: a
+#   plain 0) and whose __emplace_back_slow_path (9404) matches with it; the last piece is push_back(resto). Its landing pad calls the
+#   -Oz ~vector<std::string> read as the executable TU's (2255), which src/app/roots_vector.cpp holds.
+# - ToUpper in place (3509) is ToLower's counterpart over the same 19 accented capitals (the 76 bytes at 1118052, which
+#   5158 reads too): its static set is built by transforming the capitals with | 32 through std::inserter
+#   (insert_iterator::operator=, 9397, matches with it), each read as a char (the target's load8_s, a char parameter's),
+#   and it upper-cases with & ~32 or toupper. The capitals come from a file-static helper that returns their set,
+#   AcentuadasMaiusculas, which clang inlines: with the list written inline, the init lambda's frame held the array at +8,
+#   the list at +88 and the set at +96; through the helper, the set at +8, the array at +24 and the list at +104, the
+#   target's (a reading: an inlined callee's allocas come first in the frame). 3509's votes name the set and its guard
+#   (evidence:vote:10 and vote:2 by:3509 in splat/symbol_addrs.txt): 654's call names 3509, and their bodies are the same
+#   opcodes; 9403, the set's static destructor, matches over the set's name, and the guard sits at our link's distance
+#   from the set (docs/reference/facts/splat.md S13). The copying ToUpper (5156) is a thunk into binaryen's merge 3942, as the copying ToLower and
+#   Trim are. ToLower stays in unit 12's externs, so std::set<int>'s constructor (5157), __tree<int>::destroy (1522) and
+#   __find_equal (2676), and __split_buffer<std::string>'s destructor (5184), come from this object now, which ToUpper and
+#   Split instantiate first, ahead of the externs and datahoraasn.cpp.o on the link line; they are linkonce copies and
+#   their places in this object are no evidence.
+# - FindRegex (2199), written and `unresolved`: the start and end of a boost::regex's first match in a string, npos for
+#   both when there is none, either string is empty, or the regex throws (catch (...)). The regex, the boost::cmatch and
+#   inicio/fim, set to npos and changed on a match, are locals of the try block, which returns {inicio, fim}: that gives
+#   the target's one store of the result for a match and for none; returning from inside the if gave the case of no
+#   match a cleanup of its own (pnpm wasm score 2199: 111 rows inserted). `{std::string::npos, std::string::npos}` loads
+#   npos from its definition (the object's i32.load of _ZNSt3__212basic_string...4nposE; a reading: std::pair's
+#   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and 1539 match. It waits for Boost.Regex's
+#   -fexceptions copies: its callees do_assign (9401) and regex_search (9400), both with landing pads in the target, read
+#   as this file's instantiations (their band, above), and our link takes do_assign from src/app/roots_boost.o (APP_CXXFLAGS, no -fexceptions),
+#   which links first: `ours +0x5f i32.const 2875: a table slot of ours: ...do_assign... has no target function`
+#   (splat/scan.tsv). The same copies keep match_results<const char*>'s destructor (5153) inlined in our link: its other
+#   target caller, 5121, reads as the -fexceptions perl_matcher's push of a saved state with a copy of the results, which
+#   our link does not hold.
+# The members by band in this object (target index/ld_index in build/out/wasm-map/vota_web/names.tsv) follow the target's
+# order but where a linkonce copy is involved, and 9407 lies, as Trim (9406) already did, after CBaseError<EUtilError>'s
+# constructor (9410), which uses 1 puts before both.
 ECOURNA_SRCS += api/exception/cerror.cpp api/security/base64.cpp api/util/cstringutils.cpp app/dados/iidentificadoreleitor.cpp \
                 app/dados/cnumerocpf.cpp app/dados/cnumeroinscricaoeleitoral.cpp app/dados/cnumeroidentificacaolivre.cpp \
                 app/dados/cfabricaidentificadoreleitor.cpp

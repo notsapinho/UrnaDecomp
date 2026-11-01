@@ -238,6 +238,13 @@ void CDate::operator-=(int dias)
     m_diaSemana %= 7;
 }
 
+CDate CDate::operator+(int dias) const
+{
+    CDate data(*this);
+    data += dias;
+    return data;
+}
+
 CDate CDate::operator-(int dias) const
 {
     CDate data(*this);

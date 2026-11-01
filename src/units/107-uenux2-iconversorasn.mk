@@ -77,8 +77,8 @@
 # - CSecaoEleitoral's constructor in csecaoeleitoral.cpp (records :34 to :41), which binaryen inlines into 11453,
 #   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what its match took.
 # Not written:
-# - 11482, 11483, comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s slots: fragment 140 traps them
-#   (its destructors 11484 and 11485 match with unit 13's CRdvVota).
+# - 11483, comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota>::DoConverte: fragment 140 traps it (its
+#   DoDesconverte, 11482, matches, and its destructors 11484 and 11485 with unit 13's CRdvVota).
 # - 5680, Desconverte<EntidadeRegistroDigitalVoto, ...> with api::CFileASN<T>'s decode inlined: calls fn 5825.
 # - The default DoConverte and DoDesconverte stay out of the header: unit 96's fragment. 5710, 11457, 11458, 11454, 11453,
 #   11424, 11483 and 10266 hold instances of Converte or Desconverte inlined by binaryen, one call site each.

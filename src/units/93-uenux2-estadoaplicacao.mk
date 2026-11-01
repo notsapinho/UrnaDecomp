@@ -14,7 +14,19 @@
 # names after that label, so the content and the names agree.
 # Converters: CConversorAjusteDataHora (11405, 11406), CConversorEstadoGeralSA (11392, 11393),
 # CConversorLocalidadeEleitoral (11388, 11389; 11388 rests on ASN1::INTEGER's constructor, fn 553, being matched),
-# CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (5690, 5689).
+# CConversorEstadoGeralGap: DoDesconverte and DoConverte (11395, 11394), DesconverteUrnaAplicativo and
+# ConverteUrnaAplicativo (5690, 5689), and two helpers no record names, ConverteCorrespondencias (file-static, clang
+# inlines it) and DesconverteCorrespondencias (external, binaryen inlines it: its 112-byte frame opens inside 11395).
+# With them: md::estadoaplicacao::CEstadoGeralGap's constructor (5626, out of line in unit 109's cestadogeralgap.cpp:
+# 11395 calls it and table slot 453 holds it, which fn 10123 calls with invoke_iiiiiiiiiiii) and its getters;
+# CEstadoGeralVota::MarcaInicioAquisicao (5627, a chosen name and line in cestadogeralvota.cpp: table slot 52 holds it
+# and fn 5972 calls it); CCabecalhoQRCodeBuilder's constructor (5624, 33 empty strings, out of line in
+# ccabecalhoqrcodebuilder.cpp above the setters: in use band 2 its higher index has the lower ld_index, 4552 against
+# DefineCodigoCarga's 4553 in build/out/wasm-map/vota_web/names.tsv).
+# Records only, no target index: CEstadoGeralVota's four getters that throw when their optional is empty
+# (cestadogeralvota.h 90, 106, 131 and 159; their callers inline them, and none is written here). A probe object
+# calling each, compiled at this directory's flags (try-tu.sh --symbols, then check_srcloc.py), prints the target's
+# text, line and column for all four.
 #
 # Written and not matched:
 # - CCabecalhoQRCodeBuilder::DefineHistoricoCarga (5622): `no-candidate`. At -O2 clang inlines
@@ -32,10 +44,10 @@
 # writes CConversorEstadoGeralVota (11390, 11391) and CConversorDadoCorrespondencia (11399, 11400) over this unit's
 # CEstadoGeralVota and CDadoCorrespondencia, and the converters' callers of 5628 and 5630.
 #
-# Not reconstructed: the slots of CConversorEstadoGeralGap (11394, 11395) and of the other converters here, CEstadoGeral,
-# the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624), its other setters (fn
-# 11242 stores "ORIG:{} " over "RED" or "VOTA" into the origin field, each in a frame of its own) and preBuild(), fns
-# 5626, 5627.
+# Not reconstructed: the slots of the other converters here, CEstadoGeral, CEstadoGeralVota's MarcaFimAquisicao and
+# MarcaUltimoVoto (records cestadogeralvota.cpp:108 to :136, inlined into vota's states), CCabecalhoQRCodeBuilder's other
+# setters (fn 11242 stores "ORIG:{} " over "RED" or "VOTA" into the origin field, each in a frame of its own) and
+# preBuild().
 #
 # What decides the form, measured:
 # - Who inlined what. ValidaCriacao, ValidaModelo, ConverteEstadoSA, DesconverteEstadoSA, ConverteTipoAjusteDataHora and
@@ -47,7 +59,7 @@
 #   rows with 3 inserted and 3 deleted (binaryen leaves the out-parameter's address in a local across the throw's `if`),
 #   and 11392 is `differs` at +0x9 on a local's number; with the members first both are operand-only and match. The
 #   records' lines fit: the helpers' first throws are at lines 49 and 96.
-# - DoDesconverte comes above DoConverte in the three complete converters. Either order gives the same bytes; this one is
+# - DoDesconverte comes above DoConverte in the four complete converters. Either order gives the same bytes; this one is
 #   the target's: inside a use band a higher target index has a lower ld_index in build/out/wasm-map/vota_web/names.tsv,
 #   and all seven vtables of this family hold the lower index in slot 2. It also explains why 5693 and 5694 read inverted
 #   against their records: a function takes its place at its first mention, and DoDesconverte, above them in the file,
@@ -63,6 +75,34 @@
 # - DoConverte sets valorAjusteDataHora before tipoAjusteDataHora (11405); 11392 calls set_dadosSecao() per field and a
 #   local reference to it gives 61 rows for 64; 11393 calls DesconverteEstadoSA into a local first and passing it as the
 #   argument gives 29 rows for 26; CEstadoGeralSA::GetAtualizacaoBloqueada returns bool (a uebyte adds an `!= 0` to 11392).
+# - CConversorEstadoGeralGap::DoConverte (11394), pnpm wasm score on the whole link: the target keeps the
+#   DadoCorrespondencia temporary above the converter, and the converter above the list, in its frame, and destroys
+#   the list right after the assignment. A list built in DoConverte puts it above the converter; built in a helper
+#   clang inlines, by std::transform with a back_inserter and a lambda, the transform's temporary comes first, as
+#   clang places an inlined callee's allocas ahead of its caller's (a reading): 35 rows over 506, all call and data
+#   operands, and splat-remap IDENTICAL. The same helper with a range-for gives 55 over 506 and the transform in
+#   DoConverte with no helper 43 over 506, all operand-only (in the second two frame slots swap); std::for_each with a
+#   lambda in DoConverte leaves push_back out of line (278 over 525). The list is the field's base, ASN1::SEQUENCE_OF<DadoCorrespondencia,
+#   SizeConstraint<...>> (that class's vptr, 1568588), assigned through a cast as in cconversorsecaoeleitoral.cpp; its
+#   operator= is out of line and binaryen inlines it (a second frame). The enums go through the NamedNumber setters
+#   (set_appId(...)): `set_appId() = ...` calls ENUMERATED::operator= (asn1.cxx) where the target stores the value.
+#   The counts' getters return by value (the target copies 4 bytes before each Converte), the others by reference.
+#   The helper's linkage is a choice: external gives the same 35 rows.
+# - CConversorEstadoGeralGap::DoDesconverte (11395): DesconverteCorrespondencias defined below DoDesconverte, above
+#   DoConverte; above DoDesconverte binaryen numbers two locals the other way (33 rows over 662, four of them locals), below it 29, calls
+#   and data only. The four flags are named locals before the counts' converter (the target reads them before its vptr
+#   store); the vector goes to the constructor as a copy and the counts and the optional by value, as the target's
+#   copies show (two of each count and of the optional: the argument temporary and wasm's copy of a byval argument, a
+#   reading). ModuloEstadoGeralGap::EstadoGeralGap::dataSegundoTurno is a ModuloTiposEleitorais::DataJE (a module hand
+#   edit, src/asn1/modules/ModuloEstadoGeralGap.h): 11395 passes the field to Utils::DesconverteDataJE (fn 2276) with no
+#   conversion, and with the synthesized InicioHV our body built a DataJE temporary (113 rows over 685; 33 after).
+# - CEstadoGeralGap's constructor (5626) sets m_data2T from its parameter and again at the end, from
+#   m_dataSegundoTurno against `const api::CDate hoje;` (fn 1382): the target compares the four words inline and then
+#   calls operator<=> (fn 1261), which `*m_dataSegundoTurno == hoje || *m_dataSegundoTurno < hoje` gives; the name hoje
+#   is chosen.
+# - CCabecalhoQRCodeBuilder's constructor returns `this` to a caller that reads it in the target (its type is
+#   (i32)->(i32)); with the stand-in dropping both results ours was (i32)->() (2 rows over 7), so the stand-in returns
+#   one.
 # - CDadoCorrespondencia moves its CIdentificadorGeradorMidia: a copy gives 161 rows for 114. Each by-value parameter of
 #   5628 and 5630 is a copy the target's caller makes (11391, 11400); the constructors' own bytes do not decide that.
 #
@@ -91,7 +131,10 @@
 # ASN.1 fields' where one exists, and in CCabecalhoQRCodeBuilder the labels fn 5604 passes) and the types the bodies only
 # store; the setters' names DefineCodigoCarga, DefineHistoricoCarga, DefineIdUrna, DefineSecao and DefineZona, and the
 # tests' IsOrigemSA and IsOrigemRED (their order in the .cpp is the target's: in use band 2 the higher target index has
-# the lower ld_index); the inline getters' names (GetTipoDeltaT, GetDeltaT, GetEstadoSA, GetAtualizacaoBloqueada,
+# the lower ld_index); ConverteCorrespondencias, DesconverteCorrespondencias and MarcaInicioAquisicao, and the getters of
+# CEstadoGeralGap that the gap converter reads (GetCorrespondencias, GetAppId, ...), after the members; the
+# constructors' and helpers' lines; CCabecalhoQRCodeBuilder's constructor written `{}` (`= default` in the .cpp was not
+# measured); the inline getters' names (GetTipoDeltaT, GetDeltaT, GetEstadoSA, GetAtualizacaoBloqueada,
 # GetMunicipio, GetZona, GetSecao), which no record names. No
 # record names cconversorlocalidadeeleitoral.*, cestadogeralsa.* or cdadocorrespondencia.*: each name is the
 # class's, whose RTTI is the converter's base, and the directory the family's. The constructors' lines are chosen. The

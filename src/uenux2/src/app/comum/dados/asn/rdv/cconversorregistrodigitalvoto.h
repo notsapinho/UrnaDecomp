@@ -19,8 +19,8 @@ namespace comum::asn {
 // and the section's municipio +28, zona +32, local +36 and secao +40, 32- and 16-bit), and at +44 a vector of strings it
 // puts in historicoCodigosCarga. The D2 begins with the class's vptr store, so the class is not final. No record names
 // the file: the directory mirrors md::CVotosEleicoesVota's (docs/how-to-decompile.md step 3, rule 3), the name is the
-// class's. The member names and the words' types (by width) are chosen. DoConverte (11483) and DoDesconverte (11482)
-// are not written: 140-uenux2-app-comum-converters-pending.cpp traps them for the instance.
+// class's. The member names and the words' types (by width) are chosen. DoDesconverte (fn 11482) is defined below;
+// DoConverte (fn 11483) is not written: 140-uenux2-app-comum-converters-pending.cpp traps it for the instance.
 template <typename CONVERSOR>
 class CConversorRegistroDigitalVoto
     : public IConversorASN<ModuloRegistroDigitalVoto::EntidadeRegistroDigitalVoto, md::CVotosEleicoesVota> {
@@ -38,5 +38,14 @@ private:
     ueword m_secao;
     std::vector<std::string> m_historicoCodigosCarga;
 };
+
+// Target fn 11482: the elections' field (the entity's fifth, +16 in its field table) through the member converter's
+// Desconverte, which binaryen inlines (its frame opens in a frameless caller), then its slot 3 through the vtable.
+template <typename CONVERSOR>
+typename CConversorRegistroDigitalVoto<CONVERSOR>::TDado
+CConversorRegistroDigitalVoto<CONVERSOR>::DoDesconverte(const TEntidade& entidade) const
+{
+    return m_conversor.Desconverte(entidade.get_eleicoes());
+}
 
 } // namespace comum::asn

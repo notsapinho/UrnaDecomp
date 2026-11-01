@@ -4,8 +4,6 @@
 // - slot 5, fn 10797: reads comum::CAppInfo::GetInst().GetVota().GetEstadoVota() and writes 55 for 54 and 58 for 57;
 //   for 56 it writes 55 when fn 1269 on fn 555's result is false, +8 of fn 1391's result is 0 and +48 of
 //   CAppInfo::GetGeral()'s (fn 291) is not 51; after a write it calls fn 491; waits for fns 491, 1269 and 1391;
-// - slot 7, fn 10795: tests fn 3606's (states 55, 56) or fn 2727's (58) result on fn 815's for more than 5, else returns
-//   true; waits for fn 815 and for 2727 and 3606, calls of fn 6007 with 2 and 1;
 // - slot 9, fn 10794: returns what fn 5343 returns, vota::CAguardaInicio's GetInst (its vptr) with the constructor
 //   inlined, 2105 B, which builds a form with api::CMTFormBuilder::AddTextField (fns 180 and 651); waits for fn 5343,
 //   whose one callee with no name is fn 1694;
@@ -21,11 +19,6 @@
 namespace vota {
 
 void CControladorRegistraMesariosVota::Slot5() const
-{
-    __builtin_trap();
-}
-
-bool CControladorRegistraMesariosVota::Slot7() const
 {
     __builtin_trap();
 }

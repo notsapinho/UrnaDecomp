@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/comparecimentomesario/cregistradormesario.h"
 #include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/cfinalizaoperador.h"
@@ -41,6 +42,20 @@ int CControladorRegistraMesariosVota::Slot6() const
             return 3;
         default:
             return 0;
+    }
+}
+
+bool CControladorRegistraMesariosVota::Slot7() const
+{
+    const comum::CRegistradorMesario& registrador = comum::CRegistradorMesario::GetInst();
+    switch (comum::CAppInfo::GetInst().GetVota().GetEstadoVota()) {
+        case 55:
+        case 56:
+            return registrador.QuantidadeMesariosInicio() > 5;
+        case 58:
+            return registrador.QuantidadeMesariosFim() > 5;
+        default:
+            return true;
     }
 }
 

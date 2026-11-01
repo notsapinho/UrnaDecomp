@@ -1,7 +1,7 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 55 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Eleven come from the objects of units 31, 120, 101, 165,
-# 91, 127 and 164, whose builders are written, so the roots no longer instantiate them:
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 53 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Thirteen come from the objects of units 31, 120, 101, 165,
+# 91, 127, 164, 113 and 163, whose builders are written, so the roots no longer instantiate them:
 # IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550),
 # CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
 # 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
@@ -9,8 +9,12 @@
 # not written) and comum::md::CEleitorDinamico's (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's
 # celeitordinamicodao.cpp, from which 11536 and 11537 match) and api::CTextFieldBlinking's (1265,
 # CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
-# which 8585 and 8578 match). Each block below: the T, the function that stores its vptr in the target, and the members
-# the unit matches. The vtable's other slots are shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
+# which 8585 and 8578 match) and the pointer blocks of comum::dao::IJustificadorDAO and IComparecimentoMesarioDAO, whose
+# builders are unit 113's comum::CJustificador constructor (3742) and comum::CRegistradorMesario::GetInst (815): each
+# holds its servico's constructor inlined, whose object instantiates Entregar and with it the block (11463 matches from
+# cjustificadorservico.cpp.o, 10311 from ccomparecimentomesarioservico.cpp.o). Each block below: the T, the function
+# that stores its vptr in the target, and the members the unit matches. The vtable's other slots are shared bodies
+# matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
 #   IFormField<IPaper>: CTextFieldPaper 193, 604, 5613, 12105: 11997. CCutFieldPaper 1264: 10994.
 #     CNewLineFieldPaper 198: 10993

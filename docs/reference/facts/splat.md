@@ -500,10 +500,14 @@ Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- sp
 -E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses). These are
 7-Zip's allocators, two function pointers each: the content step places them where the target holds the same two
 integers, our table slots, which shift whenever a unit takes a function's address. So they land inside other objects
-(at c1b2630 both lie in `_ZTVN7RHVoice19str_hts_engine_implE`, at 0x18ae54), and no target piece loads them
-(`/usr/bin/grep -rlE 'i32\.const (1617516|1617524)($|[^0-9])' build/out/splat/pieces/asm | wc -l` prints 0). Read a
-range's added and dropped data lines as these too; a 7-Zip match that re-points through one would verify against the
-wrong object, and `refuteDataNames` drops only a name at another's same address (§S4).
+(at c1b2630 both lie in `_ZTVN7RHVoice19str_hts_engine_implE`, at 0x18ae54), where no 7-Zip piece loads them, and can
+sit at an address point a matched function stores: `g_BigAlloc = 0x10fce4` lay 8 bytes into `CSha512`'s vtable, at the
+address point 2684 stores, until a landing dropped it ([libraries.md](libraries.md) §B10). For one such line, grep the
+pieces for its address in decimal (`/usr/bin/grep -rlE 'i32\.const 1113316($|[^0-9])' build/out/splat/pieces/asm`
+prints `…/ecourna/2684-ecourna_api_security_CSha512_CSha512.wat`, for 0x10fce4). Read a range's added and dropped data
+lines as these too; a 7-Zip match that re-points
+through one would verify against the wrong object, and `refuteDataNames` drops only a name at another's same address
+(§S4).
 
 The scan's rows change in the same way. The rows each landing gave a new symbol under the same verdict:
 
@@ -583,7 +587,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -782,6 +786,13 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     /usr/bin/grep -E '= func:1224;' splat/symbol_addrs.txt | sed -E 's/^[^ ]* = (func:[0-9]+);.*(evidence:.*)$/\1 \2/'
     # func:1224 evidence:call by:358,1399
     ```
+23. **9258, `ecourna::app::dados::CSerialMidia::ValidaSerial`, by unit 84's vote for std::regex's constructor.** 9258
+    calls `std::basic_regex<char>`'s constructor from a C string (2416), whose body is `unresolved` (its table slot of
+    `__parse`). 2416's name comes from its callers' calls (`evidence:call`), and while 9258 was the only one it was
+    self-voted, so 9258 read `unresolved self-voted` on it at 9202406. `api::CMenuItem::GetTextoFormatado` (5492, unit
+    84) calls it too and votes for it (`/usr/bin/grep -n 'func:2416;' splat/symbol_addrs.txt` prints `evidence:call
+    by:5492,9258`), and 9258 matches. 5492 is itself `unresolved self-voted` (its static's guard), so 9258 rests on that
+    unmatched body's call: a landing that takes 5492 out, or makes 2416 another function's callee, takes 9258 out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -843,7 +854,10 @@ the data. A correction frees our body for the next of the family: the rescan aft
 `kmac_gettable_ctx_params`, the name both KMAC tables (1784304, 1784400) give its slot. Rescan until a pass adds
 nothing, and check each addition the same way.
 
-The commit 0ca4765 met four more KDF getters, 13556, 13562, 13570 and 13577: a unit changed our function numbering, the
+The check covers the family, not only the new lines: run the command above for every matched member of the new
+match's family (the 7-byte getters under one id), since the name a new line should take can stand on an old, wrong
+line, and the fix is then a permutation of the family's lines. The commit 0ca4765 met four more KDF getters, 13556,
+13562, 13570 and 13577: a unit changed our function numbering, the
 census's `addr` pairs among the 7-byte getters moved with it, and step 9 named the four after the census's picks
 (`x942kdf_`, `kdf_tls1_prf_`, `sskdf_` and `kdf_sshkdf_`). Their dispatch tables hold their slots under id 7 in
 pkcs12's, pbkdf2's, krb5kdf's and kbkdf's tables, and two of those names stood since the first commit on 13522 and

@@ -27,6 +27,7 @@ public:
     TZonaID GetZonaID() const;
     TSecaoID GetSecaoID() const;
     bool UrnaBiometrica() const;
+    TLocalID GetLocalID() const;
 
     void VerificaEhSecao(const std::string& funcao) const;
 

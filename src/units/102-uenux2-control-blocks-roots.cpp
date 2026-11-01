@@ -127,9 +127,7 @@ extern const char w102_vt_cidentificacaournacontingencia[] __asm__("_ZTVNSt3__22
 extern const char w102_vt_cvisitantefoto[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3asn14CVisitanteFotoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cvisitanteeleitor[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3asn17CVisitanteEleitorENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_ijustificadordao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao16IJustificadorDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
-extern const char w102_vt_ijustificadordao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao16IJustificadorDAOENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_icomparecimentomesariodao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao25IComparecimentoMesarioDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
-extern const char w102_vt_icomparecimentomesariodao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao25IComparecimentoMesarioDAOENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cblockcipher_caescipher_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3api8security12CBlockCipherINS3_10CAesCipherENS3_5CTrngEEENS_10shared_ptrINS3_16ISymmetricCipherEE27__shared_ptr_default_deleteISA_S7_EENS_9allocatorIS7_EEEE");
 extern const char w102_vt_csha512[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3api8security7CSha512ENS_10shared_ptrINS3_5IHashEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_cidentificacaojustificativa[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3app5dados27CIdentificacaoJustificativaENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
@@ -165,8 +163,6 @@ template struct SBloco<TFormScreen, api::CDSImageField>;
 template struct SBloco<api::IInputValidation, api::COptionValidation>;
 template struct SBloco<TDao, comum::dao::IComparecimentoMesarioDAO>;
 template struct SBloco<TDao, comum::dao::IJustificadorDAO>;
-template struct SBloco<comum::dao::IComparecimentoMesarioDAO, comum::dao::IComparecimentoMesarioDAO>;
-template struct SBloco<comum::dao::IJustificadorDAO, comum::dao::IJustificadorDAO>;
 template struct SBloco<comum::md::CIdentificacaoSecao, comum::md::CIdentificacaoSecao>;
 template struct SBloco<comum::md::CIdentificacaoUrnaContingencia, comum::md::CIdentificacaoUrnaContingencia>;
 using TJustificativa = ecourna::app::dados::CIdentificacaoJustificativa;
@@ -334,9 +330,7 @@ struct SW102Roots {
         w102_sink = w102_vt_cvisitantefoto;
         w102_sink = w102_vt_cvisitanteeleitor;
         w102_sink = w102_vt_ijustificadordao_idao;
-        w102_sink = w102_vt_ijustificadordao;
         w102_sink = w102_vt_icomparecimentomesariodao_idao;
-        w102_sink = w102_vt_icomparecimentomesariodao;
         w102_sink = w102_vt_cblockcipher_caescipher_ctrng;
         w102_sink = w102_vt_csha512;
         w102_sink = w102_vt_cidentificacaojustificativa;

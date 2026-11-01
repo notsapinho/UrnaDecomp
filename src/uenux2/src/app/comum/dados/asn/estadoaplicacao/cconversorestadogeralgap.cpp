@@ -1,16 +1,95 @@
-// Reconstruction: comum::asn::CConversorEstadoGeralGap::DesconverteUrnaAplicativo and ConverteUrnaAplicativo (target fns
-// 5690, 5689, the records at lines 150, 154, 194 and 198). DoConverte and DoDesconverte (fns 11394, 11395) are not
-// reconstructed.
+// Reconstruction: comum::asn::CConversorEstadoGeralGap (target fns 11395, 11394, 5690 and 5689; the records at lines 150,
+// 154, 194 and 198) and two helpers no record names, which 93-uenux2-estadoaplicacao.mk describes. No record names the
+// lines above 115: where each function starts is a choice.
 #include "app/comum/dados/asn/estadoaplicacao/cconversorestadogeralgap.h"
 
+#include <algorithm>
 #include <format>
+#include <iterator>
 
+#include "app/comum/asn/util.h"
+#include "app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.h"
+#include "app/comum/dados/asn/estadoaplicacao/cconversornumviasimpressasrelatorios.h"
 #include "app/comum/dados/asn/estadoaplicacao/enumeradoasn.h"
 #include "app/comum/dados/euecomumdadoserror.h"
+#include "app/comum/dados/md/estadoaplicacao/cestadogeralgap.h"
 
 namespace comum::asn {
 
-// (original lines 13-114: content not recovered)
+using TCorrespondenciasASN =
+    ASN1::SEQUENCE_OF<ModuloEstadoGeralUrna::DadoCorrespondencia, ASN1::SizeConstraint<ASN1::FixedConstraint, 0, 10>>;
+
+static TCorrespondenciasASN ConverteCorrespondencias(
+    const std::vector<md::estadoaplicacao::CDadoCorrespondencia>& correspondencias)
+{
+    TCorrespondenciasASN lista;
+    const CConversorDadoCorrespondencia conversor;
+    std::transform(correspondencias.begin(), correspondencias.end(), std::back_inserter(lista),
+                   [&](const md::estadoaplicacao::CDadoCorrespondencia& correspondencia) {
+                       return conversor.Converte(correspondencia);
+                   });
+    return lista;
+}
+
+std::vector<md::estadoaplicacao::CDadoCorrespondencia> DesconverteCorrespondencias(const TCorrespondenciasASN& lista);
+
+CConversorEstadoGeralGap::TDado CConversorEstadoGeralGap::DoDesconverte(const TEntidade& entidade) const
+{
+    const std::vector<md::estadoaplicacao::CDadoCorrespondencia> correspondencias =
+        DesconverteCorrespondencias(entidade.get_correspondencias());
+    const EUrnaAplicativo appId = DesconverteUrnaAplicativo(entidade.get_appId());
+    const EUrnaAplicativo appAnteriorId = DesconverteUrnaAplicativo(entidade.get_appAnteriorId());
+    const bool executadoRED = entidade.get_executadoRED();
+    const bool identificadoATUE = entidade.get_identificadoATUE();
+    const bool audio = entidade.get_audio();
+    const bool data2T = entidade.get_data2T();
+    const CConversorNumViasImpressasRelatorios conversorNumVias;
+    const md::estadoaplicacao::CNumViasImpressasRelatorios numVias1T =
+        conversorNumVias.Desconverte(entidade.get_numViasImpressasRelatorios1T());
+    const md::estadoaplicacao::CNumViasImpressasRelatorios numVias2T =
+        conversorNumVias.Desconverte(entidade.get_numViasImpressasRelatorios2T());
+    std::optional<api::CDate> dataSegundoTurno;
+    if (entidade.dataSegundoTurno_isPresent()) {
+        dataSegundoTurno = Utils::DesconverteDataJE(entidade.get_dataSegundoTurno());
+    }
+    return TDado(correspondencias, appId, appAnteriorId, executadoRED, identificadoATUE, audio, data2T, numVias1T,
+                 numVias2T, dataSegundoTurno);
+}
+
+std::vector<md::estadoaplicacao::CDadoCorrespondencia> DesconverteCorrespondencias(const TCorrespondenciasASN& lista)
+{
+    std::vector<md::estadoaplicacao::CDadoCorrespondencia> correspondencias;
+    const CConversorDadoCorrespondencia conversor;
+    for (std::size_t i = 0; i < lista.size(); ++i) {
+        const md::estadoaplicacao::CDadoCorrespondencia correspondencia = conversor.Desconverte(lista[i]);
+        correspondencias.push_back(correspondencia);
+    }
+    return correspondencias;
+}
+
+CConversorEstadoGeralGap::TEntidade CConversorEstadoGeralGap::DoConverte(const TDado& dado) const
+{
+    TEntidade entidade;
+    static_cast<TCorrespondenciasASN&>(entidade.set_correspondencias()) =
+        ConverteCorrespondencias(dado.GetCorrespondencias());
+    entidade.set_appId(ConverteUrnaAplicativo(dado.GetAppId()));
+    entidade.set_appAnteriorId(ConverteUrnaAplicativo(dado.GetAppAnteriorId()));
+    entidade.set_executadoRED(dado.GetExecutadoRED());
+    entidade.set_identificadoATUE(dado.GetIdentificadoATUE());
+    entidade.set_audio(dado.GetAudio());
+    entidade.set_data2T(dado.GetData2T());
+    const CConversorNumViasImpressasRelatorios conversorNumVias;
+    entidade.set_numViasImpressasRelatorios1T() = conversorNumVias.Converte(dado.GetNumViasImpressasRelatorios1T());
+    entidade.set_numViasImpressasRelatorios2T() = conversorNumVias.Converte(dado.GetNumViasImpressasRelatorios2T());
+    if (dado.GetDataSegundoTurno()) {
+        entidade.set_dataSegundoTurno() = Utils::ConverteDataJE(*dado.GetDataSegundoTurno());
+    } else {
+        entidade.omit_dataSegundoTurno();
+    }
+    return entidade;
+}
+
+// (original lines 92-114: content not recovered)
 #line 115
 EUrnaAplicativo CConversorEstadoGeralGap::DesconverteUrnaAplicativo(const ModuloEstadoGeralGap::UrnaAplicativo& aplicativo) const
 {

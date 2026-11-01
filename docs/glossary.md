@@ -228,8 +228,9 @@ constructors' C1 and C2 are the same pair. *Where:* `splat/symbol_addrs.txt` han
 `docs/reference/facts/splat.md` §S6 (an alias that looks like a rename), `docs/reference/facts/codegen.md` §C6 (the
 call `-fPIC` keeps).
 
-**compile setup, component flags** — one set of compile flags that produced target code (uenux2, ecourna, asn1,
-the libraries, emscripten's system libraries). The benchmark registry `asmlift-wasm/benchmark/dataset/setups.json`
+**compile setup, component flags** — one set of compile flags that produced target code (uenux2, split by strict
+aliasing into `uenux2` and `uenux2-tbaa`, the executable TU's `vota-web`, ecourna, asn1, the libraries, emscripten's
+system libraries). The benchmark registry `asmlift-wasm/benchmark/dataset/setups.json`
 lists them and `pnpm bench setups --check` re-derives them from the build. *Where:* `asmlift-wasm/benchmark/README.md`,
 `docs/reference/toolchain.md` §3.
 
@@ -305,7 +306,9 @@ identity, and binaryen merges identical ones; meters set them apart. *Where:* `d
 
 **score, rows, structural vs operand-only** — `score` diffs two functions' normalised rows (one per instruction) and
 counts the rows that differ; 0 means identical after normalisation. A replaced row with the same opcode is
-operand-only; an inserted, deleted or opcode-changing row is structural, which is what flag sweeps count.
+operand-only, the header row (the signature and locals) included; an inserted, deleted or opcode-changing row is
+structural, which is what flag sweeps count. The counts depend on `--depth` (default 2), so a score a note gives is at
+the default unless it says `--depth 0`.
 *Where:* `asmlift-wasm/README.md` "score", `tools/round/appflags/compare.sh`.
 
 **ledger** — the folder `ledger/` of tables derived from the target (strings, classes, vtables, call graph,

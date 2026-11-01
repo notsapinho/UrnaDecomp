@@ -75,17 +75,16 @@
 # takes that class now: 603's match line follows the new symbol (a rename, splat-match), and the masked disassembly of
 # cinformacaoeleicao.cpp's object is the same before and after.
 #
-# Roots (123-uenux2-crelatoriotesteimpressora-roots.cpp): the vtable's address, as the constructor stores it, and four
+# Roots (123-uenux2-crelatoriotesteimpressora-roots.cpp): the vtable's address, as the constructor stores it, and three
 # stand-ins for callers not reconstructed, each of a function with several callers in the target that binaryen would
-# inline into its one caller here: w123_copia for 1249's (without it binaryen inlines the copy and 11197 scores 204 over
-# 208), w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
+# inline into its one caller here: w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
-# nine throwers not in the link (the roots file lists them; 942 and 2786 are in it) and goes with the last, w123_separador when one of
-# 2785, 11943, 11946, 12105 or 12110 does, and w123_copia when 5637, 5740, 11395 and 12098 are all in the link, or
-# before that only on a link without it that moves no row: 11395 reads 1249's result as the stand-in does (with 5856 in
-# the link and w123_copia taken out, 11197 and 5856 left `match`: `+0xf target drop | ours +0xf end` in 11197's scan
-# row). The fourth,
-# w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
+# nine throwers not in the link (the roots file lists them; 942 and 2786 are in it) and goes with the last, and
+# w123_separador when one of 2785, 11943, 11946, 12105 or 12110 does. w123_copia, which stood for 1249's other callers
+# (without a second caller binaryen inlines the copy and 11197 scored 204 over 208), went before all of them landed, on
+# a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
+# and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |
+# ours +0xf end` in 11197's scan row); 5637, 5740 and 12098 still wait. The third, w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
 # lands.
 #
 # CRelUtil's other written members, in crelutil.cpp (that file's note gives their lines):

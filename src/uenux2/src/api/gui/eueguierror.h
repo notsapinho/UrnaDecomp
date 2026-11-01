@@ -23,6 +23,9 @@ enum EUeGuiError {
     // them
     EUE_GUI_FRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4917,
     EUE_GUI_GRAYEDFRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4918,
+    // the value is the code api::CMenuItem::SetSearchText (target fn 3655) throws; the name is chosen from its message,
+    // "Texto de busca repetido [" + text + "]!": no evidence names it
+    EUE_GUI_MENUITEM_BUSCA_REPETIDA = 4929,
     // the value is the code api::CLedFieldMT::Draw (target fn 11050) throws; the name is chosen from its message,
     // "Operação desconhecida {}": no evidence names it
     EUE_GUI_LEDFIELDMT_OPERACAO_DESCONHECIDA = 4940,

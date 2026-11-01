@@ -21,6 +21,8 @@ namespace comum {
 // values. preBuild(), the constructor and the other setters are not reconstructed.
 class CCabecalhoQRCodeBuilder {
 public:
+    CCabecalhoQRCodeBuilder();
+
     void DefineCodigoCarga(const std::string& codigoCarga);
     void DefineHistoricoCarga(const std::vector<std::string>& cargas);
     void DefineIdUrna(uedword idUrna);

@@ -801,17 +801,17 @@ private:
 }; // end class IdentificacaoContingencia
 
 //
-// ModuloTiposEleitorais::Tipo   // SYNTHESIZED name (field ['tipo', 'tipoCargo'])
+// ModuloTiposEleitorais::TipoCargoConsulta   // the fields 'tipo' and 'tipoCargo'; RTTI names the class (ledger/classes.json), and the record of comum::asn::CConversorCargo::DesconverteTipoCargo spells it (cconversorcargo.cpp:83)
 //
 
-class Tipo : public ASN1::ENUMERATED
+class TipoCargoConsulta : public ASN1::ENUMERATED
 {
     typedef ASN1::ENUMERATED Inherited;
 protected:
     typedef Inherited::InfoType InfoType;
-    Tipo(const void* info) : Inherited(info) {}
+    TipoCargoConsulta(const void* info) : Inherited(info) {}
 public:
-    Tipo() : Inherited(&theInfo) {}
+    TipoCargoConsulta() : Inherited(&theInfo) {}
     enum NamedNumber {
         unknownEnumeration_ = -1,
         majoritario = 1,
@@ -828,8 +828,8 @@ public:
     bool is_consulta() const { return value == consulta; }
     void set_consulta() { value = consulta; }
 
-    Tipo(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
-    Tipo & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
+    TipoCargoConsulta(const NamedNumber v) : Inherited(&theInfo) { setFromInt(v); }
+    TipoCargoConsulta & operator=(const NamedNumber v) { setFromInt(v);  return *this; }
     operator NamedNumber() const { return NamedNumber(asInt()); }
 
     bool operator == (NamedNumber rhs) const { return value == rhs; }
@@ -838,18 +838,18 @@ public:
     bool operator >  (NamedNumber rhs) const { return value >  rhs; }
     bool operator <= (NamedNumber rhs) const { return value <= rhs; }
     bool operator >= (NamedNumber rhs) const { return value >= rhs; }
-    bool operator == (const Tipo &rhs) const { return value == rhs.value; }
-    bool operator != (const Tipo &rhs) const { return value != rhs.value; }
+    bool operator == (const TipoCargoConsulta &rhs) const { return value == rhs.value; }
+    bool operator != (const TipoCargoConsulta &rhs) const { return value != rhs.value; }
 
-    void swap (Tipo & that) { Inherited::swap(that); }
-    Tipo * clone() const
-    { return static_cast<Tipo*> (Inherited::clone()); }
+    void swap (TipoCargoConsulta & that) { Inherited::swap(that); }
+    TipoCargoConsulta * clone() const
+    { return static_cast<TipoCargoConsulta*> (Inherited::clone()); }
     static bool equal_type(const ASN1::AbstractData& type)
     { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
     static const InfoType theInfo;
 private:
     static const char * nameList[];
-}; // end class Tipo
+}; // end class TipoCargoConsulta
 
 //
 // ModuloTiposEleitorais::TipoAbrangencia   // name from the app code / RTTI by field match

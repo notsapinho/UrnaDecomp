@@ -54,8 +54,12 @@
 # The base's default DoConverte of CConversorPleito and CConversorProcessoEleitoral (11364, 11362) is emitted with
 # their vtables in their objects and matches: fragment 159's row.
 # Pending (this unit's -pending.cpp traps them): 11349, CConversorEleicoesVota::DoDesconverte
-# (records :69, :74, :94 and :104, not written); 11483 and 11482, CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s
-# DoConverte and DoDesconverte (not written; 11483 holds Converte<Eleicoes, ...> inlined, iconversorasn.h:56).
+# (records :69, :74, :94 and :104, not written); 11483, CConversorRegistroDigitalVoto<CConversorEleicoesVota>::DoConverte
+# (11483 holds Converte<Eleicoes, ...> inlined, iconversorasn.h:56; the -pending.cpp gives what was measured and what it
+# waits for).
+# Matched: 11482, that class's DoDesconverte, the class template's member in rdv/cconversorregistrodigitalvoto.h, which
+# unit 13's crdvvota.cpp.o emits with the vtable: m_conversor.Desconverte over the entity's elections, an instance
+# binaryen inlines (its 640-byte frame opens in the frameless 11482), and that instance's slot 3 through the vtable.
 #
 # Not written: 11437 and 11438, the DoDesconverte and DoConverte of comum::asn::CConversorCabecalhoPacote (RTTI at the
 # typeinfo 1562760; vtable @1562736, slots 3 and 2, table slots 2546 and 2545). They hold, inlined, util.cpp's

@@ -3,21 +3,20 @@
 # Target functions matched:
 # - comum::servico::CJustificadorServico's destructor and deleting destructor (3740, 11464), in
 #   app/comum/justificativa/servico/cjustificadorservico.cpp, and CComparecimentoMesarioServico's (3607, 10312), in
-#   app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp. Both D2s are thunks into binaryen's 2899,
-#   which they form with api::CFormPart's and comum::CParteEleitores' D2s (10888, 11205), as in the target; 2899's match
-#   line now names the first member in link order, CJustificadorServico's D2 (step 9 renamed it).
+#   app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp, which unit 113 lists, ahead of
+#   cregistradormesario.cpp (its fragment gives the measurement). Both D2s are thunks into binaryen's 2899, which they
+#   form with api::CFormPart's and comum::CParteEleitores' D2s (10888, 11205), as in the target; 2899's match line names
+#   the first member in link order, CComparecimentoMesarioServico's D2 since unit 113 links it first (step 9 renamed it).
 # - The registry's map (src/api/persistencia/cdaorepositorio.cpp): its exit destructor (10292) and
 #   std::map<std::string, std::shared_ptr<api::persistencia::IDAO>>'s destroy (3845). The map's name in
 #   splat/symbol_addrs.txt is generated (vote:8 by:3742,10292).
 # - CDAORepositorio::Entregar (cdaorepositorio.hpp, its throw on the record's line 79, column 15) matches inside unit
-#   113's comum::CJustificador constructor (3742), which holds it and CJustificadorServico's constructor inlined.
+#   113's comum::CJustificador constructor (3742), which holds it and CJustificadorServico's constructor inlined, and
+#   inside unit 113's comum::CRegistradorMesario::GetInst (815), which holds CComparecimentoMesarioServico's constructor
+#   and Entregar<IComparecimentoMesarioDAO> inlined (record 1595692). 815 stores CComparecimentoMesarioServico's vptr,
+#   the reference the target has to that vtable, so no roots file keeps it.
 #
 # Not matched:
-# - Fn 815: it inlines comum::CRegistradorMesario's constructor, which holds CComparecimentoMesarioServico's and
-#   Entregar<IComparecimentoMesarioDAO> (record cdaorepositorio.hpp:79), and its callee 5380 (the registrador's
-#   destructor) calls 1902 and 2728, which nothing names. cregistradormesario.cpp is not this unit's. Its stub is gone:
-#   its record falls on the written Entregar, so this comment is its only note. CComparecimentoMesarioServico's
-#   constructor is written and compared with nothing: the link drops it, since nothing reconstructed calls it.
 # - Registrar (records at lines 35 and 52, held by fn 7787) is not written: its lines stay blank in the header.
 #
 # Read from the bytes:
@@ -46,10 +45,5 @@
 # EUE_PERSISTENCIA_DAO_NAO_REGISTRADA (api/persistencia/euepersistenciaerror.h).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.
-COMUM_SERVICO_SRCS := src/api/persistencia/cdaorepositorio.cpp src/app/comum/justificativa/servico/cjustificadorservico.cpp src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp
+COMUM_SERVICO_SRCS := src/api/persistencia/cdaorepositorio.cpp src/app/comum/justificativa/servico/cjustificadorservico.cpp
 UENUX2_SRCS += $(COMUM_SERVICO_SRCS)
-# nothing reconstructed stores CComparecimentoMesarioServico's vtable: 163-uenux2-app-comum-servico-roots.cpp keeps it,
-# as the constructor fn 815 inlines does
-$(ROOT)/$(APP)/163-uenux2-app-comum-servico-roots.o: $(ROOT)/src/units/163-uenux2-app-comum-servico-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/163-uenux2-app-comum-servico.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/163-uenux2-app-comum-servico-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/163-uenux2-app-comum-servico-roots.o

@@ -17,7 +17,8 @@ namespace comum {
 
 // The application's states, one per turn where there are two. Recovered: the layout, 532 bytes, from the constructor and
 // destructor (target fns 5813, 3792), and that the accessor allocates it (fn 185). The literals the accessors pass to their
-// throws, "GetGeral", "GetVota" and "GetGap", are the evidence for those three names, and IndiceTurno is a record's. GetInst
+// throws, "GetGeral", "GetVota" and "GetGap", are the evidence for those three names, and IndiceTurno is a record's;
+// TemVota (fn 2841) passes "TemVota" to IndiceTurno, and its name is read from that literal, a reading. GetInst
 // is evidence too: the target holds the text of `Assert (comum::CAppInfo::GetInst().GetVota().GetEstadoVota() == EAVENCERRADA)`
 // (ledger/strings.tsv, 401161). That text and nine like it call GetVota() with no argument, and all 86 direct calls of fn 261
 // pass 51, TURNO_ATUAL, so GetVota's parameter defaults to it; that the const overload does too is read from its callers'
@@ -36,6 +37,7 @@ public:
     const md::estadoaplicacao::CEstadoGeralVota& GetVota(EUrnaTurno turno = TURNO_ATUAL) const;
     const md::estadoaplicacao::CEstadoGeralGap& GetGap(EUrnaTurno turno) const;
     std::vector<std::string> GetCodigosCarga(EUrnaTurno turno) const;
+    bool TemVota(EUrnaTurno turno) const;
 
     static bool EhTreinamentoEleitor();
 

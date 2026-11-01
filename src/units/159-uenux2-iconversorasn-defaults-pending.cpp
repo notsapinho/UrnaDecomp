@@ -5,15 +5,13 @@
 // The stub of each member here went when this file landed; where it was the last stub of a stub-only file, that file
 // went with it, and writing the member writes the file again at its records' lines (named below, under
 // src/uenux2/src/app/comum/dados/).
-// - comum::asn::CConversorCargo::DoDesconverte (slot 3, fn 11373, records asn/processoeleitoral/cconversorcargo.cpp:69
-//   and :83, the second DesconverteTipoCargo inlined; that stub-only file went), not written: fns 365 and 3018 have no
-//   name.
 // - comum::asn::CConversorDetalheCandidato::DoDesconverte (slot 3, fn 11375, records
-//   asn/processoeleitoral/cconversordetalhecandidato.cpp:29, :34 and :39; that stub-only file went), not written: fns
-//   1135 and 2341 have no name.
+//   asn/processoeleitoral/cconversordetalhecandidato.cpp:29, :34 and :39; that stub-only file went), not written: fn
+//   1135 has no name (2341 matches since fragment 191).
 // - comum::asn::CConversorDetalheConsulta::DoDesconverte (slot 3, fn 11377: md::CDetalheConsulta's and
 //   md::CRespostaConsulta's constructors inlined, records md/processoeleitoral/cdetalheconsulta.cpp:29 and :32, a
-//   stub-only file that went, and crespostaconsulta.cpp:29 and :32), not written: fns 1880 and 3018 have no name.
+//   stub-only file that went, and crespostaconsulta.cpp:29 and :32), not written; its callees have names (1880 since
+//   unit 00, 3018 since fragment 191).
 // - comum::asn::CConversorEleicaoPE::DoDesconverte (slot 3, fn 11371: md::CEleicaoPE's checks inlined, records
 //   md/processoeleitoral/celeicaope.cpp:63 to :92), not written: fns 2289 and 3816 have no name.
 // - comum::asn::CConversorDedo::DoDesconverte (slot 3, fn 11416, records asn/eleitor/cconversordedo.cpp:159 and :169, a
@@ -32,18 +30,12 @@
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitor.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 #include "app/comum/dados/asn/eleitor/cconversordedo.h"
-#include "app/comum/dados/asn/processoeleitoral/cconversorcargo.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversordetalhecandidato.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversordetalheconsulta.h"
 #include "app/comum/dados/asn/processoeleitoral/cconversoreleicaope.h"
 #include "app/comum/gravadores/asn/cconversorentidadehashes.h"
 
 namespace comum::asn {
-
-md::CCargo CConversorCargo::DoDesconverte(const TEntidade&) const
-{
-    __builtin_trap();
-}
 
 md::CDetalheCandidato CConversorDetalheCandidato::DoDesconverte(const TEntidade&) const
 {

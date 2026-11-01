@@ -19,6 +19,12 @@ public:
 
     explicit CSynchronizer(bool habilitado);
 
+    // Reconstruction's note: GetOpenFlag gives CSystem::CopyFile (fn 378) O_SYNC when the byte is set; it has no target
+    // index (binaryen inlines it into its one caller). Fn 620 reads the byte and does nothing else (Sync below). Both
+    // names, and GetOpenFlag's being out of line, are chosen (unit 154's fragment).
+    int GetOpenFlag() const;
+    void Sync() const;
+
 private:
     bool m_habilitado;
 

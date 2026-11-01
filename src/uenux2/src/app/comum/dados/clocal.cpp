@@ -92,7 +92,13 @@ bool CLocal::UrnaBiometrica() const
     return false;
 }
 
-// (original lines 127-341: content not recovered)
+TLocalID CLocal::GetLocalID() const
+{
+    VerificaEhSecao("GetLocalID");
+    return m_local->GetSecao().GetIdentificacao().GetLocal();
+}
+
+// (original lines 133-341: content not recovered)
 #line 342
 void CLocal::VerificaLido(const std::string& funcao) const
 {

@@ -7,9 +7,11 @@
 //   api::CInteractiveForm's Read() (record cinteractiveform.h:57), which this tree's head of that class lacks; and
 //   CTesteTeclado::GetInst (fn 3855), which calls the base's constructor (fn 1285, unit 97's) and is not written.
 // vota::testeteclado::CPreZeresima, in cprezeresima.cpp:
-// - GetTela 11862 (slot 10): fns 3648, 6580 and 6581, with no name, and api::CDateTime's ConvertFromLocalTime (fn 5476),
+// - GetTela 11862 (slot 10): fns 6580 and 6581, with no name (3648, CDate::operator-, matches), and api::CDateTime's
+//   ConvertFromLocalTime (fn 5476),
 //   private in api/util/cdatetime.h.
-// - GetEstadoSemTeste 11861 (slot 12): fn 3648, with no name; it calls slot 11's body (fn 5945, written) directly.
+// - GetEstadoSemTeste 11861 (slot 12): its callees have names (3648, CDate::operator-, unit 125); it calls slot 11's
+//   body (fn 5945, written) directly.
 // vota::testeteclado::CRetomada, in cretomada.cpp:
 // - GetTela 11831 (slot 10): fns 6580 and 6581.
 // - GetEstadoPassouNoTeste 11830 (slot 11): fn 491, with no name.

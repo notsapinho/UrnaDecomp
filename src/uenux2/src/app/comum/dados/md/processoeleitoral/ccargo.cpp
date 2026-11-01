@@ -2,7 +2,9 @@
 // names the name getters, so their place around GetOrdinalEscolha, above Valida, is a choice, as their names are (read
 // from which field each copies; the fragment lists them). GetDetalheConsulta's own body is target fn 1923, a thunk of
 // binaryen's merge 6029, so it stays out of our link: every call of it here is inlined by clang. operator<=> (fn 5655)
-// has no record: its place, after Valida, is a choice the band fits (the fragment says so).
+// has no record: its place, after Valida, is a choice the band fits (the fragment says so). The two constructors have no
+// record and no target index (binaryen inlines each into fn 11373): their lines, above the first record, are a choice,
+// and 191-uenux2-cconversorcargo.mk says what decides their form.
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"
 
 #include <format>
@@ -20,7 +22,43 @@ constexpr CSexo::ESexo SEXO_FEMININO = static_cast<CSexo::ESexo>(2);
 
 } // namespace
 
-// (original lines 23-77: content not recovered)
+CCargo::CCargo(TCargoID id, ETipo tipo, ETipoAbrangencia abrangencia, uebyte numeroDigitos, TQtdEscolha qtdeEscolhas,
+               bool podeRepetir, uebyte ordemAquisicao, uebyte ordemImpressao, uebyte ordemApuracao,
+               uebyte paginaImpressaoVoto, const CDetalheCandidato& detalheCandidato)
+    : m_id(id),
+      m_tipo(tipo),
+      m_abrangencia(abrangencia),
+      m_numeroDigitos(numeroDigitos),
+      m_qtdeEscolhas(qtdeEscolhas),
+      m_podeRepetir(podeRepetir),
+      m_ordemAquisicao(ordemAquisicao),
+      m_ordemImpressao(ordemImpressao),
+      m_ordemApuracao(ordemApuracao),
+      m_paginaImpressaoVoto(paginaImpressaoVoto),
+      m_detalheCandidato(detalheCandidato)
+{
+    Valida();
+}
+
+CCargo::CCargo(TCargoID id, ETipo tipo, ETipoAbrangencia abrangencia, uebyte numeroDigitos, TQtdEscolha qtdeEscolhas,
+               bool podeRepetir, uebyte ordemAquisicao, uebyte ordemImpressao, uebyte ordemApuracao,
+               uebyte paginaImpressaoVoto, const CDetalheConsulta& detalheConsulta)
+    : m_id(id),
+      m_tipo(tipo),
+      m_abrangencia(abrangencia),
+      m_numeroDigitos(numeroDigitos),
+      m_qtdeEscolhas(qtdeEscolhas),
+      m_podeRepetir(podeRepetir),
+      m_ordemAquisicao(ordemAquisicao),
+      m_ordemImpressao(ordemImpressao),
+      m_ordemApuracao(ordemApuracao),
+      m_paginaImpressaoVoto(paginaImpressaoVoto),
+      m_detalheConsulta(detalheConsulta)
+{
+    Valida();
+}
+
+// (original lines 61-77: content not recovered)
 #line 78
 const CDetalheCandidato& CCargo::GetDetalheCandidato() const
 {

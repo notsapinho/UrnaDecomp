@@ -12,6 +12,10 @@ namespace comum {
 
 using namespace std::string_view_literals;
 
+CCabecalhoQRCodeBuilder::CCabecalhoQRCodeBuilder()
+{
+}
+
 void CCabecalhoQRCodeBuilder::DefineCodigoCarga(const std::string& codigoCarga)
 {
     m_codigoCarga = std::format("IDCA:{:.24s} ", codigoCarga);
@@ -51,7 +55,7 @@ bool CCabecalhoQRCodeBuilder::IsOrigemRED() const
     return m_origem == std::format("ORIG:{} ", "RED"sv);
 }
 
-// (original lines 54-280: content not recovered)
+// (original lines 58-280: content not recovered)
 #line 281
 // <stubs>
 // f2791 · 562 B · unmatched · name unknown

@@ -36,6 +36,19 @@ enum EUeUtilError {
     // from its message, "Falha ao validar a existência do recurso" and "Falha ao abrir arquivo": no evidence names them
     EUE_UTIL_FALHA_VALIDAR_RECURSO = 7031,
     EUE_UTIL_FALHA_OBTER_TAMANHO_ARQUIVO = 7038,
+    // 7041 to 7048 and 7058: the codes api::CSystem::CopyFile and Rename throw (csystem.cpp); each name is chosen from
+    // its message: no evidence names them. 7041's throw (record at line 390, "O arquivo de destino [{}] já existe") is
+    // folded away with the argument it tests, so its value is chosen too, the one before 7042 to 7048, which the file's
+    // next throws pass in line order
+    EUE_UTIL_ARQUIVO_DESTINO_EXISTENTE = 7041,
+    EUE_UTIL_FALHA_LER_ARQUIVO_ORIGEM = 7042,
+    EUE_UTIL_FALHA_CRIAR_ARQUIVO_DESTINO = 7043,
+    EUE_UTIL_FALHA_COPIAR_ARQUIVO = 7044,
+    EUE_UTIL_FALHA_OBTER_INFORMACOES_ARQUIVO = 7045,
+    EUE_UTIL_FALHA_ALTERAR_HORA_ARQUIVO = 7046,
+    EUE_UTIL_FALHA_ALTERAR_DONO_ARQUIVO = 7047,
+    EUE_UTIL_FALHA_ALTERAR_PERMISSOES_ARQUIVO = 7048,
+    EUE_UTIL_FALHA_RENOMEAR = 7058,
     EUE_UTIL_FALHA_ABRIR_ARQUIVO = 7069,
     EUE_UTIL_FALHA_TRUNCAR_ARQUIVO = 7070,
     EUE_UTIL_TICK_TEMPO_INVALIDO = 7072,

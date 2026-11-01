@@ -76,6 +76,23 @@ int urna_roots_vector_dado(int a)
     return reinterpret_cast<int>(&urna_desfaz_dado);
 }
 
+// The -Oz copy of std::vector<std::string>::~vector() read as the executable TU's (target fn 2255): it passes the vector to
+// __destroy_vector::operator() (2249, below) through a frame slot, as 1698 does. Its target callers are ecourna's
+// CStringUtils::Split (1880, on its landing pad), 9586 and 11733; urna_roots_vector_cadeias stands for the two that are
+// not in our link. Instantiated ahead of the block below, it takes its place in this object before 2249 and 2247, the
+// order of the three target indices.
+#include <string>
+
+template __attribute__((minsize)) std::vector<std::string>::~vector();
+
+int urna_roots_vector_cadeias(int a)
+{
+    auto* v = reinterpret_cast<std::vector<std::string>*>(a);
+    std::destroy_at(v);
+    std::destroy_at(v + 3);
+    return a;
+}
+
 // Three more -Oz copies read as the executable TU's: std::vector<std::string>'s __base_destruct_at_end (target fn 2247,
 // target callers 2249 8825 8826 8874) and __destroy_vector::operator() (2249, callers 679 2183 2255 5573 8873), and
 // std::string::find_first_not_of(const char*, size_type) (1843, callers 1519 2185 11546 11571 14477).
@@ -102,3 +119,20 @@ template __attribute__((minsize)) void std::allocator_traits<std::allocator<std:
 template __attribute__((minsize)) void std::__destroy_at<std::string, 0>(std::string*);
 template __attribute__((minsize)) std::string::size_type std::string::find_first_not_of(const char*, std::string::size_type) const;
 template __attribute__((minsize)) unsigned long std::__str_find_first_not_of<char, unsigned long, std::char_traits<char>, 4294967295ul>(const char*, unsigned long, const char*, unsigned long, unsigned long);
+
+// std::vector<std::filesystem::path>::~vector() (target fn 3527): its one target caller, 5821 (component ecourna), holds
+// ecourna's globToFileList (api/compression/icompressor.cpp, record line 61, which returns that vector) and calls it three
+// times. Until the -Oz instance above, 3527 matched our ecourna objects' -O3 ~vector<std::string>, a byte-identical twin;
+// this instance, at this file's UENUX2_CXXFLAGS, gives the same bytes (it matches). urna_roots_vector_caminhos stands
+// for 5821, and the instance goes when globToFileList is in the link.
+#include <filesystem>
+
+template std::vector<std::filesystem::path>::~vector();
+
+int urna_roots_vector_caminhos(int a)
+{
+    auto* v = reinterpret_cast<std::vector<std::filesystem::path>*>(a);
+    std::destroy_at(v);
+    std::destroy_at(v + 2);
+    return a;
+}
