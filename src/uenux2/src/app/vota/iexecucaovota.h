@@ -25,7 +25,7 @@ class CAppState;
 // both derived classes fill every slot.
 //
 // CExecucaoVota adds no data member: GetInst (fn 3594) allocates 4 bytes for it and stores only the vptr. Its members
-// are out of line in iexecucaovota.cpp (src/units/165-uenux2-app-vota-execucao.mk).
+// are out of line in iexecucaovota.cpp, lines past GetInst's record chosen (src/units/165-uenux2-app-vota-execucao.mk).
 
 namespace vota {
 

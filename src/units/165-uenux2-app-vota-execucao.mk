@@ -48,7 +48,8 @@
 #   only when the vtable that names it is emitted, so an out-of-line member above line 45 would put its records first
 #   (docs/reference/facts/reading.md R8 has that order for free functions). So the class has no key function: the
 #   out-of-line constructor here, which no target function holds (the target inlines it into GetInst) and our link
-#   drops, emits the vtable and LimpaBufferInput.
+#   drops, emits the vtable and LimpaBufferInput. That constructor, out of line at cpoliticaexecucaoeleitor.cpp:34, is a
+#   choice made to emit them.
 # - CAssinadorVota's destructor is out of line, measured in the whole link: left implicit (its vtable emitted by an
 #   object built in a dropped optnone function of the roots), the link held no D2 of the class's own
 #   (build/out/wasm-map/vota_web/names.tsv named its D0 only) and the D0 freed what the base's D2 returned, `call; call`
