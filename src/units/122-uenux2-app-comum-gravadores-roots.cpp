@@ -5,7 +5,8 @@
 // binaryen folds no argument:
 // - comum::CGravadorWSQ's constructor (fn 3796): fn 12098 calls it three times, with the extension 16, 17 and 18, the
 //   SAVD file 48, 49 and 50 and the type of biometrics 0, 1 and 2;
-// - comum::IGravador's constructor (fn 1396): fns 3796, 5856 and 12098; 3796 is written, the stand-in is for the others;
+// - comum::IGravador's constructor (fn 1396): fns 3796, 5856 and 12098; 3796 and 5856 (unit 160) are written, the
+//   stand-in is for 12098;
 // - comum::CGravadorUtil::ConverteFase (fn 2274): fns 3796, 5856 and 12098, the same way;
 // - comum::CGravadorUtil::DeterminaNomeArquivo (fn 3798): fns 1276, 1396 and 12134; 1396 and 1276 (unit 160) are
 //   written;
@@ -52,7 +53,7 @@ __attribute__((noinline)) int w122_wsq(const api::CDateTime& dataHora, comum::TM
     return (bio == man) ? 3 : 5;
 }
 
-// stands for fns 5856 and 12098
+// stands for fn 12098 (5856 is written)
 __attribute__((noinline)) int w122_gravador(void* objeto, unsigned int municipio, unsigned int zona, unsigned int local,
     unsigned int secao, char fase)
 {
