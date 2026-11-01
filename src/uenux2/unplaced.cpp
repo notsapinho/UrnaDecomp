@@ -307,11 +307,6 @@
 // f5642 · 291 B · unmatched · placement: link order · name unknown
 // ? f5642(i32) { ... }
 
-// link-order cluster 809 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/ccargo.cpp
-
-// f5655 · 23 B · unmatched · placement: link order · name unknown
-// ? f5655(i32, i32) { ... }
-
 // link-order cluster 812 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/eleitor/celeitor.cpp
 
 // f5665 · 144 B · unmatched · placement: link order · name unknown
@@ -337,22 +332,8 @@
 
 // link-order cluster 852 · uses=2 · neighbours' file uenux2/src/api/gui/cpowerinformation.cpp
 
-// f5908 · 23 B · unmatched · placement: link order · name unknown
-// ? f5908(i32) { ... }
-
 // f5903 · 112 B · unmatched · placement: link order · name unknown
 // void f5903(i32) { ... }
-
-// link-order cluster 853 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cmenubase.cpp
-
-// f5911 · 25 B · unmatched · placement: link order · name unknown
-// void f5911(i32) { ... }
-
-// f5910 · 27 B · unmatched · placement: link order · name unknown
-// void f5910(i32, i32) { ... }
-
-// f5909 · 23 B · unmatched · placement: link order · name unknown
-// ? f5909(i32) { ... }
 
 // link-order cluster 856 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp
 
@@ -589,14 +570,6 @@
 
 // f3750 · 135 B · unmatched · placement: link order · name unknown
 // void f3750(i32, i32) { ... }
-
-// link-order cluster 1013 · uses=3 · neighbours' file uenux2/src/app/comum/appinfo/cappinfo.cpp
-
-// f3784 · 34 B · unmatched · placement: link order · name unknown
-// void f3784(i32) { ... }
-
-// f3783 · 378 B · unmatched · placement: link order · name unknown
-// void f3783(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1014 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorwsq.cpp
 
@@ -1040,9 +1013,6 @@
 // ? f5637(i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 808 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cpleito.cpp
-
-// f5654 · 243 B · unmatched · placement: link order · name unknown
-// void f5654(i32, i32) { ... }
 
 // f5649 · 257 B · unmatched · placement: link order · name unknown
 // void f5649(i32, i32, i32) { ... }

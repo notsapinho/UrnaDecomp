@@ -5,7 +5,9 @@
 # (1547, 3716, 2797), GetNome (2796), GetNomeSuplente (3715), GetOrdinalEscolha (2258) and Valida (5657);
 # CDetalheCandidato::GetSuplente (1545); CEleicaoPE::GetCargos (2257); CPleito::GetEleicao and GetSituacoesEleicoes (5651,
 # 5648); CProcessoEleitoral::GetPleito2 (1267). comum::asn::CConversorNomesCargo::DoDesconverte (11369), with
-# CNomesCargo's constructor, in asn/processoeleitoral/.
+# CNomesCargo's constructor, in asn/processoeleitoral/. Added later: CCargo::operator<=> (5655),
+# CEleicaoPE::PossuiCargoCandidato (5653), and CCargos::RemoveFiltro (3784) with the std::vector range assign it
+# instantiates (3783).
 # Evidence, records: every file above but the converter's, each throw's line and column, and each record's spelling
 # (comum::TCargoID, const TVectorCargo &, TQtdEscolha). Evidence, RTTI: the converter's class and its base. The
 # converter's file is rule 3 and 4 of docs/how-to-decompile.md step 3: no record names it, its vtable (@1570164) lies
@@ -64,7 +66,32 @@
 #   UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md §F6). With -fno-strict-aliasing its one difference is three rows:
 #   the object reloads __child after __insert_node_at's store of the begin node. insert, emplace and a named result all
 #   keep it, and so does -O3. The caller is the constructor fn 11371 inlines.
+# The later members, what the target fixes (no record names any of them, so every name and line here is chosen):
+# - 5655 compares the bytes at +0 of its two arguments and gives -1, 0 or 1; its one caller, fn 11888
+#   (vota::CMenuFiltrarCandidatosPorCargo's slot 2), calls it twice to place a copy of CConfiguracaoEleicao::GetCargo's
+#   result in a tree of 156-byte nodes (16 + CCargo's 140) and tests the result's low byte below 0. So it orders CCargo
+#   by its id, out of line since 11888 keeps the calls: a member operator<=> returning std::strong_ordering is chosen
+#   (ccargo.h), after Valida in ccargo.cpp, which band 2's order fits (5657, Valida, then 5655).
+# - 5654 and 5653 read the vector of 140-byte elements at +28 of their argument, CEleicaoPE's m_cargos (celeicaope.h):
+#   5654 inserts each element's byte at +0 into a std::set of one-byte keys it returns, and 5653 tells whether any
+#   element's byte at +84 (CCargo's engaged flag of m_detalheCandidato) is set. In band 2 they follow ccargo.cpp's Valida
+#   (5657, record :212) and precede CPleito's constructor (5652, record cpleito.cpp:64), so a file between the two in link
+#   order; celeicaope.cpp, the file of the class they read, is chosen among those, and their place in it. Both are written as index loops over
+#   size(), as the target's multiply by 140 reads; no other form was compiled.
+# - 3784 is called on CCargos::GetInst()'s result by fns 12098 and 12110 (vota::CGravaResultado's and vota::CGeraBU's slot
+#   2) and calls 3783 on +16 with the vector at +4: m_cargos = m_todos (ccargos.h names the two vectors). 3783 is the
+#   range assign of a vector of 8-byte pairs, which 7377 (FiltraPorAbrangencia, ccargos.cpp:249) calls too. It follows
+#   3784 in band 3, and an instance takes its place at its first mention (docs/how-to-decompile.md step 3), which fits
+#   3784's object being the first to instantiate it (a reading). The name RemoveFiltro, ccargos.cpp as 3784's file (the
+#   class's) and its line there, after NomeEleicaoCorrente, are chosen. The roots give 3783 its second call site, for
+#   7377.
 # Not matched:
+# - CEleicaoPE::GetIDsCargos (fn 5654, written, no-candidate: no census pair). It differs from the target in the
+#   reload of __child after __insert_node_at's store of the begin node, as ValidaOrdem below (`pnpm wasm score` against
+#   the plain link: 8 over 122 rows, the reload's three rows, the local numbers after it and one call operand). In a
+#   whole link with celeicaope.cpp.o alone compiled without -fno-strict-aliasing (link.cmd's object swapped,
+#   docs/reference/facts/workflow.md W13), splat-remap prints target 5654: IDENTICAL, and target 3714: IDENTICAL. It
+#   waits for that decision.
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes
 #   give it. The row stays `differs`.

@@ -18,6 +18,12 @@
 //   5657  CCargo::Valida              11373, two call sites
 //   5651  CPleito::GetEleicao         3744 3775
 //   5648  CPleito::GetSituacoesEleicoes  271 3713
+//   5655  CCargo::operator<=>         11888, two call sites
+//   5654  CEleicaoPE::GetIDsCargos    7787
+//   5653  CEleicaoPE::PossuiCargoCandidato  3744 7787
+//   3784  CCargos::RemoveFiltro       12098 12110
+//   3783  vector<CCargos::TCargoEleicao>::__assign_with_size, the instance ccargos.cpp's RemoveFiltro emits: 3784 7377.
+//         RemoveFiltro is its one caller here, so a stand-in for 7377 (FiltraPorAbrangencia) gives the second.
 // comum::NomeEleicaoCorrente (11556) has no direct caller: the target reaches it only through table slot 3049, which fn
 // 5580 passes, so its address is taken.
 // GetNomeMasculino (3716) keeps its two written callers, 2796 and 2258. GetNomeFeminino has one call in the target and
@@ -46,6 +52,12 @@ void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
 void w5657(int) __asm__("_ZNK5comum2md6CCargo6ValidaEv");
 int w5651(int, int) __asm__("_ZNK5comum2md7CPleito10GetEleicaoEj");
 int w5648(int, int) __asm__("_ZNK5comum2md7CPleito20GetSituacoesEleicoesEj");
+int w5655(int, int) __asm__("_ZNK5comum2md6CCargossERKS1_");
+void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
+int w5653(int) __asm__("_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv");
+void w3784(int) __asm__("_ZN5comum7CCargos12RemoveFiltroEv");
+void w3783(int, int, int, int) __asm__(
+    "_ZNSt3__26vectorINS_4pairIjhEENS_9allocatorIS2_EEE18__assign_with_sizeB8ne210108IPS2_S7_EEvT_T0_l");
 void s11556(int) __asm__("_ZN5comum19NomeEleicaoCorrenteEv");
 }
 
@@ -139,6 +151,33 @@ __attribute__((noinline)) int SomaSituacoes(int pleito, int a, int b)
     return w5648(pleito, a) * 5 + w5648(pleito, b);
 }
 
+__attribute__((noinline)) int OrdemCargos(int a, int b)
+{
+    return w5655(a, b) * 7 - w5655(b, a + 140);
+}
+
+__attribute__((noinline)) void IDsDuasEleicoes(int saida, int a, int b)
+{
+    w5654(saida, a);
+    w5654(saida + 12, b + 52);
+}
+
+__attribute__((noinline)) int ContaCandidatos(int a, int b)
+{
+    return w5653(a) * 11 + w5653(b + 52);
+}
+
+__attribute__((noinline)) void RemoveFiltroDuas(int a, int b)
+{
+    w3784(a);
+    w3784(b + 28);
+}
+
+__attribute__((noinline)) void AtribuiCargos(int cargos, int primeiro, int n)
+{
+    w3783(cargos + 16, primeiro, primeiro + 8 * n, n);
+}
+
 const void* volatile processoeleitoral_sink;
 
 struct SProcessoEleitoralRoots {
@@ -162,6 +201,11 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaSituacoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&s11556);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&OrdemCargos);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&ContaCandidatos);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&RemoveFiltroDuas);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&AtribuiCargos);
     }
 } processoeleitoral_roots;
 
