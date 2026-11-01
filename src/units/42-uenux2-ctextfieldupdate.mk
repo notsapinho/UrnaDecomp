@@ -15,9 +15,9 @@
 # operator() (10909) with the lambda calling Atualiza, a member defined out of line: the target's operator() loads the
 # capture before a frame prologue, binaryen's inlining of a callee clang left out of line, and the test written in the
 # lambda gives a body whose prologue comes first. Atualiza, its name and its being a member are chosen. The two __clone
-# members (10910, 10911) differ: the target stores the capture before the vptr, which this object gives at -O3 without
-# -fno-strict-aliasing and not at the tree's flags, nor at -O2, -Os or -Oz with it (each compiled, the store order of both __clone
-# members read in the object), so they wait for that flag, the user's decision (docs/how-to-decompile.md step 4).
+# members (10910, 10911) match since src/api/ builds with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6): the target
+# stores the capture before the vptr, which this object gives at -O3 without -fno-strict-aliasing and not with it, nor at
+# -O2, -Os or -Oz with it (each compiled, the store order of both __clone members read in the object).
 # Show and Hide (fns 10915, 10914, slots 3 and 4) are Start and Stop of the timer, whose class the source includes
 # (api/util/itimer.h); their lines are a choice, above Rect's line 73, in the band's order. Move (one of the five
 # functions of target fn 2241, see 27-uenux2-ctextfield.mk, which lists the forms) is below line 73, a choice.

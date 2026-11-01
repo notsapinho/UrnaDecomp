@@ -64,9 +64,11 @@
 #   bytes, an IImage and a shared IImage, slots 15 to 17 (8994, 8991, 8985).
 # - std::__shared_ptr_emplace<std::vector<unsigned char>> (D2 8833, D0 8823, __on_zero_shared 5047), libc++'s code for
 #   the make_shared of slots 2, 5 and 9.
-# std::vector<double>'s range insert (fn 2662), which FillPath and DrawPath call, has to come from
-# src/app/roots_uenux2.cpp: the target's copy has TBAA, this object's does not (24 over 434 rows), and as the first definer
-# on the link line this object would take it from RHVoice's speech_processor, and 2209 and 5255 with it.
+# std::vector<double>'s range insert (fn 2662), which FillPath and DrawPath call, came from src/app/roots_uenux2.cpp: the
+# target's copy has TBAA, this object's had none while its directory built with -fno-strict-aliasing (24 over 434 rows), and
+# as the first definer on the link line this object would take it from RHVoice's speech_processor, and 2209 and 5255 with
+# it. With the directory's strict aliasing (src/Makefile UENUX2_TBAA_DIRS) this object's copy is roots_uenux2.o's (pnpm wasm score
+# on the two objects: 0 over 468 rows); the root is not measured again.
 # Nothing reconstructed calls the constructor, so the roots file keeps both vtables.
 #
 # The file is a choice, and the TU is not: the class shares one object with simulador::CWasmScreen. No record names

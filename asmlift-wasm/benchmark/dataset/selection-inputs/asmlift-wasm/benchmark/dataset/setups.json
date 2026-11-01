@@ -6,7 +6,27 @@
       "c++": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing"
     },
     "image": "urna-emsdk:6.0.0",
-    "source": "src/Makefile UENUX2_CXXFLAGS; docs/reference/toolchain.md §3",
+    "source": "src/Makefile UENUX2_CXXFLAGS, outside UENUX2_TBAA_DIRS; docs/reference/toolchain.md §3",
+    "truth": {
+      "kind": "make",
+      "vars": [
+        "UENUX2_OBJS"
+      ]
+    },
+    "components": [
+      "vota-web",
+      "comum"
+    ],
+    "note": "No -fexceptions: throw sites call __cxa_throw directly. Few uenux2 units are reconstructed, so most rows come from the ledger's attribution."
+  },
+  {
+    "key": "uenux2-tbaa",
+    "title": "uenux2, the directories built with strict aliasing (src/api, comum's data classes dados/md, src/app/vota, mock/app/simulador/wasm)",
+    "flags": {
+      "c++": "-O3 -fPIC -std=c++23 -DNDEBUG"
+    },
+    "image": "urna-emsdk:6.0.0",
+    "source": "src/Makefile UENUX2_CXXFLAGS without -fno-strict-aliasing, in UENUX2_TBAA_DIRS; docs/reference/facts/app-flags.md §F6",
     "truth": {
       "kind": "make",
       "vars": [
@@ -15,11 +35,9 @@
     },
     "components": [
       "vota",
-      "vota-web",
-      "comum",
       "simulador"
     ],
-    "note": "No -fexceptions: throw sites call __cxa_throw directly. Few uenux2 units are reconstructed, so most rows come from the ledger's attribution."
+    "note": "The uenux2 setup's flags with TBAA on: the generic uenux2 rule drops -fno-strict-aliasing in the directories UENUX2_TBAA_DIRS lists. comum's functions keep the uenux2 setup when no symbol says otherwise, and so do api's, which no component names."
   },
   {
     "key": "vota-web",

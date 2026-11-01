@@ -14,11 +14,11 @@
 # the third of each. The sources are the files the records name: md/eleitor/{celeitordinamico,cbiometriaeleitor,
 # celeitordecorator}.cpp, dados/dao/celeitordinamicodao.cpp, comparecimentomesario/dao/ccomparecimentomesariodao.cpp.
 #
+# - CBiometriaEleitor::CriaComum (2799) matches since comum's data classes build with strict aliasing (src/Makefile
+#   UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). With -fno-strict-aliasing it differed by one reload of __child
+#   after __tree::__insert_node_at's begin-node store (clang inlines the insert); eight spellings of the insert kept the
+#   reload with the flag, at -O2 and -O3, c++20 and c++23.
 # Written and unmatched (docs/how-to-decompile.md step 5, "A written body that does not match yet"):
-# - CBiometriaEleitor::CriaComum (2799): differs by one reload of __child after __tree::__insert_node_at's begin-node
-#   store (clang inlines the insert). Eight spellings of the insert keep the reload at the tree's flags, at -O2 and -O3,
-#   c++20 and c++23. With this object alone compiled without -fno-strict-aliasing in a whole link, `splat-remap` prints
-#   `target 2799: IDENTICAL`.
 # - CEleitorDinamicoDAO's constructor, Inserir and Atualizar (3768, 5776, 5775) match at the tree's -O3: clang inlines
 #   string::append(const char*, size_t) at -O2, and the target calls it (fn 160). With this one object at -O3 in the -O2
 #   link they scored 22 over 267, 18 over 404 and 18 over 400 rows, operands only, short of the name of the .bss string

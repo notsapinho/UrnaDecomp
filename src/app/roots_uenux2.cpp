@@ -80,7 +80,7 @@ __attribute__((noinline)) void LancaIpc2(int c, const std::string& m) { throw ap
 
 // std::vector<double>'s range insert (target fn 2662), which simulador::CWasmScreen::FillPath and DrawPath and RHVoice's
 // speech_processor call: the target's copy has TBAA, so this object, ahead of uenux2's on the link line, holds the instance
-// (docs/reference/facts/app-flags.md, "The stand-ins keep strict aliasing"; uenux2's -fno-strict-aliasing gives another body)
+// (docs/reference/facts/app-flags.md, "The stand-ins keep strict aliasing"; built without TBAA, cwasmscreen.cpp's differed)
 void urna_insere_doubles(std::vector<double>& valores, const double* inicio, const double* fim)
 {
     valores.insert(valores.end(), inicio, fim);

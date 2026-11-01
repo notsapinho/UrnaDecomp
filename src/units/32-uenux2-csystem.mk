@@ -23,12 +23,11 @@
 # moves it into a second, and at the end of the scope calls it when it is set, sets it to nullptr and destroys it.
 # CScopeGuard, a class with a std::function member taken by value, gives that; the class, its name, its place (an
 # anonymous namespace of this file, lines 990 to 1011) and its members' names are chosen. Slot 3 of the lambda's block,
-# __clone(__base*) (10861), differs: our object stores the vptr before the captured pointer, where the target stores the
-# pointer first; compiled with -fstrict-aliasing added (try-tu.sh --symbols, the object read with wasm-objdump) the
-# order is the target's, and in a whole-link try with csystem.cpp and cgenerictags.cpp at `--flags -fstrict-aliasing` it
-# scores 1 over 9 rows, operand-only: it waits for uenux2 without -fno-strict-aliasing, a decision that is not this
-# unit's. Slot 2, __clone() (10862), differs: it calls the shared body of the lambdas' clones (target fn 1083), which
-# our link forms with RHVoice's and stores the vptr first. The target's use band 4 runs 2762 (IsEmptyDir), 2761
+# __clone(__base*) (10861), and slot 2, __clone() (10862), match since src/api/ builds with strict aliasing (src/Makefile
+# UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). With -fno-strict-aliasing our object stored the vptr before the captured pointer, where the target
+# stores the pointer first, and 10862 calls the shared body of the lambdas' clones (target fn 1083), which our link
+# formed with RHVoice's and which stored the vptr first; it matches with app/comum/dados/md/rdv/cvotos.cpp's lambdas
+# built with strict aliasing too. The target's use band 4 runs 2762 (IsEmptyDir), 2761
 # (ZeroFill), 2760, 2759 (GetFileSize): a higher index links first, so ZeroFill is first mentioned before GetFileSize in
 # the target's object, where ours defines it after (the records fix both lines). Only a function defined before line 322
 # that mentions ZeroFill explains that order; none is written, and the order is no difference of bytes

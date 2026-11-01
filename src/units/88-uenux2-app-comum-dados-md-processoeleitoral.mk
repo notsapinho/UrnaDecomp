@@ -60,12 +60,11 @@
 # cargo pairs, 11559 and 11558, whose table slots fns 7377 (which holds code of this file's line 249) and 3782 store: so
 # it is defined after the statics, and its line, after record 249, is a choice. Chosen: its name and GetNome's, its
 # being a free function, ccargos.h as its header, GetNome's being inline in the class.
+# - CEleicaoPE::ValidaOrdem (fn 3714) matches since comum's data classes build with strict aliasing (src/Makefile
+#   UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md §F6). With -fno-strict-aliasing its one difference is three rows:
+#   the object reloads __child after __insert_node_at's store of the begin node. insert, emplace and a named result all
+#   keep it, and so does -O3. The caller is the constructor fn 11371 inlines.
 # Not matched:
-# - CEleicaoPE::ValidaOrdem (fn 3714, written, no-candidate). Its one difference is three rows: at this tree's
-#   -fno-strict-aliasing the object reloads __child after __insert_node_at's store of the begin node. insert, emplace and a
-#   named result all keep it, and so does -O3. In a whole link with celeicaope.cpp.o alone compiled without the flag,
-#   splat-remap prints target 3714: IDENTICAL. docs/reference/facts/app-flags.md §F6 states the flag for the tree, and a flag
-#   is a tree's, so the body stays and the row waits for that decision. The caller is the constructor fn 11371 inlines.
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes
 #   give it. The row stays `differs`.
@@ -73,7 +72,7 @@
 #   copy of CEleicaoPE, and fn 2289 calls no __init_with_size. At -O2 clang keeps __init_with_size<CCargo> out of line
 #   (-Rpass-missed=inline: cost=230, threshold=225) and inlines the copy into the constructor; at -O3, the tree's level,
 #   cpleito.cpp gives the target's calls. With that object and second callers for 1953 and 3870 in a scratch link, it scores 103 over 438 rows
-#   against 1150 over 1448 (3 of them the tree's reload: without -fno-strict-aliasing, 100 over 435); what is left includes the placement of its three throws, so no body here is shown right.
+#   against 1150 over 1448 (3 of them the reload of -fno-strict-aliasing, which this directory no longer has: without it, 100 over 435); what is left includes the placement of its three throws, so no body here is shown right.
 # - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
 #   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their
 #   evidence and why that object links after ccargos.cpp. The file's other records, lines 25, 93 and 249, are not written.

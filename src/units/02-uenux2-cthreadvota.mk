@@ -10,8 +10,8 @@
 # where the higher index is linked first, so 5452 is defined before StopTick (record at line 60), and our link has them
 # in that order (ld_index, build/out/wasm-map/vota_web/names.tsv). Where before StopTick is a choice: after AddTick, line 41.
 # So is the order of 4640 and 807 in cthreadvota.cpp, which no band ties to the other members.
-# CTickManager::AddTick (3644, record 31:15) is written and `differs`. The census pairs it and its three callers (4640,
-# 5452, 10800) with nothing, and two lines of splat/symbol_addrs.txt name it: a generated `evidence:call` line, since
+# CTickManager::AddTick (3644, record 31:15) matches since src/api/ builds with strict aliasing (below). The census
+# paired it and its three callers (4640, 5452, 10800) with nothing, and two lines of splat/symbol_addrs.txt name it: a generated `evidence:call` line, since
 # 1285's vptr anchor names 4640 (`call by:1285`) and 4640 and 5452 vote for 3644, and a callers+content hand line from
 # the two records 3644 alone loads, which stays for that evidence. Measured at -O2 with unit 97's states written,
 # scans run twice on copies of the symbol file and the match list: with the hand line alone out every match holds;
@@ -28,7 +28,8 @@
 # __insert_node_at, where our object reads the new node back after the store to the begin node and the target keeps it
 # in a local, and the loads of the key in __find_equal's loop, in another order. In a whole-link try with
 # ctickmanager.cpp and cthreadvota.cpp at `--flags -fstrict-aliasing` the link reads `score 28 over 421 rows`, every row
-# an operand: the body waits for uenux2 without -fno-strict-aliasing, a decision that is not this unit's.
+# an operand: those rows are -fno-strict-aliasing's, and src/api/ builds with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6),
+# so 3644 matches.
 # Five spellings of SearchNextId's loop give the same object for AddTick (wasm-objdump -d, compared row by row): an
 # unsigned, int or size_t counter, `<= 0xff` or `< 256`, and static_cast<uebyte> on the key and the result or none.
 UENUX2_SRCS += src/api/util/ctickmanager.cpp src/app/vota/cthreadvota.cpp

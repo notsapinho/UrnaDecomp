@@ -5,14 +5,15 @@
 # members at +0 and +4 are read from the class's one inlined construction (fns 3831 and 5892 store 4 and 3 there; insert
 # compares the tag's size with +0 minus 1, and 5892 takes +4 characters as the tag); their names are chosen. The map's
 # find is the twin of the matched std::map<std::string, unsigned short>::find (fn 163): the same body for any mapped
-# type. CGenericTags::insert (fn 1071, records at lines 31, 34 and 37, col 15: the 7013, 7014 and 7015 throws) is
-# written and does not match: nothing names it (`no-candidate`), since a record anchors a pair only when the two bodies
-# are the same opcodes (docs/reference/splat.md section 2). It inserts std::make_pair(tag, tamanho): the target copies
+# type. CGenericTags::insert (fn 1071, records at lines 31, 34 and 37, col 15: the 7013, 7014 and 7015 throws) matches
+# since src/api/ builds with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6), named by its records
+# (evidence:srcloc-anchor); before, nothing named it (`no-candidate`), since a record anchors a pair only when the two
+# bodies are the same opcodes (docs/reference/splat.md section 2). It inserts std::make_pair(tag, tamanho): the target copies
 # the tag into a pair whose second word is a 4-byte size_t, moves it into the node and stores the byte there, after the
 # find. Its difference is the map's __insert_node_at: our object reads the new node back after the store to the begin
 # node, where the target keeps it in a local. In a whole-link try with csystem.cpp and cgenerictags.cpp at `--flags
 # -fstrict-aliasing` it scores `54 over 878 rows`, all operand-only, against `62 over 883 (57 operand-only, 5 inserted)`
-# at the tree's flags: it waits for uenux2 without -fno-strict-aliasing, a decision that is not this unit's. EncodeTLV
+# with -fno-strict-aliasing. EncodeTLV
 # (5467, records at lines 79 and 85) is not written: it holds a body that reads as libm's exp2, inlined, and calls 6278
 # and 6279, which nothing names; AppendTLV (5466, line 102) and fn 3647, `EncodeTLV(tag, valor, TagSize(tag))`, call it.
 # WalkTreeTLV and DecodeTLV (5892) are not reconstructed. Paths relative to src/uenux2; the generic uenux2 rule depends

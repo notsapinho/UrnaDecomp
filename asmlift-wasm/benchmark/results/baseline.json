@@ -1,37 +1,37 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-11-01T12:03:41.204Z",
+ "createdAt": "2026-11-01T13:28:22.419Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
  },
  "image": "urna-emsdk:6.0.0",
  "dataset": {
-  "rows": 193,
-  "rowsSha256": "ccb19fec6475a01c540e8d5a12904d7a49e6b18683b96a09f39e6f5a72e5700f",
-  "setupsSha256": "d32618a5c629695fd6288951be23c1dc2df815ce1f88116cb582e054dd408bc7"
+  "rows": 205,
+  "rowsSha256": "c9ba89f61000629ab166c0dbf0e6e68847262b09c928c0033449a101bd423af9",
+  "setupsSha256": "5d573b199e95a9eb0341364ab5d198b33c27dbffb912101fc939fef403611220"
  },
- "commit": "ed71dfdd+dirty",
+ "commit": "65498db9+dirty",
  "durationMs": {
-  "lift": 75,
-  "compileAndOptimise": 3683,
-  "total": 8614
+  "lift": 135,
+  "compileAndOptimise": 5544,
+  "total": 14851
  },
  "totals": {
   "overall": {
-   "rows": 193,
-   "lifted": 193,
-   "compiled": 193,
-   "optimised": 193,
-   "exactRaw": 36,
-   "exact": 85,
+   "rows": 205,
+   "lifted": 205,
+   "compiled": 205,
+   "optimised": 205,
+   "exactRaw": 41,
+   "exact": 90,
    "medianRatio": 0.4069,
    "medianOptRatio": 0.0682,
-   "meanOptRatio": 0.184,
+   "meanOptRatio": 0.1828,
    "outcomes": {
-    "exact": 85,
-    "differs": 108
+    "exact": 90,
+    "differs": 115
    }
   },
   "bySetup": {
@@ -40,14 +40,29 @@
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 3,
-    "exact": 5,
-    "medianRatio": 0.263,
-    "medianOptRatio": 0.005,
-    "meanOptRatio": 0.1477,
+    "exactRaw": 4,
+    "exact": 6,
+    "medianRatio": 0.37,
+    "medianOptRatio": 0.0029,
+    "meanOptRatio": 0.1417,
     "outcomes": {
-     "exact": 5,
-     "differs": 7
+     "exact": 6,
+     "differs": 6
+    }
+   },
+   "uenux2-tbaa": {
+    "rows": 12,
+    "lifted": 12,
+    "compiled": 12,
+    "optimised": 12,
+    "exactRaw": 4,
+    "exact": 4,
+    "medianRatio": 0.3272,
+    "medianOptRatio": 0.1491,
+    "meanOptRatio": 0.1701,
+    "outcomes": {
+     "differs": 8,
+     "exact": 4
     }
    },
    "vota-web": {
@@ -294,20 +309,21 @@
  },
  "rows": [
   {
-   "id": "uenux2/1261",
-   "index": 1261,
+   "id": "uenux2/902",
+   "index": 902,
    "setup": "uenux2",
-   "size": 80,
-   "band": "small",
+   "size": 16,
+   "band": "tiny",
    "features": [
-    "leaf"
+    "leaf",
+    "i64"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 42,
+   "targetRows": 7,
    "raw": {
-    "score": 4,
-    "ratio": 0.0952
+    "score": 0,
+    "ratio": 0
    },
    "opt": {
     "score": 0,
@@ -319,52 +335,25 @@
    "standIns": []
   },
   {
-   "id": "uenux2/1915",
-   "index": 1915,
+   "id": "uenux2/2271",
+   "index": 2271,
    "setup": "uenux2",
-   "size": 70,
+   "size": 105,
    "band": "small",
    "features": [
-    "leaf"
+    "leaf",
+    "loop"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 31,
+   "targetRows": 55,
    "raw": {
-    "score": 6,
-    "ratio": 0.1935
+    "score": 10,
+    "ratio": 0.1818
    },
    "opt": {
-    "score": 6,
-    "ratio": 0.1935
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "uenux2/2662",
-   "index": 2662,
-   "setup": "uenux2",
-   "size": 821,
-   "band": "large",
-   "features": [
-    "loop",
-    "float",
-    "bulk-memory",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 432,
-   "raw": {
-    "score": 412,
-    "ratio": 0.9537
-   },
-   "opt": {
-    "score": 327,
-    "ratio": 0.7569
+    "score": 2,
+    "ratio": 0.0364
    },
    "exact": false,
    "outcome": "differs",
@@ -397,29 +386,37 @@
    "standIns": []
   },
   {
-   "id": "uenux2/5036",
-   "index": 5036,
+   "id": "uenux2/5685",
+   "index": 5685,
    "setup": "uenux2",
-   "size": 22,
-   "band": "tiny",
+   "size": 725,
+   "band": "large",
    "features": [
-    "call_indirect"
+    "loop",
+    "invoke",
+    "throw",
+    "frame",
+    "float",
+    "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 9,
+   "targetRows": 371,
    "raw": {
-    "score": 0,
-    "ratio": 0
+    "score": 318,
+    "ratio": 0.8571
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 191,
+    "ratio": 0.5148
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
-   "standIns": []
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
    "id": "uenux2/5719",
@@ -453,10 +450,35 @@
    ]
   },
   {
-   "id": "uenux2/7902",
-   "index": 7902,
+   "id": "uenux2/5813",
+   "index": 5813,
    "setup": "uenux2",
-   "size": 10,
+   "size": 121,
+   "band": "small",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 46,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2/5918",
+   "index": 5918,
+   "setup": "uenux2",
+   "size": 11,
    "band": "tiny",
    "features": [
     "leaf"
@@ -509,92 +531,6 @@
    ]
   },
   {
-   "id": "uenux2/10307",
-   "index": 10307,
-   "setup": "uenux2",
-   "size": 2480,
-   "band": "huge",
-   "features": [
-    "call_indirect",
-    "invoke",
-    "throw",
-    "frame",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 942,
-   "raw": {
-    "score": 940,
-    "ratio": 0.9979
-   },
-   "opt": {
-    "score": 4,
-    "ratio": 0.0042
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto",
-    "inlined callee outlined"
-   ]
-  },
-  {
-   "id": "uenux2/10581",
-   "index": 10581,
-   "setup": "uenux2",
-   "size": 23,
-   "band": "tiny",
-   "features": [
-    "leaf",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 10,
-   "raw": {
-    "score": 0,
-    "ratio": 0
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "uenux2/10946",
-   "index": 10946,
-   "setup": "uenux2",
-   "size": 74,
-   "band": "small",
-   "features": [
-    "call_indirect",
-    "frame",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 36,
-   "raw": {
-    "score": 2,
-    "ratio": 0.0556
-   },
-   "opt": {
-    "score": 2,
-    "ratio": 0.0556
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": []
-  },
-  {
    "id": "uenux2/10949",
    "index": 10949,
    "setup": "uenux2",
@@ -625,6 +561,449 @@
     "arm tail kept from the join",
     "goto"
    ]
+  },
+  {
+   "id": "uenux2/11591",
+   "index": 11591,
+   "setup": "uenux2",
+   "size": 10,
+   "band": "tiny",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 4,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2/11620",
+   "index": 11620,
+   "setup": "uenux2",
+   "size": 4622,
+   "band": "huge",
+   "features": [
+    "loop",
+    "throw",
+    "frame",
+    "inlined-frame",
+    "i64",
+    "bulk-memory"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 2052,
+   "raw": {
+    "score": 1773,
+    "ratio": 0.864
+   },
+   "opt": {
+    "score": 796,
+    "ratio": 0.3879
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "constant address hidden from alignment inference",
+    "frame object escapes at entry",
+    "goto",
+    "inlined callee outlined"
+   ]
+  },
+  {
+   "id": "uenux2/11668",
+   "index": 11668,
+   "setup": "uenux2",
+   "size": 106,
+   "band": "small",
+   "features": [
+    "call_indirect",
+    "frame",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 54,
+   "raw": {
+    "score": 22,
+    "ratio": 0.4074
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2-tbaa/3677",
+   "index": 3677,
+   "setup": "uenux2-tbaa",
+   "size": 133,
+   "band": "medium",
+   "features": [
+    "leaf",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 69,
+   "raw": {
+    "score": 40,
+    "ratio": 0.5797
+   },
+   "opt": {
+    "score": 33,
+    "ratio": 0.4783
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2-tbaa/5514",
+   "index": 5514,
+   "setup": "uenux2-tbaa",
+   "size": 761,
+   "band": "large",
+   "features": [
+    "loop",
+    "call_indirect",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 350,
+   "raw": {
+    "score": 129,
+    "ratio": 0.3686
+   },
+   "opt": {
+    "score": 53,
+    "ratio": 0.1514
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "uenux2-tbaa/5632",
+   "index": 5632,
+   "setup": "uenux2-tbaa",
+   "size": 61,
+   "band": "small",
+   "features": [
+    "leaf",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 25,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2-tbaa/6265",
+   "index": 6265,
+   "setup": "uenux2-tbaa",
+   "size": 123,
+   "band": "small",
+   "features": [
+    "loop",
+    "frame",
+    "i64",
+    "float"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 56,
+   "raw": {
+    "score": 16,
+    "ratio": 0.2857
+   },
+   "opt": {
+    "score": 11,
+    "ratio": 0.1964
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "unused frame"
+   ]
+  },
+  {
+   "id": "uenux2-tbaa/6999",
+   "index": 6999,
+   "setup": "uenux2-tbaa",
+   "size": 4946,
+   "band": "huge",
+   "features": [
+    "loop",
+    "switch",
+    "call_indirect",
+    "frame",
+    "inlined-frame",
+    "i64",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 2217,
+   "raw": {
+    "score": 1937,
+    "ratio": 0.8737
+   },
+   "opt": {
+    "score": 936,
+    "ratio": 0.4222
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "constant address hidden from alignment inference",
+    "frame object escapes at entry",
+    "goto",
+    "inlined callee outlined"
+   ]
+  },
+  {
+   "id": "uenux2-tbaa/7709",
+   "index": 7709,
+   "setup": "uenux2-tbaa",
+   "size": 2883,
+   "band": "huge",
+   "features": [
+    "loop",
+    "call_indirect",
+    "invoke",
+    "throw",
+    "frame",
+    "inlined-frame",
+    "i64",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 1349,
+   "raw": {
+    "score": 1036,
+    "ratio": 0.768
+   },
+   "opt": {
+    "score": 460,
+    "ratio": 0.341
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "frame object escapes at entry",
+    "goto",
+    "inlined callee outlined"
+   ]
+  },
+  {
+   "id": "uenux2-tbaa/9155",
+   "index": 9155,
+   "setup": "uenux2-tbaa",
+   "size": 114,
+   "band": "small",
+   "features": [
+    "loop",
+    "call_indirect"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 57,
+   "raw": {
+    "score": 9,
+    "ratio": 0.1579
+   },
+   "opt": {
+    "score": 2,
+    "ratio": 0.0351
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2-tbaa/10772",
+   "index": 10772,
+   "setup": "uenux2-tbaa",
+   "size": 570,
+   "band": "large",
+   "features": [
+    "loop",
+    "switch",
+    "frame",
+    "i64",
+    "bulk-memory"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 244,
+   "raw": {
+    "score": 141,
+    "ratio": 0.5779
+   },
+   "opt": {
+    "score": 66,
+    "ratio": 0.2705
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "frame object escapes at entry",
+    "goto"
+   ]
+  },
+  {
+   "id": "uenux2-tbaa/10880",
+   "index": 10880,
+   "setup": "uenux2-tbaa",
+   "size": 15,
+   "band": "tiny",
+   "features": [
+    "leaf",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 8,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2-tbaa/10881",
+   "index": 10881,
+   "setup": "uenux2-tbaa",
+   "size": 418,
+   "band": "medium",
+   "features": [
+    "call_indirect",
+    "throw",
+    "frame",
+    "inlined-frame",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 184,
+   "raw": {
+    "score": 145,
+    "ratio": 0.788
+   },
+   "opt": {
+    "score": 27,
+    "ratio": 0.1467
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "inlined callee outlined"
+   ]
+  },
+  {
+   "id": "uenux2-tbaa/11317",
+   "index": 11317,
+   "setup": "uenux2-tbaa",
+   "size": 10,
+   "band": "tiny",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 5,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "uenux2-tbaa/11318",
+   "index": 11318,
+   "setup": "uenux2-tbaa",
+   "size": 10,
+   "band": "tiny",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 5,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "vota-web/1395",
