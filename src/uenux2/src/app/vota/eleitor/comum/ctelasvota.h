@@ -18,6 +18,12 @@ namespace vota {
 // the one at +148: GetTelaReinicioVotacao's name, and that it is a getter, are chosen.
 class CTelasVota {
 public:
+    // The zeresima states' constructors copy the members at +212, +220 and +228 (fns 5965, 11945 and 5957): the getters'
+    // names, and that they are getters, are chosen.
+    const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
+    const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
+    const CFormInterativoTelaVota& GetTelaQuerImprimirZeresima() const { return m_tela28; }
+
     ~CTelasVota();
 
     static CTelasVota& GetInst();

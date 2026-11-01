@@ -15,8 +15,11 @@
 // (fns 10416, 10436, 10524, 10758 and 11798); LogaAudioDesativadoFimVotacao and LogaSuspensaoAbortada (fns 4529 and
 // 4535) are out of line, each called with GetInst's result by two states' slots (fns 10435 and 10646; 10407 and
 // 10420). Their names are chosen from their messages too. So is LogaVotacaoEncerrada's, held inlined by its one
-// caller, vota::CAplicacaoEncerrada::StartState (fn 12058; unit 138's fragment has its notes). This header's path is
-// chosen, beside clogvota.cpp, and only the members written are declared.
+// caller, vota::CAplicacaoEncerrada::StartState (fn 12058; unit 138's fragment has its notes).
+// LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
+// vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
+// member's own stack frame opens and calls fn 233; its name is chosen from its message. This header's path is chosen,
+// beside clogvota.cpp, and only the members written are declared.
 
 #include <string>
 
@@ -49,6 +52,7 @@ public:
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
     void LogaVotacaoEncerrada();
+    void LogaAguardandoConfirmacaoZeresima();
 
 private:
     CLogVota();

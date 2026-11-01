@@ -133,6 +133,11 @@ void CLogVota::LogaVotacaoEncerrada()
     loga("Votação encerrada");
 }
 
+void CLogVota::LogaAguardandoConfirmacaoZeresima()
+{
+    loga("Aguardando confirmação para emissão da zerésima");
+}
+
 } // namespace vota
 
 // <stubs>
