@@ -7,7 +7,7 @@
 # - the controller's 37 slots (10800 down to 10766, with 434 in slot 8), and the bodies binaryen merged some of them into:
 #   3887 (slots 31 to 33 in the target, 32 and 33 here: below), 3888 (slots 29, 34 and 36), 6017 (slots 19 and 27);
 # - CRegistroMesarioEncerrado's two exit-time destructors, 10765 (the pointer's) and 10764 (the mutex's).
-# Matched: 184, 3887, 3888, 6017, 10763 to 10779, 10781 to 10785, 10788, 10791, 10793, 10796 and 10798 to 10800.
+# Matched: 184, 3887, 3888, 6017, 10763 to 10779, 10781 to 10785, 10788, 10791, 10793, 10795, 10796 and 10798 to 10800.
 # Slot 8 is the shared 434 (`return true`), matched before. Unit 02 matches 422 and 5451, which
 # slot 3 reaches, and names CTickManager::AddTick (3644), which slot 2 (10800) calls, by a `callers+content` hand line.
 #
@@ -68,6 +68,11 @@
 #   of the four values indexed by the state less 55. The target's dead `local.set 0` of 0 at the entry is the switch's
 #   default held in a local, which each of those objects has too (a reading). A --single try returns that local where the
 #   target has `i32.const 0` (`score 4 over 23 rows`, 3 of them operand-only); the link gives the target's bytes.
+# - Slot 7 (10795) calls comum::CRegistradorMesario::GetInst (fn 815) first, then reads the same state: for 55 and 56
+#   it tests the count of period 1 (fn 3606), for 58 the count of period 2 (fn 2727), each `> 5` unsigned, and returns
+#   true for every other state. Unit 113 writes those three. GetInst's call comes before the state's read in the target,
+#   so the registrador is held in a local first; the switch and its cases as bare numbers are a choice, as in slot 6,
+#   and no other spelling was measured.
 # - Slot 11 (10793) returns CRegistroMesarioEncerrado::GetInst(), which binaryen inlined into its one caller: the 12-byte
 #   new, comum::CAppState's constructor (fn 224) with 1 and the vptr store, the old object freed with no call through
 #   the vtable, the mutex's unlock (fn 150). The class is written as unit 104's states with no member are (unit 104's
@@ -119,7 +124,7 @@
 #   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
 # Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
-# slots 5, 7, 9, 13, 14 and 16 (fns 10797, 10795, 10794, 10790, 10789, 10786), and behind them fns 2264, 4662 and 5343;
+# slots 5, 9, 13, 14 and 16 (fns 10797, 10794, 10790, 10789, 10786), and behind them fns 2264, 4662 and 5343;
 # CRegistroMesarioEncerrado's ProcessKey (fn 10762).
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the

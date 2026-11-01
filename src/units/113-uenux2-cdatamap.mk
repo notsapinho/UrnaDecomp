@@ -24,6 +24,41 @@
 #   has the servico and the registry. 1391 allocates 40 bytes before it calls 3742, and the destructor (2810) calls the
 #   servico's (3740) on +28: the class's size and the member's offset. A stand-in in the roots calls the constructor
 #   twice for its three callers, 1391, 11474 and 11475, which build the class's singleton and are not reconstructed.
+# - comum::CRegistradorMesario's singleton (cregistradormesario.h says what is evidence and what is chosen):
+#   - GetInst, 815, under a std::lock_guard of the static std::mutex: when the static std::unique_ptr is empty it resets
+#     it to a new object (52 bytes), whose constructor, in the class, passes the name "CRegistradorMesario" to CDataMap's
+#     and builds the servico member, whose constructor binaryen inlines from ccomparecimentomesarioservico.cpp with
+#     Entregar<IComparecimentoMesarioDAO> (the second stack prologue; the record cdaorepositorio.hpp:79, 1595692, anchors
+#     815). The other object a reset would free goes through 5380 and free.
+#   - the destructor, 5380, `= default` in the .cpp; the two trees it destroys, 1902 (the +28 map,
+#     std::map<CEleitorIdentidade, CComparecimentoMesario>) and 2728 (the CDataMap's, <CComparecimentoMesarioPK,
+#     CComparecimentoMesario>): recursive bodies, whose self-calls re-point once the symbol file names them (1902 by
+#     5380's call, 2728 by its census pair); 1902 was `differs` against the twin of another map's tree, 2265, whose node
+#     has its strings at the same offsets.
+#   - HasInst, 2221: the unique_ptr tested under the same lock. Its callers, 11616 and 12105, are not written.
+#   - the statics' exit destructors, 10310 (the unique_ptr's) and 10309 (the mutex's). The symbol file names the mutex
+#     at 1909908 by 815's vote alone; 2221 and 10309 read that address as well, and 10309 is the mutex's destructor.
+#   - QuantidadeMesariosInicio and QuantidadeMesariosFim, 3606 and 2727: each counts the map's records of one period, 1
+#     or 2, with std::count_if. binaryen merges the two into 6007, `byn$mgfn-shared$` of the first, called with 1 and 2,
+#     in our link as in the target (`pnpm wasm score ../target/vota_web_wasm.wasm 6007` against it: BYTE-EXACT).
+#   vota::CControladorRegistraMesariosVota's slot 7, 10795 (unit 119), calls GetInst and both counts. The roots'
+#   ConsultaRegistrador gives GetInst, the two counts and HasInst their second call site (its comment names the callers
+#   it stands for).
+#
+#   Measured in the link (pnpm wasm score against the target, after make -C src link-map):
+#   - the order of the objects: ccomparecimentomesarioservico.cpp is in this unit's list ahead of
+#     cregistradormesario.cpp, moved from unit 163's. In the target's data the servico's vtable (1595668), Entregar's
+#     record (1595692) and the control block's vtable lie before cregistradormesario.cpp's first record (1595748): the
+#     servico's object comes first. With unit 163's order, the servico after, 815 scored `125 over 521 rows (same 396,
+#     replaced 121 [121 operand-only], inserted 2, deleted 2)`, its locals permuted; with this order `55 over 519 rows
+#     (same 464, replaced 55 [55 operand-only], inserted 0, deleted 0)`, operands that names resolve.
+#   - the destructor's place: the first function of the .cpp. In use band 2 the target runs 5380, 5379, 5378, 5377
+#     downwards, so the destructor is defined (or first mentioned) above AtualizaMesarioSecao, which first mentions 5379
+#     (how-to step 3, "The order of two members"). Defined below Registra, the bodies were the same (5380 `4 over 29
+#     rows`, operand-only) and its ld_index came after those three.
+#   - s_inst is defined before s_mutex: their exit destructors take the target's order in band 1, 10310 above 10309
+#     (ld_index 2023 and 2024); the other order is not tried. In the object the mutex has the first .bss segment
+#     (wasm-objdump -x), as 1909908 comes before 1909932 in the target.
 #
 # Not matched: Add(const value_type &) (line 143) for <CNumeroInscricaoEleitoral, CJustificadorDetalhe>, 5725. The member
 # is written in the header and nothing in the link instantiates it over this key, so its row is no-candidate, with no
@@ -83,7 +118,8 @@
 # The members in the class are a choice as well: column 19 fits them, and a definition after the class with one more
 # nested block would too (not measured here; unit 64's fragment measures that for its template).
 #
-# Chosen, no evidence names them: Find, Registra, AtualizaMesarioSecao, GetMesario, PertenceSecao, m_registros,
+# Chosen, no evidence names them: Find, Registra, AtualizaMesarioSecao, GetInst, HasInst, QuantidadeMesariosInicio,
+# QuantidadeMesariosFim, s_inst, s_mutex, the CRegistradorMesario m_servico, GetMesario, PertenceSecao, m_registros,
 # m_corrente, m_nome, m_mesariosSecao, m_mesario and m_periodoPresente (the columns of fn 10403 name their roles), m_ano,
 # the four enumerators (from their messages), the paths of cregistradormesario.h and
 # cjustificadordetalhe.h, and cjustificador.cpp as the file of 3743: its use band puts it beside 3741 and 3742, whose
@@ -91,17 +127,18 @@
 # For CJustificador: the path of cjustificador.h, m_servico, and the CDataMap as a base, not a member at +0 (the same
 # choice as CRegistradorMesario's). The constructor follows 3743 in the file: band uses 3 runs 3743, 3742 downwards.
 # The lines in cregistradormesario.cpp and cjustificador.cpp are a choice, and each file's records (85; 55, 83 and 104)
-# belong to functions not written.
+# belong to functions not written; in cregistradormesario.cpp the order is the use bands' where they say (the destructor
+# first, above) and a choice elsewhere.
 #
 # CDataMap's constructor from a name, IsFim and Reset are written for their users in units 89, 129 and 77
 # (comum::CCandidaturas's constructor 5811; fn 2268, which holds IsFim inline; comum::CParteEleitores::Imprime, fn 11206,
 # which holds Reset and IsFim inline); cdatamap.h's comment says which parts are chosen.
 #
-# Not reconstructed: CRegistradorMesario's constructor (inlined into 815, GetInst, which gives the map the literal
-# "CRegistradorMesario"; whether it passes the name to CDataMap's constructor is not tried), its destructor 5380, CRegistradorMesario::SaveCurrentInternal (record 85, held by
-# 10337) and CJustificador's other members (Justifica, SaveCurrentInternal, the functions that build its singleton,
-# 1391, 11474 and 11475, and the destructor 2810). 5378 and 5379's other callers are 10337 and 6734.
-CDATAMAP_SRCS := src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
+# Not reconstructed: CRegistradorMesario::SaveCurrentInternal (record 85), which only fn 10337 holds, inlined
+# (IGestorDadoMesario::StartState, unit 135's trap: its callees 395, 1149, 1255, 2730 and 2731 have no name), and
+# CJustificador's other members (Justifica, SaveCurrentInternal, the functions that build its singleton, 1391, 11474 and
+# 11475, and the destructor 2810). 5378 and 5379's other callers are 10337 and 6734.
+CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
 
 $(ROOT)/$(APP)/113-uenux2-cdatamap-roots.o: $(ROOT)/src/units/113-uenux2-cdatamap-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/113-uenux2-cdatamap.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

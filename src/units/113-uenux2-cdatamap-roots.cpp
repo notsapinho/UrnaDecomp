@@ -20,6 +20,9 @@
 //   mapped type, so a std::map<CEleitorIdentidade, int> gives each its second call site, and binaryen merges the copies.
 // - comum::CJustificador's constructor, 3742 (1391, 11474, 11475): two call sites, so binaryen keeps it out of line;
 //   it stores CJustificadorServico's vptr, the reference the target has to that vtable.
+// - CRegistradorMesario::GetInst, 815 (ten callers; 10795, unit 119's slot 7, is in the link), its counts 3606 and 2727
+//   (each called by 10795 and two more), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls GetInst and each
+//   count once, beside 10795, and HasInst twice.
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
 #include <new>
@@ -132,6 +135,17 @@ __attribute__((noinline)) int CriaJustificadores(void* primeiro, void* segundo)
     return 43;
 }
 
+// Stands for the callers of CRegistradorMesario::GetInst (fn 815) not in the link, 3614, 5387, 6734, 10313, 10337,
+// 10368, 10451, 11616 and 12105 (10795 is); of QuantidadeMesariosInicio (fn 3606), 5387 and 12105, and of
+// QuantidadeMesariosFim (fn 2727), 10368 and 12105 (10795 calls both); and of HasInst (fn 2221), 11616 and 12105.
+__attribute__((noinline)) int ConsultaRegistrador(std::size_t* quantidades)
+{
+    const comum::CRegistradorMesario& registrador = comum::CRegistradorMesario::GetInst();
+    quantidades[0] = registrador.QuantidadeMesariosInicio();
+    quantidades[1] = registrador.QuantidadeMesariosFim();
+    return comum::CRegistradorMesario::HasInst() ? 47 : (comum::CRegistradorMesario::HasInst() ? 53 : 59);
+}
+
 const void* volatile w113_sink;
 
 struct SW113Roots {
@@ -152,6 +166,7 @@ struct SW113Roots {
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalhe);
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalheDois);
         w113_sink = reinterpret_cast<const void*>(&CriaJustificadores);
+        w113_sink = reinterpret_cast<const void*>(&ConsultaRegistrador);
     }
 } w113_roots;
 
