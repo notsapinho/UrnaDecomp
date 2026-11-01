@@ -71,6 +71,9 @@ enum EUeGuiError {
     // the value is the code api::IScreen::GetFontMetrics (target fn 8938) throws; the name is chosen from its message,
     // "Método não implementado": no evidence names it
     EUE_GUI_METODO_NAO_IMPLEMENTADO = 4982,
+    // the value is the code api::CApplicationContextGuard's constructor throws (record capplicationcontextstack.cpp 45:15,
+    // inlined into fn 676); the name is chosen from its message, "O contexto não pôde ser criado": no evidence names it
+    EUE_GUI_APPLICATIONCONTEXTGUARD_CONTEXTO_NAO_CRIADO = 5013,
 };
 
 using CUeGuiError = ecourna::api::exception::CBaseError<EUeGuiError, ecourna::api::exception::SErrorLimits{4900, 5100}>;
