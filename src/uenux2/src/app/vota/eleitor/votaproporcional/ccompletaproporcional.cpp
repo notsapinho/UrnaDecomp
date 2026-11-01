@@ -1,5 +1,10 @@
 #include "app/vota/eleitor/votaproporcional/ccompletaproporcional.h"
 
+#include "api/gui/cinteractiveform.h"
+#include "app/comum/dados/ccargos.h"
+#include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/euevotaerror.h"
+
 namespace vota {
 
 CCompletaProporcional::CCompletaProporcional(uebyte tela)
@@ -7,9 +12,23 @@ CCompletaProporcional::CCompletaProporcional(uebyte tela)
 {
 }
 
-} // namespace vota
+void CCompletaProporcional::StartStateAudio()
+{
+    GetTelaCargoAtual(__PRETTY_FUNCTION__)->Slot2();
+    m_pNextState = this;
+}
 
-// <stubs>
-// f5931 · 20 B · unmatched · name unknown
-// void f5931(i32, i32, i32) { ... }
-// </stubs>
+// (original lines 21-78: content not recovered)
+#line 79
+CFormInterativoTelaVota CCompletaProporcional::GetTelaCargoAtual(const std::string& chamador)
+{
+    const auto& cargos = comum::CCargos::GetInst();
+    if (cargos.IsFim()) {
+        throw CUeVotaError(EUE_VOTA_COMPLETA_PROPORCIONAL_CARGO_NAO_POSICIONADO,
+                           chamador + " - o cargo atual nao esta posicionado");
+    }
+    const auto& cargo = cargos.GetCurrent();
+    return CTelasVota::GetInst().GetTelaCargo(cargo.GetID(), static_cast<ETelaVotacao>(m_tela));
+}
+
+} // namespace vota

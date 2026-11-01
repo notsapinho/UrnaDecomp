@@ -5,8 +5,8 @@
 namespace vota {
 
 // vota::CConfirmaVotoEmCargo (RTTI: si_class of vota::CVotacaoStateAudio; vtable @1548232 [1035, 325, 7028, 7480, 1661,
-// 7022, 425, 7029, 7010, 11754, 11755, 218, 425, 3139, 6999, 12143, 12143, 425]): the states that confirm a vote. Slots
-// 9 and 10 are pending; slot 12 is empty (fn 425), slot 15 stays pure and slots 16 and 17 are this class's: fn 11754
+// 7022, 425, 7029, 7010, 11754, 11755, 218, 425, 3139, 6999, 12143, 12143, 425]): the states that confirm a vote. Slot
+// 9 is pending; slot 10 (fn 11755) shows the form GetTelaCargoAtual (record :71) returns for the screen at +28; slot 12 is empty (fn 425), slot 15 stays pure and slots 16 and 17 are this class's: fn 11754
 // stores slot 16's result as the next state and calls slot 17 with the form's result. Their names and types are chosen.
 // The constructor (fn 5929, out of line: it has two callers, the constructors of CConfirmaProporcional and
 // CConfirmaMajoritario, fns 11752 and 11700) passes its first argument to CVotacaoStateAudio's and stores the other two
@@ -16,6 +16,7 @@ namespace vota {
 // (ETelaVotacao)14), and for +32 a small number that branco states pass as 3 and nulo states as 4 (fns 11670 to 11673,
 // 11707, 11715 to 11717, 11738, 11739). This header's path is chosen, beside cconfirmavotoemcargo.cpp, a file the
 // record of GetTelaCargoAtual (:71) names; slot 9, declared first here, is the key function by choice.
+// GetTelaCargoAtual's being private and its parameter's name are chosen; it reads +28 as an ETelaVotacao.
 class CConfirmaVotoEmCargo : public CVotacaoStateAudio {
 public:
     virtual void ProcessInputAudio() override;
@@ -32,6 +33,8 @@ protected:
     CConfirmaVotoEmCargo(int eventos, uebyte tela, int tipoVoto);
 
 private:
+    CFormInterativoTelaVota GetTelaCargoAtual(const std::string& chamador);
+
     uebyte m_tela;
     int m_tipoVoto;
 };
