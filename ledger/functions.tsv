@@ -10692,8 +10692,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10826	75	0	rhvoice	RHVoice	skeleton	10878	addr	5	RHVoice::property<std::__2::set<unsigned int, std::__2::less<unsigned int>, std::__2::allocator<unsigned int>>>::~property()
 10827	62	0	rhvoice	RHVoice	skeleton	10884	addr	4	RHVoice::enum_property<RHVoice_capitals_mode>::~enum_property()
 10828	62	0	rhvoice	RHVoice	skeleton	10983	addr	4	RHVoice::enum_property<RHVoice::quality_t>::~enum_property()
-10829	6	0	rhvoice	utf8cpp	skeleton	11502	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::target_type() const
-10830	6	0	rhvoice	utf8cpp	skeleton	11507	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::target_type() const
+10829	6	0	rhvoice	utf8cpp	skeleton	11502	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::target_type() const
+10830	6	0	rhvoice	utf8cpp	skeleton	11507	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::target_type() const
 10831	6	0	rhvoice	utf8cpp	skeleton	11676	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::target_type() const
 10832	14	0	rhvoice	RHVoice	skeleton	10886	byte	0	RHVoice::property<bool>::check_value(bool const&, bool&) const
 10833	60	0	rhvoice	RHVoice	skeleton	10895	byte	0	RHVoice::property<bool>::is_set(bool) const
@@ -10746,7 +10746,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10880	15	0	app	simulador	skeleton	11063	byte	0	api::IImpressoraRelatorios::GetColumns()
 10881	418	0	app	simulador	skeleton	11065	shape	13	api::IImpressoraRelatorios::SetStyle(api::ELPStyle)
 10882	7	0	app	libc++	skeleton	11685	addr	1	std::bad_cast::what() const
-10883	20	0	app	libc++	skeleton	11503	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::target(std::type_info const&) const
+10883	20	0	app	libc++	skeleton	11503	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::target(std::type_info const&) const
 10884	10	0	app	libc++	-	-	none	-	
 10885	22	0	app	libc++	skeleton	11333	addr	1	std::__2::__function::__func<api::CSystem::ZeroFill(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
 10886	12	0	app	libc++	skeleton	11334	addr	2	std::__2::__function::__func<api::CSystem::ZeroFill(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)::$_0, void ()>::__clone() const
@@ -10771,7 +10771,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10905	215	0	app	api	-	-	none	-	
 10906	185	0	app	api	skeleton	10994	addr	1	api::CTextRectField::Draw(api::IScreen&) const
 10907	7	0	app	libc++	skeleton	11687	addr	1	std::bad_array_new_length::what() const
-10908	20	0	app	libc++	skeleton	11508	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::target(std::type_info const&) const
+10908	20	0	app	libc++	skeleton	11508	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::target(std::type_info const&) const
 10909	211	0	app	libc++	skeleton	11299	addr	2	std::__2::__function::__func<api::CTextFieldUpdate::CTextFieldUpdate(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, std::__2::chrono::duration<long long, std::__2::ratio<1ll, 1000ll>> const&, api::SFont const&, api::TColor, api::TColor)::$_0, void ()>::operator()()
 10910	22	0	app	libc++	skeleton	11679	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
 10911	12	0	app	libc++	skeleton	11680	addr	2	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
@@ -10845,14 +10845,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10979	7	0	libcxx	libc++	skeleton	11768	addr	1	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::target_type() const
 10980	20	0	app	libc++	skeleton	11689	addr	1	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::target(std::type_info const&) const
 10981	433	0	app	libc++	-	-	none	-	
-10982	22	0	libcxx	libc++	skeleton	11505	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+10982	22	0	libcxx	libc++	skeleton	11505	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
 10983	9	0	libcxx	-	skeleton	12147	fingerprint	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::resize[abi:ne210108](unsigned long)
 10984	12	0	libcxx	libc++	skeleton	10010	addr	2	RHVoice::value::concrete_container<RHVoice::break_strength>::clone() const
 10985	7	0	-	libc++	skeleton	11832	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Cargo(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target_type() const
 10986	20	0	app	libc++	skeleton	11729	addr	1	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::target(std::type_info const&) const
 10987	433	0	app	libc++	-	-	none	-	
-10988	22	0	app	libc++	skeleton	11510	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
-10989	12	0	app	libc++	skeleton	11506	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
+10988	22	0	app	libc++	skeleton	11510	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+10989	12	0	app	libc++	skeleton	11506	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
 10990	10	0	app	api	skeleton	11512	addr	2	api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::~BatteryIconDataSource()_3282
 10991	18	0	app	-	skeleton	11513	addr	3	__cxx_global_array_dtor_3277
 10992	17	0	app	libc++	skeleton	10326	addr	1	std::__2::__shared_ptr_pointer<comum::impl::IValidaMidia*, std::__2::default_delete<comum::impl::IValidaMidia>, std::__2::allocator<comum::impl::IValidaMidia>>::__get_deleter(std::type_info const&) const
@@ -10886,7 +10886,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11020	7	0	app	libc++	skeleton	11845	addr	1	std::__2::__system_error_category::name() const
 11021	20	0	app	libc++	skeleton	11833	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Cargo(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 11022	22	0	app	libc++	-	-	none	-	
-11023	12	0	app	libc++	skeleton	11511	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
+11023	12	0	app	libc++	skeleton	11511	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
 11024	673	0	app	api	skeleton	11592	shape	9	api::IInputField<api::IScreenMT>::Read(api::IInput&)
 11025	39	0	app	-	-	-	none	-	
 11026	9	0	app	-	-	-	none	-	

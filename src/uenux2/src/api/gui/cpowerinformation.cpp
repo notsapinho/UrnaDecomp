@@ -89,7 +89,7 @@ void BatteryIconDataSource<Orientation>::UpdateBatteryIcon()
     }
 }
 
-template BatteryIconDataSource<CPowerInformation::IconOrientation::Horizontal>::BatteryIconDataSource();
 template BatteryIconDataSource<CPowerInformation::IconOrientation::Vertical>::BatteryIconDataSource();
+template BatteryIconDataSource<CPowerInformation::IconOrientation::Horizontal>::BatteryIconDataSource();
 
 } // namespace api
