@@ -102,18 +102,10 @@
 // f4511 · 150 B · unmatched · placement: link order · name unknown
 // void f4511(i32) { ... }
 
-// link-order cluster 690 · uses=2
-
-// f4551 · 174 B · unmatched · placement: link order · name unknown
-// void f4551(i32) { ... }
-
 // link-order cluster 691 · uses=2
 
 // f4557 · 162 B · unmatched · placement: link order · name unknown
 // void f4557(i32) { ... }
-
-// f4556 · 35 B · unmatched · placement: link order · name unknown
-// void f4556(i32) { ... }
 
 // link-order cluster 692 · uses=2
 
@@ -387,11 +379,6 @@
 // f6113 · 446 B · unmatched · placement: link order · name unknown
 // void f6113(i32, i32, i32, i32) { ... }
 
-// link-order cluster 872 · uses=2
-
-// f6115 · 160 B · unmatched · placement: link order · name unknown
-// void f6115(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 885 · uses=2
 
 // f6265 · 123 B · unmatched · placement: link order · name unknown
@@ -629,11 +616,6 @@
 // f4152 · 297 B · unmatched · placement: link order · name unknown
 // void f4152(i32, i32) { ... }
 
-// link-order cluster 1059 · uses=4
-
-// f2495 · 35 B · unmatched · placement: link order · name unknown
-// void f2495(i32) { ... }
-
 // link-order cluster 1060 · uses=4
 
 // f2499 · 57 B · unmatched · placement: link order · name unknown
@@ -831,11 +813,6 @@
 
 // f1269 · 145 B · unmatched · placement: link order · name unknown
 // ? f1269(i32) { ... }
-
-// link-order cluster 1266 · uses=11
-
-// f1127 · 491 B · unmatched · placement: link order · name unknown
-// void f1127(i32, i32, i32) { ... }
 
 // link-order cluster 1271 · uses=12
 

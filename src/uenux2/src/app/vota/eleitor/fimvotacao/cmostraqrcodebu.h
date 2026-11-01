@@ -45,9 +45,8 @@ private:
 // base's constructor with 2 and a null +28. +28 is the form ProcessInput reads (fn 12051 reads the input fields at +72
 // and the focus at +84 of it, CInteractiveForm's layout, and gets CPolySingleton<IInputKbd>'s instance, fn 455);
 // ProcessInput passes it to AjustaTela (fn 5982), whose record (line 195) takes a CFormInterativoTelaVota &, so that is
-// its type, spelled out here: app/vota/eleitor/cvotacaostateaudio.h, which defines that alias, declares
-// api::EInputResult with a fixed underlying type that api/gui/iinputfield.h's definition contradicts, so a TU that
-// calls Read() cannot include it. Chosen: the member's name, the names GetInst, s_inst and s_mutex (the ones the
+// its type, spelled out here, where app/vota/eleitor/cvotacaostateaudio.h, which defines that alias, is not included.
+// Chosen: the member's name, the names GetInst, s_inst and s_mutex (the ones the
 // project's singletons use), the destructor declared first, and the definitions' lines.
 class CMostraQRCodeBU final : public CEstadoComDesligamentoAutomatico {
 public:

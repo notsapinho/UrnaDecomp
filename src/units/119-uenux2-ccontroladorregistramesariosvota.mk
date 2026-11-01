@@ -37,6 +37,10 @@
 #   are held inlined by 10416, 10436, 10524, 10758 and 11798, and two are out of line, 4529 and 4535, matched. Last come
 #   unit 138's LogaVotacaoEncerrada, which 12058 holds inlined, and unit 169's LogaAguardandoConfirmacaoZeresima, which
 #   5958 holds inlined. Fragments 152, 138 and 169 have their evidence, and 184 still matches with them in the file.
+# - Four more, after LogaPedidoTituloSuspensao, belong to unit 156's states: LogaImprimindoRelatorio (1127),
+#   LogaMesarioIndagadoQualidadeBU (4551), and the two logaAlerta texts binaryen merges into fn 6115,
+#   LogaQtdViasAdicionaisExcedeMaximo (4556) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (2495), all out of
+#   line; src/units/156-uenux2-fimvotacao-bu.mk has their evidence, and its roots their callers' stand-ins.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses

@@ -38,6 +38,9 @@ public:
     const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
     const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
     const CFormInterativoTelaVota& GetTelaQuerImprimirZeresima() const { return m_tela28; }
+    // vota::CLimiteCopiasBUAtingido's constructor (its GetInst inlined into fn 12023) copies the one at +108; the name is
+    // chosen, as the others' are.
+    const CFormInterativoTelaVota& GetTelaLimiteCopiasBUAtingido() const { return m_tela13; }
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;

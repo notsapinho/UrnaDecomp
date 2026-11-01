@@ -128,6 +128,27 @@ void CLogVota::LogaPedidoTituloSuspensao()
     loga("Solicitado título eleitoral para suspensão do eleitor");
 }
 
+// Unit 156's four sit here, at lines the reconstruction chose (its fragment says why).
+void CLogVota::LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via)
+{
+    loga(std::format("Imprimindo relatório [{}] via nº [{}]", ConverteERelatoriosUE(relatorio), via));
+}
+
+void CLogVota::LogaQtdViasAdicionaisExcedeMaximo()
+{
+    logaAlerta("Quantidade de vias adicionais excede o máximo permitido");
+}
+
+void CLogVota::LogaMesarioIndagadoQualidadeBU()
+{
+    loga("Mesário indagado sobre qualidade do Boletim de Urna");
+}
+
+void CLogVota::LogaHabilitacaoCanceladaReconhecimentoBiometrico()
+{
+    logaAlerta("Habilitação cancelada durante reconhecimento biométrico");
+}
+
 void CLogVota::LogaVotacaoEncerrada()
 {
     loga("Votação encerrada");
