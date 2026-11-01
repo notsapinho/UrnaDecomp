@@ -16,9 +16,9 @@
 //   five not reconstructed: with one caller binaryen inlines 1919 into 11183.
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
 //   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); 1919 is the only one reconstructed, and with one caller binaryen
-//   inlines the constructor into it. w123_erro stands for the other 13 (11181, 11212, 11214, 11233, 11968, 12110, 1543,
-//   2786, 2791, 3689, 3696, 5967, 942). It passes an empty std::source_location: a default argument would make a record
-//   on this line, which is none of the target's.
+//   inlines the constructor into it. w123_erro stands for ten of the other 13 (11181, 11212, 11233, 11968, 12110, 1543,
+//   2786, 2791, 3689, 5967; 11214, 3696 and 942 are in the link). It passes an empty std::source_location: a default
+//   argument would make a record on this line, which is none of the target's.
 #include <source_location>
 #include <string>
 

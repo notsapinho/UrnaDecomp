@@ -2,8 +2,10 @@
 # keeps these objects, so this fragment has no sources and no rules: it holds what docs/how-to-decompile.md step 3 asks
 # a fragment to say. docs/reference/facts/asn1.md has the evidence (§A2 the flags, §A5 the names, §A6 the files).
 #
-# Pending. 3473 (decodeCommon) waits for its callee 543: ours calls 3475 there, and no body of the runtime equals 543
-# (§A5). Its rows equal ours up to callees, so the source stays as written.
+# 3473 (decodeCommon) matches, held up by the link (docs/reference/facts/splat.md §S10 item 19): no body of the runtime
+# equals its callee 543 (§A5), and it matches since unit 89's ccandidaturas.cpp.o, ahead of asn1.o on the link line,
+# gives the vector<unsigned>::push_back(&&) it calls, a copy binaryen merges into the body that matches 543 (unit 89's
+# fragment says how). Before that ours called 3475 there. The source stays as written.
 #
 # What the target decided:
 # - checkTag: a bool, inverted from upstream's int dontCheckTag. 996 and 8853 store 1 where upstream clears the flag,

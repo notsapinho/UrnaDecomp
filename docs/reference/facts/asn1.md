@@ -209,8 +209,11 @@ alone: a name says which function sits there, and the scan still compares the by
   constant, so this is not `rtti-vptr`. It reads its second argument's fields as a copy does, and its `addr` and `shape`
   hashes each occur once in the target and once in ours (the `fingerprint` command above).
 
-Names free callers, not bodies. 3473 (`decodeCommon`) stays unmatched: it calls 543, a 239-B body with 28 callers, the
-`push_back(&&)` of a 4-byte element, and no body of the runtime equals it. The target's 543 is RHVoice's
+Names free callers, not bodies. 3473 (`decodeCommon`) calls 543, a 239-B body with 28 callers, the `push_back(&&)` of a
+4-byte element, and no body of the runtime equals it. It matches since `ccandidaturas.cpp.o` (unit 89) defines
+`vector<unsigned>::push_back(&&)` ahead of `asn1.o` on the link line: that `-O3` copy is the code of the `roots_boost.o`
+body below, binaryen merges the two, and the call re-points to 543 ([splat.md](splat.md) §S10 item 19). The target's
+543 is RHVoice's
 `vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`
 matches 543 by content from that object, and that flag changes more than the pads ([libraries.md](libraries.md) §B6). A twin
 reached the same bytes another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merged with `vector<long>`'s from

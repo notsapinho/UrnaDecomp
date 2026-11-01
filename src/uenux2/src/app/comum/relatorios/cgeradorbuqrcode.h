@@ -4,10 +4,12 @@
 // header beside it is chosen) and comum::SQtdeAptos. Reconstruction notes, not TSE's text.
 //
 // RTTI gives CGeradorBUQRCode with no base, and its vtable (@1575912) has four slots: the D2 (fn 2251), 325 for the D0
-// (an abstract class's) and two pure slots. No record, slot or caller names those two: Slot2 and Slot3 are named after
-// their slots. Their signatures are CGeradorBUQRCodeVota's overriders' (fns 11242 and 11241, cgeradorbuqrcodevota.h):
-// both return a std::string, and slot 3 takes one more word, which fn 5604 passes from CCargos::GetCurrentEleicaoID
-// (fn 2835), so its type, TEleicaoID, is chosen from that.
+// (an abstract class's) and two pure slots. No record or string names those two. Fn 5604 calls both, slot 2 with the
+// object alone and slot 3 with CCargos::GetCurrentEleicaoID's result, and keeps each std::string it gets, but nothing
+// in it says what part of the QR code either is: so their names are chosen, Slot2 and Slot3 after their slots, no
+// better name being recovered. Their signatures are CGeradorBUQRCodeVota's overriders' (fns 11242 and 11241,
+// cgeradorbuqrcodevota.h): both return a std::string, and slot 3 takes one more word, which fn 5604 passes from
+// CCargos::GetCurrentEleicaoID (fn 2835), so its type, TEleicaoID, is chosen from that.
 //
 // Recovered: the layout and the destructor. CGeradorBUQRCodeVota's constructor (fn 5603) holds this class's inlined: it
 // copies a CCabecalhoQRCodeBuilder to +4 (fn 5608; 396 bytes), stores CRdvVota::GetInst()'s result (fn 555) at +400

@@ -38,8 +38,9 @@
 # What waits, and for what:
 # - 2650 calls 388 where ours calls 424: two ~shared_ptr bodies in the target, one in our link, and 388 keeps a result no
 #   caller of ours reads. 3552 is unit 115's.
-# - 3473 (decodeCommon): calls 543, a body none of ours equals. document.cpp.o, the object that defines
-#   vector<unsigned>::push_back(&&), ahead of the runtime moves the row to `call 938` and matches nothing.
+# - 3473 (decodeCommon) waits no more: it matches since unit 89's ccandidaturas.cpp.o defines
+#   vector<unsigned>::push_back(&&) ahead of asn1.o (unit 89's fragment). document.cpp.o, which defines it too, put
+#   ahead of the runtime, had moved the row to `call 938` and matched nothing.
 # - 3674: its target callers (395, 1151, 5410) are not written. It matched by content only with RHVoice at
 #   -fignore-exceptions, where a twin's body is the target's; userdict.cpp.o alone at -fignore-exceptions does not give it.
 # - 8811, 194, 2706: differ past the first local. Not read further.

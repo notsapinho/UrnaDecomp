@@ -39,6 +39,14 @@
 # md::CCandidatura::GetPartidoID and GetCandidatoID and md::CDadosCandidato::GetSituacao (chosen names). Their callers in
 # our link are unit 77's 11215 (2271) and 11214 (2840, 1273); the roots' Consultas stands for the rest.
 #
+# 3473, the ASN.1 runtime's OBJECT_IDENTIFIER::decodeCommon, matches with these members in the link, and rests on the
+# link order, not on a source here (docs/reference/facts/splat.md S10 item 19). ccandidaturas.cpp.o defines
+# std::vector<unsigned>::push_back(&&) (273 B, at -O3) ahead of asn1.o's -Os copy (318 B) and RHVoice's document.cpp.o
+# on the link line (their linking sections, wasm-objdump -x, in LINK_OBJS order: inputs 307, 706 and 877), so its
+# copy is the one decodeCommon calls. That copy is the code of roots_boost.o's vector<long>::push_back(const long&),
+# which binaryen merges it into (ours 553, the body that matches 543), and decodeCommon's call re-points to 543, as
+# the target's does.
+#
 # 1709, __tree::destroy over md::CCandidatura, matches at the tree's -O3 and not at -O2:
 # __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.
 # 1719, vector<md::CDadosCandidato>::__destroy_vector, stays `differs` for another reason, TBAA, not the level: at the tree's flags the

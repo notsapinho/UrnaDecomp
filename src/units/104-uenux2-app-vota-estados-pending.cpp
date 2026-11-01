@@ -48,10 +48,10 @@ void CIniciodeCiclo::StartState()
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
 // with no name: 183, 185, 187, 202, 203, 261, 273, 291, 326, 332, 378, 401, 436, 457, 463, 491, 502,
-// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1249, 1269, 1274, 1405, 1485, 1822,
+// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1249, 1269, 1274, 1822,
 // 1933, 1935, 1960, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782, 3784, 3788, 3825, 3826, 3829,
 // 3834, 5462, 5480, 5545, 5824, 5856, 5866, 5869, 5870, 5876, 5887, 5888, 5889, 5891, 5899, 5905,
-// 6174.
+// 6174 (and units 155's 1405 and 168's 1485).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
@@ -125,14 +125,14 @@ void CMaisInformacoes::ProcessInput()
 }
 
 // CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 187, 202, 203, 242, 267, 365,
-// 374, 502, 576, 653, 861, 1279, 2383, 5951.
+// 374, 502, 576, 653, 861, 2383, 5951 (and unit 150's 1279).
 void CMenuFiltrarCandidatosPorNumero::StartState()
 {
     __builtin_trap();
 }
 
-// CMenuFiltrarCandidatosPorNumero::ProcessInput: fn 11891 (999 B), callees with no name: 202, 203, 455, 521, 1273,
-// 1279, 1401, 2245, 5446, 5550, 5951.
+// CMenuFiltrarCandidatosPorNumero::ProcessInput: fn 11891 (999 B), callees with no name: 202, 203, 455, 521, 1401,
+// 2245, 5446, 5550, 5951 (and units 89's 1273 and 150's 1279).
 void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 {
     __builtin_trap();

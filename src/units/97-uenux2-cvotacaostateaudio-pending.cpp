@@ -26,7 +26,7 @@
 // 5931, record :83), which calls fn 3921, which has no name; slot 13 is not read here. ProcessInputAudio is the class's
 // key function here, as CConfirmaVotoEmCargo's is.
 // vota::CPedeNulo::GetProximoEstado and vota::CPedeNominal::GetProximoEstado (slot 16, fns 11744, record cpedenulo.cpp:44,
-// 433 B, and 11724, 495 B): both call fn 1273 (116 B), which has no name.
+// 433 B, and 11724, 495 B): both call fn 1273 (116 B), which unit 89 matches since as CCandidaturas::Busca.
 // vota::CMajoritarioValido::AoConcluirEntrada and vota::CConfirmaVotoNominal::AoConcluirEntrada (slot 17, one target
 // body, fn 5925, 2141 B): it logs and runs a vota::impl::IPoliticaExecucaoEleitor through fn 5407, which has no name.
 // Its stub sat in app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp, where the record of the GetInst it holds inlined

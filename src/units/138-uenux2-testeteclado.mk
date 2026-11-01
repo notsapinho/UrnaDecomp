@@ -44,20 +44,20 @@
 #
 # Not written, with what each waits for:
 # - every constructor of a class over CEstadoComDesligamentoAutomatico, and so their GetInst (CBase's 5948;
-#   CAplicacaoEncerrada's 3877, CMostraQRCodeBU's 2888, CVerificaHorarioZeresima's 5947, CTesteTeclado's 3855,
-#   CEsperaRetestar's 5936) and the exit destructors of their statics (the 1564 group): the base's constructor (fn 1285)
-#   was not declared where they were measured; unit 97 declares and matches it now, and they are not written;
+#   CAplicacaoEncerrada's 3877, CVerificaHorarioZeresima's 5947, CTesteTeclado's 3855, CEsperaRetestar's 5936) and the
+#   exit destructors of their statics (the 1564 group): the base's constructor (fn 1285) was not declared where they
+#   were measured; unit 97 declares and matches it now, and they are not written. CMostraQRCodeBU's 2888 is written
+#   since, in unit 37, and waits for the 1564 group to form;
 # - CVerificaHorarioZeresima's slot 9 (fn 11870, record :80) and CEsperaRetestar's (fn 11823): the base's header names
 #   slot 9 ProcessOutroTick, a chosen name, where the record names it ProcessTickNaoDesligamento; so the base's empty
 #   body, fn 425, fills both slots here and their stubs go. 11870 also throws through the assert macro (next item),
 #   11823 calls fn 3855;
-# - vota::CQuerImprimirBU (fimvotacao/cquerimprimirbu.cpp, a stub file): StartState 12035 (records :40 and :41) throws
-#   api::EUeAssertError 3474 and 3475 with "Assert (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)" and
-#   "Assert (poInfo.GetVota().GetQtdBU() == 0)", as CVerificaHorarioZeresima's StartState (pending) throws 3481: they
-#   need the assert macro's header, the EEstadoVota enumerators and CEstadoGeralVota's GetEstadoVota and GetQtdBU, none
-#   in this tree; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
-# - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12051, 12040, 12038), CTesteTeclado's (2868, 11806,
-#   11805, 11804): callees with no name, 455, 1285, 2023, 502 and 576 among them;
+# - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
+#   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
+#   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
+# - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12051, 12040; 12038, ProcessInput, matches since in
+#   unit 156), CTesteTeclado's (2868, 11806, 11805, 11804): callees with no name, 455, 1285, 2023, 502 and 576 among
+#   them;
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data

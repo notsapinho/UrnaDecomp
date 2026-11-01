@@ -88,8 +88,8 @@
 # its slots 2 and 3 (11483 and 11482) are traps there. The roots' d5734 stands for 7787, which is not written.
 #
 # Not reconstructed:
-# - 11206, CParteEleitores::Imprime, has both its callees matched and is only not written; 11215, CParteCandidatos::Imprime,
-#   waits for 2271. Both stay traps in unit 77's pending file.
+# - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both
+#   since.
 # - 242, ~CDetalheCandidato, is written (implicit) and differs: __destroy_at<CSuplencia> costs 245, over -O2's threshold
 #   of 225 and under -O3's 250 (-Rpass-missed=inline on cpe.cpp). At -O2 it stays out of line and the small loop goes into
 #   the D2; at -O3 it goes into the loop, fn 1135, which is then too costly for the D2. At the tree's -O3 242 scores 96

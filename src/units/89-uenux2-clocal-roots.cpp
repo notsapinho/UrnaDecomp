@@ -56,7 +56,7 @@ __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 // 2838 and 5806: one call each, beside the written caller (5806 for 2838, 2268 for 5806).
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 5807, 12641 and 12742
 __attribute__((noinline)) int Sexos(int a) { return w5806(a + 1) << 1; } // stands for 13101
-__attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // stands for 2871, 5710, 5950, 7787 and 11448
+__attribute__((noinline)) void DestroiSuplentes(int a) { w1719(a + 16); } // 5710, 5950, 7787, 11448 (2871 linked)
 __attribute__((noinline)) int Construtores(int a, int b) { return w2262(a) + 2 * w2262(b); }
 __attribute__((noinline)) void Destrutores(int a, int b)
 {

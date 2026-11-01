@@ -33,10 +33,10 @@
 // CConfereVotoEmCargo instances, which this file's stand-ins bring into the link. CCompletaProporcional's
 // (fn 5932) has one, fn 11711, pending: DoisCompletaProporcional stands for it with two calls. The two GetInst (fns
 // 3849 and 5921, thunks into fn 6051) have their slot 16 callers written (fns 11751 and 11699) and 4459, 11756 not:
-// PedeProporcional and PedeMajoritario stand for those. None of CEstadoComDesligamentoAutomatico's (fn 1285) ten
-// callers is written (2888, 3855, 3877, 5936, 5947, 5948, 11804, 11809, 11812, 12051): DoisDesligamentos stands for
-// them with two calls. Each stand-in passes what the target's callers vary (the events, the two stored arguments) as a
-// variable, so binaryen folds none of them, and adds a constant somewhere, so no two are alike.
+// PedeProporcional and PedeMajoritario stand for those. Of CEstadoComDesligamentoAutomatico's (fn 1285) ten callers
+// only 2888 is in the link: DoisDesligamentos stands for the other nine (3855, 3877, 5936, 5947, 5948, 11804, 11809,
+// 11812, 12051) with two calls. Each stand-in passes what the target's callers vary (the events, the two stored
+// arguments) as a variable, so binaryen folds none of them, and adds a constant somewhere, so no two are alike.
 //
 // The rest is declared through asm labels (a constructor returns `this` before binaryen runs).
 #include <cstdint>

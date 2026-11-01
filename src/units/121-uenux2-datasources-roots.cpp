@@ -10,8 +10,8 @@
 //   CDataText<CRespostasDSNumero> too, in a builder it drops, so the copies the link keeps of that class's vtable and
 //   GetText are that object's, the same code. CRespostasDSNumero's constructor is declared only: fn 6652 builds the
 //   source with a call of fn 5729, which stores its byte and returns this, and fn 600 calls the same body on another
-//   class's one-byte object, so the target holds one body for both and does not tell which source defines it. COpcaoDS
-//   is copied, as fn 2753 copies it.
+//   class's one-byte object (unit 154 writes that one, CSynchronizer's), so the target holds one body for both and does
+//   not tell which source defines it. COpcaoDS is copied, as fn 2753 copies it.
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fns
 //   652, 1150, 1901, 2734, 2747, 5397, 10440 and 10465) and api::CInputMenuField (1579324, fn 3675). A dropped builder
 //   needs T's constructor declared, not defined.

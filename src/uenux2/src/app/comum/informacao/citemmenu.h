@@ -10,8 +10,8 @@ namespace comum {
 // heads, as far as the destructor and the slots' shapes. The vtable (@1539884) is [2937, 325, 12143]: an abstract class
 // with one pure slot, slot 2. Its D2 (fn 2937, a merge thunk over fn 1727) stores the vptr and frees a std::string at
 // +8. That the destructor is inline here is what fn 2932 says, which holds that body inlined in the control block of a
-// derived class; the D2 alone would say nothing (docs/reference/facts/reading.md R5). The +4 word is not read by any
-// body read, and its type and every name are chosen. fn 6599 builds the items and stores more at +20 and +24 of the one
+// derived class; the D2 alone would say nothing (docs/reference/facts/reading.md R5). The +4 word is the item's key
+// (below), and every name is chosen. fn 6599 builds the items and stores more at +20 and +24 of the one
 // it builds in place. The path is chosen beside cmenubase.h: no record names it.
 //
 // The four comum classes' vtables are [2937, 325, <own>, 12143]: each fills slot 2 (fns 11669, 11668, 11667, 11666,
