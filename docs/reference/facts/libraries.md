@@ -427,3 +427,97 @@ The recipe used for 7-Zip, RHVoice and Boost:
 On all three libraries objects at -O3 beat -O2 > -Os > -Oz, `-flto` loses, and `-std=c++20` changes nothing
 measurable. The paired fraction stays low (7-Zip 19 % of bytes, RHVoice 4 %, Boost 4 %) because the probe's
 inlining context is not the app's: enough to rank releases, not a byte reproduction.
+
+## B10. libqrencode 4.1.1, at CMakeLists.txt's flags, reached through one TSE caller
+
+Twenty target functions with no record, no RTTI and no string read the QR and Micro QR tables (`third_party/MANIFEST.md`
+has the reading). They are libqrencode's: the census of a probe of 4.1.1 against the target pairs each with the library
+function of the same body (`cd asmlift-wasm && pnpm wasm census ../target/vota_web_wasm.wasm
+../build/out/libqrencode-probe/v4.1.1-O3pic/probe.wasm --depth 0 --pairs`): 493 `BitStream_appendNum`, 1147
+`QRspec_lengthIndicator`, 1253 `MMask_writeFormatInformation`, 1534, 1899 and 2719 `QRinput_estimateBitsMode8`, `…An`
+and `…Num`, 2218 `MQRspec_lengthIndicator`, 2718 `QRinput_encodeBitStream`, 3595 `RSECC_encode`, 3596
+`QRinput_List_newEntry`, 3597 `QRinput_append`, 5346 `MQRspec_getWidth`, 5347 `MQRspec_getDataLengthBit`, 5349
+`QRspec_getMinimumVersion`, 5350 `BitStream_appendBytes`, 5351 `QRinput_getByteStream`, 5352
+`QRinput_isSplittableMode` and 10241 `MQRspec_getECCLength`; 5348 `Split_eat8` pairs in the whole link. 1254 is the
+body binaryen merges `BitStream_free` and `QRcode_free` into (the same null test and two frees): the target's 2718 and
+5351 call it as the one, 2772 and 10967 as the other, the probe keeps it as `QRcode_free` and our link, which calls no
+`QRcode_free` yet, as `BitStream_free`. Once a caller of `QRcode_free` lands, our link may keep `qrencode.o`'s copy
+instead, as the probe does (its driver calls `QRcode_free`, and it links `qrencode.o` first); not measured on the
+whole link. The library's one TSE caller is fn 5502 (stub in `api/gui/cqrcodeguard.cpp`,
+13,815 B), which holds `QRcode_encodeString` and every library function with one call site, inlined by binaryen. Of the
+target's functions, only 5502 and 11 of the 20 hold an address in the library's read-only data, 547888 to 551504
+(`awk '/^[0-9a-f]+ func\[/{f=$2} /i32\.const [0-9]+$/{v=$NF+0; if (v>=547888 && v<551504) print f}'
+build/dump/vota.objdump.txt | sort -u`).
+
+**The probe.** `tools/libs/libqrencode/build.sh <tag> <variant> <flags…>` exports a tag of the full clone in
+`third_party/libqrencode` with `git archive`, compiles the nine sources of CMakeLists.txt in its order with its defines,
+and links them with `driver.c`, which makes 5502's call, at the target's link line. `tools/libs/libqrencode/score.sh
+<tag>-<variant>` scores the 20 target functions against it at depth 0 (from the urna root, Node 24 first on PATH).
+Rows differing over rows, the flags being `-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1` but where the row
+says otherwise:
+
+| probe | 493 | 2718 | 3595 | 3597 | 5351 | the others |
+| --- | --- | --- | --- | --- | --- | --- |
+| **4.1.1** | 0/164 | 10/765 | 30/548 | 0/34 | 5/857 | operand rows alone but 5348 (117/315) |
+| 4.1.0 | 0/164 | 46/766 | 30/548 | 0/34 | 40/863 | as 4.1.1 |
+| 4.0.2 | 0/164 | 60/766 | 30/548 | 0/34 | 188/874 | as 4.1.1 |
+| 4.0.0 | 65/189 | 60/766 | 145/577 | 0/34 | 200/878 | 5350 16/150 |
+| 4.1.1 at `-O2` | 0/164 | 203/893 | 30/548 | 53/81 | 155/892 | 3596 not in the probe |
+| 4.1.1 at `-Os` | 118/171 | 228/830 | 289/555 | 0/34 | 442/948 | 1253 148/217, 5350 117/162 |
+| 4.1.1 at `-Oz` | 128/177 | 280/854 | not in the probe | 0/34 | 523/975 | 1253 not in the probe |
+| 4.1.1 without `-fPIC` | 0/164 | 20/767 | 144/565 | 0/34 | 11/861 | 1147, 1253, 3596, 5349, 10241 insert or delete rows |
+| 4.1.1 without `HAVE_LIBPTHREAD` | 0/164 | 10/765 | 186/560 | 0/34 | 5/857 | as 4.1.1 |
+
+- **The version.** 4.1.1 is the repository's last tag. It changed `qrinput.c` alone (`git -C third_party/libqrencode
+  diff --stat v4.1.0 v4.1.1 -- '*.c' '*.h'`): the Micro QR paths of `QRinput_estimateBitStreamSizeOfEntry` and
+  `QRinput_encodeBitStream` call `MQRspec_lengthIndicator` and `MQRspec_maximumWords`. The target's 5351 calls 2218
+  directly, as only 4.1.1's code does.
+- **The flags.** `-O3 -fPIC -DNDEBUG` is CMake's Release level with position-independent code, the conan default that
+  SQLite (B1) and zlib (B8) have too. `HAVE_LIBPTHREAD=1` is what CMakeLists.txt defines when it finds threads: it
+  brings 3595 from 186 to 30 rows, every one an operand, and the target's 3595, like ours, calls nothing.
+  `-fno-strict-aliasing` and leaving out `-DHAVE_STRDUP=1` change none of the 20 rows (175 differing rows either way).
+- **The place.** In the target's bands (`ledger/ordinals.tsv`'s `uses`) the library's functions sit among uenux2's api
+  objects: in the uses==2 band CWavFile's D2 (`api/audio/alsa/cwavfile.cpp`, 5345) comes right before 5346 to 5352 and
+  CPosixRWMutex's D2 (`api/ipc/posix`, 5353) right after, and in the uses==3 band CThread's C2 (`api/ipc/cthread.cpp`,
+  3598) right after 3595 to 3597. A band lists its functions in reverse link order (L1), so the library links after
+  `api/ipc`'s objects and before `cwavfile.cpp`'s. rsecc.o's `.bss` lies between
+  `api::persistencia::CDAORepositorio::s_daos` (0x1d24cc) and `comum::util::CMonitoraAlimentacao::s_inst` (0x1d2b10)
+  (`splat/symbol_addrs.txt`). Our link has no slot among uenux2's objects; fragment 187 puts the objects after RHVoice
+  and zlib. In the companions' slot instead (`override EXTRA_OBJS += $(QRENCODE_OBJS)` in place of fragment 187's
+  `RHVOICE_OBJS` line, which puts them between unit 17's roots and unit 187's), `make -C src link`, `census`,
+  `splat-symbols` and `splat-match` printed 10539 matches, the same 17 added and 0 renamed.
+- **The order inside the library**, in link order, where the target reads it: the uses==2 band 5352 and 5351
+  (`qrinput.o`), 5350 (`bitstream.o`), 5349 (`qrspec.o`), 5348 (`split.o`), 5347 and 5346 (`mqrspec.o`); the uses==3
+  band 3597 and 3596 (`qrinput.o`), then 3595 (`rsecc.o`); the uses==10 band 1254, then 1253 (`mmask.o`), so `mmask.o`
+  links after the object 1254's merged body comes from (`bitstream.o`, or `qrencode.o`). The target's `.rodata` holds
+  `qrinput.o`'s, `qrspec.o`'s and `mqrspec.o`'s tables in that order (`QRinput_anTable` 0x85c30, `qrspecCapacity`
+  0x85cb0, `mqrspecCapacity` 0x868e0; data order is link order, [link-order.md](link-order.md) L7 item 15). The rest
+  is a choice, CMakeLists.txt's list of sources: `qrencode.o` first and `mask.o` between `split.o` and `mqrspec.o`,
+  which nothing in the target places (neither keeps a function out of line in our link, `object` column of
+  `build/out/wasm-map/vota_web/names.tsv` after `make -C src link-map`; `wasm-objdump -x -j linking` shows no data
+  segment in `mask.o` and only the version string in `qrencode.o`; in the target `qrencode.o` may hold 1254's merged
+  body), `rsecc.o` between `qrspec.o` and `split.o`, and `mmask.o` last.
+- **The tables.** The eleven read-only objects of our link's libqrencode objects hold the target's bytes at the
+  addresses step 8 names them at, five of them placed by those bytes alone (`evidence:content`).
+- **Dead arguments.** 5502 passes constants (version 0, `QR_ECLEVEL_L`, `QR_MODE_8`, case-sensitive), and the target's
+  5348 has no `hint` parameter left: binaryen's dead-argument pass carried `QR_MODE_8` six calls down. The probe's 5348
+  keeps it (117 rows, 91 of them the Kanji test). Over a probe's module before optimisation (emcc's `emcc-02-strip.wasm`,
+  kept with `EMCC_DEBUG=1 EMCC_TEMP_DIR=<dir>`), one `wasm-opt --strip-target-features --post-emscripten
+  --dae-optimizing` folds the constants down to `Split_splitString`, a second run into `Split_eatAn` and a third into
+  `Split_eat8` (read with `wasm-dis`): how far one run gets depends on the module. In the whole link 5348 differs from
+  ours in 3 operand rows over 224 and matches.
+- **What the scan cannot place.** 2218, 2718 and 3595 differ from ours in operands alone and stay `unresolved`:
+  `lengthTableBits[mode][version - 1]` and `generatorInitialized[length - 2]` compile to the array's address less 4 and
+  less 2, in padding before the array in both links, and the scan places an address only through the object holding
+  it ("is in no data object of ours"). 3595's `generator[length - 2]`, `generator - 62`, lies in the object before the
+  array: in the target the 24 bytes before `initialized`, where rsecc.o's order puts `RSECC_mutex`, which no target
+  function reads; in our link 2 bytes into `RSECC_mutex` after RHVoice, or in unit 17's roots sink in the companions'
+  slot. Step 8 names that object by 3595's one vote at 0x1d2510, which is 4 bytes off `RSECC_mutex`'s place in one slot
+  and another object in the other: our `.bss` reaches the target's residue mod 16 by chance only.
+- **Step 8's other change.** With these objects in the link, step 8 dropped 7-Zip's `g_BigAlloc = 0x10fce4; … size:0x8
+  evidence:content` (`git log -p -S 'g_BigAlloc = 0x10fce4' -- splat/symbol_addrs.txt` shows it added with the
+  executable TU, unit 170, and dropped with fragment 187). The line was wrong: it lay 8 bytes into
+  `ecourna::api::security::CSha512`'s vtable (0x10fcdc), at the address point that fn 2684, `CSha512`'s constructor,
+  stores (`awk '/^[0-9a-f]+ func\[/{f=$2} /i32\.const [0-9]+$/{v=$NF+0; if (v>=1113316 && v<1113324) print f, v}'
+  build/dump/vota.objdump.txt` prints `func[2684]: 1113316`). 2684 matches with and without it, through the vtable's
+  own line.

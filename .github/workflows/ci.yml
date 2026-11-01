@@ -66,11 +66,19 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             # The setup check and the benchmark's setups tests run `make -n` over every object of src/Makefile,
-            # and the zlib objects' rules need zlib's sources; no other library's are read.
+            # and the rules of the zlib objects and of unit 187's (libqrencode's objects, and its roots, which
+            # include qrencode.h) need those libraries' sources; no other library's are read. Each is cloned at the
+            # tag tools/setup/bootstrap.sh --sources checks out, libqrencode checked against its commit as there.
             - id: zlib
               name: fetch zlib 1.3.1 (third_party/MANIFEST.md)
               working-directory: .
               run: git clone --quiet --depth 1 --branch v1.3.1 https://github.com/madler/zlib third_party/zlib
+            - id: libqrencode
+              name: fetch libqrencode 4.1.1 (third_party/MANIFEST.md)
+              working-directory: .
+              run: |
+                  git clone --quiet --depth 1 --branch v4.1.1 https://github.com/fukuchi/libqrencode third_party/libqrencode
+                  test "$(git -C third_party/libqrencode rev-parse HEAD)" = 715e29fd4cd71b6e452ae0f4e36d917b43122ce8
 
             # The parser, decoder and splat tests check the toolkit against wasm-objdump and wasm-validate, from the
             # wabt release docs/getting-started.md recommends: other releases print the dump differently.
@@ -107,5 +115,5 @@ jobs:
             # Setups whose flags only the image or a library build can confirm print as "unverified" and do not
             # fail the check; a "drift" does.
             - name: pnpm bench setups --check
-              if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.zlib.outcome == 'success' }}
+              if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.zlib.outcome == 'success' && steps.libqrencode.outcome == 'success' }}
               run: pnpm bench setups --check

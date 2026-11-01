@@ -103,6 +103,22 @@
     "note": "The flags are a stopgap (conan zlib defaults), not yet confirmed against the target."
   },
   {
+    "key": "libqrencode",
+    "title": "libqrencode 4.1.1",
+    "flags": {
+      "c": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static"
+    },
+    "image": "urna-emsdk:6.0.0",
+    "source": "src/units/187-libqrencode-encodestring.mk QRENCODE_CFLAGS",
+    "truth": {
+      "kind": "make",
+      "vars": [
+        "QRENCODE_OBJS"
+      ]
+    },
+    "note": "Its objects are linked in RHVOICE_OBJS, so this setup comes before rhvoice's, which would take them (an artefact setup takes every object of its variable no earlier setup took)."
+  },
+  {
     "key": "sqlite",
     "title": "SQLite 3.50.4 amalgamation",
     "flags": {

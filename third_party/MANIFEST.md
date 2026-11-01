@@ -20,6 +20,7 @@ it generates (`tools/libs/openssl/configure.sh`).
 | `openssl/` | OpenSSL (libcrypto only) | 3.0.17 | `git clone --depth 1 --branch openssl-3.0.17 https://github.com/openssl/openssl` | 4d7dfa23 |
 | `sqlite/` | SQLite | 3.50.4 | the amalgamation https://sqlite.org/2025/sqlite-amalgamation-3500400.zip, its one directory extracted: `sqlite3.c` (the file the build compiles), `sqlite3.h`, `sqlite3ext.h`, `shell.c` | zip sha256 1d3049dd0f830a025a53105fc79fd2ab9431aea99e137809d064d8ee8356b032 |
 | `zlib/` | zlib | 1.3.1 | full clone https://github.com/madler/zlib, checked out `v1.3.1` | 51b7f2a |
+| `libqrencode/` | libqrencode (the QR encoder of `api::CQRCodeGuard`) | **4.1.1** (compile-diff, see below) | full clone https://github.com/fukuchi/libqrencode, checked out `v4.1.1` (the project publishes no release archive: its page points at the repository) | 715e29fd |
 | `7zip/` | 7-Zip / LZMA SDK (C++ 7z archive + LZMA/LZMA2 codecs + console update callbacks) | **21.02** (alpha, 2021-05-06; compile-diff, see below) | the source release `7z2102-src.7z` (https://sourceforge.net/projects/sevenzip/files/7-Zip/21.02/7z2102-src.7z/download) extracted whole: `Asm/ C/ CPP/ DOC/`, 1236 files, no git repository | archive sha256 ee9755feaa034e7075712bc6b1fad25440bd0a8f21f106a16e37bc4b409f1122 |
 | `RHVoice/` | RHVoice TTS (+ bundled hts_engine fork, rapidxml, sonic, utf8cpp) | **1.14.0** (strings + compile-diff, see below) | full clone https://github.com/RHVoice/RHVoice checked out at tag `1.14.0`, with the one submodule the build compiles, `external/libs/sonic` (waywardgeek/sonic), at the commit 1.14.0 records | d1d5fc6c; sonic ba331411 |
 | `boost/` | Boost (header-only use: regex, date_time, signals2, function, lexical_cast, optional, smart_ptr, random, dynamic_bitset) | **1.89.0** (compile-diff of the signals2 control blocks, medium confidence; see below) | the release https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.bz2, of which its `boost/` header tree and `LICENSE_1_0.txt` are extracted (15,965 files) | tarball sha256 85a33fa22621b4f314f8e85e1a5e2a9363d22e4f4992925d4bb3bc631b5a0c7a |
@@ -194,6 +195,21 @@ Build inference (matches conan-center `openssl/3.x.x` recipe for os=Emscripten: 
   AVNEncoder.cxx, ValidChecker.cxx, InvalidTracer.cxx, BEREncoder.cxx). TSE additions not in upstream:
   `BERDecoderPartial BufferSeeder ISeeder IAbstractVisitor DataFree`. Generated modules `Modulo*` (ModuloBoletimUrna,
   ModuloRegistroDigitalVoto, …) come from TSE's `asnparser` run over the urna ASN.1 specs — that source is not public.
+
+## libqrencode 4.1.1 — confidence: high (library), high (exact, by compile-diff)
+
+- No string or RTTI names it (a C library with no error texts). Its functions read the QR and Micro QR tables:
+  `qrspecCapacity` rows of 28 bytes `(21, 26, 0, 7, 10, 13, 17)` … `(177, 3706, 0, 750, 1372, 2040, 2430)`, 39 rows apart
+  (`python3 -I -c "import struct; d=open('target/vota_web_wasm.wasm','rb').read(); a=d.find(struct.pack('<7i',21,26,0,7,10,13,17)); b=d.find(struct.pack('<7i',177,3706,0,750,1372,2040,2430)); print((b-a)/28)"`
+  → 39.0), the alphanumeric table at mem 547888, and a Reed-Solomon encoder over GF(256) with generator 0x11d (fn 3595).
+  Their one caller is fn 5502, whose stub is in `api/gui/cqrcodeguard.cpp` and whose throw says "Não foi possível
+  criar o QR code".
+- Version, by compile-diff (`docs/reference/facts/libraries.md` §B10; `tools/libs/libqrencode/build.sh <tag> O3pic …`
+  then `tools/libs/libqrencode/score.sh`): of 4.0.0, 4.0.2, 4.1.0 and 4.1.1, 4.1.1's probe leaves the fewest rows differing
+  in `QRinput_encodeBitStream` (fn 2718: 10 over 765, against 60, 60 and 46) and `QRinput_getByteStream` (fn 5351: 5 over
+  857, against 200, 188 and 40), every one an operand; 4.1.1 changed only `qrinput.c`, and the target has its change.
+  4.1.1 is the repository's last tag (2020-09-28). Built as CMakeLists.txt builds it, at `-O3 -fPIC -DNDEBUG
+  -DHAVE_LIBPTHREAD=1` (`src/units/187-libqrencode-encodestring.mk`).
 
 ## Function budget (14343 functions)
 

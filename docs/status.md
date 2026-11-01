@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**10,731 of 14,343 functions matched (74.82%), 2,874,778 of 5,883,903 code bytes (48.86%).**
+**10,748 of 14,343 functions matched (74.94%), 2,878,465 of 5,883,903 code bytes (48.92%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -28,10 +28,10 @@ name ([Not attributed](#not-attributed)).
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,209 / 3,285 | 67.25% | 598,379 / 2,168,476 | 27.59% |
-| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,638 / 8,294 | 80.03% | 2,000,143 / 3,145,292 | 63.59% |
+| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,225 / 3,285 | 67.73% | 602,046 / 2,168,476 | 27.76% |
+| upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,639 / 8,294 | 80.05% | 2,000,163 / 3,145,292 | 63.59% |
 | not attributed | `unknown`, `app` | 1,884 / 2,764 | 68.16% | 276,256 / 570,135 | 48.45% |
-| **total** | | **10,731 / 14,343** | **74.82%** | **2,874,778 / 5,883,903** | **48.86%** |
+| **total** | | **10,748 / 14,343** | **74.94%** | **2,878,465 / 5,883,903** | **48.92%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -51,7 +51,7 @@ come from getting the version, the flags and the link order right, not from writ
 | `simulador` | the web simulator's `CWasm*` devices | 130 / 144 | 90.28% | 21,030 / 58,157 | 36.16% |
 | `vota-web` | the web engine (`CVotaWebEngine`, …) | 4 / 11 | 36.36% | 17 / 2,808 | 0.61% |
 | **uenux2** | the five rows above | **1,231 / 2,050** | **60.05%** | **219,756 / 1,351,776** | **16.26%** |
-| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 565 / 799 | 70.71% | 302,661 / 721,680 | 41.94% |
+| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 581 / 799 | 72.72% | 306,328 / 721,680 | 42.45% |
 | `asn1-modules` | the generated `Modulo*` ASN.1 types | 49 / 59 | 83.05% | 25,946 / 41,909 | 61.91% |
 | `ASN1` | TSE's fork of the III ASN.1 runtime | 364 / 377 | 96.55% | 50,016 / 53,111 | 94.17% |
 <!-- /status:tse -->
@@ -63,7 +63,7 @@ come from getting the version, the flags and the link order right, not from writ
 | --- | ---: | ---: | ---: | ---: |
 | `openssl` | 3,166 / 3,258 | 97.18% | 948,214 / 1,014,603 | 93.46% |
 | `libc++` | 1,371 / 1,957 | 70.06% | 175,424 / 439,879 | 39.88% |
-| `sqlite` | 902 / 927 | 97.30% | 705,806 / 772,965 | 91.31% |
+| `sqlite` | 903 / 927 | 97.41% | 705,826 / 772,965 | 91.31% |
 | `7zip` | 485 / 970 | 50.00% | 44,989 / 292,539 | 15.38% |
 | `RHVoice` | 422 / 740 | 57.03% | 65,019 / 450,027 | 14.45% |
 | `libc++abi` | 230 / 234 | 98.29% | 51,256 / 53,263 | 96.23% |
@@ -120,14 +120,14 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 10,731 | 2,874,778 | matched |
+| `match` | 10,748 | 2,878,465 | matched |
 | `differs` | 453 | 114,940 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
-| `unresolved` | 520 | 499,069 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 2,639 | 2,395,116 | our link has no body for it yet |
+| `unresolved` | 523 | 501,726 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
+| `no-candidate` | 2,619 | 2,388,772 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 2,209 `match`, 69 `differs`, 35 `unresolved` and 972 `no-candidate`.
+For TSE code alone: 2,225 `match`, 69 `differs`, 38 `unresolved` and 953 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -150,7 +150,7 @@ the component tables), and three lines about readings:
 because binaryen merges identical bodies and the target keeps one copy under one index:
 
 <!-- status:twins -->
-366 matches are bodies of 8 B or less, and 56 matches have a byte-identical twin in the target. 0 matches are kind-unverified: the operand-kind table cannot vouch for their constants, so the check offered each one every reading (`make -C src splat` names them).
+368 matches are bodies of 8 B or less, and 56 matches have a byte-identical twin in the target. 0 matches are kind-unverified: the operand-kind table cannot vouch for their constants, so the check offered each one every reading (`make -C src splat` names them).
 <!-- /status:twins -->
 
 A meter that does not show the target's sha256 is not a meter: the build failed, and its output lists the matches
@@ -179,11 +179,11 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,122 | 1,122 | 0 | 0 | 0 |
-| `fingerprint` | 724 | 723 | 0 | 1 | 0 |
-| `addr` | 7,060 | 6,716 | 200 | 142 | 2 |
-| `shape` | 695 | 663 | 27 | 4 | 1 |
-| `none` | 4,742 | 1,507 | 226 | 373 | 2,636 |
+| `byte` | 1,126 | 1,126 | 0 | 0 | 0 |
+| `fingerprint` | 725 | 724 | 0 | 1 | 0 |
+| `addr` | 7,075 | 6,728 | 200 | 145 | 2 |
+| `shape` | 694 | 663 | 27 | 4 | 0 |
+| `none` | 4,723 | 1,507 | 226 | 373 | 2,617 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

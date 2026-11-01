@@ -10,7 +10,7 @@
 <rect x="275.4" y="34" width="11" height="11" rx="2" fill="#21262d"/>
 <text x="292.4" y="44" font-size="12" fill="#c3c2b7">no candidate yet</text>
 <text x="0" y="80" font-size="13" fill="#f0efec" font-weight="600">TSE code</text>
-<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">2,209 / 3,285 · 67.2%</text>
+<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">2,225 / 3,285 · 67.7%</text>
 <text x="0" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">vota</text>
 <text x="0" y="118" font-size="11" fill="#c3c2b7">43.6% · 340 / 780</text>
 <rect x="0" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -522,7 +522,7 @@
 <rect x="620" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="631" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="665" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">ecourna</text>
-<text x="665" y="118" font-size="11" fill="#c3c2b7">70.7% · 565 / 799</text>
+<text x="665" y="118" font-size="11" fill="#c3c2b7">72.7% · 581 / 799</text>
 <rect x="665" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="676" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="687" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -594,12 +594,12 @@
 <rect x="753" y="194" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="764" y="194" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="665" y="205" width="10" height="10" rx="1.7" fill="#199e70"/>
-<rect x="676" y="205" width="10" height="10" rx="1.7" fill="#3987e5"/>
-<rect x="687" y="205" width="10" height="10" rx="1.7" fill="#3987e5"/>
-<rect x="698" y="205" width="10" height="10" rx="1.7" fill="#d95926"/>
-<rect x="709" y="205" width="10" height="10" rx="1.7" fill="#d95926"/>
-<rect x="720" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
-<rect x="731" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
+<rect x="676" y="205" width="10" height="10" rx="1.7" fill="#199e70"/>
+<rect x="687" y="205" width="10" height="10" rx="1.7" fill="#199e70"/>
+<rect x="698" y="205" width="10" height="10" rx="1.7" fill="#3987e5"/>
+<rect x="709" y="205" width="10" height="10" rx="1.7" fill="#3987e5"/>
+<rect x="720" y="205" width="10" height="10" rx="1.7" fill="#d95926"/>
+<rect x="731" y="205" width="10" height="10" rx="1.7" fill="#d95926"/>
 <rect x="742" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="753" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="764" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
@@ -828,7 +828,7 @@
 <rect x="221" y="399" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="232" y="399" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="0" y="450" font-size="13" fill="#f0efec" font-weight="600">Upstream libraries</text>
-<text x="800" y="450" font-size="12" fill="#c3c2b7" text-anchor="end">6,638 / 8,294 · 80.0%</text>
+<text x="800" y="450" font-size="12" fill="#c3c2b7" text-anchor="end">6,639 / 8,294 · 80.0%</text>
 <text x="0" y="472" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">openssl</text>
 <text x="0" y="488" font-size="11" fill="#c3c2b7">97.2% · 3,166 / 3,258</text>
 <rect x="0" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -1034,7 +1034,7 @@
 <rect x="221" y="597" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="232" y="597" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="266" y="472" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">sqlite</text>
-<text x="266" y="488" font-size="11" fill="#c3c2b7">97.3% · 902 / 927</text>
+<text x="266" y="488" font-size="11" fill="#c3c2b7">97.4% · 903 / 927</text>
 <rect x="266" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="277" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="288" y="498" width="10" height="10" rx="1.7" fill="#199e70"/>
