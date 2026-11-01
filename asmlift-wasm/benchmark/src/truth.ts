@@ -124,7 +124,8 @@ export function emscriptenFlags(image: string, libraries: readonly string[]): Ma
   return new Map(Object.entries(parsed).map(([k, v]) => [k, codegenFlags(v)]));
 }
 
-/** Run `script` with `sh -c` in the image, the urna root mounted at /work. */
-export function inImage(image: string, script: string): string {
-  return run('docker', ['run', '--rm', '-v', `${URNA_ROOT}:/work`, '-w', '/work', image, 'sh', '-c', script]);
+/** Run `script` with `sh -c` in the image, the urna root mounted at /work, with `args` as its `"$@"`. A long list
+ *  goes in `args`: Linux refuses to exec a single argument over 128 KiB (`argument list too long`). */
+export function inImage(image: string, script: string, args: readonly string[] = []): string {
+  return run('docker', ['run', '--rm', '-v', `${URNA_ROOT}:/work`, '-w', '/work', image, 'sh', '-c', script, 'sh', ...args]);
 }
