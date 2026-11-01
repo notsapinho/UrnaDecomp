@@ -147,9 +147,6 @@
 
 // link-order cluster 797 · uses=2 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
 
-// f5583 · 168 B · unmatched · placement: link order · name unknown
-// void f5583(i32) { ... }
-
 // f5582 · 96893 B · unmatched · placement: link order · name unknown
 // void f5582(i32, i32, i32, i32) { ... }
 

@@ -11,7 +11,6 @@
 // over a source passed by value (fn 3699 passes a copy's address); its alignment, the constant 0, is CDataText's
 // default by choice. GetForm (fn 5515) builds an IFormImpressao<IPaperRelatorios> of the fields with a
 // CPreShowNothing<IPaper>; it names nothing and keeps the vector. Its name is chosen.
-
 #include <cstddef>
 #include <memory>
 #include <string>
@@ -39,6 +38,7 @@ public:
     void AddCut();
     void AddQRCode(const CQRCodeImagePaper::QrcodeData& qrcode);
     std::shared_ptr<IForm<IPaper>> GetForm();
+    std::shared_ptr<IForm<IPaper>> Build();
 private:
     std::vector<SharedField> m_campos;
 };
