@@ -441,7 +441,9 @@ and `…Num`, 2218 `MQRspec_lengthIndicator`, 2718 `QRinput_encodeBitStream`, 35
 `QRinput_isSplittableMode` and 10241 `MQRspec_getECCLength`; 5348 `Split_eat8` pairs in the whole link. 1254 is the
 body binaryen merges `BitStream_free` and `QRcode_free` into (the same null test and two frees): the target's 2718 and
 5351 call it as the one, 2772 and 10967 as the other, the probe keeps it as `QRcode_free` and our link, which calls no
-`QRcode_free` yet, as `BitStream_free`. The library's one TSE caller is fn 5502 (stub in `api/gui/cqrcodeguard.cpp`,
+`QRcode_free` yet, as `BitStream_free`. Once a caller of `QRcode_free` lands, our link may keep `qrencode.o`'s copy
+instead, as the probe does (its driver calls `QRcode_free`, and it links `qrencode.o` first); not measured on the
+whole link. The library's one TSE caller is fn 5502 (stub in `api/gui/cqrcodeguard.cpp`,
 13,815 B), which holds `QRcode_encodeString` and every library function with one call site, inlined by binaryen. Of the
 target's functions, only 5502 and 11 of the 20 hold an address in the library's read-only data, 547888 to 551504
 (`awk '/^[0-9a-f]+ func\[/{f=$2} /i32\.const [0-9]+$/{v=$NF+0; if (v>=547888 && v<551504) print f}'
@@ -480,9 +482,21 @@ says otherwise:
   3598) right after 3595 to 3597. A band lists its functions in reverse link order (L1), so the library links after
   `api/ipc`'s objects and before `cwavfile.cpp`'s. rsecc.o's `.bss` lies between
   `api::persistencia::CDAORepositorio::s_daos` (0x1d24cc) and `comum::util::CMonitoraAlimentacao::s_inst` (0x1d2b10)
-  (`splat/symbol_addrs.txt`). Inside the library the band reads CMakeLists.txt's order (fragment 187). Our link has
-  no slot among uenux2's objects; fragment 187 puts the objects after RHVoice and zlib, and in the companions' slot the
-  same 17 rows match.
+  (`splat/symbol_addrs.txt`). Our link has no slot among uenux2's objects; fragment 187 puts the objects after RHVoice
+  and zlib. In the companions' slot instead (`override EXTRA_OBJS += $(QRENCODE_OBJS)` in place of fragment 187's
+  `RHVOICE_OBJS` line, which puts them between unit 17's roots and unit 187's), `make -C src link`, `census`,
+  `splat-symbols` and `splat-match` printed 10539 matches, the same 17 added and 0 renamed.
+- **The order inside the library**, in link order, where the target reads it: the uses==2 band 5352 and 5351
+  (`qrinput.o`), 5350 (`bitstream.o`), 5349 (`qrspec.o`), 5348 (`split.o`), 5347 and 5346 (`mqrspec.o`); the uses==3
+  band 3597 and 3596 (`qrinput.o`), then 3595 (`rsecc.o`); the uses==10 band 1254, then 1253 (`mmask.o`), so `mmask.o`
+  links after the object 1254's merged body comes from (`bitstream.o`, or `qrencode.o`). The target's `.rodata` holds
+  `qrinput.o`'s, `qrspec.o`'s and `mqrspec.o`'s tables in that order (`QRinput_anTable` 0x85c30, `qrspecCapacity`
+  0x85cb0, `mqrspecCapacity` 0x868e0; data order is link order, [link-order.md](link-order.md) L7 item 15). The rest
+  is a choice, CMakeLists.txt's list of sources: `qrencode.o` first and `mask.o` between `split.o` and `mqrspec.o`,
+  which nothing in the target places (neither keeps a function out of line in our link, `object` column of
+  `build/out/wasm-map/vota_web/names.tsv` after `make -C src link-map`; `wasm-objdump -x -j linking` shows no data
+  segment in `mask.o` and only the version string in `qrencode.o`; in the target `qrencode.o` may hold 1254's merged
+  body), `rsecc.o` between `qrspec.o` and `split.o`, and `mmask.o` last.
 - **The tables.** The eleven read-only objects of our link's libqrencode objects hold the target's bytes at the
   addresses step 8 names them at, five of them placed by those bytes alone (`evidence:content`).
 - **Dead arguments.** 5502 passes constants (version 0, `QR_ECLEVEL_L`, `QR_MODE_8`, case-sensitive), and the target's
@@ -500,3 +514,10 @@ says otherwise:
   function reads; in our link 2 bytes into `RSECC_mutex` after RHVoice, or in unit 17's roots sink in the companions'
   slot. Step 8 names that object by 3595's one vote at 0x1d2510, which is 4 bytes off `RSECC_mutex`'s place in one slot
   and another object in the other: our `.bss` reaches the target's residue mod 16 by chance only.
+- **Step 8's other change.** With these objects in the link, step 8 dropped 7-Zip's `g_BigAlloc = 0x10fce4; … size:0x8
+  evidence:content` (`git log -p -S 'g_BigAlloc = 0x10fce4' -- splat/symbol_addrs.txt` shows it added with the
+  executable TU, unit 170, and dropped with fragment 187). The line was wrong: it lay 8 bytes into
+  `ecourna::api::security::CSha512`'s vtable (0x10fcdc), at the address point that fn 2684, `CSha512`'s constructor,
+  stores (`awk '/^[0-9a-f]+ func\[/{f=$2} /i32\.const [0-9]+$/{v=$NF+0; if (v>=1113316 && v<1113324) print f, v}'
+  build/dump/vota.objdump.txt` prints `func[2684]: 1113316`). 2684 matches with and without it, through the vtable's
+  own line.

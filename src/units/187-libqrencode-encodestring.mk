@@ -10,8 +10,9 @@
 # 10241 MQRspec_getECCLength. The eleven tables they and 5502 read (QRinput_anTable, qrspec.o's and mqrspec.o's) hold the
 # target's bytes at the addresses step 8 names them at (B10). 1254 is the body binaryen merges BitStream_free and
 # QRcode_free into: the target's 2772 and 10967 call it as QRcode_free, which nothing in our link calls yet, so the
-# line names BitStream_free; once a caller of QRcode_free lands, binaryen keeps qrencode.o's copy, the first, and step 9
-# renames the line.
+# line names BitStream_free. Once a caller of QRcode_free lands, binaryen may keep qrencode.o's copy instead, as the
+# probe does (its driver calls QRcode_free, it links qrencode.o first, and it names the body QRcode_free), and step 9
+# would then rename the line.
 #
 # What waits, and for what:
 # - 2218 MQRspec_lengthIndicator, 2718 QRinput_encodeBitStream and 3595 RSECC_encode are `unresolved` on an operand that
@@ -36,19 +37,30 @@
 #   -Os and -Oz more; without -fPIC 1147, 1253, 2718, 3595, 3596, 5349, 5351 and 10241 gain rows inserted or deleted;
 #   without HAVE_LIBPTHREAD 3595 is 186 over 560 (with it, 30 over 548, and no call is left of the mutex's lock and
 #   unlock, as in the target).
-# - The order: CMakeLists.txt's list of sources, which the target's uses==2 band reads in link order (a band lists its
-#   functions in reverse link order, docs/reference/facts/link-order.md L1): 5352 and 5351 (qrinput.o), 5350
-#   (bitstream.o), 5349 (qrspec.o), 5348 (split.o), then 5347 and 5346 (mqrspec.o).
+# - The order, where the target reads it. A band lists its functions in reverse link order
+#   (docs/reference/facts/link-order.md L1), so in link order the uses==2 band reads 5352 and 5351 (qrinput.o), 5350
+#   (bitstream.o), 5349 (qrspec.o), 5348 (split.o), then 5347 and 5346 (mqrspec.o); the uses==3 band 3597 and 3596
+#   (qrinput.o), then 3595 (rsecc.o); the uses==10 band 1254, then 1253 (mmask.o), so mmask.o links after the object
+#   1254's merged body comes from (bitstream.o, or qrencode.o). The target's .rodata holds qrinput.o's, qrspec.o's and
+#   mqrspec.o's tables in that order (QRinput_anTable 0x85c30, qrspecCapacity 0x85cb0, mqrspecCapacity 0x868e0; data
+#   order is link order, link-order.md L7 item 15). The rest of the order is chosen (below).
 # - The place. The target's bands and .bss put the library among uenux2's api objects (after api/ipc/cthread.cpp and
 #   api/ipc/posix/, before api/audio/alsa/cwavfile.cpp), where LINK_OBJS has no slot; it goes after RHVoice and zlib, as
-#   fragment 06 puts zlib. In the companions' slot (EXTRA_OBJS) the same 17 rows match and none leaves, and our .bss puts
-#   generator - 62 in unit 17's roots sink, which step 8 then names at the target's 0x1d2510.
+#   fragment 06 puts zlib. The companions' slot was measured too: with `override EXTRA_OBJS += $(QRENCODE_OBJS)` in
+#   place of the RHVOICE_OBJS line below (the objects between unit 17's roots and this unit's on the link line),
+#   make -C src link, census, splat-symbols and splat-match printed 10539 matches, the same 17 added and 0 renamed, so
+#   none left; there our .bss puts generator - 62 in unit 17's roots sink, which step 8 names at the target's 0x1d2510.
 # - The roots. In the whole link binaryen's dead-argument pass folds 5502's constants down to Split_eat8, as in the
 #   target, whose 5348 has no hint parameter; the probe keeps it (117 over 315 rows there, 3 over 224 operand-only rows
 #   in the link).
 #
 # Chosen: -DHAVE_STRDUP=1, CMake's configure result under emscripten, and strict aliasing, CMake's default: neither moves
 # any of the 20 rows. The version macros and HAVE_SDL=0, which only functions the link drops read. The stand-in's name.
+# The order where the target does not read it, CMakeLists.txt's list of sources: qrencode.o first and mask.o between
+# split.o and mqrspec.o, which nothing in the target places (neither keeps a function out of line in our link,
+# build/out/wasm-map/vota_web/names.tsv after make -C src link-map; mask.o has no data and qrencode.o only its version
+# string; in the target qrencode.o may hold 1254's merged body), rsecc.o between qrspec.o and split.o (the band puts it
+# after qrinput.o only) and mmask.o last (after 1254's object only).
 QRENCODE_DIR := build/out/libqrencode/4.1.1-O3pic
 QRENCODE_CFLAGS := -O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 \
                    '-DVERSION="4.1.1"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static -Ithird_party/libqrencode
