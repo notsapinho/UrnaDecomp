@@ -5,24 +5,26 @@
 #   curna.cpp.o's; md::CCorrespondenciaResultado's constructor (fn 2801, ValidaCriacao inlined by binaryen) in
 #   dados/md/correspondencia/ccorrespondenciaresultado.cpp.
 # - md::CUrna (gravadores/md/curna.{h,cpp}): both constructors (fns 2854, 2855), ValidaCriacao (fn 5862) and the implicit
-#   destructor (fn 1394), which this unit's roots object emits; comum::ETipoArquivo is declared in curna.h.
+#   destructor (fn 1394), which unit 160's cconversorenvelopegenerico.cpp.o emits (its DoDesconverte deletes a CUrna),
+#   ahead of this unit's roots object; comum::ETipoArquivo is declared in curna.h.
 # - md::CEnvelopeGenerico (gravadores/md/cenvelopegenerico.{h,cpp}): the three constructors (fns 3821, 5860, 5861) and
-#   ValidaCriacao (fn 3822); the getters GetUrna, GetLocal and GetSeguranca (records :96, :106, :117) are written, and
-#   nothing in our link calls them yet (their one caller, CConversorEnvelopeGenerico::DoConverte, fn 10271, is not
-#   written).
+#   ValidaCriacao (fn 3822); the getters GetUrna, GetLocal and GetSeguranca (records :96, :106, :117), which binaryen
+#   inlines into their one caller, CConversorEnvelopeGenerico::DoConverte (fn 10271, unit 160), as the target's does.
 # - md::CEntidadeHashes::ValidaCriacao (fn 5855, gravadores/md/centidadehashes.{h,cpp}; the header holds the head of
 #   the layout only).
 # - md::CTipoApuracaoSA (gravadores/md/ctipoapuracaosa.{h,cpp}) and asn::CConversorTipoApuracaoSA
 #   (gravadores/asn/cconversortipoapuracaosa.{h,cpp}): DoConverte (fn 10283, the four ConverteMotivo* inlined by
 #   binaryen) and DoDesconverte (fn 10282, the data class's constructor and checks inlined).
 # - The recorders' destructors, emitted with their vtables in 136-uenux2-app-comum-gravadores-md-pending.cpp, whose
-#   traps are the classes' key functions (src/units/README.md "The key function pending"): CGravadorEnvelopeArquivo's
-#   (fns 11622, 11621, matched, below) over IGravadorEnvelope's (fn 11625), CGravadorHashes's (5853, 11619),
+#   traps are the classes' key functions (src/units/README.md "The key function pending"): IGravadorEnvelope's (fn
+#   11625), CGravadorHashes's (5853, 11619),
 #   CGravadorRDV's (11586, and 11585, matched, below), CGravadorLog's (5823, 11583) and CGravadorVersoesArquivos's
 #   (11581, 11580), and binaryen's merge of the base-object destructors of CGravadorRDV and IGravadorEnvelope (fn 6043,
 #   written, below; our link forms the same two-member merge, byn$mgfn-shared$_ZN5comum12CGravadorRDVD2Ev). The class
 #   heads are unit 102's (gravadores/cgravador*.h, igravadorenvelope.h); this unit adds their layouts and virtual
-#   members there. CGravadorRCSecao's deleting destructor (fn 11615) is unit 122's.
+#   members there. CGravadorRCSecao's deleting destructor (fn 11615) is unit 122's. CGravadorEnvelopeArquivo's (fns
+#   11622, 11621, matched, below) are emitted with its vtable by unit 160's cgravadorenvelopearquivo.cpp, which holds
+#   its key function.
 # - ModuloTiposResultadosEcoUrna (src/asn1/modules/): the records and RTTI name ModuloTiposResultadosEcoUrna::TipoApuracaoSA
 #   (the converter's base, typeinfo @1596936) and MotivoApuracaoManual, MotivoApuracaoEletronica, MotivoApuracaoMistaComBU
 #   and MotivoApuracaoMistaComMR (the four ConverteMotivo* records' result types), which the generated module held
@@ -68,16 +70,9 @@
 # 9873, which keep it (docs/reference/facts/splat.md §S10 item 17).
 #
 # Not matched, and what each waits for:
-# - Not written: comum::asn::CConversorUrna (fns 10287, 10284), CConversorCorrespResultado (10289, 10288),
-#   CConversorEnvelopeGenerico (10271, 10270) and CConversorEntidadeHashes::DoConverte (10266). 10289 and 10288 call the
-#   slots of a local converter of ModuloTiposEcoUrna::Carga (vtable @1596140, slots fns 10291 and 10290), a class no
-#   header of ours has; 10287 builds a CConversorCorrespResultado and sets numeroSerieFV through a temporary of the
-#   field's type, which Urna's generated setter does not take (docs/reference/facts/asn1.md A3); 10284 calls
-#   DesconverteSerialFlash (fn 3604, unit 122's, matched at the tree's -O3, so it is named); 10271 builds local
-#   CConversorUrna and CConversorCabecalhoEntidade objects (vptrs @1596460 and @1556740), whose slots (fns 10287 and
-#   10284, 11589 and 11588) are not written, and 10270 holds IConversorASN<Urna, CUrna>::Desconverte inlined (record
-#   iconversorasn.h:71), which calls CConversorUrna's DoDesconverte (fn 10284); 10266 needs CEntidadeHashes's members
-#   past +36.
+# - The converters of CUrna, CCorrespondenciaResultado and CEnvelopeGenerico (fns 10287, 10284, 10289, 10288, 10271,
+#   10270) are unit 160's. Not written: CConversorEntidadeHashes::DoConverte (10266), which needs CEntidadeHashes's
+#   members past +36.
 # - IGravador's slots 2 to 6 (fns 11630 to 11634, unit 60's traps) are not this unit's. CCarga::ValidaCriacao (fn 5670)
 #   is unit 157's (dados/md/correspondencia/ccarga.cpp), and matches.
 GRAVADORES_MD_SRCS := src/app/comum/gravadores/md/curna.cpp src/app/comum/gravadores/md/cenvelopegenerico.cpp \
@@ -87,8 +82,9 @@ GRAVADORES_ASN_SRCS := src/app/comum/gravadores/asn/cconversortipoapuracaosa.cpp
 UENUX2_SRCS += $(GRAVADORES_MD_SRCS) $(GRAVADORES_ASN_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(GRAVADORES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# nothing reconstructed calls these yet: 136-uenux2-app-comum-gravadores-md-roots.cpp stands in for the target's callers,
-# two call sites each; it compiles with the tree's flags, since it emits CUrna's inline destructor (fn 1394)
+# not every caller is reconstructed: 136-uenux2-app-comum-gravadores-md-roots.cpp stands in for the others, two call
+# sites each; it compiles with the tree's flags, since it emits CUrna's inline destructor (fn 1394), TSE code (the link
+# keeps unit 160's copy, from cconversorenvelopegenerico.cpp.o, linked ahead of it)
 $(ROOT)/$(APP)/136-uenux2-app-comum-gravadores-md-roots.o: $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/136-uenux2-app-comum-gravadores-md.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/136-uenux2-app-comum-gravadores-md-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/136-uenux2-app-comum-gravadores-md-roots.o

@@ -1,7 +1,8 @@
 // Roots: keep api::CSystem::GetFileSize and api::truncate (target fns 2759 and 5457) in the skeleton link. The target
 // calls both directly and never through the table (ledger/callgraph.tsv): GetFileSize from 3653 and 11623 once and from
-// 12134 twice, truncate from 2761 twice; none of those callers is reconstructed yet. The noinline callers below give
-// GetFileSize two callers (three call sites) and truncate one with two call sites, the target's own shape, so binaryen
+// 12134 twice, truncate from 2761 twice. 11623 (CGravadorEnvelopeArquivo::LeConteudo, unit 160) is reconstructed; the
+// others are not, and the noinline callers below stand for them: MesmoTamanho for 12134, CabeEm for 3653, Redimensiona
+// for 2761. They give GetFileSize two callers (three call sites) and truncate one with two call sites, so binaryen
 // keeps both bodies out of line as the target does; their bodies differ, so wasm-opt merges none of them, and no
 // argument is the same constant at every call site, so dead-argument elimination folds none in. They are address-taken
 // from a static constructor. Declared through asm labels with the wasm-level signatures; compiled as uenux2 code.

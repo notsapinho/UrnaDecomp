@@ -21,7 +21,10 @@ namespace comum::md {
 // +220, which fn 5860 takes from the CUrna it copies. The members follow ModuloEnvelopeGenerico::
 // EntidadeEnvelopeGenerico's fields. The three getters' records (:96, :106, :117) print `const CUrna &`, `TLocalID` and
 // `const CSeguranca &`, and the nested type's name `Tipo` is the records' (cconversorenvelopegenerico.cpp:168, :191).
-// Chosen: the identifiers as iresultado.h's types, comum::EUrnaTipo, the content as uebyte, the parameters' forms
+// The local's std::optional is passed by value: comum::asn::CConversorEnvelopeGenerico::DoDesconverte (fn 10270) copies
+// it into a slot of its own frame for each call, which a const reference does not give (unit 160's fragment has the
+// measurement); the constructors' own bytes are the same either way.
+// Chosen: the identifiers as iresultado.h's types, comum::EUrnaTipo, the content as uebyte, the other parameters' forms
 // beyond what the bodies copy (const references, each copied: the vector is allocated and copied, not moved), and every
 // member and enumerator name; the parameters' order is the wasm parameters'.
 class CEnvelopeGenerico {
@@ -38,18 +41,31 @@ public:
     };
 
     CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, TMunicipioID municipio, TZonaID zona,
-        const std::optional<TLocalID>& local, TSecaoID secao, Tipo tipo, const CSeguranca& seguranca,
+        std::optional<TLocalID> local, TSecaoID secao, Tipo tipo, const CSeguranca& seguranca,
         const std::vector<uebyte>& conteudo, EUrnaTipo tipoUrna);
     CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, const CUrna& urna, TMunicipioID municipio,
-        TZonaID zona, const std::optional<TLocalID>& local, TSecaoID secao, Tipo tipo,
+        TZonaID zona, std::optional<TLocalID> local, TSecaoID secao, Tipo tipo,
         const std::vector<uebyte>& conteudo);
     CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, TMunicipioID municipio, TZonaID zona,
-        const std::optional<TLocalID>& local, TSecaoID secao, Tipo tipo, const std::vector<uebyte>& conteudo,
+        std::optional<TLocalID> local, TSecaoID secao, Tipo tipo, const std::vector<uebyte>& conteudo,
         EUrnaTipo tipoUrna);
 
     const CUrna& GetUrna() const;
     TLocalID GetLocal() const;
     const CSeguranca& GetSeguranca() const;
+
+    // comum::asn::CConversorEnvelopeGenerico::DoConverte (fn 10271) reads these; the names are chosen. It tests the
+    // urna's and the security's presence before it calls GetUrna and GetSeguranca, whose own tests binaryen keeps.
+    const CCabecalhoEntidade& GetCabecalho() const { return m_cabecalho; }
+    EUrnaFase GetFase() const { return m_fase; }
+    bool TemUrna() const { return m_urna.has_value(); }
+    TMunicipioID GetMunicipio() const { return m_municipio; }
+    TZonaID GetZona() const { return m_zona; }
+    TSecaoID GetSecao() const { return m_secao; }
+    Tipo GetTipo() const { return m_tipo; }
+    bool TemSeguranca() const { return m_seguranca.has_value(); }
+    const std::vector<uebyte>& GetConteudo() const { return m_conteudo; }
+    EUrnaTipo GetTipoUrna() const { return m_tipoUrna; }
 
 private:
     void ValidaCriacao() const;
