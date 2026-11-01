@@ -69,11 +69,6 @@
 // f12113 · 9 B · unmatched · placement: link order · name unknown
 // void f12113(i32) { ... }
 
-// link-order cluster 669 · uses=2
-
-// f4307 · 478 B · unmatched · placement: link order · name unknown
-// ? f4307(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 682 · uses=2
 
 // f4464 · 1272 B · unmatched · placement: link order · name unknown
@@ -379,25 +374,10 @@
 // f6743 · 9 B · unmatched · placement: link order · name unknown
 // void f6743(i32) { ... }
 
-// link-order cluster 923 · uses=2
-
-// f6897 · 339 B · unmatched · placement: link order · name unknown
-// void f6897(i32) { ... }
-
 // link-order cluster 924 · uses=2
 
 // f6901 · 13 B · unmatched · placement: link order · name unknown
 // void f6901(i32) { ... }
-
-// link-order cluster 925 · uses=2
-
-// f6939 · 590 B · unmatched · placement: link order · name unknown
-// void f6939(i32) { ... }
-
-// link-order cluster 926 · uses=2
-
-// f6942 · 504 B · unmatched · placement: link order · name unknown
-// ? f6942(i32, i32) { ... }
 
 // link-order cluster 928 · uses=2
 
@@ -620,11 +600,6 @@
 // f3078 · 10 B · unmatched · placement: link order · name unknown
 // ? f3078(i32) { ... }
 
-// link-order cluster 1136 · uses=4
-
-// f3137 · 283 B · unmatched · placement: link order · name unknown
-// ? f3137(i32, i32) { ... }
-
 // link-order cluster 1137 · uses=5
 
 // f2072 · 16 B · unmatched · placement: link order · name unknown
@@ -697,11 +672,6 @@
 
 // f1393 · 15 B · unmatched · placement: link order · name unknown
 // void f1393(i32, i32) { ... }
-
-// link-order cluster 1250 · uses=10
-
-// f1202 · 466 B · unmatched · placement: link order · name unknown
-// ? f1202(i32, i32) { ... }
 
 // link-order cluster 1259 · uses=10 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cprocessoeleitoral.cpp
 
@@ -1423,23 +1393,10 @@
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
 
-// link-order cluster 769 · uses=2 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
-
-// f5492 · 1445 B · unmatched · placement: link order · name unknown
-// void f5492(i32, i32) { ... }
-
 // link-order cluster 775 · uses=2 · neighbours' file uenux2/src/api/gui/cstepsprogressbar.cpp
 
 // f5506 · 836 B · unmatched · placement: link order · name unknown
 // void f5506(i32, i32, i32, i32, i32) { ... }
-
-// f5505 · 337 B · unmatched · placement: link order · name unknown
-// void f5505(i32, i32) { ... }
-
-// link-order cluster 776 · uses=2 · neighbours' file uenux2/src/api/gui/cprogressbar.cpp
-
-// f5507 · 504 B · unmatched · placement: link order · name unknown
-// ? f5507(i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 

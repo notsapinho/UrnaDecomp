@@ -16,17 +16,34 @@
 # +80 and the segments Draw builds +88 (a std::vector of 28-byte elements: a std::vector of 56-byte path commands, an
 # SPoint, a std::string). The D2 destroys +88, then +28, then the IFormFieldBase<IScreen> part (its vptr store and
 # m_nome). The member, parameter and type names are not evidenced. Move (10970) is here, over SRect::Move, with the
-# segments' clear; Draw (5504) is pending. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2
-# header.
+# segments' clear.
+#
+# Draw (5504, slot 2) is written with what it reaches, and only part of it matches. Its callees in this file are 5505,
+# 5506 and 5507 (`pnpm wasm fn ../target/vota_web_wasm.wasm 5504 --ledger ../ledger`), and it passes table slots 3442 and
+# 3443 to 5507 (its i32.const at +0x2c8 and +0x385), which hold fns 10972 and 10971 (`wasm-objdump -x -j Elem
+# target/vota_web_wasm.wasm`). Read from their bodies: 5507 tries the font sizes from the largest down to 10 with a layout
+# strategy passed as a function pointer, 10972 and 10971 are the two strategies (the steps in equal parts on one line;
+# widths in proportion to the texts), and 5506 divides the bar into equal parts for 10972 and for Draw's fallback. They
+# are in cstepsprogressbar.cpp before line 428, in an anonymous namespace (Tenta, CabeEmUmaLinha, CabeProporcional,
+# Divide, and Escolhe, CriaContorno and Fecha, which have no target function: Draw inlines them), with the private
+# Recalcula, which Draw calls and inlines. Chosen, and measured against no matching Draw: every name, the structs
+# SDisposicao and SSegmento's names, the lines, and the header's additions for them (SPathCommand's two constructors,
+# Recalcula, m_font mutable). Measured by `pnpm wasm score` in the whole link:
+# - 5507 (Tenta) and 5505 (std::vector<SSegmento>::__swap_out_circular_buffer, which Recalcula's reserve and push_back
+#   bring) differ in call and data operands only, and match.
+# - Draw 1162 over 5684 rows, CabeProporcional 665 over 1295, CabeEmUmaLinha 52 over 280, Divide 48 over 446. Their
+#   remainder is not explained. They stay written: Draw is a vtable slot, and 5505 and 5507 match through it.
+# - Divide: the target lays out its cases as 0, 1, then the rest. `if (partes == 0) ... if (partes == 1) ...`, an else
+#   if, a switch with or without a default, the whole rest as the switch's default, and the returns written as
+#   std::vector<SRect>() all give case 1, the rest, then case 0; the two tests the other way round give case 0, the rest,
+#   then case 1 (by the function's disassembly in compiles with the unit's flags, whose order the link kept for the
+#   form written). Building each area with SRect::Normalized gives the target's order but stores the area as one 64-bit
+#   word where the target stores four 16-bit fields.
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTEPSPROGRESSBAR_SRCS := src/api/gui/cstepsprogressbar.cpp
 UENUX2_SRCS += $(CSTEPSPROGRESSBAR_SRCS)
-# Draw is not reconstructed: 41-uenux2-cstepsprogressbar-pending.cpp gives the vtable trapping bodies,
-# compiled with the unit's flags; it depends on every header its compile reads (cstepsprogressbar.h, iformfield.h and
-# primitives.h in api/gui, and ecourna's uetypes.hpp; UENUX2_HDRS is not set yet where src/Makefile reads the fragments)
-$(ROOT)/$(APP)/41-uenux2-cstepsprogressbar-pending.o: $(ROOT)/src/units/41-uenux2-cstepsprogressbar-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/41-uenux2-cstepsprogressbar.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/41-uenux2-cstepsprogressbar-pending.cpp -o $(R)
 # the destructor's caller other than the deleting destructor (fn 13550) is not reconstructed yet:
 # 41-uenux2-cstepsprogressbar-roots.cpp gives it a second direct caller and takes its address
 $(ROOT)/$(APP)/41-uenux2-cstepsprogressbar-roots.o: $(ROOT)/src/units/41-uenux2-cstepsprogressbar-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/41-uenux2-cstepsprogressbar.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/41-uenux2-cstepsprogressbar-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/41-uenux2-cstepsprogressbar-pending.o $(APP)/41-uenux2-cstepsprogressbar-roots.o
+override EXTRA_OBJS += $(APP)/41-uenux2-cstepsprogressbar-roots.o

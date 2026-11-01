@@ -583,7 +583,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -782,6 +782,13 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     /usr/bin/grep -E '= func:1224;' splat/symbol_addrs.txt | sed -E 's/^[^ ]* = (func:[0-9]+);.*(evidence:.*)$/\1 \2/'
     # func:1224 evidence:call by:358,1399
     ```
+23. **9258, `ecourna::app::dados::CSerialMidia::ValidaSerial`, by unit 84's vote for std::regex's constructor.** 9258
+    calls `std::basic_regex<char>`'s constructor from a C string (2416), whose body is `unresolved` (its table slot of
+    `__parse`). 2416's name comes from its callers' calls (`evidence:call`), and while 9258 was the only one it was
+    self-voted, so 9258 read `unresolved self-voted` on it at 9202406. `api::CMenuItem::GetTextoFormatado` (5492, unit
+    84) calls it too and votes for it (`/usr/bin/grep -n 'func:2416;' splat/symbol_addrs.txt` prints `evidence:call
+    by:5492,9258`), and 9258 matches. 5492 is itself `unresolved self-voted` (its static's guard), so 9258 rests on that
+    unmatched body's call: a landing that takes 5492 out, or makes 2416 another function's callee, takes 9258 out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
