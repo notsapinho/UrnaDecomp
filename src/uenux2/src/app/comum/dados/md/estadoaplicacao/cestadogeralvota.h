@@ -4,22 +4,59 @@
 
 #include "api/util/cdatetime.h"
 #include "app/comum/dados/md/estadoaplicacao/cnumviasimpressasrelatorios.h"
+#include "app/comum/dados/md/estadoaplicacao/eurna.h"
 #include "ecourna/api/uetypes.hpp"
 
 namespace comum {
 
 // What the records of comum::asn::CConversorEstadoGeralVota say: the types' names, and 4 bytes wide in CEstadoGeralVota's
-// first two members. That they are declared here is a choice, and so is `: int`, now that they are defined here:
-// which formatter body the target uses for them is not read. The enumerators are recovered only where a body compares
-// with one and an Assert text names it: EAVIMPRIMIRBU is 61, which vota::CQuerImprimirBU::StartState (target fn 12035)
-// compares GetEstadoVota() with before it throws "Assert (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)"
-// (ledger/strings.tsv 398641). The Assert texts spell them unqualified.
+// first two members. That they are declared here is a choice, and so is `: int`. The values are evidence: the converter's
+// ConverteEstadoVota and DesconverteEstadoVota (inlined into target fns 11390 and 11391) map 49 to 64 onto
+// ModuloEstadoGeralVota::EstadoVota's values 0 to 15 (inicial to encerrada), refuse 65 as their end marker, and refuse
+// EstadoVota's exibealertadesligamento (16), which has no EEstadoVota ("Estado não deve ser usado"); their
+// EstadoEncerramento twins map 49 to 52 onto EstadoEncerramento's 0 to 3 and refuse 53. The target's Assert texts spell
+// nine EEstadoVota names and three EEstadoEncerramento names (ledger/strings.tsv: EAVINICIAL, EAVGERADADOSDINAMICOS,
+// EAVAGUARDAHORAZERESIMA, EAVGERARBU, EAVGERARRELATORIOS, EAVIMPRIMIRBU, EAVGRAVARRESULTADOS, EAVCOPIARESULTADOSMR,
+// EAVENCERRADA; EAEIMPRIMIROBRIGATORIABU, EAERETIRAMR, EAEFIMDOSTRABALHOS). EAVIMPRIMIRBU is 61, which
+// vota::CQuerImprimirBU::StartState (target fn 12035) compares GetEstadoVota() with before it throws "Assert
+// (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)" (ledger/strings.tsv 398641). The other eight Assert names are
+// placed at the value whose EstadoVota enumerator they spell, a reading; the names no text spells are chosen, after the
+// EstadoVota or EstadoEncerramento enumerator of the same value (EAEINICIAL, EAEULTIMOID and EAVULTIMOID too).
 enum EEstadoVota : int {
-    EAVIMPRIMIRBU = 61,
+    EAVINICIAL = 49,
+    EAVGERADADOSDINAMICOS,
+    EAVAGUARDAHORAZERESIMA,
+    EAVGERARZE,
+    EAVZERESIMAGERADA,
+    EAVZERESIMAIMPRESSA,
+    EAVREGISTROMESARIOINICIAL,
+    EAVVOTAR,
+    EAVFIMAQUISICAOVOTOS,
+    EAVREGISTROMESARIOFINAL,
+    EAVGERARBU,
+    EAVGERARRELATORIOS,
+    EAVIMPRIMIRBU,
+    EAVGRAVARRESULTADOS,
+    EAVCOPIARESULTADOSMR,
+    EAVENCERRADA,
+    EAVULTIMOID,
 };
-enum EEstadoEncerramento : int;
+enum EEstadoEncerramento : int {
+    EAEINICIAL = 49,
+    EAEIMPRIMIROBRIGATORIABU,
+    EAERETIRAMR,
+    EAEFIMDOSTRABALHOS,
+    EAEULTIMOID,
+};
 
 } // namespace comum
+
+// The converter's throws pass each enum as a handle on fn 536 (table slots 967 and 966), formatter<unsigned int>'s body,
+// as eurna.h's SFormatoEnum gives it.
+template <>
+struct std::formatter<comum::EEstadoVota> : comum::SFormatoEnum {};
+template <>
+struct std::formatter<comum::EEstadoEncerramento> : comum::SFormatoEnum {};
 
 namespace comum::md::estadoaplicacao {
 
@@ -49,6 +86,22 @@ public:
     // GetVota()'s result, the member's CNumViasImpressasRelatorios in that class's order.
     const CNumViasImpressasRelatorios& GetNumViasImpressasRelatorios() const { return m_numViasImpressasRelatorios; }
     bool GetTreinamentoEleitor() const { return m_treinamentoEleitor; }
+    // GetEstadoEncerramento: four Assert texts name it (`vota.GetEstadoEncerramento() == EAEFIMDOSTRABALHOS`). The
+    // getters below are what comum::asn::CConversorEstadoGeralVota::DoConverte (fn 11390) reads, the optionals and the
+    // copies' classes by reference; their names are chosen, after the ASN.1 fields.
+    EEstadoEncerramento GetEstadoEncerramento() const { return m_estadoEncerramento; }
+    const std::optional<uedword>& GetUrnaIdGerouZeresima() const { return m_urnaIdGerouZeresima; }
+    const std::optional<api::CDateTime>& GetDhIniAquisicao() const { return m_dhIniAquisicao; }
+    const std::optional<api::CDateTime>& GetDhFimAquisicao() const { return m_dhFimAquisicao; }
+    ueword GetComparecimento() const { return m_comparecimento; }
+    ueword GetQtdJustificativa() const { return m_qtdJustificativa; }
+    const std::optional<api::CDateTime>& GetDhUltimoVoto() const { return m_dhUltimoVoto; }
+    const std::optional<api::CDateTime>& GetDhEmissao() const { return m_dhEmissao; }
+    bool GetTecladoTestadoPosConversao() const { return m_tecladoTestadoPosConversao; }
+    // Adds one to the byte at +8, the BU count: target fn 3701, out of line (three callers, the vota states' slots
+    // 12065, 12077 and 12081; 12065 calls it on comum::CAppInfo::GetVota()'s result). No record names it; the name is
+    // chosen from what it does.
+    void IncrementaQtdBU();
 
 private:
     EEstadoVota m_estadoVota;

@@ -20,6 +20,13 @@
 // five states' slots and by two slots of vota::CRegistraDigitalOperador (unit 161's fragment has them). Their names
 // are chosen from their messages too. So is LogaVotacaoEncerrada's, held inlined by its one
 // caller, vota::CAplicacaoEncerrada::StartState (fn 12058; unit 138's fragment has its notes).
+// LogaImprimindoRelatorio, LogaMesarioIndagadoQualidadeBU, LogaQtdViasAdicionaisExcedeMaximo and
+// LogaHabilitacaoCanceladaReconhecimentoBiometrico (fns 1127, 4551, 4556 and 2495) are out of line, each called with
+// GetInst's result: 1127 by ten printing states' slots, 4551 by vota::CImprimindoBU's two, 4556 by
+// vota::CLimiteCopiasBUAtingido::StartState (fn 12027) and fn 12081, and 2495 by four operador states' slots (unit 156's
+// fragment has them). 1127 and 4551 call fn 233, which ieventoslog.cpp's members hold inlined, so they are in another
+// TU, this one (a reading); 4556 and 2495 log through logaAlerta (fn 1398), and the target holds both as thunks of one
+// merged body, fn 6115. Their names are chosen from their messages.
 // LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
 // vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
 // member's own stack frame opens and calls fn 233; its name is chosen from its message. This header's path is chosen,
@@ -55,6 +62,10 @@ public:
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
+    void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via);
+    void LogaMesarioIndagadoQualidadeBU();
+    void LogaQtdViasAdicionaisExcedeMaximo();
+    void LogaHabilitacaoCanceladaReconhecimentoBiometrico();
     void LogaVotacaoEncerrada();
     void LogaAguardandoConfirmacaoZeresima();
 
