@@ -53,6 +53,10 @@ enum EUeComumError {
     EUE_COMUM_SAVD_MENSAGEM_TAMANHO_INCORRETO = 7307,
     EUE_COMUM_SAVD_MENSAGEM_MARCA_INCORRETA = 7308,
     EUE_COMUM_SAVD_MENSAGEM_BUFFER_INSUFICIENTE = 7309,
+    // ValidarUE (fn 5890), "Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}"
+    EUE_COMUM_VALIDAR_ASSINATURA_UE = 7323,
+    // EnviarAcaoHSM (fn 5889), "Falha ao enviar ação ao HSM. {}"
+    EUE_COMUM_ENVIAR_ACAO_HSM = 7340,
 };
 
 using CUeComumError = ecourna::api::exception::CBaseError<EUeComumError, ecourna::api::exception::SErrorLimits{7200, 7600}>;

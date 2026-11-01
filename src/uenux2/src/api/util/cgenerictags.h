@@ -14,6 +14,10 @@ namespace api {
  */
 class CGenericTags {
 public:
+    // inline in every user: fns 3831 and 5892 store 4 and 3 at +0 and +4 and an empty map; the parameter and the form
+    // are chosen
+    explicit CGenericTags(size_t tamanhoTag) : m_tamanhoTagComNulo(tamanhoTag + 1), m_tamanhoTag(tamanhoTag) {}
+
     void insert(const std::string& tag, size_t tamanho);
     size_t TagSize(const std::string& tag) const;
 

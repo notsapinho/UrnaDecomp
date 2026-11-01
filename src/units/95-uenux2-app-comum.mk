@@ -27,8 +27,89 @@
 # calls the string's destructor, which -Oz gives and -O2 does not (a probe of the class's shape at both levels, not at -O3;
 # docs/reference/facts/levels.md V1), so the copy the target kept is the executable TU's and no object here can
 # match it. It has no stub: stubs.py counts a virtual member of a class our sources define as code of ours, though no
-# object here emits this one (its row stays no-candidate). ValidarUE (5890) and EnviarAcaoHSM (5889) wait for 3831 and
-# 3829, which no unit has.
+# object here emits this one (its row stays no-candidate).
+#
+# Added since: the SAVD requests of iinterfacesavd.cpp with their TLV builder, and CArquivosSavd's file names:
+#   5890  comum::ValidarUE(IInterfaceSavd&, ESavdAplic, const std::string&)  record 886:15, code 7323
+#   5889  comum::EnviarAcaoHSM(IInterfaceSavd&, ESavdAplic, ESavdCmdHSM)     record 1040:15, code 7340
+#   3831  comum::MontaRequisicaoTLV, a chosen name                          no record; named by 5890's call
+#   5891  IInterfaceSavd::AssinarArquivo, a chosen name                     no record; matched by its content
+#   5905  comum::DescricaoArquivo, a chosen name, in carquivossavd.cpp      no record
+#   2283  std::map<std::string, uebyte>'s __tree::destroy, which CGenericTags's implicit destructor brings into this
+#         object (it calls itself; 3831's call names it)
+#   3829  the second IInterfaceSavd::EnviarRequisicao: written, `differs` (below)
+# 5890 puts the 62-byte literal at 8090 ("Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}") in the
+# link, whose tail is the "{}" that 2285 (unit 59), 11470 (unit 66), 11542 and 3766 (unit 91) format with: written
+# there, they match with this unit.
+# - ValidarUE: fn 4625 holds, behind a prologue of its own, the code clang inlined into 5890: it refuses an ESavdAplic
+#   or a key above 255 and an empty package ("Argumento invalido validar assinar o pacote."), builds the TLV with 3831
+#   from the package and the key, zeroes a request, stores a 16-bit command at +2 and the ESavdAplic at +1 and sends it
+#   with 3830. That is IInterfaceSavd::ValidarPacote (a chosen name; a member, as it writes +4 and +16), which ValidarUE
+#   calls with SAVD_CHAVE_UE (53, the key 5890 passes 3831) and the command 0x2021; clang inlines it (cost 220,
+#   threshold 250: -Rpass=inline -Rpass-missed=inline on this file). 5890 stores the ESavdAplic 1 at +1 with a byte
+#   store of its own after the i64 store of the zeroed request and command: at clang's time it is the parameter, which
+#   binaryen's dead-argument elimination folds (5890's wasm type drops it), so the roots pass 1 from both stand-ins;
+#   with the 1 a constant at clang's time, clang merged it into the i64 (measured: 0x20210100).
+# - 3831 builds sup{pkg{package} key{key}}: a CGenericTags with the four tags inserted (CriaTags, a chosen helper in the
+#   anonymous namespace, which clang inlines: 3831 and 5892 hold the same four inserts), the content, which binaryen
+#   inlined into 3831 (MontaConteudoTLV, a chosen name; a prologue of its own in 3831, and clang keeps it a call at cost
+#   800), then EncodeTLV("sup", content); clang keeps 3831 a call in 5890 (cost 380). The content's string is
+#   default-constructed, then assigned the encoded "pkg": the target moves EncodeTLV's result from a temporary into it,
+#   where `std::string conteudo = tags.EncodeTLV(...)` constructs it in place (49 over 301 rows, 2 inserted, 11 deleted,
+#   against 34 over 299, operand-only). The key reaches std::format as an int (argument type 3): the parameter is a
+#   ueint32, a choice.
+# - The four tags are `const std::string`s of external linkage, declared in iinterfacesavd.h. Constant std::strings of
+#   three characters need no initializer or destructor, and the target has neither (no target function loads 494896 to
+#   494943 but 3831 and 5892: the i32.const and offset= search of how-to step 1 on the split's pieces). With external
+#   linkage clang emits them in the order the file defines them, the target's (sup, pkg, key, fil); in the anonymous
+#   namespace this object held them fil, sup, pkg, key (wasm-objdump -x -j Data). Names chosen.
+# - EnviarAcaoHSM: binaryen inlined IInterfaceSavd::EnviarAcaoHSM into 5889 (a prologue of its own; clang keeps it a
+#   call, cost 370). It refuses an ESavdAplic or an action above 255 and an action above 1, sends the bytes {254,
+#   action} with the command 0x1604 through 3829 and keeps the returned text at +4. The bytes are a
+#   std::vector<uebyte>(2) with both assigned: the target stores the zeroed pair merged with 254 as one 16-bit store,
+#   then the action. The request takes its ESavdAplic, then its command; the two assignments the other way round store
+#   them the other way round (3 rows inserted, 3 deleted).
+# - AssinarArquivo (5891): the same over {254, operation, file} with a command and the ESavdAplic, refusing an
+#   ESavdAplic above 255, a command above 65535 or a file above 255 (signed compares for the two ueint32). The target
+#   stores the three bytes one by one, so the operation (61 in the target) is a parameter at clang's time, which
+#   binaryen folds (5891's wasm type has four parameters): the roots pass 61 from both stand-ins. std::vector<uebyte>(3)
+#   with the three assigned stores the end pointer before the bytes, as the target does; a braced list stores it after
+#   them (18 over 131 rows, 6 inserted, 6 deleted). The request's two assignments are in 5889's order.
+# - 3829 (named by 5889's call): sends a byte vector and returns the failure's text, empty when the SAVD accepts.
+#   Written, not matching: 78 over 498 rows (28 of the 32 replaced rows operand-only, 13 inserted, 33 deleted), where
+#   the blocks of the early returns and of the response vector's release nest otherwise; the remainder is not explained.
+#   Measured (pnpm wasm score against 3829): with the response's checks returning early and the header built by a
+#   ConverteHeader overload over the vector, which clang keeps a call (cost 250, threshold 250) and binaryen inlines
+#   with the buffer behind a pointer, 224 over 552; that header built in place, 153 over 539; the error and size tests
+#   nested as in 3830, 84 over 500, and with the message's size read once into a local, 78 over 498 (as written); then
+#   an `inline` overload, 337 over 665; `if (!header->erro) return "";` ahead of the nested size test, 90 over 506. It
+#   stays written: 5889 and 5891 call it and match.
+# - DescricaoArquivo (5905): a switch over the ESavdArquivoUE 25 to 120 returning each file's text, default "Arquivo nao
+#   identificado"; clang makes the table of 96 pointers, which the target holds at 1551420, after carquivossavd.cpp's
+#   records and before cinfomtlcd.cpp's (ledger/source-locations.tsv). The enumerators are not recovered, so the case
+#   labels are the values; its being a free function is a choice. Its line, after operator[], is a choice.
+# Not written here: the ValidarUE over a file, AssinarUE and AssinarEcourna, which binaryen inlined into 11179, 1277 and
+# 12098; and 5892, the request over a package and a file that 4625 and 11179 call, which nothing in the link needs yet,
+# so it is out, with this measurement. 5892 refuses an ESavdAplic or a key above 255 (or-ed, unsigned) or an empty
+# package or file ("Argumento invalido assinar verificar arquivo."), then calls a function binaryen inlined (a prologue
+# of its own) that builds sup{pkg{package} key{key}} with 3831, decodes the content of its "sup" with
+# CGenericTags::DecodeTLV, which binaryen inlined, as it inlined WalkTreeTLV into that (records cgenerictags.cpp:110
+# and 136, codes 7020 and 7021), appends fil{file} with AppendTLV and encodes "sup" again with EncodeTLV, and sends it
+# with the command 0x1001 through 3830. WalkTreeTLV walks the TLV from position 0: the tag's characters, the length
+# marker after them, which must be one of '<' to '?' (the target's `(c & 252) == 60` over a one-character substr, read
+# as `find_first_not_of("<=>?") == 0`), the hexadecimal length (2 * (marker - ';') digits, CStringUtils::HexToInt),
+# and the value. Written so in a scratch link (pnpm wasm score against 5892): 597 over 1643 rows (91 inserted, 95
+# deleted) first; with ESavdChaveValidar given `: unsigned int` (a plain enum compares the key signed), 591 over 1639;
+# the invalid marker a `break` out of the walk where it was a second `return std::string::npos`, 564 over 1624 (read as
+# clang's cleanup destinations of a while: 1 return, 3 break); the hexadecimal length a named std::string in both
+# functions, freed at the end of its scope where the temporary was freed after HexToInt, 503 over 1596 (44 inserted, 51
+# deleted).
+# What remains: clang computes the one-character substr's source pointer (campo.data()) once and reuses it for
+# campo.back(), where the target computes it again in each place (our cgenerictags.cpp.o already holds the shared
+# select, at -O2 and with -fno-strict-aliasing as well; spelling the marker with an if-initializer, std::string's
+# constructor, `campo[campo.size() - 1]` or `!= std::string::npos` changes nothing there, and a helper or a lambda drops
+# the one-character string the target keeps); the other inserted and deleted rows are local numbers, and the operand
+# order of compares, which on both sides puts the lower-numbered local first (a reading). Not explained.
 #
 # Evidence and choices. The records fix each throw's line and each function's name and types. Chosen, and marked where
 # declared: every enumerator's name, ESavdChaveValidar's and EExtensaoArquivoResultado's enumerator names, the two
@@ -40,9 +121,8 @@
 # 3830 scores 81 over 1168 rows in the whole link, all operand-only, and matches. With the two stores in
 # EnviarRequisicao it costs 230 (3830: 331 over 1335 rows, 167 inserted), with the size passed for the data 235 (328
 # over 1332): both are inlined at -O3, and both stayed calls at -O2's 225. No target body shows where the two stores
-# belong: binaryen inlined the helper into 3830, where either form puts them. 3829 holds the same two stores where
-# clang inlined them, the size taken from a std::vector, right before the same copy: a helper over a std::string cannot
-# serve it, so 3829's landing decides the helper's real signature.
+# belong: binaryen inlined the helper into 3830, where either form puts them. 3829 holds the same two stores and copy
+# over a std::vector in its own frame (above).
 # What the bytes decide, measured on this unit's objects at -O2, the tree's level then, function by function with
 # object-local numbers masked:
 # - the `case` order of 347 and 5900: moving 347's first case or 5900's first or SEINT's case changes the br_table (the

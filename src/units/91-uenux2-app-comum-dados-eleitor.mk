@@ -24,13 +24,10 @@
 #   link they scored 22 over 267, 18 over 404 and 18 over 400 rows, operands only, short of the name of the .bss string
 #   NOME_TABELA (1838780, built in __wasm_call_ctors, freed by fn 11545), which the three bodies' votes now give
 #   (splat/symbol_addrs.txt: `evidence:vote:13 by:3768,5775,5776,14478`).
-# - CEleitorDinamicoDAO's RecuperarID and RecuperarTodos (slots 7 and 8, 11542 and 3766; names chosen) differ at one
-#   operand: the end of the "{}" each std::format reads with, which the target holds as the tail of the literal at 8090
-#   ("Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}", comum::ValidarUE's, fn 5890), not in our
-#   link. In a scratch link with a pointer to that literal kept by a roots object, `pnpm wasm splat-remap` printed
-#   `target 11542: IDENTICAL` and, for 3766, `UNRESOLVED (2)` at its two calls of the push_back slow path only, which
-#   the committed symbol file did not name yet (5759 below, matched by content in the same scan). In the link they score
-#   64 over 1282 and 71 over 1568 rows, operand-only. They wait for 5890's literal.
+# - CEleitorDinamicoDAO's RecuperarID and RecuperarTodos (slots 7 and 8, 11542 and 3766; names chosen) match since
+#   unit 95 writes comum::ValidarUE (5890): the end of the "{}" each std::format reads with is the tail of the literal
+#   at 8090 ("Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}"), which 5890 loads and our link did not
+#   hold before.
 #
 # Read from the bytes:
 # - 10403 binds its columns from the offsets the class header lists and converts data_hora_registro with

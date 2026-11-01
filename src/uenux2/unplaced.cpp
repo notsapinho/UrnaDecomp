@@ -1268,11 +1268,6 @@
 // f2135 · 136 B · unmatched · placement: link order · name unknown
 // ? f2135(i32, i32) { ... }
 
-// link-order cluster 1159 · uses=5 · neighbours' file uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp
-
-// f2285 · 534 B · unmatched · placement: link order · name unknown
-// void f2285(i32, i32) { ... }
-
 // link-order cluster 1163 · uses=5
 
 // f2341 · 242 B · unmatched · placement: link order · name unknown

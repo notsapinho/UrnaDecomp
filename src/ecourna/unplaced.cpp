@@ -338,9 +338,6 @@
 // f2302 · 483 B · unmatched · placement: link order · name unknown
 // void f2302(i32, i32, i32, i32) { ... }
 
-// f2283 · 57 B · unmatched · placement: link order · name unknown
-// void f2283(i32, i32) { ... }
-
 // link-order cluster 1189 · uses=6 · neighbours' file uenux2/src/app/comum/md/ccabecalhoentidade.cpp
 
 // f1944 · 282 B · unmatched · placement: link order · name unknown
