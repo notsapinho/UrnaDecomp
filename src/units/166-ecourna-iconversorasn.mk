@@ -16,8 +16,8 @@
 # `no-candidate` (`awk -F'\t' '$2 ~ /p\/include\/ecourna\/api\/asn\/iconversorasn/ {print $6}'
 # ledger/source-locations.tsv` lists the four among the uenux2 copies). In the target 3734 and 5365 are `f6031(p0, p1,
 # p2, <record>, <typeid name>)` and 3733 and 5708 the same over 6032, two merges of two members each (`awk -F'\t'
-# '$2==6031 || $2==6032' ledger/callgraph.tsv`). Their uenux2 callers are not written (10290 10291 11399 11400 for the
-# IdentificadorGeradorMidia pair, 11422 11440 for Foto, 11616 for DadosComparecimento); ecourna's converters reach them
+# '$2==6031 || $2==6032' ledger/callgraph.tsv`). Their uenux2 callers are 10290 10291 11399 11400 for the
+# IdentificadorGeradorMidia pair, 11422 11440 for Foto, 11616 for DadosComparecimento; ecourna's converters reach them
 # through table slots (9203 slot 6731, 9202 slot 6734, 9056 and 2772 slot 7027). A fragment's roots link after ecourna's
 # objects, which would keep their own copies, so the instances are explicit instantiations in a tree root ahead of both
 # trees, at UENUX2_CXXFLAGS, as for CBaseType. Fragment 172 writes 10290, 10291, 11399, 11400 and 11440, whose objects

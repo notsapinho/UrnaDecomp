@@ -18,14 +18,13 @@
 # CreateTimer's result address, so m_timer is initialized in the list, and stores m_aceso (+64) after that call, its
 # place in the class; the timer is 500 ms and its lambda's operator() (fn 10937) flips m_aceso and inlines
 # IFormFieldBase::Invalidate. The lambda's __func members match from this object: target_type (10935), target (10936)
-# and operator() (10937). Not matched:
-#   10938 __clone(__base*): the target stores the capture before the vptr. With -fstrict-aliasing appended to the tree's
-#         flags the object stores +4 then +0, the target's order; at the tree's -fno-strict-aliasing, +0 first (the
-#         function's stores in `wasm-objdump -d` of the object). It waits for strict aliasing in src/api, which this
-#         tree's flags do not have.
-#   10939 __clone(): the target's is a thunk into binaryen's merge body 1083; ours joins the set of the body the target
-#         holds as 786 (matched, RHVoice's concrete_container clones), splat/scan.tsv's detail. It waits for 1083's set to
-#         form in our link.
+# and operator() (10937). The two clones match since src/api/ builds with strict aliasing (src/Makefile
+# UENUX2_TBAA_DIRS) and 1083 matches (fragment 32):
+#   10938 __clone(__base*): the target stores the capture before the vptr. With -fstrict-aliasing the object stores +4
+#         then +0, the target's order; with -fno-strict-aliasing, +0 first (the function's stores in `wasm-objdump -d`
+#         of the object).
+#   10939 __clone(): the target's is a thunk into binaryen's merge body 1083; with 1083's set not formed in our link,
+#         ours joined the set of the body the target holds as 786 (matched, RHVoice's concrete_container clones).
 # Paths relative to src/uenux2.
 # Rect (10943) is a thunk of fn 3889: 27-uenux2-ctextfield.mk has it. GetTypeName (10940) is in the class, last in the
 # band, and a thunk of fn 3891, which forms with IFormField<IPaper>'s 11014 and CInputFieldControl<IScreen>'s 11155: three

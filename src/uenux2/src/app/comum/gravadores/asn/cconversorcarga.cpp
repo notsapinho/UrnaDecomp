@@ -1,6 +1,7 @@
 // Reconstruction: comum::asn::CConversorCarga's two slots, DoConverte and DoDesconverte (target fns 10291 and 10290).
-// No record names this file or a line in it: the path is the class name's (cconversorcarga.h), and the functions'
-// order and lines are chosen. src/units/172-uenux2-comum-datahora-converters.mk has the choices.
+// No record names this file or a line in it: the path is the class name's (cconversorcarga.h), DoConverte comes first
+// by the link order (10291 links ahead of 10290 in their use band) and the lines are chosen.
+// src/units/172-uenux2-comum-datahora-converters.mk has the choices.
 #include "app/comum/gravadores/asn/cconversorcarga.h"
 
 #include "app/comum/asn/util.h"

@@ -30,7 +30,7 @@
 #   95, 2 inserted, 1 deleted); one Read() on the form the ternary selects gives score 44 over 98. No other form found.
 # - fns 12041 and 12042, CMostraQRCodeCertificado's statics' destructors: their only other reader is GetInst, inlined
 #   into fn 12051 (pending in unit 37), so the data have no voter but themselves, and 12042 is also a thunk of fn 1564,
-#   which forms only from three members (unit 37 says so for fn 2888).
+#   which matches since unit 138 gave our link its third member (unit 37 says so for fn 2888).
 #  Chosen, no evidence names them: the member names; GetInst's name and its reference result; s_inst and s_mutex and
 # their order (the shape unit 104 measured: GetInst first, then the pointer and the mutex); the local trava; the
 # destructors declared first; the lines of the functions with no record (above the first record line of each file, and

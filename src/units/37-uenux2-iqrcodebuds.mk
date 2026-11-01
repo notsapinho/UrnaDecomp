@@ -16,12 +16,12 @@
 # 37-uenux2-iqrcodebuds-pending.cpp, which names what they wait for, and AjustaTela (fn 5982) and GetQRDSInst (fn 1956)
 # keep their stubs. GetInst's two callers in the link are unit 156's ProcessInputs (fns 12026, 12038); the target has a
 # third, fn 12081.
-# GetInst is written and reads `unresolved self-voted`: its s_inst (@1833848) has no voter but GetInst until the
-# pointer's exit-time destructor (fn 12057) matches, and the target's 12057 is a thunk into fn 1564, binaryen's merge of
-# such destructors over the D2 fn 785, which forms only from three members; this link has two (CMostraQRCodeBU's and
-# unit 156's CMostraQRCodeCertificado's). Measured: with vota::CAplicacaoEncerrada's two statics as well (its exit-time
-# destructors are fns 12060 and 12059), the link forms the merge, and splat-match adds 1564, 2888 and 12057. That
-# class's caplicacaoencerrada.cpp is unit 138's, which defines no statics.
+# GetInst matches since unit 138's caplicacaoencerrada.cpp defines vota::CAplicacaoEncerrada's two statics (their
+# exit-time destructors are fns 12060 and 12059): its s_inst (@1833848) had no voter but GetInst (`unresolved
+# self-voted`) until the pointer's exit-time destructor (fn 12057) matched, and the target's 12057 is a thunk into fn
+# 1564, binaryen's merge of such destructors over the D2 fn 785, which forms only from three members; CMostraQRCodeBU's
+# and unit 156's CMostraQRCodeCertificado's were two. With the third the link forms the merge, and 1564, 2888 and 12057
+# match, as measured here before.
 # Chosen as unit 104's states are (the shape it measured): GetInst's name and reference result, s_inst and s_mutex and
 # their order after GetInst, the local trava, the constructor out of line and above the destructor, declared first;
 # the definitions' lines, after IQRCodeBUDS's constructor and above the records of the members not written; the

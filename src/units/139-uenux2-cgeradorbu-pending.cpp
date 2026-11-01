@@ -19,7 +19,7 @@
 //   CRdvVota::Cargo has no symbol to link to. 11255 calls GetCandidatosPartido (2272) and Busca (1273) as well. Both
 //   wait for CRdvVota::Cargo.
 // - CGeradorBUBase<...>::ImprimeConsulta, slot 5, fn 11253 (2730 B, record :286): it calls fn 160 too, and fn 942
-//   twice, and waits for fns 1881, 1923 and 5610, which have no body or name of ours (357, Build, matches).
+//   twice, and waits for fns 1923 and 5610, which have no body or name of ours (357, Build, and 1881 match).
 #include "app/comum/relatorios/cgeradorbu.h"
 
 namespace comum {

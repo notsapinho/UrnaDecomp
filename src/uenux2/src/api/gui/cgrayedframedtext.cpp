@@ -1,6 +1,6 @@
 // Reconstruction's note, not TSE's text. The file's one record is api::CGrayedFramedText::MaskText's throw, line 29
-// (target fn 5534); the function's other lines are chosen. The constructor (fn 5535) is not written: it passes
-// CFramedText's constructor the address of a constant SFont that no object of ours defines (src/units/173-uenux2-api-gui.mk).
+// (fn 5534); its other lines are chosen. The constructor (fn 5535) is not written: it passes CFramedText's constructor
+// the address of a constant SFont no object of ours defines (src/units/173-uenux2-cgrayedframedtext.mk).
 #include "api/gui/cgrayedframedtext.h"
 
 #include <string>

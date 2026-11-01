@@ -14,7 +14,8 @@
 #   CConversorImpedido::MontaEleitorIdentidade, which returns md::CEleitorIdentidade.
 # - Before the validation 566 holds 2798's body (callers 3616, 10420, 10631): a by-value string formatted to the type's
 #   length (11 for type 2, else 12: leading '0's erased when longer, then padded) and moved out. 2798 has three callers
-#   and no call of it is in 566, so clang inlined it: the two share a TU. After the validation 566 formats its member
+#   and no call of it is in 566, read as clang inlining it, so the two share a TU (a reading: 566 could repeat the
+#   code). After the validation 566 formats its member
 #   again in place, reading the type back from +12.
 # - 3723 is the test Valida throws on, with a bool result (callers 2803 and 10627): empty is false at once, a character
 #   outside '0'-'9' is false, else slot 4 of the rule on the number with its leading '0's erased (fn 5159). 566's inlined

@@ -62,8 +62,8 @@
 # - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41): fns 3704 and 1681 have no name.
 # - 11390, 11391, 11399 and 11400 (CConversorEstadoGeralVota's and CConversorDadoCorrespondencia's slots) and fn 1080
 #   (comum::asn::Utils::ConverteDataHoraJE) are matched now: fragments 172 and 96.
-# - 11423 (CDadosDisponiveisCarga's constructor) and 566 (CValidadorIdentidade::Valida, which calls fns 3510 and 3512,
-#   both unnamed): not written.
+# - 11423 (CDadosDisponiveisCarga's constructor): not written. 566 is md::CEleitorIdentidade's constructor, which holds
+#   CValidadorIdentidade::Valida inlined, and matches with 3510 and 3512 (units 178 and 00).
 #
 # md::CCarga's constructor (fn 2802, no record) is in ccarga.cpp above ValidaCriacao, a chosen line, and matches: it
 # copies its arguments into the members in their order and calls ValidaCriacao, which it holds twice (one call on each

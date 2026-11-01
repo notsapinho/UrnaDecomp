@@ -20,7 +20,8 @@
 # target's use band 2 runs 5468, 5467, 5466, a higher index linking first: the order the file defines them in.
 #
 # EncodeTLV throws 7017 when the tag is not m_tamanhoTagComNulo - 1 characters long, takes 2^(8 * tamanho) - 1 as the
-# largest value length, pads a copy of the tag with the character ';' + tamanho (the target adds 59 to tamanho) up to
+# largest value length, pads a copy of the tag with the character ';' + tamanho (the target adds 59 to tamanho; ';' is a
+# chosen spelling of that 59) up to
 # m_tamanhoTagComNulo characters, throws 7018 when the value is longer, and returns std::format("{}{:0{}x}{}", the
 # padded tag, the value's length, 2 * tamanho, the value). The target holds libc's exp2 inlined there, on
 # (double)(tamanho << 3): std::pow(2, tamanho * 8), written here, compiles to a call of exp2 (the object imports it),
@@ -32,7 +33,9 @@
 # uenux2 TU of its own, 129 over 1095 (17 inserted, 16 deleted), with the string's old buffer loaded once where the
 # target loads it twice; with -fno-delete-null-pointer-checks added to that TU, or at ecourna's whole flag set, 48 over
 # 1078, all operand-only, and the two links are byte-identical, as is the link with the helper at its ecourna path.
-# Only ecourna's tree has that flag (docs/reference/facts/app-flags.md F3), so the helper is ecourna code.
+# So the helper is placed in ecourna, the one tree here compiled with that flag (docs/reference/facts/app-flags.md F3):
+# a reading from the flag, in the forms measured (a file-static function, a uenux2 TU of its own); no record names the
+# tree.
 #
 # libc's exp family. With EncodeTLV in the link, fp_force_eval and fp_barrier (6278, 6279) are bodies of their own and
 # match, and so do exp (956), __expo2 (6280), sinh (12297), cosh (12315) and RHVoice's limiter::do_initialize (9639,

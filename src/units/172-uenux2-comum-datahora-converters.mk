@@ -32,9 +32,12 @@
 #
 # Chosen: the getters' names; ETipoCabecalho's, EEstadoEncerramento's and most of EEstadoVota's enumerators (the
 # headers say which); the error codes' enumerators; the two cconversorcabecalhoentidade.cpp functions' first lines and
-# the other files' layout; md::CFotoCandidato's constructor out of line taking references; DoDesconverte before
-# DoConverte in cconversorestadogeralvota.cpp (cconversorestadogeralsa.cpp's order); the setters' names the module
-# hand edits below add (the generator's pattern).
+# the other files' layout but the members' order; md::CFotoCandidato's constructor out of line taking references; the
+# setters' names the module hand edits below add (the generator's pattern). The members' order in the converters' files
+# is the link order's, where a higher index links first in a use band: DoDesconverte first in
+# cconversorestadogeralvota.cpp (11391 ahead of 11390, cconversorestadogeralsa.cpp's order too) and
+# cconversordadocorrespondencia.cpp (11400 ahead of 11399), DoConverte first in cconversorcarga.cpp (10291 ahead of
+# 10290) and cconversorhorarioverao.cpp (11385 ahead of 11384).
 #
 # Module hand edits (src/asn1/README.md "The generated modules", docs/reference/facts/asn1.md A3), each on the bytes of
 # a written function:

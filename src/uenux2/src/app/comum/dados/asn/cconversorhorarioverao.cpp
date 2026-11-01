@@ -1,6 +1,7 @@
 // Reconstruction: comum::asn::CConversorHorarioVerao's two slots, DoConverte and DoDesconverte (target fns 11385 and
-// 11384). No record names this file or a line in it: the path is the header's (cconversorhorarioverao.h), and the
-// functions' order is chosen. DoDesconverte holds md::CHorarioVerao's constructor, inlined by binaryen.
+// 11384). No record names this file or a line in it: the path is the header's (cconversorhorarioverao.h), and
+// DoConverte comes first by the link order (11385 links ahead of 11384 in their use band); the lines are chosen.
+// DoDesconverte holds md::CHorarioVerao's constructor, inlined by binaryen.
 #include "app/comum/dados/asn/cconversorhorarioverao.h"
 
 #include "app/comum/asn/util.h"

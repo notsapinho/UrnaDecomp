@@ -65,7 +65,7 @@ void CEmitirMaisBU::StartState()
 }
 
 // CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 185, 261,
-// 407, 455, 491, 903, 1127, 2888, 2890, 3701, 4556, 4557, 4563, 4582, 5987.
+// 407, 455, 491, 903, 1127, 2890, 4556, 4557, 4563, 4582, 5987 (2888 and 3701 are named: units 37 and 93).
 void CEmitirMaisBU::ProcessInput()
 {
     __builtin_trap();
@@ -80,7 +80,7 @@ void CImprimindoBim::StartState()
 
 // CImprimirBUOutrasObrigatorias::StartState: fn 12065 (1790 B), records cimprimirbuoutrasobrigatorias.cpp:50,
 // cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 185, 187, 202,
-// 203, 261, 407, 463, 491, 502, 886, 1127, 1191, 1880, 2244, 2291, 2890, 3701, 5918.
+// 203, 261, 407, 463, 491, 502, 886, 1127, 1191, 1880, 2244, 2291, 2890, 5918 (3701 is named: unit 93).
 void CImprimirBUOutrasObrigatorias::StartState()
 {
     __builtin_trap();
@@ -100,7 +100,7 @@ void CImprimindoZeresima::StartState()
     __builtin_trap();
 }
 
-// CInicioZeresima::StartState: fn 11924 (41 B), callees with no name: 185, 261, 491, 697, 5959 (and unit 169's 5957).
+// CInicioZeresima::StartState: fn 11924 (41 B), callees with no name: 185, 261, 491, 697 (unit 169's: 5957, 5959).
 void CInicioZeresima::StartState()
 {
     __builtin_trap();
@@ -185,8 +185,8 @@ void CCancelaHabilitacaoEleitor::StartState()
     __builtin_trap();
 }
 
-// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 2264, 2798, 3625, 4578,
-// 5424 (and unit 152's 3624; 1688 is named: unit 174).
+// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 2264, 3625, 4578, 5424 (and
+// unit 152's 3624; 1688 is named: unit 174; 2798 unit 178).
 void CProcuraEleitor::StartState()
 {
     __builtin_trap();

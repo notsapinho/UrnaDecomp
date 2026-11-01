@@ -156,9 +156,10 @@ Consequences:
   classes' vtables hold the same slots, so 9203, which built a `DataGeracao` temporary, matched through
   `DataHoraJE`'s vtable as `address same-content`, a reading `splat-review` calls `legitimately`. The fields 9201 and
   9203 fill are `DataHoraJE` now, and neither row's readings say `same-content` (`awk -F'\t' '$1==9201 || $1==9203
-  {print $1, $6}' splat/scan.tsv`). Eleven fields still say `DataGeracao` (`/usr/bin/grep -c 'DataGeracao value_type'
-  src/asn1/modules/*.h`); nothing measured says they differ, and 1080, the fifth function that stores `DataHoraJE`'s vptr
-  (1556172), is still `no-candidate`.
+  {print $1, $6}' splat/scan.tsv`). Six fields still say `DataGeracao` (`/usr/bin/grep -c 'DataGeracao[ ]value_type'
+  src/asn1/modules/*.h` prints 5 and 1), a `DataGeracao` that now derives from `DataHoraJE`, a reading
+  (`ModuloTiposEleitorais.h` says of which functions); nothing measured says they differ. 1080, the fifth function that
+  stores `DataHoraJE`'s vptr (1556172), matches (`comum::asn::Utils::ConverteDataHoraJE`, unit 96).
 - A setter's form is per field. 11388 builds a `Constrained_INTEGER` temporary for `municipio` and `zona`
   (`f553(l4, 1567660)`, `f553(l4, 1561600)`) and stores `secao` directly: 38 over 57 rows against the generated setters,
   8 over 56 with those two on `const_reference`. A bound does not decide it: 9131 sets `<1, 99999>` and `<1, 9999>`

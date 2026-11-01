@@ -1,6 +1,6 @@
 # uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and 6 more, "Written since" below):
-# vota::CInformacaoZeresimaTardia's
-# destructors and StartState (target fns 2879, 11984, 11983); the abstract bases vota::CGeraZeresimaBase and
+# vota::CInformacaoZeresimaTardia's destructors and StartState (target fns 2879, 11984, 11983); the abstract bases
+# vota::CGeraZeresimaBase and
 # vota::CGeraResumoZeresimaBase, their constructors (5965, 11945), their destructors (1720, 1952) and the body binaryen
 # merges these into (2902); vota::CGeraZeresima's and vota::CGeraResumoZeresima's destructors (5961, 5960; 5964, 5963;
 # the target holds each body once for vota::CRegerarZeresima, or vota::CRegeraResumoZeresima, too); the slot 10 of the
@@ -83,8 +83,8 @@
 # AposGeracao (9) and GetProximoEstado (10), their protected access and the pointer result of slot 10; the pointee of
 # the bases' forms (the type of vota::CTelasVota's members, which ctelasvota.h chose);
 # LogaAguardandoConfirmacaoZeresima's name, from its message, and its place last, after LogaVotacaoEncerrada; GetInst
-# (the project's singletons' name), the local trava and std::lock_guard; the private constructors of
-# CInformacaoZeresimaTardia and CConfirmaImpressaoZeresima, declared and not defined; the bases' arguments spelled with
+# (the project's singletons' name), the local trava and std::lock_guard; the private constructor of
+# CInformacaoZeresimaTardia, declared and not defined; the bases' arguments spelled with
 # comum::CAppState's chosen enumerators; the destructor declared first, so that each class's own .cpp emits the vtable;
 # the empty slot 9 of CGeraZeresima and CRegeraResumoZeresima as a body in the class; the lines of
 # cinformacaozeresimatardia.cpp's two functions, above the records' lines, which stay past the file's end. The paths:

@@ -7,7 +7,8 @@
 # - slot 2, DoConverte, of the converters landed before: CConversorSuplencia 11358 and CConversorComplementosMunicipios
 #   11380 (unit 124), CConversorSituacoesEleicoes 11360 (unit 47), CConversorProcessoEleitoral 11362 and
 #   CConversorPleito 11364 (unit 140), CConversorNomesCargo 11368 (unit 88), CConversorDadosCandidato 11449 (unit 96),
-#   each emitted with its class's vtable in that unit's object; CConversorImpedido 11409, with unit 98's pending object;
+#   each emitted with its class's vtable in that unit's object; CConversorImpedido 11409, with unit 98's
+#   cconversorimpedido.cpp.o;
 # - slot 2 of this fragment's CConversorEleicaoPE 11370, CConversorCargo 11372, CConversorDetalheCandidato 11374,
 #   CConversorDetalheConsulta 11376, CConversorDedo 11415, CConversorBiometriaEleitor 11421, CConversorFotoCandidato
 #   11439 and CConversorCandidaturas 11444, and slot 3, DoDesconverte, of CConversorHistoricoVotoImpresso 10275 and of

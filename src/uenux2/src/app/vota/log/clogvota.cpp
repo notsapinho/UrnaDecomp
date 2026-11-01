@@ -1,8 +1,8 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// Members with no record sit at lines the reconstruction chose, each unit's fragment says why: 119's, 161's five after
-// GetInst, 152's seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's and 176's.
+// Members with no record sit at chosen lines, each unit's fragment says why: 119's, 161's five after GetInst, 152's
+// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two and 176's one.
 
 #include "app/vota/log/clogvota.h"
 

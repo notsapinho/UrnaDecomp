@@ -51,9 +51,8 @@
 #   slot 9 ProcessOutroTick, a chosen name, where the record names it ProcessTickNaoDesligamento; so the base's empty
 #   body, fn 425, fills both slots here and their stubs go. 11870 and StartState (11871) throw through the assert macro
 #   with the condition `appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA` (ledger/strings.tsv 400939) and
-#   the codes 3482 and 3481, so they wait for that EEstadoVota enumerator (51) in
-#   app/comum/dados/md/estadoaplicacao/cestadogeralvota.h, which does not declare it, and for the two codes in
-#   api/util/eueasserterror.h; 11823 calls fn 3855;
+#   the codes 3482 and 3481, so they wait for the two codes in api/util/eueasserterror.h (the EEstadoVota enumerator,
+#   51, is in app/comum/dados/md/estadoaplicacao/cestadogeralvota.h now); 11823 calls fn 3855;
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
@@ -71,7 +70,8 @@
 #   callers.
 # - CAplicacaoEncerrada's constructor, GetInst (fn 3877) and statics, pointer first below GetInst (unit 104's shape):
 #   with them our link forms fn 1564, binaryen's body for the exit destructors of every static std::unique_ptr whose
-#   class's D2 is fn 785, from three members (CMostraQRCodeBU's, CMostraQRCodeCertificado's and this one's), and 1564,
+#   class's D2 is fn 785, from three members in our link, eight in the target (CMostraQRCodeBU's,
+#   CMostraQRCodeCertificado's and this one's here), and 1564,
 #   2888 (unit 37's), 12057, 12059 and 12060 match with 3877. The constructor copies CTelasVota's +36 through
 #   ctelasvota.h's GetTelaAplicacaoEncerrada. 3877 scores 11 over 55 rows, operand-only. The roots stand in for its
 #   three target callers (12034, 12051, 12055), and its vtable has no sink: GetInst stores it.
@@ -81,7 +81,8 @@
 #   LogaMesarioConfirmouReinicioVotacao and LogaMesarioSelecionouOutrasOpcoes, names chosen from their messages. 23 over
 #   185 rows, operand-only.
 # - CEsperaRetestar::FinishState (fn 11824): it stops the tick and holds api::IForm<MEDIA>::Hide inlined on its form,
-#   which api/gui/iform.h now declares public (it was protected, for CFormStack). 3 over 40 rows, operand-only.
+#   which api/gui/iform.h now declares public, a reading (it was protected, for CFormStack; a friend of CEsperaRetestar
+#   gives the same bytes). 3 over 40 rows, operand-only.
 #
 # Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data
 # member, of s_fimEspera, LogaVotacaoEncerrada, GetTelaReinicioVotacao, CReinicioVotacao::GetInst and

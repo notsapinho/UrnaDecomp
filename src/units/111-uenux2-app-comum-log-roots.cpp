@@ -9,7 +9,7 @@
 //   slot 28, 10416, unit 152's, and 10642, unit 161's, are in the link);
 // - comum::IEventosLog::logaErro (fn 2282): the target's fns 3279, 4459, 4550, 10478 and 11849;
 // - comum::IEventosLog's five members that log a fixed text: the target's fns 7160 and 12134 (5885), 12134 twice (5883),
-//   11849 and 11921 (5882), 5945 and 11914 (5881), 11869 and 11911 (5880);
+//   11849 and 11921 (5882), 5945 and 11914 (5881), 11869 and 11911 (5880) (11921 is in the link, unit 169);
 // - comum::CInformacaoEleicao's constructor and members: fn 603 has 22 callers in the target; each member's own callers
 //   are listed in the class header.
 #include <string>
@@ -65,7 +65,7 @@ __attribute__((noinline)) int w111_erro(comum::IEventosLog& log, const std::stri
     return 3;
 }
 
-// stands for fns 7160, 12134, 11849, 11921, 5945, 11914, 11869 and 11911
+// stands for fns 7160, 12134, 11849, 5945, 11914, 11869 and 11911 (11921 is in the link)
 __attribute__((noinline)) int w111_textos(comum::IEventosLog& log, comum::IEventosLog& outro)
 {
     log.LogaMidiaResultadoAusente();

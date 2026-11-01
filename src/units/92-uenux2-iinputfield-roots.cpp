@@ -18,8 +18,8 @@
 // - The __func vtables keep the timer's lambda (fns 6306, 12381 to 12355, 11020 to 11023), which the target stores in the
 //   constructors fns 2024 and 3673.
 // - CFramedText's Rect and Move have their two direct callers in the fields (one target function each for the two masks,
-//   and CInputField's): the target has a third, fns 10896 and 2770. DrawFrame's are the Draws and fn 5534, all in the
-//   link.
+//   and CInputField's): the target has a third, fns 10896 and 2770. DrawFrame's are fn 5534 (twice) and the Draw 12438,
+//   both in the link, and fn 10897, not written.
 // The header is included because nothing else instantiates the templates; everything this object emits and the unit
 // claims is code a landed header defines. Compiled with APP_CXXFLAGS, like the other stand-ins. The 145 functions of the
 // object compare equal under UENUX2_CXXFLAGS, by function with the object-local numbers masked.

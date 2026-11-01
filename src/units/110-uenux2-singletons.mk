@@ -94,7 +94,7 @@
 # (ledger/ordinals.tsv) it follows the file's exit destructors (11481, 11480), so it is defined after the statics, here
 # after CRespostasDSNumero's call operator, a choice. Chosen: its name and GetResposta's, its being a free function,
 # crespostasds.h as its header, GetResposta's being inline in the class. fn 11478, the file's other function passed by a
-# table slot (3051, by fn 11946), waits for fn 1881, which nothing names.
+# table slot (3051, by fn 11946), is not written; fn 1881, which it calls, matches (unit 00).
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both
 #   since.

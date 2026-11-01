@@ -12,8 +12,8 @@
 // The destructor is implicit: the D0s (thunks of binaryen's fn 6062) hold the D2's body, then free `this`
 // (docs/reference/facts/reading.md §R5). Draw, GetTypeName, Rect and Move are written; GetTypeName, Rect and Move are
 // one target function for both instantiations (fns 6507, 6505, 6504). `const std::string` for the text in Draw gives
-// the same function. Draw (fns 12593, 12708) stays out of the matches while MaskText is a trap: binaryen inlines the
-// trap and the body collapses to one `unreachable`.
+// the same function. Draw (fns 12593, 12708) matches since MaskText is written (units 92 and 173); while MaskText was a
+// trap, binaryen inlined it and the body collapsed to one `unreachable`.
 //
 // The constructor's shape is chosen: fns 4185 and 2384 build the mask from different arguments, and each instantiation
 // needs its own, so a forwarding template stands for them. No function of this tree's link holds it (the masks'

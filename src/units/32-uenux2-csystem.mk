@@ -25,10 +25,13 @@
 # CScopeGuard, a class with a std::function member taken by value, gives that; the class, its name, its place (an
 # anonymous namespace of this file, lines 990 to 1011) and its members' names are chosen. Slot 3 of the lambda's block,
 # __clone(__base*) (10861), and slot 2, __clone() (10862), match since src/api/ builds with strict aliasing (src/Makefile
-# UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). With -fno-strict-aliasing our object stored the vptr before the captured pointer, where the target
-# stores the pointer first, and 10862 calls the shared body of the lambdas' clones (target fn 1083), which our link
-# formed with RHVoice's and which stored the vptr first; it matches with app/comum/dados/md/rdv/cvotos.cpp's lambdas
-# built with strict aliasing too. RemoveFile (2760) calls ZeroFill unless lstat says the path is a symbolic link, then
+# UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). With -fno-strict-aliasing our object stored the vptr before
+# the captured pointer, where the target stores the pointer first, and 10862 calls the shared body of the lambdas'
+# clones (target fn 1083), which our link formed with RHVoice's and which stored the vptr first; it matches with
+# app/comum/dados/md/rdv/cvotos.cpp's lambdas built with strict aliasing too. Measured at 694de52, before 1083 matched,
+# with csystem.cpp and cgenerictags.cpp compiled by hand with uenux2's set: 10862 scored 2 over 5 rows, operand-only,
+# and without -fno-strict-aliasing 10 over 12 (7 inserted), so strict aliasing alone did not close it.
+# RemoveFile (2760) calls ZeroFill unless lstat says the path is a symbolic link, then
 # libc's remove (fn 1572), which matches with it. At 694de52 our link has no body of remove
 # (build/out/wasm-map/vota_web/names.tsv); with RemoveFile it has one, called by RemoveFile and by 7-Zip's
 # NWindows::NFile::NDir::DeleteFileAlways (wasm-objdump -d of the link), which is not the target's caller 2583 (`score
