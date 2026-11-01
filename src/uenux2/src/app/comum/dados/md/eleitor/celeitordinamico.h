@@ -19,9 +19,10 @@ namespace comum::md {
 // The member names and the getters' are chosen from those columns, but for GetTituloMesarioHabilitacao, the record's.
 // The 32-bit members are plain ints: their enums are not recovered and the two functions only bind them.
 //
-// Constructors: fns 5664 and 5663, the second with the optional, whose one difference is that argument. Their callers
-// (3766, 11542) are not written, so the parameters' order is the wasm's and their types what the bodies do: the
-// photo's reference could be a by-value parameter, since the caller passes an address either way.
+// Constructors: fns 5664 and 5663, the second with the optional, whose one difference is that argument. The parameters'
+// order is the wasm's and their types what the bodies do; their callers (3766, 11542, CEleitorDinamicoDAO's SELECTs) pass
+// the columns in that order. The photo's reference could be a by-value parameter, since the caller passes an address
+// either way.
 class CEleitorDinamico {
 public:
     CEleitorDinamico(const CEleitorIdentidade& eleitor, const CEleitorIdentidade& identidadeHabilitacao,

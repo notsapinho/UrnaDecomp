@@ -5,8 +5,8 @@
 # cregracpf.cpp, with their headers and the base's, iregraidentidade.h. The vtables' other slots hold bodies binaryen
 # merges with other classes' and that match already: the implicit destructors, which destroy nothing (fns 174 and 144),
 # GetTipo (fns 11273, 434 and 2254: return 3, 1 and 2) and CRegraIdentidadeLivre's ValidaDigitoVerificador (fn 371:
-# return true). The constructors (inlined into fn 7787) are not written, nor IRegraIdentidade::Valida (inlined into fn
-# 566). No record names these classes, files or members (docs/how-to-decompile.md step 3, "When no record names the
+# return true). The constructors (inlined into fn 7787) are not written. IRegraIdentidade::Valida (inlined into fn 566)
+# and EhValida are unit 178's. No record names these classes, files or members (docs/how-to-decompile.md step 3, "When no record names the
 # file"):
 # - the directory md/ is rule 3's choice from the family's one record, md/iregraidentidade.cpp:23, and the data speak
 #   against it. In the uses-1 band the functions linked right before the family are md/rdv/'s (fns 11275 to 11339: CVoto

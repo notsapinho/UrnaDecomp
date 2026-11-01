@@ -11,9 +11,17 @@ public:
     static void Trim(std::string& valor);
     static std::string Trim(const std::string& valor);
     static std::string PreencheAEsquerda(const std::string& valor, char preenchimento, size_t tamanho);
-    // fn 3511: pads in place on the right up to a length (callers 10726, 11972, 11973); no record names it, so the name,
-    // after PreencheAEsquerda's, and its being a member of this class are chosen (src/units/00-*.mk says why this file)
+    // fn 3512: pads in place on the left up to a length (callers 566 and 2798, which pass '0'); fn 3511: pads in place
+    // on the right (callers 10726, 11972, 11973); fn 1881: pads a copy on the right (callers 1542, 2248, 11188, 11253,
+    // 11478, which pass ' '). No record names them: the names, after PreencheAEsquerda's, the in-place and copying
+    // overloads, after Trim's, and their being members of this class are chosen (src/units/00-*.mk says why this file)
+    static void PreencheAEsquerda(std::string& valor, char preenchimento, size_t tamanho);
     static void PreencheADireita(std::string& valor, char preenchimento, size_t tamanho);
+    static std::string PreencheADireita(const std::string& valor, char preenchimento, size_t tamanho);
+    // fn 3510: erases a string's leading '0's in place (callers 566 and 2798); fn 5159: the same on a copy (callers 566
+    // and 3723). No record names them: names, overloads and class are chosen as above
+    static std::string& RemoveZerosAEsquerda(std::string& valor);
+    static std::string RemoveZerosAEsquerda(const std::string& valor);
 
     static uebyte ToByte(const std::string& valor);
     static ueint16 ToInt16(const std::string& valor);

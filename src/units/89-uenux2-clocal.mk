@@ -1,6 +1,13 @@
 # uenux2 comum::CLocal, the comum::md locality, municipality and candidacy classes, and comum::CCandidaturas. Paths
 # relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
+# md::CLocal's two constructors are written in md/clocal.cpp, above GetSecao, and have no index of their own: the
+# target inlines each into its one caller, comum::asn::CConversorLocal::DoDesconverte (fn 11452, not written), which
+# copies the id, the three strings and the municipality, then the section or the contingency urn, and calls
+# ValidaCriacao once in each path. Read from 11452 (md/clocal.h has the forms); unrooted, so our link drops them until
+# 11452 lands, and nothing is measured on them but the object (each makes the four string copies and calls
+# ValidaCriacao out of line, as 11452 does).
+#
 # Names and files from records: md::CLocal::GetSecao (target fn 943) and ValidaCriacao (5673); comum::CLocal::VerificaLido
 # (782), GetSecaoID (1078) and VerificaEhSecao (5742); md::CInfoMunicipio::GetHorarioVerao (3725) and ValidaCriacao (5675);
 # md::CComplementoMunicipio::GetHorarioVerao (2795) and ValidaCriacao (5647); md::CHorarioVeraoMunicipio::ValidaCriacao
@@ -83,7 +90,8 @@
 #   124-uenux2-app-comum-dados-asn.mk matches, holds it inlined and shows neither tell (that fragment says so).
 # - md::CImpedido's constructors (5662, 5661, in the order of their band). The file is the record's (cimpedido.cpp:46,
 #   GetImpedimentoP2, held inlined by fn 5764 and not written, so its line stays blank). The class is read from 11410, CConversorImpedido's DoDesconverte,
-#   their only caller. Why the second constructor stores 15 in the second impediment is not known: the value is the bytes'.
+#   their only caller, which unit 98 writes: it calls each twice (emplace_back's two paths), so the roots' stand-ins for
+#   them went with it. Why the second constructor stores 15 in the second impediment is not known: the value is the bytes'.
 #
 # Evidence for forms:
 # - m_codigo is a plain uedword lvalue where it is formatted (5675, 5678). std::format over such a member stores the pair

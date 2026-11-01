@@ -24,6 +24,13 @@
 #   link they scored 22 over 267, 18 over 404 and 18 over 400 rows, operands only, short of the name of the .bss string
 #   NOME_TABELA (1838780, built in __wasm_call_ctors, freed by fn 11545), which the three bodies' votes now give
 #   (splat/symbol_addrs.txt: `evidence:vote:13 by:3768,5775,5776,14478`).
+# - CEleitorDinamicoDAO's RecuperarID and RecuperarTodos (slots 7 and 8, 11542 and 3766; names chosen) differ at one
+#   operand: the end of the "{}" each std::format reads with, which the target holds as the tail of the literal at 8090
+#   ("Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}", comum::ValidarUE's, fn 5890), not in our
+#   link. In a scratch link with a pointer to that literal kept by a roots object, `pnpm wasm splat-remap` printed
+#   `target 11542: IDENTICAL` and, for 3766, `UNRESOLVED (2)` at its two calls of the push_back slow path only, which
+#   the committed symbol file did not name yet (5759 below, matched by content in the same scan). In the link they score
+#   64 over 1282 and 71 over 1568 rows, operand-only. They wait for 5890's literal.
 #
 # Read from the bytes:
 # - 10403 binds its columns from the offsets the class header lists and converts data_hora_registro with
@@ -49,6 +56,20 @@
 #   calls the out-of-line operator+(const char*, const std::string&) (fn 345).
 # - 2799's map and photo are std::optional members, from the flags fn 11422 stores at +32 and +16. The target reads the
 #   map with no test of the flag: value() adds 8 rows to GetDedo.
+# - RecuperarID builds the voter's identity from `id`, the key it was called with, when titulo_mesario is NULL, and
+#   from the formatted titulo column when it is not: the target copies the parameter's string in one branch and the
+#   local's in the other, and reloads titulo's size byte when destroying it. Written from titulo in both, the body kept
+#   that byte in a local (267 over 1305 rows, 23 inserted, 22 deleted). The two SELECTs read every column into a named
+#   local before building anything (the calls come in column order, ahead of operator new), format titulo,
+#   identidade_habilitacao and titulo_mesario with std::format("{}") over the int64 (type code 4, reading.md R13), and
+#   close the statement before returning. RecuperarTodos pushes a named local: its slow path (5759) copies the element
+#   (5760 is the copy), where a temporary would be moved.
+# - std::vector<CEleitorDinamico>'s instances that RecuperarTodos brings match: the push_back slow path (5759), and
+#   construct_at, __uninitialized_allocator_relocate and __split_buffer's destructor (5760, 3759, 3758), which the slow
+#   path calls out of line. The target gives each of those three a second caller (3614 for 5760, 5761 for 3759 and
+#   3758), and so do the roots: with only the slow path calling them binaryen inlined all three into it (410 over 507
+#   rows, 373 inserted). The element's destructor loop, __destroy_vector (3763), has no instance of ours: its callers 5761
+#   (CEleitores::DynamicCreate) and 6734 are not written.
 #
 # Chosen, no evidence names them: every data member's name, parameter and local names (comando among them), every
 # getter's name but GetTituloMesarioHabilitacao, the converters being private, the enumerators' names of

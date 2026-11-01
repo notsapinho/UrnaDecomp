@@ -15,8 +15,12 @@ namespace comum::md {
 // +8 the mesario's kind copies with the count, and an optional identity at +12 (its flag at +28) whose value
 // GetTituloMesario returns. Each width is the bodies'; the types are CEleitorDinamico's members they are copied into. The
 // member names, the getters but GetTituloMesario, and this header's path, beside the record's .cpp, are chosen.
+// The constructor is target fn 3718, which fn 10425 calls three times: it stores its four arguments and leaves the
+// optional empty. The parameters' names are chosen, and so is its being defined in the .cpp.
 class CEleitorDadosHabilitacaoBiometrica {
 public:
+    CEleitorDadosHabilitacaoBiometrica(CDedo::TipoDedo dedo, ueword score, uebyte numeroTentativa, int erroDecifrarBiometria);
+
     CDedo::TipoDedo GetDedo() const { return m_dedo; }
     ueword GetScore() const { return m_score; }
     uebyte GetNumeroTentativa() const { return m_numeroTentativa; }

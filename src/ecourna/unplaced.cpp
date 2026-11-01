@@ -247,12 +247,6 @@
 
 // link-order cluster 958 · uses=3 · neighbours' file ecourna/api/sql/sqlite/csqlstatement.cpp
 
-// f3512 · 59 B · unmatched · placement: link order · name unknown
-// void f3512(i32, i32) { ... }
-
-// f3510 · 167 B · unmatched · placement: link order · name unknown
-// void f3510(i32) { ... }
-
 // f3509 · 530 B · unmatched · placement: link order · name unknown
 // void f3509(i32) { ... }
 
@@ -303,12 +297,6 @@
 // ? f3708(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1008 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cfotos.cpp
-
-// f3759 · 351 B · unmatched · placement: link order · name unknown
-// void f3759(i32, i32, i32) { ... }
-
-// f3758 · 188 B · unmatched · placement: link order · name unknown
-// void f3758(i32) { ... }
 
 // f3757 · 406 B · unmatched · placement: link order · name unknown
 // void f3757(i32, i32, i32, i32) { ... }
