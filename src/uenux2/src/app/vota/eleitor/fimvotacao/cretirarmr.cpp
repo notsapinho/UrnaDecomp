@@ -1,10 +1,28 @@
+#include "app/vota/eleitor/fimvotacao/cretirarmr.h"
+
+#include "api/gui/cinteractiveform.h"
+#include "api/pattern/cpolysingleton.h"
+#include "app/comum/iinterfaceinit.h"
+#include "app/vota/eleitor/fimvotacao/cemitirmaisbu.h"
+
+namespace vota {
+
+CRetirarMR::~CRetirarMR() = default;
+
+// (original lines 12-75: content not recovered)
+#line 76
+void CRetirarMR::ProcessInput()
+{
+    bool ehDemo = api::CPolySingleton<comum::IInterfaceInit>::instance().GetDemoMode();
+    api::EInputResult resultado = ehDemo ? m_formDemo->Read() : m_form->Read();
+    if (resultado == api::INPUT_CONFIRMA) {
+        m_pNextState = &CEmitirMaisBU::GetInst();
+    }
+}
+
+} // namespace vota
+
 // <stubs>
-// f12031 · 621 B · unmatched · name unknown
-// void f12031(i32) { ... }
-
-// f12030 · 208 B · unmatched · name unknown
-// void f12030(i32) { ... }
-
 // f2291 · 3426 B · unmatched · placement: link order · name unknown
 // ? f2291() { ... }
 // </stubs>

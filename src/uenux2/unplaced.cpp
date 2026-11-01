@@ -156,26 +156,6 @@
 // f12113 · 9 B · unmatched · placement: link order · name unknown
 // void f12113(i32) { ... }
 
-// link-order cluster 629 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemparametrosurnavota.cpp
-
-// f12255 · 11 B · unmatched · placement: link order · name unknown
-// ? f12255(i32) { ... }
-
-// link-order cluster 630 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemversoespacotesvota.cpp
-
-// f12259 · 11 B · unmatched · placement: link order · name unknown
-// ? f12259(i32) { ... }
-
-// link-order cluster 631 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemimprimelistaeleitoresvota.cpp
-
-// f12266 · 11 B · unmatched · placement: link order · name unknown
-// ? f12266(i32) { ... }
-
-// link-order cluster 632 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemimprimeestadournavota.cpp
-
-// f12267 · 11 B · unmatched · placement: link order · name unknown
-// ? f12267(i32) { ... }
-
 // link-order cluster 669 · uses=2
 
 // f4307 · 478 B · unmatched · placement: link order · name unknown
@@ -868,11 +848,6 @@
 // f2880 · 2039 B · unmatched · placement: link order · name unknown
 // ? f2880() { ... }
 
-// link-order cluster 1123 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemparametrosurnavota.cpp
-
-// f2939 · 12 B · unmatched · placement: link order · name unknown
-// void f2939(i32) { ... }
-
 // link-order cluster 1124 · uses=4
 
 // f2946 · 718 B · unmatched · placement: link order · name unknown
@@ -1085,26 +1060,6 @@
 
 // f11638 · 12 B · unmatched · placement: link order · name unknown
 // ? f11638(i32) { ... }
-
-// link-order cluster 530 · uses=1 · neighbours' file uenux2/src/app/comum/dados/citemversoespacotes.cpp
-
-// f11666 · 56 B · unmatched · placement: link order · name unknown
-// ? f11666(i32) { ... }
-
-// link-order cluster 531 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemparametrosurnavota.cpp
-
-// f11667 · 56 B · unmatched · placement: link order · name unknown
-// ? f11667(i32) { ... }
-
-// link-order cluster 532 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/citemimprimelistaeleitoresvota.cpp
-
-// f11668 · 106 B · unmatched · placement: link order · name unknown
-// ? f11668(i32) { ... }
-
-// link-order cluster 533 · uses=1 · neighbours' file uenux2/src/app/comum/dados/citemimprimeestadourna.cpp
-
-// f11669 · 56 B · unmatched · placement: link order · name unknown
-// ? f11669(i32) { ... }
 
 // link-order cluster 584 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelpu.cpp
 

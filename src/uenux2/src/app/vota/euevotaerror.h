@@ -28,6 +28,10 @@ enum EUeVotaError {
     EUE_VOTA_TIPO_IDENTIDADE_NAO_REGISTRADO = 9402,
     EUE_VOTA_IDENTIDADE_ELEITOR_NAO_REGISTRADA = 9403,
     EUE_VOTA_IDENTIDADE_PRINCIPAL_NAO_REGISTRADA = 9404,
+    // the value is the code vota::CMostraQRCodeCertificado::ProcessInput (target fn 12038, record
+    // cmostraqrcodecertificado.cpp:39) throws; the name is chosen from its message, "Número de inputs inválido": no
+    // evidence names it
+    EUE_VOTA_QRCODE_CERTIFICADO_NUMERO_INPUTS_INVALIDO = 9408,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

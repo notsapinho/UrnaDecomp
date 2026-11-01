@@ -5,29 +5,35 @@
 namespace vota {
 
 // The items of vota's "Mais informacoes" menu (RTTI; fn 6599 builds them, each as a
-// std::shared_ptr<comum::CItemMenu>(new X)). Recovered: the heads only. Each class is final: the control block's
+// std::shared_ptr<comum::CItemMenu>(new X)). Recovered: the heads and slot 3. Each class is final: the control block's
 // __on_zero_shared (fn 2932, one body for the four below) holds the destructor inlined instead of the call through the
 // vtable (fn 172) a class open to derivation gives (docs/reference/facts/reading.md R4). Their vtables are [2937, 2939,
-// <the comum class's slot 2>, <own>]: each inherits slot 2 and fills the pure slot 3 (fns 12267, 12266, 12259,
-// 12255), declared here and not reconstructed, nor are the constructors. The path is chosen: no record names it.
+// <the comum class's slot 2>, <own>]: each inherits slot 2 and fills the pure slot 3 (fns 12267, 12266, 12259, 12255),
+// defined in citensmenuvota.cpp, the item's count of copies printed (CEstadoGeralVota's CNumViasImpressasRelatorios,
+// through the const CAppInfo::GetVota, fn 903). Its result is 32 bits and unsigned: comum's four Slot2 compare it with
+// lt_u, and with it comum::CItemImprimeListaEleitores::Slot2 (fn 11668) gives the target's rows (local count, lt_u);
+// with uebyte and the count unsigned int it keeps the count on the stack and compares gt_u (score 7 over 55 rows, 2
+// deleted; the other three Slot2 still match), and with uebyte and an int count gt_s. unsigned int is chosen. Fn
+// 2939, the four classes' D0, is the implicit destructor's (CItemMenu's inline D2 and a free), a thunk into binaryen's
+// fn 1969 in both links. The constructors are not reconstructed. The path is chosen: no record names it.
 class CItemImprimeEstadoUrnaVota final : public comum::CItemImprimeEstadoUrna {
 public:
-    uebyte Slot3() override;
+    unsigned int Slot3() override;
 };
 
 class CItemImprimeListaEleitoresVota final : public comum::CItemImprimeListaEleitores {
 public:
-    uebyte Slot3() override;
+    unsigned int Slot3() override;
 };
 
 class CItemVersoesPacotesVota final : public comum::CItemVersoesPacotes {
 public:
-    uebyte Slot3() override;
+    unsigned int Slot3() override;
 };
 
 class CItemParametrosUrnaVota final : public comum::CItemParametrosUrna {
 public:
-    uebyte Slot3() override;
+    unsigned int Slot3() override;
 };
 
 // The fifth item derives from CItemMenu directly. Its D0 (fn 12251) calls the D2 and then frees `this` with a drop

@@ -16,6 +16,9 @@
 //   (src/units/135-uenux2-comum-mesario-estados.mk). WaitAndRead is not written, so its line stays blank. Chosen:
 //   SetFocus's name, the data members', parameters' and Read's local's names, how the record's column 25 is spelled, and
 //   Slot6's parameter type (a pointer, which the base's empty body, fn 425, takes as one word).
+// - GetEntradas: vota::CMostraQRCodeBU::ProcessInput and CMostraQRCodeCertificado::ProcessInput (fns 12051, 12038) read
+//   the input fields' vector (+72, +76) and throw when it does not hold one field. Its name, its const reference
+//   result and its lines (original 112-115) are chosen.
 
 #include <algorithm>
 #include <cstddef>
@@ -42,7 +45,7 @@ public:
         }
     }
 
-    // (original lines 45-54: content not recovered)
+    // (original lines 48-54: content not recovered)
 #line 55
     EInputResult Read()
     {
@@ -98,7 +101,13 @@ public:
         }
     }
 
-    // (original lines 111-144: content not recovered)
+
+    const std::vector<IInputField<MEDIA>*>& GetEntradas() const
+    {
+        return m_entradas;
+    }
+
+    // (original lines 117-144: content not recovered)
 #line 145
     void ClearKeyboardInput()
     {
