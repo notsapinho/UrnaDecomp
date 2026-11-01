@@ -284,9 +284,6 @@
 // f3650 · 312 B · unmatched · placement: link order · name unknown
 // void f3650(i32, i32, i32, i32, i32) { ... }
 
-// f3647 · 20 B · unmatched · placement: link order · name unknown
-// void f3647(i32, i32, i32, i32) { ... }
-
 // link-order cluster 980 · uses=3 · neighbours' file uenux2/src/api/io/cencryptedfile.cpp
 
 // f3651 · 232 B · unmatched · placement: link order · name unknown

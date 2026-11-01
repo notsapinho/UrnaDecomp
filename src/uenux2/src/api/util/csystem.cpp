@@ -1,14 +1,15 @@
 // api::CSystem (/home/rubio/tse/uenux2/src/api/util/csystem.cpp). Records fix the lines of GetFileSize (2759, 334:15),
 // api::ExistResource (1690, 64:15; file-static: its record follows the external functions'), api::truncate (5457,
-// 1024:15) and ZeroFill (2761, 1039:15). ExistFile and ExistDir (412, 5459; binaryen merges them as 6019) have no
-// record: their names and lines are chosen (csystem.h says from what). CScopeGuard (lines 990-1011, an anonymous
-// namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in a std::function. The file's
-// other functions are not reconstructed yet; the lines their records name are left blank.
+// 1024:15) and ZeroFill (2761, 1039:15). ExistFile, ExistDir and RemoveFile (412, 5459, 2760; binaryen merges the
+// first two as 6019) have no record: their names and lines are chosen (csystem.h says from what). CScopeGuard (lines
+// 990-1011, an anonymous namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in a
+// std::function. The file's other functions are not reconstructed yet; the lines their records name are left blank.
 //
 
 #include "api/util/csystem.h"
 
 #include <cerrno>
+#include <cstdio>
 #include <cstring>
 #include <fcntl.h>
 #include <format>
@@ -22,7 +23,7 @@ namespace api {
 
 bool CSystem::s_dorme = true;
 
-// (original lines 25-57: content not recovered)
+// (original lines 26-57: content not recovered)
 #line 58
 static bool ExistResource(struct stat& info, const std::string& recurso)
 {
@@ -56,7 +57,19 @@ bool CSystem::ExistDir(const std::string& diretorio)
 // ? f2762(i32) { ... }
 // </stubs>
 
-// (original lines 257-321: content not recovered)
+// (original lines 257-304: content not recovered)
+#line 305
+void CSystem::RemoveFile(const std::string& arquivo)
+{
+    struct stat info;
+
+    if (lstat(arquivo.c_str(), &info) == -1 || !S_ISLNK(info.st_mode)) {
+        ZeroFill(arquivo);
+    }
+    remove(arquivo.c_str());
+}
+
+// (original lines 315-321: content not recovered)
 #line 322
 /**
  * Obtém o tamanho de um arquivo.

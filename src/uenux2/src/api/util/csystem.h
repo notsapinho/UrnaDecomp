@@ -18,6 +18,9 @@ public:
     static bool ExistDir(const std::string& diretorio);
     static uedword GetFileSize(const std::string& arquivo);
     static void ZeroFill(const std::string& arquivo);
+    // fn 2760 has no record: the name is chosen from what it does (ZeroFill unless the file is a symbolic link, then
+    // remove).
+    static void RemoveFile(const std::string& arquivo);
 
     // Reconstruction's note. The flag is evidence: the target reads the byte at 1584624 30 times, in 24 functions, and
     // nothing stores it, a word of .data that starts as 1 between csynchronizer.cpp's one record and csystem.cpp's

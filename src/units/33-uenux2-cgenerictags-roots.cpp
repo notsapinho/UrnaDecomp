@@ -1,27 +1,19 @@
-// Roots: keep api::CGenericTags::TagSize (target fn 5468) in the skeleton link. The target calls it directly from two
-// functions (3647 and 5466, ledger/callgraph.tsv), neither reconstructed yet and neither through the table; two
-// noinline callers with different bodies give it two call sites, so binaryen keeps its body out of line as the target
-// does (two identical callers would be merged into one, and TagSize inlined into it), and both pass every argument
-// through, so binaryen's dead-argument elimination folds none of them in. They are address-taken from a static
-// constructor. CGenericTags::insert (target fn 1071) is called directly by 3831 and 5892, neither reconstructed yet:
-// two more stand-ins give it two call sites, one passing a varied length-field size, so dead-argument elimination folds
-// no argument in. Declared through asm labels with the wasm-level signatures; compiled as uenux2 code.
+// Roots: keep api::CGenericTags's functions in the skeleton link the way the target calls them. TagSize (target fn 5468)
+// needs none: its two target callers, the two-argument EncodeTLV (3647) and AppendTLV (5466), are in cgenerictags.cpp.
+// CGenericTags::insert (target fn 1071) is called directly by 3831 and 5892, neither reconstructed yet: two stand-ins
+// give it two call sites, one passing a varied length-field size, so dead-argument elimination folds no argument in.
+// The two-argument EncodeTLV (3647) is called directly by 3831 (twice) and 5892, and the three-argument AppendTLV (5466)
+// by 3831 and 5892 (ledger/callgraph.tsv), none reconstructed: four more stand-ins give the first three call sites and
+// the second two, every argument passed through. Each stand-in's body differs from the others' and is no target
+// function's; they are address-taken from a static constructor. Declared through asm labels with the wasm-level
+// signatures (EncodeTLV's result is the hidden first parameter); compiled as uenux2 code.
 extern "C" {
-int w5468_root_0(int, int) __asm__("_ZNK3api12CGenericTags7TagSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w1071_root_0(int, int, unsigned long) __asm__("_ZN3api12CGenericTags6insertERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEm");
+void w3647_root_0(int, int, int, int) __asm__("_ZNK3api12CGenericTags9EncodeTLVERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
+void w5466_root_0(int, int, int, int) __asm__("_ZNK3api12CGenericTags9AppendTLVERNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_SA_");
 }
 
 namespace {
-
-__attribute__((noinline)) int TamanhoDaTag(int tags, int tag)
-{
-    return w5468_root_0(tags, tag);
-}
-
-__attribute__((noinline)) int TagLonga(int tags, int tag)
-{
-    return w5468_root_0(tags, tag) > 1;
-}
 
 __attribute__((noinline)) void MapeiaTag(int tags, int tag, unsigned long tamanho)
 {
@@ -34,16 +26,39 @@ __attribute__((noinline)) void MapeiaDuasTags(int tags, int tagA, int tagB)
     w1071_root_0(tags, tagB, 2);
 }
 
-void* volatile w5468_sink;
+__attribute__((noinline)) void CodificaTag(int saida, int tags, int tag, int valor)
+{
+    w3647_root_0(saida, tags, tag, valor);
+}
 
-struct SW5468Roots {
-    SW5468Roots()
+__attribute__((noinline)) void CodificaDuasTags(int saida, int tags, int tagA, int tagB, int valor)
+{
+    w3647_root_0(saida, tags, tagA, valor);
+    w3647_root_0(saida + 12, tags, tagB, valor);
+}
+
+__attribute__((noinline)) void AnexaTag(int tags, int tlv, int tag, int valor)
+{
+    w5466_root_0(tags, tlv, tag, valor);
+}
+
+__attribute__((noinline)) void AnexaTagAoSegundo(int tags, int tlvs, int tag, int valor)
+{
+    w5466_root_0(tags, tlvs + 12, tag, valor);
+}
+
+void* volatile w33_sink;
+
+struct SW33Roots {
+    SW33Roots()
     {
-        w5468_sink = reinterpret_cast<void*>(&TamanhoDaTag);
-        w5468_sink = reinterpret_cast<void*>(&TagLonga);
-        w5468_sink = reinterpret_cast<void*>(&MapeiaTag);
-        w5468_sink = reinterpret_cast<void*>(&MapeiaDuasTags);
+        w33_sink = reinterpret_cast<void*>(&MapeiaTag);
+        w33_sink = reinterpret_cast<void*>(&MapeiaDuasTags);
+        w33_sink = reinterpret_cast<void*>(&CodificaTag);
+        w33_sink = reinterpret_cast<void*>(&CodificaDuasTags);
+        w33_sink = reinterpret_cast<void*>(&AnexaTag);
+        w33_sink = reinterpret_cast<void*>(&AnexaTagAoSegundo);
     }
-} w5468_roots;
+} w33_roots;
 
 } // namespace

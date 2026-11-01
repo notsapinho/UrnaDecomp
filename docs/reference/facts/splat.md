@@ -583,7 +583,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -757,6 +757,13 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     # 7718 match
     # 14424 match
     ```
+21. **956, 6278, 6279, 6280, 9639, 12297 and 12315, libc's `exp` family, by `api::CGenericTags::EncodeTLV` (unit 33).**
+    EncodeTLV (5467) holds libc's `exp2`, which binaryen inlines into it. With it in the link, `fp_force_eval` and
+    `fp_barrier` (6278, 6279) are bodies of their own, as in the target, and `exp` (956), `__expo2` (6280), `sinh`
+    (12297), `cosh` (12315) and RHVoice's `limiter::do_initialize` (9639) match. Without it our link has no body of
+    either barrier (`build/out/wasm-map/vota_web/names.tsv` at 694de52 lists neither), and at 694de52's scan `exp` is
+    `no-candidate`, as are 6280, 12297 and 12315, and 9639 is `unresolved` on its call of `exp`. Why binaryen keeps the
+    barriers out of line once `exp2` links is not measured. A landing that takes EncodeTLV out takes the seven out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 
