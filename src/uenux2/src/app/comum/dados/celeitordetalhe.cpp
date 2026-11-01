@@ -1,16 +1,17 @@
-// comum::CEleitorDetalhe: ConfereDadosDinamicos, the record at line 224 col 15, and GetDinamico and MarcaHabilitado below
-// it, which have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not
+// comum::CEleitorDetalhe: ConfereDadosDinamicos, the record at line 224 col 15, and GetImpedimento, GetDinamico and
+// MarcaHabilitado below it, which have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not
 // recovered.
 #include "app/comum/dados/celeitordetalhe.h"
 
 #include <format>
 
+#include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/celeitordadoshabilitacao.h"
 #include "app/comum/dados/euecomumdadoserror.h"
 
 namespace comum {
 
-// (original lines 13-90: content not recovered)
+// (original lines 14-90: content not recovered)
 #line 91
 // <stubs>
 // f1937 · 5175 B · unmatched · name unknown
@@ -24,6 +25,12 @@ void CEleitorDetalhe::ConfereDadosDinamicos(const std::string& funcao) const
     if (!m_dinamico.has_value()) {
         throw CUeComumDadosError(EUE_COMUM_DADOS_7832, std::format("{}: Dados dinâmicos não carregados", funcao));
     }
+}
+
+md::ETipoImpedimento CEleitorDetalhe::GetImpedimento() const
+{
+    const CAppInfo& appInfo = CAppInfo::GetInst();
+    return appInfo.GetGeral().GetDadoCarga().GetTurno() == TURNO_2 ? m_impedimentoP2 : m_impedimentoP1;
 }
 
 const md::CEleitorDinamico& CEleitorDetalhe::GetDinamico() const

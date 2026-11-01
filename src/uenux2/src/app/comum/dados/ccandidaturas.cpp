@@ -95,6 +95,12 @@ const md::CDadosCandidato& GetCandidatoAtual(const std::string& funcao, uebyte s
 
 } // namespace
 
+std::string CCandidaturasDSNome::operator()() const
+{
+    const md::CDadosCandidato& candidato = GetCandidatoAtual("CCandidaturasDSNome", m_suplente);
+    return candidato.GetNomeUrna();
+}
+
 md::CSexo::ESexo CCandidaturasDSSexo::operator()() const
 {
     const md::CDadosCandidato& candidato = GetCandidatoAtual("CCandidaturasDSSexo", m_suplente);

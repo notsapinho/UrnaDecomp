@@ -20,6 +20,9 @@ public:
     CRespostaConsulta(TCandidatoID numero, const std::string& resposta, const std::string& textoFonetico);
 
     TCandidatoID GetNumero() const { return m_numero; }
+    // The first string, at +4, which comum::RespostaCorrente (fn 11479) copies; its name and its being inline in the
+    // class are chosen, as GetNumero's are.
+    const std::string& GetResposta() const { return m_resposta; }
 
 private:
     TCandidatoID m_numero;

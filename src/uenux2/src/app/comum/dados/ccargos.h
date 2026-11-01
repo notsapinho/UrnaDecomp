@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <memory>
 #include <mutex>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -49,5 +50,11 @@ private:
     static std::mutex s_mutex;
     static std::unique_ptr<CCargos> s_instancia;
 };
+
+// The name of the current position's election, a report's text: fn 5580 passes it to
+// api::CPaperFormBuilder::AddTextField (fn 604) by table slot 3049, and no direct call reaches it. Its body, fn 11556,
+// holds GetInst's code (record ccargos.cpp:24), which only ccargos.cpp can inline, so it is defined there. Its name, its
+// being a free function and this header are chosen.
+std::string NomeEleicaoCorrente();
 
 } // namespace comum

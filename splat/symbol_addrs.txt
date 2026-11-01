@@ -4017,6 +4017,7 @@ _ZNSt3__26vectorIN3api18SPolySingletonInfoENS_9allocatorIS2_EEE26__swap_out_circ
 _ZN5comum20CConfiguracaoEleicaoD1Ev = func:5792; // size:0x126 evidence:call
 _ZNSt3__24pairIKcN7ecourna3app5dados19CLabelParametrizadoEEC2B8ne210108ERKS6_ = func:5793; // size:0x100 evidence:pair-addr
 _ZNSt3__26vectorIN7ecourna3app5dados10CFederacaoENS_9allocatorIS4_EEE13__vdeallocateEv = func:5798; // size:0xbc evidence:pair-addr
+_ZN5comum11CFederacoesD1Ev = func:5800; // size:0x3c evidence:pair-addr
 _ZN5comum22CCargoDSLabelRelatorio16TotalVotoNominalEv = func:5801; // size:0xfd evidence:srcloc-anchor
 _ZN5comum22CCargoDSLabelRelatorio13HeaderDetalheEv = func:5802; // size:0x37 evidence:srcloc-anchor
 _ZN5comum12_GLOBAL__N_121GetNomeCargoComGeneroERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS_2md5CSexo5ESexoEh = func:5803; // size:0x22a evidence:srcloc-anchor
@@ -8150,6 +8151,7 @@ _ZNK3api12persistencia16IUenuxGenericDAOIN5comum2md16CEleitorDinamicoENSt3__212b
 _ZNK5comum3dao19CEleitorDinamicoDAO5CloneEv = func:11541; // size:0xc evidence:vtable
 _ZNK5comum3dao19CEleitorDinamicoDAO9ExcluirIDERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE = func:11543; // size:0x32 evidence:srcloc-anchor
 __cxx_global_array_dtor@app/uenux2/src/app/comum/dados/cconfiguracaoeleicao.cpp.o = func:11551; // size:0x25 evidence:pair-addr
+__cxx_global_array_dtor@app/uenux2/src/app/comum/dados/cfederacoes.cpp.o = func:11553; // size:0x25 evidence:pair-addr
 _ZN5comum22CCargoDSLabelRelatorio15HeaderDetalheZEEv = func:11555; // size:0x37 evidence:srcloc-anchor
 __cxx_global_array_dtor@app/uenux2/src/app/comum/dados/ccargos.cpp.o = func:11561; // size:0x25 evidence:pair-addr
 _ZNK7ecourna3api9exception6CError4whatEv = func:11562; // size:0x15 evidence:pair-fingerprint
@@ -26852,12 +26854,12 @@ str.bcef43d3a9af = 0x10ed3c; // type:data size:0x21 evidence:string "N5boost6det
 _ZTSN5boost6detail13sp_ms_deleterINS_8signals26detail11signal_implIFvmmRKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEENS2_19optional_last_valueIvEEiNS5_4lessIiEENS_8functionISE_EENSJ_IFvRKNS2_10connectionEmmSD_EEENS2_5mutexEE16invocation_stateEEE = 0x10ed5d; // type:data size:0x107 evidence:content
 str.70b109c7b669 = 0x10ed5d; // type:data size:0x107 evidence:string "N5boost6detail13sp_ms_deleterINS_8signal"…
 _ZTVN5boost6detail17sp_counted_impl_pINS_8signals26detail12grouped_listIiNSt3__24lessIiEENS_10shared_ptrINS3_15connection_bodyINS5_4pairINS3_15slot_meta_groupENS_8optionalIiEEEENS2_4slotIFvmmRKNS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEENS_8functionISO_EEEENS2_5mutexEEEEEEEEE = 0x10ee64; // type:data size:0x24 evidence:rtti
-g_MidAlloc = 0x10ee80; // type:data size:0x8 evidence:content
 _ZTIN5boost6detail17sp_counted_impl_pINS_8signals26detail12grouped_listIiNSt3__24lessIiEENS_10shared_ptrINS3_15connection_bodyINS5_4pairINS3_15slot_meta_groupENS_8optionalIiEEEENS2_4slotIFvmmRKNS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEENS_8functionISO_EEEENS2_5mutexEEEEEEEEE = 0x10ee88; // type:data size:0xc evidence:rtti
 _ZTSN5boost6detail17sp_counted_impl_pINS_8signals26detail12grouped_listIiNSt3__24lessIiEENS_10shared_ptrINS3_15connection_bodyINS5_4pairINS3_15slot_meta_groupENS_8optionalIiEEEENS2_4slotIFvmmRKNS5_12basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEENS_8functionISO_EEEENS2_5mutexEEEEEEEEE = 0x10ee94; // type:data size:0x123 evidence:rtti
 str.13b7c5768461 = 0x10ee94; // type:data size:0x123 evidence:string "N5boost6detail17sp_counted_impl_pINS_8si"…
 _ZTVNSt3__210__function6__funcINS_6__bindIMN7ecourna3api11compression13CLzmaCompressEFvyRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEJPS6_RKNS_12placeholders4__phILi1EEERKNSJ_ILi2EEEEEEFvySE_EEE = 0x10efb8; // type:data size:0x2c evidence:vote:1+rtti by:9547
-g_BigAlloc = 0x10efc0; // type:data size:0x8 evidence:content
+g_Alloc = 0x10efd0; // type:data size:0x8 evidence:content
+g_MidAlloc = 0x10efd8; // type:data size:0x8 evidence:content
 _ZTINSt3__210__function6__funcINS_6__bindIMN7ecourna3api11compression13CLzmaCompressEFvyRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEJPS6_RKNS_12placeholders4__phILi1EEERKNSJ_ILi2EEEEEEFvySE_EEE = 0x10efe4; // type:data size:0xc evidence:rtti
 _ZTSNSt3__210__function6__funcINS_6__bindIMN7ecourna3api11compression13CLzmaCompressEFvyRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEJPS6_RKNS_12placeholders4__phILi1EEERKNSJ_ILi2EEEEEEFvySE_EEE = 0x10eff0; // type:data size:0xcf evidence:rtti
 str.e29f84b530f7 = 0x10eff0; // type:data size:0xcf evidence:string "NSt3__210__function6__funcINS_6__bindIMN"…
@@ -35526,6 +35528,7 @@ _ZN5comum13CCandidaturas7s_mutexE = 0x1c0e4c; // type:data size:0x18 evidence:vo
 _ZN5comum13CCandidaturas6s_instE = 0x1c0e64; // type:data size:0x4 evidence:vote:10 by:521,2838,11564
 _ZN5comum7CCargos7s_mutexE = 0x1c0e68; // type:data size:0x18 evidence:vote:1 by:273
 _ZN5comum7CCargos11s_instanciaE = 0x1c0e80; // type:data size:0x4 evidence:vote:3 by:273,11561
+_ZN5comum11CFederacoes6s_instE = 0x1c0e9c; // type:data size:0x4 evidence:vote:2 by:11553
 _ZN5comum20CConfiguracaoEleicao10s_instanceE = 0x1c0ea0; // type:data size:0x4 evidence:vote:3 by:187,11551
 _ZN5comum20CConfiguracaoEleicao7s_mutexE = 0x1c0ea4; // type:data size:0x18 evidence:vote:1 by:187
 _ZN5comum3dao12_GLOBAL__N_111NOME_TABELAE = 0x1c0ebc; // type:data size:0xc evidence:vote:13 by:3768,5775,5776,14478
@@ -36027,6 +36030,7 @@ _ZN5comum6CLocal7s_mutexE = 0x1c0f1c; // type:data size:0x18 evidence:callers+co
 _ZN5comum9CPartidos7s_mutexE = 0x1c0f38; // type:data size:0x18 evidence:callers+content CPartidos's mutex, unlocked by 819, 11499, 11501, 11502
 _ZN5comum9CPartidos6s_instE = 0x1c0f50; // type:data size:0x4 evidence:callers+content CPartidos's pointer, read by 819, 11499, 11501, 11503
 _ZN5comum6CFotos7s_mutexE = 0x1c0ee4; // type:data size:0x18 evidence:callers+content CFotos's mutex, unlocked by 2819, 3755, 11512, 12641
+_ZN5comum11CFederacoes7s_mutexE = 0x1c0e84; // type:data size:0x18 evidence:callers+content CFederacoes's mutex: GetInst (2832) unlocks it and its exit destructor (11552) destroys it, both through fn 150; no other target body loads 1838724
 # std::map's __tree::destroy of three element types. Each is a recursive body, so its only name would come from its own call, and its caller's row stops on it. Each body reads the
 # element it destroys: 1932 frees two strings at +24 and +36 of a node (md::CPartido: its word at +20, then the strings); 681 one string at +20 (the map of uedword to std::string);
 # 1709 calls 1719 at +80 and frees the strings at +28 and +40 and, under a flag at +64, at +52 (md::CCandidatura). 2815 and 3786 are their callers, their destructors' last calls.

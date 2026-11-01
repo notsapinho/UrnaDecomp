@@ -407,11 +407,6 @@
 // f5665 · 144 B · unmatched · placement: link order · name unknown
 // ? f5665(i32) { ... }
 
-// link-order cluster 830 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargods.cpp
-
-// f5799 · 176 B · unmatched · placement: link order · name unknown
-// ? f5799(i32, i32) { ... }
-
 // link-order cluster 831 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
 
 // f5809 · 160 B · unmatched · placement: link order · name unknown
@@ -699,11 +694,6 @@
 
 // f3750 · 135 B · unmatched · placement: link order · name unknown
 // void f3750(i32, i32) { ... }
-
-// link-order cluster 1010 · uses=3 · neighbours' file uenux2/src/app/comum/dados/celeitordetalhe.cpp
-
-// f3769 · 27 B · unmatched · placement: link order · name unknown
-// ? f3769(i32) { ... }
 
 // link-order cluster 1013 · uses=3 · neighbours' file uenux2/src/app/comum/appinfo/cappinfo.cpp
 
@@ -1273,9 +1263,6 @@
 
 // link-order cluster 830 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargods.cpp
 
-// f5800 · 60 B · unmatched · placement: link order · name unknown
-// void f5800(i32) { ... }
-
 // f5797 · 348 B · unmatched · placement: link order · name unknown
 // void f5797(i32, i32, i32) { ... }
 
@@ -1553,11 +1540,6 @@
 
 // f2829 · 189 B · unmatched · placement: link order · name unknown
 // void f2829(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1109 · uses=4 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
-
-// f2832 · 148 B · unmatched · placement: link order · name unknown
-// ? f2832() { ... }
 
 // link-order cluster 1110 · uses=4 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
 
@@ -1866,11 +1848,6 @@
 
 // f5736 · 132 B · unmatched · placement: link order · name unknown
 // void f5736(i32) { ... }
-
-// link-order cluster 831 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
-
-// f5807 · 204 B · unmatched · placement: link order · name unknown
-// void f5807(i32, i32) { ... }
 
 // link-order cluster 869 · uses=2
 

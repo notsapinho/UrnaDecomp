@@ -3,8 +3,8 @@
 # - comum::md::CTradutorFrase::RecuperaLabel (target fn 5658, md/parametrizacaourna/ctradutorfrase.cpp line 95) and its
 #   std::map<char, CLabelParametrizado>: the map's global destructor (11341) and __tree::destroy (1706) match with it;
 # - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344);
-# - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224), and below it two members no record
-#   names, GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's two members" below);
+# - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224), and below it three members no
+#   record names, GetImpedimento (3769), GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's members" below);
 # - comum::asn::CConversorTipoIdentificadorEleitor::DoConverte and DoDesconverte (11357 and 11356, slots 2 and 3 of the
 #   vtable @1570668, lines 32 and 51 of asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp); 11356 is a thunk
 #   into binaryen's body 6030, which it forms with unit 17's DoDesconverte (11366);
@@ -37,7 +37,15 @@
 # 7953 are not in the shared enum header, which lists what the target passes to fn 170 directly: each .cpp names its code
 # with a local constant, which goes when the header gains it.
 #
-# CEleitorDetalhe's two members below ConfereDadosDinamicos have no record, so their lines and their order are a choice:
+# CEleitorDetalhe's members below ConfereDadosDinamicos have no record, so their lines and their order are a choice:
+# - GetImpedimento, target fn 3769, matched: it calls CAppInfo::GetInst (185) and the const GetGeral (457), compares the
+#   load's turn (+32 of CEstadoGeral, CDadoCarga's first member) with TURNO_2 ('2', 50), and returns the word at +200 when
+#   equal and the one at +196 otherwise. The record of CEleitorDetalhe's constructor (line 49) takes a CEleitorDecorator, a
+#   CEleitorDinamico and two md::ETipoImpedimento, and the class's first 193 bytes are the first two: so the two words are
+#   the impediments of the first and second turn, in that order (a reading of the turn test). Its only target caller,
+#   10635 (vota::CEleitorEncontrado's slot 2), calls it three times and is not written; the roots stand in for it. In
+#   band 3 it follows ConfereDadosDinamicos (3770), so it is defined below it. Chosen: its name, the members' names, the
+#   const CAppInfo& local that gives the const GetGeral (a std::as_const call is not tried).
 # - GetDinamico, target fn 1271, matched: it passes "GetDinamico" (the literal at 141141, its only name evidence) to
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
 #   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its `const` and its
