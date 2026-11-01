@@ -81,7 +81,10 @@ parser drops any other line without a word, below the hand-edit marker too, and 
 - `pair-fingerprint`, `pair-addr`: a census pair that is unique on both sides. The pair says the body is the target
   function's; the name is our symbol's, carried over, so it is only as good as our source's name for the function
   (`srcloc-anchor` below is the same).
-- `call`, `table`: aligned call operands and function-pointer constants. They name a function only when
+- `call`, `table`: aligned call operands and function-pointer constants. A constant inside both tables is an address,
+  not a pointer, when the target's constant addresses a copy of our content that the address reading lists (not the
+  empty string at a string's closing NUL, which the target holds in too many places), unless the operand-kind table
+  (§3) calls ours a slot ([facts/splat.md](facts/splat.md) §S8 item 1). They name a function only when
   every vote agrees and our function has the target function's signature. Such a line has a `by:` list only when every
   voter is an anchored pair and at most 4 voted, and §3's self-vote rule can refuse only a name that has one, so no
   `by:` means the rule cannot fire, not that no one voted. A function is never listed as its own voter: a recursive
@@ -512,9 +515,10 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
 - a second name for a matched function. `splat-match` reports a match line only when none of the symbol file's names
   for its index is the matched symbol (`addMatches` in `asmlift-wasm/src/splat-sub.ts`), so a wrong name beside the
   right one says nothing. Read the range's symbol-file diff (`git diff <base> -- splat/symbol_addrs.txt`) for a
-  `func:N` of a matched index that gained a line. Some lines move at every landing whatever the unit: an
-  `evidence:table` name that 7530 or 615 gains while the function that name belongs to loses its `vtable` line, and
-  the `pair-addr` lines of matched SQLite functions that drop out and come back. [facts/splat.md](facts/splat.md) §S8
+  `func:N` of a matched index that gained a line. Some lines move at every landing whatever the unit: the `pair-addr`
+  lines of matched SQLite functions that drop out and come back, and, less often now that step 8 reads an aligned
+  constant whose two values address one string as an address, an `evidence:table` name that a matched index gains
+  while the function that name belongs to loses its line. [facts/splat.md](facts/splat.md) §S8
   lists them, with the command that separates them from a range's own lines. Read the lines the range drops for
   matched indices too: a vtable slot our link fills with a body that is not the target's can take a matched
   function's name away (§S8, the fifth kind);
