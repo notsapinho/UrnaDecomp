@@ -50,10 +50,11 @@
 # separators are tails of other literals in the target ("{} -", "...'{}'.", ",\n  "). Its name, its being a free
 # function of comum::md beside FormataIdentidade, its file and its line are chosen; no other spelling was tried.
 #
-# Roots (178-uenux2-celeitoridentidade-roots.cpp): none of the four functions' target callers is reconstructed, so the
-# file gives each two call sites; the two Valida get none, since the target inlines each into its one caller and ours
-# has that one call too. FormataIdentificador has one caller in the link, 10586, and DuasFormatacoesIdentificador stands
-# for the other two.
+# Roots (178-uenux2-celeitoridentidade-roots.cpp): of the five functions' target callers some are in the link (six of
+# 566's, 2803's 2225, 3723's 2803 and 1924's 10586) and the others are not reconstructed, so the file gives each
+# function two call sites (the roots header says which callers each stands for); the two Valida get none, since the
+# target inlines each into its one caller and ours has that one call too. FormataIdentificador has one caller in the
+# link, 10586, and DuasFormatacoesIdentificador stands for the other two.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CELEITORIDENTIDADE_SRCS := src/app/comum/dados/md/iregraidentidade.cpp src/app/comum/dados/md/eleitor/celeitoridentidade.cpp

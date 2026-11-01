@@ -1,8 +1,8 @@
-// Reconstruction's note, not TSE's text: api::CApplicationContextGuard, CApplicationContextStack and the factories of
-// CApplicationContext (/home/rubio/tse/uenux2/src/api/gui/capplicationcontextstack.cpp). The record fixes line 45 (the
-// guard's constructor from a stack and a context, inlined into target fn 676), and the target's use band puts the
-// factories ahead of the guard; every other line and the include order are chosen. The fragment,
-// src/units/193-uenux2-capplicationcontextstack.mk, has the rest.
+// Reconstruction's note, not TSE's text: api::CApplicationContextGuard, CApplicationContextStack and the two factories
+// that build an api::CApplicationContext (/home/rubio/tse/uenux2/src/api/gui/capplicationcontextstack.cpp). The record
+// fixes line 45 (the guard's constructor from a stack and a context, inlined into target fn 676), and the target's use
+// band puts CriaContextoPadrao ahead of the guard's constructor; every other line, CriaContextoAplicacao's place
+// included, and the include order are chosen; src/units/193-uenux2-capplicationcontextstack.mk has the rest.
 #include "api/gui/capplicationcontextstack.h"
 
 #include <algorithm>

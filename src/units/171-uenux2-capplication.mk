@@ -56,11 +56,13 @@
 #   CriaContextoAplicacao (fn 3682) and calls the private CriaContexto from a context, which binaryen inlines into it
 #   and which returns the guard built on s_contextos by its constructor's C1; unit 193's fragment has why these are
 #   factories.
-# - The statics' names, types beyond their widths and order are chosen (the header says so); s_contextos is unit 193's
-#   stack, at .bss 1839212. Names: InitApplication by vptr-anchor (the local facet's vptr), PushContext and
-#   CriaContextoPadrao by its call, CriaContexto by srcloc-anchor (the guard's record, which it holds inlined); the
-#   three strings by 11159's votes, which hold through their static destructors' matches, and s_contextos by 676, 3684,
-#   11159 and 11160. The word at 1839204, s_aplicativo, has only its generated line, vote:1 by:11159 (below).
+# - The statics' names and types beyond their widths are chosen (the header says so), and so is their place in the file;
+#   their order follows the target's .bss (a reading: our link lays a file's .bss statics out in definition order),
+#   except s_finalizar, defined first (chosen); s_contextos is unit 193's stack, at .bss 1839212. Names: InitApplication
+#   by vptr-anchor (the local facet's vptr), PushContext and CriaContextoPadrao by its call, CriaContexto by
+#   srcloc-anchor (the guard's record, which it holds inlined); the three strings by 11159's votes, which hold through
+#   their static destructors' matches, and s_contextos by 676, 3684, 11159 and 11160. The word at 1839204, s_aplicativo,
+#   has only its generated line, vote:1 by:11159 (below).
 # - InitApplication's locale code releases libc++ rows: 987 (locale::operator=, whose result locale::global reads),
 #   7826 (locale::__imp's constructor from a locale and a facet), 7827 and 4691 (the facet vector's operator= and
 #   __recommend), 1504 (ios_base::imbue, a caller of 987), and 12020, 2292 and 7825, whose callees now have names.

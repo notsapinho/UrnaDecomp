@@ -1,7 +1,7 @@
 // Roots of fragment 193: keep api::CApplicationContextStack's and api::CApplicationContext's functions and the two
-// factories in the skeleton link the way the target keeps them. Declared through asm labels with the objects' signatures (a constructor returns
-// this; a function that returns a class by value takes the result's address first); compiled with APP_CXXFLAGS. Each
-// stand-in's body differs from the others' and from every target function.
+// factories in the skeleton link the way the target keeps them. Declared through asm labels with the objects'
+// signatures (a constructor returns this; a function that returns a class by value takes the result's address first);
+// compiled with APP_CXXFLAGS. Each stand-in's body differs from the others' and from every target function.
 // - CApplicationContextStack::Pop (fn 5553) has two direct callers in the target, fns 7370 and 10467, neither
 //   reconstructed: w193_desempilha stands for them, two call sites on api::CApplication::s_contextos (unit 171), the
 //   stack the target's 5553 reads at its address as a constant.

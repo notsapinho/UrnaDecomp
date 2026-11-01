@@ -105,21 +105,22 @@
 # Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data
 # member, of s_fimEspera, LogaVotacaoEncerrada, GetTelaReinicioVotacao, CReinicioVotacao::GetInst and
 # CAplicacaoEncerrada::GetInst, s_inst and s_mutex (unit 104's convention for the states' singletons); CBase's
-# constructor's protected access; operator+'s parameter type (time_t: the target shows a 64-bit parameter),
-# that it is a member and const, and its line in cdatetime.cpp; s_fimEspera's internal linkage; CRetomada's final; +36 of CRetomada as uebyte and +40 of
-# CEsperaRetestar as unsigned int (11829 compares the byte with 1, 11825 zero-extends the word); GetTelaReinicioVotacao
-# as an inline getter returning a const reference; the out-of-line destructors declared first as key functions, and
-# CBase's StartState as its; the paths of the files no record names, cbase, cretomada, cesperaretestar, creiniciovotacao,
-# caplicacaoencerrada and every header, by how-to step 3's rules 2 and 4 from the data (CAplicacaoEncerrada's vtable lies
-# between cestadocomdesligamentoautomatico.cpp's record and cmostraqrcodebu.cpp's objects, and its GetInst's callers
-# are fimvotacao/'s; CBase's between auxiliares/cvisualizarcandidatos.cpp's and cverificahorariozeresima.cpp's;
-# CReinicioVotacao's after cquerreimprimirzeresima.cpp's, with three unrecorded classes between); the lines of the
-# functions written in cverificahorariozeresima.cpp other than StartState and ProcessTickNaoDesligamento (GetInst, the
-# constructor and the statics above them, FinishState and the destructor after), and of cprezeresima.cpp's functions
-# above GetEstadoPassouNoTeste; the names GetInst, GetTelaVerificaHorarioZeresima, LogaAguardandoHorarioZeresima, the
-# AddStoppedTick overload, the assert codes' and 9377's enumerators; the switch in 5945 with its cases indented, which
-# puts the throw at its record's column 19; `Now() >= m_horario` for the tick's test (another spelling is not
-# measured).
+# constructor's protected access; operator+'s parameter type (time_t: the target shows a 64-bit parameter), that it is a
+# member and const, and its line in cdatetime.cpp; s_fimEspera's internal linkage; CRetomada's final; +36 of CRetomada
+# as uebyte and +40 of CEsperaRetestar as unsigned int (11829 compares the byte with 1, 11825 zero-extends the word);
+# GetTelaReinicioVotacao as an inline getter returning a const reference; the out-of-line destructors declared first as
+# key functions, and CBase's StartState as its; the paths of the files no record names, cbase, cretomada,
+# cesperaretestar, creiniciovotacao, caplicacaoencerrada and every header, by how-to step 3's rules 2 and 4 from the
+# data (CAplicacaoEncerrada's vtable lies between cestadocomdesligamentoautomatico.cpp's record and
+# cmostraqrcodebu.cpp's objects, and its GetInst's callers are fimvotacao/'s; CBase's between
+# auxiliares/cvisualizarcandidatos.cpp's and cverificahorariozeresima.cpp's; CReinicioVotacao's after
+# cquerreimprimirzeresima.cpp's, with three unrecorded classes between); the lines of the functions written in
+# cverificahorariozeresima.cpp other than StartState and ProcessTickNaoDesligamento (GetInst, the constructor and the
+# statics above them, FinishState and the destructor after), and of cprezeresima.cpp's functions above
+# GetEstadoPassouNoTeste; the names GetInst, GetTelaVerificaHorarioZeresima, LogaAguardandoHorarioZeresima, the
+# AddStoppedTick overload, the assert codes' and 9377's enumerators, and 5945's local estado; the switch in 5945 with
+# its cases indented, which puts the throw at its record's column 19; `Now() >= m_horario` for the tick's test (another
+# spelling is not measured).
 TESTETECLADO_SRCS := src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp \
     src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp \

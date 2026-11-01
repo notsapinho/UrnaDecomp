@@ -49,7 +49,11 @@
 #   threshold 250: -Rpass=inline -Rpass-missed=inline on this file). 5890 stores the ESavdAplic 1 at +1 with a byte
 #   store of its own after the i64 store of the zeroed request and command: at clang's time it is the parameter, which
 #   binaryen's dead-argument elimination folds (5890's wasm type drops it), so the roots pass 1 from both stand-ins;
-#   with the 1 a constant at clang's time, clang merged it into the i64 (measured: 0x20210100).
+#   with the 1 a constant at clang's time, clang merged it into the i64 (measured: 0x20210100). ValidarPacote compares
+#   the key, a plain ESavdChaveValidar, signed, where 4625 or-s it with the ESavdAplic and compares unsigned
+#   (`i32.le_u(i32.or(l3, l10), 255)`): 4625's landing decides between `ESavdChaveValidar : unsigned int` and an
+#   unsigned key parameter (iinterfacesavd.h has the two readings). No byte of 5890 depends on it, since 5890 passes the
+#   constant 53.
 # - 3831 builds sup{pkg{package} key{key}}: a CGenericTags with the four tags inserted (CriaTags, a chosen helper in the
 #   anonymous namespace, which clang inlines: 3831 and 5892 hold the same four inserts), the content, which binaryen
 #   inlined into 3831 (MontaConteudoTLV, a chosen name; a prologue of its own in 3831, and clang keeps it a call at cost

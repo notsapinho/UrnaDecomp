@@ -52,9 +52,10 @@ public:
     const api::CDateTime& GetDataHoraInicioVotacao() const { return m_dataHoraInicioVotacao; }
 
     // A third api::CDateTime at +580: vota::CVerificaEleicaoPassou::StartState (fn 11914) copies it (`i64.load[+580]`,
-    // `i32.load[+588]`) and, when the current time is not before it, logs "Data da eleição inválida" and shuts the urna
-    // down; vota::CInformacaoThreadOperador's slot 19 (fn 10566) compares the current time with it in place. The end of
-    // the election by a reading; the name is chosen from that.
+    // `i32.load[+588]`) and, when the current time is not before it, logs "Data da eleição inválida", posts message 0
+    // with priority 100 to CThreadOperador's queue, beeps and stays in its state (that the message shuts the urna down
+    // is a reading); vota::CInformacaoThreadOperador's slot 19 (fn 10566) compares the current time with it in place.
+    // The end of the election by a reading; the name is chosen from that.
     const api::CDateTime& GetDataHoraFimEleicao() const { return m_dataHoraFimEleicao; }
 
 private:

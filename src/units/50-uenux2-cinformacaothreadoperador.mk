@@ -54,11 +54,12 @@
 #   behind a guard); 10553 lies after slot 30's 10554 in the uses-1 band, so it is defined after the members. Two
 #   temporaries come before the push, a std::unique_ptr<CInformacaoThreadOperador> at +8, nulled and destroyed with the
 #   final class's destructor inlined, and a std::unique_ptr<IInformacaoThreadOperador> at +12, destroyed through vtable
-#   slot 1: what std::make_unique<C>() bound to push's std::unique_ptr<I>&& gives. A macro holds GetInst: column 102 is
-#   the `)` of an invocation of 101 characters (R19), and the GetInst records of four classes not written here,
-#   IPoliticaExecucaoEleitor (5925, column 100), ISincronismoVotoEleitor (7181, 98), IExecucaoVota (3594, 78) and
-#   IValidaMidia (5575, 76), sit at 52 plus the lengths of the interface's and the class's names, so the invocation
-#   spells both once. That is a reading of the columns; none of those four is written.
+#   slot 1: what std::make_unique<C>() bound to push's std::unique_ptr<I>&& gives. GetInst is read as a macro (R19's
+#   reading of a long column, which reads as a declaration's initializer as readily): column 102 is the `)` of an
+#   invocation of 101 characters, and the GetInst records of four classes not written here, IPoliticaExecucaoEleitor
+#   (5925, column 100), ISincronismoVotoEleitor (7181, 98), IExecucaoVota (3594, 78) and IValidaMidia (5575, 76), sit at
+#   52 plus the lengths of the interface's and the class's names, so the invocation spells both once. That is a reading
+#   of the columns; none of those four is written.
 # - SorteiaDataHoraInspecao (5412; callers 599, which holds the constructor, and 10568, slot 17): a std::random_device
 #   (1905984, guard 1905985), a std::mt19937 seeded from it (1905988, guard 1908488) and a distribution of 60 to 90
 #   (1908492, its two words 60 and 90, guard 1908500), all function-local statics with guards; the draw comes before
@@ -96,9 +97,7 @@
 #   binaryen leaves a call it inlines (docs/how-to-decompile.md step 3, "Code binaryen inlined from another function"):
 #   with LocalizaEleitor's CEleitorIdentidade overload inline in celeitores.h, clang inlines it and folds the test
 #   (`pnpm wasm score` of 2225 in the link: 67 over 357 rows), and out of line in celeitores.cpp, where clang inlines it
-#   into fn 2264 and binaryen into 2225, its one other caller, 2225 matches. Measured in the whole link too: the reset
-#   written first, as an early return (56 over 379 rows), and the optional at +48 copied whole, `= m_identidadeEleitor`
-#   (145 over 405 rows), each give other code.
+#   into fn 2264 and binaryen into 2225, its one other caller, 2225 matches.
 #
 # Not matched: 5412 is `unresolved self-voted` (awk -F'\t' '$1==5412 {print $5, $6}' splat/scan.tsv): its six statics are
 # .bss objects only it reads, with no exit destructor (random_device's is empty and binaryen merges it away), so their
@@ -112,7 +111,9 @@
 # +48, +68 in that order: the 23 other orders, and = {}, give other code. Slot 29 writes the state before the result:
 # the target stores +92, then +88 (docs/reference/facts/codegen.md C1), and the other source order swaps them. clang
 # does all of this in the object: the string's construction, its copies and the optionals' resets are inlined before
-# binaryen runs.
+# binaryen runs. In 2225 the reset of +68 when no record is found, written first as an early return (56 over 379 rows),
+# and +48's optional copied whole into +68, `= m_identidadeEleitor` (145 over 405 rows), give other code too, measured
+# in the whole link.
 #
 # Choices that give the same bytes, measured the same way. Slot 2's four writes run in declaration order; of the 24
 # orders three more give these bytes (+8, +88, +92, +4; +92, +88, +4, +8; and the reverse of declaration order), and
@@ -128,16 +129,17 @@
 # lists; the data member names; the EUE_VOTA_ names of 9401 to 9404 and 9409, from their messages and getters; the
 # macro's name, path and parameters (the record fixes the invocation's length, not how it is shared: the name is fitted
 # to it, as unit 110's is), the mutex's name, std::make_unique for a std::unique_ptr<C>(new C); the constructor out of
-# line with member initializers; SorteiaDataHoraInspecao's name and its being a static member (external is measured,
-# above); AtualizaIdentidadesEleitor's name and its being a private member (it reads and writes the class's members),
-# and the names of GetTipoIdentificadorPrincipal and its member; the names of 10586 and of the 16 functions (each the
-# member it calls), their being free functions of vota, the namespace of TipoToStr's record, and their file and order:
-# in the uses-3 band 3623 lies before has<T> (3622) and 3621, 3620 and 3619 after it, which one file holding the 16
-# above GetInst does not give, unless the static initializer's call of 3622 (fn 14478, not written) instantiates it
-# first elsewhere; and every line but the six records': the members run in slot order with slots 2 to 22 before the
-# getters' records and 27 to 30 after them, TipoToStr and 10586 before the 16 functions, SorteiaDataHoraInspecao and
-# the constructor before slot 2, AtualizaIdentidadesEleitor before slot 21 (in the uses-5 band 2225 lies after 2226,
-# the IsVotacaoBloqueadaPorHorario function, which any place among the members gives).
+# line with member initializers; SorteiaDataHoraInspecao's name, its being a static member (external is measured, above)
+# and its three function-local statics' names (dispositivo, gerador, minutos); AtualizaIdentidadesEleitor's name and its
+# being a private member (it reads and writes the class's members), and the names of GetTipoIdentificadorPrincipal and
+# its member; the names of 10586 and of the 16 functions (each the member it calls), their being free functions of vota,
+# the namespace of TipoToStr's record, and their file and order: in the uses-3 band 3623 lies before has<T> (3622) and
+# 3621, 3620 and 3619 after it, which one file holding the 16 above GetInst does not give, unless the static
+# initializer's call of 3622 (fn 14478, not written) instantiates it first elsewhere; and every line but the six
+# records': the members run in slot order with slots 2 to 22 before the getters' records and 27 to 30 after them,
+# TipoToStr and 10586 before the 16 functions, SorteiaDataHoraInspecao and the constructor before slot 2,
+# AtualizaIdentidadesEleitor before slot 21 (in the uses-5 band 2225 lies after 2226, the IsVotacaoBloqueadaPorHorario
+# function, which any place among the members gives).
 CINFORMACAOTHREADOPERADOR_SRCS := src/app/vota/operador/comum/cinformacaothreadoperador.cpp
 UENUX2_SRCS += $(CINFORMACAOTHREADOPERADOR_SRCS)
 # cinformacaothreadoperador.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost

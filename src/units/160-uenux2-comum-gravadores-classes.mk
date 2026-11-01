@@ -77,14 +77,14 @@
 # Not matched, and what each waits for:
 # - CCopiadorMR's slots 2 and 3 (fns 5874, 5873) are pending (the -pending.cpp header says on what).
 # - Not attempted: comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266; md::CEntidadeHashes's members past +36
-#   are not recovered) and the constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn
-#   12098), whose class no evidence names. Not written:
-#   template instances whose callers are not written, so that no instance of ours exists
-#   (the element types are readings of the bodies; 5859, which was among them, matches from unit 200's roots): 3815 (a
-#   destructor of a class no evidence names; fns 11587, 11626, 11629), 5852 and 5854
-#   (over a vector of 24-byte elements of two strings; fns 5854, and 5358 and 11620), 5868 (a tree insertion with a
-#   string key; fn 5869), 5843 and 5844 (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths;
-#   fn 11616) and 3816 (the relocation of a vector of comum::md::CCargo; fns 3818 and 11371).
+#   are not recovered). The constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn 12098)
+#   matches in unit 195, as comum::CGeradorResultados's (a chosen class: no evidence names it). Not written: template
+#   instances whose callers are not written, so that no instance of ours exists (the element types are readings of the
+#   bodies; 5859, which was among them, matches from unit 200's roots): 3815 (a destructor of a class no evidence names;
+#   fns 11587, 11626, 11629), 5852 and 5854 (over a vector of 24-byte elements of two strings; fns 5854, and 5358 and
+#   11620), 5868 (a tree insertion with a string key; fn 5869), 5843 and 5844
+#   (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths; fn 11616) and 3816 (the relocation of a
+#   vector of comum::md::CCargo; fns 3818 and 11371).
 GRAVADORES_CLASSES_SRCS := src/app/comum/gravadores/ccopiadormr.cpp src/app/comum/gravadores/ccopiadorwsqmr.cpp \
 	src/app/comum/gravadores/igravadorenvelope.cpp src/app/comum/gravadores/cgravadorenvelopearquivo.cpp \
 	src/app/comum/gravadores/md/cvotosvotavel.cpp

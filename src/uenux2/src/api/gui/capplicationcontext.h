@@ -40,8 +40,8 @@ CApplicationContext CriaContextoAplicacao(int tipo, std::string titulo, std::str
 // line to photograph the screen, Actions(1) and the word 1 (fn 5558).
 CApplicationContext CriaContextoPadrao(std::string titulo, std::string descricao);
 
-// The lines the error screen shows for each kind of error (fn 5555, 17 cases); for any other value it returns the
-// one line "Actions({}) - não reconhecida", which gives the name.
+// The lines the error screen shows for each kind of error (fn 5555, 17 cases); for any other value it returns the one
+// line "Actions({}) - não reconhecida", which the name is chosen from.
 std::vector<std::string> Actions(int tipo);
 
 } // namespace api

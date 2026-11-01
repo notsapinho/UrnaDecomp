@@ -13,11 +13,13 @@ namespace comum {
 // AssinarEcourna and EnviarAcaoHSM take (their records in iinterfacesavd.cpp spell it ESavdAplic) and
 // comum::CSigVerifier keeps. It is 4 bytes wide (CSigVerifier stores it with an i32.store), and the request builders
 // check that it fits in a byte before storing it at the request's +1: the target compares it unsigned, or-ed with the
-// other argument it checks (fns 4625, 5889 and 5892: `(a | b) >= 256` with i32.ge_u or i32.gt_u), so its underlying
-// type is unsigned: an enum without a fixed type whose values fit in an int promotes to int and compares signed
-// (measured: a scratch build of fn 5892 that compared the plain ESavdChaveValidar below with 0xFF gave i32.gt_s where
-// the target has the unsigned compare). `unsigned int` is the plainest unsigned type, a choice. The other SAVD types are
-// not recovered; the header's path follows iinterfacesavd.cpp.
+// other argument it checks (fns 4625, 5889 and 5892: `(a | b) >= 256` with i32.ge_u or i32.gt_u). That rules out a
+// plain enum as the compared type: an enum without a fixed type whose values fit in an int promotes to int and compares
+// signed (measured: a scratch build of fn 5892 that compared the plain ESavdChaveValidar below with 0xFF gave i32.gt_s
+// where the target has the unsigned compare). Two readings give the target's code: a fixed unsigned type, or unsigned
+// parameters of the members that compare it (ValidarPacote, EnviarAcaoHSM and AssinarArquivo, whose types no record
+// gives). `: unsigned int`, the plainest unsigned type, is the reading chosen. The other SAVD types are not recovered;
+// the header's path follows iinterfacesavd.cpp.
 enum ESavdAplic : unsigned int;
 
 // Recovered: only the type of the SAVD package that comum::CArquivosSavd::operator[] takes (its record in
@@ -34,8 +36,8 @@ enum ESavdArquivoUE : int;
 
 // Recovered: only the type of the HSM action comum::EnviarAcaoHSM takes (its record in iinterfacesavd.cpp spells it
 // ESavdCmdHSM): fn 5889 compares it unsigned with the ESavdAplic, as above, then refuses any value above 1, so the
-// action is 0 or 1. Its enumerators are not recovered; its underlying type is unsigned for that compare, `unsigned int`
-// as ESavdAplic's.
+// action is 0 or 1. Its enumerators are not recovered; `: unsigned int` is the same reading as ESavdAplic's (an
+// unsigned parameter of the member that compares it gives that compare too).
 enum ESavdCmdHSM : unsigned int;
 
 // Recovered: the values of the key comum::CPacoteArquivos::RetornaNomeChave names (its record in cpacotearquivos.cpp
@@ -77,28 +79,27 @@ struct ueRespostaSavd {
 };
 
 // comum::IInterfaceSavd: the channel to the SAVD. Its vtable (@1526728, 5 slots) holds the destructor (slot 0, fn 5503;
-// slot 1 is fn 325, the trap an abstract class's deleting destructor gets) and three pure members, and
-// (anonymous namespace)::CWasmSavd, of the executable TU, overrides them (fns 425, 10949, 10930). No record names a
-// slot, so `Escreve`, `RecebeMensagem` and `Slot4` are chosen: the first from what fn 3830 does with it, the second from
-// the text fn 10949 throws ("CWasmSavd::RecebeMensagem - mensagem de tamanho invalido"); their parameter types are
-// read from those calls and CWasmSavd's overriders. The members: +4 the std::string fns 3830, 5889, 5890 and 5891 store
-// the failure's text in, +16 the code fn 3830 writes through its first parameter (fn 5890 passes this + 16). Their names
+// slot 1 is fn 325, the trap an abstract class's deleting destructor gets) and three pure members, and (anonymous
+// namespace)::CWasmSavd, of the executable TU, overrides them (fns 425, 10949, 10930). No record names a slot, so
+// `Escreve`, `RecebeMensagem` and `Slot4` are chosen: the first from what fn 3830 does with it, the second from the
+// text fn 10949 throws ("CWasmSavd::RecebeMensagem - mensagem de tamanho invalido"); their parameter types are read
+// from those calls and CWasmSavd's overriders. The members: +4 the std::string fns 3830, 5889, 5890 and 5891 store the
+// failure's text in, +16 the code fn 3830 writes through its first parameter (fn 5890 passes this + 16). Their names
 // and the header's path are chosen. CPacoteArquivos::TrataErroPacote (fn 5901) formats both, the code as an int
 // (argument type 3), through the two getters, whose names and form are chosen. EnviarRequisicao (fn 3830) is named from
 // what it does, ConverteHeader (no target function: binaryen inlines it into 3830, its one caller) likewise; the two
 // Desconverte members are the records'. ConverteHeader fills in the request's mark and size from the data before it
-// copies the request out: the form clang keeps out of line at the tree's -O3 (unit 95's fragment has the costs).
-// The second EnviarRequisicao (fn 3829, an overload by choice) sends a byte vector and returns the failure's text, empty
+// copies the request out: the form clang keeps out of line at the tree's -O3 (unit 95's fragment has the costs). The
+// second EnviarRequisicao (fn 3829, an overload by choice) sends a byte vector and returns the failure's text, empty
 // when the SAVD accepts, where fn 3830 throws; it builds the header in place (unit 95's fragment says why).
 // AssinarArquivo (fn 5891), ValidarPacote and EnviarAcaoHSM (no target functions: clang inlines ValidarPacote into
 // comum::ValidarUE, fn 5890, and fn 4625 holds the same code behind a prologue of its own; binaryen inlines
 // EnviarAcaoHSM into comum::EnviarAcaoHSM, fn 5889) check their arguments, build a request and store the failure's text
-// at +4. They are members because they write
-// +4 and +16; their names are chosen, EnviarAcaoHSM's from the text it stores ("IInterfaceSavd::EnviarAcaoHSM -
-// Tentativa de envio..."), a string that cannot tell a member from the free function it is inlined into.
-// The destructor is `= default` in the class, a choice among the inline forms: the target's copy, 5503, is the executable
-// TU's, compiled -Oz (docs/reference/facts/levels.md V1, the call of the string's destructor), and nothing of ours
-// emits it, so fn 5503 is not reconstructed.
+// at +4. They are members because they write +4 and +16. AssinarArquivo's and ValidarPacote's names are chosen;
+// EnviarAcaoHSM's is the one its log string gives ("IInterfaceSavd::EnviarAcaoHSM - Tentativa de envio..."), the
+// IInterfaceSavd:: qualifier included. The destructor is `= default` in the class, a choice among the inline forms: the
+// target's copy, 5503, is the executable TU's, compiled -Oz (docs/reference/facts/levels.md V1, the call of the
+// string's destructor), and nothing of ours emits it, so fn 5503 is not reconstructed.
 class IInterfaceSavd {
 public:
     virtual ~IInterfaceSavd() = default;

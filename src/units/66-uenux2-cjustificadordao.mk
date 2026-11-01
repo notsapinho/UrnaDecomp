@@ -1,12 +1,13 @@
-# uenux2 comum::dao::CJustificadorDAO: slot 3, the INSERT of a justified absence (target fn 11473), slot 2, Clone (11468,
-# a thunk into binaryen's 3894, which forms with unit 91's two), slots 5 and 6, ExcluirID and Atualizar (11472, 11471,
-# with the header app/comum/justificativa/euecomumjustificativaerror.h), slots 7 and 8, RecuperarID and RecuperarTodos
-# (11470, 11469, written and not matched, below), and the destructor and deleting destructor
-# (target fns 1704 and 3767, slots 0 and 1 of its vtable @1560760) in src/app/comum/justificativa/dao/cjustificadordao.cpp,
-# the file the records of ExcluirID and Atualizar name (lines 56 and 63). The headers cjustificadordao.h and
-# ijustificadordao.h beside it, and the bases src/api/persistencia/iuenuxgenericdao.h, the file the records of the base's
-# defaults name, and idao.h beside it. The class chain is RTTI's: CJustificadorDAO, IJustificadorDAO,
-# IUenuxGenericDAO<CIdentificacaoJustificativa, std::string>, IDAO. Slot 4 is the base's default (11467, unit 91's row).
+# uenux2 comum::dao::CJustificadorDAO: slot 3, the INSERT of a justified absence (target fn 11473), slot 2, Clone
+# (11468, a thunk into binaryen's 3894, which forms with unit 91's two), slots 5 and 6, ExcluirID and Atualizar (11472,
+# 11471, with the header app/comum/justificativa/euecomumjustificativaerror.h), slots 7 and 8, RecuperarID and
+# RecuperarTodos (11470, 11469, written, 11470 matched and 11469 not, below), and the destructor and deleting destructor
+# (target fns 1704 and 3767, slots 0 and 1 of its vtable @1560760) in
+# src/app/comum/justificativa/dao/cjustificadordao.cpp, the file the records of ExcluirID and Atualizar name (lines 56
+# and 63). The headers cjustificadordao.h and ijustificadordao.h beside it, and the bases
+# src/api/persistencia/iuenuxgenericdao.h, the file the records of the base's defaults name, and idao.h beside it. The
+# class chain is RTTI's: CJustificadorDAO, IJustificadorDAO, IUenuxGenericDAO<CIdentificacaoJustificativa, std::string>,
+# IDAO. Slot 4 is the base's default (11467, unit 91's row).
 #
 # Written and not matched (docs/how-to-decompile.md step 5, "A written body that does not match yet"):
 # - RecuperarID (11470) matches since unit 95 writes comum::ValidarUE (5890): the end pointer of its "{}" format string

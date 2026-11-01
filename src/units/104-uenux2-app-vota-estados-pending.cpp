@@ -45,11 +45,9 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 185, 187, 202, 203, 261, 273, 291, 326, 332, 378, 401, 457, 463, 491, 502,
-// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1249, 1269, 1822,
-// 1933, 1935, 1960, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782, 3784, 3788, 3825, 3826, 3829,
-// 5462, 5480, 5545, 5824, 5866, 5869, 5870, 5876, 5887, 5888, 5889, 5891, 5905,
-// 6174 (and units 155's 1405 and 168's 1485).
+// with no name: 378, 491, 502, 620, 886, 1164, 1269, 1933, 1935, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782,
+// 3825, 3826, 5462, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
+// 195's 5824 and 95's 3829, 5889, 5891 and 5905 among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
@@ -158,7 +156,7 @@ void CQuerReimprimirZeresima::StartState()
     __builtin_trap();
 }
 
-// CQuerReimprimirZeresima::ProcessInput: fn 11848 (349 B), callees with no name: 455, 2520, 2880, 2882.
+// CQuerReimprimirZeresima::ProcessInput: fn 11848 (349 B), callees with no name: 2520, 2882.
 void CQuerReimprimirZeresima::ProcessInput()
 {
     __builtin_trap();

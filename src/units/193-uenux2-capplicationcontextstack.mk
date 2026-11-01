@@ -34,11 +34,14 @@
 #   the constructor, operator== and Actions, in their definitions' order; capplicationcontextstack.cpp.o
 #   CriaContextoPadrao, the slow path, Pop and the move assignment. That fixes part of this file's order: compiled with
 #   the factories after the guard's destructor, the object puts CriaContextoPadrao after the slow path, Pop and the move
-#   assignment; with Pop defined before Push it orders its functions as written (the objects' function lists). Across
-#   our objects the order is not the target's: our link has the constructor's object first, so CriaContextoPadrao
-#   follows Actions, where the band has it ahead of the constructor. Which files hold the factories, the constructor and
-#   Actions, and their order on the link line, are chosen, the factories apart from Actions (below). Every other line
-#   and the include order are chosen.
+#   assignment; with Pop defined before Push the object's function list is unchanged, so Push's place against Pop's is
+#   chosen (the objects' function lists). Across our objects the order is not the target's: the band links
+#   CriaContextoPadrao ahead of the constructor, operator== and Actions, and those ahead of the slow path, Pop and the
+#   move assignment, while our link has the constructor's object first. The factories ahead of the constructor in
+#   capplicationcontext.cpp and Actions ahead of the guard in capplicationcontextstack.cpp would keep that order with
+#   the same object code (compiled, not linked), but Actions' 47 lines ahead of the guard's constructor would run past
+#   line 41, where the guard's record (line 45) puts it. Which files hold them beyond that order is chosen, the
+#   factories apart from Actions (below). Every other line and the include order are chosen.
 # - operator== is defaulted out of line in capplicationcontext.cpp, beside the constructor, as the band has it.
 #   Defaulted in the class, an inline member emitted in this file's object where Pop's find calls it, gives the same
 #   code for it and for its callers (the objects' functions compared, relocations as symbols) and matched too; there the

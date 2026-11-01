@@ -2,14 +2,15 @@
 # cgeradorresultados.cpp, with the class header beside it.
 #
 # Evidence. fn 5824 is called only by vota::CGravaResultado::StartState (fn 12098), twice (ledger/callgraph.tsv), and
-# builds an 84-byte object (cgeradorresultados.h has what it stores where). Its last argument is a std::shared_ptr that
-# it copies to +76 and then releases: this toolchain passes std::shared_ptr by value as a pointer the callee destroys,
-# and a by-value parameter copied into a member gives that release (`m_p(p)`), where one moved into it gives none
-# (measured on a probe TU at uenux2's flags, wasm-objdump -d). The two vectors are of two element types: the target's
-# body holds two calls of fn 158 (vector<unsigned char>::__throw_length_error, binaryen's one body for every vector's
-# member), one per copy; with one element type for both, our body ran both copies' throws through one call (4 rows
-# deleted, pnpm wasm score against 5824), and with two it scores 8 over 266 rows, all operand-only. The byte at +72 is a
-# bool: fn 12098 passes a condition xor-ed with 1 and tests the byte against 1.
+# builds an object of at least 84 bytes, its last store a word at +80 (cgeradorresultados.h has what it stores where).
+# Its last argument is a std::shared_ptr that it copies to +76 and then releases: this toolchain passes std::shared_ptr
+# by value as a pointer the callee destroys, and a by-value parameter copied into a member gives that release
+# (`m_p(p)`), where one moved into it gives none (measured on a probe TU at uenux2's flags, wasm-objdump -d). The two
+# vectors are of two element types: the target's body holds two calls of fn 158 (vector<unsigned
+# char>::__throw_length_error, binaryen's one body for every vector's member), one per copy; with one element type for
+# both, our body ran both copies' throws through one call (4 rows deleted, pnpm wasm score against 5824), and with two
+# it scores 8 over 266 rows, all operand-only. The byte at +72 is a bool: fn 12098 passes a condition xor-ed with 1 and
+# tests the byte against 1.
 #
 # Choices. No record, vtable slot or RTTI names the class, its file, its members or the types of its elements and of
 # +76: the class name is chosen from the log fn 12098 writes around the first vector (CLogComum::
