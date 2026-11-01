@@ -19,6 +19,12 @@ class CEleicaoPE {
 public:
     TEleicaoID GetID() const { return m_id; }
     const TVectorCargo& GetCargos() const;
+    // fn 5654: the set of the cargos' ids (byte +0 of each 140-byte element of +28), in a std::set of one-byte keys; fn
+    // 5653: whether any cargo holds a candidate's detail (+84, CCargo's engaged flag of m_detalheCandidato). Both are out
+    // of line (5654's caller 7787 and 5653's 3744 and 7787 keep the calls) and no record names them, so their names and
+    // file are chosen.
+    std::set<TCargoID> GetIDsCargos() const;
+    bool PossuiCargoCandidato() const;
     // The name at +12, which comum::NomeEleicaoCorrente (fn 11556) copies; no record names it, so its name and its being
     // inline in the class are chosen.
     const std::string& GetNome() const { return m_nome; }

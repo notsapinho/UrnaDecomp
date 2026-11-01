@@ -11,11 +11,15 @@
 //
 // Recovered: +4, the state, which the constructor (fn 3844) stores and every member reads first, and the members of
 // app/comum/cappstatecontext.cpp, which are out of line (src/units/168-uenux2-app-helpers.mk says why). That this class
-// and not its base holds +4 is chosen. The target's other members read the state's three flags (fn 3842 +8, 5909 +9,
-// 5908 +10) or call its slots 7 and 8 (5911, 5910) when there is a state. AcceptsKey (3842) reads the flag as
-// CAppState's friend (cappstate.h); 5908 to 5911 are not written here. The names of the members and of m_estado are
-// chosen; ProcessKey's uebyte is the type of the slot it calls, and an int gives another body (the fragment says so).
-// The code that changes state, inlined into fn 4349, is not reconstructed.
+// and not its base holds +4 is chosen. When there is a state, the members call its slots 6, 7 and 8 (fns 3843, 5911,
+// 5910) or read its three flags (fns 3842 +8, 5909 +9, 5908 +10), as CAppState's friend (cappstate.h). The names of the
+// members and of m_estado are chosen; ProcessKey's uebyte is the type of the slot it calls, and an int gives another
+// body (the fragment says so); ProcessTick's uebyte is read the same way, not measured. The code that changes state,
+// inlined into fn 4349, is not reconstructed.
+//
+// GetState: fn 4705 (slot 9 of vota::CExecucaoVota and of vota::CExecucaoVotaCooperativa) reads +4 of the context the
+// thread holds at +32, and fn 4713 reads it after building a new context, each in its own code (no call), so code
+// outside this class reads the state. That it does so through a public inline accessor, and its name, are chosen.
 
 namespace comum {
 
@@ -27,7 +31,17 @@ public:
 
     void ProcessKey(uebyte tecla);
 
+    void ProcessInput();
+
+    void ProcessTick(uebyte tick);
+
     bool AcceptsKey() const;
+
+    bool AcceptsInput() const;
+
+    bool AcceptsTick() const;
+
+    CAppState* GetState() const { return m_estado; }
 
 private:
     CAppState* m_estado;

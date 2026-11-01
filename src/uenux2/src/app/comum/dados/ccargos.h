@@ -42,6 +42,12 @@ public:
     comum::TEleicaoID GetCurrentEleicaoID() const;
     comum::TEleicaoID GetUltimaEleicaoID() const { return m_cargos.back().first; }
 
+    // fn 3784: copies the vector at +4 over the one at +16, through std::vector's range assign (fn 3783, which fn 7377,
+    // FiltraPorAbrangencia, calls too). Its callers, fns 12098 and 12110 (vota::CGravaResultado's and vota::CGeraBU's slot
+    // 2), call it on GetInst()'s result, so it is a member, out of line since they keep the call. No record names it:
+    // the name, that it is the undoing of FiltraPorAbrangencia, and its place in ccargos.cpp are chosen.
+    void RemoveFiltro();
+
 private:
     size_t m_atual;
     std::vector<TCargoEleicao> m_todos;

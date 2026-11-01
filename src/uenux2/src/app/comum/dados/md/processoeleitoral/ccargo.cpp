@@ -1,7 +1,8 @@
 // Reconstruction notes: comum::md::CCargo. Lines 81, 89, 112 and 212 to 240 are records' and fix their throws; no record
 // names the name getters, so their place around GetOrdinalEscolha, above Valida, is a choice, as their names are (read
 // from which field each copies; the fragment lists them). GetDetalheConsulta's own body is target fn 1923, a thunk of
-// binaryen's merge 6029, so it stays out of our link: every call of it here is inlined by clang.
+// binaryen's merge 6029, so it stays out of our link: every call of it here is inlined by clang. operator<=> (fn 5655)
+// has no record: its place, after Valida, is a choice the band fits (the fragment says so).
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"
 
 #include <format>
@@ -19,7 +20,7 @@ constexpr CSexo::ESexo SEXO_FEMININO = static_cast<CSexo::ESexo>(2);
 
 } // namespace
 
-// (original lines 22-77: content not recovered)
+// (original lines 23-77: content not recovered)
 #line 78
 const CDetalheCandidato& CCargo::GetDetalheCandidato() const
 {
@@ -144,6 +145,11 @@ void CCargo::Valida() const
         default:
             throw CUeComumDadosError(EUE_COMUM_DADOS_8144, "Tipo de cargo inválido.");
     }
+}
+
+std::strong_ordering CCargo::operator<=>(const CCargo& outro) const
+{
+    return m_id <=> outro.m_id;
 }
 
 } // namespace comum::md
