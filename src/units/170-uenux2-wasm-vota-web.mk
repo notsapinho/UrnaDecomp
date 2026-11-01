@@ -92,12 +92,26 @@
 #   GetPathTrab and GetPathRootSemSA (358, 634), a builder and its setters (10268, 10197, 10188, 10181, 10176), 11733,
 #   11572, 11641, 11642, 7787 and more.
 # - 10307, main: 8302 (28435 B, read as the simulator's setup), 8311, 11159, 7828, the slots of the TU's CWasmSavd
-#   (5503, 10965, 10949, 10930) and of main's lambda's __func (10406, 10400, 10384, 10375, 10365), and 5120.
+#   (5503, 10965, 10949, 10930) and of main's lambda's __func (10406, 10400, 10384, 10375, 10365), and 5120. main calls
+#   8302 through invoke_vii (the lift's `/* &f8302 */`, table slot 128), and 8302's records (1531180 to 1531988, the
+#   push<T> and CreateInst it holds) lie after this TU's last typeinfo (main::$_0's, 1528020), so it is read as another
+#   object's function, and main does not link until 8302 is written. Its other invoke targets: 8311 (no name), 11159
+#   (api::CApplication::InitApplication, not written: fragment 171), 10090 (push<comum::IInterfaceSavd>, record 1527276
+#   in this TU's data), the set thunks 9986 9897 9831 9731 9685 9650 9574 9372 and 9507 and 9437 (no names), and the
+#   matched 9503 (CPrng(int)), 10876 (CAjusteDataHora::Registra), vota::CAguardaMensagem::GetInst and 7828. The vptrs it
+#   stores are this TU's classes' (CWasmSavd, CPoliticaExecucaoEleitorWeb, CSincronismoVotoEleitorWeb, the four
+#   CDefaultGenericFactory instances, the lambda's __func) and CSymmetricCipherFactory's and CFingerPrepareSimulador's,
+#   so their slots wait for it too.
 # - 10619 (votaTick) and 10171 (votaGetStateJson): 5500 (6871 B, read as the state's text: votaGetStateJson moves its
-#   result into +24), 5408, 407, 2369, 10376, 10857.
-# - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532
-#   and 9873 (src/app/roots_vector.cpp keeps them), 2247 and 2249 (asn1.md A5), 1928, 3552, 518 and 1843 (asn1.md A10),
-#   11489 and 11518 (unit 82), and units 100's and 94's rows that wait for the TU (their fragments).
+#   result into +24; stub in celeitorvotando.cpp), 3594 (1923 B, stub in iexecucaovota.cpp), 5408, 407, 2369, 10376,
+#   10857: all but 407 have no name.
+# - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532,
+#   9873, 2247, 2249 and 1843 (src/app/roots_vector.cpp keeps them, the last three with minsize instances measured
+#   there), 1928, 3552 and 518 (asn1.md A10: 1928 is std::pair's implicit destructor, which clang refuses to instantiate
+#   explicitly, so no tree root gives its -Oz copy, nor 3552's, which calls it), 388 and 2650 (a minsize instance of
+#   ~shared_ptr<ASN1::IAbstractVisitor> in a probe link is (i32)->() where 388 returns `this`, `pnpm wasm score` 10 over
+#   26 rows, one deleted: read as no caller in our link reading the result), 11489 and 11518 (unit 82), and units 100's
+#   and 94's rows that wait for the TU (their fragments).
 #
 # Stand-ins this unit ended: src/app/roots_uenux2.cpp's minsize instance of fn 252 and its extern template of append
 # (252 and 3717 match from this object), src/app/vota_api.cpp's votaPressKey and votaSetAudioEnabled. Unit 100's chosen
