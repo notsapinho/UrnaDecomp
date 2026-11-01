@@ -78,9 +78,12 @@
 # object at 1838544 and builds no path. The code 8302 and 12098 hold behind a second prologue, and 11620
 # (comum::CGravadorHashes's slot 7) behind a third, that reads this file's statics (a setter of the root and the two
 # flash paths in 8302; GetPathLog's body with "arquivados/" in 12098; s_pathRoot and s_pathFlash[0] in 11620, which
-# appends "dinamico/" inline rather than calling 1082) waits for those callers.
+# appends "dinamico/" inline rather than calling 1082) waits for those callers. The setter is written: CPath::SetPathRoot,
+# a chosen name (unit 188's fragment says what its form rests on); binaryen inlines it into 8302, its one caller, so it
+# has no target function, and no match checks it while 8302 does not match.
 #
-# Roots (190-uenux2-cpath-roots.cpp): no target caller of the unit is in the link, so it gives the members the call
+# Roots (190-uenux2-cpath-roots.cpp): no target caller of the unit is in the link but 8302 (unit 188), which calls
+# SetPathRoot and holds GetPathLog inlined, so it gives the members the call
 # sites its header lists (two each, one for 1399 beside 1274, none for 358), emits GetPathLog's copy and takes
 # operator/='s address. It compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree
 # header.

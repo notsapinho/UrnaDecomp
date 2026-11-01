@@ -1,8 +1,8 @@
 // Roots: keep unit 78's classes in the skeleton link, reached the way the target reaches them.
 // - simulador::CWasmScreenMT, api::CBeepFieldMT, CBuzzFieldMT and CClockFieldMT: every member is reached through its
 //   vtable only (`awk -F'\t' '$2==8746' ledger/callgraph.tsv` and the same for the other slots print nothing). The one
-//   reference is a vptr store: fns 1072, 941 and 728 (unit 31) hold the fields', and code not reconstructed the
-//   screen's (fn 8302), so this file takes each vtable's address, which keeps every slot. api::CPreShowClearMT's vptr is
+//   reference is a vptr store: fns 1072, 941 and 728 (unit 31) hold the fields', so this file takes the fields'
+//   vtables' addresses, which keeps every slot; the screen's is stored by fn 8302 (unit 188), which needs no line here. api::CPreShowClearMT's vptr is
 //   stored by fns 1694 and 301 (unit 31's cmtformbuilder.cpp), the only target functions that load it, so it needs no
 //   line here. The constructors have no caller here, as they have no function of their own in the target.
 // - std::string::assign(size_type, char), target fn 1355: the table holds it (elem[6489]: fn 2672, a TU with exceptions,
@@ -11,7 +11,8 @@
 //   binaryen removes it.
 // - the control blocks of the classes the target builds with std::shared_ptr<U>(new T), the __shared_ptr_pointer<T*, ...>
 //   whose __get_deleter are target fns 11034-11039 and 10537 (vtables @1580040-1580240 and @1590608; the other slots
-//   are the shared 174, 144 and 172), and fn 8036 (@1531492), std::shared_ptr<IScreenMT>(std::unique_ptr)'s. 11034 to
+//   are the shared 174, 144 and 172). fn 8036 (@1531492), std::shared_ptr<IScreenMT>(std::unique_ptr)'s, comes from
+//   push<IScreenMT>, which fn 8302 (unit 188) holds, so it needs no line here. 11034 to
 //   11039 come from cmtformbuilder.cpp.o now, ahead of this object, as do 11040 and 11046, the blocks of
 //   IForm<IScreenMT> and CPreShowClearMT (@1580000, @1579896), which fn 1694 builds, and fn 301 the second, so nothing
 //   here instantiates them; the other builders are not reconstructed. Each
@@ -34,7 +35,6 @@
 #include "app/vota/operador/comum/ctextfieldupdatemt.h"
 
 extern "C" {
-extern const char cwasmscreenmt_vt[] __asm__("_ZTVN9simulador13CWasmScreenMTE");
 extern const char cbeepfieldmt_vt[] __asm__("_ZTVN3api12CBeepFieldMTE");
 extern const char cbuzzfieldmt_vt[] __asm__("_ZTVN3api12CBuzzFieldMTE");
 extern const char cclockfieldmt_vt[] __asm__("_ZTVN3api13CClockFieldMTE");
@@ -49,11 +49,6 @@ std::shared_ptr<TBase> Compartilha(T* objeto)
     return std::shared_ptr<TBase>(objeto);
 }
 
-std::shared_ptr<api::IScreenMT> CompartilhaTela(std::unique_ptr<api::IScreenMT> tela)
-{
-    return std::shared_ptr<api::IScreenMT>(std::move(tela));
-}
-
 using SharedCampoMT = api::IFormField<api::IScreenMT>;
 
 const void* volatile cwasmscreenmt_sink;
@@ -61,7 +56,6 @@ const void* volatile cwasmscreenmt_sink;
 struct SCWasmScreenMTRoots {
     SCWasmScreenMTRoots()
     {
-        cwasmscreenmt_sink = cwasmscreenmt_vt;
         cwasmscreenmt_sink = cbeepfieldmt_vt;
         cwasmscreenmt_sink = cbuzzfieldmt_vt;
         cwasmscreenmt_sink = cclockfieldmt_vt;
@@ -73,7 +67,6 @@ struct SCWasmScreenMTRoots {
         cwasmscreenmt_sink = reinterpret_cast<const void*>(&Compartilha<SharedCampoMT, api::CTextFieldMT>);
         cwasmscreenmt_sink = reinterpret_cast<const void*>(&Compartilha<SharedCampoMT, api::CTextFieldUpdateMT>);
         cwasmscreenmt_sink = reinterpret_cast<const void*>(&Compartilha<SharedCampoMT, api::CBeepFieldMT>);
-        cwasmscreenmt_sink = reinterpret_cast<const void*>(&CompartilhaTela);
     }
 } cwasmscreenmt_roots;
 

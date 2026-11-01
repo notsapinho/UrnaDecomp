@@ -221,7 +221,7 @@ APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_
 
 # ---- link order (the executable TU first, VOTA_WEB_OBJS above; then the stand-ins, votaInit's first; app before
 # libraries; libraries in this order) --------
-APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
+APP_OBJS := vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=

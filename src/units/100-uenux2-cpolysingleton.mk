@@ -59,12 +59,14 @@
 #   score). It waits for that member, inline in the original.
 # - 4879 and 4890, set<ITimerScheduler> and set<ISystemDateTime>: written and `differs` in frame offsets alone, a body right
 #   apart from something outside it (how-to step 5). Their records (1531292, 1531932) lie in fn 8302's object, so the target's
-#   copies are that TU's, and it is not written. Which stack slots push's temporaries take depends on what was emitted first
+#   copies are that TU's (unit 188's simulador.cpp now). Which stack slots push's temporaries take depends on what was emitted first
 #   in the TU: the first std::format body of a TU declares vformat, so with push first (itimerscheduler.cpp, where CreateInst
 #   is instantiated before instance, as in 10876's TU) both of push's format calls inline before vformat, and with an earlier
 #   std::format body (8302's) each comes with its vformat. A scratch `template class CPolySingleton<ITimerScheduler>;` above
 #   GetInst gives 4879 `score 64 over 895 rows (... [64 operand-only] ...)`, every frame offset the target's. That line steers
-#   the compiler and does not land. 10876 is the same source in the other order and matches. They wait for fn 8302.
+#   the compiler and does not land. 10876 is the same source in the other order and matches. Both match since 8302's TU is
+#   written and listed ahead of itimerscheduler.cpp (unit 188's fragment has the measurement); the two `callers+content`
+#   hand lines that named them while they differed went: without them no scan row moves.
 # - Bodies with landing pads, which only the executable TU's flags give (levels.md §V1): 1166 and its 11-B has<T> thunks
 #   3281 3343 5417 5423 5425 5427 5434 5436, 6147 with 642 and 1322, 3095, 1126, 624, 640, 3895, 5774, 5786, 13621, 1009 with
 #   its per-T thunks, and the push bodies 3882, 5384, 7667, 8758, 8834, 8911, 8986, 9039, 9135, 9233, 10090, 1091, 455 with
@@ -90,6 +92,32 @@
 #   object), and 13156 has no body of ours. Only their names are needed.
 # - 11265: `unresolved`, self-voted: the two .bss names only its own vote gives. fn 10620 holds the object's address and
 #   not the guard's, and is not reached. It and api::g_polySingletonsInfo are unit 170's now, in the executable TU.
+#
+# set in two layers, and the locks (added with the executable TU's main and fn 8302, units 170 and 188):
+# - CPolySingletonList::set<T>(std::unique_ptr<T>&&, info), a has<T> test, then remove<T> (the name's remove, now with no
+#   test of its own) and push<T>: the executable TU's -Oz copies hold it as a function of its own, remove<T> in a frame of
+#   its own inside the test and push<T> inlined or called (fns 9507 9437 10090 10356; 5384 is push<ISound> alone, with
+#   two callers). CPolySingleton<T>::set calls it, by unique_ptr as before and by a raw pointer, a template on the
+#   pointer's class: the copies put the pointer in a unique_ptr of their own frame and invoke the && body (the thunks
+#   9372 9574 9650 9685 9731 9831 9897 9986 into binaryen's 1562, and 4162). main calls three such sets inlined: the
+#   pointer is wrapped after the info pointer's call, and that call's landing pad deletes nothing, so the argument was a
+#   raw pointer; the three are those over main's anonymous-namespace classes, whose instances are the TU's own, and the
+#   other eight are called. fn 8302 holds its own set<ISound> inlined (remove inlined, 5384 called) where main's lambda
+#   holds another (calling 10356): one function could not be both. The two overloads' names and that the raw one is a
+#   template on the class are choices that give those shapes; the && body's name is chosen.
+# - push<T> locks with a std::unique_lock: the -Oz copies store its owns flag (i32.store8 1) before they call lock (fn
+#   1126). unlock_shared locks std::mutex with a std::unique_lock too: fn 13974, its -Oz copy, has a 16-byte frame with
+#   the flag and calls ~unique_lock. At -O3 both give the bytes std::lock_guard gives (the forms below), so the two
+#   choices of the forms list moved to unique_lock.
+# - Measured on whole links (`pnpm wasm score` against the plain link): with the has<T> test in remove<T> and a
+#   std::lock_guard in push, 10090 read 181 over 891 rows (163 operand-only, 6 inserted, 10 deleted) and 10356 21 over 58;
+#   with both changes, 161 over 885 (159 operand-only, 2 deleted: the drops after 388, unit 170's fragment) and 9 over 52,
+#   operand-only. 13974: 43 over 105 rows with the lock_guard, 16 over 103 operand-only with the unique_lock, then a
+#   match; 10876 and 184 read 64 over 911 and 71 over 947, operand-only, before and after, and stay matched. main: 502
+#   over 1098 rows (155 inserted) with its sets by unique_ptr (the three over its own classes as calls of the && body),
+#   234 over 958 (210 operand-only, 15 inserted) with the raw-pointer set, both before the lock change.
+# - The roots lines that stood for main and 8302 went: the control blocks of the 25 singletons those two push, Registra's
+#   address (main's table slot 118), w100_has_fabrica (8986's has<T>) and w100_define (4879's and 4890's second callers).
 #
 # How the names hold. instance<T> pair only by srcloc-anchor: at the census's depth 2 their fingerprints take in 212's and
 # 305's bodies, which differ. An anchor votes for .bss data alone, and its call vote for has<T> has that one voter, which the

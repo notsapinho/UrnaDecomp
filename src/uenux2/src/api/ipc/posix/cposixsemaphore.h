@@ -11,7 +11,7 @@ namespace api {
  */
 class CPosixSemaphore : public ISemaphore {
 public:
-    explicit CPosixSemaphore(unsigned int valor);
+    explicit CPosixSemaphore(unsigned int valor = 0); // CDefaultGenericFactory's Create passes 0 (fn 10854); the default is chosen
     virtual ~CPosixSemaphore();
 
     virtual void Lock();

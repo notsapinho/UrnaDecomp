@@ -32,7 +32,7 @@ public:
 
     inline void unlock_shared()
     {
-        std::lock_guard<std::mutex> trava(m_mutex);
+        std::unique_lock<std::mutex> trava(m_mutex);
         if (m_leitores <= 0) {
             throw std::runtime_error("unlock_shared() called with no shared owner");
         }

@@ -5,8 +5,7 @@
 #   (8533, slot 2), BeepError (8523, slot 3), BeepAlert (8514, slot 4), BeepDiscard (8505, slot 5) and BeepKey
 #   (8494, slot 6). SetVolume, the first, is the key function, so cwasmbeep.cpp emits the vtable. The destructors
 #   (slots 7 and 8) are the shared empty bodies 174 and 144: an implicit destructor or one defined in the class, left
-#   implicit here. The constructor (inlined into simulador's init, fn 8302) has no target function, and nothing here
-#   calls it.
+#   implicit here. The constructor (inlined into simulador's init, fn 8302, unit 188's) has no target function.
 # - the tone sequences of slots 2 to 5. The evidence is that each is built in another TU and returned by value: each
 #   target function keeps its std::vector in the frame and loads its begin and end right after the code that stored
 #   them, with no call between, which a function boundary alone gives, and fn 8523 zeroes the vector after a second
@@ -32,8 +31,4 @@
 # src/uenux2; the generic uenux2 rule compiles both and depends on each source and every uenux2 header.
 CWASMBEEP_SRCS := mock/app/simulador/wasm/cwasmbeep.cpp src/api/hwil/ibeep.cpp
 UENUX2_SRCS += $(CWASMBEEP_SRCS)
-# nothing reconstructed creates the beeper yet: 72-uenux2-cwasmbeep-roots.cpp keeps its vtable the way the target
-# reaches it
-$(ROOT)/$(APP)/72-uenux2-cwasmbeep-roots.o: $(ROOT)/src/units/72-uenux2-cwasmbeep-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/72-uenux2-cwasmbeep.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/72-uenux2-cwasmbeep-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/72-uenux2-cwasmbeep-roots.o
+# the beeper's vtable: fn 8302 (unit 188) builds the beeper and stores it, so this unit has no roots

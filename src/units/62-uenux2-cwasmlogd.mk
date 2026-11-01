@@ -37,12 +37,10 @@
 # record names cwasmlogd.h or cwasmlogd.cpp: the file is the one ledger/tu-clusters.tsv gives clusters 45 and 47 (45's
 # is the `neighbours' file` over the destructors' unplaced.cpp stubs), in the directory where simulador's other wasm
 # classes have records (cwasmthread.cpp, cwasmclp.cpp). cescritorlog.h goes beside cescritorlog.cpp, the file the
-# records name. The constructor, which binaryen inlined into fn 8302, is not reconstructed. Paths relative to
+# records name. The constructor, which binaryen inlined into fn 8302, is unit 188's, in cwasmlogd.cpp (that fragment
+# says what it rests on). Paths relative to
 # src/uenux2; the generic uenux2 rule compiles mock/ too and depends on each source and every uenux2 header.
 CWASMLOGD_SRCS := src/api/uelog/cescritorlog.cpp mock/app/simulador/wasm/cwasmlogd.cpp
 UENUX2_SRCS += $(CWASMLOGD_SRCS)
-# nothing calls the destructors directly in the target, which reaches them through the vtable only:
-# 62-uenux2-cwasmlogd-roots.cpp keeps the vtable, as the constructor inlined into fn 8302 does
-$(ROOT)/$(APP)/62-uenux2-cwasmlogd-roots.o: $(ROOT)/src/units/62-uenux2-cwasmlogd-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/62-uenux2-cwasmlogd.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/62-uenux2-cwasmlogd-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/62-uenux2-cwasmlogd-roots.o
+# nothing calls the destructors directly in the target, which reaches them through the vtable only: the constructor,
+# inlined into fn 8302 (unit 188), stores it, so this unit has no roots

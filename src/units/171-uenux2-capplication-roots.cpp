@@ -5,8 +5,8 @@
 //   (slots 4 and 3 of vota::CThreadVota's vtable, which CThreadEleitor, CThreadMonitor and CThreadOperador share),
 //   neither reconstructed. AguardaUmaVez and AguardaDuasVezes stand for them, two call sites, so binaryen keeps it out
 //   of line.
-// - InitApplication (fn 11159) is the table slot main (fn 10307, not reconstructed) passes to invoke_viiii: its address
-//   is taken here.
+// - InitApplication (fn 11159) is the table slot main (fn 10307, unit 170) passes to invoke_viiii, so it needs no line
+//   here.
 // - PushContext (fn 3684) has InitApplication's code among its callers in our link; w171_empilha stands for the other
 //   two, fns 7377 and 10468.
 // - CriaContexto from a kind and three strings (fn 676) and api::CApplicationContextGuard's destructor (fn 675, unit
@@ -15,9 +15,6 @@
 //   the guard's constructor have one caller each and are left unrooted, so binaryen inlines them as the target does.
 extern "C" {
 void w5566_root_0() __asm__("_ZN3api12CApplication21EnterLoopDoingNothingEv");
-void w171_inicia(const void* aplicacao, const void* descricao, const void* versao, int aplicativo) __asm__(
-    "_ZN3api12CApplication15InitApplicationERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_"
-    "15ELogAplicativos");
 void w171_empilha_c(void* contexto) __asm__("_ZN3api12CApplication11PushContextENS_19CApplicationContextE");
 void w171_guarda_c(void* guarda, int tipo, void* titulo, void* descricao, void* detalhe) __asm__(
     "_ZN3api12CApplication12CriaContextoEiNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_S7_");
@@ -68,7 +65,6 @@ struct SW5566Roots {
     {
         w5566_sink = reinterpret_cast<void*>(&AguardaUmaVez);
         w5566_sink = reinterpret_cast<void*>(&AguardaDuasVezes);
-        w5566_sink = reinterpret_cast<void*>(&w171_inicia);
         w5566_sink = reinterpret_cast<void*>(&w171_empilha);
         w5566_sink = reinterpret_cast<void*>(&w171_guarda);
         w5566_sink = reinterpret_cast<void*>(&w171_guardas);

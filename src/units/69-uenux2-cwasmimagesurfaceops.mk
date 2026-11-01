@@ -64,9 +64,9 @@
 #   vtable alone and cast no votes; the scan's content pass finds 5069, whose re-pointed bytes occur once (a
 #   `callers+content` hand line, weighed as docs/reference/splat.md "Reviewing a match" says, carried nothing).
 #   IScreenMT's destructor has the same shape over CFormStack<IScreenMT>'s Limpa (3461, unit 78's fragment).
-# - not reconstructed: the constructor. Its being out of line is evidence (the data order,
-#   below); its body is not checked by any match: binaryen inlined it into fn 8302, and our link drops it for want of a
-#   caller. It differs from 8302's in two known places: 8302 builds the log as std::string("CWasmScreen this=") and then
+# - the constructor, which fn 8302 (unit 188) calls, matches no function of its own. Its being out of line is evidence
+#   (the data order, below); binaryen inlines it into 8302, its one caller, so no match checks it. It differs from
+#   8302's in two known places: 8302 builds the log as std::string("CWasmScreen this=") and then
 #   appends to_string's result, where the written `"CWasmScreen this=" + std::to_string(...)` compiles to an insert;
 #   and 8302 stores 480 and 640 at +34 and +32 as two 16-bit stores, where ours is one 32-bit store.
 # CWasmImageSurfaceOps:
@@ -82,7 +82,7 @@
 # as the first definer on the link line this object would take it from RHVoice's speech_processor, and 2209 and 5255 with
 # it. With the directory's strict aliasing (src/Makefile UENUX2_TBAA_DIRS) this object's copy is roots_uenux2.o's (pnpm wasm score
 # on the two objects: 0 over 468 rows); the root is not measured again.
-# Nothing reconstructed calls the constructor, so the roots file keeps both vtables.
+# The constructor, called from fn 8302 (unit 188), stores both vtables, so this unit has no roots.
 #
 # The file is a choice, and the TU is not: the class shares one object with simulador::CWasmScreen. No record names
 # either class's file; ledger/tu-clusters.tsv's class-convention guess puts stretches 131, 206 and 956 in a
@@ -177,8 +177,4 @@ UENUX2_SRCS += $(CWASMIMAGESURFACEOPS_SRCS)
 # unit's flags; the header set is the generic rule's
 $(ROOT)/$(APP)/69-uenux2-cwasmimagesurfaceops-pending.o: $(ROOT)/src/units/69-uenux2-cwasmimagesurfaceops-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/69-uenux2-cwasmimagesurfaceops.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/69-uenux2-cwasmimagesurfaceops-pending.cpp -o $(R)
-# nothing reconstructed calls the CWasmScreen constructor yet: 69-uenux2-cwasmimagesurfaceops-roots.cpp keeps both
-# vtables, as that constructor, inlined into fn 8302, does
-$(ROOT)/$(APP)/69-uenux2-cwasmimagesurfaceops-roots.o: $(ROOT)/src/units/69-uenux2-cwasmimagesurfaceops-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/69-uenux2-cwasmimagesurfaceops.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/69-uenux2-cwasmimagesurfaceops-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/69-uenux2-cwasmimagesurfaceops-pending.o $(APP)/69-uenux2-cwasmimagesurfaceops-roots.o
+override EXTRA_OBJS += $(APP)/69-uenux2-cwasmimagesurfaceops-pending.o

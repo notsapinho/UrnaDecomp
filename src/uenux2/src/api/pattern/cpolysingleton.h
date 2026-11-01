@@ -31,8 +31,15 @@ public:
 
     static void set(std::unique_ptr<T> instancia, TPolySingletonsInfo& info = g_polySingletonsInfo())
     {
-        CPolySingletonList::remove<T>(info);
-        CPolySingletonList::push(std::move(instancia), info);
+        CPolySingletonList::set<T>(std::move(instancia), info);
+    }
+
+    // A template on the pointer's class: an instance over a class of the anonymous namespace is the TU's own (unit
+    // 100's fragment has what the executable TU's main and fn 8302 show)
+    template <typename U>
+    static void set(U* instancia, TPolySingletonsInfo& info = g_polySingletonsInfo())
+    {
+        CPolySingletonList::set<T>(std::unique_ptr<T>(instancia), info);
     }
 };
 

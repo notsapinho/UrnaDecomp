@@ -60,8 +60,5 @@ SIMULADOR_DEVICES_SRCS := mock/app/simulador/wasm/cwasminputkbd.cpp mock/app/sim
 	mock/app/simulador/wasm/cwasmnullsound.cpp mock/app/simulador/wasm/cwasmsystemdatetime.cpp \
 	src/api/util/isystemdatetime.cpp
 UENUX2_SRCS += $(SIMULADOR_DEVICES_SRCS)
-# nothing reconstructed creates these devices yet: 81-uenux2-simulador-wasm-devices-roots.cpp keeps their vtables, the
-# reference the target's vptr stores give
-$(ROOT)/$(APP)/81-uenux2-simulador-wasm-devices-roots.o: $(ROOT)/src/units/81-uenux2-simulador-wasm-devices-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/81-uenux2-simulador-wasm-devices.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/81-uenux2-simulador-wasm-devices-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/81-uenux2-simulador-wasm-devices-roots.o
+# the devices' vtables: fn 8302 (unit 188) stores CWasmInputKbd's, CWasmInputMT's, CWasmNullSound's and
+# CWasmSystemDateTime's, and fn 1155 (ISystemDateTime::GetInst) CSystemDateTime's, so this unit has no roots
