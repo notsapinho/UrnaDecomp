@@ -15,8 +15,8 @@
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fns
 //   652, 1150, 1901, 2734, 2747, 5397, 10440 and 10465) and api::CInputMenuField (1579324, fn 3675). A dropped builder
 //   needs T's constructor declared, not defined.
-// And one stand-in caller, of CCalculaCV's destructor, kept by its address: its comment names the target callers it
-// stands for. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
+// And two stand-in callers, of CCalculaCV's destructor and of IncluiString, kept by their addresses: each comment names
+// the target callers it stands for. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
 // 1575124, stored by fn 12110), has no builder here: one in this object only declares the destructor, so the block's
 // __on_zero_shared frees what the destructor returns, where the target's (fn 11263) frees the pointer it passed, and
 // the destructor (fn 5614) then keeps its result and stops matching. The fragment has the measurement.
@@ -72,12 +72,21 @@ __attribute__((noinline)) void w121_destroi_calcula(comum::CCalculaCV* primeiro,
     segundo->~CCalculaCV();
 }
 
+// Stands for the eight target callers of CCalculaCV::IncluiString (fn 942): fns 5967, 11253, 11254, 11255, 11256, 11260,
+// 11980 and 11981, none of them in our link. With one call site, binaryen would inline it into it.
+__attribute__((noinline)) void w121_inclui(comum::CCalculaCV& calcula, const std::string& primeira, const std::string& segunda)
+{
+    calcula.IncluiString(primeira);
+    calcula.IncluiString(segunda);
+}
+
 const void* volatile w121_sink;
 
 struct SW121Roots {
     SW121Roots()
     {
         w121_sink = reinterpret_cast<const void*>(&w121_destroi_calcula);
+        w121_sink = reinterpret_cast<const void*>(&w121_inclui);
         w121_sink = w121_vt_respostas;
         w121_sink = w121_vt_opcao;
         w121_sink = w121_vt_string;

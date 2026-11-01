@@ -24,6 +24,10 @@ public:
     // The names are chosen: comum::CCargoDSNomeSexoCandidato's call operator (fn 2268) compares the byte at +0 with the
     // current post's id, and CCandidaturasDSSexo's (fn 5806) reads the holder at +8 when it asks for no substitute.
     TCargoID GetCargoID() const { return m_cargo; }
+    // The names are chosen: comum::CCandidaturas's members (fns 2272, 2840) read the 16-bit word at +2 and the 32-bit
+    // word at +4.
+    TPartidoID GetPartidoID() const { return m_partido; }
+    TCandidatoID GetCandidatoID() const { return m_candidato; }
     const CDadosCandidato& GetTitular() const { return m_titular; }
     const CDadosCandidato& GetSuplente(uebyte ordem) const;
 

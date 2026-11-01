@@ -45,6 +45,8 @@ public:
     signed char GetOrdem() const { return m_ordem; }
     // The name is chosen: comum::CCandidaturasDSSexo's call operator (fn 5806) reads +40 for its ESexo.
     CSexo::ESexo GetSexo() const { return m_sexo; }
+    // The name is chosen: comum::CCandidaturas's members (fns 2271, 2272, 2840) test the holder's +44 against 0.
+    ESituacao GetSituacao() const { return m_situacao; }
 
 private:
     std::string m_codigo;

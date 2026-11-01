@@ -1030,17 +1030,6 @@
 // f11222 · 1130 B · unmatched · placement: link order · name unknown
 // void f11222(i32) { ... }
 
-// link-order cluster 422 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgeradorbuqrcodevota.cpp
-
-// f11244 · 7 B · unmatched · placement: link order · name unknown
-// ? f11244(i32) { ... }
-
-// f11243 · 13 B · unmatched · placement: link order · name unknown
-// void f11243(i32) { ... }
-
-// f11241 · 16 B · unmatched · placement: link order · name unknown
-// void f11241(i32, i32, i32) { ... }
-
 // link-order cluster 481 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidatura.cpp
 
 // f11448 · 1570 B · unmatched · placement: link order · name unknown
@@ -1187,11 +1176,6 @@
 
 // f5592 · 53 B · unmatched · placement: link order · name unknown
 // void f5592(i32, i32, i32) { ... }
-
-// link-order cluster 799 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
-
-// f5603 · 229 B · unmatched · placement: link order · name unknown
-// ? f5603(i32, i32, i32, i32) { ... }
 
 // link-order cluster 800 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelbase.cpp
 

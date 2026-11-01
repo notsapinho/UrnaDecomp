@@ -42,8 +42,10 @@
 #
 # Not reconstructed (traps in 139-uenux2-cgeradorbu-pending.cpp, its header says what each waits for): ImprimePreTexto
 # (11256) and ImprimeConsulta (11253), which call fn 160, std::string::append, as this tree's code does at its -O3 (unit
-# 31's AddField and unit 93's DefineHistoricoCarga measure that), and fn 942; ImprimeProporcionalPartido (11255) and
-# ImprimeMajoritario (11254), over fns 942, 2271, 2272 and 1273. None of the four callees has a body or a name of ours.
+# 31's AddField and unit 93's DefineHistoricoCarga measure that), and fn 942, CCalculaCV::IncluiString (unit 121, matched);
+# ImprimeProporcionalPartido (11255) and ImprimeMajoritario (11254), over fns 942, 2271, 2272 and 1273 (unit 89's
+# CCandidaturas members) and fn 1930, CRdvVota::Cargo. Each waits for a direct callee that has no body of ours (the
+# pending file's header lists them).
 # The three constructors, GeraRelatorio and the records of cgeradorbu.cpp (CriaQRCode, DefineTipo) are in fn 12110 and
 # not written; their lines stay blank.
 CGERADORBU_SRCS := src/app/comum/relatorios/cgeradorbu.cpp

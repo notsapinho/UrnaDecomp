@@ -35,7 +35,46 @@ const std::string CCandidaturas::RecuperaVersaoPacote(TCargoID cargo) const
     return versao->second;
 }
 
-// (original lines 94-256: content not recovered)
+
+std::vector<TCandidatoID> CCandidaturas::GetCandidatosPartido(TCargoID cargo, TPartidoID partido) const
+{
+    std::vector<TCandidatoID> candidatos;
+    for (const auto& [chave, candidatura] : m_registros) {
+        if (candidatura.GetCargoID() == cargo && candidatura.GetTitular().GetSituacao() == 0 &&
+            (partido == 0 || candidatura.GetPartidoID() == partido)) {
+            candidatos.push_back(candidatura.GetCandidatoID());
+        }
+    }
+    return candidatos;
+}
+
+bool CCandidaturas::ExisteCandidato(TCargoID cargo) const
+{
+    for (const auto& [chave, candidatura] : m_registros) {
+        if (candidatura.GetTitular().GetSituacao() == 0 && candidatura.GetCargoID() == cargo) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<TCandidatoID> CCandidaturas::GetCandidatos(TCargoID cargo) const
+{
+    std::vector<TCandidatoID> candidatos;
+    for (const auto& [chave, candidatura] : m_registros) {
+        if (candidatura.GetCargoID() == cargo && candidatura.GetTitular().GetSituacao() == 0) {
+            candidatos.push_back(candidatura.GetCandidatoID());
+        }
+    }
+    return candidatos;
+}
+
+md::CCandidatura* CCandidaturas::Busca(TCargoID cargo, TCandidatoID candidato)
+{
+    return Find(cargo * 1000000 + candidato);
+}
+
+// (original lines 133-256: content not recovered)
 #line 257
 const md::CCandidatura& GetCandidaturaAtual(const std::string& funcao)
 {
