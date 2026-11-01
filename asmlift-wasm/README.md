@@ -698,6 +698,19 @@ check rejects.
 pnpm test            # from asmlift-wasm/; URNA_ROOT=<checkout> points the suites at another urna checkout
 ```
 
+`URNA_ROOT` moves the target, the ledger, the Makefile and the build (`benchmark/src/paths.ts`). The benchmark's own
+dataset (`rows.json`, `selection.json`, `selection-inputs/`, `setups.json`) stays this package's, but for
+`selection-definitions.json`, which `selection.json` names by a repo path read through `URNA_ROOT`: an extract of
+another commit's `benchmark/` run against a checkout fails tests that commit passes. To test another commit's dataset,
+use a worktree at that commit with its own build (`tools/round/build-at.sh`).
+
+A real-link case reads functions of our link, so the link must keep them, and one the target lacks then stays in
+for the test alone: `test/splat-sub.test.ts` ("does not match AudioCollector's destructors with ASN1
+OBJECT_IDENTIFIER's") and `test/splat-symbols.test.ts` (`OID_VTABLE`) read `ASN1::OBJECT_IDENTIFIER`'s destructors and
+vtable, which unit 115's ASN.1 roots keep and the target holds nowhere. A row that needs them out (binaryen merges
+them with `api::AudioCollector`'s once that class is written) waits for those cases to read a saved pair of bodies
+instead; no lane edits them to land a match.
+
 Every test runs on the real target, `target/vota_web_wasm.wasm` of the urna checkout around this directory:
 section counts and offsets equal `wasm-objdump -h`; every function decodes and its `end` lands on
 the body size; sampled functions agree with `wasm-objdump -d` mnemonic by mnemonic and offset by

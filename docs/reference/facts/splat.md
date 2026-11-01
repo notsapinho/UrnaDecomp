@@ -500,10 +500,14 @@ Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- sp
 -E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses). These are
 7-Zip's allocators, two function pointers each: the content step places them where the target holds the same two
 integers, our table slots, which shift whenever a unit takes a function's address. So they land inside other objects
-(at c1b2630 both lie in `_ZTVN7RHVoice19str_hts_engine_implE`, at 0x18ae54), and no target piece loads them
-(`/usr/bin/grep -rlE 'i32\.const (1617516|1617524)($|[^0-9])' build/out/splat/pieces/asm | wc -l` prints 0). Read a
-range's added and dropped data lines as these too; a 7-Zip match that re-points through one would verify against the
-wrong object, and `refuteDataNames` drops only a name at another's same address (§S4).
+(at c1b2630 both lie in `_ZTVN7RHVoice19str_hts_engine_implE`, at 0x18ae54), where no 7-Zip piece loads them, and can
+sit at an address point a matched function stores: `g_BigAlloc = 0x10fce4` lay 8 bytes into `CSha512`'s vtable, at the
+address point 2684 stores, until a landing dropped it ([libraries.md](libraries.md) §B10). For one such line, grep the
+pieces for its address in decimal (`/usr/bin/grep -rlE 'i32\.const 1113316($|[^0-9])' build/out/splat/pieces/asm`
+prints `…/ecourna/2684-ecourna_api_security_CSha512_CSha512.wat`, for 0x10fce4). Read a range's added and dropped data
+lines as these too; a 7-Zip match that re-points
+through one would verify against the wrong object, and `refuteDataNames` drops only a name at another's same address
+(§S4).
 
 The scan's rows change in the same way. The rows each landing gave a new symbol under the same verdict:
 
@@ -850,7 +854,10 @@ the data. A correction frees our body for the next of the family: the rescan aft
 `kmac_gettable_ctx_params`, the name both KMAC tables (1784304, 1784400) give its slot. Rescan until a pass adds
 nothing, and check each addition the same way.
 
-The commit 0ca4765 met four more KDF getters, 13556, 13562, 13570 and 13577: a unit changed our function numbering, the
+The check covers the family, not only the new lines: run the command above for every matched member of the new
+match's family (the 7-byte getters under one id), since the name a new line should take can stand on an old, wrong
+line, and the fix is then a permutation of the family's lines. The commit 0ca4765 met four more KDF getters, 13556,
+13562, 13570 and 13577: a unit changed our function numbering, the
 census's `addr` pairs among the 7-byte getters moved with it, and step 9 named the four after the census's picks
 (`x942kdf_`, `kdf_tls1_prf_`, `sskdf_` and `kdf_sshkdf_`). Their dispatch tables hold their slots under id 7 in
 pkcs12's, pbkdf2's, krb5kdf's and kbkdf's tables, and two of those names stood since the first commit on 13522 and

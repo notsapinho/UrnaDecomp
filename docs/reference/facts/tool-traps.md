@@ -96,6 +96,20 @@ target files were fetched through a browser.
    `4725 (+13 into 4712) "Tipo de identificador inválido: {}"`, but 4725 is an `EUeRdvError` code (the second
    argument of the `CBaseError` constructor, through 3707), and its siblings 3749, 2814, 2813 and 5732 list 4726 to
    4729 the same way. The `addr` tier does not see it either: the row is `i32.const data:<seg>+3701` on both sides.
+   `pnpm wasm score` reads it so too, and the two modules' segments hash differently, so the row is `~`, one of the
+   operand-only rows, with the same integer on both sides. Matched 5640 (`md::CVotosEleicoesVota`'s constructor), from
+   `asmlift-wasm/`:
+
+   ```sh
+   pnpm --silent wasm score ../target/vota_web_wasm.wasm 5640 ../build/out/wasm/vota_web/vota_web_wasm.wasm 5983 | /usr/bin/grep -E '^score|\+3700 '
+   # score 17 over 548 rows (same 531, replaced 17 [17 operand-only], inserted 0, deleted 0)
+   # i32.const data:ba4744780c86a45e+3700                     ~ i32.const data:72ae4c3b27501483+3700
+   ```
+
+   `+3700` is the code 4724 it throws, and `+3699` beside it is 4723 (`wasm-objdump -d target/vota_web_wasm.wasm`,
+   func[5640]). So name each `~` row (`/usr/bin/grep -c ' ~ '`) before saying what an operand-only count holds: calls,
+   strings, records and typeinfos, and codes like these. Our index (5983 at bbf27ac1) is the `ours` column of
+   `splat/scan.tsv`.
 
 ## X6. `try-tu.sh --single` and exceptions
 

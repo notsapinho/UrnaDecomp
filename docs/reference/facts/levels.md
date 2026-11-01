@@ -1,10 +1,10 @@
 # Facts: optimisation levels measured on single sites
 
-What a compile level does to a site, where the level of a tree is not the question: the flags of the executable TU
-whose copies of inline code the target keeps, how to read LLVM's inlining decisions, the evidence for uenux2 at
-`-O3`, and how to measure which flags a linkonce copy has. This file is the one home of those four. The trees' flag
-sets are in [app-flags.md](app-flags.md), and §V3 is the evidence of uenux2's level. Measured at bb6f018, the parts
-marked so at 0b5f410 and d4cbc1a, on the pinned image
+What a compile level does to a site, where the level of a tree is not the question: the flags of the executable TU whose
+copies of inline code the target keeps, how to read LLVM's inlining decisions, the evidence for uenux2 at `-O3`, how to
+measure which flags a linkonce copy has, and what a body that differs only by strict aliasing takes. This file is the
+one home of those five. The trees' flag sets are in [app-flags.md](app-flags.md), and §V3 is the evidence of uenux2's
+level. Measured at bb6f018, the parts marked so at 0b5f410 and d4cbc1a, §V5 at bbf27ac1, on the pinned image
 (`TMPDIR=/tmp build/docker-build.sh …`), from the repository root, or from `asmlift-wasm/` with Node 24 first on PATH
 for `pnpm` ([workflow.md](workflow.md) §W1).
 
@@ -158,6 +158,15 @@ runs at `-O3` only and no inlining remark prints. Probe `unswitch.cpp`:
 426 (`AddField`), whose target holds one compare loop twice, chosen by a string's `__is_long()`, is this case: at the
 tree's `-O3` it holds both copies, and 18 of its 334 rows still differ (unit 31's fragment).
 
+**What the remarks leave out.** A call in a loop has a threshold of its own at `-O3`, and unswitching prints no
+remark. A call the target keeps and clang inlines at a low cost, with no flag to explain it, means the callee is in
+another TU ([placing.md](placing.md) §P2), unless it is an out-of-line constructor or destructor: at `-fPIC` a call of
+its C1 or D1 stays a call in its own TU, and no remark prints it ([codegen.md](codegen.md) §C6). A library callee is no
+other TU's: there the level decides (`-O2` inlines `std::string::append` where the target calls it, and `-O3` keeps
+the call, §V3). An unconditional `std::format` (a throw that only throws, a statement that builds a log message) with a
+literal of 37 to 74 bytes keeps a loop at `-O2` where the target has none: the level, not the source
+([reading.md](reading.md) §R13).
+
 ## V3. uenux2 builds at `-O3 -std=c++23`: every match verifies, and sites under both `mock/` and `src/` need the level
 
 uenux2 compiles at `-O3` ([app-flags.md](app-flags.md) §F6), a level being a tree's setting (how-to step 4), and at
@@ -289,20 +298,11 @@ rvalue `substr`), with a handful of C++20 forms tried; every site above reads th
 whole-tree measurement below took the tree to `-std=c++23`.
 
 **`-std=c++23`, measured on the whole tree at 84f5d8d (10186 matches).** A private link by
-[app-flags.md](app-flags.md) §F9 item 6 with `UENUX2_EXTRA=-std=c++23`, from a clone without every object that
-compiles at `UENUX2_CXXFLAGS`: the tree's sources, the `-pending.cpp` files, and `src/app/roots_cbasetype.cpp`,
-`src/app/roots_vector.cpp` and the roots of units 113, 128, 134, 136, 139 and 140, 395 objects. F9's exclude pattern
-keeps the last eight, which then link at their old flags. The dry run lists the objects whose command changes:
-
-    P=build/out/flags-cxx23; mkdir -p $P/app
-    make -n -C src link APP=$P/dry OUT=$P/dry/wasm OUT_NAMED=$P/dry/named UENUX2_EXTRA=-std=c++23 | /usr/bin/grep -F -- '-std=c++23' \
-      | /usr/bin/grep -oE -- "-o [^ ]+\.o" | sed "s#^-o .*$P/dry/#/#" | sort -u > $P/exclude.txt
-    wc -l < $P/exclude.txt
-      395
-    rsync -a --exclude-from=$P/exclude.txt build/out/app/ $P/app/
-    TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web UENUX2_EXTRA=-std=c++23
-
-Then F9's map, kinds, `splat-kinds` and `splat-build` with the re-keyed list:
+[app-flags.md](app-flags.md) §F9 item 6 with `UENUX2_EXTRA=-std=c++23` (`P=build/out/flags-cxx23`), from the clone
+its dry run gives with `-std=c++23` in place of `-fstrict-aliasing`: without every object that compiles at
+`UENUX2_CXXFLAGS`, the tree's sources, the `-pending.cpp` files, and `src/app/roots_cbasetype.cpp`,
+`src/app/roots_vector.cpp` and the roots of units 113, 128, 134, 136, 139 and 140, 395 objects at 84f5d8d. Then F9's
+map, kinds, `splat-kinds` and `splat-build` with the re-keyed list:
 
     Error: …/matched.txt: 3 matched functions no longer verify:
       … function 9060 … is UNRESOLVED: ours +0xe3 i32.const 3044: a table slot of ours: _ZNSt3__26vectorIcNS_9allocatorIcEEE18__assign_with_sizeB8ne210108INS_11__wrap_iterIPKcEES8_EEvT_T0_l has no target function
@@ -378,7 +378,10 @@ Rows of a probe's object compared with the target, before binaryen, are a lead a
 destructor nearest at two levels and another at four. wasm-ld keeps the first object's copy, so an object that only uses
 the class, first on the link line, wins each linkonce symbol, wasm-ld drops the probe's own functions, and the scan says
 what that copy gives. The first object of `link.cmd` is the executable TU's (unit 170), so the probe goes before it.
-About a minute at 0b5f410, from the repository root, with `$V` under `build/out/`:
+A probe of that TU's own copies takes its flags from `make -s -C src print-VOTA_WEB_CXXFLAGS` (`-Oz -fexceptions -fPIC
+-std=c++23 -DNDEBUG -fno-strict-aliasing …` at bbf27ac1): `try-tu.sh` has no route to them, and `--print-flags
+--component uenux2/wasm/vota_web` prints the tree's `-O3` line. About a minute at 0b5f410, from the repository root,
+with `$V` under `build/out/`:
 
     V=build/out/variant-probe; n=d2; d=$V/wasm/$n; mkdir -p $d $V/obj
     printf '%s\n' '#include <istream>' '#include <ostream>' '#include "asn1.h"' 'void probe_dec(std::istream& s, ASN1::AbstractData& d) { ASN1::AVNDecoder dec(s); d.accept(dec); }' > $V/obj/$n.cpp
@@ -398,3 +401,45 @@ and the fragment that lands it names that TU. The same probe with `AVNEncoder` m
 -std=c++20 -DNDEBUG`, the executable TU's level (§V1), and neither at uenux2's flags. Each such scan keeps the committed
 symbol file and ledger, so other rows move and it is a lead for them ([app-flags.md](app-flags.md) §F9). It names no
 name, and a probe object lands nowhere.
+
+## V5. Strict aliasing by directory: a body that differs only by it
+
+uenux2 compiles with strict aliasing in the directories `UENUX2_TBAA_DIRS` lists in `src/Makefile` (`src/api/`,
+`src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`) and without it elsewhere;
+[app-flags.md](app-flags.md) §F6 has the evidence and the measurement of the split, and [reading.md](reading.md) §R21
+reads the setting from a body. Measured at bbf27ac1.
+
+- **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
+  written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object
+  at the other setting, one variant object in the plain link ([workflow.md](workflow.md) §W13).
+- **The split is the tree's flag.** A directory moved into or out of the list is a flag change, measured on the whole
+  link by F6's recipe, and it lands as a commit of its own only when it gains rows and loses no match. A lane reports
+  such a measurement; it does not change the list.
+- **The list drops every `-fno-strict-aliasing` of a line**, an `UENUX2_EXTRA` one too (`uenux2_cxxflags` in
+  `src/Makefile`). So `UENUX2_EXTRA=-fno-strict-aliasing` does not reach a listed directory; `UENUX2_TBAA_DIRS=` on the
+  command line builds the whole tree without strict aliasing, and `UENUX2_EXTRA=-fstrict-aliasing` gives it to the
+  others, each in a private link ([app-flags.md](app-flags.md) §F9 item 6). The count of each compile line's
+  `-fno-strict-aliasing`:
+
+      make -n -B -C src "$PWD/build/out/app/uenux2/src/api/util/cwait.cpp.o" UENUX2_EXTRA=-fno-strict-aliasing | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -c -e '-fno-strict-aliasing'
+        0
+      make -n -B -C src "$PWD/build/out/app/uenux2/src/app/comum/dados/crdvvota.cpp.o" UENUX2_EXTRA=-fno-strict-aliasing | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -c -e '-fno-strict-aliasing'
+        1
+      make -n -B -C src "$PWD/build/out/app/uenux2/src/api/util/cwait.cpp.o" UENUX2_TBAA_DIRS= | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -c -e '-fno-strict-aliasing'
+        1
+
+- **A companion keeps the flag.** A `-roots.cpp` or `-pending.cpp` rule that compiles at `$(UENUX2_CXXFLAGS)` keeps
+  `-fno-strict-aliasing` in a listed directory too:
+
+      make -n -B -C src $(make -s -C src print-LINK_OBJS) | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -E -- '-(roots|pending)\.o( |$)' > build/out/levels-probe/companion-lines.txt
+      wc -l < build/out/levels-probe/companion-lines.txt; /usr/bin/grep -c -e '-fno-strict-aliasing' build/out/levels-probe/companion-lines.txt
+        194
+        58
+
+  At b6868d9 each such line compiled again without the flag gives 52 objects `cmp`-equal and 7 not (113, 154 and
+  183's roots, 158, 159, 82 and 98's pending), and every one of the 21 matched functions those 7 supply has the same
+  code both ways (`wasm-objdump -d`, the byte columns dropped): no match rests on the flag, and the roots of units 97,
+  113 and 154 say so. `src/units/README.md` "Companion files" has the rule that follows: such a companion is compared
+  both ways when it lands and at every change of the split.
+- **Read the base's flags, not a brief's.** `git grep -n UENUX2_TBAA_DIRS <base> -- src/Makefile` says whether the
+  split is on a lane's base; a row a brief calls closed by it is open on a base without it.

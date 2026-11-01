@@ -426,7 +426,9 @@ The recipe used for 7-Zip, RHVoice and Boost:
 
 On all three libraries objects at -O3 beat -O2 > -Os > -Oz, `-flto` loses, and `-std=c++20` changes nothing
 measurable. The paired fraction stays low (7-Zip 19 % of bytes, RHVoice 4 %, Boost 4 %) because the probe's
-inlining context is not the app's: enough to rank releases, not a byte reproduction.
+inlining context is not the app's: enough to rank releases, not a byte reproduction. Dead-argument elimination is
+the link's to judge too: a probe folds a constant fewer calls down than the whole link (B10, "Dead arguments"), so a
+body that differs from the probe's in a folded parameter alone is read in the whole link.
 
 ## B10. libqrencode 4.1.1, at CMakeLists.txt's flags, reached through one TSE caller
 
@@ -522,3 +524,38 @@ says otherwise:
   stores (`awk '/^[0-9a-f]+ func\[/{f=$2} /i32\.const [0-9]+$/{v=$NF+0; if (v>=1113316 && v<1113324) print f, v}'
   build/dump/vota.objdump.txt` prints `func[2684]: 1113316`). 2684 matches with and without it, through the vtable's
   own line.
+
+## B11. Adding a library to the link
+
+A library the target links and our link lacks takes the pieces zlib (fragment 06) and libqrencode (fragment 187) have,
+in the commit that adds it:
+
+1. **Its source** at the release B9 pins: a `clone_at` line in `tools/setup/bootstrap.sh` (the tag and its commit) and
+   a row and a section in `third_party/MANIFEST.md`.
+2. **CI's fetch.** CI runs in a fresh clone holding only the `third_party/` trees `.github/workflows/ci.yml` fetches,
+   zlib's and libqrencode's (`.github/CI.md` says why), and the benchmark's registry check and tests run `make -n -B`
+   over the setups' objects, which stops on a rule that reads a tree the clone lacks (a library object's source, or a
+   header a roots file includes; [workflow.md](workflow.md) §W25 has the message), while every local check passes.
+   The new tree's fetch goes beside zlib's, with the step's conditions, and into `.github/CI.md`.
+3. **Its objects**, compiled by a rule of the fragment at the library's own flags (`ZLIB_CFLAGS`, `QRENCODE_CFLAGS`)
+   and appended to `RHVOICE_OBJS`, after RHVoice: `LINK_OBJS` has no slot among the trees' objects a fragment can
+   reach, so where the target puts the library (libqrencode's among uenux2's `api` objects, B10 "The place") our link
+   cannot follow. The companions' slot (`override EXTRA_OBJS +=`) gave libqrencode the same matches.
+4. **A benchmark setup of its own**, `make` over the objects' variable (`ZLIB_OBJS`, `QRENCODE_OBJS`), listed before
+   `rhvoice-ignore` and `rhvoice`: an `artefact` setup takes every object of its variables no earlier setup took, so
+   without one the library's objects pass `pnpm bench setups --check` as `rhvoice`'s, at RHVoice's flags. Read the
+   object counts, not only the exit status (from `asmlift-wasm/`):
+
+   ```sh
+   TMPDIR=/tmp pnpm --silent bench setups | /usr/bin/grep -E '^(zlib|libqrencode|rhvoice)\b'
+   # zlib  [ok, 13 objects]  zlib 1.3.1 + minizip
+   # libqrencode  [ok, 9 objects]  libqrencode 4.1.1
+   # rhvoice-ignore  [ok, 1 object]  RHVoice 1.14.0, the core objects built at -fignore-exceptions (userdict.cpp)
+   # rhvoice  [ok, 52 objects]  RHVoice 1.14.0 core (+ hts_engine and sonic in C)
+   ```
+
+   At 686cdd1b, before the `libqrencode` setup, `rhvoice` read 61 objects, libqrencode's nine among them, and the check
+   exited 0. The setup's rows come from a re-selection
+   ([asmlift-wasm/benchmark/README.md](../../../asmlift-wasm/benchmark/README.md) "Re-selecting").
+5. **Its TSE caller**, while unwritten, a roots stand-in that makes the target caller's calls with its constants
+   (`187-libqrencode-encodestring-roots.cpp` for 5502).
