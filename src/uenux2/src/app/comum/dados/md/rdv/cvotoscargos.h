@@ -29,6 +29,18 @@ public:
 
     explicit CVotosCargos(TMapa mapa);
 
+    // Accessors comum::CRdvVota's slots 0 and 1 (fns 5733, 11490) and md::CVotosEleicoesVota::Comparecimento (fn 5639)
+    // need: they walk the map's nodes, and 5639 divides the first cargo's vote count by its quantidadeEscolhas (the
+    // byte at +9). The names and their being in the class are chosen.
+    const TMapa& GetMapa() const { return m_mapa; }
+    TQtdVoto Comparecimento() const
+    {
+        const auto& [cargo, votos] = *m_mapa.begin();
+        return votos.Total() / cargo.quantidadeEscolhas;
+    }
+
+    // The sum of the cargos' quantidadeEscolhas (fn 5642, called twice by fn 4454); its name is chosen.
+    uebyte QuantidadeEscolhas() const;
     const CVotos& GetVotos(TCargoID cargo) const;
     TQtdVoto Candidato(TCargoID cargo, std::string numero) const;
     TQtdVoto Legenda(TCargoID cargo, std::string numero) const;
@@ -38,6 +50,9 @@ public:
     TQtdVoto Nulos(TCargoID cargo) const;
     TQtdVoto Brancos(TCargoID cargo) const;
     TQtdVoto Cargo(TCargoID cargo) const;
+    // Out of line: md::CVotosEleicoesVota::Compativel (fn 5638) holds it inlined by binaryen, its result tested again.
+    // The name is chosen.
+    bool Compativel(const CVotosCargos& outro) const;
 
 private:
     TMapa m_mapa;

@@ -327,11 +327,6 @@
 // f5634 · 2021 B · unmatched · placement: link order · name unknown
 // void f5634(i32, i32, i32) { ... }
 
-// link-order cluster 806 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoscargos.cpp
-
-// f5642 · 291 B · unmatched · placement: link order · name unknown
-// ? f5642(i32) { ... }
-
 // link-order cluster 809 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/ccargo.cpp
 
 // f5655 · 23 B · unmatched · placement: link order · name unknown
@@ -1090,9 +1085,6 @@
 // ? f5626(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 805 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f5638 · 598 B · unmatched · placement: link order · name unknown
-// ? f5638(i32, i32) { ... }
 
 // f5637 · 222 B · unmatched · placement: link order · name unknown
 // ? f5637(i32, i32, i32, i32, i32, i32, i32, i32, i32) { ... }

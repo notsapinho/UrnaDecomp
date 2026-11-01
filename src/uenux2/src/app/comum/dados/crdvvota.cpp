@@ -32,9 +32,66 @@ std::mutex CRdvVota::s_mutex;
 
 CRdvVota::~CRdvVota() = default;
 
-} // namespace comum
+CRdv::TVotosCargo CRdvVota::GetVotos() const
+{
+    TVotosCargo votos;
+    for (const auto& [eleicao, votosCargos] : m_votos.GetMapa()) {
+        for (const auto& [info, votosCargo] : votosCargos.GetMapa()) {
+            votos.emplace(info.cargo, votosCargo.GetVotos());
+        }
+    }
+    return votos;
+}
 
-// <stubs>
-// f11487 · 707 B · unmatched · name unknown
-// void f11487(i32, i32) { ... }
-// </stubs>
+md::TQtdVoto CRdvVota::Comparecimento(md::TEleicaoID eleicao) const
+{
+    return m_votos.Comparecimento(eleicao);
+}
+
+CRdv::TVotosCargo CRdvVota::GetVotos(md::TEleicaoID eleicao) const
+{
+    TVotosCargo votos;
+    for (const auto& [info, votosCargo] : m_votos.GetVotos(eleicao).GetMapa()) {
+        votos.emplace(info.cargo, votosCargo.GetVotos());
+    }
+    return votos;
+}
+
+md::TQtdVoto CRdvVota::Legenda(md::TCargoID cargo, int numero) const
+{
+    const std::string numeroLegenda = CStringUtils::PreencheAEsquerda(std::to_string(numero), '0', m_digitosPartido);
+    return m_votos.Legenda(cargo, numeroLegenda);
+}
+
+md::TQtdVoto CRdvVota::Partido(md::TCargoID cargo, int numero) const
+{
+    const std::string numeroPartido = CStringUtils::PreencheAEsquerda(std::to_string(numero), '0', m_digitosPartido);
+    return m_votos.Partido(cargo, numeroPartido);
+}
+
+md::TQtdVoto CRdvVota::Nominais(md::TCargoID cargo) const
+{
+    return m_votos.Nominais(cargo);
+}
+
+md::TQtdVoto CRdvVota::Legendas(md::TCargoID cargo) const
+{
+    return m_votos.Legendas(cargo);
+}
+
+md::TQtdVoto CRdvVota::Nulos(md::TCargoID cargo) const
+{
+    return m_votos.Nulos(cargo);
+}
+
+md::TQtdVoto CRdvVota::Brancos(md::TCargoID cargo) const
+{
+    return m_votos.Brancos(cargo);
+}
+
+md::TQtdVoto CRdvVota::Cargo(md::TCargoID cargo) const
+{
+    return m_votos.Cargo(cargo);
+}
+
+} // namespace comum

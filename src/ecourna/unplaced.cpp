@@ -297,11 +297,6 @@
 // f3687 · 3817 B · unmatched · placement: link order · name unknown
 // void f3687(i32, i32, i32, i32) { ... }
 
-// link-order cluster 999 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/municipiozona/cmunicipio.cpp
-
-// f3708 · 173 B · unmatched · placement: link order · name unknown
-// ? f3708(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1008 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cfotos.cpp
 
 // f3759 · 351 B · unmatched · placement: link order · name unknown

@@ -58,8 +58,10 @@
 # operand-only).
 #
 # Not matched, and what each waits for (this unit's -pending.cpp names the traps):
-# - 11354, CConversorVoto::DoDesconverte: CVoto's constructor, fn 2256 (cvoto.cpp:80), is not written; the
-#   -pending.cpp header has 11354's source and what was measured.
+# - 11354, CConversorVoto::DoDesconverte, is no longer in this list: it is written in cconversorvoto.cpp with the static
+#   DesconverteTipo it inlines (records :71 and :75, on lines 49 to 76) and matches, over CVoto's constructor (fn 2256,
+#   unit 13's cvoto.cpp, written and not matched: unit 13's fragment says why), which the call names, and a
+#   callers+content hand line for Voto::digitacao's theInfo in splat/symbol_addrs.txt.
 # - 11398, CConversorEstadoGeral::DoDesconverte: CEstadoGeral's constructor, fn 5637, which calls fn 1249 (no name).
 # - 11399 and 11400, CConversorDadoCorrespondencia's slots (11397 builds the class on its stack): the correspondence's
 #   dates through api::CDateTime.

@@ -27,7 +27,9 @@ public:
 
     bool EhNominal() const;
     bool EhLegenda() const;
-    bool EhNulo() const;
+    // Inline: the target's copy (fn 11316, the one md::CVotosCargos::Nulos passes) calls the static EhNulo (fn 5645);
+    // defined in cvoto.cpp beside the static, it held the static inlined (9 over 13 rows, 8 inserted).
+    bool EhNulo() const { return EhNulo(m_tipo); }
     bool EhBranco() const;
 
     static bool EhNulo(ETipo tipo);

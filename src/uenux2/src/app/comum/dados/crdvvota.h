@@ -25,8 +25,8 @@ public:
     static CRdvVota& GetInst();
     static void CreateInst();
 
-    std::set<md::TCargoID> GetCargos() const override;
-    const md::CVotosCargos& GetVotos(md::TEleicaoID eleicao) const override;
+    TVotosCargo GetVotos() const override;
+    TVotosCargo GetVotos(md::TEleicaoID eleicao) const override;
     md::TQtdVoto Comparecimento(md::TEleicaoID eleicao) const override;
     md::TQtdVoto Candidato(md::TCargoID cargo, uedword numero, uebyte digitos) const override;
     md::TQtdVoto Legenda(md::TCargoID cargo, int numero) const override;

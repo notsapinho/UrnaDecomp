@@ -36,7 +36,10 @@
 #   emplace_back at -O2 and push_back at -O3 is the same, masked.
 # - 11352 and 11351, CConversorVotosCargo::DoConverte and DoDesconverte, and 11350, CConversorEleicoesVota::DoConverte,
 #   waited for uenux2 at -O3; at the tree's -O3 11352 matches, and 11351 and 11350 differ by the scores the private
-#   -O3 link below gave, which the plain link gives too (pnpm wasm score): what is left is not explained. What was
+#   -O3 link below gave, which the plain link gave too at -std=c++20 (pnpm wasm score): what is left is not explained.
+#   At the tree's -std=c++23, in the link that writes unit 13's CRdvVota slots, 11351 is 87 over 1235 rows (82
+#   operand-only, 2 inserted, 3 deleted) and 11350 94 over 870 (91 operand-only, 3 deleted: the target stores a new
+#   allocation's pointer at +24 of its frame, then at +20, where ours stores it at +20 alone). What was
 #   measured at -O2 and -O3: ecourna's IConversorASN Converte and Deconverte, which 11352 and 11351 hold for
 #   CConversorCargoID, append ": " with std::string::operator+=(const char*), which clang leaves out of line in that cold
 #   path at both levels; at -O2 it inlines append into it, and binaryen folds the literal into our copy, which no target
