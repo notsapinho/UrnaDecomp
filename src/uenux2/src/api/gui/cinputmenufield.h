@@ -29,7 +29,9 @@
 // at +8; fn 1693 builds the item with the menu at +0, its number at +4, the text, the position at +20, the menu's font
 // at +24, the callback, an empty rectangle at +56, the bools at +64 and +65 (0 and 1), the number as text at +68
 // (std::to_string) and an empty string at +96. Every data member's name, the names of LimpaSelecao, SelecionaItem,
-// Reposiciona, Desloca and Pisca, their parameters and the friendship are chosen.
+// Reposiciona, Desloca, Pisca and GetTextoFormatado (fn 5492, the text an item shows: its format with "%S" and "%T"
+// replaced by the search text and the text), their parameters and the friendship are chosen. SetSearchText, UpdateRect
+// and Draw have their names and types from their records (cinputmenufield.cpp 142, 49, 74).
 //
 // The constructor is declared and not defined. fn 3675 builds the menu with std::make_shared, a 184-byte block, and holds
 // the constructor inlined, its second prologue among the block's stores: it stores the position's four bytes at +92, the
@@ -71,10 +73,18 @@ public:
         m_posicao = posicao;
     }
 
+    CMenuItem& SetSearchText(const std::string& busca);
+
+    void UpdateRect();
+
+    void Draw() const;
+
     void Pisca();
 
 private:
     friend class CInputMenuField;
+
+    std::string GetTextoFormatado() const;
 
     CInputMenuField* m_menu;                       // +0
     int m_indice;                                  // +4

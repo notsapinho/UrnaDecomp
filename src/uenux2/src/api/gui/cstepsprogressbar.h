@@ -31,6 +31,20 @@ struct SPathCommand {
         CLOSE = 3,
     };
 
+    SPathCommand() = default;
+
+    SPathCommand(EType tipo, double x, double y, double raioX = 0, double raioY = 0, double anguloInicial = 0,
+                 double anguloVarredura = 0)
+        : tipo(tipo)
+        , x(x)
+        , y(y)
+        , raioX(raioX)
+        , raioY(raioY)
+        , anguloInicial(anguloInicial)
+        , anguloVarredura(anguloVarredura)
+    {
+    }
+
     EType tipo = MOVE_TO;
     double x = 0;
     double y = 0;
@@ -65,6 +79,8 @@ public:
     void Move(const SPoint& posicao) override;
 
 private:
+    void Recalcula(IScreen& screen) const;
+
     // a segment of the bar as Draw computes it (28 bytes: the vector at +0, the point at +12, the text at +16)
     struct SSegmento {
         std::vector<SPathCommand> contorno;
@@ -86,7 +102,7 @@ private:
     TColor m_corTextoPendente;
     TColor m_corBorda;
     mutable bool m_recalcular = true;       // +76: Draw rebuilds m_segmentos when set, Move sets it
-    SFont m_font = {10, 1};                 // +80: the font of the steps' text
+    mutable SFont m_font = {10, 1};         // +80: the font of the steps' text
     mutable std::vector<SSegmento> m_segmentos;   // +88
 };
 

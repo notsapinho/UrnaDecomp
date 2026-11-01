@@ -179,6 +179,9 @@ $(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/sr
 # the same for IConversorASN's members (src/app/roots_iconversorasn.cpp); the include paths are its headers' (the modules, Boost)
 $(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS) $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -Isrc/asn1/modules -I$(BOOST_HDR) -c src/app/roots_iconversorasn.cpp -o $(R)
+# std::basic_regex<char>'s copies that are ecourna's code in the target, ahead of uenux2's objects (src/app/roots_regex.cpp)
+$(ROOT)/$(APP)/roots_regex.o: $(ROOT)/src/app/roots_regex.cpp $(ROOT)/src/Makefile
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(ECOURNA_CXXFLAGS) -c src/app/roots_regex.cpp -o $(R)
 # the executable TU's copies of vector<unsigned char>'s destruction (fns 306, 520, 4967) and vector<CDadoCorrespondencia>'s
 # (5294, 1698, 5532, 9873), ahead of both trees' objects and without strict aliasing, which 4967 needs
 # (src/app/roots_vector.cpp)
@@ -221,7 +224,7 @@ APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_
 
 # ---- link order (the executable TU first, VOTA_WEB_OBJS above; then the stand-ins, votaInit's first; app before
 # libraries; libraries in this order) --------
-APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
+APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_regex.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=
