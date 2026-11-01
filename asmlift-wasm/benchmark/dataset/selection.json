@@ -1,7 +1,7 @@
 {
-  "version": 12,
+  "version": 13,
   "per": 12,
-  "commit": "65498db93d3e77a8c6db694d14b564dc8ed11047",
+  "commit": "6c1e2bef7f160fb8926610ce6adb112133614a0b",
   "inputs": {
     "target": {
       "path": "target/vota_web_wasm.wasm",
@@ -13,11 +13,11 @@
     },
     "ledger": {
       "path": "ledger/functions.tsv",
-      "blob": "784c0019da5473900228445c15a8dc810636e347"
+      "blob": "734d05faeb9db2c410007bc4575951b864de8236"
     },
     "setups": {
       "path": "asmlift-wasm/benchmark/dataset/setups.json",
-      "blob": "779cc6cbf8073044d9b1536f5374207b661ac8fa"
+      "blob": "38bf65c5b817eb1283e324f22ee0a689510fd713"
     },
     "sources": {
       "src/asn1/AVNDecoder.cxx": "763af3ce5d6453b479effd0ed4fc6daf438332d7",
@@ -33,23 +33,24 @@
       "src/ecourna/app/dados/parametrizacaourna/cparametrosurna.cpp": "6876a658873836b495f7d8747ef10ee49a9ee9a0",
       "src/ecourna/app/dados/resultadournacadastro/cestadocomparecimento.cpp": "9fb63c1a364a061e938e1ec53ebf925b9de6b98e",
       "src/ecourna/app/dados/resultadournacadastro/cidentificacaojustificativa.cpp": "818cf9c9a5e80cc89cb8d63d9e90250e581ab8de",
-      "src/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp": "6742aef3165f116b814a563e6389c54e8f95cd19",
-      "src/uenux2/src/api/gui/cframedtext.cpp": "2c497fd55c2c7c4c1d031963080a26874de7cbfd",
+      "src/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp": "0572e1d212cafa9d3e6156d530789142878f6cee",
+      "src/uenux2/src/api/gui/cframedtext.cpp": "35e076f88a030e1615df5b5427f75084f6fc06cd",
       "src/uenux2/src/api/hwil/iimpressorarelatorios.cpp": "8e7041a5b2bf556d7cce67a368fc10a8b34bd99b",
       "src/uenux2/src/app/comum/appinfo/cappinfosingleton.cpp": "49eacf999ee7c69ff8750156c1d0a17681692b87",
-      "src/uenux2/src/app/comum/asn/cconversorcodigocargoconsulta.cpp": "fc5f77b5d70a7edd837d4096891f442f8027cb21",
+      "src/uenux2/src/app/comum/cappstatecontext.cpp": "c1eed7e60651c984c127b3353923c351d0562594",
       "src/uenux2/src/app/comum/dados/ccandidaturas.cpp": "3cbd0fd4e252677d07ca47683c21d3e22b439d88",
-      "src/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadolocal.cpp": "e1fb85f5bc26c6763dc3e2f2ab57b81036c9ebcb",
-      "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp": "79099651e4140daa04ef345ff69c15c7b1bba54f",
+      "src/uenux2/src/app/comum/dados/md/eleitor/celeitordadoshabilitacaobiometrica.cpp": "10953ce8d7b9580617ea5c1433b1b4d5c5809765",
+      "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp": "f8e2f28c6073f96ff9658c844eb139dd035a697b",
+      "src/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp": "a21954f1cf6178c85d7d9c79ec5f46a2877bda09",
       "src/uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp": "fbd5a065e14ee8956c7783897f4ce183368778b9",
       "src/uenux2/wasm/vota_web/vota_web_wasm.cpp": "843fb256e11aed37d5fd8bcc85d78944458393dc",
       "tools/libs/7zip/sources.txt": "de7f5cdbcc930f24960d18ab7e1631df01d330b4"
     },
     "definitions": {
       "path": "asmlift-wasm/benchmark/dataset/selection-definitions.json",
-      "sha256": "fb3e9b9e48fdb4357ef3508adaa9fcc296754d16923efb2a6faff081d1a9cd76",
-      "names": 7757,
-      "build": "65498db93d3e77a8c6db694d14b564dc8ed11047"
+      "sha256": "d7ff57c2b60e37d7f72be625176308999d03c91025af9a5348ef30a8b090f74e",
+      "names": 7836,
+      "build": "6c1e2bef7f160fb8926610ce6adb112133614a0b"
     }
   }
 }
