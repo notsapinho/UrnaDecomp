@@ -5326,7 +5326,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5460	-	-	-	no-candidate	no symbol and no ledger pair	73	none	ecourna	0	-
 5461	-	-	-	no-candidate	no symbol and no ledger pair	1341	none	comum	0	-
 5462	-	-	-	no-candidate	no symbol and no ledger pair	227	none	app	0	-
-5463	_ZN3api7CSystem10GetMemInfoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	5515	symbol	match	readings: address string	1093	none	vota	1	app/uenux2/src/api/util/csystem.cpp.o
+5463	_ZN3api10GetMemInfoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE	5515	symbol	match	readings: address string	1093	none	vota	1	app/uenux2/src/api/util/csystem.cpp.o
 5464	-	-	-	no-candidate	no symbol and no ledger pair	110	none	comum	0	-
 5465	-	-	-	no-candidate	no symbol and no ledger pair	258	none	comum	0	-
 5466	_ZNK3api12CGenericTags9AppendTLVERNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKS7_SA_	5511	symbol	match	readings: address string,table slot,address srcloc,address symbol	627	none	ecourna	1	app/uenux2/src/api/util/cgenerictags.cpp.o

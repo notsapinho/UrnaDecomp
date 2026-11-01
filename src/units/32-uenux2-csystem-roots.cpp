@@ -23,7 +23,7 @@
 // api::RemoveTree (target fn 5458) is called by itself and by 5455 (csystem.cpp's TemporaryPath, PrepareReplace and
 // ReplaceResource records), not reconstructed: RemoveUmaArvore stands for 5455 with one call site, which with
 // RemoveTree's own recursive call gives it the two the target has.
-// GetFreeSpace, GetUsedSpace and GetMemInfo (target fns 5454, 5453 and 5463) are each called twice by 10226
+// api::GetFreeSpace, GetUsedSpace and GetMemInfo (target fns 5454, 5453 and 5463) are each called twice by 10226
 // (vota::CThreadMonitor's slot 2), not reconstructed: MedeEspaco stands for it with two call sites of each.
 // The stand-ins' bodies differ, so wasm-opt merges none of them, and no argument is the same constant at every call
 // site but CopyFile's folded bool, which the target folds too, so dead-argument elimination folds no other. They are
@@ -39,9 +39,9 @@ void w2761_root_0(int) __asm__("_ZN3api7CSystem8ZeroFillERKNSt3__212basic_string
 void w2760_root_0(int) __asm__("_ZN3api7CSystem10RemoveFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w378_root_0(int, int, int, int) __asm__("_ZN3api7CSystem8CopyFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_bb");
 int w5458_root_0(int) __asm__("_ZN3api10RemoveTreeERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
-long long w5454_root_0(int) __asm__("_ZN3api7CSystem12GetFreeSpaceERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-long long w5453_root_0(int) __asm__("_ZN3api7CSystem12GetUsedSpaceERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-int w5463_root_0(int) __asm__("_ZN3api7CSystem10GetMemInfoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+long long w5454_root_0(int) __asm__("_ZN3api12GetFreeSpaceERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+long long w5453_root_0(int) __asm__("_ZN3api12GetUsedSpaceERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+int w5463_root_0(int) __asm__("_ZN3api10GetMemInfoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 void w11584_root_0(int, int) __asm__("_ZN3api7CSystem6RenameERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
 }
 

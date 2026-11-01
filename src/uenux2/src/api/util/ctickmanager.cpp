@@ -105,8 +105,6 @@ inline uebyte CTickManager::SearchNextId()
 
 namespace {
 
-// Reconstruction's note: no target function holds this loop out of line, clang inlines it into GetExpiredTicks; its
-// name is chosen, and unit 02's fragment says why it is a function of its own.
 void NormalizaMicrossegundos(timeval& tempo)
 {
     while (tempo.tv_usec >= MICROSSEGUNDOS_POR_SEGUNDO) {

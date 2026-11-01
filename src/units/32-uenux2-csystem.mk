@@ -10,8 +10,8 @@
 #   378   CSystem::CopyFile              records at lines 390 to 476 (7041 to 7048), with AlteraDono and AlteraPermissoes
 #                                        inlined; 5456, the std::format arguments' builder it shares with Rename
 #   Rename                               record at line 692, col 15 (7058); no target index (inlined into fn 11584)
-#   5458, 5454, 5453  RemoveTree, GetFreeSpace, GetUsedSpace, no record: written, no-candidate (below)
-#   5463  CSystem::GetMemInfo, no record
+#   5458, 5454, 5453  api::RemoveTree, GetFreeSpace, GetUsedSpace, no record: written, no-candidate (below)
+#   5463  api::GetMemInfo, no record
 #   libc's chmod, chown, utime and rename (3997, 6281, 6238, 3974), which CopyFile and Rename call
 # truncate is external and not in the header: in the target's run of this file's records, its record (address 1584900,
 # line 1024) sits in line order among the external functions' ones, before ZeroFill's (1584916, line 1039); clang defers
@@ -87,11 +87,18 @@
 # into its one caller, gives `164 over 1951 rows`, every row an operand, and the match; that it is out of line, in
 # csynchronizer.cpp, is a choice that gives those bytes.
 # Rename (record 692:15) has no target index: binaryen inlines it into its one caller, fn 11584 (comum::CGravadorLog's
-# slot 7, not written). It is written because its std::format of two strings and a char* shares the arguments' builder
-# (fn 5456, a libc++ instance this object emits) with CopyFile, which the target calls from both: binaryen inlines a
-# function with one caller (docs/how-to-decompile.md step 3), so Rename is what keeps 5456 out of line, a reading (a
-# link without Rename was not measured). Rename also gives libc's rename (fn 3974) a second caller
-# in our link beside 7-Zip's MyMoveFile (wasm-objdump -d of the link), and 3974 matches. The libc callees chmod (3997) and chown (6281), called twice by the helpers, and utime (6238) match.
+# slot 7, not written), so its body is compared with nothing by the splat build (docs/reference/splat.md "Reviewing a
+# match"). Compared by hand (`pnpm wasm fn` of target 11584 and of the roots' RenomeiaUma, which holds our copy of it
+# inlined, the callees named by splat/matched.txt, the symbol file and names.tsv): the copy in 11584 has a stack-pointer
+# prologue of its own of 528 B, as ours has, and the same 13 calls in the same order, memcmp, rename,
+# __cxa_allocate_exception, __strerror_l, 5456, __try_constant_folding, __vformat_to, ~locale, a basic_string
+# constructor, emscripten_builtin_free, ~__optional_destruct_base, CBaseError<EUeUtilError>'s constructor (after
+# 7058, both) and __cxa_throw. The rest of the body, store by store, was not compared. It is written because its std::format of two
+# strings and a char* shares the arguments' builder (fn 5456, a libc++ instance this object emits) with CopyFile, which
+# the target calls from both: binaryen inlines a function with one caller (docs/how-to-decompile.md step 3), so Rename
+# is what keeps 5456 out of line, a reading (a link without Rename was not measured). Rename also gives libc's rename
+# (fn 3974) a second caller in our link beside 7-Zip's MyMoveFile (wasm-objdump -d of the link), and 3974 matches. The
+# libc callees chmod (3997) and chown (6281), called twice by the helpers, and utime (6238) match.
 # RemoveTree (5458) has no record. ledger/tu-clusters.tsv stretch 763 (5453 to 5461) is labelled csystem.cpp, and in
 # use band 2 the target runs 5459 (ExistDir), 5458, 5457 (truncate), 5456, a higher index linking first, so 5458 is an
 # external function defined between ExistDir and truncate (docs/how-to-decompile.md step 3, "What a record's place
@@ -128,6 +135,15 @@
 # ExistDir in csystem.cpp or in a file that sorts between the two (docs/reference/facts/placing.md P5: the side taken
 # is a choice). It is written at the end of csystem.cpp, as the free lines above ExistResource's record are too few
 # for it.
+# GetFreeSpace, GetUsedSpace and GetMemInfo read no state of CSystem, which is no singleton, so they are free functions
+# (docs/how-to-decompile.md step 3, "Names no evidence gives": a member only when it reads private state or helps a
+# singleton class). Nothing names a class for them: they load no record, no table slot holds them (`pnpm wasm fn`),
+# the symbol file has no line of evidence for them, their one caller is 10226 (ledger/callgraph.tsv), and a direct
+# call is the same for a static member and a free function. Chosen: their namespace, api, the one of the file they are
+# written in (step 3's "the namespace of its caller's class" is said of an inlined helper; their caller is vota's), and
+# their declarations in api/util/csystem.h. Written as static members of CSystem, the three gave the same object:
+# wasm-objdump -d and -x -r of csystem.cpp.o under either form differ in their three symbols alone, and 5463 matched
+# under either name.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSYSTEM_SRCS := src/api/util/csystem.cpp
 UENUX2_SRCS += $(CSYSTEM_SRCS)
