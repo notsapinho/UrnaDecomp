@@ -3,7 +3,7 @@
 A unit is a set of reconstructed translation units that landed together. Its fragment, `<name>.mk`, is a piece of
 Makefile that `src/Makefile` reads: it appends the unit's sources to `ECOURNA_SRCS` (paths relative to
 `src/ecourna`, compiled with `ECOURNA_CXXFLAGS`) or `UENUX2_SRCS` (paths relative to `src/uenux2`, compiled with
-`UENUX2_CXXFLAGS`, the object keeping the path), and adds whatever the unit needs beyond that: prerequisites the
+`UENUX2_CXXFLAGS`, without `-fno-strict-aliasing` in the directories `UENUX2_TBAA_DIRS` lists, the object keeping the path), and adds whatever the unit needs beyond that: prerequisites the
 generic rules lack, a compile rule of its own in the rare case the generic one gives the wrong flags, and companion objects
 appended to `EXTRA_OBJS`. The build machinery the fragments rely on (the ecourna flags every unit gets, the ASN.1
 runtime, the splat build) is in `src/mk/`.
@@ -35,7 +35,9 @@ item 3 as well:
    no source (unit 85; units 86 and 87 add exclusions, and unit 87 a roots rule). `make -n -C src link` counts 0 compiles for it.
 3. A compile rule of its own, when the generic one gives the wrong flags: a `define …_RULE` template instantiated
    per source with `$(foreach u,$(DADOS_MIDIAS_SRCS),$(eval $(call …)))`, compiling from `/work/src/…` (below). Most units need none, and unit 08's only repeats a flag
-   the tree has. Its prerequisites are the source, `$(ROOT)/src/Makefile`, the fragment
+   the tree has. A uenux2 source's own rule takes `$(call uenux2_cxxflags,<path under src/uenux2>)` where the generic
+   rule takes it, not `$(UENUX2_CXXFLAGS)`, or it keeps `-fno-strict-aliasing` in a directory built without it
+   (`src/Makefile`, `docs/reference/facts/app-flags.md` §F6). Its prerequisites are the source, `$(ROOT)/src/Makefile`, the fragment
    and every header the compile reads. Do not write `$(ECOURNA_HDRS)` or `$(UENUX2_HDRS)` there: `src/Makefile`
    includes the fragments before it sets those two variables, and a rule's prerequisites are expanded when the rule
    is read, so in a fragment both are empty and the rule depends on no header at all, with every check still
