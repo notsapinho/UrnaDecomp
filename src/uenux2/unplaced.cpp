@@ -243,14 +243,8 @@
 
 // link-order cluster 794 · uses=2 · neighbours' file uenux2/src/api/gui/crectfield.cpp
 
-// f5556 · 387 B · unmatched · placement: link order · name unknown
-// ? f5556(i32, i32) { ... }
-
 // f5553 · 204 B · unmatched · placement: link order · name unknown
 // void f5553(i32) { ... }
-
-// f5552 · 349 B · unmatched · placement: link order · name unknown
-// void f5552(i32, i32) { ... }
 
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
@@ -1543,11 +1537,6 @@
 
 // f11107 · 432 B · unmatched · placement: link order · name unknown
 // void f11107(i32, i32) { ... }
-
-// link-order cluster 406 · uses=1 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
-
-// f11156 · 4 B · unmatched · placement: link order · name unknown
-// ? f11156(i32) { ... }
 
 // link-order cluster 645 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
 

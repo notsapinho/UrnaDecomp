@@ -129,11 +129,6 @@
 // f5485 · 110 B · unmatched · placement: link order · name unknown
 // ? f5485(i32) { ... }
 
-// link-order cluster 794 · uses=2 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f5554 · 561 B · unmatched · placement: link order · name unknown
-// ? f5554(i32, i32) { ... }
-
 // link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
 
 // f5578 · 5092 B · unmatched · placement: link order · name unknown
