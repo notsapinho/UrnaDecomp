@@ -11,9 +11,11 @@
 # - Create (fn 9655, slot 2) is written and `unresolved`. -O2 inlined its std::string appends, which stay calls in the
 #   target (249 over 458 rows, 160 inserted); the tree's -O3 keeps them, and it waits for a name of s_proximoId
 #   (1832660): only 9655 loads it, so that name needs a second user even once 9655's `vtable` pair is the same
-#   instructions and votes (docs/reference/splat.md "No circular evidence"). In a scratch
-#   link with the simulator's three objects at -O3, and at the tree's -O3, it scores 79 over 313 rows, 46 of them operand-only, most of the rest
-#   other locals in the vector's growth. Its throw is on its record's line, 31:15. `emplace_back` is measured, not free:
+#   instructions and votes (docs/reference/splat.md "No circular evidence"). Its log line begins "Create #": the
+#   target builds that text in place from one eight-byte constant, 2531134541106868803, which spells it. In the whole
+#   link it scores 77 over 313 rows, 44 of them operand-only; the rest is the vector's growth, where the target stores
+#   the new end, begin and capacity in that order (ours the capacity first) and reads the context's id again after
+#   freeing the old buffer. Its throw is on its record's line, 31:15. `emplace_back` is measured, not free:
 #   `push_back`, whose body is target fn 543, leaves a call and a frame slot for the pointer at both levels (172 over
 #   305 rows at -O3, measured with the vector file-static); the target has no such call or slot.
 # - slot 4 is the empty 1528, one body with CWasmNullPaper::PrintText's and others', so its match line is not this

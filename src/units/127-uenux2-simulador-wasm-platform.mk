@@ -42,7 +42,13 @@
 #   (ComecaCom). Further: Candidatos written into Caminho (928), Normaliza into Candidatos (365), the normalised path as
 #   Candidatos' parameter (293).
 # - GetMovie (8605): at the tree's -O3 it is 16 over 507 rows, all operand-only, and `differs` in one store's alignment
-#   (+0x9e: `i32.store align=1 offset=52` in the target, `align=2` here), not read further. At -O2 clang left
+#   (+0x9e: `i32.store align=1 offset=52` in the target, `align=2` here). That store copies a GIF's width and height,
+#   one 32-bit load of the header's bytes 6 to 9, into the SPoint CMovie's constructor gets: the target's store has
+#   the SPoint's 2-byte alignment, and our object's is 4-byte aligned (`i32.store 2 52` in its disassembly). Measured in the
+#   object: each field copied alone (a memcpy per field, the two bytes joined with a shift, or the size locals of the other
+#   cases assigned) gives two 16-bit stores; TamanhoImagem with external linkage stays a call (cost 395 against 250,
+#   -Rpass-missed=inline) whose own store is 2-byte aligned, and binaryen then inlines it into GetMovie with a frame of
+#   its own and the JPEG tests in another order, 135 over 526 rows in the whole link. At -O2 clang left
 #   std::vector<CMovieFrame>'s __init_with_size out of line (cost 230 against 225, -Rpass-missed), 172 over 562 rows. std::vector<CMovieFrame>(1, ...) is inlined at -O2 and gives 41 over 518 rows, but
 #   64 over 522 at -O3: of the two forms tried, the initializer list is the one that gives the target's rows. That
 #   CMovieFrame's constructor is out of line is read from 8605, which holds code as binaryen inlines a call (the moved

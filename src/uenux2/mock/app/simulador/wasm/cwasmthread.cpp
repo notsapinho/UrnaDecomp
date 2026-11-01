@@ -34,7 +34,7 @@ void CWasmThread::Create(void* (*rotina)(void*), void* parametro)
     contexto->id = ++s_proximoId;
     m_contexto = contexto;
     s_contextos.emplace_back(contexto);
-    js_thread_log((std::string("Thread #") + std::to_string(contexto->id) + " - enqueued").c_str());
+    js_thread_log((std::string("Create #") + std::to_string(contexto->id) + " - enqueued").c_str());
 }
 
 void CWasmThread::Wait()

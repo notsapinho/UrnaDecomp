@@ -4,6 +4,7 @@
 
 #include "api/gui/iform.h"
 #include "api/gui/itext.h"
+#include "api/util/cdatetime.h"
 
 // the JavaScript side (EM_JS, src/web/wasm_shim.cpp, whose generated declaration takes an int for the pointer: the same
 // wasm type)
@@ -87,6 +88,21 @@ void CWasmScreenMT::Led3()
 {
     m_led = false;
     Refresh();
+}
+
+void CWasmScreenMT::ShowClock(const api::SPoint& posicao)
+{
+    class WasmText : public api::IText {
+    public:
+        explicit WasmText(std::string texto) : m_texto(std::move(texto)) {}
+
+        std::string GetText() const override { return m_texto; }
+
+    private:
+        std::string m_texto;
+    };
+
+    ShowText(posicao, WasmText(api::CDateTime::Now().GetHora().Format("hh:mm")));
 }
 
 void CWasmScreenMT::Slot13()
