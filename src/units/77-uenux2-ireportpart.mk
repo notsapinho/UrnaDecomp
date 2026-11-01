@@ -1,8 +1,9 @@
 # uenux2 api::IReportPart's parts: comum::CParteCandidatos, CParteCandidatosMajoritarios, CParteCandidatosProporcionais,
 # CParteCandidatosConsultas, CParteRdv, CParteEleitores and api::CFormPart (comum::CParteCargos is unit 58). Matched:
 # - the implicit destructors, the compiler's code for the class definitions, emitted with the vtables in the pending
-#   object, or for CFormPart, CParteRdv, CParteEleitores, CParteCandidatos and CParteCandidatosMajoritarios in their
-#   Imprime's .cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590), CParteCandidatosMajoritarios's and
+#   object, or for CFormPart, CParteRdv, CParteEleitores and the three classes of cpartecandidatos.cpp whose Imprime is
+#   written, in their Imprime's .cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590; the match lines name
+#   CParteRdv's since cpartecandidatos.cpp links after cparterdv.cpp, below: step 9 renamed them), CParteCandidatosMajoritarios's and
 #   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210), and
 #   CParteEleitores's (11205, 11204) and CFormPart's (10888, 10887), four thunks into binaryen's two merged bodies 2899
 #   and 6026, which match too under the byn$mgfn-shared$ names our link gives them: CParteEleitores's D2 and D0 since its
@@ -19,9 +20,9 @@
 #   already matched.
 # Imprime, the key function of every class, is pending (the pending file's header lists what each waits for), but for
 # api::CFormPart's (10889, a call of its form's slot 2), in cformpart.cpp, which brings that class's vtable and destructors,
-# CParteRdv's (11203), in cparterdv.cpp, CParteEleitores's (11206), in cparteeleitores.cpp, and CParteCandidatos's (11215)
-# and CParteCandidatosMajoritarios's (11214), in cpartecandidatos.cpp, whose objects now emit those classes' vtables and
-# destructors. 11214's throw is on its record's line (cpartecandidatos.cpp:75:19), with the target's code 9081 and
+# CParteRdv's (11203), in cparterdv.cpp, CParteEleitores's (11206), in cparteeleitores.cpp, and CParteCandidatos's (11215),
+# CParteCandidatosMajoritarios's (11214) and CParteCandidatosProporcionais's (11213), in cpartecandidatos.cpp, whose
+# objects now emit those classes' vtables and destructors. 11214's throw is on its record's line (cpartecandidatos.cpp:75:19), with the target's code 9081 and
 # message; the lines of 11215 and of the constructors, which now follow 11214, are a choice. CParteEleitores::Imprime calls its part's slot 2 once per record of
 # comum::CEleitores: the target moves the base CDataMap's cursor to the map's first record inline (CDataMap::Reset in
 # api/io/cdatamap.h, a chosen name), tests it against the map's end inline (IsFim) and calls Next (fn 5601).
@@ -36,6 +37,17 @@
 # - 11214 reads the candidate again after Busca returns on its throw's path: the loop variable is a reference.
 #   `const TCandidatoID&` scores `22 over 267 rows`, all operand-only; by value, `44 over 274 rows` (7 inserted, 7
 #   deleted).
+# - 11213 walks comum::CPartidos as its base api::CDataMap (Reset and IsFim inline, GetCurrent 1283 and Next 3697) and holds
+#   CCandidaturas::Localiza (record ccandidaturas.cpp:56, unit 89's file) inlined by binaryen, in a frame of its own. With
+#   cpartecandidatos.cpp in this fragment's list, its object ahead of ccandidaturas.cpp's, it scored `46 over 406 rows`
+#   (3 inserted, 3 deleted), every differing row that is not a callee, an address or a table slot a local's number; in
+#   scratch links of the same objects with ccandidaturas.cpp's object moved right before cpartecandidatos.cpp's, or
+#   cpartecandidatos.cpp's right after ccandidaturas.cpp's, `24 over 403 rows`, all operand-only, callees, addresses
+#   and table slots.
+#   The callee first is the target's order: its data hold every comum/dados object's records before every
+#   comum/relatorios object's (ccandidaturas.cpp's at 1558224, cpartecandidatos.cpp's at 1576428). So
+#   cpartecandidatos.cpp is listed in fragment 89, right after ccandidaturas.cpp (the second form, measured), and
+#   this unit keeps its other files; docs/reference/facts/codegen.md C4 has the effect.
 #
 # Evidence. RTTI names the classes and gives api::IReportPart as each one's only base. The D2s give the layouts, and the
 # allocations of fns 5971, 11908 and 11946 the sizes (44, 28, 88, 12 bytes). RTTI gives the std::function's signature:
@@ -89,9 +101,10 @@
 # - fn 601: a by-value parameter moved in is its only form among those R12 measures, and one defined in the class
 #   leaves no body (the probe above), where the target has one.
 #
-# Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header. A header of
+# Paths relative to src/uenux2 (cpartecandidatos.cpp is compiled through fragment 89's list, above); the generic uenux2
+# rule depends on the sources and every uenux2 header. A header of
 # api/gui/reports/ or app/comum/relatorios/ rebuilds the two companions below, whose rules name those directories.
-IREPORTPART_SRCS := src/app/comum/relatorios/cpartecandidatos.cpp src/app/comum/relatorios/cparteeleitores.cpp src/app/comum/relatorios/cparterdv.cpp src/api/gui/reports/cformpart.cpp
+IREPORTPART_SRCS := src/app/comum/relatorios/cparteeleitores.cpp src/app/comum/relatorios/cparterdv.cpp src/api/gui/reports/cformpart.cpp
 UENUX2_SRCS += $(IREPORTPART_SRCS)
 IREPORTPART_HDRS := $(wildcard $(ROOT)/src/uenux2/src/app/comum/relatorios/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/gui/reports/*.h)
 $(ROOT)/$(APP)/77-uenux2-ireportpart-pending.o: $(ROOT)/src/units/77-uenux2-ireportpart-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/77-uenux2-ireportpart.mk $(IREPORTPART_HDRS)

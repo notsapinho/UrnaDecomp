@@ -60,7 +60,12 @@ std::vector<std::string> CAppInfo::GetCodigosCarga(EUrnaTurno turno) const
     return GetGap(turno).GetCodigosCarga();
 }
 
-// (original lines 100-452: content not recovered)
+bool CAppInfo::TemVota(EUrnaTurno turno) const
+{
+    return m_vota[IndiceTurno("TemVota", turno)].has_value();
+}
+
+// (original lines 105-452: content not recovered)
 #line 453
 bool CAppInfo::EhTreinamentoEleitor()
 {

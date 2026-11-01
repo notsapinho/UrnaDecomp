@@ -1,9 +1,9 @@
 // Reconstruction notes, not TSE's text: this file holds CParteCandidatos::Imprime (fn 11215),
-// CParteCandidatosMajoritarios::Imprime (fn 11214), whose throw is the file's record at line 75, and the constructors of
-// cpartecandidatos.h's four classes, which binaryen inlined into fn 11946 (no target function). The record at line 174,
-// CParteCandidatosConsultas::Imprime's, is not written. That the file holds the other two classes is chosen: the four
-// vtables interleave with the records at 1576388-1576484. The lines of the functions with no record are a choice. The
-// two other Imprime are in src/units/77-uenux2-ireportpart-pending.cpp.
+// CParteCandidatosMajoritarios::Imprime (fn 11214), whose throw is the file's record at line 75, the constructors of
+// cpartecandidatos.h's four classes, which binaryen inlined into fn 11946 (no target function), and after them
+// CParteCandidatosProporcionais::Imprime (fn 11213). The record at line 174, CParteCandidatosConsultas::Imprime's, is
+// not written (src/units/77-uenux2-ireportpart-pending.cpp traps it). That the file holds the other two classes is
+// chosen: the vtables interleave with the records at 1576388-1576484. The lines of what has no record are chosen.
 #include "app/comum/relatorios/cpartecandidatos.h"
 
 #include <format>
@@ -12,6 +12,7 @@
 
 #include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargos.h"
+#include "app/comum/dados/cpartidos.h"
 #include "app/comum/relatorios/euecomumrelatorioserror.h"
 
 namespace comum {
@@ -31,7 +32,7 @@ void CParteCandidatos::Imprime() const
     }
 }
 
-// (original lines 34-66: content not recovered)
+// (original lines 35-66: content not recovered)
 #line 67
 void CParteCandidatosMajoritarios::Imprime() const
 {
@@ -87,6 +88,32 @@ CParteCandidatosConsultas::CParteCandidatosConsultas(std::shared_ptr<api::IRepor
                                                      std::shared_ptr<api::IReportPart> rodape)
     : m_cabecalho(std::move(cabecalho)), m_candidato(std::move(candidato)), m_rodape(std::move(rodape))
 {
+}
+
+void CParteCandidatosProporcionais::Imprime() const
+{
+    const TCargoID cargo = CCargos::GetInst().GetCurrentCargoID();
+    CPartidos& partidos = CPartidos::GetInst();
+    CCandidaturas& candidaturas = CCandidaturas::GetInst();
+    m_cabecalho->Imprime();
+    for (partidos.Reset(); !partidos.IsFim(); partidos.Next()) {
+        if (!m_filtro()) {
+            continue;
+        }
+        m_partido->Imprime();
+        const std::vector<TCandidatoID> candidatos = candidaturas.GetCandidatosPartido(cargo, partidos.GetCurrent()->GetNumero());
+        if (candidatos.empty()) {
+            m_semCandidatos->Imprime();
+        } else {
+            m_cabecalhoCandidatos->Imprime();
+            for (const TCandidatoID candidato : candidatos) {
+                candidaturas.Localiza(cargo, candidato);
+                m_candidato->Imprime();
+            }
+        }
+        m_rodapePartido->Imprime();
+    }
+    m_rodape->Imprime();
 }
 
 } // namespace comum

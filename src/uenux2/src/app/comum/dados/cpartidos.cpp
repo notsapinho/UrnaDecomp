@@ -19,7 +19,7 @@ CPartidos& CPartidos::GetInst()
 std::unique_ptr<CPartidos> CPartidos::s_inst;
 std::mutex CPartidos::s_mutex;
 
-CPartidos::CPartidos() : CPartidos("CPartidos") {}
+CPartidos::CPartidos() : CDataMap("CPartidos") {}
 
 CPartidos::~CPartidos() = default;
 
