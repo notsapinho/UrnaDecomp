@@ -655,13 +655,14 @@ class's own vtable is not the test: `api::IScreen`'s vtable lies right after `si
 its own typeinfo 2312 B later.
 
 **Emitting the destructors of a class with no key function.** A TU emits the vtable, D2 and D0 of such a class when it
-references the vtable: a constructor defined there, a derived class's destructor that inlines this one, or a call of
-the destructor by its qualified name (the D2 stores the vptr too). The last needs neither constructor nor derived
-class: `src/units/92-uenux2-iinputfield-roots.cpp` calls `campo.api::CMaskedTextField<api::CFramedText>::~CMaskedTextField()`
-from an `optnone` function. A class that declares no constructor has an implicit one,
-so `new T` in such a function emits them as well, while no constructor is declared, and building the object does the
-same where a constructor is written (unit 67). `src/units/README.md` "A class with no key function" says what a roots
-file may do with this.
+references the vtable: a constructor defined there, a derived class's destructor that inlines this one, or a call of the
+destructor by its qualified name when it destroys something (its D2 then stores the vptr; one that destroys nothing is
+the base's D2 to clang, and nothing names the vtable: [units.md](units.md) §U13). The last needs neither constructor nor
+derived class: `src/units/92-uenux2-iinputfield-roots.cpp` calls
+`campo.api::CMaskedTextField<api::CFramedText>::~CMaskedTextField()` from an `optnone` function. A class that declares
+no constructor has an implicit one, so `new T` in such a function emits them as well, while no constructor is declared,
+and building the object does the same where a constructor is written (unit 67). `src/units/README.md` "A class with no
+key function" says what a roots file may do with this.
 
 ## R7. A slot that holds `__cxa_pure_virtual` is a pure member, and dropping it makes the class concrete
 

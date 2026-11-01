@@ -4,11 +4,12 @@ How the tools a decompile round runs behave where the obvious reading of a comma
 lone and whole-link tries, cloned build outputs, counting lost matches, committing a removed file, the checks
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
 rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec and a
-table's rows, `-j` on the link, leaving a merge after step 9, and the notes a merge makes stale.
+table's rows, `-j` on the link, leaving a merge after step 9, the notes a merge makes stale, and a merge that fails to
+compile with no conflict.
 `docs/how-to-decompile.md`, `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
 and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, W23 and
-W2's items 6 and 7 at c1b2630, on macOS
+W2's items 6 and 7 at c1b2630, W24 at the merges it names, on macOS
 (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH, and the symbol file a larger heap
@@ -835,3 +836,23 @@ the merge's first parent) as the base:
 Against 05fe923, c1b2630's 84 new indices give 140 lines, each to read: an index also matches a line number or a size.
 Search the trees' comments for the indices of the classes the merge touched too. A stand-in found so goes when a link
 without it moves no row (W13, "One variant object in the whole link").
+
+## W24. A merge can fail to compile where no line of either side conflicts
+
+Three ways, each met at a landing (the commits are the merged branch and the `main` it merged onto):
+
+- **A header one side made real reaches a library path the other side's objects lack** (`… file not found`). The fix is
+  the fragment's include path, not the header (`src/units/README.md` "What a fragment holds").
+- **A signature one side changed.** ad0e419 onto e162a83, where unit 135 had made `const` every slot of
+  `comum::IControladorRegistraMesarios` but `SetTituloMesario`: the branch defines Slot6, Slot11 and
+  `LogaLimiteMesariosAtingido` and traps eight more, all without `const`, and its controller `.cpp` compiled against
+  `main`'s headers stops on `error: out-of-line definition of 'Slot6' does not match any declaration in
+  'vota::CControladorRegistraMesariosVota'`. The branch's definitions and traps take the new signature, which is no
+  change of body, and step 9 renamed the two new match lines (10793, 10796) from `_ZN` to `_ZNK`.
+- **Two headers of `main` that declare one name differently**, which no TU of `main` includes together. 013fb47 onto
+  3022964: `app/vota/eleitor/cvotacaostateaudio.h` declared `enum EInputResult : int;` and `api/gui/iinputfield.h`
+  defined it with no fixed type, the branch's states include both, and the object list stops on `iinputfield.h:67:6:
+  error: enumeration previously declared with fixed underlying type`. Both declarations take the same type (today
+  `iinputfield.h` reads `enum EInputResult : int {`); of the 373 objects `make -n` listed, 362 compared equal with the
+  build before the merge, and the 11 that differ are the branch's own and two that gain its members
+  ([../../agents.md](../../agents.md) "Shared build outputs" has the comparison).

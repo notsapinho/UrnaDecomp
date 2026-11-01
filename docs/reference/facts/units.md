@@ -485,7 +485,9 @@ python3 -I -c "import struct; d=open('build/out/units-facts/mem.bin','rb').read(
 ```
 
 The same read at a vptr a constructor stores gives the class's typeinfo, and so its name. A class missing its row gets
-no `vtable` evidence for its slots, so its members wait for a census pair or a hand edit.
+no `vtable` evidence for its slots, so its members wait for a census pair or a hand edit. From the other end, a slot
+that no row holds, or a row read past its vtable into the next object's words, [reading.md](reading.md) §R20 walks
+from the slot back to the vtable's typeinfo.
 
 ## U13. What a roots shape emits, measured on probes
 

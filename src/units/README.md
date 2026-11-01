@@ -308,8 +308,10 @@ way the target does, because binaryen's inlining and dead-argument removal depen
   the scan for a caller written but not matched, since a caller in the link ends a stand-in whether or not its row
   matches (unit 08's `UsaFaseDeconverte` stood for 9052 and went while 9052 was written and `differs`). A stand-in for
   one named caller of a function the target calls from two (unit 110's `d5805`, for 7787 beside the real 11561) goes
-  when that caller lands.
-  One whose callers landed in part stays, and its comment says which still wait.
+  when that caller lands. It goes when every caller it stands for is in the link, not when the link first holds two
+  real call sites: one whose callers landed in part stays, and its comment says which still wait. It may go earlier
+  only with a link without it that moves no row (`docs/reference/facts/workflow.md` §W13, "One variant object in the
+  whole link"), measured and said in the fragment.
   5629 has two direct callers in the target (`awk -F'\t' '$2==5629' ledger/callgraph.tsv` prints 5324 and 11387);
   unit 20 reconstructs 11387, so `20-…-roots.cpp` adds one caller standing in for 5324. binaryen inlines a function
   for having one call only when no table entry or export refers to it (`docs/reference/facts/tool-traps.md` §X1), so a
@@ -372,7 +374,8 @@ way the target does, because binaryen's inlining and dead-argument removal depen
     object's). An instance with neither is the tree's whose copy, compiled at each tree's flags, equals the target's body, and that
     has a target caller calling it directly (its `component` or vtable in `pnpm wasm fn`): uenux2's for
     `vector<char>::__insert_with_size` (1927), which comum's 11397 and 11399 call. The root's comment names those
-    callers, as a stand-in's does, and the instance goes when one of them lands (1927 comes from 11397's object now).
+    callers, as a stand-in's does, and the instance goes when one of them lands, whose object then gives the same copy,
+    where a caller stand-in waits for all of its callers (above): 1927 comes from 11397's object now.
     An instance of a tree's own code has a root at that tree's flags, since it brings its callees' linkonce copies to
     the head of the link too: `roots_cbasetype.cpp`, at `UENUX2_CXXFLAGS` right after `roots_uenux2.o`, for an ecourna
     template whose target copies are uenux2's (unit 112); its rule depends on the ecourna headers.
@@ -477,7 +480,9 @@ Roots TUs compile with `APP_CXXFLAGS`, like the other stand-ins in `src/app/`: u
 `-fno-strict-aliasing`, and kept at `-O2` where the tree builds at `-O3` (`docs/reference/app-flags.md`). A roots
 object that emits TSE inline code meant to match therefore compiles it with other flags than its tree's. The tree is
 the one whose object holds the copy the target keeps: where that copy's vtable or typeinfo lies
-(`docs/reference/facts/link-order.md` §L7 item 15), else the header's; a copy of the executable TU is at that TU's level
+(`docs/reference/facts/link-order.md` §L7 item 15), else the header's. ecourna's `CBitArray` and `CHKDFSeed` have their
+vtables among uenux2 objects' records, and their D2 and D0 match at uenux2's flags and differ at ecourna's (units 03
+and 11's fragments give the rows). A copy of the executable TU is at that TU's level
 (`docs/reference/facts/levels.md` §V1). A landing pad in the target's body says an `-fexceptions` object's copy, which
 no roots object gives (`CFile`'s constructor, 517, is out of line in `cfile.cpp`: `docs/reference/facts/app-flags.md`
 §F8 item 3). Compile that code with the tree's flags too and compare the functions in a variant link
@@ -603,10 +608,13 @@ would bring (the control block of a `std::make_shared<T>` the target calls) wait
 when no builder the link drops can emit it ("A control block").
 
 A pending member has no stub: `tools/round/stubs.py` counts a function in a slot of a vtable our link holds as code
-of ours, so `make -C src stubs` removes its stub when the unit lands. It counts a virtual member of a class our sources
-define as well (`stubs.py --report` gives both counts), with no vtable in the link: 5503, `comum::IInterfaceSavd`'s
-destructor, went so, and no TU constructs the class. So a fragment that defines a class names each slot it leaves with
-no body. That second count goes by the class's last name alone, so it can take another class's stubs: 10874 and 10875
+of ours, so `make -C src stubs` removes its stub when the unit lands. It counts a virtual member of a class as well,
+with or without a vtable in the link, once a `.cpp` of ours that holds the class's stubs defines one of its members
+(`Class::member(` at column 0, `_member_files` in `stubs.py`; `stubs.py --report` gives both counts): 5503,
+`comum::IInterfaceSavd`'s destructor, went so, and no TU constructs the class. A class head in a header does not
+count, so the first member a unit writes in that `.cpp` takes the stubs of slots it never mentions, and a fragment
+that defines a class names each slot it leaves with no body. That second count goes by the class's last name alone,
+so it can take another class's stubs: 10874 and 10875
 are `api::CAjusteDataHora`'s, and unit 93 defines `comum::md::estadoaplicacao::CAjusteDataHora`. When that stub was the
 last one of a stub-only file, the file goes too ([../README.md](../README.md) "Stubs"). The `-pending.cpp` header names each member with its
 target index and what it waits for, and the file and record lines of a stub-only file that went with it, since the
@@ -665,8 +673,9 @@ compiles: it extends that unit.
    source's fragment names it. A member with no target index of its own (binaryen inlined it into each caller) is
    noted in its class header and in the fragment whose functions hold it; the fragment that compiles its file needs
    only a pointer. Extending a unit brings into the link a function nothing linked before, which can hold a throw off
-   its record's line: compare the file's throws with their records, and after the link run `check_srcloc.py --strict`
-   on the object (`docs/how-to-decompile.md` step 10).
+   its record's line (`CTickManager::SearchNextId` threw on line 89 against its record's 128): compare the file's
+   throws with their records, and after the link run `check_srcloc.py --strict` on the object
+   (`docs/how-to-decompile.md` step 10).
 3. Add a roots file if nothing in the skeleton calls the unit, following the shapes above, and a pending file if
    the class's vtable needs members you have not written.
 4. Add the fragment's row to the table under "Names".

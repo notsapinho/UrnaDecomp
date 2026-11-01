@@ -12,11 +12,11 @@ each function against the target with `pnpm wasm score <target> <fn> <candidate.
 `asmlift-wasm/`; the index comes from the `--emit-symbol-map` twin's `.js.symbols`). A score is "rows differing /
 rows"; **operand-only** is `score`'s flag for a replaced row whose opcode is the same. Mostly that is an address, a
 table slot or the `__THREW__` address, which a separate link can never share, but it is any immediate: an alignment
-hint, a memarg `offset=` (a field, a frame slot, a vtable slot) or a count. So an all-operand-only score is a lead, not
-a structurally identical body: read the scan's first difference or `splat-remap` before calling it one (8605 differed
-at -O3 only in `i32.store align=1` against `align=2`, and a `call_indirect`'s `i32.load offset=20` against `24` is
-another virtual slot). Prefer a whole-skeleton
-link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes inlining (see F9).
+hint, a memarg `offset=` (a field, a frame slot, a vtable slot), an `i32.const` added to the frame pointer, or a
+count. So an all-operand-only score is a lead, not a structurally identical body: read the scan's first difference or
+`splat-remap` before calling it one (8605 differed at -O3 only in `i32.store align=1` against `align=2`, and 10895's
+`call_indirect` loaded `IScreen`'s slot 6, `i32.load offset=24`, where the target's loads slot 5, `offset=20`). Prefer
+a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes inlining (see F9).
 
 | component | flags |
 | --- | --- |

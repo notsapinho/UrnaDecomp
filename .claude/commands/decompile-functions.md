@@ -222,9 +222,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   `vector<CSituacoesEleicoes>`, calls 760 (`pnpm wasm fn ../target/vota_web_wasm.wasm 11361` shows `call 760`). A
   caller that uses that other instantiation still resolves when its body is the same (how-to step 3, "A callee can
   be a twin").
-- **A flag not decided.** A member whose body needs a flag the user has not decided (`docs/reference/facts/levels.md`
-  lists the signs; a no-stub row goes by its callers' tree, not its group) is listed as waiting for that decision, not
-  as expected.
+- **A flag not decided.** A member whose body needs a flag the user has not decided (uenux2's `-std=c++23`, whose sign
+  `docs/reference/facts/levels.md` §V3 gives with 8799, or the executable TU's flags for a TU of ours, §V1; a no-stub
+  row goes by its callers' tree, not its group) is listed as waiting for that decision, not as expected.
 - **The stub may sit over code we have**: search our sources for the class before choosing (step 1).
 - **The name and the file**: from the records, the vtable slot, `ledger/vtables.json` and `ledger/classes.json`;
   for an `unplaced.cpp` stub, the file rules of how-to step 3.
@@ -248,9 +248,8 @@ The matcher works only in its worktree and follows [how-to-decompile.md](../../d
 to 10 as written, including steps 6 to 10 in the worktree: link, census, symbols, match, the splat build, the
 checks, and one commit on its branch. It never touches the urna checkout's `main` and never merges. A fix `main` gained
 since the cut that the lane needs to build (a link recipe) it may take for the build only, and so may its VERIFY:
-`git cherry-pick --no-commit <fix>` stages it, so restore with `git checkout HEAD -- <file>`, remove the
-`MERGE_MSG` it leaves in `git rev-parse --git-dir`, and keep the file's old mtime with `touch -r` both ways, or every
-object that names it recompiles.
+`git cherry-pick --no-commit <fix>`, undone as [docs/agents.md](../../docs/agents.md) "House rules" says, keeping
+the file's old mtime with `touch -r` both ways, or every object that names it recompiles.
 
 It returns, and posts as a `rounds/` result: the verdict (matched, or not matchable yet and why), the commit(s), the
 splat build's sha256 and match count, the matches added and lost against the branch's base, the files it owns,
@@ -364,8 +363,8 @@ lands ("Pausing and resuming" below).
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src
    stubs` on the merge before step 9, each index once in `splat/matched.txt`, both sides' hand edits with one line per
    name, and which side of a twin's line to keep, with the check after step 9. A stand-in whose every target caller is
-   now in the link goes in the merge; one whose callers landed in part stays, with its comment saying which still wait
-   (`src/units/README.md` "Companion files").
+   now in the link goes in the merge; one whose callers landed in part stays, with its comment saying which still wait,
+   unless a link without it moves no row (`src/units/README.md` "Companion files").
 3. **Check the landing**: `TMPDIR=/tmp make -C src splat` prints sha256
    `8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2`, the match count is the old count plus every
    lane's matches, and no index of the old `main` is lost (how-to step 10's `comm`, with `<old main>` for `main`). The
@@ -379,7 +378,7 @@ lands ("Pausing and resuming" below).
    run the checks of VERIFY step 4, and from `asmlift-wasm/` `pnpm test`, `pnpm typecheck` and `pnpm test:bench`.
 4. **Clean up**, which is not optional: no worktree outlives its lane. Read the inbox again first. Then, for each lane
    of the batch and each lane dropped since the last batch:
-   - copy what the board cites to its `shared/from-<lane>/`, and check that nothing is lost, as
+   - copy what the board cites to its `shared/from-<worktree>/`, and check that nothing is lost, as
      [docs/agents.md](../../docs/agents.md) "Worktrees" says, since `git worktree remove` deletes the ignored `build/out/`;
    - run `git worktree remove <worktree>`.
 

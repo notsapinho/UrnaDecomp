@@ -282,13 +282,19 @@ twice), which passed the same constant both times, and dead-argument elimination
 caller that passes another mutex keeps the parameter; the two bodies are then byte-identical, binaryen keeps one under
 the first name in link order, and `splat-match` renames 150's line to `_ZNSt3__25mutex6unlockEv` as it renamed 246's.
 
-Three cases look like a rename and are not one:
+A rename can also move a line to a function that is no twin of the old one, when a flag or inlining change took the
+old symbol out and another body re-points the same: 17-B thunks into one merged body, 3548, 3549 and 5268 went from
+`ruleset::append<T>` to `rule::append<T>`, which the merged body 3944 confirms. Step 10's count by index reads no name,
+so a survivor's name is checked against the target body or its callers.
+
+Four cases look like a rename and are not one:
 
 - **A symbol that stays while its body moves.** A twin's name can stay in the link with another body: once a class is
   `final`, its `__on_zero_shared` stays with the new body, so `splat-match` prints `1 matches added, 0 renamed`, one
   symbol stands on two lines, and the build stops with `no longer verifies`. The scan's `symbol` column for the old
   index has the survivor: edit that line to it. `cut -d' ' -f2 splat/matched.txt | /usr/bin/grep -v '^#' | sort | uniq
-  -d` prints a symbol listed twice.
+  -d` prints a symbol listed twice. When the build passes and the new line's row reads `address same-content`, `table
+  slot copy` or `content`, it is §S11's case instead, and the new line is the one to fix.
 - **An alias.** A constructor or destructor of a class with no virtual base has C1 and C2 (D1 and D2) on one function,
   and `names.tsv` shows the name its object mentions first, so a new member earlier in the object renames it, and the
   old symbol is still defined there (`wasm-objdump -x -j Linking build/out/app/uenux2/src/app/comum/dados/clocal.cpp.o`
@@ -296,6 +302,10 @@ Three cases look like a rename and are not one:
 - **Twins that differ in their objects.** Two D0s of classes of different sizes pass different sizes to sized delete
   in their objects, and binaryen drops that argument only later. Compare twins in the final link: the old symbol gone
   from `names.tsv`, the new one there once, the build verifying it.
+- **An instance of a matched name that is another body.** A unit's instance of a matched symbol, at another level or
+  with other flags, is another body, while the old body stays in the link under another twin. Nothing renames the
+  line: `splat-match` reports it as a line the symbol file names only after other functions (how-to step 9), and the
+  build fails on the index and its callers. Edit the line to the name step 8 gives the index.
 
 ## S7. A match that verifies under a twin class's name; vtable slots name functions
 
@@ -407,9 +417,9 @@ nothing), four kinds of line:
    cast, each at the end of a format string (`"{:0{}}"`, `"{}|{}|{}"`, `"{:04}{:02}{:02}T{:02}{:02}{:02}"`), and
    none changes the file. Small constants that differ vote the same way, both being inside both tables: an anchored
    body whose frame offsets differ from the target's (`local + 40` where the target has `+ 92`) votes our slot 40's
-   function for target slot 92. One such vote took `__prepare_write`'s `table` name from 7324, and 158 rows with it.
-   The body's `~` rows that are no call or data operand show it:
-   `pnpm --silent wasm score <target> <index> <ours.wasm> <ours> --rows | /usr/bin/grep '~' | /usr/bin/grep -v -E 'call fn:|data:'`.
+   function for target slot 92. One such vote took `__prepare_write`'s `table` name from 7324, and 158 rows with it,
+   until the anchored body's frame (11451's) was fixed. The body's `~` rows of `pnpm wasm score` that are no call or
+   data operand show it (how-to step 5 has the filter), and the rows that leave all name one slot in their detail.
 
    To trace a `table` line of a matched index, gained, lost or kept: our slot of the name, the target's slot of the
    index, the functions that hold each as an `i32.const`, and their pairs. 7628's line is a real vote today:
@@ -573,7 +583,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 3199 3308 6914 6980 7037 7048 7718 14424", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -647,7 +657,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    where our record lands (§S8, the sixth kind), and their match lines hold them meanwhile.
 7. **1497, `string`'s substring constructor, by unit 100's roots.** The 16 instances are the other callers of 403, so
    binaryen keeps 403 out of line. With the roots reaching nothing, 1497 holds 403 inline, 193 B against the target's 71.
-8.  **543, 2656, 5066 and 3473, by `roots_boost.o`'s body, a hand edit and link order.** 543's match line names
+8. **543, 2656, 5066 and 3473, by `roots_boost.o`'s body, a hand edit and link order.** 543's match line names
    `vector<long>`, `roots_boost.o`'s body, which merged with `FillPath`'s and `DrawPath`'s `vector<int>` while uenux2
    built at `-O2`; at the tree's `-O3` both inline that one, and our link holds `roots_boost.o`'s body alone (§A5 of
    [asn1.md](asn1.md)). 2656 and 5066 call `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand
@@ -714,6 +724,27 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     161 in the link from 1257's too, so 1257 is the same thunk and matches; without unit 169 it is a whole body and
     `differs`. 2902's match line is `byn$mgfn-shared$<first member>`, today
     `byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev`, and step 9 renames it when the first member moves (item 13).
+19. **3199, 3308, 6914, 6980, 7037, 7048, 7718 and 14424, OpenSSL, by 7049's census pair.** Each reads an OpenSSL
+    `.bss` name whose only voters are itself and 7049, `OPENSSL_cleanup`, an `unresolved` row whose census pair votes
+    for 36 OpenSSL data names (`/usr/bin/grep -cE 'by:([0-9]+,)*7049(,[0-9]+)*$' splat/symbol_addrs.txt` prints 36).
+    Without that pair each name's one voter is the row that reads it, which is self-voted ([../splat.md](../splat.md)
+    §3, "No circular evidence"), so a landing that takes 7049's pair away or changes what it reads takes the eight out;
+    610 and 4353, held the same way, are `unresolved` for other names. The rows that a
+    name voted by 7049 and one other function holds, with their verdicts:
+
+    ```sh
+    awk -F'\t' 'NR==FNR {if (match($0, /by:[0-9]+,[0-9]+$/)) {split(substr($0, RSTART + 3), v, ","); if (v[1] == 7049) w[v[2]] = 1; if (v[2] == 7049) w[v[1]] = 1}; next} ($1 in w) {print $1, $5}' splat/symbol_addrs.txt splat/scan.tsv     # at c1b2630
+    # 610 unresolved
+    # 3199 match
+    # 3308 match
+    # 4353 unresolved
+    # 6914 match
+    # 6980 match
+    # 7037 match
+    # 7048 match
+    # 7718 match
+    # 14424 match
+    ```
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -774,12 +805,12 @@ A correction frees our body for the next of the family: the rescan after 13334's
 `kmac_gettable_ctx_params`, the name both KMAC tables (1784304, 1784400) give its slot. Rescan until a pass adds
 nothing, and check each addition the same way.
 
-The scan's content pass can make the same kind of match. It pairs one of our functions that no match uses with an
-unmatched target body when, re-pointed, it equals exactly that one body and no other function of ours equals it
-(`contentPairs` in `asmlift-wasm/src/splat-sub.ts`). Its key is the locals and the opcodes, not the wasm type, so an
-empty body pairs as soon as other matches leave one unmatched empty target body: 7722 is 2 bytes, as are 218, 425,
-1528, 1870, 8372, 10853 and 14351, of other types (`awk -F'\t' '$7==2 {print $1}' splat/scan.tsv`). The merge 9a0cec7
-matched 7722 that way, under `sqlite3_thread_cleanup`, a name no lane had chosen
+The scan's content pass can make the same kind of match. It pairs one of our functions that no `match` row holds yet,
+called or not, with an unmatched target body when, re-pointed, it equals exactly that one body and no other function
+of ours equals it (`contentPairs` in `asmlift-wasm/src/splat-sub.ts`). Its key is the locals and the opcodes, not
+the wasm type, so an empty body pairs as soon as other matches leave one unmatched empty target body: 7722 is 2 bytes,
+as are 218, 425, 1528, 1870, 8372, 10853 and 14351, of other types (`awk -F'\t' '$7==2 {print $1}' splat/scan.tsv`).
+The merge 9a0cec7 matched 7722 that way, under `sqlite3_thread_cleanup`, a name no lane had chosen
 (`awk -F'\t' '$1==7722 {print $1, $2, $4, $7}'
 splat/scan.tsv` prints `7722 sqlite3_thread_cleanup symbol 2`, `git show 9a0cec7^1:splat/matched.txt | awk '$1==7722'`
 prints nothing). What ties the name to 7722 is data the scan never reads: the target's `sqlite3Apis`, SQLite's table

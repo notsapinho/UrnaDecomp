@@ -19,20 +19,23 @@ loses its stub at that unit's step 9, since the record's line is then code of ou
 /cinteractiveform.h$/ && $3==57 {print $6}' ledger/source-locations.tsv`), not by their stubs.
 
 A stub is not always a TSE source to write. Its tree follows its callers' component, so a library's code that TSE calls
-gets one: the 7-Zip LZMA encoder (410, 2603, 3419, 4941) has stubs in `src/uenux2/unplaced.cpp` and libc's `chown`
-(6281) in `src/ecourna/unplaced.cpp`. Read the row's `owner` in `ledger/functions.tsv` (column 4) first: a library
-there means the library's build, not a source:
+gets one: the 7-Zip LZMA encoder (410, 2603, 3419, 4941) has stubs in `src/uenux2/unplaced.cpp`, and Boost's 2199 and
+libc's `chown` (6281, owner `libcxx`) in `src/ecourna/unplaced.cpp`. Read the row's `owner` in `ledger/functions.tsv`
+(column 4) first: a library there means the library's build, not a source, and the row lands with its caller:
 
 ```sh
-awk -F'\t' '$1==410 || $1==2603 || $1==6281 || $1==2578 {print $1, $4, $5}' ledger/functions.tsv
+awk -F'\t' '$1==410 || $1==2134 || $1==2199 || $1==2546 || $1==2578 || $1==6281 {print $1, $4, $5}' ledger/functions.tsv
 # 410 7zip comum
+# 2134 - ecourna
+# 2199 boost ecourna
+# 2546 libcxx ecourna
 # 2578 - comum
-# 2603 7zip comum
 # 6281 libcxx ecourna
 ```
 
-A libc++ template a TSE caller instantiates shows no owner: 2578 and 2579 read as `std::__sort3` over `unsigned` and
-`unsigned char`. Read its callers, since it lands with the caller that instantiates it.
+A row with no owner can be a library's code too: 2134 calls libc++'s path parser (2546), and 2578 and 2579, libc++
+templates a TSE caller instantiates, read as `std::__sort3` over `unsigned` and `unsigned char`. Read its callees and
+callers: an instance lands with the caller that instantiates it.
 
 A stub in `unplaced.cpp` has no evidence for any file only while no file is named after its class: `stubs.py` puts a
 class's stubs in `<class in lower case>.cpp` of the tree as soon as that file exists, so a unit that creates

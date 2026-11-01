@@ -170,8 +170,10 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   disagreement ([facts/asn1.md](facts/asn1.md) §A5 has the tally; no tool runs it). A body written and one flag from
   the target takes this kind too: its comment gives the score at that flag and what the callee's own rows show, and
   counts only the callers that hold without the line (426, unit 31's `AddField`). A `.bss` object has no content and
-  often no aligned call: its line leads with the target functions other than the match that read the address, its
-  static destructor first, as the `CEstadoAudio` statics' do.
+  often no aligned call: its line leads with the target functions other than the match that read or write the
+  address, its static destructor first, as the `CEstadoAudio` statics' do, each with what it does there (a compare
+  with a value above 1, an increment, an index), since those uses also give the member's type (how-to step 3, "What a
+  body does not decide").
 - `content`: a data line, the bytes the object holds.
 - `merged-body`: the target merged this function's body into the index, its callers there call it, and our own body of
   that name is not equal, so no match can name it. §3 says what it does. The comment must cite a caller the line does
@@ -629,7 +631,7 @@ what the line adds to the generated section. The second decides whether the line
 `splat-symbols`, since step 8 reads no hand line (§2). Follow each scan with `splat-build` on the same two copies: a
 scan that moves no row shows neither that the build accepts them nor that it refuses them. Weigh every line you keep
 again on the file you commit, once the lines found idle are out: one of those can have held what the kept line's scan
-left standing, so what a fragment says a line carries is measured on the final file. Three things make the scan
+left standing, so what a fragment says a line carries is measured on the final file. Four things make the scan
 say less than it seems to:
 
 - **One pass.** A pass re-points with the previous pass's matches, so one scan can leave out a row the next brings
@@ -640,6 +642,9 @@ say less than it seems to:
 - **A census tie.** A row that stays with `ledger` in its `source` column can rest on a pair the census made by position
   among bodies that tie (`pairUp` in `asmlift-wasm/src/census.ts`): check that its `addr` hash has one body on each side
   (the `addr` column of `pnpm wasm fingerprint <wasm>`, on each wasm) before reading the line as idle.
+- **One line at a time.** A function named by hand casts no vote (§2), so in a chain of hand-named callees each line
+  can look needed while the set is not: the content pass reaches a body once the twins that made it ambiguous match.
+  Remove a set's lines together too (unit 120 kept ten of twenty).
 
 The same line rewritten `evidence:call by:<its caller>` shows what the self-vote rule would refuse, and a line it refuses
 is sound only on evidence from the callee's own body. With two or more callers the line carries, the rewrite refuses

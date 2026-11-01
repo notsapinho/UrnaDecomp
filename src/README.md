@@ -48,7 +48,8 @@ unwritten one, nor a destructor its constructor. So a pending member's trapping 
 stub. A non-virtual function we wrote that has no record, a constructor for one, keeps its stub. A function whose
 records all fall on lines of our code counts as written even when it is a caller that inlined the code on those lines:
 writing `ctextsource.h`'s inline constructor on its record's line (37:19) removed the stubs of 1150 and 652, whose only
-record that is. Name such functions in the fragment's header, as for a stub-only file that goes (below).
+record that is. Name such functions in the fragment's header, as for a stub-only file that goes (below): they stay
+unwritten with no stub, and are found by their record (`docs/reference/facts/placing.md` §P1).
 
 ```
 // <stubs>
@@ -77,10 +78,9 @@ its tree's `unplaced.cpp`, grouped by link-order cluster. That tree is the scan'
 ecourna's `CStringUtils::ToByte`, so its stub was in `ecourna/unplaced.cpp`, and it matches from a uenux2 object (`awk
 -F'\t' '$1==5449 {print $9, $11}' splat/scan.tsv` prints `ecourna app/uenux2/src/api/util/ctime.cpp.o`). For the same
 reason a stub can sit over a body of a library `third_party/MANIFEST.md` pins, which a TSE function calls: the census's
-`owner` column names the library
-(`awk -F'\t' '$1==6281 || $1==4936 || $1==2199 {print $1, $4, $5}' ledger/functions.tsv` prints `2199 boost ecourna`,
-`4936 7zip ecourna` and `6281 libcxx ecourna`; 6281 is libc's `chown`), or the body calls one whose owner does (2134 calls libc++'s path parser, 2546). Such a row is the library's
-code and lands with its caller, never as TSE source. Decide a function's tree from its callers' records and its landing
+`owner` column (`ledger/functions.tsv` column 4) names the library, or the body calls one whose owner does. Such a row
+is the library's code and lands with its caller, never as TSE source (`docs/reference/facts/placing.md` §P1 lists such
+rows). Decide a function's tree from its callers' records and its landing
 pads (an `invoke_*` around a throwing call is ecourna's or ASN.1's flags, none is uenux2's:
 `docs/reference/facts/app-flags.md` §F6). The comment over a cluster (`// link-order cluster 984 · uses=3 · neighbours'
 file uenux2/src/api/gui/ctextfielddoubleline.cpp`) is its stretch's `probable_file` in `ledger/tu-clusters.tsv`: the
