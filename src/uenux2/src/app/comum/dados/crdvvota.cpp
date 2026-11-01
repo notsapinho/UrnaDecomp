@@ -30,19 +30,6 @@ SINGLETON_IMPL_GET_INST(CRdvVota, s_mutex, s_instancia)
 std::unique_ptr<CRdvVota> CRdvVota::s_instancia;
 std::mutex CRdvVota::s_mutex;
 
-CRdvVota::~CRdvVota() = default;
-
-CRdv::TVotosCargo CRdvVota::GetVotos() const
-{
-    TVotosCargo votos;
-    for (const auto& [eleicao, votosCargos] : m_votos.GetMapa()) {
-        for (const auto& [info, votosCargo] : votosCargos.GetMapa()) {
-            votos.emplace(info.cargo, votosCargo.GetVotos());
-        }
-    }
-    return votos;
-}
-
 md::TQtdVoto CRdvVota::Comparecimento(md::TEleicaoID eleicao) const
 {
     return m_votos.Comparecimento(eleicao);
@@ -53,6 +40,19 @@ CRdv::TVotosCargo CRdvVota::GetVotos(md::TEleicaoID eleicao) const
     TVotosCargo votos;
     for (const auto& [info, votosCargo] : m_votos.GetVotos(eleicao).GetMapa()) {
         votos.emplace(info.cargo, votosCargo.GetVotos());
+    }
+    return votos;
+}
+
+CRdvVota::~CRdvVota() = default;
+
+CRdv::TVotosCargo CRdvVota::GetVotos() const
+{
+    TVotosCargo votos;
+    for (const auto& [eleicao, votosCargos] : m_votos.GetMapa()) {
+        for (const auto& [info, votosCargo] : votosCargos.GetMapa()) {
+            votos.emplace(info.cargo, votosCargo.GetVotos());
+        }
     }
     return votos;
 }

@@ -2,7 +2,7 @@
 # 1931, CRdvVota vtable slot 3) with the CVotosEleicoesVota totals it calls; wasm-opt inlines CVotosEleicoesVota::Candidato
 # (one caller) into it, as in the target. The other slots and md members are below. Paths relative to src/uenux2.
 # CRdvVota::GetInst (target fn 555, record crdvvota.cpp:87), its statics and their exit destructors are in crdvvota.cpp;
-# src/units/110-uenux2-singletons.mk says what shows them. ~CRdvVota is written and short of its converter member (fn 5734).
+# src/units/110-uenux2-singletons.mk says what shows them. ~CRdvVota (fn 5734) matches with its converter member (below).
 #
 # comum::CRdvPosicionadorVota::Posicao (target fn 11496, slot 2 of the class's vtable; slots 0 and 1 are the shared 174
 # and 144), with the comum::md::CRdvPosicionador header and CVoto::operator<=>, which wasm-opt inlines into it (its one
@@ -51,9 +51,11 @@
 # destroy of CVotosEleicoesVota's map of cargos to elections). The member's name is chosen.
 #
 # comum::CRdvVota's other slots (vtable @1560164; CRdv declares no destructor, so the vtable has no destructor slot),
-# in crdvvota.cpp after the destructor. Slot 0 is the key function, so crdvvota.cpp emits the vtable. Their order is
-# one the use bands allow (5734 before 5733 before 5732, 3749 before 3748 before 3747, 2814 before 2813, 11492 before
-# 11490, read from ledger/ordinals.tsv); their lines are chosen.
+# in crdvvota.cpp. Slot 0 is the key function, so crdvvota.cpp emits the vtable. Inside a band of ledger/ordinals.tsv
+# the target's index runs in reverse link order: band 1 reads 11492 (slot 2), 11490 (slot 1), 11485 (the converter's
+# D2, which our object emits after ~CRdvVota, its first use in the file), so slots 2 and 1 sit above the destructor;
+# band 2 reads 5734 (~CRdvVota), 5733 (slot 0), 5732; band 3 3749, 3748, 3747; band 4 2814, 2813. Our link gives each
+# band the same order. The order across bands and the lines are chosen.
 # - Slots 4 to 10, Legenda, Partido, Nominais, Legendas, Nulos, Brancos and Cargo (fns 3749, 2814, 2813, 5732, 3748,
 #   3747, 1930): each returns m_votos's total of the same name, which has that slot as its one caller, and wasm-opt
 #   inlines it there as in the target. binaryen merges the seven into the shared bodies 6033 (Legenda, Partido) and 2296
@@ -85,12 +87,15 @@
 #   rows (6 inserted, 6 deleted); as written it is byte-identical.
 # - The constructor (fn 5640) with MontaMapa (records :33 and :40; the record spells two lambdas, the inner one taking
 #   `auto it`), the map from each cargo to its election, which throws 4723 on an empty map and 4724 on a cargo in two
-#   elections. Written and `differs`: 97 over 561 rows (13 inserted, 30 deleted) in this link. In a private link with
-#   the md/rdv objects alone compiled with UENUX2_EXTRA=-fstrict-aliasing it is 17 over 548, operand-only: the target
-#   keeps the new map's size in a local across the inserts, which only type-based aliasing allows here. It waits for
-#   the per-directory strict-aliasing decision.
-# GetEleicao, MontaMapa, Votos and the two Total sit above the constructor, around MontaMapa's record lines; their lines
-# are chosen (no record names one).
+#   elections. Written; the scan finds no body of ours for it (`no-candidate`), and `pnpm wasm score` gives 97 over 561
+#   rows (13 inserted, 30 deleted) in this link: the target keeps the new map's size in a local across the inserts,
+#   which only type-based aliasing allows here. It matches only with strict aliasing on comum/dados/md: in a private
+#   link with the 48 objects of that directory compiled with UENUX2_EXTRA=-fstrict-aliasing the score is 17 over 548
+#   rows, all of them operands (its calls, strings, records, the error's typeinfo and destructor slot), `pnpm wasm
+#   splat-remap` re-points the body IDENTICAL to 5640, and the splat build of that link verifies all 10541 match lines.
+# GetEleicao sits above MontaMapa, whose lines are its records'; Votos and the two Total sit below the constructor,
+# before the gap that ends at GetVotos's record (:113). Their lines, GetEleicao's and the constructor's are chosen (no
+# record names one).
 #
 # md::CVotosCargos, in md/rdv/cvotoscargos.cpp:
 # - The constructor (fn 5643, records :50, :58 and :66): operand-only, 39 over 303 rows. It reads the cargo into a local

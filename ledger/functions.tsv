@@ -1022,7 +1022,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1156	169	11	-	-	-	-	none	-	
 1157	36	11	app	-	-	-	none	-	
 1158	324	9	app	-	-	-	none	-	
-1159	45	11	sqlite	comum	skeleton	3547	addr	2	std::__2::__tree<std::__2::__value_type<unsigned int, comum::md::CVotosCargos>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, comum::md::CVotosCargos>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, comum::md::CVotosCargos>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned int, comum::md::CVotosCargos>, void*>*)
+1159	45	11	sqlite	comum	skeleton	3544	addr	2	std::__2::__tree<std::__2::__value_type<unsigned int, comum::md::CVotosCargos>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, comum::md::CVotosCargos>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, comum::md::CVotosCargos>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned int, comum::md::CVotosCargos>, void*>*)
 1160	147	11	-	comum	-	-	none	-	
 1161	893	11	app	ecourna	-	-	none	-	
 1162	273	11	app	-	-	-	none	-	
@@ -3222,8 +3222,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3356	7	0	libcxx	libc++	skeleton	3541	addr	1	std::__2::ios_base::failure::~failure()
 3357	43	2	libcxx	libc++	-	-	none	-	
 3358	10	2	libcxx	libc++	skeleton	3542	addr	2	std::__2::basic_stringstream<char, std::__2::char_traits<char>, std::__2::allocator<char>>::~basic_stringstream()_20266
-3359	12	2	libcxx	-	skeleton	3545	shape	2	std::__2::ctype<wchar_t> const& std::__2::use_facet[abi:ne210108]<std::__2::ctype<wchar_t>>(std::__2::locale const&)
-3360	16	2	libcxx	libc++	skeleton	3546	addr	2	std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20194
+3359	12	2	libcxx	-	skeleton	3546	shape	2	std::__2::ctype<wchar_t> const& std::__2::use_facet[abi:ne210108]<std::__2::ctype<wchar_t>>(std::__2::locale const&)
+3360	16	2	libcxx	libc++	skeleton	3548	addr	2	std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20194
 3361	16	1	libcxx	-	skeleton	3550	addr	2	std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()_20166
 3362	332	3	asn1	libc++	skeleton	2579	shape	15	std::__2::basic_istream<char, std::__2::char_traits<char>>::get()
 3363	467	3	libcxx	RHVoice	skeleton	1109	shape	24	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::__input_arithmetic[abi:ne210108]<double, char, std::__2::char_traits<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, double&)
@@ -3572,7 +3572,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3706	82	2	libcxx	-	-	-	none	-	
 3707	173	3	app	ecourna	skeleton	3527	shape	7	comum::md::(anonymous namespace)::GetEleicao(api::EUeRdvError, unsigned char, std::__2::map<unsigned char, unsigned int, std::__2::less<unsigned char>, std::__2::allocator<std::__2::pair<unsigned char const, unsigned int>>> const&, std::__2::source_location)
 3708	173	3	app	ecourna	skeleton	5927	shape	6	comum::md::CVotosEleicoesVota::Votos(api::EUeRdvError, unsigned int, std::__2::source_location) const
-3709	32	3	-	vota	skeleton	3548	addr	1	std::__2::__tree<RHVoice::pitch::stylizer::dist_t, std::__2::less<RHVoice::pitch::stylizer::dist_t>, std::__2::allocator<RHVoice::pitch::stylizer::dist_t>>::destroy(std::__2::__tree_node<RHVoice::pitch::stylizer::dist_t, void*>*)
+3709	32	3	-	vota	skeleton	3547	addr	1	std::__2::__tree<RHVoice::pitch::stylizer::dist_t, std::__2::less<RHVoice::pitch::stylizer::dist_t>, std::__2::allocator<RHVoice::pitch::stylizer::dist_t>>::destroy(std::__2::__tree_node<RHVoice::pitch::stylizer::dist_t, void*>*)
 3710	60	3	app	-	-	-	none	-	
 3711	37	3	app	-	-	-	none	-	
 3712	107	3	app	ecourna	-	-	none	-	
@@ -4618,13 +4618,13 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 4752	86	1	libcxx	libc++	skeleton	5951	byte	0	std::__2::ostreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>::operator=[abi:ne210108](wchar_t)
 4753	11	1	-	-	skeleton	5952	shape	2	std::__2::basic_ostream<wchar_t, std::__2::char_traits<wchar_t>>::flush()
 4754	12	2	app	libc++	skeleton	5953	addr	2	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::basic_streambuf()
-4755	9	0	libcxx	-	skeleton	12048	shape	1	std::__2::basic_ostream<char, std::__2::char_traits<char>>::operator<<(unsigned short)
+4755	9	0	libcxx	-	skeleton	12046	shape	1	std::__2::basic_ostream<char, std::__2::char_traits<char>>::operator<<(unsigned short)
 4756	64	1	sqlite	libc++	skeleton	3549	shape	1	std::__2::basic_ostream<char, std::__2::char_traits<char>>::sentry::sentry(std::__2::basic_ostream<char, std::__2::char_traits<char>>&)
-4757	19	0	libcxx	-	skeleton	5954	addr	1	virtual thunk to std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()_20167
-4758	9	0	libcxx	-	skeleton	5955	addr	1	virtual thunk to std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()
-4759	13	0	libcxx	-	skeleton	5956	addr	1	std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()_20164
-4760	473	2	-	-	skeleton	5957	shape	24	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::__input_arithmetic_with_numeric_limits[abi:ne210108]<int, char, std::__2::char_traits<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, int&)
-4761	66	2	libcxx	libc++	skeleton	5958	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::sputc[abi:ne210108](char)
+4757	19	0	libcxx	-	skeleton	5955	addr	1	virtual thunk to std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()_20167
+4758	9	0	libcxx	-	skeleton	5956	addr	1	virtual thunk to std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()
+4759	13	0	libcxx	-	skeleton	5957	addr	1	std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()_20164
+4760	473	2	-	-	skeleton	5958	shape	24	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::__input_arithmetic_with_numeric_limits[abi:ne210108]<int, char, std::__2::char_traits<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, int&)
+4761	66	2	libcxx	libc++	skeleton	5959	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::sputc[abi:ne210108](char)
 4762	19	0	libcxx	-	skeleton	5960	addr	1	virtual thunk to std::__2::basic_istream<char, std::__2::char_traits<char>>::~basic_istream()_20139
 4763	9	0	libcxx	-	skeleton	5961	addr	1	virtual thunk to std::__2::basic_istream<char, std::__2::char_traits<char>>::~basic_istream()
 4764	4	0	libcxx	boost	skeleton	3387	byte	0	sysinfo
@@ -7890,26 +7890,26 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 8024	17	0	app	libc++	skeleton	7235	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::empty_string*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::empty_string>, std::__2::allocator<RHVoice::userdict::empty_string>>::__get_deleter(std::type_info const&) const
 8025	378	0	libcxx	libc++	skeleton	12032	shape	8	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::overflow(int)
 8026	142	0	libcxx	libc++	skeleton	12033	byte	0	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::pbackfail(int)
-8027	95	0	libcxx	libc++	skeleton	12035	byte	0	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::underflow()
-8028	64	0	-	-	skeleton	12037	shape	1	std::__2::basic_ostream<wchar_t, std::__2::char_traits<wchar_t>>::sentry::sentry(std::__2::basic_ostream<wchar_t, std::__2::char_traits<wchar_t>>&)
+8027	95	0	libcxx	libc++	skeleton	12034	byte	0	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::underflow()
+8028	64	0	-	-	skeleton	12036	shape	1	std::__2::basic_ostream<wchar_t, std::__2::char_traits<wchar_t>>::sentry::sentry(std::__2::basic_ostream<wchar_t, std::__2::char_traits<wchar_t>>&)
 8029	17	0	app	libc++	skeleton	7237	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::word_break*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::word_break>, std::__2::allocator<RHVoice::userdict::word_break>>::__get_deleter(std::type_info const&) const
-8030	164	0	libcxx	libc++	skeleton	12039	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::xsputn(wchar_t const*, long)
-8031	51	0	libcxx	libc++	skeleton	12040	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::uflow()
-8032	164	0	libcxx	libc++	skeleton	12041	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::xsgetn(wchar_t*, long)
-8033	13	0	libcxx	libc++	skeleton	12042	addr	2	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::~basic_streambuf()_20199
-8034	19	0	-	libc++	skeleton	12043	addr	1	virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20196
-8035	10	0	-	libc++	skeleton	12044	addr	1	non-virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20195
+8030	164	0	libcxx	libc++	skeleton	12037	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::xsputn(wchar_t const*, long)
+8031	51	0	libcxx	libc++	skeleton	12038	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::uflow()
+8032	164	0	libcxx	libc++	skeleton	12039	byte	0	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::xsgetn(wchar_t*, long)
+8033	13	0	libcxx	libc++	skeleton	12040	addr	2	std::__2::basic_streambuf<wchar_t, std::__2::char_traits<wchar_t>>::~basic_streambuf()_20199
+8034	19	0	-	libc++	skeleton	12041	addr	1	virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20196
+8035	10	0	-	libc++	skeleton	12042	addr	1	non-virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20195
 8036	17	0	app	libc++	skeleton	7240	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::start_of_token*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::start_of_token>, std::__2::allocator<RHVoice::userdict::start_of_token>>::__get_deleter(std::type_info const&) const
-8037	9	0	-	libc++	skeleton	12045	addr	1	virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()
-8038	16	0	-	libc++	skeleton	12046	addr	1	non-virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()
-8039	13	0	libcxx	libc++	skeleton	12047	addr	1	std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20191
+8037	9	0	-	libc++	skeleton	12043	addr	1	virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()
+8038	16	0	-	libc++	skeleton	12044	addr	1	non-virtual thunk to std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()
+8039	13	0	libcxx	libc++	skeleton	12045	addr	1	std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_20191
 8040	583	0	-	-	-	-	none	-	
-8041	12	0	-	-	skeleton	12050	shape	2	std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>> const& std::__2::use_facet[abi:ne210108]<std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>>>(std::__2::locale const&)
+8041	12	0	-	-	skeleton	12048	shape	2	std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>> const& std::__2::use_facet[abi:ne210108]<std::__2::num_put<char, std::__2::ostreambuf_iterator<char, std::__2::char_traits<char>>>>(std::__2::locale const&)
 8042	17	0	app	libc++	skeleton	7244	addr	1	std::__2::__shared_ptr_pointer<RHVoice::userdict::end_of_token*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::end_of_token>, std::__2::allocator<RHVoice::userdict::end_of_token>>::__get_deleter(std::type_info const&) const
-8043	74	0	app	-	skeleton	12051	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::sputbackc[abi:ne210108](char)
+8043	74	0	app	-	skeleton	12049	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::sputbackc[abi:ne210108](char)
 8044	17	0	app	libc++	skeleton	7250	addr	1	std::__2::__shared_ptr_pointer<RHVoice::ukrainian*, std::__2::shared_ptr<RHVoice::language>::__shared_ptr_default_delete<RHVoice::language, RHVoice::ukrainian>, std::__2::allocator<RHVoice::ukrainian>>::__get_deleter(std::type_info const&) const
 8045	471	0	app	-	-	-	none	-	
-8046	12	0	app	-	skeleton	12052	shape	2	std::__2::num_get<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>> const& std::__2::use_facet[abi:ne210108]<std::__2::num_get<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>>>(std::__2::locale const&)
+8046	12	0	app	-	skeleton	12051	shape	2	std::__2::num_get<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>> const& std::__2::use_facet[abi:ne210108]<std::__2::num_get<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>>>(std::__2::locale const&)
 8047	17	0	app	libc++	skeleton	7258	addr	1	std::__2::__shared_ptr_pointer<RHVoice::tatar*, std::__2::shared_ptr<RHVoice::language>::__shared_ptr_default_delete<RHVoice::language, RHVoice::tatar>, std::__2::allocator<RHVoice::tatar>>::__get_deleter(std::type_info const&) const
 8048	4	0	libcxx	libc++abi	skeleton	12053	byte	0	std::__2::basic_istream<char, std::__2::char_traits<char>>::~basic_istream()
 8049	150	0	libcxx	boost	skeleton	12055	byte	0	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::xsputn(char const*, long)
@@ -10846,7 +10846,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10980	20	0	app	libc++	skeleton	11704	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Cargo(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 10981	433	0	app	libc++	-	-	none	-	
 10982	22	0	libcxx	libc++	skeleton	11238	addr	1	std::__2::__function::__func<api::CTextFieldUpdate::CTextFieldUpdate(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, std::__2::chrono::duration<long long, std::__2::ratio<1ll, 1000ll>> const&, api::SFont const&, api::TColor, api::TColor)::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
-10983	9	0	libcxx	-	skeleton	12036	fingerprint	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::resize[abi:ne210108](unsigned long)
+10983	9	0	libcxx	-	skeleton	12035	fingerprint	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::resize[abi:ne210108](unsigned long)
 10984	12	0	libcxx	libc++	skeleton	9820	addr	2	RHVoice::value::concrete_container<RHVoice::break_strength>::clone() const
 10985	7	0	-	libc++	skeleton	11732	addr	1	std::__2::__system_error_category::name() const
 10986	20	0	app	libc++	skeleton	11721	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Brancos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
@@ -11083,7 +11083,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11217	7	0	app	libc++	skeleton	11890	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Candidato(unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target_type() const
 11218	20	0	app	libc++	skeleton	11897	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Candidato(unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target(std::type_info const&) const
 11219	12	0	-	libc++	skeleton	11723	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Brancos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::__clone(std::__2::__function::__base<unsigned short (comum::md::CVotosCargos const&, unsigned char)>*) const
-11220	193	0	-	-	skeleton	12049	shape	10	std::__2::basic_ios<char, std::__2::char_traits<char>>::fill[abi:ne210108]() const
+11220	193	0	-	-	skeleton	12047	shape	10	std::__2::basic_ios<char, std::__2::char_traits<char>>::fill[abi:ne210108]() const
 11221	19	0	-	libc++	-	-	none	-	
 11222	1130	0	-	comum	-	-	none	-	
 11223	2163	0	-	comum	-	-	none	-	
@@ -11355,7 +11355,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11489	39	0	app	api	-	-	none	-	
 11490	597	0	app	comum	-	-	none	-	
 11491	9	0	app	api	skeleton	10968	byte	0	api::ITextToSpeech::SetTag(long long)
-11492	12	0	app	comum	skeleton	12028	shape	1	comum::CRdvVota::Comparecimento(unsigned int) const
+11492	12	0	app	comum	skeleton	12052	shape	1	comum::CRdvVota::Comparecimento(unsigned int) const
 11493	10	0	app	-	-	-	none	-	
 11494	37	0	app	api	skeleton	10969	byte	0	api::ITextToSpeech::DecreaseSpeed()
 11495	37	0	app	-	skeleton	12059	addr	4	__cxx_global_array_dtor_2504

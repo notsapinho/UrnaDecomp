@@ -27,8 +27,10 @@ public:
 
     bool EhNominal() const;
     bool EhLegenda() const;
-    // Inline: the target's copy (fn 11316, the one md::CVotosCargos::Nulos passes) calls the static EhNulo (fn 5645);
-    // defined in cvoto.cpp beside the static, it held the static inlined (9 over 13 rows, 8 inserted).
+    // Inline is a choice for the call: the target's copy (fn 11316, the one md::CVotosCargos::Nulos passes) calls the
+    // static EhNulo (fn 5645), as this form gives; defined in cvoto.cpp beside the static, it held the static inlined
+    // (9 over 13 rows, 8 inserted). The target's run 11315 to 11318 (EhBranco, this one, EhLegenda, EhNominal) puts its
+    // copy among cvoto.cpp's members, and ours is emitted by cvotoscargos.cpp: neither form tried gives both.
     bool EhNulo() const { return EhNulo(m_tipo); }
     bool EhBranco() const;
 
