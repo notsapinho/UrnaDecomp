@@ -32,6 +32,10 @@
 # match line was renamed from the D2 to its D1 alias. Chosen: GetTelaCargoAtual's parameter name and its being private,
 # GetTela's local, the find form, and GetTela's place below NomeTela (lines 76 to 84: the constructor's records :67 and
 # :72 stay blank). Other forms are not measured.
+# CVisualizarCandidatos::GetCargo (fn 5951): the byte at +24 when +25 is set, else 0, m_cargo.value_or(0), out of line
+# in cvisualizarcandidatos.cpp, its place after the statics a choice, and so is its name. Its two target callers,
+# vota::CMenuFiltrarCandidatosPorNumero's slots (fns 11891 and 11892), are pending in unit 104, and the roots stand in
+# for them. 0 over 10 rows (pnpm wasm score, whole link, byte-exact); `m_cargo ? *m_cargo : 0` is not measured.
 #
 # Measured. GetKeyboardPosition: the instance of api::CPolySingleton<api::IUrna> bound to a reference before Modelo() is
 # called gives the target's frame, its std::source_location temporary in the slot of the string GetMensagem keeps

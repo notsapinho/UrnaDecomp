@@ -21,6 +21,9 @@
 // not join the shared body fn 3921. TelaSemCandidato stands for 7428; the form it gets is left as it is, as nothing
 // calls this.
 //
+// vota::CVisualizarCandidatos::GetCargo (fn 5951) has two direct callers in the target, fns 11891 and 11892
+// (vota::CMenuFiltrarCandidatosPorNumero's slots, pending in unit 104): CargoVisualizado stands for them with two calls.
+//
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 extern const char cconfirmavotosemcandidato_vt[] __asm__("_ZTVN4vota25CConfirmaVotoSemCandidatoE");
@@ -29,6 +32,7 @@ int w150_visualizar() __asm__("_ZN4vota21CVisualizarCandidatos7GetInstEv");
 void w150_nome_tela(void* nome, int tela) __asm__("_ZN4vota8NomeTelaENS_12ETelaVotacaoE");
 void w150_tela_sem_candidato(void* tela, void* estado, const void* chamador) __asm__(
     "_ZN4vota25CConfirmaVotoSemCandidato17GetTelaCargoAtualERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+int w150_cargo(const void* estado) __asm__("_ZNK4vota21CVisualizarCandidatos8GetCargoEv");
 }
 
 namespace {
@@ -65,6 +69,12 @@ __attribute__((noinline)) int TelaSemCandidato(void* estado, const void* chamado
     return tela[6] + 15;
 }
 
+// stands for fns 11891 and 11892
+__attribute__((noinline)) int CargoVisualizado(const void* estado, const void* outro)
+{
+    return w150_cargo(estado) - w150_cargo(outro);
+}
+
 struct SEleitorEstadosRoots {
     SEleitorEstadosRoots()
     {
@@ -73,6 +83,7 @@ struct SEleitorEstadosRoots {
         eleitor_estados_sink = reinterpret_cast<const void*>(&VisualizarCandidatos);
         eleitor_estados_sink = reinterpret_cast<const void*>(&NomesTela);
         eleitor_estados_sink = reinterpret_cast<const void*>(&TelaSemCandidato);
+        eleitor_estados_sink = reinterpret_cast<const void*>(&CargoVisualizado);
     }
 } eleitor_estados_roots;
 

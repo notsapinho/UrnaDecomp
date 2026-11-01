@@ -30,6 +30,11 @@ public:
 
     virtual void StartState() override;
 
+    // Fn 5951: the byte at +24 when +25 is set, else 0, so m_cargo's value or 0. Out of line, in this class's .cpp:
+    // vota::CMenuFiltrarCandidatosPorNumero's two slots (fns 11891 and 11892, another file) call it on GetInst()'s
+    // result. No record names it; the name is chosen from what it returns.
+    comum::md::TCargoID GetCargo() const;
+
 private:
     CVisualizarCandidatos();
 

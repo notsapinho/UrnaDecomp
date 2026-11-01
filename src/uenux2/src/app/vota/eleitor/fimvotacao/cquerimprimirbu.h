@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "app/comum/cappstate.h"
 
@@ -19,19 +20,27 @@ namespace vota {
 // 491, which has no body here). The destructors are the bodies the states over one std::shared_ptr at +12 share (fns
 // 244 and 387): final, and out of line (docs/reference/facts/reading.md R4, R5). +12 is the form: StartState calls its
 // slot 2, ProcessInput reads its input fields (+72) and focus (+84), CInteractiveForm's layout, with
-// CPolySingleton<IInputKbd>'s instance (fn 455). GetInst, inlined into CInicioBU::StartState (fn 12062), builds the
-// object over a member of CTelasVota::GetInst() (+236) that app/vota/eleitor/comum/ctelasvota.h has no accessor for: it
-// and the statics are not reconstructed. Chosen: the member's name and the destructor declared first. This header's
-// path is chosen, beside the .cpp the records name.
+// CPolySingleton<IInputKbd>'s instance (fn 455). A singleton: GetInst, inlined by binaryen into its one caller,
+// CInicioBU::StartState (fn 12062), builds the object over the base's constructor with 2 and a copy of
+// CTelasVota::GetInst()'s +236, and keeps it in a static std::unique_ptr (@1833904, destroyed at exit by fn 12037)
+// under a static std::mutex (@1833880, by fn 12036), unit 104's shape. Chosen: the member's name, GetInst's and the
+// statics', and the destructor declared first. This header's path is chosen, beside the .cpp the records name.
 class CQuerImprimirBU final : public comum::CAppState {
 public:
     virtual ~CQuerImprimirBU() override;
+
+    static CQuerImprimirBU& GetInst();
 
     virtual void StartState() override;
 
     virtual void ProcessInput() override;
 
 private:
+    CQuerImprimirBU();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CQuerImprimirBU> s_inst;
+
     std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
 };
 

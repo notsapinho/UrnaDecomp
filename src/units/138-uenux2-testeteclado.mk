@@ -5,13 +5,16 @@
 #     CPreZeresima's and CRetomada's slot 0 hold too; the constructor 5948
 #   vota::testeteclado::CPreZeresima (testeteclado/cprezeresima.{h,cpp}) and vota::testeteclado::CRetomada
 #     (testeteclado/cretomada.{h,cpp}): the out-of-line destructors, whose D0 is one body, 5946; CRetomada's slot 12,
-#     GetEstadoSemTeste 11829
+#     GetEstadoSemTeste 11829; CPreZeresima's slot 11, GetEstadoPassouNoTeste 5945, and its statics' exit destructors
+#     11864 and 11863 (its GetInst is inlined into unit 199's 11914)
 #   vota::CReinicioVotacao (iniciovotacao/creiniciovotacao.{h,cpp}): GetInst 5938, with its constructor inlined by
 #     binaryen; the exit destructors of its static std::mutex and std::unique_ptr, 11836 and 11837; ProcessInput 11834
 #   vota::CAplicacaoEncerrada (fimvotacao/caplicacaoencerrada.{h,cpp}): StartState 12058, with
 #     vota::CLogVota::LogaVotacaoEncerrada inlined by binaryen; GetInst 3877 and its statics' exit destructors 12060 and
 #     12059, the first a thunk of binaryen's 1564, which forms with it (and with which unit 37's 2888 and 12057 match)
-#   vota::CVerificaHorarioZeresima (iniciovotacao/cverificahorariozeresima.{h,cpp}): FinishState 11868
+#   vota::CVerificaHorarioZeresima (iniciovotacao/cverificahorariozeresima.{h,cpp}): FinishState 11868; GetInst 5947,
+#     with its constructor inlined by binaryen, and its statics' exit destructors 11873 and 11872; StartState 11871;
+#     ProcessTickNaoDesligamento 11870
 #   vota::testeteclado::CEsperaRetestar (testeteclado/cesperaretestar.{h,cpp}): StartState 11825, written and
 #     `unresolved self-voted` (below); FinishState 11824
 #   The D2 785 and D0 1560 of CErroTesteTecladoFim (unit 97) are also CAplicacaoEncerrada's, CEsperaRetestar's and
@@ -44,15 +47,9 @@
 # No other spelling of a written body was compiled.
 #
 # Not written, with what each waits for:
-# - the other constructors over CEstadoComDesligamentoAutomatico, and so their GetInst: CVerificaHorarioZeresima's 5947
-#   (its constructor copies vota::CTelasVota::GetInst()'s +20, which app/vota/eleitor/comum/ctelasvota.h has no accessor
-#   for), CTesteTeclado's 3855 and CEsperaRetestar's 5936 (not read for this unit);
-# - CVerificaHorarioZeresima's slot 9 (fn 11870, record :80) and CEsperaRetestar's (fn 11823): the base's header names
-#   slot 9 ProcessOutroTick, a chosen name, where the record names it ProcessTickNaoDesligamento; so the base's empty
-#   body, fn 425, fills both slots here and their stubs go. 11870 and StartState (11871) throw through the assert macro
-#   with the condition `appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA` (ledger/strings.tsv 400939) and
-#   the codes 3482 and 3481, so they wait for the two codes in api/util/eueasserterror.h (the EEstadoVota enumerator,
-#   51, is in app/comum/dados/md/estadoaplicacao/cestadogeralvota.h now); 11823 calls fn 3855;
+# - the other constructors over CEstadoComDesligamentoAutomatico, and so their GetInst: CTesteTeclado's 3855 and
+#   CEsperaRetestar's 5936 (not read for this unit);
+# - CEsperaRetestar's slot 9 (fn 11823): it calls fn 3855; the base's empty body, fn 425, fills the slot here;
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
@@ -83,6 +80,27 @@
 # - CEsperaRetestar::FinishState (fn 11824): it stops the tick and holds api::IForm<MEDIA>::Hide inlined on its form,
 #   which api/gui/iform.h now declares public, a reading (it was protected, for CFormStack; a friend of CEsperaRetestar
 #   gives the same bytes). 3 over 40 rows, operand-only.
+# - vota::CVerificaHorarioZeresima's GetInst (fn 5947), StartState (fn 11871, record :64) and
+#   ProcessTickNaoDesligamento (fn 11870, record :80, slot 9, the name the base's header now has). GetInst is unit
+#   104's shape; the constructor passes 6 to the base's and copies CTelasVota's +20 (ctelasvota.h's
+#   GetTelaVerificaHorarioZeresima) and comum::CConfiguracaoEleicao's +544 (GetDataHoraZeresima), then adds a stopped
+#   2000-ms tick through vota::CThreadVota::AddStoppedTick(const std::chrono::milliseconds&), an overload added out of
+#   line to app/vota/cthreadvota.cpp (unit 02's file), which binaryen inlines (cthreadvota.h says what shows it).
+#   StartState starts the tick, logs through vota::CLogVota::LogaAguardandoHorarioZeresima (GetInst, fn 184, is called
+#   before the member's own stack frame opens; added to app/vota/log/clogvota.cpp, unit 119's file), shows the form
+#   and stays while the current time is before +36; else, and in slot 9 for the tick's id once the time has come, it
+#   asserts the vote's state with the codes 3481 and 3482 (api/util/eueasserterror.h, names chosen to the records'
+#   columns) and goes to vota::CInicioZeresima. The assert texts call GetVota() on `appinfo`, which the target calls
+#   const (fn 903), so a const reference. 5947 14 over 86 rows, 11871 23 over 130, 11870 11 over 58, all operand-only.
+#   GetInst's other target caller, vota::CGeraDadosDinamicos::StartState (fn 11865, pending in unit 199), has a stand-in
+#   in the roots: with 5945 alone binaryen inlined GetInst into it (5945 scored 111 over 169 rows, 83 inserted).
+# - CPreZeresima::GetEstadoPassouNoTeste (fn 5945, record :56) goes to vota::CGeraDadosDinamicos (unit 199) for the
+#   vote's first two states and to CVerificaHorarioZeresima for EAVAGUARDAHORAZERESIMA, else logs
+#   comum::IEventosLog::LogaErroEstadoAplicativo and throws vota::EUeVotaError 9377 with the state appended to "Estado
+#   nao esperado " (app/vota/euevotaerror.h). 23 over 86 rows, operand-only. CPreZeresima's GetInst (unit 104's
+#   shape over CBase's constructor and CDateTime(0) on +36) and statics are in cprezeresima.cpp, the GetInst inlined by
+#   binaryen into vota::CVerificaEleicaoPassou::StartState (fn 11914, unit 199); the statics' exit destructors 11864
+#   and 11863 match with it.
 #
 # Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data
 # member, of s_fimEspera, LogaVotacaoEncerrada, GetTelaReinicioVotacao, CReinicioVotacao::GetInst and
@@ -96,8 +114,12 @@
 # between cestadocomdesligamentoautomatico.cpp's record and cmostraqrcodebu.cpp's objects, and its GetInst's callers
 # are fimvotacao/'s; CBase's between auxiliares/cvisualizarcandidatos.cpp's and cverificahorariozeresima.cpp's;
 # CReinicioVotacao's after cquerreimprimirzeresima.cpp's, with three unrecorded classes between); the lines of the
-# functions written in cverificahorariozeresima.cpp, after its records' lines 64 and 80, which stay blank, and of
-# CPreZeresima's destructor in cprezeresima.cpp, ahead of its record's line 56 (GetEstadoPassouNoTeste, pending).
+# functions written in cverificahorariozeresima.cpp other than StartState and ProcessTickNaoDesligamento (GetInst, the
+# constructor and the statics above them, FinishState and the destructor after), and of cprezeresima.cpp's functions
+# above GetEstadoPassouNoTeste; the names GetInst, GetTelaVerificaHorarioZeresima, LogaAguardandoHorarioZeresima, the
+# AddStoppedTick overload, the assert codes' and 9377's enumerators; the switch in 5945 with its cases indented, which
+# puts the throw at its record's column 19; `Now() >= m_horario` for the tick's test (another spelling is not
+# measured).
 TESTETECLADO_SRCS := src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp \
     src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp \
@@ -106,6 +128,9 @@ TESTETECLADO_SRCS := src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cretomada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cesperaretestar.cpp
 UENUX2_SRCS += $(TESTETECLADO_SRCS)
+# cverificahorariozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
+# CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # the pending traps compile at the tree's flags, as the members will
 TESTETECLADO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/138-uenux2-testeteclado-pending.o: $(ROOT)/src/units/138-uenux2-testeteclado-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/138-uenux2-testeteclado.mk $(TESTETECLADO_HDRS)

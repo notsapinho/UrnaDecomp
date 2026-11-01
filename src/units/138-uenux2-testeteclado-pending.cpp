@@ -9,20 +9,15 @@
 // vota::testeteclado::CPreZeresima, in cprezeresima.cpp:
 // - GetTela 11862 (slot 10): fns 3648, 6580 and 6581, with no name, and api::CDateTime's ConvertFromLocalTime (fn 5476),
 //   private in api/util/cdatetime.h.
-// - GetEstadoPassouNoTeste 5945 (slot 11, record :56): fn 5881 (comum::IEventosLog::LogaErroEstadoAplicativo, unit 111)
-//   and CVerificaHorarioZeresima::GetInst (fn 5947), which calls the base's constructor.
-// - GetEstadoSemTeste 11861 (slot 12): fn 3648 and slot 11's body (fn 5945, called directly).
+// - GetEstadoSemTeste 11861 (slot 12): fn 3648, with no name; it calls slot 11's body (fn 5945, written) directly.
 // vota::testeteclado::CRetomada, in cretomada.cpp:
 // - GetTela 11831 (slot 10): fns 6580 and 6581.
 // - GetEstadoPassouNoTeste 11830 (slot 11): fn 491, with no name.
 // vota::CVerificaHorarioZeresima, in src/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp:
-// - StartState 11871 (slot 2, record :64): it throws api::EUeAssertError 3481 through fn 463 with the uenux2 assert
-//   macro's text, "Assert (appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA)", and logs through a
-//   vota::CLogVota member binaryen inlines; the assert macro, the EEstadoVota enumerator and CEstadoGeralVota's
-//   GetEstadoVota are in this tree now, the codes 3481 and 3482 not (fragment 138 says what else it waits for).
 // - ProcessInput 11869 (slot 7), 861 B: fns 455, 491, 5586, 5591 and 6595, with no name, and 5880 (IEventosLog's).
 // vota::CReinicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/creiniciovotacao.cpp:
-// - StartState 11835 (slot 2), 712 B: fns 183, 436, 1269, 1391 and 5940, with no name; 5957 and 412 have names since.
+// - StartState 11835 (slot 2), 712 B: fns 183, 436, 1269 and 1391, with no name; 5957 and 412 have names since, and
+//   5940 (vota::CQuerReimprimirZeresima::GetInst) is written in unit 104.
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/iniciovotacao/cverificahorariozeresima.h"
@@ -32,11 +27,6 @@
 #include "app/vota/eleitor/iniciovotacao/testeteclado/cretomada.h"
 
 namespace vota {
-
-void CVerificaHorarioZeresima::StartState()
-{
-    __builtin_trap();
-}
 
 void CVerificaHorarioZeresima::ProcessInput()
 {
@@ -58,11 +48,6 @@ void CBase::ProcessInput()
 }
 
 CFormInterativoTelaVota CPreZeresima::GetTela()
-{
-    __builtin_trap();
-}
-
-comum::CAppState* CPreZeresima::GetEstadoPassouNoTeste()
 {
     __builtin_trap();
 }
