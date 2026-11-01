@@ -6,7 +6,7 @@
 //
 // Read from the bytes of 3742 and 815: the key is the typeid name of I_DOMINIO_DAO, with I_ORIGEM's appended when the
 // two differ; both names live to the end of the function (their frees come last). The registry maps the key to a
-// std::shared_ptr<IDAO> (fn 3845, the map's destroy, releases a shared_ptr at the node's +28), and Entregar hands out
+// std::shared_ptr<IDAO> (IDAO from Registrar's control block's RTTI, vtable 1551092), and Entregar hands out
 // the found DAO's Clone (IDAO's slot 2) cast to I_DOMINIO_DAO, in a std::shared_ptr<I_DOMINIO_DAO> of its own (the
 // control block's typeinfo names shared_ptr<I_DOMINIO_DAO>'s default deleter), deleting the clone when the cast fails.
 // The map is initialized in __wasm_call_ctors with no guard, so it is defined in one .cpp (cdaorepositorio.cpp).

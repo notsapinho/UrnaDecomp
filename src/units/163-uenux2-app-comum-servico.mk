@@ -17,7 +17,7 @@
 #   Entregar<IComparecimentoMesarioDAO> (record cdaorepositorio.hpp:79), and its callee 5380 (the registrador's
 #   destructor) calls 1902 and 2728, which nothing names. cregistradormesario.cpp is not this unit's. Its stub is gone:
 #   its record falls on the written Entregar, so this comment is its only note. CComparecimentoMesarioServico's
-#   constructor is written and the link drops it, since nothing reconstructed calls it.
+#   constructor is written and compared with nothing: the link drops it, since nothing reconstructed calls it.
 # - Registrar (records at lines 35 and 52, held by fn 7787) is not written: its lines stay blank in the header.
 #
 # Read from the bytes:
@@ -32,7 +32,8 @@
 #   from IDAO's typeinfo to I_DOMINIO_DAO's, the clone deleted through slot 1 when the cast fails, and the result's
 #   control block is std::shared_ptr<I_DOMINIO_DAO>'s default-delete pointer block (its typeinfo, 1560996 and 1595736).
 #   The throw passes 6802 and std::format of the format string at 375451 with the key.
-# - The map: 3845 frees a std::string key at the node's +16 and releases a std::shared_ptr at +28; __wasm_call_ctors
+# - The map: 3845 frees a std::string key at the node's +16 and releases a std::shared_ptr at +28 (of IDAO, which
+#   Registrar's control block's RTTI gives, vtable 1551092); __wasm_call_ctors
 #   initializes it with no guard, so one .cpp defines it.
 #
 # Placement: no record names the servico files. Their directories are chosen beside each DAO's dao/: the data put
