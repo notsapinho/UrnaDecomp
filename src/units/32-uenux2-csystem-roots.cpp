@@ -1,8 +1,9 @@
 // Roots: keep api::CSystem::GetFileSize (target fn 2759) in the skeleton link. The target calls it and api::truncate
 // (5457) directly and never through the table (ledger/callgraph.tsv): GetFileSize from 3653 and 11623 once and from
 // 12134 twice, truncate from 2761 twice. ZeroFill (2761) is reconstructed and calls truncate twice, the target's own
-// shape; GetFileSize's callers are not reconstructed yet. The noinline callers below give GetFileSize two callers
-// (three call sites), so binaryen keeps it out of line as the target does.
+// shape. Of GetFileSize's callers, 11623 (CGravadorEnvelopeArquivo::LeConteudo, unit 160) is reconstructed; the
+// noinline callers below stand for the others, MesmoTamanho for 12134 and CabeEm for 3653, so binaryen keeps it out of
+// line as the target does.
 // They also keep CSystem::ExistFile, ExistDir and ZeroFill (target fns 412, 5459 and 2761), none of whose callers is
 // reconstructed: ExistFile is called directly by 23 target functions (1487, 2725, 3653 and others) and its address is
 // in the table (slot 3567), so it is address-taken here and called from two stand-ins; ExistDir is called once each by

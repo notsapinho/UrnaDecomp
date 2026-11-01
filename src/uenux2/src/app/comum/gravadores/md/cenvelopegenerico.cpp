@@ -10,7 +10,7 @@
 namespace comum::md {
 
 CEnvelopeGenerico::CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, TMunicipioID municipio,
-    TZonaID zona, const std::optional<TLocalID>& local, TSecaoID secao, Tipo tipo, const CSeguranca& seguranca,
+    TZonaID zona, std::optional<TLocalID> local, TSecaoID secao, Tipo tipo, const CSeguranca& seguranca,
     const std::vector<uebyte>& conteudo, EUrnaTipo tipoUrna)
     : m_cabecalho(cabecalho), m_fase(fase), m_municipio(municipio), m_zona(zona), m_local(local), m_secao(secao),
       m_tipo(tipo), m_seguranca(seguranca), m_conteudo(conteudo), m_tipoUrna(tipoUrna)
@@ -22,7 +22,7 @@ CEnvelopeGenerico::CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaF
 }
 
 CEnvelopeGenerico::CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, const CUrna& urna,
-    TMunicipioID municipio, TZonaID zona, const std::optional<TLocalID>& local, TSecaoID secao, Tipo tipo,
+    TMunicipioID municipio, TZonaID zona, std::optional<TLocalID> local, TSecaoID secao, Tipo tipo,
     const std::vector<uebyte>& conteudo)
     : m_cabecalho(cabecalho), m_fase(fase), m_urna(urna), m_municipio(municipio), m_zona(zona), m_local(local),
       m_secao(secao), m_tipo(tipo), m_conteudo(conteudo), m_tipoUrna(urna.GetTipoUrna())
@@ -34,7 +34,7 @@ CEnvelopeGenerico::CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaF
 }
 
 CEnvelopeGenerico::CEnvelopeGenerico(const CCabecalhoEntidade& cabecalho, EUrnaFase fase, TMunicipioID municipio,
-    TZonaID zona, const std::optional<TLocalID>& local, TSecaoID secao, Tipo tipo, const std::vector<uebyte>& conteudo,
+    TZonaID zona, std::optional<TLocalID> local, TSecaoID secao, Tipo tipo, const std::vector<uebyte>& conteudo,
     EUrnaTipo tipoUrna)
     : m_cabecalho(cabecalho), m_fase(fase), m_municipio(municipio), m_zona(zona), m_local(local), m_secao(secao),
       m_tipo(tipo), m_conteudo(conteudo), m_tipoUrna(tipoUrna)

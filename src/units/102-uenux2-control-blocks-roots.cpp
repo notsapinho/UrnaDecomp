@@ -51,7 +51,6 @@
 #include "api/gui/ctextfieldupdate.h"
 #include "api/gui/iinputvalidation.h"
 #include "api/persistencia/idao.h"
-#include "app/comum/ccopiadormr.h"
 #include "app/comum/comparecimentomesario/dao/icomparecimentomesariodao.h"
 #include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
 #include "app/comum/dados/asn/candidatura/cvisitantefoto.h"
@@ -60,6 +59,7 @@
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/crespostasds.h"
 #include "app/comum/dados/md/eleitor/celeitordinamico.h"
+#include "app/comum/gravadores/ccopiadormr.h"
 #include "app/comum/gravadores/cgravadorbu.h"
 #include "app/comum/gravadores/cgravadorenvelopearquivo.h"
 #include "app/comum/gravadores/cgravadorhashes.h"
@@ -266,13 +266,15 @@ __attribute__((optnone, noinline)) std::shared_ptr<vota::CPreShowProgressBar> w1
 {
     return std::make_shared<vota::CPreShowProgressBar>();
 }
-__attribute__((optnone, noinline)) std::shared_ptr<comum::CCopiadorMR> w102_copiador()
+__attribute__((optnone, noinline)) std::shared_ptr<comum::CCopiadorMR> w102_copiador(comum::TMunicipioID municipio,
+    comum::TZonaID zona, comum::TSecaoID secao, char fase, comum::EExtensaoArquivoResultado extensao)
 {
-    return std::make_shared<comum::CCopiadorMR>();
+    return std::make_shared<comum::CCopiadorMR>(municipio, zona, secao, fase, extensao);
 }
-__attribute__((optnone, noinline)) std::shared_ptr<comum::CCopiadorWSQMR> w102_copiador_wsq()
+__attribute__((optnone, noinline)) std::shared_ptr<comum::CCopiadorWSQMR> w102_copiador_wsq(comum::TMunicipioID municipio,
+    comum::TZonaID zona, comum::TSecaoID secao, char fase, comum::EExtensaoArquivoResultado extensao)
 {
-    return std::make_shared<comum::CCopiadorWSQMR>();
+    return std::make_shared<comum::CCopiadorWSQMR>(municipio, zona, secao, fase, extensao);
 }
 __attribute__((optnone, noinline)) std::shared_ptr<api::Logger> w102_logger()
 {

@@ -22,6 +22,13 @@ class CCorrespondenciaResultado {
 public:
     CCorrespondenciaResultado(uedword municipio, ueword zona, ueword secao, const CCarga& carga, EUrnaTipo tipoUrna);
 
+    // comum::asn::CConversorCorrespResultado::DoConverte (fn 10289) reads each member; the names are chosen.
+    uedword GetMunicipio() const { return m_municipio; }
+    ueword GetZona() const { return m_zona; }
+    ueword GetSecao() const { return m_secao; }
+    const CCarga& GetCarga() const { return m_carga; }
+    EUrnaTipo GetTipoUrna() const { return m_tipoUrna; }
+
 private:
     void ValidaCriacao() const;
 
