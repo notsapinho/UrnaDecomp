@@ -47,7 +47,8 @@
 #   allocator::destroy. So they are the executable TU's copies, and wait for that TU's reconstruction. 518 is
 #   ~CoderEnv: 5706 stores the rule at +0 and passes that address to 679 and to 518. That it is the same -Oz copy, as its
 #   call of 3552 suggests, is a reading. 3552 carries a hand edit for 2183's and 8851's sake.
-# - 1843 find_first_not_of: the same, the rows -Oz gives; -Os, -O2 and -O3 do not. A hand edit names it for 2185 and 1519.
+# - 1843 find_first_not_of: the same, the rows -Oz gives; -Os, -O2 and -O3 do not. It matches from src/app/roots_vector.cpp's
+#   minsize instance, which stands for the executable TU's copy; its census pair names it, so its hand edit went.
 # - 1532: BER encoding through CoderEnv with landing pads, so an -fexceptions TU's, not the -Os runtime's. Its callers'
 #   records name api::CFileASN.
 # - 2706, 5282, 5290, 2704 and 2896: libc++ instances. 2706 is vector<char>::reserve, with landing pads, called by the
@@ -80,9 +81,8 @@
 # The roots file: 859 and 5731 are template instances from the roots object. At APP_CXXFLAGS and at UENUX2_CXXFLAGS the object's
 # functions are the same but __split_buffer<AbstractData*>::emplace_back, which the link takes from ecourna's object.
 #
-# splat/symbol_addrs.txt holds hand edits for this unit: 1519, 1843, 2650, 3323, 3552, 7731 and defaultVisitors, each with
-# what it rests on. 1843, 2650, 3552 and 7731 name a body of ours that is not the target's, which is why no match can name
-# them.
+# splat/symbol_addrs.txt holds hand edits for this unit: 2650, 3323, 3552 and defaultVisitors, each with what it rests
+# on. 2650 and 3552 name a body of ours that is not the target's, which is why no match can name them.
 #
 # Reading rule for the words below: a function stays in the roots if the target holds it. These are the functions the
 # target holds nowhere, either inlined or never reached: BIT_STRING, BMPString, OpenData, Null and IntegerWithNamedNumber
