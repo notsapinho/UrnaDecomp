@@ -75,7 +75,11 @@ the build and fails on drift, so a flag changed in the Makefile cannot leave the
   variable.
 - `artefact`: a library build records the flags it compiled with beside its objects (`cflags.txt`,
   `flags.nul`, OpenSSL's configured Makefile); they must be the setup's. Absent in a checkout that has
-  not built the library, the setup is `unverified`, not failed.
+  not built the library, the setup is `unverified`, not failed. A setup reads one recorded file and
+  takes every object of its variables, so it cannot see an object built with other flags: a library
+  that compiles some objects apart takes one setup per flag set, each with a variable naming its
+  objects, the narrower first, since an artefact setup gets only the objects no earlier setup
+  covers (`rhvoice-ignore`, `RHVOICE_IGNORE_OBJS`, before `rhvoice`).
 - `emscripten`: `tools/system-lib-flags.py` asks emscripten in the image which flags it builds each
   system library with for a `-fexceptions`, no-assertions link.
 - `header-only`: nothing to compile; see Boost below.

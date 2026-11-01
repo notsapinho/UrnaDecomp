@@ -405,7 +405,29 @@ nothing), four kinds of line:
    step 8 dropped it. A constant at a string's closing NUL still votes: its content is the empty string, which the
    target holds in too many places for `same` to list (`STRING_COPY_LIMIT`). On 6bc2a12's link four such votes are
    cast, each at the end of a format string (`"{:0{}}"`, `"{}|{}|{}"`, `"{:04}{:02}{:02}T{:02}{:02}{:02}"`), and
-   none changes the file.
+   none changes the file. Small constants that differ vote the same way, both being inside both tables: an anchored
+   body whose frame offsets differ from the target's (`local + 40` where the target has `+ 92`) votes our slot 40's
+   function for target slot 92. One such vote took `__prepare_write`'s `table` name from 7324, and 158 rows with it.
+   The body's `~` rows that are no call or data operand show it:
+   `pnpm --silent wasm score <target> <index> <ours.wasm> <ours> --rows | /usr/bin/grep '~' | /usr/bin/grep -v -E 'call fn:|data:'`.
+
+   To trace a `table` line of a matched index, gained, lost or kept: our slot of the name, the target's slot of the
+   index, the functions that hold each as an `i32.const`, and their pairs. 7628's line is a real vote today:
+
+   ```sh
+   wasm-objdump -x -j Elem build/out/wasm/vota_web/vota_web_wasm.wasm | /usr/bin/grep -E "ref.func:$(awk -F'\t' '$1==7628 {print $3}' splat/scan.tsv)\$"
+   # - elem[9212] = ref.func:6974
+   wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'ref.func:7628$'
+   # - elem[8981] = ref.func:7628
+   for w in target/vota_web_wasm.wasm:8981 build/out/wasm/vota_web/vota_web_wasm.wasm:9212; do wasm-objdump -d ${w%:*} | awk -v s=${w#*:} '/ func\[[0-9]+\]/ {f=$2} / i32\.const / && $NF == s {print f}' | sort -u | tr '\n' ' '; echo; done
+   # func[610]: func[7206]:
+   # func[516]: func[6989]:
+   awk -F'\t' '$1==610 || $1==7206 {print $1, $3}' splat/scan.tsv     # 610 516, 7206 6989: the voters pair
+   ```
+
+   When the voters do not pair, or the constants also address data, read the bytes at the address on both sides (the
+   `memory_image` command above): that is a stray vote. A pair whose two constants are equal casts no vote, so a name
+   only such pairs vote goes when our slot comes to equal the target's, and comes back when it moves.
 2. **A matched function's `pair-*` line that drops out and comes back.** Each landing from 1c3d9f9 on removes the line
    of one matched SQLite function and restores the one the landing before removed: 12427 `rankValueFunc`, then 12432,
    12443, 12447, 12288, 12466, 12479, 12485, 12492, 12500 and 12510 `statInit`, which 9127880 restores. The match lines
@@ -465,7 +487,13 @@ stopped casting the votes that named `CHOICE::isValid` (1068). `git diff splat/s
 evidence. A name with evidence of its own brings the rows back: a named callee, or a hand edit.
 
 Besides these, data placed by its content moves (`git diff 5ce1d43 e745d72 -- splat/symbol_addrs.txt | /usr/bin/grep
--E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses).
+-E '^[-+]g_'` prints `g_Alloc`, `g_MidAlloc` and `g_BigAlloc`, `evidence:content`, at new addresses). These are
+7-Zip's allocators, two function pointers each: the content step places them where the target holds the same two
+integers, our table slots, which shift whenever a unit takes a function's address. So they land inside other objects
+(at c1b2630 both lie in `_ZTVN7RHVoice19str_hts_engine_implE`, at 0x18ae54), and no target piece loads them
+(`/usr/bin/grep -rlE 'i32\.const (1617516|1617524)($|[^0-9])' build/out/splat/pieces/asm | wc -l` prints 0). Read a
+range's added and dropped data lines as these too; a 7-Zip match that re-points through one would verify against the
+wrong object, and `refuteDataNames` drops only a name at another's same address (§S4).
 
 The scan's rows change in the same way. The rows each landing gave a new symbol under the same verdict:
 
@@ -545,7 +573,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -619,10 +647,14 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    where our record lands (§S8, the sixth kind), and their match lines hold them meanwhile.
 7. **1497, `string`'s substring constructor, by unit 100's roots.** The 16 instances are the other callers of 403, so
    binaryen keeps 403 out of line. With the roots reaching nothing, 1497 holds 403 inline, 193 B against the target's 71.
-8. **543, 2656 and 5066, by `roots_boost.o`'s body and a hand edit.** 543's match line names `vector<long>`,
-   `roots_boost.o`'s body, which merged with `FillPath`'s and `DrawPath`'s `vector<int>` while uenux2 built at `-O2`; at
-   the tree's `-O3` both inline that one, and our link holds `roots_boost.o`'s body alone (§A5 of [asn1.md](asn1.md)).
-   2656 and 5066 call `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand edit keeps on 543.
+8.  **543, 2656, 5066 and 3473, by `roots_boost.o`'s body, a hand edit and link order.** 543's match line names
+   `vector<long>`, `roots_boost.o`'s body, which merged with `FillPath`'s and `DrawPath`'s `vector<int>` while uenux2
+   built at `-O2`; at the tree's `-O3` both inline that one, and our link holds `roots_boost.o`'s body alone (§A5 of
+   [asn1.md](asn1.md)). 2656 and 5066 call `vector<AbstractData*>::push_back(&&)`, which only the `merged-body` hand
+   edit keeps on 543. 3473 (`ASN1::OBJECT_IDENTIFIER::decodeCommon`) calls 543 through
+   `vector<unsigned>::push_back(&&)`, which three objects define: it matches while unit 89's `ccandidaturas.cpp.o`
+   (`-O3`) links ahead of `asn1/asn1.o` (`-Os`), so that binaryen merges the kept copy into 543's body; with the
+   runtime's copy it calls a body of its own and `differs` on `call 3475`.
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
    `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
 10. **252 and 3717, by `src/app/roots_uenux2.cpp`.** The target's 252, `std::operator+(string&&, string&&)`, is the
@@ -711,15 +743,36 @@ awk '$1>=14071 && $1<=14075 || $1>=14240 && $1<=14244 {print $1, $2}' splat/matc
 ```
 
 So a new match whose readings say `address same-content` or `table slot copy`, and one the scan found by `content`,
-is checked against its neighbours and the data it uses before it is listed, at a landing as in a lane. 12991 is another:
-step 9 wrote `kdf_tls1_prf_gettable_ctx_params`, and the dispatch table at 1795712, which holds the slots of 12996 to 12992,
-holds 12991's one slot, 11864, under id 7, `OSSL_FUNC_KDF_GETTABLE_CTX_PARAMS`. So the table is pbkdf1's, and the line is
-corrected to `kdf_pbkdf1_gettable_ctx_params`. 13334 is a third: step 9 wrote
-`blake2_gettable_ctx_params@…blake2s_mac.o`, the symbol 13360's line already held, so that symbol stood on two
-lines. The dispatch table at 1784000, whose other slots are those of HMAC's functions (13340 to 13335, 13333, 13332
-and 6667), holds 13334's one slot, 11447, under id 11, `OSSL_FUNC_MAC_GETTABLE_CTX_PARAMS`, and the line is corrected
-to `hmac_gettable_ctx_params`. The rescan after it then paired 13325 by content as `kmac_gettable_ctx_params`, the name
-both KMAC tables give its slot, 11457, under the same id.
+is checked against its neighbours and the data it uses before it is listed, at a landing as in a lane. Which body of
+one content the scan pairs turns on where our data lies, so a unit that adds data can move a pick no source touched.
+At a boundary between two files' runs the neighbours do not decide. For an OpenSSL provider function the
+`OSSL_DISPATCH` tables do: each is `{id, slot}` pairs from id 1, the family's `new`, so the table that holds the
+function's slot names its family. This prints each one, with its first three entries named by `splat/matched.txt`:
+
+```sh
+python3 -I -c "
+import sys, struct; sys.path.insert(0, 'tools/extract'); import wasmmod
+m = wasmmod.Module('target/vota_web_wasm.wasm'); el = m._elem(); base, img = m.memory_image()
+names = dict(l.split()[:2] for l in open('splat/matched.txt') if l[:1].isdigit())
+w = lambda o: struct.unpack_from('<I', img, o)[0]
+for s in [k for k, v in el.items() if v == int(sys.argv[1])]:
+    for o in [o for o in range(4, len(img) - 3, 4) if w(o) == s and 0 < w(o - 4) < 64]:
+        t = o - 4
+        while 0 < w(t - 8) < 64: t -= 8
+        if w(t) == 1: print(base + t, [(w(t + k), names.get(str(el.get(w(t + k + 4))), el.get(w(t + k + 4)))) for k in range(0, 8 * 3, 8)])
+" 13334
+# 1784000 [(1, 'hmac_new'), (2, 'hmac_dup'), (3, 'hmac_free')]
+```
+
+12991 was written `kdf_tls1_prf_gettable_ctx_params`, and its slot is in pbkdf1's table (1795712, id 7,
+`OSSL_FUNC_KDF_GETTABLE_CTX_PARAMS`). 13334 was written `blake2_gettable_ctx_params@…blake2s_mac.o`, and its slot is
+in HMAC's (1784000, id 11, `OSSL_FUNC_MAC_GETTABLE_CTX_PARAMS`). Both lines were corrected by hand. 13334's symbol
+also stood on two lines, the new one and 13360's, which is right: how-to step 10's `uniq -d` prints it, and the scan's
+`symbol` column names the same symbol for both. When the line it prints is new and its row reads `address
+same-content`, `table slot copy` or `content`, this is the case, and the new line is the one corrected, from the data.
+A correction frees our body for the next of the family: the rescan after 13334's paired 13325 by content as
+`kmac_gettable_ctx_params`, the name both KMAC tables (1784304, 1784400) give its slot. Rescan until a pass adds
+nothing, and check each addition the same way.
 
 The scan's content pass can make the same kind of match. It pairs one of our functions that no match uses with an
 unmatched target body when, re-pointed, it equals exactly that one body and no other function of ours equals it

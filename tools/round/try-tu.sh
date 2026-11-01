@@ -4,7 +4,8 @@
 #
 #   tools/round/try-tu.sh <tu.cpp|dir>... [--name <n>] [--flags '<extra compile flags>'] [--targets <indices.txt>]
 #                       [--component <dir under src/>] [--keep-weak] [--roots <roots.cpp>|none] [--rows N] [--no-named]
-#                       [--skip-units <frag.mk>]  (repeatable: leave a landed src/units fragment out of the link)
+#                       [--skip-units <frag.mk>]  (repeatable: leave a landed src/units fragment out of the link; the
+#                       file name as src/units/ lists it, 13-uenux2-crdvvota.mk: a path matches nothing and is ignored)
 #   tools/round/try-tu.sh --single <target fn> --extract export:<name>|index:<n> [--component <dir>] [--flags '…'] <tu.cpp>...
 #   tools/round/try-tu.sh --print-flags [--component <dir>] <tu.cpp|dir>...   (each TU's compile command, nothing run)
 #   tools/round/try-tu.sh --symbols [--component <dir>] [--flags '…'] <tu.cpp|dir>...   (compile; print each defined

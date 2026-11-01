@@ -26,6 +26,19 @@ both callers once a second one links ([codegen.md §C3](codegen.md)). When the t
 two functions, clang inlined it in at least one TU (an `inline`-specified definition is inlined in each), and a form
 that only binaryen inlines matches until the other caller is written: link with both before choosing.
 
+The count is the one when the Inlining pass runs. merge-similar-functions and duplicate-function-elimination run after
+it, so a function can end with one caller and keep its body: a `byn$mgfn-shared$` body or a surviving twin that its
+callers became. 9256, `IIdentificadorEleitor`'s constructor, has one caller, 3939, the shared body of three derived
+constructors (from `asmlift-wasm/`):
+
+```sh
+pnpm --silent wasm fn ../target/vota_web_wasm.wasm 9256 2>/dev/null | /usr/bin/grep -E '^;; callers'   # ;; callers (1): 3939
+pnpm --silent wasm fn ../target/vota_web_wasm.wasm 3939 2>/dev/null | /usr/bin/grep -E '^;; callers'   # ;; callers (3): 1241 5106 5107
+awk -F'\t' '$1==3939 {print substr($2, 1, 16)}' ../splat/scan.tsv                                       # byn$mgfn-shared$
+```
+
+So read a one-caller row's caller in `splat/scan.tsv` before taking its body out of line as a puzzle of the source.
+
 ## X2. Probe links
 
 1. `em++ … -o probe.wasm` (no `.js`) silently selects `STANDALONE_WASM`: an `_initialize` export, WASI-flavoured
