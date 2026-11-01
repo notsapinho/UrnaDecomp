@@ -605,16 +605,6 @@
 // f3709 · 32 B · unmatched · placement: link order · name unknown
 // void f3709(i32, i32) { ... }
 
-// link-order cluster 1002 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/eleitor/cbiometriaeleitor.cpp
-
-// f3718 · 44 B · unmatched · placement: link order · name unknown
-// void f3718(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1003 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/clocal.cpp
-
-// f3723 · 192 B · unmatched · placement: link order · name unknown
-// ? f3723(i32, i32) { ... }
-
 // link-order cluster 1007 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 
 // f3750 · 135 B · unmatched · placement: link order · name unknown
@@ -1123,9 +1113,6 @@
 // void f5746(i32, i32, i32, i32) { ... }
 
 // link-order cluster 826 · uses=2 · neighbours' file uenux2/src/app/comum/dados/celeitores.cpp
-
-// f5759 · 277 B · unmatched · placement: link order · name unknown
-// ? f5759(i32, i32) { ... }
 
 // f5758 · 839 B · unmatched · placement: link order · name unknown
 // void f5758(i32, i32, i32, i32) { ... }

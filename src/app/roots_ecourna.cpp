@@ -60,6 +60,10 @@ __attribute__((noinline)) std::string UsaPreenche1(const std::string& s) { retur
 __attribute__((noinline)) std::string UsaPreenche2(const std::string& s) { return CStringUtils::PreencheAEsquerda(s, ' ', 20) + "x"; }
 __attribute__((noinline)) std::string UsaPreenche3(const std::string& s) { return "y" + CStringUtils::PreencheAEsquerda(s, '*', 5); }
 
+// CStringUtils::PreencheADireita's copying form (target fn 1881) has five callers in the target, none reconstructed: fn
+// 1542 pads two strings to 28, fns 2248 and 11188 pad to 34, fns 11253 and 11478 to 26, all with ' '. These stand for them.
+__attribute__((noinline)) std::string UsaPreencheCopiaA(const std::string& s) { return CStringUtils::PreencheADireita(s, ' ', 28) + "|"; }
+__attribute__((noinline)) std::string UsaPreencheCopiaB(const std::string& s) { return "|" + CStringUtils::PreencheADireita(s, ' ', 34); }
 __attribute__((noinline)) std::string UsaBase64A(const SComResumo& v) { return ResumoBase64(v) + "A"; }
 __attribute__((noinline)) std::string UsaBase64B(const SComResumo& v) { return "B" + ResumoBase64(v); }
 __attribute__((noinline)) std::string UsaBase64C(const SComResumo& v) { return ResumoBase64(v); }
@@ -81,6 +85,7 @@ int urna_roots_ecourna(int a)
     unsigned long long acc = UsaConversoes1(s) + UsaConversoes2(s) + UsaConversoes3(s);
     std::string out = UsaBase64A(v) + UsaBase64B(v) + UsaBase64C(v);
     out += UsaPreenche1(s) + UsaPreenche2(s) + UsaPreenche3(s);
+    out += UsaPreencheCopiaA(s) + UsaPreencheCopiaB(out);
     out += UsaIdentificador(a, s) + UsaIdentificador(a + 1, s) + UsaIdentificador(a + 2, s);
     return static_cast<int>(acc) + static_cast<int>(out.size());
 }

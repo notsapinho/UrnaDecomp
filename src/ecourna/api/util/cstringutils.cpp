@@ -124,6 +124,13 @@ std::string CStringUtils::PreencheAEsquerda(const std::string& valor, char preen
     return preenchido;
 }
 
+void CStringUtils::PreencheAEsquerda(std::string& valor, char preenchimento, size_t tamanho)
+{
+    if (valor.size() < tamanho) {
+        valor.insert(0, tamanho - valor.size(), preenchimento);
+    }
+}
+
 void CStringUtils::PreencheADireita(std::string& valor, char preenchimento, size_t tamanho)
 {
     if (valor.size() < tamanho) {
@@ -131,10 +138,31 @@ void CStringUtils::PreencheADireita(std::string& valor, char preenchimento, size
     }
 }
 
+std::string CStringUtils::PreencheADireita(const std::string& valor, char preenchimento, size_t tamanho)
+{
+    std::string preenchido(valor);
+    if (preenchido.size() < tamanho) {
+        preenchido.append(tamanho - preenchido.size(), preenchimento);
+    }
+    return preenchido;
+}
+
+std::string& CStringUtils::RemoveZerosAEsquerda(std::string& valor)
+{
+    return valor.erase(0, valor.find_first_not_of('0'));
+}
+
+std::string CStringUtils::RemoveZerosAEsquerda(const std::string& valor)
+{
+    std::string resultado = valor;
+    RemoveZerosAEsquerda(resultado);
+    return resultado;
+}
+
 // Blank lines below keep each std::source_location call site (the To* conversions and the throw) on
 // the line the target records (ledger/source-locations.tsv).
 
-// (original lines 137-711: content not recovered)
+// (original lines 165-711: content not recovered)
 #line 712
 uebyte CStringUtils::ToByte(const std::string& valor)
 {

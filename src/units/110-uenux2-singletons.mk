@@ -162,6 +162,19 @@
 # stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 4184, 6660, 6671, 6678 and the
 # rest of its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn
 # 7787, which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written.
+#
+# CValidadorIdentidade's members in cvalidadoridentidade.cpp beside GetInst and the destructor, for unit 178's
+# md::CEleitorIdentidade constructor (target fn 566), the one caller of Valida:
+# - Valida (record line 61, column 15) has no index of its own: binaryen inlined it into 566, where it sits behind a
+#   stack-pointer prologue of its own (g0-480), and our link inlines it too (it is not in names.tsv). It finds the first
+#   rule whose slot 2 (GetTipo) is 3 or the argument, calling the slot twice (the bytes); with none it throws code 8108
+#   with std::format over the type packed as an int (type code 3, docs/reference/facts/reading.md R13), else it calls the
+#   rule's Valida (unit 178).
+# - EhValida (fn 2803, callers 2225, 10313, 10420 and 10721) is the same search with false for no rule and the rule's
+#   EhValida (fn 3723) else. It matches; the roots that keep it are unit 178's.
+# Chosen: EhValida's name, the search written as a lambda in each member (a shared helper was not tried), Valida's line
+# but its throw's and EhValida's after it, and the three include lines it adds with a blank one, which take four of the
+# blank lines above the statics (lines 11 to 22 stay unknown).
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

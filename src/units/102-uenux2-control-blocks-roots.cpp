@@ -175,7 +175,6 @@ template struct SBloco<comum::dao::IComparecimentoMesarioDAO, comum::dao::ICompa
 template struct SBloco<comum::dao::IJustificadorDAO, comum::dao::IJustificadorDAO>;
 template struct SBloco<comum::md::CIdentificacaoSecao, comum::md::CIdentificacaoSecao>;
 template struct SBloco<comum::md::CIdentificacaoUrnaContingencia, comum::md::CIdentificacaoUrnaContingencia>;
-template struct SBloco<comum::md::CEleitorDinamico, comum::md::CEleitorDinamico>;
 using TJustificativa = ecourna::app::dados::CIdentificacaoJustificativa;
 template struct SBloco<TJustificativa, TJustificativa>;
 template struct SBloco<comum::asn::CVisitanteFoto, comum::asn::CVisitanteFoto>;

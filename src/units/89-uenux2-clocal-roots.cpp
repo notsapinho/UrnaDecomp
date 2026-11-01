@@ -36,8 +36,6 @@ int w3710(int, int, int, int) __asm__("_ZN5comum2md21CComplementoMunicipioC1EjsR
 int w2795(int) __asm__("_ZNK5comum2md21CComplementoMunicipio15GetHorarioVeraoEv");
 int w5660(int, int, int, int, int, int) __asm__("_ZN5comum2md12CCandidaturaC1EhtjRKNS0_15CDadosCandidatoERKNSt3__26vectorIS2_NS5_9allocatorIS2_EEEE");
 int w5659(int, int, int) __asm__("_ZN5comum2md11CIndiceFotoC1ERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS_11SIndiceFotoE");
-int w5661(int, int, int, int, int) __asm__("_ZN5comum2md9CImpedidoC1EtRKNS0_18CEleitorIdentidadeENS0_16ETipoImpedimentoES5_");
-int w5662(int, int, int, int) __asm__("_ZN5comum2md9CImpedidoC1EtRKNS0_18CEleitorIdentidadeENS0_16ETipoImpedimentoE");
 int w1389(int, int) __asm__("_ZNK5comum2md12CCandidatura11GetSuplenteEh");
 void w5810(int, int, int) __asm__("_ZNK5comum13CCandidaturas20RecuperaVersaoPacoteEh");
 void w2272(int, int, int, int) __asm__("_ZNK5comum13CCandidaturas20GetCandidatosPartidoEht");
@@ -68,14 +66,6 @@ __attribute__((noinline)) int LocaisDados(int a, int b) { return w5744(a) * 3 - 
 __attribute__((noinline)) int IndicesFoto(int a, int b, int c, int d)
 {
     return w5659(a, c, d) - w5659(b, c, d + 8);
-}
-__attribute__((noinline)) int ImpedidosP2(int a, int b, int c, int d, int e, int f)
-{
-    return w5661(a, c, d, e, f) ^ (w5661(b, c + 1, d, e, f) + 1);
-}
-__attribute__((noinline)) int Impedidos(int a, int b, int c, int d, int e)
-{
-    return w5662(a, c, d, e) | (w5662(b, c, d, e + 1) + 2);
 }
 __attribute__((noinline)) void Valida(int a, int b)
 {
@@ -163,8 +153,6 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Destrutores);
         clocal_sink = reinterpret_cast<const void*>(&LocaisDados);
         clocal_sink = reinterpret_cast<const void*>(&IndicesFoto);
-        clocal_sink = reinterpret_cast<const void*>(&ImpedidosP2);
-        clocal_sink = reinterpret_cast<const void*>(&Impedidos);
         clocal_sink = reinterpret_cast<const void*>(&Valida);
         clocal_sink = reinterpret_cast<const void*>(&Zonas);
         clocal_sink = reinterpret_cast<const void*>(&Secoes);
