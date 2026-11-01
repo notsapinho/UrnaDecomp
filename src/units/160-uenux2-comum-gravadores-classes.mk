@@ -69,9 +69,10 @@
 # Not matched, and what each waits for:
 # - CCopiadorMR's slots 2 and 3 (fns 5874, 5873) and CConversorCarga's (10291, 10290) are pending (the -pending.cpp
 #   header says on what).
-# - Not written: comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266), which needs md::CEntidadeHashes's members
-#   past +36; the constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn 12098), whose
-#   class no evidence names; and template instances whose callers are not written, so that no instance of ours exists
+# - Not attempted: comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266; md::CEntidadeHashes's members past +36
+#   are not recovered) and the constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn
+#   12098), whose class no evidence names. Not written:
+#   template instances whose callers are not written, so that no instance of ours exists
 #   (the element types are readings of the bodies): 5859 (the destruction of a vector of 20-byte elements that hold
 #   vectors; caller fn 11629), 3815 (a destructor of a class no evidence names; fns 11587, 11626, 11629), 5852 and 5854
 #   (over a vector of 24-byte elements of two strings; fns 5854, and 5358 and 11620), 5868 (a tree insertion with a

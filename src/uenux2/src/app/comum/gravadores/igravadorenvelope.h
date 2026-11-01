@@ -25,7 +25,7 @@ namespace comum {
 // is the key function; it is not reconstructed. Slot 8 is pure: GravaResultado calls it with a result slot and `this`
 // (fn 11626: table[i32.load[i32.load[p0]+32]](l2+356, p0)), and CGravadorEnvelopeArquivo's override (fn 11623) returns
 // the content of its file as a std::vector<uebyte> by value; it is const since the const GravaResultado (records)
-// calls it on `this`. No evidence names it: LeConteudo is chosen from that role.
+// calls it on `this`. LeConteudo is chosen from that role, and uebyte follows cenvelopegenerico.h's choice.
 // The path is chosen, beside igravador.h: no record names it. Chosen: +56 as comum::EUrnaTipo (49 is eUrnaVota), +60
 // as a std::optional<md::CTipoApuracaoSA>, +72 as md::CEnvelopeGenerico::Tipo (2 and 4 are its BU impresso and
 // zeresima impressa), and every member name; the constructor is not declared.

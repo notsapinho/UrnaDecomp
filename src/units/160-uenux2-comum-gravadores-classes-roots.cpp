@@ -12,10 +12,10 @@
 // comum::CGravadorEnvelopeArquivo::LeConteudo (fn 11623) needs no root: its vtable, which the target reaches it
 // through, is in unit 136's sink.
 // comum::asn::CConversorEnvelopeGenerico: the target reaches DoConverte and DoDesconverte (fns 10271, 10270) only
-// through its vtable (@1598820), which its users (the recorders' GravaResultado, fns 11626 and 11629, and fn 2725)
-// store, not written yet; so its address goes into a sink. Its slots store CConversorUrna's vtable, CConversorUrna's
-// those of CConversorCorrespResultado and CConversorTipoApuracaoSA, and CConversorCorrespResultado's slots
-// CConversorCarga's.
+// through its vtable (@1598820), which fn 2724 stores (a shim into a body binaryen merged, which 11626, 11629 and
+// 2725 call), not written yet; so its address goes into a sink. Its slots store CConversorUrna's vtable,
+// CConversorUrna's those of CConversorCorrespResultado and CConversorTipoApuracaoSA, and CConversorCorrespResultado's
+// slots CConversorCarga's.
 #include <new>
 
 #include "app/comum/gravadores/ccopiadormr.h"

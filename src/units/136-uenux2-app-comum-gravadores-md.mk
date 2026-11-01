@@ -17,14 +17,13 @@
 #   binaryen) and DoDesconverte (fn 10282, the data class's constructor and checks inlined).
 # - The recorders' destructors, emitted with their vtables in 136-uenux2-app-comum-gravadores-md-pending.cpp, whose
 #   traps are the classes' key functions (src/units/README.md "The key function pending"): IGravadorEnvelope's (fn
-#   11625), CGravadorHashes's (5853, 11619),
-#   CGravadorRDV's (11586, and 11585, matched, below), CGravadorLog's (5823, 11583) and CGravadorVersoesArquivos's
-#   (11581, 11580), and binaryen's merge of the base-object destructors of CGravadorRDV and IGravadorEnvelope (fn 6043,
-#   written, below; our link forms the same two-member merge, byn$mgfn-shared$_ZN5comum12CGravadorRDVD2Ev). The class
-#   heads are unit 102's (gravadores/cgravador*.h, igravadorenvelope.h); this unit adds their layouts and virtual
-#   members there. CGravadorRCSecao's deleting destructor (fn 11615) is unit 122's. CGravadorEnvelopeArquivo's (fns
-#   11622, 11621, matched, below) are emitted with its vtable by unit 160's cgravadorenvelopearquivo.cpp, which holds
-#   its key function.
+#   11625), CGravadorHashes's (5853, 11619), CGravadorRDV's (11586, and 11585, matched, below), CGravadorLog's (5823,
+#   11583) and CGravadorVersoesArquivos's (11581, 11580), and binaryen's merge of the base-object destructors of
+#   CGravadorRDV and IGravadorEnvelope (fn 6043, written, below; our link forms the same two-member merge,
+#   byn$mgfn-shared$_ZN5comum12CGravadorRDVD2Ev). The class heads are unit 102's (gravadores/cgravador*.h,
+#   igravadorenvelope.h); this unit adds their layouts and virtual members there. CGravadorRCSecao's deleting destructor
+#   (fn 11615) is unit 122's. CGravadorEnvelopeArquivo's (fns 11622, 11621, matched, below) are emitted with its vtable
+#   by unit 160's cgravadorenvelopearquivo.cpp, which holds its key function.
 # - ModuloTiposResultadosEcoUrna (src/asn1/modules/): the records and RTTI name ModuloTiposResultadosEcoUrna::TipoApuracaoSA
 #   (the converter's base, typeinfo @1596936) and MotivoApuracaoManual, MotivoApuracaoEletronica, MotivoApuracaoMistaComBU
 #   and MotivoApuracaoMistaComMR (the four ConverteMotivo* records' result types), which the generated module held
