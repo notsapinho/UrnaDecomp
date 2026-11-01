@@ -55,8 +55,9 @@ __attribute__((noinline)) int ImprimeRelatorios(int n)
 }
 
 // Stands for CEmitirMaisBU::ProcessInput (fn 12081), the caller of LogaQtdViasAdicionaisExcedeMaximo (fn 4556) beside
-// CLimiteCopiasBUAtingido::StartState, and for the four operador slots that call
-// LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495: 10466, 10473, 10477 and 10485).
+// CLimiteCopiasBUAtingido::StartState, and for the operador slots that call
+// LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495: 10473, 10477 and 10485; 10466, CPedeDigital::ProcessInput,
+// is in the link).
 __attribute__((noinline)) int AlertaVias(int n)
 {
     int log = w156_logvota_getinst();

@@ -102,7 +102,20 @@
 #   file-static helper and its slot 2 called on the returned temporary, so the builder is destroyed before the form is
 #   shown and the form released before m_pNextState is stored, the target's order; a named local of the form gave 136
 #   over 310 rows (11 inserted, 20 deleted). The helper's name and its linkage are chosen; the points SPoint{20, 1}
-#   and {20, 3} are the two words the target stores (65556, 196628).
+#   and {20, 3} are the two words the target stores (65556, 196628). Unit 142's 1150 clears its builder in place too.
+# - vota::CSincronismoOperador::StartState (fn 10210, in csincronismooperador.cpp, after the statics, a chosen line) is
+#   written and differs, in local numbers only. It holds comum::CEleitores::MarcaVotou (records celeitores.cpp:456 and
+#   460, unit 110's file) inlined by binaryen, which holds CEleitorDetalhe::MarcaVotou (unit 98's file) inlined the
+#   same way (a second stack-pointer prologue each); before them, the test of comum::CAppInfo::EhTreinamentoEleitor
+#   written in place (the target calls GetInst twice and keeps no call of 697, that function's own body), a choice of
+#   spelling; after them, the eleitor's queue's Post(5) (its inline member builds the message), then m_pNextState.
+#   Measured with pnpm wasm score: `40 over 150 rows (same 110, replaced 38 [38 operand-only], inserted 1, deleted 1)`,
+#   the moved row a local number: the target keeps the frame in local 3 and the voter's record (CEleitorDetalhe*), then
+#   the queue, in local 2; ours keeps the frame in 2, the record in 3 and the queue in 1. In scratch links of the same objects reordered (build/out link command, one object moved), the order
+#   celeitordetalhe.cpp.o, celeitores.cpp.o, csincronismooperador.cpp.o reads `28 over 149 rows`, every row an operand
+#   of a call or of the throws' destructor slot; this object moved after both others with celeitores.cpp.o first, or
+#   celeitordetalhe.cpp.o moved right after this object (ahead of celeitores.cpp.o), read 40 over 150 as ours. Our link has this unit's object ahead of
+#   unit 110's and unit 98's, which only renumbering landed units would change, so the row waits for that order.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:

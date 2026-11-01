@@ -70,7 +70,25 @@ void CEleitores::MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados
     }
 }
 
-// (original lines 451-733: content not recovered)
+
+void CEleitores::MarcaVotou()
+{
+    CEleitorDetalhe* detalhe = GetCurrent();
+    if (detalhe == nullptr) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7845, "Item inexistente");
+    }
+
+    if (!detalhe->TemDadosDinamicos()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7846, "Dados dinâmicos não carregados");
+    }
+
+    if (detalhe->GetDinamico().GetEstadoComparecimento() != 3) {
+        detalhe->MarcaVotou();
+        m_qtdVotaram++;
+    }
+}
+
+// (original lines 469-733: content not recovered)
 #line 734
 void CEleitores::ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const
 {

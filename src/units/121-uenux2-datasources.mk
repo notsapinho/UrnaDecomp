@@ -12,6 +12,8 @@
 #   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069
 #   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o
 #   comum::CCalculaCV::IncluiString                                   942, from ccalculacv.cpp.o
+#   vota::CEscolheOpcao's destructor and deleting destructor           2752, 10691, from cescolheopcao.cpp.o
+#   the destroy of CEscolheOpcao's std::map                            3630, from cescolheopcao.cpp.o
 # CCalculaCV::DestroyInst has no target function: unit 139's ~CGeradorBU (fn 3698) holds it inlined by binaryen, and
 # that fragment has the evidence for its body and for its TU. It needs no root: its one caller is that destructor.
 # Two forms of the operator give 10685 the same instructions in the whole link (`score 10 over 216 rows`, all
@@ -19,6 +21,17 @@
 # class, with cescolheopcao.cpp.o left out of a copy of the plain link. Written out of line, a choice. The vtable
 # (1588100) lies after CEscolheOpcao's typeinfo and before the next object's first record, which reads as
 # cescolheopcao.cpp's object holding the GetText the target keeps; it does not tell the two forms apart.
+#
+# vota::CEscolheOpcao itself (cescolheopcao.h has the layout and what each part rests on): its destructor is out of line
+# in cescolheopcao.cpp, at line 140, a choice before the records (10691 sits above 10690 and 10689 in their use band, so it
+# links first); it is the class's key function, so the object emits the vtable, whose StartState (10690) and
+# ProcessInput (10689) are trapped in 121-uenux2-datasources-pending.cpp (its header says what each waits for). Evidence:
+# 10691 is `f2752(p0); drop; f136(p0)`, an out-of-line destructor (docs/reference/facts/reading.md R5), and 2752 stores
+# no vptr first, a final class (R4); it releases the std::shared_ptr at +24 and then destroys the std::map at +12 with
+# 3630, which destroys each node's std::function at +40 and nothing else of it. fn 2753, which builds the object, is
+# not written (it calls fn 1151): the roots keep the vtable by its address. 2752, 10691 and 3630 matched as written.
+# The mapped type std::pair<int, COpcaoDS>, which only 3630's symbol carries, the members' names and the form's type are
+# chosen.
 #
 # Matched once a literal landed:
 # - 12621, CDataText<comum::CRespostasDSNumero>::GetText, emitted by unit 102's roots object. Its operator is in
@@ -71,3 +84,9 @@ W121_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o 
 $(ROOT)/$(APP)/121-uenux2-datasources-roots.o: $(ROOT)/src/units/121-uenux2-datasources-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/121-uenux2-datasources.mk $(W121_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/121-uenux2-datasources-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/121-uenux2-datasources-roots.o
+
+# vota::CEscolheOpcao's pending slots (StartState and ProcessInput), trapped at the unit's flags so that the class links;
+# the -pending.cpp says what each waits for. The rule depends on every header of both trees, as the roots rule does.
+$(ROOT)/$(APP)/121-uenux2-datasources-pending.o: $(ROOT)/src/units/121-uenux2-datasources-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/121-uenux2-datasources.mk $(W121_HDRS)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/121-uenux2-datasources-pending.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/121-uenux2-datasources-pending.o

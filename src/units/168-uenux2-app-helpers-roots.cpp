@@ -3,7 +3,8 @@
 // so two stand-ins call each. Each stand-in's body is its own: no target function holds these calls.
 // - comum::CAppStateContext's constructor (target fn 3844; callers 4713, 7061, 10204), ProcessKey (3843), ProcessInput
 //   (5911), ProcessTick (5910), AcceptsKey (3842), AcceptsInput (5909) and AcceptsTick (5908), each of the last six called
-//   by 4349 and 10204: 7061 and 10204 are unit 116's traps, 4349 and 4713 are not written. ProcessTick's two calls pass
+//   by 4349 and 10204: 7061 and 10204 are unit 116's traps, 4349 is not written; 4713 (unit 165's slots 2 and 3, through
+//   vota::CThreadVota::IniciaContexto) is in the link and calls the constructor only. ProcessTick's two calls pass
 //   two values, so that dead-argument elimination keeps the parameter the target's 5910 has.
 // - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 is unit 50's trap, the others are not
 //   written.

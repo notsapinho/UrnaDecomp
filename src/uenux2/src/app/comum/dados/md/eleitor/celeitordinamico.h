@@ -89,6 +89,9 @@ public:
         m_erroDecifrarBiometria = erroDecifrarBiometria;
         m_tituloMesarioHabilitacao.reset();
     }
+    // CEleitorDetalhe::MarcaVotou (inlined into target fn 10210) stores 3 at +32 and nothing else. The setter and its name
+    // are chosen.
+    void SetEstadoComparecimento(int estadoComparecimento) { m_estadoComparecimento = estadoComparecimento; }
     void SetTipoAtivacaoAudio(int tipoAtivacaoAudio) { m_tipoAtivacaoAudio = tipoAtivacaoAudio; }
     void SetIdentidadeHabilitacao(const CEleitorIdentidade& identidade) { m_identidadeHabilitacao = identidade; }
     void SetApresentacaoFoto(const ecourna::app::dados::CApresentacaoFotoEleitor& apresentacaoFoto)

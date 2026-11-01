@@ -33,8 +33,8 @@ __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(
 // Stands for fn 903's callers 7160, 10566, 10710, 12081, 12082, 13023 (unit 102's four and unit 138's 11870 and 11871
 // are linked).
 __attribute__((noinline)) int VotasConst(int a, int b) { return w903(a, 51) * w903(b, 51); }
-// Stands for fn 697's callers: 652, 1150, 2753, 3229, 6737, 7174, 10209, 10440, 10501, 10569, 10677, 10680, 10706,
-// 10722, 11835, 11924, 12077 (unit 199's 11994 is linked).
+// Stands for fn 697's callers: 652, 2753, 3229, 6737, 7174, 10209, 10440, 10501, 10569, 10677, 10680, 10706,
+// 10722, 11835, 11924, 12077 (unit 199's 11994 and unit 142's 1150 are linked).
 __attribute__((noinline)) int Treinamentos() { return w697() | (w697() << 1); }
 // Stands for fn 3788's callers: 7787, 12098, 12110.
 __attribute__((noinline)) void Codigos(int a, int b, int c)

@@ -13,8 +13,10 @@
 //   class's one-byte object (unit 154 writes that one, CSynchronizer's), so the target holds one body for both and does
 //   not tell which source defines it. COpcaoDS is copied, as fn 2753 copies it.
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fns
-//   652, 1150, 1901, 2734, 2747, 5397, 10440 and 10465) and api::CInputMenuField (1579324, fn 3675). A dropped builder
+//   652, 1901, 2734, 2747, 5397, 10440 and 10465, and by 1150, which is in the link) and api::CInputMenuField (1579324, fn 3675). A dropped builder
 //   needs T's constructor declared, not defined.
+// vota::CEscolheOpcao's own vtable (vptr 1588004, stored only by fn 2753, its GetInst with the constructor inlined, not
+// reconstructed) is kept by its address too, which keeps its slots: the destructors in cescolheopcao.cpp and the traps.
 // And two stand-in callers, of CCalculaCV's destructor and of IncluiString, kept by their addresses: each comment names
 // the target callers it stands for. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
 // 1575124, stored by fn 12110), has no builder here: one in this object only declares the destructor, so the block's
@@ -37,6 +39,7 @@ extern const char w121_vt_respostas[] __asm__("_ZTVN3api9CDataTextIN5comum18CRes
 extern const char w121_vt_opcao[] __asm__("_ZTVN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEEE");
 extern const char w121_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEEE");
 extern const char w121_vt_menu[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api15CInputMenuFieldENS_9allocatorIS2_EEEE");
+extern const char w121_vt_escolhe[] __asm__("_ZTVN4vota13CEscolheOpcaoE");
 }
 
 __attribute__((optnone, noinline)) void w121_respostas(uebyte digitos)
@@ -91,6 +94,7 @@ struct SW121Roots {
         w121_sink = w121_vt_opcao;
         w121_sink = w121_vt_string;
         w121_sink = w121_vt_menu;
+        w121_sink = w121_vt_escolhe;
     }
 } w121_roots;
 

@@ -34,7 +34,9 @@
 #   10444, and two are out of line, 2097 and 4522, matched; src/units/161-uenux2-app-vota-operador-identidade.mk has
 #   their evidence, and 184 still matches with them in the file.
 # - Seven more, after LogaTituloInvalidoRegistroMesario and before unit 142's three, belong to unit 152's states: five
-#   are held inlined by 10416, 10436, 10524, 10758 and 11798, and two are out of line, 4529 and 4535, matched. Last come
+#   are held inlined by 10416, 10436, 10524, 10758 and 11798, and two are out of line, 4529 and 4535, matched; an eighth,
+#   LogaAudioAtivadoConformeCadastro, right after LogaAudioDesativadoFimVotacao, is held inlined by unit 152's 10523,
+#   with a second prologue of its own (its name and line are chosen). Last come
 #   unit 138's LogaVotacaoEncerrada, which 12058 holds inlined, and unit 169's LogaAguardandoConfirmacaoZeresima, which
 #   5958 holds inlined. Fragments 152, 138 and 169 have their evidence, and 184 still matches with them in the file.
 # - Four more, after LogaPedidoTituloSuspensao, belong to unit 156's states: LogaImprimindoRelatorio (1127),

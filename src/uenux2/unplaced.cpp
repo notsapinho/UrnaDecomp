@@ -6,11 +6,6 @@
 // <stubs>
 // component vota
 
-// link-order cluster 10 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/csincronismoeleitor.cpp
-
-// f7178 · 97 B · unmatched · placement: link order · name unknown
-// void f7178(i32) { ... }
-
 // link-order cluster 286 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
 
 // f10440 · 1876 B · unmatched · placement: link order · name unknown
@@ -135,11 +130,6 @@
 
 // f5370 · 1469 B · unmatched · placement: link order · name unknown
 // ? f5370(i32, i32) { ... }
-
-// link-order cluster 753 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp
-
-// f5392 · 42 B · unmatched · placement: link order · name unknown
-// void f5392() { ... }
 
 // link-order cluster 755 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
 
@@ -424,14 +414,6 @@
 // f3593 · 16 B · unmatched · placement: link order · name unknown
 // void f3593(i32, i32) { ... }
 
-// link-order cluster 971 · uses=3 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp
-
-// f3613 · 32 B · unmatched · placement: link order · name unknown
-// void f3613(i32, i32) { ... }
-
-// f3612 · 373 B · unmatched · placement: link order · name unknown
-// void f3612(i32) { ... }
-
 // link-order cluster 975 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmajustificativatransito.cpp
 
 // f3626 · 7 B · unmatched · placement: link order · name unknown
@@ -444,9 +426,6 @@
 
 // f3631 · 1120 B · unmatched · placement: link order · name unknown
 // ? f3631() { ... }
-
-// f3630 · 81 B · unmatched · placement: link order · name unknown
-// void f3630(i32, i32) { ... }
 
 // link-order cluster 978 · uses=3 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
 

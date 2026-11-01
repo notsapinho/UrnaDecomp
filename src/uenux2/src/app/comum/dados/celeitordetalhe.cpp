@@ -1,5 +1,5 @@
-// comum::CEleitorDetalhe: ConfereDadosDinamicos, the record at line 224 col 15, and GetImpedimento, GetDinamico and
-// MarcaHabilitado below it, which have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not
+// comum::CEleitorDetalhe: ConfereDadosDinamicos, the record at line 224 col 15, and GetImpedimento, GetDinamico,
+// MarcaHabilitado and MarcaVotou below it, which have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not
 // recovered.
 #include "app/comum/dados/celeitordetalhe.h"
 
@@ -62,6 +62,12 @@ void CEleitorDetalhe::MarcaHabilitado(const CEleitorDadosHabilitacao& dados)
     m_dinamico->SetTipoAtivacaoAudio(dados.GetTipoAtivacaoAudio());
     m_dinamico->SetIdentidadeHabilitacao(dados.GetIdentidade());
     m_dinamico->SetApresentacaoFoto(dados.GetApresentacaoFoto());
+}
+
+void CEleitorDetalhe::MarcaVotou()
+{
+    ConfereDadosDinamicos("MarcaVotou");
+    m_dinamico->SetEstadoComparecimento(3);
 }
 
 } // namespace comum

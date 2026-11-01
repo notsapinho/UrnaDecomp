@@ -15,7 +15,7 @@
 //   callers 5412, 5474, 5959, 10566 and 11825, of which 5959 and 11825 are in the link: two stand-ins),
 //   std::to_string(long long) (fn
 //   4658: ConvertFromLocalTime and
-//   a stand-in for 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller
+//   unit 152's 3612, so it stays out of line as the target's does), ConvertFromTimestamp (fn 2764: its only caller
 //   7787 calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: 759, 11198 through
 //   comum::md::CHorarioVerao::Contem, and a stand-in for 1543, ...), CDateTime's (fn 759, 15 target callers: two
 //   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and two stand-ins for the others), CDate's operator+=
@@ -105,11 +105,6 @@ __attribute__((noinline)) int DataHoraDoTempo(void* dataHora, long long tempo)
     return *w1000_tempo(dataHora, tempo + 1);
 }
 
-__attribute__((noinline)) std::string TempoEmTexto(long long tempo)
-{
-    return std::to_string(tempo / 1000);
-}
-
 __attribute__((noinline)) void ConverteTempo(void* dataHora, long long tempo)
 {
     w5476_converte(dataHora, tempo * 2);
@@ -177,7 +172,6 @@ struct SW125Roots {
         w125_sink = reinterpret_cast<void*>(&DuasDataHorasAgora);
         w125_sink = reinterpret_cast<void*>(&DataHoraDoTempo);
         w125_sink = reinterpret_cast<void*>(&ConverteTempo);
-        w125_sink = reinterpret_cast<void*>(&TempoEmTexto);
         w125_sink = reinterpret_cast<void*>(&DoisTimestamps);
         w125_sink = reinterpret_cast<void*>(&DataHoraAnterior);
         w125_sink = reinterpret_cast<void*>(&DataHoraPosterior);

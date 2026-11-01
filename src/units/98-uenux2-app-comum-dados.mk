@@ -55,6 +55,10 @@
 #   binaryen (a second stack-pointer prologue at +0xaa) and it has no index of its own. Each kind of enabling calls one of
 #   CEleitorDinamico's inline members (md/eleitor/celeitordinamico.h), and its types are fragment 130's. 2825 matches
 #   at the tree's -O3 (fragment 110).
+# - MarcaVotou, named from the "MarcaVotou" it passes to ConfereDadosDinamicos (18146): unit 104's 10210 holds it inlined
+#   by binaryen (a second stack-pointer prologue around the literal) inside CEleitores::MarcaVotou (unit 110's), and it
+#   has no index of its own. It stores 3 at the dynamic record's +32 through CEleitorDinamico::SetEstadoComparecimento,
+#   a setter whose name is chosen. Its line, below MarcaHabilitado, is a choice.
 #
 # ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
 # called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it. The target's data do not

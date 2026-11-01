@@ -78,6 +78,15 @@ void CTickManager::StartTick(uebyte id)
     tick.m_proximo.tv_usec %= MICROSSEGUNDOS_POR_SEGUNDO;
 }
 
+std::map<uebyte, CTickManager::EEstadoTick> CTickManager::GetEstadoTicks() const
+{
+    std::map<uebyte, EEstadoTick> estados;
+    for (const auto& [id, tick] : m_ticks) {
+        estados.emplace(id, tick.m_parado == 0 ? TICK_ATIVO : TICK_PARADO);
+    }
+    return estados;
+}
+
 CTickManager::STick::STick(size_t milissegundos)
 {
     m_parado = 0;
@@ -91,7 +100,7 @@ CTickManager::STick::STick(size_t milissegundos)
     m_proximo.tv_usec %= MICROSSEGUNDOS_POR_SEGUNDO;
 }
 
-// (original lines 95-120: content not recovered)
+// (original lines 104-120: content not recovered)
 #line 121
 inline uebyte CTickManager::SearchNextId()
 {

@@ -8,7 +8,7 @@
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: IsAudioAtivado (fn 2746;
-//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10539, 10646, 10689, 10695, 10742, 10751),
+//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10646, 10689, 10695, 10742, 10751; 10539 is in the link),
 //   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620; 652,
 //   10527, 10676), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10680, 10689, 10706), SetIdentidadeDigitada (5414;
 //   10677), SetTipoIdentidadeDigitada (3619; 10626, 10627, 10677), GetIdentidadeDigitada (3623; 10420, 10627, 10670),
@@ -16,7 +16,8 @@
 //   SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor (2745; 10425).
 //   GetTextoAudio (10584) and GetTextoComparecimento (10583) have no direct caller: fn 652 passes their table slots (4054
 //   and 4053), and the sink takes their addresses. So does it for GetTextoIdentidadeDigitada (10586), whose slot 3907 fns
-//   1150, 1901, 1905, 2735, 2747, 3625, 5401, 5418, 10439, 10500, 10588 and 10635 pass.
+//   1901, 1905, 2735, 2747, 3625, 5401, 5418, 10439, 10500, 10588 and 10635 pass (1150, which passes it too, is in the
+//   link).
 // - std::random_device's default constructor (fn 5935), the libc++ header's, whose copy cinformacaothreadoperador.cpp.o
 //   emits first: its callers are CInformacaoThreadOperador::SorteiaDataHoraInspecao (fn 5412) and fn 11803 (a slot of
 //   vota::testeteclado::impl::CGeradorTeclasAleatorio, not written), which w50_random_device stands for.

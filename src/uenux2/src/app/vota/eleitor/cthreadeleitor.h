@@ -35,6 +35,14 @@ public:
     // accessor and its name are chosen: no record or out-of-line copy names one.
     api::CPriorityMessageQueue<api::SMessage>& GetMensagens() { return m_mensagens; }
 
+    // Whether the instance exists: target fn 10539 reads s_inst (@1833212) with s_mutex (@1833188) held and creates
+    // nothing. The member, its name and its being defined in the class are chosen.
+    static bool Existe()
+    {
+        std::lock_guard<std::mutex> trava(s_mutex);
+        return s_inst != nullptr;
+    }
+
 protected:
     void Run() override;
     void ParaOutrasThreads() override;

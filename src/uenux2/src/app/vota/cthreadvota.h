@@ -3,6 +3,7 @@
 #include <chrono>
 #include <cstddef>
 #include <exception>
+#include <map>
 #include <memory>
 
 #include "api/ipc/cthread.h"
@@ -33,6 +34,18 @@ public:
     uebyte AddStoppedTick(const std::chrono::milliseconds& tempo);
     void StopTick(uebyte id);
     void StartTick(uebyte id);
+    // The state of this thread's ticks (api::CTickManager::GetEstadoTicks), inlined into target fn 10409. The accessor,
+    // its name and its being defined in the class are chosen.
+    std::map<uebyte, api::CTickManager::EEstadoTick> GetEstadoTicks() const { return m_ticks.GetEstadoTicks(); }
+
+    // The state of the context at +32, or null when there is no context; and a new context over a state, whose state is
+    // then started. vota::CExecucaoVota's slot 9 and vota::CExecucaoVotaCooperativa's slots 2, 3 and 9 (fns 4705, 4713)
+    // hold this code on vota::CThreadEleitor with the signs of a function binaryen inlined (an if with a result where
+    // clang's own code returns twice; the state read before the context is allocated);
+    // src/units/165-uenux2-app-vota-execucao.mk has the measurement. That they are this class's members, out of line in
+    // cthreadvota.cpp, and their names are chosen.
+    comum::CAppState* GetEstado() const;
+    void IniciaContexto(comum::CAppState* estado);
 
 protected:
     void TrataErro(const ecourna::api::exception::CError& erro) override;
