@@ -179,7 +179,7 @@ void CQuerReimprimirZeresima::ProcessInput()
     __builtin_trap();
 }
 
-// CFimAquisicaoVotos::StartState: fn 10737 (79 B), callees with no name: 316, 501, 2520, 3610.
+// CFimAquisicaoVotos::StartState: fn 10737 (79 B), callees with no name: 316, 2520, 3610 (501 is named: unit 174).
 void CFimAquisicaoVotos::StartState()
 {
     __builtin_trap();
@@ -191,8 +191,8 @@ void CCancelaHabilitacaoEleitor::StartState()
     __builtin_trap();
 }
 
-// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 1688, 2264, 2798, 3625, 4578,
-// 5424 (and unit 152's 3624).
+// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 2264, 2798, 3625, 4578,
+// 5424 (and unit 152's 3624; 1688 is named: unit 174).
 void CProcuraEleitor::StartState()
 {
     __builtin_trap();
@@ -220,7 +220,8 @@ void CFinalizaOperador::StartState()
     __builtin_trap();
 }
 
-// CSincronismoOperador::StartState: fn 10210 (334 B), callees with no name: 185, 261, 291, 316, 326, 501, 656, 1271.
+// CSincronismoOperador::StartState: fn 10210 (334 B), callees with no name: 185, 261, 291, 316, 326, 656, 1271 (501 is
+// named: unit 174).
 void CSincronismoOperador::StartState()
 {
     __builtin_trap();

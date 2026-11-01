@@ -1,8 +1,9 @@
 // Pending members of unit 116's vota threads, each a slot of a vtable the unit emits (src/units/116-uenux2-cthreads.mk).
 // What each waits for:
-// - vota::CThreadVota::TrataErro(const CError&) 7710 (slot 3), 2317 B, and TrataErro(const std::exception&) 7709 (slot 4),
-//   2883 B: the unnamed callees 1695, 1696, 3336, 4633, 5566, 5568 and 5569. The first is the class's key function, so
-//   CThreadVota's vtable, typeinfo and D2 are emitted in this object, and move to cthreadvota.cpp when it lands.
+// - vota::CThreadVota::TrataErro(const CError&) 7710 (slot 3), 2317 B, and TrataErro(const std::exception&) 7709 (slot
+//   4), 2883 B: the unnamed callees 1695, 1696, 3336, 4633, 5568 and 5569 (5566 is
+//   api::CApplication::EnterLoopDoingNothing, unit 171). The first is the class's key function, so CThreadVota's
+//   vtable, typeinfo and D2 are emitted in this object, and move to cthreadvota.cpp when it lands.
 // - vota::CThreadEleitor::Run 7061 (slot 2), 4119 B: fns 2450, 3844 and ProcessarEntrada 4349 (record
 //   cthreadeleitor.cpp:134). 7061's records all belong to code inlined from cajusteinicial.cpp, so its stub sat there, and
 //   that file's stub-only state is unchanged by this trap's taking the stub.

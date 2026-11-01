@@ -362,6 +362,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   P=build/out/flags-tbaa                    # F9 item 6's clone, linked with UENUX2_EXTRA=-fstrict-aliasing
   N=build/out/flags-notbaa; mkdir -p $N/app # the plain objects, without the split
   rsync -a --exclude='/uenux2/' build/out/app/ $N/app/
+  TMPDIR=/tmp make -C src -j4 $(make -s -C src print-LINK_OBJS APP=$N/app UENUX2_TBAA_DIRS=) APP=$N/app UENUX2_TBAA_DIRS=   # the uenux2 objects, 4 at a time
   TMPDIR=/tmp make -C src link APP=$N/app OUT=$N/wasm/vota_web OUT_NAMED=$N/wasm-named/vota_web UENUX2_TBAA_DIRS=
   shasum -a 256 $N/wasm/vota_web/vota_web_wasm.wasm   # at the split's commit fce3b08c…, 694de52's plain link
   Q=build/out/flags-tbaa-api; mkdir -p $Q/app && rsync -a $N/app/ $Q/app/

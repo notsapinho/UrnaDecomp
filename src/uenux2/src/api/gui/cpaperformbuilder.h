@@ -5,12 +5,12 @@
 // api::IFormImpressao<CLASS>'s GetRenderForm (fn 11006), below, a line past this class, whose lines are a choice (RTTI:
 // an si_class of IForm<IPaper>; notes in src/units/120-uenux2-iform.mk). The layout is a reading: fns 193, 604, 198,
 // 1264 and 2775 push to a vector at this + 0, and fn 5579 zeroes the 12 bytes in line, so the constructor is implicit,
-// unlike api::CFormBuilder's. The adders' names, and which overloads share a name, are chosen from the field each builds. That
-// they are defined in a .cpp, and the member template AddTextField<FONTE> below the classes, is chosen too: no evidence
-// says where they are. Its instance fn 5613, over comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>, is 604's body
-// over a source passed by value (fn 3699 passes a copy's address); its alignment, the constant 0, is CDataText's
-// default by choice. GetForm (fn 5515) builds an IFormImpressao<IPaperRelatorios> of the fields with a
-// CPreShowNothing<IPaper>; it names nothing and keeps the vector. Its name is chosen.
+// unlike api::CFormBuilder's. The adders' names (from the field each builds, and which overloads share one), their
+// definitions in a .cpp and the member template AddTextField<FONTE> below the classes are chosen. Its instance fn 5613,
+// over comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>, is 604's body over a source passed by value (fn 3699
+// passes a copy's address); its alignment, 0, is CDataText's default by choice. GetForm (fn 5515) builds an
+// IFormImpressao<IPaperRelatorios> of the fields with a CPreShowNothing<IPaper>, names nothing and keeps the vector;
+// Build (fn 357) returns it, emptying the vector from the back (names chosen). No blank line follows, for line 51.
 #include <cstddef>
 #include <memory>
 #include <string>

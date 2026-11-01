@@ -36,8 +36,10 @@
 #   (11053, 11050, 11049, 11048, 11047 of ledger/ordinals.tsv's uses 1). That is not name order, so it says neither one
 #   file nor several; all of them in cledfieldmt.cpp would fit it, Beep in that file's unrecovered lines 18-29.
 # - every name but ShowClock's (iscreenmt.h says from what) and WasmText's (RTTI), the data members' (WasmText's too),
-#   the constructors' parameters and IPreShow's member; ShowClock's place in cwasmscreenmt.cpp, in slot order (its
-#   target index and Buzz's and Refresh's run against ld_index as one object's uses-1 band must).
+#   the constructors' parameters and IPreShow's member; ShowClock's place among the members between Buzz and Refresh
+#   in cwasmscreenmt.cpp, in slot order. That it lies between those two is the uses-1 band's: Buzz, ShowClock and
+#   Refresh are target 8787, 8757 and 8746, and their ld_index rises in that order (build/out/wasm-map/vota_web/
+#   names.tsv), as one object's band must run.
 # - WasmText's constructor taking its string by value; `explicit`.
 # - IText's default argument and CFixedText's constructor signature (api/gui/itext.h, cfixedtext.h).
 # Forms that give the same code, measured by `cmp` of the object at -O2 -std=c++20 and at -O3 -std=c++23 unless a list says

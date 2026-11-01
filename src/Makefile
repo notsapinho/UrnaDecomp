@@ -94,8 +94,8 @@ UENUX2_PREFIX_MAP  := -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 
 UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
 # strict aliasing by directory: the generic uenux2 rule compiles these without -fno-strict-aliasing (TBAA on), where
 # std::set and std::map inserts, a list's clear and lambdas' __clone keep in a local what the flag reloads; the rest of
-# comum keeps the flag, and its ASN.1 converters, gravadores, relatorios and cfederacoes.cpp lose matches with TBAA
-# (docs/reference/facts/app-flags.md §F6). The -pending and roots objects keep their rules' flags.
+# comum keeps the flag, and its ASN.1 converters, comparecimentomesario, gravadores, relatorios and cfederacoes.cpp lose
+# matches with TBAA (docs/reference/facts/app-flags.md §F6). The -pending and roots objects keep their rules' flags.
 # UENUX2_TBAA_DIRS= on the command line builds the whole tree with -fno-strict-aliasing.
 UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/%
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:

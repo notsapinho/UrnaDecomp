@@ -9,7 +9,7 @@
 // R6): its destructor is inline, declared because the class has no base.
 //
 // Chosen: this header's and cgeradorrelpu.cpp's paths (the family's directory and the class's name in lower case), the
-// name AdicionaParametro and its parameters, the member's name and the access.
+// name AdicionaParametro and its parameters, the member's name, the access and the destructor's `= default`.
 
 #include <string>
 

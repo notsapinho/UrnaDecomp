@@ -8,7 +8,7 @@
 //   fns 781, 1393, 1823 and 2740.
 // - vota::CControlaReconhecimento::ProcessInput (target fn 10511, slot 7): through Read() (record cinteractiveform.h:57
 //   @1591088), on CONFIRMA it calls fn 3621 and goes to the state fn 2743 returns or, as fn 2746 decides, after a call
-//   of fn 501, to fn 1150's.
+//   of fn 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174), to fn 1150's.
 // - vota::CIdentidadeInvalida::ProcessInput (target fn 10667, slot 7): a thunk that passes INPUT_CORRIGE (5) and its
 //   record (cinteractiveform.h:57 @1588432) to binaryen's fn 2295, whose next state is fn 652's.
 // - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 395, 652, 5396 and 5665.
@@ -18,7 +18,8 @@
 //   599, 1485, 2226, 2284 and 5903.
 // - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): it calls fns 2226, 2749, 2753, 3619, 5401, 5414 and
 //   5430.
-// - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): it calls fns 501, 599, 2226 and 3620.
+// - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): it calls fns 599, 2226 and 3620, and 501 (named: unit
+//   174).
 // - vota::IEleitorImpedidoVotar::StartState (target fn 10625, slot 2 of the base and of its six derived classes): it
 //   calls fn 3616.
 // - vota::IEleitorImpedidoVotar::ProcessInput (target fn 10624, slot 7 of the same seven vtables): through Read()

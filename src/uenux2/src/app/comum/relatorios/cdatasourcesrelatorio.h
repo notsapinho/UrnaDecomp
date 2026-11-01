@@ -9,7 +9,7 @@
 // api::CPaperFormBuilder::AddTextField (fn 604), which makes a report line's text field of it.
 //
 // Written: DetalheCandidatoZE (fn 11973) and DetalheCandidato (fn 11972, no record of its own). The other members are not
-// reconstructed: their lines stay blank, past the end of this file. src/units/183-uenux2-cdatasourcesrelatorio.mk
+// reconstructed: their lines stay blank, past the end of this file. src/units/183-uenux2-relatorios.mk
 // lists what the bytes decide and what is chosen.
 //
 // Chosen: DetalheCandidato's name and its lines (11972 is DetalheCandidatoZE's body with the vote count printed and no

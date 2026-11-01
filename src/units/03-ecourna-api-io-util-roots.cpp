@@ -9,9 +9,9 @@
 #include "ecourna/api/io/cfile.hpp"
 #include "ecourna/api/util/cbitarray.hpp"
 
-// The CFile constructor (fn 517) is defined in cfile.cpp. It has 23 direct callers in the target, of which only
-// api::CEncryptedFile::Save (2767, unit 128) is written; these optnone functions stand for the others (5480, 3653, 7787,
-// ...) as its other call sites.
+// The CFile constructor (fn 517) is defined in cfile.cpp. It has 23 direct callers in the target, of which
+// api::CEncryptedFile::Save and Load (2767, 3653, unit 128) are written; these optnone functions stand for the others
+// (5480, 7787, ...) as its other call sites.
 __attribute__((optnone, noinline)) void rapimisc_use_cfile_1(const std::string& a, const std::string& b) { ecourna::api::io::CFile f(a, b); }
 __attribute__((optnone, noinline)) void rapimisc_use_cfile_2(const std::string& a, const std::string& b) { ecourna::api::io::CFile f(a, b, ecourna::api::io::FM_SYNC); }
 __attribute__((optnone, noinline)) void rapimisc_use_cfile_3(const std::string& a) { ecourna::api::io::CFile f(a, "rb"); }

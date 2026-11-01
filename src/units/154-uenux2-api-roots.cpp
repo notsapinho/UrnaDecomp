@@ -4,7 +4,9 @@
 //   cinstrucaovotacaoacessibilidade.cpp's (its record, 1533820, follows that file's records). TamanhoDoNome and
 //   SomaDosNomes call it, so this object emits the copy; they are optnone, so that clang does not inline it into them, and
 //   they give it two call sites, so binaryen keeps it out of line. This object compiles at the uenux2 tree's flags (the
-//   fragment's rule), so its copy is compiled as the tree's own users compile theirs.
+//   fragment's rule), so its copy is compiled as the tree's own users compile theirs, but for -fno-strict-aliasing,
+//   which app/vota/'s objects drop (src/Makefile UENUX2_TBAA_DIRS): 744's body is the same without it (wasm-objdump -d
+//   of the object compiled both ways).
 // - api::CSynchronizer::GetInst (target fn 600) is called directly by 14 target functions (378, 491, 1487 and others),
 //   none reconstructed yet: InstanciaDuasVezes calls it twice. Its constructor (fn 5729) has two callers in the
 //   target, 600 and 6652 (not reconstructed): Constroi stands for 6652, so that binaryen keeps the constructor out of

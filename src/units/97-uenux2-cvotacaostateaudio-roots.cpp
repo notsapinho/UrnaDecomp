@@ -19,7 +19,8 @@
 // vptrs keep the vtables, with the D0 (fn 1278) and slot 16 (the thunks into fns 1961 and 2901) in them, and their
 // calls give IConfereVotoEmCargo's constructor (fn 1165), whose four callers are those functions, its call sites. So
 // this file includes the unit's headers, and is compiled with UENUX2_CXXFLAGS, the tree's flags, so that no match of
-// that code rests on a flag the tree lacks.
+// that code rests on a flag the tree lacks. app/vota/'s own objects drop -fno-strict-aliasing (src/Makefile
+// UENUX2_TBAA_DIRS); compiled without it too, this object is the same, byte for byte.
 //
 // api::CPosixRWMutex's constructor (target fn 10245) is reached only by its table slot 244, which fn 10864 passes to fn
 // 6023, so its own address is taken; its vptr store keeps that class's vtable, and with it slots 0 to 4.

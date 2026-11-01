@@ -4,7 +4,7 @@
 #   710 that passes the vptr 1558772), which the helpers' throws instantiate through the error header's alias; the
 #   symbol file names it by that vptr.
 # - The anonymous-namespace helpers, at their records' lines: FormataFase (target fn 2828, record :38), FormataNumero
-#   (fn 1161, record :48, written and not matched: below) and FormataUF (fn 3773, record :73).
+#   (fn 1161, record :48, matched since fn 11973's literal is in the link: below) and FormataUF (fn 3773, record :73).
 # - Two name builders, CNomeArquivo::NomeArquivoUF (fn 1705) and NomeArquivoSecao (fn 3772), matched at the tree's -O3
 #   (below). They are the helpers' callers in the object: FormataFase and FormataUF have two call sites there and
 #   FormataNumero five, and all three are functions of their own in the link (build/out/wasm-map/vota_web/names.tsv), as
@@ -31,13 +31,13 @@
 # - ('-' + tipo) for ("-" + tipo) in the builders, at -O2 and at -O3: the same bodies and data, likewise.
 # No other spelling was measured.
 #
+# - 1161 FormataNumero matches since fn 11973 (CDataSourcesRelatorio<CRdvVota, CEleitores>::DetalheCandidatoZE,
+#   src/units/183-uenux2-relatorios.mk) is in the link, its body unchanged. It loads the end of "{:0{}}", which the
+#   target holds as the tail of 11973's literal "  {}{}{:0{}}" at 1042; until 11973 landed, the scan read it
+#   `unresolved` at that one operand, `ours +0x69 i32.const 1040: an address of ours: string tail occurs 4098 times`
+#   (with a scratch object that held the literal, tools/round/try-tu.sh, splat-remap printed `target 1161: IDENTICAL`).
+#
 # Not matched, and what each waits for:
-# - 1161 FormataNumero: the scan reads it `unresolved` at its one operand that does not re-point, `ours +0x69 i32.const
-#   1040: an address of ours: string tail occurs 4098 times`, the end of "{:0{}}", which the target holds as the tail
-#   of "  {}{}{:0{}}" at 1042, the literal of fn 11973 (CDataSourcesRelatorio<CRdvVota, CEleitores>::
-#   DetalheCandidatoZE, no-candidate). With a scratch object that holds that literal added to this link
-#   (tools/round/try-tu.sh), splat-remap prints `target 1161: IDENTICAL`. It waits for 11973, or another holder of the
-#   literal, to land.
 # - 1705 and 3772 call std::string::append(const char*, size_t) (fn 160) 5 and 8 times in the target, as the tree's -O3
 #   does, and match there; the scan pairs them by content, since nothing else names them. At -O2 clang inlines append
 #   and the objects call __grow_by_and_replace instead: in the -O2 link they scored 551 over 805 rows and 877 over 1285,
