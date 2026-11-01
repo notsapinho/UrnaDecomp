@@ -22,7 +22,7 @@
 # invoke. So the target's copy is that level's, and both wait for a TU at it that calls Insert (the executable TU's code
 # is not written there); a probe object lands nowhere. Insert's callers named by `vtable` cast no votes
 # (docs/reference/splat.md section 2), so a `callers+content` hand line in splat/symbol_addrs.txt names 501 for them,
-# from its two named callers 7221 and 10763, whose rows equal ours up to callees, and from its body above. Chosen:
+# from its body above (its two named callers 7221 and 10763 are the rows the line carries, not its evidence). Chosen:
 # Insert's name and its parameters' order, the guard class (api::CSyncCtlGuard, in api/ipc/cmessagequeue.h) and its
 # names, and the local `ordem`. The item built after m_ordem's increment is the target's order (501 stores m_ordem
 # before it loads the message), and the probe compiles this form: its rows are 501's but the operands and that block.

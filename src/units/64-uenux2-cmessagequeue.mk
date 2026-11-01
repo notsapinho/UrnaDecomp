@@ -18,8 +18,8 @@
 #   ISemaphore::Wait(size_t); Remove calls slots 2 and 3 of +24; the constructor's records sit beside the singletons
 #   of IGenericFactory<ISemaphore> and IGenericFactory<ISyncCtl> (1534812 to 1534892). The D2 frees both through
 #   slot 1, +24 first.
-# - +28: Remove zeroes it when the queue is left empty. No insert is identified, so that it is the counter the
-#   element's +12 is taken from is a reading, and its name and type are a choice.
+# - +28: Remove zeroes it when the queue is left empty, and Insert (fn 501, unit 174) increments it and takes the
+#   element's +12 from it: the counter is evidence; its name and type are a choice.
 # - The element: 8 bytes of message, an int at +8 (i32.lt_s) and an unsigned at +12. The order of the comparator's
 #   tests is evidence and its spelling a choice: `<` then `>` on the int, then `>` on the unsigned, each with this
 #   element on the left, is what pop's bytes show. The forms below list what changes them and what does not.
@@ -38,9 +38,9 @@
 # - the same bytes: a functor as priority_queue's third argument for operator< with std::less (only pop's symbol
 #   differs, and it is inlined); the comparator as if/else if/else or as nested ?:; size_t for the two unsigned; a
 #   reference, or an RAII guard that holds the reference, for the pointer `sync`; with -fno-strict-aliasing or without
-#   it, and these bodies now compile at uenux2's flags in cthreadeleitor.cpp.o. No evidence names a guard class, so none
-#   is invented, although one would explain why the throw path does not Unlock: uenux2 compiles no landing pads, so a
-#   guard's destructor leaves no code on that path.
+#   it, and these bodies now compile at uenux2's flags in cthreadeleitor.cpp.o. The guard
+#   class api::CSyncCtlGuard (fn 5528, unit 174) is in this header now; it explains why the throw path does not
+#   Unlock: uenux2 compiles no landing pads, so a guard's destructor leaves no code on that path.
 # - other bytes: `a < b || (a == b && c > d)`, `>` tested before `<`, and `a > b` written `b < a`: pop stays out of line
 #   and differs from 2073 at body bytes 196, 174 and 206. `==` or `!=` tested first, `std::tie` and `<=>`: clang inlines
 #   pop into Remove, and the frame is 32 bytes.
