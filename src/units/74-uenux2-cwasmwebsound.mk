@@ -25,8 +25,8 @@
 #   stays a call and Cancela goes into them. In a scratch link with the simulator's three objects at -O3 (the rest at
 #   -O2, the tree's level then), 2680 scored 8 over 157 rows, 9604 9 over 223, 9459 1 over 5, 9448 2 over 6 and 9472 1 over 6,
 #   all operand-only. WaitAsync (fn 9515) is written and `unresolved`. With -fno-strict-aliasing its insert reloads __child
-#   where the target does not (45 over 464 rows, 5 inserted); with the directory's strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6)
-#   it is 19 over 459, 16 replaced, all operand-only, and 3 deleted. Those 3 are CEsperaAudio's flag store, which ours merges into the object's first i64; and a name of s_proximaEspera (.data
+#   where the target does not (49 over 464 rows, 5 inserted); with the directory's strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6)
+#   it is 23 over 459, 20 replaced, all operand-only, and 3 deleted. Those 3 are CEsperaAudio's flag store, which ours merges into the object's first i64; and a name of s_proximaEspera (.data
 #   1528464, value 1 in the target's data): too little content to place, and only 9515 reads it.
 # RTTI gives simulador::(anonymous namespace)::CEsperaAudioWasm, so the class is file-local (vtable @1528660, slots 9459,
 # 9448, 2680, 9445). Its `final` is evidence for the class or its destructor: 9472 calls 2680 directly, which needs one of
