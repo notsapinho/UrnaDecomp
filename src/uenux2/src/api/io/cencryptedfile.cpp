@@ -1,8 +1,11 @@
 #include "api/io/cencryptedfile.h"
 
 #include <cstring>
+#include <format>
+#include <vector>
 
 #include "api/io/eueioerror.h"
+#include "api/util/csystem.h"
 #include "ecourna/api/io/cfile.hpp"
 #include "ecourna/api/security/isymmetriccipher.hpp"
 
@@ -10,14 +13,57 @@ namespace api {
 
 CEncryptedFile::~CEncryptedFile() = default;
 
-// (original lines 13-32: content not recovered)
+// (original lines 16-32: content not recovered)
 #line 33
-// <stubs>
-// f3653 · 3845 B · unmatched · name unknown
-// void f3653(i32, i32) { ... }
-// </stubs>
+void CEncryptedFile::Load(const std::string& nome)
+{
+    if (nome.empty()) {
+        throw CUeIoError(EUE_IO_LOAD_NOME_ARQUIVO_VAZIO, "Nome de arquivo vazio");
+    }
+    if (!CSystem::ExistFile(nome)) {
+        throw CUeIoError(EUE_IO_ARQUIVO_INEXISTENTE, std::format("Arquivo [{}] não existe", nome));
+    }
 
-// (original lines 38-84: content not recovered)
+    const uedword tamanho = CSystem::GetFileSize(nome);
+    if (tamanho == 0 || tamanho % 16 != 0) {
+        CUeIoError(EUE_IO_TAMANHO_ARQUIVO_INVALIDO, std::format("Arquivo [{}] com tamanho inválido", nome));
+    }
+
+    ecourna::api::io::CFile arquivo(nome, "rb");
+    std::vector<uebyte> cifrado(tamanho);
+
+    if (arquivo.RawRead(cifrado.data(), tamanho) != tamanho) {
+        CUeIoError(EUE_IO_FALHA_LEITURA_ARQUIVO, std::format("Falha ao ler arquivo [{}]", nome));
+    }
+
+    std::vector<uebyte> dados;
+    m_cifrador->Decrypt(cifrado, dados);
+
+    const uebyte complemento = dados.back();
+    if (complemento > 16) {
+        throw CUeIoError(EUE_IO_PADDING_INVALIDO, std::format("Tamanho de padding inválido em [{}]", nome));
+    }
+
+    // (original lines 62-63: content not recovered)
+#line 64
+    if (complemento > tamanho) {
+        throw CUeIoError(EUE_IO_PADDING_EXCESSIVO, std::format("Tamanho de padding excessivo em [{}]", nome));
+    }
+
+    // (original lines 68-70: content not recovered)
+#line 71
+    for (int i = 1; i < complemento; ++i) {
+        if (dados[dados.size() - 1 - i] != complemento) {
+            CUeIoError(EUE_IO_PADDING_SECUNDARIO_INVALIDO, std::format("Tamanho de padding secundário inválido em [{}]", nome));
+        }
+    }
+
+    std::vector<uebyte> conteudo(dados.begin(), dados.end() - complemento);
+    m_dados.swap(conteudo);
+    m_posicao = 0;
+}
+
+// (original lines 82-84: content not recovered)
 #line 85
 void CEncryptedFile::Save(const std::string& nome) const
 {

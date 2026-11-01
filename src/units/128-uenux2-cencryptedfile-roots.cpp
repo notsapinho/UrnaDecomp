@@ -28,6 +28,14 @@ __attribute__((noinline)) void w128_le_grava(api::CEncryptedFile& escrita, api::
     std::destroy_at(&leitura);
 }
 
+// Load (target fn 3653) has the target callers 6734 and 7174, neither reconstructed yet: two call sites here, since
+// binaryen inlines a function called once. It goes when those callers are in splat/matched.txt.
+__attribute__((noinline)) void w128_carrega(api::CEncryptedFile& arquivo, const std::string& nome, const std::string& copia)
+{
+    arquivo.Load(nome);
+    arquivo.Load(copia);
+}
+
 // std::vector<uebyte>'s range insert, which Save calls (target fn 1927), is in the target's table (slot 6666) besides its
 // five direct callers (2767, 5360, 10967, 11397, 11399): its address is taken here, so binaryen keeps it out of line and
 // keeps its result, as the target's table entry does. cencryptedfile.cpp's object instantiates it, and binaryen merges
@@ -45,6 +53,7 @@ struct SW128Roots {
     {
         w128_sink = reinterpret_cast<void*>(&w128_salva);
         w128_sink = reinterpret_cast<void*>(&w128_le_grava);
+        w128_sink = reinterpret_cast<void*>(&w128_carrega);
         w128_sink = reinterpret_cast<void*>(&w128_insere);
     }
 } w128_roots;

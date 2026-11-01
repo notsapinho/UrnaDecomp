@@ -15,6 +15,12 @@ public:
     {
     }
 
+    // Declared so that a key moves: api::CIniSection::SetKey (target fn 5482) moves a key's strings into its map's node,
+    // and the user-declared operator= would leave the class no move constructor. `= default` is chosen
+    // (src/units/175-uenux2-cinisection.mk).
+    CIniKey(const CIniKey& chave) = default;
+    CIniKey(CIniKey&& chave) = default;
+
     CIniKey& operator=(const CIniKey& chave);
 
     const std::string& GetNome() const { return m_nome; }

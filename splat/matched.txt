@@ -10563,3 +10563,5 @@
 4420 _ZN4vota31CInstrucaoVotacaoAcessibilidade7GetInstEv
 7284 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/cinstrucaovotacaoacessibilidade.cpp.o
 7287 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/cinstrucaovotacaoacessibilidade.cpp.o
+3653 _ZN3api14CEncryptedFile4LoadERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+5482 _ZN3api11CIniSection6SetKeyERKNS_7CIniKeyE

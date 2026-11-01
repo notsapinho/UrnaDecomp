@@ -124,9 +124,6 @@
 // f5484 · 131 B · unmatched · placement: link order · name unknown
 // ? f5484(i32) { ... }
 
-// f5482 · 512 B · unmatched · placement: link order · name unknown
-// void f5482(i32, i32) { ... }
-
 // link-order cluster 768 · uses=2 · neighbours' file uenux2/src/api/gui/primitives.cpp
 
 // f5485 · 110 B · unmatched · placement: link order · name unknown

@@ -17,6 +17,15 @@ enum EUeIoError {
     EUE_IO_OPERACAO_INVALIDA = 5977,
     EUE_IO_REGISTRO_DUPLICADO = 5978,
     EUE_IO_REGISTRO_NAO_ENCONTRADO = 5979,
+    // the codes of api::CEncryptedFile::Load (target fn 3653), which builds 5989, 5990 and 5993 without throwing them;
+    // chosen from the messages (5987's is Save's message too, under its own code)
+    EUE_IO_LOAD_NOME_ARQUIVO_VAZIO = 5987,
+    EUE_IO_ARQUIVO_INEXISTENTE = 5988,
+    EUE_IO_TAMANHO_ARQUIVO_INVALIDO = 5989,
+    EUE_IO_FALHA_LEITURA_ARQUIVO = 5990,
+    EUE_IO_PADDING_INVALIDO = 5991,
+    EUE_IO_PADDING_EXCESSIVO = 5992,
+    EUE_IO_PADDING_SECUNDARIO_INVALIDO = 5993,
     // the code api::CEncryptedFile::Save throws (target fn 2767); chosen from its message, "Nome de arquivo vazio"
     EUE_IO_NOME_ARQUIVO_VAZIO = 5994,
     // the codes of api::CEncryptedFile::MemWrite and MemRead (held by target fns 2766 and 3652); chosen from the messages
