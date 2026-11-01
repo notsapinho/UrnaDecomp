@@ -29,6 +29,9 @@ public:
     TQtdVoto Nulos(TCargoID cargo) const;
     TQtdVoto Brancos(TCargoID cargo) const;
     TQtdVoto Cargo(TCargoID cargo) const;
+    // comum::CRdvVota's Desconverte and Confere (fns 11487, 11486) test a decoded RDV against theirs with it (fn 5638).
+    // The name is chosen.
+    bool Compativel(const CVotosEleicoesVota& outro) const;
 
 private:
     using TTotalCargo = std::function<TQtdVoto(const CVotosCargos&, TCargoID)>;

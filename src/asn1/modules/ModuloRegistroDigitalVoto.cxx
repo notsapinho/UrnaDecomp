@@ -23,7 +23,7 @@ const ModuloRegistroDigitalVoto::TipoVoto::InfoType ModuloRegistroDigitalVoto::T
     9, nameList
 };
 
-const ModuloRegistroDigitalVoto::Voto::digitacao::value_type::InfoType ModuloRegistroDigitalVoto::Voto::digitacao::value_type::theInfo = {
+const ModuloRegistroDigitalVoto::VotoDigitado::InfoType ModuloRegistroDigitalVoto::VotoDigitado::theInfo = {
     ASN1::AbstractString::create,
     0x00000012,
     &ASN1::NumericString::theInfo,

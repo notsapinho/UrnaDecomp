@@ -1,7 +1,8 @@
-# uenux2 comum::CRdvVota::Candidato (target fn 1931, CRdvVota vtable slot 3) with the CVotosEleicoesVota totals it
-# calls; wasm-opt inlines CVotosEleicoesVota::Candidato (one caller) into it, as in the target. Paths relative to src/uenux2.
+# uenux2 comum::CRdvVota (crdvvota.cpp) and the comum::md RDV classes it holds (md/rdv/): CRdvVota::Candidato (target fn
+# 1931, CRdvVota vtable slot 3) with the CVotosEleicoesVota totals it calls; wasm-opt inlines CVotosEleicoesVota::Candidato
+# (one caller) into it, as in the target. The other slots and md members are below. Paths relative to src/uenux2.
 # CRdvVota::GetInst (target fn 555, record crdvvota.cpp:87), its statics and their exit destructors are in crdvvota.cpp;
-# src/units/110-uenux2-singletons.mk says what shows them. ~CRdvVota is written and short of its converter member (fn 5734).
+# src/units/110-uenux2-singletons.mk says what shows them. ~CRdvVota (fn 5734) matches with its converter member (below).
 #
 # comum::CRdvPosicionadorVota::Posicao (target fn 11496, slot 2 of the class's vtable; slots 0 and 1 are the shared 174
 # and 144), with the comum::md::CRdvPosicionador header and CVoto::operator<=>, which wasm-opt inlines into it (its one
@@ -35,7 +36,7 @@
 # them, CConversorEleicoesVota::DoConverte (11350) builds one from a md::CCargo, and the map's nodes hold the CVotos at
 # +28 (fn 3893's search, fn 1268, the map's destroy, matched since). The 1-byte form matched fn 2877 under this map's name:
 # 2877 is the destroy of another map, std::map<md::TCargoID, md::CVotos> (32-byte nodes, the CVotos at +20), which the
-# target's CRdvVota slot 0 (fn 5733, not written) builds from the SCargoInfos' cargo bytes and fns 5971 and 11514 (not
+# target's CRdvVota slot 0 (fn 5733, below) builds from the SCargoInfos' cargo bytes and fns 5971 and 11514 (not
 # written) destroy; fragment 140's roots hold that instance, and 2877's line names it. 1159 (the map of CVotosCargos'
 # destroy) and 11277 (a CVotosEleicoesVota::Cargo lambda) match over the 12-byte map too.
 # md::CVotos' constructor (fn 2794) takes the vector by value, moves it in and reserves 1000 votes (the body's 16000-byte
@@ -51,12 +52,97 @@
 # md::CVotos' lambdas (Partido, Legenda, Candidato, TotalQue) have std::function __clone members (11322, 11323, 11327,
 # 11328, 11333, 11334, 11338, 11339) and binaryen's shared body of the __clone() ones (1083): they match since md/ builds
 # with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6), which stores the capture before the vptr.
+#
+# comum::CRdvVota's other slots (vtable @1560164; CRdv declares no destructor, so the vtable has no destructor slot),
+# in crdvvota.cpp. Slot 0 is the key function, so crdvvota.cpp emits the vtable. Inside a band of ledger/ordinals.tsv
+# the target's index runs in reverse link order: band 1 reads 11492 (slot 2), 11490 (slot 1), 11485 (the converter's
+# D2, which our object emits right after ~CRdvVota and the three destroys ~CRdvVota calls), so slots 2 and 1 sit
+# above the destructor; band 2 reads 5734 (~CRdvVota), 5733 (slot 0), 5732; band 3 3749, 3748, 3747; band 4 2814,
+# 2813. Our link gives each band the same order. The order across bands and the lines are chosen.
+# - Slots 4 to 10, Legenda, Partido, Nominais, Legendas, Nulos, Brancos and Cargo (fns 3749, 2814, 2813, 5732, 3748,
+#   3747, 1930): each returns m_votos's total of the same name, which has that slot as its one caller, and wasm-opt
+#   inlines it there as in the target. binaryen merges the seven into the shared bodies 6033 (Legenda, Partido) and 2296
+#   (the five others), which add 20 to this (m_votos's offset) in the target too, and both match. Legenda and Partido
+#   pad the number with m_digitosPartido (6033 passes to_string(int) and the byte at +16 to PreencheAEsquerda). The
+#   seven thunks matched before under md::CVotosEleicoesVota's names: the roots took those members' addresses, and
+#   their bodies passed this through to a shared body of ours with the same constants. The match lines are renamed.
+# - Slots 0 and 1 (fns 5733, 11490): a map from each cargo to its votes (crdv.h says why), filled with emplace from
+#   every election's md::CVotosCargos, or from one election's (md::CVotosEleicoesVota::GetVotos, record
+#   cvotoseleicoesvota.cpp:113, inlined). In 11490 clang leaves the node's pair constructor out of line and wasm-opt
+#   inlines it (the second stack frame the target has there); in 5733 clang inlines it. The code is as written: both
+#   are operand-only.
+# - Slot 2 (fn 11492) returns m_votos's Comparecimento (fn 5639).
+# - Slots 11 to 13, Converte, Desconverte and Confere (fns 11488, 11487, 11486), are not written: this unit's
+#   -pending.cpp traps them and says what each waits for. Desconverte's record, crdvvota.cpp:237, lies past the end of
+#   the file, which ends before it.
+# Chosen: slot 0's name (an overload of slot 1's), the alias CRdv::TVotosCargo, and emplace (the target finds the key
+# before it allocates the node, as emplace does; try_emplace was not measured).
+#
+# md::CVotosEleicoesVota, in md/rdv/cvotoseleicoesvota.cpp:
+# - Votos (fn 3708) matches: two of its three target callers are in the link now (5639, 11490; 4454 is not written).
+# - Comparecimento (fn 5639, record :118): the first cargo's vote count over its quantidadeEscolhas, through
+#   md::CVotosCargos::Comparecimento (in the class; the name and the place are chosen). CRdvVota's slot 2 is one caller
+#   and the roots stand in for the other.
+# - Compativel (fn 5638, a chosen name; Desconverte and Confere call it): m_eleicoes equal, then each election's cargos
+#   found in the other RDV's with the same SCargoInfo, through md::CVotosCargos::Compativel, defined in cvotoscargos.cpp
+#   (5638 tests its result again, so binaryen inlined it from another function). It walks the other's map and finds in
+#   its own, and compares the walked cargo's fields first: with the operands the other way round it was 12 over 321
+#   rows (6 inserted, 6 deleted); as written it is byte-identical.
+# - The constructor (fn 5640) with MontaMapa (records :33 and :40; the record spells two lambdas, the inner one taking
+#   `auto it`), the map from each cargo to its election, which throws 4723 on an empty map and 4724 on a cargo in two
+#   elections. Written; the scan finds no body of ours for it (`no-candidate`), and `pnpm wasm score` gives 97 over 561
+#   rows (13 inserted, 30 deleted) in this link: the target keeps the new map's size in a local across the inserts,
+#   which only type-based aliasing allows here. With strict aliasing on comum/dados/md it re-points identical: in a
+#   private link with the 48 objects of that directory compiled with UENUX2_EXTRA=-fstrict-aliasing the score is 17
+#   over 548 rows, each one an operand (operator new, __cxa_allocate_exception, std::to_string, the error's
+#   constructor and typeinfo, CError's destructor slot, three strings and MontaMapa's two records), `pnpm wasm
+#   splat-remap` re-points the body IDENTICAL to 5640, and the splat build of that link verifies the 10541 match lines
+#   (5640 not among them).
+# GetEleicao sits above MontaMapa, whose lines are its records'; Votos and the two Total sit below the constructor,
+# before the gap above GetVotos (record :113). The lines of GetEleicao, the constructor, Votos and the two Total are
+# chosen (no record names one).
+#
+# md::CVotosCargos, in md/rdv/cvotoscargos.cpp:
+# - The constructor (fn 5643, records :50, :58 and :66): operand-only, 39 over 303 rows. It reads the cargo into a local
+#   at the top of the loop: the target loads it before __cxa_allocate_exception, which std::to_string(info.cargo)
+#   written in the message does not give (130 over 329 rows, 26 inserted, 30 deleted). comparecimento is the first
+#   cargo's, as in Comparecimento.
+# - QuantidadeEscolhas (fn 5642, a chosen name): the sum of the cargos' quantidadeEscolhas over a by-value loop variable,
+#   whose vote vector the target copies and frees for each cargo; operand-only, 5 over 151 rows.
+# - Candidato to Cargo, the members the CVotosEleicoesVota lambdas call, moved below GetVotos (record :91), out of the
+#   lines the constructor's records and criaMapa's (:30 and :37, fn 7787's, not written) take; their lines are chosen.
+#
+# md::CVotos (md/rdv/cvotos.cpp): Conta counts with std::count_if over its by-value criterion, which copies it: the
+# target's TotalQue (fn 11340) holds two std::function objects, the copy above the criterion's member pointer and the
+# argument below it, and so does the Candidato/Legenda/Partido merge 3893. TotalQue is operand-only, 4 over 139 rows;
+# the loop that called the criterion in place gave one std::function, and a named std::function copied into Conta gave
+# 84 over 165 rows (the frame in another order). With TotalQue, 2897 (the target's merge of the four
+# md::CVotosEleicoesVota lambdas over TotalQue) and the lambdas' thunks 11282, 11292 and 11297 match; 11287, Nulos's,
+# passes CVoto::EhNulo's slot, fn 11316, which matches with EhNulo inline in cvoto.h (its comment says why) and the
+# static EhNulo (fn 5645) out of line in cvoto.cpp. 3893, the Candidato/Legenda/Partido merge, still differs at its
+# first row, as at the base: the lambda's cargo load precedes CVotosCargos::Candidato's stack frame in the target.
+#
+# md::CVoto's constructor (fn 2256, record cvoto.cpp:80) is written and `differs`: it trims the number and checks it
+# against the type, with a name per type joined into two tails of the message, " com digitado vazio" for the nominal
+# and legenda votes and " com digitado nao vazio" for the others, NULO unchecked, and code 4661. What is written, a
+# helper that sets the name per case and returns the message or "", is 405 over 668 rows; the name returned per group
+# by an inline NomeTipo is 610 over 831; inline helpers per case give the eight copies of the tail the target merges
+# into two (the object, read with wasm-objdump). -fstrict-aliasing leaves cvoto.cpp's object byte-identical. It stays
+# written because comum::asn::CConversorVoto::DoDesconverte (fn 11354, unit 124) calls it; the record names it.
+# The error codes' names (euerdverror.h), Compativel, QuantidadeEscolhas, Comparecimento's and the helpers' names are
+# chosen.
+#
+# The roots stand in for the callers no unit writes: the CRdvVota vtable's address for CreateInst's vptr store, and the
+# stand-ins the roots file lists by target caller.
 CRDVVOTA_SRCS := src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp \
   src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvoto.cpp
 UENUX2_SRCS += $(CRDVVOTA_SRCS)
 # crdvvota.h holds the RDV's converter, which includes generated ASN.1 modules: the generic uenux2 rule does not depend on them
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/crdvvota.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
+# the CRdvVota slots not written: 13-uenux2-crdvvota-pending.cpp traps them, compiled with the tree's flags
+$(ROOT)/$(APP)/13-uenux2-crdvvota-pending.o: $(ROOT)/src/units/13-uenux2-crdvvota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/13-uenux2-crdvvota.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/13-uenux2-crdvvota-pending.cpp -o $(R)
 # the roots that keep the units linked (see the file header)
-$(ROOT)/$(APP)/13-uenux2-crdvvota-roots.o: $(ROOT)/src/units/13-uenux2-crdvvota-roots.cpp $(ROOT)/src/Makefile
+$(ROOT)/$(APP)/13-uenux2-crdvvota-roots.o: $(ROOT)/src/units/13-uenux2-crdvvota-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/13-uenux2-crdvvota.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/13-uenux2-crdvvota-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/13-uenux2-crdvvota-roots.o
+override EXTRA_OBJS += $(APP)/13-uenux2-crdvvota-pending.o $(APP)/13-uenux2-crdvvota-roots.o
