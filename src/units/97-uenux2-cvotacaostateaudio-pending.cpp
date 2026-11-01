@@ -28,7 +28,8 @@
 // 433 B, and 11724, 495 B): every callee is matched or named (fn 1273 is CCandidaturas::Busca, unit 89's), and both
 // assign the number typed to the std::string at 1833288, which no symbol names and no record places: its readers are
 // these two, the four ProcessInputAudio above, CVotacaoStateAudio::FormataMensagem (6999) and vota::CEleitorVotando's
-// fns 7377, 4459 and 5500, and its exit destructor is fn 13593. They wait for that object's declaration.
+// fns 7377, 4459 and 5500; fn 13176 returns its address, which the screen builders of ctelasvota.cpp take as a
+// callback; its exit destructor is fn 13593. They wait for that object's declaration.
 // vota::CMajoritarioValido::AoConcluirEntrada and vota::CConfirmaVotoNominal::AoConcluirEntrada (slot 17, one target
 // body, fn 5925, 2141 B): it logs and runs a vota::impl::IPoliticaExecucaoEleitor through fn 5407, which has no name.
 // Its stub sat in app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp, where the record of the GetInst it holds inlined

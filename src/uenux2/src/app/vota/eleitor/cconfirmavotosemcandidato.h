@@ -14,7 +14,7 @@ namespace vota {
 // 9 and 13 are pending (src/units/150-uenux2-eleitor-estados-pending.cpp): 13 is EmiteEcoComInputField, record
 // cconfirmavotosemcandidato.cpp:77; 9 is CVotacaoStateAudio's ProcessInputAudio. Slot 10, StartStateAudio (fn 7441),
 // passes a string of its own signature, "virtual void vota::CConfirmaVotoSemCandidato::StartStateAudio()", to
-// GetTelaCargoAtual (fn 4483, record :64): __PRETTY_FUNCTION__ spells it, and no record holds it, so it is no
+// GetTelaCargoAtual (fn 4483, record :64): read as __PRETTY_FUNCTION__ (a literal: same bytes); no record, so no
 // std::source_location. Slot 12 is the empty fn 425. The destructors are fns 884 and 883, the bodies of unit 97's fifteen states over CVotacaoStateAudio's
 // D2: out of line, declared first as the key function. A singleton whose GetInst is inlined into fn 4459 (not
 // reconstructed): a 32-byte object, CVotacaoStateAudio's constructor called with 6, the byte 17 stored at +28 and the
