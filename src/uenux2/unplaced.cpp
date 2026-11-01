@@ -740,9 +740,6 @@
 
 // link-order cluster 1027 · uses=3 · neighbours' file uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp
 
-// f3843 · 27 B · unmatched · placement: link order · name unknown
-// void f3843(i32, i32) { ... }
-
 // f3842 · 23 B · unmatched · placement: link order · name unknown
 // ? f3842(i32) { ... }
 
@@ -984,11 +981,6 @@
 
 // f1767 · 509 B · unmatched · placement: link order · name unknown
 // void f1767(i32, i32, i32) { ... }
-
-// link-order cluster 1222 · uses=8
-
-// f1485 · 14 B · unmatched · placement: link order · name unknown
-// ? f1485() { ... }
 
 // link-order cluster 1239 · uses=8
 
@@ -1576,11 +1568,6 @@
 
 // f3827 · 29 B · unmatched · placement: link order · name unknown
 // ? f3827(i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1027 · uses=3 · neighbours' file uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp
-
-// f3844 · 21 B · unmatched · placement: link order · name unknown
-// ? f3844(i32, i32) { ... }
 
 // link-order cluster 1030 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cpartecandidatosproporcionais.cpp
 

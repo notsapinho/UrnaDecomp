@@ -10233,3 +10233,7 @@
 11877 _ZN4vota21CVisualizarCandidatosD0Ev
 11878 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp.o
 11880 __cxx_global_array_dtor@app/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp.o
+1485 _ZN4vota13EhTreinamentoEv
+2450 _ZN3api18CPolySingletonList3hasIN4vota14IAjusteInicialEEEbRKNS_19TPolySingletonsInfoE
+3843 _ZN5comum16CAppStateContext10ProcessKeyEh
+3844 _ZN5comum16CAppStateContextC2EPNS_9CAppStateE
