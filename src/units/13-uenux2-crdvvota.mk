@@ -53,9 +53,9 @@
 # comum::CRdvVota's other slots (vtable @1560164; CRdv declares no destructor, so the vtable has no destructor slot),
 # in crdvvota.cpp. Slot 0 is the key function, so crdvvota.cpp emits the vtable. Inside a band of ledger/ordinals.tsv
 # the target's index runs in reverse link order: band 1 reads 11492 (slot 2), 11490 (slot 1), 11485 (the converter's
-# D2, which our object emits after ~CRdvVota, its first use in the file), so slots 2 and 1 sit above the destructor;
-# band 2 reads 5734 (~CRdvVota), 5733 (slot 0), 5732; band 3 3749, 3748, 3747; band 4 2814, 2813. Our link gives each
-# band the same order. The order across bands and the lines are chosen.
+# D2, which our object emits right after ~CRdvVota and the three destroys ~CRdvVota calls), so slots 2 and 1 sit
+# above the destructor; band 2 reads 5734 (~CRdvVota), 5733 (slot 0), 5732; band 3 3749, 3748, 3747; band 4 2814,
+# 2813. Our link gives each band the same order. The order across bands and the lines are chosen.
 # - Slots 4 to 10, Legenda, Partido, Nominais, Legendas, Nulos, Brancos and Cargo (fns 3749, 2814, 2813, 5732, 3748,
 #   3747, 1930): each returns m_votos's total of the same name, which has that slot as its one caller, and wasm-opt
 #   inlines it there as in the target. binaryen merges the seven into the shared bodies 6033 (Legenda, Partido) and 2296
@@ -89,13 +89,15 @@
 #   `auto it`), the map from each cargo to its election, which throws 4723 on an empty map and 4724 on a cargo in two
 #   elections. Written; the scan finds no body of ours for it (`no-candidate`), and `pnpm wasm score` gives 97 over 561
 #   rows (13 inserted, 30 deleted) in this link: the target keeps the new map's size in a local across the inserts,
-#   which only type-based aliasing allows here. It matches only with strict aliasing on comum/dados/md: in a private
-#   link with the 48 objects of that directory compiled with UENUX2_EXTRA=-fstrict-aliasing the score is 17 over 548
-#   rows, all of them operands (its calls, strings, records, the error's typeinfo and destructor slot), `pnpm wasm
-#   splat-remap` re-points the body IDENTICAL to 5640, and the splat build of that link verifies all 10541 match lines.
+#   which only type-based aliasing allows here. With strict aliasing on comum/dados/md it re-points identical: in a
+#   private link with the 48 objects of that directory compiled with UENUX2_EXTRA=-fstrict-aliasing the score is 17
+#   over 548 rows, each one an operand (operator new, __cxa_allocate_exception, std::to_string, the error's
+#   constructor and typeinfo, CError's destructor slot, three strings and MontaMapa's two records), `pnpm wasm
+#   splat-remap` re-points the body IDENTICAL to 5640, and the splat build of that link verifies the 10541 match lines
+#   (5640 not among them).
 # GetEleicao sits above MontaMapa, whose lines are its records'; Votos and the two Total sit below the constructor,
-# before the gap that ends at GetVotos's record (:113). Their lines, GetEleicao's and the constructor's are chosen (no
-# record names one).
+# before the gap above GetVotos (record :113). The lines of GetEleicao, the constructor, Votos and the two Total are
+# chosen (no record names one).
 #
 # md::CVotosCargos, in md/rdv/cvotoscargos.cpp:
 # - The constructor (fn 5643, records :50, :58 and :66): operand-only, 39 over 303 rows. It reads the cargo into a local
