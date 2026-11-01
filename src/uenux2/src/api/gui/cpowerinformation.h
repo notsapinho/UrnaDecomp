@@ -25,9 +25,9 @@ namespace api {
 //
 // The destructor is declared in the class without `inline`. Evidence that its D2 is not inlined into its callers: the
 // D0s (10990, 11652) free what the D2 returns, and comum::CInfoMTLCD's destructor (fn 5902) calls the member's D2
-// (3837). Measured (src/units/164-uenux2-cpowerinformation.mk): `{}`, `= default` and
-// `virtual ~BatteryIconDataSource() {}` give the same object; the implicit destructor and one declared `inline` give a
-// D0 that holds the D2's body. `{}` is written, a choice among the three. The constructor and UpdateBatteryIcon are
+// (3837). Measured (src/units/164-uenux2-cpowerinformation.mk): `{}`, `= default`, a definition after the class in
+// this header and `virtual ~BatteryIconDataSource() {}` give the same object; the implicit destructor and one declared
+// `inline` give a D0 holding the D2's body. `{}` is written, one of four. The constructor and UpdateBatteryIcon are
 // declared only, and cpowerinformation.cpp stays a stub file: both call fn 2773, which fills a std::map of the icons
 // through fn 1263, whose std::make_shared<CFixedImage> calls CFixedImage's string constructor, fn 2246, not written.
 class CPowerInformation {

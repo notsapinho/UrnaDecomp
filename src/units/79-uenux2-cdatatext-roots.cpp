@@ -7,7 +7,7 @@
 //     (*)(const std::string&) (3058), const std::string (*)(const std::string&) (2028) and
 //     std::function<std::string(const std::string&)> (5936), CDataImage over std::vector<unsigned char> (*)() (6689),
 //     and CQRCodeImage (12040, 12055), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
-//     the source's matched call operator (2268) and whose block unit 102's object already holds;
+//     the source's matched call operator (2268); it (12632) and the block link from unit 102's object, which is first;
 //   SharedIText(new X), where the target has __shared_ptr_pointer<X*, shared_ptr<IText>::__shared_ptr_default_delete<IText, X>, ...>:
 //     CDataText over CTextSource (5409), std::string (*)() (604) and std::function<std::string()> (5419), CDataTextFmt
 //     over CTextSource (652) and std::string (*)(const std::string&) (651);

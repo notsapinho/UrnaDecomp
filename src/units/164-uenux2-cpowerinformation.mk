@@ -12,9 +12,12 @@
 # -iquote overlay of the header, at UENUX2_CXXFLAGS, and its functions compared (call and global indices masked).
 # `~BatteryIconDataSource() override {}`, `override = default` and `virtual ~BatteryIconDataSource() {}` give the same
 # object, with a D0 that passes the D2's result to operator delete;
-# the implicit destructor and `inline ... override {}` give a D0 that holds the D2's body. Declared in the class and
-# defined in cpowerinformation.cpp under an explicit instantiation of both classes, the D0 calls the D2, drops its result
-# and frees this, the out-of-line shape (docs/reference/facts/reading.md R5), which the target's 10990 and 11652 are not.
+# the implicit destructor and `inline ... override {}` give a D0 that holds the D2's body; a definition after the class
+# in the header gives the same object as `{}` in it. Under an explicit instantiation of both classes, the D0 calls the
+# D2, drops its result and frees this, the out-of-line shape (docs/reference/facts/reading.md R5), which the target's
+# 10990 and 11652 are not, whether the destructor is defined in cpowerinformation.cpp or `{}` in the class: what the
+# bytes rule out is an explicit instantiation in the file whose copy the link kept. The evidence for a definition in
+# the header is the data: BatteryIconDataSource<Vertical>'s vtable sits in cinfomtlcd.cpp's data, so that file saw it.
 #
 # Pending, with what each waits for (cpowerinformation.cpp stays a stub file):
 # - the constructor (record cpowerinformation.cpp 119:16, inlined into fns 502 and 5904) and UpdateBatteryIcon (record

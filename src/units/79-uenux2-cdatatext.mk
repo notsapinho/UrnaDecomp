@@ -6,13 +6,15 @@
 #   src/api/gui/cqrcodeimage.h, cqrcodeimage.cpp            the .cpp's path evidence: record 36:15; the header's chosen
 # The class templates have no source of their own: every function matched from them is a template instance, emitted here
 # by the roots object, which builds each instantiation the way the target's callers do and takes the place of those callers
-# until they land. The target functions:
+# until they land; 12632's GetText links from unit 102's roots object instead, ahead of this one, the same code. The
+# target functions:
 #   CDataText<CTextSource>                       D2 10536, D0 10535, GetText 10534
 #   CDataTextFmt<CTextSource>                    D2 10748, D0 10747, GetText 10746
 #   CDataTextFmt<function<string(const string&)>>  D2 12291, D0 12290, GetText 12287
 #   CDataText<string (*)()>                      GetText 12784 (D2 and D0 are the shared 174 and 144)
 #   CDataText<const string& (*)()>               GetText 12580 (the same)
 #   CDataText<comum::CCargoDSNomeSexoCandidato>  GetText 12632 (the same), a call of the source's operator, fn 2268 (unit 129)
+#                                                (linked from unit 102's roots object)
 #   CDataText<function<string()>>                D2 12305, D0 12303, GetText 12301
 #   CDataTextFmt<string (*)(const string&)>      D2 12323, D0 12317; GetText 6404, shared with the next
 #   CDataTextFmt<const string (*)(const string&)>  D2 12567, D0 12564, GetText 6404
@@ -28,7 +30,7 @@
 # a std::vector<unsigned char> (it grows the buffer, fills with the byte the last parameter points to, and throws the
 # vector's length error, fn 158), with the value GetData passes, 255; the roots object calls it twice for GetData.
 # CDataText<CCargoDSNomeSexoCandidato>'s control block (12637, 12636) is unit 102's; the roots' std::make_shared of it
-# instantiates the same block, which links from unit 102's object, ahead of this one.
+# instantiates the same block, which links from unit 102's object, ahead of this one, as 12632's GetText does.
 # The other instantiations (over comum's and vota's classes, and the three of
 # CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>) wait for those classes, but for two that unit
 # 121 brings: CDataText<vota::CEscolheOpcao::COpcaoDS>, whose GetText (10685) matches, and CDataText<comum::CRespostasDSNumero>;
@@ -44,7 +46,8 @@
 #   UENUX2_CXXFLAGS's difference from APP_CXXFLAGS while the tree built at -O2.
 # The roots compiled with UENUX2_CXXFLAGS (-O3 -fno-strict-aliasing) and with APP_CXXFLAGS: 117 of the object's 119
 # functions compare equal; the two that differ are the stand-in TextoFuncao and the allocate_shared it inlines at -O3,
-# so every instance the object emits, 12632's GetText and 3661 among them, is the same at the tree's flags.
+# so every instance the object emits, 3661 among them, is the same at the tree's flags; 12632's GetText, which links
+# from unit 102's roots object, is the same code in both.
 # Forms measured not to:
 #   operator()(const std::string&) without `inline`: it stays out of line in the object and binaryen inlines it into 10746,
 #   whose row is then `differs` at +0x3, with an outer block and the string's address in a local;
