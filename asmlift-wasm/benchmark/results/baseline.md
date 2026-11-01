@@ -1,6 +1,6 @@
 # Benchmark: baseline
 
-Target `target/vota_web_wasm.wasm` (sha256 `8579ef8d1a938191…`), image `urna-emsdk:6.0.0`, 193 rows (rows.json `ccb19fec6475`, setups.json `d32618a5c629`), urna `ed71dfdd+dirty`, 2026-11-01T12:03:41.204Z. Lift 75 ms, compile and optimise 3.7 s, total 8.6 s.
+Target `target/vota_web_wasm.wasm` (sha256 `8579ef8d1a938191…`), image `urna-emsdk:6.0.0`, 205 rows (rows.json `c9ba89f61000`, setups.json `5d573b199e95`), urna `65498db9+dirty`, 2026-11-01T13:28:22.419Z. Lift 135 ms, compile and optimise 5.5 s, total 14.9 s.
 
 Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored against the target at depth 0 with callees, data addresses, the stack pointer and the indirect table canonicalised on both sides (raw); then the object is linked alone and put through the target link's wasm-opt -Oz passes and scored again (-Oz). The ratio is differing rows over target rows; exact is a -Oz score of 0. An isolated function misses what the whole-program link does to it, so no score here means byte-identical.
 
@@ -8,13 +8,14 @@ Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored aga
 
 | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 193 | 193 | 193 | 193 | 36 | 85 | 44.0% | 0.407 | 0.068 | 0.184 |
+| 205 | 205 | 205 | 205 | 41 | 90 | 43.9% | 0.407 | 0.068 | 0.183 |
 
 ## By compile setup
 
 | setup | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz | failures |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `uenux2` uenux2, the TSE application | 12 | 12 | 12 | 12 | 3 | 5 | 41.7% | 0.263 | 0.005 | 0.148 | – |
+| `uenux2` uenux2, the TSE application | 12 | 12 | 12 | 12 | 4 | 6 | 50.0% | 0.370 | 0.003 | 0.142 | – |
+| `uenux2-tbaa` uenux2, the directories built with strict aliasing (src/api, comum's data classes dados/md, src/app/vota, mock/app/simulador/wasm) | 12 | 12 | 12 | 12 | 4 | 4 | 33.3% | 0.327 | 0.149 | 0.170 | – |
 | `vota-web` the executable TU, wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the link line | 12 | 12 | 12 | 12 | 2 | 5 | 41.7% | 0.173 | 0.043 | 0.221 | – |
 | `ecourna` ecourna (conan libecea1da310e5107) | 12 | 12 | 12 | 12 | 1 | 5 | 41.7% | 0.712 | 0.063 | 0.090 | – |
 | `asn1` TSE fork of the III ASN.1 runtime and its generated Modulo* modules | 12 | 12 | 12 | 12 | 4 | 8 | 66.7% | 0.317 | 0.000 | 0.049 | – |
@@ -36,11 +37,11 @@ Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored aga
 
 | band | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| tiny | 50 | 50 | 50 | 50 | 32 | 44 | 88.0% | 0.000 | 0.000 | 0.048 |
-| small | 53 | 53 | 53 | 53 | 3 | 33 | 62.3% | 0.250 | 0.000 | 0.069 |
-| medium | 39 | 39 | 39 | 39 | 1 | 7 | 17.9% | 0.532 | 0.232 | 0.263 |
-| large | 34 | 34 | 34 | 34 | 0 | 1 | 2.9% | 0.637 | 0.299 | 0.339 |
-| huge | 17 | 17 | 17 | 17 | 0 | 0 | 0.0% | 0.705 | 0.300 | 0.450 |
+| tiny | 53 | 53 | 53 | 53 | 35 | 47 | 88.7% | 0.000 | 0.000 | 0.045 |
+| small | 56 | 56 | 56 | 56 | 5 | 35 | 62.5% | 0.258 | 0.000 | 0.066 |
+| medium | 41 | 41 | 41 | 41 | 1 | 7 | 17.1% | 0.542 | 0.232 | 0.266 |
+| large | 36 | 36 | 36 | 36 | 0 | 1 | 2.8% | 0.634 | 0.294 | 0.325 |
+| huge | 19 | 19 | 19 | 19 | 0 | 0 | 0.0% | 0.707 | 0.359 | 0.463 |
 
 ## By feature
 
@@ -48,19 +49,19 @@ A row counts under every feature it has.
 
 | feature | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| leaf | 95 | 95 | 95 | 95 | 25 | 50 | 52.6% | 0.333 | 0.000 | 0.174 |
-| loop | 67 | 67 | 67 | 67 | 0 | 5 | 7.5% | 0.610 | 0.290 | 0.345 |
-| switch | 26 | 26 | 26 | 26 | 1 | 1 | 3.8% | 0.604 | 0.255 | 0.284 |
-| call_indirect | 35 | 35 | 35 | 35 | 4 | 19 | 54.3% | 0.300 | 0.000 | 0.104 |
-| invoke | 9 | 9 | 9 | 9 | 0 | 1 | 11.1% | 0.617 | 0.200 | 0.165 |
-| throw | 12 | 12 | 12 | 12 | 1 | 2 | 16.7% | 0.616 | 0.187 | 0.145 |
-| frame | 49 | 49 | 49 | 49 | 0 | 3 | 6.1% | 0.638 | 0.256 | 0.320 |
+| leaf | 101 | 101 | 101 | 101 | 31 | 55 | 54.5% | 0.308 | 0.000 | 0.167 |
+| loop | 75 | 75 | 75 | 75 | 0 | 5 | 6.7% | 0.590 | 0.287 | 0.330 |
+| switch | 28 | 28 | 28 | 28 | 1 | 1 | 3.6% | 0.604 | 0.263 | 0.288 |
+| call_indirect | 38 | 38 | 38 | 38 | 3 | 19 | 50.0% | 0.406 | 0.012 | 0.123 |
+| invoke | 10 | 10 | 10 | 10 | 0 | 1 | 10.0% | 0.645 | 0.219 | 0.234 |
+| throw | 15 | 15 | 15 | 15 | 1 | 2 | 13.3% | 0.673 | 0.205 | 0.208 |
+| frame | 55 | 55 | 55 | 55 | 0 | 4 | 7.3% | 0.640 | 0.287 | 0.325 |
 | alloca | 2 | 2 | 2 | 2 | 0 | 0 | 0.0% | 0.688 | 0.385 | 0.385 |
-| inlined-frame | 13 | 13 | 13 | 13 | 0 | 0 | 0.0% | 0.744 | 0.256 | 0.314 |
-| i64 | 83 | 83 | 83 | 83 | 6 | 17 | 20.5% | 0.536 | 0.200 | 0.264 |
-| float | 16 | 16 | 16 | 16 | 2 | 2 | 12.5% | 0.630 | 0.336 | 0.333 |
-| bulk-memory | 25 | 25 | 25 | 25 | 0 | 3 | 12.0% | 0.590 | 0.287 | 0.305 |
-| select | 66 | 66 | 66 | 66 | 4 | 10 | 15.2% | 0.611 | 0.272 | 0.335 |
+| inlined-frame | 17 | 17 | 17 | 17 | 0 | 0 | 0.0% | 0.768 | 0.287 | 0.317 |
+| i64 | 89 | 89 | 89 | 89 | 7 | 18 | 20.2% | 0.542 | 0.205 | 0.266 |
+| float | 17 | 17 | 17 | 17 | 2 | 2 | 11.8% | 0.624 | 0.287 | 0.311 |
+| bulk-memory | 29 | 29 | 29 | 29 | 0 | 3 | 10.3% | 0.590 | 0.287 | 0.291 |
+| select | 71 | 71 | 71 | 71 | 5 | 12 | 16.9% | 0.610 | 0.287 | 0.327 |
 
 ## Failures
 
@@ -73,7 +74,6 @@ None: every row lifted, compiled, linked and was found.
 | 7zip/4943 | 2246 | 678 | 1654 | 2.439 | 1570 | 2.316 | leaf loop i64 select |
 | compiler-rt/1733 | 219 | 101 | 102 | 1.010 | 89 | 0.881 | leaf i64 select |
 | 7zip/2646 | 526 | 281 | 277 | 0.986 | 213 | 0.758 | leaf loop frame i64 |
-| uenux2/2662 | 821 | 432 | 412 | 0.954 | 327 | 0.757 | loop float bulk-memory select |
 | compiler-rt/6225 | 192 | 83 | 66 | 0.795 | 61 | 0.735 | leaf i64 select |
 | libc/2968 | 24 | 11 | 4 | 0.364 | 8 | 0.727 | leaf frame float |
 | 7zip/2630 | 421 | 211 | 172 | 0.815 | 145 | 0.687 | loop call_indirect frame i64 select |
@@ -85,3 +85,4 @@ None: every row lifted, compiled, linked and was found.
 | 7zip/1859 | 366 | 195 | 152 | 0.779 | 121 | 0.621 | leaf loop |
 | vota-web/5944 | 599 | 315 | 245 | 0.778 | 187 | 0.594 | loop switch frame |
 | libc/1169 | 65 | 34 | 20 | 0.588 | 20 | 0.588 | leaf i64 |
+| sqlite/1184 | 414 | 215 | 155 | 0.721 | 125 | 0.581 | leaf loop frame i64 |
