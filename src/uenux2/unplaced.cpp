@@ -1805,16 +1805,6 @@
 
 // component simulador
 
-// link-order cluster 123 · uses=1
-
-// f8680 · 12 B · unmatched · placement: link order · name unknown
-// void f8680(i32) { ... }
-
-// link-order cluster 128 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
-
-// f8748 · 12 B · unmatched · placement: link order · name unknown
-// ? f8748(i32) { ... }
-
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 
 // f4684 · 52 B · unmatched · placement: link order · name unknown
@@ -1822,11 +1812,6 @@
 
 // f4683 · 57 B · unmatched · placement: link order · name unknown
 // void f4683(i32, i32, i32) { ... }
-
-// link-order cluster 726 · uses=2 · neighbours' file ecourna/app/dados/cnumerocpf.cpp
-
-// f5113 · 532 B · unmatched · placement: link order · name unknown
-// void f5113(i32, i32, i32) { ... }
 
 // link-order cluster 884 · uses=2
 
