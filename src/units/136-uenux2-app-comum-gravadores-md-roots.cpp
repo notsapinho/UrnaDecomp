@@ -21,11 +21,11 @@
 // `this` (measured: with the result unread, binaryen dropped it from all three, and 3821 and 5861 then differed in
 // that result alone); fns 2854, 2855 and 5860 return nothing in the target (binaryen dropped the unread result), and the
 // stand-ins do not read theirs. CEntidadeHashes::ValidaCriacao is private, so it is called through an asm label.
-// The recorders comum::CGravadorHashes, CGravadorLog, CGravadorRDV, CGravadorVersoesArquivos and
-// CGravadorEnvelopeArquivo: the target reaches their destructors only through their vtables, which their constructors
-// store (inlined into vota::CGravaResultado::StartState, fn 12098, and fn 5856), not written yet; so the vtables'
-// addresses go into a sink, the reference the target has. IGravadorEnvelope's vtable is stored by
-// CGravadorEnvelopeArquivo's destructors.
+// The recorders comum::CGravadorHashes, CGravadorLog, CGravadorRDV and CGravadorVersoesArquivos: the target reaches
+// their destructors only through their vtables, which their constructors store (inlined into
+// vota::CGravaResultado::StartState, fn 12098), not written yet; so the vtables' addresses go into a sink, the
+// reference the target has. CGravadorEnvelopeArquivo's vtable and IGravadorEnvelope's are stored by
+// CGravadorEnvelopeArquivo's constructor (fn 5856, unit 160's) and destructors.
 #include <new>
 #include <optional>
 #include <string>
@@ -41,7 +41,6 @@ extern const char w136_vt_hashes[] __asm__("_ZTVN5comum15CGravadorHashesE");
 extern const char w136_vt_log[] __asm__("_ZTVN5comum12CGravadorLogE");
 extern const char w136_vt_rdv[] __asm__("_ZTVN5comum12CGravadorRDVE");
 extern const char w136_vt_versoes[] __asm__("_ZTVN5comum24CGravadorVersoesArquivosE");
-extern const char w136_vt_envelope[] __asm__("_ZTVN5comum24CGravadorEnvelopeArquivoE");
 }
 
 namespace {
@@ -113,7 +112,7 @@ long (*volatile w136_sink_envelope)(void*, void*, void*, void*, void*, void*, co
     const std::vector<uebyte>&, comum::EUrnaTipo);
 int (*volatile w136_sink_hashes)(const void*, const void*);
 int (*volatile w136_sink_destroi_urna)(comum::md::CUrna*, comum::md::CUrna*);
-const void* volatile w136_sink_vt[5];
+const void* volatile w136_sink_vt[4];
 
 struct SW136Roots {
     SW136Roots()
@@ -127,7 +126,6 @@ struct SW136Roots {
         w136_sink_vt[1] = w136_vt_log;
         w136_sink_vt[2] = w136_vt_rdv;
         w136_sink_vt[3] = w136_vt_versoes;
-        w136_sink_vt[4] = w136_vt_envelope;
     }
 } w136_roots;
 

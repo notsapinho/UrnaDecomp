@@ -28,9 +28,16 @@ namespace comum {
 // calls it on `this`. LeConteudo is chosen from that role, and uebyte follows cenvelopegenerico.h's choice.
 // The path is chosen, beside igravador.h: no record names it. Chosen: +56 as comum::EUrnaTipo (49 is eUrnaVota), +60
 // as a std::optional<md::CTipoApuracaoSA>, +72 as md::CEnvelopeGenerico::Tipo (2 and 4 are its BU impresso and
-// zeresima impressa), and every member name; the constructor is not declared.
+// zeresima impressa), and every member name. The constructor has no target index of its own: it is written out of line
+// in igravadorenvelope.cpp, and binaryen inlines it into its one caller, fn 5856 (the form measured; one defined in
+// the class was not tried in the whole link). Its parameters are in the order fn 5856 uses its arguments in; their
+// types beyond IGravador's constructor's are chosen, and so is storing 49 as a constant (a parameter was not tried).
 class IGravadorEnvelope : public IGravador {
 public:
+    IGravadorEnvelope(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
+        TSecaoID secao, char fase, EExtensaoArquivoResultado extensao, ESavdArquivoUE arquivoSavd,
+        md::CEnvelopeGenerico::Tipo tipoEnvelope, const md::estadoaplicacao::CDadoCorrespondencia& correspondencia);
+
     virtual void GravaResultado(api::CFile& arquivo) const override;
     virtual std::vector<uebyte> LeConteudo() const = 0;
 

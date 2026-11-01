@@ -8,6 +8,14 @@
 # - comum::CGravadorEnvelopeArquivo::LeConteudo (target fn 11623, slot 8, a chosen name), the class's key function, in
 #   src/app/comum/gravadores/cgravadorenvelopearquivo.cpp: the class's vtable and implicit destructors (fns 11622,
 #   11621, unit 136's matches) are emitted there now, not in unit 136's pending object, under the same symbols.
+# - comum::CGravadorEnvelopeArquivo's constructor (target fn 5856), in cgravadorenvelopearquivo.cpp, with
+#   comum::IGravadorEnvelope's constructor, which has no target index of its own, out of line in
+#   src/app/comum/gravadores/igravadorenvelope.cpp (a chosen path, beside igravadorenvelope.h): binaryen inlines it
+#   into its one caller, as the target's 5856 holds it. Measured in this unit's link before step 8 (pnpm wasm score
+#   against the target): 6 over 77 rows, operand-only, every operand a call's or a data address. IGravadorEnvelope's
+#   constructor in the class was tried alone only (try-tu.sh --single), where binaryen also inlines
+#   CDadoCorrespondencia's copy constructor (fn 1249) and nothing is told; not in the whole link. The headers say
+#   which types are chosen.
 # - comum::md::CVotosVotavel's two constructors (fns 2856, 5863) and the constructor of the identification it holds
 #   (fn 5864, class name chosen: comum::md::CIdentificacaoVotavel), in app/comum/gravadores/md/cvotosvotavel.{h,cpp}.
 # - comum::asn::CConversorCorrespResultado (gravadores/asn/cconversorcorrespresultado.{h,cpp}): DoConverte (fn 10289)
@@ -40,12 +48,12 @@
 # returns the file's content, a std::vector<uebyte>. The static members' throws in a switch's default (column 19) or
 # after it (column 11) are the records' columns.
 # Chosen: the paths of the files no record names (ccopiadormr.*, ccopiadorwsqmr.cpp, cgravadorenvelopearquivo.cpp,
-# md/cvotosvotavel.*, asn/cconversorcarga.h, and the converters' headers beside their .cpp), CCopiadorMR's parameter
-# types (DeterminaNomeArquivo's) and member name, LeConteudo's name (from its role) and its const (the const
-# GravaResultado calls it on `this`), CIdentificacaoVotavel's name, the members' and locals' names, the getters' names,
-# CVotosVotavel's count as ueword and its identification by const reference, the lines of every function with no
-# record (the four converters' slots, the constructors, LeConteudo), and the order of the definitions where no band
-# gives it.
+# igravadorenvelope.cpp, md/cvotosvotavel.*, asn/cconversorcarga.h, and the converters' headers beside their .cpp),
+# CCopiadorMR's parameter types (DeterminaNomeArquivo's) and member name, LeConteudo's name (from its role) and its
+# const (the const GravaResultado calls it on `this`), CIdentificacaoVotavel's name, the members' and locals' names,
+# the getters' names, CVotosVotavel's count as ueword and its identification by const reference, the lines of every
+# function with no record (the four converters' slots, the constructors, LeConteudo), and the order of the definitions
+# where no band gives it.
 #
 # Forms measured in this unit's link (pnpm wasm score against the plain link, then the scan):
 # - CCopiadorWSQMR's constructor beside CCopiadorMR's in one .cpp: clang inlines CCopiadorMR's, `8 over 18 rows
@@ -72,20 +80,22 @@
 #   are not recovered) and the constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn
 #   12098), whose class no evidence names. Not written:
 #   template instances whose callers are not written, so that no instance of ours exists
-#   (the element types are readings of the bodies): 5859 (the destruction of a vector of 20-byte elements that hold
-#   vectors; caller fn 11629), 3815 (a destructor of a class no evidence names; fns 11587, 11626, 11629), 5852 and 5854
+#   (the element types are readings of the bodies; 5859, which was among them, matches from unit 200's roots): 3815 (a
+#   destructor of a class no evidence names; fns 11587, 11626, 11629), 5852 and 5854
 #   (over a vector of 24-byte elements of two strings; fns 5854, and 5358 and 11620), 5868 (a tree insertion with a
 #   string key; fn 5869), 5843 and 5844 (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths;
 #   fn 11616) and 3816 (the relocation of a vector of comum::md::CCargo; fns 3818 and 11371).
 GRAVADORES_CLASSES_SRCS := src/app/comum/gravadores/ccopiadormr.cpp src/app/comum/gravadores/ccopiadorwsqmr.cpp \
-	src/app/comum/gravadores/cgravadorenvelopearquivo.cpp src/app/comum/gravadores/md/cvotosvotavel.cpp
+	src/app/comum/gravadores/igravadorenvelope.cpp src/app/comum/gravadores/cgravadorenvelopearquivo.cpp \
+	src/app/comum/gravadores/md/cvotosvotavel.cpp
 GRAVADORES_CLASSES_ASN_SRCS := src/app/comum/gravadores/asn/cconversorcorrespresultado.cpp \
 	src/app/comum/gravadores/asn/cconversorurna.cpp src/app/comum/gravadores/asn/cconversorenvelopegenerico.cpp
 UENUX2_SRCS += $(GRAVADORES_CLASSES_SRCS) $(GRAVADORES_CLASSES_ASN_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(GRAVADORES_CLASSES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # not every caller is reconstructed: 160-uenux2-comum-gravadores-classes-roots.cpp stands in for the others (the copiers'
-# builder fn 12134, fns 3819 and 3820) and keeps CConversorEnvelopeGenerico's vtable; it compiles with the tree's flags
+# builder fn 12134, fns 3819, 3820 and 12098) and keeps CConversorEnvelopeGenerico's vtable; it compiles with the
+# tree's flags
 $(ROOT)/$(APP)/160-uenux2-comum-gravadores-classes-roots.o: $(ROOT)/src/units/160-uenux2-comum-gravadores-classes-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/160-uenux2-comum-gravadores-classes.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/160-uenux2-comum-gravadores-classes-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/160-uenux2-comum-gravadores-classes-roots.o
