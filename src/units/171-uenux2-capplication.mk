@@ -9,8 +9,8 @@
 #   api/gui/iscreen.h's Slot37, a chosen name there); CSystem::Dorme(1000) (api/util/csystem.h); a loop over a byte at
 #   .bss 1839209 and a word at .data 1577212. Their widths are the bytes' (a byte tested for non-zero, a word compared
 #   signed with 0 whose initial bytes are ff ff ff ff); their names, the bool and int types and the initializer's
-#   spelling are chosen (the header says so). Fn 11159 stores -1 into the word and fn 11151, which holds EnterLoopBeeping
-#   inlined, reads both with the same test; neither is written.
+#   spelling are chosen (the header says so). Fn 11159 stores -1 into the word and fn 11151 (read as holding
+#   EnterLoopBeeping inlined) reads both with the same test; neither is written.
 # - The loop: the target tests the byte alone before the first pass, and after each pass the byte first and then the
 #   word. Measured on the object at the tree's flags, calls and relocations masked (how-to step 3): `if (!s_finalizar)
 #   { do { ... } while (!s_finalizar && s_codigoRetorno <= 0); }`, the form written, gives the same code as
