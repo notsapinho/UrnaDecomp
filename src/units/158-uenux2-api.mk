@@ -1,7 +1,8 @@
 # uenux2 api: four classes of api/gui/ and api/audio/, each with its evidence in its header:
 # - api::Logger::log (target fn 10815, slot 2 of the vtable @1586188) in src/uenux2/src/api/audio/crhvoicetexttospeech.cpp:
 #   `if (level == RHVoice_log_level_error) std::clog << "RHVoice [" << tag << "]: " << message << std::endl;`, the
-#   literals and std::clog (0x1d5af8) read from the body. It is the class's key function, so that object emits the vtable.
+#   literals and std::clog (0x1d5af8) read from the body. Out of line, a choice (below), it
+#   is the class's key function, so that object emits the vtable.
 #   Chosen: that log is out of line there and not inline in api/audio/logger.h (the vtable lies in the data of the object
 #   that holds CRHVoiceTextToSpeech's; both readings put it there; the inline one is not measured), and the file's path.
 # - api::CRHVoiceTextToSpeech's implicit destructors, D2 and D0 (target fns 5441 and 10838), which 158-uenux2-api-pending.o
