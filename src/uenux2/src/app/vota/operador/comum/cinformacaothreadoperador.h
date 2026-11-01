@@ -19,13 +19,18 @@ namespace vota::impl {
 // there), and an implicit destructor at the end of the TU with the vtable (members defined in the class would come
 // after the destructors, in vtable order). CancelaHabilitacao, the first member declared, is the key function. The
 // destructors store no vptr, which clang leaves out of a destructor that destroys members only when the class is final.
-// The constructor is inlined into GetInst (fn 599), which calls fn 5412 for m_dataHoraInspecao.
+// The constructor is inlined into GetInst (fn 599): it clears +4 and +8, sets +12 from SorteiaDataHoraInspecao (fn
+// 5412), clears the optionals' flags and stores 0 into +88 and +92. SorteiaDataHoraInspecao draws the time of the next
+// inspection, 60 to 90 minutes from now; slot 17 calls it too. Its name and its being a static member are chosen (it is
+// external: src/units/50-uenux2-cinformacaothreadoperador.mk says how that was measured), and so is the constructor's
+// being out of line in the .cpp.
 // The members, from the bodies that read and write them (their names are not in the target):
 // +4  a bool slots 3, 4, 6 and 8 read (slot 8 returns the string "\xC1UDIO ATIVADO" when it is set), 7 sets, 2 clears;
 // +8  the EEstadoBiometria that slots 9 to 15 test, set and return, cleared by slot 2;
 // +12 the api::CDateTime slot 17 sets from fn 5412 and slot 18 returns;
 // +24 the identity typed (slot 21 sets it, slot 23 returns it), +40 its type (slots 22 and 24), +48 and +68 the
-//     voter's and the main voter's identities (slots 25 and 26): each the return type of its getter's record in a
+//     voter's and the main voter's identities (slots 25 and 26), which AtualizaIdentidadesEleitor (fn 2225, a chosen
+//     name) sets from the first two after slots 21 and 22: each the return type of its getter's record in a
 //     std::optional, the four optionals slot 20 resets, and the three with a destructor the ones the destructors
 //     destroy;
 // +88 and +92 the state and the result of the voter's photo (slots 27 to 29 set them, slot 30 returns a
@@ -65,6 +70,9 @@ public:
     virtual ecourna::app::dados::CApresentacaoFotoEleitor GetApresentacaoFotoEleitor() const override;
 
 private:
+    static api::CDateTime SorteiaDataHoraInspecao();
+    void AtualizaIdentidadesEleitor();
+
     bool m_audioAtivado;
     EEstadoBiometria m_estadoBiometria;
     api::CDateTime m_dataHoraInspecao;

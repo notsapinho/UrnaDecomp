@@ -83,3 +83,30 @@ public:
 };
 
 } // namespace vota::impl
+
+namespace vota {
+
+// Functions over GetInst() (target fns 10586 and 2746 ... 2745, src/units/50-uenux2-cinformacaothreadoperador.mk lists
+// them): each of the 16 after the first calls the member of the same name, passing its argument or returning the
+// member's result, and GetTextoIdentidadeDigitada formats the identity typed with its type's name. No record, slot or
+// RTTI names them: the names, their being free functions of vota (the namespace of vota::TipoToStr's record, in the
+// same .cpp) and their being declared here are chosen.
+std::string GetTextoIdentidadeDigitada();
+bool IsAudioAtivado();
+bool IsAudioAtivadoMesario();
+void SetAudioAtivadoMesario(bool ativado);
+std::string GetTextoAudio();
+void LimpaBiometria();
+std::string GetTextoComparecimento();
+void AgendaInspecao();
+bool IsVotacaoBloqueadaPorHorario();
+void SetIdentidadeDigitada(const std::string& identidade);
+void SetTipoIdentidadeDigitada(ecourna::app::dados::ETipoIdentificadorEleitor tipo);
+std::string GetIdentidadeDigitada();
+ecourna::app::dados::ETipoIdentificadorEleitor GetTipoIdentidadeDigitada();
+comum::md::CEleitorIdentidade GetIdentidadeEleitor();
+void SetEleitorSemFoto();
+void SetFotoNaoApresentada(ecourna::app::dados::CApresentacaoFotoEleitor::EResultado resultado);
+ecourna::app::dados::CApresentacaoFotoEleitor GetApresentacaoFotoEleitor();
+
+} // namespace vota

@@ -179,14 +179,14 @@ void CFimAquisicaoVotos::StartState()
     __builtin_trap();
 }
 
-// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callees with no name: 599, 652, 1687, 4529.
+// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee with no name: 652 (599 and 1687 are unit 50's).
 void CCancelaHabilitacaoEleitor::StartState()
 {
     __builtin_trap();
 }
 
-// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 2264, 3625, 4578, 5424 (and
-// unit 152's 3624; 1688 is named: unit 174; 2798 unit 178).
+// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 654, 3625, 4578, 5424 (named: unit 152's 3624,
+// unit 174's 1688, unit 178's 2798, unit 110's 326 and 2264, unit 50's 1535).
 void CProcuraEleitor::StartState()
 {
     __builtin_trap();

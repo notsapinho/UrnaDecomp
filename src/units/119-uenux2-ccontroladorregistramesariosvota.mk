@@ -115,7 +115,7 @@
 #   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
 # Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
-# slots 5, 7, 9, 13, 14 and 16 (fns 10797, 10795, 10794, 10790, 10789, 10786), and behind them fns 2264, 4662 and 5343;
+# slots 5, 7, 9, 13, 14 and 16 (fns 10797, 10795, 10794, 10790, 10789, 10786), and behind them fns 4662 and 5343;
 # CRegistroMesarioEncerrado's ProcessKey (fn 10762).
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the

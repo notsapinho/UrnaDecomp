@@ -14,6 +14,8 @@
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 2822, 6034, 7174, 10210, 10635 and 11616 (2825 is in the
 //                       link)
+//   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fns 3616, 5385,
+//                       10631, 10789 and 10790
 //   t11526 to t11529    the four CEleitorDado*::Text, which the target reaches only by table slot (fn 5401 passes all
 //                       four): their addresses are taken
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
@@ -60,6 +62,7 @@ void t11526(int) __asm__("_ZN5comum15CEleitorDadoTTE4TextEv");
 void w2825(int, int) __asm__("_ZN5comum10CEleitores25MarcaEleitorFoiHabilitadoERKNS_24CEleitorDadosHabilitacaoE");
 int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
+int w2264(int, int, int) __asm__("_ZN5comum10CEleitores15LocalizaEleitorERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 }
 
 namespace {
@@ -116,6 +119,11 @@ __attribute__((noinline)) int ConsultaDinamicos(int detalhe)
     return w1271(detalhe) + w1271(detalhe + 204) * 3;
 }
 
+__attribute__((noinline)) int LocalizaEleitores(int eleitores, int identificador)
+{
+    return w2264(eleitores, identificador, 1) + w2264(eleitores, identificador + 12, 3) * 5;
+}
+
 const void* volatile singletons_sink;
 
 struct SSingletonsRoots {
@@ -136,6 +144,7 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&HabilitaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);
+        singletons_sink = reinterpret_cast<const void*>(&LocalizaEleitores);
     }
 } singletons_roots;
 

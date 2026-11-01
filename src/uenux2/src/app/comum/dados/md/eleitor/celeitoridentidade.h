@@ -19,6 +19,8 @@ namespace comum::md {
 // The constructor is fn 566 (md/eleitor/celeitoridentidade.cpp, a chosen path): it formats the identifier to its type's
 // length, validates it through CValidadorIdentidade and formats it again. FormataIdentidade is fn 2798, which the
 // constructor holds inlined (callers 3616, 10420, 10631); its name and its being a free function are chosen.
+// FormataIdentificador is fn 1924, the text with its type's separators (src/units/178-uenux2-celeitoridentidade.mk); its
+// name and its being a free function are chosen too.
 class CEleitorIdentidade {
 public:
     CEleitorIdentidade(std::string identificador, ecourna::app::dados::ETipoIdentificadorEleitor tipo);
@@ -34,5 +36,6 @@ private:
 };
 
 std::string FormataIdentidade(std::string identificador, ecourna::app::dados::ETipoIdentificadorEleitor tipo);
+std::string FormataIdentificador(const CEleitorIdentidade& identidade);
 
 } // namespace comum::md

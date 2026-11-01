@@ -1,5 +1,5 @@
-# uenux2 comum::md::CEleitorIdentidade's constructor (target fn 566) and FormataIdentidade (fn 2798) in
-# src/app/comum/dados/md/eleitor/celeitoridentidade.cpp, and IRegraIdentidade's EhValida (fn 3723) and Valida in
+# uenux2 comum::md::CEleitorIdentidade's constructor (target fn 566), FormataIdentidade (fn 2798) and FormataIdentificador
+# (fn 1924) in src/app/comum/dados/md/eleitor/celeitoridentidade.cpp, and IRegraIdentidade's EhValida (fn 3723) and Valida in
 # src/app/comum/dados/md/iregraidentidade.cpp. CValidadorIdentidade's Valida and EhValida (fn 2803), which 566 and the
 # roots call, are unit 110's (cvalidadoridentidade.cpp); the CStringUtils zero helpers they call (fns 3510, 3512, 5159)
 # are unit 00's.
@@ -43,9 +43,17 @@
 # file. The constructor's second formatting is written as Normaliza on the member, since 566 calls 3510 and 3512 on p0
 # itself; no other spelling of it was tried.
 #
+# FormataIdentificador (fn 1924; callers 10586, unit 50's vota::GetTextoIdentidadeDigitada, 11233 and 12105): a copy of
+# the identity's text, then by its type (the br_table on type - 1): CPF (2) inserts "-" at 9, "." at 6 and "." at 3, the
+# título (1) " " at 8 and 4, each with basic_string::insert(pos, const char*, 1) (fn 499) and the result copied out of the
+# returned reference, the free identifier (3) moves the copy out, and any other type returns an empty string. The
+# separators are tails of other literals in the target ("{} -", "...'{}'.", ",\n  "). Its name, its being a free
+# function of comum::md beside FormataIdentidade, its file and its line are chosen; no other spelling was tried.
+#
 # Roots (178-uenux2-celeitoridentidade-roots.cpp): none of the four functions' target callers is reconstructed, so the
 # file gives each two call sites; the two Valida get none, since the target inlines each into its one caller and ours
-# has that one call too.
+# has that one call too. FormataIdentificador has one caller in the link, 10586, and DuasFormatacoesIdentificador stands
+# for the other two.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CELEITORIDENTIDADE_SRCS := src/app/comum/dados/md/iregraidentidade.cpp src/app/comum/dados/md/eleitor/celeitoridentidade.cpp
