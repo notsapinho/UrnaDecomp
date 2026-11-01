@@ -33,7 +33,6 @@
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
 #include "api/gui/cdsimagefield.h"
-#include "api/gui/cfixedimage.h"
 #include "api/gui/cimagefieldupdate.h"
 #include "api/gui/cinputfieldmt.h"
 #include "api/gui/cmovie.h"
@@ -81,7 +80,6 @@
 
 extern "C" {
 extern const char w102_vt_cdataimage_ccandidaturasdsfoto[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api10CDataImageIN5comum19CCandidaturasDSFotoEEENS_9allocatorIS5_EEEE");
-extern const char w102_vt_cfixedimage[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api11CFixedImageENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api11CMovieFieldENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api12CProgressBarENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctextfieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16CTextFieldUpdateENS_9allocatorIS2_EEEE");
@@ -245,10 +243,6 @@ template struct SBloco<api::IInputField<api::IScreenMT>, api::CInputFieldMT>;
 template struct SBloco<comum::asn::CVisitanteEleitor, comum::asn::CVisitanteEleitor>;
 template struct SBloco<api::IText, api::CDataText<vota::CEscolheOpcao::COpcaoDS>>;
 
-__attribute__((optnone, noinline)) std::shared_ptr<api::CFixedImage> w102_imagem_fixa(const std::string& arquivo)
-{
-    return std::make_shared<api::CFixedImage>(arquivo);
-}
 __attribute__((optnone, noinline)) std::shared_ptr<vota::CPreShowProgressBar> w102_preshow()
 {
     return std::make_shared<vota::CPreShowProgressBar>();
@@ -293,7 +287,6 @@ struct SW102Roots {
     SW102Roots()
     {
         w102_sink = w102_vt_cdataimage_ccandidaturasdsfoto;
-        w102_sink = w102_vt_cfixedimage;
         w102_sink = w102_vt_cmoviefield;
         w102_sink = w102_vt_cprogressbar;
         w102_sink = w102_vt_ctextfieldupdate;
