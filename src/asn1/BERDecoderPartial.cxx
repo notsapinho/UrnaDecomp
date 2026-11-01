@@ -60,7 +60,7 @@ void BERDecoderPartial::notify(int index, const ASN1_STD string& name, AbstractD
 
   if (it != m_visitors.end()) {
     ASN1_STD shared_ptr<IAbstractVisitor> visitor = it->second;
-    bool consumed = visitor->visit(index, path, data, position, length) == 1;
+    bool consumed = visitor->visit(index, path, *data, position, length) == 1;
     if (mayFree && consumed)
       freeData(*data);
   }

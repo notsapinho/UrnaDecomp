@@ -215,7 +215,7 @@ traps of one wasm type into one body, which then sits in the slots of several of
 so no name is given and the member stays `no-candidate`.
 
 ```sh
-awk -F'\t' '$1==11442 || $1==11469 || $1==11470 {print $1, $5, $11}' splat/scan.tsv
+awk -F'\t' '$1==11442 || $1==11469 || $1==11470 {print $1, $5, $11}' splat/scan.tsv     # at 4487d6b
 # 11442 differs app/36-uenux2-cvisitantefoto-pending.o
 # 11469 no-candidate -
 # 11470 no-candidate -
@@ -243,13 +243,13 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
 ```
 
 Unit 101's `Ajusta` trap is one body in 25 table slots: binaryen merged the pending traps of its wasm type into it, and
-the merged ones have no name in `names.tsv`. None of them gets a name. The trap of 11442 is alone in its slot, so it is
-named after its trap. Which case a member is can change in a function its unit never touched. A trap a
+the merged ones have no name in `names.tsv`. None of them gets a name. The trap of 11442 was alone in its slot, so it
+was named after its trap. Which case a member is can change in a function its unit never touched. A trap a
 unit adds merges with one of its wasm type and takes that member's name and `differs` row. A member that lands leaves its
 partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and 10900 turned `differs` when
-11366 matched. The name the symbol file gives 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`,
-is the one `src/asn1/asn1.h` declares, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
-ledger/source-locations.tsv | sort -u`).
+11366 matched. The name the symbol file gave 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`,
+was the one `src/asn1/asn1.h` declared, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
+ledger/source-locations.tsv | sort -u`). asn1.h declares the records' form since, and 11442 matches (unit 36).
 
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word
 

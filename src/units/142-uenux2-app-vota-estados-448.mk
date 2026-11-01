@@ -1,6 +1,8 @@
 # uenux2 five vota states over the D2 that 19 states share (fn 448), each a final comum::CAppState with two
 # std::shared_ptr at +12 and +20: vota::CUrnaInspecionada's StartState (target fn 1718, slot 2, one body with the slot 2
-# of six other states) and ProcessKey (11794, slot 6); vota::CJustificativaEfetuada's StartState (10594);
+# of six other states) and ProcessKey (11794, slot 6); vota::CJustificativaEfetuada's StartState (10594) and
+# ProcessInput (10593, slot 7: on Read()'s 9, api::INPUT_CONFIRMA, it goes to vota::CCancelaHabilitacaoEleitor::GetInst,
+# fn 1536; Read() is unit 135's, in api/gui/cinteractiveform.h);
 # vota::CPedeAnoNascimentoSemBiometria's StartState (10490); vota::CMostraEleitorVotando's ProcessInput (10426, slot 7);
 # vota::CPerguntaCodigoSuspensao's StartState (10421); and the destructor and deleting destructor every one of them holds
 # (fns 448 and 765, slots 0 and 1, matched under CUrnaInspecionada's symbols, the first of the five classes in link

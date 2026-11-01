@@ -12,16 +12,13 @@ namespace comum::asn {
 // (comum::asn::IConversorParcialASN<ModuloFotosCandidatos::EntidadeFotosCandidatos, md::CIndicesFotos, CVisitanteFoto>,
 // whose Desconverte, inlined into comum::CCandidaturas::LoadFromFile 7787, creates it with new, 28 bytes). RTTI: an
 // si_class of ASN1::IAbstractVisitor; vtable @1562436 [~CVisitanteFoto D2 5709, D0 11443, visit 11442].
-//
-// visit's records (cvisitantefoto.cpp:40-63) spell it
-//     virtual ASN1::IAbstractVisitor::EVisitorResult visit(int, const std::string &, ASN1::AbstractData &, size_t, size_t)
-// while src/asn1/asn1.h declares the base's slot as int visit(int, const std::string&, AbstractData*, unsigned, unsigned);
-// the override follows asn1.h until that header takes the records' form.
+// visit's records (cvisitantefoto.cpp:40-63) spell its declaration.
 class CVisitanteFoto : public ASN1::IAbstractVisitor {
 public:
     virtual ~CVisitanteFoto();
 
-    int visit(int index, const std::string& path, ASN1::AbstractData* data, unsigned position, unsigned length) override;
+    virtual EVisitorResult visit(int indice, const std::string& caminho, ASN1::AbstractData& dado, size_t posicao,
+                                 size_t tamanho) override;
 
     // What comum::asn::CIndexadorFotos::DoDesconverte (target fn 11441) reads at +16; the name is chosen.
     const std::vector<md::CIndiceFoto>& GetIndices() const { return m_indices; }

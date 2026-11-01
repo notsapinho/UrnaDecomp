@@ -99,7 +99,7 @@ void CImprimindoZeresima::StartState()
     __builtin_trap();
 }
 
-// CInicioZeresima::StartState: fn 11924 (41 B), callees with no name: 185, 261, 491, 697, 5957, 5959.
+// CInicioZeresima::StartState: fn 11924 (41 B), callees with no name: 185, 261, 491, 697, 5959 (and unit 169's 5957).
 void CInicioZeresima::StartState()
 {
     __builtin_trap();
@@ -190,8 +190,8 @@ void CCancelaHabilitacaoEleitor::StartState()
     __builtin_trap();
 }
 
-// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 1688, 2264, 2798, 3624, 3625,
-// 4578, 5424.
+// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 1688, 2264, 2798, 3625, 4578,
+// 5424 (and unit 152's 3624).
 void CProcuraEleitor::StartState()
 {
     __builtin_trap();

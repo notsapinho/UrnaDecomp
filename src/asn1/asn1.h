@@ -3220,12 +3220,16 @@ namespace ASN1 {
    *
    * @see PEREncoder
    */
-  /** Callback of the partial BER decoder: told about every decoded node whose path is registered. */
+  /** The callback of BERDecoderPartial: the records of comum::asn::CVisitanteFoto's override spell the slot (its result
+      type, the reference and the two size_t). BERDecoderPartial::notify frees the node when the result is 1; the
+      enumerators' names, and that 0 is the other, are chosen. */
   class ASN1_API IAbstractVisitor
   {
   public:
+    enum EVisitorResult { NAO_CONSUMIDO = 0, CONSUMIDO = 1 };
+
     virtual ~IAbstractVisitor() {}
-    virtual int visit(int index, const ASN1_STD string& path, AbstractData* data, unsigned position, unsigned length) = 0;
+    virtual EVisitorResult visit(int index, const ASN1_STD string& path, AbstractData& data, size_t position, size_t length) = 0;
   };
 
   /** Byte source of the partial BER decoder (BufferSeeder.h holds the in-memory one, api/io/asn/cpartialfileasn.h the

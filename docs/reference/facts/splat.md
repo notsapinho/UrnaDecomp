@@ -325,7 +325,8 @@ beside the matched one is not reported (`docs/reference/splat.md` "Reviewing a m
 ## S8. What every landing changes besides its matches
 
 `make -C src splat-symbols` and the scan re-pick some names and pairs at every landing, whatever the unit adds. None
-of it is evidence from the unit, and only the last kind below can cost a match. The function lines of the symbol file each landing of
+of it is evidence from the unit. The first kind below could cost a match until the generator stopped casting most of
+it, and the last kind can. The function lines of the symbol file each landing of
 `main` changed, leaving out the indices it matched:
 
 ```sh
@@ -354,8 +355,10 @@ nothing), four kinds of line:
    python3 -I -c "import sys; sys.path.insert(0, 'tools/extract'); import wasmmod; base, b = wasmmod.Module('target/vota_web_wasm.wasm').memory_image(); print(bytes(b[9039 - base:9041 - base]))"   # b'}\x00'
    ```
 
-   Whenever our copy of `"}"` lands on a table slot of ours, the name of the function in that slot is voted onto
-   7530; 615's votes were not traced. At ee595de neither 615 nor 7530 has a second name (`/usr/bin/grep -E '= func:(615|7530);'
+   Whenever our copy of `"}"` landed on a table slot of ours, the name of the function in that slot was voted onto
+   7530. On 6bc2a12's link `jsonObjectCompute` (6315) voted onto 615 the same way, until the change below: it
+   passes `"{}"` at 8150, the target's slot of 615. At ee595de neither 615 nor 7530 has a second name
+   (`/usr/bin/grep -E '= func:(615|7530);'
    splat/symbol_addrs.txt`). The name need not be one the file held before, so no line need lose it: one landing
    gave 615 `CAesKey`'s destructor, a function of our link the symbol file had never named, and the next took it
    away again:
@@ -372,7 +375,37 @@ nothing), four kinds of line:
    moved `differs` to `no-candidate`. The stray vote can take a matched name out of the file: on a link where `"}"` lay
    on a slot of the shared empty function, seventeen right votes for 218 lost to one for 7530, and at bb97df6 84 call
    votes for 256 lost to one table vote for 615. The match stands, because a scan applies the match list. A command that
-   reads the symbol file alone (`splat-remap`, a test) then says `has no target function`.
+   reads the symbol file alone (`splat-remap`, a test) then says `has no target function`. The name it takes can cost
+   a match, when it is an unmatched function's that a matched caller needs. The target's `__months` (7775) passes
+   `"July"` at 10969, the slot of 1030. On a link where our `"July"` lay on our slot of `CompressProgress` (8263), that
+   name got two contradicting votes and went, and 3389 (`CCompressProgressWrap::Init`, which passes `CompressProgress`)
+   read `unresolved` on `a table slot of ours: _ZL16CompressProgressPK17ICompressProgressyy has no target function`.
+
+   The generator no longer casts these votes. `constVote` (`alignVotes` in `asmlift-wasm/src/splat-symbols.ts`) reads a
+   constant inside both tables as an address, and votes it as data, when the target's constant addresses our
+   address's content: where it resolves, or at another place holding the same content (`resolveDataAddress`'s `same`,
+   which `splat-remap` prints as `address same-content`). A constant the operand-kind table (§S5) calls a slot of ours
+   stays a function pointer whatever it addresses, since two slots can address copies of one string: sqlite's 1994
+   passes `sqlite3ExprDeleteGeneric` at the target's 11969, a `"y"`, and on 6bc2a12's link at our 5141, a `"y"` too.
+   The target keeps `"July"` twice, so ours resolved to neither copy, and the vote was cast:
+
+   ```sh
+   python3 -I -c "import re, sys; sys.path.insert(0, 'tools/extract'); import wasmmod; base, b = wasmmod.Module('target/vota_web_wasm.wasm').memory_image(); print([m.start() + base for m in re.finditer(rb'(?<=\x00)July\x00', b)])"
+   # [10969, 1508107]
+   wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[(8150|10293|10969|11969)\] '
+   # - elem[8150] = ref.func:615
+   # - elem[10293] = ref.func:14030
+   # - elem[10969] = ref.func:1030
+   # - elem[11969] = ref.func:12547
+   ```
+
+   On 6bc2a12's link, reading them so moves two lines of the symbol file: 1030 loses `_ZN13CSha256Hasher4InitEv …
+   evidence:table` (the `"July"` vote), and 12318 gets back `atanh … evidence:pair-addr`. `sqlite3Pragma` (2352) passes
+   `"memory"` at 10293, and our `"memory"` lay on our slot of `atanh`: a vote for 14030 that contradicted the pair, so
+   step 8 dropped it. A constant at a string's closing NUL still votes: its content is the empty string, which the
+   target holds in too many places for `same` to list (`STRING_COPY_LIMIT`). On 6bc2a12's link four such votes are
+   cast, each at the end of a format string (`"{:0{}}"`, `"{}|{}|{}"`, `"{:04}{:02}{:02}T{:02}{:02}{:02}"`), and
+   none changes the file.
 2. **A matched function's `pair-*` line that drops out and comes back.** Each landing from 1c3d9f9 on removes the line
    of one matched SQLite function and restores the one the landing before removed: 12427 `rankValueFunc`, then 12432,
    12443, 12447, 12288, 12466, 12479, 12485, 12492, 12500 and 12510 `statInit`, which 9127880 restores. The match lines
@@ -512,7 +545,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -643,6 +676,12 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     `CAppInfo` destructor) and unit 136's 6043, 11585, 11621 and 11622 call 857 and drop it, and with no reader of the
     result in the link they differ by that `drop` alone (`pnpm wasm score`: one row deleted, every other row
     operand-only).
+18. **1257, by units 161 and 169 together, and 2902's name.** `vota::IEleitorImpedidoVotar`'s D2 (1257, unit 161) is
+    a thunk in the target, `f2902(p0, <its vptr>)`, into a body binaryen formed from four destructors, 1257's, 1688's,
+    1720's and 1952's. Our link forms 2902 from the two zeresima bases' D2s (1720 and 1952, unit 169), and with unit
+    161 in the link from 1257's too, so 1257 is the same thunk and matches; without unit 169 it is a whole body and
+    `differs`. 2902's match line is `byn$mgfn-shared$<first member>`, today
+    `byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev`, and step 9 renames it when the first member moves (item 13).
 
 ## S11. A match among bodies of the same content can take the other one's name
 

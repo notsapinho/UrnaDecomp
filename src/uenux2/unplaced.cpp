@@ -65,30 +65,10 @@
 // f10232 · 18 B · unmatched · placement: link order · name unknown
 // void f10232(i32) { ... }
 
-// link-order cluster 281 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cperguntaeleitorvotando.cpp
-
-// f10416 · 176 B · unmatched · placement: link order · name unknown
-// void f10416(i32) { ... }
-
-// link-order cluster 285 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdesabilitaaudioeleitor.cpp
-
-// f10436 · 200 B · unmatched · placement: link order · name unknown
-// void f10436(i32) { ... }
-
 // link-order cluster 286 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
 
 // f10440 · 1876 B · unmatched · placement: link order · name unknown
 // void f10440(i32) { ... }
-
-// link-order cluster 287 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cverificadadoeleitor.cpp
-
-// f10444 · 213 B · unmatched · placement: link order · name unknown
-// void f10444(i32) { ... }
-
-// link-order cluster 289 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdadoeleitornaoconfere.cpp
-
-// f10448 · 36 B · unmatched · placement: link order · name unknown
-// void f10448(i32) { ... }
 
 // link-order cluster 295 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cdigitalnaoreconhecidadecbiometria.cpp
 
@@ -100,20 +80,10 @@
 // f10486 · 919 B · unmatched · placement: link order · name unknown
 // void f10486(i32) { ... }
 
-// link-order cluster 305 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/chabilitaaudioeleitor.cpp
-
-// f10524 · 200 B · unmatched · placement: link order · name unknown
-// void f10524(i32) { ... }
-
 // link-order cluster 307 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caguardainspecao.cpp
 
 // f10530 · 701 B · unmatched · placement: link order · name unknown
 // void f10530(i32, i32) { ... }
-
-// link-order cluster 318 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitoroptouporvotaremtransito.cpp
-
-// f10625 · 45 B · unmatched · placement: link order · name unknown
-// void f10625(i32) { ... }
 
 // link-order cluster 319 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cvalidaidentidade.cpp
 
@@ -123,30 +93,10 @@
 // f10627 · 3842 B · unmatched · placement: link order · name unknown
 // void f10627(i32) { ... }
 
-// link-order cluster 322 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitorjavotou.cpp
-
-// f10642 · 164 B · unmatched · placement: link order · name unknown
-// void f10642(i32) { ... }
-
-// link-order cluster 324 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitornaoencontrado.cpp
-
-// f10663 · 175 B · unmatched · placement: link order · name unknown
-// void f10663(i32) { ... }
-
-// link-order cluster 325 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cidentidadeinvalida.cpp
-
-// f10669 · 193 B · unmatched · placement: link order · name unknown
-// void f10669(i32) { ... }
-
 // link-order cluster 330 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ciniciafinalizacao.cpp
 
 // f10706 · 1498 B · unmatched · placement: link order · name unknown
 // void f10706(i32) { ... }
-
-// link-order cluster 332 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cperguntafilaeleitorvazia.cpp
-
-// f10715 · 200 B · unmatched · placement: link order · name unknown
-// void f10715(i32) { ... }
 
 // link-order cluster 334 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cpedetituloencerramento.cpp
 
@@ -163,33 +113,10 @@
 // f10754 · 49 B · unmatched · placement: link order · name unknown
 // void f10754(i32) { ... }
 
-// link-order cluster 344 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/chorariovotacaoterminou.cpp
-
-// f10758 · 169 B · unmatched · placement: link order · name unknown
-// void f10758(i32) { ... }
-
-// link-order cluster 559 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cinspecionaurna.cpp
-
-// f11798 · 164 B · unmatched · placement: link order · name unknown
-// void f11798(i32) { ... }
-
 // link-order cluster 560 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cgeradorteclasaleatorio.cpp
 
 // f11803 · 958 B · unmatched · placement: link order · name unknown
 // void f11803(i32, i32, i32) { ... }
-
-// link-order cluster 568 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregerarzeresima.cpp
-
-// f11842 · 5 B · unmatched · placement: link order · name unknown
-// void f11842(i32) { ... }
-
-// f11841 · 22 B · unmatched · placement: link order · name unknown
-// ? f11841(i32) { ... }
-
-// link-order cluster 569 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregeraresumozeresima.cpp
-
-// f11845 · 5 B · unmatched · placement: link order · name unknown
-// ? f11845(i32) { ... }
 
 // link-order cluster 585 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimpressaopu.cpp
 
@@ -206,41 +133,10 @@
 // f11911 · 565 B · unmatched · placement: link order · name unknown
 // void f11911(i32) { ... }
 
-// link-order cluster 591 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cquerimprimirzeresima.cpp
-
-// f11921 · 35 B · unmatched · placement: link order · name unknown
-// void f11921(i32) { ... }
-
 // link-order cluster 594 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimpressaozeresimatardia.cpp
 
 // f11932 · 188 B · unmatched · placement: link order · name unknown
 // void f11932(i32) { ... }
-
-// link-order cluster 595 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresima.cpp
-
-// f11935 · 22 B · unmatched · placement: link order · name unknown
-// ? f11935(i32) { ... }
-
-// link-order cluster 596 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgeraresumozeresima.cpp
-
-// f11940 · 18 B · unmatched · placement: link order · name unknown
-// void f11940(i32) { ... }
-
-// f11939 · 5 B · unmatched · placement: link order · name unknown
-// ? f11939(i32) { ... }
-
-// link-order cluster 597 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregeraresumozeresima.cpp
-
-// f11943 · 1731 B · unmatched · placement: link order · name unknown
-// void f11943(i32) { ... }
-
-// link-order cluster 598 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresimabase.cpp
-
-// f11946 · 6878 B · unmatched · placement: link order · name unknown
-// void f11946(i32) { ... }
-
-// f11945 · 68 B · unmatched · placement: link order · name unknown
-// ? f11945(i32) { ... }
 
 // link-order cluster 600 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ciniciovotacao.cpp
 
@@ -300,21 +196,6 @@
 // f4511 · 150 B · unmatched · placement: link order · name unknown
 // void f4511(i32) { ... }
 
-// link-order cluster 687 · uses=2
-
-// f4522 · 187 B · unmatched · placement: link order · name unknown
-// void f4522(i32) { ... }
-
-// link-order cluster 688 · uses=2
-
-// f4529 · 150 B · unmatched · placement: link order · name unknown
-// void f4529(i32) { ... }
-
-// link-order cluster 689 · uses=2
-
-// f4535 · 150 B · unmatched · placement: link order · name unknown
-// void f4535(i32) { ... }
-
 // link-order cluster 690 · uses=2
 
 // f4551 · 174 B · unmatched · placement: link order · name unknown
@@ -350,9 +231,6 @@
 
 // f4677 · 494 B · unmatched · placement: link order · name unknown
 // void f4677(i32, i32) { ... }
-
-// f4661 · 245 B · unmatched · placement: link order · name unknown
-// ? f4661(i32) { ... }
 
 // link-order cluster 701 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cexecucaovota.cpp
 
@@ -399,14 +277,6 @@
 // f5392 · 42 B · unmatched · placement: link order · name unknown
 // void f5392() { ... }
 
-// link-order cluster 754 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
-
-// f5394 · 18 B · unmatched · placement: link order · name unknown
-// void f5394(i32, i32) { ... }
-
-// f5393 · 652 B · unmatched · placement: link order · name unknown
-// ? f5393() { ... }
-
 // link-order cluster 755 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
 
 // f5400 · 82 B · unmatched · placement: link order · name unknown
@@ -419,15 +289,6 @@
 
 // f5408 · 55 B · unmatched · placement: link order · name unknown
 // void f5408(i32) { ... }
-
-// f5405 · 18 B · unmatched · placement: link order · name unknown
-// ? f5405() { ... }
-
-// f5404 · 18 B · unmatched · placement: link order · name unknown
-// ? f5404() { ... }
-
-// f5403 · 13 B · unmatched · placement: link order · name unknown
-// ? f5403() { ... }
 
 // f5402 · 754 B · unmatched · placement: link order · name unknown
 // ? f5402() { ... }
@@ -451,14 +312,6 @@
 
 // f5412 · 766 B · unmatched · placement: link order · name unknown
 // void f5412(i32) { ... }
-
-// link-order cluster 758 · uses=2 · neighbours' file uenux2/src/api/gui/crhvoicetexttospeech.cpp
-
-// f5430 · 948 B · unmatched · placement: link order · name unknown
-// ? f5430() { ... }
-
-// f5426 · 851 B · unmatched · placement: link order · name unknown
-// ? f5426() { ... }
 
 // link-order cluster 761 · uses=2 · neighbours' file uenux2/src/api/util/cwait.cpp
 
@@ -636,42 +489,11 @@
 
 // link-order cluster 862 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmaregerarzeresima.cpp
 
-// f5958 · 188 B · unmatched · placement: link order · name unknown
-// void f5958(i32) { ... }
-
-// f5957 · 142 B · unmatched · placement: link order · name unknown
-// ? f5957() { ... }
-
 // f5953 · 527 B · unmatched · placement: link order · name unknown
 // void f5953(i32) { ... }
 
 // f5952 · 284 B · unmatched · placement: link order · name unknown
 // void f5952(i32, i32) { ... }
-
-// link-order cluster 863 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresima.cpp
-
-// f5961 · 7 B · unmatched · placement: link order · name unknown
-// ? f5961(i32) { ... }
-
-// f5960 · 13 B · unmatched · placement: link order · name unknown
-// void f5960(i32) { ... }
-
-// f5959 · 177 B · unmatched · placement: link order · name unknown
-// ? f5959() { ... }
-
-// link-order cluster 864 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cregeraresumozeresima.cpp
-
-// f5965 · 68 B · unmatched · placement: link order · name unknown
-// ? f5965(i32) { ... }
-
-// f5964 · 7 B · unmatched · placement: link order · name unknown
-// ? f5964(i32) { ... }
-
-// f5963 · 13 B · unmatched · placement: link order · name unknown
-// void f5963(i32) { ... }
-
-// f5962 · 93 B · unmatched · placement: link order · name unknown
-// ? f5962() { ... }
 
 // link-order cluster 866 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.cpp
 
@@ -688,14 +510,8 @@
 // f6058 · 60 B · unmatched · placement: link order · name unknown
 // void f6058(i32, i32) { ... }
 
-// f6056 · 75 B · unmatched · placement: link order · name unknown
-// ? f6056(i32, i32, i32, i32) { ... }
-
 // f6018 · 52 B · unmatched · placement: link order · name unknown
 // void f6018(i32, i32) { ... }
-
-// f6015 · 127 B · unmatched · placement: link order · name unknown
-// void f6015(i32, i32) { ... }
 
 // f6014 · 127 B · unmatched · placement: link order · name unknown
 // void f6014(i32, i32) { ... }
@@ -1020,19 +836,11 @@
 
 // link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
 
-// f2735 · 1413 B · unmatched · placement: link order · name unknown
-// ? f2735() { ... }
-
 // f2734 · 1228 B · unmatched · placement: link order · name unknown
 // ? f2734() { ... }
 
 // f2733 · 217 B · unmatched · placement: link order · name unknown
 // ? f2733(i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1081 · uses=4 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
-
-// f2743 · 882 B · unmatched · placement: link order · name unknown
-// ? f2743() { ... }
 
 // link-order cluster 1082 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmajustificativatransito.cpp
 
@@ -1069,9 +877,6 @@
 // ? f2880() { ... }
 
 // link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
-
-// f2902 · 63 B · unmatched · placement: link order · name unknown
-// ? f2902(i32, i32) { ... }
 
 // f2901 · 81 B · unmatched · placement: link order · name unknown
 // ? f2901(i32, i32, i32, i32, i32, i32, i32) { ... }
@@ -1116,11 +921,6 @@
 // f2072 · 16 B · unmatched · placement: link order · name unknown
 // void f2072(i32, i32) { ... }
 
-// link-order cluster 1140 · uses=5
-
-// f2097 · 187 B · unmatched · placement: link order · name unknown
-// void f2097(i32) { ... }
-
 // link-order cluster 1147 · uses=5 · neighbours' file uenux2/src/api/ipc/posix/cposixrwmutex.cpp
 
 // f2226 · 20 B · unmatched · placement: link order · name unknown
@@ -1162,19 +962,8 @@
 
 // link-order cluster 1179 · uses=6 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitoroptouporvotaremtransito.cpp
 
-// f1907 · 7 B · unmatched · placement: link order · name unknown
-// ? f1907(i32) { ... }
-
 // f1906 · 57 B · unmatched · placement: link order · name unknown
 // void f1906(i32, i32) { ... }
-
-// f1905 · 1239 B · unmatched · placement: link order · name unknown
-// ? f1905(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1191 · uses=6 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgeraresumozeresimabase.cpp
-
-// f1952 · 12 B · unmatched · placement: link order · name unknown
-// ? f1952(i32) { ... }
 
 // link-order cluster 1193 · uses=6
 
@@ -1191,20 +980,10 @@
 // f1687 · 20 B · unmatched · placement: link order · name unknown
 // ? f1687() { ... }
 
-// link-order cluster 1210 · uses=7 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitoroptouporvotaremtransito.cpp
-
-// f1689 · 13 B · unmatched · placement: link order · name unknown
-// void f1689(i32) { ... }
-
 // link-order cluster 1212 · uses=7 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
 
 // f1695 · 354 B · unmatched · placement: link order · name unknown
 // void f1695(i32) { ... }
-
-// link-order cluster 1218 · uses=7 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cgerazeresimabase.cpp
-
-// f1720 · 12 B · unmatched · placement: link order · name unknown
-// ? f1720(i32) { ... }
 
 // link-order cluster 1219 · uses=7
 
@@ -1240,11 +1019,6 @@
 
 // f1202 · 466 B · unmatched · placement: link order · name unknown
 // ? f1202(i32, i32) { ... }
-
-// link-order cluster 1254 · uses=10 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ieleitorimpedidovotar.cpp
-
-// f1257 · 12 B · unmatched · placement: link order · name unknown
-// ? f1257(i32) { ... }
 
 // link-order cluster 1259 · uses=10 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cprocessoeleitoral.cpp
 
@@ -1293,11 +1067,6 @@
 
 // component comum
 
-// link-order cluster 259 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorhistoricovotoimpresso.cpp
-
-// f10276 · 241 B · unmatched · placement: link order · name unknown
-// void f10276(i32, i32, i32) { ... }
-
 // link-order cluster 264 · uses=1 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp
 
 // f10312 · 13 B · unmatched · placement: link order · name unknown
@@ -1324,16 +1093,6 @@
 
 // f11241 · 16 B · unmatched · placement: link order · name unknown
 // void f11241(i32, i32, i32) { ... }
-
-// link-order cluster 477 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorfotocandidato.cpp
-
-// f11440 · 346 B · unmatched · placement: link order · name unknown
-// void f11440(i32, i32, i32) { ... }
-
-// link-order cluster 480 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidaturas.cpp
-
-// f11445 · 281 B · unmatched · placement: link order · name unknown
-// void f11445(i32, i32, i32) { ... }
 
 // link-order cluster 481 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidatura.cpp
 

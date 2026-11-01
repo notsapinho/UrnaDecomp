@@ -1,8 +1,8 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// The members with no record sit at lines the reconstruction chose; unit 119's fragment says why and has the other
-// notes, unit 142's for the three after LogaTituloInvalidoRegistroMesario, unit 138's for LogaVotacaoEncerrada.
+// The members with no record sit at lines the reconstruction chose; each unit's fragment says why: 119's, 161's five
+// after GetInst, 152's seven after LogaTituloInvalidoRegistroMesario, then 142's three, 138's one and 169's one.
 
 #include "app/vota/log/clogvota.h"
 
@@ -37,6 +37,32 @@ CLogVota& CLogVota::GetInst()
     return dynamic_cast<CLogVota &>(api::CPolySingleton<comum::IEventosLog>::instance());
 }
 
+void CLogVota::LogaEleitorJaVotou()
+{
+    logaAlerta("O eleitor identificado já votou");
+}
+
+void CLogVota::LogaIdentificadorEleitorInvalido()
+{
+    const std::string mensagem = "Identificador do eleitor digitado inválido";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaSolicitacaoDadoPessoalEleitor()
+{
+    loga("Solicitação de dado pessoal do eleitor para habilitação manual");
+}
+
+void CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado()
+{
+    loga("Habilitação cancelada durante confirmação de dado do eleitor");
+}
+
+void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
+{
+    loga("Habilitação cancelada durante a captura de digital do mesário");
+}
+
 void CLogVota::LogaIndagaRegistroMesarios()
 {
     const std::string mensagem = "Operador indagado se ocorrerá registro de mesários";
@@ -47,6 +73,42 @@ void CLogVota::LogaTituloInvalidoRegistroMesario()
 {
     const std::string mensagem = "Digitado título inválido para o registro de mesário";
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaIndagaEleitorVotando()
+{
+    logaAlerta("Mesário indagado se eleitor está votando");
+}
+
+void CLogVota::LogaPedidoDesconexaoFone()
+{
+    loga("Solicitado ao mesário que desconecte o fone de ouvido");
+}
+
+void CLogVota::LogaPedidoConexaoFone()
+{
+    loga("Solicitado ao mesário que conecte o fone de ouvido");
+}
+
+void CLogVota::LogaHorarioVotacaoTerminou()
+{
+    const std::string mensagem = "Horário de votação terminou";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaInspecaoIniciada()
+{
+    loga("Inspeção da urna iniciada");
+}
+
+void CLogVota::LogaAudioDesativadoFimVotacao()
+{
+    loga("Áudio desativado pelo fim da votação");
+}
+
+void CLogVota::LogaSuspensaoAbortada()
+{
+    loga("Mesário abortou processo de suspensão");
 }
 
 void CLogVota::LogaJustificativaRecebida()
@@ -69,6 +131,11 @@ void CLogVota::LogaPedidoTituloSuspensao()
 void CLogVota::LogaVotacaoEncerrada()
 {
     loga("Votação encerrada");
+}
+
+void CLogVota::LogaAguardandoConfirmacaoZeresima()
+{
+    loga("Aguardando confirmação para emissão da zerésima");
 }
 
 } // namespace vota
