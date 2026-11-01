@@ -48,8 +48,8 @@
 #   (its constructor copies vota::CTelasVota::GetInst()'s +20, which app/vota/eleitor/comum/ctelasvota.h has no accessor
 #   for), CTesteTeclado's 3855 and CEsperaRetestar's 5936 (not read for this unit);
 # - CVerificaHorarioZeresima's slot 9 (fn 11870, record :80) and CEsperaRetestar's (fn 11823): the base's header names
-#   slot 9 ProcessOutroTick, a chosen name, where the record names it ProcessTickNaoDesligamento; so the base's empty
-#   body, fn 425, fills both slots here and their stubs go. 11870 and StartState (11871) throw through the assert macro
+#   slot 9 ProcessTickNaoDesligamento, the record's name, and neither class overrides it here, so the base's empty
+#   body, fn 425, fills both slots and their stubs go. 11870 and StartState (11871) throw through the assert macro
 #   with the condition `appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA` (ledger/strings.tsv 400939) and
 #   the codes 3482 and 3481, so they wait for the two codes in api/util/eueasserterror.h (the EEstadoVota enumerator,
 #   51, is in app/comum/dados/md/estadoaplicacao/cestadogeralvota.h now); 11823 calls fn 3855;

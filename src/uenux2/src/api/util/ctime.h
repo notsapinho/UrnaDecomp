@@ -19,7 +19,9 @@ bool IsValidTime(const std::string& hora);
 // chosen after CDate::Format's, whose record names it, as it formats the h, m and s codes the same way. operator<=> is out
 // of line: fn 759 calls it, and the target's body for it is the one binaryen keeps for OpenSSL's err_string_data_cmp too
 // (fn 5448, the same bytes); its name and its std::strong_ordering result are chosen. The getters are inline: fns 1381
-// and 2233 compute the hour, the minute and the second from the word as they do; their names are chosen.
+// and 2233 compute the hour, the minute and the second from the word as they do; their names are chosen. operator==
+// compares the word: CDateTime's (vota::CEstadoComDesligamentoAutomatico::ProcessTick, fn 12061, holds it inlined)
+// compares CTime's word after CDate's four; defaulted is a choice.
 
 /**
  * Hora do dia, guardada em segundos desde a meia-noite.
@@ -36,6 +38,7 @@ public:
     void operator-=(int segundos);
     CTime operator-(int segundos) const;
 
+    bool operator==(const CTime& hora) const = default;
     std::strong_ordering operator<=>(const CTime& hora) const;
 
     uebyte GetHora() const { return m_segundos / 3600; }

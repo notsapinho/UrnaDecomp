@@ -9,7 +9,7 @@
 # StartState and destructors (3857, one body with CEnviarManutencao's and CTesteFalhou's, 785 and 1560, bodies of eight
 # states), over the head of vota::CEstadoComDesligamentoAutomatico. api::CPosixRWMutex: constructor and destructors
 # (10245, 5353, 10244) and slots 2 to 4, which binaryen merges into 2219, api::IRWSyncCtl and six enumerators of
-# EUeIpcError. The class headers say what each layout and name rests on. The seventeen members not written are in
+# EUeIpcError. The class headers say what each layout and name rests on. The fourteen members not written are in
 # 97-uenux2-cvotacaostateaudio-pending.cpp, with what each waits for.
 #
 # The constructors and two slots, over unit 02's tick names: CVotacaoStateAudio's constructor (1785), StartState (7028)
@@ -72,15 +72,17 @@
 #
 # The class template vota::CConfereVotoEmCargo<ESTADO, TELA> (cconferevotoemcargo.h; its RTTI names ten instances, the
 # header's comment gives what each part rests on): final, a singleton whose GetInst the target inlines into the four
-# functions that build the instances (fns 11683, 11711, 11724, 11744, not reconstructed), slot 16 returning
-# &ESTADO::GetInst(), the destructor not out of line (implicit, a choice). The roots stand in for those four builders and call the instances'
-# GetInst as they do, so the roots object instantiates the template, as unit 79's roots instantiate theirs, and is
-# compiled with UENUX2_CXXFLAGS. From it match the D0 every instance shares (1278), slot 16 (the thunks above, and 1961
+# functions that build the instances (fns 11683, 11711, 11724, 11744), slot 16 returning &ESTADO::GetInst(), the
+# destructor not out of line (implicit, a choice). 11724 and 11744 are written (below), and cpedenominal.o and
+# cpedenulo.o, which link before the roots object, instantiate the five instances they build. The roots stand in for the
+# other two builders and call the instances' GetInst as they do, so the roots object instantiates the template for the
+# other five, as unit 79's roots instantiate theirs, and is compiled with UENUX2_CXXFLAGS. From it match the D0 every instance shares (1278), slot 16 (the thunks above, and 1961
 # and 2901, which our link forms from the same six and four bodies) and 1286, the body binaryen shares for the ten
-# std::unique_ptr statics' exit-time destructors. Those destructors (11674, 11676, 11678, 11680, 11708, 11718, 11720,
-# 11722, 11740, 11742) read `unresolved`, the static's address having no target symbol, and the mutexes' (11743 for
-# CCandidatoInapto's, 11675 and the other odd neighbours) `no-candidate`: the statics' readers in the target are the
-# four builders, not written, and the roots' stand-ins cast no vote.
+# std::unique_ptr statics' exit-time destructors. Those of the five instances the roots build (11674, 11676, 11678,
+# 11680, 11708) read `unresolved`, the static's address having no target symbol, and their mutexes' (11675 and the other
+# odd neighbours) `no-candidate`: the statics' readers in the target are 11683 and 11711, not written, and the roots'
+# stand-ins cast no vote. Those of the five instances 11724 and 11744 build (11718 to 11723, 11740 to 11743) match,
+# voted by those two.
 #
 # vota::IConfereVotoEmCargo (cconferevotoemcargo.h, new, and cconferevotoemcargo.cpp, named by its records): the head,
 # the constructor (fn 1165), the destructor (fn 1717), FinishStateAudio (11792) and GetMensagem (11789). The destructor
@@ -157,6 +159,35 @@
 # Which throw holds which literal is chosen from the messages: the code that loaded them is gone, and they stay in the
 # target's data. The six enumerators' values are chosen too (eueipcerror.h).
 #
+# Written since:
+# - vota::CEstadoComDesligamentoAutomatico::ProcessTick (fn 12061, slot 8), in cestadocomdesligamentoautomatico.cpp, its
+#   lambda's record at :44:45 the CPolySingleton<api::IPower>::instance() call of api::IPower::UsandoBateriaInterna
+#   (api/hwil/ipower.h). For another tick's id it calls slot 9, ProcessTickNaoDesligamento. With a time limit set and
+#   past (api::CDateTime's operator==, inline, and fn 759), it adds CParametrosUrna's tempoAvisoDesligamentoAutomatico
+#   (+96, through fn 5474, unit 125's), copies the limit into vota::g_dataHoraDesligamento
+#   (app/vota/eleitor/comum/cinformacaoeleitor.h), sets vota::CExibeAlertaDesligamento's +36 to this state and goes to
+#   it (GetInst, fn 5979, unit 61); else, on the internal battery, it sets an unset limit to now plus
+#   tempoDesligamentoAutomatico (+92) less the warning time; off it, it unsets the limit (CDateTime(-1)). Measured with
+#   pnpm wasm score, whole link: the limit's test as a statement of its own (a bool local) gives operand rows only;
+#   `m_limite != api::CDateTime(-1) && api::CDateTime::Now() > m_limite` as one condition gives 41 over 206 rows (12
+#   inserted), a 32-byte frame for the target's 16, as the two temporaries share no slot. The target sign-extends both
+#   times to the 64-bit count (i64.load32_s, i64.extend_i32_s), where the getters return uedword, so they pass through
+#   an int: the int locals are a choice of that form. The target calls comum::CConfiguracaoEleicao::GetInst (fn 187)
+#   once in the first branch and twice in the second, as written. Chosen too: the locals' and the lambda's names, the
+#   lambda's spelling (the record fixes the 44 characters before the call) and ProcessTick's first line.
+# - vota::CPedeNulo::GetProximoEstado and vota::CPedeNominal::GetProximoEstado (fns 11744 and 11724, slot 16), in
+#   cpedenulo.cpp (EUeVotaError 9385, "O cargo atual nao esta posicionado", at record :44:15, past the last post) and
+#   cpedenominal.cpp (no record: its line, after GetMensagem, is a choice). Both store the number typed through
+#   vota::SetNumeroDigitado (cinformacaoeleitor.h), compare its size with the post's +12 and look the candidate up
+#   with comum::CCandidaturas::Busca (fn 1273); the target reads the post's id and calls ToDWord (fn 1523) before
+#   CCandidaturas::GetInst (fn 521), so both are read into locals first. The states they return are the
+#   CConfereVotoEmCargo instances of the RTTI over the screens 14 and 7 (11744) and 10, 12, 14 and 2 (11724), with a
+#   candidate's +52 (its holder's ESituacao) not 0 for CCandidatoInapto. Measured for 11744: the null state returned in
+#   the size test's block and again after it gives operand rows only; one return after the block, with `&&`, nested
+#   ifs or a bool local, 43 over 181 rows (1 inserted, 2 deleted); early returns, the size mismatch first, 77 over 200.
+#   The roots' ConfereNulo and ConfereNominal went with them, and EstadoAudio and PedeMajoritario, which stood for fn
+#   4459, now written (src/units/197-uenux2-celeitorvotando.mk).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
     src/app/vota/eleitor/cconfirmavotoemcargo.cpp \
@@ -188,7 +219,9 @@ UENUX2_SRCS += $(CVOTACAOSTATEAUDIO_SRCS)
 # cconferevotoemcargo.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit
 # 122's cgravadorutil.cpp does)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# seventeen members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
+# cestadocomdesligamentoautomatico.cpp includes cconfiguracaoeleicao.h too
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cestadocomdesligamentoautomatico.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# fourteen members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-pending.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-pending.cpp -o $(R)

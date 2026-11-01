@@ -218,11 +218,6 @@
 // f5463 · 1093 B · unmatched · placement: link order · name unknown
 // ? f5463(i32) { ... }
 
-// link-order cluster 765 · uses=2 · neighbours' file uenux2/src/api/util/cdatetime.cpp
-
-// f5474 · 12 B · unmatched · placement: link order · name unknown
-// void f5474(i32, i32) { ... }
-
 // link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
 
 // f5521 · 72 B · unmatched · placement: link order · name unknown

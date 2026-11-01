@@ -1,9 +1,5 @@
 // Roots: keep unit 150's classes in the skeleton link the way the target keeps them.
 //
-// vota::CConfirmaVotoSemCandidato's vtable is referenced in the target only by its constructor, inlined into GetInst,
-// which fn 4459 holds (not reconstructed); taking the vtable's address keeps every slot, the destructors and slot 15
-// among them.
-//
 // vota::CInstrucaoVotacaoAcessibilidade::GetInst (fn 4420) has two direct callers in the target, fns 7377 and 7787,
 // neither reconstructed: InstrucaoAcessibilidade stands for them with two calls. Its vptr store keeps that class's
 // vtable.
@@ -23,7 +19,6 @@
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
-extern const char cconfirmavotosemcandidato_vt[] __asm__("_ZTVN4vota25CConfirmaVotoSemCandidatoE");
 int w150_instrucao() __asm__("_ZN4vota31CInstrucaoVotacaoAcessibilidade7GetInstEv");
 int w150_visualizar() __asm__("_ZN4vota21CVisualizarCandidatos7GetInstEv");
 void w150_nome_tela(void* nome, int tela) __asm__("_ZN4vota8NomeTelaENS_12ETelaVotacaoE");
@@ -68,7 +63,6 @@ __attribute__((noinline)) int TelaSemCandidato(void* estado, const void* chamado
 struct SEleitorEstadosRoots {
     SEleitorEstadosRoots()
     {
-        eleitor_estados_sink = cconfirmavotosemcandidato_vt;
         eleitor_estados_sink = reinterpret_cast<const void*>(&InstrucaoAcessibilidade);
         eleitor_estados_sink = reinterpret_cast<const void*>(&VisualizarCandidatos);
         eleitor_estados_sink = reinterpret_cast<const void*>(&NomesTela);

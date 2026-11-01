@@ -2,8 +2,8 @@
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
 // Members with no record sit at chosen lines, each unit's fragment says why: 119's, 161's five after GetInst, 152's
-// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two and 176's one, and
-// 156's four after LogaPedidoTituloSuspensao.
+// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two, 176's, 61's, 197's,
+// and 156's four after LogaPedidoTituloSuspensao.
 #include "app/vota/log/clogvota.h"
 
 #include <format>
@@ -174,6 +174,22 @@ void CLogVota::LogaMesarioSelecionouOutrasOpcoes()
 void CLogVota::LogaMesarioIndagadoHorarioUrna()
 {
     loga("Mesário indagado se horário da urna está correto");
+}
+
+void CLogVota::LogaTempoLimiteBateriaInterna()
+{
+    const std::string mensagem = "Tempo limite de espera usando bateria interna atingido";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaErroIdentificacaoTipoCargo()
+{
+    logaErro("Erro na identificação do tipo de cargo");
+}
+
+void CLogVota::LogaEleitorVoltouADigitar()
+{
+    loga("Eleitor voltou a digitar enquanto estava sendo suspenso");
 }
 
 } // namespace vota
