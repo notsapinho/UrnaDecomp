@@ -6,8 +6,8 @@
 #   512 IScreen, 925 IBeep, 862 IPower, 923 IUrna, 3075 IResource, 383 IInputMT, 905 IPaperRelatorios, 3204 IAjusteDataHora,
 #   2030 ecourna::api::security::IRng, 11157 CEscritorLog, 4356 IGenericFactory<ISemaphore>, 1282 comum::CCalculaCV,
 #   837 comum::IEventosLog, 611 comum::IInterfaceInit, 356 comum::IControladorRegistraMesarios, 1822 comum::IInterfaceSavd.
-# Of those, 512, 925, 862, 11157, 4356, 837 and 611 come from real objects now. The other two come from real objects
-# alone: 3164 IGenericFactory<ISyncCtl>, 5443 ITimerScheduler from itimerscheduler.cpp.o.
+# Of those, 356, 383, 512, 611, 837, 862, 905, 923, 925, 2030, 4356 and 11157 come from real objects now. The other two
+# come from real objects alone: 3164 IGenericFactory<ISyncCtl>, 5443 ITimerScheduler from itimerscheduler.cpp.o.
 # Ten of the 16 classes are in landed headers. IResource, CCalculaCV, IControladorRegistraMesarios and
 # IGenericFactory got their heads here (unit 119 adds IControladorRegistraMesarios' slots, CCalculaCV's header has its
 # layout and destructor since unit 121, and the other two headers say they are heads alone): typeid needs a complete
@@ -35,9 +35,10 @@
 #   and each stores that vtable (the grep of the vptr finds it, or 10335's thunk constant). 10413 had read `unresolved`.
 #   7506, comum::IEventosLog's __get_deleter, comes from clogvota.cpp.o, whose CLogVota::GetInst builds the block through
 #   set (unit 119), so it has no w100_bloco.
-#   New heads, a virtual destructor alone: vota::IExecucaoVota, vota::IAjusteInicial, vota::impl::IPoliticaExecucaoEleitor,
-#   vota::impl::ISincronismoVotoEleitor, vota::testeteclado::impl::IGeradorTeclas, comum::impl::IValidaMidia,
-#   api::IFingerPrepare and ecourna::api::security::ISymmetricCipherFactory, each path chosen, beside the file whose record
+#   New heads, a virtual destructor alone: vota::IAjusteInicial, vota::impl::ISincronismoVotoEleitor,
+#   vota::testeteclado::impl::IGeradorTeclas, comum::impl::IValidaMidia, api::IFingerPrepare and
+#   ecourna::api::security::ISymmetricCipherFactory (vota::IExecucaoVota and vota::impl::IPoliticaExecucaoEleitor were
+#   too, and unit 165 declares them whole), each path chosen, beside the file whose record
 #   names the class where one does. The destructor's slot is __on_zero_shared's offset: 4 for most, so they declare it first.
 # The same objects give 403 (std::operator""s), 429 and 430 (__format_arg_store); libc++ gives 251
 # (condition_variable::wait), and __cxa_demangle, which demangle calls, brings in the libc++abi demangler. 6222 is the

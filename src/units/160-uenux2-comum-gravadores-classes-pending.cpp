@@ -6,8 +6,8 @@
 //   builds paths from the file name at +4 with fn 183 (a reading: path::operator/=) and calls fns 1274, 949 and
 //   378, which no evidence names yet. They are named after their slot. CCopiadorMR's destructors are emitted here and
 //   in ccopiadorwsqmr.cpp.o, whose copies our link keeps.
-// - comum::asn::CConversorCarga's DoConverte and DoDesconverte, fns 10291 and 10290 (slots 2 and 3): they wait for fns
-//   1080 and 3734, and 3733 and 2802, which no evidence names yet.
+// - comum::asn::CConversorCarga's DoConverte and DoDesconverte, fns 10291 and 10290 (slots 2 and 3): 10291 waits for
+//   fn 1080 and 10290 for fn 2802, which no evidence names, and 1713 (unresolved); their 3734 and 3733 match.
 // They go in app/comum/gravadores/ccopiadormr.cpp and in the converter's own .cpp (cconversorcarga.cpp, a path no
 // record names) when they are reconstructed; the vtables and the destructors move with them, under the same symbols.
 // Delete this file with the last of them.

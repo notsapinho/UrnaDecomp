@@ -62,9 +62,10 @@ TMPDIR=/tmp tools/round/try-tu.sh --name units-return-roots src/uenux2/src/app/c
 #     score 1 over 4 rows (same 3, replaced 1 [1 operand-only], inserted 0, deleted 0)
 ```
 
-The one row that differs is the call, which step 8 names once 1007 is named; the splat scan would then match 7766
-under the stand-in's name, and the splat build would verify it. The census's `moved:` list is where such a pair
-shows first.
+The one row that differs is the call, which step 8 names once 1007 is named; the splat scan would then match 7766 under
+the stand-in's name, and the splat build would verify it. (7766 matches since unit 165, under `vota::CAssinadorVota`'s
+own destructor, from `cassinadorvota.cpp.o`; the readout above is from before.) The census's `moved:` list is where such
+a pair shows first.
 
 ## U3. A roots TU that calls `std::make_shared<T>` matches `__shared_ptr_emplace<T>`'s destructors
 
@@ -145,8 +146,8 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-(roots|pending)\.o$/) r[$2]=$3;
 
 The tree roots, `src/app/roots_*.o`, have no `-roots.o` suffix, so that filter misses them. They hold 162 match lines at
 0b5f410, and the same rule applies: code a landed header or a library defines, compiled at `APP_CXXFLAGS` like a
-fragment's roots, except `roots_cbasetype.o` and `roots_vector.o`, at `UENUX2_CXXFLAGS` (`src/units/README.md` "Companion
-files"):
+fragment's roots, except `roots_cbasetype.o`, `roots_iconversorasn.o` and `roots_vector.o`, at `UENUX2_CXXFLAGS`
+(`src/units/README.md` "Companion files"):
 
 ```sh
 awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/roots_[a-z0-9]+\.o$/) r[$2]=$3; next } ($2 in r) {n[r[$2]]++} END {for (x in n) print n[x], x}' \

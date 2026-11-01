@@ -2,9 +2,9 @@
 // the other stand-ins; it instantiates none of the unit's templates (the extern template below keeps CFormStack's copy
 // out), so every body it reaches comes from the unit's objects.
 //
-//   FormInterativoA, FormInterativoB  the callers of 554, api::CInteractiveFormBuilder::GetInteractiveForm (576, 1591, 1767,
-//                     3063, 3064, 3067, 6616, 6626, 6639, 6681, 7787): two call sites, or binaryen would inline it, with
-//                     the name and the bool varied as theirs are
+//   FormInterativoA, FormInterativoB  the callers of 554, api::CInteractiveFormBuilder::GetInteractiveForm (1591, 1767,
+//                     3063, 3064, 3067, 6616, 6626, 6639, 6681, 7787; 576 is linked): two call sites, or binaryen
+//                     would inline it, with the name and the bool varied as theirs are
 //   SaiDoFormulario   12081, vota::CEmitirMaisBU::ProcessInput, the other direct caller of 5987,
 //                     api::CFormStack<api::IScreen>::Remove: with the destructor of IForm<IScreen> alone it would inline
 //   TelaMT            the callers of 1714, api::CPolySingleton<api::IScreenMT>::instance, not in our link: 10410,

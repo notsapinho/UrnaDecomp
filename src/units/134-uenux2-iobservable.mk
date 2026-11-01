@@ -8,5 +8,6 @@
 # No source and no companion of its own (src/units/README.md "What a fragment holds" item 2): in the target only
 # binaryen's shared destructor body of api::BatteryIconDataSource<Horizontal> and <Vertical> (fn 6049, over the thunks
 # 3837 and 5510) stores the vptr, and unit 164's roots object emits those destructors, with IObservable's vtable, D2 and
-# D0, at UENUX2_CXXFLAGS. Both match from that object. Until unit 164, this fragment's roots file built an IObservable in
+# D0, at UENUX2_CXXFLAGS. Both match from cinfomtlcd.cpp.o (unit 153), whose <Vertical> destructor emits the same code
+# ahead of it on the link line. Until unit 164, this fragment's roots file built an IObservable in
 # a function the link dropped and kept the vtable, a stand-in for 6049, which went when 6049 came into the link.

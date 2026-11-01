@@ -38,8 +38,9 @@
 #   V1). 2240 is named by a hand line and 857 by a generated `call by:3792` line, so their callers resolve, and both
 #   `differs`. The link's copy of 857 is src/app/roots_vector.o's, which instantiates vector<CDadoCorrespondencia>.
 #
-# Not written: 436, which calls CPath::GetPathTrab (358, not written); CJustificador's singleton (1391, 2810, 3742, 11476,
-# 11477); 1903's, whose class no body read names. 5635 stays a stub in md/estadoaplicacao/cestadogeral.cpp.
+# Not written: 436, which calls CPath::GetPathTrab (358, not written); CJustificador's singleton (1391, 2810, 11476,
+# 11477; its constructor, 3742, is unit 113's); 1903's, whose class no body read names. 5635 stays a stub in
+# md/estadoaplicacao/cestadogeral.cpp.
 #
 # What decides the form, measured:
 # - The statics are class members defined after the accessor, pointer first: `.bss` then holds the mutex below the pointer,

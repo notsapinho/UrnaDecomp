@@ -583,7 +583,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 3199 3308 6914 6980 7037 7048 7718 14424", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -619,23 +619,25 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    # 2899 ;; callers (4): 3607 3740 10888 11205
    # 6026 ;; callers (2): 10887 11204
    for i in 1565 2777 3681 5516 10362 10369 10374 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204; do awk -F'\t' -v i=$i '$1==i {printf "%s %s\n", $1, $5}' splat/scan.tsv; done | awk '{v[$2] = v[$2] " " $1} END {for (k in v) print k ":" v[k]}' | sort
-   # differs: 10362 10369 3607 3740
-   # match: 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204
-   # no-candidate: 10374
+   # differs: 10362 10369
+   # match: 1565 2777 3681 5516 12317 12564 2899 3607 3740 10888 11205 6026 10887 11204
+   # unresolved: 10374
    ```
 
-   A unit that matches one of the four `differs` callers, or 10374, adds a member to one of these bodies. In our link
-   the three bodies are 1794, 5072 and 5071, and each has fewer callers than the target's:
+   A unit that matches 10362, 10369 or 10374 adds a member to 1565's body; 3607 and 3740 matched with unit 163 and gave
+   2899's body the target's four callers. In our link the three bodies are 1990, 2497 and 5621:
 
    ```sh
    wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u | tr '\n' ' '; echo
-   # 1794 func[10460]: 1794 func[10473]: 1794 func[1894]: 1794 func[3322]: 1794 func[6853]: 5071 func[10539]: 5071 func[10541]: 5072 func[10540]: 5072 func[10542]:
+   # 1990 func[11364]: 1990 func[2470]: 1990 func[3375]: 1990 func[5411]: 1990 func[9888]: 2497 func[11065]: 2497 func[11073]: 2497 func[5532]: 2497 func[5533]: 5621 func[11064]: 5621 func[11072]:
    ```
 
-   1894 and 6853 are `CLedFieldMT`'s and `CLineField`'s D0, 3322 `api::CCutFieldPaper`'s, 10460 and 10473 two
-   `api::CDataTextFmt<…>` D0s from unit 79's roots object, and 10539 to 10542 unit 77's pending object
-   (`build/out/wasm-map/vota_web/names.tsv`). When such a set changes, the bodies stop verifying, or the merged body
-   takes another member's name and step 9 renames its line (how-to step 10, "A twin whose name moved").
+   2470 and 3375 are `CLedFieldMT`'s and `CLineField`'s D0, 5411 `api::CCutFieldPaper`'s, 11364 and 9888 two
+   `api::CDataTextFmt<…>` D0s, from `cmtformbuilder.cpp.o` and unit 79's roots object; 11065 and 11073 are
+   `api::CFormPart`'s and `comum::CParteEleitores`' D2s and 11064 and 11072 their D0s, and 5532 and 5533 the two
+   `comum::servico` classes' D2s (`build/out/wasm-map/vota_web/names.tsv`). When such a set changes, the bodies stop
+   verifying, or the merged body takes another member's name and step 9 renames its line (how-to step 10, "A twin whose
+   name moved").
 
    **1654, 2160 and 2469** are thunks of a fourth such body, 2924, which does not match: their matches rest on a hand edit
    that names our merged body `byn$mgfn-shared$<first member>` (`src/units/100-uenux2-cpolysingleton.mk`). That name follows
@@ -670,14 +672,15 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     `std::string::append` that leaves 3717 to `libc++.a` (`src/units/README.md` "Companion files"). So
     `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match app/roots_uenux2.o` and
     `3717 match sysroot:libc++.a(directory_entry.o)`.
-11. **14072, 14073, 14241, 14242, 12991 and 13334, and the nine KDF getters 13522 to 13577, by their corrected names
-    (§S11).** Step 9 can swap the two pairs, or give 12991, 13334 or a KDF getter another table's name, since no name of
-    the symbol file disagrees, and the check above cannot see a swap: each name's prefix must agree with its dispatch
-    table and its neighbours.
+11. **14072, 14073, 14241, 14242, 12991 and 13334, the nine KDF getters 13522 to 13577, and 13242, 13256, 13945 and
+    13963, by their corrected names (§S11).** Step 9 can swap the two pairs, or give 12991, 13334 or a KDF getter
+    another table's name, since no name of the symbol file disagrees, and the check above cannot see a swap: each name's
+    prefix must agree with its dispatch table and its neighbours.
 
     ```sh
     awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ || $1==12991 && $2 !~ /^kdf_pbkdf1_/ || $1==13334 && $2 !~ /^hmac_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     awk -F'\t' '$1==13522 && $2 !~ /^x942kdf_/ || $1==13528 && $2 !~ /^kdf_tls1_prf_.*kdfs/ || $1==13536 && $2 !~ /^sskdf_/ || $1==13543 && $2 !~ /^kdf_sshkdf_/ || $1==13549 && $2 !~ /^kdf_scrypt_.*kdfs/ || $1==13556 && $2 !~ /^kdf_pkcs12_/ || $1==13562 && $2 !~ /^kdf_pbkdf2_/ || $1==13570 && $2 !~ /^krb5kdf_/ || $1==13577 && $2 !~ /^kbkdf_/ {print $1, $2}' splat/scan.tsv     # prints nothing
+    awk -F'\t' '$1==13242 && $2 !~ /^test_rng_/ || $1==13256 && $2 !~ /^seed_src_/ || $1==13945 && $2 !~ /^sha1_/ || $1==13963 && $2 !~ /^md5_sha1_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
 
 12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's hand edit.** Each holds a table slot
@@ -825,7 +828,11 @@ stopped on `matched.txt only: [13522]`. Their tables put them in sskdf's, kdf_ss
 with those three lines corrected the rescan matched all nine by their lines (`git show -s --format=%B 80f35dd`). So a
 match line can lose its function when another index's census pair verifies with the same function of ours (`withMatches`
 in `asmlift-wasm/src/splat-sub.ts` gives the symbol to the later index of the two): item 11 of §S10 checks the nine
-names.
+names. The merge b0faa13 matched four more 7-byte getters when our numbering moved: 13945 and 13963 under the names
+their tables give (sha1's at 1752208, md5_sha1's at 1751904, id 12, `OSSL_FUNC_DIGEST_SETTABLE_CTX_PARAMS`), and
+13242 and 13256 swapped, `seed_src_` and `test_rng_`, while 13242's slot is in test_rng's table (1787248) and
+13256's in seed_src's (1787040), id 12, `OSSL_FUNC_RAND_GETTABLE_CTX_PARAMS`. Those two lines were corrected, and the
+rescan added nothing (`git show -s --format=%B b0faa13`); item 11 checks the four.
 
 The scan's content pass can make the same kind of match. It pairs one of our functions that no `match` row holds yet,
 called or not, with an unmatched target body when, re-pointed, it equals exactly that one body and no other function

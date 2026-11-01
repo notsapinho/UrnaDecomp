@@ -12,8 +12,8 @@ namespace comum::asn {
 // (fn 10290) in slot 3. CConversorCorrespResultado builds one on its stack (fn 10288 stores the vptr 1596148) and calls
 // it through the vtable. Its vtable and typeinfo lie between gravadores/asn/util.cpp's records and
 // cconversorcorrespresultado.cpp's in the data. Recovered: the head only; both members are pending (fn 10290 calls
-// fns 3733 and 2802, fn 10291 fns 1080 and 3734, which no evidence names yet). Chosen: the path, after the class name
-// (no record names its file).
+// fns 2802 and 1713, fn 10291 fn 1080, and those wait; the 3733 and 3734 they call match, unit 166). Chosen: the
+// path, after the class name (no record names its file).
 class CConversorCarga : public IConversorASN<ModuloTiposEcoUrna::Carga, md::CCarga> {
 protected:
     TEntidade DoConverte(const TDado& dado) const override;

@@ -1,6 +1,7 @@
 # uenux2 api::BatteryIconDataSource<Horizontal> and <Vertical>'s destructors (src/api/gui/cpowerinformation.h). No source of
 # its own (src/units/README.md "What a fragment holds" item 2): every function the unit matches is code the compiler
-# writes from the class definition, emitted by the roots object, whose header says how. The target functions:
+# writes from the class definition, emitted by the roots object, whose header says how, and <Vertical>'s by
+# cinfomtlcd.cpp.o (unit 153), ahead of it on the link line. The target functions:
 #   D2 of <Horizontal> 5510 and of <Vertical> 3837   thunks into fn 6049, passing their vptr
 #   D2 body                                          6049, binaryen's merge of the two D2s (byn$mgfn-shared)
 #   D0 of <Horizontal> 10990 and of <Vertical> 11652 f136(D2(p0))

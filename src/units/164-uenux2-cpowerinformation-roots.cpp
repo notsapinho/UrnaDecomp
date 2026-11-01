@@ -5,8 +5,8 @@
 // so this object emits the D2, the D0 and the vtable, since a destructor stores the vptr. The sink keeps the two vtables,
 // the reference the target's own code has: their address points are stored by the constructors inlined into fns 502
 // (<Horizontal>, 1581580) and 5904 (<Vertical>, 1551916), and by the D2 thunks 5510 and 3837 (the grep of "Companion
-// files" for each address lists those four). The D2s and D0s have no other caller here: the target's 5902
-// (comum::CInfoMTLCD's destructor), which calls 3837, is not in this tree.
+// files" for each address lists those four). The target's 5902 (comum::CInfoMTLCD's destructor, unit 153) calls 3837,
+// and cinfomtlcd.cpp.o, ahead of this object, gives <Vertical>'s D2, D0 and vtable; 502 and 5904 are not written.
 //
 // The D2s also store api::IObservable<std::shared_ptr<api::IImage>>'s vptr, as the target's merged D2 body 6049 does, so
 // this object emits that class's vtable, D2 and D0 (11651, 11650) as well (src/units/134-uenux2-iobservable.mk).

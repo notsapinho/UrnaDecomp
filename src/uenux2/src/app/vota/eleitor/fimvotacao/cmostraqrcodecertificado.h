@@ -15,8 +15,8 @@ class CInteractiveForm;
 namespace vota {
 
 // vota::CMostraQRCodeCertificado (RTTI: si_class of vota::CEstadoComDesligamentoAutomatico; vtable @1542480 [785, 1560,
-// 12040, 7480, 1661, 218, 425, 12038, 12061, 425]): it overrides StartState (slot 2, fn 12040, pending: it calls fns
-// 502, 576, 653 and 2782, which have no body here) and ProcessInput (slot 7, fn 12038, record line 39), which throws
+// 12040, 7480, 1661, 218, 425, 12038, 12061, 425]): it overrides StartState (slot 2, fn 12040, pending: it calls 576
+// and fns 502, 653 and 2782, which have no body here) and ProcessInput (slot 7, fn 12038, record line 39), which throws
 // unless the form holds one input field and goes back to CMostraQRCodeBU on CORRIGE. The destructors are
 // CMostraQRCodeBU's bodies (fns 785 and 1560): final, and out of line (docs/reference/facts/reading.md R4, R5). A
 // singleton: GetInst, inlined into CMostraQRCodeBU::ProcessInput (fn 12051), keeps the object in a static

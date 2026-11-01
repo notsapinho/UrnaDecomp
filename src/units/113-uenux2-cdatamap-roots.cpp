@@ -60,7 +60,7 @@ __attribute__((noinline)) bool AvancaDois(TMapa& mapa)
     return mapa.GetCurrent() != nullptr;
 }
 
-// Stands for 3125's callers (6999, 11478, 11479, 12621).
+// Stands for 3125's callers 6999 and 11478 (11479 and 12621 are linked).
 __attribute__((noinline)) int ComparaRespostas(TMapaRespostas& primeiro, TMapaRespostas& segundo)
 {
     return primeiro.GetCurrent() == segundo.GetCurrent() ? 3 : 5;

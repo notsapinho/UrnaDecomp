@@ -44,7 +44,7 @@
 # Pending, none a trap, each with what it waits for (facts/asn1.md A10 has the measurements):
 # - 1928, 3552: pair::~pair and vector<Visitante>::__destroy_vector at -Oz. A compile at -Oz -fexceptions holds pair::~pair as
 #   a function of 1928's rows, and __destroy_vector calling it; -O2 and -O3 inline the destructor and -Os holds
-#   allocator::destroy. So they are the executable TU's copies, and that TU's flags are the user's decision. 518 is
+#   allocator::destroy. So they are the executable TU's copies, and wait for that TU's reconstruction. 518 is
 #   ~CoderEnv: 5706 stores the rule at +0 and passes that address to 679 and to 518. That it is the same -Oz copy, as its
 #   call of 3552 suggests, is a reading. 3552 carries a hand edit for 2183's and 8851's sake.
 # - 1843 find_first_not_of: the same, the rows -Oz gives; -Os, -O2 and -O3 do not. A hand edit names it for 2185 and 1519.
