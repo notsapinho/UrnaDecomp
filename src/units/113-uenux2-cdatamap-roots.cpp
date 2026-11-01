@@ -16,8 +16,8 @@
 //   the second map, 5379 (5378, 6734): cregistradormesario.cpp's object is ahead of this one on the link line, so its
 //   copies are the link's; a stand-in here only adds their second call site.
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
-//   3728, 5379, 6734, 7787, 10842): no other tree of this key is in our link, and these bodies do not depend on the
-//   mapped type, so a std::map<CEleitorIdentidade, int> gives each its second call site, and binaryen merges the copies.
+//   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade, int>
+//   stands for the callers not written (2225 and 2264 are, units 50 and 110), and binaryen merges the copies.
 // - comum::CJustificador's constructor, 3742 (1391, 11474, 11475): two call sites, so binaryen keeps it out of line;
 //   it stores CJustificadorServico's vptr, the reference the target has to that vtable.
 // A stand-in goes when the target callers it names are in splat/matched.txt.
@@ -87,7 +87,7 @@ __attribute__((noinline)) int CarregaUm(api::CDataMap<comum::md::CComparecimento
     return 13;
 }
 
-// Stands for 3614, 2225, 2264 and 10842, which search and insert in other trees of this key.
+// Stands for 3614 and 10842 (2225 and 2264 are in the link), which search and insert in other trees of this key.
 __attribute__((noinline)) int ContaEleitor(std::map<comum::md::CEleitorIdentidade, int>& mapa, const comum::md::CEleitorIdentidade& eleitor)
 {
     if (mapa.find(eleitor) != mapa.end()) {

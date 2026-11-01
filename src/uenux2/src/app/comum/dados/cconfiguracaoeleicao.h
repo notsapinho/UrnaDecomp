@@ -17,8 +17,9 @@ namespace comum {
 
 // Recovered: the layout, from the destructor (fn 5792) and the order of the constructor's record (line 239): a string at
 // +8, the origin and a flag, a CPleito at +28, a CParametrosUrna at +88 (fn 2267), the municipality, two sets at +592 and
-// +604, a string at +628, vectors at +652 and +672. The bytes between them have no reader here. Which constructor
-// argument each member holds beyond those, the element types and the members' names are chosen.
+// +604, a string at +628, vectors at +652 and +672. The bytes between them have no reader here but the words the
+// accessors below read. Which constructor argument each member holds beyond those, the element types and the members'
+// names are chosen.
 class CConfiguracaoEleicao {
 public:
     ~CConfiguracaoEleicao();
@@ -36,6 +37,11 @@ public:
     md::EOrigemConfiguracao GetOrigem() const { return m_origem; }
     const md::CPleito& GetPleito() const { return m_pleito; }
     const ecourna::app::dados::CParametrosUrna& GetParametrosUrna() const { return m_parametros; }
+
+    // The word at +668: vota::impl::CInformacaoThreadOperador's fn 2225 compares the type of the identity typed with
+    // it (`i32.load[f187()+668]`) and, when they are equal, copies that identity into the one slot 26
+    // (GetIdentidadePrincipalEleitor) returns. Its type is the type it is compared with; the names are chosen.
+    ecourna::app::dados::ETipoIdentificadorEleitor GetTipoIdentificadorPrincipal() const { return m_tipoIdentificadorPrincipal; }
 
     // Two api::CDateTime of 12 bytes inside the bytes after the municipality: vota::CConfirmaImpressaoZeresima::GetInst
     // (fn 5959) and vota::CVerificaHorarioZeresima::GetInst (fn 5947) copy +544 (`i64.load[+544]`, `i32.load[+552]`),
@@ -63,7 +69,8 @@ private:
     std::string m_descricao;
     unsigned m_naoRecuperado4[3];
     std::vector<int> m_lista1;
-    unsigned m_naoRecuperado5[2];
+    unsigned m_naoRecuperado5;
+    ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
     std::vector<int> m_lista2;
 
     static std::unique_ptr<CConfiguracaoEleicao> s_instance;

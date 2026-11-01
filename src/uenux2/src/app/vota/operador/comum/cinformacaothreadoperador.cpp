@@ -1,41 +1,154 @@
-// vota::impl::CInformacaoThreadOperador (uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp).
-// Target functions of this file, by slot of the vtable @1590108:
-//   2     10581 CancelaHabilitacao          (here)     3     10580 IsAudioAtivado               (here)
-//   4     2683  Slot4                       (here)     5     10579 IsAudioAtivadoCadastro       (here)
-//   6     2683  IsAudioAtivadoMesario       (here)     7     10578 SetAudioAtivadoMesario       (here)
-//   8     10577 GetTextoAudio               (here)     9     10576 IsBiometriaOperador          (here)
-//   10    10574 IsBiometriaEleitor          (here)     11    10573 IsSemBiometria               (here)
-//   12    10572 SetBiometriaOperador        (here)     13    10571 SetBiometriaEleitor          (here)
-//   14    10570 LimpaBiometria              (here)     15    2587  GetEstadoBiometria           (here)
-//   16    10569 GetTextoComparecimento      (pending)  17    10568 AgendaInspecao               (pending)
-//   18    10567 GetDataHoraInspecao         (here)     19    10566 IsVotacaoBloqueadaPorHorario (pending)
-//   20    10565 LimpaIdentidades            (here)     21    10564 SetIdentidadeDigitada        (pending)
-//   22    10563 SetTipoIdentidadeDigitada   (pending)  27    10558 SetEleitorSemFoto            (here)
-//   28    10557 SetFotoApresentada          (here)     29    10556 SetFotoNaoApresentada        (here)
-//   30    10554 GetApresentacaoFotoEleitor  (here)
-//   23-26 10562, 10561, 10560, 10559: GetIdentidadeDigitada, GetTipoIdentidadeDigitada, GetIdentidadeEleitor and
-//         GetIdentidadePrincipalEleitor (here; records at lines 474, 484, 494 and 504, column 15)
-// The names of slots 2 to 22 and 27 to 30 are chosen (iinformacaothreadoperador.h says from what). A member marked
-// pending is defined in src/units/50-uenux2-cinformacaothreadoperador-pending.cpp until it is reconstructed.
-// vota::TipoToStr (10586, record at line 40) and IInformacaoThreadOperador::GetInst (599, record at line 554) are not
-// reconstructed, and their lines stay blank. The six records are the only lines the target fixes: the members run in
-// slot order, as the target's function order has them, and the lines of slots 2 to 22 and 27 to 30 are a choice.
+// vota::impl::CInformacaoThreadOperador and the vota:: functions over its singleton
+// (uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp). The records fix six lines: vota::TipoToStr's throw
+// (40), the four getters' throws (474, 484, 494, 504) and IInformacaoThreadOperador::GetInst's (554, the call of
+// CPolySingleton<T>::instance in POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO). Every other line is a choice, and so
+// are the names the records do not give: src/units/50-uenux2-cinformacaothreadoperador.mk lists them, with the target
+// function each definition is and the members still pending in src/units/50-uenux2-cinformacaothreadoperador-pending.cpp.
 
 #include "app/vota/operador/comum/cinformacaothreadoperador.h"
 
+#include <format>
+#include <random>
+
+#include "api/pattern/polysingletongetinst.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/md/cvalidadoridentidade.h"
+#include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 #include "app/vota/euevotaerror.h"
 
-// (original lines 29-36: content not recovered)
-#line 37
-// <stubs>
-// f10586 · 837 B · unmatched · name unknown
-// void f10586(i32) { ... }
-// </stubs>
+namespace vota {
 
-// (original lines 42-382: content not recovered)
-#line 383
+// (original lines 22-29: content not recovered)
+#line 30
+static std::string TipoToStr(ecourna::app::dados::ETipoIdentificadorEleitor tipo)
+{
+    switch (tipo) {
+    case ecourna::app::dados::TipoIDInscricaoEleitoral:
+        return "Título";
+    case ecourna::app::dados::TipoIDCPF:
+        return "CPF";
+    case ecourna::app::dados::TipoIDNumeroLivre:
+        return "Identificador";
+    }
+    throw CUeVotaError(EUE_VOTA_TIPO_IDENTIDADE_INVALIDO, "Tipo de identidade do eleitor inválido");
+}
+
+std::string GetTextoIdentidadeDigitada()
+{
+    const comum::md::CEleitorIdentidade identidade(impl::IInformacaoThreadOperador::GetInst().GetIdentidadeDigitada(),
+                                                   impl::IInformacaoThreadOperador::GetInst().GetTipoIdentidadeDigitada());
+    return std::format("{}: {}", TipoToStr(identidade.GetTipo()), comum::md::FormataIdentificador(identidade));
+}
+
+// (original lines 50-240: content not recovered)
+#line 241
+bool IsAudioAtivado()
+{
+    return impl::IInformacaoThreadOperador::GetInst().IsAudioAtivado();
+}
+
+bool IsAudioAtivadoMesario()
+{
+    return impl::IInformacaoThreadOperador::GetInst().IsAudioAtivadoMesario();
+}
+
+void SetAudioAtivadoMesario(bool ativado)
+{
+    impl::IInformacaoThreadOperador::GetInst().SetAudioAtivadoMesario(ativado);
+}
+
+std::string GetTextoAudio()
+{
+    return impl::IInformacaoThreadOperador::GetInst().GetTextoAudio();
+}
+
+void LimpaBiometria()
+{
+    impl::IInformacaoThreadOperador::GetInst().LimpaBiometria();
+}
+
+std::string GetTextoComparecimento()
+{
+    return impl::IInformacaoThreadOperador::GetInst().GetTextoComparecimento();
+}
+
+void AgendaInspecao()
+{
+    impl::IInformacaoThreadOperador::GetInst().AgendaInspecao();
+}
+
+bool IsVotacaoBloqueadaPorHorario()
+{
+    return impl::IInformacaoThreadOperador::GetInst().IsVotacaoBloqueadaPorHorario();
+}
+
+void SetIdentidadeDigitada(const std::string& identidade)
+{
+    impl::IInformacaoThreadOperador::GetInst().SetIdentidadeDigitada(identidade);
+}
+
+void SetTipoIdentidadeDigitada(ecourna::app::dados::ETipoIdentificadorEleitor tipo)
+{
+    impl::IInformacaoThreadOperador::GetInst().SetTipoIdentidadeDigitada(tipo);
+}
+
+std::string GetIdentidadeDigitada()
+{
+    return impl::IInformacaoThreadOperador::GetInst().GetIdentidadeDigitada();
+}
+
+ecourna::app::dados::ETipoIdentificadorEleitor GetTipoIdentidadeDigitada()
+{
+    return impl::IInformacaoThreadOperador::GetInst().GetTipoIdentidadeDigitada();
+}
+
+comum::md::CEleitorIdentidade GetIdentidadeEleitor()
+{
+    return impl::IInformacaoThreadOperador::GetInst().GetIdentidadeEleitor();
+}
+
+void SetEleitorSemFoto()
+{
+    impl::IInformacaoThreadOperador::GetInst().SetEleitorSemFoto();
+}
+
+void SetFotoNaoApresentada(ecourna::app::dados::CApresentacaoFotoEleitor::EResultado resultado)
+{
+    impl::IInformacaoThreadOperador::GetInst().SetFotoNaoApresentada(resultado);
+}
+
+ecourna::app::dados::CApresentacaoFotoEleitor GetApresentacaoFotoEleitor()
+{
+    return impl::IInformacaoThreadOperador::GetInst().GetApresentacaoFotoEleitor();
+}
+
+} // namespace vota
+
+
 namespace vota::impl {
+
+// (original lines 326-327: content not recovered)
+#line 328
+api::CDateTime CInformacaoThreadOperador::SorteiaDataHoraInspecao()
+{
+    static std::random_device dispositivo;
+    static std::mt19937 gerador(dispositivo());
+    static std::uniform_int_distribution<long> minutos(60, 90);
+    const long intervalo = minutos(gerador);
+    api::CDateTime dataHora = api::CDateTime::Now();
+    dataHora += intervalo * 60;
+    return dataHora;
+}
+
+// (original lines 339-340: content not recovered)
+#line 341
+CInformacaoThreadOperador::CInformacaoThreadOperador()
+    : m_audioAtivado(false), m_estadoBiometria(SemBiometria), m_dataHoraInspecao(SorteiaDataHoraInspecao()),
+      m_estadoApresentacaoFoto(ecourna::app::dados::CApresentacaoFotoEleitor::EleitorSemFoto),
+      m_resultadoApresentacaoFoto(ecourna::app::dados::CApresentacaoFotoEleitor::SemErro)
+{
+}
 
 void CInformacaoThreadOperador::CancelaHabilitacao()
 {
@@ -110,6 +223,11 @@ IInformacaoThreadOperador::EEstadoBiometria CInformacaoThreadOperador::GetEstado
     return m_estadoBiometria;
 }
 
+void CInformacaoThreadOperador::AgendaInspecao()
+{
+    m_dataHoraInspecao = SorteiaDataHoraInspecao();
+}
+
 api::CDateTime CInformacaoThreadOperador::GetDataHoraInspecao() const
 {
     return m_dataHoraInspecao;
@@ -121,6 +239,38 @@ void CInformacaoThreadOperador::LimpaIdentidades()
     m_tipoIdentidadeDigitada.reset();
     m_identidadeEleitor.reset();
     m_identidadePrincipalEleitor.reset();
+}
+
+void CInformacaoThreadOperador::AtualizaIdentidadesEleitor()
+{
+    if (!m_identidadeDigitada || !m_tipoIdentidadeDigitada ||
+        !comum::md::CValidadorIdentidade::GetInst().EhValida(*m_tipoIdentidadeDigitada, *m_identidadeDigitada)) {
+        return;
+    }
+    m_identidadeEleitor = comum::md::CEleitorIdentidade(*m_identidadeDigitada, *m_tipoIdentidadeDigitada);
+    if (*m_tipoIdentidadeDigitada == comum::CConfiguracaoEleicao::GetInst().GetTipoIdentificadorPrincipal()) {
+        m_identidadePrincipalEleitor = *m_identidadeEleitor;
+        return;
+    }
+    const comum::CEleitorDetalhe* detalhe = comum::CEleitores::GetInst().LocalizaEleitor(*m_identidadeEleitor);
+    if (detalhe != nullptr) {
+        const comum::md::CEleitorDecorator& eleitor = detalhe->GetEleitor();
+        m_identidadePrincipalEleitor = eleitor.GetIdentidadePorTipo(eleitor.GetTipoIdentificador());
+    } else {
+        m_identidadePrincipalEleitor.reset();
+    }
+}
+
+void CInformacaoThreadOperador::SetIdentidadeDigitada(const std::string& identidade)
+{
+    m_identidadeDigitada = identidade;
+    AtualizaIdentidadesEleitor();
+}
+
+void CInformacaoThreadOperador::SetTipoIdentidadeDigitada(ecourna::app::dados::ETipoIdentificadorEleitor tipo)
+{
+    m_tipoIdentidadeDigitada = tipo;
+    AtualizaIdentidadesEleitor();
 }
 
 std::string CInformacaoThreadOperador::GetIdentidadeDigitada() const
@@ -184,9 +334,8 @@ ecourna::app::dados::CApresentacaoFotoEleitor CInformacaoThreadOperador::GetApre
     return ecourna::app::dados::CApresentacaoFotoEleitor(m_estadoApresentacaoFoto, m_resultadoApresentacaoFoto);
 }
 
-} // namespace vota::impl
+// (original lines 532-553: content not recovered)
+#line 554
+POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO(IInformacaoThreadOperador, CInformacaoThreadOperador)
 
-// <stubs>
-// f599 · 4114 B · unmatched · name unknown
-// ? f599() { ... }
-// </stubs>
+} // namespace vota::impl

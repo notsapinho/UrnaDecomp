@@ -175,6 +175,17 @@
 # Chosen: EhValida's name, the search written as a lambda in each member (a shared helper was not tried), Valida's line
 # but its throw's and EhValida's after it, and the three include lines it adds with a blank one, which take four of the
 # blank lines above the statics (lines 11 to 22 stay unknown).
+#
+# CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264; callers 3616, 5385, 10631, 10789
+# and 10790, none written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it, which clang
+# inlines into 2264 and binaryen into fn 2225 (unit 50's CInformacaoThreadOperador::AtualizaIdentidadesEleitor), its
+# one other caller; out of line is a measurement, in src/units/50-uenux2-cinformacaothreadoperador.mk. 2264 builds a
+# CEleitorIdentidade (566) from a copy of the string and the type, finds it in the map at +112 (1703), finds the value
+# it maps to in the base's map (1703 again), sets the cursor at +16 and returns the record's address, or null. The map
+# at +112 is std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265)
+# and the find (1703) keep their bytes under the new types, and step 9 renamed both match lines to the new symbols. The
+# names, the file and the lines (after the destructor, the CEleitorIdentidade overload first) are chosen; the named
+# local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's five callers.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

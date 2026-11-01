@@ -56,6 +56,9 @@ enum EUeVotaError {
     // cmostraqrcodecertificado.cpp:39) throws; the name is chosen from its message, "Número de inputs inválido": no
     // evidence names it
     EUE_VOTA_QRCODE_CERTIFICADO_NUMERO_INPUTS_INVALIDO = 9408,
+    // the value is the code vota::TipoToStr throws (record cinformacaothreadoperador.cpp:40, inlined into target fn
+    // 10586); the name is chosen from its message, "Tipo de identidade do eleitor inválido": no evidence names it
+    EUE_VOTA_TIPO_IDENTIDADE_INVALIDO = 9409,
 };
 
 using CUeVotaError = ecourna::api::exception::CBaseError<EUeVotaError, ecourna::api::exception::SErrorLimits{9300, 9500}>;

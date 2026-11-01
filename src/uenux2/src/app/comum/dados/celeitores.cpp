@@ -19,7 +19,22 @@ SINGLETON_IMPL_GET_INST(CEleitores, s_mutex, s_instance)
 
 CEleitores::~CEleitores() = default;
 
-// (original lines 48-201: content not recovered)
+CEleitorDetalhe* CEleitores::LocalizaEleitor(const md::CEleitorIdentidade& identidade)
+{
+    const auto it = m_identidades.find(identidade);
+    if (it == m_identidades.end()) {
+        return nullptr;
+    }
+    return Find(it->second);
+}
+
+CEleitorDetalhe* CEleitores::LocalizaEleitor(const std::string& identificador, ecourna::app::dados::ETipoIdentificadorEleitor tipo)
+{
+    const md::CEleitorIdentidade identidade(identificador, tipo);
+    return LocalizaEleitor(identidade);
+}
+
+// (original lines 63-201: content not recovered)
 #line 202
 // <stubs>
 // f6734 · 6461 B · unmatched · name unknown

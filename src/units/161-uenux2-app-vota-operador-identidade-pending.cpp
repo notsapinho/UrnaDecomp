@@ -7,19 +7,20 @@
 // - vota::CControlaReconhecimento::StartState (target fn 10512, slot 2, 514 B): it resets the class's statics and calls
 //   fns 781, 1393, 1823 and 2740.
 // - vota::CControlaReconhecimento::ProcessInput (target fn 10511, slot 7): through Read() (record cinteractiveform.h:57
-//   @1591088), on CONFIRMA it calls fn 3621 and goes to the state fn 2743 returns or, as fn 2746 decides, after a call
-//   of fn 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174), to fn 1150's.
+//   @1591088), on CONFIRMA it calls fn 3621 and goes to the state fn 2743 returns or, as fn 2746 decides (3621 and 2746:
+//   unit 50), after a call of fn 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174), to fn 1150's.
 // - vota::CIdentidadeInvalida::ProcessInput (target fn 10667, slot 7): a thunk that passes INPUT_CORRIGE (5) and its
 //   record (cinteractiveform.h:57 @1588432) to binaryen's fn 2295, whose next state is fn 652's.
 // - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 395, 652, 5396 and 5665.
 // - vota::CDadoEleitorNaoConfere::ProcessInput (target fn 10447, slot 7): on CONFIRMA it goes to fn 652's state or,
 //   with CControlaReconhecimento::AvancaVerificacao inlined (record ccontrolareconhecimento.cpp:176), to fn 2735's.
 // - vota::CPedeIdentidade::StartState (target fn 10680, slot 2, records cpedeidentidade.cpp:62 and :63): it calls fns
-//   599, 1485, 2226, 2284 and 5903 (comum::CInfoMTLCD::MostraIconeBateria, unit 153).
-// - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): it calls fns 2226, 2749, 2753, 3619, 5401, 5414 and
-//   5430.
-// - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): it calls fns 599, 2226 and 3620, and 501 (named: unit
-//   174).
+//   2284, 5903 (comum::CInfoMTLCD::MostraIconeBateria, unit 153), 599 and 2226 (unit 50) and 1485
+//   (vota::EhTreinamento, fragment 168).
+// - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): it calls fns 2749, 2753, 5401 and 5430, and 2226,
+//   3619 and 5414 (unit 50).
+// - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): it calls fns 599, 2226 and 3620 (unit 50) and 501
+//   (unit 174), so no callee of it waits now: it is not written yet.
 // - vota::IEleitorImpedidoVotar::StartState (target fn 10625, slot 2 of the base and of its six derived classes): it
 //   calls fn 3616.
 // - vota::IEleitorImpedidoVotar::ProcessInput (target fn 10624, slot 7 of the same seven vtables): through Read()
