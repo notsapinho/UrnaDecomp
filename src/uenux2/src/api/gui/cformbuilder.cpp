@@ -22,6 +22,7 @@
 #include "api/gui/clinefield.h"
 #include "api/gui/crectfield.h"
 #include "api/gui/ctextfield.h"
+#include "api/gui/ctextfieldblinking.h"
 #include "api/gui/iscreen.h"
 #include "api/gui/ctextfielddoubleline.h"
 #include "api/gui/eueguierror.h"
@@ -130,6 +131,16 @@ CFormBuilder::SharedField CFormBuilder::AddTextField(const std::string& texto, c
     return campo;
 }
 
+CFormBuilder::SharedField CFormBuilder::AddBlinkingTextField(const std::string& texto, const SPoint& posicao,
+                                                             const SFont& fonte, ETextAlignment alinhamento)
+{
+    const auto text = std::make_shared<CFixedText>(texto, alinhamento);
+    SharedField campo = std::make_shared<CTextFieldBlinking>(posicao, text, fonte, static_cast<TColor>(2),
+                                                             static_cast<TColor>(3), static_cast<TColor>(1));
+    AddField(campo);
+    return campo;
+}
+
 std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::shared_ptr<IPreShow<IScreen>>& preShow, const std::string& nome)
 {
     std::shared_ptr<IForm<IScreen>> form(new IForm<IScreen>(m_campos, preShow));
@@ -140,7 +151,7 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::shared_ptr<IPre
     return form;
 }
 
-// (original lines 143-347: content not recovered)
+// (original lines 154-347: content not recovered)
 #line 348
 /**
  * Posição do rótulo de uma tecla desenhada em @p area: junto à borda esquerda,

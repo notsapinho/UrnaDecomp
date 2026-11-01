@@ -41,6 +41,11 @@ public:
 
     SharedField AddTextField(std::string (*fonte)(), const SPoint& posicao, const SFont& font, ETextAlignment alinhamento);
 
+    // a CTextFieldBlinking over a CFixedText of texto, in the colours 2 and 3 over 1: target fn 1265. The name is chosen,
+    // and so is having the colours in the body rather than as parameters every caller passes the same
+    SharedField AddBlinkingTextField(const std::string& texto, const SPoint& posicao, const SFont& fonte,
+                                     ETextAlignment alinhamento);
+
     SharedField AddDoubleLineField(std::string (*fonte)(), const SPoint& linha1, const SPoint& linha2, TPosition maxX,
                                    const SFont& font, TColor corFundo);
 

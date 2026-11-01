@@ -6,7 +6,8 @@
 #
 # Target functions, all matched but one:
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
-#                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField), written and differs
+#                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField), written and differs;
+#                      1265 (AddBlinkingTextField), written and differs (below)
 #   CMTFormBuilder     180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728 (AddClock)
 #   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut), 2775 (AddQRCode); the member template AddTextField<FONTE>
 #                      in cpaperformbuilder.h, below the classes so that line 51 stays in IFormImpressao: its instance
@@ -32,6 +33,14 @@
 # with a named local the push comes first), and `sufixo += repetido` gives the target's add where `if (repetido) ++sufixo`
 # gives an add under the test. Its name reaches 202 and the rest by the hand edit of splat/symbol_addrs.txt, whose comment
 # says what it rests on: 426 has 36 target callers and the only ones written here need it to be named.
+#
+# 1265, AddBlinkingTextField, is written and `differs`: AddTextField's shape over a api::CTextFieldBlinking, whose
+# constructor binaryen inlines here with its timer's lambda (unit 44 has the class). Its name, and the colours 2 and 3 over
+# 1 as constants of the body rather than parameters every caller passes the same (binaryen's dead-argument elimination
+# would fold them: the target's wasm type has none), are chosen. In the plain link it is 30 over 308 rows, 24 of them
+# operand-only: the one difference is the place of the 500 ms interval's store, which the target makes before it builds
+# the std::function and ours after (`pnpm wasm score` against our fn). The lambda as the argument and an explicit
+# std::function temporary give the same rows; the cause is not explained. TelaA and TelaB give it its two call sites.
 #
 # What the bytes fix:
 # - In each of the MT and paper adders the text local outlives the field's allocation: the field's `new` follows the text's

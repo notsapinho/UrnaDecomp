@@ -46,7 +46,6 @@
 #include "api/gui/cpreshownothing.h"
 #include "api/gui/cprogressbar.h"
 #include "api/gui/cqrcodeimagefieldpaper.h"
-#include "api/gui/ctextfieldblinking.h"
 #include "api/gui/ctextfieldpaper.h"
 #include "api/gui/ctextfieldupdate.h"
 #include "api/gui/iinputvalidation.h"
@@ -88,7 +87,6 @@ extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_empla
 extern const char w102_vt_cprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api12CProgressBarENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctextfieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16CTextFieldUpdateENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cimagefieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api17CImageFieldUpdateENS_9allocatorIS2_EEEE");
-extern const char w102_vt_ctextfieldblinking[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api18CTextFieldBlinkingENS_9allocatorIS2_EEEE");
 extern const char w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api21BatteryIconDataSourceILNS1_17CPowerInformation15IconOrientationE0EEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cmovie[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CMovieENS_9allocatorIS2_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
@@ -211,12 +209,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CMovieField> w102_campo_
 {
     return std::make_shared<api::CMovieField>(p, filme, a);
 }
-__attribute__((optnone, noinline)) std::shared_ptr<api::CTextFieldBlinking> w102_piscante(
-    const api::SPoint& p, const api::SharedIText& t, const api::SFont& f, api::TColor c0, api::TColor c1,
-    api::TColor c2)
-{
-    return std::make_shared<api::CTextFieldBlinking>(p, t, f, c0, c1, c2);
-}
 __attribute__((optnone, noinline)) std::shared_ptr<api::CTextFieldUpdate> w102_texto_vivo(
     const api::SPoint& p, const api::SharedIText& t, const std::chrono::milliseconds& i, const api::SFont& f,
     api::TColor c0, api::TColor c1)
@@ -308,7 +300,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cprogressbar;
         w102_sink = w102_vt_ctextfieldupdate;
         w102_sink = w102_vt_cimagefieldupdate;
-        w102_sink = w102_vt_ctextfieldblinking;
         w102_sink = w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0;
         w102_sink = w102_vt_cmovie;
         w102_sink = w102_vt_logger;

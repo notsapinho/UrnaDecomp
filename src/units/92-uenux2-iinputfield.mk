@@ -6,7 +6,10 @@
 #   IFormFieldBase<IScreen>::Refresh 4118, IInputField's D2s 4021 and 5517 with binaryen's body 6061, Show 6327, Hide 6324,
 #   Clear 6317, SetLength 6312; CInputFieldControl's D0s 6328 and 3672 and IScreen's Rect 11153; CMaskedTextField's
 #   D2s 12604, 12719 and D0s 12595, 12713 with binaryen's bodies 6063 and 6062, GetTypeName 6507, Rect 6505, Move 6504;
-#   CInputField<CFramedText>'s Rect 12405 and Move 12402; CFramedText's Rect 3677, Move 3676 and DrawFrame 2779, and its
+#   CInputField<CFramedText>'s Rect 12405 and Move 12402, and the three Draws that call a mask's MaskText directly
+#   (CInputField<CFramedText>'s 12438, CMaskedTextField<CFramedText>'s 12593 and <CGrayedFramedText>'s 12708);
+#   CFramedText's MaskText 2780 (record cframedtext.cpp 66:15, the key function, so this object emits the vtable, with the
+#   4917 enumerator of EUeGuiError), FillCell 5536, Rect 3677, Move 3676 and DrawFrame 2779, and its
 #   constructor 1385, whose record (cframedtext.cpp 28:24) is the default argument of CPolySingleton<IScreen>::instance():
 #   the local `IScreen& monitor` gives that column, and its name, the constructor's other lines and the vertical gap
 #   written in place (Espaco's form over size / 10) are chosen. The roots give 1385 two callers for its eight in the target.
@@ -28,7 +31,23 @@
 #         `unresolved`: no function that loads such a record has matched. In a copy of the ledger that keeps only the
 #         function's own row of the record, splat-remap prints IDENTICAL for both. They wait for the toolkit
 #         to take a record's address from among its copies; no source change can close this.
-#   12438, 12593, 12708 the Draws: they call MaskText directly, which is a trap (the pending file says what it waits for).
+#   5537  CFramedText::DrawChar, under its generated `call` name (its callers 2780 and 5534 match): 31 over 273 rows in
+#         the plain link, 19 of them operand-only. One store and one load are in another place: the target stores the
+#         CFixedText's alignment (2 at its +4) after its vptr, where ours stores it before the string's first bytes; and
+#         the target loads the cell's right edge before its left, ours left first. The point's coordinates read before
+#         its two stores, as the target does, come from the half width in a local: written in the brace (`left + (right -
+#         left) / 2`) the y store came first, 38 rows, and so it does in the object for an SPoint temporary in the call,
+#         x and y assigned in turn, and `(right - left) / 2 + left`. A local for each edge, read right first, gives the
+#         same 31 rows as the int half width; std::string{caractere}, std::string(&caractere, 1) and a CFixedText that takes its string
+#         by value and moves it keep the alignment's store where ours has it (the function's stores in the object). Not
+#         explained. Top and Bottom, unit 108's, are inlined into it.
+# MaskText (2780) and the cell members, measured: MaskText reads the character once, into a local; read at each use it is
+#   loaded twice, as load8_u for the test and load8_s for DrawChar (15 over 392 rows, 3 not operand-only). The space test
+#   is `== ' '`: the target lays the space branch first, as that gives (2780 matches), and `!= ' '` lays the other branch
+#   first in the object.
+#   That test mentions FillCell before DrawChar, and the target's uses-2 band has 5537 before 5536 (a higher index, a
+#   lower ld_index), so DrawChar is defined above MaskText and FillCell after it: their lines, and the padding with
+#   append rather than resize (not measured), are choices.
 # Not written: CGrayedFramedText's constructor (5535). It passes CFramedText's constructor the address of a constant
 #   SFont {40, 0} at 474880, which lies in the data of an app/vota object (after its typeinfo name
 #   N4vota19CPreShowProgressBarE, with {30, 0} and {20, 0} beside it), not in cgrayedframedtext.cpp's (its typeinfo name is
@@ -63,8 +82,6 @@ IINPUTFIELD_SRCS := src/api/gui/cframedtext.cpp
 UENUX2_SRCS += $(IINPUTFIELD_SRCS)
 # $(UENUX2_HDRS) is still empty when the fragments are read, so the companion rules name the directories they read.
 IINPUTFIELD_HDRS := $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h $(ROOT)/src/uenux2/src/api/hwil/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/ecourna/api/exception/*.hpp $(ROOT)/src/ecourna/api/uetypes.hpp)
-$(ROOT)/$(APP)/92-uenux2-iinputfield-pending.o: $(ROOT)/src/units/92-uenux2-iinputfield-pending.cpp $(ROOT)/src/units/92-uenux2-iinputfield.mk $(ROOT)/src/Makefile $(IINPUTFIELD_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/92-uenux2-iinputfield-pending.cpp -o $(R)
 $(ROOT)/$(APP)/92-uenux2-iinputfield-roots.o: $(ROOT)/src/units/92-uenux2-iinputfield-roots.cpp $(ROOT)/src/units/92-uenux2-iinputfield.mk $(ROOT)/src/Makefile $(IINPUTFIELD_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/92-uenux2-iinputfield-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/92-uenux2-iinputfield-pending.o $(APP)/92-uenux2-iinputfield-roots.o
+override EXTRA_OBJS += $(APP)/92-uenux2-iinputfield-roots.o
