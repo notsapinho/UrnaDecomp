@@ -3,17 +3,6 @@
 // target's, they trap, and the vtable that object emits names each of them. Defined in slot order, as the target's
 // function order has them. The names are chosen (iinformacaothreadoperador.h says from what). Target functions, by
 // vtable slot (vtable @1590108; ledger/vtables.json), and what each waits for:
-//   3  10580  `return m_audioAtivado || IsAudioAtivadoCadastro();`, and
-//   5  10579  `return comum::CEleitores::GetInst().GetCurrent()->GetEleitor().NecessitaAudio();`: both wait for an
-//             accessor of the word at +20 of comum::md::CEleitorDecorator, which
-//             app/comum/dados/md/eleitor/celeitordecorator.h lacks, `bool NecessitaAudio() const { return <+20> == 1; }`
-//             with the member renamed. Their callees, 326 and 656, match. Measured at 1dfd708: with that accessor and the
-//             two bodies in cinformacaothreadoperador.cpp after slots 2 and 4, steps 6 to 10 matched both, and an
-//             accessor that returns the word, compared with 1 here, gives the same functions. A reading: the word is the
-//             voter's special need, which comum::asn::CConversorEntidadeEleitores::ConverteNecessidadeEspecial (record
-//             cconversorentidadeeleitores.cpp:38, inlined into fn 11411) sets to 1 for ModuloEleitores' necessitaAudio
-//             and 0 for semNecessidade; fn 10523, the caller of slot 5, logs the string at 128171, "Audio ativado
-//             conforme cadastro" with an accented A.
 //   16 10569  formats "{:04}" over a count: fn 1269 of comum::CRdvVota::GetInst() (fn 555) when fn 697 holds, else
 //             CEleitores +104 (fn 326). Of those four it waits for fn 1269, which has no name; the symbol file names
 //             its std::format code
@@ -35,16 +24,6 @@
 #include "app/vota/operador/comum/cinformacaothreadoperador.h"
 
 namespace vota::impl {
-
-bool CInformacaoThreadOperador::IsAudioAtivado() const
-{
-    __builtin_trap();
-}
-
-bool CInformacaoThreadOperador::IsAudioAtivadoCadastro() const
-{
-    __builtin_trap();
-}
 
 std::string CInformacaoThreadOperador::GetTextoComparecimento() const
 {

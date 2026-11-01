@@ -12,10 +12,10 @@
 // Recovered: +4, the state, which the constructor (fn 3844) stores and every member reads first, and the members of
 // app/comum/cappstatecontext.cpp, which are out of line (src/units/168-uenux2-app-helpers.mk says why). That this class
 // and not its base holds +4 is chosen. The target's other members read the state's three flags (fn 3842 +8, 5909 +9,
-// 5908 +10) or call its slots 7 and 8 (5911, 5910) when there is a state. None of those five is written here: the
-// flags are private to CAppState and its header has no friend or accessor for them. The names of the members and of
-// m_estado are chosen; ProcessKey's uebyte is the type of the slot it calls, and an int gives another body (the
-// fragment says so). The code that changes state, inlined into fn 4349, is not reconstructed.
+// 5908 +10) or call its slots 7 and 8 (5911, 5910) when there is a state. AcceptsKey (3842) reads the flag as
+// CAppState's friend (cappstate.h); 5908 to 5911 are not written here. The names of the members and of m_estado are
+// chosen; ProcessKey's uebyte is the type of the slot it calls, and an int gives another body (the fragment says so).
+// The code that changes state, inlined into fn 4349, is not reconstructed.
 
 namespace comum {
 
@@ -26,6 +26,8 @@ public:
     explicit CAppStateContext(CAppState* estado);
 
     void ProcessKey(uebyte tecla);
+
+    bool AcceptsKey() const;
 
 private:
     CAppState* m_estado;

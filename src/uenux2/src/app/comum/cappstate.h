@@ -76,6 +76,11 @@ protected:
     CAppState* m_pNextState;
 
 private:
+    // CAppStateContext's members read the flags of the state they hold: fn 3842 loads +8, fn 5909 +9 and fn 5908 +10
+    // (evidence). That it reaches them as a friend is chosen: a public inline accessor of each flag gives the same
+    // object.
+    friend class CAppStateContext;
+
     bool m_bTecla;
     bool m_bEntrada;
     bool m_bTick;

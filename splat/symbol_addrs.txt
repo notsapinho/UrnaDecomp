@@ -2782,6 +2782,7 @@ _ZN5comum9CLogComum25LogaResultadoCopiadoResFEENS_25EExtensaoArquivoResultadoE =
 _ZN5comum14IInterfaceSavd16EnviarRequisicaoERiRNS_16ueRequisicaoSavdERKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE = func:3830; // size:0xa6f evidence:srcloc-anchor
 _ZN5comum14IInterfaceInit25DesmontarMRSemDesabilitarEv = func:3832; // size:0x245 evidence:srcloc-anchor
 _ZN5comum14IInterfaceInit23EnviarMensagemThrowVoidEiRKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE = func:3833; // size:0x44c evidence:srcloc-anchor
+_ZNK5comum16CAppStateContext10AcceptsKeyEv = func:3842; // size:0x17 evidence:pair-fingerprint
 _ZN5comum16CAppStateContext10ProcessKeyEh = func:3843; // size:0x1b evidence:pair-fingerprint
 _ZN5comum16CAppStateContextC2EPNS_9CAppStateE = func:3844; // size:0x15 evidence:vptr-anchor
 _ZNSt3__211__formatter16__format_integerB8ne210108ITkNS_17unsigned_integralEycNS_20basic_format_contextINS_20back_insert_iteratorINS_8__format15__output_bufferIcEEEEcEEEENT1_8iteratorET_RS9_NS_13__format_spec23__parsed_specificationsIT0_EEb = func:3848; // size:0x189 evidence:call by:1699
@@ -7569,6 +7570,8 @@ _ZNKSt3__220__shared_ptr_pointerIPN3api15IGenericFactoryINS1_10IRWSyncCtlEEENS_1
 _ZNK4vota4impl25CInformacaoThreadOperador19IsBiometriaOperadorEv = func:10576; // size:0xa evidence:pair-fingerprint
 _ZNK4vota4impl25CInformacaoThreadOperador13GetTextoAudioEv = func:10577; // size:0x66 evidence:vtable
 _ZN4vota4impl25CInformacaoThreadOperador22SetAudioAtivadoMesarioEb = func:10578; // size:0x9 evidence:pair-fingerprint
+_ZNK4vota4impl25CInformacaoThreadOperador22IsAudioAtivadoCadastroEv = func:10579; // size:0x11 evidence:vtable
+_ZNK4vota4impl25CInformacaoThreadOperador14IsAudioAtivadoEv = func:10580; // size:0x22 evidence:vtable
 _ZN4vota4impl25CInformacaoThreadOperador18CancelaHabilitacaoEv = func:10581; // size:0x17 evidence:pair-fingerprint
 _ZN4vota22CJustificativaEfetuada12ProcessInputEv = func:10593; // size:0x82 evidence:vtable
 _ZN4vota22CJustificativaEfetuada10StartStateEv = func:10594; // size:0x148 evidence:vtable

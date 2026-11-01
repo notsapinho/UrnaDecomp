@@ -738,11 +738,6 @@
 // f3793 · 15 B · unmatched · placement: link order · name unknown
 // void f3793(i32) { ... }
 
-// link-order cluster 1027 · uses=3 · neighbours' file uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp
-
-// f3842 · 23 B · unmatched · placement: link order · name unknown
-// ? f3842(i32) { ... }
-
 // link-order cluster 1029 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/ctestefalhou.cpp
 
 // f3854 · 36 B · unmatched · placement: link order · name unknown
