@@ -7,15 +7,18 @@
 // CThreadVota::AddStoppedTick (fn 807) has 11, of which unit 97's fn 1785 calls it twice and 1165 and 2880 (unit 199)
 // are linked: DoisTicksParados stands for the other eight (652, 2740, 3229, ...).
 // CTickManager::AddStoppedTick (fn 5452) has fn 807 and fn 5947, both in the link (unit 138 writes 5947).
+// CTickManager::GetExpiredTicks (fn 5450) has fns 4349 and 10204, not reconstructed: TicksVencidos stands for both.
 // CThreadVota::AddTick(const std::chrono::milliseconds&) (fn 4640), CTickManager::AddTick (fn 3644) and StopTick
 // (fn 5451) have all their target callers in the link (1285, unit 97's, and 5979, unit 61's; 4640, 5452 and unit
 // 119's slot 2, which holds CThreadVota::AddTick inlined; 422 and 5452). Each stand-in adds a constant to an
-// argument, so no two are alike, and the census pairs none with a target function.
+// argument, but TicksVencidos, which weighs its two results apart, so no two are alike, and the census pairs none
+// with a target function.
 // The target's callers of api::CWait's ctor (fn 5447) use the object after constructing it, so the ctor keeps its
 // `this` result (binaryen's dead-argument pass drops it when no caller reads it): EsperaUsando stands for them.
 // Compiled as uenux2 code.
 #include <cstddef>
 
+#include "api/util/ctickmanager.h"
 #include "api/util/cwait.h"
 
 extern "C" {
@@ -47,6 +50,12 @@ __attribute__((noinline)) int DoisTicksParados(void* thread, int milissegundos)
     return w02_adiciona_parado_thread(thread, milissegundos) + w02_adiciona_parado_thread(thread, milissegundos + 3);
 }
 
+// stands for fns 4349 and 10204
+__attribute__((noinline)) size_t TicksVencidos(api::CTickManager& ticksA, api::CTickManager& ticksB)
+{
+    return ticksA.GetExpiredTicks().size() + 2 * ticksB.GetExpiredTicks().size();
+}
+
 struct SFive700Roots {
     SFive700Roots()
     {
@@ -54,6 +63,7 @@ struct SFive700Roots {
         five700_sink = reinterpret_cast<void*>(&EsperaUsando);
         five700_sink = reinterpret_cast<void*>(&ParaDoisTicks);
         five700_sink = reinterpret_cast<void*>(&DoisTicksParados);
+        five700_sink = reinterpret_cast<void*>(&TicksVencidos);
     }
 } five700_roots;
 

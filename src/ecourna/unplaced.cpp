@@ -163,11 +163,6 @@
 // f6272 · 13 B · unmatched · placement: link order · name unknown
 // ? f6272(i32) { ... }
 
-// link-order cluster 888 · uses=2
-
-// f6281 · 18 B · unmatched · placement: link order · name unknown
-// ? f6281(i32, i32, i32) { ... }
-
 // link-order cluster 937 · uses=3
 
 // f3251 · 466 B · unmatched · placement: link order · name unknown
@@ -281,11 +276,6 @@
 
 // f2134 · 311 B · unmatched · placement: link order · name unknown
 // void f2134(i32) { ... }
-
-// link-order cluster 1147 · uses=5 · neighbours' file uenux2/src/api/ipc/posix/cposixrwmutex.cpp
-
-// f2220 · 233 B · unmatched · placement: link order · name unknown
-// ? f2220(i32) { ... }
 
 // link-order cluster 1148 · uses=5 · neighbours' file uenux2/src/api/gui/ctextfieldupdate.cpp
 

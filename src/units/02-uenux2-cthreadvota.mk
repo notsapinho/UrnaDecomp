@@ -35,6 +35,28 @@
 # so 3644 matches.
 # Five spellings of SearchNextId's loop give the same object for AddTick (wasm-objdump -d, compared row by row): an
 # unsigned, int or size_t counter, `<= 0xff` or `< 256`, and static_cast<uebyte> on the key and the result or none.
+# CTickManager::GetExpiredTicks (5450, no record: the name is chosen) returns the ids of the running ticks whose time
+# has come and moves each one on to its next time after now, by whole intervals. Its callers, 4349 (whose record is
+# CThreadEleitor::ProcessarEntrada's) and 10204 (CThreadOperador's slot 2), are not reconstructed: the roots stand for
+# them. It is defined last in ctickmanager.cpp, a choice: in use band 2 it links after 5452 and 5451 (StopTick) and
+# before 5449 (api::IsValidTime, ctime.cpp), so after StopTick, and the 26 free lines above SearchNextId (95 to 120)
+# are too few for it. Its `#include <cmath>` (for round) takes the blank line that followed `namespace {`, which keeps
+# AddTick's record on line 31. Measured in the whole link (pnpm wasm score against our symbol, names.tsv after
+# tools/round/link-map.sh): with the time test written as the due condition (CWait's, `agora > || (agora >= && usec
+# >=)`), `90 over 327 rows (same 237, replaced 64 [60 operand-only], inserted 12, deleted 14)`; written as the
+# condition to skip (`agora < || (agora <= && usec <)`, then continue), which tests `<` first as the target does, `84
+# over 324 rows (same 240, replaced 64 [61 operand-only], inserted 9, deleted 11)`. The rest was the loop that brings
+# the microseconds under a second: clang turns it into a closed form, and with the loop in the function's body that
+# form is `x - umin(x, 1999999)` with the extra second added before the zero-extension, where the target has the
+# select of `x - 1999999` and the second added in i64. With the loop in a function of its own that the body calls,
+# NormalizaMicrossegundos (file-static, its name chosen), the object has the target's form (a reading of why: clang
+# simplifies the helper on its own before it inlines it) and the link reads `12 over 315 rows (same 303, replaced 12 [12 operand-only], inserted 0, deleted
+# 0)`, the callees and the literals 1000000 and 999999, and the scan matches it. Object probes at the tree's flags
+# (wasm-objdump -d of ctickmanager.cpp compiled alone): the helper written as a lambda gives the same object, and so
+# does the skip test joined with the m_parado test in one if; `timercmp(&agora, &tick.m_proximo, <)` and the negated
+# due condition give others. With the loop in the body, `> 999999`, `x = x - 1000000` and time_t and int locals for
+# the two parts give the same object as the loop as first written; an int counter of the seconds and a do-while under
+# an if give others.
 UENUX2_SRCS += src/api/util/ctickmanager.cpp src/app/vota/cthreadvota.cpp
 # The roots' headers are named here: $(UENUX2_HDRS) is still empty when the fragments are read.
 CTHREADVOTA_HDRS := $(addprefix $(ROOT)/src/uenux2/src/,api/util/ctickmanager.h api/util/cwait.h api/util/eueutilerror.h api/ipc/cthread.h app/vota/cthreadvota.h)

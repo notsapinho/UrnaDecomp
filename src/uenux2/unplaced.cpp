@@ -160,16 +160,6 @@
 // f5418 · 1000 B · unmatched · placement: link order · name unknown
 // ? f5418() { ... }
 
-// link-order cluster 761 · uses=2 · neighbours' file uenux2/src/api/util/cwait.cpp
-
-// f5446 · 101 B · unmatched · placement: link order · name unknown
-// void f5446(i32) { ... }
-
-// link-order cluster 762 · uses=2 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
-
-// f5450 · 625 B · unmatched · placement: link order · name unknown
-// void f5450(i32, i32) { ... }
-
 // link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
 
 // f5454 · 122 B · unmatched · placement: link order · name unknown
@@ -177,11 +167,6 @@
 
 // f5453 · 132 B · unmatched · placement: link order · name unknown
 // ? f5453(i32) { ... }
-
-// link-order cluster 764 · uses=2 · neighbours' file uenux2/src/api/util/cgenerictags.cpp
-
-// f5463 · 1093 B · unmatched · placement: link order · name unknown
-// ? f5463(i32) { ... }
 
 // link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
 
@@ -308,11 +293,6 @@
 
 // f6113 · 446 B · unmatched · placement: link order · name unknown
 // void f6113(i32, i32, i32, i32) { ... }
-
-// link-order cluster 885 · uses=2
-
-// f6265 · 123 B · unmatched · placement: link order · name unknown
-// void f6265(i32) { ... }
 
 // link-order cluster 899 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
 
@@ -489,11 +469,6 @@
 
 // f3964 · 15 B · unmatched · placement: link order · name unknown
 // void f3964(i32, i32) { ... }
-
-// link-order cluster 1038 · uses=3
-
-// f3966 · 66 B · unmatched · placement: link order · name unknown
-// void f3966(i32) { ... }
 
 // link-order cluster 1041 · uses=3
 

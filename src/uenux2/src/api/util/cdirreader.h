@@ -24,6 +24,10 @@ public:
     bool IsFile() const;
     bool IsLink() const;
 
+    // The current entry's name, "" when there is none: api::RemoveTree (fn 5458, csystem.cpp) reads it inline. No
+    // record names it: its name is chosen.
+    std::string GetEntryName() const { return m_entrada != nullptr ? m_entrada->d_name : ""; }
+
 private:
     std::string m_diretorio = "";
     DIR* m_dir = nullptr;
