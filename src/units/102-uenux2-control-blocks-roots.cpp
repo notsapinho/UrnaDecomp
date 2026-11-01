@@ -9,8 +9,9 @@
 // - the w102_ functions and SFonte hold the std::make_shared<T> of a __shared_ptr_emplace<T>. They need T's constructor
 //   declared, not defined, and the block does not depend on its parameters: each is what the class's header declares.
 // clang emits the block in this object with the builder. The target reaches its members only through its vtable, whose
-// address the builder stores, so the sink below is the reference the target has. The last line of the sink is
-// vota::CItemVisualizarCandidatosVota's own vtable, which fn 6599 stores, and it keeps that class's D0.
+// address the builder stores, so the sink below is the reference the target has. The last five lines of the sink are
+// the vota menu items' own vtables, which fn 6599 stores: vota::CItemVisualizarCandidatosVota's keeps that class's D0,
+// and the other four keep their slot 3 (fns 12267, 12266, 12259, 12255) and their shared D0 (fn 2939).
 //
 // Every block's kind was checked against the target's own vptr store: emplace where the builder calls make_shared,
 // pointer where it allocates the T and the block apart. No stand-in stays in the link
@@ -141,6 +142,10 @@ extern const char w102_vt_csha512[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIP
 extern const char w102_vt_cidentificacaojustificativa[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3app5dados27CIdentificacaoJustificativaENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_10shared_ptrIS6_E27__shared_ptr_default_deleteIS6_S6_EENS4_IS6_EEEE");
 extern const char w102_vt_item_visualizar[] __asm__("_ZTVN4vota29CItemVisualizarCandidatosVotaE");
+extern const char w102_vt_item_estadourna[] __asm__("_ZTVN4vota26CItemImprimeEstadoUrnaVotaE");
+extern const char w102_vt_item_listaeleitores[] __asm__("_ZTVN4vota30CItemImprimeListaEleitoresVotaE");
+extern const char w102_vt_item_versoespacotes[] __asm__("_ZTVN4vota23CItemVersoesPacotesVotaE");
+extern const char w102_vt_item_parametrosurna[] __asm__("_ZTVN4vota23CItemParametrosUrnaVotaE");
 }
 
 namespace api {
@@ -358,6 +363,10 @@ struct SW102Roots {
         w102_sink = w102_vt_cidentificacaojustificativa;
         w102_sink = w102_vt_string;
         w102_sink = w102_vt_item_visualizar;
+        w102_sink = w102_vt_item_estadourna;
+        w102_sink = w102_vt_item_listaeleitores;
+        w102_sink = w102_vt_item_versoespacotes;
+        w102_sink = w102_vt_item_parametrosurna;
     }
 } w102_roots;
 

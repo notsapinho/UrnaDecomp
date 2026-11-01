@@ -21,6 +21,12 @@ enum EUeAssertError {
     EUA_RECT_TOP = 3401,
     EUA_RECT_RIGHT = 3402,
     EUA_RECT_BOTTOM = 3403,
+    // vota::CQuerImprimirBU::StartState (fn 12035, records cquerimprimirbu.cpp 40:102 and 41:85): the texts "Assert
+    // (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)" and "Assert (poInfo.GetVota().GetQtdBU() == 0)". With the
+    // invocation indented four columns and the code qualified as api::, the columns leave 34 characters for each name;
+    // the names are chosen to that length
+    EUA_QUERIMPRIMIRBU_ESTADO_INVALIDO = 3474,
+    EUA_QUERIMPRIMIRBU_QTD_BU_NAO_ZERO = 3475,
 };
 
 using CUeAssertError = ecourna::api::exception::CBaseError<EUeAssertError, ecourna::api::exception::SErrorLimits{3400, 4200}>;

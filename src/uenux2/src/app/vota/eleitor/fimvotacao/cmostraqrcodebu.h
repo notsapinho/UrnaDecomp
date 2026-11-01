@@ -1,8 +1,19 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
+
+#include "app/vota/eleitor/cestadocomdesligamentoautomatico.h"
+
+namespace api {
+class IScreen;
+class IInputKbd;
+template <typename MEDIA, typename INPUT>
+class CInteractiveForm;
+} // namespace api
 
 namespace vota {
 
@@ -22,6 +33,39 @@ public:
 private:
     std::vector<std::string> m_partes;
     std::size_t m_atual = 0;
+};
+
+// vota::CMostraQRCodeBU (RTTI: si_class of vota::CEstadoComDesligamentoAutomatico; vtable @1542116 [785, 1560, 12055,
+// 7480, 1661, 218, 425, 12051, 12061, 425]): it overrides StartState (slot 2, fn 12055, record line 70) and
+// ProcessInput (slot 7, fn 12051, record line 85), both pending in 37-uenux2-iqrcodebuds-pending.cpp. The destructors
+// are vota::testeteclado::CErroTesteTecladoFim's bodies: the D2 (fn 785) stores no vptr before it releases +32, so the
+// class is final, and the D0 (fn 1560) calls the D2 and frees `this`, so the destructor is out of line
+// (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn 2888) keeps the object in a static std::unique_ptr
+// (@1833848, destroyed at exit by fn 12057) under a static std::mutex (@1833824, by fn 12056), and builds it as the
+// base's constructor with 2 and a null +28. +28 is the form ProcessInput reads (fn 12051 reads the input fields at +72
+// and the focus at +84 of it, CInteractiveForm's layout, and gets CPolySingleton<IInputKbd>'s instance, fn 455);
+// ProcessInput passes it to AjustaTela (fn 5982), whose record (line 195) takes a CFormInterativoTelaVota &, so that is
+// its type, spelled out here: app/vota/eleitor/cvotacaostateaudio.h, which defines that alias, declares
+// api::EInputResult with a fixed underlying type that api/gui/iinputfield.h's definition contradicts, so a TU that
+// calls Read() cannot include it. Chosen: the member's name, the names GetInst, s_inst and s_mutex (the ones the
+// project's singletons use), the destructor declared first, and the definitions' lines.
+class CMostraQRCodeBU final : public CEstadoComDesligamentoAutomatico {
+public:
+    virtual ~CMostraQRCodeBU() override;
+
+    static CMostraQRCodeBU& GetInst();
+
+    virtual void StartState() override;
+
+    virtual void ProcessInput() override;
+
+private:
+    CMostraQRCodeBU();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CMostraQRCodeBU> s_inst;
+
+    std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
 };
 
 } // namespace vota

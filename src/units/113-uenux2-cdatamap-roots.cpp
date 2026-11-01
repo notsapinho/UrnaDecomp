@@ -6,8 +6,8 @@
 // - GetCurrent, four instantiations: 656 (19 callers), 1200 (7: 2268 and 2838 are in the link, 5604, 6999, 11254, 11972
 //   and 11973 wait), 1283 (9), 3125 (4). All four in the link are what makes
 //   binaryen form 2919: the second parameter of that body is the pair's second member's offset, 32 or 20.
-// - Next, three: 3697 (5604, 11213, 11255), 5601 (11206, 12105), 5611 (5604, 11254), which form 3892. The fourth record's
-//   instance is inlined into 12105 and is not instantiated here, nor is a Next for CRespostaConsulta, which has no record.
+// - Next, three: 3697 (5604, 11213, 11255), 5601 (12105; 11206 is in the link), 5611 (5604, 11254), which form 3892.
+//   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590), through Find, and the copy of the pair's second member, 3743
 //   (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
 // - CRegistradorMesario::Registra, 5378 (10337, twice). Add(KeyType, RecordType), 5377 (5378, 6734), and the insert of

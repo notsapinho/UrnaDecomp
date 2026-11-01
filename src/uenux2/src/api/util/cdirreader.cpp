@@ -1,18 +1,28 @@
 #include "api/util/cdirreader.h"
 
+#include <sys/stat.h>
+
 #include "api/util/eueutilerror.h"
 
 namespace api {
 
-// (original lines 7-26: content not recovered)
-#line 27
-// <stubs>
-// f1914 · 127 B · unmatched · name unknown
-// ? f1914(i32, i32) { ... }
-// </stubs>
+// (original lines 9-24: content not recovered)
+#line 25
+CDirReader::CDirReader(const std::string& diretorio)
+{
+    if (!diretorio.empty()) {
+        Open(diretorio);
+        if (m_dir == nullptr) {
+            throw CUeUtilError(EUE_UTIL_FALHA_LER_DIRETORIO, "Não foi possível ler o diretório " + diretorio);
+        }
+    }
+}
 
-// (original lines 32-39: content not recovered)
-#line 40
+CDirReader::~CDirReader()
+{
+    Close();
+}
+
 bool CDirReader::NextEntry()
 {
     if (m_dir == nullptr) {
@@ -21,6 +31,61 @@ bool CDirReader::NextEntry()
 
     m_entrada = readdir(m_dir);
     return m_entrada != nullptr;
+}
+
+bool CDirReader::Open(const std::string& diretorio)
+{
+    DIR* dir = opendir(diretorio.c_str());
+    if (dir != nullptr) {
+        Close();
+        m_diretorio = diretorio;
+        m_dir = dir;
+        m_entrada = nullptr;
+    }
+    return dir != nullptr;
+}
+
+void CDirReader::Close()
+{
+    if (m_dir != nullptr) {
+        closedir(m_dir);
+        m_diretorio.clear();
+        m_dir = nullptr;
+        m_entrada = nullptr;
+    }
+}
+
+bool CDirReader::IsDir() const
+{
+    const dirent* entrada = m_entrada;
+    if (entrada == nullptr) {
+        return false;
+    }
+    const std::string caminho = m_diretorio + '/' + entrada->d_name;
+    struct stat info;
+    return stat(caminho.c_str(), &info) != -1 && S_ISDIR(info.st_mode);
+}
+
+bool CDirReader::IsFile() const
+{
+    const dirent* entrada = m_entrada;
+    if (entrada == nullptr) {
+        return false;
+    }
+    const std::string caminho = m_diretorio + '/' + entrada->d_name;
+    struct stat info;
+    return stat(caminho.c_str(), &info) != -1 && S_ISREG(info.st_mode);
+}
+
+bool CDirReader::IsLink() const
+{
+    const dirent* entrada = m_entrada;
+    if (entrada == nullptr) {
+        return false;
+    }
+    const std::string caminho = m_diretorio + '/' + entrada->d_name;
+    struct stat info;
+    return lstat(caminho.c_str(), &info) != -1 && S_ISLNK(info.st_mode);
 }
 
 } // namespace api

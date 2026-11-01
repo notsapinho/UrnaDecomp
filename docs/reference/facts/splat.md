@@ -545,7 +545,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -631,12 +631,14 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     `std::string::append` that leaves 3717 to `libc++.a` (`src/units/README.md` "Companion files"). So
     `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match app/roots_uenux2.o` and
     `3717 match sysroot:libc++.a(directory_entry.o)`.
-11. **14072, 14073, 14241, 14242, 12991 and 13334, by their corrected names (§S11).** Step 9 can swap the two pairs, or
-    give 12991 or 13334 another table's name, since no name of the symbol file disagrees, and the check above cannot see
-    a swap: each name's prefix must agree with its neighbours.
+11. **14072, 14073, 14241, 14242, 12991 and 13334, and the nine KDF getters 13522 to 13577, by their corrected names
+    (§S11).** Step 9 can swap the two pairs, or give 12991, 13334 or a KDF getter another table's name, since no name of
+    the symbol file disagrees, and the check above cannot see a swap: each name's prefix must agree with its dispatch
+    table and its neighbours.
 
     ```sh
     awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ || $1==12991 && $2 !~ /^kdf_pbkdf1_/ || $1==13334 && $2 !~ /^hmac_/ {print $1, $2}' splat/scan.tsv     # prints nothing
+    awk -F'\t' '$1==13522 && $2 !~ /^x942kdf_/ || $1==13528 && $2 !~ /^kdf_tls1_prf_.*kdfs/ || $1==13536 && $2 !~ /^sskdf_/ || $1==13543 && $2 !~ /^kdf_sshkdf_/ || $1==13549 && $2 !~ /^kdf_scrypt_.*kdfs/ || $1==13556 && $2 !~ /^kdf_pkcs12_/ || $1==13562 && $2 !~ /^kdf_pbkdf2_/ || $1==13570 && $2 !~ /^krb5kdf_/ || $1==13577 && $2 !~ /^kbkdf_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
 
 12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's hand edit.** Each holds a table slot
@@ -682,6 +684,13 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     161 in the link from 1257's too, so 1257 is the same thunk and matches; without unit 169 it is a whole body and
     `differs`. 2902's match line is `byn$mgfn-shared$<first member>`, today
     `byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev`, and step 9 renames it when the first member moves (item 13).
+19. **3473, `ASN1::OBJECT_IDENTIFIER::decodeCommon`, by the link order of a `push_back`.** Its callee 543 is a 4-byte
+    `push_back(&&)` no body of the ASN.1 runtime equals ([asn1.md](asn1.md) §A5), and the match holds while the first
+    definition of `vector<unsigned>::push_back(&&)` on the link line is an `-O3` one from outside the runtime:
+    `ccandidaturas.cpp.o` (unit 89) defines it ahead of `asn1.o`'s `-Os` copy and RHVoice's `document.cpp.o`, binaryen
+    merges it into `roots_boost.o`'s `vector<long>::push_back(const long&)` (item 8), and decodeCommon's call re-points
+    to 543. Without that object, or with `document.cpp.o` ahead of the runtime, the row differs at that `call`
+    (`src/units/89-uenux2-clocal.mk`, `src/units/103-rhvoice-nocatch.mk`).
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -719,7 +728,19 @@ corrected to `kdf_pbkdf1_gettable_ctx_params`. 13334 is a third: step 9 wrote
 lines. The dispatch table at 1784000, whose other slots are those of HMAC's functions (13340 to 13335, 13333, 13332
 and 6667), holds 13334's one slot, 11447, under id 11, `OSSL_FUNC_MAC_GETTABLE_CTX_PARAMS`, and the line is corrected
 to `hmac_gettable_ctx_params`. The rescan after it then paired 13325 by content as `kmac_gettable_ctx_params`, the name
-both KMAC tables give its slot, 11457, under the same id.
+both KMAC tables give its slot, 11457, under the same id. The commit 0ca4765 met four more KDF getters, 13556, 13562,
+13570 and 13577: a unit changed our function numbering, the census's `addr` pairs among the 7-byte getters moved with
+it, and step 9 named the four after the census's picks (`x942kdf_`, `kdf_tls1_prf_`, `sskdf_` and `kdf_sshkdf_`). Their
+dispatch tables hold their slots under id 7 in pkcs12's, pbkdf2's, krb5kdf's and kbkdf's tables, and two of those
+names stood since the first commit on 13522 and 13528, whose slots the same check puts in x942kdf's and the `kdfs/`
+tls1_prf's tables. All six lines were corrected (`git show -s --format=%B 0ca4765`). The next merge, 80f35dd, moved
+the pairs again and step 9 added 13536, 13543 and 13549 under the names one table further along. The first of those
+names stood on 13528's line too, and the scan's next pass let that pair take our function from 13528 and 13528's pair
+take 13522's, so 13522 left `match` and `status.py` stopped on `matched.txt only: [13522]`. Their tables put them in
+sskdf's, kdf_sshkdf's and the `kdfs/` scrypt's, and with those three lines corrected the rescan matched all nine by
+their lines (`git show -s --format=%B 80f35dd`). So a match line can lose its function when another index's census
+pair verifies with the same function of ours (`withMatches` in `asmlift-wasm/src/splat-sub.ts` gives the symbol to the
+later index of the two): item 11 of §S10 checks the nine names.
 
 The scan's content pass can make the same kind of match. It pairs one of our functions that no match uses with an
 unmatched target body when, re-pointed, it equals exactly that one body and no other function of ours equals it

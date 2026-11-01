@@ -1,7 +1,7 @@
 // vota::impl::CInformacaoThreadOperador (uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp).
 // Target functions of this file, by slot of the vtable @1590108:
-//   2     10581 CancelaHabilitacao          (here)     3     10580 IsAudioAtivado               (pending)
-//   4     2683  Slot4                       (here)     5     10579 IsAudioAtivadoCadastro       (pending)
+//   2     10581 CancelaHabilitacao          (here)     3     10580 IsAudioAtivado               (here)
+//   4     2683  Slot4                       (here)     5     10579 IsAudioAtivadoCadastro       (here)
 //   6     2683  IsAudioAtivadoMesario       (here)     7     10578 SetAudioAtivadoMesario       (here)
 //   8     10577 GetTextoAudio               (here)     9     10576 IsBiometriaOperador          (here)
 //   10    10574 IsBiometriaEleitor          (here)     11    10573 IsSemBiometria               (here)
@@ -23,17 +23,18 @@
 
 #include "app/vota/operador/comum/cinformacaothreadoperador.h"
 
+#include "app/comum/dados/celeitores.h"
 #include "app/vota/euevotaerror.h"
 
-// (original lines 28-36: content not recovered)
+// (original lines 29-36: content not recovered)
 #line 37
 // <stubs>
 // f10586 · 837 B · unmatched · name unknown
 // void f10586(i32) { ... }
 // </stubs>
 
-// (original lines 42-392: content not recovered)
-#line 393
+// (original lines 42-382: content not recovered)
+#line 383
 namespace vota::impl {
 
 void CInformacaoThreadOperador::CancelaHabilitacao()
@@ -44,9 +45,19 @@ void CInformacaoThreadOperador::CancelaHabilitacao()
     m_resultadoApresentacaoFoto = ecourna::app::dados::CApresentacaoFotoEleitor::SemErro;
 }
 
+bool CInformacaoThreadOperador::IsAudioAtivado() const
+{
+    return m_audioAtivado || IsAudioAtivadoCadastro();
+}
+
 bool CInformacaoThreadOperador::Slot4() const
 {
     return m_audioAtivado;
+}
+
+bool CInformacaoThreadOperador::IsAudioAtivadoCadastro() const
+{
+    return comum::CEleitores::GetInst().GetCurrent()->GetEleitor().NecessitaAudio();
 }
 
 bool CInformacaoThreadOperador::IsAudioAtivadoMesario() const

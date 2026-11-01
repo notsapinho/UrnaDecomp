@@ -81,7 +81,7 @@ __attribute__((noinline)) int w111_textos(comum::IEventosLog& log, comum::IEvent
     return 10;
 }
 
-// stands for the callers of fn 603, among them 12023, 6599, 11666 to 11669
+// stands for the callers of fn 603, among them 12023 and 6599 (11666 to 11669 are in the link)
 __attribute__((noinline)) int w111_informacao(const ecourna::app::dados::CParametrosUrna& dados)
 {
     comum::CInformacaoEleicao a(dados);

@@ -1,7 +1,7 @@
 #pragma once
 
 // Reconstruction's note, not TSE's text. This file's records are the only recovered lines: line 61 is the throw of
-// `std::string api::KeyName(char)` (fn 744), which is not written, so that line stays blank, and line 86, column 19, the
+// `std::string api::KeyName(char)` (fn 744), whose other lines are a choice around it, and line 86, column 19, the
 // throw of `char api::IInput::GetKey()`, held inlined by fns 6319, 10426, 11024 and 11804. The lines of everything
 // else are a choice, and so is having IInputKbd and IInputMT in this file. Their names and bases are RTTI's: IInput
 // (typeinfo 1530852, a polymorphic class with no base), IInputKbd (1530840) and IInputMT (1530860), si_classes of
@@ -28,15 +28,31 @@
 
 #include "api/hwil/euehwilerror.h"
 
-// (original lines 31-57: content not recovered)
-#line 58
-// <stubs>
-// f744 · 625 B · unmatched · name unknown
-// void f744(i32, i32) { ... }
-// </stubs>
+#include <format>
+#include <string>
 
-
+// (original lines 34-44: content not recovered)
+#line 45
 namespace api {
+
+// (original lines 47-48: content not recovered)
+#line 49
+inline std::string KeyName(char tecla)
+{
+    switch (tecla) {
+        case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
+            return std::string(1, tecla);
+        case 'B':
+            return "BRANCO";
+        case 'C':
+            return "CONFIRMA";
+        case 'D':
+            return "CORRIGE";
+        default:
+            throw CUeHwilError(EUE_HWIL_TECLA_DESCONHECIDA, std::format("Tecla desconhecida ({})", tecla));
+    }
+}
+
 
 class IInput {
 public:

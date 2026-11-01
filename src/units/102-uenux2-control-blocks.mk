@@ -48,6 +48,16 @@
 # Members a block brought with it:
 # - comum::CItemMenu's D2 (2937, a merge thunk over 1727, whose line now names the fifth item's symbol, one body with
 #   it) and vota::CItemVisualizarCandidatosVota's D0 (12251), in the new citensmenuvota.cpp.
+# - The other four items' slot 3 (fns 12267, 12266, 12259, 12255), in citensmenuvota.cpp: the item's count of copies
+#   printed, through the const comum::CAppInfo::GetVota (fn 903) and CEstadoGeralVota::GetNumViasImpressasRelatorios (a
+#   chosen getter name; the local appInfo's name is chosen, its const is evidence: it selects fn 903). Their result is
+#   32 bits wide and unsigned, measured (citensmenuvota.h has it: with uebyte, comum's fn 11668 does not give the
+#   target's rows); its spelling, unsigned int, is chosen. Slot 3 is these classes' key function, so their vtables, and
+#   with them their
+#   shared D0 (fn 2939, the implicit destructor, a thunk into fn 1969 in both links, whose match line now names the
+#   merge after this D0, its first member in link order), are emitted in citensmenuvota.cpp's object; the sink keeps the
+#   four vtables, which fn 6599 stores. They link with comum's slot 2, which unit 156 defines in
+#   app/comum/informacao/citemmenu.cpp.
 # - ecourna::app::dados: 3803, slot 2 of the three CNumero* blocks, with the D2 (3492) and D0 (3491) of those classes.
 # - ecourna::api::security::CAesKey's D2 (3517).
 # Landed headers this unit changes, and what says so:

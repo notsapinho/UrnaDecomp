@@ -9,9 +9,14 @@
 namespace comum {
 
 // What the records of comum::asn::CConversorEstadoGeralVota say: the types' names, and 4 bytes wide in CEstadoGeralVota's
-// first two members. Their enumerators are not recovered, that they are declared here is a choice, and `: int` is only
-// what an opaque declaration needs: which formatter body the target uses for them is not read.
-enum EEstadoVota : int;
+// first two members. That they are declared here is a choice, and so is `: int`, now that they are defined here:
+// which formatter body the target uses for them is not read. The enumerators are recovered only where a body compares
+// with one and an Assert text names it: EAVIMPRIMIRBU is 61, which vota::CQuerImprimirBU::StartState (target fn 12035)
+// compares GetEstadoVota() with before it throws "Assert (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)"
+// (ledger/strings.tsv 398641). The Assert texts spell them unqualified.
+enum EEstadoVota : int {
+    EAVIMPRIMIRBU = 61,
+};
 enum EEstadoEncerramento : int;
 
 } // namespace comum
@@ -37,6 +42,12 @@ public:
     // word of GetVota()'s result with 61 and throws `Assert (vota.GetEstadoVota() == EAVIMPRIMIRBU)` when it differs.
     // Defined in the class: a choice.
     EEstadoVota GetEstadoVota() const { return m_estadoVota; }
+    // GetQtdBU: the Assert texts name it (`poInfo.GetVota().GetQtdBU() == 0`, ledger/strings.tsv 403041, and three
+    // more), and fn 12035 reads the byte at +8 before it throws that text. Defined in the class: a choice.
+    uebyte GetQtdBU() const { return m_qtdBU; }
+    // The name is chosen: the menu items' slot 3 (fns 12267, 12266, 12259, 12255) read the four bytes at +73 to +76 of
+    // GetVota()'s result, the member's CNumViasImpressasRelatorios in that class's order.
+    const CNumViasImpressasRelatorios& GetNumViasImpressasRelatorios() const { return m_numViasImpressasRelatorios; }
     bool GetTreinamentoEleitor() const { return m_treinamentoEleitor; }
 
 private:
@@ -56,8 +67,3 @@ private:
 };
 
 } // namespace comum::md::estadoaplicacao
-
-// <stubs>
-// f11242 · 10017 B · unmatched · name unknown
-// void f11242(i32, i32) { ... }
-// </stubs>

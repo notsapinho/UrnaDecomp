@@ -26,7 +26,7 @@
 // 5931, record :83), which calls fn 3921, which has no name; slot 13 is not read here. ProcessInputAudio is the class's
 // key function here, as CConfirmaVotoEmCargo's is.
 // vota::CPedeNulo::GetProximoEstado and vota::CPedeNominal::GetProximoEstado (slot 16, fns 11744, record cpedenulo.cpp:44,
-// 433 B, and 11724, 495 B): both call fn 1273 (116 B), which has no name.
+// 433 B, and 11724, 495 B): both call fn 1273 (116 B), which unit 89 matches since as CCandidaturas::Busca.
 // vota::CMajoritarioValido::AoConcluirEntrada and vota::CConfirmaVotoNominal::AoConcluirEntrada (slot 17, one target
 // body, fn 5925, 2141 B): it logs and runs a vota::impl::IPoliticaExecucaoEleitor through fn 5407, which has no name.
 // Its stub sat in app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp, where the record of the GetInst it holds inlined
@@ -36,7 +36,8 @@
 // StartStateAudio 11793, 333 B, which holds the record :41 of an anonymous-namespace GetCargoID; ProcessTickAudio 11790,
 // 131 B): 11791 waits for fn 455, CPolySingleton<api::IInputKbd>::instance, which has no name, and fn 1455
 // (CVotacaoStateAudio's, not written); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
-// std::function it builds; 11793 is not read here. ProcessInputAudio is the class's key function here.
+// std::function it builds; 11793 is not read here. The class's key function is its destructor, in
+// cconferevotoemcargo.cpp, so that object emits the vtable.
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/cconferevotoemcargo.h"

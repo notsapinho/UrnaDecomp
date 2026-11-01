@@ -8,7 +8,7 @@
 namespace comum {
 
 // Reconstruction notes, not TSE's text. The class is named by RTTI (an si_class of api::IReportPart). 12 bytes: the vptr
-// and the shared_ptr that Imprime (fn 11206) calls slot 2 of per element of a list. It is not final: its D2 and D0
+// and the shared_ptr that Imprime (fn 11206) calls slot 2 of once per record of comum::CEleitores. It is not final: its D2 and D0
 // store the vptr, and the control block's __on_zero_shared is the virtual fn 411. In the target both are thunks, 11205
 // into fn 2899 and 11204 into fn 6026, binaryen's merges with api::CFormPart's (and, for 2899, the D2s of
 // comum::servico::CComparecimentoMesarioServico and CJustificadorServico). The D0 holds the D2's body, so the destructor

@@ -7,6 +7,10 @@
 
 namespace comum {
 
+namespace md {
+class CCargo;
+}
+
 // Reconstruction notes, not TSE's text. The four classes are named by RTTI (each an si_class of api::IReportPart). The
 // records of CParteCandidatosMajoritarios::Imprime (cpartecandidatos.cpp:75:19) and CParteCandidatosConsultas::Imprime
 // (:174:19) name that file for those two only. That it holds the other two is chosen, on the data order: Candidatos's
@@ -25,7 +29,8 @@ namespace comum {
 
 // 44 bytes. D2 2876 and D0 5590 (f136(D2(p0)): this D2 is above the inlining cost in the hinted forms as well) are
 // CParteRdv's too: its body has the same bytes and binaryen keeps one. Imprime (fn 11215) prints m_cabecalho and then
-// one of the other four, chosen by fields of what fns 273 and 332 return.
+// one of the other four by the current post: m_parte1 when CargoSemCandidatos holds, else m_parte2, m_parte3 or
+// m_parte4 when md::CCargo's IsMajoritario, IsProporcional or IsConsulta does.
 class CParteCandidatos final : public api::IReportPart {
 public:
     CParteCandidatos(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> parte1,
@@ -43,7 +48,8 @@ private:
 };
 
 // 28 bytes. D2 5589 and D0 5588 (the D2's body, then the free) are CParteCandidatosConsultas's too. Imprime (fn 11214)
-// prints m_cabecalho, m_candidato per element of the list fn 2840 fills, and m_rodape.
+// prints m_cabecalho, m_candidato per candidate of the current post (CCandidaturas::GetCandidatos, fn 2840) after
+// checking that CCandidaturas::Busca (fn 1273) finds it, and m_rodape.
 class CParteCandidatosMajoritarios final : public api::IReportPart {
 public:
     CParteCandidatosMajoritarios(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> candidato,
@@ -95,5 +101,10 @@ private:
     std::shared_ptr<api::IReportPart> m_candidato;
     std::shared_ptr<api::IReportPart> m_rodape;
 };
+
+// Whether the post has candidates' details and no candidacy fit to print: CParteCandidatos::Imprime's first test, out
+// of line in another object (cparterdv.cpp) and inlined by binaryen into its one caller, fn 11215 (the fragment has the
+// measurement). Its name, its being a free function, this declaration's place and its file are chosen.
+bool CargoSemCandidatos(const md::CCargo& cargo);
 
 } // namespace comum
