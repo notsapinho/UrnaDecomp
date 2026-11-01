@@ -83,7 +83,7 @@ step_done
 if [ "$MODE" = check ]; then
   step "what is in place"
   docker image inspect urna-emsdk:6.0.0 >/dev/null 2>&1 && say "image urna-emsdk:6.0.0: built" || say "image urna-emsdk:6.0.0: missing"
-  for d in openssl zlib III-ASN.1 sqlite/sqlite3.c RHVoice RHVoice/external/libs/sonic/sonic.c 7zip boost/boost/version.hpp; do
+  for d in openssl zlib III-ASN.1 libqrencode sqlite/sqlite3.c RHVoice RHVoice/external/libs/sonic/sonic.c 7zip boost/boost/version.hpp; do
     [ -e "third_party/$d" ] && say "third_party/$d: present" || say "third_party/$d: missing"
   done
   for p in target/fs build/dump/vota.objdump.txt asmlift-wasm/node_modules; do
@@ -134,10 +134,12 @@ fetch() {
   [ "$(sha256_of "$file")" = "$want" ] || die "$file: sha256 $(sha256_of "$file"), expected $want"
 }
 
-step "third_party/: OpenSSL, zlib, III-ASN.1"
+step "third_party/: OpenSSL, zlib, III-ASN.1, libqrencode"
 clone_at openssl     https://github.com/openssl/openssl      openssl-3.0.17  4d7dfa23 shallow
 clone_at zlib        https://github.com/madler/zlib          v1.3.1          51b7f2a
 clone_at III-ASN.1   https://github.com/Kampbell/III-ASN.1   66e5d48         66e5d48
+# a full clone, as zlib's: the version probe of docs/reference/facts/libraries.md B10 reads its other tags
+clone_at libqrencode https://github.com/fukuchi/libqrencode  v4.1.1          715e29fd
 step_done
 
 # SQLite: the 3.50.4 amalgamation (sqlite3.c, the one file the build compiles, and its headers), extracted into
