@@ -4,15 +4,22 @@
 #include <format>
 #include <string>
 
+// Recovered: ELogAplicativos is a type of the global namespace. The typeinfo name of the local class of
+// api::CApplication::InitApplication (ledger/strings.tsv, 519992) mangles that function's fourth parameter as
+// `15ELogAplicativos`, with no namespace; the using-declaration below keeps the name reachable as api::ELogAplicativos.
+// This header is chosen for it, as for the two enums below.
+enum ELogAplicativos {};
+
 namespace api {
 
+using ::ELogAplicativos;
+
 // Recovered: the records of src/api/uelog/cescritorlog.cpp name ELogOperacoesLogD (fazOperacao's parameter), and
-// api::CLoga::loga's (cloga.cpp:26) ELogAplicativos and ESeveridade. The records print them unqualified, so their
-// namespace (api, the class's) and this header are chosen. No evidence names an enumerator, so none is recovered;
-// the bodies show the values they accept: an application code below 61 (fn 10260 throws "{} - O codigo da
-// aplicacao deve ser menor que {} [{}]" with 61 for a code from 61 up) and an operation from 230 to 240 (fn 10262
+// api::CLoga::loga's (cloga.cpp:26) ELogAplicativos and ESeveridade. The records print them unqualified, so the
+// namespace of the other two (api, the class's) and this header are chosen. No evidence names an enumerator, so none
+// is recovered; the bodies show the values they accept: an application code below 61 (fn 10260 throws "{} - O codigo
+// da aplicacao deve ser menor que {} [{}]" with 61 for a code from 61 up) and an operation from 230 to 240 (fn 10262
 // throws below 230 and above 240).
-enum ELogAplicativos {};
 enum ESeveridade {};
 enum ELogOperacoesLogD {};
 

@@ -35,4 +35,18 @@ CEleitorIdentidade::CEleitorIdentidade(std::string identificador, ecourna::app::
     Normaliza(m_identificador, m_tipo);
 }
 
+std::string FormataIdentificador(const CEleitorIdentidade& identidade)
+{
+    std::string texto = identidade.GetIdentificador();
+    switch (identidade.GetTipo()) {
+    case ecourna::app::dados::TipoIDCPF:
+        return texto.insert(9, "-").insert(6, ".").insert(3, ".");
+    case ecourna::app::dados::TipoIDInscricaoEleitoral:
+        return texto.insert(8, " ").insert(4, " ");
+    case ecourna::app::dados::TipoIDNumeroLivre:
+        return texto;
+    }
+    return "";
+}
+
 } // namespace comum::md

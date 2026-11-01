@@ -4,8 +4,6 @@
 // destructor, so for them this object emits the vtable, the typeinfo and the deleting destructor, with no change when
 // the member lands (src/units/README.md "Pending members"). A member's stub goes with its vtable in the link, so the note
 // over each says what it waits for and the records it holds in the file of its class, whose lines stay blank there.
-// vota::CQuerReimprimirZeresima is the exception: nothing in our link stores its vptr, so wasm-ld drops the vtable and
-// its two traps, and its StartState keeps its stub until its GetInst is written.
 
 #include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/ciniciodeciclo.h"
@@ -47,11 +45,9 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 185, 187, 202, 203, 261, 273, 291, 326, 332, 378, 401, 457, 463, 491, 502,
-// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1249, 1269, 1822,
-// 1933, 1935, 1960, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782, 3784, 3788, 3825, 3826, 3829,
-// 5462, 5480, 5545, 5824, 5866, 5869, 5870, 5876, 5887, 5888, 5889, 5891, 5905,
-// 6174 (and units 155's 1405 and 168's 1485).
+// with no name: 378, 491, 502, 620, 886, 1164, 1269, 1933, 1935, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782,
+// 3825, 3826, 5462, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
+// 195's 5824 and 95's 3829, 5889, 5891 and 5905 among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
@@ -82,13 +78,6 @@ void CImprimindoBim::StartState()
 // cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 185, 187, 202,
 // 203, 261, 407, 463, 491, 502, 886, 1127, 1191, 1880, 2244, 2291, 2890, 5918 (3701 is named: unit 93).
 void CImprimirBUOutrasObrigatorias::StartState()
-{
-    __builtin_trap();
-}
-
-// CInicioBU::StartState: fn 12062 (189 B): it holds vota::CQuerImprimirBU's GetInst inlined, whose constructor copies a
-// member of CTelasVota (+236) that app/vota/eleitor/comum/ctelasvota.h has no accessor for.
-void CInicioBU::StartState()
 {
     __builtin_trap();
 }
@@ -167,7 +156,7 @@ void CQuerReimprimirZeresima::StartState()
     __builtin_trap();
 }
 
-// CQuerReimprimirZeresima::ProcessInput: fn 11848 (349 B), callees with no name: 455, 2520, 2880, 2882.
+// CQuerReimprimirZeresima::ProcessInput: fn 11848 (349 B), callees with no name: 2520, 2882.
 void CQuerReimprimirZeresima::ProcessInput()
 {
     __builtin_trap();
@@ -179,14 +168,14 @@ void CFimAquisicaoVotos::StartState()
     __builtin_trap();
 }
 
-// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callees with no name: 599, 652, 1687, 4529.
+// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee with no name: 652 (599 and 1687 are unit 50's).
 void CCancelaHabilitacaoEleitor::StartState()
 {
     __builtin_trap();
 }
 
-// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 326, 654, 1535, 2264, 3625, 4578, 5424 (and
-// unit 152's 3624; 1688 is named: unit 174; 2798 unit 178).
+// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 654, 3625, 4578, 5424 (named: unit 152's 3624,
+// unit 174's 1688, unit 178's 2798, unit 110's 326 and 2264, unit 50's 1535).
 void CProcuraEleitor::StartState()
 {
     __builtin_trap();

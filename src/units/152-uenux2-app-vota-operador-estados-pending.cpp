@@ -19,9 +19,9 @@
 // - vota::CHorarioVotacaoTerminou::ProcessInput (fn 10757, slot 7): a thunk into binaryen's fn 2295, with the slots 7 of
 //   vota::CEleitorImpedidoJustificarVotoCPF (10604) and vota::CEncerramentoHorarioInvalido (10709); 2295 calls fn 652.
 // - vota::CInspecionaUrna::ProcessInput (fn 11797, slot 7): fns 2380 and 6557.
-// - vota::CHabilitaAudioEleitor::ProcessInput (fn 10523, slot 7): fns 599, 1150 and 5415.
+// - vota::CHabilitaAudioEleitor::ProcessInput (fn 10523, slot 7): fn 1150 (599 and 5415 are unit 50's).
 // - vota::IIniciaJustificativa::StartState (fn 10587, slot 2, the key function, so this object emits the class's
-//   vtable and its implicit destructors): fns 1391, 1535 and 2747.
+//   vtable and its implicit destructors): fns 1391 and 2747 (1535 is unit 50's).
 #include "app/vota/eleitor/cinspecionaurna.h"
 #include "app/vota/operador/aguardaeleitor/cdesabilitaaudioeleitor.h"
 #include "app/vota/operador/aguardaeleitor/cperguntaeleitorvotando.h"

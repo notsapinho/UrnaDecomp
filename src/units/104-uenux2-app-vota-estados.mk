@@ -16,8 +16,9 @@
 # (CDefineRotaPosReinicio::ProcessInput) and fn 10327 (comum::CGestorDadoMesario::StartState, which builds unit 135's
 # three comum::IGestorDadoMesario states through their GetInst, inlined: that unit's fragment has the evidence; its
 # record, cgestordadomesario.cpp:35 column 32, is the controller's instance() bound to a reference, a chosen spelling of
-# that length). 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for. vota::CQuerReimprimirZeresima lands its head, destructor and statics only: its GetInst (fn 5940) and
-# destructors (11850, 11851) stay unmatched, and the header says why. The heads say what each layout rests on. Fn 10793,
+# that length). 104-uenux2-app-vota-estados-pending.cpp names every other slot and what it waits for.
+# vota::CQuerReimprimirZeresima landed its head, destructor and statics first, and its GetInst since (below). The
+# heads say what each layout rests on. Fn 10793,
 # vota::CControladorRegistraMesariosVota's slot 11, holds vota::CRegistroMesarioEncerrado's GetInst inlined; unit 119
 # writes that class and matches it.
 #
@@ -60,9 +61,8 @@
 # chose; the +12 pointer's type in CDefineRotaPosReinicio, read from a call of slot 7; the +11 byte's bool; the base's
 # argument spelled with its chosen enumerators; StartState as key function, except for the out-of-line destructors,
 # declared first; the constructor's line and the definitions' place above the records of members not written (their
-# lines stay blank); each header's path, beside its .cpp. The order of the statics is measured for GetInst's users;
-# CQuerReimprimirZeresima has no GetInst to mention them first, so its .bss order is not the target's, which no byte of
-# a matched function shows. Records name 13 of the .cpp files. The other 11 are chosen, by how-to step 3's rule 2, then
+# lines stay blank); each header's path, beside its .cpp. The order of the statics is measured for GetInst's users.
+# Records name 13 of the .cpp files. The other 11 are chosen, by how-to step 3's rule 2, then
 # rule 4, from the data and the band: CAguardaMensagem in vota/eleitor/ (before cconfirmavotosemcandidato.cpp);
 # CInicioBU in fimvotacao/ (after cimprimirbuoutrasobrigatorias.cpp); CInicioZeresima and CReinicioComparecimentoMesario
 # in iniciovotacao/ (before cverificaeleicaopassou.cpp); CMaisInformacoes and CMenuFiltrarCandidatosPorNumero in
@@ -103,6 +103,19 @@
 #   shown and the form released before m_pNextState is stored, the target's order; a named local of the form gave 136
 #   over 310 rows (11 inserted, 20 deleted). The helper's name and its linkage are chosen; the points SPoint{20, 1}
 #   and {20, 3} are the two words the target stores (65556, 196628).
+#
+# Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
+# before steps 7 to 9 matched it:
+# - vota::CQuerReimprimirZeresima::GetInst (fn 5940), unit 104's shape, its constructor copying CTelasVota's +244
+#   through ctelasvota.h's GetTelaQuerReimprimirZeresima: 11 over 55 rows, operand-only. Its statics' exit
+#   destructors 11851 and 11850 match with it. The member's pointee is now the getter's, CInteractiveForm<IScreen,
+#   IInputKbd> (it was IForm<IScreen>, both chosen). Its one target caller, CReinicioVotacao::StartState (fn 11835,
+#   pending in unit 138), calls it twice: the roots stand in.
+# - vota::CInicioBU::StartState (fn 12062): in a training load whose voter training flag is set (+48 of
+#   comum::CAppInfo::GetGeral() is FASE_TREINAMENTO, +72 of GetVota() is 1) it goes to vota::CQuerImprimirBU, whose
+#   GetInst (unit 156's file) binaryen inlines here, else to vota::CImprimindoBU. The target calls CAppInfo::GetInst
+#   (fn 185) twice, so the test is written with two calls; comum::CAppInfo::EhTreinamentoEleitor (fn 697) is the same
+#   test out of line, which the target does not call here. 16 over 76 rows, operand-only.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \

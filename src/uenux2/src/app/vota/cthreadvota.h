@@ -25,6 +25,12 @@ public:
     uebyte AddTick(const std::chrono::milliseconds& tempo);
     // Fn 807: CTickManager::AddStoppedTick of m_ticks (fn 5452), named with it.
     uebyte AddStoppedTick(size_t milissegundos);
+    // No target function of its own: vota::CVerificaHorarioZeresima's constructor (inlined into fn 5947) stores the i64
+    // 2000 in its frame and passes the low word of that slot to CTickManager::AddStoppedTick (fn 5452) on this thread's
+    // +20, a value read back from the frame (docs/reference/facts/reading.md R10). This overload, out of line here and
+    // inlined by binaryen into its one caller, gives that: fn 5947 matches with it. The overload, its parameter's type
+    // and its name are chosen after AddTick's.
+    uebyte AddStoppedTick(const std::chrono::milliseconds& tempo);
     void StopTick(uebyte id);
     void StartTick(uebyte id);
 

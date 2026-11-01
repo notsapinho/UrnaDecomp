@@ -37,7 +37,7 @@
 // 3849 and 5921, thunks into fn 6051) have their slot 16 callers written (fns 11751 and 11699) and fn 4459, which calls
 // both; CPedeProporcional's other caller, 11756, is not: PedeProporcional stands for it. Of
 // CEstadoComDesligamentoAutomatico's (fn 1285) ten callers
-// 2888, 3877 and 5948 are in the link: DoisDesligamentos stands for the other seven (3855, 5936, 5947, 11804, 11809,
+// 2888, 3877, 5947 and 5948 are in the link: DoisDesligamentos stands for the other six (3855, 5936, 11804, 11809,
 // 11812, 12051) with two calls. Each stand-in passes what the target's callers vary (the events, the two stored
 // arguments) as a variable, so binaryen folds none of them, and adds a constant somewhere, so no two are alike.
 //

@@ -9,14 +9,18 @@
 // line goes when every target caller it stands for is in the link, and stays while some still wait, the callers already
 // in the link in parentheses (src/units/README.md "Companion files"). The target callers each pair stands for:
 //
-// 1337: 4449, 6058, 7198, 7221, 11987, 11988, 11994 (11794 is in the link); 4433: 7481, 11994; 6037: 7160, 12077; 3879:
-// 12023, 12077 (12030 is in the link); 5985: 12065, 12068; 5984: 7160, 12134; 5983: 7160, 12105; 5973: 7160 (11939 is
-// in the link); 3865: 7160, 11870, 11871; 3864: 7160, 11848, 11858; 1280: 11848, 11869, 11881, 11902, 11905, 11908,
+// 1337: 4449, 6058, 7198, 7221, 11987, 11988 (11794 and 11994 are in the link); 4433: 7481 (11994 is in the link);
+// 6037: 7160, 12077; 3879: 12023, 12077 (12030 is in the link); 5985: 12065, 12068; 5984: 7160, 12134; 5983: 7160,
+// 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160, 11848, 11858;
+// 1280: 11848, 11869, 11881, 11902, 11905, 11908,
 // 11911, 11927 (11834 and 11838 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is in the
 // link); 5943: 11855 (11834 is in the link); 5942:
 // 11848, 11852; 5941: 11848 (11845 is in the link); 5428: 10217, 10734; 1536: 10466, 10473, 10477, 10485, 10489, 10500
 // (6015 and 10593 are in the link); 5421: 10626, 10627; 2729: 6011, which still waits (2895, 10317 and 10383 are in the
 // link); 5383: 10313, 10316; 5342: 10737 (10791 is in the link); 1897: 10404, 10419, 10425.
+//
+// vota::CQuerReimprimirZeresima::GetInst (fn 5940) has one direct caller in the target, vota::CReinicioVotacao's
+// StartState (fn 11835, pending), which calls it twice: the pair 5940 stands for it.
 //
 // vota::CMaisInformacoes::GetInst (fn 1280) takes the state to go back to: its target callers pass 0 and their own
 // `this`, so one call passes 0 and the other the stand-in's argument, and binaryen folds no constant into the body.
@@ -48,6 +52,7 @@ int w2729_getinst(void) __asm__("_ZN5comum18CPedeTituloMesario7GetInstEv");
 int w5383_getinst(void) __asm__("_ZN5comum18CGestorDadoMesario7GetInstEv");
 int w5342_getinst(void) __asm__("_ZN4vota17CFinalizaOperador7GetInstEv");
 int w1897_getinst(void) __asm__("_ZN4vota20CSincronismoOperador7GetInstEv");
+int w5940_getinst(void) __asm__("_ZN4vota23CQuerReimprimirZeresima7GetInstEv");
 }
 
 namespace {
@@ -78,6 +83,7 @@ __attribute__((noinline)) int ChamaGetInstDosEstados(int n)
     total += w5383_getinst() + w5383_getinst();
     total += w5342_getinst() + w5342_getinst();
     total += w1897_getinst() + w1897_getinst();
+    total += w5940_getinst() + w5940_getinst();
     return total;
 }
 

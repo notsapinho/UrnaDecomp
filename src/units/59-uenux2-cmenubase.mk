@@ -22,12 +22,10 @@
 # name), which fn 6599 calls for each item, and AdicionaOpcao (a chosen name), which binaryen inlined into it in the
 # target: the append to +16 sits after a stack prologue of its own inside fn 2285 (docs/reference/facts/reading.md
 # R10), so it is written out of line in the same .cpp and left with its one caller. cmenubase.h says what each reads.
-# Written, not matching: AdicionaItem (2285). Against our body, `pnpm wasm score` reads 10 over 239 rows, all
-# operand-only, and `splat-remap --against 2285` differs at body byte 140: the target's `i32.const 8152` is its "{}",
-# the tail of the 62-byte literal at 8090 ("Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}"), and
-# our body loads 4339 and 4341 of our link. The function that loads that literal, comum::ValidarUE (5890, record
-# iinterfacesavd.cpp:886), is not written: unit 95's fragment says it waits for fn 3831. The row reads `no-candidate`
-# (no symbol and no ledger pair) until then; no scratch link with the literal was made.
+# AdicionaItem (2285) matches since unit 95 writes comum::ValidarUE (5890, record iinterfacesavd.cpp:886), which loads
+# the 62-byte literal at 8090 ("Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}"): the target's
+# `i32.const 8152` in 2285 is its "{}", that literal's tail, which our link held elsewhere before (body byte 140 of
+# `splat-remap --against 2285`; 10 over 239 rows, all operand-only, in `pnpm wasm score`).
 CMENUBASE_SRCS := src/app/comum/informacao/cmenubase.cpp
 UENUX2_SRCS += $(CMENUBASE_SRCS)
 # MontaMenu (target fn 5913) is not reconstructed: 59-uenux2-cmenubase-pending.cpp gives the vtable a trapping body,

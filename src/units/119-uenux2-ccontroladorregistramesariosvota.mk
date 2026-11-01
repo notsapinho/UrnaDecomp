@@ -41,6 +41,14 @@
 #   LogaMesarioIndagadoQualidadeBU (4551), and the two logaAlerta texts binaryen merges into fn 6115,
 #   LogaQtdViasAdicionaisExcedeMaximo (4556) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (2495), all out of
 #   line; src/units/156-uenux2-fimvotacao-bu.mk has their evidence, and its roots their callers' stand-ins.
+# - Four more, after LogaAguardandoConfirmacaoZeresima: unit 138's LogaAguardandoHorarioZeresima and unit 199's
+#   LogaDataEleicaoInvalida, held inlined by fns 11871 and 11914 (their fragments have the evidence), and two out of
+#   line that this unit matches: LogaErroEstadoAplicativoDesconhecido (fn 3279, logaErro of "Erro estado do aplicativo
+#   nao conhecido") and LogaFimTesteTecladoSucesso (fn 4511, loga of "Fim do teste de Teclado do TE - Sucesso"),
+#   each 8 over 59 rows, operand-only (pnpm wasm score, whole link), matched by content at step 9. Their target
+#   callers are not written (3279: fn 7160 twice and vota::CDefineRotaPosReinicio::NeedChangeState, fn 11858; 4511:
+#   fn 11804 twice), so the roots stand in for them. They call fns 2282 and 233 out of line, as unit 156's 1127 and
+#   4551 do; their names and their place are chosen.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses
@@ -119,7 +127,7 @@
 #   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
 # Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
-# slots 5, 7, 9, 13, 14 and 16 (fns 10797, 10795, 10794, 10790, 10789, 10786), and behind them fns 2264, 4662 and 5343;
+# slots 5, 7, 9, 13, 14 and 16 (fns 10797, 10795, 10794, 10790, 10789, 10786), and behind them fns 4662 and 5343;
 # CRegistroMesarioEncerrado's ProcessKey (fn 10762).
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the

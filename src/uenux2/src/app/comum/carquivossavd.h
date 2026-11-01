@@ -22,4 +22,6 @@ private:
     std::map<ESavdArquivoUE, std::string> m_assinados;
 };
 
+std::string DescricaoArquivo(ESavdArquivoUE arquivo);
+
 } // namespace comum

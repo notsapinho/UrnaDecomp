@@ -2,7 +2,7 @@
 // body each with the other two DAOs'), Inserir (5776, slot 3), ExcluirID (11543, slot 5, record at line 130), Atualizar
 // (5775, slot 6), Clone (11541, slot 2, a thunk into 3894). Their order is what the bands give and the lines but 130's
 // are chosen: src/units/91-uenux2-app-comum-dados-eleitor.mk says so. Slots 7 and 8, RecuperarID (11542) and RecuperarTodos
-// (3766), are written and wait for a literal (the fragment says which).
+// (3766), match since the literal they read the tail of, fn 5890's, is in the link (the fragment says so).
 #include "app/comum/dados/dao/celeitordinamicodao.h"
 
 #include <format>

@@ -55,10 +55,11 @@
 # classes' slot 0, fn 3626 (`f1688(p0)`), waits for a builder of one of them: their constructors, inlined into fns 10631
 # and 10635, call fn 654, which has no name.
 #
-# Roots (174-uenux2-app-vota-mensagens-roots.cpp): the two vtables, and a stand-in for fn 11914, the one target caller
-# of 501 that passes another priority than 1; without it binaryen folds the priority into Insert, and every caller loses
-# its `i32.const 1` (7221 read `score 4 over 39 rows` with one row deleted, then operand-only). Pending
-# (174-uenux2-app-vota-mensagens-pending.cpp): IConfirmaJustificativa's StartState and ProcessInput.
+# Roots (174-uenux2-app-vota-mensagens-roots.cpp): the two vtables. Insert (501) needs no stand-in now: fn 11914, the
+# one target caller of 501 that passes another priority than 1, is in the link (unit 199); without such a caller
+# binaryen folds the priority into Insert, and every caller loses its `i32.const 1` (7221 read `score 4 over 39 rows`
+# with one row deleted, then operand-only). Pending (174-uenux2-app-vota-mensagens-pending.cpp):
+# IConfirmaJustificativa's StartState and ProcessInput.
 APP_VOTA_MENSAGENS_SRCS := src/app/vota/eleitor/cmostratelacontinuavotacao.cpp \
     src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvotamensagem.cpp \
     src/app/vota/operador/justificativa/iconfirmajustificativa.cpp

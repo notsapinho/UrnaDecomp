@@ -1,20 +1,21 @@
-# uenux2 comum::dao::CJustificadorDAO: slot 3, the INSERT of a justified absence (target fn 11473), slot 2, Clone (11468,
-# a thunk into binaryen's 3894, which forms with unit 91's two), slots 5 and 6, ExcluirID and Atualizar (11472, 11471,
-# with the header app/comum/justificativa/euecomumjustificativaerror.h), slots 7 and 8, RecuperarID and RecuperarTodos
-# (11470, 11469, written and not matched, below), and the destructor and deleting destructor
-# (target fns 1704 and 3767, slots 0 and 1 of its vtable @1560760) in src/app/comum/justificativa/dao/cjustificadordao.cpp,
-# the file the records of ExcluirID and Atualizar name (lines 56 and 63). The headers cjustificadordao.h and
-# ijustificadordao.h beside it, and the bases src/api/persistencia/iuenuxgenericdao.h, the file the records of the base's
-# defaults name, and idao.h beside it. The class chain is RTTI's: CJustificadorDAO, IJustificadorDAO,
-# IUenuxGenericDAO<CIdentificacaoJustificativa, std::string>, IDAO. Slot 4 is the base's default (11467, unit 91's row).
+# uenux2 comum::dao::CJustificadorDAO: slot 3, the INSERT of a justified absence (target fn 11473), slot 2, Clone
+# (11468, a thunk into binaryen's 3894, which forms with unit 91's two), slots 5 and 6, ExcluirID and Atualizar (11472,
+# 11471, with the header app/comum/justificativa/euecomumjustificativaerror.h), slots 7 and 8, RecuperarID and
+# RecuperarTodos (11470, 11469, written, 11470 matched and 11469 not, below), and the destructor and deleting destructor
+# (target fns 1704 and 3767, slots 0 and 1 of its vtable @1560760) in
+# src/app/comum/justificativa/dao/cjustificadordao.cpp, the file the records of ExcluirID and Atualizar name (lines 56
+# and 63). The headers cjustificadordao.h and ijustificadordao.h beside it, and the bases
+# src/api/persistencia/iuenuxgenericdao.h, the file the records of the base's defaults name, and idao.h beside it. The
+# class chain is RTTI's: CJustificadorDAO, IJustificadorDAO, IUenuxGenericDAO<CIdentificacaoJustificativa, std::string>,
+# IDAO. Slot 4 is the base's default (11467, unit 91's row).
 #
 # Written and not matched (docs/how-to-decompile.md step 5, "A written body that does not match yet"):
-# - RecuperarID (11470) differs at the end pointer of its "{}" format string alone (+0x111: target 8152, ours re-pointed
-#   to 7892). The target tail-merged "{}" into the literal at 8090 that fns 5890, 11242, 12098, 12105 and 12110 load
-#   (62 bytes, ending in "Erro SAVD: ({})" and a newline and "{}"), our link into "Falha ao autenticar. - {}", and an end
-#   pointer resolves to the end of the string our link merged it into (docs/reference/splat.md section 3). It waits for
-#   that literal in our link.
-# - RecuperarTodos (11469) has the same end pointer, and is unresolved at its call of
+# - RecuperarID (11470) matches since unit 95 writes comum::ValidarUE (5890): the end pointer of its "{}" format string
+#   (+0x111, target 8152) is the tail of the literal at 8090 that fns 5890, 11242, 12098, 12105 and 12110 load (62
+#   bytes, ending in "Erro SAVD: ({})" and a newline and "{}"), which our link merged into "Falha ao autenticar. - {}"
+#   before 5890 brought the literal in (an end pointer resolves to the end of the string our link merged it into,
+#   docs/reference/splat.md section 3).
+# - RecuperarTodos (11469) reads the same "{}" and is unresolved at its call of
 #   std::__uninitialized_allocator_relocate<allocator<CIdentificacaoJustificativa>, ...> (fn 5831, whose stub stays in
 #   src/uenux2/unplaced.cpp). This object's copy of that helper is the link's, called directly, but ecourna's copy of
 #   vector<CIdentificacaoJustificativa>::__emplace_back_slow_path<CIdentificacaoJustificativa> (the link's copy, from

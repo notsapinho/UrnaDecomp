@@ -10,7 +10,8 @@
 # CGenericTags has no RTTI: the map of tags at +8 is TagSize's and insert's (fn 1071, which stores the byte at node +28
 # from a size_t), and the two size_t members at +0 and +4 are read from the class's one inlined construction (fns 3831
 # and 5892 store 4 and 3 there; insert and the encoders compare the tag's size with +0 minus 1, and 5892 takes +4
-# characters as the tag); their names are chosen. The map's find is the twin of the matched std::map<std::string,
+# characters as the tag); their names are chosen, and so is the in-class constructor from the tag's size that unit 95's
+# CriaTags (iinterfacesavd.cpp) calls. The map's find is the twin of the matched std::map<std::string,
 # unsigned short>::find (fn 163): the same body for any mapped type.
 #
 # The overloads. 5466 calls TagSize before its frame's prologue, then holds the record of line 102: binaryen inlined
@@ -55,11 +56,12 @@
 # with -fno-strict-aliasing. At 694de52's flags, with cgenerictags.cpp and csystem.cpp compiled by hand with uenux2's
 # set and relinked, it scores 56 over 883 rows (51 operand-only, 5 inserted), and without -fno-strict-aliasing 48 over
 # 878, all operand-only. WalkTreeTLV and DecodeTLV (records at lines 110 and 136, both held by fn 5892) are not
-# reconstructed. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
+# reconstructed: unit 95's fragment has 5892's measurement. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CGENERICTAGS_SRCS := src/api/util/cgenerictags.cpp
 UENUX2_SRCS += $(CGENERICTAGS_SRCS)
-# the callers of insert, of EncodeTLV(tag, valor) and of AppendTLV(tlv, tag, valor) (3831 and 5892 for each) are not
-# reconstructed yet: 33-uenux2-cgenerictags-roots.cpp gives each two call sites or more
+# the callers of insert, of EncodeTLV(tag, valor) and of AppendTLV(tlv, tag, valor) are 3831 and 5892 for each: 3831 is
+# in the link (unit 95's iinterfacesavd.cpp), 5892 is not reconstructed yet, and 33-uenux2-cgenerictags-roots.cpp stands
+# for it
 $(ROOT)/$(APP)/33-uenux2-cgenerictags-roots.o: $(ROOT)/src/units/33-uenux2-cgenerictags-roots.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/33-uenux2-cgenerictags-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/33-uenux2-cgenerictags-roots.o

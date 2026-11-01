@@ -49,8 +49,8 @@
 # Companions. 197-uenux2-celeitorvotando-pending.cpp traps the destructor, StartState, NeedChangeState, FinishState and
 # ProcessKey (its header says what each waits for); with the destructor declared first, that object emits the vtable.
 # 197-uenux2-celeitorvotando-roots.cpp takes the vtable's address (the target's reference is the constructor inlined
-# into GetInst, fn 3229, not written: it calls fn 3682, which has no name) and stands in for 4459's two callers, fns
-# 7352 and 7377, both pending. The pending object compiles at the class's flags (uenux2_cxxflags of
+# into GetInst, fn 3229, not written: it calls fn 3682, api::CriaContextoAplicacao, unit 193) and stands in for 4459's
+# two callers, fns 7352 and 7377, both pending. The pending object compiles at the class's flags (uenux2_cxxflags of
 # celeitorvotando.cpp's path, so without -fno-strict-aliasing, as app/vota/'s sources).
 #
 # Chosen, no evidence names them: g_numeroDigitado, g_dataHoraDesligamento, g_escolhaAtual, SetNumeroDigitado and that
