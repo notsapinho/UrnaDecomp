@@ -924,11 +924,6 @@
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
 
-// link-order cluster 748 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp
-
-// f5375 · 459 B · unmatched · placement: link order · name unknown
-// ? f5375(i32, i32) { ... }
-
 // link-order cluster 749 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp
 
 // f5380 · 59 B · unmatched · placement: link order · name unknown

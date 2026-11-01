@@ -96,11 +96,6 @@
 // f5363 · 198 B · unmatched · placement: link order · name unknown
 // void f5363(i32, i32) { ... }
 
-// link-order cluster 748 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp
-
-// f5369 · 18 B · unmatched · placement: link order · name unknown
-// ? f5369(i32, i32, i32, i32) { ... }
-
 // link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
 
 // f5460 · 73 B · unmatched · placement: link order · name unknown
@@ -336,9 +331,6 @@
 
 // f2728 · 82 B · unmatched · placement: link order · name unknown
 // void f2728(i32, i32) { ... }
-
-// f2723 · 18 B · unmatched · placement: link order · name unknown
-// ? f2723(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1103 · uses=4 · neighbours' file uenux2/src/app/comum/dados/md/correspondencia/ccorrespondenciaresultado.cpp
 
