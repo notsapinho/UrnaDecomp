@@ -11,6 +11,8 @@ int urna_roots_ecourna(int a);   // src/app/roots_ecourna.cpp: the reconstructed
 int urna_roots_uenux2(int a);    // src/app/roots_uenux2.cpp: the reconstructed uenux2 units
 int urna_roots_vector(int a);    // src/app/roots_vector.cpp: the executable TU's copies of vector<unsigned char>'s destruction
 int urna_roots_vector_dado(int a); // src/app/roots_vector.cpp: the same for vector<comum::md::estadoaplicacao::CDadoCorrespondencia>
+int urna_roots_vector_cadeias(int a); // src/app/roots_vector.cpp: the executable TU's ~vector<std::string>
+int urna_roots_vector_caminhos(int a); // src/app/roots_vector.cpp: the tree's ~vector<std::filesystem::path>
 int urna_roots_iconversorasn(int a); // src/app/roots_iconversorasn.cpp: IConversorASN<Foto, CFoto>::Deconverte's two callers
 
 extern "C" {
@@ -72,6 +74,8 @@ int urna_roots(int a) {
   r += urna_roots_uenux2(a);
   r += urna_roots_vector(a);
   r += urna_roots_vector_dado(a);
+  r += urna_roots_vector_cadeias(a);
+  r += urna_roots_vector_caminhos(a);
   r += urna_roots_iconversorasn(a);
   js_use_external_keyboard();
   r += js_ler_dimensao_tela(a, a);

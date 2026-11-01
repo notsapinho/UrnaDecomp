@@ -33,6 +33,7 @@ public:
 
     void operator+=(int dias);
     void operator-=(int dias);
+    CDate operator+(int dias) const;
     CDate operator-(int dias) const;
 
     bool operator==(const CDate& data) const = default;

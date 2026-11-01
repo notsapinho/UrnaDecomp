@@ -2,6 +2,8 @@
 # by its std::source_location record:
 # - comum::md::CTradutorFrase::RecuperaLabel (target fn 5658, md/parametrizacaourna/ctradutorfrase.cpp line 95) and its
 #   std::map<char, CLabelParametrizado>: the map's global destructor (11341) and __tree::destroy (1706) match with it;
+#   CTradutorFrase::Traduz (654), with TraduzLabel (records at lines 104, 119 and 132), TraduzTexto (141, 156) and
+#   TraduzData inlined in it ("CTradutorFrase's members" below);
 # - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344);
 # - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224), and below it three members no
 #   record names, GetImpedimento (3769), GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's members" below);
@@ -9,8 +11,8 @@
 #   vtable @1570668, lines 32 and 51 of asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp); 11356 is a thunk
 #   into binaryen's body 6030, which it forms with unit 17's DoDesconverte (11366);
 # - comum::asn::CConversorImpedido::DesconverteTipoImpedimento (5699, asn/eleitor/cconversorimpedido.cpp line 109).
-# Only the record's function is written in each file but celeitordetalhe.cpp; every other line of it is blank, and where
-# the function starts is chosen so that the throw lands on its record's line.
+# Only the record's function is written in each file but celeitordetalhe.cpp and ctradutorfrase.cpp; every other line of
+# them is blank, and where each function starts is chosen so that its throws land on their records' lines.
 #
 # What the bytes decide, measured in the whole link with `pnpm wasm score` against each target function:
 # - RecuperaLabel reads the key into a char local before find: 12 rows over 91, all operand-only. find(label.at(0)) gives
@@ -28,15 +30,42 @@
 # - md::ETipoImpedimento's type: fixed int, fixed unsigned, or no fixed type;
 # - each conversion: a switch, with or without a default, or a chain of if;
 # - 5699's message argument: tipo.asInt() or static_cast<int>(tipo).
-# s_labels' name rests on one vote, 11341's own (evidence:vote:2 by:11341), for 12 bytes of .bss. What else ties the
-# operand to the object: 5658 and 11341 read it, target fns 654 and 5794 hold the same addresses 1839056, 1839060 and
-# 1839064, as a map's begin node, root and size, and 14478 (__wasm_call_ctors) holds the first two.
+# s_labels' name rests on the votes of 654, 5658 and 11341 (evidence:vote:9), for 12 bytes of .bss: 5794 holds the same
+# addresses 1839056, 1839060 and 1839064, as a map's begin node, root and size, and 14478 (__wasm_call_ctors) the first
+# two.
 # Names chosen, no evidence gives them: s_labels and the parameters' and members' names; every enumerator of
 # md::ETipoImpedimento (md/etipoimpedimento.h, its path chosen too); CTradutorFrase's and CConversorImpedido's headers'
 # paths follow step 3's rule 4; CEleitorDetalhe's 192 bytes before its flag are not recovered. Codes 8184 and unit 17's
 # 7953 are not in the shared enum header, which lists what the target passes to fn 170 directly: each .cpp names its code
 # with a local constant, which goes when the header gains it.
 #
+# CTradutorFrase's members. No record names Traduz (654): its records are TraduzLabel's and TraduzTexto's, which it holds
+# inlined by binaryen, each behind a 48-byte stack prologue of its own, as is TraduzData, which has no record (how-to
+# step 3's sign), so the source defines the three out of line, each with Traduz its one caller. Traduz's and
+# TraduzData's names are chosen, from the class's and their roles. Read from the bytes: Traduz returns the phrase as it
+# is while s_labels is empty; it builds three expressions from the labels' keys, "<[keys][CL][PS][ABN]>",
+# "<[keys]\|[^|>]*\|[^|>]*\|[^|>]*>" and "<DT[+-][0-9]+>", and takes the earliest match of the three
+# (CStringUtils::FindRegex, unit 00) again and again, appending the text before it and the translation of the marker
+# without its "<" and ">". TraduzLabel picks one of the label's four spellings by its middle letters (CS, CP, LS, LP) and
+# upper-cases it (A), lower-cases it (B) or keeps it (N); TraduzTexto splits on '|' and returns the part of the label's
+# genero; TraduzData adds the day count to, or subtracts it from, the reference date at 1839068 and formats it
+# "DD/MM/YYYY" (CDate's operator+, written for it in api/util/cdate.cpp, and operator-, 3648, which matches with it).
+# Forms measured in the whole link (pnpm wasm score 654):
+# - the earliest match by two ternaries over references, then inicio and fim read once into locals, and the later tests
+#   against those locals (inicio == label.first && fim == label.second): with `proximo == label`, which reads the chosen
+#   pair again, its first field stays a load through the chosen pointer where the target selects the values (238 over
+#   2242 rows, 16 inserted, 15 deleted);
+# - Traduz and Separa above RecuperaLabel: below TraduzTexto, Traduz differs from the target in its locals' numbers (203
+#   over 2234 rows, 8 inserted, 8 deleted); above it, every row is operand-only (121 over 2226), with TraduzData either
+#   above with Traduz or below TraduzTexto;
+# - the text before the marker and the marker come back as a std::pair<std::string, std::string> braced from two locals
+#   (Separa, file-static, which clang inlines): the target copies both strings and then frees the two.
+# Chosen, not compared with another form: Separa and its file-static linkage, the locals' names, `const auto genero`
+# ahead of TraduzTexto's switch and its default, TraduzData below TraduzTexto. s_dataReferencia (its name, its type and
+# its being a private static member) is hand-named in splat/symbol_addrs.txt (callers+content: 14478 builds it with
+# CDate's constructor right after s_labels, and 7787 stores to it right after it assigns s_labels; 654 is its one reader);
+# SetDataReferencia, like SetLabels, has no target function. 654's callees CDate::operator+= and operator-= (5478, 5477)
+# are hand-named by their own bodies (unit 125's fragment): 654 was 5478's one voter.
 # CEleitorDetalhe's members below ConfereDadosDinamicos have no record, so their lines and their order are a choice:
 # - GetImpedimento, target fn 3769, matched: it calls CAppInfo::GetInst (185) and the const GetGeral (457), compares the
 #   load's turn (+32 of CEstadoGeral, CDadoCarga's first member) with TURNO_2 ('2', 50), and returns the word at +200 when

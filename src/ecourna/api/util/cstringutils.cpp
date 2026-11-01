@@ -6,7 +6,10 @@
 #include <cstdlib>
 #include <iterator>
 #include <limits>
+#include <set>
 #include <source_location>
+
+#include <boost/regex.hpp>
 
 #include "ecourna/api/util/eutilerror.hpp"
 
@@ -97,7 +100,33 @@ int HexCharToInt(int c)
     return -1;
 }
 
+std::set<int> AcentuadasMaiusculas()
+{
+    return {'Ç', 'Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ã',
+            'Õ', 'Ñ'};
+}
+
 } // namespace
+
+void CStringUtils::Replace(std::string& valor, const std::string& de, const std::string& para)
+{
+    const size_t tamanhoDe = de.size();
+    if (tamanhoDe == 0) {
+        return;
+    }
+    const size_t tamanhoPara = para.size();
+    for (size_t posicao = valor.find(de); posicao != std::string::npos;
+         posicao = valor.find(de, posicao + tamanhoPara)) {
+        valor.replace(posicao, tamanhoDe, para);
+    }
+}
+
+std::string CStringUtils::Replace(const std::string& valor, const std::string& de, const std::string& para)
+{
+    std::string resultado = valor;
+    Replace(resultado, de, para);
+    return resultado;
+}
 
 void CStringUtils::Trim(std::string& valor)
 {
@@ -147,6 +176,23 @@ std::string CStringUtils::PreencheADireita(const std::string& valor, char preenc
     return preenchido;
 }
 
+std::vector<std::string> CStringUtils::Split(const std::string& valor, char separador)
+{
+    std::vector<std::string> partes;
+    std::string resto = valor;
+    size_t posicao = 0;
+    while ((posicao = resto.find(separador)) != std::string::npos) {
+        if (posicao == 0) {
+            partes.push_back("");
+        } else {
+            partes.emplace_back(resto, 0, posicao);
+        }
+        resto.erase(0, posicao + 1);
+    }
+    partes.push_back(resto);
+    return partes;
+}
+
 std::string& CStringUtils::RemoveZerosAEsquerda(std::string& valor)
 {
     return valor.erase(0, valor.find_first_not_of('0'));
@@ -159,10 +205,37 @@ std::string CStringUtils::RemoveZerosAEsquerda(const std::string& valor)
     return resultado;
 }
 
+void CStringUtils::ToUpper(std::string& valor)
+{
+    std::transform(valor.begin(), valor.end(), valor.begin(), [](char caractere) -> char {
+        static const std::set<int> acentuadas = [] {
+            const std::set<int> maiusculas = AcentuadasMaiusculas();
+            std::set<int> minusculas;
+            std::transform(maiusculas.begin(), maiusculas.end(), std::inserter(minusculas, minusculas.end()),
+                           [](char letra) { return letra | 32; });
+            return minusculas;
+        }();
+        if (acentuadas.find(caractere) != acentuadas.end()) {
+            return caractere & ~32;
+        }
+        if (isalpha(caractere)) {
+            return toupper(caractere);
+        }
+        return caractere;
+    });
+}
+
+std::string CStringUtils::ToUpper(const std::string& valor)
+{
+    std::string resultado = valor;
+    ToUpper(resultado);
+    return resultado;
+}
+
 // Blank lines below keep each std::source_location call site (the To* conversions and the throw) on
 // the line the target records (ledger/source-locations.tsv).
 
-// (original lines 165-711: content not recovered)
+// (original lines 238-711: content not recovered)
 #line 712
 uebyte CStringUtils::ToByte(const std::string& valor)
 {
@@ -243,6 +316,27 @@ std::string CStringUtils::BytesToHexString(const std::vector<uebyte>& valor)
         texto.push_back(DIGITOS[byte & 0x0F]);
     }
     return texto;
+}
+
+std::pair<size_t, size_t> CStringUtils::FindRegex(const std::string& expressao, const std::string& valor)
+{
+    const size_t naoEncontrada = std::string::npos;
+    if (valor.empty() || expressao.empty()) {
+        return {naoEncontrada, naoEncontrada};
+    }
+    try {
+        const boost::regex regex(expressao);
+        boost::cmatch resultado;
+        size_t inicio = naoEncontrada;
+        size_t fim = naoEncontrada;
+        if (boost::regex_search(valor.data(), valor.data() + valor.size(), resultado, regex)) {
+            inicio = resultado.position();
+            fim = inicio + resultado.length();
+        }
+        return {inicio, fim};
+    } catch (...) {
+        return {naoEncontrada, naoEncontrada};
+    }
 }
 
 } // namespace ecourna::api::util
