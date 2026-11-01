@@ -534,7 +534,8 @@ Compile a variant from a copy with the `-ffile-prefix-map` of [codegen.md](codeg
 offset. A control with an unchanged object gives the plain link's sha256, so comparing sha256 says "the same module" at
 once. Take the index of ours from that link's `names.tsv`: a variant can shift the band, and `pnpm wasm score` at the
 plain link's index reads another function (`1150 over 1168 rows`, against `81` at the right one). To put a copy ahead of
-every tree, add the object before `app/vota_init.o` instead ([levels.md](levels.md) §V4).
+every tree, add the object before `app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o`, the first object, instead
+([levels.md](levels.md) §V4).
 
 A match line whose symbol is local, `<name>@<object>`, names the object's path, so a swapped object under another path
 loses it: `splat-build` on such a link needs a copy of the list with those keys rewritten to the new path.

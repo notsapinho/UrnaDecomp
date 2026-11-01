@@ -18,7 +18,7 @@ link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes in
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
 | uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
-| the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, not reconstructed) | `-Oz -fexceptions` ([levels.md](levels.md) §V1) |
+| the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
 ## F1. ecourna: `-O3 -fexceptions -std=c++20 -DNDEBUG`
@@ -300,8 +300,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
 - **`-std=c++20` is ecourna's measurement, carried over.** F1's 3703 is an ecourna function; no uenux2 function decided
   uenux2's `-std`.
 - **`-std=c++23` is not the tree's setting**: one written body, 8799, needs it ([levels.md](levels.md) §V3).
-- **The executable TU is not uenux2's set.** `wasm/vota_web/vota_web_wasm.cpp`, not reconstructed, is compiled
-  `-Oz -fexceptions`, and the linkonce copies it emits are the ones the target kept ([levels.md](levels.md) §V1).
+- **The executable TU is not uenux2's set.** `wasm/vota_web/vota_web_wasm.cpp` (unit 170, in part) is compiled
+  `-Oz -fexceptions`, with `-fPIC` and without strict aliasing, and the linkonce copies it emits are the ones the target
+  kept ([levels.md](levels.md) §V1).
 - **-fPIC** removes the last structural rows of all three ctors.
 - **No `-fexceptions`.** 0 of 1,645 uenux2 functions that load a `source_location` record call `invoke_*`; uenux2
   throw sites call `__cxa_throw` directly. Without `-fexceptions` emcc defaults to `-fignore-exceptions`

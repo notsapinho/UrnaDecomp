@@ -335,6 +335,154 @@
     "reference": null
   },
   {
+    "id": "vota-web/1549",
+    "index": 1549,
+    "size": 200,
+    "band": "medium",
+    "component": "unknown",
+    "owner": "sqlite",
+    "features": [
+      "leaf",
+      "frame",
+      "i64",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "manual",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "void std::__2::__format::__create_packed_storage[abi:ne210108]<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, char const [9], std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const>(unsigned long long&, std::__2::__basic_format_arg_value<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>>*, char const (&) [9], std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)::'lambda'()::operator()() const",
+    "symbol": "_ZZNSt3__28__format23__create_packed_storageB8ne210108INS_20basic_format_contextINS_20back_insert_iteratorINS0_15__output_bufferIcEEEEcEEJA9_KcKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEEEvRyPNS_24__basic_format_arg_valueIT_EEDpRT0_ENKUlvE_clEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/4954",
+    "index": 4954,
+    "size": 37,
+    "band": "small",
+    "component": "libc++",
+    "owner": "7zip",
+    "features": [],
+    "ledger": {
+      "kind": "addr",
+      "score": 2
+    },
+    "origin": "manual",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::unique_ptr<(anonymous namespace)::CVotaWebEngine, std::__2::default_delete<(anonymous namespace)::CVotaWebEngine>>::reset[abi:ne210108]((anonymous namespace)::CVotaWebEngine*)",
+    "symbol": "_ZNSt3__210unique_ptrIN12_GLOBAL__N_114CVotaWebEngineENS_14default_deleteIS2_EEE5resetB8ne210108EPS2_",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "vota-web/5101",
+    "index": 5101,
+    "size": 9,
+    "band": "tiny",
+    "component": "libc++",
+    "owner": "app",
+    "features": [],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "manual",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "std::__2::unique_ptr<(anonymous namespace)::CVotaWebEngine, std::__2::default_delete<(anonymous namespace)::CVotaWebEngine>>::~unique_ptr[abi:ne210108]()",
+    "symbol": "_ZNSt3__210unique_ptrIN12_GLOBAL__N_114CVotaWebEngineENS_14default_deleteIS2_EEED2B8ne210108Ev",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "vota-web/5646",
+    "index": 5646,
+    "size": 178,
+    "band": "medium",
+    "component": "unknown",
+    "owner": "sqlite",
+    "features": [
+      "frame",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "manual",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "void std::__2::__format::__create_packed_storage[abi:ne210108]<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, char const [9], std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const>(unsigned long long&, std::__2::__basic_format_arg_value<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>>*, char const (&) [9], std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)::'lambda0'()::operator()() const",
+    "symbol": "_ZZNSt3__28__format23__create_packed_storageB8ne210108INS_20basic_format_contextINS_20back_insert_iteratorINS0_15__output_bufferIcEEEEcEEJA9_KcKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEEEvRyPNS_24__basic_format_arg_valueIT_EEDpRT0_ENKUlvE0_clEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": {
+      "path": "src/uenux2/wasm/vota_web/vota_web_wasm.cpp"
+    }
+  },
+  {
+    "id": "vota-web/11265",
+    "index": 11265,
+    "size": 39,
+    "band": "small",
+    "component": "unknown",
+    "owner": "-",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 4
+    },
+    "origin": "manual",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "api::polySingletonsInfoPadrao()",
+    "symbol": "_ZN3apiL24polySingletonsInfoPadraoEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "vota-web/13876",
+    "index": 13876,
+    "size": 35,
+    "band": "small",
+    "component": "unknown",
+    "owner": "-",
+    "features": [
+      "loop"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "manual",
+    "setup": "vota-web",
+    "lang": "c++",
+    "flags": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "name": "void std::__2::condition_variable::wait[abi:ne210108]<api::CMutexCompartilhado::lock_shared()::'lambda'()>(std::__2::unique_lock<std::__2::mutex>&, api::CMutexCompartilhado::lock_shared()::'lambda'())",
+    "symbol": "_ZNSt3__218condition_variable4waitB8ne210108IZN3api19CMutexCompartilhado11lock_sharedEvEUlvE_EEvRNS_11unique_lockINS_5mutexEEET_",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o",
+    "reference": null
+  },
+  {
     "id": "ecourna/307",
     "index": 307,
     "size": 104,

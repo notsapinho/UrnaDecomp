@@ -1,37 +1,37 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-31T15:30:44.720Z",
+ "createdAt": "2026-11-01T04:06:09.879Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
  },
  "image": "urna-emsdk:6.0.0",
  "dataset": {
-  "rows": 181,
-  "rowsSha256": "4bfc1ad3947199eb0d0ca3b55d49aedae0b6293e51c03c69c822a0481c9af912",
-  "setupsSha256": "cfece17df3e722ba13a6bb4f29b1a25054d386a44d779676f5249defb6572e1e"
+  "rows": 187,
+  "rowsSha256": "d9151f0db1052ae77c94cd13cd7a79934dd057b48d5775e8f35d63f88fd2b1fe",
+  "setupsSha256": "d7e9be0f370b161142e325e729ee9c7d85bdce9eab0d321e6f2eb70f8cb948db"
  },
- "commit": "b714993a+dirty",
+ "commit": "84f5d8d4+dirty",
  "durationMs": {
-  "lift": 132,
-  "compileAndOptimise": 6625,
-  "total": 13893
+  "lift": 97,
+  "compileAndOptimise": 4081,
+  "total": 10234
  },
  "totals": {
   "overall": {
-   "rows": 181,
-   "lifted": 181,
-   "compiled": 181,
-   "optimised": 181,
-   "exactRaw": 35,
-   "exact": 82,
-   "medianRatio": 0.4043,
+   "rows": 187,
+   "lifted": 187,
+   "compiled": 187,
+   "optimised": 187,
+   "exactRaw": 36,
+   "exact": 85,
+   "medianRatio": 0.4037,
    "medianOptRatio": 0.0738,
-   "meanOptRatio": 0.1787,
+   "meanOptRatio": 0.1793,
    "outcomes": {
-    "exact": 82,
-    "differs": 99
+    "exact": 85,
+    "differs": 102
    }
   },
   "bySetup": {
@@ -48,6 +48,21 @@
     "outcomes": {
      "exact": 5,
      "differs": 7
+    }
+   },
+   "vota-web": {
+    "rows": 6,
+    "lifted": 6,
+    "compiled": 6,
+    "optimised": 6,
+    "exactRaw": 1,
+    "exact": 3,
+    "medianRatio": 0.3414,
+    "medianOptRatio": 0.1667,
+    "meanOptRatio": 0.198,
+    "outcomes": {
+     "differs": 3,
+     "exact": 3
     }
    },
    "ecourna": {
@@ -632,6 +647,162 @@
     "goto",
     "inlined callee outlined"
    ]
+  },
+  {
+   "id": "vota-web/1549",
+   "index": 1549,
+   "setup": "vota-web",
+   "size": 200,
+   "band": "medium",
+   "features": [
+    "leaf",
+    "frame",
+    "i64",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 94,
+   "raw": {
+    "score": 50,
+    "ratio": 0.5319
+   },
+   "opt": {
+    "score": 43,
+    "ratio": 0.4574
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "vota-web/4954",
+   "index": 4954,
+   "setup": "vota-web",
+   "size": 37,
+   "band": "small",
+   "features": [],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 17,
+   "raw": {
+    "score": 3,
+    "ratio": 0.1765
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "vota-web/5101",
+   "index": 5101,
+   "setup": "vota-web",
+   "size": 9,
+   "band": "tiny",
+   "features": [],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 4,
+   "raw": {
+    "score": 0,
+    "ratio": 0
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "vota-web/5646",
+   "index": 5646,
+   "setup": "vota-web",
+   "size": 178,
+   "band": "medium",
+   "features": [
+    "frame",
+    "i64"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 83,
+   "raw": {
+    "score": 29,
+    "ratio": 0.3494
+   },
+   "opt": {
+    "score": 33,
+    "ratio": 0.3976
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "vota-web/11265",
+   "index": 11265,
+   "setup": "vota-web",
+   "size": 39,
+   "band": "small",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 13,
+   "raw": {
+    "score": 8,
+    "ratio": 0.6154
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
+  },
+  {
+   "id": "vota-web/13876",
+   "index": 13876,
+   "setup": "vota-web",
+   "size": 35,
+   "band": "small",
+   "features": [
+    "loop"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 18,
+   "raw": {
+    "score": 6,
+    "ratio": 0.3333
+   },
+   "opt": {
+    "score": 6,
+    "ratio": 0.3333
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "ecourna/307",

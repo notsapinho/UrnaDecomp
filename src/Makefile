@@ -170,6 +170,17 @@ $(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/sr
 $(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_vector.cpp -o $(R)
 
+# The executable TU, /home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the TSE link line
+# (docs/reference/toolchain.md "Export order"), so wasm-ld keeps its copy of every linkonce function and vtable it emits.
+# Its own flags, not UENUX2_CXXFLAGS, each measured on the whole link (docs/reference/facts/levels.md V1): -Oz
+# -fexceptions, -fPIC (its records sit in .data too: docs/reference/facts/app-flags.md F5), -DNDEBUG (F7) and no strict
+# aliasing; -std=c++20 is the tree's, and -std=c++23, which V1 measures matching more, is the user's decision.
+# The benchmark's setup `vota-web` names VOTA_WEB_OBJS.
+VOTA_WEB_CXXFLAGS := -Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
+VOTA_WEB_OBJS := $(ROOT)/$(APP)/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
+$(VOTA_WEB_OBJS): $(ROOT)/src/uenux2/wasm/vota_web/vota_web_wasm.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
+	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c /work/src/uenux2/wasm/vota_web/vota_web_wasm.cpp -o $(R)
+
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
 # arguments; compiled with -Dmain=<name> so it becomes a plain function urna_roots() calls.
 $(ROOT)/$(GEN)/sqlite_roots.c: $(ROOT)/$(SQLITE_O) $(ROOT)/tools/libs/sqlite/attribution.tsv $(ROOT)/tools/libs/openssl/gen-probe-main.py
@@ -193,14 +204,15 @@ $(ROOT)/$(OSSL_OBJS_FILE): $(ROOT)/tools/libs/ossl_files.txt $(ROOT)/$(LIBCRYPTO
 # include paths an app TU may need (the libraries' headers at their pinned builds); tools/round/try-tu.sh adds them
 APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_SRC) -I$(RHVOICE_SRC)/src/include $(RHVOICE_CFG)
 
-# ---- link order (first object exports votaInit alone; app before libraries; libraries in this order) --------
+# ---- link order (the executable TU first, VOTA_WEB_OBJS above; then the stand-ins, votaInit's first; app before
+# libraries; libraries in this order) --------
 APP_OBJS := vota_init.o vota_api.o main.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=
 # app-side objects (the uenux2 units) precede the conan libraries (ecourna first); the ASN.1 runtime rides in EXTRA_OBJS (src/mk/asn1.mk),
 # with the one RHVoice object a measured choice puts before it (RHVOICE_BEFORE_ASN1 there)
-LINK_OBJS := $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS))
+LINK_OBJS := $(VOTA_WEB_OBJS) $(addprefix $(ROOT)/$(APP)/,$(APP_OBJS)) $(UENUX2_OBJS) $(ECOURNA_OBJS) $(abspath $(addprefix $(ROOT)/,$(patsubst $(ROOT)/%,%,$(EXTRA_OBJS)))) $(ROOT)/$(SQLITE_O) $(SEVENZIP_OBJS) $(filter-out $(RHVOICE_BEFORE_ASN1),$(RHVOICE_OBJS))
 EXPORTS := _main,_votaInit,_votaPressKey,_votaTick,_votaSetAudioEnabled,_votaGetStateJson,_uenux_wasm_web_sound_wait_cancel_requested,_uenux_wasm_web_sound_wait_finished
 LINK_FLAGS := -Oz -fexceptions -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8MB -sEXPORTED_FUNCTIONS=$(EXPORTS) -sEXPORTED_RUNTIME_METHODS=ccall,FS,callMain
 OUT := build/out/wasm/vota_web

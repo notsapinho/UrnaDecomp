@@ -80,12 +80,34 @@ reload below, and that 4967 is this TU's copy is read from link order (the first
       -fno-strict-aliasing: 4
 
 So `src/app/roots_vector.cpp`, which holds 306, 520 and 4967, compiles at `UENUX2_CXXFLAGS` and not at the roots'
-`APP_CXXFLAGS` (`src/units/README.md` "Companion files"). No setup of
-`asmlift-wasm/benchmark/dataset/setups.json` has `-Oz -fexceptions` with `-std=c++20` (the two `-Oz -fexceptions` setups
-are 7-Zip's and RHVoice's, each ending in `-O3`), so no fragment may compile a TSE object so (`pnpm bench setups
---check` refuses one), and `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` is a stub-only file. A uenux2 object's copy of
-such a member is right source with the wrong level, so it matches only when its body is the same at uenux2's flags:
-11489 and 11518 stay `differs` with unit 82's source as written (how-to steps 4 and 5).
+`APP_CXXFLAGS` (`src/units/README.md` "Companion files"). It stays while the TU's code that calls 520 (`votaInit`, 7840)
+is not written.
+
+**The TU's own rule.** `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` compiles at `VOTA_WEB_CXXFLAGS` in `src/Makefile`,
+`-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing` (the setup `vota-web` of
+`asmlift-wasm/benchmark/dataset/setups.json`), and its object is first on the link line, ahead of the stand-ins. What
+unit 170 writes of it (the engine's getter, `votaPressKey`, `votaSetAudioEnabled`) instantiates
+`api::CPolySingleton<api::ISound>::instance`, and with it libc++'s `std::format` code at the TU's level: the link at
+84f5d8d with the unit gains 119 matches and loses none, nearly all of them that code, with unit 100's hand lines as they
+stood (the unit's fragment lists them, and the eight that removing two of those lines adds). Each flag is measured on
+that link by taking it out or changing it, the TU's object alone rebuilt, with the counts by index of how-to step 10
+against 84f5d8d:
+
+    touch src/uenux2/wasm/vota_web/vota_web_wasm.cpp
+    F="<flags> $(make -s -C src print-UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1"
+    TMPDIR=/tmp make -C src link census splat-symbols splat-match "VOTA_WEB_CXXFLAGS=$F"
+      -Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing   119 added, 0 lost
+      without -fPIC                                                     89 added, 9 rows leave match
+      without -fno-strict-aliasing                                      117 added: 1549 and 5646 do not match
+      -std=c++23 for -std=c++20                                         130 added, 0 lost
+
+So `-fPIC`, the records' place in `.data` ([app-flags.md](app-flags.md) §F5), and the TU's want of strict aliasing are
+measured, and the reading above holds for the TU. `-std=c++23` matches eleven more rows, libc++'s format code that the
+C++23 escaped-string formatter brings (`__escape` 11769, `__write_escaped_code_unit` 5927, the parser 1417, ...), and
+loses none: the TU's `-std` is the user's decision, so the rule keeps the tree's. A uenux2 object's copy of a member
+whose copy the target keeps from this TU is right source with the wrong level, so it matches only when its body is the
+same at uenux2's flags, or once the TU's code that uses it is written: 11489 and 11518 stay `differs` with unit 82's
+source as written (how-to steps 4 and 5).
 
 ## V2. LLVM's inlining remarks give the cost and the threshold, and the thresholds are what separate the levels
 
@@ -262,14 +284,15 @@ rvalue `substr`), with a handful of C++20 forms tried; every site above reads th
 ## V4. Which flags a linkonce copy has: put a probe object first on the link line
 
 Rows of a probe's object compared with the target, before binaryen, are a lead and no verdict: they ranked one
-destructor nearest at two levels and another at four. wasm-ld keeps the first object's copy, so an object that only
-uses the class, first on the link line, wins each linkonce symbol, wasm-ld drops the probe's own functions, and the scan
-says what that copy gives. About a minute at 0b5f410, from the repository root, with `$V` under `build/out/`:
+destructor nearest at two levels and another at four. wasm-ld keeps the first object's copy, so an object that only uses
+the class, first on the link line, wins each linkonce symbol, wasm-ld drops the probe's own functions, and the scan says
+what that copy gives. The first object of `link.cmd` is the executable TU's (unit 170), so the probe goes before it.
+About a minute at 0b5f410, from the repository root, with `$V` under `build/out/`:
 
     V=build/out/variant-probe; n=d2; d=$V/wasm/$n; mkdir -p $d $V/obj
     printf '%s\n' '#include <istream>' '#include <ostream>' '#include "asn1.h"' 'void probe_dec(std::istream& s, ASN1::AbstractData& d) { ASN1::AVNDecoder dec(s); d.accept(dec); }' > $V/obj/$n.cpp
     TMPDIR=/tmp build/docker-build.sh sh -c "em++ -O3 -fexceptions -std=c++20 -DNDEBUG -Isrc -Isrc/asn1 -c /work/$V/obj/$n.cpp -o $V/obj/$n.o"
-    sed -e "s# app/vota_init.o # variant-probe/obj/$n.o app/vota_init.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o variant-probe/wasm/$n/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $d/link.cmd
+    sed -e "s# app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o # variant-probe/obj/$n.o app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o variant-probe/wasm/$n/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $d/link.cmd
     TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $d/link.cmd)" > $d/link.log 2>&1
     TMPDIR=/tmp tools/round/link-map.sh $d; TMPDIR=/tmp tools/round/link-kinds.sh $d
     cp splat/matched.txt $V/$n-matched.txt

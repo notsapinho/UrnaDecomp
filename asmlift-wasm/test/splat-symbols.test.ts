@@ -563,15 +563,20 @@ describe('settleAnchorVotes', () => {
   });
 });
 
-describe('the hand line of CPolySingletonList::find', () => {
-  const FIND =
+describe('the two CPolySingletonList::find instantiations', () => {
+  const FIND_CONST =
     '_ZN3api18CPolySingletonList4findIKNS_19TPolySingletonsInfoEEEDaRKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERT_';
+  const FIND =
+    '_ZN3api18CPolySingletonList4findINS_19TPolySingletonsInfoEEEDaRKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERT_';
 
-  it('names 305 below the marker, and no generated line names it: votes for 305 and 608 disagree', () => {
+  // the executable TU's copies (unit 170) keep 305 and 608 apart in our link, as the target does, so its callers' votes
+  // name each and no hand line does: has<T> calls 608 with a const info, instance<T> calls 305
+  it('names 305 and 608 by their callers, with no hand line', () => {
     const file = parseSymbolFile(readFileSync(SYMBOLS, 'utf8'));
-    expect(file.generated.filter((e) => e.name === FIND)).toEqual([]);
-    expect(file.hand.filter((e) => e.name === FIND)).toMatchObject([
-      { at: { kind: 'func', index: 305 }, evidence: 'callers+content' },
+    expect(file.hand.filter((e) => e.name === FIND || e.name === FIND_CONST)).toEqual([]);
+    expect(file.generated.filter((e) => e.name === FIND)).toMatchObject([{ at: { kind: 'func', index: 305 }, evidence: 'call' }]);
+    expect(file.generated.filter((e) => e.name === FIND_CONST)).toMatchObject([
+      { at: { kind: 'func', index: 608 }, evidence: 'call' },
     ]);
   });
 });

@@ -45,6 +45,7 @@ them (`truth`).
 | setup | what | flags from | rows |
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
+| `vota-web` | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` (one object, first on the link line) | `src/Makefile` `VOTA_WEB_CXXFLAGS` | 6 |
 | `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
 | `zlib` | zlib 1.3.1 + minizip | `src/units/06-ecourna-api-compression.mk` `ZLIB_CFLAGS` | 12 |
@@ -173,7 +174,10 @@ reason. Fix the row's cause, or retire it deliberately: a re-selection.
 **Adding a row**: `pnpm bench add <index>…` builds the row from today's inputs, marks it `manual` and
 keeps it across re-selections; then `pnpm bench run --label baseline` and commit both. A function no
 setup covers is refused with the reason; reconstruct or link its object first. A new setup is a new
-entry in `setups.json` with a `truth` the check can re-derive, then a re-selection.
+entry in `setups.json` with a `truth` the check can re-derive, and rows: `test/dataset.test.ts` wants at
+least 5 of every setup but the stand-ins'. A re-selection gives them, and so does `pnpm bench add` of the setup's
+functions as hand-added rows: `vota-web`'s six were added so, and `add` refused others of that object with `no strong
+ledger name` (10703, which the ledger pairs at `shape`; 235, 331, 2379, 3095) or `name unresolved` (9832, 1940, 4636).
 
 **Updating the references** (a library's source tree or build output moved, the rows did not): `pnpm bench select
 --references` runs selection again on the recorded inputs, as the test does, and prints the rows whose reference it

@@ -183,12 +183,10 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 **A name kept by hand when votes disagree.** Our link can merge what the target keeps apart, and no source form fixes
 that ([../how-to-decompile.md](../how-to-decompile.md) step 3). The votes for our one body then disagree, a name with
 conflicting evidence is left out, and the matches that reach the body under that name leave `match`. A hand edit keeps
-the name, under the kind its voters give. Two lines stand so:
+the name, under the kind its voters give. One line stands so (a second, `CPolySingletonList::find` on 305, went with
+unit 170, whose copies of the executable TU's two instantiations keep 305 and 608 apart in our link, each named by its
+callers' `call` votes):
 
-- `CPolySingletonList::find`, `callers+content`: one body of ours for the target's 305 and 608, the executable TU's
-  instantiations (unit 100's fragment). The 16 `instance<T>` bodies that are `srcloc-anchor`s call 305, and `has<T>`
-  calls 608. Its `content` leg is empty: 305 and 608 are one shape that differs in a slot literal, so only the callers
-  single 305 out.
 - 536, `table`: the one body of the enums' format handles, in 31 target slots. Our link merges `EUrnaTurno`'s handle
   into it and the target keeps that apart as 9868, so 1553's anchor votes 9868 and the others 536 (unit 109's fragment).
 

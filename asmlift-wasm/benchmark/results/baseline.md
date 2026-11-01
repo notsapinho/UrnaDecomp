@@ -1,6 +1,6 @@
 # Benchmark: baseline
 
-Target `target/vota_web_wasm.wasm` (sha256 `8579ef8d1a938191…`), image `urna-emsdk:6.0.0`, 181 rows (rows.json `4bfc1ad39471`, setups.json `cfece17df3e7`), urna `b714993a+dirty`, 2026-10-31T15:30:44.720Z. Lift 132 ms, compile and optimise 6.6 s, total 13.9 s.
+Target `target/vota_web_wasm.wasm` (sha256 `8579ef8d1a938191…`), image `urna-emsdk:6.0.0`, 187 rows (rows.json `d9151f0db105`, setups.json `d7e9be0f370b`), urna `84f5d8d4+dirty`, 2026-11-01T04:06:09.879Z. Lift 97 ms, compile and optimise 4.1 s, total 10.2 s.
 
 Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored against the target at depth 0 with callees, data addresses, the stack pointer and the indirect table canonicalised on both sides (raw); then the object is linked alone and put through the target link's wasm-opt -Oz passes and scored again (-Oz). The ratio is differing rows over target rows; exact is a -Oz score of 0. An isolated function misses what the whole-program link does to it, so no score here means byte-identical.
 
@@ -8,13 +8,14 @@ Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored aga
 
 | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 181 | 181 | 181 | 181 | 35 | 82 | 45.3% | 0.404 | 0.074 | 0.179 |
+| 187 | 187 | 187 | 187 | 36 | 85 | 45.5% | 0.404 | 0.074 | 0.179 |
 
 ## By compile setup
 
 | setup | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz | failures |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `uenux2` uenux2, the TSE application | 12 | 12 | 12 | 12 | 3 | 5 | 41.7% | 0.144 | 0.119 | 0.141 | – |
+| `vota-web` the executable TU, wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the link line | 6 | 6 | 6 | 6 | 1 | 3 | 50.0% | 0.341 | 0.167 | 0.198 | – |
 | `ecourna` ecourna (conan libecea1da310e5107) | 12 | 12 | 12 | 12 | 1 | 6 | 50.0% | 0.650 | 0.003 | 0.070 | – |
 | `asn1` TSE fork of the III ASN.1 runtime and its generated Modulo* modules | 12 | 12 | 12 | 12 | 4 | 8 | 66.7% | 0.317 | 0.000 | 0.049 | – |
 | `zlib` zlib 1.3.1 + minizip | 12 | 12 | 12 | 12 | 2 | 5 | 41.7% | 0.358 | 0.156 | 0.179 | – |
@@ -35,9 +36,9 @@ Each row is lifted, compiled with `em++ -c` at its setup's flags, and scored aga
 
 | band | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| tiny | 48 | 48 | 48 | 48 | 31 | 42 | 87.5% | 0.000 | 0.000 | 0.050 |
-| small | 50 | 50 | 50 | 50 | 3 | 31 | 62.0% | 0.272 | 0.000 | 0.073 |
-| medium | 36 | 36 | 36 | 36 | 1 | 8 | 22.2% | 0.515 | 0.191 | 0.252 |
+| tiny | 49 | 49 | 49 | 49 | 32 | 43 | 87.8% | 0.000 | 0.000 | 0.049 |
+| small | 53 | 53 | 53 | 53 | 3 | 33 | 62.3% | 0.278 | 0.000 | 0.075 |
+| medium | 38 | 38 | 38 | 38 | 1 | 8 | 21.1% | 0.515 | 0.216 | 0.261 |
 | large | 30 | 30 | 30 | 30 | 0 | 1 | 3.3% | 0.628 | 0.294 | 0.319 |
 | huge | 17 | 17 | 17 | 17 | 0 | 0 | 0.0% | 0.638 | 0.314 | 0.452 |
 
@@ -47,19 +48,19 @@ A row counts under every feature it has.
 
 | feature | rows | lifted | compiled | -Oz linked | exact raw | exact -Oz | exact share | median ratio | median -Oz | mean -Oz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| leaf | 90 | 90 | 90 | 90 | 25 | 48 | 53.3% | 0.333 | 0.000 | 0.171 |
-| loop | 64 | 64 | 64 | 64 | 0 | 5 | 7.8% | 0.553 | 0.289 | 0.329 |
+| leaf | 92 | 92 | 92 | 92 | 25 | 49 | 53.3% | 0.333 | 0.000 | 0.173 |
+| loop | 65 | 65 | 65 | 65 | 0 | 5 | 7.7% | 0.550 | 0.292 | 0.329 |
 | switch | 22 | 22 | 22 | 22 | 1 | 1 | 4.5% | 0.602 | 0.255 | 0.277 |
 | call_indirect | 36 | 36 | 36 | 36 | 4 | 19 | 52.8% | 0.302 | 0.000 | 0.118 |
 | invoke | 9 | 9 | 9 | 9 | 0 | 2 | 22.2% | 0.614 | 0.200 | 0.197 |
 | throw | 12 | 12 | 12 | 12 | 1 | 3 | 25.0% | 0.601 | 0.203 | 0.201 |
-| frame | 44 | 44 | 44 | 44 | 0 | 3 | 6.8% | 0.628 | 0.272 | 0.315 |
+| frame | 46 | 46 | 46 | 46 | 0 | 3 | 6.5% | 0.616 | 0.293 | 0.320 |
 | alloca | 2 | 2 | 2 | 2 | 0 | 0 | 0.0% | 0.688 | 0.385 | 0.385 |
 | inlined-frame | 12 | 12 | 12 | 12 | 0 | 0 | 0.0% | 0.789 | 0.272 | 0.301 |
-| i64 | 82 | 82 | 82 | 82 | 6 | 17 | 20.7% | 0.539 | 0.218 | 0.268 |
+| i64 | 84 | 84 | 84 | 84 | 6 | 17 | 20.2% | 0.534 | 0.228 | 0.272 |
 | float | 14 | 14 | 14 | 14 | 2 | 2 | 14.3% | 0.539 | 0.268 | 0.286 |
 | bulk-memory | 23 | 23 | 23 | 23 | 0 | 4 | 17.4% | 0.536 | 0.255 | 0.262 |
-| select | 63 | 63 | 63 | 63 | 4 | 10 | 15.9% | 0.600 | 0.255 | 0.317 |
+| select | 64 | 64 | 64 | 64 | 4 | 10 | 15.6% | 0.578 | 0.256 | 0.320 |
 
 ## Failures
 
