@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <map>
 #include <sys/time.h>
+#include <vector>
 
 #include "ecourna/api/uetypes.hpp"
 
@@ -18,6 +19,9 @@ public:
     uebyte AddStoppedTick(size_t milissegundos);
     void StopTick(uebyte id);
     void StartTick(uebyte id);
+    // Fn 5450: the ids of the running ticks whose time has come, each tick moved on to its next time. No record names
+    // it: the name is chosen from that.
+    std::vector<uebyte> GetExpiredTicks();
 
 private:
     struct STick {
