@@ -53,4 +53,12 @@ void* CThread::Rotina(void* parametro)
     return nullptr;
 }
 
+void CThread::Wait()
+{
+    if (m_estado == ESTADO_EXECUTANDO) {
+        m_pImpl->Wait();
+        m_estado = ESTADO_CRIADA;
+    }
+}
+
 } // namespace api

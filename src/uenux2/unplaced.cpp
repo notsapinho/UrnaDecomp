@@ -16,55 +16,6 @@
 // f7221 · 85 B · unmatched · placement: link order · name unknown
 // void f7221(i32) { ... }
 
-// link-order cluster 30 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cpreshowformvota.cpp
-
-// f7707 · 61 B · unmatched · placement: link order · name unknown
-// void f7707(i32, i32) { ... }
-
-// link-order cluster 32 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
-
-// f7766 · 7 B · unmatched · placement: link order · name unknown
-// ? f7766(i32) { ... }
-
-// link-order cluster 34 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cexecucaovotacooperativa.cpp
-
-// f7828 · 21 B · unmatched · placement: link order · name unknown
-// ? f7828(i32, i32) { ... }
-
-// f7823 · 38 B · unmatched · placement: link order · name unknown
-// ? f7823(i32) { ... }
-
-// link-order cluster 244 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/caguardainicio.cpp
-
-// f10220 · 38 B · unmatched · placement: link order · name unknown
-// void f10220(i32) { ... }
-
-// f10219 · 13 B · unmatched · placement: link order · name unknown
-// void f10219(i32) { ... }
-
-// f10218 · 31 B · unmatched · placement: link order · name unknown
-// void f10218(i32, i32) { ... }
-
-// f10217 · 191 B · unmatched · placement: link order · name unknown
-// void f10217(i32, i32) { ... }
-
-// link-order cluster 246 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cexecucaovota.cpp
-
-// f10236 · 57 B · unmatched · placement: link order · name unknown
-// void f10236(i32) { ... }
-
-// f10235 · 39 B · unmatched · placement: link order · name unknown
-// void f10235(i32) { ... }
-
-// f10234 · 20 B · unmatched · placement: link order · name unknown
-// void f10234(i32) { ... }
-
-// f10233 · 8 B · unmatched · placement: link order · name unknown
-// void f10233(i32) { ... }
-
-// f10232 · 18 B · unmatched · placement: link order · name unknown
-// void f10232(i32) { ... }
-
 // link-order cluster 286 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
 
 // f10440 · 1876 B · unmatched · placement: link order · name unknown
@@ -212,28 +163,12 @@
 // f4677 · 494 B · unmatched · placement: link order · name unknown
 // void f4677(i32, i32) { ... }
 
-// link-order cluster 701 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cexecucaovota.cpp
-
-// f4708 · 8 B · unmatched · placement: link order · name unknown
-// ? f4708(i32) { ... }
-
-// f4705 · 21 B · unmatched · placement: link order · name unknown
-// ? f4705(i32) { ... }
-
-// link-order cluster 702 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cexecucaovotacooperativa.cpp
-
-// f4713 · 89 B · unmatched · placement: link order · name unknown
-// void f4713(i32) { ... }
-
 // link-order cluster 704 · uses=2
 
 // f4794 · 342 B · unmatched · placement: link order · name unknown
 // void f4794(i32, i32) { ... }
 
 // link-order cluster 742 · uses=2 · neighbours' file uenux2/src/api/audio/alsa/cwavfile.cpp
-
-// f5343 · 2105 B · unmatched · placement: link order · name unknown
-// ? f5343() { ... }
 
 // f5341 · 1052 B · unmatched · placement: link order · name unknown
 // void f5341(i32) { ... }
@@ -909,9 +844,6 @@
 // f1902 · 82 B · unmatched · placement: link order · name unknown
 // void f1902(i32, i32) { ... }
 
-// f1900 · 40 B · unmatched · placement: link order · name unknown
-// void f1900(i32) { ... }
-
 // link-order cluster 1179 · uses=6 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitoroptouporvotaremtransito.cpp
 
 // f1906 · 57 B · unmatched · placement: link order · name unknown
@@ -986,11 +918,6 @@
 
 // f677 · 223 B · unmatched · placement: link order · name unknown
 // void f677(i32, i32, i32) { ... }
-
-// link-order cluster 1321 · uses=28
-
-// f576 · 144 B · unmatched · placement: link order · name unknown
-// void f576(i32, i32, i32) { ... }
 
 // link-order cluster 1328 · uses=34 · neighbours' file uenux2/src/api/gui/cformbuilder.cpp
 
@@ -1557,11 +1484,6 @@
 
 // f1941 · 21 B · unmatched · placement: link order · name unknown
 // ? f1941(i32, i32) { ... }
-
-// link-order cluster 1223 · uses=8
-
-// f1501 · 318 B · unmatched · placement: link order · name unknown
-// ? f1501(i32, i32) { ... }
 
 // link-order cluster 1224 · uses=8
 
