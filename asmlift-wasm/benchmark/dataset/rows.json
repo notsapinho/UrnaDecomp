@@ -16,7 +16,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "api::CDate::operator<=>(api::CDate const&) const",
     "symbol": "_ZNK3api5CDatessERKS0_",
     "evidence": "symbol",
@@ -42,7 +42,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "api::SRect::Move(api::SPoint const&)",
     "symbol": "_ZN3api5SRect4MoveERKNS_6SPointE",
     "evidence": "symbol",
@@ -73,7 +73,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -97,15 +97,42 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "simulador::CWasmScreenMT::Led1()",
     "symbol": "_ZN9simulador13CWasmScreenMT4Led1Ev",
     "evidence": "symbol",
     "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp.o",
     "reference": {
       "path": "src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp",
-      "line": 73
+      "line": 74
     }
+  },
+  {
+    "id": "uenux2/5719",
+    "index": 5719,
+    "size": 4179,
+    "band": "huge",
+    "component": "asn1-modules",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "i64",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 19
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "void std::__2::__introsort<std::__2::_ClassicAlgPolicy, comum::asn::CConversorSecaoEleitoral::DoDesconverte(ModuloLocal::SecaoEleitoral const&) const::$_0&, comum::md::CIdentificacaoAgregada*, false>(comum::md::CIdentificacaoAgregada*, comum::md::CIdentificacaoAgregada*, comum::asn::CConversorSecaoEleitoral::DoDesconverte(ModuloLocal::SecaoEleitoral const&) const::$_0&, std::__2::iterator_traits<comum::md::CIdentificacaoAgregada*>::difference_type, bool)",
+    "symbol": "_ZNSt3__211__introsortINS_17_ClassicAlgPolicyERZNK5comum3asn24CConversorSecaoEleitoral13DoDesconverteERKN11ModuloLocal14SecaoEleitoralEE3$_0PNS2_2md22CIdentificacaoAgregadaELb0EEEvT1_SE_T0_NS_15iterator_traitsISE_E15difference_typeEb",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/dados/asn/cconversorsecaoeleitoral.cpp.o",
+    "reference": null
   },
   {
     "id": "uenux2/6548",
@@ -124,7 +151,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "vota::CTelasVota::~CTelasVota()",
     "symbol": "_ZN4vota10CTelasVotaD1Ev",
     "evidence": "symbol",
@@ -148,7 +175,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "simulador::CWasmTimer::IsRunning() const",
     "symbol": "_ZNK9simulador10CWasmTimer9IsRunningEv",
     "evidence": "symbol",
@@ -182,7 +209,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -207,7 +234,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "vota::impl::CInformacaoThreadOperador::CancelaHabilitacao()",
     "symbol": "_ZN4vota4impl25CInformacaoThreadOperador18CancelaHabilitacaoEv",
     "evidence": "symbol",
@@ -241,7 +268,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -267,7 +294,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": "api::CTextFieldBlinking::Draw(api::IScreen&) const",
     "symbol": "_ZNK3api18CTextFieldBlinking4DrawERNS_7IScreenE",
     "evidence": "symbol",
@@ -298,36 +325,7 @@
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
-    "name": null,
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
-    "reference": null
-  },
-  {
-    "id": "uenux2/11620",
-    "index": 11620,
-    "size": 4622,
-    "band": "huge",
-    "component": "comum",
-    "owner": "app",
-    "features": [
-      "loop",
-      "throw",
-      "frame",
-      "inlined-frame",
-      "i64",
-      "bulk-memory"
-    ],
-    "ledger": {
-      "kind": "none",
-      "score": null
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
     "name": null,
     "symbol": null,
     "evidence": "component",
@@ -948,8 +946,8 @@
     }
   },
   {
-    "id": "asn1/9973",
-    "index": 9973,
+    "id": "asn1/9970",
+    "index": 9970,
     "size": 17,
     "band": "tiny",
     "component": "libc++",
@@ -966,11 +964,38 @@
     "setup": "asn1",
     "lang": "c++",
     "flags": "-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG",
-    "name": "std::__2::__shared_ptr_pointer<ASN1::BufferSeeder*, std::__2::shared_ptr<ASN1::ISeeder>::__shared_ptr_default_delete<ASN1::ISeeder, ASN1::BufferSeeder>, std::__2::allocator<ASN1::BufferSeeder>>::__get_deleter(std::type_info const&) const",
-    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN4ASN112BufferSeederENS_10shared_ptrINS1_7ISeederEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEE13__get_deleterERKSt9type_info",
+    "name": "std::__2::__shared_ptr_pointer<char*, std::__2::shared_ptr<char []>::__shared_ptr_default_delete<char [], char>, std::__2::allocator<char>>::__get_deleter(std::type_info const&) const",
+    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPcNS_10shared_ptrIA_cE27__shared_ptr_default_deleteIS3_cEENS_9allocatorIcEEE13__get_deleterERKSt9type_info",
     "evidence": "symbol",
     "object": "build/out/app/asn1/BERDecoderPartial.o",
     "reference": null
+  },
+  {
+    "id": "zlib/704",
+    "index": 704,
+    "size": 166,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "zlib",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
+    "name": "_tr_flush_bits",
+    "symbol": "_tr_flush_bits",
+    "evidence": "symbol",
+    "object": "build/out/zlib/O3pic/trees.o",
+    "reference": {
+      "path": "third_party/zlib/trees.c",
+      "line": 878
+    }
   },
   {
     "id": "zlib/931",
@@ -1001,34 +1026,6 @@
     }
   },
   {
-    "id": "zlib/990",
-    "index": 990,
-    "size": 2434,
-    "band": "huge",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "loop",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 25
-    },
-    "origin": "selected",
-    "setup": "zlib",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
-    "name": "_tr_flush_block",
-    "symbol": "_tr_flush_block",
-    "evidence": "symbol",
-    "object": "build/out/zlib/O3pic/trees.o",
-    "reference": {
-      "path": "third_party/zlib/trees.c",
-      "line": 995
-    }
-  },
-  {
     "id": "zlib/1508",
     "index": 1508,
     "size": 55,
@@ -1055,64 +1052,6 @@
     "reference": {
       "path": "third_party/zlib/contrib/minizip/ioapi.c",
       "line": 53
-    }
-  },
-  {
-    "id": "zlib/1848",
-    "index": 1848,
-    "size": 147,
-    "band": "medium",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "bulk-memory",
-      "select"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "zlib",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
-    "name": "flush_pending",
-    "symbol": "flush_pending",
-    "evidence": "symbol",
-    "object": "build/out/zlib/O3pic/deflate.o",
-    "reference": {
-      "path": "third_party/zlib/deflate.c",
-      "line": 915
-    }
-  },
-  {
-    "id": "zlib/1849",
-    "index": 1849,
-    "size": 600,
-    "band": "large",
-    "component": "ecourna",
-    "owner": "app",
-    "features": [
-      "call_indirect",
-      "frame",
-      "i64",
-      "select"
-    ],
-    "ledger": {
-      "kind": "fingerprint",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "zlib",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
-    "name": "zip64local_getLong64",
-    "symbol": "zip64local_getLong64",
-    "evidence": "symbol",
-    "object": "build/out/zlib/O3pic/minizip_zip.o",
-    "reference": {
-      "path": "third_party/zlib/contrib/minizip/zip.c",
-      "line": 401
     }
   },
   {
@@ -1201,6 +1140,67 @@
     "object": "build/out/zlib/O3pic/deflate.o",
     "reference": {
       "path": "third_party/zlib/deflate.c"
+    }
+  },
+  {
+    "id": "zlib/4825",
+    "index": 4825,
+    "size": 1801,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 10
+    },
+    "origin": "selected",
+    "setup": "zlib",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
+    "name": "deflate_stored",
+    "symbol": "deflate_stored",
+    "evidence": "symbol",
+    "object": "build/out/zlib/O3pic/deflate.o",
+    "reference": {
+      "path": "third_party/zlib/deflate.c",
+      "line": 1627
+    }
+  },
+  {
+    "id": "zlib/4826",
+    "index": 4826,
+    "size": 6899,
+    "band": "huge",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "call_indirect",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 29
+    },
+    "origin": "selected",
+    "setup": "zlib",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -D_LARGEFILE64_SOURCE=1",
+    "name": "deflate",
+    "symbol": "deflate",
+    "evidence": "symbol",
+    "object": "build/out/zlib/O3pic/deflate.o",
+    "reference": {
+      "path": "third_party/zlib/deflate.c",
+      "line": 946
     }
   },
   {
@@ -1339,36 +1339,6 @@
     "reference": {
       "path": "third_party/sqlite/sqlite3.c",
       "line": 143944
-    }
-  },
-  {
-    "id": "sqlite/1184",
-    "index": 1184,
-    "size": 414,
-    "band": "medium",
-    "component": "sqlite",
-    "owner": "sqlite",
-    "features": [
-      "leaf",
-      "loop",
-      "frame",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "sqlite",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_UNLOCK_NOTIFY -DHAVE_FDATASYNC -DHAVE_GMTIME_R -DHAVE_LOCALTIME_R -DHAVE_POSIX_FALLOCATE -DHAVE_STRERROR_R -DHAVE_USLEEP",
-    "name": "putVarint64",
-    "symbol": "putVarint64",
-    "evidence": "symbol",
-    "object": "build/out/sqlite/O3pic2/sqlite3.o",
-    "reference": {
-      "path": "third_party/sqlite/sqlite3.c",
-      "line": 36698
     }
   },
   {
@@ -1575,6 +1545,34 @@
     "reference": {
       "path": "third_party/sqlite/sqlite3.c",
       "line": 42697
+    }
+  },
+  {
+    "id": "sqlite/12709",
+    "index": 12709,
+    "size": 181,
+    "band": "medium",
+    "component": "unknown",
+    "owner": "app",
+    "features": [
+      "loop",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "sqlite",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_UNLOCK_NOTIFY -DHAVE_FDATASYNC -DHAVE_GMTIME_R -DHAVE_LOCALTIME_R -DHAVE_POSIX_FALLOCATE -DHAVE_STRERROR_R -DHAVE_USLEEP",
+    "name": "sqlite3_uri_key",
+    "symbol": "sqlite3_uri_key",
+    "evidence": "symbol",
+    "object": "build/out/sqlite/O3pic2/sqlite3.o",
+    "reference": {
+      "path": "third_party/sqlite/sqlite3.c",
+      "line": 187456
     }
   },
   {
@@ -2511,8 +2509,8 @@
     "setup": "rhvoice-ignore",
     "lang": "c++",
     "flags": "-Oz -fexceptions -DRHVOICE=1 '-DPACKAGE=\"RHVoice\"' -O3 -std=c++14 -DNDEBUG -fno-strict-aliasing -fignore-exceptions",
-    "name": "std::__2::__shared_ptr_pointer<RHVoice::userdict::empty_string*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::empty_string>, std::__2::allocator<RHVoice::userdict::empty_string>>::__get_deleter(std::type_info const&) const",
-    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict12empty_stringENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info",
+    "name": "std::__2::__shared_ptr_pointer<RHVoice::userdict::word_break*, std::__2::shared_ptr<RHVoice::userdict::correction>::__shared_ptr_default_delete<RHVoice::userdict::correction, RHVoice::userdict::word_break>, std::__2::allocator<RHVoice::userdict::word_break>>::__get_deleter(std::type_info const&) const",
+    "symbol": "_ZNKSt3__220__shared_ptr_pointerIPN7RHVoice8userdict10word_breakENS_10shared_ptrINS2_10correctionEE27__shared_ptr_default_deleteIS6_S3_EENS_9allocatorIS3_EEE13__get_deleterERKSt9type_info",
     "evidence": "symbol",
     "object": "build/out/rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/userdict.cpp.o",
     "reference": null
@@ -3012,6 +3010,33 @@
     "reference": null
   },
   {
+    "id": "boost/5179",
+    "index": 5179,
+    "size": 680,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "loop",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 10
+    },
+    "origin": "selected",
+    "setup": "boost",
+    "lang": "c++",
+    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
+    "instantiatedBy": "ecourna",
+    "name": "boost::random::mersenne_twister_engine<unsigned int, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u>::twist()",
+    "symbol": "_ZN5boost6random23mersenne_twister_engineIjLm32ELm624ELm397ELm31ELj2567483615ELm11ELj4294967295ELm7ELj2636928640ELm15ELj4022730752ELm18ELj1812433253EE5twistEv",
+    "evidence": "symbol",
+    "object": "build/out/app/ecourna/api_security_cprng.cpp.o",
+    "reference": null
+  },
+  {
     "id": "boost/9285",
     "index": 9285,
     "size": 24,
@@ -3239,29 +3264,6 @@
     "reference": {
       "path": "src/ecourna/api/compression/icompressor.cpp"
     }
-  },
-  {
-    "id": "boost/11614",
-    "index": 11614,
-    "size": 27,
-    "band": "tiny",
-    "component": "boost",
-    "owner": "boost",
-    "features": [],
-    "ledger": {
-      "kind": "addr",
-      "score": 5
-    },
-    "origin": "selected",
-    "setup": "boost",
-    "lang": "c++",
-    "flags": "-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow",
-    "instantiatedBy": "ecourna",
-    "name": "boost::wrapexcept<boost::gregorian::bad_day_of_month>::clone() const",
-    "symbol": "_ZNK5boost10wrapexceptINS_9gregorian16bad_day_of_monthEE5cloneEv",
-    "evidence": "symbol",
-    "object": "build/out/app/ecourna/app_dados_asn_datahoraasn.cpp.o",
-    "reference": null
   },
   {
     "id": "libc/390",
@@ -4289,15 +4291,13 @@
     }
   },
   {
-    "id": "libcxx/2137",
-    "index": 2137,
-    "size": 11,
+    "id": "libcxx/1359",
+    "index": 1359,
+    "size": 21,
     "band": "tiny",
-    "component": "libc++",
-    "owner": "libcxx",
-    "features": [
-      "leaf"
-    ],
+    "component": "libc++abi",
+    "owner": "sqlite",
+    "features": [],
     "ledger": {
       "kind": "byte",
       "score": 0
@@ -4306,13 +4306,11 @@
     "setup": "libcxx",
     "lang": "c++",
     "flags": "-O2 -fno-unroll-loops -Oz -DLIBCXX_BUILDING_LIBCXXABI=1 -D_LIBCPP_BUILDING_LIBRARY -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -std=c++23 -DLIBC_NAMESPACE=__llvm_libc -DNDEBUG -sDISABLE_EXCEPTION_CATCHING=0",
-    "name": "std::__2::codecvt<char, char, __mbstate_t>::do_unshift(__mbstate_t&, char*, char*, char*&) const",
-    "symbol": "_ZNKSt3__27codecvtIcc11__mbstate_tE10do_unshiftERS1_PcS4_RS4_",
+    "name": "std::__2::basic_string_view<char, std::__2::char_traits<char>>::basic_string_view[abi:ne210108](char const*)",
+    "symbol": "_ZNSt3__217basic_string_viewIcNS_11char_traitsIcEEEC2B8ne210108EPKc",
     "evidence": "symbol",
-    "object": "emsdk:libc++.a:locale.o",
-    "reference": {
-      "path": "emsdk:/emsdk/upstream/emscripten/system/lib/libcxx/src/locale.cpp"
-    }
+    "object": "emsdk:libc++.a:directory_iterator.o",
+    "reference": null
   },
   {
     "id": "libcxx/2239",

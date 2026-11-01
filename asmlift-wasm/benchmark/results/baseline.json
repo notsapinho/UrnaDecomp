@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-10-31T15:30:44.720Z",
+ "createdAt": "2026-11-01T03:47:22.990Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
@@ -9,14 +9,14 @@
  "image": "urna-emsdk:6.0.0",
  "dataset": {
   "rows": 181,
-  "rowsSha256": "4bfc1ad3947199eb0d0ca3b55d49aedae0b6293e51c03c69c822a0481c9af912",
-  "setupsSha256": "cfece17df3e722ba13a6bb4f29b1a25054d386a44d779676f5249defb6572e1e"
+  "rowsSha256": "1c33278d45414a6c9e46f579f113dbada09f6559250400d84cd85838be0315bd",
+  "setupsSha256": "603cc01dfc86d205832e1414a291fed1ebf8632bd638ea0b3168c59b76c64a7f"
  },
- "commit": "b714993a+dirty",
+ "commit": "aba2934a+dirty",
  "durationMs": {
-  "lift": 132,
-  "compileAndOptimise": 6625,
-  "total": 13893
+  "lift": 124,
+  "compileAndOptimise": 4695,
+  "total": 12362
  },
  "totals": {
   "overall": {
@@ -24,14 +24,14 @@
    "lifted": 181,
    "compiled": 181,
    "optimised": 181,
-   "exactRaw": 35,
-   "exact": 82,
-   "medianRatio": 0.4043,
-   "medianOptRatio": 0.0738,
-   "meanOptRatio": 0.1787,
+   "exactRaw": 34,
+   "exact": 81,
+   "medianRatio": 0.4069,
+   "medianOptRatio": 0.0789,
+   "meanOptRatio": 0.179,
    "outcomes": {
-    "exact": 82,
-    "differs": 99
+    "exact": 81,
+    "differs": 100
    }
   },
   "bySetup": {
@@ -44,7 +44,7 @@
     "exact": 5,
     "medianRatio": 0.1444,
     "medianOptRatio": 0.119,
-    "meanOptRatio": 0.1407,
+    "meanOptRatio": 0.1547,
     "outcomes": {
      "exact": 5,
      "differs": 7
@@ -87,9 +87,9 @@
     "optimised": 12,
     "exactRaw": 2,
     "exact": 5,
-    "medianRatio": 0.3582,
-    "medianOptRatio": 0.1563,
-    "meanOptRatio": 0.1792,
+    "medianRatio": 0.3912,
+    "medianOptRatio": 0.1161,
+    "meanOptRatio": 0.1698,
     "outcomes": {
      "exact": 5,
      "differs": 7
@@ -104,7 +104,7 @@
     "exact": 5,
     "medianRatio": 0.416,
     "medianOptRatio": 0.2128,
-    "meanOptRatio": 0.1925,
+    "meanOptRatio": 0.1772,
     "outcomes": {
      "differs": 7,
      "exact": 5
@@ -175,14 +175,14 @@
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 4,
-    "exact": 11,
-    "medianRatio": 0.0995,
+    "exactRaw": 3,
+    "exact": 10,
+    "medianRatio": 0.1995,
     "medianOptRatio": 0,
-    "meanOptRatio": 0.0158,
+    "meanOptRatio": 0.0309,
     "outcomes": {
-     "exact": 11,
-     "differs": 1
+     "exact": 10,
+     "differs": 2
     }
    },
    "libc": {
@@ -385,6 +385,37 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
+  },
+  {
+   "id": "uenux2/5719",
+   "index": 5719,
+   "setup": "uenux2",
+   "size": 4179,
+   "band": "huge",
+   "features": [
+    "loop",
+    "switch",
+    "i64",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 2049,
+   "raw": {
+    "score": 1444,
+    "ratio": 0.7047
+   },
+   "opt": {
+    "score": 1139,
+    "ratio": 0.5559
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
    "id": "uenux2/6548",
@@ -595,42 +626,6 @@
    "standIns": [
     "arm tail kept from the join",
     "goto"
-   ]
-  },
-  {
-   "id": "uenux2/11620",
-   "index": 11620,
-   "setup": "uenux2",
-   "size": 4622,
-   "band": "huge",
-   "features": [
-    "loop",
-    "throw",
-    "frame",
-    "inlined-frame",
-    "i64",
-    "bulk-memory"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 2052,
-   "raw": {
-    "score": 1773,
-    "ratio": 0.864
-   },
-   "opt": {
-    "score": 796,
-    "ratio": 0.3879
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "constant address hidden from alignment inference",
-    "frame object escapes at entry",
-    "goto",
-    "inlined callee outlined"
    ]
   },
   {
@@ -1265,8 +1260,8 @@
    "standIns": []
   },
   {
-   "id": "asn1/9973",
-   "index": 9973,
+   "id": "asn1/9970",
+   "index": 9970,
    "setup": "asn1",
    "size": 17,
    "band": "tiny",
@@ -1289,6 +1284,34 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
+  },
+  {
+   "id": "zlib/704",
+   "index": 704,
+   "setup": "zlib",
+   "size": 166,
+   "band": "medium",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 73,
+   "raw": {
+    "score": 14,
+    "ratio": 0.1918
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
    "id": "zlib/931",
@@ -1317,35 +1340,6 @@
    "standIns": []
   },
   {
-   "id": "zlib/990",
-   "index": 990,
-   "setup": "zlib",
-   "size": 2434,
-   "band": "huge",
-   "features": [
-    "loop",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 1173,
-   "raw": {
-    "score": 601,
-    "ratio": 0.5124
-   },
-   "opt": {
-    "score": 343,
-    "ratio": 0.2924
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
    "id": "zlib/1508",
    "index": 1508,
    "setup": "zlib",
@@ -1371,63 +1365,6 @@
    "outcome": "exact",
    "failure": null,
    "standIns": []
-  },
-  {
-   "id": "zlib/1848",
-   "index": 1848,
-   "setup": "zlib",
-   "size": 147,
-   "band": "medium",
-   "features": [
-    "bulk-memory",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 68,
-   "raw": {
-    "score": 28,
-    "ratio": 0.4118
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "zlib/1849",
-   "index": 1849,
-   "setup": "zlib",
-   "size": 600,
-   "band": "large",
-   "features": [
-    "call_indirect",
-    "frame",
-    "i64",
-    "select"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 302,
-   "raw": {
-    "score": 92,
-    "ratio": 0.3046
-   },
-   "opt": {
-    "score": 63,
-    "ratio": 0.2086
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
   },
   {
    "id": "zlib/3377",
@@ -1514,6 +1451,69 @@
    "outcome": "differs",
    "failure": null,
    "standIns": [
+    "goto"
+   ]
+  },
+  {
+   "id": "zlib/4825",
+   "index": 4825,
+   "setup": "zlib",
+   "size": 1801,
+   "band": "large",
+   "features": [
+    "loop",
+    "switch",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 870,
+   "raw": {
+    "score": 436,
+    "ratio": 0.5011
+   },
+   "opt": {
+    "score": 86,
+    "ratio": 0.0989
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
+  },
+  {
+   "id": "zlib/4826",
+   "index": 4826,
+   "setup": "zlib",
+   "size": 6899,
+   "band": "huge",
+   "features": [
+    "loop",
+    "switch",
+    "call_indirect",
+    "bulk-memory",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 3255,
+   "raw": {
+    "score": 1921,
+    "ratio": 0.5902
+   },
+   "opt": {
+    "score": 943,
+    "ratio": 0.2897
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": [
+    "arm tail kept from the join",
     "goto"
    ]
   },
@@ -1647,36 +1647,6 @@
    "failure": null,
    "standIns": [
     "arm tail kept from the join",
-    "goto"
-   ]
-  },
-  {
-   "id": "sqlite/1184",
-   "index": 1184,
-   "setup": "sqlite",
-   "size": 414,
-   "band": "medium",
-   "features": [
-    "leaf",
-    "loop",
-    "frame",
-    "i64"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 215,
-   "raw": {
-    "score": 155,
-    "ratio": 0.7209
-   },
-   "opt": {
-    "score": 125,
-    "ratio": 0.5814
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
     "goto"
    ]
   },
@@ -1888,6 +1858,32 @@
     "arm tail kept from the join",
     "goto"
    ]
+  },
+  {
+   "id": "sqlite/12709",
+   "index": 12709,
+   "setup": "sqlite",
+   "size": 181,
+   "band": "medium",
+   "features": [
+    "loop",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 93,
+   "raw": {
+    "score": 60,
+    "ratio": 0.6452
+   },
+   "opt": {
+    "score": 37,
+    "ratio": 0.3978
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "sqlite/12783",
@@ -3331,6 +3327,33 @@
    "standIns": []
   },
   {
+   "id": "boost/5179",
+   "index": 5179,
+   "setup": "boost",
+   "size": 680,
+   "band": "large",
+   "features": [
+    "leaf",
+    "loop",
+    "select"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 302,
+   "raw": {
+    "score": 199,
+    "ratio": 0.6589
+   },
+   "opt": {
+    "score": 55,
+    "ratio": 0.1821
+   },
+   "exact": false,
+   "outcome": "differs",
+   "failure": null,
+   "standIns": []
+  },
+  {
    "id": "boost/9285",
    "index": 9285,
    "setup": "boost",
@@ -3550,29 +3573,6 @@
    "raw": {
     "score": 21,
     "ratio": 1.1053
-   },
-   "opt": {
-    "score": 0,
-    "ratio": 0
-   },
-   "exact": true,
-   "outcome": "exact",
-   "failure": null,
-   "standIns": []
-  },
-  {
-   "id": "boost/11614",
-   "index": 11614,
-   "setup": "boost",
-   "size": 27,
-   "band": "tiny",
-   "features": [],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 7,
-   "raw": {
-    "score": 0,
-    "ratio": 0
    },
    "opt": {
     "score": 0,
@@ -4643,17 +4643,15 @@
    "standIns": []
   },
   {
-   "id": "libcxx/2137",
-   "index": 2137,
+   "id": "libcxx/1359",
+   "index": 1359,
    "setup": "libcxx",
-   "size": 11,
+   "size": 21,
    "band": "tiny",
-   "features": [
-    "leaf"
-   ],
+   "features": [],
    "lifted": true,
    "compiled": true,
-   "targetRows": 5,
+   "targetRows": 9,
    "raw": {
     "score": 0,
     "ratio": 0

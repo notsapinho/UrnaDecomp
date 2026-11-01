@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "api/gui/iform.h"
 #include "api/gui/itext.h"
 
 // the JavaScript side (EM_JS, src/web/wasm_shim.cpp, whose generated declaration takes an int for the pointer: the same
