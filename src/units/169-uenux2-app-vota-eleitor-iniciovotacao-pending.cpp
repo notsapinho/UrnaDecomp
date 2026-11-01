@@ -11,7 +11,7 @@
 // - vota::CQuerImprimirZeresima::ProcessInput (fn 11920, slot 7): the same Read() (record @1544896); it calls fns 491
 //   and 2880, which have no name.
 // - vota::CGeraZeresimaBase::StartState (target fn 11946, slot 2, 6878 B) and vota::CGeraResumoZeresimaBase::StartState
-//   (fn 11943, 1731 B): they call fns 183 and 436 (11943 also 491) and others that have no name.
+//   (fn 11943, 1731 B): they call fns 183 and 436, which have names, 11943 also 491, and others that have no name.
 // - vota::CGeraResumoZeresima::AposGeracao (target fn 11940, slot 9): it calls fn 491, which has no name.
 // - vota::CRegerarZeresima::AposGeracao (target fn 11842, slot 9): it calls fn 2882, which has no name.
 #include "app/vota/eleitor/iniciovotacao/cconfirmaimpressaozeresima.h"

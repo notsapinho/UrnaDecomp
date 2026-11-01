@@ -69,6 +69,22 @@
 # - The gravadores/md data classes, CConversorTipoApuracaoSA and the other recorders' destructors are unit 136's.
 #   CVersoesContratos::GetValor and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) wait for the class whose constructor
 #   (fn 5480) both build and whose map their find (fn 10877) and end (fn 5481) read; 6044 and 10877 wait for them.
+# - fn 5841, which converts a comum::md::CComparecimentoMesario into ecourna's CComparecimentoMesario (fn 3486): its one
+#   caller is GravaResultado (fn 11616), which calls it twice. Written as a private const member of CGravadorRCSecao
+#   after CriaIdentidadeEleitor, it builds a CNumeroInscricaoEleitoral from a copy of the poll worker's identifier, a
+#   CRegistroIdentificacaoEleitor over a std::make_shared copy of it, the time by from_time_t(ConvertToLocalTime()) and
+#   the collection state, and in the whole link (pnpm wasm score against the target) it scored 44 over 278 rows: every
+#   row but those of the state was the target's up to operands. The target computes the state in a block (result
+#   i32) after ConvertToLocalTime's call, the shape of a function binaryen inlines into its one caller (a reading: the
+#   mapping written in the same TU, as a switch or as ifs, came before that call under try-tu.sh --single, and kept out
+#   of line it came after). Out of line in cgravadorutil.cpp, over the poll worker by const reference, three forms
+#   (ifs on the state, the flag at +20 and the finger; ifs on the state first; a switch) scored 44, 51 and 51 over 278
+#   to 281. The
+#   target loads the finger and the byte at +20 only after its test of state 1, tests that byte as `& 1` and combines it
+#   with `state == 2` before testing the finger: the forms by reference gave the loads' place and not the rest, and one
+#   over the three values by value (run alone, through try-tu.sh --single's template by hand) gave the combination with
+#   the loads before the test and no `& 1`. Its remainder not explained and nothing written needing it, it is not
+#   written (docs/how-to-decompile.md step 5).
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \
 	src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
 	src/app/comum/gravadores/md/cversoesarquivos.cpp

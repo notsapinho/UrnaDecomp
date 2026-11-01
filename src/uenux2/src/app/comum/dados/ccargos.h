@@ -35,6 +35,9 @@ public:
 
     void Reset();
     bool IsFim() const;
+    // Whether the current position is the first: vota::CEleitorVotando::ProcessTick (fn 7349) tests the word at +0
+    // against 0. The member and its name are chosen.
+    bool IsPrimeiro() const { return m_atual == 0; }
     void Next();
     const md::CCargo& GetCurrent() const;
     comum::TCargoID GetCurrentCargoID() const;

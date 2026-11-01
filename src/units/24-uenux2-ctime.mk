@@ -31,6 +31,8 @@
 # operator<=>'s body is fn 5448's, the one the target keeps for OpenSSL's err_string_data_cmp as well, so that match line
 # now names ours (ctime.cpp.o links ahead of libcrypto). Format matches at the tree's -O3: its appends call
 # std::string::append (fn 160) in the target, which -O2 inlines (unit 125's fragment has the -O2 measurement).
+# ctime.h's defaulted operator== emits nothing here: vota::CEstadoComDesligamentoAutomatico::ProcessTick (fn 12061,
+# unit 97) holds it inlined through CDateTime's.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CTIME_SRCS := src/api/util/ctime.cpp
 UENUX2_SRCS += $(CTIME_SRCS)

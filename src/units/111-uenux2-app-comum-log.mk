@@ -47,7 +47,6 @@
 #   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
 #   those thunks.
-# - vota::CExibeAlertaDesligamento::StartState (12018) stays pending in unit 61: its pending file says why.
 # - not reconstructed: 5372 (needs 816, 1686, 1903, 2224), 10226,
 #   12098 and the other CLogComum members, 2742 and 3603 (the other thunks of 2900: their classes are not named).
 #

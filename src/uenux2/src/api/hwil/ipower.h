@@ -25,7 +25,10 @@
 // ones the mock's initial value sets, are named. What the callers show of them:
 // - word 0: bits 3-4 are the internal battery's status and bits 5-6 the external one's (fn 10226 passes them to
 //   comum::CLogComum::LogaNivelBateria, fn 5875, with 1 and 2); bits 1-2 are what fn 2774 reads as the source of
-//   power (below); bit 13 is slot 0's and nothing says what it is.
+//   power (below); bit 13 is slot 0's and nothing says what it is. Bits 1-2 hold 1 while the urn runs on its
+//   internal battery: fns 12017 and 12061 test `(word & 6) == 2`, and 12017 logs "Tempo limite de espera usando
+//   bateria interna atingido" when its time limit passes; fn 2774 tests them for 2 and then reads the external
+//   battery's bits. The field's name is chosen.
 // - word 1: bit 1 is the headphone (fn 10226: set is "Fone de ouvido desconectado"); the top half is slot 1's.
 // - word 2: the low half is slot 3's, the top half slot 4's.
 // - word 3: the low half is what slot 2 signs and slot 5 scales, and the level of the mock's slot 7; the next byte is
@@ -166,7 +169,7 @@ public:
 
     virtual uebyte BatLevel() = 0;
 
-    // (original lines 169-351: content not recovered)
+    // (original lines 172-351: content not recovered)
 #line 352
     virtual float BatIntMaxSocValue()
     {
@@ -264,6 +267,15 @@ public:
     {
         ReadStatus(m_status);
         return m_status.m_statusBatExt;
+    }
+
+    // The slot-15 call and test of word 0's bits 1-2 that vota::CExibeAlertaDesligamento::ProcessTick (fn 12017) and
+    // vota::CEstadoComDesligamentoAutomatico::ProcessTick's lambda (fn 12061) hold inlined. The member and its name are
+    // chosen, as FoneDesconectado's are.
+    bool UsandoBateriaInterna()
+    {
+        ReadStatus(m_status);
+        return m_status.m_fonte == 1;
     }
 
 protected:

@@ -7,7 +7,8 @@
 // - comum::IEventosLog::ConverteERelatoriosUE: the target's fns 1047 and 1127;
 // - comum::IEventosLog::logaAlerta (fn 1398): the target's fns 6115, 10415, 10420, 10512 and 10676 (10774, unit 119's
 //   slot 28, 10416, unit 152's, and 10642, unit 161's, are in the link);
-// - comum::IEventosLog::logaErro (fn 2282): the target's fns 3279, 4459, 4550, 10478 and 11849;
+// - comum::IEventosLog::logaErro (fn 2282): the target's fns 3279, 4550, 10478 and 11849 (4459, unit 197's, is in the
+//   link);
 // - comum::IEventosLog's five members that log a fixed text: the target's fns 7160 and 12134 (5885), 12134 twice (5883),
 //   11849 and 11921 (5882), 5945 and 11914 (5881), 11869 and 11911 (5880) (11921 is in the link, unit 169);
 // - comum::CInformacaoEleicao's constructor and members: fn 603 has 22 callers in the target; each member's own callers
@@ -56,7 +57,7 @@ __attribute__((noinline)) int w111_alerta(comum::IEventosLog& log, const std::st
     return 2;
 }
 
-// stands for fns 3279, 4459, 4550, 10478 and 11849
+// stands for fns 3279, 4550, 10478 and 11849
 __attribute__((noinline)) int w111_erro(comum::IEventosLog& log, const std::string& mensagem, const std::string& outra)
 {
     log.logaErro(mensagem);

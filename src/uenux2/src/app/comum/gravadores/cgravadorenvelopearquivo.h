@@ -15,9 +15,17 @@ namespace comum {
 // body and the free of `this`. Slot 7 is IGravadorEnvelope's (fn 11626); slot 8, LeConteudo (fn 11623), is out of
 // line, so it is the key function, in cgravadorenvelopearquivo.cpp: it reads the whole file the string at +172 names,
 // so that string is the envelope's file name. No record names this class's file (the path follows igravador.h). The
-// constructor is not declared; the member's name is chosen.
+// constructor (fn 5856) is in cgravadorenvelopearquivo.cpp. fn 12098, its one caller, copies the string into its own
+// frame just before each call, which a by-value parameter or a temporary bound to a const reference both give; the
+// constructor copies it to +172 (no move). Its parameters are in the order fn 5856 uses its arguments in. Chosen: the
+// const reference, the parameters' types beyond IGravador's constructor's, and the member's name.
 class CGravadorEnvelopeArquivo : public IGravadorEnvelope {
 public:
+    CGravadorEnvelopeArquivo(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
+        TSecaoID secao, char fase, EExtensaoArquivoResultado extensao, ESavdArquivoUE arquivoSavd,
+        md::CEnvelopeGenerico::Tipo tipoEnvelope, const md::estadoaplicacao::CDadoCorrespondencia& correspondencia,
+        const std::string& nomeArquivoEnvelope);
+
     virtual std::vector<uebyte> LeConteudo() const override;
 
 private:

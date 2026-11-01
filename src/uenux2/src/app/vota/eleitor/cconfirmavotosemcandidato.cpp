@@ -9,7 +9,25 @@ namespace vota {
 
 CConfirmaVotoSemCandidato::~CConfirmaVotoSemCandidato() = default;
 
-// (original lines 12-59: content not recovered)
+CConfirmaVotoSemCandidato::CConfirmaVotoSemCandidato()
+    : CVotacaoStateAudio(EVENTO_ENTRADA | EVENTO_TICK)
+    , m_tela(ETelaVotacao::TELA_CARGO_SEM_CANDIDATO)
+{
+}
+
+CConfirmaVotoSemCandidato& CConfirmaVotoSemCandidato::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CConfirmaVotoSemCandidato());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CConfirmaVotoSemCandidato> CConfirmaVotoSemCandidato::s_inst;
+std::mutex CConfirmaVotoSemCandidato::s_mutex;
+
+// (original lines 30-59: content not recovered)
 #line 60
 CFormInterativoTelaVota CConfirmaVotoSemCandidato::GetTelaCargoAtual(const std::string& chamador)
 {

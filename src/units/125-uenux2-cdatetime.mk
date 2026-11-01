@@ -74,6 +74,12 @@
 # ConvertFromLocalTime before CDateTime(const std::string &) (band 2), as CDateTime(time_t), defined above both, calls
 # it first (docs/reference/facts/reading.md R9). CDate's constructor from three numbers delegates to the one from a
 # string through std::format("{:02}{:02}{:04}", ...), the string at 8593.
+# Added since: fn 5474, CDateTime::operator+=(const std::chrono::seconds&), which passes the count's low word to
+# operator+=(int) (fn 2233). Its one caller, vota::CEstadoComDesligamentoAutomatico::ProcessTick (fn 12061, unit 97),
+# calls it twice, so it keeps its body; band 2 puts it between CDateTime(const std::string &) and FormatCurrentTime
+# (5475, 5474, 5473), so it is defined after operator+=(int), a place among those the band allows. Its name, its
+# parameter's type and its void result are chosen. And CDateTime's operator== and CTime's (defaulted, inline in their
+# headers), which 12061 holds: four 16-bit compares, then one 32-bit.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CDATETIME_SRCS := src/api/util/cdate.cpp src/api/util/cdatetime.cpp
 UENUX2_SRCS += $(CDATETIME_SRCS)

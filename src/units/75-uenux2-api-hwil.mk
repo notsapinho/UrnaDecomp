@@ -31,8 +31,9 @@
 # - ipower.h's path and the five members' names and signatures are records. Everything else named here is chosen, and
 #   each header says from what: the other members' names, the block's and the fields' names, iurna.h's and
 #   euehwilerror.h's paths, the mock/ tree's two paths. The classes, their bases and the error type with its limits are
-#   RTTI's. The constructors are implicit: no target function holds them, and clang's code for them is fn 8302's stores
-#   (the two headers say so).
+#   RTTI's. The constructors are implicit: no target function holds them. Fn 8302 holds them inlined as whole-word
+#   stores (`i64.store[p0+4] = 0`, `i64.store[p0+20] = 8589936704`), from which the two headers read the layout; the
+#   copies the roots object's builders give, which wasm-ld drops, mask the named bit-fields instead.
 # Other forms measured to give the same bytes, each against the chosen one, function by function in the object (a form
 # that differs in the object was then linked, the list below says how):
 # - that CPowerMock and not IPower defines slots 0 to 6 (ipower.h gives the evidence for IPower); `final` on CPowerMock;

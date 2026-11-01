@@ -55,14 +55,7 @@ void CEleitores::MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados
     }
 }
 
-// (original lines 451-493: content not recovered)
-#line 494
-// <stubs>
-// f7377 · 2313 B · unmatched · name unknown
-// void f7377(i32) { ... }
-// </stubs>
-
-// (original lines 499-733: content not recovered)
+// (original lines 451-733: content not recovered)
 #line 734
 void CEleitores::ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const
 {
