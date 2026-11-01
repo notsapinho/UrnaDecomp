@@ -10,10 +10,12 @@
 
 namespace api {
 
+bool CApplication::s_demonstracao = false;
 bool CApplication::s_finalizar = false;
+int CApplication::s_modo = 48;
 int CApplication::s_codigoRetorno = -1;
 
-// (original lines 16-497: content not recovered)
+// (original lines 18-497: content not recovered)
 #line 498
 void CApplication::EnterLoopDoingNothing()
 {
@@ -26,6 +28,20 @@ void CApplication::EnterLoopDoingNothing()
             CSystem::Dorme(1000);
         } while (!s_finalizar && s_codigoRetorno <= 0);
     }
+}
+
+std::string CApplication::GetDescricaoModo()
+{
+    if (s_demonstracao) {
+        return "DEMONSTRAÇÃO";
+    }
+    switch (s_modo) {
+    case 50:
+        return "SIMULADO";
+    case 51:
+        return "TREINAMENTO";
+    }
+    return "";
 }
 
 } // namespace api

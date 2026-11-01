@@ -1,5 +1,6 @@
 # uenux2 api::CApplication (api/gui/capplication.cpp, the records' file), in part: EnterLoopDoingNothing (target fn
-# 5566), with the two statics it reads, in a header of a chosen path (api/gui/capplication.h).
+# 5566), with the two statics it reads, in a header of a chosen path (api/gui/capplication.h); and GetDescricaoModo (fn
+# 5564), written and not matched (below), with the two statics it reads.
 #
 # Evidence and choices.
 # - The record capplication.cpp:503:32, `static void api::CApplication::EnterLoopDoingNothing()`, gives the class, the
@@ -25,7 +26,14 @@
 #   content to place it. Weighed on copies of the symbol file and match list (two splat-scan passes, then splat-build):
 #   either line out, or both, takes 5566 out of match and moves no other row; the build gives the target's sha256 each
 #   way, and a control that removes nothing keeps 5566.
-# - The roots file stands for 5566's two target callers, 7709 and 7710, as two noinline call sites.
+# - The roots file stands for 5566's two target callers, 7709 and 7710, as two noinline call sites, and with
+#   DescreveModo for 4620, 5564's caller beside 502 (unit 31), which is not written.
+# - GetDescricaoModo (5564) and s_modo and s_demonstracao: api/gui/capplication.h has the evidence and the choices. In
+#   the whole link 5564 scores 8 over 75 rows, every one an operand of a call or of data (pnpm wasm score), and its row
+#   is `no-candidate`: no evidence names it while 502, whose records would anchor it, differs, and 4620 is not written.
+#   Named, it would still wait: its .bss byte at 1839208 has no reader but 5564 (docs/reference/splat.md 3, no hand
+#   line for it), and its .data word, 48, holds one non-zero byte, too little for content to place it, until 7787, the
+#   word's other reader, is written.
 # - Lines: 503 is the record's; 303 (QRCodeSRC::build), 377 (ShowExceptionMsgScreen), 432 (LogExceptionMsg) and 478
 #   (EnterLoopBeeping's lambda) are records of functions not written and stay blank. Every other line, the statics' place
 #   in the file and the include order are chosen.
