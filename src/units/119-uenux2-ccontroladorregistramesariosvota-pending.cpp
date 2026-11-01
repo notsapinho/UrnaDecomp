@@ -9,15 +9,10 @@
 // - slot 9, fn 10794: returns what fn 5343 returns, vota::CAguardaInicio's GetInst (its vptr) with the constructor
 //   inlined, 2105 B, which builds a form with api::CMTFormBuilder::AddTextField (fns 180 and 651); waits for fn 5343,
 //   whose one callee with no name is fn 1694;
-// - slots 10 and 15, fns 10792 and 10787: fn 6018 with 11 and 7, which passes +36 of vota::CThreadEleitor (fn 316), the
-//   value as 16 bits in a frame slot, and 1 to fn 501; wait for fn 501 (217 B; its invoke_ thunks read as code built
-//   with exceptions, which this tree is not);
 // - slots 13 and 14, fns 10790 and 10789: fn 2264 over comum::CEleitores (fn 326) and the titulo of slots 17 and 18, the
 //   first as a bool; wait for fn 566, 2264's callee;
 // - slot 16, fn 10786: calls fn 4662, which throws an api::CUeDesligandoError that fn 1685 builds when the byte at
 //   1832936 is 1, and else calls fn 4657 (1048 B); waits for fns 4662, 1685 and 4657;
-// - CRegistroMesarioEncerrado::StartState, fn 10763: stores `this` at +4, then fn 501 as slots 10 and 15 do, with 14;
-//   waits for fn 501;
 // - CRegistroMesarioEncerrado::ProcessKey, fn 10762: for key 12, stores fn 652's result at +4, the next state; waits for
 //   fn 652.
 #include "app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.h"
@@ -40,11 +35,6 @@ comum::CAppState& CControladorRegistraMesariosVota::Slot9() const
     __builtin_trap();
 }
 
-void CControladorRegistraMesariosVota::Slot10() const
-{
-    __builtin_trap();
-}
-
 bool CControladorRegistraMesariosVota::Slot13() const
 {
     __builtin_trap();
@@ -55,17 +45,7 @@ comum::md::CComparecimentoMesario* CControladorRegistraMesariosVota::Slot14() co
     __builtin_trap();
 }
 
-void CControladorRegistraMesariosVota::Slot15() const
-{
-    __builtin_trap();
-}
-
 void CControladorRegistraMesariosVota::Slot16() const
-{
-    __builtin_trap();
-}
-
-void CRegistroMesarioEncerrado::StartState()
 {
     __builtin_trap();
 }

@@ -32,6 +32,11 @@ public:
 
     ~CThreadOperador() override;
 
+    // The queue at +36, to which the vota states post with api::CPriorityMessageQueue::Insert (fn 501): each caller
+    // passes this thread's address plus 36 (7221, 7178, 11994 and others). The accessor and its name are chosen, after
+    // vota::CThreadEleitor's: no record or out-of-line copy names one.
+    api::CPriorityMessageQueue<api::SMessage>& GetMensagens() { return m_mensagens; }
+
     // The titulo of the mesario being registered: vota::CControladorRegistraMesariosVota's slots 17 and 18 return and
     // assign +96 with no call of a member of this class, and its slots 31 to 33 format it into their messages (fn 3887).
     // The names are chosen.

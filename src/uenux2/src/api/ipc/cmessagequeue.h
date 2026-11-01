@@ -4,8 +4,8 @@
 // this file's lines 113 and 114 (the constructor, inlined into 316 and 270) and 153 (Remove, target fn 2073), and by
 // its RTTI and vtable @1534764. The offsets come from Remove, the destructors 3162 and 3157 and the constructor's
 // stores in 316. Every name but the class's, SMessage's, api::CMessageInterface's and Remove's is chosen:
-// src/units/64-uenux2-cmessagequeue.mk lists the choices and the forms that give the same bytes, and
-// src/units/116-uenux2-cthreads.mk what the constructor and api::CMessageInterface add.
+// src/units/64-uenux2-cmessagequeue.mk lists the choices and the forms that give the same bytes, 116-uenux2-cthreads.mk
+// what the constructor and api::CMessageInterface add, and 174-uenux2-app-vota-mensagens.mk Insert, Post and the guard.
 
 #include <cstddef>
 #include <memory>
@@ -19,11 +19,32 @@
 
 namespace api {
 
-// 8 bytes with alignment 4 (Remove copies it with one i64 of align=2). The callers read a short at +0 (4349, 10204);
-// nothing read so far uses +4, so the field names and the second one's type are chosen, and so is this file.
+// 8 bytes with alignment 4 (Remove copies it with one i64 of align=2). The callers read a short at +0 (4349, 10204).
+// The word at +4 is the address of the queue the message is inserted into: fn 3903 stores its first parameter there,
+// the queue it passes on to fn 7708 and so to Insert (fn 501), and every caller of 501 that builds a message stores
+// the queue it passes as 501's first argument (7221, 7178, 11994, 6018 and the others). No reader of the word is
+// known. The field names, the second one's type and this file are chosen.
 struct SMessage {
     short m_tipo;
-    int m_valor;
+    const void* m_fila;
+};
+
+// Reconstruction's note, not TSE's text: a guard that holds an ISyncCtl locked for its lifetime. The target's
+// CPriorityMessageQueue<SMessage>::Insert (fn 501) stores m_sync's pointer in a frame word, calls its Lock (slot 2) and
+// leaves through fn 5528 on both paths, a function of one parameter that calls that word's Unlock (slot 3) and
+// terminates if it throws: a destructor. No record or RTTI names the class, its members or this place: all chosen.
+class CSyncCtlGuard {
+public:
+    explicit CSyncCtlGuard(ISyncCtl* sync)
+        : m_sync(sync)
+    {
+        m_sync->Lock();
+    }
+
+    ~CSyncCtlGuard() { m_sync->Unlock(); }
+
+private:
+    ISyncCtl* m_sync;
 };
 
 template <typename TMessage>
@@ -31,7 +52,7 @@ class CPriorityMessageQueue {
 public:
     virtual ~CPriorityMessageQueue() = default;
 
-    // (original lines 34-111: content not recovered)
+    // (original lines 55-111: content not recovered)
 #line 112
     CPriorityMessageQueue()
         : m_semaforo(CPolySingleton<IGenericFactory<ISemaphore>>::instance().Create())
@@ -40,8 +61,27 @@ public:
     {
     }
 
-    // (original lines 119-146: content not recovered)
-#line 147
+    // (original lines 119-127: content not recovered)
+#line 128
+    void Insert(const TMessage& mensagem, int prioridade)
+    {
+        CSyncCtlGuard trava(m_sync.get());
+        const unsigned ordem = m_ordem++;
+        m_fila.push(SItem{mensagem, prioridade, ordem});
+        m_semaforo->Unlock();
+    }
+
+    void Insert(const TMessage& mensagem) { Insert(mensagem, 1); }
+
+    void Post(short tipo)
+    {
+        TMessage mensagem;
+        mensagem.m_tipo = tipo;
+        mensagem.m_fila = this;
+        Insert(mensagem);
+    }
+
+
     TMessage Remove()
     {
         ISyncCtl* sync = m_sync.get();
