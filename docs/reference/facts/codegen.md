@@ -3,11 +3,13 @@
 Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them,
 and what it says of the class that holds a member), what an object's disassembly does not settle and how to compare
 two forms, a switch over virtual members, when a member's body is inlined, the order of a caller and its callee, what
-the source's named values and a TU's first emissions do to a frame, a C1 or D1 call `-fPIC` keeps, `-Oz`'s subtract
-of 0x100000, how many copies binaryen merges, and what `new T()` clears. `docs/how-to-decompile.md` steps 1 to 5 and 9
+the source's named values, a TU's first emissions and an inlined callee do to a frame, a C1 or D1 call `-fPIC` keeps,
+`-Oz`'s subtract of 0x100000, how many copies binaryen merges, what `new T()` clears, and what a caller's temporaries
+say of a parameter's form. `docs/how-to-decompile.md` steps 1 to 5 and 9
 rely on these; [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors,
 linkage). Each probe compiles with the uenux2 flags of its time, `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`,
-or `-O3` where it says so (the tree builds at `-O3 -std=c++23` since, [app-flags.md](app-flags.md)), in the pinned
+or `-O3` where it says so (the tree builds at `-O3 -std=c++23` since, [app-flags.md](app-flags.md); the probes marked
+bbf27ac1 and C10's at those flags, each command giving its own), in the pinned
 image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the host's (wabt);
 `em++` and `/emsdk/upstream/bin/llvm-nm` are the image's (a bare `llvm-nm` is not on its PATH).
 
@@ -410,7 +412,13 @@ with minizip's first it keeps `crc32_z` whole, and eleven rows matched ([librari
 A function with no record has a free line to do this with, and a function with records may move while each throw stays
 on its record's line. Say in the fragment that the order is measured. A new file whose order against a landed unit's
 file decides a body goes into that unit, so the order cannot move with a fragment number (`src/units/README.md`
-"Names").
+"Names"). A landed file can need the same, when a function newly written in it holds, inlined by binaryen, a function
+of another landed unit's file whose object links on the wrong side of it (11213,
+`comum::CParteCandidatosProporcionais::Imprime` in unit 77's `cpartecandidatos.cpp`, holds unit 89's
+`CCandidaturas::Localiza`, and 77's list links first). Measure both moves in scratch links of the plain `link.cmd` with
+one object moved ([workflow.md](workflow.md) §W13, "One variant object"), then move the file into the other unit's
+list on the side that measures right, and say so in both fragments. The move can change which twin's name a match line
+holds, which step 9 renames.
 
 The same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals
 swapped, with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
@@ -439,6 +447,30 @@ wasm-objdump -d $P/frame.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/
 
 (Each destructor's `this` is the frame offset of its object.) In the whole link 5472 and 5473 match with the named
 local (`src/uenux2/src/api/util/cdatetime.cpp`).
+
+That order is each function's before clang's inlining: a callee clang inlines brings its locals in above the caller's
+own, though the caller creates its own first. A loop's temporary written in place sits below two locals made before
+the loop, and the same loop in a helper clang inlines puts it above them (bbf27ac1):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+cat > $P/inlframe.cpp <<'EOF'
+struct Item { int w[13]; Item(int); ~Item(); };
+struct List { int w[4]; List(); ~List(); void Add(const Item&); };
+struct Conv { int w[2]; Conv(); ~Conv(); };
+static inline void Fill(List& l, int n) { for (int i = 0; i < n; i++) { Item t(i); l.Add(t); } }
+void Loop(int n) { List l; Conv c; for (int i = 0; i < n; i++) { Item t(i); l.Add(t); } }
+void Inlined(int n) { List l; Conv c; Fill(l, n); }
+EOF
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/inlframe.cpp -o /work/$P/inlframe.o
+wasm-objdump -d $P/inlframe.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/ {printf "%s%s", (n++ ? "\n" : ""), $3} /^i32.const/ {c=$2} /call .*(List|Conv|Item)C1/ {s=$0; sub(/.*_ZN[0-9]/, "", s); sub(/C1.*/, "", s); printf " %s +%s", s, c} END {print ""}'
+# <_Z4Loopi>: List +64 Conv +56 Item +4
+# <_Z7Inlinedi>: List +12 Conv +4 Item +28
+```
+
+11394 (`comum::asn::CConversorEstadoGeralGap::DoConverte`) keeps its loop's 52-byte temporary at +28, above the
+converter at +24 and the list at +4 that it creates before the loop: the second shape, a callee clang inlined (an
+algorithm, a lambda or a helper), not a declaration order.
 
 What a TU emitted first decides an inlined template's stack slots too. `CPolySingleton<T>::set` (4879 for
 `api::ITimerScheduler`, 4890 for `api::ISystemDateTime`) inlines `std::format`, whose parts are `always_inline`, and
@@ -493,6 +525,22 @@ alias at the default visibility `-fPIC` gives ([app-flags.md](app-flags.md) §F5
 alone). So a caller's reload after such a call says nothing of the callee's TU. binaryen may still inline or remove the
 callee in the link. Which of the two names an object's call holds, the disassembly does not say
 ([tool-traps.md](tool-traps.md) §X11).
+
+This holds for the C1 and D1 aliases only. A delegating constructor calls the other constructor's C2, which is no
+alias, so clang inlines it in their TU; a function that returns the object built by its complete constructor calls the
+C1, which stays a call (bbf27ac1):
+
+    P=build/out/codegen-facts; mkdir -p $P
+    printf '%s\n' '#include <string>' 'struct Ctx { std::string a, b, c; bool e; Ctx(std::string, std::string, std::string, bool); Ctx(std::string, std::string); static Ctx Cria(std::string, std::string); };' 'Ctx::Ctx(std::string a, std::string b, std::string c, bool e) : a(std::move(a)), b(std::move(b)), c(std::move(c)), e(e) {}' 'Ctx::Ctx(std::string a, std::string b) : Ctx(std::move(a), std::move(b), {}, false) {}' 'Ctx Ctx::Cria(std::string a, std::string b) { return Ctx(std::move(a), std::move(b), {}, false); }' > $P/delegate.cpp
+    TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -c /work/$P/delegate.cpp -o /work/$P/delegate.o
+    wasm-objdump -d $P/delegate.o | awk '/ func\[/ {f=$3; sub(/E.*/, "", f); n[f]=0; o[++k]=f} / call [0-9]+ <_ZN3CtxC[12]/ {n[f]++} END {for (i=1; i<=k; i++) print o[i], n[o[i]], "constructor calls"}'
+      <_ZN3CtxC1 0 constructor calls          (the four-member constructor)
+      <_ZN3CtxC1 0 constructor calls          (the delegating one)
+      <_ZN3Ctx4Cria 1 constructor calls
+
+So a target caller that moves its arguments out and keeps a call of the complete constructor, whose `this` result no
+caller reads, is the second form: 3682 and 5558 call 5557, `(i32 i32 i32 i32 i32 i32)->()` (`pnpm --silent wasm fn
+../target/vota_web_wasm.wasm 5557 | head -1`). Whether it is a member is how-to step 3's member rule.
 
 ## C7. `-Oz` turns an add of 0x100000 into a subtract
 
@@ -591,3 +639,30 @@ for f in 0 1 2; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -
 and the base's default constructor is not user-provided down to the class whose constructor the code calls, which must
 be callable with no argument (a default argument, as here, or an inline delegating `A()` give the same stores). Unit 135
 writes it so. A constructor defined out of the class keeps a call of its C1 in the TU instead (unit 104).
+
+## C10. A caller's temporaries tell a by-value class parameter from a reference
+
+A caller that builds two temporary arguments, one of them a class the callee takes by value or by reference, stores
+them in another order and slot for each form. With `std::function<void()>` by value its capture comes first and each
+call's temporary takes a new slot; with `const std::function<void()>&` the interval comes first and the next call
+reuses the slots (bbf27ac1; `+N` a store at frame offset N, `v@+N` an `i64` constant stored there, `|` a call):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+cat > $P/paramform.cpp <<'EOF2'
+#include <functional>
+struct Ms { long long v; };
+struct IScheduler { virtual void Create(const Ms&, ARG) = 0; };
+void Use(IScheduler* s, int* p) { s->Create(Ms{1000}, [p] { *p = 1; }); s->Create(Ms{2000}, [p] { *p = 2; }); }
+EOF2
+for a in byvalue cref; do T='std::function<void()>'; [ $a = cref ] && T='const std::function<void()>&'
+  TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG "-DARG=$T" -c /work/$P/paramform.cpp -o /work/$P/paramform-$a.o; done
+for a in byvalue cref; do printf '%s:' $a; wasm-objdump -d $P/paramform-$a.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/ {f=$3} f !~ /_Z3Use/ {next} /^i64\.const/ {k=$2} /^i64\.store/ {printf " %s@+%s", k, $3} /^i32\.store/ {printf " +%s", $3} /^call_indirect/ && ++c % 2 == 0 {printf " |"} END {print ""}'; done
+# byvalue: +36 1000@+56 +32 +48 | +12 2000@+56 +8 +24 |
+# cref: 1000@+24 +4 +0 +16 | 2000@+24 +4 +0 +16 |
+```
+
+`ITimerScheduler`'s slot 0 has the second shape: fns 2024 and 5904 store the interval's temporary before the
+`std::function`'s, and 5904 reuses the `std::function`'s slot for its next temporary, so the callback is a reference
+(`src/uenux2/src/api/util/itimerscheduler.h`, where `&&`, giving the same object, is the form not chosen). A caller
+that copies an lvalue is the other sign (how-to step 2).

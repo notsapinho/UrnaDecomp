@@ -6,7 +6,8 @@ whether its class is `final`, whether a class is abstract or has a key function,
 binaryen inlined from another function, the format string, argument types and shape of a `std::format` throw, a
 `bool`'s reads and a byte's sign, an `invoke` around a callee that cannot throw, several table slots of one function, a
 local static's guard, one row more than the target at a call, where a record's line and column fall when no `throw`
-makes it, and a slot's vtable read from the data. `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
+makes it, a slot's vtable read from the data, and a reload that says a TU had no strict aliasing.
+`docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
 source form compiles to (the order of a body's stores, a switch over virtual slots, an in-class member against an
 `inline` one) is in [codegen.md](codegen.md).
 
@@ -15,7 +16,8 @@ The probes are short TUs compiled by the pinned em++ with uenux2's flags of the 
 [app-flags.md](app-flags.md) §F6); their sources are given in full, and each runs under `build/out/reading-probe/`.
 R1–R3 and R7–R11 were measured at 7bf701e, R4–R6, R12 and R13 at ee595de, and the parts marked bb6f018 (R14 and R15
 among them) at bb6f018; every probe prints the same at 0b5f410, where R13's shapes and R16–R18 were measured, and the
-parts marked 4487d6b and R19 at 4487d6b; the `-O3` probes and R20 at c1b2630. Readouts are
+parts marked 4487d6b and R19 at 4487d6b; the `-O3` probes and R20 at c1b2630; the parts marked bbf27ac1 and R21 at
+bbf27ac1. Readouts are
 `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
 `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
@@ -818,6 +820,20 @@ Three limits to this reading:
   every class's table slots in its `uses`, so it sits in another band than its class's other members: `awk -F'\t'
   '$1==2241 || $1==5527 {print $1, $2}' ledger/ordinals.tsv` prints `2241 5` and `5527 2` for the `Move` that five
   and two field classes share, while each class's other members are in band 1. Its line in its file is a choice.
+- **The first mention is in clang's code after its inlining.** A linkonce function takes its place where the code
+  clang emits first calls it, so a callee whose caller clang inlined into an earlier function sits after that earlier
+  function, ahead of its own caller (bbf27ac1):
+
+      P=build/out/reading-probe; mkdir -p $P
+      printf '%s\n' '#include <vector>' 'struct Ctx { int a[3]; };' 'struct Stack { std::vector<Ctx> v; void Push(const Ctx& c); void Pop(); };' 'struct Guard { Stack* s; Guard(Stack* st, const Ctx& c); ~Guard(); };' 'Guard::Guard(Stack* st, const Ctx& c) : s(st) { s->Push(c); }' 'Guard::~Guard() { s->Pop(); }' 'void Stack::Push(const Ctx& c) { v.push_back(c); }' 'void Stack::Pop() { v.pop_back(); }' > $P/firstmention.cpp
+      TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -c /work/$P/firstmention.cpp -o /work/$P/firstmention.o
+      wasm-objdump -d $P/firstmention.o | /usr/bin/grep -oE ' func\[[0-9]+\] <[^>]+>' | head -3
+         func[8] <_ZN5GuardC1EP5StackRK3Ctx>
+         func[9] <_ZNSt3__26vectorI3CtxNS_9allocatorIS1_EEE9push_backB8ne210108ERKS1_>
+         func[10] <_ZN5Stack4PushERK3Ctx>
+
+  `push_back` sits after `Guard`'s constructor, which inlines `Push`, and ahead of `Push`. When a definition's place
+  is in question, read the object's function list for each order you try.
 
 ## R10. Code binaryen inlined from an out-of-line function of the source
 
@@ -935,13 +951,46 @@ three and `unresolved` for 5181, which waits for a name:
   temporary's destruction. A test of the caller's temporary (its byte at +11, then `free`) after the constructor's code
   says binaryen inlined it: `comum::md::CSuplencia`'s constructor in 11359 scores `18 over 195` in the class and `10
   over 195`, operand-only, out of line in `csuplencia.cpp`, and `CDadosCandidato`'s two in 11450 the same (unit 124).
+- **The callee's returned `this` held in a second local.** A constructor binaryen inlined leaves its result in a local
+  of its own, and the caller's paths can return either; clang, inlining it, keeps one value. 5856
+  (`CGravadorEnvelopeArquivo`'s constructor, with `IGravadorEnvelope`'s inlined after the base's copy, `call 1249`;
+  bbf27ac1):
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 5856 | /usr/bin/grep -E '^0000(68|6a|9a|ad) '
+        000068  local.get 0                                      | local.get 0
+        00006a  local.tee 2                                      | local.tee 2
+        00009a  local.get 0                                      | local.get 0
+        0000ad  local.get 2                                      | local.get 2
+
+  The early return reads `p0` and the end `p2`. It scores `6 over 77` rows, operand-only, with `IGravadorEnvelope`'s
+  constructor out of line in `igravadorenvelope.cpp`, and `8 over 77` with it defined in the class, the tee gone
+  (unit 160's fragment).
+- **None, for a frameless callee our link calls once.** A function without a frame leaves no prologue, so a body of ours
+  that holds inline what the target calls can be binaryen's work as well as clang's. Count the target's callers against
+  ours (`awk -F'\t' '$2==365 {print $1}' ledger/callgraph.tsv | sort -u | wc -l` prints 17 for 365,
+  `CDetalheCandidato`'s implicit copy constructor, which 11373 `CConversorCargo::DoDesconverte` calls), and look for
+  the function in the caller's object before binaryen (`wasm-objdump -x -j linking <object>` lists an out-of-line
+  copy). When the object keeps it out of line and our link calls it once, binaryen inlined it: a source change clang
+  alone sees links to the same wasm, and a roots stand-in caller that gives it the target's call sites is the fix.
 - **Locals alone.** A body that differs from the target in local numbers only, whose callee has no frame, shows none of
   the signs above: binaryen re-optimizes the caller after inlining. 728 and 3890 match with a field's constructor moved
   from its header to its `.cpp`. Try such a callee out of line, unrooted, before a source form, beside
-  [codegen.md](codegen.md) §C4's order.
+  [codegen.md](codegen.md) §C4's order. A leaf that differs so can return a result the source has: binaryen's
+  dead-argument elimination drops a result no caller reads after the function's locals were laid out for it. 3510
+  (`CStringUtils::RemoveZerosAEsquerda`) written `void` is `15 over 91` rows, every one a local number, and matches as
+  `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
+  whose result every caller drops (unit 00's fragment).
 
 Such a function is a member in its class's `.cpp` when it reads the class's state; one that reads none (8533's tone
-sequences) is a free function, and its file is a choice as long as it is not the caller's TU.
+sequences) is a free function in the namespace of its caller's class, in a `.cpp` you choose and name as chosen, as
+long as it is not the caller's TU. A helper of a singleton class may be a static member of it either way, as TSE's 22
+records of a `static … ::GetInst()` show (`awk -F'\t' '$5 ~ /^static .*::GetInst\(\)$/' ledger/source-locations.tsv |
+wc -l`); mark the form chosen. When the target's callers pass an object the function never reads (6018 writes its
+first parameter before it reads it), make it a member and say so; that the target keeps that parameter where our link's
+dead-argument elimination drops it is not explained (unit 119's fragment). The tree is evidence too: a helper whose
+rows match only at another tree's flags goes in that tree and its namespace. `ecourna::api::util::Repete` (unit 182),
+inlined into uenux2's 5467 (`api::CGenericTags::EncodeTLV`), matches only with ecourna's
+`-fno-delete-null-pointer-checks`, which no uenux2 directory has ([app-flags.md](app-flags.md) §F3).
 
 ## R11. A record fixes the function's qualified name and its types' spelling, not the scope of a type it prints unqualified
 
@@ -977,6 +1026,15 @@ B's global `GFrame` and C's nested one give the same text and two symbols. `api:
 ledger/source-locations.tsv`), leaves `CMovieFrame`'s scope open in the same way, and no RTTI or vtable names the type
 (`/usr/bin/grep -c CMovieFrame ledger/classes.json ledger/vtables.json` prints 0 for both). Unit 23 puts it in `api`,
 the namespace of `CMovie`.
+
+A typeinfo name can close the question. A local class's or a lambda's mangles the whole signature of the function
+that holds it, so `ledger/strings.tsv`'s `Z…E` names fix the scope of that function's parameter types (bbf27ac1):
+
+    awk -F'\t' '$1==519992 {print $4}' ledger/strings.tsv
+      ZN3api12CApplication15InitApplicationERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_15ELogAplicativosE23commaAsDecimalSeparator
+
+`InitApplication`'s fourth parameter mangles as `15ELogAplicativos`, a type of the global namespace, which its record
+prints unqualified as it would `api::ELogAplicativos`.
 
 ## R12. A class passed by value is the address of a copy, unless it is one scalar; libc++'s smart pointers are trivial-ABI here
 
@@ -1181,6 +1239,22 @@ for s in 0 1; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DN
 So 10465's increment and its bound of 4 say nothing of the sign; its index load (`i32.load8_u` before the shift, at
 +0xe90) and 10425's (+0x209) say unsigned.
 
+**An enum's sign shows where it is compared.** An enum with no fixed type whose values fit in `int` promotes to `int`,
+so a compare of it is signed; one with a fixed unsigned type compares unsigned (bbf27ac1):
+
+```sh
+P=build/out/reading-probe; mkdir -p $P
+printf '%s\n' '#if FIXED' 'enum E : unsigned int { A = 49, B = 59 };' '#else' 'enum E { A = 49, B = 59 };' '#endif' 'bool Fora(E e) { return e > 0xFF; }' > $P/enumcmp.cpp
+for f in 0 1; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -DFIXED=$f -c /work/$P/enumcmp.cpp -o /work/$P/enumcmp-$f.o
+  printf 'FIXED=%s: ' $f; wasm-objdump -d $P/enumcmp-$f.o | /usr/bin/grep -m1 -oE 'i32\.(gt|ge|lt|le)_[su]'; done
+# FIXED=0: i32.gt_s
+# FIXED=1: i32.gt_u
+```
+
+5892 compares its enum arguments with 255 unsigned (`pnpm --silent wasm fn ../target/vota_web_wasm.wasm 5892 |
+/usr/bin/grep -m1 -E 'i32\.gt_[su]'` prints its first compare, at +0x1a, as `i32.gt_u`), so they are of a fixed
+unsigned type, or the parameters are unsigned; which spelling is a choice.
+
 ## R15. An `invoke` around a callee that cannot throw: the callee had a call that might, which a later pass removed
 
 emscripten turns a call inside a `try` (or a cleanup scope) into an `invoke_*` when the callee may throw at the time
@@ -1279,6 +1353,17 @@ sites, and one of them reads the result:
 12979 is a 9-byte forwarder whose only reference is table slot 168 (`pnpm wasm fn`'s `;; table slots 168`). Taking its
 address in a roots file (unit 103) gives ours the result.
 
+Or no target caller reads it and the target's table holds the callee itself, as an `invoke_*` slot of callers not in
+our link. libc++'s `path::operator/=(const path&)` (183) is `(i32 i32)->(i32)` in the target and lost its result in our
+link once its last reader in ours was gone, and every caller of ours then lost its `drop`; every `call 183` of the
+target is followed by `drop`, and the element section holds it:
+
+    wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep 'ref.func:183$'
+      - elem[71] = ref.func:183
+
+Slot 71 is what 5968 and 5821 pass to `invoke_iii`. Taking the callee's own address in a roots file, naming those
+slot users, gives ours the result (unit 190's roots, `operator/=` into a member-pointer sink).
+
 ## R19. A record's line and column where no `throw` makes it
 
 A `std::source_location` record from a default argument holds the start of the call expression that takes the default,
@@ -1362,3 +1447,21 @@ python3 -I -c "import struct, sys; sys.path.insert(0, 'tools/extract'); import w
 ```
 
 Count a class's slots against its family before reading a slot past the base's count as a member.
+
+## R21. A reload with no call since the store says the TU had no strict aliasing
+
+Without strict aliasing clang emits no TBAA, so a pointer member loaded again after a store of another type, with no
+call between them, is loaded again; with it, EarlyCSE keeps the first load in a local. 10289
+(`comum::asn::CConversorCorrespResultado::DoConverte`) reloads its fields vector's begin after storing a constant into
+a field (bbf27ac1, from `asmlift-wasm/`):
+
+    pnpm --silent wasm fn ../target/vota_web_wasm.wasm 10289 | sed -n 357,359p
+      000338  i32.load align=2 offset=4                        | i32.load align=2 offset=4
+      00033b  i32.const 1                                      | i32.const 1
+      00033d  i32.store align=2 offset=8                       | i32.store align=2 offset=8
+
+The begin comes from the object again (`local.get 0; i32.load offset=8` at +0x333), which with TBAA would stay in a
+local. The other sites [app-flags.md](app-flags.md) §F6 measured read the same way the other way round: a `std::map`
+insert that does not reload `__child` before `__tree_balance_after_insert`, a `std::list` clear, a lambda's `__clone`
+store order. uenux2 sets strict aliasing by directory (`UENUX2_TBAA_DIRS` in `src/Makefile`, §F6), so read the sign
+against the body's directory: a body that differs only by it is [levels.md](levels.md) §V5's case.

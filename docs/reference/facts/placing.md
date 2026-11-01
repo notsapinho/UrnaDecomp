@@ -35,7 +35,40 @@ awk -F'\t' '$1==410 || $1==2134 || $1==2199 || $1==2546 || $1==2578 || $1==6281 
 
 A row with no owner can be a library's code too: 2134 calls libc++'s path parser (2546), and 2578 and 2579, libc++
 templates a TSE caller instantiates, read as `std::__sort3` over `unsigned` and `unsigned char`. Read its callees and
-callers: an instance lands with the caller that instantiates it.
+callers: an instance lands with the caller that instantiates it. And `owner` can read `app` for a library function
+whose callers are the library's own code:
+
+```sh
+awk -F'\t' '$1==5009 || $1==9586 || $1==2602 || $1==2170 {print $1, $4, $5}' ledger/functions.tsv
+# 2170 7zip -
+# 2602 7zip -
+# 5009 app ecourna
+# 9586 app ecourna
+```
+
+5009's stub is in `src/ecourna/unplaced.cpp`, labelled by its cluster's neighbour `cwasminputmt.cpp`. Its one caller,
+9586, calls 7-Zip's 2602 and 2170, and its body is 7-Zip's `SplitString(const UString &, UStringVector &)` (a
+`CObjectVector` cleared, a split at the code 32, `CRecordVector`'s `size + size/4 + 1` growth): read the callers'
+callees' owners and the body's shape before a cluster label.
+
+A stub can stand for a body binaryen merged in the target, which no source writes. 2302 (483 B, `unplaced.cpp`,
+`placement: link order`) has five callers, thunks of 17 bytes that differ in the two constants they pass, a format
+literal's begin and end, and its neighbours in the index are merge bodies:
+
+```sh
+cd asmlift-wasm && pnpm --silent wasm fn ../target/vota_web_wasm.wasm 3272 | /usr/bin/grep 'f2302'
+#   f2302(p0, p1, 234577, 234519);
+cd .. && awk -F'\t' '$1>=2299 && $1<=2304 {print $1, substr($2, 1, 16), $5}' splat/scan.tsv
+# 2299 byn$mgfn-shared$ match
+# 2300 byn$mgfn-shared$ match
+# 2301 byn$mgfn-shared$ match
+# 2302 - no-candidate
+# 2303 byn$mgfn-shared$ match
+# 2304 byn$mgfn-shared$ match
+```
+
+Its callers (3272, 4537, 4541, 4542, 4546) are log members that format one name each; it lands when they are written
+and our link forms the same merge (`src/units/README.md` "Pending members", the merge-thunk bullet).
 
 A stub in `unplaced.cpp` has no evidence for any file only while no file is named after its class: `stubs.py` puts a
 class's stubs in `<class in lower case>.cpp` of the tree as soon as that file exists, so a unit that creates
@@ -196,11 +229,15 @@ whose target body you can read (`api::CFixedText`'s two `IText` overrides are on
 `_ZTVN3api10CFixedTextE`.
 
 A class your bodies need complete only to call a virtual slot through a pointer (a `std::shared_ptr` member whose
-`Slot2()` you call, a control block that deletes through the destructor's slot) gets its head alone: the class, the
-base clause RTTI gives and that slot, with a comment that no member is reconstructed, as
-`src/uenux2/src/app/vota/eleitor/iajusteinicial.h` does for its control block's call of the deleting destructor. Its `sizeof`
-is then wrong, so nothing may construct it; the first unit that needs a member adds the data members and the records'
-declarations as above.
+`Slot2()` you call, a control block that deletes through the destructor's slot) gets its head alone: the class, the base
+clause RTTI gives and that slot, with a comment that no member is reconstructed, as
+`src/uenux2/src/app/vota/eleitor/iajusteinicial.h` does for its control block's call of the deleting destructor. Its
+`sizeof` is then wrong, so nothing may construct it; the first unit that needs a member adds the data members and the
+records' declarations as above. A head a body returns or passes by value is not enough: the wasm signature follows the
+class's layout, so an empty class comes back in nothing and a class of one scalar as that scalar (§R3 of
+[reading.md](reading.md)). `comum::asn::CConversorEntidadeBU`'s inherited `DoDesconverte` (10272, `(i32 i32 i32)->()`)
+lost its result pointer with `md::CEntidadeBU` declared `class CEntidadeBU {};`, scored `179 over 183` rows and no
+longer merged into 731; such a member waits for the class's layout (fragments 159 and 172 say so).
 
 **A stub-only file.** A file the evidence names that does not exist yet holds its stubs only, written from line 2
 on, not at their records' lines ([src/README.md](../../../src/README.md) "Stubs"). `--strip` leaves next to nothing of
@@ -237,8 +274,10 @@ On `main` the file is stub-only, and each of its three recorded functions (6718,
 function that is neither written in the file nor stubbed there is such a case, or a match or a pending member (check
 `splat/matched.txt` and the `-pending.cpp` headers). A record past the file's last line needs
 no padding: the stub goes after the end, and whoever writes that function lays out the lines up to it.
-`src/uenux2/src/app/comum/comparecimentomesario/cregistradormesario.cpp` is 33 lines, its record of 10337 is line 85,
-and f10337's stub is line 31 (`LC_ALL=C /usr/bin/grep -n '^// f10337 ' <file>`); `stubs.py --check` passes. A record inside a class body (a template
+`src/uenux2/src/app/comum/dados/cfotos.cpp` is 32 lines, its records of 3755 are lines 39 and 51, and f3755's stub is
+line 30 (`LC_ALL=C /usr/bin/grep -n '^// f3755 ' <file>`; bbf27ac1); `stubs.py --check` passes. A function in a slot of
+a vtable our link holds has no stub at all (how-to step 9), so such an example holds only for a function no linked
+vtable holds. A record inside a class body (a template
 member defined in its class) keeps a gap, and the stub goes after the end of the file marked `placement: link order`,
 though a record names the function: `stubs.py` takes only blank lines outside every function and class
 (`LC_ALL=C /usr/bin/grep -n '^// f316 ' src/uenux2/src/api/ipc/cmessagequeue.h`).

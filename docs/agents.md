@@ -60,7 +60,10 @@ run it with one short command: no zsh array or `${(@f)…}` expansion, no heredo
   'src/uenux2/*.h'; done` lists them; take the first one byte for byte (`docs/how-to-decompile.md` step 10). A type
   several lanes of a round need is the pick's to generate whole, once, for every lane to copy as one blob, names marked
   as chosen, so that an add/add merges clean ([facts/workflow.md](reference/facts/workflow.md) §W17). An error enum read
-  from the target's codes needs the merge thunks too ([facts/placing.md](reference/facts/placing.md) §P6).
+  from the target's codes needs the merge thunks too ([facts/placing.md](reference/facts/placing.md) §P6). A static
+  data object no record names that two lanes' classes read (`/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])'
+  build/out/splat/pieces/asm` lists its readers) is declared by the lane whose class the data place it beside, under a
+  name marked chosen, and a member of the other lane that waits only for it stays pending until it lands.
 - **Commit only your own paths**: `git add <paths> && git commit -m "…" -- <paths>`. The `-- <paths>` keeps other
   agents' staged changes out of your commit. A path you removed with `git rm` (a stub
   file step 9 deleted) goes after `--` only: `git add` refuses it, and then adds nothing at all
@@ -162,7 +165,10 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   flag value, so the object would survive into everyone's link. Add the flag with `UENUX2_EXTRA=…` (or
   `ECOURNA_EXTRA=…`), never a command-line `UENUX2_CXXFLAGS`, which drops the fragments' target-specific additions
   and reaches the stand-ins. [facts/app-flags.md](reference/facts/app-flags.md) §F9 item 6 has the command and the
-  splat check of such a link. To measure one variant object in the whole link (a companion file against an overlay
+  splat check of such a link. The directories `UENUX2_TBAA_DIRS` lists drop every `-fno-strict-aliasing` of the line,
+  an `UENUX2_EXTRA` one too, so measure them without strict aliasing with `UENUX2_TBAA_DIRS=`, and a companion compiled
+  with `$(UENUX2_CXXFLAGS)` keeps the flag whatever its unit's directory ([facts/levels.md](reference/facts/levels.md)
+  §V5). To measure one variant object in the whole link (a companion file against an overlay
   header, a source with one more flag), clone the objects with their mtimes (`cp -Rp build/out/app
   build/out/<handle>/app`), replace that one object, and pass the clone as `APP`: `make -n` then counts 0 compiles
   against the 347 of a fresh `APP` ([facts/workflow.md](reference/facts/workflow.md) §W13). A header overlay for the
@@ -194,10 +200,13 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - To check a unit's objects fresh afterwards, move aside every object its worktree built and rebuild with
   `TMPDIR=/tmp make -C src splat`, serially. `find build/out/app -name '*.o' -newer .git`, run in the worktree, lists
   them, since the worktree's `.git` file dates from its creation and a cloned `build/out/` keeps older mtimes (§W15); an
-  object listed that does not come back is a deleted file's. Two kinds lie outside `build/out/app/`, so move them aside
-  by name too: what the `-W` list of an edited fragment names there (fragment 06's zlib objects), and a library variant
-  directory a change of its build makes (a `tools/libs/*/build.sh`, a `*_DIR` in `src/Makefile`), which `TMPDIR=/tmp
-  make -C src libs` rebuilds before the splat build, since the link takes those objects on trust.
+  object listed that does not come back is one no rule of the link makes, a deleted file's or a probe's compiled by
+  hand, and `make -s -C src print-LINK_OBJS` does not name it. Three kinds the list misses, so move them aside by name
+  too: what the `-W` list of an edited fragment names outside `build/out/app/` (fragment 06's zlib objects), a library
+  variant directory a change of its build makes (a `tools/libs/*/build.sh`, a `*_DIR` in `src/Makefile`), which
+  `TMPDIR=/tmp make -C src libs` rebuilds before the splat build, since the link takes those objects on trust, and, when
+  the range edits `asn1.h` or a `src/asn1/modules/*.h` header, the link objects that hold its mangled names, which make
+  does not rebuild (§W15 has the search).
 - A header your unit needs that another branch adds or changes: `docs/how-to-decompile.md` step 10, "Landing onto a
   moved main", says what to copy, what to add and where.
 - Every agent's link recompiles on the same machine. With a dozen agents the load average passes 130 and one
@@ -249,7 +258,8 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   -f latin1 -t utf-8` first: in a UTF-8 locale `/usr/bin/grep -c '// f1455 '
   src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp` counts 0 with no error where `LC_ALL=C` counts 1, macOS `sed`
   and `cut` stop with `illegal byte sequence` at a stub's middle dot, and `git grep` prints nothing
-  ([facts/workflow.md](reference/facts/workflow.md) §W9).
+  ([facts/workflow.md](reference/facts/workflow.md) §W9). A `sed -i ''` that stops so leaves its temporary copy,
+  `.!<pid>!<name>`, beside the file: edit with `LC_ALL=C sed -i ''`, and remove such a copy by its name.
 - Undo a `git cherry-pick --no-commit` with `git checkout HEAD -- <file>`: it stages the change, so `git checkout --
   <file>` restores the staged text and keeps it. It also leaves `MERGE_MSG` and `AUTO_MERGE` in the git dir (`git
   rev-parse --git-dir`), which the next commit would read: remove them by name.
