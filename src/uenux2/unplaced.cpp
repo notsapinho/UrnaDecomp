@@ -11,11 +11,6 @@
 // f7178 · 97 B · unmatched · placement: link order · name unknown
 // void f7178(i32) { ... }
 
-// link-order cluster 13 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmostratelacontinuavotacao.cpp
-
-// f7221 · 85 B · unmatched · placement: link order · name unknown
-// void f7221(i32) { ... }
-
 // link-order cluster 286 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/celeitordemorando.cpp
 
 // f10440 · 1876 B · unmatched · placement: link order · name unknown
@@ -914,16 +909,6 @@
 // f977 · 140 B · unmatched · placement: link order · name unknown
 // ? f977(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1310 · uses=22 · neighbours' file uenux2/src/api/gui/capplicationcontextstack.cpp
-
-// f677 · 223 B · unmatched · placement: link order · name unknown
-// void f677(i32, i32, i32) { ... }
-
-// link-order cluster 1328 · uses=34 · neighbours' file uenux2/src/api/gui/cformbuilder.cpp
-
-// f501 · 217 B · unmatched · placement: link order · name unknown
-// void f501(i32, i32, i32) { ... }
-
 // link-order cluster 1358 · uses=65
 
 // f310 · 286 B · unmatched · placement: link order · name unknown
@@ -951,14 +936,6 @@
 
 // f11569 · 176 B · unmatched · placement: link order · name unknown
 // void f11569(i32, i32) { ... }
-
-// link-order cluster 584 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelpu.cpp
-
-// f11901 · 12 B · unmatched · placement: link order · name unknown
-// ? f11901(i32) { ... }
-
-// f11900 · 12 B · unmatched · placement: link order · name unknown
-// void f11900(i32) { ... }
 
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 
@@ -1815,16 +1792,6 @@
 
 // component simulador
 
-// link-order cluster 123 · uses=1
-
-// f8680 · 12 B · unmatched · placement: link order · name unknown
-// void f8680(i32) { ... }
-
-// link-order cluster 128 · uses=1 · neighbours' file uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp
-
-// f8748 · 12 B · unmatched · placement: link order · name unknown
-// ? f8748(i32) { ... }
-
 // link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
 
 // f4684 · 52 B · unmatched · placement: link order · name unknown
@@ -1832,11 +1799,6 @@
 
 // f4683 · 57 B · unmatched · placement: link order · name unknown
 // void f4683(i32, i32, i32) { ... }
-
-// link-order cluster 726 · uses=2 · neighbours' file ecourna/app/dados/cnumerocpf.cpp
-
-// f5113 · 532 B · unmatched · placement: link order · name unknown
-// void f5113(i32, i32, i32) { ... }
 
 // link-order cluster 884 · uses=2
 

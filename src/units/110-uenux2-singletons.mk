@@ -105,9 +105,9 @@
 # - CEleitores's one slot, 2824, has no body and no vtable of ours: the stub went with the class (src/units/README.md
 #   "Pending members"). CreateInst of each class is inlined into 7787 or 2787 and is not written.
 # - crespostas.cpp also holds comum::CRespostasDSNumero's call operator, which inlines GetInst in the target (fn 12621,
-#   CDataText<CRespostasDSNumero>::GetText, holds this file's record 28): it is written, not matched, and
-#   src/units/121-uenux2-datasources.mk, whose roots keep that text's vtable, says what it waits for. Its line is a
-#   choice, after the destructor.
+#   CDataText<CRespostasDSNumero>::GetText, holds this file's record 28): it matches since fn 11973's literal is in the
+#   link, and src/units/121-uenux2-datasources.mk, whose roots keep that text's vtable, says what it waited for. Its line
+#   is a choice, after the destructor.
 #
 # CEleitores's members in celeitores.cpp, each throw on its record's line; every other line is blank, and where each member
 # starts is chosen:
@@ -139,16 +139,29 @@
 #   throw the object has the call first (compared in the object). The voter's data come from accessors of
 #   md::CEleitorDecorator (unit 91's header, which says what each reads); NomeParaUrna's argument is a local string, as
 #   std::make_format_args takes lvalues.
-# - Not written. LoadEleitorDetalhe (5764, line 719): a body written over a 104-byte md::CEleitor base (fn 946 is its copy:
-#   it copies 104 bytes and 5764 copies CEleitorDecorator's +104 after it), CImpedido::GetImpedimentoP2 (cimpedido.cpp:46)
-#   and CEleitorDetalhe's two constructors (celeitordetalhe.cpp:49) scored 96 over 834 rows, its 6 inserted and 6 deleted
-#   rows all local numbers. Moving cimpedido.cpp.o, celeitordetalhe.cpp.o or both after this object, -O3 on this object and
-#   celeitordetalhe.cpp.o, and twelve source forms (of the impediments, the returns, the constructors and CEleitorDinamico's
-#   copy) left them or made more, so it stays unwritten (docs/how-to-decompile.md step 5); it has no stub, since the scan
-#   groups it under libc++, and stubs.py writes none there. MarcaVotou (lines 456, 460) is
-#   held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which also calls fn 501,
-#   no name. CompleteLoad (6734), DynamicCreate (5761) and GetCurrentAbrangenciaEleitor (7377, which holds GetInst inlined
-#   and calls 501) are not written.
+# - Not written. LoadEleitorDetalhe (5764, line 719): a body written over a 104-byte md::CEleitor base (fn 946 is its
+#   copy: it copies 104 bytes and 5764 copies CEleitorDecorator's +104 after it), CImpedido::GetImpedimentoP2
+#   (cimpedido.cpp:46) and CEleitorDetalhe's two constructors (celeitordetalhe.cpp:49) scored 96 over 834 rows, its 6
+#   inserted and 6 deleted rows all local numbers. Moving cimpedido.cpp.o, celeitordetalhe.cpp.o or both after this
+#   object, -O3 on this object and celeitordetalhe.cpp.o, and twelve source forms (of the impediments, the returns, the
+#   constructors and CEleitorDinamico's copy) left them or made more, so it stays unwritten (docs/how-to-decompile.md
+#   step 5); it has no stub, since the scan groups it under libc++, and stubs.py writes none there. MarcaVotou (lines
+#   456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which
+#   also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). CompleteLoad (6734), DynamicCreate
+#   (5761) and GetCurrentAbrangenciaEleitor (7377, which holds GetInst inlined and calls 501) are not written.
+#
+# ctelasvota.cpp also holds vota::CTelasVota::GetTelaCargo (target fn 4135, record :3534, code 9358): it looks the post
+# up in the outer map and throws with std::format when it is missing, else returns CTelasCargo::GetTela's form. GetTela
+# (record ctelascargo.cpp:80) sits in 4135 behind a second stack prologue, so binaryen inlined an out-of-line member
+# with one caller: unit 150's ctelascargo.cpp defines it, unrooted. 4135's target callers are the shared
+# GetTelaCargoAtual bodies 6050 and 3921 (units 97 and 150, written) and fn 11793 (IConfereVotoEmCargo::StartStateAudio,
+# pending). Measured before step 8: 31 over 514 rows, all operand-only (pnpm wasm score, whole link); matched at step 9.
+# ctelasvota.h gains four accessors, of the forms at +36, +44, +52 and +124, which fns 3877, 5979, 5959 and 4420 copy
+# after CTelasVota::GetInst() (the header says which); their names are chosen. Chosen too: GetTelaCargo's parameter
+# names, its local, the find form, and its place above the record (lines 3530 to 3538; the constructor's record :3502
+# stays blank). Other forms are not measured. This file's screen builders (13101, 4181, 4184, 6660, 6671, 6678 and the
+# rest of its anonymous namespace) are internal, and their only target callers are each other and the constructor, fn
+# 7787, which is not written: a reading, not compiled, is that this TU would emit none of them before 7787 is written.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

@@ -9,15 +9,29 @@
 # records): the destructor (D2 2871, D0 11877), GetInst (1279), its constructor inlined, and its statics' exit-time
 # destructors (11878, 11880). vota::NomeTela (6718, comum/ctelascargo.cpp, record :60), with ETelaVotacao's enumerators
 # (comum/ctelascargo.h) and EUeVotaError's 9327 (app/vota/euevotaerror.h). The class headers say what each layout and
-# name rests on; the six members not written are in 150-uenux2-eleitor-estados-pending.cpp with what each waits for.
+# name rests on; the five members not written are in 150-uenux2-eleitor-estados-pending.cpp with what each waits for.
 #
-# Not written, and why. CConfirmaVotoSemCandidato's GetInst and constructor are inlined into fn 4459, and
-# CInstrucaoVotacaoAcessibilidade's GetInst (fn 4420) copies a form member at +124 of vota::CTelasVota, which
-# ctelasvota.h gives no accessor for; the roots take both vtables' address in their place. GetTelaCargoAtual of
-# CConfirmaVotoSemCandidato (fn 4483) is a thunk into fn 3921, which calls CTelasVota::GetTelaCargo (fn 4135, record
-# ctelasvota.cpp:3534, holding CTelasCargo::GetTela, record ctelascargo.cpp:80, inlined); that member is not declared in
-# ctelasvota.h, so 4483, 3921 and 4135 stay stubs. CTelasCargo's constructor (fn 2386) calls fn 3251, which has no
-# name, and stays a stub too.
+# Not written, and why. CConfirmaVotoSemCandidato's GetInst and constructor are inlined into fn 4459 (CEleitorVotando's,
+# not written); the roots take its vtable's address in their place. CTelasCargo's constructor (fn 2386) calls fn 3251,
+# which has no name, and stays a stub.
+#
+# Written since. CInstrucaoVotacaoAcessibilidade's GetInst (fn 4420), its constructor inlined, copies the form at +124
+# of vota::CTelasVota through an accessor ctelasvota.h now has; its statics' exit destructors are fns 7287 (the
+# pointer's, through the D2) and 7284 (the mutex's). In use band 1 the target links 7287, 7284 and the D0 7255 in that
+# order, so the statics are defined above the destructor, which moves below GetInst; our link has the same order
+# (names.tsv's ld_index 2812, 2813, 2815). GetInst's two target callers (fns 7377 and 7787) are not written: the roots
+# stand in for them, and its vptr store keeps the vtable the roots took before. The singleton's form is unit 104's;
+# the constructor's and GetInst's lines are a choice. CTelasCargo::GetTela (record ctelascargo.cpp:80, code 9330, its
+# message formatting the post and NomeTela's name): the target holds it in fn 4135 behind a second stack prologue (pnpm
+# wasm fn 4135), binaryen's inlining of a function with one caller, so it is written out of line here and left
+# unrooted; it is inlined into CTelasVota::GetTelaCargo (unit 110) in our link too. CConfirmaVotoSemCandidato's
+# GetTelaCargoAtual (fn 4483, record :64, code 9307) and StartStateAudio (fn 7441) are unit 97's form (that fragment
+# says what it rests on): 4483 joins fn 3921 with three of unit 97's, and its second caller, ProcessInputAudio (7428),
+# pending, has a stand-in in the roots. Measured before step 8 (pnpm wasm score, whole link): 4420 12 over 55 rows, 4483
+# 3 over 8, 7441 11 over 107, 7284 2 over 4 and 7287 4 over 16, all operand-only; each matched at step 9, where 2466's
+# match line was renamed from the D2 to its D1 alias. Chosen: GetTelaCargoAtual's parameter name and its being private,
+# GetTela's local, the find form, and GetTela's place below NomeTela (lines 76 to 84: the constructor's records :67 and
+# :72 stay blank). Other forms are not measured.
 #
 # Measured. GetKeyboardPosition: the instance of api::CPolySingleton<api::IUrna> bound to a reference before Modelo() is
 # called gives the target's frame, its std::source_location temporary in the slot of the string GetMensagem keeps
@@ -42,12 +56,13 @@ ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp \
     src/app/vota/eleitor/comum/ctelascargo.cpp
 UENUX2_SRCS += $(ELEITOR_ESTADOS_SRCS)
-# six members are not reconstructed: 150-uenux2-eleitor-estados-pending.cpp gives the vtables trapping bodies, compiled
+# five members are not reconstructed: 150-uenux2-eleitor-estados-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/150-uenux2-eleitor-estados-pending.o: $(ROOT)/src/units/150-uenux2-eleitor-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/150-uenux2-eleitor-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/comum/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/dados/*.h $(ROOT)/src/uenux2/src/app/comum/dados/md/candidatura/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/150-uenux2-eleitor-estados-pending.cpp -o $(R)
-# nothing reconstructed references two of the unit's vtables or calls CVisualizarCandidatos::GetInst or NomeTela yet:
-# 150-uenux2-eleitor-estados-roots.cpp takes the vtables' address and stands in for those functions' callers
+# nothing reconstructed references CConfirmaVotoSemCandidato's vtable or calls CVisualizarCandidatos::GetInst,
+# CInstrucaoVotacaoAcessibilidade::GetInst or NomeTela from all of their target callers yet:
+# 150-uenux2-eleitor-estados-roots.cpp takes the vtable's address and stands in for the missing callers
 $(ROOT)/$(APP)/150-uenux2-eleitor-estados-roots.o: $(ROOT)/src/units/150-uenux2-eleitor-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/150-uenux2-eleitor-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/150-uenux2-eleitor-estados-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/150-uenux2-eleitor-estados-pending.o $(APP)/150-uenux2-eleitor-estados-roots.o

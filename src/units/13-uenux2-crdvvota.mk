@@ -48,6 +48,9 @@
 # cconversorregistrodigitalvoto.h), which ~CRdvVota (fn 5734) destroys first, and with it 5734 matches, as do the exit
 # destructor of the instance (11495), the converter's destructors (11485, 11484, emitted here) and fn 1550 (the
 # destroy of CVotosEleicoesVota's map of cargos to elections). The member's name is chosen.
+# md::CVotos' lambdas (Partido, Legenda, Candidato, TotalQue) have std::function __clone members (11322, 11323, 11327,
+# 11328, 11333, 11334, 11338, 11339) and binaryen's shared body of the __clone() ones (1083): they match since md/ builds
+# with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6), which stores the capture before the vptr.
 CRDVVOTA_SRCS := src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp \
   src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvoto.cpp
 UENUX2_SRCS += $(CRDVVOTA_SRCS)

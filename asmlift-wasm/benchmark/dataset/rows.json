@@ -1,39 +1,39 @@
 [
   {
-    "id": "uenux2/1261",
-    "index": 1261,
-    "size": 80,
+    "id": "uenux2/902",
+    "index": 902,
+    "size": 16,
+    "band": "tiny",
+    "component": "RHVoice",
+    "owner": "libcxx",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "comum::CImprimirExtratoCarga::GetConteudosQRCodeAdicionais() const",
+    "symbol": "_ZNK5comum21CImprimirExtratoCarga28GetConteudosQRCodeAdicionaisEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/relatorios/crelatoriotesteimpressora.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "uenux2/2271",
+    "index": 2271,
+    "size": 105,
     "band": "small",
     "component": "unknown",
-    "owner": "-",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CDate::operator<=>(api::CDate const&) const",
-    "symbol": "_ZNK3api5CDatessERKS0_",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/util/cdate.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/util/cdate.cpp"
-    }
-  },
-  {
-    "id": "uenux2/1915",
-    "index": 1915,
-    "size": 70,
-    "band": "small",
-    "component": "api",
     "owner": "app",
     "features": [
-      "leaf"
+      "leaf",
+      "loop"
     ],
     "ledger": {
       "kind": "byte",
@@ -43,41 +43,14 @@
     "setup": "uenux2",
     "lang": "c++",
     "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::SRect::Move(api::SPoint const&)",
-    "symbol": "_ZN3api5SRect4MoveERKNS_6SPointE",
+    "name": "comum::CCandidaturas::ExisteCandidato(unsigned char) const",
+    "symbol": "_ZNK5comum13CCandidaturas15ExisteCandidatoEh",
     "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/gui/primitives.cpp.o",
+    "object": "build/out/app/uenux2/src/app/comum/dados/ccandidaturas.cpp.o",
     "reference": {
-      "path": "src/uenux2/src/api/gui/primitives.cpp",
-      "line": 47
+      "path": "src/uenux2/src/app/comum/dados/ccandidaturas.cpp",
+      "line": 107
     }
-  },
-  {
-    "id": "uenux2/2662",
-    "index": 2662,
-    "size": 821,
-    "band": "large",
-    "component": "simulador",
-    "owner": "-",
-    "features": [
-      "loop",
-      "float",
-      "bulk-memory",
-      "select"
-    ],
-    "ledger": {
-      "kind": "none",
-      "score": null
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": null,
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
-    "reference": null
   },
   {
     "id": "uenux2/2885",
@@ -102,31 +75,33 @@
     "reference": null
   },
   {
-    "id": "uenux2/5036",
-    "index": 5036,
-    "size": 22,
-    "band": "tiny",
-    "component": "simulador",
+    "id": "uenux2/5685",
+    "index": 5685,
+    "size": 725,
+    "band": "large",
+    "component": "comum",
     "owner": "app",
     "features": [
-      "call_indirect"
+      "loop",
+      "invoke",
+      "throw",
+      "frame",
+      "float",
+      "select"
     ],
     "ledger": {
-      "kind": "byte",
-      "score": 0
+      "kind": "none",
+      "score": null
     },
     "origin": "selected",
     "setup": "uenux2",
     "lang": "c++",
     "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": "simulador::CWasmScreenMT::Led1()",
-    "symbol": "_ZN9simulador13CWasmScreenMT4Led1Ev",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp.o",
-    "reference": {
-      "path": "src/uenux2/mock/app/simulador/wasm/cwasmscreenmt.cpp",
-      "line": 74
-    }
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
   },
   {
     "id": "uenux2/5719",
@@ -156,11 +131,11 @@
     "reference": null
   },
   {
-    "id": "uenux2/7902",
-    "index": 7902,
-    "size": 10,
-    "band": "tiny",
-    "component": "simulador",
+    "id": "uenux2/5813",
+    "index": 5813,
+    "size": 121,
+    "band": "small",
+    "component": "unknown",
     "owner": "app",
     "features": [
       "leaf"
@@ -173,13 +148,39 @@
     "setup": "uenux2",
     "lang": "c++",
     "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": "simulador::CWasmTimer::IsRunning() const",
-    "symbol": "_ZNK9simulador10CWasmTimer9IsRunningEv",
+    "name": "comum::CAppInfo::CAppInfo()",
+    "symbol": "_ZN5comum8CAppInfoC1Ev",
     "evidence": "symbol",
-    "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp.o",
+    "object": "build/out/app/uenux2/src/app/comum/appinfo/cappinfosingleton.cpp.o",
     "reference": {
-      "path": "src/uenux2/mock/app/simulador/wasm/cwasmtimer.cpp",
-      "line": 37
+      "path": "src/uenux2/src/app/comum/appinfo/cappinfosingleton.cpp"
+    }
+  },
+  {
+    "id": "uenux2/5918",
+    "index": 5918,
+    "size": 11,
+    "band": "tiny",
+    "component": "vota",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "comum::CInformacaoEleicao::AceitaJustificativa() const",
+    "symbol": "_ZNK5comum18CInformacaoEleicao19AceitaJustificativaEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/comum/informacao/cinformacaoeleicao.cpp",
+      "line": 49
     }
   },
   {
@@ -210,91 +211,6 @@
     "reference": null
   },
   {
-    "id": "uenux2/10307",
-    "index": 10307,
-    "size": 2480,
-    "band": "huge",
-    "component": "vota-web",
-    "owner": "app",
-    "features": [
-      "call_indirect",
-      "invoke",
-      "throw",
-      "frame",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "none",
-      "score": null
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": null,
-    "symbol": null,
-    "evidence": "component",
-    "object": null,
-    "reference": null
-  },
-  {
-    "id": "uenux2/10581",
-    "index": 10581,
-    "size": 23,
-    "band": "tiny",
-    "component": "vota",
-    "owner": "app",
-    "features": [
-      "leaf",
-      "i64"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": "vota::impl::CInformacaoThreadOperador::CancelaHabilitacao()",
-    "symbol": "_ZN4vota4impl25CInformacaoThreadOperador18CancelaHabilitacaoEv",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp",
-      "line": 385
-    }
-  },
-  {
-    "id": "uenux2/10946",
-    "index": 10946,
-    "size": 74,
-    "band": "small",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "call_indirect",
-      "frame",
-      "select"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": "api::CTextFieldBlinking::Draw(api::IScreen&) const",
-    "symbol": "_ZNK3api18CTextFieldBlinking4DrawERNS_7IScreenE",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/gui/ctextfieldblinking.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/api/gui/ctextfieldblinking.cpp",
-      "line": 53
-    }
-  },
-  {
     "id": "uenux2/10949",
     "index": 10949,
     "size": 160,
@@ -321,6 +237,427 @@
     "evidence": "component",
     "object": null,
     "reference": null
+  },
+  {
+    "id": "uenux2/11591",
+    "index": 11591,
+    "size": 10,
+    "band": "tiny",
+    "component": "unknown",
+    "owner": "-",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "comum::asn::CConversorCodigoCargoConsulta::DoDesconverte(ModuloTiposEleitorais::CodigoCargoConsulta const&) const",
+    "symbol": "_ZNK5comum3asn29CConversorCodigoCargoConsulta13DoDesconverteERKN21ModuloTiposEleitorais19CodigoCargoConsultaE",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/asn/cconversorcodigocargoconsulta.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/comum/asn/cconversorcodigocargoconsulta.cpp",
+      "line": 17
+    }
+  },
+  {
+    "id": "uenux2/11620",
+    "index": 11620,
+    "size": 4622,
+    "band": "huge",
+    "component": "comum",
+    "owner": "app",
+    "features": [
+      "loop",
+      "throw",
+      "frame",
+      "inlined-frame",
+      "i64",
+      "bulk-memory"
+    ],
+    "ledger": {
+      "kind": "none",
+      "score": null
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2/11668",
+    "index": 11668,
+    "size": 106,
+    "band": "small",
+    "component": "comum",
+    "owner": "app",
+    "features": [
+      "call_indirect",
+      "frame",
+      "select"
+    ],
+    "ledger": {
+      "kind": "shape",
+      "score": 4
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2-tbaa/3677",
+    "index": 3677,
+    "size": 133,
+    "band": "medium",
+    "component": "api",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "api::CFramedText::Rect() const",
+    "symbol": "_ZNK3api11CFramedText4RectEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/gui/cframedtext.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/gui/cframedtext.cpp",
+      "line": 80
+    }
+  },
+  {
+    "id": "uenux2-tbaa/5514",
+    "index": 5514,
+    "size": 761,
+    "band": "large",
+    "component": "api",
+    "owner": "app",
+    "features": [
+      "loop",
+      "call_indirect",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 21
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "api::IForm<api::IScreenMT>::~IForm()",
+    "symbol": "_ZN3api5IFormINS_9IScreenMTEED0Ev",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/gui/cmtformbuilder.cpp.o",
+    "reference": null
+  },
+  {
+    "id": "uenux2-tbaa/5632",
+    "index": 5632,
+    "size": 61,
+    "band": "small",
+    "component": "comum",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "comum::md::estadoaplicacao::CDadoLocal::CDadoLocal(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, comum::md::estadoaplicacao::CLocalidadeEleitoral const&, comum::ETipoLocalVotacao)",
+    "symbol": "_ZN5comum2md15estadoaplicacao10CDadoLocalC1ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadolocal.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadolocal.cpp",
+      "line": 7
+    }
+  },
+  {
+    "id": "uenux2-tbaa/6265",
+    "index": 6265,
+    "size": 123,
+    "band": "small",
+    "component": "vota",
+    "owner": "-",
+    "features": [
+      "loop",
+      "frame",
+      "i64",
+      "float"
+    ],
+    "ledger": {
+      "kind": "none",
+      "score": null
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2-tbaa/6999",
+    "index": 6999,
+    "size": 4946,
+    "band": "huge",
+    "component": "vota",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "call_indirect",
+      "frame",
+      "inlined-frame",
+      "i64",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "none",
+      "score": null
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2-tbaa/7709",
+    "index": 7709,
+    "size": 2883,
+    "band": "huge",
+    "component": "vota",
+    "owner": "app",
+    "features": [
+      "loop",
+      "call_indirect",
+      "invoke",
+      "throw",
+      "frame",
+      "inlined-frame",
+      "i64",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "none",
+      "score": null
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2-tbaa/9155",
+    "index": 9155,
+    "size": 114,
+    "band": "small",
+    "component": "simulador",
+    "owner": "app",
+    "features": [
+      "loop",
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "simulador::CWasmScreen::DrawPolygon(std::__2::vector<api::SPoint, std::__2::allocator<api::SPoint>> const&, api::TColor, int)",
+    "symbol": "_ZN9simulador11CWasmScreen11DrawPolygonERKNSt3__26vectorIN3api6SPointENS1_9allocatorIS4_EEEENS3_6TColorEi",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp.o",
+    "reference": {
+      "path": "src/uenux2/mock/app/simulador/wasm/cwasmscreen.cpp",
+      "line": 428
+    }
+  },
+  {
+    "id": "uenux2-tbaa/10772",
+    "index": 10772,
+    "size": 570,
+    "band": "large",
+    "component": "vota",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "frame",
+      "i64",
+      "bulk-memory"
+    ],
+    "ledger": {
+      "kind": "none",
+      "score": null
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2-tbaa/10880",
+    "index": 10880,
+    "size": 15,
+    "band": "tiny",
+    "component": "simulador",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "api::IImpressoraRelatorios::GetColumns()",
+    "symbol": "_ZN3api21IImpressoraRelatorios10GetColumnsEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/api/hwil/iimpressorarelatorios.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/api/hwil/iimpressorarelatorios.cpp",
+      "line": 30
+    }
+  },
+  {
+    "id": "uenux2-tbaa/10881",
+    "index": 10881,
+    "size": 418,
+    "band": "medium",
+    "component": "simulador",
+    "owner": "app",
+    "features": [
+      "call_indirect",
+      "throw",
+      "frame",
+      "inlined-frame",
+      "i64"
+    ],
+    "ledger": {
+      "kind": "shape",
+      "score": 13
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": null,
+    "symbol": null,
+    "evidence": "component",
+    "object": null,
+    "reference": null
+  },
+  {
+    "id": "uenux2-tbaa/11317",
+    "index": 11317,
+    "size": 10,
+    "band": "tiny",
+    "component": "unknown",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "comum::md::CVoto::EhLegenda() const",
+    "symbol": "_ZNK5comum2md5CVoto9EhLegendaEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp",
+      "line": 15
+    }
+  },
+  {
+    "id": "uenux2-tbaa/11318",
+    "index": 11318,
+    "size": 10,
+    "band": "tiny",
+    "component": "unknown",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "comum::md::CVoto::EhNominal() const",
+    "symbol": "_ZNK5comum2md5CVoto9EhNominalEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp",
+      "line": 10
+    }
   },
   {
     "id": "vota-web/1395",

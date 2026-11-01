@@ -51,8 +51,11 @@ no `invoke_`, and its callers are `api::EncodeTime` (3643, `ctime.cpp`) and `api
 `cdatetime.cpp`): uenux2 code, which unit 24 writes in `src/uenux2/src/api/util/ctime.cpp`. The other way, a row
 stubbed in a uenux2 tree whose own frame has a landing pad, its cleanup through `invoke_*` and `__resumeException`, is
 not uenux2's code: 501 (a message queue's push under a lock) is an `-fexceptions` TU's copy of an inline member, most
-likely the executable TU's ([levels.md](levels.md) §V1). It is no source to write, and gets its name from its
-callers' votes.
+likely the executable TU's ([levels.md](levels.md) §V1). It is no body to match from a uenux2 object: the header's
+inline member (`api::CPriorityMessageQueue<api::SMessage>::Insert`, `api/ipc/cmessagequeue.h`) is written for its uenux2
+callers, and its copy there reads `differs`. Its callers' votes do not name it: the two written ones, 7221 and 10763,
+are named by `vtable`, which casts none, so a `callers+content` hand line resting on 501's own body names it
+(`src/units/174-uenux2-app-vota-mensagens.mk`).
 
 ## P2. A class with no file of its own, or out of its upstream file
 

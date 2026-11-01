@@ -79,8 +79,8 @@ is libc++'s code, and what differs is which copy binaryen keeps or merges ([Libr
 
 ```sh
 python3 -I -B tools/round/pick_pool.py --differs | awk -F'\t' '$2 ~ /^_ZNSt3__2/ {print $1, $5, $6}'
-# 2247 ASN1 app/asn1/AVNDecoder.o
-# 3517 ecourna app/ecourna/api_compression_icompressor.cpp.o
+# 3613 vota app/uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp.o
+# 3709 vota app/uenux2/src/app/comum/dados/crdvvota.cpp.o
 # …
 ```
 
@@ -108,8 +108,8 @@ still have no body in our link, two ways:
   `no-candidate` while one RHVoice function called it, and became a match, with no source of its own, when a TSE unit
   added a second caller. Look for its call in the object of a caller the scan already names.
 - **Written, and nothing names it.** The scan finds a body through the symbol file, the census or its content, so a
-  body it cannot name reads `no-candidate` with its object in the link, and only the fragment says it exists. 2799 and
-  3768 (unit 91) are such bodies. A right body can read so too: 5658's definition under a `using` printed a short type
+  body it cannot name reads `no-candidate` with its object in the link, and only the fragment says it exists. 5660 (unit 89,
+  `md::CCandidatura`'s constructor) is such a body. A right body can read so too: 5658's definition under a `using` printed a short type
   in its record, so the record anchored nothing, and the row said `no symbol and no ledger pair` until the definition
   spelled the type in full (step 3). Run `check_srcloc.py --strict` on the unit's objects (step 10) before you read
   such a row.
@@ -437,7 +437,7 @@ to follow it (step 10, "A twin whose name moved"; [facts/splat.md](reference/fac
 
 Two cases go the other way. **An instance of yours can take a library's match.** A template your source instantiates is
 a copy that links ahead of the library's, compiled at your tree's flags. `FillPath` calls `std::vector<double>::insert`,
-so `cwasmscreen.cpp.o`, ahead of the RHVoice objects, defined `__insert_with_size` with `-fno-strict-aliasing`. The
+so `cwasmscreen.cpp.o`, ahead of the RHVoice objects, defined `__insert_with_size` with `-fno-strict-aliasing`, its directory's flag then. The
 target's 2662 has TBAA, its body changed, and `splat-match` stopped with `matched.txt only: [2209, 2662, 5255]`. A
 unit's roots file cannot fix it, since those link after uenux2's: a tree root, `src/app/roots_uenux2.cpp`, links ahead
 of both trees and keeps the right copy, an explicit instantiation whose callees' rows you read afterwards, since it
@@ -902,9 +902,9 @@ the fragment's header and its README row: for a `no-candidate` row the fragment 
 (8168, unit 75) is `differs` until the literal it shares a tail with is in the link, and with that literal in a scratch
 link `splat-remap` prints `IDENTICAL`; it printed that for 8746 and 8799 (unit 78) at `-O3 -std=c++23` before the
 tree took those flags ([facts/levels.md](reference/facts/levels.md) §V3), and `api::ITextToSpeech::SetVoice` (11518,
-unit 82) gives the target's rows at the executable TU's flags (§V1). 1161 (`FormataNumero`, unit 131) is the same case
+unit 82) gives the target's rows at the executable TU's flags (§V1). 1161 (`FormataNumero`, unit 131) was the same case
 read as `unresolved`, `an address of ours: string tail occurs 4098 times` (the table under "Library functions" has that
-row).
+row), and it matched, its body unchanged, once fn 11973, which holds the longer literal, was written (unit 183).
 
 A body whose remainder you cannot explain stays unwritten when nothing needs it: no trap, since nothing needs one. Take
 it out and put the measurement in the fragment. `comum::md::CPleito`'s constructor at `103 over 438` with every scratch
@@ -1575,7 +1575,7 @@ differs, the code is usually right and something around it is not. The scan's `d
 | `target i32.const N \| ours i32.const M` with small numbers | a table slot: the function-pointer table holds functions in another order, because another set of functions is address-taken | the roots TUs (`src/app/roots*.cpp`, the units' `-roots.cpp`) and the link order decide the table; [reference/link-order.md](reference/link-order.md) |
 | `target call X \| ours call Y` | the callee resolves to another target function: a callee without a name, a twin, or an inlining difference | `pnpm wasm splat-remap … --against <index>` prints how every operand resolves |
 | `the locals`, or an instruction that differs in kind | codegen: the compile flags (`-O` level, `-fPIC`, `-DNDEBUG`), the library version, or inlining | the library's flags and their evidence are in `docs/reference/facts/libraries.md` and `tools/libs/<lib>/census.json`; a root that exports or calls a function once changes what binaryen inlines ([facts/tool-traps.md](reference/facts/tool-traps.md) §X1); two bodies that differ in local numbers alone can come from the order of a caller and its callee (step 3, "Code binaryen inlined from another function"), and so can a body whose early return is `if … return` in one link and a block result in the other: the order of the library's objects decides which of a thunk and its callee binaryen keeps (zlib's `crc32`, 893, [facts/codegen.md](reference/facts/codegen.md) §C4), so read the target's use bands before trying flags. The scan stops at the first difference, and the locals come first, so this says nothing of the rest of the body: compare sizes and run `pnpm wasm score` |
-| `an address of ours: string tail occurs N times` | the operand is a string's end pointer, and our link holds as a string of its own what the target holds as the tail of a longer literal, so the end resolves only to the empty tail | the same case as a literal that waits for the one it shares a tail with (step 5, 1161): link a scratch object that holds the longer literal |
+| `an address of ours: string tail occurs N times` | the operand is a string's end pointer, and our link holds as a string of its own what the target holds as the tail of a longer literal, so the end resolves only to the empty tail | the same case as a literal that waits for the one it shares a tail with (step 5: 1161 matched once 11973, which holds the longer literal, was written): link a scratch object that holds the longer literal |
 | `read-only object: bytes not in the target` | our constant data is not the target's: another version or another configuration (`#define`s) | `tools/libs/discriminate.py` lists the target functions that tell two builds apart |
 
 A C function with no TSE record, a data table of a known format and a TSE caller can be a library the manifest does not

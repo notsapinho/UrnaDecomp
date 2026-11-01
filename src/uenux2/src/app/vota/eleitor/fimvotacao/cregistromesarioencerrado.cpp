@@ -3,6 +3,8 @@
 
 #include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 
+#include "app/vota/eleitor/cthreadeleitor.h"
+
 namespace vota {
 
 CRegistroMesarioEncerrado::CRegistroMesarioEncerrado()
@@ -21,5 +23,11 @@ CRegistroMesarioEncerrado& CRegistroMesarioEncerrado::GetInst()
 
 std::unique_ptr<CRegistroMesarioEncerrado> CRegistroMesarioEncerrado::s_inst;
 std::mutex CRegistroMesarioEncerrado::s_mutex;
+
+void CRegistroMesarioEncerrado::StartState()
+{
+    m_pNextState = this;
+    CThreadEleitor::GetInst().GetMensagens().Post(14);
+}
 
 } // namespace vota

@@ -9,12 +9,12 @@
 // Recovered: the layout and the destructor. The constructor (records lines 48 and 51, held inlined by fn 12110) stores
 // its three std::shared_ptr arguments at +4, +12 and +20, throws "header nulo" (code 9066, line 48) when the first is
 // empty and "trailer nulo" (9067, line 51) when the second is, and fills +28 from a CPaperFormBuilder that holds one
-// empty text field (fns 193 and 357). The D2 (fn 5609) releases +28, +20, +12 and +4, in that order. m_header and
-// m_trailer are named after those messages; the other two names are chosen, and so is +28's type, the other three's:
-// fn 357, not named, fills it from the builder, as it fills fn 3699's result. The constructor and GeraRelatorio (line
-// 61, inlined into fn 12110) are not reconstructed, so their lines stay blank, past the end of this file. That the
-// destructor is declared `= default` in the class is chosen ({} gives the same object); with `inline` clang inlines it
-// into fn 5612, which calls it (src/units/139-uenux2-cgeradorbu.mk). The access of the members is chosen.
+// empty text field (fns 193 and 357, CPaperFormBuilder::Build). The D2 (fn 5609) releases +28, +20, +12 and +4, in that
+// order. m_header and m_trailer are named after those messages; the other two names are chosen, and so is +28's type,
+// the other three's: 357 fills it from the builder, as it fills fn 3699's result. The constructor and GeraRelatorio
+// (line 61, inlined into fn 12110) are not reconstructed, so their lines stay blank, past the end of this file. That
+// the destructor is declared `= default` in the class is chosen ({} gives the same object); with `inline` clang inlines
+// it into fn 5612, which calls it (src/units/139-uenux2-cgeradorbu.mk). The access of the members is chosen.
 
 #include <memory>
 #include <string>

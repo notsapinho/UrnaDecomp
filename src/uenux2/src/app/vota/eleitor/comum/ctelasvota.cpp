@@ -1,10 +1,13 @@
 #include "app/vota/eleitor/comum/ctelasvota.h"
 
+#include <format>
+
+#include "app/vota/euevotaerror.h"
 #include "ecourna/api/pattern/singleton.hpp"
 
 namespace vota {
 
-// (original lines 7-290: content not recovered)
+// (original lines 10-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -106,5 +109,17 @@ std::unique_ptr<CTelasVota> CTelasVota::s_instancia;
 std::mutex CTelasVota::s_mutex;
 
 CTelasVota::~CTelasVota() = default;
+
+// (original lines 3441-3529: content not recovered)
+#line 3530
+CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
+{
+    const auto it = m_mapaTelas.find(cargo);
+    if (it == m_mapaTelas.end()) {
+        throw CUeVotaError(EUE_VOTA_CONJUNTO_TELAS_INEXISTENTE,
+                           std::format("Nao existe o conjunto de telas associado ao cargo id {}", cargo));
+    }
+    return it->second.GetTela(tela);
+}
 
 } // namespace vota

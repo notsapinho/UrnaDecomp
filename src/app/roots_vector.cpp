@@ -75,3 +75,30 @@ int urna_roots_vector_dado(int a)
     [[clang::noinline]] urna_guarda_dado(a + 12);
     return reinterpret_cast<int>(&urna_desfaz_dado);
 }
+
+// Three more -Oz copies read as the executable TU's: std::vector<std::string>'s __base_destruct_at_end (target fn 2247,
+// target callers 2249 8825 8826 8874) and __destroy_vector::operator() (2249, callers 679 2183 2255 5573 8873), and
+// std::string::find_first_not_of(const char*, size_type) (1843, callers 1519 2185 11546 11571 14477).
+// docs/reference/facts/asn1.md A5 matched 2247 and 2249 with a probe object at the executable TU's -Oz -fexceptions, and
+// A10 reads 1843's loop as -Oz's; their copies had come from the ASN.1 runtime's -Os objects and differed. The executable
+// TU's code that would instantiate them is not written (votaInit, 7840, invokes 11546, 11571 and 14477, which call 1843),
+// so they come from here until it is, and go then, as 252 did (src/units/README.md "Companion files").
+// - Measured: these lines compiled at UENUX2_CXXFLAGS give, for each of the three, the object code (calls and relocated
+//   constants masked) the same instantiations without minsize give at VOTA_WEB_CXXFLAGS, the TU's rule.
+// - 2247 calls ~basic_string (149) only with allocator_traits::destroy and __destroy_at instantiated with minsize too, 2249
+//   calls 2247 only with clear() so, and 1843's loop is not rotated only with __str_find_first_not_of so (each measured on
+//   a probe link), read as each callee's own -O3 copy inlining or rotating first (src/units/README.md "Companion files"
+//   names 2247's two).
+// - Measured on a probe link (docs/reference/facts/levels.md V4, the object first on the link line, scanned with the
+//   committed symbol file): the three match and no other row enters or leaves match against an empty probe object; in
+//   this link they match under these symbols, which census pairs name (pair-addr for 2247 and 2249, pair-fingerprint for
+//   1843), and no match is lost.
+#include <string>
+
+template __attribute__((minsize)) void std::vector<std::string>::__base_destruct_at_end(std::string*);
+template __attribute__((minsize)) void std::vector<std::string>::__destroy_vector::operator()();
+template __attribute__((minsize)) void std::vector<std::string>::clear();
+template __attribute__((minsize)) void std::allocator_traits<std::allocator<std::string>>::destroy<std::string, 0>(std::allocator<std::string>&, std::string*);
+template __attribute__((minsize)) void std::__destroy_at<std::string, 0>(std::string*);
+template __attribute__((minsize)) std::string::size_type std::string::find_first_not_of(const char*, std::string::size_type) const;
+template __attribute__((minsize)) unsigned long std::__str_find_first_not_of<char, unsigned long, std::char_traits<char>, 4294967295ul>(const char*, unsigned long, const char*, unsigned long, unsigned long);

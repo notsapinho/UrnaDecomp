@@ -21,15 +21,28 @@
 # - slots 22 and 24, DrawImage (9079, 9058), DrawMovie's shape over ImageSize. Same functions: the data held by `const
 #   std::vector<uint8_t>&` or `const auto`, `!largura || !altura` for the two tests. Not free: 9058 scales the natural
 #   width before the height; the other order differs.
-# - slots 17 and 18, FillPath and DrawPath (9146, 9125), and the scaling they share, a private member EscalaCaminho
-#   (fn 5113, whose name is chosen; it reads m_escalaX and m_escalaY, and its push_back is target fn 2670, which
-#   matches): written and `unresolved`. The tree's -O3 inlines `tipos.push_back` as the target does (at cost 225,
-#   docs/reference/facts/levels.md V2): there 9146 scores 13 over 307 rows and 9125 13 over 313, all operand-only, and
-#   both wait for 5113's name alone. At -O2 their two push_backs stayed calls of one vector<int> body, a twin of
-#   vector<long>'s in roots_boost.o, which equals target fn 543 by bytes; at -O3 543 still matches, from roots_boost.o.
-#   5113 itself differs at both levels (86 over 273 rows): the target reads each
-#   command's values first and stores the type, then y, then x; the locals above are the nearest form found, and the
-#   `SPathCommand` aggregate stands in for a header whose constructors, if any, are not known.
+# - slots 17 and 18, FillPath and DrawPath (9146, 9125), match, and the scaling they share, a private member
+#   EscalaCaminho (fn 5113, whose name is chosen; it reads m_escalaX and m_escalaY, and its push_back is target fn 2670,
+#   which matches), is written and `differs`. The tree's -O3 inlines `tipos.push_back` as the target does (at cost 225,
+#   docs/reference/facts/levels.md V2). 9146 and 9125 differed from the target in the call of 5113 alone (13 over 307
+#   and 13 over 313 rows, all operand-only), and a `callers+content` hand line of splat/symbol_addrs.txt names 5113 for
+#   them: both are named by vtable alone, so they cast no call votes. On copies of the symbol file and the match list
+#   without that line and the two match lines, the scan (twice, beside a control that moves nothing) reads 9146 and
+#   9125 `unresolved` and 5113 `no-candidate`, and both copies build to the target's sha256. At -O2 their two
+#   push_backs stayed calls of one vector<int> body, a twin of vector<long>'s in roots_boost.o, which equals target fn
+#   543 by bytes; at -O3 543 still matches, from roots_boost.o.
+#   5113 itself differs (70 over 264 rows at the tree's flags): for MOVE_TO, LINE_TO and ARC the target reads every
+#   value of the command before its first store and stores the type (and an arc's two angles) before the scaled
+#   coordinates; ours reads its last product's pair at that product's store, and stores the type (and the angles)
+#   after the products. The CLOSE case is the target's. The `SPathCommand` aggregate (cstepsprogressbar.h) stands in for a header whose constructors, if any,
+#   are not known. Measured alone (try-tu --single, which scored the body written before as the whole link did, 86 over
+#   273): the products written `m_escalaX * comando.x`, which reads x before the scale as the target does, 75 over 264;
+#   with that, CLOSE built as a value-initialized SPathCommand whose type is then set (a zero over the whole temporary,
+#   padding included, then the type, as the target has), 70 over 264, the written form. Further from the target: the
+#   products the other way round (81, and 86 with CLOSE an aggregate, the body written before); the aggregates built
+#   with the products in place, no locals (101, and 97 with the scale first); named SPathCommand locals built with
+#   braces (101); one SPathCommand per command, default-initialized and assigned field by field (304), or per case,
+#   assigned type last (116), or with the products in locals first (96).
 # - slot 12 of CWasmImageSurfaceOps, ImageSize (3493): the member tests for no data and calls TamanhoImagem, a
 #   file-static helper clang inlines, with the GIF, PNG and JPEG reading. Written in the member itself, every form tried
 #   left one thing (11 over 256 rows, 5 of them operand-only): the target tests the size against 12, the guard of the
@@ -64,9 +77,11 @@
 #   bytes, an IImage and a shared IImage, slots 15 to 17 (8994, 8991, 8985).
 # - std::__shared_ptr_emplace<std::vector<unsigned char>> (D2 8833, D0 8823, __on_zero_shared 5047), libc++'s code for
 #   the make_shared of slots 2, 5 and 9.
-# std::vector<double>'s range insert (fn 2662), which FillPath and DrawPath call, has to come from
-# src/app/roots_uenux2.cpp: the target's copy has TBAA, this object's does not (24 over 434 rows), and as the first definer
-# on the link line this object would take it from RHVoice's speech_processor, and 2209 and 5255 with it.
+# std::vector<double>'s range insert (fn 2662), which FillPath and DrawPath call, came from src/app/roots_uenux2.cpp: the
+# target's copy has TBAA, this object's had none while its directory built with -fno-strict-aliasing (24 over 434 rows), and
+# as the first definer on the link line this object would take it from RHVoice's speech_processor, and 2209 and 5255 with
+# it. With the directory's strict aliasing (src/Makefile UENUX2_TBAA_DIRS) this object's copy is roots_uenux2.o's (pnpm wasm score
+# on the two objects: 0 over 468 rows); the root is not measured again.
 # Nothing reconstructed calls the constructor, so the roots file keeps both vtables.
 #
 # The file is a choice, and the TU is not: the class shares one object with simulador::CWasmScreen. No record names

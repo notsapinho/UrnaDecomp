@@ -60,8 +60,9 @@
 #
 # splat/symbol_addrs.txt gets nine hand lines, each `callers+content`, each shown needed by the scan without it and
 # without its own match line (docs/reference/splat.md "Reviewing a match"; the matches each removal takes out are
-# counted on the committed state). vector<FormHandle>'s __emplace_back_slow_path (8872, 20 matches out), whose body of
-# ours differs (36 over 186, pnpm wasm score), is named for its caller. Its __assign_with_size (1872) had a tenth line
+# counted on the committed state). vector<FormHandle>'s __emplace_back_slow_path (8872, 20 matches out) is named for its
+# caller; its body of ours, 36 over 186 with -fno-strict-aliasing (pnpm wasm score), matches since src/api/ builds with
+# strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). Its __assign_with_size (1872) had a tenth line
 # while our body differed (106 over 434 rows at -std=c++20; 16 matches out): it matches at the tree's -std=c++23, and
 # the scan without the line and without the match lines of 1872 and its six callers brings all seven back, every row as
 # it was, so the line went. CPolySingleton<IScreenMT>::instance (1714; 11041 out) and <IInputKbd> (455;
@@ -103,7 +104,7 @@
 #   make_shared<CInputFieldControl<IScreenMT>> inlined, whose control block's vtable (@1580748) lies in the MT
 #   builder's data, and waits for 395's family; 2024 (IInputField<IScreen>'s constructor) has no written caller (901,
 #   2383, 3675, 5565, 5913, 7787).
-# - 8872 differs (above). 11004 (IForm<IPaper>::GetRenderForm, CPolySingleton<IPaper>::instance inlined) matches
+# - 8872 matches (above). 11004 (IForm<IPaper>::GetRenderForm, CPolySingleton<IPaper>::instance inlined) matches
 #   since unit 170, whose copies of CPolySingletonList::find keep 305 and 608 apart (unit 100's fragment).
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)

@@ -56,18 +56,19 @@
 #   With the field a plain SEQUENCE_OF the statement is `entidade.set_agregadas() = lista;`, and the cast calls the
 #   same operator=.
 #
-# Written and not matched, and what each waits for:
-# - 11453, CConversorSecaoEleitoral::DoDesconverte: 72 over 770 rows at -O2 and 68 over 770 at the tree's -O3, 3
-#   inserted each time: std::set<TSecaoID>::insert in CSecaoEleitoral's constructor reloads __child after the
-#   begin-node store, which -fno-strict-aliasing gives and the target does not (docs/reference/facts/app-flags.md F6
-#   has the same reload against 2799 and 3714). With csecaoeleitoral.cpp.o alone compiled with -fstrict-aliasing (a
-#   variant object in the whole link), 11453 was 65 over 767, operand-only, at -O2. Its call of 2872 then needs a name
-#   (5719, the other callee, matches).
+# Matched once comum's data classes build with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6), and what each
+# took:
+# - 11453, CConversorSecaoEleitoral::DoDesconverte: 72 over 770 rows at -O2 and 68 over 770 at -O3 with
+#   -fno-strict-aliasing, 3 inserted each time: std::set<TSecaoID>::insert in CSecaoEleitoral's constructor reloads
+#   __child after the begin-node store, which -fno-strict-aliasing gives and the target does not (app-flags.md F6 has the
+#   same reload against 2799 and 3714). With csecaoeleitoral.cpp.o (app/comum/dados/md/) compiled with strict aliasing,
+#   11453 was 65 over 767, operand-only, at -O2, and it matches once its call names 2872 (5719, the other callee,
+#   matches). Its own object, in dados/asn/, keeps -fno-strict-aliasing.
 # - 5719 and 11454 matched only once the tree took -O3: at -O2, __introsort was 238 over 2071 rows, and DoConverte 371
 #   over 685, where SEQUENCE_OF::push_back's call of the container's push_back stays out of line and merges with
 #   std::vector<long>::push_back.
-# - 2872, std::__tree<unsigned short>::destroy: ours is 1 over 15 rows, operand-only, but the census pairs the target's
-#   with another tree's destroy of the same bytes, and its callers (11453, 11884) are not matched.
+# - 2872, std::__tree<unsigned short>::destroy: ours was 1 over 15 rows, operand-only, the census pairing the target's
+#   with another tree's destroy of the same bytes; 11453's call names it (evidence:call by:11453), and it matches.
 #
 # Chosen, no evidence names them: the converter's files, app/comum/dados/asn/cconversorsecaoeleitoral.{h,cpp}, by
 # docs/how-to-decompile.md step 3's rules 3 and 4 (CSecaoEleitoral is in app/comum/dados/md/). The data put its vtable

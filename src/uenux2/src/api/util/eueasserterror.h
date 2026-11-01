@@ -21,6 +21,11 @@ enum EUeAssertError {
     EUA_RECT_TOP = 3401,
     EUA_RECT_RIGHT = 3402,
     EUA_RECT_BOTTOM = 3403,
+    // comum::CDataSourcesRelatorio<comum::CRdvVota, comum::CEleitores>::DetalheCandidatoZE (fn 11973, record
+    // cdatasourcesrelatorio.h 152:80): the text "Assert (qtd == 0u)". With the invocation indented eight columns (a member
+    // defined in its class) and the code qualified as api::, the column leaves 48 characters for the name; the name is
+    // chosen to that length
+    EUA_DATASOURCESRELATORIO_DETALHECANDIDATOZE_VOTO = 3410,
     // vota::CQuerImprimirBU::StartState (fn 12035, records cquerimprimirbu.cpp 40:102 and 41:85): the texts "Assert
     // (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)" and "Assert (poInfo.GetVota().GetQtdBU() == 0)". With the
     // invocation indented four columns and the code qualified as api::, the columns leave 34 characters for each name;

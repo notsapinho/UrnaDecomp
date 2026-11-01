@@ -3,7 +3,7 @@
 //   CMenuItem::Pisca()   no target function of its own: binaryen inlined it into Read, its one caller (a chosen name)
 //   10900 CMenuValidation::isValid(const std::string&) const   (with the two helpers it holds, records 198 and 210)
 //   10899 CMenuValidation::isValidChar(char) const   (no record falls in it; it follows isValid, a choice)
-//   5491, 10898 CInputMenuField::~CInputMenuField()   (the D2 is written and differs: see the fragment)
+//   5491, 10898 CInputMenuField::~CInputMenuField()   (the D2 matches with strict aliasing: see the fragment)
 //   10896 Rect() const, 10894 Read(IInput&) (record 419), 10893 GetTypeName()
 //   5489 SelecionaItem(const std::string&), LimpaSelecao() (inlined everywhere)
 // and std::__destroy_at<CMenuItem> (5490), which the destructor's list instantiates. Records of functions not written

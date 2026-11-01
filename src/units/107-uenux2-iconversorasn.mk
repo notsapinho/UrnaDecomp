@@ -75,7 +75,7 @@
 # Written and not matched, and what each waits for:
 # - 11401: unit 96's fragment.
 # - CSecaoEleitoral's constructor in csecaoeleitoral.cpp (records :34 to :41), which binaryen inlines into 11453,
-#   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what it waits for.
+#   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what its match took.
 # Not written:
 # - 11385 and 11384, CConversorHorarioVerao: this unit's -pending.cpp.
 # - 11482, 11483, comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s slots: fragment 140 traps them

@@ -195,15 +195,15 @@ alone: a name says which function sits there, and the scan still compares the by
 
 - `pair-depth0`: 3472, 3473 and 5066. From `asmlift-wasm/`, `pnpm --silent wasm fingerprint <wasm> --depth 0` prints one
   target and one ours for each fingerprint.
-- `callers+content`: 194, 446, 541, 2184, 2185, 2186, 2653 and 853. For every function the symbol file names, take the
-  target's body and our body of that symbol from `wasm-objdump -d`, with the operands of `call`, `global.get`,
-  `global.set` and `call_indirect` blanked and every `i32.const` and `i64.const` of absolute value 1024 or more blanked,
-  locals and branch depths kept. Keep the function when the two lists are equal (7,470 functions on this tree), pair its
-  `call`s in order, and count the kept functions behind each pair of callees. Each of these target functions then pairs
-  with one symbol of ours and that symbol with it alone: 32 callers for 194, 11 for 446, 9 for 541, 3 each for 2184,
-  2185, 2186 and 2653, and none disagrees. 853 has one caller, 8958, `new SEQUENCE(*this)`; its line enables nothing,
-  since 853 and 8958 match by content without it. The hand edits' comments list the callers; `pnpm wasm fn` on one shows
-  the `call` at the offset where ours has it.
+- `callers+content`: 194, 446, 541, 2184, 2186, 2653 and 853 (2185 had one too, until a generated `call` line named it).
+  For every function the symbol file names, take the target's body and our body of that symbol from `wasm-objdump -d`,
+  with the operands of `call`, `global.get`, `global.set` and `call_indirect` blanked and every `i32.const` and
+  `i64.const` of absolute value 1024 or more blanked, locals and branch depths kept. Keep the function when the two
+  lists are equal (7,470 functions on this tree), pair its `call`s in order, and count the kept functions behind each
+  pair of callees. Each of these target functions then pairs with one symbol of ours and that symbol with it alone: 32
+  callers for 194, 11 for 446, 9 for 541, 3 each for 2184, 2185, 2186 and 2653, and none disagrees. 853 has one caller,
+  8958, `new SEQUENCE(*this)`; its line enables nothing, since 853 and 8958 match by content without it. The hand edits'
+  comments list the callers; `pnpm wasm fn` on one shows the `call` at the offset where ours has it.
 - `vptr+shape`: 2656. Its one caller, 9012, cannot vote: it is the row this name releases. The name rests on the body. It
   stores 1147840, `SEQUENCE_OF_Base`'s vtable address point (`ledger/vtables.json`), though 27 target functions load that
   constant, so this is not `rtti-vptr`. It reads its second argument's fields as a copy does, and its `addr` and `shape`
@@ -231,11 +231,13 @@ rest on those two.
 More of the same kind, from the same tally of aligned calls:
 
 - `pair-depth0`: 5055 and 5054, equal bodies the census cannot pair while a callee differs.
-- `callers+content`: 220, 2247, 2249, 2706, 5306, 1497, 5076, 1067 and 1068. A probe object at the
-  executable TU's `-Oz -fexceptions`, first on the link line, matches 2247 and 2249, so those two are that flag set's. 220
-  stays `differs` at the locals there, so for it the flag set is a lead. Our bodies differ, but for 1497's, which matches, and
-  their callers need only the name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair. An anchor casts call and
-  table votes only while nothing else names it (`anchorVotes` in `asmlift-wasm/src/splat-symbols.ts`).
+- `callers+content`: 220, 2706, 5306, 1497, 5076, 1067 and 1068. 2247 and 2249 had such lines: a probe object at the
+  executable TU's `-Oz -fexceptions`, first on the link line, matches them, so they are that flag set's, and they match
+  since `src/app/roots_vector.cpp` emits them as `minsize` instances, generated lines naming them. 220 stays `differs`
+  at the locals there, so for it the flag set is a lead. Our bodies differ, but for 1497's, which matches, and their
+  callers need only the name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair.
+  An anchor casts call and table votes only while nothing else names it (`anchorVotes` in
+  `asmlift-wasm/src/splat-symbols.ts`).
 - 8041, `use_facet<num_put>`: one of twelve thunks of 453. Its one slot is the `invoke` operand at +0xa2 of 446 and 541,
   whose rows equal `__put_num_integer_promote` but for table slots, and the `id` lies 16 B above `num_get`'s (8046) on both
   sides. With it 446 and 541 match, as they could not by name alone.
@@ -410,7 +412,7 @@ Not every leftover is the runtime's. By their rows:
 | rows | what they are | what they wait for |
 | --- | --- | --- |
 | 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | the executable TU, at its own `-Oz -fexceptions` rule, once it is reconstructed ([levels.md](levels.md) §V1) |
-| 1843 | `string::find_first_not_of` at `-Oz`: it keeps `__str_find_first_not_of`'s loop, a compile of the member at `-Oz -fexceptions` shows it, and `-Os`, `-O2` and `-O3` do not | the executable TU, at its own `-Oz -fexceptions` rule, once it is reconstructed ([levels.md](levels.md) §V1) |
+| 1843 | `string::find_first_not_of` at `-Oz`: it keeps `__str_find_first_not_of`'s loop, a compile of the member at `-Oz -fexceptions` shows it, and `-Os`, `-O2` and `-O3` do not | matched: `src/app/roots_vector.cpp` emits it as a `minsize` instance, until the executable TU's code that instantiates it is written ([levels.md](levels.md) §V1) |
 | 1532 | BER encoding through `CoderEnv`, with landing pads, so an `-fexceptions` TU's | its callers, whose records name `api::CFileASN` |
 | 2706, 5282, 5290, 2704, 2896 | libc++ instances: 2706 is `vector<char>::reserve`, with landing pads, called by the runtime's own 3464, 3472 and 5055; 5282 is a `__split_buffer<char>` constructor and 2704 and 2896 its destructor, with no pad; 5290 holds pads too; 2896 is the merge body of 2704, 2545, 4675 and 5523 | the TU whose copy they are |
 | 8902 | calls 5056 and 1872, `api`'s, and no runtime symbol | a class of `api` |
