@@ -1,9 +1,9 @@
-// Roots: keep the vtables of vota::CMostraQRCodeCertificado (@1542480), vota::CQuerImprimirBU (@1542572),
-// vota::CRetirarMR (@1542676) and comum's four menu items (@1550780 to @1550888) in the skeleton link the way the
-// target reaches their slots: only through the vtable, which the classes' constructors store. The states'
-// constructors are inlined into their GetInst, and none of those three GetInst has a caller here:
-// CMostraQRCodeCertificado's only caller is CMostraQRCodeBU::ProcessInput (fn 12051), pending, and the other two are
-// not reconstructed (CQuerImprimirBU's is inlined into CInicioBU::StartState, fn 12062, and CRetirarMR's is fn 2291).
+// Roots: keep the vtables of vota::CMostraQRCodeCertificado (@1542480), vota::CRetirarMR (@1542676) and comum's four
+// menu items (@1550780 to @1550888) in the skeleton link the way the target reaches their slots: only through the
+// vtable, which the classes' constructors store. The states' constructors are inlined into their GetInst, and neither
+// of those two GetInst has a caller here: CMostraQRCodeCertificado's only caller is CMostraQRCodeBU::ProcessInput (fn
+// 12051), pending, and CRetirarMR's (fn 2291) is not reconstructed. vota::CQuerImprimirBU's vtable needs no line: its
+// GetInst is inlined into CInicioBU::StartState (fn 12062, unit 104), which stores its vptr.
 // vota::CLimiteCopiasBUAtingido's vtable needs no line: its GetInst is inlined into
 // CVerificaQtdBUsAdicionais::StartState (fn 12023, unit 185), which stores its vptr. Comum's items are built by fn
 // 6599, which stores each comum vptr and then the vota item's (unit 102's roots keep the vota items' vtables). Taking
@@ -21,7 +21,6 @@ void w156_loga_qualidade_bu(int) __asm__("_ZN4vota8CLogVota30LogaMesarioIndagado
 void w156_loga_vias_adicionais(int) __asm__("_ZN4vota8CLogVota33LogaQtdViasAdicionaisExcedeMaximoEv");
 void w156_loga_biometrico(int) __asm__("_ZN4vota8CLogVota48LogaHabilitacaoCanceladaReconhecimentoBiometricoEv");
 extern const char w156_vt_cmostraqrcodecertificado[] __asm__("_ZTVN4vota24CMostraQRCodeCertificadoE");
-extern const char w156_vt_cquerimprimirbu[] __asm__("_ZTVN4vota15CQuerImprimirBUE");
 extern const char w156_vt_cretirarmr[] __asm__("_ZTVN4vota10CRetirarMRE");
 extern const char w156_vt_comum_estadourna[] __asm__("_ZTVN5comum22CItemImprimeEstadoUrnaE");
 extern const char w156_vt_comum_listaeleitores[] __asm__("_ZTVN5comum26CItemImprimeListaEleitoresE");
@@ -34,12 +33,12 @@ namespace {
 const void* volatile w156_sink;
 volatile int w156_n;
 
-// Stands for vota::CImprimindoBU::GetInst's (fn 5986) two target callers, CQuerImprimirBU::ProcessInput (fn 12034,
-// pending here) and CInicioBU::StartState (fn 12062, pending in unit 104): one caller that calls it twice, and adds the
-// results and its argument, so binaryen keeps them and its body is no target function's.
+// Stands for CQuerImprimirBU::ProcessInput (fn 12034, pending here), one of vota::CImprimindoBU::GetInst's (fn 5986)
+// two target callers; the other, CInicioBU::StartState (fn 12062, unit 104), is in the link. It adds its argument to the
+// result, so binaryen keeps it and its body is no target function's.
 __attribute__((noinline)) int ChamaImprimindoBU(int n)
 {
-    return w156_imprimindobu_getinst() + w156_imprimindobu_getinst() + n;
+    return w156_imprimindobu_getinst() + n;
 }
 
 // Stands for the printing states' slots that call CLogVota::LogaImprimindoRelatorio (fn 1127: 11852, 11855, 11991,
@@ -74,7 +73,6 @@ struct SW156Roots {
         w156_n = ImprimeRelatorios(w156_n);
         w156_n = AlertaVias(w156_n);
         w156_sink = w156_vt_cmostraqrcodecertificado;
-        w156_sink = w156_vt_cquerimprimirbu;
         w156_sink = w156_vt_cretirarmr;
         w156_sink = w156_vt_comum_estadourna;
         w156_sink = w156_vt_comum_listaeleitores;

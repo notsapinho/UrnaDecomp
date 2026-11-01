@@ -30,6 +30,12 @@ enum EUeVotaError {
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,
+    // the values are the codes vota::CVerificaEleicaoPassou::StartState (target fn 11914, record
+    // cverificaeleicaopassou.cpp:70) and vota::testeteclado::CPreZeresima::GetEstadoPassouNoTeste (target fn 5945, record
+    // cprezeresima.cpp:56) throw; the names are chosen from their messages, "Estado nao esperado" and "Estado nao
+    // esperado <estado>", and the classes: no evidence names them
+    EUE_VOTA_VERIFICA_ELEICAO_PASSOU_ESTADO_NAO_ESPERADO = 9376,
+    EUE_VOTA_PRE_ZERESIMA_ESTADO_NAO_ESPERADO = 9377,
     // the values are the codes the GetTelaCargoAtual of vota::CPedeMajoritario, vota::CCompletaProporcional and
     // vota::CPedeProporcional throw (target fns 5920, 5931 and 5923, which pass them to fns 6050 and 3921); the names
     // are chosen from the message, "O cargo atual nao esta posicionado", and the class: no evidence names them

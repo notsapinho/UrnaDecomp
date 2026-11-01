@@ -43,6 +43,13 @@ enum EUeAssertError {
     // the names are chosen to that length
     EUA_QUERIMPRIMIRBU_ESTADO_INVALIDO = 3474,
     EUA_QUERIMPRIMIRBU_QTD_BU_NAO_ZERO = 3475,
+    // vota::CVerificaHorarioZeresima::StartState (fn 11871, record cverificahorariozeresima.cpp 64:60) and
+    // ProcessTickNaoDesligamento (fn 11870, record 80:61): the text "Assert (appinfo.GetVota().GetEstadoVota() ==
+    // EAVAGUARDAHORAZERESIMA)" in both. The columns are less than the condition's length, so each invocation closes on a
+    // line of its own: with the code there indented twelve columns and qualified api::, the columns leave 42 and 43
+    // characters for the names, chosen to those lengths
+    EUA_VERIFICAHORARIOZERESIMA_ESTADO_INICIAL = 3481,
+    EUA_VERIFICAHORARIOZERESIMA_ESTADO_INVALIDO = 3482,
 };
 
 using CUeAssertError = ecourna::api::exception::CBaseError<EUeAssertError, ecourna::api::exception::SErrorLimits{3400, 4200}>;

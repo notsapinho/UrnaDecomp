@@ -27,6 +27,14 @@
 // fragment has them). 1127 and 4551 call fn 233, which ieventoslog.cpp's members hold inlined, so they are in another
 // TU, this one (a reading); 4556 and 2495 log through logaAlerta (fn 1398), and the target holds both as thunks of one
 // merged body, fn 6115. Their names are chosen from their messages.
+// LogaAguardandoHorarioZeresima (held inlined by vota::CVerificaHorarioZeresima::StartState, fn 11871) and
+// LogaDataEleicaoInvalida (by vota::CVerificaEleicaoPassou::StartState, fn 11914) are the shape of the members held
+// inlined above, GetInst called before the member's own stack frame opens, each calling api::CLoga::loga (fn 433) with
+// +4, severity 1 and 2.
+// LogaErroEstadoAplicativoDesconhecido (fn 3279: logaErro, fn 2282) and LogaFimTesteTecladoSucesso (fn 4511: loga, fn
+// 233) are out of line, each called with GetInst's result: 3279 twice by fn 7160 and once by
+// vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858), 4511 twice by fn 11804. Their names are chosen from their
+// messages.
 // LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
 // vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
 // member's own stack frame opens and calls fn 233; its name is chosen from its message. LogaMesarioConfirmouReinicioVotacao
@@ -77,6 +85,10 @@ public:
     void LogaHabilitacaoCanceladaReconhecimentoBiometrico();
     void LogaVotacaoEncerrada();
     void LogaAguardandoConfirmacaoZeresima();
+    void LogaAguardandoHorarioZeresima();
+    void LogaDataEleicaoInvalida();
+    void LogaErroEstadoAplicativoDesconhecido();
+    void LogaFimTesteTecladoSucesso();
     void LogaMesarioConfirmouReinicioVotacao();
     void LogaMesarioSelecionouOutrasOpcoes();
     void LogaMesarioIndagadoHorarioUrna();

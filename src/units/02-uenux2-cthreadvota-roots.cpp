@@ -1,12 +1,12 @@
 // Roots: vota::CThreadVota::StartTick (target fn 700) is called on the CThreadEleitor and CThreadOperador
-// singletons by 16 target functions; two are reconstructed (fn 10798, unit 119's slot 4, and fn 7028, unit 97's
-// CVotacaoStateAudio::StartState), the others not. Address-taken from a static constructor (as in
-// 06-ecourna-api-compression-roots.cpp) so the link keeps it out of line.
+// singletons by 16 target functions; five are in the link (fn 10798, unit 119's slot 4, fn 7028, unit 97's
+// CVotacaoStateAudio::StartState, fn 10220, and fns 11825 and 11871, unit 138's), the others not. Address-taken from a
+// static constructor (as in 06-ecourna-api-compression-roots.cpp) so the link keeps it out of line.
 // CThreadVota::StopTick (fn 422) has 23 callers in the target; two are reconstructed (fn 10799, unit 119's slot 3, and
 // fn 7022, unit 97's CVotacaoStateAudio::FinishState): ParaDoisTicks stands for the others (4454, 7010, 10451, ...).
-// CThreadVota::AddStoppedTick (fn 807) has 11, of which unit 97's fn 1785 calls it twice and 1165 is linked:
-// DoisTicksParados stands for the other nine (652, 2740, 2880, ...).
-// CTickManager::AddStoppedTick (fn 5452) has fn 807 and fn 5947, not reconstructed: TickParado stands for 5947.
+// CThreadVota::AddStoppedTick (fn 807) has 11, of which unit 97's fn 1785 calls it twice and 1165 and 2880 (unit 199)
+// are linked: DoisTicksParados stands for the other eight (652, 2740, 3229, ...).
+// CTickManager::AddStoppedTick (fn 5452) has fn 807 and fn 5947, both in the link (unit 138 writes 5947).
 // CThreadVota::AddTick(const std::chrono::milliseconds&) (fn 4640), CTickManager::AddTick (fn 3644) and StopTick
 // (fn 5451) have all their target callers in the link (1285, unit 97's, and 5979, unit 61's; 4640, 5452 and unit
 // 119's slot 2, which holds CThreadVota::AddTick inlined; 422 and 5452). Each stand-in adds a constant to an
@@ -22,7 +22,6 @@ extern "C" {
 void five700_root_0(int, int) __asm__("_ZN4vota11CThreadVota9StartTickEh");
 void w02_para_thread(void*, int) __asm__("_ZN4vota11CThreadVota8StopTickEh");
 int w02_adiciona_parado_thread(void*, int) __asm__("_ZN4vota11CThreadVota14AddStoppedTickEm");
-int w02_adiciona_parado(void*, int) __asm__("_ZN3api12CTickManager14AddStoppedTickEm");
 }
 
 namespace {
@@ -48,12 +47,6 @@ __attribute__((noinline)) int DoisTicksParados(void* thread, int milissegundos)
     return w02_adiciona_parado_thread(thread, milissegundos) + w02_adiciona_parado_thread(thread, milissegundos + 3);
 }
 
-// stands for fn 5947
-__attribute__((noinline)) int TickParado(void* ticks, int milissegundos)
-{
-    return w02_adiciona_parado(ticks, milissegundos + 4);
-}
-
 struct SFive700Roots {
     SFive700Roots()
     {
@@ -61,7 +54,6 @@ struct SFive700Roots {
         five700_sink = reinterpret_cast<void*>(&EsperaUsando);
         five700_sink = reinterpret_cast<void*>(&ParaDoisTicks);
         five700_sink = reinterpret_cast<void*>(&DoisTicksParados);
-        five700_sink = reinterpret_cast<void*>(&TickParado);
     }
 } five700_roots;
 

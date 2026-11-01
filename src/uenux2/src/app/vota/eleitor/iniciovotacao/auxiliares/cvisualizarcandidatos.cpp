@@ -21,10 +21,10 @@ CVisualizarCandidatos& CVisualizarCandidatos::GetInst()
 std::unique_ptr<CVisualizarCandidatos> CVisualizarCandidatos::s_inst;
 std::mutex CVisualizarCandidatos::s_mutex;
 
-
-
-
-
+comum::md::TCargoID CVisualizarCandidatos::GetCargo() const
+{
+    return m_cargo.value_or(0);
+}
 
 
 

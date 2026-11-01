@@ -4,8 +4,6 @@
 // destructor, so for them this object emits the vtable, the typeinfo and the deleting destructor, with no change when
 // the member lands (src/units/README.md "Pending members"). A member's stub goes with its vtable in the link, so the note
 // over each says what it waits for and the records it holds in the file of its class, whose lines stay blank there.
-// vota::CQuerReimprimirZeresima is the exception: nothing in our link stores its vptr, so wasm-ld drops the vtable and
-// its two traps, and its StartState keeps its stub until its GetInst is written.
 
 #include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/ciniciodeciclo.h"
@@ -82,13 +80,6 @@ void CImprimindoBim::StartState()
 // cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 185, 187, 202,
 // 203, 261, 407, 463, 491, 502, 886, 1127, 1191, 1880, 2244, 2291, 2890, 5918 (3701 is named: unit 93).
 void CImprimirBUOutrasObrigatorias::StartState()
-{
-    __builtin_trap();
-}
-
-// CInicioBU::StartState: fn 12062 (189 B): it holds vota::CQuerImprimirBU's GetInst inlined, whose constructor copies a
-// member of CTelasVota (+236) that app/vota/eleitor/comum/ctelasvota.h has no accessor for.
-void CInicioBU::StartState()
 {
     __builtin_trap();
 }

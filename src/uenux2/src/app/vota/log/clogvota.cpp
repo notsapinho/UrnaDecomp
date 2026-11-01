@@ -3,7 +3,7 @@
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
 // Members with no record sit at chosen lines, each unit's fragment says why: 119's, 161's five after GetInst, 152's
 // seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two, 176's, 61's, 197's,
-// and 156's four after LogaPedidoTituloSuspensao.
+// and 156's four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's and 119's two.
 #include "app/vota/log/clogvota.h"
 
 #include <format>
@@ -157,6 +157,28 @@ void CLogVota::LogaVotacaoEncerrada()
 void CLogVota::LogaAguardandoConfirmacaoZeresima()
 {
     loga("Aguardando confirmação para emissão da zerésima");
+}
+
+void CLogVota::LogaAguardandoHorarioZeresima()
+{
+    const std::string mensagem = "Aguardando data e hora para emissão da zerésima";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaDataEleicaoInvalida()
+{
+    const std::string mensagem = "Data da eleição inválida";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaErroEstadoAplicativoDesconhecido()
+{
+    logaErro("Erro estado do aplicativo não conhecido");
+}
+
+void CLogVota::LogaFimTesteTecladoSucesso()
+{
+    loga("Fim do teste de Teclado do TE - Sucesso");
 }
 
 void CLogVota::LogaMesarioConfirmouReinicioVotacao()

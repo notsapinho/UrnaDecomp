@@ -51,6 +51,12 @@ public:
     const api::CDateTime& GetDataHoraZeresima() const { return m_dataHoraZeresima; }
     const api::CDateTime& GetDataHoraInicioVotacao() const { return m_dataHoraInicioVotacao; }
 
+    // A third api::CDateTime at +580: vota::CVerificaEleicaoPassou::StartState (fn 11914) copies it (`i64.load[+580]`,
+    // `i32.load[+588]`) and, when the current time is not before it, logs "Data da eleição inválida" and shuts the urna
+    // down; vota::CInformacaoThreadOperador's slot 19 (fn 10566) compares the current time with it in place. The end of
+    // the election by a reading; the name is chosen from that.
+    const api::CDateTime& GetDataHoraFimEleicao() const { return m_dataHoraFimEleicao; }
+
 private:
     unsigned m_naoRecuperado1[2];
     std::string m_nome;
@@ -62,7 +68,8 @@ private:
     unsigned char m_naoRecuperado2[8];
     api::CDateTime m_dataHoraZeresima;
     api::CDateTime m_dataHoraInicioVotacao;
-    unsigned char m_naoRecuperado6[24];
+    unsigned char m_naoRecuperado6[12];
+    api::CDateTime m_dataHoraFimEleicao;
     std::set<TCargoID> m_cargos;
     std::set<ecourna::app::dados::ETipoIdentificadorEleitor> m_tipos;
     unsigned m_naoRecuperado3[3];

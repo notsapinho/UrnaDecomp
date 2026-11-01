@@ -10,6 +10,9 @@
 # where the higher index is linked first, so 5452 is defined before StopTick (record at line 60), and our link has them
 # in that order (ld_index, build/out/wasm-map/vota_web/names.tsv). Where before StopTick is a choice: after AddTick, line 41.
 # So is the order of 4640 and 807 in cthreadvota.cpp, which no band ties to the other members.
+# cthreadvota.cpp also holds an AddStoppedTick(const std::chrono::milliseconds&) overload with no target function of
+# its own: binaryen inlines it into its one caller, vota::CVerificaHorarioZeresima's constructor in fn 5947 (unit
+# 138's fragment has it); its place after AddStoppedTick(size_t) is a choice.
 # CTickManager::AddTick (3644, record 31:15) matches since src/api/ builds with strict aliasing (below). The census
 # paired it and its three callers (4640, 5452, 10800) with nothing, and two lines of splat/symbol_addrs.txt name it: a generated `evidence:call` line, since
 # 1285's vptr anchor names 4640 (`call by:1285`) and 4640 and 5452 vote for 3644, and a callers+content hand line from
