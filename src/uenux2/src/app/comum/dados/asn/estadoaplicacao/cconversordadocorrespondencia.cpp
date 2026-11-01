@@ -1,6 +1,7 @@
 // Reconstruction: comum::asn::CConversorDadoCorrespondencia's two slots, DoConverte and DoDesconverte (target fns 11399
 // and 11400). No record names this file or a line in it: the path is the header's (cconversordadocorrespondencia.h),
-// and the functions' order is chosen. src/units/172-uenux2-comum-datahora-converters.mk has the choices.
+// and DoDesconverte comes first by the link order (11400 links ahead of 11399 in their use band); the lines are
+// chosen. src/units/172-uenux2-comum-datahora-converters.mk has the choices.
 #include "app/comum/dados/asn/estadoaplicacao/cconversordadocorrespondencia.h"
 
 #include "app/comum/asn/util.h"
@@ -9,23 +10,6 @@
 #include "ecourna/app/dados/asn/cconversoridentificadorgeradormidia.hpp"
 
 namespace comum::asn {
-
-CConversorDadoCorrespondencia::TEntidade CConversorDadoCorrespondencia::DoConverte(const TDado& dado) const
-{
-    const ecourna::app::dados::asn::CConversorIdentificadorGeradorMidia conversorIdentificador;
-    TEntidade entidade;
-    entidade.set_carga().set_numeroInternoUrna(dado.GetNumeroInternoUrna());
-    entidade.set_carga().set_codigoCarga(dado.GetCodigoCarga());
-    entidade.set_carga().set_numeroSerieFC(ConverteSerialFlash(dado.GetNumeroSerieFC()));
-    entidade.set_carga().set_dataHoraCarga(Utils::ConverteDataHoraJE(dado.GetDataHoraCarga()));
-    entidade.set_carga().set_identificadorGeradorMidia(
-        conversorIdentificador.Converte(dado.GetIdentificadorGeradorMidia()));
-    const CConversorLocalidadeEleitoral conversorLocalidade;
-    entidade.set_secaoCarga() = conversorLocalidade.Converte(dado.GetSecaoCarga());
-    TEntidade::assinatura::reference assinatura = entidade.set_assinatura();
-    assinatura.insert(assinatura.begin(), dado.GetAssinatura().begin(), dado.GetAssinatura().end());
-    return entidade;
-}
 
 CConversorDadoCorrespondencia::TDado CConversorDadoCorrespondencia::DoDesconverte(const TEntidade& entidade) const
 {
@@ -42,6 +26,23 @@ CConversorDadoCorrespondencia::TDado CConversorDadoCorrespondencia::DoDesconvert
         conversorIdentificador.Deconverte(entidade.get_carga().get_identificadorGeradorMidia());
     return TDado(numeroInternoUrna, numeroSerieFC, dataHoraCarga, codigoCarga, secaoCarga, assinatura,
                  identificadorGeradorMidia);
+}
+
+CConversorDadoCorrespondencia::TEntidade CConversorDadoCorrespondencia::DoConverte(const TDado& dado) const
+{
+    const ecourna::app::dados::asn::CConversorIdentificadorGeradorMidia conversorIdentificador;
+    TEntidade entidade;
+    entidade.set_carga().set_numeroInternoUrna(dado.GetNumeroInternoUrna());
+    entidade.set_carga().set_codigoCarga(dado.GetCodigoCarga());
+    entidade.set_carga().set_numeroSerieFC(ConverteSerialFlash(dado.GetNumeroSerieFC()));
+    entidade.set_carga().set_dataHoraCarga(Utils::ConverteDataHoraJE(dado.GetDataHoraCarga()));
+    entidade.set_carga().set_identificadorGeradorMidia(
+        conversorIdentificador.Converte(dado.GetIdentificadorGeradorMidia()));
+    const CConversorLocalidadeEleitoral conversorLocalidade;
+    entidade.set_secaoCarga() = conversorLocalidade.Converte(dado.GetSecaoCarga());
+    TEntidade::assinatura::reference assinatura = entidade.set_assinatura();
+    assinatura.insert(assinatura.begin(), dado.GetAssinatura().begin(), dado.GetAssinatura().end());
+    return entidade;
 }
 
 } // namespace comum::asn
