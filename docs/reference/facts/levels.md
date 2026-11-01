@@ -84,7 +84,7 @@ So `src/app/roots_vector.cpp`, which holds 306, 520 and 4967, compiles at `UENUX
 is not written.
 
 **The TU's own rule.** `src/uenux2/wasm/vota_web/vota_web_wasm.cpp` compiles at `VOTA_WEB_CXXFLAGS` in `src/Makefile`,
-`-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing` (the setup `vota-web` of
+`-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` (the setup `vota-web` of
 `asmlift-wasm/benchmark/dataset/setups.json`), and its object is first on the link line, ahead of the stand-ins. What
 unit 170 writes of it (the engine's getter, `votaPressKey`, `votaSetAudioEnabled`) instantiates
 `api::CPolySingleton<api::ISound>::instance`, and with it libc++'s `std::format` code at the TU's level: the link at
@@ -104,7 +104,11 @@ against 84f5d8d:
 So `-fPIC`, the records' place in `.data` ([app-flags.md](app-flags.md) §F5), and the TU's want of strict aliasing are
 measured, and the reading above holds for the TU. `-std=c++23` matches eleven more rows, libc++'s format code that the
 C++23 escaped-string formatter brings (`__escape` 11769, `__write_escaped_code_unit` 5927, the parser 1417, ...), and
-loses none: the TU's `-std` is the user's decision, so the rule keeps the tree's. A uenux2 object's copy of a member
+loses none. The same change on the link that holds unit 170 and the tree at `-std=c++23` (§V3) adds exactly those
+eleven, 1417 1729 1955 5814 5820 5926 5927 5933 5944 11753 11769, loses none and changes no object but the TU's, and
+13229 becomes `std::string::substr`'s C++23 `const&` overload. So the rule takes `-std=c++23`, as the tree does: this
+TU is uenux2's (`/home/rubio/tse/uenux2/wasm/...`), and that flag was decided for uenux2 on the condition that it
+gains rows and loses none. A uenux2 object's copy of a member
 whose copy the target keeps from this TU is right source with the wrong level, so it matches only when its body is the
 same at uenux2's flags, or once the TU's code that uses it is written: 11489 and 11518 stay `differs` with unit 82's
 source as written (how-to steps 4 and 5).

@@ -25,7 +25,7 @@
     "key": "vota-web",
     "title": "the executable TU, wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the link line",
     "flags": {
-      "c++": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing"
+      "c++": "-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing"
     },
     "image": "urna-emsdk:6.0.0",
     "source": "src/Makefile VOTA_WEB_CXXFLAGS; docs/reference/facts/levels.md §V1",
@@ -35,7 +35,7 @@
         "VOTA_WEB_OBJS"
       ]
     },
-    "note": "One object, first on the link line: wasm-ld keeps its copy of every linkonce function it emits. -Oz -fexceptions is the TU's level and its landing pads; -fPIC its records' place in .data; -std=c++20 is the uenux2 tree's, not measured on this TU."
+    "note": "One object, first on the link line: wasm-ld keeps its copy of every linkonce function it emits. -Oz -fexceptions is the TU's level and its landing pads; -fPIC its records' place in .data; -std=c++23, the uenux2 tree's, matches eleven more rows of this TU than -std=c++20 and loses none (docs/reference/facts/levels.md §V1)."
   },
   {
     "key": "ecourna",

@@ -179,9 +179,9 @@ $(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Make
 # (docs/reference/toolchain.md "Export order"), so wasm-ld keeps its copy of every linkonce function and vtable it emits.
 # Its own flags, not UENUX2_CXXFLAGS, each measured on the whole link (docs/reference/facts/levels.md V1): -Oz
 # -fexceptions, -fPIC (its records sit in .data too: docs/reference/facts/app-flags.md F5), -DNDEBUG (F7) and no strict
-# aliasing; -std=c++20 is the tree's, and -std=c++23, which V1 measures matching more, is the user's decision.
+# aliasing; -std=c++23, the tree's too, which V1 measures matching eleven more rows than -std=c++20 and losing none.
 # The benchmark's setup `vota-web` names VOTA_WEB_OBJS.
-VOTA_WEB_CXXFLAGS := -Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
+VOTA_WEB_CXXFLAGS := -Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX2_PREFIX_MAP) -Isrc -Isrc/uenux2/src -Isrc/asn1
 VOTA_WEB_OBJS := $(ROOT)/$(APP)/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 $(VOTA_WEB_OBJS): $(ROOT)/src/uenux2/wasm/vota_web/vota_web_wasm.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c /work/src/uenux2/wasm/vota_web/vota_web_wasm.cpp -o $(R)

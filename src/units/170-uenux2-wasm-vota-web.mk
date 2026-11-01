@@ -20,7 +20,10 @@
 # 11647 11879 11887 11928 11936 11944 11965 11971 11977 12565, with binaryen's 2907 and 6072 over them. 2094, 3979,
 # 5858, 5988, 6283 and 6377 came from the content pass; each one's target callers that match call it under the name it
 # took (2094's 10703; 3979's and 6283's 6377; 6377's 5988), and 5858's one caller (4027) is not matched. 252 and 3717
-# come from this object too, where src/app/roots_uenux2.cpp held 252 (facts/splat.md S10 item 10).
+# come from this object too, where src/app/roots_uenux2.cpp held 252 (facts/splat.md S10 item 10). At -std=c++23, the
+# tree's, it matches eleven more, libc++'s code for C++23's escaped-string formatter: 1417 (the parser), 1729, 1955,
+# 5814, 5820, 5926, 5927 (__write_escaped_code_unit), 5933, 5944 (to_chars<unsigned>), 11753 and 11769 (__escape); and
+# 13229 is then std::string::substr's const& overload (levels.md V1).
 #
 # Rows of library objects that match with the unit, by names it released or the link's table moved: 4658
 # (std::to_string(long long), whose __itoa callee 2869 this object now names) and 5476 (unit 125's
@@ -41,7 +44,7 @@
 # asmlift-wasm/test/splat-symbols.test.ts's case on the first line now reads the two generated lines.
 #
 # Evidence and choices.
-# - The flags: levels.md V1 (each one measured on this link, -std=c++23 the user's decision).
+# - The flags: levels.md V1 (each one measured on this link, -std=c++23 as the tree's).
 # - The class's name is the records'. Its 40 bytes are operator new's argument in 2094; its fields' offsets and widths
 #   come from the target's bodies: +2 the byte SetAudioEnabled stores (10240), +24 a std::string the getter builds from
 #   "{}" (literal 8150) and votaGetStateJson (10171) returns the characters of; +0, +1, +3, +4 and +5 bytes, +8 an int,
