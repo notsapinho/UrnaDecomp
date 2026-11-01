@@ -82,6 +82,28 @@
 # (m_pEstado)`; uebyte for the +11 bool. Statics defined before GetInst give the same functions and the other .bss
 # order.
 #
+# Two slots written since, each measured in the whole link with pnpm wasm score against
+# build/out/wasm-map/vota_web/names.tsv:
+# - vota::CMaisInformacoes::ProcessInput (fn 11896) matches. Its form's pointee is the records' CInteractiveForm<IScreen,
+#   IInputKbd> (Read(), record cinteractiveform.h:57 @1545360), and four of the states it goes to are written in unit 176
+#   (their GetInst inlined here). Three forms are what the rows decide: the digit test as std::all_of with ::isdigit, the
+#   target's `(c - 58) <u -10` on the sign-extended byte, where std::isdigit in a lambda gives `(c - 48) >=u 10`
+#   (66 over 304 rows) and a char lambda `c >= '0' && c <= '9'` the same test on a masked byte (69 over 306); CORRIGE's
+#   two stores as std::exchange, which stores +4 before +20 as the target does, where the two plain statements store +20
+#   first (63 over 304 with ::isdigit, 58 over 301 with std::exchange); the first input field read with at(0), whose
+#   out_of_range call is the one Read()'s bounds check throws through, as the target's block shows, where a test of
+#   size() and front() leaves an if (52 over 299); with all three, 48 over 299, all operand-only. Same object function
+#   (wasm-objdump of a --symbols try, masked): std::any_of with an int lambda `c < '0' || c > '9'`.
+# - vota::CFinalizaOperador::StartState (fn 10214) is written and differs: 128 over 307 rows (97 operand-only, 8
+#   inserted, 17 deleted), the rows not operands read as following from the builder's construction. Ours calls
+#   api::CMTFormBuilder's constructor (out of line in api/gui/cmtformbuilder.cpp, unit 31, one body with fn 203) and
+#   keeps the object's address in a local; the target clears the 12 bytes in place, as fns 5341 and 4633 do, while 88
+#   other target functions call fn 203 (ledger/callgraph.tsv). That remainder is not explained. The form is built in a
+#   file-static helper and its slot 2 called on the returned temporary, so the builder is destroyed before the form is
+#   shown and the form released before m_pNextState is stored, the target's order; a named local of the form gave 136
+#   over 310 rows (11 inserted, 20 deleted). The helper's name and its linkage are chosen; the points SPoint{20, 1}
+#   and {20, 3} are the two words the target stores (65556, 196628).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \

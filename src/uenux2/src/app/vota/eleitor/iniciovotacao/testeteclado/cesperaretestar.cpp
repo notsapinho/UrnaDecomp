@@ -22,4 +22,10 @@ void CEsperaRetestar::StartState()
     m_form->Slot2();
 }
 
+void CEsperaRetestar::FinishState()
+{
+    CThreadEleitor::GetInst().StopTick(m_tickEspera);
+    m_form->Hide();
+}
+
 } // namespace vota::testeteclado

@@ -2,17 +2,18 @@
 # vota::CReinicioVotacao, which one of them goes back to. Classes and target functions (each class's head says what its
 # layout and declaration rest on):
 #   vota::testeteclado::CBase (testeteclado/cbase.{h,cpp}): StartState 11875; the implicit D2 1559, which
-#     CPreZeresima's and CRetomada's slot 0 hold too
+#     CPreZeresima's and CRetomada's slot 0 hold too; the constructor 5948
 #   vota::testeteclado::CPreZeresima (testeteclado/cprezeresima.{h,cpp}) and vota::testeteclado::CRetomada
 #     (testeteclado/cretomada.{h,cpp}): the out-of-line destructors, whose D0 is one body, 5946; CRetomada's slot 12,
 #     GetEstadoSemTeste 11829
 #   vota::CReinicioVotacao (iniciovotacao/creiniciovotacao.{h,cpp}): GetInst 5938, with its constructor inlined by
-#     binaryen; the exit destructors of its static std::mutex and std::unique_ptr, 11836 and 11837
+#     binaryen; the exit destructors of its static std::mutex and std::unique_ptr, 11836 and 11837; ProcessInput 11834
 #   vota::CAplicacaoEncerrada (fimvotacao/caplicacaoencerrada.{h,cpp}): StartState 12058, with
-#     vota::CLogVota::LogaVotacaoEncerrada inlined by binaryen
+#     vota::CLogVota::LogaVotacaoEncerrada inlined by binaryen; GetInst 3877 and its statics' exit destructors 12060 and
+#     12059, the first a thunk of binaryen's 1564, which forms with it (and with which unit 37's 2888 and 12057 match)
 #   vota::CVerificaHorarioZeresima (iniciovotacao/cverificahorariozeresima.{h,cpp}): FinishState 11868
 #   vota::testeteclado::CEsperaRetestar (testeteclado/cesperaretestar.{h,cpp}): StartState 11825, written and
-#     `unresolved self-voted` (below)
+#     `unresolved self-voted` (below); FinishState 11824
 #   The D2 785 and D0 1560 of CErroTesteTecladoFim (unit 97) are also CAplicacaoEncerrada's, CEsperaRetestar's and
 #   CVerificaHorarioZeresima's: caplicacaoencerrada.cpp.o comes first in the link, so the two match lines name its pair.
 # Outside the unit, three members that other units' files gain: api::CDateTime::operator+(time_t) const
@@ -43,15 +44,15 @@
 # No other spelling of a written body was compiled.
 #
 # Not written, with what each waits for:
-# - every constructor of a class over CEstadoComDesligamentoAutomatico, and so their GetInst (CBase's 5948;
-#   CAplicacaoEncerrada's 3877, CVerificaHorarioZeresima's 5947, CTesteTeclado's 3855, CEsperaRetestar's 5936) and the
-#   exit destructors of their statics (the 1564 group): the base's constructor (fn 1285) was not declared where they
-#   were measured; unit 97 declares and matches it now, and they are not written. CMostraQRCodeBU's 2888 is written
-#   since, in unit 37, and waits for the 1564 group to form;
+# - the other constructors over CEstadoComDesligamentoAutomatico, and so their GetInst: CVerificaHorarioZeresima's 5947
+#   (its constructor copies vota::CTelasVota::GetInst()'s +20, which app/vota/eleitor/comum/ctelasvota.h has no accessor
+#   for), CTesteTeclado's 3855 and CEsperaRetestar's 5936 (not read for this unit);
 # - CVerificaHorarioZeresima's slot 9 (fn 11870, record :80) and CEsperaRetestar's (fn 11823): the base's header names
 #   slot 9 ProcessOutroTick, a chosen name, where the record names it ProcessTickNaoDesligamento; so the base's empty
-#   body, fn 425, fills both slots here and their stubs go. 11870 also throws through the assert macro (next item),
-#   11823 calls fn 3855;
+#   body, fn 425, fills both slots here and their stubs go. 11870 and StartState (11871) throw through the assert macro
+#   with the condition `appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA` (ledger/strings.tsv 400939) and
+#   the codes 3482 and 3481, so they wait for the two codes in api/util/eueasserterror.h (the EEstadoVota enumerator,
+#   51, is in app/comum/dados/md/estadoaplicacao/cestadogeralvota.h now); 11823 calls fn 3855;
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
@@ -60,9 +61,33 @@
 #   (576 has one since unit 165);
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
+# Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
+# before steps 7 to 9 matched it:
+# - CBase's constructor (fn 5948), in cbase.cpp: the base's constructor with 2 (EVENTO_ENTRADA), +28 cleared, this
+#   class's vptr. It is a function of its own called by fns 11914 and 7160, which hold CPreZeresima's and CRetomada's
+#   constructors inlined (each stores its class's vptr after the call), so it is out of line in a TU of its own; its
+#   line follows its stub's link-order place, a choice. 2 over 12 rows, operand-only. The roots stand in for its two
+#   callers.
+# - CAplicacaoEncerrada's constructor, GetInst (fn 3877) and statics, pointer first below GetInst (unit 104's shape):
+#   with them our link forms fn 1564, binaryen's body for the exit destructors of every static std::unique_ptr whose
+#   class's D2 is fn 785, from three members in our link, eight in the target (CMostraQRCodeBU's,
+#   CMostraQRCodeCertificado's and this one's here), and 1564,
+#   2888 (unit 37's), 12057, 12059 and 12060 match with 3877. The constructor copies CTelasVota's +36 through
+#   ctelasvota.h's GetTelaAplicacaoEncerrada. 3877 scores 11 over 55 rows, operand-only. The roots stand in for its
+#   three target callers (12034, 12051, 12055), and its vtable has no sink: GetInst stores it.
+# - CReinicioVotacao::ProcessInput (fn 11834): Read(), then CONFIRMA logs and goes to CDefineRotaPosReinicio, BRANCO
+#   logs and goes to CMaisInformacoes with this state; each log a vota::CLogVota member binaryen inlines (GetInst, fn 184,
+#   is called before the member's own stack frame opens), added to app/vota/log/clogvota.cpp:
+#   LogaMesarioConfirmouReinicioVotacao and LogaMesarioSelecionouOutrasOpcoes, names chosen from their messages. 23 over
+#   185 rows, operand-only.
+# - CEsperaRetestar::FinishState (fn 11824): it stops the tick and holds api::IForm<MEDIA>::Hide inlined on its form,
+#   which api/gui/iform.h now declares public, a reading (it was protected, for CFormStack; a friend of CEsperaRetestar
+#   gives the same bytes). 3 over 40 rows, operand-only.
+#
 # Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data
-# member, of s_fimEspera, LogaVotacaoEncerrada, GetTelaReinicioVotacao and CReinicioVotacao::GetInst (unit 104's
-# convention for the states' singletons); operator+'s parameter type (time_t: the target shows a 64-bit parameter),
+# member, of s_fimEspera, LogaVotacaoEncerrada, GetTelaReinicioVotacao, CReinicioVotacao::GetInst and
+# CAplicacaoEncerrada::GetInst, s_inst and s_mutex (unit 104's convention for the states' singletons); CBase's
+# constructor's protected access; operator+'s parameter type (time_t: the target shows a 64-bit parameter),
 # that it is a member and const, and its line in cdatetime.cpp; s_fimEspera's internal linkage; CRetomada's final; +36 of CRetomada as uebyte and +40 of
 # CEsperaRetestar as unsigned int (11829 compares the byte with 1, 11825 zero-extends the word); GetTelaReinicioVotacao
 # as an inline getter returning a const reference; the out-of-line destructors declared first as key functions, and

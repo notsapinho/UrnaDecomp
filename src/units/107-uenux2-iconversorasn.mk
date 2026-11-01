@@ -77,16 +77,13 @@
 # - CSecaoEleitoral's constructor in csecaoeleitoral.cpp (records :34 to :41), which binaryen inlines into 11453,
 #   CConversorSecaoEleitoral::DoDesconverte: 143-uenux2-cidentificacao.mk says what its match took.
 # Not written:
-# - 11385 and 11384, CConversorHorarioVerao: this unit's -pending.cpp.
 # - 11482, 11483, comum::asn::CConversorRegistroDigitalVoto<CConversorEleicoesVota>'s slots: fragment 140 traps them
 #   (its destructors 11484 and 11485 match with unit 13's CRdvVota).
 # - 5680, Desconverte<EntidadeRegistroDigitalVoto, ...> with api::CFileASN<T>'s decode inlined: calls fn 5825.
-# - 11588, 11589 (CConversorCabecalhoEntidade): fns 1713 (written, unit 96) and 1080, the dates; 1945, its constructor,
-#   matches (unit 157).
-# - 11399, 11400 (CConversorDadoCorrespondencia): the same dates (3604, 3605, 3733 and 3734, which they call too,
-#   match: units 122 and 166).
 # - The default DoConverte and DoDesconverte stay out of the header: unit 96's fragment. 5710, 11457, 11458, 11454, 11453,
 #   11424, 11483 and 10266 hold instances of Converte or Desconverte inlined by binaryen, one call site each.
+# CConversorHorarioVerao (11385, 11384), whose two slots were this unit's -pending.cpp, and CConversorCabecalhoEntidade
+# (11589, 11588) and CConversorDadoCorrespondencia (11399, 11400) are fragment 172's, matched; the -pending.cpp went.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 ICONVERSOR_SRCS := src/app/comum/dados/md/municipiozona/cmunicipio.cpp \
@@ -103,12 +100,8 @@ ICONVERSOR_SRCS := src/app/comum/dados/md/municipiozona/cmunicipio.cpp \
 UENUX2_SRCS += $(ICONVERSOR_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(ICONVERSOR_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# CConversorHorarioVerao's two slots are not reconstructed: 107-uenux2-iconversorasn-pending.cpp gives the vtable trapping
-# bodies, compiled with the tree's flags
-$(ROOT)/$(APP)/107-uenux2-iconversorasn-pending.o: $(ROOT)/src/units/107-uenux2-iconversorasn-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/107-uenux2-iconversorasn.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/asn/*.h $(ROOT)/src/uenux2/src/app/comum/dados/asn/*.h $(ROOT)/src/uenux2/src/app/comum/dados/md/*.h $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/107-uenux2-iconversorasn-pending.cpp -o $(R)
 # the callers of Converte and Desconverte are not reconstructed yet: 107-uenux2-iconversorasn-roots.cpp reaches them the
 # way the target does; the object's prerequisites are every header it reads
 $(ROOT)/$(APP)/107-uenux2-iconversorasn-roots.o: $(ROOT)/src/units/107-uenux2-iconversorasn-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/107-uenux2-iconversorasn.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/107-uenux2-iconversorasn-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/107-uenux2-iconversorasn-pending.o $(APP)/107-uenux2-iconversorasn-roots.o
+override EXTRA_OBJS += $(APP)/107-uenux2-iconversorasn-roots.o

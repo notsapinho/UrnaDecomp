@@ -583,7 +583,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -675,12 +675,15 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     Until that unit, `src/app/roots_uenux2.cpp` held 252 as an explicit instantiation with `minsize` and left 3717 to
     `libc++.a`.
 11. **14072, 14073, 14241, 14242, 12991 and 13334, the nine KDF getters 13522 to 13577, and 13242, 13256, 13945 and
-    13963, by their corrected names (§S11).** Step 9 can swap the two pairs, or give 12991, 13334 or a KDF getter
-    another table's name, since no name of the symbol file disagrees, and the check above cannot see a swap: each name's
-    prefix must agree with its dispatch table and its neighbours.
+    13963, by their corrected names (§S11), and 14063 and 14064.** Step 9 can swap the two pairs, or give 12991, 13334
+    or a KDF getter another table's name, since no name of the symbol file disagrees, and the check above cannot see a
+    swap: each name's prefix must agree with its dispatch table and its neighbours. 14063 and 14064, chacha20's
+    settable and gettable getters, matched by the census's `addr` pairs when a merge moved our numbering (`differs`
+    before it), under the names their table gives (1748288, ids 14 and 13).
 
     ```sh
     awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ || $1==12991 && $2 !~ /^kdf_pbkdf1_/ || $1==13334 && $2 !~ /^hmac_/ {print $1, $2}' splat/scan.tsv     # prints nothing
+    awk -F'\t' '$1==14063 && $2 !~ /^chacha20_settable/ || $1==14064 && $2 !~ /^chacha20_gettable/ {print $1, $2}' splat/scan.tsv     # prints nothing
     awk -F'\t' '$1==13522 && $2 !~ /^x942kdf_/ || $1==13528 && $2 !~ /^kdf_tls1_prf_.*kdfs/ || $1==13536 && $2 !~ /^sskdf_/ || $1==13543 && $2 !~ /^kdf_sshkdf_/ || $1==13549 && $2 !~ /^kdf_scrypt_.*kdfs/ || $1==13556 && $2 !~ /^kdf_pkcs12_/ || $1==13562 && $2 !~ /^kdf_pbkdf2_/ || $1==13570 && $2 !~ /^krb5kdf_/ || $1==13577 && $2 !~ /^kbkdf_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     awk -F'\t' '$1==13242 && $2 !~ /^test_rng_/ || $1==13256 && $2 !~ /^seed_src_/ || $1==13945 && $2 !~ /^sha1_/ || $1==13963 && $2 !~ /^md5_sha1_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
@@ -757,6 +760,13 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     # 7718 match
     # 14424 match
     ```
+21. **956, 6278, 6279, 6280, 9639, 12297 and 12315, libc's `exp` family, by `api::CGenericTags::EncodeTLV` (unit 33).**
+    EncodeTLV (5467) holds libc's `exp2`, which binaryen inlines into it. With it in the link, `fp_force_eval` and
+    `fp_barrier` (6278, 6279) are bodies of their own, as in the target, and `exp` (956), `__expo2` (6280), `sinh`
+    (12297), `cosh` (12315) and RHVoice's `limiter::do_initialize` (9639) match. Without it our link has no body of
+    either barrier (`build/out/wasm-map/vota_web/names.tsv` at 694de52 lists neither), and at 694de52's scan `exp` is
+    `no-candidate`, as are 6280, 12297 and 12315, and 9639 is `unresolved` on its call of `exp`. Why binaryen keeps the
+    barriers out of line once `exp2` links is not measured. A landing that takes EncodeTLV out takes the seven out.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

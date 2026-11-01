@@ -25,6 +25,13 @@
 #
 # CConversorDadoCarga's source moved to 96-uenux2-app-comum-asn.mk's list, after util.cpp: that fragment says why.
 #
+# CEstadoGeralVota::IncrementaQtdBU (fn 3701, cestadogeralvota.cpp, a chosen name and line) matches byte for byte: one
+# more on the byte at +8, m_qtdBU, of the object fn 12065 gets from comum::CAppInfo::GetVota (fn 261); its callers
+# (vota states' slots 12065, 12077, 12081) are not written, and 93-uenux2-estadoaplicacao-roots.cpp gives it two call
+# sites. Fragment 172
+# writes CConversorEstadoGeralVota (11390, 11391) and CConversorDadoCorrespondencia (11399, 11400) over this unit's
+# CEstadoGeralVota and CDadoCorrespondencia, and the converters' callers of 5628 and 5630.
+#
 # Not reconstructed: the slots of CConversorEstadoGeralGap (11394, 11395) and of the other converters here, CEstadoGeral,
 # the members of CEstadoGeralVota with records, CCabecalhoQRCodeBuilder's constructor (5624), its other setters (fn
 # 11242 stores "ORIG:{} " over "RED" or "VOTA" into the origin field, each in a frame of its own) and preBuild(), fns

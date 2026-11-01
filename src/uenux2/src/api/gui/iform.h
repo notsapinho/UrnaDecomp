@@ -12,10 +12,10 @@
 // - CFormStack<MEDIA>: the stack of the forms shown, per media two static members (guarded in __wasm_call_ctors) and two
 //   function-local statics of GetObservable (a guard byte and a std::once_flag beside them). RTTI names the class only
 //   through CObservable, whose base is api::IObservable<std::vector<FormHandle<MEDIA>>> (api/pattern/iobservable.h).
-// - Chosen: Slot2, Slot3, Slot6 and Slot7 keep the names the landed callers use; Hide, Desenha, Redesenha, SetName,
-//   every member of CFormStack, CObservable and FormHandle, the data members and every parameter. FindFieldAs (fn 1721)
-//   is not written, so its line stays blank. The spacing before GetRenderForm's brace puts the call on the record's
-//   column, a choice.
+// - Chosen: Slot2, Slot3, Slot6 and Slot7 keep the names the landed callers use; Hide (public, a reading: fn 11824
+//   holds its body inlined; a friend gives the same bytes), Desenha, Redesenha, SetName, every member of CFormStack,
+//   CObservable and FormHandle, the data members and every parameter. FindFieldAs (fn 1721) is not written, so its line
+//   stays blank. The spacing before GetRenderForm's brace puts the call on the record's column, a choice.
 // - api::IScreen's and api::IScreenMT's destructors are defined at the end, after CFormStack, whose Limpa (fns 5069 and
 //   3461) they call: iscreen.h and iscreenmt.h say why, units 69's and 78's fragments what shows it.
 
@@ -160,9 +160,6 @@ public:
 
     void SetName(std::string nome) { m_nome = std::move(nome); }
 
-protected:
-    friend class CFormStack<MEDIA>;
-
     void Hide()
     {
         {
@@ -173,6 +170,9 @@ protected:
             campo->Hide();
         }
     }
+
+protected:
+    friend class CFormStack<MEDIA>;
 
     void Desenha()
     {

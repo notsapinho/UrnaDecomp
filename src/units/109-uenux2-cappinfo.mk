@@ -67,7 +67,11 @@
 #   stores through memory and differs. So each delegates to a private constructor taking the name. See unit 89 for CCandidaturas,
 #   whose temporary needs a heap and so tells a base class from a delegating constructor.
 # - GetCodigosCarga is out of line and unrooted: 3788 opens a second frame after CAppInfo's code, so binaryen inlined it.
-#   push_back(c.GetCodigoCarga()), a getter by value: emplace_back gives 268 rows for 111.
+#   push_back(c.GetCodigoCarga()), a getter by value: emplace_back gives 268 rows for 111. The getter returns a reference
+#   now (comum::asn::CConversorDadoCorrespondencia::DoConverte, fn 11399, fragment 172, reads the member with no copy),
+#   and GetCodigosCarga copies it into a std::string temporary before push_back: the same function at the tree's flags
+#   (masked object compare), and 3788 still matches; a plain push_back over the reference differs (fragment 172 has
+#   the rows).
 #
 # Chosen, no evidence names them: every data member's name but those the ASN.1 fields give; every parameter's; GetInst for
 # CLocal, CCandidaturas, CFotos and CPartidos (the records give it to CRespostas and CEleitores); GetCodigosCarga,

@@ -1,6 +1,7 @@
 // api::SRect (/home/rubio/tse/uenux2/src/api/gui/primitives.cpp, the file the records of its setters name, lines 20, 26,
 // 32 and 38). This comment is the reconstruction's. Target functions of this file:
-//   5488 Left, 5487 Right (here); 5537, which holds Top and Bottom, is not reconstructed, and their lines stay free
+//   5488 Left, 5487 Right (here); Top and Bottom have no target function of their own: binaryen inlined each into its
+//   one caller, api::CFramedText::DrawChar (fn 5537, in cframedtext.cpp)
 //   1915 Move(const SPoint&)   no record: the file is a choice, see src/units/108-uenux2-api-gui-primitives.mk
 //   MoveX(TPosition)       no target function of its own: binaryen inlined it into its one caller, fn 10956
 //   1916 Union(const SRect&) const   no record, as Move
@@ -10,7 +11,7 @@
 
 namespace api {
 
-// (original lines 13-17: content not recovered)
+// (original lines 14-17: content not recovered)
 #line 18
 void SRect::Left(TPosition l)
 {
@@ -18,11 +19,11 @@ void SRect::Left(TPosition l)
     left = l;
 }
 
-// <stubs>
-// f5537 · 547 B · unmatched · name unknown
-// void f5537(i32, i32, i32, i32) { ... }
-// </stubs>
-
+void SRect::Top(TPosition t)
+{
+    ASSERT(bottom >= t, EUA_RECT_TOP);
+    top = t;
+}
 
 void SRect::Right(TPosition r)
 {
@@ -30,9 +31,11 @@ void SRect::Right(TPosition r)
     right = r;
 }
 
-
-
-
+void SRect::Bottom(TPosition b)
+{
+    ASSERT(b >= top, EUA_RECT_BOTTOM);
+    bottom = b;
+}
 
 SRect SRect::Union(const SRect& outro) const
 {

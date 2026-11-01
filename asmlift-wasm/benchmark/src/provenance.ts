@@ -73,11 +73,11 @@ export function buildDefinitions(setups: readonly Setup[], image: string): Defin
   const setupOf = new Map<string, string | null>(objects.map((o) => [o.object, o.setup]));
   standIns.forEach((o) => setupOf.set(o, null));
   const byImagePath = new Map([...setupOf.keys()].map((o) => [imagePath(o), o]));
-  const files = [...byImagePath.keys()].map((f) => `'${f}'`).join(' ');
   const marker = '@@@demangled@@@';
   const out = inImage(
     image,
-    `${NM} -A --defined-only ${files} 2>/dev/null; echo '${marker}'; ${NM} -A -C --defined-only ${files} 2>/dev/null`,
+    `${NM} -A --defined-only "$@" 2>/dev/null; echo '${marker}'; ${NM} -A -C --defined-only "$@" 2>/dev/null`,
+    [...byImagePath.keys()],
   );
   const [plain, demangled] = out.split(`${marker}\n`);
   const a = nmLines(plain);

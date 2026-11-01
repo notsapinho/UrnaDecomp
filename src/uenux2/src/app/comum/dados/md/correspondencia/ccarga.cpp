@@ -1,13 +1,27 @@
-// Reconstruction: comum::md::CCarga::ValidaCriacao (target fn 5670); its records (lines 36, 41, 46 and 51, column 15)
-// place the throws. The constructor that calls it is not reconstructed.
+// Reconstruction: comum::md::CCarga's constructor (target fn 2802) and ValidaCriacao (target fn 5670); ValidaCriacao's
+// records (lines 36, 41, 46 and 51, column 15) place its throws. The constructor has no record: its line, above
+// ValidaCriacao, is chosen.
 #include "app/comum/dados/md/correspondencia/ccarga.h"
 
 #include "app/comum/dados/euecomumdadoserror.h"
 
 namespace comum::md {
 
-// (original lines 9-32: content not recovered)
-#line 33
+// (original lines 10-19: content not recovered)
+#line 20
+CCarga::CCarga(uedword numeroInternoUrna, const std::string& numeroSerieFC, const api::CDateTime& dataHoraCarga,
+               const std::string& codigoCarga,
+               const ecourna::app::dados::CIdentificadorGeradorMidia& identificadorGeradorMidia)
+    : m_numeroInternoUrna(numeroInternoUrna),
+      m_numeroSerieFC(numeroSerieFC),
+      m_dataHoraCarga(dataHoraCarga),
+      m_codigoCarga(codigoCarga),
+      m_identificadorGeradorMidia(identificadorGeradorMidia)
+{
+    ValidaCriacao();
+}
+
+
 void CCarga::ValidaCriacao() const
 {
     if (m_numeroSerieFC.size() != 8) {

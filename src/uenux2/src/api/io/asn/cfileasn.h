@@ -1,7 +1,4 @@
 // <stubs>
-// f11905 · 5098 B · unmatched · name unknown
-// void f11905(i32) { ... }
-
 // f5778 · 10735 B · unmatched · name unknown
 // void f5778(i32, i32, i32, i32, i32) { ... }
 

@@ -14,9 +14,11 @@ namespace vota::testeteclado {
 // chosen from those uses. Fn 1559, the D2, stores this class's vptr and releases +28, the only member. CPreZeresima's
 // slot 0, its own D2 out of line in cprezeresima.cpp, is this same body, so this destructor is not out of line in
 // another object (a reading: such a one stays a call there at -fPIC); implicit is a choice over `inline`. The
-// constructor (fn 5948, passing 2 to the base's) is not reconstructed: it calls the base's, which this tree does not
-// declare. StartState, the first non-inline virtual member, is the key function, a choice. This header's path and the
-// member's name are chosen.
+// constructor (fn 5948) passes 2 to the base's, clears +28 and stores this class's vptr; it is a function of its own,
+// called by fns 11914 and 7160, which hold CPreZeresima's and CRetomada's constructors inlined (each stores its class's
+// vptr after the call), so it is out of line in a file of its own, this one by its stub's link-order place (a reading).
+// StartState, the first non-inline virtual member, is the key function, a choice. This header's path, the member's name
+// and the constructor's protected access are chosen.
 class CBase : public CEstadoComDesligamentoAutomatico {
 public:
     virtual void StartState() override;
@@ -24,6 +26,8 @@ public:
     virtual void ProcessInput() override;
 
 protected:
+    CBase();
+
     virtual CFormInterativoTelaVota GetTela() = 0;
 
     virtual comum::CAppState* GetEstadoPassouNoTeste() = 0;

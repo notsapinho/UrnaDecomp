@@ -23,8 +23,9 @@ namespace vota {
 // is `f244(p0); f136(p0)`, the 13-B shape of docs/reference/facts/reading.md R5), and fn 244 releases +12 and stores no
 // vptr, as a final class's (R4). A singleton: GetInst keeps the object in a static std::unique_ptr (@1834324, destroyed
 // at exit by fn 11923) under a static std::mutex (@1834300, by fn 11922); the constructor, inlined there, stores the
-// vptr on the base constructor's result. Not recovered: StartState (it calls fn 5882, a vota::CLogVota member with no
-// body here) and ProcessInput (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// vptr on the base constructor's result. StartState logs through comum::IEventosLog's
+// LogaMesarioIndagadoImprimirZeresima (fn 5882) on CLogVota::GetInst()'s result (fn 184), calls the form's slot 2 and
+// stays in this state. Not recovered: ProcessInput (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CQuerImprimirZeresima final : public comum::CAppState {
 public:

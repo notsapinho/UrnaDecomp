@@ -16,7 +16,9 @@
 //             app/comum/dados/cconfiguracaoeleicao.h and an accessor of the word at +104 of app/comum/dados/celeitores.h
 //   21 10564, 22  10563  m_identidadeDigitada = identidade; and m_tipoIdentidadeDigitada = tipo;, each then calling fn
 //             2225: 757 B, reached from these two only, that fills +48 and +68 from the voter register and calls fns
-//             1926, 2803, 566, 187, 326, 1703 and 708, of which 566 and 2803 have no body of ours. No vtable slot holds
+//             1926, 2803, 566, 187, 326, 1703 and 708, which all match (566 is unit 178's, 2803 unit 110's), and holds
+//             CEleitores's lookup of a voter by identity inlined: find (1703) in the map at +112 of CEleitores, which
+//             celeitores.h declares with a std::string key, then CDataMap::Find on the value. No vtable slot holds
 //             it, so it is no pending member. Against an import standing for it, 10563 differs in that call's operand
 //             alone (try-tu --single). 10564's object has the target's calls, four of them to fn 2225, and its lone
 //             score is noise: alone, binaryen inlines the string assigns

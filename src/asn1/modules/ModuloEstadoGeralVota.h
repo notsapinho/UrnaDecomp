@@ -248,7 +248,7 @@ public:
     qtdBU::const_reference get_qtdBU () const { return *static_cast<qtdBU::const_pointer>(fields[2]); }
     qtdBU::reference ref_qtdBU () { return *static_cast<qtdBU::pointer>(fields[2]); }
     qtdBU::reference set_qtdBU () { return *static_cast<qtdBU::pointer>(fields[2]); }
-    qtdBU::reference set_qtdBU (ASN1::INTEGER::int_type v)
+    qtdBU::reference set_qtdBU (qtdBU::const_reference v)
     { return *static_cast<qtdBU::pointer>(fields[2]) = v; }
 
     class comparecimento
@@ -264,7 +264,7 @@ public:
     comparecimento::const_reference get_comparecimento () const { return *static_cast<comparecimento::const_pointer>(fields[3]); }
     comparecimento::reference ref_comparecimento () { return *static_cast<comparecimento::pointer>(fields[3]); }
     comparecimento::reference set_comparecimento () { return *static_cast<comparecimento::pointer>(fields[3]); }
-    comparecimento::reference set_comparecimento (ASN1::INTEGER::int_type v)
+    comparecimento::reference set_comparecimento (comparecimento::const_reference v)
     { return *static_cast<comparecimento::pointer>(fields[3]) = v; }
 
     class qtdJustificativa
@@ -280,7 +280,7 @@ public:
     qtdJustificativa::const_reference get_qtdJustificativa () const { return *static_cast<qtdJustificativa::const_pointer>(fields[4]); }
     qtdJustificativa::reference ref_qtdJustificativa () { return *static_cast<qtdJustificativa::pointer>(fields[4]); }
     qtdJustificativa::reference set_qtdJustificativa () { return *static_cast<qtdJustificativa::pointer>(fields[4]); }
-    qtdJustificativa::reference set_qtdJustificativa (ASN1::INTEGER::int_type v)
+    qtdJustificativa::reference set_qtdJustificativa (qtdJustificativa::const_reference v)
     { return *static_cast<qtdJustificativa::pointer>(fields[4]) = v; }
 
     class treinamentoEleitor
@@ -354,7 +354,7 @@ public:
       includeOptionalField( e_urnaIdGerouZeresima, 8);
       return *static_cast<urnaIdGerouZeresima::pointer>(fields[8]);
     }
-    urnaIdGerouZeresima::reference set_urnaIdGerouZeresima (ASN1::INTEGER::int_type v)
+    urnaIdGerouZeresima::reference set_urnaIdGerouZeresima (urnaIdGerouZeresima::const_reference v)
     {
       includeOptionalField( e_urnaIdGerouZeresima, 8);
       return *static_cast<urnaIdGerouZeresima::pointer>(fields[8]) = v;
@@ -365,7 +365,7 @@ public:
     class dhIniAquisicao
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -398,7 +398,7 @@ public:
     class dhFimAquisicao
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -431,7 +431,7 @@ public:
     class dhUltimoVoto
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -464,7 +464,7 @@ public:
     class dhEmissao
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;

@@ -18,8 +18,8 @@
 // - The __func vtables keep the timer's lambda (fns 6306, 12381 to 12355, 11020 to 11023), which the target stores in the
 //   constructors fns 2024 and 3673.
 // - CFramedText's Rect and Move have their two direct callers in the fields (one target function each for the two masks,
-//   and CInputField's): the target has a third, fns 10896 and 2770. DrawFrame's are the Draws and fn 5534, which the traps
-//   of the pending file collapse, so Molduras stands in for them, with two of the colours fn 5534 passes.
+//   and CInputField's): the target has a third, fns 10896 and 2770. DrawFrame's are fn 5534 (twice) and the Draw 12438,
+//   both in the link, and fn 10897, not written.
 // The header is included because nothing else instantiates the templates; everything this object emits and the unit
 // claims is code a landed header defines. Compiled with APP_CXXFLAGS, like the other stand-ins. The 145 functions of the
 // object compare equal under UENUX2_CXXFLAGS, by function with the object-local numbers masked.
@@ -121,13 +121,6 @@ __attribute__((optnone, noinline)) void w92_emite_mascara_cinza(api::CMaskedText
 
 namespace {
 
-// Calls DrawFrame twice with different arguments: no target function has this body.
-__attribute__((noinline)) void Molduras(const api::CFramedText& mascara, api::IScreen& tela, size_t inicio)
-{
-    mascara.DrawFrame(inicio, static_cast<api::TColor>(3), tela);
-    mascara.DrawFrame(inicio + 1, static_cast<api::TColor>(2), tela);
-}
-
 // fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
 // 6652 and 7787), none reconstructed. These two stand in for them: the target's callers pass different lengths, points,
 // fonts and alignments, so these do too, and each has a body no target function has.
@@ -153,7 +146,6 @@ struct SW92Roots {
         w92_sink = w92_controlbasemt_vt;
         w92_sink = w92_control_vt;
         w92_sink = w92_controlmt_vt;
-        w92_sink = reinterpret_cast<const void*>(&Molduras);
         w92_sink = reinterpret_cast<const void*>(&NovaMoldura);
         w92_sink = reinterpret_cast<const void*>(&MolduraEm);
         w92_sink = w92_input_vt;

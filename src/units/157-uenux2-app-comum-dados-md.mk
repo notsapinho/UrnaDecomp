@@ -60,13 +60,15 @@
 #   __cxa_find_matching_catch_2, __resumeException): read as an -fexceptions TU's copy, which no uenux2 object gives. No
 #   name reaches 1249; its callers are 5637, 5740, 5856, 11197, 11395 and 12098.
 # - 5635, CEstadoGeral::RecuperarCertificado (record cestadogeral.cpp:147:41): fns 3704 and 1681 have no name.
-# - 11390, CConversorEstadoGeralVota::DoConverte, and 11399, CConversorDadoCorrespondencia::DoConverte: fn 1080, which no
-#   name reaches. 1080 formats the date at +0 of its argument with CDate::Format("YYYYMMDD") and the time at +8 with
-#   CTime::Format("hhmmss") (fns 706, 779, matched; the first format is an i64 constant), joins them with "T", builds a
-#   DataHoraJE temporary from the string and its result from that temporary's characters (fns 1521 and 2190,
-#   AbstractString's constructors from a string and from a const char*).
-# - 11391 and 11400, the two converters' DoDesconverte, 11423 (CDadosDisponiveisCarga's constructor) and 566
-#   (CValidadorIdentidade::Valida, which calls fns 3510 and 3512, both unnamed): not written.
+# - 11390, 11391, 11399 and 11400 (CConversorEstadoGeralVota's and CConversorDadoCorrespondencia's slots) and fn 1080
+#   (comum::asn::Utils::ConverteDataHoraJE) are matched now: fragments 172 and 96.
+# - 11423 (CDadosDisponiveisCarga's constructor): not written. 566 is md::CEleitorIdentidade's constructor, which holds
+#   CValidadorIdentidade::Valida inlined, and matches with 3510 and 3512 (units 178 and 00).
+#
+# md::CCarga's constructor (fn 2802, no record) is in ccarga.cpp above ValidaCriacao, a chosen line, and matches: it
+# copies its arguments into the members in their order and calls ValidaCriacao, which it holds twice (one call on each
+# branch of the last string's copy). Its target callers are 10290 (fragment 172) and 11587, 11626 and 11629, for which
+# 157-uenux2-app-comum-dados-md-roots.cpp's Cargas stands; with 10290 alone binaryen inlines it there (fragment 172).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 DADOS_MD157_SRCS := src/app/comum/md/ccabecalhoentidade.cpp \

@@ -46,7 +46,6 @@
 #include "api/gui/cpreshownothing.h"
 #include "api/gui/cprogressbar.h"
 #include "api/gui/cqrcodeimagefieldpaper.h"
-#include "api/gui/ctextfieldblinking.h"
 #include "api/gui/ctextfieldpaper.h"
 #include "api/gui/ctextfieldupdate.h"
 #include "api/gui/iinputvalidation.h"
@@ -58,7 +57,6 @@
 #include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/crespostasds.h"
-#include "app/comum/dados/md/eleitor/celeitordinamico.h"
 #include "app/comum/gravadores/ccopiadormr.h"
 #include "app/comum/gravadores/cgravadorbu.h"
 #include "app/comum/gravadores/cgravadorenvelopearquivo.h"
@@ -88,7 +86,6 @@ extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_empla
 extern const char w102_vt_cprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api12CProgressBarENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctextfieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16CTextFieldUpdateENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cimagefieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api17CImageFieldUpdateENS_9allocatorIS2_EEEE");
-extern const char w102_vt_ctextfieldblinking[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api18CTextFieldBlinkingENS_9allocatorIS2_EEEE");
 extern const char w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api21BatteryIconDataSourceILNS1_17CPowerInformation15IconOrientationE0EEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cmovie[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CMovieENS_9allocatorIS2_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
@@ -126,7 +123,6 @@ extern const char w102_vt_cgravadorhashes[] __asm__("_ZTVNSt3__220__shared_ptr_p
 extern const char w102_vt_cgravadorrcsecao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum16CGravadorRCSecaoENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorenvelopearquivo[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum24CGravadorEnvelopeArquivoENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorversoesarquivos[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum24CGravadorVersoesArquivosENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_celeitordinamico[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md16CEleitorDinamicoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cidentificacaosecao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md19CIdentificacaoSecaoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_ccomparecimentomesario[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md22CComparecimentoMesarioENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cidentificacaournacontingencia[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md30CIdentificacaoUrnaContingenciaENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
@@ -175,7 +171,6 @@ template struct SBloco<comum::dao::IComparecimentoMesarioDAO, comum::dao::ICompa
 template struct SBloco<comum::dao::IJustificadorDAO, comum::dao::IJustificadorDAO>;
 template struct SBloco<comum::md::CIdentificacaoSecao, comum::md::CIdentificacaoSecao>;
 template struct SBloco<comum::md::CIdentificacaoUrnaContingencia, comum::md::CIdentificacaoUrnaContingencia>;
-template struct SBloco<comum::md::CEleitorDinamico, comum::md::CEleitorDinamico>;
 using TJustificativa = ecourna::app::dados::CIdentificacaoJustificativa;
 template struct SBloco<TJustificativa, TJustificativa>;
 template struct SBloco<comum::asn::CVisitanteFoto, comum::asn::CVisitanteFoto>;
@@ -211,12 +206,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CMovieField> w102_campo_
     const api::SPoint& p, const std::shared_ptr<api::CMovie>& filme, api::EAnchorPoint a)
 {
     return std::make_shared<api::CMovieField>(p, filme, a);
-}
-__attribute__((optnone, noinline)) std::shared_ptr<api::CTextFieldBlinking> w102_piscante(
-    const api::SPoint& p, const api::SharedIText& t, const api::SFont& f, api::TColor c0, api::TColor c1,
-    api::TColor c2)
-{
-    return std::make_shared<api::CTextFieldBlinking>(p, t, f, c0, c1, c2);
 }
 __attribute__((optnone, noinline)) std::shared_ptr<api::CTextFieldUpdate> w102_texto_vivo(
     const api::SPoint& p, const api::SharedIText& t, const std::chrono::milliseconds& i, const api::SFont& f,
@@ -309,7 +298,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cprogressbar;
         w102_sink = w102_vt_ctextfieldupdate;
         w102_sink = w102_vt_cimagefieldupdate;
-        w102_sink = w102_vt_ctextfieldblinking;
         w102_sink = w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0;
         w102_sink = w102_vt_cmovie;
         w102_sink = w102_vt_logger;
@@ -347,7 +335,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cgravadorrcsecao;
         w102_sink = w102_vt_cgravadorenvelopearquivo;
         w102_sink = w102_vt_cgravadorversoesarquivos;
-        w102_sink = w102_vt_celeitordinamico;
         w102_sink = w102_vt_cidentificacaosecao;
         w102_sink = w102_vt_ccomparecimentomesario;
         w102_sink = w102_vt_cidentificacaournacontingencia;

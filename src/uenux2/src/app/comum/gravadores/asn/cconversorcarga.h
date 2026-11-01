@@ -11,8 +11,8 @@ namespace comum::asn {
 // ledger/vtables.json misses (docs/reference/facts/units.md U12): DoConverte (fn 10291) in slot 2 and DoDesconverte
 // (fn 10290) in slot 3. CConversorCorrespResultado builds one on its stack (fn 10288 stores the vptr 1596148) and calls
 // it through the vtable. Its vtable and typeinfo lie between gravadores/asn/util.cpp's records and
-// cconversorcorrespresultado.cpp's in the data. Recovered: the head only; both members are pending (fn 10290 calls
-// fns 2802 and 1713, fn 10291 fn 1080, and those wait; the 3733 and 3734 they call match, unit 166). Chosen: the
+// cconversorcorrespresultado.cpp's in the data. Both members are written in cconversorcarga.cpp (fragment 172): fn
+// 10290 calls fns 2802 and 1713, fn 10291 fn 1080, and the 3733 and 3734 they call match (unit 166). Chosen: the
 // path, after the class name (no record names its file).
 class CConversorCarga : public IConversorASN<ModuloTiposEcoUrna::Carga, md::CCarga> {
 protected:

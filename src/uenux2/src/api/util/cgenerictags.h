@@ -17,7 +17,9 @@ public:
     void insert(const std::string& tag, size_t tamanho);
     size_t TagSize(const std::string& tag) const;
 
+    std::string EncodeTLV(const std::string& tag, const std::string& valor) const;
     std::string EncodeTLV(const std::string& tag, const std::string& valor, size_t tamanho) const;
+    void AppendTLV(std::string& tlv, const std::string& tag, const std::string& valor) const;
     void AppendTLV(std::string& tlv, const std::string& tag, const std::string& valor, size_t tamanho) const;
     size_t WalkTreeTLV(const std::string& tlv, const std::string& tag) const;
     std::string DecodeTLV(std::string& tlv, const std::string& tag) const;

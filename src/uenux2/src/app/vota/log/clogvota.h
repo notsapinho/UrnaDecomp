@@ -22,8 +22,13 @@
 // caller, vota::CAplicacaoEncerrada::StartState (fn 12058; unit 138's fragment has its notes).
 // LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
 // vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
-// member's own stack frame opens and calls fn 233; its name is chosen from its message. This header's path is chosen,
-// beside clogvota.cpp, and only the members written are declared.
+// member's own stack frame opens and calls fn 233; its name is chosen from its message. LogaMesarioConfirmouReinicioVotacao
+// and LogaMesarioSelecionouOutrasOpcoes (held inlined by vota::CReinicioVotacao::ProcessInput, fn 11834) and
+// LogaMesarioIndagadoHorarioUrna (by vota::CImpressaoZeresimaTardia::StartState, fn 11932) are the same shape: each
+// caller calls GetInst before the member's own stack frame opens; the first two call api::CLoga::loga (fn 433) with +4
+// and severity 1, the third calls fn 233. That they are members of this class and not of comum::IEventosLog follows the
+// members above, a reading; their names are chosen from their messages. This header's path is chosen, beside
+// clogvota.cpp, and only the members written are declared.
 
 #include <string>
 
@@ -57,6 +62,9 @@ public:
     void LogaPedidoTituloSuspensao();
     void LogaVotacaoEncerrada();
     void LogaAguardandoConfirmacaoZeresima();
+    void LogaMesarioConfirmouReinicioVotacao();
+    void LogaMesarioSelecionouOutrasOpcoes();
+    void LogaMesarioIndagadoHorarioUrna();
 
 private:
     CLogVota();

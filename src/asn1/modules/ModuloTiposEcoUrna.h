@@ -205,6 +205,8 @@ public:
     numeroSerieFC::reference set_numeroSerieFC () { return *static_cast<numeroSerieFC::pointer>(fields[1]); }
     numeroSerieFC::reference set_numeroSerieFC (const ASN1::OCTET_STRING& v)
     { return *static_cast<numeroSerieFC::pointer>(fields[1]) = v; }
+    numeroSerieFC::reference set_numeroSerieFC (const ASN1_STD vector<char>& v)
+    { return *static_cast<numeroSerieFC::pointer>(fields[1]) = v; }
 
     class identificadorGeradorMidia
     {
@@ -219,11 +221,13 @@ public:
     identificadorGeradorMidia::const_reference get_identificadorGeradorMidia () const { return *static_cast<identificadorGeradorMidia::const_pointer>(fields[2]); }
     identificadorGeradorMidia::reference ref_identificadorGeradorMidia () { return *static_cast<identificadorGeradorMidia::pointer>(fields[2]); }
     identificadorGeradorMidia::reference set_identificadorGeradorMidia () { return *static_cast<identificadorGeradorMidia::pointer>(fields[2]); }
+    identificadorGeradorMidia::reference set_identificadorGeradorMidia (identificadorGeradorMidia::const_reference v)
+    { return *static_cast<identificadorGeradorMidia::pointer>(fields[2]) = v; }
 
     class dataHoraCarga
     {
     public:
-        typedef ModuloTiposEleitorais::DataGeracao value_type;
+        typedef ModuloTiposEleitorais::DataHoraJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -233,7 +237,7 @@ public:
     dataHoraCarga::const_reference get_dataHoraCarga () const { return *static_cast<dataHoraCarga::const_pointer>(fields[3]); }
     dataHoraCarga::reference ref_dataHoraCarga () { return *static_cast<dataHoraCarga::pointer>(fields[3]); }
     dataHoraCarga::reference set_dataHoraCarga () { return *static_cast<dataHoraCarga::pointer>(fields[3]); }
-    dataHoraCarga::reference set_dataHoraCarga (const ASN1_STD string& v)
+    dataHoraCarga::reference set_dataHoraCarga (dataHoraCarga::const_reference v)
     { return *static_cast<dataHoraCarga::pointer>(fields[3]) = v; }
 
     class codigoCarga

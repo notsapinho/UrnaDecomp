@@ -1531,32 +1531,6 @@ private:
 }; // end class Foto
 
 //
-// ModuloTiposEleitorais::DataGeracao   // SYNTHESIZED name (field ['dataGeracao', 'dataHoraCarga', 'dataHoraAbertura', 'dataHoraEncerramento', 'dataHoraDesligamentoVotoImpresso', 'dataHoraLigamento', 'dataHoraEmissao', 'dhIniAquisicao', 'dhFimAquisicao', 'dhUltimoVoto', 'dhEmissao'])
-//
-
-class DataGeracao : public ASN1::GeneralString
-{
-    typedef ASN1::GeneralString Inherited;
-protected:
-    typedef Inherited::InfoType InfoType;
-    DataGeracao(const void* info) : Inherited(info) {}
-public:
-    DataGeracao() : Inherited(&theInfo) {}
-    DataGeracao(const base_string& str, const void* info = &theInfo) : Inherited(str, info) {}
-    DataGeracao(const char* str, const void* info = &theInfo) : Inherited(str, info) {}
-    DataGeracao(const DataGeracao& that) : Inherited(that) {}
-    DataGeracao& operator=(const ASN1_STD string& that)
-    { Inherited::operator=(that); return *this; }
-    DataGeracao& operator=(const char* that)
-    { Inherited::operator=(that); return *this; }
-    DataGeracao * clone() const
-    { return static_cast<DataGeracao*> (Inherited::clone()); }
-    static bool equal_type(const ASN1::AbstractData& type)
-    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-    static const InfoType theInfo;
-}; // end class DataGeracao
-
-//
 // ModuloTiposEleitorais::DataJE   // name from the target's RTTI (vptr 1556232); theInfo at 1913204, which fn 14478
 // fills as a NumericString of 8 to 8 characters, ahead of HoraJE's and DataHoraJE's; comum::asn::Utils::
 // DesconverteDataHoraJE, fn 1713, builds it from a std::string through a temporary. The generator gave the date
@@ -1628,6 +1602,41 @@ public:
     { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
     static const InfoType theInfo;
 }; // end class DataHoraJE
+
+//
+// ModuloTiposEleitorais::DataGeracao   // SYNTHESIZED name (field ['dataGeracao', 'dataHoraCarga', 'dataHoraAbertura', 'dataHoraEncerramento', 'dataHoraDesligamentoVotoImpresso', 'dataHoraLigamento', 'dataHoraEmissao', 'dhIniAquisicao', 'dhFimAquisicao', 'dhUltimoVoto', 'dhEmissao'])
+// It derives from DataHoraJE, whose record (0x1d31cc) the date fields share: ecourna's
+// CConversorCabecalhoEntidade::DoConverte (fn 9219) assigns a std::string to CabecalhoEntidade's dataGeracao with no
+// temporary (this class's operator=), and comum's CConversorCabecalhoEntidade::DoDesconverte (fn 11588) hands the same
+// field to comum::asn::Utils::DesconverteDataHoraJE, whose record takes a const DataHoraJE &, with no copy; DataHoraJE
+// as written here has no operator=(string), a reading of fns 9110 and 9133, which assign a std::string to a DataHoraJE
+// field through a temporary. That base is a reading of those functions: RTTI holds no DataGeracao, and the target has
+// no record of its own for it. The other date fields that written comum converters read are DataHoraJE
+// (src/asn1/README.md "The generated modules"); six fields say DataGeracao
+// (`/usr/bin/grep -c 'DataGeracao[ ]value_type' src/asn1/modules/*.h`).
+//
+
+class DataGeracao : public ModuloTiposEleitorais::DataHoraJE
+{
+    typedef ModuloTiposEleitorais::DataHoraJE Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    DataGeracao(const void* info) : Inherited(info) {}
+public:
+    DataGeracao() : Inherited(&theInfo) {}
+    DataGeracao(const base_string& str, const void* info = &theInfo) : Inherited(str, info) {}
+    DataGeracao(const char* str, const void* info = &theInfo) : Inherited(str, info) {}
+    DataGeracao(const DataGeracao& that) : Inherited(that) {}
+    DataGeracao& operator=(const ASN1_STD string& that)
+    { ASN1::GeneralString::operator=(that); return *this; }
+    DataGeracao& operator=(const char* that)
+    { ASN1::GeneralString::operator=(that); return *this; }
+    DataGeracao * clone() const
+    { return static_cast<DataGeracao*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+}; // end class DataGeracao
 
 //
 // ModuloTiposEleitorais::CabecalhoEntidade

@@ -1,5 +1,6 @@
-# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows: vota::CInformacaoZeresimaTardia's
-# destructors and StartState (target fns 2879, 11984, 11983); the abstract bases vota::CGeraZeresimaBase and
+# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and 6 more, "Written since" below):
+# vota::CInformacaoZeresimaTardia's destructors and StartState (target fns 2879, 11984, 11983); the abstract bases
+# vota::CGeraZeresimaBase and
 # vota::CGeraResumoZeresimaBase, their constructors (5965, 11945), their destructors (1720, 1952) and the body binaryen
 # merges these into (2902); vota::CGeraZeresima's and vota::CGeraResumoZeresima's destructors (5961, 5960; 5964, 5963;
 # the target holds each body once for vota::CRegerarZeresima, or vota::CRegeraResumoZeresima, too); the slot 10 of the
@@ -12,13 +13,24 @@
 # vota::CTelasVota (app/vota/eleitor/comum/ctelasvota.h, unit 110's) gains three getters for the members the
 # constructors copy (+212, +220, +228). The class heads say what each layout rests on;
 # 169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp names every slot left and what it waits for. Not written: the
-# constructors and GetInst of vota::CInformacaoZeresimaTardia (fn 11931 holds them inlined) and
-# vota::CConfirmaImpressaoZeresima (fn 5959), which copy CTelasVota's members at +68 and +52, the second also a 12-byte
-# api::CDateTime at +544 of comum::CConfiguracaoEleicao, which that head leaves unrecovered; their statics are not
-# written either. vota::CRegerarZeresima's statics are written, and their exit-time destructors (11844, 11843) do not
-# match: its GetInst has no index (fn 11838 holds it inlined), so no matched body names the two objects; 11844 is
-# `unresolved` on them. Its GetInst and constructor are written and compared with nothing: the roots' stand-in holds
-# them inlined, as fn 11838 does in the target.
+# constructor and GetInst of vota::CInformacaoZeresimaTardia (fn 11931 holds them inlined), which copy CTelasVota's
+# member at +68, which app/vota/eleitor/comum/ctelasvota.h has no accessor for; its statics are not written either.
+#
+# Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
+# before steps 7 to 9 matched it:
+# - vota::CConfirmaImpressaoZeresima's constructor, GetInst (fn 5959, 14 over 69 rows, operand-only) and statics, whose
+#   exit destructors 11930 and 11929 match with it. The constructor copies CTelasVota's +52 (ctelasvota.h's
+#   GetTelaConfirmaImpressaoZeresima) and the 12-byte api::CDateTime at +544 of comum::CConfiguracaoEleicao
+#   (GetDataHoraZeresima, added with the CDateTime at +556 to app/comum/dados/cconfiguracaoeleicao.h, whose head now
+#   splits m_naoRecuperado2: fns 5959 and 5947 copy +544, fn 2880 copies +556), then adds 10800 seconds in its body
+#   (CDateTime::operator+=(int), fn 2233); `3 * 60 * 60` is a chosen spelling of the target's constant. Its object gets
+#   Boost's include path (below), which cconfiguracaoeleicao.h reaches through CHorariosUrna, as unit 88's objects do.
+#   GetInst's two target callers (11920, 11924) are not written: the roots stand in for them, and the vtable has no
+#   sink, GetInst stores it.
+# - vota::CQuerImprimirZeresima::StartState (fn 11921): comum::IEventosLog::LogaMesarioIndagadoImprimirZeresima (fn
+#   5882) on CLogVota::GetInst()'s result, the form's slot 2, this state as the next. 2 over 14 rows, operand-only.
+# - vota::CRegerarZeresima's statics' exit destructors (11844, 11843) match since fn 11838 (unit 176) holds its GetInst
+#   inlined, which names the two objects; the roots' stand-in for 11838 went with it.
 #
 # Evidence, each read in the target (pnpm wasm fn) or measured on this unit's links:
 # - The destructors' forms (docs/reference/facts/reading.md R4, R5). CInformacaoZeresimaTardia's is out of line and the
@@ -71,8 +83,8 @@
 # AposGeracao (9) and GetProximoEstado (10), their protected access and the pointer result of slot 10; the pointee of
 # the bases' forms (the type of vota::CTelasVota's members, which ctelasvota.h chose);
 # LogaAguardandoConfirmacaoZeresima's name, from its message, and its place last, after LogaVotacaoEncerrada; GetInst
-# (the project's singletons' name), the local trava and std::lock_guard; the private constructors of
-# CInformacaoZeresimaTardia and CConfirmaImpressaoZeresima, declared and not defined; the bases' arguments spelled with
+# (the project's singletons' name), the local trava and std::lock_guard; the private constructor of
+# CInformacaoZeresimaTardia, declared and not defined; the bases' arguments spelled with
 # comum::CAppState's chosen enumerators; the destructor declared first, so that each class's own .cpp emits the vtable;
 # the empty slot 9 of CGeraZeresima and CRegeraResumoZeresima as a body in the class; the lines of
 # cinformacaozeresimatardia.cpp's two functions, above the records' lines, which stay past the file's end. The paths:
@@ -98,6 +110,9 @@ APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS := src/app/vota/eleitor/iniciovotacao/cinfor
     src/app/vota/eleitor/iniciovotacao/cregeraresumozeresima.cpp \
     src/app/vota/eleitor/iniciovotacao/cregerarzeresima.cpp
 UENUX2_SRCS += $(APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS)
+# cconfirmaimpressaozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
+# CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cconfirmaimpressaozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp gives the vtables trapping
 # bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-pending.o: $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

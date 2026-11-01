@@ -4,8 +4,7 @@
 // - StartState (slot 2, target fn 12055, record cmostraqrcodebu.cpp:70), which also calls fns 502, 576, 2243, 3877 and
 //   5530;
 // - ProcessInput (slot 7, fn 12051, record cmostraqrcodebu.cpp:85), which also calls fn 3877 (CAplicacaoEncerrada's
-//   GetInst, whose constructor copies a member of CTelasVota that app/vota/eleitor/comum/ctelasvota.h has no accessor
-//   for).
+//   GetInst, which matches: unit 138).
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
 
 namespace vota {

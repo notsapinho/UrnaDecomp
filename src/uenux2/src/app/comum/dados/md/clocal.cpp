@@ -4,7 +4,22 @@
 
 namespace comum::md {
 
-// (original lines 7-55: content not recovered)
+CLocal::CLocal(uedword idPE, const std::string& nomePais, const std::string& siglaUF, const std::string& nomeUF,
+               const CInfoMunicipio& municipio, const CSecaoEleitoral& secao)
+    : m_idPE(idPE), m_nomePais(nomePais), m_siglaUF(siglaUF), m_nomeUF(nomeUF), m_municipio(municipio), m_secao(secao)
+{
+    ValidaCriacao();
+}
+
+CLocal::CLocal(uedword idPE, const std::string& nomePais, const std::string& siglaUF, const std::string& nomeUF,
+               const CInfoMunicipio& municipio, const CIdentificacaoUrnaContingencia& contingencia)
+    : m_idPE(idPE), m_nomePais(nomePais), m_siglaUF(siglaUF), m_nomeUF(nomeUF), m_municipio(municipio),
+      m_contingencia(contingencia)
+{
+    ValidaCriacao();
+}
+
+// (original lines 22-55: content not recovered)
 #line 56
 const CSecaoEleitoral& CLocal::GetSecao() const
 {

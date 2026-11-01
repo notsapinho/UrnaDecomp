@@ -24,6 +24,11 @@ enum EUeUtilError {
     EUE_UTIL_TAG_JA_MAPEADA = 7014,
     EUE_UTIL_TAG_TAMANHO_CAMPO_INVALIDO = 7015,
     EUE_UTIL_TAG_NAO_MAPEADA = 7016,
+    // 7017 to 7019: the codes api::CGenericTags::EncodeTLV and AppendTLV throw (cgenerictags.cpp); each name is chosen
+    // from its message and the function that throws it: no evidence names them
+    EUE_UTIL_TLV_TAG_TAMANHO_INVALIDO = 7017,
+    EUE_UTIL_TLV_LIMITE_EXCEDIDO = 7018,
+    EUE_UTIL_TLV_ANEXA_TAG_TAMANHO_INVALIDO = 7019,
     // the code api::CSynchronizer::CreateInst throws (csynchronizer.cpp); the name is chosen from its message, "Instância já
     // criada": no evidence names it
     EUE_UTIL_SINCRONIZADOR_JA_CRIADO = 7030,

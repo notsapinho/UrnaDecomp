@@ -10,7 +10,7 @@
 //   inlined, 2105 B, which builds a form with api::CMTFormBuilder::AddTextField (fns 180 and 651); waits for fn 5343,
 //   whose one callee with no name is fn 1694;
 // - slots 13 and 14, fns 10790 and 10789: fn 2264 over comum::CEleitores (fn 326) and the titulo of slots 17 and 18, the
-//   first as a bool; wait for fn 566, 2264's callee;
+//   first as a bool; wait for fn 2264 (its callee 566 matches: unit 178);
 // - slot 16, fn 10786: calls fn 4662, which throws an api::CUeDesligandoError that fn 1685 builds when the byte at
 //   1832936 is 1, and else calls fn 4657 (1048 B); waits for fns 4662, 1685 and 4657;
 // - CRegistroMesarioEncerrado::ProcessKey, fn 10762: for key 12, stores fn 652's result at +4, the next state; waits for

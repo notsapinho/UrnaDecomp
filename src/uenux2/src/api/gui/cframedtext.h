@@ -8,10 +8,14 @@
 //   which are a cell's width and height, and which fn 1385 then grows by a gap. The names of the data members are
 //   chosen.
 //
-// Rect, Move and DrawFrame (fns 3677, 3676, 2779) have no record: their names and their being members are chosen from
-// what they read and from their callers, and 2779's parameter types as far as its body uses them
-// (docs/how-to-decompile.md step 3). CellRect holds what fns 2779, 2780, 5536 and 5537 inline; Espaco and Largura what
-// fn 1385 and those inline. All three names are chosen, and Largura's and CellRect's operand orders are free. What the bytes decide:
+// Rect, Move and DrawFrame (fns 3677, 3676, 2779), DrawChar (fn 5537) and FillCell (fn 5536) have no record: their names
+// and their being members are chosen from what they read and from their callers, and their parameter types as far as
+// their bodies use them (docs/how-to-decompile.md step 3). DrawChar draws one character centred in a cell (it inlines
+// api::SRect::Top and Bottom, records primitives.cpp 26 and 38), FillCell fills a cell; both MaskText overrides call
+// them. CellRect holds what fns 2779, 2780, 5536 and 5537 inline; Espaco and Largura what fn 1385 and those inline;
+// EspacoVertical what fn 5537 inlines, the form fn 1385 writes in place over size / 10 (5537 reads the size again for each
+// of its two uses; the helper rather than the expression written twice is a choice). The four names are chosen, and
+// Largura's and CellRect's operand orders are free. What the bytes decide:
 // - Espaco reads the quotient into a local and tests that: `i32.div_s` with the test on the size, with no extend16 and
 //   no shift, comes from that form. `std::max(size / 8, 1)` (compares the quotient) and `size < 8 ? 1 : size / 8`
 //   (`std::max(size, 8) >> 3`) compile to other code. The TPosition is SetLength's: fn 12387 holds an extend16 of the result, which `int` drops.
@@ -47,10 +51,20 @@ public:
 
     void DrawFrame(size_t index, TColor color, IScreen& screen) const;
 
+    void DrawChar(size_t index, char caractere, IScreen& screen) const;
+
+    void FillCell(size_t index, TColor color, IScreen& screen) const;
+
 protected:
     TPosition Espaco() const
     {
         const TPosition espaco = m_font.size / 8;
+        return espaco > 0 ? espaco : 1;
+    }
+
+    TPosition EspacoVertical() const
+    {
+        const TPosition espaco = m_font.size / 10;
         return espaco > 0 ? espaco : 1;
     }
 

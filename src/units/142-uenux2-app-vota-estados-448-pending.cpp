@@ -11,8 +11,9 @@
 // - vota::CPerguntaCodigoSuspensao::ProcessKey (target fn 10419, slot 6): on keys 2, 5 and 13 it goes to
 //   vota::CEleitorVotouNaoVotou::GetInst() (fn 1901), vota::CMostraEleitorVotando::GetInst() (fn 1150) or
 //   vota::CSincronismoOperador::GetInst() (fn 1897). It waits for the first two, which have no body.
-// - vota::CPerguntaCodigoSuspensao::ProcessInput (target fn 10420, slot 7, 1917 B): it calls fns 1150, 2798, 2803 and
-//   3623, which have no name, 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174), 4535 (unit 152's) and
+// - vota::CPerguntaCodigoSuspensao::ProcessInput (target fn 10420, slot 7, 1917 B): it calls fns 1150 and 3623, which
+//   have no name, 2798 and 2803 (units 178 and 110), 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174),
+//   4535 (unit 152's) and
 //   1398 (comum::IEventosLog::logaAlerta, unit 111).
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 #include "app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.h"

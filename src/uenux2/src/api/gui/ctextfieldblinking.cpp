@@ -1,6 +1,6 @@
 // api::CTextFieldBlinking (/home/rubio/tse/uenux2/src/api/gui/ctextfieldblinking.cpp, the file the records of the
 // constructor and of Rect name). This comment is the reconstruction's. Target functions of this file:
-//   the constructor   records at lines 39 and 42, column 15; binaryen inlined it into fn 1265; not reconstructed
+//   the constructor   records at lines 39 and 42, column 15; binaryen inlined it into fn 1265, with its timer's lambda (here)
 //   10946 Draw(IScreen&) const                                                                 (here)
 //   10945 Show(), 10944 Hide()                                                                 (here)
 //   10943 Rect() const   record at line 70, column 21; a thunk of fn 3889                      (here)
@@ -13,14 +13,37 @@
 
 #include "api/gui/ctextfieldblinking.h"
 
+#include "api/gui/eueguierror.h"
 #include "api/gui/iform.h"
 #include "api/gui/iscreen.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/itimer.h"
+#include "api/util/itimerscheduler.h"
 
 namespace api {
 
-// (original lines 23-52: content not recovered)
+CTextFieldBlinking::CTextFieldBlinking(const SPoint& posicao, const SharedIText& text, const SFont& font, TColor corTexto,
+                                       TColor corPisca, TColor corFundo)
+    : m_posicao(posicao)
+    , m_text(text)
+    , m_font(font)
+    , m_corTexto(corTexto)
+    , m_corPisca(corPisca)
+    , m_corFundo(corFundo)
+    , m_timer(ITimerScheduler::GetInst().CreateTimer(std::chrono::milliseconds(500), [this]() {
+          m_aceso = !m_aceso;
+          Invalidate();
+      }))
+{
+    if (!m_text) {
+        throw CUeGuiError(EUE_GUI_TEXTFIELDBLINKING_TEXTO_NULO, "Campo estava com o texto nulo");
+    }
+    if (m_corTexto == m_corPisca) {
+        throw CUeGuiError(EUE_GUI_TEXTFIELDBLINKING_CORES_IGUAIS, "As cores estavam iguais");
+    }
+}
+
+// (original lines 46-52: content not recovered)
 #line 53
 void CTextFieldBlinking::Draw(IScreen& screen) const
 {

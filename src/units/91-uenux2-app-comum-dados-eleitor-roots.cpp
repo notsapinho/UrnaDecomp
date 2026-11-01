@@ -7,12 +7,16 @@
 // - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers), CBiometriaEleitor::GetDedo (fn 3720, three) and
 //   CriaComum (fn 2799, one caller with four call sites, 11422): one stand-in each with two call sites keeps each out of
 //   line, and no argument is the same constant at both, so dead-argument elimination folds nothing in.
-// - CEleitorDinamico's two constructors (fns 5664 and 5663): two direct callers each in the target, 3766 and 11542, which
-//   use the returned `this`; a stand-in with two call sites each stands in for them, and varies what the callers vary.
 // - CComparecimentoMesarioDAO::ConverteEstadoBiometria and ConverteDedoHabilitacao (fns 5391 and 5390): two direct
 //   callers each in the target, 10401 and 10402, the DAO's slots 8 and 7, which are pending; one stand-in calls each
 //   twice, with different arguments.
 // CEleitorDinamico::GetTituloMesarioHabilitacao (fn 1548) needs none: Inserir and Atualizar call it twice each.
+// - std::vector<CEleitorDinamico>'s instances that RecuperarTodos's push_back brings: its slow path (fn 5759) calls
+//   construct_at (fn 5760), __uninitialized_allocator_relocate (fn 3759) and __split_buffer's destructor (fn 3758), each
+//   with a second caller in the target: fn 3614 (CRegistraDigitalOperador::BiometriaMesarioPresenteNosEleitores) for
+//   5760, fn 5761 (CEleitores::DynamicCreate) for 3759 and 3758. Neither is reconstructed; one stand-in each keeps the
+//   three out of line, and drops the results the target's callers drop. The labels name the instances
+//   celeitordinamicodao.cpp's object defines, so this TU instantiates none of them.
 // The stand-ins differ from each other and call two things or add an offset, so none is a target function's body.
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2
 // header and instantiates nothing.
@@ -22,10 +26,11 @@ int r91_dinamicodao_ctor(int, int) __asm__("_ZN5comum3dao19CEleitorDinamicoDAOC1
 void r91_identidade_por_tipo(int, int, int) __asm__("_ZNK5comum2md17CEleitorDecorator20GetIdentidadePorTipoEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void r91_get_dedo(int, int, int) __asm__("_ZNK5comum2md17CBiometriaEleitor7GetDedoENS0_5CDedo8TipoDedoE");
 void r91_cria_comum(int, int) __asm__("_ZN5comum2md17CBiometriaEleitor9CriaComumENSt3__26vectorINS0_5CDedoENS2_9allocatorIS4_EEEE");
-int r91_eleitor_sem_mesario(int, int, int, int, int, int, int, int, int, int, int) __asm__("_ZN5comum2md16CEleitorDinamicoC1ERKNS0_18CEleitorIdentidadeES4_iiNS0_5CDedo8TipoDedoEthiiRKN7ecourna3app5dados24CApresentacaoFotoEleitorE");
 int r91_estado_biometria(int, int) __asm__("_ZNK5comum3dao25CComparecimentoMesarioDAO23ConverteEstadoBiometriaEi");
 int r91_dedo_habilitacao(int, int) __asm__("_ZNK5comum3dao25CComparecimentoMesarioDAO23ConverteDedoHabilitacaoEi");
-int r91_eleitor_com_mesario(int, int, int, int, int, int, int, int, int, int, int, int) __asm__("_ZN5comum2md16CEleitorDinamicoC1ERKNS0_18CEleitorIdentidadeES4_iiNS0_5CDedo8TipoDedoEthiiS4_RKN7ecourna3app5dados24CApresentacaoFotoEleitorE");
+int r91_constroi_copia(int, int) __asm__("_ZNSt3__212construct_atB8ne210108IN5comum2md16CEleitorDinamicoEJRKS3_EPS3_EEPT_S8_DpOT0_");
+void r91_realoca(int, int, int, int) __asm__("_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md16CEleitorDinamicoEEEPS4_EEvRT_T0_S9_S9_");
+int r91_libera_buffer(int) __asm__("_ZNSt3__214__split_bufferIN5comum2md16CEleitorDinamicoERNS_9allocatorIS3_EEED2Ev");
 }
 
 namespace {
@@ -58,22 +63,21 @@ __attribute__((noinline)) void DuasBiometrias(int biometria, int dedos)
     r91_cria_comum(biometria + 40, dedos + 12);
 }
 
-__attribute__((noinline)) int EleitorSemMesario(int* a)
-{
-    return r91_eleitor_sem_mesario(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]) +
-           r91_eleitor_sem_mesario(a[0] + 84, a[1], a[2], a[3], a[4], a[5] + 1, a[6], a[7], a[8], a[9], a[10]);
-}
-
-__attribute__((noinline)) int EleitorComMesario(int* a)
-{
-    return r91_eleitor_com_mesario(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11]) +
-           r91_eleitor_com_mesario(a[0] + 84, a[1], a[2], a[3], a[4], a[5] + 1, a[6], a[7], a[8], a[9], a[10], a[11]);
-}
-
 __attribute__((noinline)) int ConverteDuasLinhas(int dao, int estado, int dedo)
 {
     return r91_estado_biometria(dao, estado) + r91_estado_biometria(dao, estado + 1) * 3 + r91_dedo_habilitacao(dao, dedo) * 5 +
            r91_dedo_habilitacao(dao, dedo + 2) * 7;
+}
+
+__attribute__((noinline)) void CopiaEleitor(int destino, int origem)
+{
+    r91_constroi_copia(destino + 84, origem);
+}
+
+__attribute__((noinline)) void CresceEleitores(int alocador, int inicio, int fim, int buffer)
+{
+    r91_realoca(alocador, inicio, fim, buffer + 4);
+    r91_libera_buffer(buffer);
 }
 
 const void* volatile r91_sink;
@@ -87,9 +91,9 @@ struct SRoots91 {
         r91_sink = reinterpret_cast<const void*>(&DuasIdentidades);
         r91_sink = reinterpret_cast<const void*>(&DoisDedos);
         r91_sink = reinterpret_cast<const void*>(&DuasBiometrias);
-        r91_sink = reinterpret_cast<const void*>(&EleitorSemMesario);
-        r91_sink = reinterpret_cast<const void*>(&EleitorComMesario);
         r91_sink = reinterpret_cast<const void*>(&ConverteDuasLinhas);
+        r91_sink = reinterpret_cast<const void*>(&CopiaEleitor);
+        r91_sink = reinterpret_cast<const void*>(&CresceEleitores);
     }
 } roots91;
 
