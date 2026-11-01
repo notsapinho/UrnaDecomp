@@ -49,6 +49,7 @@ them (`truth`).
 | `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
 | `zlib` | zlib 1.3.1 + minizip | `src/units/06-ecourna-api-compression.mk` `ZLIB_CFLAGS` | 12 |
+| `libqrencode` | libqrencode 4.1.1, linked in `RHVOICE_OBJS` ahead of RHVoice's setups, which would otherwise take its objects | `src/units/187-libqrencode-encodestring.mk` `QRENCODE_CFLAGS` | 12 |
 | `sqlite` | SQLite 3.50.4 amalgamation | `tools/libs/sqlite/build.sh` (recorded in `cflags.txt`) | 12 |
 | `openssl` | OpenSSL 3.0.17 libcrypto | `tools/libs/openssl/configure.sh` (the configured Makefile) | 12 |
 | `7zip` | 7-Zip / LZMA SDK 21.02, single-threaded | `tools/libs/7zip/build.sh` (recorded in `flags.nul`) | 12 |
