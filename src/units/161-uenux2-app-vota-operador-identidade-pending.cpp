@@ -15,7 +15,7 @@
 // - vota::CDadoEleitorNaoConfere::ProcessInput (target fn 10447, slot 7): on CONFIRMA it goes to fn 652's state or,
 //   with CControlaReconhecimento::AvancaVerificacao inlined (record ccontrolareconhecimento.cpp:176), to fn 2735's.
 // - vota::CPedeIdentidade::StartState (target fn 10680, slot 2, records cpedeidentidade.cpp:62 and :63): it calls fns
-//   599, 1485, 2226, 2284 and 5903.
+//   599, 1485, 2226, 2284 and 5903 (comum::CInfoMTLCD::MostraIconeBateria, unit 153).
 // - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): it calls fns 2226, 2749, 2753, 3619, 5401, 5414 and
 //   5430.
 // - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): it calls fns 599, 2226 and 3620, and 501 (named: unit

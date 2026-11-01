@@ -15,8 +15,14 @@
 //       std::remove leaves
 //   +24 std::mutex, held while the vector changes: its unlock is the call of fn 150 (std::mutex's unlock and
 //       destructor are one body in the target); the lock is inlined away
-// Detach is the one member written here, from those two destructors. Attaching (find, push_back through fn 543, then
-// the observer's Update with the value, under the mutex; inlined into fn 502) and notifying are not recovered.
+// Detach is read from those two destructors. Attach is read from comum::CInfoMTLCD's fn 5903 and the end of its
+// constructor, fn 5904, which hold it inlined: under the mutex, a search of the vector for the observer (wmemchr, fn
+// 736), and only when it is not there a push_back (fn 543) and the observer's Update (IObserver's slot 2) with the
+// value; the observer is a pointer taken by value (chosen: IObserver<T>* const& gives the same object). SetValor is
+// read from the operator()
+// of the lambda of api::BatteryIconDataSource's constructor (fns 10981 and 10987, UpdateBatteryIcon inlined): under the
+// mutex, the value's copy assignment (its count incremented, the old one released) and each observer's Update in
+// vector order, with the new value.
 
 #include <algorithm>
 #include <mutex>
@@ -31,6 +37,15 @@ class IObservable {
 public:
     virtual ~IObservable() = default;
 
+    void Attach(IObserver<T>* observer)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        if (std::find(m_observers.begin(), m_observers.end(), observer) == m_observers.end()) {
+            m_observers.push_back(observer);
+            observer->Update(m_valor);
+        }
+    }
+
     void Detach(IObserver<T>* observer)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -38,6 +53,15 @@ public:
     }
 
 protected:
+    void SetValor(const T& valor)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_valor = valor;
+        for (IObserver<T>* observer : m_observers) {
+            observer->Update(m_valor);
+        }
+    }
+
     T m_valor;
     std::vector<IObserver<T>*> m_observers;
     std::mutex m_mutex;

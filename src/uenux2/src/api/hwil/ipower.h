@@ -12,7 +12,8 @@
 // vota's code holds only an IPower (the singleton of fn 862) and does the same call, `this->slot15(this + 4)`, then
 // reads the block's fields, in fns 1898, 2774, 10226, 11107, 11188, 12017 and 12061. The callers show the calls and the
 // block; that non-virtual inline members of this class hold that code is a reading (the same code in many callers, and
-// binaryen inlines a function with one call site only), and only FoneDesconectado is reconstructed. Slots 0 to 6 have the same shape, so
+// binaryen inlines a function with one call site only), and only FoneDesconectado and GetEstadoBateria (fn 2774) are
+// reconstructed. Slots 0 to 6 have the same shape, so
 // they are written here: that they are IPower's and not CPowerMock's is a reading too, and a CPowerMock that defines
 // them gives the same bytes. Slot 7 reads the mock's own block (+32) without the call, so it is the mock's override,
 // and pure here by choice; slots 15 and 16 are pure here by choice too.
@@ -23,7 +24,8 @@
 // four uint32_t words read with masks and shifts give the same bytes. Only the fields the members below read, and the
 // ones the mock's initial value sets, are named. What the callers show of them:
 // - word 0: bits 3-4 are the internal battery's status and bits 5-6 the external one's (fn 10226 passes them to
-//   comum::CLogComum::LogaNivelBateria, fn 5875, with 1 and 2); bit 13 is slot 0's and nothing says what it is.
+//   comum::CLogComum::LogaNivelBateria, fn 5875, with 1 and 2); bits 1-2 are what fn 2774 reads as the source of
+//   power (below); bit 13 is slot 0's and nothing says what it is.
 // - word 1: bit 1 is the headphone (fn 10226: set is "Fone de ouvido desconectado"); the top half is slot 1's.
 // - word 2: the low half is slot 3's, the top half slot 4's.
 // - word 3: the low half is what slot 2 signs and slot 5 scales, and the level of the mock's slot 7; the next byte is
@@ -50,7 +52,8 @@ namespace api {
 class IPower {
 public:
     struct SStatus {
-        std::uint32_t : 3;
+        std::uint32_t : 1;
+        std::uint32_t m_fonte : 2;
         std::uint32_t m_statusBatInt : 2;
         std::uint32_t m_statusBatExt : 2;
         std::uint32_t : 4;
@@ -163,7 +166,7 @@ public:
 
     virtual uebyte BatLevel() = 0;
 
-    // (original lines 166-351: content not recovered)
+    // (original lines 169-351: content not recovered)
 #line 352
     virtual float BatIntMaxSocValue()
     {
@@ -206,6 +209,61 @@ public:
     {
         ReadStatus(m_status);
         return m_status.m_foneDesconectado;
+    }
+
+    // The battery icon's state, fn 2774 (pnpm wasm score: 0 over 151 rows against our body in the whole link). Its
+    // callers, api::BatteryIconDataSource's constructor and UpdateBatteryIcon (api/gui/cpowerinformation.cpp), pass it
+    // CPolySingleton<IPower>::instance()'s result. That it is a member of this class, called on that result, is a
+    // reading of their records' columns: 119:16 and 131:24 fit `, m_estado(` and `const int estado = ` before the
+    // instance() call, where a free function taking the IPower would move each column. Each test of the target reads
+    // the block again through slot 15, and a read that both arms of a test begin with sits above the test: one accessor
+    // per test, as written, gives those rows (that clang hoists the shared read is a reading). What the values mean is
+    // read from the icon each one gets in the constructor's map (src/units/164-uenux2-cpowerinformation.mk): bits 1-2
+    // at 2 an external battery and not 0 no mains; a battery's status 0 full, 1 partial, 2 critical, 3 absent; 10 no
+    // icon. Chosen: the names of the member, of the accessors and of the field, the accessors' being members and
+    // returning uebyte, and a plain number for each state.
+    int GetEstadoBateria()
+    {
+        if (Fonte() == 2) {
+            if (StatusBatExt() == 3) {
+                return 3;
+            }
+            if (StatusBatExt() == 2) {
+                return 9;
+            }
+            return StatusBatExt() == 1 ? 8 : 7;
+        }
+        if (StatusBatInt() == 3) {
+            return 3;
+        }
+        if (StatusBatInt() == 2) {
+            return Fonte() != 0 ? 6 : 2;
+        }
+        if (StatusBatInt() == 1) {
+            return Fonte() != 0 ? 5 : 1;
+        }
+        if (StatusBatInt() != 0) {
+            return 10;
+        }
+        return Fonte() != 0 ? 4 : 0;
+    }
+
+    uebyte Fonte()
+    {
+        ReadStatus(m_status);
+        return m_status.m_fonte;
+    }
+
+    uebyte StatusBatInt()
+    {
+        ReadStatus(m_status);
+        return m_status.m_statusBatInt;
+    }
+
+    uebyte StatusBatExt()
+    {
+        ReadStatus(m_status);
+        return m_status.m_statusBatExt;
     }
 
 protected:

@@ -33,12 +33,16 @@
 #
 # CToUpperDS's and CPadDS's layout and call operators, in ccargods.h, which says what gives them: fn 11247
 # (api::CDataText<CPadDS<CToUpperDS<CCargoDSNome>>>::GetText) holds the operators inlined with CCargoDSNome's. It is in
-# the link through unit 139's instance of fn 5613, which builds that CDataText, and it differs: at -O2 pnpm wasm score
-# gave 142 over 504 rows (81 inserted, 9 deleted), the tail our std::string::append inlined where the target calls fn
-# 160; at the tree's -O3 ours calls fn 160 once, as the target does, and scores 38 over 429 rows (26 operand-only, 6
-# inserted, 6 deleted, the first at +0x115); what is left is not read. The roots' stand-in for 11247 went with
-# that: 11247 is the operator's caller in our link, and 5803 keeps the target's two callers, 2268 and 11247's
-# CCargoDSNome operator (inlined there). `falta / 2` written twice or in a local gives the same 11247.
+# the link through unit 139's instance of fn 5613, which builds that CDataText (unit 139's roots object, at
+# UENUX2_CXXFLAGS), and it matches. At -O2 pnpm wasm score gave 142 over 504 rows (81 inserted, 9 deleted), the tail our
+# std::string::append inlined where the target calls fn 160; at the tree's -O3 ours calls fn 160 once, as the target
+# does. What was left, 38 over 429 rows (26 operand-only, 6 inserted, 6 deleted, the first at +0x115), is the order of
+# CPadDS's subtraction: the target computes `falta - metade` right after `falta / 2`, before it allocates the left
+# string. With the right count in a local before the left string (`resto`), 11247 scores 18 over 423 rows, all
+# operand-only, in the whole link, and matches; computed inside `direita`'s constructor call, after the left string, it
+# is the 38 above. The local's name is chosen. The roots' stand-in for 11247 went with unit 139: 11247 is the
+# operator's caller in our link, and 5803 keeps the target's two callers, 2268 and 11247's CCargoDSNome operator
+# (inlined there). `falta / 2` written twice or in a local gave the same 11247 (measured on the earlier form).
 CCARGODS_SRCS := src/app/comum/dados/ccargods.cpp
 UENUX2_SRCS += $(CCARGODS_SRCS)
 $(ROOT)/$(APP)/129-uenux2-ccargods-roots.o: $(ROOT)/src/units/129-uenux2-ccargods-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/129-uenux2-ccargods.mk

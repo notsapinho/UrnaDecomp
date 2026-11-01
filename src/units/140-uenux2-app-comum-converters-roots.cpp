@@ -6,13 +6,13 @@
 // w140_conversores calls CConversorVotosCargo's constructor (fn 5683), standing for its target caller 11349
 // (CConversorEleicoesVota::DoDesconverte, not written); 11350 is the other call site. The constructor stores the
 // converter's vptr, so its slots (11352, 11351) are kept the way the target keeps them.
-// w140_votos calls md::CVotos' constructor (fn 2794), standing for its target callers 5733, 7787 and 11490 (not
-// written); 11351 is the other call site.
+// w140_votos calls md::CVotos' constructor (fn 2794), standing for its target caller 7787 (not written); 11351 and
+// comum::CRdvVota's slots 0 and 1 (fns 5733, 11490, unit 13) are the other call sites.
 // w140_mapa destroys a std::map<md::TCargoID, md::CVotos>, standing for fns 5971 and 11514 (not written), which destroy
-// the map comum::CRdvVota's slot 0 (fn 5733, not written) returns: its nodes are 32 bytes, the cargo's byte at +16 and
-// the CVotos at +20, and 5733 takes each key from an SCargoInfo's cargo. Its destroy is fn 2877. The key's type is
-// chosen. No source of the tree instantiates that map, so this file's copy is the one the link keeps, and the file
-// compiles at the tree's flags (the fragment's rule).
+// the map comum::CRdvVota's slots 0 and 1 (fns 5733, 11490, unit 13) return: its nodes are 32 bytes, the cargo's byte
+// at +16 and the CVotos at +20, and 5733 takes each key from an SCargoInfo's cargo. Its destroy is fn 2877. The key's
+// type is chosen. crdvvota.cpp fills the map and never destroys it, so this file's copy of the destroy is the one the
+// link keeps, and the file compiles at the tree's flags (the fragment's rule).
 // Declared through asm labels where no header is needed.
 #include <map>
 

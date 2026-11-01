@@ -12,6 +12,11 @@
 # CConversorDadosCandidato::DoDesconverte (11450), is in 96-uenux2-app-comum-asn.mk's list, which says why. The
 # vector<char>::__insert_with_size<__wrap_iter<const unsigned char*>> instance 11397 calls (target fn 1927) matches from
 # cconversorestadogeral.cpp's object, which now comes before the ecourna object that held the link's copy.
+# CConversorVoto::DoDesconverte (11354) matches, with the static DesconverteTipo it inlines (records :71 and :75, on
+# lines 49 to 76), over CVoto's constructor (fn 2256, unit 13's cvoto.cpp, written and not matched: unit 13's fragment
+# says why), which the call names. For an absent digitacao it builds a ModuloRegistroDigitalVoto::VotoDigitado from ""
+# (the target stores that class's vptr), which src/asn1/modules/ModuloRegistroDigitalVoto.h adds and Voto::digitacao
+# takes by typedef; a callers+content hand line in splat/symbol_addrs.txt names VotoDigitado's theInfo.
 #
 # Evidence: the records give the files, the helpers' names and signatures and the throws' lines and columns; RTTI names
 # every converter and its base; the vtables give the slots. Each helper and data-class constructor is out of line, and
@@ -58,8 +63,6 @@
 # operand-only).
 #
 # Not matched, and what each waits for (this unit's -pending.cpp names the traps):
-# - 11354, CConversorVoto::DoDesconverte: CVoto's constructor, fn 2256 (cvoto.cpp:80), is not written; the
-#   -pending.cpp header has 11354's source and what was measured.
 # - 11398, CConversorEstadoGeral::DoDesconverte: CEstadoGeral's constructor, fn 5637, which calls fn 1249 (no name).
 # CConversorDadoCorrespondencia's slots (11399, 11400; 11397 builds the class on its stack) were traps here: fragment
 # 172 writes and matches them, and its object emits the class's vtable now.

@@ -2,8 +2,8 @@
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
 // Members with no record sit at chosen lines, each unit's fragment says why: 119's, 161's five after GetInst, 152's
-// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two and 176's one.
-
+// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two and 176's one, and
+// 156's four after LogaPedidoTituloSuspensao.
 #include "app/vota/log/clogvota.h"
 
 #include <format>
@@ -126,6 +126,27 @@ void CLogVota::LogaEleitorJaJustificou()
 void CLogVota::LogaPedidoTituloSuspensao()
 {
     loga("Solicitado título eleitoral para suspensão do eleitor");
+}
+
+
+void CLogVota::LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via)
+{
+    loga(std::format("Imprimindo relatório [{}] via nº [{}]", ConverteERelatoriosUE(relatorio), via));
+}
+
+void CLogVota::LogaQtdViasAdicionaisExcedeMaximo()
+{
+    logaAlerta("Quantidade de vias adicionais excede o máximo permitido");
+}
+
+void CLogVota::LogaMesarioIndagadoQualidadeBU()
+{
+    loga("Mesário indagado sobre qualidade do Boletim de Urna");
+}
+
+void CLogVota::LogaHabilitacaoCanceladaReconhecimentoBiometrico()
+{
+    logaAlerta("Habilitação cancelada durante reconhecimento biométrico");
 }
 
 void CLogVota::LogaVotacaoEncerrada()

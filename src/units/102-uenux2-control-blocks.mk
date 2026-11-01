@@ -1,16 +1,16 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 56 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Ten come from the objects of units 31, 120, 101, 165 and 91,
-# whose builders are written, so the roots no longer instantiate them: IFormImpressao<IPaperRelatorios>'s and
-# CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CInteractiveForm<IScreen, IInputKbd>'s (554),
-# CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515, 6024), api::CTimer's (10846, unit 101's
-# itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and vota::CPreShowFormVota's (576, unit 165's
-# cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is not written) and comum::md::CEleitorDinamico's
-# (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's celeitordinamicodao.cpp, from which 11536 and 11537 match) and
-# api::CTextFieldBlinking's (1265, CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, written and
-# differing, from which 11113 and 11112 match). Each block below: the T, the function that stores its vptr in the
-# target, and the members the unit matches. The vtable's other slots are shared
-# bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 55 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Eleven come from the objects of units 31, 120, 101, 165,
+# 91, 127 and 164, whose builders are written, so the roots no longer instantiate them:
+# IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550),
+# CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
+# 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
+# vota::CPreShowFormVota's (576, unit 165's cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is
+# not written) and comum::md::CEleitorDinamico's (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's
+# celeitordinamicodao.cpp, from which 11536 and 11537 match) and api::CTextFieldBlinking's (1265,
+# CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
+# which 8585 and 8578 match). Each block below: the T, the function that stores its vptr in the target, and the members
+# the unit matches. The vtable's other slots are shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
 #   IFormField<IPaper>: CTextFieldPaper 193, 604, 5613, 12105: 11997. CCutFieldPaper 1264: 10994.
 #     CNewLineFieldPaper 198: 10993
@@ -42,7 +42,7 @@
 #   12098: 12087, 12086, 12085. CProgressBar 5545: 11111, 11110. CMovieField 5543: 11104, 11103. CTextFieldBlinking
 #   1265: 11113, 11112. CTextFieldUpdate 502, 3058, 5936: 12316, 12314. CImageFieldUpdate 3059: 12541, 12535. CWavFile
 #   10841: 10819, 10818. CFixedImage 1263, 8633: 8585, 8578, which match from unit 127's cwasmresource.cpp.o, whose
-#   GetImage (8633) builds the block; the dropped builder here stands for 1263. CPreShowProgressBar (ten builders, 1591
+#   GetImage (8633) builds the block, as unit 164's CriaIcones (1263) does. CPreShowProgressBar (ten builders, 1591
 #   first): 12813,
 #   12812. CCopiadorMR 12134: 12124, 12120. CCopiadorWSQMR 12134: 12117, 12116. api::Logger
 #   10842: 10817, 10816. BatteryIconDataSource<Horizontal> 502: 11106, 11105. ecourna CTrng 6154: 9483, 9482.

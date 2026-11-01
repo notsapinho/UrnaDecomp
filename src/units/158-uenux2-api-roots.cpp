@@ -32,7 +32,8 @@ __attribute__((optnone, noinline)) api::IPreShow<api::IScreen>* w158_preshow()
 namespace {
 
 // fn 2246, CFixedImage's string constructor, has four direct callers in the target (fns 1263, 3616, 3617 and 13441),
-// none reconstructed. These two stand in for them, with bodies no target function has.
+// of which 1263 (unit 164's CriaIcones) is reconstructed. These two stand in for the others, with bodies no target
+// function has.
 __attribute__((noinline)) std::shared_ptr<api::IImage> NovaImagemFixa(const std::string& arquivo)
 {
     return std::make_shared<api::CFixedImage>(arquivo);

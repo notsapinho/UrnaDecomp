@@ -77,6 +77,9 @@ another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap
 One directory per library with its probe build (`build.sh`), the driver or probe source that keeps the app's entry
 points alive, and the scored result (`census.json`): `sqlite/`, `openssl/`, `7zip/`, `rhvoice/`, `boost/`, `asn1/`.
 Each `census.json` is the record of the probe runs that pinned that library; the paths inside it are the ones those runs used.
+`libqrencode/` has a `score.sh` in place of a `census.json`: it scores the target's 20 libqrencode functions against a
+probe of any tag (`docs/reference/facts/libraries.md` §B10), and the link builds the library in
+`src/units/187-libqrencode-encodestring.mk`, as fragment 06 builds zlib, not through its `build.sh`.
 `src/Makefile` builds the libraries of the link through these `build.sh` scripts (`openssl/configure.sh` and
 `build.sh` for libcrypto) and reads `7zip/sources.txt`, `ossl_files.txt`, `openssl/roots.txt`,
 `sqlite/attribution.tsv` and `openssl/gen-probe-main.py`. `openssl/README.md` and `sqlite/README.md` describe those

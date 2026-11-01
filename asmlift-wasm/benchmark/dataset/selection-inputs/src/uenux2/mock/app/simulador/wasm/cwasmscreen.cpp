@@ -443,28 +443,31 @@ std::vector<api::SPathCommand> CWasmScreen::EscalaCaminho(const std::vector<api:
     for (const api::SPathCommand& comando : caminho) {
         switch (comando.tipo) {
         case api::SPathCommand::MOVE_TO: {
-            const double x = comando.x * m_escalaX;
-            const double y = comando.y * m_escalaY;
+            const double x = m_escalaX * comando.x;
+            const double y = m_escalaY * comando.y;
             escalado.push_back({api::SPathCommand::MOVE_TO, x, y});
             break;
         }
         case api::SPathCommand::LINE_TO: {
-            const double x = comando.x * m_escalaX;
-            const double y = comando.y * m_escalaY;
+            const double x = m_escalaX * comando.x;
+            const double y = m_escalaY * comando.y;
             escalado.push_back({api::SPathCommand::LINE_TO, x, y});
             break;
         }
         case api::SPathCommand::ARC: {
-            const double x = comando.x * m_escalaX;
-            const double y = comando.y * m_escalaY;
-            const double raioX = comando.raioX * m_escalaX;
-            const double raioY = comando.raioY * m_escalaY;
+            const double x = m_escalaX * comando.x;
+            const double y = m_escalaY * comando.y;
+            const double raioX = m_escalaX * comando.raioX;
+            const double raioY = m_escalaY * comando.raioY;
             escalado.push_back({api::SPathCommand::ARC, x, y, raioX, raioY, comando.anguloInicial, comando.anguloVarredura});
             break;
         }
-        case api::SPathCommand::CLOSE:
-            escalado.push_back({api::SPathCommand::CLOSE});
+        case api::SPathCommand::CLOSE: {
+            api::SPathCommand fechar = api::SPathCommand();
+            fechar.tipo = api::SPathCommand::CLOSE;
+            escalado.push_back(std::move(fechar));
             break;
+        }
         }
     }
     return escalado;

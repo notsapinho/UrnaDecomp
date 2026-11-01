@@ -1,5 +1,6 @@
 #pragma once
 
+#include <compare>
 #include <cstddef>
 #include <optional>
 #include <string>
@@ -57,6 +58,13 @@ public:
     std::string GetOrdinalEscolha(TQtdEscolha escolha) const;
 
     void Valida() const;
+
+    // The order of a std::set<CCargo>: fn 11888 (vota::CMenuFiltrarCandidatosPorCargo's slot 2) inserts copies of
+    // CConfiguracaoEleicao::GetCargo's results into a tree of 156-byte nodes, and to place each it calls fn 5655, which
+    // compares the ids at +0 of two cargos and gives -1, 0 or 1; 11888 tests the result's low byte below 0. That is
+    // std::less's `a < b` over a three-way operator (a reading); out of line, since 11888 keeps the call. Its being a
+    // member, the std::strong_ordering result and its file (ccargo.cpp) are chosen.
+    std::strong_ordering operator<=>(const CCargo& outro) const;
 
 private:
     TCargoID m_id;

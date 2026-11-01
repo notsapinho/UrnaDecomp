@@ -26,6 +26,17 @@ enum EUeAssertError {
     // defined in its class) and the code qualified as api::, the column leaves 48 characters for the name; the name is
     // chosen to that length
     EUA_DATASOURCESRELATORIO_DETALHECANDIDATOZE_VOTO = 3410,
+    // vota::CVerificaQtdBUsAdicionais::StartState (fn 12023, records cverificaqtdbusadicionais.cpp 36:102 and 37:116):
+    // the texts "Assert (egVota.GetEstadoVota() == EAVENCERRADA)" and "Assert (egVota.GetEstadoEncerramento() ==
+    // EAEFIMDOSTRABALHOS)". With the invocations indented four columns and the codes qualified api::, the columns leave
+    // 45 characters for each name, chosen to that length
+    EUA_VERIFICAQTDBUSADICIONAIS_ESTADO_ENCERRADA = 3461,
+    EUA_VERIFICAQTDBUSADICIONAIS_ENCERRAMENTO_FIM = 3462,
+    // vota::CLimiteCopiasBUAtingido::StartState (fn 12027, record climitecopiasbuatingido.cpp 37:56): the text "Assert
+    // (comum::CAppInfo::GetInst().GetVota().GetEstadoVota() == EAVENCERRADA)". The column is less than the condition's
+    // length, so the invocation closes on a line of its own: with the code there indented eight columns and qualified
+    // api::, the column leaves 42 characters for the name, chosen to that length
+    EUA_LIMITECOPIASBUATINGIDO_ESTADO_INVALIDO = 3473,
     // vota::CQuerImprimirBU::StartState (fn 12035, records cquerimprimirbu.cpp 40:102 and 41:85): the texts "Assert
     // (poInfo.GetVota().GetEstadoVota() == EAVIMPRIMIRBU)" and "Assert (poInfo.GetVota().GetQtdBU() == 0)". With the
     // invocation indented four columns and the code qualified as api::, the columns leave 34 characters for each name;

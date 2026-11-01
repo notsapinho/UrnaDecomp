@@ -1,5 +1,6 @@
 #include "app/comum/dados/md/rdv/cvotoseleicoesvota.h"
 
+#include <algorithm>
 #include <string>
 
 namespace comum::md {
@@ -16,7 +17,31 @@ TEleicaoID GetEleicao(api::EUeRdvError erro, TCargoID cargo, const CVotosEleicoe
     return it->second;
 }
 
+// (original lines 20-29: content not recovered)
+#line 30
+CVotosEleicoesVota::TMapaCargoEleicao MontaMapa(const CVotosEleicoesVota::TMapa& mapa)
+{
+    if (mapa.empty()) {
+        throw api::CUeRdvError(api::EUE_RDV_GRUPO_VOTOS_VAZIO, "Grupo de votos vazio");
+    }
+
+    CVotosEleicoesVota::TMapaCargoEleicao eleicoes;
+    std::for_each(mapa.begin(), mapa.end(), [&eleicoes](const auto& votosEleicao) {
+        std::for_each(votosEleicao.second.GetMapa().begin(), votosEleicao.second.GetMapa().end(), [&](const auto& it) {
+            if (!eleicoes.emplace(it.first.cargo, votosEleicao.first).second) {
+                throw api::CUeRdvError(api::EUE_RDV_CARGO_EM_MAIS_DE_UMA_ELEICAO,
+                                       "Cargo " + std::to_string(it.first.cargo) + " presente em mais de uma eleicao");
+            }
+        });
+    });
+    return eleicoes;
+}
+
 } // namespace
+
+CVotosEleicoesVota::CVotosEleicoesVota(TMapa mapa) : m_votos(std::move(mapa)), m_eleicoes(MontaMapa(m_votos))
+{
+}
 
 const CVotosCargos& CVotosEleicoesVota::Votos(api::EUeRdvError erro, TEleicaoID eleicao, std::source_location local) const
 {
@@ -41,14 +66,19 @@ TQtdVoto CVotosEleicoesVota::Total(TCargoID cargo, const std::string& numero, co
     return total(m_votos.find(eleicao)->second, cargo, numero);
 }
 
-// (original lines 44-110: content not recovered)
+// (original lines 77-110: content not recovered)
 #line 111
 const CVotosCargos& CVotosEleicoesVota::GetVotos(TEleicaoID eleicao) const
 {
     return Votos(api::EUE_RDV_VOTOS_SEM_ELEICAO, eleicao);
 }
 
-// (original lines 116-123: content not recovered)
+TQtdVoto CVotosEleicoesVota::Comparecimento(TEleicaoID eleicao) const
+{
+    return Votos(api::EUE_RDV_COMPARECIMENTO_SEM_ELEICAO, eleicao).Comparecimento();
+}
+
+// (original lines 121-123: content not recovered)
 #line 124
 TQtdVoto CVotosEleicoesVota::Candidato(TCargoID cargo, const std::string& numero) const
 {
@@ -114,6 +144,20 @@ TQtdVoto CVotosEleicoesVota::Cargo(TCargoID cargo) const
 {
     return Total(cargo, [](const CVotosCargos& votos, TCargoID cargoID) { return votos.Cargo(cargoID); },
                  api::EUE_RDV_CARGO_SEM_ELEICAO);
+}
+
+bool CVotosEleicoesVota::Compativel(const CVotosEleicoesVota& outro) const
+{
+    if (m_eleicoes != outro.m_eleicoes) {
+        return false;
+    }
+    for (const auto& [eleicao, votosCargos] : m_votos) {
+        const auto it = outro.m_votos.find(eleicao);
+        if (it == outro.m_votos.end() || !votosCargos.Compativel(it->second)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 } // namespace comum::md

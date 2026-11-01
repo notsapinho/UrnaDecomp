@@ -20,9 +20,13 @@ Its `asmlift-wasm` job runs, in `asmlift-wasm/`:
 | `pnpm bench setups --check` | every compile setup still has the flags `src/Makefile` compiles its objects with |
 
 Every check runs even when an earlier one failed. The setup check and the benchmark's `setups` tests run
-`make -n` over `src/Makefile`'s objects, and the zlib rules need zlib's sources, so the job first clones
-zlib 1.3.1 into `third_party/zlib`. No other library is fetched. It also installs wabt 1.0.42's release
-build: the toolkit's parser, decoder and splat tests compare against its `wasm-objdump` and `wasm-validate`.
+`make -n` over `src/Makefile`'s objects, and the rules of the zlib objects and of unit 187's (libqrencode's
+objects, and its roots, which include `qrencode.h`) need those libraries' sources, so the job first clones
+zlib 1.3.1 into `third_party/zlib` and libqrencode 4.1.1 into `third_party/libqrencode`, each at the tag
+`tools/setup/bootstrap.sh --sources` checks out (libqrencode's checked against its commit, as there). No
+other library is fetched: a fragment whose rules read another `third_party/` tree adds its clone here and in
+`workflows/ci.yml`. It also installs wabt 1.0.42's release build: the toolkit's parser, decoder and splat
+tests compare against its `wasm-objdump` and `wasm-validate`.
 
 ## Skipped tests
 
@@ -41,8 +45,9 @@ ledger, and its tests are passing by skipping. A run that skips fewer prints a n
 When a change adds a gated test, raise the budget in the same change.
 
 `pnpm bench setups --check` behaves the same way: a setup whose flags only the image or a library build
-can confirm prints as `unverified`, and only a `drift` fails the step. In a fresh clone 10 of the 17
-setups print as `unverified`.
+can confirm prints as `unverified`, and only a `drift` fails the step. In a fresh clone 11 of the 19
+setups print as `unverified`: SQLite's, OpenSSL's, 7-Zip's, the two RHVoice setups and emscripten's six
+system libraries.
 
 ## What CI does not run
 

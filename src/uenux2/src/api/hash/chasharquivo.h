@@ -8,8 +8,8 @@ namespace api::hash {
 // fn 5364), which tests the string at +0 against "CHashArquivo: nome inválido." and the one at +12 against
 // "CHashArquivo: hash inválido.", so the members are the name, then the hash; their names and the getters' are
 // chosen. comum::asn::CConversorHashArquivo::DoConverte (target fn 10267) reads both strings in place, so the getters
-// return them by reference. The constructor (fn 3600: copies the two strings, then calls ValidaObjeto) is defined in
-// chasharquivo.cpp, which is not reconstructed yet.
+// return them by reference. The constructor (fn 3600: copies the two strings, then calls ValidaObjeto) and ValidaObjeto
+// are defined in chasharquivo.cpp.
 class CHashArquivo {
 public:
     CHashArquivo(const std::string& nome, const std::string& hash);

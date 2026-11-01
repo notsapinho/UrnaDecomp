@@ -99,8 +99,8 @@ __attribute__((noinline)) void w100_define(std::unique_ptr<T> instancia, int vez
     }
 }
 
-// Stands for the callers of the two GetInst that have not landed: 502, 652, 1265, 2024, 3059, 3673, 5543, 5904 and 8302
-// for fn 1259, whose 3658 is in the link, and 10226, 10870 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
+// Stands for the callers of the two GetInst that have not landed: 502, 652, 2024, 3059, 3673, 5543 and 8302 for fn
+// 1259, whose 1265, 3658 and 5904 are in the link, and 10226, 10870 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
 // 5473, 10874 and 10875 are in the link.
 __attribute__((noinline)) int w100_getinst()
 {

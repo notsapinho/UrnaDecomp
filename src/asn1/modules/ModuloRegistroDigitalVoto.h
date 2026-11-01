@@ -84,6 +84,36 @@ private:
 }; // end class TipoVoto
 
 //
+// ModuloRegistroDigitalVoto::VotoDigitado   // name from the target's RTTI (vptr 1570956), the module's one
+// NumericString class there; theInfo at 1913644, which fn 14478 fills as a NumericString of 1 to 5 characters and
+// Voto's info lists as its field digitacao; comum::asn::CConversorVoto::DoDesconverte, fn 11354, builds it from ""
+// through a temporary and stores this vptr. The generator gave that field a nested value_type of its own, which RTTI
+// does not hold: the field takes this type's typedef
+//
+
+class VotoDigitado : public ASN1::NumericString
+{
+    typedef ASN1::NumericString Inherited;
+protected:
+    typedef Inherited::InfoType InfoType;
+    VotoDigitado(const void* info) : Inherited(info) {}
+public:
+    VotoDigitado() : Inherited(&theInfo) {}
+    VotoDigitado(const base_string& str, const void* info = &theInfo) : Inherited(str, info) {}
+    VotoDigitado(const char* str, const void* info = &theInfo) : Inherited(str, info) {}
+    VotoDigitado(const VotoDigitado& that) : Inherited(that) {}
+    VotoDigitado& operator=(const ASN1_STD string& that)
+    { Inherited::operator=(that); return *this; }
+    VotoDigitado& operator=(const char* that)
+    { Inherited::operator=(that); return *this; }
+    VotoDigitado * clone() const
+    { return static_cast<VotoDigitado*> (Inherited::clone()); }
+    static bool equal_type(const ASN1::AbstractData& type)
+    { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
+    static const InfoType theInfo;
+}; // end class VotoDigitado
+
+//
 // ModuloRegistroDigitalVoto::Voto
 //
 
@@ -123,32 +153,7 @@ public:
     class digitacao
     {
     public:
-        //
-        // ModuloRegistroDigitalVoto::Voto::digitacao::value_type
-        //
-
-        class value_type : public ASN1::NumericString
-        {
-            typedef ASN1::NumericString Inherited;
-        protected:
-            typedef Inherited::InfoType InfoType;
-            value_type(const void* info) : Inherited(info) {}
-        public:
-            value_type() : Inherited(&theInfo) {}
-            value_type(const base_string& str, const void* info = &theInfo) : Inherited(str, info) {}
-            value_type(const char* str, const void* info = &theInfo) : Inherited(str, info) {}
-            value_type(const value_type& that) : Inherited(that) {}
-            value_type& operator=(const ASN1_STD string& that)
-            { Inherited::operator=(that); return *this; }
-            value_type& operator=(const char* that)
-            { Inherited::operator=(that); return *this; }
-            value_type * clone() const
-            { return static_cast<value_type*> (Inherited::clone()); }
-            static bool equal_type(const ASN1::AbstractData& type)
-            { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
-            static const InfoType theInfo;
-        }; // end class value_type
-
+        typedef ModuloRegistroDigitalVoto::VotoDigitado value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;

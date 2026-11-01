@@ -157,6 +157,33 @@
     }
   },
   {
+    "id": "uenux2/5911",
+    "index": 5911,
+    "size": 25,
+    "band": "tiny",
+    "component": "vota",
+    "owner": "-",
+    "features": [
+      "call_indirect"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
+    "name": "comum::CAppStateContext::ProcessInput()",
+    "symbol": "_ZN5comum16CAppStateContext12ProcessInputEv",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/cappstatecontext.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/comum/cappstatecontext.cpp",
+      "line": 23
+    }
+  },
+  {
     "id": "uenux2/5918",
     "index": 5918,
     "size": 11,
@@ -239,33 +266,6 @@
     "reference": null
   },
   {
-    "id": "uenux2/11591",
-    "index": 11591,
-    "size": 10,
-    "band": "tiny",
-    "component": "unknown",
-    "owner": "-",
-    "features": [
-      "leaf"
-    ],
-    "ledger": {
-      "kind": "byte",
-      "score": 0
-    },
-    "origin": "selected",
-    "setup": "uenux2",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing",
-    "name": "comum::asn::CConversorCodigoCargoConsulta::DoDesconverte(ModuloTiposEleitorais::CodigoCargoConsulta const&) const",
-    "symbol": "_ZNK5comum3asn29CConversorCodigoCargoConsulta13DoDesconverteERKN21ModuloTiposEleitorais19CodigoCargoConsultaE",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/app/comum/asn/cconversorcodigocargoconsulta.cpp.o",
-    "reference": {
-      "path": "src/uenux2/src/app/comum/asn/cconversorcodigocargoconsulta.cpp",
-      "line": 17
-    }
-  },
-  {
     "id": "uenux2/11620",
     "index": 11620,
     "size": 4622,
@@ -345,46 +345,18 @@
     "object": "build/out/app/uenux2/src/api/gui/cframedtext.cpp.o",
     "reference": {
       "path": "src/uenux2/src/api/gui/cframedtext.cpp",
-      "line": 80
+      "line": 89
     }
   },
   {
-    "id": "uenux2-tbaa/5514",
-    "index": 5514,
-    "size": 761,
-    "band": "large",
-    "component": "api",
-    "owner": "app",
-    "features": [
-      "loop",
-      "call_indirect",
-      "bulk-memory",
-      "select"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 21
-    },
-    "origin": "selected",
-    "setup": "uenux2-tbaa",
-    "lang": "c++",
-    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
-    "name": "api::IForm<api::IScreenMT>::~IForm()",
-    "symbol": "_ZN3api5IFormINS_9IScreenMTEED0Ev",
-    "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/api/gui/cmtformbuilder.cpp.o",
-    "reference": null
-  },
-  {
-    "id": "uenux2-tbaa/5632",
-    "index": 5632,
-    "size": 61,
+    "id": "uenux2-tbaa/3718",
+    "index": 3718,
+    "size": 44,
     "band": "small",
-    "component": "comum",
-    "owner": "app",
+    "component": "vota",
+    "owner": "libcxx",
     "features": [
-      "leaf",
-      "i64"
+      "leaf"
     ],
     "ledger": {
       "kind": "byte",
@@ -394,13 +366,42 @@
     "setup": "uenux2-tbaa",
     "lang": "c++",
     "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
-    "name": "comum::md::estadoaplicacao::CDadoLocal::CDadoLocal(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, comum::md::estadoaplicacao::CLocalidadeEleitoral const&, comum::ETipoLocalVotacao)",
-    "symbol": "_ZN5comum2md15estadoaplicacao10CDadoLocalC1ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE",
+    "name": "comum::md::CEleitorDadosHabilitacaoBiometrica::CEleitorDadosHabilitacaoBiometrica(comum::md::CDedo::TipoDedo, unsigned short, unsigned char, int)",
+    "symbol": "_ZN5comum2md34CEleitorDadosHabilitacaoBiometricaC1ENS0_5CDedo8TipoDedoEthi",
     "evidence": "symbol",
-    "object": "build/out/app/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadolocal.cpp.o",
+    "object": "build/out/app/uenux2/src/app/comum/dados/md/eleitor/celeitordadoshabilitacaobiometrica.cpp.o",
     "reference": {
-      "path": "src/uenux2/src/app/comum/dados/md/estadoaplicacao/cdadolocal.cpp",
-      "line": 7
+      "path": "src/uenux2/src/app/comum/dados/md/eleitor/celeitordadoshabilitacaobiometrica.cpp",
+      "line": 10
+    }
+  },
+  {
+    "id": "uenux2-tbaa/5638",
+    "index": 5638,
+    "size": 598,
+    "band": "large",
+    "component": "comum",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "loop",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "uenux2-tbaa",
+    "lang": "c++",
+    "flags": "-O3 -fPIC -std=c++23 -DNDEBUG",
+    "name": "comum::md::CVotosEleicoesVota::Compativel(comum::md::CVotosEleicoesVota const&) const",
+    "symbol": "_ZNK5comum2md18CVotosEleicoesVota10CompativelERKS1_",
+    "evidence": "symbol",
+    "object": "build/out/app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o",
+    "reference": {
+      "path": "src/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp",
+      "line": 194
     }
   },
   {
@@ -629,7 +630,7 @@
     "object": "build/out/app/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp.o",
     "reference": {
       "path": "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp",
-      "line": 15
+      "line": 94
     }
   },
   {
@@ -656,7 +657,7 @@
     "object": "build/out/app/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp.o",
     "reference": {
       "path": "src/uenux2/src/app/comum/dados/md/rdv/cvoto.cpp",
-      "line": 10
+      "line": 89
     }
   },
   {
@@ -1958,6 +1959,346 @@
     "reference": {
       "path": "third_party/zlib/contrib/minizip/ioapi.c",
       "line": 126
+    }
+  },
+  {
+    "id": "libqrencode/1147",
+    "index": 1147,
+    "size": 49,
+    "band": "small",
+    "component": "ecourna",
+    "owner": "-",
+    "features": [
+      "select"
+    ],
+    "ledger": {
+      "kind": "fingerprint",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "QRspec_lengthIndicator",
+    "symbol": "QRspec_lengthIndicator",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/qrspec.o",
+    "reference": {
+      "path": "third_party/libqrencode/qrspec.c",
+      "line": 142
+    }
+  },
+  {
+    "id": "libqrencode/1253",
+    "index": 1253,
+    "size": 378,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "rhvoice",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 2
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "MMask_writeFormatInformation",
+    "symbol": "MMask_writeFormatInformation",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/mmask.o",
+    "reference": {
+      "path": "third_party/libqrencode/mmask.c",
+      "line": 34
+    }
+  },
+  {
+    "id": "libqrencode/1899",
+    "index": 1899,
+    "size": 25,
+    "band": "tiny",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "select"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "QRinput_estimateBitsModeAn",
+    "symbol": "QRinput_estimateBitsModeAn",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/qrinput.o",
+    "reference": {
+      "path": "third_party/libqrencode/qrinput.c",
+      "line": 493
+    }
+  },
+  {
+    "id": "libqrencode/2718",
+    "index": 2718,
+    "size": 1524,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "-",
+    "features": [
+      "loop",
+      "switch",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 62
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "QRinput_encodeBitStream",
+    "symbol": "QRinput_encodeBitStream",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/qrinput.o",
+    "reference": {
+      "path": "third_party/libqrencode/qrinput.c",
+      "line": 1013
+    }
+  },
+  {
+    "id": "libqrencode/2719",
+    "index": 2719,
+    "size": 56,
+    "band": "small",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "switch"
+    ],
+    "ledger": {
+      "kind": "byte",
+      "score": 0
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "QRinput_estimateBitsModeNum",
+    "symbol": "QRinput_estimateBitsModeNum",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/qrinput.o",
+    "reference": {
+      "path": "third_party/libqrencode/qrinput.c",
+      "line": 381
+    }
+  },
+  {
+    "id": "libqrencode/3595",
+    "index": 3595,
+    "size": 1112,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf",
+      "loop",
+      "frame",
+      "i64",
+      "bulk-memory",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 30
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "RSECC_encode",
+    "symbol": "RSECC_encode",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/rsecc.o",
+    "reference": {
+      "path": "third_party/libqrencode/rsecc.c",
+      "line": 105
+    }
+  },
+  {
+    "id": "libqrencode/3596",
+    "index": 3596,
+    "size": 304,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "i64",
+      "bulk-memory"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 9
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "QRinput_List_newEntry",
+    "symbol": "QRinput_List_newEntry",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/qrinput.o",
+    "reference": {
+      "path": "third_party/libqrencode/qrinput.c",
+      "line": 48
+    }
+  },
+  {
+    "id": "libqrencode/5346",
+    "index": 5346,
+    "size": 15,
+    "band": "tiny",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "MQRspec_getWidth",
+    "symbol": "MQRspec_getWidth",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/mqrspec.o",
+    "reference": {
+      "path": "third_party/libqrencode/mqrspec.c",
+      "line": 80
+    }
+  },
+  {
+    "id": "libqrencode/5347",
+    "index": 5347,
+    "size": 54,
+    "band": "small",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "MQRspec_getDataLengthBit",
+    "symbol": "MQRspec_getDataLengthBit",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/mqrspec.o",
+    "reference": {
+      "path": "third_party/libqrencode/mqrspec.c",
+      "line": 59
+    }
+  },
+  {
+    "id": "libqrencode/5348",
+    "index": 5348,
+    "size": 415,
+    "band": "medium",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 4
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "Split_eat8",
+    "symbol": "Split_eat8",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/split.o",
+    "reference": {
+      "path": "third_party/libqrencode/split.c",
+      "line": 186
+    }
+  },
+  {
+    "id": "libqrencode/5351",
+    "index": 5351,
+    "size": 1632,
+    "band": "large",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "loop",
+      "switch",
+      "i64",
+      "select"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 26
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "QRinput_getByteStream",
+    "symbol": "QRinput_getByteStream",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/qrinput.o",
+    "reference": {
+      "path": "third_party/libqrencode/qrinput.c",
+      "line": 1326
+    }
+  },
+  {
+    "id": "libqrencode/10241",
+    "index": 10241,
+    "size": 21,
+    "band": "tiny",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "MQRspec_getECCLength",
+    "symbol": "MQRspec_getECCLength",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/mqrspec.o",
+    "reference": {
+      "path": "third_party/libqrencode/mqrspec.c",
+      "line": 75
     }
   },
   {
