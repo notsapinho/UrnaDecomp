@@ -35,7 +35,7 @@
 # already.
 #
 # 9117's names. Its body re-pointed IDENTICAL, kind-unverified, before (`pnpm wasm splat-remap ... --against 9117
-# --no-kinds`), and the scan held it `unresolved self-voted` on the three alternatives' theInfo records, .bss objects
+# --no-kinds`), and the scan held it `unresolved self-voted` on the three alternatives' theInfo objects, .bss objects
 # that only 9117 and the static constructors (14478) read, so no vote but its own named them and no content can. The
 # hand lines in splat/symbol_addrs.txt (`callers+content`) rest on the target's data: the words at 1621696 are 1913336,
 # 1913380 and 1913424, and the next three, at 1621708, point at "numeroInscricao", "numeroCPF" and "identificacaoLivre"
@@ -44,4 +44,5 @@
 # src/asn1/modules/ModuloTiposEleitorais.cxx, 12, 11 and 12. At c1b2630, without the lines, the row was `unresolved
 # self-voted` on the first of them (splat/scan.tsv).
 #
-# Chosen: the root's file name, the stand-in's name, and its argument offsets (any that differ from each other).
+# Chosen: the root's file name, the stand-in's name, its label urna_deconverte_foto, and its argument offsets (any
+# that differ from each other).
