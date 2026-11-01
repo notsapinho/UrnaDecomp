@@ -31,10 +31,10 @@
 #   `f144(f5725(p0))` (fn 144 is free in that link), 4 over 7 rows against fns 5960 and 5963 (pnpm wasm score); declared
 #   and defined `= default` in each .cpp, slot 0 is a body of its own, one call of the base's, and the D0 is `f1720(p0);
 #   drop; f136(p0)`, which reads as that body inlined into the D0's call of it.
-# - Fn 2902: our link merges the two bases' D2s into one body, as the target merges them with two more classes' (fns
-#   1257 and 1688, vota::IEleitorImpedidoVotar's and vota::IConfirmaJustificativa's, not in this link). Its match line
-#   names `byn$mgfn-shared$_ZN4vota17CGeraZeresimaBaseD2Ev`, a name our link derives from its first member
-#   (docs/how-to-decompile.md step 9, "Hand edits").
+# - Fn 2902: our link merges the two bases' D2s into one body with unit 161's vota::IEleitorImpedidoVotar D2 (1257,
+#   which then matches as a thunk), as the target merges them with one more, vota::IConfirmaJustificativa's (1688, not
+#   in this link). Its match line names `byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev`, a name our link derives
+#   from its first member in link order, unit 161's (docs/how-to-decompile.md step 9, "Hand edits").
 # - Fn 6056: vota::CGeraZeresima's and vota::CRegerarZeresima's slot 10 each hold the next class's GetInst inlined
 #   (binaryen: each GetInst has that one caller), and our link merges the two into one body as the target does, whose
 #   match line names `byn$mgfn-shared$_ZN4vota13CGeraZeresima16GetProximoEstadoEv`, the name our link derives. The
@@ -50,10 +50,10 @@
 #   table[i32.load[i32.load[p0]+40]](p0);` in the folded readouts), and both slots are pure in the bases (fn 12143).
 # - The forms: CInformacaoZeresimaTardia's (+40) and CConfirmaImpressaoZeresima's (+12) are
 #   api::CInteractiveForm<api::IScreen, api::IInputKbd>: each class's ProcessInput (fns 11982, 11927) holds that
-#   instance's Read() (record cinteractiveform.h:57) on the member. The type is spelled out in the heads and not as
-#   vota::CFormInterativoTelaVota: app/vota/eleitor/cvotacaostateaudio.h, which declares that name, declares `enum
-#   EInputResult : int;`, and api/gui/iinputfield.h, which cinteractiveform.h includes, defines it without a fixed type,
-#   so no TU can include both (`error: enumeration previously declared with fixed underlying type`).
+#   instance's Read() (record cinteractiveform.h:57) on the member. The type is spelled out in the heads, a choice: it
+#   is the type vota::CFormInterativoTelaVota names (app/vota/eleitor/cvotacaostateaudio.h), and a TU can include that
+#   header and cinteractiveform.h together, since api/gui/iinputfield.h gives EInputResult the fixed type int that
+#   cvotacaostateaudio.h's opaque declaration has.
 # - The log member: fn 5958 calls vota::CLogVota::GetInst (fn 184) at +0x3 and only then opens the stack frame that
 #   builds "Aguardando confirmação para emissão da zerésima" and calls comum::IEventosLog::loga (fn 233): the shape of a
 #   CLogVota member binaryen inlined (reading.md R10), as unit 142's three members are.
@@ -67,24 +67,25 @@
 # the destructor instead of the class; the forms written here are chosen.
 #
 # Chosen, no evidence names them: every data member's name (m_form, m_espera, m_limite, s_mutex, s_inst); the three
-# CTelasVota getters' names, that they are getters, and their place first in the class; the slots' names AposGeracao (9)
-# and GetProximoEstado (10), their protected access and the pointer result of slot 10; the pointee of the bases' forms
-# (the type of vota::CTelasVota's members, which ctelasvota.h chose); LogaAguardandoConfirmacaoZeresima's name, from its
-# message, and its place after LogaPedidoTituloSuspensao; GetInst (the project's singletons' name), the local trava and
-# std::lock_guard; the private constructors of CInformacaoZeresimaTardia and CConfirmaImpressaoZeresima, declared and
-# not defined; the bases' arguments spelled with comum::CAppState's chosen enumerators; the destructor declared first,
-# so that each class's own .cpp emits the vtable; the empty slot 9 of CGeraZeresima and CRegeraResumoZeresima as a body
-# in the class; the lines of cinformacaozeresimatardia.cpp's two functions, above the records' lines, which stay past
-# the file's end. The paths: cinformacaozeresimatardia.cpp is the records' file; the other classes' files are chosen by
-# how-to step 3 (rule 2, then rule 4, the class name in lower case), each header beside its .cpp. Each class's typeinfo
-# follows its own vtable with no other class's between (docs/reference/facts/placing.md P2). The vtables of
-# CGeraZeresimaBase (@1544384), CGeraResumoZeresimaBase, CGeraResumoZeresima, CGeraZeresima, CConfirmaImpressaoZeresima
-# and CQuerImprimirZeresima (@1544840) lie between iniciovotacao/cinformacaozeresimatardia.cpp's and
-# iniciovotacao/cgeradorresumozeresima.cpp's records (@1543708, @1543768) and iniciovotacao/cverificaeleicaopassou.cpp's
-# (@1545012), with only unrecorded vtables and records of headers (cdatasourcesrelatorio.h, cdatamap.h,
-# cpolysingleton.h, cinteractiveform.h) between: both sides name the directory (P5). CRegeraResumoZeresima's and
-# CRegerarZeresima's (@1546428, @1546492) follow iniciovotacao/cquerreimprimirzeresima.cpp's record (@1546384) with one
-# cinteractiveform.h record between; the adjacent recorded side, a choice (P5).
+# CTelasVota getters' names, that they are getters, and their place, after GetTelaReinicioVotacao; the slots' names
+# AposGeracao (9) and GetProximoEstado (10), their protected access and the pointer result of slot 10; the pointee of
+# the bases' forms (the type of vota::CTelasVota's members, which ctelasvota.h chose);
+# LogaAguardandoConfirmacaoZeresima's name, from its message, and its place last, after LogaVotacaoEncerrada; GetInst
+# (the project's singletons' name), the local trava and std::lock_guard; the private constructors of
+# CInformacaoZeresimaTardia and CConfirmaImpressaoZeresima, declared and not defined; the bases' arguments spelled with
+# comum::CAppState's chosen enumerators; the destructor declared first, so that each class's own .cpp emits the vtable;
+# the empty slot 9 of CGeraZeresima and CRegeraResumoZeresima as a body in the class; the lines of
+# cinformacaozeresimatardia.cpp's two functions, above the records' lines, which stay past the file's end. The paths:
+# cinformacaozeresimatardia.cpp is the records' file; the other classes' files are chosen by how-to step 3 (rule 2, then
+# rule 4, the class name in lower case), each header beside its .cpp. Each class's typeinfo follows its own vtable with
+# no other class's between (docs/reference/facts/placing.md P2). The vtables of CGeraZeresimaBase (@1544384),
+# CGeraResumoZeresimaBase, CGeraResumoZeresima, CGeraZeresima, CConfirmaImpressaoZeresima and CQuerImprimirZeresima
+# (@1544840) lie between iniciovotacao/cinformacaozeresimatardia.cpp's and iniciovotacao/cgeradorresumozeresima.cpp's
+# records (@1543708, @1543768) and iniciovotacao/cverificaeleicaopassou.cpp's (@1545012), with only unrecorded vtables
+# and records of headers (cdatasourcesrelatorio.h, cdatamap.h, cpolysingleton.h, cinteractiveform.h) between: both sides
+# name the directory (P5). CRegeraResumoZeresima's and CRegerarZeresima's (@1546428, @1546492) follow
+# iniciovotacao/cquerreimprimirzeresima.cpp's record (@1546384) with one cinteractiveform.h record between; the adjacent
+# recorded side, a choice (P5).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_SRCS := src/app/vota/eleitor/iniciovotacao/cinformacaozeresimatardia.cpp \

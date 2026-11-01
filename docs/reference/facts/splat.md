@@ -545,7 +545,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -676,6 +676,12 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     `CAppInfo` destructor) and unit 136's 6043, 11585, 11621 and 11622 call 857 and drop it, and with no reader of the
     result in the link they differ by that `drop` alone (`pnpm wasm score`: one row deleted, every other row
     operand-only).
+18. **1257, by units 161 and 169 together, and 2902's name.** `vota::IEleitorImpedidoVotar`'s D2 (1257, unit 161) is
+    a thunk in the target, `f2902(p0, <its vptr>)`, into a body binaryen formed from four destructors, 1257's, 1688's,
+    1720's and 1952's. Our link forms 2902 from the two zeresima bases' D2s (1720 and 1952, unit 169), and with unit
+    161 in the link from 1257's too, so 1257 is the same thunk and matches; without unit 169 it is a whole body and
+    `differs`. 2902's match line is `byn$mgfn-shared$<first member>`, today
+    `byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev`, and step 9 renames it when the first member moves (item 13).
 
 ## S11. A match among bodies of the same content can take the other one's name
 

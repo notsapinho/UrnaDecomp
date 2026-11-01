@@ -54,15 +54,17 @@
 #   reads it and increments it, and 10425, which reads it; its generated line is AvancaTentativa's own vote, so without
 #   the hand line 5406 is `unresolved self-voted`.
 #
-# Written, not matching: IEleitorImpedidoVotar's destructor (1257 `differs`): the target's is a thunk into binaryen's fn
-# 2902 with the class's vptr, a body the target forms from four thunks (1257, 1688, 1720 and 1952; the other three are
-# no class's here); ours is a whole body. 1907 and 1689 call it and match through its `vtable` name.
+# IEleitorImpedidoVotar's destructor (1257): the target's is a thunk into binaryen's fn 2902 with the class's vptr, a
+# body the target forms from four thunks (1257, 1688, 1720 and 1952). It matches with unit 169's 1720 and 1952 in the
+# link: binaryen then merges the three into one body, which unit 169 matches as 2902, and ours is the same thunk
+# (`f3388(p0, 1391348)` on that link). Alone, ours was a whole body and `differs`. 1688 is no class's here. 1907 and
+# 1689 call it and match through its `vtable` name.
 #
 # Not reconstructed: every class's GetInst and constructor (each header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
 # waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10667, 10443, 10447,
-# 10680, 10677, 10676, 10625 and 10624 (pending); 1257 (above).
+# 10680, 10677, 10676, 10625 and 10624 (pending).
 #
 # Chosen, no evidence names them: the names of the three helpers, of the statics and of every data member, and their
 # types where only a width shows (int for the 32-bit counters), and uebyte as the spelling of the byte's unsigned 8-bit

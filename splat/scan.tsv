@@ -2765,7 +2765,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 2899	byn$mgfn-shared$_ZN3api9CFormPartD2Ev	5571	symbol	match	-	63	fingerprint	app	1	<binaryen>
 2900	byn$mgfn-shared$_ZN5comum9CLogComum7GetInstEv	5621	symbol	match	-	61	none	app	1	<binaryen>
 2901	-	-	-	no-candidate	no symbol and no ledger pair	81	none	vota	0	-
-2902	byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev	3388	ledger	match	-	63	fingerprint	vota	1	<binaryen>
+2902	byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev	3388	symbol	match	-	63	fingerprint	vota	1	<binaryen>
 2903	-	-	-	no-candidate	no symbol and no ledger pair	32	none	app	0	-
 2904	byn$mgfn-shared$_ZNK3api11CImageField11GetTypeNameEv	2464	symbol	match	-	57	none	unknown	1	<binaryen>
 2905	-	-	-	no-candidate	no symbol and no ledger pair	453	none	unknown	0	-

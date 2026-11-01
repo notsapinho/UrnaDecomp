@@ -1083,7 +1083,8 @@ row is still `no-candidate`: when your class leaves a slot with no body, name it
 scan lists a pending member one of two ways. When binaryen merged its trap with another trap of the same wasm type, the
 slot gets no name and the row stays `no-candidate` (11470 and 11469, unit 66's). When the trap is a function of
 its own, step 8 names the target function after the trap by `vtable` evidence, and the row is `differs` with the
-`-pending.o` as its object (11442, unit 36's). A landing moves these rows ("Pending members" says how).
+`-pending.o` as its object (11442, unit 36's, at 4487d6b; it matches since). A landing moves these rows ("Pending
+members" says how).
 
 ```sh
 awk -F'\t' '$1==11442 || $1==11469 || $1==11470 {print $1, $4, $5, $11}' splat/scan.tsv     # at 4487d6b

@@ -14,21 +14,19 @@ namespace vota {
 // comum::TCargoID, const ETelaVotacao), held by fn 4135, gives the map's types: 4135 walks the map at +0 comparing a
 // one-byte key at node+16 with its first argument, and it holds record 1536624 too, CTelasCargo::GetTela, with its `this`
 // at node+20, so that is the element. The members' names are chosen, and so is the 30 members' type: only their
-// destruction shows, which any std::shared_ptr gives. vota::CReinicioVotacao's constructor (inlined into fn 5938) copies
-// the one at +148: GetTelaReinicioVotacao's name, and that it is a getter, are chosen.
+// destruction shows, which any std::shared_ptr gives. Four constructors copy one member each, through a getter:
+// vota::CReinicioVotacao's (inlined into fn 5938) the one at +148, and the zeresima states' (fns 5965, 11945 and 5957)
+// those at +212, +220 and +228. The getters' names, and that they are getters, are chosen.
 class CTelasVota {
 public:
-    // The zeresima states' constructors copy the members at +212, +220 and +228 (fns 5965, 11945 and 5957): the getters'
-    // names, and that they are getters, are chosen.
-    const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
-    const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
-    const CFormInterativoTelaVota& GetTelaQuerImprimirZeresima() const { return m_tela28; }
-
     ~CTelasVota();
 
     static CTelasVota& GetInst();
 
     const CFormInterativoTelaVota& GetTelaReinicioVotacao() const { return m_tela18; }
+    const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
+    const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
+    const CFormInterativoTelaVota& GetTelaQuerImprimirZeresima() const { return m_tela28; }
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;

@@ -25,7 +25,7 @@
 //   GetEstadoVota are not in this tree.
 // - ProcessInput 11869 (slot 7), 861 B: fns 455, 491, 5586, 5591 and 6595, with no name, and 5880 (IEventosLog's).
 // vota::CReinicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/creiniciovotacao.cpp:
-// - StartState 11835 (slot 2), 712 B: fns 183, 412, 436, 1269, 1391, 5940 and 5957, with no name.
+// - StartState 11835 (slot 2), 712 B: fns 183, 412, 436, 1269, 1391 and 5940, with no name, and unit 169's 5957.
 // - ProcessInput 11834 (slot 7), 448 B: fn 455 and Read() (record cinteractiveform.h:57).
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
