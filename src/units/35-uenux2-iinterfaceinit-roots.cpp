@@ -6,7 +6,7 @@
 // yet (ledger/callgraph.tsv: 2863 from 7160 and 12134, 2862 from 7160 12031 12134, 5897 and 3832 from 7160 and 12134,
 // 729 from 17 functions): two noinline callers with different bodies give each two call sites, so binaryen keeps it out
 // of line. DesabilitarMR has one call site, the one binaryen inlines it into in the target (7160). DesligarUrna (fn
-// 5894) has two callers in the target, 11982 and 12017, not reconstructed: one stand-in calls it twice.
+// 5894) has two callers in the target, 11982, not reconstructed, and 12017 (unit 61): one stand-in calls it twice.
 // Declared through asm labels with the object's signatures (a destructor returns `this`); compiled with APP_CXXFLAGS,
 // like the other stand-ins.
 extern "C" {
@@ -44,7 +44,7 @@ __attribute__((noinline)) int VerificaMR(int init, int vezes)
     return vezes + 1;
 }
 
-// stands for fns 11982 and 12017
+// stands for fn 11982 (12017 is in the link)
 __attribute__((noinline)) int Desliga(int init, int outra)
 {
     w5894_root_0(init);

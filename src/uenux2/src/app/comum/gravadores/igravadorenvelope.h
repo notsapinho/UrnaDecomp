@@ -29,9 +29,10 @@ namespace comum {
 // The path is chosen, beside igravador.h: no record names it. Chosen: +56 as comum::EUrnaTipo (49 is eUrnaVota), +60
 // as a std::optional<md::CTipoApuracaoSA>, +72 as md::CEnvelopeGenerico::Tipo (2 and 4 are its BU impresso and
 // zeresima impressa), and every member name. The constructor has no target index of its own: it is written out of line
-// in igravadorenvelope.cpp, and binaryen inlines it into its one caller, fn 5856 (the form measured; one defined in
-// the class was not tried in the whole link). Its parameters are in the order fn 5856 uses its arguments in; their
-// types beyond IGravador's constructor's are chosen, and so is storing 49 as a constant (a parameter was not tried).
+// in igravadorenvelope.cpp, and binaryen inlines it into its one caller, fn 5856 (in the whole link: 6 over 77 rows,
+// all operand-only; defined in the class, 8 over 77, with other bytes). Its parameters are in the order fn 5856 uses
+// its arguments in; their types beyond IGravador's constructor's are chosen, and so is storing 49 as a constant (a
+// parameter was not tried).
 class IGravadorEnvelope : public IGravador {
 public:
     IGravadorEnvelope(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,

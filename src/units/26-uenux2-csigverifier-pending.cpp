@@ -2,7 +2,7 @@
 // yet. The class's vtable is emitted with Verify, its key function (the destructor is implicit), and needs it defined;
 // its body is NOT the target's, it traps. Target function: Verify 11179 (vtable slot 2), whose record puts the
 // CPolySingleton<IInterfaceSavd>::instance() call on line 32 col 19 of that file; it inlines comum::ValidarUE
-// (iinterfacesavd.cpp:898) and calls 5892, 1822, 178 and 183, none of them named yet.
+// (iinterfacesavd.cpp:898) and calls 5892, 1822, 178 and 183, of which 5892 has no name yet.
 // Move it into csigverifier.cpp when it is reconstructed; delete this file with it.
 #include "app/comum/relatorios/csigverifier.h"
 

@@ -13,9 +13,9 @@
 #   src/app/comum/gravadores/igravadorenvelope.cpp (a chosen path, beside igravadorenvelope.h): binaryen inlines it
 #   into its one caller, as the target's 5856 holds it. Measured in this unit's link before step 8 (pnpm wasm score
 #   against the target): 6 over 77 rows, operand-only, every operand a call's or a data address. IGravadorEnvelope's
-#   constructor in the class was tried alone only (try-tu.sh --single), where binaryen also inlines
-#   CDadoCorrespondencia's copy constructor (fn 1249) and nothing is told; not in the whole link. The headers say
-#   which types are chosen.
+#   constructor defined in the class, in the whole link (one variant object): 8 over 77 rows (same 69, replaced 7, 6 of
+#   them operand-only, deleted 1), other bytes; tried alone (try-tu.sh --single), binaryen also inlines
+#   CDadoCorrespondencia's copy constructor (fn 1249) and nothing is told. The headers say which types are chosen.
 # - comum::md::CVotosVotavel's two constructors (fns 2856, 5863) and the constructor of the identification it holds
 #   (fn 5864, class name chosen: comum::md::CIdentificacaoVotavel), in app/comum/gravadores/md/cvotosvotavel.{h,cpp}.
 # - comum::asn::CConversorCorrespResultado (gravadores/asn/cconversorcorrespresultado.{h,cpp}): DoConverte (fn 10289)

@@ -5,9 +5,9 @@
 //   fns 178 and 183, and passes it to fn 5821 with 0), Slot3 fn 11577 and Slot6 fn 11578 (slots 3 and 6, 9 B each: fn
 //   6041 with 0 and with 1, which does the same with fn 1274's directory for 1, passing its argument on to fn 5821,
 //   when m_gravaMidiaExterna is set). 5821 (8686 B) holds the records of GetCaminhoCorretoInternal and
-//   GetCaminhoCorretoExternal (cgravadorwsq.cpp:175 and :192); 1274 and 6041 are not named. They go in
-//   src/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp when they are reconstructed; with Slot2 the vtable and the
-//   implicit destructors move there too, under the same symbols.
+//   GetCaminhoCorretoExternal (cgravadorwsq.cpp:175 and :192); 6041 is not named, and 1274 is
+//   comum::CPath::GetPathResult (unit 190). They go in src/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp when they
+//   are reconstructed; with Slot2 the vtable and the implicit destructors move there too, under the same symbols.
 // - CGravadorWSQ's typeinfo names IGravador's, which is emitted only with IGravador's key function (its first
 //   out-of-line virtual member): without a definition of it the link stops on an undefined `typeinfo for
 //   comum::IGravador`. IGravador's vtable (@1553648) needs its five members defined: Slot2 fn 11632, Slot3 fn 11630,

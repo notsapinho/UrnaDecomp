@@ -22,7 +22,7 @@
 //   GetEstadoVota are in this tree now, the codes 3481 and 3482 not (fragment 138 says what else it waits for).
 // - ProcessInput 11869 (slot 7), 861 B: fns 455, 491, 5586, 5591 and 6595, with no name, and 5880 (IEventosLog's).
 // vota::CReinicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/creiniciovotacao.cpp:
-// - StartState 11835 (slot 2), 712 B: fns 183, 436, 1269, 1391 and 5940, with no name; 5957 and 412 have names since.
+// - StartState 11835 (slot 2), 712 B: fns 1269, 1391 and 5940, with no name; 5957, 412, 183 and 436 have names since.
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/iniciovotacao/cverificahorariozeresima.h"

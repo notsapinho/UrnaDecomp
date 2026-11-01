@@ -39,13 +39,14 @@
 #   informacao/cinformacaoeleicao.cpp's 2865 and iinterfaceinit.cpp's 2862, and 11648, 11649 (uses 1) between
 #   cinfomtlcd.cpp's 11653 and iinterfaceinit.cpp's 11646: where cpath.cpp's records lie in the data
 #   (docs/reference/facts/placing.md P5), a reading that fits the file.
-# - GetPathLog is inline in cpath.h and the array is declared there with no bound. 5899 loads 1838576 with `i64.load
-#   align=2`, where the static initializer and the code 8302 and 12098 hold behind a second prologue (read as functions
-#   of this file binaryen inlined there) use align=3. Measured on probes at the tree's flags: a TU that declares the
-#   array as path[2] loads it with align=3, one that declares it with no bound with align=2, and every function of the
-#   TU that defines it gets align=3, defined before the definition or after. 5899 lies in band 2 after
-#   cpacotearquivos.cpp's 5900 and 5901 and before iinterfaceinit.cpp's 5897, where a copy deferred to the end of
-#   cpacotearquivos.cpp's object would be: a reading. Our copy comes from the roots object, compiled at UENUX2_CXXFLAGS.
+# - GetPathLog is read as inline in cpath.h, and the array is declared there with no bound. 5899 loads 1838576 with
+#   `i64.load align=2`, where the static initializer, the code 8302 and 12098 hold behind a second prologue and the
+#   code 11620 (comum::CGravadorHashes's slot 7) holds behind a third (each read as functions of this file binaryen
+#   inlined there) use align=3. Measured on probes at the tree's flags: a TU that declares the array as path[2] loads
+#   it with align=3, one that declares it with no bound with align=2, and every function of the TU that defines it
+#   gets align=3, defined before the definition or after. 5899 lies in band 2 after cpacotearquivos.cpp's 5900 and
+#   5901 and before iinterfaceinit.cpp's 5897, where a copy deferred to the end of cpacotearquivos.cpp's object would
+#   be: a reading. Our copy comes from the roots object, compiled at UENUX2_CXXFLAGS.
 # - 436 and 1274 call GetGeral's const overload (457), not the one GetInst()'s reference picks (291): `splat-remap` said
 #   `differs at body byte 9 (target instruction +8 call 457)`; a `const CAppInfo&` local gives 457, as
 #   CEleitorDetalhe::GetImpedimento (3769, matched) spells it.
@@ -65,18 +66,19 @@
 #   1082 3 over 7, 6047 5 over 66, 949 and 1948 3 over 6, 6048 12 over 153, 5899 11 over 61, all operand rows.
 #
 # Chosen, no evidence names them: every member's name but the three records', the statics' names, EFlashOrigem's
-# enumerators, its comum:: scope and its header's path, the EUeComumError enumerators' names, the lines of every member
-# but the three throws, the order of the members, GetPathWsq's class and file (2864 calls 358 and appends "wsq/"; its
-# band fits cpath.cpp, above), and `static_cast<int>` for the origin's format argument.
+# enumerators, its comum:: scope and its header's path, cpath.h's path, the EUeComumError enumerators' names, the lines
+# of every member but the three throws, the order of the members, GetPathWsq's class and file (2864 calls 358 and
+# appends "wsq/"; its band fits cpath.cpp, above), and `static_cast<int>` for the origin's format argument.
 #
 # Not written: 3896, the merge body of CServicoEstadoGeralSA's, Gap's and Vota's GetPathArquivo (11565, 11567, 11568),
 # which are those classes' slots, not CPath's; 6035 and 6036, the merge bodies of 1701, 5762, 1551 and 2826, which build
 # a string from GetPathTrab(EFlashOrigem) and "rdv.dat" or "uenux.db" and call 436: a probe function of cpath.cpp that
 # does the same holds 436 inlined (calls of GetInst, GetGeral and 358), so they are read as another file's; 1487 and
 # 1488, the "dinamico/imprimindo" marker, which call fn 620, not written; 5907, which destroys three members of the
-# object at 1838544 and builds no path. The code 8302 and 12098 hold behind a second prologue and that reads this file's
-# statics (a setter of the root and the two flash paths in 8302; GetPathLog's body with "arquivados/" in 12098) waits
-# for those callers.
+# object at 1838544 and builds no path. The code 8302 and 12098 hold behind a second prologue, and 11620
+# (comum::CGravadorHashes's slot 7) behind a third, that reads this file's statics (a setter of the root and the two
+# flash paths in 8302; GetPathLog's body with "arquivados/" in 12098; s_pathRoot and s_pathFlash[0] in 11620, which
+# appends "dinamico/" inline rather than calling 1082) waits for those callers.
 #
 # Roots (190-uenux2-cpath-roots.cpp): no target caller of the unit is in the link, so it gives the members the call
 # sites its header lists (two each, one for 1399 beside 1274, none for 358), emits GetPathLog's copy and takes

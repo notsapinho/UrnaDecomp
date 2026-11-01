@@ -47,10 +47,10 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 183, 185, 187, 202, 203, 261, 273, 291, 326, 332, 378, 401, 436, 457, 463, 491, 502,
-// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1249, 1269, 1274, 1822,
+// with no name: 185, 187, 202, 203, 261, 273, 291, 326, 332, 378, 401, 457, 463, 491, 502,
+// 509, 555, 600, 602, 620, 624, 631, 640, 675, 676, 886, 1164, 1249, 1269, 1822,
 // 1933, 1935, 1960, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782, 3784, 3788, 3825, 3826, 3829,
-// 3834, 5462, 5480, 5545, 5824, 5856, 5866, 5869, 5870, 5876, 5887, 5888, 5889, 5891, 5899, 5905,
+// 5462, 5480, 5545, 5824, 5866, 5869, 5870, 5876, 5887, 5888, 5889, 5891, 5905,
 // 6174 (and units 155's 1405 and 168's 1485).
 void CGravaResultado::StartState()
 {
@@ -72,7 +72,7 @@ void CEmitirMaisBU::ProcessInput()
 }
 
 // CImprimindoBim::StartState: fn 12071 (1074 B), records cimprimindobim.cpp:50, cimprimindobim.cpp:51,
-// cimprimindobim.cpp:66, callees with no name: 183, 185, 187, 261, 401, 436, 463, 1127, 1487, 1488, 2291.
+// cimprimindobim.cpp:66, callees with no name: 185, 187, 261, 401, 463, 1127, 1487, 1488, 2291.
 void CImprimindoBim::StartState()
 {
     __builtin_trap();
@@ -94,7 +94,7 @@ void CInicioBU::StartState()
 }
 
 // CImprimindoZeresima::StartState: fn 11991 (2577 B), records cimprimindozeresima.cpp:104, cimprimindozeresima.cpp:77,
-// callees with no name: 183, 185, 187, 261, 436, 491, 1127, 1487, 1488, 2882, 6587.
+// callees with no name: 185, 187, 261, 491, 1127, 1487, 1488, 2882, 6587.
 void CImprimindoZeresima::StartState()
 {
     __builtin_trap();
@@ -147,14 +147,14 @@ bool CDefineRotaPosReinicio::NeedChangeState()
 }
 
 // CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
-// no name: 183, 185, 187, 261, 436, 491, 1127, 1487, 1488, 6587.
+// no name: 185, 187, 261, 491, 1127, 1487, 1488, 6587.
 void CReimprimindoResumoZeresima::StartState()
 {
     __builtin_trap();
 }
 
 // CReimprimindoZeresima::StartState: fn 11852 (1153 B), records creimprimindozeresima.cpp:51, callees with no name:
-// 183, 187, 436, 1127, 1487, 1488.
+// 187, 1127, 1487, 1488.
 void CReimprimindoZeresima::StartState()
 {
     __builtin_trap();

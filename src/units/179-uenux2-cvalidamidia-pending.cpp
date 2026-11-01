@@ -14,8 +14,9 @@
 //      "#regex#[ost][0-9]{5}[a-z]{2}[0-9]{13}-...".
 //   7  Slot7    fn 11168 (414 B).
 //   9  Slot9    fn 11166 (138 B), calls fns 949 and 5571.
-// None is read further than that here; fns 949, 2784, 5571 and 5572 have no name (splat/symbol_addrs.txt). Move each
-// into cvalidamidia.cpp when it is reconstructed; delete this file with the last.
+// None is read further than that here; fns 2784, 5571 and 5572 have no name (splat/symbol_addrs.txt), and 949 is
+// comum::CPath::GetPathMR (unit 190). Move each into cvalidamidia.cpp when it is reconstructed; delete this file with
+// the last.
 #include "app/comum/validamidia/cvalidamidia.h"
 
 namespace comum::impl {

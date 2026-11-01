@@ -22,8 +22,8 @@ namespace vota {
 // pointee's type is chosen, the type of vota::CTelasVota's members. The destructor is out of line, in another object
 // than the derived classes': their destructors (fns 5961 and 5960) call fn 1720, which stores this class's vptr and
 // releases +12 (through binaryen's fn 2902). The constructor reads the member through a getter chosen for it
-// (ctelasvota.h). Not recovered: StartState (6878 B; it calls fns 183 and 436 and others that have no name;
-// src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// (ctelasvota.h). Not recovered: StartState (6878 B; it calls fns 183 and 436, which have names, and others that have
+// no name; src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CGeraZeresimaBase : public comum::CAppState {
 public:

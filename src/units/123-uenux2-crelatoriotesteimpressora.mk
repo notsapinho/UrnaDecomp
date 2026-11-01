@@ -81,9 +81,10 @@
 # 208), w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
 # nine throwers not in the link (the roots file lists them; 942 and 2786 are in it) and goes with the last, w123_separador when one of
-# 2785, 11943, 11946, 12105 or 12110 does, and w123_copia when 11395 does, which reads 1249's result as the stand-in
-# does (with 5856 in the link and w123_copia taken out, 11197 and 5856 left `match`: `+0xf target drop | ours +0xf end`
-# in 11197's scan row). The fourth,
+# 2785, 11943, 11946, 12105 or 12110 does, and w123_copia when 5637, 5740, 11395 and 12098 are all in the link, or
+# before that only on a link without it that moves no row: 11395 reads 1249's result as the stand-in does (with 5856 in
+# the link and w123_copia taken out, 11197 and 5856 left `match`: `+0xf target drop | ours +0xf end` in 11197's scan
+# row). The fourth,
 # w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
 # lands.
 #
