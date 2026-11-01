@@ -443,8 +443,9 @@ unit's roots file cannot fix it, since those link after uenux2's: a tree root, `
 of both trees and keeps the right copy, an explicit instantiation whose callees' rows you read afterwards, since it
 brings their copies too (`src/units/README.md` "Companion files" has the tree roots' rules). **Our link can merge what the
 target keeps apart.** 305 and 608 are two functions in the target, kept apart by the table slots of their landing pads,
-and one body in ours, so 3387 reads `target call 608 | ours call 305`. No source form fixes that: a spelling that
-differs on purpose is scaffolding. Leave the row `differs`, with the measurement in the fragment.
+and were one body in ours, so 3387 read `target call 608 | ours call 305` until the executable TU's own copies, with
+those pads, linked first (unit 170). No source form of the caller fixes that: a spelling that differs on purpose is
+scaffolding. Leave the row `differs`, with the measurement in the fragment.
 
 **Code binaryen inlined from another function.** The lift writes inlined code in place, whether clang inlined it (the
 source defined it in the class or in the header) or wasm-opt did (the source defined a separate function, which had one
@@ -1307,10 +1308,11 @@ line a generated one has caught up with (the `awk` there), and a `func:` line fo
 Then weigh the lines you keep again on the file you commit. A merge body's own name,
 `byn$mgfn-shared$<first member>`, is
 one our link derives: it is no evidence of the target, and it moves with link order, so step 9 renames a match line to
-the new one. It earns a hand line only when the removal shows rows that fall without it: 2924's line holds its three
-thunks 1654, 2160 and 2469, and a landing that moves the first member rewrites the line's name from
-`build/out/wasm-map/vota_web/names.tsv` (the row whose object is `<binaryen>`; [facts/splat.md](reference/facts/splat.md)
-§S10 item 2). An internal first member's name carries `@<object>`.
+the new one. It earns a hand line only when the removal shows rows that fall without it: 2924's line held its three
+thunks 1654, 2160 and 2469 while 2924 did not match, and a landing that moved the first member rewrote the line's name
+from `build/out/wasm-map/vota_web/names.tsv` (the row whose object is `<binaryen>`); since 2924 matches (unit 170), its
+match line holds them and the hand line is gone ([facts/splat.md](reference/facts/splat.md) §S10 item 2). An internal
+first member's name carries `@<object>`.
 
 A data name is the same question: a generated `vote:1 by:<index>` line is a name whose only evidence is the one body that
 voted, and the build's check is that body's bytes and the object's (one byte for `api::CSystem::s_dorme`, which 8461

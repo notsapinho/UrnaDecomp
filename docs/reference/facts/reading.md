@@ -1239,7 +1239,8 @@ that does not. So a function with no record shows its linkage here. Probe `guard
       _ZL7Internov:  i32.load8_u 0 0; br_if 0; global.get 0 <env.__memory_base>;
 
 11265 reads its guard as `i32.eqz(i32.load8_u[1832596])`, so `api::polySingletonsInfoPadrao` is a `static` function of a
-`.cpp`, though the pointer to it reads from a header (unit 100, `src/uenux2/src/api/pattern/cpolysingletonlist.cpp`).
+`.cpp`, though the pointer to it reads from a header (unit 170, `src/uenux2/wasm/vota_web/vota_web_wasm.cpp`, whose
+engine pointer, which fn 2094 reads, is the next word, 1832600).
 
 ## R18. One row more than the target at a call is the callee's signature, not the caller
 

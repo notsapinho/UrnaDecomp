@@ -71,8 +71,13 @@ into the C++ objects, not a `--js-library`. Their bodies are extracted verbatim 
 **Packager payload.** `--preload-file <dir>@/` over the unpacked asset tree reproduces `vota_web_wasm.data` byte for byte.
 
 **Export order.** wasm-ld emits exports in object order on the link line. It places the function table right after the
-first object's exports. In the target the table sits between `votaInit` and `votaPressKey`. So the first object on the
-link line defines `votaInit` and no other exported function.
+exports of the first object that imports it ([facts/toolchain.md](facts/toolchain.md) §T5). In the target the table sits
+between `votaInit` and `votaPressKey`. So the first object on the link line defines `votaInit` first among its exports.
+It defines others too: `votaSetAudioEnabled` (`Ib`, fn 10240) holds the record of `(anonymous namespace)::CVotaWebEngine::
+SetAudioEnabled(bool)` at `vota_web_wasm.cpp:592`, a class only that file can hold, and `main`'s
+`std::__function::__func<main::$_0, void ()>` has its typeinfo and vtable in that TU's data. As `Ib` follows `Gb`
+(`votaPressKey`) and `Hb` (`votaTick`), those two are that TU's as well; inside one object the table's export comes where
+the object's own symbol order puts it, which is not measured.
 
 ## 3. Compile flags per component
 
@@ -81,7 +86,7 @@ Each row is measured by reconstructing or building that component and scoring it
 | component | source root embedded in the binary | compile flags |
 | --- | --- | --- |
 | uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` |
-| the executable TU (not reconstructed) | `/home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp` | `-Oz -fexceptions` (facts/levels.md §V1) |
+| the executable TU (unit 170, in part) | `/home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp` | `-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing` (facts/levels.md §V1) |
 | ecourna (conan package `libecea1da310e5107`) | `/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna/...` | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks`; no `-fPIC` |
 | III ASN.1 runtime (TSE fork) | none | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` |
 | SQLite 3.50.4 amalgamation | none | `-O3 -fPIC` + `-DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_UNLOCK_NOTIFY` + `-DHAVE_FDATASYNC -DHAVE_GMTIME_R -DHAVE_LOCALTIME_R -DHAVE_POSIX_FALLOCATE -DHAVE_STRERROR_R -DHAVE_USLEEP` |

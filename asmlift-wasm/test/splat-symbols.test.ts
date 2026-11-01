@@ -563,15 +563,20 @@ describe('settleAnchorVotes', () => {
   });
 });
 
-describe('the hand line of CPolySingletonList::find', () => {
-  const FIND =
+describe('the two CPolySingletonList::find instantiations', () => {
+  const FIND_CONST =
     '_ZN3api18CPolySingletonList4findIKNS_19TPolySingletonsInfoEEEDaRKNSt3__212basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEERT_';
+  const FIND =
+    '_ZN3api18CPolySingletonList4findINS_19TPolySingletonsInfoEEEDaRKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERT_';
 
-  it('names 305 below the marker, and no generated line names it: votes for 305 and 608 disagree', () => {
+  // the executable TU's copies (unit 170) keep 305 and 608 apart in our link, as the target does, so its callers' votes
+  // name each and no hand line does: has<T> calls 608 with a const info, instance<T> calls 305
+  it('names 305 and 608 by their callers, with no hand line', () => {
     const file = parseSymbolFile(readFileSync(SYMBOLS, 'utf8'));
-    expect(file.generated.filter((e) => e.name === FIND)).toEqual([]);
-    expect(file.hand.filter((e) => e.name === FIND)).toMatchObject([
-      { at: { kind: 'func', index: 305 }, evidence: 'callers+content' },
+    expect(file.hand.filter((e) => e.name === FIND || e.name === FIND_CONST)).toEqual([]);
+    expect(file.generated.filter((e) => e.name === FIND)).toMatchObject([{ at: { kind: 'func', index: 305 }, evidence: 'call' }]);
+    expect(file.generated.filter((e) => e.name === FIND_CONST)).toMatchObject([
+      { at: { kind: 'func', index: 608 }, evidence: 'call' },
     ]);
   });
 });
@@ -920,10 +925,16 @@ describe('refuteDataNames', () => {
 
   it.skipIf(!real)('drops a voted name that shares its target address with another object of ours', () => {
     const { ours, ourImage, target } = load();
+    // a word of ours in .bss, its name read from the link: zeros, as the vtable's offset-to-top word at the target's
+    // address is, so its bytes cannot refute the vote and only the place can. stdout served while the __stdout_FILE its
+    // word points at had no place in the target; since the executable TU's object the re-pointed bytes place that
+    // object, and stdout's bytes refute it
+    const word = ours.map.data.find((d) => d.out === '.bss' && d.size === 4 && !d.name.startsWith('.'));
+    expect(word, 'a named 4-byte object of ours in .bss').toBeDefined();
+    expect(target.image.readUInt32LE(AUDIO_COLLECTOR_VTABLE - target.imageBase)).toBe(0);
     const names = new Map([
       ['_ZTVN3api14AudioCollectorE', { addr: AUDIO_COLLECTOR_VTABLE, evidence: 'rtti' }],
-      // stdout's one word points at __stdout_FILE, which has no target name: its bytes cannot refute it
-      ['stdout', { addr: AUDIO_COLLECTOR_VTABLE, evidence: 'vote:1', voters: [394] }],
+      [word!.key, { addr: AUDIO_COLLECTOR_VTABLE, evidence: 'vote:1' }],
     ]);
     const stats = refuteDataNames(ours, ourImage, target, new Map(), names);
     expect([...names.keys()]).toEqual(['_ZTVN3api14AudioCollectorE']);

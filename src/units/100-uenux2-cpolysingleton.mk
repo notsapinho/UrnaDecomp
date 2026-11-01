@@ -20,12 +20,10 @@
 # - 5443 ITimerScheduler (callers 1259 and 5444, unit 101), and 1155 and 3598, which hold instance<T> inlined by binaryen:
 #   ISystemDateTime::GetInst (unit 81) and CThread's constructor (unit 18). They need no stand-in.
 # - has<T> 1654, 2160 and 2469 are 19-B thunks of one merged body in both links (the type names are 23 bytes), so they match
-#   with that body's name, a hand edit. 2924 itself stays `differs`: its find is 608, the merge below. That name is unstable:
-#   byn$mgfn-shared$... carries the first member in link order, and the target has a fourth member, 2450 (has<vota::
-#   IAjusteInicial>). When a landing moves the first member, 1654, 2160 and 2469 go `unresolved` and status.py stops on
-#   `matched.txt only:`. The landing then takes the new name from build/out/wasm-map/vota_web/names.tsv (`awk -F'\t' '$2 ~
-#   /mgfn-shared.*3hasI/ {print $1, $2}'` lists the has<T> bodies, and the one those thunks call is the one), rewrites the
-#   name on the line under the marker, keeps its evidence, and runs step 9 again.
+#   with that body's name. 2924 matches since unit 170, whose copies of the two finds keep 305 and 608 apart (below), and
+#   its match line holds the three; the hand edit that named it while it differed went, its removal moving no row. The
+#   name byn$mgfn-shared$... carries the first member in link order, and the target has a fourth member, 2450 (has<vota::
+#   IAjusteInicial>); step 9 renames the match line when a landing moves the first member.
 # - 631, emplace_back's slow path, and 14476, 321 and 871, which the roots keep (their comments there). 631's second arg is
 #   the typeinfo by reference, so m_tipo is a std::reference_wrapper here, one of the same-bytes forms below.
 # - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7962 7966
@@ -69,21 +67,26 @@
 #   its per-T thunks, and the push bodies 3882, 5384, 7667, 8758, 8834, 8911, 8986, 9039, 9135, 9233, 10090, 1091, 455 with
 #   5395, 5398 and 5407. 1010 with its thunks, 1113, 1119, 2270, 5646, 5650, 1549, 6700, 13540 and 13876 have no landing pad,
 #   but they are its -Oz outlined copies, and uenux2's level inlines them. 388 (~shared_ptr) is too: our copy is `score 6 over
-#   28 rows`, with an early exit where -Oz nests the ifs. Only their names matter to their callers.
+#   28 rows`, with an early exit where -Oz nests the ifs. Only their names matter to their callers. 3095, 1549, 5646 and
+#   13876 match from unit 170's object, the executable TU, which instantiates CPolySingleton<api::ISound>::instance at those
+#   flags; the rest wait for the TU's code that instantiates them (unit 170's fragment).
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
 #   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
 #   unit 121's fragment says why no roots builder stands in for it.
-# - has<T>: written, and `differs` or `unresolved`. The target's 3387 calls 608 and instance's 512 calls 305: the
-#   executable TU's two find instantiations, kept apart by the two table slots their landing pads hold (fn 6161, the merged
-#   body, takes the slot as its last argument). Ours have no landing pads, so the two are byte-identical and binaryen
-#   keeps one, which the calls of the instances name 305: `3387 differs +0xd8 target +0xd7 call 608 | ours +0xd7 call 305`.
-#   They wait for src/uenux2/wasm/vota_web/vota_web_wasm.cpp. So do the instances that hold has<T> inlined and call 608
-#   themselves (11004 and 2279). 1155 and 3876 call has<T> as a callee and hold other code besides; tried, they stay far
+# - has<T>: written. The target's 3387 calls 608 and instance's 512 calls 305: the executable TU's two find
+#   instantiations, kept apart by the two table slots their landing pads hold (fn 6161, the merged body, takes the slot as
+#   its last argument). Our uenux2 copies have no landing pads, so the two were byte-identical, binaryen kept one, and a
+#   hand edit named it 305 (`3387 differs +0xd8 target +0xd7 call 608 | ours +0xd7 call 305`). Unit 170's object, the
+#   executable TU, links first and holds both copies with their pads, so our link keeps them apart and its callers' votes
+#   name each; with the hand edit gone, 3387, 2509, 4867, 4873, 2924, 3928, 6131 and 11004 (an instance that holds
+#   has<T> inlined) match, and 2279 still has no body of ours. 1155 and 3876 call has<T> as a callee and hold other code besides; tried, they stay far
 #   from the target's rows, and they are not read further.
 # - trace 212, find 305 and 608, debug 13156, the error thunks 235 and 331: the executable TU's copies (levels.md §V1),
-#   written and not matching, as 212's and 6161's landing pads show. Only their names are needed.
+#   as 212's and 6161's landing pads show. 235 and 331 match from unit 170's object; 212, 305, 608 and 6161 come from it
+#   too and stay `unresolved` on operands with no target name (debug's table slot, the find_if slot, ranges::find_if's
+#   object), and 13156 has no body of ours. Only their names are needed.
 # - 11265: `unresolved`, self-voted: the two .bss names only its own vote gives. fn 10620 holds the object's address and
-#   not the guard's, and is not reached.
+#   not the guard's, and is not reached. It and api::g_polySingletonsInfo are unit 170's now, in the executable TU.
 #
 # How the names hold. instance<T> pair only by srcloc-anchor: at the census's depth 2 their fingerprints take in 212's and
 # 305's bodies, which differ. An anchor votes for .bss data alone, and its call vote for has<T> has that one voter, which the
@@ -116,8 +119,7 @@
 # guard, so the target's unlock_shared_and_lock takes the guard itself, a shape that gates no match while 640 is pending; that
 # set is a member of CPolySingleton and remove<T> a template over the name's remove: the frame says only that a helper
 # clang inlined holds the temporary name, since a form written in set puts it above the unique_ptr; the
-# paths of cmutexcompartilhado.h, iajustedatahora.h, icontroladorregistramesarios.h and cpolysingletonlist.cpp (its header
-# says why); TPolySingletonsInfo as a struct and not a typedef; a template on the info's constness for the two finds,
+# paths of cmutexcompartilhado.h, iajustedatahora.h and icontroladorregistramesarios.h; TPolySingletonsInfo as a struct and not a typedef; a template on the info's constness for the two finds,
 # where the target shows two instantiations and not what tells them; has<T>'s const; std::ranges::find_if, which
 # fn 6161's first argument (a pointer to an empty object) reads as, and which gives the same object as std::find_if here;
 # every line but the three with a record. trace's, demangle's and debug's bodies are the target's 212 and 13156 read,
@@ -156,10 +158,11 @@
 #
 # fn 252, operator+(string&&, string&&). The target's copy is the executable TU's, at -Oz. Every TU that instantiates
 # instance<T> emits a copy at its tree's level, its object links before libc++.a, and with nothing else 252 read
-# `differs +0x0 ... the locals` at -O2, with api/util/itimerscheduler.cpp.o as its object (measured). So src/app/roots_uenux2.cpp, ahead of both trees,
-# holds the instance at the level of the target's rows, and its comment says how; no file of this unit declares anything
-# for it. After a merge read `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv`, which prints `252 match
-# app/roots_uenux2.o` and `3717 match sysroot:libc++.a(directory_entry.o)`.
+# `differs +0x0 ... the locals` at -O2, with api/util/itimerscheduler.cpp.o as its object (measured). The executable TU's
+# object (unit 170), first on the link line at -Oz, holds it now, and 3717 (std::string::append) with it, where
+# src/app/roots_uenux2.cpp held an instance with minsize before; no file of this unit declares anything for it. After a
+# merge read `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv`, which prints `252 match
+# app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o` and `3717 match app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o`.
 #
 # The roots object compiles with APP_CXXFLAGS, at -O2. Measured when the tree built at -O2 too: with uenux2's
 # -fno-strict-aliasing 9 of its 165 functions differ, all libc++ format internals, and the link takes none of the nine
@@ -167,9 +170,6 @@
 #
 # EPE_INSTANCIA_NAO_CRIADA extends the landed ecourna::api::pattern::EPatternError. The rename of match 150 from
 # std::mutex::unlock to std::condition_variable::notify_one comes from this unit: mutex::unlock left the link for its twin.
-CPOLYSINGLETON_SRCS := src/api/pattern/cpolysingletonlist.cpp
-UENUX2_SRCS += $(CPOLYSINGLETON_SRCS)
-
 # compiled from its /work path with -iquote /work/src/uenux2/src, so the quoted includes resolve to the absolute paths that
 # -ffile-prefix-map rewrites to the target's file names (unit 19 has the same rule). The header set is computed here,
 # as a fragment must: $(UENUX2_HDRS) is empty when the fragments are read.

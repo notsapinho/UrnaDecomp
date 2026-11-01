@@ -22,6 +22,22 @@
     "note": "No -fexceptions: throw sites call __cxa_throw directly. Few uenux2 units are reconstructed, so most rows come from the ledger's attribution."
   },
   {
+    "key": "vota-web",
+    "title": "the executable TU, wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the link line",
+    "flags": {
+      "c++": "-Oz -fexceptions -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing"
+    },
+    "image": "urna-emsdk:6.0.0",
+    "source": "src/Makefile VOTA_WEB_CXXFLAGS; docs/reference/facts/levels.md §V1",
+    "truth": {
+      "kind": "make",
+      "vars": [
+        "VOTA_WEB_OBJS"
+      ]
+    },
+    "note": "One object, first on the link line: wasm-ld keeps its copy of every linkonce function it emits. -Oz -fexceptions is the TU's level and its landing pads; -fPIC its records' place in .data; -std=c++20 is the uenux2 tree's, not measured on this TU."
+  },
+  {
     "key": "ecourna",
     "title": "ecourna (conan libecea1da310e5107)",
     "flags": {

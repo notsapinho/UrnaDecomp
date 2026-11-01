@@ -639,11 +639,11 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    verifying, or the merged body takes another member's name and step 9 renames its line (how-to step 10, "A twin whose
    name moved").
 
-   **1654, 2160 and 2469** are thunks of a fourth such body, 2924, which does not match: their matches rest on a hand edit
-   that names our merged body `byn$mgfn-shared$<first member>` (`src/units/100-uenux2-cpolysingleton.mk`). That name follows
-   the first member in link order, and no step renames a hand line. When the three go `unresolved` and `status.py` stops on
-   `matched.txt only:`, take the new name from `build/out/wasm-map/vota_web/names.tsv`, rewrite the name on the line and keep
-   its evidence, and run step 9 again.
+   **1654, 2160 and 2469** are thunks of a fourth such body, 2924. Until unit 170 their matches rested on a hand edit
+   that named our merged body `byn$mgfn-shared$<first member>`, since 2924 did not match. The executable TU's copies of
+   `CPolySingletonList::find` keep 305 and 608 apart in our link too, 2924 matches, and its match line, which step 9
+   renames when the first member moves, holds the three; the hand edit went when its removal moved no row (scan and
+   `splat` build, the target's sha256).
 3. **10881, by the order of two objects of unit 80.** `api::IImpressoraRelatorios::SetStyle` matches with
    `iimpressorarelatorios.cpp` before `eueprintererror.cpp` in the fragment's list and differs in its locals the other
    way (`src/units/README.md` "Names").
@@ -666,12 +666,14 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    which calls 543 too, is item 19.
 9. **11388, by the row it calls.** It waits for 553 under `ASN1::INTEGER`'s constructor, and for `DadoSecao`'s
    `set_municipio` and `set_zona` on `const_reference` ([asn1.md](asn1.md) §A3). Its name is its vtable slot.
-10. **252 and 3717, by `src/app/roots_uenux2.cpp`.** The target's 252, `std::operator+(string&&, string&&)`, is the
-    executable TU's `-Oz` copy, and every real TU that instantiates `CPolySingleton<T>::instance` emits one at uenux2's level. That
-    tree root, first on the link line, holds an explicit instantiation with `minsize`, and an `extern template` of
-    `std::string::append` that leaves 3717 to `libc++.a` (`src/units/README.md` "Companion files"). So
-    `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match app/roots_uenux2.o` and
-    `3717 match sysroot:libc++.a(directory_entry.o)`.
+10. **252 and 3717, by the executable TU's object.** The target's 252, `std::operator+(string&&, string&&)`, is the
+    executable TU's `-Oz` copy, and every real TU that instantiates `CPolySingleton<T>::instance` emits one at uenux2's
+    level. Unit 170's `src/uenux2/wasm/vota_web/vota_web_wasm.cpp`, first on the link line at `-Oz`, instantiates
+    `CPolySingleton<api::ISound>::instance`, and its copies of 252 and of `std::string::append` (3717) are the link's, so
+    `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match
+    app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o` and `3717 match app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o`.
+    Until that unit, `src/app/roots_uenux2.cpp` held 252 as an explicit instantiation with `minsize` and left 3717 to
+    `libc++.a`.
 11. **14072, 14073, 14241, 14242, 12991 and 13334, the nine KDF getters 13522 to 13577, and 13242, 13256, 13945 and
     13963, by their corrected names (§S11).** Step 9 can swap the two pairs, or give 12991, 13334 or a KDF getter
     another table's name, since no name of the symbol file disagrees, and the check above cannot see a swap: each name's
