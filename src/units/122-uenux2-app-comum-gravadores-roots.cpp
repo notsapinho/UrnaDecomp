@@ -7,9 +7,10 @@
 //   SAVD file 48, 49 and 50 and the type of biometrics 0, 1 and 2;
 // - comum::IGravador's constructor (fn 1396): fns 3796, 5856 and 12098; 3796 is written, the stand-in is for the others;
 // - comum::CGravadorUtil::ConverteFase (fn 2274): fns 3796, 5856 and 12098, the same way;
-// - comum::CGravadorUtil::DeterminaNomeArquivo (fn 3798): fns 1276, 1396 and 12134; 1396 is written;
+// - comum::CGravadorUtil::DeterminaNomeArquivo (fn 3798): fns 1276, 1396 and 12134; 1396 and 1276 (unit 160) are
+//   written;
 // - comum::asn::ConverteSerialFlash and DesconverteSerialFlash (fns 3605, 3604): fns 10287, 10291 and 11399, and 10284,
-//   10290 and 11400;
+//   10290 and 11400; 10287 and 10284 are written (unit 160), the stand-in is for the others;
 // - comum::md::CVersoesArquivos's constructor (fn 5867): fn 12098 (10263 is in the link); and libc++'s hinted emplace
 //   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 3689, 4625,
 //   5867 and 12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns
@@ -59,14 +60,14 @@ __attribute__((noinline)) int w122_gravador(void* objeto, unsigned int municipio
     return w122_igravador(objeto, municipio, zona, local, secao, fase, comum::EXTENSAO_BU_DAT, 35) + faseUrna;
 }
 
-// stands for fns 1276 and 12134
+// stands for fn 12134
 __attribute__((noinline)) int w122_nome(comum::TMunicipioID municipio, comum::TZonaID zona, comum::TSecaoID secao, char fase,
     comum::EExtensaoArquivoResultado extensao)
 {
     return static_cast<int>(comum::CGravadorUtil::DeterminaNomeArquivo(municipio, zona, secao, fase, extensao).size()) + 7;
 }
 
-// stands for fns 10287, 10291 and 11399, and 10284, 10290 and 11400
+// stands for fns 10291 and 11399, and 10290 and 11400
 __attribute__((noinline)) int w122_serial(const std::string& serial, const std::string& outro, const std::vector<char>& flash,
     const std::vector<char>& outra)
 {

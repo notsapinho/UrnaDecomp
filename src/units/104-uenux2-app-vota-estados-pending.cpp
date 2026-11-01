@@ -125,7 +125,7 @@ void CMaisInformacoes::ProcessInput()
 }
 
 // CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 187, 202, 203, 242, 267, 365,
-// 374, 502, 576, 653, 861, 2383, 5951 (and unit 150's 1279).
+// 374, 502, 653, 861, 2383, 5951 (and unit 150's 1279; 576 has one since unit 165).
 void CMenuFiltrarCandidatosPorNumero::StartState()
 {
     __builtin_trap();

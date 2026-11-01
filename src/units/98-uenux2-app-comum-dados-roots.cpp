@@ -17,6 +17,7 @@ int w5658_root(int) __asm__("_ZN5comum2md14CTradutorFrase13RecuperaLabelERKNSt3_
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 void w3770_root(int, int) __asm__("_ZNK5comum15CEleitorDetalhe21ConfereDadosDinamicosERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 int w5699_root(int, int) __asm__("_ZNK5comum3asn18CConversorImpedido26DesconverteTipoImpedimentoEN15ModuloImpedidos15TipoImpedimentoE");
+int w3769_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14GetImpedimentoEv");
 }
 
 namespace {
@@ -43,6 +44,12 @@ __attribute__((noinline)) int SomaImpedimentos(int conversor, int p1, int p2)
     return w5699_root(conversor, p1) * 16 + w5699_root(conversor, p2);
 }
 
+// Stands for fn 3769's one caller, 10635 (vota::CEleitorEncontrado's slot 2), which calls it three times.
+__attribute__((noinline)) int ImpedimentosDoTurno(int a, int b)
+{
+    return w3769_root(a) - 3 * w3769_root(b);
+}
+
 const void* volatile comum_dados_sink;
 
 struct SComumDadosRoots {
@@ -54,6 +61,7 @@ struct SComumDadosRoots {
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&ConfereEleitor);
         comum_dados_sink = reinterpret_cast<const void*>(&SomaImpedimentos);
+        comum_dados_sink = reinterpret_cast<const void*>(&ImpedimentosDoTurno);
     }
 } comum_dados_roots;
 

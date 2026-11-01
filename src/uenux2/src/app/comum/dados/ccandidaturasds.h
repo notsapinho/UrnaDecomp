@@ -16,9 +16,19 @@ public:
     std::string operator()() const;
 };
 
+// The name on the ballot of the current candidacy's holder or of one of its substitutes. fn 5807, the call operator,
+// builds the literal "CCandidaturasDSNome" for GetCandidaturaAtual, reads a byte of its object as the substitute's order
+// (0, the holder) and copies the string at +12 of that candidate (md::CDadosCandidato::GetNomeUrna), as
+// CCandidaturasDSSexo's does for its sex (fn 5806): the member is that byte. The member's name and type, the constructor
+// and its being explicit are chosen, as CCandidaturasDSSexo's are.
 class CCandidaturasDSNome {
 public:
+    explicit CCandidaturasDSNome(uebyte suplente) : m_suplente(suplente) {}
+
     std::string operator()() const;
+
+private:
+    uebyte m_suplente;
 };
 
 class CCandidaturasDSFoto {

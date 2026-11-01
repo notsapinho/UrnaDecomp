@@ -185,14 +185,6 @@
 // f5766 · 5577 B · unmatched · placement: link order · name unknown
 // void f5766(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 839 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/curna.cpp
-
-// f5864 · 18 B · unmatched · placement: link order · name unknown
-// ? f5864(i32, i32, i32) { ... }
-
-// f5863 · 48 B · unmatched · placement: link order · name unknown
-// ? f5863(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 861 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cretomada.cpp
 
 // f5950 · 399 B · unmatched · placement: link order · name unknown
@@ -210,12 +202,6 @@
 
 // f6044 · 571 B · unmatched · placement: link order · name unknown
 // void f6044(i32, i32, i32, i32, i32) { ... }
-
-// f6032 · 151 B · unmatched · placement: link order · name unknown
-// void f6032(i32, i32, i32, i32, i32) { ... }
-
-// f6031 · 151 B · unmatched · placement: link order · name unknown
-// void f6031(i32, i32, i32, i32, i32) { ... }
 
 // f6029 · 68 B · unmatched · placement: link order · name unknown
 // ? f6029(i32, i32, i32, i32, i32) { ... }
@@ -287,11 +273,6 @@
 
 // f3596 · 304 B · unmatched · placement: link order · name unknown
 // ? f3596(i32, i32, i32) { ... }
-
-// link-order cluster 970 · uses=3 · neighbours' file uenux2/src/app/comum/comparecimentomesario/estados/cpedetitulomesariovotacao.cpp
-
-// f3611 · 18 B · unmatched · placement: link order · name unknown
-// ? f3611(i32, i32, i32, i32) { ... }
 
 // link-order cluster 978 · uses=3 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
 
@@ -405,11 +386,6 @@
 
 // f2820 · 189 B · unmatched · placement: link order · name unknown
 // void f2820(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1112 · uses=4 · neighbours' file uenux2/src/app/comum/iinterfaceinit.cpp
-
-// f2856 · 39 B · unmatched · placement: link order · name unknown
-// ? f2856(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
 

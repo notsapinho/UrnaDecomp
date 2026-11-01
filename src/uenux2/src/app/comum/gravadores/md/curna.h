@@ -41,8 +41,14 @@ public:
     CUrna(EUrnaTipo tipoUrna, const std::string& versaoVotacao, const CCorrespondenciaResultado& correspondencia,
         ETipoArquivo tipoArquivo, const std::string& numeroSerieFV, const CTipoApuracaoSA& tipoApuracao);
 
-    // CEnvelopeGenerico's constructor (fn 5860) reads the type through it; the name is chosen.
+    // CEnvelopeGenerico's constructor (fn 5860) reads the type through it, and comum::asn::CConversorUrna::DoConverte
+    // (fn 10287) the others; the names are chosen.
     EUrnaTipo GetTipoUrna() const { return m_tipoUrna; }
+    const std::string& GetVersaoVotacao() const { return m_versaoVotacao; }
+    const CCorrespondenciaResultado& GetCorrespondencia() const { return m_correspondencia; }
+    ETipoArquivo GetTipoArquivo() const { return m_tipoArquivo; }
+    const std::string& GetNumeroSerieFV() const { return m_numeroSerieFV; }
+    const std::optional<CTipoApuracaoSA>& GetTipoApuracao() const { return m_tipoApuracao; }
 
 private:
     void ValidaCriacao() const;

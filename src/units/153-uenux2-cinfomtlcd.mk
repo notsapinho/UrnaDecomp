@@ -2,11 +2,11 @@
 # MostrarImagemNoLCD, line 84): the destructor (target fn 5902, slot 0), the deleting destructor (11654, slot 1),
 # Update (11653, slot 2) and MostraImagem (3836, a chosen name). The header, cinfomtlcd.h (a chosen path, beside the
 # .cpp), says what each comes from.
-# Written, not matching: the destructor (5902). The target's 5902 calls the member's destructor out of line, fn 3837, a
+# The destructor (5902) matches since unit 164. The target's 5902 calls the member's destructor out of line, fn 3837, a
 # thunk of binaryen's 6049 (`f6049(p0, 1551916)`, the BatteryIconDataSource<Vertical> vptr), a merge with the other
-# orientation's destructor in api/gui/cpowerinformation.{h,cpp}; api::BatteryIconDataSource's head there declares no
-# destructor, so clang inlines the implicit one into ours (the object defines no BatteryIconDataSource destructor:
-# wasm-objdump -x -j linking). It waits for that header's destructor and 6049's set. The deleting destructor (11654)
+# orientation's destructor in api/gui/cpowerinformation.{h,cpp}. That header declares the destructor in the class since
+# unit 164 (with the implicit one clang inlined it into ours), so ours calls 3837 too, and this object gives
+# <Vertical>'s D2, D0 and vtable, ahead of unit 164's roots on the link line. The deleting destructor (11654)
 # calls fn 5902 and frees `this`, which a destructor out of line gives whatever 5902's body is.
 # What the bytes decide in Update (11653): both coordinates are computed before either is stored (the target reads
 # GetWidth, the image size's x, GetHeight and the image's pointer, then stores +4 and +6), which locals x and y give; the

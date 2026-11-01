@@ -963,14 +963,23 @@ describe('the perturbation cases', { timeout: 300_000 }, () => {
   });
 
   it.skipIf(!real)('an integer in the target table past ours is a review warning', () => {
-    // midway between the end of our table and the end of the target's
+    // midway between the end of our table and the end of the target's. Our table grows with every landing that takes
+    // an address and can pass the target's, which leaves no such integer: the target's table then ends two slots past
+    // ours here, so the case reads the rule, not the link's two sizes
     const { ours, target } = load().maps;
-    const past = Math.floor((ours.tableSize + target.module.tables[0].min) / 2);
+    const end = Math.max(target.module.tables[0].min, ours.tableSize + 2);
+    const past = Math.floor((ours.tableSize + end) / 2);
     expect(past).toBeGreaterThan(ours.tableSize);
     const c = { ...byName('c1'), plain: past, shifted: past };
     const { maps } = caseMaps(c);
+    const tables = [{ ...target.module.tables[0], min: end }];
+    const ended = { ...maps, target: { ...target, module: { ...target.module, tables } } };
     const matched = new Map([[1260, { match: parseMatchList(`1260 ${NEXT_ENTRY}\n`).matches[0], ours: indexOf(load().plain, NEXT_ENTRY) }]]);
-    expect(reviewWarnings(maps, matched).map((w) => [w.at, w.why, w.value])).toEqual([[0x1b, 'past-table', past]]);
+    expect(reviewWarnings(ended, matched).map((w) => [w.at, w.why, w.value])).toEqual([[0x1b, 'past-table', past]]);
+    if (target.module.tables[0].min <= past) {
+      // past the target's own table as well: no warning
+      expect(reviewWarnings(maps, matched)).toEqual([]);
+    }
   });
 
   it.skipIf(!real)('c8L, c2S: the limits of the check build the target, with no review warning', () => {

@@ -16,7 +16,7 @@ namespace comum {
 
 // IGestorDadoMesario::StartState: fn 10337 (1733 B), slot 2 of CGestorDadoMesarioInicial, Votacao and Final, records
 // igestordadomesario.cpp:65 (GetControlador, inlined) and cregistradormesario.cpp:85, callees with no name: 1149, 1255,
-// 2730, 2731, 3611, 395, 448, 566, 815.
+// 2730, 2731, 395, 448, 566, 815 (3611 has one since unit 91).
 void IGestorDadoMesario::StartState()
 {
     __builtin_trap();

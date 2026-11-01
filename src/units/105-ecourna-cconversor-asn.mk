@@ -69,22 +69,18 @@
 # 9200 was `unresolved` on the table slot of CAutenticacao(unsigned, unsigned, const vector&) (9037); it matches since
 # the content pass names 9037, which it does once 306 is the target's.
 #
+# 9056 got past that call and was `unresolved` at ours +0x2ed, on the table slot of 5365,
+# IConversorASN<DadosComparecimento, CDadosComparecimento>::Converte, whose name only 9056's own operand voted for
+# (`self-voted`). It matches since unit 166's tree root holds uenux2's copy of 5365, and with it 9202 (unit 08's), which
+# waited on the table slot of 3733, that root's IConversorASN<IdentificadorGeradorMidia, ...>::Deconverte.
+#
 # Written, and not a match yet:
-# - 9056 gets past that call and is `unresolved` at ours +0x2ed, on the table slot of 5365,
-#   IConversorASN<DadosComparecimento, CDadosComparecimento>::Converte, whose name only 9056's own operand votes for
-#   (`self-voted`). 5365 is one of uenux2's copies below: 9056 waits for a match that names it.
-# - 9202: operand-only (29 over 274), on IConversorASN<IdentificadorGeradorMidia, ...>::Deconverte's table slot, which has
-#   no target function; it calls 2240 too, `differs`.
 # - 9216: 146 over 705 rows, one more `block` at +0x3dd: the element goes through a temporary (a loop gives neither that
 #   nor 9214 out of line).
-# - 9117: numeroInscricao's theInfo (.bss), self-voted.
 # - 9106 and 9081: one extra branch island or landing pad around a call of an ASN.1 copy (47 over 225, 121 over 813; an
 #   if for the ternary gives 48 over 226, and const auto& on the registro local changes neither).
 # - 9137: 118 over 399 as written, a temporary, with 22 rows inserted and 21 deleted. const auto& on the vector gives 65
 #   over 390, 13 and 13, and stops on `target br 2 | ours local.get 2` at +0x279, the placement of the map's cleanup.
-# - 3733, 3734, 5365, 5708 and their merges 6031, 6032: uenux2's copies of Converte and Deconverte (records under
-#   p/include/, no landing pads). They come first in the link once a uenux2 TU instantiates them: their callers
-#   10290, 10291, 11399, 11400, 11422, 11440 and 11616 are not written.
 # - 1006, 3813, 5842, 5846: copies that 11616, a uenux2 function not written, brings first in the link. 1006 is one test
 #   off (2 over 121, `i32.and | i32.ne` at +0x20): a probe of the destructor at uenux2's flags gives the target's
 #   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813, 5842 and 5846 have no landing pads in the target, and ours do

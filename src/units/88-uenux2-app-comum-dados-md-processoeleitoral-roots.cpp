@@ -18,6 +18,8 @@
 //   5657  CCargo::Valida              11373, two call sites
 //   5651  CPleito::GetEleicao         3744 3775
 //   5648  CPleito::GetSituacoesEleicoes  271 3713
+// comum::NomeEleicaoCorrente (11556) has no direct caller: the target reaches it only through table slot 3049, which fn
+// 5580 passes, so its address is taken.
 // GetNomeMasculino (3716) keeps its two written callers, 2796 and 2258. GetNomeFeminino has one call in the target and
 // here, 2796's, so binaryen inlines it there, as the second stack prologue in 2796 shows it did. CNomesCargo's
 // constructor has one, 11369's, and goes the same way. comum::asn::CConversorNomesCargo's vtable keeps slots 2 and 3, as
@@ -44,6 +46,7 @@ void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
 void w5657(int) __asm__("_ZNK5comum2md6CCargo6ValidaEv");
 int w5651(int, int) __asm__("_ZNK5comum2md7CPleito10GetEleicaoEj");
 int w5648(int, int) __asm__("_ZNK5comum2md7CPleito20GetSituacoesEleicoesEj");
+void s11556(int) __asm__("_ZN5comum19NomeEleicaoCorrenteEv");
 }
 
 namespace {
@@ -158,6 +161,7 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&ValidaDois);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaSituacoes);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&s11556);
     }
 } processoeleitoral_roots;
 

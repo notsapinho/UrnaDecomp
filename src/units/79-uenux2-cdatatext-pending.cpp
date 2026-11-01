@@ -6,7 +6,8 @@
 //   GetData, fn 10967, 1751 B: reads the +4 value, calls the std::function at +8 and holds
 //     `static std::vector<uebyte> api::CQRCodeImage::MontaImagem(const TPosition, const std::string &)` inlined, whose throw
 //     is the record at cqrcodeimage.cpp line 36, column 15. It waits for api::CQRCodeGuard (fn 5502, 13815 B,
-//     cqrcodeguard.cpp), and for fn 3661, 423 B, which it calls three times and no evidence names.
+//     cqrcodeguard.cpp). Fn 3661, which it calls three times, matches from the roots object as std::vector<unsigned
+//     char>'s fill insert (the fragment says what gives that name).
 #include "api/gui/cqrcodeimage.h"
 
 namespace api {

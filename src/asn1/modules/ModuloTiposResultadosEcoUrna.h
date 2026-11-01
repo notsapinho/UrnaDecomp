@@ -1048,7 +1048,7 @@ public:
     numeroSerieFV::const_reference get_numeroSerieFV () const { return *static_cast<numeroSerieFV::const_pointer>(fields[4]); }
     numeroSerieFV::reference ref_numeroSerieFV () { return *static_cast<numeroSerieFV::pointer>(fields[4]); }
     numeroSerieFV::reference set_numeroSerieFV () { return *static_cast<numeroSerieFV::pointer>(fields[4]); }
-    numeroSerieFV::reference set_numeroSerieFV (const ASN1::OCTET_STRING& v)
+    numeroSerieFV::reference set_numeroSerieFV (numeroSerieFV::const_reference v)
     { return *static_cast<numeroSerieFV::pointer>(fields[4]) = v; }
 
     class motivoUtilizacaoSA

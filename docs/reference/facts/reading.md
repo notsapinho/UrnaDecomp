@@ -4,17 +4,18 @@ What a target body says about the C++ that compiled to it, beyond the name its `
 the parameters a wasm type hides, how a class returns or takes a class by value, how a destructor is declared and
 whether its class is `final`, whether a class is abstract or has a key function, a free function's linkage, code
 binaryen inlined from another function, the format string, argument types and shape of a `std::format` throw, a
-`bool`'s reads, an `invoke` around a callee that cannot throw, several table slots of one function, a local static's
-guard, one row more than the target at a call, and where a record's line and column fall when no `throw` makes it.
-`docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
+`bool`'s reads and a byte's sign, an `invoke` around a callee that cannot throw, several table slots of one function, a
+local static's guard, one row more than the target at a call, where a record's line and column fall when no `throw`
+makes it, and a slot's vtable read from the data. `docs/how-to-decompile.md` steps 2, 3 and 5 rely on these. What a
 source form compiles to (the order of a body's stores, a switch over virtual slots, an in-class member against an
 `inline` one) is in [codegen.md](codegen.md).
 
 The probes are short TUs compiled by the pinned em++ with uenux2's flags of the time, `-O2 -fPIC -std=c++20 -DNDEBUG
--fno-strict-aliasing` (the tree builds at `-O3` since: `docs/reference/facts/app-flags.md` §F6); their sources are given in full, and each runs under
-`build/out/reading-probe/`. R1–R3 and R7–R11 were measured at 7bf701e, R4–R6, R12 and R13 at ee595de, and the parts
-marked bb6f018 (R14 and R15 among them) at bb6f018; every probe prints the same at 0b5f410, where R13's shapes and
-R16–R18 were measured, and the parts marked 4487d6b and R19 at 4487d6b. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
+-fno-strict-aliasing`, or `-O3` where they say so (the tree's level since: [app-flags.md](app-flags.md) §F6); their
+sources are given in full, and each runs under `build/out/reading-probe/`. R1–R3 and R7–R11 were measured at 7bf701e,
+R4–R6, R12 and R13 at ee595de, and the parts marked bb6f018 (R14 and R15 among them) at bb6f018; every probe prints the
+same at 0b5f410, where R13's shapes and R16–R18 were measured, and the parts marked 4487d6b and R19 at 4487d6b; the
+`-O3` probes and R20 at c1b2630. Readouts are `pnpm --silent wasm fn ../target/vota_web_wasm.wasm <index>`, run from
 `asmlift-wasm/` with Node 24 first on PATH ([workflow.md](workflow.md) §W1).
 
 ## R1. A parameter every caller passes as the same constant is gone from the wasm type
@@ -30,6 +31,22 @@ stores can be an argument of the source (R18 is the same pass seen from the call
 
 Unit 26 writes `comum::CSigVerifier`'s constructor (1540) with the `ESavdAplic` parameter the target folded, and
 its roots callers pass the constant, so the source invents no enumerator for it (`src/units/26-uenux2-csigverifier-roots.cpp`).
+
+A test of the folded argument goes with it, and its throw's record stays in the data with no function loading it
+(column 6 empty in `ledger/source-locations.tsv`). `cidentificacaosecao.cpp:33:19` and
+`cidentificacaournacontingencia.cpp:32:19` belong to the constructors of 5887 and 5888, which call `f5886(p0, 49, p1,
+p2)` and `f5886(p0, 50, p1, p2)`: each tested the urn type its callers all pass. Write the test at the record's line,
+with every caller and stand-in passing the constant (unit 143). Its message is among the strings no function loads:
+find the text, then check that no target piece holds its address and, for a `std::format` string, no packed `i64.const`
+either (R13):
+
+```sh
+awk -F'\t' '$4 ~ /urna de se/' ledger/strings.tsv
+# 361994	33	latin1	Tipo inválido para urna de seção.
+/usr/bin/grep -rlE 'i32\.const 361994($|[^0-9])' build/out/splat/pieces/asm      # prints nothing
+```
+
+Which throw holds which such literal is then the only choice (`src/uenux2/src/api/ipc/posix/cposixrwmutex.cpp`).
 
 ## R2. A constructor returns `this` in the object; the target's `void` is a result no caller used
 
@@ -107,7 +124,9 @@ The target's `comum::CSigVerifier` D2 frees three strings and stores nothing at 
 
 `final` removes only the class's own store. A derived class's D2 that inlines its base's destructor stores the
 base's vptr where the base's part begins, `final` or not, and a class with no member of its own has no D2 of its own
-(its slot 0 holds the base's). Probe `dtorbase.cpp`:
+(its slot 0 holds the base's), with its destructor implicit or defined in the class: over a base D2 in another object,
+the implicit form, `~D() override = default;` and `~D() override {}` compile to one object (R5, "A derived class with no
+member of its own"). Probe `dtorbase.cpp`:
 
     // What a derived class's implicit destructor does with its base's, and what final changes.
     #include <string>
@@ -486,6 +505,77 @@ The last two rows need the files: 3609's class is not in its base's object, sinc
 before its own records and the base's before its file's (`ledger/vtables.json`, `ledger/source-locations.tsv`). With the
 derived destructor implicit and the base's out of line, `splat-remap` stops at 3609's `drop`.
 
+The fourth form, a derived destructor not out of line over a base D2 in another object, has the 10-B shape above, and
+the three ways to write it give one object (at uenux2's `-O3`, a `final` class template or a plain class alike):
+
+```sh
+P=build/out/reading-probe; mkdir -p $P
+printf '%s\n' 'struct B { virtual ~B(); int b; };' 'struct D : B {' '#if FORM == 1' '    ~D() override = default;' '#elif FORM == 2' '    ~D() override {}' '#endif' '};' 'B* make() { return new D(); }' > $P/slot0.cpp
+for f in 0 1 2; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/$P/slot0.cpp -o /work/$P/slot0-$f.o; done
+for f in 1 2; do cmp -s $P/slot0-0.o $P/slot0-$f.o && echo "FORM 0 = $f"; done
+# FORM 0 = 1
+# FORM 0 = 2
+```
+
+So the base's D2 in slot 0 says the derived destructor is not out of line, not which of the three it is.
+
+**The shape is the destructor's own TU's.** A D0 is compiled where the destructor is defined. A `delete` elsewhere (a
+control block's `__on_zero_shared`, a `unique_ptr` release) frees what the destructor returns when its TU only declares
+the destructor, and frees `this` after the call, the out-of-line D0's shape, when the TU defines it:
+
+```sh
+printf '%s\n' 'struct S { ~S(); int a[14]; };' '#if DEF' 'S::~S() = default;' '#endif' 'void del(S* p) { delete p; }' > $P/del.cpp
+for d in 0 1; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DDEF=$d -c /work/$P/del.cpp -o /work/$P/del-$d.o
+  printf 'DEF=%s: ' $d; wasm-objdump -d $P/del-$d.o | sed -n '/<_Z3delP1S>:/,$p' | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | /usr/bin/grep -E '^(call|drop|local.get 0)' | tr '\n' ';'; echo; done
+# DEF=0: local.get 0;local.get 0;call 0 <env._ZN1SD1Ev>;call 1 <env._ZdlPvm>;
+# DEF=1: local.get 0;local.get 0;call 1 <_ZN1SD1Ev>;drop;local.get 0;call 0 <env._ZdlPvm>;
+```
+
+The target's 11263, `__shared_ptr_pointer<comum::CCalculaCV*, …>::__on_zero_shared`, is `f5614(p); f136(p)`: compiled
+in the TU of `CCalculaCV`'s out-of-line destructor, which a roots file's control block cannot give, since it only
+declares the destructor (unit 121's fragment).
+
+**An explicit instantiation decides nothing of the form.** For a class template the shapes above are those of an
+implicit instantiation. An explicit instantiation definition (`template struct T<1>;`) gives the out-of-line D0, a call
+of the D2 then `drop` and a free of `this`, both with the destructor `{}` in the class and with it declared there and
+`= default` after it:
+
+```sh
+cat > $P/tmpl.cpp <<'EOF'
+#include <string>
+#include <vector>
+struct I { virtual ~I(); };
+template <int N> struct T : I {
+    T() {}
+#if FORM == 1
+    ~T() override;
+#else
+    ~T() override {}
+#endif
+    std::string a, b;
+    std::vector<int> v;
+};
+#if FORM == 1
+template <int N> T<N>::~T() = default;
+#endif
+#if EXPLICIT
+template struct T<1>;
+#else
+I* make() { return new T<1>(); }
+#endif
+EOF
+for e in 0 1; do for f in 0 1; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DEXPLICIT=$e -DFORM=$f -c /work/$P/tmpl.cpp -o /work/$P/tmpl-$e$f.o
+  printf 'EXPLICIT=%s FORM=%s: ' $e $f; wasm-objdump -d $P/tmpl-$e$f.o | sed -n '/<_ZN1TILi1EED0Ev>:/,/^ *[0-9a-f]* func\[/p' | /usr/bin/grep -c -E 'call [0-9]+ <_ZN1TILi1EED1Ev>'; done; done
+# EXPLICIT=0 FORM=0: 0
+# EXPLICIT=0 FORM=1: 0
+# EXPLICIT=1 FORM=0: 1
+# EXPLICIT=1 FORM=1: 1
+```
+
+(Implicitly instantiated, this D0 holds the D2's body.) So a target D0 of the in-class shapes is an implicit
+instantiation's copy, in a user's TU or one with no explicit instantiation, and an explicit instantiation in the
+class's `.cpp` cannot give it.
+
 A base destructor in the class without `inline` is inlined only under the plain threshold (225, [levels.md](levels.md)
 §V2). `CVotacaoStateAudio`'s D2 is 180 B: `CProporcionalBranco`'s out-of-line destructor over the in-class form stays
 one call, of a weak copy, and `inline` gives 85 lines. So "defined in the class" does not always show as the base's
@@ -565,13 +655,14 @@ class's own vtable is not the test: `api::IScreen`'s vtable lies right after `si
 its own typeinfo 2312 B later.
 
 **Emitting the destructors of a class with no key function.** A TU emits the vtable, D2 and D0 of such a class when it
-references the vtable: a constructor defined there, a derived class's destructor that inlines this one, or a call of
-the destructor by its qualified name (the D2 stores the vptr too). The last needs neither constructor nor derived
-class: `src/units/92-uenux2-iinputfield-roots.cpp` calls `campo.api::CMaskedTextField<api::CFramedText>::~CMaskedTextField()`
-from an `optnone` function. A class that declares no constructor has an implicit one,
-so `new T` in such a function emits them as well, while no constructor is declared, and building the object does the
-same where a constructor is written (unit 67). `src/units/README.md` "A class with no key function" says what a roots
-file may do with this.
+references the vtable: a constructor defined there, a derived class's destructor that inlines this one, or a call of the
+destructor by its qualified name when it destroys something (its D2 then stores the vptr; one that destroys nothing is
+the base's D2 to clang, and nothing names the vtable: [units.md](units.md) §U13). The last needs neither constructor nor
+derived class: `src/units/92-uenux2-iinputfield-roots.cpp` calls
+`campo.api::CMaskedTextField<api::CFramedText>::~CMaskedTextField()` from an `optnone` function. A class that declares
+no constructor has an implicit one, so `new T` in such a function emits them as well, while no constructor is declared,
+and building the object does the same where a constructor is written (unit 67). `src/units/README.md` "A class with no
+key function" says what a roots file may do with this.
 
 ## R7. A slot that holds `__cxa_pure_virtual` is a pure member, and dropping it makes the class concrete
 
@@ -731,7 +822,7 @@ Three limits to this reading:
 
 A body can hold code that was a separate function in the object, which wasm-opt inlined into its only caller; that
 function then has no target index of its own, and the source defines it out of line, unrooted
-(`src/units/README.md` "Companion files"). Two tells in a readout:
+(`src/units/README.md` "Companion files"). The tells in a readout:
 
 - **A second stack-pointer prologue inside the body.** clang merges an inlined callee's frame into the caller's;
   binaryen keeps the callee's own. In `api::CTime::operator-(int) const` (3641) the `if (p1 < 0)` arm opens a
@@ -816,6 +907,33 @@ three and `unresolved` for 5181, which waits for a name:
   matches with `CTituloRelatorio`'s constructor out of line (unit 106).
 - **An `if (result i32) … else 0 end` tested again with `i32.eqz; br_if`,** which clang, inlining, folds into one
   branch. `CSynchronizer::Sync` out of line took 5181 to one row from the target.
+  The same value carried across the epilogue to the return is the sign too: 11198
+  (`CRelatorioTesteImpressora::EstaEmHorarioVerao`) holds `a <= x && x < b` so, where the compares written in the
+  caller keep the result in a local read after the epilogue (`14 over 40`); in an out-of-line `CHorarioVerao::Contem`
+  of another TU it matches (unit 147).
+- **Statements ahead of the body's only prologue.** A caller with no frame of its own keeps its code before the frame
+  of a callee binaryen inlined into it:
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 10380 | sed -n '/folded readout/,/^}/p' | sed -n 4,5p
+          i32.store[p0+4] = p0;
+          l2 = i32.sub(g0, 16);
+
+  Written as one function, 10380's prologue comes first (`117 over 203`); with the store in a frameless `StartState`
+  and the switch in an out-of-line member it calls, the store comes first (`42 over 174`, unit 135's fragment).
+- **A narrow value widened to a parameter's type and held.** Beside bytes, a 32-bit member read as `i64.load32_u` into
+  a local, kept across other code and narrowed only at a call: clang folds such an extend and narrow inside one
+  function. 11825 (`CEsperaRetestar::StartState`) matches its rows only with an out-of-line `CDateTime::operator+(time_t)
+  const` in `cdatetime.cpp` (`6 over 62` against `30 over 64` written in place, unit 138's fragment):
+
+      pnpm --silent wasm fn ../target/vota_web_wasm.wasm 11825 | sed -n '/folded readout/,/^}/p' | /usr/bin/grep -n 'load32_u\|wrap_i64'
+        10:  l4 = i64.load32_u[p0+40];
+        14:  f2233(l3, i32.wrap_i64(l4));
+
+- **An argument temporary tested after a constructor that is no call.** When clang inlines a constructor it sees, it
+  knows that a `std::string` moved from is empty and drops the temporary's test, and joins a copy's test with the
+  temporary's destruction. A test of the caller's temporary (its byte at +11, then `free`) after the constructor's code
+  says binaryen inlined it: `comum::md::CSuplencia`'s constructor in 11359 scores `18 over 195` in the class and `10
+  over 195`, operand-only, out of line in `csuplencia.cpp`, and `CDadosCandidato`'s two in 11450 the same (unit 124).
 - **Locals alone.** A body that differs from the target in local numbers only, whose callee has no frame, shows none of
   the signs above: binaryen re-optimizes the caller after inlining. 728 and 3890 match with a field's constructor moved
   from its header to its `.cpp`. Try such a callee out of line, unrooted, before a source form, beside
@@ -1040,6 +1158,28 @@ Only the `bool` compares at the entry and tests bare on the back edge. The byte 
 
 so it is a `bool`; a reader with one test, such as fn 8461, cannot say.
 
+Read every function that loads or stores the byte, written or not (`/usr/bin/grep -rlE 'i32\.const <address>($|[^0-9])'
+build/out/splat/pieces/asm` lists a static's), before calling its type a width only: a compare with a value above 1, an
+increment or an index rules out a `bool`. The byte at 0x1d1fbc (1908668) is one: 10465 loops until it is 4, increments
+it, and indexes a table of finger codes with it, so it is no `bool`.
+
+**A byte's sign shows only where it is widened.** An equality test, an increment and a truncating store load the byte
+with `i32.load8_u` whether it is `signed char` or `uint8_t`; an index loads it with `i32.load8_s` for `signed char`:
+
+```sh
+P=build/out/reading-probe; mkdir -p $P
+printf '%s\n' '#include <cstdint>' '#if SIGNED' 'typedef signed char T;' '#else' 'typedef std::uint8_t T;' '#endif' 'extern T s;' 'extern int g_tabela[];' '[[noreturn]] void Lanca();' 'void Usa(int);' 'void Avanca() { if (s != 4) s = s + 1; else Lanca(); }' 'void Indexa() { Usa(g_tabela[s]); }' > $P/sign.cpp
+for s in 0 1; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DSIGNED=$s -c /work/$P/sign.cpp -o /work/$P/sign-$s.o
+  for f in _Z6Avancav _Z6Indexav; do printf 'SIGNED=%s %s: ' $s $f; wasm-objdump -d $P/sign-$s.o | sed -n "/<$f>:/,\$p" | /usr/bin/grep -m1 -oE 'i32\.load8_[su]'; done; done
+# SIGNED=0 _Z6Avancav: i32.load8_u
+# SIGNED=0 _Z6Indexav: i32.load8_u
+# SIGNED=1 _Z6Avancav: i32.load8_u
+# SIGNED=1 _Z6Indexav: i32.load8_s
+```
+
+So 10465's increment and its bound of 4 say nothing of the sign; its index load (`i32.load8_u` before the shift, at
++0xe90) and 10425's (+0x209) say unsigned.
+
 ## R15. An `invoke` around a callee that cannot throw: the callee had a call that might, which a later pass removed
 
 emscripten turns a call inside a `try` (or a cleanup scope) into an `invoke_*` when the callee may throw at the time
@@ -1177,3 +1317,46 @@ a slot reads 20,000 higher there and an integer does not. At 0b5f410 seven bodie
       func[1026]: func[3978]: func[5061]: func[5152]: func[5725]: func[7702]: func[7703]:
     wasm-objdump -d build/out/wasm-kinds/vota_web/vota_web_wasm.wasm | awk '/ func\[/ {f=$2} / i32\.const 21176$/ {print f}' | tr '\n' ' '; echo
       func[5152]: func[5725]:
+
+## R20. A slot's vtable, read from the data when `ledger/vtables.json` has no row or too long a one
+
+`ledger/classes.json` misses classes as `vtables.json` does ([units.md](units.md) §U12), and `fn` then names no vtable
+class for a slot a function fills: 11592's header gives only the class its vptr store names and `table slots 2275`. A
+vtable is a zero word, the typeinfo's address and the slots, so from a slot, walk back over the words that are table
+slots to the typeinfo, whose second word points at the mangled name:
+
+```sh
+wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'ref\.func:11592$'
+#   - elem[2275] = ref.func:11592
+python3 -I - target/vota_web_wasm.wasm 2275 <<'END'
+import struct, sys
+sys.path.insert(0, 'tools/extract'); import wasmmod
+m = wasmmod.Module(sys.argv[1]); base, img = m.memory_image(); s = int(sys.argv[2]); n = max(m._elem()) + 1
+w = lambda a: struct.unpack_from('<I', img, a - base)[0]
+for o in range(0, len(img) - 3, 4):
+    if struct.unpack_from('<I', img, o)[0] != s: continue
+    a = base + o
+    while 0 < w(a - 4) < n: a -= 4                      # back over the slots before it
+    ti = w(a - 4)
+    if w(a - 8) != 0 or not base <= ti < base + len(img): continue
+    name = img[w(ti + 4) - base:].split(b'\0')[0].decode()
+    print('vtable', a - 8, 'slot', (base + o - a) // 4, 'typeinfo', ti, name)
+END
+# vtable 1555728 slot 2 typeinfo 1555752 N5comum3asn29CConversorCodigoCargoConsultaE
+```
+
+So 11592 is `comum::asn::CConversorCodigoCargoConsulta`'s slot 2, `DoConverte`, a class neither ledger file lists. A
+small slot number is also an integer, so a search for one can print several vtables; take the one whose class the
+function's vptr stores or callers agree with.
+
+A row can also be too long: the extraction reads on past a vtable's last slot into the next object. `vtables.json` gives
+`ModuloEleitores::Dedo` nine functions, and `fn` names Dedo for 11895 at slot 8, but a generated SEQUENCE class has
+seven slots ([asn1.md](asn1.md) §A3). The words after Dedo's seventh are the head of the SEQUENCE_OF info record that
+follows: table slot 2445 (9010, `SEQUENCE_OF_Base::create`) and the tag 16, which as a slot is 11895's:
+
+```sh
+python3 -I -c "import struct, sys; sys.path.insert(0, 'tools/extract'); import wasmmod; base, img = wasmmod.Module('target/vota_web_wasm.wasm').memory_image(); print(struct.unpack_from('<11I', img, 1566108 - base))"
+# (0, 1566036, 2195, 2603, 2197, 2198, 2199, 2200, 2201, 2445, 16)
+```
+
+Count a class's slots against its family before reading a slot past the base's count as a member.

@@ -19,6 +19,9 @@ class CEleicaoPE {
 public:
     TEleicaoID GetID() const { return m_id; }
     const TVectorCargo& GetCargos() const;
+    // The name at +12, which comum::NomeEleicaoCorrente (fn 11556) copies; no record names it, so its name and its being
+    // inline in the class are chosen.
+    const std::string& GetNome() const { return m_nome; }
 
 private:
     void ValidaOrdem(std::set<uebyte>& ordens, uebyte ordem, const std::string& nome) const;

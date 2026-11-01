@@ -1,4 +1,4 @@
-# uenux2 api::CThread in src/uenux2/src/api/ipc/cthread.cpp, three members:
+# uenux2 api::CThread in src/uenux2/src/api/ipc/cthread.cpp, five members:
 # - ~CThread (target fn 2721, CThread vtable @1599952 slot 0), placed where the stub's link-order placement put it (no
 #   std::source_location record falls in the destructor, so its line is not evidence). Its body is the two
 #   two std::unique_ptr members (+12 m_pImpl, +16 m_sync) reset in reverse order; both pointees have a virtual destructor,
@@ -20,9 +20,12 @@
 #   Paths relative to src/uenux2.
 # - The head: slots 3 and 4 are pure, and unit 116 declares them with what vota::CThreadVota's overriders take. +8 and +9
 #   swapped their chosen names there: +8 is the flag the Run loops test, so it is m_parar.
+# - Wait (target fn 1900, a chosen name, after IThreadImpl's slot 3 that it calls): when the state (+4) is running (1),
+#   waits through m_pImpl's slot 3 and sets the state to created (0). Its two callers are vota::CExecucaoVota's slots 2
+#   and 4 (fns 10236, 10234, fragment 165), in another TU, and the target keeps it as a function, so it is out of line
+#   here (that clang would inline the 40-B body from the class is a reading, not measured). Its line, after Rotina, is
+#   a choice: no record falls in it.
+# Start's three target callers, fns 10233, 10235 and 10236, are fragment 165's, so this unit has no roots file: the two
+# stand-ins that gave Start more than one call site went when they landed.
 CTHREAD_SRCS := src/api/ipc/cthread.cpp
 UENUX2_SRCS += $(CTHREAD_SRCS)
-# the roots that keep Start linked (see the file header)
-$(ROOT)/$(APP)/18-uenux2-cthread-roots.o: $(ROOT)/src/units/18-uenux2-cthread-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/18-uenux2-cthread-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/18-uenux2-cthread-roots.o

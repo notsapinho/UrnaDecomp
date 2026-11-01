@@ -259,6 +259,16 @@ from its unroll threshold, and per-directory flags are not excluded. The `-std` 
 rvalue `substr`), with a handful of C++20 forms tried; every site above reads the same at `c++20` and `c++23`.
 `-std=c++23` is not taken, and 8799, which needs it, stays written.
 
+**The text a level change makes false.** Sentences that call the old level the tree's, and sentences written as
+conditions on the new one (`if uenux2 moves to -O3`, `waits for -O3`). A search for the old flag finds the first kind
+only; the second takes the conditions' wording:
+
+    LC_ALL=C /usr/bin/grep -rn -i -E "moves? to .?-O3|waits? (for|on) (the tree's )?.?-O3|at which it matches|once the tree|if (uenux2|the tree) (moves|takes)" docs/ src/units/
+
+At c1b2630 it prints one line, `src/units/143-uenux2-cidentificacao.mk:66`, which states what happened ("matched only
+once the tree took -O3") and is right. Read each line it prints, and rewrite the false ones in the commit that lands
+the change or a comments-only one after it.
+
 ## V4. Which flags a linkonce copy has: put a probe object first on the link line
 
 Rows of a probe's object compared with the target, before binaryen, are a lead and no verdict: they ranked one

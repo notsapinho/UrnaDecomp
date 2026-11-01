@@ -114,10 +114,10 @@ Where that differs from the table, and what is known to turn on it:
   `vector<unsigned>::push_back(const&)` has to be RHVoice's copy. That is a measured choice: moving all of RHVoice, as the
   table reads, loses rows ([asn1.md](asn1.md) §A2 has the links).
 - **The stand-ins first.** They define templates the target took from code with TBAA that precedes both trees
-  ([app-flags.md](app-flags.md) §F6, "The stand-ins keep strict aliasing"), and a throw there picks which tree's linkonce
-  copy wins (`src/units/README.md` "Companion files"). `roots_cbasetype.o`, right after `roots_uenux2.o`, compiles at
-  `UENUX2_CXXFLAGS`: its instances of an ecourna template are uenux2's code in the target, and ahead of ecourna's
-  objects they are the copies the link keeps.
+  ([app-flags.md](app-flags.md) §F6, "The stand-ins keep strict aliasing"), and a throw there picks which tree's
+  linkonce copy wins (`src/units/README.md` "Companion files"). `roots_cbasetype.o` and `roots_iconversorasn.o`, right
+  after `roots_uenux2.o`, compile at `UENUX2_CXXFLAGS`: their instances of ecourna templates are uenux2's code in the
+  target, and ahead of ecourna's objects they are the copies the link keeps.
 - **A flag that changes an ABI tag changes who owns an inline symbol.** Symbols of two tags never collide, so the order
   did not matter while the runtime's `nn` copies stood apart. With `ne` on both sides the first definer wins.
 - **Fragments sort as text.** `100-…` links between `10-…` and `11-…`. Nothing turns on it: with unit 100's objects last,

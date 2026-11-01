@@ -21,15 +21,15 @@
 // - comum::asn::CConversorDedo::DoDesconverte (slot 3, fn 11416, records asn/eleitor/cconversordedo.cpp:159 and :169, a
 //   stub-only file that went, and md/eleitor/cdedo.cpp:28 and :33), not written: fn 5702 has no name.
 // - comum::asn::CConversorBiometriaEleitor::DoDesconverte (slot 3, fn 11422, record
-//   asn/eleitor/cconversorbiometriaeleitor.cpp:26, a stub-only file that went), not written: fns 781, 2799 and 5708
-//   have no name.
+//   asn/eleitor/cconversorbiometriaeleitor.cpp:26, a stub-only file that went), not written: fns 781 and 2799 have
+//   no name (5708, which it calls too, matches from unit 166's tree root).
 // - comum::asn::CConversorBiometriaEleitorCifrada::DoDesconverte (slot 3, fn 11419, records of its inlined LeChave at
 //   asn/eleitor/cconversorbiometriaeleitorcifrada.cpp:91, :101 and :109), not written: fns 183, 518, 679 and others
 //   have no name (412 has one since, unit 32's).
 // - comum::asn::CConversorCandidaturas::DoDesconverte (slot 3, fn 11445): it builds a comum::asn::CConversorCandidatura
 //   on its stack (constructor fn 5712), whose entity type ModuloCandidatos::Candidatura the generated module lacks.
-// - comum::asn::CConversorFotoCandidato::DoDesconverte (slot 3, fn 11440): it converts the photo through fn 5708, the
-//   Desconverte of ecourna's CConversorFoto, which has no body of ours.
+// - comum::asn::CConversorFotoCandidato::DoDesconverte (slot 3, fn 11440): it converts the photo through fn 5708,
+//   which matches from unit 166's tree root; every function it calls has a name, so it waits only to be written.
 #include "app/comum/dados/asn/candidatura/cconversorcandidaturas.h"
 #include "app/comum/dados/asn/candidatura/cconversorfotocandidato.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitor.h"

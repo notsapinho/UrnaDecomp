@@ -16,6 +16,8 @@
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
 //   3728, 5379, 6734, 7787, 10842): no other tree of this key is in our link, and these bodies do not depend on the
 //   mapped type, so a std::map<CEleitorIdentidade, int> gives each its second call site, and binaryen merges the copies.
+// - comum::CJustificador's constructor, 3742 (1391, 11474, 11475): two call sites, so binaryen keeps it out of line;
+//   it stores CJustificadorServico's vptr, the reference the target has to that vtable.
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
 #include <new>
@@ -28,6 +30,7 @@
 #include "app/comum/dados/md/cpartido.h"
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 #include "app/comum/dados/md/processoeleitoral/crespostaconsulta.h"
+#include "app/comum/justificativa/cjustificador.h"
 #include "app/comum/justificativa/cjustificadordetalhe.h"
 #include "ecourna/app/dados/cnumeroinscricaoeleitoral.hpp"
 
@@ -57,7 +60,7 @@ __attribute__((noinline)) bool AvancaDois(TMapa& mapa)
     return mapa.GetCurrent() != nullptr;
 }
 
-// Stands for 3125's callers (6999, 11478, 11479, 12621).
+// Stands for 3125's callers 6999 and 11478 (11479 and 12621 are linked).
 __attribute__((noinline)) int ComparaRespostas(TMapaRespostas& primeiro, TMapaRespostas& segundo)
 {
     return primeiro.GetCurrent() == segundo.GetCurrent() ? 3 : 5;
@@ -118,6 +121,15 @@ __attribute__((noinline)) int CopiaDetalheDois(void* primeiro, void* segundo, co
     return 41;
 }
 
+// Stands for 3742's callers, 1391, 11474 and 11475, which build comum::CJustificador's singleton and are not
+// reconstructed: two call sites, since binaryen inlines a function called once.
+__attribute__((noinline)) int CriaJustificadores(void* primeiro, void* segundo)
+{
+    new (primeiro) comum::CJustificador();
+    new (segundo) comum::CJustificador();
+    return 43;
+}
+
 const void* volatile w113_sink;
 
 struct SW113Roots {
@@ -137,6 +149,7 @@ struct SW113Roots {
         w113_sink = reinterpret_cast<const void*>(&JustificaDois);
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalhe);
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalheDois);
+        w113_sink = reinterpret_cast<const void*>(&CriaJustificadores);
     }
 } w113_roots;
 

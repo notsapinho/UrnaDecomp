@@ -56,8 +56,8 @@
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
 # - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12051, 12040; 12038, ProcessInput, matches since in
-#   unit 156), CTesteTeclado's (2868, 11806, 11805, 11804): callees with no name, 455, 1285, 2023, 502 and 576 among
-#   them;
+#   unit 156), CTesteTeclado's (2868, 11806, 11805, 11804): callees with no name, 455, 1285, 2023 and 502 among them
+#   (576 has one since unit 165);
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data

@@ -26,4 +26,9 @@ std::string CRespostasDSNumero::operator()() const
     return std::format("{:0{}}", CRespostas::GetInst().GetCurrent()->GetNumero(), m_digitos);
 }
 
+std::string RespostaCorrente()
+{
+    return CRespostas::GetInst().GetCurrent()->GetResposta();
+}
+
 } // namespace comum

@@ -21,6 +21,11 @@ public:
     virtual ~CThread();
 
     void Start();
+    // Fn 1900, called by vota::CExecucaoVota's slots 2 and 4 (fns 10236, 10234): when the thread runs (+4 is 1), waits
+    // for it through IThreadImpl's slot 3 and marks it created again (0). Out of line: the target keeps the 40-B body
+    // as a function with two callers in another TU (that clang would inline it from the class is a reading, not
+    // measured). The name is chosen, after the slot it calls.
+    void Wait();
 
     // +8: the Run loops test it (fns 4349, 10204), Start clears it, and fns 10225 and 10203 set it on the other threads.
     // The member's name is chosen.

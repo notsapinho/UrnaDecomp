@@ -10,7 +10,8 @@
 # std::string members (+36, +24, +12).
 # With it: the class header (cassinador.h) and the ESavdPacote type of its +8 member, declared beside ESavdAplic in
 # app/comum/iinterfacesavd.h. In the target the deleting destructor 4694 is also slot 1 of vota::CAssinadorVota's
-# vtable (binaryen merged the two identical bodies); that class (fns 7766, 1501) is not reconstructed. Paths relative
+# vtable (binaryen merged the two identical bodies); fragment 165 writes that class's destructor (7766), whose object
+# links first, so 4694's match line names its D0; its constructor (1501) is not reconstructed. Paths relative
 # to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CASSINADOR_SRCS := src/app/comum/gravadores/cassinador.cpp
 UENUX2_SRCS += $(CASSINADOR_SRCS)
