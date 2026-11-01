@@ -6,29 +6,30 @@
 //   11093 / 11092  Update(const SharedIImage&) and its thunk at -44: they pass a copy of the image, by value, to
 //         CImageField::SetImage (fn 5533)                                                                (here)
 //   11091 GetTypeName() const                                                                           (here)
-// The constructor is not reconstructed: binaryen inlined it into fn 502, so no target function holds it, and the lines
-// around its record stay blank. The target's function order puts Update and its thunk after the deleting destructor's
-// thunk and before GetTypeName, so the file defines Update between the destructor and GetTypeName.
+// The constructor, whose throw is the record's (line 29, column 15), has no target function: binaryen inlined it into its
+// one caller, fn 502 (api::CFormBuilder::AddStatusHeader), behind a second stack-pointer prologue, so it is out of line
+// here. It hands CImageField a null image (fn 502 zeroes a std::shared_ptr temporary for it and releases it after the
+// call) and attaches the field to the source after the test. Its lines but the throw's are a choice. The target's
+// function order puts Update and its thunk after the deleting destructor's thunk and before GetTypeName, so the file
+// defines Update between the destructor and GetTypeName.
 
 #include "api/gui/cdsimagefield.h"
+
+#include "api/gui/eueguierror.h"
 
 namespace api {
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+CDSImageField::CDSImageField(const SPoint& posicao, const std::shared_ptr<IObservable<SharedIImage>>& fonte,
+                             EAnchorPoint ancora)
+    : CImageField(posicao, SharedIImage(), ancora)
+    , m_fonte(fonte)
+{
+    if (!m_fonte) {
+        throw CUeGuiError(EUE_GUI_DSIMAGEFIELD_FONTE_NULA, "A fonte de dados não pode ser nula");
+    }
+    m_fonte->Attach(this);
+}
 
 CDSImageField::~CDSImageField()
 {

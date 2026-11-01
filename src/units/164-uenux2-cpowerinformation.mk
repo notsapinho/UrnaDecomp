@@ -57,10 +57,7 @@
 # which has one caller and is inlined (ours is 6489 B, the target's 5642 B). What it waits for is a reading, not
 # measured: a copy binaryen merges with ours, so that ours keeps a body of its own, and that body being 3668's.
 #
-# The roots file stands for fn 502, which builds <Horizontal> and is not written (cformbuilder.cpp); its header says how.
+# The unit has no roots file: <Horizontal>'s constructor has its one caller, fn 502 (api::CFormBuilder::AddStatusHeader,
+# cformbuilder.cpp, unit 31), in the link, and <Vertical>'s, fn 5904, is unit 153's.
 CPOWERINFORMATION_SRCS := src/api/gui/cpowerinformation.cpp
 UENUX2_SRCS += $(CPOWERINFORMATION_SRCS)
-W164_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-$(ROOT)/$(APP)/164-uenux2-cpowerinformation-roots.o: $(ROOT)/src/units/164-uenux2-cpowerinformation-roots.cpp $(ROOT)/src/units/164-uenux2-cpowerinformation.mk $(ROOT)/src/Makefile $(W164_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/164-uenux2-cpowerinformation-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/164-uenux2-cpowerinformation-roots.o

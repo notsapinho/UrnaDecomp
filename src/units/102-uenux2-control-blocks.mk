@@ -1,7 +1,7 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 55 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Eleven come from the objects of units 31, 120, 101, 165,
-# 91, 127 and 164, whose builders are written, so the roots no longer instantiate them:
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 52 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Fourteen come from the objects of units 31, 120, 101,
+# 165, 91, 127 and 164, whose builders are written, so the roots no longer instantiate them, but for one:
 # IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550),
 # CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
 # 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
@@ -9,7 +9,10 @@
 # not written) and comum::md::CEleitorDinamico's (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's
 # celeitordinamicodao.cpp, from which 11536 and 11537 match) and api::CTextFieldBlinking's (1265,
 # CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
-# which 8585 and 8578 match). Each block below: the T, the function that stores its vptr in the target, and the members
+# which 8585 and 8578 match) and api::CDSImageField's pointer block and BatteryIconDataSource<Horizontal>'s (502,
+# CFormBuilder::AddStatusHeader, unit 31's cformbuilder.cpp, from which 11116, 11106 and 11105 match) and
+# api::CTextFieldUpdate's (502 and 3058, the same object, from which 12316 and 12314 match; its third builder, 5936,
+# is not written, and the roots still build the block for it). Each block below: the T, the function that stores its vptr in the target, and the members
 # the unit matches. The vtable's other slots are shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
 #   IFormField<IPaper>: CTextFieldPaper 193, 604, 5613, 12105: 11997. CCutFieldPaper 1264: 10994.
@@ -96,7 +99,12 @@
 # - every class head's path, each said in its header, and every name the head says is chosen; and that the three
 #   CNumero* destructors are declared after the constructor. Not chosen: api::IFormImpressao's file and parameter, which
 #   record 1581300 gives (api/gui/cpaperformbuilder.h, CLASS); the class's lines span that record's line 51.
-# Flags: the roots object compiles with APP_CXXFLAGS, and with UENUX2_CXXFLAGS its 391 functions compare equal. The
+# Flags: the roots object compiles with APP_CXXFLAGS. Against the same file compiled with UENUX2_CXXFLAGS and the rule's
+# include paths, by function with call and global indices and relocated constants masked, 343 of the 346 functions
+# both define compare equal (354 of 357 at bbf27ac1's roots, the same three differing): std::shared_ptr<IGravador>'s
+# constructor over a comum::CGravadorWSQ*, that block's __on_zero_shared, and make_shared<CMovie>. The link keeps one of
+# them from this object, the block's __on_zero_shared, matched as 12092, which calls default_delete's operator() at
+# APP_CXXFLAGS' -O2 and inlines it at -O3. The
 # blocks of ecourna's classes: at ECOURNA_CXXFLAGS, brought into a private link ahead of the roots object, 9480 and
 # 11466 give the target's rows (score 4 over 38 and 1 over 60, operand rows only), and 10279 does not (25 over 56, 19
 # rows inserted). So 9480's and 11466's bodies do not depend on which of the two levels compiles them, and 10279's copy
@@ -105,9 +113,9 @@
 # Pending, each with what it waits for:
 # - 12244, vota::CItemVisualizarCandidatosVota's slot 2, a trap in 102-uenux2-control-blocks-pending.cpp, the one slot
 #   this unit leaves with no body, and no stub.
-# - 11109, 11108, CDataText<AddStatusHeader's lambda>, and 12530, 12529,
-#   CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>: a lambda is spelled only in its function, so they
-#   land with fns 502 and 6561.
+# - 12530, 12529, CDataImage<__bind<CriaTelaVisualizacaoCandidato's lambda, ...>>: a lambda is spelled only in its
+#   function, so they land with fn 6561 (11109 and 11108, CDataText<AddStatusHeader's lambda>'s, landed with fn 502,
+#   unit 31).
 # - 12592, 12591, CDataText<vota::(anonymous namespace)::DS_NomeCargoNeutroComEscolha>, and 10373, 10367, 10361, three
 #   blocks of CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>: no roots file can spell a T of
 #   another TU's anonymous namespace, so they land with fns 6627 and 10388.

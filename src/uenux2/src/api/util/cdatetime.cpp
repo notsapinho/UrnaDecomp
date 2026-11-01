@@ -103,6 +103,12 @@ std::string CDateTime::FormatCurrentDate(const std::string& formato)
     return data.Format(formato);
 }
 
+std::string CDateTime::FormatCurrentDateTime(const std::string& formato)
+{
+    const CDateTime agora = Now();
+    return agora.GetData().Format(agora.GetHora().Format(formato));
+}
+
 CDateTime CDateTime::operator+(time_t segundos) const
 {
     CDateTime resultado(*this);
@@ -110,7 +116,7 @@ CDateTime CDateTime::operator+(time_t segundos) const
     return resultado;
 }
 
-// (original lines 122-202: content not recovered)
+// (original lines 128-202: content not recovered)
 #line 203
 CDateTime CDateTime::ConvertFromTimestamp(const std::string& timestamp)
 {

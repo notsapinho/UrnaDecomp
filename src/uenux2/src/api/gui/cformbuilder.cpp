@@ -1,31 +1,44 @@
-// api::CFormBuilder (/home/rubio/tse/uenux2/src/api/gui/cformbuilder.cpp). The throw of the static GetLabeledKeyPos
-// (target fn 5544) is a record of the target (line 372, column 11), so its position in this file is fixed. The file's
-// other records, AddStatusHeader's throws at lines 292 and 305 (target fn 502, not reconstructed), fall on blank lines.
+// api::CFormBuilder (/home/rubio/tse/uenux2/src/api/gui/cformbuilder.cpp). Three lines are records of the target:
+// AddStatusHeader's 292 and 305 (target fn 502; columns 30 and 24, each the start of a CPolySingleton instance() call
+// whose default argument makes the record) and the throw of the static GetLabeledKeyPos at 372 (target fn 5544, column
+// 11).
 //   203   CFormBuilder()
 //   426   AddField                 written, differs at the tree's -O3: src/units/31-uenux2-cformbuilder.mk has the measurement
 //   202, 1191  AddTextField        over a CFixedText, over a CDataText of a function
 //   3068  AddDoubleLineField
 //   5547  AddImage
 //   2244, 2245, 3680  AddLine, AddFill, AddRect
-// GeraNome has no target function: binaryen inlined it into 426, which shows its second prologue. The order of the
-// definitions above line 348 is read from band 1 (src/units/31-uenux2-cformbuilder.mk); their lines are a choice.
+//   502   AddStatusHeader          written, differs: the fragment has the measurement. The members of its lambda's
+//         CDataText, 11107 (GetText) and 11109 and 11108 (the control block's D2 and D0), match from this object
+// FONTE_PADRAO is the SFont {20, 0} at .rodata 520920 that 502 passes twice; its name and its being a constant of this
+// file are chosen (its one other reader, fn 3678, is not written). GeraNome has no target function: binaryen inlined it
+// into 426, which shows its second prologue. The order of the definitions above line 290 is read from band 1
+// (src/units/31-uenux2-cformbuilder.mk); their lines are a choice.
 
 #include "api/gui/cformbuilder.h"
 
 #include <algorithm>
 #include <format>
 
+#include "api/gui/capplication.h"
 #include "api/gui/cdatatext.h"
+#include "api/gui/cdatatextfmt.h"
 #include "api/gui/cfillfield.h"
 #include "api/gui/cfixedtext.h"
 #include "api/gui/cimagefield.h"
+#include "api/gui/cdsimagefield.h"
 #include "api/gui/clinefield.h"
 #include "api/gui/crectfield.h"
+#include "api/gui/cpowerinformation.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldblinking.h"
+#include "api/gui/ctextfieldupdate.h"
 #include "api/gui/iscreen.h"
 #include "api/gui/ctextfielddoubleline.h"
 #include "api/gui/eueguierror.h"
+#include "api/hwil/ipower.h"
+#include "api/pattern/cpolysingleton.h"
+#include "api/util/cdatetime.h"
 
 namespace api {
 
@@ -35,6 +48,9 @@ namespace {
 constexpr TPosition MARGEM_ESQUERDA = 23;
 constexpr TPosition MARGEM_DIREITA = 19;
 constexpr TPosition DISTANCIA_BASE = 47;
+
+const SFont FONTE_PADRAO{20, 0};
+
 
 // o retângulo cujos cantos opostos são @p canto e @p oposto
 SRect RectEntre(const SPoint& canto, const SPoint& oposto)
@@ -151,7 +167,50 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::shared_ptr<IPre
     return form;
 }
 
-// (original lines 154-347: content not recovered)
+// (original lines 170-289: content not recovered)
+#line 290
+void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
+{
+    const auto larguraTela = CPolySingleton<IScreen>::instance().GetWidth();
+    const bool comIcone = (campos & STATUS_ICONE_BATERIA) != 0;
+    if (campos & STATUS_DATA_HORA) {
+        AddTextFieldUpdate(&CDateTime::FormatCurrentDateTime, SPoint(5, 5), std::chrono::milliseconds(500), FONTE_PADRAO,
+                           "A DD/MM/YYYY hh:mm:ss", ALINHAMENTO_ESQUERDA);
+    }
+
+    // (original lines 299-303: content not recovered)
+#line 304
+    if (campos & STATUS_CARGA_BATERIA) {
+        auto& ipower = CPolySingleton<IPower>::instance();
+        AddTextFieldUpdate(
+            [&ipower]() -> std::string {
+                if (ipower.Fonte() == 2) {
+                    return "";
+                }
+                return std::format("{: >3}%", ipower.BatLevel());
+            },
+            SPoint(larguraTela - (comIcone ? 70 : 55), 5), std::chrono::milliseconds(1000), FONTE_PADRAO,
+            ALINHAMENTO_DIREITA);
+    }
+
+    if (comIcone) {
+        const std::shared_ptr<IObservable<SharedIImage>> bateria =
+            std::make_shared<BatteryIconDataSource<CPowerInformation::IconOrientation::Horizontal>>();
+        const SPoint posicao(larguraTela - 55, 5);
+        const SharedField campo(new CDSImageField(posicao, bateria, ANCHOR_TOP_LEFT));
+        m_campos.push_back(campo);
+    }
+
+    if (campos & STATUS_MODO) {
+        const std::string modo = CApplication::GetDescricaoModo();
+        if (!modo.empty()) {
+            AddTextField(modo, SPoint(static_cast<TPosition>(larguraTela * 0.53), 5), SFont{20, 1}, ALINHAMENTO_CENTRO,
+                         static_cast<TColor>(3), static_cast<TColor>(1));
+        }
+    }
+}
+
+// (original lines 334-347: content not recovered)
 #line 348
 /**
  * Posição do rótulo de uma tecla desenhada em @p area: junto à borda esquerda,

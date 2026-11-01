@@ -16,8 +16,10 @@
 // fn 5565 is CInputFieldControlBase<IScreen>'s constructor, the vtable's only user. It builds a CControlValidation (a
 // 16-byte object, an empty string) and passes IInputField's constructor the length 0, true, false and bits 2, 0 and 1
 // of its argument. fn 653 builds that argument from a table at 524056, (1, 4, 2) for keys 'B', 'C' and 'D', and fns 901
-// and 3673 hold it as 4, hence the default. The parameter's name and its default are chosen. No function of this tree's
-// link holds these constructors (api/gui/iinputfield.h says why), and nothing has compared them with the target.
+// and 3673 hold it as 4, hence the default. The parameter's name and its default are chosen. 5565 matches, from
+// api/gui/cinteractiveformbuilder.cpp's object: AddInputControl(int) (5530) calls it, and the roots stand for 653.
+// CInputFieldControl<IScreen>'s constructor has no target function: clang inlines it into 5530, and into the
+// __shared_ptr_emplace constructor over no argument that binaryen inlines into 901.
 //
 // CControlValidation::isValid is COptionValidation's loop: the vtable @1577476 holds the same fn 4022 in slot 2.
 // GetTypeName (fn 11155) is written: the target's is a thunk of binaryen's fn 3891, which needs all three functions of

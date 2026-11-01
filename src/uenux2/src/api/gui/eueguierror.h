@@ -23,6 +23,9 @@ enum EUeGuiError {
     // them
     EUE_GUI_FRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4917,
     EUE_GUI_GRAYEDFRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4918,
+    // the value is the code api::CDSImageField's constructor throws (record cdsimagefield.cpp 29:15, inlined into fn 502);
+    // the name is chosen from its message, "A fonte de dados não pode ser nula": no evidence names it
+    EUE_GUI_DSIMAGEFIELD_FONTE_NULA = 4923,
     // the value is the code api::CLedFieldMT::Draw (target fn 11050) throws; the name is chosen from its message,
     // "Operação desconhecida {}": no evidence names it
     EUE_GUI_LEDFIELDMT_OPERACAO_DESCONHECIDA = 4940,

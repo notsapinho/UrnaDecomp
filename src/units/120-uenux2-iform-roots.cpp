@@ -5,6 +5,12 @@
 //   FormInterativoA, FormInterativoB  the callers of 554, api::CInteractiveFormBuilder::GetInteractiveForm (1591, 1767,
 //                     3063, 3064, 3067, 6616, 6626, 6639, 6681, 7787; 576 is linked): two call sites, or binaryen
 //                     would inline it, with the name and the bool varied as theirs are
+//   CampoA, CampoB    the callers of the control fields' adders, none reconstructed: of 901, AddInputControl() (1591,
+//                     2376, 3063, 3064, 6626, 6639, 7787, 11804, 11809) and of 5530, AddInputControl(int) (7787 and
+//                     12055, which pass the keys 6 and 5). Each adder gets two call sites
+//   ControleTeclas    653, AddLabeledInputControl, not reconstructed, the other caller of 5565
+//                     (CInputFieldControlBase<IScreen>'s constructor): it builds the control field over the mask of its
+//                     keys with std::make_shared, as this does. With 5530 alone binaryen would inline 5565 into it
 //   SaiDoFormulario   12081, vota::CEmitirMaisBU::ProcessInput, the other direct caller of 5987,
 //                     api::CFormStack<api::IScreen>::Remove: with the destructor of IForm<IScreen> alone it would inline
 //   TelaMT            the callers of 1714, api::CPolySingleton<api::IScreenMT>::instance, not in our link: 10410,
@@ -16,6 +22,7 @@
 #include <source_location>
 #include <string>
 
+#include "api/gui/cinputfieldcontrol.h"
 #include "api/gui/cinteractiveformbuilder.h"
 #include "api/gui/iscreen.h"
 
@@ -39,6 +46,26 @@ __attribute__((noinline)) int FormInterativoB(api::CInteractiveFormBuilder& form
     return vezes * interativo.use_count();
 }
 
+__attribute__((noinline)) int CampoA(api::CInteractiveFormBuilder& form)
+{
+    const auto controle = form.AddInputControl();
+    const auto teclas = form.AddInputControl(6);
+    return static_cast<int>(controle.use_count() + teclas.use_count());
+}
+
+__attribute__((noinline)) int CampoB(api::CInteractiveFormBuilder& form, int vezes)
+{
+    form.AddInputControl(5);
+    form.AddInputControl();
+    return vezes + 2;
+}
+
+__attribute__((noinline)) int ControleTeclas(int teclas)
+{
+    const auto campo = std::make_shared<api::CInputFieldControl<api::IScreen>>(teclas | 1);
+    return static_cast<int>(campo.use_count()) + teclas;
+}
+
 __attribute__((noinline)) int SaiDoFormulario(api::IForm<api::IScreen>* form, int codigo)
 {
     api::CFormStack<api::IScreen>::Remove(form);
@@ -60,6 +87,9 @@ struct SW120Roots {
     {
         w120_sink = reinterpret_cast<void*>(&FormInterativoA);
         w120_sink = reinterpret_cast<void*>(&FormInterativoB);
+        w120_sink = reinterpret_cast<void*>(&CampoA);
+        w120_sink = reinterpret_cast<void*>(&CampoB);
+        w120_sink = reinterpret_cast<void*>(&ControleTeclas);
         w120_sink = reinterpret_cast<void*>(&SaiDoFormulario);
         w120_sink = reinterpret_cast<void*>(&TelaMT);
     }
