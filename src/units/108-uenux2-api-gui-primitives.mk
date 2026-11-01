@@ -5,8 +5,9 @@
 #   2768 Adjust(TPosition x4) const  callers 2770, 5545, 7787, 10977
 #   MoveX(TPosition)                 no target function of its own: binaryen inlined it into its one caller, fn 10956
 # The file is the records' (SRect::Left, Top, Right and Bottom, lines 20, 26, 32 and 38, col 37, in fns 5488, 5537, 5487).
-# Top and Bottom are not written: binaryen inlined both into fn 5537, which is not written, so their lines stay blank. The
-# setters throw api::CUeAssertError (api/util/eueasserterror.h, new, its path chosen) through its constructor, fn 463, by
+# Top and Bottom ("Assert (bottom >= t)", code 3401; "Assert (b >= top)", 3403) have no target function of their own:
+# binaryen inlined each into its one caller, fn 5537 (CFramedText::DrawChar, unit 92's, written and not matched), behind a
+# second stack prologue, and our link does the same; they stay unrooted. The setters throw api::CUeAssertError (api/util/eueasserterror.h, new, its path chosen) through its constructor, fn 463, by
 # the ASSERT macro there: the record's column 37 is the invocation's closing parenthesis, and the message is the
 # condition the macro stringizes ("Assert (right >= l)", code 3400; "Assert (r >= left)", 3402), which also gives the
 # parameters' names. None of the four others written here has a record, so their being in this file, and their lines below

@@ -15,7 +15,8 @@
 //   TelaMTA, TelaMTB  652, 1150, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
 //                     (1150, 2734), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
 //                     target callers all pass it, and they have no parameter for it
-//   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426
+//   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
+//                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265
 //   RelatorioA        5579, 5580, 5591 and the other callers of 193, 604, 198, 1264, and of 2775 (5591 and 12110). Its
 //                     form is a parameter: their callers zero the vector in line, and it takes no constructor of ours. The
 //                     EStyle and alignments vary as theirs do
@@ -97,6 +98,7 @@ __attribute__((noinline)) int TelaA(const std::string& texto, const api::SPoint&
     form.AddLine(posicao, posicao, corTexto);
     form.AddFill(posicao, posicao, corTexto);
     form.AddRect(posicao, posicao);
+    form.AddBlinkingTextField(texto, posicao, fonte, alinhamento);
     return posicao.x;
 }
 
@@ -112,6 +114,7 @@ __attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint&
     form.AddRect(posicao, api::SPoint{posicao.y, posicao.x});
     form.AddFill(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(1));
     form.AddLine(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(2));
+    form.AddBlinkingTextField(texto, api::SPoint{posicao.y, posicao.x}, fonte, api::ALINHAMENTO_DIREITA);
     form.AddTextField(texto, posicao, fonte, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
     return posicao.y;
 }

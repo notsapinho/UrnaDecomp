@@ -1712,11 +1712,6 @@
 // f5507 · 504 B · unmatched · placement: link order · name unknown
 // ? f5507(i32, i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 789 · uses=2 · neighbours' file uenux2/src/api/gui/primitives.cpp
-
-// f5536 · 164 B · unmatched · placement: link order · name unknown
-// void f5536(i32, i32, i32, i32) { ... }
-
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
 // f5565 · 193 B · unmatched · placement: link order · name unknown

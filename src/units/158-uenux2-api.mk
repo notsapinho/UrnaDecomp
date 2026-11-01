@@ -25,6 +25,18 @@
 # stores that vptr too, so the anchor and those votes went, and 5441, 9427 and 11489 read `unresolved` on the two calls
 # (the scan of this unit before the lines). With the lines 5441 and 9427 (unit 82's D0) match; 11489 is the executable
 # TU's copy and stays `differs`.
+# Not written: api::AudioCollector (vtable @1586028, an si_class of RHVoice::client, built in place by DoSynthesize
+#   alone): its D2 and D0 (10840, 10822), play_speech (10820, slot 3: the samples appended to a std::vector<short> at +8,
+#   true returned) and RHVoice::client's inline defaults. Its vtable lies in this object's data, and the target's band 1
+#   runs 10840, 10822, 10821, 10820 in slot order after 10841, which reads as the members a TU emits with the vtable,
+#   so no key function. Measured with the
+#   class in a header, play_speech inline, an out-of-line constructor here to emit the vtable and the roots taking its
+#   address: binaryen merged the D2 and the D0 with ASN1::OBJECT_IDENTIFIER's, which unit 115's ASN.1 roots keep and the
+#   target holds nowhere (no RTTI), into two byn$mgfn-shared bodies, so both read `unresolved`; play_speech was 68 over
+#   441 rows, 56 of them operand-only (local numbers), and the target's reallocation computes the new begin as
+#   new_pos - ((pos - begin) & -2) where ours does not. Nothing in the link needs the class, so it stays out. Reading:
+#   the destructors match once OBJECT_IDENTIFIER's leave the ASN.1 roots, which asmlift-wasm's splat-sub and
+#   splat-symbols tests read in our link.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 API158_SRCS := src/api/audio/crhvoicetexttospeech.cpp src/api/gui/cfixedimage.cpp
 UENUX2_SRCS += $(API158_SRCS)

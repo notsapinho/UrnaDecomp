@@ -18,6 +18,11 @@ enum EUeGuiError {
     // the value is the code api::CFormBuilder::GetLabeledKeyPos (target fn 5544) throws; the name is chosen from its
     // message, "Alinhamento desconhecido ({})": no evidence names it
     EUE_GUI_GETLABELEDKEYPOS_ALINHAMENTO_DESCONHECIDO = 4914,
+    // the values are the codes api::CFramedText::MaskText (target fn 2780) and api::CGrayedFramedText::MaskText (target fn
+    // 5534) throw; the names are chosen from their message, "Texto [" + text + "] eh grande demais": no evidence names
+    // them
+    EUE_GUI_FRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4917,
+    EUE_GUI_GRAYEDFRAMEDTEXT_TEXTO_GRANDE_DEMAIS = 4918,
     // the value is the code api::CLedFieldMT::Draw (target fn 11050) throws; the name is chosen from its message,
     // "Operação desconhecida {}": no evidence names it
     EUE_GUI_LEDFIELDMT_OPERACAO_DESCONHECIDA = 4940,
@@ -36,6 +41,11 @@ enum EUeGuiError {
     // the value is the code api::CTextField::CTextField (target fn 1918) throws; the name is chosen from its message,
     // "Campo estava com o texto nulo", as 4972's was: no evidence names it
     EUE_GUI_TEXTFIELD_TEXTO_NULO = 4964,
+    // the values are the codes api::CTextFieldBlinking's constructor throws (records ctextfieldblinking.cpp 39:15 and 42:15,
+    // inlined into fn 1265); the names are chosen from its messages, "Campo estava com o texto nulo" and "As cores estavam
+    // iguais": no evidence names them
+    EUE_GUI_TEXTFIELDBLINKING_TEXTO_NULO = 4965,
+    EUE_GUI_TEXTFIELDBLINKING_CORES_IGUAIS = 4966,
     // the values are the codes api::CTextFieldDoubleLine's constructor (target fn 3659) throws; the names are chosen from
     // its messages, "Campo estava com o texto nulo" and "maxX menor que a posição x da linha 1" (and "... linha 2"): no
     // evidence names them
