@@ -45,6 +45,7 @@ them (`truth`).
 | setup | what | flags from | rows |
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
+| `uenux2-tbaa` | the TSE application's directories built with strict aliasing (`src/api/`, comum's data classes `dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`) | `src/Makefile` `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`, in `UENUX2_TBAA_DIRS` | 0 |
 | `vota-web` | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` (one object, first on the link line) | `src/Makefile` `VOTA_WEB_CXXFLAGS` | 12 |
 | `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
@@ -115,7 +116,7 @@ share it.
   libc++ templates they instantiate win the link, and the target's copies of those have TBAA
   (urna's `docs/reference/facts/app-flags.md` §F6).
 - **uenux2** has few reconstructed units, so its rows also come from the ledger's attribution
-  (components `vota`, `vota-web`, `comum`, `simulador`): `evidence: "component"`, no object, no
+  (components `vota-web` and `comum` for `uenux2`, `vota` and `simulador` for `uenux2-tbaa`): `evidence: "component"`, no object, no
   reference.
 
 ## The dataset

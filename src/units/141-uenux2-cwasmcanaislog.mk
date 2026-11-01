@@ -6,12 +6,14 @@
 #   741: one internal copy per object, cwasminit.cpp's and cwasmlogd.cpp's, which binaryen merges, so our link holds
 #   it in two slots too), and libc++'s std::deque<std::string> D2 (fn 3503), which it calls. The static's name has the
 #   votes of 5154 and 8327.
-# - written and `differs`: Escreve (fn 5152), with Agora and Adiciona, which binaryen inlines into it as into the
-#   target's (each has one caller). At -O2 clang inlines std::string::append into `Agora() + " " + texto`, where the
-#   target calls it (fn 160) twice, and the body differs (833 over 1995 rows). At the tree's -O3 it is 78 over 1787
-#   rows, all operand-only: among them, its calls of std::__split_buffer<std::string*>'s emplace_back and emplace_front
-#   go to the bodies matched as fns 915 and 1199, where the target's go to 3501 and 5150, the bodies matched as
-#   RHVoice's language_search_criteria instances. A generated vptr-anchor line names 5152. Its callers are 8327, named
+# - matched since mock/app/simulador/wasm/ builds with strict aliasing: Escreve (fn 5152), with Agora and Adiciona,
+#   which binaryen inlines into it as into the target's (each has one caller). At -O2 clang inlines std::string::append
+#   into `Agora() + " " + texto`, where the target calls it (fn 160) twice, and the body differs (833 over 1995 rows).
+#   At -O3 with -fno-strict-aliasing it was 78 over 1787 rows, all operand-only: its calls of
+#   std::__split_buffer<std::string*>'s emplace_back and emplace_front went to this object's copies, matched as fns 915
+#   and 1199, where the target's go to 3501 and 5150, roots_rhvoice.o's language_search_criteria instances. With strict
+#   aliasing this object's two are byte-identical to those, and the lines of 915 and 1199 went to their other twins
+#   (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). A generated vptr-anchor line names 5152. Its callers are 8327, named
 #   by vtable alone, and 1524, which the content pass finds, and 1524's caller is 9405: with 5152's name out on both
 #   sides of splat/symbol_addrs.txt's marker (docs/reference/splat.md "Reviewing a match"), 1524 and 9405 leave match.
 #   Its body also casts the vote that names std::time_put<char>'s id (0x1d5e18), which only 5152 and libc++'s

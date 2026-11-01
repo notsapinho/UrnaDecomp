@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions` |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` and `mock/app/simulador/wasm/` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -279,7 +279,7 @@ So a table read with an `i32.add` proves nothing, and neither does one function'
 12's externs included. The `-roots.cpp` files are stand-ins and compile with `APP_CXXFLAGS`. Why the package differs from conan's default
 `fPIC=True` ([libraries.md](libraries.md) §B1) is not known: the target shows the result, not the reason.
 
-## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`
+## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG`, `-fno-strict-aliasing` by directory, without `-fexceptions`
 
 Compared on three reconstructed units (`api/util/cwait.cpp`, `api/io/cinikey.cpp`,
 `api/ipc/posix/cposixmutex.cpp` + `cposixsemaphore.cpp`; 13 target functions), each flag set in a private
@@ -335,24 +335,86 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   (the files from `awk -F'\t' '$2 ~ /\/mock\// {print $2, $6}' ledger/source-locations.tsv`). So
   `mock/app/simulador/wasm/` is throw-only like `src/`, and `cappinfobuilder.cpp` has landing pads, like the executable
   TU.
-- **`-fno-strict-aliasing`: no TBAA.** `comum::asn::CConversorCorrespResultado::DoConverte` (fn 10289, rows 355-360
-  of `pnpm wasm fn ../target/vota_web_wasm.wasm 10289`) stores a constant into a SEQUENCE field and then reloads the
-  fields vector's begin (`local.get 0; i32.load offset=8; i32.load offset=4; i32.const 1; i32.store offset=8`). No
-  call can sit between the store and the reload, and with TBAA clang's EarlyCSE keeps the begin in a local (an `int`
-  store and a pointer load are disjoint in clang's TBAA tree; `-fno-strict-aliasing` emits no TBAA at all). Every
+- **`-fno-strict-aliasing` by directory: no TBAA in comum's converters.** `comum::asn::CConversorCorrespResultado::DoConverte`
+  (fn 10289, rows 355-360 of `pnpm wasm fn ../target/vota_web_wasm.wasm 10289`) stores a constant into a SEQUENCE field and
+  then reloads the fields vector's begin (`local.get 0; i32.load offset=8; i32.load offset=4; i32.const 1; i32.store
+  offset=8`). No call can sit between the store and the reload, and with TBAA clang's EarlyCSE keeps the begin in a local (an
+  `int` store and a pointer load are disjoint in clang's TBAA tree; `-fno-strict-aliasing` emits no TBAA at all). Every
   comum converter with two or more field stores reloads the same way (10276, 10289, 11383, 11386, 11388, …), as
   ecourna's do (F2). comum is uenux2: all 755 `app/comum` records are `/home/rubio/tse/uenux2/…`
-  (`ledger/source-locations.tsv`). With the flag `make -C src splat` gives the target's sha256 on every match.
+  (`ledger/source-locations.tsv`). 10289 is written (`gravadores/asn/cconversorcorrespresultado.cpp`) and matches without
+  TBAA, and leaves `match` with it (the table below).
 
-  That is what the flag has measured, and not every uenux2 site agrees. Off the whole tree at 0b5f410 (F9 item 6's
-  `flags-tbaa` link), `splat-build` ends `3 matched functions no longer verify`, 11386, 11388 and 11392, and the scan
-  turns 2799 and 3714 `match`. Those two are open evidence against the flag: a `std::map` or `std::set` insert reloads
-  `__child` after the begin-node store, before `__tree_balance_after_insert` (fn 152), at the flag, in every spelling,
-  and neither target body does. The other side is in the target too: 4454, in `md/rdv/`, reloads, and 5725 and
-  5377, one template at one record line, split, so which TU's linkonce copy won may decide it. A local or `sret` tree
-  reloads at the flag too, since the first insert stores its address in a node. The sites with no call to explain the
-  reload are 10276, 10289 and 11383. 11383 matches, unit 107's, and the other two are `no-candidate`: writing 10289 and
-  measuring it both ways is the test.
+  The flag is not the whole tree's. Off the whole tree (F9 item 6's clone) the converters lose their matches and other
+  sites gain: a `std::map` or `std::set` insert reloads `__child` after the begin-node store, before
+  `__tree_balance_after_insert` (fn 152), at the flag, in every spelling, where the target's 2799 and 3714 do not; a local
+  or `sret` tree reloads too, since the first insert stores its address in a node; a `std::list` clear (5491) and the
+  store order of a lambda's `std::function` `__clone` (10861, 10910, 11322, …) are the same question. So it was measured
+  per directory, at 694de52 (10522 matches): the uenux2 objects and their `-pending` objects compiled once with
+  `UENUX2_EXTRA=-fstrict-aliasing` in F9 item 6's clone (427 compiles; the flag changes 160 uenux2 objects and 4 pending,
+  `cmp` against the plain ones), then each split linked from the plain objects with that clone's objects of its
+  directories copied in, which is the clone that compiles only those (the build in place below gives every object
+  `cmp`-equal to its split's), then F9 item 6's steps: `splat-build` with the matches re-keyed, and the `join` of the private
+  link's scan with `splat/scan.tsv`. Since the split is the build's rule, the plain objects carry it: build them with
+  `UENUX2_TBAA_DIRS=` first, in a directory of their own, so a split starts from the tree without it:
+
+  ```sh
+  P=build/out/flags-tbaa                    # F9 item 6's clone, linked with UENUX2_EXTRA=-fstrict-aliasing
+  N=build/out/flags-notbaa; mkdir -p $N/app # the plain objects, without the split
+  rsync -a --exclude='/uenux2/' build/out/app/ $N/app/
+  TMPDIR=/tmp make -C src link APP=$N/app OUT=$N/wasm/vota_web OUT_NAMED=$N/wasm-named/vota_web UENUX2_TBAA_DIRS=
+  shasum -a 256 $N/wasm/vota_web/vota_web_wasm.wasm   # at the split's commit fce3b08c…, 694de52's plain link
+  Q=build/out/flags-tbaa-api; mkdir -p $Q/app && rsync -a $N/app/ $Q/app/
+  (cd $P/app && find uenux2/src/api -name '*.o') | while read o; do cp -p $P/app/$o $Q/app/$o; done
+  make -n -C src link APP=$Q/app OUT=$Q/wasm/vota_web OUT_NAMED=$Q/wasm-named/vota_web UENUX2_TBAA_DIRS= | /usr/bin/grep -c 'em++.* -c '   # 0
+  TMPDIR=/tmp make -C src link APP=$Q/app OUT=$Q/wasm/vota_web OUT_NAMED=$Q/wasm-named/vota_web UENUX2_TBAA_DIRS=
+  ```
+
+  | strict aliasing in | `splat-build` | rows that turn `match` | rows that leave `match` |
+  | --- | --- | --- | --- |
+  | all of uenux2, its `-pending` objects too | 23 no longer verify | 21: 1071 1083 1719 2799 3644 3714 5152 5491 8872 10861 10862 10910 10911 11322 11323 11327 11328 11333 11334 11338 11339 | 21: 1076 1221 1272 5377 5378 5379 5794 5867 10263 10271 10287 10289 11379 11383 11386 11388 11392 11397 11413 11451 11454 |
+  | `src/api/` | the target's sha256 | 6: 1071 3644 5491 8872 10861 10910 | none |
+  | `mock/app/simulador/wasm/` | the 2 names, 1076 unresolved on one | 5152 | none |
+  | `src/app/comum/dados/md/` | the target's sha256 | 11: 1083 2799 3714 11322 11323 11327 11328 11333 11334 11338 11339 | none |
+  | `src/app/vota/` | the target's sha256 | 1719 | none |
+  | `src/api/`, `mock/…/wasm/`, `src/app/comum/dados/` but `dados/asn/` | the 2 names, 1076, and 1272 | 20, all but 1719 | 1272 |
+  | the same but `dados/cfederacoes.cpp` | the 2 names, 1076 | the 20 | none |
+  | `src/api/`, `mock/…/wasm/`, `src/app/comum/dados/md/` | the 2 names, 1076 | the 20 (the same link as the line above) | none |
+  | `src/api/`, `mock/…/wasm/`, `src/app/comum/dados/md/`, `src/app/vota/` | the 2 names, 1076 | the 21 | none |
+
+  The 2 names are 915's and 1199's, `std::__split_buffer<std::string*>` members: with strict aliasing
+  `cwasmcanaislog.cpp`'s copies equal other objects' (`dados/asn/cconversorsecaoeleitoral.cpp.o`'s `ASN1::AbstractData*`
+  one and RHVoice's `hts_label` list iterators'), so those symbols leave the link and the scan matches both rows under the
+  twins (how-to step 9 renames the lines). `src/api/` alone gets 6 of its 8: 10862 and 10911, `CSystem::ZeroFill`'s and
+  `CTextFieldUpdate`'s `__clone()`, call binaryen's shared `__clone` body, 1083, which `dados/md/rdv/cvotos.cpp` brings only
+  with TBAA. By object, the rows say:
+  - **with TBAA**: `src/api/util/` (1071 `CGenericTags::insert`, 3644 `CTickManager::AddTick`, 10861 and 10862 in
+    `csystem.cpp`), `src/api/gui/` (5491, 8872, 10910 and 10911 in `ctextfieldupdate.cpp`), `app/comum/dados/md/` (2799 in
+    `eleitor/`, 3714 in `processoeleitoral/`, the `CVotos` lambdas' `std::function` members 11322 to 11339 and their merged
+    body 1083 in `rdv/`), `app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp` (1719, whose copy of
+    `vector<CDadosCandidato>::__destroy_vector` comes first on the link line, ahead of `dados/ccandidaturas.cpp`'s),
+    `mock/app/simulador/wasm/cwasmcanaislog.cpp` (5152);
+  - **without**: comum's converters, `app/comum/dados/asn/` (1076, 11379, 11383, 11386, 11388, 11392, 11397, 11451, 11454),
+    `app/comum/asn/` (11413) and `app/comum/gravadores/asn/` (10263, 10271, 10287, 10289), and
+    `app/comum/comparecimentomesario/` (5377 to 5379), `app/comum/gravadores/md/` (1221, 5867),
+    `app/comum/relatorios/` (5794), and `app/comum/dados/cfederacoes.cpp` (1272, `vector<CFederacao>::__destroy_vector`,
+    whose winning copy is that object's);
+  - **neither**: the rest of `app/vota/` (it changes 18 objects, and 1719 is the only row that moves) and comum's other
+    directories and files (`dados/`'s other top-level files change 9 objects and move no row).
+
+  The last split is `src/Makefile`'s rule: `UENUX2_TBAA_DIRS`, where the generic uenux2 rule drops
+  `-fno-strict-aliasing` (the `-pending` and roots objects keep their rules' flags). Built in place, how-to steps 6 to 10
+  turn 23 rows `match` and none leaves, 10522 to 10545, and `make -C src splat` gives the target's sha256: the 21, and
+  11453 (`CConversorSecaoEleitoral::DoDesconverte`, in `dados/asn/`, whose inlined `CSecaoEleitoral` constructor is
+  `dados/md/`'s) with its callee 2872, which the symbol file names by 11453's call. The split is a reading of the original
+  build's settings, made from the rows: TSE's build gave `src/api/`, comum's data classes, the voting application and the
+  simulator strict aliasing, clang's default, and comum's converters and the directories around them none. It is a
+  reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it; `dados/md/` and the files
+  beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
+  directories) the setting is a choice. Still open: 4454, in `md/rdv/`, reloads in the target and is not written; 5725 and
+  5377, one template at one record line, split (5377 matches from `comparecimentomesario/`). The sites with no call to
+  explain the reload are converters and keep the flag: 10289 (`gravadores/asn/`) and 11383 (`dados/asn/`) match, 10276
+  (`CConversorHistoricoVotoImpresso`, no record) is `no-candidate`.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'
@@ -362,7 +424,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   copies were compiled with TBAA, as the library TUs that instantiate them are. Letting the library objects win
   instead does not reproduce the target: a private link with `roots_rhvoice.o` and `roots_boost.o` at uenux2's flags
   and moved after the RHVoice objects loses dozens of matches, 152 among them, whose first definer becomes uenux2's
-  `ctickmanager.cpp.o` (no TBAA). So in the TSE link some code with TBAA that defines these templates precedes the
+  `ctickmanager.cpp.o`, without TBAA then (`src/api/` builds with it since, and that link was not tried again). So in the TSE link some code with TBAA that defines these templates precedes the
   uenux2 and ecourna objects that also define them, as our stand-ins do. `src/app/roots_uenux2.cpp` holds
   `vector<double>`'s range insert (2662) that way (`src/units/README.md` "Companion files").
 - **Not ecourna's other two.** In a private whole link (the flags through `UENUX2_EXTRA`, so the stand-ins keep
@@ -483,6 +545,10 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    rsync -a --exclude='/uenux2/' --exclude='*-uenux2-*-pending.o' build/out/app/ $P/app/
    TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web UENUX2_EXTRA=-fstrict-aliasing
    ```
+
+   In the directories of `UENUX2_TBAA_DIRS` the generic uenux2 rule filters `-fno-strict-aliasing` out of the whole line,
+   `UENUX2_EXTRA` included, so `UENUX2_EXTRA=-fno-strict-aliasing` leaves them with TBAA; `UENUX2_TBAA_DIRS=` on the
+   command line builds the tree without the split (F6), and `UENUX2_EXTRA=-fstrict-aliasing` the whole tree with TBAA.
 
    That answers whether a flag set keeps every match. It does not say what the flag set adds: steps 7 to 9 read the
    plain link's fixed paths (`/usr/bin/grep -n 'build/out/wasm' tools/round/census.sh` prints `M=` and `N=` under

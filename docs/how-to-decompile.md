@@ -108,8 +108,8 @@ still have no body in our link, two ways:
   `no-candidate` while one RHVoice function called it, and became a match, with no source of its own, when a TSE unit
   added a second caller. Look for its call in the object of a caller the scan already names.
 - **Written, and nothing names it.** The scan finds a body through the symbol file, the census or its content, so a
-  body it cannot name reads `no-candidate` with its object in the link, and only the fragment says it exists. 2799 and
-  3768 (unit 91) are such bodies. A right body can read so too: 5658's definition under a `using` printed a short type
+  body it cannot name reads `no-candidate` with its object in the link, and only the fragment says it exists. 5660 (unit 89,
+  `md::CCandidatura`'s constructor) is such a body. A right body can read so too: 5658's definition under a `using` printed a short type
   in its record, so the record anchored nothing, and the row said `no symbol and no ledger pair` until the definition
   spelled the type in full (step 3). Run `check_srcloc.py --strict` on the unit's objects (step 10) before you read
   such a row.
@@ -437,7 +437,7 @@ to follow it (step 10, "A twin whose name moved"; [facts/splat.md](reference/fac
 
 Two cases go the other way. **An instance of yours can take a library's match.** A template your source instantiates is
 a copy that links ahead of the library's, compiled at your tree's flags. `FillPath` calls `std::vector<double>::insert`,
-so `cwasmscreen.cpp.o`, ahead of the RHVoice objects, defined `__insert_with_size` with `-fno-strict-aliasing`. The
+so `cwasmscreen.cpp.o`, ahead of the RHVoice objects, defined `__insert_with_size` with `-fno-strict-aliasing`, its directory's flag then. The
 target's 2662 has TBAA, its body changed, and `splat-match` stopped with `matched.txt only: [2209, 2662, 5255]`. A
 unit's roots file cannot fix it, since those link after uenux2's: a tree root, `src/app/roots_uenux2.cpp`, links ahead
 of both trees and keeps the right copy, an explicit instantiation whose callees' rows you read afterwards, since it

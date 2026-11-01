@@ -89,7 +89,7 @@ Each row is measured by reconstructing or building that component and scoring it
 
 | component | source root embedded in the binary | compile flags |
 | --- | --- | --- |
-| uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions` |
+| uenux2 (the application) | `/home/rubio/tse/uenux2/src/...` | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions`; strict aliasing (no `-fno-strict-aliasing`) in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` and `mock/app/simulador/wasm/` |
 | the executable TU (unit 170, in part) | `/home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp` | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` (facts/levels.md §V1) |
 | ecourna (conan package `libecea1da310e5107`) | `/home/rubio/.conan2/p/b/libecea1da310e5107/b/src/ecourna/...` | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks`; no `-fPIC` |
 | III ASN.1 runtime (TSE fork) | none | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` |
@@ -106,7 +106,7 @@ Each row is measured by reconstructing or building that component and scoring it
 - `-O2` and `-O3` give the same bodies on the units of the sweep and differ on others, with no loop in them ([facts/levels.md](facts/levels.md) §V2); the whole tree decides for `-O3`: every match holds and 25 rows more match (§V3). `-Os` loses `CIniKey::operator=`, and `-Oz` loses all the units.
 - `-std=c++23`, decided on the whole tree too (§V3): every match holds, and three rows more match: `CWasmScreenMT::ShowText` (8799), whose `substr` of a temporary moves the string only through C++23's rvalue overload, and two of libc++'s `vector::__assign_with_size` copies uenux2 objects emit (1158, 1872). The target also holds libc++'s `__escaped_output_table`, which libc++ defines only from C++23. The stand-ins keep `-std=c++20`. One `-std` for the whole tree is a reading: no site tells one directory from another.
 - `-fPIC` removes the last structural differences in the constructors.
-- `-fno-strict-aliasing`: comum's converters reload a vector's begin right after storing a constant, which only code without TBAA does (fn 10289).
+- `-fno-strict-aliasing`, by directory: comum's converters reload a vector's begin right after storing a constant, which only code without TBAA does (fn 10289), while `std::set` and `std::map` inserts in comum's data classes and in `src/api/`, a list's clear and lambdas' `__clone` keep in a local what the flag reloads. Measured directory by directory on the whole link at 694de52, strict aliasing in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` and `mock/app/simulador/wasm/` matches 21 rows more and loses none; comum's converters (`dados/asn/`, `asn/`, `gravadores/asn/`), `comparecimentomesario/`, `gravadores/md/`, `relatorios/` and `dados/cfederacoes.cpp` lose matches with it. The split is a reading of the original build's settings ([facts/app-flags.md](facts/app-flags.md) §F6).
 - None of the 1,645 uenux2 functions that load an error record call an `invoke_*` thunk. Their `throw` sites call `__cxa_throw` directly, so the code was built without `-fexceptions`.
 
 **ecourna.** A sweep over reconstructed units decides these flags.

@@ -47,12 +47,12 @@
 #   out of line in CMenuItem::Pisca, which binaryen inlines, gives the target's shape (17 over 358 rows, one deleted,
 #   against 14 over 358, all operand-only). Written in Read, a loop of two and the two toggles written out gave the same
 #   object code; Pisca's loop of two is a choice measured only through Read's match.
-# - The destructor (5491) is written and differs: libc++'s list clear, `__f->__prev_->__next_ = __l->__next_;
-#   __l->__next_->__prev_ = __f->__prev_;`, reloads `__f->__prev_` after the first store at the tree's
-#   -fno-strict-aliasing, and the target keeps it in a local, which strict aliasing gives (the function's disassembly in
-#   two compiles of the file, with the flag and without it: only the destructor and libc++'s std::format helpers differ).
-#   Score 13 over 76 rows (2 inserted, 2 deleted). The flag is the tree's (docs/reference/facts/app-flags.md F6 lists the
-#   other uenux2 sites against it), so the body stays as written; the D0 holds by the vtable's name for it.
+# - The destructor (5491) matches since src/api/ builds with strict aliasing: libc++'s list clear,
+#   `__f->__prev_->__next_ = __l->__next_; __l->__next_->__prev_ = __f->__prev_;`, reloads `__f->__prev_` after the first
+#   store with -fno-strict-aliasing, and the target keeps it in a local, which strict aliasing gives (the function's
+#   disassembly in two compiles of the file, with the flag and without it: only the destructor and libc++'s std::format
+#   helpers differ). With the flag it scored 13 over 76 rows (2 inserted, 2 deleted); src/Makefile UENUX2_TBAA_DIRS takes
+#   it off this directory (docs/reference/facts/app-flags.md F6).
 # - Reposiciona (2770) is not written: it is no slot, its remainder (the frame) is not explained, and no matched caller
 #   needs it (docs/how-to-decompile.md step 5). Written, it differed, 25 over 107 rows: the target puts the rectangle
 #   Adjust returns at +4 of its frame and the point built from it at +12, stores that point's y before its x, and writes

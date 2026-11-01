@@ -91,7 +91,7 @@
 #   is -O3's limit (docs/reference/facts/reading.md R13). At the tree's -O3 it matches, a thunk into 3887 with slots 32
 #   and 33, and binaryen names 3887 after it (the rename of 3887's line in splat/matched.txt).
 # - 10800, slot 2: it was `unresolved` while its call named no target function, and matches since CTickManager::AddTick
-#   (3644) is named (unit 02's fragment); 3644 itself is written and `differs`.
+#   (3644) is named (unit 02's fragment); 3644 itself matches since src/api/ builds with strict aliasing.
 # - 10774, slot 28: the same limit. At -O2 its std::format keeps the search of the 58-byte literal for a brace (a loop
 #   and two br_table over `i32.const 123`; the target has none): `pnpm wasm score` against our link reads `52 over 216
 #   rows (same 164, replaced 11 [11 operand-only], inserted 35, deleted 6)`. With this unit's four files at -O3 in a

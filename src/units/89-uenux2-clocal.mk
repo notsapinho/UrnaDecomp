@@ -53,10 +53,10 @@
 #
 # 1709, __tree::destroy over md::CCandidatura, matches at the tree's -O3 and not at -O2:
 # __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.
-# 1719, vector<md::CDadosCandidato>::__destroy_vector, stays `differs` for another reason, TBAA, not the level: at the tree's flags the
-# store of __end_ comes ahead of the reload of __begin_, -O3 leaves that as it is, and the same compile without -fno-strict-aliasing
-# gives the target's order. That flag is its tree's (docs/reference/facts/app-flags.md F6), and the copy in roots_uenux2.cpp how-to step 3
-# describes is not tried.
+# 1719, vector<md::CDadosCandidato>::__destroy_vector, needed TBAA, not the level: with -fno-strict-aliasing the store of __end_
+# comes ahead of the reload of __begin_, -O3 leaves that as it is, and the same compile without the flag gives the target's order.
+# The copy that wins the link is cvisualizarcandidatos.cpp's (app/vota/, unit 150), ahead of ccandidaturas.cpp's, and it matches
+# since app/vota/ builds with strict aliasing (src/Makefile UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6).
 #
 # Read from the body, no record names them:
 # - The constructors of CInfoMunicipio (5674, 5676), CHorarioVeraoMunicipio (5677, 5679) and CComplementoMunicipio (3710,

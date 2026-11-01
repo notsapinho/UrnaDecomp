@@ -246,8 +246,9 @@ operand-only, and the units that hold them say what is left (69, 74).
 **What the whole tree does.** All of uenux2 at `-O3` loses no match (7953 at f6826bc, `-std` unchanged): 19 of 96 objects
 change and 8746 turns `match`. The rest of this section is bb6f018's first whole-tree run.
 
-**What it does not decide.** 2799 and 9515 need `-fno-strict-aliasing` off, not `-O3` ([app-flags.md](app-flags.md)
-§F6). At bb6f018, 16 of the 91 uenux2 objects change, 4 under `mock/` and 12 under `src/`:
+**What it does not decide.** 2799 and 9515 needed `-fno-strict-aliasing` off, not `-O3` ([app-flags.md](app-flags.md)
+§F6): 2799 matches since comum's data classes build with strict aliasing, and 9515 is 19 over 459 rows with the
+simulator's (unit 74's fragment). At bb6f018, 16 of the 91 uenux2 objects change, 4 under `mock/` and 12 under `src/`:
 
     for o in $(cd build/out/app && find uenux2 -name '*.o' | sort); do cmp -s build/out/app/$o $P/app/$o || echo $o; done | awk -F/ '{print $2}' | sort | uniq -c
        4 mock
