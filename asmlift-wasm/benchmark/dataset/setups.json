@@ -3,7 +3,7 @@
     "key": "uenux2",
     "title": "uenux2, the TSE application",
     "flags": {
-      "c++": "-O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing"
+      "c++": "-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing"
     },
     "image": "urna-emsdk:6.0.0",
     "source": "src/Makefile UENUX2_CXXFLAGS; docs/reference/toolchain.md §3",

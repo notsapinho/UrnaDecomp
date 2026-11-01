@@ -7,9 +7,9 @@ the source's named values and a TU's first emissions do to a frame, a C1 or D1 c
 of 0x100000, how many copies binaryen merges, and what `new T()` clears. `docs/how-to-decompile.md` steps 1 to 5 and 9
 rely on these; [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors,
 linkage). Each probe compiles with the uenux2 flags of its time, `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`,
-or `-O3` where it says so (the tree's level since, [app-flags.md](app-flags.md)), in the pinned image, from the
-repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the host's (wabt); `em++` and
-`/emsdk/upstream/bin/llvm-nm` are the image's (a bare `llvm-nm` is not on its PATH).
+or `-O3` where it says so (the tree builds at `-O3 -std=c++23` since, [app-flags.md](app-flags.md)), in the pinned
+image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the host's (wabt);
+`em++` and `/emsdk/upstream/bin/llvm-nm` are the image's (a bare `llvm-nm` is not on its PATH).
 
 ## C1. The stores follow the loads: values read first are stored in reverse
 

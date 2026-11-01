@@ -165,7 +165,7 @@ TMPDIR=/tmp tools/round/try-tu.sh --single 1931 --extract export:_ZNK5comum8CRdv
 ```
 
 ```
-flags: -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -I/work/src …
+flags: -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -I/work/src …
 names for vota_web_wasm.wasm: …/target/vota_web_wasm.js
   2868 / 2963   crdvvota.cpp
 

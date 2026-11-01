@@ -899,10 +899,11 @@ file: a callee not written, a flag its tree does not have, a data object or a li
 cause with a link or a compile that holds what the body waits for, and say what it waits for, with that measurement, in
 the fragment's header and its README row: for a `no-candidate` row the fragment is the only note. `ModeloAbreviado`
 (8168, unit 75) is `differs` until the literal it shares a tail with is in the link, and with that literal in a scratch
-link `splat-remap` prints `IDENTICAL`; it prints that for 8746 and 8799 (unit 78) at `-O3 -std=c++23`
-([facts/levels.md](reference/facts/levels.md) §V3), and `api::ITextToSpeech::SetVoice` (11518, unit 82) gives the
-target's rows at the executable TU's flags (§V1). 1161 (`FormataNumero`, unit 131) is the same case read as
-`unresolved`, `an address of ours: string tail occurs 4098 times` (the table under "Library functions" has that row).
+link `splat-remap` prints `IDENTICAL`; it printed that for 8746 and 8799 (unit 78) at `-O3 -std=c++23` before the
+tree took those flags ([facts/levels.md](reference/facts/levels.md) §V3), and `api::ITextToSpeech::SetVoice` (11518,
+unit 82) gives the target's rows at the executable TU's flags (§V1). 1161 (`FormataNumero`, unit 131) is the same case
+read as `unresolved`, `an address of ours: string tail occurs 4098 times` (the table under "Library functions" has that
+row).
 
 A body whose remainder you cannot explain stays unwritten when nothing needs it: no trap, since nothing needs one. Take
 it out and put the measurement in the fragment. `comum::md::CPleito`'s constructor at `103 over 438` with every scratch
