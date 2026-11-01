@@ -17,8 +17,8 @@ namespace api {
 // function: its vtable and typeinfo (1530264, 1530284) lie right after CWasmResource's and the
 // std::__shared_ptr_emplace<CFixedImage> that slot 2 instantiates, as a first user's copy does. So GetData and the
 // vector constructor are inline here, the destructor implicit (8563 and 8554 are thunks of binaryen's shared bodies
-// 3937 and 3936, a D2 and a D0 that store the vptr they are given and free one vector at +4). The string constructor is
-// not reconstructed. Not final: the block's __on_zero_shared goes through the vtable (fn 411). The member's name, that
+// 3937 and 3936, a D2 and a D0 that store the vptr they are given and free one vector at +4). The string constructor (fn 2246) is
+// in cfixedimage.cpp, out of line: four target functions call it. Not final: the block's __on_zero_shared goes through the vtable (fn 411). The member's name, that
 // the vector constructor takes its parameter by value, and its being in the class are chosen.
 class CFixedImage : public IImage {
 public:

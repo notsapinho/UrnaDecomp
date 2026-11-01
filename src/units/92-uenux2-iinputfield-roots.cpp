@@ -128,6 +128,20 @@ __attribute__((noinline)) void Molduras(const api::CFramedText& mascara, api::IS
     mascara.DrawFrame(inicio + 1, static_cast<api::TColor>(2), tela);
 }
 
+// fn 1385, CFramedText's constructor, has eight direct callers in the target (fns 2383, 2384, 3675, 5535, 5913, 6624,
+// 6652 and 7787), none reconstructed. These two stand in for them: the target's callers pass different lengths, points,
+// fonts and alignments, so these do too, and each has a body no target function has.
+__attribute__((noinline)) api::CFramedText* NovaMoldura(size_t n, const api::SPoint& p, const api::SFont& f)
+{
+    return new api::CFramedText(n, p, f, api::ALINHAMENTO_CENTRO);
+}
+
+__attribute__((noinline)) void MolduraEm(void* destino, size_t n, const api::SPoint& p, const api::SFont& f,
+                                         api::ETextAlignment alinhamento)
+{
+    new (destino) api::CFramedText(n + 2, p, f, alinhamento);
+}
+
 const void* volatile w92_sink;
 
 struct SW92Roots {
@@ -140,6 +154,8 @@ struct SW92Roots {
         w92_sink = w92_control_vt;
         w92_sink = w92_controlmt_vt;
         w92_sink = reinterpret_cast<const void*>(&Molduras);
+        w92_sink = reinterpret_cast<const void*>(&NovaMoldura);
+        w92_sink = reinterpret_cast<const void*>(&MolduraEm);
         w92_sink = w92_input_vt;
         w92_sink = w92_func_vt;
         w92_sink = w92_funcmt_vt;

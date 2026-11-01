@@ -8,8 +8,11 @@
 // a movie (8605), slot 5 says whether it exists (8600) and slot 6 whether the name is a resource name, one that starts
 // with ':' (8591). This header's records are three free functions that call those slots: getResourceFile (line 82, in
 // fn 2246, slot 3), getResourceMovie (line 87, in fns 1593 and 3076, slot 4) and isResource (line 97, in fn 2246, slot
-// 6). They are not reconstructed, and the class ends before line 82, so their lines stay free. The record spells
-// getResourceFile's result `SharedVector`; the alias's scope (api) is chosen, and its type is the
+// 6). Each holds its record's line, a call of CPolySingleton<IResource>::instance() whose default argument the record is
+// (column 12); the other lines are blank, and that the three are inline is chosen: their records lie in the data of the
+// objects that call them (isResource's and getResourceFile's after cfixedimage.cpp's record at 1577732), as a header's
+// inline code inlined there gives. The record spells getResourceFile's result `SharedVector`; the alias's scope (api) is
+// chosen, and its type is the
 // std::shared_ptr<std::vector<unsigned char>> that slot 3 builds. The member names are chosen after those functions',
 // and so are slot 2's two int parameters, which its one body ignores, and that no member is const.
 
@@ -19,6 +22,7 @@
 
 #include "api/gui/cmovie.h"
 #include "api/gui/iimage.h"
+#include "api/pattern/cpolysingleton.h"
 #include "ecourna/api/uetypes.hpp"
 
 namespace api {
@@ -35,5 +39,24 @@ public:
     virtual bool Exists(const std::string& nome) = 0;
     virtual bool IsResource(const std::string& nome) = 0;
 };
+
+// (original lines 43-79: content not recovered)
+#line 80
+inline SharedVector getResourceFile(const std::string& nome)
+{
+    return CPolySingleton<IResource>::instance().GetFile(nome);
+}
+
+inline CMovie getResourceMovie(const std::string& nome)
+{
+    return CPolySingleton<IResource>::instance().GetMovie(nome);
+}
+
+// (original lines 90-94: content not recovered)
+#line 95
+inline bool isResource(const std::string& nome)
+{
+    return CPolySingleton<IResource>::instance().IsResource(nome);
+}
 
 } // namespace api

@@ -1,19 +1,43 @@
-// Roots: keep api::CTextFieldUpdate's destructors (target fns 5495 and 10917, slots 0 and 1 of the vtable @1582988) in
-// the skeleton link the way the target keeps them. In the target the vtable is referenced by the constructor (fn 3658,
-// not reconstructed: it calls api::ITimerScheduler::GetInst, fn 1259), which the make_shared callers 502, 3058 and 5936
-// call; the vtable's slots put both destructors in the table, and the deleting destructor is the base-object one's only
-// direct caller (awk -F'\t' '$2==5495' ledger/callgraph.tsv prints 10917). Taking the vtable's address keeps the same
-// set. Declared through an asm label, so this TU needs no uenux2 header and instantiates nothing.
-extern "C" {
-extern const char ctextfieldupdate_vt[] __asm__("_ZTVN3api16CTextFieldUpdateE");
-}
+// Roots: api::CTextFieldUpdate's constructor (target fn 3658) has three callers in the target, fns 502, 3058 and 5936,
+// each a std::make_shared<CTextFieldUpdate> (awk -F'\t' '$2==3658' ledger/callgraph.tsv), none reconstructed. All three
+// pass the text colour 2 and the background colour 1, which binaryen's dead-argument elimination folds into the
+// constructor (its wasm type has no parameter for them), and they pass different points, texts, intervals and fonts,
+// which stay parameters. These two stand-ins give it the same call shape, with the colours 2 and 1 and the rest varied,
+// and bodies that differ, so wasm-opt cannot merge them into one caller; they are address-taken from a static
+// constructor. The constructor stores the vtable, which keeps the destructors, Show and Hide in the table as the target
+// has them. Compiled with APP_CXXFLAGS, like unit 28's roots, which make the same make_shared calls.
+#include <chrono>
+#include <memory>
+
+#include "api/gui/ctextfieldupdate.h"
 
 namespace {
 
-const void* volatile ctextfieldupdate_sink;
+__attribute__((noinline)) std::shared_ptr<api::IFormField<api::IScreen>> CampoAtualizadoA(
+    const api::SPoint& posicao, const api::SharedIText& text, const std::chrono::milliseconds& intervalo, const api::SFont& font)
+{
+    return std::make_shared<api::CTextFieldUpdate>(posicao, text, intervalo, font, static_cast<api::TColor>(2),
+                                                   static_cast<api::TColor>(1));
+}
 
-struct SCTextFieldUpdateRoots {
-    SCTextFieldUpdateRoots() { ctextfieldupdate_sink = ctextfieldupdate_vt; }
-} ctextfieldupdate_roots;
+__attribute__((noinline)) std::shared_ptr<api::IFormField<api::IScreen>> CampoAtualizadoB(api::TPosition x, api::TPosition y,
+                                                                                         const api::SharedIText& text,
+                                                                                         const api::SFont& font)
+{
+    const api::SPoint posicao{x, y};
+    const std::chrono::milliseconds intervalo{500};
+    return std::make_shared<api::CTextFieldUpdate>(posicao, text, intervalo, font, static_cast<api::TColor>(2),
+                                                   static_cast<api::TColor>(1));
+}
+
+void* volatile w3658_sink;
+
+struct SW3658Roots {
+    SW3658Roots()
+    {
+        w3658_sink = reinterpret_cast<void*>(&CampoAtualizadoA);
+        w3658_sink = reinterpret_cast<void*>(&CampoAtualizadoB);
+    }
+} w3658_roots;
 
 } // namespace

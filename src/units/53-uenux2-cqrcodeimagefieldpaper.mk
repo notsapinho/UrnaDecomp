@@ -11,15 +11,15 @@
 # return type).
 # Draw (fn 10963) is the class's only member of its own, the key function, so src/uenux2/src/api/gui/
 # cqrcodeimagefieldpaper.cpp (a file no record names; the name follows the class) emits the vtable and with it the
-# implicit destructors. The constructor (inlined into fn 2775, not reconstructed) has no target function. The vtable
+# implicit destructors. The constructor is out of line there too, and binaryen inlines it into its one caller,
+# api::CPaperFormBuilder::AddQRCode (fn 2775, unit 31), so it has no target function: with it inline in the class, 2775's
+# copy of the vector lacks the store of the end pointer before the copy that the target keeps (rows read with pnpm wasm
+# score in the link); out of line, that part of 2775 is the target's. Its being in this file is chosen. The vtable
 # also brings IFormField<IPaper>::GetTypeName (fn 11014, inline in api/gui/iformfield.h), which does not match yet: the
 # target's is a thunk into fn 3891, the body binaryen merged from the three 18-character GetTypeName bodies, with
 # api::CTextFieldBlinking's (10940) and api::CInputFieldControl<IScreen>'s (11155), neither in our link; its stub goes
 # with the vtable (src/README.md "Stubs"). Paths relative to src/uenux2.
 CQRCODEIMAGEFIELDPAPER_SRCS := src/api/gui/cqrcodeimagefieldpaper.cpp
 UENUX2_SRCS += $(CQRCODEIMAGEFIELDPAPER_SRCS)
-# nothing calls the destructors directly in the target, which reaches them through the vtable only:
-# 53-uenux2-cqrcodeimagefieldpaper-roots.cpp keeps the vtable, as the constructor inlined into fn 2775 does
-$(ROOT)/$(APP)/53-uenux2-cqrcodeimagefieldpaper-roots.o: $(ROOT)/src/units/53-uenux2-cqrcodeimagefieldpaper-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/53-uenux2-cqrcodeimagefieldpaper.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/53-uenux2-cqrcodeimagefieldpaper-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/53-uenux2-cqrcodeimagefieldpaper-roots.o
+# nothing calls the destructors directly in the target, which reaches them through the vtable only: the constructor's
+# vptr store keeps it, reached from unit 31's roots through AddQRCode, so this unit has no roots file
