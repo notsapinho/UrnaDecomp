@@ -7,7 +7,6 @@
 // binaryen inlines a function with one call site, so each gets a second one. CThreadEleitor::GetInst (316) needs no
 // root: 10203 and 10225 call it. Each stand-in's body is its own: no target function holds these calls.
 #include "app/vota/eleitor/cestadoaudio.h"
-#include "app/vota/monitor/cthreadmonitor.h"
 #include "app/vota/operador/cthreadoperador.h"
 
 namespace {
@@ -15,7 +14,6 @@ namespace {
 __attribute__((noinline)) int ParaOperadorEMonitor()
 {
     vota::CThreadOperador::GetInst().Stop();
-    vota::CThreadMonitor::GetInst().Stop();
     return vota::CEstadoAudio::GetInst().Ativo();
 }
 
