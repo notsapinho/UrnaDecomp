@@ -1,8 +1,8 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// The members with no record sit at lines the reconstruction chose; unit 119's fragment says why and has the other
-// notes, unit 142's for the three after LogaTituloInvalidoRegistroMesario, unit 138's for LogaVotacaoEncerrada.
+// The members with no record sit at lines the reconstruction chose; each one's unit fragment says why: 119's, then
+// 152's seven after LogaTituloInvalidoRegistroMesario, 142's three after those, and 138's LogaVotacaoEncerrada.
 
 #include "app/vota/log/clogvota.h"
 
@@ -47,6 +47,42 @@ void CLogVota::LogaTituloInvalidoRegistroMesario()
 {
     const std::string mensagem = "Digitado título inválido para o registro de mesário";
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaIndagaEleitorVotando()
+{
+    logaAlerta("Mesário indagado se eleitor está votando");
+}
+
+void CLogVota::LogaPedidoDesconexaoFone()
+{
+    loga("Solicitado ao mesário que desconecte o fone de ouvido");
+}
+
+void CLogVota::LogaPedidoConexaoFone()
+{
+    loga("Solicitado ao mesário que conecte o fone de ouvido");
+}
+
+void CLogVota::LogaHorarioVotacaoTerminou()
+{
+    const std::string mensagem = "Horário de votação terminou";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaInspecaoIniciada()
+{
+    loga("Inspeção da urna iniciada");
+}
+
+void CLogVota::LogaAudioDesativadoFimVotacao()
+{
+    loga("Áudio desativado pelo fim da votação");
+}
+
+void CLogVota::LogaSuspensaoAbortada()
+{
+    loga("Mesário abortou processo de suspensão");
 }
 
 void CLogVota::LogaJustificativaRecebida()
