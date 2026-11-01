@@ -8,6 +8,8 @@
 //     std::function<std::string(const std::string&)> (5936), CDataImage over std::vector<unsigned char> (*)() (6689),
 //     and CQRCodeImage (12040, 12055), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
 //     the source's matched call operator (2268); it (12632) and the block link from unit 102's object, which is first;
+//     and so do CDataText over comum::CCandidaturasDSNome and comum::CCandidaturasDSNumero (4185 builds both), whose
+//     GetText (12649, 12742) calls the source's operator, matched (5807) or inlined by binaryen (unit 180's);
 //   SharedIText(new X), where the target has __shared_ptr_pointer<X*, shared_ptr<IText>::__shared_ptr_default_delete<IText, X>, ...>:
 //     CDataText over CTextSource (5409), std::string (*)() (604) and std::function<std::string()> (5419), CDataTextFmt
 //     over CTextSource (652) and std::string (*)(const std::string&) (651);
@@ -41,6 +43,7 @@
 #include "api/gui/cdatatextfmt.h"
 #include "api/gui/cqrcodeimage.h"
 #include "api/gui/ctextsource.h"
+#include "app/comum/dados/ccandidaturasds.h"
 #include "app/comum/dados/ccargods.h"
 
 namespace {
@@ -135,6 +138,18 @@ __attribute__((noinline)) SharedIText TextoCargoSexo(const comum::CCargoDSNomeSe
     return std::make_shared<CDataText<comum::CCargoDSNomeSexoCandidato>>(fonte);
 }
 
+// Stands for fn 4185, which builds CDataText<comum::CCandidaturasDSNome> (vptr 1537440) and
+// CDataText<comum::CCandidaturasDSNumero> (vptr 1537204) with std::make_shared.
+__attribute__((noinline)) SharedIText TextoCandidaturaNome(const comum::CCandidaturasDSNome& fonte)
+{
+    return std::make_shared<CDataText<comum::CCandidaturasDSNome>>(fonte);
+}
+
+__attribute__((noinline)) SharedIText TextoCandidaturaNumero(const comum::CCandidaturasDSNumero& fonte)
+{
+    return std::make_shared<CDataText<comum::CCandidaturasDSNumero>>(fonte);
+}
+
 // Stands for fn 10967, CQRCodeImage::GetData (pending), which calls std::vector<unsigned char>::insert(const_iterator,
 // size_type, const value_type&), fn 3661, three times with a byte of 255. Two calls, so binaryen keeps it a function.
 __attribute__((noinline)) void BordaImagem(std::vector<unsigned char>& imagem, std::size_t tamanho)
@@ -174,6 +189,8 @@ struct SW79Roots {
         w79_sink = reinterpret_cast<void*>(&TextoFormatoFuncao);
         w79_sink = reinterpret_cast<void*>(&TextoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoCargoSexo);
+        w79_sink = reinterpret_cast<void*>(&TextoCandidaturaNome);
+        w79_sink = reinterpret_cast<void*>(&TextoCandidaturaNumero);
         w79_sink = reinterpret_cast<void*>(&BordaImagem);
     }
 } w79_roots;

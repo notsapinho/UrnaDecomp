@@ -365,9 +365,6 @@
 // f5908 · 23 B · unmatched · placement: link order · name unknown
 // ? f5908(i32) { ... }
 
-// f5903 · 112 B · unmatched · placement: link order · name unknown
-// void f5903(i32) { ... }
-
 // link-order cluster 853 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cmenubase.cpp
 
 // f5911 · 25 B · unmatched · placement: link order · name unknown
@@ -1640,16 +1637,6 @@
 
 // f12641 · 544 B · unmatched · placement: link order · name unknown
 // void f12641(i32, i32) { ... }
-
-// link-order cluster 658 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f12649 · 12 B · unmatched · placement: link order · name unknown
-// void f12649(i32, i32) { ... }
-
-// link-order cluster 662 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f12742 · 500 B · unmatched · placement: link order · name unknown
-// void f12742(i32, i32) { ... }
 
 // link-order cluster 695 · uses=2
 

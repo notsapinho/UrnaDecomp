@@ -18,7 +18,19 @@ using namespace api;
 
 namespace comum {
 
-// (original lines 21-35: content not recovered)
+// (original lines 21-22: content not recovered)
+#line 23
+CInfoMTLCD::CInfoMTLCD()
+{
+    MostraIconeBateria();
+}
+
+void CInfoMTLCD::MostraIconeBateria()
+{
+    m_bateria.Attach(this);
+}
+
+// (original lines 33-35: content not recovered)
 #line 36
 CInfoMTLCD::~CInfoMTLCD()
 {
