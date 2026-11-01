@@ -11,7 +11,9 @@
 #   tools/round/try-tu.sh --symbols [--component <dir>] [--flags '…'] <tu.cpp|dir>...   (compile; print each defined
 #                       function symbol as <mangled> TAB <demangled>: the name --extract export:<mangled> takes. llvm-nm's
 #                       T and W only, so weak data shows and strong data does not: a class's own vtable and typeinfo
-#                       are missing even when the TU emits them; read the object with llvm-nm --defined-only for those)
+#                       are missing even when the TU emits them; read the object with llvm-nm --defined-only for those.
+#                       A local symbol is missing too, a static or anonymous-namespace function or a lambda's __func
+#                       members: read build/out/try/<name>/obj/<tu>.o with wasm-objdump -d)
 #
 # Whole-link mode writes build/out/try/<name>/{obj/,wasm/,wasm-named/,functions.tsv,targets.txt,report.md} and never touches
 # ledger/ (you decide what lands in src/; `make -C src census` then moves the ledger). Each TU is compiled with the
@@ -20,7 +22,11 @@
 # landed unit's own rule in src/units/, plus --flags. A TU's path under src/ names its component; a TU outside src/
 # needs --component, the directory under src/ it would land in (ecourna/app/dados, uenux2/src/api/util, asn1, app), which
 # also overrides the path of every TU inside src/ (so it is how a src/units/*-pending.cpp, which has no rule here, gets
-# compiled with the unit's flags). Library objects are the prebuilt ones (make rebuilds nothing of theirs).
+# compiled with the unit's flags). The executable TU's flags (VOTA_WEB_CXXFLAGS, -Oz -fexceptions) belong to its one
+# file: src/uenux2/wasm/vota_web/vota_web_wasm.cpp gets them, and --component uenux2/wasm/vota_web gives the uenux2
+# tree's (-O3), so a probe of its copies is compiled with `make -s -C src print-VOTA_WEB_CXXFLAGS` by hand
+# (docs/reference/facts/levels.md V4 links one). Library objects are the prebuilt ones (make rebuilds nothing of
+# theirs).
 # The try's objects go in EXTRA_OBJS, after both trees on the link line, so a linkonce copy a landed object defines stays
 # that object's. An object takes its TU's base name, so two TUs of one base name overwrite each other.
 # The candidate's functions are kept alive by a generated roots TU (tools/round/gen_try_roots.py, compiled with
@@ -38,6 +44,8 @@
 # sym:<mangled> --against <fn>` (or skip the kinds with --no-kinds; docs/how-to-decompile.md step 5).
 # --single: no link of the skeleton; the toolkit's rank adapter compiles the TU alone and scores one exported function
 # (a candidate linked alone has other inlining/DAE decisions than inside the app — use it to iterate, not to conclude).
+# It links in the toolkit's temporary directory and keeps no wasm: its score aligns rows, and a row of ours it does not
+# align is not shown. --symbols keeps the object (clang's code, before binaryen).
 # A TU that is not at the path it would land in (one outside src/, or any under --component) is compiled as a copy
 # there under build/out/try/<name>/, so a quoted #include of a file beside the original is not found (the tree's -I
 # finds the tracked header of that name instead): include a scratch header by its /work path. To try a variant of a

@@ -419,8 +419,9 @@ stands for an inline member decides which object of ours emits the vtable's memb
 
 `ledger/callgraph.tsv` holds direct calls only, so a function an `invoke_*` thunk calls has no caller there, and
 `pnpm wasm fn` lists its table slots without their users. The disassembly prints an import by its minified name
-(`call 8 <a.i>`), and `ledger/import-names.json` gives the real one. A use of slot S is an `i32.const S` whose next call
-is an `invoke_*` import:
+(`call 8 <a.i>`), and `ledger/import-names.json` gives the real one. A use of slot S is an `i32.const S` before the next
+call, an `invoke_*` import. Other constants can come between them, since the slot is the invoke's first argument and
+the others are pushed after it (5821 builds `p3 + 40` after slot 71), so the script keeps the slot until a call:
 
 ```sh
 python3 -I - target/vota_web_wasm.wasm 448 <<'END'
@@ -428,25 +429,36 @@ import json, re, subprocess, sys
 wasm, slot = sys.argv[1], sys.argv[2]
 names = json.load(open('ledger/import-names.json'))
 invoke = {n for n, real in names.items() if real.startswith('invoke_')}
-f, last = None, None
+f, seen = None, False
 for line in subprocess.run(['wasm-objdump', '-d', wasm], capture_output=True, text=True).stdout.splitlines():
-    if m := re.search(r' func\[(\d+)\]', line): f, last = m[1], None
-    elif m := re.search(r'\| *i32\.const (\d+)$', line): last = m[1]
-    elif (m := re.search(r'\| *call \d+ <a\.(\S+)>', line)) and last == slot and m[1] in invoke:
-        print('func', f, '->', names[m[1]]); last = None
-    elif '| call' in line: last = None
+    if m := re.search(r' func\[(\d+)\]', line): f, seen = m[1], False
+    elif re.search(r'\| *i32\.const ' + slot + '$', line): seen = True
+    elif m := re.search(r'\| *call \d+ <a\.(\S+)>', line):
+        if seen and m[1] in invoke: print('func', f, '->', names[m[1]])
+        seen = False
+    elif '| call' in line: seen = False
 END
 # func 1525 -> invoke_iii
+# func 3939 -> invoke_iiii
+# func 5166 -> invoke_viiiiii
+# func 6155 -> invoke_v
+# func 7787 -> invoke_v
+# func 7869 -> invoke_viiiiiiiiii
+# func 7869 -> invoke_viiiiiiiiiiiiiii
+# func 7877 -> invoke_v
 # func 9256 -> invoke_iii
 # func 9259 -> invoke_iii
 # func 9538 -> invoke_iii
 # func 9543 -> invoke_iii
 # func 10205 -> invoke_iiiii
+# func 12110 -> invoke_vii
 ```
 
 Slot 448 holds 5632 (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[448\] '`), which
-takes four parameters and returns one, so only `invoke_iiiii` fits: 10205 is its caller. The other five pass 448 as
-an integer that happens to equal the slot.
+takes four parameters and returns one, so only `invoke_iiiii` fits: 10205 is its caller. The others pass 448 as an
+integer that happens to equal the slot, or as another argument. Slot 71 holds `path::operator/=` (183), which takes
+two and returns one: of `func 2942 -> invoke_ii`, `func 5821 -> invoke_iii` and `func 5968 -> invoke_iii`, the last
+two are its callers.
 
 ## U12. A class with no row in `ledger/vtables.json` can have a vtable
 
@@ -550,3 +562,35 @@ build/docker-build.sh /emsdk/upstream/bin/llvm-objdump -r $P/rtti.o | /usr/bin/g
 - **An `si_class` typeinfo does not make the base polymorphic.** `Derived`'s typeinfo is `__si_class_type_info` over
   an empty `Base` with no virtual member, whose typeinfo is `__class_type_info`. The kind gives the bases, their
   offsets and access, not which class declares a virtual member.
+
+## U14. The charset of `src/units/`
+
+`.editorconfig` gives one file of `src/units/` a charset, the externs file, Latin-1 (it compiles as a TSE source), so
+`check_encoding.py` reads no other. At bbf27ac1, by what each file decodes as:
+
+```sh
+python3 -I -c "
+import pathlib
+n = {}
+for p in sorted(pathlib.Path('src/units').iterdir()):
+    if p.suffix not in ('.mk', '.cpp', '.h'): continue
+    b = p.read_bytes()
+    try: b.decode('ascii'); k = 'ascii'
+    except UnicodeDecodeError:
+        try: b.decode('utf-8'); k = 'utf-8'
+        except UnicodeDecodeError: k = 'latin-1'
+    n.setdefault((p.suffix, k), []).append(p.name.split('-')[0])
+for (s, k), v in sorted(n.items()): print(s, k, len(v), ' '.join(v) if k != 'ascii' else '')
+"
+# .cpp ascii 193
+# .cpp latin-1 1 12
+# .cpp utf-8 1 05
+# .mk ascii 144
+# .mk latin-1 4 110 124 130 143
+# .mk utf-8 22 01 04 05 08 10 100 109 13 136 145 152 157 169 176 186 24 67 80 85 88 94 96
+```
+
+UTF-8 is what most non-ASCII fragments hold, quotes of accented target literals among them (169's
+`"Aguardando confirmação para emissão da zerésima"`), and what a tool that writes UTF-8 gives. The four Latin-1
+fragments are the exception the README's
+rule leaves.

@@ -125,7 +125,9 @@ Post it when you hit it, not at the end of your stage.
    `src/units/`, read as a number (`100-` sorts between `10-` and `11-`), one per lane in lane order (A 15, B 16). Two lanes that each take "the next free
    number" collide ([src/units/README.md](../../src/units/README.md) "Names"). A lane whose target lives in a file a
    landed unit already compiles takes no number: it extends that unit's fragment ("Landing a unit" item 2 there), and
-   its brief names the fragment it extends.
+   its brief names the fragment it extends. Two lanes may extend one unit that compiles unrelated classes' sources
+   (unit 110), each with its own source and its own paragraph of the fragment: the pick names the pair, and the landing
+   takes both hunks.
 6. **Create one worktree per lane**, from the urna checkout's root, branch `decomp/<lane>` from `main`, as a
    sibling directory of the checkout:
 
@@ -160,7 +162,9 @@ Post it when you hit it, not at the end of your stage.
 
    A lane that builds on another lane's unlanded work is cut the same way, from that lane's commit once its verdict is
    CONFIRMED, and lands after it. Its base is that commit: the brief names it, and the commands written with
-   `git merge-base main HEAD` take it literally, since that command then gives the older commit `main` shares.
+   `git merge-base main HEAD` take it literally, since that command then gives the older commit `main` shares. A lane
+   that needs two or more lanes' unlanded work has no such base: it is cut from `main` once they have landed, in a later
+   batch, and until then the pick lists its rows with the lanes they wait for.
 
 ---
 
@@ -193,6 +197,11 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   a body of ours calls something no target function is named for, which the row's `detail` names, and how-to step 1
   tells the three cases apart.
 
+  A batch still landing moves the pool of a pick whose base is before it. Count as resolved what its branches match or
+  name (`git show <branch>:splat/symbol_addrs.txt`). The rows they write or trap without matching (their diff removes
+  the row's stub, or adds the member to a `-pending.cpp`) are out of the pool until they land, and the pick says which
+  lane would take them after; a row a pending comment only mentions is not taken.
+
   Claude Code replaces a `$` followed by a digit in this file with one of the command's argument words before the
   session reads it (a dollar and 0 become the first word; Claude Code's skills docs, "Available string substitutions"), fenced code
   included, so the file holds no such text, and a query belongs in a script, not here:
@@ -204,7 +213,12 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   (`wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'elem\[4527\]'` prints
   `- elem[4527] = ref.func:10255`, the routine 1684 passes to `IThreadImpl::Create`). Count it as a callee, and put it
   in the same lane. A callee resolves when it is matched (`/usr/bin/grep -E '^N ' splat/matched.txt` prints a line) or
-  named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A function whose callees are unnamed
+  named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A slot of a lambda's
+  `std::__function::__func` vtable is written with the function that builds the lambda, the one whose body stores that
+  vtable's vptr (`pnpm wasm fn` of it shows the `i32.const`): count that builder as the slot's callee, since the
+  closure type is local to it. A call of the row itself, or a cycle of rows the lane writes together, blocks nothing:
+  the name comes from a caller's vote once the caller matches (how-to step 1, "The row's own symbol"), so the row goes
+  in its caller's lane. A function whose callees are unnamed
   needs those first, with one kind of exception: a callee the candidate's own TU instantiates, which step 8 names by
   `call` evidence once the candidate is paired (`docs/reference/splat.md` §2). Its signs: no stub, owner `-`, a body of
   library calls shaped like a header member (183 is `std::filesystem::path::operator/=`). A merge thunk of a stub-less
@@ -341,7 +355,9 @@ confirmed, and the match count and commit of `main` before the batch. Land in ba
 batch is a LAND stage of its own, and it touches no lane its brief does not name. It posts a `rounds/` claim of `main`
 first, naming the lanes, their commits and the worktrees it will remove, and keeps its logs under `build/out/land/`. A
 batch that meets a lost match stops before committing that merge and posts it. A toolkit fix the merge needs is a commit
-of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there. A row lost to
+of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there: a merge already
+staged when the need shows is aborted (`git merge --abort`, everything staged first: `docs/reference/facts/workflow.md`
+§W22), the fix committed on `main`, and the lane merged again. A row lost to
 one link's data layout, the cause shown (how-to step 9's cases: an object at 0x100000, a string's closing NUL read as
 a table slot),
 may wait for the next lane of the batch: land that lane first, retry, stop if the row is still out, and say so at the
@@ -359,7 +375,10 @@ lands ("Pausing and resuming" below).
    <commit>` prints nothing), so nothing is regenerated: link, run the splat build and the checks, and commit.
 2. **Each later lane** merges with `git merge --no-ff --no-commit <commit>` and resolves the conflicts as
    [how-to-decompile.md](../../docs/how-to-decompile.md) step 10 "Landing onto a moved main" says, then runs steps 6
-   to 10 again on the merge (link, census, symbols, match, build, checks) and commits it all as the merge commit. A
+   to 10 again on the merge (link, census, symbols, match, build, checks) and commits it all as the merge commit. Every
+   check passes at that commit but one case: a lane that adds or retires a benchmark setup leaves the merge failing
+   `pnpm test:bench` until the re-selection, a commit of its own after it (`asmlift-wasm/benchmark/README.md`
+   "Re-selecting"), and the merge's message says so. A
    merge commit takes no pathspec (`docs/reference/facts/workflow.md` §W18): stage everything, check that `git status
    --short` shows no unstaged or untracked line, and commit with a bare `git commit -F -`. That is safe only because
    LAND owns the whole checkout. Do not pick generated lines by hand. How-to step 10 has the rest: no `make -C src

@@ -161,8 +161,12 @@ none, a range that does not end at its `#line`, a comment or a `#line` without t
 longer sits on the first line it names. That last one means lines were added or removed above it: the `#line` holds
 the code below where it was, and `make -C src stubs` writes the comment again over the lines that are left, which is
 what a recovered function written into a gap needs. To move the code below instead, `--strip` the file first and edit
-the blank lines. Code added between a `#line` and the line under it moves that code; `TMPDIR=/tmp make -C src
-check-srcloc` lists every record that moved, after a link.
+the blank lines. Code added between a `#line` and the line under it moves that code, and so does any line added above
+a record with no `#line` between them, which in a stripped file is every line: an `#include` a new function needs,
+added at the top, moves every record of the file. Delete as many blank lines of the run below it. A moved record takes
+its function out of `match` with its body unchanged: step 9 stops on `matched.txt only: [N]`, and N's row reads
+`unresolved` with `source_location not in the target` at the record's operand. `TMPDIR=/tmp make -C src check-srcloc`
+lists every record that moved, after the link: run it before step 7 when an edit added a line above a record.
 
 ## Trying a candidate: tools/round/try-tu.sh
 

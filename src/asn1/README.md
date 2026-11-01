@@ -60,7 +60,11 @@ header comment (`/usr/bin/grep -h SYNTHESIZED src/asn1/modules/*.h | wc -l` coun
 record: rename the class by hand, in the module those give (facts §A3), and take the word out. A made-up class that
 other modules' typedefs or a landed unit spell stays instead: add the real class to its module beside it, move to it
 only the fields a written function reads, and say in the made-up class's comment which fields still use it and what
-the real class is (`DataGeracao` and `DataHoraJE`, `InicioHV` and `ModuloTiposEleitorais::DataJE`). It yields when the
+the real class is (`DataGeracao` and `DataHoraJE`, `InicioHV` and `ModuloTiposEleitorais::DataJE`). A field a written
+function reads that a matched one assigns a `std::string` with no temporary stays on the made-up class, which then
+derives from the real one: `dataGeracao`, which 11588 hands to a `const DataHoraJE&` and 9219 assigns, keeps
+`DataGeracao`, which derives from `DataHoraJE` and adds the generated `operator=(std::string)`, a reading its header
+says (facts §A3). It yields when the
 bytes agree as well: two generated classes with the same slots have vtables of the same content, so a field of the
 made-up type matches through the real one's vtable, and the review calls it `legitimately` (`DataGeracao`, which RTTI
 calls `DataHoraJE`, facts §A3). A generated class has no code of its own (all `SEQUENCE` classes share seven vtable
