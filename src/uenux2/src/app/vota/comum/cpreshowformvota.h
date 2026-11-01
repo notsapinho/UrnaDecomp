@@ -1,10 +1,17 @@
 #pragma once
 
+#include <memory>
+#include <string>
+
 #include "api/gui/ipreshow.h"
 
 namespace api {
 class IScreen;
-}
+class IInputKbd;
+class CInteractiveFormBuilder;
+template <typename MEDIA, typename INPUT>
+class CInteractiveForm;
+} // namespace api
 
 namespace vota {
 
@@ -24,5 +31,14 @@ public:
 
     void PreShow(api::IScreen& tela) override;
 };
+
+// Fn 576 (144 B, 16 callers): the interactive form of the builder's fields, named, with a new CPreShowFormVota as its
+// pre-show (api::CInteractiveFormBuilder::GetInteractiveForm, fn 554, with true as its last argument). It builds the
+// std::shared_ptr<api::IPreShow<api::IScreen>> from the pointer (the __shared_ptr_pointer block, vptr @1532684), and
+// that block's vtable lies right after CPreShowFormVota's typeinfo. A reading: the object that first builds the block
+// emits its vtable, so the function is in the class's file (fn 886, the other builder, could be too). No record names
+// it: a free function of vota, its name and its parameters' are chosen.
+std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> GetFormularioInterativo(
+    api::CInteractiveFormBuilder& builder, const std::string& nome);
 
 } // namespace vota

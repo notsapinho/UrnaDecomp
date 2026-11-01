@@ -6,8 +6,9 @@
 // - vota::CThreadEleitor::Run 7061 (slot 2), 4119 B: fns 2450, 3844 and ProcessarEntrada 4349 (record
 //   cthreadeleitor.cpp:134). 7061's records all belong to code inlined from cajusteinicial.cpp, so its stub sat there, and
 //   that file's stub-only state is unchanged by this trap's taking the stub.
-// - vota::CThreadEleitor::ParaOutrasThreads 7030 (slot 5), 18 B: `IExecucaoVota::GetInst().Slot6();`, which needs fn 3594,
-//   record iexecucaovota.cpp:74, 1923 B, not written. Slot 6 of vota::IExecucaoVota is the call at vtable + 24.
+// - vota::CThreadEleitor::ParaOutrasThreads 7030 (slot 5), 18 B: `IExecucaoVota::GetInst().ParaThreadsOperadorMonitor();`
+//   (slot 6, the call at vtable + 24; fragment 165 writes CExecucaoVota's, fn 10232), which needs GetInst, fn 3594,
+//   record iexecucaovota.cpp:74, 1923 B, not written.
 // - vota::CThreadOperador::Run 10204 (slot 2), 1873 B, record cthreadoperador.cpp:87: fns 180, 203, 1694, 3593, 3842, 3843,
 //   3844, 3966, 5343, 5450, 5908 to 5911.
 // - vota::CThreadMonitor::Run 10226 (slot 2), 7171 B: its records name VotacaoSuspensa, MonitorFoneOuvido,

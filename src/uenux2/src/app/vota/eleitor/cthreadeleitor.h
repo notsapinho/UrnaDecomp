@@ -31,6 +31,10 @@ public:
 
     ~CThreadEleitor() override;
 
+    // The queue at +36, which vota::CExecucaoVota's slot 8 returns (fn 4708: the thread's address plus 36). The
+    // accessor and its name are chosen: no record or out-of-line copy names one.
+    api::CPriorityMessageQueue<api::SMessage>& GetMensagens() { return m_mensagens; }
+
 protected:
     void Run() override;
     void ParaOutrasThreads() override;

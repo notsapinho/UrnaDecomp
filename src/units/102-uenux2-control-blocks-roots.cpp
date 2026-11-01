@@ -112,7 +112,6 @@ extern const char w102_vt_cnewlinefieldpaper[] __asm__("_ZTVNSt3__220__shared_pt
 extern const char w102_vt_cpreshowclearscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api19CPreShowClearScreenENS_10shared_ptrINS1_8IPreShowINS1_7IScreenEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cqrcodeimagefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api22CQRCodeImageFieldPaperENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cdatatext_cescolheopcao_copcaods[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS9_S6_EENS_9allocatorIS6_EEEE");
-extern const char w102_vt_cpreshowformvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota16CPreShowFormVotaENS_10shared_ptrIN3api8IPreShowINS5_7IScreenEEEE27__shared_ptr_default_deleteIS8_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_citemparametrosurnavota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemParametrosUrnaVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_citemversoespacotesvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemVersoesPacotesVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_citemimprimeestadournavota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota26CItemImprimeEstadoUrnaVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
@@ -245,7 +244,6 @@ template struct SBloco<TItem, vota::CItemImprimeListaEleitoresVota>;
 template struct SBloco<TItem, vota::CItemVersoesPacotesVota>;
 template struct SBloco<TItem, vota::CItemParametrosUrnaVota>;
 template struct SBloco<TItem, vota::CItemVisualizarCandidatosVota>;
-template struct SBloco<TPreShow, vota::CPreShowFormVota>;
 template struct SBloco<TPreShow, api::CPreShowClearScreen>;
 template struct SBloco<TPreShow, api::CPreShowNothing<api::IScreen>>;
 template struct SBloco<api::IInputValidation, api::CNumberValidation>;
@@ -329,7 +327,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cpreshowclearscreen;
         w102_sink = w102_vt_cqrcodeimagefieldpaper;
         w102_sink = w102_vt_cdatatext_cescolheopcao_copcaods;
-        w102_sink = w102_vt_cpreshowformvota;
         w102_sink = w102_vt_citemparametrosurnavota;
         w102_sink = w102_vt_citemversoespacotesvota;
         w102_sink = w102_vt_citemimprimeestadournavota;

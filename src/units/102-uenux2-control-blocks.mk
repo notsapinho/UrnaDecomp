@@ -1,10 +1,11 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 59 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Seven come from the objects of units 31, 120 and 101, whose
-# builders are written, so the roots no longer instantiate them: IFormImpressao<IPaperRelatorios>'s and
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 58 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Eight come from the objects of units 31, 120, 101 and 165,
+# whose builders are written, so the roots no longer instantiate them: IFormImpressao<IPaperRelatorios>'s and
 # CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CInteractiveForm<IScreen, IInputKbd>'s (554),
-# CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515, 6024) and api::CTimer's (10846, unit 101's
-# itimerscheduler.cpp, from which 10844, 10843 and 2967 match). Each block below: the T, the
+# CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515, 6024), api::CTimer's (10846, unit 101's
+# itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and vota::CPreShowFormVota's (576, unit 165's
+# cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is not written). Each block below: the T, the
 # function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are shared
 # bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
@@ -16,7 +17,7 @@
 #   IText: CDataText<vota::CEscolheOpcao::COpcaoDS> 2753: 10684 (CDataText<CPadDS<CToUpperDS<CCargoDSNome>>>'s, 11246,
 #     comes from its builder, fn 5613, which unit 139 matches)
 #   IForm<IPaper>: IFormImpressao<IPaperRelatorios> 5515: 11001
-#   IPreShow<IScreen>: vota::CPreShowFormVota 576, 886: 7660. CPreShowClearScreen 11140: 11138.
+#   IPreShow<IScreen>: CPreShowClearScreen 11140: 11138.
 #     CPreShowNothing<IScreen> 11891: 11137
 #   IPreShow<IPaper>: CPreShowNothing<IPaper> 5515: 11010
 #   IDAO: IComparecimentoMesarioDAO 7787: 11664. IJustificadorDAO 7787: 11663
