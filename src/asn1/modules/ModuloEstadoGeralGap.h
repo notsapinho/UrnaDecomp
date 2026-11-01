@@ -295,7 +295,7 @@ public:
     class dataSegundoTurno
     {
     public:
-        typedef ModuloComplementosMunicipios::InicioHV value_type;
+        typedef ModuloTiposEleitorais::DataJE value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;

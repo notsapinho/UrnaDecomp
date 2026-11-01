@@ -12,9 +12,9 @@ class CEstadoGeralGap;
 
 namespace comum::asn {
 
-// DoConverte and DoDesconverte (target fns 11394, 11395, slots 2 and 3) are not reconstructed and CEstadoGeralGap has no
-// header yet, so nothing here emits the vtable: DesconverteUrnaAplicativo and ConverteUrnaAplicativo, which each calls
-// twice, are reached from the roots file.
+// RTTI names the class and its base (vtable @1568488). DoConverte and DoDesconverte (target fns 11394 and 11395, slots
+// 2 and 3) are written in cconversorestadogeralgap.cpp, which emits the vtable; each calls one of the two helpers below
+// twice.
 class CConversorEstadoGeralGap : public IConversorASN<ModuloEstadoGeralGap::EstadoGeralGap, md::estadoaplicacao::CEstadoGeralGap> {
 protected:
     TEntidade DoConverte(const TDado& dado) const override;

@@ -8,6 +8,8 @@
 # CNomesCargo's constructor, in asn/processoeleitoral/. Added later: CCargo::operator<=> (5655),
 # CEleicaoPE::PossuiCargoCandidato (5653), and CCargos::RemoveFiltro (3784) with the std::vector range assign it
 # instantiates (3783); CEleicaoPE::ValidaOrdem (3714) and GetIDsCargos (5654), once md/ built with strict aliasing.
+# ccargo.cpp also holds CCargo's two constructors, which fragment 191 describes (no target index of their own: binaryen
+# inlines each into fn 11373).
 # Evidence, records: every file above but the converter's, each throw's line and column, and each record's spelling
 # (comum::TCargoID, const TVectorCargo &, TQtdEscolha). Evidence, RTTI: the converter's class and its base. The
 # converter's file is rule 3 and 4 of docs/how-to-decompile.md step 3: no record names it, its vtable (@1570164) lies

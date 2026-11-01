@@ -710,7 +710,7 @@ public:
     class tipoCargo
     {
     public:
-        typedef ModuloTiposEleitorais::Tipo value_type;
+        typedef ModuloTiposEleitorais::TipoCargoConsulta value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        pointer;
@@ -720,7 +720,7 @@ public:
     tipoCargo::const_reference get_tipoCargo () const { return *static_cast<tipoCargo::const_pointer>(fields[0]); }
     tipoCargo::reference ref_tipoCargo () { return *static_cast<tipoCargo::pointer>(fields[0]); }
     tipoCargo::reference set_tipoCargo () { return *static_cast<tipoCargo::pointer>(fields[0]); }
-    tipoCargo::reference set_tipoCargo (ModuloTiposEleitorais::Tipo::NamedNumber v)
+    tipoCargo::reference set_tipoCargo (ModuloTiposEleitorais::TipoCargoConsulta::NamedNumber v)
     { return *static_cast<tipoCargo::pointer>(fields[0]) = v; }
 
     class qtdComparecimento

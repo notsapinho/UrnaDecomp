@@ -15,7 +15,6 @@
 //   3715  GetNomeSuplente             5803 12272
 //   2796  GetNome                     5803 6569 11892
 //   2258  GetOrdinalEscolha           4464 12587 12811 13550
-//   5657  CCargo::Valida              11373, two call sites
 //   5651  CPleito::GetEleicao         3744 3775
 //   5648  CPleito::GetSituacoesEleicoes  271 3713
 //   5655  CCargo::operator<=>         11888, two call sites
@@ -49,7 +48,6 @@ void w3714(int, int, int, int) __asm__(
 void w3715(int, int, int, int) __asm__("_ZNK5comum2md6CCargo15GetNomeSuplenteEmNS0_5CSexo5ESexoE");
 void w2796(int, int, int) __asm__("_ZNK5comum2md6CCargo7GetNomeENS0_5CSexo5ESexoE");
 void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
-void w5657(int) __asm__("_ZNK5comum2md6CCargo6ValidaEv");
 int w5651(int, int) __asm__("_ZNK5comum2md7CPleito10GetEleicaoEj");
 int w5648(int, int) __asm__("_ZNK5comum2md7CPleito20GetSituacoesEleicoesEj");
 int w5655(int, int) __asm__("_ZNK5comum2md6CCargossERKS1_");
@@ -135,12 +133,6 @@ __attribute__((noinline)) void Ordinais(int saida, int cargo, int a)
     w2258(saida + 48, cargo, a + 2);
 }
 
-__attribute__((noinline)) void ValidaDois(int a, int b)
-{
-    w5657(a);
-    w5657(b + 140);
-}
-
 __attribute__((noinline)) int SomaEleicoesDoPleito(int pleito, int a, int b)
 {
     return w5651(pleito, a) + w5651(pleito, b) * 3;
@@ -197,7 +189,6 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesSuplentes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&NomesPorSexo);
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&ValidaDois);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaSituacoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&s11556);

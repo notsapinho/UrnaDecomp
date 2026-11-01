@@ -46,8 +46,8 @@
 # - Not written: fn 3744, which holds the record at :208 (ajustaAbrangenciaUFMunicipio, code 8953) and the helpers'
 #   calls inside a second stack frame, under code that copies what comum::md::CPleito::GetEleicao (fn 5651) returns and
 #   inserts what reads as the name into a std::map keyed by a word (32-byte nodes, rebalanced by fn 152); it calls
-#   append (fn 160) six times, comum::md::CEleicaoPE::PossuiCargoCandidato (fn 5653, unit 88), and fns 365 and 374,
-#   which have no name.
+#   append (fn 160) six times, comum::md::CEleicaoPE::PossuiCargoCandidato (fn 5653, unit 88), and fns 365 and 374
+#   (374 has no name; 365, comum::md::CDetalheCandidato's copy constructor, matches since fragment 191).
 NOMEARQUIVO_SRCS := src/app/comum/nomearquivo/cnomearquivo.cpp
 UENUX2_SRCS += $(NOMEARQUIVO_SRCS)
 # nothing reconstructed calls the builders yet: 131-uenux2-cnomearquivo-roots.cpp stands in for the target's callers,
