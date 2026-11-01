@@ -538,14 +538,23 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
 
    To take a uenux2 flag off, add its opposite: `UENUX2_EXTRA` comes last on the line, and for a flag em++ does not read
    that is the same as the flag off the line (five objects, `cmp`-equal to the same sources compiled with
-   `-fno-strict-aliasing` off the line; item 9 is the exception). A clone without the objects that change compiles only
-   those, 190 of them here:
+   `-fno-strict-aliasing` off the line; item 9 is the exception). A clone without the objects whose compile line the
+   flag
+   reaches compiles only those. The dry run lists them: a path pattern (`/uenux2/`, `-uenux2-*-pending.o`) misses the
+   roots that compile at `$(UENUX2_CXXFLAGS)`, the tree roots and the units' roots whose rule names it, which make
+   would then keep at the old flags:
 
    ```sh
    P=build/out/flags-tbaa; mkdir -p $P/app
-   rsync -a --exclude='/uenux2/' --exclude='*-uenux2-*-pending.o' build/out/app/ $P/app/
+   make -n -C src link APP=$P/dry OUT=$P/dry/wasm OUT_NAMED=$P/dry/named UENUX2_EXTRA=-fstrict-aliasing | /usr/bin/grep -F -- '-fstrict-aliasing' \
+     | /usr/bin/grep -oE -- "-o [^ ]+\.o" | sed "s#^-o .*$P/dry/#/#" | sort -u > $P/exclude.txt
+   wc -l < $P/exclude.txt                                                                 # 468 at bbf27ac1
+   /usr/bin/grep -v -e '^/uenux2/' -e '-uenux2-.*-pending\.o$' $P/exclude.txt | wc -l    # 16 roots, 3 of them tree roots
+   rsync -a --exclude-from=$P/exclude.txt build/out/app/ $P/app/
    TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web UENUX2_EXTRA=-fstrict-aliasing
    ```
+
+   `make -n` of the last line counts 468 compiles: the clone's objects are the list's.
 
    In the directories of `UENUX2_TBAA_DIRS` the generic uenux2 rule filters `-fno-strict-aliasing` out of the whole line,
    `UENUX2_EXTRA` included, so `UENUX2_EXTRA=-fno-strict-aliasing` leaves them with TBAA; `UENUX2_TBAA_DIRS=` on the

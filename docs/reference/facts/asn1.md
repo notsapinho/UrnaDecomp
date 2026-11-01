@@ -164,7 +164,12 @@ Consequences:
   (`f553(l4, 1567660)`, `f553(l4, 1561600)`) and stores `secao` directly: 38 over 57 rows against the generated setters,
   8 over 56 with those two on `const_reference`. A bound does not decide it: 9131 sets `<1, 99999>` and `<1, 9999>`
   fields directly, and 11392 sets `<0, …>` fields directly. A temporary of the field's type in a converter is what
-  shows `const_reference`.
+  shows `const_reference`. The load order is the other sign: a converter that loads the field's holder
+  (`entidade.set_carga()`) before the call that computes the value, and the field after it, sets it through a setter
+  that takes the value, `set_x(call(…))`, whose object is evaluated before its argument, where `set_x() = call(…)`
+  evaluates the call first. 11399 sets `Carga`'s three fields so: 38 over 287 rows as assignments, 17 over 278, all
+  operand-only, through setters, each of a parameter type that takes the call's result with no temporary (a
+  `vector<char>` for `numeroSerieFC`, where the generated `OCTET_STRING` would build one; `ModuloTiposEcoUrna.h`).
 
 The generated headers are `src/asn1/modules/<Modulo>.h` + `.cxx`.
 

@@ -169,8 +169,12 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   evidence names it, its vtable slot or its record say, and the aligned calls pair the two functions one to one with no
   disagreement ([facts/asn1.md](facts/asn1.md) §A5 has the tally; no tool runs it). A body written and one flag from
   the target takes this kind too: its comment gives the score at that flag and what the callee's own rows show, and
-  counts only the callers that hold without the line (426, unit 31's `AddField`). A `.bss` object has no content and
-  often no aligned call: its line leads with the target functions other than the match that read or write the
+  counts only the callers that hold without the line (426, unit 31's `AddField`). When the line carries every caller it
+  names (each a `vtable` name whose row needs this name), those callers align the call site and count for nothing
+  else: the comment leads with the callee's own rows, read without the match, and says the callers fall without the
+  line (501's). A `.bss` object, or a `.data` object whose re-pointed bytes are too few to place it (§3), has no
+  content to stand on and often no aligned call: its line leads with the target functions other than the match that
+  read or write the
   address, its static destructor first, as the `CEstadoAudio` statics' do, each with what it does there (a compare
   with a value above 1, an increment, an index), since those uses also give the member's type (how-to step 3, "What a
   body does not decide").
@@ -202,7 +206,11 @@ constructors build it from a literal only it has, and five functions read it) an
 (`content`: the word holds the one slot of 11265, paired on its own). A `_ZGV` guard that one body reads has such
 evidence in its object: the target keeps our link's distance between the two ([facts/splat.md](facts/splat.md) §S13),
 so the object's address, held by another match, places the guard. §3's self-vote rule reads that itself, so such a
-guard takes no hand line (5158's, in §3).
+guard takes no hand line (5158's, in §3), when step 8 wrote a line for it: a seed or anchor pair of its reader votes
+for it. A `shape` pair casts no vote until a caller's anchor names the reader (whose `call` vote then makes it vote in
+turn), so until then the guard has no line to place, and it takes a `callers+content` hand line with the object's
+holder and the distance in both links as its evidence, which goes once the reader votes (`CStringUtils::ToUpper`'s
+guard, 0x1d2c18, 12 bytes after its set, which the set's static destructor 9403 holds).
 
 Step 8 reads no hand line: `gatherEvidence` takes the two maps and the ledger, not the file it rewrites
 (`splat-symbols-cli.ts`). So a function named by hand casts no vote, and the objects its body reads need names of their
@@ -275,8 +283,12 @@ table slot, else the literal. The target body then picks the kind as well, so th
 match and fails on more of them than `SPLAT_MAX_KIND_UNVERIFIED` (`src/mk/splat-sub.mk`, 0). Today every function of
 our link is kind-verified ([facts/splat.md](facts/splat.md) §S5).
 
-An address of ours resolves through the symbol file's name for its object when there is one. Otherwise
-the object's content places it:
+An address of ours resolves through the symbol file's name for its object when there is one. An address in no object
+of ours resolves nowhere, and its row reads `unresolved` with `an address of ours: 0x… is in no data object of ours`
+(12 rows at bbf27ac1, `/usr/bin/grep -c 'in no data object of ours' splat/scan.tsv`): an array base with a constant
+index folded in (`lengthTableBits[mode][version - 1]` is `lengthTableBits - 4 + …`) lies in the padding before the
+array. One that falls inside the object before the array resolves to that object, so its vote names whatever our
+layout puts there ([facts/libraries.md](facts/libraries.md) §B10). Otherwise the object's content places it:
 
 - a C string by its bytes through the NUL; every place the target holds the same string is a copy (up to
   4,096 of them: tail merging leaves a short string such as `"\n"` in hundreds of places). An end pointer, which
@@ -335,7 +347,12 @@ Two rules guard the evidence:
   1711 so, by its slots 2289 and 2288. They land or leave together: withdrawing one turns the other `unresolved
   self-voted`, so a landing that drops one checks the other. A callee with one caller that can land has no second vote
   to wait for: a `callers+content` hand edit from what its own body holds gives the name (unit 100's `has<T>`, by the
-  `T` each one names).
+  `T` each one names). A `.bss` object no target function but the match reads or writes has no second user either,
+  and no hand line names it, since its one use is the match it would enable: the reader stays `unresolved
+  self-voted`. A neighbour's distance places only a `_ZGV` guard ([facts/splat.md](facts/splat.md) §S13): the word
+  at 1839204, which only 11159 loads
+  (`/usr/bin/grep -rlE 'i32\.const 1839204($|[^0-9])' build/out/splat/pieces/asm`), lies among statics our link
+  spaces otherwise.
 - **A match names its function.** The build re-points with every match applied: the matched symbol names
   that target function, and no other symbol does. A match found by body therefore corrects what its
   callers' calls resolve to. The one exception is a hand edit with evidence `merged-body`: that name stays, beside the
@@ -506,7 +523,12 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   when an inverted pair is two definitions swapped). A swapped order gives the same bytes and matches all the same;
 - a body with no target function. A function binaryen inlined, written out of line and unrooted
   ([../how-to-decompile.md](../how-to-decompile.md) step 3), or a constructor only a dropped builder reaches, is compared
-  with nothing. Compare its store order with the target caller's by hand, and the fragment says "compared with nothing";
+  with nothing. Compare its store order with the target caller's by hand, and the fragment says "compared with nothing".
+  Our side is the object's code (`wasm-objdump -d <object>`), since the link drops a function nothing calls: read it
+  with each out-of-line callee it calls in place, and allow for what the link removes (an empty base destructor, a
+  sized `operator delete` that is `free`). When the target caller is written and does not match, the body is compared
+  through the caller's `score` instead, and the fragment gives that score and says whether the rows that differ lie
+  in the inlined body (`SRect::Top` and `Bottom` in 5537: operands only);
 - a body from a companion object. Read the `object` column of each new match in `splat/scan.tsv`. A body compiled in a
   `-roots.o`, a `-pending.o` or a tree root `app/roots_*.o` must be code a landed header defines (an implicit or inline
   member, a template instance such as `__shared_ptr_emplace<T>`'s destructors), never a stand-in's own body, and the
@@ -625,7 +647,9 @@ join -t "$(printf '\t')" <(cut -f1,5 ../splat/scan.tsv | sort) <(cut -f1,5 ../bu
 What falls is what the line carries. Then rule on whether the evidence in its comment stands without those matches: the
 two rows above are the line's own, and its uniqueness reads neither of them. A hand line is weighed two ways: with its
 name out on both sides of the marker, which shows what the name carries, and with the hand line alone out, which shows
-what the line adds to the generated section. The second decides whether the line stays; the copy needs no new run of
+what the line adds to the generated section. To weigh a hand line a range removed, put back the base's line from
+below the marker only: a name can stand on a generated line as well (2924's at 84f5d8d), and a grep by `= func:N;`
+takes both. The second way decides whether the line stays; the copy needs no new run of
 `splat-symbols`, since step 8 reads no hand line (§2). Follow each scan with `splat-build` on the same two copies: a
 scan that moves no row shows neither that the build accepts them nor that it refuses them. Weigh every line you keep
 again on the file you commit, once the lines found idle are out: one of those can have held what the kept line's scan
@@ -634,7 +658,9 @@ say less than it seems to:
 
 - **One pass.** A pass re-points with the previous pass's matches, so one scan can leave out a row the next brings
   back (8749 waits for 8951's and 8956's matches). Run the scan a second time over the same `--match` copy, as
-  `splat-match` passes until its count stops, and beside a control that removes nothing.
+  `splat-match` passes until its count stops, and beside a control over that same `--match` copy with no symbol line
+  removed: the copy and the control then differ in the line weighed alone. A control over the committed match list
+  cannot fall, since every row it scans is listed.
 - **Lines.** `--match` appends and renames and never removes, so the copy keeps a line whose row left `match`: count
   the rows (`awk -F'\t' 'NR>1 && $5=="match"' <tsv> | wc -l`), not the lines.
 - **A census tie.** A row that stays with `ledger` in its `source` column can rest on a pair the census made by position

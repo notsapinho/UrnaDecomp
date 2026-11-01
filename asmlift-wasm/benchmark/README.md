@@ -102,8 +102,9 @@ the code. A changed define is drift. `-fPIC … -fno-PIC` is non-PIC but is not 
 The ledger (`ledger/functions.tsv`) names a target function after the skeleton function it pairs
 with at the byte, fingerprint or addr tier. The skeleton links exactly the objects the check
 classifies, so the object that defines that name is the function's setup: `llvm-nm` over every link
-input in the image, cached in `build/out/bench/definitions.json` (rebuilt when the registry changes or
-on `select`). Link semantics decide between several definitions: an object's weak definition shadows
+input in the image, cached in `build/out/bench/definitions.json` (rebuilt when the registry changes, on
+`select`, and by every `pnpm test:bench`, whose symbol check reads the build again; "Tests" below). Link semantics
+decide between several definitions: an object's weak definition shadows
 an archive's, and of two archives the earlier in link order wins (`libc_optz.a` before `libc.a`). A
 name is left out when a **stand-in** (a hand-written root or stub object of `src/app` and
 `src/units/*-roots.cpp`) also defines it, when two setups define it, or when two target functions
@@ -118,7 +119,10 @@ share it.
   (urna's `docs/reference/facts/app-flags.md` §F6).
 - **uenux2** has few reconstructed units, so its rows also come from the ledger's attribution
   (components `vota-web` and `comum` for `uenux2`, `vota` and `simulador` for `uenux2-tbaa`): `evidence: "component"`, no object, no
-  reference.
+  reference. A component is listed by one setup, the first that lists it decides (`resolveIndex`), and a split by
+  directory can divide one: `comum`'s data classes (`dados/md/`) build with strict aliasing and the rest of `comum`
+  without, so a `component` row of `comum` takes `uenux2`'s flags wherever its function was, a guess. A row with a
+  strong name is resolved by its object instead. `api` is in no setup's list, so an `api` row comes only by a name.
 
 ## The dataset
 
@@ -203,12 +207,22 @@ definitions snapshot and the copies in `dataset/selection-inputs/`. It refuses w
 uncommitted changes, since it records HEAD as their commit. Then `pnpm bench run --label baseline`, and
 commit `rows.json`, `selection.json`, `selection-definitions.json`, `selection-inputs/` and
 `results/baseline.{json,md}` together, with the `rows` column of "The compile setups" table updated from
-`rows.json` (no test reads the table). `test/run.test.ts` takes three rows by id (`uenux2/11668`, `zlib/4824`,
+`rows.json` (no test reads the table). The baseline so records `<HEAD>+dirty`, the rows being uncommitted when it runs;
+no test reads its `commit`. `test/run.test.ts` takes three rows by id (`uenux2/11668`, `zlib/4824`,
 `libc-optz/504`): when a re-selection drops one, give the test a row of the same setup, size band and features.
 
-A setup retired or merged into another is the same steps after the change to `setups.json`. Commit `setups.json`
-first, since `--write` refuses it uncommitted; `pnpm test:bench` fails at that commit (the rows still name the old
-setup) and passes again at the re-selection's commit, which follows it.
+`--write` keeps every hand-added row of the working `rows.json` and reads nothing else from it (`selectDataset` in
+`src/dataset.ts`), and `rows.json` is none of the paths it refuses uncommitted. To retire hand-added rows, delete them
+from `rows.json` first, then `--write`.
+
+A setup added, retired or merged into another, or a change of a setup's `flags` (a tree's own flags: every row of the
+setup records them), is the same steps after the change to `setups.json`. Commit `setups.json`, with the Makefile
+change it follows, first, since `--write` refuses it uncommitted. `pnpm test:bench` fails at that commit and passes
+again at the re-selection's commit, which follows it: the rows still name the old setup or flags, or no row names the
+new setup and the baseline has no totals for it (`has rows from every setup of the registry`: `<setup>: expected 0 to
+be greater than or equal to 5`; `renderBenchReport`: `Cannot read properties of undefined (reading 'rows')`). A branch
+that adds a setup lands so too: its merge takes `main`'s dataset and fails those cases, since `--write` cannot run over
+a staged merge's uncommitted ledger, registry and `src/`, and the re-selection is the commit after the merge.
 
 To check a re-selection without touching a worktree's tracked files, run it in another worktree at the commit
 `selection.json` records. A bare `git clone` cannot: selection reads the build's objects through `llvm-nm`.
@@ -216,6 +230,9 @@ To check a re-selection without touching a worktree's tracked files, run it in a
 write `dataset/` as the commit under review holds it: extract that commit's `asmlift-wasm/benchmark/dataset` with
 `git archive <reviewed commit> asmlift-wasm/benchmark/dataset | tar -x -C <scratch>` and compare with `diff -r`, since
 `git diff` does not show the copies the selection adds, which are untracked there. Remove the worktree afterwards.
+`--write` reads the hand-added rows from that commit's `rows.json`, which `selection.json` does not record: a
+re-selection that retired hand-added rows is reproduced only over `rows.json` less the ones the commit under review no
+longer has.
 
 ## Results
 
@@ -258,6 +275,9 @@ reported as drift), on the library builds' recorded flags and on emscripten's ow
 flags; the committed rows against today's repo (above); `selection.json` against the files it
 records, and selection on those recorded inputs reproducing `rows.json`; the harness end to end on a
 C++, a C and a system-library row; the baseline against `rows.json` and its totals against its rows;
-the report and the diff. The tests that need the image skip without it; the artefact test skips in a
+the report and the diff. The symbol check rebuilds `build/out/bench/definitions.json` (`loadDefinitions(…, true)`);
+the two `buildRow` cases read the cache, rebuilt only when its key moves, so a failure of `buildDefinitions` fails one
+test with a current cache and three with a stale one. The tests that need the image skip without it; the artefact test
+skips in a
 checkout that has not built SQLite, and the two that read the library sources skip without the fetched
 and built trees the rows' references point into.
