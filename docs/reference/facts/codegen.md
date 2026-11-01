@@ -416,9 +416,7 @@ file decides a body goes into that unit, so the order cannot move with a fragmen
 of another landed unit's file whose object links on the wrong side of it (11213,
 `comum::CParteCandidatosProporcionais::Imprime` in unit 77's `cpartecandidatos.cpp`, holds unit 89's
 `CCandidaturas::Localiza`, and 77's list links first). Measure both moves in scratch links of the plain `link.cmd` with
-one object moved ([workflow.md](workflow.md) §W13, "One variant object"), then move the file into the other unit's
-list on the side that measures right, and say so in both fragments. The move can change which twin's name a match line
-holds, which step 9 renames.
+one object moved ([workflow.md](workflow.md) §W13, "One variant object"); "Names" says where the file then goes.
 
 The same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals
 swapped, with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
@@ -664,5 +662,9 @@ for a in byvalue cref; do printf '%s:' $a; wasm-objdump -d $P/paramform-$a.o | s
 
 `ITimerScheduler`'s slot 0 has the second shape: fns 2024 and 5904 store the interval's temporary before the
 `std::function`'s, and 5904 reuses the `std::function`'s slot for its next temporary, so the callback is a reference
-(`src/uenux2/src/api/util/itimerscheduler.h`, where `&&`, giving the same object, is the form not chosen). A caller
-that copies an lvalue is the other sign (how-to step 2).
+(`src/uenux2/src/api/util/itimerscheduler.h`, where `&&`, giving the same object, is the form not chosen).
+
+A copy is the other sign, and it says less. A caller that passes an lvalue of the parameter's own type with no copy
+rules out by-value. A copy made just before the call is a by-value parameter or a temporary a conversion binds to a
+`const &`: 2890 copies a `std::filesystem::path` into a string before calling `api::IPaper`'s slot 8, which `const
+std::string&`, `std::string` and `std::filesystem::path` by value all give (how-to step 2).

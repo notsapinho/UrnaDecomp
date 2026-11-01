@@ -981,13 +981,14 @@ three and `unresolved` for 5181, which waits for a name:
   `std::string& RemoveZerosAEsquerda(std::string& valor) { return valor.erase(0, valor.find_first_not_of('0')); }`,
   whose result every caller drops (unit 00's fragment).
 
-Such a function is a member in its class's `.cpp` when it reads the class's state; one that reads none (8533's tone
-sequences) is a free function in the namespace of its caller's class, in a `.cpp` you choose and name as chosen, as
-long as it is not the caller's TU. A helper of a singleton class may be a static member of it either way, as TSE's 22
-records of a `static … ::GetInst()` show (`awk -F'\t' '$5 ~ /^static .*::GetInst\(\)$/' ledger/source-locations.tsv |
-wc -l`); mark the form chosen. When the target's callers pass an object the function never reads (6018 writes its
-first parameter before it reads it), make it a member and say so; that the target keeps that parameter where our link's
-dead-argument elimination drops it is not explained (unit 119's fragment). The tree is evidence too: a helper whose
+Whether such a function is a member is how-to step 3's member rule ("Names no evidence gives"); these are its cases. One
+that reads its class's state is a member in the class's `.cpp`. One that reads none (8533's tone sequences) is a free
+function in the namespace of its caller's class, in a `.cpp` you choose and name as chosen, as long as it is not the
+caller's TU. A helper of a singleton class may be a static member of it either way, as TSE's 22 records of a `static …
+::GetInst()` show (`awk -F'\t' '$5 ~ /^static .*::GetInst\(\)$/' ledger/source-locations.tsv | wc -l`); mark the form
+chosen. When the target's callers pass an object the function never reads (6018 writes its first parameter before it
+reads it), make it a member and say so; that the target keeps that parameter where our link's dead-argument
+elimination drops it is not explained (unit 119's fragment). The tree is evidence too: a helper whose
 rows match only at another tree's flags goes in that tree and its namespace. `ecourna::api::util::Repete` (unit 182),
 inlined into uenux2's 5467 (`api::CGenericTags::EncodeTLV`), matches only with ecourna's
 `-fno-delete-null-pointer-checks`, which no uenux2 directory has ([app-flags.md](app-flags.md) §F3).

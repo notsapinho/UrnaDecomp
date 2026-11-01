@@ -535,8 +535,8 @@ in the commit that adds it:
 2. **CI's fetch.** CI runs in a fresh clone holding only the `third_party/` trees `.github/workflows/ci.yml` fetches,
    zlib's and libqrencode's (`.github/CI.md` says why), and the benchmark's registry check and tests run `make -n -B`
    over the setups' objects, which stops on a rule that reads a tree the clone lacks (a library object's source, or a
-   header a roots file includes), while every local check passes. The new tree's fetch goes beside zlib's, with the
-   step's conditions, and into `.github/CI.md`.
+   header a roots file includes; [workflow.md](workflow.md) §W25 has the message), while every local check passes.
+   The new tree's fetch goes beside zlib's, with the step's conditions, and into `.github/CI.md`.
 3. **Its objects**, compiled by a rule of the fragment at the library's own flags (`ZLIB_CFLAGS`, `QRENCODE_CFLAGS`)
    and appended to `RHVOICE_OBJS`, after RHVoice: `LINK_OBJS` has no slot among the trees' objects a fragment can
    reach, so where the target puts the library (libqrencode's among uenux2's `api` objects, B10 "The place") our link

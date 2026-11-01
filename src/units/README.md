@@ -139,7 +139,8 @@ otherwise the `rhvoice` setup's at RHVoice's flags, and the check passes (`docs/
   them out (`docs/agents.md`), and otherwise the number is said in the pull request or issue that announces the work.
   The same holds for a landed file a new function needs on the other side of another landed unit's file: move it into
   that unit's list, on the side it measures right (the second fragment no longer lists it, "Landing a unit" item 2),
-  and say so in both fragments. The move can rename a twin's match line, which step 9 does.
+  and say so in both fragments (`docs/reference/facts/codegen.md` §C4 measures both moves). The move can rename a
+  twin's match line, which step 9 does.
   Whoever lands second has a link the first never measured: it runs link, census, symbols, match and the splat build
   again on top of the first (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
 - `<component>` is the `src/` tree the sources live in: `ecourna`, `uenux2` or `asn1`, or the library's name for a unit
@@ -571,8 +572,9 @@ so with the measurement (5725, unit 113). A unit may also compile its roots at i
 tree root `roots_cbasetype.cpp`); then no match can rest on a flag its tree lacks, and the fragment says so.
 `$(UENUX2_CXXFLAGS)` on the rule is the tree's flags only outside `UENUX2_TBAA_DIRS`: it keeps `-fno-strict-aliasing`,
 which the directories the split lists drop (`$(call uenux2_cxxflags,<path>)` gives a directory's own). A companion at
-`$(UENUX2_CXXFLAGS)` that emits code of such a directory compares its object compiled both ways, and says so, at every
-change of the split (units 97, 113 and 154's roots). Taking an instance out is a withdrawal, so measure the fragment's
+`$(UENUX2_CXXFLAGS)` that emits code of such a directory compares its object compiled both ways, and says so, when it
+lands and at every change of the split (units 97, 113 and 154's roots; `docs/reference/facts/levels.md` §V5 has the
+measurement). Taking an instance out is a withdrawal, so measure the fragment's
 "differs" forms for that object
 again (`docs/how-to-decompile.md` step 10, "Withdrawing a match"). A body a companion object supplies can match only
 when it is code a landed header defines: an implicit or inline member, or a template instance such as

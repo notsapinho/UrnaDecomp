@@ -166,16 +166,15 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   `ECOURNA_EXTRA=…`), never a command-line `UENUX2_CXXFLAGS`, which drops the fragments' target-specific additions
   and reaches the stand-ins. [facts/app-flags.md](reference/facts/app-flags.md) §F9 item 6 has the command and the
   splat check of such a link. The directories `UENUX2_TBAA_DIRS` lists drop every `-fno-strict-aliasing` of the line,
-  an `UENUX2_EXTRA` one too, so measure them without strict aliasing with `UENUX2_TBAA_DIRS=`, and a companion compiled
-  with `$(UENUX2_CXXFLAGS)` keeps the flag whatever its unit's directory ([facts/levels.md](reference/facts/levels.md)
-  §V5). To measure one variant object in the whole link (a companion file against an overlay
-  header, a source with one more flag), clone the objects with their mtimes (`cp -Rp build/out/app
-  build/out/<handle>/app`), replace that one object, and pass the clone as `APP`: `make -n` then counts 0 compiles
-  against the 347 of a fresh `APP` ([facts/workflow.md](reference/facts/workflow.md) §W13). A header overlay for the
-  whole link needs `APP_CXXFLAGS` passed too, since `UENUX2_EXTRA` does not reach the roots, and a variant's scan reads
-  the committed symbol file (both §W13). `make` compares times, not paths: an override such as `RHVOICE_DIR=<dir>`
-  over an existing link whose inputs are older relinks nothing, and the census and scan then measure the old link, so
-  delete the two link outputs by name first, or use a private `OUT`.
+  an `UENUX2_EXTRA` one too, so measure them without strict aliasing with `UENUX2_TBAA_DIRS=`
+  ([facts/levels.md](reference/facts/levels.md) §V5). To measure one variant object in the whole link (a companion
+  file against an overlay header, a source with one more flag), clone the objects with their mtimes (`cp -Rp
+  build/out/app build/out/<handle>/app`), replace that one object, and pass the clone as `APP`: `make -n` then counts 0
+  compiles against the 347 of a fresh `APP` ([facts/workflow.md](reference/facts/workflow.md) §W13). A header overlay
+  for the whole link needs `APP_CXXFLAGS` passed too, since `UENUX2_EXTRA` does not reach the roots, and a variant's
+  scan reads the committed symbol file (both §W13). `make` compares times, not paths: an override such as
+  `RHVOICE_DIR=<dir>` over an existing link whose inputs are older relinks nothing, and the census and scan then
+  measure the old link, so delete the two link outputs by name first, or use a private `OUT`.
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
   fragment rebuilds the objects whose rules name it: `roots_asn1.o` always, the fragment's companions when their rules

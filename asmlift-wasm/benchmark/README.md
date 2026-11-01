@@ -219,10 +219,10 @@ A setup added, retired or merged into another, or a change of a setup's `flags` 
 setup records them), is the same steps after the change to `setups.json`. Commit `setups.json`, with the Makefile
 change it follows, first, since `--write` refuses it uncommitted. `pnpm test:bench` fails at that commit and passes
 again at the re-selection's commit, which follows it: the rows still name the old setup or flags, or no row names the
-new setup and the baseline has no totals for it (`has rows from every setup of the registry`: `<setup>: expected 0 to
-be greater than or equal to 5`; `renderBenchReport`: `Cannot read properties of undefined (reading 'rows')`). A branch
-that adds a setup lands so too: its merge takes `main`'s dataset and fails those cases, since `--write` cannot run over
-a staged merge's uncommitted ledger, registry and `src/`, and the re-selection is the commit after the merge.
+new setup and the baseline has no totals for it (urna's `docs/reference/facts/workflow.md` §W25 names each failing
+case and its message). A branch that adds or retires a setup lands so too: its merge keeps both sides' setups in
+`setups.json`, takes `main`'s selected dataset and fails those cases, since `--write` cannot run over a staged merge's
+uncommitted ledger, registry and `src/`, and the re-selection is the commit after the batch's last merge.
 
 To check a re-selection without touching a worktree's tracked files, run it in another worktree at the commit
 `selection.json` records. A bare `git clone` cannot: selection reads the build's objects through `llvm-nm`.

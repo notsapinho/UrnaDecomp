@@ -298,20 +298,11 @@ rvalue `substr`), with a handful of C++20 forms tried; every site above reads th
 whole-tree measurement below took the tree to `-std=c++23`.
 
 **`-std=c++23`, measured on the whole tree at 84f5d8d (10186 matches).** A private link by
-[app-flags.md](app-flags.md) §F9 item 6 with `UENUX2_EXTRA=-std=c++23`, from a clone without every object that
-compiles at `UENUX2_CXXFLAGS`: the tree's sources, the `-pending.cpp` files, and `src/app/roots_cbasetype.cpp`,
-`src/app/roots_vector.cpp` and the roots of units 113, 128, 134, 136, 139 and 140, 395 objects. F9's exclude pattern
-keeps the last eight, which then link at their old flags. The dry run lists the objects whose command changes:
-
-    P=build/out/flags-cxx23; mkdir -p $P/app
-    make -n -C src link APP=$P/dry OUT=$P/dry/wasm OUT_NAMED=$P/dry/named UENUX2_EXTRA=-std=c++23 | /usr/bin/grep -F -- '-std=c++23' \
-      | /usr/bin/grep -oE -- "-o [^ ]+\.o" | sed "s#^-o .*$P/dry/#/#" | sort -u > $P/exclude.txt
-    wc -l < $P/exclude.txt
-      395
-    rsync -a --exclude-from=$P/exclude.txt build/out/app/ $P/app/
-    TMPDIR=/tmp make -C src link APP=$P/app OUT=$P/wasm/vota_web OUT_NAMED=$P/wasm-named/vota_web UENUX2_EXTRA=-std=c++23
-
-Then F9's map, kinds, `splat-kinds` and `splat-build` with the re-keyed list:
+[app-flags.md](app-flags.md) §F9 item 6 with `UENUX2_EXTRA=-std=c++23` (`P=build/out/flags-cxx23`), from the clone
+its dry run gives with `-std=c++23` in place of `-fstrict-aliasing`: without every object that compiles at
+`UENUX2_CXXFLAGS`, the tree's sources, the `-pending.cpp` files, and `src/app/roots_cbasetype.cpp`,
+`src/app/roots_vector.cpp` and the roots of units 113, 128, 134, 136, 139 and 140, 395 objects at 84f5d8d. Then F9's
+map, kinds, `splat-kinds` and `splat-build` with the re-keyed list:
 
     Error: …/matched.txt: 3 matched functions no longer verify:
       … function 9060 … is UNRESOLVED: ours +0xe3 i32.const 3044: a table slot of ours: _ZNSt3__26vectorIcNS_9allocatorIcEEE18__assign_with_sizeB8ne210108INS_11__wrap_iterIPKcEES8_EEvT_T0_l has no target function
@@ -448,7 +439,7 @@ reads the setting from a body. Measured at bbf27ac1.
   At b6868d9 each such line compiled again without the flag gives 52 objects `cmp`-equal and 7 not (113, 154 and
   183's roots, 158, 159, 82 and 98's pending), and every one of the 21 matched functions those 7 supply has the same
   code both ways (`wasm-objdump -d`, the byte columns dropped): no match rests on the flag, and the roots of units 97,
-  113 and 154 say so. A companion of a unit in a listed directory that emits a matched function is compared so when
-  it lands or the split changes.
+  113 and 154 say so. `src/units/README.md` "Companion files" has the rule that follows: such a companion is compared
+  both ways when it lands and at every change of the split.
 - **Read the base's flags, not a brief's.** `git grep -n UENUX2_TBAA_DIRS <base> -- src/Makefile` says whether the
   split is on a lane's base; a row a brief calls closed by it is open on a base without it.

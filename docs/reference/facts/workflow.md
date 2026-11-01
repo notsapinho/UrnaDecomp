@@ -773,7 +773,15 @@ list that holds its line twice, at ee595de, from the repository root:
     /usr/bin/grep -v '^#' splat/matched.txt | cut -d' ' -f1 | sort | uniq -d
       (nothing)
 
-So a landing keeps one line per index, under the symbol the merged link names, and counts that match once.
+So a landing keeps one line per index, under the symbol the merged link names, and counts that match once. A local
+symbol's line, `<name>@<object>`, is two columns of `names.tsv`, so a search of the name column for the whole line
+finds nothing; the check joins them (bbf27ac1, after step 9's link map):
+
+    s='strtox@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc.a(strtol.o)'
+    awk -F'\t' -v s="$s" '$2 == s || $2 "@" $3 == s' build/out/wasm-map/vota_web/names.tsv | wc -l
+      1
+    awk -F'\t' -v s="$s" '$2 == s' build/out/wasm-map/vota_web/names.tsv | wc -l
+      0
 
 ## W17. A header added on two branches as the same blob merges with no conflict
 
@@ -923,10 +931,11 @@ dataset (`asmlift-wasm/benchmark/dataset/`) fails it on these, each named by its
 | a setup added | `has rows from every setup of the registry` (`<setup>: expected 0 to be greater than or equal to 5`) and `renderBenchReport > writes a table row for every setup` (`Cannot read properties of undefined (reading 'rows')`: the baseline has no totals for it) | a re-selection, or five rows by `pnpm bench add <index>` and a new baseline (`pnpm bench run --label baseline`) |
 | a setup retired or merged into another | the rows that still name it | a re-selection |
 
-`pnpm bench select --write` refuses an uncommitted ledger, registry or `src/`, so a re-selection is a commit of its
-own after the change, and the change's commit fails `test:bench` on those cases: say so in its message. A landing takes
-`main`'s dataset at each merge (how-to step 10), so a lane that added or retired a setup leaves its merge commit failing
-the two "setup added" cases, and one re-selection with a new baseline after the batch's last merge passes them all.
+`pnpm bench select --write` refuses an uncommitted ledger, registry or `src/`, so the re-selection is a commit of its
+own after the change, the change's commit fails those cases (its message says so), and a merge that takes `main`'s
+dataset fails them until one re-selection after the batch's last merge: the cases of a setup added, or the rows naming
+one retired ([asmlift-wasm/benchmark/README.md](../../../asmlift-wasm/benchmark/README.md) "Re-selecting" has the
+order of the commits).
 
 Two failures are no change of the branch's:
 
@@ -938,5 +947,5 @@ Two failures are no change of the branch's:
 - **A tree CI does not have.** CI runs `test:bench` and `pnpm bench setups --check` in a fresh clone that holds only
   the `third_party/` trees `.github/workflows/ci.yml` fetches (zlib and libqrencode at bbf27ac1), and the benchmark's
   `make -n -B` over the make setups' objects stops on a rule that reads another (`No rule to make target
-  '…/third_party/libqrencode/qrencode.h'`). Every local check passes, since the checkout holds every tree. A fragment
-  whose rules or roots read a new `third_party/` tree adds its fetch to `ci.yml` and `.github/CI.md` in the same commit.
+  '…/third_party/libqrencode/qrencode.h'`). Every local check passes, since the checkout holds every tree. The fetch
+  goes in the commit that reads the tree ([libraries.md](libraries.md) §B11 item 2).

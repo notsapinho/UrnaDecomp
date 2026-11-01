@@ -238,9 +238,10 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   be a twin").
 - **A flag not decided.** The user decided three: uenux2 at `-std=c++23` and the executable TU at its own rule
   (`VOTA_WEB_CXXFLAGS`), both in `src/Makefile` (`docs/reference/facts/levels.md` §V3, §V1), and strict aliasing per
-  directory in uenux2, which lands as a split only when the split gains rows and loses no match (none has yet). Every
-  other flag stays the user's to decide: a member whose body needs one (a no-stub row goes by its callers' tree, not
-  its group) is listed as waiting for that decision, not as expected.
+  directory in uenux2, landed as the directories `UENUX2_TBAA_DIRS` lists in `src/Makefile`
+  (`docs/reference/facts/levels.md` §V5): a lane reports a measurement that would move a directory, and does not move
+  it. Every other flag stays the user's to decide: a member whose body needs one (a no-stub row goes by its callers'
+  tree, not its group) is listed as waiting for that decision, not as expected.
 - **The stub may sit over code we have**: search our sources for the class before choosing (step 1).
 - **The name and the file**: from the records, the vtable slot, `ledger/vtables.json` and `ledger/classes.json`;
   for an `unplaced.cpp` stub, the file rules of how-to step 3.
