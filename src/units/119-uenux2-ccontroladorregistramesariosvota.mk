@@ -30,6 +30,9 @@
 # - Three more members, after LogaTituloInvalidoRegistroMesario and so below GetInst, belong to unit 142's states, which
 #   hold them inlined (10594 two, 10421 one); src/units/142-uenux2-app-vota-estados-448.mk has their evidence. They have
 #   no target function of their own, and 184 matches with them in the file.
+# - Five more members, right after GetInst, belong to unit 161's states: three are held inlined by 10642, 10669 and
+#   10444, and two are out of line, 2097 and 4522, matched; src/units/161-uenux2-app-vota-operador-identidade.mk has
+#   their evidence, and 184 still matches with them in the file.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses

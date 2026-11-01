@@ -28,6 +28,12 @@ class CLogVota : public comum::IEventosLog {
 public:
     static CLogVota& GetInst();
 
+    void LogaEleitorJaVotou();
+    void LogaIdentificadorEleitorInvalido();
+    void LogaSolicitacaoDadoPessoalEleitor();
+    void LogaHabilitacaoCanceladaConfirmacaoDado();
+    void LogaHabilitacaoCanceladaCapturaDigitalMesario();
+
     void LogaMesarioRegistrado(const std::string& titulo);
     void LogaMesarioJaRegistrado(const std::string& titulo);
     void LogaIndagaRegistroMesarios();

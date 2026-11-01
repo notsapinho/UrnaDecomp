@@ -37,6 +37,32 @@ CLogVota& CLogVota::GetInst()
     return dynamic_cast<CLogVota &>(api::CPolySingleton<comum::IEventosLog>::instance());
 }
 
+void CLogVota::LogaEleitorJaVotou()
+{
+    logaAlerta("O eleitor identificado já votou");
+}
+
+void CLogVota::LogaIdentificadorEleitorInvalido()
+{
+    const std::string mensagem = "Identificador do eleitor digitado inválido";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(2), mensagem);
+}
+
+void CLogVota::LogaSolicitacaoDadoPessoalEleitor()
+{
+    loga("Solicitação de dado pessoal do eleitor para habilitação manual");
+}
+
+void CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado()
+{
+    loga("Habilitação cancelada durante confirmação de dado do eleitor");
+}
+
+void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
+{
+    loga("Habilitação cancelada durante a captura de digital do mesário");
+}
+
 void CLogVota::LogaIndagaRegistroMesarios()
 {
     const std::string mensagem = "Operador indagado se ocorrerá registro de mesários";

@@ -15,6 +15,9 @@ enum EUeVotaError {
     // the value is the code vota::IIniciaJustificativa's constructor (target fn 3624) throws; the name is chosen from
     // its message, "Confirmação de justificativa nula": no evidence names it
     EUE_VOTA_CONFIRMACAO_JUSTIFICATIVA_NULA = 9396,
+    // the value is the code vota::CControlaReconhecimento::AvancaTentativa (target fn 5406) throws; the name is chosen
+    // from its message, "Limite de tentativas atingido.": no evidence names it
+    EUE_VOTA_LIMITE_TENTATIVAS_ATINGIDO = 9397,
     // the values are the codes CInformacaoThreadOperador's four getters throw (target fns 10562, 10561, 10560, 10559);
     // the names are chosen from their messages and their getters, "Identidade não registrada" and "Tipo de identidade
     // não registrado": no evidence names them
