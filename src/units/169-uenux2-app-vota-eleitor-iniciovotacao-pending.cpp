@@ -4,12 +4,12 @@
 //
 // - vota::CInformacaoZeresimaTardia::ProcessInput (target fn 11982, slot 7, records cinformacaozeresimatardia.cpp:48
 //   and :51): reads the form through api::CInteractiveForm<api::IScreen, api::IInputKbd>::Read() (record
-//   cinteractiveform.h:57 @1543736, inlined), which api/gui/cinteractiveform.h does not hold yet, and calls fns 5446
-//   (on the api::CWait at +16) and 5894, which have no name.
-// - vota::CConfirmaImpressaoZeresima::ProcessInput (target fn 11927, slot 7) and
-//   vota::CQuerImprimirZeresima::ProcessInput (fn 11920, slot 7): the same Read() (records @1544768 and @1544896).
-// - vota::CQuerImprimirZeresima::StartState (target fn 11921, slot 2): it calls fn 5882, a vota::CLogVota member (its
-//   own stack frame logs "Mesário indagado se quer imprimir a zerésima") with no body here.
+//   cinteractiveform.h:57 @1543736, inlined) and calls fn 5446 (on the api::CWait at +16), which has no name.
+// - vota::CConfirmaImpressaoZeresima::ProcessInput (target fn 11927, slot 7): the same Read() (record @1544768); it calls
+//   fn 491, which has no name, and holds vota::CImpressaoZeresimaTardia's GetInst inlined (unit 176's class, whose
+//   constructor copies a member of vota::CTelasVota that app/vota/eleitor/comum/ctelasvota.h has no accessor for).
+// - vota::CQuerImprimirZeresima::ProcessInput (fn 11920, slot 7): the same Read() (record @1544896); it calls fns 491
+//   and 2880, which have no name.
 // - vota::CGeraZeresimaBase::StartState (target fn 11946, slot 2, 6878 B) and vota::CGeraResumoZeresimaBase::StartState
 //   (fn 11943, 1731 B): they call fns 183 and 436 (11943 also 491) and others that have no name.
 // - vota::CGeraResumoZeresima::AposGeracao (target fn 11940, slot 9): it calls fn 491, which has no name.
@@ -43,11 +43,6 @@ void CGeraResumoZeresima::AposGeracao()
 }
 
 void CConfirmaImpressaoZeresima::ProcessInput()
-{
-    __builtin_trap();
-}
-
-void CQuerImprimirZeresima::StartState()
 {
     __builtin_trap();
 }

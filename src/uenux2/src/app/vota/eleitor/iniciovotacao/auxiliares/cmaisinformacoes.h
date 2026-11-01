@@ -7,17 +7,22 @@
 
 namespace api {
 class IScreen;
-template <typename MEDIA>
-class IForm;
+class IInputKbd;
+template <typename MEDIA, typename INPUT>
+class CInteractiveForm;
 } // namespace api
 
 namespace vota {
 
 // vota::CMaisInformacoes (RTTI: si_class of comum::CAppState; vtable @1545304 [244, 387, 11897, 7480, 1661, 218, 425,
 // 11896, 425]): it overrides StartState (slot 2) and ProcessInput (slot 7). The 24-byte object adds a std::shared_ptr
-// at +12, to the form StartState builds (fn 11897 replaces it and calls its slot 2; the pointee's type is chosen, the
-// one vota::CExibeAlertaDesligamento's form has), and at +20 the state to go back to, which GetInst stores when its
-// argument is not null and ProcessInput (fn 11896) moves to the next state. The destructor is out of line: the
+// at +12, to the form StartState builds (fn 11897 replaces it and calls its slot 2; the pointee is the form whose
+// Read() ProcessInput holds, record cinteractiveform.h:57 @1545360), and at +20 the state to go back to, which GetInst
+// stores when its argument is not null and ProcessInput (fn 11896) moves to the next state on CORRIGE, clearing it. On
+// CONFIRMA ProcessInput reads the first input field's text and, when it is all digits, goes by its value (fn 2200,
+// ecourna::api::util::CStringUtils::ToInt32) to one of five states, four of whose GetInst it holds inlined
+// (vota::CImpressaoEstadoUrna, CImpressaoListaEleitores, CImpressaoVersaoPacotes, CImpressaoPU) and
+// vota::CMenuVisualizarCandidatos (fn 2288). The destructor is out of line: the
 // deleting one (fn 387) calls it and frees `this`, and it stores no vptr, as a final class's. 49 states share those
 // two bodies, fns 244 and 387. A singleton: GetInst (fn 1280) keeps the object in a static std::unique_ptr (@1834520,
 // destroyed at exit by fn 11899) under a static std::mutex (@1834496, by fn 11898). The constructor passes 2 to the
@@ -38,7 +43,7 @@ private:
     static std::mutex s_mutex;
     static std::unique_ptr<CMaisInformacoes> s_inst;
 
-    std::shared_ptr<api::IForm<api::IScreen>> m_form;
+    std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
     comum::CAppState* m_pRetorno;
 };
 

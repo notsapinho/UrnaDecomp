@@ -11,9 +11,9 @@ void CBase::StartState()
     m_form->Slot2();
 }
 
-} // namespace vota::testeteclado
+CBase::CBase()
+    : CEstadoComDesligamentoAutomatico(EVENTO_ENTRADA)
+{
+}
 
-// <stubs>
-// f5948 · 28 B · unmatched · placement: link order · name unknown
-// ? f5948(i32) { ... }
-// </stubs>
+} // namespace vota::testeteclado

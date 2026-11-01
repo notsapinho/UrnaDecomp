@@ -1,8 +1,8 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// The members with no record sit at lines the reconstruction chose; each unit's fragment says why: 119's, 161's five
-// after GetInst, 152's seven after LogaTituloInvalidoRegistroMesario, then 142's three, 138's one and 169's one.
+// Members with no record sit at lines the reconstruction chose, each unit's fragment says why: 119's, 161's five after
+// GetInst, 152's seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's and 176's.
 
 #include "app/vota/log/clogvota.h"
 
@@ -136,6 +136,23 @@ void CLogVota::LogaVotacaoEncerrada()
 void CLogVota::LogaAguardandoConfirmacaoZeresima()
 {
     loga("Aguardando confirmação para emissão da zerésima");
+}
+
+void CLogVota::LogaMesarioConfirmouReinicioVotacao()
+{
+    const std::string mensagem = "Mesário confirmou o reinício da votação";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaMesarioSelecionouOutrasOpcoes()
+{
+    const std::string mensagem = "Mesário selecionou outras opções";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaMesarioIndagadoHorarioUrna()
+{
+    loga("Mesário indagado se horário da urna está correto");
 }
 
 } // namespace vota

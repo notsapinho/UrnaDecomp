@@ -15,9 +15,6 @@
 // vota::testeteclado::CRetomada, in cretomada.cpp:
 // - GetTela 11831 (slot 10): fns 6580 and 6581.
 // - GetEstadoPassouNoTeste 11830 (slot 11): fn 491, with no name.
-// vota::testeteclado::CEsperaRetestar, in cesperaretestar.cpp:
-// - FinishState 11824 (slot 5): it stops the tick at +36 and holds, inlined, a member of the form that clears the flag at
-//   +4 under the mutex at +28 and calls slot 4 of each field, which this tree's api/gui/iform.h does not define.
 // vota::CVerificaHorarioZeresima, in src/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp:
 // - StartState 11871 (slot 2, record :64): it throws api::EUeAssertError 3481 through fn 463 with the uenux2 assert
 //   macro's text, "Assert (appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA)", and logs through a
@@ -26,7 +23,6 @@
 // - ProcessInput 11869 (slot 7), 861 B: fns 455, 491, 5586, 5591 and 6595, with no name, and 5880 (IEventosLog's).
 // vota::CReinicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/creiniciovotacao.cpp:
 // - StartState 11835 (slot 2), 712 B: fns 183, 436, 1269, 1391 and 5940, with no name; 5957 and 412 have names since.
-// - ProcessInput 11834 (slot 7), 448 B: fn 455 and Read() (record cinteractiveform.h:57).
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/iniciovotacao/cverificahorariozeresima.h"
@@ -48,11 +44,6 @@ void CVerificaHorarioZeresima::ProcessInput()
 }
 
 void CReinicioVotacao::StartState()
-{
-    __builtin_trap();
-}
-
-void CReinicioVotacao::ProcessInput()
 {
     __builtin_trap();
 }
@@ -87,11 +78,6 @@ CFormInterativoTelaVota CRetomada::GetTela()
 }
 
 comum::CAppState* CRetomada::GetEstadoPassouNoTeste()
-{
-    __builtin_trap();
-}
-
-void CEsperaRetestar::FinishState()
 {
     __builtin_trap();
 }

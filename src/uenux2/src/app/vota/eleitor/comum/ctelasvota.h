@@ -16,15 +16,24 @@ namespace vota {
 // at node+20, so that is the element. The members' names are chosen, and so is the 30 members' type: only their
 // destruction shows, which any std::shared_ptr gives. Five constructors copy one member each, through a getter:
 // vota::CImprimindoBU's (inlined into fn 5986) the one at +100, vota::CReinicioVotacao's (inlined into fn 5938) the
-// one at +148, and the zeresima states' (fns 5965, 11945 and 5957) those at +212, +220 and +228. The getters' names,
-// and that they are getters, are chosen.
+// one at +148, and the zeresima states' (fns 5965, 11945 and 5957) those at +212, +220 and +228. Four GetInst copy one
+// more each, right after CTelasVota::GetInst() (fn 407): vota::CAplicacaoEncerrada's (fn 3877) the one at +36,
+// vota::CExibeAlertaDesligamento's (fn 5979) +44, vota::CConfirmaImpressaoZeresima's (fn 5959) +52 and
+// vota::CInstrucaoVotacaoAcessibilidade's (fn 4420) +124. The getters' names, and that they are getters, are chosen.
+// GetTelaCargo is the record's (1536832, ctelasvota.cpp:3534), defined in ctelasvota.cpp.
 class CTelasVota {
 public:
     ~CTelasVota();
 
     static CTelasVota& GetInst();
 
+    CFormInterativoTelaVota GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const;
+
+    const CFormInterativoTelaVota& GetTelaAplicacaoEncerrada() const { return m_tela4; }
+    const CFormInterativoTelaVota& GetTelaAlertaDesligamento() const { return m_tela5; }
+    const CFormInterativoTelaVota& GetTelaConfirmaImpressaoZeresima() const { return m_tela6; }
     const CFormInterativoTelaVota& GetTelaImprimindoBU() const { return m_tela12; }
+    const CFormInterativoTelaVota& GetTelaInstrucaoVotacaoAcessibilidade() const { return m_tela15; }
     const CFormInterativoTelaVota& GetTelaReinicioVotacao() const { return m_tela18; }
     const CFormInterativoTelaVota& GetTelaGeraZeresima() const { return m_tela26; }
     const CFormInterativoTelaVota& GetTelaGeraResumoZeresima() const { return m_tela27; }
