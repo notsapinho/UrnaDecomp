@@ -4,10 +4,10 @@
 //   slot 2), which hand it to fn 5591; 5591 reaches every member through the vtable, slots 2 to 25. Taking the vtable's
 //   address keeps the same set: every slot in the table and none called directly.
 // - GetCorrespondencia (slot 9, fn 11197) calls CDadoCorrespondencia's copy constructor, fn 1249, which has six callers
-//   in the target (awk -F'\t' '$2==1249' ledger/callgraph.tsv: 5637, 5740, 5856, 11197, 11395, 12098). 5856 is in the
-//   link (unit 160); w123_copia stands for the others: with one caller binaryen inlines the copy into 11197, as the
-//   target does not, and the stand-in reads the copy's returned `this`, as 11395 does (`f1249(p1, l4) + 96`): without
-//   that read binaryen drops the result, and 11197 and 5856, which drop it, differ by that row.
+//   in the target (awk -F'\t' '$2==1249' ledger/callgraph.tsv: 5637, 5740, 5856, 11197, 11395, 12098). 5856 (unit 160)
+//   and 11395 (comum::asn::CConversorEstadoGeralGap::DoDesconverte, unit 93, three call sites) are in the link, and
+//   11395 reads the copy's result as the target's does; 5637, 5740 and 12098 still wait. The stand-in that stood for
+//   them went before they landed, on a link without it that moves no row: 11197 and 5856 keep `match`.
 // - InicializaTradutorFrase (slot 10, fn 11196) hands its map to comum::md::CTradutorFrase::SetLabels, inline, which
 //   calls the tree's __assign_multi, fn 5794, with the static map's address. 5794 has two callers in the target
 //   (awk -F'\t' '$2==5794' ledger/callgraph.tsv: 7787, 11196); w123_labels stands for 7787, not reconstructed, so that
@@ -29,7 +29,6 @@
 #include <string>
 
 #include "api/gui/cpaperformbuilder.h"
-#include "app/comum/dados/md/estadoaplicacao/cdadocorrespondencia.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/comum/relatorios/crelutil.h"
 #include "app/comum/relatorios/euecomumrelatorioserror.h"
@@ -39,14 +38,6 @@ extern const char relatoriotesteimpressora_vt[] __asm__("_ZTVN5comum25CRelatorio
 }
 
 namespace {
-
-using comum::md::estadoaplicacao::CDadoCorrespondencia;
-
-__attribute__((noinline)) unsigned w123_copia(const CDadoCorrespondencia& correspondencia)
-{
-    const CDadoCorrespondencia copia(correspondencia);
-    return copia.GetNumeroInternoUrna() + 123;
-}
 
 __attribute__((noinline)) unsigned w123_labels(const std::map<char, ecourna::app::dados::CLabelParametrizado>& labels)
 {
@@ -77,7 +68,6 @@ __attribute__((noinline)) void w123_demonstracao(api::CPaperFormBuilder& builder
 }
 
 const void* volatile relatoriotesteimpressora_sink;
-unsigned (*volatile w123_sink_copia)(const CDadoCorrespondencia&);
 unsigned (*volatile w123_sink_labels)(const std::map<char, ecourna::app::dados::CLabelParametrizado>&);
 unsigned (*volatile w123_sink_separador)(comum::EUrnaFase);
 void (*volatile w123_sink_erro)(int, const std::string&);
@@ -88,7 +78,6 @@ struct SRelatorioTesteImpressoraRoots {
     SRelatorioTesteImpressoraRoots()
     {
         relatoriotesteimpressora_sink = relatoriotesteimpressora_vt;
-        w123_sink_copia = w123_copia;
         w123_sink_labels = w123_labels;
         w123_sink_separador = w123_separador;
         w123_sink_erro = w123_erro;

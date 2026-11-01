@@ -273,14 +273,14 @@ const ModuloTiposEleitorais::IdentificacaoContingencia::InfoType ModuloTiposElei
     "IdentificacaoContingencia"
 };
 
-const char * ModuloTiposEleitorais::Tipo::nameList[] = {
+const char * ModuloTiposEleitorais::TipoCargoConsulta::nameList[] = {
     "<undefined>=0",
     "majoritario",
     "proporcional",
     "consulta"
   };
 
-const ModuloTiposEleitorais::Tipo::InfoType ModuloTiposEleitorais::Tipo::theInfo = {
+const ModuloTiposEleitorais::TipoCargoConsulta::InfoType ModuloTiposEleitorais::TipoCargoConsulta::theInfo = {
     ASN1::ENUMERATED::create,
     0x0000000a,
     0,

@@ -8,14 +8,14 @@
 // The objects are built in place, by guaranteed elision, so this TU calls no constructor or destructor of an entity or
 // a data class: those are the ASN.1 runtime's and the units', and an instance here would be a copy ahead of them.
 // The callers each instance stands for:
-//   3726: 11394 (11390 is written). 3727: 11395 (11391 is written). 3730: 11411 (10270 is written). 3736: 11424
-//   (11451 is written).
+//   3730: 11411 (10270 is written). 3736: 11424 (11451 is written). 3726 and 3727 need none: their callers 11390 and
+//   11394, and 11391 and 11395, are written.
 //   3737: 11423, 11452 (11381 is written). 3738: 11411 (10270, 11457). 3799: 10273, 11587 (10271).
 //   2275: 10266, 10273, 11587 (10271, 11458). 5688: 11375 (11359 is written).
-//   5691: 11394 (11397 is written). 5692: 11395, 11398. 5696 and 5697 need none: their callers 11399 and 11403, and
+//   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
 //   11400 and 11404, are written.
 //   5705: 5706, 11423. 5711: 11448. 5713, 5714: 11424 (11451 is written). 5715, 5716: 11423, 11452.
-//   5828: 11373, 11445.
+//   5828: 11445 (11373 is written).
 // w107_dados gives a constructor its second call site, each stands for: 3712 11424 (11451 is written), 5672 5741, 3823
 // 2725 and 11629. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.
@@ -93,7 +93,6 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
 {
     using namespace comum::md;
     using namespace comum::md::estadoaplicacao;
-    d = w107_desconverte<ModuloEstadoGeralDefs::NumViasImpressasRelatorios, CNumViasImpressasRelatorios>(d, e);
     d = w107_desconverte<ModuloComplementosMunicipios::ComplementoMunicipio, CComplementoMunicipio>(d, e);
     d = w107_desconverte<ModuloEleicao::NomesCargo, CNomesCargo>(d, e);
     d = w107_desconverte<ModuloEstadoGeralUrna::DadoCorrespondencia, CDadoCorrespondencia>(d, e);
@@ -104,9 +103,7 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
     d = w107_desconverte<ModuloTiposEleitorais::CabecalhoPacote, CCabecalhoPacote>(d, e);
     d = w107_desconverte<ModuloTiposCadastro::Municipio, CMunicipio>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
-    d = w107_converte<ModuloEstadoGeralDefs::NumViasImpressasRelatorios, CNumViasImpressasRelatorios>(d, e);
     d = w107_converte<ModuloComplementosMunicipios::ComplementoMunicipio, CComplementoMunicipio>(d, e);
-    d = w107_converte<ModuloEstadoGeralUrna::DadoCorrespondencia, CDadoCorrespondencia>(d, e);
     d = w107_converte<ModuloLocal::SecaoEleitoral, CSecaoEleitoral>(d, e);
     d = w107_converte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
     d = w107_converte<ModuloTiposResultadosEcoUrna::Urna, CUrna>(d, e);

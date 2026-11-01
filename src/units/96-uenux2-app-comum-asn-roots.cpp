@@ -3,9 +3,9 @@
 // inline it: each stand-in below calls each of its members twice. ConverteTipoLocalVotacao and
 // DesconverteTipoLocalVotacao need none: CConversorDadoLocal and CConversorIdentificacaoAgregada call each, and
 // DesconverteDataJE neither: DesconverteDataHoraJE and CConversorPleito::DoDesconverte call it, and DesconverteDataHoraJE
-// neither: its four target callers (10290, 11391, 11400, 11588) are written, fragment 172's. utils_converte stands for
-// ConverteDataHoraJE's caller 10273 and ConverteDataJE's 11394, not written (10276, 10291, 11390, 11399, 11589 and 11385
-// are, fragment 172's).
+// neither: its four target callers (10290, 11391, 11400, 11588) are written, fragment 172's, and ConverteDataJE neither:
+// its callers 11385 (twice) and 11394 are written. utils_converte stands for ConverteDataHoraJE's caller 10273, not
+// written (10276, 10291, 11390, 11399 and 11589 are, fragment 172's).
 // comum::asn::CConversorDadosCandidato's vtable (@1562224) is what the target keeps that converter by: its slots 2
 // and 3 (fns 11449, 11450) have no direct caller, and fn 11448 (CConversorCandidatura::DoDesconverte, not written)
 // stores its vptr. So the sink holds the vtable, the reference the target has.
@@ -17,7 +17,6 @@ int desconverte_fase(const void*) __asm__("_ZN5comum3asn5Utils15DesconverteFaseE
 int desconverte_abrangencia(int) __asm__(
     "_ZN5comum3asn5Utils22DesconverteAbrangenciaEN21ModuloTiposEleitorais15TipoAbrangencia11NamedNumberE");
 void converte_datahora(void*, const void*) __asm__("_ZN5comum3asn5Utils18ConverteDataHoraJEERKN3api9CDateTimeE");
-void converte_data(void*, const void*) __asm__("_ZN5comum3asn5Utils14ConverteDataJEERKN3api5CDateE");
 }
 
 namespace {
@@ -40,8 +39,6 @@ __attribute__((noinline)) void utils_converte(char* resultado, const char* dado)
 {
     converte_datahora(resultado, dado);
     converte_datahora(resultado + 20, dado + 12);
-    converte_data(resultado + 40, dado + 24);
-    converte_data(resultado + 60, dado + 32);
 }
 
 struct SUtilsRoots {

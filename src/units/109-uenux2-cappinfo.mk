@@ -7,6 +7,8 @@
 # CBaseError<EUeComumAppInfoError>'s constructor (1710, a thunk of 710). CFotos and CPartidos: the accessors (2819, 819), the
 # static destructors (11512, 11513, 11502, 11503), the constructors (3756, 3751), the destructors (2818, 2815) and their
 # __tree::destroy (1934, 1932). 376, vector<string>::push_back(&&), comes with GetCodigosCarga.
+# cestadogeralgap.cpp also holds md::estadoaplicacao::CEstadoGeralGap's constructor (fn 5626), which unit 93's fragment
+# describes with its converter.
 #
 # Names from evidence: GetGeral, GetVota and GetGap are the literals the three pass to their throws; IndiceTurno and
 # GetEstado<ESTADO> are records (cappinfo.cpp:472, :42, :57); EUeComumAppInfoError and its limits are RTTI; CFotos and
