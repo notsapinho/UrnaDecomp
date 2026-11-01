@@ -39,8 +39,9 @@
 # order is a swap of two definitions, with the same bytes (docs/how-to-decompile.md step 3).
 #
 # Chosen, no evidence names them: CEleitor's and CTransferenciaTemporaria's members, CEleitor's constructors' parameter
-# names, CIndexer's two words and its header's path (app/comum/dados/md/cindexer.h), that the 20-byte object at +48 of
-# CEleitor is a CTransferenciaTemporaria (a reading of fn 11411's records, ctransferenciatemporaria.h says how), the
+# names and their first parameter's `int` against `uedword`, CIndexer's two words and its header's path
+# (app/comum/dados/md/cindexer.h), that the 20-byte object at +48 of CEleitor is a CTransferenciaTemporaria (a reading
+# of fn 11411's records, ctransferenciatemporaria.h says how), the
 # enums CEleitor::ENecessidadeEspecial, CTransferenciaTemporaria::ETransferenciaTemporaria and md::ETipoCabecalho with no
 # enumerators, and the tests over them (`< 0 || > 1`, `< 0 || > 2`, the target's unsigned compares), `codigo > 99999`
 # against `>= 100000`, the names EUE_COMUM_MD_8906 and 8907, the getters md::CLocal::GetIdPE, GetNomePais and GetNomeUF

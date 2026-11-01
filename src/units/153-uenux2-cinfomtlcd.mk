@@ -14,7 +14,8 @@
 # GetData()'s result after the vector is freed, which the temporary in the `if` gives.
 # Chosen, no byte decides: `using namespace api` in the .cpp; the early return in Update against an `if` around it (not
 # measured); the locals' names and spelled types, which fill the records' columns (50:21, 51:23, 84:25); the lines of
-# the destructor and MostraImagem; the names in cinfomtlcd.h. Line 33 (CreateInst's record, fn 7787) stays blank.
+# the destructor and MostraImagem; the names in cinfomtlcd.h; the destructor declared first in the class (Update is out
+# of line in the same .cpp, so either order emits the vtable there). Line 33 (CreateInst's record, fn 7787) stays blank.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CINFOMTLCD_SRCS := src/app/comum/cinfomtlcd.cpp
 UENUX2_SRCS += $(CINFOMTLCD_SRCS)

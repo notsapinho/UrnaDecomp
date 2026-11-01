@@ -104,12 +104,12 @@
 # orders; its object reads 35 rows against 37, since the constructor's call differs by what the TU sees.
 #
 # Chosen, no byte decides: every name but the records' (loga 233, logaAlerta 1398, LogaCargaBateria, GetInst,
-# s_instancia, s_mutex, m_aplicativo, the eight members and m_parametros, logaErro and the five fixed-text members, the enumerators of ERelatoriosUE,
-# EStatusOperacaoRelatorio and EUeComumLogError); 603's parameter taken by `const &` and held as a reference member,
-# where a pointer is the same address; the namespace of ERelatoriosUE and EStatusOperacaoRelatorio; the
-# severities as bare casts, as ESeveridade has no enumerator; the lines of every function but the throws' and the lines the
-# column records hold. The definition above the Converte members gave the match, and no other order
-# was linked.
+# s_instancia, s_mutex, m_aplicativo, the eight members and m_parametros, logaErro and the five fixed-text members, the
+# enumerators of ERelatoriosUE, EStatusOperacaoRelatorio and EUeComumLogError); 603's parameter taken by `const &` and
+# held as a reference member, where a pointer is the same address; the namespace of ERelatoriosUE and
+# EStatusOperacaoRelatorio; the severities as bare casts, as ESeveridade has no enumerator; the lines of every function
+# but the throws' and the lines the column records hold. The definition above the Converte members gave the match, and
+# no other order was linked.
 #
 # Hand edits in splat/symbol_addrs.txt: GetInst's two names and four statics, `callers+content`, from the calls aligned
 # with fn 347 and the CLogComum members and from the table slots of the destructors that load the same addresses. None

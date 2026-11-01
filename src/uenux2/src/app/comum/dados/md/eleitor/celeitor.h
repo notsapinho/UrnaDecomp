@@ -20,8 +20,9 @@ namespace comum::md {
 // an optional CIndexer at +92, its flag at +100: fn 946 copies +92 to +103 as plain bytes, fn 5666 leaves the vector
 // and the optional empty and fn 5668 copies both from its last two parameters. comum::md::CEleitorDecorator
 // (celeitordecorator.h) holds these 104 bytes
-// as members of its own. The constructors' parameter types are the widths and the copies the bodies make; every member
-// and parameter name, the enum's lack of enumerators and the vector's element type are chosen.
+// as members of its own. The constructors' parameter types are the widths and the copies the bodies make, but for the
+// first one's signedness, which no width tells: its `int` (the `i` in 5666's and 5668's symbols) against `uedword` is
+// chosen; every member and parameter name, the enum's lack of enumerators and the vector's element type are chosen.
 class CEleitor {
 public:
     enum ENecessidadeEspecial : int;

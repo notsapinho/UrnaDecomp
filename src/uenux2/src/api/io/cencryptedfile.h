@@ -19,8 +19,10 @@ namespace api {
 // The constructor (fn 1692) copies a shared_ptr into +0 and +4, adding to its count, and zeroes +8 to +20; the destructor
 // (fn 1691) frees the content and releases that shared_ptr. The member names, the data members' types past their
 // widths and the path of this header are chosen; so are the names Write and Read (fns 2766, 3652: no record, slot or
-// RTTI names them; each holds MemWrite's or MemRead's records), and their parameter types past what the bodies read. The
-// constructor and Load (fn 3653, declared from its records) are not written: fragment 128 says why.
+// RTTI names them; each holds MemWrite's or MemRead's records), and their parameter types past what the bodies read.
+// Their uedword results are a reading of MemWrite's and MemRead's record types (int gives the same bytes). The
+// constructor's parameter, its type and its name are chosen. The constructor and Load (fn 3653, declared from its
+// records) are not written: fragment 128 says why.
 class CEncryptedFile {
 public:
     CEncryptedFile(const ecourna::api::security::TSharedSymmetricCipher& cifrador);

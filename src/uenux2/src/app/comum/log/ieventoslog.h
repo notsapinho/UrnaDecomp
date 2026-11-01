@@ -33,9 +33,9 @@
 //   Each holds loga or logaErro inlined, the text's std::string built in its own frame and api::CLoga::loga called with
 //   +4 of `this` and severity 1 (5882, 5880) or 3 (5885, 5883, 5881), and their callers call them on fn 184's result.
 //   Their band (uses 2) puts them between md/cidentificacaourna.cpp's constructor (5886, records @1552804 to @1552836)
-//   and ConverteERelatoriosUE (5879, @1552880), so they are defined above line 396. 5885, 5881 and 5880, whose texts are
-//   38 bytes each, are thunks of binaryen's fn 3902, which takes the severity and the text's five words. Each name is
-//   chosen from the text it logs.
+//   and ConverteERelatoriosUE (5879, @1552880). That they are this file's, defined above line 396, and not a file's
+//   that links between those two, is a reading. 5885, 5881 and 5880, whose texts are 38 bytes each, are thunks of
+//   binaryen's fn 3902, which takes the severity and the text's five words. Each name is chosen from the text it logs.
 // ERelatoriosUE and its values: the record names the type, unqualified, so the namespace is chosen; the values are the
 // cases of fn 5879 and each name is chosen from the text its case returns. The parameter types are the records'.
 

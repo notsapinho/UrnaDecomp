@@ -37,10 +37,9 @@ void CInfoMTLCD::Update(const api::SharedIImage& imagem)
     const TPosition x = disp.GetWidth() / 2 - tamanho.x / 2;
     const TPosition y = disp.GetHeight() / 2 - tamanho.y / 2;
     MostrarImagemNoLCD(*imagem, SPoint{x, y}, false);
-
 }
 
-// (original lines 59-81: content not recovered)
+// (original lines 58-81: content not recovered)
 #line 82
 void CInfoMTLCD::MostrarImagemNoLCD(const api::IImage& imagem, const api::SPoint& posicao, bool opcao)
 {

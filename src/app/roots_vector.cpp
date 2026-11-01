@@ -16,9 +16,10 @@
 template __attribute__((minsize)) std::__exception_guard_exceptions<std::vector<unsigned char>::__destroy_vector>::~__exception_guard_exceptions();
 template __attribute__((minsize)) std::vector<unsigned char>::~vector();
 
-// Stands in for 520's callers in the target (857 1249 1532 2793 2891 2927 5500 6004 7840 8592 9770 10155 10205 10256
-// 10261), none of which calls it in our link: two call sites, since binaryen inlines a function called once
-// (docs/reference/facts/tool-traps.md X1). The instantiation above keeps clang from inlining ~vector here.
+// Stands in for 520's callers in the target that are not in our link (1249 1532 2793 2891 2927 5500 6004 7840 8592 9770
+// 10155 10205 10256 10261): two call sites, since binaryen inlines a function called once
+// (docs/reference/facts/tool-traps.md X1). 857, the other one, calls it now, from this object's copy below. The
+// instantiation above keeps clang from inlining ~vector here.
 int urna_roots_vector(int a)
 {
     auto* v = reinterpret_cast<std::vector<unsigned char>*>(a);

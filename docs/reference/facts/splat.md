@@ -512,7 +512,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -598,12 +598,12 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     `std::string::append` that leaves 3717 to `libc++.a` (`src/units/README.md` "Companion files"). So
     `awk -F'\t' '$1==252 || $1==3717 {print $1, $5, $11}' splat/scan.tsv` prints `252 match app/roots_uenux2.o` and
     `3717 match sysroot:libc++.a(directory_entry.o)`.
-11. **14072, 14073, 14241, 14242 and 12991, by their corrected names (§S11).** Step 9 can swap the two pairs, or give
-    12991 another table's name, since no name of the symbol file disagrees, and the check above cannot see a swap: each
-    name's prefix must agree with its neighbours.
+11. **14072, 14073, 14241, 14242, 12991 and 13334, by their corrected names (§S11).** Step 9 can swap the two pairs, or
+    give 12991 or 13334 another table's name, since no name of the symbol file disagrees, and the check above cannot see
+    a swap: each name's prefix must agree with its neighbours.
 
     ```sh
-    awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ || $1==12991 && $2 !~ /^kdf_pbkdf1_/ {print $1, $2}' splat/scan.tsv     # prints nothing
+    awk -F'\t' '($1==14072 || $1==14073) && $2 !~ /^camellia/ || ($1==14241 || $1==14242) && $2 !~ /^aes/ || $1==12991 && $2 !~ /^kdf_pbkdf1_/ || $1==13334 && $2 !~ /^hmac_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
 
 12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's hand edit.** Each holds a table slot
@@ -634,6 +634,15 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     twice, since binaryen inlines a function called once ([tool-traps.md](tool-traps.md) §X1). The rows that call 306
     (5161, 9052, 9504 and the others that stopped at `call 306 | call 2671`) leave `match` with it. 2671's line names
     `vector<int>`'s guard, the first of that body's twins in link order, since the root's guard is another body.
+17. **5294, 1698, 5532 and 9873, by `src/app/roots_vector.cpp`, and 3792, 6043, 11585, 11621 and 11622, by two of
+    them.** The first four are the executable TU's copies of
+    `vector<comum::md::estadoaplicacao::CDadoCorrespondencia>`'s guard destructor, `~vector`,
+    `__destroy_vector::operator()` and `_AllocatorDestroyRangeReverse::operator()`, instantiated with `minsize` in that
+    tree root as in item 16; each matches by content under the root's instance. 5532 and 9873 use the `this` that
+    `CDadoCorrespondencia`'s destructor (857) returns, so binaryen keeps that result in our link. 3792 (unit 109's
+    `CAppInfo` destructor) and unit 136's 6043, 11585, 11621 and 11622 call 857 and drop it, and with no reader of the
+    result in the link they differ by that `drop` alone (`pnpm wasm score`: one row deleted, every other row
+    operand-only).
 
 ## S11. A match among bodies of the same content can take the other one's name
 
@@ -666,7 +675,12 @@ So a new match whose readings say `address same-content` or `table slot copy`, a
 is checked against its neighbours and the data it uses before it is listed, at a landing as in a lane. 12991 is another:
 step 9 wrote `kdf_tls1_prf_gettable_ctx_params`, and the dispatch table at 1795712, which holds the slots of 12996 to 12992,
 holds 12991's one slot, 11864, under id 7, `OSSL_FUNC_KDF_GETTABLE_CTX_PARAMS`. So the table is pbkdf1's, and the line is
-corrected to `kdf_pbkdf1_gettable_ctx_params`.
+corrected to `kdf_pbkdf1_gettable_ctx_params`. 13334 is a third: step 9 wrote
+`blake2_gettable_ctx_params@…blake2s_mac.o`, the symbol 13360's line already held, so that symbol stood on two
+lines. The dispatch table at 1784000, whose other slots are those of HMAC's functions (13340 to 13335, 13333, 13332
+and 6667), holds 13334's one slot, 11447, under id 11, `OSSL_FUNC_MAC_GETTABLE_CTX_PARAMS`, and the line is corrected
+to `hmac_gettable_ctx_params`. The rescan after it then paired 13325 by content as `kmac_gettable_ctx_params`, the name
+both KMAC tables give its slot, 11457, under the same id.
 
 The scan's content pass can make the same kind of match. It pairs one of our functions that no match uses with an
 unmatched target body when, re-pointed, it equals exactly that one body and no other function of ours equals it

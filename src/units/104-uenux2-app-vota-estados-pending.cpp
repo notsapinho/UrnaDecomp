@@ -165,8 +165,8 @@ void CReimprimindoZeresima::StartState()
     __builtin_trap();
 }
 
-// CQuerReimprimirZeresima::StartState: fn 11849 (250 B), records cquerreimprimirzeresima.cpp:45, callees with no name:
-// 555, 1269, 2282, 5882.
+// CQuerReimprimirZeresima::StartState: fn 11849 (250 B), records cquerreimprimirzeresima.cpp:45, callees 555 and 1269
+// with no name, 2282 and 5882 (comum::IEventosLog::logaErro and LogaMesarioIndagadoImprimirZeresima, unit 111).
 void CQuerReimprimirZeresima::StartState()
 {
     __builtin_trap();

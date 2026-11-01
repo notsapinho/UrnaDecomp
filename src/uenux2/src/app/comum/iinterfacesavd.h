@@ -74,11 +74,11 @@ struct ueRespostaSavd {
 // read from those calls and CWasmSavd's overriders. The members: +4 the std::string fns 3830, 5889 and 5890 store the
 // failure's text in, +16 the code fn 3830 writes through its first parameter (fn 5890 passes this + 16). Their names and
 // the header's path are chosen. CPacoteArquivos::TrataErroPacote (fn 5901) formats both, the code as an int (argument
-// type 3), through the two getters, whose names and form are chosen. EnviarRequisicao (fn 3830) is named from what it does, ConverteHeader (no target
-// function: binaryen inlines it into 3830, its one caller, and 3829 holds the same loop, so re-read this form when
-// 3829 lands) likewise; the two Desconverte members are the records'. ConverteHeader fills in the request's mark
-// and size from the data before it copies the request out: the form clang keeps out of line at the tree's -O3
-// (unit 95's fragment has the costs).
+// type 3), through the two getters, whose names and form are chosen. EnviarRequisicao (fn 3830) is named from what it
+// does, ConverteHeader (no target function: binaryen inlines it into 3830, its one caller, and 3829 holds the same
+// loop, so re-read this form when 3829 lands) likewise; the two Desconverte members are the records'. ConverteHeader
+// fills in the request's mark and size from the data before it copies the request out: the form clang keeps out of
+// line at the tree's -O3 (unit 95's fragment has the costs).
 // The destructor is `= default` in the class, a choice among the inline forms: the target's copy, 5503, is the executable
 // TU's, compiled -Oz (docs/reference/facts/levels.md V1, the call of the string's destructor), and nothing of ours
 // emits it, so fn 5503 is not reconstructed.

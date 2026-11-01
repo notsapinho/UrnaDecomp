@@ -9,8 +9,8 @@
 // vota::testeteclado::CPreZeresima, in cprezeresima.cpp:
 // - GetTela 11862 (slot 10): fns 3648, 6580 and 6581, with no name, and api::CDateTime's ConvertFromLocalTime (fn 5476),
 //   private in api/util/cdatetime.h.
-// - GetEstadoPassouNoTeste 5945 (slot 11, record :56): fn 5881, with no name, and CVerificaHorarioZeresima::GetInst (fn
-//   5947), which calls the base's constructor.
+// - GetEstadoPassouNoTeste 5945 (slot 11, record :56): fn 5881 (comum::IEventosLog::LogaErroEstadoAplicativo, unit 111)
+//   and CVerificaHorarioZeresima::GetInst (fn 5947), which calls the base's constructor.
 // - GetEstadoSemTeste 11861 (slot 12): fn 3648 and slot 11's body (fn 5945, called directly).
 // vota::testeteclado::CRetomada, in cretomada.cpp:
 // - GetTela 11831 (slot 10): fns 6580 and 6581.
@@ -23,7 +23,7 @@
 //   macro's text, "Assert (appinfo.GetVota().GetEstadoVota() == EAVAGUARDAHORAZERESIMA)", and logs through a
 //   vota::CLogVota member binaryen inlines; the macro's header, the EEstadoVota enumerator and CEstadoGeralVota's
 //   GetEstadoVota are not in this tree.
-// - ProcessInput 11869 (slot 7), 861 B: fns 455, 491, 5586, 5591, 5880 and 6595, with no name.
+// - ProcessInput 11869 (slot 7), 861 B: fns 455, 491, 5586, 5591 and 6595, with no name, and 5880 (IEventosLog's).
 // vota::CReinicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/creiniciovotacao.cpp:
 // - StartState 11835 (slot 2), 712 B: fns 183, 412, 436, 1269, 1391, 5940 and 5957, with no name.
 // - ProcessInput 11834 (slot 7), 448 B: fn 455 and Read() (record cinteractiveform.h:57).

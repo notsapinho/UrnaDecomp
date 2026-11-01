@@ -12,7 +12,8 @@
 //   (fn 5902) detaches `this` from it (the search of its observers' vector at +16 for `this`, under its mutex at +28,
 //   IObservable::Detach inlined) and then calls that instance's destructor on +4 (fn 3837).
 // - The destructor is defined out of line: the deleting destructor (fn 11654, 13 B) calls fn 5902 and frees `this`
-//   (docs/reference/facts/reading.md R5). Declared first, so the class's own .cpp emits the vtable.
+//   (docs/reference/facts/reading.md R5). Declaring it first is a choice: Update is out of line in the same .cpp, so
+//   either order emits the vtable there.
 // - Update (fn 11653): with a non-null image it centres it on the LCD, from IScreen's image surface ops (slot 34, then
 //   their slot 13, ImageSize) and IScreenMT's GetWidth and GetHeight (slots 17 and 18), and shows it there with
 //   MostrarImagemNoLCD and `false`.
