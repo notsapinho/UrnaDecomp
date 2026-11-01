@@ -374,8 +374,9 @@ function shapeKey(fn: Func): string {
   return `${Buffer.from(fn.bodyBytes.subarray(0, fn.codeStart)).toString('hex')}:${ops.join(',')}`;
 }
 
-/** Pairs found by body alone among what the candidates left: one of our functions that no match uses, re-pointed,
- *  equal to exactly one unmatched target body that no other such function of ours equals. */
+/** Pairs found by body alone among what the candidates left: one of our functions that no `match` row holds yet
+ *  (called or not), re-pointed, equal to exactly one unmatched target body that no other such function of ours
+ *  equals. */
 export function contentPairs(
   maps: SymbolMaps,
   rows: readonly ScanRow[],

@@ -57,10 +57,13 @@ asnparser appends the type's name to it (facts §A3). The 297 records give the f
 optionality, the enumerators and the constraints exactly. Class names come from RTTI, from the names the app's
 `std::source_location` records spell, or are made up from the field name. A made-up one says `SYNTHESIZED` in its
 header comment (`/usr/bin/grep -h SYNTHESIZED src/asn1/modules/*.h | wc -l` counts them), and it yields to RTTI or a
-record: rename the class by hand, in the module those give (facts §A3), and take the word out. It yields when the bytes
-agree as well: two generated classes with the same slots have vtables of the same content, so a field of the made-up
-type matches through the real one's vtable, and the review calls it `legitimately` (`DataGeracao`, which RTTI calls
-`DataHoraJE`, facts §A3). A generated class has no code of its own (all `SEQUENCE` classes share seven vtable
+record: rename the class by hand, in the module those give (facts §A3), and take the word out. A made-up class that
+other modules' typedefs or a landed unit spell stays instead: add the real class to its module beside it, move to it
+only the fields a written function reads, and say in the made-up class's comment which fields still use it and what
+the real class is (`DataGeracao` and `DataHoraJE`, `InicioHV` and `ModuloTiposEleitorais::DataJE`). It yields when the
+bytes agree as well: two generated classes with the same slots have vtables of the same content, so a field of the
+made-up type matches through the real one's vtable, and the review calls it `legitimately` (`DataGeracao`, which RTTI
+calls `DataHoraJE`, facts §A3). A generated class has no code of its own (all `SEQUENCE` classes share seven vtable
 functions), so the modules place data, not functions.
 
 `tools/extract/asn1/run.sh` regenerates them from the target into `build/out/asn1-schema/modules/` (about 15 s;

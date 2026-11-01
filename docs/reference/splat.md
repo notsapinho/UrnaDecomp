@@ -170,8 +170,10 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   disagreement ([facts/asn1.md](facts/asn1.md) §A5 has the tally; no tool runs it). A body written and one flag from
   the target takes this kind too: its comment gives the score at that flag and what the callee's own rows show, and
   counts only the callers that hold without the line (426, unit 31's `AddField`). A `.bss` object has no content and
-  often no aligned call: its line leads with the target functions other than the match that read the address, its
-  static destructor first, as the `CEstadoAudio` statics' do.
+  often no aligned call: its line leads with the target functions other than the match that read or write the
+  address, its static destructor first, as the `CEstadoAudio` statics' do, each with what it does there (a compare
+  with a value above 1, an increment, an index), since those uses also give the member's type (how-to step 3, "What a
+  body does not decide").
 - `content`: a data line, the bytes the object holds.
 - `merged-body`: the target merged this function's body into the index, its callers there call it, and our own body of
   that name is not equal, so no match can name it. §3 says what it does. The comment must cite a caller the line does
@@ -283,7 +285,8 @@ the object's content places it:
   points at a string's NUL, is the empty tail, found in more places than that, so it resolves only to the end of the
   whole string our link merged it into (`resolveString`). A short literal the target tail-merged into another string
   then differs at its end pointer alone, until our link holds the string the target merged it into: unit 75's
-  `ModeloAbreviado` (8168), whose `"{:02}"` waits for fn 10425's `"-{:02}-{:02}"`;
+  `ModeloAbreviado` (8168), whose `"{:02}"` waits for fn 10425's `"-{:02}-{:02}"`. A `wchar_t` literal is read the
+  same way, so only up to its first zero byte, its first character: `L"%I:%M:%S %p"` has the copies of `"%"`;
 - a `std::source_location` record by what it records: its file, function, line and column. A header-inline throw has
   its record once per TU that inlines it, so the target holds 10 such keys at more than one address. Each address is a
   copy, with no first among them: every reading says `address same-content`, the target body picks one, and a key the
@@ -329,7 +332,10 @@ Two rules guard the evidence:
   it. A function name voted only by the match's own call or table operand holds
   only if another holding match calls it or has a constant the target reads as its table slot. A constant
   the target keeps as an integer does not count, even when it equals the function's slot in our table, so a
-  unit that shifts our table cannot make or break a match. A callee with one caller that can land has no second vote
+  unit that shifts our table cannot make or break a match. Two new matches can each be the other's holding match
+  when their votes come from two target bodies (two call sites, or two slots of the function): 5827 and 11450 name
+  1711 so, by its slots 2289 and 2288. They land or leave together: withdrawing one turns the other `unresolved
+  self-voted`, so a landing that drops one checks the other. A callee with one caller that can land has no second vote
   to wait for: a `callers+content` hand edit from what its own body holds gives the name (unit 100's `has<T>`, by the
   `T` each one names).
 - **A match names its function.** The build re-points with every match applied: the matched symbol names
@@ -474,7 +480,9 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   since no name of the symbol file disagrees ([facts/splat.md](facts/splat.md) §S11). Among bodies that tie, the census
   pairs by position, so the name step 9 writes is the tie's pick. Check such a match against the functions around its
   index in `splat/matched.txt` and the data that points at it, and correct the line by hand when they disagree (12991,
-  by the dispatch table that holds its slot, §S11);
+  by the dispatch table that holds its slot, §S11). `splat-review`'s first line names the target function by that
+  pick too (`function 13334 (<name>)` is `ledger/functions.tsv`'s `best_name`), so it is no evidence either way. For a
+  wide literal (§3, the C-string bullet), read the whole UTF-32 text at the place the target body picked;
 - a number equal to the target's number of another kind: the target's slot number written as an integer inside our
   table (every small integer is some target slot), a pointer of ours whose re-pointed value equals an integer the
   target holds, or a target address written as an integer that lies inside our data range and is not the start of a
@@ -490,8 +498,11 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
   [../how-to-decompile.md](../how-to-decompile.md) step 3). "No evidence" is said of the object, not only of the
   function: before a class is chosen, follow `this` from the callers to the next functions that take the object, and
   read their vptr stores, strings and records (5622's class is named one hop on, by 5604's callee 2791). A template
-  argument is a name too, which the match's symbol holds whatever the bytes say: check it against the records
-  [../how-to-decompile.md](../how-to-decompile.md) step 3 lists (1929's key, `unsigned int`, is record 1536124's);
+  argument is a name too, whatever the bytes say, in the match's symbol or in a member the body calls through (a
+  form's `MEDIA` and `INPUT`, which a call through a vtable slot never shows): check it against the records
+  [../how-to-decompile.md](../how-to-decompile.md) step 3 lists and the ones the class's other slots load (1929's key,
+  `unsigned int`, is record 1536124's; `CInspecionaUrna`'s slot 7, 11797, loads 1547504, which prints
+  `CInteractiveForm<api::IScreen, api::IInputKbd>::Read()`);
 - the order of a file's members that have no record: compare `ld_index`, not the `ours` of `splat/scan.tsv`
   ([../how-to-decompile.md](../how-to-decompile.md) step 3, "The order of two members", has the rule, the command and
   when an inverted pair is two definitions swapped). A swapped order gives the same bytes and matches all the same;
@@ -515,13 +526,14 @@ What no check here rejects, so a reviewer of a TSE function reads it in the sour
 - a second name for a matched function. `splat-match` reports a match line only when none of the symbol file's names
   for its index is the matched symbol (`addMatches` in `asmlift-wasm/src/splat-sub.ts`), so a wrong name beside the
   right one says nothing. Read the range's symbol-file diff (`git diff <base> -- splat/symbol_addrs.txt`) for a
-  `func:N` of a matched index that gained a line. Some lines move at every landing whatever the unit: the `pair-addr`
-  lines of matched SQLite functions that drop out and come back, and, less often now that step 8 reads an aligned
-  constant whose two values address one string as an address, an `evidence:table` name that a matched index gains
-  while the function that name belongs to loses its line. [facts/splat.md](facts/splat.md) §S8
-  lists them, with the command that separates them from a range's own lines. Read the lines the range drops for
-  matched indices too: a vtable slot our link fills with a body that is not the target's can take a matched
-  function's name away (§S8, the fifth kind);
+  `func:N` of a matched index that gained a line, and the data lines it adds or drops. Some lines move at every
+  landing whatever the unit: the `pair-addr` lines of matched SQLite functions that drop out and come back, 7-Zip's
+  `g_Alloc` names placed by our slot numbers, and, less often now that step 8 reads an aligned constant whose two
+  values address one string as an address, an `evidence:table` name that a matched index gains or loses.
+  [facts/splat.md](facts/splat.md) §S8 lists them, with the command that separates them from a range's own lines and
+  the one that traces a `table` line to its voters. Read the lines the range drops for matched indices too: a vtable
+  slot our link fills with a body that is not the target's can take a matched function's name away (§S8, the fifth
+  kind);
 - a source form chosen for the code it gives. Ordinary C++ in the project's types is a source form, whatever made the
   matcher pick it: locals read before the first store, an order of evaluation, a temporary
   ([facts/codegen.md](facts/codegen.md) §C1). A construct whose only purpose is to constrain the compiler is
@@ -542,13 +554,18 @@ in `ledger/callgraph.tsv`; check such a claim with the grep for its address poin
 Re-running the generators on the committed state is the check that they wrote it: `make -C src splat-symbols` leaves
 `git status` clean, and a rescan changes `splat/scan.tsv` only in the `source` column, to `symbol`, since the match
 now names the function: from `content` or `ledger` for a new match the scan found by its body or by the census's pair,
-and from `ledger` for a match line step 9 renamed to a twin. A new match step 8 already named
-(`srcloc-anchor`, `pair-*`, `call`, `vtable`) is `symbol` from the start, and the rescan leaves its line alone: 5526
+and from `ledger` for a match line step 9 renamed to a twin. It also shortens the `detail` of a new match the first
+scan found after trying another candidate, which that scan listed there (`readings: address symbol;
+__cxx_global_array_dtor@… unresolved` becomes `readings: address symbol`): commit the rescan's file. A new match step 8
+already named (`srcloc-anchor`, `pair-*`, `call`, `vtable`) is `symbol` from the start, and the rescan leaves its line
+alone: 5526
 (`evidence:srcloc-anchor`) reads `symbol` in the committed scan (`awk -F'\t' '$1==5526' splat/scan.tsv | cut -f1,3-5`).
 
 A reviewer who wants to see the matched bytes come from our link, with the target's body gone, runs the
-**blanked-target check**: `splat-review` (`asmlift-wasm/src/splat-review.ts`), from `asmlift-wasm/`, with the target
-index of the match. It takes about five seconds, reuses the split in `build/out/splat/pieces` and relinks nothing:
+**blanked-target check** (in the blocks below, as in every doc here, a line that starts `# ` under a command is its
+output; the tool prints it without the `# `): `splat-review` (`asmlift-wasm/src/splat-review.ts`), from `asmlift-wasm/`,
+with the target index of the match. It takes about five seconds, reuses the split in `build/out/splat/pieces` and
+relinks nothing:
 
 1. it blanks the matched piece in a copy of the split: a valid body of the same size (a `0x00` local count,
    `unreachable` bytes, a final `0x0b`; random bytes would make the module fail to parse), with its sha256 in the
@@ -592,8 +609,9 @@ pnpm --silent wasm splat-review ../target/vota_web_wasm.wasm ../build/out/wasm/v
 A function's name needs its match line out as well: "A match names its function" (§3) holds it otherwise, so with
 only the symbol line gone the review of 7909 still passes. For the question "which matches fall without this name?",
 scan on copies of both files, each without the name and without the match lines of what it may carry, one hand line per
-scan (`--match <f>` rewrites `<f>`). A data name needs only its symbol line out. 7909's `pair-depth0` line, from
-`asmlift-wasm/`:
+scan (`--match <f>` rewrites `<f>`). A data name has no match line of its own: its symbol line out is enough for the
+scan, which drops the rows it carries whether their lines stay or not, but `splat-build` then refuses the whole copy,
+so take out the match lines of what it may carry too to build it. 7909's `pair-depth0` line, from `asmlift-wasm/`:
 
 ```sh
 /usr/bin/grep -v '_ZN9simulador10CWasmTimer4FireEPv' ../splat/symbol_addrs.txt > ../build/out/splat-review-facts/symbols-no-fire.txt
@@ -611,7 +629,9 @@ two rows above are the line's own, and its uniqueness reads neither of them. A h
 name out on both sides of the marker, which shows what the name carries, and with the hand line alone out, which shows
 what the line adds to the generated section. The second decides whether the line stays; the copy needs no new run of
 `splat-symbols`, since step 8 reads no hand line (§2). Follow each scan with `splat-build` on the same two copies: a
-scan that moves no row shows neither that the build accepts them nor that it refuses them. Three things make the scan
+scan that moves no row shows neither that the build accepts them nor that it refuses them. Weigh every line you keep
+again on the file you commit, once the lines found idle are out: one of those can have held what the kept line's scan
+left standing, so what a fragment says a line carries is measured on the final file. Four things make the scan
 say less than it seems to:
 
 - **One pass.** A pass re-points with the previous pass's matches, so one scan can leave out a row the next brings
@@ -622,6 +642,9 @@ say less than it seems to:
 - **A census tie.** A row that stays with `ledger` in its `source` column can rest on a pair the census made by position
   among bodies that tie (`pairUp` in `asmlift-wasm/src/census.ts`): check that its `addr` hash has one body on each side
   (the `addr` column of `pnpm wasm fingerprint <wasm>`, on each wasm) before reading the line as idle.
+- **One line at a time.** A function named by hand casts no vote (§2), so in a chain of hand-named callees each line
+  can look needed while the set is not: the content pass reaches a body once the twins that made it ambiguous match.
+  Remove a set's lines together too (unit 120 kept ten of twenty).
 
 The same line rewritten `evidence:call by:<its caller>` shows what the self-vote rule would refuse, and a line it refuses
 is sound only on evidence from the callee's own body. With two or more callers the line carries, the rewrite refuses

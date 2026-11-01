@@ -3,13 +3,13 @@
 Probes of source forms whose code the target shows: the order of a function's stores (a constructor's among them,
 and what it says of the class that holds a member), what an object's disassembly does not settle and how to compare
 two forms, a switch over virtual members, when a member's body is inlined, the order of a caller and its callee, what
-a TU emitted first does to a frame, a C1 or D1 call `-fPIC` keeps, `-Oz`'s subtract of 0x100000, and how many copies
-binaryen merges. `docs/how-to-decompile.md` steps 1 to 5 and 9 rely on these;
-[reading.md](reading.md) holds what a target body says about declarations (parameters, destructors, linkage). Each probe
-compiles with the uenux2 flags of the time, at `-O2` (`-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`; the tree builds
-at `-O3` since, `docs/reference/app-flags.md`) in
-the pinned image, from the repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the
-host's (wabt); `em++` and `llvm-nm` are the image's.
+the source's named values and a TU's first emissions do to a frame, a C1 or D1 call `-fPIC` keeps, `-Oz`'s subtract
+of 0x100000, how many copies binaryen merges, and what `new T()` clears. `docs/how-to-decompile.md` steps 1 to 5 and 9
+rely on these; [reading.md](reading.md) holds what a target body says about declarations (parameters, destructors,
+linkage). Each probe compiles with the uenux2 flags of its time, `-O2 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing`,
+or `-O3` where it says so (the tree's level since, [app-flags.md](app-flags.md)), in the pinned image, from the
+repository root, and writes only under `build/out/codegen-facts/`. `wasm-objdump` is the host's (wabt); `em++` and
+`/emsdk/upstream/bin/llvm-nm` are the image's (a bare `llvm-nm` is not on its PATH).
 
 ## C1. The stores follow the loads: values read first are stored in reverse
 
@@ -187,7 +187,37 @@ spellings move a function within the object). A function that throws often reads
 adds each offset to the local: `local.get 0; i32.const 220; i32.add`, with no `global.get` beside the constant. Mask
 that `i32.const` as well, and a function that differs on one row per record it loads has not changed.
 
-**Five ways a form comparison lies.**
+**Where the reversal stops.** It is measured on stores whose values are loads, into one object. A store of a parameter
+among stores of constants comes after them whatever the source's order: the three assignments of a state's
+`StartState` in each of their six orders, at uenux2's `-O3`:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+cat > $P/stores.cpp <<'EOF'
+struct F { virtual void s0(); virtual void s1(); virtual void Slot2(); };
+struct S { virtual ~S(); S* m_next; char m_pad[20]; int m_t; bool m_b; F* m_form; void Start(); };
+#define N m_next = this;
+#define B m_b = true;
+#define T m_t = 0;
+void S::Start() { ORDER m_form->Slot2(); }
+EOF
+for o in 'N B T' 'N T B' 'B N T' 'B T N' 'T N B' 'T B N'; do n=$(echo $o | tr -d ' ')
+  TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing "-DORDER=$o" -c /work/$P/stores.cpp -o /work/$P/stores-$n.o
+  printf '%s: ' $n; wasm-objdump -d $P/stores-$n.o | sed -n '/<_ZN1S5StartEv>:/,/^$/p' | /usr/bin/grep -oE 'i32\.store8? [0-9] [0-9]+|call_indirect' | tr '\n' ';'; echo; done
+# NBT: i32.store8 0 32;i32.store 2 28;i32.store 2 4;call_indirect;
+# NTB: i32.store8 0 32;i32.store 2 28;i32.store 2 4;call_indirect;
+# BNT: i32.store 2 28;i32.store8 0 32;i32.store 2 4;call_indirect;
+# BTN: i32.store 2 28;i32.store8 0 32;i32.store 2 4;call_indirect;
+# TNB: i32.store8 0 32;i32.store 2 28;i32.store 2 4;call_indirect;
+# TBN: i32.store8 0 32;i32.store 2 28;i32.store 2 4;call_indirect;
+```
+
+The `this` store (+4) is last in every one, and 10490
+(`CPedeAnoNascimentoSemBiometria::StartState`) stores +4 first, so its order is no evidence of a source order. Stores
+into different temporaries that feed one call can come out in an order neither the source's nor its reverse explains:
+3673's interval of 600 for `CreateTimer`, under six spellings of the argument (unit 120's fragment).
+
+**Seven ways a form comparison lies.**
 
 - **A copy's path moves every offset.** A record holds its file name, so a copy under another path has other offsets in
   every later row, and a variant compares as different with nothing changed. Compile the copy with
@@ -204,6 +234,17 @@ that `i32.const` as well, and a function that differs on one row per record it l
 
   Without the flag the same `cmp` differs. Compile every variant of a comparison from one directory, with one name
   length, when you do not map them.
+- **A copy's base name names its dynamic initializer.** A TU with one (a static whose constructor runs at start-up,
+  such as a singleton's `s_instance`) names it `_GLOBAL__sub_I_<base name>`, which no prefix map rewrites, so a copy
+  under another name differs in that symbol and every offset after it. Keep the base name, in a directory of its own:
+
+  ```sh
+  P=build/out/codegen-facts; printf '%s\n' 'struct X { X(); };' 'X x;' > $P/ginit.cpp; cp $P/ginit.cpp $P/ginit-copy.cpp
+  for b in ginit ginit-copy; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/$P/$b.cpp -o /work/$P/$b.o
+    wasm-objdump -x $P/$b.o | /usr/bin/grep -o '_GLOBAL__sub_I_[A-Za-z_.-]*' | sort -u; done
+  # _GLOBAL__sub_I_ginit.cpp
+  # _GLOBAL__sub_I_ginit_copy.cpp
+  ```
 - **A constructor's C2 and a destructor's D2 compare zero rows.** `wasm-objdump -d` names one body by its `C1` or `D1`
   symbol, so a slice on `…C2…` is empty on both sides, and two empty lists compare equal. Treat 0 rows as a failed
   comparison, never as equal.
@@ -215,6 +256,20 @@ that `i32.const` as well, and a function that differs on one row per record it l
   link; swapping the source to equal the object gave `36 over 165 rows`. Read operand order in a link only.
 - **A load can sink.** A load that only moves across a stretch with no store can be one binaryen sinks at link; when a
   form's object differs only there, link both before calling it evidence.
+- **A mask can go at link.** clang writes an `i32.and` with 65535 over a 16-bit result it returns zero-extended, and
+  binaryen drops it when every value it masks is already that narrow, so a form whose object adds only such a mask
+  gives the same module (1078, `CLocal::GetSecaoID`, scores the same over both forms of comum's ID types). A probe and a
+  link of it:
+
+  ```sh
+  P=build/out/codegen-facts
+  printf '%s\n' 'struct L { unsigned short m_id; bool m_ok; };' 'extern "C" unsigned short GetId(const L* l) { return l->m_ok ? l->m_id : 0; }' > $P/mask.cpp
+  TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/$P/mask.cpp -o /work/$P/mask.o
+  TMPDIR=/tmp build/docker-build.sh em++ -Oz --no-entry -Wl,--export=GetId /work/$P/mask.o -o /work/$P/mask.wasm
+  for f in $P/mask.o $P/mask.wasm; do wasm-objdump -d $f | sed -n '/<GetId>:/,/^$/p' | /usr/bin/grep -c 'i32.const 65535'; done
+  # 1
+  # 0
+  ```
 
 ## C2. A switch whose cases call consecutive virtual members is one call through a computed slot
 
@@ -329,8 +384,8 @@ second caller lands (unit 95's fragment).
 ## C4. The order of a caller and its callee decides what binaryen makes of them
 
 When two bodies differ in locals, or in what a pointer folds into, the order of the caller and the function binaryen
-inlines into it can be the cause, with no difference in the object. A caller first gives binaryen's inliner another
-round. Why, binaryen's source in the image does not show; the effect is measured:
+inlines into it can be the cause, with no difference in the object. Either order can be the target's, so try the
+other one. Why, binaryen's source in the image does not show; the effect is measured, the caller first in these:
 
 - **Across objects.** `api::IImpressoraRelatorios::SetStyle` (10881) differs in local numbers only with
   `eueprintererror.cpp` before `iimpressorarelatorios.cpp` in its fragment's sources, `34 over 189`, and matches with the
@@ -341,19 +396,56 @@ round. Why, binaryen's source in the image does not show; the effect is measured
   244` with `DoConverte` and `DoDesconverte` above their helpers (unit 93's), and 5745 from `47 over 298` to `29 over 293`
   (unit 110's).
 
+The callee first, in these:
+
+- **Inside one `.cpp`.** `CConversorVoto::DoConverte` (11355) above its static helper `ConverteTipo` scores `55 over
+  329` (7 rows inserted, 7 deleted), and below it matches (unit 124's fragment).
+- **Across objects.** `CConversorDadosCandidato::DoDesconverte` (11450) linked ahead of `util.cpp` scores `108 over
+  1389`, the inlined `Utils::DesconverteSexo`'s result copied to another local, and after it matches (units 96 and 124).
+
+A library's objects are the same question: zlib's `crc32` (893) is a 14-byte call of `crc32_z`, and with zlib's objects
+ahead of minizip's our link kept `crc32` with `crc32_z` inlined (a block result where the target has `if … return`);
+with minizip's first it keeps `crc32_z` whole, and eleven rows matched ([libraries.md](libraries.md) §B8, fragment 06).
+
 A function with no record has a free line to do this with, and a function with records may move while each throw stays
-on its record's line. Say in the fragment that the order is measured.
+on its record's line. Say in the fragment that the order is measured. A new file whose order against a landed unit's
+file decides a body goes into that unit, so the order cannot move with a fragment number (`src/units/README.md`
+"Names").
 
 The same body can show a source form only here: `std::map<char, T>::find` in 5658 scores `25 over 92`, two locals
 swapped, with `label.at(0)` as the argument or bound to a `const char&`, and `12 over 91` with `const char token`.
 
-## C5. What a TU emitted first decides an inlined template's stack slots
+## C5. A frame's offsets: which values the source names, and what a TU emitted first
 
-`CPolySingleton<T>::set` (4879 for `api::ITimerScheduler`, 4890 for `api::ISystemDateTime`) inlines `std::format`,
-whose parts are `always_inline`, and differs from the target in frame offsets alone, while 10876, the same template
-over another class, matches. The source of `set` is not the cause. One line that makes the TU emit `instance()`'s format
-code first, above `GetInst`, gives every frame offset of the target's (at 4487d6b, a variant object in a copy of the
-link, [workflow.md](workflow.md) §W13):
+The first local or temporary the source creates takes the highest offset, so which value is a named local moves the
+frame. `api::CDateTime::FormatCurrentDate` (5472) keeps its `CDateTime` at +16 and the `CDate` copy at +8, which a
+named `CDateTime` gives and a temporary does not:
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+cat > $P/frame.cpp <<'EOF'
+#include <string>
+struct CDate { int d[2]; ~CDate(); std::string Format(const char*) const; };
+struct CDateTime { long long t; int x[2]; ~CDateTime(); CDate GetData() const; };
+CDateTime Now();
+std::string Temp(const char* f) { return Now().GetData().Format(f); }
+std::string Named(const char* f) { const CDateTime agora = Now(); const CDate data = agora.GetData(); return data.Format(f); }
+EOF
+TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -c /work/$P/frame.cpp -o /work/$P/frame.o
+wasm-objdump -d $P/frame.o | sed -E 's/^ [0-9a-f]+:[^|]*\| *//' | awk '/ func\[/ {printf "%s%s", (n++ ? "\n" : ""), $3} /^i32.const/ {c=$2} /call .*D1Ev/ {printf " %s +%s", ($3 ~ /CDateTime/ ? "CDateTime" : "CDate"), c} END {print ""}'
+# <_Z4TempPKc>: CDate +24 CDateTime +8
+# <_Z5NamedPKc>: CDate +8 CDateTime +16
+```
+
+(Each destructor's `this` is the frame offset of its object.) In the whole link 5472 and 5473 match with the named
+local (`src/uenux2/src/api/util/cdatetime.cpp`).
+
+What a TU emitted first decides an inlined template's stack slots too. `CPolySingleton<T>::set` (4879 for
+`api::ITimerScheduler`, 4890 for `api::ISystemDateTime`) inlines `std::format`, whose parts are `always_inline`, and
+differs from the target in frame offsets alone, while 10876, the same template over another class, matches. The source
+of `set` is not the cause. One line that makes the TU emit `instance()`'s format code first, above `GetInst`, gives
+every frame offset of the target's (at 4487d6b, a variant object in a copy of the link, [workflow.md](workflow.md)
+§W13):
 
     V=build/out/codegen-facts/frame; mkdir -p $V/src/uenux2/src/api/util $V/obj $V/wasm/f
     LC_ALL=C sed 's|^#line 18$|template class CPolySingleton<ITimerScheduler>;\n#line 18|' src/uenux2/src/api/util/itimerscheduler.cpp > $V/src/uenux2/src/api/util/itimerscheduler.cpp
@@ -463,3 +555,39 @@ singletons of a kind leave their destructors whole bodies where the target has 1
 104's third member, `vota::CQuerReimprimirZeresima`, is what formed fn 389. A large body can merge from two (1565). The
 target's callers give no bound on what forms the body in our link (389 has 49), and the members need not be matched:
 count our link's copies before reading a thunk's `unresolved` row.
+
+## C9. What `new T()` clears before the base constructor says how the constructors are declared
+
+A `GetInst` or a `StartState` that builds an object holds its constructor inlined, and the stores before the base
+constructor's call are then the evidence. A value-initialized object is cleared first: a complete object with no
+user-provided constructor at `operator new`'s alignment over `sizeof`, a base that a user-provided constructor
+value-initializes (`D() : B() {}`) at the base's alignment over the base's data size, and nothing when that constructor
+default-initializes it. With `A` a vptr, a pointer and three `bool`s (11 bytes of data, `sizeof` 12):
+
+```sh
+P=build/out/codegen-facts; mkdir -p $P
+cat > $P/newinit.cpp <<'EOF2'
+struct A { virtual ~A(); void* p; bool b1, b2, b3; A(int e = 0); };
+struct B : A {};
+struct D final : B {
+#if FORM == 1
+    D() : B() {}
+#elif FORM == 2
+    D() {}
+#endif
+};
+A* make() { return new D(); }
+EOF2
+for f in 0 1 2; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -DFORM=$f -c /work/$P/newinit.cpp -o /work/$P/newinit-$f.o
+  printf 'FORM=%s: ' $f; wasm-objdump -d $P/newinit-$f.o | sed -n '/<_Z4makev>:/,$p' | /usr/bin/grep -oE '(i32|i64)\.store8? [0-9] [0-9]+|call [0-9]+ <env\._ZN1AC2Ei>' | awk '{print} /_ZN1AC2Ei/ {exit}' | tr '\n' ';'; echo; done
+# FORM=0: i32.store 2 8;i64.store 3 0;call 1 <env._ZN1AC2Ei>;
+# FORM=1: i32.store 0 7;i64.store 2 0;call 1 <env._ZN1AC2Ei>;
+# FORM=2: call 1 <env._ZN1AC2Ei>;
+```
+
+(`wasm-objdump` prints a store's alignment as a power of two, then its offset.) The second is the target's 10327
+(`comum::CGestorDadoMesario::StartState`): `i32.store align=0 offset=7` and `i64.store align=2 offset=0` before `call
+224`, `CAppState`'s constructor, with 0. So the state's constructor is user-provided and value-initializes its base,
+and the base's default constructor is not user-provided down to the class whose constructor the code calls, which must
+be callable with no argument (a default argument, as here, or an inline delegating `A()` give the same stores). Unit 135
+writes it so. A constructor defined out of the class keeps a call of its C1 in the TU instead (unit 104).

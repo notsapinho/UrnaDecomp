@@ -101,12 +101,15 @@ the next run.
   commit what is worth having first.
 - **Copy out what the board cites first.** The clean-up check sees tracked and untracked files only, and the worktree's
   ignored `build/out/` goes with it, with every script and log a post names. Copy the worktree's scratch roots to the
-  board's `shared/from-<lane>/`, which the coordinator copies between machines, each file of 5 MB or less, and write
-  what stayed out and why in a `SKIPPED.txt` there. A private clone or `APP` tree under a scratch root is thousands of
-  small files that each pass the limit, and its commit and script make it again: copy its logs and row lists, leave the
-  tree out, and name it in `SKIPPED.txt`. Keep a verifier's logs one level above any tree it makes. Name the new path in your result. Check the copy against the names the
-  lane's posts give, relative ones too: a posts' search for `build/out/…` misses `p/run.sh` under "in build/out/<handle>/"
-  and still reports nothing unresolved. A script worth keeping past the run belongs in `tools/`.
+  board's `shared/from-<worktree>/`, the worktree's name in lower case for the lane and the landing alike, which the
+  coordinator copies between machines, each file of 5 MB or less, and write what stayed out and why in a `SKIPPED.txt`
+  there. The board's filesystem can fold case (`from-Lane-D` and `from-lane-d` are one folder on macOS), so list
+  `shared/` first, and a copy into a folder that exists writes its list as `SKIPPED-<handle>.txt` and replaces no file.
+  A private clone or `APP` tree under a scratch root is thousands of small files that each pass the limit, and its
+  commit and script make it again: copy its logs and row lists, leave the tree out, and name it in `SKIPPED.txt`. Keep a
+  verifier's logs one level above any tree it makes. Name the new path in your result. Check the copy against the names
+  the lane's posts give, relative ones too: a posts' search for `build/out/…` misses `p/run.sh` under "in
+  build/out/<handle>/" and still reports nothing unresolved. A script worth keeping past the run belongs in `tools/`.
 - **At a round's end `git worktree list` shows only the main checkout.** Read it before you report the round.
 
 ## Two machines
@@ -169,7 +172,9 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   delete the two link outputs by name first, or use a private `OUT`.
 - A flag change in a `src/units/*.mk` fragment does not rebuild stale objects: touch the sources. An edit of a
   source or a header does: each object depends on its own source and on every header of its tree. A comment edit in a
-  fragment rebuilds that fragment's companions and `roots_asn1.o`, whose rules name it.
+  fragment rebuilds the objects whose rules name it: `roots_asn1.o` always, the fragment's companions when their rules
+  list it (135 companion rules do, 34 do not), and objects the fragment builds outside `build/out/app/` (fragment 06's
+  13 zlib objects under `build/out/zlib/`). `make -n -C src link -W $PWD/<fragment>` lists them.
 - `-j` goes on the object list only, never on `link` or `splat` ([facts/workflow.md](reference/facts/workflow.md) §W21).
 - Two units landing in one run each need their own fragment number: the coordinator assigns them before the
   matchers start, and the unit that lands second re-runs link, census, symbols, match and the splat build on top of
@@ -180,33 +185,21 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   ([facts/workflow.md](reference/facts/workflow.md) §W15). A half-finished edit breaks every other agent's link
   until it is fixed. Keep shared headers compiling at every commit. The splat build checks only the
   matched functions of those units; to show that a restructure left them as they were (a vtable, an inline member a
-  parallel lane builds on), list the objects the edit will rebuild, keep a copy of them before the first link or try,
-  and compare each after relinking ([facts/workflow.md](reference/facts/workflow.md) §W13):
-
-  ```sh
-  make -n -C src link -W $PWD/<header> | /usr/bin/grep -oE ' -o [^ ]+\.o( |$)' | sed 's/^ -o //; s/ $//' > build/out/<handle>/rebuilt.txt
-  while read o; do [ ! -f "$o" ] || echo "$o"; done < build/out/<handle>/rebuilt.txt > build/out/<handle>/existing.txt
-  tar -cf build/out/<handle>/before.tar -T build/out/<handle>/existing.txt
-  # edit the header, then TMPDIR=/tmp make -C src link
-  while read o; do tar -xOf build/out/<handle>/before.tar "$o" 2>/dev/null | cmp -s - "$o" || echo "DIFFER $o"; done < build/out/<handle>/rebuilt.txt
-  ```
-
-  The list names the objects of sources a unit adds too; they are not built yet, so the filter keeps them out of the
-  archive (`tar -T` would report each one and exit 1), and the loop prints `DIFFER` for them, which is right. An object
-  that is not in the list compares equal with itself and proves nothing, and the list can miss one: a fragment, a
-  companion that holds a header its rule omits, and an edit of an `src/asn1` module header
-  ([facts/workflow.md](reference/facts/workflow.md) §W15 has the check). A reviewer with no copy from before the edit
-  compiles the base's objects from `git archive <commit> src` in scratch
-  ([facts/workflow.md](reference/facts/workflow.md) §W13). Before a link, the same list taken for each file a unit added
-  or changed, fragments too, gives, as their union, what the unit's edits will rebuild. To check a unit's objects fresh
-  afterwards (move them aside, rebuild, compare), move aside every object its worktree built: `find build/out/app -name
-  '*.o' -newer .git`, run in the worktree, lists them, since the worktree's `.git` file dates from its creation and a
-  cloned `build/out/` keeps older mtimes ([facts/workflow.md](reference/facts/workflow.md) §W15). `find build/out/app
-  -newer <header>` compares with the header's last edit and misses an object of the unit built before it. Rebuild with
-  `TMPDIR=/tmp make -C src splat`, serially; an object listed that does not come back is a deleted file's.
-- A header your unit needs that `main` gained after your branch started: start your copy from `main`'s text and only
-  add to it. One that a branch landing before yours adds: copy it from that branch byte for byte, claim it, and do
-  not edit it (`docs/how-to-decompile.md` step 10, "Landing onto a moved main").
+  parallel lane builds on), list the objects the edit will rebuild (`make -n -C src link -W $PWD/<file>` for each file
+  added or changed, fragments too), keep a copy of them before the first link or try, and compare each after relinking
+  ([facts/workflow.md](reference/facts/workflow.md) §W13 has the commands). An object not in the list compares equal
+  with itself and proves nothing, and the list can miss one: a companion that holds a header its rule omits, and an
+  edit of an `src/asn1` module header (§W15 has the check). A reviewer with no copy from before the edit compiles the
+  base's objects from `git archive <commit> src` in scratch (§W13).
+- To check a unit's objects fresh afterwards, move aside every object its worktree built and rebuild with
+  `TMPDIR=/tmp make -C src splat`, serially. `find build/out/app -name '*.o' -newer .git`, run in the worktree, lists
+  them, since the worktree's `.git` file dates from its creation and a cloned `build/out/` keeps older mtimes (§W15); an
+  object listed that does not come back is a deleted file's. Two kinds lie outside `build/out/app/`, so move them aside
+  by name too: what the `-W` list of an edited fragment names there (fragment 06's zlib objects), and a library variant
+  directory a change of its build makes (a `tools/libs/*/build.sh`, a `*_DIR` in `src/Makefile`), which `TMPDIR=/tmp
+  make -C src libs` rebuilds before the splat build, since the link takes those objects on trust.
+- A header your unit needs that another branch adds or changes: `docs/how-to-decompile.md` step 10, "Landing onto a
+  moved main", says what to copy, what to add and where.
 - Every agent's link recompiles on the same machine. With a dozen agents the load average passes 130 and one
   compile of eight objects takes six minutes; size the fan-out to the machine, and prefer a lone compile
   (`tools/round/try-tu.sh --single`) or a library probe for questions that do not need the whole link.
@@ -252,9 +245,14 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
 - In an agent's shell, `grep` can be a shell function that prints nothing for a search over the Latin-1 sources, with
   `LC_ALL=C` in front too, and exits as if nothing matched, so a negative from it is no evidence.
   Use `/usr/bin/grep` (or `command grep`) there. Run every text tool of a pipe over those sources or a stub line
-  under `LC_ALL=C` (`sed`, `cut`, `tr`, `awk` with a regex, `git grep`), or convert with `iconv -f latin1 -t utf-8`
-  first: in a UTF-8 locale macOS `sed` and `cut` stop with `illegal byte sequence` at a stub's middle dot, and
-  `git grep` prints nothing ([facts/workflow.md](reference/facts/workflow.md) §W9).
+  under `LC_ALL=C` (`/usr/bin/grep` itself, `sed`, `cut`, `tr`, `awk` with a regex, `git grep`), or convert with `iconv
+  -f latin1 -t utf-8` first: in a UTF-8 locale `/usr/bin/grep -c '// f1455 '
+  src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp` counts 0 with no error where `LC_ALL=C` counts 1, macOS `sed`
+  and `cut` stop with `illegal byte sequence` at a stub's middle dot, and `git grep` prints nothing
+  ([facts/workflow.md](reference/facts/workflow.md) §W9).
+- Undo a `git cherry-pick --no-commit` with `git checkout HEAD -- <file>`: it stages the change, so `git checkout --
+  <file>` restores the staged text and keeps it. It also leaves `MERGE_MSG` and `AUTO_MERGE` in the git dir (`git
+  rev-parse --git-dir`), which the next commit would read: remove them by name.
 - Run `pnpm test` (from `asmlift-wasm/`) alone in a checkout: beside a census or `splat-match` its real-link cases
   skip and it still exits 0. Read the count ([facts/workflow.md](reference/facts/workflow.md) §W12).
 - The official progress check is `TMPDIR=/tmp make -C src splat`: it must print the target's sha256. A stage that

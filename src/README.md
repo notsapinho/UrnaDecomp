@@ -48,7 +48,8 @@ unwritten one, nor a destructor its constructor. So a pending member's trapping 
 stub. A non-virtual function we wrote that has no record, a constructor for one, keeps its stub. A function whose
 records all fall on lines of our code counts as written even when it is a caller that inlined the code on those lines:
 writing `ctextsource.h`'s inline constructor on its record's line (37:19) removed the stubs of 1150 and 652, whose only
-record that is. Name such functions in the fragment's header, as for a stub-only file that goes (below).
+record that is. Name such functions in the fragment's header, as for a stub-only file that goes (below): they stay
+unwritten with no stub, and are found by their record (`docs/reference/facts/placing.md` §P1).
 
 ```
 // <stubs>
@@ -75,24 +76,27 @@ takes `CWasmScreen`'s stubs out of `unplaced.cpp` at step 9, whatever the file h
 its tree's `unplaced.cpp`, grouped by link-order cluster. That tree is the scan's `group` column's (`tree_of` in
 `tools/round/stubs.py`), a guess like the group. 5449, `api::IsValidTime`, is in group `ecourna` because it calls
 ecourna's `CStringUtils::ToByte`, so its stub was in `ecourna/unplaced.cpp`, and it matches from a uenux2 object (`awk
--F'\t' '$1==5449 {print $9, $11}' splat/scan.tsv` prints `ecourna app/uenux2/src/api/util/ctime.cpp.o`). Decide a
-function's tree from its callers' records and its landing pads (an `invoke_*` around a throwing call is ecourna's or
-ASN.1's flags, none is uenux2's: `docs/reference/facts/app-flags.md` §F6). The comment over a cluster (`// link-order
-cluster 984 · uses=3 · neighbours' file uenux2/src/api/gui/ctextfielddoubleline.cpp`) is its stretch's `probable_file`
-in `ledger/tu-clusters.tsv`: the file of a record one of the stretch's functions loads, or of a vtable class's records
-(`label_kinds` `source_location`, `class-record`), else a guess from a class name (`class-convention`). A stretch also
-holds unlabelled functions of other classes: f3660, `api::CSubReport`'s constructor, sits under 3659's record in
-cluster 984, and a stretch can hold functions of another digit zone
-([../docs/reference/link-order.md](../docs/reference/link-order.md) §7.5). So the comment is a hint, not the file;
-`docs/how-to-decompile.md` step 3 gives the file. A file the evidence names that does not exist yet holds its stubs
-only, and goes when its last stub goes, even when records name it: they can be an inlined callee's. Whoever removes
-that last stub, by a match or a pending member, names the file and its record lines in the fragment's or the
-`-pending.cpp`'s header (`units/README.md` "Pending members"), so that whoever writes the functions of those records
-finds it. The deletion is left unstaged: `git rm` it before `python3 -I -B tools/round/check_encoding.py`, which reads
-the index and stops with `FileNotFoundError` on a tracked file that is gone. The stub files and `unplaced.cpp` are
-never compiled: no fragment lists them, and the generator never creates a `.cxx` in `asn1/`, where `mk/asn1.mk`
-compiles every one. A stub is a comment, never the target's code: there is no `INCLUDE_ASM`, and an unmatched
-function's bytes come from its piece in the splat build
+-F'\t' '$1==5449 {print $9, $11}' splat/scan.tsv` prints `ecourna app/uenux2/src/api/util/ctime.cpp.o`). For the same
+reason a stub can sit over a body of a library `third_party/MANIFEST.md` pins, which a TSE function calls: the census's
+`owner` column (`ledger/functions.tsv` column 4) names the library, or the body calls one whose owner does. Such a row
+is the library's code and lands with its caller, never as TSE source (`docs/reference/facts/placing.md` §P1 lists such
+rows). Decide a function's tree from its callers' records and its landing
+pads (an `invoke_*` around a throwing call is ecourna's or ASN.1's flags, none is uenux2's:
+`docs/reference/facts/app-flags.md` §F6). The comment over a cluster (`// link-order cluster 984 · uses=3 · neighbours'
+file uenux2/src/api/gui/ctextfielddoubleline.cpp`) is its stretch's `probable_file` in `ledger/tu-clusters.tsv`: the
+file of a record one of the stretch's functions loads, or of a vtable class's records (`label_kinds` `source_location`,
+`class-record`), else a guess from a class name (`class-convention`). A stretch also holds unlabelled functions of other
+classes: f3660, `api::CSubReport`'s constructor, sits under 3659's record in cluster 984, and a stretch can hold
+functions of another digit zone ([../docs/reference/link-order.md](../docs/reference/link-order.md) §7.5). So the
+comment is a hint, not the file; `docs/how-to-decompile.md` step 3 gives the file. A file the evidence names that does
+not exist yet holds its stubs only, and goes when its last stub goes, even when records name it: they can be an inlined
+callee's. Whoever removes that last stub, by a match or a pending member, names the file and its record lines in the
+fragment's or the `-pending.cpp`'s header (`units/README.md` "Pending members"), so that whoever writes the functions of
+those records finds it. The deletion is left unstaged: `git rm` it before `python3 -I -B tools/round/check_encoding.py`,
+which reads the index and stops with `FileNotFoundError` on a tracked file that is gone. The stub files and
+`unplaced.cpp` are never compiled: no fragment lists them, and the generator never creates a `.cxx` in `asn1/`, where
+`mk/asn1.mk` compiles every one. A stub is a comment, never the target's code: there is no `INCLUDE_ASM`, and an
+unmatched function's bytes come from its piece in the splat build
 ([../docs/reference/include-asm.md](../docs/reference/include-asm.md)).
 
 Stubs only take blank lines (the ones that keep a decompiled function's throw sites at their recorded lines) or go
@@ -123,17 +127,20 @@ CNumeroCPF::CNumeroCPF(const std::string& numeroCPF) : IIdentificadorEleitor(TTi
 
 Write nothing of your own into those lines: they stay blank, and step 9 makes a run of three or more a gap, the
 project's statement that the content is not recovered. The lines a record names for a function no file of ours
-writes (a constructor its only caller inlined) stay blank too, and the members you write go after them, or before
-them when evidence says so: their lines are then a choice, which the file's header says. Such a run gets no gap when
+writes (a constructor its only caller inlined, a pending member) stay blank too, and the members you write go after
+them, or before them when evidence says so: their lines are then a choice, which the file's header comment or the
+fragment's header says. Such a run gets no gap when
 no record line lies below it: lines 4-77 of `uenux2/src/api/gui/cprogressbar.cpp` hold the records 52, 58 and 67 of
 the constructor that `std::make_shared`'s 5545 inlined, and stay 74 blank lines. When the records' function has a
 stub, step 9 writes the stub over its record's line: `uenux2/src/api/gui/cstepsprogressbar.cpp` holds a gap for
 lines 18-424, then f13550's stub on lines 425-428 (its record is 428:15), then the unit's members. A comment there
 reads as TSE's, and no evidence gives it.
 What a reader needs to know about the reconstruction (which target functions the file holds, which names and paths
-are chosen) goes in the file's header comment. Files landed before this rule still hold doc comments of their own
-above a function (`LC_ALL=C git grep -l '^ */\*\*' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'` lists them); they are
-not the form to copy.
+are chosen) goes in the file's header comment. Above a record line (a header whose inline member a record names), every
+line added there moves the records below it: keep the line count above the first record, folding the note into the
+lines already there, and run `TMPDIR=/tmp make -C src check-srcloc` after the link. Files landed before this rule still
+hold doc comments of their own above a function
+(`LC_ALL=C git grep -l '^ */\*\*' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'` lists them); they are not the form to copy.
 
 The comment is ASCII (a `-` between the numbers: Latin-1 has no dash), indented like the line under it, and sits on
 the first line it names; the `#line` names the line after the last. A `#line` without a file name keeps the file
@@ -235,12 +242,14 @@ pnpm exec tsx src/cli.ts "$@"`, exit status 134. What try-tu does:
   [../docs/reference/facts/tool-traps.md](../docs/reference/facts/tool-traps.md) §X10).
 
 `--skip-units <fragment>.mk` leaves a landed fragment out of the link, with its companion objects, so its TUs can be
-tried again without a duplicate symbol. To measure a variant of one source of a landed unit, copy every source the
-fragment lists, its `-externs.cpp` included, into one scratch directory, change the copy, and pass that directory with
-`--skip-units <fragment>.mk --component <the sources' directory under src/> --roots <the unit's -roots.cpp>`.
-`--component` gives the copies their tree's flags and path map, and the externs file, which has no rule of its own
-once the fragment is skipped, the flags it has in the fragment. Run the unchanged copy first: it must reproduce the
-committed result.
+tried again without a duplicate symbol. It takes the file name as `src/units/` lists it (`13-uenux2-crdvvota.mk`), not a
+path: `src/Makefile` filters the fragments by `$(ROOT)/src/units/<name>`, so a path matches none, is dropped without a
+word, and the link stops on `duplicate symbol`. To measure a variant of one source of a landed unit, copy every source
+the fragment lists, its `-externs.cpp` included, into one scratch directory, change the copy, and pass that directory
+with `--skip-units <fragment>.mk --component <the sources' directory under src/> --roots <the unit's -roots.cpp>`.
+`--component` gives the copies their tree's flags and path map, and the externs file, which has no rule of its own once
+the fragment is skipped, the flags it has in the fragment. Run the unchanged copy first: it must reproduce the committed
+result.
 
 Times: `--single` takes about 7 s on an idle machine and the whole link about a minute (compile, both links,
 census). Both are mostly docker runs, so they grow with the machine's load: `--single` takes about 35 s while a fresh

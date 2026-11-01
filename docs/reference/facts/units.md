@@ -215,16 +215,16 @@ traps of one wasm type into one body, which then sits in the slots of several of
 so no name is given and the member stays `no-candidate`.
 
 ```sh
-awk -F'\t' '$1==11442 || $1==11469 || $1==11470 {print $1, $5, $11}' splat/scan.tsv     # at 4487d6b
-# 11442 differs app/36-uenux2-cvisitantefoto-pending.o
-# 11469 no-candidate -
-# 11470 no-candidate -
-/usr/bin/grep -cE 'func:11442;.*evidence:vtable' splat/symbol_addrs.txt
+awk -F'\t' '$1==11419 || $1==11724 || $1==11744 {print $1, $5, $11}' splat/scan.tsv     # at c1b2630
+# 11419 differs app/159-uenux2-iconversorasn-defaults-pending.o
+# 11724 no-candidate -
+# 11744 no-candidate -
+/usr/bin/grep -cE 'func:11419;.*evidence:vtable' splat/symbol_addrs.txt
 # 1
 ```
 
 Which case a trap is shows in the plain link: the functions of the pending objects other than destructors, with the
-number of table slots that hold each (at 4487d6b; the indices move with the link, and the objects with the landings):
+number of table slots that hold each (at c1b2630; the indices move with the link, and the objects with the landings):
 
 ```sh
 python3 -I -c "
@@ -235,21 +235,23 @@ for line in open('build/out/wasm-map/vota_web/names.tsv'):
     if obj.endswith('-pending.o') and 'D0Ev' not in name and 'D2Ev' not in name:
         print(i, len([k for k, v in d.items() if v == int(i)]), name[:70], obj.split('/')[-1])
 "
-# 508 25 _ZN3api15CAjusteDataHora6AjustaERKNS_9CDateTimeE 101-uenux2-api-util-singletons-pending.o
-# 962 11 _ZNK5comum3asn22CConversorHorarioVerao10DoConverteERKNS_2md13CHorarioV 107-uenux2-iconversorasn-pending.o
-# 1596 6 _ZN4vota29CItemVisualizarCandidatosVota5Slot2Ev 102-uenux2-control-blocks-pending.o
-# 3176 3 _ZN3api15CTimerScheduler11CreateTimerERKNSt3__26chrono8durationIxNS1_5 101-uenux2-api-util-singletons-pending.o
-# 10346 1 _ZN5comum3asn14CVisitanteFoto5visitEiRKNSt3__212basic_stringIcNS2_11ch 36-uenux2-cvisitantefoto-pending.o
+# 339 46 _ZN4vota16CAguardaMensagem10ProcessKeyEh 104-uenux2-app-vota-estados-pending.o
+# 467 30 _ZNK5comum3asn22CConversorHorarioVerao10DoConverteERKNS_2md13CHorarioV 107-uenux2-iconversorasn-pending.o
+# 930 12 _ZN4vota29CItemVisualizarCandidatosVota5Slot2Ev 102-uenux2-control-blocks-pending.o
+# 5156 2 _ZNK4vota9CPedeNulo16GetProximoEstadoERKNSt3__212basic_stringIcNS1_11c 97-uenux2-cvotacaostateaudio-pending.o
+# 9779 1 _ZNK5comum3asn13IConversorASNIN15ModuloImpedidos17EntidadeImpedidosENS 98-uenux2-app-comum-dados-pending.o
+# 10095 1 _ZNK5comum3asn13IConversorASNIN21ModuloFotosCandidatos13FotoCandidatoE 159-uenux2-iconversorasn-defaults-pending.o
+# …       (ten more of unit 159's, one slot each)
 ```
 
-Unit 101's `Ajusta` trap is one body in 25 table slots: binaryen merged the pending traps of its wasm type into it, and
-the merged ones have no name in `names.tsv`. None of them gets a name. The trap of 11442 was alone in its slot, so it
-was named after its trap. Which case a member is can change in a function its unit never touched. A trap a
-unit adds merges with one of its wasm type and takes that member's name and `differs` row. A member that lands leaves its
-partner alone again: 11366 (unit 17) shared a body in two slots with 10900 (unit 84), and 10900 turned `differs` when
-11366 matched. The name the symbol file gave 11442, `visit(int, const std::string&, AbstractData*, unsigned, unsigned)`,
-was the one `src/asn1/asn1.h` declared, not its records' (`awk -F'\t' '$6 ~ /(^|,)11442(,|$)/ {print $5}'
-ledger/source-locations.tsv | sort -u`). asn1.h declares the records' form since, and 11442 matches (unit 36).
+Unit 104's `ProcessKey` trap is one body in 46 table slots: binaryen merged the pending traps of its wasm type into
+it, and the merged ones have no name in `names.tsv`. None of them gets a name. Unit 97's two `GetProximoEstado` traps
+are one body in two slots, so 11724 and 11744 have none either. The trap of 11419, unit 159's
+`CConversorBiometriaEleitorCifrada::DoDesconverte`, is alone in its slot, so it is named after its trap. A slot that
+holds a real body from the pending object (an inherited default, 9779 for 11409) is a match, not this case (§U4).
+Which case a member is can change in a function its unit never touched. A trap a unit adds merges with one of its wasm
+type and takes that member's name and `differs` row. A member that lands leaves its partner alone again: 11366 (unit
+17) shared a body in two slots with 10900 (unit 84), and 10900 turned `differs` when 11366 matched.
 
 ## U6. An explicit specialization's trap beats the class template's instantiation without a word
 
@@ -483,4 +485,67 @@ python3 -I -c "import struct; d=open('build/out/units-facts/mem.bin','rb').read(
 ```
 
 The same read at a vptr a constructor stores gives the class's typeinfo, and so its name. A class missing its row gets
-no `vtable` evidence for its slots, so its members wait for a census pair or a hand edit.
+no `vtable` evidence for its slots, so its members wait for a census pair or a hand edit. From the other end, a slot
+that no row holds, or a row read past its vtable into the next object's words, [reading.md](reading.md) §R20 walks
+from the slot back to the vtable's typeinfo.
+
+## U13. What a roots shape emits, measured on probes
+
+Each probe is compiled at `APP_CXXFLAGS`, the roots' flags, and read with `llvm-nm` or `llvm-objdump -dr`:
+
+```sh
+P=build/out/units-facts/shapes; mkdir -p $P
+printf '%s\n' 'struct B { virtual ~B(); int x; };' 'struct S { ~S(); };' 'struct D : B { };' \
+  'struct E : B { int y; ~E() override {} };' 'struct F : B { S s; };' \
+  '__attribute__((optnone, noinline)) void destroiD(D* d) { d->D::~D(); }' \
+  '__attribute__((optnone, noinline)) void destroiE(E* e) { e->E::~E(); }' \
+  '__attribute__((optnone, noinline)) void destroiF(F* f) { f->F::~F(); }' > $P/dtor.cpp
+printf '%s\n' 'struct K { virtual void f(); virtual ~K() {} };' 'inline void K::f() {}' \
+  'namespace { __attribute__((optnone, noinline)) void constroi() { K k; } }' > $P/anon.cpp
+sed 's/^namespace { \(.*\) }$/\1/' $P/anon.cpp > $P/named.cpp
+printf '%s\n' 'template <class T> struct G { T* p; __attribute__((minsize)) ~G() { if (p) p->~T(); } };' \
+  'struct S { ~S(); };' 'template struct G<S>;' 'extern "C" int urna_guarda(int) __asm__("_ZN1GI1SED2Ev");' \
+  '__attribute__((noinline)) int usa(int a, int b) { return urna_guarda(a) + urna_guarda(b); }' \
+  '__attribute__((noinline)) int usa_noinline(int a, int b) { int r; [[clang::noinline]] r = urna_guarda(a); [[clang::noinline]] r += urna_guarda(b); return r; }' > $P/label.cpp
+printf '%s\n' '#include <new>' 'struct X { X(int, int); int a, b; };' \
+  '__attribute__((noinline)) long le(void* a, void* b, int x, int y) { return reinterpret_cast<long>(new (a) X(x, y)) - reinterpret_cast<long>(new (b) X(y, x)); }' > $P/placement.cpp
+printf '%s\n' 'struct Base { };' 'struct Derived : Base { virtual ~Derived(); int x; };' 'Derived::~Derived() {}' > $P/rtti.cpp
+for f in dtor anon named label placement rtti; do TMPDIR=/tmp build/docker-build.sh em++ $(make -s -C src print-APP_CXXFLAGS) -c $P/$f.cpp -o $P/$f.o; done
+build/docker-build.sh /emsdk/upstream/bin/llvm-nm $P/dtor.o | /usr/bin/grep -E '_ZTV|D[012]Ev'
+#          U _ZN1BD2Ev
+# 000000c2 W _ZN1FD0Ev
+# 0000009d W _ZN1FD2Ev
+#          U _ZN1SD1Ev
+# 00000000 W _ZTV1F
+#          U _ZTVN10__cxxabiv120__si_class_type_infoE
+for f in anon named; do printf '%s ' $f; build/docker-build.sh /emsdk/upstream/bin/llvm-nm --defined-only $P/$f.o 2>/dev/null | /usr/bin/grep -c K; done
+# anon 0
+# named 7
+build/docker-build.sh /emsdk/upstream/bin/llvm-objdump -dr $P/label.o | awk '/^[0-9a-f]+ <.*>:$/ {f=$2} /R_WASM_FUNCTION_INDEX_LEB/ {print f, $NF}' | sort | uniq -c
+#    2 <_Z12usa_noinlineii>: _ZN1GI1SED2Ev+0
+#    2 <_Z3usaii>: _ZN1SD1Ev+0
+#    1 <_ZN1GI1SED2Ev>: _ZN1SD1Ev+0
+build/docker-build.sh /emsdk/upstream/bin/llvm-objdump -dr $P/placement.o | /usr/bin/grep -E 'R_WASM_FUNCTION_INDEX_LEB|i32.sub' | awk '{print $NF}' | uniq -c
+#    2 _ZN1XC1Eii+0
+#    1 i32.sub
+build/docker-build.sh /emsdk/upstream/bin/llvm-objdump -r $P/rtti.o | /usr/bin/grep -oE '__cxxabiv1[0-9]+__[a-z_]+type_info' | sort | uniq -c
+#    1 __cxxabiv117__class_type_info
+#    1 __cxxabiv120__si_class_type_info
+```
+
+- **A destructor called by its qualified name emits the vtable only when it destroys something.** `D` adds no
+  member and `E` only a trivial one under an empty destructor: clang emits no D2 of theirs, the call goes to `B`'s,
+  and nothing names their vtables. `F`'s member has a destructor, so its D2 stores the vptr, and the object emits
+  `F`'s D2, D0 and vtable. A roots file whose sink names such a class's vtable then stops the link on `undefined
+  symbol: vtable for <class>`.
+- **A dropped builder must have external linkage.** In the anonymous namespace nothing references it, so clang emits
+  neither it nor what it was for (`anon.o` has no symbol); at namespace scope it emits `K`'s constructor, destructors,
+  vtable and typeinfo, and wasm-ld drops the builder.
+- **An `__asm__` label is the function to clang when the TU defines it.** `usa` holds the guard inlined twice, with
+  its callee's calls; `[[clang::noinline]]` on each call statement keeps the two calls `usa_noinline` has.
+- **A placement new's result is the constructor's returned `this`.** `le` calls `X`'s C1 twice and subtracts the
+  results, so a stand-in reads the result with no label, and no mangled parameter list to break when a header
+  changes a parameter's type.
+- **An `si_class` typeinfo does not make the base polymorphic.** `Derived`'s typeinfo is `__si_class_type_info` over
+  an empty `Base` with no virtual member, whose typeinfo is `__class_type_info`. The kind gives the bases, their
+  offsets and access, not which class declares a virtual member.

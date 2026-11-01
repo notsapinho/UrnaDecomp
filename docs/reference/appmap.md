@@ -5,8 +5,8 @@ Everything below is derived from the binary alone by the scripts in `tools/extra
 
 | artefact | produced by | what it holds |
 | --- | --- | --- |
-| `ledger/strings.tsv` | `tools/extract/extract_strings.py` | 16375 NUL-terminated data strings: addr, len, encoding (ascii/latin1/utf8), text |
-| `ledger/classes.json` | `tools/extract/rtti.py` | 2,162 typeinfo objects: name, kind (class/si_class/vmi_class/pointer/…), bases with offset/virtual/public |
+| `ledger/strings.tsv` | `tools/extract/extract_strings.py` | 16375 NUL-terminated data strings: addr, len, encoding (ascii/latin1/utf8), text. The text is UTF-8 whatever the encoding column says, so compare a literal's length (column 2) or encoding (column 3) with the source, never column 4's bytes |
+| `ledger/classes.json` | `tools/extract/rtti.py` | 2,162 typeinfo objects: name, kind (class/si_class/vmi_class/pointer/…), bases with offset/virtual/public. The kind gives the bases, not which class declares a virtual member: `si_class` holds over an empty, non-polymorphic base too (`docs/reference/facts/units.md` §U13) |
 | `ledger/vtables.json` | `tools/extract/rtti.py` | 1851 vtables: address, class, offset_to_top, table indices and resolved function indices |
 | `ledger/func-strings.tsv` (ignored) | `tools/extract/func_refs.py` | per function: every data address it loads (i32.const or folded load/store offset) that is a string start, a vptr or a typeinfo |
 | `ledger/callgraph.tsv` | `tools/extract/func_refs.py` | 113,299 direct `call` edges |
