@@ -4,8 +4,12 @@
 # CEleitorDinamicoDAO::ExcluirID (11543), the three defaults of api/persistencia/iuenuxgenericdao.h with their merge
 # (11540, 11467, 10398, 10397, 10396, thunks of 2297), and the three DAOs' Clone with theirs (11541, 11468, 10399, thunks
 # of 3894), and CBaseError<api::EUePersistenciaError>'s and CBaseError<comum::EUeComumJustificativaError>'s constructors
-# (1715, 2260), thunks of fn 710, with unit 94's constructor. 1715's name is a hand edit, evidence:rtti-vptr (the only
-# target function holding that vptr); 2297 calls it, and the line is older than the votes of what an anchor's vote names.
+# (1715, 2260), thunks of fn 710, with unit 94's constructor; CComparecimentoMesarioDAO's Inserir (10403, slot 3), its
+# two converters ConverteEstadoBiometria and ConverteDedoHabilitacao (5391, 5390, records ccomparecimentomesariodao.cpp
+# lines 200 and 232) and CBaseError<comum::EUeComumComparecimentoMesarioError>'s constructor they throw with (3611, a
+# thunk of fn 710; app/comum/comparecimentomesario/euecomumcomparecimentomesarioerror.h). 1715's name is a hand edit,
+# evidence:rtti-vptr (the only target function holding that vptr); 2297 calls it, and the line is older than the votes
+# of what an anchor's vote names.
 # All three DAOs must be in the link: binaryen forms 2297 and 3894 from those members, and unit 66's file holds
 # the third of each. The sources are the files the records name: md/eleitor/{celeitordinamico,cbiometriaeleitor,
 # celeitordecorator}.cpp, dados/dao/celeitordinamicodao.cpp, comparecimentomesario/dao/ccomparecimentomesariodao.cpp.
@@ -22,6 +26,18 @@
 #   (splat/symbol_addrs.txt: `evidence:vote:13 by:3768,5775,5776,14478`).
 #
 # Read from the bytes:
+# - 10403 binds its columns from the offsets the class header lists and converts data_hora_registro with
+#   CDateTime::ConvertToLocalTime (fn 1381), then a multiply by 1000000 and the add of the epoch's microseconds, inlined:
+#   boost::posix_time::from_time_t is written (no other spelling of that conversion tried). It loads the statement once
+#   before it tests id_arquivo's flag, then calls SetInt or SetNull
+#   through it: `stmt->` in each branch loads it in each branch (object compared), and a helper that takes the
+#   statement by reference loads its vtable once as well, where the target loads it in each branch. So a reference to
+#   the statement is taken before the test.
+# - 5391 and 5390 range-check with `i32.lt_u` of 3 (after subtracting 1) and of 11 in the object, as the target's
+#   `i32.ge_u` after binaryen: a switch whose cases each return their own value gives it. Measured on 5390, an `if`
+#   over the range (`>= 0 && <= 10`, `<= 10 && >= 0`, a cast to uedword `< 11`, a negated `||`) and a switch whose
+#   cases share one return give `i32.le_u` of 10 (each compiled, the function's rows compared). Their throws stand at
+#   column 11, the function's top level, after the switch; each formats the int argument (type code 3).
 # - The throws of 1548 and 708 stand at column 11, at the function's own indent, so each is the fall-through after an
 #   `if` that returns; the three others of the unit in functions of this kind (3720, 2799) stand at 15 and 19, in a block.
 # - 708's second compare of the iterator is a search and then a test, not a return inside the loop: a range-for that
@@ -34,8 +50,9 @@
 # - 2799's map and photo are std::optional members, from the flags fn 11422 stores at +32 and +16. The target reads the
 #   map with no test of the flag: value() adds 8 rows to GetDedo.
 #
-# Chosen, no evidence names them: every data member's name, parameter names, every getter's name but
-# GetTituloMesarioHabilitacao, the
+# Chosen, no evidence names them: every data member's name, parameter and local names (comando among them), every
+# getter's name but GetTituloMesarioHabilitacao, the converters being private, the enumerators' names of
+# EUeComumComparecimentoMesarioError and that header's path, the
 # paths of every new header (cdedo.h, celeitordecorator.h, cbiometriaeleitor.h, celeitordinamico.h, celeitordinamicodao.h,
 # ieleitordinamicodao.h, ccomparecimentomesariodao.h, icomparecimentomesariodao.h, comparecimentomesario/md/
 # ccomparecimentomesario.h, api/persistencia/euepersistenciaerror.h), the enumerators of EUePersistenciaError, the name

@@ -16,6 +16,14 @@
 #   1703 and 860 do not depend on the mapped type: in the target each is one body for every map of this key, and the
 #   match line names this unit's instance (docs/how-to-decompile.md step 3, "A callee can be a twin").
 # - 3743, an out-of-line 2-byte copy of the map's pair's second member, read as CJustificadorDetalhe's copy constructor.
+# - comum::CJustificador's constructor, 3742 (app/comum/justificativa/cjustificador.cpp; the class in cjustificador.h
+#   beside it): CDataMap's constructor from the name "CJustificador", then the comum::servico::CJustificadorServico
+#   member's, which binaryen inlines from cjustificadorservico.cpp with api::persistencia::CDAORepositorio::Entregar
+#   (the second stack prologue; Entregar's record, cdaorepositorio.hpp:79, is held by 3742, and the symbol file names
+#   3742 by that anchor). Fragment 163
+#   has the servico and the registry. 1391 allocates 40 bytes before it calls 3742, and the destructor (2810) calls the
+#   servico's (3740) on +28: the class's size and the member's offset. A stand-in in the roots calls the constructor
+#   twice for its three callers, 1391, 11474 and 11475, which build the class's singleton and are not reconstructed.
 #
 # Not matched: Add(const value_type &) (line 143) for <CNumeroInscricaoEleitoral, CJustificadorDetalhe>, 5725. The member
 # is written in the header and nothing in the link instantiates it over this key, so its row is no-candidate, with no
@@ -80,6 +88,8 @@
 # the four enumerators (from their messages), the paths of cregistradormesario.h and
 # cjustificadordetalhe.h, and cjustificador.cpp as the file of 3743: its use band puts it beside 3741 and 3742, whose
 # callers are in that file, and the band is the only evidence. Find returns the record because 3614 uses that result.
+# For CJustificador: the path of cjustificador.h, m_servico, and the CDataMap as a base, not a member at +0 (the same
+# choice as CRegistradorMesario's). The constructor follows 3743 in the file: band uses 3 runs 3743, 3742 downwards.
 # The lines in cregistradormesario.cpp and cjustificador.cpp are a choice, and each file's records (85; 55, 83 and 104)
 # belong to functions not written.
 #
@@ -89,7 +99,8 @@
 #
 # Not reconstructed: CRegistradorMesario's constructor (inlined into 815, GetInst, which gives the map the literal
 # "CRegistradorMesario"; whether it passes the name to CDataMap's constructor is not tried), its destructor 5380, CRegistradorMesario::SaveCurrentInternal (record 85, held by
-# 10337) and CJustificador's members. 5378 and 5379's other callers are 10337 and 6734.
+# 10337) and CJustificador's other members (Justifica, SaveCurrentInternal, the functions that build its singleton,
+# 1391, 11474 and 11475, and the destructor 2810). 5378 and 5379's other callers are 10337 and 6734.
 CDATAMAP_SRCS := src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
 
