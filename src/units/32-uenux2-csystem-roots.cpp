@@ -1,13 +1,20 @@
-// Roots: keep api::CSystem::GetFileSize and api::truncate (target fns 2759 and 5457) in the skeleton link. The target
-// calls both directly and never through the table (ledger/callgraph.tsv): GetFileSize from 3653 and 11623 once and from
-// 12134 twice, truncate from 2761 twice; none of those callers is reconstructed yet. The noinline callers below give
-// GetFileSize two callers (three call sites) and truncate one with two call sites, the target's own shape, so binaryen
-// keeps both bodies out of line as the target does; their bodies differ, so wasm-opt merges none of them, and no
-// argument is the same constant at every call site, so dead-argument elimination folds none in. They are address-taken
-// from a static constructor. Declared through asm labels with the wasm-level signatures; compiled as uenux2 code.
+// Roots: keep api::CSystem::GetFileSize (target fn 2759) in the skeleton link. The target calls it and api::truncate
+// (5457) directly and never through the table (ledger/callgraph.tsv): GetFileSize from 3653 and 11623 once and from
+// 12134 twice, truncate from 2761 twice. ZeroFill (2761) is reconstructed and calls truncate twice, the target's own
+// shape; GetFileSize's callers are not reconstructed yet. The noinline callers below give GetFileSize two callers
+// (three call sites), so binaryen keeps it out of line as the target does.
+// They also keep CSystem::ExistFile, ExistDir and ZeroFill (target fns 412, 5459 and 2761), none of whose callers is
+// reconstructed: ExistFile is called directly by 23 target functions (1487, 2725, 3653 and others) and its address is
+// in the table (slot 3567), so it is address-taken here and called from two stand-ins; ExistDir is called once each by
+// 5572 and 5821, and ZeroFill by 2760 and 5458 once and 5455 twice, so each gets two call sites. The stand-ins' bodies
+// differ, so wasm-opt merges none of them, and no argument is the same constant at every call site, so dead-argument
+// elimination folds none in. They are address-taken from a static constructor. Declared through asm labels with the
+// wasm-level signatures; compiled as uenux2 code.
 extern "C" {
 int w2759_root_0(int) __asm__("_ZN3api7CSystem11GetFileSizeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void w5457_root_0(int, long long, int) __asm__("_ZN3api8truncateEixRKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+int w412_root_0(int) __asm__("_ZN3api7CSystem9ExistFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+int w5459_root_0(int) __asm__("_ZN3api7CSystem8ExistDirERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+void w2761_root_0(int) __asm__("_ZN3api7CSystem8ZeroFillERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 }
 
 namespace {
@@ -22,10 +29,20 @@ __attribute__((noinline)) int CabeEm(int arquivo, unsigned limite)
     return static_cast<unsigned>(w2759_root_0(arquivo)) <= limite;
 }
 
-__attribute__((noinline)) void Redimensiona(int descritor, long long tamanho, int arquivo)
+__attribute__((noinline)) int ArquivoNoDiretorio(int arquivo, int diretorio)
 {
-    w5457_root_0(descritor, 0, arquivo);
-    w5457_root_0(descritor, tamanho, arquivo);
+    return w412_root_0(arquivo) && w5459_root_0(diretorio);
+}
+
+__attribute__((noinline)) int ContaRecursos(int arquivo, int diretorio, int outro)
+{
+    return w412_root_0(arquivo) + w412_root_0(outro) * 2 + w5459_root_0(diretorio) * 4;
+}
+
+__attribute__((noinline)) void ZeraAmbos(int arquivoA, int arquivoB)
+{
+    w2761_root_0(arquivoA);
+    w2761_root_0(arquivoB);
 }
 
 void* volatile w2759_sink;
@@ -35,7 +52,10 @@ struct SW2759Roots {
     {
         w2759_sink = reinterpret_cast<void*>(&MesmoTamanho);
         w2759_sink = reinterpret_cast<void*>(&CabeEm);
-        w2759_sink = reinterpret_cast<void*>(&Redimensiona);
+        w2759_sink = reinterpret_cast<void*>(&ArquivoNoDiretorio);
+        w2759_sink = reinterpret_cast<void*>(&ContaRecursos);
+        w2759_sink = reinterpret_cast<void*>(&ZeraAmbos);
+        w2759_sink = reinterpret_cast<void*>(&w412_root_0);
     }
 } w2759_roots;
 

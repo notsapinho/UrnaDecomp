@@ -12,13 +12,20 @@ namespace api {
 
 // (original lines 13-27: content not recovered)
 #line 28
-// <stubs>
-// f1071 · 2048 B · unmatched · name unknown
-// void f1071(i32, i32, i32) { ... }
-// </stubs>
+void CGenericTags::insert(const std::string& tag, size_t tamanho)
+{
+    if (tag.size() != m_tamanhoTagComNulo - 1) {
+        throw CUeUtilError(EUE_UTIL_TAG_TAMANHO_INVALIDO, std::format("Tag [{}] com tamanho inválido", tag));
+    }
+    if (m_tags.find(tag) != m_tags.end()) {
+        throw CUeUtilError(EUE_UTIL_TAG_JA_MAPEADA, std::format("Tag [{}] já foi mapeada", tag));
+    }
+    if (tamanho < 1 || tamanho > 4) {
+        throw CUeUtilError(EUE_UTIL_TAG_TAMANHO_CAMPO_INVALIDO, std::format("Tag [{}] com tamanho inválido", tag));
+    }
+    m_tags.insert(std::make_pair(tag, tamanho));
+}
 
-// (original lines 33-41: content not recovered)
-#line 42
 size_t CGenericTags::TagSize(const std::string& tag) const
 {
     const auto it = m_tags.find(tag);

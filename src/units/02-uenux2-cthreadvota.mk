@@ -24,7 +24,11 @@
 # inserted 20, deleted 21)` against `229 over 493` before. The search loop's shape is -O3's: compiled at -O3 the object
 # has the target's (the test of the tree's root hoisted out of the loop over ids, the id's mask once per id,
 # `node < id`), at -O2 not. The level does not close the body alone: at the tree's -O3 the link reads `score 83 over
-# 432 rows (same 349, replaced 63 [63 operand-only], inserted 11, deleted 9)`; what those 20 rows are is not read.
+# 432 rows (same 349, replaced 63 [63 operand-only], inserted 11, deleted 9)`. Two places hold those 20 rows: the map's
+# __insert_node_at, where our object reads the new node back after the store to the begin node and the target keeps it
+# in a local, and the loads of the key in __find_equal's loop, in another order. In a whole-link try with
+# ctickmanager.cpp and cthreadvota.cpp at `--flags -fstrict-aliasing` the link reads `score 28 over 421 rows`, every row
+# an operand: the body waits for uenux2 without -fno-strict-aliasing, a decision that is not this unit's.
 # Five spellings of SearchNextId's loop give the same object for AddTick (wasm-objdump -d, compared row by row): an
 # unsigned, int or size_t counter, `<= 0xff` or `< 256`, and static_cast<uebyte> on the key and the result or none.
 UENUX2_SRCS += src/api/util/ctickmanager.cpp src/app/vota/cthreadvota.cpp

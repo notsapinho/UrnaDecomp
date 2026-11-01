@@ -10,6 +10,9 @@ namespace api {
 enum EUeHwilError {
     // the values are the codes api::IPower's defaults throw (target fns 8105, 8098, 8091, 8083 and 8074); the names are
     // chosen from the member that throws each and its message, "Not supported": no evidence names them
+    // the value is the code api::KeyName throws (fn 744, api/hwil/iinput.h); the name is chosen from its message, "Tecla
+    // desconhecida ({})"
+    EUE_HWIL_TECLA_DESCONHECIDA = 5169,
     // the value is the code IInput::GetKey throws (its record's functions); the name is chosen from its message, "IInput -
     // Nao havia um caractere disponivel"
     EUE_HWIL_TECLA_INDISPONIVEL = 5170,
