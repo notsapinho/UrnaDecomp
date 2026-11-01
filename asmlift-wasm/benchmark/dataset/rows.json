@@ -1624,33 +1624,6 @@
     }
   },
   {
-    "id": "libqrencode/493",
-    "index": 493,
-    "size": 298,
-    "band": "medium",
-    "component": "ecourna",
-    "owner": "-",
-    "features": [
-      "loop"
-    ],
-    "ledger": {
-      "kind": "addr",
-      "score": 1
-    },
-    "origin": "manual",
-    "setup": "libqrencode",
-    "lang": "c",
-    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
-    "name": "BitStream_appendNum",
-    "symbol": "BitStream_appendNum",
-    "evidence": "symbol",
-    "object": "build/out/libqrencode/4.1.1-O3pic/bitstream.o",
-    "reference": {
-      "path": "third_party/libqrencode/bitstream.c",
-      "line": 152
-    }
-  },
-  {
     "id": "libqrencode/1147",
     "index": 1147,
     "size": 49,
@@ -1664,7 +1637,7 @@
       "kind": "fingerprint",
       "score": 0
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1691,7 +1664,7 @@
       "kind": "addr",
       "score": 2
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1719,7 +1692,7 @@
       "kind": "byte",
       "score": 0
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1748,7 +1721,7 @@
       "kind": "addr",
       "score": 62
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1776,7 +1749,7 @@
       "kind": "byte",
       "score": 0
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1808,7 +1781,7 @@
       "kind": "addr",
       "score": 30
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1838,7 +1811,7 @@
       "kind": "addr",
       "score": 9
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1852,28 +1825,57 @@
     }
   },
   {
-    "id": "libqrencode/3597",
-    "index": 3597,
-    "size": 66,
-    "band": "small",
+    "id": "libqrencode/5346",
+    "index": 5346,
+    "size": 15,
+    "band": "tiny",
     "component": "ecourna",
     "owner": "app",
-    "features": [],
+    "features": [
+      "leaf"
+    ],
     "ledger": {
       "kind": "addr",
       "score": 1
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
-    "name": "QRinput_append",
-    "symbol": "QRinput_append",
+    "name": "MQRspec_getWidth",
+    "symbol": "MQRspec_getWidth",
     "evidence": "symbol",
-    "object": "build/out/libqrencode/4.1.1-O3pic/qrinput.o",
+    "object": "build/out/libqrencode/4.1.1-O3pic/mqrspec.o",
     "reference": {
-      "path": "third_party/libqrencode/qrinput.c",
-      "line": 223
+      "path": "third_party/libqrencode/mqrspec.c",
+      "line": 80
+    }
+  },
+  {
+    "id": "libqrencode/5347",
+    "index": 5347,
+    "size": 54,
+    "band": "small",
+    "component": "ecourna",
+    "owner": "app",
+    "features": [
+      "leaf"
+    ],
+    "ledger": {
+      "kind": "addr",
+      "score": 1
+    },
+    "origin": "selected",
+    "setup": "libqrencode",
+    "lang": "c",
+    "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
+    "name": "MQRspec_getDataLengthBit",
+    "symbol": "MQRspec_getDataLengthBit",
+    "evidence": "symbol",
+    "object": "build/out/libqrencode/4.1.1-O3pic/mqrspec.o",
+    "reference": {
+      "path": "third_party/libqrencode/mqrspec.c",
+      "line": 59
     }
   },
   {
@@ -1891,7 +1893,7 @@
       "kind": "addr",
       "score": 4
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
@@ -1905,58 +1907,60 @@
     }
   },
   {
-    "id": "libqrencode/5349",
-    "index": 5349,
-    "size": 64,
-    "band": "small",
+    "id": "libqrencode/5351",
+    "index": 5351,
+    "size": 1632,
+    "band": "large",
     "component": "ecourna",
     "owner": "app",
     "features": [
-      "leaf",
-      "loop"
+      "loop",
+      "switch",
+      "i64",
+      "select"
     ],
     "ledger": {
       "kind": "addr",
-      "score": 1
+      "score": 26
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
-    "name": "QRspec_getMinimumVersion",
-    "symbol": "QRspec_getMinimumVersion",
+    "name": "QRinput_getByteStream",
+    "symbol": "QRinput_getByteStream",
     "evidence": "symbol",
-    "object": "build/out/libqrencode/4.1.1-O3pic/qrspec.o",
+    "object": "build/out/libqrencode/4.1.1-O3pic/qrinput.o",
     "reference": {
-      "path": "third_party/libqrencode/qrspec.c",
-      "line": 108
+      "path": "third_party/libqrencode/qrinput.c",
+      "line": 1326
     }
   },
   {
-    "id": "libqrencode/5350",
-    "index": 5350,
-    "size": 276,
-    "band": "medium",
+    "id": "libqrencode/10241",
+    "index": 10241,
+    "size": 21,
+    "band": "tiny",
     "component": "ecourna",
     "owner": "app",
     "features": [
-      "loop"
+      "leaf"
     ],
     "ledger": {
       "kind": "addr",
       "score": 1
     },
-    "origin": "manual",
+    "origin": "selected",
     "setup": "libqrencode",
     "lang": "c",
     "flags": "-O3 -fPIC -DNDEBUG -DHAVE_LIBPTHREAD=1 -DHAVE_STRDUP=1 -DMAJOR_VERSION=4 -DMINOR_VERSION=1 -DMICRO_VERSION=1 '-DVERSION=\"4.1.1\"' -DHAVE_SDL=0 -DSTATIC_IN_RELEASE=static",
-    "name": "BitStream_appendBytes",
-    "symbol": "BitStream_appendBytes",
+    "name": "MQRspec_getECCLength",
+    "symbol": "MQRspec_getECCLength",
     "evidence": "symbol",
-    "object": "build/out/libqrencode/4.1.1-O3pic/bitstream.o",
+    "object": "build/out/libqrencode/4.1.1-O3pic/mqrspec.o",
     "reference": {
-      "path": "third_party/libqrencode/bitstream.c",
-      "line": 168
+      "path": "third_party/libqrencode/mqrspec.c",
+      "line": 75
     }
   },
   {

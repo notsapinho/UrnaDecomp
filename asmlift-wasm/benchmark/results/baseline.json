@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "label": "baseline",
- "createdAt": "2026-11-01T15:34:13.289Z",
+ "createdAt": "2026-11-01T16:16:03.617Z",
  "target": {
   "path": "target/vota_web_wasm.wasm",
   "sha256": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
@@ -9,14 +9,14 @@
  "image": "urna-emsdk:6.0.0",
  "dataset": {
   "rows": 205,
-  "rowsSha256": "b71404f6cadc7a1433a7312fd32446dd7d53489b976b674c6e046f5e1328c9c9",
+  "rowsSha256": "25c6b879a22b4f2144ab3e307dd51f4585c8c9d99a0e52a02c6191f1bf5cc3d2",
   "setupsSha256": "02016cca8b7bc1899746af2fb54b660fca08f15da6fc114239409d2a4308e536"
  },
- "commit": "686cdd1b+dirty",
+ "commit": "b16c108f+dirty",
  "durationMs": {
-  "lift": 85,
-  "compileAndOptimise": 4742,
-  "total": 10526
+  "lift": 86,
+  "compileAndOptimise": 4090,
+  "total": 9404
  },
  "totals": {
   "overall": {
@@ -24,11 +24,11 @@
    "lifted": 205,
    "compiled": 205,
    "optimised": 205,
-   "exactRaw": 37,
+   "exactRaw": 38,
    "exact": 89,
    "medianRatio": 0.4043,
    "medianOptRatio": 0.0682,
-   "meanOptRatio": 0.1903,
+   "meanOptRatio": 0.1882,
    "outcomes": {
     "exact": 89,
     "differs": 116
@@ -115,11 +115,11 @@
     "lifted": 12,
     "compiled": 12,
     "optimised": 12,
-    "exactRaw": 1,
+    "exactRaw": 2,
     "exact": 4,
-    "medianRatio": 0.3631,
+    "medianRatio": 0.3599,
     "medianOptRatio": 0.2098,
-    "meanOptRatio": 0.2927,
+    "meanOptRatio": 0.2566,
     "outcomes": {
      "differs": 8,
      "exact": 4
@@ -1972,33 +1972,6 @@
    "standIns": []
   },
   {
-   "id": "libqrencode/493",
-   "index": 493,
-   "setup": "libqrencode",
-   "size": 298,
-   "band": "medium",
-   "features": [
-    "loop"
-   ],
-   "lifted": true,
-   "compiled": true,
-   "targetRows": 163,
-   "raw": {
-    "score": 102,
-    "ratio": 0.6258
-   },
-   "opt": {
-    "score": 80,
-    "ratio": 0.4908
-   },
-   "exact": false,
-   "outcome": "differs",
-   "failure": null,
-   "standIns": [
-    "goto"
-   ]
-  },
-  {
    "id": "libqrencode/1147",
    "index": 1147,
    "setup": "libqrencode",
@@ -2199,18 +2172,20 @@
    ]
   },
   {
-   "id": "libqrencode/3597",
-   "index": 3597,
+   "id": "libqrencode/5346",
+   "index": 5346,
    "setup": "libqrencode",
-   "size": 66,
-   "band": "small",
-   "features": [],
+   "size": 15,
+   "band": "tiny",
+   "features": [
+    "leaf"
+   ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 33,
+   "targetRows": 7,
    "raw": {
-    "score": 11,
-    "ratio": 0.3333
+    "score": 0,
+    "ratio": 0
    },
    "opt": {
     "score": 0,
@@ -2219,10 +2194,32 @@
    "exact": true,
    "outcome": "exact",
    "failure": null,
-   "standIns": [
-    "arm tail kept from the join",
-    "goto"
-   ]
+   "standIns": []
+  },
+  {
+   "id": "libqrencode/5347",
+   "index": 5347,
+   "setup": "libqrencode",
+   "size": 54,
+   "band": "small",
+   "features": [
+    "leaf"
+   ],
+   "lifted": true,
+   "compiled": true,
+   "targetRows": 31,
+   "raw": {
+    "score": 5,
+    "ratio": 0.1613
+   },
+   "opt": {
+    "score": 0,
+    "ratio": 0
+   },
+   "exact": true,
+   "outcome": "exact",
+   "failure": null,
+   "standIns": []
   },
   {
    "id": "libqrencode/5348",
@@ -2253,53 +2250,58 @@
    ]
   },
   {
-   "id": "libqrencode/5349",
-   "index": 5349,
+   "id": "libqrencode/5351",
+   "index": 5351,
    "setup": "libqrencode",
-   "size": 64,
-   "band": "small",
+   "size": 1632,
+   "band": "large",
    "features": [
-    "leaf",
-    "loop"
+    "loop",
+    "switch",
+    "i64",
+    "select"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 34,
+   "targetRows": 856,
    "raw": {
-    "score": 30,
-    "ratio": 0.8824
+    "score": 459,
+    "ratio": 0.5362
    },
    "opt": {
-    "score": 25,
-    "ratio": 0.7353
+    "score": 289,
+    "ratio": 0.3376
    },
    "exact": false,
    "outcome": "differs",
    "failure": null,
-   "standIns": []
+   "standIns": [
+    "arm tail kept from the join",
+    "goto"
+   ]
   },
   {
-   "id": "libqrencode/5350",
-   "index": 5350,
+   "id": "libqrencode/10241",
+   "index": 10241,
    "setup": "libqrencode",
-   "size": 276,
-   "band": "medium",
+   "size": 21,
+   "band": "tiny",
    "features": [
-    "loop"
+    "leaf"
    ],
    "lifted": true,
    "compiled": true,
-   "targetRows": 141,
+   "targetRows": 11,
    "raw": {
-    "score": 33,
-    "ratio": 0.234
+    "score": 5,
+    "ratio": 0.4545
    },
    "opt": {
-    "score": 0,
-    "ratio": 0
+    "score": 5,
+    "ratio": 0.4545
    },
-   "exact": true,
-   "outcome": "exact",
+   "exact": false,
+   "outcome": "differs",
    "failure": null,
    "standIns": []
   },

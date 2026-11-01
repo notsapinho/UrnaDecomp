@@ -1,7 +1,7 @@
 {
-  "version": 11,
+  "version": 12,
   "per": 12,
-  "commit": "ed71dfdde62fc6850a5d5814cda699ceffe00e59",
+  "commit": "b16c108fb405493040e4f411a1b87580fb3c7664",
   "inputs": {
     "target": {
       "path": "target/vota_web_wasm.wasm",
@@ -13,11 +13,11 @@
     },
     "ledger": {
       "path": "ledger/functions.tsv",
-      "blob": "94ee52243cbf3842a8b58947a41c7c078e1423bf"
+      "blob": "02d31fbbaa1f9bef855b9eee8f58c4d8ca198f27"
     },
     "setups": {
       "path": "asmlift-wasm/benchmark/dataset/setups.json",
-      "blob": "e34b2260ecb13db8848fd9add2b6a3e5752682f6"
+      "blob": "b2535977115c4d256280ebf2b7f0ff98c19b5780"
     },
     "sources": {
       "src/asn1/AVNDecoder.cxx": "763af3ce5d6453b479effd0ed4fc6daf438332d7",
@@ -44,9 +44,9 @@
     },
     "definitions": {
       "path": "asmlift-wasm/benchmark/dataset/selection-definitions.json",
-      "sha256": "a4de4159371dd7af95b7e990f007157e6f49363a9186a958940d8fe055ce795f",
-      "names": 7749,
-      "build": "ed71dfdde62fc6850a5d5814cda699ceffe00e59"
+      "sha256": "836129ffee6ed58d2b6a0d8a205eaa791000565862ec3f810640a104e50c5396",
+      "names": 7767,
+      "build": "b16c108fb405493040e4f411a1b87580fb3c7664"
     }
   }
 }
