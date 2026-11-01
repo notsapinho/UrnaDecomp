@@ -112,11 +112,6 @@
 // f4677 · 494 B · unmatched · placement: link order · name unknown
 // void f4677(i32, i32) { ... }
 
-// link-order cluster 704 · uses=2
-
-// f4794 · 342 B · unmatched · placement: link order · name unknown
-// void f4794(i32, i32) { ... }
-
 // link-order cluster 742 · uses=2 · neighbours' file uenux2/src/api/audio/alsa/cwavfile.cpp
 
 // f5341 · 1052 B · unmatched · placement: link order · name unknown
@@ -129,12 +124,6 @@
 
 // f5374 · 988 B · unmatched · placement: link order · name unknown
 // void f5374(i32) { ... }
-
-// f5373 · 7522 B · unmatched · placement: link order · name unknown
-// void f5373(i32, i32, i32, i32) { ... }
-
-// f5370 · 1469 B · unmatched · placement: link order · name unknown
-// ? f5370(i32, i32) { ... }
 
 // link-order cluster 753 · uses=2 · neighbours' file uenux2/src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp
 
@@ -561,11 +550,6 @@
 // f2687 · 983 B · unmatched · placement: link order · name unknown
 // void f2687(i32, i32) { ... }
 
-// link-order cluster 1079 · uses=4 · neighbours' file uenux2/src/app/comum/reconhecimentobiometrico/ccontrolaarmazenamentodeimagens.cpp
-
-// f2726 · 594 B · unmatched · placement: link order · name unknown
-// void f2726(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
 
 // f2734 · 1228 B · unmatched · placement: link order · name unknown
@@ -717,11 +701,6 @@
 
 // f977 · 140 B · unmatched · placement: link order · name unknown
 // ? f977(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1358 · uses=65
-
-// f310 · 286 B · unmatched · placement: link order · name unknown
-// ? f310(i32, i32) { ... }
 
 // component comum
 

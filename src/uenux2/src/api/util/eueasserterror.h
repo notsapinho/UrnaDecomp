@@ -21,6 +21,10 @@ enum EUeAssertError {
     EUA_RECT_TOP = 3401,
     EUA_RECT_RIGHT = 3402,
     EUA_RECT_BOTTOM = 3403,
+    // comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (fn 5385, record
+    // cimprimiridentificacaomesariosfinal.cpp 229:84): the text "Assert (mesario)". With the invocation indented four
+    // columns and the code qualified as api::, the column leaves 58 characters for the name, chosen to that length
+    EUA_IMPRIMIRIDENTIFICACAOMESARIOSFINAL_MESARIO_INEXISTENTE = 3409,
     // comum::CDataSourcesRelatorio<comum::CRdvVota, comum::CEleitores>::DetalheCandidatoZE (fn 11973, record
     // cdatasourcesrelatorio.h 152:80): the text "Assert (qtd == 0u)". With the invocation indented eight columns (a member
     // defined in its class) and the code qualified as api::, the column leaves 48 characters for the name; the name is
