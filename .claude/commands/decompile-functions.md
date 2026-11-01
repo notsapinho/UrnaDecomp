@@ -206,7 +206,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   in the same lane. A callee resolves when it is matched (`/usr/bin/grep -E '^N ' splat/matched.txt` prints a line) or
   named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A function whose callees are unnamed
   needs those first, with one kind of exception: a callee the candidate's own TU instantiates, which step 8 names by
-  `call` evidence once the candidate is paired (`docs/reference/splat.md` §2). A `CBaseError<E, SErrorLimits{…}>`
+  `call` evidence once the candidate is paired (`docs/reference/splat.md` §2). Its signs: no stub, owner `-`, a body of
+  library calls shaped like a header member (183 is `std::filesystem::path::operator/=`). A merge thunk of a stub-less
+  TSE body is work, not one (412). A `CBaseError<E, SErrorLimits{…}>`
   constructor is one, even when the target's is a binaryen merge thunk: 1889, `push f710(p0, p1, p2, p3, 1528452)`,
   is named `evidence:call by:1684,10250`. A name only the candidate's own call votes for is self-voted, and the match
   holds once another match calls the same function (splat.md §3): 10250 matched when 1684 landed. It holds only where
@@ -220,6 +222,9 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   `vector<CSituacoesEleicoes>`, calls 760 (`pnpm wasm fn ../target/vota_web_wasm.wasm 11361` shows `call 760`). A
   caller that uses that other instantiation still resolves when its body is the same (how-to step 3, "A callee can
   be a twin").
+- **A flag not decided.** A member whose body needs a flag the user has not decided (`docs/reference/facts/levels.md`
+  lists the signs; a no-stub row goes by its callers' tree, not its group) is listed as waiting for that decision, not
+  as expected.
 - **The stub may sit over code we have**: search our sources for the class before choosing (step 1).
 - **The name and the file**: from the records, the vtable slot, `ledger/vtables.json` and `ledger/classes.json`;
   for an `unplaced.cpp` stub, the file rules of how-to step 3.
@@ -241,7 +246,11 @@ the target index (and any stretch target), its fragment number, and the PICK pos
 
 The matcher works only in its worktree and follows [how-to-decompile.md](../../docs/how-to-decompile.md) steps 1
 to 10 as written, including steps 6 to 10 in the worktree: link, census, symbols, match, the splat build, the
-checks, and one commit on its branch. It never touches the urna checkout's `main` and never merges.
+checks, and one commit on its branch. It never touches the urna checkout's `main` and never merges. A fix `main` gained
+since the cut that the lane needs to build (a link recipe) it may take for the build only, and so may its VERIFY:
+`git cherry-pick --no-commit <fix>` stages it, so restore with `git checkout HEAD -- <file>`, remove the
+`MERGE_MSG` it leaves in `git rev-parse --git-dir`, and keep the file's old mtime with `touch -r` both ways, or every
+object that names it recompiles.
 
 It returns, and posts as a `rounds/` result: the verdict (matched, or not matchable yet and why), the commit(s), the
 splat build's sha256 and match count, the matches added and lost against the branch's base, the files it owns,
@@ -304,8 +313,9 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
    build in the worktree has finished: it skips its real-link tests while `build/out/` is being rewritten and still
    exits 0, so read its `skipped` count, and a failure the base has as well is not the lane's.
 5. **Generated files are what the generators write.** Re-running `make -C src splat-symbols` leaves
-   `git status` clean. A rescan changes `splat/scan.tsv` in one way only, the `source` column, to `symbol`: of a new
-   match the scan found by content or by the census's pair, and of a match line step 9 renamed to a twin. A new match step 8 already named is
+   `git status` clean. A rescan changes `splat/scan.tsv` in two ways only: the `source` column, to `symbol`, of a new
+   match the scan found by content or by the census's pair and of a match line step 9 renamed to a twin, and the
+   `detail` of a new match the first scan found after trying another candidate. A new match step 8 already named is
    `symbol` from the start, and the rescan leaves its line alone (`docs/reference/splat.md` "Reviewing a match").
    Restore anything a re-run rewrote with `git checkout -- <file>`, and report it.
 6. **The source**, against rules 3 to 5: the real mangled name and where its evidence comes from (a name no record,
@@ -315,10 +325,11 @@ branch started from, `git merge-base main HEAD` for a branch cut from `main`:
    [docs/reference/splat.md](../../docs/reference/splat.md) "Reviewing a match" says, and so is each hand line the
    range adds to the symbol file: removed, scanned twice beside a control, then built.
 
-A REFUTED lane does not land. Send its finding back to the lane's matcher once, as a new MATCH run, then to a new
-VERIFY, which is narrow: the refuted points and the range since the commit the first verdict judged, with the first
-verdict's other checks standing. If it is refuted again on comment text alone, fix the text yourself, as a commit on
-the lane's branch, and say so in the landing's brief and your report. Any other second refutation goes to the user.
+A REFUTED lane does not land. A refutation on comment or doc text alone, every check passing, you fix yourself, with
+the verdict's replacement text, as a commit on the lane's branch, and say so in the landing's brief and your report.
+Send any other finding back to the lane's matcher once, as a new MATCH run, then to a new VERIFY, which is narrow: the
+refuted points and the range since the commit the first verdict judged, with the first verdict's other checks
+standing. A second refutation on text alone you fix the same way; any other goes to the user.
 
 ---
 
@@ -330,7 +341,8 @@ batch is a LAND stage of its own, and it touches no lane its brief does not name
 first, naming the lanes, their commits and the worktrees it will remove, and keeps its logs under `build/out/land/`. A
 batch that meets a lost match stops before committing that merge and posts it. A toolkit fix the merge needs is a commit
 of its own on `main`, with a VERIFY of its own before the push, and the batch then goes on from there. A row lost to
-one link's data layout, the cause shown (how-to step 9's two cases: an object at 0x100000, a data word read as a slot),
+one link's data layout, the cause shown (how-to step 9's cases: an object at 0x100000, a string's closing NUL read as
+a table slot),
 may wait for the next lane of the batch: land that lane first, retry, stop if the row is still out, and say so at the
 top of the result.
 

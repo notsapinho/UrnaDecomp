@@ -10,8 +10,12 @@ flags, LLVM's inlining remarks and the measurement of uenux2's `-O3`.
 How a flag is measured: compile the reconstructed TU under each flag set in `urna-emsdk:6.0.0`, link, and score
 each function against the target with `pnpm wasm score <target> <fn> <candidate.wasm> <index> --depth 0` (from
 `asmlift-wasm/`; the index comes from the `--emit-symbol-map` twin's `.js.symbols`). A score is "rows differing /
-rows"; **operand-only** means every remaining row differs only in an address, a table slot or the `__THREW__`
-address, which a separate link can never share, so the body is structurally identical. Prefer a whole-skeleton
+rows"; **operand-only** is `score`'s flag for a replaced row whose opcode is the same. Mostly that is an address, a
+table slot or the `__THREW__` address, which a separate link can never share, but it is any immediate: an alignment
+hint, a memarg `offset=` (a field, a frame slot, a vtable slot) or a count. So an all-operand-only score is a lead, not
+a structurally identical body: read the scan's first difference or `splat-remap` before calling it one (8605 differed
+at -O3 only in `i32.store align=1` against `align=2`, and a `call_indirect`'s `i32.load offset=20` against `24` is
+another virtual slot). Prefer a whole-skeleton
 link over a lone link (`tools/round/try-tu.sh --single`): a lone link changes inlining (see F9).
 
 | component | flags |
@@ -310,12 +314,16 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `asmlift-wasm/`,
 
   ```sh
-  for f in 9655 3876 10243 10212; do printf '%s ' $f; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $f 2>/dev/null | /usr/bin/grep -c invoke_; done
+  for f in 9655 3876 10243 10212; do printf '%s ' $f; pnpm --silent wasm fn ../target/vota_web_wasm.wasm $f 2>/dev/null | /usr/bin/grep -c 'call import:invoke_'; done
   # 9655 0      (mock/app/simulador/wasm/cwasmthread.cpp)
   # 3876 0      (mock/app/simulador/wasm/cwasmclp.cpp)
-  # 10243 18    (mock/app/comum/cappinfobuilder.cpp)
-  # 10212 62    (mock/app/comum/cappinfobuilder.cpp)
+  # 10243 7     (mock/app/comum/cappinfobuilder.cpp)
+  # 10212 29    (mock/app/comum/cappinfobuilder.cpp)
   ```
+
+  Count `call import:invoke_`, the call sites: a bare `invoke_` also counts the readout's callee table and lifted
+  lines, and over an object's listing it counts libc++'s `std::__invoke` instances, which are no landing pads (an
+  object's own are its `env.invoke_*` imports: `wasm-objdump -x -j Import <object> | /usr/bin/grep -c 'env\.invoke_'`).
 
   (the files from `awk -F'\t' '$2 ~ /\/mock\// {print $2, $6}' ledger/source-locations.tsv`). So
   `mock/app/simulador/wasm/` is throw-only like `src/`, and `cappinfobuilder.cpp` has landing pads, like the executable
