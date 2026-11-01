@@ -1,7 +1,8 @@
-# uenux2 api::CEncryptedFile (api/io/cencryptedfile.cpp, the file its records name): Save, target fn 2767, the member at
-# record line 88, which holds ecourna's CFile::Flush inlined by binaryen (record cfile.cpp:145). With it, the copy of
-# std::vector<uebyte>'s range insert that this object instantiates, 1927, matches, and CFile::Close (336, fragment 03)
-# matches because Save is the second voter for the name of CFile::Sync, which both call.
+# uenux2 api::CEncryptedFile (api/io/cencryptedfile.cpp, the file its records name): Load (target fn 3653, below) and
+# Save, target fn 2767, the member at record line 88, which holds ecourna's CFile::Flush inlined by binaryen (record
+# cfile.cpp:145). With it, the copy of std::vector<uebyte>'s range insert that this object instantiates, 1927, matches,
+# and CFile::Close (336, fragment 03) matches because Save is the second voter for the name of CFile::Sync, which both
+# call.
 #
 # Evidence for the forms (whole link, pnpm wasm score against the target before steps 7 to 9):
 # - Save calls CFile's constructor (517) and does not inline it: the constructor is out of line in cfile.cpp (fragment
@@ -48,9 +49,28 @@
 #   position taken from a parameter is stored first. A call after the content's stores (a member defined in another TU)
 #   leaves +16 and +8 as the target has them, and binaryen inlining a function with one caller would put the +20 store
 #   after them: a reading, and nothing names such a member.
-# - Load (3653): it calls fn 412, `f6019(nome, 32768)`. 6019 masks the word at +4 of a buffer fn 1690 fills with 61440
-#   and compares it with that argument, read as stat's file type against a regular file's; nothing names 412, 6019 or
-#   1690. Its stub stays in cencryptedfile.cpp.
+#
+# Load (target fn 3653), at its seven records (lines 36 to 73): it throws for an empty name (5987) and a file that does
+# not exist (5988, CSystem::ExistFile, 412), reads the file whole through ecourna's CFile ("rb"), decrypts it through the
+# cipher's slot 3 (Decrypt), and throws for a padding byte above 16 (5991) or above the file's size (5992). Three checks
+# build their CUeIoError and do not throw it: a size of 0 or not a multiple of 16 (5989), a short read (5990) and a
+# padding byte that differs from the last one (5993). Evidence: those records' columns are the expression's start
+# (9 and 13, against 15 after `throw `), and the target constructs each error (CError's constructor, 1143) and destroys
+# it at once. The content kept is the decrypted bytes less the padding, swapped into m_dados, and the position is reset.
+# Evidence for the forms (whole link, pnpm wasm score against the target before steps 7 to 9):
+# - The content goes into a named vector that is swapped with m_dados, and the position is reset after the swap: the
+#   target stores the new buffer into m_dados and frees the old one after. A move assignment from a temporary frees the
+#   old buffer first (227 over 1669 rows); swapping from a temporary frees it before the reset (213 over 1660); the reset
+#   before the swap stores the position before the new buffer (115 over 1648, 3 rows inserted and 3 deleted, with the
+#   reset before the vector's construction or between it and the swap). As written: 109 over 1645, every row an operand
+#   of a call, a data address, a table slot or a packed format string.
+# - Same object code (wasm-objdump -d of the object, local and relocation numbers masked): the size test in either order
+#   (`tamanho == 0 || tamanho % 16 != 0` is written), `dados.back()` or `dados[dados.size() - 1]`, and
+#   `conteudo.swap(m_dados)` for `m_dados.swap(conteudo)`. Different code: `*(dados.end() - 1 - i)` for
+#   `dados[dados.size() - 1 - i]`, the read's size as `cifrado.size()`, and std::swap.
+# - Chosen: the enumerator names of 5987 to 5993 (api/io/eueioerror.h, from the messages), the loop counter's int, the
+#   locals' names, and the lines between the records.
+# Its target callers 6734 and 7174 are not written: the roots file calls Load twice for them.
 CENCRYPTEDFILE_SRCS := src/api/io/cencryptedfile.cpp
 UENUX2_SRCS += $(CENCRYPTEDFILE_SRCS)
 
