@@ -84,11 +84,7 @@ UENUX2_SRCS += $(PROCESSOELEITORAL_SRCS)
 # UENUX2_CXXFLAGS has no Boost path. An include path is not a flag of the code (asmlift-wasm/benchmark/README.md
 # "The compile setups").
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,src/app/comum/dados/ccargos.cpp src/app/comum/dados/cconfiguracaoeleicao.cpp)): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# slot 2 of CConversorNomesCargo is the base's default DoConverte (target fn 11368), which iconversorasn.h does not
-# define yet: the pending file gives the vtable a trapping explicit specialization of it, compiled with the unit's flags
-$(ROOT)/$(APP)/88-uenux2-app-comum-dados-md-processoeleitoral-pending.o: $(ROOT)/src/units/88-uenux2-app-comum-dados-md-processoeleitoral-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/88-uenux2-app-comum-dados-md-processoeleitoral.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/asn/*.h $(ROOT)/src/uenux2/src/app/comum/dados/asn/processoeleitoral/*.h $(ROOT)/src/uenux2/src/app/comum/dados/md/processoeleitoral/*.h $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/ModuloEleicao.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/88-uenux2-app-comum-dados-md-processoeleitoral-pending.cpp -o $(R)
 # no target caller of these functions is reconstructed: the roots file gives each its call sites and keeps the vtable
 $(ROOT)/$(APP)/88-uenux2-app-comum-dados-md-processoeleitoral-roots.o: $(ROOT)/src/units/88-uenux2-app-comum-dados-md-processoeleitoral-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/88-uenux2-app-comum-dados-md-processoeleitoral.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/88-uenux2-app-comum-dados-md-processoeleitoral-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/88-uenux2-app-comum-dados-md-processoeleitoral-pending.o $(APP)/88-uenux2-app-comum-dados-md-processoeleitoral-roots.o
+override EXTRA_OBJS += $(APP)/88-uenux2-app-comum-dados-md-processoeleitoral-roots.o

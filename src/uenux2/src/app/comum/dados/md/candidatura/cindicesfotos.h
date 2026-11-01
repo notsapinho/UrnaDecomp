@@ -12,7 +12,12 @@ namespace comum {
 // md::CFotoCandidato comum::GetFotoPara(const std::string &, const SIndiceFoto &), spelled unqualified inside
 // namespace comum; its two members are the position and the length that CVisitanteFoto::visit receives (size_t in
 // visit's record) and stores side by side (target fn 11442).
+// The constructor is measured: through it visit's assignment compiles to the target's one i64 store after the store of
+// its sequencer; as an aggregate (SIndiceFoto{posicao, tamanho}, member by member, or a named local) it gives two i32
+// stores, ahead of the sequencer's. That it is defined in the struct, and its parameters' names, are chosen.
 struct SIndiceFoto {
+    SIndiceFoto(size_t posicaoFoto, size_t tamanhoFoto) : posicao(posicaoFoto), tamanho(tamanhoFoto) {}
+
     size_t posicao;
     size_t tamanho;
 };

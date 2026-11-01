@@ -23,13 +23,8 @@
 SITUACOESELEICOES_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversorsituacoeseleicoes.cpp \
   src/app/comum/dados/md/processoeleitoral/csituacoeseleicoes.cpp
 UENUX2_SRCS += $(SITUACOESELEICOES_SRCS)
-# slot 2 is the base's default DoConverte (target fn 11360), which iconversorasn.h does not define yet:
-# 47-uenux2-cconversorsituacoeseleicoes-pending.cpp gives the vtable a trapping explicit specialization of it, compiled
-# with the unit's flags
-$(ROOT)/$(APP)/47-uenux2-cconversorsituacoeseleicoes-pending.o: $(ROOT)/src/units/47-uenux2-cconversorsituacoeseleicoes-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/47-uenux2-cconversorsituacoeseleicoes.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/asn/*.h $(ROOT)/src/uenux2/src/app/comum/dados/asn/processoeleitoral/*.h $(ROOT)/src/uenux2/src/app/comum/dados/md/processoeleitoral/*.h $(ROOT)/src/uenux2/src/app/comum/dados/md/rdv/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/47-uenux2-cconversorsituacoeseleicoes-pending.cpp -o $(R)
 # the converter's users are not reconstructed yet: 47-uenux2-cconversorsituacoeseleicoes-roots.cpp keeps its vtable the
 # way the target reaches it
 $(ROOT)/$(APP)/47-uenux2-cconversorsituacoeseleicoes-roots.o: $(ROOT)/src/units/47-uenux2-cconversorsituacoeseleicoes-roots.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/47-uenux2-cconversorsituacoeseleicoes-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/47-uenux2-cconversorsituacoeseleicoes-pending.o $(APP)/47-uenux2-cconversorsituacoeseleicoes-roots.o
+override EXTRA_OBJS += $(APP)/47-uenux2-cconversorsituacoeseleicoes-roots.o

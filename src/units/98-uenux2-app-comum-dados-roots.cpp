@@ -6,11 +6,13 @@
 // 1271 (CEleitorDetalhe::GetDinamico) and 2825 (which holds CEleitorDetalhe::MarcaHabilitado inlined) are in the link
 // now; its stand-in waits for 10210. The converter's
 // users are not reconstructed either: its vtable (@1570668) is what the target keeps it by (slots 2 and 3, table
-// slots 2773 and 2774, no direct caller). Declared through asm labels with the object's signatures, so this TU needs no
+// slots 2773 and 2774, no direct caller). CConversorImpedido's vtable (@1567096) is kept the same way: its slots 2
+// and 3 (table slots 2633 and 2634, fns 11409 and 11410) have no direct caller either. Declared through asm labels with the object's signatures, so this TU needs no
 // uenux2 or ASN.1 header and instantiates nothing; DesconverteTipoImpedimento takes this, unused, and the address of a
 // by-value ModuloImpedidos::TipoImpedimento.
 extern "C" {
 extern const char tipoidentificador_vt[] __asm__("_ZTVN5comum3asn34CConversorTipoIdentificadorEleitorE");
+extern const char impedido_vt[] __asm__("_ZTVN5comum3asn18CConversorImpedidoE");
 int w5658_root(int) __asm__("_ZN5comum2md14CTradutorFrase13RecuperaLabelERKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE");
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 void w3770_root(int, int) __asm__("_ZNK5comum15CEleitorDetalhe21ConfereDadosDinamicosERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
@@ -47,6 +49,7 @@ struct SComumDadosRoots {
     SComumDadosRoots()
     {
         comum_dados_sink = tipoidentificador_vt;
+        comum_dados_sink = impedido_vt;
         comum_dados_sink = reinterpret_cast<const void*>(&MesmoRotulo);
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&ConfereEleitor);

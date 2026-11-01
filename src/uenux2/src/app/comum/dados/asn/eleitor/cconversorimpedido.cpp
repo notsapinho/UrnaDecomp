@@ -6,14 +6,7 @@
 
 namespace comum::asn {
 
-// (original lines 9-36: content not recovered)
-#line 37
-// <stubs>
-// f11410 · 1444 B · unmatched · name unknown
-// void f11410(i32, i32, i32) { ... }
-// </stubs>
-
-// (original lines 42-69: content not recovered)
+// (original lines 9-69: content not recovered)
 #line 70
 md::ETipoImpedimento CConversorImpedido::DesconverteTipoImpedimento(ModuloImpedidos::TipoImpedimento tipo) const
 {
