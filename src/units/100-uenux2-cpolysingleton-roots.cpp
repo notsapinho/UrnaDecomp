@@ -101,10 +101,20 @@ long w100_bloco(std::unique_ptr<T> instancia)
     return bloco.use_count();
 }
 
+// has<vota::IQRCodeBUDS> (target fn 2886, a thunk into binaryen's body 6057, which it forms with has<comum::CCalculaCV>,
+// 1954). Its target callers are not written: vota::(anonymous namespace)::GetQRDSInst (fn 1956, a stub in
+// cmostraqrcodebu.cpp) and 14478 (__wasm_call_ctors, the static initializer of a TU not written, which calls
+// has<T>(g_polySingletonsInfo()) and drops the result). w100_tem_qrcode stands for both with two calls.
+__attribute__((noinline)) int w100_tem_qrcode()
+{
+    return api::CPolySingletonList::has<vota::IQRCodeBUDS>() ? 9 : (api::CPolySingletonList::has<vota::IQRCodeBUDS>() ? 11 : 13);
+}
+
 // Libc++ destructors the target keeps out of line, and uenux2's objects inline: two call sites each, in optnone functions
 // where clang leaves the calls. Each goes when the target callers below are in our link and call it there; those that
-// are not: of 321's, 1091 2893 5344 9039 9135 10212; of 871's, 4771 5560 13621; of 388's, 1091 3373 8096 8101 9039
-// 9135 (2927, 518 and 2650 are in the link and call them since unit 229's root).
+// are not: of 321's, 1091 2893 5344 10212; of 871's, 4771 5560; of 388's, 1091 (2927, 518 and 2650 are in the link and
+// call them since unit 229's root; 3373, 8096 and 8101 match; 9039, 9135 and 13621 are in the link since unit 170's
+// has<T> stand-ins and the guard parameter of unlock_shared_and_lock).
 // - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233 10090 10212.
 // - 871, unique_lock<mutex>: 624 1126 3095 3328 4771 5560 8059 13621 13974.
 // - 388, shared_ptr<void>: 455 518 640 1091 1928 2154 2584 2650 3373 3882 4180 4774 5384 5707 5750 7667 8089 8090 8092 8096
@@ -127,6 +137,7 @@ __attribute__((optnone, noinline)) void w100_destroi_b(std::shared_ptr<void>* po
 int (*volatile w100_sink)();
 void* volatile w100_sink_bloco;
 int (*volatile w100_sink_getinst)();
+int (*volatile w100_sink_qrcode)();
 void (*volatile w100_sink_falha)(const char*);
 
 struct SW100Roots {
@@ -142,6 +153,7 @@ struct SW100Roots {
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IAjusteInicial>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IQRCodeBUDS>);
         w100_sink_getinst = w100_getinst;
+        w100_sink_qrcode = w100_tem_qrcode;
         w100_sink_falha = w100_falha;
     }
 } w100_roots;

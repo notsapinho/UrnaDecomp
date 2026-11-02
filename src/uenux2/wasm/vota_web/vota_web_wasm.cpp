@@ -165,7 +165,7 @@ int main()
     api::CPolySingleton<vota::IExecucaoVota>::set(new vota::CExecucaoVotaCooperativa(&vota::CAguardaMensagem::GetInst()));
 
     simulador::Inicializa(configuracao, [] {
-        api::CPolySingleton<api::ISound>::set(new simulador::CWasmWebSound);
+        api::CPolySingleton<api::ISound>::set(new simulador::CWasmWebSound());
         simulador::EmitEvent("vota:ready", "{}");
     });
     return 0;
