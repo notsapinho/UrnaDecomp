@@ -8,6 +8,9 @@
 
 namespace comum::md {
 
+class CCedula;
+class CRdvPosicionador;
+
 using TCargoID = uebyte;
 using TEleicaoID = unsigned int;
 
@@ -53,8 +56,13 @@ public:
     // Out of line: md::CVotosEleicoesVota::Compativel (fn 5638) holds it inlined by binaryen, its result tested again.
     // The name is chosen.
     bool Compativel(const CVotosCargos& outro) const;
+    // Records cvotoscargos.cpp:199 and :248 to :295; fn 4454 holds both, each behind a prologue of its own (48 and 208
+    // bytes). ConfereCedula's being private is chosen.
+    void InsereCedula(const CRdvPosicionador& posicionador, const CCedula& cedula);
 
 private:
+    void ConfereCedula(const CCedula& cedula) const;
+
     TMapa m_mapa;
 };
 

@@ -2,7 +2,7 @@
 // target callers only 2268 and 5803 (unit 129), 11191 (unit 123) and those a comment names are reconstructed, and only
 // 1547 and 1938 are in the table (elems 97, 89), so each gets noinline stand-in callers for the others, with at least two
 // call sites, and stays out of line, as the target has it (ledger/callgraph.tsv):
-//   1708  CCargos::Next               4442 5604 7352 11209 12098 12110
+//   1708  CCargos::Next               4442 5604 11209 12098 12110 (7352, unit 197's NeedChangeState, is in the link)
 //   1938  GetCurrentCargoID           11793 13550 (11212, 11213 and 11214 are in the link)
 //   2835  GetCurrentEleicaoID         5604 11209 13550
 //   1267  CProcessoEleitoral::GetPleito2  1543 2787 5586 7787 11191 11223 11902
@@ -20,11 +20,13 @@
 //   5654  CEleicaoPE::GetIDsCargos    7787
 //   5653  CEleicaoPE::PossuiCargoCandidato  3744 7787
 //   3784  CCargos::RemoveFiltro       12098 12110
-//   271   CConfiguracaoEleicao::GetSituacoesEleicoes  1386 3687 5577 5578 5582 11558 11559
+//   271   CConfiguracaoEleicao::GetSituacoesEleicoes  1386 3687 5577 5578 5582 (11558 and 11559 are in the link)
 //   3783  vector<CCargos::TCargoEleicao>::__assign_with_size, the instance ccargos.cpp's RemoveFiltro emits: 3784 7377.
-//         RemoveFiltro is its one caller here, so a stand-in for 7377 (FiltraPorAbrangencia) gives the second.
+//         Both are in the link now (7377 holds FiltraPorAbrangencia's two calls): AtribuiCargos stood for 7377 and
+//         stands for nothing.
 //   5791  CConfiguracaoEleicao::GetIDsEleicoes     5735 (1269, CRdvVota::Comparecimento(), is written)
-//   3774  CConfiguracaoEleicao::GetCargosEleicoes  4454 7787, two call sites
+//   3774  CConfiguracaoEleicao::GetCargosEleicoes  4454 7787, two call sites (4454, unit 197's FinalizaEleitor, is in
+//         the link now, so the second stands for nothing)
 // comum::NomeEleicaoCorrente (11556) has no direct caller: the target reaches it only through table slot 3049, which fn
 // 5580 passes, so its address is taken.
 // GetNomeMasculino (3716) keeps its two written callers, 2796 and 2258. GetNomeFeminino has one call in the target and

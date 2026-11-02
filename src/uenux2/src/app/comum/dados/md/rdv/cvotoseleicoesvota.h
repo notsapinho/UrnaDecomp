@@ -4,6 +4,7 @@
 #include <map>
 #include <source_location>
 #include <string>
+#include <utility>
 
 #include "app/comum/dados/euerdverror.h"
 #include "app/comum/dados/md/rdv/cvotoscargos.h"
@@ -32,6 +33,8 @@ public:
     // comum::CRdvVota's Desconverte and Confere (fns 11487, 11486) test a decoded RDV against theirs with it (fn 5638).
     // The name is chosen.
     bool Compativel(const CVotosEleicoesVota& outro) const;
+    // Record cvotoseleicoesvota.cpp:215, column 27: the Votos call with that location, error 4735; fn 4454 holds it.
+    void RecebeCedula(const CRdvPosicionador& posicionador, TEleicaoID eleicao, const CCedula& cedula);
 
 private:
     using TTotalCargo = std::function<TQtdVoto(const CVotosCargos&, TCargoID)>;
@@ -39,6 +42,14 @@ private:
 
     const CVotosCargos& Votos(api::EUeRdvError erro, TEleicaoID eleicao,
                               std::source_location local = std::source_location::current()) const;
+    // The non-const access RecebeCedula needs: the target calls the const Votos (fn 3708) there, which this inline
+    // overload gives. A const_cast of the const call in RecebeCedula is the other form; neither was compiled against
+    // the other, and the overload is chosen.
+    CVotosCargos& Votos(api::EUeRdvError erro, TEleicaoID eleicao,
+                        std::source_location local = std::source_location::current())
+    {
+        return const_cast<CVotosCargos&>(std::as_const(*this).Votos(erro, eleicao, local));
+    }
     TQtdVoto Total(TCargoID cargo, const TTotalCargo& total, api::EUeRdvError erro,
                    std::source_location local = std::source_location::current()) const;
     TQtdVoto Total(TCargoID cargo, const std::string& numero, const TTotalNumero& total, api::EUeRdvError erro,

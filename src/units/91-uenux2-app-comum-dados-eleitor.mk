@@ -90,6 +90,12 @@
 # cast through `unsigned int` as well. The defaults: a non-const local, `entidade(...)`, `entidade{...}`. Clone defined
 # in the class, which gives a weak symbol and the same body. NOME_TABELA as a plain namespace-scope const or as static.
 #
+# md::CEleitorDecorator::GetAbrangencia (fn 3721, celeitordecorator.cpp, after GetIdentidadePorTipo): the voter's reach
+# for the urn's state and municipality, 0 with no temporary transfer or one to that municipality, 1 to that state, 2
+# otherwise (celeitordecorator.h). It scored 0 rows over 57 (pnpm wasm score) and matches; unit 197's roots stand in
+# for its callers 2824 and 5761. The decorator's words at +48 to +67 are renamed from m_tte, m_nomeSocial and
+# m_naoRecuperado4 to the transfer's (md::CEleitor's CTransferenciaTemporaria lies there), names chosen, a change of names only.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 and ecourna header.
 COMUM_ELEITOR_MD_SRCS := src/app/comum/dados/md/eleitor/celeitordinamico.cpp src/app/comum/dados/md/eleitor/cbiometriaeleitor.cpp src/app/comum/dados/md/eleitor/celeitordecorator.cpp
 COMUM_ELEITOR_DAO_SRCS := src/app/comum/dados/dao/celeitordinamicodao.cpp src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp

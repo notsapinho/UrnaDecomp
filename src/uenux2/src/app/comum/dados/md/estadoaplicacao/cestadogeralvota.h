@@ -138,8 +138,10 @@ public:
     // caller, fn 5972, which calls it on GetVota()'s result, and table slot 52). No record names it; the name is chosen,
     // after MarcaFimAquisicao and MarcaUltimoVoto, whose records are cestadogeralvota.cpp's (lines 108 to 136).
     void MarcaInicioAquisicao();
+    // Records cestadogeralvota.cpp:131 and :136 (8086, 8087); fn 4454 holds it behind a 48-byte prologue.
+    void MarcaUltimoVoto();
 
-    // (original lines 145-155: content not recovered)
+    // (original lines 147-155: content not recovered)
 #line 156
     const api::CDateTime& GetDtHrEmissaoBU() const
     {

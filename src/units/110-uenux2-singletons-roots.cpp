@@ -7,7 +7,7 @@
 //                       ~CProcessoEleitoral 2830: 2787, 5598, 7787;
 //                       ~CParametrosUrna 2267: 7787, beside 5792's and 9171's calls in the link;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
-//                       5604, 7377, 11209, 12098, 12110
+//                       5604, 11209, 12098, 12110 (7377, unit 197's StartState, is in the link)
 //   DestroiDecoradores  ~CEleitorDecorator 379: 15 callers, some read its result, so this stand-in reads it (R18)
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787

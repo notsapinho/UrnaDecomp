@@ -7,7 +7,9 @@
 # 5648); CProcessoEleitoral::GetPleito2 (1267). comum::asn::CConversorNomesCargo::DoDesconverte (11369), with
 # CNomesCargo's constructor, in asn/processoeleitoral/. Added later: CCargo::operator<=> (5655),
 # CEleicaoPE::PossuiCargoCandidato (5653), and CCargos::RemoveFiltro (3784) with the std::vector range assign it
-# instantiates (3783); CEleicaoPE::ValidaOrdem (3714) and GetIDsCargos (5654), once md/ built with strict aliasing.
+# instantiates (3783); CEleicaoPE::ValidaOrdem (3714) and GetIDsCargos (5654), once md/ built with strict aliasing;
+# with vota::CEleitorVotando's StartState (unit 197): CCargos::OrdenaPorImpressao (3782), the two comparators
+# (11559, 11558) and the libc++ sort instances ccargos.cpp's two std::sort calls emit (2837, 2833, 5804), below.
 # ccargo.cpp also holds CCargo's two constructors, which fragment 191 describes (no target index of their own: binaryen
 # inlines each into fn 11373).
 # Evidence, records: every file above but the converter's, each throw's line and column, and each record's spelling
@@ -62,8 +64,9 @@
 # table slot 3049, which fn 5580 passes to api::CPaperFormBuilder::AddTextField (604): the roots take its address. In
 # band 1 (ledger/ordinals.tsv) it follows ccargos.cpp's exit destructors (11561, 11560) and two comparators of the
 # cargo pairs, 11559 and 11558, whose table slots fns 7377 (which holds code of this file's line 249) and 3782 store: so
-# it is defined after the statics, and its line, after record 249, is a choice. Chosen: its name and GetNome's, its
-# being a free function, ccargos.h as its header, GetNome's being inline in the class.
+# it is defined after the statics and after OrdenaPorAquisicao and OrdenaPorImpressao, which mention the comparators
+# first (how-to step 3, "The order of two members"), and its line, after theirs, is a choice. Chosen: its name and
+# GetNome's, its being a free function, ccargos.h as its header, GetNome's being inline in the class.
 # - CEleicaoPE::ValidaOrdem (fn 3714) matches since comum's data classes build with strict aliasing (src/Makefile
 #   UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md §F6). With -fno-strict-aliasing its one difference is three rows:
 #   the object reloads __child after __insert_node_at's store of the begin node. insert, emplace and a named result all
@@ -84,9 +87,12 @@
 # - 3784 is called on CCargos::GetInst()'s result by fns 12098 and 12110 (vota::CGravaResultado's and vota::CGeraBU's slot
 #   2) and calls 3783 on +16 with the vector at +4: m_cargos = m_todos (ccargos.h names the two vectors). 3783 is the
 #   range assign of a vector of 8-byte pairs, which 7377 (FiltraPorAbrangencia, ccargos.cpp:249) calls too. 3783 follows
-#   3784 in band 3, an instance of ccargos.cpp's (both callers are its). The name RemoveFiltro, ccargos.cpp as 3784's
-#   file (the class's) and its line there, after NomeEleicaoCorrente, are chosen; 3784 is written as the one assignment,
-#   and no other form was compiled. The roots give 3783 its second call site, for 7377.
+#   3784 in band 3, an instance of ccargos.cpp's (both callers are its), so RemoveFiltro is defined before
+#   FiltraPorAbrangencia, whose two assignments would mention 3783 first. The name RemoveFiltro, ccargos.cpp as 3784's
+#   file (the class's) and its line there are chosen; 3784 is written as the one assignment, and no other form was
+#   compiled. FiltraPorAbrangencia calls 3783 twice in 7377, which is in the link now: the roots' AtribuiCargos, which
+#   stood for 7377, stands for nothing and can go (a stand-in beside its real caller changes no row here: this
+#   commit's scan).
 # - CEleicaoPE::GetIDsCargos (fn 5654) matches since comum's data classes build with strict aliasing, as ValidaOrdem
 #   does. With -fno-strict-aliasing it differed from the target in the reload of __child after __insert_node_at's store
 #   of the begin node (`pnpm wasm score` against the plain link: 8 over 122 rows, the reload's three rows, the local
@@ -126,7 +132,31 @@
 #   against 1150 over 1448 (3 of them the reload of -fno-strict-aliasing, which this directory no longer has: without it, 100 over 435); what is left includes the placement of its three throws, so no body here is shown right.
 # - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
 #   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their
-#   evidence and why that object links after ccargos.cpp. The file's other records, lines 25, 93 and 249, are not written.
+#   evidence and why that object links after ccargos.cpp. The file's other records, lines 25 and 93, are not written.
+# - FiltraPorAbrangencia (record 249, column 19, EUE_COMUM_DADOS_7821, "Tipo de abrangência inválido: {}" formatting
+#   the reach as an int, the argument code 3 of its i64 constant), held by 7377 behind a 496-byte prologue: for the
+#   municipal reach it copies m_todos into a local vector; otherwise, for each post of m_todos, it reads the post
+#   from CConfiguracaoEleicao (GetCargo, 861) and keeps the state and federal posts for the state reach, the federal
+#   ones for the federal reach, and throws for any other reach (on the first post, which it reads first: the target's
+#   loop, unswitched by -O3, calls 861 before that throw); then m_cargos = the local. The column puts the throw at
+#   indent 12, the default of a switch inside a loop at the function's level, while the municipal copy happens
+#   outside the loop: `} else for (...)` gives both, a choice of layout (the statements of an if/else around the
+#   loop, which was not compiled in that layout). Measured with unit 197's StartState: the FEDERAL case before ESTADUAL and push_back of a braced pair give
+#   the target's order of the unswitched loops and its one 8-byte store of the element (unit 197's fragment has the
+#   numbers).
+# - OrdenaPorAquisicao and OrdenaPorImpressao (3782): std::sort of m_cargos with a comparator, then Reset (m_atual =
+#   0, the same code written in place). 7377 holds the first behind a 16-byte prologue; 3782 matches. The comparators
+#   (11559 by acquisition order, 11558 by printing order) compare the elections' orders (CSituacoesEleicoes' bytes +4
+#   and +5, through 271) and, when equal, the posts' (CCargo's bytes +15 and +16, through 861). The target switches on
+#   a three-way int of the first comparison (`gt - lt + 1` into a br_table), which a switch over an int -1, 0, 1
+#   gives: written as a ternary into a local, and `(a > b) - (a < b)` gives the same rows. Scored alone against 11559
+#   (try-tu.sh --single): that form 8 over 47 rows, all its calls (imports there); std::strong_ordering compared with
+#   less and greater, 27 over 53; with is_lt and is_eq, 39 over 63; `<=>` with `!= 0` and `< 0`, 29 over 49 rows in the
+#   whole link (2 inserted, 15 deleted). Both match. 2837, 2833 and 5804 are libc++'s __introsort, __sort4 and
+#   __insertion_sort_incomplete over the pair with a function-pointer comparator, ccargos.cpp's instances (scores 0).
+#   Chosen: the three members' and the comparators' names, the comparators' being free functions of an anonymous
+#   namespace (they read nothing of the class), their lines, and calling Reset; unit 197's roots keep 3782 for its
+#   callers 5604, 12098 and 12110.
 # - ccargo.cpp also holds comum::md::CCargo's TemFoto and QtdSuplentes (target fns 1546 and 1157, 16 and 36 B, no
 #   record), which fns 1192, 4185, 6569, 6660, 6671, 6678 and 1588, 6569, 6660, 6671, 6678, 7787, 12272 call 8 and 11
 #   times, none written (those with records, 6660, 6671, 6678, 7787 and 12272, are app/vota/eleitor/comum/ctelasvota.cpp's).

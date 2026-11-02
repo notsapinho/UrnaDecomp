@@ -38,6 +38,9 @@ public:
 
     // Out of line: f11496 holds it inlined by binaryen, a strong_ordering returned from a call (its i32.extend8_s).
     std::strong_ordering operator<=>(const CVoto& outro) const;
+    // Defaulted: fn 4454's inlined ConfereCedula compares the type and then the number's size and bytes in place
+    // (memcmp), with no call, when it searches a ballot (ccedula.h).
+    bool operator==(const CVoto& outro) const = default;
 
 private:
     ETipo m_tipo;

@@ -43,9 +43,9 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 491, 1935, 2281, 2543, 2821, 2824, 2860, 3782, 3825, 3826, 5480, 5545, 5866, 5869 and 5870; its other
+// with no name: 491, 1935, 2281, 2543, 2821, 2824, 2860, 3825, 3826, 5480, 5545, 5866, 5869 and 5870; its other
 // callees have names (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164,
-// 3829, 5889, 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269 and 110's 2822
+// 3829, 5889, 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 88's 3782
 // among them).
 void CGravaResultado::StartState()
 {

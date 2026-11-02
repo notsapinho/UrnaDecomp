@@ -11,7 +11,8 @@
 # (comum/ctelascargo.h) and EUeVotaError's 9327 (app/vota/euevotaerror.h). The class headers say what each layout and
 # name rests on; the five members not written are in 150-uenux2-eleitor-estados-pending.cpp with what each waits for.
 #
-# Not written, and why. CTelasCargo's constructor (fn 2386) calls fn 3251, which has no name, and stays a stub.
+# Not written, and why. CTelasCargo's constructor (fn 2386) calls fn 3251, which had no name and stays a stub; 3251
+# matches since, as the __find_equal of md::CVotosCargos' map that unit 13's InsereCedula brings (unit 197).
 #
 # Written since. CConfirmaVotoSemCandidato's GetInst, its constructor and its two statics: the target holds GetInst,
 # the constructor inlined, in fn 4459 (vota::CEleitorVotando::ChamaEstadoProximoCargo, src/units/197-uenux2-celeitorvotando.mk),
@@ -23,8 +24,8 @@
 # of vota::CTelasVota through an accessor ctelasvota.h now has; its statics' exit destructors are fns 7287 (the
 # pointer's, through the D2) and 7284 (the mutex's). In use band 1 the target links 7287, 7284 and the D0 7255 in that
 # order, so the statics are defined above the destructor, which moves below GetInst; our link has the same order
-# (names.tsv's ld_index 2812, 2813, 2815). GetInst's two target callers (fns 7377 and 7787) are not written: the roots
-# stand in for them, and its vptr store keeps the vtable the roots took before. The singleton's form is unit 104's;
+# (names.tsv's ld_index 2812, 2813, 2815). GetInst's two target callers are fns 7377 (unit 197's StartState, in the
+# link since) and 7787, not written: the roots stand in for 7787, and its vptr store keeps the vtable the roots took before. The singleton's form is unit 104's;
 # the constructor's and GetInst's lines are a choice. CTelasCargo::GetTela (record ctelascargo.cpp:80, code 9330, its
 # message formatting the post and NomeTela's name): the target holds it in fn 4135 behind a second stack prologue (pnpm
 # wasm fn 4135), binaryen's inlining of a function with one caller, so it is written out of line here and left

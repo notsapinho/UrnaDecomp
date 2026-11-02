@@ -1,7 +1,8 @@
 // Roots: keep unit 150's classes in the skeleton link the way the target keeps them.
 //
-// vota::CInstrucaoVotacaoAcessibilidade::GetInst (fn 4420) has two direct callers in the target, fns 7377 and 7787,
-// neither reconstructed: InstrucaoAcessibilidade stands for them with two calls. Its vptr store keeps that class's
+// vota::CInstrucaoVotacaoAcessibilidade::GetInst (fn 4420) has two direct callers in the target, fns 7377 (unit 197's
+// StartState, in the link) and 7787, not reconstructed: InstrucaoAcessibilidade stood for both with two calls and
+// stands for 7787 now. Its vptr store keeps that class's
 // vtable.
 //
 // vota::CVisualizarCandidatos::GetInst (fn 1279) has five direct callers in the target, fns 11881, 11884, 11888, 11891
@@ -40,7 +41,7 @@ __attribute__((noinline)) int VisualizarCandidatos(int vezes)
     return w150_visualizar() + (vezes > 1 ? w150_visualizar() : 3);
 }
 
-// stands for fns 7377 and 7787
+// stands for fn 7787 (7377 is in the link)
 __attribute__((noinline)) int InstrucaoAcessibilidade(int vezes)
 {
     return w150_instrucao() + (vezes > 2 ? w150_instrucao() : 5);

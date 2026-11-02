@@ -22,7 +22,7 @@ using TCargoID = md::TCargoID;
 using TEleicaoID = md::TEleicaoID;
 
 // Recovered: the layout, 28 bytes: CreateInst (inlined into fn 7787) allocates 28, zeroes +0 and builds the two vectors
-// at +4 and +16 with one function (fn 3774); fn 7377, which holds FiltraPorAbrangencia, reads +4 and sorts +16. Their
+// at +4 and +16 with one function (fn 3774); FiltraPorAbrangencia, which fn 7377 holds, reads +4 and fills +16. Their
 // elements are 8 bytes, the election id at +0 and the cargo id at +4 (fns 1938 and 2835). That the element is a std::pair
 // and the members' names are chosen.
 class CCargos {
@@ -50,6 +50,13 @@ public:
     // 2), call it on GetInst()'s result, so it is a member, out of line since they keep the call. No record names it:
     // the name, that it is the undoing of FiltraPorAbrangencia, and its place in ccargos.cpp are chosen.
     void RemoveFiltro();
+    // Record ccargos.cpp:249; slot 2 of vota::CEleitorVotando (fn 7377) holds it behind a 496-byte prologue.
+    void FiltraPorAbrangencia(md::ETipoAbrangencia abrangencia);
+    // Sort the posts kept and go back to the first: fn 7377 holds the first behind a 16-byte prologue (its
+    // comparator at table slot 2357, fn 11559), and fn 3782 is the second (slot 2358, fn 11558; callers 5604, 12098
+    // and 12110). The names are chosen from the orders they sort by.
+    void OrdenaPorAquisicao();
+    void OrdenaPorImpressao();
 
 private:
     size_t m_atual;

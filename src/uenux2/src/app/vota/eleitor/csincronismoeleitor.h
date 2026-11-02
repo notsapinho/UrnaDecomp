@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <mutex>
+
 #include "app/comum/cappstate.h"
 
 namespace vota {
@@ -9,10 +12,12 @@ namespace vota {
 // src/units/192-uenux2-app-vota-estados-sincronismo-pending.cpp says what it waits for). Its singleton lives in fn 4454,
 // which holds GetInst and the constructor inlined: it allocates 12 bytes, passes comum::CAppState::EVENTO_TECLA (1) to
 // the base's constructor and stores only the vptr, keeps the object in a static std::unique_ptr (@1833160) under a static
-// std::mutex (@1833136), and frees an old object with no call through the vtable, as for a final class. GetInst, the
-// constructor and the statics are not written here: the target has no function of GetInst's own, and the statics' only
-// reader besides their exit destructors (fns 7195 and 7187) is fn 4454, which is not written. The destructors are the bodies 174
-// and 144 the class shares with the base, an implicit destructor.
+// std::mutex (@1833136), and frees an old object with no call through the vtable, as for a final class. GetInst and
+// the statics are in csincronismoeleitor.cpp, the constructor inline: the target has no function of GetInst's own, and
+// whether clang or binaryen inlined it into 4454 (vota::CEleitorVotando::FinalizaEleitor, written and not matched) is
+// not decided; both places are choices. The statics' exit destructors are fns 7195 (s_inst) and 7187 (s_mutex), in
+// that order in use band 1, so s_inst is defined first. The destructors are the bodies 174 and 144 the class shares
+// with the base, an implicit destructor.
 //
 // No record names the class: the path is chosen. Its vtable and typeinfo lie in the data between
 // app/vota/eleitor/cfimvotoeleitor.cpp's record (1534048) and app/vota/eleitor/csincronismovotoeleitor.cpp's (1534132),
@@ -20,9 +25,17 @@ namespace vota {
 // of either neighbour's object fits the data too.
 class CSincronismoEleitor final : public comum::CAppState {
 public:
+    static CSincronismoEleitor& GetInst();
+
     virtual void StartState() override;
 
     virtual void ProcessKey(uebyte tecla) override;
+
+private:
+    CSincronismoEleitor() : comum::CAppState(EVENTO_TECLA) {}
+
+    static std::unique_ptr<CSincronismoEleitor> s_inst;
+    static std::mutex s_mutex;
 };
 
 } // namespace vota

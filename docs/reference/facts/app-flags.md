@@ -412,7 +412,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   simulator strict aliasing, clang's default, and comum's converters and the directories around them none. It is a
   reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it; `dados/md/` and the files
   beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
-  directories) the setting is a choice. Still open: 4454, in `md/rdv/`, reloads in the target and is not written; 5725 and
+  directories) the setting is a choice. Still open: 4454, whose `md/rdv/` members reload in the target, is written and differs, and a probe link with
+  `md/rdv/` built with `-fno-strict-aliasing` does not close it (unit 197's fragment); 5725 and
   5377, one template at one record line, split (5377 matches from `comparecimentomesario/`). The sites with no call to
   explain the reload are converters and keep the flag: 10289 (`gravadores/asn/`) and 11383 (`dados/asn/`) match, 10276
   (`CConversorHistoricoVotoImpresso`, no record) is `no-candidate`.

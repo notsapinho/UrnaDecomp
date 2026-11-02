@@ -7,8 +7,11 @@
 #   vota::CPedeDigital::ProcessInput (slot 7)                   10466
 # Pending, trapped in 192-uenux2-app-vota-estados-sincronismo-pending.cpp (its header says what each waits for):
 # CSincronismoEleitor::ProcessKey (7181), CPedeDigital's StartState (10468), FinishState (10467) and ProcessTick (10465).
-# Not written: each class's GetInst and constructor, inlined into fns 4454 and 2740, which call functions with no name
-# or that no form has matched; the roots keep the two vtables by their addresses (the roots' header).
+# CSincronismoEleitor's GetInst and statics are in csincronismoeleitor.cpp and its constructor inline in the class
+# (csincronismoeleitor.h says what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is written
+# and not matched (unit 197's fragment). Not written: CPedeDigital's GetInst and constructor, inlined into fn 2740,
+# which calls functions with no name or that no form has matched. The roots keep the two vtables by their addresses
+# (the roots' header); CSincronismoEleitor's vptr store is in the link now, inlined into FinalizaEleitor.
 #
 # Evidence:
 # - CSincronismoEleitor::StartState posts 13 to the operator's queue (the queue's inline Post: Insert, fn 501, with

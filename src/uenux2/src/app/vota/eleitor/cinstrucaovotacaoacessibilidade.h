@@ -20,7 +20,8 @@ namespace vota {
 // calls CVotacaoStateAudio's D2 with no vptr store of its own, so the class is final (docs/reference/facts/reading.md
 // R4), and the D0 (fn 7255) calls the D2 and frees `this`, so the destructor is out of line, declared first as the key
 // function. GetInst, its statics and the constructor follow unit 104's singletons (the pointer's exit destructor, fn
-// 7287, deletes through the D2 too); the target's two callers of GetInst (fns 7377 and 7787) are not written. The
+// 7287, deletes through the D2 too); of the target's two callers of GetInst, fn 7377 is written (unit 197) and 7787
+// is not. The
 // member's name and type are chosen: a std::shared_ptr is what the copy and the release show, and the form
 // type is unit 97's, which ctelasvota.h chooses for CTelasVota's members too. This header's path is chosen, beside
 // cinstrucaovotacaoacessibilidade.cpp.
