@@ -10,7 +10,9 @@
 #
 # Target functions, by the object that holds them:
 # - cthreadeleitor.cpp: GetInst 316, its pointer's and mutex's static destructors 7122 and 7116, the D2 2438 and D0 7070,
-#   CMessageEleitor::Espera 4343 and its thunks 4341, 4338, 4337, and the map's __tree::destroy 2125.
+#   CMessageEleitor::Espera 4343 and its thunks 4341, 4338, 4337, and the map's __tree::destroy 2125; slot 5,
+#   ParaOutrasThreads 7030 (`IExecucaoVota::GetInst().ParaThreadsOperadorMonitor()`, the call at vtable + 24), added
+#   since unit 165 wrote GetInst (3594): defined last in the file, a choice.
 # - cthreadoperador.cpp: GetInst 270, its statics' destructors 10208 and 10207, the D2 2717 and D0 10206, slot 5 10203,
 #   slot 2 Run 10204. Its notes stay here; src/units/197-uenux2-celeitorvotando.mk lists it, after
 #   celeitorvotando.cpp and cinformacaoeleitor.cpp, the order the target's data have and the one in which fn 4464
@@ -19,7 +21,7 @@
 # - cthreadmonitor.cpp: GetInst 1898, its statics' destructors 10229 and 10228, the D0 10227, slot 5 10225, and 2126, the
 #   D2 that CThreadVota and CThreadMonitor share.
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195.
-# Not matched, and why: CThreadVota's slots 3 and 4, CThreadEleitor's and CThreadMonitor's slot 2 and 7030 are traps,
+# Not matched, and why: CThreadVota's slots 3 and 4 and CThreadEleitor's and CThreadMonitor's slot 2 are traps,
 # listed in the -pending.cpp with what they wait for. ProcessaEventos 4349 is written and differs (below), and the two debug
 # wrappers 3593 and 2072 and the body binaryen merges them into wait for the wrappers of two other files (below).
 # 13695 and 10231, the pointer destructors of fn 509's object and of CMonitoraAlimentacao, match with no text of their own: each is a thunk

@@ -22,7 +22,9 @@
 // here. ProcessInputAudio is the class's
 // key function here, as CConfirmaVotoEmCargo's is.
 // vota::CMajoritarioValido::AoConcluirEntrada and vota::CConfirmaVotoNominal::AoConcluirEntrada (slot 17, one target
-// body, fn 5925, 2141 B): it logs and runs a vota::impl::IPoliticaExecucaoEleitor through fn 5407, which has no name.
+// body, fn 5925, 2141 B): it logs and runs a vota::impl::IPoliticaExecucaoEleitor through its GetInst, written in
+// unit 165 with the has<T> and push<T> thunks it calls (2744, 5407), which match; every direct callee of 5925 is
+// matched or named now (splat/matched.txt, splat/symbol_addrs.txt), and the member is not written.
 // Its stub sat in app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp, where the record of the GetInst it holds inlined
 // lies (:45); with these traps in the vtables the stub generator writes it no more.
 //

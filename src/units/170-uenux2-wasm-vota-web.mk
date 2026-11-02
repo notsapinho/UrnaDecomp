@@ -87,8 +87,8 @@
 #   GetPathTrab and GetPathRootSemSA (358, 634), a builder and its setters (10268, 10197, 10188, 10181, 10176), 11733,
 #   11572, 11641, 11642, 7787 and more.
 # - 10619 (votaTick) and 10171 (votaGetStateJson): 5500 (6871 B, read as the state's text: votaGetStateJson moves its
-#   result into +24; stub in celeitorvotando.cpp), 3594 (1923 B, stub in iexecucaovota.cpp), 5408, 407, 2369, 10376,
-#   10857: all but 407 have no name.
+#   result into +24; stub in celeitorvotando.cpp), 3594 (IExecucaoVota::GetInst, unit 165's), 5408, 407, 2369, 10376,
+#   10857: all but 407 and 3594 have no name.
 # - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532,
 #   9873, 2247, 2249 and 1843 (src/app/roots_vector.cpp keeps them, the last three with minsize instances measured
 #   there), 3552 and 518 (asn1.md A10: 1928, which 3552 calls, is std::pair's implicit destructor, which clang refuses to
@@ -136,8 +136,15 @@
 #   9372, 9650 and 9831 stay `unresolved` and 9507 and 9437 `no-candidate`.
 # - 10384 (the lambda's operator()): on 10356's name, and CWasmWebSound's inline constructor stores +4 and +8 (an i32
 #   and an i64) where ours stores an i64 at +4 and a byte at +12 (unit 74's header's layout): 23 over 126 rows.
-# - 10949 (RecebeMensagem): our link inlines vector<unsigned char>'s assign (5496), whose other target caller, 5702, is
-#   not written: 121 over 174 rows, 103 inserted.
+# - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours (11962) reads 22
+#   over 74 rows, 15 replaced (all operand-only), 3 inserted and 4 deleted, the rows of the response's slot. The target
+#   holds the 12-byte comum::ueRespostaSavd at +4 of the frame, 4-aligned (`i64.store align=2 offset=4`, `i32.store
+#   offset=12`, the mark's `i32.store8 offset=4`, and `i32.const 4; i32.add` for assign's range); ours at +0, 8-aligned
+#   (`i64.store align=3 offset=0`, `i32.store offset=8`). The
+#   TU compiled alone at its flags with three forms of the zeroing, `resposta{}` then the mark (written), `resposta{254}`,
+#   and the declaration above the size test, gives our slot for each (wasm-objdump -d of the object, RecebeMensagem's
+#   stores). 5496 (vector<unsigned char>'s __assign_with_size, which assign calls) is out of line now and matches
+#   (below).
 # - 10878 (the CWasmThread factory's Create): 35 over 40 rows, 29 deleted, not read further.
 # - 10869 (the CPosixMutex factory's Create): `unresolved`, CPosixMutex's constructor has no target name.
 #
@@ -146,3 +153,22 @@
 # (main), and the roots lines that stood for main's table slots (units 100's Registra, 137's CPrng constructor, 171's
 # InitApplication). Unit 100's chosen
 # file src/uenux2/src/api/pattern/cpolysingletonlist.cpp goes too: its two definitions are here.
+#
+# Rows of this object that match with fragment 241 and the GetInsts unit 165 writes (against 36dda756, by index): the
+# has<T> thunks 2736, 2741 and 2744 (IExecucaoVota, impl::ISincronismoVotoEleitor, impl::IPoliticaExecucaoEleitor),
+# which this TU's static initializer (14478), its set<T> bodies and the three GetInsts call (3594, and the copies 7181
+# and 5925 hold inlined), with binaryen's body 3884 they share; the push thunks 5395, 5398 and 5407 (into binaryen's
+# 3882, still `unresolved`); the set<T> bodies 8728, 9437 and 9507; and 9372
+# (CPolySingleton<IExecucaoVota>::set<CExecucaoVotaCooperativa>, which passes 8728's table slot to 1562). The bullet
+# on 10307 above lists 9507, 9437 and 9372 as waiting. What held them was the type's name: this TU passed the name's
+# own address, from the typeinfo it emitted, where the target's thunks pass the typeinfo's name field (the typeinfo +
+# 4), the typeinfo being external since each interface's destructor is out of line, its key function (unit 165's
+# fragment has the evidence). At the base 2736, 2741, 2744 and 3884 were `no-candidate`, and 5395, 5398 and 5407 read
+# `differs` on that constant (`git show 36dda756:splat/scan.tsv`).
+# And 5496, vector<unsigned char>'s __assign_with_size, this TU's -Oz copy: RecebeMensagem (10949) calls it through
+# assign, and 170-uenux2-wasm-vota-web-roots.cpp stands for its other target caller, 5702 (ecourna's, not written), so
+# that binaryen keeps it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls 5496
+# through an asm label.
+$(ROOT)/$(APP)/170-uenux2-wasm-vota-web-roots.o: $(ROOT)/src/units/170-uenux2-wasm-vota-web-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/170-uenux2-wasm-vota-web.mk
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/170-uenux2-wasm-vota-web-roots.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/170-uenux2-wasm-vota-web-roots.o
