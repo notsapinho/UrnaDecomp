@@ -60,8 +60,9 @@
 # - fn 3685, the destroy of a std::map<std::string, std::vector<std::string>>'s tree (it frees the key at +16 and the
 #   vector at +28 of each node), reads as this object's copy: in the uses-3 band it follows has<IValidaMidia> (3686) and
 #   precedes api/gui/capplication.cpp's 3684 (a reading; its cluster label in ledger/tu-clusters.tsv is
-#   capplication.cpp's). Its one caller besides itself is fn 5571, not written (it calls fns 4678 and 4679, which have
-#   no name); it waits for 5571.
+#   capplication.cpp's). Its one caller besides itself is fn 5571, not written (it calls fns 4678 and 4679, libc++'s
+#   remove_all_impl and ErrorHandler<unsigned long long>::report, which match since unit 261's stand-in for 5571 keeps
+#   them in the link); it waits for 5571.
 # - fn 5574 is the priority-6 wrapper api/util/uedebug.h describes over fn 2921, with its word at @1577092, right after
 #   IValidaMidia's typeinfo (@1577084, 8 bytes), so among this object's data (a reading); its one caller is slot 3
 #   (11172), which calls it twice, so it waits for 11172.

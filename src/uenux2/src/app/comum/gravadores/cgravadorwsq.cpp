@@ -65,7 +65,7 @@ void CGravadorWSQ::Slot3()
 
 void CGravadorWSQ::CompactaWsq(bool midiaExterna, const std::string& arquivo) const
 {
-    const std::vector<std::string> caminhos = midiaExterna ? GetCaminhoCorretoExternal() : GetCaminhoCorretoInternal();
+    const std::vector<std::string> caminhos = !midiaExterna ? GetCaminhoCorretoInternal() : GetCaminhoCorretoExternal();
     bool vazio = true;
     for (const std::string& caminho : caminhos) {
         if (!api::CSystem::ExistDir(caminho)) {

@@ -11,7 +11,7 @@ namespace {
 
 bool endsWith(const std::string& valor, const std::string& sufixo)
 {
-    return valor.size() >= sufixo.size() && valor.compare(valor.size() - sufixo.size(), sufixo.size(), sufixo) == 0;
+    return valor.ends_with(sufixo);
 }
 
 bool isGlob(const std::string& valor)
@@ -55,20 +55,18 @@ std::vector<std::filesystem::path> globToFileList(const std::filesystem::path& g
         caminho = diretorio / caminho;
     }
     if (!std::filesystem::is_directory(diretorio)) {
-        throw CCompressionError(ECE_GLOB_INVALIDO, "[" + glob.string() + "] é um glob inválido");
+        throw CCompressionError(ECE_GLOB_INVALIDO, "[" + caminho.string() + "] é um glob inválido");
     }
 
     std::vector<std::filesystem::path> arquivos;
     const std::regex regex(globToRegex(caminho.string()));
     auto adiciona = [&regex, &arquivos](const std::filesystem::directory_entry& entrada) {
-        if (entrada.is_regular_file()) {
-            const std::filesystem::path encontrado = entrada.path();
-            if (std::regex_match(encontrado.string(), regex)) {
-                arquivos.push_back(encontrado);
-            }
+        const std::filesystem::path encontrado = entrada.path();
+        if (entrada.is_regular_file() && std::regex_match(encontrado.string(), regex)) {
+            arquivos.push_back(encontrado);
         }
     };
-    if (endsWith(caminho.string(), "/*")) {
+    if (endsWith(caminho.string(), std::filesystem::path("/*").string())) {
         for (const auto& entrada : std::filesystem::recursive_directory_iterator(diretorio)) {
             adiciona(entrada);
         }
@@ -104,9 +102,7 @@ void ICompressor::Add(const std::vector<std::filesystem::path>& arquivos)
 void ICompressor::Add(const std::filesystem::path& arquivo)
 {
     if (SuportaGlob() && isGlob(arquivo.string())) {
-        for (const auto& encontrado : globToFileList(arquivo)) {
-            Add(std::vector<std::filesystem::path>{encontrado});
-        }
+        Add(globToFileList(arquivo));
     } else {
         Add(std::vector<std::filesystem::path>{arquivo});
     }
