@@ -15,6 +15,8 @@
 # compiled at the tree's flags, a function shaped like 5359 (CriaHashesDiretorio into a local, a call with it, then
 # its destruction) keeps the call to the implicit destructor (a probe compile, wasm-objdump -d), as it would keep a
 # call to one defined in chashdiretorio.cpp, so the target's call does not tell the two apart.
+# The header's inline getters are fragment 227's (api::hash::ListaHashesArquivos, fn 5358, reads the three members in
+# place); this unit's roots object is the same with them (cmp of the object before and after).
 $(ROOT)/$(APP)/198-uenux2-chashdiretorio-roots.o: $(ROOT)/src/units/198-uenux2-chashdiretorio-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/198-uenux2-chashdiretorio.mk $(ROOT)/src/uenux2/src/api/hash/chashdiretorio.h $(ROOT)/src/uenux2/src/api/hash/chasharquivo.h
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/198-uenux2-chashdiretorio-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/198-uenux2-chashdiretorio-roots.o
