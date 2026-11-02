@@ -95,9 +95,12 @@ UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX
 # strict aliasing by directory: the generic uenux2 rule compiles these without -fno-strict-aliasing (TBAA on), where
 # std::set and std::map inserts, a list's clear and lambdas' __clone keep in a local what the flag reloads; the rest of
 # comum keeps the flag, and its ASN.1 converters, comparecimentomesario, gravadores, relatorios and cfederacoes.cpp lose
-# matches with TBAA (docs/reference/facts/app-flags.md §F6). The -pending and roots objects keep their rules' flags.
+# matches with TBAA, but one file of gravadores, cgeracaoversoescontratos.cpp, whose std::set copy and insert (fns 1163
+# and 5868) match only with it (docs/reference/facts/app-flags.md §F6). An entry is a pattern of the source's path,
+# .cpp included. The -pending and roots objects keep their rules' flags.
 # UENUX2_TBAA_DIRS= on the command line builds the whole tree with -fno-strict-aliasing.
-UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/%
+UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/% \
+                      src/app/comum/gravadores/cgeracaoversoescontratos.cpp
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
@@ -167,10 +170,10 @@ $(ROOT)/$(APP)/roots_ecourna.o: $(ROOT)/src/app/roots_ecourna.cpp $(ROOT)/src/Ma
 UENUX2_HDRS := $(shell find $(ROOT)/src/uenux2 -name '*.h' -o -name '*.hpp' 2>/dev/null) $(ECOURNA_HDRS)
 UENUX2_OBJS := $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(UENUX2_SRCS)))
 # a uenux2 source's flags: UENUX2_CXXFLAGS (with a fragment's target-specific additions), without -fno-strict-aliasing
-# in UENUX2_TBAA_DIRS
+# in UENUX2_TBAA_DIRS; the argument is the source's path with its .cpp, as a fragment's own rule passes it
 uenux2_cxxflags = $(if $(filter $(UENUX2_TBAA_DIRS),$(1)),$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS)),$(UENUX2_CXXFLAGS))
 $(ROOT)/$(APP)/uenux2/%.cpp.o: $(ROOT)/src/uenux2/%.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
-	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(call uenux2_cxxflags,$*) -c /work/src/uenux2/$*.cpp -o $(R)
+	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(call uenux2_cxxflags,$*.cpp) -c /work/src/uenux2/$*.cpp -o $(R)
 $(ROOT)/$(APP)/roots_uenux2.o: $(ROOT)/src/app/roots_uenux2.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/app/roots_uenux2.cpp -o $(R)
 # instances of ecourna's templates that are uenux2's code in the target, ahead of ecourna's objects and at the tree's flags
@@ -184,6 +187,10 @@ $(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(
 # (src/app/roots_vector.cpp)
 $(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_vector.cpp -o $(R)
+# a uenux2 object's copy of std::set<std::string>'s hinted insert (fn 2281), without strict aliasing, whose object is
+# not identified yet: last in APP_OBJS, after roots_rhvoice.o and roots_boost.o (src/app/roots_set.cpp)
+$(ROOT)/$(APP)/roots_set.o: $(ROOT)/src/app/roots_set.cpp $(ROOT)/src/Makefile
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_set.cpp -o $(R)
 
 # The executable TU, /home/rubio/tse/uenux2/wasm/vota_web/vota_web_wasm.cpp: votaInit's, first on the TSE link line
 # (docs/reference/toolchain.md "Export order"), so wasm-ld keeps its copy of every linkonce function and vtable it emits.
@@ -230,8 +237,9 @@ APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_
 # ---- link order (the executable TU first, VOTA_WEB_OBJS above, then roots_coderenv.o, built at that TU's rule: the
 # target keeps its copy of basic_stringbuf::__init_buf_ptrs, 674, over the uenux2 roots'; then roots_texttospeech.o, at
 # the same rule, ahead of the uenux2 objects whose copies of ITextToSpeech's inline members it replaces; then the stand-ins,
-# votaInit's first; app before libraries; libraries in this order) --------
-APP_OBJS := roots_coderenv.o roots_texttospeech.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
+# votaInit's first; roots_set.o last, after roots_rhvoice.o, whose copy of __tree_balance_after_insert (152) the
+# target's is; app before libraries; libraries in this order) --------
+APP_OBJS := roots_coderenv.o roots_texttospeech.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o roots_set.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=

@@ -406,7 +406,8 @@ name, and a probe object lands nowhere.
 ## V5. Strict aliasing by directory: a body that differs only by it
 
 uenux2 compiles with strict aliasing in the directories `UENUX2_TBAA_DIRS` lists in `src/Makefile` (`src/api/`,
-`src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`) and without it elsewhere;
+`src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, and one file,
+`src/app/comum/gravadores/cgeracaoversoescontratos.cpp`) and without it elsewhere;
 [app-flags.md](app-flags.md) §F6 has the evidence and the measurement of the split, and [reading.md](reading.md) §R21
 reads the setting from a body. Measured at bbf27ac1.
 

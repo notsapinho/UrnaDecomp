@@ -117,7 +117,10 @@ Where that differs from the table, and what is known to turn on it:
   ([app-flags.md](app-flags.md) §F6, "The stand-ins keep strict aliasing"), and a throw there picks which tree's
   linkonce copy wins (`src/units/README.md` "Companion files"). `roots_cbasetype.o` and `roots_iconversorasn.o`, right
   after `roots_uenux2.o`, compile at `UENUX2_CXXFLAGS`: their instances of ecourna templates are uenux2's code in the
-  target, and ahead of ecourna's objects they are the copies the link keeps.
+  target, and ahead of ecourna's objects they are the copies the link keeps. `roots_set.o`, last of the stand-ins, after
+  `roots_rhvoice.o` and `roots_boost.o`, compiles at `UENUX2_CXXFLAGS` too, for a set's hinted insert (2281) without
+  TBAA: ahead of `roots_rhvoice.o` the `__tree_balance_after_insert` it brings (152) would be its copy, and 152 differs
+  then (unit 268's fragment).
 - **A flag that changes an ABI tag changes who owns an inline symbol.** Symbols of two tags never collide, so the order
   did not matter while the runtime's `nn` copies stood apart. With `ne` on both sides the first definer wins.
 - **Fragments sort as text.** `100-…` links between `10-…` and `11-…`. Nothing turns on it: with unit 100's objects last,
