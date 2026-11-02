@@ -10,8 +10,9 @@
 #   begins with the class's own vptr store, which the target's does not. The members' types beyond their destruction, and
 #   that the destructor is implicit rather than defined in the class without `inline` (the same D0 shape), are chosen
 #   (api/audio/crhvoicetexttospeech.h).
-# - api::CPreShowClearScreen::PreShow (target fn 11139), inline in api/gui/cpreshowclearscreen.h; no key function, so
-#   158-uenux2-api-roots.o emits it with the vtable, at the tree's flags.
+# - api::CPreShowClearScreen::PreShow (target fn 11139), inline in api/gui/cpreshowclearscreen.h; no key function. Its
+#   vptr's storer, api::CFormBuilder::GetForm(const std::string&) (fn 11140), is written in unit 31's cformbuilder.cpp,
+#   whose object emits PreShow with the vtable first in the link, so the roots' builder that emitted them went.
 # - api::CFixedImage::CFixedImage(const std::string &) (target fn 2246), in src/uenux2/src/api/gui/cfixedimage.cpp, the
 #   file its record names (24:15), with api::isResource and api::getResourceFile, inline in api/gui/iresource.h, which it
 #   inlines (records 97:12 and 82:12), and the 4913 enumerator of EUeGuiError. Measured, by the frame offsets of the

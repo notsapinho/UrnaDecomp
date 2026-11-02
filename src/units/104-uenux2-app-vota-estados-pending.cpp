@@ -163,7 +163,7 @@ namespace comum {
 
 // CPedeTituloMesario::StartState: fn 10388 (4789 B), records cpedetitulomesario.cpp:33,
 // cpedetitulomesariofinal.cpp:45, cpedetitulomesarioinicial.cpp:44, cpedetitulomesariovotacao.cpp:44, callees with no
-// name: 180, 203, 301, 728, 1151, 1255.
+// name: 180, 203, 301, 728, 1151.
 void CPedeTituloMesario::StartState()
 {
     __builtin_trap();

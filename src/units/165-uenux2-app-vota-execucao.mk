@@ -123,12 +123,16 @@
 #
 # cpreshowformvota.cpp also holds vota::GetFormulario (fn 886, 21 B in the target, eleven callers), the form of an
 # api::CFormBuilder's fields with a new CPreShowFormVota, beside GetFormularioInterativo (cpreshowformvota.h says what
-# places it). It is written and differs, `the locals` at +0x0: the target's body is a thunk of binaryen's fn 6117, which
-# the target forms from 886 and fn 11140 (api::CFormBuilder::GetForm(const std::string&) over a CPreShowClearScreen,
-# not in our link: unit 220's fragment has why), and ours is the whole body, 59 over 63 rows against the thunk (55
-# inserted; pnpm wasm score against names.tsv). It stays written: four matched functions call it (6129, 6174, 6583 and
-# 5936, units 220, 110 and 138), and step 8 names it by their call votes. Chosen: its name, its parameters' names, its
-# line after fn 576.
+# places it). Its target body is a thunk of binaryen's fn 6117, which binaryen forms from 886 and fn 11140
+# (api::CFormBuilder::GetForm(const std::string&) over a CPreShowClearScreen, unit 31's), and so does our link since
+# unit 247 keeps 11140 out of line (that fragment says how): 886 and 6117 match. Before, ours was the whole body, 59
+# over 63 rows against the thunk (55 inserted; pnpm wasm score against names.tsv). Step 8 names 886 by the call votes of
+# four matched callers (6129, 6174, 6583 and 5936, units 220, 110 and 138). 576's `vptr-anchor` line left
+# splat/symbol_addrs.txt with unit 247's landing, and 576 still matches. CPreShowFormVota's vptr (1532608) has two holders on
+# each side, 576 and 886 in the target (/usr/bin/grep -rlE 'i32\.const 1532608($|[^0-9])' build/out/splat/pieces/asm),
+# and with 886 a thunk in our link too they make two pairs of one shape each; that docs/reference/splat.md section 2's
+# rule, two such pairs anchor nothing, is why the line left is a reading. Chosen: 886's name, its parameters' names,
+# its line after fn 576.
 APP_VOTA_EXECUCAO_SRCS := src/app/vota/iexecucaovota.cpp src/app/vota/cexecucaovotacooperativa.cpp src/app/vota/comum/cassinadorvota.cpp \
     src/app/vota/comum/cpreshowformvota.cpp src/app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp \
     src/app/vota/operador/caguardainicio.cpp

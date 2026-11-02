@@ -8,6 +8,7 @@
 //   3068  AddDoubleLineField
 //   5547  AddImage
 //   2244, 2245, 3680  AddLine, AddFill, AddRect
+//   11140 GetForm(nome)            over an api::CPreShowClearScreen, through 5550 (GetForm(preShow, nome))
 //   502   AddStatusHeader          written, differs: the fragment has the measurement. The members of its lambda's
 //         CDataText, 11107 (GetText) and 11109 and 11108 (the control block's D2 and D0), match from this object
 // FONTE_PADRAO is the SFont {20, 0} at .rodata 520920 that 502 passes twice; its name and its being a constant of this
@@ -30,6 +31,7 @@
 #include "api/gui/clinefield.h"
 #include "api/gui/crectfield.h"
 #include "api/gui/cpowerinformation.h"
+#include "api/gui/cpreshowclearscreen.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldblinking.h"
 #include "api/gui/ctextfieldupdate.h"
@@ -167,7 +169,12 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::shared_ptr<IPre
     return form;
 }
 
-// (original lines 170-289: content not recovered)
+std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::string& nome)
+{
+    return GetForm(std::shared_ptr<IPreShow<IScreen>>(new CPreShowClearScreen()), nome);
+}
+
+// (original lines 177-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {

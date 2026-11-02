@@ -76,9 +76,10 @@
 #
 # Not reconstructed, and what each waits for:
 # - GetInst and the constructors of CConfirmaFimRegistroMesarios (5389) and CLimiteMesariosRegistradosAtingido (5386),
-#   which build both forms with fns 395 (matched, unit 31) and 1255, which has no body here; the other states' GetInst,
-#   inlined into callers not written (each vptr is stored in fn 10313, IPedeTituloMesario::ProcessInput, or for
-#   CDigitalMesarioNaoReconhecida in fn 10316), and the files' anonymous data sources (10349, 10344, 10323, 10319).
+#   which build both forms with fns 395 (matched, unit 31) and 1255 (matched, unit 247), so no callee holds them back;
+#   the other states' GetInst, inlined into callers not written (each vptr is stored in fn 10313,
+#   IPedeTituloMesario::ProcessInput, or for CDigitalMesarioNaoReconhecida in fn 10316), and the files' anonymous data
+#   sources (10349, 10344, 10323, 10319).
 # - comum::CRegistrarMesarios (10392, 10391) and comum::CMesarioRegistrado (10339, 10338): 10392 and 10339 call 5386,
 #   and fn 6011, their ProcessInput's shared body, calls 5389. Their stub files stay as they are.
 # - The pending traps (135-uenux2-comum-mesario-estados-pending.cpp names each): IGestorDadoMesario::StartState

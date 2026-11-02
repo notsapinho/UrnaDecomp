@@ -19,7 +19,8 @@
 #                      over CPadDS<CToUpperDS<CCargoDSNome>> (5613) is unit 139's, whose fragment says what shows it
 #   binaryen's         3890, the one body of 435, 1072 and 198; 1400, vector<shared_ptr<IFormField<...>>>::emplace_back(const
 #                      value_type&), one body of the media's instantiations, under the first in the link
-#   the getters        5550 (CFormBuilder::GetForm), 1694 and 301 (CMTFormBuilder::GetForm and GetInteractiveForm, each
+#   the getters        5550 (CFormBuilder::GetForm) and 11140 (its overload of a name alone, below), 1694 and 301
+#                      (CMTFormBuilder::GetForm and GetInteractiveForm, each
 #                      inlining a private overload that takes the pre-show) and 5515 (CPaperFormBuilder::GetForm): they
 #                      build the forms of api/gui/iform.h and api/gui/cinteractiveform.h, whose code these objects emit,
 #                      and src/units/120-uenux2-iform.mk has their notes. Their names are chosen. GetForm sits after
@@ -27,6 +28,14 @@
 #                      and GetInteractiveForm after them, the order of their first uses in the target's data
 #                      (IForm<IScreenMT>'s vtable @1579936 before the adders' control blocks @1580040 to @1580240, and
 #                      CInteractiveForm<IScreenMT, IInputMT>'s @1580280 after them)
+#
+# 11140, CFormBuilder::GetForm(const std::string&): the form of the fields added over a new api::CPreShowClearScreen
+# (vptr 1577896; its vtable and typeinfo lie in this file's data, so this object emits them and PreShow, fn 11139, first
+# in the link, and so CPreShowClearScreen's control block, whose __get_deleter, fn 11138, matches from here), through
+# GetForm(preShow, nome). Its target body is a thunk of binaryen's fn 6117, the body of 11140 and vota::GetFormulario
+# (fn 886, unit 165). Its one target caller is fn 1255, comum::TelaRegistroMesarios, and what keeps it out of line is
+# unit 247's (that fragment has the measurements). Chosen: its being an overload, its name, its line after the first
+# GetForm (11140's ld_index, 4508, is below 11139's, 4514, in band 1, as the target's order wants).
 #
 # 426, AddField, is written and `differs` (docs/how-to-decompile.md step 5). At -O2 it scored 292 over 449 rows: clang
 # inlines std::string::append into operator+, and one loop compares the name. The target calls append (fn 160) and holds
