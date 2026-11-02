@@ -9,7 +9,8 @@
 //   cinteractiveform.h:57), which this tree does not hold, and for a definition of api::EInputResult.
 // - FormataMensagem 6999 (slot 14, a chosen name), 4946 B: fills the {cargo-atual}-style tags; waits for the tags' sources.
 // vota::CConfirmaVotoEmCargo, slot 9 (ProcessInputAudio 11754, record cvotacaostateaudio.cpp:209 of its inlined
-// EmiteEcoCorrigeConfirma): it calls fns 1455, 3229 and 4471, which have no name, and reads vota::g_numeroDigitado
+// EmiteEcoCorrigeConfirma): it calls fn 1455, which has no name, and fns 3229 and 4471 (vota::CEleitorVotando's
+// GetInst and RegistraVoto, unit 197), and reads vota::g_numeroDigitado
 // (app/vota/eleitor/comum/cinformacaoeleitor.h). ProcessInputAudio is the class's
 // key function here, so this object emits its vtable, its typeinfo and nothing else of it; its real key function is not
 // recorded.

@@ -1,12 +1,15 @@
 #pragma once
 
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "api/util/cdatetime.h"
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"
+#include "app/comum/dados/md/rdv/cvoto.h"
 
 // Reconstruction's note, not TSE's text: static objects of the vota application that no symbol or record names, these
-// two and the byte further down.
+// two, the votes cast further down (with the function that appends to them) and the byte.
 // - The number the voter typed, a std::string at 1833288. vota::CPedeNulo's and vota::CPedeNominal's GetProximoEstado
 //   (fns 11744 and 11724) assign their argument to it, vota::CEleitorVotando::ChamaEstadoProximoCargo (fn 4459) assigns
 //   it an empty string, and fns 5500, 6999, 7377, 11683, 11711, 11754 and 11756 read it; fn 13176, at table slot 1098,
@@ -34,6 +37,33 @@ inline void SetNumeroDigitado(const std::string& numero)
 {
     g_numeroDigitado = numero;
 }
+
+// The votes cast in the current cycle, a 12-byte object at 1833300: a vector of 20-byte (post id, vote) pairs, the id
+// a byte at +0 and the comum::md::CVoto at +4, which fn 4192 appends to, fn 7377 empties in place, fns 6999, 4454 and
+// 11683 read, and fn 13588 (table slot 1079) destroys at exit, freeing each element's string at +8. __wasm_call_ctors
+// calls a constructor on it, fn 203's body, which zeroes the 12 bytes and is binaryen's one body for it and
+// api::CFormBuilder's constructor: so the object's type has a user-provided constructor out of this file (one this file
+// sees would be folded into the object's zero bytes: a reading), in cvotoseleitor.cpp with Adiciona, which fn 4192 holds
+// behind a stack frame of its own (src/units/197-uenux2-celeitorvotando.mk has the measurement). The class, its file,
+// its members' names and g_votosEleitor's are chosen; that the vector is its one member rests on the 12 bytes.
+class CVotosEleitor {
+public:
+    CVotosEleitor();
+
+    void Adiciona(comum::md::TCargoID cargo, comum::md::CVoto voto);
+
+private:
+    std::vector<std::pair<comum::md::TCargoID, comum::md::CVoto>> m_votos;
+};
+
+extern CVotosEleitor g_votosEleitor;
+
+// fn 4192: copies the vote in a 16-byte frame and passes it by value to CVotosEleitor::Adiciona, held in a second,
+// 32-byte frame, which builds the pair there and pushes it. Its callers are vota::CEleitorVotando::RegistraVoto (fn
+// 4471) and suspenderEleitor (fn 4442), in celeitorvotando.cpp, which would inline a function this small
+// (docs/how-to-decompile.md step 3): so it is in another TU, this one beside the object (a choice). Its name and that it
+// is a free function are chosen.
+void AdicionaVoto(comum::md::TCargoID cargo, const comum::md::CVoto& voto);
 
 extern api::CDateTime g_dataHoraDesligamento;
 

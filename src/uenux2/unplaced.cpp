@@ -74,16 +74,6 @@
 // f4307 · 478 B · unmatched · placement: link order · name unknown
 // ? f4307(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 682 · uses=2
-
-// f4464 · 1272 B · unmatched · placement: link order · name unknown
-// void f4464(i32) { ... }
-
-// link-order cluster 683 · uses=2
-
-// f4471 · 140 B · unmatched · placement: link order · name unknown
-// void f4471(i32, i32, i32) { ... }
-
 // link-order cluster 691 · uses=2
 
 // f4557 · 162 B · unmatched · placement: link order · name unknown
@@ -197,11 +187,6 @@
 
 // f5528 · 64 B · unmatched · placement: link order · name unknown
 // void f5528(i32) { ... }
-
-// link-order cluster 794 · uses=2 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f5553 · 204 B · unmatched · placement: link order · name unknown
-// void f5553(i32) { ... }
 
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 

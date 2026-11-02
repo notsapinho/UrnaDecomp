@@ -41,6 +41,13 @@
 #   LogaMesarioIndagadoQualidadeBU (4551), and the two logaAlerta texts binaryen merges into fn 6115,
 #   LogaQtdViasAdicionaisExcedeMaximo (4556) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (2495), all out of
 #   line; src/units/156-uenux2-fimvotacao-bu.mk has their evidence, and its roots their callers' stand-ins.
+# - Four more after LogaMesarioIndagadoQualidadeBU, and one at the end, belong to unit 197's
+#   CEleitorVotando::RegistraVoto and suspenderEleitor: the LogaVoto* members (4546, 4542, 4541 and 4537; 3272, last),
+#   thunks of binaryen's one body for the five, fn 2302, out of line, matched. They read comum::CConfiguracaoEleicao:
+#   its include takes the place of the blank line after this file's own header's include, which keeps GetInst's
+#   record on line 37, and the rule after the source list gives the include path.
+#   src/units/197-uenux2-celeitorvotando.mk has their evidence and why they sit where they do, and its roots their
+#   callers' stand-ins.
 # - Four more, after LogaAguardandoConfirmacaoZeresima: unit 138's LogaAguardandoHorarioZeresima and unit 199's
 #   LogaDataEleicaoInvalida, held inlined by fns 11871 and 11914 (their fragments have the evidence), and two out of
 #   line that this unit matches: LogaErroEstadoAplicativoDesconhecido (fn 3279, logaErro of "Erro estado do aplicativo
@@ -134,6 +141,9 @@
 # slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
+# clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost
+# through CConfiguracaoMunicipio's CHorariosUrna: an include path, not a flag of the code
+$(ROOT)/$(APP)/uenux2/src/app/vota/log/clogvota.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 CCONTROLADORREGISTRAMESARIOSVOTA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/119-uenux2-ccontroladorregistramesariosvota-pending.o: $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota.mk $(CCONTROLADORREGISTRAMESARIOSVOTA_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/119-uenux2-ccontroladorregistramesariosvota-pending.cpp -o $(R)

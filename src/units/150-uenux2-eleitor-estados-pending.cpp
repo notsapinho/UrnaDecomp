@@ -3,7 +3,7 @@
 //
 // vota::CConfirmaVotoSemCandidato, in src/uenux2/src/app/vota/eleitor/cconfirmavotosemcandidato.cpp:
 // - ProcessInputAudio 7428 (slot 9), 278 B: calls GetTelaCargoAtual (fn 4483) and slot 13, and fns 3229 and 4471,
-//   which have no name;
+//   vota::CEleitorVotando's GetInst and RegistraVoto (unit 197);
 // - EmiteEcoComInputField 4477 (slot 13, record :77), 243 B: waits for api::CInteractiveForm::Read() (record
 //   cinteractiveform.h:57), which this tree does not hold, and calls fn 1455 (CVotacaoStateAudio's, not written) and fn
 //   455 (CPolySingleton<api::IInputKbd>::instance, named, its row `differs`).

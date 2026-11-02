@@ -48,6 +48,12 @@
 // LogaEleitorVoltouADigitar (by vota::CEleitorVotando::ProcessInput, fn 7345: loga, fn 233) are that shape too, GetInst
 // called before the member's own stack frame opens; their names are chosen from their messages. This header's path is
 // chosen, beside clogvota.cpp, and only the members written are declared.
+// The five LogaVoto* members are out of line, each a 17-byte thunk of one body binaryen merged (fn 2302: the post's
+// neutral name, comum::CConfiguracaoEleicao::GetCargo(cargo).GetNomeNeutro(), formatted into its message and passed to
+// loga, fn 233), with the message's begin and end as the two constants: fns 3272, 4546, 4542, 4541 and 4537, each
+// called with GetInst's result and a post's id by vota::CEleitorVotando::RegistraVoto (fn 4471) and by
+// suspenderEleitor (fn 4442), which makes RegistraVoto's calls. Their names are chosen from their messages, and their
+// parameter's type from GetCargo's.
 
 #include <string>
 
@@ -95,6 +101,11 @@ public:
     void LogaTempoLimiteBateriaInterna();
     void LogaErroIdentificacaoTipoCargo();
     void LogaEleitorVoltouADigitar();
+    void LogaVotoCargoSemCandidatoPorSuspensao(uebyte cargo);
+    void LogaVotoBrancoPorSuspensao(uebyte cargo);
+    void LogaVotoCargoSemCandidato(uebyte cargo);
+    void LogaVotoNuloPorSuspensao(uebyte cargo);
+    void LogaVotoConfirmado(uebyte cargo);
 
 private:
     CLogVota();
