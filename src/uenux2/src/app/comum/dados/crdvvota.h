@@ -6,6 +6,7 @@
 #include "app/comum/dados/asn/rdv/cconversoreleicoesvota.h"
 #include "app/comum/dados/asn/rdv/cconversorregistrodigitalvoto.h"
 #include "app/comum/dados/crdv.h"
+#include "app/comum/dados/md/rdv/ccedula.h"
 #include "app/comum/dados/md/rdv/crdvposicionador.h"
 #include "app/comum/dados/md/rdv/cvotoseleicoesvota.h"
 
@@ -45,6 +46,9 @@ public:
     // 12110; 12098 compares it with CEleitores' own count). No record names it: its name, an overload of slot 2's, and
     // its being a member (it reads m_votos) are chosen.
     md::TQtdVoto Comparecimento() const;
+    // Splits a voter's ballot by election and hands each part to m_votos.RecebeCedula with m_posicionador: fn 4454
+    // holds it behind a 32-byte prologue of its own. It reads private state, so it is a member; its name is chosen.
+    void RecebeCedula(const md::CCedula& cedula);
 
 private:
     md::CVotosEleicoesVota m_votos;

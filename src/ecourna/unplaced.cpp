@@ -132,11 +132,6 @@
 // f6272 · 13 B · unmatched · placement: link order · name unknown
 // ? f6272(i32) { ... }
 
-// link-order cluster 937 · uses=3
-
-// f3251 · 466 B · unmatched · placement: link order · name unknown
-// ? f3251(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 944 · uses=3
 
 // f3335 · 356 B · unmatched · placement: link order · name unknown

@@ -104,4 +104,19 @@ md::TQtdVoto CRdvVota::Cargo(md::TCargoID cargo) const
     return m_votos.Cargo(cargo);
 }
 
+void CRdvVota::RecebeCedula(const md::CCedula& cedula)
+{
+    std::map<md::TEleicaoID, md::CCedula> cedulas;
+    const auto cargos = CConfiguracaoEleicao::GetInst().GetCargosEleicoes();
+    for (const auto& voto : cedula.GetVotos()) {
+        const auto cargo = std::find_if(cargos.begin(), cargos.end(),
+                                        [&voto](const CCargos::TCargoEleicao& item) { return item.second == voto.cargo; });
+        const md::TEleicaoID eleicao = cargo == cargos.end() ? 0 : cargo->first;
+        cedulas[eleicao].Adiciona(voto);
+    }
+    for (const auto& [eleicao, cedulaEleicao] : cedulas) {
+        m_votos.RecebeCedula(*m_posicionador, eleicao, cedulaEleicao);
+    }
+}
+
 } // namespace comum

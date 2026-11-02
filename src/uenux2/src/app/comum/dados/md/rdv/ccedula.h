@@ -21,18 +21,37 @@ namespace comum::md {
 //   and throws "Tamanho da cedula (" under its record cvotoscargos.cpp:248 (1573780) when they differ.
 // The constructor is a call there, so it is user-provided and defined out of line, in ccedula.cpp (a reading: one
 // clang sees inline is folded into the stores). Chosen: the class's namespace (the records print it unqualified; it is
-// that of the classes that take it), this header's path and ccedula.cpp's (no record names a file of it), std::pair as
-// the element (no symbol spells it), the data member's name and Adiciona's, that the member is private and Adiciona a
-// member (6999, 11683 and 4454 read the vector from outside the class); that the vector is the one data member rests
-// on the 12 bytes.
+// that of the classes that take it), this header's path and ccedula.cpp's (no record names a file of it), the data
+// member's name and the members' names, that the member is private and the accessors members; that the vector is the
+// one data member rests on the 12 bytes.
+// The element is an aggregate (evidence, from 4454's bytes): the inlined ConfereCedula searches the vector for a
+// value it builds in its frame, storing the post's id at +0 and then calling CVoto's constructor on +4 of the same
+// object, which brace-initializing an aggregate gives; a std::pair built from a CVoto temporary constructs the
+// temporary first and moves it in. Its name and its members' names are chosen; its equality is defaulted, as the
+// search compares the id, the type and the number in place.
+// Out of line in ccedula.cpp, measured (src/units/197-uenux2-celeitorvotando.mk): Limpa, which slot 2 of
+// vota::CEleitorVotando (fn 7377) calls on vota::g_votosEleitor and which keeps the new end's store before the
+// next statement's, and Adiciona(const SVotoCargo&), whose push fn 4454 splits as the out-of-line form gives.
+// GetVotos, inline, is chosen.
+// A post's vote in a ballot: the post's id and the vote.
+struct SVotoCargo {
+    TCargoID cargo;
+    CVoto voto;
+
+    bool operator==(const SVotoCargo& outro) const = default;
+};
+
 class CCedula {
 public:
     CCedula();
 
     void Adiciona(TCargoID cargo, CVoto voto);
+    void Adiciona(const SVotoCargo& voto);
+    void Limpa();
+    const std::vector<SVotoCargo>& GetVotos() const { return m_votos; }
 
 private:
-    std::vector<std::pair<TCargoID, CVoto>> m_votos;
+    std::vector<SVotoCargo> m_votos;
 };
 
 } // namespace comum::md

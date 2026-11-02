@@ -1,7 +1,7 @@
 #include "app/comum/dados/md/rdv/cvotos.h"
 
 #include <algorithm>
-
+#include "app/comum/dados/euerdverror.h"
 namespace comum::md {
 
 TQtdVoto CVotos::Conta(TCriterio criterio) const
@@ -34,8 +34,21 @@ TQtdVoto CVotos::TotalQue(bool (CVoto::*criterio)() const) const
     return Conta([&criterio](const CVoto& voto) { return (voto.*criterio)(); });
 }
 
-// (original lines 37-38: content not recovered)
-#line 39
+void CVotos::Insere(const CVoto& voto, size_t posicao)
+{
+    if (posicao > m_votos.size()) {
+        ErroPosicao(posicao);
+    }
+    m_votos.insert(m_votos.begin() + posicao, voto);
+}
+
+void CVotos::ErroPosicao(const size_t posicao, const std::source_location local) const
+{
+    throw api::CUeRdvError(api::EUE_RDV_POSICAO_FORA_DO_LIMITE,
+                           "Posição (" + std::to_string(posicao) + ") fora do limite (" + std::to_string(Total()) + ")",
+                           local);
+}
+
 CVotos::CVotos(std::vector<CVoto> votos) : m_votos(std::move(votos))
 {
     m_votos.reserve(1000);

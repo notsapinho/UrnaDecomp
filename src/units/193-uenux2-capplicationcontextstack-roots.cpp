@@ -10,7 +10,8 @@
 // - api::CriaContextoPadrao (fn 5558) has api::CApplication::InitApplication's code among its callers in our link;
 //   w193_padrao stands for the other, fn 1695.
 // - CApplicationContext's copy constructor (fn 1841) has fn 676's code (the guard's constructor, inlined) among its
-//   callers in our link; w193_copia stands for the other five, fns 491, 1695, 3333, 7377 and 10468.
+//   callers in our link, and unit 197's StartState (7377); w193_copia stands for the other four, fns 491, 1695, 3333
+//   and 10468.
 extern "C" {
 extern char w193_contextos[] __asm__("_ZN3api12CApplication11s_contextosE");
 void w193_desempilha_c(void* pilha, const void* contexto) __asm__(

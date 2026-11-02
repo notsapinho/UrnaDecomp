@@ -241,6 +241,12 @@
 # CDataImage<CCandidaturasDSFoto> and CDataText<CCargoDSNomeSexoCandidato> fields whose
 # vtables lie between this file's records in the data; fn 6561 (adicionaFotoEmoldurada over the lambda of
 # CriaTelaVisualizacaoCandidato, record :487) has callers 6569 and 12272 only.
+# CEleitores::GetCurrentAbrangenciaEleitor (record celeitores.cpp:497, 7847, "Não posicionado no eleitor
+# corretamente"): vota::CEleitorVotando's StartState (fn 7377, unit 197) holds it behind a 32-byte prologue, on the
+# object CEleitores::GetInst() returns (fn 326, called before), and it reads the current record through GetInst's
+# code again (s_instance, inlined: the macro's GetInst is in this TU) while it passes this's +32 and +44 to
+# md::CEleitorDecorator::GetAbrangencia (3721, unit 91). So it calls GetInst() inside, as the CEleitorDado* texts do;
+# the members at +32 and +44 are renamed m_uf and m_municipio (celeitores.h says what they rest on), names only.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

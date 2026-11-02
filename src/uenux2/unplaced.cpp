@@ -360,11 +360,6 @@
 // f3709 · 32 B · unmatched · placement: link order · name unknown
 // void f3709(i32, i32) { ... }
 
-// link-order cluster 1007 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f3750 · 135 B · unmatched · placement: link order · name unknown
-// void f3750(i32, i32) { ... }
-
 // link-order cluster 1014 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorwsq.cpp
 
 // f3793 · 15 B · unmatched · placement: link order · name unknown
