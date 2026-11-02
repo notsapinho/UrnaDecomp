@@ -90,9 +90,9 @@
 #   3784 in band 3, an instance of ccargos.cpp's (both callers are its), so RemoveFiltro is defined before
 #   FiltraPorAbrangencia, whose two assignments would mention 3783 first. The name RemoveFiltro, ccargos.cpp as 3784's
 #   file (the class's) and its line there are chosen; 3784 is written as the one assignment, and no other form was
-#   compiled. FiltraPorAbrangencia calls 3783 twice in 7377, which is in the link now: the roots' AtribuiCargos, which
-#   stood for 7377, stands for nothing and can go (a stand-in beside its real caller changes no row here: this
-#   commit's scan).
+#   compiled. FiltraPorAbrangencia calls 3783 twice in 7377, which is in the link now, so the roots' AtribuiCargos,
+#   which stood for 7377, went: the link without it (and without the other stand-ins 4454 and 7377 left standing
+#   for nothing) moves no row into or out of match, measured on that link by steps 6 to 10.
 # - CEleicaoPE::GetIDsCargos (fn 5654) matches since comum's data classes build with strict aliasing, as ValidaOrdem
 #   does. With -fno-strict-aliasing it differed from the target in the reload of __child after __insert_node_at's store
 #   of the begin node (`pnpm wasm score` against the plain link: 8 over 122 rows, the reload's three rows, the local
@@ -120,7 +120,7 @@
 #   comes right after the destructor (5792) in link order, which is what puts it after the destructor here; in use band
 #   3 its 3774 lies after ccargos.cpp's 3784 and 3783 and before cnomearquivo.cpp's 3773, with 3775 to 3782 between (all
 #   unwritten but 3779, a std::__split_buffer instance), which this file fits (a reading). Chosen: both names, their being members (they read m_pleito), the line of
-#   each and their order. The roots' IDsEleicoes stands for 5735 and CargosEleicoesDuas for 4454 and 7787.
+#   each and their order. The roots' IDsEleicoes stands for 5735 and CargosEleicoes for 7787 (4454 is in the link).
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes

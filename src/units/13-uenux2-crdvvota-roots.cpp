@@ -17,8 +17,8 @@
 //   callers, CRdvVota's Desconverte and Confere (fns 11487, 11486, trapped in this unit's -pending.cpp).
 // - w13_voto calls md::CVoto's constructor (fn 2256), standing for its target caller 4442 (4471 and 4454 are linked);
 //   comum::asn::CConversorVoto::DoDesconverte (fn 11354) is the other call site.
-// - w13_escolhas calls md::CVotosCargos::QuantidadeEscolhas (fn 5642) twice, as its one target caller, 4454, does;
-//   4454 (unit 197's FinalizaEleitor, holding ConfereCedula) is in the link now, so it stands for nothing.
+// - md::CVotosCargos::QuantidadeEscolhas (fn 5642) has none: its one target caller, 4454 (unit 197's FinalizaEleitor,
+//   holding ConfereCedula), is in the link.
 // - w13_nulo calls the static md::CVoto::EhNulo (fn 5645), standing for its target caller 11514; CVoto::EhNulo() const
 //   (fn 11316) is the other call site.
 // Declared through asm labels with the wasm-level signatures (a constructor returns this); compiled as uenux2 code.
@@ -31,7 +31,6 @@ int w13_votoseleicoes(void*, void*) __asm__(
 int w13_compativel(const void*, const void*) __asm__("_ZNK5comum2md18CVotosEleicoesVota10CompativelERKS1_");
 int w13_cvoto(void*, int, const void*) __asm__(
     "_ZN5comum2md5CVotoC1ENS1_5ETipoERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
-int w13_quantidade_escolhas(const void*) __asm__("_ZNK5comum2md12CVotosCargos18QuantidadeEscolhasEv");
 int w13_eh_nulo(int) __asm__("_ZN5comum2md5CVoto6EhNuloENS1_5ETipoE");
 }
 extern const char w13_rdvvota_vt[] __asm__("_ZTVN5comum8CRdvVotaE");
@@ -71,11 +70,6 @@ __attribute__((noinline)) int w13_voto(char* destino, int tipo, const char* nume
     return w13_cvoto(destino + 16, tipo ^ 1, numero) - 13;
 }
 
-__attribute__((noinline)) int w13_escolhas(const char* votos, const char* outros)
-{
-    return w13_quantidade_escolhas(votos) * 3 + w13_quantidade_escolhas(outros + 12);
-}
-
 __attribute__((noinline)) int w13_nulo(const int* tipos)
 {
     return w13_eh_nulo(tipos[2]) + 2;
@@ -94,7 +88,6 @@ struct SW13Roots {
         w13_sink = reinterpret_cast<void*>(&w13_desconverte_rdv);
         w13_sink = reinterpret_cast<void*>(&w13_confere);
         w13_sink = reinterpret_cast<void*>(&w13_voto);
-        w13_sink = reinterpret_cast<void*>(&w13_escolhas);
         w13_sink = reinterpret_cast<void*>(&w13_nulo);
     }
 } w13_roots;

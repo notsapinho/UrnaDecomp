@@ -10,8 +10,9 @@
 # CSincronismoEleitor's GetInst and statics are in csincronismoeleitor.cpp and its constructor inline in the class
 # (csincronismoeleitor.h says what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is written
 # and not matched (unit 197's fragment). Not written: CPedeDigital's GetInst and constructor, inlined into fn 2740,
-# which calls functions with no name or that no form has matched. The roots keep the two vtables by their addresses
-# (the roots' header); CSincronismoEleitor's vptr store is in the link now, inlined into FinalizaEleitor.
+# which calls functions with no name or that no form has matched. The roots keep CPedeDigital's vtable by its address
+# (the roots' header); CSincronismoEleitor's vptr store is in the link, inlined into FinalizaEleitor, so its vtable's
+# stand-in went (the link without it moves no row into or out of match).
 #
 # Evidence:
 # - CSincronismoEleitor::StartState posts 13 to the operator's queue (the queue's inline Post: Insert, fn 501, with
@@ -51,7 +52,7 @@ ESTADOS_SINCRONISMO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna 
 $(ROOT)/$(APP)/192-uenux2-app-vota-estados-sincronismo-pending.o: $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo.mk $(ESTADOS_SINCRONISMO_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/192-uenux2-app-vota-estados-sincronismo-pending.cpp -o $(R)
 
-# The roots: the two vtables' addresses (asm labels only, no header).
+# The roots: CPedeDigital's vtable's address (asm labels only, no header).
 $(ROOT)/$(APP)/192-uenux2-app-vota-estados-sincronismo-roots.o: $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/192-uenux2-app-vota-estados-sincronismo.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/192-uenux2-app-vota-estados-sincronismo-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/192-uenux2-app-vota-estados-sincronismo-pending.o $(APP)/192-uenux2-app-vota-estados-sincronismo-roots.o
