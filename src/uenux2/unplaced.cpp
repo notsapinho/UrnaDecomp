@@ -1042,11 +1042,6 @@
 // f3528 · 530 B · unmatched · placement: link order · name unknown
 // void f3528(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 988 · uses=3 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
-
-// f3673 · 441 B · unmatched · placement: link order · name unknown
-// ? f3673(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1046 · uses=3
 
 // f4129 · 280 B · unmatched · placement: link order · name unknown
@@ -1084,11 +1079,6 @@
 
 // f491 · 1329 B · unmatched · placement: link order · name unknown
 // void f491() { ... }
-
-// link-order cluster 1343 · uses=48
-
-// f395 · 327 B · unmatched · placement: link order · name unknown
-// void f395(i32) { ... }
 
 // component simulador
 

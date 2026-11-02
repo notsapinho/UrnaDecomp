@@ -49,8 +49,11 @@
 // The constructor for IScreen, fn 2024, matches from api/gui/cinteractiveformbuilder.cpp's object, where
 // CInputFieldControlBase<IScreen>'s constructor (5565) and AddInputControl (901) call it with the length 0 and the flags
 // true and false; its other target callers (2383, 3675, 5913, 7787) pass others, 5913 in the link (unit 59), and unit
-// 92's roots stand for the rest so that binaryen folds none of its parameters. 3673, IInputField<IScreenMT>'s, is not
-// in the link. Read (fns 6319, 11024) stays `unresolved` although its bytes are the target's: see unit 92's fragment.
+// 92's roots stand for the rest so that binaryen folds none of its parameters. 3673, IInputField<IScreenMT>'s, matches
+// from api/gui/cmtformbuilder.cpp's object, where api::CMTFormBuilder::AddInputControl (395) calls it with the length 0
+// and the confirm flag true; its other target callers (1151, 5410) are not written, and unit 31's roots stand for them
+// with a varied length and flag, so that binaryen folds the four flags every target caller passes alike (false, true,
+// false, false) and not those two, as 3673's wasm type has it. Read (fns 6319, 11024) matches for both media.
 
 #include <chrono>
 #include <cstddef>

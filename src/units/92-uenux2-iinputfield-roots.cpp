@@ -2,23 +2,24 @@
 // Two of their IScreen builders are in the link, fns 901 and 5530 (api::CInteractiveFormBuilder's AddInputControl,
 // api/gui/cinteractiveformbuilder.cpp), and with them CInputFieldControlBase<IScreen>'s constructor (fn 5565) and
 // IInputField<IScreen>'s (fn 2024): they store IInputField<IScreen>'s vtable and its lambda's __func vtable,
-// CInputFieldControlBase<IScreen>'s and CInputFieldControl<IScreen>'s, and build __shared_ptr_emplace<CInputFieldControl
-// <IScreen>> and __shared_ptr_pointer<CControlValidation*>, so nothing below stands for those. The other users are not
-// reconstructed: fns 2383, 3675, 7787, 395, 5410, 6624 and 4185 (5913, unit 59's, is in the link). So:
+// CInputFieldControlBase<IScreen>'s and CInputFieldControl<IScreen>'s, and build
+// __shared_ptr_emplace<CInputFieldControl<IScreen>> and __shared_ptr_pointer<CControlValidation*>, so nothing below
+// stands for those. One IScreenMT builder is in the link too, fn 395 (api::CMTFormBuilder::AddInputControl,
+// api/gui/cmtformbuilder.cpp), and with it IInputField<IScreenMT>'s constructor (fn 3673): they store
+// CInputFieldControl<IScreenMT>'s vtable, IInputField<IScreenMT>'s and its lambda's __func vtable, and build
+// __shared_ptr_pointer<CInputFieldControl<IScreenMT>*>, so nothing below stands for those either. The other users are
+// not reconstructed: fns 2383, 3675, 7787, 5410, 6624 and 4185 (5913, unit 59's, is in the link). So:
 // - The optnone functions below are not rooted, and wasm-ld drops them with the constructors. They exist to make clang
 //   emit what the target's builders emit (src/units/README.md "A class with no key function", "A control block"):
-//   w92_emite_mt builds a CInputFieldControl as fn 395 does, w92_emite_campo a CInputField as fn 2383 does;
-//   w92_emite_mascara and w92_emite_mascara_cinza call the destructor by its qualified name; the w92_emite_bloco_* and
-//   w92_emite_controle_mt ones instantiate each control block as its builder does: std::shared_ptr<U>(T*) for
-//   __shared_ptr_pointer<CInputField<CFramedText>*> (fn 2383), <CMaskedTextField<CFramedText>*> (fn 7787) and
-//   <CInputFieldControl<IScreenMT>*> (fn 395), and std::make_shared for <CInputFieldControl<IScreenMT>> (fn 5410),
+//   w92_emite_campo builds a CInputField as fn 2383 does; w92_emite_mascara and w92_emite_mascara_cinza call the
+//   destructor by its qualified name; the w92_emite_bloco_* and w92_emite_controle_mt ones instantiate each control
+//   block as its builder does: std::shared_ptr<U>(T*) for __shared_ptr_pointer<CInputField<CFramedText>*> (fn 2383) and
+//   <CMaskedTextField<CFramedText>*> (fn 7787), and std::make_shared for <CInputFieldControl<IScreenMT>> (fn 5410),
 //   <CMaskedTextField<CFramedText>> (fn 6624) and <CMaskedTextField<CGrayedFramedText>> (fn 4185).
 // - The static constructor takes the address of each vtable the target's unwritten builders store, which keeps every
 //   slot. The target reaches Show, Hide, Read, Clear, SetLength, Rect, GetTypeName, Move and the D0s only through these
 //   vtables, and the D2s also from the D0s. Taking CInputFieldControlBase<IScreenMT>'s vtable keeps nothing more; it is
-//   what fn 5410 stores.
-// - The __func vtable keeps the IScreenMT timer's lambda (fns 11020 to 11023), which the target stores in the
-//   constructor fn 3673.
+//   what fn 5410 stores, and fn 395 does not (its code holds no store of that vptr).
 // - CFramedText's Rect and Move have their two direct callers in the fields (one target function each for the two masks,
 //   and CInputField's): the target has a third, fns 10896 and 2770. DrawFrame's are fn 5534 (twice), the Draw 12438 and
 //   fn 10897 (CInputMenuField::Draw, unit 84), all in the link.
@@ -33,24 +34,15 @@
 #include "api/gui/iscreen.h"
 
 extern "C" {
-extern const char w92_iinputfieldmt_vt[] __asm__("_ZTVN3api11IInputFieldINS_9IScreenMTEEE");
 extern const char w92_controlbasemt_vt[] __asm__("_ZTVN3api22CInputFieldControlBaseINS_9IScreenMTEEE");
-extern const char w92_controlmt_vt[] __asm__("_ZTVN3api18CInputFieldControlINS_9IScreenMTEEE");
 extern const char w92_input_vt[] __asm__("_ZTVN3api11CInputFieldINS_11CFramedTextEEE");
-extern const char w92_funcmt_vt[] __asm__("_ZTVNSt3__210__function6__funcIZN3api11IInputFieldINS2_9IScreenMTEEC1ERKNS_10shared_ptrINS2_16IInputValidationEEEmbbbbbEUlvE_FvvEEE");
 extern const char w92_emplace_masked_vt[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16CMaskedTextFieldINS1_11CFramedTextEEENS_9allocatorIS4_EEEE");
 extern const char w92_emplace_maskedgray_vt[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16CMaskedTextFieldINS1_17CGrayedFramedTextEEENS_9allocatorIS4_EEEE");
 extern const char w92_emplace_controlmt_vt[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api18CInputFieldControlINS1_9IScreenMTEEENS_9allocatorIS4_EEEE");
 extern const char w92_pointer_input_vt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api11CInputFieldINS1_11CFramedTextEEENS_10shared_ptrINS1_11IInputFieldINS1_7IScreenEEEE27__shared_ptr_default_deleteIS9_S4_EENS_9allocatorIS4_EEEE");
 extern const char w92_pointer_masked_vt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api16CMaskedTextFieldINS1_11CFramedTextEEENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
-extern const char w92_pointer_controlmt_vt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api18CInputFieldControlINS1_9IScreenMTEEENS_10shared_ptrINS1_11IInputFieldIS3_EEE27__shared_ptr_default_deleteIS8_S4_EENS_9allocatorIS4_EEEE");
 extern const char w92_masked_vt[] __asm__("_ZTVN3api16CMaskedTextFieldINS_11CFramedTextEEE");
 extern const char w92_maskedgray_vt[] __asm__("_ZTVN3api16CMaskedTextFieldINS_17CGrayedFramedTextEEE");
-}
-
-__attribute__((optnone, noinline)) api::IInputField<api::IScreenMT>* w92_emite_mt(int teclas)
-{
-    return new api::CInputFieldControl<api::IScreenMT>(teclas);
 }
 
 __attribute__((optnone, noinline)) api::IInputField<api::IScreen>* w92_emite_campo(
@@ -69,12 +61,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::CMaskedTextField<api::CF
     api::CMaskedTextField<api::CFramedText>* campo)
 {
     return std::shared_ptr<api::CMaskedTextField<api::CFramedText>>(campo);
-}
-
-__attribute__((optnone, noinline)) std::shared_ptr<api::IInputField<api::IScreenMT>> w92_emite_bloco_mt(
-    api::CInputFieldControl<api::IScreenMT>* campo)
-{
-    return std::shared_ptr<api::IInputField<api::IScreenMT>>(campo);
 }
 
 __attribute__((optnone, noinline)) std::shared_ptr<api::CInputFieldControl<api::IScreenMT>> w92_emite_controle_mt(
@@ -145,21 +131,17 @@ const void* volatile w92_sink;
 struct SW92Roots {
     SW92Roots()
     {
-        w92_sink = w92_iinputfieldmt_vt;
         w92_sink = w92_controlbasemt_vt;
-        w92_sink = w92_controlmt_vt;
         w92_sink = reinterpret_cast<const void*>(&NovaMoldura);
         w92_sink = reinterpret_cast<const void*>(&MolduraEm);
         w92_sink = reinterpret_cast<const void*>(&CampoNumeroA);
         w92_sink = reinterpret_cast<const void*>(&CampoNumeroB);
         w92_sink = w92_input_vt;
-        w92_sink = w92_funcmt_vt;
         w92_sink = w92_emplace_masked_vt;
         w92_sink = w92_emplace_maskedgray_vt;
         w92_sink = w92_emplace_controlmt_vt;
         w92_sink = w92_pointer_input_vt;
         w92_sink = w92_pointer_masked_vt;
-        w92_sink = w92_pointer_controlmt_vt;
         w92_sink = w92_masked_vt;
         w92_sink = w92_maskedgray_vt;
     }
