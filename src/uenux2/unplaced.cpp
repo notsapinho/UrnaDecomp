@@ -142,11 +142,6 @@
 // f5579 · 638 B · unmatched · placement: link order · name unknown
 // void f5579(i32, i32, i32, i32) { ... }
 
-// link-order cluster 797 · uses=2 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
-
-// f5584 · 15 B · unmatched · placement: link order · name unknown
-// void f5584(i32, i32) { ... }
-
 // link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
 // f5599 · 1759 B · unmatched · placement: link order · name unknown
@@ -307,11 +302,6 @@
 
 // f3646 · 666 B · unmatched · placement: link order · name unknown
 // void f3646(i32, i32) { ... }
-
-// link-order cluster 992 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp
-
-// f3688 · 445 B · unmatched · placement: link order · name unknown
-// void f3688(i32, i32, i32) { ... }
 
 // link-order cluster 994 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp
 
