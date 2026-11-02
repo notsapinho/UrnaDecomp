@@ -843,11 +843,6 @@
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
 
-// link-order cluster 775 · uses=2 · neighbours' file uenux2/src/api/gui/cstepsprogressbar.cpp
-
-// f5506 · 836 B · unmatched · placement: link order · name unknown
-// void f5506(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
 
 // f5737 · 132 B · unmatched · placement: link order · name unknown
