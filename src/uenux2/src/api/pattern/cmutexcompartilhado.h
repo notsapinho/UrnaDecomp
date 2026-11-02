@@ -10,7 +10,12 @@
 // signals +72 when it was the last and a writer waits. A mutex lock leaves no call in this build (reading.md §R15).
 //
 // lock takes the mutex in a std::unique_lock, counts itself among the waiting writers, waits on +72 and sets the flag.
-// unlock clears the flag and signals +72 when a writer waits, else +24. unlock_shared_and_lock trades a reader for the flag.
+// unlock clears the flag and signals +72 when a writer waits, else +24. unlock_shared_and_lock trades a reader for the flag:
+// fn 13621 takes the result, the mutex and the reader's guard, stores the result's mutex and owns flag, then nulls both
+// words of the guard (+0 and +4) before the mutex's std::unique_lock goes, so it takes the guard and returns the lock.
+// The guard is the 8 bytes fn 640 holds at +24 of its frame and destroys through ~CTravaLeitura (fn 1322): a word and a
+// byte, both of which 13621 stores 0 to, read as the mutex pointer and the flag. Its parameter, the friend that lets it
+// empty the guard and the order of the class definitions are chosen.
 //
 // The target holds unlock_shared's throw inlined in 57 functions, so clang inlines it (how-to step 3). `inline` on
 // unlock_shared and on ~CTravaLeitura gives that, and each without it gives a call: the forms are in unit 100's fragment.
@@ -20,6 +25,8 @@
 #include <stdexcept>
 
 namespace api {
+
+class CTravaLeitura;
 
 class CMutexCompartilhado {
 public:
@@ -64,18 +71,7 @@ public:
         }
     }
 
-    void unlock_shared_and_lock()
-    {
-        std::unique_lock<std::mutex> trava(m_mutex);
-        if (m_leitores <= 0) {
-            throw std::runtime_error("unlock_shared_and_lock() requires an active shared owner");
-        }
-        --m_leitores;
-        ++m_escritoresAguardando;
-        m_escritoresCv.wait(trava, [this] { return !m_escritor && m_leitores == 0; });
-        m_escritor = true;
-        --m_escritoresAguardando;
-    }
+    std::unique_lock<CMutexCompartilhado> unlock_shared_and_lock(CTravaLeitura& leitura);
 
 private:
     std::mutex m_mutex;
@@ -88,24 +84,36 @@ private:
 
 class CTravaLeitura {
 public:
-    explicit CTravaLeitura(CMutexCompartilhado& mutex) : m_mutex(mutex) { m_mutex.lock_shared(); }
+    explicit CTravaLeitura(CMutexCompartilhado& mutex) : m_mutex(&mutex) { m_mutex->lock_shared(); }
     inline ~CTravaLeitura()
     {
         if (m_ativa) {
-            m_mutex.unlock_shared();
+            m_mutex->unlock_shared();
         }
     }
 
-    std::unique_lock<CMutexCompartilhado> promove()
-    {
-        m_mutex.unlock_shared_and_lock();
-        m_ativa = false;
-        return std::unique_lock<CMutexCompartilhado>(m_mutex, std::adopt_lock);
-    }
-
 private:
-    CMutexCompartilhado& m_mutex;
+    friend class CMutexCompartilhado;
+
+    CMutexCompartilhado* m_mutex;
     bool m_ativa = true;
 };
+
+inline std::unique_lock<CMutexCompartilhado> CMutexCompartilhado::unlock_shared_and_lock(CTravaLeitura& leitura)
+{
+    std::unique_lock<std::mutex> trava(m_mutex);
+    if (m_leitores <= 0) {
+        throw std::runtime_error("unlock_shared_and_lock() requires an active shared owner");
+    }
+    --m_leitores;
+    ++m_escritoresAguardando;
+    m_escritoresCv.wait(trava, [this] { return !m_escritor && m_leitores == 0; });
+    m_escritor = true;
+    --m_escritoresAguardando;
+    std::unique_lock<CMutexCompartilhado> escrita(*this, std::adopt_lock);
+    leitura.m_mutex = nullptr;
+    leitura.m_ativa = false;
+    return escrita;
+}
 
 } // namespace api

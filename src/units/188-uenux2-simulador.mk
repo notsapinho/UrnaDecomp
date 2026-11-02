@@ -18,7 +18,13 @@
 # +0xa3 i32.store align=2 offset=172 | ours offset=120` (`pnpm wasm score`: 141 over 895 rows, 136 operand-only); listed
 # before it, 4879 matches from this object. In the target this TU's data lie before api/'s.
 #
-# Not matched: 8302 (no-candidate). Our body is the target's in shape but for, at least:
+# Not matched: 8302 (`unresolved`, named by a hand line in splat/symbol_addrs.txt for main, unit 170's, which invokes
+# it through its table slot: it and our Inicializa are the only loaders of the record of
+# ITimerScheduler::CreateInst<simulador::CWasmTimerScheduler>). The scan stops at the call of
+# std::filesystem::__create_directories (target fn 2548, libc++'s copy with landing pads), which has no target name:
+# ours (libc++.a's operations.o) holds path::parent_path inlined where the target calls 3706, whose other caller is 11818
+# (table slot 17, which votaInit invokes; not written), `pnpm wasm score` 86 over 390 rows, 36 inserted. Our body is the
+# target's in shape but for, at least:
 # - the ITextToSpeech set: the target calls fn 4162, the executable TU's copy of CPolySingleton<ITextToSpeech>::set
 #   (landing pads), which only votaInit's code instantiates (not written); ours inlines this TU's copy;
 # - CPath::GetPathLog: the target calls fn 5899; clang inlines it into our InicializaLog (it is inline in cpath.h, unit
@@ -32,7 +38,9 @@
 # - The layout of 8302: a frameless body that ends with the std::function's call (slot 6, __throw_bad_function_call
 #   when empty), after three inlined bodies with frames of 16, 16 and 64 bytes. That these are functions of their own
 #   is evidence (the frames); that they are three, their names, their being in this TU and external, are choices.
-#   main passes the settings by address and the std::function by address, destroying both after the call.
+#   main passes the settings by address and the std::function by address, destroying both after the call. The
+#   std::function is a reference parameter, by main's frame (unit 170's fragment: 80 bytes and the target's slots with
+#   `const&` or `&&`, 96 by value); `const&` is chosen.
 # - InicializaAmbiente: CPath::SetPathRoot("/"), create_directories("/uenux") (fn 2548 with a null error_code), then
 #   setenv("PROJECT_DIR", ".") and setenv("BUILD_DIR", "/") (fn 6256: libc's setenv, its third argument folded; the
 #   literals are the tails at 378041 and 358800).
