@@ -158,7 +158,8 @@
 # builder's vector is emptied, a clear() as the target's loop shows (each pointer released from the last, the end then
 # set to the start). The target passes its own result to 5515, which `return form;` of a named local gives by copy
 # elision. 16 target functions call it (2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,
-# 11946, 12005, 12105, 12110); 11256 is in the link and the stand-in FormPapelC calls it twice for the others. In the whole link it scores
+# 11946, 12005, 12105, 12110); 11256 and 2890 (unit 156) are in the link and the stand-in FormPapelC calls it twice
+# for the others. In the whole link it scores
 # 1 over 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name is chosen: 5515 has GetForm, and the
 # screens' builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp

@@ -38,6 +38,10 @@ enum EUeVotaError {
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,
+    // the value is the code vota::CQuerReimprimirZeresima::StartState (target fn 11849, record
+    // cquerreimprimirzeresima.cpp:45) throws; the name is chosen from its message, "Erro na verificação do
+    // comparecimento": no evidence names it
+    EUE_VOTA_ERRO_VERIFICACAO_COMPARECIMENTO = 9375,
     // the values are the codes vota::CVerificaEleicaoPassou::StartState (target fn 11914, record
     // cverificaeleicaopassou.cpp:70) and vota::testeteclado::CPreZeresima::GetEstadoPassouNoTeste (target fn 5945, record
     // cprezeresima.cpp:56) throw; the names are chosen from their messages, "Estado nao esperado" and "Estado nao

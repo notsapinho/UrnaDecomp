@@ -108,6 +108,17 @@
 #   shape over CBase's constructor and CDateTime(0) on +36) and statics are in cprezeresima.cpp, the GetInst inlined by
 #   binaryen into vota::CVerificaEleicaoPassou::StartState (fn 11914, unit 199); the statics' exit destructors 11864
 #   and 11863 match with it.
+# - CPreZeresima::GetEstadoSemTeste (fn 11861, slot 12) copies the date of comum::CConfiguracaoEleicao's zeresima time
+#   (+544, through GetDataHoraZeresima) into a local, as the target does into its frame before api::CDate::operator-(int)
+#   (fn 3648), and goes to GetEstadoPassouNoTeste's state when +36's date is before that date less one day
+#   (CDate::operator<=>, fn 1261), else stays. GetEstadoPassouNoTeste is called directly (the class is final) with the
+#   frame pointer as `this`, the target's row, which the source gives. At the end of cprezeresima.cpp, after
+#   GetEstadoPassouNoTeste: its line is a choice; its use band (1) puts it below GetTela (fn 11862, pending) and the
+#   statics' exit destructors, the order a GetTela written above it keeps. The file includes cconfiguracaoeleicao.h,
+#   whose line takes a blank line of the run above GetEstadoPassouNoTeste, so its record stays on line 56. 3 over 35
+#   rows (pnpm wasm score before step 8), operand-only: the calls of fns 187, 3648 and 5945. The local's name
+#   dataZeresima is chosen; a form without the local (the target copies the date's 8 bytes into its frame) was not
+#   compiled.
 #
 # Chosen, no evidence names them: in CBase::ProcessInput, the local holding slot 11's state and CTesteTeclado's setter
 # (that the target calls slot 11 before GetInst is its rows; that the setter called on GetInst() with slot 11 as its
@@ -141,9 +152,10 @@ TESTETECLADO_SRCS := src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cretomada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cesperaretestar.cpp
 UENUX2_SRCS += $(TESTETECLADO_SRCS)
-# cverificahorariozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
-# CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
+# cverificahorariozeresima.cpp and cprezeresima.cpp include app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost
+# through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cprezeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # the pending traps compile at the tree's flags, as the members will
 TESTETECLADO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/138-uenux2-testeteclado-pending.o: $(ROOT)/src/units/138-uenux2-testeteclado-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/138-uenux2-testeteclado.mk $(TESTETECLADO_HDRS)

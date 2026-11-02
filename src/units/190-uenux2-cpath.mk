@@ -73,13 +73,14 @@
 # of every member but the three throws, the order of the members, GetPathWsq's class and file (2864 calls 358 and
 # appends "wsq/"; its band fits cpath.cpp, above), and `static_cast<int>` for the origin's format argument.
 #
-# Not CPath's: 3896, the merge body of CServicoEstadoGeralSA's, Gap's and Vota's GetPathArquivo (11565, 11567, 11568),
-# those classes' slots, which unit 206 writes. Not written: 6035 and 6036, the merge bodies of 1701, 5762, 1551 and
+# Not CPath's: 1487 and 1488, the "dinamico/imprimindo" marker, which call 634 and fn 620 (CSynchronizer::Sync, unit
+# 154), written as vota's free functions in app/vota/comum/votadefs.cpp (unit 168); 3896, the merge body of
+# CServicoEstadoGeralSA's, Gap's and Vota's GetPathArquivo (11565, 11567, 11568), those classes' slots, which unit 206
+# writes. Not written: 6035 and 6036, the merge bodies of 1701, 5762, 1551 and
 # 2826, which build a string from GetPathTrab(EFlashOrigem) and "rdv.dat" or "uenux.db" and call 436: a probe
 # function of cpath.cpp that does the same holds 436 inlined (calls of GetInst, GetGeral and 358), so they are read as
-# another file's; 1487 and 1488, the "dinamico/imprimindo" marker, which call fn 620 (CSynchronizer::Sync, unit 154).
-# Not CPath's either: 5907, which destroys three members of the object at 1838544 and builds no path, is
-# comum::CArquivosSavd's destructor (unit 95). The code 8302 and 12098 hold behind a second prologue, and 11620
+# another file's. Not CPath's either: 5907, which destroys three members of the object at 1838544 and builds no path,
+# is comum::CArquivosSavd's destructor (unit 95). The code 8302 and 12098 hold behind a second prologue, and 11620
 # (comum::CGravadorHashes's slot 7) behind a third, that reads this file's statics (a setter of the root and the two
 # flash paths in 8302; GetPathLog's body with "arquivados/" in 12098; s_pathRoot and s_pathFlash[0] in 11620, which
 # appends "dinamico/" inline rather than calling 1082) waits for those callers. The setter is written: CPath::SetPathRoot,
@@ -87,9 +88,9 @@
 # has no target function, and no match checks it while 8302 does not match.
 #
 # Roots (190-uenux2-cpath-roots.cpp): it gives the members whose target callers are not all in the link the call sites
-# its header lists (two each; none for 1399, whose callers 1164 and 1274 are both in the link, and none for 358), emits
-# GetPathLog's copy and takes operator/='s address. It compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree
-# header.
+# its header lists (two each; none for 1399, whose callers 1164 and 1274 are both in the link, none for 634, whose
+# callers 1164, 1487 and 1488 are, and none for 358), emits GetPathLog's copy and takes operator/='s address. It
+# compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree header.
 #
 # Added since: CPath::GetPathTrabExterno (no target index), `std::filesystem::path path("/dsk/fe/dinamico/trab/");
 # return s_pathRoot / path.relative_path();`, GetPathMR's form (above), under a chosen name. binaryen inlined it into

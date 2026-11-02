@@ -2,11 +2,6 @@
 // through its vtable. The classes' vtables need every slot defined; these bodies are NOT the target's, they trap. Move
 // each into its class's .cpp when it is reconstructed, and delete this file with the last.
 //
-// - vota::CInformacaoZeresimaTardia::ProcessInput (target fn 11982, slot 7, records cinformacaozeresimatardia.cpp:48
-//   and :51): reads the form through api::CInteractiveForm<api::IScreen, api::IInputKbd>::Read() (record
-//   cinteractiveform.h:57 @1543736, inlined) and calls fn 5446 (api::CWait::Wait, unit 01, on the api::CWait at +16).
-//   Its other callees have names (fns 455, 184, 433, 925, 611, 5894 and 234); it logs the strings at @124202 and
-//   @226571 (severity 1 on CLogVota's +4, fn 433), each after a CLogVota::GetInst call, in a stack frame of its own.
 // - vota::CConfirmaImpressaoZeresima::ProcessInput (target fn 11927, slot 7): the same Read() (record @1544768); it calls
 //   fn 491, which has no name, and holds vota::CImpressaoZeresimaTardia's GetInst inlined (unit 176's class, whose
 //   constructor copies a member of vota::CTelasVota that app/vota/eleitor/comum/ctelasvota.h has no accessor for).
@@ -18,16 +13,10 @@
 // - vota::CRegerarZeresima::AposGeracao (target fn 11842, slot 9): it calls fn 2882, which has no name.
 #include "app/vota/eleitor/iniciovotacao/cconfirmaimpressaozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/cgeraresumozeresima.h"
-#include "app/vota/eleitor/iniciovotacao/cinformacaozeresimatardia.h"
 #include "app/vota/eleitor/iniciovotacao/cquerimprimirzeresima.h"
 #include "app/vota/eleitor/iniciovotacao/cregerarzeresima.h"
 
 namespace vota {
-
-void CInformacaoZeresimaTardia::ProcessInput()
-{
-    __builtin_trap();
-}
 
 void CGeraZeresimaBase::StartState()
 {

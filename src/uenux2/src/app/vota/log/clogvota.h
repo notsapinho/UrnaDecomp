@@ -98,7 +98,10 @@ public:
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
-    void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via);
+    // The copy number is byte-wide: every target caller that passes a computed number masks it to 8 bits (11852, 11855
+    // and 11991 their loop counter, 12065 and 12081 a byte plus one), which a uebyte parameter gives; its spelling is
+    // chosen.
+    void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, uebyte via);
     void LogaMesarioIndagadoQtdViasAdicionais();
     void LogaMesarioNaoSolicitouViasAdicionais();
     void LogaMesarioIndagadoQualidadeBU();
@@ -122,6 +125,15 @@ public:
     void LogaVotoCargoSemCandidato(uebyte cargo);
     void LogaVotoNuloPorSuspensao(uebyte cargo);
     void LogaVotoConfirmado(uebyte cargo);
+    // The shape of the members held inlined above, GetInst called before the member's own stack frame opens:
+    // LogaErroVerificacaoComparecimento ("Erro na verificação do comparecimento", logaErro, fn 2282) by
+    // vota::CQuerReimprimirZeresima::StartState (fn 11849), which logs it before it throws the same text;
+    // LogaFinalizacaoAplicativo and LogaDesligandoUrna ("Finalização de aplicativo", "Desligando a urna", api::CLoga::loga,
+    // fn 433, with +4 and severity 1) by vota::CInformacaoZeresimaTardia::ProcessInput (fn 11982), one after the other.
+    // Their names are chosen from their messages.
+    void LogaErroVerificacaoComparecimento();
+    void LogaFinalizacaoAplicativo();
+    void LogaDesligandoUrna();
 
 private:
     CLogVota();

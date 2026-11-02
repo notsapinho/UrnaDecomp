@@ -12,12 +12,13 @@
 // - GetPathMR (fn 949): callers 1164, 5873, 5874, 7160, 11166 to 11172, 12134; 1164 (unit 95's), 5873 and 5874
 //   (unit 160's) are in the link.
 // - GetPathChave (fn 1948): callers 2725, 11419, 11616, 11620, 11629, 12110.
-// - GetPathRootSemSA (fn 634): callers 1164, 1487, 1488; 1164 (unit 95's) is in the link.
+// - GetPathRootSemSA (fn 634): callers 1164, 1487, 1488, all in the link (1164 is unit 95's, 1487 and 1488 unit 168's),
+//   so it has no stand-in.
 // - GetPathResult (fn 1399): callers 1164 and 1274, both in the link (1164 is unit 95's), so it has no stand-in.
 // - GetPathResult(EFlashOrigem) (fn 1274): callers 5873, 5874, 6041, 11579, 11630, 11631, 11632, 12098, 12134; 5873,
 //   5874 (unit 160's) and 11630 to 11632 (unit 122's) are in the link.
 // - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 1836, 2890, 4657, 6035, 6036, 7174, 7787, 12098;
-//   11630 to 11632 (unit 122's) are in the link.
+//   11630 to 11632 (unit 122's), 2890 (unit 156's) and 11852 (unit 104's) are in the link.
 // - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451.
 // GetPathTrab with the turn (fn 358) gets none: the unit's GetPathTrab(EFlashOrigem) and GetPathWsq are two call sites.
 // std::filesystem::path::operator/=(const path&) (fn 183), which the members call, is table slot 71 in the target,
@@ -77,12 +78,6 @@ __attribute__((noinline)) void DuasChaves(void* destino)
     ::new (Em(destino, 84)) path(CPath::GetPathChave());
 }
 
-__attribute__((noinline)) void DuasRaizesSemSA(void* destino, comum::EFlashOrigem origem)
-{
-    ::new (destino) path(CPath::GetPathRootSemSA(comum::FLASH_INTERNA));
-    ::new (Em(destino, 96)) path(CPath::GetPathRootSemSA(origem));
-}
-
 __attribute__((noinline)) void DoisResultadosAtuais(void* destino, comum::EFlashOrigem origem)
 {
     ::new (destino) path(CPath::GetPathResult(origem));
@@ -113,7 +108,6 @@ struct SRoots190 {
         r190_sink = reinterpret_cast<const void*>(&DoisLogs);
         r190_sink = reinterpret_cast<const void*>(&DoisMR);
         r190_sink = reinterpret_cast<const void*>(&DuasChaves);
-        r190_sink = reinterpret_cast<const void*>(&DuasRaizesSemSA);
         r190_sink = reinterpret_cast<const void*>(&DoisResultadosAtuais);
         r190_sink = reinterpret_cast<const void*>(&DoisTrabalhos);
         r190_sink = reinterpret_cast<const void*>(&DoisWsq);

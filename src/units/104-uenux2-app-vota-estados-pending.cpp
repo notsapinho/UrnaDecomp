@@ -54,16 +54,16 @@ void CGravaResultado::StartState()
     __builtin_trap();
 }
 
-// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 491 and 2890;
-// the others have names (185, 261, 407, 455, 903, 1127, 4556, 4557, 4563, 5987, 2888 and 3701, units 37's and 93's,
-// and 4582, unit 168's).
+// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 491; the others
+// have names (185, 261, 407, 455, 903, 1127, 4556, 4557, 4563, 5987, 2888 and 3701, units 37's and 93's, 4582, unit
+// 168's, and 2890, unit 156's).
 void CEmitirMaisBU::ProcessInput()
 {
     __builtin_trap();
 }
 
 // CImprimindoBim::StartState: fn 12071 (1074 B), records cimprimindobim.cpp:50, cimprimindobim.cpp:51,
-// cimprimindobim.cpp:66, callees with no name: 185, 187, 261, 401, 463, 1127, 1487, 1488, 2291.
+// cimprimindobim.cpp:66, callees with no name: 185, 187, 261, 401, 463, 1127, 2291 (1487 and 1488 are unit 168's).
 void CImprimindoBim::StartState()
 {
     __builtin_trap();
@@ -71,14 +71,14 @@ void CImprimindoBim::StartState()
 
 // CImprimirBUOutrasObrigatorias::StartState: fn 12065 (1790 B), records cimprimirbuoutrasobrigatorias.cpp:50,
 // cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 491, 502, 886,
-// 2291, 2890; the others have names (3701 unit 93's, 1880 unit 00's).
+// 2291; the others have names (3701 unit 93's, 1880 unit 00's, 2890 unit 156's).
 void CImprimirBUOutrasObrigatorias::StartState()
 {
     __builtin_trap();
 }
 
 // CImprimindoZeresima::StartState: fn 11991 (2577 B), records cimprimindozeresima.cpp:104, cimprimindozeresima.cpp:77,
-// callees with no name: 185, 187, 261, 491, 1127, 1487, 1488, 2882, 6587.
+// callees with no name: 185, 187, 261, 491, 1127, 2882, 6587 (1487 and 1488 are unit 168's).
 void CImprimindoZeresima::StartState()
 {
     __builtin_trap();
@@ -139,23 +139,8 @@ bool CDefineRotaPosReinicio::NeedChangeState()
 }
 
 // CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
-// no name: 185, 187, 261, 491, 1127, 1487, 1488, 6587.
+// no name: 185, 187, 261, 491, 1127, 6587 (1487 and 1488 are unit 168's).
 void CReimprimindoResumoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
-// CReimprimindoZeresima::StartState: fn 11852 (1153 B), records creimprimindozeresima.cpp:51, callees with no name:
-// 187, 1127, 1487, 1488.
-void CReimprimindoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
-// CQuerReimprimirZeresima::StartState: fn 11849 (250 B), records cquerreimprimirzeresima.cpp:45, callees 555, 1269
-// (comum::CRdvVota::Comparecimento, unit 13), 2282 and 5882 (comum::IEventosLog::logaErro and
-// LogaMesarioIndagadoImprimirZeresima, unit 111), all named.
-void CQuerReimprimirZeresima::StartState()
 {
     __builtin_trap();
 }

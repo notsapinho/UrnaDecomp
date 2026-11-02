@@ -46,6 +46,10 @@ enum EUeAssertError {
     // 45 characters for each name, chosen to that length
     EUA_VERIFICAQTDBUSADICIONAIS_ESTADO_ENCERRADA = 3461,
     EUA_VERIFICAQTDBUSADICIONAIS_ENCERRAMENTO_FIM = 3462,
+    // vota::CImprimindoBU::ImprimeBU (fn 2890, record cimprimindobu.cpp 114:79): the text "Assert (estVota.GetQtdBU() ==
+    // numVia - 1)". With the invocation indented four columns and the code qualified api::, the column leaves 28
+    // characters for the name, chosen to that length
+    EUA_IMPRIMINDOBU_QTD_BU_VIAS = 3467,
     // vota::CLimiteCopiasBUAtingido::StartState (fn 12027, record climitecopiasbuatingido.cpp 37:56): the text "Assert
     // (comum::CAppInfo::GetInst().GetVota().GetEstadoVota() == EAVENCERRADA)". The column is less than the condition's
     // length, so the invocation closes on a line of its own: with the code there indented eight columns and qualified

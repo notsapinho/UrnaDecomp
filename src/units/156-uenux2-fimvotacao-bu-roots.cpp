@@ -15,8 +15,9 @@
 extern "C" {
 int w156_imprimindobu_getinst(void) __asm__("_ZN4vota13CImprimindoBU7GetInstEv");
 int w156_logvota_getinst(void) __asm__("_ZN4vota8CLogVota7GetInstEv");
-void w156_loga_imprimindo_relatorio(int, int, unsigned) __asm__(
-    "_ZN4vota8CLogVota23LogaImprimindoRelatorioEN5comum13ERelatoriosUEEj");
+void w156_loga_imprimindo_relatorio(int, int, unsigned char) __asm__(
+    "_ZN4vota8CLogVota23LogaImprimindoRelatorioEN5comum13ERelatoriosUEEh");
+void w156_imprime_bu(unsigned char, int) __asm__("_ZN4vota13CImprimindoBU9ImprimeBUEhNS_16PrintMessageModeE");
 void w156_loga_qualidade_bu(int) __asm__("_ZN4vota8CLogVota30LogaMesarioIndagadoQualidadeBUEv");
 void w156_loga_vias_adicionais(int) __asm__("_ZN4vota8CLogVota33LogaQtdViasAdicionaisExcedeMaximoEv");
 void w156_loga_biometrico(int) __asm__("_ZN4vota8CLogVota48LogaHabilitacaoCanceladaReconhecimentoBiometricoEv");
@@ -43,9 +44,10 @@ __attribute__((noinline)) int ChamaImprimindoBU(int n)
     return w156_imprimindobu_getinst() + n;
 }
 
-// Stands for the printing states' slots that call CLogVota::LogaImprimindoRelatorio (fn 1127: 11852, 11855, 11991,
-// 12065, 12068, 12071, 12074, 12077, 12078 and 12081), each with a report and a copy number of its own (12078 passes 3
-// and 1), and for vota::CImprimindoBU's two slots that call LogaMesarioIndagadoQualidadeBU (fn 4551: 12077, 12078).
+// Stands for the printing states' slots that call CLogVota::LogaImprimindoRelatorio (fn 1127: 11855, 11991, 12065,
+// 12068, 12071, 12074, 12077, 12078 and 12081; 11852 is in the link, unit 104), each with a report and a copy number of
+// its own (12078 passes 3 and 1), and for vota::CImprimindoBU's two slots that call LogaMesarioIndagadoQualidadeBU (fn
+// 4551: 12077, 12078).
 __attribute__((noinline)) int ImprimeRelatorios(int n)
 {
     int log = w156_logvota_getinst();
@@ -54,6 +56,18 @@ __attribute__((noinline)) int ImprimeRelatorios(int n)
     w156_loga_imprimindo_relatorio(log, n, n + 2);
     w156_loga_qualidade_bu(log);
     return n + 79;
+}
+
+// Stands for vota::CImprimindoBU::ImprimeBU's (fn 2890) four target callers, all pending: CImprimindoBU's StartState
+// and ProcessInput (fns 12078, 12077, here), CEmitirMaisBU::ProcessInput (fn 12081) and
+// CImprimirBUOutrasObrigatorias::StartState (fn 12065, both in unit 104). They pass the copy number 1 or a computed one,
+// and the mode 0 (12077, 12078, 12081) or 1 (12065), so the two calls vary both and binaryen folds neither into the
+// body; with one call site binaryen would inline it.
+__attribute__((noinline)) int ImprimeBUs(int n)
+{
+    w156_imprime_bu(1, 0);
+    w156_imprime_bu(static_cast<unsigned char>(n + 1), 1);
+    return n * 7 + 97;
 }
 
 // Stands for CEmitirMaisBU::ProcessInput (fn 12081), the caller of LogaQtdViasAdicionaisExcedeMaximo (fn 4556) beside
@@ -88,6 +102,7 @@ struct SW156Roots {
         w156_n = ImprimeRelatorios(w156_n);
         w156_n = AlertaVias(w156_n);
         w156_n = PerguntaVias(w156_n);
+        w156_n = ImprimeBUs(w156_n);
         w156_sink = w156_vt_cmostraqrcodecertificado;
         w156_sink = w156_vt_cretirarmr;
         w156_sink = w156_vt_comum_estadourna;

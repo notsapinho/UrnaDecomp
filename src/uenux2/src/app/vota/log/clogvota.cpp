@@ -1,9 +1,9 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// Members with no record sit at chosen lines, each fragment says why: 119's, 161's five and 156's two after GetInst,
-// 152's seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's,
-// 197's, 156's four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two.
+// Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's
+// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's
+// four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two.
 #include "app/vota/log/clogvota.h"
 #include <format>
 #include <memory>
@@ -149,7 +149,7 @@ void CLogVota::LogaPedidoTituloSuspensao()
 }
 
 
-void CLogVota::LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via)
+void CLogVota::LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, uebyte via)
 {
     loga(std::format("Imprimindo relatório [{}] via nº [{}]", ConverteERelatoriosUE(relatorio), via));
 }
@@ -267,6 +267,23 @@ void CLogVota::LogaVotoCargoSemCandidatoPorSuspensao(const uebyte cargo)
 {
     loga(std::format("Atribuido voto para cargo sem candidato por suspensão [{}]",
                      comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
+void CLogVota::LogaErroVerificacaoComparecimento()
+{
+    logaErro("Erro na verificação do comparecimento");
+}
+
+void CLogVota::LogaFinalizacaoAplicativo()
+{
+    const std::string mensagem = "Finalização de aplicativo";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaDesligandoUrna()
+{
+    const std::string mensagem = "Desligando a urna";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 
 } // namespace vota
