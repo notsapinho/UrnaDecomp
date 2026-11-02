@@ -3751,7 +3751,8 @@ namespace ASN1 {
     {
       if (get_encodingRule() == per_Basic_Aligned)
         return encodePER(val, begin);
-      if (get_encodingRule() == ber)
+      // ber_partial encodes as ber: 9770's br_table is [2 1 1 0], where upstream's test gives [2 1 3 0] (unit 229)
+      if (get_encodingRule() == ber || get_encodingRule() == ber_partial)
         return encodeBER(val, begin);
       if (get_encodingRule() == avn)
         return encodeAVN(val, begin);

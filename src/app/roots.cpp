@@ -14,6 +14,7 @@ int urna_roots_vector_dado(int a); // src/app/roots_vector.cpp: the same for vec
 int urna_roots_vector_cadeias(int a); // src/app/roots_vector.cpp: ~vector<std::string>, read as the executable TU's
 int urna_roots_vector_caminhos(int a); // src/app/roots_vector.cpp: the tree's ~vector<std::filesystem::path>
 int urna_roots_iconversorasn(int a); // src/app/roots_iconversorasn.cpp: IConversorASN<Foto, CFoto>::Deconverte's two callers
+int urna_roots_coderenv(int a);  // src/app/roots_coderenv.cpp: the executable TU's copies of ASN1::CoderEnv::encode
 
 extern "C" {
 // EM_JS imports (src/web/wasm_shim.cpp)
@@ -77,6 +78,7 @@ int urna_roots(int a) {
   r += urna_roots_vector_cadeias(a);
   r += urna_roots_vector_caminhos(a);
   r += urna_roots_iconversorasn(a);
+  r += urna_roots_coderenv(a);
   js_use_external_keyboard();
   r += js_ler_dimensao_tela(a, a);
   js_wasm_beep_init();

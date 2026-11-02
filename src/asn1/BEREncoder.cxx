@@ -297,8 +297,3 @@ void BEREncoder::encodeHeader(const AbstractData & obj)
 }
 
 } // namespace ASN1
-
-// <stubs>
-// f1532 · 252 B · unmatched · placement: link order · name unknown
-// ? f1532(i32, i32) { ... }
-// </stubs>
