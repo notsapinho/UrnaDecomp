@@ -2,8 +2,10 @@
 
 // comum::EUeComumAppInfoError, SErrorLimits{7600, 7650}: the typeinfo of CBaseError<comum::EUeComumAppInfoError, ...> gives
 // the enum's name, namespace and limits (vptr 1558004, target fn 1710 passes it). The values are the codes fns 291, 457 and
-// 1553 pass. No evidence names an enumerator, so each name is chosen from its message; the path is chosen too, beside
-// cappinfo.cpp, the file the throws are in.
+// 1553 pass, and 7605 to 7607 the codes CServicoEstadoGeralGap's, -SA's and -Vota's GetPathArquivo pass with "Urna sem
+// turno em contexto onde turno era esperado" (thunks 11567, 11565, 11568 of fn 3896). No evidence names an enumerator,
+// so each name is chosen from its message and, for the last three, its class; the path is chosen too, beside
+// cappinfo.cpp, the file the first three codes' throws are in.
 
 #include "ecourna/api/exception/cbaseerror.hpp"
 
@@ -13,6 +15,9 @@ enum EUeComumAppInfoError {
     EUE_APPINFO_ESTADO_NAO_CARREGADO = 7600,
     EUE_APPINFO_ESTADO_CONST_NAO_CARREGADO = 7601,
     EUE_APPINFO_TURNO_INVALIDO = 7602,
+    EUE_APPINFO_SEM_TURNO_GAP = 7605,
+    EUE_APPINFO_SEM_TURNO_SA = 7606,
+    EUE_APPINFO_SEM_TURNO_VOTA = 7607,
 };
 
 using CUeComumAppInfoError =

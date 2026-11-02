@@ -3,7 +3,7 @@
 // sites, varying what the target's callers vary, so dead-argument elimination folds nothing in:
 // - GetPathRoot (fn 3834): callers 11620 and 12098.
 // - GetPathEstatico (fn 762): callers 1164, 1937, 3771, 5740, 6734, 7787, 11587, 11626, 11629, 11905.
-// - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11569, 11661.
+// - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11661 (11569, unit 206's, is in the link).
 // - GetPathLog (fn 5899): callers 8302 and 12098. It is inline in cpath.h, so these calls carry [[clang::noinline]], and
 //   this object emits the copy the link keeps, at the tree's flags (the rule in 190-uenux2-cpath.mk). 8302 is in the link
 //   (unit 188), but clang inlines GetPathLog there, where the target calls 5899 (unit 188's fragment), so both lines stay.
