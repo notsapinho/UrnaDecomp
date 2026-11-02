@@ -79,6 +79,10 @@
 #   nor 9214 out of line).
 # - 9106 and 9081: one extra branch island or landing pad around a call of an ASN.1 copy (47 over 225, 121 over 813; an
 #   if for the ternary gives 48 over 226, and const auto& on the registro local changes neither).
+#   9081 has 16 landing pads, ours 15: the target's second habilitacaoBiometrica_isPresent() call shares its pad with
+#   the last return's CEstadoComparecimento constructor, where ours shares it with the first call's. With the
+#   CConversorHabilitacaoBiometrica declared before that if, the object holds one pad more (18 for 17), but the
+#   converter's vptr is stored before the call, where the target stores it inside the if: 155 over 826 rows.
 # - 9137: 118 over 399 as written, a temporary, with 22 rows inserted and 21 deleted. const auto& on the vector gives 65
 #   over 390, 13 and 13, and stops on `target br 2 | ours local.get 2` at +0x279, the placement of the map's cleanup.
 # - 1006, 3813, 5842, 5846: copies that 11616, a uenux2 function not written, brings first in the link. 1006 is one test
