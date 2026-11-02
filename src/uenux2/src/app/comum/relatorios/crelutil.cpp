@@ -1,29 +1,46 @@
 // comum::CRelUtil (/home/rubio/tse/uenux2/src/app/comum/relatorios/crelutil.cpp). The reconstruction's own note: the blank
-// lines stand for text not recovered. Of the file's five records (lines 58, 69, 307, 412 and 554), GetIDCargaFormatado's
-// (line 69, column 15, target fn 2786) and GetSeparadorFase's (line 554, column 23, fn 1919) are written; the other lines
-// stay blank, and each function's first line is chosen so that its throw lands on its record's. IncluiAvisoModoDemonstracao
-// (fn 5583) has no record: its name and its lines are chosen.
+// lines stand for text not recovered. Of the file's five records (lines 58, 69, 307, 412 and 554), four are written:
+// TituloPartido's (line 58, column 15, target fn 11181), GetIDCargaFormatado's (line 69, column 15, fn 2786),
+// DSCodigoVerificador's (line 412, column 27, fn 11182) and GetSeparadorFase's (line 554, column 23, fn 1919).
+// IncluiCabecalhoEleicoesMZS (line 307) is not written. Each function's first line is chosen so that its throw, or its
+// CPolySingleton<CCalculaCV>::instance() call, lands on its record's line. TituloPartido is in the anonymous namespace,
+// as its record names it. IncluiAvisoModoDemonstracao (fn 5583) and FormTituloPartido have no record: their names and
+// their lines are chosen. FormTituloPartido is defined last, and so is TituloPartido's first mention: in our link
+// 11182's ld_index is then below 11181's, as the use band asks (docs/how-to-decompile.md step 3, "The order of two
+// members").
 #include "app/comum/relatorios/crelutil.h"
 
 #include <format>
 
 #include "api/gui/cpaperformbuilder.h"
+#include "api/pattern/cpolysingleton.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/dados/cpartidos.h"
 #include "app/comum/dados/md/estadoaplicacao/eurna.h"
+#include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/comum/informacao/cinformacaoeleicao.h"
+#include "app/comum/relatorios/ccalculacv.h"
 #include "app/comum/relatorios/euecomumrelatorioserror.h"
 
 namespace comum {
 
-// (original lines 18-54: content not recovered)
-#line 55
-// <stubs>
-// f11181 · 549 B · unmatched · name unknown
-// void f11181(i32) { ... }
-// </stubs>
+// (original lines 27-50: content not recovered)
+#line 51
+namespace {
 
-// (original lines 60-65: content not recovered)
-#line 66
+std::string TituloPartido()
+{
+    CPartidos& partidos = CPartidos::GetInst();
+
+    if (partidos.IsFim()) {
+        throw CUeComumRelatoriosError(EUE_COMUM_RELATORIOS_9084, "Partido não posicionado");
+    }
+    const md::CPartido* partido = partidos.GetCurrent();
+    const ueword numero = partido->GetNumero();
+    return md::CTradutorFrase::Traduz("<PLSN>") + ": " + std::to_string(numero) + " - " + partido->GetSigla();
+}
+} // namespace
+
 std::string CRelUtil::GetIDCargaFormatado(const std::string& idCarga)
 {
     if (idCarga.size() <= 20) {
@@ -51,7 +68,17 @@ void CRelUtil::IncluiAvisoModoDemonstracao(api::CPaperFormBuilder& builder)
 // void f1543(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 309-539: content not recovered)
+// (original lines 309-409: content not recovered)
+#line 410
+std::string CRelUtil::DSCodigoVerificador()
+{
+    CCalculaCV& calculo = api::CPolySingleton<CCalculaCV>::instance();
+    const std::string codigo = calculo.CalculaCodigo();
+    return std::format("Código Verificador: {}.{}.{}.{}", codigo.substr(0, 1), codigo.substr(1, 3), codigo.substr(4, 3),
+                       codigo.substr(7, 3));
+}
+
+// (original lines 418-539: content not recovered)
 #line 540
 std::string CRelUtil::GetSeparadorFase(const EUrnaFase fase)
 {
@@ -70,6 +97,13 @@ std::string CRelUtil::GetSeparadorFase(const EUrnaFase fase)
                 throw CUeComumRelatoriosError(EUE_COMUM_RELATORIOS_9087, std::format("Fase inválida: {}", fase));
         }
     }
+}
+
+std::shared_ptr<api::IForm<api::IPaper>> CRelUtil::FormTituloPartido()
+{
+    api::CPaperFormBuilder builder;
+    builder.AddTextField(TituloPartido, api::ALINHAMENTO_ESQUERDA);
+    return builder.Build();
 }
 
 } // namespace comum

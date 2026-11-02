@@ -17,14 +17,17 @@
 //   five not reconstructed: with one caller binaryen inlines 1919 into 11183.
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
 //   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); with one caller binaryen inlines the constructor into it, as it
-//   did into 1919 alone. w123_erro stands for nine of the other 13 (11181, 11212, 11233, 11968, 12110, 1543,
-//   2791, 3689, 5967; 11214, 3696, 942 and 2786 are in the link). It passes an empty std::source_location: a default
+//   did into 1919 alone. w123_erro stands for eight of the other 13 (11212, 11233, 11968, 12110, 1543, 2791, 3689,
+//   5967; 11181, 11214, 3696, 942 and 2786 are in the link). It passes an empty std::source_location: a default
 //   argument would make a record on this line, which is none of the target's.
 // - CRelUtil::GetIDCargaFormatado, fn 2786, has four callers in the target (awk -F'\t' '$2==2786' ledger/callgraph.tsv:
-//   5579, 11256, 12105, 12110), none reconstructed: w123_idcarga stands for them and calls it twice, or binaryen would
-//   inline it into its one caller.
+//   5579, 11256, 12105, 12110): 11256 is in the link, and w123_idcarga stands for the other three and calls it twice.
 // - CRelUtil::IncluiAvisoModoDemonstracao, fn 5583, has two (awk -F'\t' '$2==5583' ledger/callgraph.tsv: 1543, 5591),
 //   neither reconstructed: w123_demonstracao stands for both and calls it twice.
+// - CRelUtil::FormTituloPartido, which the target holds inlined by binaryen in fn 11946 (vota::CGeraZeresimaBase's slot
+//   2, not reconstructed), takes the address of crelutil.cpp's internal TituloPartido (fn 11181, table slot 3050, which
+//   only 11946 passes): w123_titulo stands for 11946 and calls it once, so binaryen inlines it here as there, and 11181
+//   is reached as the target reaches it. It goes when 11946 lands.
 #include <source_location>
 #include <string>
 
@@ -67,12 +70,18 @@ __attribute__((noinline)) void w123_demonstracao(api::CPaperFormBuilder& builder
     comum::CRelUtil::IncluiAvisoModoDemonstracao(outro);
 }
 
+__attribute__((noinline)) unsigned w123_titulo(unsigned base)
+{
+    return comum::CRelUtil::FormTituloPartido() ? base + 123 : base;
+}
+
 const void* volatile relatoriotesteimpressora_sink;
 unsigned (*volatile w123_sink_labels)(const std::map<char, ecourna::app::dados::CLabelParametrizado>&);
 unsigned (*volatile w123_sink_separador)(comum::EUrnaFase);
 void (*volatile w123_sink_erro)(int, const std::string&);
 unsigned (*volatile w123_sink_idcarga)(const std::string&, const std::string&);
 void (*volatile w123_sink_demonstracao)(api::CPaperFormBuilder&, api::CPaperFormBuilder&);
+unsigned (*volatile w123_sink_titulo)(unsigned);
 
 struct SRelatorioTesteImpressoraRoots {
     SRelatorioTesteImpressoraRoots()
@@ -83,6 +92,7 @@ struct SRelatorioTesteImpressoraRoots {
         w123_sink_erro = w123_erro;
         w123_sink_idcarga = w123_idcarga;
         w123_sink_demonstracao = w123_demonstracao;
+        w123_sink_titulo = w123_titulo;
     }
 } relatoriotesteimpressora_roots;
 

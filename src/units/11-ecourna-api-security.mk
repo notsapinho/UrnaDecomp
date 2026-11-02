@@ -2,6 +2,14 @@
 ECOURNA_CXXFLAGS += $(OPENSSL_INCLUDES)
 ECOURNA_SRCS += api/security/csha.cpp api/security/csiphashmac.cpp api/security/chkdfseed.cpp api/security/ckey.cpp \
     api/security/imacalgorithm.cpp api/security/isymmetriccipher.cpp api/security/caescipher.cpp
+# CSiphashMac's and IMacAlgorithm's default constructors are declared in the classes and defined in csiphashmac.cpp and
+# imacalgorithm.cpp: fn 3700 (comum::CCalculaCV::CalculaCodigo, unit 121), the one target function that stores
+# CSiphashMac's vptr, stores IMacAlgorithm's (1114744) and then CSiphashMac's (1113604) to the same word, back to back,
+# which reads as two constructors that were calls when clang compiled them and that binaryen inlined. Measured with
+# `pnpm wasm score` in the whole link: with both inline in the headers 3700 held one store (21 rows inserted and 23
+# deleted), with both out of line both stores (13 and 13; unit 121's fragment has the rest). `= default` in the .cpp,
+# the public access of IMacAlgorithm's and their lines, before Mac and DoMac, are chosen; `{}` was not linked.
+# The roots no longer take IMacAlgorithm::Mac's, DoMac's and DoVerify's addresses: the roots file says why.
 # CSha::Reset holds EVP_DigestInit_ex2's result in a named local before testing it: the local's lifetime-end cleanup on the
 # throw path gives the landing-pad layout 5177 has, and the call in the condition does not (-Xclang
 # -disable-lifetime-markers turns the local form back into the other). The local's name and type are chosen: an int, a
