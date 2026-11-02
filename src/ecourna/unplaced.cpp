@@ -216,14 +216,6 @@
 // f2800 · 193 B · unmatched · placement: link order · name unknown
 // ? f2800(i32, i32, i32, i32) { ... }
 
-// link-order cluster 1104 · uses=4 · neighbours' file uenux2/src/app/comum/dados/crespostas.cpp
-
-// f2810 · 46 B · unmatched · placement: link order · name unknown
-// void f2810(i32) { ... }
-
-// f2809 · 41 B · unmatched · placement: link order · name unknown
-// void f2809(i32, i32) { ... }
-
 // link-order cluster 1106 · uses=4 · neighbours' file uenux2/src/app/comum/dados/chv.cpp
 
 // f2820 · 189 B · unmatched · placement: link order · name unknown

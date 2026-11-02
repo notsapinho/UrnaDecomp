@@ -41,6 +41,9 @@ public:
     CDadosCandidato(std::string codigo, std::string nomeUrna, std::string nomeFonetico, CSexo::ESexo sexo,
                     ESituacao situacao, uebyte ordem);
 
+    // The name is chosen: comum::VerificaFotoCandidatura (fn 5746) copies the string at +0, the holder's (CCandidatura
+    // +8) or GetSuplente's.
+    const std::string& GetCodigo() const { return m_codigo; }
     const std::string& GetNomeUrna() const { return m_nomeUrna; }
     signed char GetOrdem() const { return m_ordem; }
     // The name is chosen: comum::CCandidaturasDSSexo's call operator (fn 5806) reads +40 for its ESexo.

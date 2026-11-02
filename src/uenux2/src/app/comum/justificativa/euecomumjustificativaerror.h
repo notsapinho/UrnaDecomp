@@ -10,6 +10,8 @@ namespace comum {
 // here (fns 10590, 11475). Each enumerator's name is chosen from its message: no evidence names one. The path, in the
 // directory of the classes that throw it, is chosen too.
 enum EUeComumJustificativaError {
+    // CJustificadorDadoTitulo::Text's (fn 11475, "Justificativa inválida"); the name is chosen from that message.
+    EUE_COMUM_JUSTIFICATIVA_INVALIDA = 8802,
     EUE_COMUM_JUSTIFICATIVA_DAO_EXCLUSAO_NAO_ESPERADA = 8804,
     EUE_COMUM_JUSTIFICATIVA_DAO_ATUALIZACAO_NAO_ESPERADA = 8805,
 };

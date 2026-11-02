@@ -54,6 +54,11 @@ public:
     // it inlined by binaryen, one call). It counts the voter at +104 (an increment of that word). The counter's name is
     // chosen; its type is the one GetComparecimento's readers give (below).
     void MarcaVotou();
+    // fn 2822: the records with dynamic data whose comparecimento state is 3 (the state MarcaEleitorFoiHabilitado
+    // refuses as "Eleitor já votou") and whose kind of enabling is 0 (the kind md::CEleitorDinamico::HabilitaSemBiometria
+    // stores). One caller, fn 10699, formats the count into "Habilitação sem biometria: {}", which the name is chosen
+    // from; the result's 16 bits are the body's mask.
+    ueword QuantidadeHabilitacaoSemBiometria() const;
     void ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const;
     // The unsigned word at +104, a count of the voters who voted (a reading of its readers): fn 12098
     // (vota::CGravaResultado's slot 2) compares it with comum::CRdvVota::Comparecimento() (fn 1269),

@@ -164,6 +164,23 @@
 #   also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). CompleteLoad (6734), DynamicCreate
 #   (5761) and GetCurrentAbrangenciaEleitor (7377, which holds GetInst inlined and calls 501) are not written.
 #
+# CEleitores::QuantidadeHabilitacaoSemBiometria (2822, celeitores.cpp line 640) and CHV's constructor (3754, chv.cpp line
+# 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
+# - 2822 walks the base CDataMap's map at +4 and counts the records whose detail holds dynamic data (the optional's flag
+#   at +192), whose GetDinamico() (1271, called twice) has tipo_habilitacao 0 (+36) and estado_comparecimento 3 (+32),
+#   and returns the count's low 16 bits. Its callers (10699, 11242, 12098, 12110, not written) pass
+#   CEleitores::GetInst()'s result (326) as this, and 10699 formats the count into "Habilitação sem biometria: {}", which
+#   the name is chosen from. std::count_if over a lambda is written; other forms are not measured. Band uses 4 runs 2825,
+#   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
+# - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
+#   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
+#   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,
+#   and the records' data run celeitores.cpp, cintegridadereferencial.cpp, cfotos.cpp, chv.cpp, clocal.cpp (`awk -F'\t'
+#   '$1>=1559000 && $1<=1559900 {print $1, $2}' ledger/source-locations.tsv`), so it is chv.cpp's. A constructor stays a
+#   call from another function of its own file: a probe of that shape (the constructor and a CreateInst-like caller in
+#   one TU in this directory, try-tu.sh --symbols, wasm-objdump -d) keeps the call of the C1 alias, as the target's
+#   CreateInst does. Chosen: explicit, private, the parameter's name and the line.
+#
 # ctelasvota.cpp also holds vota::CTelasVota::GetTelaCargo (target fn 4135, record :3534, code 9358): it looks the post
 # up in the outer map and throws with std::format when it is missing, else returns CTelasCargo::GetTela's form. GetTela
 # (record ctelascargo.cpp:80) sits in 4135 behind a second stack prologue, so binaryen inlined an out-of-line member
