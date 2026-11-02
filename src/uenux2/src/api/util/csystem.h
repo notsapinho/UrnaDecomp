@@ -27,6 +27,18 @@ public:
     // fn 2760 has no record: the name is chosen from what it does (ZeroFill unless the file is a symbolic link, then
     // remove).
     static void RemoveFile(const std::string& arquivo);
+    // The records of TemporaryPath (csystem.cpp 236:15 and 243:15) print it static; target fn 5455 holds it inlined.
+    static std::string TemporaryPath(const std::string& caminho);
+    // Fn 5455 has no record of its own: its name is chosen from the text "CSystem::ReplaceFile" it passes to
+    // PrepareReplace and ReplaceResource of csystem.cpp's anonymous namespace, whose records (lines 916 to 962) it
+    // holds. The parameters' names are chosen from what the body does with them (unit 32's fragment).
+    static void ReplaceFile(const std::string& origem, const std::string& destino, const std::string& backup);
+    // Not in the target: the link drops it, as nothing calls it. A reading, not evidence: clang keeps PrepareReplace and
+    // ReplaceResource, single-use internal functions, out of line in fn 5455 (binaryen inlines them, their frames
+    // nested in 5455's), which needs a second caller in the TU, and ReplaceResource's directory branch and
+    // PrepareReplace's existence test passed as a function pointer fit a directory's replacement. The name, the text
+    // and the parameters are chosen after ReplaceFile (unit 32's fragment has the measurement).
+    static void ReplaceDir(const std::string& origem, const std::string& destino, const std::string& backup);
 
     // Reconstruction's note. The flag is evidence: the target reads the byte at 1584624 30 times, in 24 functions, and
     // nothing stores it, a word of .data that starts as 1 between csynchronizer.cpp's one record and csystem.cpp's
