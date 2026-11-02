@@ -12,7 +12,8 @@
 // RemoveFile (target fn 2760) is called directly by 1487 and 7160 once and 6737 twice, none reconstructed: RemoveDois
 // gives it two call sites.
 // CopyFile (target fn 378) is called directly by 15 target functions (1836, 2725, 3333, 4657, 4682, 4687, 5371, 5873,
-// 5874, 6737, 7174, 11630, 11631, 11632 and 12098), none reconstructed: CopiaDuas gives it two call sites. Every target
+// 5874, 6737, 7174, 11630, 11631, 11632 and 12098), of which vota::CSincronizaVota's 1836, 4657, 4682 and 4687 are
+// reconstructed (fragment 205): CopiaDuas stands for the other eleven. Every target
 // caller passes the same value for one of its two bools, which the target's type (i32 i32 i32) has folded, and 0 or 1
 // for the other (2725 passes 1, the rest 0): CopiaDuas passes the folded one as 1 at both sites, the other as 0 and 1.
 // Rename has no target index of its own: binaryen inlines it into its one caller, fn 11584 (comum::CGravadorLog's slot
@@ -25,6 +26,9 @@
 // RemoveTree's own recursive call gives it the two the target has.
 // api::GetFreeSpace, GetUsedSpace and GetMemInfo (target fns 5454, 5453 and 5463) are each called twice by 10226
 // (vota::CThreadMonitor's slot 2), not reconstructed: MedeEspaco stands for it with two call sites of each.
+// api::GetFileName and GetDirName (target fns 2763 and 5462) are called by 1501 (vota::CAssinadorVota's constructor,
+// with comum::CAssinador's inlined, reconstructed) once each and by 12098, and GetFileName by 5360 and 5461 too, none of
+// which is reconstructed: PartesDoCaminho stands for them with one call site of each.
 // The stand-ins' bodies differ, so wasm-opt merges none of them, and no argument is the same constant at every call
 // site but CopyFile's folded bool, which the target folds too, so dead-argument elimination folds no other. They are
 // address-taken from a static constructor. Declared through asm labels with the wasm-level signatures; compiled as
@@ -43,6 +47,8 @@ long long w5454_root_0(int) __asm__("_ZN3api12GetFreeSpaceERKNSt3__212basic_stri
 long long w5453_root_0(int) __asm__("_ZN3api12GetUsedSpaceERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 int w5463_root_0(int) __asm__("_ZN3api10GetMemInfoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 void w11584_root_0(int, int) __asm__("_ZN3api7CSystem6RenameERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
+void w2763_root_0(int, int) __asm__("_ZN3api11GetFileNameERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+void w5462_root_0(int, int) __asm__("_ZN3api10GetDirNameERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 }
 
 namespace {
@@ -101,6 +107,12 @@ __attribute__((noinline)) int AjustaHora(const char* arquivo)
     return utime(arquivo, nullptr) + 1;
 }
 
+__attribute__((noinline)) void PartesDoCaminho(int arquivo, int diretorio, int caminho)
+{
+    w2763_root_0(arquivo, caminho);
+    w5462_root_0(diretorio, caminho);
+}
+
 void* volatile w2759_sink;
 
 struct SW2759Roots {
@@ -117,6 +129,7 @@ struct SW2759Roots {
         w2759_sink = reinterpret_cast<void*>(&AjustaHora);
         w2759_sink = reinterpret_cast<void*>(&RemoveUmaArvore);
         w2759_sink = reinterpret_cast<void*>(&MedeEspaco);
+        w2759_sink = reinterpret_cast<void*>(&PartesDoCaminho);
     }
 } w2759_roots;
 

@@ -32,7 +32,8 @@
 # the others), and fn 3903 does so with its own first parameter before it calls fn 7708, which is `f501(p0, p1, 1)`. So
 # SMessage's second field holds the queue's address (evidence; its name m_fila and type `const void*` are chosen),
 # Post(short) is fn 3903's shape and Insert(const T&) fn 7708's (both names chosen; neither copy is written: 3903's
-# callers 10376, 11026 and 11100 are table slots 110, 57 and 55, which fn 1164, 77 KB and not written, loads). Measured
+# callers 10376, 11026 and 11100 are table slots 110, 57 and 55; fn 1164, which holds those three constants, holds them
+# as keys of comum::CArquivosSavd's maps, unit 95's, not as table slots). Measured
 # on a scratch TU at this tree's flags (wasm-objdump of the object): Post with `m_tipo = tipo; m_fila = this;` gives
 # 7221's order, the word at +12 of the frame stored before the type at +8; the other order stores the type first. With
 # the field left unset, `SMessage m; m.m_tipo = 12; Insert(m, 1)` stores no word at +12, and with it value-initialized

@@ -1,37 +1,57 @@
-// vota's free functions (uenux2/src/app/vota/comum/votadefs.cpp). The reconstruction's own note: the file's records
-// (lines 103, 110 and 135: vota::VerificaAssinaturaMI, VerificaAssinaturaMV, GetQuantidadeMaximaBUsAdicionais) are
-// of functions not written, and their lines stay blank. EhTreinamento (target fn 1485) has no record: its file and its
+// vota's free functions (uenux2/src/app/vota/comum/votadefs.cpp). The reconstruction's own note: the records of
+// VerificaAssinaturaMI, VerificaAssinaturaMV and GetQuantidadeMaximaBUsAdicionais (target fns 3290, 3288 and 4582) fix
+// lines 103, 110 and 135; every other line is a choice. EhTreinamento (target fn 1485) has no record: its file and its
 // line, after the last record, are a choice (src/units/168-uenux2-app-helpers.mk).
 #include "app/vota/comum/votadefs.h"
 
+#include "api/pattern/cpolysingleton.h"
+#include "api/util/eueasserterror.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/cpath.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
+#include "app/comum/iinterfacesavd.h"
+#include "app/comum/informacao/cinformacaoeleicao.h"
 
-// (original lines 9-99: content not recovered)
-#line 100
-// <stubs>
-// f3290 · 356 B · unmatched · name unknown
-// void f3290(i32) { ... }
-// </stubs>
-
-// (original lines 105-106: content not recovered)
-#line 107
-// <stubs>
-// f3288 · 356 B · unmatched · name unknown
-// void f3288(i32) { ... }
-// </stubs>
-
-// (original lines 112-131: content not recovered)
-#line 132
-// <stubs>
-// f4582 · 157 B · unmatched · name unknown
-// ? f4582() { ... }
-// </stubs>
-
-
-
-
-
+// (original lines 16-97: content not recovered)
+#line 98
 namespace vota {
+
+
+void VerificaAssinaturaMI(const std::string& arquivo)
+{
+    auto& iSavd = api::CPolySingleton<comum::IInterfaceSavd>::instance();
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    comum::ValidarUE(iSavd, comum::SAVD_APLIC_VOTA, (comum::CPath::GetPathTrab(comum::FLASH_INTERNA, appInfo.GetGeral().GetDadoCarga().GetTurno()) / arquivo).string());
+}
+
+void VerificaAssinaturaMV(const std::string& arquivo)
+{
+    auto& iSavd = api::CPolySingleton<comum::IInterfaceSavd>::instance();
+    const comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    comum::ValidarUE(iSavd, comum::SAVD_APLIC_VOTA, (comum::CPath::GetPathTrab(comum::FLASH_EXTERNA, appInfo.GetGeral().GetDadoCarga().GetTurno()) / arquivo).string());
+}
+
+// (original lines 115-123: content not recovered)
+#line 124
+comum::TQtdImpresso GetQuantidadeMaximaBUsAdicionais()
+{
+    if (EhTreinamento() && comum::CAppInfo::GetInst().GetVota().GetTreinamentoEleitor()) {
+        return 1;
+    }
+
+    const comum::md::estadoaplicacao::CEstadoGeralVota& vota = comum::CAppInfo::GetInst().GetVota();
+    const comum::CInformacaoEleicao informacao(comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna());
+    const comum::TQtdImpresso numObrigatorias = informacao.GetNumViasBU();
+    const comum::TQtdImpresso numAdicionais = informacao.GetNumViasBUAdicionais();
+    const comum::TQtdImpresso numImpresso = vota.GetQtdBU();
+    ASSERT(numImpresso >= numObrigatorias, api::EUA_QUANTIDADEMAXIMABUSADICIONAIS_IMPRESSO_MENOR);
+    const comum::TQtdImpresso numAdicionaisImpressos = numImpresso - numObrigatorias;
+    return numAdicionais - numAdicionaisImpressos;
+}
+
+
+
 
 bool EhTreinamento()
 {

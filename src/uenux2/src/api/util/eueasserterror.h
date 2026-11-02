@@ -26,6 +26,10 @@ enum EUeAssertError {
     // defined in its class) and the code qualified as api::, the column leaves 48 characters for the name; the name is
     // chosen to that length
     EUA_DATASOURCESRELATORIO_DETALHECANDIDATOZE_VOTO = 3410,
+    // vota::GetQuantidadeMaximaBUsAdicionais (fn 4582, record votadefs.cpp 135:97): the text "Assert (numImpresso >=
+    // numObrigatorias)". With the invocation indented four columns and the code qualified as api::, the column leaves
+    // 48 characters for the name, chosen to that length
+    EUA_QUANTIDADEMAXIMABUSADICIONAIS_IMPRESSO_MENOR = 3449,
     // vota::CVerificaQtdBUsAdicionais::StartState (fn 12023, records cverificaqtdbusadicionais.cpp 36:102 and 37:116):
     // the texts "Assert (egVota.GetEstadoVota() == EAVENCERRADA)" and "Assert (egVota.GetEstadoEncerramento() ==
     // EAEFIMDOSTRABALHOS)". With the invocations indented four columns and the codes qualified api::, the columns leave

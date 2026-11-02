@@ -1,9 +1,9 @@
-// comum::IInterfaceSavd and the SAVD requests (/home/rubio/tse/uenux2/src/app/comum/iinterfacesavd.cpp). The records
-// of the target fix the lines of DesconverteHeader's and DesconverteMensagem's throws (553 to 578), ValidarUE's (886)
-// and EnviarAcaoHSM's (1040); lines 898, 1004 and 1022 stay blank for the records of the ValidarUE over a file,
-// AssinarUE and AssinarEcourna, not written (fns 11179, 1277 and 12098 hold them). Every other line is a choice: the
-// use bands put fn 3831 ahead of EnviarRequisicao (3830) and 3829 after it, and AssinarArquivo (5891) ahead of
-// ValidarUE (5890). iinterfacesavd.h has the class, and the unit's fragment which members are reconstructed.
+// comum::IInterfaceSavd and the SAVD requests (/home/rubio/tse/uenux2/src/app/comum/iinterfacesavd.cpp). The records of
+// the target fix the lines of DesconverteHeader's and DesconverteMensagem's throws (553 to 578), ValidarUE's (886),
+// AssinarUE's (1004, inlined into fn 1277) and EnviarAcaoHSM's (1040); lines 898 and 1022 stay blank for the records of
+// the ValidarUE over a file and AssinarEcourna, not written (fns 11179 and 12098 hold them). Every other line is a
+// choice: the use bands put fn 3831 ahead of EnviarRequisicao (3830) and 3829 after it, and AssinarArquivo (5891) ahead
+// of ValidarUE (5890). iinterfacesavd.h has the class, and the unit's fragment which members are reconstructed.
 
 #include "app/comum/iinterfacesavd.h"
 
@@ -252,7 +252,14 @@ bool IInterfaceSavd::EnviarAcaoHSM(ESavdAplic aplic, ESavdCmdHSM acao)
     return m_mensagem.empty();
 }
 
-// (original lines 1001-1036: content not recovered)
+void AssinarUE(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo)
+{
+    if (!savd.AssinarArquivo(aplic, comando, 61, arquivo)) {
+        throw CUeComumError(EUE_COMUM_ASSINAR_UE, std::format("Falha ao assinar ({}-UE[{}])", savd.GetMensagem(), arquivo));
+    }
+}
+
+// (original lines 1008-1036: content not recovered)
 #line 1037
 void EnviarAcaoHSM(IInterfaceSavd& savd, ESavdAplic aplic, ESavdCmdHSM acao)
 {

@@ -1,17 +1,41 @@
 // comum::CArquivosSavd (/home/rubio/tse/uenux2/src/app/comum/carquivossavd.cpp). Its two throws are records of the target:
 //   275  operator[](ESavdPacote) const     record at line 49, column 15
 //   680  operator[](ESavdArquivoUE) const  record at line 73, column 15
-//   5905 DescricaoArquivo(ESavdArquivoUE)  no record: after them, on chosen lines (src/units/95-uenux2-app-comum.mk)
+// The functions with no record (GetInst, fn 1164, with the constructor and its three loaders inlined; the destructor,
+// fn 5907; DescricaoArquivo, fn 5905) and their lines are chosen (src/units/95-uenux2-app-comum.mk).
 
 #include "app/comum/carquivossavd.h"
 
 #include <format>
 
+#include "app/comum/carquivosresultado.h"
+#include "app/comum/cpath.h"
 #include "app/comum/euecomumerror.h"
 
 namespace comum {
 
-// (original lines 14-44: content not recovered)
+CArquivosSavd& CArquivosSavd::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_instancia) {
+        s_instancia.reset(new CArquivosSavd);
+    }
+    return *s_instancia;
+}
+
+std::unique_ptr<CArquivosSavd> CArquivosSavd::s_instancia;
+std::mutex CArquivosSavd::s_mutex;
+
+CArquivosSavd::CArquivosSavd()
+{
+    CarregaAssinaturas();
+    CarregaAssinados();
+    CarregaNomesPacotes();
+}
+
+CArquivosSavd::~CArquivosSavd() = default;
+
+// (original lines 38-44: content not recovered)
 #line 45
 std::string CArquivosSavd::operator[](ESavdPacote pacote) const
 {
@@ -231,6 +255,206 @@ std::string DescricaoArquivo(ESavdArquivoUE arquivo)
     default:
         return "Arquivo não identificado";
     }
+}
+
+void CArquivosSavd::CarregaAssinaturas()
+{
+    m_assinaturas[ESavdPacote(120)] = (CPath::GetPathDinamico(FLASH_INTERNA) / "eg.vsu").string();
+    m_assinaturas[ESavdPacote(121)] = (CPath::GetPathDinamico(FLASH_EXTERNA) / "eg.vsu").string();
+    m_assinaturas[ESavdPacote(146)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "gap.vsu").string();
+    m_assinaturas[ESavdPacote(147)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "gap.vsu").string();
+    m_assinaturas[ESavdPacote(148)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "gap.vsu").string();
+    m_assinaturas[ESavdPacote(149)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "gap.vsu").string();
+    m_assinaturas[ESavdPacote(122)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "vota.vsu").string();
+    m_assinaturas[ESavdPacote(123)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "vota.vsu").string();
+    m_assinaturas[ESavdPacote(124)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "vota.vsu").string();
+    m_assinaturas[ESavdPacote(125)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "vota.vsu").string();
+    m_assinaturas[ESavdPacote(126)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "bu.vsu").string();
+    m_assinaturas[ESavdPacote(127)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "bu.vsu").string();
+    m_assinaturas[ESavdPacote(128)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "bu.vsu").string();
+    m_assinaturas[ESavdPacote(129)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "bu.vsu").string();
+    m_assinaturas[ESavdPacote(130)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "buj.vsu").string();
+    m_assinaturas[ESavdPacote(131)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "buj.vsu").string();
+    m_assinaturas[ESavdPacote(132)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "buj.vsu").string();
+    m_assinaturas[ESavdPacote(133)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "buj.vsu").string();
+    m_assinaturas[ESavdPacote(138)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "ze.vsu").string();
+    m_assinaturas[ESavdPacote(139)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "ze.vsu").string();
+    m_assinaturas[ESavdPacote(140)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "ze.vsu").string();
+    m_assinaturas[ESavdPacote(141)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "ze.vsu").string();
+    m_assinaturas[ESavdPacote(142)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "rze.vsu").string();
+    m_assinaturas[ESavdPacote(143)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "rze.vsu").string();
+    m_assinaturas[ESavdPacote(144)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "rze.vsu").string();
+    m_assinaturas[ESavdPacote(145)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "rze.vsu").string();
+    m_assinaturas[ESavdPacote(134)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "rdv.vsu").string();
+    m_assinaturas[ESavdPacote(135)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "rdv.vsu").string();
+    m_assinaturas[ESavdPacote(136)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "rdv.vsu").string();
+    m_assinaturas[ESavdPacote(137)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "rdv.vsu").string();
+    m_assinaturas[ESavdPacote(150)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "sa.vsu").string();
+    m_assinaturas[ESavdPacote(151)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "sa.vsu").string();
+    m_assinaturas[ESavdPacote(152)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "red.vsu").string();
+    m_assinaturas[ESavdPacote(153)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "red.vsu").string();
+    m_assinaturas[ESavdPacote(154)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "red.vsu").string();
+    m_assinaturas[ESavdPacote(155)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "red.vsu").string();
+    m_assinaturas[ESavdPacote(156)] = (CPath::GetPathTrabExterno() / "tabcorr.vsc").string();
+    m_assinaturas[ESavdPacote(157)] = (CPath::GetPathEstatico(FLASH_EXTERNA) / "{:05}{:04}{:04}-lo.vsc").string();
+    m_assinaturas[ESavdPacote(203)] = (CPath::GetPathEstatico(FLASH_EXTERNA) / "dadoscarga.vsu").string();
+    m_assinaturas[ESavdPacote(158)] = (CPath::GetPathResult(FLASH_INTERNA, TURNO_1) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_VOTA_VSC];
+    m_assinaturas[ESavdPacote(159)] = (CPath::GetPathResult(FLASH_INTERNA, TURNO_2) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_VOTA_VSC];
+    m_assinaturas[ESavdPacote(160)] = (CPath::GetPathResult(FLASH_EXTERNA, TURNO_1) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_VOTA_VSC];
+    m_assinaturas[ESavdPacote(161)] = (CPath::GetPathResult(FLASH_EXTERNA, TURNO_2) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_VOTA_VSC];
+    m_assinaturas[ESavdPacote(162)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_SA_VSC];
+    m_assinaturas[ESavdPacote(163)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_SA_VSC];
+    m_assinaturas[ESavdPacote(164)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_SA_VSC];
+    m_assinaturas[ESavdPacote(165)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_SA_VSC];
+    m_assinaturas[ESavdPacote(166)] = (CPath::GetPathResult(FLASH_INTERNA, TURNO_1) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_RED_VSC];
+    m_assinaturas[ESavdPacote(167)] = (CPath::GetPathResult(FLASH_INTERNA, TURNO_2) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_RED_VSC];
+    m_assinaturas[ESavdPacote(168)] = (CPath::GetPathResult(FLASH_EXTERNA, TURNO_1) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_RED_VSC];
+    m_assinaturas[ESavdPacote(169)] = (CPath::GetPathResult(FLASH_EXTERNA, TURNO_2) / "{:c}{:05}{}{:05}{:04}{:04}-").string() + CArquivosResultado::GetInst()[EXTENSAO_RED_VSC];
+    m_assinaturas[ESavdPacote(170)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "rdv.vsu";
+    m_assinaturas[ESavdPacote(171)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "rdv.vsu";
+    m_assinaturas[ESavdPacote(172)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "rdv.vsu";
+    m_assinaturas[ESavdPacote(173)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "rdv.vsu";
+    m_assinaturas[ESavdPacote(174)] = (CPath::GetPathRootSemSA(FLASH_EXTERNA) / "dinamico/sa/{}/trab1/").string() + "rdv.vsu";
+    m_assinaturas[ESavdPacote(175)] = (CPath::GetPathRootSemSA(FLASH_EXTERNA) / "dinamico/sa/{}/trab2/").string() + "rdv.vsu";
+    m_assinaturas[ESavdPacote(176)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "ze.vsu";
+    m_assinaturas[ESavdPacote(177)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "ze.vsu";
+    m_assinaturas[ESavdPacote(178)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "ze.vsu";
+    m_assinaturas[ESavdPacote(179)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "ze.vsu";
+    m_assinaturas[ESavdPacote(180)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "bu.vsu";
+    m_assinaturas[ESavdPacote(181)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "bu.vsu";
+    m_assinaturas[ESavdPacote(182)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "saraiz.vsu";
+    m_assinaturas[ESavdPacote(183)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "saraiz.vsu";
+    m_assinaturas[ESavdPacote(184)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "sasecao.vsu";
+    m_assinaturas[ESavdPacote(185)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "sasecao.vsu";
+    m_assinaturas[ESavdPacote(186)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab1/").string() + "busa.vsu";
+    m_assinaturas[ESavdPacote(187)] = (CPath::GetPathRootSemSA(FLASH_INTERNA) / "dinamico/sa/{}/trab2/").string() + "busa.vsu";
+    m_assinaturas[ESavdPacote(188)] = (CPath::GetPathRootSemSA(FLASH_EXTERNA) / "dinamico/sa/{}/trab1/").string() + "busa.vsu";
+    m_assinaturas[ESavdPacote(189)] = (CPath::GetPathRootSemSA(FLASH_EXTERNA) / "dinamico/sa/{}/trab2/").string() + "busa.vsu";
+    m_assinaturas[ESavdPacote(190)] = (CPath::GetPathMR() / "sieco-dados/").string();
+    m_assinaturas[ESavdPacote(191)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "bim.vsu").string();
+    m_assinaturas[ESavdPacote(192)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "bim.vsu").string();
+    m_assinaturas[ESavdPacote(193)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "bim.vsu").string();
+    m_assinaturas[ESavdPacote(194)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "bim.vsu").string();
+    m_assinaturas[ESavdPacote(195)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "behb.vsu").string();
+    m_assinaturas[ESavdPacote(196)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "behb.vsu").string();
+    m_assinaturas[ESavdPacote(197)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "behb.vsu").string();
+    m_assinaturas[ESavdPacote(198)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "behb.vsu").string();
+    m_assinaturas[ESavdPacote(199)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_1) / "uenux.vsu").string();
+    m_assinaturas[ESavdPacote(200)] = (CPath::GetPathTrab(FLASH_INTERNA, TURNO_2) / "uenux.vsu").string();
+    m_assinaturas[ESavdPacote(201)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_1) / "uenux.vsu").string();
+    m_assinaturas[ESavdPacote(202)] = (CPath::GetPathTrab(FLASH_EXTERNA, TURNO_2) / "uenux.vsu").string();
+}
+
+void CArquivosSavd::CarregaAssinados()
+{
+    m_assinados[ESavdArquivoUE(25)] = "eg.bin";
+    m_assinados[ESavdArquivoUE(26)] = "eg.bin";
+    m_assinados[ESavdArquivoUE(27)] = "gap.bin";
+    m_assinados[ESavdArquivoUE(28)] = "gap.bin";
+    m_assinados[ESavdArquivoUE(29)] = "gap.bin";
+    m_assinados[ESavdArquivoUE(30)] = "gap.bin";
+    m_assinados[ESavdArquivoUE(31)] = "vota.bin";
+    m_assinados[ESavdArquivoUE(32)] = "vota.bin";
+    m_assinados[ESavdArquivoUE(33)] = "sa.bin";
+    m_assinados[ESavdArquivoUE(115)] = "red.bin";
+    m_assinados[ESavdArquivoUE(34)] = "tabcorr.dat";
+    m_assinados[ESavdArquivoUE(112)] = "{:05}{:04}{:04}-lo.dat";
+    m_assinados[ESavdArquivoUE(113)] = "dadoscarga.dat";
+    m_assinados[ESavdArquivoUE(35)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_BU_DAT];
+    m_assinados[ESavdArquivoUE(36)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_BUSA_DAT];
+    m_assinados[ESavdArquivoUE(37)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_RDV_DAT];
+    m_assinados[ESavdArquivoUE(39)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_JUFA_DAT];
+    m_assinados[ESavdArquivoUE(41)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_JUFA_DAT];
+    m_assinados[ESavdArquivoUE(42)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_JUFA_DAT];
+    m_assinados[ESavdArquivoUE(43)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGBU_DAT];
+    m_assinados[ESavdArquivoUE(44)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGZE_DAT];
+    m_assinados[ESavdArquivoUE(45)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGBUSA_DAT];
+    m_assinados[ESavdArquivoUE(46)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_HASH_DAT];
+    m_assinados[ESavdArquivoUE(47)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_HASH_DAT];
+    m_assinados[ESavdArquivoUE(48)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQBIO_JEZ];
+    m_assinados[ESavdArquivoUE(49)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMAN_JEZ];
+    m_assinados[ESavdArquivoUE(50)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMES_JEZ];
+    m_assinados[ESavdArquivoUE(51)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQBIO_JEZ];
+    m_assinados[ESavdArquivoUE(52)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMAN_JEZ];
+    m_assinados[ESavdArquivoUE(53)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMES_JEZ];
+    m_assinados[ESavdArquivoUE(54)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQBIO_JEZ];
+    m_assinados[ESavdArquivoUE(55)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMAN_JEZ];
+    m_assinados[ESavdArquivoUE(56)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMES_JEZ];
+    m_assinados[ESavdArquivoUE(57)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQBIO_JEZ];
+    m_assinados[ESavdArquivoUE(58)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMAN_JEZ];
+    m_assinados[ESavdArquivoUE(59)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_WSQMES_JEZ];
+    m_assinados[ESavdArquivoUE(60)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_LOG_JEZ];
+    m_assinados[ESavdArquivoUE(61)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_LOGSA_JEZ];
+    m_assinados[ESavdArquivoUE(63)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_BU_DAT];
+    m_assinados[ESavdArquivoUE(64)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_JUFA_DAT];
+    m_assinados[ESavdArquivoUE(65)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_RDV_DAT];
+    m_assinados[ESavdArquivoUE(66)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGBU_DAT];
+    m_assinados[ESavdArquivoUE(67)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGZE_DAT];
+    m_assinados[ESavdArquivoUE(68)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_HASH_DAT];
+    m_assinados[ESavdArquivoUE(69)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_LOG_JEZ];
+    m_assinados[ESavdArquivoUE(73)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_JUFA_DAT];
+    m_assinados[ESavdArquivoUE(74)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_RDVRED_DAT];
+    m_assinados[ESavdArquivoUE(75)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGBU_DAT];
+    m_assinados[ESavdArquivoUE(76)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGZE_DAT];
+    m_assinados[ESavdArquivoUE(77)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_LOG_JEZ];
+    m_assinados[ESavdArquivoUE(78)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_JUFA_DAT];
+    m_assinados[ESavdArquivoUE(79)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_RDVRED_DAT];
+    m_assinados[ESavdArquivoUE(80)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGBU_DAT];
+    m_assinados[ESavdArquivoUE(81)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_IMGZE_DAT];
+    m_assinados[ESavdArquivoUE(82)] = "{:c}{:05}{}{:05}{:04}{:04}-" + CArquivosResultado::GetInst()[EXTENSAO_LOG_JEZ];
+    m_assinados[ESavdArquivoUE(83)] = "rdv.dat";
+    m_assinados[ESavdArquivoUE(84)] = "buj.dat";
+    m_assinados[ESavdArquivoUE(106)] = "bim.dat";
+    m_assinados[ESavdArquivoUE(108)] = "behb.dat";
+    m_assinados[ESavdArquivoUE(86)] = "bu.dat";
+    m_assinados[ESavdArquivoUE(85)] = "buj.dat";
+    m_assinados[ESavdArquivoUE(107)] = "bim.dat";
+    m_assinados[ESavdArquivoUE(109)] = "behb.dat";
+    m_assinados[ESavdArquivoUE(87)] = "bu.dat";
+    m_assinados[ESavdArquivoUE(88)] = "ze.dat";
+    m_assinados[ESavdArquivoUE(89)] = "rze.dat";
+    m_assinados[ESavdArquivoUE(90)] = "bur.dat";
+    m_assinados[ESavdArquivoUE(91)] = "bujr.dat";
+    m_assinados[ESavdArquivoUE(92)] = "bimr.dat";
+    m_assinados[ESavdArquivoUE(93)] = "behbr.dat";
+    m_assinados[ESavdArquivoUE(94)] = "bur.dat";
+    m_assinados[ESavdArquivoUE(95)] = "bujr.dat";
+    m_assinados[ESavdArquivoUE(96)] = "bimr.dat";
+    m_assinados[ESavdArquivoUE(97)] = "behbr.dat";
+    m_assinados[ESavdArquivoUE(98)] = "rdv.dat";
+    m_assinados[ESavdArquivoUE(99)] = "ze.dat";
+    m_assinados[ESavdArquivoUE(100)] = "bu.dat";
+    m_assinados[ESavdArquivoUE(101)] = "saraiz.bin";
+    m_assinados[ESavdArquivoUE(102)] = "sasecao.bin";
+    m_assinados[ESavdArquivoUE(103)] = "busa.dig";
+    m_assinados[ESavdArquivoUE(110)] = "uenux.db";
+    m_assinados[ESavdArquivoUE(111)] = "uenux.db";
+    m_assinados[ESavdArquivoUE(104)] = "uesieco-20[0-9]{2}.[0-1][0-9].[0-3][0-9]-[0-2][0-9].[0-5][0-9].[0-5][0-9]-[0-9]{8}-cert.dat";
+    m_assinados[ESavdArquivoUE(105)] = "uesieco-20[0-9]{2}.[0-1][0-9].[0-3][0-9]-[0-2][0-9].[0-5][0-9].[0-5][0-9]-[0-9]{8}-aut.dat";
+}
+
+void CArquivosSavd::CarregaNomesPacotes()
+{
+    m_nomesPacotes[ESavdNomePacote(19)] = "partido.pub";
+    m_nomesPacotes[ESavdNomePacote(18)] = "partido.app";
+    m_nomesPacotes[ESavdNomePacote(17)] = "partido";
+    m_nomesPacotes[ESavdNomePacote(20)] = "partido.id";
+    m_nomesPacotes[ESavdNomePacote(1)] = "vota.of";
+    m_nomesPacotes[ESavdNomePacote(2)] = "vota.si";
+    m_nomesPacotes[ESavdNomePacote(3)] = "vota.te";
+    m_nomesPacotes[ESavdNomePacote(4)] = "vota.tm";
+    m_nomesPacotes[ESavdNomePacote(5)] = "sa.of";
+    m_nomesPacotes[ESavdNomePacote(6)] = "sa.si";
+    m_nomesPacotes[ESavdNomePacote(7)] = "sa.tr";
+    m_nomesPacotes[ESavdNomePacote(9)] = "red";
+    m_nomesPacotes[ESavdNomePacote(10)] = "vpp";
+    m_nomesPacotes[ESavdNomePacote(11)] = "adh";
+    m_nomesPacotes[ESavdNomePacote(12)] = "atue";
+    m_nomesPacotes[ESavdNomePacote(13)] = "ste";
+    m_nomesPacotes[ESavdNomePacote(8)] = "gap";
+    m_nomesPacotes[ESavdNomePacote(16)] = "savd";
+    m_nomesPacotes[ESavdNomePacote(15)] = "turno2.jez";
+    m_nomesPacotes[ESavdNomePacote(22)] = "infomidia.pwd";
 }
 
 } // namespace comum

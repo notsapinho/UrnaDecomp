@@ -10,8 +10,9 @@
 // - PushContext (fn 3684) has InitApplication's code among its callers in our link; w171_empilha stands for the other
 //   two, fns 7377 and 10468.
 // - CriaContexto from a kind and three strings (fn 676) and api::CApplicationContextGuard's destructor (fn 675, unit
-//   193) have the same ten direct callers in the target (491 1277 3333 4657 4682 10590 12098 12105 12110 12134), none
-//   reconstructed: w171_guarda and w171_guardas stand for them, three call sites of each. The other CriaContexto and
+//   193) have the same ten direct callers in the target (491 1277 3333 4657 4682 10590 12098 12105 12110 12134), of
+//   which 1277 (comum::CAssinador::Assina, unit 34), 4657 and 4682 (unit 205) are reconstructed: w171_guarda and
+//   w171_guardas stand for the other seven, three call sites of each. The other CriaContexto and
 //   the guard's constructor have one caller each and are left unrooted, so binaryen inlines them as the target does.
 // - DescreveModo stands for 4620, not reconstructed, the caller of api::CApplication::GetDescricaoModo (fn 5564)
 //   beside 502: with 502 alone binaryen would inline 5564 into it.

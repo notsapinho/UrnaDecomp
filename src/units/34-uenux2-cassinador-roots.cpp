@@ -1,9 +1,10 @@
 // Roots: keep comum::CAssinador::~CAssinador (target fn 1007) in the skeleton link the way the target reaches it:
 // through slot 0 of the CAssinador vtable, and from ten direct callers (491 1836 3333 4657 4668 4694 7174 7766 10590
 // 12098, ledger/callgraph.tsv). Of those the deleting destructor (4694, slot 1), which comes with the vtable that the
-// destructor's vptr store names, and vota::CAssinadorVota's destructor (7766, fragment 165) are reconstructed. These two
-// noinline callers stand in for the eight others, with different bodies so that binaryen does not merge them into one;
-// they are address-taken from a static constructor.
+// destructor's vptr store names, vota::CAssinadorVota's destructor (7766, fragment 165) and vota::CSincronizaVota's
+// SincronizaRelatorios, GravaBancoDadosMI and AssinaRDVEBancoDados (1836, 4657, 4668, fragment 205) are reconstructed.
+// These two noinline callers stand in for the five others (491 3333 7174 10590 12098), with different bodies so that
+// binaryen does not merge them into one; they are address-taken from a static constructor.
 // Declared through an asm label with the wasm-level signature (a non-deleting destructor returns `this`); compiled
 // with APP_CXXFLAGS.
 extern "C" {

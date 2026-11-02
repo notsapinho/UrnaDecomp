@@ -23,6 +23,9 @@ public:
     static std::filesystem::path GetPathLog() { return s_pathFlash[FLASH_INTERNA] / "dinamico/log/"; }
     static std::filesystem::path GetPathMR();
     static std::filesystem::path GetPathChave();
+    // No target index: binaryen inlined it into comum::CArquivosSavd::GetInst (fn 1164), its one caller, where its code
+    // sits behind a stack frame of its own. Its name is chosen from the path it builds.
+    static std::filesystem::path GetPathTrabExterno();
     static std::filesystem::path GetPathRootSemSA(EFlashOrigem origem);
     static std::filesystem::path GetPathResult(EFlashOrigem origem, EUrnaTurno turno);
     static std::filesystem::path GetPathResult(EFlashOrigem origem);
