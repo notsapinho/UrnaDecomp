@@ -255,7 +255,8 @@
 # compiled without strict aliasing. It stays written, as slot 14
 # (a trap would hide it), and the matches above rest on its code.
 #
-# std::regex's copies, src/app/roots_cbasetype.cpp and src/app/roots_regex.cpp (their comments say what each holds),
+# std::regex's copies, src/app/roots_cbasetype.cpp (its comment says what it holds) and src/app/roots_regex.cpp (the
+# std::string constructor's chain, gone since 5821, unit 122, brings ecourna's icompressor.cpp.o, which gives it),
 # measured by whole links of this unit with roots_regex.o compiled at each set by hand (census, splat-symbols,
 # splat-match; rows against a081739b's splat/scan.tsv, 5 of whose new matches are the ones above):
 # - roots_regex.cpp as it was (the constructor from a C string at ECOURNA_CXXFLAGS): 5 rows turn `match`, none stops;

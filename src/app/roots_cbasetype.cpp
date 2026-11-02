@@ -16,7 +16,7 @@
 // the measurements). urna_regex_uenux2 and urna_regex_tokens only instantiate: nothing calls them and they leave the
 // link. They go when the objects that use std::regex so build without strict aliasing, or when a uenux2 object outside
 // UENUX2_TBAA_DIRS that uses it links ahead of them. The constructor from a std::string and what it instantiates are an
-// -fexceptions object's in the target: src/app/roots_regex.cpp holds them.
+// -fexceptions object's in the target: ecourna's api/compression/icompressor.cpp.o gives them (unit 06's fragment).
 #include "ecourna/app/dados/tiposbasicos.hpp"
 
 #include <regex>

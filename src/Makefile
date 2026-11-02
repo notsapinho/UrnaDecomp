@@ -179,12 +179,6 @@ $(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/sr
 # the same for IConversorASN's members (src/app/roots_iconversorasn.cpp); the include paths are its headers' (the modules, Boost)
 $(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS) $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -Isrc/asn1/modules -I$(BOOST_HDR) -c src/app/roots_iconversorasn.cpp -o $(R)
-# std::basic_regex<char>'s copies from a std::string, an -fexceptions object's code in the target (the const char* ones
-# are uenux2's: roots_cbasetype.o), ahead of uenux2's objects and after roots_vector.o:
-# both define vector<std::string>'s destructor, every caller gets the first one's copy, and the target's callers (Split,
-# fn 1880, and 9586) call the -Oz copy roots_vector.o holds (fn 2255, read as the executable TU's) (src/app/roots_regex.cpp)
-$(ROOT)/$(APP)/roots_regex.o: $(ROOT)/src/app/roots_regex.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(ECOURNA_CXXFLAGS) -c src/app/roots_regex.cpp -o $(R)
 # the executable TU's copies of vector<unsigned char>'s destruction (fns 306, 520, 4967) and vector<CDadoCorrespondencia>'s
 # (5294, 1698, 5532, 9873), ahead of both trees' objects and without strict aliasing, which 4967 needs
 # (src/app/roots_vector.cpp)
@@ -237,7 +231,7 @@ APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_
 # target keeps its copy of basic_stringbuf::__init_buf_ptrs, 674, over the uenux2 roots'; then roots_texttospeech.o, at
 # the same rule, ahead of the uenux2 objects whose copies of ITextToSpeech's inline members it replaces; then the stand-ins,
 # votaInit's first; app before libraries; libraries in this order) --------
-APP_OBJS := roots_coderenv.o roots_texttospeech.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o roots_regex.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
+APP_OBJS := roots_coderenv.o roots_texttospeech.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=

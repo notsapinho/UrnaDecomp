@@ -23,16 +23,15 @@
 # constructor from a std::string, and 3526, 5187, 9518), vector<path>'s __init_with_size and slow push_back (9531,
 # 9516), and libc++.a's directory_iterator.o and operations.o rows the iterators reach (unit 122's fragment lists the
 # matches). The globToFileList the target inlines into 5821 differs from icompressor.cpp's (unit 122's fragment says
-# where). In the whole link src/app/roots_regex.cpp, ahead of this object at the same flags, gives the std::regex
-# members over std::string first (5187 matches from it).
-# 9534 (the regex constructor from a std::string) is not matched: its call through table slot 6153 reaches 9518
-# (__parse over __wrap_iter<const char*>), which has no name, and 3526, 5189, 2688 and 2689 below it have none either.
-# 9518 had one by `vptr-anchor` only while the link's const char* parser had another shape than the target's 2062:
-# both target parsers hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and since
-# src/app/roots_cbasetype.cpp gives the const char* copy that matches 2062, each forms a same-shape pair with ours
-# (depth-0 shapes from pnpm wasm fingerprint --depth 0: 2062 and ours ba0f426a…, 9518 and ours 90bccd20…), so the
-# vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`) and only 9534's own reference would name 9518. 9534
-# waits for another name of 9518.
+# where). This object gives the link's std::regex members over std::string (9534, 5187, 5191 match from it): a tree
+# root at these flags, src/app/roots_regex.cpp, gave them first while 5821 was not in the link, and went with it.
+# The census pairs 9534 with this object's copy by `addr` (with that root's by `shape`, which named it not), and
+# 9518 has a name by `table`; it is `unresolved` on its callee 3526 (__parse_basic_reg_exp), which has none: 9518 is
+# 3526's one target caller (ledger/callgraph.tsv), so only 9518's own call would name it, and 5189, 2689 and 2688
+# below them wait the same way. No vptr anchors 9518 either: the target's const char* and __wrap_iter parsers
+# (2062, 9518) both hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and with
+# src/app/roots_cbasetype.cpp's copy matching 2062 each forms a same-shape pair with ours (pnpm wasm fingerprint
+# --depth 0), so the vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`).
 # DoAdd (9538) is written and unresolved on std::system_category: 752 rows over 2794, 557 of the 561 replaced
 # operand-only, 158 inserted and 33 deleted. Its callees in the target 891 and 1053 pair with libc++'s system_category
 # and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3334,
