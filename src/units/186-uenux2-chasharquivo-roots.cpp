@@ -2,9 +2,10 @@
 // code below), each stand-in address-taken from a static constructor:
 // - api::hash::CHashArquivo's constructor (target fn 3600). The target calls it directly from three functions
 //   (ledger/callgraph.tsv), none through the table: 10269, comum::asn::CConversorHashArquivo::DoDesconverte (unit 46,
-//   in the link), and 5358 and 5360, which are not reconstructed (5360 holds the records of api::hash::CMontadorHash in
-//   cmontadorhash.cpp and of CHashDiretorio::ValidaObjeto, chashdiretorio.cpp:41). w186_hash stands for 5358 and 5360,
-//   so the constructor keeps two call sites and binaryen keeps its body. Both of those read the constructor's result
+//   in the link), and 5358 and 5360. 5358 is in the link (api::hash::ListaHashesArquivos, fragment 227, written and
+//   not matched); 5360 is not reconstructed (it holds the records of api::hash::CMontadorHash in cmontadorhash.cpp and
+//   of CHashDiretorio::ValidaObjeto, chashdiretorio.cpp:41). w186_hash stands for 5360, and stood for 5358 too until it
+//   was written; it stays while 5360 waits. Both of those read the constructor's result
 //   (`local.set` after the call, where 10269 drops it), and the target's wasm type keeps it, (i32 i32 i32)->(i32): the
 //   stand-in returns it, so dead-argument elimination keeps it here too. Declared through an asm label with the
 //   object's signature (a constructor returns `this`).

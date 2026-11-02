@@ -562,11 +562,6 @@
 // f4811 · 268 B · unmatched · placement: link order · name unknown
 // void f4811(i32, i32, i32) { ... }
 
-// link-order cluster 736 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
-
-// f5180 · 36 B · unmatched · placement: link order · name unknown
-// void f5180(i32, i32) { ... }
-
 // link-order cluster 746 · uses=2 · neighbours' file uenux2/src/api/hash/cmontadorhash.cpp
 
 // f5359 · 47 B · unmatched · placement: link order · name unknown
@@ -709,11 +704,6 @@
 
 // f5843 · 239 B · unmatched · placement: link order · name unknown
 // ? f5843(i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 836 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorhashes.cpp
-
-// f5852 · 340 B · unmatched · placement: link order · name unknown
-// void f5852(i32, i32, i32, i32) { ... }
 
 // link-order cluster 837 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/centidadehashes.cpp
 

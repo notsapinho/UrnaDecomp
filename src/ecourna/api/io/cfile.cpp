@@ -281,4 +281,12 @@ std::vector<uebyte> CFile::ReadFileBinary(const std::filesystem::path& caminho)
     return conteudo;
 }
 
+uedword CFile::Write(const std::vector<char>& dados) const
+{
+    if (dados.empty()) {
+        return 0;
+    }
+    return RawWrite(dados.data(), dados.size());
+}
+
 } // namespace ecourna::api::io
