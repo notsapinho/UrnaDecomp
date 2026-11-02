@@ -21,16 +21,33 @@
 #   CDataTextFmt<string (*)(const string&)>      D2 12323, D0 12317; GetText 6404, shared with the next
 #   CDataTextFmt<const string (*)(const string&)>  D2 12567, D0 12564, GetText 6404
 #   CDataImage<vector<unsigned char> (*)()>      GetData 6330 (a twin of __func<string (*)(), string()>'s slot 6)
-#   CQRCodeImage                                 constructor 3662, D2 10966, D0 10964
+#   CQRCodeImage                                 constructor 3662, D2 10966, D0 10964, GetData 10967 (below)
 #   byn$mgfn-shared bodies                       6060 and 6059, of CQRCodeImage's and CDataText<function<string()>>'s D2 and D0;
 #                                                the other thunks above join 1566 and 1565
 #   __shared_ptr_emplace<X> D2, D0               12796 12788, 12586 12581, 12309 12306, 12335 12328, 12575 12570, 12294 12292,
 #                                                12518 12517, 12313 12311; slot 2 of two with std::function, 2967
 #   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546
 #   std::vector<unsigned char>::insert(const_iterator, size_type, const value_type&)  3661, which GetData calls three times
-# GetData (10967) is pending: the fragment's -pending.cpp names what it waits for. 3661 reads as libc++'s fill insert of
-# a std::vector<unsigned char> (it grows the buffer, fills with the byte the last parameter points to, and throws the
-# vector's length error, fn 158), with the value GetData passes, 255; the roots object calls it twice for GetData.
+# 3661 reads as libc++'s fill insert of a std::vector<unsigned char> (it grows the buffer, fills with the byte the last
+# parameter points to, and throws the vector's length error, fn 158), with the value GetData passes, 255. It matches from
+# cqrcodeimage.cpp.o, GetData's object, at the tree's flags; while GetData was a trap it matched from the roots object,
+# whose stand-in for GetData called it twice.
+# CQRCodeImage::GetData (10967, slot 2) is written in cqrcodeimage.cpp and differs in the place of two stores alone. Two
+# functions binaryen inlined into it each keep a second prologue: the static MontaImagem (record 36:15, its std::format
+# throw, EUE_GUI_QRCODEIMAGE_LARGURA_EXCEDIDA 4948), here, which builds an api::CQRCodeGuard (fn 5502, unit 204) on its
+# frame, and api::CBmpConversor::CreateBitmapHeader (record cbmpconversor.cpp 122:15, unit 22). In the whole link
+# (pnpm wasm score at the default depth) it is 52 over 839 rows: 36 operand-only, 8 inserted and 8 deleted, the 8 being
+# CreateBitmapHeader's stores of the file header's type (+0) and size (+2), which the target makes right after the vector
+# is built and ours after the info header; unit 22's fragment has the forms measured for them. It stays written: it is a
+# vtable slot, which a trap would only hide (docs/how-to-decompile.md step 5). The forms the bytes chose, each measured in
+# the whole link: a row's modules painted by two loops in an if/else on the module's bit, and the rows counted from the
+# QR code's width down to 1 with (y - 1) in the index, 67 over 844 before CreateBitmapHeader's final form. With the rows
+# counted from width - 1 down to 0, the row loop's exit test is `>= 2` where the target's is `> 1`, and the if/else gives
+# 280 over 889 (its object tests escala once above the rows, where the target tests it in each arm), a branch inside one
+# loop 222 over 871 and the colour computed before one loop 303 over 877. The size is read before the width at the call
+# (CreateBitmapHeader's parameter order, unit 22's fragment). The padding of a row to four bytes is a uint16_t: the
+# target zero-extends it before adding the width. Chosen: every name but MontaImagem's, MontaImagem's being in this TU
+# beside GetData (its record names the file), the definitions' order, and the constructor's place after GetData.
 # CDataText<CCargoDSNomeSexoCandidato>'s control block (12637, 12636) is unit 102's; the roots' std::make_shared of it
 # instantiates the same block, which links from unit 102's object, ahead of this one, as 12632's GetText does.
 # The roots' stand-ins for fn 4185, which builds CDataText<comum::CCandidaturasDSNome> and
@@ -54,8 +71,9 @@
 #   UENUX2_CXXFLAGS's difference from APP_CXXFLAGS while the tree built at -O2.
 # The roots compiled with UENUX2_CXXFLAGS (-O3 -fno-strict-aliasing -std=c++23) and with APP_CXXFLAGS: 131 of the 132
 # functions the two objects share compare equal (133 at APP_CXXFLAGS); what differs is the stand-in TextoFuncao and the
-# allocate_shared it inlines at -O3, so every instance the object emits, 3661 among them, is the same at the tree's
-# flags; 12632's and 12649's GetText, which link from unit 102's roots object, are the same code in both.
+# allocate_shared it inlines at -O3, so every instance the object emits is the same at the tree's flags (measured while
+# the object also emitted 3661, which GetData's object emits now); 12632's and 12649's GetText, which link from unit
+# 102's roots object, are the same code in both.
 # Forms measured not to:
 #   operator()(const std::string&) without `inline`: it stays out of line in the object and binaryen inlines it into 10746,
 #   whose row is then `differs` at +0x3, with an outer block and the string's address in a local;
@@ -72,9 +90,10 @@
 # (1768 B) and 652 (4609 B): both inline it, it is their only record, and tools/round/stubs.py counts a function whose
 # record lines all hold code as written. Neither is written; no evidence names their file.
 UENUX2_SRCS += src/api/gui/cqrcodeimage.cpp
-$(ROOT)/$(APP)/79-uenux2-cdatatext-pending.o: $(ROOT)/src/units/79-uenux2-cdatatext-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/79-uenux2-cdatatext.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/79-uenux2-cdatatext-pending.cpp -o $(R)
+# cqrcodeimage.cpp includes api/gui/cqrcodeguard.h, which includes libqrencode's qrencode.h, and UENUX2_CXXFLAGS has no
+# path to it. An include path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").
+$(ROOT)/$(APP)/uenux2/src/api/gui/cqrcodeimage.cpp.o: UENUX2_CXXFLAGS += -Ithird_party/libqrencode
 W79_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/79-uenux2-cdatatext-roots.o: $(ROOT)/src/units/79-uenux2-cdatatext-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/79-uenux2-cdatatext.mk $(W79_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/79-uenux2-cdatatext-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/79-uenux2-cdatatext-pending.o $(APP)/79-uenux2-cdatatext-roots.o
+override EXTRA_OBJS += $(APP)/79-uenux2-cdatatext-roots.o
