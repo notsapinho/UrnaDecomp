@@ -11352,3 +11352,5 @@
 10690 _ZN4vota13CEscolheOpcao10StartStateEv
 11655 __cxx_global_array_dtor.2@app/uenux2/src/app/comum/cinfomtlcd.cpp.o
 11656 __cxx_global_array_dtor@app/uenux2/src/app/comum/cinfomtlcd.cpp.o
+4620 _ZN4vota20DesenhaDescricaoModoERN3api7IScreenENS0_6SPointE
+7707 _ZN4vota16CPreShowFormVota7PreShowERN3api7IScreenE

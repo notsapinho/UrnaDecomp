@@ -960,11 +960,6 @@
 // f12641 · 544 B · unmatched · placement: link order · name unknown
 // void f12641(i32, i32) { ... }
 
-// link-order cluster 695 · uses=2
-
-// f4620 · 229 B · unmatched · placement: link order · name unknown
-// void f4620(i32, i32) { ... }
-
 // link-order cluster 737 · uses=2
 
 // f5254 · 1114 B · unmatched · placement: link order · name unknown
