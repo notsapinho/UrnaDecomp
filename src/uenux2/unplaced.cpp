@@ -136,9 +136,6 @@
 
 // link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
 
-// f5581 · 427 B · unmatched · placement: link order · name unknown
-// void f5581(i32, i32, i32) { ... }
-
 // f5579 · 638 B · unmatched · placement: link order · name unknown
 // void f5579(i32, i32, i32, i32) { ... }
 

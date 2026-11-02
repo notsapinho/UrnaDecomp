@@ -108,6 +108,8 @@
 #   (fn 1543, record crelutil.cpp:307) and fn 5591, and it tests CInformacaoEleicao::EhModoDemonstracao as
 #   GetSeparadorFase does. It adds the demonstration-mode line, centred in style 1, and two blank lines: 10 over 69,
 #   all operand-only. Its name, its lines and its being a static member are chosen.
+# - ImprimeSeparadorVia (fn 5581, no record), on lines 403 to 408: src/units/235-uenux2-imprimeseparadorvia.mk has its
+#   evidence and choices, and its roots stand for its caller.
 # - TituloPartido (fn 11181, record crelutil.cpp:58:15, `std::string comum::(anonymous namespace)::TituloPartido()`)
 #   returns CTradutorFrase::Traduz("<PLSN>") + ": " + the current party's number + " - " + its abbreviation (the string
 #   at +4 of md::CPartido, GetSigla), and throws CUeComumRelatoriosError 9084 "Partido não posicionado" when

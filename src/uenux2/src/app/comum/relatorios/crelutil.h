@@ -35,6 +35,9 @@ namespace comum {
 // opening and closing date and time lines through ImprimeDataHora (fn 1542). None of the four has a record: their
 // names, their parameters' types, that they are static members of this class and that they live in crelutil.cpp are
 // chosen (src/units/123-uenux2-crelatoriotesteimpressora.mk says what places them).
+// ImprimeSeparadorVia (fn 5581), which vota::CGeraBU's slot 2 (fn 12110) calls twice with a counter plus one and a
+// total: no record names it, so its name, its being a static member (the class's records name only static members)
+// and its parameters' unsigned int (the format's argument code says unsigned, not the width) are chosen.
 class CRelUtil {
 public:
     static std::string GetIDCargaFormatado(const std::string& idCarga);
@@ -50,6 +53,7 @@ public:
     static void IncluiAvisoModoDemonstracao(api::CPaperFormBuilder& builder);
     static std::string DSCodigoVerificador();
     static std::string GetSeparadorFase(const EUrnaFase fase);
+    static void ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias);
 };
 
 } // namespace comum
