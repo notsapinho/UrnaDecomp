@@ -74,16 +74,6 @@
 // f4471 · 140 B · unmatched · placement: link order · name unknown
 // void f4471(i32, i32, i32) { ... }
 
-// link-order cluster 691 · uses=2
-
-// f4557 · 162 B · unmatched · placement: link order · name unknown
-// void f4557(i32) { ... }
-
-// link-order cluster 692 · uses=2
-
-// f4563 · 174 B · unmatched · placement: link order · name unknown
-// void f4563(i32) { ... }
-
 // link-order cluster 693 · uses=2
 
 // f4578 · 41 B · unmatched · placement: link order · name unknown

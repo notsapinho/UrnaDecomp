@@ -129,11 +129,6 @@
 // f5950 · 399 B · unmatched · placement: link order · name unknown
 // void f5950(i32, i32, i32) { ... }
 
-// link-order cluster 868 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmostraqrcodebu.cpp
-
-// f5978 · 97 B · unmatched · placement: link order · name unknown
-// void f5978(i32) { ... }
-
 // link-order cluster 869 · uses=2
 
 // f6044 · 571 B · unmatched · placement: link order · name unknown
