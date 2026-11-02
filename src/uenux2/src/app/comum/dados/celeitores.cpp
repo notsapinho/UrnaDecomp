@@ -99,8 +99,24 @@ md::ETipoAbrangencia CEleitores::GetCurrentAbrangenciaEleitor() const
     return detalhe->GetEleitor().GetAbrangencia(m_uf, m_municipio);
 }
 
-// (original lines 502-639: content not recovered)
-#line 640
+// (original lines 502-623: content not recovered)
+#line 624
+CEleitores::SQuantidadeAptos CEleitores::QuantidadeAptos() const
+{
+    SQuantidadeAptos quantidade{};
+    for (const Container::value_type& registro : m_registros) {
+        const CEleitorDetalhe& detalhe = registro.second;
+        if (detalhe.SemImpedimento()) {
+            if (!detalhe.GetEleitor().IsTTE()) {
+                ++quantidade.m_semTransferencia;
+            } else {
+                ++quantidade.m_comTransferencia;
+            }
+        }
+    }
+    return quantidade;
+}
+
 ueword CEleitores::QuantidadeHabilitacaoSemBiometria() const
 {
     return std::count_if(m_registros.begin(), m_registros.end(), [](const Container::value_type& registro) {

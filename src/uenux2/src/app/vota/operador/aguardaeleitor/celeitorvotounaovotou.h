@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "app/comum/cappstate.h"
@@ -25,8 +26,9 @@ namespace vota {
 // f1284(p0); f136(p0)); it stores no vptr, which clang leaves out only when the class or the destructor is final. fns
 // 1284 and 2884 fill the same slots of vota::CRetirarMR, CDigitalNaoReconhecida and CEleitorDemorando: binaryen merged
 // those classes' destructors. Declared first, it is the key function and celeitorvotounaovotou.cpp emits the vtable: a
-// choice, as a key function StartState gives the same objects' code. Not recovered: the constructor and GetInst (fn
-// 1901; its name follows the project's other singletons).
+// choice, as a key function StartState gives the same objects' code. GetInst (fn 1901; its name follows the project's
+// other singletons) holds the constructor inlined, which initializes the form from a helper that builds it and takes
+// the two strings by value (1901 adds a reference to each before building the form and drops both after it).
 //
 // The layout: +11 whether the voter voted: fn 1901 clears it, and the code that goes to this state sets it first, to 0
 // in CMostraEleitorVotando's and CPerguntaCodigoSuspensao's slot 6 (fns 10425, 10419) and to 1 in
@@ -49,6 +51,9 @@ public:
 
 private:
     CEleitorVotouNaoVotou();
+
+    static std::unique_ptr<CEleitorVotouNaoVotou> s_inst;
+    static std::mutex s_mutex;
 
     bool m_bVotou;
     std::shared_ptr<std::string> m_situacao;

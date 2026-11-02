@@ -2,23 +2,21 @@
 // vtable it stores kept by the static constructor below. None of the target's builders is reconstructed. Each builder
 // here is an optnone function that nothing calls, which wasm-ld drops; clang emits what it instantiates in this object,
 // and the sink keeps the one vtable the target's own builder stores (the grep for its address point lists the function):
-// - a class with no key function, built in the builder so that this object emits its vtable and the slots: the texts
-//   api::CDataText<comum::CRespostasDSNumero> (vptr 1537840, stored by fn 6652) and
-//   api::CDataText<vota::CEscolheOpcao::COpcaoDS> (1588108, fn 2753). Their GetText call the source's call operator,
-//   defined out of line in crespostas.cpp and cescolheopcao.cpp, which binaryen inlines into its one caller (fns 12621
-//   and 10685; the fragment says which form the target shows). Unit 102's roots object, ahead of this one, instantiates
-//   CDataText<CRespostasDSNumero> too, in a builder it drops, so the copies the link keeps of that class's vtable and
-//   GetText are that object's, the same code. CRespostasDSNumero's constructor is declared only: fn 6652 builds the
-//   source with a call of fn 5729, which stores its byte and returns this, and fn 600 calls the same body on another
-//   class's one-byte object (unit 154 writes that one, CSynchronizer's), so the target holds one body for both and does
-//   not tell which source defines it. COpcaoDS is copied, as fn 2753 copies it.
+// - a class with no key function, built in the builder so that this object emits its vtable and the slots: the text
+//   api::CDataText<comum::CRespostasDSNumero> (vptr 1537840, stored by fn 6652). Its GetText calls the source's call
+//   operator, defined out of line in crespostas.cpp, which binaryen inlines into its one caller (fn 12621). Unit 102's
+//   roots object, ahead of this one, instantiates CDataText<CRespostasDSNumero> too, in a builder it drops, so the
+//   copies the link keeps of that class's vtable and GetText are that object's, the same code. CRespostasDSNumero's
+//   constructor is declared only: fn 6652 builds the source with a call of fn 5729, which stores its byte and returns
+//   this, and fn 600 calls the same body on another class's one-byte object (unit 154 writes that one, CSynchronizer's),
+//   so the target holds one body for both and does not tell which source defines it.
 // - a control block: std::make_shared<T> for __shared_ptr_emplace<T>, with T std::string (vptr 1588328, stored by fns
 //   652, 1901, 2734, 2747, 5397, 10440 and 10465, and by 1150, which is in the link) and api::CInputMenuField (1579324, fn 3675). A dropped builder
 //   needs T's constructor declared, not defined.
-// vota::CEscolheOpcao's own vtable (vptr 1588004, stored only by fn 2753, its GetInst with the constructor inlined, not
-// reconstructed) is kept by its address too, which keeps its slots: the destructors in cescolheopcao.cpp and the traps.
-// And four stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo, kept by their
-// addresses: each comment names the target callers it stands for. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
+// And six stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo, of
+// vota::CEscolheOpcao::GetInst and of vota::AdicionaCampoNumerico, kept by their addresses: each comment names the target
+// callers it stands for. GetInst (fn 2753) stores the vptrs of CEscolheOpcao and of CDataText<CEscolheOpcao::COpcaoDS>
+// in cescolheopcao.cpp's object, so no sink keeps those vtables here. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
 // 1575124, stored by fn 12110), has no builder here: one in this object only declares the destructor, so the block's
 // __on_zero_shared frees what the destructor returns, where the target's (fn 11263) frees the pointer it passed, and
 // the destructor (fn 5614) then keeps its result and stops matching. The fragment has the measurement.
@@ -30,26 +28,21 @@
 
 #include "api/gui/cdatatext.h"
 #include "api/gui/cinputmenufield.h"
+#include "api/gui/cmtformbuilder.h"
+#include "api/gui/iinputfield.h"
 #include "app/comum/dados/crespostasds.h"
 #include "app/comum/relatorios/ccalculacv.h"
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 
 extern "C" {
 extern const char w121_vt_respostas[] __asm__("_ZTVN3api9CDataTextIN5comum18CRespostasDSNumeroEEE");
-extern const char w121_vt_opcao[] __asm__("_ZTVN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEEE");
 extern const char w121_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEEE");
 extern const char w121_vt_menu[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api15CInputMenuFieldENS_9allocatorIS2_EEEE");
-extern const char w121_vt_escolhe[] __asm__("_ZTVN4vota13CEscolheOpcaoE");
 }
 
 __attribute__((optnone, noinline)) void w121_respostas(uebyte digitos)
 {
     const api::CDataText<comum::CRespostasDSNumero> texto(comum::CRespostasDSNumero{digitos});
-}
-
-__attribute__((optnone, noinline)) void w121_opcao(const vota::CEscolheOpcao::COpcaoDS& opcao)
-{
-    const api::CDataText<vota::CEscolheOpcao::COpcaoDS> texto(opcao);
 }
 
 __attribute__((optnone, noinline)) std::shared_ptr<std::string> w121_string(const std::string& valor)
@@ -98,6 +91,21 @@ __attribute__((noinline)) unsigned w121_codigo(comum::CCalculaCV& calcula)
     return calcula.CalculaCodigo().size() + 121;
 }
 
+// Stands for the four target callers of vota::CEscolheOpcao::GetInst (fn 2753): fns 10677, 10698, 10740 and 10754,
+// slots of states not reconstructed. Two calls, so binaryen keeps GetInst a function of its own.
+__attribute__((noinline)) bool w121_escolhe()
+{
+    return &vota::CEscolheOpcao::GetInst() == &vota::CEscolheOpcao::GetInst();
+}
+
+// Stands for eight target callers of vota::AdicionaCampoNumerico (fn 1151), all but fn 2753: fns 652, 2735, 3631, 5418,
+// 10388, 10415, 10500 and 10627. They pass the length and the flag as 1 and 0, 4 and 1 or 12 and 1, so these pass 12 and
+// false, which keeps both parameters through binaryen's dead-argument elimination, as fn 2753's 1 and true alone would not.
+__attribute__((noinline)) bool w121_campo(api::CMTFormBuilder& builder, const api::SPoint& posicao)
+{
+    return vota::AdicionaCampoNumerico(builder, 12, false, posicao) != nullptr;
+}
+
 const void* volatile w121_sink;
 
 struct SW121Roots {
@@ -107,11 +115,11 @@ struct SW121Roots {
         w121_sink = reinterpret_cast<const void*>(&w121_inclui);
         w121_sink = reinterpret_cast<const void*>(&w121_reinicia);
         w121_sink = reinterpret_cast<const void*>(&w121_codigo);
+        w121_sink = reinterpret_cast<const void*>(&w121_escolhe);
+        w121_sink = reinterpret_cast<const void*>(&w121_campo);
         w121_sink = w121_vt_respostas;
-        w121_sink = w121_vt_opcao;
         w121_sink = w121_vt_string;
         w121_sink = w121_vt_menu;
-        w121_sink = w121_vt_escolhe;
     }
 } w121_roots;
 

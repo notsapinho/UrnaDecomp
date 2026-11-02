@@ -1,5 +1,6 @@
 # uenux2 vota::CEleitorVotouNaoVotou::StartState (target fn 10431, slot 2 of its vtable @1592928) with its destructor
-# and deleting destructor (fns 1284, 2884, slots 0 and 1), and comum::IPedeTituloMesario's StartState, constructor and
+# and deleting destructor (fns 1284, 2884, slots 0 and 1), its GetInst (fn 1901) with the constructor and the static
+# destructor of s_mutex (fn 10433), and comum::IPedeTituloMesario's StartState, constructor and
 # implicit destructor (fns 10314, 3608, 1378). The class headers say what the layout rests on; ProcessInput of each (fns 10430,
 # 10313) is pending. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) and its base
 # api::IForm<MEDIA> (api/gui/iform.h) are unit 120's.
@@ -47,6 +48,22 @@
 # (cregistrarmesarios.cpp), which binaryen joins with it into target fn 1255. Unit 247's fragment has the evidence for a
 # second function and what is chosen (this class, a protected non-static member, its name), and its roots stand in for
 # the copy's callers, the three derived constructors in fn 10388.
+#
+# GetInst (1901), the project's singleton, holds the constructor inlined behind a 96-byte frame of its own: CAppState's
+# with EVENTO_ENTRADA, +11 cleared, two std::make_shared<std::string> (the first from "pode/nao pode entregar comp", the
+# second from "": its size byte and first byte stored, where make_shared<std::string>() zeroed the twelve bytes, 45 over
+# 520 rows, 3 not operands), one more reference taken on each before the form is built and dropped after it, the two
+# arguments of a helper that takes them by value, which initializes the form at +28 in the member list (fn 301 writes
+# it in place). The helper: AddLed(LED_OPERACAO_0), GetTextoIdentidadeDigitada at {1, 1}, a CTextSource over each string
+# with "%s" at {1, 2} and {1, 3} (fn 1152), "CONFIRMA: prosseguir" at {40, 4} on the right, AddInputControl,
+# GetInteractiveForm("", true). Before steps 7 to 9: 42 over 520 rows, all operand-only, the statics' addresses. The
+# helper's being in an anonymous namespace, its name and its parameters are chosen. The statics are defined before
+# StartState: their destructors (10434, 10433) sit above 10431 in band 1. s_inst (@1909288) has a hand line in
+# splat/symbol_addrs.txt: step 8 names it by GetInst's votes alone, which the self-vote rule refuses, and its static
+# destructor 10434, the other function that reads it (a thunk into 2903, the body four classes' statics share; elem
+# 4215 to 4222 tie it to this class), does not match: the census pairs our destructor of it with fn 10414 (the same
+# body as ours, over another class's pointer and D2: a shape pair), and 10434 stays no-candidate. The roots stand
+# for 1901's target callers (10209, 10419, 10425), and the vtable sink went: 1901's constructor stores the vptr.
 #
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 120's now
 # (unit 65 wrote its first form): this unit adds nothing to it.

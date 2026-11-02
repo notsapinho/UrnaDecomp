@@ -1,7 +1,8 @@
 // Roots: keep the api::CTextFieldMT constructor (target fn 1262) in the skeleton link. The target calls it directly from
 // eight functions (180 619 651 1152 2753 5409 5419 10388, ledger/callgraph.tsv; each a
 // std::shared_ptr<IFormField<IScreenMT>>(new CTextFieldMT(...)) on a 48-byte block), none through the table. Six are
-// written, in cmtformbuilder.cpp; 2753 and 10388 are not, and the two noinline callers here stand for them. Their bodies
+// written, in cmtformbuilder.cpp, and 2753 in unit 121's cescolheopcao.cpp; 10388 is not, and the two noinline callers
+// here stood for 2753 and 10388 and stay for 10388. Their bodies
 // differ and both use the `this` it returns, so binaryen's dead-argument elimination keeps the target's
 // (i32 i32 i32)->(i32). They are address-taken from a static constructor. Its vtable, and through it the destructors and
 // IFormField<IScreenMT>::GetTypeName, are kept by the constructor's vptr store. Declared through an asm label with the

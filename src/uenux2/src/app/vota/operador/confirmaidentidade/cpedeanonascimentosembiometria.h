@@ -21,7 +21,7 @@ namespace vota {
 // 10492 and 10491; the constructor, inlined there, passes comum::CAppState::EVENTO_ENTRADA (2) to the base's and stores
 // what the layout below holds. The destructor is out of line: the deleting one (fn 765) calls it and frees `this`, and
 // it stores no vptr, as a final class's; 19 states share the two bodies, fns 448 and 765. Not recovered: the constructor
-// and GetInst (fn 10500, which holds them inlined, calls fn 1151 and six others that have no name).
+// and GetInst (fn 10500, which holds them inlined, calls fn 1151, vota::AdicionaCampoNumerico, and six with no name).
 //
 // The layout: +12 and +20 two forms, each from api::CMTFormBuilder::GetInteractiveForm (fn 301); StartState shows the
 // first. +28 a 32-bit word that the constructor and StartState set to 0, and +32 a byte both set to 1. int and bool are

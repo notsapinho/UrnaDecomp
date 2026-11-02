@@ -33,6 +33,11 @@ md::ETipoImpedimento CEleitorDetalhe::GetImpedimento() const
     return appInfo.GetGeral().GetDadoCarga().GetTurno() == TURNO_2 ? m_impedimentoP2 : m_impedimentoP1;
 }
 
+bool CEleitorDetalhe::SemImpedimento() const
+{
+    return GetImpedimento() == md::IMPEDIMENTO_SEM_IMPEDIMENTO;
+}
+
 const md::CEleitorDinamico& CEleitorDetalhe::GetDinamico() const
 {
     ConfereDadosDinamicos("GetDinamico");

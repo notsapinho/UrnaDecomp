@@ -25,12 +25,7 @@
 # Same code, by the same comparison: `static_cast<std::string>(digitado)` for the plain branch; `digitado` const or not;
 # GetLength() for m_length. Written as the file has them by choice; every name in Draw is chosen.
 #
-# Not written: fn 1151, the one builder of a CInputFieldMT (src/units/120-uenux2-iform.mk, "Not matched", has what keeps
-# it out), so no function of this link builds the class, and the roots take the vtable's address.
+# The class's one builder, fn 1151 (vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp), is in the link and
+# stores the vptr, so the roots file that took the vtable's address went with it.
 CINPUTFIELDMT_SRCS := src/app/vota/operador/outrasopcoes/cinputfieldmt.cpp
 UENUX2_SRCS += $(CINPUTFIELDMT_SRCS)
-# fn 1151, the vtable's only user in the target, is not reconstructed: 146-uenux2-cinputfieldmt-roots.cpp takes the
-# vtable's address
-$(ROOT)/$(APP)/146-uenux2-cinputfieldmt-roots.o: $(ROOT)/src/units/146-uenux2-cinputfieldmt-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/146-uenux2-cinputfieldmt.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/146-uenux2-cinputfieldmt-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/146-uenux2-cinputfieldmt-roots.o

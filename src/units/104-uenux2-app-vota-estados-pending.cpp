@@ -155,7 +155,7 @@ namespace comum {
 
 // CPedeTituloMesario::StartState: fn 10388 (4789 B), records cpedetitulomesario.cpp:33,
 // cpedetitulomesariofinal.cpp:45, cpedetitulomesarioinicial.cpp:44, cpedetitulomesariovotacao.cpp:44, callees with no
-// name: 180, 203, 301, 728, 1151.
+// name: 180, 203, 301 and 728 match now, and 1151 (unit 121's); 10388 is not read further.
 void CPedeTituloMesario::StartState()
 {
     __builtin_trap();
@@ -165,7 +165,9 @@ void CPedeTituloMesario::StartState()
 
 namespace vota {
 
-// CSincronismoOperador::ProcessKey: fn 10209 (120 B), callees with no name: 509, 652, 697, 1901, 5341, 5393.
+// CSincronismoOperador::ProcessKey: fn 10209 (120 B), callees with no name: 652 (vota::CPedeIdentidade::GetInst) and 5341
+// (a screen it shows with key 14 or 15, which builds its api::CMTFormBuilder in place, its 12 bytes zeroed with no call of
+// fn 203). 509, 697, 1901 (unit 71's) and 5393 (unit 152's) match.
 void CSincronismoOperador::ProcessKey(uebyte)
 {
     __builtin_trap();

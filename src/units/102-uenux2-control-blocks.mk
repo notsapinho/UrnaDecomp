@@ -1,7 +1,12 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 47 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Nineteen come from the objects of units 31, 120, 101, 165,
-# 91, 127, 164, 113, 163, 110 and 122, whose builders are written, so the roots no longer instantiate them:
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 44 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). 22 come from the objects of units 31, 120, 101, 165,
+# 91, 127, 164, 113, 163, 110, 122 and 121, whose builders are written, so the roots no longer instantiate them:
+# CNumberValidation's and CInputFieldMT's (1151, vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp, from which
+# 12463 and 10683 match; CNumberValidation's other builders, 2383 and 7787, are not written, and the block's stand-in
+# went all the same: one builder's vptr store keeps the block's vtable, and a link with the stand-in back moves no
+# row) and
+# CDataText<vota::CEscolheOpcao::COpcaoDS>'s (2753, the same object, from which 10684 matches),
 # IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CPreShowClearScreen's
 # (11140, CFormBuilder::GetForm(const std::string&), unit 31's cformbuilder.cpp, from which 11138 matches),
 # CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
@@ -28,10 +33,8 @@
 #   IFormField<IPaper>: CTextFieldPaper 193, 604, 5613, 12105: 11997. CCutFieldPaper 1264: 10994.
 #     CNewLineFieldPaper 198: 10993
 #   IFormField<IScreen>: CDSImageField 502: 11116
-#   IInputValidation: COptionValidation 5913: 11665. CNumberValidation 1151, 2383, 7787: 12463
-#   IInputField<IScreenMT>: CInputFieldMT 1151: 10683
-#   IText: CDataText<vota::CEscolheOpcao::COpcaoDS> 2753: 10684 (CDataText<CPadDS<CToUpperDS<CCargoDSNome>>>'s, 11246,
-#     comes from its builder, fn 5613, which unit 139 matches)
+#   IInputValidation: COptionValidation 5913: 11665
+#   IText: CDataText<CPadDS<CToUpperDS<CCargoDSNome>>>'s, 11246, comes from its builder, fn 5613, which unit 139 matches
 #   IForm<IPaper>: IFormImpressao<IPaperRelatorios> 5515: 11001
 #   IPreShow<IScreen>: CPreShowNothing<IScreen> 11891: 11137
 #   IPreShow<IPaper>: CPreShowNothing<IPaper> 5515: 11010
