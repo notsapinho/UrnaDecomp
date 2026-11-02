@@ -137,6 +137,12 @@
 # codes written as literals (as 7221's Post(12) is), and the declaration order of the class's virtual members (the
 # destructor first). A reading, not a choice: that g_votosEleitor is a CCedula (above).
 #
+# vota::ArtigoCandidato, in cinformacaoeleitor.cpp: the letter of the "{o/a}" tag of
+# vota::CVotacaoStateAudio::FormataMensagem (fn 6999, unit 97, whose fragment has the measurement), 'a' when the current
+# candidacy's holder is a woman, else 'o'. 6999 holds it inlined by binaryen, and in 6999's own file clang forms a select
+# the target does not have, so it is a function of another TU. Its name, its being a free function and this file, beside
+# the voter's statics, are chosen; its one caller is 6999, so it has no index of its own.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CELEITORVOTANDO_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/vota/eleitor/comum/cinformacaoeleitor.cpp src/app/comum/dados/md/rdv/ccedula.cpp src/app/vota/operador/cthreadoperador.cpp
 UENUX2_SRCS += $(CELEITORVOTANDO_SRCS)

@@ -28,6 +28,9 @@ namespace comum::md {
 class CCedula {
 public:
     CCedula();
+    // vota::CVotacaoStateAudio::FormataMensagem (fn 6999) reads the vector's size from vota::g_votosEleitor. The accessor
+    // and its name are chosen.
+    const std::vector<std::pair<TCargoID, CVoto>>& GetVotos() const { return m_votos; }
 
     void Adiciona(TCargoID cargo, CVoto voto);
 

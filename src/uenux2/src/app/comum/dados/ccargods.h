@@ -35,6 +35,13 @@ private:
 
 class CCargoDSNomeSexoCandidato {
 public:
+    // vota::CVotacaoStateAudio::FormataMensagem (fn 6999) builds one in its frame, the flag 1 at +1 and the order at +0,
+    // and calls the operator on it. The constructor and its parameters' names are chosen.
+    CCargoDSNomeSexoCandidato(uebyte suplente, bool abreviaNomeLongo)
+        : m_suplente(suplente), m_abreviaNomeLongo(abreviaNomeLongo)
+    {
+    }
+
     std::string operator()() const;
 
 private:

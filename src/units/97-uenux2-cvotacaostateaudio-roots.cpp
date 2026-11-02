@@ -49,6 +49,10 @@
 // TelaCompleta stand for the four ProcessInputAudio. The forms they return are left as they are, as nothing calls
 // these.
 //
+// comum::md::CCargo::GetDetalheConsulta (target fn 1923, a thunk into binaryen's merge 6029, whose other member is
+// comum::md::CLocal::GetContingencia, fn 3724) has six direct callers in the target: fns 3074, 3819, 5604, 6999, 7787 and
+// 11253. 6999 is written; with it alone binaryen inlines the member into it. DetalheConsulta stands for the other five.
+//
 // The rest is declared through asm labels (a constructor returns `this` before binaryen runs).
 #include <cstdint>
 
@@ -75,6 +79,7 @@ void w97_tela_em_cargo(void* tela, void* estado, const void* chamador) __asm__(
     "_ZN4vota20CConfirmaVotoEmCargo17GetTelaCargoAtualERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w97_tela_completa(void* tela, void* estado, const void* chamador) __asm__(
     "_ZN4vota21CCompletaProporcional17GetTelaCargoAtualERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
+const char* w97_detalhe_consulta(const void* cargo) __asm__("_ZNK5comum2md6CCargo18GetDetalheConsultaEv");
 }
 
 namespace {
@@ -155,6 +160,12 @@ __attribute__((noinline)) int TelaCompleta(void* estado, const void* chamador)
     return tela[5] + 14;
 }
 
+// stands for fns 3074, 3819, 5604, 7787 and 11253
+__attribute__((noinline)) int DetalheConsulta(const void* cargo)
+{
+    return w97_detalhe_consulta(cargo)[11] + 15;
+}
+
 struct SCVotacaoStateAudioRoots {
     SCVotacaoStateAudioRoots()
     {
@@ -173,6 +184,7 @@ struct SCVotacaoStateAudioRoots {
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&TelaProporcional);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&TelaEmCargo);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&TelaCompleta);
+        cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DetalheConsulta);
     }
 } cvotacaostateaudio_roots;
 

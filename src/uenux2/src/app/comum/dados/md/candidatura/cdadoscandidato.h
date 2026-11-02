@@ -45,6 +45,9 @@ public:
     // +8) or GetSuplente's.
     const std::string& GetCodigo() const { return m_codigo; }
     const std::string& GetNomeUrna() const { return m_nomeUrna; }
+    // vota::CVotacaoStateAudio::FormataMensagem (fn 6999) copies the optional string at +24 when it is engaged (+36),
+    // else the name at +12. The name is chosen, as the member's is.
+    const std::optional<std::string>& GetNomeFonetico() const { return m_nomeFonetico; }
     signed char GetOrdem() const { return m_ordem; }
     // The name is chosen: comum::CCandidaturasDSSexo's call operator (fn 5806) reads +40 for its ESexo.
     CSexo::ESexo GetSexo() const { return m_sexo; }

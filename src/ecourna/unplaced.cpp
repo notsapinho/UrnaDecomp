@@ -118,9 +118,6 @@
 // f6044 · 571 B · unmatched · placement: link order · name unknown
 // void f6044(i32, i32, i32, i32, i32) { ... }
 
-// f6029 · 68 B · unmatched · placement: link order · name unknown
-// ? f6029(i32, i32, i32, i32, i32) { ... }
-
 // f6013 · 2101 B · unmatched · placement: link order · name unknown
 // ? f6013(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 

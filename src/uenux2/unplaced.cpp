@@ -265,11 +265,6 @@
 // f6681 · 476 B · unmatched · placement: link order · name unknown
 // void f6681(i32, i32) { ... }
 
-// link-order cluster 924 · uses=2
-
-// f6901 · 13 B · unmatched · placement: link order · name unknown
-// void f6901(i32) { ... }
-
 // link-order cluster 928 · uses=2
 
 // f6958 · 863 B · unmatched · placement: link order · name unknown
