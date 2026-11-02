@@ -8,28 +8,25 @@
 //   GetCaminhoCorretoExternal (cgravadorwsq.cpp:175 and :192); 6041 is not named, and 1274 is
 //   comum::CPath::GetPathResult (unit 190). They go in src/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp when they
 //   are reconstructed; with Slot2 the vtable and the implicit destructors move there too, under the same symbols.
-// - CGravadorWSQ's typeinfo names IGravador's, which is emitted only with IGravador's key function (its first
-//   out-of-line virtual member): without a definition of it the link stops on an undefined `typeinfo for
-//   comum::IGravador`. IGravador's vtable (@1553648) needs its five members defined: Slot2 fn 11632, Slot3 fn 11630,
-//   Slot4 fn 11634, Slot5 fn 11633, Slot6 fn 11631 (608, 1207, 438, 438 and 608 B, no record). IGravador's
-//   constructor (fn 1396, unit 122's, in iresultado.cpp) stores its vptr, so the link keeps that vtable and these
-//   traps, and the five stubs went from src/uenux2/unplaced.cpp; the scan lists the five `no-candidate`. They go in
-//   the file of IGravador's key function when they are reconstructed: iresultado.cpp, where unit 122 put the
-//   constructor, is a choice the vtable's place in the data allows (that unit's fragment), not evidence.
+// - comum::IGravador's Slot4 and Slot5, fns 11634 and 11633 (slots 4 and 5 of IGravador's vtable @1553648, 438 B each,
+//   no record). IGravador's key function, Slot2, and Slot3 and Slot6 are unit 122's, in iresultado.cpp, which emits the
+//   vtable, and these two go there when they are written. Each builds the path of the file in the work directory of
+//   one flash (comum::CPath::GetPathTrab with 0 and with 1, fn 436, then path::operator/= with the file name at +20),
+//   opens it with ecourna::api::io::CFile's constructor (fn 517, the mode "wb" and FileMode 0), passes the file to
+//   GravaResultado (slot 7), then calls Close (fn 336), and the CFile's inline destructor follows. They wait for the
+//   type of GravaResultado's parameter: its records (cgravadorbu.cpp:484, cgravadorhashes.cpp:112,
+//   cgravadorrcsecao.cpp:110) spell it api::CFile, and app/comum/gravadores/igravador.h only forward-declares an
+//   api::CFile, no header of this tree declaring that name as the ecourna::api::io::CFile these bodies pass.
+//   Measured in a whole-link variant (docs/reference/facts/workflow.md W13: iresultado.cpp's object and this one's
+//   replaced), with igravador.h under -iquote declaring `namespace api { using ecourna::api::io::CFile; }` and each
+//   slot written in iresultado.cpp before Slot2 as a named const path (GetPathTrab with FLASH_INTERNA or FLASH_EXTERNA,
+//   then / m_nomeArquivo), `api::CFile arquivo(caminho.string(), "wb");`, `GravaResultado(arquivo);` and
+//   `arquivo.Close();`: fns 11634 and 11633 each scored 15 over 210 rows (pnpm wasm score against the target),
+//   operand-only, every operand a call's or a data address.
 // Delete this file with the last of them.
 #include "app/comum/gravadores/cgravadorwsq.h"
 
 namespace comum {
-
-void IGravador::Slot2()
-{
-    __builtin_trap();
-}
-
-void IGravador::Slot3()
-{
-    __builtin_trap();
-}
 
 void IGravador::Slot4()
 {
@@ -37,11 +34,6 @@ void IGravador::Slot4()
 }
 
 void IGravador::Slot5()
-{
-    __builtin_trap();
-}
-
-void IGravador::Slot6()
 {
     __builtin_trap();
 }

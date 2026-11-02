@@ -17,7 +17,9 @@ namespace comum {
 // R5). It is declared, since a class with no base has a virtual destructor only when it says so; `= default` in the
 // class gives both rows (they match), chosen; the `inline` form was not measured. CCopiadorWSQMR adds no member and
 // overrides nothing (its slots are this class's): its destructor is implicit. Slots 2 and 3 (fns 5874, 5873) are out
-// of line, so Slot2 is the key function; neither is reconstructed, and no evidence names them: they are named after
+// of line, in ccopiadormr.cpp, so Slot2 is the key function. Each copies the result file (the name at +4) from the
+// result directory of one flash (comum::CPath::GetPathResult, the internal one for Slot2, the external for Slot3) to
+// the MR's directory (CPath::GetPathMR) with api::CSystem::CopyFile. No evidence names them: they are named after
 // their slot. Not final: the blocks' __on_zero_shared go through the vtable (fn 411).
 // The directory is placement rule 2's reading: no record names either class, and the vtables and constructors lie in
 // link order between gravadores/cassinador.cpp and gravadores/md/cdependenciascontratos.cpp (data, use bands).

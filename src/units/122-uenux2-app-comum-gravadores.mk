@@ -21,6 +21,20 @@
 # - IResultado's destructor (fn 12090, unit 60's match): its copy in the link now comes from iresultado.cpp.o, which
 #   emits IResultado's vtable with the constructor, ahead of unit 102's roots object; the same symbol, and it still
 #   matches.
+# - comum::IGravador's Slot2, Slot6 and Slot3 (target fns 11632, 11631 and 11630, slots 2, 6 and 3 of IGravador's vtable
+#   and of the eight recorders' that hold them), in iresultado.cpp after the constructor, in the order their use band
+#   gives. Slot2 is the class's key function, so iresultado.cpp.o emits IGravador's vtable now, where unit 60's pending
+#   object did; its traps of Slot4 and Slot5 (fns 11634, 11633) stay there, and its header says what they wait for.
+#   Each slot builds two paths from comum::CPath's directories (GetPathTrab and GetPathResult over EFlashOrigem, fns
+#   436 and 1274) and the file name at +20 (std::filesystem::path's operator/), and calls api::CSystem::CopyFile (fn
+#   378) on their strings: Slot2 and Slot6 copy the work file to the result directory of the internal and of the
+#   external flash, Slot3 copies the work file and then the result file from the internal flash to the external one.
+#   The target's calls pass 0 for the CopyFile bool its type keeps, so the slots pass false there; true for the bool
+#   binaryen folded is unit 32's choice of which bool that is and of its value (api/util/csystem.h). Measured in this
+#   link before step 8 (pnpm wasm score against the target): 11632 19 over 294 rows, 11631 19 over 294, 11630 38 over
+#   582, every one operand-only and every operand a call's or a data address. The paths are named locals, as the
+#   target keeps each to the end of the function (Slot3 destroys its four there, the last built first); `const` on
+#   them and their names are chosen, and no other form was measured.
 # - CGravadorRCSecao's implicit deleting destructor (fn 11615, slot 1): its vtable is emitted in
 #   122-uenux2-app-comum-gravadores-pending.cpp, whose trap of GravaResultado (fn 11616, slot 7, record
 #   cgravadorrcsecao.cpp:110) is the class's key function; the roots keep that vtable. cgravadorrcsecao.h gives the

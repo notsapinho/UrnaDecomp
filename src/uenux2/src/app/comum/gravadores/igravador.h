@@ -18,7 +18,15 @@ namespace comum {
 // destructors inline it and store no vptr of this class (fn 11576; one defined in the class gives the same bytes, one
 // defined out of line a call there). The constructor (fn 1396) passes its arguments on to IResultado's and stores the
 // vptr; that it is defined in iresultado.cpp is a choice the data allows: the vtable (@1553648) follows that file's
-// record (@1553632), so that object can be the one that emits it (unit 122's fragment). The five members are pending.
+// record (@1553632), so that object can be the one that emits it (unit 122's fragment). Slots 2, 6 and 3 (fns 11632,
+// 11631, 11630) are written there, Slot2 the key function, so that object emits the vtable: Slot2 and Slot6 copy the
+// result file from the work directory to the result directory (comum::CPath's GetPathTrab and GetPathResult) of the
+// internal and of the external flash, and Slot3 copies the work file and the result file from the internal flash to
+// the external one, each with api::CSystem::CopyFile. Slots 4 and 5 (fns 11634, 11633) open the file in the work
+// directory of each flash with the mode "wb", pass it to GravaResultado and close it. They are pending
+// (src/units/60-uenux2-cgravadorwsq-pending.cpp): the file they open is an ecourna::api::io::CFile (fn 517, its
+// constructor, builds it), and GravaResultado's records spell their parameter api::CFile, which no header of this tree
+// declares as that class; the forward declaration above is that spelling only.
 class IGravador : public IResultado {
 public:
     IGravador(TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao, char fase,
