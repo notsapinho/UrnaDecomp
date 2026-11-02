@@ -64,6 +64,9 @@ public:
     void LogaSolicitacaoDadoPessoalEleitor();
     void LogaHabilitacaoCanceladaConfirmacaoDado();
     void LogaHabilitacaoCanceladaCapturaDigitalMesario();
+    // Out of line (fn 4550: logaErro, fn 2282), called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName
+    // (fn 6954) and vota::CPedeMajoritario's fn 11683. Its name is chosen from its message.
+    void LogaErroPartidoNaoEncontrado();
 
     void LogaMesarioRegistrado(const std::string& titulo);
     void LogaMesarioJaRegistrado(const std::string& titulo);

@@ -103,6 +103,15 @@
 # - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
 #   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their
 #   evidence and why that object links after ccargos.cpp. The file's other records, lines 25, 93 and 249, are not written.
+# - ccargo.cpp also holds comum::md::CCargo's TemFoto and QtdSuplentes (target fns 1546 and 1157, 16 and 36 B, no
+#   record), which fns 1192, 4185, 6569, 6660, 6671, 6678 and 1588, 6569, 6660, 6671, 6678, 7787, 12272 call 8 and 11
+#   times, none written (those with records, 6660, 6671, 6678, 7787 and 12272, are app/vota/eleitor/comum/ctelasvota.cpp's).
+#   Each reads the candidate detail's engaged flag at +84 and a field of the detail itself, the photo flag at +20 or the
+#   substitutes' vector at +72 (52-byte elements), not through GetDetalheCandidato, which those screens call elsewhere
+#   (fn 1388). That a caller's TU would inline a body this small is a reading, not compiled, so their TU is another
+#   one: ccargo.cpp, their being members, their names, QtdSuplentes' uebyte result, CDetalheCandidato's two accessors
+#   (TemFoto, GetSuplentes) and their lines after operator<=> are chosen; other forms are not measured. Both scored 0 rows over 9 and over 19 (byte-exact) before step
+#   8 and matched at step 9. Their stand-ins are src/units/212-uenux2-app-vota-callers-roots.cpp's.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 PROCESSOELEITORAL_SRCS := src/app/comum/dados/ccargos.cpp \
   src/app/comum/dados/cconfiguracaoeleicao.cpp \

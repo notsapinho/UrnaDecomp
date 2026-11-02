@@ -48,5 +48,5 @@
 # (EUeComumDadosError's, EUeIoError's, EUeComumAsnError's), since ours are uenux2's copies (210: target `i32.const 483`,
 # ours `call 710`). Their vptrs, 1528096, 1528208 and 1528128 (ledger/vtables.json), lie after the records of
 # mock/app/comum/cappinfobuilder.cpp (1528028 to 1528060), a TU with landing pads, and the executable TU's data ends
-# before them: read as that TU's copies, not the executable TU's. 1143, CError's constructor, is 787 rows with 67
-# operand-only: unit 112's fragment says what it waits for.
+# before them: read as that TU's copies, not the executable TU's. 1143, CError's constructor, matches since its
+# literal's tail is in the link: unit 112's fragment says which.

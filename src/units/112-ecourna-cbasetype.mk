@@ -87,10 +87,9 @@
 #   - 9215, TPartidoID's constructor, is ecourna's copy (b/src record) with table slot 6695. It left this list when its
 #     users landed: it matches from cconversorfederacao.cpp's object, unit 105's. In tiposbasicos.cpp NOME's definition
 #     folds, 25 rows, which a converter's TU does not see.
-#   - 1143, CError's constructor, stays `differs`, written and right. All 67 of its 787 rows that differ are operands, and the
-#     first the scan cannot re-point is the literal " - ": the target's lies in the tail of ") - ", which fn 690 holds, a helper
-#     of vota/eleitor/comum/ctelasvota.cpp that builds `prefixo + " - cargo " + ... + ") - " + sufixo`. Ours lies in the tail
-#     of "] - ". With that literal in a scratch link, `pnpm wasm splat-remap ... --against 1143 --no-kinds` prints IDENTICAL.
+#   - 1143, CError's constructor, left this list: it matches since fn 690 (vota::MensagemErroCargo, unit 110's
+#     ctelasvota.cpp) is in the link. Its literal " - " lies in the target in the tail of ") - ", which fn 690 holds; while
+#     690 was not written, ours lay in the tail of "] - ", and all 67 of its 787 rows that differed were operands.
 #   - 3858, __to_chars_itoa<unsigned>, is the executable TU's copy: libc++.a's loads its power table with the address
 #     folded into the load's offset where the target adds it, and its 2869 inlines the digit helpers (3856 3852 2867
 #     3850) that the target keeps out of line. All six match from that TU's object at -Oz (unit 170).

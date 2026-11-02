@@ -195,6 +195,27 @@
 # and the find (1703) keep their bytes under the new types, and step 9 renamed both match lines to the new symbols. The
 # names, the file and the lines (after the destructor, the CEleitorIdentidade overload first) are chosen; the named
 # local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's five callers.
+#
+# ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
+# tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws
+# code 9347 with it over "não é de proporcional"). Its 22 call sites are this file's (fns 3064, 6602, 6603, 6605, 6608,
+# 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787), none written. No record gives its name or its linkage. The file's
+# recorded helpers (DS_CandidatoNaoConcorre, adicionaFotoEmoldurada, the adicionaBaseTela* builders, GetKeyboardLayout)
+# are in an anonymous namespace, where clang emits no function nothing in the TU calls (a reading), so in that form it
+# would leave the link until a caller here is written; it is written as a function of vota with external linkage
+# (docs/how-to-decompile.md step 3, "Names no evidence gives"), and src/units/212-uenux2-app-vota-callers-roots.cpp
+# gives it two call sites. Chosen: its name, its parameters' names, its namespace and linkage, and its lines (801 to 804,
+# above line 822, the first record of a caller). The include line it needed (<string>) took one of the blank lines above
+# line 291. Scored 15 over 340 rows, all operand-only, before step 8; matched at step 9. With its literal ") - " in the
+# link, unit 112's fn 1143 matches too (src/units/112-ecourna-cbasetype.mk).
+# Not written, each waiting for a caller in this file: fn 2028 (502 B; callers 6602, 6605, 6660, 6671, 6678 and 7787)
+# also passes table slot 1089, fn 11501 (573 B, unwritten), which calls CPartidos' constructor and destructor (fns
+# 3751, 2815), its GetInst inlined (a reading); besides 2028 only OpenSSL's ecd_item_verify loads the constant 1089
+# (grep of the split's pieces), so 11501's name waits on 2028 too; fns 4129 and 6528 (their only callers are 4181 and
+# 4184, adicionaFotoEmoldurada over CCandidaturasDSFoto) build the CDataImage<CCandidaturasDSFoto> and
+# CDataText<CCargoDSNomeSexoCandidato> fields whose
+# vtables lie between this file's records in the data; fn 6561 (adicionaFotoEmoldurada over the lambda of
+# CriaTelaVisualizacaoCandidato, record :487) has callers 6569 and 12272 only.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

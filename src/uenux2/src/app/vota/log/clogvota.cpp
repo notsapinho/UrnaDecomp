@@ -58,6 +58,11 @@ void CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado()
     loga("Habilitação cancelada durante confirmação de dado do eleitor");
 }
 
+void CLogVota::LogaErroPartidoNaoEncontrado()
+{
+    logaErro("Erro partido não encontrado");
+}
+
 void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
 {
     loga("Habilitação cancelada durante a captura de digital do mesário");

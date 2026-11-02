@@ -188,6 +188,19 @@
 #   The roots' ConfereNulo and ConfereNominal went with them, and EstadoAudio and PedeMajoritario, which stood for fn
 #   4459, now written (src/units/197-uenux2-celeitorvotando.mk).
 #
+# FormatPartyName (target fn 6954, record :297, code 9321) is written: it converts the number with atoi, finds it in
+# comum::CPartidos' map (CDataMap::Find, inlined: the cursor at +12 set on a hit) and returns a copy of the party's
+# m_nome (+16 of md::CPartido); on a miss it calls vota::CLogVota::LogaErroPartidoNaoEncontrado (fn 4550, unit 119's
+# source) on GetInst's result and throws code 9321, "Nao foi encontrado o partido". Its record shows it neither static
+# nor const; its wasm type has no `this`, which binaryen's dead-argument elimination drops when the body does not read
+# it (a reading). The number is read into a local first, since the target calls atoi before CPartidos::GetInst; the
+# form with the conversion in Find's argument is not compiled. Chosen: the parameter's and locals' names, the test of the
+# null result before the return, its access (private) and the enumerator's name. Its one target caller is fn 6999
+# (slot 14, pending), which calls it twice: src/units/212-uenux2-app-vota-callers-roots.cpp stands for it. Slot 14 is
+# declared const in cvotacaostateaudio.h, a choice that a body calling FormatPartyName on `this` cannot keep, so the
+# writer of 6999 revisits it. The four include lines it needed, with a blank line, took five of the blank lines above
+# line 69 (ProcessInput's record, not written). Scored 13 over 112 rows, all operand-only, before step 8; matched at step 9.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
     src/app/vota/eleitor/cconfirmavotoemcargo.cpp \
