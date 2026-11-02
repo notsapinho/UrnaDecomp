@@ -69,13 +69,15 @@
 # - The destructor pops the context when no exception is in flight (fn 675 calls __cxa_uncaught_exceptions first):
 #   std::uncaught_exceptions() is the form written; std::uncaught_exception() was not measured.
 # - Pop (fn 5553) is written and does not match. The target's body reads the stack at its address as a constant, and
-#   its two callers (7370 and 10467, not reconstructed) pass only the context; ours is Pop with `this` folded by
-#   binaryen, since the roots pass s_contextos. It scores 31 over 105 rows (4 inserted, 4 deleted): the rows that
+#   its two callers (7370, vota::CEleitorVotando::FinishState, unit 197's, and 10467, not reconstructed) pass only
+#   the context; ours is Pop with `this` folded by binaryen, since FinishState and the roots pass s_contextos. It
+#   scores 31 over 105 rows (4 inserted, 4 deleted), with FinishState's call in the link as without it: the rows that
 #   differ are local.get, local.set and local.tee of other locals, the erase loop's values pairing into other locals
 #   than the target's. The same 31 for: Pop inline in the header under a static wrapper in capplication.cpp, the
 #   erase's first iterator written `(it + 1).base()` or `it.base() - 1`, the test written as an early return, and Pop
 #   defined after the guard's destructor; a hand loop over the reverse iterators scores 53 over 110. The remainder is
-#   not explained, and nothing in the link needs Pop's name.
+#   not explained. FinishState (7370) matches through a callers+content hand line for 5553 in
+#   splat/symbol_addrs.txt, whose comment gives Pop's body and the callers.
 # - Roots: 193-uenux2-capplicationcontextstack-roots.cpp stands for the callers of Pop, CriaContextoAplicacao,
 #   CriaContextoPadrao and the copy constructor that are not reconstructed (its header lists them); the guard's are in
 #   unit 171's.

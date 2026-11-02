@@ -1,6 +1,7 @@
 # uenux2 vota::CThreadEleitor, CThreadOperador, CThreadMonitor and the heads they need: the three threads' singletons and
 # destructors, vota::CMessageEleitor and CMessageOperador, api::CMessageInterface, CThreadVota's D2, the 12-byte singleton
-# of fn 509 and comum::util::CMonitoraAlimentacao::CreateInst. The sources are the five named below; the headers are
+# of fn 509 and comum::util::CMonitoraAlimentacao::CreateInst. The sources are the five named below, four in
+# CTHREADS_SRCS and cthreadoperador.cpp in unit 197's list (its bullet says why); the headers are
 # api/ipc/cmessagequeue.h (the queue's constructor, CMessageInterface), api/ipc/cthread.h (slots 3 and 4, Stop),
 # api/hwil/ipower.h (FoneDesconectado), app/vota/cthreadvota.h, and the new app/comum/cappstatecontext.h,
 # app/comum/util/euecomumutilerror.h, cmonitoraalimentacao.h, and the three threads' heads.
@@ -9,6 +10,9 @@
 # - cthreadeleitor.cpp: GetInst 316, its pointer's and mutex's static destructors 7122 and 7116, the D2 2438 and D0 7070,
 #   CMessageEleitor::Espera 4343 and its thunks 4341, 4338, 4337, and the map's __tree::destroy 2125.
 # - cthreadoperador.cpp: GetInst 270, its statics' destructors 10208 and 10207, the D2 2717 and D0 10206, slot 5 10203.
+#   Its notes stay here; src/units/197-uenux2-celeitorvotando.mk lists it, after celeitorvotando.cpp and
+#   cinformacaoeleitor.cpp, the order the target's data have and the one in which fn 4464 holds the setter
+#   SetTextoEleitor(const std::string&), written for it, as the target does (that fragment has the measurement).
 # - cthreadmonitor.cpp: GetInst 1898, its statics' destructors 10229 and 10228, the D0 10227, slot 5 10225, and 2126, the
 #   D2 that CThreadVota and CThreadMonitor share.
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685.
@@ -83,7 +87,7 @@
 #   the class; assignments in CThreadMonitor's constructor's body, or FoneConectado() in place of `!`, each of which moves
 #   the record's column; `if (!s_inst) { ...; return; } throw` and if/else in CreateInst; GetInst below the statics.
 # - other rows: the forms named above as evidence.
-CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp src/app/vota/operador/cthreadoperador.cpp
+CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
 UENUX2_SRCS += $(CTHREADS_SRCS)
 CTHREADS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/116-uenux2-cthreads-pending.o: $(ROOT)/src/units/116-uenux2-cthreads-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/116-uenux2-cthreads.mk $(CTHREADS_HDRS)

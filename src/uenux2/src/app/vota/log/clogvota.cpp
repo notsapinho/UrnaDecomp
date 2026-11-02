@@ -5,13 +5,13 @@
 // 152's seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's,
 // 197's, 156's four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two.
 #include "app/vota/log/clogvota.h"
-
 #include <format>
 #include <memory>
 #include <string>
 
 #include "api/pattern/cpolysingleton.h"
 #include "api/uelog/cloga.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 
 namespace vota {
 
@@ -164,6 +164,30 @@ void CLogVota::LogaMesarioIndagadoQualidadeBU()
     loga("Mesário indagado sobre qualidade do Boletim de Urna");
 }
 
+void CLogVota::LogaVotoBrancoPorSuspensao(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto branco por suspensão [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
+void CLogVota::LogaVotoCargoSemCandidato(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto para cargo sem candidato [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
+void CLogVota::LogaVotoNuloPorSuspensao(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto nulo por suspensão [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
+void CLogVota::LogaVotoConfirmado(const uebyte cargo)
+{
+    loga(std::format("Voto confirmado para [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
 void CLogVota::LogaHabilitacaoCanceladaReconhecimentoBiometrico()
 {
     logaAlerta("Habilitação cancelada durante reconhecimento biométrico");
@@ -237,6 +261,12 @@ void CLogVota::LogaErroIdentificacaoTipoCargo()
 void CLogVota::LogaEleitorVoltouADigitar()
 {
     loga("Eleitor voltou a digitar enquanto estava sendo suspenso");
+}
+
+void CLogVota::LogaVotoCargoSemCandidatoPorSuspensao(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto para cargo sem candidato por suspensão [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
 }
 
 } // namespace vota

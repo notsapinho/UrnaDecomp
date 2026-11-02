@@ -4,9 +4,11 @@
 
 #include "api/util/cdatetime.h"
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"
+#include "app/comum/dados/md/rdv/ccedula.h"
+#include "app/comum/dados/md/rdv/cvoto.h"
 
 // Reconstruction's note, not TSE's text: static objects of the vota application that no symbol or record names, these
-// two and the byte further down.
+// two, the votes cast further down (with the function that appends to them) and the byte.
 // - The number the voter typed, a std::string at 1833288. vota::CPedeNulo's and vota::CPedeNominal's GetProximoEstado
 //   (fns 11744 and 11724) assign their argument to it, vota::CEleitorVotando::ChamaEstadoProximoCargo (fn 4459) assigns
 //   it an empty string, and fns 5500, 6999, 7377, 11683, 11711, 11754 and 11756 read it; fn 13176, at table slot 1098,
@@ -34,6 +36,25 @@ inline void SetNumeroDigitado(const std::string& numero)
 {
     g_numeroDigitado = numero;
 }
+
+// The votes cast in the current cycle, a 12-byte object at 1833300: a vector of 20-byte (post id, vote) pairs, the id a
+// byte at +0 and the comum::md::CVoto at +4, which fn 4192 appends to, fn 7377 empties in place, fns 6999, 4454 and
+// 11683 read, and fn 13588 (table slot 1079) destroys at exit, freeing each element's string at +8. __wasm_call_ctors
+// calls a constructor on it, fn 203's body, which zeroes the 12 bytes. Its type is read as comum::md::CCedula
+// (app/comum/dados/md/rdv/ccedula.h), the class the records of fn 4454's inlined callees take: 4454 copies this
+// object's elements, one by one, into the vectors of CCedula values that it builds with the same call of fn 203's body,
+// keyed by a word it looks up from each pair's post id. The reading rests on those bytes: this object has the class's
+// 12 bytes, its constructor call and its elements. Its constructor and Adiciona, which fn 4192 holds behind a stack
+// frame of its own, are in ccedula.cpp (src/units/197-uenux2-celeitorvotando.mk has the measurement). g_votosEleitor's
+// name is chosen.
+extern comum::md::CCedula g_votosEleitor;
+
+// fn 4192: copies the vote in a 16-byte frame and passes it by value to CCedula::Adiciona, held in a second,
+// 32-byte frame, which builds the pair there and pushes it. Its callers are vota::CEleitorVotando::RegistraVoto (fn
+// 4471) and suspenderEleitor (fn 4442), in celeitorvotando.cpp, which would inline a function this small
+// (docs/how-to-decompile.md step 3): so it is in another TU, this one beside the object (a choice). Its name and that it
+// is a free function are chosen.
+void AdicionaVoto(comum::md::TCargoID cargo, const comum::md::CVoto& voto);
 
 extern api::CDateTime g_dataHoraDesligamento;
 
