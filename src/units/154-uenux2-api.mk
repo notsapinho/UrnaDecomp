@@ -26,11 +26,13 @@
 # 258`, all operand-only (pnpm wasm score on the whole link, and on a whole-link try of the roots object against the
 # header in an -iquote overlay). The keys are spelled as character literals, a choice: the target holds only their
 # values. The target's copy reads as cinstrucaovotacaoacessibilidade.cpp's object's (its record 1533820 follows that
-# file's records), which is not reconstructed; until it is, the roots object emits the copy.
+# file's records), which is not reconstructed; until it is, a copy of ours stands in: cformbuilder.cpp.o's (unit 31,
+# whose 2243 calls KeyName), the first object in link order to emit one, and the roots object's after it.
 API154_SRCS := src/api/util/csynchronizer.cpp
 UENUX2_SRCS += $(API154_SRCS)
-# KeyName is a header's inline code and none of its five callers (fns 653, 1455, 2243, 7787 and 12903) is reconstructed:
-# 154-uenux2-api-roots.cpp emits it, and calls GetInst and the constructor, whose callers are not reconstructed either.
+# KeyName is a header's inline code and of its five callers (fns 653, 1455, 2243, 7787 and 12903) only 2243 is
+# reconstructed (unit 31, whose object's copy the link keeps): 154-uenux2-api-roots.cpp calls it for the other four, and
+# calls GetInst and the constructor, whose callers are not reconstructed either.
 # The roots object compiles at the uenux2 tree's flags, not APP_CXXFLAGS, so no match rests on a flag the tree lacks
 # (src/units/README.md "Companion files").
 $(ROOT)/$(APP)/154-uenux2-api-roots.o: $(ROOT)/src/units/154-uenux2-api-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/154-uenux2-api.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

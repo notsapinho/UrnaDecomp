@@ -14,6 +14,7 @@ namespace api {
 
 bool CApplication::s_demonstracao = false;
 bool CApplication::s_finalizar = false;
+SRect CApplication::s_areaTela{0, 0, 639, 479};
 int CApplication::s_modo = 48;
 int CApplication::s_codigoRetorno = -1;
 std::string CApplication::s_aplicacao;
@@ -63,7 +64,7 @@ CApplicationContextGuard CApplication::CriaContexto(int tipo, std::string titulo
     return CriaContexto(CriaContextoAplicacao(tipo, std::move(titulo), std::move(descricao), std::move(detalhe)));
 }
 
-// (original lines 66-497: content not recovered)
+// (original lines 67-497: content not recovered)
 #line 498
 void CApplication::EnterLoopDoingNothing()
 {
@@ -90,6 +91,11 @@ std::string CApplication::GetDescricaoModo()
         return "TREINAMENTO";
     }
     return "";
+}
+
+const SRect& CApplication::GetAreaTela()
+{
+    return s_areaTela;
 }
 
 } // namespace api

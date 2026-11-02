@@ -21,13 +21,22 @@
 // place in the uses-2 band of ledger/ordinals.tsv, between 5566 (EnterLoopDoingNothing) and 5563 (InitApplication's
 // local facet's deleting destructor), puts it in capplication.cpp after EnterLoopDoingNothing. Widths and values are the
 // bytes'; every name, the types beyond their widths (a bool tested as 1, an int compared as a 32-bit word), that
-// GetDescricaoModo is a static member and the order of the statics' definitions are chosen. Not written: the SRect
-// {0, 0, 639, 479} at .data 1577200, 12 bytes before s_codigoRetorno, the screen's area that fns 3678 and 653 read
-// (src/units/31-uenux2-cformbuilder.mk and 120-uenux2-iform.mk say why they are not written) and 12055 and 7787 too.
+// GetDescricaoModo is a static member and the order of the statics' definitions are chosen.
+//
+// s_areaTela is the SRect {0, 0, 639, 479} at .data 1577200, 12 bytes before s_codigoRetorno: the screen's area. Fn 3678
+// (api::CFormBuilder::AddLabeledKey) passes its address to GetLabeledKeyPos (fn 5544) twice, and fns 653, 7787, 12040 and
+// 12055 read it, none storing to it: 653 its left, right and bottom, 12040 its bottom, 7787 and 12055 its eight bytes at
+// once (`/usr/bin/grep -rlE 'i32\.const 157720[0-7]($|[^0-9])' build/out/splat/pieces/asm` lists those five). GetAreaTela
+// returns it and has no target function: binaryen inlines it into its one caller, 3678, whose calls of 5544 keep their
+// area argument as the target's do. With 3678 naming the static itself, our link folds that argument into 5544
+// (src/units/31-uenux2-cformbuilder.mk has both measurements), which fits a call binaryen inlines only after its
+// dead-argument elimination (a reading). The names, the static's being a public member, the accessor and its being out
+// of line here are chosen; the values and the width are the bytes'.
 
 #include <string>
 
 #include "api/gui/capplicationcontextstack.h"
+#include "api/gui/primitives.h"
 #include "api/uelog/cescritorlog.h"
 
 namespace api {
@@ -41,6 +50,10 @@ public:
                                                  std::string detalhe);
     static void EnterLoopDoingNothing();
     static std::string GetDescricaoModo();
+
+    static const SRect& GetAreaTela();
+
+    static SRect s_areaTela;
 
     static bool s_finalizar;
     static int s_codigoRetorno;

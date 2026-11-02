@@ -108,9 +108,24 @@ public:
 
     SharedField AddRect(const SPoint& canto, const SPoint& oposto);
 
+    // a CTextFieldMultiLine over a CFixedText of texto, in the colours 2 over 1: target fn 2782. The name is chosen, and
+    // so is having the colours in the body rather than as parameters every caller passes the same (not measured)
+    SharedField AddTextFieldMultiLine(const std::string& texto, const SRect& rect, const SFont& fonte, ETextAlignment alinhamento);
+
     void AddStatusHeader(StatusHeaderFields campos);
 
     static SPoint GetLabeledKeyPos(const SRect& area, ETextAlignment alinhamento, TPosition deslocamento);
+
+    // a key's name and, under it, its action's label, at GetLabeledKeyPos's offsets 0 and 21 of the screen's area:
+    // target fn 3678 over the name, fn 2243 over the key (KeyName, then 3678). The target's 3678 takes no colour, which
+    // fits parameters every caller passes alike, folded by binaryen (a reading). With both colours constants of the
+    // body 3678 differs; with the text colour a parameter it matches, the background a parameter or a constant alike
+    // (src/units/31-uenux2-cformbuilder.mk has the measurements). The names, the overloading, the background's being a
+    // parameter and the parameters' order beyond the wasm's are chosen
+    void AddLabeledKey(const std::string& tecla, const std::string& rotulo, ETextAlignment alinhamento,
+                       TColor corTexto = static_cast<TColor>(2), TColor corFundo = static_cast<TColor>(1));
+
+    void AddLabeledKey(char tecla, const std::string& rotulo, ETextAlignment alinhamento);
 
     std::shared_ptr<IForm<IScreen>> GetForm(const std::shared_ptr<IPreShow<IScreen>>& preShow, const std::string& nome);
 

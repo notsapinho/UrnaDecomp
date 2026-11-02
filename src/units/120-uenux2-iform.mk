@@ -107,9 +107,13 @@
 #   key it takes the bit of 'B', 'C' or 'D' (1, 4, 2, the table at 524056), adds the key's labels through the twin of
 #   2243 that it inlines (31-uenux2-cformbuilder.mk) with the alignments 1, 0, 2 popped from a vector {2, 0, 1}, draws
 #   a line 50 above the bottom of the screen's area (the SRect at .data 1577200), and returns the form's first
-#   IInputField<IScreen> or a new CInputFieldControl<IScreen> over the bits. Written so, it scores 206 over 712: the
-#   target lays the bad key's throw after the loop, ours inside it, and the frame slots of the two std::format calls
-#   differ; not explained. The roots' ControleTeclas stands for its call of 5565.
+#   IInputField<IScreen> or a new CInputFieldControl<IScreen> over the bits. Written so, beside 2243 and 3678 (unit
+#   31), over a CFormBuilder member with 2243's code that only 653 calls, and called by two stand-ins that pass
+#   api::CApplication::s_areaTela and true, which binaryen folds to the target's three parameters, it scores 272 over
+#   704 rows (1518 bytes, the target's 1531; `pnpm wasm score`), and 2243, 3678 and 5544 score as they do matched:
+#   the target's frame is 544 bytes, ours 528, and the target lays the bad key's throw after the label calls of the
+#   loop's body (KeyName, 3678), ours before them, with its std::format buffer at +96 of the frame, ours at +464; not
+#   explained. The roots' ControleTeclas stands for its call of 5565.
 #   2383, an adder of a CInputField<CFramedText> over a CNumberValidation (callers 1591, 2384, 7787, 11892), written
 #   as the target's code reads (the validation a named local, the field a SharedInput, AddField, return) differs in
 #   its frame alone: the target keeps the validation at +16 and the field's SharedField copy at +24, ours the other
