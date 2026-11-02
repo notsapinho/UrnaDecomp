@@ -2,16 +2,24 @@
 
 #include <format>
 #include <functional>
+#include <map>
+#include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "api/gui/cformbuilder.h"
+#include "api/gui/cinteractiveformbuilder.h"
+#include "api/hwil/iurna.h"
+#include "api/pattern/cpolysingleton.h"
 #include "app/vota/comum/cpreshowformvota.h"
+#include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
 #include "app/vota/euevotaerror.h"
 #include "ecourna/api/pattern/singleton.hpp"
 
 namespace vota {
 
-// (original lines 14-290: content not recovered)
+// (original lines 22-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -98,7 +106,56 @@ std::string MensagemErroCargo(const std::string& tela, const comum::md::CCargo& 
 // void f6602(i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 1128-1388: content not recovered)
+// (original lines 1128-1289: content not recovered)
+#line 1290
+namespace {
+
+struct SLayoutTecla {
+    api::SPoint posicao;
+    api::SPoint tamanho;
+    api::TFontSize tamanhoFonte;
+    char tecla;
+};
+
+const auto GetKeyboardLayout()
+{
+    if (api::CPolySingleton<api::IUrna>::instance().Modelo() <= 2019) {
+        return std::map<std::string, SLayoutTecla>{
+            {TECLAS_TESTE_TECLADO[0], {{245, 140}, {41, 36}, 25, '1'}},
+            {TECLAS_TESTE_TECLADO[1], {{320, 140}, {41, 36}, 25, '2'}},
+            {TECLAS_TESTE_TECLADO[2], {{395, 140}, {41, 36}, 25, '3'}},
+            {TECLAS_TESTE_TECLADO[3], {{245, 195}, {41, 36}, 25, '4'}},
+            {TECLAS_TESTE_TECLADO[4], {{320, 195}, {41, 36}, 25, '5'}},
+            {TECLAS_TESTE_TECLADO[5], {{395, 195}, {41, 36}, 25, '6'}},
+            {TECLAS_TESTE_TECLADO[6], {{245, 250}, {41, 36}, 25, '7'}},
+            {TECLAS_TESTE_TECLADO[7], {{320, 250}, {41, 36}, 25, '8'}},
+            {TECLAS_TESTE_TECLADO[8], {{395, 250}, {41, 36}, 25, '9'}},
+            {TECLAS_TESTE_TECLADO[9], {{320, 305}, {41, 36}, 25, '0'}},
+            {TECLAS_TESTE_TECLADO[10], {{201, 360}, {85, 36}, 15, 'B'}},
+            {TECLAS_TESTE_TECLADO[11], {{320, 360}, {85, 36}, 15, 'D'}},
+            {TECLAS_TESTE_TECLADO[12], {{439, 345}, {85, 51}, 15, 'C'}},
+        };
+    }
+    return std::map<std::string, SLayoutTecla>{
+        {TECLAS_TESTE_TECLADO[0], {{185, 140}, {41, 36}, 25, '1'}},
+        {TECLAS_TESTE_TECLADO[1], {{260, 140}, {41, 36}, 25, '2'}},
+        {TECLAS_TESTE_TECLADO[2], {{335, 140}, {41, 36}, 25, '3'}},
+        {TECLAS_TESTE_TECLADO[3], {{185, 195}, {41, 36}, 25, '4'}},
+        {TECLAS_TESTE_TECLADO[4], {{260, 195}, {41, 36}, 25, '5'}},
+        {TECLAS_TESTE_TECLADO[5], {{335, 195}, {41, 36}, 25, '6'}},
+        {TECLAS_TESTE_TECLADO[6], {{185, 250}, {41, 36}, 25, '7'}},
+        {TECLAS_TESTE_TECLADO[7], {{260, 250}, {41, 36}, 25, '8'}},
+        {TECLAS_TESTE_TECLADO[8], {{335, 250}, {41, 36}, 25, '9'}},
+        {TECLAS_TESTE_TECLADO[9], {{260, 305}, {41, 36}, 25, '0'}},
+        {TECLAS_TESTE_TECLADO[10], {{433, 140}, {85, 36}, 15, 'B'}},
+        {TECLAS_TESTE_TECLADO[11], {{433, 195}, {85, 36}, 15, 'D'}},
+        {TECLAS_TESTE_TECLADO[12], {{433, 250}, {85, 91}, 15, 'C'}},
+    };
+}
+
+} // namespace
+
+// (original lines 1337-1388: content not recovered)
 #line 1389
 // <stubs>
 // f7787 · 148912 B · unmatched · name unknown
@@ -117,6 +174,7 @@ std::string MensagemErroCargo(const std::string& tela, const comum::md::CCargo& 
 namespace {
 
 const api::SFont FONTE_TITULO{30, 0};
+const api::SFont FONTE_INSTRUCAO_TESTE_TECLADO{20, 0};
 const api::SFont FONTE_AGUARDE{25, 0};
 
 } // namespace
@@ -175,16 +233,40 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
     return GetFormulario(builder, "telaEsperaRepetirTesteTeclado");
 }
 
-// (original lines 3431-3433: content not recovered)
+// (original lines 3432-3433: content not recovered)
 #line 3434
 SINGLETON_IMPL_GET_INST(CTelasVota, s_mutex, s_instancia)
 
 std::unique_ptr<CTelasVota> CTelasVota::s_instancia;
 std::mutex CTelasVota::s_mutex;
 
+const std::vector<std::string> TECLAS_TESTE_TECLADO{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BRANCO", "CORRIGE", "CONFIRMA"};
+
+std::pair<CFormInterativoTelaVota, TTeclasTesteTeclado> TelaTesteTeclado()
+{
+    api::CInteractiveFormBuilder builder;
+    const auto layout = GetKeyboardLayout();
+    TTeclasTesteTeclado teclas;
+    for (const std::string& nome : TECLAS_TESTE_TECLADO) {
+        const SLayoutTecla& tecla = layout.at(nome);
+        const auto caixa = AdicionaCaixaTecla(builder, nome, tecla.posicao, api::SFont{tecla.tamanhoFonte, 0}, tecla.tamanho);
+        teclas.insert({nome, {tecla.tecla, caixa}});
+    }
+    AdicionaCabecalhoTesteTeclado(builder);
+    const std::string instrucao = "Pressione a tecla destacada";
+    builder.AddTextField(instrucao, api::SPoint(320, 440), FONTE_INSTRUCAO_TESTE_TECLADO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return {GetFormularioInterativo(builder, "telaTesteTeclado"), teclas};
+}
+
+std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorTeclas& gerador)
+{
+    return gerador.GeraSequencia(TECLAS_TESTE_TECLADO);
+}
+
 CTelasVota::~CTelasVota() = default;
 
-// (original lines 3441-3529: content not recovered)
+// (original lines 3465-3529: content not recovered)
 #line 3530
 CFormInterativoTelaVota CTelasVota::GetTelaCargo(const comum::TCargoID cargo, const ETelaVotacao tela) const
 {

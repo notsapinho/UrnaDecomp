@@ -18,12 +18,8 @@
 //   and 4053), and the sink takes their addresses. So does it for GetTextoIdentidadeDigitada (10586), whose slot 3907 fns
 //   1901, 1905, 2735, 2747, 3625, 5401, 5418, 10439, 10500, 10588 and 10635 pass (1150, which passes it too, is in the
 //   link).
-// - std::random_device's default constructor (fn 5935), the libc++ header's, whose copy cinformacaothreadoperador.cpp.o
-//   emits first: its callers are CInformacaoThreadOperador::SorteiaDataHoraInspecao (fn 5412) and fn 11803 (a slot of
-//   vota::testeteclado::impl::CGeradorTeclasAleatorio, not written), which w50_random_device stands for.
 extern "C" {
 int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv");
-int informacaothreadoperador_random_device(void* dispositivo) __asm__("_ZNSt3__213random_deviceC2B8ne210108Ev");
 
 int vota_IsAudioAtivado() __asm__("_ZN4vota14IsAudioAtivadoEv");
 int vota_IsAudioAtivadoMesario() __asm__("_ZN4vota21IsAudioAtivadoMesarioEv");
@@ -53,13 +49,6 @@ __attribute__((noinline)) int w50_getinst(int salto)
 {
     const int primeira = informacaothreadoperador_getinst();
     return primeira == informacaothreadoperador_getinst() ? salto + 3 : salto + 5;
-}
-
-__attribute__((noinline)) int w50_random_device(int salto)
-{
-    char dispositivos[2];
-    const int primeiro = informacaothreadoperador_random_device(&dispositivos[0]);
-    return primeiro == informacaothreadoperador_random_device(&dispositivos[1]) ? salto + 7 : salto + 11;
 }
 
 __attribute__((noinline)) int w50_fachada(int salto, void* resultado, const void* identidade)
@@ -98,7 +87,6 @@ struct SInformacaoThreadOperadorRoots {
     SInformacaoThreadOperadorRoots()
     {
         w50_sink = reinterpret_cast<const void*>(&w50_getinst);
-        w50_sink = reinterpret_cast<const void*>(&w50_random_device);
         w50_sink = reinterpret_cast<const void*>(&w50_fachada);
         w50_sink = reinterpret_cast<const void*>(&vota_GetTextoAudio);
         w50_sink = reinterpret_cast<const void*>(&vota_GetTextoComparecimento);

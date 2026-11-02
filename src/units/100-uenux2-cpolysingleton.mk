@@ -28,17 +28,20 @@
 #   the typeinfo by reference, so m_tipo is a std::reference_wrapper here, one of the same-bytes forms below.
 # - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7962 7966
 #   7982 7989 7994 8000 8019 8024 8029 8042 8044 8047 8055 10308 10413 10455 10498 10538 10575 10596 10632 10668 10702
-#   10741 10780 10873 11164 11801 12048, and __on_zero_shared 4739 4772 5381 8009 8051. Each is reached by a never-called
+#   10741 10780 10873 11164 12048, and __on_zero_shared 4739 4772 5381 8009 8051. Each is reached by a never-called
 #   w100_bloco<T>, the shape units 78 and 79 use: the target's builder is push<T> or the shared_ptr constructor over fn 1010,
 #   and each stores that vtable (the grep of the vptr finds it, or 10335's thunk constant). 10413 had read `unresolved`.
 #   10550, vota::impl::IInformacaoThreadOperador's __get_deleter, comes from cinformacaothreadoperador.cpp.o, whose GetInst
 #   (fn 599, unit 50) holds push<T>, so it has no w100_bloco.
 #   7506, comum::IEventosLog's __get_deleter, comes from clogvota.cpp.o, whose CLogVota::GetInst builds the block through
 #   set (unit 119), so it has no w100_bloco.
+#   11801, vota::testeteclado::impl::IGeradorTeclas's __get_deleter, comes from ctesteteclado.cpp.o, whose
+#   IGeradorTeclas::GetInst (inlined into fn 11805, unit 217) holds push<T>, so its w100_bloco went.
 #   New heads, a virtual destructor alone: vota::IAjusteInicial, vota::impl::ISincronismoVotoEleitor,
-#   vota::testeteclado::impl::IGeradorTeclas, api::IFingerPrepare and
-#   ecourna::api::security::ISymmetricCipherFactory (vota::IExecucaoVota and vota::impl::IPoliticaExecucaoEleitor were
-#   too, and unit 165 declares them whole; so was comum::impl::IValidaMidia, and unit 179 gives it slots 2 to 9), each
+#   api::IFingerPrepare and ecourna::api::security::ISymmetricCipherFactory (vota::IExecucaoVota and
+#   vota::impl::IPoliticaExecucaoEleitor were too, and unit 165 declares them whole; so was comum::impl::IValidaMidia,
+#   and unit 179 gives it slots 2 to 9; so was vota::testeteclado::impl::IGeradorTeclas, and unit 217 gives it GetInst
+#   and slot 2), each
 #   path chosen, beside the file whose record
 #   names the class where one does. The destructor's slot is __on_zero_shared's offset: 4 for most, so they declare it first.
 # The same objects give 403 (std::operator""s), 429 and 430 (__format_arg_store); libc++ gives 251

@@ -275,7 +275,8 @@
 # their members (12287, 12290, 12291, the block's 12294 and 12292, and 12316, 12314 of api::CTextFieldUpdate's block)
 # link from this object now,
 # ahead of the objects that gave them before (79's roots and unit 31's cformbuilder.cpp), with the same bytes.
-# 3054's other target callers (11804, 11805, 11809) are not written: unit 220's roots stand in for them.
+# 3054's other target callers: 11805 is written (unit 217, below), 11804 and 11809 are not, and unit 220's roots stand
+# in for them.
 # The three include lines this needs (<functional>, api/gui/cformbuilder.h, app/vota/comum/cpreshowformvota.h) took
 # blank lines above line 291. cformbuilder.h brings iform.h, so the TU now also initializes api::CFormStack<IScreen>'s
 # guarded statics, and its own static's exit destructor (12875) took another local suffix: step 9 renamed that match
@@ -284,7 +285,17 @@
 # these have no record), their parameters' types and names, the fonts' names and their being file constants, the
 # interval and the font in TelaEsperaRepetirTesteTeclado written as named locals before the call (the target stores
 # them at +72 and +64 of its frame before the std::function's copy at +32; temporaries were not compiled), and their
-# lines (3370 to 3429, chosen, in the blank run that follows record 3366, 12272's, and ends at GetInst's 3434).
+# lines (3370 to 3430, chosen, in the blank run that follows record 3366, 12272's, and ends at GetInst's 3434).
+#
+# ctelasvota.cpp also holds unit 217's part of the keyboard test, written with vota::testeteclado::CTesteTeclado's
+# StartState (fn 11805), which holds it behind second stack-pointer prologues: the anonymous namespace's
+# GetKeyboardLayout (record :1301) with its value type, vota::TelaTesteTeclado and vota::SorteiaTeclasTesteTeclado
+# (declared in ctelasvota.h), the key names vota::TECLAS_TESTE_TECLADO (declared there extern), and the {20, 0} font after
+# FONTE_TITULO, a line that moved the six builders above down by one. With them this object brings the destroy of
+# GetKeyboardLayout's map (4148, matched), that map's initializer-list constructor (6579, written, not matched) and the
+# destroy of CTesteTeclado's map (2023, matched, now linked from here). The key names, TelaTesteTeclado and
+# SorteiaTeclasTesteTeclado come after CTelasVota's statics, and CTelasVota's destructor moved after them, from line
+# 3439 to 3463: src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp
