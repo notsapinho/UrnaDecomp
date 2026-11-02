@@ -13,7 +13,8 @@
 # __wrap_iter<const char*> (1158), the copy cconversorseguranca.cpp emits, which 11413 and unit 105's 9060 and 9062
 # call: it matches at the tree's -std=c++23, found by the scan's content pass. At -std=c++20 it merged with
 # roots_ecourna.o's vector<unsigned char> copy, 39 over 175 rows from the target's (the compare's operands and the
-# locals), and took that copy's name.
+# locals), and took that copy's name. Its match line names src/app/roots_vector.cpp's vector<unsigned char> instance
+# over __wrap_iter<const unsigned char*> now, the same body, which links first (that file's comment says why).
 # CMunicipio's constructor (3712) builds m_nome as the copying ecourna::api::util::CStringUtils::Trim's result (fn 1374,
 # declared by unit 112 in api/util/cstringutils.hpp; the target's call writes the result in place at +4), and matches
 # since; CConversorMunicipio::DoDesconverte (11378), 3 operand rows from the target, matched with it, its one call now

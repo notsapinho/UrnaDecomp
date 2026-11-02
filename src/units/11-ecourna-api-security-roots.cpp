@@ -4,6 +4,10 @@
 // Declared through asm labels with the wasm-level signatures; chkdfseed.hpp is included for the class whose destructor
 // the function below emits. Compiled as uenux2 code (APP_CXXFLAGS): at UENUX2_CXXFLAGS that class's D2 and D0 compare
 // equal, by function with the object-local numbers masked.
+// CAesCipher's constructor, SetKey, Encrypt and Decrypt (fns 9495, 9494, 9493, 9491) are not taken here: the target
+// reaches each through one table slot, which CBlockCipher<CAesCipher, CTrng>'s Encrypt and Decrypt (9487, 9485) and
+// their merged body (6154) hold (/usr/bin/grep -rlE 'i32\.const 628[2-5]($|[^0-9])' build/out/splat/pieces/asm), and
+// unit 137's objects hold those in our link.
 // CSiphashMac's DoMac and DoVerify (fns 9498, 9497) and IMacAlgorithm::Mac are not taken here: the target reaches the
 // first two through the vtable that fn 3700 alone stores (/usr/bin/grep -rlE 'i32\.const 1113604($|[^0-9])'
 // build/out/splat/pieces/asm), and holds Mac inlined there by binaryen. 3700, comum::CCalculaCV::CalculaCodigo (unit
@@ -11,10 +15,6 @@
 #include "ecourna/api/security/chkdfseed.hpp"
 
 extern "C" {
-void rsec_root_0(int, int) __asm__("_ZN7ecourna3api8security10CAesCipher6SetKeyERKNS1_7CAesKeyE");
-void rsec_root_1(int, int, int) __asm__("_ZN7ecourna3api8security10CAesCipher7DecryptERKNSt3__26vectorIhNS3_9allocatorIhEEEERS7_");
-void rsec_root_2(int, int, int) __asm__("_ZN7ecourna3api8security10CAesCipher7EncryptERKNSt3__26vectorIhNS3_9allocatorIhEEEERS7_");
-int rsec_root_3(int, int, int, int) __asm__("_ZN7ecourna3api8security10CAesCipherC1ENS1_15EOperationModesENS1_23ESymmetricCipherKeySizeENSt3__210shared_ptrINS1_4IRngEEE");
 void rsec_root_4(int, int) __asm__("_ZN7ecourna3api8security9CHKDFSeed7GetSeedEv");
 int rsec_root_5(int, int, int, int, int, int) __asm__("_ZN7ecourna3api8security4CKeyC1ERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjNS1_7KeyTypeERKNS3_6vectorIhNS7_IhEEEESB_");
 int rsec_root_6(int, int) __asm__("_ZN7ecourna3api8security8CKeyDataC1ERKNSt3__26vectorIhNS3_9allocatorIhEEEE");
@@ -46,10 +46,6 @@ void* volatile rsec_sink;
 struct SRsecRoots {
     SRsecRoots()
     {
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_0);
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_1);
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_2);
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_3);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_4);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_5);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_6);

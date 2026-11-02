@@ -17,10 +17,10 @@
 //   without the call below, binaryen inlined it into 9770, its one caller. encodeBER is protected, so the call goes
 //   through an __asm__ label, with [[clang::noinline]] on the call as roots_vector.cpp has it (src/units/README.md
 //   "Companion files").
-// - 3656, vector<char>::__recommend, has the target callers 1681, 5496 and 5290. 1681 is not in our link, so the
-//   second call below stays for it; 5496 was inlined into its one caller there (10949) when that call was measured:
-//   without it, binaryen inlined 3656 into 5290 (47 over 158 rows). 5496 is out of line now (unit 170's roots stand for
-//   its other caller, 5702) and calls 3656. __recommend is private to vector, hence the label too.
+// - 3656, vector<char>::__recommend, has the target callers 1681, 5496 and 5290, all three out of line in our link and
+//   calling it (1681 from roots_vector.cpp, unit 11; 5496 with unit 170's roots standing for its other caller, 5702),
+//   so nothing here calls it. A call of it stood here while 1681 was not in the link: without it then, binaryen inlined
+//   3656 into 5290 (47 over 158 rows).
 #include <iterator>
 #include <vector>
 
@@ -62,16 +62,12 @@ static int urna_roots_cfileasn()
 }
 
 extern "C" int urna_codifica_ber(int, int, int) __asm__("_ZN4ASN18CoderEnv9encodeBERINSt3__220back_insert_iteratorINS2_6vectorIcNS2_9allocatorIcEEEEEEEEbRKNS_12AbstractDataET_");
-extern "C" int urna_recomenda(int, int) __asm__("_ZNKSt3__26vectorIcNS_9allocatorIcEEE11__recommendB8ne210108Em");
-
-// Stands in for 1532's and 3656's target callers named above.
+// Stands in for 1532's target callers named above.
 int urna_roots_coderenv(int a)
 {
     [[clang::noinline]] urna_codifica_ber(a, a + 4, a + 8);
     a += urna_roots_cfileasn();
-    int n;
-    [[clang::noinline]] n = urna_recomenda(a, a + 12);
-    return n;
+    return a;
 }
 
 // std::vector<std::string>'s range construction from std::string* (target fn 5585): __vallocate and __construct_at_end

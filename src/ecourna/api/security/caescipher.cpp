@@ -52,9 +52,10 @@ CAesCipher::CAesCipher(const EOperationModes modo, const ESymmetricCipherKeySize
 void CAesCipher::SetKey(const CAesKey& chave)
 {
 
-    // (original lines 64-68: content not recovered)
-#line 69
-    if (static_cast<int>(chave.GetBytes().size()) != EVP_CIPHER_get_key_length(m_cipher)) {
+    // (original lines 64-67: content not recovered)
+#line 68
+    const int tamanho = static_cast<int>(chave.GetBytes().size());
+    if (tamanho != EVP_CIPHER_get_key_length(m_cipher)) {
         throw CSecurityError(ESE_AES_CHAVE_TAMANHO_SETKEY, "Chave AES de tamanho inválido.");
     }
 
@@ -70,6 +71,7 @@ void CAesCipher::Encrypt(const std::vector<uebyte>& entrada, std::vector<uebyte>
     std::unique_ptr<uebyte[]> buffer(new uebyte[m_tamanhoBloco + entrada.size()]());
     int tamanho = 0;
     int tamanhoFinal = 0;
+    unsigned long erro = 0;
     std::vector<uebyte> iv(TAMANHO_IV);
     if (m_chave.GetIV().empty()) {
         m_rng->Generate(iv, TAMANHO_IV);
@@ -78,23 +80,22 @@ void CAesCipher::Encrypt(const std::vector<uebyte>& entrada, std::vector<uebyte>
         iv.assign(m_chave.GetIV().begin(), m_chave.GetIV().end());
     }
 
-    // (original lines 93-94: content not recovered)
-#line 95
+
     if (!EVP_EncryptInit_ex(ctx.get(), m_cipher, nullptr, m_chave.GetBytes().data(), iv.data())) {
         throw CSecurityError(ESE_AES_ENCRYPT_INIT, "EncryptInit_ex falhou.");
     }
     if (!EVP_EncryptUpdate(ctx.get(), buffer.get(), &tamanho, entrada.data(), entrada.size())) {
-        if (const unsigned long erro = ERR_get_error(); erro != 0) {
+        if ((erro = ERR_get_error()) != 0) {
             throw CSecurityError(ESE_AES_ENCRYPT_UPDATE, ERR_error_string(erro, nullptr));
         }
     }
     if (!EVP_EncryptFinal_ex(ctx.get(), buffer.get() + tamanho, &tamanhoFinal)) {
-        if (const unsigned long erro = ERR_get_error(); erro != 0) {
+        if ((erro = ERR_get_error()) != 0) {
             throw CSecurityError(ESE_AES_ENCRYPT_FINAL, ERR_error_string(erro, nullptr));
         }
     }
 
-    saida.assign(buffer.get(), buffer.get() + tamanho + tamanhoFinal);
+    saida.assign(buffer.get(), buffer.get() + tamanhoFinal + tamanho);
     if (m_chave.GetIV().empty()) {
         saida.insert(saida.end(), iv.begin(), iv.end());
     }
@@ -110,6 +111,7 @@ void CAesCipher::Decrypt(const std::vector<uebyte>& entrada, std::vector<uebyte>
     std::unique_ptr<uebyte[]> buffer(new uebyte[m_tamanhoBloco + entrada.size()]());
     int tamanho = 0;
     int tamanhoFinal = 0;
+    unsigned long erro = 0;
     std::vector<uebyte> iv(TAMANHO_IV);
     std::vector<uebyte> dados(entrada.size());
     if (m_chave.GetIV().empty()) {
@@ -121,23 +123,23 @@ void CAesCipher::Decrypt(const std::vector<uebyte>& entrada, std::vector<uebyte>
         dados.assign(entrada.begin(), entrada.end());
     }
 
-    // (original lines 136-139: content not recovered)
+    // (original lines 137-139: content not recovered)
 #line 140
     if (!EVP_DecryptInit_ex(ctx.get(), m_cipher, nullptr, m_chave.GetBytes().data(), iv.data())) {
         throw CSecurityError(ESE_AES_DECRYPT_INIT, "DecryptInit_ex falhou.");
     }
     if (!EVP_DecryptUpdate(ctx.get(), buffer.get(), &tamanho, dados.data(), dados.size())) {
-        if (const unsigned long erro = ERR_get_error(); erro != 0) {
+        if ((erro = ERR_get_error()) != 0) {
             throw CSecurityError(ESE_AES_DECRYPT_UPDATE, ERR_error_string(erro, nullptr));
         }
     }
     if (!EVP_DecryptFinal_ex(ctx.get(), buffer.get() + tamanho, &tamanhoFinal)) {
-        if (const unsigned long erro = ERR_get_error(); erro != 0) {
+        if ((erro = ERR_get_error()) != 0) {
             throw CSecurityError(ESE_AES_DECRYPT_FINAL, ERR_error_string(erro, nullptr));
         }
     }
 
-    saida.assign(buffer.get(), buffer.get() + tamanho + tamanhoFinal);
+    saida.assign(buffer.get(), buffer.get() + tamanhoFinal + tamanho);
 }
 
 } // namespace ecourna::api::security
