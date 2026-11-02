@@ -1,4 +1,4 @@
-# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and 6 more, "Written since" below):
+# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and 7 more, "Written since" below):
 # vota::CInformacaoZeresimaTardia's destructors and StartState (target fns 2879, 11984, 11983); the abstract bases
 # vota::CGeraZeresimaBase and
 # vota::CGeraResumoZeresimaBase, their constructors (5965, 11945), their destructors (1720, 1952) and the body binaryen
@@ -44,6 +44,9 @@
 #   138) puts :48's call at column 13; :51's 43 characters before the call are `            comum::IInterfaceInit& poIni
 #   = `, a chosen spelling of that length (docs/reference/facts/reading.md R19), which needs the case's braces. The lines
 #   45 to 50 between them are a choice; the empty default is a choice (the target returns at once for any other input).
+# - vota::CRegerarZeresima::AposGeracao (slot 9, fn 11842): one call of vota::CRelVotaUtil::CortaPapel (fn 2882, unit
+#   246), 1 over 3 rows, operand-only, the call. Defined in cregerarzeresima.cpp after the statics and before
+#   GetProximoEstado, the order of their target indices in their use band (11844, 11843, 11842, 11841).
 #
 # Evidence, each read in the target (pnpm wasm fn) or measured on this unit's links:
 # - The destructors' forms (docs/reference/facts/reading.md R4, R5). CInformacaoZeresimaTardia's is out of line and the

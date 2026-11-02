@@ -15,7 +15,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-
 #include "api/gui/cdatatext.h"
 #include "api/gui/cqrcodeimagepaper.h"
 #include "api/gui/ctextfieldpaper.h"
@@ -39,6 +38,7 @@ public:
     void AddQRCode(const CQRCodeImagePaper::QrcodeData& qrcode);
     std::shared_ptr<IForm<IPaper>> GetForm();
     std::shared_ptr<IForm<IPaper>> Build();
+    void Show(const std::string& titulo, const std::string& subtitulo, bool habilitado);
 private:
     std::vector<SharedField> m_campos;
 };
