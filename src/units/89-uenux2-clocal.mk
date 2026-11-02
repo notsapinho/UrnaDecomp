@@ -47,7 +47,8 @@
 # base's map, as Localiza (record ccandidaturas.cpp:56, held by fn 11213) does, which also sets its
 # cursor: so they are members, and api/io/cdatamap.h makes the map and cursor protected. Busca's one target body is
 # also called on CRespostas::GetInst()'s result (fn 2812: by 11212, and by 11683 on one of its two calls), a CDataMap
-# of the same layout giving the same bytes: CCandidaturas as its class is chosen between the two. They read three accessors added for them,
+# of the same layout giving the same bytes: crespostas.cpp (unit 110) writes CRespostas::Busca too, for 11212, and
+# binaryen keeps one body, whose match line names CRespostas's since crespostas.cpp links first (step 9 renamed it). They read three accessors added for them,
 # md::CCandidatura::GetPartidoID and GetCandidatoID and md::CDadosCandidato::GetSituacao (chosen names). Their callers in
 # our link are unit 77's 11215 (2271), 11214 (2840, 1273) and 11213 (2272), and unit 139's 11254 (2271) and 11255 (2272,
 # 2271, 1273); the roots' Consultas stands for the rest, which its comment lists.

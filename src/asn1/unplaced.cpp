@@ -4,21 +4,6 @@
 // not evidence; inside a cluster they are in link order.
 
 // <stubs>
-// link-order cluster 235 · uses=1
-
-// f9770 · 621 B · unmatched · placement: link order · name unknown
-// ? f9770(i32, i32, i32) { ... }
-
-// link-order cluster 738 · uses=2
-
-// f5282 · 70 B · unmatched · placement: link order · name unknown
-// ? f5282(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1077 · uses=4 · neighbours' file uenux2/src/app/vota/operador/cthreadoperador.cpp
-
-// f2704 · 9 B · unmatched · placement: link order · name unknown
-// void f2704(i32) { ... }
-
 // link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
 
 // f2896 · 64 B · unmatched · placement: link order · name unknown

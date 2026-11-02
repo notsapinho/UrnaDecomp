@@ -17,7 +17,7 @@
 //                     target callers all pass it, and they have no parameter for it
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
-//                     2291, 2376, 2380, 3054, 3059, 4152, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
+//                     2291, 2376, 2380, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
 //                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary; TelaB for 7787,
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
 //                     another callback, alignment and font
@@ -151,8 +151,8 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 //                         (652, 1901, 1905, 2734, 2735 and the other 44)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
 //   FormPapelA, FormPapelB  callers of 5515: 357 and 10997; 357 (Build) is in the link, 10997 still waits
-//   FormPapelC   the callers of 357 (Build): 2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11908,
-//                11946, 12005, 12105 and 12110, not reconstructed (11256 is in the link); it calls Build twice
+//   FormPapelC   the callers of 357 (Build): 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11908, 11946,
+//                12005, 12105 and 12110, not reconstructed (11256 and 2890 are in the link); it calls Build twice
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
 {
     const auto simples = form.GetForm(nome);

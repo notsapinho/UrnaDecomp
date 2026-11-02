@@ -37,22 +37,46 @@
 #   operand-only. It was `unresolved self-voted` while it was the only reader in the link of the CDateTime at 1835000,
 #   which __wasm_call_ctors builds with CDateTime(time_t) of 0; it matches since CEsperaRetestar's slot 9 (fn 11823,
 #   below) reads the object too (`evidence:vote:3 by:11823,11825`). Its other target reader is the text callback fn
-#   11826 (which calls fn 5471, with no name).
+#   11826, written since (below).
 # - CReinicioVotacao follows unit 104's states with a std::shared_ptr (104-uenux2-app-vota-estados.mk has the evidence
 #   for GetInst's shape, the statics' order and final); 5938 copies the shared_ptr at +148 of CTelasVota::GetInst(). Its
 #   statics are named by 5938's votes; their exit destructors 11836 and 11837 load the same two addresses. GetInst has
 #   two target callers, 11829 and 11830 (pending); the roots stand in for 11830.
 # - CPreZeresima's slot 12 (fn 11861) calls slot 11 (fn 5945) directly: final, on the class here (on the member alone
 #   it would do the same, a choice).
+# - CEsperaRetestar's constructor, GetInst (fn 5936) and statics, written since in cesperaretestar.cpp, unit 104's
+#   shape: the base's constructor with 4 (EVENTO_TICK), at +28 the form vota::TelaEsperaRepetirTesteTeclado builds
+#   (unit 110's ctelasvota.cpp, inlined by binaryen behind its own stack frame) over a std::function of the text
+#   callback, at +36 CThreadEleitor::GetInst().AddStoppedTick(100) (fns 316 and 807) and +40 cleared; the pointer
+#   @1835036 and the mutex @1835012, whose exit destructors 11828 and 11827 alone load them besides 5936. +28 is what
+#   vota::GetFormulario (fn 886) returns, so the member is a std::shared_ptr<api::IForm<api::IScreen>> now, where the
+#   head had CFormInterativoTelaVota: StartState and FinishState call its slot 2 and Hide, IForm's, and 11825 and 11824
+#   still match (step 9). The text callback, fn 11826 (483 B, table slot 1862, which 5936 passes), is TextoEspera in
+#   the anonymous namespace below s_fimEspera: the seconds from Now to s_fimEspera through api::CDateTime::operator-
+#   (fn 5471, unit 125), 0 when that time has passed, given to std::vformat with the text as the format (argument code
+#   6, unsigned). Its date is a local scoped to the if: with it a plain local before the if, the frame was 400 bytes and
+#   the date at +44, against the target's 384 and +40 (each compiled, try-tu.sh --symbols, the frame read in the object);
+#   three more spellings with the plain local gave 400 too. Measured in the whole link (pnpm wasm score against
+#   names.tsv): 5936 50 over 791 rows before steps 7 to 9, 11826 10 over 223 with the if form (38 over 223 before it,
+#   the frame's offsets), operand-only. 5936 first scored 378 over 794,
+#   155 rows deleted: unit 79's roots built CDataTextFmt<std::function<...>> for it with std::make_shared, which kept
+#   construct_at out of line, a second caller, where the target inlines it; that stand-in went with 5936's landing.
+#   Step 8 named 5936 by vptr-anchor and 11826 by its table vote; 11827 and 11828 matched through the content pass. The
+#   std::function's __func members over the pointer (11817, 11819, 11820, 11821, 11822) match from this object. 5936
+#   has two target callers, CTesteFalhou's and CEnviarManutencao's ProcessInput (11809, 11812), not written: unit 220's
+#   roots stand in for them, and this unit's roots no longer keep CEsperaRetestar's vtable, which GetInst stores.
+#   Chosen: GetInst, s_inst, s_mutex, TextoEspera and their names, the locals, the lines, and the callback's internal
+#   linkage.
 # No other spelling of a written body was compiled.
 #
 # Not written, with what each waits for:
-# - CEsperaRetestar's constructor and GetInst (fn 5936, not read for this unit); CTesteTeclado's are unit 217's;
+# - CTesteTeclado's constructor and GetInst are unit 217's;
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
 # - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12051, 12040; 12038, ProcessInput, matches since in
-#   unit 156): callees with no name, 455 and 502 among them (576 has one since unit 165); CTesteTeclado is unit 217's;
+#   unit 156): callees with no name, 455 among them (576 has one since unit 165, 502 since unit 220); CTesteTeclado
+#   is unit 217's;
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
@@ -74,6 +98,24 @@
 #   is called before the member's own stack frame opens), added to app/vota/log/clogvota.cpp:
 #   LogaMesarioConfirmouReinicioVotacao and LogaMesarioSelecionouOutrasOpcoes, names chosen from their messages. 23 over
 #   185 rows, operand-only.
+# - CReinicioVotacao::StartState (fn 11835, between the statics and ProcessInput: the band's order is 11837, 11836,
+#   11835, 11834): it stores `this` as the next state and calls comum::CRdvVota::GetInst (555) and
+#   comum::CJustificador::GetInst (1391) before it tests either, so both are locals. When the vote count
+#   (CRdvVota::Comparecimento, 1269) or the count of justified voters (the size of CJustificador's map, +8, through an
+#   accessor added to cjustificador.h, its name chosen) is not 0, it logs "Apresentada tela do reinício da votação" (a
+#   CLogVota member binaryen inlines, GetInst called before its frame opens: LogaApresentadaTelaReinicioVotacao, added
+#   to clogvota.cpp after LogaMesarioSelecionouOutrasOpcoes, its name and place chosen) and shows its form (slot 2 of
+#   +12). Else, in the voters' training (comum::CAppInfo::EhTreinamentoEleitor, 697, called), it goes to
+#   vota::CQuerReimprimirZeresima (5940) when ze.dat is in the internal flash's work directory and to
+#   CQuerImprimirZeresima (5957) when not; that test is behind a stack frame of its own, an out-of-line function
+#   binaryen inlines: vota::ExisteArquivoZeresima, a free function added to unit 168's votadefs.cpp (its name and file
+#   chosen), whose path is a named local (the target frees both temporaries of the `/` before ExistFile, fn 412). Out
+#   of training, it reads the urna's internal number (CEstadoGeral +60, CDadoCorrespondencia's first word) and then
+#   GetVota()'s optional urnaIdGerouZeresima (+12, flag +16), and goes to vota::CConfirmaRegerarZeresima when the
+#   zerésima was made by another urna, else to CQuerReimprimirZeresima. CConfirmaRegerarZeresima::GetInst is held
+#   inlined (unit 176's file has it now, with its constructor and statics). 43 over 311 rows, operand-only; matched,
+#   and with it the statics' exit destructors 11840 and 11839. Chosen: the locals', the accessor's and the helper's
+#   names.
 # - CEsperaRetestar::FinishState (fn 11824): it stops the tick and holds api::IForm<MEDIA>::Hide inlined on its form,
 #   which api/gui/iform.h now declares public, a reading (it was protected, for CFormStack; a friend of CEsperaRetestar
 #   gives the same bytes). 3 over 40 rows, operand-only.
@@ -108,6 +150,17 @@
 #   shape over CBase's constructor and CDateTime(0) on +36) and statics are in cprezeresima.cpp, the GetInst inlined by
 #   binaryen into vota::CVerificaEleicaoPassou::StartState (fn 11914, unit 199); the statics' exit destructors 11864
 #   and 11863 match with it.
+# - CPreZeresima::GetEstadoSemTeste (fn 11861, slot 12) copies the date of comum::CConfiguracaoEleicao's zeresima time
+#   (+544, through GetDataHoraZeresima) into a local, as the target does into its frame before api::CDate::operator-(int)
+#   (fn 3648), and goes to GetEstadoPassouNoTeste's state when +36's date is before that date less one day
+#   (CDate::operator<=>, fn 1261), else stays. GetEstadoPassouNoTeste is called directly (the class is final) with the
+#   frame pointer as `this`, the target's row, which the source gives. At the end of cprezeresima.cpp, after
+#   GetEstadoPassouNoTeste: its line is a choice; its use band (1) puts it below GetTela (fn 11862, pending) and the
+#   statics' exit destructors, the order a GetTela written above it keeps. The file includes cconfiguracaoeleicao.h,
+#   whose line takes a blank line of the run above GetEstadoPassouNoTeste, so its record stays on line 56. 3 over 35
+#   rows (pnpm wasm score before step 8), operand-only: the calls of fns 187, 3648 and 5945. The local's name
+#   dataZeresima is chosen; a form without the local (the target copies the date's 8 bytes into its frame) was not
+#   compiled.
 #
 # Chosen, no evidence names them: in CBase::ProcessInput, the local holding slot 11's state and CTesteTeclado's setter
 # (that the target calls slot 11 before GetInst is its rows; that the setter called on GetInst() with slot 11 as its
@@ -141,9 +194,10 @@ TESTETECLADO_SRCS := src/app/vota/eleitor/fimvotacao/caplicacaoencerrada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cretomada.cpp \
     src/app/vota/eleitor/iniciovotacao/testeteclado/cesperaretestar.cpp
 UENUX2_SRCS += $(TESTETECLADO_SRCS)
-# cverificahorariozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
-# CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
+# cverificahorariozeresima.cpp and cprezeresima.cpp include app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost
+# through CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cprezeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # the pending traps compile at the tree's flags, as the members will
 TESTETECLADO_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/138-uenux2-testeteclado-pending.o: $(ROOT)/src/units/138-uenux2-testeteclado-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/138-uenux2-testeteclado.mk $(TESTETECLADO_HDRS)

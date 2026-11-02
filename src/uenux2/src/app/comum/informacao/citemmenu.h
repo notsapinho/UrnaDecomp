@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "api/gui/primitives.h"
 #include "ecourna/api/uetypes.hpp"
 
 namespace comum {
@@ -23,6 +24,11 @@ namespace comum {
 // The +4 word is the item's key: comum::CMenuBase::AdicionaItem (fn 2285) formats it into the menu's string of keys as
 // an unsigned (argument type 6 of its std::format) when slot 2 is true. Unsigned is that evidence; `unsigned int`, the
 // getter and both names are chosen.
+// comum::CMenuBase::MontaMenu (fn 5913) reads the rest: it formats the key and the string at +8 into the item's line
+// (argument types 6 and 13, a string), and adds the line at the api::SPoint at +20 in the api::SFont at +24, which it
+// copies into its frame for the call (the getters return them by value, a reading of those copies); after the last
+// item it reads the point's two words and the font's size in place. The types are api::CFormBuilder::AddTextField's,
+// whose parameters they fill; the getters' and members' names are chosen.
 class CItemMenu {
 public:
     virtual ~CItemMenu() = default;
@@ -30,10 +36,15 @@ public:
     virtual bool Slot2() = 0;
 
     unsigned int GetChave() const { return m_chave; }
+    const std::string& GetTexto() const { return m_texto; }
+    api::SPoint GetPosicao() const { return m_posicao; }
+    api::SFont GetFonte() const { return m_fonte; }
 
 private:
     unsigned int m_chave;
     std::string m_texto;
+    api::SPoint m_posicao;
+    api::SFont m_fonte;
 };
 
 class CItemImprimeEstadoUrna : public CItemMenu {

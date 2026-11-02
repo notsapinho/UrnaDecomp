@@ -1,5 +1,8 @@
 #include "app/vota/eleitor/iniciovotacao/creiniciocomparecimentomesario.h"
 
+#include "app/vota/eleitor/caguardamensagem.h"
+#include "app/vota/operador/cthreadoperador.h"
+
 namespace vota {
 
 CReinicioComparecimentoMesario::CReinicioComparecimentoMesario()
@@ -18,5 +21,11 @@ CReinicioComparecimentoMesario& CReinicioComparecimentoMesario::GetInst()
 
 std::unique_ptr<CReinicioComparecimentoMesario> CReinicioComparecimentoMesario::s_inst;
 std::mutex CReinicioComparecimentoMesario::s_mutex;
+
+void CReinicioComparecimentoMesario::StartState()
+{
+    m_pNextState = &CAguardaMensagem::GetInst();
+    CThreadOperador::GetInst().GetMensagens().Post(7);
+}
 
 } // namespace vota

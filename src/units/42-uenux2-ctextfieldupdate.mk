@@ -35,8 +35,5 @@
 CTEXTFIELDUPDATE_SRCS := src/api/gui/ctextfieldupdate.cpp
 UENUX2_SRCS += $(CTEXTFIELDUPDATE_SRCS)
 # Rect (10913) is a thunk of fn 3889: 27-uenux2-ctextfield.mk has it.
-# of the constructor's three callers, 502 and 3058 are in the link (unit 31) and 5936 is not:
-# 42-uenux2-ctextfieldupdate-roots.cpp stands in for it with two make_shared callers
-$(ROOT)/$(APP)/42-uenux2-ctextfieldupdate-roots.o: $(ROOT)/src/units/42-uenux2-ctextfieldupdate-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/42-uenux2-ctextfieldupdate.mk $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/ecourna/api/exception/*.hpp)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/42-uenux2-ctextfieldupdate-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/42-uenux2-ctextfieldupdate-roots.o
+# The constructor's three target callers are in the link: 502 and 3058 (unit 31) and 5936 (vota::testeteclado::
+# CEsperaRetestar::GetInst, unit 138's cesperaretestar.cpp), so the roots file that stood for 5936 went.

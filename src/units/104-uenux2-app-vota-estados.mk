@@ -140,6 +140,62 @@
 #   longer the pending object. Chosen: `using namespace comum;`, which lets the texts spell comum's EAVENCERRADA and
 #   EAEFIMDOSTRABALHOS unqualified, the local's name being the texts'; StartState's first line, 42, below the
 #   definitions written before it; ProcessInput's record line, 64, stays blank.
+# - vota::CQuerReimprimirZeresima::StartState (fn 11849, record cquerreimprimirzeresima.cpp:45:15): when
+#   comum::CRdvVota::GetInst().Comparecimento() (fns 555, 1269) is not 0 it logs "Erro na verificação do comparecimento"
+#   (ledger/strings.tsv 125479, which only 11849 loads) through vota::CLogVota::LogaErroVerificacaoComparecimento, a
+#   member binaryen inlines (its stack frame opens after CLogVota::GetInst, fn 184), added to app/vota/log/clogvota.cpp
+#   after its last member, which calls comum::IEventosLog::logaErro (fn 2282) as LogaErroIdentificacaoTipoCargo does;
+#   then it throws vota::EUeVotaError 9375 with the same text (app/vota/euevotaerror.h). Else it calls
+#   comum::IEventosLog::LogaMesarioIndagadoImprimirZeresima (fn 5882), the form's slot 2, and stays. The target calls
+#   CLogVota::GetInst once, after Comparecimento and before the branch: one GetInst() call in each arm gives that (a
+#   reading: LLVM hoists the arms' common first call above the branch); a reference local taken before the test called
+#   GetInst ahead of CRdvVota::GetInst (21 over 102 rows, 2 inserted, 2 deleted). 19 over 100 rows, operand-only. `!= 0` is a chosen spelling of the test
+#   (TQtdVoto is unsigned).
+# - vota::CReimprimindoZeresima::StartState (fn 11852) and ImprimeZeresima, the records' name
+#   (creimprimindozeresima.cpp:51:22), which StartState holds after a stack prologue of its own and whose epilogue runs
+#   before StartState stores CReimprimindoResumoZeresima::GetInst() (fn 5942) as the next state: out of line, binaryen's
+#   inlining into its one caller. ImprimeZeresima takes CPolySingleton<api::IPaperRelatorios>'s instance (fn 905) at
+#   :51:22 (the 21 characters `    auto& impresso = ` before the call are a chosen spelling of that length), builds
+#   comum::CPath::GetPathTrab(FLASH_INTERNA) / "ze.dat", reads the number of copies at +96 of comum::CConfiguracaoEleicao
+#   (GetParametrosUrna().GetNumZeresimas(), an int here: the target tests it `<= 0` signed and formats it with the int
+#   code 3), and for each copy calls vota::CriaArquivoImprimindo (fn 1488),
+#   CLogVota::LogaImprimindoRelatorio(RELATORIO_ZERESIMA, copy) (fn 1127), api::IPaper's slot 7 (PrintFile) with the
+#   path's string, a comum::CSigVerifier of 1, GetPathTrab(FLASH_INTERNA), "ze.dat" and "ze.vsu" (fn 1540), "zerésima"
+#   (the eight bytes the target stores, é included) and std::format("via {} de {}", copy, copies), then
+#   vota::RemoveArquivoImprimindo (fn 1487); after the loop, slot 10 (EndPrintFile). Measured: a counter from 0 with `via
+#   + 1` gives the target's increment before the log and its `!=` test; a counter from 1 to `<= vias` gave 8 rows
+#   inserted and 4 deleted (72 over 509, measured with the title spelled without its é as well). ImprimeZeresima above
+#   StartState, the callee first, gave 60 over 501 rows with locals 3 to 6 permuted (splat-match: `differs +0x2e
+#   local.set 3 | ours local.set 4`); StartState above it gives 42 over 501, operand-only
+#   (docs/reference/facts/codegen.md C4: the order is measured). Its object gets Boost's include path (below), which
+#   cconfiguracaoeleicao.h reaches through CHorariosUrna. Chosen: ImprimeZeresima's private access, StartState's line
+#   (43) above it, the locals' names.
+#
+# Two more slots, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
+# before steps 7 to 9 matched it:
+# - vota::CReinicioComparecimentoMesario::StartState (fn 11917, after the statics, the band's order: 11919, 11918,
+#   11917) stores vota::CAguardaMensagem::GetInst() as the next state, then posts 7 to vota::CThreadOperador's queue.
+#   The target's 11917 is `f6058(p0, 7)`, a thunk into binaryen's merge of it with vota::CFinalizaAquisicao's
+#   StartState (fragment 223 has the evidence); our link forms the same merge, named after this one: 11917 `1 over 5
+#   rows`, 6058 `3 over 29 rows`, operand-only.
+# - vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858, its throw on the record's line 81, column 19, as
+#   `throw CUeVotaError(` at 12 spaces in a switch's case): reads the vote state; for EAVZERESIMAIMPRESSA and
+#   EAVREGISTROMESARIOINICIAL (54, 55) it clears m_pEstado and goes to vota::CReinicioComparecimentoMesario when
+#   vota::RegistraMesarios (fn 2520, unit 168) is true and to vota::CInicioVotacao (fn 2880) when not, for EAVVOTAR
+#   (56) it clears m_pEstado and goes to CInicioVotacao, and for any other state it logs
+#   LogaErroEstadoAplicativoDesconhecido (fn 3279) and throws EUeVotaError 9309 with std::format("Estado inválido = {}",
+#   estado). The format's argument is a handle (type 15) on table slot 967, which comum::asn::CConversorEstadoGeralVota's
+#   DoConverte (fn 11390) passes too, for the estado of ConverteEstadoVota, which it holds inlined (record
+#   `ConverteEstadoVota(const EEstadoVota)`): so the local is `const comum::EEstadoVota`, the handle's type. The target
+#   stores the next state once, after the switch, and calls CInicioVotacao::GetInst once for both of its paths: the
+#   state is a local assigned in the cases and stored once (23 over 237 rows, operand-only); assigning m_pNextState in
+#   each case gave three stores and two calls, `34 over 244 rows (... inserted 7, deleted 2)`. Chosen: the code's name
+#   (euevotaerror.h), the locals' names, the cases as the enumerators, the member's place after StartState and the
+#   lines above it, ProcessInput's place after it. The function's instance of the enum's handle comes first in the
+#   link, so the hand line of 536 in splat/symbol_addrs.txt names that symbol now (unit 109's fragment has the rule).
+#
+# Roots: the pair for vota::CQuerReimprimirZeresima::GetInst (5940) went, its one target caller, 11835, being in the
+# link (unit 138).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
@@ -167,6 +223,9 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/operador/cfinalizaoperador.cpp \
     src/app/vota/operador/csincronismooperador.cpp
 UENUX2_SRCS += $(APP_VOTA_ESTADOS_SRCS)
+# creimprimindozeresima.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through
+# CConfiguracaoMunicipio's CHorariosUrna (an include path, not a flag of the code: unit 88 adds the same)
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/creimprimindozeresima.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 104-uenux2-app-vota-estados-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/104-uenux2-app-vota-estados-pending.o: $(ROOT)/src/units/104-uenux2-app-vota-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/104-uenux2-app-vota-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/fimvotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/vota/operador/*.h $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

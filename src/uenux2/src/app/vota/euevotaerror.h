@@ -18,6 +18,10 @@ enum EUeVotaError {
     // from the message, "<caller> - o cargo atual nao esta posicionado", and the class: no evidence names them
     EUE_VOTA_CONFIRMA_VOTO_EM_CARGO_CARGO_NAO_POSICIONADO = 9306,
     EUE_VOTA_CONFIRMA_VOTO_SEM_CANDIDATO_CARGO_NAO_POSICIONADO = 9307,
+    // the value is the code vota::CDefineRotaPosReinicio::NeedChangeState (target fn 11858, record
+    // cdefinerotaposreinicio.cpp:81) throws; the name is chosen from its message, "Estado inválido = {}", and the class:
+    // no evidence names it
+    EUE_VOTA_DEFINE_ROTA_POS_REINICIO_ESTADO_INVALIDO = 9309,
     // the value is the code vota::CEleitorVotando::ChamaEstadoProximoCargo (target fn 4459, record
     // celeitorvotando.cpp:229) throws; the name is chosen from its message, "Tipo de cargo nao identificado": no evidence
     // names it
@@ -38,6 +42,10 @@ enum EUeVotaError {
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,
+    // the value is the code vota::CQuerReimprimirZeresima::StartState (target fn 11849, record
+    // cquerreimprimirzeresima.cpp:45) throws; the name is chosen from its message, "Erro na verificação do
+    // comparecimento": no evidence names it
+    EUE_VOTA_ERRO_VERIFICACAO_COMPARECIMENTO = 9375,
     // the values are the codes vota::CVerificaEleicaoPassou::StartState (target fn 11914, record
     // cverificaeleicaopassou.cpp:70) and vota::testeteclado::CPreZeresima::GetEstadoPassouNoTeste (target fn 5945, record
     // cprezeresima.cpp:56) throw; the names are chosen from their messages, "Estado nao esperado" and "Estado nao

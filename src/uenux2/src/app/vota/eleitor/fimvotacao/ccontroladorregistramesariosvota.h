@@ -27,7 +27,7 @@ public:
     comum::CAppState& Slot11() const override;
     comum::CAppState& Slot12() const override;
     bool Slot13() const override;
-    comum::md::CComparecimentoMesario* Slot14() const override;
+    comum::CEleitorDetalhe* Slot14() const override;
     void Slot15() const override;
     void Slot16() const override;
     const std::string& GetTituloMesario() const override;
@@ -50,12 +50,6 @@ public:
     void LogaConferenciaBiometriaMesario() const override;
     void LogaIndagaContinuaRegistro() const override;
     void LogaIndagaFinalizaRegistro() const override;
-
-private:
-    // Slots 10 and 15 call it with 11 and 7 (fn 6018): it posts that type to vota::CThreadEleitor's queue and reads
-    // nothing of the object. Its name, its being a member and its file (ccontroladorregistramesariosvotamensagem.cpp)
-    // are chosen; unit 119's fragment says why it is in a file of its own.
-    void EnviaMensagemEleitor(short tipo) const;
 };
 
 } // namespace vota

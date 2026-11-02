@@ -43,4 +43,22 @@ std::string LinhaRespostaCorrente()
     return "  " + CStringUtils::PreencheADireita(resposta->GetResposta(), ' ', 26) + CStringUtils::PreencheAEsquerda(numero, ' ', 10);
 }
 
+std::vector<TCandidatoID> CRespostas::GetNumeros(TCargoID cargo) const
+{
+    std::vector<TCandidatoID> numeros;
+    const uedword primeira = cargo * 1000000;
+    const uedword ultima = static_cast<TCargoID>(cargo + 1) * 1000000;
+    for (const auto& [chave, resposta] : m_registros) {
+        if (chave >= primeira && chave < ultima) {
+            numeros.push_back(resposta.GetNumero());
+        }
+    }
+    return numeros;
+}
+
+md::CRespostaConsulta* CRespostas::Busca(TCargoID cargo, TCandidatoID numero)
+{
+    return Find(cargo * 1000000 + numero);
+}
+
 } // namespace comum

@@ -19,14 +19,7 @@
 
 namespace comum {
 
-// (original lines 22-54: content not recovered)
-#line 55
-// <stubs>
-// f12110 · 17349 B · unmatched · name unknown
-// void f12110(i32) { ... }
-// </stubs>
-
-// (original lines 60-105: content not recovered)
+// (original lines 22-105: content not recovered)
 #line 106
 void CCalculaCV::IncluiString(const std::string& str)
 {

@@ -4,7 +4,8 @@
 #   constructor (target fn 3844), ProcessKey (3843), ProcessInput (5911), ProcessTick (5910), AcceptsKey (3842),
 #   AcceptsInput (5909) and AcceptsTick (5908), which read the state's flags at +8, +9 and +10 as CAppState's friend (a
 #   line of app/comum/cappstate.h), and the inline accessor GetState;
-# - vota::EhTreinamento (src/app/vota/comum/votadefs.cpp, declared in the new app/vota/comum/votadefs.h): fn 1485;
+# - vota::EhTreinamento (src/app/vota/comum/votadefs.cpp, declared in the new app/vota/comum/votadefs.h): fn 1485, and
+#   since, in the same file, CriaArquivoImprimindo (fn 1488) and RemoveArquivoImprimindo (fn 1487), below;
 # - api::CPolySingletonList::has<vota::IAjusteInicial> (fn 2450), the template of api/pattern/cpolysingletonlist.h, which
 #   in both links is a 19-B thunk into the has<T> merge body 2924, as unit 100's has<T> 1654, 2160 and 2469 are.
 # Paths relative to src/uenux2.
@@ -103,6 +104,46 @@
 # - The roots give each two call sites: 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) calls 3288 and 3290 three
 #   times each, 12081 and 12974 call 4582; none is written. votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h,
 #   which reaches Boost, hence the include path on its object.
+#
+# vota::CriaArquivoImprimindo (fn 1488, 405 B) and vota::RemoveArquivoImprimindo (fn 1487, 587 B), above EhTreinamento
+# in votadefs.cpp, with vota::ExisteArquivoImprimindo between them, which has no target index of its own. The marker
+# file "dinamico/imprimindo" under comum::CPath::GetPathRootSemSA(FLASH_INTERNA) (fn 634; the literal at 135131): 1488
+# opens an api::CFile on the path's string with mode "wb" (fn 517), closes it (fn 336) and calls
+# api::CSynchronizer::GetInst().Sync() (fns 600, 620), then the CFile's inline destructor; 1487 opens a stack frame of
+# its own around the existence test (api::CSystem::ExistFile, fn 412, on the same path), a function binaryen inlined
+# into its one caller (docs/reference/facts/reading.md R10), ExisteArquivoImprimindo, out of line here (votadefs.cpp.o
+# keeps it, `wasm-objdump -x -j Function`), and when the file exists removes it (CSystem::RemoveFile, fn 2760) and syncs.
+# Seven printing functions call both, 2890 and 11852 (units 156 and 104, in the link) and 11855, 11991, 12068, 12071,
+# 12074.
+# Scores before step 8 (`pnpm wasm score`): 1488 18 over 190 rows, 1487 25 over 280, all operand-only. Each path is
+# `(GetPathRootSemSA(FLASH_INTERNA) / "dinamico/imprimindo").string()`: the temporaries the target builds and destroys
+# are the root path, the literal's path, the operator/ result and its string copy (fns 178, 138, 183). In use band 8
+# the target's 1488 and 1487 lie right above 1485 among the TSE rows (1486 is OpenSSL's). The object holds 1488 and
+# then 1487 (build/out/wasm-map/vota_web/names.tsv's ld_index), with 1485 just ahead of both, since
+# GetQuantidadeMaximaBUsAdicionais, above them, calls it first (a reading of clang's order). Chosen, no record,
+# slot or string names them: the three names; that they are free functions of namespace vota (they read no state; their
+# callers are vota states of fimvotacao/ and iniciovotacao/); the file, votadefs.cpp, as for 1485, which agrees with
+# the band's order but is not evidence; ExisteArquivoImprimindo in the same TU as its caller, measured: clang keeps it
+# out of line; `.string()` for the conversion.
+#
+# Added since, at the end of votadefs.cpp:
+# - 2520 (81 B, ()->(i32), no record and no stub file): comum::CInformacaoEleicao over
+#   CConfiguracaoEleicao::GetInst().GetParametrosUrna() (fns 187 + 88, 603), ImprimeBJust (1950), then, when it is
+#   true, not the voters' training: GetGeral()'s phase (+48 of fn 291) not FASE_TREINAMENTO, else GetVota()'s training
+#   flag (+72 of fn 261) clear. The target calls CAppInfo::GetInst (185) twice and not EhTreinamentoEleitor (697), so the
+#   test is written in place, with EhTreinamento (1485, this file) for its first half, which clang inlines here. Four
+#   callers keep the call, in four files (vota::CDefineRotaPosReinicio::NeedChangeState 11858, which then goes to
+#   vota::CReinicioComparecimentoMesario, CFimAquisicaoVotos::StartState 10737, CQuerReimprimirZeresima::ProcessInput
+#   11848, CEscolheOpcao's GetInst 2753), so it is in a TU of none of them; 11858 is in the link, and the roots give it
+#   a second call site for the other three. `pnpm wasm score` against the link: 6 over 41 rows, operand-only; matched.
+#   It reads no state and its callers are vota's: a free function of vota (how-to step 3's member rule). Chosen: the
+#   name RegistraMesarios (CParametrosUrna's field 1950 reads is registrarMesarios, and 11858 goes to the mesarios'
+#   registration when it is true), the file and the line, last.
+# - vota::ExisteArquivoZeresima: CSystem::ExistFile (412) on CPath::GetPathTrab(FLASH_INTERNA) / "ze.dat", held
+#   inlined by vota::CReinicioVotacao::StartState (11835, unit 138's) behind a stack prologue of its own
+#   (docs/reference/facts/reading.md R10), so it is out of line in a TU other than 11835's and has no target index;
+#   unrooted, it has 11835 as its one caller here too. The path is a named local: the target frees the `/`'s two
+#   temporaries before ExistFile. Its name, its being a free function, its file and its line (last) are chosen.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CHorariosUrna

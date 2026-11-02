@@ -33,9 +33,9 @@
 # What the instances bring. The root is now the link's copy of four functions the uenux2 object
 # app/comum/dados/asn/rdv/cconversorvotoscargo.cpp.o gave before, at the same UENUX2_CXXFLAGS, and each still matches:
 # string::operator+=(const char*) (678), stringstream's constructor (858) and str() (1075), and CBaseError<EApiAsnError,
-# {1900, 1910}>'s constructor (1074). basic_stringbuf::__init_buf_ptrs (674) comes from it too, in place of
-# roots_rhvoice.o's, and stays `differs`. Step 8 adds a `call` line for 682, the ecourna copies' Converte merge, matched
-# already.
+# {1900, 1910}>'s constructor (1074). basic_stringbuf::__init_buf_ptrs (674) came from it too, in place of
+# roots_rhvoice.o's, and differed: it matches from src/app/roots_coderenv.cpp, which links first with the executable
+# TU's copy (unit 229). Step 8 adds a `call` line for 682, the ecourna copies' Converte merge, matched already.
 #
 # 9117's names. Its body re-pointed IDENTICAL, kind-unverified, before (`pnpm wasm splat-remap ... --against 9117
 # --no-kinds`), and the scan held it `unresolved self-voted` on the three alternatives' theInfo objects, .bss objects

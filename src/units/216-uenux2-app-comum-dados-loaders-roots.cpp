@@ -18,7 +18,8 @@ namespace {
 
 const void* volatile w216_sink;
 
-// Stands for fn 1391's callers (comum::CJustificador::GetInst): 5971, 6734, 10587, 10590, 10797, 11616, 11835, 12105.
+// Stands for fn 1391's callers (comum::CJustificador::GetInst): 5971, 6734, 10587, 10590, 10797, 11616, 12105 (unit
+// 138's 11835 is in the link).
 __attribute__((noinline)) int Justificadores() { return w216_1391() - 11 * w216_1391(); }
 // Stands for fn 2822's callers: 10699, 11242, 12098, 12110.
 __attribute__((noinline)) int HabilitadosSemBiometria(int a) { return 5 * w216_2822(a) + w216_2822(a + 4); }

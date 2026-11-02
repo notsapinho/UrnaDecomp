@@ -129,9 +129,9 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
 }
 // Stands for the callers of four CCandidaturas members that are not in our link, beside units 77's and 139's:
 // GetCandidatosPartido (2272: 3819, 5604 and 11976, beside 11213 and 11255), ExisteCandidato (2271: 3819 and 4442, beside
-// 11215, 11254 and 11255), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 5604, 11212, 11683 and
-// 11891, beside 11214, 11255, 11724, 11744 and 3820, unit 200's; 11212's call and one of 11683's are on
-// CRespostas::GetInst()'s result, fn 2812).
+// 11215, 11254 and 11255), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 5604, 11683 and 11891,
+// beside 11214, 11255, 11724, 11744 and 3820, unit 200's, and unit 77's 11212, which calls CRespostas::Busca, the same
+// body; one of 11683's calls is on CRespostas::GetInst()'s result, fn 2812, too).
 __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
 {
     w2272(r, c, cargo, partido);

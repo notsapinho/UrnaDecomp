@@ -8,7 +8,10 @@
 namespace api {
 class IScreen;
 class IInputKbd;
+class CFormBuilder;
 class CInteractiveFormBuilder;
+template <typename MEDIA>
+class IForm;
 template <typename MEDIA, typename INPUT>
 class CInteractiveForm;
 } // namespace api
@@ -40,5 +43,14 @@ public:
 // it: a free function of vota, its name and its parameters' are chosen.
 std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> GetFormularioInterativo(
     api::CInteractiveFormBuilder& builder, const std::string& nome);
+
+// Fn 886 (21 B, 11 callers): the same over api::CFormBuilder, the form (api::IForm<api::IScreen>, fn 5550's) of the
+// builder's fields, named, with a new CPreShowFormVota as its pre-show. It builds the block fn 576 builds, whose vtable
+// lies after CPreShowFormVota's typeinfo, which places it in this file as fn 576 is placed (a reading). Its target body
+// is a thunk of binaryen's fn 6117, which the target forms from it and fn 11140 (the same with an
+// api::CPreShowClearScreen: they pass fn 6117 the object's and the control block's vptrs, @1532684 and @1532608 here).
+// Fn 11140 is not in our link, so ours is a whole body and differs: src/units/165-uenux2-app-vota-execucao.mk has the
+// measurement. No record names it: a free function of vota beside fn 576, its name and its parameters' are chosen.
+std::shared_ptr<api::IForm<api::IScreen>> GetFormulario(api::CFormBuilder& builder, const std::string& nome);
 
 } // namespace vota

@@ -9,16 +9,19 @@
 //   and urna_roots_vector stands in for 520's callers.
 // - The file compiles at UENUX2_CXXFLAGS, not the roots' APP_CXXFLAGS: 4967 loads __vec_ and __begin_ again after its
 //   store to __end_, which -fno-strict-aliasing gives and strict aliasing does not (docs/reference/facts/levels.md V1).
-// Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match.
+// Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match. 520's and
+// 4967's are also the bodies of src/app/roots_coderenv.cpp's vector<char> copies, which link first, so binaryen keeps
+// those and the two match lines carry vector<char>'s names.
 #include <memory>
 #include <vector>
 
 template __attribute__((minsize)) std::__exception_guard_exceptions<std::vector<unsigned char>::__destroy_vector>::~__exception_guard_exceptions();
 template __attribute__((minsize)) std::vector<unsigned char>::~vector();
 
-// Stands in for 520's callers in the target that are not in our link (1249 1532 2793 2891 2927 5500 6004 7840 8592 9770
-// 10155 10205 10256 10261): two call sites, since binaryen inlines a function called once
-// (docs/reference/facts/tool-traps.md X1). 857, the other one, calls it now, from this object's copy below. The
+// Stands in for 520's callers in the target that are not in our link (1249 2793 2891 2927 5500 6004 7840 8592 10155
+// 10205 10256 10261): two call sites, since binaryen inlines a function called once
+// (docs/reference/facts/tool-traps.md X1). 857, 1532 and 9770, the others, call it now: 857 from this object's copy
+// below, 1532 and 9770 from src/app/roots_coderenv.cpp. The
 // instantiation above keeps clang from inlining ~vector here.
 int urna_roots_vector(int a)
 {

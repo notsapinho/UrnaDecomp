@@ -4,7 +4,7 @@
 
 namespace comum {
 
-CSigVerifier::CSigVerifier(ESavdAplic aplic, std::string diretorio, std::string arquivo, std::string pacote)
+CSigVerifier::CSigVerifier(ESavdAplic aplic, std::filesystem::path diretorio, std::string arquivo, std::string pacote)
     : m_aplic(aplic), m_diretorio(std::move(diretorio)), m_arquivo(std::move(arquivo)), m_pacote(std::move(pacote))
 {
 }

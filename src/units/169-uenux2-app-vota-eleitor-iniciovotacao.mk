@@ -31,6 +31,19 @@
 #   5882) on CLogVota::GetInst()'s result, the form's slot 2, this state as the next. 2 over 14 rows, operand-only.
 # - vota::CRegerarZeresima's statics' exit destructors (11844, 11843) match since fn 11838 (unit 176) holds its GetInst
 #   inlined, which names the two objects; the roots' stand-in for 11838 went with it.
+# - vota::CInformacaoZeresimaTardia::ProcessInput (fn 11982, records cinformacaozeresimatardia.cpp:48:13 and :51:44):
+#   Read() on the form (record cinteractiveform.h:57), and on api::INPUT_CONFIRMA (9) two log members binaryen inlines,
+#   each after its own CLogVota::GetInst call (fn 184), whose stack frame opens after the call (the shape unit 138's
+#   LogaMesarioConfirmouReinicioVotacao measures): vota::CLogVota::LogaFinalizacaoAplicativo and LogaDesligandoUrna,
+#   added to app/vota/log/clogvota.cpp after its last member, each building its text ("Finalização de aplicativo",
+#   "Desligando a urna": ledger/strings.tsv 124202 and 226571, which only 11982 loads) and calling api::CLoga::loga
+#   (fn 433) with +4 and severity 1; then slot 4 of CPolySingleton<api::IBeep>'s instance (fn 925, api::IBeep::BeepAlert,
+#   api/hwil/ibeep.h) at :48:13, api::CWait::Wait on +16 (fn 5446), comum::IInterfaceInit::DesligarUrna (fn 5894) on
+#   CPolySingleton<comum::IInterfaceInit>'s instance (fn 611) at :51:44, and nullptr as the next state. 27 over 197 rows,
+#   operand-only. The records' columns: the switch with its cases indented eight columns (as cprezeresima.cpp's, unit
+#   138) puts :48's call at column 13; :51's 43 characters before the call are `            comum::IInterfaceInit& poIni
+#   = `, a chosen spelling of that length (docs/reference/facts/reading.md R19), which needs the case's braces. The lines
+#   45 to 50 between them are a choice; the empty default is a choice (the target returns at once for any other input).
 #
 # Evidence, each read in the target (pnpm wasm fn) or measured on this unit's links:
 # - The destructors' forms (docs/reference/facts/reading.md R4, R5). CInformacaoZeresimaTardia's is out of line and the
@@ -87,7 +100,8 @@
 # CInformacaoZeresimaTardia, declared and not defined; the bases' arguments spelled with
 # comum::CAppState's chosen enumerators; the destructor declared first, so that each class's own .cpp emits the vtable;
 # the empty slot 9 of CGeraZeresima and CRegeraResumoZeresima as a body in the class; the lines of
-# cinformacaozeresimatardia.cpp's two functions, above the records' lines, which stay past the file's end. The paths:
+# cinformacaozeresimatardia.cpp's destructor and StartState, above ProcessInput's records; the names
+# LogaFinalizacaoAplicativo, LogaDesligandoUrna (from their texts) and ProcessInput's local poIni. The paths:
 # cinformacaozeresimatardia.cpp is the records' file; the other classes' files are chosen by how-to step 3 (rule 2, then
 # rule 4, the class name in lower case), each header beside its .cpp. Each class's typeinfo follows its own vtable with
 # no other class's between (docs/reference/facts/placing.md P2). The vtables of CGeraZeresimaBase (@1544384),

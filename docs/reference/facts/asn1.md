@@ -237,11 +237,11 @@ rest on those two.
 More of the same kind, from the same tally of aligned calls:
 
 - `pair-depth0`: 5055 and 5054, equal bodies the census cannot pair while a callee differs.
-- `callers+content`: 220, 2706, 5306, 1497, 5076, 1067 and 1068. 2247 and 2249 had such lines: a probe object at the
+- `callers+content`: 5306, 1497, 5076, 1067 and 1068. 2247 and 2249 had such lines: a probe object at the
   executable TU's `-Oz -fexceptions`, first on the link line, matches them, so they are that flag set's, and they match
-  since `src/app/roots_vector.cpp` emits them as `minsize` instances, generated lines naming them. 220 stays `differs`
-  at the locals there, so for it the flag set is a lead. Our bodies differ, but for 1497's, which matches, and their
-  callers need only the name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair.
+  since `src/app/roots_vector.cpp` emits them as `minsize` instances, generated lines naming them. 220 and 2706 had such
+  lines too, and match since `src/app/roots_coderenv.cpp` holds them at that TU's rule (unit 229), generated lines naming
+  them. Our bodies differ, but for 1497's, which matches, and their callers need only the name. 1067 and 1068 were named by anchor 9113's table operands until 9114 became a census pair.
   An anchor casts call and table votes only while nothing else names it (`anchorVotes` in
   `asmlift-wasm/src/splat-symbols.ts`).
 - 8041, `use_facet<num_put>`: one of twelve thunks of 453. Its one slot is the `invoke` operand at +0xa2 of 446 and 541,
@@ -419,7 +419,7 @@ Not every leftover is the runtime's. By their rows:
 | --- | --- | --- |
 | 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | the executable TU, at its own `-Oz -fexceptions` rule, once it is reconstructed ([levels.md](levels.md) §V1) |
 | 1843 | `string::find_first_not_of` at `-Oz`: it keeps `__str_find_first_not_of`'s loop, a compile of the member at `-Oz -fexceptions` shows it, and `-Os`, `-O2` and `-O3` do not | matched: `src/app/roots_vector.cpp` emits it as a `minsize` instance, until the executable TU's code that instantiates it is written ([levels.md](levels.md) §V1) |
-| 1532 | BER encoding through `CoderEnv`, with landing pads, so an `-fexceptions` TU's | its callers, whose records name `api::CFileASN` |
-| 2706, 5282, 5290, 2704, 2896 | libc++ instances: 2706 is `vector<char>::reserve`, with landing pads, called by the runtime's own 3464, 3472 and 5055; 5282 is a `__split_buffer<char>` constructor and 2704 and 2896 its destructor, with no pad; 5290 holds pads too; 2896 is the merge body of 2704, 2545, 4675 and 5523 | the TU whose copy they are |
+| 1532, 2706, 5282, 5290 | `CoderEnv::encodeBER` over a `back_insert_iterator<vector<char>>` and libc++ instances it brings (`vector<char>::reserve`, called by the runtime's own 3464, 3472 and 5055 too; a `__split_buffer<char>` constructor; `std::copy` into the iterator); 1532, 2706 and 5290 have a landing pad each, 5282 none | matched: `src/app/roots_coderenv.cpp` holds them at the executable TU's rule (unit 229) |
+| 2704, 2896 | `__split_buffer<char>`'s destructor, a thunk into 2896, the merge body of 2704, 2545, 4675 and 5523 | the merge's other members |
 | 8902 | calls 5056 and 1872, `api`'s, and no runtime symbol | a class of `api` |
 | 2650 | `allocator<Visitante>::destroy`: it calls 388, a `~shared_ptr` that keeps its result, where ours calls 424, the one that has none, over which 2183 and 3469 match | a second `~shared_ptr` body in our link |

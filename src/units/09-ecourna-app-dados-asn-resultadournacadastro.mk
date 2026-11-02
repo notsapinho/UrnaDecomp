@@ -4,6 +4,14 @@
 # out-of-line constructors their bodies call (CApresentacaoFotoEleitor, fn 1081 after binaryen's folding;
 # CIdentificadorEleitor(TSharedIdentificadorEleitor), fn 5172).
 # cconversorresultadournacadastro.cpp is unit 105's, with the converters it builds.
+# CConversorHabilitacaoBiometrica::DoDeconverte (9066) is written and `unresolved` on the table slot of
+# IConversorASN<EstadoHabilitacaoPorCodigo, CEstadoHabilitacaoPorCodigo>::Deconverte: the target calls that member with
+# no landing pad and binaryen inlined it there (its 176-byte frame is 9066's fourth stack prologue), where ours invokes
+# it. In the object's LLVM IR the converter local's cleanup pad is empty but joins the pad of the
+# CEstadoHabilitacaoPorCodigo temporary before the resume, so the invoke stays. A temporary converter, the converter
+# declared first in the function, the result in a named local and a named CHabilitacaoBiometrica each keep the invoke
+# (wasm-objdump -d -r of the object); the call is direct only with no converter object to destroy, which no form of this
+# function tried gives.
 DADOS_RUC_ASN_SRCS := app/dados/asn/resultadournacadastro/cconversorapresentacaofotoeleitor.cpp \
                  app/dados/asn/resultadournacadastro/cconversorcomparecimentomesario.cpp \
                  app/dados/asn/resultadournacadastro/cconversorestadocomparecimento.cpp \

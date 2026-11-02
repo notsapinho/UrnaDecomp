@@ -5,12 +5,12 @@
 // (api::CEncryptedFile::Load, unit 128) are reconstructed; the noinline caller below, MesmoTamanho, stands for the
 // other, 12134, so binaryen keeps it out of line as the target does.
 // They also keep CSystem::ExistFile, ExistDir and ZeroFill (target fns 412, 5459 and 2761), whose callers are not
-// reconstructed but for 3653 and 2760: ExistFile is called directly by 23 target functions (1487, 2725, 3653 and
+// reconstructed but for 3653, 2760 and 1487: ExistFile is called directly by 23 target functions (1487, 2725, 3653 and
 // others) and its address is in the table (slot 3567), so it is address-taken here and called from two stand-ins;
 // ExistDir is called once each by 5572 and 5821, so it gets two call sites. ZeroFill is called by 2760 (RemoveFile)
 // and 5458 (RemoveTree) once and by 5455 (CSystem::ReplaceFile) twice, all reconstructed.
-// RemoveFile (target fn 2760) is called directly by 1487 and 7160 once and 6737 twice, none reconstructed: RemoveDois
-// gives it two call sites.
+// RemoveFile (target fn 2760) is called directly by 1487 and 7160 once and 6737 twice: RemoveDois gives it two call
+// sites and stands for 7160 and 6737 (1487 is in the link, unit 168).
 // CopyFile (target fn 378) is called directly by 15 target functions (1836, 2725, 3333, 4657, 4682, 4687, 5371, 5873,
 // 5874, 6737, 7174, 11630, 11631, 11632 and 12098); 5873, 5874, 11630, 11631 and 11632 are in the link (units 160 and
 // 122), and so are vota::CSincronizaVota's 1836, 4657, 4682 and 4687 (fragment 205): CopiaDuas stands for the other

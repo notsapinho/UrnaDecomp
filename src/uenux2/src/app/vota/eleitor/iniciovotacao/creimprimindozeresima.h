@@ -13,7 +13,9 @@ namespace vota {
 // object with no call through the vtable. A singleton: GetInst (fn 5941, a thunk into binaryen's fn 764) keeps the
 // object in a static std::unique_ptr (@1834828, destroyed at exit by fn 11854) under a static std::mutex (@1834804, by
 // fn 11853). The constructor passes 0 to the base's. src/units/104-uenux2-app-vota-estados.mk says which of this is
-// evidence and which is chosen.
+// evidence and which is chosen. StartState (fn 11852) holds ImprimeZeresima, the record's name
+// (creimprimindozeresima.cpp:51, `void vota::CReimprimindoZeresima::ImprimeZeresima()`, no `static` and no `virtual`),
+// after a stack prologue of its own: out of line, and inlined by binaryen into its one caller; its access is chosen.
 class CReimprimindoZeresima final : public comum::CAppState {
 public:
     static CReimprimindoZeresima& GetInst();
@@ -22,6 +24,8 @@ public:
 
 private:
     CReimprimindoZeresima();
+
+    void ImprimeZeresima();
 
     static std::mutex s_mutex;
     static std::unique_ptr<CReimprimindoZeresima> s_inst;

@@ -49,11 +49,10 @@
 #   call of 3552 suggests, is a reading. 3552 carries a hand edit for 2183's and 8851's sake.
 # - 1843 find_first_not_of: the same, the rows -Oz gives; -Os, -O2 and -O3 do not. It matches from src/app/roots_vector.cpp's
 #   minsize instance, which stands for the executable TU's copy; its census pair names it, so its hand edit went.
-# - 1532: BER encoding through CoderEnv with landing pads, so an -fexceptions TU's, not the -Os runtime's. Its callers'
-#   records name api::CFileASN.
-# - 2706, 5282, 5290, 2704 and 2896: libc++ instances. 2706 is vector<char>::reserve, with landing pads, called by the
-#   runtime's own 3464, 3472 and 5055. 5282 is a __split_buffer<char> constructor and 2704 and 2896 its destructor, with no
-#   pad, whose copy came with 2706's. 5290 holds pads too. 2896 is the body of a merge of 2704, 2545, 4675 and 5523.
+# - 1532 (CoderEnv::encodeBER), 2706 (vector<char>::reserve, called by the runtime's own 3464, 3472 and 5055), 5282 and
+#   5290 match from unit 229's root, at the executable TU's rule. 2704 and 2896 stay: 2704 is __split_buffer<char>'s
+#   destructor, a thunk into 2896, the body of a merge of 2704, 2545, 4675 and 5523, and our link has the whole
+#   destructor (unit 229's fragment).
 # - 2650 differs on one call: target 388, ours 424. Our link keeps one ~shared_ptr body where the target has two, and 2183
 #   and 3469 match over it (unit 86's note).
 # - 8902: calls 5056 and 1872, api's, and no runtime symbol.

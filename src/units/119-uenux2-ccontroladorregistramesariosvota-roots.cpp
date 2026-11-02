@@ -3,8 +3,8 @@
 // slots call. Every other function of the unit has its callers in the unit, except two vota::CLogVota members:
 //
 // LogaErroEstadoAplicativoDesconhecido (fn 3279) has two direct callers in the target, fn 7160, which calls it twice,
-// and vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858, pending in unit 104); LogaErroEstado stands for them,
-// one caller that calls it twice. LogaFimTesteTecladoSucesso (fn 4511) has one, fn 11804 (CTesteTeclado's, not
+// and vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858, unit 104's, in the link); LogaErroEstado stands for
+// fn 7160, one caller that calls it twice. LogaFimTesteTecladoSucesso (fn 4511) has one, fn 11804 (CTesteTeclado's, not
 // written), which calls it twice; LogaFimTeste stands for it the same way. Each body differs from the other and from
 // every target function (a test of its second argument, a result). Each goes when its callers are in the link.
 extern "C" {
@@ -17,7 +17,7 @@ namespace {
 
 const void* volatile w119_sink;
 
-// stands for fns 7160 and 11858
+// stands for fn 7160 (11858 is in the link)
 __attribute__((noinline)) void LogaErroEstado(void* log, int vezes)
 {
     w119_erro_estado(log);

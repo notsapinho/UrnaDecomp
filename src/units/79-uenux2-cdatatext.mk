@@ -10,7 +10,9 @@
 # target functions:
 #   CDataText<CTextSource>                       D2 10536, D0 10535, GetText 10534
 #   CDataTextFmt<CTextSource>                    D2 10748, D0 10747, GetText 10746
-#   CDataTextFmt<function<string(const string&)>>  D2 12291, D0 12290, GetText 12287
+#   CDataTextFmt<function<string(const string&)>>  D2 12291, D0 12290, GetText 12287, from unit 110's ctelasvota.cpp.o
+#                                                since its builder (TelaEsperaRepetirTesteTeclado, for 5936) is written;
+#                                                the roots' stand-in for 5936 went
 #   CDataText<string (*)()>                      GetText 12784 (D2 and D0 are the shared 174 and 144)
 #   CDataText<const string& (*)()>               GetText 12580 (the same)
 #   CDataText<comum::CCargoDSNomeSexoCandidato>  GetText 12632 (the same), a call of the source's operator, fn 2268 (unit 129)
@@ -24,7 +26,8 @@
 #   CQRCodeImage                                 constructor 3662, D2 10966, D0 10964, GetData 10967 (below)
 #   byn$mgfn-shared bodies                       6060 and 6059, of CQRCodeImage's and CDataText<function<string()>>'s D2 and D0;
 #                                                the other thunks above join 1566 and 1565
-#   __shared_ptr_emplace<X> D2, D0               12796 12788, 12586 12581, 12309 12306, 12335 12328, 12575 12570, 12294 12292,
+#   __shared_ptr_emplace<X> D2, D0               12796 12788, 12586 12581, 12309 12306, 12335 12328, 12575 12570, 12294 12292
+#                                                (CDataTextFmt<function<...>>'s, from ctelasvota.cpp.o since its builder is written),
 #                                                12518 12517, 12313 12311; slot 2 of two with std::function, 2967
 #   __shared_ptr_pointer<X*, ...>::__get_deleter 10533 10745 11998 10623 11245 12345 12546
 #   std::vector<unsigned char>::insert(const_iterator, size_type, const value_type&)  3661, which GetData calls three times

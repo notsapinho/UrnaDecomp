@@ -72,8 +72,12 @@
 #
 # Names: 407, 555, 187, 1073, 1926 and 2817 are srcloc-anchors. Their mutexes hold through their exit destructors, which
 # the content pass pairs once the name is voted, and through the thunk. A record held by a function that inlines GetInst
-# anchors nothing, so 273, 326 and 2812 have hand edits of `s_mutex`, and CRespostas's pointer one too, with 1929, whose
-# twin 1932 stops the census; the content pass then pairs 5730. 555's pointer has one voter, so it has a hand edit too: 555's
+# anchors nothing, so 273 and 326 have hand edits of `s_mutex`. 2812's mutex and CRespostas's pointer had them too, until
+# fn 11212 (comum::CParteCandidatosConsultas::Imprime, cpartecandidatos.cpp) named 2812 by its call: their generated lines
+# read `vote:2 by:2812,12621`, and with the two hand lines out, two scans on copies (the readers' match lines out, beside a
+# control that keeps the lines) move no row and the build gives the target's sha256 with 11182 matches, so they went.
+# 1929, whose twin 1932 stops the census, keeps its hand edit; the content pass then pairs 5730. 555's pointer has one
+# voter, so it has a hand edit too: 555's
 # destructor cannot land, and the build refuses the name without its line. 2817's has one voter as well and needs no line:
 # its destructor, 11510, holds the address. Each line in splat/symbol_addrs.txt cites what the thunk's own body holds and the
 # other holders.
@@ -103,6 +107,16 @@
 # RespostaCorrente. PreencheADireita's fill character is not in 11478's call: binaryen folded the one every caller passes
 # into 1881, whose body holds the constant 32, ' '. Chosen: its name, its being a free function, its declaration in
 # crespostasds.h.
+# comum::CRespostas::GetNumeros and Busca, after LinhaRespostaCorrente (no record: their lines, names and their being
+# members are chosen; they read the base's map). GetNumeros has no index of its own: unit 77's 11212
+# (CParteCandidatosConsultas::Imprime) holds it inlined by binaryen and matches. Busca has the bytes of unit 89's
+# CCandidaturas::Busca, and binaryen keeps one body, 1273, whose match line names CRespostas's since crespostas.cpp
+# links first (step 9 renamed it). GetNumeros keeps the keys from post * 1000000 below (post + 1) * 1000000 with post + 1
+# narrowed to a TCargoID, the target's `i32.and 255`. Compiled at the tree's flags and compared in the object, call
+# numbers read as symbols (none linked): written `(cargo + 1) * 1000000`, the bound is an add of 1000000 and the code
+# differs, and `chave / 1000000 == cargo` gives other code (79 rows against 94); the same code comes from the test written inline without
+# the two locals, from a TCargoID local holding cargo + 1, and from an iterator loop for the structured binding.
+# Pushing a named local differs only in calling push_back(const unsigned int&) for push_back(unsigned int&&).
 # The includes it needed (ccargos.h, cstringutils.hpp) took two of the blank lines above GetInst's record line.
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both
@@ -216,7 +230,8 @@
 # at +112 is std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265)
 # and the find (1703) keep their bytes under the new types, and step 9 renamed both match lines to the new symbols. The
 # names, the file and the lines (after the destructor, the CEleitorIdentidade overload first) are chosen; the named
-# local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's five callers.
+# local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's callers not in the
+# link, 3616 and 10631 (5385 is, and so are 10789 and 10790, unit 119's slots 14 and 13).
 #
 # ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
 # tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws
@@ -241,6 +256,35 @@
 # CDataImage<CCandidaturasDSFoto> and CDataText<CCargoDSNomeSexoCandidato> fields whose
 # vtables lie between this file's records in the data; fn 6561 (adicionaFotoEmoldurada over the lambda of
 # CriaTelaVisualizacaoCandidato, record :487) has callers 6569 and 12272 only.
+#
+# ctelasvota.cpp also holds six screen builders outside CTelasVota, free functions of vota that ctelasvota.h declares
+# (its comment says what places them in this file): AdicionaTelaAguarde (fn 4152), AdicionaCabecalhoTesteTeclado (fn
+# 3054) and TelaPreparandoDadosEncerramento (fn 6583), which match, and TelaVotacaoEncerrada, TelaCopiaResultadoParaMR
+# and TelaEsperaRepetirTesteTeclado, which have no index of their own: binaryen inlines each into its one target caller,
+# the GetInst of vota::CGeraBU (6129) and vota::CCopiaResultadoParaMR (6174), unit 220's, and of
+# vota::testeteclado::CEsperaRetestar (5936, unit 138's), where each sits behind a second stack-pointer prologue (so out
+# of line in its object, in another TU than its caller: docs/how-to-decompile.md step 3). Measured in the whole link
+# before steps 7 to 9 (pnpm wasm score against names.tsv): 4152 10 over 127 rows, 6583 16 over 167, 3054 8 over 125, all
+# operand-only, calls and data addresses. Step 8 named 4152 and 6583 by the GetInst's call votes and 3054 by 5936's; 4152
+# and 3054 name api::CFormBuilder::AddStatusHeader (fn 502) in turn (unit 220's fragment). The fonts: the file constants
+# FONTE_TITULO {30, 0} and FONTE_AGUARDE {25, 0}, which the scan places by their bytes (the target holds them at @474888
+# and @474992, among 3 and 63 places at a multiple of 4 in the first 65 occurrences, the most splat-symbols.ts's
+# resolveBytes reads), and a local SFont {25, 0} in TelaEsperaRepetirTesteTeclado,
+# which 5936 builds in its frame. TelaEsperaRepetirTesteTeclado instantiates AddTextFieldUpdate over a
+# std::function<std::string(const std::string &)>, and with it the CDataTextFmt and the two control blocks it builds:
+# their members (12287, 12290, 12291, the block's 12294 and 12292, and 12316, 12314 of api::CTextFieldUpdate's block)
+# link from this object now,
+# ahead of the objects that gave them before (79's roots and unit 31's cformbuilder.cpp), with the same bytes.
+# 3054's other target callers (11804, 11805, 11809) are not written: unit 220's roots stand in for them.
+# The three include lines this needs (<functional>, api/gui/cformbuilder.h, app/vota/comum/cpreshowformvota.h) took
+# blank lines above line 291. cformbuilder.h brings iform.h, so the TU now also initializes api::CFormStack<IScreen>'s
+# guarded statics, and its own static's exit destructor (12875) took another local suffix: step 9 renamed that match
+# line (__cxx_global_array_dtor.7 to .19 of this object), the same body.
+# Chosen: the names, their being functions of vota with external linkage (the file's recorded helpers are internal, and
+# these have no record), their parameters' types and names, the fonts' names and their being file constants, the
+# interval and the font in TelaEsperaRepetirTesteTeclado written as named locals before the call (the target stores
+# them at +72 and +64 of its frame before the std::function's copy at +32; temporaries were not compiled), and their
+# lines (3370 to 3429, chosen, in the blank run that follows record 3366, 12272's, and ends at GetInst's 3434).
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

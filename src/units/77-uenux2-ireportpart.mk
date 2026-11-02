@@ -1,8 +1,8 @@
 # uenux2 api::IReportPart's parts: comum::CParteCandidatos, CParteCandidatosMajoritarios, CParteCandidatosProporcionais,
 # CParteCandidatosConsultas, CParteRdv, CParteEleitores and api::CFormPart (comum::CParteCargos is unit 58). Matched:
-# - the implicit destructors, the compiler's code for the class definitions, emitted with the vtables in the pending
-#   object, or for CFormPart, CParteRdv, CParteEleitores and the three classes of cpartecandidatos.cpp whose Imprime is
-#   written, in their Imprime's .cpp: CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590; the match lines name
+# - the implicit destructors, the compiler's code for the class definitions, emitted with the vtables in each class's
+#   Imprime's .cpp (CFormPart's, CParteRdv's and CParteEleitores's own, and cpartecandidatos.cpp for its four
+#   classes): CParteCandidatos's and CParteRdv's one body (D2 2876, D0 5590; the match lines name
 #   CParteRdv's since cpartecandidatos.cpp links after cparterdv.cpp, below: step 9 renamed them), CParteCandidatosMajoritarios's and
 #   CParteCandidatosConsultas's one body (5589, 5588), CParteCandidatosProporcionais's (3867, 11210), and
 #   CParteEleitores's (11205, 11204) and CFormPart's (10888, 10887), four thunks into binaryen's two merged bodies 2899
@@ -18,12 +18,14 @@
 #   for CParteCandidatos and CParteRdv) and 11958 call the D2, and 5966 (one body for the two three-part classes) holds
 #   it: clang inlined it there, as the roots object shows. The classes that are not final use the virtual fn 411,
 #   already matched.
-# Imprime, the key function of every class, is pending (the pending file's header lists what each waits for), but for
-# api::CFormPart's (10889, a call of its form's slot 2), in cformpart.cpp, which brings that class's vtable and destructors,
-# CParteRdv's (11203), in cparterdv.cpp, CParteEleitores's (11206), in cparteeleitores.cpp, and CParteCandidatos's (11215),
-# CParteCandidatosMajoritarios's (11214) and CParteCandidatosProporcionais's (11213), in cpartecandidatos.cpp, whose
-# objects now emit those classes' vtables and destructors. 11214's throw is on its record's line (cpartecandidatos.cpp:75:19), with the target's code 9081 and
-# message; the lines of 11215 and of the constructors, which now follow 11214, are a choice. CParteEleitores::Imprime calls its part's slot 2 once per record of
+# Imprime, the key function of every class, is written: api::CFormPart's (10889, a call of its form's slot 2) in
+# cformpart.cpp, which brings that class's vtable and destructors, CParteRdv's (11203) in cparterdv.cpp, CParteEleitores's
+# (11206) in cparteeleitores.cpp, and CParteCandidatos's (11215), CParteCandidatosMajoritarios's (11214),
+# CParteCandidatosProporcionais's (11213) and CParteCandidatosConsultas's (11212) in cpartecandidatos.cpp, whose objects
+# emit those classes' vtables and destructors. The unit has no pending file since 11212, the last trapped member, was
+# written. 11214's throw is on its record's line (cpartecandidatos.cpp:75:19), with the target's code 9081 and message,
+# and 11212's on its own (:174:19), with code 9083 and its message; the lines of 11215, of the constructors, which follow
+# 11214, and where 11212 starts above its record are a choice. CParteEleitores::Imprime calls its part's slot 2 once per record of
 # comum::CEleitores: the target moves the base CDataMap's cursor to the map's first record inline (CDataMap::Reset in
 # api/io/cdatamap.h, a chosen name), tests it against the map's end inline (IsFim) and calls Next (fn 5601).
 #
@@ -51,6 +53,33 @@
 #   measured in the whole link. So
 #   cpartecandidatos.cpp is listed in fragment 89, right after ccandidaturas.cpp (the second form, measured), and
 #   this unit keeps its other files; docs/reference/facts/codegen.md C4 has the effect.
+#
+# 11212, CParteCandidatosConsultas::Imprime, prints m_cabecalho, then m_candidato per answer number of the current post,
+# after checking that CRespostas::Busca finds it (else code 9083, "Resposta não encontrada: {}/{}", the post and the
+# number, both formatted as unsigned: the argument word 198), and m_rodape. What shows each part:
+# - The numbers come from a function binaryen inlined: a 16-byte frame of its own inside 11212's
+#   (docs/reference/facts/reading.md R10, the first sign). It walks the map at +0 of CRespostas::GetInst()'s result
+#   (fn 2812) and keeps the number at +0 of each CRespostaConsulta (node +20) whose key lies from post * 1000000 to below
+#   (post + 1, narrowed to a byte) * 1000000. It reads the class's map; that it is a CRespostas member, and in
+#   crespostas.cpp, is a choice (unit 110's fragment has its forms): the second frame shows only that it is in a TU
+#   other than 11212's. Defined in cpartecandidatos.cpp instead, clang inlines it into 11212: the object's 11212 has
+#   486 rows and one frame, against 309 rows and a call.
+# - std::sort over the numbers calls libc++'s own __sort<__less<unsigned>&, unsigned*>, the extern template the
+#   header's __sort_dispatch routes an unsigned* sort to, which the pinned emsdk's libc++.a defines in algorithm.o
+#   (system/lib/libcxx/src/algorithm.cpp). binaryen inlines it into 11212, its one caller, as the target's 11212 shows:
+#   the first == last test and the 2 * log2 depth limit before the call of 4816. It brings 4816,
+#   std::__introsort<_ClassicAlgPolicy, ranges::less, unsigned int*, true>, and its callees 4809 (__sift_down), 4810
+#   (__swap_bitmap_pos), 4813 (__insertion_sort_incomplete), 4814 (__sort5), 4815 (__sort4), 1506 (__sort3) and 2578
+#   (__partially_sorted_swap), which match from libc++.a(algorithm.o) with no source of ours.
+# - The loop variable is a reference: on the throw's path the target reads the number again after Busca returns, as
+#   11214 does. By value, the object's 11212 differs (32 lines of diff over 309 rows). The one call of CRespostas::GetInst serves both the walk
+#   and Busca; a second call for the walk adds a call to the object's 11212.
+# - CRespostas::Busca has the bytes of 1273, CCandidaturas::Busca (unit 89's fragment): binaryen keeps one body.
+# Same code for 11212 in the object, compiled at the tree's flags and compared with call and global numbers read as
+# symbols and __memory_base offsets masked (none linked): std::ranges::sort(numeros), and std::sort with
+# std::less<TCandidatoID>(). Chosen: the names CRespostas::GetNumeros and Busca, their being members, and the locals'
+# names. Before step 8, `pnpm wasm score` against our plain link: 11212 `23 over 378 rows`, all operand-only (callees,
+# data addresses, the packed format string and two table slots); 4816, 4809, 4810, 4813, 4814, 4815, 1506 and 2578 `0`.
 #
 # Evidence. RTTI names the classes and gives api::IReportPart as each one's only base. The D2s give the layouts, and the
 # allocations of fns 5971, 11908 and 11946 the sizes (44, 28, 88, 12 bytes). RTTI gives the std::function's signature:
@@ -80,7 +109,8 @@
 # api/gui/cformpart.cpp, the guess of link-order stretch 364, does not. The lines of cpartecandidatos.cpp's constructors
 # are chosen, before the two records' lines.
 #
-# Forms that give the same bytes, measured on this unit's pending object with variant headers passed by -iquote, each
+# Forms that give the same bytes, measured on this unit's pending object (which held CParteCandidatosConsultas::Imprime's
+# trap until 11212 was written) with variant headers passed by -iquote, each
 # form on all the classes of its kind at once, comparing the whole object and each function's body with its call and GOT
 # numbers read as symbols. None was linked. A function's body is what the target can show:
 # - final classes: every body is the same for the implicit destructor (what these headers write), for
@@ -110,8 +140,6 @@
 IREPORTPART_SRCS := src/app/comum/relatorios/cparteeleitores.cpp src/app/comum/relatorios/cparterdv.cpp src/api/gui/reports/cformpart.cpp
 UENUX2_SRCS += $(IREPORTPART_SRCS)
 IREPORTPART_HDRS := $(wildcard $(ROOT)/src/uenux2/src/app/comum/relatorios/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/gui/reports/*.h)
-$(ROOT)/$(APP)/77-uenux2-ireportpart-pending.o: $(ROOT)/src/units/77-uenux2-ireportpart-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/77-uenux2-ireportpart.mk $(IREPORTPART_HDRS)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/77-uenux2-ireportpart-pending.cpp -o $(R)
 $(ROOT)/$(APP)/77-uenux2-ireportpart-roots.o: $(ROOT)/src/units/77-uenux2-ireportpart-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/77-uenux2-ireportpart.mk $(IREPORTPART_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/77-uenux2-ireportpart-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/77-uenux2-ireportpart-pending.o $(APP)/77-uenux2-ireportpart-roots.o
+override EXTRA_OBJS += $(APP)/77-uenux2-ireportpart-roots.o

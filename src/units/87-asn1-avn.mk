@@ -17,8 +17,10 @@
 # - 3559 and 9471, the destructors of AVNEncoder and AVNDecoder, are not the -Os copies their .cxx emits. Only 3559, 8903
 #   and 9770 hold AVNEncoder's vptr and 8873, 9471 and 679 AVNDecoder's. A probe object first on the link line matches 9471
 #   at -O3 -fexceptions, ecourna's level, and 3559 at -Oz -fexceptions, the executable TU's (facts/levels.md V1), with
-#   8873 and 8903, the D0s, still from the -Os objects. So they wait for the TUs that hold 679 and 9770. That those are
-#   CoderEnv's decode and encode templates is a reading of their calls.
+#   8873 and 8903, the D0s, still from the -Os objects. 3559 matches from unit 229's root, which holds 9770
+#   (CoderEnv::encode) at the executable TU's rule. 9471 waits for an ecourna object that emits the D2 ahead of the
+#   runtime: 679, which holds CoderEnv's decode (unit 115), calls no invoke_* import, so it is not that object's copy,
+#   and no target function but those three holds AVNDecoder's vptr.
 # - 1497 is libc++'s substring constructor, named for its caller 2184. It matches, the sysroot's body, since unit 100's
 #   instances are other callers of 403: without them binaryen inlines 403 here, 193 B against the target's 71.
 #
