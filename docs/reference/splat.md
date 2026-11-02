@@ -172,7 +172,7 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
   counts only the callers that hold without the line (426, unit 31's `AddField`). When the line carries every caller it
   names (each a `vtable` name whose row needs this name), those callers align the call site and count for nothing
   else: the comment leads with the callee's own rows, read without the match, and says the callers fall without the
-  line (501's). A `.bss` object, or a `.data` object whose re-pointed bytes are too few to place it (§3), has no
+  line (4349's). A `.bss` object, or a `.data` object whose re-pointed bytes are too few to place it (§3), has no
   content to stand on and often no aligned call: its line leads with the target functions other than the match that
   read or write the
   address, its static destructor first, as the `CEstadoAudio` statics' do, each with what it does there (a compare
