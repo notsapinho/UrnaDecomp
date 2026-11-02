@@ -23,11 +23,10 @@
 # comum::CArquivosResultado::GetInst (348), its out-of-line constructor and destructor and its two statics are in this
 # unit's files and belong to unit 111's measurement: its fragment says why GetInst sits above the statics.
 #
-# Not written: IInterfaceSavd's destructor (5503, slot 0 of its vtable and of the executable TU's CWasmSavd): its body
-# calls the string's destructor, which -Oz gives and -O2 does not (a probe of the class's shape at both levels, not at -O3;
-# docs/reference/facts/levels.md V1), so the copy the target kept is the executable TU's and no object here can
-# match it. It has no stub: stubs.py counts a virtual member of a class our sources define as code of ours, though no
-# object here emits this one (its row stays no-candidate).
+# IInterfaceSavd's destructor (5503, slot 0 of its vtable and of the executable TU's CWasmSavd) is not written here: its
+# body calls the string's destructor, which -Oz gives and -O2 does not (a probe of the class's shape at both levels, not
+# at -O3; docs/reference/facts/levels.md V1), so the copy the target kept is the executable TU's and no object here can
+# match it. It matches from that TU's object (unit 170), whose CWasmSavd derives from the class.
 #
 # Added since: the SAVD requests of iinterfacesavd.cpp with their TLV builder, and CArquivosSavd's file names:
 #   5890  comum::ValidarUE(IInterfaceSavd&, ESavdAplic, const std::string&)  record 886:15, code 7323

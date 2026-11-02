@@ -15,8 +15,8 @@
 // 1280: 11848, 11869, 11881, 11902, 11905, 11908,
 // 11911, 11927 (11834 and 11838 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is in the
 // link); 5943: 11855 (11834 is in the link); 5942:
-// 11848, 11852; 5941: 11848 (11845 is in the link); 5428: 10217, 10734; 1536: 10466, 10473, 10477, 10485, 10489, 10500
-// (6015 and 10593 are in the link); 5421: 10626, 10627; 2729: 6011, which still waits (2895, 10317 and 10383 are in the
+// 11848, 11852; 5941: 11848 (11845 is in the link); 5428: 10217, 10734; 1536: 10473, 10477, 10485, 10489, 10500
+// (6015, 10466 and 10593 are in the link); 5421: 10626, 10627; 2729: 6011, which still waits (2895, 10317 and 10383 are in the
 // link); 5383: 10313, 10316; 5342: 10737 (10791 is in the link); 1897: 10404, 10419, 10425.
 //
 // vota::CQuerReimprimirZeresima::GetInst (fn 5940) has one direct caller in the target, vota::CReinicioVotacao's

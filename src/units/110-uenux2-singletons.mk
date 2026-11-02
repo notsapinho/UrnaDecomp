@@ -148,6 +148,11 @@
 #   throw the object has the call first (compared in the object). The voter's data come from accessors of
 #   md::CEleitorDecorator (unit 91's header, which says what each reads); NomeParaUrna's argument is a local string, as
 #   std::make_format_args takes lvalues.
+# - MarcaVotou (records 456 and 460, column 15) has no target function of its own: binaryen inlines it into its one
+#   caller, vota::CSincronismoOperador::StartState (10210, unit 104's, whose fragment has the measurement), and it holds
+#   CEleitorDetalhe::MarcaVotou (unit 98's) inlined the same way. Its throws and their codes (7845, 7846) and messages are
+#   the target's ("Item inexistente", and the tail of 68059's "{}: Dados dinâmicos não carregados", as 2825's 7843 reads
+#   it); the counter it increments at +104 is m_qtdVotaram, name and int chosen (celeitores.h).
 # - Not written. LoadEleitorDetalhe (5764, line 719): a body written over a 104-byte md::CEleitor base (fn 946 is its
 #   copy: it copies 104 bytes and 5764 copies CEleitorDecorator's +104 after it), CImpedido::GetImpedimentoP2
 #   (cimpedido.cpp:46) and CEleitorDetalhe's two constructors (celeitordetalhe.cpp:49) scored 96 over 834 rows, its 6

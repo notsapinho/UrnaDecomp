@@ -61,4 +61,9 @@ api::CPriorityMessageQueue<api::SMessage>& CExecucaoVota::GetFilaEleitor()
     return CThreadEleitor::GetInst().GetMensagens();
 }
 
+comum::CAppState* CExecucaoVota::GetEstadoEleitor()
+{
+    return CThreadEleitor::GetInst().GetEstado();
+}
+
 } // namespace vota

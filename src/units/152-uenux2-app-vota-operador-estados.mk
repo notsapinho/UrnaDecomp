@@ -1,7 +1,13 @@
 # uenux2 vota operador states over comum::CAppState, and the members of other classes they need. Target fns matched:
 # - vota::CSuspensaoAutomaticaEleitor (aguardaeleitor/csuspensaoautomaticaeleitor.cpp): the destructor and deleting
 #   destructor (fns 2732, 10411, slots 0 and 1) and FinishState (10408, slot 5), which stops its tick through
-#   vota::CThreadOperador::GetInst() (fn 270) and CThreadVota::StopTick (fn 422) and clears the byte at +24;
+#   vota::CThreadOperador::GetInst() (fn 270) and CThreadVota::StopTick (fn 422) and clears the byte at +24; StartState
+#   (10409, slot 2), ProcessInput (10407, slot 7) and ProcessTick (10405, slot 8), and the members they call: the text's
+#   update, AtualizaMensagem (3612), DisparaSinalizacaoSonora (5392, the record's name, csuspensaoautomaticaeleitor.cpp:89
+#   being its lambda's line) with std::thread's __thread_proxy over that lambda (10410), and the destroy of the local
+#   std::map StartState builds (3613);
+# - vota::CPerguntaEleitorVotando::ProcessKey (5394, slot 6, one body with vota::CEleitorDemorando's slot 6, a class our
+#   link does not hold) and vota::CHabilitaAudioEleitor::ProcessInput (10523, slot 7);
 # - the StartState (slot 2) of six states over the destructors 49 final states share (fns 244 and 387):
 #   vota::CPerguntaEleitorVotando (10416) and vota::CDesabilitaAudioEleitor (10436) in aguardaeleitor/,
 #   vota::CHabilitaAudioEleitor (10524) in confirmaidentidade/, vota::CHorarioVotacaoTerminou (10758) and
@@ -87,7 +93,43 @@
 #   into AddField, its one caller, where the target keeps fn 3674 with three: `pnpm wasm score` gives 395 `179 over 271
 #   rows` and 3674 against AddField `68 over 157 rows`. So 395, 1151, 3673 and 3674 are not written.
 # - the pending slots: the -pending.cpp header lists them.
-# - fn 10410, DisparaSinalizacaoSonora's lambda: it calls fn 3321, which has no name.
+#
+# Evidence and forms of the members written since (each measured in the whole link with pnpm wasm score):
+# - StartState (10409) runs the tick part in a function of its own that binaryen inlined: `this` copied to a local at
+#   entry, the 16-byte frame of the local std::map opened and closed around it, and the map built through two locals
+#   that hold its address and the thread's tick map's (the signs of a callee's parameters). So InicializaTick, a private
+#   member (name chosen), holds the map's copy (api::CTickManager::GetEstadoTicks, out of line in unit 02's
+#   ctickmanager.cpp, inlined by binaryen in turn), its find and either a new stopped tick of 1000 ms or a stop of the
+#   active one; the caller compares the map's byte with 1, which reads as no bool (api::CTickManager::EEstadoTick, chosen).
+#   Written in StartState, the body read `181 over 302 rows`; with GetEstadoTicks out of line (and the find's test
+#   negated, its arms swapped), `105 over 281 rows`; with InicializaTick out of line too, as written, `10 over 262 rows`,
+#   operand rows only, and it matches. The destroy (3613) is
+#   recursive and has one caller besides itself, so no vote names it: a callers+content hand line does, on that caller
+#   and the aligned call; 10409 and 3613 match through it. The map's mapped type in its symbol is chosen.
+# - In ProcessTick the stores of +24 and +16 come out in the reverse of the source's order, and StartState's pair is
+#   written the same way, each in the order that gives the target's: ProcessTick with the stores swapped read `14 over 82 rows (same 68,
+#   replaced 6 [6 operand-only], inserted 4, deleted 4)`, and with them as written `7 over 78`, operand rows only.
+# - The messages go through the queue's inline Post (api/ipc/cmessagequeue.h), whose own local is the message: written
+#   as Insert of a temporary, ProcessInput (10407) read `16 over 88 rows`, operand rows only but frame slots swapped: the
+#   target keeps Read()'s std::source_location at +4 and the message at +8, ours at +12 and +4; with Post, 11 over 88,
+#   names only.
+#   StartState's Post (3) and CHabilitaAudioEleitor's Posts are written so too.
+# - DisparaSinalizacaoSonora: `std::thread([] { ... }).detach();` on line 89, which puts the lambda's
+#   CPolySingleton<api::IScreenMT>::instance() call at column 22, its record's; the lambda buzzes the MT screen (slot 6,
+#   Buzz, 50 and 3). Ours keeps the member out of line, with std::thread's constructor inlined in it, and it matches 5392,
+#   whose wasm type has no parameter; whether the target's 5392 is that member or the constructor is not in its bytes (a
+#   reading, not measured the other way). AtualizaMensagem (3612, name chosen) builds "Suspensão automática em " +
+#   std::to_string(+16) + " segundo..."/" segundos..." into +36's string, the literal built first.
+# - CHabilitaAudioEleitor::ProcessInput reads the form, asks vota::impl::IInformacaoThreadOperador's slot 5
+#   (IsAudioAtivadoCadastro) and on CONFIRMA clears the operator's audio flag (5415), posts 8 or 9 and then 1 to the
+#   eleitor's queue, goes to CMostraEleitorVotando::GetInst (1150, unit 142's) and, when the record's audio is on, logs
+#   "Áudio ativado conforme cadastro" through a CLogVota member binaryen inlines (unit 119's file).
+# - The roots' stand-in for 4535's caller 10407 went with 10407 (the roots' header).
+# - Member order: in csuspensaoautomaticaeleitor.cpp InicializaTick comes before AtualizaMensagem, above the gap: the
+#   target's uses-3 band links 3613 (the map's destroy, which InicializaTick mentions first) ahead of 3612, and the
+#   object gives that order only so (ld_index in build/out/wasm-map/vota_web/names.tsv; the bytes are the same).
+# Chosen: InicializaTick's and AtualizaMensagem's names and lines, the enumeration's names, the local names, the queue
+# held in a local for the 8/9 choice in CHabilitaAudioEleitor (one GetInst, as the target calls it once there).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_OPERADOR_ESTADOS_SRCS := src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp \

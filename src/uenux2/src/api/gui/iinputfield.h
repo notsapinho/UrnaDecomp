@@ -46,9 +46,11 @@
 // and the form's Refresh into one call through a computed slot, as fn 1401 does; Ativa and Desativa written apart give
 // neither (src/units/120-uenux2-iform.mk has the scores). The names are chosen.
 //
-// The constructor is written and no function of this tree's link holds it: it calls ITimerScheduler::GetInst, which has
-// no body here, so only functions the link drops reach it. Nothing has compared it with fns 2024 and 3673. Read
-// (fns 6319, 11024) stays `unresolved` although its bytes are the target's: see src/units/92-uenux2-iinputfield.mk.
+// The constructor for IScreen, fn 2024, matches from api/gui/cinteractiveformbuilder.cpp's object, where
+// CInputFieldControlBase<IScreen>'s constructor (5565) and AddInputControl (901) call it with the length 0 and the flags
+// true and false; its other target callers (2383, 3675, 5913, 7787) pass others, and unit 92's roots stand for them so
+// that binaryen folds none of its parameters. 3673, IInputField<IScreenMT>'s, is not in the link. Read (fns 6319,
+// 11024) stays `unresolved` although its bytes are the target's: see src/units/92-uenux2-iinputfield.mk.
 
 #include <chrono>
 #include <cstddef>

@@ -1,13 +1,16 @@
 # uenux2 api::CFormBuilder, and its two siblings for the other media, api::CMTFormBuilder and api::CPaperFormBuilder, in
 # src/uenux2/src/api/gui/. cformbuilder.cpp is the file the records name: GetLabeledKeyPos (target fn 5544, line 372 col
-# 11, the CUeGuiError 4914 throw) and AddStatusHeader (fn 502, lines 292 and 305, not reconstructed). No record names the
+# 11, the CUeGuiError 4914 throw) and AddStatusHeader (fn 502, lines 292 and 305, written, below). No record names the
 # other two .cpp files, whose paths are chosen, each the class's in lower case beside cformbuilder.cpp; cpaperformbuilder.h
 # is a record's. Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
-# Target functions, all matched but one:
+# Target functions, all matched but two:
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
 #                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField), written and differs;
-#                      1265 (AddBlinkingTextField, below)
+#                      1265 (AddBlinkingTextField, below); 3058 (AddTextFieldUpdate over std::string (*)(const std::string&),
+#                      a template of cformbuilder.h, which says why; the scan's content pass finds it, no vote names it); 502 (AddStatusHeader), written and differs, below,
+#                      with the members of its lambda's CDataText: 11107 (GetText), 11109 and 11108 (the control block's
+#                      D2 and D0)
 #   CMTFormBuilder     180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728 (AddClock)
 #   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut), 2775 (AddQRCode); the member template AddTextField<FONTE>
 #                      in cpaperformbuilder.h, below the classes so that line 51 stays in IFormImpressao: its instance
@@ -33,6 +36,49 @@
 # with a named local the push comes first), and `sufixo += repetido` gives the target's add where `if (repetido) ++sufixo`
 # gives an add under the test. Its name reaches 202 and the rest by the hand edit of splat/symbol_addrs.txt, whose comment
 # says what it rests on: 426 has 36 target callers and the only ones written here need it to be named.
+#
+# 502, AddStatusHeader, is written and `differs` (docs/how-to-decompile.md step 5). It holds what only it reaches: the
+# lambda's CDataText (11107 to 11109 match from this object), the table slot of api::CDateTime::FormatCurrentDateTime
+# (fn 10870, unit 125), and the constructors of api::CDSImageField (unit 55) and BatteryIconDataSource<Horizontal> (unit
+# 164), which binaryen inlines into it as into the target. In the whole link it scores 91 over 977 rows (pnpm wasm
+# score against our fn), 62 of the 63 replaced rows operand-only. What is left, not explained:
+# - in the icon's field, the target lays the paths of m_campos.push_back that throw (__throw_length_error,
+#   __throw_bad_array_new_length) right after the push, ours at the end of the function; and the unlock of
+#   IObservable::Attach's mutex (Attach is inlined with the CDSImageField constructor) takes the mutex's address at the
+#   call, ours before;
+# - two blocks more in our copy of BatteryIconDataSource<Horizontal>'s constructor, whose <Vertical> copy matches in
+#   5904 (unit 153);
+# - one add's operand order in the charge's x, larguraTela - 70 or - 55: the target adds the width to the selected
+#   constant, ours the constant to the width, with x a named local or written in the call alike (91 rows each way).
+# What the bytes fixed, each measured in the link:
+# - comIcone: the target computes campos & 4 once, before the charge's field, and reads it there and for the icon;
+#   with the bit tested in both places our link computes it in each branch of the charge's test (106 over 986 rows);
+# - the icon's SPoint a named local: the target builds it before the CDSImageField's allocation, and a temporary in
+#   the new-expression comes after it (the allocation is sequenced first), which our link showed;
+# - the lambda's empty text, `return ""`: the target stores two bytes, where `return {}` zeroes twelve (11107 then
+#   differs in 3 rows);
+# - SharedField(new CDSImageField(...)) pushed with m_campos.push_back, not AddField: the target builds the pointer
+#   block @1578376 and calls no AddField there, so the icon's field gets no generated name;
+# - the two CPolySingleton instance() calls on the records' lines, the record's columns 30 and 24 being where each
+#   call starts.
+# Chosen: every local's name and how each record's column is shared out (const auto larguraTela, auto& ipower), the
+# lambda's capture by reference, every line but the records' (and the blank runs between), the font's name
+# FONTE_PADRAO, and SFont{20, 1} for the mode's text, a temporary as the target builds it on the stack.
+#
+# Not written, each measured with it written here and taken out again, as nothing that matches needs it:
+# - 3678, two key labels at GetLabeledKeyPos's offsets 0 and 21, the second named "labelAcao" + the key's name
+#   (callers 653, 2243, 7787). It passes 5544 the screen's area, the SRect {0, 0, 639, 479} at .data 1577200 among
+#   capplication.cpp's statics, as a constant. Written so, our link folds 5544's area parameter (5544, matched
+#   today, then scores 96 over 244 rows, 5 inserted and 5 deleted), which the target keeps; with the area from an accessor out of line in capplication.cpp
+#   that only 3678 calls, 5544 keeps it (15 over 239, operand-only), which fits a target whose binaryen folds the
+#   parameter before it inlines such a call (a reading). With both positions and the second field temporaries,
+#   3678's frame is the target's, and it differs in two locals' numbers alone (27 over 264: "labelAcao" + the key's
+#   name keeps its size and its sum in locals 2 and 0, the target in 0 and 2), not explained. PosicoesTecla (the
+#   roots) still stands for its two calls of 5544.
+# - 2243 (callers 6569, 7787, 12055; 7787's and 12055's calls pass the keys 'B' and 'D' as constants) is KeyName and
+#   a call of 3678. 653 holds that
+#   code behind a second prologue, so what it inlined had 653 as its one caller when binaryen inlined, a twin of 2243
+#   (docs/reference/facts/tool-traps.md X1): which of the two is CFormBuilder's is not settled.
 #
 # 1265, AddBlinkingTextField: AddTextField's shape over a api::CTextFieldBlinking, whose constructor binaryen inlines
 # here with its timer's lambda (unit 44 has the class). Its name, and the colours 2 and 3 over 1 as constants of the body
@@ -117,8 +163,8 @@
 # screens' builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
-# no caller of the unit's members is reconstructed yet: 31-uenux2-cformbuilder-roots.cpp gives each the calls it has in the
-# target, and says which they are
-$(ROOT)/$(APP)/31-uenux2-cformbuilder-roots.o: $(ROOT)/src/units/31-uenux2-cformbuilder-roots.cpp $(ROOT)/src/units/31-uenux2-cformbuilder.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(wildcard $(ROOT)/src/ecourna/api/*.hpp) $(wildcard $(ROOT)/src/ecourna/api/exception/*.hpp)
+# the callers of the unit's members are not reconstructed, but for 502 (AddStatusHeader, here), which calls 3058 and
+# 202: 31-uenux2-cformbuilder-roots.cpp gives each member the calls it has in the target, and says which they stand for
+$(ROOT)/$(APP)/31-uenux2-cformbuilder-roots.o: $(ROOT)/src/units/31-uenux2-cformbuilder-roots.cpp $(ROOT)/src/units/31-uenux2-cformbuilder.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/util/*.h) $(wildcard $(ROOT)/src/ecourna/api/*.hpp) $(wildcard $(ROOT)/src/ecourna/api/exception/*.hpp)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/31-uenux2-cformbuilder-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/31-uenux2-cformbuilder-roots.o

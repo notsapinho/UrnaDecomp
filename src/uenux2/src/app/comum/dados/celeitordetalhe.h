@@ -16,7 +16,9 @@ class CEleitorDadosHabilitacao;
 // 3770) reads is the optional's flag. The record of the constructor (line 49) takes two md::ETipoImpedimento after
 // them: GetImpedimento (target fn 3769) reads +200 when the load's turn is TURNO_2 and +196 otherwise, which makes them
 // the impediments of the first and the second turn, at +196 and +200 (a reading of that test: nothing else gives the
-// members' order). ConfereDadosDinamicos, GetDinamico (fn 1271), MarcaHabilitado and GetImpedimento are written.
+// members' order). ConfereDadosDinamicos, GetDinamico (fn 1271), MarcaHabilitado, MarcaVotou and GetImpedimento are
+// written. MarcaVotou passes its own name to ConfereDadosDinamicos (the literal "MarcaVotou" in target fn 10210, which
+// holds it inlined), as GetDinamico and MarcaHabilitado pass theirs: the name is read from that literal.
 // Chosen: the members' names, the two accessors, GetDinamico's const and const& result, GetImpedimento's name,
 // MarcaHabilitado's parameter type. Nothing builds it.
 class CEleitorDetalhe {
@@ -27,6 +29,7 @@ public:
     bool TemDadosDinamicos() const { return m_dinamico.has_value(); }
     const md::CEleitorDinamico& GetDinamico() const;
     void MarcaHabilitado(const CEleitorDadosHabilitacao& dados);
+    void MarcaVotou();
     md::ETipoImpedimento GetImpedimento() const;
 
 private:

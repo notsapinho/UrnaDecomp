@@ -50,6 +50,10 @@ public:
     CEleitorDetalhe* LocalizaEleitor(const std::string& identificador, ecourna::app::dados::ETipoIdentificadorEleitor tipo);
 
     void MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados);
+    // MarcaVotou: the records celeitores.cpp:456 and 460 (vota::CSincronismoOperador::StartState, target fn 10210, holds
+    // it inlined by binaryen, one call). It counts the voter at +104 (an increment of that word). The counter's name and
+    // its type, int, are chosen.
+    void MarcaVotou();
     void ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const;
 
 private:
@@ -60,7 +64,8 @@ private:
     std::vector<std::string> m_lista2;
     std::vector<std::string> m_lista3;
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
-    int m_naoRecuperado3[2];
+    int m_qtdVotaram;
+    int m_naoRecuperado3;
     std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> m_identidades;
 
     static std::unique_ptr<CEleitores> s_instance;

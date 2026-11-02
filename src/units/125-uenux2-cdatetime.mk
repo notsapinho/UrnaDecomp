@@ -30,11 +30,19 @@
 #              `return Now().GetData().Format(formato)` with a GetData that returns by value, and
 #              `const CDate data = Now().GetData();`, put the CDateTime at +8 and the copy at +24 (5472), +0 and +12
 #              (5473). GetData's and GetHora's return by reference is 11198's (cdatetime.h).
+#              10870 FormatCurrentDateTime, a third callback (cdatetime.h), matches: the scan's content pass finds
+#              it, and no vote names it. Its one reference in the target is the table slot 3117 that
+#              api::CFormBuilder::AddStatusHeader (fn 502, unit 31) passes, which holds it in our link too.
+#              Written as `agora.GetData().Format(agora.GetHora().Format(formato))` on a named CDateTime, it is
+#              operand-only against the target (5 over 48 rows, the call and data rows). Its band-1 neighbours
+#              (10868 to 10872 in ledger/ordinals.tsv) are CDefaultGenericFactory slots, which place nothing; its
+#              line after FormatCurrentDate is a choice.
 #   written    the rest below.
 #              5476 ConvertFromLocalTime is operand-only (14 over 90 rows) and read `unresolved self-voted` until unit
-#              170: it calls std::to_string(long long) (fn 4658), whose other target caller, 3612, is not written, so
-#              5476 was the name's one voter; unit 170's object names 4658's callee __itoa (2869), and both match
-#              since. The roots' TempoEmTexto keeps to_string out of line for it, standing in for 3612.
+#              170: it calls std::to_string(long long) (fn 4658), whose other target caller, 3612, was not written
+#              then, so 5476 was the name's one voter; unit 170's object names 4658's callee __itoa (2869), and both
+#              match since. 3612 (unit 152's AtualizaMensagem) is in the link now, and the roots' TempoEmTexto, which
+#              stood for it, went.
 #              5478 operator+= and 5477 operator-= do not match at -O2 (291 over 558, 271 over 543 rows) nor at the tree's
 #              -O3 (86 over 550, 30 over 530): the target splits the day-of-the-year loop on `ano % 4` (two copies, one over a
 #              lookup table), which our -O3 build gives and our -O2 build does not, and keeps the month's store inside

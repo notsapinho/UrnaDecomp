@@ -4,13 +4,14 @@
 # a vota::CPreShowFormVota. Paths relative to src/uenux2.
 #
 # Target functions, by the object that holds them:
-# - app/vota/iexecucaovota.cpp: CExecucaoVota's slots 2 to 6 and 8 (Executa 10236, IniciaThreads 10235, AguardaThreads
-#   10234, IniciaThreadOperador 10233, ParaThreadsOperadorMonitor 10232, GetFilaEleitor 4708); slot 7,
+# - app/vota/iexecucaovota.cpp: CExecucaoVota's slots 2 to 6, 8 and 9 (Executa 10236, IniciaThreads 10235, AguardaThreads
+#   10234, IniciaThreadOperador 10233, ParaThreadsOperadorMonitor 10232, GetFilaEleitor 4708, GetEstadoEleitor 4705); slot 7,
 #   ProcessaEntradaEleitor, is `return false`, the shared body 340. The slots' callees are vota::CThreadEleitor's,
 #   CThreadOperador's and CThreadMonitor's GetInst (316, 270, 1898), api::CThread::Start (1684) and Wait (1900, unit 18),
 #   the threads' stop flag and api::CSystem::Dorme.
-# - app/vota/cexecucaovotacooperativa.cpp: CExecucaoVotaCooperativa's constructor (7828) and slots 4 to 6, empty (218),
-#   and slot 8, one body with CExecucaoVota's (4708).
+# - app/vota/cexecucaovotacooperativa.cpp: CExecucaoVotaCooperativa's constructor (7828), slots 2 and 3 (Executa and
+#   IniciaThreads, one body, 4713), slots 4 to 6, empty (218), and slots 8 and 9, one body each with CExecucaoVota's
+#   (4708, 4705).
 # - app/vota/comum/cassinadorvota.cpp: CAssinadorVota's D2 (7766) and D0, which binaryen merges with comum::CAssinador's
 #   (4694, unit 34). The merge keeps the first name in link order, so 4694's match line moved to this class's D0.
 # - app/vota/operador/caguardainicio.cpp: CAguardaInicio's StartState (10220), FinishState (10219) and ProcessTick
@@ -18,9 +19,8 @@
 # - app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp: LimpaBufferInput (13564), records 33:18, 34:35 and 37:38.
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so).
-# Not matched, and why: the -pending.cpp traps CExecucaoVota's slot 9 (4705), CExecucaoVotaCooperativa's slots 2 and 3
-# (4713), 7 (7823) and 9 (4705), CAguardaInicio's ProcessKey (10217) and CPreShowFormVota's PreShow (7707), with what
-# each waits for. GetInst of
+# Not matched, and why: the -pending.cpp traps CExecucaoVotaCooperativa's slot 7 (7823), CAguardaInicio's ProcessKey
+# (10217) and CPreShowFormVota's PreShow (7707), with what each waits for. GetInst of
 # IExecucaoVota (3594), of CAguardaInicio (5343) and of IPoliticaExecucaoEleitor (inlined into 5925), and
 # CAssinadorVota's constructor (1501), are not written; the roots file says what stands for them and for 576's 16
 # callers.
@@ -57,6 +57,19 @@
 # - CAguardaInicio is final (5343 deletes an old object by a direct call of the D2) with the destructor out of line (387
 #   is `f244(p0); f136(p0)`, docs/reference/facts/reading.md R5).
 # - CThread::Wait (1900) is unit 18's: its fragment says why it is out of line there.
+# - Slot 9 (4705) and the cooperative slots 2 and 3 (4713) reach vota::CThreadEleitor's context (+32) through two
+#   members of vota::CThreadVota, GetEstado and IniciaContexto, out of line in cthreadvota.cpp (unit 02's): the slots call
+#   them, and binaryen inlines each into the one body the slots share. Evidence: 4705 is `if (result i32) ... else 0`
+#   where clang's own code for the null test returns twice, and 4713 loads the state at +4 before it calls operator new,
+#   which a `new comum::CAppStateContext(m_estadoInicial)` written in the slot cannot give (the allocation comes first).
+#   Measured in the whole link with pnpm wasm score: written in the slots over an inline accessor of the
+#   std::unique_ptr, 4705 read `score 8 over 14 rows (same 6, replaced 3 [1 operand-only], inserted 3, deleted 2)` and
+#   4713 `17 over 44 rows (same 27, replaced 5 [5 operand-only], inserted 5, deleted 7)`; four spellings of 4705's test
+#   (the ternary, an early return, a local set in an if, an if with a declaration) gave the same object at the tree's
+#   -O3, and the ternary the same at -O2, -Os and -Oz; with the two members, 4705 read `1 over 11` and 4713 `3 over 39`, operand rows only, and both matched.
+#   Each member has two call sites in our link, CExecucaoVota's and CExecucaoVotaCooperativa's slot 9 (and slots 2 and
+#   3), and binaryen inlines it all the same: a reading, that it merges the byte-identical callers before it counts.
+#   Chosen: the members' names, their class and file.
 #
 # Chosen, no evidence names them: every name of IExecucaoVota's slots 2 to 9 and their result types beyond what the
 # bodies return; CExecucaoVotaCooperativa's member and its constructor's parameter; CAguardaInicio's m_form and m_tick;

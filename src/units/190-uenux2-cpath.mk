@@ -23,9 +23,11 @@
 #   has_root_directory and has_filename, which have one caller there, where the target's 5549 has 183 and 7749 and 3679
 #   has 183, 7738 and 7742, three functions only the table holds (slots 8848, 8871, 8866). So 183, 3679 and 5549 are
 #   read as the executable TU's copies and wait for its code that calls them.
-# - path::__filename (1224) is libc++.a's: 180 over 252 rows. Our link has no body of 2134 (PathParser::decrement, which
-#   calls consumeName and consumeAllSeparators; build/out/wasm-map/vota_web/names.tsv names none), read as binaryen
-#   inlining it into __filename, its one caller here. 2134's other target callers, 1840 and 5360, have no body of ours.
+# - path::__filename (1224) is libc++.a's, and matches with 1840 (path::__parent_path) and 2134 (PathParser::decrement,
+#   which calls consumeName and consumeAllSeparators), both libc++.a's, since unit 62's CWasmLogd constructor, inlined
+#   into fn 8302, calls 1840. Before, 1224 read 180 over 252 rows and our link had no body of 2134
+#   (build/out/wasm-map/vota_web/names.tsv named none), read as binaryen inlining it into __filename, its one caller
+#   then. 2134's third target caller, 5360, has no body of ours.
 #
 # Evidence:
 # - The three records (cpath.cpp lines 153, 189, 216, column 11) give the names, `static`, the std::filesystem::path
@@ -78,9 +80,12 @@
 # object at 1838544 and builds no path. The code 8302 and 12098 hold behind a second prologue, and 11620
 # (comum::CGravadorHashes's slot 7) behind a third, that reads this file's statics (a setter of the root and the two
 # flash paths in 8302; GetPathLog's body with "arquivados/" in 12098; s_pathRoot and s_pathFlash[0] in 11620, which
-# appends "dinamico/" inline rather than calling 1082) waits for those callers.
+# appends "dinamico/" inline rather than calling 1082) waits for those callers. The setter is written: CPath::SetPathRoot,
+# a chosen name (unit 188's fragment says what its form rests on); binaryen inlines it into 8302, its one caller, so it
+# has no target function, and no match checks it while 8302 does not match.
 #
-# Roots (190-uenux2-cpath-roots.cpp): no target caller of the unit is in the link, so it gives the members the call
+# Roots (190-uenux2-cpath-roots.cpp): no target caller of the unit is in the link but 8302 (unit 188), which calls
+# SetPathRoot and holds GetPathLog inlined, so it gives the members the call
 # sites its header lists (two each, one for 1399 beside 1274, none for 358), emits GetPathLog's copy and takes
 # operator/='s address. It compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree
 # header.

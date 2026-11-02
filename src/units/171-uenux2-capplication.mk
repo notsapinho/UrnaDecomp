@@ -2,7 +2,7 @@
 # (api/gui/capplication.h): EnterLoopDoingNothing (target fn 5566), with the two statics it reads; InitApplication (fn
 # 11159, written and not matched, below) with its local facet's do_decimal_point (fn 11156); PushContext (fn 3684) and
 # CriaContexto (fn 676), over unit 193's context stack; the statics InitApplication writes and their static destructors
-# (fns 11160 to 11163).
+# (fns 11160 to 11163); GetDescricaoModo (fn 5564), written and not matched (below), with the two statics it reads.
 #
 # Evidence and choices.
 # - The record capplication.cpp:503:32, `static void api::CApplication::EnterLoopDoingNothing()`, gives the class, the
@@ -66,12 +66,20 @@
 # - InitApplication's locale code releases libc++ rows: 987 (locale::operator=, whose result locale::global reads),
 #   7826 (locale::__imp's constructor from a locale and a facet), 7827 and 4691 (the facet vector's operator= and
 #   __recommend), 1504 (ios_base::imbue, a caller of 987), and 12020, 2292 and 7825, whose callees now have names.
-# - The roots file stands for 5566's two target callers (7709, 7710), takes InitApplication's address (main passes its
-#   table slot to invoke_viiii), and stands for the callers of PushContext, CriaContexto and the guard's destructor that
-#   are not reconstructed (its header lists them).
+# - The roots file stands for 5566's two target callers (7709, 7710) and for the callers of PushContext, CriaContexto
+#   and the guard's destructor that are not reconstructed (its header lists them), and with DescreveModo for 4620,
+#   5564's caller beside 502 (unit 31), which is not written. InitApplication needs no line: main (fn 10307, unit 170)
+#   passes its table slot to invoke_viiii.
+# - GetDescricaoModo (5564) and s_modo and s_demonstracao: api/gui/capplication.h has the evidence and the choices. In
+#   the whole link 5564 scores 8 over 75 rows, every one an operand of a call or of data (pnpm wasm score), and its row
+#   is `no-candidate`: no evidence names it while 502, whose records would anchor it, differs, and 4620 is not written.
+#   Named, it would still wait: its .bss byte at 1839208 has no reader but 5564 (docs/reference/splat.md 3, no hand
+#   line for it), and its .data word, 48, holds one non-zero byte, too little for content to place it, until 7787, the
+#   word's other reader, is written.
 # - Lines: 503 is the record's; 303 (QRCodeSRC::build), 377 (ShowExceptionMsgScreen), 432 (LogExceptionMsg) and 478
 #   (EnterLoopBeeping's lambda) are records of functions not written and stay blank. Every other line, the statics' place
-#   in the file, the order of the definitions and the include order are chosen.
+#   in the file, the order of the definitions but GetDescricaoModo's (after EnterLoopDoingNothing, the uses-2 band's
+#   order) and the include order are chosen.
 #
 # Written and not matched:
 # - 11159, InitApplication. The scan reads it `unresolved self-voted` on its store of the fourth parameter to the word
@@ -83,8 +91,8 @@
 #   a static without a second user, by the other statics of its object as a _ZGV guard is placed by its object
 #   (docs/reference/facts/splat.md S13); our link keeps the target's distance from the three strings (36 B after
 #   s_aplicacao, 12 B after s_versao) but not from s_contextos (4 B before it, the target 8 B;
-#   build/out/wasm-map/vota_web/vota_web_wasm.map against the symbol file). The body stays: main (fn 10307, not
-#   reconstructed) passes its table slot to invoke_viiii, and its votes name the three strings and CriaContextoPadrao
+#   build/out/wasm-map/vota_web/vota_web_wasm.map against the symbol file). The body stays: main (fn 10307, unit
+#   170) passes its table slot to invoke_viiii, and its votes name the three strings and CriaContextoPadrao
 #   (their lines' by:11159 in splat/symbol_addrs.txt).
 #
 # Not written:

@@ -82,7 +82,7 @@ public:
     static void push(std::unique_ptr<INTERFACE>&& instancia, TPolySingletonsInfo& info)
     {
         const char* nome = typeid(INTERFACE).name();
-        std::lock_guard<CMutexCompartilhado> trava(info.m_mutex);
+        std::unique_lock<CMutexCompartilhado> trava(info.m_mutex);
 
         const auto [existe, it] = find(nome, info);
         if (existe) {
@@ -93,6 +93,17 @@ public:
         depura(__func__, nome, std::format("sz[{}] ptr[{}]", info.m_lista.size(), static_cast<const void*>(&info)));
         const std::shared_ptr<INTERFACE> ponteiro(std::move(instancia));
         info.m_lista.emplace_back(nome, typeid(INTERFACE), ponteiro);
+    }
+
+    // The executable TU's copies hold it as a function of its own, a has<T> test and then remove<T> and push<T>
+    // (fns 9507, 10090, 10356), which main and CPolySingleton<T>::set call (unit 100's fragment). Its name is chosen
+    template <typename INTERFACE>
+    static void set(std::unique_ptr<INTERFACE>&& instancia, TPolySingletonsInfo& info)
+    {
+        if (has<INTERFACE>(info)) {
+            remove<INTERFACE>(info);
+        }
+        push(std::move(instancia), info);
     }
 
     // fn 14476, which the push bodies hold inlined: only the table slot the executable TU's invoke uses keeps a body of it.
@@ -160,9 +171,7 @@ public:
     template <typename INTERFACE>
     static void remove(TPolySingletonsInfo& info)
     {
-        if (has<INTERFACE>(info)) {
-            remove(typeid(INTERFACE).name(), info);
-        }
+        remove(typeid(INTERFACE).name(), info);
     }
 
     static void remove(const std::string& nome, TPolySingletonsInfo& info)

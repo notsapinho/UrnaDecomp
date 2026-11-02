@@ -1,10 +1,10 @@
 # uenux2 singletons of api/util over unit 100's api::CPolySingleton, and the timer the scheduler makes:
 # - api::ITimerScheduler::GetInst (target fn 1259, record itimerscheduler.cpp:23:12) and CreateInst<api::CTimerScheduler>
-#   (5444, record itimerscheduler.h:40:19), with api::CTimerScheduler (api/util/ctimerscheduler.h, a chosen path). GetInst's
-#   callers are not written: unit 100's roots call it. CreateInst returns what GetInst returns, as its record spells it; no
+#   (5444, record itimerscheduler.h:40:19), with api::CTimerScheduler (api/util/ctimerscheduler.h, a chosen path). Of GetInst's
+#   callers only 8302's code is written (unit 188): unit 100's roots call it for the rest. CreateInst returns what GetInst returns, as its record spells it; no
 #   caller reads it, so binaryen dropped the result. The 7085 enumerator of EUeUtilError is new, its name chosen.
 # - api::CAjusteDataHora (api/util/cajustedatahora.{h,cpp}, chosen paths): Registra (10876, a chosen name: only table slot 118
-#   reaches it, so the roots take its address), Ajusta(const CDateTime&) (10875, slot 0, the clock set to
+#   reaches it, which the executable TU's main passes to invoke_v, unit 170), Ajusta(const CDateTime&) (10875, slot 0, the clock set to
 #   CDateTime::ConvertToLocalTime's time_t, fn 1381, unit 125) and Ajusta(const time_t&) (10874). The three are defined in
 #   that order, the band's (ledger/ordinals.tsv, uses 1: 10876, 10875, 10874 in reverse link order); the class's vtable is
 #   emitted with Ajusta(const CDateTime&), its key function. 10876 holds set<IAjusteDataHora> and
@@ -42,7 +42,10 @@
 # shape; 1155 holds instance<T> because it is its only caller, and CreateInst for the same reason.
 # Chosen, no byte decides: every name but GetInst's, CreateInst's and the messages'; has<T> and not a member of CPolySingleton
 # in the two tests; std::unique_ptr<T>(new T) for make_unique, the same object.
-API_UTIL_SINGLETONS_SRCS := src/api/util/cajustedatahora.cpp src/api/util/itimerscheduler.cpp
+# mock/app/simulador/wasm/simulador.cpp is unit 188's source (fn 8302, the simulator's start), listed here ahead of
+# itimerscheduler.cpp: both instantiate CPolySingleton<ITimerScheduler>::set, whose target copy (fn 4879, record 1531292)
+# is 8302's TU's, and the first object on the link line gives the copy (measured: unit 188's fragment).
+API_UTIL_SINGLETONS_SRCS := src/api/util/cajustedatahora.cpp mock/app/simulador/wasm/simulador.cpp src/api/util/itimerscheduler.cpp
 UENUX2_SRCS += $(API_UTIL_SINGLETONS_SRCS)
 # a second call site of libc++'s std::__thread_struct constructor, which api::CTimer::Start calls (the roots file says why)
 $(ROOT)/$(APP)/101-uenux2-api-util-singletons-roots.o: $(ROOT)/src/units/101-uenux2-api-util-singletons-roots.cpp $(ROOT)/src/units/101-uenux2-api-util-singletons.mk $(ROOT)/src/Makefile

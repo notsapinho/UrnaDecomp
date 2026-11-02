@@ -67,12 +67,6 @@ inline int w100_usa()
     return &a == &b ? 3 : (api::CPolySingletonList::has<T>() ? 5 : 7);
 }
 
-// fn 8986, the executable TU's push, is has<IGenericFactory<IThreadImpl>>'s other caller beside the constructor of CThread
-__attribute__((noinline)) int w100_has_fabrica()
-{
-    return api::CPolySingletonList::has<api::IGenericFactory<api::IThreadImpl>>() ? 9 : 11;
-}
-
 [[noreturn]] __attribute__((noinline, cold)) void w100_falha(const char* detalhe)
 {
     using namespace std::string_literals;
@@ -88,19 +82,8 @@ __attribute__((noinline)) int w100_todos()
         w100_usa<comum::IControladorRegistraMesarios>() + w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
 }
 
-// Stands for fn 8302's call of CPolySingleton<T>::set, which keeps the function out of line: fns 4879 and 4890 have two
-// callers in the target, and 5444 and 1155 are one each.
-template <typename T>
-__attribute__((noinline)) void w100_define(std::unique_ptr<T> instancia, int vezes)
-{
-    for (int i = 0; i < vezes; ++i) {
-        api::CPolySingleton<T>::set(std::move(instancia));
-    }
-}
-
-// Stands for the callers of the two GetInst that have not landed: 502, 652, 2024, 3059, 3673, 5543 and 8302 for fn
-// 1259, whose 1265, 3658 and 5904 are in the link, and 10226, 10870 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
-// 5473, 10874 and 10875 are in the link.
+// Stands for the callers of the two GetInst that have not landed: 652, 3059, 3673 and 5543 for fn 1259, whose 502, 1265, 2024, 3658 and 5904 are in the link, and 10226 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
+// 5473, 10870, 10874 and 10875 are in the link.
 __attribute__((noinline)) int w100_getinst()
 {
     int soma = &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;
@@ -111,6 +94,8 @@ __attribute__((noinline)) int w100_getinst()
 // The control block of each singleton: __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>. The target's builder is
 // push<T>, or the shared_ptr constructor its thunks hold (10335, 10547, ...: a merged 1010 with that vptr), and each stores
 // that vtable. w100_bloco is never called, uses no constructor of T, and is no target function: it reads the count back.
+// The singletons that fn 8302 (unit 188) and the executable TU's main (unit 170) push have their builders in the link
+// and no line here.
 template <typename T>
 long w100_bloco(std::unique_ptr<T> instancia)
 {
@@ -142,56 +127,24 @@ __attribute__((optnone, noinline)) void w100_destroi_b(std::shared_ptr<void>* po
 
 int (*volatile w100_sink)();
 void* volatile w100_sink_bloco;
-void (*volatile w100_sink_registra)();
 int (*volatile w100_sink_getinst)();
-void (*volatile w100_sink_timer)(std::unique_ptr<api::ITimerScheduler>, int);
-void (*volatile w100_sink_datahora)(std::unique_ptr<api::ISystemDateTime>, int);
 void (*volatile w100_sink_falha)(const char*);
 
 struct SW100Roots {
     SW100Roots()
     {
         w100_sink = w100_todos;
-        w100_sink_registra = api::CAjusteDataHora::Registra;
-        w100_sink_getinst = w100_has_fabrica;
         w100_sink_bloco = reinterpret_cast<void*>(&w100_destroi_a);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_destroi_b);
         w100_sink_bloco = reinterpret_cast<void*>(&api::CPolySingletonList::depura);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_troca);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IAjusteDataHora>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IBeep>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IFingerPrepare>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IGenericFactory<api::IRWSyncCtl>>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IGenericFactory<api::ISemaphore>>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IGenericFactory<api::ISyncCtl>>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IGenericFactory<api::IThreadImpl>>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IImpressoraRelatorios>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IInputKbd>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IInputMT>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IPaperRelatorios>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IPower>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IResource>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IScreen>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::ISound>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::ISystemDateTime>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::ITimerScheduler>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IUrna>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::CEscritorLog>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IControladorRegistraMesarios>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IInterfaceInit>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IInterfaceSavd>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::impl::IValidaMidia>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<ecourna::api::security::IRng>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<ecourna::api::security::ISymmetricCipherFactory>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IAjusteInicial>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IExecucaoVota>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IQRCodeBUDS>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::impl::IPoliticaExecucaoEleitor>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::impl::ISincronismoVotoEleitor>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::testeteclado::impl::IGeradorTeclas>);
         w100_sink_getinst = w100_getinst;
-        w100_sink_timer = w100_define<api::ITimerScheduler>;
-        w100_sink_datahora = w100_define<api::ISystemDateTime>;
         w100_sink_falha = w100_falha;
     }
 } w100_roots;

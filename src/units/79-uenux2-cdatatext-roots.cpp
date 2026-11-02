@@ -1,10 +1,10 @@
-// Roots: each of this unit's classes is built where the target's callers build it. 3068, 604, 651, 5409 and 5419 are
-// written (unit 31), and what they instantiate comes from their objects, ahead of this one. The others are not
+// Roots: each of this unit's classes is built where the target's callers build it. 3068, 604, 651, 3058, 5409 and 5419
+// are written (unit 31), and what they instantiate comes from their objects, ahead of this one. The others are not
 // reconstructed, so these stand-ins build each instantiation the way those callers do, with the exact template arguments
 // the RTTI spells:
 //   std::make_shared<X>, where the target has __shared_ptr_emplace<X>: CDataText over std::string (*)() (fn 3068 builds it
 //     so), const std::string& (*)() (3060) and std::function<std::string()> (12055), CDataTextFmt over std::string
-//     (*)(const std::string&) (3058), const std::string (*)(const std::string&) (2028) and
+//     (*)(const std::string&) (3058 builds it so), const std::string (*)(const std::string&) (2028) and
 //     std::function<std::string(const std::string&)> (5936), CDataImage over std::vector<unsigned char> (*)() (6689),
 //     and CQRCodeImage (12040, 12055), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
 //     the source's matched call operator (2268); it (12632) and the block link from unit 102's object, which is first;
@@ -105,11 +105,6 @@ __attribute__((noinline)) SharedIText TextoFormatoFuncao(const FuncaoFormato& fo
     return std::make_shared<CDataTextFmt<FuncaoFormato>>(fonte, formato, alinhamento);
 }
 
-__attribute__((noinline)) SharedIText TextoFormato(FonteFormato fonte, const std::string& formato)
-{
-    return std::make_shared<CDataTextFmt<FonteFormato>>(fonte, formato);
-}
-
 __attribute__((noinline)) SharedIText TextoFormatoProprio(FonteFormato fonte, const std::string& formato,
                                                           api::ETextAlignment alinhamento)
 {
@@ -174,7 +169,6 @@ struct SW79Roots {
     SW79Roots()
     {
         w79_sink = reinterpret_cast<void*>(&ImagemQRCodePropria);
-        w79_sink = reinterpret_cast<void*>(&TextoFormato);
         w79_sink = reinterpret_cast<void*>(&TextoCompartilhado);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonteFormatado);
         w79_sink = reinterpret_cast<void*>(&TextoFormatoConst);

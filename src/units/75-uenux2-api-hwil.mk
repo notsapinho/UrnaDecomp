@@ -1,7 +1,8 @@
 # uenux2 api::IPower and api::IUrna, the hardware interfaces of src/uenux2/src/api/hwil/ (ipower.h, iurna.h, with the
 # error type in euehwilerror.h), and the two classes the wasm build implements them with, api::teste::CPowerMock and
 # api::teste::CUrnaMock (src/uenux2/mock/api/hwil/cpowermock.h and curnamock.h). The unit has no source of its own: every
-# function it matches is defined in a class in those headers, and 75-uenux2-api-hwil-roots.o emits them with the vtables.
+# function it matches is defined in a class in those headers, and the object of fn 8302 (unit 188's
+# mock/app/simulador/wasm/simulador.cpp), which builds both mocks, emits them with the vtables.
 # Target functions, by vtable slot:
 # - CPowerMock's vtable @1530944, 17 slots: Slot0 (fn 8128, slot 0), BatIntVoltage (8120), BatCurrent (8116), BatExtVoltage
 #   (8113), AcVoltage (8111), Slot5 (8109), Slot6 (8108), BatLevel (8107, slot 7), the five defaults IPower's records name,
@@ -26,14 +27,15 @@
 #   and then its base's (1530924, 1530936; 1531020, 1531032), and fn 8302 is the one function that loads CPowerMock's vptr
 #   and, with CUrnaMock's destructors, the one that loads CUrnaMock's (`/usr/bin/grep -rlE 'i32\.const 1530952($|[^0-9])'
 #   build/out/splat/pieces/asm`, and 1530888). So every virtual member is inline or pure
-#   (docs/reference/facts/reading.md R6), defined in the classes here. That TU is not reconstructed, so the roots file
-#   stands for it.
+#   (docs/reference/facts/reading.md R6), defined in the classes here. That TU is unit 188's simulador.cpp, which
+#   emits them, as this unit's roots file did until it landed.
 # - ipower.h's path and the five members' names and signatures are records. Everything else named here is chosen, and
 #   each header says from what: the other members' names, the block's and the fields' names, iurna.h's and
 #   euehwilerror.h's paths, the mock/ tree's two paths. The classes, their bases and the error type with its limits are
 #   RTTI's. The constructors are implicit: no target function holds them. Fn 8302 holds them inlined as whole-word
 #   stores (`i64.store[p0+4] = 0`, `i64.store[p0+20] = 8589936704`), from which the two headers read the layout; the
-#   copies the roots object's builders give, which wasm-ld drops, mask the named bit-fields instead.
+#   copies the former roots object's builders gave masked the named bit-fields instead, and our 8302 (unit 188) holds
+#   the constructors as clang inlines them from these headers.
 # Other forms measured to give the same bytes, each against the chosen one, function by function in the object (a form
 # that differs in the object was then linked, the list below says how):
 # - that CPowerMock and not IPower defines slots 0 to 6 (ipower.h gives the evidence for IPower); `final` on CPowerMock;
@@ -55,20 +57,13 @@
 # - std::vector<char> for m_dados; IUrna's members without const; ModeloAbreviado with a local for `m_modelo - 2000`, or
 #   as std::vformat over std::make_format_args;
 # - CUrnaMock's destructor in the class, with or without `inline`; IPower's and IUrna's destructors as `{}`;
-# - compiling the roots with UENUX2_CXXFLAGS (-fno-strict-aliasing) instead of APP_CXXFLAGS, measured when both were at
-#   -O2, the tree's level then.
-# Forms measured not to, each linked with the variant's roots object in the plain link's place and remapped against its
+# - compiling the former roots object with UENUX2_CXXFLAGS (-fno-strict-aliasing) instead of APP_CXXFLAGS, measured
+#   when both were at -O2, the tree's level then. The members match from simulador.cpp.o now, at the flags of
+#   mock/app/simulador/wasm (src/Makefile UENUX2_TBAA_DIRS), with no row lost.
+# Forms measured not to, each linked with the variant's (former) roots object in the plain link's place and remapped against its
 # target (`splat-remap --no-kinds`; the chosen form, linked the same way, prints IDENTICAL): uint16_t members in the
 # block (slots 2, 5, 7), `final` on CUrnaMock (its destructors), Slot0 returning int, BatLevel returning int or written
 # with std::min (an unconditional store), Slot5 with one `return` per step, Slot4 with no test (clang joins the paths),
 # with the size taken before the test, with the test as `m_dados.size() == 0`, with std::fill (a signed test), with a
 # `for` loop for the last std::fill_n or with an unguarded std::memset. ModeloAbreviado over an unsigned or
 # with `m_modelo % 100` differs in the object: its argument type constant, its arithmetic. It has no match to compare with.
-# Compiled from its /work path with -iquote: the quoted includes then resolve to the absolute paths, which
-# -ffile-prefix-map rewrites to /home/rubio/tse/uenux2/src/api/hwil/ipower.h, the file name of the target's records
-# (-iquote directories are searched before the -I ones, so the relative -Isrc/uenux2/src of APP_CXXFLAGS does not win;
-# unit 19 has the same rule). The prerequisites name the directories the compile reads ($(UENUX2_HDRS) is set after
-# src/Makefile reads the fragments: here it would be empty).
-$(ROOT)/$(APP)/75-uenux2-api-hwil-roots.o: $(ROOT)/src/units/75-uenux2-api-hwil-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/75-uenux2-api-hwil.mk $(wildcard $(ROOT)/src/uenux2/src/api/hwil/*.h $(ROOT)/src/uenux2/mock/api/hwil/*.h $(ROOT)/src/ecourna/api/exception/*.hpp $(ROOT)/src/ecourna/api/uetypes.hpp)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -iquote /work/src/uenux2/src -iquote /work/src/uenux2 -c /work/src/units/75-uenux2-api-hwil-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/75-uenux2-api-hwil-roots.o

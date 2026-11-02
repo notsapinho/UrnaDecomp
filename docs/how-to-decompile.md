@@ -79,8 +79,8 @@ is libc++'s code, and what differs is which copy binaryen keeps or merges ([Libr
 
 ```sh
 python3 -I -B tools/round/pick_pool.py --differs | awk -F'\t' '$2 ~ /^_ZNSt3__2/ {print $1, $5, $6}'
-# 3613 vota app/uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp.o
-# 3709 vota app/uenux2/src/app/comum/dados/crdvvota.cpp.o
+# 3709 vota app/uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp.o
+# 2650 ASN1 app/asn1/BERDecoderPartial.o
 # …
 ```
 

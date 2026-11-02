@@ -12,11 +12,15 @@
 // of stand-ins stands for them, and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets
 // its calls and the vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what
 // the target's callers vary varies here, or binaryen would fold it:
-//   TelaMTA, TelaMTB  652, 1150, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
-//                     (1150, 2734), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
+//   TelaMTA, TelaMTB  652, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
+//                     (2734; 1150 is in the link, as for 180, 619, 651 and 435), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
 //                     target callers all pass it, and they have no parameter for it
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
-//                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265
+//                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
+//                     2291, 2376, 2380, 3054, 3059, 4152, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
+//                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary; TelaB for 7787,
+//                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
+//                     another callback, alignment and font
 //   RelatorioA        5579, 5580, 5591 and the other callers of 193, 604, 198, 1264, and of 2775 (5591 and 12110). Its
 //                     form is a parameter: their callers zero the vector in line, and it takes no constructor of ours. The
 //                     EStyle and alignments vary as theirs do
@@ -28,6 +32,7 @@
 #include "api/gui/cformbuilder.h"
 #include "api/gui/cmtformbuilder.h"
 #include "api/gui/cpaperformbuilder.h"
+#include "api/util/cdatetime.h"
 
 extern "C" {
 void w5544_root_0(void*, const void*, int, int) __asm__("_ZN3api12CFormBuilder16GetLabeledKeyPosERKNS_5SRectENS_14ETextAlignmentEs");
@@ -99,6 +104,7 @@ __attribute__((noinline)) int TelaA(const std::string& texto, const api::SPoint&
     form.AddFill(posicao, posicao, corTexto);
     form.AddRect(posicao, posicao);
     form.AddBlinkingTextField(texto, posicao, fonte, alinhamento);
+    form.AddStatusHeader(static_cast<api::CFormBuilder::StatusHeaderFields>(posicao.y));
     return posicao.x;
 }
 
@@ -116,6 +122,9 @@ __attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint&
     form.AddLine(posicao, api::SPoint{posicao.y, posicao.x}, static_cast<api::TColor>(2));
     form.AddBlinkingTextField(texto, api::SPoint{posicao.y, posicao.x}, fonte, api::ALINHAMENTO_DIREITA);
     form.AddTextField(texto, posicao, fonte, api::ALINHAMENTO_CENTRO, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    form.AddTextFieldUpdate(&api::CDateTime::FormatCurrentDate, api::SPoint{posicao.y, posicao.x},
+                            std::chrono::milliseconds(1000), fonte, texto, api::ALINHAMENTO_CENTRO);
+    form.AddStatusHeader(5);
     return posicao.y;
 }
 
@@ -138,8 +147,8 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
-//   FormMTA, FormMTB      callers of 1694 (1150, 4633, 5341, 5343, 10204, 10214, 10676) and of 301 (652, 1901, 1905, 2734,
-//                         2735 and the other 44)
+//   FormMTA, FormMTB      callers of 1694 (4633, 5341, 5343, 10204, 10676; 1150 and 10214 are in the link) and of 301
+//                         (652, 1901, 1905, 2734, 2735 and the other 44)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
 //   FormPapelA, FormPapelB  callers of 5515: 357 and 10997; 357 (Build) is in the link, 10997 still waits
 //   FormPapelC   the callers of 357 (Build): 2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,

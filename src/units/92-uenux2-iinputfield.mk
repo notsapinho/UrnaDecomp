@@ -53,7 +53,9 @@
 #   N4vota19CPreShowProgressBarE, with {30, 0} and {20, 0} beside it), not in cgrayedframedtext.cpp's (its typeinfo name is
 #   at 523132): an object no source of ours defines. Measured: `SFont{40, 0}` written in the call compiles to a stack
 #   temporary, and a namespace-scope or function-local constant of this file lands in its own data.
-#   the constructors, in the headers: only dropped functions reach them, so nothing has measured them.
+#   the constructors of the other classes, in the headers: only dropped functions or stand-ins reach them, so nothing has
+#   measured them. IInputField<IScreen>'s (2024) and CInputFieldControlBase<IScreen>'s (5565) match from unit 120's
+#   object, whose AddInputControl (901, 5530) calls them.
 # CInputMenuField's own members, among them 10893 (GetTypeName) and 5491, are unit 84's, with CMenuItem and the list of
 #   them at +140. CInputFieldMT is unit 146's.
 # Evidence for the forms is in the headers; what follows is what the bytes do not decide, measured by compiling each variant
@@ -72,8 +74,9 @@
 #   cinputmenufield.cpp, in band 3 next to fn 3675, which the record of another function gives: it can be a neighbour's
 #   label (docs/how-to-decompile.md step 3). Their lines are chosen too.
 # - The two masks in their own headers beside the recorded .cpp, and cmaskedtextfield.h, are chosen paths.
-# - The roots compile with APP_CXXFLAGS. Under UENUX2_CXXFLAGS 9 of their 257 functions differ, all libc++ format
-#   functions, and the link keeps none of the 9 from this object; the others compare equal, 12387, 11155 and 12411 among them.
+# - The roots compile with APP_CXXFLAGS. Against the same file compiled with UENUX2_CXXFLAGS, by function with call and global indices and relocated constants masked: 212 of the 244 functions the two compiles
+#   both define compare equal, and the 32 that differ, all libc++'s std::format code and std::string's operator+, are
+#   the same 32 as at bbf27ac1's roots (224 of 256 equal); the link keeps none of the 32 from this object.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 #
 # The control-block roots are builders the link drops, with the block's vtable kept in the sink: the shape of unit 83's

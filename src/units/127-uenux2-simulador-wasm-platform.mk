@@ -71,8 +71,4 @@
 # relative to src/uenux2; the generic uenux2 rule compiles mock/ too and depends on each source and every uenux2 header.
 SIMULADOR_PLATFORM_SRCS := mock/app/simulador/wasm/cwasminit.cpp mock/app/simulador/wasm/cwasmresource.cpp
 UENUX2_SRCS += $(SIMULADOR_PLATFORM_SRCS)
-# nothing reconstructed creates these classes yet: 127-uenux2-simulador-wasm-platform-roots.cpp keeps their vtables,
-# the reference the target's vptr stores (fn 8302) give
-$(ROOT)/$(APP)/127-uenux2-simulador-wasm-platform-roots.o: $(ROOT)/src/units/127-uenux2-simulador-wasm-platform-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/127-uenux2-simulador-wasm-platform.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/127-uenux2-simulador-wasm-platform-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/127-uenux2-simulador-wasm-platform-roots.o
+# the two vtables: fn 8302 (unit 188) builds both objects and stores them, so this unit has no roots

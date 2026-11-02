@@ -13,6 +13,17 @@
 //   takes from and CriaContexto (fn 676) hands to a guard.
 // The class's other members (the records of ShowExceptionMsgScreen, LogExceptionMsg and EnterLoopBeeping's lambda) are
 // not written.
+//
+// Two more statics and GetDescricaoModo (fn 5564), from the target's data and 5564's body. A word whose initial value
+// is 48 lies at .data 1577208, 4 bytes before s_codigoRetorno, and a byte at .bss 1839208, the byte before s_finalizar.
+// 5564 reads both (their only readers but 7787, which reads the word) and returns "DEMONSTRAÇÃO" when the byte is 1,
+// otherwise "SIMULADO" for the word's 50 and "TREINAMENTO" for 51, else an empty string; fns 502 and 4620 call it. Its
+// place in the uses-2 band of ledger/ordinals.tsv, between 5566 (EnterLoopDoingNothing) and 5563 (InitApplication's
+// local facet's deleting destructor), puts it in capplication.cpp after EnterLoopDoingNothing. Widths and values are the
+// bytes'; every name, the types beyond their widths (a bool tested as 1, an int compared as a 32-bit word), that
+// GetDescricaoModo is a static member and the order of the statics' definitions are chosen. Not written: the SRect
+// {0, 0, 639, 479} at .data 1577200, 12 bytes before s_codigoRetorno, the screen's area that fns 3678 and 653 read
+// (src/units/31-uenux2-cformbuilder.mk and 120-uenux2-iform.mk say why they are not written) and 12055 and 7787 too.
 
 #include <string>
 
@@ -29,9 +40,12 @@ public:
     static CApplicationContextGuard CriaContexto(int tipo, std::string titulo, std::string descricao,
                                                  std::string detalhe);
     static void EnterLoopDoingNothing();
+    static std::string GetDescricaoModo();
 
     static bool s_finalizar;
     static int s_codigoRetorno;
+    static int s_modo;
+    static bool s_demonstracao;
     static std::string s_aplicacao;
     static std::string s_descricao;
     static std::string s_versao;

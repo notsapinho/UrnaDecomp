@@ -5,7 +5,9 @@
 // (splat/scan.tsv's object column at 9202406). api::CMenuItem::GetTextoFormatado (fn 5492, cinputmenufield.cpp) uses
 // std::regex too, and uenux2's objects link ahead of ecourna's, so its copies, at uenux2's flags, took those rows: 8 of
 // them then differed or left the link. This object, ahead of both trees, holds the copies at ECOURNA_CXXFLAGS, the flags
-// of the objects that gave them. It only instantiates: urna_regex has no caller and leaves the link.
+// of the objects that gave them, after src/app/roots_vector.o: both define std::vector<std::string>'s destructor, whose
+// target callers reach that object's -Oz copy (fn 2255). It only instantiates: urna_regex has no caller and leaves the
+// link.
 // src/units/84-uenux2-cinputmenufield.mk has the rows.
 #include <regex>
 
