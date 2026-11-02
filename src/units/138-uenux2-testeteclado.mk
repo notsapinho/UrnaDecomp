@@ -15,8 +15,8 @@
 #   vota::CVerificaHorarioZeresima (iniciovotacao/cverificahorariozeresima.{h,cpp}): FinishState 11868; GetInst 5947,
 #     with its constructor inlined by binaryen, and its statics' exit destructors 11873 and 11872; StartState 11871;
 #     ProcessTickNaoDesligamento 11870
-#   vota::testeteclado::CEsperaRetestar (testeteclado/cesperaretestar.{h,cpp}): StartState 11825, written and
-#     `unresolved self-voted` (below); FinishState 11824
+#   vota::testeteclado::CEsperaRetestar (testeteclado/cesperaretestar.{h,cpp}): StartState 11825 (below); FinishState
+#     11824
 #   The D2 785 and D0 1560 of CErroTesteTecladoFim (unit 97) are also CAplicacaoEncerrada's, CEsperaRetestar's and
 #   CVerificaHorarioZeresima's: caplicacaoencerrada.cpp.o comes first in the link, so the two match lines name its pair.
 # Outside the unit, three members that other units' files gain: api::CDateTime::operator+(time_t) const
@@ -34,10 +34,10 @@
 #   from +40 to operator+= (fn 2233): a function with a 64-bit parameter that returns a copy of a CDateTime moved by it,
 #   inlined by binaryen. Written as `fim += m_segundosEspera` on a local it scores 30 over 64 rows; as
 #   `s_fimEspera = api::CDateTime::Now() + m_segundosEspera` over operator+(time_t) in cdatetime.cpp, 6 over 62, all
-#   operand-only. It stays `unresolved self-voted`: the CDateTime at 1835000, which __wasm_call_ctors builds with
-#   CDateTime(time_t) of 0, has 11825 as its only reader in the link. Its other target readers are CEsperaRetestar's
-#   slot 9 (fn 11823, which calls CTesteTeclado::GetInst, fn 3855, over the base's constructor) and the text callback fn
-#   11826 (which calls fn 5471, with no name); either one in the link gives the object a second voter.
+#   operand-only. It was `unresolved self-voted` while it was the only reader in the link of the CDateTime at 1835000,
+#   which __wasm_call_ctors builds with CDateTime(time_t) of 0; it matches since CEsperaRetestar's slot 9 (fn 11823,
+#   below) reads the object too (`evidence:vote:3 by:11823,11825`). Its other target reader is the text callback fn
+#   11826 (which calls fn 5471, with no name).
 # - CReinicioVotacao follows unit 104's states with a std::shared_ptr (104-uenux2-app-vota-estados.mk has the evidence
 #   for GetInst's shape, the statics' order and final); 5938 copies the shared_ptr at +148 of CTelasVota::GetInst(). Its
 #   statics are named by 5938's votes; their exit destructors 11836 and 11837 load the same two addresses. GetInst has
@@ -47,15 +47,12 @@
 # No other spelling of a written body was compiled.
 #
 # Not written, with what each waits for:
-# - the other constructors over CEstadoComDesligamentoAutomatico, and so their GetInst: CTesteTeclado's 3855 and
-#   CEsperaRetestar's 5936 (not read for this unit);
-# - CEsperaRetestar's slot 9 (fn 11823): it calls fn 3855; the base's empty body, fn 425, fills the slot here;
+# - CEsperaRetestar's constructor and GetInst (fn 5936, not read for this unit); CTesteTeclado's are unit 217's;
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
 # - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12051, 12040; 12038, ProcessInput, matches since in
-#   unit 156), CTesteTeclado's (2868, 11806, 11805, 11804): callees with no name, 455, 1285, 2023 and 502 among them
-#   (576 has one since unit 165);
+#   unit 156): callees with no name, 455 and 502 among them (576 has one since unit 165); CTesteTeclado is unit 217's;
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
@@ -94,6 +91,16 @@
 #   const (fn 903), so a const reference. 5947 14 over 86 rows, 11871 23 over 130, 11870 11 over 58, all operand-only.
 #   GetInst's other target caller, vota::CGeraDadosDinamicos::StartState (fn 11865, pending in unit 199), has a stand-in
 #   in the roots: with 5945 alone binaryen inlined GetInst into it (5945 scored 111 over 169 rows, 83 inserted).
+# - CBase::ProcessInput (fn 11874, slot 7 of CBase, CPreZeresima and CRetomada): Read() on the form (record
+#   cinteractiveform.h:57, inlined); on INPUT_CORRIGE (5) slot 12's state, and when that is not this state (slot 4,
+#   GetNextState, compared with `this`) the log of the string at @137526 through a vota::CLogVota member binaryen
+#   inlines (GetInst, fn 184, is called before the member's own stack frame opens), added to app/vota/log/clogvota.cpp:
+#   LogaTesteTecladoNaoExecutado, a name chosen from its message; on INPUT_CONFIRMA (9) slot 11's state, called before
+#   the first of two calls of vota::testeteclado::CTesteTeclado::GetInst (fn 3855, unit 217), stored at +64 of the
+#   object it returns, and that object as the next state. 15 over 148 rows, operand-only.
+# - CEsperaRetestar::ProcessTickNaoDesligamento (fn 11823, slot 9): for the tick at +36, once Now() is not before the
+#   static the StartState sets (fn 759, its result's sign), CTesteTeclado::GetInst() as the next state. 3 over 33 rows,
+#   operand-only.
 # - CPreZeresima::GetEstadoPassouNoTeste (fn 5945, record :56) goes to vota::CGeraDadosDinamicos (unit 199) for the
 #   vote's first two states and to CVerificaHorarioZeresima for EAVAGUARDAHORAZERESIMA, else logs
 #   comum::IEventosLog::LogaErroEstadoAplicativo and throws vota::EUeVotaError 9377 with the state appended to "Estado
@@ -102,7 +109,12 @@
 #   binaryen into vota::CVerificaEleicaoPassou::StartState (fn 11914, unit 199); the statics' exit destructors 11864
 #   and 11863 match with it.
 #
-# Chosen, no evidence names them: the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste), of every data
+# Chosen, no evidence names them: in CBase::ProcessInput, the local holding slot 11's state and CTesteTeclado's setter
+# (that the target calls slot 11 before GetInst is its rows; that the setter called on GetInst() with slot 11 as its
+# argument would call GetInst first, and an assignment to a public member would not, is a reading of C++17's order of
+# evaluation, neither compiled), the switch over the two cases with an empty default, and the cases' order; `>=` for
+# slot 9's test (another spelling is not measured); the names of CBase's slots 10 and 12 (GetTela, GetEstadoSemTeste),
+# of every data
 # member, of s_fimEspera, LogaVotacaoEncerrada, GetTelaReinicioVotacao, CReinicioVotacao::GetInst and
 # CAplicacaoEncerrada::GetInst, s_inst and s_mutex (unit 104's convention for the states' singletons); CBase's
 # constructor's protected access; operator+'s parameter type (time_t: the target shows a 64-bit parameter), that it is a

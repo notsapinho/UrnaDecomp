@@ -186,6 +186,11 @@ void CLogVota::LogaFimTesteTecladoSucesso()
     loga("Fim do teste de Teclado do TE - Sucesso");
 }
 
+void CLogVota::LogaTesteTecladoNaoExecutado()
+{
+    loga("Teste de Teclado do TE não executado");
+}
+
 void CLogVota::LogaMesarioConfirmouReinicioVotacao()
 {
     const std::string mensagem = "Mesário confirmou o reinício da votação";
