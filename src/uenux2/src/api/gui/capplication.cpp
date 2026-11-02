@@ -5,6 +5,7 @@
 #include "api/gui/capplication.h"
 
 #include <locale>
+#include <optional>
 #include <sstream>
 
 #include "api/gui/iscreen.h"
@@ -82,8 +83,8 @@ CApplicationContext CApplication::GetContexto()
     if (s_contextos.m_contextos.empty()) {
         return CriaContextoPadrao("Erro inesperado", "Pilha de contexto vazia");
     }
-    CApplicationContext contexto = s_contextos.m_contextos.back();
-    return std::move(contexto);
+    std::optional<CApplicationContext> contexto = s_contextos.m_contextos.back();
+    return std::move(*contexto);
 }
 
 CApplication::EExceptionLevel GetExceptionLevel()
@@ -91,7 +92,7 @@ CApplication::EExceptionLevel GetExceptionLevel()
     return CApplication::GetContexto().m_padrao ? CApplication::EXCEPTION_LEVEL_2 : CApplication::EXCEPTION_LEVEL_1;
 }
 
-// (original lines 94-497: content not recovered)
+// (original lines 95-497: content not recovered)
 #line 498
 void CApplication::EnterLoopDoingNothing()
 {

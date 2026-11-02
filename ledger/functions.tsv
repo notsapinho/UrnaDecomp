@@ -5416,7 +5416,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5550	296	2	app	libc++	-	-	none	-	
 5551	12	0	app	api	skeleton	5526	byte	0	api::CFillField::Rect() const
 5552	349	2	app	vota	skeleton	5736	addr	5	api::CApplicationContext::operator=(api::CApplicationContext&&)
-5553	204	2	app	vota	-	-	none	-	
+5553	204	2	app	vota	skeleton	3587	addr	8	api::CApplicationContextStack::Pop(api::CApplicationContext const&)
 5554	561	2	app	ecourna	-	-	none	-	
 5555	3197	2	app	-	-	-	none	-	
 5556	387	2	-	vota	skeleton	5740	fingerprint	0	api::CApplicationContext::operator==(api::CApplicationContext const&) const
@@ -5432,7 +5432,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 5566	138	2	app	vota	-	-	none	-	
 5567	114	0	-	-	-	-	none	-	
 5568	100	2	libcxx	libc++	-	-	none	-	
-5569	217	2	app	vota	-	-	none	-	
+5569	217	2	app	vota	skeleton	5759	addr	6	api::GetExceptionLevel()
 5570	26	2	-	-	-	-	none	-	
 5571	2179	2	7zip	comum	-	-	none	-	
 5572	2128	2	app	comum	-	-	none	-	
@@ -7233,7 +7233,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 7367	7	0	app	-	skeleton	7157	addr	1	X9_62_FIELDID_it
 7368	1294	0	app	openssl	skeleton	14512	addr	34	keymgmt_from_algorithm
 7369	35	0	app	openssl	skeleton	14514	addr	3	op_cache_free
-7370	61	0	app	vota	-	-	none	-	
+7370	61	0	app	vota	skeleton	12091	shape	2	vota::CEleitorVotando::FinishState()
 7371	160	0	app	openssl	skeleton	7019	addr	6	evp_keymgmt_util_try_import
 7372	341	0	app	openssl	skeleton	7024	addr	27	EVP_PKEY_derive
 7373	939	0	app	openssl	skeleton	14517	addr	71	EVP_PKEY_derive_init
