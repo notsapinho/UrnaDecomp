@@ -1,10 +1,12 @@
 #include "app/comum/comparecimentomesario/estados/cconfirmafimregistromesarios.h"
 
 #include "api/gui/cinteractiveform.h"
+#include "api/gui/cmtformbuilder.h"
 #include "api/gui/iform.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/comparecimentomesario/estados/cencerraregistromesarios.h"
 #include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
+#include "app/comum/comparecimentomesario/estados/cregistrarmesarios.h"
 #include "app/comum/comparecimentomesario/estados/icontroladorregistramesarios.h"
 
 namespace comum {
@@ -14,7 +16,33 @@ CConfirmaFimRegistroMesarios::~CConfirmaFimRegistroMesarios() = default;
 std::unique_ptr<CConfirmaFimRegistroMesarios> CConfirmaFimRegistroMesarios::s_inst;
 std::mutex CConfirmaFimRegistroMesarios::s_mutex;
 
-// (original lines 17-57: content not recovered)
+CConfirmaFimRegistroMesarios::CConfirmaFimRegistroMesarios()
+    : CAppState(EVENTO_ENTRADA)
+{
+    m_formEleitor = TelaRegistroMesarios();
+    m_form = TelaConfirmaFimRegistroMesarios();
+}
+
+std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> TelaConfirmaFimRegistroMesarios()
+{
+    api::CMTFormBuilder builder;
+    builder.AddBuzz(51, 10);
+    builder.AddTextField("Finalizar registro de mesários?", api::SPoint{1, 1}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField("CORRIGE: Voltar  CONFIRMA: Finalizar", api::SPoint{1, 4}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddInputControl();
+    return builder.GetInteractiveForm("", true);
+}
+
+CConfirmaFimRegistroMesarios& CConfirmaFimRegistroMesarios::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CConfirmaFimRegistroMesarios());
+    }
+    return *s_inst;
+}
+
+// (original lines 45-57: content not recovered)
 #line 58
 const IControladorRegistraMesarios& CConfirmaFimRegistroMesarios::GetControlador()
 {
@@ -43,8 +71,3 @@ void CConfirmaFimRegistroMesarios::ProcessInput()
 }
 
 } // namespace comum
-
-// <stubs>
-// f5389 · 983 B · unmatched · placement: link order · name unknown
-// ? f5389() { ... }
-// </stubs>

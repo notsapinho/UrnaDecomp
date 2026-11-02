@@ -23,6 +23,7 @@ public:
     const std::string& GetNomeMunicipio() const;
     const std::string& GetUF() const;
     std::string GetUFMinuscula() const;
+    bool EhExterior() const;
     const md::CLocal& GetLocalData() const;
     TZonaID GetZonaID() const;
     TSecaoID GetSecaoID() const;

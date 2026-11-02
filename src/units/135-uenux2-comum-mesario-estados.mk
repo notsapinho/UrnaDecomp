@@ -13,7 +13,16 @@
 #   ProcessInput 10317;
 # - CGestorDadoMesarioInicial, Votacao and Final, over the new head comum::IGestorDadoMesario: their statics' destructors
 #   10336 and 10334, 10333 and 10332, 10331 and 10330, whose reader is unit 104's CGestorDadoMesario::StartState (10327,
-#   matched with them: it holds the three GetInst inlined).
+#   matched with them: it holds the three GetInst inlined);
+# - CConfirmaFimRegistroMesarios::GetInst 5389, with its constructor and form builder inlined, and its statics'
+#   destructors 10387 and 10386; the statics' destructors of CTituloMesarioVazio (10355, 10354), CTituloMesarioInvalido
+#   (10351, 10350) and CTituloMesarioJaRegistrado (10346, 10345), whose reader is unit 71's
+#   IPedeTituloMesario::ProcessInput (10313: it holds those three GetInst inlined, and CPedeDigitalMesario's);
+#   CTituloMesarioInvalidoDS::Text 10349 and CTituloMesarioJaRegistradoDS::Text 10344, thunks into 6009, the body
+#   binaryen forms from the two;
+# - CPedeDigitalMesario's s_mutex destructor 10320; api::CPolySingleton<api::IFingerScanner>::instance 816 (the copy of
+#   cpededigitalmesario.cpp.o, whose StartState calls it) and <api::IFingerMatcher>::instance 1686 (the roots' copy,
+#   below), thunks into 6013, the body binaryen forms from the two.
 # The states read their controller through comum::IControladorRegistraMesarios, now const (its header says why), and
 # slot 7 through api::CInteractiveForm<MEDIA, INPUT>::Read(), now written in api/gui/cinteractiveform.h at its record's
 # line 57. Both 448 and 765 are named after CConfirmaFimRegistroMesarios, the first object of ours that defines them.
@@ -50,6 +59,37 @@
 # - The statics' destructors match where a matched function reads the object (docs/reference/splat.md "No circular
 #   evidence"): 5388 for CEncerraRegistroMesarios's, 10327 for the three Gestor states'.
 #
+# GetInst, the constructors and the forms' builders (5389, and the four 10313 holds inlined). Each GetInst is the project's
+# singleton, CEncerraRegistroMesarios's form. Each constructor of the 28-byte states stores CAppState's vptr and two empty
+# std::shared_ptr, then assigns +20 from TelaRegistroMesarios (fn 1255) and +12 from its builder, each through a
+# temporary in a 16-byte frame of the constructor's own, releasing the old pointer after the move: assignments in its
+# body. CPedeDigitalMesario's builds its two forms in place in its member list, and its two ticks from the controller's
+# slot 2 (AddTick, with 15000 and 50). In the target the constructor and the builder each have a frame of their own, so
+# each is a function binaryen inlined: on cconfirmafimregistromesarios.cpp's object (try-tu --symbols, wasm-objdump -d) a
+# builder in the anonymous namespace is inlined by clang into the constructor, and one with external linkage stays a
+# call. The texts, positions, alignments, the LED and the buzzes are the target's constants. Orders measured in the whole
+# link (`pnpm wasm score`; docs/reference/facts/codegen.md C4): in cconfirmafimregistromesarios.cpp the constructor above
+# its builder gives 5389 at 33 over 429 rows, all operand-only (a match), and the builder above it 59 over 432 (3
+# inserted, 3 deleted: the result's address kept in a local where the target computes it at the call); in
+# ctitulomesariovazio.cpp and ctitulomesarioinvalido.cpp the builder is above the constructor, since the other order takes
+# 10313 from 202 over 2650 (a match) to 710 over 2672 (22 inserted, 20 deleted). In ctitulomesariojaregistrado.cpp the
+# builder has to precede StartState, whose record is line 53, because its data source's Text (10344, first mentioned by
+# the builder) precedes StartState (10343) in the band; the constructor is after them. In each file the statics are
+# defined above the builder, so their exit destructors precede Text in the object, as the band has them.
+# The data sources: each file's anonymous class with a static Text, named and placed by its record (28:36, 29:36 and
+# cpededigitalmesario.cpp 47:36); the column falls at the call after `auto& controladorMesario = `, the spelling of
+# CTituloMesarioJaRegistrado::StartState's record (53:32), a choice of that length. Text copies the controller's titulo
+# (slot 17) into a local and formats it with std::vformat. 6009 forms from the two CTitulo* copies: 10 over 280 rows
+# before step 9, all operand-only, and a match after it.
+# The roots: the vtable sinks of CConfirmaFimRegistroMesarios, CTituloMesarioVazio, CTituloMesarioInvalido,
+# CTituloMesarioJaRegistrado and CPedeDigitalMesario went, since their constructors are in the link (inlined through
+# GetInst into 5389 and 10313). ConfirmaFimRegistro calls 5389 for fn 6011, its other target caller; ReconheceDigital
+# calls CPolySingleton<api::IFingerMatcher>::instance twice for its six unwritten callers, which puts 1686 in the link
+# beside 816 and lets binaryen form 6013 from the two, as the target does. The roots object compiles at uenux2's flags
+# for this directory ($(UENUX2_CXXFLAGS)), so no match rests on a flag the tree lacks; with strict aliasing on the
+# instance's code is the same (wasm-objdump -d of the function in the two objects: 154 identical lines).
+# api/hwil/ifingerscanner.h and ifingermatcher.h are new heads, and say what their slots rest on.
+#
 # Written, not matching:
 # - 10380, CEncerraRegistroMesarios::StartState: the scan says `the locals`. The target stores m_pNextState before its
 #   stack prologue. It is read as a frameless StartState with an out-of-line member binaryen inlined, a reading: how-to
@@ -66,29 +106,38 @@
 #   GetControlador defined above the slots, and with cencerraregistromesarios.cpp first in this fragment. The case order
 #   is measured: CORRIGE first (with a `default: break;`) moves the blocks, `31 over 88 rows (... inserted 3, deleted
 #   3)`.
-# - The static pointers and mutexes of CConfirmaFimRegistroMesarios (10387, 10386), CLimiteMesariosRegistradosAtingido
-#   (10360, 10359), CTituloMesarioVazio (10355, 10354), CTituloMesarioInvalido (10351, 10350), CTituloMesarioJaRegistrado
-#   (10346, 10345), CDigitalMesarioNaoReconhecida (10326 through fn 389, 10324) and CPedeDigitalMesario (10321 through
-#   fn 3886, 10320): no reader is written (their GetInst are below), so their destructors' `.bss` names have no voter
-#   but themselves. With CEncerraRegistroMesarios's, the five static pointers of these over fn 448 are the six members
-#   fn 763 forms from here (three form that shape: docs/reference/facts/codegen.md C8); with no GetInst to mention them
-#   first, the .bss order of these seven classes' statics is a choice, as unit 104 says of CQuerReimprimirZeresima's.
+# - 10318, CPedeDigitalMesario::StartState: the target's 257 bytes, row for row, but for binaryen's local numbers (`42
+#   over 106 rows (... [13 operand-only], inserted 12, deleted 12)`: the frame and the record's address are locals 3 and 2
+#   in the target, 2 and 3 here, and the last call's result takes the address's local there and the other results'
+#   here). The same score with instance<IFingerScanner>'s copy in an object linked ahead of cregistradormesario.cpp.o
+#   (a scratch link), where the target's band puts 816. Not explained; its slot needs it, so it stays written.
+# - 10319, CNomeMesariosUrnaDS::Text: a whole body where the target's is a thunk into fn 6008, the shared body with
+#   cdigitalmesarionaoreconhecida.cpp's 10323, which is not in our link (10316, pending, holds it). Against 6008 ours
+#   scores 346 over 704 rows (226 inserted): the voter's md::CEleitorDecorator is copied in place where 6008 calls fn
+#   946. It is written because 10313's form takes its address, and a hand line names it for 10313 (its comment).
+# - The static pointers and mutexes of CLimiteMesariosRegistradosAtingido (10360, 10359) and CDigitalMesarioNaoReconhecida
+#   (10326 through fn 389, 10324): no reader is written, so their destructors' `.bss` names have no voter but themselves,
+#   and their .bss order is a choice, as unit 104 says of CQuerReimprimirZeresima's. CPedeDigitalMesario's pointer's
+#   destructor (10321) is a thunk into fn 3886, the reset binaryen keeps once for three classes' statics (10321, 10457,
+#   10682) over the D2 1537: ours is a whole body and differs, so a hand line names the pointer for 10313.
 #
 # Not reconstructed, and what each waits for:
-# - GetInst and the constructors of CConfirmaFimRegistroMesarios (5389) and CLimiteMesariosRegistradosAtingido (5386),
-#   which build both forms with fns 395 (matched, unit 31) and 1255 (matched, unit 247), so no callee holds them back;
-#   the other states' GetInst, inlined into callers not written (each vptr is stored in fn 10313,
-#   IPedeTituloMesario::ProcessInput, or for CDigitalMesarioNaoReconhecida in fn 10316), and the files' anonymous data
-#   sources (10349, 10344, 10323, 10319).
-# - comum::CRegistrarMesarios (10392, 10391) and comum::CMesarioRegistrado (10339, 10338): 10392 and 10339 call 5386,
-#   and fn 6011, their ProcessInput's shared body, calls 5389. Their stub files stay as they are.
+# - CLimiteMesariosRegistradosAtingido's GetInst and constructor (5386), which build both forms with fns 395 and 1255,
+#   both matched; CDigitalMesarioNaoReconhecida's GetInst, inlined into fn 10316 (pending), with its file's anonymous
+#   CNomeMesariosUrnaDS::Text (10323), the other half of fn 6008.
+# - comum::CRegistrarMesarios (10392, 10391) and comum::CMesarioRegistrado (10339, 10338): 10392 and 10339 call 5386.
+#   Fn 6011 is binaryen's shared body of the two ProcessInput 10391 and 10338, each `f6011(p0, <its Read() record>,
+#   <its GetControlador record>)`, so it forms only once both are written; its one callee that had no name, 5389,
+#   matches now. Their stub files stay as they are.
 # - The pending traps (135-uenux2-comum-mesario-estados-pending.cpp names each): IGestorDadoMesario::StartState
-#   (10337), CPedeDigitalMesario's StartState (10318), FinishState (10315) and ProcessTick (10316). 10318 and 10315 call
-#   fn 816, api::CPolySingleton<api::IFingerScanner>::instance by its records, a thunk into binaryen's fn 6013, whose
-#   other member is fn 1686, IFingerMatcher's instance; this tree declares neither class.
+#   (10337), CPedeDigitalMesario's FinishState (10315, a thunk into fn 6012, which it shares with
+#   vota::CRegistraDigitalOperador::FinishState, 10453, not written; the pending file holds its source) and ProcessTick
+#   (10316).
 #
-# Chosen, no evidence names them: DefineProximoEstado; every data member's name and CPedeDigitalMesario's +24 pointee;
-# the locals; the lines of what each .cpp defines, around the records' lines, which stay where the records put them;
+# Chosen, no evidence names them: DefineProximoEstado; every data member's name; the forms' builders' names
+# (TelaConfirmaFimRegistroMesarios, TelaTituloMesarioVazio, TelaTituloMesarioInvalido, TelaTituloMesarioJaRegistrado,
+# TelaPedeDigitalMesario, TelaAguardeDigitalMesario) and their being free functions of comum declared in the class's
+# header (on the object, a static member of the class stays a call too, not measured further); the locals; the lines of what each .cpp defines, around the records' lines, which stay where the records put them;
 # the headers' paths, beside their .cpp; the three Gestor states' .cpp paths (how-to step 3, rule 4: no record names
 # them) and their order here, which follows the band (10336 above 10333 above 10331); the out-of-line destructors as key
 # functions, declared first.
@@ -106,12 +155,13 @@ COMUM_MESARIO_ESTADOS_SRCS := src/app/comum/comparecimentomesario/estados/cconfi
     src/app/comum/comparecimentomesario/estados/ctitulomesariojaregistrado.cpp \
     src/app/comum/comparecimentomesario/estados/ctitulomesariovazio.cpp
 UENUX2_SRCS += $(COMUM_MESARIO_ESTADOS_SRCS)
-# IGestorDadoMesario::StartState and three slots of CPedeDigitalMesario are not reconstructed:
+# IGestorDadoMesario::StartState and two slots of CPedeDigitalMesario are not reconstructed:
 # 135-uenux2-comum-mesario-estados-pending.cpp gives the vtables trapping bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/135-uenux2-comum-mesario-estados-pending.o: $(ROOT)/src/units/135-uenux2-comum-mesario-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/135-uenux2-comum-mesario-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/135-uenux2-comum-mesario-estados-pending.cpp -o $(R)
-# nothing reconstructed references seven of the states' vtables: 135-uenux2-comum-mesario-estados-roots.cpp takes their
-# addresses
-$(ROOT)/$(APP)/135-uenux2-comum-mesario-estados-roots.o: $(ROOT)/src/units/135-uenux2-comum-mesario-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/135-uenux2-comum-mesario-estados.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/135-uenux2-comum-mesario-estados-roots.cpp -o $(R)
+# nothing reconstructed references two of the states' vtables, nor calls 5389 and IFingerMatcher's instance as the
+# target does: 135-uenux2-comum-mesario-estados-roots.cpp takes those addresses and stands in for those callers, at the
+# directory's uenux2 flags, since it emits the instance; its header set is the one the generic rules use
+$(ROOT)/$(APP)/135-uenux2-comum-mesario-estados-roots.o: $(ROOT)/src/units/135-uenux2-comum-mesario-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/135-uenux2-comum-mesario-estados.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/135-uenux2-comum-mesario-estados-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/135-uenux2-comum-mesario-estados-pending.o $(APP)/135-uenux2-comum-mesario-estados-roots.o

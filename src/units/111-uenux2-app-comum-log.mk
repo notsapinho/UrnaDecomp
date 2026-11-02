@@ -47,7 +47,7 @@
 #   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
 #   those thunks.
-# - not reconstructed: 5372 (needs 816, 1686, 1903, 2224), 10226,
+# - not reconstructed: 5372 (needs 1903 and 2224; 816 and 1686 match since unit 135's IFingerMatcher stand-in), 10226,
 #   12098 and the other CLogComum members, 2742 and 3603 (the other thunks of 2900: their classes are not named).
 #
 # Inlining, by who did it. clang: EhModoDemonstracao into the seven members (one frame, restored after the member's load)
