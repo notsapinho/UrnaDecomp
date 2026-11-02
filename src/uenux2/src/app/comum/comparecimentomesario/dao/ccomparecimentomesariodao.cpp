@@ -2,8 +2,9 @@
 // Inserir (10403, slot 3, a chosen name), Clone (10399, slot 2, a thunk into 3894) and the records' two converters,
 // ConverteEstadoBiometria (line 200, fn 5391) and ConverteDedoHabilitacao (line 232, fn 5390). Evidence: Inserir comes
 // first of the file's slot members in band uses 1 (ledger/ordinals.tsv: 10403, 10402, 10401, then 10399, downwards).
-// Chosen: every line but the two throws', and the converters' place after Clone (they are in band uses 2). Slots 7 and 8
-// are in src/units/91-uenux2-app-comum-dados-eleitor-pending.cpp.
+// Chosen: every line but the two throws', and the converters' place after Clone (they are in band uses 2). Slots 7 and 8,
+// RecuperarID (10402) and RecuperarTodos (10401), names chosen, follow Inserir in the band's order;
+// src/units/91-uenux2-app-comum-dados-eleitor.mk says what they rest on.
 #include "app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.h"
 
 #include <format>
@@ -39,12 +40,76 @@ void CComparecimentoMesarioDAO::Inserir(const TDado& dado) const
     stmt->Close();
 }
 
+std::shared_ptr<CComparecimentoMesarioDAO::TDado> CComparecimentoMesarioDAO::RecuperarID(const TDadoID& id) const
+{
+    using ecourna::app::dados::ETipoIdentificadorEleitor;
+
+    const std::string sql = " SELECT numero_titulo, tipo_identificador, periodo_presente, pertence_secao, estado_biometria, dedo_habilitacao, data_hora_registro, id_arquivo FROM comparecimento_mesario WHERE numero_titulo = ? and periodo_presente = ? \n";
+
+    const ecourna::api::sql::TSharedSqlStatement stmt = m_conexao->Prepare(sql);
+    stmt->SetInt64(1, ecourna::api::util::CStringUtils::ToQWord(id.GetMesario().GetIdentificador()));
+    stmt->SetInt(2, id.GetPeriodoPresente());
+    const ecourna::api::sql::TSharedSqlResultSet rs = stmt->Execute();
+    std::shared_ptr<TDado> dado;
+    if (rs->Next()) {
+        const std::string titulo = std::format("{}", rs->GetInt64("numero_titulo"));
+        const ETipoIdentificadorEleitor tipo = static_cast<ETipoIdentificadorEleitor>(rs->GetInt("tipo_identificador"));
+        const int periodoPresente = rs->GetInt("periodo_presente");
+        const bool pertenceSecao = rs->GetBool("pertence_secao");
+        const TDado::EstadoReconhecimentoBiometrico estadoBiometria =
+            ConverteEstadoBiometria(rs->GetInt("estado_biometria"));
+        const md::CDedo::TipoDedo dedoHabilitacao = ConverteDedoHabilitacao(rs->GetInt("dedo_habilitacao"));
+        const api::CDateTime dataHoraRegistro(boost::posix_time::to_time_t(rs->GetDateTime("data_hora_registro")));
+        if (!rs->IsNull("id_arquivo")) {
+            const int idArquivo = rs->GetInt("id_arquivo");
+            dado.reset(new TDado(md::CEleitorIdentidade(titulo, tipo), periodoPresente, pertenceSecao, estadoBiometria,
+                                 dedoHabilitacao, dataHoraRegistro, idArquivo));
+        } else {
+            dado.reset(new TDado(md::CEleitorIdentidade(titulo, tipo), periodoPresente, pertenceSecao, estadoBiometria,
+                                 dedoHabilitacao, dataHoraRegistro));
+        }
+    }
+    stmt->Close();
+    return dado;
+}
+
+std::vector<CComparecimentoMesarioDAO::TDado> CComparecimentoMesarioDAO::RecuperarTodos() const
+{
+    using ecourna::app::dados::ETipoIdentificadorEleitor;
+
+    const std::string sql = " SELECT numero_titulo, tipo_identificador, periodo_presente, pertence_secao, estado_biometria,  dedo_habilitacao, data_hora_registro, id_arquivo FROM comparecimento_mesario  ORDER BY pertence_secao ASC, numero_titulo ASC, periodo_presente ASC, dedo_habilitacao ASC \n";
+
+    const ecourna::api::sql::TSharedSqlStatement stmt = m_conexao->Prepare(sql);
+    const ecourna::api::sql::TSharedSqlResultSet rs = stmt->Execute();
+    std::vector<TDado> dados;
+    while (rs->Next()) {
+        const std::string titulo = std::format("{}", rs->GetInt64("numero_titulo"));
+        const ETipoIdentificadorEleitor tipo = static_cast<ETipoIdentificadorEleitor>(rs->GetInt("tipo_identificador"));
+        const int periodoPresente = rs->GetInt("periodo_presente");
+        const bool pertenceSecao = rs->GetBool("pertence_secao");
+        const TDado::EstadoReconhecimentoBiometrico estadoBiometria =
+            ConverteEstadoBiometria(rs->GetInt("estado_biometria"));
+        const md::CDedo::TipoDedo dedoHabilitacao = ConverteDedoHabilitacao(rs->GetInt("dedo_habilitacao"));
+        const api::CDateTime dataHoraRegistro(boost::posix_time::to_time_t(rs->GetDateTime("data_hora_registro")));
+        if (!rs->IsNull("id_arquivo")) {
+            const int idArquivo = rs->GetInt("id_arquivo");
+            dados.emplace_back(md::CEleitorIdentidade(titulo, tipo), periodoPresente, pertenceSecao, estadoBiometria,
+                               dedoHabilitacao, dataHoraRegistro, idArquivo);
+        } else {
+            dados.emplace_back(md::CEleitorIdentidade(titulo, tipo), periodoPresente, pertenceSecao, estadoBiometria,
+                               dedoHabilitacao, dataHoraRegistro);
+        }
+    }
+    stmt->Close();
+    return dados;
+}
+
 api::persistencia::IDAO* CComparecimentoMesarioDAO::Clone() const
 {
     return new CComparecimentoMesarioDAO(*this);
 }
 
-// (original lines 47-189: content not recovered)
+// (original lines 112-189: content not recovered)
 #line 190
 comum::md::CComparecimentoMesario::EstadoReconhecimentoBiometrico CComparecimentoMesarioDAO::ConverteEstadoBiometria(ueint32 estado) const
 {

@@ -13,13 +13,9 @@
 //                     keys with std::make_shared, as this does. With 5530 alone binaryen would inline 5565 into it
 //   SaiDoFormulario   12081, vota::CEmitirMaisBU::ProcessInput, the other direct caller of 5987,
 //                     api::CFormStack<api::IScreen>::Remove: with the destructor of IForm<IScreen> alone it would inline
-//   TelaMT            the callers of 1714, api::CPolySingleton<api::IScreenMT>::instance, not in our link: 10680 and
-//                     10690. 11041 (IForm<IScreenMT>::GetRenderForm), unit 153's CInfoMTLCD members 3836 and 11653
-//                     and unit 152's 10410 call it in the link; the stand-in stays until those two land. It passes an empty
-//                     std::source_location, as unit 100's w100_usa does: a default argument would make a record on this
-//                     file's line, which no target function has
+// api::CPolySingleton<api::IScreenMT>::instance (1714) needs no stand-in: every target caller the one here stood for,
+// 10680 and 10690, is in the link.
 #include <memory>
-#include <source_location>
 #include <string>
 
 #include "api/gui/cinputfieldcontrol.h"
@@ -27,8 +23,6 @@
 #include "api/gui/iscreen.h"
 
 extern template void api::CFormStack<api::IScreen>::Remove(api::IForm<api::IScreen>*);
-extern template api::IScreenMT& api::CPolySingleton<api::IScreenMT>::instance(api::TPolySingletonsInfo&,
-                                                                              const std::source_location&);
 
 namespace {
 
@@ -72,14 +66,6 @@ __attribute__((noinline)) int SaiDoFormulario(api::IForm<api::IScreen>* form, in
     return codigo + 3;
 }
 
-__attribute__((noinline)) int TelaMT()
-{
-    const std::source_location local;
-    api::IScreenMT& a = api::CPolySingleton<api::IScreenMT>::instance(api::g_polySingletonsInfo(), local);
-    api::IScreenMT& b = api::CPolySingleton<api::IScreenMT>::instance(api::g_polySingletonsInfo(), local);
-    return &a == &b ? 13 : 17;
-}
-
 void* volatile w120_sink;
 
 struct SW120Roots {
@@ -91,7 +77,6 @@ struct SW120Roots {
         w120_sink = reinterpret_cast<void*>(&CampoB);
         w120_sink = reinterpret_cast<void*>(&ControleTeclas);
         w120_sink = reinterpret_cast<void*>(&SaiDoFormulario);
-        w120_sink = reinterpret_cast<void*>(&TelaMT);
     }
 } w120_roots;
 

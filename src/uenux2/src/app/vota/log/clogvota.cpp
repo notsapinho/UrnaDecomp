@@ -148,6 +148,21 @@ void CLogVota::LogaPedidoTituloSuspensao()
     loga("Solicitado título eleitoral para suspensão do eleitor");
 }
 
+void CLogVota::LogaTituloSuspensaoDigitado()
+{
+    loga("Mesário digitou o título para suspender o eleitor");
+}
+
+void CLogVota::LogaTituloSuspensaoInvalido(const std::string& titulo)
+{
+    logaAlerta(std::format("Título {} é inválido para suspender a votação", titulo));
+}
+
+void CLogVota::LogaTituloSuspensaoValido(const std::string& titulo)
+{
+    logaAlerta(std::format("Título {} é válido para suspender a votação", titulo));
+}
+
 
 void CLogVota::LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, uebyte via)
 {
@@ -206,6 +221,12 @@ void CLogVota::LogaAguardandoConfirmacaoZeresima()
 void CLogVota::LogaAguardandoHorarioZeresima()
 {
     const std::string mensagem = "Aguardando data e hora para emissão da zerésima";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaAguardandoIdentificadorEleitor()
+{
+    const std::string mensagem = "Aguardando digitação do identificador do eleitor";
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 

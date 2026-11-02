@@ -22,8 +22,8 @@ namespace vota {
 //
 // CEscolheOpcao (vtable @1587996 [2752, 10691, 10690, 7480, 1661, 218, 425, 10689, 425]): it overrides the destructors
 // (slots 0 and 1, fns 2752 and 10691), StartState (slot 2, fn 10690, records cescolheopcao.cpp:150 to 152) and
-// ProcessInput (slot 7, fn 10689); the last two are pending (src/units/121-uenux2-datasources-pending.cpp says what each
-// waits for). A singleton: fn 2753 holds GetInst and the constructor inlined, allocates 32 bytes, passes
+// ProcessInput (slot 7, fn 10689), which is pending (src/units/121-uenux2-datasources-pending.cpp says what it waits
+// for). A singleton: fn 2753 holds GetInst and the constructor inlined, allocates 32 bytes, passes
 // comum::CAppState::EVENTO_ENTRADA (2) to the base's constructor and keeps the object in a static std::unique_ptr
 // (@1905308); it calls fn 1151, which no form has matched, so GetInst and the constructor are not written. The destructor
 // is out of line: the deleting one (fn 10691) calls it, drops its result and frees `this`. It releases the

@@ -47,7 +47,6 @@
 #include "api/gui/iinputvalidation.h"
 #include "api/persistencia/idao.h"
 #include "app/comum/comparecimentomesario/dao/icomparecimentomesariodao.h"
-#include "app/comum/comparecimentomesario/md/ccomparecimentomesario.h"
 #include "app/comum/dados/asn/candidatura/cvisitantefoto.h"
 #include "app/comum/dados/asn/eleitor/cvisitanteeleitor.h"
 #include "app/comum/dados/ccandidaturasds.h"
@@ -115,7 +114,6 @@ extern const char w102_vt_cgravadorrcsecao[] __asm__("_ZTVNSt3__220__shared_ptr_
 extern const char w102_vt_cgravadorenvelopearquivo[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum24CGravadorEnvelopeArquivoENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cgravadorversoesarquivos[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum24CGravadorVersoesArquivosENS_10shared_ptrINS1_9IGravadorEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cidentificacaosecao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md19CIdentificacaoSecaoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
-extern const char w102_vt_ccomparecimentomesario[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md22CComparecimentoMesarioENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cidentificacaournacontingencia[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum2md30CIdentificacaoUrnaContingenciaENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cvisitantefoto[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3asn14CVisitanteFotoENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cvisitanteeleitor[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3asn17CVisitanteEleitorENS_10shared_ptrIS3_E27__shared_ptr_default_deleteIS3_S3_EENS_9allocatorIS3_EEEE");
@@ -159,7 +157,6 @@ using TJustificativa = ecourna::app::dados::CIdentificacaoJustificativa;
 template struct SBloco<TJustificativa, TJustificativa>;
 template struct SBloco<comum::asn::CVisitanteFoto, comum::asn::CVisitanteFoto>;
 template struct SBloco<api::CQRCodeImageFieldPaper, api::CQRCodeImageFieldPaper>;
-template struct SBloco<comum::md::CComparecimentoMesario, comum::md::CComparecimentoMesario>;
 template struct SBloco<std::string, std::string>;
 template struct SBloco<ecourna::api::security::ISymmetricCipher, TAes>;
 template struct SBloco<comum::IGravador, comum::CGravadorWSQ>;
@@ -300,7 +297,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cgravadorenvelopearquivo;
         w102_sink = w102_vt_cgravadorversoesarquivos;
         w102_sink = w102_vt_cidentificacaosecao;
-        w102_sink = w102_vt_ccomparecimentomesario;
         w102_sink = w102_vt_cidentificacaournacontingencia;
         w102_sink = w102_vt_cvisitantefoto;
         w102_sink = w102_vt_cvisitanteeleitor;

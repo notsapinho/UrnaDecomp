@@ -65,30 +65,44 @@
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
 # waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10667, 10443, 10447,
-# 10680, 10677, 10676, 10625 and 10624 (pending).
+# 10677, 10676, 10625 and 10624 (pending).
+#
+# CPedeIdentidade::StartState (10680, slot 2) is written in cpedeidentidade.cpp, its records on lines 62 and 63 (the
+# CPolySingleton<IUrna>::instance() call of the `if` and CPolySingleton<IScreenMT>::instance()'s inside it, both at
+# column 9); FinishState moved below it, a choice. In the target's order it logs "Aguardando digitação do
+# identificador do eleitor" (CLogVota::GetInst, then a 16-byte frame binaryen inlined: the member
+# LogaAguardandoIdentificadorEleitor, added to clogvota.cpp with CLoga::loga, fn 433, severity 1, the shape of
+# LogaAguardandoHorarioZeresima), calls IInformacaoThreadOperador's slot 20 (LimpaIdentidades) on its GetInst (fn 599),
+# shows the form at +24, sets the next state, calls IScreenMT's slot 19 with 0 when IUrna's Modelo() is at least 2020,
+# calls comum::CInfoMTLCD::MostraIconeBateria on CInfoMTLCD::GetInst() (2284, unit 153's file), starts the tick at +11
+# unless vota::EhTreinamento() or IsVotacaoBloqueadaPorHorario() (1485, 2226), and the ticks at +12 and +13 unless
+# comum::CAppInfo::EhTreinamentoEleitor() (697). It scored 29 over 149 rows, all operand-only (pnpm wasm score, before
+# steps 7 to 9). Chosen: the log member's name and its place in clogvota.cpp (binaryen inlined it: no index orders it),
+# `>= 2020`, the slot called directly on GetInst's result rather than through a vota:: function over it, and the two
+# `if`s' spelling. ProcessTick (10676) stays pending: the pending file says what it waits for.
 #
 # Chosen, no evidence names them: the names of the three helpers, of the statics and of every data member, and their
 # types where only a width shows (int for the 32-bit counters), and uebyte as the spelling of the byte's unsigned 8-bit
 # type, which the target gives: the reads that index the table load it with i32.load8_u before the shift (10465 at
 # +0xe90, 10425 at +0x209), where a signed char gives i32.load8_s, and 10465's increment and its bound of 4 make it a
-# counter, not a flag; the CLogVota members' names (from their messages) and their
-# place, after GetInst; IEleitorImpedidoVotar's slot 9 name (LogaImpedimento, from the one override, which logs) and its
-# +20 int; CPedeIdentidade's +16 pointee (the voter's form, as comum::CPedeDigitalMesario's header chooses); GetInst and
-# the private constructors, declared and not defined; the destructors declared first. The lines: AvancaTentativa's throw
-# is on its record's line, the statics and the destructor above it and the helpers after line 187 are a choice, and so
-# is FinishState after StartState's two record lines. Same bytes: CDadoEleitorNaoConfere's StartState as written and
-# with a conditional operator choosing the form (its object's function, wasm-objdump -d). The paths: cpedeidentidade.cpp
-# and ccontrolareconhecimento.cpp are the records'; every other class is in a file named after it (how-to step 3, rule
-# 4), its header beside it, in the directory its vtable's neighbours give (docs/reference/facts/placing.md P5):
-# CIdentidadeInvalida (@1588376), CEleitorNaoEncontrado (@1588448) and CEleitorJaVotou (@1588804) lie between
-# cpedeidentidade.cpp's records (@1588276) and celeitorencontrado.cpp's (@1588980); IEleitorImpedidoVotar (@1589136) has
-# celeitorencontrado.cpp's record before it and justificativa/iconfirmajustificativa.cpp's (@1589992) after it, with
-# unrecorded vtables between on both sides, and goes beside the six classes derived from it, a choice;
-# CInformaAnoNascimentoErrado (@1591424) lies between cnomeeleitor.cpp's records (@1591336) and
-# cdigitalreconhecida.cpp's (@1591684); CDadoEleitorNaoConfere (@1592640) and CVerificaDadoEleitor (@1592712) after
-# cregistradigitaloperador.cpp's records (@1592596) with no vtable between, and unrecorded vtables between them and
-# aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side. The order of the sources below
-# follows the data, leidentidade's before confirmaidentidade's.
+# counter, not a flag; the CLogVota members' names (from their messages) and their place, after GetInst;
+# IEleitorImpedidoVotar's slot 9 name (LogaImpedimento, from the one override, which logs) and its +20 int;
+# CPedeIdentidade's +16 member's name (m_aviso: its pointee is a std::string, which ProcessTick, fn 10676, assigns);
+# GetInst and the private constructors, declared and not defined; the destructors declared first. The lines:
+# AvancaTentativa's throw is on its record's line, the statics and the destructor above it and the helpers after line
+# 187 are a choice, and so is FinishState after StartState's two record lines. Same bytes: CDadoEleitorNaoConfere's
+# StartState as written and with a conditional operator choosing the form (its object's function, wasm-objdump -d). The
+# paths: cpedeidentidade.cpp and ccontrolareconhecimento.cpp are the records'; every other class is in a file named
+# after it (how-to step 3, rule 4), its header beside it, in the directory its vtable's neighbours give
+# (docs/reference/facts/placing.md P5): CIdentidadeInvalida (@1588376), CEleitorNaoEncontrado (@1588448) and
+# CEleitorJaVotou (@1588804) lie between cpedeidentidade.cpp's records (@1588276) and celeitorencontrado.cpp's
+# (@1588980); IEleitorImpedidoVotar (@1589136) has celeitorencontrado.cpp's record before it and
+# justificativa/iconfirmajustificativa.cpp's (@1589992) after it, with unrecorded vtables between on both sides, and
+# goes beside the six classes derived from it, a choice; CInformaAnoNascimentoErrado (@1591424) lies between
+# cnomeeleitor.cpp's records (@1591336) and cdigitalreconhecida.cpp's (@1591684); CDadoEleitorNaoConfere (@1592640) and
+# CVerificaDadoEleitor (@1592712) after cregistradigitaloperador.cpp's records (@1592596) with no vtable between, and
+# unrecorded vtables between them and aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side.
+# The order of the sources below follows the data, leidentidade's before confirmaidentidade's.
 #
 # Roots: the eight classes' vtables, and stand-ins for the target callers of 5403 to 5406, 2097, 4522 and 4661 (the
 # roots file names them). ccontrolareconhecimento.cpp reaches Boost through cconfiguracaoeleicao.h, so its object takes

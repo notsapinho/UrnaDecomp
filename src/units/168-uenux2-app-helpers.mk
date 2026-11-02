@@ -40,8 +40,8 @@
 # - 1485 is CAppInfo::GetInst().GetGeral().GetDadoCarga().GetFase() == FASE_TREINAMENTO ('3', 51). It calls fn 291, the
 #   non-const GetGeral (splat/symbol_addrs.txt: _ZN5comum8CAppInfo8GetGeralEv); through a const CAppInfo& the object
 #   calls _ZNK5comum8CAppInfo8GetGeralEv instead. Its four callers (10425, 10566, 10680, 12098: CMostraEleitorVotando,
-#   CInformacaoThreadOperador, CPedeIdentidade and CGravaResultado) each keep the call, so a reading: it is defined in
-#   none of their files, where clang would inline a body this small.
+#   CInformacaoThreadOperador, CPedeIdentidade and CGravaResultado; 10566 and 10680 are in the link) each keep the call,
+#   so a reading: it is defined in none of their files, where clang would inline a body this small.
 # - 2450 passes the three 8-byte pieces of the type name "N4vota14IAjusteInicialE" to 2924: a constant name, so
 #   vota::IAjusteInicial has no key function, as app/vota/eleitor/iajusteinicial.h declares it.
 #

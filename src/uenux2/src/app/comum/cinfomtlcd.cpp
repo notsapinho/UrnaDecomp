@@ -1,8 +1,6 @@
-// comum::CInfoMTLCD (/home/rubio/tse/uenux2/src/app/comum/cinfomtlcd.cpp). The reconstruction's notes are in
-// cinfomtlcd.h and the unit's fragment. Its records are records of the target:
-//   11653  Update  records at lines 50 (column 21) and 51 (column 23), and 84 (column 25, MostrarImagemNoLCD inlined)
-//   3836   MostraImagem  record at line 84 (column 25, MostrarImagemNoLCD inlined)
-//   7787   CreateInst (not reconstructed)  record at line 33, which stays blank
+// comum::CInfoMTLCD (/home/rubio/tse/uenux2/src/app/comum/cinfomtlcd.cpp). Records of the target: lines 50:21 and
+// 51:23 (Update, fn 11653), 84:25 (MostrarImagemNoLCD, inlined into 11653 and MostraImagem, 3836) and 33 (CreateInst,
+// fn 7787, not reconstructed: the line stays blank). The other lines are chosen; the unit's fragment says why.
 
 #include "app/comum/cinfomtlcd.h"
 
@@ -15,29 +13,35 @@
 #include "api/pattern/cpolysingleton.h"
 
 using namespace api;
-
 namespace comum {
-
-// (original lines 21-22: content not recovered)
-#line 23
 CInfoMTLCD::CInfoMTLCD()
 {
     MostraIconeBateria();
 }
+
+CInfoMTLCD& CInfoMTLCD::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst = std::make_unique<CInfoMTLCD>();
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CInfoMTLCD> CInfoMTLCD::s_inst;
+std::mutex CInfoMTLCD::s_mutex;
 
 void CInfoMTLCD::MostraIconeBateria()
 {
     m_bateria.Attach(this);
 }
 
-// (original lines 33-35: content not recovered)
-#line 36
 CInfoMTLCD::~CInfoMTLCD()
 {
     m_bateria.Detach(this);
 }
 
-// (original lines 41-45: content not recovered)
+// (original lines 44-45: content not recovered)
 #line 46
 void CInfoMTLCD::Update(const api::SharedIImage& imagem)
 {

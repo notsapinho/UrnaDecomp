@@ -14,13 +14,14 @@
 // - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 395, 652, 5396 and 5665.
 // - vota::CDadoEleitorNaoConfere::ProcessInput (target fn 10447, slot 7): on CONFIRMA it goes to fn 652's state or,
 //   with CControlaReconhecimento::AvancaVerificacao inlined (record ccontrolareconhecimento.cpp:176), to fn 2735's.
-// - vota::CPedeIdentidade::StartState (target fn 10680, slot 2, records cpedeidentidade.cpp:62 and :63): it calls fns
-//   2284, 5903 (comum::CInfoMTLCD::MostraIconeBateria, unit 153), 599 and 2226 (unit 50) and 1485
-//   (vota::EhTreinamento, fragment 168).
 // - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): it calls fns 2749, 2753, 5401 and 5430, and 2226,
 //   3619 and 5414 (unit 50).
-// - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): it calls fns 599, 2226 and 3620 (unit 50) and 501
-//   (unit 174), so no callee of it waits now: it is not written yet.
+// - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): every direct callee has a name, but it waits for two
+//   things this tree lacks. On the tick at +12 it holds vota::CAguardaInspecao's GetInst and constructor inlined (the
+//   one store of that class's vptr, 1590732; its statics at 1908552 and 1908528), a class with no header here, whose
+//   slot 6 (fn 10530) calls fn 395, which no form has matched. On the tick at +13 it reads the text of the input field
+//   that has the form's focus, std::vector::at with CInteractiveForm's index at +84, a member that
+//   api/gui/cinteractiveform.h does not have.
 // - vota::IEleitorImpedidoVotar::StartState (target fn 10625, slot 2 of the base and of its six derived classes): it
 //   calls fn 3616.
 // - vota::IEleitorImpedidoVotar::ProcessInput (target fn 10624, slot 7 of the same seven vtables): through Read()
@@ -55,11 +56,6 @@ void CVerificaDadoEleitor::ProcessInput()
 }
 
 void CDadoEleitorNaoConfere::ProcessInput()
-{
-    __builtin_trap();
-}
-
-void CPedeIdentidade::StartState()
 {
     __builtin_trap();
 }

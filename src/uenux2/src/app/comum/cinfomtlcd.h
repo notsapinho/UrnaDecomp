@@ -29,10 +29,15 @@
 //   so which of the two is written is a choice.
 // - MostraIconeBateria (fn 5903): Attach on the member with `this`, the counterpart of MostraImagem's detach. Its callers
 //   (fns 10427 and 10680, two vota states) call it on fn 2284's result. Its name is chosen from that role.
-// Not recovered: GetInst (fn 2284) and CreateInst. The member's name and this header's path, beside cinfomtlcd.cpp, are
-// chosen.
+// - GetInst (fn 2284, no record): CFederacoes::GetInst's shape (fn 2832, unit 162). It creates the instance on first
+//   use, a new 64-byte object built by the constructor (fn 5904), under a mutex it unlocks through fn 150 (@1838548),
+//   and keeps it in a std::unique_ptr (@1838572) whose old value it deletes through the vtable's slot 1. Fn 7787
+//   (CreateInst inlined, record :33) reads the same two statics, and fns 11655 and 11656 destroy them at exit. The
+//   statics' names and their being members are chosen.
+// Not recovered: CreateInst. The member's name and this header's path, beside cinfomtlcd.cpp, are chosen.
 
 #include <memory>
+#include <mutex>
 
 #include "api/gui/cpowerinformation.h"
 #include "api/gui/iimage.h"
@@ -46,6 +51,7 @@ public:
     CInfoMTLCD();
     ~CInfoMTLCD() override;
 
+    static CInfoMTLCD& GetInst();
     static void CreateInst();
 
     void Update(const api::SharedIImage& imagem) override;
@@ -56,6 +62,9 @@ private:
     void MostrarImagemNoLCD(const api::IImage& imagem, const api::SPoint& posicao, bool opcao);
 
     api::BatteryIconDataSource<api::CPowerInformation::IconOrientation::Vertical> m_bateria;
+
+    static std::unique_ptr<CInfoMTLCD> s_inst;
+    static std::mutex s_mutex;
 };
 
 } // namespace comum
