@@ -15,8 +15,8 @@
 # hours(), minutes() and seconds(), spelled as ConverteDataHora spells them; its calls that can throw go through
 # invoke_*, with a landing pad that ends in __resumeException, an -fexceptions object's code. Its one target caller,
 # vota::CImpressaoPU::StartState (11902, a trap in unit 176), calls it four times, each next to a call of fn 2687, which
-# formats a date as "{:02}/{:02}/{:04}" over boost's from_day_number (1376) and is not written; its stand-in is in
-# fragment 234's roots. pnpm wasm score before step 8:
+# formats a date as "{:02}/{:02}/{:04}" over boost's from_day_number (1376) and was not written then (fragment 265's
+# FormataData now); its stand-in is in fragment 234's roots. pnpm wasm score before step 8:
 # 21 over 317 rows, all operand-only; the census paired it (shape) and the scan matched it. Chosen: the name and the
 # file, a choice against the band: in band 4, 2687, 2686 and 2685 (a thunk into 6155, the body binaryen merges with
 # ConverteDataHora's 9220) lie between api/compression/czip.cpp's 2690 and api/security/csha.cpp's 2684, where the data
@@ -27,6 +27,12 @@
 # ptime is trivially copyable, and a probe function taking one by value compiles to `(i64) -> i64`, by const
 # reference to `(i32) -> i64` (em++ -O2 -std=c++23 over Boost's headers), and 2686 takes an address. A const
 # reference, as ConverteDataHora takes, over a const pointer, which fits the bytes too, is chosen.
+# ConverteDataHora (9220) matches since fragment 265: the target's is `f6155(p0, p1, 8913, 8944)`, a thunk into
+# binaryen's merge (6155) of its body with that of 2685, which fragment 265 writes, with 2687, as
+# ecourna::api::security::ConverteDataHoraSemSeparador in an api/security/ file, by the band above; our link forms the
+# same merge once 2685 is in it, and 6155 matches under the merge's name, after ConverteDataHora. Boost's from_day_number
+# (1376) and greg_month's and greg_day's on_error (5183, 5182) match from this unit's datahoraasn.cpp.o since then, the
+# first ecourna object that emits them, once src/app/roots_boost.cpp leaves them to ecourna's objects (fragment 265).
 DADOS_ASN_SRCS := app/dados/asn/cconversorturno.cpp app/dados/asn/cconversorfase.cpp app/dados/asn/cconversorcargoid.cpp \
                  app/dados/asn/cconversorfoto.cpp app/dados/asn/cconversorcabecalhoentidade.cpp \
                  app/dados/asn/cconversoridentificadoreleitor.cpp app/dados/asn/datahoraasn.cpp \
