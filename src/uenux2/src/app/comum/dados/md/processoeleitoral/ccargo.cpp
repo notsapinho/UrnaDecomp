@@ -1,7 +1,7 @@
 // Reconstruction notes: comum::md::CCargo. Lines 81, 89, 112 and 212 to 240 are records' and fix their throws; no record
 // names the name getters, so their place around GetOrdinalEscolha, above Valida, is a choice, as their names are (read
 // from which field each copies; the fragment lists them). GetDetalheConsulta's own body is target fn 1923, a thunk of
-// binaryen's merge 6029, so it stays out of our link: every call of it here is inlined by clang. operator<=> (fn 5655)
+// binaryen's merge 6029; every call of it here is inlined by clang, and fragment 232's roots keep it. operator<=> (5655)
 // has no record: its place, after Valida, is a choice the band fits (the fragment says so). The two constructors have no
 // record and no target index (binaryen inlines each into fn 11373): their lines, above the first record, are a choice,
 // and 191-uenux2-cconversorcargo.mk says what decides their form.

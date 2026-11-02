@@ -15,11 +15,11 @@
 # - ConstroiHV: two calls of CHV's constructor (3754) for its three in fn 7787 (CHV::CreateInst, inlined there);
 # - CJustificadorDadoTitulo::Text (11475) has its address taken: the target reaches it only by table slot 2949.
 #
-# Not written: four libc++ instances whose only target callers are TSE functions not written, which bring them: 5784,
-# std::vector's move assignment of a 28-byte element holding two std::string (callers 783 and 5789); 2807, a
+# Not written: three libc++ instances whose only target callers are TSE functions not written, which bring them: 2807, a
 # std::vector copy of 36-byte elements (caller 11423); 5787 and 5788, std::insert_iterator<std::set<uebyte>>'s assignment
 # and a lower-bound search over a std::set<uebyte>, the parts of a std::set_intersection in fn 7787's code (beside its
-# calls of 3713, 5654 and 3778).
+# calls of 3713, 5654 and 3778). A fourth, 5784, std::vector<md::CRespostaConsulta>'s move assignment, matches since
+# unit 88's CConfiguracaoEleicao::GetCargos brings its callers 783 and 5789.
 $(ROOT)/$(APP)/216-uenux2-app-comum-dados-loaders-roots.o: $(ROOT)/src/units/216-uenux2-app-comum-dados-loaders-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/216-uenux2-app-comum-dados-loaders.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/216-uenux2-app-comum-dados-loaders-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/216-uenux2-app-comum-dados-loaders-roots.o

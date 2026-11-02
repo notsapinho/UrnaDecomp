@@ -9,12 +9,13 @@
 //   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888 12272, and 5747, written (3715 holds it inlined)
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787 12272, and 3715, which is written
 //   1547  GetNomeNeutro               6999 12587 13550, and 2796, 2302 and 4464, which are written
-//   2257  CEleicaoPE::GetCargos       861 3775 5790 7787 (3774, CConfiguracaoEleicao::GetCargosEleicoes, is written)
+//   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
+//         are written)
 //   3714  CEleicaoPE::ValidaOrdem     11371, three call sites; it reads nothing of this, and binaryen drops the parameter
 //   3715  GetNomeSuplente             5803 12272
 //   2796  GetNome                     5803 6569 11892
 //   2258  GetOrdinalEscolha           12587 12811 13550, and 4464, which is written
-//   5651  CPleito::GetEleicao         3744 3775
+//   5651  CPleito::GetEleicao         3744 (3775, CConfiguracaoEleicao::GetCargos, is written)
 //   5648  CPleito::GetSituacoesEleicoes  3713 (271, cconfiguracaoeleicao.cpp, is written and gives the other)
 //   5655  CCargo::operator<=>         11888, two call sites
 //   5654  CEleicaoPE::GetIDsCargos    7787
