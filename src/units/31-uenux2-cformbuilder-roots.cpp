@@ -147,7 +147,6 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 //   FormMTA, FormMTB      callers of 1694 (4633, 5341, 10676; 1150, 5343, 10204 and 10214 are in the link) and of 301
 //                         (652, 1901, 1905, 2734, 2735 and the other 44)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
-//   FormPapelA, FormPapelB  callers of 5515: 357 and 10997; 357 (Build) is in the link, 10997 still waits
 //   FormPapelC   the callers of 357 (Build): 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11908, 11946,
 //                12005, 12105 and 12110, not reconstructed (11256 and 2890 are in the link); it calls Build twice
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
@@ -176,17 +175,6 @@ __attribute__((noinline)) int FormB(api::CFormBuilder& form, const std::shared_p
 {
     form.AddLine(posicao, posicao, cor);
     return form.GetForm(preShow, std::string()).use_count() + posicao.x;
-}
-
-__attribute__((noinline)) int FormPapelA(api::CPaperFormBuilder& form)
-{
-    return form.GetForm().use_count();
-}
-
-__attribute__((noinline)) int FormPapelB(api::CPaperFormBuilder& form, size_t linhas)
-{
-    form.AddNewLine(linhas);
-    return form.GetForm().use_count() + 2;
 }
 
 __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPaperFormBuilder& outro)
@@ -239,8 +227,6 @@ struct SW5544Roots {
         w5544_sink = reinterpret_cast<void*>(&FormMTB);
         w5544_sink = reinterpret_cast<void*>(&FormA);
         w5544_sink = reinterpret_cast<void*>(&FormB);
-        w5544_sink = reinterpret_cast<void*>(&FormPapelA);
-        w5544_sink = reinterpret_cast<void*>(&FormPapelB);
         w5544_sink = reinterpret_cast<void*>(&FormPapelC);
         w5544_sink = reinterpret_cast<void*>(&ControleMT);
         w5544_sink = reinterpret_cast<void*>(&EntradaMT);
