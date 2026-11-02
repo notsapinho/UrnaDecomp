@@ -7,8 +7,11 @@
 // three csystem.h declares (unit 32's fragment says why). AlteraDono and AlteraPermissoes, inlined into CopyFile, have
 // no record and no target index: their names, lines and linkage are chosen (unit 32's fragment says what the target shows).
 // CScopeGuard (lines 990-1011, an anonymous namespace), its name, place and members' names are chosen: it holds
-// ZeroFill's lambda in a std::function. The file's other functions are not reconstructed yet; the lines their records
-// name are left blank.
+// ZeroFill's lambda in a std::function. ReplaceFile (5455) holds TemporaryPath (records 236:15 and 243:15) and the
+// anonymous namespace's PrepareReplace (916:15 to 928:15) and ReplaceResource (954:15, 962:15) inlined; its name, and
+// RenameResource's (3645), Existe's, ReplaceDir's (both with no target index) and their lines, are chosen (unit 32's
+// fragment says from what). The file's other functions are not reconstructed yet; the lines their records name are
+// left blank.
 
 #include "api/util/csystem.h"
 
@@ -41,7 +44,7 @@ constexpr size_t TAMANHO_BUFFER_MEMINFO = 4096;
 
 } // namespace
 
-// (original lines 44-57: content not recovered)
+// (original lines 47-57: content not recovered)
 #line 58
 static bool ExistResource(struct stat& info, const std::string& recurso)
 {
@@ -173,7 +176,28 @@ int RemoveTree(const std::string& diretorio)
     return 0;
 }
 
-// (original lines 188-251: content not recovered)
+// (original lines 188-229: content not recovered)
+#line 230
+std::string CSystem::TemporaryPath(const std::string& caminho)
+{
+    std::string temporario = caminho + ".XXXXXX";
+
+    const int descritor = mkstemp(&temporario.at(0));
+    if (descritor == -1) {
+        throw CUeUtilError(EUE_UTIL_FALHA_CRIAR_CAMINHO_TEMPORARIO, std::format("Falha ao criar caminho temporário para [{}]: {}", caminho, strerror(errno)));
+    }
+    close(descritor);
+
+    // (original lines 240-241: content not recovered)
+#line 242
+    if (temporario.at(0) == '\0') {
+        throw CUeUtilError(EUE_UTIL_CAMINHO_TEMPORARIO_VAZIO, std::format("Falha ao criar caminho temporário para [{}]: {}", caminho, strerror(errno)));
+    }
+
+    return temporario;
+}
+
+// (original lines 249-251: content not recovered)
 #line 252
 // <stubs>
 // f2762 · 919 B · unmatched · name unknown
@@ -326,14 +350,95 @@ void CSystem::Rename(const std::string& origem, const std::string& destino)
     }
 }
 
-// (original lines 696-912: content not recovered)
-#line 913
-// <stubs>
-// f5455 · 4258 B · unmatched · name unknown
-// void f5455(i32, i32, i32) { ... }
-// </stubs>
+// (original lines 696-897: content not recovered)
+#line 898
+namespace {
 
-// (original lines 918-989: content not recovered)
+bool Existe(const std::string& recurso)
+{
+    struct stat info;
+
+    return stat(recurso.c_str(), &info) == 0;
+}
+
+
+std::string PrepareReplace(const std::string& origem, const std::string& destino, const std::string& backup,
+                           bool (*existe)(const std::string&), const std::string& contexto, const std::string& tipo)
+{
+    const std::string caminhoBackup = backup.empty() ? CSystem::TemporaryPath(origem) : backup;
+    if (backup.empty()) {
+        CSystem::RemoveFile(caminhoBackup);
+    }
+    if (!existe(origem)) {
+        throw CUeUtilError(EUE_UTIL_RECURSO_NAO_ENCONTRADO, std::format("{} - {} [{}] não encontrado", contexto, tipo, origem));
+    }
+
+    // (original lines 919-920: content not recovered)
+#line 921
+    if (origem == destino) {
+        throw CUeUtilError(EUE_UTIL_RECURSOS_MESMO_NOME, std::format("{} - os {}s têm o mesmo nome [{}]", contexto, tipo, destino));
+    }
+
+    // (original lines 925-926: content not recovered)
+#line 927
+    if (Existe(caminhoBackup)) {
+        throw CUeUtilError(EUE_UTIL_BACKUP_EXISTENTE, std::format("{} - {} [{}] existe", contexto, tipo, caminhoBackup));
+    }
+
+    return caminhoBackup;
+}
+
+std::string RenameResource(const std::string& origem, const std::string& destino)
+{
+    if (rename(origem.c_str(), destino.c_str()) != 0) {
+        return "RenameResource(" + origem + ", " + destino + ") - " + strerror(errno);
+    }
+    return "";
+}
+
+void ReplaceResource(const std::string& origem, const std::string& destino, const std::string& backup,
+                     const std::string& contexto)
+{
+    std::string erro;
+
+    // (original lines 947-952: content not recovered)
+#line 953
+    if (Existe(destino) && !(erro = RenameResource(destino, backup)).empty()) {
+        throw CUeUtilError(EUE_UTIL_FALHA_RENOMEAR_DESTINO, contexto + " - " + erro);
+    }
+
+    erro = RenameResource(origem, destino);
+    if (!erro.empty()) {
+        if (Existe(backup)) {
+            RenameResource(backup, destino);
+        }
+        throw CUeUtilError(EUE_UTIL_FALHA_RENOMEAR_ORIGEM, contexto + " - " + erro);
+    }
+
+    if (CSystem::ExistDir(backup)) {
+        if (RemoveTree(backup) == 0) {
+            rmdir(backup.c_str());
+        }
+    } else if (CSystem::ExistFile(backup)) {
+        CSystem::RemoveFile(backup);
+    }
+}
+
+} // namespace
+
+void CSystem::ReplaceFile(const std::string& origem, const std::string& destino, const std::string& backup)
+{
+    const std::string caminhoBackup = PrepareReplace(origem, destino, backup, CSystem::ExistFile, "CSystem::ReplaceFile", "arquivo");
+    ReplaceResource(origem, destino, caminhoBackup, "CSystem::ReplaceFile");
+}
+
+void CSystem::ReplaceDir(const std::string& origem, const std::string& destino, const std::string& backup)
+{
+    const std::string caminhoBackup = PrepareReplace(origem, destino, backup, CSystem::ExistDir, "CSystem::ReplaceDir", "diretório");
+    ReplaceResource(origem, destino, caminhoBackup, "CSystem::ReplaceDir");
+}
+
+// (original lines 988-989: content not recovered)
 #line 990
 namespace {
 

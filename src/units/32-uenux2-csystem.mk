@@ -10,7 +10,13 @@
 #   378   CSystem::CopyFile              records at lines 390 to 476 (7041 to 7048), with AlteraDono and AlteraPermissoes
 #                                        inlined; 5456, the std::format arguments' builder it shares with Rename
 #   Rename                               record at line 692, col 15 (7058); no target index (inlined into fn 11584)
-#   5458, 5454, 5453  api::RemoveTree, GetFreeSpace, GetUsedSpace, no record: written, no-candidate (below)
+#   5458  api::RemoveTree, no record: matched, named by 5455's call (below)
+#   5454, 5453  api::GetFreeSpace, GetUsedSpace, no record: written, no-candidate (below)
+#   5455  CSystem::ReplaceFile, with TemporaryPath (records at lines 236 and 243, col 15: 7034, 7035) and the anonymous
+#         namespace's PrepareReplace (916, 922, 928: 7064 to 7066) and ReplaceResource (954, 962: 7067, 7068) inlined:
+#         written, unresolved self-voted (below)
+#   3645  RenameResource, no record: matched; 5460 and 2858, libc++'s std::operator+(string&&, const string&) and
+#         std::make_format_args over three strings, instances this object emits: matched
 #   5463  api::GetMemInfo, no record
 #   libc's chmod, chown, utime and rename (3997, 6281, 6238, 3974), which CopyFile and Rename call
 # truncate is external and not in the header: in the target's run of this file's records, its record (address 1584900,
@@ -53,9 +59,7 @@
 # replaced 47 [43 operand-only], inserted 0, deleted 15)` in the whole link: ours returns the inverse of the last
 # NextEntry's result, where the target keeps the flag in a local of its own. Three spellings of the flag's update (`else
 # if (IsFile()) vazio = false`, `vazio = !IsFile()`, `vazio &= !IsFile()`) give the same object, and whole-link tries at
-# `--flags -fstrict-aliasing` and `--flags -O2` give the same score. Not reconstructed either: 5455 (TemporaryPath's,
-# PrepareReplace's and ReplaceResource's records), AreFilesEqual (12134) and std::operator+(string&&, const string&)
-# (5460), whose one caller is 5455. The flag CSystem::s_dorme, defined here, and the inline CSystem::Dorme over it are
+# `--flags -fstrict-aliasing` and `--flags -O2` give the same score. Not reconstructed either: AreFilesEqual (12134). The flag CSystem::s_dorme, defined here, and the inline CSystem::Dorme over it are
 # unit 81's (ISound::Wait, fn 8461, is the first reader written); api/util/csystem.h says what is chosen about them.
 #
 # CopyFile (378), records at lines 390 to 476 (390:15, 397:15, 414:15, 448:15, 456:19, 465:19, 471:19, 476:19). Its
@@ -111,8 +115,8 @@
 # the stat, which shares its slot with the loop's name string, above the vectors); declared first, `52 over 678`, 9
 # rows inserted, 1 deleted (`diretorio + '/'` reloads the name's size after the allocation, which the target reuses);
 # with `"/"`, `30 over 669 rows (same 639, replaced 30 [30 operand-only], inserted 0, deleted 0)`, every differing row a
-# call or a data address. It stays no-candidate: it calls itself, so its name waits for a caller's vote, and its other
-# target caller, 5455, is not written (docs/how-to-decompile.md step 1, "The row's own symbol").
+# call or a data address. It calls itself, so its name waits for a caller's vote (docs/how-to-decompile.md step
+# 1, "The row's own symbol"): 5455's call gives it (splat/symbol_addrs.txt, evidence:call by:5455), and it matches.
 # GetFreeSpace and GetUsedSpace (5454 and 5453, no record, names chosen): stretch 763 too, after 5455 in band 2, so
 # defined late in the file (their lines, after ZeroFill, are chosen). Each builds a std::filesystem::path from the
 # string and calls std::filesystem::space; the path is named first, which puts it above the space_info as the target's
@@ -147,6 +151,44 @@
 # their declarations in api/util/csystem.h. Written as static members of CSystem, the three gave the same object:
 # wasm-objdump -d and -x -r of csystem.cpp.o under either form differ in their three symbols alone, and 5463 matched
 # under either name.
+# ReplaceFile (5455, 4258 B) has no record of its own; its records are TemporaryPath's (a static member, as they print
+# it) and those of PrepareReplace and ReplaceResource, both in the anonymous namespace. Its name is chosen from the text
+# "CSystem::ReplaceFile" (184723) it passes to both, with "arquivo" (124102, the tail of "O arquivo"); the parameters'
+# names and the backup's role are chosen from what the body does: the backup path is the third string, or when that is
+# empty TemporaryPath's mkstemp name for the first, removed at once with RemoveFile's code; it throws when the first
+# file does not exist (ExistFile through the record's function pointer: a direct call of 412), when the two names are
+# the same and when the backup exists; then the second is renamed to the backup, the first to the second (and on
+# failure the backup back), each through RenameResource, whose message is the throw's after `contexto + " - "`; last
+# the backup goes, with RemoveTree and rmdir when ExistDir says a directory, RemoveFile's code when ExistFile says a
+# file. Its one target caller, 7174 (vota::impl::CSincronismoVotoEleitor's slot 2), calls it twice with an empty third
+# string: the roots' RepoeDois stands for it, and ZeraAmbos and RemoveUmaArvore, which stood for 5455, are gone.
+# The target's frames, read from pnpm wasm fn's disassembly: 48 B for ReplaceFile's three strings, and nested in it
+# 608, 544 and 160 B, the frames of PrepareReplace, TemporaryPath and ReplaceResource, which binaryen inlined (with
+# libc's mkstemp inside TemporaryPath's). clang inlines an internal function of one call site, so PrepareReplace and
+# ReplaceResource had a second caller in the TU (a reading): CSystem::ReplaceDir, a chosen name over ExistDir and
+# "diretorio", gives them one, and the link drops it, as nothing calls it (build/out/wasm-map/vota_web/names.tsv has
+# no ReplaceDir). Measured in the whole link: all of it inlined by clang, `785 over 1982 rows (same 1197, replaced 494
+# [449 operand-only], inserted 146, deleted 145)`, a 704-B frame where the target's are 48 and 608; with ReplaceDir,
+# `365 over 1847`, the frames 704 and 256 where the target's are 608 and 160 (a struct stat of each function's own,
+# 96 B more each); with the stat tests through Existe (an anonymous-namespace helper, a chosen name, which clang
+# inlines: no target index), whose struct stat ends with it as the target's slot shared with the throws' buffers says,
+# `168 over 1837`, inserted 1, deleted 12: the long-string test before the first move into erro, which the target
+# keeps and ours dropped. The destination's rename in the condition of its test (line 953) keeps it (an object compile,
+# wasm-objdump -d of ReplaceResource: the test before the move with it, none with the test after an if of its own,
+# `std::string erro = ""` or erro.assign()); the throw's column 15 rules out a test nested in the rename's block. Then
+# `score 155 over 1836 rows (same 1681, replaced 155 [155 operand-only], inserted 0, deleted 0)`: calls, data
+# addresses, the packed format strings and table slots. It stays `unresolved self-voted` (splat/scan.tsv: `+0x205
+# i32.const 1932552: __randname.counter = 0x1d7d08 (evidence:vote:2 by:5455) comes from this function's own operand`):
+# the counter of libc's __randname, inlined into it, is a .bss word no other target function reads (`/usr/bin/grep -rlE
+# 'i32\.const 1932552($|[^0-9])' build/out/splat/pieces/asm` lists only ecourna/5455.wat), so nothing but the match
+# would name it (docs/reference/splat.md "No circular evidence"). It stays written: its callees RenameResource,
+# RemoveTree, 5460 and 2858 match through it. The lines of TemporaryPath (230 to 247), RenameResource, Existe,
+# ReplaceFile and ReplaceDir within what the records leave free, and the error codes' names, are chosen.
+# RenameResource (3645, 608 B): `"RenameResource(" + origem + ", " + destino + ") - " + strerror(errno)` when rename
+# fails, else an empty string. Its name is chosen from that text, and its linkage (the anonymous namespace, as its
+# callers'): no record names it. Named by 5455's call (evidence:call by:5455), it matches; ReplaceResource calls it
+# three times, the target's 5455 too. Its ") - " gives ecourna::api::exception::CError's constructor (1143, unit 112's
+# note) the literal whose tail it uses, and 1143 matches too.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSYSTEM_SRCS := src/api/util/csystem.cpp
 UENUX2_SRCS += $(CSYSTEM_SRCS)

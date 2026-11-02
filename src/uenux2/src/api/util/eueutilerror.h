@@ -35,6 +35,11 @@ enum EUeUtilError {
     // 7031 and 7069: the codes api::ExistResource and api::CSystem::ZeroFill throw (csystem.cpp); each name is chosen
     // from its message, "Falha ao validar a existência do recurso" and "Falha ao abrir arquivo": no evidence names them
     EUE_UTIL_FALHA_VALIDAR_RECURSO = 7031,
+    // 7034 and 7035: the codes api::CSystem::TemporaryPath throws (csystem.cpp 236 and 243), both with the message
+    // "Falha ao criar caminho temporario para [{}]: {}"; each name is chosen from the message and what the throw tests
+    // (mkstemp's -1, an empty name): no evidence names them
+    EUE_UTIL_FALHA_CRIAR_CAMINHO_TEMPORARIO = 7034,
+    EUE_UTIL_CAMINHO_TEMPORARIO_VAZIO = 7035,
     EUE_UTIL_FALHA_OBTER_TAMANHO_ARQUIVO = 7038,
     // 7041 to 7048 and 7058: the codes api::CSystem::CopyFile and Rename throw (csystem.cpp); each name is chosen from
     // its message: no evidence names them. 7041's throw (record at line 390, "O arquivo de destino [{}] já existe") is
@@ -49,6 +54,14 @@ enum EUeUtilError {
     EUE_UTIL_FALHA_ALTERAR_DONO_ARQUIVO = 7047,
     EUE_UTIL_FALHA_ALTERAR_PERMISSOES_ARQUIVO = 7048,
     EUE_UTIL_FALHA_RENOMEAR = 7058,
+    // 7064 to 7068: the codes PrepareReplace (csystem.cpp 916, 922, 928) and ReplaceResource (954, 962) throw, in
+    // csystem.cpp's anonymous namespace; each name is chosen from its message or what the throw tests: no evidence
+    // names them
+    EUE_UTIL_RECURSO_NAO_ENCONTRADO = 7064,
+    EUE_UTIL_RECURSOS_MESMO_NOME = 7065,
+    EUE_UTIL_BACKUP_EXISTENTE = 7066,
+    EUE_UTIL_FALHA_RENOMEAR_DESTINO = 7067,
+    EUE_UTIL_FALHA_RENOMEAR_ORIGEM = 7068,
     EUE_UTIL_FALHA_ABRIR_ARQUIVO = 7069,
     EUE_UTIL_FALHA_TRUNCAR_ARQUIVO = 7070,
     EUE_UTIL_TICK_TEMPO_INVALIDO = 7072,

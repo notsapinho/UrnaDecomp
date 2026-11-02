@@ -29,6 +29,11 @@ public:
     const std::string& GetVersao() const { return m_versao; }
     const std::vector<uebyte>& GetHashVersoesPacotes() const { return m_hashVersoesPacotes; }
 
+    // Target fn 3705, out of line in cestadogeral.cpp: its callers (7160, 7306, 10710) read the +52 adjustment inline,
+    // change it with CAjusteDataHora::AdicionaDeltaT (fn 3702) and store it back through this call. The name is chosen:
+    // no record, slot or RTTI names it.
+    void SetAjusteDataHora(const CAjusteDataHora& ajusteDataHora);
+
 private:
     EEstadoUrna m_estadoUrna;
     int m_idPE;

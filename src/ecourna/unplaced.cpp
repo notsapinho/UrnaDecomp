@@ -61,19 +61,6 @@
 // f5363 · 198 B · unmatched · placement: link order · name unknown
 // void f5363(i32, i32) { ... }
 
-// link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
-
-// f5460 · 73 B · unmatched · placement: link order · name unknown
-// void f5460(i32, i32, i32) { ... }
-
-// f5458 · 1367 B · unmatched · placement: link order · name unknown
-// ? f5458(i32) { ... }
-
-// link-order cluster 767 · uses=2 · neighbours' file uenux2/src/api/io/cinikey.cpp
-
-// f5484 · 131 B · unmatched · placement: link order · name unknown
-// ? f5484(i32) { ... }
-
 // link-order cluster 768 · uses=2 · neighbours' file uenux2/src/api/gui/primitives.cpp
 
 // f5485 · 110 B · unmatched · placement: link order · name unknown
@@ -159,11 +146,6 @@
 
 // f3564 · 120 B · unmatched · placement: link order · name unknown
 // void f3564(i32) { ... }
-
-// link-order cluster 978 · uses=3 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
-
-// f3645 · 608 B · unmatched · placement: link order · name unknown
-// void f3645(i32, i32, i32) { ... }
 
 // link-order cluster 979 · uses=3 · neighbours' file uenux2/src/api/util/cdate.cpp
 
