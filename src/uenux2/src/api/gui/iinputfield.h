@@ -143,6 +143,10 @@ public:
     }
 
     const std::string& GetTexto() const { return m_texto; }
+    // vota::CVotacaoStateAudio::EmiteEcoComInputField (fn 3139), CConfirmaVotoSemCandidato's (fn 4477) and
+    // CInstrucaoVotacaoAcessibilidade::ProcessInputAudio (fn 7248) read the byte +55 of the form's input field after
+    // Read: the last key. The accessor's name, and its being an accessor, are chosen.
+    char GetUltimaTecla() const { return m_ultimaTecla; }
 
     size_t GetLength() const { return m_length; }
 

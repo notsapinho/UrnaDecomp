@@ -9,7 +9,7 @@
 // line goes when every target caller it stands for is in the link, and stays while some still wait, the callers already
 // in the link in parentheses (src/units/README.md "Companion files"). The target callers each pair stands for:
 //
-// 1337: 4449, 7198, 11987, 11988 (11794, 11994, 7221 and 6058 are in the link); 4433: 7481 (11994 is in the link);
+// 1337: 4449, 11987, 11988 (11794, 11994, 7221, 6058 and 7198 are in the link); 4433: 7481 (11994 is in the link);
 // 6037: 7160, 12077; 3879: 12023, 12077 (12030 is in the link); 5985: 12065, 12068; 5984: 7160, 12134; 5983: 7160,
 // 12105; 5973: 7160 (11939 is in the link); 3865: 7160 (11870 and 11871 are in the link); 3864: 7160 (11848 and 11858
 // are in the link); 1280: 11869, 11881, 11902, 11905, 11908,

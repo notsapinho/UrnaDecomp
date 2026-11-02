@@ -30,8 +30,9 @@
 # whose 2243 calls KeyName), the first object in link order to emit one, and the roots object's after it.
 API154_SRCS := src/api/util/csynchronizer.cpp
 UENUX2_SRCS += $(API154_SRCS)
-# KeyName is a header's inline code and of its five callers (fns 653, 1455, 2243, 7787 and 12903) only 2243 is
-# reconstructed (unit 31, whose object's copy the link keeps): 154-uenux2-api-roots.cpp calls it for the other four, and
+# KeyName is a header's inline code and of its five callers (fns 653, 1455, 2243, 7787 and 12903) 2243 (unit 31, whose
+# object's copy the link keeps) and 1455 (unit 97) are reconstructed: 154-uenux2-api-roots.cpp calls it for the other
+# three, and
 # calls GetInst and the constructor, whose callers are not reconstructed either.
 # The roots object compiles at the uenux2 tree's flags, not APP_CXXFLAGS, so no match rests on a flag the tree lacks
 # (src/units/README.md "Companion files").

@@ -18,6 +18,10 @@ enum EUeVotaError {
     // from the message, "<caller> - o cargo atual nao esta posicionado", and the class: no evidence names them
     EUE_VOTA_CONFIRMA_VOTO_EM_CARGO_CARGO_NAO_POSICIONADO = 9306,
     EUE_VOTA_CONFIRMA_VOTO_SEM_CANDIDATO_CARGO_NAO_POSICIONADO = 9307,
+    // the value is the code vota::CConfirmaVotoSemCandidato::EmiteEcoComInputField (target fn 4477, record
+    // cconfirmavotosemcandidato.cpp:77) throws; the name is chosen from its message, "Nao havia campos de input no
+    // formulario sem nada digitado", and the class: no evidence names it
+    EUE_VOTA_CONFIRMA_VOTO_SEM_CANDIDATO_SEM_INPUT = 9308,
     // the value is the code vota::CDefineRotaPosReinicio::NeedChangeState (target fn 11858, record
     // cdefinerotaposreinicio.cpp:81) throws; the name is chosen from its message, "Estado inválido = {}", and the class:
     // no evidence names it
@@ -26,6 +30,14 @@ enum EUeVotaError {
     // celeitorvotando.cpp:229) throws; the name is chosen from its message, "Tipo de cargo nao identificado": no evidence
     // names it
     EUE_VOTA_TIPO_CARGO_NAO_IDENTIFICADO = 9310,
+    // the value is the code vota::CInstrucaoVotacaoAcessibilidade::ProcessInputAudio (target fn 7248, record
+    // cinstrucaovotacaoacessibilidade.cpp:54) throws; the name is chosen from its message, "Número de inputs inválido",
+    // and the class: no evidence names it
+    EUE_VOTA_INSTRUCAO_ACESSIBILIDADE_INPUTS_INVALIDOS = 9314,
+    // the value is the code vota::CVotacaoStateAudio::EmiteEcoComInputField (target fn 3139, record
+    // cvotacaostateaudio.cpp:188) throws; the name is chosen from its message, "Nao havia campos de input no formulario
+    // sem nada digitado", and the class: no evidence names it
+    EUE_VOTA_STATE_AUDIO_SEM_INPUT = 9318,
     // the value is the code vota::CVotacaoStateAudio::FormatPartyName (target fn 6954, record
     // cvotacaostateaudio.cpp:297) throws; the name is chosen from its message, "Nao foi encontrado o partido": no
     // evidence names it

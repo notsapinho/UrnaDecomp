@@ -12,7 +12,7 @@ namespace vota {
 // vota::CInstrucaoVotacaoAcessibilidade (RTTI: si_class of vota::CVotacaoStateAudio; vtable @1533608 [2466, 7255, 7028,
 // 7480, 1661, 7022, 425, 7029, 7010, 7248, 7242, 218, 425, 3139, 6999, 4407]): the state that tells the voter how to
 // use the keyboard. Records of cinstrucaovotacaoacessibilidade.cpp name slots 9 (ProcessInputAudio, :54 to :60, fn
-// 7248) and 10 (StartStateAudio, :129 and :131, fn 7242), both pending (src/units/150-uenux2-eleitor-estados-pending.cpp),
+// 7248) and 10 (StartStateAudio, :129 and :131, fn 7242), both written (src/units/150-uenux2-eleitor-estados.mk),
 // and two private members held inlined: CacheInstructionAudio (:157 and :161, in fn 7787) and GetKeyboardPosition
 // (:175, in fn 4407, slot 15, CVotacaoStateAudio's GetMensagem, a name unit 97 chose). Slot 12 is the empty fn 425.
 // The layout is what GetInst (fn 4420) stores: the constructor passes 2 to CVotacaoStateAudio's and

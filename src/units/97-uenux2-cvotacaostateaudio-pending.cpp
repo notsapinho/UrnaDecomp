@@ -1,21 +1,15 @@
 // Pending members of unit 97: the slots the unit's vtables need and no reconstructed source holds yet. Their bodies are
 // NOT the target's, they trap. All are reached only through the vtables.
 //
-// vota::CVotacaoStateAudio, in src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:
-// - ProcessInput 7029 (slot 7, record :69), 282 B, and ProcessTick 7010 (slot 8, records :120 and :388), 683 B: both
-//   wait for fn 1091 (and waited for 422); 7010 holds IniciarEsperaFimAudio and its two lambdas (the __func vtables
-//   @1536140 and @1536204), and calls PlayInterruptibleMessage (fn 3143).
-// - EmiteEcoComInputField 3139 (slot 13, record :188), 525 B: waits for api::CInteractiveForm::Read() (record
-//   cinteractiveform.h:57), which this tree does not hold, and for a definition of api::EInputResult.
 // vota::CConfirmaVotoEmCargo, slot 9 (ProcessInputAudio 11754, record cvotacaostateaudio.cpp:209 of its inlined
-// EmiteEcoCorrigeConfirma): it calls fn 1455, which has no name, and fns 3229 and 4471 (vota::CEleitorVotando's
-// GetInst and RegistraVoto, unit 197), and reads vota::g_numeroDigitado
-// (app/vota/eleitor/comum/cinformacaoeleitor.h). ProcessInputAudio is the class's
-// key function here, so this object emits its vtable, its typeinfo and nothing else of it; its real key function is not
-// recorded.
+// EmiteEcoCorrigeConfirma): it calls fn 1455 (CVotacaoStateAudio::PlayKey, written since) and fns 3229 and 4471
+// (vota::CEleitorVotando's GetInst and RegistraVoto, unit 197), and reads vota::g_numeroDigitado
+// (app/vota/eleitor/comum/cinformacaoeleitor.h): its callees are matched, and it is not written. ProcessInputAudio is
+// the class's key function here, so this object emits its vtable, its typeinfo and nothing else of it; its real key
+// function is not recorded.
 // vota::CPedeProporcional, slot 9 (ProcessInputAudio 11711, record cpedeproporcional.cpp:84, 811 B), and
 // vota::CPedeMajoritario's (ProcessInputAudio 11683, records cpedemajoritario.cpp:64 and :125, 1210 B): each calls slot
-// 13 (fn 3139, pending above) and one more function, fn 5922 (no name) in 11711 and fn 4550
+// 13 (fn 3139, CVotacaoStateAudio's, written since) and one more function, fn 5922 (no name) in 11711 and fn 4550
 // (vota::CLogVota::LogaErroPartidoNaoEncontrado, unit 119) in 11683, and reads vota::g_numeroDigitado.
 // vota::CCompletaProporcional, slots 9 and 13 (ProcessInputAudio 11756, 786 B, and EmiteEcoComInputField 5930, record
 // ccompletaproporcional.cpp:60, 522 B): slot 9 calls slot 13 and reads vota::g_numeroDigitado; slot 13 is not read
@@ -29,11 +23,11 @@
 // lies (:45); with these traps in the vtables the stub generator writes it no more.
 //
 // vota::IConfereVotoEmCargo, slots 9, 10 and 12 (ProcessInputAudio 11791, record cconferevotoemcargo.cpp:80, 71 B;
-// StartStateAudio 11793, 333 B, which holds the record :41 of an anonymous-namespace GetCargoID; ProcessTickAudio 11790,
-// 131 B): 11791 waits for fn 1455 (CVotacaoStateAudio's, not written; fn 455, CPolySingleton<api::IInputKbd>::instance,
-// matches since unit 237); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
-// std::function it builds; 11793 is not read here. The class's key function is its destructor, in
-// cconferevotoemcargo.cpp, so that object emits the vtable.
+// StartStateAudio 11793, 333 B, which holds the record :41 of an anonymous-namespace GetCargoID; ProcessTickAudio
+// 11790, 131 B): 11791's callees match (fn 1455, CVotacaoStateAudio::PlayKey, since it was written; fn 455,
+// CPolySingleton<api::IInputKbd>::instance, since unit 237), and it is not written; 11790 waits for
+// ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the std::function it builds; 11793 is not read
+// here. The class's key function is its destructor, in cconferevotoemcargo.cpp, so that object emits the vtable.
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/cconferevotoemcargo.h"
@@ -44,21 +38,6 @@
 #include "app/vota/eleitor/votaproporcional/cpedeproporcional.h"
 
 namespace vota {
-
-void CVotacaoStateAudio::ProcessInput()
-{
-    __builtin_trap();
-}
-
-void CVotacaoStateAudio::ProcessTick(uebyte)
-{
-    __builtin_trap();
-}
-
-std::pair<api::EInputResult, std::string> CVotacaoStateAudio::EmiteEcoComInputField(const CFormInterativoTelaVota&) const
-{
-    __builtin_trap();
-}
 
 void CConfirmaVotoEmCargo::ProcessInputAudio()
 {
