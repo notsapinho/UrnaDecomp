@@ -74,6 +74,24 @@
 #   is called before the member's own stack frame opens), added to app/vota/log/clogvota.cpp:
 #   LogaMesarioConfirmouReinicioVotacao and LogaMesarioSelecionouOutrasOpcoes, names chosen from their messages. 23 over
 #   185 rows, operand-only.
+# - CReinicioVotacao::StartState (fn 11835, between the statics and ProcessInput: the band's order is 11837, 11836,
+#   11835, 11834): it stores `this` as the next state and calls comum::CRdvVota::GetInst (555) and
+#   comum::CJustificador::GetInst (1391) before it tests either, so both are locals. When the vote count
+#   (CRdvVota::Comparecimento, 1269) or the count of justified voters (the size of CJustificador's map, +8, through an
+#   accessor added to cjustificador.h, its name chosen) is not 0, it logs "Apresentada tela do reinício da votação" (a
+#   CLogVota member binaryen inlines, GetInst called before its frame opens: LogaApresentadaTelaReinicioVotacao, added
+#   to clogvota.cpp after LogaMesarioSelecionouOutrasOpcoes, its name and place chosen) and shows its form (slot 2 of
+#   +12). Else, in the voters' training (comum::CAppInfo::EhTreinamentoEleitor, 697, called), it goes to
+#   vota::CQuerReimprimirZeresima (5940) when ze.dat is in the internal flash's work directory and to
+#   CQuerImprimirZeresima (5957) when not; that test is behind a stack frame of its own, an out-of-line function
+#   binaryen inlines: vota::ExisteArquivoZeresima, a free function added to unit 168's votadefs.cpp (its name and file
+#   chosen), whose path is a named local (the target frees both temporaries of the `/` before ExistFile, fn 412). Out
+#   of training, it reads the urna's internal number (CEstadoGeral +60, CDadoCorrespondencia's first word) and then
+#   GetVota()'s optional urnaIdGerouZeresima (+12, flag +16), and goes to vota::CConfirmaRegerarZeresima when the
+#   zerésima was made by another urna, else to CQuerReimprimirZeresima. CConfirmaRegerarZeresima::GetInst is held
+#   inlined (unit 176's file has it now, with its constructor and statics). 43 over 311 rows, operand-only; matched,
+#   and with it the statics' exit destructors 11840 and 11839. Chosen: the locals', the accessor's and the helper's
+#   names.
 # - CEsperaRetestar::FinishState (fn 11824): it stops the tick and holds api::IForm<MEDIA>::Hide inlined on its form,
 #   which api/gui/iform.h now declares public, a reading (it was protected, for CFormStack; a friend of CEsperaRetestar
 #   gives the same bytes). 3 over 40 rows, operand-only.

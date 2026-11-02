@@ -242,6 +242,12 @@ void CLogVota::LogaMesarioSelecionouOutrasOpcoes()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 
+void CLogVota::LogaApresentadaTelaReinicioVotacao()
+{
+    const std::string mensagem = "Apresentada tela do reinício da votação";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
 void CLogVota::LogaMesarioIndagadoHorarioUrna()
 {
     loga("Mesário indagado se horário da urna está correto");

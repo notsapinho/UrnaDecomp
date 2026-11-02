@@ -171,6 +171,32 @@
 #   cconfiguracaoeleicao.h reaches through CHorariosUrna. Chosen: ImprimeZeresima's private access, StartState's line
 #   (43) above it, the locals' names.
 #
+# Two more slots, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
+# before steps 7 to 9 matched it:
+# - vota::CReinicioComparecimentoMesario::StartState (fn 11917, after the statics, the band's order: 11919, 11918,
+#   11917) stores vota::CAguardaMensagem::GetInst() as the next state, then posts 7 to vota::CThreadOperador's queue.
+#   The target's 11917 is `f6058(p0, 7)`, a thunk into binaryen's merge of it with vota::CFinalizaAquisicao's
+#   StartState (fragment 223 has the evidence); our link forms the same merge, named after this one: 11917 `1 over 5
+#   rows`, 6058 `3 over 29 rows`, operand-only.
+# - vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858, its throw on the record's line 81, column 19, as
+#   `throw CUeVotaError(` at 12 spaces in a switch's case): reads the vote state; for EAVZERESIMAIMPRESSA and
+#   EAVREGISTROMESARIOINICIAL (54, 55) it clears m_pEstado and goes to vota::CReinicioComparecimentoMesario when
+#   vota::RegistraMesarios (fn 2520, unit 168) is true and to vota::CInicioVotacao (fn 2880) when not, for EAVVOTAR
+#   (56) it clears m_pEstado and goes to CInicioVotacao, and for any other state it logs
+#   LogaErroEstadoAplicativoDesconhecido (fn 3279) and throws EUeVotaError 9309 with std::format("Estado inválido = {}",
+#   estado). The format's argument is a handle (type 15) on table slot 967, which comum::asn::CConversorEstadoGeralVota's
+#   DoConverte (fn 11390) passes too, for the estado of ConverteEstadoVota, which it holds inlined (record
+#   `ConverteEstadoVota(const EEstadoVota)`): so the local is `const comum::EEstadoVota`, the handle's type. The target
+#   stores the next state once, after the switch, and calls CInicioVotacao::GetInst once for both of its paths: the
+#   state is a local assigned in the cases and stored once (23 over 237 rows, operand-only); assigning m_pNextState in
+#   each case gave three stores and two calls, `34 over 244 rows (... inserted 7, deleted 2)`. Chosen: the code's name
+#   (euevotaerror.h), the locals' names, the cases as the enumerators, the member's place after StartState and the
+#   lines above it, ProcessInput's place after it. The function's instance of the enum's handle comes first in the
+#   link, so the hand line of 536 in splat/symbol_addrs.txt names that symbol now (unit 109's fragment has the rule).
+#
+# Roots: the pair for vota::CQuerReimprimirZeresima::GetInst (5940) went, its one target caller, 11835, being in the
+# link (unit 138).
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \

@@ -124,6 +124,25 @@
 # callers are vota states of fimvotacao/ and iniciovotacao/); the file, votadefs.cpp, as for 1485, which agrees with
 # the band's order but is not evidence; ExisteArquivoImprimindo in the same TU as its caller, measured: clang keeps it
 # out of line; `.string()` for the conversion.
+#
+# Added since, at the end of votadefs.cpp:
+# - 2520 (81 B, ()->(i32), no record and no stub file): comum::CInformacaoEleicao over
+#   CConfiguracaoEleicao::GetInst().GetParametrosUrna() (fns 187 + 88, 603), ImprimeBJust (1950), then, when it is
+#   true, not the voters' training: GetGeral()'s phase (+48 of fn 291) not FASE_TREINAMENTO, else GetVota()'s training
+#   flag (+72 of fn 261) clear. The target calls CAppInfo::GetInst (185) twice and not EhTreinamentoEleitor (697), so the
+#   test is written in place, with EhTreinamento (1485, this file) for its first half, which clang inlines here. Four
+#   callers keep the call, in four files (vota::CDefineRotaPosReinicio::NeedChangeState 11858, which then goes to
+#   vota::CReinicioComparecimentoMesario, CFimAquisicaoVotos::StartState 10737, CQuerReimprimirZeresima::ProcessInput
+#   11848, CEscolheOpcao's GetInst 2753), so it is in a TU of none of them; 11858 is in the link, and the roots give it
+#   a second call site for the other three. `pnpm wasm score` against the link: 6 over 41 rows, operand-only; matched.
+#   It reads no state and its callers are vota's: a free function of vota (how-to step 3's member rule). Chosen: the
+#   name RegistraMesarios (CParametrosUrna's field 1950 reads is registrarMesarios, and 11858 goes to the mesarios'
+#   registration when it is true), the file and the line, last.
+# - vota::ExisteArquivoZeresima: CSystem::ExistFile (412) on CPath::GetPathTrab(FLASH_INTERNA) / "ze.dat", held
+#   inlined by vota::CReinicioVotacao::StartState (11835, unit 138's) behind a stack prologue of its own
+#   (docs/reference/facts/reading.md R10), so it is out of line in a TU other than 11835's and has no target index;
+#   unrooted, it has 11835 as its one caller here too. The path is a named local: the target frees the `/`'s two
+#   temporaries before ExistFile. Its name, its being a free function, its file and its line (last) are chosen.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CHorariosUrna

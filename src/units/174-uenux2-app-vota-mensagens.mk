@@ -3,9 +3,10 @@
 # - app/vota/eleitor/cmostratelacontinuavotacao.{h,cpp} (new): vota::CMostraTelaContinuaVotacao, its destructor and
 #   StartState (fn 7221, matched);
 # - app/vota/operador/justificativa/iconfirmajustificativa.{h,cpp} (the .cpp was a stub-only file): the destructor of
-#   vota::IConfirmaJustificativa (fns 1688 and 2748, matched);
-# - app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvotamensagem.cpp (new): unit 119's class's helper behind its
-#   slots 10 and 15 (fn 6018, written, not matched; unit 119's fragment has the measurement).
+#   vota::IConfirmaJustificativa (fns 1688 and 2748, matched).
+# Unit 119's slots 10 and 15 post to vota::CThreadEleitor's queue with Post; a helper this unit compiled for them
+# (ccontroladorregistramesariosvotamensagem.cpp) went: fn 6018 is binaryen's merge of the two slots, not a source
+# function (unit 119's fragment has the evidence and the measurement).
 # Headers changed: api/ipc/cmessagequeue.h (unit 64's: Insert, its one-argument overload, Post, api::CSyncCtlGuard and
 # SMessage's second field) and app/vota/operador/cthreadoperador.h (GetMensagens). Unit 119's sources gain
 # CRegistroMesarioEncerrado::StartState (fn 10763, matched) and the controller's slots 10 and 15.
@@ -62,7 +63,6 @@
 # with one row deleted, then operand-only). Pending (174-uenux2-app-vota-mensagens-pending.cpp):
 # IConfirmaJustificativa's StartState and ProcessInput.
 APP_VOTA_MENSAGENS_SRCS := src/app/vota/eleitor/cmostratelacontinuavotacao.cpp \
-    src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvotamensagem.cpp \
     src/app/vota/operador/justificativa/iconfirmajustificativa.cpp
 UENUX2_SRCS += $(APP_VOTA_MENSAGENS_SRCS)
 APP_VOTA_MENSAGENS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

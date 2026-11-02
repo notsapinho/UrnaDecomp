@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "app/comum/cappstate.h"
 
@@ -21,10 +22,9 @@ namespace vota {
 // share (fns 244 and 387): final, and out of line (docs/reference/facts/reading.md R4, R5). +12 is the form StartState
 // shows. A singleton: GetInst, held inlined by vota::CReinicioVotacao::StartState (fn 11835), keeps the object in a
 // static std::unique_ptr (@1834940, destroyed at exit by fn 11840) under a static std::mutex (@1834916, by fn 11839);
-// its constructor passes 2 to the base's and copies vota::CTelasVota::GetInst()'s +84 and +88, which
-// app/vota/eleitor/comum/ctelasvota.h has no accessor for: the constructor, GetInst and the statics are not
-// reconstructed. src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk says which of this is evidence and
-// which is chosen.
+// its constructor passes 2 to the base's and copies vota::CTelasVota::GetInst()'s +84 and +88, the std::shared_ptr
+// app/vota/eleitor/comum/ctelasvota.h's GetTelaConfirmaRegerarZeresima returns.
+// src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk says which of this is evidence and which is chosen.
 class CConfirmaRegerarZeresima final : public comum::CAppState {
 public:
     virtual ~CConfirmaRegerarZeresima() override;
@@ -37,6 +37,9 @@ public:
 
 private:
     CConfirmaRegerarZeresima();
+
+    static std::mutex s_mutex;
+    static std::unique_ptr<CConfirmaRegerarZeresima> s_inst;
 
     std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>> m_form;
 };

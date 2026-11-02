@@ -59,11 +59,6 @@
 // f11803 · 958 B · unmatched · placement: link order · name unknown
 // void f11803(i32, i32, i32) { ... }
 
-// link-order cluster 625 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cfinalizaaquisicao.cpp
-
-// f12113 · 9 B · unmatched · placement: link order · name unknown
-// void f12113(i32) { ... }
-
 // link-order cluster 693 · uses=2
 
 // f4578 · 41 B · unmatched · placement: link order · name unknown
@@ -225,12 +220,6 @@
 // void f5980(i32) { ... }
 
 // link-order cluster 869 · uses=2
-
-// f6058 · 60 B · unmatched · placement: link order · name unknown
-// void f6058(i32, i32) { ... }
-
-// f6018 · 52 B · unmatched · placement: link order · name unknown
-// void f6018(i32, i32) { ... }
 
 // f6014 · 127 B · unmatched · placement: link order · name unknown
 // void f6014(i32, i32) { ... }
@@ -406,11 +395,6 @@
 
 // f2502 · 15 B · unmatched · placement: link order · name unknown
 // void f2502(i32, i32) { ... }
-
-// link-order cluster 1062 · uses=4
-
-// f2520 · 81 B · unmatched · placement: link order · name unknown
-// ? f2520() { ... }
 
 // link-order cluster 1075 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
 

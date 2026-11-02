@@ -14,11 +14,9 @@
 #include "app/vota/eleitor/fimvotacao/ciniciobu.h"
 #include "app/vota/eleitor/iniciovotacao/cimprimindozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/ciniciozeresima.h"
-#include "app/vota/eleitor/iniciovotacao/creiniciocomparecimentomesario.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenufiltrarcandidatospornumero.h"
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
-#include "app/vota/eleitor/cdefinerotaposreinicio.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/cquerreimprimirzeresima.h"
@@ -90,12 +88,6 @@ void CInicioZeresima::StartState()
     __builtin_trap();
 }
 
-// CReinicioComparecimentoMesario::StartState: fn 11917 (9 B), callees with no name: 6058.
-void CReinicioComparecimentoMesario::StartState()
-{
-    __builtin_trap();
-}
-
 // CMaisInformacoes::StartState: fn 11897 (182 B), callee with no name: 6599.
 void CMaisInformacoes::StartState()
 {
@@ -131,13 +123,6 @@ void CMenuVisualizarCandidatos::StartState()
     __builtin_trap();
 }
 
-// CDefineRotaPosReinicio::NeedChangeState: fn 11858 (562 B), records cdefinerotaposreinicio.cpp:81, callees with no
-// name: 185, 261, 2520, 2880, 3279.
-bool CDefineRotaPosReinicio::NeedChangeState()
-{
-    __builtin_trap();
-}
-
 // CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
 // no name: 185, 187, 261, 491, 1127, 6587 (1487 and 1488 are unit 168's).
 void CReimprimindoResumoZeresima::StartState()
@@ -145,13 +130,15 @@ void CReimprimindoResumoZeresima::StartState()
     __builtin_trap();
 }
 
-// CQuerReimprimirZeresima::ProcessInput: fn 11848 (349 B), callees with no name: 2520, 2882.
+// CQuerReimprimirZeresima::ProcessInput: fn 11848 (349 B), callee with no name: 2882 (2520 is vota::RegistraMesarios,
+// unit 168).
 void CQuerReimprimirZeresima::ProcessInput()
 {
     __builtin_trap();
 }
 
-// CFimAquisicaoVotos::StartState: fn 10737 (79 B), callees with no name: 316, 2520, 3610 (501 is named: unit 174).
+// CFimAquisicaoVotos::StartState: fn 10737 (79 B), callees with no name: 316, 3610 (501 is named: unit 174; 2520 is
+// vota::RegistraMesarios, unit 168).
 void CFimAquisicaoVotos::StartState()
 {
     __builtin_trap();
