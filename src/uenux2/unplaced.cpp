@@ -275,11 +275,6 @@
 // f3258 · 17 B · unmatched · placement: link order · name unknown
 // void f3258(i32, i32) { ... }
 
-// link-order cluster 944 · uses=3
-
-// f3336 · 12 B · unmatched · placement: link order · name unknown
-// void f3336() { ... }
-
 // link-order cluster 975 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmajustificativatransito.cpp
 
 // f3626 · 7 B · unmatched · placement: link order · name unknown

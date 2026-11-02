@@ -5,6 +5,7 @@
 #include "api/gui/capplication.h"
 
 #include <locale>
+#include <sstream>
 
 #include "api/gui/iscreen.h"
 #include "api/pattern/cpolysingleton.h"
@@ -63,7 +64,33 @@ CApplicationContextGuard CApplication::CriaContexto(int tipo, std::string titulo
     return CriaContexto(CriaContextoAplicacao(tipo, std::move(titulo), std::move(descricao), std::move(detalhe)));
 }
 
-// (original lines 66-497: content not recovered)
+std::string Join(const std::vector<std::string>& partes, const std::string& separador)
+{
+    std::ostringstream saida;
+    for (const std::string& parte : partes) {
+        if (&parte != &partes.front()) {
+            saida << separador;
+        }
+        saida << parte;
+    }
+    return saida.str();
+}
+
+CApplicationContext CApplication::GetContexto()
+{
+    if (s_contextos.m_contextos.empty()) {
+        return CriaContextoPadrao("Erro inesperado", "Pilha de contexto vazia");
+    }
+    CApplicationContext contexto = s_contextos.m_contextos.back();
+    return std::move(contexto);
+}
+
+CApplication::EExceptionLevel GetExceptionLevel()
+{
+    return CApplication::GetContexto().m_padrao ? CApplication::EXCEPTION_LEVEL_2 : CApplication::EXCEPTION_LEVEL_1;
+}
+
+// (original lines 93-497: content not recovered)
 #line 498
 void CApplication::EnterLoopDoingNothing()
 {

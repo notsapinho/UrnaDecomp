@@ -7,19 +7,17 @@
 //   sites on api::CApplication::s_contextos (unit 171), the stack the target's 5553 reads at its address as a constant.
 // - api::CriaContextoAplicacao (fn 3682) has api::CApplication::CriaContexto's code among its callers in our link, and
 //   vota::CEleitorVotando::GetInst (fn 3229, unit 197); w193_contexto stands for the other, fn 2740.
-// - api::CriaContextoPadrao (fn 5558) has api::CApplication::InitApplication's code among its callers in our link;
-//   w193_padrao stands for the other, fn 1695.
+// - api::CriaContextoPadrao (fn 5558) needs no stand-in: its two target callers, api::CApplication::InitApplication's
+//   code and GetContexto (fn 1695, unit 171), are in the link.
 // - CApplicationContext's copy constructor (fn 1841) has fn 676's code (the guard's constructor, inlined) among its
-//   callers in our link, and unit 197's StartState (7377); w193_copia stands for the other four, fns 491, 1695, 3333
-//   and 10468.
+//   callers in our link, unit 197's StartState (7377) and GetContexto (1695, unit 171); w193_copia stands for the
+//   other three, fns 491, 3333 and 10468.
 extern "C" {
 extern char w193_contextos[] __asm__("_ZN3api12CApplication11s_contextosE");
 void w193_desempilha_c(void* pilha, const void* contexto) __asm__(
     "_ZN3api24CApplicationContextStack3PopERKNS_19CApplicationContextE");
 void w193_contexto_c(void* contexto, int tipo, void* titulo, void* descricao, void* detalhe) __asm__(
     "_ZN3api21CriaContextoAplicacaoEiNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_S6_");
-void w193_padrao_c(void* contexto, void* titulo, void* descricao) __asm__(
-    "_ZN3api18CriaContextoPadraoENSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_");
 int w193_copia_c(void* contexto, const void* outro) __asm__("_ZN3api19CApplicationContextC2ERKS0_");
 }
 
@@ -38,12 +36,6 @@ __attribute__((noinline)) int w193_contexto(char* bloco, int tipo)
     return bloco[7] - 7;
 }
 
-__attribute__((noinline)) int w193_padrao(char* bloco)
-{
-    w193_padrao_c(bloco + 8, bloco + 60, bloco + 72);
-    return bloco[11] ^ 11;
-}
-
 __attribute__((noinline)) int w193_copia(char* bloco)
 {
     w193_copia_c(bloco + 52, bloco);
@@ -57,7 +49,6 @@ struct SW193Roots {
     {
         w193_sink = reinterpret_cast<void*>(&w193_desempilha);
         w193_sink = reinterpret_cast<void*>(&w193_contexto);
-        w193_sink = reinterpret_cast<void*>(&w193_padrao);
         w193_sink = reinterpret_cast<void*>(&w193_copia);
     }
 } w193_roots;

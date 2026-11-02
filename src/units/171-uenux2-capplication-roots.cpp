@@ -16,6 +16,10 @@
 //   the guard's constructor have one caller each and are left unrooted, so binaryen inlines them as the target does.
 // - DescreveModo stands for 4620, not reconstructed, the caller of api::CApplication::GetDescricaoModo (fn 5564)
 //   beside 502: with 502 alone binaryen would inline 5564 into it.
+// - GetContexto (fn 1695) has seven direct calls in the target: GetExceptionLevel's (fn 5569, in the link) and three
+//   each in 7709 and 7710 (vota::CThreadVota's two TrataErro, traps in unit 116's pending file); w171_contexto stands
+//   for those two. GetExceptionLevel's two callers are 7709 and 7710, which w171_nivel stands for, and so are two of
+//   api::Join's (fn 1696) five; w171_junta stands for all five (652, 5604, 7709, 7710, 11233, none reconstructed).
 extern "C" {
 void w5566_root_0() __asm__("_ZN3api12CApplication21EnterLoopDoingNothingEv");
 void w5564_root_0(void* resultado) __asm__("_ZN3api12CApplication16GetDescricaoModoEv");
@@ -23,6 +27,10 @@ void w171_empilha_c(void* contexto) __asm__("_ZN3api12CApplication11PushContextE
 void w171_guarda_c(void* guarda, int tipo, void* titulo, void* descricao, void* detalhe) __asm__(
     "_ZN3api12CApplication12CriaContextoEiNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_S7_");
 int w171_guarda_d(void* guarda) __asm__("_ZN3api24CApplicationContextGuardD1Ev");
+void w1695_root(void* resultado) __asm__("_ZN3api12CApplication11GetContextoEv");
+int w5569_root() __asm__("_ZN3api17GetExceptionLevelEv");
+void w1696_root(void* resultado, void* partes, void* separador) __asm__(
+    "_ZN3api4JoinERKNSt3__26vectorINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEENS5_IS7_EEEERKS7_");
 }
 
 namespace {
@@ -69,6 +77,27 @@ __attribute__((noinline)) int DescreveModo(int a)
     return a + texto[11];
 }
 
+// stands for fns 7709 and 7710
+__attribute__((noinline)) int w171_contexto(char* bloco)
+{
+    w1695_root(bloco + 8);
+    return bloco[51] + 7;
+}
+
+// stands for fns 7709 and 7710
+__attribute__((noinline)) int w171_nivel(int a)
+{
+    return w5569_root() * 3 + w5569_root() + a;
+}
+
+// stands for fns 652, 5604, 7709, 7710 and 11233
+__attribute__((noinline)) int w171_junta(char* bloco)
+{
+    w1696_root(bloco, bloco + 12, bloco + 24);
+    w1696_root(bloco + 36, bloco + 12, bloco + 48);
+    return bloco[47] - 2;
+}
+
 void* volatile w5566_sink;
 
 struct SW5566Roots {
@@ -80,6 +109,9 @@ struct SW5566Roots {
         w5566_sink = reinterpret_cast<void*>(&w171_guarda);
         w5566_sink = reinterpret_cast<void*>(&w171_guardas);
         w5566_sink = reinterpret_cast<void*>(&DescreveModo);
+        w5566_sink = reinterpret_cast<void*>(&w171_contexto);
+        w5566_sink = reinterpret_cast<void*>(&w171_nivel);
+        w5566_sink = reinterpret_cast<void*>(&w171_junta);
     }
 } w5566_roots;
 
