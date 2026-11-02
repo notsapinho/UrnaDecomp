@@ -3,7 +3,9 @@
 // the target keeps them.
 //
 // Each vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
-// singleton (fns 11797, 2747, 10500 and 10415, none reconstructed). Taking the vtables' addresses keeps every slot.
+// singleton (fns 11797, 10500 and 10415, none reconstructed). Taking the vtables' addresses keeps every slot.
+// vota::CJustificativaEfetuada's GetInst (fn 2747), which holds its constructor inlined, is in the link (its caller
+// 10587, unit 152, calls it twice), so no sink keeps that vtable.
 // vota::CMostraEleitorVotando's vtable needs no root: its GetInst (fn 1150) is written and stores it, and our link keeps
 // that GetInst through two callers, CPerguntaEleitorVotando::ProcessKey and CSuspensaoAutomaticaEleitor::ProcessInput
 // (unit 152's sources). The other direct callers of the destructor (fn 448: the resets of the four creators above and fn
@@ -22,7 +24,6 @@
 // uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 extern const char curnainspecionada_vt[] __asm__("_ZTVN4vota17CUrnaInspecionadaE");
-extern const char cjustificativaefetuada_vt[] __asm__("_ZTVN4vota22CJustificativaEfetuadaE");
 extern const char cpedeanonascimentosembiometria_vt[] __asm__("_ZTVN4vota30CPedeAnoNascimentoSemBiometriaE");
 extern const char cperguntacodigosuspensao_vt[] __asm__("_ZTVN4vota24CPerguntaCodigoSuspensaoE");
 int r142_habilitacao(int, int, int, int, int, int) __asm__("_ZN5comum24CEleitorDadosHabilitacaoC1ERKNS_2md18CEleitorIdentidadeENS0_16ETipoHabilitacaoEiRKNS1_34CEleitorDadosHabilitacaoBiometricaERKN7ecourna3app5dados24CApresentacaoFotoEleitorE");
@@ -43,7 +44,6 @@ struct SEstados448Roots {
     SEstados448Roots()
     {
         estados448_sink = curnainspecionada_vt;
-        estados448_sink = cjustificativaefetuada_vt;
         estados448_sink = cpedeanonascimentosembiometria_vt;
         estados448_sink = cperguntacodigosuspensao_vt;
         estados448_sink = reinterpret_cast<const void*>(&DuasHabilitacoes);

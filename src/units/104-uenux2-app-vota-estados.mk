@@ -194,6 +194,34 @@
 #   lines above it, ProcessInput's place after it. The function's instance of the enum's handle comes first in the
 #   link, so the hand line of 536 in splat/symbol_addrs.txt names that symbol now (unit 109's fragment has the rule).
 #
+# CProcuraEleitor::StartState and vota::CEleitorEncontrado (leidentidade/celeitorencontrado.{h,cpp}, the file of the
+# class's record), each measured in the whole link with pnpm wasm score before steps 7 to 9:
+# - StartState (fn 10631, matched, named by vptr-anchor) stores into m_pNextState what EstadoAposProcura returns, an
+#   external function of cprocuraeleitor.cpp that clang keeps a call (wasm-objdump -d of the object) and binaryen
+#   inlines: the target pushes `this` for the one store ahead of the only stack prologue, the helper's (how-to step 3's
+#   sign of a frameless caller over an inlined body), and stores after the voter's identity is destroyed. Each other
+#   form measured on the final tree, the rest unchanged: the next state stored in each branch of StartState, `111 over
+#   283 rows (... inserted 9, deleted 5)`; the helper in the anonymous namespace, which clang inlines, `101 over 279
+#   (... inserted 5, deleted 3)`; as written, 48 over 274, all operand rows. EstadoAposProcura reads the identity typed (vota::GetIdentidadeEleitor, 1535), looks the voter up
+#   (comum::CEleitores::LocalizaEleitor, 2264, over comum::md::FormataIdentidade, 2798) and returns
+#   CEleitorEncontrado::GetInst() when found, else unit 243's CIniciaJustificativa::GetInst() when
+#   vota::NaoAceitaJustificativa (4578, unit 168) is false and the identifier is a título (TipoIDInscricaoEleitoral, 1),
+#   else vota::CEleitorNaoEncontrado::GetInst() (5424, unit 161). binaryen inlines CEleitorEncontrado's GetInst and unit
+#   243's two there, as in the target.
+# - CEleitorEncontrado: GetInst, the constructor (comum::CAppState's with EVENTO_NENHUM, the target's 0) and the statics
+#   (the pointer at 1905616, the mutex at 1905592), whose exit destructors 10637 and 10636 match. StartState (10635) is
+#   pending in 104-uenux2-app-vota-estados-pending.cpp as the key function; its record, line 102, lies past the lines
+#   written. celeitorencontrado.cpp links ahead of cprocuraeleitor.cpp, the order of the two classes' vtables in the
+#   target's data (@1588936, @1589008), so it is listed here, before it. In it, and in unit 243's two files, GetInst is
+#   defined above the constructor: with the constructor first, 10631 scored `69 over 276 rows (... inserted 2, deleted
+#   2)`, two pairs of binaryen's locals swapped in the inlined CIniciaJustificativa::GetInst and
+#   CEleitorEncontrado::GetInst (docs/reference/facts/codegen.md C4); with GetInst first, 48 over 274, all operand rows.
+#   Neither the object order (celeitorencontrado.cpp before or after cprocuraeleitor.cpp, unit 243's two files before
+#   or after it) nor StartState above or below its helper moved that score.
+# Chosen: EstadoAposProcura's name and its being a free function of namespace vota (it reads no state of the class), the
+# found branch last (the target's block order), the locals' names, celeitorencontrado.h's path and the lines of
+# CEleitorEncontrado's members and statics.
+#
 # Roots: the pair for vota::CQuerReimprimirZeresima::GetInst (5940) went, its one target caller, 11835, being in the
 # link (unit 138).
 #
@@ -217,6 +245,7 @@ APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/iniciovotacao/cquerreimprimirzeresima.cpp \
     src/app/vota/operador/outrasopcoes/cfimaquisicaovotos.cpp \
     src/app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.cpp \
+    src/app/vota/operador/leidentidade/celeitorencontrado.cpp \
     src/app/vota/operador/leidentidade/cprocuraeleitor.cpp \
     src/app/comum/comparecimentomesario/estados/cpedetitulomesario.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesario.cpp \

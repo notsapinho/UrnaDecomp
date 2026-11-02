@@ -3,7 +3,7 @@
 # - app/vota/eleitor/cmostratelacontinuavotacao.{h,cpp} (new): vota::CMostraTelaContinuaVotacao, its destructor and
 #   StartState (fn 7221, matched);
 # - app/vota/operador/justificativa/iconfirmajustificativa.{h,cpp} (the .cpp was a stub-only file): the destructor of
-#   vota::IConfirmaJustificativa (fns 1688 and 2748, matched).
+#   vota::IConfirmaJustificativa (fns 1688 and 2748, matched) and its constructor (fn 3625, matched).
 # Unit 119's slots 10 and 15 post to vota::CThreadEleitor's queue with Post; a helper this unit compiled for them
 # (ccontroladorregistramesariosvotamensagem.cpp) went: fn 6018 is binaryen's merge of the two slots, not a source
 # function (unit 119's fragment has the evidence and the measurement).
@@ -52,12 +52,21 @@
 #
 # IConfirmaJustificativa: its D2 (1688) is a thunk into binaryen's fn 2902 with the class's vptr, and with unit 161's 1257
 # and unit 169's 1720 and 1952 our link forms the same body from four thunks. The D0 (2748) calls the D2 and frees `this`
-# after a drop, the out-of-line shape (docs/how-to-decompile.md step 5). The destructor's line, 40, below the
-# constructor's record at 34, is chosen. The constructor (fn 3625) is not written; every direct callee of it has a name
-# now (ledger/callgraph.tsv). The three derived classes' slot 0, fn 3626 (`f1688(p0)`), waits for a builder of one of
-# them: their constructors, inlined into fns 10631 and 10635, call fn 654 (comum::md::CTradutorFrase::Traduz, unit 98).
+# after a drop, the out-of-line shape (docs/how-to-decompile.md step 5).
+# The constructor (fn 3625, matched, named by srcloc-anchor) is out of line in iconfirmajustificativa.cpp, its throw on
+# the record's line 34 (column 15); the lines above it and the destructor's below are chosen. It passes
+# EVENTO_ENTRADA to the base's, throws the vota error 9395 (EUE_VOTA_FRASE_JUSTIFICATIVA_MUITO_GRANDE, added to
+# euevotaerror.h, its name chosen from the message) with "Frase muito grande [" + the text + "]" when the text is longer
+# than 40 bytes (the target's unsigned compare with 41), before it builds the form (the throw reuses the builder's frame
+# slot), then builds it: AddLed(0), the identity typed (slot 3907, fn 10586) at {1, 1}, the text at {1, 2}, "CORRIGE:
+# retornar" at {1, 4}, "CONFIRMA: justificar" at {40, 4} aligned right, AddInputControl, and assigns
+# GetInteractiveForm("", true) to +12 in the body (the target clears the member first, then moves the result in). Its
+# two callers: vota::CProcuraEleitor::StartState (10631, unit 104), through unit 243's CConfirmaJustificativa, and
+# CEleitorEncontrado::StartState (10635, pending), which unit 243's roots stand in for. `> 40` against `>= 41` is a
+# choice that gives the same compare. The three derived classes' slot 0, fn 3626 (`f1688(p0)`), matches from unit 243's
+# CConfirmaJustificativa, whose destructor is out of line.
 #
-# Roots (174-uenux2-app-vota-mensagens-roots.cpp): the two vtables. Insert (501) needs no stand-in now: fn 11914, the
+# Roots (174-uenux2-app-vota-mensagens-roots.cpp): CMostraTelaContinuaVotacao's vtable. Insert (501) needs no stand-in now: fn 11914, the
 # one target caller of 501 that passes another priority than 1, is in the link (unit 199); without such a caller
 # binaryen folds the priority into Insert, and every caller loses its `i32.const 1` (7221 read `score 4 over 39 rows`
 # with one row deleted, then operand-only). Pending (174-uenux2-app-vota-mensagens-pending.cpp):

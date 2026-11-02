@@ -66,6 +66,10 @@ enum EUeVotaError {
     // name is chosen from its message, "O cargo atual nao esta posicionado", and the class: no evidence names it
     EUE_VOTA_PEDE_NULO_CARGO_NAO_POSICIONADO = 9385,
     EUE_VOTA_PEDE_PROPORCIONAL_CARGO_NAO_POSICIONADO = 9386,
+    // the value is the code vota::IConfirmaJustificativa's constructor (target fn 3625, record
+    // iconfirmajustificativa.cpp:34) throws; the name is chosen from its message, "Frase muito grande [<frase>]": no
+    // evidence names it
+    EUE_VOTA_FRASE_JUSTIFICATIVA_MUITO_GRANDE = 9395,
     // the value is the code vota::IIniciaJustificativa's constructor (target fn 3624) throws; the name is chosen from
     // its message, "Confirmação de justificativa nula": no evidence names it
     EUE_VOTA_CONFIRMACAO_JUSTIFICATIVA_NULA = 9396,

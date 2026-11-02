@@ -1,6 +1,8 @@
 #pragma once
 
+#include <functional>
 #include <memory>
+#include <string>
 
 #include "app/comum/cappstate.h"
 
@@ -23,9 +25,16 @@ namespace vota {
 // 652's state on INPUT_CONFIRMA (9) when the int at +20 is 0, and on INPUT_CORRIGE (5) when it is 1.
 // Both are pending (src/units/161-uenux2-app-vota-operador-identidade-pending.cpp says what they wait for). The
 // destructor is out of line: fn 1257 is a thunk into binaryen's fn 2902 with this class's vptr, and the derived
-// classes' destructors call it (fn 1907, and fn 1689 frees after it). fn 1905 stores this class's vptr too; it is not
-// reconstructed. src/units/161-uenux2-app-vota-operador-identidade.mk says which of this is evidence and which is
-// chosen.
+// classes' destructors call it (fn 1907, and fn 1689 frees after it).
+// The constructor is fn 1905, out of line (its callers are fn 5424, CEleitorNaoEncontrado::GetInst, and fn 10635, which
+// calls it five times for the other derived classes): it passes comum::CAppState::EVENTO_ENTRADA (2) to the base's,
+// stores its int at +20, and builds the form: the identity typed on line 1 (table slot 3907, GetTextoIdentidadeDigitada),
+// the texts of its two std::function on lines 2 and 3 (api::CMTFormBuilder's AddTextField over a std::function, fn
+// 5419, which takes a copy of each), and on line 4 "CONFIRMA: retornar" at the right when the int at +20 is 0 or
+// "CORRIGE: retornar" at the left when it is 1, the key ProcessInput reads; the form is assigned to +12 in the body
+// (the member is cleared first, then the result moved in). The derived classes pass two function pointers (the table
+// slots of each __func<std::string (*)(), std::string ()> they build) and 0 or 1. src/units/161-uenux2-app-vota-
+// operador-identidade.mk says which of this is evidence and which is chosen.
 class IEleitorImpedidoVotar : public comum::CAppState {
 public:
     virtual ~IEleitorImpedidoVotar() override;
@@ -37,7 +46,7 @@ public:
     virtual void LogaImpedimento() {}
 
 protected:
-    IEleitorImpedidoVotar();
+    IEleitorImpedidoVotar(std::function<std::string()> linha2, std::function<std::string()> linha3, int tipo);
 
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
     int m_tipo;

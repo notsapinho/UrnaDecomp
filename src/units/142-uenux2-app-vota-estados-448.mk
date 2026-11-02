@@ -15,8 +15,8 @@
 #   docs/reference/facts/reading.md R5, and fn 448 destroys the members and stores no vptr (R4). Measured on
 #   CUrnaInspecionada: without final the D2 gains the vptr store (55 rows against 50).
 # - The members' offsets and types: the constructors that fns 11797, 2747, 10500, 1150 and 10415 hold inlined (the class
-#   headers list what each stores). Four stay unwritten here: fns 11797, 2747, 10500 and 10415 call functions with no
-#   name (ledger/callgraph.tsv against splat/symbol_addrs.txt; each header names them). Fn 1150 is written (below).
+#   headers list what each stores). Three stay unwritten here: fns 11797, 10500 and 10415 call functions with no name
+#   (ledger/callgraph.tsv against splat/symbol_addrs.txt; each header names them). Fns 1150 and 2747 are written (below).
 # - The log members: fns 10594 and 10421 call vota::CLogVota::GetInst (fn 184) and then open a stack frame of their own
 #   (docs/reference/facts/reading.md R10) that builds the message and calls api::CLoga::loga (fn 433) on CLogVota's +4,
 #   or comum::IEventosLog::loga (fn 233), as unit 119's four Loga members do.
@@ -87,6 +87,20 @@
 #   after the __func slots of the lambdas of BatteryIconDataSource, CTextFieldUpdate and CTextFieldBlinking (10540 to
 #   10544; api::CTextFieldUpdateMT's own members are 10545 to 10549), not among this file's functions (10424 to 10429).
 # Chosen too: CriaForm's name and its being a static member, the statics' names.
+#
+# CJustificativaEfetuada's singleton, in cjustificativaefetuada.cpp, at chosen lines after the destructor (the file has
+# no record): GetInst (fn 2747, matched, named by vptr-anchor), with the constructor inlined, which builds +12 with
+# std::make_shared<std::string>("justificou/ja justificou"), initializes the form at +20 from MontaTela, a helper of the
+# file's anonymous namespace that takes the title by value (2747 adds a reference to the block before the form and drops
+# it after, vota::CEleitorVotouNaoVotou's shape) and that the constructor holds inlined, and sets +28 to true; the form:
+# AddLed(0), the identity typed (slot 3907, fn 10586) at {1, 1}, the title's api::CTextSource with "%s" at {1, 2},
+# "CONFIRMA: continuar" at {1, 4} aligned right (the point 262145 and the alignment 1 the target passes, both evidence),
+# AddInputControl, GetInteractiveForm("", true). Its statics' exit destructors, 10597 (the std::unique_ptr at 1905952)
+# and 10595 (the std::mutex at 1905928), match: the statics are defined before StartState, s_inst first, since 10597 and
+# 10595 lie above StartState (10594) in use band 1. Its callers are vota::IIniciaJustificativa::StartState (10587, unit
+# 152), which calls it twice and clears +28 through the first result with SetRecebida(false), a setter added to
+# cjustificativaefetuada.h, and fn 10590 (not written). Chosen: the helper's name and linkage, SetRecebida's name and its
+# being a setter (a public member is the other form, not tried), the statics' names.
 #
 # Two more slots match, written in their classes' files (scores from pnpm wasm score before steps 7 to 9):
 # - CMostraEleitorVotando::StartState (10427, 3 over 74 rows, all operand-only), at a chosen line before ProcessInput's
