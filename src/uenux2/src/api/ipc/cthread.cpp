@@ -14,7 +14,7 @@ CThread::~CThread() = default;
 #line 28
 CThread::CThread()
     : m_estado(ESTADO_CRIADA)
-    , m_parar(false), m_iniciada(false)
+    , m_parar(false), m_dormindo(false)
     , m_pImpl(CPolySingleton<IGenericFactory<IThreadImpl>>::instance().Create())
     , m_sync(CPolySingleton<IGenericFactory<ISyncCtl>>::instance().Create())
 {
@@ -58,6 +58,21 @@ void CThread::Wait()
     if (m_estado == ESTADO_EXECUTANDO) {
         m_pImpl->Wait();
         m_estado = ESTADO_CRIADA;
+    }
+}
+
+void CThread::Dorme(useconds_t microssegundos)
+{
+    if (m_estado == ESTADO_EXECUTANDO) {
+        ISyncCtl* sync = m_sync.get();
+        sync->Lock();
+        m_dormindo = true;
+        sync->Unlock();
+        usleep(microssegundos);
+        sync = m_sync.get();
+        sync->Lock();
+        m_dormindo = false;
+        sync->Unlock();
     }
 }
 

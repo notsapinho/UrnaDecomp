@@ -14,8 +14,8 @@
 // cexibealertadesligamento.cpp:45; NeedChangeState in celeitorvotando.cpp:294 and cdefinerotaposreinicio.cpp:81;
 // FinishState in cpededigital.cpp:131; ProcessInput in cvotacaostateaudio.cpp:69; ProcessTick(uebyte) in
 // cexibealertadesligamento.cpp:53). No record, symbol or caller names slots 4 and 6: GetNextState and ProcessKey are
-// chosen from what CAppStateContext does with them (fn 4349, CThreadEleitor::ProcessarEntrada, record
-// cthreadeleitor.cpp:134, with the context's members inlined): it changes state as
+// chosen from what CAppStateContext does with them (fn 4349, CThreadEleitor::ProcessaEventos, which holds the record
+// cthreadeleitor.cpp:134 and the context's members inlined): it changes state as
 // `if (s->NeedChangeState()) { s->FinishState(); s = s->GetNextState(); if (s) s->StartState(); }`, passes each key it
 // reads to slot 6 with the key's low byte (its overriders compare it with key codes: fn 11794 with 13), calls slot 7
 // when the keyboard has input and slot 8 with each tick's id. Every derived vtable (196) holds fn 1661 in slot 4.

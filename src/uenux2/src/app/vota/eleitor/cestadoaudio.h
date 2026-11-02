@@ -5,7 +5,9 @@
 // - +0 is a byte: 7787 tests it with load8_u and sets it with store8 around the block that loads the urn's data.
 // - +1 is a byte: 6734 tests it first and sets it last, and that body holds comum::CEleitores::CompleteLoad's records.
 // - +4 is the mode. Not 2 is audio on (10539 returns "AUDIO ATIVADO" for it and 13424 "Audio ativado"), 215 tests 0 and
-//   3078 tests 1, and CThreadEleitor::ProcessarEntrada (4349) sets 0, 1 and 2 through fns 6745, 6743 and 4195.
+//   3078 tests 1, and vota::CThreadEleitor's fn 4349 sets 0, 1 and 2 through fns 6745, 6743 and 4195, for the messages
+//   8, 9 and 10. Each of the three is a function of its own that stores its constant at +4 and that 4349 calls twice:
+//   out of line here, where no caller of this TU inlines them. Their names are chosen.
 // - +8 is a byte: 7787 tests it and sets it around the block that starts with the literal "uenux.db".
 // - +9 and +10 are bytes: 11804 stores them and 12903 loads them.
 // The object's next members take it as `this`, and neither is written: 6734, which 7787 and 11865 call on it, and 6737,
@@ -29,6 +31,10 @@ public:
     static CEstadoAudio& GetInst();
 
     bool Ativo() const { return m_modo != MODO_DESATIVADO; }
+
+    void SelecionaModo0();
+    void SelecionaModo1();
+    void Desativa();
 
 private:
     CEstadoAudio();

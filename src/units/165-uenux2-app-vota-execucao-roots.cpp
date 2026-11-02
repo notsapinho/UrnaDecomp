@@ -1,10 +1,8 @@
 // Roots: keep fragment 165's functions in the skeleton link the way the target reaches them.
 // - Classes reached only through their vtable, whose address point a constructor or GetInst stores in the target, none
 //   of them reconstructed: vota::CExecucaoVota (vtable @1600572, stored by GetInst, fn 3594), vota::CAssinadorVota
-//   (@1532304, by its constructor, fn 1501, and by fn 12098), vota::CAguardaInicio (@1601032, by GetInst, fn 5343,
-//   with the constructor
-//   inlined) and vota::impl::CPoliticaExecucaoEleitor (@1536368, by GetInst, inlined into fn 5925). The static
-//   constructor takes each vtable's address, which keeps every slot.
+//   (@1532304, by its constructor, fn 1501, and by fn 12098) and vota::impl::CPoliticaExecucaoEleitor (@1536368, by
+//   GetInst, inlined into fn 5925). The static constructor takes each vtable's address, which keeps every slot.
 // - vota::CExecucaoVotaCooperativa's constructor (fn 7828) is in the target's table (slot 126), so its own address is
 //   taken, which also keeps the vtable it stores; no reconstructed code takes it.
 // - vota::GetFormularioInterativo (fn 576) has 16 direct callers in the target, none reconstructed: two stand-ins below.
@@ -13,7 +11,6 @@ extern "C" void w576_formulario(int, int, int) __asm__("_ZN4vota23GetFormularioI
 extern "C" int w7828_construtor(int, int) __asm__("_ZN4vota24CExecucaoVotaCooperativaC2EPN5comum9CAppStateE");
 extern const char w165_vt_execucaovota[] __asm__("_ZTVN4vota13CExecucaoVotaE");
 extern const char w165_vt_assinadorvota[] __asm__("_ZTVN4vota14CAssinadorVotaE");
-extern const char w165_vt_aguardainicio[] __asm__("_ZTVN4vota14CAguardaInicioE");
 extern const char w165_vt_politicaexecucao[] __asm__("_ZTVN4vota4impl24CPoliticaExecucaoEleitorE");
 
 namespace {
@@ -42,7 +39,6 @@ struct SW165Roots {
         w165_sink = reinterpret_cast<const void*>(&FormulariosVota);
         w165_sink = w165_vt_execucaovota;
         w165_sink = w165_vt_assinadorvota;
-        w165_sink = w165_vt_aguardainicio;
         w165_sink = w165_vt_politicaexecucao;
     }
 } w165_roots;

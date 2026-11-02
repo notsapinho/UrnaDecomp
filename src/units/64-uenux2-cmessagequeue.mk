@@ -2,8 +2,9 @@
 # (target fn 2073, record cmessagequeue.h:153:19) and the destructor's D2 and D0 (3162, 3157; slots 0 and 1 of the
 # vtable @1534764), with api::SMessage and the 6228 enumerator of EUeIpcError. The unit has no source of its own and no
 # companion: unit 116's vota::CMessageEleitor and CMessageOperador instantiate the template, with its constructor
-# (inlined into 316 and 270, records at lines 113-114), and call Remove from 4337 and 4343. Its callers 4349 and 10204 are
-# not reconstructed. The D2 and D0 match under vota::CMessageEleitor's names, the twin that links first.
+# (inlined into 316 and 270, records at lines 113-114), and call Remove from 4337 and 4343; its callers 4349 and 10204 are
+# unit 116's too. The D2 and D0 match under vota::CMessageEleitor's names, the twin that links first. Vazia, the test
+# with m_sync held that 4349 and 10204 hold inlined, is unit 116's addition: its notes are in that fragment.
 #
 # What the evidence gives:
 # - +4: std::priority_queue, the +16 byte its empty comparator. The constructor in 316 stores the vector's three words
