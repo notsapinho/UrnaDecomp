@@ -32,8 +32,9 @@
 # fits both; the other was not measured), the constructors' parameters, m_abrangencia's name, the local names. The
 # converter's constructor is not written: its builders are not reconstructed.
 #
-# Roots (191-uenux2-cconversorcargo-roots.cpp): one stand-in caller each for 365 (its 16 other target callers), 2341
-# (5594, 11375) and 3018 (374 and 6627; 11377 is in the link, fragment 225), through asm labels; each goes when the
+# Roots (191-uenux2-cconversorcargo-roots.cpp): one stand-in caller each for 365 (14 of its 16 other target callers;
+# 2289 and 3775 are in the link, unit 88), 2341 (5594, 11375) and 3018 (6627; 374 and 11377 are in the link, unit 88
+# and fragment 225), through asm labels; each goes when the
 # callers it names are in the link.
 CCONVERSORCARGO_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversorcargo.cpp
 UENUX2_SRCS += $(CCONVERSORCARGO_SRCS)

@@ -33,9 +33,8 @@ private:
     TQtdVoto Conta(TCriterio criterio) const;
     // Throws "Posicao (...) fora do limite (...)" with the location its caller passes: Insere's record, cvotos.cpp:40
     // column 9, is a call there, and fn 4454 holds this body behind an 80-byte prologue of its own on the path that
-    // throws only. A call of a [[noreturn]] function is cold, so clang keeps it out of line (-Rpass-missed=inline:
-    // cost 400, threshold 0) and binaryen inlines it. Its name, that it is a private member and its parameter's
-    // type are chosen.
+    // throws only, so it is out of line in its object and binaryen inlines it. Its name, that it is a private member
+    // and its parameter's type are chosen.
     void ErroPosicao(size_t posicao, std::source_location local = std::source_location::current()) const;
 
     std::vector<CVoto> m_votos;

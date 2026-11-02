@@ -41,7 +41,9 @@ public:
     // the file's last, is a choice). The result is RawWrite's count, 0 for an empty buffer: the target keeps a `return`
     // in the empty branch and drops the call's result, which reads as binaryen's removal of a result no caller uses;
     // written void, with an early return or with the call in an `if`, it scored 5 over 20 rows against the target, and
-    // with the result 1 over 19, the call's operand. Chosen: the name and that the result is RawWrite's.
+    // with the result 1 over 19, the call's operand. Chosen: the name, that it is a const member (as WriteLine, a
+    // recorded const member of this file, is; a free function of ecourna::api::io taking the CFile by reference
+    // compiles to the same instructions) and that the result is RawWrite's.
     uedword Write(const std::vector<char>& dados) const;
     uedword WriteLine(const std::string& linha) const;
     uedword RawRead(void* buffer, uedword tamanho) const;

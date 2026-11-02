@@ -149,7 +149,7 @@
 #   the names GetCargos, ExisteEleicao, ComparaOrdemImpressao and GetOrdemImpressao, the parameters' names, GetCargos'
 #   and ExisteEleicao's being members, the comparator's being a file-static function (use band 1 puts 11547 after this
 #   file's statics' exit destructors, 11551 and 11550, which an external function defined after them fits as well),
-#   ExisteEleicao's std::any_of (a range-for is not measured), and every line.
+#   ExisteEleicao's std::any_of (a range-for with an early return gives the same code), and every line.
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes

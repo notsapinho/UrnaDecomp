@@ -30,8 +30,10 @@ IConversorASN<ModuloResultadoUrnaCadastro::DadosComparecimento, CDadosComparecim
 //   __uninitialized_allocator_relocate (5831) directly, as comum::dao::CJustificadorDAO::RecuperarTodos (11469, unit
 //   66) does: with ecourna's copy reaching 5831 through a slot, the relocate kept its allocator parameter;
 // - CDadosComparecimento's implicit copy constructor (5846), with std::optional<TVectorComparecimentoMesario>'s copy
-//   (5832), which it calls twice; urna_copia_dados_comparecimento only instantiates it (clang keeps the copy out of
-//   line, a call) and leaves the link.
+//   (5832), which it calls twice, and its callee __uninitialized_allocator_copy_impl<CEstadoComparecimento> (2278),
+//   which the link now takes from this object instead of ecourna's ccomparecimentosecao.cpp.o, the same code;
+//   urna_copia_dados_comparecimento only instantiates it (clang keeps the copy out of line, a call) and leaves the
+//   link.
 template ecourna::app::dados::CIdentificacaoJustificativa*
 std::vector<ecourna::app::dados::CIdentificacaoJustificativa>::__emplace_back_slow_path<
     ecourna::app::dados::CIdentificacaoJustificativa>(ecourna::app::dados::CIdentificacaoJustificativa&&);

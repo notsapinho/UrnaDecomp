@@ -59,7 +59,9 @@
 #
 # Chosen (each header marks its own): the classes' members and parameter names; that each md class holds its INI object
 # as a member (a base would give the same layout; not measured); ListaHashesArquivos's name, its being a free function
-# and its header; the lines of the functions with no record. One form of each was measured, none listed as the same.
+# and its header; the lines of the functions with no record. One form of each was measured, none listed as the same,
+# but for CFile::Write: a free function of ecourna::api::io taking the CFile by reference gives the const member's
+# instructions (cfile.hpp says so).
 #
 # Roots: 227-uenux2-contratos-cmontadorhash-roots.cpp stands in for the callers not written (12098 for both GetValor,
 # 5869 for CDependenciasContratos's, 5359 for 5358, 11620 for 5854, 5371 and 11587 for 5180); each stand-in names

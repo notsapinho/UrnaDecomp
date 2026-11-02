@@ -31,8 +31,8 @@ __attribute__((noinline)) int UsaMunicipioZona(int obj, int municipio, int zona)
 __attribute__((noinline)) int UsaSecao(int obj, int zona, int local) { return cv105_secao_ctor(obj, zona, local + 5, local) * 7; }
 
 // The CBaseType constructors of TLocalID, TSecaoID, TZonaID (their target callers are 9127 or 9130, and 11616) and TAno
-// (9064 here; 10590, 11469, 11470, 11616): stands for the callers not written, so that binaryen keeps each one out of
-// line as the target does.
+// (9064 here, 11469 and 11470 in the link, unit 66's; 10590 and 11616): stands for the callers not written, so that
+// binaryen keeps each one out of line as the target does.
 __attribute__((noinline)) int UsaTipos(int obj, int valor)
 {
     return cv105_local_ctor(obj, valor) + cv105_secao_id_ctor(obj + 4, valor + 1) + cv105_zona_ctor(obj + 6, valor + 2) +

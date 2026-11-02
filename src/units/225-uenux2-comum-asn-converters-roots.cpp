@@ -4,9 +4,10 @@
 
 #include "app/comum/dados/md/eleitor/celeitor.h"
 
-// comum::asn::CVisitanteEleitor's vtable (@1567204: slots 5698, 11408, 11407). Its only vptr store is the constructor fn
-// 11523 holds inlined (a std::function's call operator in CEleitores::GetEleitoresEstaticos, not written); the slots have
-// no direct caller but the D0's call of the D2. The address stands for that store and goes when 11523 is in the link.
+// comum::asn::CVisitanteEleitor's vtable (@1567204: slots 5698, 11408, 11407). Its only vptr store outside its own
+// destructor (the D2, 5698, stores it too) is the constructor fn 11523 holds inlined (a std::function's call operator
+// in CEleitores::GetEleitoresEstaticos, not written); the slots have no direct caller but the D0's call of the D2. The
+// address stands for that store and goes when 11523 is in the link.
 extern "C" {
 extern const char visitanteeleitor_vt[] __asm__("_ZTVN5comum3asn17CVisitanteEleitorE");
 }

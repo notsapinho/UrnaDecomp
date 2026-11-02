@@ -43,10 +43,10 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 491, 1935, 2281, 2543, 2821, 2824, 2860, 3825, 3826, 5480, 5545, 5866, 5869 and 5870; its other
-// callees have names (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164,
-// 3829, 5889, 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 88's 3782
-// among them).
+// with no name: 491, 1935, 2281, 2543, 2821, 2824, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have
+// names (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164, 3829, 5889,
+// 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822, 88's 3782 and fragment 227's 3825 and
+// 3826 among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
@@ -94,8 +94,8 @@ void CMaisInformacoes::StartState()
     __builtin_trap();
 }
 
-// CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 374, 502, 653,
-// 2383; the others have names (365 since fragment 191, 1279 unit 150's, 576 unit 165's).
+// CMenuFiltrarCandidatosPorNumero::StartState: fn 11892 (1721 B), callees with no name: 653, 2383; the others have
+// names (365 since fragment 191, 374 since unit 88's GetCargos, 502 unit 31's, 1279 unit 150's, 576 unit 165's).
 void CMenuFiltrarCandidatosPorNumero::StartState()
 {
     __builtin_trap();

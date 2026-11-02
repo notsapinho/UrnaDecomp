@@ -85,10 +85,11 @@
 #   converter's vptr is stored before the call, where the target stores it inside the if: 155 over 826 rows.
 # - 9137: 118 over 399 as written, a temporary, with 22 rows inserted and 21 deleted. const auto& on the vector gives 65
 #   over 390, 13 and 13, and stops on `target br 2 | ours local.get 2` at +0x279, the placement of the map's cleanup.
-# - 1006, 3813, 5842, 5846: copies that 11616, a uenux2 function not written, brings first in the link. 1006 is one test
+# - 1006, 3813: copies that 11616, a uenux2 function not written, brings first in the link. 1006 is one test
 #   off (2 over 121, `i32.and | i32.ne` at +0x20): a probe of the destructor at uenux2's flags gives the target's
-#   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813, 5842 and 5846 have no landing pads in the target, and ours do
-#   (206 over 352, 185 over 295, 312 over 449).
+#   `i32.and; i32.eqz`, ecourna's gives `i32.ne`. 3813 has no landing pads in the target, and ours does (206 over 352).
+#   5842 and 5846, two more such copies (185 over 295 and 312 over 449 from this unit's objects, which have landing
+#   pads), match from src/app/roots_iconversorasn.cpp, which compiles them at uenux2's flags for 11616.
 # - 9029: 3777, CParametrosUrna's copy constructor, is a call in the target, and binaryen inlines it here, its one caller
 #   in our link (440 over 454): its other caller, 7787, is not written.
 CCONVERSOR_ASN_SRCS := app/dados/cdetalhamentocomparecimento.cpp app/dados/federacoes/cfederacoes.cpp \

@@ -36,12 +36,13 @@
 # written) and vota::CLogVota::LogaQuantidade (3268, fragment 234's paragraph). The target computes the count's `>> 20`
 # before its first test and its `>> 10` after it, which the three quotients named first give; with each branch's test
 # written as `tamanho >= 1024 * 1024 * 1024` the object compares with the bound instead (try-tu.sh --symbols, read with
-# wasm-objdump -d). Its file is a reading of the band: in band 6 it lies right after cpath.cpp's 1948, and in bands 1,
-# 3 and 4 this file's functions follow cpath.cpp's (11649 and 11648, then 11646 and 11644; 3834, then 3833 and 3832;
-# 2864, then 2863 and 2862); a last function of cpath.cpp would lie there too. Chosen: the name, the namespace, the size_t
-# parameter (the bytes give an unsigned 32-bit word), its declaration in iinterfaceinit.h, its line (83) and the
-# locals' names. pnpm wasm score before step 8: 29 over 644 rows, all operand-only; the scan matched it by content. Its
-# stand-in is in fragment 234's roots (src/units/README.md "Landing a unit" item 2).
+# wasm-objdump -d). Its file is a choice the band leaves open: in band 6 it lies right after cpath.cpp's 1948, and in
+# bands 1, 3 and 4 this file's functions follow cpath.cpp's (11649 and 11648, then 11646 and 11644; 3834, then 3833
+# and 3832; 2864, then 2863 and 2862), so a last function of cpath.cpp would lie there as well as this file's first;
+# its call from this file's MontarMRSemHabilitar (5896) is what tips it here. Chosen: the file, the name, the
+# namespace, the size_t parameter (the bytes give an unsigned 32-bit word), its declaration in iinterfaceinit.h, its
+# line (83) and the locals' names. pnpm wasm score before step 8: 29 over 644 rows, all operand-only; the scan
+# matched it by content. Its stand-in is in fragment 234's roots (src/units/README.md "Landing a unit" item 2).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 IINTERFACEINIT_SRCS := src/app/comum/iinterfaceinit.cpp
 UENUX2_SRCS += $(IINTERFACEINIT_SRCS)

@@ -12,9 +12,9 @@ namespace api::hash {
 // one; fn 5360 loads both. Its destructor (fn 2220) gives the layout: a string at +0, a vector at +12 whose 24-byte
 // elements each free two strings (CHashArquivo's size and shape, a reading) and a vector at +24 of 36-byte elements it
 // destroys by calling itself. The members' names are chosen, and so is the destructor's being implicit (unit 198's
-// fragment says why the target cannot tell). The getters are inline: ListaHashesArquivos (fn 5358, cmontadorhash.cpp)
-// reads the three members in place; their names are chosen. Nothing else of the class is reconstructed:
-// chashdiretorio.cpp is not written.
+// fragment says why the target cannot tell). ListaHashesArquivos (fn 5358, cmontadorhash.cpp) reads the three members
+// in place, which inline getters and public members give alike: the getters and their names are chosen. Nothing else
+// of the class is reconstructed: chashdiretorio.cpp is not written.
 class CHashDiretorio {
 public:
     const std::string& GetNome() const { return m_nome; }

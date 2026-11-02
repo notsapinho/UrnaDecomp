@@ -54,7 +54,8 @@ private:
     std::string m_nomeUrna;
     // +48 to +67: md::CEleitor's CTransferenciaTemporaria (celeitor.h), a type word, a string and a word, which
     // GetAbrangencia reads as the transfer's kind (0 for none, as IsTTE tests), state and municipality (a reading,
-    // from what it compares them with). The names and the word's type are chosen.
+    // from what it compares them with). The names and the word's type are chosen. ctransferenciatemporaria.h names
+    // the same bytes m_tipo, m_municipio (the string) and m_zona (the word), chosen there: the two readings differ.
     int m_tipoTransferencia;
     std::string m_ufTransferencia;
     uedword m_municipioTransferencia;

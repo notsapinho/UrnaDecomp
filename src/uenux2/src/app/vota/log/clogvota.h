@@ -66,7 +66,8 @@
 // of a name (a std::string at +0) and a 64-bit count (+16); it logs "Quantidade de {} [{}]" of the name and
 // comum::FormataTamanho (fn 1947) of the count's low word, through fn 233. Its name, its being a member (a free
 // function over a comum::IEventosLog& gives the same object) and the std::pair are chosen; fragment 234 has its
-// evidence.
+// evidence. Its iinterfaceinit.h include (comum::FormataTamanho) is in this header, not in clogvota.cpp, so that
+// GetInst's record stays on line 37 of the .cpp: a choice made for that record's line.
 
 #include <cstdint>
 #include <string>

@@ -35,8 +35,8 @@ public:
 
     // Whether Stop was asked: vota::CThreadOperador::Run (fn 10204) and vota::CThreadEleitor's fn 4349 test +8 in their
     // loops, and vota::CExecucaoVotaCooperativa's slot 7 (fn 7823) tests it on CThreadEleitor's instance, from outside
-    // the class, so the source reads it through something public. That it is this accessor, public, and its name are
-    // chosen.
+    // the class, so the source reads it through something public (a friend would do as well). That it is this
+    // accessor, public, and its name are chosen.
     bool PararSolicitado() const { return m_parar; }
 
 protected:

@@ -6,10 +6,11 @@
 // went with it, and writing the member writes the file again at its records' lines (named below, under
 // src/uenux2/src/app/comum/dados/).
 // - comum::asn::CConversorDetalheCandidato::DoDesconverte (slot 3, fn 11375, records
-//   asn/processoeleitoral/cconversordetalhecandidato.cpp:29, :34 and :39; that stub-only file went), not written: fn
-//   1135 has no name (2341 matches since fragment 191).
+//   asn/processoeleitoral/cconversordetalhecandidato.cpp:29, :34 and :39; that stub-only file went), not written: its
+//   callees have names (1135 matches since unit 88's GetCargos, 2341 since fragment 191).
 // - comum::asn::CConversorEleicaoPE::DoDesconverte (slot 3, fn 11371: md::CEleicaoPE's checks inlined, records
-//   md/processoeleitoral/celeicaope.cpp:63 to :92), not written: fns 2289 and 3816 have no name.
+//   md/processoeleitoral/celeicaope.cpp:63 to :92), not written: fn 3816 has no name (2289 matches since unit 88's
+//   GetCargos).
 // - comum::asn::CConversorDedo::DoDesconverte (slot 3, fn 11416, records asn/eleitor/cconversordedo.cpp:159 and :169, a
 //   stub-only file that went, and md/eleitor/cdedo.cpp:28 and :33), not written: fn 5702 has no name.
 // - comum::asn::CConversorBiometriaEleitor::DoDesconverte (slot 3, fn 11422, record

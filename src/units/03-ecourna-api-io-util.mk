@@ -33,6 +33,9 @@
 # breaks, so no vote names 1911988, and the census pairs 9268 at the addr tier with another static's destructor of its
 # shape (cpedetitulomesario.cpp.o's), so it stays `differs` with ours, csynchronizer.cpp.o's, in the link. CFile::Close
 # (336) matches: its call of 5181 has two voters, 336 and 2767.
+# CFile::Write (target fn 5180, a chosen name) matches, in cfile.cpp after ReadFileBinary, declared in cfile.hpp, whose
+# comment has the evidence (its band place right after Sync, fn 5181) and the forms measured; fragment 227's roots stand
+# in for its callers 5371 and 11587.
 # CBitArray::GetValor(uebyte) (1375) holds GetValor(ueqword, uebyte) inlined by binaryen, and matches. The two-argument
 # member tests the bound first and throws in the else, after the loop as the target has it; the bound is `size() -
 # posicao`, zeroed when it exceeds size(); the loop steps a 64-bit position of its own in the call (`test(pos++)`) under a

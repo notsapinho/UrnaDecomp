@@ -2,7 +2,8 @@
 // bodies are NOT the target's; they trap.
 // - CConversorEleicoesVota::DoDesconverte (slot 3, fn 11349, records cconversoreleicoesvota.cpp:69, :74, :94 and :104),
 //   not written: it builds md::CVotosEleicoesVota's maps from the entity (5054 B); of its direct callees, 3869 has no
-//   body of ours and 5681 is written and differs (unit 197's fragment), and md::CVotosCargos' and md::CVotosEleicoesVota's constructors (5643, 5640) match.
+//   body of ours and 5681 is written and reads `no-candidate` (15 over 167 rows by pnpm wasm score, fragment 13),
+//   and md::CVotosCargos' and md::CVotosEleicoesVota's constructors (5643, 5640) match.
 // - CConversorRegistroDigitalVoto<CConversorEleicoesVota>::DoConverte (slot 2, fn 11483), an explicit specialization of
 //   the class template's member for this instance, which moves into the template when written. What it waits for: the
 //   form of its historicoCodigosCarga loop. The target holds that loop in a function binaryen inlined (a second frame of

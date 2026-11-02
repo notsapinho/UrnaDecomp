@@ -27,7 +27,9 @@
 #   the pointer read, then the mutex unlocked through fn 150), the constructor that copies the map (a frame of its
 #   own), and the substitution of one line (a frame of its own: the line copied, then for each pair of the map
 #   CStringUtils::Replace's copying form, fn 2677, assigned back). They are written out of line here, each with one
-#   call site, which binaryen inlines.
+#   call site, which binaryen inlines. The constructor and the substitution have frames of their own, binaryen's
+#   sign; the pointer test is frameless, so nothing tells binaryen's inlining from clang's there, and its being out
+#   of line (not an inline member, as CThreadEleitor::Existe is) is a choice.
 # Chosen: the header's path; the names Existe, Substitui and the members' names; their access; the constructor's
 # explicit; s_instancia.reset(new ...) for the assignment (a std::unique_ptr assigned was not tried); the lines of
 # everything but the two records. Substitui passes the line to Replace through std::as_const: with a non-const string

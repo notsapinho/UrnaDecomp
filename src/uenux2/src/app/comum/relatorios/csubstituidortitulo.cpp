@@ -1,5 +1,5 @@
-// comum::CSubstituidorTitulo (/home/rubio/tse/uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp). The
-// reconstruction's own note: the blank lines stand for text not recovered. The file's two records are GetInst's (line
+// comum::CSubstituidorTitulo (/home/rubio/tse/uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp). Notes
+// of the reconstruction, not TSE's text, with no blank-line gap in the file. The file's two records are GetInst's (line
 // 21, column 66: the closing parenthesis of SINGLETON_IMPL_GET_INST, as for the singletons of
 // src/units/110-uenux2-singletons.mk, whose column formula gives 47 plus the class name's 19 characters) and
 // CreateInst's throw (line 26, column 15). The other members have no record: their lines are chosen. The statics follow

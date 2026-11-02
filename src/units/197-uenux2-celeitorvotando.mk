@@ -116,6 +116,7 @@
 #   and its comment lists them.
 # - ProcessInput: stops and starts the tick again, and when +17 is set posts 5, logs "Eleitor voltou a digitar
 #   enquanto estava sendo suspenso" (vota::CLogVota::LogaEleitorVoltouADigitar) and clears it; then passes the input to
+#   the post's state.
 # - StartState (slot 2): pushes a copy of the context at +20 (api::CApplication::PushContext, fn 3684), posts 6 to the
 #   operator thread's queue and calls IniciaCiclo, which binaryen inlines: its body sits behind a 16-byte prologue of
 #   its own after StartState's code (docs/reference/facts/reading.md R10), so it is out of line. IniciaCiclo clears

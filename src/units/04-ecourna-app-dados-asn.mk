@@ -21,10 +21,12 @@
 # file, a choice against the band: in band 4, 2687, 2686 and 2685 (a thunk into 6155, the body binaryen merges with
 # ConverteDataHora's 9220) lie between api/compression/czip.cpp's 2690 and api/security/csha.cpp's 2684, where the data
 # hold icompressor.cpp's, cfile.cpp's, base64.cpp's, chkdfseed.cpp's and ckey.cpp's records and no date class, and
-# ConverteDataHora (band 1) lies among app/dados/asn's converters; the file is the one whose function 2685 shares a body
-# with. The parameter's form, a const reference, is evidence: ptime is trivially copyable, and a probe function taking
-# one by value compiles to `(i64) -> i64`, by const reference to `(i32) -> i64` (em++ -O2 -std=c++23 over Boost's
-# headers), and 2686 takes an address.
+# ConverteDataHora (band 1) lies among app/dados/asn's converters. The file is the one whose function 2685 shares a body
+# with, a weak reason: binaryen's merge is module-wide and ties no TU, and an ecourna api/ file between czip.cpp and
+# csha.cpp, where the band puts it, is the better reading. The parameter is not by value, which the bytes rule out:
+# ptime is trivially copyable, and a probe function taking one by value compiles to `(i64) -> i64`, by const
+# reference to `(i32) -> i64` (em++ -O2 -std=c++23 over Boost's headers), and 2686 takes an address. A const
+# reference, as ConverteDataHora takes, over a const pointer, which fits the bytes too, is chosen.
 DADOS_ASN_SRCS := app/dados/asn/cconversorturno.cpp app/dados/asn/cconversorfase.cpp app/dados/asn/cconversorcargoid.cpp \
                  app/dados/asn/cconversorfoto.cpp app/dados/asn/cconversorcabecalhoentidade.cpp \
                  app/dados/asn/cconversoridentificadoreleitor.cpp app/dados/asn/datahoraasn.cpp \

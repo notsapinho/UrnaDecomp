@@ -41,8 +41,11 @@
 #   compare equal (wasm-objdump -d, indices masked).
 #
 # Chosen, no evidence decides them: the names FormataPergunta (and its being an external function of comum::asn) and
-# the lambdas' parameters; std::transform and std::accumulate as the spellings of the inlined loops (no hand-written
-# loop was measured); where each function starts in its file and the blank lines above (the throws' lines are the
+# the lambdas' parameters; std::transform and std::accumulate as the spellings of FormataPergunta's two inlined loops
+# (no hand-written loop was measured for them; the answers' loop's forms are measured above, and of those only
+# std::transform matches); visit's insert({key, value}), which gives 3728 its template arguments (the key and
+# std::pair<const md::CEleitorIdentidade, md::CIndexer>, from the braced pair; no evidence gives the spelling); where
+# each function starts in its file and the blank lines above (the throws' lines are the
 # records'); the constructors' parameter names and `numero > 99999` over `>= 100000`; the visitor's member names and the
 # word at +4; md::CIndexer as the type of the two words (a reading, cindexer.h says why); the destructor `= default`
 # ({} gives the same object, docs/reference/facts/reading.md R4).

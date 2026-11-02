@@ -6,8 +6,8 @@
 // template's member is written in cgeradorbubase.h, as ImprimeProporcionalPartido's and ImprimeMajoritario's are.
 // - CGeradorBUBase<...>::ImprimeConsulta, slot 5, fn 11253 (2730 B, record :286): it calls fn 160,
 //   std::string::append, which this tree's code calls at its -O3 (units 31 and 93 measure it on AddField and
-//   DefineHistoricoCarga), and fn 942 (CCalculaCV::IncluiString, unit 121) twice, and waits for fns 1923 and 5610, which
-//   have no body or name of ours (357, Build, and 1881 match).
+//   DefineHistoricoCarga), and fn 942 (CCalculaCV::IncluiString, unit 121) twice, and waits for fn 5610, which has no
+//   body or name of ours (357, Build, 1881 and 1923, CCargo::GetDetalheConsulta, match).
 #include "app/comum/relatorios/cgeradorbu.h"
 
 namespace comum {

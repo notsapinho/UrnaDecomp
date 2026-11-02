@@ -13,9 +13,9 @@
 // - comum::asn::ConverteSerialFlash and DesconverteSerialFlash (fns 3605, 3604) need none: their callers, fns 10287,
 //   10291 and 11399, and 10284, 10290 and 11400, are written (units 160 and 172);
 // - comum::md::CVersoesArquivos's constructor (fn 5867): fn 12098 (10263 is in the link); and libc++'s hinted emplace
-//   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 3689, 4625,
-//   5867 and 12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns
-//   nothing);
+//   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 4625, 5867
+//   and 12098 (3689 is in the link). The constructors' results are not read, as the target's callers do not read them
+//   (fn 5867 returns nothing);
 // - comum::CGravadorRCSecao::CriaIdentidadeEleitor (fn 5845): fn 11616, GravaResultado.
 // - comum::asn::CalculaHashSha512 (fn 3602): fn 10273, CConversorEntidadeBU's slot 2, three times.
 // - comum::GetPathWsqNaoRegistrado (fn 3793): fns 5374 and 10451; 5374 (unit 214) is written, the stand-in is for
@@ -73,8 +73,8 @@ __attribute__((noinline)) int w122_nome(comum::TMunicipioID municipio, comum::TZ
     return static_cast<int>(comum::CGravadorUtil::DeterminaNomeArquivo(municipio, zona, secao, fase, extensao).size()) + 7;
 }
 
-// stands for fn 12098 (10263 is in the link), and, with its copy of a map, for fns 3689 and 4625, which call libc++'s
-// hinted emplace into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
+// stands for fn 12098 (10263 is in the link), and, with its copy of a map, for fn 4625 (3689 is in the link), which
+// calls libc++'s hinted emplace into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
 __attribute__((noinline)) int w122_versoes(const std::string& tag, const comum::md::CVersoesArquivos::TMapVersoes& versoes,
     const std::string& outra)
 {

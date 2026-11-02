@@ -109,7 +109,8 @@ still have no body in our link, two ways:
   added a second caller. Look for its call in the object of a caller the scan already names.
 - **Written, and nothing names it.** The scan finds a body through the symbol file, the census or its content, so a
   body it cannot name reads `no-candidate` with its object in the link, and only the fragment says it exists. 5660 (unit 89,
-  `md::CCandidatura`'s constructor) is such a body. A right body can read so too: 5658's definition under a `using` printed a short type
+  `md::CCandidatura`'s constructor) was such a body, until its callee 2870 got the second caller the target gives it
+  (unit 232's roots stand in for it) and both matched. A right body can read so too: 5658's definition under a `using` printed a short type
   in its record, so the record anchored nothing, and the row said `no symbol and no ledger pair` until the definition
   spelled the type in full (step 3). Run `check_srcloc.py --strict` on the unit's objects (step 10) before you read
   such a row.

@@ -12,9 +12,9 @@ namespace api {
 // as one is ecourna's CFile, built by ecourna::api::io::CFile::CFile (fn 517), closed by fn 336 and destroyed by that
 // class's inline destructor. Chosen: that api::CFile is an alias of that class, where the bodies read so far do not
 // tell it from a class of uenux2's own derived from it with no member of its own, and this header's path, which no
-// record names. app/vota/comum/votadefs.cpp includes it (fn 1488 builds an api::CFile); app/comum/gravadores/igravador.h
-// and app/comum/asn/iconversorparcialasn.h forward-declare a class api::CFile, which an alias cannot meet in one TU, so
-// each includes this header in place of its forward declaration once a TU of its needs the type.
+// record names. app/vota/comum/votadefs.cpp includes it (fn 1488 builds an api::CFile), and so do
+// app/comum/gravadores/igravador.h and app/comum/asn/iconversorparcialasn.h, in place of the forward declaration of
+// a class api::CFile each held, which an alias cannot meet in one TU.
 using CFile = ecourna::api::io::CFile;
 
 } // namespace api
