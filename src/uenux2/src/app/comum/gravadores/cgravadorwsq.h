@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 #include "api/util/cdatetime.h"
@@ -46,5 +47,10 @@ private:
     std::string m_versao;
     bool m_gravaMidiaExterna;
 };
+
+// The WSQ directory "nao-registrado/" of the internal flash for the load's turn (target fn 3793, defined in
+// cgravadorwsq.cpp). No record names it: the name, its being a free function and this declaration's place are chosen,
+// and the file is its band's (src/units/122-uenux2-app-comum-gravadores.mk).
+std::filesystem::path GetPathWsqNaoRegistrado();
 
 } // namespace comum

@@ -17,11 +17,15 @@
 //   5867 and 12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns
 //   nothing);
 // - comum::CGravadorRCSecao::CriaIdentidadeEleitor (fn 5845): fn 11616, GravaResultado.
+// - comum::GetPathWsqNaoRegistrado (fn 3793): fns 5374 and 10451; 5374 (unit 214) is written, the stand-in is for
+//   10451. It builds the path in place, so no destructor of std::filesystem::path is emitted here.
 // - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
 //   it: the constructor that stores it (inlined into fn 12098) is not written, so its address goes into a sink.
 // IGravador and CGravadorRCSecao are abstract, so IGravador's constructor (declared with the object's int result) and
 // the private CriaIdentidadeEleitor are called through asm labels.
+#include <filesystem>
 #include <map>
+#include <new>
 #include <string>
 #include <vector>
 
@@ -89,6 +93,14 @@ __attribute__((noinline)) int w122_identidade(const void* gravador, const void* 
     return a[0] + b[4];
 }
 
+// stands for fn 10451 (5374 is written)
+__attribute__((noinline)) int w122_naoregistrado(void* destino)
+{
+    ::new (destino) std::filesystem::path(comum::GetPathWsqNaoRegistrado());
+    return 19;
+}
+
+int (*volatile w122_sink_naoregistrado)(void*);
 int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum::TZonaID, comum::TLocalID, comum::TSecaoID,
     char, bool);
 int (*volatile w122_sink_gravador)(void*, unsigned int, unsigned int, unsigned int, unsigned int, char);
@@ -106,6 +118,7 @@ struct SW122Roots {
         w122_sink_versoes = w122_versoes;
         w122_sink_identidade = w122_identidade;
         w122_sink_vt_rcsecao = w122_vt_rcsecao;
+        w122_sink_naoregistrado = w122_naoregistrado;
     }
 } w122_roots;
 

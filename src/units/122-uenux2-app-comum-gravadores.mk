@@ -85,6 +85,20 @@
 #   over the three values by value (run alone, through try-tu.sh --single's template by hand) gave the combination with
 #   the loads before the test and no `& 1`. Its remainder not explained and nothing written needing it, it is not
 #   written (docs/how-to-decompile.md step 5).
+# - comum::GetPathWsqNaoRegistrado (fn 3793; no record, the name chosen), CPath::GetPathWsq(FLASH_INTERNA, the load's
+#   turn) / "nao-registrado/", in cgravadorwsq.cpp after the constructor and declared in cgravadorwsq.h. In the target
+#   it is a 15-byte thunk, `f2298(p0, end, begin)` of its literal, into binaryen's fn 2298, which calls GetPathWsq (fn
+#   2864) with 0 and the word at +32 of CAppInfo::GetGeral() const's result, then appends the literal to the path;
+#   fns 3795, 5815, 5818 and 5819 are the same thunk over "operador/", "registrado/", "nao-habilitado/" and
+#   "habilitado/", not written. Alone here it is a whole body, 83 over 85 rows against the thunk. Against 2298 it scores
+#   34 over 89 (pnpm wasm score): the statements read alike, the literal's ends passed in as parameters there, but 2298
+#   loads the turn (CAppInfo::GetInst, GetGeral, +32) ahead of its stack prologue and ours after it, which
+#   docs/reference/facts/reading.md R10 reads as a frameless caller's code ahead of a callee binaryen inlined (a
+#   reading). So it waits for the four and for a source shape not recovered: no link with the four written was
+#   measured. Its use band puts it between this file's constructor (3796) and cappinfosingleton.cpp's CAppInfo
+#   destructor (3792), so its file is this one or a record-less object between the two: a choice, as is its being a
+#   free function (it takes no object).
+#   Its target callers are fn 5374 (unit 214) and fn 10451, for which the roots stand in.
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \
 	src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
 	src/app/comum/gravadores/md/cversoesarquivos.cpp
