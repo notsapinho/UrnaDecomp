@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` and `mock/app/simulador/wasm/` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/` and the file `src/app/comum/carquivossavd.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -279,7 +279,7 @@ So a table read with an `i32.add` proves nothing, and neither does one function'
 12's externs included. The `-roots.cpp` files are stand-ins and compile with `APP_CXXFLAGS`. Why the package differs from conan's default
 `fPIC=True` ([libraries.md](libraries.md) §B1) is not known: the target shows the result, not the reason.
 
-## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG`, `-fno-strict-aliasing` by directory, without `-fexceptions`
+## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG`, `-fno-strict-aliasing` by directory and one file, without `-fexceptions`
 
 Compared on three reconstructed units (`api/util/cwait.cpp`, `api/io/cinikey.cpp`,
 `api/ipc/posix/cposixmutex.cpp` + `cposixsemaphore.cpp`; 13 target functions), each flag set in a private
@@ -417,6 +417,22 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   5377, one template at one record line, split (5377 matches from `comparecimentomesario/`). The sites with no call to
   explain the reload are converters and keep the flag: 10289 (`gravadores/asn/`) and 11383 (`dados/asn/`) match, 10276
   (`CConversorHistoricoVotoImpresso`, no record) is `no-candidate`.
+
+  One file joins the directories: `src/app/comum/carquivossavd.cpp`, whose `comum::CArquivosSavd::GetInst` (1164) holds
+  the catalogue's `std::map` insertions, with the constructor and its loaders inlined. Without TBAA every insertion
+  reloads `__child` before `__tree_balance_after_insert` (fn 152), the sign above, and our body is 80384 B against the
+  target's 77002 B (35926 rows differ over 37186); with TBAA it is 77000 B, and 1850 rows over 35494 differ, every one
+  operand-only (unit 95's fragment). At 36dda756 (11350 matches) the compile lines `make -n` prints with and without the
+  file in the list differ in that one object's, and F9 item 6's private link with only that object rebuilt gives the
+  target's sha256 with every match (the list and the symbol file re-keyed to the clone's objects); its scan, with the
+  plain link's symbol file, moves no row, since the names 1164 needs come from step 8 at the flag. Built in place, steps
+  7 to 9 turn 1164 and the exit destructors of its `s_mutex` and `s_instancia` (11657, 11658) `match` and none leaves,
+  11350 to 11353, and `make -C src splat` gives the target's sha256. `UENUX2_TBAA_DIRS` lists the file beside the
+  directories, and the generic rule passes `uenux2_cxxflags` the source's path with its `.cpp`, as a fragment's own rule
+  does. Whether TSE's build gave strict aliasing to that TU or to its directory, no row says: with all nine of
+  `src/app/comum/`'s top-level files built with it (six of the other eight objects change), the link is byte-identical to
+  the one with the file alone. So the file is listed and its directory stays a choice, and the split, by directory and
+  one file, is a reading of the original build's settings like the rest of it.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'
