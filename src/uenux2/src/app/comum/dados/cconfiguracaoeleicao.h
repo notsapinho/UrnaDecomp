@@ -71,6 +71,13 @@ public:
     // names them: their names and their being members (they read m_pleito) are chosen.
     std::vector<md::TEleicaoID> GetIDsEleicoes() const;
     std::vector<CCargos::TCargoEleicao> GetCargosEleicoes() const;
+    // A copy of the cargos of the pleito's election with that id, empty when the pleito has no such election, sorted by
+    // the order of printing (the byte at +16) when the bool says so: target fn 3775, out of line (fns 5735, 7787 and
+    // 11629 call it on GetInst()'s result). It reads m_pleito, calls CPleito::GetEleicao (fn 5651) and copies
+    // CEleicaoPE::GetCargos (fn 2257); the sort's comparator is a function, passed by table slot 2363 (fn 11547). No
+    // record names it: its name, the parameters' names, its being a member and the comparator's name and linkage are
+    // chosen.
+    std::vector<md::CCargo> GetCargos(const TEleicaoID eleicao, const bool ordenados) const;
 
 private:
     unsigned m_naoRecuperado1[2];

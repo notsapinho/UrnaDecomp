@@ -50,7 +50,8 @@ public:
     ETipo GetTipo() const { return m_tipo; }
     uebyte GetNumeroDigitos() const { return m_numeroDigitos; }
     TQtdEscolha GetQtdeEscolhas() const { return m_qtdeEscolhas; }
-    // The names are chosen: CCargos's comparators (fns 11559, 11558) read the bytes at +15 and +16.
+    // The names are chosen: CCargos's comparators (fns 11559, 11558) read the bytes at +15 and +16, and
+    // CConfiguracaoEleicao::GetCargos's comparator (fn 11547) compares the byte at +16 unsigned.
     uebyte GetOrdemAquisicao() const { return m_ordemAquisicao; }
     uebyte GetOrdemImpressao() const { return m_ordemImpressao; }
     // The name is chosen: comum::CGeradorBUQRCode::GetCamposAptos (fn 3696) reads the field.

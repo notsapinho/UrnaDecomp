@@ -1,5 +1,6 @@
 #include "app/comum/dados/cconfiguracaoeleicao.h"
 
+#include <algorithm>
 #include <format>
 
 #include "app/comum/dados/euecomumdadoserror.h"
@@ -7,7 +8,7 @@
 
 namespace comum {
 
-// (original lines 10-32: content not recovered)
+// (original lines 11-32: content not recovered)
 #line 33
 std::unique_ptr<CConfiguracaoEleicao> CConfiguracaoEleicao::s_instance;
 std::mutex CConfiguracaoEleicao::s_mutex;
@@ -26,6 +27,29 @@ std::vector<md::TEleicaoID> CConfiguracaoEleicao::GetIDsEleicoes() const
     return ids;
 }
 
+namespace {
+
+bool ComparaOrdemImpressao(const md::CCargo& a, const md::CCargo& b)
+{
+    return a.GetOrdemImpressao() < b.GetOrdemImpressao();
+}
+
+} // namespace
+
+std::vector<md::CCargo> CConfiguracaoEleicao::GetCargos(const TEleicaoID eleicao, const bool ordenados) const
+{
+    if (m_pleito.ExisteEleicao(eleicao)) {
+        std::vector<md::CCargo> cargos = m_pleito.GetEleicao(eleicao).GetCargos();
+        if (ordenados) {
+            std::vector<md::CCargo> resultado = cargos;
+            std::sort(resultado.begin(), resultado.end(), ComparaOrdemImpressao);
+            return resultado;
+        }
+        return cargos;
+    }
+    return {};
+}
+
 std::vector<CCargos::TCargoEleicao> CConfiguracaoEleicao::GetCargosEleicoes() const
 {
     std::vector<CCargos::TCargoEleicao> cargos;
@@ -37,7 +61,7 @@ std::vector<CCargos::TCargoEleicao> CConfiguracaoEleicao::GetCargosEleicoes() co
     return cargos;
 }
 
-// (original lines 61-284: content not recovered)
+// (original lines 84-284: content not recovered)
 #line 285
 const md::CEleicaoPE& CConfiguracaoEleicao::GetEleicao(const TEleicaoID eleicao) const
 {

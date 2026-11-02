@@ -21,8 +21,9 @@
 # are the ones md/candidatura/cdadoscandidato.h and asn/util.h declare, with eurnafase.h beside it.
 # Who inlines what, read from the objects (wasm-objdump -d) against the target:
 # - clang: GetDetalheConsulta into the four name getters, and GetDetalheCandidato into GetNomeSuplente; those objects hold
-#   no call of either. GetDetalheConsulta's own body is target fn 1923, a thunk of binaryen's merge 6029, so it stays out
-#   of our link and 1923 is unmatched.
+#   no call of either. GetDetalheConsulta's own body is target fn 1923, a thunk of binaryen's merge 6029: fragment 232's
+#   roots stand in for its callers in other TUs, which keeps the body in our link, binaryen merges it with
+#   md::CLocal::GetContingencia (3724, unit 89) into one body as the target does, and 1923 and 6029 match.
 # - wasm-opt: GetNomeFeminino into GetNome (ccargo.cpp.o calls it, 2796 holds a second stack prologue, and 2796 is its one
 #   caller), and CNomesCargo's constructor into 11369 (another TU; 11369 holds its prologue).
 # Chosen names: GetNomeNeutro, GetNomeMasculino, GetNomeFeminino, GetNomeAbreviado, read from the field each copies
@@ -119,8 +120,36 @@
 #   The scan matched 5791 through the census's pair (`shape`) and 3774 by its content. In use band 2 the target's 5791
 #   comes right after the destructor (5792) in link order, which is what puts it after the destructor here; in use band
 #   3 its 3774 lies after ccargos.cpp's 3784 and 3783 and before cnomearquivo.cpp's 3773, with 3775 to 3782 between (all
-#   unwritten but 3779, a std::__split_buffer instance), which this file fits (a reading). Chosen: both names, their being members (they read m_pleito), the line of
+#   unwritten then but 3779, a std::__split_buffer instance; 3775 is GetCargos, below), which this file fits (a reading). Chosen: both names, their being members (they read m_pleito), the line of
 #   each and their order. The roots' IDsEleicoes stands for 5735 and CargosEleicoes for 7787 (4454 is in the link).
+# - comum::CConfiguracaoEleicao::GetCargos (fn 3775, 573 B), in cconfiguracaoeleicao.cpp before GetCargosEleicoes, as
+#   use band 3 orders 3775 before 3774: a copy of the cargos of the pleito's election with that id (CPleito::GetEleicao,
+#   5651, then CEleicaoPE::GetCargos, 2257), empty when the pleito has none, and when its bool is set a copy of that copy
+#   (std::vector<md::CCargo>'s copy constructor, fn 2289, out of line) sorted by std::sort with a function passed by table
+#   slot 2363 (fn 11547: CCargo's byte at +16 compared unsigned, ccargo.h's GetOrdemImpressao). Its callers, 5735 and 7787
+#   (false) and 11629 (true), on GetInst()'s result, are not written: fragment 232's roots stand in for them, and for
+#   2289's other callers. The sort brings libc++'s instances over md::CCargo with that comparator, and each matches from
+#   this object: __introsort (5789), __insertion_sort_incomplete (5785), __sort4 (2829), std::swap of two CCargo (320),
+#   CDetalheCandidato's move assignment (761), the move assignments of std::optional<CDetalheConsulta> (783) and of
+#   std::vector<CRespostaConsulta> (5784), and CDetalheConsulta's copy (374, a std::construct_at). 5789 and 761 also call
+#   the destroy of a std::vector<CSuplencia>'s tail (1135), whose one caller in our link was ~CDetalheCandidato (242, unit
+#   110's, `differs` on its locals, binaryen having inlined 1135 there); with these calls 1135 stays out of line, and it
+#   and 242 match from cpe.cpp.o. 365,
+#   2341 and 3018 keep matching, from this object's copies now instead of ccargo.cpp.o's: the two give the same bytes.
+#   Evidence for the existence test: the target holds it as a loop binaryen inlined from another function (a bool built
+#   as `if (result i32) ... else 0 end` and tested again, how-to step 3) that takes the pleito (+28) and the id, so it is
+#   written as CPleito::ExisteEleicao, out of line in cpleito.cpp, with GetCargos its one caller and no index of its own.
+#   Measured (pnpm wasm score in the whole link, each form with the rest as landed): the test in GetCargos with
+#   std::any_of, 135 over 313 rows (30 inserted, 32 deleted); ExisteEleicao with early returns of {} and of the copy (`if
+#   (!ordenados) return cargos;`), 59 over 307 (24, 23); the found case in an if with `return {}` after it, 44 over 298
+#   (15, 15); and the sorted case in `if (ordenados)` with `return cargos;` after it, 11 over 283, all operand-only, the
+#   form that matches. Clang inlines the first vector copy (-Rpass=inline: cost=225, threshold=250) and keeps the second
+#   out of line (cost=250, threshold=250), as the target does; without the stand-in for 2289's callers binaryen inlines
+#   it into its one caller here, and 3775 scored 249 over 427 (144 inserted, 32 deleted, the std::any_of form). Chosen:
+#   the names GetCargos, ExisteEleicao, ComparaOrdemImpressao and GetOrdemImpressao, the parameters' names, GetCargos'
+#   and ExisteEleicao's being members, the comparator's being a file-static function (use band 1 puts 11547 after this
+#   file's statics' exit destructors, 11551 and 11550, which an external function defined after them fits as well),
+#   ExisteEleicao's std::any_of (a range-for is not measured), and every line.
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes
