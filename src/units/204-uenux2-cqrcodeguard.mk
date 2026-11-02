@@ -8,8 +8,9 @@
 #
 # Measured: in the whole link, before steps 7 to 9, pnpm wasm score of 5502 against our constructor read 140 over 7128
 # rows, all operand-only (the errno and libqrencode table addresses, and the CBaseError destructor's table slot), and the
-# scan matched it by its srcloc-anchor name. The constructor stores 0 at +0 before the call, which the member's
-# initializer gives; the target then stores the encoder's result there and tests it. The call's arguments, read from
+# scan matched it by its srcloc-anchor name. The constructor stores 0 at +0 before the call: evidence; that a
+# mem-initializer gives it is chosen (a default member initializer or an assignment gives the same store). The target
+# then stores the encoder's result there and tests it. The call's arguments, read from
 # 5502's body as unit 187's former roots stand-in read them: version 0 and QR_ECLEVEL_L (the 28-byte QRinput 5502
 # allocates is stored with 0 at +0 and +4), QR_MODE_8 (no Kanji test is left in 5502 or in Split_eat8, fn 5348, which has
 # no hint parameter) and case-sensitive (no copy of the text is upper-cased).

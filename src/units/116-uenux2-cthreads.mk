@@ -76,8 +76,9 @@
 # symbol, names.tsv after make -C src link-map; clang's decisions with try-tu.sh --symbols --flags '-Rpass=inline
 # -Rpass-missed=inline'):
 # - It reaches the context and the ticks itself (cthreadvota.h's protected members): calling CThreadVota::IniciaContexto
-#   and GetEstado kept both as functions of their own in our link (names.tsv listed them), which costs unit 165's
-#   4705 and 4713 the inlining they match by. The target's Run holds that code in its own frame.
+#   and GetEstado kept both as functions of their own in our link (names.tsv listed them), which would cost unit
+#   165's 4705 and 4713 the inlining they match by (read from unit 165's fragment, not scanned). The target's Run
+#   holds that code in its own frame.
 # - `bool processou` is declared before the loop. Declared at the top of the loop's body, clang reads the call of
 #   Remove, inside the two loops, as a hot call site and inlines it (cost 265, threshold 525); declared before the loop,
 #   the threshold is 250 and the call stays, as the target's does. At -O2 it stays too (threshold 225): -O3's

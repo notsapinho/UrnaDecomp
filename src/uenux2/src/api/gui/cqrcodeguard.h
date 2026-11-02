@@ -9,7 +9,8 @@
 // 1254) on +0. So the destructor is inline (a reading: out of line, its two callers would keep it a function, since
 // binaryen inlines only a function with one call site, and they would call it, not QRcode_free). Chosen: the header's
 // path (the class's name in lower case, beside the .cpp the record names), the member's name, the accessor (an
-// operator-> here: no evidence names one), the deleted copies, and that the destructor is defined in the class.
+// operator-> here: no evidence names one), the deleted copies, that the destructor is defined in the class, and that
+// the constructor's null is a mem-initializer (a default member initializer or an assignment gives the same store).
 // src/units/204-uenux2-cqrcodeguard.mk says how the constructor's arguments to QRcode_encodeString are read.
 
 #include <string>

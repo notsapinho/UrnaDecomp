@@ -58,16 +58,18 @@ public:
 
 // Fns 5454, 5453 and 5463 have no record: their names are chosen from what they return (std::filesystem::space's free,
 // its capacity less its free, and the number on the line of /proc/meminfo that holds the field, MemTotal or MemFree in
-// 5463's one caller). They read no state of CSystem, so they are free functions; their namespace and this header are
-// chosen (unit 32's fragment says why).
+// 5463's one caller). They read no state of CSystem; that they are free functions and not static members of CSystem
+// is a choice (a static member gives the same code), and so are their namespace and this header (unit 32's fragment
+// says why).
 uintmax_t GetFreeSpace(const std::string& caminho);
 uintmax_t GetUsedSpace(const std::string& caminho);
 uedword GetMemInfo(const std::string& campo);
 
 // Fns 2763 and 5462 have no record: the part of a path held in a std::string after its last '/' (the whole string
 // when it holds none) and the part before it. Their callers are comum's and vota's (2763: 1501, 5360, 5461, 12098;
-// 5462: 1501, 12098), and both lie in csystem.cpp's run of the use bands. They read no state of CSystem, so they are
-// free functions; their names and namespace are chosen.
+// 5462: 1501, 12098), and both lie in csystem.cpp's run of the use bands. They read no state of CSystem; that they are
+// free functions and not static members of CSystem is a choice, the file's GetMemInfo's form (a static member gives
+// the same code: unit 32's fragment), and so are their names and namespace.
 std::string GetFileName(const std::string& caminho);
 std::string GetDirName(const std::string& caminho);
 

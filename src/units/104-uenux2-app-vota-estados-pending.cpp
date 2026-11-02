@@ -45,17 +45,18 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 491, 502, 886, 1164, 1935, 2281, 2543, 2763, 2821, 2824, 2860, 3782,
-// 3825, 3826, 5462, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
-// 195's 5824, 95's 3829, 5889, 5891 and 5905, 32's 378, 154's 620, 13's 1269 and 110's 2822 among them).
+// with no name: 491, 502, 886, 1935, 2281, 2543, 2821, 2824, 2860, 3782,
+// 3825, 3826, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
+// 195's 5824, 95's 1164, 3829, 5889, 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269 and 110's 2822
+// among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
 }
 
-// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 491, 2890 and
-// 4582; the others have names (185, 261, 407, 455, 903, 1127, 4556, 4557, 4563, 5987, and 2888 and 3701, units 37's
-// and 93's).
+// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 491 and 2890;
+// the others have names (185, 261, 407, 455, 903, 1127, 4556, 4557, 4563, 5987, 2888 and 3701, units 37's and 93's,
+// and 4582, unit 168's).
 void CEmitirMaisBU::ProcessInput()
 {
     __builtin_trap();

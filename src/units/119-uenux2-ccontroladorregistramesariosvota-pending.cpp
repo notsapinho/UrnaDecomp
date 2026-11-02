@@ -8,7 +8,8 @@
 // - slots 13 and 14, fns 10790 and 10789: fn 2264 over comum::CEleitores (fn 326) and the titulo of slots 17 and 18, the
 //   first as a bool; no callee waits now (2264 is unit 110's): not written yet;
 // - slot 16, fn 10786: calls fn 4662, which throws an api::CUeDesligandoError that fn 1685 builds when the byte at
-//   1832936 is 1, and else calls fn 4657 (1048 B); waits for fns 4662, 1685 and 4657;
+//   1832936 is 1, and else calls fn 4657 (1048 B); no callee waits now (4662 is vota::CSincronizaVota's
+//   SincronizaBancoDados, unit 205's, as 1685 and 4657 are): not written yet;
 // - CRegistroMesarioEncerrado::ProcessKey, fn 10762: for key 12, stores fn 652's result at +4, the next state; waits for
 //   fn 652.
 #include "app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.h"

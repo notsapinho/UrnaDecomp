@@ -1,7 +1,7 @@
 // vota::CSincronizaVota (/home/rubio/tse/uenux2/src/app/vota/comum/csincronizavota.cpp). The reconstruction's own
 // note: the records of VerificaUrnaDesligando's and SincronizaRelatorios's throws fix lines 47 and 392; those of
 // SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (fn 7174 holds both), lines 290 and 303, are of functions
-// not written, and those lines stay blank. Every other line is a choice (src/units/205-uenux2-csincronizavota.mk).
+// not written: 290 holds 7174's stub, 303 a gap. Every other line is chosen (src/units/205-uenux2-csincronizavota.mk).
 
 #include "app/vota/comum/csincronizavota.h"
 

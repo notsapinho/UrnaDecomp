@@ -27,8 +27,8 @@ namespace {
 
 const void* volatile cappinfo_sink;
 
-// Stands for fn 457's callers (3769, 436 and 1274 are linked): 491, 1836, 2266, 2298, 2725, 3059, 3288, 3290, 3898,
-// 4160, 4657, 4668, 4682, 4687, 5382, 6737, 7160, 7174, 7787, 10451, 10590, 10635, 10710, 11242, 12098, 12105, 12110,
+// Stands for fn 457's callers (3769, 436, 1274, 1836, 3288, 3290, 4657, 4668, 4682 and 4687 are linked): 491, 2266,
+// 2298, 2725, 3059, 3898, 4160, 5382, 6737, 7160, 7174, 7787, 10451, 10590, 10635, 10710, 11242, 12098, 12105, 12110,
 // 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
 // Stands for fn 903's callers 7160, 10710, 12081, 13023 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566

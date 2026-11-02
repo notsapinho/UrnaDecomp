@@ -107,7 +107,8 @@ APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votade
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CHorariosUrna
 $(ROOT)/$(APP)/uenux2/src/app/vota/comum/votadefs.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# nothing in the link calls these functions yet: 168-uenux2-app-helpers-roots.cpp gives each two call sites. It compiles
+# 168-uenux2-app-helpers-roots.cpp gives two call sites to each function whose target callers are not all in the link
+# (its header comment names them). It compiles
 # at the tree's flags, so the has<T> instance it emits is the code a uenux2 object gives, and no match rests on a flag
 # the tree lacks
 $(ROOT)/$(APP)/168-uenux2-app-helpers-roots.o: $(ROOT)/src/units/168-uenux2-app-helpers-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/168-uenux2-app-helpers.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

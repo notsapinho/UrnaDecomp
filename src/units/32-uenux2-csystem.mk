@@ -142,9 +142,9 @@
 # ExistDir in csystem.cpp or in a file that sorts between the two (docs/reference/facts/placing.md P5: the side taken
 # is a choice). It is written at the end of csystem.cpp, as the free lines above ExistResource's record are too few
 # for it.
-# GetFreeSpace, GetUsedSpace and GetMemInfo read no state of CSystem, which is no singleton, so they are free functions
-# (docs/how-to-decompile.md step 3, "Names no evidence gives": a member only when it reads private state or helps a
-# singleton class). Nothing names a class for them: they load no record, no table slot holds them (`pnpm wasm fn`),
+# GetFreeSpace, GetUsedSpace and GetMemInfo read no state of CSystem, which is no singleton; that they are free
+# functions and not static members of CSystem is a choice (docs/how-to-decompile.md step 3 allows either: CSystem's
+# records name only static members that read no state). Nothing names a class for them: they load no record, no table slot holds them (`pnpm wasm fn`),
 # the symbol file has no line of evidence for them, their one caller is 10226 (ledger/callgraph.tsv), and a direct
 # call is the same for a static member and a free function. Chosen: their namespace, api, the one of the file they are
 # written in (step 3's "the namespace of its caller's class" is said of an inlined helper; their caller is vota's), and
@@ -199,8 +199,10 @@
 # '/', which can throw out_of_range) and the part before it (`substr(0, rfind('/'))`). Their callers are comum's and
 # vota's (2763: 1501, 5360, 5461, 12098; 5462: 1501 and 12098), and both lie in this file's run of the use bands, 5462 in
 # band 2 between 5461 and 5463 (GetMemInfo) and 2763 in band 4 just ahead of 2762 (IsEmptyDir's record, 255) and
-# ZeroFill. They read no state of CSystem, so they are free functions of api, as GetMemInfo is; their names are
-# chosen. Their places: GetFileName after ExistDir, so that it links ahead of ZeroFill, RemoveFile and GetFileSize as
+# ZeroFill. They read no state of CSystem; that they are free functions of api and not static members of CSystem is a
+# choice, GetMemInfo's form, and so are their names. Written as static members of CSystem with GetFreeSpace,
+# GetUsedSpace and GetMemInfo, all five compile to the same code (wasm-objdump -d of the two csystem.cpp.o: the
+# symbols and one object-local data offset in GetMemInfo, 1472 against 1480, apart). Their places: GetFileName after ExistDir, so that it links ahead of ZeroFill, RemoveFile and GetFileSize as
 # 2763 does in its band; GetDirName after GetMemInfo, at the end of the file, which keeps 5463 ahead of it as band 2 does
 # and, like GetMemInfo, takes it after ExistDir where the band has it before (a choice, the same one GetMemInfo's place
 # makes). 1501 (vota::CAssinadorVota's constructor, comum::CAssinador's inlined) calls each once: PartesDoCaminho in the

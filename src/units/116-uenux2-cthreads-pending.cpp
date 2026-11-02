@@ -7,7 +7,8 @@
 //   4633 shows the "URNA ELETRÔNICA INOPERANTE" screen with a LED, its api::CMTFormBuilder cleared in place (the
 //   remainder units 104 and 142 record); 3336 stores 1 in the byte @1832936, which 14 other target functions load
 //   (`grep -rlE 'i32\.const 1832936($|[^0-9])' build/out/splat/pieces/asm`), 4662 among them, which tests it before
-//   throwing the api::CUeDesligandoError fn 1685 builds (unit 119's pending file); 5568 builds
+//   throwing the api::CUeDesligandoError fn 1685 builds (both unit 205's, which names the byte
+//   vota::CSincronizaVota::s_urnaDesligando); 5568 builds
 //   libc++'s std::async state for a lambda of api::CApplication::ShowExceptionMsg (its vptr) and throws "thread
 //   constructor failed".
 // - vota::CThreadMonitor::Run 10226 (slot 2), 7171 B: its records name VotacaoSuspensa, MonitorFoneOuvido,

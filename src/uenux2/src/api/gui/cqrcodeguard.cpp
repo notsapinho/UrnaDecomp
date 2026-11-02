@@ -1,7 +1,7 @@
 // api::CQRCodeGuard's constructor, fn 5502 (a note of the reconstruction, not TSE's text). Its throw is the record at
-// line 23, column 15; every other line of the file is a choice. binaryen inlined QRcode_encodeString and every library
-// function it alone calls into 5502; the arguments are read from that body (src/units/204-uenux2-cqrcodeguard.mk says
-// how). The store of 0 before the call is the member's initializer.
+// line 23, column 15; every other line is a choice. binaryen inlined QRcode_encodeString and the library functions it
+// alone calls into 5502, whose body gives the arguments (fragment 204 says how). The store of 0 before the call is
+// evidence; that it is a mem-initializer is chosen (a default member initializer or an assignment gives that store).
 
 #include "api/gui/cqrcodeguard.h"
 
