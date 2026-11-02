@@ -104,8 +104,8 @@ long w100_bloco(std::unique_ptr<T> instancia)
 
 // Libc++ destructors the target keeps out of line, and uenux2's objects inline: two call sites each, in optnone functions
 // where clang leaves the calls. Each goes when the target callers below are in our link and call it there; those that
-// are not: of 321's, 1091 2893 2927 5344 9039 9135 10212; of 871's, 4771 5560 13621; of 388's, 518 1091 3373 8096 8101
-// 9039 9135, and 2650, whose body here calls 424.
+// are not: of 321's, 1091 2893 5344 9039 9135 10212; of 871's, 4771 5560 13621; of 388's, 1091 3373 8096 8101 9039
+// 9135 (2927, 518 and 2650 are in the link and call them since unit 229's root).
 // - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233 10090 10212.
 // - 871, unique_lock<mutex>: 624 1126 3095 3328 4771 5560 8059 13621 13974.
 // - 388, shared_ptr<void>: 455 518 640 1091 1928 2154 2584 2650 3373 3882 4180 4774 5384 5707 5750 7667 8089 8090 8092 8096

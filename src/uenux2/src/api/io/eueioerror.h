@@ -5,6 +5,10 @@
 namespace api {
 
 enum EUeIoError {
+    // the codes api::CFileASN::CodeObjectFunction throws (target fn 2927, records cfileasn.h 161 and 171); chosen from
+    // the messages
+    EUE_IO_OBJETO_INVALIDO = 5955,
+    EUE_IO_OBJETO_NAO_CODIFICADO = 5956,
     // the values are the codes api::CFileSeeder's members throw (target fns 11433, 11432, 11431 twice and 11430); no
     // evidence names them: they are chosen from the messages, and 5959's and 5960's (one message) from each test
     EUE_IO_SEEDER_SEM_BYTES = 5957,

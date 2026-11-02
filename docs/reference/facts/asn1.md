@@ -414,18 +414,23 @@ runtime with no row in `splat/scan.tsv` was not paired by anything:
 python3 -I -c "import json; print([c['name'] for c in json.load(open('ledger/classes.json'))['classes'] if c['name'].startswith('ASN1::') and '<' not in c['name']])"
 ```
 
-`ASN1_ROOTS_EXCLUDE` in `src/units/115-asn1-leftovers.mk` lists them. Two stay rooted though the target has no body of their
-own. `CoderEnv::decode(const char*, …)` stands for 679, which holds it, and without it 1544, 2565, 3477, 5607, 7970, 8873, 8925
-and 8927 leave `match`, measured on the link that left it out. `OBJECT_IDENTIFIER`'s members have no vtable in the target, and
-the toolkit's tests of the AudioCollector trap ([splat.md](splat.md) §S4) read that vtable in our link; no row needs them out.
+`ASN1_ROOTS_EXCLUDE` in `src/units/115-asn1-leftovers.mk` lists them. `CoderEnv::decode(const char*, …)` stayed rooted,
+standing for 679, which holds it, until 679 was written: without it 1544, 2565, 3477, 5607, 7970, 8873, 8925 and 8927 left
+`match`, measured on the link that left it out. 679 is `CoderEnv::decode` over a `vector<char>` range, uenux2's copy (no
+landing pad, `istringstream`'s constructor inlined), with `decode(const char*, …)` and `BERDecoder`'s constructor inlined
+by binaryen; `src/app/roots_iconversorasn.cpp` instantiates it, and both leave the roots, so they inline into it and those
+rows stay. Its ber_partial case holds `decode(seeder, val)`'s steps written out in `CoderEnv.cxx`: clang inlines that call
+at none of `-Os`, `-O2` and `-O3`, and the target's 679 calls no 5060 (unit 115). `OBJECT_IDENTIFIER`'s members have no vtable
+in the target, and the toolkit's tests of the AudioCollector trap ([splat.md](splat.md) §S4) read that vtable in our link; no
+row needs them out.
 
 Not every leftover is the runtime's. By their rows:
 
 | rows | what they are | what they wait for |
 | --- | --- | --- |
-| 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | the executable TU, at its own `-Oz -fexceptions` rule, once it is reconstructed ([levels.md](levels.md) §V1); 1928 matches since unit 237, whose tree root at that rule holds `pair<string, shared_ptr<api::CWavFile>>`'s destructor, the same body, and whose roots file reads its result for 3552 |
+| 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | matched: `src/app/roots_coderenv.cpp` (unit 229) instantiates `api::CFileASN::CodeObjectFunction`, whose `CoderEnv` gives the three at the executable TU's rule ([levels.md](levels.md) §V1); 1928 had matched since unit 237, whose tree root at that rule holds `pair<string, shared_ptr<api::CWavFile>>`'s destructor, the same body, and its line now names unit 229's `Visitante` copy, which links first |
 | 1843 | `string::find_first_not_of` at `-Oz`: it keeps `__str_find_first_not_of`'s loop, a compile of the member at `-Oz -fexceptions` shows it, and `-Os`, `-O2` and `-O3` do not | matched: `src/app/roots_vector.cpp` emits it as a `minsize` instance, until the executable TU's code that instantiates it is written ([levels.md](levels.md) §V1) |
 | 1532, 2706, 5282, 5290 | `CoderEnv::encodeBER` over a `back_insert_iterator<vector<char>>` and libc++ instances it brings (`vector<char>::reserve`, called by the runtime's own 3464, 3472 and 5055 too; a `__split_buffer<char>` constructor; `std::copy` into the iterator); 1532, 2706 and 5290 have a landing pad each, 5282 none | matched: `src/app/roots_coderenv.cpp` holds them at the executable TU's rule (unit 229) |
 | 2704, 2896 | `__split_buffer<char>`'s destructor, a thunk into 2896, the merge body of 2704, 2545, 4675 and 5523 | the merge's other members |
 | 8902 | calls 5056 and 1872, `api`'s, and no runtime symbol | a class of `api` |
-| 2650 | `allocator<Visitante>::destroy`: it calls 388, a `~shared_ptr` that keeps its result, where ours calls 424, the one that has none, over which 2183 and 3469 match | a copy of `~shared_ptr<IAbstractVisitor>` with 388's body ahead of the runtime: since unit 237 our link holds that body (388 matches, its result read by 11530), and 2650 still calls 424's |
+| 2650 | `allocator<Visitante>::destroy`: it calls 388, a `~shared_ptr` that keeps its result, where ours calls 424, the one that has none, over which 2183 and 3469 match | matched: since unit 237 our link holds 388's body (its result read by 11530), and since unit 229's root emits `~shared_ptr<IAbstractVisitor>` at the executable TU's rule, ahead of the runtime, 2650's call reaches it |
