@@ -35,8 +35,9 @@
 #   it calls (__init_with_size, fn 1556), from that object; and std::vector<md::CResultadoVotacao>'s
 #   __emplace_back_slow_path<const md::CResultadoVotacao &> (fn 3817), the push_back of a copy, which the roots file's
 #   stand-in for fn 11629 emits at the tree's flags. 11629 is the one target caller of 3824 and 3817 (three calls each)
-#   and calls 1556 six times; 3817 and 3824 call it too. The scan finds 3817 by its content (its row's `source` is
-#   `content`): its one caller is not in the link, and its body holds CResultadoVotacao's implicit copy constructor
+#   and calls 1556 six times; 3817 and 3824 call it too. The scan's content pass found 3817 (no line of
+#   splat/symbol_addrs.txt names it): its one caller is not in the link, and its body holds CResultadoVotacao's implicit
+#   copy constructor
 #   (the two words at +0 and +4 and fn 1556 over the vector at +8), so the name is the reading of a template instance
 #   the stand-in gives, as 2853's is; it comes from cgravadorbu.cpp's object once GravaResultado lands.
 # Measured in this link before step 8 (pnpm wasm score against the target): 3820 23 over 332 rows, 1944 4 over 137,

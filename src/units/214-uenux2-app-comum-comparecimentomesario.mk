@@ -39,18 +39,21 @@
 # and __increment) have one other direct caller in the target, fn 11584 (comum::CGravadorLog's slot 7), and fn 5821
 # (cgravadorwsq.cpp) passes both by table slot to invoke_ thunks; neither caller is written, so binaryen inlines both
 # into 5374 (names.tsv holds neither). Measured with a stand-in for 11584's two calls and both addresses taken, not
-# kept: 5374 then scored 115 over 516 rows (inserted 37, deleted 13), the target calling out of line what our link
-# inlines (a second frame of 96 bytes) and other frame offsets; 3372 differed in operands only (12 over 111) and 3373
+# kept: 5374 then scored 115 over 516 rows (inserted 37, deleted 13), a remainder not explained: 5821 also passes fn
+# 2574 (directory_iterator::operator*) by table slot 6148, which the stand-in left out, so operator* stayed inlined,
+# and no link measured the three together; 3372 differed in operands only (12 over 111) and 3373
 # inlined a std::shared_ptr release the target calls (51 over 152); steps 7 to 9 named none of the three and moved no
 # row, so the stand-in went. Fn 3793 keeps its call (it has a stand-in), but its body is not the target's thunk (unit
 # 122's fragment says why), so the call has no target name either.
 #
-# Chosen: ListaArquivosNaoRegistrados and its being a free function (it takes no object); its file, by its band's
+# Chosen: ListaArquivosNaoRegistrados and its being a free function (it takes no object; a static member of
+# CControladorReconhecimentoMesario would fit as well); its file, by its band's
 # neighbours (cluster 748 of src/uenux2/unplaced.cpp names ccontroladorreconhecimetomesario.cpp, from ComparaDigitais's
 # records); the comparator as a lambda and `.string()` for its copies; `continue` over is_directory() and push_back; the
 # class head's access and that it declares nothing else; the enumerator's name, to the record's column; the lines of
-# 5374 (above ComparaDigitais's records at lines 65 and 76) and of GetNomeMesario's first lines; every local's name. No
-# other spelling was measured, so no form here is listed as giving the same bytes.
+# 5374 (above ComparaDigitais's records at lines 65 and 76) and of GetNomeMesario's first lines; every local's name;
+# the if and the second return around GetNomeMesario's two substr calls, where one ternary over them was not compiled.
+# No other spelling was measured, so no form here is listed as giving the same bytes.
 #
 # Not written, and what each waits for:
 # - CControladorReconhecimentoMesario::ComparaDigitais (5372, records 65 and 76): not tried; its callers are fns 3614

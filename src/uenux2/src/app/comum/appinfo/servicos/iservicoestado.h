@@ -7,10 +7,11 @@ namespace comum {
 // A service that keeps one ESTADO of the urna in a file, through its ASN.1 CONVERSOR. RTTI names the template and its
 // four instances, each the only base of one class (comum::CServicoEstadoGeral, -Vota, -Gap, -SA in
 // ledger/classes.json); slots 0 and 1 of the four vtables are the shared 174 and 144 (an empty D2, and a D0 that only
-// frees), slot 2 is each class's GetPathArquivo, whose records name it. The destructor's spelling is chosen ({} and =
-// default give the same bodies in a class template, docs/reference/facts/reading.md R4), and so is GetPathArquivo being
-// pure here: no vtable of the template is in the target's data, and every instance's class overrides it. This path and
-// the template's parameter names are chosen: no record names the header.
+// frees), slot 2 is GetPathArquivo, which -Vota's, -Gap's and -SA's records name and the template's save and read (fns
+// 2894, 3791) call through slot 2, so CServicoEstadoGeral's is the same member. The destructor's spelling is chosen
+// ({} and = default give the same bodies, docs/reference/facts/reading.md R4, measured on plain classes), and so is
+// GetPathArquivo being pure here: no vtable of the template is in the target's data, and every instance's class
+// overrides it. This path and the template's parameter names are chosen: no record names the header.
 //
 // Not written: the template's members the target holds as binaryen merges of the four instances, each with landing
 // pads. Target fn 2894 (thunks 3592, 5329, 10089, 10112, which pass the converter's vptr and two table slots) saves an

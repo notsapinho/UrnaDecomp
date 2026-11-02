@@ -73,9 +73,10 @@
 # 12110 (CGeraBU), nine call sites passing 0 or 2; the roots give it two, with both values. `pnpm wasm score` before
 # step 8: 3 over 56 rows, all operand-only; the scan matched it by its content. It has no record and reads only its
 # parameters, so it is a free function of vota, its callers' namespace (how-to step 3's member rule). Chosen: the name,
-# the file (votadefs.cpp holds vota's free functions other files call; in use band 9 the target's 1387 lies after
-# md/processoeleitoral/ccargo.cpp's 1388 and before api/gui/cframedtext.cpp's 1385, which a file of app/vota/ fits, a
-# reading), the line after EhTreinamento, and static_cast<api::IPaper::EStyle>(1), as cgeradorrelpu.cpp spells it.
+# the file (votadefs.cpp, the file whose records name vota's free functions, as for 1485 above; chosen against use
+# band 9, where the target's 1387 lies between md/processoeleitoral/ccargo.cpp's 1388 and 1386, comum code not
+# written, and then api/gui/cframedtext.cpp's 1385, none of them app/vota/ code), the line after EhTreinamento, and
+# static_cast<api::IPaper::EStyle>(1), as cgeradorrelpu.cpp spells it.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # nothing in the link calls these functions yet: 168-uenux2-app-helpers-roots.cpp gives each two call sites. It compiles

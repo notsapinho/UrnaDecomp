@@ -9,6 +9,7 @@ class IRng {
 public:
     virtual ~IRng() = default;
 
+    // The slots' names are chosen: no record names them.
     virtual uebyte GetByte() = 0;
     virtual int GetInt() = 0;
     virtual int Generate(std::vector<uebyte>& dados) = 0;

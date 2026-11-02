@@ -32,7 +32,8 @@
 #   no target function of their own, and 184 matches with them in the file.
 # - Five more members, right after GetInst, belong to unit 161's states: three are held inlined by 10642, 10669 and
 #   10444, and two are out of line, 2097 and 4522, matched; src/units/161-uenux2-app-vota-operador-identidade.mk has
-#   their evidence, and 184 still matches with them in the file.
+#   their evidence, and 184 still matches with them in the file. Unit 156's 4563 and 4557 sit among them, right above
+#   4522 (fragment 156 says why).
 # - Seven more, after LogaTituloInvalidoRegistroMesario and before unit 142's three, belong to unit 152's states: five
 #   are held inlined by 10416, 10436, 10524, 10758 and 11798, and two are out of line, 4529 and 4535, matched; an eighth,
 #   LogaAudioAtivadoConformeCadastro, right after LogaAudioDesativadoFimVotacao, is held inlined by unit 152's 10523,

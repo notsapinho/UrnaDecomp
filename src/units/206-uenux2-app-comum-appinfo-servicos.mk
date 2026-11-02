@@ -18,9 +18,11 @@
 #   turn at +8 is 48 (SEM_TURNO, eurnaturno.h); else 3896 returns CPath::GetPathTrab (358) of the origin at +4 and the
 #   turn, with "vota.bin", "gap.bin" or "sa.bin". 11569 returns GetPathDinamico (1082) of the origin at +4 with
 #   "eg.bin".
-# - 1941 stores its parameter at +4 and the vptr 1558024 (CServicoEstadoGeral's vtable + 8) and returns the object; the
-#   member is written as the class's own and the constructor matches so. That the template holding it would store it
-#   after the vptr (docs/reference/facts/codegen.md C1) is not measured in this shape.
+# - 1941 stores its parameter at +4 and the vptr 1558024 (CServicoEstadoGeral's vtable + 8) and returns the object. The
+#   member is written as the class's own; held by the template instead it gives the same bytes (both compiled at the
+#   tree's flags, docs/reference/facts/codegen.md C1: in 1941's shape both store +4 and then the vptr, and in a
+#   constructor of 3897's shape both store +8, +4 and then the vptr), and 2894 and 3791 never load +4, so which class
+#   holds it is chosen (below).
 # - Place: no record names CServicoEstadoGeral's file. In the data its vtable, its typeinfo and its base's (1558016,
 #   1558036, 1558048) lie just before -Vota's vtable (1558056), and the four classes' run in the order base, Vota, Gap,
 #   SA (vtables 1558016, 1558056, 1558112, 1558168, each derived class's record and typeinfos after its vtable); in
@@ -57,10 +59,11 @@
 #   writer, which no unit writes, and for a TU that instantiates the save for the four classes ahead of the trees'
 #   copies, at those flags by the lead above.
 #
-# Chosen, no evidence names them: m_origem and m_turno, the template's parameter names, the paths of iservicoestado.h,
-# of CServicoEstadoGeral's header and source and of the derived classes' headers, the destructor's spelling, that
-# GetPathArquivo is pure in the template, the three enumerators' names, the constructors' parameter types, the lines of
-# every member but the three throws, and the order of CServicoEstadoGeral's two members.
+# Chosen, no evidence names them: m_origem and m_turno, that each class, not the template, holds the origin, the
+# template's parameter names, the paths of iservicoestado.h, of CServicoEstadoGeral's header and source and of the
+# derived classes' headers, the destructor's spelling, that GetPathArquivo is pure in the template, the three
+# enumerators' names, the constructors' parameter types, the lines of every member but the three throws, and the order
+# of CServicoEstadoGeral's two members.
 #
 # Roots (206-uenux2-app-comum-appinfo-servicos-roots.cpp): two stand-ins give 1941 three call sites that read its
 # result, for its five target callers (2273, 3333, 3897, 10243, 11572), none in the link; and the three derived classes'

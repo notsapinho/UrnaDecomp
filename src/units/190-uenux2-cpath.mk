@@ -61,7 +61,8 @@
 #   rows with the two paths' frame slots swapped (6048: offsets 16 and 0 the other way round; 634: 416 and 48), and a
 #   helper declared `inline` in cpath.cpp stays a call in 634.
 # - Every call of operator/= keeps the target's `drop` only while its result has a reader: the target's 183 is table
-#   slot 71, which fns 5968 (read as an -fexceptions copy of operator/) and 5821 pass to invoke_iii. Without the roots'
+#   slot 71, which fns 5968 (libc++'s operator/ of directory_iterator.o, in the link since unit 214) and 5821 (not in
+#   the link) pass to invoke_iii. Without the roots'
 #   address of it, binaryen drops the result, and 358, 1399, 634, 2864, 6047 and 5899 each lost a row per call (`deleted
 #   2`, `1`, `2`, `1`, `1`, `1`).
 # - The scores with the forms above: 634 42 over 484, 436 and 1274 3 over 8, 2864 8 over 83, 3834 6 over 23, 762 and

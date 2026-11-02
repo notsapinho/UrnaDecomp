@@ -15,10 +15,13 @@
 #   LogaPedidoTituloSuspensao: LogaImprimindoRelatorio (fn 1127), LogaQtdViasAdicionaisExcedeMaximo (fn 4556),
 #   LogaMesarioIndagadoQualidadeBU (fn 4551) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495), 4556 and
 #   2495 thunks of the body binaryen merges from them (fn 6115); 4556 sits above 4551, the order the target's band gives.
-#   Two more since, after LogaImprimindoRelatorio: LogaMesarioIndagadoQtdViasAdicionais (fn 4563) and
-#   LogaMesarioNaoSolicitouViasAdicionais (fn 4557), 4551's shape, above 4556 in that order, the band's (uses 2, the
-#   higher index first; build/out/wasm-map/vota_web/names.tsv gives ld_index 2106, 2107, 2108, 2109 for 4563, 4557,
-#   4556, 4551). Each builds a std::string of its literal (ledger/strings.tsv 72014, 52 bytes, and 71965, 48 bytes)
+#   Two more since, LogaMesarioIndagadoQtdViasAdicionais (fn 4563) and LogaMesarioNaoSolicitouViasAdicionais (fn
+#   4557), 4551's shape, in that order right above unit 161's LogaHabilitacaoCanceladaCapturaDigitalMesario (fn 4522):
+#   in use band 2 the higher index links first, and these two are the file's highest there, so the band puts them
+#   ahead of 4522, 4529, 4535, 4556 and 4551 (build/out/wasm-map/vota_web/names.tsv gives ld_index 2692 and 2693 for
+#   4563 and 4557, 2694 for 4522); their place right above 4522 is chosen. The band's other inverted pairs (4556 and
+#   4551 against 4535, 4529 and 4522, and those three among themselves) are older than them. Each builds a std::string
+#   of its literal (ledger/strings.tsv 72014, 52 bytes, and 71965, 48 bytes)
 #   and calls IEventosLog::loga (fn 233). 4563 is called by vota::CEmitirMaisBU::StartState (fn 12082, unit 104's)
 #   and ProcessInput (fn 12081, pending in unit 104), 4557 twice by 12081: the roots stand in for 12081. Scored on
 #   the whole link before steps 7 to 9: 10 over 67 and 9 over 63 rows, operand-only.

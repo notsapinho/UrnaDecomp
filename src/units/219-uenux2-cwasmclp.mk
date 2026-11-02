@@ -19,6 +19,11 @@
 #   destructor, inlined, destroys an ecourna::api::io::CFile at +20 (its inline destructor calls fn 336, CFile::Close,
 #   when the FILE* is set, then frees the name at +24) and then frees a std::vector at +8 whose elements need no
 #   destruction (no loop between the end and the free). Nothing else of the pointee is destroyed.
+# - The file: the constructor's record names cwasmclp.cpp, and link order puts the destructor in that file's object
+#   (docs/reference/facts/placing.md P4): in use band 1 the statics' exit destructors (12016, 12015) lie between
+#   vota::CExibeAlertaDesligamento's 12017 to 12019 and api::CSubReport's 12014 to 12010, in band 3 the accessor
+#   (3876) and 3875 between vota::CAplicacaoEncerrada::GetInst (3877) and CSubReport::GetTitulo (3874), and in band 2
+#   the destructor (5978) lies right below CExibeAlertaDesligamento::GetInst (5979), where band 1 has this object.
 # Measured on the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv before steps 7 to 9:
 # 4 over 46 rows, operand-only. Steps 8 and 9 give it no symbol line: the census pairs nothing with it (its tier is
 # none), and the scan's content pass matched it (the first scan's source column read content; a rescan writes symbol
@@ -28,7 +33,7 @@
 # types, the vector's element type (uebyte), every data member's name; the types of CLp's +0 and +4 (fn 3876 stores the
 # same word, CPolySingleton<IImpressoraRelatorios>::instance()'s, in both, and fn 3875 calls slot 9 of +4's object, an
 # IImpressora's per api/hwil/iimpressora.h); the header's path, api/hwil/clp.h, beside the printer interfaces (no record
-# names a header; the record's file is the simulator's implementation); the destructor's file, the constructor's;
+# names a header; the record's file is the simulator's implementation);
 # `= default` for its body (`{}` gives the same D2: wasm-objdump -d of the two objects, call indices masked) and its
 # line, below line 10, the constructor's record line.
 #

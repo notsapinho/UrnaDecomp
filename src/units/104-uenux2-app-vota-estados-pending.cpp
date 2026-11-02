@@ -45,16 +45,17 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 491, 502, 886, 1164, 1269, 1935, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782,
+// with no name: 491, 502, 886, 1164, 1935, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782,
 // 3825, 3826, 5462, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
-// 195's 5824, 95's 3829, 5889, 5891 and 5905, 32's 378 and 154's 620 among them).
+// 195's 5824, 95's 3829, 5889, 5891 and 5905, 32's 378, 154's 620 and 13's 1269 among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
 }
 
-// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 185, 261,
-// 407, 455, 491, 903, 1127, 2890, 4556, 4557, 4563, 4582, 5987 (2888 and 3701 are named: units 37 and 93).
+// CEmitirMaisBU::ProcessInput: fn 12081 (1543 B), records cemitirmaisbu.cpp:64, callees with no name: 491, 2890 and
+// 4582; the others have names (185, 261, 407, 455, 903, 1127, 4556, 4557, 4563, 5987, and 2888 and 3701, units 37's
+// and 93's).
 void CEmitirMaisBU::ProcessInput()
 {
     __builtin_trap();
@@ -142,8 +143,9 @@ void CReimprimindoZeresima::StartState()
     __builtin_trap();
 }
 
-// CQuerReimprimirZeresima::StartState: fn 11849 (250 B), records cquerreimprimirzeresima.cpp:45, callees 555 and 1269
-// with no name, 2282 and 5882 (comum::IEventosLog::logaErro and LogaMesarioIndagadoImprimirZeresima, unit 111).
+// CQuerReimprimirZeresima::StartState: fn 11849 (250 B), records cquerreimprimirzeresima.cpp:45, callees 555, 1269
+// (comum::CRdvVota::Comparecimento, unit 13), 2282 and 5882 (comum::IEventosLog::logaErro and
+// LogaMesarioIndagadoImprimirZeresima, unit 111), all named.
 void CQuerReimprimirZeresima::StartState()
 {
     __builtin_trap();

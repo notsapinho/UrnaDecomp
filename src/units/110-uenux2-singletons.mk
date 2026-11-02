@@ -191,7 +191,7 @@
 # blank lines above the statics (lines 11 to 22 stay unknown).
 #
 # CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264; callers 3616, 5385, 10631, 10789
-# and 10790, none written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it, which clang
+# and 10790, only 5385 written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it, which clang
 # inlines into 2264 and binaryen into fn 2225 (unit 50's CInformacaoThreadOperador::AtualizaIdentidadesEleitor), its
 # one other caller; out of line is a measurement, in src/units/50-uenux2-cinformacaothreadoperador.mk. 2264 builds a
 # CEleitorIdentidade (566) from a copy of the string and the type, finds it in the map at +112 (1703), finds the value
