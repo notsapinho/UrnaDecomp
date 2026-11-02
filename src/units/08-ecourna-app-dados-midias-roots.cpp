@@ -11,7 +11,6 @@ extern const char midias_vt_autenticacao[] __asm__("_ZTVN7ecourna3app5dados3asn2
 extern const char midias_vt_dadosgeracao[] __asm__("_ZTVN7ecourna3app5dados3asn27CConversorDadosGeracaoMidiaE");
 extern const char midias_vt_gerador[] __asm__("_ZTVN7ecourna3app5dados3asn35CConversorIdentificadorGeradorMidiaE");
 void midias_bytes_hex(int, int) __asm__("_ZN7ecourna3api4util12CStringUtils16BytesToHexStringERKNSt3__26vectorIhNS3_9allocatorIhEEEE");
-int midias_gerador_dtor(int) __asm__("_ZN7ecourna3app5dados26CIdentificadorGeradorMidiaD2Ev");
 }
 
 namespace {
@@ -22,11 +21,6 @@ const void* volatile midias_sink;
 // only one linked so far, and binaryen would inline it there.
 __attribute__((noinline)) void UsaBytesToHex(int texto, int bytes) { midias_bytes_hex(texto + 8, bytes - 4); }
 
-// ~CIdentificadorGeradorMidia (fn 2240 in the target, shared by four callers) stays a call in the landing pad of
-// CConversorDadosGeracaoMidia::DoDeconverte (fn 9202); with one caller binaryen would inline it there. The result is
-// dropped, as by every target caller, so binaryen's DAE removes the this-return as in the target.
-__attribute__((noinline)) void UsaGeradorDtor(int identificador) { midias_gerador_dtor(identificador + 36); }
-
 struct SMidiasRoots {
     SMidiasRoots()
     {
@@ -36,7 +30,6 @@ struct SMidiasRoots {
         midias_sink = midias_vt_dadosgeracao;
         midias_sink = midias_vt_gerador;
         midias_sink = reinterpret_cast<const void*>(&UsaBytesToHex);
-        midias_sink = reinterpret_cast<const void*>(&UsaGeradorDtor);
     }
 } midias_roots;
 
