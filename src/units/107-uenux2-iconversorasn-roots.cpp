@@ -8,16 +8,17 @@
 // The objects are built in place, by guaranteed elision, so this TU calls no constructor or destructor of an entity or
 // a data class: those are the ASN.1 runtime's and the units', and an instance here would be a copy ahead of them.
 // The callers each instance stands for:
-//   3730: 11411 (10270 is written). 3736: 11424 (11451 is written). 3726 and 3727 need none: their callers 11390 and
-//   11394, and 11391 and 11395, are written.
-//   3737: 11423, 11452 (11381 is written). 3738: 11411 (10270, 11457). 3799: 10273, 11587 (10271).
+//   3730: 11411 (10270 is written). 3726, 3727 and 3736 need none: their callers 11390 and 11394, 11391 and 11395, and
+//   11424 and 11451, are written.
+//   3737: 11452 (11381 and 11423 are written). 3738: 11411 (10270, 11457). 3799: 10273, 11587 (10271).
 //   2275: 10266, 10273, 11587 (10271, 11458). 5688: 11375 (11359 is written).
 //   5692: 11398 (11395 is written). 5691, 5696 and 5697 need none: their callers 11394 and 11397, 11399 and 11403, and
 //   11400 and 11404, are written.
-//   5705: 5706, 11423. 5711: 11448. 5713, 5714: 11424 (11451 is written). 5715, 5716: 11423, 11452.
+//   5705: 5706 (11423 is written). 5711: 11448. 5713 and 5714 need none: their callers 11424 and 11451 are written.
+//   5715, 5716: 11452 (11423 is written).
 //   5828: 11445 (11373 is written).
-// w107_dados gives a constructor its second call site, each stands for: 3712 11424 (11451 is written), 5672 5741, 3823
-// 2725 and 11629. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
+// w107_dados gives a constructor its second call site, each stands for: 5672 5741, 3823 2725 and 11629. 3712 needs none:
+// its callers 11378, 11424 and 11451 are written. 5632 has one direct caller (11404) and a table slot (448), which 10205 passes to invoke_iiiii: its address is
 // the reference the target has.
 //
 // The vtables are what the target keeps the converters by: slots 2 and 3, no direct caller. Every converter's data is
@@ -50,7 +51,6 @@
 #include "asn1/modules/ModuloTiposResultadosEcoUrna.h"
 
 extern "C" {
-int w3712(void*, unsigned, const void*, int) __asm__("_ZN5comum2md10CMunicipioC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEb");
 int w5672(void*, int, int) __asm__("_ZN5comum2md22CIdentificacaoAgregadaC1EtNS_17ETipoLocalVotacaoE");
 int w3823(void*, int, int, const void*) __asm__("_ZN5comum2md10CSegurancaC1EhhRKNSt3__26vectorIhNS2_9allocatorIhEEEE");
 int w5632(void*, void*, const void*, int) __asm__("_ZN5comum2md15estadoaplicacao10CDadoLocalC1ENSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERKNS1_20CLocalidadeEleitoralENS_17ETipoLocalVotacaoE");
@@ -103,17 +103,14 @@ __attribute__((noinline)) char* w107_todos(char* d, const char* e)
     d = w107_desconverte<ModuloTiposEleitorais::CabecalhoPacote, CCabecalhoPacote>(d, e);
     d = w107_desconverte<ModuloTiposCadastro::Municipio, CMunicipio>(d, e);
     d = w107_desconverte<ModuloTiposEleitorais::CodigoCargoConsulta, unsigned char>(d, e);
-    d = w107_converte<ModuloComplementosMunicipios::ComplementoMunicipio, CComplementoMunicipio>(d, e);
-    d = w107_converte<ModuloLocal::SecaoEleitoral, CSecaoEleitoral>(d, e);
     d = w107_converte<ModuloTiposEleitorais::CabecalhoEntidade, CCabecalhoEntidade>(d, e);
     d = w107_converte<ModuloTiposResultadosEcoUrna::Urna, CUrna>(d, e);
-    d = w107_converte<ModuloTiposCadastro::Municipio, CMunicipio>(d, e);
     return d;
 }
 
 __attribute__((noinline)) int w107_dados(char* d, int a, int b, const char* e)
 {
-    return w3712(d, a, e, b) + w5672(d + 32, a + 1, b + 2) + w3823(d + 64, b, a, e + 16);
+    return w5672(d + 32, a + 1, b + 2) + w3823(d + 64, b, a, e + 16);
 }
 
 char* (*volatile w107_sink)(char*, const char*);

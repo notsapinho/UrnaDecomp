@@ -1,7 +1,11 @@
 #pragma once
 
+#include <optional>
 #include <string>
 
+#include "app/comum/eurnafase.h"
+#include "app/comum/md/cideleitoral.h"
+#include "app/comum/md/cidentificacaourna.h"
 #include "ecourna/api/uetypes.hpp"
 
 namespace comum {
@@ -13,10 +17,26 @@ namespace md {
 
 enum ETipoPacote : int;
 
-// 40 bytes: the constructor stores them at +4 of the class (fn 11437, where binaryen inlined it). Only the size is
-// recovered here; the class's file, cidpacote.cpp, has records and is not written.
+// Recovered: the layout, 40 bytes, which the constructor stores at +4 of the class (fn 11437, where binaryen inlined
+// it). fn 11437 builds one in its frame: a CIDEleitoral at +0, the phase at +8 (Utils::DesconverteFase's result),
+// then the entity's three optional fields in their order, each with its engaged flag: a string at +12 (flag at +24), a
+// 32-bit word at +28 (flag at +32) and a 16-bit word at +36 (flag at +38). The elements' copy (fn 5669) and the vector's
+// destroy (fn 3863) read the same layout: the copy moves +0 to +12 as words, the string only when its flag is 1, then
+// the 11 bytes from +28; the destroy frees the string only when its flag is 1. The three getters are the records'
+// (cidpacote.cpp:67, 75 and 83, whose return types say which optional is which), declared and not written there. The
+// member names are chosen.
 class CIDPacote {
-    alignas(4) unsigned char m_bytes[40];
+public:
+    std::string UF() const;
+    TMunicipioID Municipio() const;
+    TZonaID Zona() const;
+
+private:
+    CIDEleitoral m_idEleitoral;
+    EUrnaFase m_fase;
+    std::optional<std::string> m_uf;
+    std::optional<TMunicipioID> m_municipio;
+    std::optional<TZonaID> m_zona;
 };
 
 // The layout, 72 bytes, from the constructor as fn 11437 holds it (records ccabecalhopacote.cpp:33, :36, :39): the type

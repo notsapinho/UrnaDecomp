@@ -925,9 +925,6 @@
 // f2808 · 187 B · unmatched · placement: link order · name unknown
 // ? f2808(i32, i32) { ... }
 
-// f2807 · 237 B · unmatched · placement: link order · name unknown
-// void f2807(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1108 · uses=4 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
 
 // f2829 · 189 B · unmatched · placement: link order · name unknown
