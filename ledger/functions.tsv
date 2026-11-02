@@ -10787,8 +10787,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10921	73	0	app	api	-	-	none	-	
 10922	104	0	app	api	skeleton	11922	addr	4	api::CTextFieldMultiLine::~CTextFieldMultiLine()_3944
 10923	101	0	app	api	skeleton	11923	addr	3	api::CTextFieldMultiLine::~CTextFieldMultiLine()
-10924	295	0	app	api	-	-	none	-	
-10925	564	0	app	api	-	-	none	-	
+10924	295	0	app	api	skeleton	11924	shape	3	api::CTextFieldMultiLine::Rect() const
+10925	564	0	app	api	skeleton	11926	shape	7	api::CTextFieldMultiLine::Draw(api::IScreen&) const
 10926	73	0	app	api	-	-	none	-	
 10927	12	0	app	api	skeleton	11585	addr	2	api::CTextFieldDoubleLine::~CTextFieldDoubleLine()_5051
 10928	12	0	app	api	skeleton	11586	addr	2	api::CTextFieldDoubleLine::~CTextFieldDoubleLine()

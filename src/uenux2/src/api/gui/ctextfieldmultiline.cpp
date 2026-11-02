@@ -8,7 +8,7 @@
 //   10925 Draw(IScreen&) const                                                              (here)
 //   10924 Rect() const                                                                      (here)
 //   2783  Move(const SPoint&)    one body binaryen shares with CFillField/CRectField/CTextRectField (here)
-// src/units/14-uenux2-ctextfieldmultiline.mk says what each member rests on.
+// src/units/14-uenux2-ctextfieldmultiline.mk says what each member, and the helper UltimoEspaco, rests on.
 
 #include "api/gui/ctextfieldmultiline.h"
 
@@ -88,8 +88,23 @@ void CTextFieldMultiLine::Move(const SPoint& posicao)
     }
 }
 
-// (original lines 94-110: content not recovered)
-#line 111
+namespace {
+size_t UltimoEspaco(IScreen& tela, const std::string& linha, const SFont& font, int largura)
+{
+    size_t corte = std::string::npos;
+    size_t inicio = 0;
+    size_t espaco;
+
+    while ((espaco = linha.find(' ', inicio)) != std::string::npos && tela.GetTextWidth(linha.substr(0, espaco), font) <= largura) {
+        corte = espaco;
+        inicio = espaco + 1;
+    }
+
+    return corte;
+}
+} // namespace
+
+
 std::vector<std::string> CTextFieldMultiLine::GetTextLines() const
 {
     const int largura = m_rect.Width();
@@ -98,7 +113,6 @@ std::vector<std::string> CTextFieldMultiLine::GetTextLines() const
     IScreen& tela = CPolySingleton<IScreen>::instance();
     std::istringstream stream(texto);
     std::string linha;
-    const auto larguraPrefixo = [&](size_t tamanho) { return tela.GetTextWidth(linha.substr(0, tamanho), m_font); };
 
     while (std::getline(stream, linha)) {
         if (linha.empty()) {
@@ -110,22 +124,18 @@ std::vector<std::string> CTextFieldMultiLine::GetTextLines() const
             size_t corte = std::string::npos;
 
             if (tela.GetTextWidth(linha, m_font) > largura) {
-                size_t espaco = linha.find(' ');
-
-                while (espaco != std::string::npos && larguraPrefixo(espaco) <= largura) {
-                    corte = espaco;
-                    espaco = linha.find(' ', espaco + 1);
-                }
+                corte = UltimoEspaco(tela, linha, m_font, largura);
 
                 if (corte == std::string::npos) {
                     size_t tamanho = 1;
 
-                    while (tamanho < linha.size() && larguraPrefixo(tamanho) <= largura) {
-                        ++tamanho;
-                    }
-
-                    if (tamanho < linha.size()) {
-                        corte = tamanho - 1;
+                    while (tamanho < linha.size()) {
+                        if (tela.GetTextWidth(linha.substr(0, tamanho), m_font) <= largura) {
+                            ++tamanho;
+                        } else {
+                            corte = tamanho - 1;
+                            break;
+                        }
                     }
                 }
             }
