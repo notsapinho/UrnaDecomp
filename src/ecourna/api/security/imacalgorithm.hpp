@@ -8,6 +8,7 @@ namespace ecourna::api::security {
 
 class IMacAlgorithm : private pattern::NonCopyable {
 public:
+    IMacAlgorithm();
     virtual ~IMacAlgorithm() = default;
 
     void Mac(const std::vector<uebyte>& dados, std::vector<uebyte>& mac, const std::vector<uebyte>& chave) const;

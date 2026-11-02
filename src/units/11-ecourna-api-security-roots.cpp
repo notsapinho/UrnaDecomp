@@ -4,6 +4,10 @@
 // Declared through asm labels with the wasm-level signatures; chkdfseed.hpp is included for the class whose destructor
 // the function below emits. Compiled as uenux2 code (APP_CXXFLAGS): at UENUX2_CXXFLAGS that class's D2 and D0 compare
 // equal, by function with the object-local numbers masked.
+// CSiphashMac's DoMac and DoVerify (fns 9498, 9497) and IMacAlgorithm::Mac are not taken here: the target reaches the
+// first two through the vtable that fn 3700 alone stores (/usr/bin/grep -rlE 'i32\.const 1113604($|[^0-9])'
+// build/out/splat/pieces/asm), and holds Mac inlined there by binaryen. 3700, comum::CCalculaCV::CalculaCodigo (unit
+// 121), is in the link and stores that vptr, and Mac's one call site is in it.
 #include "ecourna/api/security/chkdfseed.hpp"
 
 extern "C" {
@@ -21,9 +25,6 @@ int rsec_root_10(int, int, int) __asm__("_ZN7ecourna3api8security4CShaC1ENSt3__2
 void rsec_root_11(int) __asm__("_ZN7ecourna3api8security4CShaD0Ev");
 int rsec_root_12(int) __asm__("_ZN7ecourna3api8security4CShaD2Ev");
 int rsec_root_13(int) __asm__("_ZN7ecourna3api8security7CSha512C1Ev");
-void rsec_root_14(int, int, int, int) __asm__("_ZNK7ecourna3api8security11CSiphashMac5DoMacERKNSt3__26vectorIhNS3_9allocatorIhEEEERS7_S9_");
-int rsec_root_15(int, int, int, int) __asm__("_ZNK7ecourna3api8security11CSiphashMac8DoVerifyERKNSt3__26vectorIhNS3_9allocatorIhEEEES9_S9_");
-void rsec_root_16(int, int, int, int) __asm__("_ZNK7ecourna3api8security13IMacAlgorithm3MacERKNSt3__26vectorIhNS3_9allocatorIhEEEERS7_S9_");
 int rsec_root_17(int, int) __asm__("_ZN7ecourna3api8security16ISymmetricCipherC2ERKNS1_7CAesKeyE");
 extern const char rsec_hkdf_vt[] __asm__("_ZTVN7ecourna3api8security9CHKDFSeedE");
 }
@@ -59,9 +60,6 @@ struct SRsecRoots {
         rsec_sink = reinterpret_cast<void*>(&rsec_root_11);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_12);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_13);
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_14);
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_15);
-        rsec_sink = reinterpret_cast<void*>(&rsec_root_16);
         rsec_sink = reinterpret_cast<void*>(&rsec_root_17);
         rsec_sink = const_cast<char*>(rsec_hkdf_vt);
     }

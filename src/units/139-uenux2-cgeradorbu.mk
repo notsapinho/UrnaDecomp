@@ -1,7 +1,7 @@
 # uenux2 comum::CGeradorBU (app/comum/relatorios/cgeradorbu.cpp and cgeradorbu.h) and its bases
 # comum::CGeradorBUBase<comum::CRdvVota, comum::CEleitores> (cgeradorbubase.h) and
 # comum::CGeradorRelBase<comum::CRdvVota, comum::CEleitores> (cgeradorrelbase.h, new, its records' file): their
-# destructors and two of the base's slots; and api::CPaperFormBuilder::AddTextField<FONTE> over
+# destructors, two of the base's slots and CGeradorBU's ImprimePreTexto; and api::CPaperFormBuilder::AddTextField<FONTE> over
 # comum::CPadDS<comum::CToUpperDS<comum::CCargoDSNome>>, whose instance this unit's roots object emits. Paths relative
 # to src/uenux2.
 #
@@ -12,6 +12,26 @@
 # - CGeradorBUBase<CRdvVota, CEleitores>::ImprimeProporcionalPartido (11255, slot 3, record cgeradorbubase.h:187), with
 #   ImprimeVotosCandidatos (record :222) inlined by binaryen (a second 400-byte frame), defined in the class in
 #   cgeradorbubase.h; cgeradorbu.cpp's object, which emits the base's vtable, emits it.
+# - CGeradorBU::ImprimePreTexto (11256, slot 2, record cgeradorbu.cpp:257:27, the default std::source_location of its
+#   CPolySingleton<CCalculaCV>::instance() call), with two free functions binaryen inlines into it, each behind a
+#   stack-pointer prologue of its own: ImprimeHistoricoCargas (a 416-byte frame) adds a 38-dash line, the title
+#   "Histórico de código de carga" and a second dash line, then for each load code "{}: {}" of its number from 1 and
+#   CRelUtil::GetIDCargaFormatado's text (fn 2786), a new line, CRelUtil::DSCodigoVerificador by its table slot (3048,
+#   fn 11182, unit 123) and a new line; ConcatenaHistoricoCargas (a 32-byte frame) joins the codes, each followed by "@".
+#   ImprimePreTexto builds the form, hands the joined codes to CCalculaCV::IncluiString (fn 942) and calls the form's
+#   slot 2. Measured with `pnpm wasm score` in the whole link, all before steps 7 to 9:
+#   - the helpers as const members of CGeradorBU over m_historicoCargas, defined before ImprimePreTexto: 250 over 768
+#     rows (15 inserted, 17 deleted; the target copies `this` to another local before the first prologue and loads
+#     +116 and +120 through it); the same members after ImprimePreTexto: 278 over 775; declared inline: 391 over 820;
+#   - as free functions taking the vector, defined before ImprimePreTexto: 133 over 763 (the vector's address held in a
+#     local, loaded at offsets 0 and 4); defined after it, as written: 41 over 753, all operand-only, the one operand that
+#     is no call and no data address the format buffer's table slot (148 in the target), which 11182 and 3700 hold too.
+#   ConcatenaHistoricoCargas is a std::accumulate whose lambda returns `historico + carga + "@"`: the target builds the
+#   string in the helper's frame and copies it to the result at the end, which reads as accumulate's by-value initial
+#   value returned (a reading). A range-for that assigns `historico = historico + carga + "@"` to a named local and
+#   returns it scores ImprimePreTexto 291 over 783 (30 inserted, 47 deleted). The two dash lines are std::string(38, '-'):
+#   the target fills each with eight-byte stores of 0x2D, where the title is copied from the data. The formatted line is
+#   a named local: the target frees the load code's text before AddTextField and the line after it.
 #
 # Written and not matched: ImprimeMajoritario (11254, slot 4, record :246), beside it. The scan's first difference,
 # `+0xae target +0xad i32.const 8975 | ours +0xad i32.const 8944` (splat/scan.tsv), is the end of its literal "{:02}",
@@ -62,6 +82,10 @@
 #   129's fragment says how). The control block of that CDataText (11246) comes from this instance now: unit 102's
 #   dropped builder for it, which stood for 5613, is gone, and unit 129's stand-in for 11247 too.
 #
+# Chosen, for ImprimePreTexto: the helpers' names, their being free functions in comum (they read only the vector they
+# are given), their declarations in cgeradorbu.cpp above ImprimePreTexto, the parameters' and locals' names,
+# `CCalculaCV& calculo = ` before the call as what fills line 257 to column 27, and ALINHAMENTO_ESQUERDA and
+# ALINHAMENTO_CENTRO for the alignments 0 and 2 the target passes (style 1 is a cast: IPaper::EStyle has no enumerators).
 # Chosen: every data member's name but those the constructors' messages give (headers); in cgeradorbubase.h, where the
 # class declares its data members, ImprimeConsulta's declaration's line, ImprimeVotosCandidatos' access, the locals'
 # names and the `!= 0` and `continue` forms of the tests; CGeradorBU's header path, and
@@ -69,10 +93,10 @@
 # cgeradorbu.cpp and ccalculacv.cpp (no record); DestroyInst's name and class; AddTextField<FONTE>'s name, its place in
 # the header and the alignment as CDataText's default (the target's body stores the constant 0).
 #
-# Not reconstructed (traps in 139-uenux2-cgeradorbu-pending.cpp, its header says what each waits for): ImprimePreTexto
-# (11256) and ImprimeConsulta (11253), which call fn 160, std::string::append, as this tree's code does at its -O3 (unit
-# 31's AddField and unit 93's DefineHistoricoCarga measure that), and fn 942, CCalculaCV::IncluiString (unit 121, matched).
-# Each waits for a direct callee that has no body of ours (the pending file's header lists them).
+# Not reconstructed (a trap in 139-uenux2-cgeradorbu-pending.cpp, whose header says what it waits for): ImprimeConsulta
+# (11253), which calls fn 160, std::string::append, as this tree's code does at its -O3 (unit 31's AddField and unit 93's
+# DefineHistoricoCarga measure that), and fn 942, CCalculaCV::IncluiString (unit 121, matched), and waits for direct
+# callees that have no body of ours.
 # The three constructors, GeraRelatorio and the records of cgeradorbu.cpp (CriaQRCode, DefineTipo) are in fn 12110 and
 # not written; their lines stay blank.
 CGERADORBU_SRCS := src/app/comum/relatorios/cgeradorbu.cpp

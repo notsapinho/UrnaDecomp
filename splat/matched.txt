@@ -9708,7 +9708,7 @@
 6024 byn$mgfn-shared$_ZN3api5IFormINS_7IScreenEEC2ERKNSt3__26vectorINS3_10shared_ptrINS_10IFormFieldIS1_EEEENS3_9allocatorIS8_EEEERKNS5_INS_8IPreShowIS1_EEEE
 8177 __cxx_global_array_dtor.14@app/uenux2/src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp.o
 8187 __cxx_global_array_dtor.12@app/uenux2/src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp.o
-8641 __cxx_global_array_dtor.8@app/uenux2/src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp.o
+8641 __cxx_global_array_dtor.8
 8727 __cxx_global_array_dtor.7@app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 8879 _ZNSt3__26vectorIN3api10FormHandleINS1_7IScreenEEENS_9allocatorIS4_EEE7reserveEm
 8910 __cxx_global_array_dtor.7@app/uenux2/src/api/gui/cinteractiveformbuilder.cpp.o
@@ -9729,8 +9729,8 @@
 11134 _ZN3api5IFormINS_7IScreenEE5Slot3Ev
 11135 _ZN3api5IFormINS_7IScreenEE5Slot2Ev
 11136 _ZN3api5IFormINS_7IScreenEED0Ev
-12108 __cxx_global_array_dtor.10@app/uenux2/src/app/comum/relatorios/cgeradorbu.cpp.o
-12109 __cxx_global_array_dtor.8@app/uenux2/src/app/comum/relatorios/cgeradorbu.cpp.o
+12108 __cxx_global_array_dtor.13@app/uenux2/src/app/comum/relatorios/cgeradorbu.cpp.o
+12109 __cxx_global_array_dtor.11@app/uenux2/src/app/comum/relatorios/cgeradorbu.cpp.o
 2776 _ZN3api5IFormINS_9IScreenMTEED2Ev
 3941 byn$mgfn-shared$_ZN3api10CFormStackINS_7IScreenEE10GetHandlesEv
 5022 _ZN3api10CFormStackINS_9IScreenMTEE10GetHandlesEv
@@ -11160,3 +11160,8 @@
 4546 _ZN4vota8CLogVota26LogaVotoBrancoPorSuspensaoEh
 7370 _ZN4vota15CEleitorVotando11FinishStateEv
 13588 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/comum/cinformacaoeleitor.cpp.o
+3700 _ZN5comum10CCalculaCV13CalculaCodigoEv
+5615 _ZN5comum10CCalculaCV8ReiniciaERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
+11181 _ZN5comum12_GLOBAL__N_113TituloPartidoEv
+11182 _ZN5comum8CRelUtil19DSCodigoVerificadorEv
+11256 _ZNK5comum10CGeradorBU15ImprimePreTextoEv

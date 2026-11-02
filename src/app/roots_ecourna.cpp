@@ -52,9 +52,11 @@ __attribute__((noinline)) unsigned long long UsaConversoes2(const std::string& s
            CStringUtils::HexToInt(s) * 19 + CStringUtils::HexStringToBytes(s).size() * 23;
 }
 
+// CStringUtils::HexToQWord has no call here: its one target caller, fn 3700 (comum::CCalculaCV::CalculaCodigo, unit
+// 121), holds it inlined by binaryen and is in the link.
 __attribute__((noinline)) unsigned long long UsaConversoes3(const std::string& s)
 {
-    return CStringUtils::ToQWord(s) ^ CStringUtils::HexToQWord(s) ^ CStringUtils::ToDWord(s);
+    return CStringUtils::ToQWord(s) ^ CStringUtils::ToDWord(s);
 }
 
 __attribute__((noinline)) std::string UsaPreenche1(const std::string& s) { return CStringUtils::PreencheAEsquerda(s, '0', 11); }
