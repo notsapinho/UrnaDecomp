@@ -19,10 +19,13 @@ UENUX2_SRCS += $(CSUBREPORT_SRCS)
 # ImprimeParte (fn 12009) is defined in the class like the other slots. Defined out of line in csubreport.cpp it has the
 # same bytes (a probe with uenux2's flags, as has `(*m_parte).Imprime()` or `m_parte.get()->Imprime()` in the class), but
 # it would be the key function and the vtable strong, where the data order above shows a linkonce copy: that is what
-# makes the class form the choice. The constructor's three callers are not reconstructed:
-# 57-uenux2-csubreport-roots.cpp gives it two. The vtable, the implicit destructors (fns 12014, 12013) and the inline
-# slots are emitted with the constructor, in csubreport.cpp's object, which comes before the ecourna csha object in the
-# link: slot 2, a twin of CSha::GetAlgoritmo, is GetTitulo's body now.
+# makes the class form the choice. Of the constructor's three target callers, 2882 (vota::CRelVotaUtil::CortaPapel,
+# unit 246) and 3671 (api::CPaperFormBuilder::Show, unit 31) are in the link, and 57-uenux2-csubreport-roots.cpp
+# stands for 11908. The vtable, the implicit
+# destructors (fns 12014, 12013) and the inline slots are emitted with the constructor, in csubreport.cpp's object, and
+# with 2882, in crelvotautil.cpp's, which links first (fragment 246 sorts before 57) and gives the copies the link keeps
+# (the object column of build/out/wasm-map/vota_web/names.tsv), as the target keeps CRelVotaUtil's object's; both come
+# before the ecourna csha object in the link: slot 2, a twin of CSha::GetAlgoritmo, is GetTitulo's body now.
 $(ROOT)/$(APP)/57-uenux2-csubreport-roots.o: $(ROOT)/src/units/57-uenux2-csubreport-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/57-uenux2-csubreport.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/57-uenux2-csubreport-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/57-uenux2-csubreport-roots.o

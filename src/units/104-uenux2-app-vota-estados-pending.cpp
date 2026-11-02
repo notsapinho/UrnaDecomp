@@ -19,7 +19,6 @@
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
-#include "app/vota/eleitor/iniciovotacao/cquerreimprimirzeresima.h"
 #include "app/vota/operador/outrasopcoes/cfimaquisicaovotos.h"
 #include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 #include "app/vota/operador/leidentidade/cprocuraeleitor.h"
@@ -76,7 +75,7 @@ void CImprimirBUOutrasObrigatorias::StartState()
 }
 
 // CImprimindoZeresima::StartState: fn 11991 (2577 B), records cimprimindozeresima.cpp:104, cimprimindozeresima.cpp:77,
-// callees with no name: 185, 187, 261, 491, 1127, 2882, 6587 (1487 and 1488 are unit 168's).
+// callees with no name: 185, 187, 261, 491, 1127, 6587 (1487 and 1488 are unit 168's; 2882 is unit 246's).
 void CImprimindoZeresima::StartState()
 {
     __builtin_trap();
@@ -126,13 +125,6 @@ void CMenuVisualizarCandidatos::StartState()
 // CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
 // no name: 185, 187, 261, 491, 1127, 6587 (1487 and 1488 are unit 168's).
 void CReimprimindoResumoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
-// CQuerReimprimirZeresima::ProcessInput: fn 11848 (349 B), callee with no name: 2882 (2520 is vota::RegistraMesarios,
-// unit 168).
-void CQuerReimprimirZeresima::ProcessInput()
 {
     __builtin_trap();
 }

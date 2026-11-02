@@ -6,6 +6,7 @@
 //   357       Build          GetForm's form, after which the builder's vector is emptied: the target calls GetForm (fn
 //                            5515) and then destroys the vector's elements from the last, as clear() does; the name is
 //                            chosen, and the copy elided into the result (the target passes its result to 5515)
+//   3671      Show           named by its lambda's RTTI; prints the form through api::CLp, then empties the vector
 // The EStyle 604 passes is a literal by choice: a parameter every caller passes as 1 gives the same body, since binaryen
 // folds it (docs/how-to-decompile.md step 2). `new CCutFieldPaper()` has its parentheses from the bytes: 1264 zeroes the
 // 24 bytes of the object before the vptr store, which the value-initialization of a class with an implicit constructor
@@ -20,7 +21,9 @@
 #include "api/gui/ipaperrelatorios.h"
 #include "api/gui/cpreshownothing.h"
 #include "api/gui/cqrcodeimagefieldpaper.h"
+#include "api/gui/csubreport.h"
 #include "api/gui/ctextfieldpaper.h"
+#include "api/hwil/clp.h"
 
 namespace api {
 
@@ -68,6 +71,12 @@ std::shared_ptr<IForm<IPaper>> CPaperFormBuilder::Build()
     std::shared_ptr<IForm<IPaper>> form = GetForm();
     m_campos.clear();
     return form;
+}
+
+void CPaperFormBuilder::Show(const std::string& titulo, const std::string& subtitulo, bool habilitado)
+{
+    CLp::GetInst().Imprime(CSubReport(titulo, subtitulo, habilitado), [this] { GetForm()->Slot2(); });
+    m_campos.clear();
 }
 
 } // namespace api

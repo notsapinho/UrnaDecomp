@@ -193,9 +193,21 @@
 #   (euevotaerror.h), the locals' names, the cases as the enumerators, the member's place after StartState and the
 #   lines above it, ProcessInput's place after it. The function's instance of the enum's handle comes first in the
 #   link, so the hand line of 536 in splat/symbol_addrs.txt names that symbol now (unit 109's fragment has the rule).
+# - vota::CQuerReimprimirZeresima::ProcessInput (fn 11848, slot 7, after StartState: 11849 and 11848 in their band). It
+#   takes the form's first input field (GetEntradas().at(0): the target makes that bounds check before Read's), then
+#   switches on Read() (record cinteractiveform.h:57, which it holds inlined, with CPolySingleton<api::IInputKbd>'s
+#   instance, fn 455): on api::INPUT_CONFIRMA (9) a text "1" or "2" cuts the paper (vota::CRelVotaUtil::CortaPapel, fn
+#   2882, unit 246) and goes to vota::CReimprimindoZeresima or CReimprimindoResumoZeresima (fns 5941, 5942), and any
+#   other text is cleared (the field's slot 11, Clear); on api::INPUT_CORRIGE (5) a text that is not empty is cleared,
+#   else it goes to vota::CReinicioComparecimentoMesario when vota::RegistraMesarios (fn 2520) is true and to
+#   vota::CInicioVotacao when not (fns 3864, 2880); on api::INPUT_BRANCO (3) to vota::CMaisInformacoes::GetInst(this)
+#   (fn 1280). The text is read through GetTexto's reference each time, not copied: the target reads the field's +24
+#   string at each test. 12 over 162 rows, operand-only. Chosen: the local's name and type spelling, the cases' order,
+#   `== "1"` and `!empty()` as the tests' spellings, the else-if chains.
 #
 # Roots: the pair for vota::CQuerReimprimirZeresima::GetInst (5940) went, its one target caller, 11835, being in the
-# link (unit 138).
+# link (unit 138). The pairs for CReimprimindoZeresima::GetInst (5941) and CReimprimindoResumoZeresima::GetInst (5942)
+# went: their target callers, 11848 with 11845 and with 11852, are in the link.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
