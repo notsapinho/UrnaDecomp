@@ -1,10 +1,10 @@
 // vota::CEscolheOpcao (/home/rubio/tse/uenux2/src/app/vota/operador/outrasopcoes/cescolheopcao.cpp). This comment is
 // the reconstruction's. The file's records are StartState's, lines 150 to 152. Written here: the statics, the four
-// texts of the options, AdicionaCampoNumerico (fn 1151), GetInst (fn 2753) with the constructor and its two helpers,
-// whose lines are a choice before the destructor's, in their use bands' order; the destructor (fns 2752 and 10691), whose
-// line is a choice before the records; StartState (fn 10690) at its records; and COpcaoDS's call operator, which has no
-// record and no target function of its own: binaryen inlined it into fn 10685, CDataText<COpcaoDS>::GetText. Its line
-// is a choice, after the records. src/units/121-uenux2-datasources.mk says which of this is evidence.
+// texts of the options, AdicionaCampoNumerico (fn 1151), GetInst (fn 2753) with the constructor and its two helpers
+// (CriaOpcoes and MontaTela, chosen), whose lines are a choice before the destructor's, in their use bands' order; the
+// destructor (fns 2752 and 10691), whose line is a choice before the records; StartState (fn 10690) at its records; and
+// COpcaoDS's call operator, which has no record and no target function of its own: binaryen inlined it into fn 10685,
+// CDataText<COpcaoDS>::GetText. Its line is a choice, after the records. Unit 121's fragment gives the evidence.
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 
 #include <format>

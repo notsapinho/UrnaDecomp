@@ -14,8 +14,9 @@
 // - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 652, 5396 and 5665.
 // - vota::CDadoEleitorNaoConfere::ProcessInput (target fn 10447, slot 7): on CONFIRMA it goes to fn 652's state or,
 //   with CControlaReconhecimento::AvancaVerificacao inlined (record ccontrolareconhecimento.cpp:176), to fn 2735's.
-// - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): it calls fns 2749, 2753, 5401 and 5430, and 2226,
-//   3619 and 5414 (unit 50).
+// - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): fn 2749 (vota::CValidaIdentidade's slot 0, a class
+//   with no source here). Its other callees match: 2753, 5401 and 5430 (units 121, 239 and 152), and 2226, 3619 and
+//   5414 (unit 50).
 // - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): every direct callee has a name, but it waits for two
 //   things this tree lacks. On the tick at +12 it holds vota::CAguardaInspecao's GetInst and constructor inlined (the
 //   one store of that class's vptr, 1590732; its statics at 1908552 and 1908528), a class with no header here, whose

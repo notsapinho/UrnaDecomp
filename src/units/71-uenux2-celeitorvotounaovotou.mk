@@ -60,8 +60,9 @@
 # helper's being in an anonymous namespace, its name and its parameters are chosen. The statics are defined before
 # StartState: their destructors (10434, 10433) sit above 10431 in band 1. s_inst (@1909288) has a hand line in
 # splat/symbol_addrs.txt: step 8 names it by GetInst's votes alone, which the self-vote rule refuses, and its static
-# destructor 10434, the other function that reads it, does not match: the census pairs our destructor of it with fn
-# 10414 (the same body over another class's pointer and D2, a shape pair), and 10434 stays no-candidate. The roots stand
+# destructor 10434, the other function that reads it (a thunk into 2903, the body four classes' statics share; elem
+# 4215 to 4222 tie it to this class), does not match: the census pairs our destructor of it with fn 10414 (the same
+# body as ours, over another class's pointer and D2: a shape pair), and 10434 stays no-candidate. The roots stand
 # for 1901's target callers (10209, 10419, 10425), and the vtable sink went: 1901's constructor stores the vptr.
 #
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 120's now

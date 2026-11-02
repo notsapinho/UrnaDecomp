@@ -53,6 +53,8 @@
 #   map from a helper (the map's three words written in place at +12, NRVO) and the form from another (fn 301 writes its
 #   result at +24 directly, with no zeroing of the member first, which an assignment in the body would need). Both
 #   helpers have no frame of their own: clang inlines them, a reading that they are internal functions called once.
+#   Chosen: the helpers' names (CriaOpcoes for the map, MontaTela for the form), their being in an anonymous namespace
+#   and MontaTela's parameter.
 # - The map: four emplace(numero, SOpcao(codigo, COpcaoDS(numero, &Texto))) whose find runs before the node is built
 #   (libc++'s key-extracting emplace): key 1, 2, 3 (when vota::RegistraMesarios(), fn 2520, says so) and then the next
 #   number when the urn is biometric (comum::CLocal::UrnaBiometrica, fn 820) and not in voter training (fn 697), with
@@ -77,10 +79,11 @@
 #   operand-only (64 over 1667, all the statics' addresses and calls).
 # - The texts are external functions defined after the statics: in band 1 the statics' destructors (10697, 10696)
 #   link before the texts (10695 to 10692, in option order), which link before the destructor's D0 (10691). Internal
-#   functions referenced only from the helpers would be emitted at the end of the object, after the D0 (a reading of
-#   clang's deferred emission). TextoAudio returns from two branches, "Desativar áudio" or "Ativar áudio": a
-#   conditional expression gave one copy of a selected pointer (50 over 64); two returns, the target's two fixed copies.
-#   The names and the texts' being free functions of namespace vota are chosen.
+#   functions referenced only from the helpers would be emitted at the end of the object, after the D0 (clang defers
+#   internal functions to the end of the TU: how-to step 3, "What a record's place says"). TextoAudio returns from two
+#   branches, "Desativar áudio" or "Ativar áudio": a conditional expression gave one copy of a selected pointer (50 over
+#   64); two returns, the target's two fixed copies. The names and the texts' being free functions of namespace vota
+#   are chosen.
 # - 1151, vota::AdicionaCampoNumerico(api::CMTFormBuilder&, size_t, bool, const api::SPoint&), returns the
 #   std::shared_ptr<api::IInputField<api::IScreenMT>> it builds: a CNumberValidation (cnumbervalidation.h, its
 #   constructor inlined, "0123456789" stored in place), a CInputFieldMT over it (cinputfieldmt.h's constructor inlined,
@@ -96,7 +99,9 @@
 # of CDataText<COpcaoDS> went, since 2753 stores both vptrs, and so did the builder of CDataText<COpcaoDS>.
 # cescolheopcao.cpp.o now links ahead of unit 31's cmtformbuilder.cpp.o and gives the copies of what both instantiate:
 # IInputField<IScreenMT>'s constructor (3673), its destructor and Read, and the vector's emplace_back (1400, renamed by
-# step 9 to its IScreenMT twin), each re-pointing as before. Choices that give the same bytes: none measured.
+# step 9 to its IScreenMT twin), each re-pointing as before. Choices that give the same bytes: none measured. Not
+# measured either: 1151 as the linkonce copy of an inline definition in a header, the other reading unit 31's fragment
+# gave of where the target's copy comes from before 1151 was written.
 #
 # StartState (10690, slot 2) is written at its records' lines in cescolheopcao.cpp: it sets the next state to itself,
 # shows the form at +24 (its slot 2), logs with musl's syslog(LOG_INFO, "%s:%d> %d", __func__, __LINE__, ...) whether

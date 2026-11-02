@@ -6,7 +6,8 @@
 // src/units/174-uenux2-app-vota-mensagens.mk):
 // - vota::CSuspensaoAutomaticaEleitor::ProcessKey (fn 10404, slot 6): fn 652, one of the two states it goes to (the
 //   other, fn 1150, is unit 142's CMostraEleitorVotando::GetInst).
-// - vota::CPerguntaEleitorVotando::ProcessInput (fn 10415, slot 7): fn 1151 (it calls fn 1150 too, unit 142's).
+// - vota::CPerguntaEleitorVotando::ProcessInput (fn 10415, slot 7): every direct callee has a name now (1151 is unit
+//   121's vota::AdicionaCampoNumerico, 1150 unit 142's); not written.
 // - vota::CDesabilitaAudioEleitor::ProcessInput (fn 10435, slot 7): fn 652 (it calls
 //   CLogVota::LogaAudioDesativadoFimVotacao, fn 4529, written, and usleep, 3966, matched).
 // - vota::CPerguntaFilaEleitorVazia::ProcessInput (fn 10713, slot 7): fn 3631, CPedeTituloEncerramento's GetInst,

@@ -78,9 +78,10 @@
 #   const CAppInfo& local that gives the const GetGeral (a std::as_const call is not tried).
 # - SemImpedimento, target fn 2266, matched, right after GetImpedimento: GetImpedimento() == IMPEDIMENTO_SEM_IMPEDIMENTO,
 #   with GetImpedimento inlined, which clang does only in this file (2266 holds 185 and 457's calls and the turn's test
-#   in place). Band 5 runs ccargods.cpp's 2268 and the ecourna 2267, then 2266, then celeitores.cpp's 2265 and 2264: name
-#   order puts celeitordetalhe.cpp there. Before steps 7 to 9 it scored 2 over 14 rows, both operands (pnpm wasm score). Its five callers: 2823
-#   (unit 110's CEleitores::QuantidadeAptos) and 2824, 10635, 11233 and 11616, not written, for which the roots'
+#   in place). Band 5 runs ccargods.cpp's 2268 and cconfiguracaoeleicao.cpp's 2267 (the D2 of
+#   ecourna::app::dados::CParametrosUrna), then 2266, then celeitores.cpp's 2265 and 2264: name order puts
+#   celeitordetalhe.cpp there. Before steps 7 to 9 it scored 2 over 14 rows, both operands (pnpm wasm score). Its five
+#   callers: 2823 (unit 110's CEleitores::QuantidadeAptos) and 2824, 10635, 11233 and 11616, not written, for which the roots'
 #   SemImpedimentoEmOutro stands. Its name, its being a member (it reads the private impediments) and const are chosen.
 # - GetDinamico, target fn 1271, matched: it passes "GetDinamico" (the literal at 141141, its only name evidence) to
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
