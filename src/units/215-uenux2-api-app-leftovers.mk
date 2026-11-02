@@ -6,8 +6,9 @@
 # CAjusteDataHora at +52 inline (CEstadoGeral's adjustment, cestadogeral.h), change it with
 # CAjusteDataHora::AdicionaDeltaT (fn 3702) and pass it to 3705, which stores the 8 bytes back at +52. Chosen: the name
 # (no record, slot or RTTI names it), the file (the class's own, whose one record, RecuperarCertificado's at line 147,
-# fn 5635, stays blank: docs/how-to-decompile.md step 3, "When no record names the file", rule 4) and the line after
-# it. It is a member because it writes the class's private member. Whole link, before step 9: `score 0 over 6 rows
+# fn 5635, holds that function's generated stub: docs/how-to-decompile.md step 3, "When no record names the file",
+# rule 4), the line after it, and its being a member: it writes the class's member at +52, which cestadogeral.h
+# declares private, an access the header chooses. Whole link, before step 9: `score 0 over 6 rows
 # (same 6, replaced 0 [0 operand-only], inserted 0, deleted 0) BYTE-EXACT`; step 8 names it by pair-fingerprint.
 #
 # api::TerminaComBarraInvertida (target fn 5484, 131 B), matched, in src/uenux2/src/api/io/cinistrings.cpp, a new file,
@@ -17,7 +18,8 @@
 # it and 5485, another helper only 5480 calls, link right before cinikey.cpp's CIniKey::operator= (5483), and in the data
 # cinistrings.cpp's record (1584092) lies right before cinikey.cpp's (1584124). Chosen: the name, the file, the line,
 # its being a free function of api with external linkage (it reads no class state: docs/how-to-decompile.md step 3,
-# "Names no evidence gives") and the header. Measured alone (tools/round/try-tu.sh --single 5484): a reverse index loop
+# "Names no evidence gives"; a static member of api::CIniStrings, whose only records name the static ParseKeyLine,
+# gives the same bytes) and the header. Measured alone (tools/round/try-tu.sh --single 5484): a reverse index loop
 # that counts the backslashes, `37 over 74 rows`; the same over reverse iterators flipping a bool, `40 over 76`; the
 # empty string and the last character tested before a counting loop, `25 over 79`; the form written, those two tests
 # before a loop that flips a bool, `score 0 over 71 rows ... BYTE-EXACT`, and the same in the whole link.

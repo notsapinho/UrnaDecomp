@@ -21,7 +21,9 @@
 // cgeradorbuqrcodevota.cpp's object). The vtable (@1575912) lies in the run of this file's records, before line 80's.
 // +400 is a reference to the base CRdv: GetCamposVotos (fn 5606) calls Nominais, Brancos, Nulos and Cargo through its
 // vtable, where a reference to the final CRdvVota is called directly (src/units/155-uenux2-cgeradorbuqrcode.mk has the
-// measurement). Its being a reference, and every member's and the map's names, are chosen.
+// measurement). The target's CRdvVota is final too: its D2 (fn 5734) first stores a member's vptr, not its own, and fn
+// 11980 calls those four slots' CRdvVota bodies directly on CRdvVota::GetInst()'s result. Its being a reference, and
+// every member's and the map's names, are chosen.
 //
 // SQtdeAptos: the map's mapped type. fn 2824 allocates its nodes with 24 bytes (a 16-byte node, the 4-byte key and 4
 // bytes of value), zeroes the value and counts in the 16-bit words at +0 and +2 of it, and fn 3696 prints the first as

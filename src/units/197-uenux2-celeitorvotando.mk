@@ -126,7 +126,9 @@
 # loggers. GetInst's constructor stores the vptr, the target's one reference to the vtable, so no root takes it.
 #
 # Chosen, no evidence names them: GetInst (the name the project's recorded singletons use), g_numeroDigitado,
-# g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor, CCedula's Adiciona and its data member, AdicionaVoto,
+# g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor, CCedula's Adiciona and its data member, that the vector is
+# private and Adiciona a member (6999, 11683 and 4454 read the vector from outside the class, through what is not
+# written yet), AdicionaVoto,
 # RegistraVoto, MostraCargoNoOperador, SetTextoEleitor, the five LogaVoto* names (from their messages) and
 # SetNumeroDigitado; that the objects are of namespace vota rather than static members of a class, that AdicionaVoto
 # and MostraCargoNoOperador are free functions and RegistraVoto a member that is not static; cinformacaoeleitor.h's

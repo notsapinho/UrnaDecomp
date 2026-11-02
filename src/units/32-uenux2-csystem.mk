@@ -167,8 +167,11 @@
 # libc's mkstemp inside TemporaryPath's). clang inlines an internal function of one call site, so PrepareReplace and
 # ReplaceResource had a second caller in the TU (a reading): CSystem::ReplaceDir, a chosen name over ExistDir and
 # "diretorio", gives them one, and the link drops it, as nothing calls it (build/out/wasm-map/vota_web/names.tsv has
-# no ReplaceDir). Measured in the whole link: all of it inlined by clang, `785 over 1982 rows (same 1197, replaced 494
-# [449 operand-only], inserted 146, deleted 145)`, a 704-B frame where the target's are 48 and 608; with ReplaceDir,
+# no ReplaceDir). Measured in the whole link: all of it inlined by clang, with an earlier body, `785 over 1982 rows
+# (same 1197, replaced 494 [449 operand-only], inserted 146, deleted 145)`, a 704-B frame where the target's are 48 and
+# 608; the body as landed without ReplaceDir scores `717 over 1984 rows (same 1267, replaced 439 [400 operand-only],
+# inserted 148, deleted 130)`, and then 5455 anchors nothing, so RenameResource (3645) and RemoveTree (5458) lose the
+# names its calls give them: those two matches rest on this reading; with ReplaceDir,
 # `365 over 1847`, the frames 704 and 256 where the target's are 608 and 160 (a struct stat of each function's own,
 # 96 B more each); with the stat tests through Existe (an anonymous-namespace helper, a chosen name, which clang
 # inlines: no target index), whose struct stat ends with it as the target's slot shared with the throws' buffers says,
@@ -181,8 +184,9 @@
 # i32.const 1932552: __randname.counter = 0x1d7d08 (evidence:vote:2 by:5455) comes from this function's own operand`):
 # the counter of libc's __randname, inlined into it, is a .bss word no other target function reads (`/usr/bin/grep -rlE
 # 'i32\.const 1932552($|[^0-9])' build/out/splat/pieces/asm` lists only ecourna/5455.wat), so nothing but the match
-# would name it (docs/reference/splat.md "No circular evidence"). It stays written: its callees RenameResource,
-# RemoveTree, 5460 and 2858 match through it. The lines of TemporaryPath (230 to 247), RenameResource, Existe,
+# would name it (docs/reference/splat.md "No circular evidence"). It stays written: its calls give its callees
+# RenameResource and RemoveTree (3645, 5458) the names they match under; 5460 and 2858, pair-fingerprint, are in our
+# link because ReplaceFile's code emits them. The lines of TemporaryPath (230 to 247), RenameResource, Existe,
 # ReplaceFile and ReplaceDir within what the records leave free, and the error codes' names, are chosen.
 # RenameResource (3645, 608 B): `"RenameResource(" + origem + ", " + destino + ") - " + strerror(errno)` when rename
 # fails, else an empty string. Its name is chosen from that text, and its linkage (the anonymous namespace, as its

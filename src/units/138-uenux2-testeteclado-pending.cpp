@@ -28,7 +28,7 @@
 // vota::CVerificaHorarioZeresima, in src/uenux2/src/app/vota/eleitor/iniciovotacao/cverificahorariozeresima.cpp:
 // - ProcessInput 11869 (slot 7), 861 B: fns 455, 491, 5586, 5591 and 6595, with no name, and 5880 (IEventosLog's).
 // vota::CReinicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/creiniciovotacao.cpp:
-// - StartState 11835 (slot 2), 712 B: fn 1391, with no name; 1269, 5957, 412, 183 and 436 have names since, and
+// - StartState 11835 (slot 2), 712 B: every callee has a name now (1391, comum::CJustificador::GetInst, too), and
 //   5940 (vota::CQuerReimprimirZeresima::GetInst) is written in unit 104.
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.

@@ -14,7 +14,7 @@
 //   in fragment 140's -pending.cpp).
 // - w13_desconverte_rdv and w13_confere call md::CVotosEleicoesVota::Compativel (fn 5638), standing for its two target
 //   callers, CRdvVota's Desconverte and Confere (fns 11487, 11486, trapped in this unit's -pending.cpp).
-// - w13_voto calls md::CVoto's constructor (fn 2256), standing for its target callers 4442, 4454 and 4471;
+// - w13_voto calls md::CVoto's constructor (fn 2256), standing for its target callers 4442 and 4454 (4471 is linked);
 //   comum::asn::CConversorVoto::DoDesconverte (fn 11354) is the other call site.
 // - w13_escolhas calls md::CVotosCargos::QuantidadeEscolhas (fn 5642) twice, as its one target caller, 4454, does.
 // - w13_nulo calls the static md::CVoto::EhNulo (fn 5645), standing for its target caller 11514; CVoto::EhNulo() const

@@ -1,9 +1,10 @@
-// Roots: stand-ins for the target callers of comum members whose files other units compile (celeitores.cpp and
-// chv.cpp, unit 110; cjustificador.cpp, unit 113; cintegridadereferencial.cpp, unit 98). Their callers are not
-// reconstructed yet. Each member but 11475 has direct callers and no table slot (ledger/callgraph.tsv), so a noinline
-// stand-in gives it two call sites and binaryen keeps its body out of line; 11475 is reached only by its table slot, so
-// its address is taken. Each stand-in's comment names the target callers it stands for. Declared through asm labels
-// with the objects' signatures (a constructor returns this); address-taken from a static constructor.
+// Roots: stand-ins for the target callers of comum members whose files other units compile (celeitores.cpp and chv.cpp,
+// unit 110; cjustificador.cpp, unit 113; cintegridadereferencial.cpp, unit 98). Their callers are not reconstructed
+// yet. Each member but 11475 has direct callers (ledger/callgraph.tsv) and no slot in the target's table
+// (wasm-objdump -x -j Elem target/vota_web_wasm.wasm), so a noinline stand-in gives it two call sites and binaryen
+// keeps its body out of line; 11475 is reached only by its table slot, so its address is taken. Each stand-in's comment
+// names the target callers it stands for. Declared through asm labels with the objects' signatures (a constructor
+// returns this); address-taken from a static constructor.
 extern "C" {
 int w216_1391() __asm__("_ZN5comum13CJustificador7GetInstEv");
 int w216_2822(int) __asm__("_ZNK5comum10CEleitores33QuantidadeHabilitacaoSemBiometriaEv");

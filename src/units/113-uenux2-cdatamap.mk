@@ -162,7 +162,7 @@
 # and 11616 read it too (each unlocks it through fn 150 after reading the pointer), not written. The pointer's name is
 # `vote:6 by:11475,11477`. Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
 # in cjustificador.h with nothing else, the enumerator's name, and every line but the throw's (104); lines 55 and 83
-# stay blank for the records of 10590.
+# hold no code, for the records of 10590.
 CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
 

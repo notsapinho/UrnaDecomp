@@ -37,7 +37,8 @@ public:
     // ReplaceResource, single-use internal functions, out of line in fn 5455 (binaryen inlines them, their frames
     // nested in 5455's), which needs a second caller in the TU, and ReplaceResource's directory branch and
     // PrepareReplace's existence test passed as a function pointer fit a directory's replacement. The name, the text
-    // and the parameters are chosen after ReplaceFile (unit 32's fragment has the measurement).
+    // and the parameters are chosen after ReplaceFile (unit 32's fragment has the measurement). Without it fn 5455
+    // scores 717 over 1984 rows and anchors nothing, so fns 3645 and 5458 lose the names its calls give them.
     static void ReplaceDir(const std::string& origem, const std::string& destino, const std::string& backup);
 
     // Reconstruction's note. The flag is evidence: the target reads the byte at 1584624 30 times, in 24 functions, and

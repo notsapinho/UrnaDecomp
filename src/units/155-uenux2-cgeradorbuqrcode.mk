@@ -37,11 +37,12 @@
 #   148 against our 17, both std::__format::__allocating_buffer<char>::__prepare_write (target fn 7324, matched;
 #   wasm-objdump -x -j Elem on both). It matched by content.
 #
-# Chosen: the names Slot2, Slot3, GetCamposAptos, GetCamposVotos and every data member's; SQtdeAptos's place and its
-# members' names (from the labels 3696 prints); TEleicaoID for Slot3's parameter; the members' access; the destructors',
-# GetCamposAptos's and GetCamposVotos's lines (no record; GetCamposVotos after GetCamposAptos); CGeradorBUQRCodeVota's
-# file and its members' types beyond their widths. md::CCargo gains the accessor GetAbrangencia (app/comum/dados/md/processoeleitoral/ccargo.h, a chosen
-# name) for 3696's read of +8.
+# Chosen: the names Slot2, Slot3, GetCamposAptos, GetCamposVotos and every data member's; GetCamposVotos' being a member
+# (no record, slot or RTTI says so: it passes its own this to GetCamposAptos and reads the +400 member); SQtdeAptos's
+# place and its members' names (from the labels 3696 prints); TEleicaoID for Slot3's parameter; the members' access; the
+# destructors', GetCamposAptos's and GetCamposVotos's lines (no record; GetCamposVotos after GetCamposAptos);
+# CGeradorBUQRCodeVota's file and its members' types beyond their widths. md::CCargo gains the accessor GetAbrangencia
+# (app/comum/dados/md/processoeleitoral/ccargo.h, a chosen name) for 3696's read of +8.
 #
 # Not reconstructed: CGeradorBUQRCodeVota's Slot2 (fn 11242), a trap in 155-uenux2-cgeradorbuqrcode-pending.cpp, whose
 # header says what it waits for; CGeradorBUQRCodeVota's constructor (fn 5603, which holds the base's; its stub is in

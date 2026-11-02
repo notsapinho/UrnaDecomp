@@ -56,8 +56,8 @@ public:
     void MarcaVotou();
     // fn 2822: the records with dynamic data whose comparecimento state is 3 (the state MarcaEleitorFoiHabilitado
     // refuses as "Eleitor já votou") and whose kind of enabling is 0 (the kind md::CEleitorDinamico::HabilitaSemBiometria
-    // stores). One caller, fn 10699, formats the count into "Habilitação sem biometria: {}", which the name is chosen
-    // from; the result's 16 bits are the body's mask.
+    // stores). One of its four callers, fn 10699, formats the count into "Habilitação sem biometria: {}", which
+    // the name is chosen from; the result's 16 bits are the body's mask; its const is chosen, as no record gives it.
     ueword QuantidadeHabilitacaoSemBiometria() const;
     void ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const;
     // The unsigned word at +104, a count of the voters who voted (a reading of its readers): fn 12098

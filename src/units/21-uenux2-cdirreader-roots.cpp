@@ -1,5 +1,5 @@
 // Roots: keep api::CDirReader's members in the skeleton link. The target calls each directly and never through the
-// table (ledger/callgraph.tsv), and none of their callers outside the class is reconstructed yet:
+// table (ledger/callgraph.tsv), and of their callers outside the class only 5458 (api::RemoveTree, unit 32) is written:
 //   NextEntry (1260)    from 2762 5360 5458 5572 7160 11167
 //   the constructor (1914) and the destructor (1913)    from 2762 5360 5458 5572 7160 11167
 //   Close (2232), IsDir (1912) and IsFile (2231)        from 2762 5360 5458 5572 11167

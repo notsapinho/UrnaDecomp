@@ -22,8 +22,9 @@ namespace comum::md {
 // The constructor is a call there, so it is user-provided and defined out of line, in ccedula.cpp (a reading: one
 // clang sees inline is folded into the stores). Chosen: the class's namespace (the records print it unqualified; it is
 // that of the classes that take it), this header's path and ccedula.cpp's (no record names a file of it), std::pair as
-// the element (no symbol spells it), the data member's name and Adiciona's; that the vector is the one data member
-// rests on the 12 bytes.
+// the element (no symbol spells it), the data member's name and Adiciona's, that the member is private and Adiciona a
+// member (6999, 11683 and 4454 read the vector from outside the class); that the vector is the one data member rests
+// on the 12 bytes.
 class CCedula {
 public:
     CCedula();

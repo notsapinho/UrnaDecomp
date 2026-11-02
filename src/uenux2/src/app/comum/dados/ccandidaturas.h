@@ -46,7 +46,8 @@ public:
     // parameter) and the federation CFederacoes::GetFederacao (fn 5799) returns for a party, when there is one; it walks
     // that federation's parties (the 16-bit words of its vector at +28) and, for each, the candidacies (the base's map),
     // and says whether one of the post with the party's number has a holder whose situation is 0, as
-    // GetCandidatosPartido keeps them. The name is chosen.
+    // GetCandidatosPartido keeps them. The name is chosen, and so is its being a member (no record, slot or RTTI says
+    // so): its callers pass the singleton, and it reads the base's map.
     bool ExisteCandidatoFederacao(TCargoID cargo, const ecourna::app::dados::CFederacao& federacao) const;
 
     // Record ccandidaturas.cpp:56 (its throw, code 7800) names it and spells its types. It finds the candidacy by the

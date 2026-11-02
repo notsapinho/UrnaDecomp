@@ -31,23 +31,23 @@
 
 namespace vota {
 
-// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 185, 261, 407, 491, 2376, 3229, 6129, 6557.
+// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 491, 2376, 6129, 6557.
 void CAguardaMensagem::ProcessKey(uebyte)
 {
     __builtin_trap();
 }
 
 // CIniciodeCiclo::StartState: fn 7306 (251 B), records ciniciodeciclo.cpp:48, ciniciodeciclo.cpp:61, callees with no
-// name: 185, 187, 261, 291, 491, 1823, 2880, 3333, 3705.
+// name: 491, 1823, 3333.
 void CIniciodeCiclo::StartState()
 {
     __builtin_trap();
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 491, 502, 886, 1164, 1935, 2281, 2543, 2763, 2821, 2822, 2824, 2860, 3782,
+// with no name: 491, 502, 886, 1164, 1935, 2281, 2543, 2763, 2821, 2824, 2860, 3782,
 // 3825, 3826, 5462, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
-// 195's 5824, 95's 3829, 5889, 5891 and 5905, 32's 378, 154's 620 and 13's 1269 among them).
+// 195's 5824, 95's 3829, 5889, 5891 and 5905, 32's 378, 154's 620, 13's 1269 and 110's 2822 among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();

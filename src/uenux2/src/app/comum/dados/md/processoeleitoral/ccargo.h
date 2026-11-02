@@ -64,8 +64,8 @@ public:
     // 1588, 6569, 6660, 6671, 6678, 7787, 12272, none written; those with records, 6660, 6671, 6678, 7787 and 12272,
     // are vota/eleitor/comum/ctelasvota.cpp's): each reads the candidate detail's engaged flag at +84 and a field of the
     // detail itself, not through GetDetalheCandidato, which those screens call elsewhere (fn 1388). That a caller's TU
-    // would inline a body this small is a reading, so another TU holds them; that it is ccargo.cpp, that they are
-    // members, their names and QtdSuplentes' uebyte result are chosen.
+    // would inline a body this small is a reading, so another TU holds them; ccargo.cpp, their being members, their
+    // names and the spelling uebyte are chosen; QtdSuplentes' 8-bit unsigned width is the target's (1157 masks 255).
     bool TemFoto() const;
     uebyte QtdSuplentes() const;
     const CDetalheConsulta& GetDetalheConsulta() const;

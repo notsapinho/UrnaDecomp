@@ -84,8 +84,10 @@
 #   a byte vector, calls IMacAlgorithm::Mac and appends "{:02x}" of each MAC byte, an index loop. 3700 holds GeraMacHexa,
 #   Mac, HexToQWord and std::to_string(unsigned long long) inlined by binaryen, behind prologues of their own (frames of
 #   416, 32, 32, and 48 and 16 bytes); the records of Mac (imacalgorithm.cpp:32, 35) and of HexToQWord
-#   (cstringutils.cpp:754) are loaded by 3700 alone, and anchor its name. The two vptr stores, IMacAlgorithm's (1114744) and then CSiphashMac's (1113604), read as two
-#   constructors that were calls when clang compiled them: unit 11 defines both out of line now. Measured:
+#   (cstringutils.cpp:754) are loaded by 3700 alone, and anchor its name. The two vptr stores, IMacAlgorithm's (1114744)
+#   and then CSiphashMac's (1113604), say that the base's constructor was a call when clang compiled 3700: unit 11
+#   defines it out of line. CSiphashMac's own, defaulted in its header, gives the same bytes out of line, a choice (unit
+#   11's fragment). Measured:
 #   - GeraMacHexa a free function over (text, key), defined before CalculaCodigo, the constructors inline in the
 #     headers: 242 over 888 (21 inserted, 23 deleted); with the constructors out of line: 268 over 880 (13, 13), the two
 #     vptr stores now there; as a const member that takes the text and reads the key: 222 over 875 (8, 8); as one that

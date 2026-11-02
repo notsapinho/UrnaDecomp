@@ -26,6 +26,8 @@
 #   - as free functions taking the vector, defined before ImprimePreTexto: 133 over 763 (the vector's address held in a
 #     local, loaded at offsets 0 and 4); defined after it, as written: 41 over 753, all operand-only, the one operand that
 #     is no call and no data address the format buffer's table slot (148 in the target), which 11182 and 3700 hold too.
+#   Their external linkage is the bytes': made static, clang inlines both into ImprimePreTexto (llvm-nm of that object
+#   then lists only ImprimePreTexto), and their own frames in 11256 go.
 #   ConcatenaHistoricoCargas is a std::accumulate whose lambda returns `historico + carga + "@"`: the target builds the
 #   string in the helper's frame and copies it to the result at the end, which reads as accumulate's by-value initial
 #   value returned (a reading). A range-for that assigns `historico = historico + carga + "@"` to a named local and
@@ -82,10 +84,12 @@
 #   129's fragment says how). The control block of that CDataText (11246) comes from this instance now: unit 102's
 #   dropped builder for it, which stood for 5613, is gone, and unit 129's stand-in for 11247 too.
 #
-# Chosen, for ImprimePreTexto: the helpers' names, their being free functions in comum (they read only the vector they
-# are given), their declarations in cgeradorbu.cpp above ImprimePreTexto, the parameters' and locals' names,
+# Chosen, for ImprimePreTexto: the helpers' names, their being free functions in comum rather than static members of
+# CGeradorBU (they read only the vector they are given; the members' forms above score worse, and their external linkage
+# is the bytes', below), their declarations in cgeradorbu.cpp above ImprimePreTexto, the parameters' and locals' names,
 # `CCalculaCV& calculo = ` before the call as what fills line 257 to column 27, and ALINHAMENTO_ESQUERDA and
-# ALINHAMENTO_CENTRO for the alignments 0 and 2 the target passes (style 1 is a cast: IPaper::EStyle has no enumerators).
+# ALINHAMENTO_CENTRO for the alignments 0 and 2 the target passes (style 1 is a cast: IPaper::EStyle has no
+# enumerators).
 # Chosen: every data member's name but those the constructors' messages give (headers); in cgeradorbubase.h, where the
 # class declares its data members, ImprimeConsulta's declaration's line, ImprimeVotosCandidatos' access, the locals'
 # names and the `!= 0` and `continue` forms of the tests; CGeradorBU's header path, and

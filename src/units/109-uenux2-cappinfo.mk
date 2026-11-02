@@ -49,7 +49,8 @@
 #   `differs`. The link's copy of 857 is src/app/roots_vector.o's, which instantiates vector<CDadoCorrespondencia>.
 #
 # Not written: 1903's singleton, whose class no body read names. CJustificador's (1391, 2810, 11476, 11477) is unit 113's,
-# with its constructor 3742. cfotos.h's inline ExisteFoto is held by fn 5746 (unit 98's fragment). 5635 stays a stub in md/estadoaplicacao/cestadogeral.cpp. 436, which calls
+# with its constructor 3742. cfotos.h's inline ExisteFoto is held by fn 5746 (unit 98's fragment). 5635 stays a stub in
+# md/estadoaplicacao/cestadogeral.cpp. 436, which calls
 # CPath::GetPathTrab (358), is unit 190's and matches.
 #
 # What decides the form, measured:

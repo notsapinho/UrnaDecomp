@@ -31,15 +31,16 @@
 #   which reads as one statement holding the format and both calls, as written; other forms were not linked. The style 1
 #   and the alignments 2 and 0 are the constants the target passes (IPaper::EStyle has no enumerators, ipaper.h).
 #
-# Written and not matched: InicializaTradutorFrase (11196, slot 10) builds a std::map<char, CLabelParametrizado> of the
-# four labels of CConfiguracaoEleicao's CParametrosUrna ('M' municipio, 'Z' zona, 'S' secao, 'P' partido) and hands it
-# to CTradutorFrase::SetLabels (ctradutorfrase.h). It differs at -O2 and at the tree's -O3: the target calls the map's initializer-list constructor (fn 5795, which holds the insertion
-# inlined), and at -O2 clang inlines that constructor into 11196, 281 over 345 rows (`unresolved` on the insertion's
-# __emplace_hint_unique_extract_key, which the target has inside 5795). In a private link with this TU at -O3 and a
-# scratch second caller of the constructor in it (standing for 7787, the target's other caller), 11196 scores 20 over
-# 289 and 5795 1 over 172, all operand-only; without that second caller binaryen inlines the constructor into 11196 (212
-# over 453, as in the whole link at the tree's -O3). So 5795 needs a stand-in for 7787 here. The list handed straight to the setter keeps the constructor
-# out of line at -O3 too, in a probe object; it was not linked.
+# InicializaTradutorFrase (11196, slot 10) matches, with the map's initializer-list constructor (fn 5795) that this
+# object instantiates for it: it builds a std::map<char, CLabelParametrizado> of the four labels of
+# CConfiguracaoEleicao's CParametrosUrna ('M' municipio, 'Z' zona, 'S' secao, 'P' partido) and hands it to
+# CTradutorFrase::SetLabels (ctradutorfrase.h). The target calls that constructor, which holds the insertion inlined;
+# at -O2 clang inlines it into 11196, 281 over 345 rows (`unresolved` on the insertion's
+# __emplace_hint_unique_extract_key, which the target has inside 5795), and at the tree's -O3 with 11196 its only
+# caller binaryen does (212 over 453 in the whole link). With a second caller standing for 7787, the target's other
+# one (the roots' w123_mapa, below), 11196 scores 20 over 289 and 5795 1 over 172, all operand-only, and both match;
+# 11196's body did not change. The list handed straight to the setter keeps the constructor out of line at -O3 too, in
+# a probe object; it was not linked.
 #
 # Pending, in the -pending.cpp, whose header says what each waits for: GetConteudoQRCode (11200), GetDadosLocal (11188).
 # Not reconstructed: the constructor (5586, declared; its stub stays in crelatoriotesteimpressora.cpp): it calls

@@ -133,9 +133,11 @@
 #   Each reads the candidate detail's engaged flag at +84 and a field of the detail itself, the photo flag at +20 or the
 #   substitutes' vector at +72 (52-byte elements), not through GetDetalheCandidato, which those screens call elsewhere
 #   (fn 1388). That a caller's TU would inline a body this small is a reading, not compiled, so their TU is another
-#   one: ccargo.cpp, their being members, their names, QtdSuplentes' uebyte result, CDetalheCandidato's two accessors
-#   (TemFoto, GetSuplentes) and their lines after operator<=> are chosen; other forms are not measured. Both scored 0 rows over 9 and over 19 (byte-exact) before step
-#   8 and matched at step 9. Their stand-ins are src/units/212-uenux2-app-vota-callers-roots.cpp's.
+#   one: ccargo.cpp, their being members, their names, the spelling uebyte of QtdSuplentes' result (its 8-bit unsigned
+#   width is the target's: 1157's `i32.const 255; i32.and` at +0x1f), CDetalheCandidato's two accessors (TemFoto,
+#   GetSuplentes) and their lines after operator<=> are chosen; other forms are not measured. Both scored 0 rows over 9
+#   and over 19 (byte-exact) before step 8 and matched at step 9. Their stand-ins are
+#   src/units/212-uenux2-app-vota-callers-roots.cpp's.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 PROCESSOELEITORAL_SRCS := src/app/comum/dados/ccargos.cpp \
   src/app/comum/dados/cconfiguracaoeleicao.cpp \

@@ -16,7 +16,8 @@
 // recorded.
 // vota::CPedeProporcional, slot 9 (ProcessInputAudio 11711, record cpedeproporcional.cpp:84, 811 B), and
 // vota::CPedeMajoritario's (ProcessInputAudio 11683, records cpedemajoritario.cpp:64 and :125, 1210 B): each calls slot
-// 13 (fn 3139, pending above) and a function with no name (fn 5922 and fn 4550), and reads vota::g_numeroDigitado.
+// 13 (fn 3139, pending above) and one more function, fn 5922 (no name) in 11711 and fn 4550
+// (vota::CLogVota::LogaErroPartidoNaoEncontrado, unit 119) in 11683, and reads vota::g_numeroDigitado.
 // vota::CCompletaProporcional, slots 9 and 13 (ProcessInputAudio 11756, 786 B, and EmiteEcoComInputField 5930, record
 // ccompletaproporcional.cpp:60, 522 B): slot 9 calls slot 13 and reads vota::g_numeroDigitado; slot 13 is not read
 // here. ProcessInputAudio is the class's
