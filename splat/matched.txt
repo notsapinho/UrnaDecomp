@@ -11707,3 +11707,4 @@
 1695 _ZN3api12CApplication11GetContextoEv
 5553 _ZN3api24CApplicationContextStack3PopERKNS_19CApplicationContextE
 5569 _ZN3api17GetExceptionLevelEv
+5497 _ZNK3api19CTextFieldMultiLine12GetTextLinesEv

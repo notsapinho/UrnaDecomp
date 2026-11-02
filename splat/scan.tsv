@@ -5360,7 +5360,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5494	_ZNSt3__26vectorIhNS_9allocatorIhEEE18__construct_at_endIPKhS6_EEvT_T0_m	5877	symbol	match	readings: address symbol,table slot	80	shape	app	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 5495	_ZN3api16CTextFieldUpdateD2Ev	5631	symbol	match	readings: address symbol	176	addr	api	1	app/uenux2/src/api/gui/ctextfieldupdate.cpp.o
 5496	_ZNSt3__26vectorIhNS_9allocatorIhEEE18__assign_with_sizeB8ne210108IPKhS6_EEvT_T0_l	5882	symbol	match	-	159	shape	app	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-5497	_ZNK3api19CTextFieldMultiLine12GetTextLinesEv	5853	symbol	differs	+0x5f target +0x5e local.set 8 | ours +0x5e local.set 7	1944	none	libc++	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
+5497	_ZNK3api19CTextFieldMultiLine12GetTextLinesEv	5853	symbol	match	readings: address symbol,address srcloc	1944	none	libc++	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
 5498	_ZN3api19CTextFieldMultiLineC2ERKNS_5SRectERKNSt3__210shared_ptrINS_5ITextEEERKNS_5SFontENS_6TColorESD_	5854	symbol	match	readings: address symbol,address string,address srcloc,table slot	230	shape	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
 5499	_ZNK3api20CTextFieldDoubleLine12GetTextLinesEv	5690	symbol	differs	+0x0 target the locals | ours the locals	2912	none	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
 5500	-	-	-	no-candidate	no symbol and no ledger pair	6871	none	vota	0	-
@@ -10787,8 +10787,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 10921	_ZNK3api19CTextFieldMultiLine11GetTypeNameEv	11928	symbol	match	readings: address string	73	none	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
 10922	_ZN3api19CTextFieldMultiLineD0Ev	11929	symbol	match	readings: address symbol	104	addr	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
 10923	_ZN3api19CTextFieldMultiLineD2Ev	11930	symbol	match	readings: address symbol	101	addr	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
-10924	_ZNK3api19CTextFieldMultiLine4RectEv	11931	symbol	match	-	295	none	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
-10925	_ZNK3api19CTextFieldMultiLine4DrawERNS_7IScreenE	11933	symbol	match	readings: address symbol	564	none	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
+10924	_ZNK3api19CTextFieldMultiLine4RectEv	11931	symbol	match	-	295	shape	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
+10925	_ZNK3api19CTextFieldMultiLine4DrawERNS_7IScreenE	11933	symbol	match	readings: address symbol	564	shape	api	1	app/uenux2/src/api/gui/ctextfieldmultiline.cpp.o
 10926	_ZNK3api20CTextFieldDoubleLine11GetTypeNameEv	11583	symbol	match	readings: address string	73	none	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
 10927	_ZN3api20CTextFieldDoubleLineD0Ev	11579	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
 10928	_ZN3api20CTextFieldDoubleLineD2Ev	11580	symbol	match	readings: address symbol	12	addr	api	1	app/uenux2/src/api/gui/ctextfielddoubleline.cpp.o
