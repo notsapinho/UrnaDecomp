@@ -12,12 +12,11 @@
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
+//   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 652, 2881, 11242 and 12110
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 6034, 7174, 10635 and 11616 (2822, 2825 and 10210 are
 //                       in the link)
 //   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fns 3616
 //                       and 10631 (5385, unit 214's, 10789 and 10790, unit 119's, are in the link)
-//   t11526 to t11529    the four CEleitorDado*::Text, which the target reaches only by table slot (fn 5401 passes all
-//                       four): their addresses are taken
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
 //   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes
@@ -57,10 +56,7 @@ int d5805(int) __asm__("_ZN5comum7CCargosD1Ev");
 int d6548(int) __asm__("_ZN4vota10CTelasVotaD1Ev");
 
 void w5765(int, int) __asm__("_ZNK5comum10CEleitores24ValidaIdentidadesEleitorERKNS_2md17CEleitorDecoratorE");
-void t11529(int, int) __asm__("_ZN5comum24CEleitorDadoNomeParaUrna4TextERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void t11528(int, int) __asm__("_ZN5comum22CEleitorDadoSequencial4TextERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void t11527(int, int) __asm__("_ZN5comum17CEleitorDadoSecao4TextERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-void t11526(int) __asm__("_ZN5comum15CEleitorDadoTTE4TextEv");
+void w2823(int, int) __asm__("_ZNK5comum10CEleitores15QuantidadeAptosEv");
 void w2825(int, int) __asm__("_ZN5comum10CEleitores25MarcaEleitorFoiHabilitadoERKNS_24CEleitorDadosHabilitacaoE");
 int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
@@ -117,6 +113,16 @@ __attribute__((noinline)) void HabilitaEleitores(int eleitores, int dados)
     w2825(eleitores, dados + 64);
 }
 
+// Stands for fns 652, 2881, 11242 and 12110, the target callers of CEleitores::QuantidadeAptos (fn 2823): two calls,
+// each reading one of the two counts the result's address receives.
+__attribute__((noinline)) int QuantidadesAptos(int eleitores)
+{
+    int quantidade[2];
+    w2823(reinterpret_cast<int>(&quantidade[0]), eleitores);
+    w2823(reinterpret_cast<int>(&quantidade[1]), eleitores);
+    return (quantidade[0] & 0xffff) + (quantidade[1] >> 16);
+}
+
 __attribute__((noinline)) int ConsultaDinamicos(int detalhe)
 {
     return w1271(detalhe) + w1271(detalhe + 204) * 3;
@@ -140,10 +146,7 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&w332);
         singletons_sink = reinterpret_cast<const void*>(&w407);
         singletons_sink = reinterpret_cast<const void*>(&ValidaEleitores);
-        singletons_sink = reinterpret_cast<const void*>(&t11529);
-        singletons_sink = reinterpret_cast<const void*>(&t11528);
-        singletons_sink = reinterpret_cast<const void*>(&t11527);
-        singletons_sink = reinterpret_cast<const void*>(&t11526);
+        singletons_sink = reinterpret_cast<const void*>(&QuantidadesAptos);
         singletons_sink = reinterpret_cast<const void*>(&HabilitaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&ConsultaDinamicos);
         singletons_sink = reinterpret_cast<const void*>(&s11479);

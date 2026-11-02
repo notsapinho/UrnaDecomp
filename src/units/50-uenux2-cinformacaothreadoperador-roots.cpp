@@ -17,8 +17,8 @@
 //   SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor (2745; 10425).
 //   GetTextoAudio (10584) and GetTextoComparecimento (10583) have no direct caller: fn 652 passes their table slots (4054
 //   and 4053), and the sink takes their addresses. So does it for GetTextoIdentidadeDigitada (10586), whose slot 3907 fns
-//   1901, 1905, 2735, 2747, 3625, 5401, 5418, 10439, 10500, 10588 and 10635 pass (1150, which passes it too, is in the
-//   link).
+//   1905, 2735, 2747, 3625, 5418, 10439, 10500, 10588 and 10635 pass (1150, 1901 and 5401, which pass it too, are in
+//   the link).
 extern "C" {
 int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv");
 

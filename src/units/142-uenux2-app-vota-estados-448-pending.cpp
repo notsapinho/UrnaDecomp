@@ -6,11 +6,11 @@
 //   which have no name (ledger/callgraph.tsv against splat/symbol_addrs.txt), 395 (unit 31's), 2097 and 4661 (161's).
 // - vota::CMostraEleitorVotando::ProcessKey (target fn 10425, slot 6, 4809 B, records cmostraeleitorvotando.cpp:127 and
 //   159, SalvaHabilitacaoEleitor's): of its 46 distinct callees (ledger/callgraph.tsv), 14 have no name in
-//   splat/symbol_addrs.txt or splat/matched.txt, among them fn 1901. It calls comum::CEleitorDadosHabilitacao's
+//   splat/symbol_addrs.txt or splat/matched.txt (fn 1901, unit 71's, matches now). It calls comum::CEleitorDadosHabilitacao's
 //   constructor (2733), which cmostraeleitorvotando.cpp holds, four times: the roots file stands in for those calls.
 // - vota::CPerguntaCodigoSuspensao::ProcessKey (target fn 10419, slot 6): on keys 2, 5 and 13 it goes to
 //   vota::CEleitorVotouNaoVotou::GetInst() (fn 1901), vota::CMostraEleitorVotando::GetInst() (fn 1150) or
-//   vota::CSincronismoOperador::GetInst() (fn 1897). It waits for the first, which has no body.
+//   vota::CSincronismoOperador::GetInst() (fn 1897), the three matched (1901 in unit 71); not read further.
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 #include "app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.h"
 #include "app/vota/operador/confirmaidentidade/cpedeanonascimentosembiometria.h"

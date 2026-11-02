@@ -6,9 +6,9 @@
 //   CEstadoGeralVota::GetDtHrInicioAquisicao and GetDtHrFimAquisicao inlined, records cestadogeralvota.h:90 and 106). It
 //   builds the QR code's header fields ("ORIG:{} " to "HREM:{} ") from the election's state, and waits for its direct
 //   callees that have neither a match nor a name (splat/scan.tsv `no-candidate`, no line in splat/symbol_addrs.txt):
-//   fns 1935, 2821, 2823 and 3752. Three such callees match: 1933, comum::CLocal::GetLocalID (unit 89), 2841,
-//   comum::CAppInfo::TemVota (unit 109), and 2822, comum::CEleitores::QuantidadeHabilitacaoSemBiometria (unit 110), which
-//   11242 calls on comum::CEleitores::GetInst()'s result (fn 326).
+//   fns 1935, 2821 and 3752. Four such callees match: 1933, comum::CLocal::GetLocalID (unit 89), 2841,
+//   comum::CAppInfo::TemVota (unit 109), 2822, comum::CEleitores::QuantidadeHabilitacaoSemBiometria (unit 110), which
+//   11242 calls on comum::CEleitores::GetInst()'s result (fn 326), and 2823, CEleitores::QuantidadeAptos (unit 110).
 #include "app/comum/relatorios/cgeradorbuqrcodevota.h"
 
 namespace comum {

@@ -21,9 +21,9 @@
 // leaves it out of line in the object. The names, the overloads and their parameters are chosen.
 //
 // AddField (fn 3674) moves a field into the vector at this + 0: its body is vector::emplace_back with the slow path, and
-// its target callers are AddInputControl (fn 395), fn 1151 and fn 5410. 1151 is read as another object's code: its
-// control block's vtable (@1588176) lies in app/vota/operador/outrasopcoes/cescolheopcao.cpp's data (a reading of the
-// data's order). AddField takes the field by rvalue reference: 395 and 1151 release the temporary SharedField after
+// its target callers are AddInputControl (fn 395), fn 1151 and fn 5410. 1151 is another object's code: its control
+// block's vtable (@1588176) lies in app/vota/operador/outrasopcoes/cescolheopcao.cpp's data, where it is written
+// (vota::AdicionaCampoNumerico, unit 121). AddField takes the field by rvalue reference: 395 and 1151 release the temporary SharedField after
 // the call, which a by-value shared_ptr, trivial-ABI here, would leave to the callee. AddInputControl builds an
 // api::CInputFieldControl<IScreenMT> with `new` (its block is a __shared_ptr_pointer, @1580708) and returns nothing:
 // 395's wasm type has no result pointer. Their names, the SharedInput alias, emplace_back rather than push_back, and
@@ -36,8 +36,10 @@
 #include <string>
 #include <vector>
 
+#include "api/gui/cdatatext.h"
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cledfieldmt.h"
+#include "api/gui/ctextfieldmt.h"
 #include "api/gui/ctextsource.h"
 #include "api/gui/iform.h"
 #include "api/gui/iformfield.h"
@@ -99,6 +101,26 @@ private:
     SharedField AddTextField(const SharedIText& texto, const SPoint& posicao);
 
     std::vector<SharedField> m_campos;
+
+public:
+    template <typename FONTE>
+    SharedField AddTextField(FONTE fonte, const SPoint& posicao);
 };
+
+// The adder of a text a source of the caller's type gives, CDataText<FONTE> with CDataText's default alignment: its
+// instance over vota::CEscolheOpcao::COpcaoDS is held inlined by binaryen in fn 2753, behind a 48-byte frame of its own
+// (the source's copy at +8, the text at +40), where clang leaves it out of line, linkonce; it builds the CDataText, a
+// CTextFieldMT over it (fn 1262) and pushes the field through push_back (fn 1400), the private AddTextField's statements,
+// which are written in place because that one is defined in cmtformbuilder.cpp. Its name and its being a member
+// template with two parameters (an overload with an alignment would take the calls with a string literal from the
+// non-template overloads) are chosen.
+template <typename FONTE>
+CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(FONTE fonte, const SPoint& posicao)
+{
+    const SharedIText text(new CDataText<FONTE>(fonte));
+    SharedField campo(new CTextFieldMT(posicao, text));
+    m_campos.push_back(campo);
+    return campo;
+}
 
 } // namespace api

@@ -1,21 +1,125 @@
 // vota::CEscolheOpcao (/home/rubio/tse/uenux2/src/app/vota/operador/outrasopcoes/cescolheopcao.cpp). This comment is
-// the reconstruction's. The file's records are StartState's (fn 10690, not reconstructed), lines 150 to 152; they stay
-// blank. Written here: the destructor (fns 2752 and 10691), whose line is a choice before the records, in its use band's
-// order, and COpcaoDS's call operator, which has no record and no target function of its own: binaryen inlined it into
-// fn 10685, CDataText<COpcaoDS>::GetText. Its line is a choice, after the records.
+// the reconstruction's. The file's records are StartState's, lines 150 to 152. Written here: the statics, the four
+// texts of the options, AdicionaCampoNumerico (fn 1151), GetInst (fn 2753) with the constructor and its two helpers,
+// whose lines are a choice before the destructor's, in their use bands' order; the destructor (fns 2752 and 10691), whose
+// line is a choice before the records; StartState (fn 10690) at its records; and COpcaoDS's call operator, which has no
+// record and no target function of its own: binaryen inlined it into fn 10685, CDataText<COpcaoDS>::GetText. Its line
+// is a choice, after the records. src/units/121-uenux2-datasources.mk says which of this is evidence.
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 
 #include <format>
 #include <syslog.h>
 
+#include "api/gui/cinputfieldmt.h"
 #include "api/gui/cinteractiveform.h"
+#include "api/gui/cmtformbuilder.h"
+#include "api/gui/cnumbervalidation.h"
 #include "api/gui/iscreenmt.h"
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/dados/clocal.h"
+#include "app/vota/comum/votadefs.h"
+#include "app/vota/operador/comum/iinformacaothreadoperador.h"
 
 namespace vota {
 
-// (original lines 18-139: content not recovered)
+std::unique_ptr<CEscolheOpcao> CEscolheOpcao::s_inst;
+std::mutex CEscolheOpcao::s_mutex;
+
+std::string TextoAudio()
+{
+    if (IsAudioAtivadoMesario()) {
+        return "Desativar áudio";
+    }
+    return "Ativar áudio";
+}
+
+std::string TextoEncerrarVotacao()
+{
+    return "Encerrar votação";
+}
+
+std::string TextoRegistrarMesarios()
+{
+    return "Registrar mesários";
+}
+
+std::string TextoExibirContadores()
+{
+    return "Exibir contadores";
+}
+
+std::shared_ptr<api::IInputField<api::IScreenMT>> AdicionaCampoNumerico(api::CMTFormBuilder& builder, size_t tamanho,
+                                                                       bool confirmaAoCompletar, const api::SPoint& posicao)
+{
+    const std::shared_ptr<api::IInputValidation> validacao(new api::CNumberValidation);
+    api::CMTFormBuilder::SharedInput campo(new api::CInputFieldMT(validacao, tamanho, confirmaAoCompletar, posicao));
+    builder.AddField(campo);
+    return campo;
+}
+
+namespace {
+
+std::map<int, CEscolheOpcao::SOpcao> CriaOpcoes()
+{
+    std::map<int, CEscolheOpcao::SOpcao> opcoes;
+    int numero = 1;
+    opcoes.emplace(numero, CEscolheOpcao::SOpcao(1, CEscolheOpcao::COpcaoDS(numero, &TextoAudio)));
+    ++numero;
+    opcoes.emplace(numero, CEscolheOpcao::SOpcao(2, CEscolheOpcao::COpcaoDS(numero, &TextoEncerrarVotacao)));
+    ++numero;
+    if (RegistraMesarios()) {
+        opcoes.emplace(numero, CEscolheOpcao::SOpcao(3, CEscolheOpcao::COpcaoDS(numero, &TextoRegistrarMesarios)));
+        ++numero;
+    }
+    if (comum::CLocal::GetInst().UrnaBiometrica() && !comum::CAppInfo::EhTreinamentoEleitor()) {
+        opcoes.emplace(numero, CEscolheOpcao::SOpcao(4, CEscolheOpcao::COpcaoDS(numero, &TextoExibirContadores)));
+    }
+    return opcoes;
+}
+
+std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTela(const std::map<int, CEscolheOpcao::SOpcao>& opcoes)
+{
+    api::CMTFormBuilder builder;
+    builder.AddClock(api::SPoint{33, 1});
+    builder.AddTextField("Selecione a opção: ", api::SPoint{1, 1}, api::ALINHAMENTO_ESQUERDA);
+    int coluna = 1;
+    int linha = 2;
+    for (const auto& opcao : opcoes) {
+        builder.AddTextField(opcao.second.m_ds, api::SPoint(coluna, linha));
+        if (linha == 3) {
+            coluna = 20;
+            linha = 2;
+        } else {
+            linha = 3;
+        }
+    }
+    builder.AddTextField("CORRIGE: retornar", api::SPoint{1, 4}, api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField("CONFIRMA: prosseguir", api::SPoint{40, 4}, api::ALINHAMENTO_DIREITA);
+    AdicionaCampoNumerico(builder, 1, true, api::SPoint{20, 1});
+    return builder.GetInteractiveForm("", true);
+}
+
+} // namespace
+
+CEscolheOpcao::CEscolheOpcao()
+    : comum::CAppState(EVENTO_ENTRADA)
+    , m_opcoes(CriaOpcoes())
+    , m_form(MontaTela(m_opcoes))
+{
+}
+
+CEscolheOpcao& CEscolheOpcao::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CEscolheOpcao());
+    }
+    return *s_inst;
+}
+
+// (original lines 122-139: content not recovered)
 #line 140
 CEscolheOpcao::~CEscolheOpcao() = default;
 
@@ -34,6 +138,18 @@ void CEscolheOpcao::StartState()
 
 
 
+
+CEscolheOpcao::COpcaoDS::COpcaoDS(int numero, std::function<std::string()> texto)
+    : m_numero(numero)
+    , m_texto(std::move(texto))
+{
+}
+
+CEscolheOpcao::SOpcao::SOpcao(int codigo, COpcaoDS ds)
+    : m_codigo(codigo)
+    , m_ds(std::move(ds))
+{
+}
 
 std::string CEscolheOpcao::COpcaoDS::operator()() const
 {

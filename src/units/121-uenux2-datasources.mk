@@ -1,5 +1,6 @@
-# uenux2 data sources of api::CDataText, and control blocks of this tree's classes: vota::CEscolheOpcao::COpcaoDS's call
-# operator (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's IncluiString, destructor,
+# uenux2 data sources of api::CDataText, and control blocks of this tree's classes: vota::CEscolheOpcao (GetInst with its
+# constructor, the four texts of its options, COpcaoDS's constructor and call operator, SOpcao's constructor) and
+# vota::AdicionaCampoNumerico (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's IncluiString, destructor,
 # DestroyInst, Reinicia, CalculaCodigo and GeraMacHexa (src/app/comum/relatorios/ccalculacv.cpp), and the roots file 121-uenux2-datasources-roots.cpp, whose
 # header says which vtables it keeps and from which dropped builders. Both files are the ones the classes' records name
 # (cescolheopcao.cpp:150 to 152, StartState's; ccalculacv.cpp:58 to 74, the constructor's, and 109, IncluiString's).
@@ -18,6 +19,14 @@
 #   vota::CEscolheOpcao's destructor and deleting destructor           2752, 10691, from cescolheopcao.cpp.o
 #   the destroy of CEscolheOpcao's std::map                            3630, from cescolheopcao.cpp.o
 #   vota::CEscolheOpcao::StartState                                    10690, from cescolheopcao.cpp.o
+#   vota::CEscolheOpcao::GetInst, its constructor inlined               2753, from cescolheopcao.cpp.o
+#   CEscolheOpcao::COpcaoDS's and SOpcao's constructors                 2751, 2750
+#   the four option texts (TextoAudio, TextoEncerrarVotacao,           10695, 10694, 10693, 10692
+#   TextoRegistrarMesarios, TextoExibirContadores)
+#   CEscolheOpcao::s_inst's and s_mutex's static destructors           10697, 10696
+#   vota::AdicionaCampoNumerico                                         1151, from cescolheopcao.cpp.o
+#   std::__function::__func<std::string (*)(), std::string ()>'s       12043, 12044, 12046, 12047, from cescolheopcao.cpp.o
+#   target_type, target and the two __clone, first instantiated here
 # CCalculaCV::DestroyInst has no target function: unit 139's ~CGeradorBU (fn 3698) holds it inlined by binaryen, and
 # that fragment has the evidence for its body and for its TU. It needs no root: its one caller is that destructor.
 # Two forms of the operator give 10685 the same instructions in the whole link (`score 10 over 216 rows`, all
@@ -32,10 +41,62 @@
 # 121-uenux2-datasources-pending.cpp (its header says what it waits for). Evidence:
 # 10691 is `f2752(p0); drop; f136(p0)`, an out-of-line destructor (docs/reference/facts/reading.md R5), and 2752 stores
 # no vptr first, a final class (R4); it releases the std::shared_ptr at +24 and then destroys the std::map at +12 with
-# 3630, which destroys each node's std::function at +40 and nothing else of it. fn 2753, which builds the object, is
-# not written (it calls fn 1151): the roots keep the vtable by its address. 2752, 10691 and 3630 matched as written.
-# The mapped type std::pair<int, COpcaoDS>, which only 3630's symbol carries, the members' names and the form's type are
-# chosen.
+# 3630, which destroys each node's std::function at +40 and nothing else of it. 2752, 10691 and 3630 matched as written;
+# 3630's and 2752's match lines were renamed by step 9 (the map's mapped type is SOpcao now, and GetInst's delete calls
+# the D1 alias, so the D2's symbol left the link). The members' names and the form's type are chosen.
+#
+# GetInst (2753) and what it calls, written in cescolheopcao.cpp before the destructor's line. Evidence, from the target's
+# 2753 (pnpm wasm fn), each part measured in the whole link with pnpm wasm score:
+# - GetInst is the project's singleton (lock_guard on s_mutex @1905284, reset of s_inst @1905308, unlock through fn
+#   150). The constructor is a function of its own that binaryen inlined: its 272-byte frame opens after the `new` of 32
+#   bytes and before the base constructor's call (fn 224 with comum::CAppState::EVENTO_ENTRADA, 2). It initializes the
+#   map from a helper (the map's three words written in place at +12, NRVO) and the form from another (fn 301 writes its
+#   result at +24 directly, with no zeroing of the member first, which an assignment in the body would need). Both
+#   helpers have no frame of their own: clang inlines them, a reading that they are internal functions called once.
+# - The map: four emplace(numero, SOpcao(codigo, COpcaoDS(numero, &Texto))) whose find runs before the node is built
+#   (libc++'s key-extracting emplace): key 1, 2, 3 (when vota::RegistraMesarios(), fn 2520, says so) and then the next
+#   number when the urn is biometric (comum::CLocal::UrnaBiometrica, fn 820) and not in voter training (fn 697), with
+#   the code 4 in SOpcao's int: 2751 is called with the number and 2750 with the code, and the node's key is the number.
+# - 2751 and 2750 are out of line though cheap: at uenux2's -fPIC a call of an out-of-line constructor's C1 alias stays
+#   a call in its own TU (docs/reference/facts/codegen.md C6). Written in the class (inline), clang inlined both into
+#   the helper (-Rpass=inline: cost 20 and 25 against 250). Out of line they match byte for byte (score 0 over 41 and 47
+#   rows). Their order in band 4 (2753, 2752, 2751, 2750: GetInst, the destructor, then the two constructors) is the
+#   order of first mention when they are defined after the destructor's line, as written (ld_index 3096, 3097, 3103,
+#   3104 at the first link).
+# - By value: COpcaoDS's std::function and SOpcao's COpcaoDS are parameters by value. With `&&` both, the temporaries
+#   of the four emplaces shared their stack slots and the frame was 144 bytes (2753: 461 over 1690 rows); by value, the
+#   frame is the target's 272, each emplace's std::function and COpcaoDS in slots of their own, and the SOpcao
+#   temporary shared (299 over 1687): a by-value class argument's temporary takes a new slot at each call, as
+#   docs/reference/facts/codegen.md C10 measures.
+# - The form: AddClock({33, 1}), "Selecione a opção: " at {1, 1}, one text per option through
+#   api::CMTFormBuilder::AddTextField<COpcaoDS> (cmtformbuilder.h; binaryen holds it inlined behind a 48-byte frame)
+#   at the column and line the loop keeps as two ints (1, 2; 1, 3; then 20, 2 and 20, 3), "CORRIGE: retornar" at {1, 4},
+#   "CONFIRMA: prosseguir" at {40, 4} on the right, AdicionaCampoNumerico(builder, 1, true, {20, 1}) and
+#   GetInteractiveForm("", true). The loop's coordinates as an api::SPoint kept in place gave 299 rows; as TPosition
+#   (int16_t), a mask before each compare (74 over 1673, 6 inserted); as int with api::SPoint(coluna, linha),
+#   operand-only (64 over 1667, all the statics' addresses and calls).
+# - The texts are external functions defined after the statics: in band 1 the statics' destructors (10697, 10696)
+#   link before the texts (10695 to 10692, in option order), which link before the destructor's D0 (10691). Internal
+#   functions referenced only from the helpers would be emitted at the end of the object, after the D0 (a reading of
+#   clang's deferred emission). TextoAudio returns from two branches, "Desativar áudio" or "Ativar áudio": a
+#   conditional expression gave one copy of a selected pointer (50 over 64); two returns, the target's two fixed copies.
+#   The names and the texts' being free functions of namespace vota are chosen.
+# - 1151, vota::AdicionaCampoNumerico(api::CMTFormBuilder&, size_t, bool, const api::SPoint&), returns the
+#   std::shared_ptr<api::IInputField<api::IScreenMT>> it builds: a CNumberValidation (cnumbervalidation.h, its
+#   constructor inlined, "0123456789" stored in place), a CInputFieldMT over it (cinputfieldmt.h's constructor inlined,
+#   3673 called), AddField (3674) with a SharedField copy, the validation released last, so a named local. Its copy is
+#   this object's: the control block it alone instantiates (@1588176) lies in cescolheopcao.cpp's data. A free function
+#   of namespace vota, declared in cescolheopcao.h, external (9 target callers in several TUs), its name and its
+#   parameters' names are chosen; its band (11) has no other function of this object.
+# - The new names (step 8): 2753 and 1151 by vptr-anchor (CEscolheOpcao's and CInputFieldMT's vptrs), 2751 and 2750 by
+#   pair-fingerprint, the texts by 2753's table slots (table), s_inst by the votes of 2753 and 10697 and s_mutex by
+#   2753's (vote:1; its static destructor 10696 matches through it).
+# The roots stand for GetInst's four target callers (fns 10677, 10698, 10740, 10754) and for 1151's other eight
+# (12 and false, so that dead-argument elimination keeps the length and the flag); the vtable sinks of CEscolheOpcao and
+# of CDataText<COpcaoDS> went, since 2753 stores both vptrs, and so did the builder of CDataText<COpcaoDS>.
+# cescolheopcao.cpp.o now links ahead of unit 31's cmtformbuilder.cpp.o and gives the copies of what both instantiate:
+# IInputField<IScreenMT>'s constructor (3673), its destructor and Read, and the vector's emplace_back (1400, renamed by
+# step 9 to its IScreenMT twin), each re-pointing as before. Choices that give the same bytes: none measured.
 #
 # StartState (10690, slot 2) is written at its records' lines in cescolheopcao.cpp: it sets the next state to itself,
 # shows the form at +24 (its slot 2), logs with musl's syslog(LOG_INFO, "%s:%d> %d", __func__, __LINE__, ...) whether

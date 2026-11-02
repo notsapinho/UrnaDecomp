@@ -143,7 +143,8 @@
 #   std::find_if(...) == end() differs, 32 over 262 rows.
 # - MarcaEleitorFoiHabilitado (2825, lines 435, 439 and 447) and the Text of four data sources, CEleitorDadoNomeParaUrna,
 #   CEleitorDadoSequencial, CEleitorDadoSecao and CEleitorDadoTTE (11529, 11528, 11527, 11526, lines 756, 772, 784, 796;
-#   reached only by table slots 3906, 4055, 4056 and 4113, which fn 5401 passes), match at the tree's -O3 and did not at -O2:
+#   reached only by table slots 3906, 4055, 4056 and 4113, which fn 5401 passes; 5401, unit 239's, is in the link, so
+#   the roots no longer take their addresses), match at the tree's -O3 and did not at -O2:
 #   - the four Text hold GetInst inlined (record 44 lists them), which -O2 keeps out of line: `try-tu.sh --symbols --flags
 #     '-Rpass-missed=inline'` on this file prints `cost=230, threshold=225` at each call. In the -O2 link they scored 41
 #     over 93, 41 over 251 (twice) and 43 over 371, each with GetInst's 23 rows deleted.
@@ -186,6 +187,14 @@
 #   CEleitores::GetInst()'s result (326) as this, and 10699 formats the count into "Habilitação sem biometria: {}", which
 #   the name is chosen from. std::count_if over a lambda is written; other forms are not measured. Band uses 4 runs 2825,
 #   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
+# - 2823, CEleitores::QuantidadeAptos (celeitores.cpp, the lines just above 2822's, a choice; band 4 runs 2824, 2823,
+#   2822): it walks the same map and, for each record whose detail has no impediment (CEleitorDetalhe::SemImpedimento,
+#   fn 2266, unit 98's), adds one to the first of two 16-bit counts it returns through the result's address when the
+#   voter's md::CEleitorDecorator word at +48 (IsTTE's) is 0, and to the second otherwise. The branch on the false test
+#   first is the target's: the other order swapped the two counts' rows (6 over 72, 5 operands and a deleted eqz);
+#   written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). The struct SQuantidadeAptos, its members'
+#   names and the function's name and const are chosen (celeitores.h). Its callers (652, 2881, 11242, 12110) are not
+#   written: this unit's roots stand for them, QuantidadesAptos.
 # - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
 #   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
 #   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,

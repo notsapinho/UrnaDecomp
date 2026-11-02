@@ -31,6 +31,11 @@ public:
     void MarcaHabilitado(const CEleitorDadosHabilitacao& dados);
     void MarcaVotou();
     md::ETipoImpedimento GetImpedimento() const;
+    // fn 2266: whether the voter has no impediment in the current turn, GetImpedimento() == 0 with GetImpedimento
+    // inlined (+196 or +200 by the load's turn), which clang does in this file only; band 5 puts the function between
+    // ccargods.cpp's and celeitores.cpp's in link order. Its callers count the voters who can vote (fn 2823 below,
+    // CEleitores's slot 0 fn 2824, and fns 10635, 11233, 11616). The name, its being a member and its const are chosen.
+    bool SemImpedimento() const;
 
 private:
     md::CEleitorDecorator m_eleitor;
