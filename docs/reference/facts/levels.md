@@ -110,8 +110,9 @@ eleven, 1417 1729 1955 5814 5820 5926 5927 5933 5944 11753 11769, loses none and
 TU is uenux2's (`/home/rubio/tse/uenux2/wasm/...`), and that flag was decided for uenux2 on the condition that it
 gains rows and loses none. A uenux2 object's copy of a member
 whose copy the target keeps from this TU is right source with the wrong level, so it matches only when its body is the
-same at uenux2's flags, or once the TU's code that uses it is written: 11489 and 11518 stay `differs` with unit 82's
-source as written (how-to steps 4 and 5).
+same at uenux2's flags, or once code at this TU's rule that uses it links ahead of the tree: 11489 and 11518 were
+`differs` with unit 82's source as written (how-to steps 4 and 5), and match since unit 237's tree root,
+`src/app/roots_texttospeech.cpp`, builds the class at `VOTA_WEB_CXXFLAGS` as votaInit does.
 
 ## V2. LLVM's inlining remarks give the cost and the threshold, and the thresholds are what separate the levels
 

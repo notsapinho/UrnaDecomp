@@ -231,11 +231,6 @@
 // f1397 · 107 B · unmatched · placement: link order · name unknown
 // void f1397(i32, i32) { ... }
 
-// link-order cluster 1264 · uses=11
-
-// f1113 · 227 B · unmatched · placement: link order · name unknown
-// ? f1113(i32, i32, i32) { ... }
-
 // link-order cluster 1298 · uses=17
 
 // f818 · 355 B · unmatched · placement: link order · name unknown

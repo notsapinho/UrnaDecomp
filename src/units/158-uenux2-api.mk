@@ -24,7 +24,10 @@
 # containers. Their names came from 9427's `call` votes while 9427 held ITextToSpeech's vptr as an anchor; the D2 5441
 # stores that vptr too, so the anchor and those votes went, and 5441, 9427 and 11489 read `unresolved` on the two calls
 # (the scan of this unit before the lines). With the lines 5441 and 9427 (unit 82's D0) match; 11489 is the executable
-# TU's copy and stays `differs`.
+# TU's copy and was `differs`. Both lines went with unit 237, which gives 3746, 3764 and 11489 from the executable TU's
+# rule: 3746 has a generated `pair-addr` line, 3764 matches without one, and with each line out, or both, and the match
+# lines of 3746, 3764, 5441, 9427 and 11489 out of the copy, two scans and the splat build give every match back (that
+# fragment has the measurement).
 # Not written: api::AudioCollector (vtable @1586028, an si_class of RHVoice::client, built in place by DoSynthesize
 #   alone): its D2 and D0 (10840, 10822), play_speech (10820, slot 3: the samples appended to a std::vector<short> at +8,
 #   true returned) and RHVoice::client's inline defaults. Its vtable lies in this object's data, and the target's band 1

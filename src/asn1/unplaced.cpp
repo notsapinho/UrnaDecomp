@@ -8,9 +8,4 @@
 
 // f2896 · 64 B · unmatched · placement: link order · name unknown
 // void f2896(i32, i32) { ... }
-
-// link-order cluster 1186 · uses=6 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f1928 · 16 B · unmatched · placement: link order · name unknown
-// ? f1928(i32) { ... }
 // </stubs>

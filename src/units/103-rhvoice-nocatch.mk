@@ -36,8 +36,8 @@
 # - The roots' stand-in names and bodies.
 #
 # What waits, and for what:
-# - 2650 calls 388 where ours calls 424: two ~shared_ptr bodies in the target, one in our link, and 388 keeps a result no
-#   caller of ours reads. 3552 is unit 115's.
+# - 2650 calls 388 where ours calls 424: two ~shared_ptr bodies in the target. Since unit 237 our link has both (388
+#   keeps the result 11530 reads), and 2650 still calls 424's (unit 86's note). 3552 is unit 115's.
 # - 3473 (decodeCommon) waits no more: it matches since unit 89's ccandidaturas.cpp.o defines
 #   vector<unsigned>::push_back(&&) ahead of asn1.o (unit 89's fragment). document.cpp.o, which defines it too, put
 #   ahead of the runtime, had moved the row to `call 938` and matched nothing.

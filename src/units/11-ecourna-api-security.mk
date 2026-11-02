@@ -45,9 +45,13 @@ ECOURNA_SRCS += api/security/csha.cpp api/security/csiphashmac.cpp api/security/
 #   -fPIC without it) calls operator new and delete as -O3 does, and -Os keeps __vdeallocate and __vallocate but not
 #   __recommend. -Oz is the executable TU's level (docs/reference/facts/levels.md V1), so the target's 1681 reads
 #   as that TU's copy: a reading, from the first object's linkonce copy winning the link.
-# - 9495 is 35 over 277 rows, all operand rows but the two `drop`s the target has after its unwind path's calls of fn
-#   388, a ~shared_ptr copy whose result one target caller reads (fn 11530, not written); ours drops that result
-#   (docs/reference/facts/reading.md R18). Unit 100's fragment lists 388 among the executable TU's -Oz copies.
+# - 9495 was 35 over 277 rows, all operand rows but the two `drop`s the target has after its unwind path's calls of fn
+#   388, a ~shared_ptr copy whose result one target caller reads (fn 11530); ours dropped that result while 11530 was
+#   not written (docs/reference/facts/reading.md R18). Since unit 237 writes 11530 and 388 matches, 9495 has the drops
+#   and is 30 over 277, all operand-only, and reads `unresolved self-voted` on 1911776, (anonymous namespace)::CIFRASE,
+#   which only its own vote names (`evidence:vote:3 by:9495`); the address's other target readers are 9496 (a static's
+#   destructor, `differs`) and 14478 (__wasm_call_ctors) (`/usr/bin/grep -rlE 'i32\.const 1911776($|[^0-9])'
+#   build/out/splat/pieces/asm`).
 # - 9493's and 9491's names reach CBlockCipher's Encrypt and Decrypt (9487, 9485, unit 137) by two hand lines in
 #   splat/symbol_addrs.txt (callers+content): each loads the records of its own name that no other target function
 #   loads, and each fills one table slot (6284, 6285) whose number only its thunk holds. The generated

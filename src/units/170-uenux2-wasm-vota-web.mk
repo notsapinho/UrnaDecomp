@@ -78,9 +78,9 @@
 #   stays out of line and stops `unresolved` at +0xc11 on ~shared_ptr<ISound>, `pnpm wasm score` 340 over 1315 rows, 132
 #   inserted: our link inlines 5650 and 5656 (target callers 455 and 1091), keeps ~CTravaLeitura whole where the target
 #   calls 1322 (a thunk of 6147, which forms with the push bodies' 642), and our ~shared_ptr<ISound> drops the `this`
-#   that 388 returns. main (below) is written now; the row reads `unresolved +0xb30 call 509: ~shared_ptr<void> has no
-#   target function`, the same 388 as main's push bodies (below). None of the scratch helps landed: no row matched with
-#   them.
+#   that 388 returns. main (below) is written now; the row read `unresolved +0xb30 call 509: ~shared_ptr<void> has no
+#   target function`, the same 388 as main's push bodies (below), until unit 237 matched 388; it reads `differs +0x0`
+#   on the locals now, with 1091 inlined into it as above. None of the scratch helps landed: no row matched with them.
 # - 7840, votaInit (CVotaWebEngine::Init inlined, 6669 B, 109 invoke_* call sites): src/app/vota_init.cpp stands in. It
 #   invokes about 50 functions, most with no name and no stub: 14477, 11571 and 11546, which take votaInit's argument
 #   and a key string ("audioEleitorHabilitado", "municipio", ...), read as readers of its options, comum::CPath's
@@ -91,11 +91,13 @@
 #   10857: all but 407 have no name.
 # - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532,
 #   9873, 2247, 2249 and 1843 (src/app/roots_vector.cpp keeps them, the last three with minsize instances measured
-#   there), 1928, 3552 and 518 (asn1.md A10: 1928 is std::pair's implicit destructor, which clang refuses to instantiate
-#   explicitly, so no tree root gives its -Oz copy, nor 3552's, which calls it), 388 and 2650 (a minsize instance of
-#   ~shared_ptr<ASN1::IAbstractVisitor> in a probe link is (i32)->() where 388 returns `this`, `pnpm wasm score` 10 over
-#   26 rows, one deleted: read as no caller in our link reading the result), 11489 and 11518 (unit 82), and units 100's
-#   and 94's rows that wait for the TU (their fragments).
+#   there), 3552 and 518 (asn1.md A10: 1928, which 3552 calls, is std::pair's implicit destructor, which clang refuses to
+#   instantiate explicitly; it matches since unit 237, from a tree root at this TU's rule that instantiates it
+#   implicitly), 2650 (a minsize instance of ~shared_ptr<ASN1::IAbstractVisitor> in a probe link is (i32)->() where 388
+#   returns `this`, `pnpm wasm score` 10 over 26 rows, one deleted: read as no caller in our link reading the result;
+#   since unit 237 writes 11530, the reader, 388 matches from this object and 2650 still calls 424's body, unit 86's
+#   note), and units 100's and 94's rows that wait for the TU (their fragments). 11489 and 11518 (unit 82) match since
+#   unit 237, from its tree root src/app/roots_texttospeech.cpp at this TU's rule.
 #
 # main (fn 10307) and what it builds, added after the rest: the settings (unit 188's simulador::SConfiguracao, fn 8311),
 # InitApplication ("VOTA", "Software de Votacao" in Latin-1, the version text, an ELogAplicativos of 1: the
@@ -127,6 +129,11 @@
 #   operand-only, 2 deleted, the two `drop`s). The same holds 9507, 9437 (whose push bodies 5407 and 5398 have second
 #   callers, 5925 and 7181, not written), the set thunks 9372 9574 9650 9685 9731 9831 9897 9986 (operand-only: 9986 is
 #   2 over 6 rows) and 10356 (9 over 52, operand-only), whose push 5384 has the same two drops.
+#   Since unit 237 (11530 written, 388 matched with its result) the push bodies have the drops: 10090 is `differs`,
+#   156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower, and 5384, 8758, 8911, 8986 and
+#   9233 read the same 288 against 280; 9574, 9685, 9731, 9986 and 10356 match (unit 237's fragment); main reads
+#   `unresolved +0x363` on the table slot of the ISymmetricCipherFactory set, which has no target name, as 9897 does;
+#   9372, 9650 and 9831 stay `unresolved` and 9507 and 9437 `no-candidate`.
 # - 10384 (the lambda's operator()): on 10356's name, and CWasmWebSound's inline constructor stores +4 and +8 (an i32
 #   and an i64) where ours stores an i64 at +4 and a byte at +12 (unit 74's header's layout): 23 over 126 rows.
 # - 10949 (RecebeMensagem): our link inlines vector<unsigned char>'s assign (5496), whose other target caller, 5702, is

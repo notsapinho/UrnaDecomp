@@ -5,7 +5,8 @@
 # - ITextToSpeech's inline members in slots 2 to 8, which that vtable names, so the same object emits them: SetPitch
 #   11511, SetVolume 11507, SetSpeed 11505, GetSpeed 11504, IncreaseSpeed 11500, DecreaseSpeed 11494 and SetTag 11491.
 #   Their target copies are the executable TU's (the class has no key function); they are the same code at the uenux2
-#   flags.
+#   flags, and matched from this object until unit 237's tree root, src/app/roots_texttospeech.cpp, which links ahead
+#   of it at that TU's rule, gave them (the census pairs them with that object at tier `byte`).
 # Evidence of form: IncreaseSpeed tests equality with 4 and DecreaseSpeed compares with 0. On the target's rows `m_speed
 # < 4`, signed or unsigned, and std::min differ, and so do signed `m_speed > 0` and std::max. Both store m_speed
 # unconditionally, which rules out `if (m_speed != 4) ++m_speed;` (the store goes inside the branch). A bare virtual
@@ -26,13 +27,13 @@
 # cwasmwebsound.cpp's data, and 9436 follows that file's 9459, 9448 and 9445 in the uses=1 band (`awk -F'\t' 'NR>1 &&
 # $2==1 && $1>=9427 && $1<=9459' ledger/ordinals.tsv`, the index in reverse link order). The class in another file gives
 # the same bytes.
-# Left to do, with their bodies here and no match:
-# - SetVoice (target fn 11518, slot 1, `differs`): the target's copy is the executable TU's, and only there does
-#   `m_voice = voice` stay a call of std::string::operator= (fn 1700). At -Oz -fexceptions this header compiles to the
-#   target's rows; at the uenux2 flags clang inlines the call (cost=125, threshold=225), and `m_voice.assign(voice)`
-#   gives the same object.
-# - ITextToSpeech's D2 (target fn 11489, slot 9, `differs`), the executable TU's copy too: at -Oz -fexceptions this
-#   header gives the target's rows, with the string's destructor as a call (fn 149), which the uenux2 flags inline.
+# Matched since unit 237, from its tree root at the executable TU's rule (that fragment has the link); what this unit
+# measured while they were `differs` from this object:
+# - SetVoice (target fn 11518, slot 1): the target's copy is the executable TU's, and only there does `m_voice = voice`
+#   stay a call of std::string::operator= (fn 1700). At -Oz -fexceptions this header compiles to the target's rows; at
+#   the uenux2 flags clang inlines the call (cost=125, threshold=225), and `m_voice.assign(voice)` gives the same object.
+# - ITextToSpeech's D2 (target fn 11489, slot 9), the executable TU's copy too: at -Oz -fexceptions this header gives
+#   the target's rows, with the string's destructor as a call (fn 149), which the uenux2 flags inline.
 # This class's D0 (target fn 9427, slot 10) matches at the tree's -O3 since unit 158, whose fragment says how its two
 # callees are named; what was measured before, at -O2 and -O3:
 # - 9427 (`differs` at -O2). The target's holds the
@@ -46,7 +47,8 @@
 #   object): std::list's clear goes inline into the cache's destructor (cost=240, threshold=250), and that one stays a
 #   call (cost=450, threshold=325). 9427 is then 5 over 27 rows, all operand-only; its callees, 3746 and 3764, were named
 #   by its own votes alone (`unresolved self-voted`), and 3764 is the executable TU's copy (invoke_vii).
-# Pending: Synthesize (target fn 11530, slot 0): 82-uenux2-cwasmnulltexttospeech-pending.cpp says what it waits for.
+# Synthesize (target fn 11530, slot 0) was this unit's one pending member, trapped in 82-uenux2-cwasmnulltexttospeech-
+# pending.cpp; unit 237 writes it in the header, and the trap, the pending file and its rule went.
 # Not written: the implicit constructor (fn 13877), the executable TU's (std::make_unique through invoke_ii in fn 7840).
 # `std::make_unique<simulador::CWasmNullTextToSpeech>()` at -Oz -fexceptions compiles this header's default member
 # initializers to ITextToSpeech's constructor, out of line, with 13877's stores in 13877's order, and to a derived
@@ -57,12 +59,8 @@
 # header.
 CWASMNULLTEXTTOSPEECH_SRCS := mock/app/simulador/wasm/cwasmnulltexttospeech.cpp
 UENUX2_SRCS += $(CWASMNULLTEXTTOSPEECH_SRCS)
-# Synthesize (target fn 11530) is not reconstructed: 82-uenux2-cwasmnulltexttospeech-pending.cpp gives the vtable a
-# trapping body, compiled with the unit's flags
-$(ROOT)/$(APP)/82-uenux2-cwasmnulltexttospeech-pending.o: $(ROOT)/src/units/82-uenux2-cwasmnulltexttospeech-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/82-uenux2-cwasmnulltexttospeech.mk $(ROOT)/src/uenux2/src/api/audio/itexttospeech.h
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/82-uenux2-cwasmnulltexttospeech-pending.cpp -o $(R)
 # nothing reconstructed builds the speech yet: 82-uenux2-cwasmnulltexttospeech-roots.cpp keeps the vtable, as the
 # constructor's vptr store does
 $(ROOT)/$(APP)/82-uenux2-cwasmnulltexttospeech-roots.o: $(ROOT)/src/units/82-uenux2-cwasmnulltexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/82-uenux2-cwasmnulltexttospeech.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/82-uenux2-cwasmnulltexttospeech-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/82-uenux2-cwasmnulltexttospeech-pending.o $(APP)/82-uenux2-cwasmnulltexttospeech-roots.o
+override EXTRA_OBJS += $(APP)/82-uenux2-cwasmnulltexttospeech-roots.o

@@ -204,6 +204,10 @@ $(VOTA_WEB_OBJS): $(ROOT)/src/uenux2/wasm/vota_web/vota_web_wasm.cpp $(ROOT)/src
 # (src/app/roots_coderenv.cpp): landing pads and -Oz shapes, so that TU's rule, ahead of both trees and the ASN.1 runtime
 $(ROOT)/$(APP)/roots_coderenv.o: $(ROOT)/src/app/roots_coderenv.cpp $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/asn1/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c src/app/roots_coderenv.cpp -o $(R)
+# the executable TU's copies of api::ITextToSpeech's inline members, Synthesize and its recent-audio cache among them
+# (src/app/roots_texttospeech.cpp): landing pads and -Oz shapes, so that TU's rule, ahead of the uenux2 objects that emit them too
+$(ROOT)/$(APP)/roots_texttospeech.o: $(ROOT)/src/app/roots_texttospeech.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c src/app/roots_texttospeech.cpp -o $(R)
 
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
 # arguments; compiled with -Dmain=<name> so it becomes a plain function urna_roots() calls.
@@ -229,9 +233,10 @@ $(ROOT)/$(OSSL_OBJS_FILE): $(ROOT)/tools/libs/ossl_files.txt $(ROOT)/$(LIBCRYPTO
 APP_INCLUDES := -I$(BOOST_HDR) -I$(SEVENZIP_SRC) $(OPENSSL_INCLUDES) -I$(SQLITE_SRC) -I$(RHVOICE_SRC)/src/include $(RHVOICE_CFG)
 
 # ---- link order (the executable TU first, VOTA_WEB_OBJS above, then roots_coderenv.o, built at that TU's rule: the
-# target keeps its copy of basic_stringbuf::__init_buf_ptrs, 674, over the uenux2 roots'; then the stand-ins,
+# target keeps its copy of basic_stringbuf::__init_buf_ptrs, 674, over the uenux2 roots'; then roots_texttospeech.o, at
+# the same rule, ahead of the uenux2 objects whose copies of ITextToSpeech's inline members it replaces; then the stand-ins,
 # votaInit's first; app before libraries; libraries in this order) --------
-APP_OBJS := roots_coderenv.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o roots_regex.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
+APP_OBJS := roots_coderenv.o roots_texttospeech.o vota_init.o vota_api.o wasm_shim.o roots.o roots_ecourna.o roots_uenux2.o roots_cbasetype.o roots_iconversorasn.o roots_vector.o roots_regex.o sqlite_roots.o openssl_roots.o roots_7zip.o stubs_7zip.o roots_rhvoice.o roots_boost.o
 # EXTRA_OBJS: candidate app objects linked after the stubs and before the libraries (tools/round/try-tu.sh sets it;
 # root-relative or absolute paths under build/out). OUT/OUT_NAMED are overridable the same way for a side link.
 EXTRA_OBJS ?=
