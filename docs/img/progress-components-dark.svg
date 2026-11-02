@@ -10,7 +10,7 @@
 <rect x="275.4" y="34" width="11" height="11" rx="2" fill="#21262d"/>
 <text x="292.4" y="44" font-size="12" fill="#c3c2b7">no candidate yet</text>
 <text x="0" y="80" font-size="13" fill="#f0efec" font-weight="600">TSE code</text>
-<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">2,458 / 3,285 · 74.8%</text>
+<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">2,460 / 3,285 · 74.9%</text>
 <text x="0" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">vota</text>
 <text x="0" y="118" font-size="11" fill="#c3c2b7">57.1% · 445 / 780</text>
 <rect x="0" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -216,7 +216,7 @@
 <rect x="221" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="232" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="266" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">api</text>
-<text x="266" y="118" font-size="11" fill="#c3c2b7">86.8% · 448 / 516</text>
+<text x="266" y="118" font-size="11" fill="#c3c2b7">87.2% · 450 / 516</text>
 <rect x="266" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="277" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="288" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -1748,7 +1748,7 @@
 <rect x="354" y="769" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="365" y="769" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="0" y="820" font-size="13" fill="#f0efec" font-weight="600">Not attributed</text>
-<text x="800" y="820" font-size="12" fill="#c3c2b7" text-anchor="end">2,037 / 2,764 · 73.7%</text>
+<text x="800" y="820" font-size="12" fill="#c3c2b7" text-anchor="end">2,038 / 2,764 · 73.7%</text>
 <text x="0" y="842" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">unknown</text>
 <text x="0" y="858" font-size="11" fill="#c3c2b7">85.5% · 1,290 / 1,508</text>
 <rect x="0" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -1852,7 +1852,7 @@
 <rect x="88" y="967" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="99" y="967" width="10" height="10" rx="1.7" fill="#21262d"/>
 <text x="133" y="842" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">app</text>
-<text x="133" y="858" font-size="11" fill="#c3c2b7">59.5% · 747 / 1,256</text>
+<text x="133" y="858" font-size="11" fill="#c3c2b7">59.6% · 748 / 1,256</text>
 <rect x="133" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="144" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="155" y="868" width="10" height="10" rx="1.7" fill="#199e70"/>

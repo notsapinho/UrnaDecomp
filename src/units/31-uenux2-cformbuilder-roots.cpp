@@ -197,6 +197,35 @@ __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPap
     return form.Build().use_count() + outro.Build().use_count() + 3;
 }
 
+// The MT builder's input fields: none of their target callers is reconstructed.
+//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (652, 1901, 1905, 2734, 2740, 2743, 2747, 3610 and
+//                 the other 31): it calls it twice, or binaryen would inline it
+//   EntradaMT     1151 and 5410, the other callers of 3674, CMTFormBuilder::AddField: it adds a field the way they do,
+//                 a SharedField copied from the input field, and passes the length and the confirm flag of
+//                 IInputField<IScreenMT>'s constructor (3673) on to it through its asm label, as 1151 does through
+//                 CInputFieldMT's: with AddInputControl alone binaryen would inline 3673, and the four flags every
+//                 target caller passes the same (false, true, false, false) are passed so here, so that dead-argument
+//                 elimination folds them as it did in the target and not the length or the flag
+extern "C" {
+int w3673_root_0(void*, const void*, unsigned long, bool, bool, bool, bool, bool) __asm__(
+    "_ZN3api11IInputFieldINS_9IScreenMTEEC2ERKNSt3__210shared_ptrINS_16IInputValidationEEEmbbbbb");
+}
+
+__attribute__((noinline)) int ControleMT(api::CMTFormBuilder& form, int vezes)
+{
+    form.AddInputControl();
+    form.AddInputControl();
+    return vezes + 4;
+}
+
+__attribute__((noinline)) int EntradaMT(api::CMTFormBuilder& form, const api::CMTFormBuilder::SharedInput& entrada,
+                                        const std::shared_ptr<api::IInputValidation>& validacao, unsigned long tamanho,
+                                        bool confirma, void* memoria)
+{
+    form.AddField(entrada);
+    return w3673_root_0(memoria, &validacao, tamanho, confirma, false, true, false, false) != 0 ? 5 : 6;
+}
+
 void* volatile w5544_sink;
 
 struct SW5544Roots {
@@ -215,6 +244,8 @@ struct SW5544Roots {
         w5544_sink = reinterpret_cast<void*>(&FormPapelA);
         w5544_sink = reinterpret_cast<void*>(&FormPapelB);
         w5544_sink = reinterpret_cast<void*>(&FormPapelC);
+        w5544_sink = reinterpret_cast<void*>(&ControleMT);
+        w5544_sink = reinterpret_cast<void*>(&EntradaMT);
     }
 } w5544_roots;
 

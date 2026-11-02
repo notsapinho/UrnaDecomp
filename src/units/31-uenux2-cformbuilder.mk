@@ -11,7 +11,9 @@
 #                      a template of cformbuilder.h, which says why; the scan's content pass finds it, no vote names it); 502 (AddStatusHeader), written and differs, below,
 #                      with the members of its lambda's CDataText: 11107 (GetText), 11109 and 11108 (the control block's
 #                      D2 and D0)
-#   CMTFormBuilder     180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728 (AddClock)
+#   CMTFormBuilder     180, 619, 651, 1152, 5409, 5419 (AddTextField), 435 (AddLed), 1072 (AddBeep), 941 (AddBuzz), 728 (AddClock),
+#                      3674 (AddField) and 395 (AddInputControl), with 3673, api::IInputField<IScreenMT>'s constructor
+#                      (api/gui/iinputfield.h), whose copy this object emits: the input fields, below
 #   CPaperFormBuilder  193, 604 (AddTextField), 198 (AddNewLine), 1264 (AddCut), 2775 (AddQRCode); the member template AddTextField<FONTE>
 #                      in cpaperformbuilder.h, below the classes so that line 51 stays in IFormImpressao: its instance
 #                      over CPadDS<CToUpperDS<CCargoDSNome>> (5613) is unit 139's, whose fragment says what shows it
@@ -128,6 +130,46 @@
 #   the class members of CDataText<std::function> and of CDataTextFmt of a function, which can be another object's copies, a
 #   reading, and band 2's two pairs against 6404 stay inverted with them. The other bands' pairs in one object agree: 203
 #   above 202, 2245 above 2244, 5419 above 5409.
+#
+# The MT builder's input fields: 3674 (AddField), 395 (AddInputControl) and 3673. 395 allocates the field's 64 bytes,
+# builds the CControlValidation and its control block, calls 3673 and releases the validation before the field's vptr
+# store, the order `new CInputFieldControl<IScreenMT>` gives with api/gui/cinputfieldcontrol.h's constructor, which 395
+# holds inlined in its own frame. It then copies the field into a SharedField and passes that to 3674, which holds
+# vector::emplace_back with its slow path. The target keeps 3674 a call in its three callers, 395, 1151 and 5410, and
+# 1151 is another object's code (its control block's vtable @1588176 lies in app/vota/operador/outrasopcoes/
+# cescolheopcao.cpp's data). What fixes the form, each measured:
+# - Nothing outside this file keeps 3674 a call. At the tree's flags (-Rpass=inline -Rpass-missed=inline on
+#   cmtformbuilder.cpp), emplace_back goes into AddField (cost=310, threshold=325) and AddField, which has no inline
+#   hint, stays out of AddInputControl (cost=270, threshold=250); 3673 stays out of line (cost=340, threshold=250) and
+#   CInputFieldControlBase<IScreenMT>'s constructor goes in (cost=240, threshold=250). Written with no AddField, as
+#   m_campos.push_back(campo) in AddInputControl, push_back(&&) stays out of it too (cost=270, threshold=250).
+# - AddField is defined before AddInputControl. In use band 3 the target links 3674 before 3673, and an object lists a
+#   linkonce function at its first mention: with AddInputControl calling m_campos.push_back(campo) and no AddField, the
+#   object lists AddInputControl, 3673's constructor, then push_back(&&), the other order; with AddField first, AddField,
+#   AddInputControl and the constructor link in that order (ld_index 4473, 4474, 4475), and band 3 holds no pair of
+#   this object out of order.
+# - AddField's body, emplace_back(std::move(campo)) or push_back(std::move(campo)): the two give one plain link
+#   (sha256 7dace76cda976fb7... both, at this unit's landing). With push_back, clang inlines AddField into
+#   AddInputControl and binaryen into its one other caller, the roots' EntradaMT, and the link map names the body
+#   libc++'s vector::push_back(value_type&&) (build/out/wasm-map/vota_web/names.tsv); with emplace_back it names it
+#   AddField, the name the match line takes. emplace_back is the choice.
+# - AddInputControl's `campo` const or not, and AddInputControl a member or a free function of api that takes the
+#   builder by reference: each pair gives 395's function, its disassembly compared with the object-local numbers
+#   masked. A member by choice: it reaches the vector only through AddField.
+# - 3673 matches with api::ITimerScheduler::CreateTimer taking its callback by reference, as api/util/itimerscheduler.h
+#   has it now; unit 120's fragment scored it 12 over 211 rows with the callback by value.
+# The roots' ControleMT and EntradaMT give 395, 3674 and 3673 their second call sites. Not written, and what each
+# waits for:
+# - 1151 (9 callers, none written) builds an api::CInputFieldMT over a CNumberValidation ("0123456789"), pushes a
+#   SharedField of it through 3674 and returns it. Its control block's vtable lies among cescolheopcao.cpp's records,
+#   and fn 2753, which stores the vptr of CDataText<vota::CEscolheOpcao::COpcaoDS>, calls it, so the target's copy is
+#   that object's (a reading: the linkonce copy of an inline definition, or a function of that file). It waits for
+#   CNumberValidation's constructor and isValid (api/gui/cnumbervalidation.h holds the class's head only) and for a
+#   caller in that object: a stand-in here would emit it at APP_CXXFLAGS, not at app/vota's flags.
+# - 5410 ("ELEITOR(A) PODE VOTAR", callers 1256 and 5399, not written) holds behind a second prologue code that builds a
+#   CInputFieldControl<IScreenMT> with std::make_shared and calls 3674; its block's vtable (@1580748) lies in this
+#   object's data, so that code is a member of this file that binaryen inlined, a reading.
+#   Every direct callee of 5410 has a name now; no record, slot or RTTI names 5410, its class or its file.
 #
 # Chosen, the bytes do not decide:
 # - Every adder's name, GeraNome, RectEntre and that it is a free function of the file, every parameter name, the name and

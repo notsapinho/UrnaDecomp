@@ -52,9 +52,9 @@
 # IConfirmaJustificativa: its D2 (1688) is a thunk into binaryen's fn 2902 with the class's vptr, and with unit 161's 1257
 # and unit 169's 1720 and 1952 our link forms the same body from four thunks. The D0 (2748) calls the D2 and frees `this`
 # after a drop, the out-of-line shape (docs/how-to-decompile.md step 5). The destructor's line, 40, below the
-# constructor's record at 34, is chosen. The constructor (fn 3625) calls fn 395, which has no name. The three derived
-# classes' slot 0, fn 3626 (`f1688(p0)`), waits for a builder of one of them: their constructors, inlined into fns 10631
-# and 10635, call fn 654 (comum::md::CTradutorFrase::Traduz, unit 98).
+# constructor's record at 34, is chosen. The constructor (fn 3625) is not written; every direct callee of it has a name
+# now (ledger/callgraph.tsv). The three derived classes' slot 0, fn 3626 (`f1688(p0)`), waits for a builder of one of
+# them: their constructors, inlined into fns 10631 and 10635, call fn 654 (comum::md::CTradutorFrase::Traduz, unit 98).
 #
 # Roots (174-uenux2-app-vota-mensagens-roots.cpp): the two vtables. Insert (501) needs no stand-in now: fn 11914, the
 # one target caller of 501 that passes another priority than 1, is in the link (unit 199); without such a caller

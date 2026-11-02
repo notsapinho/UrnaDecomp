@@ -4,6 +4,9 @@
 //         function, a CDataTextFmt<CTextSource>, a CDataText<CTextSource>, a CDataText of a std::function
 //   435, 1072  AddLed, AddBeep     thunks into 3890, binaryen's one body for these two and CPaperFormBuilder::AddNewLine
 //   941, 728   AddBuzz, AddClock
+//   3674, 395  AddField and AddInputControl, the input fields, after GetInteractiveForm: CInputFieldControl<IScreenMT>'s
+//         vtable, which AddInputControl brings, follows CInteractiveForm<IScreenMT, IInputMT>'s in the target's data
+//         (@1580448 after @1580280); AddField comes first by use band 3 (src/units/31-uenux2-cformbuilder.mk)
 // The private AddTextField has no target function: clang inlines it into each of the six, whose rows are the same with its
 // statements written in place or with `inline`. Band 1 speaks to which, and that is a reading, not proof: as written, a
 // plain member defined after the three adders above it, 38 of the band's 231 pairs stay inverted in this object, 42 with
@@ -18,6 +21,7 @@
 #include "api/gui/cdatatext.h"
 #include "api/gui/cdatatextfmt.h"
 #include "api/gui/cfixedtext.h"
+#include "api/gui/cinputfieldcontrol.h"
 #include "api/gui/cpreshowclearmt.h"
 #include "api/gui/iscreenmt.h"
 #include "api/gui/ctextfieldmt.h"
@@ -123,6 +127,17 @@ std::shared_ptr<CInteractiveForm<IScreenMT, IInputMT>> CMTFormBuilder::GetIntera
     }
     m_campos.clear();
     return form;
+}
+
+void CMTFormBuilder::AddField(SharedField&& campo)
+{
+    m_campos.emplace_back(std::move(campo));
+}
+
+void CMTFormBuilder::AddInputControl()
+{
+    const SharedInput campo(new CInputFieldControl<IScreenMT>);
+    AddField(campo);
 }
 
 } // namespace api

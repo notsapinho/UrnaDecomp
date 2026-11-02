@@ -79,35 +79,20 @@
 # nothing, leaves every row as it is (the first run brings back all but 11029, 11030, 11043 and 11044, the second those).
 #
 # Not matched:
-# - 395 (an MT builder member that adds an input field of api::CInputFieldControl<IScreenMT>) allocates the field's 64
-#   bytes first, then the CControlValidation and its control block, and releases the validation right after the
-#   IInputField constructor (3673), before the field's vptr: the order `new CInputFieldControl<IScreenMT>` gives with
-#   api/gui/cinputfieldcontrol.h's constructor, which builds the validation (lone object). The validation's
-#   std::shared_ptr lives in 395's own frame (+8): 395 holds CInputFieldControlBase's constructor inlined, in one frame
-#   and with no store of the base's vptr. Measured on a scratch copy of cmtformbuilder.cpp with 395 written as a member
-#   that pushes a local std::shared_ptr<IInputField<IScreenMT>> (`m_campos.push_back(campo)`), by -Rpass=inline and
-#   -Rpass-missed=inline: at -O2 clang leaves that constructor out of line (cost=240, threshold=225); at the tree's -O3
-#   it inlines it into the member (cost=240, threshold=250), and not into CInputFieldControl's own constructor
-#   (cost=260), which fits 5565 (IScreen's, out of line) and the copy with a frame of its own that binaryen inlined into
-#   5410, a reading. At both levels clang also inlines vector::emplace_back(&&) into the member (cost=300,
-#   threshold=325), where 395 calls it (3674, whose body appends at the end): so do emplace_back of the converted
-#   temporary, a copy then push_back(std::move), a non-const local, and a by-value helper that clang inlines (cost=300
-#   each); insert keeps a call, to insert. No form tried keeps 3674 a call, so 395 is not written, and 3673 and 3674,
-#   which only 395, 1151 and 5410 call, have no caller in this link.
-# - 1151 builds an api::CInputFieldMT (whose Draw is unit 146's) the same way, a std::shared_ptr<IInputField<IScreenMT>>
-#   pushed through 3674, and is not written for the same reason. The vtable of its control block (@1588176) lies among
-#   app/vota/operador/outrasopcoes/cescolheopcao.cpp's data, before that file's record of CEscolheOpcao's slot 7
-#   (@1588216), not in a builder's.
-# - 3673, IInputField<IScreenMT>'s constructor (api/gui/iinputfield.h), reached through those two members in a scratch
-#   link, scored 12 over 211 rows: the store of the 600 ms interval comes after the timer lambda's stores, where 3673
-#   (and 2024, 5904, 1265) stores the interval first, right after ITimerScheduler::GetInst. cmtformbuilder.cpp's -O2 IR
-#   (-S -emit-llvm) has the 600 store first, so the backend moves it, and no spelling of the argument tried changes the
-#   object's order (milliseconds(600), {600}, 600LL, duration<int, std::milli>, an explicit std::function, [=]), nor
-#   -O3. CreateTimer's callback as a const reference does, in BatteryIconDataSource's constructor's object
-#   (api/util/itimerscheduler.h, which takes it so now); 3673 is not measured again with it.
-# - 5410, a screen built on a CMTFormBuilder ("ELEITOR(A) PODE VOTAR"), holds a
-#   make_shared<CInputFieldControl<IScreenMT>> inlined, whose control block's vtable (@1580748) lies in the MT
-#   builder's data, and waits for 395's family.
+# - 395, 3673 (IInputField<IScreenMT>'s constructor) and 3674 match from api/gui/cmtformbuilder.cpp's object, unit 31's
+#   source: src/units/31-uenux2-cformbuilder.mk has their form, what was measured, and what 1151 (an api::CInputFieldMT
+#   pushed through 3674) and 5410 (a screen over a make_shared<CInputFieldControl<IScreenMT>>), not written, wait for.
+#   Measured here before they matched, and a lead for 5410: at -O2 clang leaves CInputFieldControlBase<IScreenMT>'s
+#   constructor out of line in a builder member (cost=240, threshold=225); at the tree's -O3 it inlines it there
+#   (cost=240, threshold=250), and not into CInputFieldControl's own constructor (cost=260), which fits 5565
+#   (IScreen's, out of line) and the copy with a frame of its own that binaryen inlined into 5410, a reading.
+# - 3673 scored 12 over 211 rows, reached through those members in a scratch link, while CreateTimer took its callback
+#   by value: the store of the 600 ms interval came after the timer lambda's stores, where 3673 (and 2024, 5904, 1265)
+#   stores the interval first, right after ITimerScheduler::GetInst. cmtformbuilder.cpp's -O2 IR (-S -emit-llvm) had the
+#   600 store first, so the backend moved it, and no spelling of the argument tried changed the object's order
+#   (milliseconds(600), {600}, 600LL, duration<int, std::milli>, an explicit std::function, [=]), nor -O3.
+#   CreateTimer's callback as a const reference does, in BatteryIconDataSource's constructor's object
+#   (api/util/itimerscheduler.h takes it so now), and 3673 matches with it.
 # - 901 and 5530, AddInputControl: 901's code holds the control field's construction behind a second prologue, with
 #   the keys 4 folded in and CInputFieldControl<IScreen>'s vptr stored last, and 5530 calls 5565 and then stores that
 #   vptr. The header's one constructor with the default argument 4 gives both (the object keeps 901's
