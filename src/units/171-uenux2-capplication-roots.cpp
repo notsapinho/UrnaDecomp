@@ -14,15 +14,12 @@
 //   which 1277 (comum::CAssinador::Assina, unit 34), 4657 and 4682 (unit 205) are reconstructed: w171_guarda and
 //   w171_guardas stand for the other seven, three call sites of each. The other CriaContexto and
 //   the guard's constructor have one caller each and are left unrooted, so binaryen inlines them as the target does.
-// - DescreveModo stands for 4620, not reconstructed, the caller of api::CApplication::GetDescricaoModo (fn 5564)
-//   beside 502: with 502 alone binaryen would inline 5564 into it.
 // - GetContexto (fn 1695) has seven direct calls in the target: GetExceptionLevel's (fn 5569, in the link) and three
 //   each in 7709 and 7710 (vota::CThreadVota's two TrataErro, traps in unit 116's pending file); w171_contexto stands
 //   for those two. GetExceptionLevel's two callers are 7709 and 7710, which w171_nivel stands for, and so are two of
 //   api::Join's (fn 1696) five; w171_junta stands for all five (652, 5604, 7709, 7710, 11233, none reconstructed).
 extern "C" {
 void w5566_root_0() __asm__("_ZN3api12CApplication21EnterLoopDoingNothingEv");
-void w5564_root_0(void* resultado) __asm__("_ZN3api12CApplication16GetDescricaoModoEv");
 void w171_empilha_c(void* contexto) __asm__("_ZN3api12CApplication11PushContextENS_19CApplicationContextE");
 void w171_guarda_c(void* guarda, int tipo, void* titulo, void* descricao, void* detalhe) __asm__(
     "_ZN3api12CApplication12CriaContextoEiNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES7_S7_");
@@ -70,13 +67,6 @@ __attribute__((noinline)) int w171_guardas(char* bloco)
     return bloco[5] * 5;
 }
 
-__attribute__((noinline)) int DescreveModo(int a)
-{
-    alignas(4) char texto[12];
-    w5564_root_0(texto);
-    return a + texto[11];
-}
-
 // stands for fns 7709 and 7710
 __attribute__((noinline)) int w171_contexto(char* bloco)
 {
@@ -108,7 +98,6 @@ struct SW5566Roots {
         w5566_sink = reinterpret_cast<void*>(&w171_empilha);
         w5566_sink = reinterpret_cast<void*>(&w171_guarda);
         w5566_sink = reinterpret_cast<void*>(&w171_guardas);
-        w5566_sink = reinterpret_cast<void*>(&DescreveModo);
         w5566_sink = reinterpret_cast<void*>(&w171_contexto);
         w5566_sink = reinterpret_cast<void*>(&w171_nivel);
         w5566_sink = reinterpret_cast<void*>(&w171_junta);

@@ -69,15 +69,15 @@
 #   7826 (locale::__imp's constructor from a locale and a facet), 7827 and 4691 (the facet vector's operator= and
 #   __recommend), 1504 (ios_base::imbue, a caller of 987), and 12020, 2292 and 7825, whose callees now have names.
 # - The roots file stands for 5566's two target callers (7709, 7710) and for the callers of PushContext, CriaContexto
-#   and the guard's destructor that are not reconstructed (its header lists them), and with DescreveModo for 4620,
-#   5564's caller beside 502 (unit 31), which is not written. InitApplication needs no line: main (fn 10307, unit 170)
-#   passes its table slot to invoke_viiii.
+#   and the guard's destructor that are not reconstructed (its header lists them); 5564's two target callers, 502
+#   (unit 31) and 4620 (unit 165), are both in the link and need no line. InitApplication needs no line: main (fn
+#   10307, unit 170) passes its table slot to invoke_viiii.
 # - GetDescricaoModo (5564) and s_modo and s_demonstracao: api/gui/capplication.h has the evidence and the choices. In
-#   the whole link 5564 scores 8 over 75 rows, every one an operand of a call or of data (pnpm wasm score), and its row
-#   is `no-candidate`: no evidence names it while 502, whose records would anchor it, differs, and 4620 is not written.
-#   Named, it would still wait: its .bss byte at 1839208 has no reader but 5564 (docs/reference/splat.md 3, no hand
-#   line for it), and its .data word, 48, holds one non-zero byte, too little for content to place it, until 7787, the
-#   word's other reader, is written.
+#   the whole link 5564 scores 8 over 75 rows, every one an operand of a call or of data (pnpm wasm score). Step 8 names
+#   it by its call from 4620, which matches, and its row reads `unresolved self-voted` on its .bss byte at 1839208
+#   (s_demonstracao, whose one line is 5564's own vote): no target function but 5564 reads the byte, so no second
+#   match can hold the name and docs/reference/splat.md 3 allows no hand line for it. Its .data word (s_modo, 48) has
+#   a line of 5564's vote too, which the scan does not refuse. It waits for the rule 11159 waits for (below).
 # - Lines: 503 is the record's; 303 (QRCodeSRC::build), 377 (ShowExceptionMsgScreen), 432 (LogExceptionMsg) and 478
 #   (EnterLoopBeeping's lambda) are records of functions not written and stay blank. Every other line, the statics' place
 #   in the file, the order of the definitions but GetDescricaoModo's (after EnterLoopDoingNothing, the uses-2 band's

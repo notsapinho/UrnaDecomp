@@ -1,7 +1,8 @@
 # uenux2 vota's execution classes: vota::IExecucaoVota and its two implementations, vota::CExecucaoVota and
 # vota::CExecucaoVotaCooperativa, vota::CAssinadorVota's destructor and constructor, vota::CAguardaInicio's slots,
 # vota::impl::CPoliticaExecucaoEleitor's LimpaBufferInput and vota::GetFormularioInterativo, the builder of the forms with
-# a vota::CPreShowFormVota. Paths relative to src/uenux2.
+# a vota::CPreShowFormVota, whose PreShow draws the mode text through vota::DesenhaDescricaoModo. Paths relative to
+# src/uenux2.
 #
 # Target functions, by the object that holds them:
 # - app/vota/iexecucaovota.cpp: CExecucaoVota's slots 2 to 6, 8 and 9 (Executa 10236, IniciaThreads 10235, AguardaThreads
@@ -21,9 +22,10 @@
 #   (10218); its D2 and D0 are the bodies 49 states share (244, 387). GetInst (5343) is written and differs (below).
 # - app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp: LimpaBufferInput (13564), records 33:18, 34:35 and 37:38.
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
-#   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so).
+#   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so);
+#   CPreShowFormVota::PreShow (7707, slot 2, the class's key function) and DesenhaDescricaoModo (4620), below.
 # Not matched, and why: the -pending.cpp traps CAguardaInicio's ProcessKey
-# (10217) and CPreShowFormVota's PreShow (7707), with what each waits for. GetInst of
+# (10217), with what it waits for. GetInst of
 # IExecucaoVota (3594) and of IPoliticaExecucaoEleitor (inlined into 5925) are not written; the roots file says what
 # stands for them and for 576's 16 callers.
 #
@@ -97,6 +99,29 @@
 # the CMessageEleitor at +36 derives from first); the files above; LimpaBufferInput's local names and its line layout
 # around the records' columns (lines 33, 34 and 37 put each call where its record says; how the text before each call
 # is shared out is a choice). Which of CExecucaoVotaCooperativa's slots 2 and 3, one body, the source defines first.
+#
+# CPreShowFormVota::PreShow (7707) and vota::DesenhaDescricaoModo (4620), in cpreshowformvota.cpp, match. 7707 calls
+# api::IScreen's slot 4 with 1, then 4620 with the point {340, 5}; 4620 draws the text api::CApplication::GetDescricaoModo
+# (5564, unit 171's) gives, when it is not empty, through IScreen's slot 19, with an api::CFixedText of alignment 2, the
+# font {20, 1} and the colours 3 and 0 (cpreshowformvota.h says what places 4620 here and why its point is by value).
+# Measured with pnpm wasm score against names.tsv before step 8: 7707 3 over 28 rows, 4620 6 over 109 rows, operand rows
+# only. The census paired both (`addr`), and step 8 named them `pair-addr` and 5564 `call` (of the two new pairs, 4620
+# is the one that calls it). 4620's other target caller is 13550 (CPreShowProgressBar's slot 2, not reconstructed):
+# with 7707 its only caller in our link, binaryen inlined 4620 into it (names.tsv named no DesenhaDescricaoModo), so the
+# roots file's ModoProgressBar stands for 13550. The same bytes (try-tu.sh --symbols on copies, each function's
+# disassembly compared): in 7707 the point as a named const local; in 4620 `modo.size() > 0` for `!modo.empty()`, an
+# early return, `modo` not const, the CFixedText as a named const local. Not the same: a `const api::SPoint&` parameter
+# (7707 then stores the point once, at +12, and passes that; the target stores it twice and passes +8), and the font as
+# a named local (4620's frame offsets move, the font above the CFixedText). The band places nothing: 4620 is alone in
+# its stretch of ledger/tu-clusters.tsv (695, uses 2), between two OpenSSL objects. Chosen: 4620's name, its being a
+# free function of vota, its parameters' names, and the two functions' place in the file, before
+# GetFormularioInterativo. Put after GetFormulario instead, they leave the object's data in the same order
+# (wasm-objdump -x on both objects), the target's run's: CPreShowFormVota's vtable and typeinfo, IPreShow<IScreen>'s
+# typeinfo, CFixedText's vtable and typeinfo, the block's vtable and typeinfo (our object also emits IText's typeinfo
+# after CFixedText's, which the target's run does not hold: its block vtable follows CFixedText's typeinfo).
+# 5564 is written in unit 171 and does not match: named now, it reads `unresolved self-voted` on its .bss byte at 1839208
+# (`vote:1 by:5564` in splat/symbol_addrs.txt), which no target function but 5564 reads (docs/reference/splat.md 3, no
+# hand line for it).
 #
 # CExecucaoVotaCooperativa::ProcessaEntradaEleitor (7823, slot 7) matches, written in cexecucaovotacooperativa.cpp in
 # slot order: CThreadEleitor::GetInst (316), false when the instance has no context at +32 or Stop was asked (the byte
