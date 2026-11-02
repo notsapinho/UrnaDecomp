@@ -66,7 +66,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 200	_ZN4utf84nextINSt3__211__wrap_iterIPKcEEEEjRT_S6_	195	symbol	match	readings: address symbol,table slot	779	shape	utf8cpp	1	app/roots_rhvoice.o
 201	CRYPTO_THREAD_lock_free	202	symbol	match	readings: address string	19	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-threads_pthread.o
 202	_ZN3api12CFormBuilder12AddTextFieldERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS_6SPointERKNS_5SFontENS_14ETextAlignmentENS_6TColorESH_	5548	symbol	match	readings: address symbol	347	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
-203	_ZN4vota13CVotosEleitorC2Ev	1479	symbol	match	-	18	byte	unknown	1	app/uenux2/src/app/vota/eleitor/comum/cvotoseleitor.cpp.o
+203	_ZN5comum2md7CCedulaC2Ev	1479	symbol	match	-	18	byte	unknown	1	app/uenux2/src/app/comum/dados/md/rdv/ccedula.cpp.o
 204	gf_sqr	203	symbol	match	-	1753	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-f_impl64.o)
 205	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE17__assign_no_aliasILb1EEERS5_PKcm	234	symbol	match	-	80	addr	unknown	1	sysroot:libc++.a(string.o)
 206	__multi3	206	symbol	match	-	117	byte	ecourna	1	sysroot:libcompiler_rt.a(multi3.o)

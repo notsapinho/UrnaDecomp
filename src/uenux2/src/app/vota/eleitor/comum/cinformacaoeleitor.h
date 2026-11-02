@@ -1,11 +1,10 @@
 #pragma once
 
 #include <string>
-#include <utility>
-#include <vector>
 
 #include "api/util/cdatetime.h"
 #include "app/comum/dados/md/processoeleitoral/ccargo.h"
+#include "app/comum/dados/md/rdv/ccedula.h"
 #include "app/comum/dados/md/rdv/cvoto.h"
 
 // Reconstruction's note, not TSE's text: static objects of the vota application that no symbol or record names, these
@@ -38,27 +37,19 @@ inline void SetNumeroDigitado(const std::string& numero)
     g_numeroDigitado = numero;
 }
 
-// The votes cast in the current cycle, a 12-byte object at 1833300: a vector of 20-byte (post id, vote) pairs, the id
-// a byte at +0 and the comum::md::CVoto at +4, which fn 4192 appends to, fn 7377 empties in place, fns 6999, 4454 and
+// The votes cast in the current cycle, a 12-byte object at 1833300: a vector of 20-byte (post id, vote) pairs, the id a
+// byte at +0 and the comum::md::CVoto at +4, which fn 4192 appends to, fn 7377 empties in place, fns 6999, 4454 and
 // 11683 read, and fn 13588 (table slot 1079) destroys at exit, freeing each element's string at +8. __wasm_call_ctors
-// calls a constructor on it, fn 203's body, which zeroes the 12 bytes and is binaryen's one body for it and
-// api::CFormBuilder's constructor: so the object's type has a user-provided constructor out of this file (one this file
-// sees would be folded into the object's zero bytes: a reading), in cvotoseleitor.cpp with Adiciona, which fn 4192 holds
-// behind a stack frame of its own (src/units/197-uenux2-celeitorvotando.mk has the measurement). The class, its file,
-// its members' names and g_votosEleitor's are chosen; that the vector is its one member rests on the 12 bytes.
-class CVotosEleitor {
-public:
-    CVotosEleitor();
+// calls a constructor on it, fn 203's body, which zeroes the 12 bytes. Its type is read as comum::md::CCedula
+// (app/comum/dados/md/rdv/ccedula.h), the class the records of fn 4454's inlined callees take: 4454 copies this
+// object's elements, one by one, into the vectors of CCedula values that it builds with the same call of fn 203's body,
+// keyed by a word it looks up from each pair's post id. The reading rests on those bytes: this object has the class's
+// 12 bytes, its constructor call and its elements. Its constructor and Adiciona, which fn 4192 holds behind a stack
+// frame of its own, are in ccedula.cpp (src/units/197-uenux2-celeitorvotando.mk has the measurement). g_votosEleitor's
+// name is chosen.
+extern comum::md::CCedula g_votosEleitor;
 
-    void Adiciona(comum::md::TCargoID cargo, comum::md::CVoto voto);
-
-private:
-    std::vector<std::pair<comum::md::TCargoID, comum::md::CVoto>> m_votos;
-};
-
-extern CVotosEleitor g_votosEleitor;
-
-// fn 4192: copies the vote in a 16-byte frame and passes it by value to CVotosEleitor::Adiciona, held in a second,
+// fn 4192: copies the vote in a 16-byte frame and passes it by value to CCedula::Adiciona, held in a second,
 // 32-byte frame, which builds the pair there and pushes it. Its callers are vota::CEleitorVotando::RegistraVoto (fn
 // 4471) and suspenderEleitor (fn 4442), in celeitorvotando.cpp, which would inline a function this small
 // (docs/how-to-decompile.md step 3): so it is in another TU, this one beside the object (a choice). Its name and that it

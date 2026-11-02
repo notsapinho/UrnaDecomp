@@ -7,8 +7,12 @@
 //   comum::CCargos::FiltraPorAbrangencia (record ccargos.cpp:249) and a sort of the positions with the comparator at
 //   table slot 2357 (libc++'s introsort, fn 2837, with fns 2833 and 5804 under it, none written); and it calls fn 3721,
 //   which has no name (its other callers, fns 2824 and 5761, are not written either);
-// - NeedChangeState 7352 (slot 3, record :294), 305 B: calls comum::md::CVotos::Insere (fn 4454, record cvotos.cpp:40),
-//   not written;
+// - NeedChangeState 7352 (slot 3, record :294), 305 B: calls fn 4454, not written, a CEleitorVotando member that no
+//   record names (one parameter, this: its first statement is CThreadEleitor::GetInst().StopTick on the tick at +16;
+//   its callers are 7352 and 4442). Its records are those of five functions it holds inlined (CVotos::Insere,
+//   CVotosCargos::InsereCedula and ConfereCedula, CVotosEleicoesVota::RecebeCedula and
+//   CEstadoGeralVota::MarcaUltimoVoto): it copies vota::g_votosEleitor's votes into comum::md::CCedula values and
+//   checks and inserts them under those records. 7352 and 4442 wait for it;
 // - ProcessKey 7337 (slot 6), 96 B: calls suspenderEleitor (fn 4442, records :410 and :427), not written, which makes
 //   RegistraVoto's calls and calls fn 4454 and DescartaVotos (fn 4449, records :253 and :254), not written, over fn 1091
 //   (api::CPolySingleton<api::ISound>::instance), not matched.

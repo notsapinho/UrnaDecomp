@@ -1,8 +1,9 @@
 # uenux2 vota::CEleitorVotando in src/app/vota/eleitor/celeitorvotando.cpp, the file the class's records name, with its
 # head (celeitorvotando.h, which says what the layout rests on); the objects of the vota application that the voting
-# states share, in src/app/vota/eleitor/comum/cinformacaoeleitor.{h,cpp} and cvotoseleitor.cpp; the five
-# vota::CLogVota members the votes are logged with, in app/vota/log/clogvota.cpp (unit 119's list, whose fragment
-# gives clogvota.cpp.o the Boost include path); and unit 116's cthreadoperador.cpp, listed here (below).
+# states share, in src/app/vota/eleitor/comum/cinformacaoeleitor.{h,cpp}, with the votes' class comum::md::CCedula in
+# src/app/comum/dados/md/rdv/ccedula.{h,cpp}; the five vota::CLogVota members the votes are logged with, in
+# app/vota/log/clogvota.cpp (unit 119's list, whose fragment gives clogvota.cpp.o the Boost include path); and unit
+# 116's cthreadoperador.cpp, listed here (below).
 #
 # Matched, by object (target fns):
 # - celeitorvotando.cpp: GetInst 3229 with the constructor inlined, its statics' exit destructors 7416 (s_inst) and
@@ -10,9 +11,9 @@
 #   MostraCargoNoOperador 4464, ChamaEstadoProximoCargo 4459 (EUeVotaError 9310), ProcessTick 7349 (slot 8) and
 #   ProcessInput 7345 (slot 7);
 # - cinformacaoeleitor.cpp: the exit destructors of g_numeroDigitado (13593) and g_votosEleitor (13588), and
-#   AdicionaVoto 4192 with CVotosEleitor::Adiciona inlined by binaryen;
-# - cvotoseleitor.cpp: CVotosEleitor's constructor, one body with api::CFormBuilder's (fn 203): this object links
-#   ahead of cformbuilder.cpp's, so 203's match line takes its name;
+#   AdicionaVoto 4192 with comum::md::CCedula::Adiciona inlined by binaryen;
+# - ccedula.cpp: CCedula's constructor, one body with api::CFormBuilder's (fn 203): this object links ahead of
+#   cformbuilder.cpp's, so 203's match line takes its name;
 # - clogvota.cpp: LogaVotoCargoSemCandidatoPorSuspensao 3272, LogaVotoBrancoPorSuspensao 4546,
 #   LogaVotoCargoSemCandidato 4542, LogaVotoNuloPorSuspensao 4541 and LogaVotoConfirmado 4537, each a thunk of
 #   binaryen's one body for the five, fn 2302, which matches too.
@@ -33,9 +34,21 @@
 # comum/cinformacaoeleitor.cpp, the one file whose records lie between cvotacaostateaudio.cpp's and
 # cpoliticaexecucaoeleitor.cpp's, is chosen for all four; cvotacaostateaudio.cpp, whose FormataMensagem reads the
 # string, the votes and the byte, is the other reading. Their readers say what each is (cinformacaoeleitor.h has
-# them). The file's record line 181 stays blank, past the file's end. The votes' type has its constructor out of that
-# file, since __wasm_call_ctors calls it, and fn 4192 holds Adiciona behind a frame of its own, so both are in a file of
-# their own, cvotoseleitor.cpp, a chosen name.
+# them). The file's record line 181 stays blank, past the file's end.
+#
+# The votes' type is read as comum::md::CCedula, the class the records of CVotosCargos::InsereCedula and ConfereCedula
+# and of CVotosEleicoesVota::RecebeCedula take by const reference. Fn 4454, a CEleitorVotando member no record names
+# (not written; its callers 7352, pending, and 4442 wait for it: the -pending.cpp), holds the three inlined: it copies
+# the votes' 20-byte elements one by one into the vectors of CCedula values it builds with a call of fn 203's body, the
+# call __wasm_call_ctors makes on the votes, and its ConfereCedula tests the size of that vector (ccedula.h has the
+# readout). The reading rests on those bytes: the votes have the class's 12 bytes, its constructor call and its
+# elements. Both calls stay calls, so the constructor is out of line (a reading), and fn 4192 holds Adiciona behind a
+# frame of its own: both are in ccedula.cpp, in md/rdv/ beside the classes that take it (unit 13's list compiles
+# those; the path is chosen).
+# This unit lists ccedula.cpp, after cinformacaoeleitor.cpp, and the place is a choice: a private link with its object
+# after unit 13's cvoto.cpp instead, ahead of AdicionaVoto's object, scanned with this link's symbol file and match list
+# (docs/reference/facts/workflow.md W13), gave the same 10898 matches, 4192, 13588 and 203 among them, and moved no row
+# into or out of match.
 #
 # The members, measured with pnpm wasm score against the whole link:
 # - GetInst and the constructor: GetInst holds s_mutex through a std::lock_guard (the form unit 116's singletons use;
@@ -66,7 +79,7 @@
 #   calls of AdicionaVoto and of the five loggers have stand-ins (Companions).
 # - AdicionaVoto: with the append written as a free function beside it in cinformacaoeleitor.cpp, clang inlined it,
 #   one 48-byte frame where the target has AdicionaVoto's 16-byte frame and then binaryen's 32-byte one: 102 over 328
-#   rows (14 inserted, 23 deleted); with the append in cvotoseleitor.cpp it matches. With the constructor there too,
+#   rows (14 inserted, 23 deleted); with the append in ccedula.cpp it matches. With the constructor there too,
 #   our __wasm_call_ctors calls it on g_votosEleitor as the target's calls fn 203's body on 1833300. g_votosEleitor's
 #   line (`vote:5 by:13588`) has 4192, 7377, 6999, 4454 and 11683 among the target's other users of the address.
 # - The five loggers: clogvota.h says what they are. Their places in clogvota.cpp are a choice. Use band 2 puts
@@ -112,17 +125,18 @@
 # RegistraVoto's (fns 7428 and 11754), Suspende for suspenderEleitor's (fn 4442) calls of AdicionaVoto and the five
 # loggers. GetInst's constructor stores the vptr, the target's one reference to the vtable, so no root takes it.
 #
-# Chosen, no evidence names them: g_numeroDigitado, g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor,
-# CVotosEleitor, Adiciona, AdicionaVoto, RegistraVoto, MostraCargoNoOperador, SetTextoEleitor, the five LogaVoto*
-# names (from their messages) and SetNumeroDigitado; that the objects are of namespace vota rather than static members
-# of a class, that AdicionaVoto and MostraCargoNoOperador are free functions and RegistraVoto a member that is not
-# static; cinformacaoeleitor.h's and cvotoseleitor.cpp's paths and that CVotosEleitor is declared in
-# cinformacaoeleitor.h; CEleitorVotando's data members' names, CCargos::IsPrimeiro, the locals, the message codes
-# written as literals (as 7221's Post(12) is), and the declaration order of the class's virtual members (the
-# destructor first).
+# Chosen, no evidence names them: GetInst (the name the project's recorded singletons use), g_numeroDigitado,
+# g_dataHoraDesligamento, g_escolhaAtual, g_votosEleitor, CCedula's Adiciona and its data member, AdicionaVoto,
+# RegistraVoto, MostraCargoNoOperador, SetTextoEleitor, the five LogaVoto* names (from their messages) and
+# SetNumeroDigitado; that the objects are of namespace vota rather than static members of a class, that AdicionaVoto
+# and MostraCargoNoOperador are free functions and RegistraVoto a member that is not static; cinformacaoeleitor.h's
+# path, CCedula's namespace (comum::md: the records print it unqualified), the paths of ccedula.h and ccedula.cpp and
+# std::pair as CCedula's element; CEleitorVotando's data members' names, CCargos::IsPrimeiro, the locals, the message
+# codes written as literals (as 7221's Post(12) is), and the declaration order of the class's virtual members (the
+# destructor first). A reading, not a choice: that g_votosEleitor is a CCedula (above).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-CELEITORVOTANDO_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/vota/eleitor/comum/cinformacaoeleitor.cpp src/app/vota/eleitor/comum/cvotoseleitor.cpp src/app/vota/operador/cthreadoperador.cpp
+CELEITORVOTANDO_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/vota/eleitor/comum/cinformacaoeleitor.cpp src/app/comum/dados/md/rdv/ccedula.cpp src/app/vota/operador/cthreadoperador.cpp
 UENUX2_SRCS += $(CELEITORVOTANDO_SRCS)
 # celeitorvotando.cpp reads comum::CConfiguracaoEleicao, whose header reaches Boost through CConfiguracaoMunicipio's
 # CHorariosUrna: an include path, not a flag of the code (src/units/README.md "What a fragment holds")

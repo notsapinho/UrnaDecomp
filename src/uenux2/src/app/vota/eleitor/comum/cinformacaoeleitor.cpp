@@ -7,7 +7,7 @@ namespace vota {
 
 std::string g_numeroDigitado;
 
-CVotosEleitor g_votosEleitor;
+comum::md::CCedula g_votosEleitor;
 
 void AdicionaVoto(const comum::md::TCargoID cargo, const comum::md::CVoto& voto)
 {
