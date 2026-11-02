@@ -59,7 +59,8 @@
 #   invocation of 101 characters, and the GetInst records of four classes not written here, IPoliticaExecucaoEleitor
 #   (5925, column 100), ISincronismoVotoEleitor (7181, 98), IExecucaoVota (3594, 78) and IValidaMidia (5575, 76), sit at
 #   52 plus the lengths of the interface's and the class's names, so the invocation spells both once. That is a reading
-#   of the columns; none of those four is written.
+#   of the columns; of those four only IValidaMidia's is written (unit 179, with this macro, not matched: its fragment
+#   says what it waits for).
 # - SorteiaDataHoraInspecao (5412; callers 599, which holds the constructor, and 10568, slot 17): a std::random_device
 #   (1905984, guard 1905985), a std::mt19937 seeded from it (1905988, guard 1908488) and a distribution of 60 to 90
 #   (1908492, its two words 60 and 90, guard 1908500), all function-local statics with guards; the draw comes before

@@ -1,21 +1,26 @@
-// Roots: keep comum::impl::CValidaMidia's vtable (@1577024) in the skeleton link the way the target reaches its slots:
-// only through it, with no direct caller (ledger/callgraph.tsv has no edge into fns 11166 to 11173). The one function
-// that stores its vptr, IValidaMidia::GetInst (fn 5575, `grep -rlE 'i32\.const 1577032($|[^0-9])'
-// build/out/splat/pieces/asm`), is not reconstructed, so a static constructor takes the vtable's address in its place.
-// Compiled as app code.
+// Roots: reach comum::impl::IValidaMidia::GetInst (fn 5575) the way the target does until its caller lands. Its one
+// caller, fn 12134, calls it twice (ledger/callgraph.tsv) and is not reconstructed; w179_usa stands for it with two call
+// sites, so binaryen keeps GetInst out of line, and has a body no target function has. GetInst stores
+// comum::impl::CValidaMidia's vptr (its constructor, inlined), which keeps the vtable and the slots the target reaches
+// only through it. Compiled as app code; GetInst is declared through its mangled name.
 extern "C" {
-extern const char cvalidamidia_vt[] __asm__("_ZTVN5comum4impl12CValidaMidiaE");
+int w179_getinst() __asm__("_ZN5comum4impl12IValidaMidia7GetInstEv");
 }
 
 namespace {
 
-const void* volatile cvalidamidia_sink;
+__attribute__((noinline)) int w179_usa()
+{
+    return w179_getinst() == w179_getinst() ? 17 : 19;
+}
+
+int (*volatile w179_sink)();
 
 struct SCValidaMidiaRoots {
     SCValidaMidiaRoots()
     {
-        cvalidamidia_sink = cvalidamidia_vt;
+        w179_sink = w179_usa;
     }
-} cvalidamidia_roots;
+} w179_roots;
 
 } // namespace

@@ -83,15 +83,10 @@
 # splat/symbol_addrs.txt):
 # - every GetInst of these states and its constructor, which build the forms through fn 395 (the MT builder's input
 #   control) or 1151: 5393 (CDesabilitaAudioEleitor's), the one inlined into 10440 (CSuspensaoAutomaticaEleitor's), and
-#   the others' callers. 395 and 1151 call fns 3673 and 3674, whose callers in the target are 395, 1151 and 5410; 5410
-#   builds a state's form in another TU and still calls 3674. Fn 3674 is vector<shared_ptr<...>>::emplace_back(&&), out
-#   of line. With 395 written as an out-of-line CMTFormBuilder member in api/gui/cmtformbuilder.cpp that pushes through
-#   a by-value AddField there, clang inlines emplace_back into it: at the tree's flags `-Rpass=inline` prints `inlined
-#   into 'AddInputControl' with (cost=300, threshold=325)`, at -std=c++20 and at -std=c++23 alike. Written instead as an
-#   in-class AddInputControl over a private AddField(SharedField&&) in api/gui/cmtformbuilder.cpp, the object keeps the
-#   call (`not inlined into 'AddField' ... (cost=340, threshold=325)`), but the link's binaryen inlines emplace_back
-#   into AddField, its one caller, where the target keeps fn 3674 with three: `pnpm wasm score` gives 395 `179 over 271
-#   rows` and 3674 against AddField `68 over 157 rows`. So 395, 1151, 3673 and 3674 are not written.
+#   the others' callers. 395 is api::CMTFormBuilder::AddInputControl, matched in unit 31 with the fns it calls, 3673 and
+#   3674 (AddField, out of line: unit 31's fragment has the measurement); 1151, which calls them too, is not written,
+#   nor is 5410, which builds a state's form in another TU and calls 3674. 5393 and 10440 have every direct callee named
+#   now.
 # - the pending slots: the -pending.cpp header lists them.
 #
 # Evidence and forms of the members written since (each measured in the whole link with pnpm wasm score):

@@ -20,6 +20,8 @@
 //   returns one, slot 9 takes nothing and returns nothing.
 // SResultadoValidacao is that result: its name and its members' names are chosen; the byte's being a bool and the
 // word's being an int are the plainest types of those widths.
+// GetInst (fn 5575, record `static IValidaMidia &comum::impl::IValidaMidia::GetInst()`, cvalidamidia.cpp:182) is
+// declared last; its place among the members is chosen.
 
 namespace comum::impl {
 
@@ -40,6 +42,8 @@ public:
     virtual int Slot7(int) = 0;
     virtual int Slot8() = 0;
     virtual void Slot9() = 0;
+
+    static IValidaMidia& GetInst();
 };
 
 } // namespace comum::impl

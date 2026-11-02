@@ -136,9 +136,6 @@
 
 // link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
 
-// f5581 · 427 B · unmatched · placement: link order · name unknown
-// void f5581(i32, i32, i32) { ... }
-
 // f5579 · 638 B · unmatched · placement: link order · name unknown
 // void f5579(i32, i32, i32, i32) { ... }
 
@@ -370,9 +367,6 @@
 
 // f2734 · 1228 B · unmatched · placement: link order · name unknown
 // ? f2734() { ... }
-
-// f2733 · 217 B · unmatched · placement: link order · name unknown
-// ? f2733(i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1083 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cvalidaidentidade.cpp
 
@@ -825,19 +819,6 @@
 // f2685 · 17 B · unmatched · placement: link order · name unknown
 // void f2685(i32, i32) { ... }
 
-// link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
-
-// f2731 · 68 B · unmatched · placement: link order · name unknown
-// ? f2731(i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f2730 · 68 B · unmatched · placement: link order · name unknown
-// ? f2730(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1081 · uses=4 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
-
-// f2738 · 76 B · unmatched · placement: link order · name unknown
-// ? f2738(i32, i32, i32) { ... }
-
 // link-order cluster 1085 · uses=4 · neighbours' file uenux2/src/api/util/csystem.cpp
 
 // f2758 · 507 B · unmatched · placement: link order · name unknown
@@ -1042,11 +1023,6 @@
 // f3528 · 530 B · unmatched · placement: link order · name unknown
 // void f3528(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 988 · uses=3 · neighbours' file uenux2/src/api/gui/cinputfieldcontrol.cpp
-
-// f3673 · 441 B · unmatched · placement: link order · name unknown
-// ? f3673(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1046 · uses=3
 
 // f4129 · 280 B · unmatched · placement: link order · name unknown
@@ -1084,11 +1060,6 @@
 
 // f491 · 1329 B · unmatched · placement: link order · name unknown
 // void f491() { ... }
-
-// link-order cluster 1343 · uses=48
-
-// f395 · 327 B · unmatched · placement: link order · name unknown
-// void f395(i32) { ... }
 
 // component simulador
 

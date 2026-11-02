@@ -23,7 +23,7 @@ class IControladorRegistraMesarios;
 // 7480, 1661, 218, 425, 10357, 425]): it overrides StartState (slot 2, fn 10358), which shows both forms and logs that
 // the limit of mesarios is reached, and ProcessInput (slot 7, fn 10357), which ends the registration on CONFIRMA.
 // GetInst (fn 5386) and the constructor inlined there, which builds both forms, are not reconstructed: they call fns
-// 395 and 1255, which have no body here. A singleton: GetInst keeps the object in a static std::unique_ptr (@1909624,
+// 395 and 1255, and 1255 has no body here. A singleton: GetInst keeps the object in a static std::unique_ptr (@1909624,
 // destroyed at exit by fn 10360) under a static std::mutex (@1909600, by fn 10359). The 28-byte object and its two
 // forms are those of the 19 states over the destructors 448 and 765: src/units/135-uenux2-comum-mesario-estados.mk says
 // which of this is evidence and which is chosen.

@@ -1,10 +1,11 @@
 // Roots: keep CEleitorDadosHabilitacaoBiometrica's constructor (target fn 3718) in the skeleton link the way the target
-// reaches it. Its one target caller, fn 10425 (vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor), is not
-// reconstructed and calls it three times, with every argument varying between the calls (a global's value, a
-// constant 0 and two locals), and drops the returned `this`. These two stand-ins give it three call sites, vary each
-// argument and drop the result, so binaryen neither inlines it nor folds an argument. They call two things or add an
-// offset, so neither is a target function's body. Declared through an asm label with the object's signature (a
-// constructor returns `this`), so this TU needs no uenux2 header and instantiates nothing.
+// reaches it. Its one target caller, fn 10425 (vota::CMostraEleitorVotando::ProcessKey, slot 6, which holds
+// SalvaHabilitacaoEleitor inlined: its records), is not reconstructed and calls it three times, with every argument
+// varying between the calls (a global's value, a constant 0 and two locals), and drops the returned `this`. These two
+// stand-ins give it three call sites, vary each argument and drop the result, so binaryen neither inlines it nor folds
+// an argument. They call two things or add an offset, so neither is a target function's body. Declared through an asm
+// label with the object's signature (a constructor returns `this`), so this TU needs no uenux2 header and instantiates
+// nothing.
 extern "C" {
 int r130_biometria(int, int, int, int, int) __asm__("_ZN5comum2md34CEleitorDadosHabilitacaoBiometricaC1ENS0_5CDedo8TipoDedoEthi");
 }

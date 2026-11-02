@@ -138,7 +138,7 @@
 # which holds Reset and IsFim inline); cdatamap.h's comment says which parts are chosen.
 #
 # Not reconstructed: CRegistradorMesario::SaveCurrentInternal (record 85), which only fn 10337 holds, inlined
-# (IGestorDadoMesario::StartState, unit 135's trap: its callees 395, 1149, 1255, 2730 and 2731 have no name), and
+# (IGestorDadoMesario::StartState, unit 135's trap: its callees 1149 and 1255 have no name), and
 # CJustificador's other members: Justifica and SaveCurrentInternal (records 55 and 83, both held by fn 10590) and 11474,
 # the other data source that holds GetInst's code. 5378 and 5379's other callers are 10337 and 6734.
 #

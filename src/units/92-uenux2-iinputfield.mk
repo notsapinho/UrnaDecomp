@@ -18,19 +18,23 @@
 #   __shared_ptr_pointer's __get_deleter for CInputField<CFramedText> (12350), CMaskedTextField<CFramedText> (12340),
 #   CControlValidation (11152) and CInputFieldControl<IScreenMT> (11019); and IInputField's constructor's lambda, the
 #   __func members 12381, 12374, 12361, 12355 for IScreen and 11023, 11022, 11021, 11020 for IScreenMT, with
-#   operator() 6306, one body for both.
+#   operator() 6306, one body for both. Of these, 11071, 11072, 11152, the IScreen __func members and 6306 come from
+#   api/gui/cinteractiveformbuilder.cpp's object (unit 120), and 11019 and 11020 to 11023 from
+#   api/gui/cmtformbuilder.cpp's, whose AddInputControl (fn 395) builds that block and whose copy of
+#   IInputField<IScreenMT>'s constructor (fn 3673) stores the __func vtable (src/units/31-uenux2-cformbuilder.mk).
+#   The roots' builders and sinks that stood for 395 and 3673 went when those two landed, though 5410 stores
+#   CInputFieldControl<IScreenMT>'s vptr too: the scan with them and the scan without them each move the same three
+#   rows, 395, 3673 and 3674, from the commit before (docs/how-to-decompile.md step 9's join), so no row rests on them.
 #   11155 CInputFieldControl<IScreen>::GetTypeName and 12411 CInputField's: thunks of binaryen's 3891 and 2904, which form
 #   with three and four functions of the shape, the others units 39's and 44's, and units 29's and 52's and RHVoice's 9690.
 #   12387 CInputField<CFramedText>::SetLength, 148:13, in the class. Its width is size_t: the target halves it with an
 #   unsigned shift, and a TPosition from Largura() differs in 21 lines. CFramedText::SetLength has no target function:
 #   binaryen inlined it, and keeps the mask's address in a local, so it is out of line in cframedtext.cpp, and its name is
 #   chosen. Espaco returns TPosition for the extend16 12387 holds.
+#   6319, 11024 IInputField's Read: both load IInput::GetKey's record, which the target holds four times (1538968,
+#         1547328, 1580692, 1593104), and both match: the scan offers each copy of such a record and the target body
+#         picks one (docs/reference/facts/splat.md S12).
 # Written, and not matched:
-#   6319, 11024 IInputField's Read: the bodies are the target's. Both load IInput::GetKey's record, which the target holds
-#         four times (1538968, 1547328, 1580692, 1593104), and the scan calls such a record `ambiguous` and leaves the row
-#         `unresolved`: no function that loads such a record has matched. In a copy of the ledger that keeps only the
-#         function's own row of the record, splat-remap prints IDENTICAL for both. They wait for the toolkit
-#         to take a record's address from among its copies; no source change can close this.
 #   5537  CFramedText::DrawChar, under its generated `call` name (its callers 2780 and 5534 match): 31 over 273 rows in
 #         the plain link, 19 of them operand-only. One store and one load are in another place: the target stores the
 #         CFixedText's alignment (2 at its +4) after its vptr, where ours stores it before the string's first bytes; and

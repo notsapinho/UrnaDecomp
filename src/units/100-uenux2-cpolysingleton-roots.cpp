@@ -42,7 +42,6 @@
 #include "app/comum/iinterfacesavd.h"
 #include "app/comum/log/ieventoslog.h"
 #include "app/comum/relatorios/ccalculacv.h"
-#include "app/comum/validamidia/ivalidamidia.h"
 #include "app/vota/eleitor/comum/ipoliticaexecucaoeleitor.h"
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
 #include "app/vota/eleitor/iajusteinicial.h"
@@ -82,7 +81,7 @@ __attribute__((noinline)) int w100_todos()
         w100_usa<comum::IControladorRegistraMesarios>() + w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
 }
 
-// Stands for the callers of the two GetInst that have not landed: 652, 3059, 3673 and 5543 for fn 1259, whose 502, 1265, 2024, 3658 and 5904 are in the link, and 10226 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
+// Stands for the callers of the two GetInst that have not landed: 652, 3059 and 5543 for fn 1259, whose 502, 1265, 2024, 3658, 3673 and 5904 are in the link, and 10226 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
 // 5473, 10870, 10874 and 10875 are in the link.
 __attribute__((noinline)) int w100_getinst()
 {
@@ -140,7 +139,6 @@ struct SW100Roots {
         w100_sink_bloco = reinterpret_cast<void*>(&w100_troca);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IAjusteDataHora>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IControladorRegistraMesarios>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::impl::IValidaMidia>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IAjusteInicial>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IQRCodeBUDS>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::testeteclado::impl::IGeradorTeclas>);

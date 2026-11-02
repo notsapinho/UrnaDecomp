@@ -68,6 +68,21 @@
 #   rows, 373 inserted). The element's destructor loop, __destroy_vector (3763), has no instance of ours: its callers 5761
 #   (CEleitores::DynamicCreate) and 6734 are not written.
 #
+# CComparecimentoMesarioDAO's slots 7 and 8, RecuperarID (10402) and RecuperarTodos (10401), names chosen as
+# CEleitorDinamicoDAO's are, are written in ccomparecimentomesariodao.cpp between Inserir and Clone, the band's order
+# (10403, 10402, 10401, 10399); the -pending.cpp and its rule went with them. Each runs its SELECT (the literals at 448774
+# and 448415), reads every column by name (ISqlResultSet's std::string overloads, slots 3, 5, 11, 13 and 15) into a
+# named local in column order, numero_titulo formatted with std::format("{}") over the int64, estado_biometria and
+# dedo_habilitacao through the two converters, data_hora_registro through boost::posix_time::to_time_t into
+# CDateTime(time_t) (fn 1000), and then builds the row over a CEleitorIdentidade of titulo and the type (fn 566) with
+# CComparecimentoMesario's constructor 2730, after reading id_arquivo, when id_arquivo is not NULL, else 2731 (unit 221
+# writes both): RecuperarID into a std::shared_ptr it resets with new, as CEleitorDinamicoDAO's does (other spellings not
+# measured), RecuperarTodos with emplace_back, which the target holds inlined with its reallocation (the constructor
+# called twice in each branch). Both close the statement before returning. Scores before steps 7 to 9 (pnpm wasm score):
+# 10402 68 over 940 rows, 10401 71 over 1285, all operand-only. RecuperarID builds the
+# __shared_ptr_pointer<CComparecimentoMesario*> block, whose __get_deleter (10395) and slot 2 (5429) now match from this
+# object; unit 102's roots no longer build it. The roots' stand-in for the converters' two callers went: both are in the
+# link.
 # Chosen, no evidence names them: every data member's name, parameter and local names (comando among them), every
 # getter's name but GetTituloMesarioHabilitacao, the converters being private, the enumerators' names of
 # EUeComumComparecimentoMesarioError and that header's path, the
@@ -103,8 +118,6 @@ UENUX2_SRCS += $(COMUM_ELEITOR_MD_SRCS) $(COMUM_ELEITOR_DAO_SRCS)
 # src/ecourna/api/sql/isqlstatement.hpp and isqlresultset.hpp include Boost, and UENUX2_CXXFLAGS has no Boost path. An
 # include path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(COMUM_ELEITOR_DAO_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-$(ROOT)/$(APP)/91-uenux2-app-comum-dados-eleitor-pending.o: $(ROOT)/src/units/91-uenux2-app-comum-dados-eleitor-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/91-uenux2-app-comum-dados-eleitor.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -I$(BOOST_HDR) -c src/units/91-uenux2-app-comum-dados-eleitor-pending.cpp -o $(R)
 $(ROOT)/$(APP)/91-uenux2-app-comum-dados-eleitor-roots.o: $(ROOT)/src/units/91-uenux2-app-comum-dados-eleitor-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/91-uenux2-app-comum-dados-eleitor.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/91-uenux2-app-comum-dados-eleitor-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/91-uenux2-app-comum-dados-eleitor-pending.o $(APP)/91-uenux2-app-comum-dados-eleitor-roots.o
+override EXTRA_OBJS += $(APP)/91-uenux2-app-comum-dados-eleitor-roots.o

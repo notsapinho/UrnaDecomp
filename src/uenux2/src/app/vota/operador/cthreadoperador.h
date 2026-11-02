@@ -51,6 +51,9 @@ public:
     // the measurement). That the two are overloads of one setter, and their names, are chosen.
     void SetTextoEleitor(const char* texto) { m_texto3 = texto; }
     void SetTextoEleitor(const std::string& texto);
+    // Its reader: vota::CMostraEleitorVotando::StartState (fn 10427) copies the string at +108 into its own after
+    // calling GetInst, with no call of a member of this class. The accessor and its name are chosen.
+    const std::string& GetTextoEleitor() const { return m_texto3; }
 
 protected:
     void Run() override;

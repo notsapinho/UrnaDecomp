@@ -109,6 +109,12 @@ public:
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
+    // Held inlined by vota::CPerguntaCodigoSuspensao::ProcessInput (fn 10420), their one caller, after GetInst: the
+    // first logs through loga (fn 233), the other two format the title into their message and log through logaAlerta
+    // (fn 1398). The names are chosen from their messages.
+    void LogaTituloSuspensaoDigitado();
+    void LogaTituloSuspensaoInvalido(const std::string& titulo);
+    void LogaTituloSuspensaoValido(const std::string& titulo);
     // The copy number is byte-wide: every target caller that passes a computed number masks it to 8 bits (11852, 11855
     // and 11991 their loop counter, 12065 and 12081 a byte plus one), which a uebyte parameter gives; its spelling is
     // chosen.
@@ -121,6 +127,10 @@ public:
     void LogaVotacaoEncerrada();
     void LogaAguardandoConfirmacaoZeresima();
     void LogaAguardandoHorarioZeresima();
+    // Held inlined by vota::CPedeIdentidade::StartState (fn 10680), its one caller, the shape of
+    // LogaAguardandoHorarioZeresima (CLoga::loga, fn 433, with +4 and severity 1). The name is chosen from its message,
+    // and its place here and in clogvota.cpp, after LogaAguardandoHorarioZeresima, is chosen: it has no index to order.
+    void LogaAguardandoIdentificadorEleitor();
     void LogaDataEleicaoInvalida();
     void LogaErroEstadoAplicativoDesconhecido();
     void LogaFimTesteTecladoSucesso();

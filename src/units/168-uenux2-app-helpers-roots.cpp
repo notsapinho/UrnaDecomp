@@ -6,8 +6,8 @@
 //   stand-ins construct one for 7061, unit 116's trap. ProcessKey (3843), ProcessInput (5911), ProcessTick (5910),
 //   AcceptsKey (3842), AcceptsInput (5909) and AcceptsTick (5908) have no stand-in: their callers, 4349 and 10204
 //   (unit 116's, 4349 written and not matched), are both in the link.
-// - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 is in the link (unit 50), the others are
-//   not written.
+// - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 (unit 50) and 10680 (unit 161) are in the
+//   link, the stand-in stays for the other two, not written.
 // - vota::AdicionaSeparador (fn 1387; callers 11908, 11946, 12105, 12110, none written), with the two alignments they
 //   pass, 0 and 2, so that dead-argument elimination keeps the parameter.
 // - vota::RegistraMesarios (fn 2520; callers 2753, 10737, 11848, 11858): 11858 is in the link (unit 104), the others

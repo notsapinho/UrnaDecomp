@@ -15,9 +15,9 @@
 namespace comum {
 
 // IGestorDadoMesario::StartState: fn 10337 (1733 B), slot 2 of CGestorDadoMesarioInicial, Votacao and Final, records
-// igestordadomesario.cpp:65 (GetControlador, inlined) and cregistradormesario.cpp:85, callees with no name: 1149, 1255,
-// 2730, 2731, 395 (3611 has one since unit 91, 566 since unit 178, 815 since unit 113's GetInst; 448 matches from this
-// unit's cconfirmafimregistromesarios.cpp.o).
+// igestordadomesario.cpp:65 (GetControlador, inlined) and cregistradormesario.cpp:85, callees with no name: 1149 and
+// 1255 (395 has one since unit 31, 3611 since unit 91, 566 since unit 178, 815 since unit 113's GetInst, 2730 and 2731
+// since unit 221; 448 matches from this unit's cconfirmafimregistromesarios.cpp.o).
 void IGestorDadoMesario::StartState()
 {
     __builtin_trap();
@@ -40,7 +40,7 @@ void CPedeDigitalMesario::FinishState()
 
 // CPedeDigitalMesario::ProcessTick: fn 10316 (3808 B), records cpededigitalmesario.cpp:141, 142, 143, 182, 262
 // (ExecutaBatimentoDigitalMesario, inlined) and 304 (GetControlador, inlined), callees with no name: 781, 816, 1149,
-// 1686, 1903, 1937, 2223, 2224, 2742, 3615, 3719, 395, 5382, 6269.
+// 1686, 1903, 1937, 2223, 2224, 2742, 3615, 3719, 5382, 6269 (395 has one since unit 31).
 void CPedeDigitalMesario::ProcessTick(uebyte)
 {
     __builtin_trap();
