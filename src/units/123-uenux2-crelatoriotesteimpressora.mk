@@ -85,7 +85,14 @@
 # a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
 # and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |
 # ours +0xf end` in 11197's scan row); 5637, 5740 and 12098 still wait. The third, w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
-# lands.
+# lands. A fourth, w123_mapa, stands for 7787's call of the label map's initializer-list constructor (fn 5795, which
+# this unit's object instantiates for InicializaTradutorFrase), so that 5795 keeps two call sites and stays out of
+# line; it goes when 7787 lands. It declares the constructor through an __asm__ label with the object's signature
+# ((i32, i32, i32) -> i32 in crelatoriotesteimpressora.cpp.o, wasm-objdump -x) and reads the result, which the target's
+# wasm type, (i32 i32)->(i32), keeps; the comparator, the object's third parameter, is in neither link's type (pnpm
+# wasm fn on both). Measured with `pnpm wasm score` against our plain link with the stand-in in it: 5795 1 over 172
+# rows and 11196 20 over 289, all operand-only, and splat-match then matched both (5795 by content, 11196 under the
+# symbol file's name).
 #
 # CRelUtil's other written members, in crelutil.cpp (that file's note gives their lines), all matched; the scores of
 # 11181 and 11182 are `pnpm wasm score` against the plain link before steps 7 to 9:
