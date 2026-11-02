@@ -2,7 +2,9 @@
 # (api/gui/capplication.h): EnterLoopDoingNothing (target fn 5566), with the two statics it reads; InitApplication (fn
 # 11159, written and not matched, below) with its local facet's do_decimal_point (fn 11156); PushContext (fn 3684) and
 # CriaContexto (fn 676), over unit 193's context stack; the statics InitApplication writes and their static destructors
-# (fns 11160 to 11163); GetDescricaoModo (fn 5564), written and not matched (below), with the two statics it reads.
+# (fns 11160 to 11163); GetDescricaoModo (fn 5564), written and not matched (below), with the two statics it reads;
+# api::Join (fn 1696), and GetContexto (fn 1695) and api::GetExceptionLevel (fn 5569), both written and not matched
+# (below).
 #
 # Evidence and choices.
 # - The record capplication.cpp:503:32, `static void api::CApplication::EnterLoopDoingNothing()`, gives the class, the
@@ -67,19 +69,42 @@
 #   7826 (locale::__imp's constructor from a locale and a facet), 7827 and 4691 (the facet vector's operator= and
 #   __recommend), 1504 (ios_base::imbue, a caller of 987), and 12020, 2292 and 7825, whose callees now have names.
 # - The roots file stands for 5566's two target callers (7709, 7710) and for the callers of PushContext, CriaContexto
-#   and the guard's destructor that are not reconstructed (its header lists them), and with DescreveModo for 4620,
-#   5564's caller beside 502 (unit 31), which is not written. InitApplication needs no line: main (fn 10307, unit 170)
-#   passes its table slot to invoke_viiii.
+#   and the guard's destructor that are not reconstructed (its header lists them); 5564's two target callers, 502
+#   (unit 31) and 4620 (unit 165), are both in the link and need no line. InitApplication needs no line: main (fn
+#   10307, unit 170) passes its table slot to invoke_viiii.
 # - GetDescricaoModo (5564) and s_modo and s_demonstracao: api/gui/capplication.h has the evidence and the choices. In
-#   the whole link 5564 scores 8 over 75 rows, every one an operand of a call or of data (pnpm wasm score), and its row
-#   is `no-candidate`: no evidence names it while 502, whose records would anchor it, differs, and 4620 is not written.
-#   Named, it would still wait: its .bss byte at 1839208 has no reader but 5564 (docs/reference/splat.md 3, no hand
-#   line for it), and its .data word, 48, holds one non-zero byte, too little for content to place it, until 7787, the
-#   word's other reader, is written.
+#   the whole link 5564 scores 8 over 75 rows, every one an operand of a call or of data (pnpm wasm score). Step 8 names
+#   it by its call from 4620, which matches, and its row reads `unresolved self-voted` on its .bss byte at 1839208
+#   (s_demonstracao, whose one line is 5564's own vote): no target function but 5564 reads the byte, so no second
+#   match can hold the name and docs/reference/splat.md 3 allows no hand line for it. Its .data word (s_modo, 48) has
+#   a line of 5564's vote too, which the scan does not refuse. It waits for the rule 11159 waits for (below).
 # - Lines: 503 is the record's; 303 (QRCodeSRC::build), 377 (ShowExceptionMsgScreen), 432 (LogExceptionMsg) and 478
 #   (EnterLoopBeeping's lambda) are records of functions not written and stay blank. Every other line, the statics' place
 #   in the file, the order of the definitions but GetDescricaoModo's (after EnterLoopDoingNothing, the uses-2 band's
 #   order) and the include order are chosen.
+#
+# - Join (fn 1696), GetContexto (fn 1695) and GetExceptionLevel (fn 5569), three helpers of vota::CThreadVota's two
+#   TrataErro (7709, 7710, traps in unit 116's pending file), written after CriaContexto, their lines a choice;
+#   capplication.h has what each does, its evidence and its choices. Their stand-ins are in this unit's roots. Measured
+#   in the whole link (pnpm wasm score against our symbol, names.tsv after make -C src link-map):
+#   - 1696 matches (the scan's content pass). Written as an iterator loop that tests `parte != partes.begin()`, it read
+#     `32 over 305 rows (same 273, replaced 26 [26 operand-only], inserted 3, deleted 3)`: ours read the vector's end
+#     again on each pass, the target holds it in a local. The range-for that compares the element's address with the
+#     first's gives `20 over 302 rows`, every one an operand, and the match.
+#   - 1695 is written and differs: `15 over 142 rows (same 127, replaced 13 [13 operand-only], inserted 2, deleted 0)`.
+#     The two rows are one frame offset: the target builds its copy of the stack's last context at +0 of its 80-byte
+#     frame and leaves +52 to +56 unused, ours at +4, with the two string temporaries at +56 and +68 on both sides; read
+#     as an 8-byte-aligned slot in the target, not explained. The copy into a local that the result is then moved from
+#     is the target's shape: `return contexto;` gives NRVO, the copy built in the result, and `97 over 146 rows (... 45
+#     deleted)`. Forms compiled at the tree's flags, the copy's offset read in the object (wasm-objdump -d): +4 for
+#     `return std::move(contexto)` after the early return (written), the same with the vector held in a reference, a
+#     std::move of a temporary copy, or a by-value lambda parameter returned; +28 with the non-empty case first or a
+#     ternary into the local (with std::move); +24 for a std::optional; NRVO, the copy built in the result, for a plain
+#     `return contexto;` after the early return, with the non-empty case first or after a ternary into the local, and
+#     for two named locals; +4 still with -fno-strict-aliasing or -O2 added, and with CApplicationContext's copy and
+#     move constructors declared (defaulted, or the copy out of line). It stays written: 5569 needs it.
+#   - 5569 is written and right apart from a name: `6 over 109 rows (same 103, replaced 6 [6 operand-only])`, every
+#     one a call, of 1695 and of emscripten_builtin_free (fn 136). Its row is no-candidate until 1695 has a name.
 #
 # Written and not matched:
 # - 11159, InitApplication. The scan reads it `unresolved self-voted` on its store of the fourth parameter to the word
@@ -100,6 +125,22 @@
 #   __async_assoc_state over a lambda of ShowExceptionMsg (ledger/vtables.json) and calls it three times in a loop over
 #   the same two statics, read as EnterLoopBeeping inlined there: it waits for ShowExceptionMsg, and so do that
 #   __async_assoc_state's other slots (5560, 5561, 11151).
+# - 5568, ShowExceptionMsg(EExceptionLevel, const std::string& x4, const TExceptionStacktrace*): the typeinfo name of
+#   its lambda's std::async state (ledger/strings.tsv 520532) gives the name and the parameter types, and 5568 is the
+#   one function that holds that state's vptr (1577576). Its whole body is the std::async: the state built, then the
+#   std::thread's constructor (2541, __thread_struct's), then std::__throw_system_error (1223) with "thread constructor
+#   failed", and nothing after it; read as pthread_create failing in a build without threads. A probe gives that
+#   shape: a function of the same signature (std::async over a lambda that captures nothing, then calls that pass its
+#   parameters on), compiled at uenux2's flags and linked like the build (-Oz -fexceptions) with two callers that pass
+#   the stacktrace pointer as nullptr, builds the state and the thread's structures (__thread_struct's constructor
+#   inlined, its one caller there) and throws through std::__throw_system_error, with nothing after. It keeps
+#   (i32 x5)->(), as 5568 does, the pointer gone, and the same function with nothing after the std::async has ()->().
+#   So the source used its parameters after the std::async, read as calls of LogExceptionMsg and
+#   ShowExceptionMsgScreen: their records (432 and 377) print ShowExceptionMsg's parameter list, LogExceptionMsg's
+#   without the level, and no function loads them, nor the five
+#   log texts that begin "CApplication:" (ledger/strings.tsv 80041, 80069, 80097, 80554, 81522; no i32.const or packed
+#   i64.const of them in build/out/splat/pieces/asm). Those two bodies are not in the target, and a function no vtable
+#   slot holds is never trapped (src/units/README.md "Pending members"), so 5568 waits, and 7709 and 7710 with it.
 CAPPLICATION_SRCS := src/api/gui/capplication.cpp
 UENUX2_SRCS += $(CAPPLICATION_SRCS)
 $(ROOT)/$(APP)/171-uenux2-capplication-roots.o: $(ROOT)/src/units/171-uenux2-capplication-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/171-uenux2-capplication.mk

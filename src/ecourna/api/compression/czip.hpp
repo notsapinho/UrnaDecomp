@@ -18,11 +18,9 @@ public:
         ADICIONAR = 1,
     };
 
-    CZip(const std::filesystem::path& arquivo, ENivelCompressao nivel)
-        : m_arquivo(arquivo.string()), m_zip(nullptr), m_nivel(nivel), m_modo(EModoAbertura::CRIAR)
-    {
-        CreateZipFile();
-    }
+    // Defined in czip.cpp (target fn 5193), where comum::CGravadorWSQ::CompactaWsq calls it out of line
+    // (src/units/06-ecourna-api-compression.mk).
+    CZip(const std::filesystem::path& arquivo, ENivelCompressao nivel);
     ~CZip() override { SafeClose(); }
 
     void Close() override;

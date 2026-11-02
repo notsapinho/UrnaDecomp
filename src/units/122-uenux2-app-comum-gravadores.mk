@@ -62,6 +62,58 @@
 #   the word at +28 of CConfiguracaoEleicao, its CPleito's identifier. With the unit's edits of headers (these two and
 #   unit 60's), every object the link held before is byte-identical (542 objects, sha1 before and after).
 #
+# comum::CGravadorWSQ's members (cgravadorwsq.cpp; the class head is unit 60's cgravadorwsq.h), which empty unit 60's
+# pending object:
+# - Slot2 (fn 11579), Slot6 and Slot3: the result file's path on the internal (Slot2) or external flash (CPath::
+#   GetPathResult, fn 1274, with FLASH_INTERNA or FLASH_EXTERNA, then / m_nomeArquivo) passed to CompactaWsq with false
+#   (Slot2, Slot3) or true (Slot6); Slot6 and Slot3 do it only when the byte at +84 (m_gravaMidiaExterna) is set. They
+#   differ in that bool alone, and binaryen merges them into one body, the target's fn 6041 (our
+#   byn$mgfn-shared$_ZN5comum12CGravadorWSQ5Slot6Ev), with the slots its 9-byte thunks 11577 and 11578 passing 0 and 1;
+#   they are not called anywhere else. Their order in the file is band 1's (11579, 11578, 11577). Measured (pnpm wasm
+#   score against the target, before step 8): with CompactaWsq taking the file name as a std::string by value, 11579 and
+#   6041 scored 51 over 159 and 51 over 165 rows, a 64-byte frame where the target's is 48: the target reuses the
+#   directory temporary's slot for the converted string; taken as const std::string& with the path passed to it (its
+#   conversion's temporary), every row is operand-only (10 over 155, 10 over 161) and they match. The named const local
+#   for the path is IGravador's slots' form, a choice that gives these rows; no other spelling was measured.
+# - CompactaWsq (fn 5821, a chosen name): GetCaminhoCorretoExternal() or GetCaminhoCorretoInternal() by the bool, then
+#   for each directory CSystem::ExistDir (fn 5459) and, when it is missing, api::CreateDir (csystem.cpp, inlined by
+#   binaryen with its own frame), and CSystem::IsEmptyDir (fn 2762) while every directory so far was empty; when all
+#   are empty an ecourna::api::compression::CZip (fn 5193) of the file at ENivelCompressao::PADRAO (2), closed at once,
+#   else one at NENHUM (0) to which each directory + "*.wsq" is added through ICompressor::Add(const path&), which
+#   binaryen inlines (its one caller in both links), then CZip::Close (2691) and the destructor (2690). The target's
+#   first branch is the internal one (an i32.eqz before the if), ours the external one; not taken further.
+# - GetCaminhoCorretoInternal and GetCaminhoCorretoExternal (records 175:19 and 192:19, binaryen-inlined into 5821 with
+#   frames of 480 B each): a switch on m_tipoBiometria whose cases return a vector of the one WSQ directory (5819,
+#   5818, 3795 internal; 5817, 5816, 3794 external) as a string, and whose default throws 8652 or 8653 with
+#   "Tipo de biometria inválido: {}" over the enum's formatter (cgravadorwsq.h). Their rows are the target's up to
+#   operands within 5821's score.
+# - The WSQ directories, in pathwsq.cpp (pathwsq.h; GetPathWsqNaoRegistrado, fn 3793, moved there from cgravadorwsq.cpp
+#   and cgravadorwsq.h): fns 5819, 5818, 3795, 3793 on the internal flash, 5817, 5816, 3794 on the external one, each a
+#   15-byte thunk `f2298(p0, end, begin)` or `f3898(...)` of its literal into a body binaryen merged, 2298 (internal)
+#   and 3898 (external), which loads the turn (CAppInfo::GetInst, GetGeral, +32) ahead of its stack prologue, calls
+#   CPath::GetPathWsq (fn 2864) with the flash and the turn and appends the literal. Each is written as a function with
+#   no argument that reads the turn and calls its overload with the turn, which holds the frame and which binaryen
+#   inlines into it (docs/reference/facts/reading.md R10, statements ahead of the body's only prologue). Measured in the
+#   whole link: written as one function each in cgravadorwsq.cpp, 2298 scored 14 over 89 (the turn read after the
+#   prologue; 34 over 89 when 3793 was the only one written); split in two in cgravadorwsq.cpp, clang inlined the wrappers into
+#   GetCaminhoCorreto*, binaryen kept the turn overloads and merged those (33 over 90 against 2298); in a file of their
+#   own every row of 2298, 3898 and the seven thunks is operand-only, and steps 8 and 9 match them. So the file is not
+#   cgravadorwsq.cpp; band 3 (3834 of cpath.cpp.o, 3796 of cgravadorwsq.cpp.o, 3795 to 3793, 3792 of
+#   cappinfosingleton.cpp.o) puts it after cgravadorwsq.cpp.o and so not in cpath.cpp. Its directory is a choice:
+#   gravadores/, beside the band's left neighbour; appinfo/, beside the right one, fits as well. Its name
+#   pathwsq.cpp, the functions' names, the turn overloads, their being free functions of comum and their order (the
+#   bands' 5819, 5818, 5817, 5816 and 3795, 3794, 3793) are chosen. 5815 ("registrado/", internal) is not written: its callers 3614 and
+#   5382 are not in the link, and 2298 forms without it.
+# - 9531 (vector<std::filesystem::path>::__init_with_size<const path*, const path*>, 5821's only user of its table slot
+#   6150) comes from icompressor.cpp.o with Add(path). Its match line named vector<std::string>'s instance from
+#   app_dados_asn_datahoraasn.cpp.o, a twin until now: with both in the link, they differ in one table slot (each its own
+#   __throw_length_error) and binaryen merged them (`matched.txt only: [9531]`). The target's vector<std::string> copy is
+#   fn 5585, an -Oz -fexceptions body (__vallocate and __construct_at_end out of line, slots 232 and 233); src/app/
+#   roots_coderenv.cpp's instantiation of it gives our link that copy first, 5585 against it reads 8 over 69 rows,
+#   operand-only (5585 stays unresolved: its callees 11180 and 11177 have no name), and 9531's line now names the vector<path> instance, the scan's symbol for it (docs/how-to-decompile.md
+#   step 10, "A symbol that stays while its body moves").
+# - The roots stand in for the other target callers of the directories (fns 10425 and 5382), so binaryen keeps them out
+#   of line as the target does; 3793's stand-in for 10451 stays.
 # Evidence: the records give each member's name, file, line and column, and the signatures; the codes, the messages and
 # the bodies give the rest. The enum's values are the codes every thrower passes to fn 283 and the two that fns 3825 and
 # 3826 pass to their merged body 6044 (docs/reference/facts/placing.md P6). IGravador's constructor is in iresultado.cpp
@@ -71,7 +123,8 @@
 # ccabecalhoentidade.cpp's (@1553700) would give the same order; its line there is a choice too.
 # Chosen: the enumerators' names, the header paths, DeterminaNomeArquivo's name, the two accessors' names, the
 # CVersoesArquivos map alias, the constructors' parameter types beyond what the records spell (CGravadorWSQ's tipo de
-# biometria as unsigned int and its last argument as bool, from the unsigned compare and the byte store), the lines of
+# biometria as cgravadorwsq.h's ETipoBiometria and its last argument as bool, from the unsigned compare and the byte
+# store), the lines of
 # the functions with no record (each above the function it calls, DeterminaNomeArquivo after the one it calls), that
 # CriaIdentidadeEleitor, ValidaCriacao and ValidaTipoBiometria are private, `.Get()` where DeterminaNomeArquivoSemLetra
 # formats the identifiers, and every member and parameter name.
@@ -118,27 +171,27 @@
 #   over the three values by value (run alone, through try-tu.sh --single's template by hand) gave the combination with
 #   the loads before the test and no `& 1`. Its remainder not explained and nothing written needing it, it is not
 #   written (docs/how-to-decompile.md step 5).
-# - comum::GetPathWsqNaoRegistrado (fn 3793; no record, the name chosen), CPath::GetPathWsq(FLASH_INTERNA, the load's
-#   turn) / "nao-registrado/", in cgravadorwsq.cpp after the constructor and declared in cgravadorwsq.h. In the target
-#   it is a 15-byte thunk, `f2298(p0, end, begin)` of its literal, into binaryen's fn 2298, which calls GetPathWsq (fn
-#   2864) with 0 and the word at +32 of CAppInfo::GetGeral() const's result, then appends the literal to the path;
-#   fns 3795, 5815, 5818 and 5819 are the same thunk over "operador/", "registrado/", "nao-habilitado/" and
-#   "habilitado/", not written. Alone here it is a whole body, 83 over 85 rows against the thunk. Against 2298 it scores
-#   34 over 89 (pnpm wasm score): the statements read alike, the literal's ends passed in as parameters there, but 2298
-#   loads the turn (CAppInfo::GetInst, GetGeral, +32) ahead of its stack prologue and ours after it, which
-#   docs/reference/facts/reading.md R10 reads as a frameless caller's code ahead of a callee binaryen inlined (a
-#   reading). So it waits for the four and for a source shape not recovered: no link with the four written was
-#   measured. Its use band puts it between this file's constructor (3796) and cappinfosingleton.cpp's CAppInfo
-#   destructor (3792), so its file is this one or a record-less object between the two: a choice, as is its being a
-#   free function (it takes no object).
-#   Its target callers are fn 5374 (unit 214) and fn 10451, for which the roots stand in.
+# - comum::CGravadorWSQ::CompactaWsq (fn 5821): written (above) and not matched (`unresolved` on its first unnamed
+#   operand, libc++'s recursive_directory_iterator constructor 8101, which the census does not pair). It scores 1131 over
+#   4212 rows (pnpm wasm score, before step 8): the target's frame is 160 bytes against our 80, with 64 bytes at its
+#   bottom that no instruction addresses, and the rows of ecourna's globToFileList, which Add(const path&) brings
+#   inlined, differ: the target builds the suffix "/*" as a std::filesystem::path (an append of the literal's ends,
+#   table slot 6140) and copies both of endsWith's arguments, where icompressor.cpp as written passes caminho.string() by
+#   reference and a std::string temporary, and assigns "." to the directory through an append too. None of it was taken
+#   further. Its name is a callers+content hand line of splat/symbol_addrs.txt, on the three records it alone loads
+#   (cgravadorwsq.cpp:175 and :192, icompressor.cpp:61), which slots 2, 3 and 6 and their merged body need: no vote
+#   reaches 5821, since its callers are named by vtable or by content.
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \
-	src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
+	src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/pathwsq.cpp \
+	src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
 	src/app/comum/gravadores/md/cversoesarquivos.cpp
 UENUX2_SRCS += $(GRAVADORES_SRCS)
 # cgravadorutil.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit 88's
 # sources do): an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# cgravadorwsq.cpp's CompactaWsq builds an ecourna::api::compression::CZip, whose header includes minizip's zip.h and,
+# through ICompressor, Boost's signals2: include paths, not flags of the code
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 # gravadores/asn/util.cpp's CalculaHashSha512 includes ecourna/api/security/csha.hpp, which includes OpenSSL's evp.h
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/asn/util.cpp.o: UENUX2_CXXFLAGS += $(OPENSSL_INCLUDES)
 # nothing reconstructed calls most of these yet: 122-uenux2-app-comum-gravadores-roots.cpp stands in for the target's

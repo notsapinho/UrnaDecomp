@@ -9,7 +9,8 @@
 # - CInformacaoThreadOperador::AtualizaIdentidadesEleitor (2225), the member slots 21 and 22 call.
 # - vota::impl::IInformacaoThreadOperador::GetInst (599) and what this object emits with it: api::CPolySingletonList::has
 #   over the interface (3622, the header's template), the exit destructor of GetInst's mutex (10553) and
-#   std::random_device's default constructor (5935, libc++'s header, which SorteiaDataHoraInspecao calls).
+#   std::random_device's default constructor (5935, libc++'s header, which SorteiaDataHoraInspecao calls; the copy our
+#   link keeps is ctesteteclado.cpp.o's since unit 217, which links first and calls it from fn 11803).
 # - vota::GetTextoIdentidadeDigitada (10586), which holds vota::TipoToStr inlined, and 16 vota:: functions that call one
 #   slot of GetInst()'s object each: IsAudioAtivado 2746, IsAudioAtivadoMesario 1687, SetAudioAtivadoMesario 5415,
 #   GetTextoAudio 10584, LimpaBiometria 3621, GetTextoComparecimento 10583, AgendaInspecao 3620,
@@ -100,11 +101,16 @@
 #   (`pnpm wasm score` of 2225 in the link: 67 over 357 rows), and out of line in celeitores.cpp, where clang inlines it
 #   into fn 2264 and binaryen into 2225, its one other caller, 2225 matches.
 #
-# Not matched: 5412 is `unresolved self-voted` (awk -F'\t' '$1==5412 {print $5, $6}' splat/scan.tsv): its six statics are
+# Not matched: 5412 was `unresolved self-voted` (awk -F'\t' '$1==5412 {print $5, $6}' splat/scan.tsv): its six statics are
 # .bss objects only it reads, with no exit destructor (random_device's is empty and binaryen merges it away), so their
 # names have no voter but 5412 (docs/reference/splat.md section 3, "No circular evidence"), as fns 988, 989, 4710 and
 # 7779 on this tree. Its body scores operand rows only against the target (`pnpm wasm score ... 5412 ...`: 31 over
-# 350, after this unit's step 6), and 599 and 10568 match over it.
+# 350, after this unit's step 6), and 599 and 10568 match over it. Since unit 217's fn 11803 (CGeradorTeclasAleatorio's
+# std::shuffle, in ctesteteclado.cpp) is in the link, std::uniform_int_distribution<long>::operator() has two callers and
+# binaryen inlines it into neither: 5412 scores 265 over 350 (212 rows deleted) and reads `unresolved` on its guard's
+# address (`(.bss) has no target symbol`). With 5412's distribution of unsigned long, the same-object form the paragraph
+# above lists, and unit 217's two files without strict aliasing, 5412 is 31 over 350 again (unit 217's fragment has the
+# measurement).
 #
 # Slots 16 and 19, written in slot order (16 after slot 15, 19 after slot 18; their lines are chosen like the others'):
 # - Slot 19, IsVotacaoBloqueadaPorHorario (fn 10566), matches: false in the training phase (vota::EhTreinamento, fn
@@ -173,7 +179,8 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.
 # and app/comum/dados/crdvvota.h, which holds the RDV's converter over generated ASN.1 modules: the generic uenux2 rule
 # does not depend on them
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-# the target callers of GetInst, of the vota:: functions and of random_device's constructor are not reconstructed:
+# the target callers of GetInst and of the vota:: functions are not reconstructed (random_device's constructor has its
+# two since unit 217's fn 11803):
 # 50-uenux2-cinformacaothreadoperador-roots.cpp stands in for them
 $(ROOT)/$(APP)/50-uenux2-cinformacaothreadoperador-roots.o: $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/50-uenux2-cinformacaothreadoperador-roots.cpp -o $(R)

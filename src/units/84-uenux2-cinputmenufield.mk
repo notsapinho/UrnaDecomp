@@ -119,7 +119,8 @@
 #   14268 differed). src/app/roots_regex.cpp, a tree root at ECOURNA_CXXFLAGS ahead of both trees, held those copies;
 #   with it the 59 regex rows of splat/scan.tsv's matches (Boost's aside) scored operand-only. Measured since (unit 97's
 #   fragment): the copies over const char* and the token iterator's are uenux2's without strict aliasing, which
-#   src/app/roots_cbasetype.cpp holds now, and roots_regex.cpp holds the std::string constructor's chain.
+#   src/app/roots_cbasetype.cpp holds now; the std::string constructor's chain, which roots_regex.cpp held, comes from
+#   ecourna's icompressor.cpp.o since its caller 5821 is in the link (unit 06's fragment).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CINPUTMENUFIELD_SRCS := src/api/gui/cinputmenufield.cpp
 UENUX2_SRCS += $(CINPUTMENUFIELD_SRCS)

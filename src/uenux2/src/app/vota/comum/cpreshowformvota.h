@@ -4,6 +4,7 @@
 #include <string>
 
 #include "api/gui/ipreshow.h"
+#include "api/gui/primitives.h"
 
 namespace api {
 class IScreen;
@@ -19,10 +20,12 @@ class CInteractiveForm;
 namespace vota {
 
 // RTTI: CPreShowFormVota is an si_class of api::IPreShow<api::IScreen>, vtable @1532600 [174, 144, 7707], and
-// CPreShowProgressBar an si_class of it, vtable [174, 144, 13550]. Recovered: the heads only. Slot 2 is fn 7707 and fn
-// 13550, not reconstructed. Neither class is final: their blocks' __on_zero_shared go through the vtable (fns 172 and
-// 411). The path is chosen, under app/vota/comum: no record names either class, and the file holds both because the
-// second derives from the first.
+// CPreShowProgressBar an si_class of it, vtable @1536544 [174, 144, 13550]. Slot 2 of the first, PreShow (fn 7707), is
+// written in cpreshowformvota.cpp, where it is the key function; the second is a head only, its slot 2 (fn 13550) not
+// reconstructed. Neither class is final: their blocks' __on_zero_shared go through the vtable (fns 172 and 411). The path
+// is chosen, under app/vota/comum: no record names either class, and the header holds both because the second derives
+// from the first. CPreShowProgressBar's vtable lies after vota::impl::CPoliticaExecucaoEleitor's typeinfo (@1536388), not
+// beside CPreShowFormVota's, so its key function is in another file (a reading).
 class CPreShowFormVota : public api::IPreShow<api::IScreen> {
 public:
     void PreShow(api::IScreen& tela) override;
@@ -34,6 +37,19 @@ public:
 
     void PreShow(api::IScreen& tela) override;
 };
+
+// Fn 4620 (229 B, 2 callers): the text api::CApplication::GetDescricaoModo (fn 5564) gives, when it is not empty, drawn
+// at a point as an api::CFixedText with alignment 2, in the font {20, 1}, colour 3 over 0 (api::IScreen's slot 19). Its
+// callers are CPreShowFormVota::PreShow (fn 7707, at {340, 5}) and CPreShowProgressBar's slot 2 (fn 13550, at
+// {320, 30}), each after the screen's slot 4 with 1. The point is taken by value: each caller stores it twice (read as
+// the temporary and the byval copy whose address it passes; 7707 at +12 and +8, 13550 at +156 and +8), which a
+// `const api::SPoint&` parameter does not give (one store; measured, cpreshowformvota.cpp's object). Placement: no
+// record names it. CFixedText, a class with no key function, has its vtable (@1532640) right after the typeinfos of
+// CPreShowFormVota and api::IPreShow<api::IScreen> and before the vtable of the block fn 576 builds, so this object is
+// CFixedText's first user (docs/how-to-decompile.md step 3, rule 2), and 4620 is the function here that builds one (a
+// reading). It is external, its caller 13550 being in another object (the reading above). A free function of vota (it
+// reads no class state): that, its name and its parameters' names are chosen.
+void DesenhaDescricaoModo(api::IScreen& tela, api::SPoint posicao);
 
 // Fn 576 (144 B, 16 callers): the interactive form of the builder's fields, named, with a new CPreShowFormVota as its
 // pre-show (api::CInteractiveFormBuilder::GetInteractiveForm, fn 554, with true as its last argument). It builds the

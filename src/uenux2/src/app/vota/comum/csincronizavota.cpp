@@ -22,7 +22,12 @@ namespace vota {
 
 bool CSincronizaVota::s_urnaDesligando = false;
 
-// (original lines 25-43: content not recovered)
+void CSincronizaVota::MarcaUrnaDesligando()
+{
+    s_urnaDesligando = true;
+}
+
+// (original lines 30-43: content not recovered)
 #line 44
 void CSincronizaVota::VerificaUrnaDesligando()
 {

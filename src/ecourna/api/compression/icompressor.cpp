@@ -113,8 +113,3 @@ void ICompressor::Add(const std::filesystem::path& arquivo)
 }
 
 } // namespace ecourna::api::compression
-
-// <stubs>
-// f5192 · 205 B · unmatched · placement: link order · name unknown
-// ? f5192(i32) { ... }
-// </stubs>

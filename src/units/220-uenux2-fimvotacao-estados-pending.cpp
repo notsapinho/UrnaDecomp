@@ -6,7 +6,7 @@
 // Each calls functions with no name (no line in splat/matched.txt or splat/symbol_addrs.txt; imports aside): 12110 23
 // of them, fns 491, 1047, 1156, 1541 and 1543 among them; 12105 17, 491, 1047, 1156, 1541 and 1543 among them (and
 // it builds the std::function of comum::(anonymous)::MontaCabecalho's lambda, whose __func members 11236 to 11239
-// wait for it); 12134 5: 491, 2762, 3978, 5575 and 5896.
+// wait for it); 12134 4: 491, 3978, 5575 and 5896 (2762, CSystem::IsEmptyDir, has a name: unit 32 matches it).
 // Their record lines in those files stay blank, past each file's end. The stubs of two went with these traps (a pending
 // member has no stub): 12110's in the gap of app/comum/relatorios/ccalculacv.cpp at line 55 (a record of an inlined
 // callee, ccalculacv.cpp:58), and 12105's in app/comum/relatorios/cgeradorbuj.cpp, a stub-only file that went with it

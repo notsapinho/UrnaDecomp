@@ -63,6 +63,9 @@
 #   4551 do; their names and their place are chosen.
 # - One more, after LogaFimTesteTecladoSucesso: unit 138's LogaTesteTecladoNaoExecutado, held inlined by fn 11874
 #   (unit 138's fragment has the evidence); its place is chosen.
+# - One more after that: unit 217's LogaInicioTesteTeclado, loga of "Inicio do teste de Teclado do TE", held inlined by
+#   fn 11805 (CTesteTeclado::StartState, GetInst called before the member's own frame opens); its name and place are
+#   chosen.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses

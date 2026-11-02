@@ -122,20 +122,3 @@ template __attribute__((minsize)) void std::allocator_traits<std::allocator<std:
 template __attribute__((minsize)) void std::__destroy_at<std::string, 0>(std::string*);
 template __attribute__((minsize)) std::string::size_type std::string::find_first_not_of(const char*, std::string::size_type) const;
 template __attribute__((minsize)) unsigned long std::__str_find_first_not_of<char, unsigned long, std::char_traits<char>, 4294967295ul>(const char*, unsigned long, const char*, unsigned long, unsigned long);
-
-// std::vector<std::filesystem::path>::~vector() (target fn 3527): its one target caller, 5821 (component ecourna), holds
-// ecourna's globToFileList (api/compression/icompressor.cpp, record line 61, which returns that vector) and calls it three
-// times. Until the -Oz instance above, 3527 matched our ecourna objects' -O3 ~vector<std::string>, a byte-identical twin;
-// this instance, at this file's UENUX2_CXXFLAGS, gives the same bytes (it matches). urna_roots_vector_caminhos stands
-// for 5821, and the instance goes when globToFileList is in the link.
-#include <filesystem>
-
-template std::vector<std::filesystem::path>::~vector();
-
-int urna_roots_vector_caminhos(int a)
-{
-    auto* v = reinterpret_cast<std::vector<std::filesystem::path>*>(a);
-    std::destroy_at(v);
-    std::destroy_at(v + 2);
-    return a;
-}

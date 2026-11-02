@@ -40,6 +40,9 @@ enum EUeUtilError {
     // (mkstemp's -1, an empty name): no evidence names them
     EUE_UTIL_FALHA_CRIAR_CAMINHO_TEMPORARIO = 7034,
     EUE_UTIL_CAMINHO_TEMPORARIO_VAZIO = 7035,
+    // the code api::CSystem::IsEmptyDir throws (csystem.cpp 255); the name is chosen from its message, "O diretório [{}]
+    // não existe: {}": no evidence names it
+    EUE_UTIL_DIRETORIO_NAO_EXISTE = 7036,
     EUE_UTIL_FALHA_OBTER_TAMANHO_ARQUIVO = 7038,
     // 7041 to 7048 and 7058: the codes api::CSystem::CopyFile and Rename throw (csystem.cpp); each name is chosen from
     // its message: no evidence names them. 7041's throw (record at line 390, "O arquivo de destino [{}] já existe") is

@@ -70,8 +70,8 @@
 #   3281 and 5417, ours 3618 and 5423).
 # - 9650, 9831, 9897 and 10307 (main): `unresolved` on table slots of set<T> bodies that have no target name; 640 on
 #   unlock_shared_and_lock's; 9372 on a table slot of ours whose function the target's table does not hold.
-# - 2650 still calls the body matched as 424 (named after roots_regex.o's ~shared_ptr<__empty_state<char>>, with no
-#   result) where the target calls 388: read as waiting for a copy of ~shared_ptr<ASN1::IAbstractVisitor> with 388's body
+# - 2650 still calls the body matched as 424 (named after a twin with no result, boost's
+#   ~shared_ptr<basic_regex_implementation> of ecourna's cstringutils.cpp.o) where the target calls 388: read as waiting for a copy of ~shared_ptr<ASN1::IAbstractVisitor> with 388's body
 #   ahead of the runtime.
 # - 921 (above) and 13877 (unit 82's fragment) are not written; 3552 is asn1.md A10's.
 $(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk

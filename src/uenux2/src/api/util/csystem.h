@@ -17,6 +17,9 @@ public:
     // (S_IFREG, S_IFDIR) after api::ExistResource, whose record names it.
     static bool ExistFile(const std::string& arquivo);
     static bool ExistDir(const std::string& diretorio);
+    // Record csystem.cpp:255 (fn 2762): it throws when the directory does not exist, and is true when the directory holds
+    // no file and no subdirectory but "." and "..".
+    static bool IsEmptyDir(const std::string& diretorio);
     static uedword GetFileSize(const std::string& arquivo);
     // The record names four parameters, the target's type (fn 378) three: every caller passes the same value for one
     // of the two bools, which binaryen's dead-argument elimination folds. Which bool that is, and both bools' names and
@@ -72,5 +75,12 @@ uedword GetMemInfo(const std::string& campo);
 // the same code: unit 32's fragment), and so are their names and namespace.
 std::string GetFileName(const std::string& caminho);
 std::string GetDirName(const std::string& caminho);
+
+// Creates each missing directory of a path held in a std::string, from its first component on, with the mode 0755;
+// false when a mkdir fails. It has no record and no target index: binaryen inlines it into its one caller, fn 5821
+// (comum::CGravadorWSQ::CompactaWsq), where it keeps its own stack frame and inlines CSystem::ExistDir, which only
+// csystem.cpp's own functions can inline (api::ExistResource is file-static). Its name, its result, its being a free
+// function and its namespace are chosen, as GetFileName's are.
+bool CreateDir(const std::string& diretorio);
 
 } // namespace api

@@ -12,6 +12,11 @@ namespace vota {
 
 class CSincronizaVota {
 public:
+    // Target fn 3336, the one store of s_urnaDesligando (it stores 1); its callers are vota::CThreadVota's two TrataErro
+    // (fns 7709, 7710) and CThreadMonitor::Run (fn 10226). No record names it: its name, its being a member (it sets
+    // the class's flag, and the class's records name only static members) and its place in csincronizavota.cpp, ahead
+    // of VerificaUrnaDesligando, are chosen.
+    static void MarcaUrnaDesligando();
     static void VerificaUrnaDesligando();
     static void SincronizaRelatorios(const std::string& arquivo);
 

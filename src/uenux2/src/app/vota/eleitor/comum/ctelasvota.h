@@ -5,16 +5,25 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "app/vota/eleitor/comum/ctelascargo.h"
 
 namespace api {
 class CProgressBar;
 class CFormBuilder;
+class CTextBox;
 class IScreen;
 template <typename MEDIA>
 class IForm;
+struct SFont;
+struct SPoint;
 } // namespace api
+
+namespace vota::testeteclado::impl {
+class IGeradorTeclas;
+} // namespace vota::testeteclado::impl
 
 namespace vota {
 
@@ -113,5 +122,19 @@ std::shared_ptr<api::IForm<api::IScreen>> TelaVotacaoEncerrada();
 std::shared_ptr<api::IForm<api::IScreen>> TelaCopiaResultadoParaMR();
 std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
     std::function<std::string(const std::string&)> fonte);
+
+// The keyboard test's screen and key sequence, which vota::testeteclado::CTesteTeclado::StartState (fn 11805) holds
+// behind second stack-pointer prologues, one caller each: TelaTesteTeclado and SorteiaTeclasTesteTeclado, defined in
+// ctelasvota.cpp (TelaTesteTeclado holds GetKeyboardLayout, record ctelasvota.cpp:1301), and AdicionaCaixaTecla, which
+// TelaTesteTeclado calls per key, defined in ctesteteclado.cpp. TECLAS_TESTE_TECLADO, the 13 key names, is defined in
+// ctelasvota.cpp after CTelasVota's statics and read above them. TTeclasTesteTeclado is the type of CTesteTeclado's
+// +36, each key's name mapped to the char its key gives and to its box. src/units/217-uenux2-ctesteteclado.mk has the
+// evidence and the choices (all names here are chosen).
+using TTeclasTesteTeclado = std::map<std::string, std::pair<char, std::shared_ptr<api::CTextBox>>>;
+extern const std::vector<std::string> TECLAS_TESTE_TECLADO;
+std::shared_ptr<api::CTextBox> AdicionaCaixaTecla(api::CFormBuilder& builder, const std::string& texto, api::SPoint posicao,
+                                                  api::SFont fonte, api::SPoint tamanho);
+std::pair<CFormInterativoTelaVota, TTeclasTesteTeclado> TelaTesteTeclado();
+std::vector<std::string> SorteiaTeclasTesteTeclado(testeteclado::impl::IGeradorTeclas& gerador);
 
 } // namespace vota

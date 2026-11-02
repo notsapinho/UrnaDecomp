@@ -40,7 +40,9 @@
 // messages.
 // LogaTesteTecladoNaoExecutado is the shape of the members held inlined above: vota::testeteclado::CBase::ProcessInput
 // (fn 11874) calls GetInst before the member's own stack frame opens and calls fn 233; its name is chosen from its
-// message.
+// message. LogaInicioTesteTeclado is that shape too: vota::testeteclado::CTesteTeclado::StartState (fn 11805) calls
+// GetInst before the member's own stack frame opens and calls fn 233 with "Início do teste de Teclado do TE"; its name
+// is chosen from its message.
 // LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
 // vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
 // member's own stack frame opens and calls fn 233; its name is chosen from its message. LogaMesarioConfirmouReinicioVotacao
@@ -135,6 +137,7 @@ public:
     void LogaErroEstadoAplicativoDesconhecido();
     void LogaFimTesteTecladoSucesso();
     void LogaTesteTecladoNaoExecutado();
+    void LogaInicioTesteTeclado();
     void LogaMesarioConfirmouReinicioVotacao();
     void LogaMesarioSelecionouOutrasOpcoes();
     void LogaApresentadaTelaReinicioVotacao();
