@@ -8,12 +8,25 @@
 // - comum::CGeradorRelPU::AdicionaParametro (fn 677) has one caller in the target, fn 11902 (vota::CImpressaoPU's slot
 //   2), which calls it 22 times (awk -F'\t' '$2==677' ledger/callgraph.tsv). w183_parametros stands for it and calls it
 //   twice, so binaryen keeps it out of line.
+// - comum::CGeradorRelPU's vtable, which only fn 11902 stores (its constructor inlined; the class has no key function):
+//   w183_relpu_emite, at namespace scope and unrooted, builds the object so that this object emits the vtable and the
+//   inline destructor's D2 and D0, and the static constructor keeps the vtable in w183_sink_vtable. It goes when 11902
+//   lands.
 #include <string>
 
 #include "app/comum/dados/celeitores.h"
 #include "app/comum/dados/crdvvota.h"
 #include "app/comum/relatorios/cdatasourcesrelatorio.h"
 #include "app/comum/relatorios/cgeradorrelpu.h"
+
+extern "C" {
+extern const char w183_relpu_vt[] __asm__("_ZTVN5comum13CGeradorRelPUE");
+}
+
+__attribute__((optnone, noinline)) void w183_relpu_emite()
+{
+    comum::CGeradorRelPU gerador;
+}
 
 namespace {
 
@@ -29,6 +42,7 @@ __attribute__((noinline)) void w183_parametros(comum::CGeradorRelPU& gerador, co
 
 std::string (*volatile w183_sink_fonte)();
 void (*volatile w183_sink_parametros)(comum::CGeradorRelPU&, const std::string&, const std::string&);
+const void* volatile w183_sink_vtable;
 
 struct SW183Roots {
     SW183Roots()
@@ -36,6 +50,7 @@ struct SW183Roots {
         w183_sink_fonte = &DataSources::DetalheCandidatoZE;
         w183_sink_fonte = &DataSources::DetalheCandidato;
         w183_sink_parametros = w183_parametros;
+        w183_sink_vtable = w183_relpu_vt;
     }
 } w183_roots;
 

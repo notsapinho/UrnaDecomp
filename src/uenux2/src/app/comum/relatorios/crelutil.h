@@ -2,10 +2,13 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "app/comum/eurnafase.h"
+#include "ecourna/app/dados/parametrizacaourna/ctitulorelatorio.hpp"
 
 namespace api {
+class CDateTime;
 class CPaperFormBuilder;
 class IPaper;
 template <typename MEDIA>
@@ -26,9 +29,23 @@ namespace comum {
 // slot 2), the one function that passes TituloPartido's table slot (3050), and only crelutil.cpp's TU can take that
 // address. Its name, and its being a static member (the class's records name only static members), are chosen. This
 // header's path is chosen, beside the .cpp.
+// ImprimeTitulos (fn 3689) prints a report's title lines: it creates comum::CSubstituidorTitulo with the UF the first
+// time, then prints each line of each title's translated text with the substitutions applied, empty lines as new
+// lines. Its overload without the UF (fn 5584) passes comum::CLocal's. ImprimeAberturaFechamento (fn 3688) prints the
+// opening and closing date and time lines through ImprimeDataHora (fn 1542). None of the four has a record: their
+// names, their parameters' types, that they are static members of this class and that they live in crelutil.cpp are
+// chosen (src/units/123-uenux2-crelatoriotesteimpressora.mk says what places them).
 class CRelUtil {
 public:
     static std::string GetIDCargaFormatado(const std::string& idCarga);
+    static void ImprimeTitulos(api::CPaperFormBuilder& builder,
+                               const std::vector<ecourna::app::dados::CTituloRelatorio>& titulos, const std::string& uf);
+    static void ImprimeTitulos(api::CPaperFormBuilder& builder,
+                               const std::vector<ecourna::app::dados::CTituloRelatorio>& titulos);
+    static void ImprimeAberturaFechamento(api::CPaperFormBuilder& builder, const api::CDateTime& abertura,
+                                          const api::CDateTime& fechamento);
+    static void ImprimeDataHora(api::CPaperFormBuilder& builder, const api::CDateTime& dataHora,
+                                const std::string& rotuloData, const std::string& rotuloHora);
     static std::shared_ptr<api::IForm<api::IPaper>> FormTituloPartido();
     static void IncluiAvisoModoDemonstracao(api::CPaperFormBuilder& builder);
     static std::string DSCodigoVerificador();

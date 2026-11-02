@@ -74,9 +74,6 @@
 // f5577 · 7625 B · unmatched · placement: link order · name unknown
 // ? f5577(i32, i32) { ... }
 
-// f5576 · 12 B · unmatched · placement: link order · name unknown
-// void f5576(i32) { ... }
-
 // link-order cluster 797 · uses=2 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
 
 // f5582 · 96893 B · unmatched · placement: link order · name unknown

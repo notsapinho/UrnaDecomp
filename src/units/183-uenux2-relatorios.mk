@@ -36,11 +36,26 @@
 # (a helper both members call was not tried); AdicionaParametro's name; CGeradorRelPU's member name; the paths of
 # cgeradorrelpu.{h,cpp}. cgeradorrelpu.h says what the class's data show.
 #
+# CGeradorRelPU's destructors, matched from this unit's roots object: the D2 and D0 (target fns 11901, 11900), each a
+# thunk that passes the vptr to a body binaryen merged, 6055 and 6054, whose other callers are RHVoice's
+# RHVoice::dtree::in_list D2 and D0 (9937, 9936; `pnpm --silent wasm fn ../target/vota_web_wasm.wasm 6054` from
+# asmlift-wasm/ lists callers 9936 and 11900). The class has no key function (cgeradorrelpu.h), and its one user, fn
+# 11902, is not written, so the roots build the object in an unrooted optnone function, which emits the vtable and the
+# inline destructor's D2 and D0 (src/units/README.md "A class with no key function", unit 67's shape), and keep the
+# vtable in a sink, the reference 11902's inlined constructor stores. With the two destructors in the link binaryen
+# forms the same two bodies, named byn$mgfn-shared$_ZN5comum13CGeradorRelPUD0Ev and ...D2Ev after the first member in
+# link order, and
+# six rows match: 11900, 11901, 6054, 6055 and RHVoice's 9936 and 9937, whose bodies did not change (they were
+# `differs`, whole bodies where the target has thunks). `pnpm wasm score` against the plain link before steps 7 to 9:
+# 2 over 5 rows for each thunk, 2 over 65 and 1 over 64 for the bodies, all operand-only. The target's copy is a vota
+# TU's (the vtable lies in CImpressaoPU's data), a directory built with strict aliasing, and the roots compile at
+# UENUX2_CXXFLAGS, with -fno-strict-aliasing: the roots object compiled both ways gives the same D2 and D0
+# (wasm-objdump -d of the two functions: 148 lines in each object, cmp-equal).
+#
 # Not reconstructed: the other records of cdatasourcesrelatorio.h (TrailerProporcionalPartido 11260,
 # GetLinhasEleitoresAptos's lambda 11968, TrailerProporcional 11981, TrailerMajoritario 11980, CodVerificador 11974);
-# fn 3872, the one user of 11972 and 11973 (no record, a link-order stub in unplaced.cpp); CGeradorRelPU's
-# destructors (11901, 11900, thunks into binaryen's merged 6055 and 6054), which come with the vtable from the class's
-# user, vota::CImpressaoPU's slot 2 (fn 11902), not reconstructed.
+# fn 3872, the one user of 11972 and 11973 (no record, a link-order stub in unplaced.cpp); CGeradorRelPU's user,
+# vota::CImpressaoPU's slot 2 (fn 11902).
 RELATORIOS183_SRCS := src/app/comum/relatorios/cgeradorrelpu.cpp
 UENUX2_SRCS += $(RELATORIOS183_SRCS)
 W183_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

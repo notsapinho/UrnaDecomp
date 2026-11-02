@@ -133,7 +133,46 @@
 # (5579, 12105, 12110; 11256 is in the link). w123_idcarga stands for those three and w123_demonstracao for 5583's two:
 # each calls its function twice, as the target's several callers do; each goes when every caller it stands for is in the
 # link.
-CRELATORIOTESTEIMPRESSORA_SRCS := src/app/comum/relatorios/crelatoriotesteimpressora.cpp src/app/comum/relatorios/crelutil.cpp \
+#
+# Four more CRelUtil statics in crelutil.cpp, all matched; their stand-ins are in unit 230's roots, the unit of
+# comum::CSubstituidorTitulo, which the first one uses:
+# - ImprimeTitulos (target fn 3689) prints a report's title lines (std::vector<ecourna::app::dados::CTituloRelatorio>):
+#   when CSubstituidorTitulo does not exist yet it creates it from a map of "<uf>" to the UF it is given; then for each
+#   title it splits CTradutorFrase::Traduz of the text on '\n' (CStringUtils::Split, fn 1880), drops a last empty line,
+#   and adds each line, a new line for an empty one and otherwise the line with the substitutions applied, style 2 for an
+#   expanded title and 1 otherwise, the title's alignment mapped to ETextAlignment (centre to 2, right to 1, else 0). It
+#   holds CSubstituidorTitulo's GetInst and CreateInst (records csubstituidortitulo.cpp:21 and :26), the test of the
+#   pointer, the constructor and the substitution inlined, those with a frame each behind a prologue of their own (unit
+#   230 has them). Both loops go by index: the target divides the vectors' byte lengths by 20 and 12 on each pass.
+# - its overload without the UF (fn 5584, 15 B) passes comum::CLocal::GetInst().GetUF() (fns 401, 1702);
+# - ImprimeAberturaFechamento (fn 3688) prints the UE's opening and closing date and time through ImprimeDataHora (fn
+#   1542), then a new line; ImprimeDataHora adds two text fields, style 1 and alignment 0: the date label padded to 28
+#   with CStringUtils::PreencheADireita (fn 1881) followed by CDate::Format("DD/MM/YYYY") (fn 706) of the date, and the
+#   time label so followed by CTime::Format("  hh:mm:ss") (fn 779).
+# Where they are: none has a record. In the use bands they sit among this file's functions: 1542 right after 1543
+# (IncluiCabecalhoEleicoesMZS, record :307) in band 8, 5584 right before 5583 (IncluiAvisoModoDemonstracao) in band 2,
+# and 3689 and 3688 in band 3 between fn 3691 (comum::CGeradorRelVersaoPacoteDados's D2) and capplication.cpp's 3684
+# (`awk -F'\t' '$1>=3683 && $1<=3691' ledger/ordinals.tsv`). That they are crelutil.cpp's is a reading of those bands and
+# a choice; that 3689 is not csubstituidortitulo.cpp's is a reading: GetInst is a plain function, which clang inlines in
+# its own TU at uenux2's flags (docs/reference/facts/codegen.md C6), and 3689 holds it inlined by binaryen. Their lines
+# (after GetIDCargaFormatado, in the blank run above line 294) are chosen; in our link 3689's ld_index (2932) is below
+# 3688's (2935) and 5584's (2934) below 5583's (2937), as the bands ask.
+# What the bytes decide: 3689's frame. Written with the lines built in ImprimeTitulos itself, 3689 scored 70 over 796
+# rows, all operand-only, with the map at +20 of the frame where the target has it at +36 and the key's tuple and the
+# insertion's result above it where the target has them below; the lines built in a helper clang inlines
+# (QuebraLinhas, the title's text translated, split and its last empty line dropped) give the target's frame, 41 over
+# 796, all operand-only, the operands that are no call and no data address being the two .bss words and the thrown
+# object's destructor's table slot (69 in the target). Compared on the object (wasm-objdump -d, the offsets of the
+# map's stores), these forms gave the first frame: the lines built by a helper that takes the translated text, the
+# vector assigned after its declaration, the map's creation in a helper; the Traduz result a named local gave a third
+# (the map at +28). Scores with
+# `pnpm wasm score` against the plain link before steps 7 to 9: 5584 3 over 7, 3688 23 over 172, 1542 20 over 239, all
+# operand-only.
+# Chosen: the four names and QuebraLinhas's, their parameters' types (the vector, api::CDateTime), that they are static
+# members of CRelUtil (its records name only static members) and that QuebraLinhas is in the anonymous namespace (a
+# static member was not tried), the conditionals for the style and the alignment (a switch was not tried), `continue`
+# for the empty line.
+CRELATORIOTESTEIMPRESSORA_SRCS :=src/app/comum/relatorios/crelatoriotesteimpressora.cpp src/app/comum/relatorios/crelutil.cpp \
                                   src/app/comum/relatorios/cimprimirextratocarga.cpp
 UENUX2_SRCS += $(CRELATORIOTESTEIMPRESSORA_SRCS)
 # cconfiguracaoeleicao.h reaches ecourna's chorariosurna.hpp, which includes Boost (unit 88 adds the path the same way)
