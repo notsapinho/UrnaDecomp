@@ -1,8 +1,8 @@
 // comum's mesario registration: the voter's screen of the registration (target fn 1255) and its two fonts. The file is
 // the one comum::CRegistrarMesarios's records name (line 68, GetControlador, which fns 10391 and 10392 hold inlined);
 // that line stays blank, as nothing here writes the class, and what this file defines follows it, at lines that are a
-// choice. Why the screen's code is in this file is a reading of the data: its fonts follow CRegistrarMesarios's
-// typeinfo name (src/units/247-uenux2-cregistrarmesarios.mk has the evidence and the choices).
+// choice. That the screen's code is in this file is a choice: its fonts lie between CRegistrarMesarios's typeinfo name
+// and CPedeTituloMesario's, an order that fits either file (src/units/247-uenux2-cregistrarmesarios.mk says why).
 #include "app/comum/comparecimentomesario/estados/cregistrarmesarios.h"
 
 #include "api/gui/cformbuilder.h"

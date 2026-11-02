@@ -55,8 +55,8 @@
 # - 1714 IScreenMT matches now. Unit 78's trap, which gave IScreenMT a key function the original does not have, is gone,
 #   and our 1714 differed from 455 (IInputKbd's) only in constants, so binaryen merged the two into one body
 #   (byn$mgfn-shared$...IInputKbd...instance) where the target keeps two: the target's 455 has the executable TU's
-#   landing pads (below). Our 455 is that TU's copy now (unit 170's object, `unresolved`), so the two bodies differ and
-#   1714 matches (from cescolheopcao.cpp.o on this tree). Their callers 11041, 11075 and 11077 match.
+#   landing pads (below). Our 455 is that TU's copy now (unit 170's object, matched since unit 237), so the two bodies
+#   differ and 1714 matches (from cescolheopcao.cpp.o on this tree). Their callers 11041, 11075 and 11077 match.
 # - 2079 ITextToSpeech: our headers give it a key function, a trap of unit 82 that the original does not have, so
 #   `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 44 rows more (pnpm wasm
 #   score). It waits for that member, inline in the original.
@@ -74,8 +74,9 @@
 #   3281 3343 5417 5423 5425 5427 5434 5436, 6147 with 642 and 1322, 3095, 1126, 624, 640, 3895, 5774, 5786, 13621, 1009 with
 #   its per-T thunks, and the push bodies 3882, 5384, 7667, 8758, 8834, 8911, 8986, 9039, 9135, 9233, 10090, 1091, 455 with
 #   5395, 5398 and 5407. 1010 with its thunks, 1113, 1119, 2270, 5646, 5650, 1549, 6700, 13540 and 13876 have no landing pad,
-#   but they are its -Oz outlined copies, and uenux2's level inlines them. 388 (~shared_ptr) is too: our copy is `score 6 over
-#   28 rows`, with an early exit where -Oz nests the ifs. Only their names matter to their callers. 3095, 1549, 5646 and
+#   but they are its -Oz outlined copies, and uenux2's level inlines them. 388 (~shared_ptr) is too: this tree's copy
+#   was `score 6 over 28 rows`, with an early exit where -Oz nests the ifs, and 388 matches from the executable TU's
+#   object since unit 237. Only their names matter to their callers. 3095, 1549, 5646 and
 #   13876 match from unit 170's object, the executable TU, which instantiates CPolySingleton<api::ISound>::instance at those
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
 #   and 1166, 6147 and 1009 as binaryen's merges of its code; the rest wait for the TU's code that instantiates them (unit
@@ -117,7 +118,8 @@
 #   choices of the forms list moved to unique_lock.
 # - Measured on whole links (`pnpm wasm score` against the plain link): with the has<T> test in remove<T> and a
 #   std::lock_guard in push, 10090 read 181 over 891 rows (163 operand-only, 6 inserted, 10 deleted) and 10356 21 over 58;
-#   with both changes, 161 over 885 (159 operand-only, 2 deleted: the drops after 388, unit 170's fragment) and 9 over 52,
+#   with both changes, 161 over 885 (159 operand-only, 2 deleted: the drops after 388, there since unit 237 matched 388
+#   with its result; unit 170's fragment) and 9 over 52,
 #   operand-only. 13974: 43 over 105 rows with the lock_guard, 16 over 103 operand-only with the unique_lock, then a
 #   match; 10876 and 184 read 64 over 911 and 71 over 947, operand-only, before and after, and stay matched. main: 502
 #   over 1098 rows (155 inserted) with its sets by unique_ptr (the three over its own classes as calls of the && body),

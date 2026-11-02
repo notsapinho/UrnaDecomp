@@ -97,6 +97,12 @@ since the symbol file and the ledger stay committed; each compiles nothing:
 That table is the `-fexceptions` RHVoice objects. On the objects `src/Makefile` builds now ([libraries.md](libraries.md) §B6),
 measured by steps 7 to 9, all of RHVoice just before the runtime loses 16 rows (777, 1917, 2649, 5055, 8750 and 11 `AVNDecoder`
 visitors), and `language` with `document`, the one object that defines `vector<unsigned>::push_back(&&)`, loses none and adds none.
+Neither RHVoice row reaches 1917's copy now: `std::getline`'s weak definers are `ctextfieldmultiline.cpp.o` (unit 14's
+`GetTextLines`), `AVNDecoder.o` and RHVoice's `ini_parser.cpp.o`, the first wins, and it lies ahead of every place those
+rows put RHVoice (`tr ' ' '\n' < build/out/wasm/vota_web/link.cmd | /usr/bin/grep -n -E
+'ctextfieldmultiline\.cpp\.o|/AVNDecoder\.o|ini_parser\.cpp\.o|^app/ecourna/' | head -3` prints 158, the first
+`app/ecourna/` object at 481, and 828). By link order, not re-measured: how many of the 16 rows still leave needs the
+private link below.
 
 ```sh
 P=build/out/order-last; mkdir -p $P; cp -cpR build/out/app $P/app

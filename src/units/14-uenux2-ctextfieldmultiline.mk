@@ -11,6 +11,12 @@
 #         Draw advances y before SRect::Union: the target reads m_alturaLinha for the sum before that call and again at
 #         the loop's test after it. With the sum after the union Draw scores 12 over 276 rows at --depth 0, before it 2
 #         over 270, both operand rows (the CFixedText vtable's address).
+#         Two spellings the bytes do not decide, each compiled from one path and `cmp`-equal to the other's object: line
+#         174's `m_rect.left + (m_rect.right - (larguraLinha + m_rect.left)) / 2` against `m_rect.left + (m_rect.right
+#         - m_rect.left - larguraLinha) / 2` (and `... - larguraLinha - m_rect.left ...`, `(m_rect.right - m_rect.left
+#         - larguraLinha) / 2 + m_rect.left`), and line 162's `m_rect.bottom < m_alturaLinha + y` against `y +
+#         m_alturaLinha > m_rect.bottom`: the written forms are chosen. Rect's four `!= 0` tests and
+#         `std::min(m_rect.bottom, y)` are the bytes': `if (m_desenhado)` and the swapped operands give other objects.
 #   5497  GetTextLines is written and differs: 153 over 950 rows (40 inserted, 12 deleted; pnpm wasm score against
 #         build/out/wasm/vota_web after make -C src link-map). What differs, read from the rows: the space search's loop
 #         carries linha's size byte (masked with 255) and reloads its long data pointer at each pass, where the target's

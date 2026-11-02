@@ -117,7 +117,7 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 }
 
 // CMenuVisualizarCandidatos::StartState: fn 11881 (2561 B), records cmenuvisualizarcandidatos.cpp:55, callees with no
-// name: 202, 203, 455, 502, 576, 653, 1279, 1693, 1763, 3675, 3861.
+// name: 653, 1693, 1763, 3675, 3861 (202, 203, 455, 502, 576 and 1279 have names).
 void CMenuVisualizarCandidatos::StartState()
 {
     __builtin_trap();

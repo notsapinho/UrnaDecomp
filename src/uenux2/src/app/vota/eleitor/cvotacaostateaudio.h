@@ -39,7 +39,8 @@ public:
 // the names of slots 11 (FinishState calls it last), 12 (ProcessTick calls it with any other tick's id), 14 and 15, and
 // slot 15's const. ProcessTick (fn 7010) calls slot 15 and hands the result to slot 14: slot 15 is the message, with
 // {cargo-atual}-style tags, and slot 14 fills them in (fn 6999 holds those tags and returns a string). Slot 14 is not
-// const, a choice: its tags' member, SubstituiMarcador, calls FormatPartyName, whose record shows it not const.
+// const, and the target forces it: its tags' member, SubstituiMarcador, calls FormatPartyName (fn 6954), whose record
+// shows it not const, and 6999 calls 6954 twice, which a const slot 14 could not do on `this`.
 // Slots 7, 8 and 13 are pending (src/units/97-uenux2-cvotacaostateaudio-pending.cpp).
 //
 // The layout is what the constructor (fn 1785) stores: +11 a flag read before every use of audio (fn 7028 stores a

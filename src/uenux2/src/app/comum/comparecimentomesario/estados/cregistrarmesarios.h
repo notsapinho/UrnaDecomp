@@ -20,9 +20,10 @@ namespace comum {
 // beside cregistrarmesarios.cpp, are chosen.
 std::shared_ptr<api::IForm<api::IScreen>> TelaRegistroMesarios();
 
-// The two fonts of that screen, SFont {35, 0} and {25, 0}: the target holds them once (@540572 and @540580, after
-// comum::CRegistrarMesarios's typeinfo name), and both functions that build the screen read them. Their names, and
-// their being constants of cregistrarmesarios.cpp declared here, are chosen.
+// The two fonts of that screen, SFont {35, 0} and {25, 0}: the target holds them once (@540572 and @540580, between
+// the typeinfo names of comum::CRegistrarMesarios and comum::CPedeTituloMesario), and 1255 alone reads them; that both
+// functions here read them is part of the reading of two copies. Their names, their being constants of
+// cregistrarmesarios.cpp declared here, and that file are chosen.
 extern const api::SFont FONTE_TITULO_REGISTRO_MESARIOS;
 extern const api::SFont FONTE_TEXTO_REGISTRO_MESARIOS;
 

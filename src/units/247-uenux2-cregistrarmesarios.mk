@@ -13,9 +13,14 @@
 #   as instruções no terminal do mesário." at (320, 250) with {25, 0} @540580, alignment 2 (ALINHAMENTO_CENTRO),
 #   colours 2 over 1, then 11140 with an empty name, whose temporary gets two byte stores (its NUL and its size), as
 #   `""` gives. Only 1255 reads the fonts (/usr/bin/grep -rlE 'i32\.const (540572|540580)($|[^0-9])'
-#   build/out/splat/pieces/asm prints comum/1255.wat); they lie right after comum::CRegistrarMesarios's typeinfo name
-#   (@540542, 30 bytes), and that the code is cregistrarmesarios.cpp's is a reading of that order. That file's one
-#   record (line 68, CRegistrarMesarios::GetControlador, which fns 10391 and 10392 hold inlined) stays a blank line.
+#   build/out/splat/pieces/asm prints comum/1255.wat); they lie between comum::CRegistrarMesarios's typeinfo name
+#   (@540542, 29 bytes with its NUL, then one of alignment) and comum::CPedeTituloMesario's (@540588;
+#   ledger/strings.tsv). clang puts a file's constants before the typeinfo name of the class whose key function the
+#   file defines, and after it only constants that file-internal code alone reads (a probe at the uenux2 flags,
+#   wasm-objdump -x of its data segments), so the order fits cpedetitulomesario.cpp with ordinary constants at least as
+#   well as cregistrarmesarios.cpp, which it fits only with file-internal fonts (both copies in that file): the file is
+#   a choice the data leave open. cregistrarmesarios.cpp's one record (line 68, CRegistrarMesarios::GetControlador,
+#   which fns 10391 and 10392 hold inlined) stays a blank line.
 # - 11140: `f6117(p0, p1, p2, 1577960, 1577896)`, the vptrs of CPreShowClearScreen's __shared_ptr_pointer block and of
 #   api::CPreShowClearScreen, whose vtable and typeinfo lie in cformbuilder.cpp's data (cpreshowclearscreen.h); 6117
 #   news the pre-show and the block and calls fn 5550, GetForm(preShow, nome). 886 passes vota::CPreShowFormVota's two
@@ -23,8 +28,8 @@
 # - Two functions for 1255: fn 1255 is 11140's one caller (pnpm wasm fn: `callers (1): 1255`) and 11140 is in no
 #   table slot (wasm-objdump -x -j Elem target/vota_web_wasm.wasm prints no ref.func:11140), yet it keeps its body, and
 #   binaryen inlines a function with one call site and no slot (docs/reference/facts/tool-traps.md X1). So two bodies
-#   called it when the inlining pass ran, and duplicate-function-elimination joined them after that pass (X1's "a
-#   surviving twin that its callers became"). Measured in the whole link (TMPDIR=/tmp make -C src link,
+#   called it when the inlining pass ran; that duplicate-function-elimination joined them after that pass is a reading
+#   (X1's "a surviving twin that its callers became"). Measured in the whole link (TMPDIR=/tmp make -C src link,
 #   tools/round/link-map.sh, then build/out/wasm-map/vota_web/names.tsv and pnpm wasm score at the default depth):
 #   - TelaRegistroMesarios alone, with its stand-ins: names.tsv has no GetForm(const std::string&) and no
 #     byn$mgfn-shared$ of GetFormulario; 1255 scores 95 over 321 rows (57 inserted) and 886 59 over 63 (55 inserted);
@@ -59,7 +64,11 @@
 # GetTelaEleitor, the one form measured (another function of the same body with a parameter dead-argument elimination
 # drops would read the same, not measured); which target callers call which copy (the three derived constructors of
 # IPedeTituloMesario, inlined into fn 10388, call GetTelaEleitor; the constructors of the states over comum::CAppState,
-# in fns 3610, 5386, 5389, 10313 three times and 10337, call TelaRegistroMesarios); the fonts' names and their being
+# in fns 3610, 5386, 5389, 10313 three times and 10337, call TelaRegistroMesarios). At 10388's three sites the target
+# calls 1255 before IPedeTituloMesario's constructor (fn 3608) runs on the new state, so the chosen calls there run a
+# member before its base subobject exists, undefined behaviour ([class.base.init]); the parameter form above, not
+# measured, would not. The other seven sites call 1255 in a constructor body, after the state's vptr store. Chosen as
+# well: the fonts' names and their being
 # external constants of cregistrarmesarios.cpp, which the second copy reads (the target holds one pair);
 # GetForm(const std::string&) as an overload, its name and its place after the first GetForm; the lines of what
 # cregistrarmesarios.cpp defines, after line 68. Which copy names fn 1255's match line is our link's: the one binaryen
@@ -68,8 +77,9 @@
 #
 # Not written, and what each waits for: comum::CRegistrarMesarios (GetInst 3610, StartState 10392, ProcessInput 10391),
 # CConfirmaFimRegistroMesarios::GetInst (5389), CLimiteMesariosRegistradosAtingido::GetInst (5386) and
-# IPedeTituloMesario::ProcessInput (10313, trapped in unit 71) build the operator's form with fn 395, which has no body
-# here; vota::CFimAquisicaoVotos::StartState (10737, trapped in unit 104) calls 3610.
+# IPedeTituloMesario::ProcessInput (10313, trapped in unit 71) build the operator's form with fn 395, matched (unit 31),
+# so they wait only to be written (10313 calls 5389 too); vota::CFimAquisicaoVotos::StartState (10737, trapped in unit
+# 104) calls 3610 and fn 501 (written, `differs`).
 #
 # The generic uenux2 rule depends on the source and every uenux2 header.
 CREGISTRARMESARIOS_SRCS := src/app/comum/comparecimentomesario/estados/cregistrarmesarios.cpp

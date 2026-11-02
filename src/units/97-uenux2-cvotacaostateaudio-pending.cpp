@@ -28,8 +28,8 @@
 //
 // vota::IConfereVotoEmCargo, slots 9, 10 and 12 (ProcessInputAudio 11791, record cconferevotoemcargo.cpp:80, 71 B;
 // StartStateAudio 11793, 333 B, which holds the record :41 of an anonymous-namespace GetCargoID; ProcessTickAudio 11790,
-// 131 B): 11791 waits for fn 455, CPolySingleton<api::IInputKbd>::instance, which has no name, and fn 1455
-// (CVotacaoStateAudio's, not written); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
+// 131 B): 11791 waits for fn 1455 (CVotacaoStateAudio's, not written; fn 455, CPolySingleton<api::IInputKbd>::instance,
+// matches since unit 237); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
 // std::function it builds; 11793 is not read here. The class's key function is its destructor, in
 // cconferevotoemcargo.cpp, so that object emits the vtable.
 //

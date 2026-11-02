@@ -208,8 +208,12 @@
 # of unit 84's CMenuItem::GetTextoFormatado (5492). The target holds these functions of the file each behind a stack
 # frame of its own, binaryen's inlining (docs/reference/facts/reading.md R10), so they are out of line here, external,
 # and binaryen inlines them into their one caller: SubstituiMarcador (a 48-byte frame), GetNomeCargoAtual (432),
-# GetCandidatoComSuplentes (80), GetQuantidadeDigitos (400) and FormataProgresso (400), under GetProgresso, which has
-# none. Each tag's text, read from 6999's code:
+# GetCandidatoComSuplentes (80), GetQuantidadeDigitos (400) and FormataProgresso (400). GetProgresso, over
+# FormataProgresso, has no frame, so no evidence makes it a function: it is one as a measured form ({progresso}, below).
+# Chosen: the helpers' names (SoletraNumero and TextoConsulta, which picks the consulta's string, in an anonymous
+# namespace; GetNomeCargoAtual, GetCandidatoComSuplentes, GetQuantidadeDigitos, FormataProgresso and GetProgresso, in
+# vota), their being free functions, their locals' names, and their place after `#line 228` (cvotacaostateaudio.cpp:65).
+# Each tag's text, read from 6999's code:
 # - {cargo-atual}: the current post's GetNomeNeutro (fn 1547), or for a consulta the detail's string at +36, else the
 #   one at +12 (GetDetalheConsulta, fn 1923), then, when the post has more than one choice, " {}ª {}" of
 #   vota::g_escolhaAtual and "escolha" or "vaga";

@@ -796,6 +796,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     84) calls it too and votes for it (`/usr/bin/grep -n 'func:2416;' splat/symbol_addrs.txt` prints `evidence:call
     by:5492,9258`), and 9258 matches. 5492 is itself `unresolved self-voted` (its static's guard), so 9258 rests on that
     unmatched body's call: a landing that takes 5492 out, or makes 2416 another function's callee, takes 9258 out.
+    Since unit 97 wrote fn 6999 and std::regex's `const char*` copies in `src/app/roots_cbasetype.cpp`, 2416 and 5492
+    match, both from `cinputmenufield.cpp.o` (`splat/scan.tsv`'s object column), and 2416's line reads
+    `evidence:call` with no voter list: 9258 rests on a matched callee now.
 
 ## S11. A match among bodies of the same content can take the other one's name
 

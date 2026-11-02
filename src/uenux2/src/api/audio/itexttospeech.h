@@ -39,7 +39,8 @@ class CWavFile;
 // row: RHVoice's relative rate, pitch and volume, so +84 is the rate and +80 the pitch. No target body reads +76 but to
 // copy it.
 // No record, symbol or string names this file or a member. All of these are chosen: the path (beside api/audio/isound.h),
-// every member and data member name, SOptions, SRecentCache, and the types int and long long where the wasm type alone
+// every member and data member name, SOptions, SRecentCache, TEntry and its being a std::pair (a struct with a
+// constructor gives the same bodies), and the types int and long long where the wasm type alone
 // says i32 or i64. Synthesize / DoSynthesize follows the project's Converte / DoConverte (comum::asn::IConversorASN's
 // records); volume is the third of RHVoice's three, by elimination; SetTag is named for what the body does with the value,
 // since slot 8 has no caller in the target (no call_indirect of its type (i32, i64)->() goes through +32). 4 and 0, the
@@ -71,7 +72,8 @@ class CWavFile;
 // Chosen as well: the names GetOptions, MakeKey, Lookup, Store, ECache and its enumerators, Get and Put; ECache an enum
 // (an int compared with 1 gives the same rows); MakeKey a member (how-to step 3: its callers pass an object it never
 // reads; a free function that takes the object first gives the same rows); the cast that makes the tag a prvalue (a
-// C-style cast gives the same rows). src/units/237-uenux2-itexttospeech.mk lists the other forms measured.
+// C-style cast gives the same rows), which converts nothing on the chosen long long and may stand for a conversion from
+// the original member's type. src/units/237-uenux2-itexttospeech.mk lists the other forms measured.
 class ITextToSpeech {
 public:
     struct SOptions {

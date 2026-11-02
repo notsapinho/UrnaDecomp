@@ -8,10 +8,11 @@
 // 3678 passes. It is address-taken from a static constructor. Declared through an asm label with the wasm-level signature
 // (the SPoint result through its address first).
 //
-// The adders: the target calls each directly from the screens that build a form, and those are not reconstructed. Each pair
-// of stand-ins stands for them, and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets
-// its calls and the vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what
-// the target's callers vary varies here, or binaryen would fold it:
+// The adders: the target calls each directly from the screens that build a form, of which only 1255 is reconstructed
+// (comum::TelaRegistroMesarios, unit 247; the lists below still name it). Each pair of stand-ins stands for the others,
+// and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
+// vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's callers
+// vary varies here, or binaryen would fold it:
 //   TelaMTA, TelaMTB  652, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
 //                     (2734; 1150 is in the link, as for 180, 619, 651 and 435), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
 //                     target callers all pass it, and they have no parameter for it

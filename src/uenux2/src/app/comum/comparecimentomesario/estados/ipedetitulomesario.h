@@ -56,7 +56,9 @@ protected:
     // no table slot, yet it is out of line, and binaryen inlines a function with one call site and no slot
     // (docs/reference/facts/tool-traps.md X1). src/units/247-uenux2-cregistrarmesarios.mk has the measurements. Chosen:
     // that this class holds the second copy, as a non-static member, its name, and that the three derived classes'
-    // constructors call it.
+    // constructors call it. The target calls 1255 at those sites (fn 10388) before this class's constructor (fn 3608)
+    // runs, so the chosen calls run a member before its base subobject exists, undefined behaviour ([class.base.init]);
+    // a function of the same body with a parameter dead-argument elimination drops would not, and is not measured.
     std::shared_ptr<api::IForm<api::IScreen>> GetTelaEleitor();
 
 private:

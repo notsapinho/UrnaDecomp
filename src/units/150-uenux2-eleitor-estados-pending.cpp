@@ -6,7 +6,7 @@
 //   vota::CEleitorVotando's GetInst and RegistraVoto (unit 197);
 // - EmiteEcoComInputField 4477 (slot 13, record :77), 243 B: waits for api::CInteractiveForm::Read() (record
 //   cinteractiveform.h:57), which this tree does not hold, and calls fn 1455 (CVotacaoStateAudio's, not written) and fn
-//   455 (CPolySingleton<api::IInputKbd>::instance, named, its row `differs`).
+//   455 (CPolySingleton<api::IInputKbd>::instance, matched since unit 237).
 // vota::CInstrucaoVotacaoAcessibilidade, in src/uenux2/src/app/vota/eleitor/cinstrucaovotacaoacessibilidade.cpp:
 // - ProcessInputAudio 7248 (slot 9, records :54 to :60), 1315 B: waits for CInteractiveForm::Read() as 4477 does;
 // - StartStateAudio 7242 (slot 10, records :129 and :131), 123 B: stores 7 at +4 of what fn 1091

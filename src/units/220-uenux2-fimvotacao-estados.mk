@@ -7,9 +7,10 @@
 # Their forms come from functions this unit adds to other units' files, whose paragraphs have the evidence: unit 110's
 # ctelasvota.cpp (vota::AdicionaTelaAguarde 4152, TelaPreparandoDadosEncerramento 6583, and TelaVotacaoEncerrada and
 # TelaCopiaResultadoParaMR, which binaryen inlines into 6129 and 6174) and unit 165's cpreshowformvota.cpp
-# (vota::GetFormulario 886, written, differs). The destructors are the bodies other states share (448 and 765 for
-# CGeraBU's two std::shared_ptr; 244 and 387 for the other two), matched already. 220-uenux2-fimvotacao-estados-pending.cpp
-# traps the three StartState and says what each waits for; the class heads say what each layout rests on.
+# (vota::GetFormulario 886, a thunk of binaryen's 6117, matched since unit 247). The destructors are the bodies other
+# states share (448 and 765 for CGeraBU's two std::shared_ptr; 244 and 387 for the other two), matched already.
+# 220-uenux2-fimvotacao-estados-pending.cpp traps the three StartState and says what each waits for; the class heads say
+# what each layout rests on.
 #
 # Evidence: the records name the .cpp files (cgerabu.cpp:54, cgerarelatorios.cpp:51, ccopiaresultadoparamr.cpp:59 to
 # 174, all StartState's); the vtables' slots and the D0s (a call of the D2 and a free: out of line; D2s with no vptr

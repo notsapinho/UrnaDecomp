@@ -179,7 +179,8 @@ $(ROOT)/$(APP)/roots_cbasetype.o: $(ROOT)/src/app/roots_cbasetype.cpp $(ROOT)/sr
 # the same for IConversorASN's members (src/app/roots_iconversorasn.cpp); the include paths are its headers' (the modules, Boost)
 $(ROOT)/$(APP)/roots_iconversorasn.o: $(ROOT)/src/app/roots_iconversorasn.cpp $(ROOT)/src/Makefile $(ECOURNA_HDRS) $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -Isrc/asn1/modules -I$(BOOST_HDR) -c src/app/roots_iconversorasn.cpp -o $(R)
-# std::basic_regex<char>'s copies that are ecourna's code in the target, ahead of uenux2's objects and after roots_vector.o:
+# std::basic_regex<char>'s copies from a std::string, an -fexceptions object's code in the target (the const char* ones
+# are uenux2's: roots_cbasetype.o), ahead of uenux2's objects and after roots_vector.o:
 # both define vector<std::string>'s destructor, every caller gets the first one's copy, and the target's callers (Split,
 # fn 1880, and 9586) call the -Oz copy roots_vector.o holds (fn 2255, read as the executable TU's) (src/app/roots_regex.cpp)
 $(ROOT)/$(APP)/roots_regex.o: $(ROOT)/src/app/roots_regex.cpp $(ROOT)/src/Makefile
