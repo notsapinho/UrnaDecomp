@@ -1,5 +1,13 @@
 #pragma once
 
+// api::CTextFieldMultiLine (/home/rubio/tse/uenux2/src/api/gui/ctextfieldmultiline.cpp). Draw is the first virtual
+// member defined out of line, so it is the key function and that .cpp emits the vtable. Inside the uses-1 band of
+// ledger/ordinals.tsv the index runs against the link order: Draw (10925), Rect (10924), the D2 (10923), the D0 (10922),
+// then GetTypeName (10921). The destructors are implicit (the D0 holds the D2's body), so they are emitted with the
+// vtable at the end of the TU, and GetTypeName, after them, is inline too: it is written in the class (a reading of the
+// band, as api/gui/ctextbox.h reads its own). The data members' names are chosen, as no evidence gives them, and the
+// comments are ours, not TSE's.
+
 #include <string>
 #include <vector>
 
@@ -18,7 +26,7 @@ class CTextFieldMultiLine : public IFormField<IScreen> {
 public:
     CTextFieldMultiLine(const SRect& rect, const SharedIText& text, const SFont& font, TColor corTexto, TColor corFundo);
 
-    std::string GetTypeName() const override;
+    std::string GetTypeName() const override { return "CTextFieldMultiLine"; }
 
     void Draw(IScreen& screen) const override;
 
