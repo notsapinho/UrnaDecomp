@@ -7,6 +7,24 @@
 # CConversorLabelParametrizado::DesconverterGeneroLabel's cases run neutro, feminino, masculino. Evidence: 9167's br_table
 # is [1 2 4 0 3] 2, and of the six orders of the three cases only this one gives it (measured on the object: the enum's
 # order, for one, gives [1 2 4 3 0] 2).
+# ecourna::app::dados::asn::FormataHora (fn 2686), added since in asn/datahoraasn.cpp: the time of day of a
+# boost::posix_time::ptime as "{:02}:{:02}:{:02}" (8945), its hours, minutes and seconds as three long long (argument
+# types 4228). Evidence: it reads the ptime's 64-bit count through its second parameter; for INT64_MAX - 1, INT64_MAX and
+# INT64_MIN (boost's not_a_date_time, pos_infin and neg_infin) it takes the hours, minutes and seconds of that count
+# itself, +-2562047788, 0 and +-54, else of the count modulo 86400000000, the microseconds of a day: time_of_day()'s
+# hours(), minutes() and seconds(), spelled as ConverteDataHora spells them; its calls that can throw go through
+# invoke_*, with a landing pad that ends in __resumeException, an -fexceptions object's code. Its one target caller,
+# vota::CImpressaoPU::StartState (11902, a trap in unit 176), calls it four times, each next to a call of fn 2687, which
+# formats a date as "{:02}/{:02}/{:04}" over boost's from_day_number (1376) and is not written; its stand-in is in
+# fragment 234's roots. pnpm wasm score before step 8:
+# 21 over 317 rows, all operand-only; the census paired it (shape) and the scan matched it. Chosen: the name and the
+# file, a choice against the band: in band 4, 2687, 2686 and 2685 (a thunk into 6155, the body binaryen merges with
+# ConverteDataHora's 9220) lie between api/compression/czip.cpp's 2690 and api/security/csha.cpp's 2684, where the data
+# hold icompressor.cpp's, cfile.cpp's, base64.cpp's, chkdfseed.cpp's and ckey.cpp's records and no date class, and
+# ConverteDataHora (band 1) lies among app/dados/asn's converters; the file is the one whose function 2685 shares a body
+# with. The parameter's form, a const reference, is evidence: ptime is trivially copyable, and a probe function taking
+# one by value compiles to `(i64) -> i64`, by const reference to `(i32) -> i64` (em++ -O2 -std=c++23 over Boost's
+# headers), and 2686 takes an address.
 DADOS_ASN_SRCS := app/dados/asn/cconversorturno.cpp app/dados/asn/cconversorfase.cpp app/dados/asn/cconversorcargoid.cpp \
                  app/dados/asn/cconversorfoto.cpp app/dados/asn/cconversorcabecalhoentidade.cpp \
                  app/dados/asn/cconversoridentificadoreleitor.cpp app/dados/asn/datahoraasn.cpp \

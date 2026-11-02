@@ -61,9 +61,18 @@
 // called with GetInst's result and a post's id by vota::CEleitorVotando::RegistraVoto (fn 4471) and by
 // suspenderEleitor (fn 4442), which makes RegistraVoto's calls. Their names are chosen from their messages, and their
 // parameter's type from GetCargo's.
+// LogaQuantidade (fn 3268) is out of line, the last member of clogvota.cpp (its band puts it after fns 3279 and 3272),
+// called three times by vota::CThreadMonitor::Run (fn 10226, a trap in unit 116) with GetInst's result and a temporary
+// of a name (a std::string at +0) and a 64-bit count (+16); it logs "Quantidade de {} [{}]" of the name and
+// comum::FormataTamanho (fn 1947) of the count's low word, through fn 233. Its name, its being a member (a free
+// function over a comum::IEventosLog& gives the same object) and the std::pair are chosen; fragment 234 has its
+// evidence.
 
+#include <cstdint>
 #include <string>
+#include <utility>
 
+#include "app/comum/iinterfaceinit.h"
 #include "app/comum/log/ieventoslog.h"
 
 namespace vota {
@@ -136,6 +145,8 @@ public:
     void LogaErroVerificacaoComparecimento();
     void LogaFinalizacaoAplicativo();
     void LogaDesligandoUrna();
+
+    void LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade);
 
 private:
     CLogVota();

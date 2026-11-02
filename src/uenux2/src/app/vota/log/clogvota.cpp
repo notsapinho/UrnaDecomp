@@ -292,6 +292,11 @@ void CLogVota::LogaDesligandoUrna()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 
+void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
+{
+    loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
+}
+
 } // namespace vota
 
 // <stubs>

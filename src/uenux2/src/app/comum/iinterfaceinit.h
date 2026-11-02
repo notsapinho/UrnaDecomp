@@ -30,6 +30,9 @@
 //   functions (docs/reference/facts/reading.md R8), and its callers are all in this file. The other members are
 //   declared from their records in iinterfaceinit.cpp, and the unit's fragment says which are reconstructed. The
 //   header's path, the access of each member and the parameter names are not in the target.
+// - FormataTamanho (fn 1947): no record names it. A free function defined in iinterfaceinit.cpp whose callers are in
+//   other files too (vota::CThreadMonitor's slot 2, vota::CLogVota::LogaQuantidade), so it is declared in a header,
+//   this one by choice; the unit's fragment has its evidence and what is chosen.
 
 #include <memory>
 #include <string>
@@ -38,6 +41,8 @@
 #include "ecourna/api/uetypes.hpp"
 
 namespace comum {
+
+std::string FormataTamanho(size_t tamanho);
 
 enum EBootDeviceId : int {
     BOOT_DEVICE_DESCONHECIDO = 0,

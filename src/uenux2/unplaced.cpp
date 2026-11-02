@@ -275,11 +275,6 @@
 // f3258 · 17 B · unmatched · placement: link order · name unknown
 // void f3258(i32, i32) { ... }
 
-// link-order cluster 939 · uses=3
-
-// f3268 · 538 B · unmatched · placement: link order · name unknown
-// void f3268(i32, i32) { ... }
-
 // link-order cluster 944 · uses=3
 
 // f3336 · 12 B · unmatched · placement: link order · name unknown
@@ -365,11 +360,6 @@
 
 // f2502 · 15 B · unmatched · placement: link order · name unknown
 // void f2502(i32, i32) { ... }
-
-// link-order cluster 1075 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
-
-// f2686 · 739 B · unmatched · placement: link order · name unknown
-// void f2686(i32, i32) { ... }
 
 // link-order cluster 1076 · uses=4 · neighbours' file ecourna/api/compression/czip.cpp
 
