@@ -97,9 +97,6 @@
 
 // link-order cluster 799 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
 
-// f5606 · 1782 B · unmatched · placement: link order · name unknown
-// void f5606(i32, i32) { ... }
-
 // f5605 · 5436 B · unmatched · placement: link order · name unknown
 // void f5605(i32, i32, i32, i32) { ... }
 

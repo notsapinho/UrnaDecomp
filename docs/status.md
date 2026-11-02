@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**11,163 of 14,343 functions matched (77.83%), 3,006,307 of 5,883,903 code bytes (51.09%).**
+**11,167 of 14,343 functions matched (77.86%), 3,009,225 of 5,883,903 code bytes (51.14%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -28,10 +28,10 @@ name ([Not attributed](#not-attributed)).
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,434 / 3,285 | 74.09% | 700,470 / 2,168,476 | 32.30% |
+| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,438 / 3,285 | 74.22% | 703,388 / 2,168,476 | 32.44% |
 | upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,700 / 8,294 | 80.78% | 2,010,682 / 3,145,292 | 63.93% |
 | not attributed | `unknown`, `app` | 2,029 / 2,764 | 73.41% | 295,155 / 570,135 | 51.77% |
-| **total** | | **11,163 / 14,343** | **77.83%** | **3,006,307 / 5,883,903** | **51.09%** |
+| **total** | | **11,167 / 14,343** | **77.86%** | **3,009,225 / 5,883,903** | **51.14%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -45,13 +45,13 @@ come from getting the version, the flags and the link order right, not from writ
 <!-- status:tse -->
 | component | what it is | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| `vota` | uenux2 `src/app/vota`: the voting application | 436 / 780 | 55.90% | 68,586 / 470,204 | 14.59% |
-| `comum` | uenux2 `src/app/comum`: shared urna code (domain model, converters, reports) | 372 / 599 | 62.10% | 130,657 / 606,487 | 21.54% |
+| `vota` | uenux2 `src/app/vota`: the voting application | 437 / 780 | 56.03% | 68,746 / 470,204 | 14.62% |
+| `comum` | uenux2 `src/app/comum`: shared urna code (domain model, converters, reports) | 374 / 599 | 62.44% | 131,633 / 606,487 | 21.70% |
 | `api` | uenux2 `src/api`: GUI toolkit, io, ipc, util, logging, audio | 444 / 516 | 86.05% | 66,500 / 214,120 | 31.06% |
 | `simulador` | the web simulator's `CWasm*` devices | 132 / 144 | 91.67% | 21,139 / 58,157 | 36.35% |
 | `vota-web` | the web engine (`CVotaWebEngine`, …) | 9 / 11 | 81.82% | 168 / 2,808 | 5.98% |
-| **uenux2** | the five rows above | **1,393 / 2,050** | **67.95%** | **287,050 / 1,351,776** | **21.24%** |
-| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 628 / 799 | 78.60% | 337,458 / 721,680 | 46.76% |
+| **uenux2** | the five rows above | **1,396 / 2,050** | **68.10%** | **288,186 / 1,351,776** | **21.32%** |
+| `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 629 / 799 | 78.72% | 339,240 / 721,680 | 47.01% |
 | `asn1-modules` | the generated `Modulo*` ASN.1 types | 49 / 59 | 83.05% | 25,946 / 41,909 | 61.91% |
 | `ASN1` | TSE's fork of the III ASN.1 runtime | 364 / 377 | 96.55% | 50,016 / 53,111 | 94.17% |
 <!-- /status:tse -->
@@ -120,14 +120,14 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 11,163 | 3,006,307 | matched |
-| `differs` | 472 | 110,046 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
+| `match` | 11,167 | 3,009,225 | matched |
+| `differs` | 471 | 109,415 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
 | `unresolved` | 521 | 516,823 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 2,187 | 2,250,727 | our link has no body for it yet |
+| `no-candidate` | 2,184 | 2,248,440 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 2,434 `match`, 73 `differs`, 42 `unresolved` and 736 `no-candidate`.
+For TSE code alone: 2,438 `match`, 72 `differs`, 42 `unresolved` and 733 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -179,11 +179,11 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 <!-- status:tiers -->
 | tier | functions | match | differs | unresolved | no-candidate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `byte` | 1,229 | 1,229 | 0 | 0 | 0 |
+| `byte` | 1,230 | 1,230 | 0 | 0 | 0 |
 | `fingerprint` | 645 | 644 | 0 | 1 | 0 |
 | `addr` | 7,191 | 6,846 | 208 | 135 | 2 |
-| `shape` | 766 | 726 | 27 | 13 | 0 |
-| `none` | 4,512 | 1,718 | 237 | 372 | 2,185 |
+| `shape` | 767 | 727 | 27 | 13 | 0 |
+| `none` | 4,510 | 1,720 | 236 | 372 | 2,182 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved

@@ -86,7 +86,20 @@ md::CCandidatura* CCandidaturas::Busca(TCargoID cargo, TCandidatoID candidato)
     return Find(cargo * 1000000 + candidato);
 }
 
-// (original lines 133-256: content not recovered)
+bool CCandidaturas::ExisteCandidatoFederacao(TCargoID cargo, const ecourna::app::dados::CFederacao& federacao) const
+{
+    for (const TPartidoID partido : federacao.GetPartidos()) {
+        for (const auto& [chave, candidatura] : m_registros) {
+            if (candidatura.GetTitular().GetSituacao() == 0 && candidatura.GetCargoID() == cargo &&
+                candidatura.GetPartidoID() == partido) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// (original lines 146-256: content not recovered)
 #line 257
 const md::CCandidatura& GetCandidaturaAtual(const std::string& funcao)
 {
