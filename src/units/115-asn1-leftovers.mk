@@ -52,9 +52,9 @@
 # - 1843 find_first_not_of: the same, the rows -Oz gives; -Os, -O2 and -O3 do not. It matches from src/app/roots_vector.cpp's
 #   minsize instance, which stands for the executable TU's copy; its census pair names it, so its hand edit went.
 # - 1532 (CoderEnv::encodeBER), 2706 (vector<char>::reserve, called by the runtime's own 3464, 3472 and 5055), 5282 and
-#   5290 match from unit 229's root, at the executable TU's rule. 2704 and 2896 stay: 2704 is __split_buffer<char>'s
-#   destructor, a thunk into 2896, the body of a merge of 2704, 2545, 4675 and 5523, and our link has the whole
-#   destructor (unit 229's fragment).
+#   5290 match from unit 229's root, at the executable TU's rule. 2704 is __split_buffer<char>'s destructor, a thunk
+#   into 2896, the body of a merge of 2704, 2545, 4675 and 5523: both match since unit 269's root brings 5523, and our
+#   link merges the two into 2896's body (unit 229's fragment).
 # - 2650 differs on one call: target 388, ours 424. Our link kept one ~shared_ptr body where the target has two, and 2183
 #   and 3469 match over it (unit 86's note); since unit 237 it has both, and 2650 still calls 424's.
 # - 8902: calls 5056 and 1872, api's, and no runtime symbol.

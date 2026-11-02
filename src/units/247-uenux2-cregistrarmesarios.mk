@@ -79,7 +79,7 @@
 # CConfirmaFimRegistroMesarios::GetInst (5389), CLimiteMesariosRegistradosAtingido::GetInst (5386) and
 # IPedeTituloMesario::ProcessInput (10313, trapped in unit 71) build the operator's form with fn 395, matched (unit 31),
 # so they wait only to be written (10313 calls 5389 too); vota::CFimAquisicaoVotos::StartState (10737, trapped in unit
-# 104) calls 3610 and fn 501 (written, `differs`).
+# 104) calls 3610 and fn 501 (matched, unit 269).
 #
 # The generic uenux2 rule depends on the source and every uenux2 header.
 CREGISTRARMESARIOS_SRCS := src/app/comum/comparecimentomesario/estados/cregistrarmesarios.cpp

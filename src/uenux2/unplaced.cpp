@@ -124,11 +124,6 @@
 // f5521 · 72 B · unmatched · placement: link order · name unknown
 // void f5521(i32, i32) { ... }
 
-// link-order cluster 786 · uses=2 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
-
-// f5528 · 64 B · unmatched · placement: link order · name unknown
-// void f5528(i32) { ... }
-
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
 // f5569 · 217 B · unmatched · placement: link order · name unknown

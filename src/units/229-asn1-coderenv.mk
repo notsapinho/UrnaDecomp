@@ -61,9 +61,10 @@
 #   9770 also stores PEREncoder's vptr and 220 the ostringstream's (a reading of which store each anchor read); both
 #   stay matched by their match lines, and 3464 keeps unit 86's hand line. 5152's callees 3501 and 5150 lose their
 #   `call by:5152` names, their rows unchanged.
-# - 2704, __split_buffer<char>'s destructor, gets a `call` name from 2706 and 5290 and stays `differs`: our body is the
-#   whole destructor, and the target's 2704 is a 9-B thunk into 2896, binaryen's merge of four such destructors (its
-#   thunks pass 1, 12, 8 and 16, the step of its loop; the other three, 2545, 4675 and 5523, are not in our link).
+# - 2704, __split_buffer<char>'s destructor, is a 9-B thunk into 2896 in the target, binaryen's merge of four such
+#   destructors (its thunks pass 1, 12, 8 and 16, the step of its loop). Both match since unit 269's root brings 5523,
+#   the step 16: our link merges the two into 2896's body (2545 and 4675 are not in our link) and names 2704 by its
+#   census pair.
 #
 # Chosen: the root's file name, its stand-in's name and labels, their argument offsets, and the `||` in encode, which a
 # switch over the four rules gives as well (encode's rows in the root's object, relocated constants masked, the same).
