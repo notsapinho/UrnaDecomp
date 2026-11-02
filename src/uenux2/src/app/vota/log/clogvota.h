@@ -114,7 +114,8 @@ public:
     void LogaAguardandoConfirmacaoZeresima();
     void LogaAguardandoHorarioZeresima();
     // Held inlined by vota::CPedeIdentidade::StartState (fn 10680), its one caller, the shape of
-    // LogaAguardandoHorarioZeresima (CLoga::loga, fn 433, with +4 and severity 1). The name is chosen from its message.
+    // LogaAguardandoHorarioZeresima (CLoga::loga, fn 433, with +4 and severity 1). The name is chosen from its message,
+    // and its place here and in clogvota.cpp, after LogaAguardandoHorarioZeresima, is chosen: it has no index to order.
     void LogaAguardandoIdentificadorEleitor();
     void LogaDataEleicaoInvalida();
     void LogaErroEstadoAplicativoDesconhecido();

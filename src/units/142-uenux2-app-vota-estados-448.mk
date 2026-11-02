@@ -121,6 +121,32 @@
 # cperguntacodigosuspensao.h, the locals' names, `valido && diferente`, the switch's default, and the early return (the
 # `if` around the switch was measured only with `size() > 0`).
 #
+# comum::CEleitorDadosHabilitacao's constructor (target fn 2733, no record) matches, defined out of line in
+# cmostraeleitorvotando.cpp after the file's last record line (159), at chosen lines (src/README.md "Gaps").
+# - Its layout is unit 130's celeitordadoshabilitacao.h: it copies the identity (its std::string inline or through
+#   __init_copy_ctor_external, fn 138), stores the kind and the audio word, and copies the biometric part with its
+#   std::optional and the photo's 8 bytes, in the members' order; the parameters' order is the wasm signature's.
+# - Out of line: its one caller, ProcessKey (10425, slot 6, pending; its records are those of SalvaHabilitacaoEleitor,
+#   which it holds inlined), calls it four times, with the kinds 1, 2, 2 and 0, and keeps the returned `this` each time.
+#   A probe caller with those four constructions, compiled at the tree's flags, inlines the constructor at all four when
+#   the header defines it in its class, and keeps the four calls when it is defined out of line, in another TU or in the
+#   caller's (docs/reference/facts/codegen.md C6).
+# - Placement, by how-to step 3's rule 2: in its use band (uses 4, ledger/ordinals.tsv) 2733 links after 2735,
+#   CVerificaDadoEleitor::GetInst (its vtable @1592712), and 2734 (no name), and before
+#   aguardaeleitor/csuspensaoautomaticaeleitor.cpp's 2732 (stretch 1080 of ledger/tu-clusters.tsv, labelled that file).
+#   In the data the one recorded file between those ends is this one (record @1593044), and the lower end is
+#   aguardaeleitor's too: so the directory is app/vota/operador/aguardaeleitor/, against the class's namespace. The file
+#   is a choice there: it holds the one caller, and a small class one file constructs can be defined there
+#   (docs/reference/facts/placing.md P2); a file named after the class there (rule 4) is the other reading, which no
+#   data place.
+# - The roots file stands in for ProcessKey with two calls whose results it reads: with a stand-in that dropped them,
+#   our body lost its i32 result, 4 over 98 rows (one deleted), against 2 over 98, all operand-only, with the results
+#   read (pnpm wasm score, before steps 7 to 9, the constructor then in a file of its own).
+# Chosen too: the parameters' names; the photo taken by reference (the caller passes the address of a temporary, which a
+# by-value photo takes too); the member-initializer list; the header's path, unit 130's (rule 1: such a path names
+# nothing; it stays). This file builds with strict aliasing (UENUX2_TBAA_DIRS), comum/dados/ without: compiled with
+# -fno-strict-aliasing too, the file gives the constructor the same code.
+#
 # A written body that does not match: CPedeAnoNascimentoSemBiometria::StartState (fn 10490) is `differs`. The target
 # stores +4 (the next state) first, then +32 and +28. Each of the six orders of the three statements compiles at the
 # tree's flags with the +4 store last, and the order written here does so at -O1, -O2, -O3, -Os and -Oz, and with and
@@ -140,7 +166,7 @@ UENUX2_SRCS += $(APP_VOTA_ESTADOS_448_SRCS)
 $(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-pending.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-pending.cpp -o $(R)
 # nothing reconstructed references the five classes yet: 142-uenux2-app-vota-estados-448-roots.cpp takes their vtables'
-# addresses
+# addresses, and stands in for ProcessKey's (10425) calls of comum::CEleitorDadosHabilitacao's constructor
 $(ROOT)/$(APP)/142-uenux2-app-vota-estados-448-roots.o: $(ROOT)/src/units/142-uenux2-app-vota-estados-448-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/142-uenux2-app-vota-estados-448.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/142-uenux2-app-vota-estados-448-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/142-uenux2-app-vota-estados-448-pending.o $(APP)/142-uenux2-app-vota-estados-448-roots.o

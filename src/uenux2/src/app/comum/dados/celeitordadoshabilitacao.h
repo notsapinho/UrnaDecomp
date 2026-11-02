@@ -12,11 +12,12 @@ namespace comum {
 // bytes CEleitorDetalhe::MarcaHabilitado (inlined into target fn 2825) reads, nothing after them: the identity it
 // copies at +0, the kind it switches on at +16 (0, 1 and 2 have cases), a 32-bit word at +20 it copies, the biometric
 // part at +24 whose members it reads, and the photo's 8 bytes at +56. The kinds' names, the members' names and the
-// getters are chosen. The constructor is fn 2733 (no record): its one caller,
-// vota::CMostraEleitorVotando::SalvaHabilitacaoEleitor (fn 10425), passes the identity, the kind (0, 1 or 2), the audio
-// word, the biometric part and the photo, in the order of the members it stores; it is out of line in
-// celeitordadoshabilitacao.cpp. The parameters' names, and the reference for the photo (the caller passes the address
-// of a temporary, which a by-value photo takes too), are chosen.
+// getters are chosen. The constructor is fn 2733 (no record): its one caller, vota::CMostraEleitorVotando::ProcessKey
+// (fn 10425, slot 6, which holds SalvaHabilitacaoEleitor inlined: its records), passes the identity, the kind (0, 1 or
+// 2), the audio word, the biometric part and the photo, in the order of the members it stores; it is out of line in its
+// caller's file, app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp
+// (src/units/142-uenux2-app-vota-estados-448.mk says why). The parameters' names, and the reference for the photo (the
+// caller passes the address of a temporary, which a by-value photo takes too), are chosen.
 class CEleitorDadosHabilitacao {
 public:
     enum ETipoHabilitacao {

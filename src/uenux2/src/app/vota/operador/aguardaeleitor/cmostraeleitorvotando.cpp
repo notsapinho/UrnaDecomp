@@ -1,8 +1,7 @@
 // vota::CMostraEleitorVotando (/home/rubio/tse/uenux2/src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp).
-// Reconstruction's note, not TSE's text. Its records are records of the target:
-//   10426  virtual void ProcessInput()   record at line 64, column 22 (the default argument of CPolySingleton's instance)
-//   10425  ProcessKey (slot 6)           records at lines 127 and 159, column 31 (not written)
-// The other lines are a choice: src/units/142-uenux2-app-vota-estados-448.mk has them and the other notes.
+// Reconstruction's note, not TSE's text. Records of the target: 10426's (ProcessInput) at line 64, column 22, and
+// 10425's (ProcessKey, slot 6, not written) at 127 and 159, column 31. The other lines are a choice, and so is this
+// file for comum::CEleitorDadosHabilitacao's constructor (2733): src/units/142-uenux2-app-vota-estados-448.mk says why.
 
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 
@@ -12,6 +11,7 @@
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/cinfomtlcd.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/celeitordadoshabilitacao.h"
 #include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
@@ -86,4 +86,92 @@ std::shared_ptr<api::IForm<api::IScreenMT>> CMostraEleitorVotando::CriaForm(std:
     return builder.GetForm("");
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 } // namespace vota
+
+namespace comum {
+
+CEleitorDadosHabilitacao::CEleitorDadosHabilitacao(const md::CEleitorIdentidade& identidade, ETipoHabilitacao tipo,
+                                                   int tipoAtivacaoAudio,
+                                                   const md::CEleitorDadosHabilitacaoBiometrica& biometria,
+                                                   const ecourna::app::dados::CApresentacaoFotoEleitor& apresentacaoFoto)
+    : m_identidade(identidade)
+    , m_tipo(tipo)
+    , m_tipoAtivacaoAudio(tipoAtivacaoAudio)
+    , m_biometria(biometria)
+    , m_apresentacaoFoto(apresentacaoFoto)
+{
+}
+
+} // namespace comum

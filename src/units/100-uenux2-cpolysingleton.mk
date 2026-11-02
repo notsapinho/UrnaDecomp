@@ -54,7 +54,7 @@
 #   and our 1714 differed from 455 (IInputKbd's) only in constants, so binaryen merged the two into one body
 #   (byn$mgfn-shared$...IInputKbd...instance) where the target keeps two: the target's 455 has the executable TU's
 #   landing pads (below). Our 455 is that TU's copy now (unit 170's object, `unresolved`), so the two bodies differ and
-#   1714 matches (from csuspensaoautomaticaeleitor.cpp.o on this tree). Their callers 11041, 11075 and 11077 match.
+#   1714 matches (from cescolheopcao.cpp.o on this tree). Their callers 11041, 11075 and 11077 match.
 # - 2079 ITextToSpeech: our headers give it a key function, a trap of unit 82 that the original does not have, so
 #   `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 44 rows more (pnpm wasm
 #   score). It waits for that member, inline in the original.

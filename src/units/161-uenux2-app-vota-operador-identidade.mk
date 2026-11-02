@@ -77,9 +77,9 @@
 # calls comum::CInfoMTLCD::MostraIconeBateria on CInfoMTLCD::GetInst() (2284, unit 153's file), starts the tick at +11
 # unless vota::EhTreinamento() or IsVotacaoBloqueadaPorHorario() (1485, 2226), and the ticks at +12 and +13 unless
 # comum::CAppInfo::EhTreinamentoEleitor() (697). It scored 29 over 149 rows, all operand-only (pnpm wasm score, before
-# steps 7 to 9). Chosen: the log member's name, `>= 2020`, the slot called directly on GetInst's result rather than
-# through a vota:: function over it, and the two `if`s' spelling. ProcessTick (10676) stays pending: the pending file
-# says what it waits for.
+# steps 7 to 9). Chosen: the log member's name and its place in clogvota.cpp (binaryen inlined it: no index orders it),
+# `>= 2020`, the slot called directly on GetInst's result rather than through a vota:: function over it, and the two
+# `if`s' spelling. ProcessTick (10676) stays pending: the pending file says what it waits for.
 #
 # Chosen, no evidence names them: the names of the three helpers, of the statics and of every data member, and their
 # types where only a width shows (int for the 32-bit counters), and uebyte as the spelling of the byte's unsigned 8-bit

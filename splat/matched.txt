@@ -11210,5 +11210,5 @@
 10427 _ZN4vota21CMostraEleitorVotando10StartStateEv
 10680 _ZN4vota15CPedeIdentidade10StartStateEv
 10690 _ZN4vota13CEscolheOpcao10StartStateEv
-11655 __cxx_global_array_dtor.4@app/uenux2/src/app/comum/cinfomtlcd.cpp.o
+11655 __cxx_global_array_dtor.2@app/uenux2/src/app/comum/cinfomtlcd.cpp.o
 11656 __cxx_global_array_dtor@app/uenux2/src/app/comum/cinfomtlcd.cpp.o

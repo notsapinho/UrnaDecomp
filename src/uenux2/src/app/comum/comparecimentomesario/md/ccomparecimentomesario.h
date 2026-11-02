@@ -14,9 +14,9 @@ namespace comum::md {
 // from the columns fn 10403 binds, with the period's type; GetPeriodoPresente, named from its column; and the spelling
 // of the ordering: a hand-written <=>, and a < over std::tie, give the same object as the defaulted <=>. The
 // constructor is fn 2738 (no record): it copies the identity and then stores the period, and fns 2730 and 2731
-// (CComparecimentoMesario's) call it out of line; it is defined in ccomparecimentomesariopk.cpp
-// (src/units/221-uenux2-app-comum-constructors.mk says why that file, and its name and the parameters' names are
-// chosen).
+// (CComparecimentoMesario's) call it out of line; it is defined in vota::CRegistraDigitalOperador's file,
+// app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp (src/units/221-uenux2-app-comum-constructors.mk
+// says why; the file among its neighbours and the parameters' names are chosen).
 class CComparecimentoMesarioPK {
 public:
     CComparecimentoMesarioPK(const CEleitorIdentidade& mesario, int periodoPresente);
@@ -41,8 +41,8 @@ private:
 // The two constructors, fns 2730 and 2731 (no record), are the DAO's: RecuperarID and RecuperarTodos (fns 10402 and
 // 10401) build each row with 2730 when id_arquivo is not NULL, passing it, and with 2731 when it is, which leaves the
 // optional empty. Both call the key's constructor first and then store the other members from their arguments, the
-// date as a 12-byte copy from an address. They are defined in ccomparecimentomesario.cpp; the parameters' order is the
-// wasm signature's, their names and the date's being a reference are chosen.
+// date as a 12-byte copy from an address. They are defined in ccomparecimentomesario.cpp, 2731 first (it links first);
+// the parameters' order is the wasm signature's, their names and the date's being a reference are chosen.
 class CComparecimentoMesario : public CComparecimentoMesarioPK {
 public:
     enum EstadoReconhecimentoBiometrico {};

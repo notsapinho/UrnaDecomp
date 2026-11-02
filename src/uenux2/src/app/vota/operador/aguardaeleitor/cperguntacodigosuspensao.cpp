@@ -1,7 +1,8 @@
 // vota::CPerguntaCodigoSuspensao
-// (/home/rubio/tse/uenux2/src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp).
-// The reconstruction's note, not TSE's text: no record names a line of this file, so every line is a choice;
-// src/units/142-uenux2-app-vota-estados-448.mk says what the bytes decide.
+// (/home/rubio/tse/uenux2/src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp; no record names the file:
+// the path is chosen, its directory from the data). The reconstruction's note, not TSE's text: no record names a line
+// of this file either, so every line is a choice; src/units/142-uenux2-app-vota-estados-448.mk says what the bytes
+// decide.
 #include "app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.h"
 
 #include <string>
