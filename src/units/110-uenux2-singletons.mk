@@ -72,8 +72,12 @@
 #
 # Names: 407, 555, 187, 1073, 1926 and 2817 are srcloc-anchors. Their mutexes hold through their exit destructors, which
 # the content pass pairs once the name is voted, and through the thunk. A record held by a function that inlines GetInst
-# anchors nothing, so 273, 326 and 2812 have hand edits of `s_mutex`, and CRespostas's pointer one too, with 1929, whose
-# twin 1932 stops the census; the content pass then pairs 5730. 555's pointer has one voter, so it has a hand edit too: 555's
+# anchors nothing, so 273 and 326 have hand edits of `s_mutex`. 2812's mutex and CRespostas's pointer had them too, until
+# fn 11212 (comum::CParteCandidatosConsultas::Imprime, cpartecandidatos.cpp) named 2812 by its call: their generated lines
+# read `vote:2 by:2812,12621`, and with the two hand lines out, two scans on copies (the readers' match lines out, beside a
+# control that keeps the lines) move no row and the build gives the target's sha256 with 11182 matches, so they went.
+# 1929, whose twin 1932 stops the census, keeps its hand edit; the content pass then pairs 5730. 555's pointer has one
+# voter, so it has a hand edit too: 555's
 # destructor cannot land, and the build refuses the name without its line. 2817's has one voter as well and needs no line:
 # its destructor, 11510, holds the address. Each line in splat/symbol_addrs.txt cites what the thunk's own body holds and the
 # other holders.
@@ -103,6 +107,16 @@
 # RespostaCorrente. PreencheADireita's fill character is not in 11478's call: binaryen folded the one every caller passes
 # into 1881, whose body holds the constant 32, ' '. Chosen: its name, its being a free function, its declaration in
 # crespostasds.h.
+# comum::CRespostas::GetNumeros and Busca, after LinhaRespostaCorrente (no record: their lines, names and their being
+# members are chosen; they read the base's map). GetNumeros has no index of its own: unit 77's 11212
+# (CParteCandidatosConsultas::Imprime) holds it inlined by binaryen and matches. Busca has the bytes of unit 89's
+# CCandidaturas::Busca, and binaryen keeps one body, 1273, whose match line names CRespostas's since crespostas.cpp
+# links first (step 9 renamed it). GetNumeros keeps the keys from post * 1000000 below (post + 1) * 1000000 with post + 1
+# narrowed to a TCargoID, the target's `i32.and 255`. Compiled at the tree's flags and compared in the object, call
+# numbers read as symbols (none linked): written `(cargo + 1) * 1000000`, the bound is an add of 1000000 and the code
+# differs, and `chave / 1000000 == cargo` gives other code (79 rows against 94); the same code comes from the test written inline without
+# the two locals, from a TCargoID local holding cargo + 1, and from an iterator loop for the structured binding.
+# Pushing a named local differs only in calling push_back(const unsigned int&) for push_back(unsigned int&&).
 # The includes it needed (ccargos.h, cstringutils.hpp) took two of the blank lines above GetInst's record line.
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both

@@ -618,29 +618,11 @@
 // f4817 · 287 B · unmatched · placement: link order · name unknown
 // ? f4817(i32, i32) { ... }
 
-// f4816 · 2502 B · unmatched · placement: link order · name unknown
-// void f4816(i32, i32, i32, i32) { ... }
-
-// f4815 · 198 B · unmatched · placement: link order · name unknown
-// void f4815(i32, i32, i32, i32) { ... }
-
-// f4814 · 151 B · unmatched · placement: link order · name unknown
-// void f4814(i32, i32, i32, i32, i32) { ... }
-
-// f4813 · 290 B · unmatched · placement: link order · name unknown
-// ? f4813(i32, i32) { ... }
-
 // f4812 · 101 B · unmatched · placement: link order · name unknown
 // void f4812(i32, i32, i32, i32) { ... }
 
 // f4811 · 268 B · unmatched · placement: link order · name unknown
 // void f4811(i32, i32, i32) { ... }
-
-// f4810 · 107 B · unmatched · placement: link order · name unknown
-// void f4810(i32, i32, i32, i32) { ... }
-
-// f4809 · 269 B · unmatched · placement: link order · name unknown
-// void f4809(i32, i32, i32) { ... }
 
 // link-order cluster 736 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
 
@@ -961,9 +943,6 @@
 // f2579 · 79 B · unmatched · placement: link order · name unknown
 // void f2579(i32, i32, i32) { ... }
 
-// f2578 · 79 B · unmatched · placement: link order · name unknown
-// void f2578(i32, i32, i32) { ... }
-
 // link-order cluster 1075 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
 
 // f2685 · 17 B · unmatched · placement: link order · name unknown
@@ -1035,9 +1014,6 @@
 
 // f1507 · 53 B · unmatched · placement: link order · name unknown
 // void f1507(i32, i32, i32) { ... }
-
-// f1506 · 53 B · unmatched · placement: link order · name unknown
-// void f1506(i32, i32, i32) { ... }
 
 // link-order cluster 1241 · uses=9
 
