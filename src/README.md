@@ -47,7 +47,7 @@ definition there has the record's qualified name and parameter types, so a defin
 unwritten one, nor a destructor its constructor. So a pending member's trapping body (`units/README.md`) removes its
 stub. A non-virtual function we wrote that has no record, a constructor for one, keeps its stub. A function whose
 records all fall on lines of our code counts as written even when it is a caller that inlined the code on those lines:
-writing `ctextsource.h`'s inline constructor on its record's line (37:19) removed the stubs of 1150 and 652, whose only
+writing `ctextsource.h`'s inline constructor on its record's line (37:19) removed the stubs of 1150 (written since) and 652, whose only
 record that is. Name such functions in the fragment's header, as for a stub-only file that goes (below): they stay
 unwritten with no stub, and are found by their record (`docs/reference/facts/placing.md` §P1).
 

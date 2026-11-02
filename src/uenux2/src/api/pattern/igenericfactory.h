@@ -1,8 +1,8 @@
 #pragma once
-
-// api::IGenericFactory<AP> and api::CDefaultGenericFactory<AP, T> (/home/rubio/tse/uenux2/src/api/pattern/igenericfactory.h,
-// the records' file: slots 3 and 4 throw at lines 44 and 50, column 15). Slot 2 is Create with no argument (CThread's fn 3598
-// calls it); the destructor is the first slot (fn 172 calls vtable + 4). Unit 170's fragment has the rest.
+// api::IGenericFactory<AP> (/home/rubio/tse/uenux2/src/api/pattern/igenericfactory.h, the records' file: slots 3 and 4
+// throw at lines 44 and 50, column 15) and api::CDefaultGenericFactory<AP, T>, whose place in this file and whose T are
+// chosen. Slot 2 is Create with no argument (CThread's fn 3598 calls it); the destructor is the first slot (fn 172 calls
+// vtable + 4). Unit 170's fragment has the rest.
 
 #include <cstddef>
 #include <memory>

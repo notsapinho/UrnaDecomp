@@ -775,8 +775,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     (`CPath::GetPathEstatico` and `GetPathDinamico`, chosen names) are thunks of binaryen's merge 6047, and 949 and 1948
     (`GetPathMR` and `GetPathChave`) of 6048, each body formed by its two members in our link as in the target: item 2's
     case, so a member with another differing operand, or one taken away, reshapes it. 9530 (unit 06's
-    `ICompressor::Add` over a vector of paths) calls `path::__filename` (1224), whose name rests on the calls of
-    `CPath::GetPathTrab` and `GetPathResult` (358, 1399), two `differs` rows. Before unit 190, 9530 read `no-candidate`
+    `ICompressor::Add` over a vector of paths) calls `path::__filename` (1224), whose name rested on the calls of
+    `CPath::GetPathTrab` and `GetPathResult` (358, 1399), two `differs` rows, until 1224 matched (unit 190's fragment
+    says how): its line is `pair-addr` now. Before unit 190, 9530 read `no-candidate`
     (`no symbol and no ledger pair` in 9202406's scan):
 
     ```sh
@@ -784,7 +785,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     # 6047 ;; callers (2): 762 1082
     # 6048 ;; callers (2): 949 1948
     /usr/bin/grep -E '= func:1224;' splat/symbol_addrs.txt | sed -E 's/^[^ ]* = (func:[0-9]+);.*(evidence:.*)$/\1 \2/'
-    # func:1224 evidence:call by:358,1399
+    # func:1224 evidence:pair-addr
     ```
 23. **9258, `ecourna::app::dados::CSerialMidia::ValidaSerial`, by unit 84's vote for std::regex's constructor.** 9258
     calls `std::basic_regex<char>`'s constructor from a C string (2416), whose body is `unresolved` (its table slot of

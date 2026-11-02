@@ -29,7 +29,8 @@
 # plainest of that width); api::IForm<api::IScreen> as CUrnaInspecionada's forms' pointee, after api::CFormBuilder's
 # GetForm, the builder that fns 2380 and 6557 use; the key 13 written as a literal (no evidence names the key); the three
 # CLogVota members' names (from their messages) and their place after LogaTituloInvalidoRegistroMesario; GetInst and the
-# private constructor, declared and not defined, their names following the project's other singletons; the destructor
+# private constructor, declared and not defined (but CMostraEleitorVotando's, now that fn 1150 is written), their names
+# following the project's other singletons; the destructor
 # declared first, so that the class's own .cpp emits the vtable (how-to step 3). The paths:
 # app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp is the record's; the four others are chosen by how-to step 3
 # from the data (docs/reference/facts/placing.md P4, P5), each header beside its .cpp and the file named after the class:
@@ -83,8 +84,8 @@
 #   the inline CThreadEleitor::Existe added to cthreadeleitor.h) and CEstadoAudio's mode is not 2, or
 #   IsAudioAtivadoMesario (1687, unit 50's) holds. Only 1150 passes its slot. It is a function of this file's anonymous
 #   namespace, TextoAudioAtivado: name, linkage and file are chosen, the file against its band, which puts 10539 right
-#   after api::CTextFieldUpdateMT's constructor's lambda's slots (10540 to 10544), not among this file's functions
-#   (10424 to 10429).
+#   after the __func slots of the lambdas of BatteryIconDataSource, CTextFieldUpdate and CTextFieldBlinking (10540 to
+#   10544; api::CTextFieldUpdateMT's own members are 10545 to 10549), not among this file's functions (10424 to 10429).
 # Chosen too: CriaForm's name and its being a static member, the statics' names.
 #
 # A written body that does not match: CPedeAnoNascimentoSemBiometria::StartState (fn 10490) is `differs`. The target

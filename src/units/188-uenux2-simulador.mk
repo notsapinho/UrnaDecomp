@@ -8,7 +8,10 @@
 # forms are unit 100's headers. Each of those fragments says what it rests on.
 #
 # Matches with this file (against 0fe14b05, by target index): 8311; 4879 and 4890, CPolySingleton<ITimerScheduler>::set
-# and <ISystemDateTime>::set, whose records (1531292, 1531932) lie among 8302's; the two mocks' members (unit 75: they
+# and <ISystemDateTime>::set, whose records (1531292, 1531932) lie among 8302's (4890's line names the raw-pointer
+# template over CWasmSystemDateTime because binaryen folds that body with set(unique_ptr<ISystemDateTime>) of
+# isystemdatetime.cpp.o, which fn 1155 calls, and keeps this object's name: the two forms give one body, so the bytes
+# do not decide which the target's 4890 is, and its name is the link order's pick); the two mocks' members (unit 75: they
 # came from that unit's roots object, which is gone) and the control blocks push<T> builds here (8036 for IScreenMT,
 # 11554 and 11557 for ITextToSpeech); has<T> thunks 4853, 4872, 4877. Measured on the order: with simulador.cpp in a
 # fragment of its own, after itimerscheduler.cpp, 4879's copy was itimerscheduler.cpp.o's and read `differs +0xa5 target

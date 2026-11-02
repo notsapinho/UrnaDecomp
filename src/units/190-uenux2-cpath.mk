@@ -23,9 +23,11 @@
 #   has_root_directory and has_filename, which have one caller there, where the target's 5549 has 183 and 7749 and 3679
 #   has 183, 7738 and 7742, three functions only the table holds (slots 8848, 8871, 8866). So 183, 3679 and 5549 are
 #   read as the executable TU's copies and wait for its code that calls them.
-# - path::__filename (1224) is libc++.a's: 180 over 252 rows. Our link has no body of 2134 (PathParser::decrement, which
-#   calls consumeName and consumeAllSeparators; build/out/wasm-map/vota_web/names.tsv names none), read as binaryen
-#   inlining it into __filename, its one caller here. 2134's other target callers, 1840 and 5360, have no body of ours.
+# - path::__filename (1224) is libc++.a's, and matches with 1840 (path::__parent_path) and 2134 (PathParser::decrement,
+#   which calls consumeName and consumeAllSeparators), both libc++.a's, since unit 62's CWasmLogd constructor, inlined
+#   into fn 8302, calls 1840. Before, 1224 read 180 over 252 rows and our link had no body of 2134
+#   (build/out/wasm-map/vota_web/names.tsv named none), read as binaryen inlining it into __filename, its one caller
+#   then. 2134's third target caller, 5360, has no body of ours.
 #
 # Evidence:
 # - The three records (cpath.cpp lines 153, 189, 216, column 11) give the names, `static`, the std::filesystem::path

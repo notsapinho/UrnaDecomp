@@ -49,16 +49,17 @@
 # no census pair. Its `symbol` in splat/scan.tsv comes from the rescan once the match names it. It is the one body of its
 # kind in our link, with no direct caller on either side. Every other match of this unit was named before the scan.
 #
-# What waits, and for what:
-# - 1714 IScreenMT: unit 78's trap, which gave IScreenMT a key function the original does not have, is gone, and our
-#   1714 differs from 455 (IInputKbd's) only in constants, so binaryen merges the two into one body
+# What waits, and for what, and what matches since (said so):
+# - 1714 IScreenMT matches now. Unit 78's trap, which gave IScreenMT a key function the original does not have, is gone,
+#   and our 1714 differed from 455 (IInputKbd's) only in constants, so binaryen merged the two into one body
 #   (byn$mgfn-shared$...IInputKbd...instance) where the target keeps two: the target's 455 has the executable TU's
-#   landing pads (below). 1714 matches only once our 455 differs from it. Their callers 11041, 11075 and 11077 match.
+#   landing pads (below). Our 455 is that TU's copy now (unit 170's object, `unresolved`), so the two bodies differ and
+#   1714 matches (from csuspensaoautomaticaeleitor.cpp.o on this tree). Their callers 11041, 11075 and 11077 match.
 # - 2079 ITextToSpeech: our headers give it a key function, a trap of unit 82 that the original does not have, so
 #   `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 44 rows more (pnpm wasm
 #   score). It waits for that member, inline in the original.
-# - 4879 and 4890, set<ITimerScheduler> and set<ISystemDateTime>: written and `differs` in frame offsets alone, a body right
-#   apart from something outside it (how-to step 5). Their records (1531292, 1531932) lie in fn 8302's object, so the target's
+# - 4879 and 4890, set<ITimerScheduler> and set<ISystemDateTime>, match now; they read `differs` in frame offsets alone, a
+#   body right apart from something outside it (how-to step 5), while their copies were another TU's. Their records (1531292, 1531932) lie in fn 8302's object, so the target's
 #   copies are that TU's (unit 188's simulador.cpp now). Which stack slots push's temporaries take depends on what was emitted first
 #   in the TU: the first std::format body of a TU declares vformat, so with push first (itimerscheduler.cpp, where CreateInst
 #   is instantiated before instance, as in 10876's TU) both of push's format calls inline before vformat, and with an earlier
@@ -74,7 +75,9 @@
 #   but they are its -Oz outlined copies, and uenux2's level inlines them. 388 (~shared_ptr) is too: our copy is `score 6 over
 #   28 rows`, with an early exit where -Oz nests the ifs. Only their names matter to their callers. 3095, 1549, 5646 and
 #   13876 match from unit 170's object, the executable TU, which instantiates CPolySingleton<api::ISound>::instance at those
-#   flags; the rest wait for the TU's code that instantiates them (unit 170's fragment).
+#   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
+#   and 1166, 6147 and 1009 as binaryen's merges of its code; the rest wait for the TU's code that instantiates them (unit
+#   170's fragment).
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
 #   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
 #   unit 121's fragment says why no roots builder stands in for it.
@@ -90,8 +93,9 @@
 #   as 212's and 6161's landing pads show. 235 and 331 match from unit 170's object; 212, 305, 608 and 6161 come from it
 #   too and stay `unresolved` on operands with no target name (debug's table slot, the find_if slot, ranges::find_if's
 #   object), and 13156 has no body of ours. Only their names are needed.
-# - 11265: `unresolved`, self-voted: the two .bss names only its own vote gives. fn 10620 holds the object's address and
-#   not the guard's, and is not reached. It and api::g_polySingletonsInfo are unit 170's now, in the executable TU.
+# - 11265 and 10620 match now, from unit 170's object, the executable TU, which holds them and api::g_polySingletonsInfo
+#   (unit 170's fragment). 11265 had read `unresolved`, self-voted: the two .bss names only its own vote gave; and 10620,
+#   which holds the object's address and not the guard's, was not reached.
 #
 # set in two layers, and the locks (added with the executable TU's main and fn 8302, units 170 and 188):
 # - CPolySingletonList::set<T>(std::unique_ptr<T>&&, info), a has<T> test, then remove<T> (the name's remove, now with no
@@ -158,7 +162,7 @@
 #
 # Forms measured, per function, the object's rows at uenux2's flags with its numbers masked (how-to step 3), against
 # CPolySingleton<IScreen>::instance, CPolySingletonList::instance<IScreen> and has<IScreen>:
-# - the same bytes: std::unique_lock or std::scoped_lock for the std::lock_guard in unlock_shared; m_leitores < 1 for
+# - the same bytes: std::lock_guard or std::scoped_lock for the std::unique_lock in unlock_shared; m_leitores < 1 for
 #   <= 0; the decrement on its own line; m_escritor as unsigned char; `inline` on lock_shared or on the guard's
 #   constructor; unlock_shared or ~CTravaLeitura defined inline
 #   after their class; a flag in the guard that its destructor tests; for the copy of the shared_ptr, `const auto
@@ -178,7 +182,7 @@
 #   or a plain " ["; `":"s`; std::to_string(int); `it->m_tipo != &typeid(INTERFACE)`.
 #
 # Forms of push, set and lock measured the same way, against CAjusteDataHora's object:
-# - the same bytes: std::unique_lock or std::scoped_lock for the std::lock_guard; `const auto&` or no const on the structured
+# - the same bytes: std::lock_guard or std::scoped_lock for the std::unique_lock; `const auto&` or no const on the structured
 #   binding, or a local pair and .first; static_cast<void*> for the const void*; the literal "push" for __func__ in the hot
 #   call; `== false` for the ! in Registra; std::make_unique for the unique_ptr of a new. A const on nome or none on the
 #   shared_ptr changes one row, the symbol of the slow path, whose instances binaryen merges.

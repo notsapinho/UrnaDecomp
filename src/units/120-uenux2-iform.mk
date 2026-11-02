@@ -69,8 +69,9 @@
 # while our body differed (106 over 434 rows at -std=c++20; 16 matches out): it matches at the tree's -std=c++23, and
 # the scan without the line and without the match lines of 1872 and its six callers brings all seven back, every row as
 # it was, so the line went. CPolySingleton<IScreenMT>::instance (1714; 11041 out) and <IInputKbd> (455;
-# 11077 and 11075 out) differ too (393 over 992 and 1176 over 1459): each loads a record no other target function
-# loads, 1714's generated name is `call by:11041`, a vote of the one caller it would release, and 455 has none. The
+# 11077 and 11075 out) differed too when the lines were added (393 over 992 and 1176 over 1459; 1714 matches since the
+# executable TU's 455 differs from it, unit 100's fragment): each loads a record no other target function loads,
+# 1714's generated name was `call by:11041`, a vote of the one caller it would release, and 455 had none. The
 # guard byte and the std::once_flag of GetObservable's statics, which only their media's Notifica reads: IScreen's (1
 # out each, 2651, whose own vote is their generated name), IScreenMT's (8 each) and IPaper's (4 each). The functions of
 # the chain (Exibe, Empilha, Notifica, the proxies and the GetHandles thunks, 3941) have no line: the content pass finds

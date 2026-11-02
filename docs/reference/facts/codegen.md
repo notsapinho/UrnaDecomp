@@ -472,7 +472,7 @@ algorithm, a lambda or a helper), not a declaration order.
 
 What a TU emitted first decides an inlined template's stack slots too. `CPolySingleton<T>::set` (4879 for
 `api::ITimerScheduler`, 4890 for `api::ISystemDateTime`) inlines `std::format`, whose parts are `always_inline`, and
-differs from the target in frame offsets alone, while 10876, the same template over another class, matches. The source
+differed from the target in frame offsets alone at 4487d6b, while 10876, the same template over another class, matched. The source
 of `set` is not the cause. One line that makes the TU emit `instance()`'s format code first, above `GetInst`, gives
 every frame offset of the target's (at 4487d6b, a variant object in a copy of the link, [workflow.md](workflow.md)
 §W13):
@@ -489,8 +489,9 @@ every frame offset of the target's (at 4487d6b, a variant object in a copy of th
       score 64 over 895 rows (same 831, replaced 64 [64 operand-only], inserted 0, deleted 0)
 
 The 64 rows left are operands a full link re-points (the variant has no kinds table here); a private link with its own
-kinds re-points both 4879 and 4890 `IDENTICAL`. The line only steers the compiler, so it never lands: the two rows stay
-`differs` until a TU that emits a format body before them holds the instance. Which TU's copy the target keeps, its
+kinds re-points both 4879 and 4890 `IDENTICAL`. The line only steers the compiler, so it never lands: the two rows stayed
+`differs` until a TU that emits a format body before them held the instance: fn 8302's
+(`src/units/188-uenux2-simulador.mk`), from whose object both match now. Which TU's copy the target keeps, its
 records say: `awk -F'\t' '$2 ~ /cpolysingletonlist.h/ && $3==129 {print $1, $6}' ledger/source-locations.tsv` lists
 4879's record, 1531292, right after 8302's, 1531180, in another object's run. That clang declares a callee at its first
 mention, so that the inlined parts' allocas come in another order, is the reading; the scores are the measurement.

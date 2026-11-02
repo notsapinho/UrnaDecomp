@@ -21,7 +21,7 @@
 // place in the uses-2 band of ledger/ordinals.tsv, between 5566 (EnterLoopDoingNothing) and 5563 (InitApplication's
 // local facet's deleting destructor), puts it in capplication.cpp after EnterLoopDoingNothing. Widths and values are the
 // bytes'; every name, the types beyond their widths (a bool tested as 1, an int compared as a 32-bit word), that
-// GetDescricaoModo is a static member and the order of the definitions are chosen. Not written: the SRect
+// GetDescricaoModo is a static member and the order of the statics' definitions are chosen. Not written: the SRect
 // {0, 0, 639, 479} at .data 1577200, 12 bytes before s_codigoRetorno, the screen's area that fns 3678 and 653 read
 // (src/units/31-uenux2-cformbuilder.mk and 120-uenux2-iform.mk say why they are not written) and 12055 and 7787 too.
 

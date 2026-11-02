@@ -99,7 +99,7 @@ struct ueRespostaSavd {
 // EnviarAcaoHSM's is the one its log string gives ("IInterfaceSavd::EnviarAcaoHSM - Tentativa de envio..."), the
 // IInterfaceSavd:: qualifier included. The destructor is `= default` in the class, a choice among the inline forms: the
 // target's copy, 5503, is the executable TU's, compiled -Oz (docs/reference/facts/levels.md V1, the call of the
-// string's destructor), and nothing of ours emits it, so fn 5503 is not reconstructed.
+// string's destructor), and it matches from that TU's object (unit 170), whose CWasmSavd derives from this class.
 class IInterfaceSavd {
 public:
     virtual ~IInterfaceSavd() = default;

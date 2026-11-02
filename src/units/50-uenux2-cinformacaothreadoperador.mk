@@ -101,8 +101,8 @@
 #
 # Not matched: 5412 is `unresolved self-voted` (awk -F'\t' '$1==5412 {print $5, $6}' splat/scan.tsv): its six statics are
 # .bss objects only it reads, with no exit destructor (random_device's is empty and binaryen merges it away), so their
-# names have no voter but 5412 (docs/reference/splat.md section 3, "No circular evidence"), as fns 988, 989, 4710, 7779
-# and 11265 on this tree. Its body scores operand rows only against the target (`pnpm wasm score ... 5412 ...`: 31 over
+# names have no voter but 5412 (docs/reference/splat.md section 3, "No circular evidence"), as fns 988, 989, 4710 and
+# 7779 on this tree. Its body scores operand rows only against the target (`pnpm wasm score ... 5412 ...`: 31 over
 # 350, after this unit's step 6), and 599 and 10568 match over it.
 #
 # Forms the bytes decide, each other form measured object against object. Slot 8 is one conditional over two const
