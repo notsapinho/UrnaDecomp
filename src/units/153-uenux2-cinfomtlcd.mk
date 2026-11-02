@@ -37,20 +37,20 @@
 # (docs/reference/splat.md "No circular evidence"); 7787, which holds CreateInst inlined (record :33), reads both
 # addresses too. Chosen: GetInst's name and being a static member (a singleton's), the statics' names and their being
 # members, make_unique against reset(new), not compared.
-# The statics' place is not free: the band and the target's .bss give it. The target links their exit destructors, 11656
-# (s_inst's) then 11655 (s_mutex's), before the deleting destructor and Update (11654, 11653; uses 1), and a static's
-# exit destructor is emitted at its definition: so both are defined above the destructor, s_inst first. Its .bss holds
-# s_mutex (0x1c0dd4) below s_inst (0x1c0dec), and an object's .bss takes a static where it is first named, which a
-# function above the definitions can do: GetInst names s_mutex first. Measured, each a compile of the file at the tree's
-# flags, read for the functions' order, which static each thunk destroys and the .bss order: the definitions after
-# GetInst below Update give the .bss order, with the thunks after Update; above the constructor or above the destructor
-# with nothing naming them before, s_inst first gives the thunks' order and s_inst first in .bss, and s_mutex first
-# gives the .bss order with s_mutex's thunk first; GetInst and then the definitions, above the constructor or between
-# MostraIconeBateria and the destructor, give both orders. The layout kept is the constructor, GetInst, the statics,
-# MostraIconeBateria and the destructor, the banner folded by three lines to fit them above the records; the object's
-# order is the constructor, MostraIconeBateria (a function takes its place at its first mention, how-to step 3, and the
-# constructor names it), GetInst, the two thunks, the destructors and Update, and every body is the one before but for
-# two record offsets in Update.
+# The statics' place is bounded, not free: the band and the target's .bss bound it. The target links their exit
+# destructors, 11656 (s_inst's) then 11655 (s_mutex's), before the deleting destructor and Update (11654, 11653; uses
+# 1), and a static's exit destructor is emitted at its definition: so both are defined above the destructor, s_inst
+# first. Its .bss holds s_mutex (0x1c0dd4) below s_inst (0x1c0dec), and an object's .bss takes a static where it is
+# first named, which a function above the definitions can do: GetInst names s_mutex first. Measured, each a compile of
+# the file at the tree's flags, read for the functions' order, which static each thunk destroys and the .bss order: the
+# definitions after GetInst below Update give the .bss order, with the thunks after Update; above the constructor or
+# above the destructor with nothing naming them before, s_inst first gives the thunks' order and s_inst first in .bss,
+# and s_mutex first gives the .bss order with s_mutex's thunk first; GetInst and then the definitions, above the
+# constructor or between MostraIconeBateria and the destructor, give both orders. The layout kept, one of these and
+# chosen, is the constructor, GetInst, the statics, MostraIconeBateria and the destructor, the banner folded by three
+# lines to fit them above the records; the object's order is the constructor, MostraIconeBateria (a function takes its
+# place at its first mention, how-to step 3, and the constructor names it), GetInst, the two thunks, the destructors and
+# Update, and every body is the one before but for two record offsets in Update.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CINFOMTLCD_SRCS := src/app/comum/cinfomtlcd.cpp
 UENUX2_SRCS += $(CINFOMTLCD_SRCS)

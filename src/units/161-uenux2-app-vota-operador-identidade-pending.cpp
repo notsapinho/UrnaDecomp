@@ -11,7 +11,7 @@
 //   unit 50), after a call of fn 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174), to fn 1150's.
 // - vota::CIdentidadeInvalida::ProcessInput (target fn 10667, slot 7): a thunk that passes INPUT_CORRIGE (5) and its
 //   record (cinteractiveform.h:57 @1588432) to binaryen's fn 2295, whose next state is fn 652's.
-// - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 395, 652, 5396 and 5665.
+// - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 652, 5396 and 5665.
 // - vota::CDadoEleitorNaoConfere::ProcessInput (target fn 10447, slot 7): on CONFIRMA it goes to fn 652's state or,
 //   with CControlaReconhecimento::AvancaVerificacao inlined (record ccontrolareconhecimento.cpp:176), to fn 2735's.
 // - vota::CPedeIdentidade::ProcessInput (target fn 10677, slot 7): it calls fns 2749, 2753, 5401 and 5430, and 2226,
@@ -19,8 +19,8 @@
 // - vota::CPedeIdentidade::ProcessTick (target fn 10676, slot 8): every direct callee has a name, but it waits for two
 //   things this tree lacks. On the tick at +12 it holds vota::CAguardaInspecao's GetInst and constructor inlined (the
 //   one store of that class's vptr, 1590732; its statics at 1908552 and 1908528), a class with no header here, whose
-//   slot 6 (fn 10530) calls fn 395, which no form has matched. On the tick at +13 it reads the text of the input field
-//   that has the form's focus, std::vector::at with CInteractiveForm's index at +84, a member that
+//   slot 6 (fn 10530) calls fn 395, matched since unit 31. On the tick at +13 it reads the text of the input field that
+//   has the form's focus, std::vector::at with CInteractiveForm's index at +84, a member that
 //   api/gui/cinteractiveform.h does not have.
 // - vota::IEleitorImpedidoVotar::StartState (target fn 10625, slot 2 of the base and of its six derived classes): it
 //   calls fn 3616.

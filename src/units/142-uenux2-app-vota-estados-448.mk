@@ -143,9 +143,10 @@
 #   our body lost its i32 result, 4 over 98 rows (one deleted), against 2 over 98, all operand-only, with the results
 #   read (pnpm wasm score, before steps 7 to 9, the constructor then in a file of its own).
 # Chosen too: the parameters' names; the photo taken by reference (the caller passes the address of a temporary, which a
-# by-value photo takes too); the member-initializer list; the header's path, unit 130's (rule 1: such a path names
-# nothing; it stays). This file builds with strict aliasing (UENUX2_TBAA_DIRS), comum/dados/ without: compiled with
-# -fno-strict-aliasing too, the file gives the constructor the same code.
+# by-value photo takes too); the member-initializer list; the header's path, unit 130's (a choice against rule 1, which
+# would move it beside this file: celeitores.cpp and celeitordetalhe.cpp include it there). This file builds with strict
+# aliasing (UENUX2_TBAA_DIRS), comum/dados/ without: compiled with -fno-strict-aliasing too, the file gives the
+# constructor the same code.
 #
 # A written body that does not match: CPedeAnoNascimentoSemBiometria::StartState (fn 10490) is `differs`. The target
 # stores +4 (the next state) first, then +32 and +28. Each of the six orders of the three statements compiles at the

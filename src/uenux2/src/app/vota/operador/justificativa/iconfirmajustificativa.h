@@ -20,7 +20,7 @@ namespace vota {
 // StartState (slot 2, fn 10589) and ProcessInput (slot 7, fn 10588), both pending (unit 174's -pending.cpp says what
 // they wait for). The constructor (fn 3625, record iconfirmajustificativa.cpp:34, which spells its parameter) passes 2 to
 // the base's and builds, with api::CMTFormBuilder::GetInteractiveForm (fn 301), the std::shared_ptr it moves into +12;
-// it is not written (it calls fn 395, which has no name). The destructor is out of line: fn 1688 is a thunk into
+// it is not written (every callee has a name now). The destructor is out of line: fn 1688 is a thunk into
 // binaryen's fn 2902 with this class's vptr, a body the target forms from four such thunks (vota::IEleitorImpedidoVotar's
 // 1257 among them), and the deleting destructor (fn 2748) calls it and frees `this` after a drop. The member's name, and
 // its pointee's type (vota::IEleitorImpedidoVotar's form, what GetInteractiveForm returns), are chosen.

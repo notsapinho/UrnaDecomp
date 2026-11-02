@@ -21,13 +21,15 @@
 // leaves it out of line in the object. The names, the overloads and their parameters are chosen.
 //
 // AddField (fn 3674) moves a field into the vector at this + 0: its body is vector::emplace_back with the slow path, and
-// its target callers are AddInputControl (fn 395), fn 1151, whose control block's vtable (@1588176) lies in
-// app/vota/operador/outrasopcoes/cescolheopcao.cpp's data and so is another object's code, and fn 5410. AddField takes
-// the field by rvalue reference: 395 and 1151 release the temporary SharedField after the call, which a by-value
-// shared_ptr, trivial-ABI here, would leave to the callee. AddInputControl builds an api::CInputFieldControl<IScreenMT>
-// with `new` (its block is a __shared_ptr_pointer, @1580708) and returns nothing: 395's wasm type has no result
-// pointer. Their names, the SharedInput alias, emplace_back rather than push_back, and AddInputControl's being a member
-// (it reaches the vector only through AddField) are chosen; src/units/31-uenux2-cformbuilder.mk has what was measured.
+// its target callers are AddInputControl (fn 395), fn 1151 and fn 5410. 1151 is read as another object's code: its
+// control block's vtable (@1588176) lies in app/vota/operador/outrasopcoes/cescolheopcao.cpp's data (a reading of the
+// data's order). AddField takes the field by rvalue reference: 395 and 1151 release the temporary SharedField after
+// the call, which a by-value shared_ptr, trivial-ABI here, would leave to the callee. AddInputControl builds an
+// api::CInputFieldControl<IScreenMT> with `new` (its block is a __shared_ptr_pointer, @1580708) and returns nothing:
+// 395's wasm type has no result pointer. Their names, the SharedInput alias, emplace_back rather than push_back, and
+// AddInputControl's being a member are chosen. For the membership: api::CInteractiveFormBuilder::AddLabeledInputControl
+// (fn 653), a member by its record (1579136), reaches its fields only through CFormBuilder::AddField (fn 426), as
+// AddInputControl reaches the vector only through AddField. src/units/31-uenux2-cformbuilder.mk has what was measured.
 
 #include <functional>
 #include <memory>

@@ -2,8 +2,8 @@
 // vtable. The classes' vtables are emitted in their own .cpp and need every slot defined; these bodies are NOT the
 // target's, they trap. Move each into its class's .cpp when it is reconstructed, and delete this file with the last.
 //
-// - vota::CPedeAnoNascimentoSemBiometria::ProcessInput (target fn 10489, slot 7, 2040 B): it calls fns 395, 5399 and
-//   5665, which have no name (ledger/callgraph.tsv against splat/symbol_addrs.txt), and 2097 and 4661 (unit 161's).
+// - vota::CPedeAnoNascimentoSemBiometria::ProcessInput (target fn 10489, slot 7, 2040 B): it calls fns 5399 and 5665,
+//   which have no name (ledger/callgraph.tsv against splat/symbol_addrs.txt), 395 (unit 31's), 2097 and 4661 (161's).
 // - vota::CMostraEleitorVotando::ProcessKey (target fn 10425, slot 6, 4809 B, records cmostraeleitorvotando.cpp:127 and
 //   159, SalvaHabilitacaoEleitor's): of its 46 distinct callees (ledger/callgraph.tsv), 14 have no name in
 //   splat/symbol_addrs.txt or splat/matched.txt, among them fn 1901. It calls comum::CEleitorDadosHabilitacao's

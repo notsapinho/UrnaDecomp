@@ -22,7 +22,7 @@ namespace vota {
 // says what each waits for). A singleton: fn 2740 creates the 84-byte object on first use and keeps it in a static
 // std::unique_ptr (@1909064); the constructor, inlined there, passes comum::CAppState::EVENTO_ENTRADA |
 // comum::CAppState::EVENTO_TICK (6) to the base's and stores what the layout below holds. Not recovered: the
-// constructor, GetInst (fn 2740, which calls fns 395, 1151 and others that have no name) and the members the records
+// constructor, GetInst (fn 2740, whose direct callees all have names now) and the members the records
 // name at lines 234, 262 and 279 (ObtemEstadoPosReconhecimentoBiometrico, VerificaDigital, VerificaDigitalTreinamento).
 //
 // The destructor is out of line: the deleting one (fn 10469) calls it, drops its result and frees `this`

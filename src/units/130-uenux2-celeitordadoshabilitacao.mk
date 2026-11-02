@@ -19,8 +19,8 @@
 # CEleitorDadosHabilitacaoBiometrica's constructor (fn 3718, no record) stores its four arguments and leaves the
 # optional empty (its null byte at +12 and flag at +28 cleared): the target stores them in the reverse of the members'
 # order, which a member-initializer list in declaration order gives (docs/reference/facts/codegen.md C1); it matches
-# byte for byte (`pnpm wasm score`: 0 over 20 rows). Its one target caller, vota::CMostraEleitorVotando::
-# SalvaHabilitacaoEleitor (fn 10425), calls it three times and is not written:
+# byte for byte (`pnpm wasm score`: 0 over 20 rows). Its one target caller, vota::CMostraEleitorVotando::ProcessKey (fn
+# 10425, slot 6, which holds SalvaHabilitacaoEleitor inlined: its records), calls it three times and is not written:
 # 130-uenux2-celeitordadoshabilitacao-roots.cpp stands for it. Chosen: its parameters' names and its being defined in
 # the .cpp, above GetTituloMesario (no record gives its line).
 #

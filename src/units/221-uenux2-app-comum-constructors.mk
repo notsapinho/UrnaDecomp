@@ -12,13 +12,13 @@
 #   optional's null byte and flag: std::optional<int>'s two constructors. The parameters' order is each wasm
 #   signature's.
 # - Out of line, and 2738 in another TU than 2730 and 2731. The target keeps their calls: 2730 and 2731 from 10401 and
-#   10402 (unit 91's DAO), 2738 from 2730, 2731, 3614 and 10313. Defined in its class, each is inlined where the target
-#   calls it: compiled alone at the tree's flags, the DAO's TU against a header that defines all three in their classes
-#   calls none of them, and ccomparecimentomesario.cpp against one that defines only the key's constructor there calls
-#   __init_copy_ctor_external twice where the target's 2730 and 2731 call 2738. Out of line, a call of the complete
-#   constructor (C1) stays a call even in the constructor's own TU at -fPIC (docs/reference/facts/codegen.md C6; a
-#   caller compiled in one TU with the key's constructor keeps its call), but 2730 and 2731 call the base's constructor
-#   (C2, no alias), which clang inlines in their TU: so 2738's TU is another.
+#   10402 (unit 91's DAO), and 10337 (not written), 2738 from 2730, 2731, 3614 and 10313. Defined in its class, each is
+#   inlined where the target calls it: compiled alone at the tree's flags, the DAO's TU against a header that defines
+#   all three in their classes calls none of them, and ccomparecimentomesario.cpp against one that defines only the
+#   key's constructor there calls __init_copy_ctor_external twice where the target's 2730 and 2731 call 2738. Out of
+#   line, a call of the complete constructor (C1) stays a call even in the constructor's own TU at -fPIC
+#   (docs/reference/facts/codegen.md C6; a caller compiled in one TU with the key's constructor keeps its call), but
+#   2730 and 2731 call the base's constructor (C2, no alias), which clang inlines in their TU: so 2738's TU is another.
 # - The calls name them: splat/symbol_addrs.txt gives 2730 and 2731 `pair-fingerprint` and 2738 `pair-addr` evidence.
 #   Before steps 7 to 9, pnpm wasm score gave 2738 1 over 35 rows (then in a file of its own) and 2730 and 2731 0
 #   over 30, all operand-only.
@@ -42,9 +42,9 @@
 #   csuspensaoautomaticaeleitor.cpp). In the data CSuspensaoAutomaticaEleitor's vtable (@1593264) and record are
 #   followed by comum::dao::CComparecimentoMesarioDAO's vtable (@1593352) and dao/ccomparecimentomesariodao.cpp's record
 #   (@1593396), the object of their callers 10401 and 10402: the data support that file. md/, the directory of the
-#   class's header and of the comum side the band reaches next (2729's), is kept instead, a choice
-#   (docs/reference/facts/placing.md P5), and the file is named after the class (rule 4). 2731 is defined first, as it
-#   links first (docs/how-to-decompile.md step 3, "The order of two members").
+#   class's header, in the comparecimentomesario/ tree whose estados/cpedetitulomesario.cpp (2729's) the band reaches
+#   next, is kept instead, a choice (docs/reference/facts/placing.md P5), and the file is named after the class (rule
+#   4). 2731 is defined first, as it links first (docs/how-to-decompile.md step 3, "The order of two members").
 # Chosen too: the header's path, unit 91's (rule 1: such a path names nothing; 2730, 2731 and the DAO include it, and it
 # stays); the parameters' names; the date taken by reference (the callers pass an address, which a by-value class
 # parameter gets too); the member-initializer lists. cregistradigitaloperador.cpp builds with strict aliasing

@@ -16,7 +16,8 @@ namespace comum {
 // (fn 10425, slot 6, which holds SalvaHabilitacaoEleitor inlined: its records), passes the identity, the kind (0, 1 or
 // 2), the audio word, the biometric part and the photo, in the order of the members it stores; it is out of line in its
 // caller's file, app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp
-// (src/units/142-uenux2-app-vota-estados-448.mk says why). The parameters' names, and the reference for the photo (the
+// (src/units/142-uenux2-app-vota-estados-448.mk says why: the directory is the band's and the data's, the file among
+// its neighbours is chosen). The parameters' names, and the reference for the photo (the
 // caller passes the address of a temporary, which a by-value photo takes too), are chosen.
 class CEleitorDadosHabilitacao {
 public:

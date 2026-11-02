@@ -23,7 +23,7 @@ namespace vota {
 // constructor, inlined there, passes
 // comum::CAppState::EVENTO_ENTRADA (2) to the base's and stores what the layout below holds. The destructor is out of
 // line: the deleting one (fn 765) calls it and frees `this`, and it stores no vptr, as a final class's; 19 states share
-// the two bodies, fns 448 and 765. Not recovered: the constructor and GetInst (fn 2747 calls fn 395, which has no name).
+// the two bodies, fns 448 and 765. Not recovered: the constructor and GetInst (fn 2747, every callee named now).
 //
 // The layout: +12 a std::shared_ptr<std::string>, which fn 2747 builds with std::make_shared (control block vptr 1588328,
 // __shared_ptr_emplace<std::string>) from "justificou/ja justificou" and hands to the form's builder, and which
