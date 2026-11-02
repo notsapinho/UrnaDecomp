@@ -60,6 +60,15 @@ function load() {
   return cache;
 }
 
+/** The maps with __cxa_new_handler voted by target 137 (operator new) alone, as the symbol file read it before another
+ *  of its readers matched (2549 adds its vote): the self-vote cases set that premise rather than read the line. */
+function newHandlerVotedBy137Alone(maps: SymbolMaps): SymbolMaps {
+  const { symbols } = maps.target;
+  const dataEvidence = new Map(symbols.dataEvidence);
+  dataEvidence.set('__cxa_new_handler', { evidence: 'vote:1', voters: [137] });
+  return { ...maps, target: { ...maps.target, symbols: { ...symbols, dataEvidence } } };
+}
+
 function candidate(symbol: string) {
   const ours = load().maps.ours.fnByKey.get(symbol);
   expect(ours).toBeDefined();
@@ -110,14 +119,14 @@ describe('selfVoted', { timeout: 180_000 }, () => {
 
   it.skipIf(!real)('refuses a match whose address name comes only from its own vote and says nothing else', () => {
     // operator new's __cxa_new_handler is .bss: zeros on both sides, voted by target 137 alone
-    const { maps } = load();
+    const maps = newHandlerVotedBy137Alone(load().maps);
     const chosen = chosenOf('_Znwm', 137);
     const refused = selfVoted(maps, new Map([[137, { chosen }]]));
     expect(refused.get(137)).toMatchObject({ symbol: '__cxa_new_handler', bytes: 'unknown' });
   });
 
   it.skipIf(!real)('keeps it when another match re-points through the same name', () => {
-    const { maps } = load();
+    const maps = newHandlerVotedBy137Alone(load().maps);
     const chosen = chosenOf('_Znwm', 137);
     const other = { chosen: [{ reading: 'address symbol __cxa_new_handler', preferred: true, at: 0, oursAt: 0 }] };
     expect(
@@ -637,7 +646,7 @@ describe('buildSplat', { timeout: 180_000 }, () => {
   });
 
   it.skipIf(!real)('refuses a match whose only evidence for an address is its own vote, naming the operand', () => {
-    const { maps } = load();
+    const maps = newHandlerVotedBy137Alone(load().maps);
     const { matches } = parseMatchList('162 sqlite3ErrorMsg\n137 _Znwm\n');
     expect(() => buildSplat(maps, PIECES, matches, TARGET_SHA)).toThrow(
       /line 2: function 137 .*matched to _Znwm .*UNCONFIRMED: self-voted \+0x1c i32\.const 1936860: __cxa_new_handler = 0x1d8ddc \(evidence:vote:1 by:137\)/,

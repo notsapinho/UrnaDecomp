@@ -20,6 +20,9 @@
 // - comum::asn::CalculaHashSha512 (fn 3602): fn 10273, CConversorEntidadeBU's slot 2, three times.
 // - comum::GetPathWsqNaoRegistrado (fn 3793): fns 5374 and 10451; 5374 (unit 214) is written, the stand-in is for
 //   10451. It builds the path in place, so no destructor of std::filesystem::path is emitted here.
+// - the other WSQ directories of pathwsq.cpp (fns 5819, 5818, 3795, 5817, 5816 and 3794): fns 5821 and 10425 call
+//   each, and 5382 calls 3795 and 3794; 5821 (CGravadorWSQ::CompactaWsq) is written, and one stand-in for 10425 and
+//   5382 builds the six in place, so binaryen keeps each out of line as the target does.
 // - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
 //   it: the constructor that stores it (inlined into fn 12098) is not written, so its address goes into a sink.
 // IGravador and CGravadorRCSecao are abstract, so IGravador's constructor (declared with the object's int result) and
@@ -35,6 +38,7 @@
 #include "app/comum/gravadores/cgravadorutil.h"
 #include "app/comum/gravadores/cgravadorwsq.h"
 #include "app/comum/gravadores/md/cversoesarquivos.h"
+#include "app/comum/gravadores/pathwsq.h"
 
 extern "C" int w122_igravador(void* objeto, unsigned int municipio, unsigned int zona, unsigned int local,
     unsigned int secao, int fase, int extensao, int arquivoSavd)
@@ -52,9 +56,10 @@ __attribute__((noinline)) int w122_wsq(const api::CDateTime& dataHora, comum::TM
     comum::TLocalID local, comum::TSecaoID secao, char fase, bool externa)
 {
     comum::CGravadorWSQ* bio = new comum::CGravadorWSQ(dataHora, municipio, zona, local, secao, fase,
-        comum::EXTENSAO_WSQBIO_JEZ, static_cast<comum::ESavdArquivoUE>(48), 0, externa);
+        comum::EXTENSAO_WSQBIO_JEZ, static_cast<comum::ESavdArquivoUE>(48), comum::TIPO_BIOMETRIA_HABILITADO, externa);
     comum::CGravadorWSQ* man = new comum::CGravadorWSQ(dataHora, municipio, zona, local, secao, fase,
-        comum::EXTENSAO_WSQMAN_JEZ, static_cast<comum::ESavdArquivoUE>(49), 1, !externa);
+        comum::EXTENSAO_WSQMAN_JEZ, static_cast<comum::ESavdArquivoUE>(49), comum::TIPO_BIOMETRIA_NAO_HABILITADO,
+        !externa);
     return (bio == man) ? 3 : 5;
 }
 
@@ -107,6 +112,20 @@ __attribute__((noinline)) int w122_naoregistrado(void* destino)
     return 19;
 }
 
+// stands for fns 10425 and 5382 (5821 is written)
+__attribute__((noinline)) int w122_wsqdiretorios(void* destinos)
+{
+    std::filesystem::path* caminhos = static_cast<std::filesystem::path*>(destinos);
+    ::new (&caminhos[0]) std::filesystem::path(comum::GetPathWsqHabilitado());
+    ::new (&caminhos[1]) std::filesystem::path(comum::GetPathWsqNaoHabilitado());
+    ::new (&caminhos[2]) std::filesystem::path(comum::GetPathWsqOperador());
+    ::new (&caminhos[3]) std::filesystem::path(comum::GetPathWsqHabilitadoExterno());
+    ::new (&caminhos[4]) std::filesystem::path(comum::GetPathWsqNaoHabilitadoExterno());
+    ::new (&caminhos[5]) std::filesystem::path(comum::GetPathWsqOperadorExterno());
+    return 29;
+}
+
+int (*volatile w122_sink_wsqdiretorios)(void*);
 int (*volatile w122_sink_naoregistrado)(void*);
 int (*volatile w122_sink_hash)(const std::string&, const std::string&);
 int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum::TZonaID, comum::TLocalID, comum::TSecaoID,
@@ -127,6 +146,7 @@ struct SW122Roots {
         w122_sink_identidade = w122_identidade;
         w122_sink_vt_rcsecao = w122_vt_rcsecao;
         w122_sink_naoregistrado = w122_naoregistrado;
+        w122_sink_wsqdiretorios = w122_wsqdiretorios;
         w122_sink_hash = w122_hash;
     }
 } w122_roots;

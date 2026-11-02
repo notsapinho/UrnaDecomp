@@ -40,3 +40,14 @@ int urna_roots_coderenv(int a)
     [[clang::noinline]] n = urna_recomenda(a, a + 12);
     return n + reinterpret_cast<int>(&urna_codifica);
 }
+
+// std::vector<std::string>'s range construction from std::string* (target fn 5585): __vallocate and __construct_at_end
+// out of line (fns 11180 and 11177, table slots 232 and 233) and a landing pad, the -Oz -fexceptions shape this file's
+// rule gives. Its one target user is ecourna's CLzmaCompress::DoAdd (fn 9586), through table slot 6051. Without this copy
+// the link's is an ecourna object's (app_dados_asn_datahoraasn.cpp.o), whose body differs from the vector<path> one of
+// ICompressor::Add (fn 9531, icompressor.cpp.o's) in one table slot alone, and binaryen merges the two, so 9531 has no
+// body of its own (src/units/122-uenux2-app-comum-gravadores.mk). That the copy is the executable TU's is a reading.
+// 5585 itself stays unresolved: its callees 11180 and 11177 have no name.
+#include <string>
+
+template void std::vector<std::string>::__init_with_size<std::string*, std::string*>(std::string*, std::string*, std::size_t);

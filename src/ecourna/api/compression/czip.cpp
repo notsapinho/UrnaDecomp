@@ -32,7 +32,13 @@ std::string CZip::ConvertToErrorMessage(int erro)
     return "Erro desconhecido.";
 }
 
-// (original lines 35-132: content not recovered)
+CZip::CZip(const std::filesystem::path& arquivo, ENivelCompressao nivel)
+    : m_arquivo(arquivo.string()), m_zip(nullptr), m_nivel(nivel), m_modo(EModoAbertura::CRIAR)
+{
+    CreateZipFile();
+}
+
+// (original lines 41-132: content not recovered)
 #line 133
 void CZip::Close()
 {
@@ -156,8 +162,3 @@ void CZip::AtualizaProgresso(ueqword atual, ueqword total, const std::string& ar
 }
 
 } // namespace ecourna::api::compression
-
-// <stubs>
-// f5193 · 238 B · unmatched · placement: link order · name unknown
-// ? f5193(i32, i32, i32) { ... }
-// </stubs>

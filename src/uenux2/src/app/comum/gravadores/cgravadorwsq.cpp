@@ -1,22 +1,29 @@
-// comum::CGravadorWSQ (/home/rubio/tse/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp): the constructor, target fn
-// 3796, with ValidaTipoBiometria inlined by clang (one stack frame, set up before IGravador's constructor is called).
-// ValidaTipoBiometria's throw is a record of the target (line 73, column 15); the constructor has none, so its line is
-// a choice, above the member it calls. The slots and fn 5821 (records at lines 175 and 192) are not written.
-// GetPathWsqNaoRegistrado (fn 3793) has no record: its line is a choice, after the constructor as its band has it.
+// comum::CGravadorWSQ (/home/rubio/tse/uenux2/src/app/comum/gravadores/cgravadorwsq.cpp). Records of the target fix
+// three throws: ValidaTipoBiometria's (line 73, column 15), inlined by clang into the constructor (fn 3796), and those
+// of GetCaminhoCorretoInternal (175:19) and GetCaminhoCorretoExternal (192:19), which binaryen inlines into CompactaWsq
+// (fn 5821), each with its own stack frame. Column 19 puts each throw 12 spaces in; case labels indented under the
+// switch are the form chosen for that. No other function of this file has a record: the constructor's line is a choice
+// above the member it calls, and Slot2, Slot6 and Slot3 (fns 11579, 11578, 11577) and CompactaWsq follow it in the order
+// the use bands give (11579, 11578 and 11577 run that way in band 1), at lines chosen. The WSQ directories the two
+// GetCaminhoCorreto members list are pathwsq.cpp's (src/units/122-uenux2-app-comum-gravadores.mk says why).
 
 #include "app/comum/gravadores/cgravadorwsq.h"
 
-#include "app/comum/appinfo/cappinfo.h"
+#include <format>
+
+#include "api/util/csystem.h"
 #include "app/comum/cpath.h"
 #include "app/comum/gravadores/cgravadorutil.h"
 #include "app/comum/gravadores/euecomumgravadoreserror.h"
+#include "app/comum/gravadores/pathwsq.h"
+#include "ecourna/api/compression/czip.hpp"
 
 namespace comum {
 
-// (original lines 16-55: content not recovered)
+// (original lines 23-55: content not recovered)
 #line 56
 CGravadorWSQ::CGravadorWSQ(const api::CDateTime& dataHora, TMunicipioID municipio, TZonaID zona, TLocalID local,
-    TSecaoID secao, char fase, EExtensaoArquivoResultado extensao, ESavdArquivoUE arquivoSavd, unsigned int tipoBiometria,
+    TSecaoID secao, char fase, EExtensaoArquivoResultado extensao, ESavdArquivoUE arquivoSavd, ETipoBiometria tipoBiometria,
     bool gravaMidiaExterna)
     : IGravador(municipio, zona, local, secao, fase, extensao, arquivoSavd), m_dataHora(dataHora),
       m_faseUrna(CGravadorUtil::ConverteFase(fase)), m_arquivoChave("wsq.pk1"), m_tipoBiometria(tipoBiometria),
@@ -34,15 +41,80 @@ void CGravadorWSQ::ValidaTipoBiometria() const
     }
 }
 
-std::filesystem::path GetPathWsqNaoRegistrado()
+void CGravadorWSQ::Slot2()
 {
-    const CAppInfo& appInfo = CAppInfo::GetInst();
-    return CPath::GetPathWsq(FLASH_INTERNA, appInfo.GetGeral().GetDadoCarga().GetTurno()) / "nao-registrado/";
+    const std::filesystem::path destino = CPath::GetPathResult(FLASH_INTERNA) / m_nomeArquivo;
+    CompactaWsq(false, destino);
+}
+
+void CGravadorWSQ::Slot6()
+{
+    if (m_gravaMidiaExterna) {
+        const std::filesystem::path destino = CPath::GetPathResult(FLASH_EXTERNA) / m_nomeArquivo;
+        CompactaWsq(true, destino);
+    }
+}
+
+void CGravadorWSQ::Slot3()
+{
+    if (m_gravaMidiaExterna) {
+        const std::filesystem::path destino = CPath::GetPathResult(FLASH_EXTERNA) / m_nomeArquivo;
+        CompactaWsq(false, destino);
+    }
+}
+
+void CGravadorWSQ::CompactaWsq(bool midiaExterna, const std::string& arquivo) const
+{
+    const std::vector<std::string> caminhos = midiaExterna ? GetCaminhoCorretoExternal() : GetCaminhoCorretoInternal();
+    bool vazio = true;
+    for (const std::string& caminho : caminhos) {
+        if (!api::CSystem::ExistDir(caminho)) {
+            api::CreateDir(caminho);
+        }
+        vazio = vazio && api::CSystem::IsEmptyDir(caminho);
+    }
+    if (vazio) {
+        ecourna::api::compression::CZip zip(arquivo, ecourna::api::compression::ENivelCompressao::PADRAO);
+        zip.Close();
+    } else {
+        ecourna::api::compression::CZip zip(arquivo, ecourna::api::compression::ENivelCompressao::NENHUM);
+        for (const std::string& caminho : caminhos) {
+            zip.Add(caminho + "*.wsq");
+        }
+        zip.Close();
+    }
+}
+
+// (original lines 121-164: content not recovered)
+#line 165
+std::vector<std::string> CGravadorWSQ::GetCaminhoCorretoInternal() const
+{
+    switch (m_tipoBiometria) {
+        case TIPO_BIOMETRIA_HABILITADO:
+            return {GetPathWsqHabilitado().string()};
+        case TIPO_BIOMETRIA_NAO_HABILITADO:
+            return {GetPathWsqNaoHabilitado().string()};
+        case TIPO_BIOMETRIA_OPERADOR:
+            return {GetPathWsqOperador().string()};
+        default:
+            throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8652, std::format("Tipo de biometria inválido: {}", m_tipoBiometria));
+    }
+}
+
+// (original lines 179-181: content not recovered)
+#line 182
+std::vector<std::string> CGravadorWSQ::GetCaminhoCorretoExternal() const
+{
+    switch (m_tipoBiometria) {
+        case TIPO_BIOMETRIA_HABILITADO:
+            return {GetPathWsqHabilitadoExterno().string()};
+        case TIPO_BIOMETRIA_NAO_HABILITADO:
+            return {GetPathWsqNaoHabilitadoExterno().string()};
+        case TIPO_BIOMETRIA_OPERADOR:
+            return {GetPathWsqOperadorExterno().string()};
+        default:
+            throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8653, std::format("Tipo de biometria inválido: {}", m_tipoBiometria));
+    }
 }
 
 } // namespace comum
-
-// <stubs>
-// f5821 · 8686 B · unmatched · name unknown
-// void f5821(i32, i32, i32) { ... }
-// </stubs>

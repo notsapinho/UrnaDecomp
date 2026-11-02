@@ -2,10 +2,37 @@
 # CZip::Close (2691) matches with zlib's deflate chain, which zlib's object order below gives: Close calls minizip's
 # zipCloseFileInZipRaw64 (3379), which calls deflate (4826), which calls crc32_z (893), deflate_stored (4825) and
 # fill_window (2581).
-# CreateZipFile (9543, with ConvertToOpen and minizip's zipOpen64 inlined) is written and has no target name: against ours
-# it is 380 rows over 2051, 343 of the 344 replaced operand-only, 15 inserted and 21 deleted, the same with the order
-# below as before it. The target pushes `this` for its store of m_zip ahead of c_str() and the inlined code, ours after
-# the inlined code, and the inlined minizip code has an `if ... br` where ours has a `br_if`.
+# CZip's constructor (5193) is defined in czip.cpp, after ConvertToErrorMessage, a line chosen: the target calls it from
+# comum::CGravadorWSQ::CompactaWsq (5821, unit 122) twice, and defined in czip.hpp clang inlined it there (both links
+# measured before step 8). Its band, 5194 (clzmacompress.cpp's), 5193, 5192 (icompressor.cpp's), puts it in czip.cpp.o.
+# It stores CZip's vptr after ICompressor's constructor (5192), copies the path's string to +16, stores 0, the level
+# and 0 at +36, +32 and +28 and invokes CreateZipFile through table slot 6119; every row is operand-only and it
+# matches, under a vptr+shape hand line of splat/symbol_addrs.txt (its depth-0 shape is the only one on both sides,
+# and its one caller is named by hand, so nothing votes for it).
+# CreateZipFile (9543, with ConvertToOpen and minizip's zipOpen64 inlined) matches since the constructor that invokes it
+# is in this object; before, its only reference was the roots' address and it was 380 rows over 2051 against the
+# target (343 of the 344 replaced operand-only, 15 inserted and 21 deleted: `this` pushed for the store of m_zip
+# ahead of c_str() in the target, after the inlined code in ours, and an `if ... br` where ours had a `br_if`). What
+# in the object took that difference away was not compared.
+# ICompressor's constructor (5192) is written and differs, 90 over 155 rows: ours inlines boost's shared_count release
+# (the cleanup of the signal member's shared_ptr) where the target calls fn 2203, which has the target callers 5192,
+# 9521, 9536 and 9558 and no out-of-line copy in our link; not explained. A rtti-vptr hand line names it (the only
+# target function that holds ICompressor's vtable address point), which 5193's call needs.
+# ICompressor::Add(const std::filesystem::path&) and globToFileList (record icompressor.cpp:61) are in the link inside
+# 5821, where binaryen inlines Add; with them come libc++'s std::regex members this object instantiates (9534, the
+# constructor from a std::string, and 3526, 5187, 9518), vector<path>'s __init_with_size and slow push_back (9531,
+# 9516), and libc++.a's directory_iterator.o and operations.o rows the iterators reach (unit 122's fragment lists the
+# matches). The globToFileList the target inlines into 5821 differs from icompressor.cpp's (unit 122's fragment says
+# where). In the whole link src/app/roots_regex.cpp, ahead of this object at the same flags, gives the std::regex
+# members over std::string first (5187 matches from it).
+# 9534 (the regex constructor from a std::string) is not matched: its call through table slot 6153 reaches 9518
+# (__parse over __wrap_iter<const char*>), which has no name, and 3526, 5189, 2688 and 2689 below it have none either.
+# 9518 had one by `vptr-anchor` only while the link's const char* parser had another shape than the target's 2062:
+# both target parsers hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and since
+# src/app/roots_cbasetype.cpp gives the const char* copy that matches 2062, each forms a same-shape pair with ours
+# (depth-0 shapes from pnpm wasm fingerprint --depth 0: 2062 and ours ba0f426a…, 9518 and ours 90bccd20…), so the
+# vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`) and only 9534's own reference would name 9518. 9534
+# waits for another name of 9518.
 # DoAdd (9538) is written and unresolved on std::system_category: 752 rows over 2794, 557 of the 561 replaced
 # operand-only, 158 inserted and 33 deleted. Its callees in the target 891 and 1053 pair with libc++'s system_category
 # and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3334,

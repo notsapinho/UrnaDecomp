@@ -1,20 +1,21 @@
 // api::CSystem (/home/rubio/tse/uenux2/src/api/util/csystem.cpp). Records fix the lines of GetFileSize (2759, 334:15),
-// api::ExistResource (1690, 64:15; file-static: its record follows the external functions'), CopyFile (378, 390:15 to
-// 476:19), Rename (692:15; binaryen inlines it into fn 11584), api::truncate (5457, 1024:15) and ZeroFill (2761,
-// 1039:15). ExistFile, ExistDir, RemoveFile, RemoveTree, GetFreeSpace, GetUsedSpace, GetMemInfo, GetFileName and
-// GetDirName (412, 5459, 2760, 5458, 5454, 5453, 5463, 2763, 5462; binaryen merges the first two as 6019) have no
-// record: their names and lines are chosen, and so are the last six's being free functions and their namespace,
-// api: RemoveTree, which only this file calls, and the five csystem.h declares (unit 32's fragment says why).
-// AlteraDono and AlteraPermissoes, inlined into CopyFile, have no record and no target index: their names, lines and
-// linkage are chosen (unit 32's fragment says what the target shows). CScopeGuard (lines 990-1011, an anonymous
-// namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in a std::function.
-// ReplaceFile (5455) holds TemporaryPath (records 236:15 and 243:15) and the anonymous namespace's PrepareReplace
-// (916:15 to 928:15) and ReplaceResource (954:15, 962:15) inlined; its name, and RenameResource's (3645), Existe's,
-// ReplaceDir's (both with no target index) and their lines, are chosen (unit 32's fragment says from what). The
-// file's other functions are not reconstructed yet; the lines their records name are left blank.
+// api::ExistResource (1690, 64:15; file-static: its record follows the external functions'), IsEmptyDir (2762, 255:15),
+// CopyFile (378, 390:15 to 476:19), Rename (692:15; binaryen inlines it into fn 11584), api::truncate (5457, 1024:15) and
+// ZeroFill (2761, 1039:15). ExistFile, ExistDir, RemoveFile, RemoveTree, GetFreeSpace, GetUsedSpace, GetMemInfo,
+// GetFileName and GetDirName (412, 5459, 2760, 5458, 5454, 5453, 5463, 2763, 5462; binaryen merges the first two as 6019)
+// have no record: their names and lines are chosen, and so are the last six's being free functions and their namespace,
+// api: RemoveTree, which only this file calls, and the five csystem.h declares (unit 32's fragment says why). So do
+// CreateDir, which binaryen inlines into fn 5821 (no target index), and AlteraDono and AlteraPermissoes, inlined into
+// CopyFile: their names, lines and linkage are chosen (unit 32's fragment says what the target shows). CScopeGuard
+// (lines 990-1011, an anonymous namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in
+// a std::function. ReplaceFile (5455) holds TemporaryPath (records 236:15 and 243:15) and the anonymous namespace's
+// PrepareReplace (916:15 to 928:15) and ReplaceResource (954:15, 962:15) inlined; its name, and RenameResource's (3645),
+// Existe's, ReplaceDir's (both with no target index) and their lines, are chosen (unit 32's fragment says from what).
+// The file's other functions are not reconstructed yet; the lines their records name are left blank.
 
 #include "api/util/csystem.h"
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdio>
 #include <cstring>
@@ -23,6 +24,7 @@
 #include <fcntl.h>
 #include <format>
 #include <functional>
+#include <iterator>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <utime.h>
@@ -44,7 +46,7 @@ constexpr size_t TAMANHO_BUFFER_MEMINFO = 4096;
 
 } // namespace
 
-// (original lines 47-57: content not recovered)
+// (original lines 49-57: content not recovered)
 #line 58
 static bool ExistResource(struct stat& info, const std::string& recurso)
 {
@@ -206,14 +208,51 @@ std::string CSystem::TemporaryPath(const std::string& caminho)
     return temporario;
 }
 
-// (original lines 249-251: content not recovered)
-#line 252
-// <stubs>
-// f2762 · 919 B · unmatched · name unknown
-// ? f2762(i32) { ... }
-// </stubs>
+// (original lines 249-250: content not recovered)
+#line 251
+bool CSystem::IsEmptyDir(const std::string& diretorio)
+{
 
-// (original lines 257-304: content not recovered)
+    if (!ExistDir(diretorio)) {
+        throw CUeUtilError(EUE_UTIL_DIRETORIO_NAO_EXISTE, std::format("O diretório [{}] não existe: {}", diretorio, strerror(errno)));
+    }
+
+    CDirReader leitor(diretorio);
+    bool vazio = true;
+    while (leitor.NextEntry()) {
+        const std::string nome = leitor.GetEntryName();
+        if (leitor.IsDir() && nome != "." && nome != "..") {
+            vazio = false;
+            break;
+        }
+        if (leitor.IsFile()) {
+            vazio = false;
+            break;
+        }
+    }
+    leitor.Close();
+    return vazio;
+}
+
+bool CreateDir(const std::string& diretorio)
+{
+    std::string caminho;
+    std::string::const_iterator inicio = diretorio.begin();
+    while (inicio != diretorio.end()) {
+        const std::string::const_iterator fim = std::find(inicio, diretorio.end(), '/');
+        if (std::distance(inicio, fim) > 0) {
+            std::copy(inicio, fim, std::back_inserter(caminho));
+            if (!CSystem::ExistDir(caminho) && mkdir(caminho.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0) {
+                return false;
+            }
+        }
+        caminho.push_back('/');
+        inicio = (fim == diretorio.end()) ? fim : fim + 1;
+    }
+    return true;
+}
+
+// (original lines 293-304: content not recovered)
 #line 305
 void CSystem::RemoveFile(const std::string& arquivo)
 {
