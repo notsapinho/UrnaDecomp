@@ -25,6 +25,11 @@ public:
     virtual ~IServicoEstado() {}
 
     virtual std::filesystem::path GetPathArquivo() = 0;
+
+    // The save above (fn 2894), declared for its callers and not written. mock/app/comum/cappinfobuilder.cpp's members
+    // (fns 10243 and 10212) call its thunks with a copy of the state they hold, made before the call and destroyed after
+    // it, so the state by value is evidence; the name is chosen.
+    void Salva(ESTADO estado);
 };
 
 } // namespace comum

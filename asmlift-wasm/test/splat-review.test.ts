@@ -12,7 +12,14 @@ import { type Piece, remapBody } from '../src/splat-remap';
 import { blankBody, blankSplit, confirmingPart, reviewMatch } from '../src/splat-review';
 import { parseMatchList, readPieceBodies, verifyMatches, withMatches } from '../src/splat-sub';
 import { runSplatSubCommand } from '../src/splat-sub-cli';
-import { type OurSide, type TargetSide, loadOurSide, loadTargetSide, symbolMaps } from '../src/splat-symbols';
+import {
+  type OurSide,
+  type SymbolMaps,
+  type TargetSide,
+  loadOurSide,
+  loadTargetSide,
+  symbolMaps,
+} from '../src/splat-symbols';
 import { URNA_ROOT } from './helpers';
 
 const URNA = process.env.URNA_SPLAT_ROOT ?? URNA_ROOT;
@@ -53,6 +60,18 @@ function maps(kinds = true) {
 
 function matches() {
   return parseMatchList(readFileSync(MATCHED, 'utf8')).matches;
+}
+
+/** The maps with the name of target 1877 (ecourna's DesconverteDataHora) voted by 9218's call alone, as the symbol file
+ *  read it before the link named it by its table slot too (6735, which the matches 9200 and 9202 hold): the self-vote
+ *  case sets that premise rather than read the line. */
+function desconverteVotedBy9218Alone(m: SymbolMaps): SymbolMaps {
+  const { symbols } = m.target;
+  const name = [...symbols.fns].find(([, index]) => index === 1877)?.[0];
+  expect(name).toMatch(/DesconverteDataHora/);
+  const fnEvidence = new Map(symbols.fnEvidence);
+  fnEvidence.set(name!, { evidence: 'call', voters: [9218] });
+  return { ...m, target: { ...m.target, symbols: { ...symbols, fnEvidence } } };
 }
 
 /** loadBlankedTarget as splat-review does it: the blanked module beside a copy of the target's glue */
@@ -156,7 +175,7 @@ describe('reviewMatch', { timeout: 300_000 }, () => {
 
   it.skipIf(!real)('confirms a self-voted name through the matches that may use it, not the whole list', () => {
     // 9218's call to DesconverteDataHora is that name's only vote; other matches call it too
-    const m = withMatches(maps(), matches());
+    const m = withMatches(desconverteVotedBy9218Alone(maps()), matches());
     const list = matches();
     const match = list.find((x) => x.index === 9218)!;
     const manifest = readManifest(PIECES);

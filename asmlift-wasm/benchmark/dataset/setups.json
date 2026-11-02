@@ -53,7 +53,7 @@
         "VOTA_WEB_OBJS"
       ]
     },
-    "note": "One object, first on the link line: wasm-ld keeps its copy of every linkonce function it emits. -Oz -fexceptions is the TU's level and its landing pads; -fPIC its records' place in .data; -std=c++23, the uenux2 tree's, matches eleven more rows of this TU than -std=c++20 and loses none (docs/reference/facts/levels.md §V1)."
+    "note": "Two objects at the TU's rule: the executable TU's, first on the link line, and mock/app/comum/cappinfobuilder.cpp's, second (unit 253); wasm-ld keeps the first object's copy of every linkonce function. -Oz -fexceptions is the TU's level and its landing pads; -fPIC its records' place in .data; -std=c++23, the uenux2 tree's, matches eleven more rows of this TU than -std=c++20 and loses none (docs/reference/facts/levels.md §V1)."
   },
   {
     "key": "ecourna",

@@ -204,6 +204,12 @@ $(ROOT)/$(APP)/roots_coderenv.o: $(ROOT)/src/app/roots_coderenv.cpp $(ROOT)/src/
 # (src/app/roots_texttospeech.cpp): landing pads and -Oz shapes, so that TU's rule, ahead of the uenux2 objects that emit them too
 $(ROOT)/$(APP)/roots_texttospeech.o: $(ROOT)/src/app/roots_texttospeech.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c src/app/roots_texttospeech.cpp -o $(R)
+# mock/app/comum/cappinfobuilder.cpp (comum::teste::CAppInfoBuilder) has landing pads, and the target keeps its -Oz copies
+# of inline code (EUrnaTurno's format handle, fn 9868): that TU's rule, its object second on the line, in the setup
+# `vota-web` (src/units/253-uenux2-cappinfobuilder.mk has the measurements)
+VOTA_WEB_OBJS += $(ROOT)/$(APP)/uenux2/mock/app/comum/cappinfobuilder.cpp.o
+$(ROOT)/$(APP)/uenux2/mock/app/comum/cappinfobuilder.cpp.o: $(ROOT)/src/uenux2/mock/app/comum/cappinfobuilder.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
+	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c /work/src/uenux2/mock/app/comum/cappinfobuilder.cpp -o $(R)
 
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
 # arguments; compiled with -Dmain=<name> so it becomes a plain function urna_roots() calls.

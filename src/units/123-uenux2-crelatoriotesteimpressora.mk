@@ -20,10 +20,11 @@
 # - EstaEmHorarioVerao (11198) tests the date of api::CDateTime::Now() (fn 479) against the CHorarioVerao of CHV through
 #   comum::md::CHorarioVerao::Contem, out of line in chorarioverao.cpp (unit 147, which has the two forms measured).
 # - GetCorrespondencia (11197) calls CDadoCorrespondencia's copy constructor, fn 1249 in the target, which has landing
-#   pads (invoke_iii), so the target's copy is an -fexceptions object's, and ours, from this unit's object, differs from
-#   it (188 over 232 rows). A callers+content hand line of splat/symbol_addrs.txt names 1249 from its body and from
-#   11197's call; 11197 (3 over 9 rows, all operand-only, with the roots' stand-in for 1249's other callers) matches over
-#   it, and with the line out it is `unresolved` again.
+#   pads (invoke_iii), so the target's copy is an -fexceptions object's, and ours, from this unit's object, differed from
+#   it (188 over 232 rows). 1249 matches since mock/app/comum/cappinfobuilder.cpp's object, at the executable TU's rule
+#   and ahead of this one, gives the link's copy (unit 253); the callers+content hand line that named 1249 from its body
+#   and from 11197's call, on which 11197 (3 over 9 rows, all operand-only, with the roots' stand-in for 1249's other
+#   callers) matched, went then, carrying no row.
 # - ImprimeDataHoraEmissao (11216) prints "EMISSAO DO RELATORIO" and one std::format line of the date and the time, from
 #   api::CDateTime::FormatCurrentDate and FormatCurrentTime (fns 5472, 5473, unit 125's callbacks, which match at the
 #   tree's -O3 with their callees 706 and 779). The four

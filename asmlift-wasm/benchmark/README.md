@@ -46,7 +46,7 @@ them (`truth`).
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
 | `uenux2-tbaa` | the TSE application's directories built with strict aliasing (`src/api/`, comum's data classes `dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`) | `src/Makefile` `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`, in `UENUX2_TBAA_DIRS` | 12 |
-| `vota-web` | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` (one object, first on the link line) | `src/Makefile` `VOTA_WEB_CXXFLAGS` | 12 |
+| `vota-web` | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` (its object first on the link line), and `mock/app/comum/cappinfobuilder.cpp` at its rule (second) | `src/Makefile` `VOTA_WEB_CXXFLAGS` | 12 |
 | `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |
 | `zlib` | zlib 1.3.1 + minizip | `src/units/06-ecourna-api-compression.mk` `ZLIB_CFLAGS` | 12 |

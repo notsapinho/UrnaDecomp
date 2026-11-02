@@ -9,11 +9,14 @@
 # with this unit: it calls path::__filename (1224), which the symbol file names from GetPathTrab's and GetPathResult's
 # calls (`call by:358,1399`).
 #
+# GetPathTrab and GetPathResult with the turn (358, 1399) match since mock/app/comum/cappinfobuilder.cpp links ahead of
+# this object at the executable TU's rule (unit 253). They were operand rows only (`pnpm wasm score`: 37 over 393, 30
+# over 323), and the scan stopped at the turn's format handle, `differs ... target i32.const 474 | ours i32.const 966`:
+# slot 474 is fn 9868, EUrnaTurno's handle at -Oz, which the target keeps apart from the 31 slots of 536 and our link
+# merged into 536's body until that object gave every user its copy. Unit 109's CAppInfo::IndiceTurno (1553) was the
+# same case.
+#
 # Written and not matched, each with its measurement:
-# - GetPathTrab and GetPathResult with the turn (358, 1399): operand rows only (`pnpm wasm score`: 37 over 393, 30 over
-#   323), and the scan stops at the turn's format handle: `differs ... target i32.const 474 | ours i32.const 966`. Slot
-#   474 is fn 9868, EUrnaTurno's handle, which the target keeps apart from the 31 slots of 536; our link merges it into
-#   536's body. It is unit 109's case for CAppInfo::IndiceTurno (1553): the two wait for that copy of the handle.
 # - path::operator/=(const path&) (183) is named by the anchors' calls (`call by:358,634,1399`), and its body differs,
 #   87 over 105 rows: ours is cpath.cpp's copy at the tree's -O3, which inlines has_root_directory, operator= and
 #   has_filename. A compile of operator/= at the executable TU's -Oz -fexceptions keeps has_root_directory, operator=,

@@ -192,7 +192,8 @@
 #   each case gave three stores and two calls, `34 over 244 rows (... inserted 7, deleted 2)`. Chosen: the code's name
 #   (euevotaerror.h), the locals' names, the cases as the enumerators, the member's place after StartState and the
 #   lines above it, ProcessInput's place after it. The function's instance of the enum's handle comes first in the
-#   link, so the hand line of 536 in splat/symbol_addrs.txt names that symbol now (unit 109's fragment has the rule).
+#   link, so splat/symbol_addrs.txt names 536 by that symbol now, a generated line since unit 253 (unit 109's fragment
+#   has the rule).
 #
 # Roots: the pair for vota::CQuerReimprimirZeresima::GetInst (5940) went, its one target caller, 11835, being in the
 # link (unit 138).

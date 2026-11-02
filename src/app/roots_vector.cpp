@@ -9,19 +9,20 @@
 //   and urna_roots_vector stands in for 520's callers.
 // - The file compiles at UENUX2_CXXFLAGS, not the roots' APP_CXXFLAGS: 4967 loads __vec_ and __begin_ again after its
 //   store to __end_, which -fno-strict-aliasing gives and strict aliasing does not (docs/reference/facts/levels.md V1).
-// Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match. 520's and
-// 4967's are also the bodies of src/app/roots_coderenv.cpp's vector<char> copies, which link first, so binaryen keeps
-// those and the two match lines carry vector<char>'s names.
+// Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match. The link's
+// copies of the three are mock/app/comum/cappinfobuilder.cpp's now (unit 253), the same code at the executable TU's rule,
+// whose object links ahead of this one and of src/app/roots_coderenv.cpp (whose vector<char> twins of 520 and 4967
+// named the two match lines before), so the lines carry vector<unsigned char>'s names.
 #include <memory>
 #include <vector>
 
 template __attribute__((minsize)) std::__exception_guard_exceptions<std::vector<unsigned char>::__destroy_vector>::~__exception_guard_exceptions();
 template __attribute__((minsize)) std::vector<unsigned char>::~vector();
 
-// Stands in for 520's callers in the target that are not in our link (1249 2793 2891 2927 5500 6004 7840 8592 10155
-// 10205 10256 10261): two call sites, since binaryen inlines a function called once
-// (docs/reference/facts/tool-traps.md X1). 857, 1532 and 9770, the others, call it now: 857 from this object's copy
-// below, 1532 and 9770 from src/app/roots_coderenv.cpp. The
+// Stands in for 520's callers in the target that are not in our link (2793 2891 2927 5500 6004 7840 8592 10155 10205
+// 10256 10261): two call sites, since binaryen inlines a function called once
+// (docs/reference/facts/tool-traps.md X1). 857, 1249, 1532 and 9770, the others, call it now: 857 and 1249 from
+// mock/app/comum/cappinfobuilder.cpp's object (unit 253), 1532 and 9770 from src/app/roots_coderenv.cpp. The
 // instantiation above keeps clang from inlining ~vector here.
 int urna_roots_vector(int a)
 {
@@ -45,9 +46,10 @@ int urna_roots_vector(int a)
 //   into their one caller each, as the target's bodies show.
 // - 5532 and 9873 use the this that CDadoCorrespondencia's destructor (857) returns, so binaryen keeps that result in
 //   our link: 3792, 6043, 11585, 11621 and 11622, which call 857 and drop it, differed by that drop alone at 1dfd708 and
-//   match with these copies in the link. 857 itself stays differs: our copy inlines ~basic_string at the tree's level,
-//   and the target's calls it (fn 149). This object now holds the link's copy of 857, at the tree's flags, and it calls
-//   ~vector<unsigned char> (520), the minsize instance above, where cappinfosingleton.cpp.o's copy inlined it.
+//   match with these copies in the link. 857 itself differed from this object's copy, at the tree's level, which inlines
+//   ~basic_string where the target's calls it (fn 149); it matches since mock/app/comum/cappinfobuilder.cpp's object, at
+//   the executable TU's rule and ahead of this one (unit 253), gives the link's copy. That object gives the link's 5294,
+//   5532 and 9873 too, the same code as the instances below; 1698 stays this object's.
 // - urna_roots_vector_dado stands in for those callers: two call sites each for ~vector and the guard, and 9873's
 //   address, which the target's table holds. The guard's type names vector's private __destroy_vector, which an explicit
 //   instantiation may name and a function body may not, hence the __asm__ labels; at those calls clang inlined the

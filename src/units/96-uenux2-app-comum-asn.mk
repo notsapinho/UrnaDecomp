@@ -81,11 +81,13 @@
 # that cast and the converter's object ahead of util.cpp's, in unit 93's list: 11402 is 73 over 652 with 3 inserted and 5
 # deleted, and 11401 83 over 513 with 3 and 12. So the order is what makes 11402 match. The cases of DesconverteModelo run
 # from ue2022 down: in ascending order the block of 2013 comes first and 11402 is `differs` at +0x24a.
-# - 11401 is written and `differs`, first at +0x52 on one operand, as CAppInfo::IndiceTurno (1553) is, unit 109's
-#   fragment. ConverteTurno's throw in the target passes the turn as a handle, table slot 474, fn 9868, whose body calls
-#   formatter<unsigned int>::format out of line (fn 5906, called by 4027 too). Our link merges that handle into fn 536's
-#   body, one of its 31 slots, so the two slots vote for two target functions. The hand line for 536 keeps its name, and
-#   with it the eleven rows that would leave `match` (1712, 2253, 3702, 275, 680, 3801, 5633, 5689, 5900, 11392 and 11405).
+# - 11401 matches since mock/app/comum/cappinfobuilder.cpp links ahead of this object at the executable TU's rule (unit
+#   253). It differed first at +0x52 on one operand, as CAppInfo::IndiceTurno (1553) did, unit 109's fragment:
+#   ConverteTurno's throw in the target passes the turn as a handle, table slot 474, fn 9868, whose body calls
+#   formatter<unsigned int>::format out of line (fn 5906, called by 4027 too), an -Oz copy. Our link merged that handle
+#   into fn 536's body, one of its 31 slots, so the two slots voted for two target functions, and a hand line for 536
+#   kept its name and the eleven rows that would leave `match` (1712, 2253, 3702, 275, 680, 3801, 5633, 5689, 5900, 11392
+#   and 11405). That object's copy of the handle is the link's now, the votes no longer split, and the line went.
 #   An explicit `std::formatter<EUrnaTurno> : std::formatter<unsigned int> {}` does not compile: libc++'s format takes an
 #   integral.
 #
