@@ -109,7 +109,15 @@ void CMenuFiltrarCandidatosPorNumero::StartState()
 }
 
 // CMenuFiltrarCandidatosPorNumero::ProcessInput: fn 11891 (999 B), every callee has a name (5446 unit 01's,
-// 1273 unit 89's, 1279 unit 150's).
+// 1273 unit 89's, 1279 unit 150's). It holds two functions binaryen inlined, each behind a stack prologue of its own:
+// a message screen ("Candidato não encontrado!" over an api::CWait of 2000 ms the caller builds in its own frame) and,
+// inside it, a GetForm over std::shared_ptr<IPreShow<IScreen>>(new CPreShowNothing<IScreen>). Written in a scratch
+// link with the two out of line in other TUs than their callers' (vota::MostraMensagemTemporaria beside ProcessInput,
+// vota::MontaForm in comum/ctelasvota.cpp, names chosen), it scored 33 over 447 rows, all operand-only: calls and data
+// but for one frame slot, the message's second api::SPoint temporary at +12 where the target has +20. Step 8's
+// vptr-anchor then read that 12 and 20 as table slots and took the name of fn 608 (ours 678, at slot 12), and ten
+// matches left (599, 2509, 2924, 3387, 3622, 3928, 4867, 4873, 6131, 11004). It waits for a form of the message whose
+// temporaries take the target's slots.
 void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 {
     __builtin_trap();

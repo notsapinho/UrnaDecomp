@@ -1,13 +1,14 @@
 #include "app/vota/eleitor/comum/ctelasvota.h"
 
 #include <format>
+#include <string>
 
 #include "app/vota/euevotaerror.h"
 #include "ecourna/api/pattern/singleton.hpp"
 
 namespace vota {
 
-// (original lines 10-290: content not recovered)
+// (original lines 11-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -24,7 +25,14 @@ namespace vota {
 // void f4181(i32, i32, i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 492-818: content not recovered)
+// (original lines 492-800: content not recovered)
+#line 801
+std::string MensagemErroCargo(const std::string& tela, const comum::md::CCargo& cargo, const std::string& erro)
+{
+    return tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro;
+}
+
+// (original lines 806-818: content not recovered)
 #line 819
 // <stubs>
 // f6678 · 192 B · unmatched · name unknown

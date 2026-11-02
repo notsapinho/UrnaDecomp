@@ -142,6 +142,17 @@
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the
 # slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in.
+#
+# CLogVota::LogaErroPartidoNaoEncontrado (target fn 4550, no record), logaErro (fn 2282) of "Erro partido não
+# encontrado", is out of line, called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName (fn 6954, unit
+# 97's source) and fn 11683 (vota::CPedeMajoritario, not written), for which
+# src/units/212-uenux2-app-vota-callers-roots.cpp stands. Its name is chosen from its message. Its place, above
+# LogaHabilitacaoCanceladaCapturaDigitalMesario, is a choice by the use band (ledger/ordinals.tsv, band 2): the file's
+# band-2 members are already out of the band's order (4556 and 4551 sit below 4535, 4529 and 4522), so every place
+# adds an inverted pair. There, after the link, `names.tsv` gives 4550 ld 2276 against 4556 2291, 4551 2292, 4535 2286,
+# 4529 2285, 4522 2277 and 4511 2299: two new inverted pairs (4556, 4551); below 4551 it would form three (4535, 4529,
+# 4522), counted from those ld_index values, not linked. Scored 7 over 55 rows, all operand-only, before step 8; matched
+# at step 9.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 CCONTROLADORREGISTRAMESARIOSVOTA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

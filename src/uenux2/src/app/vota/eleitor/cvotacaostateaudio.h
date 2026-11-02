@@ -82,6 +82,10 @@ protected:
     explicit CVotacaoStateAudio(int eventos);
 
 private:
+    // The record (cvotacaostateaudio.cpp:297, fn 6954) names it and shows it neither static nor const; fn 6999, slot 14,
+    // calls it twice. Its access is chosen.
+    std::string FormatPartyName(const std::string& numero);
+
     void CancelaEsperaFimAudio()
     {
         if (m_esperaFimAudio) {

@@ -68,6 +68,11 @@ void CLogVota::LogaMesarioNaoSolicitouViasAdicionais()
     loga("Mesário não solicitou emissão de vias adicionais");
 }
 
+void CLogVota::LogaErroPartidoNaoEncontrado()
+{
+    logaErro("Erro partido não encontrado");
+}
+
 void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
 {
     loga("Habilitação cancelada durante a captura de digital do mesário");
