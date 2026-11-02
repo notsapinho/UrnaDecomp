@@ -231,16 +231,17 @@
 # blank lines above the statics (lines 11 to 22 stay unknown).
 #
 # CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264; callers 3616, 5385, 10631, 10789
-# and 10790, only 5385 written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it, which clang
-# inlines into 2264 and binaryen into fn 2225 (unit 50's CInformacaoThreadOperador::AtualizaIdentidadesEleitor), its
-# one other caller; out of line is a measurement, in src/units/50-uenux2-cinformacaothreadoperador.mk. 2264 builds a
-# CEleitorIdentidade (566) from a copy of the string and the type, finds it in the map at +112 (1703), finds the value
-# it maps to in the base's map (1703 again), sets the cursor at +16 and returns the record's address, or null. The map
-# at +112 is std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265)
-# and the find (1703) keep their bytes under the new types, and step 9 renamed both match lines to the new symbols. The
-# names, the file and the lines (after the destructor, the CEleitorIdentidade overload first) are chosen; the named
-# local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's callers not in the
-# link, 3616 and 10631 (5385 is, and so are 10789 and 10790, unit 119's slots 14 and 13).
+# and 10790, 5385 and 10631 written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it,
+# which clang inlines into 2264 and binaryen into fn 2225 (unit 50's
+# CInformacaoThreadOperador::AtualizaIdentidadesEleitor), its one other caller; out of line is a measurement, in
+# src/units/50-uenux2-cinformacaothreadoperador.mk. 2264 builds a CEleitorIdentidade (566) from a copy of the string and
+# the type, finds it in the map at +112 (1703), finds the value it maps to in the base's map (1703 again), sets the
+# cursor at +16 and returns the record's address, or null. The map at +112 is std::map<md::CEleitorIdentidade,
+# md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265) and the find (1703) keep their bytes under the
+# new types, and step 9 renamed both match lines to the new symbols. The names, the file and the lines (after the
+# destructor, the CEleitorIdentidade overload first) are chosen; the named local for the identity is measured
+# (celeitores.h). The roots' LocalizaEleitores stands for 2264's caller not in the link, 3616 (5385 and 10631 are, unit
+# 104's, and so are 10789 and 10790, unit 119's slots 14 and 13).
 #
 # ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
 # tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws
@@ -308,8 +309,10 @@
 # GetKeyboardLayout (record :1301) with its value type, vota::TelaTesteTeclado and vota::SorteiaTeclasTesteTeclado
 # (declared in ctelasvota.h), the key names vota::TECLAS_TESTE_TECLADO (declared there extern), and the {20, 0} font after
 # FONTE_TITULO, a line that moved the six builders above down by one. With them this object brings the destroy of
-# GetKeyboardLayout's map (4148, matched), that map's initializer-list constructor (6579, written, not matched) and the
-# destroy of CTesteTeclado's map (2023, matched, now linked from here). The key names, TelaTesteTeclado and
+# GetKeyboardLayout's map (4148, matched), that map's initializer-list constructor (6579, matched since this file builds
+# without strict aliasing, src/Makefile's UENUX2_NOTBAA_FILES: unit 217's fragment has its rows, and on the whole link
+# no other row moves, docs/reference/facts/app-flags.md F6) and the destroy of CTesteTeclado's map (2023, matched, now
+# linked from here). The key names, TelaTesteTeclado and
 # SorteiaTeclasTesteTeclado come after CTelasVota's statics, and CTelasVota's destructor moved after them, from line
 # 3439 to 3463: src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \

@@ -4,9 +4,10 @@
 # std::unique_ptr and std::mutex (11808, 11807); the destroy of its std::map's tree (2023, now linked from
 # ctelasvota.cpp.o, which instantiates the map first); api::CPolySingletonList::has<impl::IGeradorTeclas> (3853) and
 # std::vector<std::string>::at (3854), from this object; in other units' files, api::CTextBox::SetStatus (940, unit 65's
-# ctextbox.cpp) and the destroy of GetKeyboardLayout's map (4148, unit 110's ctelasvota.cpp). Written and not matched
-# (below says what each waits for): StartState (11805); impl::CGeradorTeclasAleatorio::GeraSequencia (11803, slot 2 of
-# its vtable); the initializer-list constructor of GetKeyboardLayout's map (6579, ctelasvota.cpp's instance).
+# ctextbox.cpp), the destroy of GetKeyboardLayout's map (4148, unit 110's ctelasvota.cpp) and that map's
+# initializer-list constructor (6579, ctelasvota.cpp's instance, matched since that file builds without strict
+# aliasing: src/Makefile's UENUX2_NOTBAA_FILES). Written and not matched (below says what each waits for): StartState
+# (11805); impl::CGeradorTeclasAleatorio::GeraSequencia (11803, slot 2 of its vtable).
 # 217-uenux2-ctesteteclado-pending.cpp traps ProcessInput (11804). The class head says what its layout and declaration
 # rest on; igeradorteclas.h and cgeradorteclasaleatorio.h say what the generator's do.
 #
@@ -70,21 +71,25 @@
 #   and 3634 reads unresolved on its own recursive call.
 # No other spelling of these bodies was compiled.
 #
-# Written and not matched, and what each waits for. Measured on private links: a copy of build/out/app in which only
-# the named objects are rebuilt, with UENUX2_TBAA_DIRS= for this lane's two files, then make -C src link APP=<copy> and
-# tools/round/link-map.sh; pnpm wasm score as above.
-# - Strict aliasing. src/Makefile's UENUX2_TBAA_DIRS (src/app/vota/%) gives ctelasvota.cpp and ctesteteclado.cpp TBAA;
-#   docs/reference/facts/app-flags.md F6 reads app/vota's setting from one row (1719) and calls it a choice for its
-#   other directories. 6579 reloads the tree's begin after a new node's stores, with no call between
-#   (docs/reference/facts/reading.md R21): 74 over 308 rows here, 2 over 292, operand-only, with both files without
-#   TBAA. 11803 holds std::uniform_int_distribution<long>::operator() inlined and reloads its lower bound after the
-#   engine's loop; here that operator stays a call (cost 375, threshold 250, -Rpass-missed=inline) with a second
-#   caller, unit 50's 5412, and 11803 scores 255 over 447 (226 rows deleted). With both files without TBAA and 5412's
-#   distribution of unsigned long (unit 50's same-object form): 24 over 447, operand-only, and 5412 31 over 350,
-#   operand-only; with this lane's files without TBAA alone, still 255 (the long instance has the two callers). The
-#   flag is the user's decision: the bodies stay as written.
-# - ProcessInput in this TU. StartState: 1699 over 4686 rows here; 392 over 4520 (379 operand-only, 4 inserted, 4
-#   deleted) with both files without TBAA. What is left is push<IGeradorTeclas>'s frame (its string temporary at +120
+# Written and not matched, and what each waits for. Measured on whole links of objects rebuilt with UENUX2_TBAA_DIRS=
+# (the line a carve-out from strict aliasing gives them): first private links (a copy of build/out/app, make -C src
+# link APP=<copy>, tools/round/link-map.sh), then in place with steps 7 to 9 (docs/reference/facts/app-flags.md F6);
+# pnpm wasm score as above.
+# - Strict aliasing. 6579 reloads the tree's begin after a new node's stores, with no call between
+#   (docs/reference/facts/reading.md R21): 74 over 308 rows with ctelasvota.cpp at src/app/vota/'s strict aliasing, 2
+#   over 292, operand-only, without it, and it matches since src/Makefile's UENUX2_NOTBAA_FILES lists ctelasvota.cpp.
+#   ctesteteclado.cpp keeps strict aliasing: without it no row moves on the whole link, with or without 5412's
+#   distribution of unsigned long (F6). 11803 holds std::uniform_int_distribution<long>::operator() inlined and reloads
+#   its lower bound after the engine's loop; here that operator stays a call (cost 375, threshold 250,
+#   -Rpass-missed=inline) with a second caller, unit 50's 5412, and 11803 scores 255 over 447 (226 rows deleted). With
+#   this file without TBAA and 5412's distribution of unsigned long (unit 50's same-object form): 24 over 447,
+#   operand-only, and 5412 31 over 350, operand-only, but both rows are then `unresolved self-voted` on the guards of
+#   their std::mt19937 and std::random_device, statics no other target function reads (docs/reference/splat.md section
+#   3, "No circular evidence"); with this file without TBAA alone, still 255 (the long instance has the two callers).
+#   The body stays as written.
+# - ProcessInput in this TU. StartState: 1699 over 4686 rows with ctelasvota.cpp at strict aliasing; 392 over 4520 (379
+#   operand-only, 4 inserted, 4 deleted) without it, as it builds now, and the same score with ctesteteclado.cpp
+#   without it too. What is left is push<IGeradorTeclas>'s frame (its string temporary at +120
 #   where the target's, as fn 599's, is at +172) and where l8 + 28, the sequence's result slot, is set. With a call of
 #   api::CPolySingleton<api::IInputKbd>::instance() in a function above line 121 (a scratch line, not kept:
 #   ProcessInput calls that instance, fn 455), push's frame is the target's: 310 over 4520 (302 operand-only, the same

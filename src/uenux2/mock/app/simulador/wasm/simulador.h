@@ -23,6 +23,6 @@ struct SConfiguracao {
 void InicializaAmbiente();
 void InicializaDispositivos(const SConfiguracao& configuracao);
 void InicializaLog();
-void Inicializa(const SConfiguracao& configuracao, std::function<void()> aoIniciar);
+void Inicializa(const SConfiguracao& configuracao, const std::function<void()>& aoIniciar);
 
 } // namespace simulador

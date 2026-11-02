@@ -51,8 +51,11 @@ void CZip::Close()
     }
 }
 
-// (original lines 144-148: content not recovered)
-#line 149
+CZip::~CZip()
+{
+    SafeClose();
+}
+
 int CZip::ConvertToOpen()
 {
     switch (m_modo) {

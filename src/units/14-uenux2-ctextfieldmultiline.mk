@@ -4,58 +4,58 @@
 #   5498  the constructor (its throw is the record 71:15); GetTypeName (10921, in the class: the header says why) and the
 #         implicit D0 and D2 (10922, 10923), emitted with the vtable; Move (one of the four functions of fn 2783,
 #         90-uenux2-api-gui.mk).
-#   10925 Draw (slot 2) and 10924 Rect (slot 8) match. Their one call each, of GetTextLines, re-points through the hand
-#         line of splat/symbol_addrs.txt for func:5497 (callers+content), whose comment says what it rests on: no
-#         generated route names 5497, since Draw and Rect are named by vtable evidence, which casts no vote, and 5497's
-#         body is not ours. Without the line both read unresolved (call of GetTextLines has no target function).
+#   10925 Draw (slot 2) and 10924 Rect (slot 8) match. Their one call each, of GetTextLines, re-points through 5497's
+#         generated line (evidence:srcloc-anchor, its record 116:21, which 5497 alone loads), now that our body is the
+#         target's. The callers+content hand line for func:5497 that held them while 5497 differed is gone: with it put
+#         back on a copy of splat/symbol_addrs.txt, a scan over the same match list moves no row (11620 match rows both
+#         ways).
 #         Draw advances y before SRect::Union: the target reads m_alturaLinha for the sum before that call and again at
 #         the loop's test after it. With the sum after the union Draw scores 12 over 276 rows at --depth 0, before it 2
 #         over 270, both operand rows (the CFixedText vtable's address).
-#         Two spellings the bytes do not decide, each compiled from one path and `cmp`-equal to the other's object: line
-#         174's `m_rect.left + (m_rect.right - (larguraLinha + m_rect.left)) / 2` against `m_rect.left + (m_rect.right
+#         Spellings the bytes do not decide, each compiled from one path and `cmp`-equal to the other's object: Draw's
+#         centring `m_rect.left + (m_rect.right - (larguraLinha + m_rect.left)) / 2` against `m_rect.left + (m_rect.right
 #         - m_rect.left - larguraLinha) / 2` (and `... - larguraLinha - m_rect.left ...`, `(m_rect.right - m_rect.left
-#         - larguraLinha) / 2 + m_rect.left`), and line 162's `m_rect.bottom < m_alturaLinha + y` against `y +
-#         m_alturaLinha > m_rect.bottom`: the written forms are chosen. Rect's four `!= 0` tests and
-#         `std::min(m_rect.bottom, y)` are the bytes': `if (m_desenhado)` and the swapped operands give other objects.
-#   5497  GetTextLines is written and differs: 153 over 950 rows (40 inserted, 12 deleted; pnpm wasm score against
-#         build/out/wasm/vota_web after make -C src link-map). What differs, read from the rows: the space search's loop
-#         carries linha's size byte (masked with 255) and reloads its long data pointer at each pass, where the target's
-#         carries the size and the pointer computed for the previous find; and after the character search ours tests
-#         tamanho < linha.size() again (a select), where the target's loop leaves to corte = tamanho - 1 with no test.
-#         The other rows are local numbers. The form written is the one these measurements chose (scores at the
-#         default depth, in the order they were taken, each on the form the line before it left):
-#         - find(' ') where the earlier draft had find(" "), since the target calls memchr and subtracts, the char
-#           overload's code, together with the width read before GetText, since the target loads m_rect.left and
-#           .right before its first call: 606 over 1158 to 494 over 1064.
+#         - larguraLinha) / 2 + m_rect.left`), its loop's test `m_rect.bottom < m_alturaLinha + y` against `y +
+#         m_alturaLinha > m_rect.bottom`, and Rect's four `!= 0` written out or left implicit: the written forms are
+#         chosen. Rect's four tests themselves and `std::min(m_rect.bottom, y)` are the bytes': `if (m_desenhado)` and
+#         the swapped operands give other objects.
+#   5497  GetTextLines matches. The search for the last space whose prefix fits is a function of its own, UltimoEspaco,
+#         which GetTextLines calls once and clang inlines (it has no target index). What the target's rows show of that
+#         loop: it carries the size and the data pointer the find computed into the next pass's substr (no reload of the
+#         pointer, no size byte masked with 255), a later find that fails goes straight to the push of the cut, and only
+#         the exit of a width test that fails tests corte against npos. Written in GetTextLines' own body (the find in
+#         the loop's test as below, each prefix's width through a lambda, the character search as below) it scores 143
+#         over 925 rows (pnpm wasm score at the default depth, on a whole link with this object swapped in, its .js
+#         beside the wasm); as a function it gives the target's rows. Why, a reading of the TU's -mllvm -print-after-all
+#         dumps: in GetTextLines' body the loop's first LoopRotate moves only the find's position test to the latch, the
+#         find itself turning at the late LoopRotate, after the last JumpThreading; in UltimoEspaco that first rotation
+#         happens in its own pipeline, and GetTextLines' LoopRotate turns the find after the inlining, before its
+#         JumpThreading (its dump shows the two memchr calls then). The forms below are compared on the object
+#         (wasm-objdump -d of GetTextLines with the call and global.get indices masked, every object compiled from one
+#         path); a count is of the lines that differ:
+#         - UltimoEspaco takes the line as a parameter: a lambda in GetTextLines that takes it as its parameter gives the
+#           same code, one that reads the captured linha differs (96).
+#         - its loop has the find in its test, from a start position: `while ((espaco = linha.find(' ', inicio)) !=
+#           npos && ... <= largura)`; `while (true)` with the find at the top and one break gives the same code. The
+#           next find at the end of the body (the earlier form) differs (112), and so do a for over the finds (112) and
+#           the find from corte + 1 (454).
+#         - the character search is `while (tamanho < linha.size())` with the cut set in the else of the width test: the
+#           target sets corte = tamanho - 1 straight from the width test, with no test of tamanho against the size it
+#           reloads after the call, and lays the increment's block before the cut's. A for with continue gives the same
+#           code. The earlier form, the test after the loop, differs (297), and so do a for with the cut set before a
+#           break and a while with the break first (63 each).
+#         - find(' '), since the target calls memchr and subtracts, the char overload's code: find(" ") differs (333).
+#         - const int largura = m_rect.Width(), read before GetText, since the target loads m_rect.left and .right
+#           before its first call: const TPosition largura differs (18), m_rect.right - m_rect.left + 1 written out
+#           differs (9).
 #         - return linhas when not even one character fits (corte == 0): the target's br_table sends that case out of
-#           both loops to the function's exit. With a break (the earlier draft's), clang inlines
-#           push_back(std::string&&) at -O3's hot call site threshold (try-tu.sh --symbols --flags '-Rpass=inline
-#           -Rpass-missed=inline': cost 300, threshold 525); with the return its threshold is 250 and the call stays,
-#           as the target's call of fn 376 does: 353 over 954. With the break, six other shapes of the inner loop kept
-#           the call hot (corte declared before the loop, espaco declared at the top of its body, do-while, for(;;)
-#           with the test at the end, the empty-line case without continue, the corte == 0 test first), and so did the
-#           loop in a free function, which clang inlines and then weighs push_back again at the hot site.
-#         - the width as m_rect.right - m_rect.left + 1: through a local esquerda read first, m_rect.right loads before
-#           m_rect.left (353 over 954; 349 over 952 without the local).
-#         - each prefix's width through a lambda, larguraPrefixo: the target keeps the substr temporaries' slot (which
-#           the locale of getline's widen shares) at the top of its frame, above texto, where a callee clang inlined
-#           puts it (docs/reference/facts/codegen.md C5); written in place it is at the bottom: 349 to 232, the operand
-#           rows 275 to 159. A free function of the anonymous namespace, LarguraPrefixo(IScreen&, const std::string&,
-#           size_t, const SFont&), gives a byte-identical body (the two links' disassembly compared, on the final form):
-#           which of the two the source had is a choice.
-#         - the character search as while (tamanho < linha.size() && larguraPrefixo(tamanho) <= largura) ++tamanho,
-#           then corte = tamanho - 1 when tamanho < linha.size(): 232 to 153 over 952. On that form, a for loop with
-#           corte set before a break, the same with continue, != for the last test, corte == npos in the loop's test
-#           read 232, 232, 153 and 294 over 975. The whole search for the cut in a lambda or in a free function, each
-#           with returns, measured on the form before the lambda, read 196 over 979 and 209 over 959.
-#         - const int largura = m_rect.Width(): as an int its sign extension sits where the target's does, 153 over 950;
-#           const TPosition largura = m_rect.Width() scores as the expression written out, 153 over 952. On this form,
-#           the character search as a lambda returning the cut read 156 over 956, and the space search as a for loop, a
-#           while with a break, the next find from corte + 1, or the lambda taking the string read 170 over 958, 153,
-#           153 and 153.
-#         At -O2 (this object only, a measurement on the draft with the break), push_back(std::string&&) stays a call
-#         (threshold 225), but GetTextLines read 449 over 955 and std::getline's copy differed (131 over 421): the level
-#         is not the cause. What gives the target's two loops is not found.
+#           both loops to the function's exit.
+#         The frame's top slot, above texto, is the substr temporaries' (getline's widen locale shares it), where an
+#         inlined callee's local goes (docs/reference/facts/codegen.md C5); UltimoEspaco's substr is such a local. The
+#         character search's width written in place, through a lambda (the earlier form's larguraPrefixo) or through a
+#         file-local LarguraPrefixo(IScreen&, const std::string&, size_t, const SFont&) that UltimoEspaco calls too
+#         gives the same code (the first two `cmp`-equal objects, the third the same GetTextLines): in place is chosen.
+#         UltimoEspaco's parameter order, and largura there as a TPosition, give the same GetTextLines too.
 #   GetTextLines instantiates std::getline (fn 1917) in this object, which links ahead of app/asn1/AVNDecoder.o, the
 #   object 1917 matched from before. At uenux2's -O3 with strict aliasing (api/ is in UENUX2_TBAA_DIRS) the copy is
 #   byte-identical, so 1917 still matches, from this object now, and so do its callers 2649, 5055, 8877, 8878, 8883 and
@@ -63,8 +63,11 @@
 #   Draw's CFixedText likewise brings CFixedText's GetText (1139), D0 (7666) and D2 (7706) from this object, ahead of
 #   app/uenux2/src/app/vota/operador/outrasopcoes/cinputfieldmt.cpp.o, whose copies they were; all three still match.
 # Chosen, as no evidence gives them: every local and parameter name, the data members' names (ctextfieldmultiline.h),
-# the lambda and its name (or the free function above), Move's place in the file, and Draw and Rect after
-# GetTextLines, whose line its record fixes. Draw before Rect is the band's order (ledger/ordinals.tsv, uses 1).
+# UltimoEspaco's name, that it is a free function (it reads no class state) rather than the lambda above (its internal
+# linkage is the bytes': with external linkage GetTextLines differs, 669 lines, and `static` gives the same object as
+# the anonymous namespace), its parameters' order and types, its place (the lines before GetTextLines, which no record
+# holds), Move's place in the file, and Draw and Rect after GetTextLines, whose line its record fixes. Draw before Rect
+# is the band's order (ledger/ordinals.tsv, uses 1).
 UENUX2_SRCS += src/api/gui/ctextfieldmultiline.cpp
 # a caller of the ctor beside 2782 (api::CFormBuilder::AddTextFieldMultiLine, unit 31) and two more CUeGuiError throw
 # sites (14-uenux2-ctextfieldmultiline-roots.cpp), so binaryen neither inlines the ctor nor the CBaseError<EUeGuiError>

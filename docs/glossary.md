@@ -209,7 +209,7 @@ vtable needs them defined; each moves into the real source when reconstructed. S
 pending file's header is the note that it is left to do. When the pending member is the class's key function, the
 vtable and the implicit members it names are emitted in the pending object, and those can match there. `src/units/12-ecourna-api-sql-sqlite-externs.cpp` holds
 reconstructed `CStringUtils` functions that belong to a unit not landed yet. *Where:* those files' headers,
-`src/units/14-uenux2-ctextfieldmultiline.mk`, `src/units/12-ecourna-api-sql-sqlite.mk`.
+`src/units/40-uenux2-cprogressbar.mk`, `src/units/12-ecourna-api-sql-sqlite.mk`.
 
 **stand-in** — two uses. In the benchmark, a hand-written root or stub object (`src/app/*`,
 `src/units/*-roots.cpp`) that also defines a name, which disqualifies that name from deciding a row's setup

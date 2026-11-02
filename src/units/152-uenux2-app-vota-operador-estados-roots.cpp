@@ -10,9 +10,9 @@
 //   5393, fns 10677 and 10689 call 5430. Each stand-in calls its GetInst twice, so that binaryen keeps it a function of
 //   its own; one subtracts the two results and the other adds them, so the two bodies differ.
 // - vota::IIniciaJustificativa's constructor (target fn 3624) has two direct callers in the target, fns 10631 and 10635,
-//   which build the derived states and use the `this` it returns. Two noinline callers stand in for them and use that
-//   result; their bodies differ from each other and from every target function, one adding to the result and one to
-//   the address (unit 71's shape). Its vptr store keeps the class's vtable.
+//   which build the derived states and use the `this` it returns. 10631 is in the link (unit 104, through
+//   vota::CIniciaJustificativa's constructor, unit 243); a noinline caller stands in for 10635 and uses that result,
+//   its body no target function's.
 // - vota::CLogVota::LogaAudioDesativadoFimVotacao (fn 4529, callers 10435 and 10646): two call sites, so that binaryen
 //   keeps it out of line as the target does. Two noinline stand-ins call it for its two callers, one of them with an
 //   offset address. LogaSuspensaoAbortada (fn 4535) needs none: both its callers, 10407
@@ -46,14 +46,10 @@ __attribute__((noinline)) int HorarioTerminou()
     return w5430_root_0() + w5430_root_0();
 }
 
+// Stands for fn 10635.
 __attribute__((noinline)) int ConstroiIniciaJustificativa(int estado, const void* confirma)
 {
     return w3624_root_0(estado, confirma) + 4;
-}
-
-__attribute__((noinline)) int ConstroiIniciaJustificativaMembro(int bloco, const void* confirma)
-{
-    return w3624_root_0(bloco + 16, confirma);
 }
 
 __attribute__((noinline)) void LogaFim(char* log)
@@ -77,7 +73,6 @@ struct SEstados152Roots {
         estados152_sink = cinspecionaurna_vt;
         estados152_sink = chabilitaaudioeleitor_vt;
         estados152_sink = reinterpret_cast<const void*>(&ConstroiIniciaJustificativa);
-        estados152_sink = reinterpret_cast<const void*>(&ConstroiIniciaJustificativaMembro);
         estados152_sink = reinterpret_cast<const void*>(&LogaFim);
         estados152_sink = reinterpret_cast<const void*>(&LogaFimDeslocado);
         estados152_sink = reinterpret_cast<const void*>(&DesabilitaAudio);

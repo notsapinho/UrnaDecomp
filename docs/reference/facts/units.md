@@ -146,7 +146,8 @@ awk 'NR==FNR { if (FNR>1 && $3 ~ /app\/[0-9]+-.*-(roots|pending)\.o$/) r[$2]=$3;
 
 The tree roots, `src/app/roots_*.o`, have no `-roots.o` suffix, so that filter misses them. They hold 162 match lines at
 0b5f410, and the same rule applies: code a landed header or a library defines, compiled at `APP_CXXFLAGS` like a
-fragment's roots, except `roots_cbasetype.o`, `roots_iconversorasn.o` and `roots_vector.o`, at `UENUX2_CXXFLAGS`,
+fragment's roots, except `roots_cbasetype.o`, `roots_iconversorasn.o`, `roots_vector.o` and `roots_set.o`, at
+`UENUX2_CXXFLAGS`,
 and `roots_coderenv.o` and `roots_texttospeech.o`, at the executable TU's
 `VOTA_WEB_CXXFLAGS`
 (`src/units/README.md` "Companion files"):

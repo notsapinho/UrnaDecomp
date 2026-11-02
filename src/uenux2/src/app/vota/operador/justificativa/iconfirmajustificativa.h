@@ -19,8 +19,11 @@ namespace vota {
 // CConfirmaJustificativaTransito, whose vtables hold the same slots but slot 0 (fn 3626, a call of fn 1688). It overrides
 // StartState (slot 2, fn 10589) and ProcessInput (slot 7, fn 10588), both pending (unit 174's -pending.cpp says what
 // they wait for). The constructor (fn 3625, record iconfirmajustificativa.cpp:34, which spells its parameter) passes 2 to
-// the base's and builds, with api::CMTFormBuilder::GetInteractiveForm (fn 301), the std::shared_ptr it moves into +12;
-// it is not written (every callee has a name now). The destructor is out of line: fn 1688 is a thunk into
+// the base's, throws the vota error 9395 with "Frase muito grande [" + the text + "]" when the text is longer than 40
+// characters (the record's line, before the builder), and builds the form, the text on line 2, with
+// api::CMTFormBuilder::GetInteractiveForm (fn 301), whose std::shared_ptr it moves into +12 in the body; its callers
+// are fn 10631 and fn 10635, each through a derived class's constructor that passes a text of its own (unit 243's
+// vota::CConfirmaJustificativa passes CTradutorFrase::Traduz's). The destructor is out of line: fn 1688 is a thunk into
 // binaryen's fn 2902 with this class's vptr, a body the target forms from four such thunks (vota::IEleitorImpedidoVotar's
 // 1257 among them), and the deleting destructor (fn 2748) calls it and frees `this` after a drop. The member's name, and
 // its pointee's type (vota::IEleitorImpedidoVotar's form, what GetInteractiveForm returns), are chosen.

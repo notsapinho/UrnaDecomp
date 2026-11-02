@@ -87,9 +87,9 @@
 #   matches in unit 195, as comum::CGeradorResultados's (a chosen class: no evidence names it). Not written: template
 #   instances whose callers are not written, so that no instance of ours exists (the element types are readings of the
 #   bodies; 5859, which was among them, matches from unit 200's roots): 3815 (a destructor of a class no evidence names;
-#   fns 11587, 11626, 11629), 5868 (a tree insertion with a string key; fn 5869), 5843 and 5844
-#   (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths; fn 11616) and 3816 (the relocation of a
-#   vector of comum::md::CCargo; fns 3818 and 11371).
+#   fns 11587, 11626, 11629), 5843 and 5844 (vector<ecourna::app::dados::CEstadoComparecimento>'s reallocating paths;
+#   fn 11616) and 3816 (the relocation of a vector of comum::md::CCargo; fns 3818 and 11371). 5868 (a tree insertion
+#   with a string key), which was among them, matches from fragment 268's object, its caller fn 5869's.
 # - 5852 and 5854 (std::vector<api::hash::CHashArquivo>'s range insert and its helper; fns 5358 and 11620 call 5854) are
 #   fragment 227's: 5852 matches from cmontadorhash.cpp's object, and 5854 waits for 11620, whose object, built without
 #   strict aliasing, reads as the one that holds the target's copy (fragment 227 has the measurement).

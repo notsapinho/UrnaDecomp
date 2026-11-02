@@ -39,23 +39,14 @@
 # api/io/cfile.cpp, unit 03's source, and declared in cfile.hpp, whose comment has its evidence and the forms measured;
 # this fragment's roots stand for its two callers. Unit 03's fragment and row name it at the landing.
 #
+# fn 5869, CDependenciasContratos::GetValor's other caller (comum::CGeracaoVersoesContratos::ObtemDependencias, a
+# chosen name), is fragment 268's, written in app/comum/gravadores/cgeracaoversoescontratos.cpp and not matched; that
+# fragment has its measurements.
+#
 # Not written, and what each waits for:
 # - fn 5359 (calls CMontadorHash::CriaHashesDiretorio, fn 5360, then 5358, and destroys the directory): 5360 (9613 B).
-# - fn 5869, which collects a contract's dependencies through CDependenciasContratos::GetValor, CStringUtils::Split on
-#   ',' and two inserts into a std::set<std::string>, recursively, and returns a copy of the set (its one target
-#   caller, fn 12098, passes it comum::CGeracaoVersoesContratos's singleton, whose +0 is the CDependenciasContratos).
-#   Written as that class's member in app/comum/gravadores/cgeracaoversoescontratos.cpp (5869's band lies between
-#   ccopiadormr.cpp's and md/cversoesarquivos.cpp's rows) it scored 14 over 211 rows: the set's copy called the hinted
-#   emplace (__emplace_hint_unique_key_args: tree, hint, key, value) where the target calls fn 1163, three parameters
-#   and no result; and its insert (fn 5868) scored 10 over 189, the reload of the inserted node after the begin-node
-#   store that strict aliasing removes. With that object built with strict aliasing (a variant object in the whole
-#   link), clang kept __emplace_hint_unique_extract_key out of line instead, the emplace inlined into it (1163's
-#   shape), 5868 scored 2 over 184, operands only, and 5869 91 over 284, since binaryen inlined that wrapper into its
-#   one caller in our link (1163's other target callers, 5360 and 11620, are not written). So 5869 needs strict
-#   aliasing, which comum/gravadores is built without (docs/reference/facts/app-flags.md F6), and a second caller of
-#   the wrapper: not written, and 1163 and 5868 with it.
 # - CGeracaoVersoesContratos's destructor (fn 5866, the four trees from +36 down, fns 1397 and 2859): not written; its
-#   band place, after md/cversoesarquivos.cpp's rows, is not that file's.
+#   band place, after md/cversoesarquivos.cpp's rows, is not cgeracaoversoescontratos.cpp's.
 #
 # Chosen (each header marks its own): the classes' members and parameter names; that each md class holds its INI object
 # as a member (a base would give the same layout; not measured); ListaHashesArquivos's name, its being a free function
@@ -64,8 +55,9 @@
 # instructions (cfile.hpp says so).
 #
 # Roots: 227-uenux2-contratos-cmontadorhash-roots.cpp stands in for the callers not written (12098 for both GetValor,
-# 5869 for CDependenciasContratos's, 5359 for 5358, 11620 for 5854, 5371 and 11587 for 5180); each stand-in names
-# them. No census pair falls on a function the roots object defines (step 7's check).
+# 5359 for 5358, 11620 for 5854, 5371 and 11587 for 5180; 5869, CDependenciasContratos's other caller, is in the link
+# since unit 268); each stand-in names them. No census pair falls on a function the roots object defines (step 7's
+# check).
 W227_SRCS := src/api/hash/cmontadorhash.cpp \
     src/app/comum/gravadores/md/cdependenciascontratos.cpp src/app/comum/gravadores/md/cversoescontratos.cpp
 UENUX2_SRCS += $(W227_SRCS)

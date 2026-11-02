@@ -18,8 +18,8 @@ __attribute__((noinline)) std::size_t w227_versoes(comum::md::CVersoesContratos&
     return versoes.GetValor(chave).size() + versoes.GetValor(outra).size();
 }
 
-// comum::md::CDependenciasContratos::GetValor (fn 3826): its target callers are fn 12098, which calls it twice, and fn
-// 5869, which is not written.
+// comum::md::CDependenciasContratos::GetValor (fn 3826): its target callers are fn 12098, which calls it twice and is
+// not written, and fn 5869, in the link since unit 268.
 __attribute__((noinline)) std::size_t w227_dependencias(comum::md::CDependenciasContratos& dependencias,
     const std::string& chave, const std::string& outra)
 {

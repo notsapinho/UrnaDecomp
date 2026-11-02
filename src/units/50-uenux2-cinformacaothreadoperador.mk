@@ -110,8 +110,10 @@
 # std::shuffle, in ctesteteclado.cpp) is in the link, std::uniform_int_distribution<long>::operator() has two callers and
 # binaryen inlines it into neither: 5412 scores 265 over 350 (212 rows deleted) and reads `unresolved` on its guard's
 # address (`(.bss) has no target symbol`). With 5412's distribution of unsigned long, the same-object form the paragraph
-# above lists, and unit 217's two files without strict aliasing, 5412 is 31 over 350 again (unit 217's fragment has the
-# measurement).
+# above lists, and unit 217's ctesteteclado.cpp without strict aliasing, 5412 is 31 over 350 again (unit 217's fragment
+# has the measurement), and its row is `unresolved self-voted` as before. So that file keeps strict aliasing and 5412
+# keeps long: measured on the whole link, either change, alone or with the other, moves no row
+# (docs/reference/facts/app-flags.md F6).
 #
 # Slots 16 and 19, written in slot order (16 after slot 15, 19 after slot 18; their lines are chosen like the others'):
 # - Slot 19, IsVotacaoBloqueadaPorHorario (fn 10566), matches: false in the training phase (vota::EhTreinamento, fn

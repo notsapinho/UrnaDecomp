@@ -88,7 +88,8 @@
 #   11572, 11641, 11642, 7787 and more.
 # - 10619 (votaTick) and 10171 (votaGetStateJson): 5500 (6871 B, read as the state's text: votaGetStateJson moves its
 #   result into +24; stub in celeitorvotando.cpp), 3594 (IExecucaoVota::GetInst, unit 165's), 5408, 407, 2369, 10376,
-#   10857: all but 407 and 3594 have no name.
+#   10857: all but 407 and 3594 have no name. 2737 and 977, the -Oz copies of std::string::find(const char*) and of
+#   std::__str_find that votaTick and 5500 call (977 is 3355's callee too), have no caller in our link.
 # - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532,
 #   9873, 2247, 2249 and 1843 (src/app/roots_vector.cpp keeps them, the last three with minsize instances measured
 #   there; since unit 253 the link's 306, 520, 4967, 5294, 5532 and 9873 are mock/app/comum/cappinfobuilder.cpp's, at
@@ -120,21 +121,41 @@
 # SPolySingletonInfo vector's 1005 1009 4852 5779 10325 10424 10464 10507 10547 10582 10607 10643 10679 10714 10750
 # 10801 11533 11544 11548 11549, the control blocks' constructors 10335 10432 10470 10513 10555 10585 10618 10652 10687
 # 10723 10759 10807), vector<unsigned char>'s 5493, 5494 and 10890, and 8319 (std::length_error's constructor).
+# Matches with the has<T> roots, the value-initialized sound and Inicializa's reference parameter (against b7c2e8a5, by
+# target index): 5417, 5425 and 5427, has<T> over IGenericFactory<IRWSyncCtl>, IFingerPrepare and
+# ISymmetricCipherFactory, which 170-uenux2-wasm-vota-web-roots.cpp gives the second call site their unwritten target
+# callers give them: with one caller here, binaryen inlined each into its set<T> body, and the three bodies merged into
+# one (9039 and 9135 were `no-candidate`, 8834 `differs` against a twin). Whole again, those bodies take their names by srcloc-anchor, and the
+# raw-pointer sets over them match: 9650, 9831, 9897. With them main (10307) and its lambda's operator() (10384), each
+# after a form measured on the whole link (`pnpm wasm score` against the plain link, before the names):
+# - `new simulador::CWasmWebSound()` in the lambda, value-initialized: the object is zeroed and the implicit
+#   constructor's stores leave the target's i32 at +4 and i64 at +8 (15 over 123 rows, all operand-only), where
+#   `new simulador::CWasmWebSound` gave an i64 at +4 and a byte at +12 (23 over 126, 3 inserted, 3 deleted).
+#   `new simulador::CWasmWebSound{}` gives the same object as `()` (`cmp`, the TU compiled at its rule).
+# - simulador::Inicializa taking the std::function by reference (unit 188's fragment): by value, main's frame is 96
+#   bytes and InitApplication's first string has a slot of its own (234 over 958 rows, 15 inserted); by `const&`, as
+#   written, or by `&&` (both 80 bytes, the TU's object compiled alone) the frame is 80 bytes, the string sharing the
+#   std::function's slot at +0 as in the target (203 over 951, every row an operand but the eight `invoke` table slots
+#   the diff aligns apart). `const&` is chosen.
+# main's last callee name, fn 8302's, is a hand line (splat/symbol_addrs.txt, unit 188's): main's table vote is its only
+# voter, and the scan refused main as `unresolved self-voted` without it.
+#
 # Not matched yet, each written:
-# - 10307 (main): `unresolved` on the && set of IInterfaceSavd (fn 10090), which has no target name: every push body of
-#   this TU calls fn 388 (~shared_ptr<void>, this TU's -Oz copy, which returns `this` for a reader of votaInit's side,
-#   2650) and drops the result, where ours returns nothing (10090: `pnpm wasm score` 161 over 885 rows, 159
-#   operand-only, 2 deleted, the two `drop`s). The same held 9507, 9437 (whose push bodies 5407 and 5398 have second
-#   callers, 5925 and 7181), the set thunks 9372 9574 9650 9685 9731 9831 9897 9986 (operand-only: 9986 is 2 over 6
-#   rows) and 10356 (9 over 52, operand-only), whose push 5384 has the same two drops.
-#   Since unit 237 (11530 written, 388 matched with its result) the push bodies have the drops: 10090 is `differs`,
-#   156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower, and 3882, 5384, 8758, 8911,
-#   8986 and 9233 read the same 288 against 280; 9574, 9685, 9731, 9986 and 10356 match (unit 237's fragment), and
-#   9507, 9437 and 9372 since fragment 241 (below); main reads `unresolved +0x363` on the table slot of the
-#   ISymmetricCipherFactory set, which has no target name, as 9897 does; 9650 and 9831 stay `unresolved`.
-# - 10384 (the lambda's operator()): on 10356's name, and CWasmWebSound's inline constructor stores +4 and +8 (an i32
-#   and an i64) where ours stores an i64 at +4 and a byte at +12 (unit 74's header's layout): 23 over 126 rows.
-# - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours (11962) reads 22
+# - The push bodies 10090, 5384, 8758, 8911, 8986, 9233, 3882 (under 5395, 5398, 5407), 8834, 9039, 9135 and 7667 differ
+#   in one frame slot: depura's std::format_string ("sz[{}] ptr[{}]") is at +280 in the target, below the format buffer
+#   at +288, and at +584 in ours, above it, every slot between moved 8 (10090: 156 over 885 rows, all operand-only). None
+#   of the forms of push tried gives it. Measured on the TU's object (wasm-objdump -d, the slot of that string's store in each push):
+#   a scratch explicit instantiation of push<comum::IInterfaceSavd> above the TU's code, a line that only steers the
+#   compiler and does not land, gives every push of the TU +280; a strong function with a std::format call there, an
+#   explicit instantiation of CPolySingleton<api::ISound> or of CPolySingletonList::instance<api::ISound>, or the two
+#   exports moved below main give +584, and so do six forms of push in the header (std::lock_guard, a local for the
+#   size, static_cast<void*>, a non-const shared_ptr, a local pair for find's result, the shared_ptr made before depura's
+#   call); a named local for depura's text gives +552, a std::string nome +568. Read with unit 100's frame paragraph: the
+#   slot follows whether a push's format calls are emitted before any other format body of the TU. Ours emits
+#   instance<ISound>'s first (SetAudioEnabled);
+#   the target's records of this TU run CVotaWebEngine::Init's (515:13), then 7667's push (set<ITextToSpeech>), then
+#   instance<ISound>'s, so they wait for Init (votaInit, 7840).
+# - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours reads 22
 #   over 74 rows, 15 replaced (all operand-only), 3 inserted and 4 deleted, the rows of the response's slot. The target
 #   holds the 12-byte comum::ueRespostaSavd at +4 of the frame, 4-aligned (`i64.store align=2 offset=4`, `i32.store
 #   offset=12`, the mark's `i32.store8 offset=4`, and `i32.const 4; i32.add` for assign's range); ours at +0, 8-aligned
@@ -143,14 +164,21 @@
 #   and the declaration above the size test, gives our slot for each (wasm-objdump -d of the object, RecebeMensagem's
 #   stores). 5496 (vector<unsigned char>'s __assign_with_size, which assign calls) is out of line now and matches
 #   (below).
-# - 10878 (the CWasmThread factory's Create): 35 over 40 rows, 29 deleted, not read further.
-# - 10869 (the CPosixMutex factory's Create): `unresolved`, CPosixMutex's constructor has no target name.
+# - 10878 (the CWasmThread factory's Create): 35 over 40 rows, 29 deleted. The target's object is 16 bytes, zeroed, with
+#   an i16 8192 at +12 and the vptr (`f137(16)`, then two i64 stores of 0), and a word of the frame that it nulls, reads
+#   back and frees (fn 136, emscripten_builtin_free); our simulador::CWasmThread is 8 bytes (cwasmthread.h, unit 99's: m_contexto
+#   at +4 alone). It waits for that layout.
+# - 10869 (the CPosixMutex factory's Create): `unresolved`, CPosixMutex's constructor (target fn 10254, the record
+#   cposixmutex.cpp 30:15) has no target name: it is `no-candidate`, and ours (unit 01's) scores 19 over 209 rows
+#   against it, 1 deleted, not read further.
 #
 # Stand-ins this unit ended: src/app/roots_uenux2.cpp's minsize instance of fn 252 and its extern template of append
 # (252 and 3717 match from this object), src/app/vota_api.cpp's votaPressKey and votaSetAudioEnabled, src/app/main.cpp
 # (main), and the roots lines that stood for main's table slots (units 100's Registra, 137's CPrng constructor, 171's
 # InitApplication). Unit 100's chosen
-# file src/uenux2/src/api/pattern/cpolysingletonlist.cpp goes too: its two definitions are here.
+# file src/uenux2/src/api/pattern/cpolysingletonlist.cpp goes too: its two definitions are here. Unit 74's roots file,
+# which kept CWasmWebSound's vtable for the vptr store of main's lambda, went with the lambda's match: that store is in
+# the link (a link without the file moved no row: steps 7 to 10).
 #
 # Rows of this object that match with fragment 241 and the GetInsts unit 165 writes (against 36dda756, by index): the
 # has<T> thunks 2736, 2741 and 2744 (IExecucaoVota, impl::ISincronismoVotoEleitor, impl::IPoliticaExecucaoEleitor),

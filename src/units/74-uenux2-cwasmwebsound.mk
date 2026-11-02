@@ -53,8 +53,5 @@
 # header.
 CWASMWEBSOUND_SRCS := mock/app/simulador/wasm/cwasmwebsound.cpp
 UENUX2_SRCS += $(CWASMWEBSOUND_SRCS)
-# nothing reconstructed builds the sound yet: 74-uenux2-cwasmwebsound-roots.cpp keeps the vtable, as the constructor
-# inlined into fn 10384 does
-$(ROOT)/$(APP)/74-uenux2-cwasmwebsound-roots.o: $(ROOT)/src/units/74-uenux2-cwasmwebsound-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/74-uenux2-cwasmwebsound.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/74-uenux2-cwasmwebsound-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/74-uenux2-cwasmwebsound-roots.o
+# No roots: the one reference the target has, the vptr store of the constructor inlined into main's lambda (fn 10384, unit
+# 170's, matched), is in the link, so the roots file that kept the vtable went.

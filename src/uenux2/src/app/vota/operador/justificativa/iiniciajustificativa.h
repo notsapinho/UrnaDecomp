@@ -8,8 +8,9 @@ class IConfirmaJustificativa;
 
 // vota::IIniciaJustificativa (RTTI: si_class of comum::CAppState; vtable @1590036 [174, 144, 10587, 7480, 1661, 218,
 // 425, 218, 425]), the base of vota::CIniciaJustificativa, CIniciaJustificativaTemporario and
-// CIniciaJustificativaTransito, whose vtables hold the same slots. It overrides StartState (slot 2, fn 10587, pending:
-// it calls fn 2747, which has no name, 1391, comum::CJustificador::GetInst, and 1535). Slots 0 and 1 hold bodies other
+// CIniciaJustificativaTransito, whose vtables hold the same slots. It overrides StartState (slot 2, fn 10587), which goes
+// to vota::CJustificativaEfetuada when comum::CJustificador lists the voter's título and to the confirmation state at
+// +12 when not (src/units/152-uenux2-app-vota-operador-estados.mk). Slots 0 and 1 hold bodies other
 // classes share (fns 174 and 144), which say nothing of where the destructor is defined: it is left implicit, a
 // choice. The constructor (fn
 // 3624, record iiniciajustificativa.cpp:27, which spells its parameter) passes 0 to the base's, stores its argument at

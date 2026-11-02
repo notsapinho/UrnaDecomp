@@ -21,7 +21,7 @@
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
 #include "app/vota/operador/outrasopcoes/cfimaquisicaovotos.h"
 #include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
-#include "app/vota/operador/leidentidade/cprocuraeleitor.h"
+#include "app/vota/operador/leidentidade/celeitorencontrado.h"
 #include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/csincronismooperador.h"
@@ -42,10 +42,10 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 491, 1935, 2281, 2543, 2821, 2824, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have
-// names (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164, 3829, 5889,
-// 5891 and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822, 88's 3782 and fragment 227's 3825 and
-// 3826 among them).
+// with no name: 491, 1935, 2543, 2821, 2824, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have names
+// (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164, 3829, 5889, 5891
+// and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822, 88's 3782, fragment 227's 3825 and 3826, and
+// 2281, std::set<std::string>'s hinted insert, from the tree root src/app/roots_set.cpp, among them).
 void CGravaResultado::StartState()
 {
     __builtin_trap();
@@ -142,9 +142,12 @@ void CCancelaHabilitacaoEleitor::StartState()
     __builtin_trap();
 }
 
-// CProcuraEleitor::StartState: fn 10631 (657 B), callees with no name: 3625, 4578, 5424 (named: unit 98's 654, unit
-// 152's 3624, unit 174's 1688, unit 178's 2798, unit 110's 326 and 2264, unit 50's 1535).
-void CProcuraEleitor::StartState()
+// CEleitorEncontrado::StartState: fn 10635 (3870 B), record celeitorencontrado.cpp:102 (the throw of the vota error 9394
+// "Eleitor não posicionado"), whose line stays blank there. Every direct callee is named but 6733, a std::set<int> range
+// insert whose other caller is fn 7787; the body holds inlined the GetInst of the five other states derived from
+// vota::IEleitorImpedidoVotar and of the Temporario and Transito justification pairs, classes the tree lacks, and
+// vota::CLogVota::LogaEleitorImpedido (record clogvota.cpp:432).
+void CEleitorEncontrado::StartState()
 {
     __builtin_trap();
 }

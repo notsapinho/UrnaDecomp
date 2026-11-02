@@ -9,21 +9,51 @@
 # and 0 at +36, +32 and +28 and invokes CreateZipFile through table slot 6119; every row is operand-only and it
 # matches by content (the scan's content pass finds it: its depth-0 shape is the only one on both sides; a
 # vptr+shape hand line that named it carried no row, measured, and went).
+# CZip's destructor is declared in czip.hpp and defined in czip.cpp after Close: CompactaWsq calls its D2 (2690) out of
+# line, twice. Defined in the class, clang inlined it there (-Rpass=inline: cost 110 against 250; 170 with
+# ICompressor's destructor inline in its header, still inlined), and 5821 then held the D2's code where the target
+# calls 2690. Out of line, 2690 and the D0 (9540) still match from this object (the D0 holds the D2's code; measured:
+# 9540 matches from this object with the destructor out of line). Its line after Close is a choice the
+# use bands allow: in czip.cpp.o Close (2691) comes before the D2 (2690) in band 4 and the D0 (9540) between
+# CreateZipFile (9543) and ConvertToCompressLevel (9539) in band 1, as the index order asks (docs/how-to-decompile.md
+# step 3, "The order of two members"); defined right after the constructor, the D2 came before Close.
 # CreateZipFile (9543, with ConvertToOpen and minizip's zipOpen64 inlined) matches since the constructor that invokes it
 # is in this object; before, its only reference was the roots' address and it was 380 rows over 2051 against the
 # target (343 of the 344 replaced operand-only, 15 inserted and 21 deleted: `this` pushed for the store of m_zip
 # ahead of c_str() in the target, after the inlined code in ours, and an `if ... br` where ours had a `br_if`). What
 # in the object took that difference away was not compared.
-# ICompressor's constructor (5192) is written and differs, 90 over 155 rows: ours inlines boost's shared_count release
-# (the cleanup of the signal member's shared_ptr) where the target calls fn 2203, which has the target callers 5192,
-# 9521, 9536 and 9558 and no out-of-line copy in our link; not explained. A rtti-vptr hand line names it (the only
-# target function that holds ICompressor's vtable address point), which 5193's call needs.
+# ICompressor's constructor (5192) is written and unresolved (90 over 155 rows): ours holds boost's
+# shared_count::~shared_count inlined in its landing pad where the target calls fn 2203. clang keeps the call in this
+# object (-Rpass-missed=inline: cost 90, threshold 45), and our link holds no body of ~shared_count (names.tsv), so
+# binaryen inlined it into its one caller there (a reading). The target's other callers of 2203 are 9536
+# (signal_impl's constructor, table slot 6135, which 5192 invokes), 9558 and 9521, each with landing pads. This object
+# instantiates signal_impl's constructor too, but our link takes it first from the tree root src/app/roots_boost.o (the
+# Boost probe at APP_CXXFLAGS, no landing pads), whose copy does not call ~shared_count. Measured in a scratch link whose
+# roots_boost.o declared signal_impl's constructor extern (`extern template`, not committed: the root is not this
+# unit's): 5192 14 over 87 rows, 2203 7 over 70 and 9536 32 over 339, every row operand-only, and the four rows that
+# match from roots_boost.o (519, 5481, 9522, 9552) scored as before. So 5192 and 2203 wait for the Boost root to leave
+# that constructor to this object. A rtti-vptr hand line names 5192 (the only target function that holds ICompressor's
+# vtable address point), which 5193's call needs.
 # ICompressor::Add(const std::filesystem::path&) and globToFileList (record icompressor.cpp:61) are in the link inside
 # 5821, where binaryen inlines Add; with them come libc++'s std::regex members this object instantiates (9534, the
 # constructor from a std::string, and 3526, 5187, 9518), vector<path>'s __init_with_size and slow push_back (9531,
 # 9516), and libc++.a's directory_iterator.o and operations.o rows the iterators reach (unit 122's fragment lists the
-# matches). The globToFileList the target inlines into 5821 differs from icompressor.cpp's (unit 122's fragment says
-# where). This object gives the link's std::regex members over std::string (9534, 5187, 5191 match from it): a tree
+# matches). globToFileList's lambda, `$_0::operator()` (9532, out of line: both loops invoke it through table slot
+# 6145, its two captures passed as parameters: a reading, clang's argument promotion), matches: it copies the entry's
+# path before it asks is_regular_file, as the target's 9532 does (its first rows copy the string at +0; with the test
+# first, as written before, it scored 104 over 388 rows). `&&` or a nested `if` for the two tests, and the copy `const`
+# or `auto`, give the same object; a reference for the copy gives another (the object compared at its compile line).
+# The rest is read from the rows of 5821, which hold Add and
+# globToFileList inlined:
+# Add calls Add(const std::vector<path>&) once on globToFileList's result (one invoke of slot 6151 with the vector at
+# +12, after the regex and the two paths are destroyed); the message of the throw builds on caminho (a copy of +128),
+# not on the argument; the "/*" suffix is a std::filesystem::path whose string() endsWith takes, after caminho's
+# string() (the copies at +96, then +24 and +80, destroyed in the reverse order); and endsWith is a size test and one
+# memcmp of the tail, which std::string::ends_with gives (5821 scored 648 over 4036 rows with compare(), 508 over 3946
+# with ends_with). That ends_with is called in a helper, its parameters' types, the lambda's and the helper's names are
+# chosen; endsWith over (const std::string&, const std::filesystem::path&), calling string() inside, is another form
+# the order of the copies allows, not measured. 5821's remaining rows are unit 122's fragment's. This
+# object gives the link's std::regex members over std::string (9534, 5187, 5191 match from it): a tree
 # root at these flags, src/app/roots_regex.cpp, gave them first while 5821 was not in the link, and went with it.
 # The census pairs 9534 with this object's copy by `addr` (with that root's by `shape`, which named it not), and
 # 9518 has a name by `table`; it is `unresolved` on its callee 3526 (__parse_basic_reg_exp), which has none: 9518 is
@@ -34,8 +64,13 @@
 # --depth 0), so the vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`).
 # DoAdd (9538) is written and unresolved on std::system_category: 752 rows over 2794, 557 of the 561 replaced
 # operand-only, 158 inserted and 33 deleted. Its callees in the target 891 and 1053 pair with libc++'s system_category
-# and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3564 and
-# 4679 have no pair (3334, libc++'s posix_stat, matches), and localtime (6270) is unresolved self-voted.
+# and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3564 has
+# no pair (3334, libc++'s posix_stat, matches), 4679 (ErrorHandler<unsigned long long>::report) matches since unit
+# 261's stand-in gives it its second caller, and localtime (6270) and generic_category (1053) are unresolved
+# self-voted on a .bss word that only each reads in the target (localtime's buffer 1932496, generic_category's guard
+# 1926460: grep of the split's pieces), which no hand line may name (docs/reference/splat.md section 3, "No circular
+# evidence"). DoAdd now reads `unresolved` on table slot 3818, CZip::AtualizaProgresso, which no symbol line names
+# (9537 pairs with it by shape and is unresolved).
 # The ecourna compile rule has only -Isrc; these TUs include <boost/signals2/...> and <minizip/zip.h> (zlib contrib).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp

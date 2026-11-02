@@ -76,7 +76,7 @@ void InicializaLog()
     api::CPolySingleton<api::CEscritorLog>::set(new CWasmLogd(arquivo));
 }
 
-void Inicializa(const SConfiguracao& configuracao, std::function<void()> aoIniciar)
+void Inicializa(const SConfiguracao& configuracao, const std::function<void()>& aoIniciar)
 {
     InicializaAmbiente();
     InicializaDispositivos(configuracao);

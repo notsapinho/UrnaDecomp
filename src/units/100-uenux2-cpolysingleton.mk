@@ -24,6 +24,12 @@
 #   its match line holds the three; the hand edit that named it while it differed went, its removal moving no row. The
 #   name byn$mgfn-shared$... carries the first member in link order, and the target has a fourth member, 2450 (has<vota::
 #   IAjusteInicial>); step 9 renames the match line when a landing moves the first member.
+# - has<T> 1954 (comum::CCalculaCV) and 2886 (vota::IQRCodeBUDS) are 19-B thunks of another merged body, 6057, for
+#   20-character type names. The three match since the roots' w100_tem_qrcode calls has<vota::IQRCodeBUDS> twice, for its
+#   two unwritten target callers (1956, GetQRDSInst in cmostraqrcodebu.cpp, and 14478): with no copy of it in the link,
+#   crelutil.cpp.o's has<CCalculaCV> stayed a whole body (`differs` against the thunk 1954). Its copy is the roots
+#   object's, at APP_CXXFLAGS (no tree object instantiates it); compiled at src/app/vota's flags (-O3 -std=c++23, strict
+#   aliasing), the roots object gives that function the same code (wasm-objdump -d, calls and constants masked).
 # - 631, emplace_back's slow path, and 14476, 321 and 871, which the roots keep (their comments there). 631's second arg is
 #   the typeinfo by reference, so m_tipo is a std::reference_wrapper here, one of the same-bytes forms below.
 # - The control blocks, __shared_ptr_pointer<T*, default_delete<T>, allocator<T>>: __get_deleter 7126 7137 7962 7966
@@ -84,6 +90,11 @@
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
 #   and 1166, 6147 and 1009 as binaryen's merges of its code, and with fragment 241's interfaces and unit 165's GetInsts
 #   the push thunks 5395, 5398 and 5407; the rest wait for the TU's code that instantiates them (unit 170's fragment).
+#   5417, 5425 and 5427 match since unit 170's roots give them the second call site the target gives them, and the
+#   set<T> bodies that call them are named; 640 (remove by name) and 13621 (unlock_shared_and_lock) match since the
+#   latter takes the guard (below). The push bodies differ in one frame slot, depura's format string, and unit 170's
+#   fragment has what that waits for: the reading of the frame paragraph above holds there too, since a scratch push
+#   instantiated above the TU's code, ahead of its other format code, gives every push the target's slot.
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
 #   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
 #   unit 121's fragment says why no roots builder stands in for it.
@@ -155,11 +166,14 @@
 #
 # Chosen, no byte decides: the operator of the name compare; m_escritor's type, bool (the wait tests it as a byte, and
 # unsigned char gives the same object); every name but those of the records and the messages' unlock_shared, unlock and
-# unlock_shared_and_lock (enumerators, members, CMutexCompartilhado, lock_shared, lock, CTravaLeitura and its promove,
+# unlock_shared_and_lock (enumerators, members, CMutexCompartilhado, lock_shared, lock, CTravaLeitura,
 # SPolySingletonInfo, g_polySingletonsInfo, polySingletonsInfoPadrao, m_depuracao, has, set, remove, depura, trace, demangle,
 # debug, find); depura's access: public, a keyword that is there for the roots, which take 14476's address, and no byte or
-# record gives this member's access; CTravaLeitura::promove as the caller's way up: 13621 takes the result, the mutex and the
-# guard, so the target's unlock_shared_and_lock takes the guard itself, a shape that gates no match while 640 is pending; that
+# record gives this member's access; unlock_shared_and_lock's guard parameter, a CTravaLeitura& (evidence: 13621 takes the
+# result, the mutex and an 8-byte object of 640's frame that 640 destroys through ~CTravaLeitura, and stores 0 to both of
+# its words before ~unique_lock<mutex>; the result's two stores come first), the friend that lets it empty the guard, its
+# definition after CTravaLeitura's in cmutexcompartilhado.h, and m_mutex as a pointer (a reference cannot be nulled; the
+# two give ~CTravaLeitura the same bytes, 1322 matching before and after); that
 # set is a member of CPolySingleton and remove<T> a template over the name's remove: the frame says only that a helper
 # clang inlined holds the temporary name, since a form written in set puts it above the unique_ptr; the
 # paths of cmutexcompartilhado.h, iajustedatahora.h and icontroladorregistramesarios.h; TPolySingletonsInfo as a struct and not a typedef; a template on the info's constness for the two finds,
@@ -181,7 +195,8 @@
 #   std::literals for std::string_literals; std::pair{…} for make_pair; end() != it; find_if over two iterators; std::find_if;
 #   a local bool in has<T>; a non-const name in has<T>; const_cast for mutable; `const auto&` for the structured binding;
 #   has<T> taking the info non-const (the rows differ in the symbol of one call, which binaryen merges with the other).
-# - other bytes: no `inline` on unlock_shared, or none on ~CTravaLeitura; std::shared_lock (its destructor stays out of
+# - other bytes: no `inline` on unlock_shared, or none on ~CTravaLeitura; std::shared_lock<CMutexCompartilhado> in
+#   CTravaLeitura's place, whose two words and release() read as fitting 13621's stores too (its destructor stays out of
 #   line, cost 245 against 225: levels.md §V2); a while loop for the wait's predicate, or `<= 0` in it; no copy of the
 #   shared_ptr; has<T>(info); the name before the lock in instance<T> or after it in has<T>; a non-const name in
 #   instance<T>; .first and .second for the structured binding; the test inverted around the throw in

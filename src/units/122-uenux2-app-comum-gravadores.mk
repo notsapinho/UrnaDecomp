@@ -80,8 +80,11 @@
 #   binaryen with its own frame), and CSystem::IsEmptyDir (fn 2762) while every directory so far was empty; when all
 #   are empty an ecourna::api::compression::CZip (fn 5193) of the file at ENivelCompressao::PADRAO (2), closed at once,
 #   else one at NENHUM (0) to which each directory + "*.wsq" is added through ICompressor::Add(const path&), which
-#   binaryen inlines (its one caller in both links), then CZip::Close (2691) and the destructor (2690). The target's
-#   first branch is the internal one (an i32.eqz before the if), ours the external one; not taken further.
+#   binaryen inlines (its one caller in both links), then CZip::Close (2691) and the destructor (2690), which czip.cpp
+#   defines out of line (unit 06's fragment). The target's first branch is the internal one (an i32.eqz before the if):
+#   `!midiaExterna ? GetCaminhoCorretoInternal() : GetCaminhoCorretoExternal()` puts the internal call first in
+#   cgravadorwsq.cpp.o, where `midiaExterna ? ...External() : ...Internal()` put the external one (wasm-objdump -d of
+#   the object compiled both ways); the conditional's spelling is chosen.
 # - GetCaminhoCorretoInternal and GetCaminhoCorretoExternal (records 175:19 and 192:19, binaryen-inlined into 5821 with
 #   frames of 480 B each): a switch on m_tipoBiometria whose cases return a vector of the one WSQ directory (5819,
 #   5818, 3795 internal; 5817, 5816, 3794 external) as a string, and whose default throws 8652 or 8653 with
@@ -171,14 +174,23 @@
 #   over the three values by value (run alone, through try-tu.sh --single's template by hand) gave the combination with
 #   the loads before the test and no `& 1`. Its remainder not explained and nothing written needing it, it is not
 #   written (docs/how-to-decompile.md step 5).
-# - comum::CGravadorWSQ::CompactaWsq (fn 5821): written (above) and not matched (`unresolved` on its first unnamed
-#   operand, libc++'s recursive_directory_iterator constructor 8101, which the census does not pair). It scores 1131 over
-#   4212 rows (pnpm wasm score, before step 8): the target's frame is 160 bytes against our 80, with 64 bytes at its
-#   bottom that no instruction addresses, and the rows of ecourna's globToFileList, which Add(const path&) brings
-#   inlined, differ: the target builds the suffix "/*" as a std::filesystem::path (an append of the literal's ends,
-#   table slot 6140) and copies both of endsWith's arguments, where icompressor.cpp as written passes caminho.string() by
-#   reference and a std::string temporary, and assigns "." to the directory through an append too. None of it was taken
-#   further. Its name is a callers+content hand line of splat/symbol_addrs.txt, on the three records it alone loads
+# - comum::CGravadorWSQ::CompactaWsq (fn 5821): written (above) and `differs`, its first difference the frame (scan
+#   detail +0x6: the target's is 160 bytes, ours 80). It scores 453 over 3911 rows (pnpm wasm score: 15 inserted, 19
+#   deleted, 411 of 419 replaced operand-only); ecourna's globToFileList, its lambda and ~CZip are written in the forms
+#   5821's rows show (unit 06's fragment; the lambda matches, and globToFileList is read off 5821's rows), and the rest
+#   is the frame's slot offsets, the locals' numbering, block placement (the place of the inlined Add's epilogue) and
+#   the store order of the inlined CreateDir's string (unit 32's code). The frame, measured on cgravadorwsq.cpp.o
+#   (wasm-objdump -d, and -emit-llvm for the allocas): clang gives CompactaWsq seven allocas (the vector, two CZip,
+#   three paths and the "*.wsq" string) and packs them into 80 bytes, the vector at 68, the CZip at 28, the paths at 16
+#   and the string at 0. The target's 5821 uses 148 (the vector), 104 (the CZip), 88 (the string) and 64 (the paths) of
+#   160, and no instruction of it addresses 0 to 63, 76 to 87, 100 to 103 or 144 to 147. A reading of that layout, slots
+#   in frame-index order from the top and an inline memset or memcpy raising a slot's alignment to 8 (our string at 0
+#   leaves 12 to 15 empty so): the vector, the CZip, the string, a 12-byte object, the paths and a 64-byte object
+#   aligned to 16, the size of a three-argument std::format store or of a std::filesystem::directory_entry. No
+#   instruction of the target uses the two, so their code is gone: a reading that binaryen removed it after folding a
+#   constant (docs/reference/facts/reading.md R1 has the pass). The file's three records are all loaded
+#   (ledger/source-locations.tsv), so no record shows it. What it was is not recovered, so it is not written, and 5821
+#   waits for it. Its name is a callers+content hand line of splat/symbol_addrs.txt, on the three records it alone loads
 #   (cgravadorwsq.cpp:175 and :192, icompressor.cpp:61), which slots 2, 3 and 6 and their merged body need: no vote
 #   reaches 5821, since its callers are named by vtable or by content.
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \

@@ -15,14 +15,11 @@
 // - vota::CHorarioVotacaoTerminou::ProcessInput (fn 10757, slot 7): a thunk into binaryen's fn 2295, with the slots 7 of
 //   vota::CEleitorImpedidoJustificarVotoCPF (10604) and vota::CEncerramentoHorarioInvalido (10709); 2295 calls fn 652.
 // - vota::CInspecionaUrna::ProcessInput (fn 11797, slot 7): fns 2380 and 6557.
-// - vota::IIniciaJustificativa::StartState (fn 10587, slot 2, the key function, so this object emits the class's
-//   vtable and its implicit destructors): fn 2747 (1535 is unit 50's, 1391, CJustificador::GetInst, unit 113's).
 #include "app/vota/eleitor/cinspecionaurna.h"
 #include "app/vota/operador/aguardaeleitor/cdesabilitaaudioeleitor.h"
 #include "app/vota/operador/aguardaeleitor/cperguntaeleitorvotando.h"
 #include "app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.h"
 #include "app/vota/operador/confirmaidentidade/chabilitaaudioeleitor.h"
-#include "app/vota/operador/justificativa/iiniciajustificativa.h"
 #include "app/vota/operador/outrasopcoes/chorariovotacaoterminou.h"
 #include "app/vota/operador/outrasopcoes/cperguntafilaeleitorvazia.h"
 
@@ -54,11 +51,6 @@ void CHorarioVotacaoTerminou::ProcessInput()
 }
 
 void CInspecionaUrna::ProcessInput()
-{
-    __builtin_trap();
-}
-
-void IIniciaJustificativa::StartState()
 {
     __builtin_trap();
 }

@@ -3,8 +3,7 @@
 # 11159, written and not matched, below) with its local facet's do_decimal_point (fn 11156); PushContext (fn 3684) and
 # CriaContexto (fn 676), over unit 193's context stack; the statics InitApplication writes and their static destructors
 # (fns 11160 to 11163); GetDescricaoModo (fn 5564), written and not matched (below), with the two statics it reads;
-# api::Join (fn 1696), and GetContexto (fn 1695) and api::GetExceptionLevel (fn 5569), both written and not matched
-# (below).
+# api::Join (fn 1696), GetContexto (fn 1695) and api::GetExceptionLevel (fn 5569).
 #
 # Evidence and choices.
 # - The record capplication.cpp:503:32, `static void api::CApplication::EnterLoopDoingNothing()`, gives the class, the
@@ -91,20 +90,28 @@
 #     `32 over 305 rows (same 273, replaced 26 [26 operand-only], inserted 3, deleted 3)`: ours read the vector's end
 #     again on each pass, the target holds it in a local. The range-for that compares the element's address with the
 #     first's gives `20 over 302 rows`, every one an operand, and the match.
-#   - 1695 is written and differs: `15 over 142 rows (same 127, replaced 13 [13 operand-only], inserted 2, deleted 0)`.
-#     The two rows are one frame offset: the target builds its copy of the stack's last context at +0 of its 80-byte
-#     frame and leaves +52 to +56 unused, ours at +4, with the two string temporaries at +56 and +68 on both sides; read
-#     as an 8-byte-aligned slot in the target, not explained. The copy into a local that the result is then moved from
-#     is the target's shape: `return contexto;` gives NRVO, the copy built in the result, and `97 over 146 rows (... 45
-#     deleted)`. Forms compiled at the tree's flags, the copy's offset read in the object (wasm-objdump -d): +4 for
-#     `return std::move(contexto)` after the early return (written), the same with the vector held in a reference, a
-#     std::move of a temporary copy, or a by-value lambda parameter returned; +28 with the non-empty case first or a
-#     ternary into the local (with std::move); +24 for a std::optional; NRVO, the copy built in the result, for a plain
-#     `return contexto;` after the early return, with the non-empty case first or after a ternary into the local, and
-#     for two named locals; +4 still with -fno-strict-aliasing or -O2 added, and with CApplicationContext's copy and
-#     move constructors declared (defaulted, or the copy out of line). It stays written: 5569 needs it.
-#   - 5569 is written and right apart from a name: `6 over 109 rows (same 103, replaced 6 [6 operand-only])`, every
-#     one a call, of 1695 and of emscripten_builtin_free (fn 136). Its row is no-candidate until 1695 has a name.
+#   - 1695 matches, named by its call from 5569, the one caller of it with a name (step 8's `evidence:call`). It
+#     copies the stack's last context into a std::optional<CApplicationContext> declared after the empty case and
+#     returns the value moved out. The target builds that copy at +0 of its 80-byte frame and leaves +52 to +56
+#     unused, under the two string temporaries at +56 and +68: read as a 56-byte object, the context and the optional's
+#     flag, whose store and test fold away. The optional is the form written among those that give the same object
+#     (below), a choice. Measured in the whole link: the plain local written before, `CApplicationContext contexto =
+#     s_contextos.m_contextos.back(); return std::move(contexto);`, built the copy at +4 and read `15 over 142 rows
+#     (same 127, replaced 13 [13 operand-only], inserted 2, deleted 0)`; the optional reads `13 over 140 rows (same
+#     127, replaced 13 [13 operand-only], inserted 0, deleted 0)` and matches. Forms compiled at the tree's flags,
+#     GetContexto read in the object (wasm-objdump -d, the copy constructor's this): the same object code as the form
+#     written for the optional's value taken as `std::move(contexto).value()`, a temporary
+#     `std::optional<CApplicationContext>(...).value()` returned, `*std::make_optional(...)` returned, and a
+#     file-static helper that returns the optional (std::nullopt when the stack is empty) dereferenced after the empty
+#     case; the copy at +24 with the optional declared first and tested for the empty case, at +4 with the plain local,
+#     and built in the result (NRVO, a 32-byte frame) for the plain local returned as `return contexto;`. Measured
+#     when the plain local was written: +4 with the vector held in a reference, a std::move of a temporary copy, or a
+#     by-value lambda parameter returned, and with -fno-strict-aliasing or -O2 added or CApplicationContext's copy and
+#     move constructors declared; +28 with the non-empty case first or a ternary into the local; NRVO read `97 over 146
+#     rows (... 45 deleted)` in the whole link.
+#   - 5569 matches, named by its census pair (step 8's `pair-addr`; its addr hash has one body on each side, pnpm wasm
+#     fingerprint): `6 over 109 rows (same 103, replaced 6 [6 operand-only])` against our symbol, every one a call, of
+#     1695 and of emscripten_builtin_free (fn 136).
 #
 # Written and not matched:
 # - 11159, InitApplication. The scan reads it `unresolved self-voted` on its store of the fourth parameter to the word

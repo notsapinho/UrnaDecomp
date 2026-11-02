@@ -179,7 +179,7 @@ public:
         CTravaLeitura trava(info.m_mutex);
         const auto [encontrada, it] = find(nome, info);
         if (encontrada) {
-            const std::unique_lock<CMutexCompartilhado> escrita = trava.promove();
+            const std::unique_lock<CMutexCompartilhado> escrita = info.m_mutex.unlock_shared_and_lock(trava);
             const auto instancia = it->m_instancia;
             info.m_lista.erase(it);
         }
