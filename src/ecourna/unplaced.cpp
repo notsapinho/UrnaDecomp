@@ -22,9 +22,6 @@
 // f4686 · 15 B · unmatched · placement: link order · name unknown
 // ? f4686(i32, i32, i32) { ... }
 
-// f4679 · 344 B · unmatched · placement: link order · name unknown
-// ? f4679(i32, i32) { ... }
-
 // f4676 · 15 B · unmatched · placement: link order · name unknown
 // ? f4676(i32, i32, i32) { ... }
 

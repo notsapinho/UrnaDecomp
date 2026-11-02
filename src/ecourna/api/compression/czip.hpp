@@ -21,7 +21,9 @@ public:
     // Defined in czip.cpp (target fn 5193), where comum::CGravadorWSQ::CompactaWsq calls it out of line
     // (src/units/06-ecourna-api-compression.mk).
     CZip(const std::filesystem::path& arquivo, ENivelCompressao nivel);
-    ~CZip() override { SafeClose(); }
+    // Defined in czip.cpp too: CompactaWsq calls its D2 (target fn 2690) out of line, which a definition in the class
+    // does not give (the same fragment).
+    ~CZip() override;
 
     void Close() override;
     bool SuportaGlob() const override { return true; }
