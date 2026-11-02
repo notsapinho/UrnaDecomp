@@ -54,7 +54,8 @@
 #   bodies an implicit destructor over CAppState's gives; slot 2 (fn 10587) is StartState, here the key function.
 #
 # Chosen, no evidence names them: every data member's name and, where only a width shows, its type (bool for the bytes,
-# ueint64 for +16); GetInst and the private constructors, declared and not defined; the CLogVota members' names (from
+# ueint64 for +16); GetInst and the private constructors, declared and not defined but for CDesabilitaAudioEleitor's
+# and CHorarioVotacaoTerminou's; the CLogVota members' names (from
 # their messages) and their place after LogaTituloInvalidoRegistroMesario; the enumerator's name
 # (app/vota/euevotaerror.h); the headers' paths, beside their .cpp, and every new .cpp's file name (the class name in
 # lower case). The directories (how-to step 3, docs/reference/facts/placing.md P4, P5):
@@ -81,12 +82,25 @@
 #
 # Not reconstructed, and what each waits for (callees with no name: ledger/callgraph.tsv against
 # splat/symbol_addrs.txt):
-# - every GetInst of these states and its constructor, which build the forms through fn 395 (the MT builder's input
-#   control) or 1151: 5393 (CDesabilitaAudioEleitor's), the one inlined into 10440 (CSuspensaoAutomaticaEleitor's), and
-#   the others' callers. 395 is api::CMTFormBuilder::AddInputControl, matched in unit 31 with the fns it calls, 3673 and
-#   3674 (AddField, out of line: unit 31's fragment has the measurement); 1151, which calls them too, is not written,
-#   nor is 5410, which builds a state's form in another TU and calls 3674. 5393 and 10440 have every direct callee named
-#   now.
+# - the GetInst of the other states and its constructor, which build the forms through fn 395 (the MT builder's input
+#   control) or 1151 (unit 121's): the one inlined into 10440 (CSuspensaoAutomaticaEleitor's) and the others' callers.
+#   10440 has every direct callee named now.
+#
+# GetInst written (each holds its constructor inlined behind a frame of its own, matched with its two static
+# destructors; the statics are defined before StartState, as the destructors' use band 1 sits above StartState's slot):
+# - vota::CDesabilitaAudioEleitor::GetInst (5393; statics' destructors 10438 and 10437): the form from an
+#   anonymous-namespace helper, initialized in the member list (301's result address is the member's, with no zeroing of
+#   it before): AddBuzz(51, 10), AddClock({33, 1}), "Retire o fone de ouvido da urna" at {1, 2}, "CONFIRMA" at {40, 4} on
+#   the right, AddInputControl, GetInteractiveForm("", true). Before steps 7 to 9 every differing row was the two
+#   statics' addresses (pnpm wasm score: 28 over 283, all operand-only).
+# - vota::CHorarioVotacaoTerminou::GetInst (5430; 10761 and 10760): the form built in the constructor's body and
+#   assigned (the member's two words zeroed before the vptr store, 301's result swapped in): AddBeep(2), "Horario de
+#   votacao terminou!" at {1, 1}, "Favor encerrar a urna!" at {1, 2}, "CORRIGE" at {1, 4}, AddInputControl,
+#   GetInteractiveForm("", true). 35 over 412 rows, all operand-only, the statics.
+# The two forms are the target's: the member-list helper where 301 writes into the member, the assignment where the
+# member is zeroed first. The helper's being in an anonymous namespace and its name are chosen. Their target callers are
+# not reconstructed (10209 and 10430 for 5393, 10677 and 10689 for 5430): the roots stand in for them, and the vtable
+# sinks for these two classes went.
 # - the pending slots: the -pending.cpp header lists them.
 #
 # Evidence and forms of the members written since (each measured in the whole link with pnpm wasm score):

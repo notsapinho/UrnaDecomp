@@ -335,19 +335,8 @@
 
 // link-order cluster 1083 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cvalidaidentidade.cpp
 
-// f2750 · 96 B · unmatched · placement: link order · name unknown
-// void f2750(i32, i32, i32) { ... }
-
 // f2749 · 69 B · unmatched · placement: link order · name unknown
 // ? f2749(i32) { ... }
-
-// link-order cluster 1084 · uses=4 · neighbours' file uenux2/src/app/vota/operador/outrasopcoes/cescolheopcao.cpp
-
-// f2753 · 3646 B · unmatched · placement: link order · name unknown
-// ? f2753() { ... }
-
-// f2751 · 83 B · unmatched · placement: link order · name unknown
-// void f2751(i32, i32, i32) { ... }
 
 // link-order cluster 1099 · uses=4 · neighbours' file uenux2/src/app/comum/relatorios/ccabecalhoqrcodebuilder.cpp
 
@@ -934,11 +923,6 @@
 
 // f1896 · 294 B · unmatched · placement: link order · name unknown
 // ? f1896(i32, i32) { ... }
-
-// link-order cluster 1268 · uses=11 · neighbours' file uenux2/src/api/util/isystemdatetime.cpp
-
-// f1151 · 330 B · unmatched · placement: link order · name unknown
-// void f1151(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1329 · uses=35
 

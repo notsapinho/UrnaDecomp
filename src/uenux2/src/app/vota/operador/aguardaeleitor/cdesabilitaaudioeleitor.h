@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "app/comum/cappstate.h"
 
@@ -19,8 +20,10 @@ namespace vota {
 // 244 and 387, the out-of-line destructors 49 final states share: a std::shared_ptr at +12 is all they release. +12
 // is the form: StartState shows it (slot 2 of api::IForm) and ProcessInput reads it through
 // api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read(). The object's size and its other members are not
-// recovered. GetInst and the constructor are not written: src/units/152-uenux2-app-vota-operador-estados.mk says what
-// they wait for and which of this is chosen.
+// recovered. A singleton: GetInst (fn 5393) creates the object under a static std::mutex (@1909236, destroyed at exit
+// by fn 10437) and keeps it in a static std::unique_ptr (@1909260, by fn 10438); the constructor, inlined into it,
+// initializes the form from a helper that builds it. src/units/152-uenux2-app-vota-operador-estados.mk says which of
+// this is chosen.
 class CDesabilitaAudioEleitor final : public comum::CAppState {
 public:
     virtual ~CDesabilitaAudioEleitor() override;
@@ -33,6 +36,9 @@ public:
 
 private:
     CDesabilitaAudioEleitor();
+
+    static std::unique_ptr<CDesabilitaAudioEleitor> s_inst;
+    static std::mutex s_mutex;
 
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };

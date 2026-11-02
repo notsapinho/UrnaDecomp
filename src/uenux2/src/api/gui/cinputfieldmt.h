@@ -12,8 +12,8 @@
 //
 // The constructor is 1151's code inlined: IInputField's constructor (fn 3673) with the validation, the length and the
 // confirm-on-full flag 1151 passes on, and false, true, false, false, which 3673 holds as constants because every
-// caller passes them (binaryen's dead-argument elimination). That this class passes them, and not 1151, is chosen. 1151
-// is not reconstructed, so no function of this link holds the constructor and nothing has compared it with the target.
+// caller passes them (binaryen's dead-argument elimination). That this class passes them, and not 1151, is chosen.
+// 1151 (vota::AdicionaCampoNumerico, unit 121's cescolheopcao.cpp) holds it inlined and matches.
 //
 // Draw is declared out of line, so it is the key function and cinputfieldmt.cpp emits the vtable. Evidence: the
 // target's vtable lies in the data away from the control block that 1151 instantiates

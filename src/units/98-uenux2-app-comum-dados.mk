@@ -6,7 +6,8 @@
 #   TraduzData inlined in it ("CTradutorFrase's members" below);
 # - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344);
 # - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224), and below it three members no
-#   record names, GetImpedimento (3769), GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's members" below);
+#   record names, GetImpedimento (3769), SemImpedimento (2266), GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's
+#   members" below);
 # - comum::asn::CConversorTipoIdentificadorEleitor::DoConverte and DoDesconverte (11357 and 11356, slots 2 and 3 of the
 #   vtable @1570668, lines 32 and 51 of asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp); 11356 is a thunk
 #   into binaryen's body 6030, which it forms with unit 17's DoDesconverte (11366);
@@ -75,6 +76,12 @@
 #   10635 (vota::CEleitorEncontrado's slot 2), calls it three times and is not written; the roots stand in for it. In
 #   band 3 it follows ConfereDadosDinamicos (3770), so it is defined below it. Chosen: its name, the members' names, the
 #   const CAppInfo& local that gives the const GetGeral (a std::as_const call is not tried).
+# - SemImpedimento, target fn 2266, matched, right after GetImpedimento: GetImpedimento() == IMPEDIMENTO_SEM_IMPEDIMENTO,
+#   with GetImpedimento inlined, which clang does only in this file (2266 holds 185 and 457's calls and the turn's test
+#   in place). Band 5 runs ccargods.cpp's 2268 and the ecourna 2267, then 2266, then celeitores.cpp's 2265 and 2264: name
+#   order puts celeitordetalhe.cpp there. Before steps 7 to 9 it scored 2 over 14 rows, both operands (pnpm wasm score). Its five callers: 2823
+#   (unit 110's CEleitores::QuantidadeAptos) and 2824, 10635, 11233 and 11616, not written, for which the roots'
+#   SemImpedimentoEmOutro stands. Its name, its being a member (it reads the private impediments) and const are chosen.
 # - GetDinamico, target fn 1271, matched: it passes "GetDinamico" (the literal at 141141, its only name evidence) to
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
 #   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its `const` and its

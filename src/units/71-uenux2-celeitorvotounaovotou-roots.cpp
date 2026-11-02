@@ -2,9 +2,8 @@
 // 1 of its vtable @1592928) in the skeleton link the way the target keeps them.
 //
 // StartState is reached only through the vtable. The vtable is referenced in the target only by the constructor,
-// inlined into GetInst (fn 1901, not reconstructed), which also calls fn 1284 directly from the static std::unique_ptr's
-// reset. Taking the vtable's address keeps every slot; the direct callers are not stood in for: the destructor is in
-// the table, so binaryen keeps it out of line with the one caller our link gives it, the deleting destructor.
+// inlined into GetInst (fn 1901), which is in the link: its target callers, fns 10209, 10419 and 10425, are not, so a
+// stand-in calls it twice, and GetInst's constructor keeps the vtable and every slot.
 //
 // comum::IPedeTituloMesario's constructor (target fn 3608) has three direct call sites in the target, all in fn 10388
 // (the derived states' constructors, inlined there), and uses of the `this` it returns, on which they store their own
@@ -17,12 +16,18 @@
 // constructor returns `this` before binaryen runs), so this TU needs no uenux2 header and instantiates nothing; compiled
 // with APP_CXXFLAGS.
 extern "C" {
-extern const char celeitorvotounaovotou_vt[] __asm__("_ZTVN4vota21CEleitorVotouNaoVotouE");
+int w1901_root_0() __asm__("_ZN4vota21CEleitorVotouNaoVotou7GetInstEv");
 int w3608_root_0(int, const void*, const void*) __asm__(
     "_ZN5comum18IPedeTituloMesarioC2ENSt3__210shared_ptrIN3api16CInteractiveFormINS3_9IScreenMTENS3_8IInputMTEEEEENS2_INS3_5IFormINS3_7IScreenEEEEE");
 }
 
 namespace {
+
+// Stands for fns 10209, 10419 and 10425, the target callers of vota::CEleitorVotouNaoVotou::GetInst (fn 1901).
+__attribute__((noinline)) int VotouNaoVotou()
+{
+    return w1901_root_0() | w1901_root_0();
+}
 
 __attribute__((noinline)) int ConstroiPedeTitulo(int estado, const void* form, const void* formEleitor)
 {
@@ -39,7 +44,7 @@ const void* volatile celeitorvotounaovotou_sink;
 struct SCEleitorVotouNaoVotouRoots {
     SCEleitorVotouNaoVotouRoots()
     {
-        celeitorvotounaovotou_sink = celeitorvotounaovotou_vt;
+        celeitorvotounaovotou_sink = reinterpret_cast<const void*>(&VotouNaoVotou);
         celeitorvotounaovotou_sink = reinterpret_cast<const void*>(&ConstroiPedeTitulo);
         celeitorvotounaovotou_sink = reinterpret_cast<const void*>(&ConstroiPedeTituloMembro);
     }

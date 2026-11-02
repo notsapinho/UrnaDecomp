@@ -163,7 +163,7 @@
 # holds inlined in its own frame. It then copies the field into a SharedField and passes that to 3674, which holds
 # vector::emplace_back with its slow path. The target keeps 3674 a call in its three callers, 395, 1151 and 5410, and
 # 1151 is another object's code (its control block's vtable @1588176 lies in app/vota/operador/outrasopcoes/
-# cescolheopcao.cpp's data). What fixes the form, each measured:
+# cescolheopcao.cpp's data; unit 121 writes it there as vota::AdicionaCampoNumerico). What fixes the form, each measured:
 # - Nothing outside this file keeps 3674 a call. At the tree's flags (-Rpass=inline -Rpass-missed=inline on
 #   cmtformbuilder.cpp), emplace_back goes into AddField (cost=310, threshold=325) and AddField, which has no inline
 #   hint, stays out of AddInputControl (cost=270, threshold=250); 3673 stays out of line (cost=340, threshold=250) and
@@ -184,14 +184,9 @@
 #   masked. A member by choice: it reaches the vector only through AddField.
 # - 3673 matches with api::ITimerScheduler::CreateTimer taking its callback by reference, as api/util/itimerscheduler.h
 #   has it now; unit 120's fragment scored it 12 over 211 rows with the callback by value.
-# The roots' ControleMT and EntradaMT give 395, 3674 and 3673 their second call sites. Not written, and what each
-# waits for:
-# - 1151 (9 callers, none written) builds an api::CInputFieldMT over a CNumberValidation ("0123456789"), pushes a
-#   SharedField of it through 3674 and returns it. Its control block's vtable lies among cescolheopcao.cpp's records,
-#   and fn 2753, which stores the vptr of CDataText<vota::CEscolheOpcao::COpcaoDS>, calls it, so the target's copy is
-#   that object's (a reading: the linkonce copy of an inline definition, or a function of that file). It waits for
-#   CNumberValidation's constructor and isValid (api/gui/cnumbervalidation.h holds the class's head only) and for a
-#   caller in that object: a stand-in here would emit it at APP_CXXFLAGS, not at app/vota's flags.
+# The roots' ControleMT and EntradaMT give 395, 3674 and 3673 their second call sites. 1151, which builds an
+# api::CInputFieldMT over a CNumberValidation ("0123456789") and pushes it through 3674, is unit 121's (cescolheopcao.cpp,
+# vota::AdicionaCampoNumerico; src/units/121-uenux2-datasources.mk has its evidence). Not written, and what it waits for:
 # - 5410 ("ELEITOR(A) PODE VOTAR", callers 1256 and 5399, not written) holds behind a second prologue code that builds a
 #   CInputFieldControl<IScreenMT> with std::make_shared and calls 3674; its block's vtable (@1580748) lies in this
 #   object's data, so that code is a member of this file that binaryen inlined, a reading.

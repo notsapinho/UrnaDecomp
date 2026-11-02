@@ -33,11 +33,9 @@
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
 #include "api/gui/cimagefieldupdate.h"
-#include "api/gui/cinputfieldmt.h"
 #include "api/gui/cmovie.h"
 #include "api/gui/cmoviefield.h"
 #include "api/gui/cnewlinefieldpaper.h"
-#include "api/gui/cnumbervalidation.h"
 #include "api/gui/coptionvalidation.h"
 #include "api/gui/cpreshownothing.h"
 #include "api/gui/cprogressbar.h"
@@ -65,7 +63,6 @@
 #include "app/comum/md/cidentificacaournacontingencia.h"
 #include "app/vota/comum/cpreshowformvota.h"
 #include "app/vota/eleitor/fimvotacao/cprogressoencerramento.h"
-#include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 #include "app/vota/operador/outrasopcoes/citensmenuvota.h"
 #include "ecourna/api/security/caescipher.hpp"
 #include "ecourna/api/security/cblockcipher.hpp"
@@ -89,15 +86,12 @@ extern const char w102_vt_cprogressoencerramento[] __asm__("_ZTVNSt3__220__share
 extern const char w102_vt_ccopiadormr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum11CCopiadorMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadorwsqmr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum14CCopiadorWSQMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN7ecourna3api8security5CTrngENS_9allocatorIS4_EEEE");
-extern const char w102_vt_cinputfieldmt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api13CInputFieldMTENS_10shared_ptrINS1_11IInputFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccutfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cpreshownothing_iscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CPreShowNothingINS1_7IScreenEEENS_10shared_ptrINS1_8IPreShowIS3_EEE27__shared_ptr_default_deleteIS8_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_ctextfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CTextFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cnumbervalidation[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api17CNumberValidationENS_10shared_ptrINS1_16IInputValidationEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_coptionvalidation[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api17COptionValidationENS_10shared_ptrINS1_16IInputValidationEE27__shared_ptr_default_deleteIS5_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cnewlinefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api18CNewLineFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cqrcodeimagefieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api22CQRCodeImageFieldPaperENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEEE");
-extern const char w102_vt_cdatatext_cescolheopcao_copcaods[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api9CDataTextIN4vota13CEscolheOpcao8COpcaoDSEEENS_10shared_ptrINS1_5ITextEE27__shared_ptr_default_deleteIS9_S6_EENS_9allocatorIS6_EEEE");
 extern const char w102_vt_citemparametrosurnavota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemParametrosUrnaVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_citemversoespacotesvota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota23CItemVersoesPacotesVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_citemimprimeestadournavota[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN4vota26CItemImprimeEstadoUrnaVotaENS_10shared_ptrIN5comum9CItemMenuEE27__shared_ptr_default_deleteIS6_S2_EENS_9allocatorIS2_EEEE");
@@ -211,10 +205,7 @@ template struct SBloco<TItem, vota::CItemVersoesPacotesVota>;
 template struct SBloco<TItem, vota::CItemParametrosUrnaVota>;
 template struct SBloco<TItem, vota::CItemVisualizarCandidatosVota>;
 template struct SBloco<TPreShow, api::CPreShowNothing<api::IScreen>>;
-template struct SBloco<api::IInputValidation, api::CNumberValidation>;
-template struct SBloco<api::IInputField<api::IScreenMT>, api::CInputFieldMT>;
 template struct SBloco<comum::asn::CVisitanteEleitor, comum::asn::CVisitanteEleitor>;
-template struct SBloco<api::IText, api::CDataText<vota::CEscolheOpcao::COpcaoDS>>;
 
 __attribute__((optnone, noinline)) std::shared_ptr<vota::CPreShowProgressBar> w102_preshow()
 {
@@ -270,15 +261,12 @@ struct SW102Roots {
         w102_sink = w102_vt_ccopiadormr;
         w102_sink = w102_vt_ccopiadorwsqmr;
         w102_sink = w102_vt_ctrng;
-        w102_sink = w102_vt_cinputfieldmt;
         w102_sink = w102_vt_ccutfieldpaper;
         w102_sink = w102_vt_cpreshownothing_iscreen;
         w102_sink = w102_vt_ctextfieldpaper;
-        w102_sink = w102_vt_cnumbervalidation;
         w102_sink = w102_vt_coptionvalidation;
         w102_sink = w102_vt_cnewlinefieldpaper;
         w102_sink = w102_vt_cqrcodeimagefieldpaper;
-        w102_sink = w102_vt_cdatatext_cescolheopcao_copcaods;
         w102_sink = w102_vt_citemparametrosurnavota;
         w102_sink = w102_vt_citemversoespacotesvota;
         w102_sink = w102_vt_citemimprimeestadournavota;
