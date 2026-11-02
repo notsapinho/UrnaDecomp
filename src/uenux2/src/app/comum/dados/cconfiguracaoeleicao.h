@@ -29,9 +29,9 @@ public:
     const md::CEleicaoPE& GetEleicao(const TEleicaoID eleicao) const;
     const md::CCargo& GetCargo(const TCargoID cargo) const;
     // Target fn 271 is f5648(this + 28, eleicao): CPleito::GetSituacoesEleicoes on the pleito at +28, out of line. Its
-    // callers (1386, 3687, 5577, 5578, 5582, 11558, 11559) each call GetInst (fn 187), and 5578 and 11558 pass its
-    // result to it, 11558 to GetCargo (fn 861) as well. No record names it: the name is chosen, from the member it
-    // forwards to, and so is the parameter's type, 5648's.
+    // callers (1386, 3687, 5577, 5578, 5582, 11558, 11559) pass it GetInst's (fn 187) result at every call, and
+    // 11558 and 11559 pass that result to GetCargo (fn 861) as well. No record names it: the name is chosen, from the
+    // member it forwards to, and so is the parameter's type, 5648's.
     const md::CSituacoesEleicoes& GetSituacoesEleicoes(const TEleicaoID eleicao) const;
 
     // The names are chosen: CGravadorUtil::DeterminaNomeArquivoSemLetra (inlined into target fn 3798) reads the pleito's

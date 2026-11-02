@@ -34,7 +34,10 @@
 # try-tu.sh --single: the zeroed bound gives the target's select where the ternary gives a branch, and a position of its
 # own gives the target's loop, a 32-bit counter and a 64-bit position stepped apart, where an index added to posicao
 # gives one 64-bit counter.
-# The counter's type and direction and the order of the two locals ahead of the null test are chosen.
+# The counter counts down in 32 bits, which the object shows (the two-argument GetValor's code, relocations masked): one
+# counting up differs, int or unsigned, and so does an 8-, 16- or 64-bit one counting down. Its signedness is chosen
+# (unsigned gives the same code), and so is the order of the two locals ahead of the null test (swapped, or both after
+# it: the same code).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR)
 ECOURNA_SRCS += api/io/cfile.cpp
 ECOURNA_SRCS += api/io/cioerror.cpp

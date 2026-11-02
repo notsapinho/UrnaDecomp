@@ -9363,7 +9363,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 9497	_ZNK7ecourna3api8security11CSiphashMac8DoVerifyERKNSt3__26vectorIhNS3_9allocatorIhEEEES9_S9_	10535	symbol	match	readings: address symbol,table slot,address string,address srcloc	814	shape	ecourna	1	app/ecourna/api_security_csiphashmac.cpp.o
 9498	_ZNK7ecourna3api8security11CSiphashMac5DoMacERKNSt3__26vectorIhNS3_9allocatorIhEEEERS7_S9_	10536	symbol	match	readings: address symbol,table slot,address string,address srcloc	3654	shape	ecourna	1	app/ecourna/api_security_csiphashmac.cpp.o
 9499	_ZN7ecourna3api8security5CPrng8GenerateERNSt3__26vectorIhNS3_9allocatorIhEEEE	10467	symbol	match	-	20	addr	ecourna	1	app/ecourna/api_security_cprng.cpp.o
-9500	_ZN7ecourna3api8security5CPrng6GetIntEv	10468	symbol	match	-	370	addr	ecourna	1	app/ecourna/api_security_cprng.cpp.o
+9500	_ZN7ecourna3api8security5CPrng6GetIntEv	10468	symbol	differs	+0x1 target the locals | ours the locals	370	none	ecourna	1	app/ecourna/api_security_cprng.cpp.o
 9501	_ZNSt3__220__shared_ptr_emplaceIN3api12CEsperaAudioENS_9allocatorIS2_EEED0Ev	11153	symbol	match	readings: address symbol	17	addr	libc++	2	app/uenux2/mock/app/simulador/wasm/cwasmwebsound.cpp.o
 9502	_ZN7ecourna3api8security5CPrng7GetByteEv	10469	symbol	match	-	332	addr	ecourna	1	app/ecourna/api_security_cprng.cpp.o
 9503	_ZN7ecourna3api8security5CPrngC2Ei	10470	symbol	match	readings: address symbol	21	none	libc++	1	app/ecourna/api_security_cprng.cpp.o

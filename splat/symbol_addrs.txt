@@ -7216,7 +7216,7 @@ _ZN7ecourna3api8security10CAesCipher7EncryptERKNSt3__26vectorIhNS3_9allocatorIhE
 _ZNK7ecourna3api8security11CSiphashMac8DoVerifyERKNSt3__26vectorIhNS3_9allocatorIhEEEES9_S9_ = func:9497; // size:0x32e evidence:srcloc-anchor
 _ZNK7ecourna3api8security11CSiphashMac5DoMacERKNSt3__26vectorIhNS3_9allocatorIhEEEERS7_S9_ = func:9498; // size:0xe46 evidence:srcloc-anchor
 _ZN7ecourna3api8security5CPrng8GenerateERNSt3__26vectorIhNS3_9allocatorIhEEEE = func:9499; // size:0x14 evidence:pair-addr
-_ZN7ecourna3api8security5CPrng6GetIntEv = func:9500; // size:0x172 evidence:pair-addr
+_ZN7ecourna3api8security5CPrng6GetIntEv = func:9500; // size:0x172 evidence:vtable
 _ZNSt3__220__shared_ptr_emplaceIN3api12CEsperaAudioENS_9allocatorIS2_EEED0Ev = func:9501; // size:0x11 evidence:vtable
 _ZN7ecourna3api8security5CPrng7GetByteEv = func:9502; // size:0x14c evidence:pair-addr
 _ZN7ecourna3api8security5CPrngC2Ei = func:9503; // size:0x15 evidence:vptr-anchor

@@ -91,7 +91,7 @@
 #   numbers after it and one call operand).
 # - CConfiguracaoEleicao::GetSituacoesEleicoes (fn 271, a chosen name) is f5648(this + 28, eleicao): CPleito's
 #   GetSituacoesEleicoes on the pleito at +28 (cconfiguracaoeleicao.h's m_pleito). Its callers (1386,
-#   3687, 5577, 5578, 5582, 11558, 11559) each call GetInst (187), and 5578 and 11558 pass its result to 271, 11558 to
+#   3687, 5577, 5578, 5582, 11558, 11559) pass it GetInst's (187) result at every call, and 11558 and 11559 pass that to
 #   GetCargo (861) as well (pnpm wasm fn), so it is the class's member, out of line in cconfiguracaoeleicao.cpp; its line
 #   there, after GetCargo's, and its parameter's TEleicaoID (5648's) are chosen. Its stub was an ecourna/unplaced.cpp
 #   row: the ledger's component for it is ecourna, which says which code calls it, not where it is written. The scan
