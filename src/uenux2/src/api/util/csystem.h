@@ -64,4 +64,11 @@ uintmax_t GetFreeSpace(const std::string& caminho);
 uintmax_t GetUsedSpace(const std::string& caminho);
 uedword GetMemInfo(const std::string& campo);
 
+// Fns 2763 and 5462 have no record: the part of a path held in a std::string after its last '/' (the whole string
+// when it holds none) and the part before it. Their callers are comum's and vota's (2763: 1501, 5360, 5461, 12098;
+// 5462: 1501, 12098), and both lie in csystem.cpp's run of the use bands. They read no state of CSystem, so they are
+// free functions; their names and namespace are chosen.
+std::string GetFileName(const std::string& caminho);
+std::string GetDirName(const std::string& caminho);
+
 } // namespace api

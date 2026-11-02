@@ -40,6 +40,28 @@ __attribute__((noinline)) void w168_separadores(api::CPaperFormBuilder* builder,
     vota::AdicionaSeparador(*outro, api::ALINHAMENTO_CENTRO);
 }
 
+// stands for fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2, not written), which calls VerificaAssinaturaMI
+// (fn 3290) and VerificaAssinaturaMV (fn 3288) three times each
+__attribute__((noinline)) void w168_assinaturas(const std::string& arquivo, const std::string& outro)
+{
+    vota::VerificaAssinaturaMI(arquivo);
+    vota::VerificaAssinaturaMV(arquivo);
+    vota::VerificaAssinaturaMI(outro);
+    vota::VerificaAssinaturaMV(outro);
+}
+
+// stand for fns 12081 (vota::CEmitirMaisBU::ProcessInput) and 12974, not written, which call
+// GetQuantidadeMaximaBUsAdicionais (fn 4582) once each and read what it returns
+__attribute__((noinline)) int w168_qtdbu(int base)
+{
+    return vota::GetQuantidadeMaximaBUsAdicionais() + base;
+}
+
+__attribute__((noinline)) int w168_qtdbu_vezes(int fator)
+{
+    return vota::GetQuantidadeMaximaBUsAdicionais() * fator;
+}
+
 const void* volatile w168_sink;
 
 struct SW168Roots {
@@ -48,6 +70,9 @@ struct SW168Roots {
         w168_sink = reinterpret_cast<const void*>(&w168_tecla);
         w168_sink = reinterpret_cast<const void*>(&w168_ajuste);
         w168_sink = reinterpret_cast<const void*>(&w168_separadores);
+        w168_sink = reinterpret_cast<const void*>(&w168_assinaturas);
+        w168_sink = reinterpret_cast<const void*>(&w168_qtdbu);
+        w168_sink = reinterpret_cast<const void*>(&w168_qtdbu_vezes);
     }
 } w168_roots;
 

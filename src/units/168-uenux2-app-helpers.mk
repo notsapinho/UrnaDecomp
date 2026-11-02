@@ -77,8 +77,36 @@
 # band 9, where the target's 1387 lies between md/processoeleitoral/ccargo.cpp's 1388 and 1386, comum code not
 # written, and then api/gui/cframedtext.cpp's 1385, none of them app/vota/ code), the line after EhTreinamento, and
 # static_cast<api::IPaper::EStyle>(1), as cgeradorrelpu.cpp spells it.
+
+# Added since, in votadefs.cpp at the lines of their records (the file's other lines are a choice):
+# - vota::VerificaAssinaturaMI and VerificaAssinaturaMV (fns 3290 and 3288, records 103:19 and 110:19): ValidarUE (fn
+#   5890, unit 95) over CPolySingleton<IInterfaceSavd>::instance() and the file under CPath::GetPathTrab of the internal
+#   (0) and the external (1) flash and the current turno, as one std::string. The target calls instance() first (its
+#   default location is the record) and CAppInfo::GetInst() after it, through the const GetGeral (fn 457), so each is a
+#   statement of its own: `auto& iSavd = …instance();`, a name chosen to give the record's column at four spaces, as
+#   landed code's `auto& iurna = …` does, then `const CAppInfo& appInfo = CAppInfo::GetInst();`, then the call; the
+#   path's temporaries are freed after ValidarUE, so the path is built in that call's arguments. ValidarUE's ESavdAplic
+#   is 1 (its wasm type has lost it: every caller passes 1), SAVD_APLIC_VOTA, a chosen name.
+# - vota::GetQuantidadeMaximaBUsAdicionais (fn 4582, record 135:97, the closing parenthesis of an ASSERT whose text is
+#   "Assert (numImpresso >= numObrigatorias)", code 3449, api::EUA_QUANTIDADEMAXIMABUSADICIONAIS_IMPRESSO_MENOR, a name
+#   chosen to the column's length): 1 when EhTreinamento and the vota state's +72 byte (GetTreinamentoEleitor) are set,
+#   else the extra copies less those already printed past the obligatory ones. Its return type, comum::TQtdImpresso,
+#   is the record's: 8 bits wide and unsigned (the result is masked with 255), declared in votadefs.h, a chosen place.
+#   The target takes GetVota()'s reference before it builds the CInformacaoEleicao, and keeps (obligatory - printed) +
+#   extras in that order, which a TQtdImpresso local for the difference gives. Measured in copies of link.cmd with
+#   votadefs.cpp.o alone recompiled (pnpm wasm score): a TQtdImpresso local for the copies printed past the obligatory
+#   ones (the one written, `numAdicionais - numAdicionaisImpressos`), or for the obligatory ones not printed
+#   (`numRestantes + numAdicionais`, the extras a TQtdImpresso or an int), or a static_cast<TQtdImpresso> of that
+#   difference: 16 over 72 rows, operand-only; the one line `numObrigatorias - numImpresso + numAdicionais`, the printed
+#   count a TQtdImpresso, an int or bound to a const reference: 20 over 74 (2 inserted, 2 deleted: clang adds the extras
+#   first).
+# - The roots give each two call sites: 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) calls 3288 and 3290 three
+#   times each, 12081 and 12974 call 4582; none is written. votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h,
+#   which reaches Boost, hence the include path on its object.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
+# votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost through CHorariosUrna
+$(ROOT)/$(APP)/uenux2/src/app/vota/comum/votadefs.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # nothing in the link calls these functions yet: 168-uenux2-app-helpers-roots.cpp gives each two call sites. It compiles
 # at the tree's flags, so the has<T> instance it emits is the code a uenux2 object gives, and no match rests on a flag
 # the tree lacks

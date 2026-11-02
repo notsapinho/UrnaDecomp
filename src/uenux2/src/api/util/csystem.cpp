@@ -71,6 +71,15 @@ bool CSystem::ExistDir(const std::string& diretorio)
     return ExistResource(info, diretorio) && S_ISDIR(info.st_mode);
 }
 
+std::string GetFileName(const std::string& caminho)
+{
+    const size_t barra = caminho.rfind('/');
+    if (barra == std::string::npos) {
+        return caminho;
+    }
+    return caminho.substr(barra + 1);
+}
+
 int AlteraDono(const std::string& arquivo, uid_t dono, gid_t grupo)
 {
     struct stat info;
@@ -176,7 +185,7 @@ int RemoveTree(const std::string& diretorio)
     return 0;
 }
 
-// (original lines 188-229: content not recovered)
+// (original lines 197-229: content not recovered)
 #line 230
 std::string CSystem::TemporaryPath(const std::string& caminho)
 {
@@ -536,6 +545,11 @@ uedword GetMemInfo(const std::string& campo)
         }
     }
     return valor;
+}
+
+std::string GetDirName(const std::string& caminho)
+{
+    return caminho.substr(0, caminho.rfind('/'));
 }
 
 } // namespace api

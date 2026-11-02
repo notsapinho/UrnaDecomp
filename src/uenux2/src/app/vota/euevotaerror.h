@@ -9,6 +9,10 @@
 namespace vota {
 
 enum EUeVotaError {
+    // the value is the code vota::CSincronizaVota::SincronizaRelatorios (target fn 1836, record csincronizavota.cpp:392)
+    // throws; the name is chosen from its message, "O arquivo{} não é um relatório válido para sincronização": no
+    // evidence names it
+    EUE_VOTA_RELATORIO_INVALIDO_SINCRONIZACAO = 9302,
     // the values are the codes the GetTelaCargoAtual(const std::string &) of vota::CConfirmaVotoEmCargo and
     // vota::CConfirmaVotoSemCandidato throw (target fns 5928 and 4483, which pass them to fn 3921); the names are chosen
     // from the message, "<caller> - o cargo atual nao esta posicionado", and the class: no evidence names them

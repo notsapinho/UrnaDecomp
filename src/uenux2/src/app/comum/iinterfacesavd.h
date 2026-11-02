@@ -19,8 +19,13 @@ namespace comum {
 // where the target has the unsigned compare). Two readings give the target's code: a fixed unsigned type, or unsigned
 // parameters of the members that compare it (ValidarPacote, EnviarAcaoHSM and AssinarArquivo, whose types no record
 // gives). `: unsigned int`, the plainest unsigned type, is the reading chosen. The other SAVD types are not recovered;
-// the header's path follows iinterfacesavd.cpp.
-enum ESavdAplic : unsigned int;
+// the header's path follows iinterfacesavd.cpp. One value is named: 1, which vota's requests carry (the CAssinador
+// that vota::CAssinadorVota's constructor, fn 1501, builds stores it at +4; vota::VerificaAssinaturaMI and MV, fns 3290
+// and 3288, pass it to ValidarUE, whose wasm type has lost the parameter: every caller passes 1). Its name is chosen
+// from those callers; no evidence names an enumerator.
+enum ESavdAplic : unsigned int {
+    SAVD_APLIC_VOTA = 1,
+};
 
 // Recovered: only the type of the SAVD package that comum::CArquivosSavd::operator[] takes (its record in
 // carquivossavd.cpp spells it ESavdPacote, fn 275) and comum::CAssinador keeps: vota::CAssinadorVota's constructor
@@ -141,6 +146,7 @@ std::string MontaRequisicaoTLV(const std::string& pacote, ueint32 chave);
 std::string MontaConteudoTLV(const std::string& pacote, ueint32 chave);
 
 void ValidarUE(IInterfaceSavd& savd, ESavdAplic aplic, const std::string& pacote);
+void AssinarUE(IInterfaceSavd& savd, ESavdAplic aplic, ueint32 comando, ueint32 arquivo);
 void EnviarAcaoHSM(IInterfaceSavd& savd, ESavdAplic aplic, ESavdCmdHSM acao);
 
 } // namespace comum

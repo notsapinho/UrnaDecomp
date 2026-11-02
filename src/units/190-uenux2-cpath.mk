@@ -92,6 +92,13 @@
 # operator/='s address. It compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree
 # header.
 #
+# Added since: CPath::GetPathTrabExterno (no target index), `std::filesystem::path path("/dsk/fe/dinamico/trab/");
+# return s_pathRoot / path.relative_path();`, GetPathMR's form (above), under a chosen name. binaryen inlined it into
+# comum::CArquivosSavd::GetInst (fn 1164, unit 95), its one caller, behind a stack frame of its own, where it builds the
+# path of the package 156 ("tabcorr.vsc" under it). It is a member because it reads s_pathRoot; its line, after
+# GetPathChave, is a choice. 1164 is written and does not match yet (unit 95's fragment says what it waits for), so no
+# match checks this body.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CPATH_SRCS := src/app/comum/cpath.cpp
 UENUX2_SRCS += $(CPATH_SRCS)

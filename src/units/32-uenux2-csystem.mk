@@ -193,6 +193,18 @@
 # callers'): no record names it. Named by 5455's call (evidence:call by:5455), it matches; ReplaceResource calls it
 # three times, the target's 5455 too. Its ") - " gives ecourna::api::exception::CError's constructor (1143, unit 112's
 # note) the literal whose tail it uses, and 1143 matches too.
+
+# Added since: api::GetFileName and GetDirName (target fns 2763 and 5462, no record), the part of a path held in a
+# std::string after its last '/' (the whole string when it holds none: the target copies it whole, and substr after the
+# '/', which can throw out_of_range) and the part before it (`substr(0, rfind('/'))`). Their callers are comum's and
+# vota's (2763: 1501, 5360, 5461, 12098; 5462: 1501 and 12098), and both lie in this file's run of the use bands, 5462 in
+# band 2 between 5461 and 5463 (GetMemInfo) and 2763 in band 4 just ahead of 2762 (IsEmptyDir's record, 255) and
+# ZeroFill. They read no state of CSystem, so they are free functions of api, as GetMemInfo is; their names are
+# chosen. Their places: GetFileName after ExistDir, so that it links ahead of ZeroFill, RemoveFile and GetFileSize as
+# 2763 does in its band; GetDirName after GetMemInfo, at the end of the file, which keeps 5463 ahead of it as band 2 does
+# and, like GetMemInfo, takes it after ExistDir where the band has it before (a choice, the same one GetMemInfo's place
+# makes). 1501 (vota::CAssinadorVota's constructor, comum::CAssinador's inlined) calls each once: PartesDoCaminho in the
+# roots stands for 12098, 5360 and 5461, so binaryen keeps both out of line as the target does.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSYSTEM_SRCS := src/api/util/csystem.cpp
 UENUX2_SRCS += $(CSYSTEM_SRCS)

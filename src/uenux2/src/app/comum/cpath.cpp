@@ -54,7 +54,13 @@ std::filesystem::path CPath::GetPathChave()
     return s_pathRoot / path.relative_path();
 }
 
-// (original lines 57-140: content not recovered)
+std::filesystem::path CPath::GetPathTrabExterno()
+{
+    std::filesystem::path path("/dsk/fe/dinamico/trab/");
+    return s_pathRoot / path.relative_path();
+}
+
+// (original lines 63-140: content not recovered)
 #line 141
 std::filesystem::path CPath::GetPathRootSemSA(EFlashOrigem origem)
 {
