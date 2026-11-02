@@ -33,7 +33,8 @@
 # converter's constructor is not written: its builders are not reconstructed.
 #
 # Roots (191-uenux2-cconversorcargo-roots.cpp): one stand-in caller each for 365 (its 16 other target callers), 2341
-# (5594, 11375) and 3018 (374, 6627, 11377), through asm labels; each goes when the callers it names are in the link.
+# (5594, 11375) and 3018 (374 and 6627; 11377 is in the link, fragment 225), through asm labels; each goes when the
+# callers it names are in the link.
 CCONVERSORCARGO_SRCS := src/app/comum/dados/asn/processoeleitoral/cconversorcargo.cpp
 UENUX2_SRCS += $(CCONVERSORCARGO_SRCS)
 # the converter includes generated ASN.1 modules, which the generic uenux2 rule does not depend on

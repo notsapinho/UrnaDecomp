@@ -11,7 +11,7 @@
 // It calls each one twice, so each has two call sites here; 9066, 9127, 9130, 9142, 9221 and 9228 are written, the rest are
 // not. Its body is no target function's: two constructions and a difference.
 //
-// w112_apara stands for the callers of the copying Trim (1374) not written: 5604 5896 11377 (2256 and 5343 are in the
+// w112_apara stands for the callers of the copying Trim (1374) not written: 5604 5896 (2256, 5343 and 11377 are in the
 // link). Two calls, for the same reason. Without a second copying function 1879 stays a whole body: with this one
 // binaryen forms the target's merge 3942.
 //

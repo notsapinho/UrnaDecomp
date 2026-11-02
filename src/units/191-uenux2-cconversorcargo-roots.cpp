@@ -7,7 +7,7 @@
 // - std::construct_at<comum::md::CSuplencia> (fn 2341, the element copy of that constructor's vector): stands for 5594
 //   and 11375.
 // - std::vector<comum::md::CRespostaConsulta>::__init_with_size (fn 3018, the vector copy inside
-//   comum::md::CDetalheConsulta's copy): stands for 374, 6627 and 11377.
+//   comum::md::CDetalheConsulta's copy): stands for 374 and 6627 (11377 is in the link, fragment 225).
 // Declared through asm labels with the objects' signatures (a constructor returns `this`), so this TU instantiates
 // nothing; each copy comes from the object that calls it first in link order.
 extern "C" {

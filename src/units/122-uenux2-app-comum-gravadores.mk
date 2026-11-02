@@ -7,6 +7,12 @@
 #   binaryen inlines into it (its second stack frame), matches at the tree's -O3 (below).
 # - comum::asn::ConverteSerialFlash (target fn 3605, records :26 and :31) and DesconverteSerialFlash (fn 3604, record
 #   :54, matched at the tree's -O3: below) in src/app/comum/gravadores/asn/util.cpp, with the header util.h beside it.
+# - comum::asn::CalculaHashSha512 (fn 3602, no record), util.cpp's last function: in band uses 3 of ledger/ordinals.tsv
+#   it follows 3605 and 3604 (with 3603 between, not written), so it is placed after them, a reading of the band; its
+#   name, its being a free function of comum::asn and its parameter's name are chosen. It hashes a string's bytes with a
+#   std::shared_ptr<IHash>(new CSha512): Reset, then Update of a vector the target frees after Finish (written as a
+#   named local), then Finish into the result. Its CSha512 pointer block (10277, 10279) matches from this object now (unit 102's row).
+#   Its only target caller, fn 10273 (CConversorEntidadeBU's slot 2), is not written: the roots stand in for it.
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
 #   inlines into it, in md/cversoesarquivos.cpp, the class header beside it; libc++'s hinted emplace into its
 #   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346,
@@ -120,6 +126,8 @@ UENUX2_SRCS += $(GRAVADORES_SRCS)
 # cgravadorutil.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit 88's
 # sources do): an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# gravadores/asn/util.cpp's CalculaHashSha512 includes ecourna/api/security/csha.hpp, which includes OpenSSL's evp.h
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/asn/util.cpp.o: UENUX2_CXXFLAGS += $(OPENSSL_INCLUDES)
 # nothing reconstructed calls most of these yet: 122-uenux2-app-comum-gravadores-roots.cpp stands in for the target's
 # callers, two call sites each
 $(ROOT)/$(APP)/122-uenux2-app-comum-gravadores-roots.o: $(ROOT)/src/units/122-uenux2-app-comum-gravadores-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/122-uenux2-app-comum-gravadores.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)

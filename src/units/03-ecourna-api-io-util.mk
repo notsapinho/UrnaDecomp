@@ -5,6 +5,13 @@
 # Boost's path too (its header says how): at UENUX2_CXXFLAGS both compare equal, by function with the object-local
 # numbers masked; at ECOURNA_CXXFLAGS both differ (55 and 57 rows against 48 and 50, the address arithmetic). The
 # target's copies are a uenux2 object's: their vtable lies among app/comum/dados/asn/eleitor/ records.
+# The std::make_shared<boost::dynamic_bitset<uebyte>>() in CBitArray's constructor builds a __shared_ptr_emplace block
+# whose vptr (vtable @1117736) only fn 5702 stores in the target (not written; it holds the constructor inlined). Its
+# D2 and D0 (9409, 9408) match from the roots object: a builder there that the link drops instantiates the block, and
+# the vtable's address in the sink stands for 5702's store (src/units/README.md "A control block"); slot 2 holds 5047,
+# matched as vector<uebyte>'s block's __on_zero_shared. The two bodies store the vptr and return or
+# free: compiled at UENUX2_CXXFLAGS too, the roots object's D2 and D0 give the same rows (wasm-objdump -d, function by
+# function, indices masked).
 # CFile's constructor (fn 517) is out of line in cfile.cpp: its target body has an -fexceptions object's landing pad
 # around the call of Open (invoke_iiiii through Open's slot, 6209, and m_nome destroyed inline), and uenux2 callers such
 # as api::CEncryptedFile::Save (2767, unit 128) call it, where an inline constructor is inlined into them; compiled in
