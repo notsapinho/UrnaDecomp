@@ -7,7 +7,9 @@
 # - 2650 allocator<Visitante>::destroy: one call, 3 over 19 rows. Target 424, shared_ptr<ISeeder>'s destructor among
 #   others, has no result, and BERDecoderPartial's destructor and constructor (2183, 3469) match over it. Target 388 is a
 #   second copy that reads +4 and keeps its result, and 2650 calls it and drops that, so one body of ours cannot serve
-#   both. 8831 matches by their names.
+#   both. 8831 matches by their names. Since unit 237 our link has both bodies (388 matches from the executable TU's
+#   object, its result read by 11530), and our 2650 still calls the one matched as 424, read as waiting for a copy of
+#   ~shared_ptr<ASN1::IAbstractVisitor> with 388's body ahead of the runtime (unit 237's fragment).
 # - 8811 PERDecoder::do_visit(SEQUENCE_OF_Base&): differs. It calls 543, which no body of the runtime equals
 #   (docs/reference/facts/asn1.md A5), with one block more than the target around the vector growth wasm-opt inlined
 #   from SEQUENCE_OF_Base::resize, which asn1.cxx holds.

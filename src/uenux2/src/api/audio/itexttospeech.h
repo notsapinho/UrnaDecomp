@@ -1,5 +1,6 @@
 #pragma once
 
+#include <format>
 #include <list>
 #include <memory>
 #include <string>
@@ -43,9 +44,34 @@ class CWavFile;
 // records); volume is the third of RHVoice's three, by elimination; SetTag is named for what the body does with the value,
 // since slot 8 has no caller in the target (no call_indirect of its type (i32, i64)->() goes through +32). 4 and 0, the
 // limits of slots 6 and 7, have no name.
-// Synthesize is inline in the original, like every other member. It is declared here without a body and trapped in
-// src/units/82-uenux2-cwasmnulltexttospeech-pending.cpp until its callees exist (that file says which), and moves into
-// the class with its body.
+// Synthesize (slot 0) and its helpers, from the executable TU's copies (src/app/roots_texttospeech.cpp gives them at
+// that TU's rule; src/units/237-uenux2-itexttospeech.mk has the measurements):
+// - Synthesize: fn 11530 builds the options, makes the key through table slot 207 (fn 5758), looks it up through slot
+//   208 (fn 5754) into its result and returns when the pointer is not null. Otherwise it destroys that empty result
+//   (fn 388) and calls slot 11 into the same address, then stores a copy through slot 209 (fn 5750) with 0 as the last
+//   argument; two named results in one return slot, as written here, give those rows. The options' address is held in
+//   a local before the string copy and the fields are stored through the copy's returned this, read as a function of
+//   its own that binaryen inlined (how-to step 3's signs), GetOptions here; the same initializer written in Synthesize,
+//   and a constructor of SOptions, give other rows.
+// - MakeKey (fn 5758): std::format of the text, the rate, the voice, the pitch and the tag. The tag is copied into a
+//   temporary of the frame before the format, which a prvalue argument gives and options.tag alone does not. Its
+//   second parameter is the object, which both callers, 11530 and fn 921, pass and it never reads.
+// - Lookup (fn 5754): the kept map's find, then the cache's Get, which binaryen inlined (Get's code written in Lookup
+//   gives other rows).
+// - Store (fn 5750): its last argument is compared with 1: 11530 passes 0 (the cache) and fn 921 passes 1 (the kept
+//   map). A bool there gives other rows. The kept map's operator[] is slot 210 (fn 11447) and its assignment a copy
+//   (fn 5707); the shared_ptr comes by value (5750 destroys it on both paths).
+// - SRecentCache::Put (fn 11436, slot 211, called with this + 4): find and then operator[] of the index (fns 2808 and
+//   3732); when the index holds `capacity` keys, a copy of the last entry, its key erased (slot 212, fn 11353) and the
+//   entry popped (slot 213, fn 11346); then emplace_front of the key and the file (the pair's constructor is slot 218, fn
+//   11342) and the index set to the new first entry.
+// Not written: fn 921, a member with no landing pads (a uenux2 TU's copy) that only fn 7787 calls, 14 times: the same
+// options, key and Lookup; when the file is found it sets the kept map's entry to it, else it calls slot 11 and Store
+// with 1. Its copy is the TU of 7787, not written.
+// Chosen as well: the names GetOptions, MakeKey, Lookup, Store, ECache and its enumerators, Get and Put; ECache an enum
+// (an int compared with 1 gives the same rows); MakeKey a member (how-to step 3: its callers pass an object it never
+// reads; a free function that takes the object first gives the same rows); the cast that makes the tag a prvalue (a
+// C-style cast gives the same rows). src/units/237-uenux2-itexttospeech.mk lists the other forms measured.
 class ITextToSpeech {
 public:
     struct SOptions {
@@ -56,7 +82,16 @@ public:
         long long tag;
     };
 
-    virtual std::shared_ptr<CWavFile> Synthesize(const std::string& text);
+    virtual std::shared_ptr<CWavFile> Synthesize(const std::string& text)
+    {
+        SOptions options = GetOptions();
+        std::string key = MakeKey(text, options);
+        if (std::shared_ptr<CWavFile> wav = Lookup(key))
+            return wav;
+        std::shared_ptr<CWavFile> wav = DoSynthesize(text, options);
+        Store(key, wav, eCacheRecent);
+        return wav;
+    }
     virtual void SetVoice(const std::string& voice) { m_voice = voice; }
     virtual void SetPitch(unsigned pitch) { m_pitch = pitch; }
     virtual void SetVolume(unsigned volume) { m_volume = volume; }
@@ -81,13 +116,65 @@ public:
     virtual std::shared_ptr<CWavFile> DoSynthesize(const std::string& text, const SOptions& options) = 0;
 
 private:
+    enum ECache { eCacheRecent, eCacheKept };
+
     struct SRecentCache {
         using TEntry = std::pair<std::string, std::shared_ptr<CWavFile>>;
+
+        std::shared_ptr<CWavFile> Get(const std::string& key)
+        {
+            if (index.find(key) == index.end())
+                return nullptr;
+            auto entry = index[key];
+            entries.splice(entries.begin(), entries, entry);
+            return entry->second;
+        }
+
+        void Put(const std::string& key, const std::shared_ptr<CWavFile>& wav)
+        {
+            if (index.find(key) != index.end()) {
+                auto entry = index[key];
+                entry->second = wav;
+                entries.splice(entries.begin(), entries, entry);
+                return;
+            }
+            if (index.size() == capacity) {
+                TEntry last = entries.back();
+                index.erase(last.first);
+                entries.pop_back();
+            }
+            entries.emplace_front(key, wav);
+            index[key] = entries.begin();
+        }
 
         unsigned capacity = 256;
         std::list<TEntry> entries;
         std::unordered_map<std::string, std::list<TEntry>::iterator> index;
     };
+
+    SOptions GetOptions() { return {m_voice, m_rate, m_pitch, m_volume, m_tag}; }
+
+    std::string MakeKey(const std::string& text, const SOptions& options)
+    {
+        return std::format("{}:{}:{}:{}:{}", text, options.rate, options.voice, options.pitch,
+                           static_cast<long long>(options.tag));
+    }
+
+    std::shared_ptr<CWavFile> Lookup(const std::string& key)
+    {
+        auto kept = m_kept.find(key);
+        if (kept != m_kept.end())
+            return kept->second;
+        return m_recent.Get(key);
+    }
+
+    void Store(const std::string& key, std::shared_ptr<CWavFile> wav, ECache cache)
+    {
+        if (cache == eCacheKept)
+            m_kept[key] = wav;
+        else
+            m_recent.Put(key, wav);
+    }
 
     SRecentCache m_recent;
     std::unordered_map<std::string, std::shared_ptr<CWavFile>> m_kept;
