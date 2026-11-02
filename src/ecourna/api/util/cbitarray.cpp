@@ -16,25 +16,20 @@ ueword CBitArray::GetValor(const uebyte bits)
     return valor;
 }
 
-// (original lines 51-52: content not recovered)
-#line 53
 ueword CBitArray::GetValor(const ueqword posicao, const uebyte bits) const
 {
+    ueword valor = 0;
+    ueqword pos = posicao;
     if (m_bits == nullptr) {
         throw CUtilError(EUE_BITARRAY_NAO_ALOCADO, "array de bits nao alocado corretamente");
     }
-
-
-    ueword valor = 0;
     if (bits > 0) {
-        ueqword restantes = (posicao <= m_bits->size()) ? m_bits->size() - posicao : 0;
-        if (bits - 1 >= restantes) {
+        ueqword restantes = m_bits->size() - posicao;
+        if (restantes > m_bits->size()) restantes = 0;
+        if (bits - 1 < restantes) {
+            for (int i = bits; i > 0; --i) if (m_bits->test(pos++)) valor |= 1 << (i - 1);
+        } else {
             throw CUtilError(EUE_BITARRAY_POSICAO_INVALIDA, "busca no vetor em posicao invalida");
-        }
-        for (uebyte i = 0; i < bits; ++i) {
-            if (m_bits->test(posicao + i)) {
-                valor |= 1 << (bits - 1 - i);
-            }
         }
     }
     return valor;

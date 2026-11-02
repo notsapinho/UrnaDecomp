@@ -16,11 +16,12 @@
 //   2796  GetNome                     5803 6569 11892
 //   2258  GetOrdinalEscolha           4464 12587 12811 13550
 //   5651  CPleito::GetEleicao         3744 3775
-//   5648  CPleito::GetSituacoesEleicoes  271 3713
+//   5648  CPleito::GetSituacoesEleicoes  3713 (271, cconfiguracaoeleicao.cpp, is written and gives the other)
 //   5655  CCargo::operator<=>         11888, two call sites
 //   5654  CEleicaoPE::GetIDsCargos    7787
 //   5653  CEleicaoPE::PossuiCargoCandidato  3744 7787
 //   3784  CCargos::RemoveFiltro       12098 12110
+//   271   CConfiguracaoEleicao::GetSituacoesEleicoes  1386 3687 5577 5578 5582 11558 11559
 //   3783  vector<CCargos::TCargoEleicao>::__assign_with_size, the instance ccargos.cpp's RemoveFiltro emits: 3784 7377.
 //         RemoveFiltro is its one caller here, so a stand-in for 7377 (FiltraPorAbrangencia) gives the second.
 // comum::NomeEleicaoCorrente (11556) has no direct caller: the target reaches it only through table slot 3049, which fn
@@ -50,6 +51,7 @@ void w2796(int, int, int) __asm__("_ZNK5comum2md6CCargo7GetNomeENS0_5CSexo5ESexo
 void w2258(int, int, int) __asm__("_ZNK5comum2md6CCargo17GetOrdinalEscolhaEh");
 int w5651(int, int) __asm__("_ZNK5comum2md7CPleito10GetEleicaoEj");
 int w5648(int, int) __asm__("_ZNK5comum2md7CPleito20GetSituacoesEleicoesEj");
+int w271(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao20GetSituacoesEleicoesEj");
 int w5655(int, int) __asm__("_ZNK5comum2md6CCargossERKS1_");
 void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
 int w5653(int) __asm__("_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv");
@@ -138,9 +140,14 @@ __attribute__((noinline)) int SomaEleicoesDoPleito(int pleito, int a, int b)
     return w5651(pleito, a) + w5651(pleito, b) * 3;
 }
 
-__attribute__((noinline)) int SomaSituacoes(int pleito, int a, int b)
+__attribute__((noinline)) int SomaSituacoes(int pleito, int a)
 {
-    return w5648(pleito, a) * 5 + w5648(pleito, b);
+    return w5648(pleito, a) * 5;
+}
+
+__attribute__((noinline)) int SituacoesDeDuasEleicoes(int configuracao, int a, int b)
+{
+    return w271(configuracao, a) - w271(configuracao, b + 1) * 9;
 }
 
 __attribute__((noinline)) int OrdemCargos(int a, int b)
@@ -191,6 +198,7 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&Ordinais);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaEleicoesDoPleito);
         processoeleitoral_sink = reinterpret_cast<const void*>(&SomaSituacoes);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&SituacoesDeDuasEleicoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&s11556);
         processoeleitoral_sink = reinterpret_cast<const void*>(&OrdemCargos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);

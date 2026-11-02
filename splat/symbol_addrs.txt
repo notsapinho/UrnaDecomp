@@ -1205,6 +1205,7 @@ SysFreeString = func:1368; // size:0xf evidence:pair-addr
 _ZN4ASN110PEREncoder12encodeLengthEjjj = func:1369; // size:0xaf evidence:pair-addr
 _ZN4ASN110PERDecoder15decodeSingleBitEv = func:1370; // size:0x5b evidence:pair-addr
 _ZN7ecourna3api4util12CStringUtils4TrimERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE = func:1374; // size:0xc evidence:call by:3712,5667
+_ZN7ecourna3api4util9CBitArray8GetValorEh = func:1375; // size:0x3e1 evidence:srcloc-anchor
 _ZN7RHVoice25brazilian_portuguese_infoD0Ev = func:1377; // size:0xa evidence:vtable
 _ZN5comum18IPedeTituloMesarioD2Ev = func:1378; // size:0x74 evidence:pair-addr
 Xzs_Construct = func:1379; // size:0x10 evidence:pair-fingerprint
@@ -36677,7 +36678,7 @@ buf@/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc.a(setloc
 __sig_actions = 0x1d7e80; // type:data size:0x514 evidence:vote:6 by:341
 _gm_ = 0x1d8be4; // type:data size:0x1d8 evidence:vote:200 by:136,262,908,2943
 mparams = 0x1d8dbc; // type:data size:0x18 evidence:vote:13 by:262,908
-__THREW__ = 0x1d8dd4; // type:data size:0x4 evidence:vote:6297
+__THREW__ = 0x1d8dd4; // type:data size:0x4 evidence:vote:6351
 __threwValue = 0x1d8dd8; // type:data size:0x4 evidence:vote:1 by:12275
 __cxa_new_handler = 0x1d8ddc; // type:data size:0x4 evidence:vote:1 by:137
 _ZN12_GLOBAL__N_18freelistE = 0x1d8de0; // type:data size:0x4 evidence:vote:3 by:6175
