@@ -4,7 +4,7 @@
 # Matched. CAppInfo: the accessor (target fn 185), its static destructors (11573, 11574), the constructor (5813), GetGeral and
 # its const overload (291, 457, thunks of binaryen's merge 6040, the shared body, which the two form here too), GetVota and
 # its const overload (261, 903), GetCodigosCarga (3788), EhTreinamentoEleitor (697), GetIdentificacaoUrna (1942), TemVota
-# (2841, below), and CBaseError<EUeComumAppInfoError>'s constructor (1710, a thunk of 710). CFotos and CPartidos: the accessors (2819, 819), the
+# (2841, below), IndiceTurno (1553, below), and CBaseError<EUeComumAppInfoError>'s constructor (1710, a thunk of 710). CFotos and CPartidos: the accessors (2819, 819), the
 # static destructors (11512, 11513, 11502, 11503), the constructors (3756, 3751), the destructors (2818, 2815) and their
 # __tree::destroy (1934, 1932). 376, vector<string>::push_back(&&), comes with GetCodigosCarga.
 # cestadogeralgap.cpp also holds md::estadoaplicacao::CEstadoGeralGap's constructor (fn 5626), which unit 93's fragment
@@ -34,21 +34,22 @@
 # (docs/reference/facts/splat.md §S10 item 17). With no reader it differs by that drop alone, 19 over 348 rows (one
 # deleted, the rest operand-only).
 #
-# Written and not matched, each with its measurement:
-# - CAppInfo::IndiceTurno (1553): one operand, `differs +0x3f target i32.const 474`. Slot 474 is 9868, EUrnaTurno's
-#   format handle, and the target keeps it apart from the 31 slots of 536 because its copy has parse and format out of line
-#   (calls 1558 and 5906, whose other caller 4027 is in invoke form): not a body this tree gave at -O2. Our link merges
-#   the handle into 536's body, so no name can tell them apart. 1553's anchor votes 9868 and the other anchors 536, which
-#   drops the generated name of 536 and 24 matches with it (275, 680, 1712, 1919, 2253, 2668, 2828, 3702, 3801, 5633,
-#   5689, 5765, 5900, 10260, 10262, 10271, 10283, 10287, 11355, 11390, 11392, 11397, 11405 and 11858: a scan without
-#   the line), so splat/symbol_addrs.txt holds a hand line for 536. That line names the surviving symbol, the handle of
-#   the object that links first among its users (cdefinerotaposreinicio.cpp.o's, of const comum::EEstadoVota): a unit
-#   that adds an enum's handle ahead of it changes it, and the 24 rows leave until the line follows.
-# - CDadoCorrespondencia's destructor (857) and CIdentificadorGeradorMidia's (2240): the target's copies call ~basic_string
-#   out of line, 38 and 26 B, where 857's in our object is 222 B. A compile of the same class at -Oz -fexceptions gives the
-#   target's calls in order (2240, the vector, two strings; three strings), which reads as the executable TU's copy (levels.md
-#   V1). 2240 is named by a hand line and 857 by a generated `call by:3792` line, so their callers resolve, and both
-#   `differs`. The link's copy of 857 is src/app/roots_vector.o's, which instantiates vector<CDadoCorrespondencia>.
+# CAppInfo::IndiceTurno (1553) differed by one operand, `+0x3f target i32.const 474`, until
+# mock/app/comum/cappinfobuilder.cpp linked ahead of this object at the executable TU's rule (unit 253). Slot 474 is
+# 9868, EUrnaTurno's format handle, which the target keeps apart from the 31 slots of 536 because its copy has parse and
+# format out of line (calls 1558 and 5906): an -Oz copy, which that object gives every user of the handle now. Before,
+# our link merged the handle into 536's body, 1553's anchor voted 9868 and the other anchors 536, which dropped the
+# generated name of 536 and 24 matches with it (275, 680, 1712, 1919, 2253, 2668, 2828, 3702, 3801, 5633, 5689, 5765,
+# 5900, 10260, 10262, 10271, 10283, 10287, 11355, 11390, 11392, 11397, 11405 and 11858), and a hand line kept it. With
+# the turn's handle a body of its own the votes no longer split: step 8 writes 536's line again (`table`), and the hand
+# line went (unit 253's fragment has the measurement). That line names our link's survivor of the handle bodies 536
+# merges, the first in link order (cdefinerotaposreinicio.cpp.o's, of const comum::EEstadoVota), so a unit that adds an
+# enum's handle ahead of it renames it, as a generated line.
+# CDadoCorrespondencia's destructor (857) and CIdentificadorGeradorMidia's (2240) match too, from cappinfobuilder.cpp.o,
+# which instantiates both ahead of the other objects: the target's copies call ~basic_string out of line, 38 and 26 B,
+# and a compile of the class at -Oz -fexceptions gives their calls in order (2240, the vector, two strings; three
+# strings). This fragment read that shape as the executable TU's copy (levels.md V1) while src/app/roots_vector.o's copy
+# of 857, at the tree's flags, was the link's and differed. The hand line that named 2240 went with it.
 #
 # Not written: 1903's singleton, whose class no body read names. CJustificador's (1391, 2810, 11476, 11477) is unit 113's,
 # with its constructor 3742. cfotos.h's inline ExisteFoto is held by fn 5746 (unit 98's fragment). 5635 stays a stub in

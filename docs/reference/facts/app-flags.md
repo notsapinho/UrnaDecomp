@@ -334,7 +334,15 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
 
   (the files from `awk -F'\t' '$2 ~ /\/mock\// {print $2, $6}' ledger/source-locations.tsv`). So
   `mock/app/simulador/wasm/` is throw-only like `src/`, and `cappinfobuilder.cpp` has landing pads, like the executable
-  TU.
+  TU. It compiles at that TU's rule, `VOTA_WEB_CXXFLAGS` (unit 253). Its records (1528028 to 1528060) follow that TU's
+  data (up to 1527964) and come before those of the `src/` files that pass `EUrnaTurno`'s format handle, so its object
+  links second, a reading from that order. The handle the target keeps, 9868, calls `__formatter_integer<char>::parse`
+  and `format<unsigned int>` out of line, where the uenux2 objects' copies hold both inlined: compiled at this rule and
+  linked second, the object gives every user that copy. On the whole link at 36dda756 (`TMPDIR=/tmp make -C src link
+  census splat-symbols splat-match`, counts by index of how-to step 10), the rule with the object second gains 17 rows
+  and loses none (358, 1399, 1553 and 11401, which differed only by the handle's slot, 5906, and copies of inline code
+  the target keeps from this object); after the tree roots the object gains 12, and after both trees none (unit 253's
+  fragment lists them). The rule is measured as a whole: no flag of it is measured alone for this TU.
 - **`-fno-strict-aliasing` by directory: no TBAA in comum's converters.** `comum::asn::CConversorCorrespResultado::DoConverte`
   (fn 10289, rows 355-360 of `pnpm wasm fn ../target/vota_web_wasm.wasm 10289`) stores a constant into a SEQUENCE field and
   then reloads the fields vector's begin (`local.get 0; i32.load offset=8; i32.load offset=4; i32.const 1; i32.store

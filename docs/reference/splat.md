@@ -189,12 +189,15 @@ A hand edit names its evidence in its comment, with the addresses or indices tha
 **A name kept by hand when votes disagree.** Our link can merge what the target keeps apart, and no source form fixes
 that ([../how-to-decompile.md](../how-to-decompile.md) step 3). The votes for our one body then disagree, a name with
 conflicting evidence is left out, and the matches that reach the body under that name leave `match`. A hand edit keeps
-the name, under the kind its voters give. One line stands so (a second, `CPolySingletonList::find` on 305, went with
-unit 170, whose copies of the executable TU's two instantiations keep 305 and 608 apart in our link, each named by its
-callers' `call` votes):
+the name, under the kind its voters give. No line stands so today. Two did, and each went when the object that gives
+the target's copy landed ahead of the merge:
 
-- 536, `table`: the one body of the enums' format handles, in 31 target slots. Our link merges `EUrnaTurno`'s handle
-  into it and the target keeps that apart as 9868, so 1553's anchor votes 9868 and the others 536 (unit 109's fragment).
+- `CPolySingletonList::find` on 305, until unit 170, whose copies of the executable TU's two instantiations keep 305 and
+  608 apart in our link, each named by its callers' `call` votes.
+- 536, `table`: the one body of the enums' format handles, in 31 target slots. Our link merged `EUrnaTurno`'s handle
+  into it and the target keeps that apart as 9868, so 1553's anchor voted 9868 and the others 536 (unit 109's
+  fragment), until unit 253's object, `mock/app/comum/cappinfobuilder.cpp` at the executable TU's rule, gave every user
+  of that handle its `-Oz` copy: step 8 names both by `table` votes now.
 
 Each such line meets three conditions. Its voters are the evidence, and they read records and aligned operands, not a
 match, so the line passes the removal check of "Reviewing a match". Its comment names the dissenters. A dissenter's row

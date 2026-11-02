@@ -57,7 +57,9 @@
 #   -DNDEBUG -fno-strict-aliasing, the executable TU's flags, with the path a named local; a temporary path is destroyed
 #   right after the copy, and at -O3 and -Os the copy is no invoke_iii of its own. So these wait for cfileasn.h's
 #   writer, which no unit writes, and for a TU that instantiates the save for the four classes ahead of the trees'
-#   copies, at those flags by the lead above.
+#   copies, at those flags by the lead above. mock/app/comum/cappinfobuilder.cpp is that TU (unit 253: its object links
+#   second, at the executable TU's rule), and its members call the save, which iservicoestado.h declares for them
+#   (Salva, a chosen name); the save's body and the writer are what is left.
 #
 # Chosen, no evidence names them: m_origem and m_turno, that each class, not the template, holds the origin, the
 # template's parameter names, the paths of iservicoestado.h, of CServicoEstadoGeral's header and source and of the

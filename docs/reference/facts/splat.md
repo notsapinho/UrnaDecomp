@@ -692,13 +692,16 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     awk -F'\t' '$1==13242 && $2 !~ /^test_rng_/ || $1==13256 && $2 !~ /^seed_src_/ || $1==13945 && $2 !~ /^sha1_/ || $1==13963 && $2 !~ /^md5_sha1_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
 
-12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's hand edit.** Each holds a table slot
-    of 536, the one body of the enums' format handles, at the aligned site. Our link merges `EUrnaTurno`'s handle into
-    it, so the votes disagree and only a hand edit names it ([../splat.md](../splat.md) §2, "A name kept by hand when
-    votes disagree"). The line names the surviving symbol, the handle of the first object in link order that makes one,
-    today `cappinfo.cpp.o`. When a unit adds an enum's handle ahead of it, the eleven go `unresolved` and `status.py`
-    stops on `matched.txt only:`: take the new name from `build/out/wasm-map/vota_web/names.tsv`, rewrite the name on
-    the line and keep its evidence, and run step 9 again, as for 2924 above.
+12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's name.** Each holds a table slot of
+    536, the one body of the enums' format handles, at the aligned site. Our link merged `EUrnaTurno`'s handle into it,
+    so the votes disagreed and a hand edit named it ([../splat.md](../splat.md) §2, "A name kept by hand when votes
+    disagree"), until `mock/app/comum/cappinfobuilder.cpp`'s object (unit 253), second on the link line at the
+    executable TU's rule, gave every user of that handle its `-Oz` copy, a body of its own (9868). Step 8 names 536 by a
+    generated `table` line since, and the hand edit went. The name is the surviving symbol, the handle of the first
+    object in link order that makes one of 536's shape, today `cdefinerotaposreinicio.cpp.o`'s: a unit that adds an
+    enum's handle ahead of it renames it, a generated change. An object that gave `EUrnaTurno`'s `-O3` handle ahead of
+    unit 253's would merge it into 536's body again, the eleven would go `unresolved` and `status.py` would stop on
+    `matched.txt only:`.
 13. **349 and 389, and the thunks 11510, 13695, 10231, 11640 and 11660, by the exit destructors that form them.** Each
     body forms only from enough members, 4 of fn 349's shape and 3 of fn 389's ([codegen.md](codegen.md) §C8): the
     singletons' pointer destructors of units 104, 110, 111 and 116. The thunks are `f349(p0, <pointer>)`, so each also
@@ -778,7 +781,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     (`GetPathMR` and `GetPathChave`) of 6048, each body formed by its two members in our link as in the target: item 2's
     case, so a member with another differing operand, or one taken away, reshapes it. 9530 (unit 06's
     `ICompressor::Add` over a vector of paths) calls `path::__filename` (1224), whose name rested on the calls of
-    `CPath::GetPathTrab` and `GetPathResult` (358, 1399), two `differs` rows, until 1224 matched (unit 190's fragment
+    `CPath::GetPathTrab` and `GetPathResult` (358, 1399), two `differs` rows then, until 1224 matched (unit 190's fragment
     says how): its line is `pair-addr` now. Before unit 190, 9530 read `no-candidate`
     (`no symbol and no ledger pair` in 9202406's scan):
 
