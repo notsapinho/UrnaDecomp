@@ -8,6 +8,7 @@
 
 #include "api/io/cdatamap.h"
 #include "app/comum/dados/md/candidatura/ccandidatura.h"
+#include "ecourna/app/dados/federacoes/cfederacao.hpp"
 
 namespace comum {
 
@@ -39,6 +40,14 @@ public:
     bool ExisteCandidato(TCargoID cargo) const;
     std::vector<TCandidatoID> GetCandidatos(TCargoID cargo) const;
     md::CCandidatura* Busca(TCargoID cargo, TCandidatoID candidato);
+
+    // Target fn 5809, which no record names. Its callers, fns 11976 and 5922, pass it this singleton's GetInst()
+    // (fn 521), a post's id (11976 the current one's, the byte at +0 of CCargos::GetCurrent()'s CCargo; 5922 its own
+    // parameter) and the federation CFederacoes::GetFederacao (fn 5799) returns for a party, when there is one; it walks
+    // that federation's parties (the 16-bit words of its vector at +28) and, for each, the candidacies (the base's map),
+    // and says whether one of the post with the party's number has a holder whose situation is 0, as
+    // GetCandidatosPartido keeps them. The name is chosen.
+    bool ExisteCandidatoFederacao(TCargoID cargo, const ecourna::app::dados::CFederacao& federacao) const;
 
     // Record ccandidaturas.cpp:56 (its throw, code 7800) names it and spells its types. It finds the candidacy by the
     // same key, throws when there is none and moves the cursor to it; fn 11213, CParteCandidatosProporcionais::Imprime,

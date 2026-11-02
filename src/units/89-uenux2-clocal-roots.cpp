@@ -44,6 +44,7 @@ int w2271(int, int) __asm__("_ZNK5comum13CCandidaturas15ExisteCandidatoEh");
 void w2840(int, int, int) __asm__("_ZNK5comum13CCandidaturas13GetCandidatosEh");
 int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
 void w5807(int, int) __asm__("_ZNK5comum19CCandidaturasDSNomeclEv");
+int w5809(int, int, int) __asm__("_ZNK5comum13CCandidaturas24ExisteCandidatoFederacaoEhRKN7ecourna3app5dados10CFederacaoE");
 }
 
 namespace {
@@ -144,6 +145,11 @@ __attribute__((noinline)) void NomesUrna(int r, int s, int a)
     w5807(r, a);
     w5807(s + 12, a + 1);
 }
+// Stands for fn 5809's callers 5922 and 11976, neither reconstructed.
+__attribute__((noinline)) int Federacoes(int c, int cargo, int f, int g)
+{
+    return w5809(c, cargo, f) * 5 - w5809(c, cargo + 2, g);
+}
 
 struct SCLocalRoots {
     SCLocalRoots()
@@ -181,6 +187,7 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Versoes);
         clocal_sink = reinterpret_cast<const void*>(&Consultas);
         clocal_sink = reinterpret_cast<const void*>(&NomesUrna);
+        clocal_sink = reinterpret_cast<const void*>(&Federacoes);
     }
 } clocal_roots;
 

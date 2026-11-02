@@ -232,11 +232,6 @@
 // f5665 · 144 B · unmatched · placement: link order · name unknown
 // ? f5665(i32) { ... }
 
-// link-order cluster 831 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
-
-// f5809 · 160 B · unmatched · placement: link order · name unknown
-// ? f5809(i32, i32, i32) { ... }
-
 // link-order cluster 840 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/cversoesarquivos.cpp
 
 // f5869 · 402 B · unmatched · placement: link order · name unknown
@@ -876,9 +871,6 @@
 
 // f5796 · 373 B · unmatched · placement: link order · name unknown
 // void f5796(i32, i32, i32) { ... }
-
-// f5795 · 345 B · unmatched · placement: link order · name unknown
-// ? f5795(i32, i32) { ... }
 
 // f5790 · 3572 B · unmatched · placement: link order · name unknown
 // void f5790(i32, i32) { ... }
