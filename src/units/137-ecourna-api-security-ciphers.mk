@@ -10,9 +10,7 @@
 # CCepescCipher::Encrypt (2681) and Decrypt (5171), whose call of the executable TU's vector<uebyte> exception-guard
 # destructor (306) src/app/roots_vector.cpp gives the link; CBlockCipher's Encrypt and Decrypt (9487, 9485), thunks
 # into a merged body (6154) our link forms too (byn$mgfn-shared$ of Encrypt, called by both), which pass CAesCipher's
-# Encrypt and Decrypt (9493, 9491) by table slot: those two names come from hand lines in splat/symbol_addrs.txt
-# (fragment 11 says what the lines rest on and what 9493 and 9491 wait for), and without them both thunks are
-# `unresolved self-voted`.
+# Encrypt and Decrypt (9493, 9491) by table slot: both match (fragment 11), named by step 8 (srcloc-anchor).
 # No record names any of these files. What the target shows:
 # - The classes, their bases and their slots are RTTI's and the vtables' (1113168 CPrng, 1114660 CTrng, 1113832 the
 #   factory, 1114996 CCepescCipher). The data place the first three in api/security/: CPrng's vtable lies between
@@ -69,7 +67,9 @@
 #   (draw until a word is at most 0xFFFFFFFD, then subtract 0x7FFFFFFF), written in GetInt, gives the target's bytes
 #   (it matched at commit 7b369b12 and was withdrawn) and is not written: it spells out the library's body where GetByte
 #   and Generate(dados, tamanho) call the distribution, a spelling that differs on purpose (how-to step 3).
-# - The merged body of CBlockCipher's Encrypt and Decrypt (6154) waits for CAesCipher's constructor's name (9495).
+# - The merged body of CBlockCipher's Encrypt and Decrypt (6154) differs, at +0x1a on a local: 81 over 298 rows (10
+#   inserted, 28 deleted) at 441ae041, before CAesCipher's constructor and SetKey (9495, 9494) matched, and the same
+#   since. Not explained.
 # Roots: 137-ecourna-api-security-ciphers-roots.cpp (its header says how). Unit 100's roots include
 # isymmetriccipherfactory.hpp, which gains the two pure slots and its private NonCopyable base: unit 100's and unit
 # 102's objects are byte-identical before and after (cmp).

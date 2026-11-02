@@ -96,6 +96,26 @@ int urna_roots_vector_cadeias(int a)
     return a;
 }
 
+// std::vector<unsigned char>::__assign_with_size over two iterator kinds, which ecourna's CAesCipher calls
+// (src/ecourna/api/security/caescipher.cpp, unit 11) and whose copies from that object are not the target's:
+// - Over unsigned char* (target fn 1681), the -Oz copy, read as the executable TU's as the instances above are: it calls
+//   __vdeallocate (5493), __recommend (3656) and __vallocate (2769), which of -O2, -O3, -Os and -Oz only -Oz gives
+//   (src/units/11-ecourna-api-security.mk has the measurement). Its target callers are 2772, 5635, 10451 and 10465,
+//   whose records are uenux2 files', and CAesCipher's 9494, and 9491 and 9493 through table slot 6264: none is that
+//   TU's code, which is not written. Measured: this line compiled at UENUX2_CXXFLAGS gives the object code (calls
+//   masked) the same instantiation without minsize gives at VOTA_WEB_CXXFLAGS. ckey.cpp.o's copy, which the link kept
+//   before, scored 68 over 162 rows against 1681.
+// - Over __wrap_iter<const unsigned char*>, the tree's -O3 code. The target's 1158 is one body for this instance and
+//   vector<char>'s over __wrap_iter<const char*>, which cconversorseguranca.cpp.o gives: two table slots, 6259, which
+//   only 9491 and 9493 hold (their assigns from a vector's iterators), and 7008. caescipher.cpp.o's copy, at ecourna's
+//   flags, scored 39 over 175 rows against 1158. This one merges with cconversorseguranca.cpp.o's in our link and,
+//   linking first, gives 1158's match line its name. No uenux2 caller of this instance is identified in the target, so
+//   the instance stays until a uenux2 object that instantiates it is in the link.
+// In our link SetKey's two calls and Encrypt's and Decrypt's table slots reach the first, and their slots and
+// cconversorseguranca.cpp.o's callers the second: both stay out of line, and both match.
+template __attribute__((minsize)) void std::vector<unsigned char>::__assign_with_size<unsigned char*, unsigned char*>(unsigned char*, unsigned char*, std::ptrdiff_t);
+template void std::vector<unsigned char>::__assign_with_size<std::__wrap_iter<const unsigned char*>, std::__wrap_iter<const unsigned char*>>(std::__wrap_iter<const unsigned char*>, std::__wrap_iter<const unsigned char*>, std::ptrdiff_t);
+
 // Three more -Oz copies read as the executable TU's: std::vector<std::string>'s __base_destruct_at_end (target fn 2247,
 // target callers 2249 8825 8826 8874) and __destroy_vector::operator() (2249, callers 679 2183 2255 5573 8873), and
 // std::string::find_first_not_of(const char*, size_type) (1843, callers 1519 2185 11546 11571 14477).
