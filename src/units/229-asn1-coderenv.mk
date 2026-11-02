@@ -50,11 +50,12 @@
 # - urna_roots_coderenv calls 1532 once more (it took 9770's address until 2927 was in the link), for its seven direct
 #   target callers (11488 11582 11587 11616 11629 5366 6006), none in our link: without that call no function of
 #   build/out/wasm-map/vota_web/names.tsv is encodeBER (binaryen inlined it into 9770).
-# - It calls 3656 too, for its target callers 1681 and 5496: 1681 is not in our link and 5496 was inlined into 10949,
-#   its one caller there. Without that call binaryen inlined 3656 into 5290, which scored 47 over 158 rows (27
-#   inserted). 5496 is out of line now and calls 3656 (unit 170's roots stand for its other caller, 5702); the call
-#   stays for 1681.
-# - An explicit instantiation of __recommend beside the label gave a byte-identical link, so the file has none.
+# - It called 3656 too, for its target callers 1681 and 5496, while 1681 was not in our link and 5496 was inlined into
+#   10949, its one caller there: without that call binaryen inlined 3656 into 5290, which scored 47 over 158 rows (27
+#   inserted). Both are out of line now and call 3656: 5496 with unit 170's roots standing for its other caller, 5702,
+#   and 1681 from src/app/roots_vector.cpp (unit 11). The call went; the merge that took it out moved no row besides
+#   unit 11's own (steps 7 to 9).
+# - While that call stood, an explicit instantiation of __recommend beside its label gave a byte-identical link.
 #
 # What the root changes elsewhere:
 # - Unit 87's sink of AVNEncoder's vtable went: it stood for 9770's vptr store, which is in the link now. Steps 7 to 9
@@ -66,9 +67,10 @@
 #   9770 also stores PEREncoder's vptr and 220 the ostringstream's (a reading of which store each anchor read); both
 #   stay matched by their match lines, and 3464 keeps unit 86's hand line. 5152's callees 3501 and 5150 lose their
 #   `call by:5152` names, their rows unchanged.
-# - 2704, __split_buffer<char>'s destructor, gets a `call` name from 2706 and 5290 and stays `differs`: our body is the
-#   whole destructor, and the target's 2704 is a 9-B thunk into 2896, binaryen's merge of four such destructors (its
-#   thunks pass 1, 12, 8 and 16, the step of its loop; the other three, 2545, 4675 and 5523, are not in our link).
+# - 2704, __split_buffer<char>'s destructor, is a 9-B thunk into 2896 in the target, binaryen's merge of four such
+#   destructors (its thunks pass 1, 12, 8 and 16, the step of its loop). Both match since unit 269's root brings 5523,
+#   the step 16: our link merges the two into 2896's body (2545 and 4675 are not in our link) and names 2704 by its
+#   census pair.
 #
 # Chosen: the root's file name, its stand-in's name and labels, their argument offsets, and the `||` in encode, which a
 # switch over the four rules gives as well (encode's rows in the root's object, relocated constants masked, the same).

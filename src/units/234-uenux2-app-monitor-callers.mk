@@ -31,7 +31,7 @@
 #
 # The hand line for 4349 (callers+content, below the marker). 4349 has no generated name: its two target callers,
 # CThreadEleitor's Run (7061, slot 2, a trap here) and 7823 (slot 7), are named by vtable, which casts no vote
-# (docs/reference/splat.md section 2, the case of fn 501's line). Without the line, step 9 read 7823 `unresolved`,
+# (docs/reference/splat.md section 2). Without the line, step 9 read 7823 `unresolved`,
 # `ours +0x1d call 3692: _ZN4vota14CThreadEleitor15ProcessaEventosEv has no target function`, with every other row as
 # before; with it, 7823 matches and 4349's row goes from no-candidate to unresolved, on the debug wrapper 2072 its body
 # calls (unit 116's fragment). The line leads with 4349's own body, read without the match: it opens with the two

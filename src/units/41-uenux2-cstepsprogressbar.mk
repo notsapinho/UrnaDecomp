@@ -31,14 +31,36 @@
 # which take unit 69's 5113, EscalaCaminho, from 70 over 264 rows to 38 over 256; Recalcula, m_font mutable). Measured by `pnpm wasm score` in the whole link:
 # - 5507 (Tenta) and 5505 (std::vector<SSegmento>::__swap_out_circular_buffer, which Recalcula's reserve and push_back
 #   bring) differ in call and data operands only, and match.
-# - Draw 1162 over 5684 rows, CabeProporcional 665 over 1295, CabeEmUmaLinha 52 over 280, Divide 48 over 446. Their
-#   remainder is not explained. They stay written: Draw is a vtable slot, and 5505 and 5507 match through it.
-# - Divide: the target lays out its cases as 0, 1, then the rest. `if (partes == 0) ... if (partes == 1) ...`, an else
-#   if, a switch with or without a default, the whole rest as the switch's default, and the returns written as
-#   std::vector<SRect>() all give case 1, the rest, then case 0; the two tests the other way round give case 0, the rest,
-#   then case 1 (by the function's disassembly in compiles with the unit's flags, whose order the link kept for the
-#   form written). Building each area with SRect::Normalized gives the target's order but stores the area as one 64-bit
-#   word where the target stores four 16-bit fields.
+# - Divide (5506) matches, through three forms, each measured on the function's disassembly in compiles with the
+#   unit's flags and then in the whole link:
+#   - its area loop is a `while`. With a `for` (an int or size_t counter) the cases are laid out 1, the rest, then 0:
+#     the MIR (`-mllvm -print-after-all`) shows LLVM's branch folder moving case 0's block, `return {}`, to the end,
+#     next to the return block, which the loop's last block does not fall through to (a reading of why). The forms of
+#     the two special cases tried with it (two ifs, an else if, a switch with or without a default, the returns as
+#     std::vector<SRect>()) all keep that order, as the whole rest as the switch's default did before; the two tests the
+#     other way round give 0, the rest, then 1, and one vector returned from every path the rest, 1, then 0. The
+#     `while` gives the target's 0, 1, then the rest; a `do`/`while` gives the same br_table.
+#   - `base` is read before `topo`: the target loads the top (+2), then the bottom (+6), after the length check, and the
+#     other order of the two reads gives the other order of the loads.
+#   - each area is built in place, `areas.emplace_back(x, topo, x + l - 1, base)`, through SRect's normalizing
+#     constructor (primitives.h): the target narrows the corner x + l - 1 to TPosition in emplace_back's fast and slow
+#     paths both, after a zero extension of x and of l (two `i32.and 65535`), and of the forms tried only that one gives
+#     them. Building the area with SRect::Normalized stores it as one 64-bit word; std::min and std::max in
+#     emplace_back's arguments narrow the corner once (no mask), and so do x and l as int or ueword with them (one
+#     mask or none).
+# - CabeEmUmaLinha (10972) 52 over 280 rows. Its one difference is how the available width is grouped: the target
+#   computes `1 - 2 * margem` once, from the 2 * margem the height test uses, and the width as `(1 - 2m + right) - (left
+#   + seta + recuo)`, where ours is `(right + 1) - (left + recuo + 2m)`. Not the target's grouping, by the optimized IR
+#   (`-S -emit-llvm`): the width through Width() or right - left + 1, as int or TPosition, its terms in ten orders or
+#   grouped in parentheses, the two side terms in one variable, margem and recuo before the loop, the area read first in
+#   the loop. In the whole link: the two side terms as if statements 81 over 294; a margin taken off each side as two
+#   TPosition edges 44 over 283; `right - left + 1 - margem - seta - margem - recuo` builds 1 - 2m first, but from a
+#   second 2 * margem as a multiply by 65534 or-ed with 1, 64 over 288. The remainder is not explained.
+# - CabeProporcional (10971) 665 over 1295 rows: the target builds its areas by the same loop as Divide (the same two
+#   masks), but building them in place here takes the function to 726 over 1260, so it keeps SRect::Normalized, and
+#   the rest of the function differs. Draw 1162 over 5684 rows. Their remainder is not explained. They stay written:
+#   Draw is a vtable slot, 5505 and 5507 match through it, and Draw's operands for the table slots of 10972 and 10971
+#   re-point only once those match (its scan row is `unresolved` at +0x2c6, 10972's slot).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSTEPSPROGRESSBAR_SRCS := src/api/gui/cstepsprogressbar.cpp
 UENUX2_SRCS += $(CSTEPSPROGRESSBAR_SRCS)

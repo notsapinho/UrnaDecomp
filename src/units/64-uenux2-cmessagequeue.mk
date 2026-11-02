@@ -36,8 +36,9 @@
 #
 # Forms measured against this one when a roots object held the instances, comparing the object's Remove, pop, D2 and D0
 # (em++ with uenux2's flags); a body byte is where the form, linked in that object's place, first differs from 2073:
-# - the same bytes: a functor as priority_queue's third argument for operator< with std::less (only pop's symbol
-#   differs, and it is inlined); the comparator as if/else if/else or as nested ?:; size_t for the two unsigned; a
+# - the same bytes: SItem::operator< with std::less for the function object the header now gives priority_queue as its
+#   third argument (only pop's symbol differs, and it is inlined; Insert's -Oz -fexceptions push tells the two apart,
+#   unit 269's fragment); the comparator as if/else if/else or as nested ?:; size_t for the two unsigned; a
 #   reference, or an RAII guard that holds the reference, for the pointer `sync`; with -fno-strict-aliasing or without
 #   it, and these bodies now compile at uenux2's flags in cthreadeleitor.cpp.o. The guard
 #   class api::CSyncCtlGuard (fn 5528, unit 174) is in this header now; it explains why the throw path does not

@@ -159,11 +159,11 @@
 #   chosen. The two sums in locals are a choice as well: written inside the aggregate, they give the same object.
 #   std::min(x, direita) and std::max(x, direita) in that operand order are the target's: swapped, one or both, the
 #   object differs, and with both swapped the whole link re-points with `differs` (at +0xb4).
-# - the SRect aggregate stands in for a header that is not the original's: fns 1916 and 11067 end in the same
-#   four-select store run, so the real SRect probably has a normalising constructor. One that takes left, top, right
-#   and bottom and applies std::min and std::max in its initializers gives this object, cmp-identical, with `return
-#   SRect(x, y, x + largura, y + altura);`, and so the operand order above would live there. primitives.h is not this
-#   unit's, and every landed `SRect{...}` would go through that constructor, so it stays an aggregate.
+# - fns 1916 and 11067 end in the same four-select store run, read as the code of SRect's normalising constructor,
+#   which primitives.h declares (its comment has the evidence: unit 41's Divide, fn 5506, and the target's other
+#   sites). `return SRect(x, y, x + largura, y + altura);` through such a constructor gives this object, cmp-identical,
+#   and so the operand order above would live there. The brace form with std::min and std::max written out stays: its
+#   object is the same with the constructor declared.
 # - CopyBytes: `if (!dados.empty())`, `if (dados.size() != 0)` around the std::copy, std::copy_n, std::copy over data()
 #   pointers and a guarded std::memcpy give the same object; an unguarded std::memcpy does not.
 # - slots 13 and 15 to 17 defined inline in CWasmImageSurfaceOps instead of the base give the same bodies.

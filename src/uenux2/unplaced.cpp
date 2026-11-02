@@ -119,11 +119,6 @@
 // f5521 · 72 B · unmatched · placement: link order · name unknown
 // void f5521(i32, i32) { ... }
 
-// link-order cluster 786 · uses=2 · neighbours' file uenux2/src/api/gui/cinteractiveform.cpp
-
-// f5528 · 64 B · unmatched · placement: link order · name unknown
-// void f5528(i32) { ... }
-
 // link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
 
 // f5569 · 217 B · unmatched · placement: link order · name unknown
@@ -322,11 +317,6 @@
 
 // f2502 · 15 B · unmatched · placement: link order · name unknown
 // void f2502(i32, i32) { ... }
-
-// link-order cluster 1076 · uses=4 · neighbours' file ecourna/api/compression/czip.cpp
-
-// f2687 · 983 B · unmatched · placement: link order · name unknown
-// void f2687(i32, i32) { ... }
 
 // link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
 
@@ -592,11 +582,6 @@
 // f6011 · 227 B · unmatched · placement: link order · name unknown
 // void f6011(i32, i32, i32) { ... }
 
-// link-order cluster 876 · uses=2
-
-// f6155 · 1623 B · unmatched · placement: link order · name unknown
-// void f6155(i32, i32, i32, i32) { ... }
-
 // link-order cluster 881 · uses=2
 
 // f6239 · 13 B · unmatched · placement: link order · name unknown
@@ -707,11 +692,6 @@
 
 // f2579 · 79 B · unmatched · placement: link order · name unknown
 // void f2579(i32, i32, i32) { ... }
-
-// link-order cluster 1075 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
-
-// f2685 · 17 B · unmatched · placement: link order · name unknown
-// void f2685(i32, i32) { ... }
 
 // link-order cluster 1085 · uses=4 · neighbours' file uenux2/src/api/util/csystem.cpp
 
@@ -862,11 +842,6 @@
 
 // f5442 · 1068 B · unmatched · placement: link order · name unknown
 // void f5442(i32, i32) { ... }
-
-// link-order cluster 775 · uses=2 · neighbours' file uenux2/src/api/gui/cstepsprogressbar.cpp
-
-// f5506 · 836 B · unmatched · placement: link order · name unknown
-// void f5506(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
 

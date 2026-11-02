@@ -10,8 +10,8 @@
 //   5507  Tenta, 5506 Divide, 10972 CabeEmUmaLinha and 10971 CabeProporcional, file-local; 10972 and 10971 are the table
 //         slots 3442 and 3443 that Draw passes to Tenta (its i32.const at +0x2c8 and +0x385)
 //   5505  std::vector<SSegmento>::__swap_out_circular_buffer, which the segments' reserve and push_back instantiate
-// Of those Draw reaches, 5505 and 5507 match and the others differ: src/units/41-uenux2-cstepsprogressbar.mk has the
-// scores. Every helper's name, and the lines of every function but the constructor's record, are a choice.
+// Of those Draw reaches, 5505, 5506 and 5507 match and the others differ: src/units/41-uenux2-cstepsprogressbar.mk has
+// the scores. Every helper's name, and the lines of every function but the constructor's record, are a choice.
 
 #include "api/gui/cstepsprogressbar.h"
 
@@ -51,8 +51,8 @@ std::vector<SRect> Divide(const SRect& rect, int partes, int seta, int espaco)
     }
     const TPosition total = rect.right - rect.left + 1 + (partes - 1) * (seta - espaco);
     const TPosition largura = total / static_cast<TPosition>(partes);
-    const TPosition topo = rect.top;
     const TPosition base = rect.bottom;
+    const TPosition topo = rect.top;
     std::vector<TPosition> larguras(partes, largura);
     const int resto = total % static_cast<TPosition>(partes);
     for (TPosition i = 0; i < resto; ++i) {
@@ -61,11 +61,12 @@ std::vector<SRect> Divide(const SRect& rect, int partes, int seta, int espaco)
     std::vector<SRect> areas;
     areas.reserve(partes);
     TPosition x = rect.left;
-    for (int i = 0; i < partes; ++i) {
+    int i = 0;
+    while (i < partes) {
         const TPosition l = (i == partes - 1) ? rect.right - x + 1 : larguras[i];
-        const TPosition fim = x + l - 1;
-        areas.emplace_back(std::min(x, fim), std::min(topo, base), std::max(x, fim), std::max(topo, base));
+        areas.emplace_back(x, topo, x + l - 1, base);
         x += espaco - seta + l;
+        ++i;
     }
     return areas;
 }
@@ -260,7 +261,7 @@ std::vector<SPathCommand> CriaContorno(const SRect& area, bool primeiro, bool ul
 
 } // namespace
 
-// (original lines 263-424: content not recovered)
+// (original lines 264-424: content not recovered)
 #line 425
 // <stubs>
 // f13550 · 2118 B · unmatched · name unknown

@@ -10,14 +10,15 @@
 # CommitTransaction 9454, RollbackTransaction 9453, Prepare 9460, IsClosed 9457, Close 9458, CheckIntegrity 9452 and
 # GetCaminho 5322 (a twin of an RHVoice getter, whose line now carries this name); CSqlStatement's constructor 9430, D2
 # 3513, D0 9426, SetInt 5160, SetInt64 9425, SetDouble 9424, SetText 9423, SetBool 9421, SetBlob 9420, SetNull 9419,
-# Execute 9417, Reset 9416, IsClosed 9428 and VerifyParameterIndex 1882; CSqlResultSet's constructor 9449, D2 9443, D0
+# SetDateTime 9422, Execute 9417, Reset 9416, IsClosed 9428 and VerifyParameterIndex 1882; CSqlResultSet's constructor 9449, D2 9443, D0
 # 9442, the GetInt/GetInt64/GetDouble/GetText/IsNull/GetBool pairs (2679 9441, 5165 9440, 5164 9439, 3514 9438, 5163
 # 9435, 9446 9433), GetDateTime(const std::string &) 9434, the GetBlob pair (5161 9432), IndexForColumnName 1525,
 # Next 9444 and VerifyColumnIndex 1883; ObterMensagemErro 9411; the __shared_ptr_pointer control blocks' __get_deleter and
 # __on_zero_shared (statement 9450 9451, result set 9412 9413 from the unit's objects; connection 11538 11539 from
 # celeitordinamicodao.cpp.o, as the target's copy is a uenux2 caller's: its vtable 1559000 lies in uenux2's data band); the
 # externs' ToLower in place 5158, copying ToLower 1879 and Replace 9398; and library code these bodies call:
-# std::map<std::string, int>'s tree members 1677, 2678, 9447, std::set<int>'s __find_equal 2676 and string::replace 4667.
+# std::map<std::string, int>'s tree members 1677, 2678, 9447, std::set<int>'s __find_equal 2676 and string::replace 4667,
+# and Boost date_time's format_month in iso_extended_format 9414 and to_simple_string_type over a time_duration 9415.
 #
 # Names: records name the connection's constructor, Prepare and Close; the statement's SetInt, SetInt64, SetDouble,
 # SetText, SetBlob, SetNull, Reset, Close and VerifyParameterIndex; the result set's GetInt(int), GetInt64(int),
@@ -69,15 +70,20 @@
 # (`return {};` gives the same bytes; `if (tamanho > 0)` around the copy does not).
 #
 # Not matched, each with what blocks it:
-# - CSqlStatement::SetDateTime (9422): its callees boost::date_time's from_day_number (1376) and ymd_to_string are
-#   linkonce copies the link takes from src/app/roots_boost.o, which comes first and compiles at -O2 without
-#   -fexceptions; the target's 1376 is an -fexceptions copy, and its ymd_to_string has this one caller.
 # - CSqlResultSet::GetDateTime (5162): its callee boost::date_time::parse_iso_time<ptime> (5851, 9824 B) is the copy of
 #   app/dados/asn/datahoraasn.cpp in our link, a different body (fn 6004, whose folded readout is 290 lines against the target's 1568).
 # - CSqlResultSet::StepStatement (5166): no evidence names std::piecewise_construct, a one-byte object the map's
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
 # Matched later, with what held each:
+# - CSqlStatement::SetDateTime (9422) waited for its inlined ymd_to_string in iso_extended_format: the target holds it
+#   inlined here, its one caller, and the probe that src/app/roots_boost.o compiles (-O2, no -fexceptions, ahead of both
+#   trees) gave it a second call site. 9422 matches since that call left tools/libs/boost/probe.cpp (fragment 265 has
+#   the measurements). Its callees from_day_number (1376) and to_simple_string_type over a time_duration (9415, which
+#   it calls through invoke_vij) come from ecourna's objects too since the root declares them `extern template`, and
+#   this unit's object gives 9415 and month_formatter's format_month in iso_extended_format (9414); 9422 reaches 1376
+#   and 9415 through their table slots, which re-point by name whichever copy fills them, so its bytes do not rest on
+#   those two lines (measured: a whole link without either line keeps 9422 verified).
 # - CSqlStatement::Close (9429) waited for a target name of the file-static std::mutex it unlocks (our .bss `s_mutex`;
 #   the target's is at 1911796): a .bss object gets a name only from a vote of a census-paired function, and the census
 #   paired neither 9429 nor 9431, the mutex's exit-time destructor. 9429 is a `srcloc-anchor` now, and its vote names

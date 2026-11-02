@@ -14,19 +14,12 @@
 # Insert (fn 501, 217 B): the target's body locks m_sync (+24, slot 2) and keeps its pointer in a frame word that fn
 # 5528 unlocks (slot 3) on both paths, increments m_ordem (+28), pushes {message, priority, order} into the heap at +4
 # (invoke of table slot 237, fn 11076), and releases m_semaforo (+20, slot 3). It calls invoke_*: an -fexceptions copy,
-# which no uenux2 object gives. Ours is the uenux2 -O3 copy and differs (`pnpm wasm score` against the link: `score 299
-# over 339 rows`); 5528, the guard's destructor that copy keeps out of line, has no body here. Measured with
-# docs/reference/facts/levels.md V4's probe, an object that calls Insert compiled at VOTA_WEB_CXXFLAGS (the executable
-# TU's -Oz -fexceptions) and put first on the link line, scanned with this tree's symbol file and matches: 5528 matches,
-# as api::CSyncCtlGuard's D2, and 501 reads `unresolved` on its push's table slot (fn 11076 has no name), `score 16 over
-# 95 rows (same 79, replaced 11 [8 operand-only], inserted 2, deleted 3)`, the rest one block's shape around the second
-# invoke. So the target's copy is that level's, and both wait for a TU at it that calls Insert (the executable TU's code
-# is not written there); a probe object lands nowhere. Insert's callers named by `vtable` cast no votes
-# (docs/reference/splat.md section 2), so a `callers+content` hand line in splat/symbol_addrs.txt names 501 for them,
-# from its body above (its two named callers 7221 and 10763 are the rows the line carries, not its evidence). Chosen:
-# Insert's name and its parameters' order, the guard class (api::CSyncCtlGuard, in api/ipc/cmessagequeue.h) and its
-# names, and the local `ordem`. The item built after m_ordem's increment is the target's order (501 stores m_ordem
-# before it loads the message), and the probe compiles this form: its rows are 501's but the operands and that block.
+# which no uenux2 object gives. It matches, with 5528 and 11076, from the tree root src/app/roots_messagequeue.cpp at
+# the executable TU's rule; unit 269's fragment has that evidence, the measurements, and the two forms of the header the
+# copy needed (the item a named local, the heap's comparator a function object). Chosen: Insert's name and its
+# parameters' order, the guard class (api::CSyncCtlGuard, in api/ipc/cmessagequeue.h) and its names, and the local
+# `ordem`. The item built after m_ordem's increment is the target's order (501 stores m_ordem before it loads the
+# message).
 #
 # The message. Each of the target's 33 calls of 501 that builds one (in the split pieces, all but 7708's) stores the
 # queue it passes as 501's first argument in the word at +4 and the type in the short at +0 (7221, 7178, 11994, 6018 and

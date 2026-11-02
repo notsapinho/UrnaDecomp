@@ -82,7 +82,10 @@ EMSCRIPTEN_KEEPALIVE int probe_datetime(const char *text) {
   date d2 = from_undelimited_string(text);
   ptime now = second_clock::local_time();
   ptime u = microsec_clock::universal_time();
-  std::string out = to_simple_string(t) + to_iso_string(d) + to_iso_extended_string(d2) + to_simple_string(u.time_of_day());
+  // no gregorian date in iso_extended format: the target's ymd_to_string in that format has one caller, ecourna's
+  // CSqlStatement::SetDateTime (fn 9422), which holds it inlined; a call here would give it a second in the app link
+  // (src/units/265-ecourna-boost-datetime.mk)
+  std::string out = to_simple_string(t) + to_iso_string(d) + to_simple_string(u.time_of_day());
   time_duration diff = now - t;
   date_duration dd = d - d2;
   return (int)out.size() + (int)diff.total_seconds() + (int)dd.days() + (int)d.day_of_week() + (int)t.date().year();

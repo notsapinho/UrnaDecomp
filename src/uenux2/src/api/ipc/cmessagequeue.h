@@ -5,11 +5,13 @@
 // its RTTI and vtable @1534764. The offsets come from Remove, the destructors 3162 and 3157 and the constructor's
 // stores in 316. Every name but the class's, SMessage's, api::CMessageInterface's and Remove's is chosen:
 // src/units/64-uenux2-cmessagequeue.mk lists the choices and the forms that give the same bytes, 116-uenux2-cthreads.mk
-// what the constructor and api::CMessageInterface add, and 174-uenux2-app-vota-mensagens.mk Insert, Post and the guard.
+// what the constructor and api::CMessageInterface add, 174-uenux2-app-vota-mensagens.mk Insert, Post and the guard, and
+// 269-uenux2-cmessagequeue-insert.mk the target's copy of Insert, its form and the heap's comparator.
 
 #include <cstddef>
 #include <memory>
 #include <queue>
+#include <vector>
 
 #include "api/ipc/eueipcerror.h"
 #include "api/ipc/isemaphore.h"
@@ -52,7 +54,7 @@ class CPriorityMessageQueue {
 public:
     virtual ~CPriorityMessageQueue() = default;
 
-    // (original lines 55-111: content not recovered)
+    // (original lines 57-111: content not recovered)
 #line 112
     CPriorityMessageQueue()
         : m_semaforo(CPolySingleton<IGenericFactory<ISemaphore>>::instance().Create())
@@ -67,7 +69,8 @@ public:
     {
         CSyncCtlGuard trava(m_sync.get());
         const unsigned ordem = m_ordem++;
-        m_fila.push(SItem{mensagem, prioridade, ordem});
+        SItem item{mensagem, prioridade, ordem};
+        m_fila.push(item);
         m_semaforo->Unlock();
     }
 
@@ -80,7 +83,6 @@ public:
         mensagem.m_fila = this;
         Insert(mensagem);
     }
-
 
     TMessage Remove()
     {
@@ -118,20 +120,22 @@ private:
         TMessage m_mensagem;
         int m_prioridade;
         unsigned m_ordem;
+    };
 
-        bool operator<(const SItem& outro) const
+    struct SComparaItem {
+        bool operator()(const SItem& item, const SItem& outro) const
         {
-            if (m_prioridade < outro.m_prioridade) {
+            if (item.m_prioridade < outro.m_prioridade) {
                 return true;
             }
-            if (m_prioridade > outro.m_prioridade) {
+            if (item.m_prioridade > outro.m_prioridade) {
                 return false;
             }
-            return m_ordem > outro.m_ordem;
+            return item.m_ordem > outro.m_ordem;
         }
     };
 
-    std::priority_queue<SItem> m_fila;
+    std::priority_queue<SItem, std::vector<SItem>, SComparaItem> m_fila;
 
 protected:
     // +20: the derived classes' waits read it (fn 4343).

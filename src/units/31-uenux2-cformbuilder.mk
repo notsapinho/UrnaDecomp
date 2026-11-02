@@ -146,8 +146,9 @@
 #   1's 136 pairs below are inverted, and clang still inlines it. So 7787's own make_shared<CRectField> is not a call of it.
 # - RectEntre reads the four coordinates into locals before it builds the SRect: 2245 and 3680 store it +6, +4, +2, +0, which
 #   docs/reference/facts/codegen.md C1 gives for values read first. Written as `SRect{std::min(canto.x, oposto.x), ...}`, 2245
-#   scores 38 over 121 and 3680 36 over 105. SRect is an aggregate of ours (api/gui/primitives.h), so these locals stand in
-#   for whatever the original reads them with: its header's form is not recovered.
+#   scores 38 over 121 and 3680 36 over 105. SRect was an aggregate of ours when this was measured; it has
+#   a normalizing constructor now (api/gui/primitives.h), which this brace form calls, and cformbuilder.cpp.o is the same
+#   object with it. These locals stand in for whatever the original reads them with: its header's form is not recovered.
 # - The order of the definitions, by the use bands of ledger/ordinals.tsv. The members of the control blocks and of the
 #   CDataText instantiations an adder brings are linkonce and have one use each, and each takes its place at its first
 #   mention, so a run of consecutive target indices in band 1 orders the adders that mention them (docs/how-to-decompile.md
