@@ -7,7 +7,8 @@
 // calls vtable + 4). No member has a record: the names are chosen from what the implementer's bodies do (the ticks of
 // vota::CThreadOperador, the titulo it holds, the text each log slot writes), else from the slot. The parameter and result
 // types are the bodies' widths; the result of slots 9, 11 and 12 is chosen as the state class their callees return, and
-// slot 14's as the mapped type of the map whose node fn 2264 returns (+32 into a node of fn 1703's tree).
+// slot 14's is what its body returns, comum::CEleitores::LocalizaEleitor's result (fn 2264, celeitores.h), whose byte at
+// +100 comum::CPedeDigitalMesario::ProcessTick (fn 10316) reads; its constness is chosen.
 // Every slot but SetTituloMesario is const. The states call them through GetControlador, whose records return
 // `const IControladorRegistraMesarios &` (cconfirmafimregistromesarios.cpp:60 and nine more files), and the target calls
 // 28 of the 35 slots through such a reference: 2 to 7, 9 to 17, 19, 23 to 31 and 34 to 36, in fns 10313, 10316, 10318,
@@ -25,10 +26,7 @@
 namespace comum {
 
 class CAppState;
-
-namespace md {
-class CComparecimentoMesario;
-} // namespace md
+class CEleitorDetalhe;
 
 class IControladorRegistraMesarios {
 public:
@@ -46,7 +44,7 @@ public:
     virtual CAppState& Slot11() const = 0;
     virtual CAppState& Slot12() const = 0;
     virtual bool Slot13() const = 0;
-    virtual md::CComparecimentoMesario* Slot14() const = 0;
+    virtual CEleitorDetalhe* Slot14() const = 0;
     virtual void Slot15() const = 0;
     virtual void Slot16() const = 0;
     virtual const std::string& GetTituloMesario() const = 0;

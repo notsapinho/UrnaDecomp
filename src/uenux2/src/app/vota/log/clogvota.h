@@ -44,10 +44,11 @@
 // LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
 // vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
 // member's own stack frame opens and calls fn 233; its name is chosen from its message. LogaMesarioConfirmouReinicioVotacao
-// and LogaMesarioSelecionouOutrasOpcoes (held inlined by vota::CReinicioVotacao::ProcessInput, fn 11834) and
+// and LogaMesarioSelecionouOutrasOpcoes (held inlined by vota::CReinicioVotacao::ProcessInput, fn 11834),
+// LogaApresentadaTelaReinicioVotacao (by vota::CReinicioVotacao::StartState, fn 11835) and
 // LogaMesarioIndagadoHorarioUrna (by vota::CImpressaoZeresimaTardia::StartState, fn 11932) are the same shape: each
-// caller calls GetInst before the member's own stack frame opens; the first two call api::CLoga::loga (fn 433) with +4
-// and severity 1, the third calls fn 233. That they are members of this class and not of comum::IEventosLog follows the
+// caller calls GetInst before the member's own stack frame opens; the first three call api::CLoga::loga (fn 433) with +4
+// and severity 1, the fourth calls fn 233. That they are members of this class and not of comum::IEventosLog follows the
 // members above, a reading; their names are chosen from their messages. LogaTempoLimiteBateriaInterna (held inlined by
 // vota::CExibeAlertaDesligamento::ProcessTick, fn 12017: api::CLoga::loga with +4 and severity 2),
 // LogaErroIdentificacaoTipoCargo (by vota::CEleitorVotando::ChamaEstadoProximoCargo, fn 4459: logaErro, fn 2282) and
@@ -113,6 +114,7 @@ public:
     void LogaTesteTecladoNaoExecutado();
     void LogaMesarioConfirmouReinicioVotacao();
     void LogaMesarioSelecionouOutrasOpcoes();
+    void LogaApresentadaTelaReinicioVotacao();
     void LogaMesarioIndagadoHorarioUrna();
     void LogaTempoLimiteBateriaInterna();
     void LogaErroIdentificacaoTipoCargo();

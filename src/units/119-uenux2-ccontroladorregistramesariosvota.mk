@@ -5,9 +5,11 @@
 # - 184, CLogVota::GetInst: CPolySingletonList::has<comum::IEventosLog>, then CPolySingleton<comum::IEventosLog>::set with
 #   push, both inlined by binaryen (two more stack prologues), then the instance through dynamic_cast to CLogVota&;
 # - the controller's 37 slots (10800 down to 10766, with 434 in slot 8), and the bodies binaryen merged some of them into:
-#   3887 (slots 31 to 33 in the target, 32 and 33 here: below), 3888 (slots 29, 34 and 36), 6017 (slots 19 and 27);
+#   3887 (slots 31 to 33 in the target, 32 and 33 here: below), 3888 (slots 29, 34 and 36), 6017 (slots 19 and 27),
+#   6018 (slots 10 and 15);
 # - CRegistroMesarioEncerrado's two exit-time destructors, 10765 (the pointer's) and 10764 (the mutex's).
-# Matched: 184, 3887, 3888, 6017, 10763 to 10779, 10781 to 10785, 10788, 10791, 10793, 10795, 10796 and 10798 to 10800.
+# Matched: 184, 3887, 3888, 6017, 6018, 10763 to 10779, 10781 to 10785, 10787 to 10793, 10795, 10796 and 10798 to
+# 10800.
 # Slot 8 is the shared 434 (`return true`), matched before. Unit 02 matches 422 and 5451, which
 # slot 3 reaches, and names CTickManager::AddTick (3644), which slot 2 (10800) calls, by a `callers+content` hand line.
 #
@@ -112,17 +114,23 @@
 #   and one argument of type code 6, libc++'s __arg_t::__unsigned: an unsigned type of 32 bits or less, so `6u` is a
 #   choice among those.
 # - The members are defined in slot order, a choice, but slots 10 and 15: the band puts 10793 (slot 11) above 10792
-#   (slot 10) and 10788 (slot 17) above 10787 (slot 15), so slot 10 follows slot 11 and slot 15 follows GetTituloMesario.
-# - Slots 10 and 15 (10792, 10787) post 11 and 7 to vota::CThreadEleitor's queue through fn 6018, which the target keeps
-#   out of line under them and which reads nothing of the object it is passed: a const member, EnviaMensagemEleitor
-#   (name chosen), with api::CPriorityMessageQueue's Post (unit 174's fragment). In this .cpp clang inlines it into both
-#   slots (measured on a scratch TU of the same shape, a class with the const helper and two const callers at this
-#   tree's flags: both callers hold the post inlined and no call), so it is in a TU of its own, ccontroladorregistramesariosvotamensagem.cpp (fragment 174's source; the file
-#   name is chosen). Written, not matched: the target's 6018 is (i32 i32)->() and keeps the unused first parameter,
-#   where our link's binaryen drops it, so the slots pass one argument less (`pnpm wasm score` against the link: 6018
-#   `score 9 over 27 rows (same 18, replaced 7 [7 operand-only], inserted 1, deleted 1)`, 10792 `score 2 over 5 rows`,
-#   one row deleted, the slot's `local.get 0`). No form found keeps the parameter; the slots read `unresolved`, their
-#   callee 6018 having no name.
+#   (slot 10) and 10788 (slot 17) above 10787 (slot 15), so slot 10 follows slot 11 and slot 15 follows GetTituloMesario;
+#   10791 (slot 12), 10790 (slot 13) and 10789 (slot 14) lie between, in slot order.
+# - Slots 10 and 15 (10792, 10787) post 11 and 7 to vota::CThreadEleitor's queue (fn 316 + 36, Post inlined, Insert fn
+#   501). In the target each is `f6018(p0, <its constant>)`, and 6018 lies in the target's run of merge bodies (6007 to
+#   6065, `byn$mgfn-shared$` matches but 6016 and 6037): the two slots are whole functions binaryen's
+#   merge-similar-functions joined, the constant made a parameter and `this` kept first, which is why 6018 keeps a
+#   parameter it never reads (that pass runs after dead-argument elimination). Written whole, the post in each slot, our
+#   link forms the same merge, named after slot 10: `pnpm wasm score` against the link reads 10792 and 10787 `1 over 5
+#   rows` and 6018 `2 over 26 rows`, all operand-only, and steps 7 to 9 match the three. The helper this unit had
+#   (EnviaMensagemEleitor, in fragment 174's ccontroladorregistramesariosvotamensagem.cpp) is not the target's and went.
+# - Slots 13 and 14 (10790, 10789) look up the titulo slot 17 returns (CThreadOperador's +96) in comum::CEleitores
+#   (fn 326, GetInst) with fn 2264, LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor), type 1
+#   (TipoIDInscricaoEleitoral); slot 13 returns whether a record was found, slot 14 the record. Both read the titulo
+#   through CThreadOperador::GetInst() in place, as slot 17's body does; that spelling is a choice, not measured against
+#   a call of GetTituloMesario. Slot 14's result type is LocalizaEleitor's, comum::CEleitorDetalhe*, whose byte at +100
+#   comum::CPedeDigitalMesario::ProcessTick (fn 10316) reads (the interface had a chosen md::CComparecimentoMesario*).
+#   `pnpm wasm score` against the link: 10790 `3 over 10 rows`, 10789 `3 over 8 rows`, operand-only; both match.
 # - CRegistroMesarioEncerrado::StartState (10763) is written after the statics: the band puts their destructors (10765,
 #   10764) above it. It stores `this` as the next state and posts 14 to vota::CThreadEleitor's queue with Post.
 #
@@ -144,7 +152,7 @@
 #   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
 # Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
-# slots 5, 9, 13, 14 and 16 (fns 10797, 10794, 10790, 10789, 10786), and behind them fns 4662 and 5343;
+# slots 5, 9 and 16 (fns 10797, 10794, 10786), and behind them fns 4662 and 5343;
 # CRegistroMesarioEncerrado's ProcessKey (fn 10762).
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the

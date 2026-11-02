@@ -6,10 +6,15 @@
 # constructors, which fn 11896 holds inlined, and their statics, whose exit-time destructors match (11913 and 11912,
 # 11910 and 11909, 11907 and 11906, 11904 and 11903, each pointer's first). The class heads say what each layout rests
 # on; 176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp names every slot left and what it waits for. Not
-# written: the constructors, GetInst and statics of CConfirmaRegerarZeresima (fn 11835 holds them inlined; the
-# constructor copies vota::CTelasVota::GetInst()'s +84) and CImpressaoZeresimaTardia (fn 11927; +60), which
-# app/vota/eleitor/comum/ctelasvota.h has no accessors for; their statics' exit destructors (11840, 11839; 11934, 11933)
-# wait with them.
+# written: the constructor, GetInst and statics of CImpressaoZeresimaTardia (fn 11927 holds them inlined; the
+# constructor copies vota::CTelasVota::GetInst()'s +60, which app/vota/eleitor/comum/ctelasvota.h has no accessor for);
+# their statics' exit destructors (11934, 11933) wait with them.
+# CConfirmaRegerarZeresima's constructor, GetInst and statics are written, unit 104's shape, and
+# vota::CReinicioVotacao::StartState (fn 11835, unit 138) holds GetInst inlined: the new of 20 bytes, the base's
+# constructor (fn 224) with 2, the vptr, the copy of CTelasVota's +84 and +88 (a getter added to ctelasvota.h, its name
+# chosen), the mutex's unlock (fn 150); its statics' exit destructors match with 11835 (11840 the pointer's, 11839 the
+# mutex's, @1834940 and @1834916, which 11835 alone votes for and these two destructors read too), and the roots' sink
+# of this class's vtable went, 11835 storing it.
 #
 # Evidence, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv:
 # - CConfirmaRegerarZeresima has a TU of its own. Written in cregerarzeresima.cpp, the TU that defines
@@ -59,8 +64,8 @@ UENUX2_SRCS += $(APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS)
 # trapping bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.o: $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.cpp -o $(R)
-# nothing reconstructed stores two of the classes' vptrs yet:
-# 176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.cpp takes their vtables' addresses
+# nothing reconstructed stores CImpressaoZeresimaTardia's vptr yet:
+# 176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.cpp takes its vtable's address
 $(ROOT)/$(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.o: $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-pending.o $(APP)/176-uenux2-app-vota-eleitor-iniciovotacao-estados-roots.o

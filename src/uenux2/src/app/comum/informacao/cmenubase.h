@@ -37,11 +37,15 @@
 //   function there (docs/reference/facts/reading.md R10): AdicionaOpcao, which formats the key with std::format("{}")
 //   and appends it, out of line in cmenubase.cpp. Both names are chosen. Their place in the link (band 5, between
 //   cinformacaoeleicao.cpp's 2286 and cinfomtlcd.cpp's GetInst, 2284) fits cmenubase.cpp in informacao/.
+// - AdicionaPergunta: MontaMenu's prompt and input field after the last item, which 5913 holds behind a stack prologue
+//   of its own; its name and its int parameters' names are chosen (src/units/59-uenux2-cmenubase.mk has the evidence).
 // - CItemMenu is only declared here: the destructor needs no more of it. cmenubase.cpp includes citemmenu.h.
 
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "api/gui/primitives.h"
 
 namespace api {
 class CFormBuilder;
@@ -67,6 +71,7 @@ protected:
 
 private:
     void AdicionaOpcao(unsigned int chave);
+    void AdicionaPergunta(int x, int y);
 };
 
 inline CMenuBase::~CMenuBase() = default;

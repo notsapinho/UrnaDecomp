@@ -14,6 +14,10 @@ enum EUeVotaError {
     // from the message, "<caller> - o cargo atual nao esta posicionado", and the class: no evidence names them
     EUE_VOTA_CONFIRMA_VOTO_EM_CARGO_CARGO_NAO_POSICIONADO = 9306,
     EUE_VOTA_CONFIRMA_VOTO_SEM_CANDIDATO_CARGO_NAO_POSICIONADO = 9307,
+    // the value is the code vota::CDefineRotaPosReinicio::NeedChangeState (target fn 11858, record
+    // cdefinerotaposreinicio.cpp:81) throws; the name is chosen from its message, "Estado inválido = {}", and the class:
+    // no evidence names it
+    EUE_VOTA_DEFINE_ROTA_POS_REINICIO_ESTADO_INVALIDO = 9309,
     // the value is the code vota::CEleitorVotando::ChamaEstadoProximoCargo (target fn 4459, record
     // celeitorvotando.cpp:229) throws; the name is chosen from its message, "Tipo de cargo nao identificado": no evidence
     // names it

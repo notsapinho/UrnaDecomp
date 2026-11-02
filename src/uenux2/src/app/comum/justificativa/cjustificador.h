@@ -33,6 +33,9 @@ public:
     // The título of the current record, the map's key: CJustificadorDadoTitulo::Text (fn 11475) reads the cursor at +12
     // and calls GetNumero (fn 1139, a twin) on the node's key. The name is chosen.
     const ecourna::app::dados::CNumeroInscricaoEleitoral& GetTituloCorrente() const { return m_corrente->first; }
+    // How many voters are justified, the map's size (+8): vota::CReinicioVotacao::StartState (fn 11835) tests it for 0
+    // in place. The name, and that it is an inline accessor, are chosen.
+    std::size_t QuantidadeJustificados() const { return m_registros.size(); }
 
 private:
     servico::CJustificadorServico m_servico;

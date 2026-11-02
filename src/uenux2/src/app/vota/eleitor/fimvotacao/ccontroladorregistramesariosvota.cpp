@@ -9,6 +9,8 @@
 
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/comparecimentomesario/cregistradormesario.h"
+#include "app/comum/dados/celeitores.h"
+#include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/cfinalizaoperador.h"
@@ -71,12 +73,24 @@ comum::CAppState& CControladorRegistraMesariosVota::Slot11() const
 
 void CControladorRegistraMesariosVota::Slot10() const
 {
-    EnviaMensagemEleitor(11);
+    CThreadEleitor::GetInst().GetMensagens().Post(11);
 }
 
 comum::CAppState& CControladorRegistraMesariosVota::Slot12() const
 {
     return CFinalizaOperador::GetInst();
+}
+
+bool CControladorRegistraMesariosVota::Slot13() const
+{
+    return comum::CEleitores::GetInst().LocalizaEleitor(CThreadOperador::GetInst().GetTituloMesario(),
+                                                         ecourna::app::dados::TipoIDInscricaoEleitoral) != nullptr;
+}
+
+comum::CEleitorDetalhe* CControladorRegistraMesariosVota::Slot14() const
+{
+    return comum::CEleitores::GetInst().LocalizaEleitor(CThreadOperador::GetInst().GetTituloMesario(),
+                                                         ecourna::app::dados::TipoIDInscricaoEleitoral);
 }
 
 const std::string& CControladorRegistraMesariosVota::GetTituloMesario() const
@@ -86,7 +100,7 @@ const std::string& CControladorRegistraMesariosVota::GetTituloMesario() const
 
 void CControladorRegistraMesariosVota::Slot15() const
 {
-    EnviaMensagemEleitor(7);
+    CThreadEleitor::GetInst().GetMensagens().Post(7);
 }
 
 void CControladorRegistraMesariosVota::SetTituloMesario(const std::string& titulo)
