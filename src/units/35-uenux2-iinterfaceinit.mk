@@ -28,6 +28,20 @@
 # - EnviarMensagemThrowVoid: with and without `inline` (only the offset of its records moves, which the link rewrites);
 # - GetDemoMode: `m_demoMode = std::shared_ptr<bool>(new bool(x))` and `m_demoMode.reset(new bool(x))`; `!= 0` and
 #   static_cast<bool>; `if (m_demoMode)` and `!= nullptr`.
+# comum::FormataTamanho (fn 1947), added since, a free function of this file: a byte count as "{}.{} GB", "{}.{} MB" or
+# "{}.{} KB" with one decimal digit, else "{} B". Evidence: its four std::format calls (strings 333538, 333515, 333524,
+# 334286; argument types 198, two unsigned, and 6), the count's shifts by 30, 20 and 10 and the digit's `& 1023`, `* 10`
+# and `>> 10`, all on an unsigned 32-bit word, and its callers (ledger/callgraph.tsv): vota::CThreadMonitor::Run (10226,
+# a trap in unit 116, four calls on the low word of 64-bit values), MontarMRSemHabilitar (5896, this file's, not
+# written) and vota::CLogVota::LogaQuantidade (3268, fragment 234's paragraph). The target computes the count's `>> 20`
+# before its first test and its `>> 10` after it, which the three quotients named first give; with each branch's test
+# written as `tamanho >= 1024 * 1024 * 1024` the object compares with the bound instead (try-tu.sh --symbols, read with
+# wasm-objdump -d). Its file is a reading of the band: in band 6 it lies right after cpath.cpp's 1948, and in bands 1,
+# 3 and 4 this file's functions follow cpath.cpp's (11649 and 11648, then 11646 and 11644; 3834, then 3833 and 3832;
+# 2864, then 2863 and 2862); a last function of cpath.cpp would lie there too. Chosen: the name, the namespace, the size_t
+# parameter (the bytes give an unsigned 32-bit word), its declaration in iinterfaceinit.h, its line (83) and the
+# locals' names. pnpm wasm score before step 8: 29 over 644 rows, all operand-only; the scan matched it by content. Its
+# stand-in is in fragment 234's roots (src/units/README.md "Landing a unit" item 2).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 IINTERFACEINIT_SRCS := src/app/comum/iinterfaceinit.cpp
 UENUX2_SRCS += $(IINTERFACEINIT_SRCS)

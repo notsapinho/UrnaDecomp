@@ -10,8 +10,8 @@
 #   CThreadOperador's and CThreadMonitor's GetInst (316, 270, 1898), api::CThread::Start (1684) and Wait (1900, unit 18),
 #   the threads' stop flag and api::CSystem::Dorme.
 # - app/vota/cexecucaovotacooperativa.cpp: CExecucaoVotaCooperativa's constructor (7828), slots 2 and 3 (Executa and
-#   IniciaThreads, one body, 4713), slots 4 to 6, empty (218), and slots 8 and 9, one body each with CExecucaoVota's
-#   (4708, 4705).
+#   IniciaThreads, one body, 4713), slots 4 to 6, empty (218), slot 7 (ProcessaEntradaEleitor, 7823, below) and slots
+#   8 and 9, one body each with CExecucaoVota's (4708, 4705).
 # - app/vota/comum/cassinadorvota.cpp: CAssinadorVota's D2 (7766) and D0, which binaryen merges with comum::CAssinador's
 #   (4694, unit 34). The merge keeps the first name in link order, so 4694's match line moved to this class's D0. The
 #   constructor (1501, named by its vptr store), added since: it passes comum::CAssinador's constructor (unit 34's file,
@@ -22,7 +22,7 @@
 # - app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp: LimpaBufferInput (13564), records 33:18, 34:35 and 37:38.
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so).
-# Not matched, and why: the -pending.cpp traps CExecucaoVotaCooperativa's slot 7 (7823), CAguardaInicio's ProcessKey
+# Not matched, and why: the -pending.cpp traps CAguardaInicio's ProcessKey
 # (10217) and CPreShowFormVota's PreShow (7707), with what each waits for. GetInst of
 # IExecucaoVota (3594) and of IPoliticaExecucaoEleitor (inlined into 5925) are not written; the roots file says what
 # stands for them and for 576's 16 callers.
@@ -97,6 +97,20 @@
 # the CMessageEleitor at +36 derives from first); the files above; LimpaBufferInput's local names and its line layout
 # around the records' columns (lines 33, 34 and 37 put each call where its record says; how the text before each call
 # is shared out is a choice). Which of CExecucaoVotaCooperativa's slots 2 and 3, one body, the source defines first.
+#
+# CExecucaoVotaCooperativa::ProcessaEntradaEleitor (7823, slot 7) matches, written in cexecucaovotacooperativa.cpp in
+# slot order: CThreadEleitor::GetInst (316), false when the instance has no context at +32 or Stop was asked (the byte
+# +8), else CThreadEleitor::ProcessaEventos (4349, unit 116's) on it. The target tests the two as two branches, the
+# byte bare. Read through two accessors, api::CThread::PararSolicitado and vota::CThreadVota::TemContexto, the object
+# gives those branches written as `if (!a || b) return false;`, as two ifs, as one `&&` chain or as `if (a && !b)`, the
+# same object for the four (try-tu.sh --symbols on copies, read with wasm-objdump -d). Read through one inline accessor
+# that returns `m_contexto && !PararSolicitado()`, with the call after `&&`, an early return or a local flag, clang
+# folds the tests into one select and tests the byte with `i32.const 1; i32.and`: in the whole link that form read 4
+# over 20 rows (2 inserted, the `& 1`). So PararSolicitado is public (it was protected, a choice) and TemContexto is
+# new in cthreadvota.h; both are inline, and their names, TemContexto's being defined in the class and the if's
+# spelling are chosen. pnpm wasm score before step 8: 2 over 18 rows, the two calls. 4349 has no generated name (its
+# callers are vtable names, which cast no vote): a callers+content hand line of splat/symbol_addrs.txt names it, and
+# without it 7823 reads unresolved on that call (fragment 234 has the line's measurement).
 #
 # The same bytes, measured in the whole link with pnpm wasm score against the target function:
 # - LimpaBufferInput's loop: `for (size_t i = 0; i < n; i++)` (written) and `for (int i = 0; i != n; i++)` both give

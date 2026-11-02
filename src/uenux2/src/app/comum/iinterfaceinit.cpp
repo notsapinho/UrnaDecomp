@@ -48,7 +48,25 @@ void IInterfaceInit::DesabilitarMR()
     api::CSystem::Dorme(100);
 }
 
-// (original lines 82-132: content not recovered)
+
+std::string FormataTamanho(size_t tamanho)
+{
+    const size_t gb = tamanho / (1024 * 1024 * 1024);
+    const size_t mb = tamanho / (1024 * 1024);
+    const size_t kb = tamanho / 1024;
+    if (gb > 0) {
+        return std::format("{}.{} GB", gb, mb % 1024 * 10 / 1024);
+    }
+    if (mb > 0) {
+        return std::format("{}.{} MB", mb, kb % 1024 * 10 / 1024);
+    }
+    if (kb > 0) {
+        return std::format("{}.{} KB", kb, tamanho % 1024 * 10 / 1024);
+    }
+    return std::format("{} B", tamanho);
+}
+
+// (original lines 100-132: content not recovered)
 #line 133
 bool IInterfaceInit::IsMRPresenteSemHabilitar()
 {

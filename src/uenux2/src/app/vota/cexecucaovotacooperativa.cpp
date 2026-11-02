@@ -31,6 +31,15 @@ void CExecucaoVotaCooperativa::ParaThreadsOperadorMonitor()
 {
 }
 
+bool CExecucaoVotaCooperativa::ProcessaEntradaEleitor()
+{
+    CThreadEleitor& thread = CThreadEleitor::GetInst();
+    if (!thread.TemContexto() || thread.PararSolicitado()) {
+        return false;
+    }
+    return thread.ProcessaEventos();
+}
+
 api::CPriorityMessageQueue<api::SMessage>& CExecucaoVotaCooperativa::GetFilaEleitor()
 {
     return CThreadEleitor::GetInst().GetMensagens();

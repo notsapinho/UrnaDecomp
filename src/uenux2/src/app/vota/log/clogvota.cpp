@@ -269,6 +269,11 @@ void CLogVota::LogaVotoCargoSemCandidatoPorSuspensao(const uebyte cargo)
                      comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
 }
 
+void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
+{
+    loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
+}
+
 } // namespace vota
 
 // <stubs>

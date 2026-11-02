@@ -13,6 +13,12 @@ std::string ConverteDataHora(const boost::posix_time::ptime& dataHora)
                        dataHora.time_of_day().hours(), dataHora.time_of_day().minutes(), dataHora.time_of_day().seconds());
 }
 
+std::string FormataHora(const boost::posix_time::ptime& dataHora)
+{
+    return std::format("{:02}:{:02}:{:02}", dataHora.time_of_day().hours(), dataHora.time_of_day().minutes(),
+                       dataHora.time_of_day().seconds());
+}
+
 boost::posix_time::ptime DesconverteDataHora(const std::string& dataHora)
 {
     std::string texto = dataHora;
