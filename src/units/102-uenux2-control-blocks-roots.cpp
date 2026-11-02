@@ -72,7 +72,6 @@
 #include "app/vota/operador/outrasopcoes/citensmenuvota.h"
 #include "ecourna/api/security/caescipher.hpp"
 #include "ecourna/api/security/cblockcipher.hpp"
-#include "ecourna/api/security/csha.hpp"
 #include "ecourna/api/security/ctrng.hpp"
 #include "ecourna/app/dados/resultadournacadastro/cidentificacaojustificativa.hpp"
 
@@ -125,7 +124,6 @@ extern const char w102_vt_cvisitanteeleitor[] __asm__("_ZTVNSt3__220__shared_ptr
 extern const char w102_vt_ijustificadordao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao16IJustificadorDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_icomparecimentomesariodao_idao[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN5comum3dao25IComparecimentoMesarioDAOENS_10shared_ptrIN3api12persistencia4IDAOEE27__shared_ptr_default_deleteIS8_S3_EENS_9allocatorIS3_EEEE");
 extern const char w102_vt_cblockcipher_caescipher_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3api8security12CBlockCipherINS3_10CAesCipherENS3_5CTrngEEENS_10shared_ptrINS3_16ISymmetricCipherEE27__shared_ptr_default_deleteISA_S7_EENS_9allocatorIS7_EEEE");
-extern const char w102_vt_csha512[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3api8security7CSha512ENS_10shared_ptrINS3_5IHashEE27__shared_ptr_default_deleteIS7_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_cidentificacaojustificativa[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN7ecourna3app5dados27CIdentificacaoJustificativaENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS_9allocatorIS4_EEEE");
 extern const char w102_vt_string[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_10shared_ptrIS6_E27__shared_ptr_default_deleteIS6_S6_EENS4_IS6_EEEE");
 extern const char w102_vt_item_visualizar[] __asm__("_ZTVN4vota29CItemVisualizarCandidatosVotaE");
@@ -167,7 +165,6 @@ template struct SBloco<comum::md::CComparecimentoMesario, comum::md::CComparecim
 template struct SBloco<std::string, std::string>;
 template struct SBloco<ecourna::api::security::ISymmetricCipher, TAes>;
 template struct SBloco<comum::IGravador, comum::CGravadorWSQ>;
-template struct SBloco<ecourna::api::security::IHash, ecourna::api::security::CSha512>;
 
 __attribute__((optnone, noinline)) std::shared_ptr<api::CMovie> w102_filme(
     std::vector<api::CMovieFrame> quadros, const api::SPoint& tamanho)
@@ -319,7 +316,6 @@ struct SW102Roots {
         w102_sink = w102_vt_ijustificadordao_idao;
         w102_sink = w102_vt_icomparecimentomesariodao_idao;
         w102_sink = w102_vt_cblockcipher_caescipher_ctrng;
-        w102_sink = w102_vt_csha512;
         w102_sink = w102_vt_cidentificacaojustificativa;
         w102_sink = w102_vt_string;
         w102_sink = w102_vt_item_visualizar;
