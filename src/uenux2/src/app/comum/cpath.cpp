@@ -17,6 +17,16 @@ namespace comum {
 std::filesystem::path CPath::s_pathFlash[] = {"/dsk/fi/", "/dsk/fe/"};
 std::filesystem::path CPath::s_pathRoot = "/";
 
+void CPath::SetPathRoot(const std::filesystem::path& raiz)
+{
+    const std::filesystem::path root = raiz;
+    s_pathRoot = root;
+    const std::filesystem::path flashInterna("/dsk/fi/");
+    const std::filesystem::path flashExterna("/dsk/fe/");
+    s_pathFlash[FLASH_INTERNA] = s_pathRoot / flashInterna.relative_path();
+    s_pathFlash[FLASH_EXTERNA] = s_pathRoot / flashExterna.relative_path();
+}
+
 std::filesystem::path CPath::GetPathRoot()
 {
     return s_pathRoot;
@@ -44,7 +54,7 @@ std::filesystem::path CPath::GetPathChave()
     return s_pathRoot / path.relative_path();
 }
 
-// (original lines 47-140: content not recovered)
+// (original lines 57-140: content not recovered)
 #line 141
 std::filesystem::path CPath::GetPathRootSemSA(EFlashOrigem origem)
 {

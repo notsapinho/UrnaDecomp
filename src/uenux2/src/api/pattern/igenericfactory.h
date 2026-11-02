@@ -1,10 +1,14 @@
 #pragma once
 
-// api::IGenericFactory<AP>: the head alone. RTTI gives the instances and no base, and AP is the records' name for the
-// parameter. Slot 2 is Create with no argument: api::CThread's constructor (fn 3598) calls it for the
-// std::unique_ptr it stores, and slots 3 and 4 are the two overloads whose records are at lines 44 and 50, not written. Only typeid in api::CPolySingleton<T> needs an instance complete. The virtual destructor is in the first slot, as the control block's __on_zero_shared shows (fn 172 calls vtable + 4).
+// api::IGenericFactory<AP> and api::CDefaultGenericFactory<AP, T> (/home/rubio/tse/uenux2/src/api/pattern/igenericfactory.h,
+// the records' file: slots 3 and 4 throw at lines 44 and 50, column 15). Slot 2 is Create with no argument (CThread's fn 3598
+// calls it); the destructor is the first slot (fn 172 calls vtable + 4). Unit 170's fragment has the rest.
 
+#include <cstddef>
 #include <memory>
+#include <string>
+
+#include "api/pattern/euepatternerror.h"
 
 namespace api {
 
@@ -14,32 +18,25 @@ public:
     virtual ~IGenericFactory() = default;
 
     virtual std::unique_ptr<AP> Create() = 0;
+
+    // (original lines 22-41: content not recovered)
+#line 42
+    virtual std::unique_ptr<AP> Create(const std::string&)
+    {
+        throw CUePatternError(EUE_PATTERN_CREATE_TEXTO_NAO_SOBRECARREGADO, "Create(const std::string &) não sobrecarregado.");
+    }
+
+
+    virtual std::unique_ptr<AP> Create(size_t)
+    {
+        throw CUePatternError(EUE_PATTERN_CREATE_TAMANHO_NAO_SOBRECARREGADO, "Create(size_t) não sobrecarregado.");
+    }
+};
+
+template <typename AP, typename T>
+class CDefaultGenericFactory : public IGenericFactory<AP> {
+public:
+    std::unique_ptr<AP> Create() override { return std::make_unique<T>(); }
 };
 
 } // namespace api
-
-// <stubs>
-// f10872 · 21 B · unmatched · name unknown
-// ? f10872(i32, i32) { ... }
-
-// f10868 · 21 B · unmatched · name unknown
-// ? f10868(i32, i32) { ... }
-
-// f10863 · 21 B · unmatched · name unknown
-// ? f10863(i32, i32) { ... }
-
-// f10845 · 21 B · unmatched · name unknown
-// ? f10845(i32, i32) { ... }
-
-// f10871 · 21 B · unmatched · name unknown
-// ? f10871(i32, i32) { ... }
-
-// f10865 · 21 B · unmatched · name unknown
-// ? f10865(i32, i32) { ... }
-
-// f10856 · 21 B · unmatched · name unknown
-// ? f10856(i32, i32) { ... }
-
-// f10839 · 21 B · unmatched · name unknown
-// ? f10839(i32, i32) { ... }
-// </stubs>

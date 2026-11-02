@@ -24,7 +24,8 @@
 // UENUX2_TBAA_DIRS); compiled without it too, this object is the same, byte for byte.
 //
 // api::CPosixRWMutex's constructor (target fn 10245) is reached only by its table slot 244, which fn 10864 passes to fn
-// 6023, so its own address is taken; its vptr store keeps that class's vtable, and with it slots 0 to 4.
+// 6023: fn 10864 is the executable TU's CDefaultGenericFactory<IRWSyncCtl, CPosixRWMutex> (unit 170), in the link, so
+// the constructor needs no line here.
 //
 // The constructors, with direct callers in the target that are not reconstructed: CVotacaoStateAudio's (fn 1785) has
 // six, fns 5929, 5932, 6051's two (GetInst of vota::CPedeProporcional and CPedeMajoritario, binaryen's merge), 1165,
@@ -63,7 +64,6 @@ extern const char cpedetitulomesarioinicial_vt[] __asm__("_ZTVN5comum25CPedeTitu
 extern const char cpedetitulomesariofinal_vt[] __asm__("_ZTVN5comum23CPedeTituloMesarioFinalE");
 extern const char cpedetitulomesariovotacao_vt[] __asm__("_ZTVN5comum25CPedeTituloMesarioVotacaoE");
 extern const char cerrotestetecladofim_vt[] __asm__("_ZTVN4vota12testeteclado20CErroTesteTecladoFimE");
-int w10245_root_0(int) __asm__("_ZN3api13CPosixRWMutexC2Ev");
 int w97_completa_proporcional(void*, int) __asm__("_ZN4vota21CCompletaProporcionalC2Eh");
 int w97_pede_proporcional() __asm__("_ZN4vota17CPedeProporcional7GetInstEv");
 extern const char cpedenulo_vt[] __asm__("_ZTVN4vota9CPedeNuloE");
@@ -162,7 +162,6 @@ struct SCVotacaoStateAudioRoots {
         cvotacaostateaudio_sink = cpedetitulomesariofinal_vt;
         cvotacaostateaudio_sink = cpedetitulomesariovotacao_vt;
         cvotacaostateaudio_sink = cerrotestetecladofim_vt;
-        cvotacaostateaudio_sink = reinterpret_cast<const void*>(&w10245_root_0);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DoisCompletaProporcional);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&PedeProporcional);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&ConfereProporcional);

@@ -78,30 +78,14 @@
 #   stays out of line and stops `unresolved` at +0xc11 on ~shared_ptr<ISound>, `pnpm wasm score` 340 over 1315 rows, 132
 #   inserted: our link inlines 5650 and 5656 (target callers 455 and 1091), keeps ~CTravaLeitura whole where the target
 #   calls 1322 (a thunk of 6147, which forms with the push bodies' 642), and our ~shared_ptr<ISound> drops the `this`
-#   that 388 returns. Each waits for this TU's main (10307), which calls the push bodies and builds
-#   CPoliticaExecucaoEleitorWeb, whose LimpaBufferInput holds 455. None of the scratch helps landed: no row matched with
+#   that 388 returns. main (below) is written now; the row reads `unresolved +0xb30 call 509: ~shared_ptr<void> has no
+#   target function`, the same 388 as main's push bodies (below). None of the scratch helps landed: no row matched with
 #   them.
-# - 10835, CPoliticaExecucaoEleitorWeb::LimpaBufferInput (record 361:46):
-#   `api::CPolySingleton<api::IInputKbd>::instance()` then IInput's slot 4, Clear (api/hwil/iinput.h), in the target.
-#   Only main builds the class (a 4-byte `new`, vptr 1527156, then 9507, which removes a
-#   vota::impl::IPoliticaExecucaoEleitor it finds and calls that push, 5407), so with main unwritten its vtable would
-#   not link.
 # - 7840, votaInit (CVotaWebEngine::Init inlined, 6669 B, 109 invoke_* call sites): src/app/vota_init.cpp stands in. It
 #   invokes about 50 functions, most with no name and no stub: 14477, 11571 and 11546, which take votaInit's argument
 #   and a key string ("audioEleitorHabilitado", "municipio", ...), read as readers of its options, comum::CPath's
 #   GetPathTrab and GetPathRootSemSA (358, 634), a builder and its setters (10268, 10197, 10188, 10181, 10176), 11733,
 #   11572, 11641, 11642, 7787 and more.
-# - 10307, main: 8302 (28435 B, read as the simulator's setup), 8311, 11159, 7828, the slots of the TU's CWasmSavd
-#   (5503, 10965, 10949, 10930) and of main's lambda's __func (10406, 10400, 10384, 10375, 10365), and 5120. main calls
-#   8302 through invoke_vii (the lift's `/* &f8302 */`, table slot 128), and 8302's records (1531180 to 1531988, the
-#   push<T> and CreateInst it holds) lie after this TU's last typeinfo (main::$_0's, 1528020), so it is read as another
-#   object's function, and main does not link until 8302 is written. Its other invoke targets: 8311 (no name), 11159
-#   (api::CApplication::InitApplication, not written: fragment 171), 10090 (push<comum::IInterfaceSavd>, record 1527276
-#   in this TU's data), the set thunks 9986 9897 9831 9731 9685 9650 9574 9372 and 9507 and 9437 (no names), and the
-#   matched 9503 (CPrng(int)), 10876 (CAjusteDataHora::Registra), vota::CAguardaMensagem::GetInst and 7828. The vptrs it
-#   stores are this TU's classes' (CWasmSavd, CPoliticaExecucaoEleitorWeb, CSincronismoVotoEleitorWeb, the four
-#   CDefaultGenericFactory instances, the lambda's __func) and CSymmetricCipherFactory's and CFingerPrepareSimulador's,
-#   so their slots wait for it too.
 # - 10619 (votaTick) and 10171 (votaGetStateJson): 5500 (6871 B, read as the state's text: votaGetStateJson moves its
 #   result into +24; stub in celeitorvotando.cpp), 3594 (1923 B, stub in iexecucaovota.cpp), 5408, 407, 2369, 10376,
 #   10857: all but 407 have no name.
@@ -113,6 +97,45 @@
 #   26 rows, one deleted: read as no caller in our link reading the result), 11489 and 11518 (unit 82), and units 100's
 #   and 94's rows that wait for the TU (their fragments).
 #
+# main (fn 10307) and what it builds, added after the rest: the settings (unit 188's simulador::SConfiguracao, fn 8311),
+# InitApplication ("VOTA", "Software de Votacao" in Latin-1, the version text, an ELogAplicativos of 1: the
+# literals' addresses, 334482 being the tail of "rodapeZEVOTA"), eleven singletons, then simulador::Inicializa (fn 8302,
+# unit 188) with a std::function over main's lambda, which sets ISound to a simulador::CWasmWebSound and emits
+# "vota:ready" with "{}" (fn 3533). The classes it builds that no header of ours had: (anonymous namespace)::CWasmSavd
+# over comum::IInterfaceSavd (20 bytes, the base's members zeroed: `new CWasmSavd()`), CPoliticaExecucaoEleitorWeb at
+# line 361 (LimpaBufferInput, the record 361:46: the instance call starts at column 46 of a member defined in the class)
+# and CSincronismoVotoEleitorWeb (slot 2 is the shared `return 1`, 434), simulador::CFingerPrepareSimulador
+# (mock/app/simulador/wasm/cfingerpreparesimulador.h, chosen) and api::CDefaultGenericFactory<AP, T>
+# (api/pattern/igenericfactory.h, with IGenericFactory's slots 3 and 4 at their records' lines 44 and 50, their codes
+# 6761 and 6762 new enumerators of EUePatternError, names chosen from the messages). CWasmSavd's members are
+# IInterfaceSavd's slots (unit 95's names): Escreve empty (425), RecebeMensagem (10949) and Slot4 (10930), which store
+# and return 212593824, a constant under a chosen name; RecebeMensagem throws std::invalid_argument with the record-less
+# text "CWasmSavd::RecebeMensagem - mensagem de tamanho invalido" when the size is not 12 and else answers a
+# ueRespostaSavd with the mark 254.
+# Matches from this object with it (against 0fe14b05): 5503 and 10965 (IInterfaceSavd's D2, CWasmSavd's D0), 10930,
+# 10835, the factories' slots 10839 10845 10854 10856 10863 10864 10865 10868 10871 10872 and binaryen's 1561 and 6023
+# over them, the lambda's __func slots 10365 10375 10400 10406 and 5120 (~function), 11265 and 10620 (a static's
+# destructor of this object, __cxx_global_array_dtor.4), the set and push helpers the -Oz copies of CPolySingleton's code bring (1562 and the has<T> thunks 3343 3618
+# 3627 5423 5431 5434 5436 with 1166, 6147 with 642 and 1322, 624, 1126, 13974, 1119, 5650, 5656, 6700, the
+# SPolySingletonInfo vector's 1005 1009 4852 5779 10325 10424 10464 10507 10547 10582 10607 10643 10679 10714 10750
+# 10801 11533 11544 11548 11549, the control blocks' constructors 10335 10432 10470 10513 10555 10585 10618 10652 10687
+# 10723 10759 10807), vector<unsigned char>'s 5493, 5494 and 10890, and 8319 (std::length_error's constructor).
+# Not matched yet, each written:
+# - 10307 (main): `unresolved` on the && set of IInterfaceSavd (fn 10090), which has no target name: every push body of
+#   this TU calls fn 388 (~shared_ptr<void>, this TU's -Oz copy, which returns `this` for a reader of votaInit's side,
+#   2650) and drops the result, where ours returns nothing (10090: `pnpm wasm score` 161 over 885 rows, 159
+#   operand-only, 2 deleted, the two `drop`s). The same holds 9507, 9437 (whose push bodies 5407 and 5398 have second
+#   callers, 5925 and 7181, not written), the set thunks 9372 9574 9650 9685 9731 9831 9897 9986 (operand-only: 9986 is
+#   2 over 6 rows) and 10356 (9 over 52, operand-only), whose push 5384 has the same two drops.
+# - 10384 (the lambda's operator()): on 10356's name, and CWasmWebSound's inline constructor stores +4 and +8 (an i32
+#   and an i64) where ours stores an i64 at +4 and a byte at +12 (unit 74's header's layout): 23 over 126 rows.
+# - 10949 (RecebeMensagem): our link inlines vector<unsigned char>'s assign (5496), whose other target caller, 5702, is
+#   not written: 121 over 174 rows, 103 inserted.
+# - 10878 (the CWasmThread factory's Create): 35 over 40 rows, 29 deleted, not read further.
+# - 10869 (the CPosixMutex factory's Create): `unresolved`, CPosixMutex's constructor has no target name.
+#
 # Stand-ins this unit ended: src/app/roots_uenux2.cpp's minsize instance of fn 252 and its extern template of append
-# (252 and 3717 match from this object), src/app/vota_api.cpp's votaPressKey and votaSetAudioEnabled. Unit 100's chosen
+# (252 and 3717 match from this object), src/app/vota_api.cpp's votaPressKey and votaSetAudioEnabled, src/app/main.cpp
+# (main), and the roots lines that stood for main's table slots (units 100's Registra, 137's CPrng constructor, 171's
+# InitApplication). Unit 100's chosen
 # file src/uenux2/src/api/pattern/cpolysingletonlist.cpp goes too: its two definitions are here.

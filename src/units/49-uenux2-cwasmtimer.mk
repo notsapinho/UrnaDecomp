@@ -34,8 +34,4 @@
 # uenux2 rule compiles mock/ too and depends on the source and every uenux2 header.
 CWASMTIMER_SRCS := mock/app/simulador/wasm/cwasmtimer.cpp mock/app/simulador/wasm/cwasmtimerscheduler.cpp
 UENUX2_SRCS += $(CWASMTIMER_SRCS)
-# nothing reconstructed creates the scheduler yet: 49-uenux2-cwasmtimer-roots.cpp keeps its vtable, the reference the
-# target's vptr store (fn 8302) gives
-$(ROOT)/$(APP)/49-uenux2-cwasmtimer-roots.o: $(ROOT)/src/units/49-uenux2-cwasmtimer-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/49-uenux2-cwasmtimer.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/49-uenux2-cwasmtimer-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/49-uenux2-cwasmtimer-roots.o
+# the scheduler's vtable: fn 8302 (unit 188, mock/app/simulador/wasm/simulador.cpp) stores it, so this unit has no roots
