@@ -575,20 +575,10 @@
 // f1591 · 658 B · unmatched · placement: link order · name unknown
 // void f1591(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1246 · uses=9 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/ccargo.cpp
-
-// f1387 · 169 B · unmatched · placement: link order · name unknown
-// void f1387(i32, i32) { ... }
-
 // link-order cluster 1248 · uses=9 · neighbours' file uenux2/src/app/comum/gravadores/iresultado.cpp
 
 // f1393 · 15 B · unmatched · placement: link order · name unknown
 // void f1393(i32, i32) { ... }
-
-// link-order cluster 1259 · uses=10 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/cprocessoeleitoral.cpp
-
-// f1269 · 145 B · unmatched · placement: link order · name unknown
-// ? f1269(i32) { ... }
 
 // link-order cluster 1271 · uses=12
 

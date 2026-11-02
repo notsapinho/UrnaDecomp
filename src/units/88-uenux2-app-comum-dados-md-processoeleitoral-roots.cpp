@@ -10,7 +10,7 @@
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787 12272, and 3715, which is written
 //   1547  GetNomeNeutro               2302 4464 6999 12587 13550, and 2796, which is written
 //   2797  GetNomeAbreviado            2268 4464
-//   2257  CEleicaoPE::GetCargos       861 3774 3775 5790 7787
+//   2257  CEleicaoPE::GetCargos       861 3775 5790 7787 (3774, CConfiguracaoEleicao::GetCargosEleicoes, is written)
 //   3714  CEleicaoPE::ValidaOrdem     11371, three call sites; it reads nothing of this, and binaryen drops the parameter
 //   3715  GetNomeSuplente             5803 12272
 //   2796  GetNome                     5803 6569 11892
@@ -24,6 +24,8 @@
 //   271   CConfiguracaoEleicao::GetSituacoesEleicoes  1386 3687 5577 5578 5582 11558 11559
 //   3783  vector<CCargos::TCargoEleicao>::__assign_with_size, the instance ccargos.cpp's RemoveFiltro emits: 3784 7377.
 //         RemoveFiltro is its one caller here, so a stand-in for 7377 (FiltraPorAbrangencia) gives the second.
+//   5791  CConfiguracaoEleicao::GetIDsEleicoes     5735 (1269, CRdvVota::Comparecimento(), is written)
+//   3774  CConfiguracaoEleicao::GetCargosEleicoes  4454 7787, two call sites
 // comum::NomeEleicaoCorrente (11556) has no direct caller: the target reaches it only through table slot 3049, which fn
 // 5580 passes, so its address is taken.
 // GetNomeMasculino (3716) keeps its two written callers, 2796 and 2258. GetNomeFeminino has one call in the target and
@@ -59,6 +61,8 @@ void w3784(int) __asm__("_ZN5comum7CCargos12RemoveFiltroEv");
 void w3783(int, int, int, int) __asm__(
     "_ZNSt3__26vectorINS_4pairIjhEENS_9allocatorIS2_EEE18__assign_with_sizeB8ne210108IPS2_S7_EEvT_T0_l");
 void s11556(int) __asm__("_ZN5comum19NomeEleicaoCorrenteEv");
+void w5791(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao14GetIDsEleicoesEv");
+void w3774(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao17GetCargosEleicoesEv");
 }
 
 namespace {
@@ -177,6 +181,17 @@ __attribute__((noinline)) void AtribuiCargos(int cargos, int primeiro, int n)
     w3783(cargos + 16, primeiro, primeiro + 8 * n, n);
 }
 
+__attribute__((noinline)) void IDsEleicoes(int saida, int configuracao)
+{
+    w5791(saida + 12, configuracao);
+}
+
+__attribute__((noinline)) void CargosEleicoesDuas(int saida, int configuracao)
+{
+    w3774(saida, configuracao);
+    w3774(saida + 24, configuracao);
+}
+
 const void* volatile processoeleitoral_sink;
 
 struct SProcessoEleitoralRoots {
@@ -205,6 +220,8 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&ContaCandidatos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&RemoveFiltroDuas);
         processoeleitoral_sink = reinterpret_cast<const void*>(&AtribuiCargos);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&IDsEleicoes);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&CargosEleicoesDuas);
     }
 } processoeleitoral_roots;
 

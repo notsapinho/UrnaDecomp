@@ -63,6 +63,15 @@ public:
     // The end of the election by a reading; the name is chosen from that.
     const api::CDateTime& GetDataHoraFimEleicao() const { return m_dataHoraFimEleicao; }
 
+    // The ids of the pleito's elections, in their order: target fn 5791, out of line (its callers, fns 1269 and 5735,
+    // call it with GetInst()'s result), pushed one by one through std::vector's push_back(const&) (fn 543). Each cargo
+    // of each election with that election's id, in that order: target fn 3774, out of line (fns 4454 and 7787 call it on
+    // GetInst()'s result; 7787 holds CCargos::CreateInst, which builds CCargos' two vectors with it), each pair pushed
+    // as one 8-byte value (src/units/88-uenux2-app-comum-dados-md-processoeleitoral.mk has the measurement). No record
+    // names them: their names and their being members (they read m_pleito) are chosen.
+    std::vector<md::TEleicaoID> GetIDsEleicoes() const;
+    std::vector<CCargos::TCargoEleicao> GetCargosEleicoes() const;
+
 private:
     unsigned m_naoRecuperado1[2];
     std::string m_nome;

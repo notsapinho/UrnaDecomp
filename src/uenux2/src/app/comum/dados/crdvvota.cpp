@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "ecourna/api/pattern/singleton.hpp"
 #include "ecourna/api/util/cstringutils.hpp"
 
@@ -21,7 +22,7 @@ md::TQtdVoto CRdvVota::Candidato(md::TCargoID cargo, uedword numero, uebyte digi
     return m_votos.Candidato(cargo, numeroCandidato);
 }
 
-// (original lines 24-86: content not recovered)
+// (original lines 25-86: content not recovered)
 #line 87
 SINGLETON_IMPL_GET_INST(CRdvVota, s_mutex, s_instancia)
 
@@ -33,6 +34,15 @@ std::mutex CRdvVota::s_mutex;
 md::TQtdVoto CRdvVota::Comparecimento(md::TEleicaoID eleicao) const
 {
     return m_votos.Comparecimento(eleicao);
+}
+
+md::TQtdVoto CRdvVota::Comparecimento() const
+{
+    md::TQtdVoto comparecimento = 0;
+    for (const md::TEleicaoID eleicao : CConfiguracaoEleicao::GetInst().GetIDsEleicoes()) {
+        comparecimento = std::max(comparecimento, m_votos.Comparecimento(eleicao));
+    }
+    return comparecimento;
 }
 
 CRdv::TVotosCargo CRdvVota::GetVotos(md::TEleicaoID eleicao) const
