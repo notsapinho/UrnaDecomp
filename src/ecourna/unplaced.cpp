@@ -224,11 +224,6 @@
 // f3882 · 2072 B · unmatched · placement: link order · name unknown
 // void f3882(i32, i32, i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1033 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cprogressoencerramento.cpp
-
-// f3896 · 223 B · unmatched · placement: link order · name unknown
-// void f3896(i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1053 · uses=3
 
 // f4192 · 704 B · unmatched · placement: link order · name unknown
