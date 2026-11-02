@@ -318,6 +318,32 @@ void CLogVota::LogaDesligandoUrna()
     api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 
+void CLogVota::LogaMudancaChaveUrnaDesligada()
+{
+    const std::string mensagem = "Mudança do estado da chave: URNA DESLIGADA";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaEspacoLivreMI(uintmax_t espaco)
+{
+    loga(std::format("Espaço livre na MI [{}]", comum::FormataTamanho(espaco)));
+}
+
+void CLogVota::LogaEspacoLivreMV(uintmax_t espaco)
+{
+    loga(std::format("Espaço livre na MV [{}]", comum::FormataTamanho(espaco)));
+}
+
+void CLogVota::LogaEspacoUtilizadoMI(uintmax_t espaco)
+{
+    loga(std::format("Espaço utilizado na MI [{}]", comum::FormataTamanho(espaco)));
+}
+
+void CLogVota::LogaEspacoUtilizadoMV(uintmax_t espaco)
+{
+    loga(std::format("Espaço utilizado na MV [{}]", comum::FormataTamanho(espaco)));
+}
+
 void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
 {
     loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));

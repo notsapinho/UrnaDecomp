@@ -38,6 +38,8 @@ enum EUeComumError {
     // IInterfaceInit::DesligarUrna (fn 5894), "Resposta nula" and "Erro ao desligar urna: {}"
     EUE_COMUM_DESLIGAR_URNA_RESPOSTA_NULA = 7268,
     EUE_COMUM_DESLIGAR_URNA_FALHA = 7269,
+    // IInterfaceInit::LogDiskInfo (inlined into fn 10226, vota::CThreadMonitor's slot 2), "Resposta nula"
+    EUE_COMUM_LOG_DISK_INFO_RESPOSTA_NULA = 7277,
     // IInterfaceInit::EnviarMensagemThrowVoid (fn 3833), "{}: Resposta nula" and "Falha ao enviar mensagem {}, {}: {}"
     EUE_COMUM_ENVIAR_MENSAGEM_RESPOSTA_NULA = 7293,
     EUE_COMUM_ENVIAR_MENSAGEM_FALHA = 7294,

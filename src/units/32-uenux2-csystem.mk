@@ -11,7 +11,8 @@
 #                                        inlined; 5456, the std::format arguments' builder it shares with Rename
 #   Rename                               record at line 692, col 15 (7058); no target index (inlined into fn 11584)
 #   5458  api::RemoveTree, no record: matched, named by 5455's call (below)
-#   5454, 5453  api::GetFreeSpace, GetUsedSpace, no record: written, no-candidate (below)
+#   5454, 5453  api::GetFreeSpace, GetUsedSpace, no record: matched (below), with libc++'s std::filesystem::__space
+#         (4677) and libc's statfs (3972) under them
 #   5455  CSystem::ReplaceFile, with TemporaryPath (records at lines 236 and 243, col 15: 7034, 7035) and the anonymous
 #         namespace's PrepareReplace (916, 922, 928: 7064 to 7066) and ReplaceResource (954, 962: 7067, 7068) inlined:
 #         written, unresolved self-voted (below)
@@ -133,12 +134,19 @@
 # defined late in the file (their lines, after ZeroFill, are chosen). Each builds a std::filesystem::path from the
 # string and calls std::filesystem::space; the path is named first, which puts it above the space_info as the target's
 # frame has it (a temporary path scored `20 over 70 rows` for 5453, 5 inserted, 5 deleted). Written, they score `3
-# over 60` and `3 over 65`, operand-only, three calls each; they stay no-candidate while their callee, libc++'s
-# std::filesystem::__space (target fn 4677), has no name: our link's copy, libc++.a's operations.o, holds invoke_*
-# landing pads the target's lacks (`pnpm wasm score ../target/vota_web_wasm.wasm 4677 <our link> <its index>`: `169 over
-# 385 rows`, 157 inserted). Its helper std::filesystem::detail::capture_errno (845) matches since it is in our link.
+# over 60` and `3 over 65`, operand-only, three calls each, and they match since their callee, libc++'s
+# std::filesystem::__space (target fn 4677), does. At b7c2e8a5 our link's copy, libc++.a's operations.o, scored `20 over
+# 237 rows (same 217, replaced 9 [8 operand-only], inserted 9, deleted 2)` against 4677 (`pnpm wasm score
+# ../target/vota_web_wasm.wasm 4677 <our link> <its index>`): libc's statfs (3972, musl's __statfs, which statvfs calls)
+# was inlined into it, as statvfs is, our link's one caller of statfs. The target keeps statfs out of line: 2725
+# (comum::CControlaArmazenamentoDeImagens, records at ccontrolaarmazenamentodeimagens.cpp 73 to 152) and 5371 (the
+# "me{:06}.wsq" writer), neither written, call it on a path's c_str() (ledger/callgraph.tsv). The roots' LivreEmDois
+# stands for those two, one call each; with it 4677 reads `4 over 228 rows`, all operand-only, and 3972 `1 over 11`, and
+# the scan matched 3972 (pair-addr), 4677, 5453 and 5454 (census pairs). Its helper
+# std::filesystem::detail::capture_errno (845) matches since it is in our link.
 # GetMemInfo (5463, no record, a chosen name) returns the number on the line of /proc/meminfo that holds the field it
-# is given; its one caller, 10226 (vota::CThreadMonitor's slot 2, not written), passes "MemTotal" and "MemFree". It
+# is given; its one caller, 10226 (vota::CThreadMonitor's slot 2, unit 116's, written and not matched), passes
+# "MemTotal" and "MemFree", each from a stack frame of its own (below). It
 # reads the file into a zeroed 4096-B buffer (a std::vector<char>, a choice, as CopyFile's), keeps of the string built
 # from the buffer as many bytes as read returned, finds the field, cuts its line at '\n' and converts the digits
 # between find_first_of and find_first_not_of("0123456789") with ecourna's CStringUtils::ToDWord (fn 1523). Measured
@@ -157,7 +165,7 @@
 # GetFreeSpace, GetUsedSpace and GetMemInfo read no state of CSystem, which is no singleton; that they are free
 # functions and not static members of CSystem is a choice (docs/how-to-decompile.md step 3 allows either: CSystem's
 # records name only static members that read no state). Nothing names a class for them: they load no record, no table slot holds them (`pnpm wasm fn`),
-# the symbol file has no line of evidence for them, their one caller is 10226 (ledger/callgraph.tsv), and a direct
+# the symbol file had no line of evidence for them, their one caller is 10226 (ledger/callgraph.tsv), and a direct
 # call is the same for a static member and a free function. Chosen: their namespace, api, the one of the file they are
 # written in (step 3's "the namespace of its caller's class" is said of an inlined helper; their caller is vota's), and
 # their declarations in api/util/csystem.h. Written as static members of CSystem, the three gave the same object:
@@ -219,6 +227,13 @@
 # and, like GetMemInfo, takes it after ExistDir where the band has it before (a choice, the same one GetMemInfo's place
 # makes). 1501 (vota::CAssinadorVota's constructor, comum::CAssinador's inlined) calls each once: PartesDoCaminho in the
 # roots stands for 12098, 5360 and 5461, so binaryen keeps both out of line as the target does.
+# GetMemTotal and GetMemFree (no target index, chosen names, free functions after GetMemInfo, a choice): 10226 calls
+# GetMemInfo twice, each time after a 16-B stack frame of its own that builds the field's name, "MemTotal" or
+# "MemFree", as a std::string, so each call sits in a function binaryen inlined into its one caller; clang would inline
+# so small a function into a caller in its own file, so these two are another object's than 10226's, this one (a
+# reading). 10226 widens their results as signed numbers (i64.extend_i32_s), so they return long, a choice of a signed
+# 32-bit type. They give GetMemInfo its two call sites in our link, where the roots' MedeEspaco stood for 10226 until
+# 10226 was written (unit 116); with it in the link, MedeEspaco and its calls of 5454, 5453 and 5463 went.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CSYSTEM_SRCS := src/api/util/csystem.cpp
 UENUX2_SRCS += $(CSYSTEM_SRCS)

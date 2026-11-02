@@ -14,7 +14,8 @@
 # code, so no match rests on their flags. The census pairs no target function with a stand-in (step 7's command). Each
 # stand-in's comment names the target callers it stands for; it goes when they are all in the link.
 #
-# LogaQuantidade (3268). Evidence: its one target caller, vota::CThreadMonitor::Run (10226, a trap in unit 116), calls
+# LogaQuantidade (3268). Evidence: its one target caller, vota::CThreadMonitor::Run (10226, unit 116's, written and
+# not matched; the roots' Quantidades stood for it until it was in the link, and went), calls
 # it three times (ledger/callgraph.tsv), each time on vota::CLogVota::GetInst()'s result (fn 184) and a temporary of its
 # own frame that holds a std::string at +0 ("memoria total", "memoria livre" and "memoria usada", with accents, 13 bytes
 # each) and a 64-bit word at +16 (fn 5463's "MemTotal" and "MemFree" values widened and shifted left by 10, and their

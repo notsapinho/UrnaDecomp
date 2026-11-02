@@ -35,6 +35,8 @@ public:
     void LogaResultadoCopiadoResFE(EExtensaoArquivoResultado extensao);
     void LogaGerandoResultados(EExtensaoArquivoResultado extensao, EStatusOperacaoRelatorio status);
     void LogaNivelBateria(uebyte fonte, uebyte status);
+    void LogaSuspensoMonitoramenteRepeticao(uebyte eventos);
+    void LogaTipoBateria();
 
 private:
     CLogComum();

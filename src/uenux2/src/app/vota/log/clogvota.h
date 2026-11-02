@@ -64,7 +64,7 @@
 // suspenderEleitor (fn 4442), which makes RegistraVoto's calls. Their names are chosen from their messages, and their
 // parameter's type from GetCargo's.
 // LogaQuantidade (fn 3268) is out of line, the last member of clogvota.cpp (its band puts it after fns 3279 and 3272),
-// called three times by vota::CThreadMonitor::Run (fn 10226, a trap in unit 116) with GetInst's result and a temporary
+// called three times by vota::CThreadMonitor::Run (fn 10226, unit 116's, written) with GetInst's result and a temporary
 // of a name (a std::string at +0) and a 64-bit count (+16); it logs "Quantidade de {} [{}]" of the name and
 // comum::FormataTamanho (fn 1947) of the count's low word, through fn 233. Its name, its being a member (a free
 // function over a comum::IEventosLog& gives the same object) and the std::pair are chosen; fragment 234 has its
@@ -159,6 +159,17 @@ public:
     void LogaErroVerificacaoComparecimento();
     void LogaFinalizacaoAplicativo();
     void LogaDesligandoUrna();
+
+    // Held inlined by vota::CThreadMonitor::Run (fn 10226), each after a call of GetInst and in a stack frame of its own:
+    // the first logs through api::CLoga::loga (fn 433) with +4 and severity 1, the other four format
+    // comum::FormataTamanho (fn 1947) of the low word of their 64-bit argument into their message and log through loga
+    // (fn 233). Their names, and their parameter's type (a 64-bit unsigned, what GetFreeSpace and GetUsedSpace return),
+    // are chosen from their messages and their callers.
+    void LogaMudancaChaveUrnaDesligada();
+    void LogaEspacoLivreMI(uintmax_t espaco);
+    void LogaEspacoLivreMV(uintmax_t espaco);
+    void LogaEspacoUtilizadoMI(uintmax_t espaco);
+    void LogaEspacoUtilizadoMV(uintmax_t espaco);
 
     void LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade);
 

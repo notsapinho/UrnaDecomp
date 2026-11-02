@@ -14,8 +14,8 @@
 //   16);
 // - AssinaRDVEBancoDados (fn 4668): caller 6737, which calls it twice;
 // - SincronizaRelatorios (fn 1836): callers 11943, 11946, 12105 (three times) and 12110, the slot 2 of four vota states.
-// - MarcaUrnaDesligando (fn 3336): callers 7709 and 7710 (vota::CThreadVota's two TrataErro) and 10226
-//   (CThreadMonitor::Run), traps in unit 116's pending file.
+// - MarcaUrnaDesligando (fn 3336): callers 7709 and 7710 (vota::CThreadVota's two TrataErro), traps in unit 116's
+//   pending file, and 10226 (CThreadMonitor::Run, unit 116's, in the link, written and not matched).
 #include "app/vota/comum/csincronizavota.h"
 
 namespace {
@@ -60,7 +60,7 @@ __attribute__((noinline)) void w205_relatorios(const std::string& relatorio, con
     vota::CSincronizaVota::SincronizaRelatorios(outro);
 }
 
-// stands for fns 7709, 7710 and 10226
+// stands for fns 7709 and 7710 (10226 is in the link)
 __attribute__((noinline)) int w205_desligando(int passo)
 {
     vota::CSincronizaVota::MarcaUrnaDesligando();

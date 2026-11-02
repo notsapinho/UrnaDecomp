@@ -23,8 +23,12 @@
 #   mutex's address before it clears the flag (with the lock after the notify, 9 over 24 rows); CreateTimer passes the
 #   callback as an lvalue, so the constructor's by-value parameter is a copy (the target calls the function's __clone())
 #   that then moves into the member.
-#   Written and not matched: the destructor (5445, 25 over 76 rows: it inlines Stop, and the target computes the second
-#   mutex's address after the join, where ours computes it for the lock at the start and keeps it; not explained).
+#   The destructor (5445) matches since unit 116 wrote vota::CThreadMonitor::Run, with no change here: until then it read
+#   25 over 76 rows (it inlines Stop, and the target computes the second mutex's address after the join, where ours
+#   computed it for the lock at the start and kept it), and a link with unit 116's CThreadMonitor objects swapped back
+#   to their earlier state (Run a trap, no std::async) reads 25 over 76 again. Read as: the libc++ future.o code that
+#   Run's std::async brings gives a callee of the destructor more call sites, so binaryen leaves the calls as the target
+#   has them (which callee was not isolated).
 #   CreateTimer (10846) matches at the tree's -O3 in the whole link. At -O2 it scored 59 over 190 rows: the target keeps
 #   make_shared out of line, binaryen's second frame, with the control block's constructor inside it, where clang at -O2
 #   inlines make_shared, cost 35 at threshold 337, and leaves the constructor out, cost 225 at threshold 225, per

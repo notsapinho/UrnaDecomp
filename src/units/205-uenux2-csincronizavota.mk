@@ -17,8 +17,8 @@
 #         which only 3336 has: the one store of s_urnaDesligando (named by 1836's vote), which it sets to 1; its file and its place ahead of VerificaUrnaDesligando are a
 #         choice (in use band 3, 3333, which holds VerificaUrnaDesligando inlined, lies three places away, with 3334
 #         and 3335, 3335 stubbed in src/ecourna/unplaced.cpp, between them). Its callers, 7709 and 7710
-#         (vota::CThreadVota's TrataErro) and 10226 (CThreadMonitor::Run), are traps in unit 116's pending file;
-#         w205_desligando stands for them.
+#         (vota::CThreadVota's TrataErro), traps in unit 116's pending file, and 10226 (CThreadMonitor::Run, unit
+#         116's, in the link, written and not matched); w205_desligando stands for the first two.
 # and, with no target index of their own: VerificaUrnaDesligando (record 47:15, inlined by clang into each of its seven
 # target callers, 491, 1836, 3333, 4662, 6737, 7174 and 10590), SincronizaAssinaturaRelatorio (binaryen inlined it into
 # 1836, its one caller, behind a stack frame of its own) and AssinaESincroniza (an anonymous-namespace helper clang

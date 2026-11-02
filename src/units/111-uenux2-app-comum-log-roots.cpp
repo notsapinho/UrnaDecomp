@@ -3,7 +3,8 @@
 // they have one), and none is called. Each function below has direct callers in the target, none reconstructed unless
 // said, so each gets two call sites and stays out of line:
 // - comum::CLogComum's LogaCopiandoArqResParaFI, LogaResultadoCopiadoResFE, LogaGerandoResultados, LogaNivelBateria:
-//   the target's fns 12098 and 10226 call them, on GetInst's result, which they drop;
+//   the target's fns 12098 and 10226 call them, on GetInst's result, which they drop (10226, vota::CThreadMonitor::Run,
+//   unit 116's, is in the link, written and not matched: it calls LogaNivelBateria twice);
 // - comum::IEventosLog::ConverteERelatoriosUE: the target's fns 1047 and 1127;
 // - comum::IEventosLog::logaAlerta (fn 1398): the target's fns 6115, 10415, 10512 and 10676 (10774, unit 119's
 //   slot 28, 10416, unit 152's, 10642, unit 161's, and 10420, unit 142's, are in the link);
@@ -33,7 +34,7 @@ __attribute__((noinline)) int w111_copia(comum::EExtensaoArquivoResultado extens
     return 3;
 }
 
-// stands for fns 12098 and 10226
+// stands for fn 12098 (10226 is in the link)
 __attribute__((noinline)) int w111_gera(comum::EExtensaoArquivoResultado extensao, uebyte fonte, uebyte status)
 {
     comum::CLogComum& log = comum::CLogComum::GetInst();
