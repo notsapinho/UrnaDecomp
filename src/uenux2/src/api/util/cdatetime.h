@@ -36,6 +36,13 @@ bool IsValidDateTime(const std::string& dataHora);
 //   comum::CImprimirExtratoCarga::ImprimeDataHoraEmissao (fn 11216) calls both. Each formats the date or the time of
 //   Now (inlined, fns 1155 and 1000) through a copy of it. Their names, and that they are static members and not free
 //   functions, are chosen; src/units/125-uenux2-cdatetime.mk has the forms measured.
+// - FormatCurrentDateTime (fn 10870) is a third such callback. Its only reference in the target is its table slot
+//   3117, which api::CFormBuilder::AddStatusHeader (fn 502) passes to fn 3058 with "A DD/MM/YYYY hh:mm:ss": it
+//   formats Now's time with the format (CTime::Format, fn 779) and then Now's date with that result (CDate::Format, fn
+//   706), on the members of one CDateTime with no copy (the two calls take its +8 and +0). It holds Now inlined (fns
+//   1155 and 1000), as the two above do; that this puts it in cdatetime.cpp, the TU that defines Now (fn 479) out of
+//   line, is a reading. Its name, and that it is a static member, are chosen; src/units/125-uenux2-cdatetime.mk has the
+//   measurement.
 // - GetData and GetHora return the members by reference: comum::CRelatorioTesteImpressora::EstaEmHorarioVerao (fn 11198)
 //   hands the date of a local CDateTime to CDate::operator<=> (fn 1261) with no copy, which is the evidence. By-value
 //   getters were measured only in a form of 11198 that compares in its own body, not the one landed, where they copy
@@ -58,6 +65,7 @@ public:
     static CDateTime ConvertFromTimestamp(const std::string& timestamp);
     static std::string FormatCurrentDate(const std::string& formato);
     static std::string FormatCurrentTime(const std::string& formato);
+    static std::string FormatCurrentDateTime(const std::string& formato);
 
     const CDate& GetData() const { return m_data; }
     const CTime& GetHora() const { return m_hora; }

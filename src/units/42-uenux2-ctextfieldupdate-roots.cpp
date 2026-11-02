@@ -1,5 +1,6 @@
 // Roots: api::CTextFieldUpdate's constructor (target fn 3658) has three callers in the target, fns 502, 3058 and 5936,
-// each a std::make_shared<CTextFieldUpdate> (awk -F'\t' '$2==3658' ledger/callgraph.tsv), none reconstructed. All three
+// each a std::make_shared<CTextFieldUpdate> (awk -F'\t' '$2==3658' ledger/callgraph.tsv). 502 and 3058 are in the link
+// (api::CFormBuilder's AddStatusHeader and AddTextFieldUpdate, unit 31), 5936 is not, and these stand for it. All three
 // pass the text colour 2 and the background colour 1, which binaryen's dead-argument elimination folds into the
 // constructor (its wasm type has no parameter for them), and they pass different points, texts, intervals and fonts,
 // which stay parameters. These two stand-ins give it the same call shape, with the colours 2 and 1 and the rest varied,

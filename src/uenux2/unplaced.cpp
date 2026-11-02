@@ -1250,11 +1250,6 @@
 // f10842 · 23822 B · unmatched · placement: link order · name unknown
 // ? f10842(i32, i32) { ... }
 
-// link-order cluster 401 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
-
-// f11107 · 432 B · unmatched · placement: link order · name unknown
-// void f11107(i32, i32) { ... }
-
 // link-order cluster 645 · uses=1 · neighbours' file uenux2/src/api/gui/cdataimage.cpp
 
 // f12520 · 16 B · unmatched · placement: link order · name unknown
@@ -1329,11 +1324,6 @@
 // f5506 · 836 B · unmatched · placement: link order · name unknown
 // void f5506(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
-
-// f5565 · 193 B · unmatched · placement: link order · name unknown
-// ? f5565(i32, i32) { ... }
-
 // link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
 
 // f5737 · 132 B · unmatched · placement: link order · name unknown
@@ -1394,11 +1384,6 @@
 
 // f1896 · 294 B · unmatched · placement: link order · name unknown
 // ? f1896(i32, i32) { ... }
-
-// link-order cluster 1197 · uses=6
-
-// f2024 · 441 B · unmatched · placement: link order · name unknown
-// ? f2024(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1268 · uses=11 · neighbours' file uenux2/src/api/util/isystemdatetime.cpp
 

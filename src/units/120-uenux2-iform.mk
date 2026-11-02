@@ -22,7 +22,10 @@
 #   CInteractiveForm  SetFocus 1401 and Slot6 5529 (one body each for both instances); <IScreen, IInputKbd>: D2 11079,
 #                     D0 11078, Slot2 11077, Slot3 11075, Slot7 11074; <IScreenMT, IInputMT>: 11032, 11031, 11030,
 #                     11029, 11028
-#   CInteractiveFormBuilder::GetInteractiveForm 554
+#   CInteractiveFormBuilder::GetInteractiveForm 554, and AddInputControl 901 (no argument) and 5530 (the keys), with
+#                     what this object emits first of api/gui/cinputfieldcontrol.h and iinputfield.h:
+#                     CInputFieldControlBase<IScreen>'s constructor 5565 and IInputField<IScreen>'s 2024 (unit 92's
+#                     headers, whose notes they are)
 #   libc++ that the forms reach: std::__shared_mutex_base's lock 3328, unlock 3327 and constructor 4670
 #                     (FormControlBlock's std::shared_mutex), std::__call_once 2577, which the forms' callers keep out
 #                     of line, and with it std::locale::id::__get (514), which calls it and matches since __call_once
@@ -103,15 +106,38 @@
 #   (api/util/itimerscheduler.h, which takes it so now); 3673 is not measured again with it.
 # - 5410, a screen built on a CMTFormBuilder ("ELEITOR(A) PODE VOTAR"), holds a
 #   make_shared<CInputFieldControl<IScreenMT>> inlined, whose control block's vtable (@1580748) lies in the MT
-#   builder's data, and waits for 395's family; 2024 (IInputField<IScreen>'s constructor) has no written caller (901,
-#   2383, 3675, 5565, 5913, 7787).
+#   builder's data, and waits for 395's family.
+# - 901 and 5530, AddInputControl: 901's code holds the control field's construction behind a second prologue, with
+#   the keys 4 folded in and CInputFieldControl<IScreen>'s vptr stored last, and 5530 calls 5565 and then stores that
+#   vptr. The header's one constructor with the default argument 4 gives both (the object keeps 901's
+#   __shared_ptr_emplace constructor over no argument out of line, which binaryen inlines into its one caller, and
+#   5530's call of 5565); 5565 keeps its body only with a second caller in the link, which the roots give for 653.
+#   5565 is named by its own vptr anchor; 2024 by 5565's call vote alone, which docs/reference/splat.md 3 holds through
+#   901, a match that calls 2024 too; 901 and 5530 by the scan's content pass. With 2383 out of the link (below), 2024's callers in it pass the length 0, true and false alike, and binaryen
+#   folded the three (2024 then 5 parameters, 5565 three rows short); unit 92's roots stand for 2024's other callers.
+# - Not written, measured with each written here and taken out again, as nothing that matches needs it:
+#   653, AddLabeledInputControl (records 76:23, the throw of a lambda over the key, "Tecla de controle não suportada
+#   '{}'", EUeGuiError 4936; 86:15, "O número máximo de teclas suportado é {}", 4937, past three keys): for each
+#   key it takes the bit of 'B', 'C' or 'D' (1, 4, 2, the table at 524056), adds the key's labels through the twin of
+#   2243 that it inlines (31-uenux2-cformbuilder.mk) with the alignments 1, 0, 2 popped from a vector {2, 0, 1}, draws
+#   a line 50 above the bottom of the screen's area (the SRect at .data 1577200), and returns the form's first
+#   IInputField<IScreen> or a new CInputFieldControl<IScreen> over the bits. Written so, it scores 206 over 712: the
+#   target lays the bad key's throw after the loop, ours inside it, and the frame slots of the two std::format calls
+#   differ; not explained. The roots' ControleTeclas stands for its call of 5565.
+#   2383, an adder of a CInputField<CFramedText> over a CNumberValidation (callers 1591, 2384, 7787, 11892), written
+#   as the target's code reads (the validation a named local, the field a SharedInput, AddField, return) differs in
+#   its frame alone: the target keeps the validation at +16 and the field's SharedField copy at +24, ours the other
+#   way round, and the validation as a temporary of the new-expression allocates the field first. Anchored by its
+#   vptr, its +24 against the target's +16 voted our table slot 24 (ecourna's CError constructor) onto the target's
+#   slot 16, and the conflicting vote took CError's name and ten matches with it (710, 1011, 1898, 2379, 3520, 3653,
+#   6133, 9056, 10257, 10881 left `match`), docs/reference/facts/splat.md S8 item 1's case.
 # - 8872 matches (above). 11004 (IForm<IPaper>::GetRenderForm, CPolySingleton<IPaper>::instance inlined) matches
 #   since unit 170, whose copies of CPolySingletonList::find keep 305 and 608 apart (unit 100's fragment).
 IFORM_SRCS := src/api/gui/cinteractiveformbuilder.cpp
 UENUX2_SRCS += $(IFORM_SRCS)
-# no caller of GetInteractiveForm, of CFormStack<IScreen>::Remove's other one or of
-# CPolySingleton<IScreenMT>::instance's others is reconstructed yet: 120-uenux2-iform-roots.cpp stands for them, and
-# says which they are
+# no caller of GetInteractiveForm, of AddInputControl, of CFormStack<IScreen>::Remove's other one or of
+# CPolySingleton<IScreenMT>::instance's others is reconstructed yet, nor 653, 5565's other caller:
+# 120-uenux2-iform-roots.cpp stands for them, and says which they are
 IFORM_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/120-uenux2-iform-roots.o: $(ROOT)/src/units/120-uenux2-iform-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/120-uenux2-iform.mk $(IFORM_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/120-uenux2-iform-roots.cpp -o $(R)

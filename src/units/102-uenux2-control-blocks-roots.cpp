@@ -20,8 +20,8 @@
 // The fragment's name sorts between 10- and 11-, ahead of most units, so this object is the first definition of what it
 // and a later companion both instantiate: comum::IResultado's D2 (fn 12090) came from here, not from unit 60's pending
 // object, until unit 122's iresultado.cpp.o, which uenux2's sources link ahead of it, emitted it. Compiled with
-// APP_CXXFLAGS. Compiled with UENUX2_CXXFLAGS the object's 391 functions compare equal, by function with the
-// object-local numbers masked. The fragment says what ecourna's flags give for the ecourna classes' blocks. The order of
+// APP_CXXFLAGS; the fragment says what UENUX2_CXXFLAGS gives, and what ecourna's flags give for the ecourna classes'
+// blocks. The order of
 // the sink lines is free (docs/reference/facts/splat.md section S9).
 #include <memory>
 #include <string>
@@ -32,7 +32,6 @@
 #include "api/gui/ccutfieldpaper.h"
 #include "api/gui/cdataimage.h"
 #include "api/gui/cdatatext.h"
-#include "api/gui/cdsimagefield.h"
 #include "api/gui/cimagefieldupdate.h"
 #include "api/gui/cinputfieldmt.h"
 #include "api/gui/cmovie.h"
@@ -40,7 +39,6 @@
 #include "api/gui/cnewlinefieldpaper.h"
 #include "api/gui/cnumbervalidation.h"
 #include "api/gui/coptionvalidation.h"
-#include "api/gui/cpowerinformation.h"
 #include "api/gui/cpreshowclearscreen.h"
 #include "api/gui/cpreshownothing.h"
 #include "api/gui/cprogressbar.h"
@@ -84,7 +82,6 @@ extern const char w102_vt_cmoviefield[] __asm__("_ZTVNSt3__220__shared_ptr_empla
 extern const char w102_vt_cprogressbar[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api12CProgressBarENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctextfieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api16CTextFieldUpdateENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cimagefieldupdate[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api17CImageFieldUpdateENS_9allocatorIS2_EEEE");
-extern const char w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api21BatteryIconDataSourceILNS1_17CPowerInformation15IconOrientationE0EEENS_9allocatorIS5_EEEE");
 extern const char w102_vt_cmovie[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6CMovieENS_9allocatorIS2_EEEE");
 extern const char w102_vt_logger[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api6LoggerENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cwavfile[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN3api8CWavFileENS_9allocatorIS2_EEEE");
@@ -97,7 +94,6 @@ extern const char w102_vt_cprogressoencerramento[] __asm__("_ZTVNSt3__220__share
 extern const char w102_vt_ccopiadormr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum11CCopiadorMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccopiadorwsqmr[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN5comum14CCopiadorWSQMRENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ctrng[] __asm__("_ZTVNSt3__220__shared_ptr_emplaceIN7ecourna3api8security5CTrngENS_9allocatorIS4_EEEE");
-extern const char w102_vt_cdsimagefield[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api13CDSImageFieldENS_10shared_ptrINS1_10IFormFieldINS1_7IScreenEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cinputfieldmt[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api13CInputFieldMTENS_10shared_ptrINS1_11IInputFieldINS1_9IScreenMTEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_ccutfieldpaper[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api14CCutFieldPaperENS_10shared_ptrINS1_10IFormFieldINS1_6IPaperEEEE27__shared_ptr_default_deleteIS7_S2_EENS_9allocatorIS2_EEEE");
 extern const char w102_vt_cpreshownothing_iscreen[] __asm__("_ZTVNSt3__220__shared_ptr_pointerIPN3api15CPreShowNothingINS1_7IScreenEEENS_10shared_ptrINS1_8IPreShowIS3_EEE27__shared_ptr_default_deleteIS8_S4_EENS_9allocatorIS4_EEEE");
@@ -152,14 +148,12 @@ struct SBloco {
 };
 
 using TFormPaper = api::IFormField<api::IPaper>;
-using TFormScreen = api::IFormField<api::IScreen>;
 using TDao = api::persistencia::IDAO;
 using TAes = ecourna::api::security::CBlockCipher<ecourna::api::security::CAesCipher, ecourna::api::security::CTrng>;
 
 template struct SBloco<TFormPaper, api::CTextFieldPaper>;
 template struct SBloco<TFormPaper, api::CCutFieldPaper>;
 template struct SBloco<TFormPaper, api::CNewLineFieldPaper>;
-template struct SBloco<TFormScreen, api::CDSImageField>;
 template struct SBloco<api::IInputValidation, api::COptionValidation>;
 template struct SBloco<TDao, comum::dao::IComparecimentoMesarioDAO>;
 template struct SBloco<TDao, comum::dao::IJustificadorDAO>;
@@ -257,11 +251,6 @@ __attribute__((optnone, noinline)) std::shared_ptr<api::Logger> w102_logger()
 {
     return std::make_shared<api::Logger>();
 }
-using THorizontal = api::BatteryIconDataSource<api::CPowerInformation::IconOrientation::Horizontal>;
-__attribute__((optnone, noinline)) std::shared_ptr<THorizontal> w102_bateria()
-{
-    return std::make_shared<THorizontal>();
-}
 template <typename TCampo, typename TFonte>
 struct SFonte {
     __attribute__((optnone, noinline)) static std::shared_ptr<TCampo> Constroi(const TFonte& fonte)
@@ -287,7 +276,6 @@ struct SW102Roots {
         w102_sink = w102_vt_cprogressbar;
         w102_sink = w102_vt_ctextfieldupdate;
         w102_sink = w102_vt_cimagefieldupdate;
-        w102_sink = w102_vt_batteryicondatasource_cpowerinformation_iconorientation_0;
         w102_sink = w102_vt_cmovie;
         w102_sink = w102_vt_logger;
         w102_sink = w102_vt_cwavfile;
@@ -300,7 +288,6 @@ struct SW102Roots {
         w102_sink = w102_vt_ccopiadormr;
         w102_sink = w102_vt_ccopiadorwsqmr;
         w102_sink = w102_vt_ctrng;
-        w102_sink = w102_vt_cdsimagefield;
         w102_sink = w102_vt_cinputfieldmt;
         w102_sink = w102_vt_ccutfieldpaper;
         w102_sink = w102_vt_cpreshownothing_iscreen;
