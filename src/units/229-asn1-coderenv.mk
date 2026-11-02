@@ -14,6 +14,12 @@
 #     basic_ostream's constructor, from encodeAVN's ostringstream (DECLARE_STRSTREAM).
 #   9770 has no line in splat/symbol_addrs.txt: the census pairs it with the instance (tier `shape`), and its match
 #   line names it. The other twelve have generated lines.
+#   The root's copies also give matches the link had from elsewhere, the same code: 3666 (~basic_stringbuf), 3694
+#   (basic_ios::init) and 10983 (string::resize), libc++.a's before; and, first in APP_OBJS (below), 674
+#   (basic_stringbuf<char>::__init_buf_ptrs), which differed from roots_iconversorasn.o, and 520 and 4967 (~vector and
+#   __destroy_vector::operator()), roots_vector.o's vector<unsigned char> bodies, whose match lines now carry
+#   vector<char>'s names. 3656's and 2769's (__vallocate) bodies are the executable TU's object's, of
+#   vector<unsigned char>, the same code: step 9 renamed those two lines to that type's names when the root moved.
 #
 # Evidence, from the target's bodies (pnpm wasm fn and lift of each):
 # - 9770 tests the rule at +0 of its first argument with a br_table, [2 1 1 0] and 3: rule 3 builds a PEREncoder (vptr
@@ -31,8 +37,9 @@
 #   matched a probe at -Oz -fexceptions and not at uenux2's flags (docs/reference/facts/levels.md V4). The executable TU
 #   compiles at those flags and is first on the link line, so the root takes its rule; that the copies are that TU's is
 #   a reading (unit 206's fragment has a lead, from IServicoEstado's saves, to mock/app/comum/cappinfobuilder.cpp at the
-#   same flags). The root's place in APP_OBJS, after the other tree roots, is a choice: there it takes no copy they
-#   give, since the first object's copy wins.
+#   same flags). The root's place in APP_OBJS is the target's, by 674: first, right after the executable TU's object,
+#   its copy of basic_stringbuf<char>::__init_buf_ptrs wins over roots_iconversorasn.o's, at uenux2's flags, and 674
+#   matches; after the other tree roots it differed. No row leaves match in either place (whole link, steps 7 to 9).
 # - asn1.h's encode sends ber_partial to encodeBER as it does ber. Upstream's test, `== ber` alone, gives the br_table
 #   [2 1 3 0] (measured on a probe link, every other row of 9770 operand-only).
 #

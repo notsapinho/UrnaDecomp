@@ -8,7 +8,7 @@
 //
 // GetInst is called directly in the target, and binaryen inlines a function with one call site, so one noinline
 // stand-in calls vota::CGeraZeresima::GetInst (fn 5962) twice, for its target callers 11927 and 11931,
-// vota::CQuerImprimirZeresima::GetInst (fn 5957) twice, for 11835 and 11924, and
+// vota::CQuerImprimirZeresima::GetInst (fn 5957) twice, for 11924 (11835, unit 138's, is in the link), and
 // vota::CConfirmaImpressaoZeresima::GetInst (fn 5959) twice, for 11920 and 11924. The stand-in adds the results, so
 // binaryen keeps every result (the target's wasm types are ()->(i32)), and its body is no target function's. Each call
 // goes when its target callers are in the link. vota::CRegerarZeresima::GetInst has no index of its own: fn 11838, its one

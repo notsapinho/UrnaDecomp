@@ -230,7 +230,8 @@
 # at +112 is std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265)
 # and the find (1703) keep their bytes under the new types, and step 9 renamed both match lines to the new symbols. The
 # names, the file and the lines (after the destructor, the CEleitorIdentidade overload first) are chosen; the named
-# local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's five callers.
+# local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's callers not in the
+# link, 3616 and 10631 (5385 is, and so are 10789 and 10790, unit 119's slots 14 and 13).
 #
 # ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
 # tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws
@@ -283,7 +284,7 @@
 # these have no record), their parameters' types and names, the fonts' names and their being file constants, the
 # interval and the font in TelaEsperaRepetirTesteTeclado written as named locals before the call (the target stores
 # them at +72 and +64 of its frame before the std::function's copy at +32; temporaries were not compiled), and their
-# lines (3370 to 3429, in the blank run below the record line 1582 and above GetInst at 3434).
+# lines (3370 to 3429, chosen, in the blank run that follows record 3366, 12272's, and ends at GetInst's 3434).
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

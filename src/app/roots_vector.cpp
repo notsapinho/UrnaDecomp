@@ -9,7 +9,9 @@
 //   and urna_roots_vector stands in for 520's callers.
 // - The file compiles at UENUX2_CXXFLAGS, not the roots' APP_CXXFLAGS: 4967 loads __vec_ and __begin_ again after its
 //   store to __end_, which -fno-strict-aliasing gives and strict aliasing does not (docs/reference/facts/levels.md V1).
-// Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match.
+// Each body is the header's own; in the whole link they pair with 306, 520 and 4967 by address and match. 520's and
+// 4967's are also the bodies of src/app/roots_coderenv.cpp's vector<char> copies, which link first, so binaryen keeps
+// those and the two match lines carry vector<char>'s names.
 #include <memory>
 #include <vector>
 

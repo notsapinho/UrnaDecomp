@@ -49,7 +49,8 @@
 #   `m_form.AddField(campo)`, AdicionaPergunta over two api::TPosition and a third `true` among the flags, `225 over 622
 #   rows (same 397, replaced 190 [175 operand-only], inserted 18, deleted 17)`; the helper and int parameters, `33 over
 #   605 rows` (one row inserted and one deleted, the flag); the flags as above, `31 over 604 rows`, all operand-only.
-# - The font: 493212 holds {20, 0} and lies right before CMenuBase's typeinfo name (493220), so a constant of this TU;
+# - The font: 493212 holds {20, 0} and lies right before CMenuBase's typeinfo name (493220): a constant of this TU, a
+#   reading of the data's order;
 #   5913 is the only target function that loads it (`/usr/bin/grep -rlE 'i32\.const 493212($|[^0-9])'
 #   build/out/splat/pieces/asm`). Our FONTE_PERGUNTA (its name and internal linkage chosen) re-points as
 #   `address same-content 0x7869c` (`pnpm wasm splat-remap ... --against 5913`), the target's bytes, no name. CItemMenu's point (+20) and font (+24)

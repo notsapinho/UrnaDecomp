@@ -6,7 +6,7 @@
 // vota::testeteclado::CPreZeresima, vota::CVerificaHorarioZeresima and vota::testeteclado::CEsperaRetestar are stored
 // by code in the link: GetInst (fn 3877), written here; CPreZeresima's GetInst inlined into
 // vota::CVerificaEleicaoPassou::StartState (fn 11914, unit 199); CVerificaHorarioZeresima's GetInst (fn 5947), written
-// here; CEsperaRetestar's GetInst (fn 5936), written in unit 220's paragraph of this unit (138-uenux2-testeteclado.mk).
+// here; CEsperaRetestar's GetInst (fn 5936), written in cesperaretestar.cpp (138-uenux2-testeteclado.mk has its note).
 //
 // vota::CAplicacaoEncerrada::GetInst (fn 3877) has three direct callers in the target, 12034, 12051 and 12055
 // (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots, pending in units 156 and 37). The noinline stand-in calls

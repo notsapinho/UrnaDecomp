@@ -101,11 +101,11 @@ private:
 //   25-point font, named
 //   through GetFormulario. Its one caller, vota::testeteclado::CEsperaRetestar's constructor (inlined into fn 5936),
 //   holds it behind a second stack-pointer prologue, as the two above.
-// Why ctelasvota.cpp: fns 4152 and 3054 pass the same SFont {30, 0} by address (@474888), so they share a TU, and that
-// constant and fn 4152's SFont {25, 0} (@474992) lie among ctelasvota.cpp's read-only data (after the typeinfo name of
-// vota::CPreShowProgressBar @474851, whose vtable @1536544 lies just before the records this TU's fn 4135 loads,
-// @1536624 and @1536832): a reading of the data's order. Fn 6583 lies in use band 2 between ctelasvota.cpp's fn 6602
-// and its destructor fn 6548 (ledger/ordinals.tsv), a reading of the band; the three with no index follow it, a choice.
+// Why ctelasvota.cpp: fns 4152 and 3054 pass the same SFont {30, 0} by address (@474888); that they share a TU rests on
+// the fonts being file constants, a choice (@474888 has 19 target readers). It and 4152's SFont {25, 0} (@474992) lie
+// in one read-only run after vota::CPreShowProgressBar's typeinfo name (@474851), a run that functions loading
+// ctelasvota.cpp's records read (7787 its strings and fonts; 6624, 6652, 6603, 6605, 6608 its fonts): a reading of
+// the data's order. Fn 6583: use band 2, between this TU's 6602 and 6548, a reading; the three with no index, chosen.
 void AdicionaTelaAguarde(api::CFormBuilder& builder, const std::string& mensagem);
 void AdicionaCabecalhoTesteTeclado(api::CFormBuilder& builder);
 std::shared_ptr<api::IForm<api::IScreen>> TelaPreparandoDadosEncerramento();

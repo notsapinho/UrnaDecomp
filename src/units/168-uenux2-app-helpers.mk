@@ -118,8 +118,9 @@
 # Scores before step 8 (`pnpm wasm score`): 1488 18 over 190 rows, 1487 25 over 280, all operand-only. Each path is
 # `(GetPathRootSemSA(FLASH_INTERNA) / "dinamico/imprimindo").string()`: the temporaries the target builds and destroys
 # are the root path, the literal's path, the operator/ result and its string copy (fns 178, 138, 183). In use band 8
-# the target's 1488 and 1487 lie right above 1485 among the TSE rows (1486 is OpenSSL's), and the object keeps that
-# order (build/out/wasm-map/vota_web/names.tsv: ld_index 3947, 3949, 3950 for 1488, 1487, 1485). Chosen, no record,
+# the target's 1488 and 1487 lie right above 1485 among the TSE rows (1486 is OpenSSL's). The object holds 1488 and
+# then 1487 (build/out/wasm-map/vota_web/names.tsv's ld_index), with 1485 just ahead of both, since
+# GetQuantidadeMaximaBUsAdicionais, above them, calls it first (a reading of clang's order). Chosen, no record,
 # slot or string names them: the three names; that they are free functions of namespace vota (they read no state; their
 # callers are vota states of fimvotacao/ and iniciovotacao/); the file, votadefs.cpp, as for 1485, which agrees with
 # the band's order but is not evidence; ExisteArquivoImprimindo in the same TU as its caller, measured: clang keeps it

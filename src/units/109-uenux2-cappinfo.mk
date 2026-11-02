@@ -39,9 +39,11 @@
 #   format handle, and the target keeps it apart from the 31 slots of 536 because its copy has parse and format out of line
 #   (calls 1558 and 5906, whose other caller 4027 is in invoke form): not a body this tree gave at -O2. Our link merges
 #   the handle into 536's body, so no name can tell them apart. 1553's anchor votes 9868 and the other anchors 536, which
-#   drops the generated name of 536 and eleven matches with it (275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392,
-#   11405), so splat/symbol_addrs.txt holds a hand line for 536. That line names the surviving symbol: a unit that adds an
-#   enum's handle ahead of cappinfo.cpp.o changes it, and the eleven rows leave until the line follows.
+#   drops the generated name of 536 and 24 matches with it (275, 680, 1712, 1919, 2253, 2668, 2828, 3702, 3801, 5633,
+#   5689, 5765, 5900, 10260, 10262, 10271, 10283, 10287, 11355, 11390, 11392, 11397, 11405 and 11858: a scan without
+#   the line), so splat/symbol_addrs.txt holds a hand line for 536. That line names the surviving symbol, the handle of
+#   the object that links first among its users (cdefinerotaposreinicio.cpp.o's, of const comum::EEstadoVota): a unit
+#   that adds an enum's handle ahead of it changes it, and the 24 rows leave until the line follows.
 # - CDadoCorrespondencia's destructor (857) and CIdentificadorGeradorMidia's (2240): the target's copies call ~basic_string
 #   out of line, 38 and 26 B, where 857's in our object is 222 B. A compile of the same class at -Oz -fexceptions gives the
 #   target's calls in order (2240, the vector, two strings; three strings), which reads as the executable TU's copy (levels.md

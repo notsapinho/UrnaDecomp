@@ -22,8 +22,8 @@ public:
 
     // The numbers of one post's answers, in key order: target fn 11212 holds it inlined by binaryen (a frame of its
     // own). Busca finds an answer by the base's key, the post times 1000000 plus the number, and moves the cursor to it,
-    // as CCandidaturas::Busca does: the target calls one body, fn 1273, on both singletons (11212 passes this one). No
-    // record names either; their names and their being members are chosen (they read the base's map).
+    // as CCandidaturas::Busca does: the target calls one body, fn 1273, on both singletons (11683 on each, 11212 on
+    // this one). No record names either; their names and their being members are chosen (they read the base's map).
     std::vector<TCandidatoID> GetNumeros(md::TCargoID cargo) const;
     md::CRespostaConsulta* Busca(md::TCargoID cargo, TCandidatoID numero);
 

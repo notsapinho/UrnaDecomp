@@ -720,6 +720,8 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     twice, since binaryen inlines a function called once ([tool-traps.md](tool-traps.md) §X1). The rows that call 306
     (5161, 9052, 9504 and the others that stopped at `call 306 | call 2671`) leave `match` with it. 2671's line names
     `vector<int>`'s guard, the first of that body's twins in link order, since the root's guard is another body.
+    `src/app/roots_coderenv.cpp` (unit 229), first in `APP_OBJS`, holds `vector<char>`'s copies of `~vector` and
+    `__destroy_vector`, the same code, so 520's and 4967's match lines carry `vector<char>`'s names.
 17. **5294, 1698, 5532 and 9873, by `src/app/roots_vector.cpp`, and 3792, 6043, 11585, 11621 and 11622, by two of
     them.** The first four are the executable TU's copies of
     `vector<comum::md::estadoaplicacao::CDadoCorrespondencia>`'s guard destructor, `~vector`,

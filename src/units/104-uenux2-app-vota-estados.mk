@@ -164,7 +164,7 @@
 #   (the eight bytes the target stores, é included) and std::format("via {} de {}", copy, copies), then
 #   vota::RemoveArquivoImprimindo (fn 1487); after the loop, slot 10 (EndPrintFile). Measured: a counter from 0 with `via
 #   + 1` gives the target's increment before the log and its `!=` test; a counter from 1 to `<= vias` gave 8 rows
-#   inserted and 4 deleted (72 over 509, measured with the title spelled without its é as well). ImprimeZeresima below
+#   inserted and 4 deleted (72 over 509, measured with the title spelled without its é as well). ImprimeZeresima above
 #   StartState, the callee first, gave 60 over 501 rows with locals 3 to 6 permuted (splat-match: `differs +0x2e
 #   local.set 3 | ours local.set 4`); StartState above it gives 42 over 501, operand-only
 #   (docs/reference/facts/codegen.md C4: the order is measured). Its object gets Boost's include path (below), which

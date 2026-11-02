@@ -60,9 +60,10 @@
 # - The numbers come from a function binaryen inlined: a 16-byte frame of its own inside 11212's
 #   (docs/reference/facts/reading.md R10, the first sign). It walks the map at +0 of CRespostas::GetInst()'s result
 #   (fn 2812) and keeps the number at +0 of each CRespostaConsulta (node +20) whose key lies from post * 1000000 to below
-#   (post + 1, narrowed to a byte) * 1000000. It reads the class's map, so it is a CRespostas member, in crespostas.cpp
-#   (unit 110's fragment has its forms). Defined in cpartecandidatos.cpp instead, clang inlines it into 11212: the object's
-#   11212 has 486 rows and one frame, against 309 rows and a call.
+#   (post + 1, narrowed to a byte) * 1000000. It reads the class's map; that it is a CRespostas member, and in
+#   crespostas.cpp, is a choice (unit 110's fragment has its forms): the second frame shows only that it is in a TU
+#   other than 11212's. Defined in cpartecandidatos.cpp instead, clang inlines it into 11212: the object's 11212 has
+#   486 rows and one frame, against 309 rows and a call.
 # - std::sort over the numbers calls libc++'s own __sort<__less<unsigned>&, unsigned*>, the extern template the
 #   header's __sort_dispatch routes an unsigned* sort to, which the pinned emsdk's libc++.a defines in algorithm.o
 #   (system/lib/libcxx/src/algorithm.cpp). binaryen inlines it into 11212, its one caller, as the target's 11212 shows:

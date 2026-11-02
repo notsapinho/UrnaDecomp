@@ -1,7 +1,11 @@
 // The executable TU's copies of ASN1::CoderEnv::encode over a std::back_insert_iterator<std::vector<char>> (target fn 9770)
 // and of what it instantiates, among them encodeBER (1532), ~AVNEncoder (3559), std::copy into the iterator (5290),
 // vector<char>::reserve (2706) and its growth (5282, 9722, 3656), and basic_ostringstream's members (220, 1001, 10998,
-// 11016, 11235). src/units/229-asn1-coderenv.mk has the evidence and the measurements.
+// 11016, 11235). The same copies give 3666, 3694 and 10983 (~basic_stringbuf, basic_ios::init, string::resize, from
+// libc++.a before), 674 (basic_stringbuf<char>::__init_buf_ptrs, the target's copy over roots_iconversorasn.o's: this
+// object links first for it) and 520 and 4967 (vector<char>'s ~vector and __destroy_vector, the bodies of
+// roots_vector.cpp's vector<unsigned char> copies); 3656's body is the executable TU's object's, the same code.
+// src/units/229-asn1-coderenv.mk has the evidence and the measurements.
 // - Whose copy. 9770, 1532, 2706 and 5290 have landing pads, so an -fexceptions object's: the ASN.1 runtime compiles at
 //   -Os without them (docs/reference/facts/asn1.md A1, A2) and uenux2 without -fexceptions. 3559 matched a probe object
 //   at -Oz -fexceptions and not at uenux2's flags (docs/reference/facts/levels.md V4). So this file compiles at
