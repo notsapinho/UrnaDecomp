@@ -34,8 +34,8 @@
 # --depth 0), so the vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`).
 # DoAdd (9538) is written and unresolved on std::system_category: 752 rows over 2794, 557 of the 561 replaced
 # operand-only, 158 inserted and 33 deleted. Its callees in the target 891 and 1053 pair with libc++'s system_category
-# and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3334,
-# 3564 and 4679 have no pair, and localtime (6270) is unresolved self-voted.
+# and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3564 and
+# 4679 have no pair (3334, libc++'s posix_stat, matches), and localtime (6270) is unresolved self-voted.
 # The ecourna compile rule has only -Isrc; these TUs include <boost/signals2/...> and <minizip/zip.h> (zlib contrib).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp

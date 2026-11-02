@@ -113,11 +113,16 @@
 # the return's temporaries and before the map (a temporary was not compiled). The insert of a value_type temporary is
 # the target's +112 object (emplace was not compiled).
 # Placement: GetKeyboardLayout's `if` on line 1301, with SLayoutTecla above it in the anonymous namespace; the {20, 0}
-# font after FONTE_TITULO (the target holds it at @474896, after FONTE_TITULO's @474888); TECLAS_TESTE_TECLADO,
+# font's line after FONTE_TITULO is a choice: the target holds it at @474896, after FONTE_TITULO's @474888, but clang
+# emits such a constant at its first reader, not by its line (our object holds it after TECLAS_TESTE_TECLADO), and
+# the line moved unit 110's six builders down one; TECLAS_TESTE_TECLADO,
 # TelaTesteTeclado and SorteiaTeclasTesteTeclado after CTelasVota's statics, and CTelasVota's destructor after them
 # (line 3463; it was on 3439): the band order above; and in band 1 the index runs 12882, 12875, 12862, the statics'
 # exit destructors before the vector's, so its definition follows theirs, and ctelasvota.h declares it extern for line
-# 1303. In ctesteteclado.cpp, GetInst, the statics and the D0 above StartState (record :38), the constructor (no index)
+# 1303. The data leave that open: the target holds TECLAS_TESTE_TECLADO (0x1bf990) before CTelasVota::s_mutex
+# (0x1bf99c) and s_instancia (0x1bf9b4), our link after them; clang lays a file's globals out by first use, so the
+# original read the vector above line 3434, which this layout does not give (no match depends on it).
+# In ctesteteclado.cpp, GetInst, the statics and the D0 above StartState (record :38), the constructor (no index)
 # below ProcessInput's blank record lines 50, 60 and 81, GeraSequencia above the macro (its static std::mt19937,
 # @1835152, lies below the macro's mutex in .bss), AdicionaCaixaTecla last; api/gui/ctextbox.h and
 # api/gui/cinteractiveform.h moved into ctesteteclado.h, whose members name both, to keep StartState's record lines.

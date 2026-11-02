@@ -41,8 +41,8 @@ public:
 // Fn 4620 (229 B, 2 callers): the text api::CApplication::GetDescricaoModo (fn 5564) gives, when it is not empty, drawn
 // at a point as an api::CFixedText with alignment 2, in the font {20, 1}, colour 3 over 0 (api::IScreen's slot 19). Its
 // callers are CPreShowFormVota::PreShow (fn 7707, at {340, 5}) and CPreShowProgressBar's slot 2 (fn 13550, at
-// {320, 30}), each after the screen's slot 4 with 1. The point is taken by value: each caller stores it twice, the
-// temporary and the copy whose address it passes (7707 at +12 and +8 of its frame, 13550 at +156 and +8), which a
+// {320, 30}), each after the screen's slot 4 with 1. The point is taken by value: each caller stores it twice (read as
+// the temporary and the byval copy whose address it passes; 7707 at +12 and +8, 13550 at +156 and +8), which a
 // `const api::SPoint&` parameter does not give (one store; measured, cpreshowformvota.cpp's object). Placement: no
 // record names it. CFixedText, a class with no key function, has its vtable (@1532640) right after the typeinfos of
 // CPreShowFormVota and api::IPreShow<api::IScreen> and before the vtable of the block fn 576 builds, so this object is

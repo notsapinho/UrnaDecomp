@@ -99,9 +99,10 @@
 #   GetCaminhoCorreto*, binaryen kept the turn overloads and merged those (33 over 90 against 2298); in a file of their
 #   own every row of 2298, 3898 and the seven thunks is operand-only, and steps 8 and 9 match them. So the file is not
 #   cgravadorwsq.cpp; band 3 (3834 of cpath.cpp.o, 3796 of cgravadorwsq.cpp.o, 3795 to 3793, 3792 of
-#   cappinfosingleton.cpp.o) puts it after cgravadorwsq.cpp.o and so not in cpath.cpp. Its name pathwsq.cpp, the
-#   functions' names, the turn overloads, their being free functions of comum and their order (the bands' 5819, 5818,
-#   5817, 5816 and 3795, 3794, 3793) are chosen. 5815 ("registrado/", internal) is not written: its callers 3614 and
+#   cappinfosingleton.cpp.o) puts it after cgravadorwsq.cpp.o and so not in cpath.cpp. Its directory is a choice:
+#   gravadores/, beside the band's left neighbour; appinfo/, beside the right one, fits as well. Its name
+#   pathwsq.cpp, the functions' names, the turn overloads, their being free functions of comum and their order (the
+#   bands' 5819, 5818, 5817, 5816 and 3795, 3794, 3793) are chosen. 5815 ("registrado/", internal) is not written: its callers 3614 and
 #   5382 are not in the link, and 2298 forms without it.
 # - 9531 (vector<std::filesystem::path>::__init_with_size<const path*, const path*>, 5821's only user of its table slot
 #   6150) comes from icompressor.cpp.o with Add(path). Its match line named vector<std::string>'s instance from

@@ -68,12 +68,12 @@ private:
     static CApplicationContextGuard CriaContexto(CApplicationContext contexto);
 };
 
-// Target fn 5569: the level of the context in force. Its result type is evidence: 7709 and 7710 pass the result as
-// 5568's first argument, which is ShowExceptionMsg's EExceptionLevel (5568 holds the async state of that function's
-// lambda). No record names it, and it reads no state of the class, so it is a free function (docs/how-to-decompile.md
-// step 3); its name is chosen. Its file is a reading of use band 2 (ledger/ordinals.tsv): there it lies ahead of 5568
-// and EnterLoopDoingNothing (5566, record 503), with only 5567 between them, read as a libc++ thread routine (it calls
-// __thread_local_data and pthread_setspecific).
+// Target fn 5569: the level of the context in force. Its result type is a reading: 7709 and 7710 pass the result as
+// 5568's first argument, ShowExceptionMsg's EExceptionLevel (5568 holds that function's lambda's async state). No
+// record names it; it reads no state of the class, so it is a free function (docs/how-to-decompile.md step 3); its
+// name and its namespace (api, the file's; its callers are vota's) are chosen, as in api/util/csystem.h. Its file is a
+// reading of use band 2 (ledger/ordinals.tsv): ahead of 5568 and EnterLoopDoingNothing (5566, record 503), with only
+// 5567 between them, read as a libc++ thread routine (it calls __thread_local_data and pthread_setspecific).
 CApplication::EExceptionLevel GetExceptionLevel();
 
 // Target fn 1696: the parts written one after the other through a std::ostringstream, the separator between two of

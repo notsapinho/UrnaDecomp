@@ -14,7 +14,7 @@ namespace comum {
 // reading.md R10, statements ahead of the body's only prologue). binaryen then merges the bodies that differ in the
 // literal only, fn 2298 for the internal flash and fn 3898 for the external one, and each function becomes a thunk that
 // passes its literal's ends. No record names any of them: the names, the overloads with the turn, their being free
-// functions of comum, this header and pathwsq.cpp are chosen.
+// functions of comum, this header and pathwsq.cpp, and their directory, are chosen.
 std::filesystem::path GetPathWsqHabilitado(EUrnaTurno turno);
 std::filesystem::path GetPathWsqHabilitado();
 std::filesystem::path GetPathWsqNaoHabilitado(EUrnaTurno turno);

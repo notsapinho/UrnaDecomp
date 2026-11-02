@@ -13,8 +13,8 @@ namespace comum::asn {
 // and 3 are target fns 11438 and 11437, DoConverte and DoDesconverte). Neither member is written: fragment 245's
 // -pending.cpp traps both, so that the vtable a local of this class needs is in the link, and says what they hold. No
 // record names the class's file. In the use band its two members lie right after the candidatura converters' and right
-// before CConversorDadosDisponiveisCarga's, and in the data its vtable comes after CConversorFotoCandidato's; this
-// header's path, beside CConversorDadosDisponiveisCarga's, is chosen.
+// before CConversorDadosDisponiveisCarga's; in the data its vtable follows CConversorFotoCandidato's and the records
+// of md/ccabecalhopacote.cpp (1562656 to 1562688). This header's path, beside the other converter's, is chosen.
 class CConversorCabecalhoPacote
     : public IConversorASN<ModuloTiposEleitorais::CabecalhoPacote, md::CCabecalhoPacote> {
 protected:

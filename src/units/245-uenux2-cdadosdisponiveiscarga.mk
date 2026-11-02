@@ -14,8 +14,9 @@
 # (vector<md::CMunicipioDisponivel>'s), which this unit's converter object emits. The target's copies are ones compiled
 # with strict aliasing, and app/comum/dados/asn has none: as linked, 3863 is 20 over 108 rows and 5956 45 over 127 (pnpm
 # wasm score); in a private link with src/app/comum/dados/asn/correspondencia/% added to UENUX2_TBAA_DIRS on the make
-# command line (the converter object recompiled, measured before DoConverte was written), 4 over 104 and 4 over 118, the
-# four calls of free each, with 11423 unchanged. They wait for a strict-aliasing object that emits them ahead of this
+# command line (the converter object recompiled, measured before DoConverte was written), 4 over 104 and 4 over 118,
+# call operands only, and pnpm wasm splat-remap reads both bodies identical to the target's, with 11423 unchanged (11424,
+# written since, differs so). They wait for a strict-aliasing object that emits them ahead of this
 # unit's: their other target callers, 11905 (vota::CImpressaoVersaoPacotes's slot 2, which calls 679, CoderEnv::decode)
 # and 3691 (comum::CGeradorRelVersaoPacoteDados's slot 0), are not written. Two hand lines in splat/symbol_addrs.txt name
 # them for 11423, whose own call is otherwise their only voter (without them 11423 reads unresolved self-voted, measured);
@@ -53,6 +54,8 @@
 # - DoConverte's sections: std::transform likewise. With a range-for the municipality entity takes the frame's top slot
 #   (+220) and the temporaries +64, the target's other way round (the object's offsets), 567 over 1647, against 544 over
 #   1639; a reading: the inlined lambda's temporary is the first 52-byte alloca, so the temporaries' slot comes first.
+#   Not measured: which other forms (std::for_each, as for DoDesconverte) give DoConverte's bytes, and whether a
+#   range-for in ConvertePacotes' and DesconvertePacotes' index loops gives the same functions.
 # - ConvertePacotes in another TU than DoConverte: in DoConverte's TU clang inlines it, 544 over 1639; in
 #   cconversorcabecalhopacote.cpp, 109 over 1513, all operand-only. DesconvertePacotes leaves 11423 at 145 operand-only
 #   rows over 2696 in either TU.
@@ -70,10 +73,12 @@
 # ModuloTiposEcoUrna::Carga's and CConversorBiometriaEleitor's: where a correspondencia/ directory sorts.
 # cconversorcabecalhopacote.* beside it, chosen. md/cideleitoral.h beside the records' cideleitoral.cpp, chosen.
 #
-# Chosen, no evidence names them: CMunicipioDisponivel (its name, namespace, header, members, getters), the place and
+# Chosen, no evidence names them: CMunicipioDisponivel's namespace, header, members and getters (its name is the record's,
+# cdadosdisponiveiscarga.cpp:41, which prints it unqualified), the place and
 # type of comum::TProcessoEleitoralID and comum::TPleitoID, EUrnaFase's FASE_INDEFINIDA ('0', app/comum/eurnafase.h), the
 # member, getter and parameter names of CDadosDisponiveisCarga and the order of its four string parameters, CIDPacote's
-# and CIDEleitoral's member names, ConvertePacotes and DesconvertePacotes (names, free functions, file), and the lines of
+# and CIDEleitoral's member names, ConvertePacotes and DesconvertePacotes (names and free functions; the file is a
+# reading for ConvertePacotes, cconversorcabecalhopacote.cpp says why), and the lines of
 # the functions with no record (the constructors' first lines in cdadosdisponiveiscarga.cpp, every line of the asn files).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.

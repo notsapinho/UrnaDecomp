@@ -12,8 +12,9 @@
 #   4668  CSincronizaVota::AssinaRDVEBancoDados()       no record; content pass
 #   4662  CSincronizaVota::SincronizaBancoDados()       no record; content pass
 #   4657  CSincronizaVota::GravaBancoDadosMI()          no record; content pass
-#   3336  CSincronizaVota::MarcaUrnaDesligando()        no record; the census's addr pair (step 9's `ledger`): the one
-#         store of s_urnaDesligando, which it sets to 1; its file and its place ahead of VerificaUrnaDesligando are a
+#   3336  CSincronizaVota::MarcaUrnaDesligando()        no record; the census's addr pair (step 9's `ledger`), one of a
+#         six-way tie of that hash (five OpenSSL ossl_init_* setters), so the match stands on its re-pointed bytes,
+#         which only 3336 has: the one store of s_urnaDesligando (named by 1836's vote), which it sets to 1; its file and its place ahead of VerificaUrnaDesligando are a
 #         choice (in use band 3, 3333, which holds VerificaUrnaDesligando inlined, lies three places away, with 3334
 #         and 3335, 3335 stubbed in src/ecourna/unplaced.cpp, between them). Its callers, 7709 and 7710
 #         (vota::CThreadVota's TrataErro) and 10226 (CThreadMonitor::Run), are traps in unit 116's pending file;

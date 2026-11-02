@@ -13,8 +13,8 @@
 namespace comum {
 
 // The constructor's record spells these two comum:: (cdadosdisponiveiscarga.cpp:41); the bodies give their width, the
-// 32-bit stores at +4 and +8 of CDadosDisponiveisCarga. uedword among the 32-bit unsigned types, and declaring them here,
-// are choices.
+// 32-bit stores at +4 and +8 of CDadosDisponiveisCarga. uedword among the 32-bit types (unsigned too: no body tests a
+// sign) and declaring them here are choices.
 using TProcessoEleitoralID = uedword;
 using TPleitoID = uedword;
 
@@ -24,9 +24,9 @@ namespace md {
 // 11423), which builds one per ModuloDadosDisponiveisCarga::MunicipioDisponivel from a CInfoMunicipio and the vector of
 // its sections, then copies it into the vector CDadosDisponiveisCarga's constructor takes: the CInfoMunicipio at +0 (its
 // code, its name, then 25 bytes as words) and the sections' vector at +44, copied through fn 2807. The vector's destroy
-// (fn 5956) frees the same two. No record names the class: the record of CDadosDisponiveisCarga's constructor prints it
-// unqualified, inside std::vector. Its name, its namespace, the composition (a CInfoMunicipio member, not a base), the
-// getters and the member names are chosen, and so is declaring it in this header. The constructor is out of line, in
+// (fn 5956) frees the same two. Its name is the record's: CDadosDisponiveisCarga's constructor's record prints
+// std::vector<CMunicipioDisponivel>, unqualified. Its namespace, the composition (a CInfoMunicipio member, not a base),
+// the getters and the member names are chosen, and so is declaring it in this header. The constructor is out of line, in
 // cdadosdisponiveiscarga.cpp (a choice of file; fragment 245 has the measurement that puts it in another TU than
 // DoDesconverte).
 class CMunicipioDisponivel {

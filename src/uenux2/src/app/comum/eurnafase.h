@@ -9,7 +9,7 @@ namespace comum {
 // enum of these values gives; `: unsigned int`, and `: int` with an explicit formatter<unsigned int>, give the same. The
 // plain form, the character spelling of the values, the enumerators' names, the comum:: scope and this path are chosen.
 // The value 48, '0', is evidence too: comum::md::CDadosDisponiveisCarga's constructor (held inlined by target fn 11423)
-// rejects that one phase, with code 8040 (record cdadosdisponiveiscarga.cpp:41); FASE_INDEFINIDA's name is chosen.
+// rejects that one phase, code 8040 (record cdadosdisponiveiscarga.cpp:41); an enumerator for it and its name: chosen.
 enum EUrnaFase {
     FASE_INDEFINIDA = '0',
     FASE_OFICIAL = '1',

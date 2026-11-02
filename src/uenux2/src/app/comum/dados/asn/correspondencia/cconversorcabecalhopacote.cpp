@@ -4,8 +4,8 @@
 // (docs/how-to-decompile.md step 3). Measured: written in DoConverte's TU, ConvertePacotes is inlined there by clang and
 // 11424 differs; here, 11424 matches. DesconvertePacotes in either TU leaves 11423 at the same score (145 operand-only
 // rows over 2696, its names), so its file is chosen.
-// No record names them or this file; their names, their being free functions and this file (the class's own, whose
-// members 11438 and 11437 are not written) are chosen.
+// No record names them; names and free functions chosen. The file (the class's own) is a reading for ConvertePacotes
+// (Converte<CabecalhoPacote>'s record, 1562828, after this class's vtable) and chosen for DesconvertePacotes.
 #include "app/comum/dados/asn/correspondencia/cconversorcabecalhopacote.h"
 
 namespace comum::asn {

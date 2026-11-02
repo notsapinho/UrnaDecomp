@@ -3,8 +3,8 @@
 // the target's, it traps. It is reached only through the vtable. What it waits for (a callee "with no name" has no line
 // in splat/matched.txt or splat/symbol_addrs.txt):
 // - ProcessInput 11804 (slot 7, 1437 B, records ctesteteclado.cpp:50, :60 and :81): fn 653,
-//   api::CInteractiveFormBuilder::AddLabeledInputControl, with no body of ours. Every other callee has one (455 and 137
-//   read unresolved, the rest match); 940 and 3854 are this unit's.
+//   api::CInteractiveFormBuilder::AddLabeledInputControl, with no body of ours. Every other callee has one, and each
+//   matches; 940 and 3854 are this unit's.
 // Its record lines in ctesteteclado.cpp stay blank, between StartState and the constructor. Move it into
 // ctesteteclado.cpp when it is reconstructed, and delete this file then.
 #include "app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.h"
