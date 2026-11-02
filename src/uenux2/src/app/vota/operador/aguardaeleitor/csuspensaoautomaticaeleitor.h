@@ -51,6 +51,12 @@ public:
 private:
     CSuspensaoAutomaticaEleitor();
 
+    void InicializaTick();
+
+    void AtualizaMensagem();
+
+    void DisparaSinalizacaoSonora();
+
     bool m_bVotou;
     uebyte m_tick;
     ueint64 m_contagem;

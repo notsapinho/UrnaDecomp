@@ -12,8 +12,8 @@
 // of stand-ins stands for them, and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets
 // its calls and the vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what
 // the target's callers vary varies here, or binaryen would fold it:
-//   TelaMTA, TelaMTB  652, 1150, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
-//                     (1150, 2734), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
+//   TelaMTA, TelaMTB  652, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
+//                     (2734; 1150 is in the link, as for 180, 619, 651 and 435), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
 //                     target callers all pass it, and they have no parameter for it
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
@@ -147,8 +147,8 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
-//   FormMTA, FormMTB      callers of 1694 (1150, 4633, 5341, 5343, 10204, 10214, 10676) and of 301 (652, 1901, 1905, 2734,
-//                         2735 and the other 44)
+//   FormMTA, FormMTB      callers of 1694 (4633, 5341, 5343, 10204, 10676; 1150 and 10214 are in the link) and of 301
+//                         (652, 1901, 1905, 2734, 2735 and the other 44)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
 //   FormPapelA, FormPapelB  callers of 5515: 357 and 10997; 357 (Build) is in the link, 10997 still waits
 //   FormPapelC   the callers of 357 (Build): 2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,

@@ -75,6 +75,10 @@ public:
     void LogaHorarioVotacaoTerminou();
     void LogaInspecaoIniciada();
     void LogaAudioDesativadoFimVotacao();
+    // "Áudio ativado conforme cadastro": vota::CHabilitaAudioEleitor::ProcessInput (target fn 10523) holds it as binaryen
+    // inlines a function into its one caller (a second stack frame around the literal and comum::IEventosLog::loga, fn
+    // 233). The member's name is chosen from its text, as its neighbours' are.
+    void LogaAudioAtivadoConformeCadastro();
     void LogaSuspensaoAbortada();
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();

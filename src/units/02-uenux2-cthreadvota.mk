@@ -13,6 +13,10 @@
 # cthreadvota.cpp also holds an AddStoppedTick(const std::chrono::milliseconds&) overload with no target function of
 # its own: binaryen inlines it into its one caller, vota::CVerificaHorarioZeresima's constructor in fn 5947 (unit
 # 138's fragment has it); its place after AddStoppedTick(size_t) is a choice.
+# Three members with no target function of their own, each inlined by binaryen into its one caller: cthreadvota.cpp's
+# GetEstado and IniciaContexto, after StartTick, which unit 165's 4705 and 4713 hold, and ctickmanager.cpp's
+# GetEstadoTicks, after StartTick, which unit 152's 10409 holds; fragments 165 and 152 have the measurements, and the
+# headers what is chosen. Their lines are a choice.
 # CTickManager::AddTick (3644, record 31:15) matches since src/api/ builds with strict aliasing (below). The census
 # paired it and its three callers (4640, 5452, 10800) with nothing, and two lines of splat/symbol_addrs.txt name it: a generated `evidence:call` line, since
 # 1285's vptr anchor names 4640 (`call by:1285`) and 4640 and 5452 vote for 3644, and a callers+content hand line from

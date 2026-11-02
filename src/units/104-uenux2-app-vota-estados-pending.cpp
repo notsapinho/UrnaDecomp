@@ -197,13 +197,6 @@ void CPedeTituloMesario::StartState()
 
 namespace vota {
 
-// CSincronismoOperador::StartState: fn 10210 (334 B), callees with no name: 185, 261, 291, 316, 326, 656, 1271 (501 is
-// named: unit 174).
-void CSincronismoOperador::StartState()
-{
-    __builtin_trap();
-}
-
 // CSincronismoOperador::ProcessKey: fn 10209 (120 B), callees with no name: 509, 652, 697, 1901, 5341, 5393.
 void CSincronismoOperador::ProcessKey(uebyte)
 {

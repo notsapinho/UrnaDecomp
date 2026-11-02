@@ -9,6 +9,16 @@ CExecucaoVotaCooperativa::CExecucaoVotaCooperativa(comum::CAppState* estadoInici
 {
 }
 
+void CExecucaoVotaCooperativa::Executa()
+{
+    CThreadEleitor::GetInst().IniciaContexto(m_estadoInicial);
+}
+
+void CExecucaoVotaCooperativa::IniciaThreads()
+{
+    CThreadEleitor::GetInst().IniciaContexto(m_estadoInicial);
+}
+
 void CExecucaoVotaCooperativa::AguardaThreads()
 {
 }
@@ -24,6 +34,11 @@ void CExecucaoVotaCooperativa::ParaThreadsOperadorMonitor()
 api::CPriorityMessageQueue<api::SMessage>& CExecucaoVotaCooperativa::GetFilaEleitor()
 {
     return CThreadEleitor::GetInst().GetMensagens();
+}
+
+comum::CAppState* CExecucaoVotaCooperativa::GetEstadoEleitor()
+{
+    return CThreadEleitor::GetInst().GetEstado();
 }
 
 } // namespace vota

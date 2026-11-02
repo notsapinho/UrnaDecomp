@@ -13,9 +13,9 @@
 //                     keys with std::make_shared, as this does. With 5530 alone binaryen would inline 5565 into it
 //   SaiDoFormulario   12081, vota::CEmitirMaisBU::ProcessInput, the other direct caller of 5987,
 //                     api::CFormStack<api::IScreen>::Remove: with the destructor of IForm<IScreen> alone it would inline
-//   TelaMT            the callers of 1714, api::CPolySingleton<api::IScreenMT>::instance, not in our link: 10410,
-//                     10680, 10690. 11041 (IForm<IScreenMT>::GetRenderForm) and unit 153's CInfoMTLCD members 3836
-//                     and 11653 call it in the link; the stand-in stays until those three land. It passes an empty
+//   TelaMT            the callers of 1714, api::CPolySingleton<api::IScreenMT>::instance, not in our link: 10680 and
+//                     10690. 11041 (IForm<IScreenMT>::GetRenderForm), unit 153's CInfoMTLCD members 3836 and 11653
+//                     and unit 152's 10410 call it in the link; the stand-in stays until those two land. It passes an empty
 //                     std::source_location, as unit 100's w100_usa does: a default argument would make a record on this
 //                     file's line, which no target function has
 #include <memory>

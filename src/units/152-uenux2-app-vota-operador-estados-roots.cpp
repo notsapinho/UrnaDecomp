@@ -9,8 +9,9 @@
 //   result; their bodies differ from each other and from every target function, one adding to the result and one to
 //   the address (unit 71's shape). Its vptr store keeps the class's vtable.
 // - vota::CLogVota::LogaAudioDesativadoFimVotacao (fn 4529, callers 10435 and 10646) and LogaSuspensaoAbortada (fn
-//   4535, callers 10407 and 10420): two call sites each, from three noinline stand-ins, one calling both and two
-//   calling one each with an offset address, so that binaryen keeps both out of line as the target does.
+//   4535, callers 10407 and 10420): two call sites each, so that binaryen keeps both out of line as the target does.
+//   Two noinline stand-ins call 4529 for its two callers, one of them with an offset address; the first also calls
+//   4535 for 10420, the caller that waits: 10407 (CSuspensaoAutomaticaEleitor::ProcessInput) is in the link.
 //
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2
 // header and instantiates nothing; compiled with APP_CXXFLAGS.
@@ -50,11 +51,6 @@ __attribute__((noinline)) void LogaFimDeslocado(char* log)
     w4529_root_0(log + 4);
 }
 
-__attribute__((noinline)) void LogaAbortadaDeslocado(char* log)
-{
-    w4535_root_0(log + 8);
-}
-
 const void* volatile estados152_sink;
 
 struct SEstados152Roots {
@@ -71,7 +67,6 @@ struct SEstados152Roots {
         estados152_sink = reinterpret_cast<const void*>(&ConstroiIniciaJustificativaMembro);
         estados152_sink = reinterpret_cast<const void*>(&LogaFimEAbortada);
         estados152_sink = reinterpret_cast<const void*>(&LogaFimDeslocado);
-        estados152_sink = reinterpret_cast<const void*>(&LogaAbortadaDeslocado);
     }
 } estados152_roots;
 

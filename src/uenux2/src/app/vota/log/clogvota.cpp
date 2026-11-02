@@ -106,6 +106,11 @@ void CLogVota::LogaAudioDesativadoFimVotacao()
     loga("Áudio desativado pelo fim da votação");
 }
 
+void CLogVota::LogaAudioAtivadoConformeCadastro()
+{
+    loga("Áudio ativado conforme cadastro");
+}
+
 void CLogVota::LogaSuspensaoAbortada()
 {
     loga("Mesário abortou processo de suspensão");
