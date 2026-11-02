@@ -88,7 +88,18 @@ void CEleitores::MarcaVotou()
     }
 }
 
-// (original lines 469-639: content not recovered)
+// (original lines 469-492: content not recovered)
+#line 493
+md::ETipoAbrangencia CEleitores::GetCurrentAbrangenciaEleitor() const
+{
+    const CEleitorDetalhe* detalhe = CEleitores::GetInst().GetCurrent();
+    if (detalhe == nullptr) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7847, "Não posicionado no eleitor corretamente");
+    }
+    return detalhe->GetEleitor().GetAbrangencia(m_uf, m_municipio);
+}
+
+// (original lines 502-639: content not recovered)
 #line 640
 ueword CEleitores::QuantidadeHabilitacaoSemBiometria() const
 {

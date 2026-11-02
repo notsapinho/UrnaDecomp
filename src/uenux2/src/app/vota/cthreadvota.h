@@ -46,6 +46,10 @@ public:
     // cthreadvota.cpp, and their names are chosen.
     comum::CAppState* GetEstado() const;
     void IniciaContexto(comum::CAppState* estado);
+    // Whether the thread has a context at +32: vota::CExecucaoVotaCooperativa's slot 7 (fn 7823) tests it, and then
+    // PararSolicitado, on CThreadEleitor's instance before it calls ProcessaEventos. The accessor, its name and its being
+    // defined in the class are chosen.
+    bool TemContexto() const { return m_contexto != nullptr; }
 
 protected:
     void TrataErro(const ecourna::api::exception::CError& erro) override;

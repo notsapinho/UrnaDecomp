@@ -1,8 +1,14 @@
 #include "app/comum/dados/md/rdv/cvotoscargos.h"
+
+#include <algorithm>
+#include <map>
+
 #include "app/comum/dados/euerdverror.h"
+#include "app/comum/dados/md/rdv/ccedula.h"
+#include "app/comum/dados/md/rdv/crdvposicionador.h"
 namespace comum::md {
 
-// (original lines 5-46: content not recovered)
+// (original lines 11-46: content not recovered)
 #line 47
 CVotosCargos::CVotosCargos(TMapa mapa) : m_mapa(std::move(mapa))
 {
@@ -114,9 +120,85 @@ bool CVotosCargos::Compativel(const CVotosCargos& outro) const
     return true;
 }
 
-} // namespace comum::md
+// (original lines 159-190: content not recovered)
+#line 191
+void CVotosCargos::InsereCedula(const CRdvPosicionador& posicionador, const CCedula& cedula)
+{
+    ConfereCedula(cedula);
+    TMapa mapa(m_mapa);
+    for (const auto& [cargo, voto] : cedula.GetVotos()) {
+        const auto it = mapa.find(SCargoInfo{cargo});
+        if (it == mapa.end()) {
+            const std::string mensagem = "Cargo nao encontrado " + std::to_string(cargo);
+            throw api::CUeRdvError(api::EUE_RDV_CEDULA_CARGO_NAO_ENCONTRADO, mensagem);
+        }
+        it->second.Insere(voto, posicionador.Posicao(it->second.GetVotos(), voto));
+    }
+    m_mapa.swap(mapa);
+}
 
-// <stubs>
-// f4454 · 5617 B · unmatched · name unknown
-// void f4454(i32) { ... }
-// </stubs>
+// (original lines 206-242: content not recovered)
+#line 243
+void CVotosCargos::ConfereCedula(const CCedula& cedula) const
+{
+    if (cedula.GetVotos().size() != QuantidadeEscolhas()) {
+        const std::string mensagem = "Tamanho da cedula (" + std::to_string(cedula.GetVotos().size()) +
+                                     ") difere do esperado (" + std::to_string(QuantidadeEscolhas()) + ")";
+        throw api::CUeRdvError(api::EUE_RDV_TAMANHO_CEDULA, mensagem);
+    }
+
+    std::map<TCargoID, size_t> quantidades;
+    for (const auto& [cargo, voto] : cedula.GetVotos()) {
+        quantidades[cargo]++;
+    }
+    for (const auto& [cargo, quantidade] : quantidades) {
+        const auto it = m_mapa.find(SCargoInfo{cargo});
+        if (it == m_mapa.end()) {
+            const std::string mensagem = "Cedula com cargo nao encontrado (" + std::to_string(cargo) + ")";
+            throw api::CUeRdvError(api::EUE_RDV_CEDULA_COM_CARGO_NAO_ENCONTRADO, mensagem);
+        }
+        if (quantidade != it->first.quantidadeEscolhas) {
+            const std::string mensagem = "Cedula do cargo " + std::to_string(cargo) + " com numero de votos (" +
+                                         std::to_string(quantidade) + ") diferente da quantidade de escolhas (" +
+                                         std::to_string(it->first.quantidadeEscolhas) + ")";
+            throw api::CUeRdvError(api::EUE_RDV_CEDULA_QUANTIDADE_ESCOLHAS, mensagem);
+        }
+    }
+
+    for (const auto& [cargo, voto] : cedula.GetVotos()) {
+        const SCargoInfo& info = m_mapa.find(SCargoInfo{cargo})->first;
+        switch (voto.GetTipo()) {
+            case CVoto::NOMINAL:
+                if (voto.GetNumero().size() != info.numeroDigitos) {
+                    const std::string mensagem = "Voto nominal para o cargo " + std::to_string(cargo) +
+                                                 " com tamanho (" + std::to_string(voto.GetNumero().size()) +
+                                                 ") diferente do numero de digitos (" +
+                                                 std::to_string(info.numeroDigitos) + ")";
+                    throw api::CUeRdvError(api::EUE_RDV_CEDULA_TAMANHO_VOTO_NOMINAL, mensagem);
+                }
+                break;
+            case CVoto::NULO_POR_REPETICAO: {
+                if (info.quantidadeEscolhas == 1) {
+                    const std::string mensagem =
+                        "Voto nulo por repeticao para o cargo " + std::to_string(cargo) + " que so tem uma escolha";
+                    throw api::CUeRdvError(api::EUE_RDV_CEDULA_NULO_REPETICAO_UMA_ESCOLHA, mensagem);
+                }
+
+                const auto& votos = cedula.GetVotos();
+                const auto nominal =
+                    std::find(votos.begin(), votos.end(), SVotoCargo{cargo, CVoto(CVoto::NOMINAL, voto.GetNumero())});
+                if (nominal == votos.end()) {
+                    const std::string mensagem = "Voto nulo por repeticao para o cargo " +
+                                                 std::to_string(cargo) +
+                                                 " sem voto nominal correspondente";
+                    throw api::CUeRdvError(api::EUE_RDV_CEDULA_NULO_REPETICAO_SEM_NOMINAL, mensagem);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+}
+
+} // namespace comum::md

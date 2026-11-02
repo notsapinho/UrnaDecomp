@@ -18,8 +18,11 @@
 # and 11418, IConversorBiometriaASN's default DoConverte, slot 2 of CConversorBiometriaEleitorCifrada. All of them come
 # from the headers' code; the pending object emits this fragment's classes' vtables, and the defaults with them, except
 # CConversorHistoricoVotoImpresso's and CConversorFotoCandidato's: fragment 172 writes their own slots (10276, 11440),
-# and those objects emit the vtables now; and CConversorCargo's: fragment 191 writes its slot 3 (11373), and
-# cconversorcargo.cpp.o emits the vtable and the default 11372 with it.
+# and those objects emit the vtables now; CConversorCargo's: fragment 191 writes its slot 3 (11373), and
+# cconversorcargo.cpp.o emits the vtable and the default 11372 with it; and CConversorDetalheConsulta's: fragment 225
+# writes its slot 3 (11377), and cconversordetalheconsulta.cpp.o emits the vtable and the default 11376 with it. The
+# roots keep no vtable of CConversorDetalheCandidato and CConversorDetalheConsulta: fn 11373 (fragment 191's) stores
+# both vptrs, the converters it builds on its stack.
 #
 # Evidence. Records name each default, its class template and its throw's line and column: iconversorasn.h 89 and 98,
 # iconversorbiometriaasn.h 81, column 15 (a throw in a body in the class). Each thunk passes its instance's record, code

@@ -67,10 +67,18 @@ public:
     // stands for 1269's result. The member's and the accessor's names and the accessor's being inline in the class are
     // chosen.
     unsigned int GetComparecimento() const { return m_qtdVotaram; }
+    // Record celeitores.cpp:497 (7847); slot 2 of vota::CEleitorVotando (fn 7377) holds it behind a 32-byte prologue.
+    md::ETipoAbrangencia GetCurrentAbrangenciaEleitor() const;
 
 private:
-    std::string m_arquivoDinamico;
-    int m_naoRecuperado2[2];
+    // GetCurrentAbrangenciaEleitor passes the string at +32 and the word at +44 to
+    // md::CEleitorDecorator::GetAbrangencia (fn 3721), which compares them with the voter's temporary transfer's
+    // string and word: the urn's state and
+    // municipality by a reading (md::CAbrangencia holds a state and a municipality so). The names and the word's type
+    // are chosen; the word at +48 has no reader here.
+    std::string m_uf;
+    uedword m_municipio;
+    int m_naoRecuperado2;
     std::set<ecourna::app::dados::ETipoIdentificadorEleitor> m_tipos;
     std::vector<std::string> m_lista1;
     std::vector<std::string> m_lista2;

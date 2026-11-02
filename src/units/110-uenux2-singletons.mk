@@ -121,10 +121,10 @@
 # Not reconstructed:
 # - 11206, CParteEleitores::Imprime, and 11215, CParteCandidatos::Imprime, which waited for 2271: unit 77 matches both
 #   since.
-# - 242, ~CDetalheCandidato, is written (implicit) and differs: __destroy_at<CSuplencia> costs 245, over -O2's threshold
-#   of 225 and under -O3's 250 (-Rpass-missed=inline on cpe.cpp). At -O2 it stays out of line and the small loop goes into
-#   the D2; at -O3 it goes into the loop, fn 1135, which is then too costly for the D2. At the tree's -O3 242 scores 96
-#   over 152 rows (86 inserted; 79 over 134 at -O2), so the level does not close it, and no source form here does.
+# - 242, ~CDetalheCandidato (implicit), and the loop it calls, fn 1135, match from this object since unit 88's
+#   CConfiguracaoEleicao::GetCargos brings 1135's other target callers, 761 and 5789: with 242 its one caller in our
+#   link, binaryen inlined 1135 into it, and 242 differed at both levels (at the tree's -O3 96 over 152 rows, 86
+#   inserted; 79 over 134 at -O2).
 # - CEleitores's one slot, 2824, has no body and no vtable of ours: the stub went with the class (src/units/README.md
 #   "Pending members"). CreateInst of each class is inlined into 7787 or 2787 and is not written.
 # - crespostas.cpp also holds comum::CRespostasDSNumero's call operator, which inlines GetInst in the target (fn 12621,
@@ -175,8 +175,8 @@
 #   constructors and CEleitorDinamico's copy) left them or made more, so it stays unwritten (docs/how-to-decompile.md
 #   step 5); it has no stub, since the scan groups it under libc++, and stubs.py writes none there. MarcaVotou (lines
 #   456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which
-#   also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). CompleteLoad (6734), DynamicCreate
-#   (5761) and GetCurrentAbrangenciaEleitor (7377, which holds GetInst inlined and calls 501) are not written.
+#   also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). CompleteLoad (6734) and
+#   DynamicCreate (5761) are not written; GetCurrentAbrangenciaEleitor, which 7377 holds inlined, is (below).
 #
 # CEleitores::QuantidadeHabilitacaoSemBiometria (2822, celeitores.cpp line 640) and CHV's constructor (3754, chv.cpp line
 # 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
@@ -285,6 +285,13 @@
 # interval and the font in TelaEsperaRepetirTesteTeclado written as named locals before the call (the target stores
 # them at +72 and +64 of its frame before the std::function's copy at +32; temporaries were not compiled), and their
 # lines (3370 to 3429, chosen, in the blank run that follows record 3366, 12272's, and ends at GetInst's 3434).
+#
+# CEleitores::GetCurrentAbrangenciaEleitor (record celeitores.cpp:497, 7847, "Não posicionado no eleitor
+# corretamente"): vota::CEleitorVotando's StartState (fn 7377, unit 197) holds it behind a 32-byte prologue, on the
+# object CEleitores::GetInst() returns (fn 326, called before), and it reads the current record through GetInst's
+# code again (s_instance, inlined: the macro's GetInst is in this TU) while it passes this's +32 and +44 to
+# md::CEleitorDecorator::GetAbrangencia (3721, unit 91). So it calls GetInst() inside, as the CEleitorDado* texts do;
+# the members at +32 and +44 are renamed m_uf and m_municipio (celeitores.h says what they rest on), names only.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

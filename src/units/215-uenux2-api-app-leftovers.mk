@@ -24,6 +24,17 @@
 # empty string and the last character tested before a counting loop, `25 over 79`; the form written, those two tests
 # before a loop that flips a bool, `score 0 over 71 rows ... BYTE-EXACT`, and the same in the whole link.
 #
+# api::CIniStrings::FindKey (target fn 10877, 12 B, matched) and EndKey (the end fn 6044 calls, fn 5481, a body the
+# target keeps once for boost's sp_counted_impl_pd::get_untyped_deleter too), in cinistrings.cpp after
+# TerminaComBarraInvertida, declared with the class's head in cinistrings.h: the find and the end of the std::map at +12
+# of the INI object fn 5480 loads, which comum::md::CVersoesContratos::GetValor and CDependenciasContratos::GetValor
+# (fragment 227) call out of line. Evidence: their merged body, fn 6044, calls both with its own `this`, and 10877 is
+# `f163(p0 + 12, p1)`, the map's find; in the uses-1 band 10877 lies between api/hwil's rows (10880, 10881) and
+# api/util/cajustedatahora.cpp's (10874 to 10876), where api/io's objects fit. Chosen: the class (CIniStrings, whose
+# static ParseKeyLine fn 5480 holds: a reading, cinistrings.h says it), the names, the iterator type, that they are not
+# const, the file and the lines. Whole link, before step 8: 10877 `score 0 over 7 rows`; step 8 names it by
+# pair-fingerprint. Their callers are fragment 227's sources, so the roots below need no stand-in for them.
+#
 # 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 7160, 7306 and 10710 for 3705, 5480 (twice) for 5484.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 LEFTOVERS_UENUX2_SRCS := src/api/io/cinistrings.cpp src/app/comum/dados/md/estadoaplicacao/cestadogeral.cpp

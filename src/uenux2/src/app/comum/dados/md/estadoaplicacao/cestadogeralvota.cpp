@@ -1,6 +1,6 @@
-// Reconstruction: comum::md::estadoaplicacao::CEstadoGeralVota's constructor (target fn 5628), IncrementaQtdBU (fn 3701)
-// and MarcaInicioAquisicao (fn 5627). Their lines are chosen, above MarcaFimAquisicao's records at lines 108 and 113,
-// which are not reconstructed.
+// Reconstruction: CEstadoGeralVota's constructor (target fn 5628), IncrementaQtdBU (3701), MarcaInicioAquisicao (5627),
+// on chosen lines above MarcaFimAquisicao's records (108, 113; not written), and MarcaUltimoVoto, throws at its records
+// 131 and 136 (fn 4454 holds it); where it starts and its first message on two lines are chosen.
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 
 namespace comum::md::estadoaplicacao {
@@ -40,9 +40,27 @@ void CEstadoGeralVota::MarcaInicioAquisicao()
     }
 }
 
-} // namespace comum::md::estadoaplicacao
-
+// (original lines 43-104: content not recovered)
+#line 105
 // <stubs>
 // f10734 · 648 B · unmatched · name unknown
 // void f10734(i32) { ... }
 // </stubs>
+
+// (original lines 110-127: content not recovered)
+#line 128
+void CEstadoGeralVota::MarcaUltimoVoto()
+{
+    if (!m_dhIniAquisicao) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8086,
+                                 "Ainda não foi marcado o início da aquisição");
+    }
+
+    if (m_dhFimAquisicao) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8087, "Já foi marcado o fim da aquisição");
+    }
+    m_dhUltimoVoto = api::CDateTime::Now();
+    ++m_comparecimento;
+}
+
+} // namespace comum::md::estadoaplicacao

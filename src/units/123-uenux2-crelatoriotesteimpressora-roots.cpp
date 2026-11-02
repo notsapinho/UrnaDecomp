@@ -24,8 +24,8 @@
 //   five not reconstructed: with one caller binaryen inlines 1919 into 11183.
 // - 1919 throws CUeComumRelatoriosError, whose constructor is fn 580, a thunk of binaryen's 710 with 14 callers in the
 //   target (awk -F'\t' '$2==580' ledger/callgraph.tsv); with one caller binaryen inlines the constructor into it, as it
-//   did into 1919 alone. w123_erro stands for seven of the other 13 (11233, 11968, 12110, 1543, 2791, 3689, 5967;
-//   11181, 11212, 11214, 3696, 942 and 2786 are in the link). It passes an empty std::source_location: a default
+//   did into 1919 alone. w123_erro stands for six of the other 13 (11233, 11968, 12110, 1543, 2791, 5967; 11181,
+//   11212, 11214, 3696, 942, 2786 and 3689 are in the link). It passes an empty std::source_location: a default
 //   argument would make a record on this line, which is none of the target's.
 // - CRelUtil::GetIDCargaFormatado, fn 2786, has four callers in the target (awk -F'\t' '$2==2786' ledger/callgraph.tsv:
 //   5579, 11256, 12105, 12110): 11256 is in the link, and w123_idcarga stands for the other three and calls it twice.

@@ -160,4 +160,12 @@ bool CVotosEleicoesVota::Compativel(const CVotosEleicoesVota& outro) const
     return true;
 }
 
+// (original lines 208-212: content not recovered)
+#line 213
+void CVotosEleicoesVota::RecebeCedula(const CRdvPosicionador& posicionador, TEleicaoID eleicao, const CCedula& cedula)
+{
+    CVotosCargos& votos = Votos(api::EUE_RDV_CEDULA_SEM_ELEICAO, eleicao);
+    votos.InsereCedula(posicionador, cedula);
+}
+
 } // namespace comum::md

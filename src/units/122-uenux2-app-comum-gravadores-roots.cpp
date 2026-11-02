@@ -13,10 +13,11 @@
 // - comum::asn::ConverteSerialFlash and DesconverteSerialFlash (fns 3605, 3604) need none: their callers, fns 10287,
 //   10291 and 11399, and 10284, 10290 and 11400, are written (units 160 and 172);
 // - comum::md::CVersoesArquivos's constructor (fn 5867): fn 12098 (10263 is in the link); and libc++'s hinted emplace
-//   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 3689, 4625,
-//   5867 and 12098. The constructors' results are not read, as the target's callers do not read them (fn 5867 returns
-//   nothing);
+//   into a std::map<std::string, std::string> (fn 1221), which the constructor's copy of the map calls: fns 4625, 5867
+//   and 12098 (3689 is in the link). The constructors' results are not read, as the target's callers do not read them
+//   (fn 5867 returns nothing);
 // - comum::CGravadorRCSecao::CriaIdentidadeEleitor (fn 5845): fn 11616, GravaResultado.
+// - comum::asn::CalculaHashSha512 (fn 3602): fn 10273, CConversorEntidadeBU's slot 2, three times.
 // - comum::GetPathWsqNaoRegistrado (fn 3793): fns 5374 and 10451; 5374 (unit 214) is written, the stand-in is for
 //   10451. It builds the path in place, so no destructor of std::filesystem::path is emitted here.
 // - comum::CGravadorRCSecao's vtable (@1554740), whose deleting destructor (fn 11615) the target reaches only through
@@ -72,8 +73,8 @@ __attribute__((noinline)) int w122_nome(comum::TMunicipioID municipio, comum::TZ
     return static_cast<int>(comum::CGravadorUtil::DeterminaNomeArquivo(municipio, zona, secao, fase, extensao).size()) + 7;
 }
 
-// stands for fn 12098 (10263 is in the link), and, with its copy of a map, for fns 3689 and 4625, which call libc++'s
-// hinted emplace into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
+// stands for fn 12098 (10263 is in the link), and, with its copy of a map, for fn 4625 (3689 is in the link), which
+// calls libc++'s hinted emplace into a std::map<std::string, std::string> (fn 1221) as the constructor's copy does
 __attribute__((noinline)) int w122_versoes(const std::string& tag, const comum::md::CVersoesArquivos::TMapVersoes& versoes,
     const std::string& outra)
 {
@@ -93,6 +94,12 @@ __attribute__((noinline)) int w122_identidade(const void* gravador, const void* 
     return a[0] + b[4];
 }
 
+// stands for fn 10273
+__attribute__((noinline)) int w122_hash(const std::string& texto, const std::string& outro)
+{
+    return static_cast<int>(comum::asn::CalculaHashSha512(texto).size() + comum::asn::CalculaHashSha512(outro).size()) + 23;
+}
+
 // stands for fn 10451 (5374 is written)
 __attribute__((noinline)) int w122_naoregistrado(void* destino)
 {
@@ -101,6 +108,7 @@ __attribute__((noinline)) int w122_naoregistrado(void* destino)
 }
 
 int (*volatile w122_sink_naoregistrado)(void*);
+int (*volatile w122_sink_hash)(const std::string&, const std::string&);
 int (*volatile w122_sink_wsq)(const api::CDateTime&, comum::TMunicipioID, comum::TZonaID, comum::TLocalID, comum::TSecaoID,
     char, bool);
 int (*volatile w122_sink_gravador)(void*, unsigned int, unsigned int, unsigned int, unsigned int, char);
@@ -119,6 +127,7 @@ struct SW122Roots {
         w122_sink_identidade = w122_identidade;
         w122_sink_vt_rcsecao = w122_vt_rcsecao;
         w122_sink_naoregistrado = w122_naoregistrado;
+        w122_sink_hash = w122_hash;
     }
 } w122_roots;
 

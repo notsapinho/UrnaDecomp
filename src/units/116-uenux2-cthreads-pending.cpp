@@ -15,8 +15,9 @@
 //   VerificaErroCriticoFlash, VerificaErroCriticoKbdTE, LogaEspaco, LogaStatusRedeAcBateria and
 //   CMonitoraAlimentacao::GetInst and VerificaAlimentacao, all inlined there, and IInterfaceInit::LogDiskInfo
 //   (iinterfaceinit.cpp:285) and CLogComum's LogaSuspensoMonitoramenteRepeticao and LogaTipoBateria (clogcomum.cpp:136
-//   to 158). Its callees 5453 and 5454 (unit 32, written) wait for libc++'s __space (4677), and 1947 (a size formatter,
-//   "{}.{} GB" to "{} B"), 3268, 3336, 5895 and 10224 are not written.
+//   to 158). Its callees 5453 and 5454 (unit 32, written) wait for libc++'s __space (4677), 1947 and 3268
+//   (comum::FormataTamanho and vota::CLogVota::LogaQuantidade, fragment 234's) match, and 3336, 5895 and 10224 are
+//   not written.
 // - vota::CThreadEleitor::Run 7061 (slot 2), 4119 B: fns 2450 and 3844, and ProcessaEventos 4349 (written in
 //   cthreadeleitor.cpp, not matched: the fragment says why). 7061's records all belong to code inlined from
 //   cajusteinicial.cpp, so its stub sat there, and that file's stub-only state is unchanged by this trap's taking the stub.

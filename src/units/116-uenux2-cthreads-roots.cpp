@@ -5,9 +5,9 @@
 //   the link.
 // - CEstadoAudio::GetInst (fn 509, 17 callers, among them 1455, 4349, 7028): unit 97's 7028 and this unit's 4349 are
 //   its real callers here, and two stand-ins stand for the others.
-// - CThreadEleitor::ProcessaEventos (fn 4349): both its target callers, CThreadEleitor's Run (fn 7061, this unit's
-//   pending file) and vota::CExecucaoVotaCooperativa's slot 7 (fn 7823, unit 165's pending file), are traps here, so
-//   EventosEleitor stands for them and calls it twice.
+// - CThreadEleitor::ProcessaEventos (fn 4349): of its two target callers, vota::CExecucaoVotaCooperativa's slot 7 (fn
+//   7823, unit 165) is in the link and CThreadEleitor's Run (fn 7061, this unit's pending file) is a trap, so
+//   EventosEleitor stands for 7061 and calls it twice.
 // binaryen inlines a function with one call site, so each gets a second one. CThreadEleitor::GetInst (316) needs no
 // root: 10203 and 10225 call it. Each stand-in's body is its own: no target function holds these calls.
 #include "app/vota/eleitor/cestadoaudio.h"

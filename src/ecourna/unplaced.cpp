@@ -12,11 +12,6 @@
 // f9790 · 130 B · unmatched · placement: link order · name unknown
 // ? f9790(i32, i32, i32) { ... }
 
-// link-order cluster 361 · uses=1 · neighbours' file uenux2/src/api/gui/cdefaultgenericfactory.cpp
-
-// f10877 · 12 B · unmatched · placement: link order · name unknown
-// ? f10877(i32, i32) { ... }
-
 // link-order cluster 637 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
 
 // f12310 · 10 B · unmatched · placement: link order · name unknown
@@ -74,9 +69,6 @@
 // f5577 · 7625 B · unmatched · placement: link order · name unknown
 // ? f5577(i32, i32) { ... }
 
-// f5576 · 12 B · unmatched · placement: link order · name unknown
-// void f5576(i32) { ... }
-
 // link-order cluster 797 · uses=2 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
 
 // f5582 · 96893 B · unmatched · placement: link order · name unknown
@@ -115,12 +107,6 @@
 
 // link-order cluster 869 · uses=2
 
-// f6044 · 571 B · unmatched · placement: link order · name unknown
-// void f6044(i32, i32, i32, i32, i32) { ... }
-
-// f6029 · 68 B · unmatched · placement: link order · name unknown
-// ? f6029(i32, i32, i32, i32, i32) { ... }
-
 // f6013 · 2101 B · unmatched · placement: link order · name unknown
 // ? f6013(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 
@@ -131,11 +117,6 @@
 
 // f6272 · 13 B · unmatched · placement: link order · name unknown
 // ? f6272(i32) { ... }
-
-// link-order cluster 937 · uses=3
-
-// f3251 · 466 B · unmatched · placement: link order · name unknown
-// ? f3251(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 944 · uses=3
 

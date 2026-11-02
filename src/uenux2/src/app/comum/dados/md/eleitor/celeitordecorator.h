@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "app/comum/asn/util.h"
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 #include "ecourna/app/dados/tiposbasicos.hpp"
 #include "ecourna/api/uetypes.hpp"
@@ -30,7 +31,7 @@ public:
     const std::vector<CEleitorIdentidade>& GetIdentidades() const { return m_identidades; }
     const std::string& GetNome() const { return m_nome; }
     const std::string& GetNomeUrna() const { return m_nomeUrna; }
-    bool IsTTE() const { return m_tte != 0; }
+    bool IsTTE() const { return m_tipoTransferencia != 0; }
     ecourna::app::dados::ETipoIdentificadorEleitor GetTipoIdentificador() const { return m_tipoIdentificador; }
     // The word at +20 is the voter's special need: comum::asn::CConversorEntidadeEleitores::ConverteNecessidadeEspecial
     // (record cconversorentidadeeleitores.cpp:38, inlined into fn 11411) maps ModuloEleitores' semNecessidade to 0 and
@@ -38,6 +39,11 @@ public:
     // compares it with 1 (evidence). The member's and the accessor's names are chosen, and so is comparing here: an
     // accessor that returns the word, compared with 1 by its caller, gives the same object.
     bool NecessitaAudio() const { return m_necessidadeEspecial == 1; }
+    // fn 3721 (callers 2824, 5761 and 7377, the last through GetCurrentAbrangenciaEleitor): 0 for a voter with no
+    // temporary transfer or one to the municipality given, 1 for one to the state given, 2 otherwise. The three
+    // callers keep the call, which their file (celeitores.cpp) would inline, so it is out of line in another TU (a
+    // reading); this file, the name and the parameters' names and types are chosen.
+    ETipoAbrangencia GetAbrangencia(const std::string& uf, uedword municipio) const;
 
 private:
     int m_sequencial;
@@ -46,9 +52,13 @@ private:
     uedword m_necessidadeEspecial;
     std::string m_nome;
     std::string m_nomeUrna;
-    int m_tte;
-    std::string m_nomeSocial;
-    uedword m_naoRecuperado4;
+    // +48 to +67: md::CEleitor's CTransferenciaTemporaria (celeitor.h), a type word, a string and a word, which
+    // GetAbrangencia reads as the transfer's kind (0 for none, as IsTTE tests), state and municipality (a reading,
+    // from what it compares them with). The names and the word's type are chosen. ctransferenciatemporaria.h names
+    // the same bytes m_tipo, m_municipio (the string) and m_zona (the word), chosen there: the two readings differ.
+    int m_tipoTransferencia;
+    std::string m_ufTransferencia;
+    uedword m_municipioTransferencia;
     std::string m_nomeMae;
     std::vector<uedword> m_impedimentos;
     uedword m_naoRecuperado5[3];

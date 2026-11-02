@@ -2,29 +2,30 @@
 // target callers only 2268 and 5803 (unit 129), 11191 (unit 123) and those a comment names are reconstructed, and only
 // 1547 and 1938 are in the table (elems 97, 89), so each gets noinline stand-in callers for the others, with at least two
 // call sites, and stays out of line, as the target has it (ledger/callgraph.tsv):
-//   1708  CCargos::Next               4442 5604 7352 11209 12098 12110
+//   1708  CCargos::Next               4442 5604 11209 12098 12110 (7352, unit 197's NeedChangeState, is in the link)
 //   1938  GetCurrentCargoID           11793 13550 (11212, 11213 and 11214 are in the link)
 //   2835  GetCurrentEleicaoID         5604 11209 13550
 //   1267  CProcessoEleitoral::GetPleito2  1543 2787 5586 7787 11191 11223 11902
 //   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888 12272, and 5747, written (3715 holds it inlined)
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787 12272, and 3715, which is written
 //   1547  GetNomeNeutro               6999 12587 13550, and 2796, 2302 and 4464, which are written
-//   2257  CEleicaoPE::GetCargos       861 3775 5790 7787 (3774, CConfiguracaoEleicao::GetCargosEleicoes, is written)
+//   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
+//         are written)
 //   3714  CEleicaoPE::ValidaOrdem     11371, three call sites; it reads nothing of this, and binaryen drops the parameter
 //   3715  GetNomeSuplente             5803 12272
 //   2796  GetNome                     5803 6569 11892
 //   2258  GetOrdinalEscolha           12587 12811 13550, and 4464, which is written
-//   5651  CPleito::GetEleicao         3744 3775
+//   5651  CPleito::GetEleicao         3744 (3775, CConfiguracaoEleicao::GetCargos, is written)
 //   5648  CPleito::GetSituacoesEleicoes  3713 (271, cconfiguracaoeleicao.cpp, is written and gives the other)
 //   5655  CCargo::operator<=>         11888, two call sites
 //   5654  CEleicaoPE::GetIDsCargos    7787
 //   5653  CEleicaoPE::PossuiCargoCandidato  3744 7787
 //   3784  CCargos::RemoveFiltro       12098 12110
-//   271   CConfiguracaoEleicao::GetSituacoesEleicoes  1386 3687 5577 5578 5582 11558 11559
-//   3783  vector<CCargos::TCargoEleicao>::__assign_with_size, the instance ccargos.cpp's RemoveFiltro emits: 3784 7377.
-//         RemoveFiltro is its one caller here, so a stand-in for 7377 (FiltraPorAbrangencia) gives the second.
+//   271   CConfiguracaoEleicao::GetSituacoesEleicoes  1386 3687 5577 5578 5582 (11558 and 11559 are in the link)
+//   3783  vector<CCargos::TCargoEleicao>::__assign_with_size, the instance ccargos.cpp's RemoveFiltro emits: 3784 7377,
+//         both in the link (7377 holds FiltraPorAbrangencia's two calls), so it has no stand-in.
 //   5791  CConfiguracaoEleicao::GetIDsEleicoes     5735 (1269, CRdvVota::Comparecimento(), is written)
-//   3774  CConfiguracaoEleicao::GetCargosEleicoes  4454 7787, two call sites
+//   3774  CConfiguracaoEleicao::GetCargosEleicoes  7787 (4454, unit 197's FinalizaEleitor, is in the link)
 // comum::NomeEleicaoCorrente (11556) has no direct caller: the target reaches it only through table slot 3049, which fn
 // 5580 passes, so its address is taken.
 // GetNomeMasculino (3716) keeps its two written callers, 2796 and 2258. GetNomeFeminino has one call in the target and
@@ -56,8 +57,6 @@ int w5655(int, int) __asm__("_ZNK5comum2md6CCargossERKS1_");
 void w5654(int, int) __asm__("_ZNK5comum2md10CEleicaoPE12GetIDsCargosEv");
 int w5653(int) __asm__("_ZNK5comum2md10CEleicaoPE20PossuiCargoCandidatoEv");
 void w3784(int) __asm__("_ZN5comum7CCargos12RemoveFiltroEv");
-void w3783(int, int, int, int) __asm__(
-    "_ZNSt3__26vectorINS_4pairIjhEENS_9allocatorIS2_EEE18__assign_with_sizeB8ne210108IPS2_S7_EEvT_T0_l");
 void s11556(int) __asm__("_ZN5comum19NomeEleicaoCorrenteEv");
 void w5791(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao14GetIDsEleicoesEv");
 void w3774(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao17GetCargosEleicoesEv");
@@ -168,20 +167,14 @@ __attribute__((noinline)) void RemoveFiltroDuas(int a, int b)
     w3784(b + 28);
 }
 
-__attribute__((noinline)) void AtribuiCargos(int cargos, int primeiro, int n)
-{
-    w3783(cargos + 16, primeiro, primeiro + 8 * n, n);
-}
-
 __attribute__((noinline)) void IDsEleicoes(int saida, int configuracao)
 {
     w5791(saida + 12, configuracao);
 }
 
-__attribute__((noinline)) void CargosEleicoesDuas(int saida, int configuracao)
+__attribute__((noinline)) void CargosEleicoes(int saida, int configuracao)
 {
     w3774(saida, configuracao);
-    w3774(saida + 24, configuracao);
 }
 
 const void* volatile processoeleitoral_sink;
@@ -210,9 +203,8 @@ struct SProcessoEleitoralRoots {
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsDuasEleicoes);
         processoeleitoral_sink = reinterpret_cast<const void*>(&ContaCandidatos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&RemoveFiltroDuas);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&AtribuiCargos);
         processoeleitoral_sink = reinterpret_cast<const void*>(&IDsEleicoes);
-        processoeleitoral_sink = reinterpret_cast<const void*>(&CargosEleicoesDuas);
+        processoeleitoral_sink = reinterpret_cast<const void*>(&CargosEleicoes);
     }
 } processoeleitoral_roots;
 

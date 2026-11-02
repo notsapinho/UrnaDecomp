@@ -20,7 +20,7 @@
 #   D2 that CThreadVota and CThreadMonitor share.
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195.
 # Not matched, and why: CThreadVota's slots 3 and 4, CThreadEleitor's and CThreadMonitor's slot 2 and 7030 are traps,
-# listed in the -pending.cpp with what they wait for. ProcessaEventos 4349 is written and differs, and the two debug
+# listed in the -pending.cpp with what they wait for. ProcessaEventos 4349 is written and differs (below), and the two debug
 # wrappers 3593 and 2072 and the body binaryen merges them into wait for the wrappers of two other files (below).
 # 13695 and 10231, the pointer destructors of fn 509's object and of CMonitoraAlimentacao, match with no text of their own: each is a thunk
 # of fn 349, f349(p0, addr), binaryen's merge of the trivial unique_ptr destructors, which unit 104's states form and these
@@ -104,8 +104,10 @@
 #   a printf of a 140-byte local that nothing in the target fills, not written (uedebug.h).
 #
 # CThreadEleitor::ProcessaEventos (4349, written, differs): one pass over the messages, the input and the ticks, false
-# when there is no context or Stop was asked. Its callers, CThreadEleitor's Run (7061) and CExecucaoVotaCooperativa's
-# slot 7 (7823), are traps, so the roots file stands for them. Evidence: two stack frames binaryen inlined, 80 bytes
+# when there is no context or Stop was asked. Its callers are CThreadEleitor's Run (7061), a trap, for which the roots
+# file stands, and CExecucaoVotaCooperativa's slot 7 (7823, unit 165's file, matched), both named by vtable, which casts
+# no vote: a callers+content hand line of splat/symbol_addrs.txt names 4349 for 7823 (fragment 234 has its
+# measurement), and its row reads unresolved on the debug wrapper 2072. Evidence: two stack frames binaryen inlined, 80 bytes
 # (ProcessarMensagens, whose name is its logs' "%s", read as __func__ as above) and 16 (ProcessarEntrada, the record cthreadeleitor.cpp:134:20, the
 # start of CPolySingleton<api::IInputKbd>::instance()); the message loop's first pass is peeled, which `processou`
 # false only there gives; messages 0 and 6 stop, 8, 9 and 10 set CEstadoAudio's mode (fns 6745, 6743, 4195); the ticks'

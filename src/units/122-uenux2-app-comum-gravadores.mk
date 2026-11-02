@@ -7,6 +7,12 @@
 #   binaryen inlines into it (its second stack frame), matches at the tree's -O3 (below).
 # - comum::asn::ConverteSerialFlash (target fn 3605, records :26 and :31) and DesconverteSerialFlash (fn 3604, record
 #   :54, matched at the tree's -O3: below) in src/app/comum/gravadores/asn/util.cpp, with the header util.h beside it.
+# - comum::asn::CalculaHashSha512 (fn 3602, no record), util.cpp's last function: in band uses 3 of ledger/ordinals.tsv
+#   it follows 3605 and 3604 (with 3603 between, not written), so it is placed after them, a reading of the band; its
+#   name, its being a free function of comum::asn and its parameter's name are chosen. It hashes a string's bytes with a
+#   std::shared_ptr<IHash>(new CSha512): Reset, then Update of a vector the target frees after Finish (written as a
+#   named local), then Finish into the result. Its CSha512 pointer block (10277, 10279) matches from this object now (unit 102's row).
+#   Its only target caller, fn 10273 (CConversorEntidadeBU's slot 2), is not written: the roots stand in for it.
 # - comum::md::CVersoesArquivos's constructor (target fn 5867) with ValidaCriacao (records :28, :33), which binaryen
 #   inlines into it, in md/cversoesarquivos.cpp, the class header beside it; libc++'s hinted emplace into its
 #   std::map<std::string, std::string> (fn 1221) comes from that object. The hinted __find_equal it calls (fn 1346,
@@ -24,7 +30,7 @@
 # - comum::IGravador's Slot2, Slot6 and Slot3 (target fns 11632, 11631 and 11630, slots 2, 6 and 3 of IGravador's vtable
 #   and of the eight recorders' that hold them), in iresultado.cpp after the constructor, in the order their use band
 #   gives. Slot2 is the class's key function, so iresultado.cpp.o emits IGravador's vtable now, where unit 60's pending
-#   object did; its traps of Slot4 and Slot5 (fns 11634, 11633) stay there, and its header says what they wait for.
+#   object did.
 #   Each slot builds two paths from comum::CPath's directories (GetPathTrab and GetPathResult over EFlashOrigem, fns
 #   436 and 1274) and the file name at +20 (std::filesystem::path's operator/), and calls api::CSystem::CopyFile (fn
 #   378) on their strings: Slot2 and Slot6 copy the work file to the result directory of the internal and of the
@@ -35,6 +41,19 @@
 #   582, every one operand-only and every operand a call's or a data address. The paths are named locals, as the
 #   target keeps each to the end of the function (Slot3 destroys its four there, the last built first); `const` on
 #   them and their names are chosen, and no other form was measured.
+# - comum::IGravador's Slot4 and Slot5 (target fns 11634 and 11633, slots 4 and 5), in iresultado.cpp before Slot2, in
+#   their use band's order (11634, 11633, then 11632), where unit 60's pending object trapped them until the type of
+#   GravaResultado's parameter was declared: its records spell api::CFile, which api/io/cfile.h makes an alias of
+#   ecourna::api::io::CFile, and igravador.h and app/comum/asn/iconversorparcialasn.h include it in place of their
+#   forward declarations. Each builds the path of the file in the work directory of one flash (CPath::GetPathTrab
+#   with FLASH_INTERNA or FLASH_EXTERNA, fn 436, then / m_nomeArquivo), opens it with ecourna's CFile constructor (fn
+#   517, the mode "wb"), passes it to GravaResultado (slot 7) and closes it (fn 336); the CFile's inline destructor
+#   follows.
+#   Measured in this link before step 8 (pnpm wasm score against the target): 11634 and 11633 15 over 210 rows each,
+#   every one operand-only and every operand a call's or a data address. The path is a named const local, a choice;
+#   no other form was measured. The include changes the mangled name of every GravaResultado (traps and declarations:
+#   units 60, 122, 136 and 200's pending objects, cgravadorenvelopearquivo.cpp.o's vtable reference), and no other
+#   object of the link (every object compared with cmp before and after).
 # - CGravadorRCSecao's implicit deleting destructor (fn 11615, slot 1): its vtable is emitted in
 #   122-uenux2-app-comum-gravadores-pending.cpp, whose trap of GravaResultado (fn 11616, slot 7, record
 #   cgravadorrcsecao.cpp:110) is the class's key function; the roots keep that vtable. cgravadorrcsecao.h gives the
@@ -81,8 +100,8 @@
 #
 # Not matched, and what each waits for:
 # - The gravadores/md data classes, CConversorTipoApuracaoSA and the other recorders' destructors are unit 136's.
-#   CVersoesContratos::GetValor and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) wait for the class whose constructor
-#   (fn 5480) both build and whose map their find (fn 10877) and end (fn 5481) read; 6044 and 10877 wait for them.
+#   CVersoesContratos::GetValor and CDependenciasContratos::GetValor (3825, 3826, the merge thunks of 6044) are fragment
+#   227's.
 # - fn 5841, which converts a comum::md::CComparecimentoMesario into ecourna's CComparecimentoMesario (fn 3486): its one
 #   caller is GravaResultado (fn 11616), which calls it twice. Written as a private const member of CGravadorRCSecao
 #   after CriaIdentidadeEleitor, it builds a CNumeroInscricaoEleitoral from a copy of the poll worker's identifier, a
@@ -120,6 +139,8 @@ UENUX2_SRCS += $(GRAVADORES_SRCS)
 # cgravadorutil.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit 88's
 # sources do): an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/cgravadorutil.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# gravadores/asn/util.cpp's CalculaHashSha512 includes ecourna/api/security/csha.hpp, which includes OpenSSL's evp.h
+$(ROOT)/$(APP)/uenux2/src/app/comum/gravadores/asn/util.cpp.o: UENUX2_CXXFLAGS += $(OPENSSL_INCLUDES)
 # nothing reconstructed calls most of these yet: 122-uenux2-app-comum-gravadores-roots.cpp stands in for the target's
 # callers, two call sites each
 $(ROOT)/$(APP)/122-uenux2-app-comum-gravadores-roots.o: $(ROOT)/src/units/122-uenux2-app-comum-gravadores-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/122-uenux2-app-comum-gravadores.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)

@@ -245,8 +245,8 @@ row was built at 0b5f410: the object alone at `-O3` in the plain link (the recip
 
 At the tree's `-O3` (d4cbc1a, the link of the measurement above, `pnpm wasm score`): 3768, 5775 and 5776 match; 5622
 is `89 over 431`, its 5 inserted and 5 deleted rows `local.get`; 5660 is `220 over 669`, since no second caller keeps
-2870 out of line in this link; 731 and 11418 were traps then (unit 47's pending file) and match since (unit 159), and
-5652 is unwritten.
+2870 out of line in this link (both match since unit 232's roots stand in for 2870's other callers); 731 and 11418
+were traps then (unit 47's pending file) and match since (unit 159), and 5652 is unwritten.
 
 **Sites under `mock/`, more.** With `cwasmthread.cpp.o`, `cwasmwebsound.cpp.o` and `cwasmscreen.cpp.o` at `-O3` as well
 (0b5f410), 2680, 9459, 9448, 9472 and 9604 print `IDENTICAL`, 9146 and 9125 are `13 over 307` and `13 over 313`, all

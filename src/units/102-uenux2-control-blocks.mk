@@ -1,7 +1,7 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 50 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Sixteen come from the objects of units 31, 120, 101, 165,
-# 91, 127, 164, 113, 163 and 110, whose builders are written, so the roots no longer instantiate them:
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 49 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Seventeen come from the objects of units 31, 120, 101, 165,
+# 91, 127, 164, 113, 163, 110 and 122, whose builders are written, so the roots no longer instantiate them:
 # IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550),
 # CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
 # 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
@@ -16,7 +16,9 @@
 # and BatteryIconDataSource<Horizontal>'s (502, CFormBuilder::AddStatusHeader, unit 31's cformbuilder.cpp, from which
 # 11116, 11106 and 11105 match) and api::CTextFieldUpdate's (502 and 3058, the same object, and 5936, unit 138's,
 # which holds vota::TelaEsperaRepetirTesteTeclado inlined, whose object, unit 110's ctelasvota.cpp, links first: 12316
-# and 12314 match from it; the roots' builder and sink that stood for 5936 went). Each block below: the
+# and 12314 match from it; the roots' builder and sink that stood for 5936 went) and IHash's over
+# ecourna::api::security::CSha512 (3602, comum::asn::CalculaHashSha512, unit 122's gravadores/asn/util.cpp, from which
+# 10277 and 10279 match). Each block below: the
 # T, the function that stores its vptr in the target, and the members the unit matches. The vtable's other slots are
 # shared bodies matched already (174, 144, 172, 411, 519, 1946, 2967).
 # Pointer blocks (slot 3, __get_deleter; slot 2 too where it is listed):
@@ -106,15 +108,17 @@
 #   record 1581300 gives (api/gui/cpaperformbuilder.h, CLASS); the class's lines span that record's line 51.
 # Flags: the roots object compiles with APP_CXXFLAGS. Against the same file compiled with UENUX2_CXXFLAGS and the rule's
 # include paths, by function with call and global indices and relocated constants masked, 343 of the 346 functions
-# both define compare equal (354 of 357 at bbf27ac1's roots, the same three differing): std::shared_ptr<IGravador>'s
+# both define compare equal, counted while the roots still built CSha512's block (354 of 357 at bbf27ac1's, the same
+# three differing): std::shared_ptr<IGravador>'s
 # constructor over a comum::CGravadorWSQ*, that block's __on_zero_shared, and make_shared<CMovie>. The link keeps one of
 # them from this object, the block's __on_zero_shared, matched as 12092, which calls default_delete's operator() at
 # APP_CXXFLAGS' -O2 and inlines it at -O3. The
 # blocks of ecourna's classes: at ECOURNA_CXXFLAGS, brought into a private link ahead of the roots object, 9480 and
 # 11466 give the target's rows (score 4 over 38 and 1 over 60, operand rows only), and 10279 does not (25 over 56, 19
 # rows inserted). So 9480's and 11466's bodies do not depend on which of the two levels compiles them, and 10279's copy
-# has uenux2's level. That reads as a builder (3602) in a uenux2 TU, which is why CSha's destructor is taken as inline
-# there; 3602's file is not recovered, so it is a reading and not a measurement.
+# has uenux2's level. That read as a builder (3602) in a uenux2 TU, which is why CSha's destructor is taken as inline
+# there; 3602 is written now, in gravadores/asn/util.cpp at the tree's flags, and 10279 matches from its object, which
+# measures it.
 # Pending, each with what it waits for:
 # - 12244, vota::CItemVisualizarCandidatosVota's slot 2, a trap in 102-uenux2-control-blocks-pending.cpp, the one slot
 #   this unit leaves with no body, and no stub.

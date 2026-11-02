@@ -142,11 +142,6 @@
 // f5579 · 638 B · unmatched · placement: link order · name unknown
 // void f5579(i32, i32, i32, i32) { ... }
 
-// link-order cluster 797 · uses=2 · neighbours' file uenux2/src/app/comum/relatorios/cpartecandidatos.cpp
-
-// f5584 · 15 B · unmatched · placement: link order · name unknown
-// void f5584(i32, i32) { ... }
-
 // link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
 // f5599 · 1759 B · unmatched · placement: link order · name unknown
@@ -280,11 +275,6 @@
 // f3258 · 17 B · unmatched · placement: link order · name unknown
 // void f3258(i32, i32) { ... }
 
-// link-order cluster 939 · uses=3
-
-// f3268 · 538 B · unmatched · placement: link order · name unknown
-// void f3268(i32, i32) { ... }
-
 // link-order cluster 944 · uses=3
 
 // f3336 · 12 B · unmatched · placement: link order · name unknown
@@ -308,11 +298,6 @@
 // f3646 · 666 B · unmatched · placement: link order · name unknown
 // void f3646(i32, i32) { ... }
 
-// link-order cluster 992 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/csubstituidortitulo.cpp
-
-// f3688 · 445 B · unmatched · placement: link order · name unknown
-// void f3688(i32, i32, i32) { ... }
-
 // link-order cluster 994 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp
 
 // f3695 · 135 B · unmatched · placement: link order · name unknown
@@ -322,11 +307,6 @@
 
 // f3709 · 32 B · unmatched · placement: link order · name unknown
 // void f3709(i32, i32) { ... }
-
-// link-order cluster 1007 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
-
-// f3750 · 135 B · unmatched · placement: link order · name unknown
-// void f3750(i32, i32) { ... }
 
 // link-order cluster 1014 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorwsq.cpp
 
@@ -380,11 +360,6 @@
 
 // f2502 · 15 B · unmatched · placement: link order · name unknown
 // void f2502(i32, i32) { ... }
-
-// link-order cluster 1075 · uses=4 · neighbours' file uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp
-
-// f2686 · 739 B · unmatched · placement: link order · name unknown
-// void f2686(i32, i32) { ... }
 
 // link-order cluster 1076 · uses=4 · neighbours' file ecourna/api/compression/czip.cpp
 
@@ -562,11 +537,6 @@
 // f4811 · 268 B · unmatched · placement: link order · name unknown
 // void f4811(i32, i32, i32) { ... }
 
-// link-order cluster 736 · uses=2 · neighbours' file ecourna/api/io/cfile.cpp
-
-// f5180 · 36 B · unmatched · placement: link order · name unknown
-// void f5180(i32, i32) { ... }
-
 // link-order cluster 746 · uses=2 · neighbours' file uenux2/src/api/hash/cmontadorhash.cpp
 
 // f5359 · 47 B · unmatched · placement: link order · name unknown
@@ -632,9 +602,6 @@
 // f5701 · 106 B · unmatched · placement: link order · name unknown
 // void f5701(i32, i32, i32, i32) { ... }
 
-// f5700 · 510 B · unmatched · placement: link order · name unknown
-// void f5700(i32, i32) { ... }
-
 // link-order cluster 821 · uses=2 · neighbours' file uenux2/src/app/comum/dados/asn/candidatura/cvisitantefoto.cpp
 
 // f5712 · 35 B · unmatched · placement: link order · name unknown
@@ -677,12 +644,6 @@
 // f5787 · 682 B · unmatched · placement: link order · name unknown
 // void f5787(i32, i32) { ... }
 
-// f5785 · 1732 B · unmatched · placement: link order · name unknown
-// ? f5785(i32, i32, i32) { ... }
-
-// f5784 · 197 B · unmatched · placement: link order · name unknown
-// void f5784(i32, i32) { ... }
-
 // f5777 · 886 B · unmatched · placement: link order · name unknown
 // void f5777(i32, i32) { ... }
 
@@ -697,21 +658,10 @@
 // f5790 · 3572 B · unmatched · placement: link order · name unknown
 // void f5790(i32, i32) { ... }
 
-// f5789 · 12897 B · unmatched · placement: link order · name unknown
-// void f5789(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 831 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
 
 // f5808 · 501 B · unmatched · placement: link order · name unknown
 // void f5808(i32, i32, i32) { ... }
-
-// link-order cluster 834 · uses=2 · neighbours' file uenux2/src/app/comum/asn/util.cpp
-
-// f5832 · 284 B · unmatched · placement: link order · name unknown
-// void f5832(i32, i32) { ... }
-
-// f5831 · 259 B · unmatched · placement: link order · name unknown
-// void f5831(i32, i32, i32) { ... }
 
 // link-order cluster 835 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorrcsecao.cpp
 
@@ -720,11 +670,6 @@
 
 // f5843 · 239 B · unmatched · placement: link order · name unknown
 // ? f5843(i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 836 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/cgravadorhashes.cpp
-
-// f5852 · 340 B · unmatched · placement: link order · name unknown
-// void f5852(i32, i32, i32, i32) { ... }
 
 // link-order cluster 837 · uses=2 · neighbours' file uenux2/src/app/comum/gravadores/md/centidadehashes.cpp
 
@@ -799,9 +744,6 @@
 // f3729 · 123 B · unmatched · placement: link order · name unknown
 // ? f3729(i32) { ... }
 
-// f3728 · 220 B · unmatched · placement: link order · name unknown
-// void f3728(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1005 · uses=3 · neighbours' file uenux2/src/app/comum/md/cabrangencia.cpp
 
 // f3732 · 767 B · unmatched · placement: link order · name unknown
@@ -830,9 +772,6 @@
 
 // f3776 · 278 B · unmatched · placement: link order · name unknown
 // void f3776(i32, i32) { ... }
-
-// f3775 · 573 B · unmatched · placement: link order · name unknown
-// void f3775(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1013 · uses=3 · neighbours' file uenux2/src/app/comum/appinfo/cappinfo.cpp
 
@@ -911,9 +850,6 @@
 
 // link-order cluster 1103 · uses=4 · neighbours' file uenux2/src/app/comum/dados/md/correspondencia/ccorrespondenciaresultado.cpp
 
-// f2806 · 57 B · unmatched · placement: link order · name unknown
-// void f2806(i32, i32) { ... }
-
 // f2804 · 61 B · unmatched · placement: link order · name unknown
 // void f2804(i32) { ... }
 
@@ -927,11 +863,6 @@
 
 // f2807 · 237 B · unmatched · placement: link order · name unknown
 // void f2807(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1108 · uses=4 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
-
-// f2829 · 189 B · unmatched · placement: link order · name unknown
-// void f2829(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1110 · uses=4 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
 
@@ -963,30 +894,10 @@
 // f1255 · 612 B · unmatched · placement: link order · name unknown
 // void f1255(i32) { ... }
 
-// link-order cluster 1267 · uses=11
-
-// f1135 · 175 B · unmatched · placement: link order · name unknown
-// void f1135(i32, i32) { ... }
-
 // link-order cluster 1283 · uses=14
 
 // f921 · 584 B · unmatched · placement: link order · name unknown
 // void f921(i32, i32) { ... }
-
-// link-order cluster 1300 · uses=18 · neighbours' file uenux2/src/app/comum/dados/clocal.cpp
-
-// f783 · 404 B · unmatched · placement: link order · name unknown
-// void f783(i32, i32) { ... }
-
-// link-order cluster 1304 · uses=19 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/curnainspecionada.cpp
-
-// f761 · 342 B · unmatched · placement: link order · name unknown
-// void f761(i32, i32) { ... }
-
-// link-order cluster 1357 · uses=63
-
-// f320 · 1110 B · unmatched · placement: link order · name unknown
-// void f320(i32, i32) { ... }
 
 // no link-order cluster
 

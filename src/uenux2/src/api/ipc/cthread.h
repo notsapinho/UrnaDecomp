@@ -33,12 +33,14 @@ public:
     // The member's name is chosen.
     void Stop() { m_parar = true; }
 
+    // Whether Stop was asked: vota::CThreadOperador::Run (fn 10204) and vota::CThreadEleitor's fn 4349 test +8 in their
+    // loops, and vota::CExecucaoVotaCooperativa's slot 7 (fn 7823) tests it on CThreadEleitor's instance, from outside
+    // the class, so the source reads it through something public (a friend would do as well). That it is this
+    // accessor, public, and its name are chosen.
+    bool PararSolicitado() const { return m_parar; }
+
 protected:
     virtual void Run() = 0;
-
-    // Whether Stop was asked: vota::CThreadOperador::Run (fn 10204) and vota::CThreadEleitor's fn 4349 test +8 in their
-    // loops. The accessor and its name are chosen.
-    bool PararSolicitado() const { return m_parar; }
 
     // Fn 10204 calls slot 5 of m_pImpl (IThreadImpl::Yield) after each pass of its loop, and vota::CThreadEleitor's
     // Run (fn 7061) does too, each in its own code (a reading: binaryen inlines a function of one call site only, so

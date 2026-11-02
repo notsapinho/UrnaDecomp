@@ -3,8 +3,6 @@
 // in the table (no slot has a direct caller), so rooting the vtable keeps the same set:
 // - comum::asn::CConversorHistoricoVotoImpresso, vtable @1597388 (slots 2 and 3: fns 10276, 10275);
 // - comum::asn::CConversorCargo, @1569964 (fns 11372, 11373);
-// - comum::asn::CConversorDetalheCandidato, @1569872 (fns 11374, 11375);
-// - comum::asn::CConversorDetalheConsulta, @1569764 (fns 11376, 11377);
 // - comum::asn::CConversorEleicaoPE, @1570088 (fns 11370, 11371);
 // - comum::asn::CConversorDedo, @1566480 (fns 11415, 11416);
 // - comum::asn::CConversorBiometriaEleitor, @1565992 (fns 11421, 11422);
@@ -16,8 +14,6 @@
 extern "C" {
 extern const char historicovotoimpresso_vt[] __asm__("_ZTVN5comum3asn31CConversorHistoricoVotoImpressoE");
 extern const char cargo_vt[] __asm__("_ZTVN5comum3asn15CConversorCargoE");
-extern const char detalhecandidato_vt[] __asm__("_ZTVN5comum3asn26CConversorDetalheCandidatoE");
-extern const char detalheconsulta_vt[] __asm__("_ZTVN5comum3asn25CConversorDetalheConsultaE");
 extern const char eleicaope_vt[] __asm__("_ZTVN5comum3asn19CConversorEleicaoPEE");
 extern const char dedo_vt[] __asm__("_ZTVN5comum3asn14CConversorDedoE");
 extern const char biometriaeleitor_vt[] __asm__("_ZTVN5comum3asn26CConversorBiometriaEleitorE");
@@ -29,22 +25,20 @@ extern const char entidadehashes_vt[] __asm__("_ZTVN5comum3asn24CConversorEntida
 
 namespace {
 
-const void* volatile defaults159_sink[11];
+const void* volatile defaults159_sink[9];
 
 struct SDefaults159Roots {
     SDefaults159Roots()
     {
         defaults159_sink[0] = historicovotoimpresso_vt;
         defaults159_sink[1] = cargo_vt;
-        defaults159_sink[2] = detalhecandidato_vt;
-        defaults159_sink[3] = detalheconsulta_vt;
-        defaults159_sink[4] = eleicaope_vt;
-        defaults159_sink[5] = dedo_vt;
-        defaults159_sink[6] = biometriaeleitor_vt;
-        defaults159_sink[7] = biometriaeleitorcifrada_vt;
-        defaults159_sink[8] = candidaturas_vt;
-        defaults159_sink[9] = fotocandidato_vt;
-        defaults159_sink[10] = entidadehashes_vt;
+        defaults159_sink[2] = eleicaope_vt;
+        defaults159_sink[3] = dedo_vt;
+        defaults159_sink[4] = biometriaeleitor_vt;
+        defaults159_sink[5] = biometriaeleitorcifrada_vt;
+        defaults159_sink[6] = candidaturas_vt;
+        defaults159_sink[7] = fotocandidato_vt;
+        defaults159_sink[8] = entidadehashes_vt;
     }
 } defaults159_roots;
 

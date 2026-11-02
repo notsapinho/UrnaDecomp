@@ -1,10 +1,7 @@
 #pragma once
 
+#include "api/io/cfile.h"
 #include "app/comum/gravadores/iresultado.h"
-
-namespace api {
-class CFile;
-}
 
 namespace comum {
 
@@ -22,11 +19,10 @@ namespace comum {
 // 11631, 11630) are written there, Slot2 the key function, so that object emits the vtable: Slot2 and Slot6 copy the
 // result file from the work directory to the result directory (comum::CPath's GetPathTrab and GetPathResult) of the
 // internal and of the external flash, and Slot3 copies the work file and the result file from the internal flash to
-// the external one, each with api::CSystem::CopyFile. Slots 4 and 5 (fns 11634, 11633) open the file in the work
-// directory of each flash with the mode "wb", pass it to GravaResultado and close it. They are pending
-// (src/units/60-uenux2-cgravadorwsq-pending.cpp): the file they open is an ecourna::api::io::CFile (fn 517, its
-// constructor, builds it), and GravaResultado's records spell their parameter api::CFile, which no header of this tree
-// declares as that class; the forward declaration above is that spelling only.
+// the external one, each with api::CSystem::CopyFile. Slots 4 and 5 (fns 11634, 11633), written there too, open the
+// file in the work directory of each flash with the mode "wb", pass it to GravaResultado and close it: the file is an
+// ecourna::api::io::CFile (fn 517, its constructor, builds it), which GravaResultado's records spell api::CFile, the
+// alias api/io/cfile.h declares.
 class IGravador : public IResultado {
 public:
     IGravador(TMunicipioID municipio, TZonaID zona, TLocalID local, TSecaoID secao, char fase,

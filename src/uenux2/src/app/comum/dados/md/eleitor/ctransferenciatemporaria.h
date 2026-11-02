@@ -10,6 +10,8 @@ namespace comum::md {
 // That this is the class CEleitor holds there is a reading: CConversorEntidadeEleitores's slot 2 (fn 11411), whose
 // records include DesconverteTransferenciaTemporaria's, which returns one, is the caller of both constructors. The enum's
 // enumerators, the type of the word at +16 and every member name are chosen; neither constructor is reconstructed.
+// m_municipio and m_zona disagree with md::CEleitorDecorator's reading of the same bytes (celeitordecorator.h: a
+// state string and a municipality word, from what GetAbrangencia compares them with), the better supported one.
 class CTransferenciaTemporaria {
 public:
     enum ETransferenciaTemporaria : int;

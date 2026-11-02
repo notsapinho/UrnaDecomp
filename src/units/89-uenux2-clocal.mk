@@ -157,21 +157,20 @@
 #   two tests swapped differ in 240 rows.
 # - 5810: const auto or auto. An early return of the hit differs in 256 rows, and contains() in 296.
 #
-# Written, not matching:
+# Matched through fragment 232's stand-ins, which give their callees the target's out-of-line calls:
 # - md::CLocal::GetContingencia (3724). The target's 3724 is a thunk into binaryen's merge 6029, whose other caller is
-#   CCargo::GetDetalheConsulta (1923, record ccargo.cpp:89); unit 88 writes 1923, but clang inlines it there and the link
-#   drops its body, so with no partner ours stays a whole body (`differs`). It waits for a caller that keeps 1923.
-#   Measured: a try link with a stand-in of 1923 (flag at +136, member at +88, its code and literal) forms the merge,
-#   and 3724, 1923, 6029 and 1003 differ from the target in operand rows only (4 of 8, 4 of 8, 5 of 33, 14 of 84).
+#   CCargo::GetDetalheConsulta (1923, record ccargo.cpp:89); unit 88 writes 1923, and clang inlines it into ccargo.cpp's
+#   own callers, so the link dropped its body and ours stayed a whole body (`differs`). Fragment 232's roots stand in for
+#   1923's callers in other TUs; with 1923 in the link binaryen forms the merge, and 3724, 1923 and 6029 match.
 #   comum::CLocal::GetZonaID (1003), which calls 3724, was `unresolved self-voted` on that call until unit 157 wrote
 #   CConversorLocal::DoConverte (11451), the target's other caller of 3724: its two calls give the name a second voter,
 #   and 1003 matches. Those three calls are the target's, so 3724 needs no stand-in.
 # - md::CCandidatura's constructor (5660) needs -O3: at -O2 clang inlines vector::__init_with_size and leaves
 #   __uninitialized_allocator_copy_impl out of line (cost 225 against 225), and at -O3 the threshold is 250, which keeps
-#   __init_with_size (2870) out of line as the target does. Measured: a try link of this unit at -O3 with a second caller
-#   of 2870, which the target has and this link does not, differs from the target in operand rows only (63 of 519 for
-#   5660, 5 of 155 for 2870), against 236 of 667 rows at -O2. It stays written, and its row stays `no-candidate`: at the
-#   tree's -O3 this link has no second caller of 2870, and 5660 scores 220 over 669 rows.
+#   __init_with_size (2870) out of line as the target does (a try link of this unit with a second caller of 2870 scored
+#   236 over 667 rows at -O2, against 63 over 519, all operand-only, at -O3). It needs that second caller, which the target has
+#   (5808, 5952, 7787, none written): with 5660 its one caller binaryen inlined 2870 there, and 5660 scored 220 over 669
+#   rows. Fragment 232's roots stand in for those callers, and 5660 and 2870 match.
 #
 # CMunicipio's constructor (3712, unit 107) and CEleitor::ValidaCriacao (5667, unit 157), which call 1374, a copying
 # wrapper of the trim body 9406 that binaryen merges into 3942 with the copying CStringUtils::ToLower, are written and

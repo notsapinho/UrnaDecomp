@@ -20,9 +20,11 @@ namespace vota {
 // suspenderEleitor(const EOrigemSuspensao) (:410 and :427, fn 4442).
 //
 // Written: the constructor (held inlined by GetInst, fn 3229), GetInst, the destructor (D2 fn 2483, D0 fn 7385),
-// RegistraVoto (fn 4471), FinishState (slot 5, fn 7370), ChamaEstadoProximoCargo, ProcessInput (slot 7, fn 7345) and
-// ProcessTick (slot 8, fn 7349). Pending (src/units/197-uenux2-celeitorvotando-pending.cpp): StartState,
-// NeedChangeState and ProcessKey. The destructor is out of line (the D0 calls the D2 and frees `this`:
+// RegistraVoto (fn 4471), StartState (slot 2, fn 7377) with IniciaCiclo, NeedChangeState (slot 3, fn 7352),
+// FinishState (slot 5, fn 7370), ChamaEstadoProximoCargo, FinalizaEleitor (fn 4454, written and not matched),
+// ProcessInput (slot 7, fn 7345) and ProcessTick (slot 8, fn 7349). Pending
+// (src/units/197-uenux2-celeitorvotando-pending.cpp): ProcessKey. The destructor is out of line (the D0 calls the D2 and
+// frees `this`:
 // docs/reference/facts/reading.md R5) and the D2 stores no vptr, so the class is final (R4); declared first, it is the
 // key function, a choice, so this class's own object emits the vtable.
 //
@@ -64,6 +66,27 @@ private:
     CEleitorVotando();
 
     void ChamaEstadoProximoCargo();
+
+    // Records :125 and :131. StartState (fn 7377) holds it behind a 16-byte prologue of its own, binaryen's sign of an
+    // out-of-line function with one caller (docs/reference/facts/reading.md R10). Private: a choice.
+    void IniciaCiclo();
+
+    // fn 4454: one parameter, this; NeedChangeState (fn 7352) and suspenderEleitor (fn 4442) call it. It stops the
+    // tick, hands the votes cast to comum::CRdvVota::RecebeCedula, marks the last vote in the state of the voting and
+    // hands over to CSincronismoEleitor; it holds the records of the md members those calls reach, which binaryen
+    // inlines (src/units/197-uenux2-celeitorvotando.mk). No record names it: the name is chosen.
+    void FinalizaEleitor();
+
+    // Finishes the post's state and clears the pointer, as IniciaCiclo does when the posts are over and
+    // FinalizaEleitor does at the end. A helper of the reconstruction, inline: its name, that it is a function and
+    // not the statements written in place (not compiled that way), are choices.
+    void TerminaEstado()
+    {
+        if (m_pEstado != nullptr) {
+            m_pEstado->FinishState();
+        }
+        m_pEstado = nullptr;
+    }
 
     comum::CAppState* m_pEstado;
     uebyte m_tick;

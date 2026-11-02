@@ -1,7 +1,7 @@
 // Reconstruction notes: comum::md::CPleito's GetEleicao and GetSituacoesEleicoes (target fns 5651 and 5648), on their
-// records' lines 139 and 175, at the four-space indent each record's column 11 gives. The constructor (fn 5652, records
-// at 64, 67 and 70) and GetVersaoPacoteEleicao (inlined into fn 5604, record at 158) are not written; the fragment says
-// what the constructor waits for.
+// records' lines 139 and 175, at the four-space indent each record's column 11 gives; ExisteEleicao (no record, no index:
+// fn 3775 holds it inlined), its line a choice. The constructor (fn 5652, records at 64, 67 and 70) and
+// GetVersaoPacoteEleicao (inlined into fn 5604, record at 158) are not written; unit 88's fragment says why.
 #include "app/comum/dados/md/processoeleitoral/cpleito.h"
 
 #include <algorithm>
@@ -30,7 +30,14 @@ const CEleicaoPE& CPleito::GetEleicao(const TEleicaoID id) const
     throw CUeComumDadosError(EUE_COMUM_DADOS_8162, std::format("Eleição não encontrada: {}", id));
 }
 
-// (original lines 142-167: content not recovered)
+
+bool CPleito::ExisteEleicao(const TEleicaoID id) const
+{
+    return std::any_of(m_eleicoes.begin(), m_eleicoes.end(),
+                       [id](const CEleicaoPE& eleicao) { return eleicao.GetID() == id; });
+}
+
+// (original lines 149-167: content not recovered)
 #line 168
 const CSituacoesEleicoes& CPleito::GetSituacoesEleicoes(const TEleicaoID id) const
 {

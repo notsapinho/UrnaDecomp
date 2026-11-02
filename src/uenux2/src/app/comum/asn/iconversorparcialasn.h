@@ -2,9 +2,7 @@
 
 #include <memory>
 
-namespace api {
-class CFile;
-}
+#include "api/io/cfile.h"
 
 namespace comum::asn {
 

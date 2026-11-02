@@ -146,6 +146,38 @@
 #
 # The roots stand in for the callers no unit writes: the CRdvVota vtable's address for CreateInst's vptr store, and the
 # stand-ins the roots file lists by target caller.
+#
+# The way a voter's ballot (comum::md::CCedula, unit 197's ccedula.h) enters the RDV, which vota::CEleitorVotando's
+# FinalizaEleitor (fn 4454, unit 197, written and not matched) holds, each member here out of line with one caller and
+# inlined there by binaryen (a prologue of its own where it has a frame):
+# - CRdvVota::RecebeCedula(const CCedula&) (crdvvota.cpp, no record, a chosen name, a member as it reads m_votos and
+#   m_posicionador): a std::map from election to ballot (+20 of its 32-byte frame, declared first) and the posts'
+#   elections (CConfiguracaoEleicao::GetCargosEleicoes, 3774, at +8); each vote goes to its post's election's ballot
+#   (std::find_if, 0 when none) and each ballot to m_votos.RecebeCedula. The map's destroy matches (3750).
+# - CVotosEleicoesVota::RecebeCedula (record :215, column 27): `CVotosCargos& votos = Votos(4735, eleicao)` through an
+#   inline non-const Votos over the const one (3708; cvotoseleicoesvota.h says what else gives it), then InsereCedula.
+# - CVotosCargos::InsereCedula (:199) and ConfereCedula (:248 to :295, private): the ballot is checked (its size against
+#   QuantidadeEscolhas, 5642, called twice; the votes per post against each post's choices; a nominal vote's length;
+#   a void-by-repetition vote against a post of one choice and against the ballot's nominal votes), the map copied
+#   (`TMapa mapa(m_mapa)`), each vote inserted at the place m_posicionador gives (CVotos::Insere) and the copy swapped
+#   in (`m_mapa.swap(mapa)`, whose destroy is 1268). The throws build a named message and copy it, as GetVotos's does
+#   (the temporaries are freed before __cxa_throw). The columns of :278, :285 and :295 (27) put those throws at indent
+#   20: the switch's case labels are indented in this file (a choice of layout that gives them). The count map is
+#   std::map<TCargoID, size_t>, its destroy 3709 in the target, called by 4454 alone: size_t is chosen, and a value
+#   type another map of our link already instantiates (3613's EEstadoTick) would make that destroy the other map's.
+# - CVotos::Insere (cvotos.cpp:40): the record's column 9 is a call at indent 8, ErroPosicao's (cvotos.h says why it
+#   is a function of its own), then m_votos.insert, which clang keeps out of line (-Rpass-missed=inline: cost 925,
+#   threshold 250; the target's 32-byte prologue there). The constructor moved from line 39 to after them (its line
+#   is a choice).
+# The map copy brings 5681 (__emplace_hint_unique_key_args) and 3251 (__find_equal, which matches): unit 197's roots
+# stand in for their other target callers (11349; 2386 and 3266). 5681 is written and differs, 15 over 167 rows
+# (5 deleted): libc++'s __insert_node_at reloads the child pointer after the begin node's store in the target, which a
+# TU without strict aliasing gives (the reload GetIDsCargos had in unit 88 before md/ built with strict aliasing); with
+# md/rdv/'s objects built with -fno-strict-aliasing in a probe link, 4 over 167 rows, operand rows only. 5681's other
+# caller, 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, in app/comum/dados/asn/rdv/, a directory
+# without strict aliasing), is not written; that its object holds the target's copy is a reading. No flag changes
+# here (docs/reference/facts/app-flags.md F6). The error codes 4662, 4669, 4672 to 4677 and 4735 (euerdverror.h) are
+# named from their messages; the names ErroPosicao, InsereCedula's and ConfereCedula's locals are chosen.
 CRDVVOTA_SRCS := src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp \
   src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvoto.cpp
 UENUX2_SRCS += $(CRDVVOTA_SRCS)
