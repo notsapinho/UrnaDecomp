@@ -3,6 +3,8 @@
 // .bss order) and AdicionaVoto sit at chosen lines (src/units/197-uenux2-celeitorvotando.mk).
 #include "app/vota/eleitor/comum/cinformacaoeleitor.h"
 
+#include "app/comum/dados/ccandidaturas.h"
+
 namespace vota {
 
 std::string g_numeroDigitado;
@@ -17,5 +19,15 @@ void AdicionaVoto(const comum::md::TCargoID cargo, const comum::md::CVoto& voto)
 api::CDateTime g_dataHoraDesligamento;
 
 comum::md::TQtdEscolha g_escolhaAtual = 1;
+
+char ArtigoCandidato()
+{
+    const comum::CCandidaturas& candidaturas = comum::CCandidaturas::GetInst();
+    if (!candidaturas.IsFim() &&
+        candidaturas.GetCurrent()->GetTitular().GetSexo() == comum::md::CSexo::SEXO_FEMININO) {
+        return 'a';
+    }
+    return 'o';
+}
 
 } // namespace vota

@@ -19,6 +19,10 @@ public:
                      const std::string& textoFonetico);
 
     const std::string& GetNome() const { return m_nome; }
+    // vota::CVotacaoStateAudio::FormataMensagem (fn 6999) copies the fourth string (+36), or the second (+12) when it
+    // is empty. The accessors' names are chosen, as the members' are.
+    const std::string& GetPergunta() const { return m_pergunta; }
+    const std::string& GetTextoFonetico() const { return m_textoFonetico; }
 
 private:
     std::string m_nome;

@@ -23,6 +23,9 @@ public:
     // The first string, at +4, which comum::RespostaCorrente (fn 11479) copies; its name and its being inline in the
     // class are chosen, as GetNumero's are.
     const std::string& GetResposta() const { return m_resposta; }
+    // vota::CVotacaoStateAudio::FormataMensagem (fn 6999) copies the string at +16, or GetResposta's when it is empty.
+    // The name is chosen, as the member's is.
+    const std::string& GetTextoFonetico() const { return m_textoFonetico; }
 
 private:
     TCandidatoID m_numero;

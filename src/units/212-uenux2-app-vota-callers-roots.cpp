@@ -1,8 +1,5 @@
-// Roots: give the members fragment 212 adds to units 88, 97, 110 and 119 the call sites the target gives them, while
+// Roots: give the members fragment 212 adds to units 88, 110 and 119 the call sites the target gives them, while
 // their callers are not written.
-//
-// vota::CVotacaoStateAudio::FormatPartyName (fn 6954) has one direct caller in the target, fn 6999 (slot 14 of the
-// class, pending in unit 97), which calls it twice: NomesPartidos stands for it with two calls.
 //
 // vota::CLogVota::LogaErroPartidoNaoEncontrado (fn 4550) has two direct callers in the target, FormatPartyName (fn
 // 6954, written) and fn 11683 (vota::CPedeMajoritario, not written): ErroPartido stands for 11683.
@@ -18,8 +15,6 @@
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 // The results returned through a pointer are left as they are, as nothing calls these.
 extern "C" {
-void w212_partido(void* nome, void* estado, const void* numero) __asm__(
-    "_ZN4vota18CVotacaoStateAudio15FormatPartyNameERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w212_erro_partido(void* log) __asm__("_ZN4vota8CLogVota28LogaErroPartidoNaoEncontradoEv");
 int w212_tem_foto(const void* cargo) __asm__("_ZNK5comum2md6CCargo7TemFotoEv");
 int w212_suplentes(const void* cargo) __asm__("_ZNK5comum2md6CCargo12QtdSuplentesEv");
@@ -30,16 +25,6 @@ void w212_mensagem_cargo(void* mensagem, const void* tela, const void* cargo, co
 namespace {
 
 const void* volatile app_vota_callers_sink;
-
-// stands for fn 6999
-__attribute__((noinline)) int NomesPartidos(void* estado, const void* numero, const void* outro)
-{
-    char nome[12];
-    char sigla[12];
-    w212_partido(nome, estado, numero);
-    w212_partido(sigla, estado, outro);
-    return nome[11] - sigla[11];
-}
 
 // stands for fn 11683
 __attribute__((noinline)) void ErroPartido(void* log, int vezes)
@@ -69,7 +54,6 @@ __attribute__((noinline)) int MensagensCargo(const void* tela, const void* cargo
 struct SAppVotaCallersRoots {
     SAppVotaCallersRoots()
     {
-        app_vota_callers_sink = reinterpret_cast<const void*>(&NomesPartidos);
         app_vota_callers_sink = reinterpret_cast<const void*>(&ErroPartido);
         app_vota_callers_sink = reinterpret_cast<const void*>(&DetalheCargo);
         app_vota_callers_sink = reinterpret_cast<const void*>(&MensagensCargo);

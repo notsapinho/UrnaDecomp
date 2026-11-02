@@ -2,7 +2,8 @@
 # to landed units' sources (src/units/README.md "Landing a unit" item 2), each of which that unit's fragment describes
 # in a paragraph of its own, with its evidence, its choices and its score:
 # - unit 97, app/vota/eleitor/cvotacaostateaudio.cpp: vota::CVotacaoStateAudio::FormatPartyName (target fn 6954, record
-#   :297), with EUeVotaError's 9321 (app/vota/euevotaerror.h);
+#   :297), with EUeVotaError's 9321 (app/vota/euevotaerror.h); its one caller, fn 6999, is written (unit 97), so it has
+#   no stand-in;
 # - unit 119, app/vota/log/clogvota.cpp: vota::CLogVota::LogaErroPartidoNaoEncontrado (fn 4550, a chosen name);
 # - unit 88, app/comum/dados/md/processoeleitoral/ccargo.cpp: comum::md::CCargo's TemFoto and QtdSuplentes (fns 1546 and
 #   1157, chosen names), with two accessors of CDetalheCandidato (cdetalhecandidato.h);

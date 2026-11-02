@@ -7,10 +7,10 @@
 #
 # The stand-ins, each for the target callers its comment names, none of them written; each goes when they are in the
 # link:
-# - DetalhesConsulta: two calls of md::CCargo::GetDetalheConsulta (1923) for 3074, 3819, 5604, 6999, 7787 and 11253.
-#   ccargo.cpp's own calls are inlined by clang, so without these the link drops 1923's body. With it in the link,
-#   binaryen merges it with md::CLocal::GetContingencia (3724, unit 89) into one body as the target's 6029 does, and
-#   1923, 3724 and 6029 match (fragments 88 and 89).
+# - DetalhesConsulta: two calls of md::CCargo::GetDetalheConsulta (1923) for 3074, 3819, 5604, 7787 and 11253 (6999, the
+#   sixth caller, is in the link and calls it once). ccargo.cpp's own calls are inlined by clang, so without these the
+#   link drops 1923's body. With it in the link, binaryen merges it with md::CLocal::GetContingencia (3724, unit 89)
+#   into one body as the target's 6029 does, and 1923, 3724 and 6029 match (fragments 88 and 89).
 # - CargosEleicao: two calls of CConfiguracaoEleicao::GetCargos (3775), for 5735 and 7787, which pass false, and 11629,
 #   which passes true; the stand-in passes both.
 # - CopiaCargos: one call of std::vector<md::CCargo>'s copy constructor (2289), for 1953, 5777 and 11371; GetCargos is

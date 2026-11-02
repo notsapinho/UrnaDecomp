@@ -32,7 +32,8 @@ namespace comum::md {
 // Out of line in ccedula.cpp, measured (src/units/197-uenux2-celeitorvotando.mk): Limpa, which slot 2 of
 // vota::CEleitorVotando (fn 7377) calls on vota::g_votosEleitor and which keeps the new end's store before the
 // next statement's, and Adiciona(const SVotoCargo&), whose push fn 4454 splits as the out-of-line form gives.
-// GetVotos, inline, is chosen.
+// GetVotos, inline, is chosen; vota::CVotacaoStateAudio::FormataMensagem (fn 6999) reads the vector's size through it
+// from vota::g_votosEleitor.
 // A post's vote in a ballot: the post's id and the vote.
 struct SVotoCargo {
     TCargoID cargo;

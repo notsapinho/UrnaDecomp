@@ -94,8 +94,11 @@
 # - 5492 is `unresolved self-voted`: the guard of its static (1839284) has no reader but 5492 in the target
 #   (`/usr/bin/grep -rlE 'i32\.const 1839284($|[^0-9])' build/out/splat/pieces/asm`). The static's exit destructor,
 #   10901 (17 B, `f6096(p0, 1839244, 1839276)`: a thunk into binaryen's merge 6096, whose other caller is 14464), reads
-#   the regex object, not the guard; our object's destructor of the static inlines ~basic_regex instead. So 5492 waits
-#   for another reader of the guard's name. Its callers 3657 and 10897 match on its `call` name.
+#   the regex object, not the guard; our object's destructor of the static inlines ~basic_regex instead. So 5492 waited
+#   for another reader of the guard's name. Its callers 3657 and 10897 match on its `call` name. Since unit 97 wrote fn
+#   6999, whose static std::regex's exit destructor (14464) merges with 10901 into 6096 as in the target, 10901 and 6096
+#   match, and 5492 matches with the token iterator's copies of src/app/roots_cbasetype.cpp (the link's rows are in
+#   src/units/97-uenux2-cvotacaostateaudio.mk).
 # - 3655 with "]" as the message's last literal differed there: our "]" re-pointed to the tail of "appl [ %d ]"
 #   (target 319759). The target's data at 439956 hold "]!" (the bytes `]!\0`, right before the string at 439959), only 3655
 #   loads it, and that literal is written.
@@ -109,11 +112,14 @@
 # - 4307 differs, 15 over 227 rows: the target stores the submatch vector's end right after operator new, ours later. A
 #   compile of this file with -fno-strict-aliasing puts that store right after operator new too (the function's
 #   disassembly in the two objects; the rest of the function was not compared), so its target copy reads as one from an
-#   object without strict aliasing (a reading); 6999, its other target caller, is not written.
+#   object without strict aliasing (a reading). It matches from src/app/roots_cbasetype.cpp, compiled without strict
+#   aliasing; 6999, its other target caller, is written (unit 97).
 # - std::regex's internals: with this file in the link and no tree root, its copies (uenux2's flags) took 56 rows that
 #   ecourna's objects gave, and 8 of them left `match` (3135 and 6770 left the link; 3524, 4239, 5186, 5188, 13875 and
-#   14268 differed). src/app/roots_regex.cpp, a tree root at ECOURNA_CXXFLAGS ahead of both trees, holds those copies;
-#   with it the 59 regex rows of splat/scan.tsv's matches (Boost's aside) score operand-only.
+#   14268 differed). src/app/roots_regex.cpp, a tree root at ECOURNA_CXXFLAGS ahead of both trees, held those copies;
+#   with it the 59 regex rows of splat/scan.tsv's matches (Boost's aside) scored operand-only. Measured since (unit 97's
+#   fragment): the copies over const char* and the token iterator's are uenux2's without strict aliasing, which
+#   src/app/roots_cbasetype.cpp holds now, and roots_regex.cpp holds the std::string constructor's chain.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CINPUTMENUFIELD_SRCS := src/api/gui/cinputmenufield.cpp
 UENUX2_SRCS += $(CINPUTMENUFIELD_SRCS)
@@ -125,7 +131,7 @@ CINPUTMENUFIELD_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -nam
 $(ROOT)/$(APP)/84-uenux2-cinputmenufield-pending.o: $(ROOT)/src/units/84-uenux2-cinputmenufield-pending.cpp $(ROOT)/src/units/84-uenux2-cinputmenufield.mk $(ROOT)/src/Makefile $(CINPUTMENUFIELD_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/84-uenux2-cinputmenufield-pending.cpp -o $(R)
 # fn 3675, which builds both objects in the target, is not reconstructed: the roots file does its make_shared of the
-# validation, takes CInputMenuField's vtable and holds the stand-ins for fns 1693, 11884 and 11888, and 6999 and 6958
+# validation, takes CInputMenuField's vtable and holds the stand-ins for fns 1693, 11884 and 11888
 $(ROOT)/$(APP)/84-uenux2-cinputmenufield-roots.o: $(ROOT)/src/units/84-uenux2-cinputmenufield-roots.cpp $(ROOT)/src/units/84-uenux2-cinputmenufield.mk $(ROOT)/src/Makefile $(CINPUTMENUFIELD_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/84-uenux2-cinputmenufield-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/84-uenux2-cinputmenufield-pending.o $(APP)/84-uenux2-cinputmenufield-roots.o

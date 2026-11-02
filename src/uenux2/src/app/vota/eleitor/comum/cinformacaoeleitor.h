@@ -67,4 +67,10 @@ extern api::CDateTime g_dataHoraDesligamento;
 // are chosen: the readers load and store one byte, and two pass it as a TQtdEscolha.
 extern comum::md::TQtdEscolha g_escolhaAtual;
 
+// The letter of the "{o/a}" tag that CVotacaoStateAudio::FormataMensagem (fn 6999) fills: 'a' when the current
+// candidacy's holder is a woman, else 'o'. 6999 holds it inlined by binaryen (written in that function's file, clang
+// forms a select there that the target does not have), so it is a function of another TU. Its name, its being a free
+// function and its place beside the voter's statics are chosen.
+char ArtigoCandidato();
+
 } // namespace vota
