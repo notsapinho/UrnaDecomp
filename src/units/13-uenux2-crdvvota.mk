@@ -160,11 +160,19 @@
 #   QuantidadeEscolhas, 5642, called twice; the votes per post against each post's choices; a nominal vote's length;
 #   a void-by-repetition vote against a post of one choice and against the ballot's nominal votes), the map copied
 #   (`TMapa mapa(m_mapa)`), each vote inserted at the place m_posicionador gives (CVotos::Insere) and the copy swapped
-#   in (`m_mapa.swap(mapa)`, whose destroy is 1268). The throws build a named message and copy it, as GetVotos's does
+#   in (`mapa.swap(m_mapa)`, whose destroy is 1268). The throws build a named message and copy it, as GetVotos's does
 #   (the temporaries are freed before __cxa_throw). The columns of :278, :285 and :295 (27) put those throws at indent
 #   20: the switch's case labels are indented in this file (a choice of layout that gives them). The count map is
-#   std::map<TCargoID, size_t>, its destroy 3709 in the target, called by 4454 alone: size_t is chosen, and a value
-#   type another map of our link already instantiates (3613's EEstadoTick) would make that destroy the other map's.
+#   std::map<TCargoID, size_t>, its destroy 3709 in the target, called by 4454 alone, which matches (its name is 4454's
+#   call vote, cast since 4454's records anchor it): size_t is chosen, and a value type another map of our link already
+#   instantiates (3613's EEstadoTick) would make that destroy the other map's. Two forms are 4454's rows, measured with
+#   pnpm wasm score against it on the whole link (unit 197's fragment has the steps): the swap called on the copy, whose
+#   three words the target exchanges through the copy's (`tmp = mapa.x; mapa.x = m_mapa.x; m_mapa.x = tmp`), where
+#   `m_mapa.swap(mapa)` gives the other order; and the void-by-repetition search compared with `votos.end()` in the
+#   same full-expression, which loads the end before the temporary vote's string is freed and again at the case's
+#   start, as the target does, where a named result compared after it reloads the end after the free (both forms
+#   together: 562 over 2719 rows, 33 inserted, to 180 over 2687, 1 inserted). Both are ordinary forms of the same
+#   statements; their being the source's is read from those rows.
 # - CVotos::Insere (cvotos.cpp:40): the record's column 9 is a call at indent 8, ErroPosicao's (cvotos.h says why it
 #   is a function of its own), then m_votos.insert, which clang keeps out of line (-Rpass-missed=inline: cost 925,
 #   threshold 250; the target's 32-byte prologue there). The constructor moved from line 39 to after them (its line
@@ -178,8 +186,20 @@
 # without strict aliasing), is not written; that its object holds the target's copy is a reading. No flag changes
 # here (docs/reference/facts/app-flags.md F6). The error codes 4662, 4669, 4672 to 4677 and 4735 (euerdverror.h) are
 # named from their messages; the names ErroPosicao, InsereCedula's and ConfereCedula's locals are chosen.
-CRDVVOTA_SRCS := src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp \
-  src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvoto.cpp
+# The list's order is the target's: its data hold the records of celeitorvotando.cpp (1533188), crdvvota.cpp (1560132)
+# and md/rdv/'s cvoto.cpp (1573404), cvotos.cpp (1573420), cvotoscargos.cpp (1573700) and cvotoseleicoesvota.cpp
+# (1573908) in that order (LC_ALL=C awk -F'\t' '$2 ~ /crdvvota\.cpp$|md\/rdv\/|celeitorvotando\.cpp$/ {print $1, $2}'
+# ledger/source-locations.tsv | sort -n), and the order of these objects decides what binaryen makes of fn 4454, which
+# holds this list's RecebeCedula chain inlined (docs/reference/facts/codegen.md C4). Unit 197's celeitorvotando.cpp is
+# listed here, ahead of crdvvota.cpp, moved from unit 197's own list (its fragment says what the file holds).
+# Measured on 4454 with pnpm wasm score, each against the link before it: 958 over 2759 rows (73 inserted, 79 deleted)
+# with crdvvota.cpp, cvotoseleicoesvota.cpp, cvotoscargos.cpp, cvotos.cpp, cvoto.cpp and celeitorvotando.cpp in unit
+# 197's list after them; 830 over 2767 (81, 80) with celeitorvotando.cpp first; 562 over 2719 (33, 34) with md/rdv/ in
+# this order, where binaryen keeps the inlined ConfereCedula's and InsereCedula's ballot (the map node + 20) in a local
+# and loads at small offsets from it, as the target does; before, it folded the offsets onto the node. The 112 matched
+# functions of these objects and of unit 197's scored the same at each step.
+CRDVVOTA_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvoto.cpp \
+  src/app/comum/dados/md/rdv/cvotos.cpp src/app/comum/dados/md/rdv/cvotoscargos.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 UENUX2_SRCS += $(CRDVVOTA_SRCS)
 # crdvvota.h holds the RDV's converter, which includes generated ASN.1 modules: the generic uenux2 rule does not depend on them
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/crdvvota.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)

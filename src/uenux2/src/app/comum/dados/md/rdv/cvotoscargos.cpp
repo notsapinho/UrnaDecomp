@@ -134,7 +134,7 @@ void CVotosCargos::InsereCedula(const CRdvPosicionador& posicionador, const CCed
         }
         it->second.Insere(voto, posicionador.Posicao(it->second.GetVotos(), voto));
     }
-    m_mapa.swap(mapa);
+    mapa.swap(m_mapa);
 }
 
 // (original lines 206-242: content not recovered)
@@ -185,9 +185,9 @@ void CVotosCargos::ConfereCedula(const CCedula& cedula) const
                 }
 
                 const auto& votos = cedula.GetVotos();
-                const auto nominal =
-                    std::find(votos.begin(), votos.end(), SVotoCargo{cargo, CVoto(CVoto::NOMINAL, voto.GetNumero())});
-                if (nominal == votos.end()) {
+                if (std::find(votos.begin(), votos.end(),
+                              SVotoCargo{cargo, CVoto(CVoto::NOMINAL, voto.GetNumero())}) ==
+                    votos.end()) {
                     const std::string mensagem = "Voto nulo por repeticao para o cargo " +
                                                  std::to_string(cargo) +
                                                  " sem voto nominal correspondente";
