@@ -22,11 +22,12 @@
 # cgravadorwsq.o when Slot2 moves there. The constructor (fn 3796, with ValidaTipoBiometria inlined, record line 73)
 # is unit 122's, in cgravadorwsq.cpp, which unit 122 compiles; fn 5821 (records of GetCaminhoCorretoInternal/External,
 # lines 175 and 192) keeps its stub there. Paths relative to src/uenux2.
-# CGravadorWSQ's Slot2, Slot3 and Slot6 (fns 11579, 11577, 11578) and IGravador's five members (fns 11632, 11630,
-# 11634, 11633, 11631, which IGravador's typeinfo needs) are not reconstructed:
-# 60-uenux2-cgravadorwsq-pending.cpp defines them with trapping bodies, compiled with the unit's flags, and its header
-# names each with its target function. Its prerequisites are every header of both trees, as the generic rules' are
-# ($(UENUX2_HDRS) is still empty when the fragments are read).
+# CGravadorWSQ's Slot2, Slot3 and Slot6 (fns 11579, 11577, 11578) and IGravador's Slot4 and Slot5 (fns 11634, 11633)
+# are not reconstructed: 60-uenux2-cgravadorwsq-pending.cpp defines them with trapping bodies, compiled with the unit's
+# flags, and its header names each with its target function and what it waits for. IGravador's key function Slot2,
+# and Slot3 and Slot6 (fns 11632, 11630, 11631), are unit 122's, in iresultado.cpp, whose object emits IGravador's
+# vtable and typeinfo, which CGravadorWSQ's typeinfo names. The pending rule's prerequisites are every header of both
+# trees, as the generic rules' are ($(UENUX2_HDRS) is still empty when the fragments are read).
 $(ROOT)/$(APP)/60-uenux2-cgravadorwsq-pending.o: $(ROOT)/src/units/60-uenux2-cgravadorwsq-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/60-uenux2-cgravadorwsq.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/60-uenux2-cgravadorwsq-pending.cpp -o $(R)
 # nothing calls the destructors directly in the target, which reaches them through the vtable only:

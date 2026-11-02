@@ -10,10 +10,15 @@
 #include "app/comum/dados/md/estadoaplicacao/eurna.h"
 #include "app/comum/eurnafase.h"
 #include "app/comum/gravadores/igravador.h"
+#include "app/comum/gravadores/md/cvotosvotavel.h"
 #include "app/comum/relatorios/cgeradorbuqrcode.h"
 #include "ecourna/api/uetypes.hpp"
 
 namespace comum {
+
+namespace md {
+class CCargo;
+}
 
 // RTTI: an si_class of comum::IGravador. vota::CGravaResultado::StartState (fn 12098) builds it as a
 // std::shared_ptr<IGravador>(new CGravadorBU), whose control block's __on_zero_shared is the shared call through the
@@ -31,9 +36,14 @@ namespace comum {
 // strings of the vector at +168 and the vector, the correspondencia (fn 857), and holds IResultado's (its vptr, the
 // string at +20); the deleting one (fn 11628, slot 1) frees what that one returns, the shape of a destructor whose
 // base-object body is too large to inline (docs/how-to-decompile.md step 5). GravaResultado (slot 7, fn 11629, records
-// cgravadorbu.cpp:484 and :485) is out of line, so it is the key function; it is not reconstructed, and neither is
-// AcrescentaVotoVotavel (fn 3820, record cgravadorbu.cpp:221), which waits for a lookup of comum::CPartidos as an
-// api::CDataMap (src/units/200-uenux2-cgravadorbu.mk has the measurement). Evidence for the types: +72's copy
+// cgravadorbu.cpp:484 and :485) is out of line, so it is the key function; it is not reconstructed.
+// AcrescentaVotoVotavel (fn 3820) is in cgravadorbu.cpp: its record (cgravadorbu.cpp:221) prints it static and spells
+// its parameter types, TVetorVotosVotaveis and TQtdEleitor among them. The vector's element is the 24-byte
+// CVotosVotavel its push_back (fn 1944) copies. TQtdEleitor is a 16-bit count the body passes on unmasked to
+// CVotosVotavel's constructors, which take a ueword: as ueword it gives the target's rows, and as ecourna's CBaseType
+// the count is masked where the target's is not (src/units/200-uenux2-cgravadorbu.mk); the spelling ueword is chosen.
+// That the aliases are the class's and the member private is chosen, and so is the forward declaration of md::CCargo.
+// Evidence for the types: +72's copy
 // constructor call, +180's tree destroy, +168's 12-byte elements whose destruction frees a std::string, +284's node and
 // its unsigned compare of the post (md::TCargoID is a byte); +40 is the same object fn 12098 passes
 // CGravadorEnvelopeArquivo's constructor as its api::CDateTime. Chosen: +68 as comum::EUrnaTipo (49 is eUrnaVota), as
@@ -41,9 +51,15 @@ namespace comum {
 // map, and every member name; the bytes at +52, +216 and +296 have no reader here and are not recovered.
 class CGravadorBU : public IGravador {
 public:
+    using TVetorVotosVotaveis = std::vector<md::CVotosVotavel>;
+    using TQtdEleitor = ueword;
+
     virtual void GravaResultado(api::CFile& arquivo) const override;
 
 private:
+    static void AcrescentaVotoVotavel(TVetorVotosVotaveis& votos, md::CVoto::ETipo tipo, TCandidatoID candidato,
+        TQtdEleitor quantidade, const md::CCargo& cargo);
+
     api::CDateTime m_dataHora;
     uedword m_naoRecuperado1[3];
     EUrnaFase m_faseUrna;

@@ -1044,19 +1044,11 @@
 // f3818 · 659 B · unmatched · placement: link order · name unknown
 // void f3818(i32, i32, i32) { ... }
 
-// f3817 · 796 B · unmatched · placement: link order · name unknown
-// ? f3817(i32, i32) { ... }
-
 // f3816 · 560 B · unmatched · placement: link order · name unknown
 // void f3816(i32, i32, i32) { ... }
 
 // f3815 · 278 B · unmatched · placement: link order · name unknown
 // void f3815(i32) { ... }
-
-// link-order cluster 1020 · uses=3 · neighbours' file uenux2/src/app/comum/gravadores/md/cversoescontratos.cpp
-
-// f3824 · 62 B · unmatched · placement: link order · name unknown
-// ? f3824(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1030 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cpartecandidatosproporcionais.cpp
 
@@ -1160,11 +1152,6 @@
 
 // f1506 · 53 B · unmatched · placement: link order · name unknown
 // void f1506(i32, i32, i32) { ... }
-
-// link-order cluster 1237 · uses=8 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/cbase.cpp
-
-// f1556 · 224 B · unmatched · placement: link order · name unknown
-// void f1556(i32, i32, i32, i32) { ... }
 
 // link-order cluster 1241 · uses=9
 
