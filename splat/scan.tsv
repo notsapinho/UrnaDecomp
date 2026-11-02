@@ -1558,7 +1558,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1692	-	-	-	no-candidate	no symbol and no ledger pair	65	none	app	0	-
 1693	-	-	-	no-candidate	no symbol and no ledger pair	1335	none	ecourna	0	-
 1694	_ZN3api14CMTFormBuilder7GetFormERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	1799	symbol	match	readings: address symbol	423	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
-1695	-	-	-	no-candidate	no symbol and no ledger pair	354	none	vota	0	-
+1695	_ZN3api12CApplication11GetContextoEv	5763	symbol	match	readings: address symbol,address string	354	none	vota	1	app/uenux2/src/api/gui/capplication.cpp.o
 1696	_ZN3api4JoinERKNSt3__26vectorINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEENS5_IS7_EEEERKS7_	5764	symbol	match	readings: address symbol	658	none	libc++	1	app/uenux2/src/api/gui/capplication.cpp.o
 1697	_ZNSt3__214basic_ifstreamIcNS_11char_traitsIcEEED1Ev	3416	ledger	differs	+0x6 target +0x5 i32.const 1296376 | ours +0x5 i32.const 1296220 [ours 1420476 = _ZTTNSt3__214basic_ifstreamIcNS_11char_traitsIcEEEE+0: address content-repointed → 0x13c75c]	61	shape	libc++	1	rhvoice/1.14.0-cxx14-O3-ndebug-nsa-nocatch-userdict-ign/obj/language.cpp.o
 1698	_ZNSt3__26vectorIN5comum2md15estadoaplicacao20CDadoCorrespondenciaENS_9allocatorIS4_EEED2B8ne210108Ev	5264	symbol	match	-	35	addr	libc++	1	app/roots_vector.o
@@ -5416,7 +5416,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5550	_ZN3api12CFormBuilder7GetFormERKNSt3__210shared_ptrINS_8IPreShowINS_7IScreenEEEEERKNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	3574	symbol	match	readings: address symbol	296	none	libc++	1	app/uenux2/src/api/gui/cformbuilder.cpp.o
 5551	_ZNK3api10CFillField4RectEv	5537	symbol	match	-	12	byte	api	1	app/uenux2/src/api/gui/cfillfield.cpp.o
 5552	_ZN3api19CApplicationContextaSEOS0_	5741	symbol	match	-	349	addr	vota	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
-5553	_ZN3api24CApplicationContextStack3PopERKNS_19CApplicationContextE	3601	symbol	differs	+0x18 target +0x17 local.tee 3 | ours +0x17 local.tee 2	204	none	vota	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
+5553	_ZN3api24CApplicationContextStack3PopERKNS_19CApplicationContextE	3601	symbol	match	readings: address symbol	204	addr	vota	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
 5554	_ZNSt3__26vectorIN3api19CApplicationContextENS_9allocatorIS2_EEE24__emplace_back_slow_pathIJS2_EEEPS2_DpOT_	5742	symbol	match	-	561	none	ecourna	1	app/uenux2/src/api/gui/capplicationcontextstack.cpp.o
 5555	_ZN3api7ActionsEi	5744	symbol	match	readings: address string,table slot	3197	none	app	1	app/uenux2/src/api/gui/capplicationcontext.cpp.o
 5556	_ZNK3api19CApplicationContexteqERKS0_	5745	symbol	match	-	387	fingerprint	vota	1	app/uenux2/src/api/gui/capplicationcontext.cpp.o
@@ -5432,7 +5432,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 5566	_ZN3api12CApplication21EnterLoopDoingNothingEv	3612	symbol	match	readings: address symbol,address srcloc	138	none	vota	1	app/uenux2/src/api/gui/capplication.cpp.o
 5567	-	-	-	no-candidate	no symbol and no ledger pair	114	none	unknown	0	-
 5568	-	-	-	no-candidate	no symbol and no ledger pair	100	none	libc++	0	-
-5569	-	-	-	no-candidate	no symbol and no ledger pair	217	none	vota	0	-
+5569	_ZN3api17GetExceptionLevelEv	5762	symbol	match	-	217	addr	vota	1	app/uenux2/src/api/gui/capplication.cpp.o
 5570	-	-	-	no-candidate	no symbol and no ledger pair	26	none	unknown	0	-
 5571	-	-	-	no-candidate	no symbol and no ledger pair	2179	none	comum	0	-
 5572	-	-	-	no-candidate	no symbol and no ledger pair	2128	none	comum	0	-
@@ -7233,7 +7233,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 7367	EVP_sha512	12993	symbol	match	readings: address symbol	7	addr	app	2	openssl/O3/libcrypto.a(libcrypto-lib-legacy_sha.o)
 7368	keymgmt_from_algorithm	14550	symbol	match	readings: address string	1294	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-keymgmt_meth.o
 7369	op_cache_free	14552	symbol	match	readings: address string	35	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-keymgmt_lib.o
-7370	_ZN4vota15CEleitorVotando11FinishStateEv	12102	symbol	match	-	61	none	vota	1	app/uenux2/src/app/vota/eleitor/celeitorvotando.cpp.o
+7370	_ZN4vota15CEleitorVotando11FinishStateEv	12102	symbol	match	-	61	shape	vota	1	app/uenux2/src/app/vota/eleitor/celeitorvotando.cpp.o
 7371	evp_keymgmt_util_try_import	7036	symbol	match	readings: address string	160	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-keymgmt_lib.o
 7372	EVP_PKEY_derive	7041	symbol	match	readings: address string	341	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-exchange.o
 7373	EVP_PKEY_derive_init	14555	symbol	match	readings: address string,table slot	939	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-exchange.o

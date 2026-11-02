@@ -20,8 +20,10 @@ public:
     // result says whether it went.
     bool Push(CApplicationContext context);
 
-    // Takes the context out, with every context pushed after it, searching from the innermost.
-    void Pop(const CApplicationContext& context);
+    // Takes the context out, with every context pushed after it, searching from the innermost. It returns a result that
+    // no caller reads; the target's fn 5553 has none, read as binaryen's removal of it. That the result says whether the
+    // context was found is chosen. src/units/193-uenux2-capplicationcontextstack.mk has the measurement.
+    bool Pop(const CApplicationContext& context);
 
     std::vector<CApplicationContext> m_contextos;
 };

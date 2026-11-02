@@ -114,11 +114,6 @@
 // f5521 · 72 B · unmatched · placement: link order · name unknown
 // void f5521(i32, i32) { ... }
 
-// link-order cluster 795 · uses=2 · neighbours' file uenux2/src/api/gui/capplication.cpp
-
-// f5569 · 217 B · unmatched · placement: link order · name unknown
-// ? f5569() { ... }
-
 // link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
 
 // f5579 · 638 B · unmatched · placement: link order · name unknown
@@ -361,11 +356,6 @@
 
 // f1906 · 57 B · unmatched · placement: link order · name unknown
 // void f1906(i32, i32) { ... }
-
-// link-order cluster 1212 · uses=7 · neighbours' file uenux2/src/api/gui/cinputmenufield.cpp
-
-// f1695 · 354 B · unmatched · placement: link order · name unknown
-// void f1695(i32) { ... }
 
 // link-order cluster 1219 · uses=7
 

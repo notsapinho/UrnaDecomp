@@ -46,12 +46,14 @@ bool CApplicationContextStack::Push(CApplicationContext context)
     return true;
 }
 
-void CApplicationContextStack::Pop(const CApplicationContext& context)
+bool CApplicationContextStack::Pop(const CApplicationContext& context)
 {
     auto it = std::find(m_contextos.rbegin(), m_contextos.rend(), context);
-    if (it != m_contextos.rend()) {
-        m_contextos.erase(std::prev(it.base()), m_contextos.end());
+    if (it == m_contextos.rend()) {
+        return false;
     }
+    m_contextos.erase(std::prev(it.base()), m_contextos.end());
+    return true;
 }
 
 CApplicationContextGuard::~CApplicationContextGuard()

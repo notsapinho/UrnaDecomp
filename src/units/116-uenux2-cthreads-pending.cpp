@@ -5,9 +5,8 @@
 //   when the error is an api::CUeDesligandoError, a __dynamic_cast), then stops the other threads (slot 5), calls 4633
 //   and 3336, shows the error through code binaryen inlined (a second stack frame of 112 bytes, over 1695, 5569, 1696
 //   and 5568) and calls api::CApplication::EnterLoopDoingNothing (5566, unit 171). Of those callees, 3336
-//   (CSincronizaVota::MarcaUrnaDesligando, unit 205) and 1696 (api::Join, unit 171) match; 1695 and 5569 (unit 171)
-//   are written and not matched, 1695 by one frame offset, 5569 waiting for 1695's name; 4633 and 5568 are not
-//   written. 4633 shows the "URNA ELETRÔNICA INOPERANTE" screen with a LED and differs only where it builds its
+//   (CSincronizaVota::MarcaUrnaDesligando, unit 205), 1696 (api::Join), 1695 (CApplication::GetContexto) and 5569
+//   (api::GetExceptionLevel), all three unit 171's, match; 4633 and 5568 are not written. 4633 shows the "URNA ELETRÔNICA INOPERANTE" screen with a LED and differs only where it builds its
 //   api::CMTFormBuilder, which the target clears in place, the remainder units 104 and 142 record
 //   (src/units/02-uenux2-cthreadvota.mk has the measurement). 5568 is api::CApplication::ShowExceptionMsg, whose code
 //   after its std::async is not in the target (src/units/171-uenux2-capplication.mk says why that stops it). 7709's

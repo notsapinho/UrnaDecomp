@@ -1,7 +1,7 @@
 # uenux2 api::CApplicationContextGuard, api::CApplicationContextStack and api::CApplicationContext (api/gui/): the
 # guard's constructor (record capplicationcontextstack.cpp 45:15, held inlined by target fn 676) and destructor (fn
-# 675); the stack's Push (held inlined by fns 3684 and 676) and Pop (fn 5553, written and not matched, below; held
-# inlined by fn 675); the context's constructor from its five members (fn 5557) and its operator== (fn 5556); the free
+# 675); the stack's Push (held inlined by fns 3684 and 676) and Pop (fn 5553, and held inlined by fn 675); the
+# context's constructor from its five members (fn 5557) and its operator== (fn 5556); the free
 # functions CriaContextoAplicacao (fn 3682), CriaContextoPadrao (fn 5558) and Actions (fn 5555); and the members the
 # compiler writes from the class definition, which match from api/gui/capplication.cpp's object (unit 171), the first
 # on the link line that emits them, or from this unit's: the destructor (fn 1468), the copy constructor (fn 1841), the
@@ -68,16 +68,21 @@
 #   pointer to the temporary. That the factories are CApplication's is a choice.
 # - The destructor pops the context when no exception is in flight (fn 675 calls __cxa_uncaught_exceptions first):
 #   std::uncaught_exceptions() is the form written; std::uncaught_exception() was not measured.
-# - Pop (fn 5553) is written and does not match. The target's body reads the stack at its address as a constant, and
-#   its two callers (7370, vota::CEleitorVotando::FinishState, unit 197's, and 10467, not reconstructed) pass only
-#   the context; ours is Pop with `this` folded by binaryen, since FinishState and the roots pass s_contextos. It
-#   scores 31 over 105 rows (4 inserted, 4 deleted), with FinishState's call in the link as without it: the rows that
-#   differ are local.get, local.set and local.tee of other locals, the erase loop's values pairing into other locals
-#   than the target's. The same 31 for: Pop inline in the header under a static wrapper in capplication.cpp, the
+# - Pop (fn 5553) returns a bool, which no caller reads; that it says whether the context was found is chosen. The
+#   target's body reads the stack at its address as a constant and has no result, and its two callers (7370,
+#   vota::CEleitorVotando::FinishState, unit 197's, and 10467, not reconstructed) pass only the context: read as
+#   binaryen's dead-argument elimination, which folds the `this` every caller passes (s_contextos) and drops the
+#   result no caller reads. Measured in the whole link (pnpm wasm score against our symbol): Pop declared void scored
+#   `31 over 105 rows (same 74, replaced 23 [21 operand-only], inserted 4, deleted 4)`, which beside the stack's
+#   addresses and the calls are local.get, local.set and local.tee of other locals than the target's; returning the
+#   bool, `8 over 101 rows (same 93, replaced 8 [8 operand-only], inserted 0, deleted 0)`, six of them the stack's
+#   addresses and two calls.
+#   With Pop void the same 31 came for Pop inline in the header under a static wrapper in capplication.cpp, the
 #   erase's first iterator written `(it + 1).base()` or `it.base() - 1`, the test written as an early return, and Pop
-#   defined after the guard's destructor; a hand loop over the reverse iterators scores 53 over 110. The remainder is
-#   not explained. FinishState (7370) matches through a callers+content hand line for 5553 in
-#   splat/symbol_addrs.txt, whose comment gives Pop's body and the callers.
+#   defined after the guard's destructor, and a hand loop over the reverse iterators scored 53 over 110. Returning the
+#   bool, the found case written first (`return true` in the if, `return false` after it) and `(it + 1).base()` give
+#   the object's Pop and guard destructor unchanged (wasm-objdump -d of the object at the tree's flags, against the
+#   form written). The guard's destructor (fn 675), which holds Pop inlined and drops its result, matches either way.
 # - Roots: 193-uenux2-capplicationcontextstack-roots.cpp stands for the callers of Pop, CriaContextoAplicacao,
 #   CriaContextoPadrao and the copy constructor that are not reconstructed (its header lists them); the guard's are in
 #   unit 171's.

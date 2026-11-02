@@ -69,11 +69,7 @@
 #   operand of its exit destructor, 7405; s_inst's line names 3229 and 7416.
 # - FinishState: sets the operator's +108 string to " " (CThreadOperador::SetTextoEleitor(const char*), inline) and
 #   takes the post's context back out of api::CApplication::s_contextos through CApplicationContextStack::Pop (fn 5553,
-#   unit 193's, written and not matched: 31 over 105 rows with this call in the link, as with the roots' alone). It
-#   matches through a callers+content hand line for 5553 in splat/symbol_addrs.txt, whose comment gives Pop's body.
-#   Weighed by removal on copies of the symbol file and the match list (docs/reference/splat.md "Reviewing a match"):
-#   without the line 7370 reads unresolved and 5553 no-candidate, no other row moves (two scans, beside a control
-#   that moves nothing), and splat-build passes on the copies with 10897 matches.
+#   unit 193's, matched and named by its census pair), whose result it drops.
 # - MostraCargoNoOperador: builds "VOTANDO PARA: " and the post's name (with the choice's ordinal for a post of several
 #   choices), cut to 40 characters, gives it to the operator thread and posts 9 to its queue. It holds
 #   CThreadOperador::SetTextoEleitor(const std::string&) inlined by binaryen, a second 16-byte frame right after the
