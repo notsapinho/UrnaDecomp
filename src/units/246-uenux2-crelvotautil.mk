@@ -18,19 +18,18 @@
 #   before csubreport.cpp's (fragment 246 sorts before 57; the object column of build/out/wasm-map/vota_web/names.tsv),
 #   as the target keeps the copies of CRelVotaUtil's object (src/uenux2/src/api/gui/csubreport.h).
 #
-# Written and not matched, measured: the lambda's __clone(__base*) (fn 12006) and __clone() (fn 12007), which step 8
-# names by their vtable. The target's 12006 stores the vptr before it copies the captured pointer; ours copies first
-# (`differs +0x3 target i32.const 1543240 | ours local.get 0`), and 12007, a thunk into binaryen's merge of clone bodies,
-# calls another merge (`target call 786 | ours call 1083`). A variant link with this object compiled with
-# -fno-strict-aliasing added (docs/reference/facts/workflow.md W13, scanned with the committed symbol file and match
-# list) turns 12006 and 12007 to match and moves no other row in or out of match: the target's order is what this
-# object gives without strict aliasing (a reading of that variant link, which only a measured flag for the file can
-# settle), while src/app/vota/ is in UENUX2_TBAA_DIRS (src/Makefile). The lambda of
-# api::CPaperFormBuilder::Show, of the same shape in an src/api object, which builds with strict aliasing too, has the
-# load first in the target (fn 10999, matched). The two rows wait for that question, and the body stays as written: a
-# flag for this file is the user's decision, and a path outside UENUX2_TBAA_DIRS would take the flags as tree evidence
-# (docs/reference/facts/reading.md R10's last paragraph puts a helper in the tree whose flags its rows match at)
-# against the use band below, which no doc weighs.
+# The lambda's __clone(__base*) (fn 12006) and __clone() (fn 12007), which step 8 names by their vtable, match since
+# this file builds without strict aliasing (src/Makefile's UENUX2_NOTBAA_FILES). The target's 12006 stores the vptr
+# before it copies the captured pointer, the order this object gives without TBAA; at src/app/vota/'s strict aliasing
+# ours copied first (`differs +0x3 target i32.const 1543240 | ours local.get 0`, 6 over 12 rows; 1 over 9, operand-only,
+# without it), and 12007, a thunk into binaryen's merge of clone bodies, called another merge (`target call 786 | ours
+# call 1083`). The closure's `$_0` in its RTTI name is clang's name for a type with internal linkage, so the target's
+# copies are code of the TU that defines CortaPapel. On the whole link this object without strict aliasing turns 12006
+# and 12007 to match and moves no other row in or out of match (docs/reference/facts/app-flags.md F6). The lambda of
+# api::CPaperFormBuilder::Show, of the same shape in an src/api object, which builds with strict aliasing, has the load
+# first in the target (fn 10999, matched). A path outside UENUX2_TBAA_DIRS would have given the flag too
+# (docs/reference/facts/reading.md R10's last paragraph puts a helper in the tree whose flags its rows match at), against
+# the use band below; the file is listed by its own path instead, so the directory stays the band's choice.
 #
 # Chosen, no evidence names them: the file's path and the header's beside it; CRelVotaUtil as a class of static members,
 # as comum::CRelUtil is (its records read `static`), where the mangled name does not tell a class from a namespace; the
@@ -46,7 +45,8 @@
 # app/vota/eleitor/iniciovotacao/, the band neighbours' directory (ledger/tu-clusters.tsv labels stretch 1118, 2881 to
 # 2883, iniciovotacao/cexibealertadesligamento.cpp), which docs/reference/facts/placing.md P4 lets a fragment take
 # when it names both neighbours, as here. The directory is a choice, the band's and the class's namespace's; both
-# candidates build with strict aliasing, which 12006 and 12007 say this TU did not have.
+# candidates build with strict aliasing, which 12006 and 12007 say this TU did not have, so the file is listed in
+# UENUX2_NOTBAA_FILES whichever directory holds it.
 #
 # Not written: CriaCabecalho (fn 5977) and its lambda's slots (2881, 12000 to 12002).
 #

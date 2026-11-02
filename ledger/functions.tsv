@@ -1269,7 +1269,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1403	79	8	sqlite	-	skeleton	1331	fingerprint	0	std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>> std::__2::__formatter::__fill[abi:ne210108]<char, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>>(std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, unsigned long, std::__2::__format_spec::__code_point<T>)
 1404	74	9	-	-	-	-	none	-	
 1405	32	9	sqlite	-	skeleton	1776	addr	1	std::__2::__tree<std::__2::__value_type<CBaseType<unsigned int, 0u, 99999u, 6>, ecourna::app::dados::CConfiguracaoMunicipio>, std::__2::__map_value_compare<CBaseType<unsigned int, 0u, 99999u, 6>, std::__2::pair<CBaseType<unsigned int, 0u, 99999u, 6> const, ecourna::app::dados::CConfiguracaoMunicipio>, std::__2::less<CBaseType<unsigned int, 0u, 99999u, 6>>, true>, std::__2::allocator<std::__2::pair<CBaseType<unsigned int, 0u, 99999u, 6> const, ecourna::app::dados::CConfiguracaoMunicipio>>>::destroy(std::__2::__tree_node<std::__2::__value_type<CBaseType<unsigned int, 0u, 99999u, 6>, ecourna::app::dados::CConfiguracaoMunicipio>, void*>*)
-1406	72	9	-	ecourna	skeleton	1294	shape	6	
+1406	72	9	-	ecourna	skeleton	1293	shape	6	
 1407	40	9	7zip	7zip	-	-	none	-	
 1408	37	9	7zip	7zip	-	-	none	-	
 1409	242	9	libcxx	-	skeleton	1233	shape	17	std::__2::__format_spec::__throw_invalid_type_format_error[abi:ne210108](char const*)
@@ -10165,7 +10165,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10299	7	0	app	libc++	skeleton	11464	addr	1	std::__2::__function::__func<api::CSystem::ZeroFill(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)::$_0, void ()>::target_type() const
 10300	20	0	app	libc++	skeleton	11423	addr	1	std::__2::__function::__func<api::CTextFieldUpdate::CTextFieldUpdate(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, std::__2::chrono::duration<long long, std::__2::ratio<1ll, 1000ll>> const&, api::SFont const&, api::TColor, api::TColor)::$_0, void ()>::target(std::type_info const&) const
 10301	10	0	app	libc++	-	-	none	-	
-10302	22	0	app	libc++	skeleton	11778	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+10302	22	0	app	libc++	skeleton	11600	addr	1	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
 10303	12	0	app	libc++	skeleton	11497	addr	2	std::__2::__function::__func<api::IInputField<api::IScreenMT>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone() const
 10304	25	0	app	-	-	-	none	-	
 10305	10	0	app	-	skeleton	11046	addr	2	__cxx_global_array_dtor.2_6381
@@ -10801,8 +10801,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10935	7	0	app	libc++	skeleton	12015	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Nulos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target_type() const
 10936	20	0	app	libc++	skeleton	11775	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::target(std::type_info const&) const
 10937	78	0	app	libc++	skeleton	11404	addr	1	std::__2::__function::__func<api::CTextFieldBlinking::CTextFieldBlinking(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, api::SFont const&, api::TColor, api::TColor, api::TColor)::$_0, void ()>::operator()()
-10938	22	0	app	libc++	skeleton	11600	addr	1	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
-10939	12	0	app	libc++	skeleton	11601	addr	2	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone() const
+10938	22	0	app	libc++	skeleton	12050	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+10939	12	0	app	libc++	skeleton	12051	addr	2	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 10940	21	0	app	api	skeleton	11407	addr	4	api::CTextFieldBlinking::GetTypeName() const
 10941	154	0	app	api	skeleton	11408	addr	4	api::CTextFieldBlinking::~CTextFieldBlinking()_5514
 10942	151	0	app	api	skeleton	11409	addr	3	api::CTextFieldBlinking::~CTextFieldBlinking()
@@ -10845,14 +10845,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10979	7	0	libcxx	libc++	skeleton	12020	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Legendas(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target_type() const
 10980	20	0	app	libc++	skeleton	11781	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::target(std::type_info const&) const
 10981	433	0	app	libc++	-	-	none	-	
-10982	22	0	libcxx	libc++	skeleton	11783	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+10982	22	0	libcxx	libc++	skeleton	11778	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
 10983	9	0	libcxx	-	skeleton	10981	fingerprint	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::resize[abi:ne210108](unsigned long)
-10984	12	0	libcxx	libc++	skeleton	11779	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
+10984	12	0	libcxx	libc++	skeleton	11601	addr	2	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone() const
 10985	7	0	-	libc++	skeleton	12025	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Nominais(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target_type() const
 10986	20	0	app	libc++	skeleton	11936	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target(std::type_info const&) const
 10987	433	0	app	libc++	-	-	none	-	
-10988	22	0	app	libc++	skeleton	11938	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone(std::__2::__function::__base<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>*) const
-10989	12	0	app	libc++	skeleton	11784	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
+10988	22	0	app	libc++	skeleton	11783	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+10989	12	0	app	libc++	skeleton	11779	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
 10990	10	0	app	api	skeleton	11785	addr	2	api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::~BatteryIconDataSource()_4377
 10991	18	0	app	-	skeleton	11787	addr	3	__cxx_global_array_dtor_4372
 10992	17	0	app	libc++	skeleton	11303	addr	1	std::__2::__shared_ptr_pointer<api::COptionValidation*, std::__2::shared_ptr<api::IInputValidation>::__shared_ptr_default_delete<api::IInputValidation, api::COptionValidation>, std::__2::allocator<api::COptionValidation>>::__get_deleter(std::type_info const&) const
@@ -10862,8 +10862,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10996	20	0	app	libc++	skeleton	12006	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Cargo(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 10997	101	0	app	libc++	skeleton	11473	addr	1	std::__2::__function::__func<api::CPaperFormBuilder::Show(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, bool)::$_0, void ()>::operator()()
 10998	102	0	app	libc++	skeleton	11095	shape	8	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::basic_stringbuf[abi:ne210108](unsigned int)
-10999	22	0	app	libc++	skeleton	12050	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11000	12	0	app	libc++	skeleton	12051	addr	2	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+10999	22	0	app	libc++	skeleton	12056	addr	1	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+11000	12	0	app	libc++	skeleton	12057	addr	2	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 11001	17	0	app	libc++	skeleton	11373	addr	1	std::__2::__shared_ptr_pointer<api::ISound*, std::__2::default_delete<api::ISound>, std::__2::allocator<api::ISound>>::__get_deleter(std::type_info const&) const
 11002	193	0	-	-	skeleton	12177	addr	6	void std::__2::__call_once_proxy[abi:ne210108]<std::__2::tuple<api::CFormStack<api::IScreen>::GetObservable()::'lambda'()&&>>(void*)
 11003	11	0	-	-	skeleton	12178	addr	2	__cxx_global_array_dtor.7
@@ -10885,8 +10885,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11019	17	0	app	libc++	skeleton	11463	addr	1	std::__2::__shared_ptr_pointer<vota::IExecucaoVota*, std::__2::default_delete<vota::IExecucaoVota>, std::__2::allocator<vota::IExecucaoVota>>::__get_deleter(std::type_info const&) const
 11020	7	0	app	libc++	skeleton	12035	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Legenda(unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target_type() const
 11021	20	0	app	libc++	skeleton	12011	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Brancos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
-11022	22	0	app	libc++	skeleton	12163	addr	1	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
-11023	12	0	app	libc++	skeleton	11939	addr	2	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone() const
+11022	22	0	app	libc++	skeleton	11938	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone(std::__2::__function::__base<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>*) const
+11023	12	0	app	libc++	skeleton	11784	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
 11024	673	0	app	api	skeleton	11879	shape	9	api::IInputField<api::IScreenMT>::Read(api::IInput&)
 11025	39	0	app	-	-	-	none	-	
 11026	9	0	app	-	-	-	none	-	
@@ -10920,8 +10920,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11054	7	0	app	libc++	skeleton	12040	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Candidato(unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target_type() const
 11055	20	0	app	libc++	skeleton	12016	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Nulos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 11056	237	0	app	libc++	-	-	none	-	
-11057	22	0	app	libc++	skeleton	12056	addr	1	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11058	12	0	app	libc++	skeleton	12057	addr	2	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+11057	22	0	app	libc++	skeleton	12061	addr	1	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+11058	12	0	app	libc++	skeleton	12062	addr	2	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 11059	17	0	app	api	skeleton	11308	addr	3	api::CInputField<api::CFramedText>::GetTypeName() const
 11060	29	0	app	api	skeleton	11331	byte	0	api::CMovieField::Hide()
 11061	77	0	app	api	skeleton	11332	addr	1	api::CMovieField::Show()
@@ -10946,8 +10946,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11080	7	0	app	libc++	skeleton	12047	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::target_type() const
 11081	20	0	app	libc++	skeleton	12021	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Legendas(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 11082	65	0	app	libc++	-	-	none	-	
-11083	22	0	app	libc++	skeleton	12061	addr	1	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11084	12	0	app	libc++	skeleton	12062	addr	2	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+11083	22	0	app	libc++	skeleton	12066	addr	1	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+11084	12	0	app	libc++	skeleton	12067	addr	2	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 11085	73	0	app	api	-	-	none	-	
 11086	10	0	app	api	skeleton	11416	addr	2	api::CImageFieldUpdate::~CImageFieldUpdate()_5505
 11087	97	0	app	api	-	-	none	-	
@@ -11114,8 +11114,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11248	7	0	app	libc++	skeleton	12253	addr	1	std::bad_cast::what() const
 11249	20	0	app	libc++	skeleton	12048	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::target(std::type_info const&) const
 11250	15	0	app	libc++	-	-	none	-	
-11251	22	0	app	libc++	-	-	none	-	
-11252	12	0	app	libc++	skeleton	12164	addr	2	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone() const
+11251	22	0	app	libc++	skeleton	12163	addr	1	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+11252	12	0	app	libc++	skeleton	11939	addr	2	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone() const
 11253	2730	0	app	comum	-	-	none	-	
 11254	1443	0	app	comum	-	-	none	-	
 11255	1749	0	app	comum	-	-	none	-	
@@ -11185,8 +11185,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11319	7	0	app	libc++	skeleton	12904	addr	1	deflt_gettable_params
 11320	20	0	app	libc++	skeleton	14513	shape	2	boost::detail::sp_counted_impl_pd<boost::signals2::detail::signal_impl<void (int), boost::signals2::optional_last_value<void>, int, std::__2::less<int>, boost::function<void (int)>, boost::function<void (boost::signals2::connection const&, int)>, boost::signals2::mutex>::invocation_state*, boost::detail::sp_ms_deleter<boost::signals2::detail::signal_impl<void (int), boost::signals2::optional_last_value<void>, int, std::__2::less<int>, boost::function<void (int)>, boost::function<void (boost::signals2::connection const&, int)>, boost::signals2::mutex>::invocation_state>>::get_deleter(std::type_info const&)
 11321	124	0	app	libc++	-	-	none	-	
-11322	22	0	app	libc++	skeleton	12066	addr	1	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11323	12	0	app	libc++	skeleton	12067	addr	2	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+11322	22	0	app	libc++	-	-	none	-	
+11323	12	0	app	libc++	-	-	none	-	
 11324	7	0	app	libc++	skeleton	12907	addr	1	base_gettable_params
 11325	20	0	app	libc++	skeleton	14555	shape	2	boost::detail::sp_counted_impl_pd<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (), boost::function<void ()>>, boost::signals2::mutex>*, boost::detail::sp_ms_deleter<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (), boost::function<void ()>>, boost::signals2::mutex>>>::get_deleter(std::type_info const&)
 11326	121	0	app	libc++	-	-	none	-	
@@ -11634,7 +11634,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11768	23	0	app	libc++	-	-	none	-	
 11769	640	0	app	-	skeleton	12722	shape	22	void std::__2::__formatter::__escape[abi:ne210108]<char>(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&, std::__2::basic_string_view<char, std::__2::char_traits<char>>, std::__2::__formatter::__escape_quotation_mark)
 11770	22	0	app	libc++	-	-	none	-	
-11771	12	0	app	libc++	-	-	none	-	
+11771	12	0	app	libc++	skeleton	12164	addr	2	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone() const
 11772	7	0	app	libc++	skeleton	13329	addr	1	cmac_gettable_params
 11773	20	0	app	libc++	-	-	none	-	
 11774	12	0	app	libc++	-	-	none	-	

@@ -82,7 +82,7 @@ ECOURNA_CXXFLAGS   := -O3 -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP)
 # uenux2 (the app itself, /home/rubio/tse/uenux2, tree mirrored under src/uenux2 so the records' paths map): -O3 -fPIC,
 # NO -fexceptions (emcc's default -fignore-exceptions: throw sites call __cxa_throw directly, no landing pads),
 # -DNDEBUG, -fno-strict-aliasing (no TBAA: comum's converters reload a vector's begin after an int store, fn 10289)
-# except in the directories and the file UENUX2_TBAA_DIRS lists (below);
+# except in the directories and the file UENUX2_TBAA_DIRS lists (below), but for the files UENUX2_NOTBAA_FILES lists;
 # measured on the api/util, api/io, api/ipc/posix and comum units (docs/reference/facts/app-flags.md §F6), the level on
 # the whole tree (docs/reference/facts/levels.md §V3: every match holds and the bodies that call
 # std::string::append where -O2 inlines it match), and -std=c++23 on the whole tree too (§V3: every match holds, and
@@ -99,6 +99,12 @@ UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX
 # (docs/reference/facts/app-flags.md §F6). The -pending and roots objects keep their rules' flags.
 # UENUX2_TBAA_DIRS= on the command line builds the whole tree with -fno-strict-aliasing.
 UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/% src/app/comum/carquivossavd.cpp
+# the files inside those directories that keep -fno-strict-aliasing, each read from code that only its own functions
+# reach: in ctelasvota.cpp the map constructor GetKeyboardLayout alone calls (fn 6579) reloads the tree's begin after a
+# new node's stores, and in crelvotautil.cpp the __clone of CortaPapel's lambda (fns 12006, 12007) stores the vptr
+# before it copies the capture, as only code without TBAA does. The other files of their directories keep strict
+# aliasing (docs/reference/facts/app-flags.md §F6 has the measurements, and those of the files measured and not listed).
+UENUX2_NOTBAA_FILES := src/app/vota/eleitor/comum/ctelasvota.cpp src/app/vota/eleitor/iniciovotacao/crelvotautil.cpp
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
@@ -168,8 +174,8 @@ $(ROOT)/$(APP)/roots_ecourna.o: $(ROOT)/src/app/roots_ecourna.cpp $(ROOT)/src/Ma
 UENUX2_HDRS := $(shell find $(ROOT)/src/uenux2 -name '*.h' -o -name '*.hpp' 2>/dev/null) $(ECOURNA_HDRS)
 UENUX2_OBJS := $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(UENUX2_SRCS)))
 # a uenux2 source's flags: UENUX2_CXXFLAGS (with a fragment's target-specific additions), without -fno-strict-aliasing
-# in UENUX2_TBAA_DIRS
-uenux2_cxxflags = $(if $(filter $(UENUX2_TBAA_DIRS),$(1)),$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS)),$(UENUX2_CXXFLAGS))
+# in UENUX2_TBAA_DIRS, but in the files UENUX2_NOTBAA_FILES lists
+uenux2_cxxflags = $(if $(filter-out $(UENUX2_NOTBAA_FILES),$(filter $(UENUX2_TBAA_DIRS),$(1))),$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS)),$(UENUX2_CXXFLAGS))
 $(ROOT)/$(APP)/uenux2/%.cpp.o: $(ROOT)/src/uenux2/%.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(call uenux2_cxxflags,$*.cpp) -c /work/src/uenux2/$*.cpp -o $(R)
 $(ROOT)/$(APP)/roots_uenux2.o: $(ROOT)/src/app/roots_uenux2.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)

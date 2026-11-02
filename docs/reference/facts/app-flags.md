@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/` and the file `src/app/comum/carquivossavd.cpp` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp` and `eleitor/iniciovotacao/crelvotautil.cpp`, `mock/app/simulador/wasm/` and the file `src/app/comum/carquivossavd.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -279,7 +279,7 @@ So a table read with an `i32.add` proves nothing, and neither does one function'
 12's externs included. The `-roots.cpp` files are stand-ins and compile with `APP_CXXFLAGS`. Why the package differs from conan's default
 `fPIC=True` ([libraries.md](libraries.md) §B1) is not known: the target shows the result, not the reason.
 
-## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG`, `-fno-strict-aliasing` by directory and one file, without `-fexceptions`
+## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG`, `-fno-strict-aliasing` by directory and file, without `-fexceptions`
 
 Compared on three reconstructed units (`api/util/cwait.cpp`, `api/io/cinikey.cpp`,
 `api/ipc/posix/cposixmutex.cpp` + `cposixsemaphore.cpp`; 13 target functions), each flag set in a private
@@ -418,7 +418,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `dados/md/`'s) with its callee 2872, which the symbol file names by 11453's call. The split is a reading of the original
   build's settings, made from the rows: TSE's build gave `src/api/`, comum's data classes, the voting application and the
   simulator strict aliasing, clang's default, and comum's converters and the directories around them none. It is a
-  reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it; `dados/md/` and the files
+  reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it, but for two files whose
+  own rows say the other way (below); `dados/md/` and the files
   beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
   directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, written), which holds
   `md/rdv/`'s `InsereCedula` and `ConfereCedula` inlined, has none of their reloads in the target: at the split every
@@ -457,6 +458,54 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   read as two TUs' code, a reading: 4454's as built with strict aliasing, and 5681's as another TU's copy, that of
   11349 (`comum::asn::CConversorEleicoesVota::DoDesconverte`, not written), in `dados/asn/rdv/`, which builds without
   it. 5681 waits for 11349.
+
+  Two files of `app/vota/` keep `-fno-strict-aliasing`: `UENUX2_NOTBAA_FILES` in `src/Makefile` lists them, and
+  `uenux2_cxxflags` leaves them out of the strict-aliasing test. Each is read from code that only its own functions
+  reach. In `eleitor/comum/ctelasvota.cpp`, the initializer-list constructor of `GetKeyboardLayout`'s
+  `std::map<std::string, SLayoutTecla>` (6579), which only that anonymous-namespace function calls (record
+  `ctelasvota.cpp:1301`; binaryen inlines it into 11805, 6579's one caller in `ledger/callgraph.tsv`), reloads the
+  tree's begin after a new node's stores ([reading.md](reading.md) §R21's sign): 74 over 308 rows with strict aliasing,
+  2 over 292, operand-only, without it. In `eleitor/iniciovotacao/crelvotautil.cpp`, the `__clone` of `CortaPapel`'s
+  lambda (12006, 12007; `$_0` in the closure's RTTI name is clang's name for a type with internal linkage) stores the
+  vptr before it copies the capture: 6 over 12 rows with strict aliasing, 1 over 9, operand-only, without it. At
+  b7c2e8a5 (11619 matches) each file was built in place, its object compiled with `make -C src <object>
+  UENUX2_TBAA_DIRS=` (the compile line gains `-fno-strict-aliasing` and nothing else), then how-to steps 7 to 9 and
+  `make -C src splat`, the rows against b7c2e8a5's `splat/scan.tsv`; between two variants the tracked files went back to
+  b7c2e8a5's and the objects were compiled again, and the link came back byte-identical each time:
+
+  | built without strict aliasing | `make -C src splat` | rows that turn `match` | rows that leave `match` |
+  | --- | --- | --- | --- |
+  | `eleitor/comum/ctelasvota.cpp` | the target's sha256, 11620 | 6579 | none |
+  | `eleitor/iniciovotacao/crelvotautil.cpp` | the target's sha256, 11621 | 12006 12007 | none |
+  | both | the target's sha256, 11622 | 6579 12006 12007 | none |
+  | `eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp` | the target's sha256, 11619 | none | none |
+  | the same, and 5412's distribution as `unsigned long` | the target's sha256, 11619 | none | none |
+  | `src/api/gui/cinputmenufield.cpp` | 1 no longer verifies | none | 5491 |
+  | `eleitor/cvotacaostateaudio.cpp` | the target's sha256, 11619 (the link byte-identical) | none | none |
+  | the last two, and `roots_cbasetype.cpp`'s two regex functions removed | 1 no longer verifies | none | 5491 |
+  | `cvotacaostateaudio.cpp`, and those two functions removed | 30 no longer verify | 3525 5190 | 32 |
+  | all five | 1 no longer verifies | 6579 12006 12007 | 5491 |
+
+  With the two files listed, the compile lines `make -n -C src link APP=<a new directory>` prints (845) differ from
+  b7c2e8a5's in those two objects' alone, each by `-fno-strict-aliasing`; built in place, 921 of the 923 objects are
+  `cmp`-equal to b7c2e8a5's, the other two are the variants', and so is the link. The other three files keep strict
+  aliasing, each for its own reason:
+  - `cinputmenufield.cpp`'s destructor (5491) clears a `std::list` as only code with TBAA does (unit 84's fragment).
+  - `ctesteteclado.cpp` gains no row. Its scores read as built without TBAA, but no verdict follows: with 5412's
+    distribution as `unsigned long`, 11803 (`GeraSequencia`'s `std::shuffle`) goes from 255 over 447 rows to 24, and
+    5412 from 265 over 350 to 31, all operand rows, and both are then `unresolved self-voted` on the guards of their
+    own function-local statics, which no other target function reads ([../splat.md](../splat.md) §3, "No circular evidence").
+  - `cvotacaostateaudio.cpp`'s object changes and the link does not: the regex copies it would bring come from
+    `src/app/roots_cbasetype.cpp`, ahead of both trees. Without that root's two functions they come from
+    `cinputmenufield.cpp.o`, ahead of it on the link line, and with that file built without strict aliasing too they
+    all match again from it, but 5491 does not.
+
+  So the target's copies of the token iterator (4307, whose callers are 5492 and 6999 only) and of the `const char*`
+  parser (2062: 2416, 5782, 6833, 6999) have no TBAA while `cinputmenufield.cpp` has it. Whose copies they are, no row
+  says: `cvotacaostateaudio.cpp`'s in a link order with it ahead of `cinputmenufield.cpp` (not measured), or another
+  TU's; the tree root stands for them either way (unit 97's fragment). Whether the original build gave
+  `-fno-strict-aliasing` to `ctelasvota.cpp` and `crelvotautil.cpp` alone or to more of `app/vota/`, the rows do not
+  say beyond this table: listing the two files is the reading that keeps every match.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'
@@ -597,9 +646,12 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
 
    `make -n` of the last line counts 468 compiles: the clone's objects are the list's.
 
-   In the directories of `UENUX2_TBAA_DIRS` the generic uenux2 rule filters `-fno-strict-aliasing` out of the whole line,
-   `UENUX2_EXTRA` included, so `UENUX2_EXTRA=-fno-strict-aliasing` leaves them with TBAA; `UENUX2_TBAA_DIRS=` on the
-   command line builds the tree without the split (F6), and `UENUX2_EXTRA=-fstrict-aliasing` the whole tree with TBAA.
+   In the directories of `UENUX2_TBAA_DIRS`, but for the files `UENUX2_NOTBAA_FILES` lists, the generic uenux2 rule
+   filters `-fno-strict-aliasing` out of the whole line, `UENUX2_EXTRA` included, so `UENUX2_EXTRA=-fno-strict-aliasing`
+   leaves them with TBAA; `UENUX2_TBAA_DIRS=` on the command line builds the tree without the split (F6), and
+   `UENUX2_EXTRA=-fstrict-aliasing` the whole tree with TBAA. One file without strict aliasing is its object compiled
+   with `make -C src <object> UENUX2_TBAA_DIRS=` (the line `make -n -B` prints gains `-fno-strict-aliasing` alone), which
+   in place in a worktree of one's own gives steps 7 to 9 too (F6's per-file table was measured so).
 
    That answers whether a flag set keeps every match. It does not say what the flag set adds: steps 7 to 9 read the
    plain link's fixed paths (`/usr/bin/grep -n 'build/out/wasm' tools/round/census.sh` prints `M=` and `N=` under

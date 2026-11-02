@@ -14,8 +14,11 @@
 // -fexceptions, while the objects that instantiate them in our link, cinputmenufield.cpp's and cvotacaostateaudio.cpp's,
 // build in UENUX2_TBAA_DIRS: with strict aliasing they match fewer rows (src/units/97-uenux2-cvotacaostateaudio.mk has
 // the measurements). urna_regex_uenux2 and urna_regex_tokens only instantiate: nothing calls them and they leave the
-// link. They go when the objects that use std::regex so build without strict aliasing, or when a uenux2 object outside
-// UENUX2_TBAA_DIRS that uses it links ahead of them. The constructor from a std::string and what it instantiates are an
+// link. They go when a uenux2 object outside UENUX2_TBAA_DIRS that uses std::regex links ahead of them. Not when the
+// two users build without strict aliasing: with both so and these two gone, cinputmenufield.cpp.o's copies take every
+// row, but its destructor (5491) needs strict aliasing and stops matching; with cvotacaostateaudio.cpp alone so, the
+// copies of cinputmenufield.cpp.o, ahead of it on the link line, take the rows and 32 stop matching
+// (docs/reference/facts/app-flags.md §F6). The constructor from a std::string and what it instantiates are an
 // -fexceptions object's in the target: ecourna's api/compression/icompressor.cpp.o gives them (unit 06's fragment).
 #include "ecourna/app/dados/tiposbasicos.hpp"
 

@@ -299,8 +299,10 @@
 # GetKeyboardLayout (record :1301) with its value type, vota::TelaTesteTeclado and vota::SorteiaTeclasTesteTeclado
 # (declared in ctelasvota.h), the key names vota::TECLAS_TESTE_TECLADO (declared there extern), and the {20, 0} font after
 # FONTE_TITULO, a line that moved the six builders above down by one. With them this object brings the destroy of
-# GetKeyboardLayout's map (4148, matched), that map's initializer-list constructor (6579, written, not matched) and the
-# destroy of CTesteTeclado's map (2023, matched, now linked from here). The key names, TelaTesteTeclado and
+# GetKeyboardLayout's map (4148, matched), that map's initializer-list constructor (6579, matched since this file builds
+# without strict aliasing, src/Makefile's UENUX2_NOTBAA_FILES: unit 217's fragment has its rows, and on the whole link
+# no other row moves, docs/reference/facts/app-flags.md F6) and the destroy of CTesteTeclado's map (2023, matched, now
+# linked from here). The key names, TelaTesteTeclado and
 # SorteiaTeclasTesteTeclado come after CTelasVota's statics, and CTelasVota's destructor moved after them, from line
 # 3439 to 3463: src/units/217-uenux2-ctesteteclado.mk has the evidence for that order, the measurements and the choices.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
