@@ -1,13 +1,19 @@
 #pragma once
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <mutex>
+#include <string>
 
 #include "app/vota/eleitor/comum/ctelascargo.h"
 
 namespace api {
 class CProgressBar;
+class CFormBuilder;
+class IScreen;
+template <typename MEDIA>
+class IForm;
 } // namespace api
 
 namespace vota {
@@ -77,5 +83,35 @@ private:
     static std::mutex s_mutex;
     static std::unique_ptr<CTelasVota> s_instancia;
 };
+
+// The screens of the end of the vote and of the keyboard test built outside CTelasVota, in ctelasvota.cpp. No record
+// names any of them; their names, their being free functions of vota and their parameters' types are chosen.
+// - AdicionaTelaAguarde (fn 4152): the status header (5: date and time, battery icon), the message at (320, 160) in a
+//   30-point font and "Por favor, aguarde..." at (320, 240) in a 25-point one, centred, colours 2 over 1. Callers:
+//   fns 6129, 6174 and 6583.
+// - AdicionaCabecalhoTesteTeclado (fn 3054): the status header (5), "Teste de teclado" at (320, 80) in the 30-point
+//   font and a line in colour 3 from (0, 429) to (640, 429). Callers: fns 5936, 11804, 11805 and 11809.
+// - TelaPreparandoDadosEncerramento (fn 6583), TelaVotacaoEncerrada and TelaCopiaResultadoParaMR: a form of
+//   AdicionaTelaAguarde's fields with their message, named, through GetFormulario (fn 886). The first is called by
+//   vota::CGeraRelatorios's and vota::CGeraBU's constructors (inlined into fns 6084 and 6129); the other two each have
+//   one caller, CGeraBU's and vota::CCopiaResultadoParaMR's constructors, which hold them behind a second
+//   stack-pointer prologue (inlined by binaryen, so out of line in the object: docs/how-to-decompile.md step 3).
+// - TelaEsperaRepetirTesteTeclado: AdicionaCabecalhoTesteTeclado's fields, an api::CTextFieldUpdate with an interval
+//   of 200 ms over a std::function and the format "Por favor, espere {}s para a", and two lines below it, in a
+//   25-point font, named
+//   through GetFormulario. Its one caller, vota::testeteclado::CEsperaRetestar's constructor (inlined into fn 5936),
+//   holds it behind a second stack-pointer prologue, as the two above.
+// Why ctelasvota.cpp: fns 4152 and 3054 pass the same SFont {30, 0} by address (@474888), so they share a TU, and that
+// constant and fn 4152's SFont {25, 0} (@474992) lie among ctelasvota.cpp's read-only data (after the typeinfo name of
+// vota::CPreShowProgressBar @474851, whose vtable @1536544 lies just before the records this TU's fn 4135 loads,
+// @1536624 and @1536832): a reading of the data's order. Fn 6583 lies in use band 2 between ctelasvota.cpp's fn 6602
+// and its destructor fn 6548 (ledger/ordinals.tsv), a reading of the band; the three with no index follow it, a choice.
+void AdicionaTelaAguarde(api::CFormBuilder& builder, const std::string& mensagem);
+void AdicionaCabecalhoTesteTeclado(api::CFormBuilder& builder);
+std::shared_ptr<api::IForm<api::IScreen>> TelaPreparandoDadosEncerramento();
+std::shared_ptr<api::IForm<api::IScreen>> TelaVotacaoEncerrada();
+std::shared_ptr<api::IForm<api::IScreen>> TelaCopiaResultadoParaMR();
+std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
+    std::function<std::string(const std::string&)> fonte);
 
 } // namespace vota

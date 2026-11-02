@@ -196,11 +196,6 @@
 // f5922 · 243 B · unmatched · placement: link order · name unknown
 // ? f5922(i32, i32) { ... }
 
-// link-order cluster 859 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/votaproporcional/ccompletaproporcional.cpp
-
-// f5936 · 1802 B · unmatched · placement: link order · name unknown
-// ? f5936() { ... }
-
 // link-order cluster 862 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmaregerarzeresima.cpp
 
 // f5953 · 527 B · unmatched · placement: link order · name unknown
@@ -244,11 +239,6 @@
 
 // f6579 · 572 B · unmatched · placement: link order · name unknown
 // void f6579(i32, i32) { ... }
-
-// link-order cluster 901 · uses=2
-
-// f6583 · 398 B · unmatched · placement: link order · name unknown
-// void f6583(i32) { ... }
 
 // link-order cluster 902 · uses=2
 
@@ -381,11 +371,6 @@
 // f4148 · 53 B · unmatched · placement: link order · name unknown
 // void f4148(i32) { ... }
 
-// link-order cluster 1049 · uses=3
-
-// f4152 · 297 B · unmatched · placement: link order · name unknown
-// void f4152(i32, i32) { ... }
-
 // link-order cluster 1060 · uses=4
 
 // f2499 · 57 B · unmatched · placement: link order · name unknown
@@ -434,11 +419,6 @@
 
 // f2789 · 738 B · unmatched · placement: link order · name unknown
 // void f2789(i32, i32, i32, i32) { ... }
-
-// link-order cluster 1129 · uses=4
-
-// f3054 · 290 B · unmatched · placement: link order · name unknown
-// void f3054(i32) { ... }
 
 // link-order cluster 1131 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
 

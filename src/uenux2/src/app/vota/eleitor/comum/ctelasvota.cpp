@@ -1,14 +1,17 @@
 #include "app/vota/eleitor/comum/ctelasvota.h"
 
 #include <format>
+#include <functional>
 #include <string>
 
+#include "api/gui/cformbuilder.h"
+#include "app/vota/comum/cpreshowformvota.h"
 #include "app/vota/euevotaerror.h"
 #include "ecourna/api/pattern/singleton.hpp"
 
 namespace vota {
 
-// (original lines 11-290: content not recovered)
+// (original lines 14-290: content not recovered)
 #line 291
 // <stubs>
 // f13101 · 217 B · unmatched · name unknown
@@ -109,7 +112,70 @@ std::string MensagemErroCargo(const std::string& tela, const comum::md::CCargo& 
 // void f3064(i32, i32) { ... }
 // </stubs>
 
-// (original lines 1587-3433: content not recovered)
+// (original lines 1587-3369: content not recovered)
+#line 3370
+namespace {
+
+const api::SFont FONTE_TITULO{30, 0};
+const api::SFont FONTE_AGUARDE{25, 0};
+
+} // namespace
+
+void AdicionaTelaAguarde(api::CFormBuilder& builder, const std::string& mensagem)
+{
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField(mensagem, api::SPoint(320, 160), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("Por favor, aguarde...", api::SPoint(320, 240), FONTE_AGUARDE, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+}
+
+void AdicionaCabecalhoTesteTeclado(api::CFormBuilder& builder)
+{
+    builder.AddStatusHeader(api::CFormBuilder::STATUS_DATA_HORA | api::CFormBuilder::STATUS_ICONE_BATERIA);
+    builder.AddTextField("Teste de teclado", api::SPoint(320, 80), FONTE_TITULO, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddLine(api::SPoint(0, 429), api::SPoint(640, 429), static_cast<api::TColor>(3));
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaPreparandoDadosEncerramento()
+{
+    api::CFormBuilder builder;
+    AdicionaTelaAguarde(builder, "Preparando dados para encerramento");
+    return GetFormulario(builder, "telaPreparandoDadosEncerramento");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaVotacaoEncerrada()
+{
+    api::CFormBuilder builder;
+    AdicionaTelaAguarde(builder, "Votação encerrada");
+    return GetFormulario(builder, "telaVotacaoEncerrada");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaCopiaResultadoParaMR()
+{
+    api::CFormBuilder builder;
+    AdicionaTelaAguarde(builder, "Gravando o resultado na mídia");
+    return GetFormulario(builder, "telaCopiaResultadoParaMR");
+}
+
+std::shared_ptr<api::IForm<api::IScreen>> TelaEsperaRepetirTesteTeclado(
+    std::function<std::string(const std::string&)> fonte)
+{
+    api::CFormBuilder builder;
+    AdicionaCabecalhoTesteTeclado(builder);
+    const api::SFont fonteTexto{25, 0};
+    const std::chrono::milliseconds intervalo(200);
+    builder.AddTextFieldUpdate(fonte, api::SPoint(320, 170), intervalo, fonteTexto, "Por favor, espere {}s para a",
+                               api::ALINHAMENTO_CENTRO);
+    builder.AddTextField("realização de uma nova tentativa", api::SPoint(320, 220), fonteTexto, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    builder.AddTextField("de execução do teste.", api::SPoint(320, 270), fonteTexto, api::ALINHAMENTO_CENTRO,
+                         static_cast<api::TColor>(2), static_cast<api::TColor>(1));
+    return GetFormulario(builder, "telaEsperaRepetirTesteTeclado");
+}
+
+// (original lines 3431-3433: content not recovered)
 #line 3434
 SINGLETON_IMPL_GET_INST(CTelasVota, s_mutex, s_instancia)
 

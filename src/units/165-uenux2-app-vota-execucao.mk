@@ -106,6 +106,15 @@
 #   not (above). A `{}` body was not measured.
 # - CExecucaoVotaCooperativa's member in the class (written) gives 7828's store order (operand rows only); the member in
 #   the interface was not measured.
+#
+# cpreshowformvota.cpp also holds vota::GetFormulario (fn 886, 21 B in the target, eleven callers), the form of an
+# api::CFormBuilder's fields with a new CPreShowFormVota, beside GetFormularioInterativo (cpreshowformvota.h says what
+# places it). It is written and differs, `the locals` at +0x0: the target's body is a thunk of binaryen's fn 6117, which
+# the target forms from 886 and fn 11140 (api::CFormBuilder::GetForm(const std::string&) over a CPreShowClearScreen,
+# not in our link: unit 220's fragment has why), and ours is the whole body, 59 over 63 rows against the thunk (55
+# inserted; pnpm wasm score against names.tsv). It stays written: four matched functions call it (6129, 6174, 6583 and
+# 5936, units 220, 110 and 138), and step 8 names it by their call votes. Chosen: its name, its parameters' names, its
+# line after fn 576.
 APP_VOTA_EXECUCAO_SRCS := src/app/vota/iexecucaovota.cpp src/app/vota/cexecucaovotacooperativa.cpp src/app/vota/comum/cassinadorvota.cpp \
     src/app/vota/comum/cpreshowformvota.cpp src/app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp \
     src/app/vota/operador/caguardainicio.cpp
