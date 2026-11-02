@@ -5,7 +5,7 @@
 //   lines 70 and 71 stay blank in cimprimindobu.cpp.
 // - vota::CImprimindoBU::ProcessInput (slot 7, fn 12077): it calls fn 491, which has no body here, and 3701 (unit 93).
 // - vota::CMostraQRCodeCertificado::StartState (slot 2, fn 12040, 1932 B): it builds the screen through fns 502, 576,
-//   653 and 2782, which have no body here.
+//   653 and 2782, of which 653 has no body here.
 // - vota::CQuerImprimirBU::ProcessInput (slot 7, fn 12034): it calls fn 491, which has no body here, and
 //   CAplicacaoEncerrada's GetInst (fn 3877), which matches (unit 138; its constructor copies CTelasVota's +36 through
 //   ctelasvota.h's GetTelaAplicacaoEncerrada).

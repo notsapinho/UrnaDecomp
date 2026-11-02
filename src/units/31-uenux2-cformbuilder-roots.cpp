@@ -1,13 +1,6 @@
 // Roots: keep the unit's members in the skeleton link the way the target reaches them. Compiled with APP_CXXFLAGS, like the
 // other stand-ins, and it emits none of them: each stand-in calls members its unit's objects define.
 //
-// api::CFormBuilder::GetLabeledKeyPos (target fn 5544): the target calls it from one function, 3678 (not reconstructed
-// yet), at two call sites (ledger/callgraph.tsv lists 3678 twice), and never through the table (no elem slot holds it); two
-// call sites keep binaryen from inlining it. PosicoesTecla reproduces 3678's two calls: the same area and alignment in
-// both, passed through so that binaryen's dead-argument elimination folds neither, and the vertical offsets 0 and 21 that
-// 3678 passes. It is address-taken from a static constructor. Declared through an asm label with the wasm-level signature
-// (the SPoint result through its address first).
-//
 // The adders: the target calls each directly from the screens that build a form, of which only 1255 is reconstructed
 // (comum::TelaRegistroMesarios, unit 247; the lists below still name it). Each pair of stand-ins stands for the others,
 // and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
@@ -21,7 +14,12 @@
 //                     2291, 2376, 2380, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
 //                     12055, 12065 and 12098, the callers of 502 (AddStatusHeader), whose fields vary; TelaB for 7787,
 //                     the caller of 3058 (AddTextFieldUpdate, the instance over a function pointer) beside 502, with
-//                     another callback, alignment and font
+//                     another callback, alignment and font; and 6569, 7787 and 12055, the callers of 2243 (AddLabeledKey
+//                     over a key), which pass the keys '4' and '6', 'B' and 'D', and 'B', with the alignments 0 and 2
+//   RotuloTecla       7787 and 653 (which holds 2243's code inlined), the other callers of 3678 (AddLabeledKey over the
+//                     key's name): its second call site, beside 2243's. It leaves the colours at their defaults
+//   TextoMultiLinha   1588, 3074, 7787 and 12040, the callers of 2782 (AddTextFieldMultiLine): it calls it twice, with
+//                     another rectangle and alignment the second time
 //   RelatorioA        5579, 5580, 5591 and the other callers of 193, 604, 198, 1264, and of 2775 (5591 and 12110). Its
 //                     form is a parameter: their callers zero the vector in line, and it takes no constructor of ours. The
 //                     EStyle and alignments vary as theirs do
@@ -35,25 +33,7 @@
 #include "api/gui/cpaperformbuilder.h"
 #include "api/util/cdatetime.h"
 
-extern "C" {
-void w5544_root_0(void*, const void*, int, int) __asm__("_ZN3api12CFormBuilder16GetLabeledKeyPosERKNS_5SRectENS_14ETextAlignmentEs");
-}
-
 namespace {
-
-struct SPosicao {
-    short x;
-    short y;
-};
-
-__attribute__((noinline)) int PosicoesTecla(const void* area, int alinhamento)
-{
-    SPosicao rotulo;
-    SPosicao legenda;
-    w5544_root_0(&rotulo, area, alinhamento, 0);
-    w5544_root_0(&legenda, area, alinhamento, 21);
-    return rotulo.x + legenda.y;
-}
 
 __attribute__((noinline)) int TelaMTA(const std::string& texto, const api::SPoint& posicao, api::ETextAlignment alinhamento,
                                       std::string (*fonte)(), std::string (*fonteFmt)(const std::string&),
@@ -106,6 +86,7 @@ __attribute__((noinline)) int TelaA(const std::string& texto, const api::SPoint&
     form.AddRect(posicao, posicao);
     form.AddBlinkingTextField(texto, posicao, fonte, alinhamento);
     form.AddStatusHeader(static_cast<api::CFormBuilder::StatusHeaderFields>(posicao.y));
+    form.AddLabeledKey('B', texto, alinhamento);
     return posicao.x;
 }
 
@@ -126,7 +107,22 @@ __attribute__((noinline)) int TelaB(const std::string& texto, const api::SPoint&
     form.AddTextFieldUpdate(&api::CDateTime::FormatCurrentDate, api::SPoint{posicao.y, posicao.x},
                             std::chrono::milliseconds(1000), fonte, texto, api::ALINHAMENTO_CENTRO);
     form.AddStatusHeader(5);
+    form.AddLabeledKey('D', texto, api::ALINHAMENTO_CENTRO);
     return posicao.y;
+}
+
+__attribute__((noinline)) int RotuloTecla(api::CFormBuilder& form, const std::string& nome, const std::string& rotulo,
+                                          api::ETextAlignment alinhamento)
+{
+    form.AddLabeledKey(nome, rotulo, alinhamento);
+    return static_cast<int>(alinhamento) + 1;
+}
+
+__attribute__((noinline)) int TextoMultiLinha(api::CFormBuilder& form, const std::string& texto, const api::SRect& rect,
+                                              const api::SFont& fonte, api::ETextAlignment alinhamento)
+{
+    form.AddTextFieldMultiLine(texto, rect, fonte, alinhamento);
+    return form.AddTextFieldMultiLine(texto, api::SRect{rect.top, rect.left, rect.bottom, rect.right}, fonte, api::ALINHAMENTO_CENTRO).use_count();
 }
 
 __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std::string& texto, std::string (*fonte)(), size_t linhas,
@@ -232,11 +228,12 @@ void* volatile w5544_sink;
 struct SW5544Roots {
     SW5544Roots()
     {
-        w5544_sink = reinterpret_cast<void*>(&PosicoesTecla);
         w5544_sink = reinterpret_cast<void*>(&TelaMTA);
         w5544_sink = reinterpret_cast<void*>(&TelaMTB);
         w5544_sink = reinterpret_cast<void*>(&TelaA);
         w5544_sink = reinterpret_cast<void*>(&TelaB);
+        w5544_sink = reinterpret_cast<void*>(&RotuloTecla);
+        w5544_sink = reinterpret_cast<void*>(&TextoMultiLinha);
         w5544_sink = reinterpret_cast<void*>(&RelatorioA);
         w5544_sink = reinterpret_cast<void*>(&FormMTA);
         w5544_sink = reinterpret_cast<void*>(&FormMTB);

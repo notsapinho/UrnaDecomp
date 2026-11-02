@@ -1,6 +1,7 @@
 // Roots: the CTextFieldMultiLine ctor has two callers in the target (fns 2782 and 12055, both a
 // std::make_shared<CTextFieldMultiLine> with the colours 2 and 1, which binaryen's dead-argument elimination folds
-// into the ctor); these two stand-ins give it the same call sites and are address-taken from a static constructor.
+// into the ctor). 2782 is in the link (api::CFormBuilder::AddTextFieldMultiLine, unit 31); CampoMultiLinhaB stands for
+// 12055 and gives the ctor its second call site. It is address-taken from a static constructor.
 // Compiled as uenux2 code.
 #include <memory>
 #include <string>
@@ -9,12 +10,6 @@
 #include "api/gui/eueguierror.h"
 
 namespace {
-
-__attribute__((noinline)) std::shared_ptr<api::IFormField<api::IScreen>> CampoMultiLinhaA(const api::SRect& rect, const api::SharedIText& text,
-                                                                                          const api::SFont& font)
-{
-    return std::make_shared<api::CTextFieldMultiLine>(rect, text, font, static_cast<api::TColor>(2), static_cast<api::TColor>(1));
-}
 
 __attribute__((noinline)) std::shared_ptr<api::IFormField<api::IScreen>> CampoMultiLinhaB(api::TPosition left, api::TPosition top, api::TPosition right,
                                                                                           api::TPosition bottom, const api::SharedIText& text,
@@ -34,7 +29,6 @@ void* volatile w5498_sink;
 struct SW5498Roots {
     SW5498Roots()
     {
-        w5498_sink = reinterpret_cast<void*>(&CampoMultiLinhaA);
         w5498_sink = reinterpret_cast<void*>(&CampoMultiLinhaB);
         w5498_sink = reinterpret_cast<void*>(&LancaGui1);
         w5498_sink = reinterpret_cast<void*>(&LancaGui2);

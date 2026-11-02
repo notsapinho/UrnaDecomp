@@ -1,9 +1,10 @@
 // Roots of fragment 154.
 // - api::KeyName(char) (target fn 744), an inline function of api/hwil/iinput.h: the target calls it directly from five
-//   functions (653, 1455, 2243, 7787 and 12903), none reconstructed yet, and its copy reads as
-//   cinstrucaovotacaoacessibilidade.cpp's (its record, 1533820, follows that file's records). TamanhoDoNome and
-//   SomaDosNomes call it, so this object emits the copy; they are optnone, so that clang does not inline it into them, and
-//   they give it two call sites, so binaryen keeps it out of line. This object compiles at the uenux2 tree's flags (the
+//   functions (653, 1455, 2243, 7787 and 12903), of which only 2243 (api::CFormBuilder::AddLabeledKey, unit 31) is
+//   reconstructed, and its copy reads as cinstrucaovotacaoacessibilidade.cpp's (its record, 1533820, follows that file's
+//   records). TamanhoDoNome and SomaDosNomes call it and stand for the other four; they are optnone, so that clang does
+//   not inline it into them, and with 2243 they give it three call sites, so binaryen keeps it out of line. The copy the
+//   link keeps is cformbuilder.cpp.o's, the first in link order (the scan's object column). This object compiles at the uenux2 tree's flags (the
 //   fragment's rule), so its copy is compiled as the tree's own users compile theirs, but for -fno-strict-aliasing,
 //   which app/vota/'s objects drop (src/Makefile UENUX2_TBAA_DIRS): 744's body is the same without it (wasm-objdump -d
 //   of the object compiled both ways).
