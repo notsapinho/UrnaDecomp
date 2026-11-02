@@ -39,6 +39,11 @@ enum EUeVotaError {
     // the value is the code vota::CTelasVota::GetTelaCargo (target fn 4135, record ctelasvota.cpp:3534) throws; the
     // name is chosen from its message, "Nao existe o conjunto de telas associado ao cargo id {}": no evidence names it
     EUE_VOTA_CONJUNTO_TELAS_INEXISTENTE = 9358,
+    // the values are the codes vota::testeteclado::CTesteTeclado::StartState (target fn 11805, records
+    // ctesteteclado.cpp:38 and :42) throws; the names are chosen from their messages, "Sem teclas para testar" and
+    // "Tecla não encontrada: <tecla>": no evidence names them
+    EUE_VOTA_TESTE_TECLADO_SEM_TECLAS = 9359,
+    EUE_VOTA_TESTE_TECLADO_TECLA_NAO_ENCONTRADA = 9360,
     // the value is the code vota::IQRCodeBUDS::IQRCodeBUDS (inlined into target fn 1956) throws; the name is chosen
     // from its message, "Vetor de partes vazio": no evidence names it
     EUE_VOTA_VETOR_PARTES_VAZIO = 9372,

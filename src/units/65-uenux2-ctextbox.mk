@@ -38,10 +38,10 @@ UENUX2_SRCS += $(CTEXTBOX_SRCS)
 # Rect (10956): the record's col 9 is a statement in a block, and the assignment of a temporary gives the target's one
 # i64 store. The tests in `m_largura != 0 && m_altura != 0`, the known size first, are evidence: the other way round
 # differs in 125 lines. The tail calls SRect::MoveX, 108-uenux2-api-gui-primitives.mk says why it is out of line.
-# The constructor's caller is not reconstructed: 65-uenux2-ctextbox-roots.cpp builds the box with std::make_shared as
-# fn 11805 does, which keeps the vtable and brings the control block's D2 and D0 (target fns 11115, 11114). Both rules
-# list the headers by directory: every header ctextbox.h includes, transitively, is in api/gui/ ($(UENUX2_HDRS) is still
-# empty when the fragments are read)
-$(ROOT)/$(APP)/65-uenux2-ctextbox-roots.o: $(ROOT)/src/units/65-uenux2-ctextbox-roots.cpp $(ROOT)/src/units/65-uenux2-ctextbox.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/65-uenux2-ctextbox-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/65-uenux2-ctextbox-roots.o
+# The constructor's one caller, vota::AdicionaCaixaTecla (unit 217's ctesteteclado.cpp, behind its own frame in fn
+# 11805), builds the box with std::make_shared, as fn 11805 does, which keeps the vtable and brings the control block's
+# D2 and D0 (target fns 11115, 11114, which now link from ctesteteclado.cpp.o); the roots file that stood in for fn
+# 11805 went when it was written.
+# SetStatus (fn 940, matched; unit 217's fragment has the measurement and its stand-in): +44 stored when it differs, then
+# the notification Move has. It is the file's last function, a choice: no record places it, and it is alone in its use
+# band. `status == m_status` is the form written (the other order was not compiled).

@@ -30,10 +30,10 @@ __attribute__((noinline)) int ChamaEstadosEncerramentoOutros(int n)
     return w220_gerarelatorios_getinst() * 7 + w220_copiaresultado_getinst() + w220_gerabu_getinst() * 11 + n;
 }
 
-// Stands for three of the four callers of vota::AdicionaCabecalhoTesteTeclado (fn 3054,
-// app/vota/eleitor/comum/ctelasvota.cpp): CTesteTeclado's ProcessInput and StartState (fns 11804 and 11805, pending in
-// unit 217) and CTesteFalhou's ProcessInput (fn 11809, not written). The fourth, CEsperaRetestar::GetInst (fn 5936),
-// is in the link.
+// Stands for two of the four callers of vota::AdicionaCabecalhoTesteTeclado (fn 3054,
+// app/vota/eleitor/comum/ctelasvota.cpp): CTesteTeclado's ProcessInput (fn 11804, pending in unit 217) and
+// CTesteFalhou's ProcessInput (fn 11809, not written). The other two are in the link: CEsperaRetestar::GetInst (fn 5936)
+// and CTesteTeclado::StartState (fn 11805, written in unit 217, not matched).
 __attribute__((noinline)) int CabecalhosTesteTeclado(int construtor)
 {
     w220_cabecalho_teste(construtor + 12);

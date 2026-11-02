@@ -113,4 +113,18 @@ SRect CTextBox::Rect() const
     return rect;
 }
 
+void CTextBox::SetStatus(ETextStatus status)
+{
+    if (status == m_status) {
+        return;
+    }
+
+    m_status = status;
+
+    if (m_form != nullptr && m_form->IsVisible()) {
+        m_alterado = true;
+        m_form->Refresh();
+    }
+}
+
 } // namespace api

@@ -45,7 +45,6 @@
 #include "app/vota/eleitor/comum/ipoliticaexecucaoeleitor.h"
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
 #include "app/vota/eleitor/iajusteinicial.h"
-#include "app/vota/eleitor/iniciovotacao/testeteclado/igeradorteclas.h"
 #include "app/vota/eleitor/isincronismovotoeleitor.h"
 #include "app/vota/iexecucaovota.h"
 #include "ecourna/api/security/irng.hpp"
@@ -142,7 +141,6 @@ struct SW100Roots {
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IControladorRegistraMesarios>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IAjusteInicial>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IQRCodeBUDS>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::testeteclado::impl::IGeradorTeclas>);
         w100_sink_getinst = w100_getinst;
         w100_sink_falha = w100_falha;
     }

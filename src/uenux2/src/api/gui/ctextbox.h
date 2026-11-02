@@ -17,7 +17,8 @@
 // Draw is the first virtual member defined out of line, so it is the key function. Inside the uses-1 band of
 // ledger/ordinals.tsv the index runs against the link order, and the records put Draw, Move and Rect in their file's
 // order; the destructors and GetTypeName follow them, so those are implicit or inline, and GetTypeName is written in
-// the class. The comments are ours, not TSE's.
+// the class. SetStatus (fn 940, not virtual, out of line: three target callers, 5982, 11804 and 11805) stores +44
+// when the status differs and notifies the form as Move does. The comments are ours, not TSE's.
 
 #include <string>
 
@@ -51,6 +52,8 @@ public:
     SRect Rect() const override;
 
     void Move(const SPoint& posicao) override;
+
+    void SetStatus(ETextStatus status);
 
     std::string GetTypeName() const override { return "CTextBox"; }
 

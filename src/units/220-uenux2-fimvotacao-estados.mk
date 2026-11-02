@@ -51,7 +51,8 @@
 #
 # The roots stand in for the GetInst callers not in the link (fns 7160, 7481, 12098 and CGeraBU::StartState 12110) and
 # for the other units' members this unit's paragraphs add whose target callers are not all written: 3054 (fns 11804,
-# 11805, 11809), 5936 (11809, 11812) and api::CDateTime::operator- (5471: fn 13012). Their comments name each.
+# 11809; 11805 is unit 217's, written), 5936 (11809, 11812) and api::CDateTime::operator- (5471: fn 13012). Their
+# comments name each.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 FIMVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/fimvotacao/cgerabu.cpp \
     src/app/vota/eleitor/fimvotacao/cgerarelatorios.cpp \
