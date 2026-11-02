@@ -61,6 +61,18 @@
 # due condition give others. With the loop in the body, `> 999999`, `x = x - 1000000` and time_t and int locals for
 # the two parts give the same object as the loop as first written; an int counter of the seconds and a do-while under
 # an if give others.
+# Not written: fn 4633, which CThreadVota's two TrataErro (7709, 7710, traps in unit 116's pending file) call. It shows
+# an api::CMTFormBuilder form: AddLed(0), "URNA ELETRÔNICA INOPERANTE" at {1, 1} and "Siga as instruções na tela do
+# eleitor" at {1, 2}, both centred, then GetForm("")'s slot 2. Written as a free function of vota after IniciaContexto
+# (MostraTelaUrnaInoperanteComLed, cthreadoperador.cpp's MostraTelaUrnaInoperante has no LED and other points) with a
+# roots caller for the two traps, it read `128 over 302 rows (same 174, replaced 103 [97 operand-only], inserted 8,
+# deleted 17)` in the whole link (pnpm wasm score against our symbol), and every row that is not an operand is the
+# builder's construction: the target clears its 12 bytes in place and uses the frame's address, ours calls the
+# constructor (fn 203's body) and uses its result, the remainder units 104, 142 and 165 record for 10214, 1150 and
+# 5343. Of GetForm's (fn 1694) seven target callers (`grep -lE 'call 1694( |$)'` over build/out/splat/pieces/asm) only
+# 10204 calls 203; 10214, 1150, 5341 and 4633 call AddLed (435) right after the clearing, with 0, 1, 2 and 0, and 5343
+# and 10676 call no AddLed. Not explained, and nothing in the link needs it, so it is not written
+# (docs/how-to-decompile.md step 5).
 UENUX2_SRCS += src/api/util/ctickmanager.cpp src/app/vota/cthreadvota.cpp
 # The roots' headers are named here: $(UENUX2_HDRS) is still empty when the fragments are read.
 CTHREADVOTA_HDRS := $(addprefix $(ROOT)/src/uenux2/src/,api/util/ctickmanager.h api/util/cwait.h api/util/eueutilerror.h api/ipc/cthread.h app/vota/cthreadvota.h)

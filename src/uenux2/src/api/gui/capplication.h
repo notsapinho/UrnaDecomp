@@ -26,6 +26,7 @@
 // (src/units/31-uenux2-cformbuilder.mk and 120-uenux2-iform.mk say why they are not written) and 12055 and 7787 too.
 
 #include <string>
+#include <vector>
 
 #include "api/gui/capplicationcontextstack.h"
 #include "api/uelog/cescritorlog.h"
@@ -34,6 +35,13 @@ namespace api {
 
 class CApplication {
 public:
+    // The level ShowExceptionMsg takes: its lambda's typeinfo name (ledger/strings.tsv, 520532) mangles the type as
+    // CApplication's own EExceptionLevel. Target fn 5569 returns 2 when the context in force has its word set (+48,
+    // CApplicationContext::m_padrao) and 1 otherwise; the one function it reaches in the target, 5568, never reads it
+    // (that body ends at its std::async's throw: src/units/171-uenux2-capplication.mk). The enumerators' names and
+    // the enum's underlying type are chosen.
+    enum EExceptionLevel { EXCEPTION_LEVEL_1 = 1, EXCEPTION_LEVEL_2 = 2 };
+
     static void InitApplication(const std::string& aplicacao, const std::string& descricao, const std::string& versao,
                                 ELogAplicativos aplicativo);
     static void PushContext(CApplicationContext context);
@@ -41,6 +49,10 @@ public:
                                                  std::string detalhe);
     static void EnterLoopDoingNothing();
     static std::string GetDescricaoModo();
+    // Target fn 1695: a copy of the context in force, the stack's last, or CriaContextoPadrao("Erro inesperado",
+    // "Pilha de contexto vazia") when the stack is empty. No record names it: its name and its being a static member
+    // (it reads s_contextos) are chosen.
+    static CApplicationContext GetContexto();
 
     static bool s_finalizar;
     static int s_codigoRetorno;
@@ -55,5 +67,18 @@ public:
 private:
     static CApplicationContextGuard CriaContexto(CApplicationContext contexto);
 };
+
+// Target fn 5569: the level of the context in force. Its result type is evidence: 7709 and 7710 pass the result as
+// 5568's first argument, which is ShowExceptionMsg's EExceptionLevel (5568 holds the async state of that function's
+// lambda). No record names it, and it reads no state of the class, so it is a free function (docs/how-to-decompile.md
+// step 3); its name is chosen. Its file is a reading of use band 2 (ledger/ordinals.tsv): there it lies ahead of 5568
+// and EnterLoopDoingNothing (5566, record 503), with only 5567 between them, read as a libc++ thread routine (it calls
+// __thread_local_data and pthread_setspecific).
+CApplication::EExceptionLevel GetExceptionLevel();
+
+// Target fn 1696: the parts written one after the other through a std::ostringstream, the separator between two of
+// them. No record names it: its name, its being a free function of api and its file are chosen; in use band 7 it
+// lies right ahead of GetContexto (1695), and capplication.cpp defines it first of the two.
+std::string Join(const std::vector<std::string>& partes, const std::string& separador);
 
 } // namespace api

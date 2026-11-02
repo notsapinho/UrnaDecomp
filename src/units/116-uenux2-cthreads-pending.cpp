@@ -1,16 +1,22 @@
 // Pending members of unit 116's vota threads, each a slot of a vtable the unit emits (src/units/116-uenux2-cthreads.mk).
 // What each waits for:
 // - vota::CThreadVota::TrataErro(const CError&) 7710 (slot 3), 2317 B, and TrataErro(const std::exception&) 7709 (slot
-//   4), 2883 B: the unnamed callees 1695, 1696, 3336, 4633, 5568 and 5569 (5566 is
-//   api::CApplication::EnterLoopDoingNothing, unit 171). The first is the class's key function, so CThreadVota's
-//   vtable, typeinfo and D2 are emitted in this object, and move to cthreadvota.cpp when it lands. Read, not written:
-//   4633 shows the "URNA ELETRÔNICA INOPERANTE" screen with a LED, its api::CMTFormBuilder cleared in place (the
-//   remainder units 104 and 142 record); 3336 stores 1 in the byte @1832936, which 14 other target functions load
-//   (`grep -rlE 'i32\.const 1832936($|[^0-9])' build/out/splat/pieces/asm`), 4662 among them, which tests it before
-//   throwing the api::CUeDesligandoError fn 1685 builds (both unit 205's, which names the byte
-//   vota::CSincronizaVota::s_urnaDesligando); 5568 builds
-//   libc++'s std::async state for a lambda of api::CApplication::ShowExceptionMsg (its vptr) and throws "thread
-//   constructor failed".
+//   4), 2883 B. Read, not written: each does nothing once vota::CSincronizaVota::s_urnaDesligando is set (7710 also
+//   when the error is an api::CUeDesligandoError, a __dynamic_cast), then stops the other threads (slot 5), calls 4633
+//   and 3336, shows the error through code binaryen inlined (a second stack frame of 112 bytes, over 1695, 5569, 1696
+//   and 5568) and calls api::CApplication::EnterLoopDoingNothing (5566, unit 171). Of those callees, 3336
+//   (CSincronizaVota::MarcaUrnaDesligando, unit 205) and 1696 (api::Join, unit 171) match; 1695 and 5569 (unit 171)
+//   are written and not matched, 1695 by one frame offset, 5569 waiting for 1695's name; 4633 and 5568 are not
+//   written. 4633 shows the "URNA ELETRÔNICA INOPERANTE" screen with a LED and differs only where it builds its
+//   api::CMTFormBuilder, which the target clears in place, the remainder units 104 and 142 record
+//   (src/units/02-uenux2-cthreadvota.mk has the measurement). 5568 is api::CApplication::ShowExceptionMsg, whose code
+//   after its std::async is not in the target (src/units/171-uenux2-capplication.mk says why that stops it). 7709's
+//   inlined code also holds a message extractor (std::regex ".*?\).*?:\d+:-?\d+ - ((.|\n)*)" matched against what()
+//   inside a catch (...), the whole text when it does not match) that calls through invoke_*, so it is an
+//   -fexceptions TU's code, which uenux2's src/api and src/app files are not (docs/reference/app-flags.md
+//   "Exceptions"); not written. The
+//   first is the class's key function, so CThreadVota's vtable, typeinfo and D2 are emitted in this object, and move to
+//   cthreadvota.cpp when it lands.
 // - vota::CThreadMonitor::Run 10226 (slot 2), 7171 B: its records name VotacaoSuspensa, MonitorFoneOuvido,
 //   VerificaErroCriticoFlash, VerificaErroCriticoKbdTE, LogaEspaco, LogaStatusRedeAcBateria and
 //   CMonitoraAlimentacao::GetInst and VerificaAlimentacao, all inlined there, and IInterfaceInit::LogDiskInfo
