@@ -20,7 +20,19 @@ namespace vota {
 
 CSuspensaoAutomaticaEleitor::~CSuspensaoAutomaticaEleitor() = default;
 
-// (original lines 23-79: content not recovered)
+void CSuspensaoAutomaticaEleitor::InicializaTick()
+{
+    CThreadOperador& thread = CThreadOperador::GetInst();
+    const std::map<uebyte, api::CTickManager::EEstadoTick> ticks = thread.GetEstadoTicks();
+    const auto it = ticks.find(m_tick);
+    if (it == ticks.end()) {
+        m_tick = thread.AddStoppedTick(1000);
+    } else if (it->second == api::CTickManager::TICK_ATIVO) {
+        thread.StopTick(m_tick);
+    }
+}
+
+// (original lines 35-79: content not recovered)
 #line 80
 void CSuspensaoAutomaticaEleitor::AtualizaMensagem()
 {
@@ -32,18 +44,6 @@ void CSuspensaoAutomaticaEleitor::AtualizaMensagem()
 void CSuspensaoAutomaticaEleitor::DisparaSinalizacaoSonora()
 {
     std::thread([] { api::CPolySingleton<api::IScreenMT>::instance().Buzz(50, 3); }).detach();
-}
-
-void CSuspensaoAutomaticaEleitor::InicializaTick()
-{
-    CThreadOperador& thread = CThreadOperador::GetInst();
-    const std::map<uebyte, api::CTickManager::EEstadoTick> ticks = thread.GetEstadoTicks();
-    const auto it = ticks.find(m_tick);
-    if (it == ticks.end()) {
-        m_tick = thread.AddStoppedTick(1000);
-    } else if (it->second == api::CTickManager::TICK_ATIVO) {
-        thread.StopTick(m_tick);
-    }
 }
 
 void CSuspensaoAutomaticaEleitor::StartState()

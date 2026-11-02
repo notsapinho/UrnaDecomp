@@ -3572,7 +3572,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3706	82	2	libcxx	-	-	-	none	-	
 3707	173	3	app	ecourna	skeleton	3542	shape	7	comum::md::(anonymous namespace)::GetEleicao(api::EUeRdvError, unsigned char, std::__2::map<unsigned char, unsigned int, std::__2::less<unsigned char>, std::__2::allocator<std::__2::pair<unsigned char const, unsigned int>>> const&, std::__2::source_location)
 3708	173	3	app	ecourna	skeleton	5728	shape	6	comum::md::CVotosEleicoesVota::Votos(api::EUeRdvError, unsigned int, std::__2::source_location) const
-3709	32	3	-	vota	skeleton	3525	addr	1	std::__2::__tree<std::__2::__value_type<unsigned char, unsigned char>, std::__2::__map_value_compare<unsigned char, std::__2::pair<unsigned char const, unsigned char>, std::__2::less<unsigned char>, true>, std::__2::allocator<std::__2::pair<unsigned char const, unsigned char>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned char, unsigned char>, void*>*)
+3709	32	3	-	vota	skeleton	3526	addr	1	std::__2::__tree<std::__2::__value_type<unsigned char, unsigned char>, std::__2::__map_value_compare<unsigned char, std::__2::pair<unsigned char const, unsigned char>, std::__2::less<unsigned char>, true>, std::__2::allocator<std::__2::pair<unsigned char const, unsigned char>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned char, unsigned char>, void*>*)
 3710	60	3	app	-	-	-	none	-	
 3711	37	3	app	-	-	-	none	-	
 3712	107	3	app	ecourna	-	-	none	-	

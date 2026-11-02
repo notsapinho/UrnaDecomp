@@ -3475,8 +3475,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3609	_ZN5comum25CPedeTituloMesarioInicialD0Ev	3408	symbol	match	-	13	addr	comum	1	app/uenux2/src/app/comum/comparecimentomesario/estados/cpedetitulomesarioinicial.cpp.o
 3610	-	-	-	no-candidate	no symbol and no ledger pair	971	none	comum	0	-
 3611	_ZN7ecourna3api9exception10CBaseErrorIN5comum34EUeComumComparecimentoMesarioErrorEXtlNS1_12SErrorLimitsELi7750ELi7800EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	5402	symbol	match	readings: address symbol	18	shape	ecourna	2	app/uenux2/src/app/comum/comparecimentomesario/dao/ccomparecimentomesariodao.cpp.o
-3612	_ZN4vota27CSuspensaoAutomaticaEleitor16AtualizaMensagemEv	3526	symbol	match	readings: address string	373	none	vota	1	app/uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp.o
-3613	_ZNSt3__26__treeINS_12__value_typeIhN3api12CTickManager11EEstadoTickEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	3525	symbol	match	-	32	addr	vota	2	app/uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp.o
+3612	_ZN4vota27CSuspensaoAutomaticaEleitor16AtualizaMensagemEv	3525	symbol	match	readings: address string	373	none	vota	1	app/uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp.o
+3613	_ZNSt3__26__treeINS_12__value_typeIhN3api12CTickManager11EEstadoTickEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	3526	symbol	match	-	32	addr	vota	2	app/uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp.o
 3614	-	-	-	no-candidate	no symbol and no ledger pair	4765	none	vota	0	-
 3615	-	-	-	no-candidate	no symbol and no ledger pair	2126	none	ecourna	0	-
 3616	-	-	-	no-candidate	no symbol and no ledger pair	3477	none	api	0	-
@@ -3572,7 +3572,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 3706	-	-	-	no-candidate	no symbol and no ledger pair	82	none	libc++	0	-
 3707	_ZN5comum2md12_GLOBAL__N_110GetEleicaoEN3api11EUeRdvErrorEhRKNSt3__23mapIhjNS4_4lessIhEENS4_9allocatorINS4_4pairIKhjEEEEEENS4_15source_locationE	3542	symbol	match	readings: address string,address symbol,table slot	173	shape	ecourna	1	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o
 3708	_ZNK5comum2md18CVotosEleicoesVota5VotosEN3api11EUeRdvErrorEjNSt3__215source_locationE	5728	symbol	match	readings: address string,address symbol,table slot	173	shape	ecourna	1	app/uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp.o
-3709	_ZNSt3__26__treeINS_12__value_typeIhN3api12CTickManager11EEstadoTickEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	3525	ledger	differs	+0xd target +0xc call 3709 | ours +0xc call 3613	32	addr	vota	1	app/uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp.o
+3709	_ZNSt3__26__treeINS_12__value_typeIhN3api12CTickManager11EEstadoTickEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE	3526	ledger	differs	+0xd target +0xc call 3709 | ours +0xc call 3613	32	addr	vota	1	app/uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp.o
 3710	_ZN5comum2md21CComplementoMunicipioC2EjsRKNS0_13CHorarioVeraoE	2516	symbol	match	-	60	none	app	1	app/uenux2/src/app/comum/dados/md/municipiozona/ccomplementomunicipio.cpp.o
 3711	_ZN5comum2md21CComplementoMunicipioC2Ejs	2517	symbol	match	-	37	none	app	1	app/uenux2/src/app/comum/dados/md/municipiozona/ccomplementomunicipio.cpp.o
 3712	_ZN5comum2md10CMunicipioC2EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEb	3843	symbol	match	readings: address string,address srcloc,address symbol,table slot	107	none	ecourna	1	app/uenux2/src/app/comum/dados/md/municipiozona/cmunicipio.cpp.o

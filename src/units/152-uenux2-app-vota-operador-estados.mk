@@ -125,6 +125,9 @@
 #   eleitor's queue, goes to CMostraEleitorVotando::GetInst (1150, unit 142's) and, when the record's audio is on, logs
 #   "Áudio ativado conforme cadastro" through a CLogVota member binaryen inlines (unit 119's file).
 # - The roots' stand-in for 4535's caller 10407 went with 10407 (the roots' header).
+# - Member order: in csuspensaoautomaticaeleitor.cpp InicializaTick comes before AtualizaMensagem, above the gap: the
+#   target's uses-3 band links 3613 (the map's destroy, which InicializaTick mentions first) ahead of 3612, and the
+#   object gives that order only so (ld_index in build/out/wasm-map/vota_web/names.tsv; the bytes are the same).
 # Chosen: InicializaTick's and AtualizaMensagem's names and lines, the enumeration's names, the local names, the queue
 # held in a local for the 8/9 choice in CHabilitaAudioEleitor (one GetInst, as the target calls it once there).
 #
