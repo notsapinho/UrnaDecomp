@@ -78,7 +78,8 @@
 #   assign +96 of CThreadOperador, unit 116's second string, now m_tituloMesario with an inline getter and setter (chosen:
 #   an out-of-line pair was not measured); slots 31 to 33 format it.
 # - Slot 30 takes the four scores as a const std::vector<int>& (chosen: it loads a data pointer and four ints, each of
-#   type code 3). Slot 12 returns CFinalizaOperador::GetInst() (fn 5342) as comum::CAppState&, a chosen type.
+#   type code 3). Slot 12 returns CFinalizaOperador::GetInst() (fn 5342) as comum::CAppState&, a chosen type. Slot 9
+#   (10794) returns CAguardaInicio::GetInst() (fn 5343, unit 165) the same way; it matches.
 # - Slot 6 (10796) reads the first word of comum::CAppInfo::GetInst().GetVota() (fns 185, 261 with 51), the vote state,
 #   and returns 1, 2, 0 and 3 for 55, 56, 57 and 58 (a table at 534720), else 0. The getter's name, GetEstadoVota, is the
 #   target's Assert texts' (cestadogeralvota.h says which). No text or record names EEstadoVota's 52 to 58 (the Assert
@@ -144,7 +145,7 @@
 #   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
 # Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
-# slots 5, 9, 13, 14 and 16 (fns 10797, 10794, 10790, 10789, 10786), and behind them fns 4662 and 5343;
+# slots 5, 13, 14 and 16 (fns 10797, 10790, 10789, 10786), and behind them fn 4662;
 # CRegistroMesarioEncerrado's ProcessKey (fn 10762).
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the

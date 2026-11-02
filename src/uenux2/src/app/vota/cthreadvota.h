@@ -55,7 +55,11 @@ protected:
     // the two others, and 7030 calls slot 6 of vota::IExecucaoVota. The name is chosen from that.
     virtual void ParaOutrasThreads() = 0;
 
-private:
+    // Protected: vota::CThreadOperador::Run (fn 10204) builds its context and runs it, and calls
+    // CTickManager::GetExpiredTicks (fn 5450) on +20, in its own code, without calling GetEstado or IniciaContexto,
+    // which binaryen inlines into their one caller (src/units/165-uenux2-app-vota-execucao.mk); a call from Run would
+    // keep them as functions. That Run reaches the members directly, and not through accessors clang inlines, is
+    // chosen.
     api::CTickManager m_ticks;
     std::unique_ptr<comum::CAppStateContext> m_contexto;
 };

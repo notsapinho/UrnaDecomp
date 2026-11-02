@@ -101,6 +101,17 @@ public:
         return mensagem;
     }
 
+    // Whether the queue is empty, read with m_sync held: vota::CThreadOperador::Run (fn 10204) and
+    // vota::CThreadEleitor's fn 4349 call Lock (slot 2) on m_sync, load the heap's first and last words and call Unlock
+    // (slot 3) on the same pointer before comparing them, in their own code. The member, its name and the guard are
+    // chosen. `size() == 0` is the form 10204 matches with; empty() was measured only together with another change
+    // (src/units/116-uenux2-cthreads.mk).
+    bool Vazia()
+    {
+        CSyncCtlGuard trava(m_sync.get());
+        return m_fila.size() == 0;
+    }
+
 private:
     // 16 bytes: the message, then what the heap compares (both offsets are Remove's; the names are chosen).
     struct SItem {

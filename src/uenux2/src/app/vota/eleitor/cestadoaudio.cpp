@@ -24,4 +24,19 @@ CEstadoAudio::CEstadoAudio()
 {
 }
 
+void CEstadoAudio::SelecionaModo0()
+{
+    m_modo = MODO_0;
+}
+
+void CEstadoAudio::SelecionaModo1()
+{
+    m_modo = MODO_1;
+}
+
+void CEstadoAudio::Desativa()
+{
+    m_modo = MODO_DESATIVADO;
+}
+
 } // namespace vota

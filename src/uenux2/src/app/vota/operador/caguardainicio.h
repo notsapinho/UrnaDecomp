@@ -16,8 +16,9 @@ namespace vota {
 // vota::CAguardaInicio (RTTI: si_class of comum::CAppState; vtable @1601032 [244, 387, 10220, 7480, 1661, 10219, 10217,
 // 218, 10218]): the operador's screen before the voting starts. It overrides the destructors, StartState (slot 2, fn
 // 10220), FinishState (slot 5, fn 10219), ProcessKey (slot 6, fn 10217, pending) and ProcessTick (slot 8, fn 10218). A
-// singleton: GetInst (fn 5343, not reconstructed) creates the 24-byte object on first use, with the constructor
-// inlined, and keeps it in a static std::unique_ptr (@1911624), releasing @1911600 at the end (fn 150) as the landed
+// singleton: GetInst (fn 5343, written, src/units/165-uenux2-app-vota-execucao.mk says why it differs) creates the
+// 24-byte object on first use, with the constructor inlined, and keeps it in a static std::unique_ptr (@1911624),
+// releasing @1911600 at the end (fn 150) as the landed
 // states' GetInst release their static std::mutex; it deletes an old
 // object with a direct call of fn 244 (the D2), so the class is final, and its destructor is out of line: fn 387 calls
 // fn 244 and frees `this`, the bodies 49 states share. The constructor passes comum::CAppState::EVENTO_TECLA |

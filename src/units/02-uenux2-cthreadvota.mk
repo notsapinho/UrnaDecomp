@@ -40,9 +40,9 @@
 # Five spellings of SearchNextId's loop give the same object for AddTick (wasm-objdump -d, compared row by row): an
 # unsigned, int or size_t counter, `<= 0xff` or `< 256`, and static_cast<uebyte> on the key and the result or none.
 # CTickManager::GetExpiredTicks (5450, no record: the name is chosen) returns the ids of the running ticks whose time
-# has come and moves each one on to its next time after now, by whole intervals. Its callers, 4349 (whose record is
-# CThreadEleitor::ProcessarEntrada's) and 10204 (CThreadOperador's slot 2), are not reconstructed: the roots stand for
-# them. It is defined last in ctickmanager.cpp, a choice: in use band 2 it links after 5452 and 5451 (StopTick) and
+# has come and moves each one on to its next time after now, by whole intervals. Its callers, 4349
+# (CThreadEleitor::ProcessaEventos, which holds CThreadEleitor::ProcessarEntrada's record) and 10204 (CThreadOperador's
+# slot 2), are unit 116's. It is defined last in ctickmanager.cpp, a choice: in use band 2 it links after 5452 and 5451 (StopTick) and
 # before 5449 (api::IsValidTime, ctime.cpp), so after StopTick, and the 26 free lines above SearchNextId (95 to 120)
 # are too few for it. Its `#include <cmath>` (for round) takes the blank line that followed `namespace {`, which keeps
 # AddTick's record on line 31. Measured in the whole link (pnpm wasm score against our symbol, names.tsv after

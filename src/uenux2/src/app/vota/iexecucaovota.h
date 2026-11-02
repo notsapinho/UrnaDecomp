@@ -17,7 +17,7 @@ class CAppState;
 // what CExecucaoVota's bodies show: 2 starts the three threads, sleeps and waits for them (fn 10236); 3 starts them
 // and sleeps (10235); 4 waits for them (10234); 5 starts the operador's thread (10233); 6 sets the operador's and the
 // monitor's stop flag (10232; vota::CThreadEleitor::ParaOutrasThreads, fn 7030, calls this slot); 7 returns false here
-// (the shared body 340) and runs the eleitor's ProcessarEntrada in the cooperative class (fn 7823); 8 the eleitor's
+// (the shared body 340) and runs the eleitor's ProcessaEventos in the cooperative class (fn 7823); 8 the eleitor's
 // message queue, +36 of the thread (4708); 9 the state the eleitor's context holds, or null (4705). No record or
 // caller names a slot: every name and the parameter-free signatures are chosen, the result types from what each body
 // returns (a reference to the queue at +36, a pointer that can be null). That the slots are pure here is chosen too:

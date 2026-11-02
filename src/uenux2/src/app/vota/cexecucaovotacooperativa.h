@@ -8,7 +8,7 @@ namespace vota {
 // 4713, 4713, 218, 218, 218, 7823, 4708, 4705]): the other implementation of the interface. Slots 2 and 3 are one body
 // (fn 4713): it gives vota::CThreadEleitor's context (+32 of the thread) a new comum::CAppStateContext built over the
 // state at +4 (fn 3844, the context's constructor) and starts that context's state; slots 4 to 6 are empty (the shared
-// body 218); slot 7 (fn 7823) runs CThreadEleitor's ProcessarEntrada (fn 4349) when the thread has a context and is not
+// body 218); slot 7 (fn 7823) runs CThreadEleitor::ProcessaEventos (fn 4349) when the thread has a context and is not
 // stopped; slots 8 and 9 are CExecucaoVota's bodies (fns 4708, 4705). Two slots that hold one function are two members:
 // which of the two the target's source defines and which calls the other is not in the bytes.
 //
