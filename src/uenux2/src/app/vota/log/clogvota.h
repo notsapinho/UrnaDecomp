@@ -98,6 +98,12 @@ public:
     void LogaJustificativaRecebida();
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
+    // Held inlined by vota::CPerguntaCodigoSuspensao::ProcessInput (fn 10420), their one caller, after GetInst: the
+    // first logs through loga (fn 233), the other two format the title into their message and log through logaAlerta
+    // (fn 1398). The names are chosen from their messages.
+    void LogaTituloSuspensaoDigitado();
+    void LogaTituloSuspensaoInvalido(const std::string& titulo);
+    void LogaTituloSuspensaoValido(const std::string& titulo);
     void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via);
     void LogaMesarioIndagadoQtdViasAdicionais();
     void LogaMesarioNaoSolicitouViasAdicionais();
@@ -107,6 +113,9 @@ public:
     void LogaVotacaoEncerrada();
     void LogaAguardandoConfirmacaoZeresima();
     void LogaAguardandoHorarioZeresima();
+    // Held inlined by vota::CPedeIdentidade::StartState (fn 10680), its one caller, the shape of
+    // LogaAguardandoHorarioZeresima (CLoga::loga, fn 433, with +4 and severity 1). The name is chosen from its message.
+    void LogaAguardandoIdentificadorEleitor();
     void LogaDataEleicaoInvalida();
     void LogaErroEstadoAplicativoDesconhecido();
     void LogaFimTesteTecladoSucesso();

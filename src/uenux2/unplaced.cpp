@@ -427,9 +427,6 @@
 // f2734 · 1228 B · unmatched · placement: link order · name unknown
 // ? f2734() { ... }
 
-// f2733 · 217 B · unmatched · placement: link order · name unknown
-// ? f2733(i32, i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 1083 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cvalidaidentidade.cpp
 
 // f2750 · 96 B · unmatched · placement: link order · name unknown
@@ -942,19 +939,6 @@
 
 // f2685 · 17 B · unmatched · placement: link order · name unknown
 // void f2685(i32, i32) { ... }
-
-// link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
-
-// f2731 · 68 B · unmatched · placement: link order · name unknown
-// ? f2731(i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// f2730 · 68 B · unmatched · placement: link order · name unknown
-// ? f2730(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1081 · uses=4 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
-
-// f2738 · 76 B · unmatched · placement: link order · name unknown
-// ? f2738(i32, i32, i32) { ... }
 
 // link-order cluster 1085 · uses=4 · neighbours' file uenux2/src/api/util/csystem.cpp
 

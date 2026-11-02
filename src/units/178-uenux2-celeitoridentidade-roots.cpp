@@ -2,12 +2,13 @@
 // not reconstructed. Each function has direct callers in the target and gets two call sites here, which vary what the
 // callers vary, so dead-argument elimination folds nothing in:
 // - CEleitorIdentidade's constructor (fn 566): 13 direct callers, which use the returned `this`, so the stand-ins use it
-//   too. Six are in the link (3766 and 11542, unit 91; 11410, unit 98; 2264, unit 110; 10586 and 2225, unit 50), and the
-//   first three pass the type as a constant or a column's value; the stand-ins stay for the seven that wait (10313,
-//   10337, 10401, 10402, 10425, 11407, 11411), which pass it as a variable.
-// - FormataIdentidade (fn 2798): callers 3616, 10420 and 10631, which pass the type as a constant (10420, 1) or a
-//   variable.
-// - CValidadorIdentidade::EhValida (fn 2803): callers 2225, in the link (unit 50), 10313, 10420 and 10721.
+//   too. Eight are in the link (3766, 11542, 10401 and 10402, unit 91; 11410, unit 98; 2264, unit 110; 10586 and 2225,
+//   unit 50), and the first five pass the type as a constant or a column's value; the stand-ins stay for the five that
+//   wait (10313, 10337, 10425, 11407, 11411), which pass it as a variable.
+// - FormataIdentidade (fn 2798): callers 3616, 10420 (in the link, unit 142, which passes the type as the constant 1)
+//   and 10631; the stand-ins stay for 3616 and 10631.
+// - CValidadorIdentidade::EhValida (fn 2803): callers 2225 (unit 50) and 10420 (unit 142's validatitulosuspensao.cpp,
+//   binaryen-inlined there), in the link, and 10313 and 10721, which the stand-ins stay for.
 // - IRegraIdentidade::EhValida (fn 3723): callers 2803, in the link, and 10627, vota::CValidaIdentidade's slot 2, which
 //   one stand-in stands for.
 // - FormataIdentificador (fn 1924): callers 10586, in the link (unit 50), 11233 (comum::(anonymous

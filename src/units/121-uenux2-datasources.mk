@@ -3,8 +3,8 @@
 # DestroyInst, Reinicia, CalculaCodigo and GeraMacHexa (src/app/comum/relatorios/ccalculacv.cpp), and the roots file 121-uenux2-datasources-roots.cpp, whose
 # header says which vtables it keeps and from which dropped builders. Both files are the ones the classes' records name
 # (cescolheopcao.cpp:150 to 152, StartState's; ccalculacv.cpp:58 to 74, the constructor's, and 109, IncluiString's).
-# IncluiString's throw is on its record's line; StartState and the constructor are not written, and the lines of the
-# functions here that have no record are a choice, after the records. Paths relative to src/uenux2.
+# IncluiString's throw and StartState's three records are on their lines; the constructor is not written, and the lines
+# of the functions here that have no record are a choice, after the records. Paths relative to src/uenux2.
 #
 # Target functions matched:
 #   CDataText<vota::CEscolheOpcao::COpcaoDS>::GetText                 10685, with the source's call operator inlined
@@ -17,6 +17,7 @@
 #   comum::CCalculaCV::CalculaCodigo, with GeraMacHexa inlined        3700, from ccalculacv.cpp.o
 #   vota::CEscolheOpcao's destructor and deleting destructor           2752, 10691, from cescolheopcao.cpp.o
 #   the destroy of CEscolheOpcao's std::map                            3630, from cescolheopcao.cpp.o
+#   vota::CEscolheOpcao::StartState                                    10690, from cescolheopcao.cpp.o
 # CCalculaCV::DestroyInst has no target function: unit 139's ~CGeradorBU (fn 3698) holds it inlined by binaryen, and
 # that fragment has the evidence for its body and for its TU. It needs no root: its one caller is that destructor.
 # Two forms of the operator give 10685 the same instructions in the whole link (`score 10 over 216 rows`, all
@@ -27,14 +28,24 @@
 #
 # vota::CEscolheOpcao itself (cescolheopcao.h has the layout and what each part rests on): its destructor is out of line
 # in cescolheopcao.cpp, at line 140, a choice before the records (10691 sits above 10690 and 10689 in their use band, so it
-# links first); it is the class's key function, so the object emits the vtable, whose StartState (10690) and
-# ProcessInput (10689) are trapped in 121-uenux2-datasources-pending.cpp (its header says what each waits for). Evidence:
+# links first); it is the class's key function, so the object emits the vtable, whose ProcessInput (10689) is trapped in
+# 121-uenux2-datasources-pending.cpp (its header says what it waits for). Evidence:
 # 10691 is `f2752(p0); drop; f136(p0)`, an out-of-line destructor (docs/reference/facts/reading.md R5), and 2752 stores
 # no vptr first, a final class (R4); it releases the std::shared_ptr at +24 and then destroys the std::map at +12 with
 # 3630, which destroys each node's std::function at +40 and nothing else of it. fn 2753, which builds the object, is
 # not written (it calls fn 1151): the roots keep the vtable by its address. 2752, 10691 and 3630 matched as written.
 # The mapped type std::pair<int, COpcaoDS>, which only 3630's symbol carries, the members' names and the form's type are
 # chosen.
+#
+# StartState (10690, slot 2) is written at its records' lines in cescolheopcao.cpp: it sets the next state to itself,
+# shows the form at +24 (its slot 2), logs with musl's syslog(LOG_INFO, "%s:%d> %d", __func__, __LINE__, ...) whether
+# IUrna's Modelo() (slot 0) is at least 2020, and when it is calls IScreenMT's slot 19 with 1. Evidence: the three
+# records (150:55, the CPolySingleton<IUrna>::instance() call inside syslog's arguments, which `__func__, __LINE__,`
+# written out put at that column; 151:9 and 152:9), the literals "%s:%d> %d" and "StartState", the 150 and the priority
+# 6 the target passes. syslog is the C library's: binaryen inlines it into its one caller, its 16-byte frame holding the
+# va_list, and the target's 10690 has that frame too around its call of __vsyslog (2946). Chosen: `>= 2020` spelled in
+# both places, which gives the target's rows (the first as `i32.gt_s` of 2019; `> 2019` spelled there is not measured),
+# and api:: written at each call. Before steps 7 to 9 it scored 14 over 96 rows, all operand-only (pnpm wasm score).
 #
 # Matched once a literal landed:
 # - 12621, CDataText<comum::CRespostasDSNumero>::GetText, emitted by unit 102's roots object. Its operator is in

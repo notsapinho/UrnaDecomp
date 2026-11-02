@@ -26,6 +26,17 @@
 # measured); the locals' names and spelled types, which fill the records' columns (50:21, 51:23, 84:25); the lines of
 # the destructor and MostraImagem; the names in cinfomtlcd.h; the destructor declared first in the class (Update is out
 # of line in the same .cpp, so either order emits the vtable there). Line 33 (CreateInst's record, fn 7787) stays blank.
+# GetInst (target fn 2284, a chosen name) is written in cinfomtlcd.cpp at a chosen line after Update, with the two
+# statics it reads (defined after it, s_inst first, as in cfederacoes.cpp, a choice): CFederacoes::GetInst's shape (unit
+# 162), a lock_guard over the std::mutex (its unlock is the `call 150` the target makes on 1838548) and, when the
+# std::unique_ptr (1838572) is empty, a new 64-byte object from the constructor (5904) moved into it with
+# std::make_unique; the old pointer's delete is the vtable's slot 1. It scored 8 over 32 rows, all operand-only (pnpm
+# wasm score, before steps 7 to 9), the eight the two statics' addresses. Their exit destructors match too: 11656 (the
+# pointer's, `pair-addr`) and 11655 (the mutex's, found by the content pass, its object cinfomtlcd.cpp.o, beside 11656
+# in matched.txt). The names: s_inst is `vote:6 by:2284,11656`; s_mutex is `vote:1 by:2284` and holds through 11655's
+# match, its static destructor (docs/reference/splat.md "No circular evidence"); 7787, which holds CreateInst inlined
+# (record :33), reads both addresses too. Chosen: GetInst's name and being a static member (a singleton's), the statics'
+# names and their being members, make_unique against reset(new), not compared.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CINFOMTLCD_SRCS := src/app/comum/cinfomtlcd.cpp
 UENUX2_SRCS += $(CINFOMTLCD_SRCS)

@@ -51,7 +51,20 @@ void CInfoMTLCD::Update(const api::SharedIImage& imagem)
     MostrarImagemNoLCD(*imagem, SPoint{x, y}, false);
 }
 
-// (original lines 58-81: content not recovered)
+
+CInfoMTLCD& CInfoMTLCD::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst = std::make_unique<CInfoMTLCD>();
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CInfoMTLCD> CInfoMTLCD::s_inst;
+std::mutex CInfoMTLCD::s_mutex;
+
+// (original lines 71-81: content not recovered)
 #line 82
 void CInfoMTLCD::MostrarImagemNoLCD(const api::IImage& imagem, const api::SPoint& posicao, bool opcao)
 {

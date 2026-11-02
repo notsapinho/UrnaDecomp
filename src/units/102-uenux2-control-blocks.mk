@@ -1,13 +1,15 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 50 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Sixteen come from the objects of units 31, 120, 101, 165,
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 49 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Seventeen come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113 and 163, whose builders are written, so the roots no longer instantiate them, but for one:
 # IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550),
 # CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
 # 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
 # vota::CPreShowFormVota's (576, unit 165's cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is
 # not written) and comum::md::CEleitorDinamico's (11542, CEleitorDinamicoDAO::RecuperarID, unit 91's
-# celeitordinamicodao.cpp, from which 11536 and 11537 match) and api::CTextFieldBlinking's (1265,
+# celeitordinamicodao.cpp, from which 11536 and 11537 match) and comum::md::CComparecimentoMesario's (10402,
+# CComparecimentoMesarioDAO::RecuperarID, unit 91's ccomparecimentomesariodao.cpp, from which 10395 and 5429, the slot 2
+# it shares with std::string's block, match) and api::CTextFieldBlinking's (1265,
 # CFormBuilder::AddBlinkingTextField, unit 31's cformbuilder.cpp, from which 11113 and 11112 match) and api::CFixedImage's (8633, unit 127's cwasmresource.cpp, and 1263, unit 164's cpowerinformation.cpp, from
 # which 8585 and 8578 match) and the pointer blocks of comum::dao::IJustificadorDAO and IComparecimentoMesarioDAO, whose
 # builders are unit 113's comum::CJustificador constructor (3742) and comum::CRegistradorMesario::GetInst (815): each

@@ -88,6 +88,39 @@
 #   10544; api::CTextFieldUpdateMT's own members are 10545 to 10549), not among this file's functions (10424 to 10429).
 # Chosen too: CriaForm's name and its being a static member, the statics' names.
 #
+# Two more slots match, written in their classes' files (scores from pnpm wasm score before steps 7 to 9):
+# - CMostraEleitorVotando::StartState (10427, 3 over 74 rows, all operand-only), at a chosen line before ProcessInput's
+#   record: it copies vota::CThreadOperador's string at +108 into the string +12 points to (std::string's operator=,
+#   through CThreadOperador::GetTextoEleitor, an accessor added to cthreadoperador.h, its name chosen), shows +20's
+#   form, calls comum::CInfoMTLCD::MostraIconeBateria on CInfoMTLCD::GetInst()'s result (2284, unit 153's file) and sets
+#   the next state, in the target's order.
+# - CPerguntaCodigoSuspensao::ProcessInput (10420, 56 over 873 rows, all operand-only): Read() (record
+#   cinteractiveform.h:57 @1593176), then nothing more while +28 is set; on INPUT_CORRIGE,
+#   CLogVota::LogaSuspensaoAbortada (4535), CThreadEleitor's queue's Post(4) and CMostraEleitorVotando::GetInst() as the
+#   next state; on INPUT_CONFIRMA, the text of the form's GetEntradas().at(0), and when it is not empty three functions
+#   binaryen inlines, each in a stack frame of its own after its call: the CLogVota member LogaTituloSuspensaoDigitado
+#   (loga, fn 233), vota::ValidaTituloSuspensao and LogaTituloSuspensaoInvalido or LogaTituloSuspensaoValido
+#   (std::format of the title, logaAlerta, fn 1398); an invalid title shows +20's form, waits 3000 ms through
+#   api::CSystem::Dorme (the target's test of the byte at 1584624 around emscripten_sleep) and shows +12's form again, a
+#   valid one posts 2 and sets +28. The empty vector branches to the same std::out_of_range throw as Read()'s bounds
+#   check, and the vector's end is loaded before its begin: at(0). Measured, with the helper below still in the
+#   caller's TU: an `if (!GetEntradas().empty())` around `[0]` gave 90 over 881 rows (8 inserted, 8 deleted), the begin
+#   loaded first and Read()'s check an `if` where the shared throw gives a `block` and `br_if`; `size() > 0`, with the
+#   switch inside `if (!m_bLido)`, loaded the end first and kept the `if` (119 over 877, 4 inserted, 4 deleted);
+#   at(0) with the early return, 115 over 877 (4 inserted, 3 deleted), the helper's difference alone.
+# - ValidaTituloSuspensao (no target index: 10420 holds it, in a 48-byte frame) formats the title typed and the voter's
+#   identity typed (GetIdentidadeDigitada, fn 3623) with comum::md::FormataIdentidade and type 1, compares them (memcmp
+#   with the voter's first) before CValidadorIdentidade::EhValida, and returns the AND of the two and the formatted
+#   title, a copy. It is in a file of its own, validatitulosuspensao.cpp, listed after cperguntacodigosuspensao.cpp:
+#   defined in the caller's TU it gave 115 over 877 rows (4 inserted, 3 deleted), the result's address (+8 of the
+#   caller's frame) computed before the helper's frame instead of at the store and the locals renumbered after it; in a
+#   TU of its own, the score above. A function that reads no state of the class goes in another TU than its caller as a
+#   free function (docs/reference/facts/reading.md R10).
+# Chosen: the three CLogVota members' names (from their messages; their place after LogaPedidoTituloSuspensao),
+# ValidaTituloSuspensao's name, its std::pair<bool, std::string> result, its file and its declaration in
+# cperguntacodigosuspensao.h, the locals' names, `valido && diferente`, the switch's default, and the early return (the
+# `if` around the switch was measured only with `size() > 0`).
+#
 # A written body that does not match: CPedeAnoNascimentoSemBiometria::StartState (fn 10490) is `differs`. The target
 # stores +4 (the next state) first, then +32 and +28. Each of the six orders of the three statements compiles at the
 # tree's flags with the +4 store last, and the order written here does so at -O1, -O2, -O3, -Os and -Oz, and with and
@@ -99,7 +132,8 @@ APP_VOTA_ESTADOS_448_SRCS := src/app/vota/eleitor/curnainspecionada.cpp \
     src/app/vota/operador/justificativa/cjustificativaefetuada.cpp \
     src/app/vota/operador/confirmaidentidade/cpedeanonascimentosembiometria.cpp \
     src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp \
-    src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp
+    src/app/vota/operador/aguardaeleitor/cperguntacodigosuspensao.cpp \
+    src/app/vota/operador/aguardaeleitor/validatitulosuspensao.cpp
 UENUX2_SRCS += $(APP_VOTA_ESTADOS_448_SRCS)
 # The members not reconstructed: 142-uenux2-app-vota-estados-448-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags

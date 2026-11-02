@@ -10,10 +10,12 @@
 #include "api/hwil/iinput.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/cinfomtlcd.h"
 #include "app/comum/dados/celeitores.h"
 #include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/cthreadoperador.h"
 
 namespace vota {
 
@@ -50,8 +52,13 @@ CMostraEleitorVotando& CMostraEleitorVotando::GetInst()
 std::unique_ptr<CMostraEleitorVotando> CMostraEleitorVotando::s_inst;
 std::mutex CMostraEleitorVotando::s_mutex;
 
-// (original lines 53-61: content not recovered)
-#line 62
+void CMostraEleitorVotando::StartState()
+{
+    *m_nome = CThreadOperador::GetInst().GetTextoEleitor();
+    m_form->Slot2();
+    comum::CInfoMTLCD::GetInst().MostraIconeBateria();
+    m_pNextState = this;
+}
 void CMostraEleitorVotando::ProcessInput()
 {
     auto& terminal = api::CPolySingleton<api::IInputMT>::instance();

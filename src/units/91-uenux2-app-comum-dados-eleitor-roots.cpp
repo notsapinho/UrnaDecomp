@@ -7,9 +7,6 @@
 // - CEleitorDecorator::GetIdentidadePorTipo (fn 708, twelve callers), CBiometriaEleitor::GetDedo (fn 3720, three) and
 //   CriaComum (fn 2799, one caller with four call sites, 11422): one stand-in each with two call sites keeps each out of
 //   line, and no argument is the same constant at both, so dead-argument elimination folds nothing in.
-// - CComparecimentoMesarioDAO::ConverteEstadoBiometria and ConverteDedoHabilitacao (fns 5391 and 5390): two direct
-//   callers each in the target, 10401 and 10402, the DAO's slots 8 and 7, which are pending; one stand-in calls each
-//   twice, with different arguments.
 // CEleitorDinamico::GetTituloMesarioHabilitacao (fn 1548) needs none: Inserir and Atualizar call it twice each.
 // - std::vector<CEleitorDinamico>'s instances that RecuperarTodos's push_back brings: its slow path (fn 5759) calls
 //   construct_at (fn 5760), __uninitialized_allocator_relocate (fn 3759) and __split_buffer's destructor (fn 3758), each
@@ -26,8 +23,6 @@ int r91_dinamicodao_ctor(int, int) __asm__("_ZN5comum3dao19CEleitorDinamicoDAOC1
 void r91_identidade_por_tipo(int, int, int) __asm__("_ZNK5comum2md17CEleitorDecorator20GetIdentidadePorTipoEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void r91_get_dedo(int, int, int) __asm__("_ZNK5comum2md17CBiometriaEleitor7GetDedoENS0_5CDedo8TipoDedoE");
 void r91_cria_comum(int, int) __asm__("_ZN5comum2md17CBiometriaEleitor9CriaComumENSt3__26vectorINS0_5CDedoENS2_9allocatorIS4_EEEE");
-int r91_estado_biometria(int, int) __asm__("_ZNK5comum3dao25CComparecimentoMesarioDAO23ConverteEstadoBiometriaEi");
-int r91_dedo_habilitacao(int, int) __asm__("_ZNK5comum3dao25CComparecimentoMesarioDAO23ConverteDedoHabilitacaoEi");
 int r91_constroi_copia(int, int) __asm__("_ZNSt3__212construct_atB8ne210108IN5comum2md16CEleitorDinamicoEJRKS3_EPS3_EEPT_S8_DpOT0_");
 void r91_realoca(int, int, int, int) __asm__("_ZNSt3__234__uninitialized_allocator_relocateB8ne210108INS_9allocatorIN5comum2md16CEleitorDinamicoEEEPS4_EEvRT_T0_S9_S9_");
 int r91_libera_buffer(int) __asm__("_ZNSt3__214__split_bufferIN5comum2md16CEleitorDinamicoERNS_9allocatorIS3_EEED2Ev");
@@ -63,12 +58,6 @@ __attribute__((noinline)) void DuasBiometrias(int biometria, int dedos)
     r91_cria_comum(biometria + 40, dedos + 12);
 }
 
-__attribute__((noinline)) int ConverteDuasLinhas(int dao, int estado, int dedo)
-{
-    return r91_estado_biometria(dao, estado) + r91_estado_biometria(dao, estado + 1) * 3 + r91_dedo_habilitacao(dao, dedo) * 5 +
-           r91_dedo_habilitacao(dao, dedo + 2) * 7;
-}
-
 __attribute__((noinline)) void CopiaEleitor(int destino, int origem)
 {
     r91_constroi_copia(destino + 84, origem);
@@ -91,7 +80,6 @@ struct SRoots91 {
         r91_sink = reinterpret_cast<const void*>(&DuasIdentidades);
         r91_sink = reinterpret_cast<const void*>(&DoisDedos);
         r91_sink = reinterpret_cast<const void*>(&DuasBiometrias);
-        r91_sink = reinterpret_cast<const void*>(&ConverteDuasLinhas);
         r91_sink = reinterpret_cast<const void*>(&CopiaEleitor);
         r91_sink = reinterpret_cast<const void*>(&CresceEleitores);
     }
