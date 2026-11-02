@@ -1,11 +1,12 @@
-// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the vtables of eight of its classes, and the second
+// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the vtables of seven of its classes, and the second
 // call sites of the static members, CLogVota members and the libc++ function whose target callers are not
 // reconstructed yet.
 //
 // - Each vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
-//   singleton (fns 1256, 10635, 10489, 10627, 2735, 10443, 652 and 5424, none reconstructed). Taking the vtables'
-//   addresses keeps every slot. vota::IEleitorImpedidoVotar's comes with CEleitorNaoEncontrado's destructor, which
-//   calls the base's.
+//   singleton (fns 1256, 10635, 10489, 10627, 2735, 10443 and 652, none reconstructed). Taking the vtables' addresses
+//   keeps every slot. vota::CEleitorNaoEncontrado's constructor is in the link, inlined into its GetInst (fn 5424),
+//   which vota::CProcuraEleitor::StartState (10631, unit 104) and unit 243's stand-in for 10635 call, so no sink keeps
+//   that vtable; vota::IEleitorImpedidoVotar's comes with its constructor (fn 1905), which 5424 calls.
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
 //   CControlaReconhecimento::PrimeiraTentativa (fn 5403, called twice by 10465), AtingiuLimiteVerificacoes (5404:
@@ -27,7 +28,6 @@ extern const char cidentidadeinvalida_vt[] __asm__("_ZTVN4vota19CIdentidadeInval
 extern const char cverificadadoeleitor_vt[] __asm__("_ZTVN4vota20CVerificaDadoEleitorE");
 extern const char cdadoeleitornaoconfere_vt[] __asm__("_ZTVN4vota22CDadoEleitorNaoConfereE");
 extern const char cpedeidentidade_vt[] __asm__("_ZTVN4vota15CPedeIdentidadeE");
-extern const char celeitornaoencontrado_vt[] __asm__("_ZTVN4vota21CEleitorNaoEncontradoE");
 }
 
 namespace {
@@ -99,7 +99,6 @@ struct SW161Roots {
         w161_sink = cverificadadoeleitor_vt;
         w161_sink = cdadoeleitornaoconfere_vt;
         w161_sink = cpedeidentidade_vt;
-        w161_sink = celeitornaoencontrado_vt;
         w161_sink = reinterpret_cast<const void*>(&PrimeiraDuasVezes);
         w161_sink = reinterpret_cast<const void*>(&LimiteVerificacoes);
         w161_sink = reinterpret_cast<const void*>(&TentaUm);

@@ -12,7 +12,8 @@
 #   vota::CPerguntaEleitorVotando (10416) and vota::CDesabilitaAudioEleitor (10436) in aguardaeleitor/,
 #   vota::CHabilitaAudioEleitor (10524) in confirmaidentidade/, vota::CHorarioVotacaoTerminou (10758) and
 #   vota::CPerguntaFilaEleitorVazia (10715) in outrasopcoes/, vota::CInspecionaUrna (11798) in app/vota/eleitor/;
-# - vota::IIniciaJustificativa's constructor (3624, justificativa/iiniciajustificativa.cpp, its record's file);
+# - vota::IIniciaJustificativa's constructor (3624, justificativa/iiniciajustificativa.cpp, its record's file) and
+#   StartState (10587, slot 2 of the class and of its three derived classes);
 # - vota::CLogVota::LogaAudioDesativadoFimVotacao and LogaSuspensaoAbortada (4529, 4535), in app/vota/log/clogvota.cpp
 #   (unit 119's file), with the five members five of the StartStates hold inlined.
 # The class headers say what each layout rests on; 152-uenux2-app-vota-operador-estados-pending.cpp names every slot
@@ -52,6 +53,17 @@
 #   the vptr (a derived class's member), and throws CBaseError<vota::EUeVotaError, {9300, 9500}> (fn 253) with 9396 and
 #   "Confirmação de justificativa nula" when it is null. Its vtable's slots 0 and 1 are fns 174 and 144, the shared
 #   bodies an implicit destructor over CAppState's gives; slot 2 (fn 10587) is StartState, here the key function.
+# - IIniciaJustificativa::StartState (fn 10587, matched, named by vtable), after the constructor (a choice: the file has
+#   no other record): a copy of the identity typed's text (vota::GetIdentidadeEleitor, 1535; the identity, a temporary,
+#   is destroyed at once), then, through Justificou, a helper of the file's anonymous namespace that clang inlines,
+#   comum::CJustificador::GetInst() (1391) and api::CDataMap's Find, inlined, over a CNumeroInscricaoEleitoral (1241)
+#   built from the text: the map's find (3741, a call) and the cursor at +12 set when it finds the voter. Found, it clears
+#   CJustificativaEfetuada's +28 through SetRecebida(false) on that class's GetInst() (2747, unit 142) and goes to
+#   CJustificativaEfetuada::GetInst(); not found, to m_confirma. The helper is measured (pnpm wasm score before steps 7
+#   to 9): written in StartState, the identity's temporary takes the frame slot below the text's copy, +8 against the
+#   target's +24 (27 over 101 rows, ten of them frame offsets), and so with the text taken through a helper instead;
+#   through Justificou, 10 over 101, no frame offset among them. 3741 now comes from this object, which links ahead of
+#   unit 113's roots (their stand-in for 10587's search went). Chosen: the helper's name and linkage, the local's name.
 #
 # Chosen, no evidence names them: every data member's name and, where only a width shows, its type (bool for the bytes,
 # ueint64 for +16); GetInst and the private constructors, declared and not defined but for CDesabilitaAudioEleitor's
@@ -154,9 +166,10 @@ UENUX2_SRCS += $(APP_VOTA_OPERADOR_ESTADOS_SRCS)
 # compiled with the unit's flags
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-pending.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/justificativa/*.h $(ROOT)/src/uenux2/src/app/vota/operador/outrasopcoes/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-pending.cpp -o $(R)
-# nothing reconstructed references the seven states' vtables, IIniciaJustificativa's constructor or the two CLogVota
-# members with two callers: 152-uenux2-app-vota-operador-estados-roots.cpp takes the vtables' addresses and stands in
-# for the callers
+# nothing reconstructed references five of the states' vtables, and IIniciaJustificativa's constructor,
+# CLogVota::LogaAudioDesativadoFimVotacao and two GetInst have callers not reconstructed:
+# 152-uenux2-app-vota-operador-estados-roots.cpp takes the vtables' addresses and stands in for those callers (for 3624,
+# 10635 alone now: 10631, unit 104, is in the link)
 $(ROOT)/$(APP)/152-uenux2-app-vota-operador-estados-roots.o: $(ROOT)/src/units/152-uenux2-app-vota-operador-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/152-uenux2-app-vota-operador-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/152-uenux2-app-vota-operador-estados-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/152-uenux2-app-vota-operador-estados-pending.o $(APP)/152-uenux2-app-vota-operador-estados-roots.o

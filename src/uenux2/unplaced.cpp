@@ -54,11 +54,6 @@
 // f10754 · 49 B · unmatched · placement: link order · name unknown
 // void f10754(i32) { ... }
 
-// link-order cluster 693 · uses=2
-
-// f4578 · 41 B · unmatched · placement: link order · name unknown
-// ? f4578() { ... }
-
 // link-order cluster 697 · uses=2
 
 // f4633 · 675 B · unmatched · placement: link order · name unknown
@@ -250,11 +245,6 @@
 
 // f3258 · 17 B · unmatched · placement: link order · name unknown
 // void f3258(i32, i32) { ... }
-
-// link-order cluster 975 · uses=3 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmajustificativatransito.cpp
-
-// f3626 · 7 B · unmatched · placement: link order · name unknown
-// ? f3626(i32) { ... }
 
 // link-order cluster 976 · uses=3 · neighbours' file uenux2/src/app/vota/operador/leidentidade/cpedeidentidade.cpp
 

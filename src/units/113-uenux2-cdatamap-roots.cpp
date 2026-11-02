@@ -3,17 +3,17 @@
 // instances (src/units/README.md, "A body a companion object supplies"). This object compiles at the tree's flags, so no
 // match rests on a flag its tree lacks; fragment 113 says what that decides. src/api/'s own objects drop
 // -fno-strict-aliasing (src/Makefile UENUX2_TBAA_DIRS); the four bodies this object supplied, 1283, 3697, 3741 and
-// 5611, are the same without it (wasm-objdump -d of the object compiled both ways). Of them it supplies 3741 now: 1283,
+// 5611, are the same without it (wasm-objdump -d of the object compiled both ways). It supplies none of them now: 1283,
 // 3697 and 5611 come from cgeradorbu.cpp's object, which instantiates them for unit 139's 11254 and 11255 and links
-// first. Each function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
+// first, and 3741 from iiniciajustificativa.cpp's (unit 152), whose StartState, 10587, holds Find inlined. Each function here has two call sites or more, as each has in the target, so binaryen keeps it out of line:
 // - GetCurrent, four instantiations: 656 (19 callers), 1200 (7: 2268, 2838, 6999, 11254, 11972 and 11973 are in the
 //   link, 5604 waits), 1283 (9: 11213 and 11255 are in the link), 3125 (4, all in the link). All four in the link are
 //   what makes binaryen form 2919: the second parameter of that body is the pair's second member's offset, 32 or 20.
 // - Next, three: 3697 (5604; 11213 and 11255 are in the link), 5601 (12105; 11206 is in the link), 5611 (5604; 11254 is
 //   in the link), which form 3892.
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
-// - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590), through Find, and the copy of the pair's second member, 3743
-//   (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
+// - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590; 10587 is in the link), through Find, and the copy of the
+//   pair's second member, 3743 (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
 // - CRegistradorMesario::Registra, 5378 (10337, twice). Add(KeyType, RecordType), 5377 (5378, 6734), and the insert of
 //   the second map, 5379 (5378, 6734): cregistradormesario.cpp's object is ahead of this one on the link line, so its
 //   copies are the link's; a stand-in here only adds their second call site.
@@ -101,12 +101,6 @@ __attribute__((noinline)) bool Justifica(TMapaJustificados& mapa, const ecourna:
     return mapa.Find(numero) != nullptr;
 }
 
-// Stands for 10587's search.
-__attribute__((noinline)) int JustificaDois(TMapaJustificados& mapa, const ecourna::app::dados::CNumeroInscricaoEleitoral& numero)
-{
-    return mapa.Find(numero) != nullptr ? 29 : 31;
-}
-
 // Stand for 6734 and 10590, which copy the detail into the pair they build.
 __attribute__((noinline)) int CopiaDetalhe(void* destino, const comum::CJustificadorDetalhe& origem)
 {
@@ -156,7 +150,6 @@ struct SW113Roots {
         w113_sink = reinterpret_cast<const void*>(&CarregaUm);
         w113_sink = reinterpret_cast<const void*>(&ContaEleitor);
         w113_sink = reinterpret_cast<const void*>(&Justifica);
-        w113_sink = reinterpret_cast<const void*>(&JustificaDois);
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalhe);
         w113_sink = reinterpret_cast<const void*>(&CopiaDetalheDois);
         w113_sink = reinterpret_cast<const void*>(&CriaJustificadores);

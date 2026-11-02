@@ -61,7 +61,47 @@
 # vota::IConfirmaJustificativa's D2 (unit 174), the fourth thunk. 1907 and 1689 call it and match through its `vtable`
 # name.
 #
-# Not reconstructed: every class's GetInst and constructor (each header names the function that holds them inlined);
+# vota::IEleitorImpedidoVotar's constructor and vota::CEleitorNaoEncontrado's singleton, measured in the whole link with
+# pnpm wasm score before steps 7 to 9:
+# - The constructor (fn 1905, matched, named by `call` from 5424), out of line in ieleitorimpedidovotar.cpp, above the
+#   destructor (a choice: no band holds both). Its callers are 5424 and 10635, which calls it five times, for the other
+#   five derived classes, passing 1; 5424 passes 0, so binaryen folds no constant. It takes two
+#   std::function<std::string()> by value (a choice: const& was not tried; the body copies each into the builder's
+#   AddTextField over a std::function, fn 5419, which the target does too) and the int at +20, which it stores before it
+#   clears the form member at +12 and reads back for the switch; the form: AddLed(0), the identity typed (table slot 3907, fn
+#   10586) at {1, 1}, the two functions' texts at {1, 2} and {1, 3}, then "CONFIRMA: retornar" at {40, 4} aligned right
+#   for 0 or "CORRIGE: retornar" at {1, 4} for 1, AddInputControl, and GetInteractiveForm("", true) assigned to +12 in
+#   the body (the target clears the member first, then moves the result in): 28 over 562 rows, all operand rows.
+# - CEleitorNaoEncontrado::GetInst (fn 5424, matched, named by vptr-anchor), with the constructor, which passes
+#   &TextoNaoCadastrado, &TextoVazio and 0 (the table slots 3867 and 3868 the target stores in the two
+#   __func<std::string (*)(), std::string ()>), and the statics (the pointer at 1905392, the mutex at 1905368): 15 over
+#   116 rows, all operand rows, with the constructor above GetInst or below it. Its callers are
+#   vota::CProcuraEleitor::StartState (10631, unit 104) and 10635, which unit 243's roots stand in for. The mutex's exit
+#   destructor, 10665, matches; the pointer's, 10666, is `f1959(p0, 1905392)`, a thunk into the body binaryen merged
+#   from the exit destructors of the six singletons over IEleitorImpedidoVotar (10640, 10651, 10656, 10659, 10662,
+#   10666), five of which 10635 creates: it waits for them, and the pointer's .bss name rests on a `callers+content` hand
+#   line in splat/symbol_addrs.txt (10666 reads it; without the line 5424 reads `unresolved self-voted`).
+# - TextoNaoCadastrado (fn 10664, written, `differs`): "CPF não encontrado. Digite o Título." when the identity typed
+#   is a CPF (GetTipoIdentidadeDigitada, 5416, is 2) and comum::CConfiguracaoEleicao's GetTipoIdentificadorPrincipal (the
+#   word at +668) is 1, else "NÃO CADASTRADO nesta urna"; both calls come before either test, as two locals. The target
+#   builds each literal in a return path of its own, the first storing the pointer and the size before the bytes, and
+#   ours sinks both paths' stores into one tail: 34 over 85 rows, 9 inserted, 3 deleted. No form tried keeps two
+#   return paths in the object (wasm-objdump -d of try objects): the test inverted, explicit std::string returns, a
+#   conditional of two std::string or of the two const char*, a const char* local, a std::string assigned in the
+#   branches, an early return with the second a named local, external or internal linkage, and as written at -O2, -Os
+#   and -Oz. Not explained. Its band, 1, gives its place: 10666 and 10665 (the statics' exit destructors),
+#   10664, then 10663 (LogaImpedimento) in link order, so the statics are defined above it, and it is external, since
+#   clang defers an internal function to the end of the TU. Its one caller is 5424 (by table slot 3867): its name is a
+#   `callers+content` hand line resting on its own body, the one target function that loads its two literals; without
+#   the line 5424 reads `unresolved self-voted`.
+# - TextoVazio (fn 3628, matched, named by pair-fingerprint): " ", the body the target holds once for three table slots
+#   (3868, 3877 and 3896: this class's line 3 and two of the siblings' 10635 builds), matched from this object; its
+#   being a function of the file's anonymous namespace is a choice, as are the two functions' names, TextoNaoCadastrado's
+#   being a free function of namespace vota, the statics' names and the parameters' names.
+# celeitornaoencontrado.cpp includes cconfiguracaoeleicao.h, so it takes the Boost include path, as
+# ccontrolareconhecimento.cpp does.
+#
+# Not reconstructed: the other classes' GetInst and constructors (each header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
 # waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10667, 10443, 10447,
@@ -104,7 +144,7 @@
 # unrecorded vtables between them and aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side.
 # The order of the sources below follows the data, leidentidade's before confirmaidentidade's.
 #
-# Roots: the eight classes' vtables, and stand-ins for the target callers of 5403 to 5406, 2097, 4522 and 4661 (the
+# Roots: seven classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it), and stand-ins for the target callers of 5403 to 5406, 2097, 4522 and 4661 (the
 # roots file names them). ccontrolareconhecimento.cpp reaches Boost through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #
@@ -121,6 +161,8 @@ APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cpedeide
 UENUX2_SRCS += $(APP_VOTA_OPERADOR_IDENTIDADE_SRCS)
 # ccontrolareconhecimento.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# celeitornaoencontrado.cpp includes it too, for the identifier type the urna takes first (an include path, not a flag)
+$(ROOT)/$(APP)/uenux2/src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # The members not reconstructed: 161-uenux2-app-vota-operador-identidade-pending.cpp gives the vtables trapping bodies,
 # compiled with the unit's flags
 $(ROOT)/$(APP)/161-uenux2-app-vota-operador-identidade-pending.o: $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/161-uenux2-app-vota-operador-identidade.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/leidentidade/*.h $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp

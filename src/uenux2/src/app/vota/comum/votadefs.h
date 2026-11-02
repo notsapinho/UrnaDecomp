@@ -67,4 +67,11 @@ bool RegistraMesarios();
 // caller's and has no target index. Its name, its being a free function and its file are chosen.
 bool ExisteArquivoZeresima();
 
+// Target fn 4578: whether the election takes no justification: the negation of comum::CInformacaoEleicao::
+// AceitaJustificativa (fn 5918) on the urna's parameters. Two callers keep the call, in two TUs:
+// vota::CProcuraEleitor::StartState (10631), which starts the justification of a voter it does not find only when this
+// is false, and vota::CEleitorEncontrado::StartState (10635). No record, slot or string names it; its name, its being a free
+// function and its file are chosen.
+bool NaoAceitaJustificativa();
+
 } // namespace vota
