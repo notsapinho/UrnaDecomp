@@ -405,11 +405,12 @@ name, and a probe object lands nowhere.
 
 ## V5. Strict aliasing by directory: a body that differs only by it
 
-uenux2 compiles with strict aliasing in the directories and the file `UENUX2_TBAA_DIRS` lists in `src/Makefile`
-(`src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, `src/app/comum/carquivossavd.cpp`)
-but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s `ctelasvota.cpp` and `crelvotautil.cpp`), and without it
-elsewhere; [app-flags.md](app-flags.md) §F6 has the evidence and the measurement of the split, and
-[reading.md](reading.md) §R21 reads the setting from a body. Measured at bbf27ac1.
+uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TBAA_DIRS` lists in `src/Makefile`
+(`src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, `src/app/comum/carquivossavd.cpp`,
+`src/app/comum/gravadores/cgeracaoversoescontratos.cpp`) but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s
+`ctelasvota.cpp` and `crelvotautil.cpp`), and without it elsewhere; [app-flags.md](app-flags.md) §F6 has the
+evidence and the measurement of the split, and [reading.md](reading.md) §R21 reads the setting from a body. Measured
+at bbf27ac1.
 
 - **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
   written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object

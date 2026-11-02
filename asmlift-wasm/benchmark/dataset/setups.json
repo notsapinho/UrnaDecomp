@@ -21,7 +21,7 @@
   },
   {
     "key": "uenux2-tbaa",
-    "title": "uenux2, the directories and the file built with strict aliasing (src/api, comum's data classes dados/md, src/app/vota but its ctelasvota.cpp and crelvotautil.cpp, mock/app/simulador/wasm, comum's carquivossavd.cpp)",
+    "title": "uenux2, the directories and the files built with strict aliasing (src/api, comum's data classes dados/md, src/app/vota but its ctelasvota.cpp and crelvotautil.cpp, mock/app/simulador/wasm, comum's carquivossavd.cpp, gravadores' cgeracaoversoescontratos.cpp)",
     "flags": {
       "c++": "-O3 -fPIC -std=c++23 -DNDEBUG"
     },
@@ -37,7 +37,7 @@
       "vota",
       "simulador"
     ],
-    "note": "The uenux2 setup's flags with TBAA on: the generic uenux2 rule drops -fno-strict-aliasing in the directories and the file UENUX2_TBAA_DIRS lists, but in the files UENUX2_NOTBAA_FILES lists. comum's functions keep the uenux2 setup when no symbol says otherwise, and so do api's, which no component names; vota's take this one, the two listed files' too."
+    "note": "The uenux2 setup's flags with TBAA on: the generic uenux2 rule drops -fno-strict-aliasing in the directories and the files UENUX2_TBAA_DIRS lists, but in the files UENUX2_NOTBAA_FILES lists. comum's functions keep the uenux2 setup when no symbol says otherwise, and so do api's, which no component names; vota's take this one, the two listed files' too."
   },
   {
     "key": "vota-web",

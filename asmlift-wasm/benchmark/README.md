@@ -45,7 +45,7 @@ them (`truth`).
 | setup | what | flags from | rows |
 | --- | --- | --- | --- |
 | `uenux2` | the TSE application | `src/Makefile` `UENUX2_CXXFLAGS` | 12 |
-| `uenux2-tbaa` | the TSE application's directories and file built with strict aliasing (`src/api/`, comum's data classes `dados/md/`, `src/app/vota/` but its `ctelasvota.cpp` and `crelvotautil.cpp`, `mock/app/simulador/wasm/`, comum's `carquivossavd.cpp`) | `src/Makefile` `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`, in `UENUX2_TBAA_DIRS` but not `UENUX2_NOTBAA_FILES` | 12 |
+| `uenux2-tbaa` | the TSE application's directories and files built with strict aliasing (`src/api/`, comum's data classes `dados/md/`, `src/app/vota/` but its `ctelasvota.cpp` and `crelvotautil.cpp`, `mock/app/simulador/wasm/`, comum's `carquivossavd.cpp`, `gravadores/cgeracaoversoescontratos.cpp`) | `src/Makefile` `UENUX2_CXXFLAGS` without `-fno-strict-aliasing`, in `UENUX2_TBAA_DIRS` but not `UENUX2_NOTBAA_FILES` | 12 |
 | `vota-web` | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` (its object first on the link line), and `mock/app/comum/cappinfobuilder.cpp` at its rule (second) | `src/Makefile` `VOTA_WEB_CXXFLAGS` | 12 |
 | `ecourna` | ecourna, non-PIC in the whole tree | `src/Makefile` `ECOURNA_CXXFLAGS` + `src/mk/ecourna-flags.mk` + `src/units/*.mk` | 12 |
 | `asn1` | the TSE fork of the III ASN.1 runtime and its generated modules | `src/mk/asn1.mk` | 12 |

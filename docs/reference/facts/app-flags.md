@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp` and `eleitor/iniciovotacao/crelvotautil.cpp`, `mock/app/simulador/wasm/` and the file `src/app/comum/carquivossavd.cpp` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` but its files `eleitor/comum/ctelasvota.cpp` and `eleitor/iniciovotacao/crelvotautil.cpp`, `mock/app/simulador/wasm/` and the files `src/app/comum/carquivossavd.cpp` and `src/app/comum/gravadores/cgeracaoversoescontratos.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -506,6 +506,38 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   TU's; the tree root stands for them either way (unit 97's fragment). Whether the original build gave
   `-fno-strict-aliasing` to `ctelasvota.cpp` and `crelvotautil.cpp` alone or to more of `app/vota/`, the rows do not
   say beyond this table: listing the two files is the reading that keeps every match.
+
+  One file of `gravadores/` has it: `cgeracaoversoescontratos.cpp` (unit 268), whose `ObtemDependencias` (5869) copies
+  a `std::set<std::string>` and inserts into one. The target's copy calls libc++'s
+  `__emplace_hint_unique_extract_key<const std::string&>` (1163, with tree, hint and value) for each element, which clang
+  keeps out of line, the emplace inlined into it, only with strict aliasing. Without it the copy calls
+  `__emplace_hint_unique_key_args` with the result, tree, hint, key and value, 5869 scores 14 over 211 rows and the set's
+  insert (5868) 10 over 189, the node loaded again through the child pointer (the sign above); with it, and a stand-in
+  in the unit's roots for 1163's other callers (5360, 11620), 5868 and 1163 score 2 over 184 and 2 over 84, operands
+  only (`pnpm wasm score`; unit 268's fragment). The flag costs a copy, though. Built without it, at e5577685 (11542
+  matches), the object gave the link libc++'s `__emplace_hint_unique_key_args<std::string, const std::string&>` (2281,
+  which RHVoice's 1248 and 5309 call), and 2281 and 5309 matched from it; with it the object emits no 2281, and steps 6
+  to 9 on F9 item 6's private link turned 1163 and 5868 `match` and took 2281 and 5309 out (RHVoice's `language.cpp`, the
+  next object of ours that emits it, gives another body). 2281's body is one without TBAA: the function instantiated
+  explicitly at `UENUX2_CXXFLAGS` loads a value again after a store (`local.get 2; i32.load`, `wasm-objdump -d`), with
+  strict aliasing it does not, and the target's does. So a tree root at `UENUX2_CXXFLAGS` holds it,
+  `src/app/roots_set.cpp`, which only instantiates a set's hinted insert, and where it links matters: in
+  `roots_cbasetype.cpp`, right after `roots_uenux2.o`, it gives `__tree_balance_after_insert` (152) ahead of
+  `roots_rhvoice.o`'s, and 152 then differs and 447 (`RHVoice::str::less`) reads `unresolved`; last in `APP_OBJS`, after
+  `roots_rhvoice.o` and `roots_boost.o`, a private link (the root compiled into the clone and `APP_OBJS` given on the
+  make line) through steps 6 to 9 and `splat-build` gave the target's sha256 with 1163, 2281, 5309 and 5868 `match` and
+  none lost. Built in place, the compile lines `make -n -C src link APP=<a new directory>` prints differ from
+  e5577685's in that object's alone, which loses `-fno-strict-aliasing`, and in the root's, added; the edit recompiles
+  the 795 objects that depend on `src/Makefile`, 916 of the 918 objects of e5577685's build are `cmp`-equal to theirs
+  (the others are the file's and unit 268's roots, which gains the stand-in), the plain link is the private link's
+  (sha256 `5d5d2247…`), and steps 7 to 9 turn 1163 and 5868 `match` and lose none, 11542 to 11544; `make -C src splat`
+  gives the target's sha256. 5869 stays `unresolved`: its recursive call names nothing, and its other caller, 12098, is
+  not written. The other twelve top-level files of `gravadores/` built with strict aliasing as well give the same link as
+  this file alone, so the file is listed and the directory keeps the flag, which `gravadores/asn/` and `gravadores/md/`
+  need (the table above): listing the file is a choice. Which TU gives the target's 2281, no row says: its TSE caller
+  12098 lies under `src/app/vota/`, which builds with strict aliasing, so the root stands for an object not identified,
+  and its comment says when it goes. The file's flag is a reading of the original build's settings like the rest of
+  the split.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'

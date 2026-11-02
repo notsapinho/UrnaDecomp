@@ -165,9 +165,6 @@
 // f5869 · 402 B · unmatched · placement: link order · name unknown
 // void f5869(i32, i32, i32, i32) { ... }
 
-// f5868 · 367 B · unmatched · placement: link order · name unknown
-// void f5868(i32, i32, i32, i32) { ... }
-
 // link-order cluster 841 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccopiadorwsqmr.cpp
 
 // f5870 · 87 B · unmatched · placement: link order · name unknown
