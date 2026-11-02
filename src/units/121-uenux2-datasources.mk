@@ -1,6 +1,6 @@
 # uenux2 data sources of api::CDataText, and control blocks of this tree's classes: vota::CEscolheOpcao::COpcaoDS's call
-# operator (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's IncluiString, destructor and
-# DestroyInst (src/app/comum/relatorios/ccalculacv.cpp), and the roots file 121-uenux2-datasources-roots.cpp, whose
+# operator (src/app/vota/operador/outrasopcoes/cescolheopcao.cpp), comum::CCalculaCV's IncluiString, destructor,
+# DestroyInst, Reinicia, CalculaCodigo and GeraMacHexa (src/app/comum/relatorios/ccalculacv.cpp), and the roots file 121-uenux2-datasources-roots.cpp, whose
 # header says which vtables it keeps and from which dropped builders. Both files are the ones the classes' records name
 # (cescolheopcao.cpp:150 to 152, StartState's; ccalculacv.cpp:58 to 74, the constructor's, and 109, IncluiString's).
 # IncluiString's throw is on its record's line; StartState and the constructor are not written, and the lines of the
@@ -13,6 +13,8 @@
 #   __shared_ptr_emplace<api::CInputMenuField> D2, D0                 11070, 11069
 #   comum::CCalculaCV's destructor, ~CCalculaCV (its D2)               5614, from ccalculacv.cpp.o
 #   comum::CCalculaCV::IncluiString                                   942, from ccalculacv.cpp.o
+#   comum::CCalculaCV::Reinicia                                       5615, from ccalculacv.cpp.o
+#   comum::CCalculaCV::CalculaCodigo, with GeraMacHexa inlined        3700, from ccalculacv.cpp.o
 #   vota::CEscolheOpcao's destructor and deleting destructor           2752, 10691, from cescolheopcao.cpp.o
 #   the destroy of CEscolheOpcao's std::map                            3630, from cescolheopcao.cpp.o
 # CCalculaCV::DestroyInst has no target function: unit 139's ~CGeradorBU (fn 3698) holds it inlined by binaryen, and
@@ -66,7 +68,41 @@
 # the argument to the string at +16 with fn 160, `append(const char*, size_t)`, after testing the size it passes there.
 # `m_texto.append(str)` is what is written; `m_texto += str` and `m_texto.append(str.data(), str.size())` give the same
 # function (compared in ccalculacv.cpp's object with the object-local numbers masked). Of its eight target callers (5967, 11253, 11254, 11255, 11256, 11260, 11980,
-# 11981) unit 139's 11254 and 11255 are in our link: the roots file's stand-in calls it twice for the other six.
+# 11981) unit 139's 11254, 11255 and 11256 are in our link: the roots file's stand-in calls it twice for the other five.
+#
+# Reinicia, CalculaCodigo and GeraMacHexa have no record, and their names are chosen: CalculaCodigo is the function
+# CRelUtil::DSCodigoVerificador (fn 11182, unit 123) formats as the verification code. Scores are `pnpm wasm score`
+# against the plain link, before steps 7 to 9.
+# - Reinicia (5615; callers 3700 and 12110): the string at +16 assigned the byte at +12 (libc++'s operator=(char): the
+#   short or long size set to 1, then the byte and a NUL), then appended the string at +0 and the argument, which is
+#   then copied to +40. 0 over 124 rows. In band 2 (ledger/ordinals.tsv) it is above the destructor (5614), so it is
+#   defined before it: in our link its ld_index (2402) is below 5614's (2403).
+# - CalculaCodigo (3700; callers 11182, 11260, 11974) increments +52, appends its decimal text to +16, takes the text's
+#   SipHash MAC under the key at +28 (GeraMacHexa), reads the MAC's hexadecimal text with
+#   ecourna::api::util::CStringUtils::HexToQWord, hands the number's decimal text to Reinicia and returns "{:010}" of
+#   the number modulo 10^10. GeraMacHexa builds an ecourna::api::security::CSiphashMac on the stack, copies the text to
+#   a byte vector, calls IMacAlgorithm::Mac and appends "{:02x}" of each MAC byte, an index loop. 3700 holds GeraMacHexa,
+#   Mac, HexToQWord and std::to_string(unsigned long long) inlined by binaryen, behind prologues of their own (frames of
+#   416, 32, 32, and 48 and 16 bytes); the records of Mac (imacalgorithm.cpp:32, 35) and of HexToQWord
+#   (cstringutils.cpp:754) are loaded by 3700 alone, and anchor its name. The two vptr stores, IMacAlgorithm's (1114744)
+#   and then CSiphashMac's (1113604), say that the base's constructor was a call when clang compiled 3700: unit 11
+#   defines it out of line. CSiphashMac's own, defaulted in its header, gives the same bytes out of line, a choice (unit
+#   11's fragment). Measured:
+#   - GeraMacHexa a free function over (text, key), defined before CalculaCodigo, the constructors inline in the
+#     headers: 242 over 888 (21 inserted, 23 deleted); with the constructors out of line: 268 over 880 (13, 13), the two
+#     vptr stores now there; as a const member that takes the text and reads the key: 222 over 875 (8, 8); as one that
+#     reads both members: 238 over 891 (24, 23); the member over the text defined after CalculaCodigo, as written: 70
+#     over 867, all operand-only. The operands that are no call and no data address: the address of emscripten's
+#     __THREW__ (1936852 in the target, 18 rows), the format buffer's table slot (148), and the table slots of
+#     __cxa_throw (49) and of the thrown object's destructor (69) in Mac's two throws.
+#   - Mac and HexToQWord have one call site in our link, in 3700, so binaryen inlines them there as in the target: unit
+#     11's roots no longer take Mac's address, nor CSiphashMac's DoMac and DoVerify (9498 and 9497 keep `match`, in the
+#     link through the vtable 3700 stores), and src/app/roots_ecourna.cpp's UsaConversoes3 no longer calls HexToQWord.
+#     Its other calls stay.
+# The roots file's w121_reinicia stands for 12110, Reinicia's caller not in the link, and w121_codigo for 11260 and
+# 11974, CalculaCodigo's: each goes when they land. 11260 and 11974 (CDataSourcesRelatorio<CRdvVota, CEleitores>'s
+# TrailerProporcionalPartido and CodVerificador, records cdatasourcesrelatorio.h:188 and 348) wait for fn 5967, which
+# loads IncluiString's record and calls fn 1281 (439 B, no body or name of ours).
 #
 # Choices measured to give the same bytes, by function with the object-local numbers masked: CCalculaCV's destructor
 # `= default` or `{}` (ccalculacv.cpp.o). The roots object compiles with APP_CXXFLAGS; with UENUX2_CXXFLAGS its 27 functions

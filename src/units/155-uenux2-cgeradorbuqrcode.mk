@@ -13,6 +13,11 @@
 #   second stack frame inside 3696 shows (docs/reference/facts/reading.md R10).
 # - CGeradorBUQRCodeVota's D2 (fn 11244), which only calls the base's, its D0 (fn 11243), and Slot3 (fn 11241), which
 #   returns an empty string.
+# - GetCamposVotos (fn 5606, no record; its stub was in src/ecourna/unplaced.cpp), which formats the current post's
+#   votes after GetCamposAptos's fields: it calls GetCamposAptos (fn 3696) on its own this and slots 6, 9, 8 and 10 of
+#   the object at +400 (comum::CRdv's Nominais, Brancos, Nulos and Cargo, crdv.h) with the byte at +0 of
+#   CCargos::GetCurrent()'s CCargo, and prints them as "NOMI:{} ", "BRAN:{} ", "NULO:{} " and "TOTC:{} " (argument type
+#   6, unsigned: md::TQtdVoto is a ueword). Its one target caller, fn 5604, calls it twice; the roots stand in for it.
 #
 # Evidence, and what was measured:
 # - The layouts and the destructors' forms are in the two headers. GetQtdAptos searches the map twice in the target, the
@@ -23,17 +28,26 @@
 #   `return "";` and `return std::string("");` (`return std::string();` and `return {};` differ in 6 rows); `= default`
 #   and `{}` for each class's destructor (CGeradorBUQRCode's D1 and D0, CGeradorBUQRCodeVota's D1 and D0). A test of
 #   `m_qtdAptos.count(abrangencia) == 0` in place of find differs from the written GetQtdAptos in 72 rows.
+# - The +400 member's type, from GetCamposVotos: the target calls the four slots through the vtable. As a reference to
+#   CRdvVota, which crdvvota.h declares final, clang calls CRdvVota::Nominais and the others directly in the object
+#   (tools/round/try-tu.sh --symbols, wasm-objdump -d: four `call`s); as a reference to the base CRdv the four are
+#   `call_indirect`, as in the target. So the member is a `const CRdv&`; CGeradorBUQRCodeVota's constructor (fn 5603,
+#   not written) stores CRdvVota::GetInst()'s result there. In the whole link GetCamposVotos scored 36 over 776 rows,
+#   all operand-only, four of them neither a call nor a data address: the table slot each std::format buffer stores,
+#   148 against our 17, both std::__format::__allocating_buffer<char>::__prepare_write (target fn 7324, matched;
+#   wasm-objdump -x -j Elem on both). It matched by content.
 #
-# Chosen: the names Slot2, Slot3, GetCamposAptos and every data member's; SQtdeAptos's place and its members' names
-# (from the labels 3696 prints); a reference to CRdvVota for +400; TEleicaoID for Slot3's parameter; the members' access;
-# the destructors' and GetCamposAptos's lines (no record); CGeradorBUQRCodeVota's file and its members' types beyond
-# their widths. md::CCargo gains the accessor GetAbrangencia (app/comum/dados/md/processoeleitoral/ccargo.h, a chosen
-# name) for 3696's read of +8.
+# Chosen: the names Slot2, Slot3, GetCamposAptos, GetCamposVotos and every data member's; GetCamposVotos' being a member
+# (no record, slot or RTTI says so: it passes its own this to GetCamposAptos and reads the +400 member); SQtdeAptos's
+# place and its members' names (from the labels 3696 prints); TEleicaoID for Slot3's parameter; the members' access; the
+# destructors', GetCamposAptos's and GetCamposVotos's lines (no record; GetCamposVotos after GetCamposAptos);
+# CGeradorBUQRCodeVota's file and its members' types beyond their widths. md::CCargo gains the accessor GetAbrangencia
+# (app/comum/dados/md/processoeleitoral/ccargo.h, a chosen name) for 3696's read of +8.
 #
 # Not reconstructed: CGeradorBUQRCodeVota's Slot2 (fn 11242), a trap in 155-uenux2-cgeradorbuqrcode-pending.cpp, whose
 # header says what it waits for; CGeradorBUQRCodeVota's constructor (fn 5603, which holds the base's; its stub is in
 # cgeradorbuqrcodevota.cpp); RetornaBlocoAssinado (record cgeradorbuqrcode.cpp:405), inlined into fn 5604, whose stub
-# app/comum/dados/ccargos.cpp holds by another of its records; and fn 5606, which calls GetCamposAptos as 5604 does.
+# app/comum/dados/ccargos.cpp holds by another of its records.
 CGERADORBUQRCODE_SRCS := src/app/comum/relatorios/cgeradorbuqrcode.cpp src/app/comum/relatorios/cgeradorbuqrcodevota.cpp
 UENUX2_SRCS += $(CGERADORBUQRCODE_SRCS)
 W155_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')

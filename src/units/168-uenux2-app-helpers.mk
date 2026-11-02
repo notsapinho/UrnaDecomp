@@ -62,8 +62,21 @@
 # Same bytes, not measured as variants: 5908 to 5911 are written in the forms of 3842 and 3843 above.
 #
 # How the matches are named: 3843, 3844, 2450 and 3842 by symbol-file lines (pair-fingerprint, vptr-anchor,
-# content-anchor and pair-fingerprint), and 5908 to 5911 by pair-fingerprint lines; 1485 by the scan's content pass alone
-# (source `content` in splat/scan.tsv): no line of the symbol file names it, since none of its callers is in the link.
+# content-anchor and pair-fingerprint), and 5908 to 5911 by pair-fingerprint lines; 1485 by the scan's content pass
+# alone while none of its callers was in the link, and since unit 50's slot 19 (fn 10566) is, by that caller's `call`
+# vote (splat/symbol_addrs.txt: `evidence:call by:10566`).
+#
+# vota::AdicionaSeparador (fn 1387, 169 B), at the end of votadefs.cpp: std::string(38, '-') (operator new of 40 and
+# the dashes stored eight at a time) passed to api::CPaperFormBuilder::AddTextField (fn 193) with IPaper's style 1 and
+# the caller's alignment, then the string freed. Its callers are four vota states' slot 2, none written: 11908
+# (CImpressaoListaEleitores), 11946 (CGeraZeresimaBase, CGeraZeresima, CRegerarZeresima), 12105 (CGeraRelatorios) and
+# 12110 (CGeraBU), nine call sites passing 0 or 2; the roots give it two, with both values. `pnpm wasm score` before
+# step 8: 3 over 56 rows, all operand-only; the scan matched it by its content. It has no record and reads only its
+# parameters, so it is a free function of vota, its callers' namespace (how-to step 3's member rule). Chosen: the name,
+# the file (votadefs.cpp, the file whose records name vota's free functions, as for 1485 above; chosen against use
+# band 9, where the target's 1387 lies between md/processoeleitoral/ccargo.cpp's 1388 and 1386, comum code not
+# written, and then api/gui/cframedtext.cpp's 1385, none of them app/vota/ code), the line after EhTreinamento, and
+# static_cast<api::IPaper::EStyle>(1), as cgeradorrelpu.cpp spells it.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # nothing in the link calls these functions yet: 168-uenux2-app-helpers-roots.cpp gives each two call sites. It compiles

@@ -152,7 +152,7 @@
 #   caller, vota::CSincronismoOperador::StartState (10210, unit 104's, whose fragment has the measurement), and it holds
 #   CEleitorDetalhe::MarcaVotou (unit 98's) inlined the same way. Its throws and their codes (7845, 7846) and messages are
 #   the target's ("Item inexistente", and the tail of 68059's "{}: Dados dinâmicos não carregados", as 2825's 7843 reads
-#   it); the counter it increments at +104 is m_qtdVotaram, name and int chosen (celeitores.h).
+#   it); the counter it increments at +104 is m_qtdVotaram, its name chosen, unsigned as 10569 reads it (celeitores.h).
 # - Not written. LoadEleitorDetalhe (5764, line 719): a body written over a 104-byte md::CEleitor base (fn 946 is its
 #   copy: it copies 104 bytes and 5764 copies CEleitorDecorator's +104 after it), CImpedido::GetImpedimentoP2
 #   (cimpedido.cpp:46) and CEleitorDetalhe's two constructors (celeitordetalhe.cpp:49) scored 96 over 834 rows, its 6
@@ -163,6 +163,23 @@
 #   456, 460) is held inlined by fn 10210, vota::CSincronismoOperador::StartState (unit 104's pending member), which
 #   also calls fn 501, api::CPriorityMessageQueue<api::SMessage>::Insert (unit 174). CompleteLoad (6734), DynamicCreate
 #   (5761) and GetCurrentAbrangenciaEleitor (7377, which holds GetInst inlined and calls 501) are not written.
+#
+# CEleitores::QuantidadeHabilitacaoSemBiometria (2822, celeitores.cpp line 640) and CHV's constructor (3754, chv.cpp line
+# 74); the stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
+# - 2822 walks the base CDataMap's map at +4 and counts the records whose detail holds dynamic data (the optional's flag
+#   at +192), whose GetDinamico() (1271, called twice) has tipo_habilitacao 0 (+36) and estado_comparecimento 3 (+32),
+#   and returns the count's low 16 bits. Its callers (10699, 11242, 12098, 12110, not written) pass
+#   CEleitores::GetInst()'s result (326) as this, and 10699 formats the count into "Habilitação sem biometria: {}", which
+#   the name is chosen from. std::count_if over a lambda is written; other forms are not measured. Band uses 4 runs 2825,
+#   2824, 2822 in link order (ledger/ordinals.tsv), so it follows MarcaEleitorFoiHabilitado; the line is a choice.
+# - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
+#   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
+#   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,
+#   and the records' data run celeitores.cpp, cintegridadereferencial.cpp, cfotos.cpp, chv.cpp, clocal.cpp (`awk -F'\t'
+#   '$1>=1559000 && $1<=1559900 {print $1, $2}' ledger/source-locations.tsv`), so it is chv.cpp's. A constructor stays a
+#   call from another function of its own file: a probe of that shape (the constructor and a CreateInst-like caller in
+#   one TU in this directory, try-tu.sh --symbols, wasm-objdump -d) keeps the call of the C1 alias, as the target's
+#   CreateInst does. Chosen: explicit, private, the parameter's name and the line.
 #
 # ctelasvota.cpp also holds vota::CTelasVota::GetTelaCargo (target fn 4135, record :3534, code 9358): it looks the post
 # up in the outer map and throws with std::format when it is missing, else returns CTelasCargo::GetTela's form. GetTela
@@ -191,7 +208,7 @@
 # blank lines above the statics (lines 11 to 22 stay unknown).
 #
 # CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264; callers 3616, 5385, 10631, 10789
-# and 10790, none written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it, which clang
+# and 10790, only 5385 written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it, which clang
 # inlines into 2264 and binaryen into fn 2225 (unit 50's CInformacaoThreadOperador::AtualizaIdentidadesEleitor), its
 # one other caller; out of line is a measurement, in src/units/50-uenux2-cinformacaothreadoperador.mk. 2264 builds a
 # CEleitorIdentidade (566) from a copy of the string and the type, finds it in the map at +112 (1703), finds the value
@@ -200,6 +217,30 @@
 # and the find (1703) keep their bytes under the new types, and step 9 renamed both match lines to the new symbols. The
 # names, the file and the lines (after the destructor, the CEleitorIdentidade overload first) are chosen; the named
 # local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's five callers.
+#
+# ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
+# tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws
+# code 9347 with it over "não é de proporcional"). Its 22 call sites are this file's (fns 3064, 6602, 6603, 6605, 6608,
+# 6624, 6641, 6646, 6652, 6660, 6671, 6678 and 7787), none written. No record gives its name or its linkage. The file's
+# recorded helpers (DS_CandidatoNaoConcorre, adicionaFotoEmoldurada, the adicionaBaseTela* builders, GetKeyboardLayout)
+# are in an anonymous namespace, where clang emits no function nothing in the TU calls (a reading), so in that form it
+# would leave the link until a caller here is written; it is written as a function of vota, its callers' namespace
+# (docs/how-to-decompile.md step 3, "Names no evidence gives"), with external linkage, a choice that lets
+# src/units/212-uenux2-app-vota-callers-roots.cpp give it two call sites. Chosen: its name, its parameters' names, its
+# namespace and linkage, and its lines (801 to 804, above line 822, the first record of a caller). Those lines lie
+# inside the file's run of internal records (lines 294 to 1301, all vota::(anonymous namespace)::), between :487 and
+# :822: written external there, the original would close and reopen the anonymous namespace around it, so the place goes
+# with the linkage chosen. Its include line (<string>, which <format>, already included, brings: a choice) took one of
+# the blank lines above line 291. Scored 15 over 340 rows, all operand-only, before step 8; matched at step 9. With its
+# literal ") - " in the link, unit 112's fn 1143 matches too (src/units/112-ecourna-cbasetype.mk).
+# Not written: fn 2028 (502 B; callers 6602, 6605, 6660, 6671, 6678 and 7787; no record, as 690 has none) waits for
+# table slot 1089, which it passes: fn 11501 (573 B, unwritten), which calls CPartidos' constructor and destructor (fns
+# 3751, 2815), its GetInst inlined (a reading); besides 2028 only OpenSSL's ecd_item_verify loads the constant 1089
+# (grep of the split's pieces), so 11501's name waits on 2028 too. Each waiting for a caller in this file: fns 4129 and
+# 6528 (their only callers are 4181 and 4184, adicionaFotoEmoldurada over CCandidaturasDSFoto) build the
+# CDataImage<CCandidaturasDSFoto> and CDataText<CCargoDSNomeSexoCandidato> fields whose
+# vtables lie between this file's records in the data; fn 6561 (adicionaFotoEmoldurada over the lambda of
+# CriaTelaVisualizacaoCandidato, record :487) has callers 6569 and 12272 only.
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

@@ -21,6 +21,20 @@
 # - IResultado's destructor (fn 12090, unit 60's match): its copy in the link now comes from iresultado.cpp.o, which
 #   emits IResultado's vtable with the constructor, ahead of unit 102's roots object; the same symbol, and it still
 #   matches.
+# - comum::IGravador's Slot2, Slot6 and Slot3 (target fns 11632, 11631 and 11630, slots 2, 6 and 3 of IGravador's vtable
+#   and of the eight recorders' that hold them), in iresultado.cpp after the constructor, in the order their use band
+#   gives. Slot2 is the class's key function, so iresultado.cpp.o emits IGravador's vtable now, where unit 60's pending
+#   object did; its traps of Slot4 and Slot5 (fns 11634, 11633) stay there, and its header says what they wait for.
+#   Each slot builds two paths from comum::CPath's directories (GetPathTrab and GetPathResult over EFlashOrigem, fns
+#   436 and 1274) and the file name at +20 (std::filesystem::path's operator/), and calls api::CSystem::CopyFile (fn
+#   378) on their strings: Slot2 and Slot6 copy the work file to the result directory of the internal and of the
+#   external flash, Slot3 copies the work file and then the result file from the internal flash to the external one.
+#   The target's calls pass 0 for the CopyFile bool its type keeps, so the slots pass false there; true for the bool
+#   binaryen folded is unit 32's choice of which bool that is and of its value (api/util/csystem.h). Measured in this
+#   link before step 8 (pnpm wasm score against the target): 11632 19 over 294 rows, 11631 19 over 294, 11630 38 over
+#   582, every one operand-only and every operand a call's or a data address. The paths are named locals, as the
+#   target keeps each to the end of the function (Slot3 destroys its four there, the last built first); `const` on
+#   them and their names are chosen, and no other form was measured.
 # - CGravadorRCSecao's implicit deleting destructor (fn 11615, slot 1): its vtable is emitted in
 #   122-uenux2-app-comum-gravadores-pending.cpp, whose trap of GravaResultado (fn 11616, slot 7, record
 #   cgravadorrcsecao.cpp:110) is the class's key function; the roots keep that vtable. cgravadorrcsecao.h gives the
@@ -85,6 +99,20 @@
 #   over the three values by value (run alone, through try-tu.sh --single's template by hand) gave the combination with
 #   the loads before the test and no `& 1`. Its remainder not explained and nothing written needing it, it is not
 #   written (docs/how-to-decompile.md step 5).
+# - comum::GetPathWsqNaoRegistrado (fn 3793; no record, the name chosen), CPath::GetPathWsq(FLASH_INTERNA, the load's
+#   turn) / "nao-registrado/", in cgravadorwsq.cpp after the constructor and declared in cgravadorwsq.h. In the target
+#   it is a 15-byte thunk, `f2298(p0, end, begin)` of its literal, into binaryen's fn 2298, which calls GetPathWsq (fn
+#   2864) with 0 and the word at +32 of CAppInfo::GetGeral() const's result, then appends the literal to the path;
+#   fns 3795, 5815, 5818 and 5819 are the same thunk over "operador/", "registrado/", "nao-habilitado/" and
+#   "habilitado/", not written. Alone here it is a whole body, 83 over 85 rows against the thunk. Against 2298 it scores
+#   34 over 89 (pnpm wasm score): the statements read alike, the literal's ends passed in as parameters there, but 2298
+#   loads the turn (CAppInfo::GetInst, GetGeral, +32) ahead of its stack prologue and ours after it, which
+#   docs/reference/facts/reading.md R10 reads as a frameless caller's code ahead of a callee binaryen inlined (a
+#   reading). So it waits for the four and for a source shape not recovered: no link with the four written was
+#   measured. Its use band puts it between this file's constructor (3796) and cappinfosingleton.cpp's CAppInfo
+#   destructor (3792), so its file is this one or a record-less object between the two: a choice, as is its being a
+#   free function (it takes no object).
+#   Its target callers are fn 5374 (unit 214) and fn 10451, for which the roots stand in.
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \
 	src/app/comum/gravadores/cgravadorwsq.cpp src/app/comum/gravadores/cgravadorrcsecao.cpp src/app/comum/gravadores/asn/util.cpp \
 	src/app/comum/gravadores/md/cversoesarquivos.cpp

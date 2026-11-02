@@ -3,10 +3,11 @@
 // MontaEntidadeBU, lines 542 to 636, inlined into it), is the class's first out-of-line virtual member, so its vtable
 // (@1554132) is emitted here, and with it the implicit destructors of slots 0 and 1 (fns 5857, 11628), the compiler's
 // code for the class definition in app/comum/gravadores/cgravadorbu.h. GravaResultado calls fns 3819 (which calls
-// AcrescentaVotoVotavel, fn 3820, record cgravadorbu.cpp:221) and 2853 and many functions not written yet; it goes in
-// cgravadorbu.cpp when it is reconstructed, and the vtable and the destructors move there with it, under the same
-// symbols. Delete this file with it. cgravadorbu.cpp is a stub-only file until then: its record lines 221, 484, 485,
-// 542, 552, 560 and 636 belong to functions not written.
+// AcrescentaVotoVotavel, fn 3820, written in cgravadorbu.cpp at its record's line 221), 2853, 3817, 3824 and many
+// functions not written yet; it goes in cgravadorbu.cpp when it is reconstructed, and the vtable and the destructors
+// move there with it, under the same symbols. Delete this file with it. cgravadorbu.cpp ends after
+// AcrescentaVotoVotavel: its record lines 484, 485, 542, 552, 560 and 636 are this member's, LeChavePublica and
+// MontaEntidadeBU inlined into it.
 #include "app/comum/gravadores/cgravadorbu.h"
 
 namespace comum {

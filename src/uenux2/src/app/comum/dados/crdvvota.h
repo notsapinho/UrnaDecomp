@@ -40,6 +40,12 @@ public:
     void Desconverte(const std::vector<uebyte>& dados) override;
     bool Confere(const std::vector<uebyte>& dados) const override;
 
+    // The largest of the elections' Comparecimento over CConfiguracaoEleicao's elections: target fn 1269, no slot (it is
+    // called directly, on GetInst()'s result, by eight vota functions: 1956, 5972, 10569, 10797, 11835, 11849, 12098,
+    // 12110; 12098 compares it with CEleitores' own count). No record names it: its name, an overload of slot 2's, and
+    // its being a member (it reads m_votos) are chosen.
+    md::TQtdVoto Comparecimento() const;
+
 private:
     md::CVotosEleicoesVota m_votos;
     // Recovered: the RDV's converter at +44, which the destructor (fn 5734) destroys first; the name is chosen.

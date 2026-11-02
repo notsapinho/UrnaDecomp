@@ -630,7 +630,18 @@ describe('remapBody with operand kinds', { timeout: 180_000 }, () => {
     expect(ambiguous.at(-1)!.readings.every((x) => x.startsWith('table slot'))).toBe(true);
     const all = remapBody({ ...maps, kinds: undefined }, ours);
     expect(all.ok && all.kindUnverified).toBe('no operand-kind table');
-    expect(all.ok && all.pieces.some((p) => !(p instanceof Uint8Array) && p.at === 0x1b)).toBe(true);
+    // without the table each of those operands keeps its literal reading too, and the enum 7010 is offered the target
+    // slots of the function in our slot 7010 while the target's table holds that function in 1 to SAME_CONTENT_LIMIT
+    // slots: which function sits in our slot 7010 is a number each landing moves. 7010 is also an address of our data,
+    // and the string a landing puts there can give it an address reading as well, so only its slot readings are read
+    const loose = all.ok ? all.pieces.filter((p): p is Exclude<Piece, Uint8Array> => !(p instanceof Uint8Array)) : [];
+    for (const at of [0x23, 0x2a, 0x32, 0x37]) {
+      expect(loose.find((p) => p.at === at)?.readings.includes('literal'), `+0x${at.toString(16)}`).toBe(true);
+    }
+    const f7010 = maps.target.symbols.fns.get(maps.ours.fns.get(maps.ours.elem.get(7010) ?? -1)?.key ?? '');
+    const theirs = f7010 === undefined ? [] : (maps.target.slots.get(f7010) ?? []);
+    const slotReadings = loose.find((p) => p.at === 0x1b)?.readings.filter((x) => x.startsWith('table slot')) ?? [];
+    expect(slotReadings.length > 0).toBe(theirs.length >= 1 && theirs.length <= SAME_CONTENT_LIMIT);
   });
 
   it.skipIf(!real)("offers an unfolded sum's base the target's table base, its relative slots minus it", () => {

@@ -44,6 +44,7 @@ int w2271(int, int) __asm__("_ZNK5comum13CCandidaturas15ExisteCandidatoEh");
 void w2840(int, int, int) __asm__("_ZNK5comum13CCandidaturas13GetCandidatosEh");
 int w1273(int, int, int) __asm__("_ZN5comum13CCandidaturas5BuscaEhj");
 void w5807(int, int) __asm__("_ZNK5comum19CCandidaturasDSNomeclEv");
+int w5809(int, int, int) __asm__("_ZNK5comum13CCandidaturas24ExisteCandidatoFederacaoEhRKN7ecourna3app5dados10CFederacaoE");
 }
 
 namespace {
@@ -128,9 +129,9 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
 }
 // Stands for the callers of four CCandidaturas members that are not in our link, beside units 77's and 139's:
 // GetCandidatosPartido (2272: 3819, 5604 and 11976, beside 11213 and 11255), ExisteCandidato (2271: 3819 and 4442, beside
-// 11215, 11254 and 11255), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 3820, 5604, 11212, 11683
-// and 11891, beside 11214, 11255, 11724 and 11744; 11212's call and one of 11683's are on CRespostas::GetInst()'s
-// result, fn 2812).
+// 11215, 11254 and 11255), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 5604, 11212, 11683 and
+// 11891, beside 11214, 11255, 11724, 11744 and 3820, unit 200's; 11212's call and one of 11683's are on
+// CRespostas::GetInst()'s result, fn 2812).
 __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
 {
     w2272(r, c, cargo, partido);
@@ -143,6 +144,11 @@ __attribute__((noinline)) void NomesUrna(int r, int s, int a)
 {
     w5807(r, a);
     w5807(s + 12, a + 1);
+}
+// Stands for fn 5809's callers 5922 and 11976, neither reconstructed.
+__attribute__((noinline)) int Federacoes(int c, int cargo, int f, int g)
+{
+    return w5809(c, cargo, f) * 5 - w5809(c, cargo + 2, g);
 }
 
 struct SCLocalRoots {
@@ -181,6 +187,7 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Versoes);
         clocal_sink = reinterpret_cast<const void*>(&Consultas);
         clocal_sink = reinterpret_cast<const void*>(&NomesUrna);
+        clocal_sink = reinterpret_cast<const void*>(&Federacoes);
     }
 } clocal_roots;
 

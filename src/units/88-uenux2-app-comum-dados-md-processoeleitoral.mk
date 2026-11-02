@@ -91,6 +91,30 @@
 #   does. With -fno-strict-aliasing it differed from the target in the reload of __child after __insert_node_at's store
 #   of the begin node (`pnpm wasm score` against the plain link: 8 over 122 rows, the reload's three rows, the local
 #   numbers after it and one call operand).
+# - CConfiguracaoEleicao::GetSituacoesEleicoes (fn 271, a chosen name) is f5648(this + 28, eleicao): CPleito's
+#   GetSituacoesEleicoes on the pleito at +28 (cconfiguracaoeleicao.h's m_pleito). Its callers (1386,
+#   3687, 5577, 5578, 5582, 11558, 11559) pass it GetInst's (187) result at every call, and 11558 and 11559 pass that to
+#   GetCargo (861) as well (pnpm wasm fn), so it is the class's member, out of line in cconfiguracaoeleicao.cpp; its line
+#   there, after GetCargo's, and its parameter's TEleicaoID (5648's) are chosen. Its stub was an ecourna/unplaced.cpp
+#   row: the ledger's component for it is ecourna, which says which code calls it, not where it is written. The scan
+#   pairs it by content. None of its callers is written, so the roots give it two call sites, and the stand-in for 5648
+#   now stands for 3713 alone.
+# - comum::CConfiguracaoEleicao::GetIDsEleicoes (fn 5791, 87 B) and GetCargosEleicoes (fn 3774, 389 B), in
+#   cconfiguracaoeleicao.cpp after the destructor. 5791 pushes the id (+0) of each 52-byte CEleicaoPE of m_pleito into
+#   a vector through push_back(const&): the target calls fn 543, matched as std::vector<long>'s, and our body's call
+#   goes to that body (ours 532, roots_boost.o's, in build/out/wasm-map/vota_web/names.tsv), binaryen keeping one of
+#   identical bodies for our std::vector<unsigned int>'s instance (a reading); its callers are 1269
+#   (comum::CRdvVota::Comparecimento(), unit 13) and 5735. 3774 pairs each
+#   election's id with the id of each of its cargos (CEleicaoPE::GetCargos, fn 2257, out of line) into a
+#   std::vector<CCargos::TCargoEleicao>; its callers are 4454 (vota::CEleitorVotando's, not written) and 7787 (which
+#   holds CCargos::CreateInst; ccargos.h has it). Each pair is one 8-byte store in the target: `push_back({id, cargo})`
+#   gives it, 5 over 195 rows, all operand-only, where `emplace_back(id, cargo)` builds the pair in place with two stores,
+#   33 over 201 rows (6 inserted, 10 deleted); 5791 scores 1 over 44, operand-only (`pnpm wasm score` before step 8).
+#   The scan matched 5791 through the census's pair (`shape`) and 3774 by its content. In use band 2 the target's 5791
+#   comes right after the destructor (5792) in link order, which is what puts it after the destructor here; in use band
+#   3 its 3774 lies after ccargos.cpp's 3784 and 3783 and before cnomearquivo.cpp's 3773, with 3775 to 3782 between (all
+#   unwritten but 3779, a std::__split_buffer instance), which this file fits (a reading). Chosen: both names, their being members (they read m_pleito), the line of
+#   each and their order. The roots' IDsEleicoes stands for 5735 and CargosEleicoesDuas for 4454 and 7787.
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes
@@ -103,6 +127,17 @@
 # - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
 #   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their
 #   evidence and why that object links after ccargos.cpp. The file's other records, lines 25, 93 and 249, are not written.
+# - ccargo.cpp also holds comum::md::CCargo's TemFoto and QtdSuplentes (target fns 1546 and 1157, 16 and 36 B, no
+#   record), which fns 1192, 4185, 6569, 6660, 6671, 6678 and 1588, 6569, 6660, 6671, 6678, 7787, 12272 call 8 and 11
+#   times, none written (those with records, 6660, 6671, 6678, 7787 and 12272, are app/vota/eleitor/comum/ctelasvota.cpp's).
+#   Each reads the candidate detail's engaged flag at +84 and a field of the detail itself, the photo flag at +20 or the
+#   substitutes' vector at +72 (52-byte elements), not through GetDetalheCandidato, which those screens call elsewhere
+#   (fn 1388). That a caller's TU would inline a body this small is a reading, not compiled, so their TU is another
+#   one: ccargo.cpp, their being members, their names, the spelling uebyte of QtdSuplentes' result (its 8-bit unsigned
+#   width is the target's: 1157's `i32.const 255; i32.and` at +0x1f), CDetalheCandidato's two accessors (TemFoto,
+#   GetSuplentes) and their lines after operator<=> are chosen; other forms are not measured. Both scored 0 rows over 9
+#   and over 19 (byte-exact) before step 8 and matched at step 9. Their stand-ins are
+#   src/units/212-uenux2-app-vota-callers-roots.cpp's.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 PROCESSOELEITORAL_SRCS := src/app/comum/dados/ccargos.cpp \
   src/app/comum/dados/cconfiguracaoeleicao.cpp \

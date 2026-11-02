@@ -43,6 +43,15 @@ public:
     const std::string& GetTituloMesario() const { return m_tituloMesario; }
     void SetTituloMesario(const std::string& titulo) { m_tituloMesario = titulo; }
 
+    // The string at +108, the line about the voter's state: vota::CEleitorVotando's FinishState (fn 7370) and slot 2
+    // (fn 7377) assign it a literal in place (fn 7370's one char inlined, fn 7377's through __assign_external, fn 276),
+    // and fn 4464 holds an out-of-line function of this class inlined by binaryen (a second 16-byte frame right after
+    // its call of GetInst) that assigns it the first 40 characters of a string: the second, out of line in
+    // cthreadoperador.cpp, whose object links after celeitorvotando.cpp's (src/units/197-uenux2-celeitorvotando.mk has
+    // the measurement). That the two are overloads of one setter, and their names, are chosen.
+    void SetTextoEleitor(const char* texto) { m_texto3 = texto; }
+    void SetTextoEleitor(const std::string& texto);
+
 protected:
     void Run() override;
     void ParaOutrasThreads() override;

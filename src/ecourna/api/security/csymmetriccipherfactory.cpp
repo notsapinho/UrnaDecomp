@@ -15,7 +15,9 @@ std::shared_ptr<ISymmetricCipher> CSymmetricCipherFactory::Create(const std::str
     CSha512 sha;
     sha.Update(dados);
     const std::vector<uebyte> resumo = sha.Finish();
-    const std::vector<uebyte> bytes(resumo.begin() + 16, resumo.begin() + 48);
+    const auto inicio = resumo.begin() + 16;
+    const auto fim = resumo.begin() + 48;
+    const std::vector<uebyte> bytes(inicio, fim);
     const CAesKey chave(bytes, ESCKS_256);
     return Create(chave);
 }

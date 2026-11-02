@@ -60,6 +60,14 @@ public:
     bool IsConsulta() const { return m_detalheConsulta.has_value(); }
 
     const CDetalheCandidato& GetDetalheCandidato() const;
+    // Out of line in ccargo.cpp (fns 1546 and 1157, 8 and 11 call sites in fns 1192, 4185, 6569, 6660, 6671, 6678 and
+    // 1588, 6569, 6660, 6671, 6678, 7787, 12272, none written; those with records, 6660, 6671, 6678, 7787 and 12272,
+    // are vota/eleitor/comum/ctelasvota.cpp's): each reads the candidate detail's engaged flag at +84 and a field of the
+    // detail itself, not through GetDetalheCandidato, which those screens call elsewhere (fn 1388). That a caller's TU
+    // would inline a body this small is a reading, so another TU holds them; ccargo.cpp, their being members, their
+    // names and the spelling uebyte are chosen; QtdSuplentes' 8-bit unsigned width is the target's (1157 masks 255).
+    bool TemFoto() const;
+    uebyte QtdSuplentes() const;
     const CDetalheConsulta& GetDetalheConsulta() const;
 
     std::string GetNomeNeutro() const;

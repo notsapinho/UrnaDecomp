@@ -1,17 +1,17 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// Members with no record sit at chosen lines, each unit's fragment says why: 119's, 161's five after GetInst, 152's
-// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two, 176's, 61's, 197's,
-// and 156's four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's and 119's two.
+// Members with no record sit at chosen lines, each fragment says why: 119's, 161's five and 156's two after GetInst,
+// 152's seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's,
+// 197's, 156's four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two.
 #include "app/vota/log/clogvota.h"
-
 #include <format>
 #include <memory>
 #include <string>
 
 #include "api/pattern/cpolysingleton.h"
 #include "api/uelog/cloga.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 
 namespace vota {
 
@@ -56,6 +56,21 @@ void CLogVota::LogaSolicitacaoDadoPessoalEleitor()
 void CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado()
 {
     loga("Habilitação cancelada durante confirmação de dado do eleitor");
+}
+
+void CLogVota::LogaMesarioIndagadoQtdViasAdicionais()
+{
+    loga("Mesário indagado sobre quantidade de vias adicionais");
+}
+
+void CLogVota::LogaMesarioNaoSolicitouViasAdicionais()
+{
+    loga("Mesário não solicitou emissão de vias adicionais");
+}
+
+void CLogVota::LogaErroPartidoNaoEncontrado()
+{
+    logaErro("Erro partido não encontrado");
 }
 
 void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
@@ -149,6 +164,30 @@ void CLogVota::LogaMesarioIndagadoQualidadeBU()
     loga("Mesário indagado sobre qualidade do Boletim de Urna");
 }
 
+void CLogVota::LogaVotoBrancoPorSuspensao(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto branco por suspensão [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
+void CLogVota::LogaVotoCargoSemCandidato(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto para cargo sem candidato [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
+void CLogVota::LogaVotoNuloPorSuspensao(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto nulo por suspensão [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
+void CLogVota::LogaVotoConfirmado(const uebyte cargo)
+{
+    loga(std::format("Voto confirmado para [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
+}
+
 void CLogVota::LogaHabilitacaoCanceladaReconhecimentoBiometrico()
 {
     logaAlerta("Habilitação cancelada durante reconhecimento biométrico");
@@ -186,6 +225,11 @@ void CLogVota::LogaFimTesteTecladoSucesso()
     loga("Fim do teste de Teclado do TE - Sucesso");
 }
 
+void CLogVota::LogaTesteTecladoNaoExecutado()
+{
+    loga("Teste de Teclado do TE não executado");
+}
+
 void CLogVota::LogaMesarioConfirmouReinicioVotacao()
 {
     const std::string mensagem = "Mesário confirmou o reinício da votação";
@@ -217,6 +261,12 @@ void CLogVota::LogaErroIdentificacaoTipoCargo()
 void CLogVota::LogaEleitorVoltouADigitar()
 {
     loga("Eleitor voltou a digitar enquanto estava sendo suspenso");
+}
+
+void CLogVota::LogaVotoCargoSemCandidatoPorSuspensao(const uebyte cargo)
+{
+    loga(std::format("Atribuido voto para cargo sem candidato por suspensão [{}]",
+                     comum::CConfiguracaoEleicao::GetInst().GetCargo(cargo).GetNomeNeutro()));
 }
 
 } // namespace vota

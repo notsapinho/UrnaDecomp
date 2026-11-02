@@ -2,8 +2,8 @@
 # crelatoriotesteimpressora.cpp (the file of its records), the class in crelatoriotesteimpressora.h, its base
 # comum::CImprimirExtratoCarga in cimprimirextratocarga.h with its one out-of-line member in cimprimirextratocarga.cpp, and
 # the callee comum::CRelUtil::GetSeparadorFase in crelutil.cpp (its record's file) with crelutil.h and
-# euecomumrelatorioserror.h, the error it throws; and CRelUtil's GetIDCargaFormatado and IncluiAvisoModoDemonstracao in
-# crelutil.cpp (below).
+# euecomumrelatorioserror.h, the error it throws; and CRelUtil's GetIDCargaFormatado, IncluiAvisoModoDemonstracao,
+# DSCodigoVerificador and FormTituloPartido and the file's internal TituloPartido in crelutil.cpp (below).
 #
 # Matched: the overrides TemHorarioVerao, EhTreinamento, GetHorarioVerao, EstaEmHorarioVerao, GetCorrespondencia,
 # GetCabecalho, EhEleicaoComunitaria, EhModoDemonstracao, GetNomeEleicao, GetPleito, GetTipoUrna, GetUF, GetTitulo,
@@ -31,15 +31,16 @@
 #   which reads as one statement holding the format and both calls, as written; other forms were not linked. The style 1
 #   and the alignments 2 and 0 are the constants the target passes (IPaper::EStyle has no enumerators, ipaper.h).
 #
-# Written and not matched: InicializaTradutorFrase (11196, slot 10) builds a std::map<char, CLabelParametrizado> of the
-# four labels of CConfiguracaoEleicao's CParametrosUrna ('M' municipio, 'Z' zona, 'S' secao, 'P' partido) and hands it
-# to CTradutorFrase::SetLabels (ctradutorfrase.h). It differs at -O2 and at the tree's -O3: the target calls the map's initializer-list constructor (fn 5795, which holds the insertion
-# inlined), and at -O2 clang inlines that constructor into 11196, 281 over 345 rows (`unresolved` on the insertion's
-# __emplace_hint_unique_extract_key, which the target has inside 5795). In a private link with this TU at -O3 and a
-# scratch second caller of the constructor in it (standing for 7787, the target's other caller), 11196 scores 20 over
-# 289 and 5795 1 over 172, all operand-only; without that second caller binaryen inlines the constructor into 11196 (212
-# over 453, as in the whole link at the tree's -O3). So 5795 needs a stand-in for 7787 here. The list handed straight to the setter keeps the constructor
-# out of line at -O3 too, in a probe object; it was not linked.
+# InicializaTradutorFrase (11196, slot 10) matches, with the map's initializer-list constructor (fn 5795) that this
+# object instantiates for it: it builds a std::map<char, CLabelParametrizado> of the four labels of
+# CConfiguracaoEleicao's CParametrosUrna ('M' municipio, 'Z' zona, 'S' secao, 'P' partido) and hands it to
+# CTradutorFrase::SetLabels (ctradutorfrase.h). The target calls that constructor, which holds the insertion inlined;
+# at -O2 clang inlines it into 11196, 281 over 345 rows (`unresolved` on the insertion's
+# __emplace_hint_unique_extract_key, which the target has inside 5795), and at the tree's -O3 with 11196 its only
+# caller binaryen does (212 over 453 in the whole link). With a second caller standing for 7787, the target's other
+# one (the roots' w123_mapa, below), 11196 scores 20 over 289 and 5795 1 over 172, all operand-only, and both match;
+# 11196's body did not change. The list handed straight to the setter keeps the constructor out of line at -O3 too, in
+# a probe object; it was not linked.
 #
 # Pending, in the -pending.cpp, whose header says what each waits for: GetConteudoQRCode (11200), GetDadosLocal (11188).
 # Not reconstructed: the constructor (5586, declared; its stub stays in crelatoriotesteimpressora.cpp): it calls
@@ -79,15 +80,23 @@
 # stand-ins for callers not reconstructed, each of a function with several callers in the target that binaryen would
 # inline into its one caller here: w123_separador for 1919's (without it 11183 scores 388 over 390, measured on an earlier form of 1919), w123_erro for 580's 13 other throwers (without it
 # binaryen inlines the constructor into 1919, 90 over 387, and neither 580 nor 1919 matches). w123_erro stands for the
-# nine throwers not in the link (the roots file lists them; 942 and 2786 are in it) and goes with the last, and
+# eight throwers not in the link (the roots file lists them; 942, 2786 and 11181 are in it) and goes with the last, and
 # w123_separador when one of 2785, 11943, 11946, 12105 or 12110 does. w123_copia, which stood for 1249's other callers
 # (without a second caller binaryen inlines the copy and 11197 scored 204 over 208), went before all of them landed, on
 # a link without it that moves no row: 11395 (unit 93) calls 1249 three times and reads its result as the stand-in did,
 # and with it out 11197 and 5856 (unit 160) keep `match` (without 11395 in the link they left it: `+0xf target drop |
 # ours +0xf end` in 11197's scan row); 5637, 5740 and 12098 still wait. The third, w123_labels, stands for 7787's call of 5794 through SetLabels, so that 5794 keeps two call sites; it goes when 7787
-# lands.
+# lands. A fourth, w123_mapa, stands for 7787's call of the label map's initializer-list constructor (fn 5795, which
+# this unit's object instantiates for InicializaTradutorFrase), so that 5795 keeps two call sites and stays out of
+# line; it goes when 7787 lands. It declares the constructor through an __asm__ label with the object's signature
+# ((i32, i32, i32) -> i32 in crelatoriotesteimpressora.cpp.o, wasm-objdump -x) and reads the result, which the target's
+# wasm type, (i32 i32)->(i32), keeps; the comparator, the object's third parameter, is in neither link's type (pnpm
+# wasm fn on both). Measured with `pnpm wasm score` against our plain link with the stand-in in it: 5795 1 over 172
+# rows and 11196 20 over 289, all operand-only, and splat-match then matched both (5795 by content, 11196 under the
+# symbol file's name).
 #
-# CRelUtil's other written members, in crelutil.cpp (that file's note gives their lines):
+# CRelUtil's other written members, in crelutil.cpp (that file's note gives their lines), all matched; the scores of
+# 11181 and 11182 are `pnpm wasm score` against the plain link before steps 7 to 9:
 # - GetIDCargaFormatado (target fn 2786, record crelutil.cpp:69:15) joins seven three-character pieces of the load code
 #   with "." and the rest from position 21, and throws CUeComumRelatoriosError 9085 with the code between brackets when
 #   the code has 20 characters or fewer. The test comes first with the throw inside it: written as an else after the
@@ -99,9 +108,31 @@
 #   (fn 1543, record crelutil.cpp:307) and fn 5591, and it tests CInformacaoEleicao::EhModoDemonstracao as
 #   GetSeparadorFase does. It adds the demonstration-mode line, centred in style 1, and two blank lines: 10 over 69,
 #   all operand-only. Its name, its lines and its being a static member are chosen.
-# Their callers are not reconstructed. w123_idcarga stands for 2786's four (5579, 11256, 12105, 12110) and
-# w123_demonstracao for 5583's two (1543, 5591): each calls its function twice, as the target's several callers do; each
-# goes when every caller it stands for is in the link.
+# - TituloPartido (fn 11181, record crelutil.cpp:58:15, `std::string comum::(anonymous namespace)::TituloPartido()`)
+#   returns CTradutorFrase::Traduz("<PLSN>") + ": " + the current party's number + " - " + its abbreviation (the string
+#   at +4 of md::CPartido, GetSigla), and throws CUeComumRelatoriosError 9084 "Partido não posicionado" when
+#   CPartidos::GetInst()'s cursor is at the end (IsFim, inline). The number is read into a named local right after
+#   GetCurrent, as the target loads it before it builds "<PLSN>": 21 over 246 rows, all operand-only, the one operand that
+#   is no call and no data address the thrown object's destructor's table slot (69); with the number read inside the
+#   expression, 26 over 247 (1 inserted, 2 deleted).
+# - The target reaches TituloPartido only by its table slot (3050), which only fn 11946 (vota::CGeraZeresimaBase's slot
+#   2, not written) loads, behind a stack-pointer prologue of its own: a function binaryen inlined there that builds a
+#   CPaperFormBuilder, adds one text field over the slot (AddTextField, fn 604, alignment 0) and returns Build's form
+#   (fn 357). Only crelutil.cpp's TU can take the address of its internal function, so that function is crelutil.cpp's:
+#   FormTituloPartido, a static member of CRelUtil (its name and membership chosen: the class's records name only static
+#   members), defined last in the file. In our link 11182's ld_index (2459) is then below 11181's (2466), the order their
+#   use band (1) asks; the other places were not linked. w123_titulo stands for 11946 and calls it once, so binaryen
+#   inlines it there as in the target; it goes when 11946 lands.
+# - DSCodigoVerificador (fn 11182, record crelutil.cpp:412:27, the default std::source_location of its
+#   CPolySingleton<CCalculaCV>::instance() call) formats CCalculaCV::CalculaCodigo's result (fn 3700, unit 121) as
+#   "Código Verificador: {}.{}.{}.{}" of its substrings (0, 1), (1, 3), (4, 3) and (7, 3), the lengths the target's
+#   copies clamp to. 18 over 501 rows, all operand-only, the one operand that is no call and no data address the format
+#   buffer's table slot (148 in the target). The target reaches it only by table slot 3048, which fn 11256 (unit 139)
+#   passes: it needs no stand-in. `CCalculaCV& calculo = ` before the call, what fills the line to column 27, is chosen.
+# IncluiAvisoModoDemonstracao's callers (1543, 5591) are not reconstructed, nor three of GetIDCargaFormatado's four
+# (5579, 12105, 12110; 11256 is in the link). w123_idcarga stands for those three and w123_demonstracao for 5583's two:
+# each calls its function twice, as the target's several callers do; each goes when every caller it stands for is in the
+# link.
 CRELATORIOTESTEIMPRESSORA_SRCS := src/app/comum/relatorios/crelatoriotesteimpressora.cpp src/app/comum/relatorios/crelutil.cpp \
                                   src/app/comum/relatorios/cimprimirextratocarga.cpp
 UENUX2_SRCS += $(CRELATORIOTESTEIMPRESSORA_SRCS)

@@ -132,6 +132,18 @@
 # The error codes' names (euerdverror.h), Compativel, QuantidadeEscolhas, Comparecimento's and the helpers' names are
 # chosen.
 #
+# comum::CRdvVota::Comparecimento() (target fn 1269, 145 B), in crdvvota.cpp: no slot, called directly on GetInst()'s
+# result by eight vota functions (1956, 5972, 10569, 10797, 11835, 11849, 12098, 12110). Its body takes the ids
+# comum::CConfiguracaoEleicao::GetIDsEleicoes (fn 5791, unit 88's file) returns for GetInst() (187), calls
+# md::CVotosEleicoesVota::Comparecimento (5639) on +20 (m_votos) for each, keeps the largest as a 16-bit value and frees
+# the vector. `pnpm wasm score` before step 8: 4 over 74 rows, all operand-only (calls and data addresses); the scan
+# matched it through the census's pair (`shape`). The roots' w13_comparecimento stands for its callers but 10569 (unit
+# 50's slot 16, in the link), and 5639 needs no stand-in now that both its callers are in. Chosen: the name (an overload
+# of slot 2's), its being a member (it reads m_votos, which no accessor exposes), std::max, and its line, after slot 2's
+# Comparecimento; in use band 10 the target's 1269 lies just before 1268 (this map's destroy) in link order, and so
+# does ours (ld_index 2593 against 2615 in build/out/wasm-map/vota_web/names.tsv). crdvvota.cpp includes
+# app/comum/dados/cconfiguracaoeleicao.h for it.
+#
 # The roots stand in for the callers no unit writes: the CRdvVota vtable's address for CreateInst's vptr store, and the
 # stand-ins the roots file lists by target caller.
 CRDVVOTA_SRCS := src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp \
@@ -139,6 +151,9 @@ CRDVVOTA_SRCS := src/app/comum/dados/crdvvota.cpp src/app/comum/dados/md/rdv/cvo
 UENUX2_SRCS += $(CRDVVOTA_SRCS)
 # crdvvota.h holds the RDV's converter, which includes generated ASN.1 modules: the generic uenux2 rule does not depend on them
 $(ROOT)/$(APP)/uenux2/src/app/comum/dados/crdvvota.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
+# crdvvota.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost (as unit 88's
+# sources do)
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/crdvvota.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # the CRdvVota slots not written: 13-uenux2-crdvvota-pending.cpp traps them, compiled with the tree's flags
 $(ROOT)/$(APP)/13-uenux2-crdvvota-pending.o: $(ROOT)/src/units/13-uenux2-crdvvota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/13-uenux2-crdvvota.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp') $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/13-uenux2-crdvvota-pending.cpp -o $(R)

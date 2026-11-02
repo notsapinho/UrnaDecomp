@@ -20,8 +20,8 @@
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
 //   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade, int>
 //   stands for the callers not written (2225 and 2264 are, units 50 and 110), and binaryen merges the copies.
-// - comum::CJustificador's constructor, 3742 (1391, 11474, 11475): two call sites, so binaryen keeps it out of line;
-//   it stores CJustificadorServico's vptr, the reference the target has to that vtable.
+// - comum::CJustificador's constructor, 3742 (11474; 1391 and 11475 are in the link): two call sites, so binaryen
+//   keeps it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
 // - CRegistradorMesario::GetInst, 815 (ten callers; 10795, unit 119's slot 7, is in the link), its counts 3606 and 2727
 //   (each called by 10795 and two more), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls GetInst and each
 //   count once, beside 10795, and HasInst twice.
@@ -128,8 +128,8 @@ __attribute__((noinline)) int CopiaDetalheDois(void* primeiro, void* segundo, co
     return 41;
 }
 
-// Stands for 3742's callers, 1391, 11474 and 11475, which build comum::CJustificador's singleton and are not
-// reconstructed: two call sites, since binaryen inlines a function called once.
+// Stands for 3742's caller 11474, which holds comum::CJustificador::GetInst's code and is not reconstructed (1391 and
+// 11475 are in the link): two call sites, since binaryen inlines a function called once.
 __attribute__((noinline)) int CriaJustificadores(void* primeiro, void* segundo)
 {
     new (primeiro) comum::CJustificador();

@@ -1,10 +1,17 @@
 # uenux2 comum::gravadores classes and converters, paths relative to src/uenux2:
 # - comum::CCopiadorMR and comum::CCopiadorWSQMR (src/app/comum/gravadores/ccopiadormr.{h,cpp}, ccopiadorwsqmr.cpp):
-#   both constructors (target fns 1276 and 3827) and the destructors defined in the class (fns 11638 and 5872, slots 0
-#   and 1 of both vtables, thunks into binaryen's merged bodies fns 1723 and 1722). In our link the two destructors
-#   come from ccopiadorwsqmr.cpp.o, whose constructor stores CCopiadorWSQMR's vptr and so emits that vtable and the
-#   inline destructors first; 160-uenux2-comum-gravadores-classes-pending.cpp emits CCopiadorMR's vtable with its
-#   traps of slots 2 and 3 (fns 5874, 5873; Slot2 is the key function).
+#   both constructors (target fns 1276 and 3827), the destructors defined in the class (fns 11638 and 5872, slots 0
+#   and 1 of both vtables, thunks into binaryen's merged bodies fns 1723 and 1722), and CCopiadorMR's slots 2 and 3
+#   (fns 5874 and 5873, slots of both vtables too), in ccopiadormr.cpp after the constructor, Slot2 first, as their use
+#   band gives. Slot2 is the key function, so ccopiadormr.cpp.o emits CCopiadorMR's vtable and with it the two inline
+#   destructors, ahead of ccopiadorwsqmr.cpp.o's copies (the pending object emitted the vtable before). CCopiadorWSQMR's
+#   deleting destructor is the same body as CCopiadorMR's, so fn 5872's match line follows CCopiadorMR's symbol now
+#   (step 9 renamed it). Each slot copies the file named at +4 from the result directory of one flash
+#   (comum::CPath::GetPathResult, fn 1274, with FLASH_INTERNA for Slot2 and FLASH_EXTERNA for Slot3) to the MR's
+#   (CPath::GetPathMR, fn 949), with api::CSystem::CopyFile (fn 378), passing false and true as unit 122's fragment
+#   says of IGravador's slots. Measured in this link before step 8 (pnpm wasm score against the target): 5874 and 5873
+#   19 over 293 rows each, operand-only, every operand a call's or a data address; the paths as named const locals and
+#   their names are chosen, and no other form was measured.
 # - comum::CGravadorEnvelopeArquivo::LeConteudo (target fn 11623, slot 8, a chosen name), the class's key function, in
 #   src/app/comum/gravadores/cgravadorenvelopearquivo.cpp: the class's vtable and implicit destructors (fns 11622,
 #   11621, unit 136's matches) are emitted there now, not in unit 136's pending object, under the same symbols.
@@ -75,7 +82,6 @@
 # found to give the same bytes.
 #
 # Not matched, and what each waits for:
-# - CCopiadorMR's slots 2 and 3 (fns 5874, 5873) are pending (the -pending.cpp header says on what).
 # - Not attempted: comum::asn::CConversorEntidadeHashes::DoConverte (fn 10266; md::CEntidadeHashes's members past +36
 #   are not recovered). The constructor at fn 5824 (562 B, its one caller vota::CGravaResultado::StartState, fn 12098)
 #   matches in unit 195, as comum::CGeradorResultados's (a chosen class: no evidence names it). Not written: template
@@ -94,13 +100,7 @@ UENUX2_SRCS += $(GRAVADORES_CLASSES_SRCS) $(GRAVADORES_CLASSES_ASN_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(GRAVADORES_CLASSES_ASN_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
 # not every caller is reconstructed: 160-uenux2-comum-gravadores-classes-roots.cpp stands in for the others (the copiers'
-# builder fn 12134, fns 3819, 3820 and 12098) and keeps CConversorEnvelopeGenerico's vtable; it compiles with the
-# tree's flags
+# builder fn 12134, fns 3819 and 12098) and keeps CConversorEnvelopeGenerico's vtable; it compiles with the tree's flags
 $(ROOT)/$(APP)/160-uenux2-comum-gravadores-classes-roots.o: $(ROOT)/src/units/160-uenux2-comum-gravadores-classes-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/160-uenux2-comum-gravadores-classes.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/160-uenux2-comum-gravadores-classes-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/160-uenux2-comum-gravadores-classes-roots.o
-# CCopiadorMR's and CConversorCarga's slots are not reconstructed: 160-uenux2-comum-gravadores-classes-pending.cpp gives
-# them trapping bodies, compiled with the tree's flags, and emits the classes' vtables and destructors
-$(ROOT)/$(APP)/160-uenux2-comum-gravadores-classes-pending.o: $(ROOT)/src/units/160-uenux2-comum-gravadores-classes-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/160-uenux2-comum-gravadores-classes.mk $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null) $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/160-uenux2-comum-gravadores-classes-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/160-uenux2-comum-gravadores-classes-pending.o

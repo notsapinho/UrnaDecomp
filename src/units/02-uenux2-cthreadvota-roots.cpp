@@ -4,8 +4,8 @@
 // static constructor (as in 06-ecourna-api-compression-roots.cpp) so the link keeps it out of line.
 // CThreadVota::StopTick (fn 422) has 23 callers in the target; two are reconstructed (fn 10799, unit 119's slot 3, and
 // fn 7022, unit 97's CVotacaoStateAudio::FinishState): ParaDoisTicks stands for the others (4454, 7010, 10451, ...).
-// CThreadVota::AddStoppedTick (fn 807) has 11, of which unit 97's fn 1785 calls it twice and 1165 and 2880 (unit 199)
-// are linked: DoisTicksParados stands for the other eight (652, 2740, 3229, ...).
+// CThreadVota::AddStoppedTick (fn 807) has 11, of which unit 97's fn 1785 calls it twice and 1165 and 2880 (unit 199),
+// 3229 (unit 197) and 10409 are linked: DoisTicksParados stands for the other six (652, 2740, 5343, 5396, 5936, 10440).
 // CTickManager::AddStoppedTick (fn 5452) has fn 807 and fn 5947, both in the link (unit 138 writes 5947).
 // CTickManager::GetExpiredTicks (fn 5450) has fns 4349 and 10204, not reconstructed: TicksVencidos stands for both.
 // CThreadVota::AddTick(const std::chrono::milliseconds&) (fn 4640), CTickManager::AddTick (fn 3644) and StopTick

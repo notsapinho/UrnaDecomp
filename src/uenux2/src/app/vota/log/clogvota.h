@@ -26,7 +26,10 @@
 // vota::CLimiteCopiasBUAtingido::StartState (fn 12027) and fn 12081, and 2495 by four operador states' slots (unit 156's
 // fragment has them). 1127 and 4551 call fn 233, which ieventoslog.cpp's members hold inlined, so they are in another
 // TU, this one (a reading); 4556 and 2495 log through logaAlerta (fn 1398), and the target holds both as thunks of one
-// merged body, fn 6115. Their names are chosen from their messages.
+// merged body, fn 6115. Their names are chosen from their messages. LogaMesarioIndagadoQtdViasAdicionais and
+// LogaMesarioNaoSolicitouViasAdicionais (fns 4563 and 4557) are 4551's shape, out of line and calling fn 233, each
+// called with GetInst's result: 4563 by vota::CEmitirMaisBU::StartState (fn 12082) and ProcessInput (fn 12081), 4557
+// twice by 12081; their names are chosen from their messages.
 // LogaAguardandoHorarioZeresima (held inlined by vota::CVerificaHorarioZeresima::StartState, fn 11871) and
 // LogaDataEleicaoInvalida (by vota::CVerificaEleicaoPassou::StartState, fn 11914) are the shape of the members held
 // inlined above, GetInst called before the member's own stack frame opens, each calling api::CLoga::loga (fn 433) with
@@ -35,6 +38,9 @@
 // 233) are out of line, each called with GetInst's result: 3279 twice by fn 7160 and once by
 // vota::CDefineRotaPosReinicio::NeedChangeState (fn 11858), 4511 twice by fn 11804. Their names are chosen from their
 // messages.
+// LogaTesteTecladoNaoExecutado is the shape of the members held inlined above: vota::testeteclado::CBase::ProcessInput
+// (fn 11874) calls GetInst before the member's own stack frame opens and calls fn 233; its name is chosen from its
+// message.
 // LogaAguardandoConfirmacaoZeresima is the same shape again: fn 5958, the StartState of
 // vota::CConfirmaImpressaoZeresima and vota::CConfirmaRegerarZeresima (one body for both), calls GetInst before the
 // member's own stack frame opens and calls fn 233; its name is chosen from its message. LogaMesarioConfirmouReinicioVotacao
@@ -48,6 +54,12 @@
 // LogaEleitorVoltouADigitar (by vota::CEleitorVotando::ProcessInput, fn 7345: loga, fn 233) are that shape too, GetInst
 // called before the member's own stack frame opens; their names are chosen from their messages. This header's path is
 // chosen, beside clogvota.cpp, and only the members written are declared.
+// The five LogaVoto* members are out of line, each a 17-byte thunk of one body binaryen merged (fn 2302: the post's
+// neutral name, comum::CConfiguracaoEleicao::GetCargo(cargo).GetNomeNeutro(), formatted into its message and passed to
+// loga, fn 233), with the message's begin and end as the two constants: fns 3272, 4546, 4542, 4541 and 4537, each
+// called with GetInst's result and a post's id by vota::CEleitorVotando::RegistraVoto (fn 4471) and by
+// suspenderEleitor (fn 4442), which makes RegistraVoto's calls. Their names are chosen from their messages, and their
+// parameter's type from GetCargo's.
 
 #include <string>
 
@@ -64,6 +76,9 @@ public:
     void LogaSolicitacaoDadoPessoalEleitor();
     void LogaHabilitacaoCanceladaConfirmacaoDado();
     void LogaHabilitacaoCanceladaCapturaDigitalMesario();
+    // Out of line (fn 4550: logaErro, fn 2282), called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName
+    // (fn 6954) and vota::CPedeMajoritario's fn 11683. Its name is chosen from its message.
+    void LogaErroPartidoNaoEncontrado();
 
     void LogaMesarioRegistrado(const std::string& titulo);
     void LogaMesarioJaRegistrado(const std::string& titulo);
@@ -84,6 +99,8 @@ public:
     void LogaEleitorJaJustificou();
     void LogaPedidoTituloSuspensao();
     void LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via);
+    void LogaMesarioIndagadoQtdViasAdicionais();
+    void LogaMesarioNaoSolicitouViasAdicionais();
     void LogaMesarioIndagadoQualidadeBU();
     void LogaQtdViasAdicionaisExcedeMaximo();
     void LogaHabilitacaoCanceladaReconhecimentoBiometrico();
@@ -93,12 +110,18 @@ public:
     void LogaDataEleicaoInvalida();
     void LogaErroEstadoAplicativoDesconhecido();
     void LogaFimTesteTecladoSucesso();
+    void LogaTesteTecladoNaoExecutado();
     void LogaMesarioConfirmouReinicioVotacao();
     void LogaMesarioSelecionouOutrasOpcoes();
     void LogaMesarioIndagadoHorarioUrna();
     void LogaTempoLimiteBateriaInterna();
     void LogaErroIdentificacaoTipoCargo();
     void LogaEleitorVoltouADigitar();
+    void LogaVotoCargoSemCandidatoPorSuspensao(uebyte cargo);
+    void LogaVotoBrancoPorSuspensao(uebyte cargo);
+    void LogaVotoCargoSemCandidato(uebyte cargo);
+    void LogaVotoNuloPorSuspensao(uebyte cargo);
+    void LogaVotoConfirmado(uebyte cargo);
 
 private:
     CLogVota();

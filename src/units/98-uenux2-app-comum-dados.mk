@@ -79,7 +79,8 @@
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
 #   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its `const` and its
 #   `const md::CEleitorDinamico&` result are chosen: no record gives them. Its target callers
-#   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616; in the link 2825 (unit 110) and a stand-in of unit 110's roots.
+#   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616; in the link 2822 and 2825 (unit 110) and a stand-in of unit
+#   110's roots.
 # - MarcaHabilitado, named from the "MarcaHabilitado" it passes to ConfereDadosDinamicos (138114): 2825 holds it inlined by
 #   binaryen (a second stack-pointer prologue at +0xaa) and it has no index of its own. Each kind of enabling calls one of
 #   CEleitorDinamico's inline members (md/eleitor/celeitordinamico.h), and its types are fragment 130's. 2825 matches
@@ -105,6 +106,37 @@
 # constructors are reached through emplace_back, whose growth clang inlines. Chosen: the locals' names, MontaEleitor-
 # Identidade's line but its throw's, DoDesconverte's place after DesconverteTipoImpedimento and the range-for.
 # CHV's member 5745 is unit 110's.
+#
+# comum::VerificaCargoCandidatura (5747, line 289) and VerificaFotoCandidatura (5746, line 320), in
+# cintegridadereferencial.cpp above Lanca; the stand-ins of their callers are in
+# src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
+# - Both return CIntegridadeReferencial::TResultado, the flag at +0 and the message at +4 that Lanca reads. Their only
+#   caller, fn 7787, calls each twice, in integrity tests whose results it hands to Lanca (2263): the post of every
+#   candidatura (5747), then the photo of each holder and substitute whose post's detail says it has one (5746, with
+#   CFotos::GetInst() as the photos). No record says whether those tests are functions of their own.
+# - 5747 finds the candidatura's post in the map fn 2834 builds from CCargos::GetInst() (an inlined find over a byte key
+#   compared unsigned; the value at +20 has CCargo's detail flag at +84 and fn 1388, CCargo::GetDetalheCandidato), leaves
+#   the iterator in its last parameter (the caller nulls it first), and fails with "o cargo ({}) da candidatura ({}) não
+#   foi encontrado", "... não é de candidato" or "o cargo ({}) e a candidatura ({}) não têm a mesma quantidade de
+#   suplentes" (the two vectors' spans compared; both elements are 52 bytes). The post's id read into a local before the
+#   find is measured: written at each use, 5747 scored 50 over 683 rows, 12 inserted and 3 deleted (pnpm wasm score,
+#   whole link), and 29 over 671, operand-only, with the local.
+# - 5746 passes a holder whose situation is not 0; else it copies the code of the holder (ordem 0) or of GetSuplente
+#   (1389), and fails with "a foto (" + code + ")" + " da candidatura ({}[{}]) não foi encontrada" when CFotos's map at
+#   +0 holds no such code. Its find is fn 163, matched under another std::map<std::string, ...>'s find: our instance for
+#   CFotos's map is merged into that body (it is not in names.tsv).
+# - Each failure builds its message into a named local, which the result copies (the target copies a long message and
+#   frees the local); a temporary moved into the result is not measured.
+# - The file: the records' data put cintegridadereferencial.cpp after celeitores.cpp and before cfotos.cpp and chv.cpp
+#   (`awk -F'\t' '$1>=1559000 && $1<=1559900 {print $1, $2}' ledger/source-locations.tsv`), and 5747 and 5746 lie in band 2
+#   between celeitores.cpp's 5761 and chv.cpp's 5745: the reading that they are this file's. 5747 is defined first, as
+#   the band runs.
+# Chosen: the names; their being free functions of comum with external linkage (a static member of
+# CIntegridadeReferencial, whose one record is a static member, is the other form, not measured); the parameters' names
+# and their types past what the bodies read, the map's std::map<md::TCargoID, md::CCargo> among them (read from its
+# node); the lines; and the inline accessors they read, CFotos::ExisteFoto (cfotos.h), CDadosCandidato::GetCodigo
+# (cdadoscandidato.h) and CCandidatura::GetSuplentes (ccandidatura.h). CDetalheCandidato::GetSuplentes is
+# cdetalhecandidato.h's.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp \
   src/app/comum/dados/cintegridadereferencial.cpp \

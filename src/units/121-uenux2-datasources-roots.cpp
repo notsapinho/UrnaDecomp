@@ -17,8 +17,8 @@
 //   needs T's constructor declared, not defined.
 // vota::CEscolheOpcao's own vtable (vptr 1588004, stored only by fn 2753, its GetInst with the constructor inlined, not
 // reconstructed) is kept by its address too, which keeps its slots: the destructors in cescolheopcao.cpp and the traps.
-// And two stand-in callers, of CCalculaCV's destructor and of IncluiString, kept by their addresses: each comment names
-// the target callers it stands for. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
+// And four stand-in callers, of CCalculaCV's destructor, IncluiString, Reinicia and CalculaCodigo, kept by their
+// addresses: each comment names the target callers it stands for. CCalculaCV's own block, __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...> (vptr
 // 1575124, stored by fn 12110), has no builder here: one in this object only declares the destructor, so the block's
 // __on_zero_shared frees what the destructor returns, where the target's (fn 11263) frees the pointer it passed, and
 // the destructor (fn 5614) then keeps its result and stops matching. The fragment has the measurement.
@@ -75,12 +75,27 @@ __attribute__((noinline)) void w121_destroi_calcula(comum::CCalculaCV* primeiro,
     segundo->~CCalculaCV();
 }
 
-// Stands for six of the eight target callers of CCalculaCV::IncluiString (fn 942): fns 5967, 11253, 11256, 11260, 11980
-// and 11981 (11254 and 11255 are in the link).
+// Stands for five of the eight target callers of CCalculaCV::IncluiString (fn 942): fns 5967, 11253, 11260, 11980 and
+// 11981 (11254, 11255 and 11256 are in the link).
 __attribute__((noinline)) void w121_inclui(comum::CCalculaCV& calcula, const std::string& primeira, const std::string& segunda)
 {
     calcula.IncluiString(primeira);
     calcula.IncluiString(segunda);
+}
+
+// Stands for fn 12110, the target caller of CCalculaCV::Reinicia (fn 5615) that is not in the link (fn 3700, the other,
+// is), so that 5615 keeps two call sites (src/units/README.md "Companion files").
+__attribute__((noinline)) unsigned w121_reinicia(comum::CCalculaCV& calcula, const std::string& valor)
+{
+    calcula.Reinicia(valor);
+    return valor.size() + 121;
+}
+
+// Stands for fns 11260 and 11974, the two target callers of CCalculaCV::CalculaCodigo (fn 3700) that are not in the link
+// (fn 11182, the third, is), so that 3700 keeps two call sites.
+__attribute__((noinline)) unsigned w121_codigo(comum::CCalculaCV& calcula)
+{
+    return calcula.CalculaCodigo().size() + 121;
 }
 
 const void* volatile w121_sink;
@@ -90,6 +105,8 @@ struct SW121Roots {
     {
         w121_sink = reinterpret_cast<const void*>(&w121_destroi_calcula);
         w121_sink = reinterpret_cast<const void*>(&w121_inclui);
+        w121_sink = reinterpret_cast<const void*>(&w121_reinicia);
+        w121_sink = reinterpret_cast<const void*>(&w121_codigo);
         w121_sink = w121_vt_respostas;
         w121_sink = w121_vt_opcao;
         w121_sink = w121_vt_string;

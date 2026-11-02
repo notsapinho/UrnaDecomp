@@ -190,4 +190,14 @@ std::strong_ordering CCargo::operator<=>(const CCargo& outro) const
     return m_id <=> outro.m_id;
 }
 
+bool CCargo::TemFoto() const
+{
+    return m_detalheCandidato.has_value() && m_detalheCandidato->TemFoto();
+}
+
+uebyte CCargo::QtdSuplentes() const
+{
+    return m_detalheCandidato ? m_detalheCandidato->GetSuplentes().size() : 0;
+}
+
 } // namespace comum::md

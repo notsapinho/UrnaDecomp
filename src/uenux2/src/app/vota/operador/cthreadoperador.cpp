@@ -32,4 +32,9 @@ void CThreadOperador::ParaOutrasThreads()
     CThreadMonitor::GetInst().Stop();
 }
 
+void CThreadOperador::SetTextoEleitor(const std::string& texto)
+{
+    m_texto3 = texto.substr(0, 40);
+}
+
 } // namespace vota

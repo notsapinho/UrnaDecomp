@@ -21,11 +21,21 @@ enum EUeAssertError {
     EUA_RECT_TOP = 3401,
     EUA_RECT_RIGHT = 3402,
     EUA_RECT_BOTTOM = 3403,
+    // comum::CImprimirIdentificacaoMesariosFinal::GetNomeMesario (fn 5385, record
+    // cimprimiridentificacaomesariosfinal.cpp 229:84): the text "Assert (mesario)". With the invocation indented four
+    // columns and the code qualified as api::, the column leaves 58 characters for the name, chosen to that length
+    EUA_IMPRIMIRIDENTIFICACAOMESARIOSFINAL_MESARIO_INEXISTENTE = 3409,
     // comum::CDataSourcesRelatorio<comum::CRdvVota, comum::CEleitores>::DetalheCandidatoZE (fn 11973, record
     // cdatasourcesrelatorio.h 152:80): the text "Assert (qtd == 0u)". With the invocation indented eight columns (a member
     // defined in its class) and the code qualified as api::, the column leaves 48 characters for the name; the name is
     // chosen to that length
     EUA_DATASOURCESRELATORIO_DETALHECANDIDATOZE_VOTO = 3410,
+    // vota::CEmitirMaisBU::StartState (fn 12082, records cemitirmaisbu.cpp 46:100 and 47:114): the texts "Assert
+    // (appInfo.GetVota().GetEstadoVota() == EAVENCERRADA)" and "Assert (appInfo.GetVota().GetEstadoEncerramento() ==
+    // EAEFIMDOSTRABALHOS)". With the invocations indented four columns and the codes qualified api::, the columns leave
+    // 32 characters for each name, chosen to that length
+    EUA_EMITIRMAISBU_ESTADO_INVALIDO = 3452,
+    EUA_EMITIRMAISBU_FIMDOSTRABALHOS = 3453,
     // vota::CVerificaQtdBUsAdicionais::StartState (fn 12023, records cverificaqtdbusadicionais.cpp 36:102 and 37:116):
     // the texts "Assert (egVota.GetEstadoVota() == EAVENCERRADA)" and "Assert (egVota.GetEstadoEncerramento() ==
     // EAEFIMDOSTRABALHOS)". With the invocations indented four columns and the codes qualified api::, the columns leave

@@ -12,8 +12,11 @@ namespace vota {
 // the base's 12 bytes, and slots 0 and 1 hold the destructors the states with no member share (fns 174 and 144).
 // final: fn 764 deletes the old object with no call through the vtable. A singleton: GetInst (fn 3879, a thunk into
 // binaryen's fn 764) keeps the object in a static std::unique_ptr (@1833624, destroyed at exit by fn 12084) under a
-// static std::mutex (@1833600, by fn 12083). The constructor passes 2 to the base's.
-// src/units/104-uenux2-app-vota-estados.mk says which of this is evidence and which is chosen.
+// static std::mutex (@1833600, by fn 12083). The constructor passes 2 to the base's. StartState (fn 12082, records
+// cemitirmaisbu.cpp 46 and 47) asserts that the vote is EAVENCERRADA and the closing EAEFIMDOSTRABALHOS, logs, and shows
+// CTelasVota's +196; it is the class's key function, so cemitirmaisbu.cpp's object emits the vtable. ProcessInput (fn
+// 12081) is pending in unit 104's file. src/units/104-uenux2-app-vota-estados.mk says which of this is evidence and
+// which is chosen.
 class CEmitirMaisBU final : public comum::CAppState {
 public:
     static CEmitirMaisBU& GetInst();

@@ -18,6 +18,10 @@ enum EUeVotaError {
     // celeitorvotando.cpp:229) throws; the name is chosen from its message, "Tipo de cargo nao identificado": no evidence
     // names it
     EUE_VOTA_TIPO_CARGO_NAO_IDENTIFICADO = 9310,
+    // the value is the code vota::CVotacaoStateAudio::FormatPartyName (target fn 6954, record
+    // cvotacaostateaudio.cpp:297) throws; the name is chosen from its message, "Nao foi encontrado o partido": no
+    // evidence names it
+    EUE_VOTA_PARTIDO_NAO_ENCONTRADO = 9321,
     // the value is the code vota::NomeTela (target fn 6718) throws; the name is chosen from its message, "Tela
     // inválida {}": no evidence names it
     EUE_VOTA_TELA_INVALIDA = 9327,

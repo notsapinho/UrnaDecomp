@@ -22,8 +22,8 @@
 #   (the second stack prologue; Entregar's record, cdaorepositorio.hpp:79, is held by 3742, and the symbol file names
 #   3742 by that anchor). Fragment 163
 #   has the servico and the registry. 1391 allocates 40 bytes before it calls 3742, and the destructor (2810) calls the
-#   servico's (3740) on +28: the class's size and the member's offset. A stand-in in the roots calls the constructor
-#   twice for its three callers, 1391, 11474 and 11475, which build the class's singleton and are not reconstructed.
+#   servico's (3740) on +28: the class's size and the member's offset. Its callers 1391 and 11475 are written (below);
+#   a stand-in in the roots calls the constructor twice for the third, 11474, which is not.
 # - comum::CRegistradorMesario's singleton (cregistradormesario.h says what is evidence and what is chosen):
 #   - GetInst, 815, under a std::lock_guard of the static std::mutex: when the static std::unique_ptr is empty it resets
 #     it to a new object (52 bytes), whose constructor, in the class, passes the name "CRegistradorMesario" to CDataMap's
@@ -139,8 +139,30 @@
 #
 # Not reconstructed: CRegistradorMesario::SaveCurrentInternal (record 85), which only fn 10337 holds, inlined
 # (IGestorDadoMesario::StartState, unit 135's trap: its callees 395, 1149, 1255, 2730 and 2731 have no name), and
-# CJustificador's other members (Justifica, SaveCurrentInternal, the functions that build its singleton, 1391, 11474 and
-# 11475, and the destructor 2810). 5378 and 5379's other callers are 10337 and 6734.
+# CJustificador's other members: Justifica and SaveCurrentInternal (records 55 and 83, both held by fn 10590) and 11474,
+# the other data source that holds GetInst's code. 5378 and 5379's other callers are 10337 and 6734.
+#
+# comum::CJustificador's singleton, destructor and current titulo, in cjustificador.cpp after the constructor; the
+# stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:
+# - GetInst (1391, a chosen name): under the static mutex it resets the empty static std::unique_ptr to a new object (40
+#   bytes) and returns it, the shape of comum::CFotos::GetInst (2819, unit 109). It is written as
+#   CRegistradorMesario::GetInst is (std::lock_guard, reset(new)); unit 109 measures the other spellings on 2819, not
+#   here. The statics follow GetInst, the order unit 110's fragment measures: our link then holds the mutex 24 bytes
+#   below the pointer, as the target does (1838988, 1839012), and the pointer's exit destructor (11477) ahead of the
+#   mutex's (11476) by ld_index, as the target's indices run.
+# - the destructor (2810), `= default` in the .cpp (`{}` not measured): 1391 and 11477 (37 B) keep a call of it, the
+#   shape unit 110's fragment measures for an out-of-line destructor. It calls the servico's D2 (3740) on +28, frees the
+#   name at +16 and calls the map's __tree::destroy (2809), the instance for <CNumeroInscricaoEleitoral,
+#   CJustificadorDetalhe>, whose node's key at +16 goes through fn 778 (a twin, matched as IIdentificadorEleitor's D2).
+# - CJustificadorDadoTitulo::Text (11475; record line 104, code 8802, "Justificativa inválida"): GetInst's code, IsFim,
+#   then IIdentificadorEleitor::GetNumero (fn 1139, a twin matched as api::CFixedText::GetText) on the current key,
+#   which GetTituloCorrente in cjustificador.h returns. The target reaches it only by table slot 2949.
+# Names: 2809, 2810 and 11477 are pair-addr, 11475 srcloc-anchor; 1391 and 11476 match by content. The mutex's name is
+# `vote:1 by:11475`, that anchor's vote, and it holds through 1391 and 11476, the other matches that read 1838988; 11474
+# and 11616 read it too (each unlocks it through fn 150 after reading the pointer), not written. The pointer's name is
+# `vote:6 by:11475,11477`. Chosen: GetInst, s_inst, s_mutex, GetTituloCorrente, CJustificadorDadoTitulo's declaration
+# in cjustificador.h with nothing else, the enumerator's name, and every line but the throw's (104); lines 55 and 83
+# hold no code, for the records of 10590.
 CDATAMAP_SRCS := src/app/comum/comparecimentomesario/servico/ccomparecimentomesarioservico.cpp src/app/comum/comparecimentomesario/cregistradormesario.cpp src/app/comum/justificativa/cjustificador.cpp
 UENUX2_SRCS += $(CDATAMAP_SRCS)
 

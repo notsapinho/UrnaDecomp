@@ -15,7 +15,12 @@ SINGLETON_IMPL_GET_INST(CHV, s_mutex, s_instancia)
 std::unique_ptr<CHV> CHV::s_instancia;
 std::mutex CHV::s_mutex;
 
-// (original lines 73-105: content not recovered)
+
+CHV::CHV(const md::CHorarioVeraoMunicipio& horarioVerao) : m_horarioVerao(horarioVerao)
+{
+}
+
+// (original lines 78-105: content not recovered)
 #line 106
 const md::CHorarioVerao& CHV::GetHorarioVerao() const
 {

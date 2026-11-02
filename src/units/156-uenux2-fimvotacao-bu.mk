@@ -15,6 +15,16 @@
 #   LogaPedidoTituloSuspensao: LogaImprimindoRelatorio (fn 1127), LogaQtdViasAdicionaisExcedeMaximo (fn 4556),
 #   LogaMesarioIndagadoQualidadeBU (fn 4551) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (fn 2495), 4556 and
 #   2495 thunks of the body binaryen merges from them (fn 6115); 4556 sits above 4551, the order the target's band gives.
+#   Two more since, LogaMesarioIndagadoQtdViasAdicionais (fn 4563) and LogaMesarioNaoSolicitouViasAdicionais (fn
+#   4557), 4551's shape, in that order right above unit 161's LogaHabilitacaoCanceladaCapturaDigitalMesario (fn 4522):
+#   in use band 2 the higher index links first, and these two are the file's highest there, so the band puts them
+#   ahead of 4522, 4529, 4535, 4556 and 4551 (build/out/wasm-map/vota_web/names.tsv gives ld_index 2692 and 2693 for
+#   4563 and 4557, 2694 for 4522); their place right above 4522 is chosen. The band's other inverted pairs (4556 and
+#   4551 against 4535, 4529 and 4522, and those three among themselves) are older than them. Each builds a std::string
+#   of its literal (ledger/strings.tsv 72014, 52 bytes, and 71965, 48 bytes)
+#   and calls IEventosLog::loga (fn 233). 4563 is called by vota::CEmitirMaisBU::StartState (fn 12082, unit 104's)
+#   and ProcessInput (fn 12081, pending in unit 104), 4557 twice by 12081: the roots stand in for 12081. Scored on
+#   the whole link before steps 7 to 9: 10 over 67 and 9 over 63 rows, operand-only.
 # 156-uenux2-fimvotacao-bu-pending.cpp names the slots left as traps and what each waits for; the class heads say what
 # each layout rests on. The destructors are bodies other states share, so the match lines of 785 and 1560, and of 1284
 # and 2884, name this unit's symbols, the first in link order (docs/reference/facts/splat.md S6).
@@ -97,7 +107,7 @@ $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-pending.o: $(ROOT)/src/units/156-uenux2-
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-pending.cpp -o $(R)
 # nothing reconstructed builds CMostraQRCodeCertificado, CRetirarMR or comum's items yet:
 # 156-uenux2-fimvotacao-bu-roots.cpp keeps their vtables, the way the target reaches their slots, and stands for the
-# callers of CImprimindoBU::GetInst and of the four CLogVota members (CLimiteCopiasBUAtingido's vptr is stored by unit
+# callers of CImprimindoBU::GetInst and of the six CLogVota members (CLimiteCopiasBUAtingido's vptr is stored by unit
 # 185's 12023, CQuerImprimirBU's by unit 104's 12062)
 $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-roots.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-roots.cpp -o $(R)

@@ -181,6 +181,19 @@
 # no twin: C1 and C2 are aliases of one function in clocal.cpp.o (wasm-objdump -x prints one func= for both), and GetInst mentions C1
 # first, so the link map holds no C2 or D2 of this class. 3751, 3756, 5813, 2815, 2818 and 3786 read so for the same reason. 3753 is a second caller of the copying ToLower (1879), which releases unit 12's
 # IndexForColumnName (1525).
+#
+# CCandidaturas::ExisteCandidatoFederacao (target fn 5809), in ccandidaturas.cpp after Busca. No record names it, and
+# its name is chosen; ccandidaturas.h says what its callers pass. Its body walks a federation's parties, an outer loop
+# over the 16-bit words of ecourna::app::dados::CFederacao's vector at +28, and for each the candidacies of the base's
+# map, testing the holder's situation (+52 of the CCandidatura), then the post (+0), then the party (+2) and returning
+# true at the first hit: the conditions in that order, as ExisteCandidato tests them. It is in the band (uses 2) between
+# RecuperaVersaoPacote (5810) and CCandidaturasDSNome's operator (5807), the order of their ld_index in this link (4775,
+# 4781, 4783), so its line, after the file's other queries, is a choice. It matched with the score 0 over 84 rows (pnpm
+# wasm score, before the match; step 8 named it by its census pair, pair-fingerprint). The loop variable written as the
+# party's 16-bit integer (comum's TPartidoID, from ecourna's TPartidoID through its conversion) loads each party once in
+# the outer loop, as the target does; as `const auto&` the object loads it again in the inner loop (try-tu.sh --symbols,
+# the function's disassembly compared; not linked). Its callers, fns 5922 and 11976, are not reconstructed; the roots'
+# Federacoes stands for both.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \

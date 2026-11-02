@@ -9,13 +9,15 @@
 //   cinteractiveform.h:57), which this tree does not hold, and for a definition of api::EInputResult.
 // - FormataMensagem 6999 (slot 14, a chosen name), 4946 B: fills the {cargo-atual}-style tags; waits for the tags' sources.
 // vota::CConfirmaVotoEmCargo, slot 9 (ProcessInputAudio 11754, record cvotacaostateaudio.cpp:209 of its inlined
-// EmiteEcoCorrigeConfirma): it calls fns 1455, 3229 and 4471, which have no name, and reads vota::g_numeroDigitado
+// EmiteEcoCorrigeConfirma): it calls fn 1455, which has no name, and fns 3229 and 4471 (vota::CEleitorVotando's
+// GetInst and RegistraVoto, unit 197), and reads vota::g_numeroDigitado
 // (app/vota/eleitor/comum/cinformacaoeleitor.h). ProcessInputAudio is the class's
 // key function here, so this object emits its vtable, its typeinfo and nothing else of it; its real key function is not
 // recorded.
 // vota::CPedeProporcional, slot 9 (ProcessInputAudio 11711, record cpedeproporcional.cpp:84, 811 B), and
 // vota::CPedeMajoritario's (ProcessInputAudio 11683, records cpedemajoritario.cpp:64 and :125, 1210 B): each calls slot
-// 13 (fn 3139, pending above) and a function with no name (fn 5922 and fn 4550), and reads vota::g_numeroDigitado.
+// 13 (fn 3139, pending above) and one more function, fn 5922 (no name) in 11711 and fn 4550
+// (vota::CLogVota::LogaErroPartidoNaoEncontrado, unit 119) in 11683, and reads vota::g_numeroDigitado.
 // vota::CCompletaProporcional, slots 9 and 13 (ProcessInputAudio 11756, 786 B, and EmiteEcoComInputField 5930, record
 // ccompletaproporcional.cpp:60, 522 B): slot 9 calls slot 13 and reads vota::g_numeroDigitado; slot 13 is not read
 // here. ProcessInputAudio is the class's

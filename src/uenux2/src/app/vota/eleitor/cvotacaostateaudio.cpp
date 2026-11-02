@@ -1,7 +1,12 @@
 #include "app/vota/eleitor/cvotacaostateaudio.h"
 
+#include <cstdlib>
+
+#include "app/comum/dados/cpartidos.h"
 #include "app/vota/eleitor/cestadoaudio.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/euevotaerror.h"
+#include "app/vota/log/clogvota.h"
 
 namespace vota {
 
@@ -17,7 +22,7 @@ CVotacaoStateAudio::~CVotacaoStateAudio()
     CancelaEsperaFimAudio();
 }
 
-// (original lines 20-79: content not recovered)
+// (original lines 25-79: content not recovered)
 #line 80
 void CVotacaoStateAudio::StartState()
 {
@@ -39,12 +44,24 @@ void CVotacaoStateAudio::FinishState()
     FinishStateAudio();
 }
 
-} // namespace vota
-
+// (original lines 100-132: content not recovered)
+#line 133
 // <stubs>
 // f1455 · 496 B · unmatched · name unknown
 // void f1455(i32, i32) { ... }
-
-// f6954 · 239 B · unmatched · name unknown
-// void f6954(i32, i32) { ... }
 // </stubs>
+
+// (original lines 138-290: content not recovered)
+#line 291
+std::string CVotacaoStateAudio::FormatPartyName(const std::string& numero)
+{
+    const ueword numeroPartido = static_cast<ueword>(std::atoi(numero.c_str()));
+    const comum::md::CPartido* partido = comum::CPartidos::GetInst().Find(numeroPartido);
+    if (partido == nullptr) {
+        CLogVota::GetInst().LogaErroPartidoNaoEncontrado();
+        throw CUeVotaError(EUE_VOTA_PARTIDO_NAO_ENCONTRADO, "Nao foi encontrado o partido");
+    }
+    return partido->GetNome();
+}
+
+} // namespace vota

@@ -32,7 +32,8 @@
 #   no target function of their own, and 184 matches with them in the file.
 # - Five more members, right after GetInst, belong to unit 161's states: three are held inlined by 10642, 10669 and
 #   10444, and two are out of line, 2097 and 4522, matched; src/units/161-uenux2-app-vota-operador-identidade.mk has
-#   their evidence, and 184 still matches with them in the file.
+#   their evidence, and 184 still matches with them in the file. Unit 156's 4563 and 4557 sit among them, right above
+#   4522 (fragment 156 says why).
 # - Seven more, after LogaTituloInvalidoRegistroMesario and before unit 142's three, belong to unit 152's states: five
 #   are held inlined by 10416, 10436, 10524, 10758 and 11798, and two are out of line, 4529 and 4535, matched; an eighth,
 #   LogaAudioAtivadoConformeCadastro, right after LogaAudioDesativadoFimVotacao, is held inlined by unit 152's 10523,
@@ -43,6 +44,13 @@
 #   LogaMesarioIndagadoQualidadeBU (4551), and the two logaAlerta texts binaryen merges into fn 6115,
 #   LogaQtdViasAdicionaisExcedeMaximo (4556) and LogaHabilitacaoCanceladaReconhecimentoBiometrico (2495), all out of
 #   line; src/units/156-uenux2-fimvotacao-bu.mk has their evidence, and its roots their callers' stand-ins.
+# - Four more after LogaMesarioIndagadoQualidadeBU, and one at the end, belong to unit 197's
+#   CEleitorVotando::RegistraVoto and suspenderEleitor: the LogaVoto* members (4546, 4542, 4541 and 4537; 3272, last),
+#   thunks of binaryen's one body for the five, fn 2302, out of line, matched. They read comum::CConfiguracaoEleicao:
+#   its include takes the place of the blank line after this file's own header's include, which keeps GetInst's
+#   record on line 37, and the rule after the source list gives the include path.
+#   src/units/197-uenux2-celeitorvotando.mk has their evidence and why they sit where they do, and its roots their
+#   callers' stand-ins.
 # - Four more, after LogaAguardandoConfirmacaoZeresima: unit 138's LogaAguardandoHorarioZeresima and unit 199's
 #   LogaDataEleicaoInvalida, held inlined by fns 11871 and 11914 (their fragments have the evidence), and two out of
 #   line that this unit matches: LogaErroEstadoAplicativoDesconhecido (fn 3279, logaErro of "Erro estado do aplicativo
@@ -51,6 +59,8 @@
 #   callers are not written (3279: fn 7160 twice and vota::CDefineRotaPosReinicio::NeedChangeState, fn 11858; 4511:
 #   fn 11804 twice), so the roots stand in for them. They call fns 2282 and 233 out of line, as unit 156's 1127 and
 #   4551 do; their names and their place are chosen.
+# - One more, after LogaFimTesteTecladoSucesso: unit 138's LogaTesteTecladoNaoExecutado, held inlined by fn 11874
+#   (unit 138's fragment has the evidence); its place is chosen.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses
@@ -139,8 +149,22 @@
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the
 # slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in.
+#
+# CLogVota::LogaErroPartidoNaoEncontrado (target fn 4550, no record), logaErro (fn 2282) of "Erro partido não
+# encontrado", is out of line, called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName (fn 6954, unit
+# 97's source) and fn 11683 (vota::CPedeMajoritario, not written), for which
+# src/units/212-uenux2-app-vota-callers-roots.cpp stands. Its name is chosen from its message. Its place, above
+# LogaHabilitacaoCanceladaCapturaDigitalMesario, is a choice by the use band (ledger/ordinals.tsv, band 2): the file's
+# band-2 members are already out of the band's order (4556 and 4551 sit below 4535, 4529 and 4522), so every place
+# adds an inverted pair. There, after the link, `names.tsv` gives 4550 ld 2276 against 4556 2291, 4551 2292, 4535 2286,
+# 4529 2285, 4522 2277 and 4511 2299: two new inverted pairs (4556, 4551); below 4551 it would form three (4535, 4529,
+# 4522), counted from those ld_index values, not linked. Scored 7 over 55 rows, all operand-only, before step 8; matched
+# at step 9.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
+# clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost
+# through CConfiguracaoMunicipio's CHorariosUrna: an include path, not a flag of the code
+$(ROOT)/$(APP)/uenux2/src/app/vota/log/clogvota.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 CCONTROLADORREGISTRAMESARIOSVOTA_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/119-uenux2-ccontroladorregistramesariosvota-pending.o: $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/119-uenux2-ccontroladorregistramesariosvota.mk $(CCONTROLADORREGISTRAMESARIOSVOTA_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/119-uenux2-ccontroladorregistramesariosvota-pending.cpp -o $(R)

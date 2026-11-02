@@ -5,22 +5,23 @@
 // into it, as in the target. CRdvPosicionadorVota::Posicao (target fn 11496) is kept the same way: its vptr store sits in
 // CreateInst too. CVoto::operator<=> is not rooted: its only caller is Posicao, which wasm-opt inlines it into.
 // The stand-ins below give the md members their target callers' call sites, none of which is written:
-// - w13_comparecimento calls md::CVotosEleicoesVota::Comparecimento (target fn 5639), standing for its target caller
-//   1269 (not written; it takes the largest attendance over the elections fn 5791 returns, read on the object at +20 of
-//   its parameter, CRdvVota's m_votos by its offset); CRdvVota's slot 2 (fn 11492) is the other call site.
+// - w13_comparecimento calls comum::CRdvVota::Comparecimento() (target fn 1269), standing for its target callers
+//   1956, 5972, 10797, 11835, 11849, 12098 and 12110 (none written); vota::impl::CInformacaoThreadOperador's slot 16
+//   (fn 10569, unit 50) is the other call site. md::CVotosEleicoesVota::Comparecimento (fn 5639) needs no stand-in
+//   now: its target callers, 1269 and CRdvVota's slot 2 (fn 11492), are both in the link.
 // - w13_cria and w13_desconverte call md::CVotosCargos' and md::CVotosEleicoesVota's constructors (fns 5643, 5640),
 //   standing for their two target callers, 7787 (CreateInst) and 11349 (CConversorEleicoesVota::DoDesconverte, trapped
 //   in fragment 140's -pending.cpp).
 // - w13_desconverte_rdv and w13_confere call md::CVotosEleicoesVota::Compativel (fn 5638), standing for its two target
 //   callers, CRdvVota's Desconverte and Confere (fns 11487, 11486, trapped in this unit's -pending.cpp).
-// - w13_voto calls md::CVoto's constructor (fn 2256), standing for its target callers 4442, 4454 and 4471;
+// - w13_voto calls md::CVoto's constructor (fn 2256), standing for its target callers 4442 and 4454 (4471 is linked);
 //   comum::asn::CConversorVoto::DoDesconverte (fn 11354) is the other call site.
 // - w13_escolhas calls md::CVotosCargos::QuantidadeEscolhas (fn 5642) twice, as its one target caller, 4454, does.
 // - w13_nulo calls the static md::CVoto::EhNulo (fn 5645), standing for its target caller 11514; CVoto::EhNulo() const
 //   (fn 11316) is the other call site.
 // Declared through asm labels with the wasm-level signatures (a constructor returns this); compiled as uenux2 code.
 extern "C" {
-int w13_comparecimento_alvo(int, int) __asm__("_ZNK5comum2md18CVotosEleicoesVota14ComparecimentoEj");
+int w13_comparecimento_alvo(int) __asm__("_ZNK5comum8CRdvVota14ComparecimentoEv");
 int w13_votoscargos(void*, void*) __asm__(
     "_ZN5comum2md12CVotosCargosC1ENSt3__23mapINS1_10SCargoInfoENS0_6CVotosENS2_4lessIS4_EENS2_9allocatorINS2_4pairIKS4_S5_EEEEEE");
 int w13_votoseleicoes(void*, void*) __asm__(
@@ -36,9 +37,9 @@ extern const char w11496_vt[] __asm__("_ZTVN5comum20CRdvPosicionadorVotaE");
 
 namespace {
 
-__attribute__((noinline)) int w13_comparecimento(char* rdv, int eleicao)
+__attribute__((noinline)) int w13_comparecimento(char* rdv)
 {
-    return w13_comparecimento_alvo(reinterpret_cast<int>(rdv + 20), eleicao + 1) * 7;
+    return w13_comparecimento_alvo(reinterpret_cast<int>(rdv)) * 7 + 1;
 }
 
 __attribute__((noinline)) int w13_cria(char* destino, char* mapas)

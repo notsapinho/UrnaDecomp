@@ -31,11 +31,11 @@ const void* volatile cappinfo_sink;
 // 4160, 4657, 4668, 4682, 4687, 5382, 6737, 7160, 7174, 7787, 10451, 10590, 10635, 10710, 11242, 12098, 12105, 12110,
 // 12134.
 __attribute__((noinline)) int GeraisConst(int a, int b) { return w457(a) ^ w457(b); }
-// Stands for fn 903's callers 7160, 10566, 10710, 12081, 12082, 13023 (unit 102's four and unit 138's 11870 and 11871
-// are linked).
+// Stands for fn 903's callers 7160, 10710, 12081, 13023 (unit 102's four, unit 138's 11870 and 11871, unit 50's 10566
+// and unit 104's 12082 are linked).
 __attribute__((noinline)) int VotasConst(int a, int b) { return w903(a, 51) * w903(b, 51); }
-// Stands for fn 697's callers: 652, 2753, 3229, 6737, 7174, 10209, 10440, 10501, 10569, 10677, 10680, 10706,
-// 10722, 11835, 11924, 12077 (unit 199's 11994 and unit 142's 1150 are linked).
+// Stands for fn 697's callers: 652, 2753, 6737, 7174, 10209, 10440, 10501, 10677, 10680, 10706,
+// 10722, 11835, 11924, 12077 (unit 199's 11994, unit 142's 1150, unit 50's 10569 and unit 197's 3229 are linked).
 __attribute__((noinline)) int Treinamentos() { return w697() | (w697() << 1); }
 // Stands for fn 3788's callers: 7787, 12098, 12110.
 __attribute__((noinline)) void Codigos(int a, int b, int c)
@@ -46,8 +46,8 @@ __attribute__((noinline)) void Codigos(int a, int b, int c)
 // Stands for fn 2841's callers 11242, 12105 (two calls) and 12110, which pass the turn they read (not a constant).
 __attribute__((noinline)) int Votos(int a, int t) { return w2841(a, t) + 2 * w2841(a + 4, t ^ 1); }
 
-// Stands for fn 819's callers: 2543, 3820, 5604, 5922, 6954, 7787, 11181, 11260, 11261, 11629, 11683, 11711, 11976
-// (11213 and 11255 are in the link).
+// Stands for fn 819's callers: 2543, 5604, 5922, 7787, 11260, 11261, 11629, 11683, 11711, 11976 (11213, 11255, 3820,
+// 6954 and 11181 are in the link).
 __attribute__((noinline)) int Partidos() { return w819() + 7 * w819(); }
 // Stands for fn 2819's callers: 7787, 12520, 12641.
 __attribute__((noinline)) int Fotos() { return w2819() - 9 * w2819(); }

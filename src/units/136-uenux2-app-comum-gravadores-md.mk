@@ -72,8 +72,8 @@
 # - The converters of CUrna, CCorrespondenciaResultado and CEnvelopeGenerico (fns 10287, 10284, 10289, 10288, 10271,
 #   10270) are unit 160's. Not written: CConversorEntidadeHashes::DoConverte (10266), which needs CEntidadeHashes's
 #   members past +36.
-# - IGravador's slots 2 to 6 (fns 11630 to 11634, unit 60's traps) are not this unit's. CCarga::ValidaCriacao (fn 5670)
-#   is unit 157's (dados/md/correspondencia/ccarga.cpp), and matches.
+# - IGravador's slots 2 to 6 (fns 11630 to 11634) are not this unit's: unit 122's (slots 2, 3 and 6) and unit 60's traps
+#   (4 and 5). CCarga::ValidaCriacao (fn 5670) is unit 157's (dados/md/correspondencia/ccarga.cpp), and matches.
 GRAVADORES_MD_SRCS := src/app/comum/gravadores/md/curna.cpp src/app/comum/gravadores/md/cenvelopegenerico.cpp \
 	src/app/comum/gravadores/md/centidadehashes.cpp src/app/comum/gravadores/md/ctipoapuracaosa.cpp \
 	src/app/comum/dados/md/correspondencia/ccorrespondenciaresultado.cpp

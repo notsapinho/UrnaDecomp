@@ -28,6 +28,11 @@ public:
 
     const md::CEleicaoPE& GetEleicao(const TEleicaoID eleicao) const;
     const md::CCargo& GetCargo(const TCargoID cargo) const;
+    // Target fn 271 is f5648(this + 28, eleicao): CPleito::GetSituacoesEleicoes on the pleito at +28, out of line. Its
+    // callers (1386, 3687, 5577, 5578, 5582, 11558, 11559) pass it GetInst's (fn 187) result at every call, and
+    // 11558 and 11559 pass that result to GetCargo (fn 861) as well. No record names it: the name is chosen, from the
+    // member it forwards to, and so is the parameter's type, 5648's.
+    const md::CSituacoesEleicoes& GetSituacoesEleicoes(const TEleicaoID eleicao) const;
 
     // The names are chosen: CGravadorUtil::DeterminaNomeArquivoSemLetra (inlined into target fn 3798) reads the pleito's
     // identifier at +28 of the instance, and no record names an accessor; comum::CRelatorioTesteImpressora's slots read
@@ -57,6 +62,15 @@ public:
     // is a reading); vota::CInformacaoThreadOperador's slot 19 (fn 10566) compares the current time with it in place.
     // The end of the election by a reading; the name is chosen from that.
     const api::CDateTime& GetDataHoraFimEleicao() const { return m_dataHoraFimEleicao; }
+
+    // The ids of the pleito's elections, in their order: target fn 5791, out of line (its callers, fns 1269 and 5735,
+    // call it with GetInst()'s result), pushed one by one through std::vector's push_back(const&) (fn 543). Each cargo
+    // of each election with that election's id, in that order: target fn 3774, out of line (fns 4454 and 7787 call it on
+    // GetInst()'s result; 7787 holds CCargos::CreateInst, which builds CCargos' two vectors with it), each pair pushed
+    // as one 8-byte value (src/units/88-uenux2-app-comum-dados-md-processoeleitoral.mk has the measurement). No record
+    // names them: their names and their being members (they read m_pleito) are chosen.
+    std::vector<md::TEleicaoID> GetIDsEleicoes() const;
+    std::vector<CCargos::TCargoEleicao> GetCargosEleicoes() const;
 
 private:
     unsigned m_naoRecuperado1[2];
