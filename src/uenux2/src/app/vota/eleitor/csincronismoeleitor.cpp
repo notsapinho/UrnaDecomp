@@ -11,6 +11,8 @@
 
 namespace vota {
 
+CSincronismoEleitor::CSincronismoEleitor() : comum::CAppState(EVENTO_TECLA) {}
+
 CSincronismoEleitor& CSincronismoEleitor::GetInst()
 {
     std::lock_guard<std::mutex> trava(s_mutex);

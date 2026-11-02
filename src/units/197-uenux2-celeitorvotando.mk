@@ -23,8 +23,10 @@
 # GetCurrentAbrangenciaEleitor), unit 91 (celeitordecorator.cpp: GetAbrangencia, 3721), unit 13 (md/rdv/ and
 # crdvvota.cpp: the ballot's way into the RDV), unit 93 (cestadogeralvota.cpp: MarcaUltimoVoto) and unit 192
 # (csincronismoeleitor.cpp: GetInst).
-# Written, not matched: FinalizaEleitor 4454 (below). Pending (197-uenux2-celeitorvotando-pending.cpp, whose header
-# says what it waits for): ProcessKey 7337.
+# Written, not matched: FinalizaEleitor 4454 (below), every row an operand row, waiting for the name of fn 5681. Pending
+# (197-uenux2-celeitorvotando-pending.cpp, whose header says what it waits for): ProcessKey 7337.
+# celeitorvotando.cpp is compiled through unit 13's list, ahead of crdvvota.cpp and md/rdv/ (that fragment has the order
+# and its measurements); the rest of this unit's sources are in its own list (below).
 #
 # Where the objects are defined is a reading of the data. The .bss holds, in this order, the statics
 # CVotacaoStateAudio::FormataMensagem reads (fn 6999: 1833216 and 1833256), vota::CEstadoAudio's (1833260 to 1833287,
@@ -140,27 +142,44 @@
 #   (api::IBeep::BeepConfirm(1), record :294, column 19) and either ends the voter (FinalizaEleitor, true) or shows the
 #   next post (false). The target calls CCargos::IsFim between the IBeep singleton's instance() and BeepConfirm: with
 #   the test after the beep, 23 over 134 rows (2 inserted, 3 deleted); the result taken first (`const bool fim`),
-#   operand rows only. Its call of FinalizaEleitor is the one generated vote for 4454's name, so self-voted (7352 read
-#   `unresolved self-voted` at step 9); a callers+content hand line in splat/symbol_addrs.txt names 4454 from its own
-#   body (its comment says what), with it 7352 matches, and the line carries 7352 alone.
-# - FinalizaEleitor (fn 4454, celeitorvotando.h says what it does), written and not matched. In the target its band
-#   (use band 2 of ledger/ordinals.tsv) puts it after ChamaEstadoProximoCargo (4459) and before DescartaVotos (4449,
-#   records :253 and :254), so it is defined in the lines between them, which leave it eight: the state's finishing
-#   is the inline helper TerminaEstado (celeitorvotando.h). It reaches, each out of line in its own file and inlined by
+#   operand rows only. Its call of FinalizaEleitor resolves on 4454's srcloc-anchor name: 4454's own records, with
+#   the same opcodes on both sides now (docs/reference/splat.md section 2). The callers+content hand line that named
+#   4454 from its own body before went: with it removed, splat-match added no match and moved no verdict.
+# - FinalizaEleitor (fn 4454, celeitorvotando.h says what it does), written and not matched. In the target its band (use
+#   band 2 of ledger/ordinals.tsv) puts it after ChamaEstadoProximoCargo (4459) and before DescartaVotos (4449, records
+#   :253 and :254), so it is defined in the lines between them, which leave it eight: the state's finishing is the
+#   inline helper TerminaEstado (celeitorvotando.h). It reaches, each out of line in its own file and inlined by
 #   binaryen into this one body (none of them is in names.tsv): comum::CRdvVota::RecebeCedula (crdvvota.cpp),
 #   md::CVotosEleicoesVota::RecebeCedula, CVotosCargos::InsereCedula and ConfereCedula, CVotos::Insere and its
-#   ErroPosicao (md/rdv/), CEstadoGeralVota::MarcaUltimoVoto and CSincronismoEleitor::GetInst; unit 13's fragment has
-#   the md members. Measured (pnpm wasm score against 4454): 1438 over 3181 rows (495 inserted) while 5681 and 3251,
-#   the map copy's __emplace_hint_unique_key_args and __find_equal, had one caller here and binaryen inlined them (the
-#   roots now stand in for their other target callers); 1011 over 2780 (94 inserted, 101 deleted) with them out of
-#   line and CCedula::Adiciona(const SVotoCargo&) inline in ccedula.h; 958 over 2759 (73 inserted, 79 deleted) with it
-#   out of line in ccedula.cpp, where the push of a vote into a ballot takes the target's shape (the new end stored in
-#   the fast path, the slow path's after it). What is left is not explained: the target keeps the inlined members'
-#   this and parameter pointers in locals (the ballot at node+20, the CVotos at node+28) and loads at small offsets
-#   from them, where ours folds the offsets onto the map node. A probe link with md/rdv/'s objects built with
-#   -fno-strict-aliasing (UENUX2_TBAA_DIRS without md/rdv/, docs/reference/facts/app-flags.md F6) gave 968 over 2789
-#   rows (103 inserted, 107 deleted), no closer. 3709, the destroy of ConfereCedula's count map (written by it,
-#   std::map<TCargoID, size_t>), waits for 4454's match: a function named by hand casts no vote for its callees.
+#   ErroPosicao (md/rdv/), CEstadoGeralVota::MarcaUltimoVoto and CSincronismoEleitor::GetInst with its constructor; unit
+#   13's fragment has the md members. Measured (pnpm wasm score against 4454, on the whole link, each step on the one
+#   before): 1438 over 3181 rows (495 inserted) while 5681 and 3251, the map copy's __emplace_hint_unique_key_args and
+#   __find_equal, had one caller here and binaryen inlined them (the roots now stand in for their other target callers);
+#   1011 over 2780 (94 inserted, 101 deleted) with them out of line and CCedula::Adiciona(const SVotoCargo&) inline in
+#   ccedula.h; 958 over 2759 (73 inserted, 79 deleted) with it out of line in ccedula.cpp, where the push of a vote into
+#   a ballot takes the target's shape (the new end stored in the fast path, the slow path's after it); 562 over 2719 (33
+#   inserted, 34 deleted) with this file and md/rdv/ in the target's data order in unit 13's list, where binaryen keeps
+#   the inlined members' ballot (the map node + 20) in a local and loads at small offsets from it, as the target does
+#   (it folded them onto the node before); 180 over 2687 (1 inserted, 1 deleted) with InsereCedula's swap and
+#   ConfereCedula's search in the forms unit 13's fragment gives; 178 over 2686, operand rows only, with
+#   vota::CSincronismoEleitor's constructor out of line in csincronismoeleitor.cpp (unit 192's; csincronismoeleitor.h
+#   says what shows it). Before these, a probe link with md/rdv/'s objects built with -fno-strict-aliasing
+#   (UENUX2_TBAA_DIRS without md/rdv/, docs/reference/facts/app-flags.md F6) gave 968 over 2789 rows (103 inserted, 107
+#   deleted); with the form above and cvotoscargos.cpp alone built so, 222 over 2696 (10 inserted, 1 deleted): the
+#   inlined ConfereCedula's map insert reloads the child pointer after the begin node's store, and the swap reloads a
+#   word, reloads the target's 4454 does not have. So the md/rdv/ code it holds reads as compiled with strict aliasing,
+#   as md/ builds. The row reads `unresolved self-voted` on its call of 5681, the map copy's
+#   __emplace_hint_unique_key_args: 4454's call is the only vote for 5681's name (`evidence:call by:4454` in
+#   splat/symbol_addrs.txt), and 5681 does not match (unit 13's fragment). 4454 waits for a second voter: 5681's other
+#   target caller, 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, not written), or 5681's own match. 5681's
+#   target body has the reload a TU without strict aliasing gives, which 4454's does not, so the two are read as copies
+#   of different TUs: 11349's object, app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp, is outside UENUX2_TBAA_DIRS
+#   and its records (1571240) lie ahead of md/rdv/'s in the target's data, so a reading, not measured, is that the
+#   target keeps that object's copy of 5681. 3709, the destroy of ConfereCedula's count map (written by it,
+#   std::map<TCargoID, size_t>), matches: 4454's srcloc-anchor name casts its call votes. So do the exit destructors of
+#   vota::CSincronismoEleitor's statics, 7195 (s_inst) and 7187 (s_mutex), unit 192's: 4454's anchor votes the two
+#   objects' names (1833160 and 1833136), and 4454, 7195 and 7187 are the three target functions that hold those
+#   addresses (/usr/bin/grep -rlE 'i32\.const (1833160|1833136)($|[^0-9])' build/out/splat/pieces/asm).
 #
 # The lines of members with no record are a choice: the constructor, GetInst, the statics and the destructor first,
 # RegistraVoto before StartState and IniciaCiclo's records (:125, :131), FinishState and MostraCargoNoOperador after
@@ -199,7 +218,8 @@
 # the voter's statics, are chosen; its one caller is 6999, so it has no index of its own.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-CELEITORVOTANDO_SRCS := src/app/vota/eleitor/celeitorvotando.cpp src/app/vota/eleitor/comum/cinformacaoeleitor.cpp src/app/comum/dados/md/rdv/ccedula.cpp src/app/vota/operador/cthreadoperador.cpp
+# celeitorvotando.cpp itself is in unit 13's list (13-uenux2-crdvvota.mk).
+CELEITORVOTANDO_SRCS := src/app/vota/eleitor/comum/cinformacaoeleitor.cpp src/app/comum/dados/md/rdv/ccedula.cpp src/app/vota/operador/cthreadoperador.cpp
 UENUX2_SRCS += $(CELEITORVOTANDO_SRCS)
 # celeitorvotando.cpp reads comum::CConfiguracaoEleicao, whose header reaches Boost through CConfiguracaoMunicipio's
 # CHorariosUrna: an include path, not a flag of the code (src/units/README.md "What a fragment holds")
