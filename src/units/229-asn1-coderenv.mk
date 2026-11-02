@@ -47,8 +47,10 @@
 # - urna_roots_coderenv takes 9770's address, for 2927's slot, and calls 1532 once more, for its seven direct target
 #   callers (11488 11582 11587 11616 11629 5366 6006), none in our link: without that call no function of
 #   build/out/wasm-map/vota_web/names.tsv is encodeBER (binaryen inlined it into 9770).
-# - It calls 3656 too, for its target callers 1681 and 5496: 1681 is not in our link and 5496 is inlined into 10949, its
-#   one caller there. Without that call binaryen inlined 3656 into 5290, which scored 47 over 158 rows (27 inserted).
+# - It calls 3656 too, for its target callers 1681 and 5496: 1681 is not in our link and 5496 was inlined into 10949,
+#   its one caller there. Without that call binaryen inlined 3656 into 5290, which scored 47 over 158 rows (27
+#   inserted). 5496 is out of line now and calls 3656 (unit 170's roots stand for its other caller, 5702); the call
+#   stays for 1681.
 # - An explicit instantiation of __recommend beside the label gave a byte-identical link, so the file has none.
 #
 # What the root changes elsewhere:

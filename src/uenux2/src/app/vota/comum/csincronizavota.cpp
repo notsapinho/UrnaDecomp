@@ -94,14 +94,7 @@ void CSincronizaVota::GravaBancoDadosMI()
     api::CSynchronizer::GetInst().Sync();
 }
 
-// (original lines 114-286: content not recovered)
-#line 287
-// <stubs>
-// f7174 · 3288 B · unmatched · name unknown
-// ? f7174(i32) { ... }
-// </stubs>
-
-// (original lines 292-369: content not recovered)
+// (original lines 114-369: content not recovered)
 #line 370
 void CSincronizaVota::SincronizaRelatorios(const std::string& arquivo)
 {

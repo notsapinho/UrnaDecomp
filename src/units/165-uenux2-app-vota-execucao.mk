@@ -1,10 +1,12 @@
-# uenux2 vota's execution classes: vota::IExecucaoVota and its two implementations, vota::CExecucaoVota and
-# vota::CExecucaoVotaCooperativa, vota::CAssinadorVota's destructor and constructor, vota::CAguardaInicio's slots,
+# uenux2 vota's execution classes: vota::IExecucaoVota (its destructor and GetInst) and its two implementations,
+# vota::CExecucaoVota and vota::CExecucaoVotaCooperativa, vota::CAssinadorVota's destructor and constructor,
+# vota::CAguardaInicio's slots, vota::impl::IPoliticaExecucaoEleitor's destructor and GetInst,
 # vota::impl::CPoliticaExecucaoEleitor's LimpaBufferInput and vota::GetFormularioInterativo, the builder of the forms with
 # a vota::CPreShowFormVota. Paths relative to src/uenux2.
 #
 # Target functions, by the object that holds them:
-# - app/vota/iexecucaovota.cpp: CExecucaoVota's slots 2 to 6, 8 and 9 (Executa 10236, IniciaThreads 10235, AguardaThreads
+# - app/vota/iexecucaovota.cpp: IExecucaoVota::GetInst (3594) and its mutex's exit destructor (10237); CExecucaoVota's
+#   slots 2 to 6, 8 and 9 (Executa 10236, IniciaThreads 10235, AguardaThreads
 #   10234, IniciaThreadOperador 10233, ParaThreadsOperadorMonitor 10232, GetFilaEleitor 4708, GetEstadoEleitor 4705); slot 7,
 #   ProcessaEntradaEleitor, is `return false`, the shared body 340. The slots' callees are vota::CThreadEleitor's,
 #   CThreadOperador's and CThreadMonitor's GetInst (316, 270, 1898), api::CThread::Start (1684) and Wait (1900, unit 18),
@@ -20,12 +22,39 @@
 # - app/vota/operador/caguardainicio.cpp: CAguardaInicio's StartState (10220), FinishState (10219) and ProcessTick
 #   (10218); its D2 and D0 are the bodies 49 states share (244, 387). GetInst (5343) is written and differs (below).
 # - app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp: LimpaBufferInput (13564), records 33:18, 34:35 and 37:38.
+#   IPoliticaExecucaoEleitor::GetInst (record 45:100) has no target function of its own: its one target caller, 5925
+#   (unit 97's pending header), holds it inlined, and the roots' stand-in for 5925 inlines it the same way. The exit
+#   destructor of its mutex is in our link and matches nothing: the census pairs it with 10483, which reads
+#   `unresolved` on the mutex's address, a .bss object with no target name (splat/scan.tsv).
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so).
 # Not matched, and why: the -pending.cpp traps CAguardaInicio's ProcessKey
-# (10217) and CPreShowFormVota's PreShow (7707), with what each waits for. GetInst of
-# IExecucaoVota (3594) and of IPoliticaExecucaoEleitor (inlined into 5925) are not written; the roots file says what
-# stands for them and for 576's 16 callers.
+# (10217) and CPreShowFormVota's PreShow (7707), with what each waits for. The roots file says what stands for the
+# unwritten callers of both GetInsts (5408 for 3594, 5925 for IPoliticaExecucaoEleitor's) and for 576's 16 callers.
+#
+# The two GetInsts are unit 50's macro, POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO (api/pattern/
+# polysingletongetinst.h), over CExecucaoVota and CPoliticaExecucaoEleitor: each record's column (74:78, 45:100) is the
+# closing parenthesis of that invocation (52 plus the two names' lengths, unit 50's reading of the columns). 3594 tests
+# has<IExecucaoVota> (the executable TU's thunk 2736), pushes a new 4-byte CExecucaoVota (push<T>'s thunk 5395) and
+# returns instance(), under the macro's std::mutex: the body keeps its unlock, f150(1911520), at the end. The mutex
+# (.bss 1911520) takes its name from 3594's votes alone (`vote:3 by:3594`), and holds through a second match: 10237,
+# iexecucaovota.cpp.o's __cxx_global_array_dtor, destroys that address (`awk -F'\t' '$1==10237' splat/scan.tsv`; the
+# base's scan paired 10237 with another object's destructor, `differs` on the address 1911520).
+#
+# Both interfaces' destructors are out of line, in iexecucaovota.cpp and cpoliticaexecucaoeleitor.cpp, each its
+# interface's key function. Evidence: the interface's typeinfo lies in that file's data, between GetInst's record and
+# the derived class's vtable (@1600564 between 74:78's record @1600548 and @1600572; @1536360 between 45:100's
+# @1536344 and @1536368; splat/symbol_addrs.txt), where a class with no key function has its typeinfo from the first
+# object that uses it, the executable TU, which links first (docs/reference/facts/reading.md R6); and that TU's has<T>
+# and push<T> thunks load the type name from the typeinfo (+4) where an emitted typeinfo gives it as a constant. At the
+# base the push thunks 5395 and 5407 read `differs` on that constant (5395: target `i32.const 1600568`, the typeinfo
+# + 4, ours the name's own address; 5407 the same at 1536364; `git show 36dda756:splat/scan.tsv`), and with the
+# destructors out of line the TU's has<T> thunks 2736 and 2744, binaryen's body 3884 they share with 2741, the push
+# thunks and the set<T> bodies 8728 and 9507 match, with 9372 (CPolySingleton<IExecucaoVota>::set<CExecucaoVotaCooperativa>,
+# which passes 8728's table slot, 136, to binaryen's 1562): all from the executable TU's object (unit 170's
+# fragment). Which member is the key function is a choice, the other slots being
+# pure here; so is `= default`. The interfaces still have no vtable in the target (below): our objects emit one each,
+# which no function stores and the link drops.
 #
 # CAguardaInicio::GetInst (5343) holds the class's constructor, out of line in caguardainicio.cpp, which binaryen
 # inlined into its one caller (the second stack frame, 448 bytes): CAppState(5), the vptr, the form at +12 from
@@ -64,10 +93,9 @@
 #   in the data after the class's vtable and typeinfo, which follow GetInst's record at line 45. A reading, not
 #   measured: clang emits an external function's records where the file defines it and a function defined in the class
 #   only when the vtable that names it is emitted, so an out-of-line member above line 45 would put its records first
-#   (docs/reference/facts/reading.md R8 has that order for free functions). So the class has no key function: the
-#   out-of-line constructor here, which no target function holds (the target inlines it into GetInst) and our link
-#   drops, emits the vtable and LimpaBufferInput. That constructor, out of line at cpoliticaexecucaoeleitor.cpp:34, is a
-#   choice made to emit them.
+#   (docs/reference/facts/reading.md R8 has that order for free functions). So the class has no key function:
+#   GetInst's std::make_unique<CPoliticaExecucaoEleitor> emits the vtable and LimpaBufferInput, as the target's
+#   GetInst, inlined into 5925, stores that vtable. The interface's destructor above line 45 holds no record.
 # - CAssinadorVota's destructor is out of line, measured in the whole link: left implicit (its vtable emitted by an
 #   object built in a dropped optnone function of the roots), the link held no D2 of the class's own
 #   (build/out/wasm-map/vota_web/names.tsv named its D0 only) and the D0 freed what the base's D2 returned, `call; call`

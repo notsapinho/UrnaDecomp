@@ -1,5 +1,9 @@
+// Reconstruction's note, not TSE's text: the file's one record is IExecucaoVota::GetInst's, line 74, column 78, the
+// closing parenthesis of POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO's invocation. Every other line, the
+// interface's destructor's and CExecucaoVota's members', is chosen (src/units/165-uenux2-app-vota-execucao.mk).
 #include "app/vota/iexecucaovota.h"
 
+#include "api/pattern/polysingletongetinst.h"
 #include "api/util/csystem.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/monitor/cthreadmonitor.h"
@@ -7,12 +11,11 @@
 
 namespace vota {
 
-// (original lines 10-70: content not recovered)
-#line 71
-// <stubs>
-// f3594 · 1923 B · unmatched · name unknown
-// ? f3594() { ... }
-// </stubs>
+// (original lines 14-71: content not recovered)
+#line 72
+IExecucaoVota::~IExecucaoVota() = default;
+
+POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO(IExecucaoVota, CExecucaoVota)
 
 void CExecucaoVota::Executa()
 {

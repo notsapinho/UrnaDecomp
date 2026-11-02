@@ -17,9 +17,10 @@
 //   without the call below, binaryen inlined it into 9770, its one caller. encodeBER is protected, so the call goes
 //   through an __asm__ label, with [[clang::noinline]] on the call as roots_vector.cpp has it (src/units/README.md
 //   "Companion files").
-// - 3656, vector<char>::__recommend, has the target callers 1681, 5496 and 5290. 1681 is not in our link and 5496 is
-//   inlined into its one caller there (10949): without the second call below, binaryen inlined 3656 into 5290 (47 over
-//   158 rows). __recommend is private to vector, hence the label too.
+// - 3656, vector<char>::__recommend, has the target callers 1681, 5496 and 5290. 1681 is not in our link, so the
+//   second call below stays for it; 5496 was inlined into its one caller there (10949) when that call was measured:
+//   without it, binaryen inlined 3656 into 5290 (47 over 158 rows). 5496 is out of line now (unit 170's roots stand for
+//   its other caller, 5702) and calls 3656. __recommend is private to vector, hence the label too.
 #include <iterator>
 #include <vector>
 

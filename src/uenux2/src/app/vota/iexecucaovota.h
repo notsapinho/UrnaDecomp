@@ -8,21 +8,28 @@ class CAppState;
 
 // vota::IExecucaoVota and vota::CExecucaoVota. RTTI names both (typeinfos @1600564 and @1600620; CExecucaoVota is an
 // si_class of IExecucaoVota) and the path follows iexecucaovota.cpp, whose record at line 74 is GetInst's (fn 3594,
-// not reconstructed), and whose data holds IExecucaoVota's typeinfo and CExecucaoVota's vtable @1600572 right after
-// that record. vota::CExecucaoVotaCooperativa is the other class of the interface (vtable @1532244): it shares slots 8
-// and 9 with CExecucaoVota (fns 4708 and 4705, one body each).
+// POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO over CExecucaoVota), and whose data holds IExecucaoVota's typeinfo
+// and CExecucaoVota's vtable @1600572 right after that record. vota::CExecucaoVotaCooperativa is the other class of the
+// interface (vtable @1532244): it shares slots 8 and 9 with CExecucaoVota (fns 4708 and 4705, one body each).
 //
 // The slots. 0 and 1 are the destructors: the control block's __on_zero_shared calls the deleting destructor at vtable
 // + 4 (fn 172), and CExecucaoVota's are the shared bodies 174 and 144, a destructor that destroys nothing. 2 to 9 are
-// what CExecucaoVota's bodies show: 2 starts the three threads, sleeps and waits for them (fn 10236); 3 starts them
-// and sleeps (10235); 4 waits for them (10234); 5 starts the operador's thread (10233); 6 sets the operador's and the
+// what CExecucaoVota's bodies show: 2 starts the three threads, sleeps and waits for them (fn 10236); 3 starts them and
+// sleeps (10235); 4 waits for them (10234); 5 starts the operador's thread (10233); 6 sets the operador's and the
 // monitor's stop flag (10232; vota::CThreadEleitor::ParaOutrasThreads, fn 7030, calls this slot); 7 returns false here
 // (the shared body 340) and runs the eleitor's ProcessaEventos in the cooperative class (fn 7823); 8 the eleitor's
-// message queue, +36 of the thread (4708); 9 the state the eleitor's context holds, or null (4705). No record or
-// caller names a slot: every name and the parameter-free signatures are chosen, the result types from what each body
-// returns (a reference to the queue at +36, a pointer that can be null). That the slots are pure here is chosen too:
-// the interface has no vtable in the target (src/units/165-uenux2-app-vota-execucao.mk says how that was searched), and
+// message queue, +36 of the thread (4708); 9 the state the eleitor's context holds, or null (4705). No record or caller
+// names a slot: every name and the parameter-free signatures are chosen, the result types from what each body returns
+// (a reference to the queue at +36, a pointer that can be null). That the slots are pure here is chosen too: the
+// interface has no vtable in the target (src/units/165-uenux2-app-vota-execucao.mk says how that was searched), and
 // both derived classes fill every slot.
+//
+// The destructor is out of line, in iexecucaovota.cpp: the interface's key function. Evidence: its typeinfo lies in
+// that file's data, between GetInst's record and CExecucaoVota's vtable, where a class with no key function would have
+// the copy of the executable TU, which links first and uses the class (docs/reference/facts/reading.md R6); and that
+// TU's has<IExecucaoVota> (fn 2736, a thunk of binaryen's fn 3884) loads the type name from the typeinfo (its constant
+// 1600568 is the typeinfo + 4), where a class with no key function gives the name as a constant. That the destructor is
+// the key function is a choice, the other slots being pure here; so is `= default`.
 //
 // CExecucaoVota adds no data member: GetInst (fn 3594) allocates 4 bytes for it and stores only the vptr. Its members
 // are out of line in iexecucaovota.cpp, lines past GetInst's record chosen (src/units/165-uenux2-app-vota-execucao.mk).
@@ -31,7 +38,7 @@ namespace vota {
 
 class IExecucaoVota {
 public:
-    virtual ~IExecucaoVota() = default;
+    virtual ~IExecucaoVota();
 
     static IExecucaoVota& GetInst();
 
