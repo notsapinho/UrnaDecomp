@@ -11,6 +11,7 @@
 #include "app/comum/comparecimentomesario/cregistradormesario.h"
 #include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 #include "app/vota/log/clogvota.h"
+#include "app/vota/operador/caguardainicio.h"
 #include "app/vota/operador/cfinalizaoperador.h"
 #include "app/vota/operador/cthreadoperador.h"
 
@@ -62,6 +63,11 @@ bool CControladorRegistraMesariosVota::Slot7() const
 bool CControladorRegistraMesariosVota::Slot8() const
 {
     return true;
+}
+
+comum::CAppState& CControladorRegistraMesariosVota::Slot9() const
+{
+    return CAguardaInicio::GetInst();
 }
 
 comum::CAppState& CControladorRegistraMesariosVota::Slot11() const

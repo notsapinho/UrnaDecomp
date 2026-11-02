@@ -77,20 +77,26 @@
 # those classes' slots, which unit 206 writes. Not written: 6035 and 6036, the merge bodies of 1701, 5762, 1551 and
 # 2826, which build a string from GetPathTrab(EFlashOrigem) and "rdv.dat" or "uenux.db" and call 436: a probe
 # function of cpath.cpp that does the same holds 436 inlined (calls of GetInst, GetGeral and 358), so they are read as
-# another file's; 1487 and 1488, the "dinamico/imprimindo" marker, which call fn 620 (CSynchronizer::Sync, unit 154);
-# 5907, which destroys three members of the
-# object at 1838544 and builds no path. The code 8302 and 12098 hold behind a second prologue, and 11620
+# another file's; 1487 and 1488, the "dinamico/imprimindo" marker, which call fn 620 (CSynchronizer::Sync, unit 154).
+# Not CPath's either: 5907, which destroys three members of the object at 1838544 and builds no path, is
+# comum::CArquivosSavd's destructor (unit 95). The code 8302 and 12098 hold behind a second prologue, and 11620
 # (comum::CGravadorHashes's slot 7) behind a third, that reads this file's statics (a setter of the root and the two
 # flash paths in 8302; GetPathLog's body with "arquivados/" in 12098; s_pathRoot and s_pathFlash[0] in 11620, which
 # appends "dinamico/" inline rather than calling 1082) waits for those callers. The setter is written: CPath::SetPathRoot,
 # a chosen name (unit 188's fragment says what its form rests on); binaryen inlines it into 8302, its one caller, so it
 # has no target function, and no match checks it while 8302 does not match.
 #
-# Roots (190-uenux2-cpath-roots.cpp): no target caller of the unit is in the link but 8302 (unit 188), which calls
-# SetPathRoot and holds GetPathLog inlined, so it gives the members the call
-# sites its header lists (two each, one for 1399 beside 1274, none for 358), emits GetPathLog's copy and takes
-# operator/='s address. It compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree
+# Roots (190-uenux2-cpath-roots.cpp): it gives the members whose target callers are not all in the link the call sites
+# its header lists (two each; none for 1399, whose callers 1164 and 1274 are both in the link, and none for 358), emits
+# GetPathLog's copy and takes operator/='s address. It compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree
 # header.
+#
+# Added since: CPath::GetPathTrabExterno (no target index), `std::filesystem::path path("/dsk/fe/dinamico/trab/");
+# return s_pathRoot / path.relative_path();`, GetPathMR's form (above), under a chosen name. binaryen inlined it into
+# comum::CArquivosSavd::GetInst (fn 1164, unit 95), its one caller, behind a stack frame of its own, where it builds the
+# path of the package 156 ("tabcorr.vsc" under it). It is a member, as GetPathMR is, a choice (it reads s_pathRoot,
+# private by our header's choice); its line, after GetPathChave, is a choice too. 1164 is written and does not match yet (unit 95's fragment says what it waits for), so no
+# match checks this body.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CPATH_SRCS := src/app/comum/cpath.cpp

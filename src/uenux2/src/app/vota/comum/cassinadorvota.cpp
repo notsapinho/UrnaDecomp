@@ -2,11 +2,11 @@
 
 namespace vota {
 
+CAssinadorVota::CAssinadorVota(comum::ESavdPacote pacote)
+    : CAssinador(comum::SAVD_APLIC_VOTA, pacote)
+{
+}
+
 CAssinadorVota::~CAssinadorVota() = default;
 
 } // namespace vota
-
-// <stubs>
-// f1501 · 318 B · unmatched · placement: link order · name unknown
-// ? f1501(i32, i32) { ... }
-// </stubs>

@@ -55,6 +55,8 @@ enum EUeComumError {
     EUE_COMUM_SAVD_MENSAGEM_BUFFER_INSUFICIENTE = 7309,
     // ValidarUE (fn 5890), "Falha ao validar assinatura UE\npacote: ({})\nErro SAVD: ({})\n{}"
     EUE_COMUM_VALIDAR_ASSINATURA_UE = 7323,
+    // AssinarUE (inlined into fn 1277, CAssinador::Assina), "Falha ao assinar ({}-UE[{}])"
+    EUE_COMUM_ASSINAR_UE = 7336,
     // EnviarAcaoHSM (fn 5889), "Falha ao enviar ação ao HSM. {}"
     EUE_COMUM_ENVIAR_ACAO_HSM = 7340,
 };

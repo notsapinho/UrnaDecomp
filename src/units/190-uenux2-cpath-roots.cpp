@@ -2,16 +2,18 @@
 // callers in the target, few of them in the link (each line below names those that are), so the stand-ins give each
 // member two call sites, varying what the target's callers vary, so dead-argument elimination folds nothing in:
 // - GetPathRoot (fn 3834): callers 11620 and 12098.
-// - GetPathEstatico (fn 762): callers 1164, 1937, 3771, 5740, 6734, 7787, 11587, 11626, 11629, 11905.
-// - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11661 (11569, unit 206's, is in the link).
+// - GetPathEstatico (fn 762): callers 1164, 1937, 3771, 5740, 6734, 7787, 11587, 11626, 11629, 11905; 1164 (unit
+//   95's) is in the link.
+// - GetPathDinamico (fn 1082): callers 1164, 2725, 5371, 10226, 10243, 11661 (1164, unit 95's, and 11569, unit 206's,
+//   are in the link).
 // - GetPathLog (fn 5899): callers 8302 and 12098. It is inline in cpath.h, so these calls carry [[clang::noinline]], and
 //   this object emits the copy the link keeps, at the tree's flags (the rule in 190-uenux2-cpath.mk). 8302 is in the link
 //   (unit 188), but clang inlines GetPathLog there, where the target calls 5899 (unit 188's fragment), so both lines stay.
-// - GetPathMR (fn 949): callers 1164, 5873, 5874, 7160, 11166 to 11172, 12134; 5873 and 5874 (unit 160's) are in
-//   the link.
+// - GetPathMR (fn 949): callers 1164, 5873, 5874, 7160, 11166 to 11172, 12134; 1164 (unit 95's), 5873 and 5874
+//   (unit 160's) are in the link.
 // - GetPathChave (fn 1948): callers 2725, 11419, 11616, 11620, 11629, 12110.
-// - GetPathRootSemSA (fn 634): callers 1164, 1487, 1488.
-// - GetPathResult (fn 1399): callers 1164 and 1274; 1274 is the unit's, so one stand-in stands for 1164.
+// - GetPathRootSemSA (fn 634): callers 1164, 1487, 1488; 1164 (unit 95's) is in the link.
+// - GetPathResult (fn 1399): callers 1164 and 1274, both in the link (1164 is unit 95's), so it has no stand-in.
 // - GetPathResult(EFlashOrigem) (fn 1274): callers 5873, 5874, 6041, 11579, 11630, 11631, 11632, 12098, 12134; 5873,
 //   5874 (unit 160's) and 11630 to 11632 (unit 122's) are in the link.
 // - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 1836, 2890, 4657, 6035, 6036, 7174, 7787, 12098;
@@ -81,11 +83,6 @@ __attribute__((noinline)) void DuasRaizesSemSA(void* destino, comum::EFlashOrige
     ::new (Em(destino, 96)) path(CPath::GetPathRootSemSA(origem));
 }
 
-__attribute__((noinline)) void UmResultado(void* destino, comum::EFlashOrigem origem, comum::EUrnaTurno turno)
-{
-    ::new (Em(destino, 108)) path(CPath::GetPathResult(origem, turno));
-}
-
 __attribute__((noinline)) void DoisResultadosAtuais(void* destino, comum::EFlashOrigem origem)
 {
     ::new (destino) path(CPath::GetPathResult(origem));
@@ -117,7 +114,6 @@ struct SRoots190 {
         r190_sink = reinterpret_cast<const void*>(&DoisMR);
         r190_sink = reinterpret_cast<const void*>(&DuasChaves);
         r190_sink = reinterpret_cast<const void*>(&DuasRaizesSemSA);
-        r190_sink = reinterpret_cast<const void*>(&UmResultado);
         r190_sink = reinterpret_cast<const void*>(&DoisResultadosAtuais);
         r190_sink = reinterpret_cast<const void*>(&DoisTrabalhos);
         r190_sink = reinterpret_cast<const void*>(&DoisWsq);

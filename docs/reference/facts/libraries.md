@@ -442,10 +442,10 @@ and `…Num`, 2218 `MQRspec_lengthIndicator`, 2718 `QRinput_encodeBitStream`, 35
 `QRspec_getMinimumVersion`, 5350 `BitStream_appendBytes`, 5351 `QRinput_getByteStream`, 5352
 `QRinput_isSplittableMode` and 10241 `MQRspec_getECCLength`; 5348 `Split_eat8` pairs in the whole link. 1254 is the
 body binaryen merges `BitStream_free` and `QRcode_free` into (the same null test and two frees): the target's 2718 and
-5351 call it as the one, 2772 and 10967 as the other, the probe keeps it as `QRcode_free` and our link, which calls no
-`QRcode_free` yet, as `BitStream_free`. Once a caller of `QRcode_free` lands, our link may keep `qrencode.o`'s copy
-instead, as the probe does (its driver calls `QRcode_free`, and it links `qrencode.o` first); not measured on the
-whole link. The library's one TSE caller is fn 5502 (stub in `api/gui/cqrcodeguard.cpp`,
+5351 call it as the one, 2772 and 10967 as the other, and the probe keeps it as `QRcode_free`. Our link kept it as
+`BitStream_free` while it called no `QRcode_free`; since `api::CQRCodeGuard`'s destructor (unit 204) calls it, our link
+keeps `qrencode.o`'s copy, as the probe does (its driver calls `QRcode_free`, and it links `qrencode.o` first), and
+1254's match line names `QRcode_free`. The library's one TSE caller is fn 5502 (unit 204, `api/gui/cqrcodeguard.cpp`,
 13,815 B), which holds `QRcode_encodeString` and every library function with one call site, inlined by binaryen. Of the
 target's functions, only 5502 and 11 of the 20 hold an address in the library's read-only data, 547888 to 551504
 (`awk '/^[0-9a-f]+ func\[/{f=$2} /i32\.const [0-9]+$/{v=$NF+0; if (v>=547888 && v<551504) print f}'
@@ -558,4 +558,4 @@ in the commit that adds it:
    exited 0. The setup's rows come from a re-selection
    ([asmlift-wasm/benchmark/README.md](../../../asmlift-wasm/benchmark/README.md) "Re-selecting").
 5. **Its TSE caller**, while unwritten, a roots stand-in that makes the target caller's calls with its constants
-   (`187-libqrencode-encodestring-roots.cpp` for 5502).
+   (`187-libqrencode-encodestring-roots.cpp` stood for 5502 until unit 204 wrote it).

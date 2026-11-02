@@ -1,17 +1,17 @@
 // api::CSystem (/home/rubio/tse/uenux2/src/api/util/csystem.cpp). Records fix the lines of GetFileSize (2759, 334:15),
 // api::ExistResource (1690, 64:15; file-static: its record follows the external functions'), CopyFile (378, 390:15 to
 // 476:19), Rename (692:15; binaryen inlines it into fn 11584), api::truncate (5457, 1024:15) and ZeroFill (2761,
-// 1039:15). ExistFile, ExistDir, RemoveFile, RemoveTree, GetFreeSpace, GetUsedSpace and GetMemInfo (412, 5459, 2760,
-// 5458, 5454, 5453, 5463; binaryen merges the first two as 6019) have no record: their names and lines are chosen,
-// and so is the namespace of the last four, free functions of api: RemoveTree, which only this file calls, and the
-// three csystem.h declares (unit 32's fragment says why). AlteraDono and AlteraPermissoes, inlined into CopyFile, have
-// no record and no target index: their names, lines and linkage are chosen (unit 32's fragment says what the target shows).
-// CScopeGuard (lines 990-1011, an anonymous namespace), its name, place and members' names are chosen: it holds
-// ZeroFill's lambda in a std::function. ReplaceFile (5455) holds TemporaryPath (records 236:15 and 243:15) and the
-// anonymous namespace's PrepareReplace (916:15 to 928:15) and ReplaceResource (954:15, 962:15) inlined; its name, and
-// RenameResource's (3645), Existe's, ReplaceDir's (both with no target index) and their lines, are chosen (unit 32's
-// fragment says from what). The file's other functions are not reconstructed yet; the lines their records name are
-// left blank.
+// 1039:15). ExistFile, ExistDir, RemoveFile, RemoveTree, GetFreeSpace, GetUsedSpace, GetMemInfo, GetFileName and
+// GetDirName (412, 5459, 2760, 5458, 5454, 5453, 5463, 2763, 5462; binaryen merges the first two as 6019) have no
+// record: their names and lines are chosen, and so are the last six's being free functions and their namespace,
+// api: RemoveTree, which only this file calls, and the five csystem.h declares (unit 32's fragment says why).
+// AlteraDono and AlteraPermissoes, inlined into CopyFile, have no record and no target index: their names, lines and
+// linkage are chosen (unit 32's fragment says what the target shows). CScopeGuard (lines 990-1011, an anonymous
+// namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in a std::function.
+// ReplaceFile (5455) holds TemporaryPath (records 236:15 and 243:15) and the anonymous namespace's PrepareReplace
+// (916:15 to 928:15) and ReplaceResource (954:15, 962:15) inlined; its name, and RenameResource's (3645), Existe's,
+// ReplaceDir's (both with no target index) and their lines, are chosen (unit 32's fragment says from what). The
+// file's other functions are not reconstructed yet; the lines their records name are left blank.
 
 #include "api/util/csystem.h"
 
@@ -69,6 +69,15 @@ bool CSystem::ExistDir(const std::string& diretorio)
     struct stat info;
 
     return ExistResource(info, diretorio) && S_ISDIR(info.st_mode);
+}
+
+std::string GetFileName(const std::string& caminho)
+{
+    const size_t barra = caminho.rfind('/');
+    if (barra == std::string::npos) {
+        return caminho;
+    }
+    return caminho.substr(barra + 1);
 }
 
 int AlteraDono(const std::string& arquivo, uid_t dono, gid_t grupo)
@@ -176,7 +185,7 @@ int RemoveTree(const std::string& diretorio)
     return 0;
 }
 
-// (original lines 188-229: content not recovered)
+// (original lines 197-229: content not recovered)
 #line 230
 std::string CSystem::TemporaryPath(const std::string& caminho)
 {
@@ -536,6 +545,11 @@ uedword GetMemInfo(const std::string& campo)
         }
     }
     return valor;
+}
+
+std::string GetDirName(const std::string& caminho)
+{
+    return caminho.substr(0, caminho.rfind('/'));
 }
 
 } // namespace api

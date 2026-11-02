@@ -1,5 +1,5 @@
 # uenux2 vota's execution classes: vota::IExecucaoVota and its two implementations, vota::CExecucaoVota and
-# vota::CExecucaoVotaCooperativa, vota::CAssinadorVota's destructor, vota::CAguardaInicio's slots,
+# vota::CExecucaoVotaCooperativa, vota::CAssinadorVota's destructor and constructor, vota::CAguardaInicio's slots,
 # vota::impl::CPoliticaExecucaoEleitor's LimpaBufferInput and vota::GetFormularioInterativo, the builder of the forms with
 # a vota::CPreShowFormVota. Paths relative to src/uenux2.
 #
@@ -13,17 +13,35 @@
 #   IniciaThreads, one body, 4713), slots 4 to 6, empty (218), and slots 8 and 9, one body each with CExecucaoVota's
 #   (4708, 4705).
 # - app/vota/comum/cassinadorvota.cpp: CAssinadorVota's D2 (7766) and D0, which binaryen merges with comum::CAssinador's
-#   (4694, unit 34). The merge keeps the first name in link order, so 4694's match line moved to this class's D0.
+#   (4694, unit 34). The merge keeps the first name in link order, so 4694's match line moved to this class's D0. The
+#   constructor (1501, named by its vptr store), added since: it passes comum::CAssinador's constructor (unit 34's file,
+#   which binaryen inlined into it) the ESavdAplic 1 and its package; its callers are fragment 205's, and the vtable needs
+#   no roots sink any more.
 # - app/vota/operador/caguardainicio.cpp: CAguardaInicio's StartState (10220), FinishState (10219) and ProcessTick
-#   (10218); its D2 and D0 are the bodies 49 states share (244, 387).
+#   (10218); its D2 and D0 are the bodies 49 states share (244, 387). GetInst (5343) is written and differs (below).
 # - app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp: LimpaBufferInput (13564), records 33:18, 34:35 and 37:38.
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so).
 # Not matched, and why: the -pending.cpp traps CExecucaoVotaCooperativa's slot 7 (7823), CAguardaInicio's ProcessKey
 # (10217) and CPreShowFormVota's PreShow (7707), with what each waits for. GetInst of
-# IExecucaoVota (3594), of CAguardaInicio (5343) and of IPoliticaExecucaoEleitor (inlined into 5925), and
-# CAssinadorVota's constructor (1501), are not written; the roots file says what stands for them and for 576's 16
-# callers.
+# IExecucaoVota (3594) and of IPoliticaExecucaoEleitor (inlined into 5925) are not written; the roots file says what
+# stands for them and for 576's 16 callers.
+#
+# CAguardaInicio::GetInst (5343) holds the class's constructor, out of line in caguardainicio.cpp, which binaryen
+# inlined into its one caller (the second stack frame, 448 bytes): CAppState(5), the vptr, the form at +12 from
+# GetForm (fn 1694) over a builder that shows std::format("{}: {}") of api::CApplication's s_aplicacao and s_versao
+# (.bss 1839168 and 1839192, read as two string_views) split at its first '-' and trimmed (ecourna's CStringUtils::Trim,
+# fn 1374), each half when not empty at {1, 1} and {1, 2}, the whole at {1, 1} when there is no '-', then "Siga as
+# instruções na tela do eleitor" at {1, 3} and the date and time callbacks (slots 1103, 1104: CDateTime's
+# FormatCurrentDate and FormatCurrentTime) at {11, 4} and {22, 4} with "DD/MM/YYYY" and "hh:mm:ss"; +20 is
+# CThreadOperador::GetInst().AddStoppedTick(500) (fn 807). Its callers, CThreadOperador::Run (10204) and
+# vota::CControladorRegistraMesariosVota's slot 9 (10794, unit 119), both match, so the vtable sink the roots file had
+# for this class went. Measured (pnpm wasm score against our symbol): 145 over 962 rows (104 of the 106 replaced
+# operand-only, 12 inserted, 27 deleted). The rows not operands are the builder's construction: the target clears its
+# 12 bytes in place and passes the frame address on, ours calls fn 203 and passes its result, the remainder units 104
+# and 142 record for 10214 and 1150 (of 1694's seven target callers only 10204 calls 203). Chosen: the helper
+# MontaTelaAguardaInicio, a function of the anonymous namespace that clang inlines into the constructor, and its local
+# names; the constructor's initializer list.
 #
 # What the evidence gives:
 # - Classes: RTTI names each class; CExecucaoVota's object is 4 bytes (3594 allocates 4 and stores only the vptr),

@@ -43,12 +43,22 @@ public:
         return s_inst != nullptr;
     }
 
+    // Fn 4349, one pass over the thread's messages, input and ticks, false when there is no context or Stop was asked;
+    // vota::CExecucaoVotaCooperativa's slot 7 (fn 7823) and this class's Run (fn 7061) call it. It holds
+    // ProcessarMensagens and ProcessarEntrada (the record cthreadeleitor.cpp:134) under a stack frame each, functions
+    // binaryen inlined into their one caller. Its name is chosen; the second's is its record's, and the first's is its
+    // logs' "%s" (a reading: they pass __func__, as ProcessarEntrada's passes its record's name).
+    bool ProcessaEventos();
+
 protected:
     void Run() override;
     void ParaOutrasThreads() override;
 
 private:
     CThreadEleitor();
+
+    bool ProcessarMensagens(comum::CAppStateContext& contexto);
+    bool ProcessarEntrada(comum::CAppStateContext& contexto);
 
     CMessageEleitor m_mensagens;
 

@@ -25,6 +25,15 @@
 #   and 4 (fns 10236, 10234, fragment 165), in another TU, and the target keeps it as a function, so it is out of line
 #   here (that clang would inline the 40-B body from the class is a reading, not measured). Its line, after Rotina, is
 #   a choice: no record falls in it.
+# - Dorme (no target function of its own: binaryen inlined it into its one caller, vota::CThreadOperador::Run, fn 10204,
+#   unit 116): when the state (+4) is running, it sets +9 between m_sync's Lock and Unlock (slots 2 and 3), calls usleep
+#   (fn 3966) with its argument and clears +9 the same way, m_sync loaded once for each pair. Out of line here, after
+#   Wait: unit 116's fragment has Run's scores with it written in the class (Dorme's test joined to Run's in one i32.or,
+#   its last Unlock merged with Run's Yield into one call through a computed slot) and out of line. Its name, its line,
+#   and m_dormindo for +9 (m_iniciada before: no evidence named it) are chosen.
+# - In the class, protected: PararSolicitado (+8, which the Run loops test) and Yield (m_pImpl's slot 5, which fns 7061
+#   and 10204 call in their own code; a reading: binaryen inlines a function of one call site only, so two holders mean
+#   clang inlined it). Their names are chosen.
 # Start's three target callers, fns 10233, 10235 and 10236, are fragment 165's, so this unit has no roots file: the two
 # stand-ins that gave Start more than one call site went when they landed.
 CTHREAD_SRCS := src/api/ipc/cthread.cpp

@@ -5,13 +5,11 @@
 //   for 56 it writes 55 when fn 1269 on fn 555's result is false, +8 of fn 1391's result is 0 and +48 of
 //   CAppInfo::GetGeral()'s (fn 291) is not 51; after a write it calls fn 491; waits for fn 491 (1269 is
 //   comum::CRdvVota::Comparecimento(), unit 13, and 1391 comum::CJustificador::GetInst, unit 113);
-// - slot 9, fn 10794: returns what fn 5343 returns, vota::CAguardaInicio's GetInst (its vptr) with the constructor
-//   inlined, 2105 B, which builds a form with api::CMTFormBuilder::AddTextField (fns 180 and 651); waits for fn 5343,
-//   whose one callee with no name is fn 1694;
 // - slots 13 and 14, fns 10790 and 10789: fn 2264 over comum::CEleitores (fn 326) and the titulo of slots 17 and 18, the
 //   first as a bool; no callee waits now (2264 is unit 110's): not written yet;
 // - slot 16, fn 10786: calls fn 4662, which throws an api::CUeDesligandoError that fn 1685 builds when the byte at
-//   1832936 is 1, and else calls fn 4657 (1048 B); waits for fns 4662, 1685 and 4657;
+//   1832936 is 1, and else calls fn 4657 (1048 B); no callee waits now (4662 is vota::CSincronizaVota's
+//   SincronizaBancoDados, unit 205's, as 1685 and 4657 are): not written yet;
 // - CRegistroMesarioEncerrado::ProcessKey, fn 10762: for key 12, stores fn 652's result at +4, the next state; waits for
 //   fn 652.
 #include "app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.h"
@@ -20,11 +18,6 @@
 namespace vota {
 
 void CControladorRegistraMesariosVota::Slot5() const
-{
-    __builtin_trap();
-}
-
-comum::CAppState& CControladorRegistraMesariosVota::Slot9() const
 {
     __builtin_trap();
 }

@@ -66,7 +66,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             # The setup check and the benchmark's setups tests run `make -n` over every object of src/Makefile,
-            # and the rules of the zlib objects and of unit 187's (libqrencode's objects, and its roots, which
+            # and the rules of the zlib objects, of unit 187's libqrencode objects and of unit 204's roots (which
             # include qrencode.h) need those libraries' sources; no other library's are read. Each is cloned at the
             # tag tools/setup/bootstrap.sh --sources checks out, libqrencode checked against its commit as there.
             - id: zlib

@@ -91,8 +91,8 @@
 #   identificado"; clang makes the table of 96 pointers, which the target holds at 1551420, after carquivossavd.cpp's
 #   records and before cinfomtlcd.cpp's (ledger/source-locations.tsv). The enumerators are not recovered, so the case
 #   labels are the values; its being a free function is a choice. Its line, after operator[], is a choice.
-# Not written here: the ValidarUE over a file, AssinarUE and AssinarEcourna, which binaryen inlined into 11179, 1277 and
-# 12098; and 5892, the request over a package and a file that 4625 and 11179 call, which nothing in the link needs yet,
+# Not written here: the ValidarUE over a file and AssinarEcourna, which binaryen inlined into 11179 and 12098 (AssinarUE,
+# inlined into 1277, is written: the paragraph on CArquivosSavd below); and 5892, the request over a package and a file that 4625 and 11179 call, which nothing in the link needs yet,
 # so it is out, with this measurement. 5892 refuses an ESavdAplic or a key above 255 (or-ed, unsigned) or an empty
 # package or file ("Argumento invalido assinar verificar arquivo."), then calls a function binaryen inlined (a prologue
 # of its own) that builds sup{pkg{package} key{key}} with 3831, decodes the content of its "sup" with
@@ -153,8 +153,58 @@
 # - DesconverteHeader: `size != sizeof` and `sizeof != size`;
 # - EnviarRequisicao: `m_mensagem = ""`, `= {}`, erase() and resize(0); `const uebyte erro` and `const bool erro = ... != 0`;
 #   `if (header->tamanho)` and `!= 0`.
+#
+# Added since: comum::CArquivosSavd's construction and singleton in carquivossavd.cpp, comum::AssinarUE in
+# iinterfacesavd.cpp, and app/comum/gravadores/cassinador.cpp moved into this list from unit 34's:
+#   1164  CArquivosSavd::GetInst, with the constructor and its three loaders inlined  written, unresolved (below)
+#   5907  CArquivosSavd::~CArquivosSavd                                              matched
+#   3839, 3840, 3841  the three maps' __tree::destroy (each calls itself)           matched, named by 5907's calls
+#   11658, 11657      the exit destructors of s_instancia and s_mutex (slots 2144, 2145)  wait for 1164 (below)
+#   AssinarUE  record iinterfacesavd.cpp 1004:15, code 7336; no target index: binaryen inlined it into 1277
+#              (comum::CAssinador::Assina, unit 34's), its one caller, behind a stack frame of its own
+# - GetInst: a std::lock_guard on s_mutex (@1838520; 1164 unlocks it through fn 150), s_instancia.reset(new
+#   CArquivosSavd) on a 36-B object of three std::maps (+0 by ESavdPacote and +12 by ESavdArquivoUE, the two operator[]
+#   read; +24 by a third key), as CArquivosResultado's GetInst does. The statics are defined in that order, s_instancia
+#   then s_mutex: their exit destructors take table slots 2144 and 2145 in that order (wasm-objdump -x -j Elem). 1164
+#   holds the constructor and, behind two stack frames of their own (80 B, then 32 B), the loaders of the +0 and +12
+#   maps, so the loaders are functions binaryen inlined, each with one caller; that the +24 map's twenty entries, which
+#   need no frame, are a third loader and not the constructor's own statements is a choice, and so are the three
+#   members' names, and the constructor's being out of line (a reading: at -fPIC clang keeps a C1 call in its own TU,
+#   docs/reference/facts/codegen.md C6, and binaryen inlines a function with one caller). The 188 insertions are written in the target's order from 1164's readout: `m[key] = value`, the value
+#   built before the insertion (C++17 orders the right side first) from CPath's builders `/` a name, `.string()` (the
+#   implicit conversion is the other spelling, not measured), with `+` a name of CArquivosResultado's or a literal, or a
+#   literal assigned after it; the keys are the target's constants, written `ESavdPacote(120)` (the enumerators are not
+#   recovered). One builder has no target index: binaryen inlined it into 1164, `s_pathRoot /
+#   path("/dsk/fe/dinamico/trab/").relative_path()` in a frame of its own, the form of CPath::GetPathMR (949); it is
+#   CPath::GetPathTrabExterno in unit 190's cpath.cpp, a chosen name. The +24 map's key is a signed type of its own
+#   (carquivossavd.h says why); no target function reads that map.
+#   1164 differs by strict aliasing alone. This TU builds with uenux2's -fno-strict-aliasing (src/app/comum/'s top-level
+#   files are not in UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6: a choice no row had decided), and every map
+#   insertion then reloads __child before __tree_balance_after_insert (fn 152), F6's sign: 80384 B against 77002 B. In a
+#   copy of link.cmd with carquivossavd.cpp.o alone compiled from its own compile line without -fno-strict-aliasing
+#   (workflow.md W13, "One variant object"), 1164 scores 1850 over 35494 rows, every one operand-only, a scan of that
+#   link with the committed symbol file moves no row into or out of match, and with one more line in a copy of the
+#   symbol file, a callers+content line for s_mutex of CFederacoes::s_mutex's form (GetInst unlocks it, its exit
+#   destructor destroys it, both through fn 150), 1164, 11657 and 11658 match and splat-build gives the target's sha256
+#   with 11097 matches. So 1164 waits for strict aliasing in this TU, a flag decision that is not this unit's to make, and
+#   11657 and 11658 wait with it: s_mutex's one other reader is 1164, and s_instancia's line reads vote:2 by:11658.
+# - The destructor is out of line, `= default` in the .cpp, as CArquivosResultado's is: 1164 and 11658 call 5907. 3839
+#   to 3841 follow 5907's calls, the +24 map first.
+# - AssinarUE: `if (!savd.AssinarArquivo(aplic, comando, 61, arquivo)) throw CUeComumError(EUE_COMUM_ASSINAR_UE,
+#   std::format("Falha ao assinar ({}-UE[{}])", savd.GetMensagem(), arquivo))`, the record's four parameters; in 1277
+#   it passes 5891 the ESavdAplic, the command 66 and the file. That Assina passes 66 and AssinarUE passes 61 is a
+#   choice: both are constants in the one inlined body, and the other placements were not measured. The enumerator
+#   ESavdAplic's SAVD_APLIC_VOTA (1) and EUE_COMUM_ASSINAR_UE are chosen names, marked where declared.
+# - cassinador.cpp joins this list after iinterfacesavd.cpp (src/units/README.md "Names"): 1277 holds AssinarUE
+#   inlined, and with cassinador.cpp.o linked before iinterfacesavd.cpp.o, its unit 34 place, 1277 scores 151 over 376
+#   rows (7 inserted, 7 deleted, local numbers); after it, in a copy of link.cmd with that one object moved, 31 over 369,
+#   all operand-only, and it matches in the link with this list.
+# - The roots: ValidarUE's two stand-ins stood for 3288 and 3290, now in the link (unit 168), and are gone; AssinaArquivo,
+#   AssinaDoisArquivos, DescreveArquivo and DescreveDoisArquivos stand for 12098 still (1277 is in the link), and the
+#   stand-ins of 275's and 680's callers for the ones not written (1501, 1836, 4657, 4682 and 4687 are).
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-APP_COMUM_SRCS := src/app/comum/carquivosresultado.cpp src/app/comum/carquivossavd.cpp src/app/comum/cpacotearquivos.cpp src/app/comum/iinterfacesavd.cpp
+APP_COMUM_SRCS := src/app/comum/carquivosresultado.cpp src/app/comum/carquivossavd.cpp src/app/comum/cpacotearquivos.cpp src/app/comum/iinterfacesavd.cpp \
+    src/app/comum/gravadores/cassinador.cpp
 UENUX2_SRCS += $(APP_COMUM_SRCS)
 # their callers are not reconstructed yet: 95-uenux2-app-comum-roots.cpp gives each two call sites
 $(ROOT)/$(APP)/95-uenux2-app-comum-roots.o: $(ROOT)/src/units/95-uenux2-app-comum-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/95-uenux2-app-comum.mk
