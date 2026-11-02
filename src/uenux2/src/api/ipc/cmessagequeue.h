@@ -122,10 +122,6 @@ private:
         unsigned m_ordem;
     };
 
-    // The heap's order: the higher priority first, then the lower order number. The tests' order is pop's (unit 64's
-    // fragment). That it is a function object is measured: Insert's -Oz -fexceptions copy (fn 501) pushes through fn
-    // 11076, whose first compare clang inlines with it and not with SItem::operator< (the forms measured are in
-    // 269-uenux2-cmessagequeue-insert.mk). Its name and place are chosen.
     struct SComparaItem {
         bool operator()(const SItem& item, const SItem& outro) const
         {

@@ -56,7 +56,9 @@
 #
 # Chosen: the three functions' names (FormataData from FormataHora's, its sibling in the band; ConverteDataHoraSemSeparador
 # from what it does beside ConverteDataHora), the date overload's being an overload that takes the date by const
-# reference (a pointer fits the bytes too), their namespace, and the file's path and name: no record names them. The
+# reference (a pointer fits the bytes too), its external linkage, declared in the header (a file-static helper, which
+# clang may inline into its one caller, was not measured), their namespace, and the file's path and name: no record
+# names them. The
 # directory follows the band (docs/how-to-decompile.md step 3, rule 2): in band
 # 4 (`uses` 4 in ledger/ordinals.tsv), 2687, 2686 and 2685 lie between api/compression/czip.cpp's 2690 and
 # api/security/csha.cpp's 2684, and the data between czip.cpp's and csha.cpp's records hold icompressor.cpp's, cfile.cpp's,

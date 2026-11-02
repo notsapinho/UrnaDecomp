@@ -24,16 +24,22 @@ struct SRect {
     // keeps SRect{} and a default-constructed rectangle all zero, as the aggregate's were
     SRect() = default;
 
-    // the rectangle of two opposite corners, in any order. Evidence: target fn 5506 (CStepsProgressBar's Divide, in
-    // cstepsprogressbar.cpp) builds each area with std::vector<SRect>::emplace_back and narrows the int corner
-    // x + l - 1 to TPosition in emplace_back's fast and slow paths both, after a zero extension of each operand (two
-    // `i32.and 65535`); fn 10971 holds the same loop. Measured on cstepsprogressbar.cpp's object: emplace_back of the
-    // four corners through this constructor gives those two masks, and Divide matches with it (the splat build);
+    // the rectangle of two opposite corners, in any order. Evidence that the original normalizes wherever it builds a
+    // rectangle: 27 target functions store a pair of min/max corners (`select` results stored by `i32.store16` at two
+    // offsets 4 apart), and vota's and comum's 12040, 12055 and 7787, far from api/gui, normalize rectangles whose
+    // corners are constants and the screen's size, which no programmer orders by hand: (10, 95, w - 30, h - 130),
+    // (10, 95, 230, h - 115) and (80, 100, w - 80, h - 200). A normalizing constructor explains all of them. Fn 5506
+    // (CStepsProgressBar's Divide, cstepsprogressbar.cpp) builds each area with std::vector<SRect>::emplace_back and
+    // narrows the int corner x + l - 1 to TPosition in emplace_back's fast and slow paths both, after a zero extension
+    // of each operand (two `i32.and 65535`); fn 10971 holds the same loop. Measured on cstepsprogressbar.cpp's object:
+    // emplace_back of the four corners through this constructor gives those two masks, and Divide matches with it;
     // SRect::Normalized in the argument stores the area as one 64-bit word, and std::min and std::max written in the
-    // arguments narrow the corner once, with no mask. The parameter names are chosen. With it SRect is no aggregate, so
-    // a brace form of four values calls it: of the 909 objects the tree compiles, compared byte for byte with the build
-    // before it, only cstepsprogressbar.cpp's (whose source changed too) and the stand-ins of units 14 and 90 differ,
-    // the stand-ins because their corners are not known to be in order and are now normalized
+    // arguments narrow the corner once, with no mask. constexpr is measured too: without it the brace-initialized
+    // static CApplication::s_areaTela (capplication.cpp) leaves .data for .bss and a store in that file's static
+    // constructor, where the target holds its bytes as data. The parameter names are chosen. With it SRect is no
+    // aggregate, so a brace form of four values calls it: of the 929 objects the tree compiles, compared byte for byte
+    // with the build before it, only cstepsprogressbar.cpp's (whose source changed too) and the stand-ins of units 14,
+    // 31 and 90 differ, the stand-ins because their corners are not known to be in order and are now normalized
     constexpr SRect(TPosition x1, TPosition y1, TPosition x2, TPosition y2)
         : left(std::min(x1, x2))
         , top(std::min(y1, y2))
@@ -47,7 +53,8 @@ struct SRect {
     TPosition Width() const { return right - left + 1; }
 
     // the same rectangle by value, which the landed bodies call. The name and its being a static member are chosen: the
-    // target's code shows the constructor above (fn 5506), and this one's callers' objects are unchanged since it came
+    // target's code shows the normalization the constructor above gives (its comment has the evidence), and this one's
+    // callers' objects are unchanged since it came
     static SRect Normalized(TPosition x1, TPosition y1, TPosition x2, TPosition y2)
     {
         return SRect{std::min(x1, x2), std::min(y1, y2), std::max(x1, x2), std::max(y1, y2)};

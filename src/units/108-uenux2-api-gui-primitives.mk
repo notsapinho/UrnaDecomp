@@ -27,9 +27,9 @@
 # the right edge are locals, the other's first: it is the one form tried whose compare is the target's.
 #
 # Chosen, no evidence gives them. The names of Move, Union, MoveX and Adjust; SRect::Normalized, its name, and its being a static member: the target
-# has the same min and max at every site, which SRect's normalizing constructor gives as well: primitives.h declares it
-# since fn 5506 (unit 41) showed it, and the landed bodies keep Normalized and their brace forms, whose objects are
-# unchanged with it.
+# has the same min and max at every site, which SRect's normalizing constructor gives as well: primitives.h declares it,
+# with the evidence in its comment (fn 5506, unit 41, and the target's other normalizing sites), and the landed bodies
+# keep Normalized and their brace forms, whose objects are unchanged with it.
 #
 # Same object code, by the function's disassembly with the object-local numbers masked: Move with the old top in a local,
 # `top` stored before `left` and `bottom` last. Other bytes: Move through a local size (18 lines); Union with

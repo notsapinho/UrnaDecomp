@@ -76,12 +76,14 @@
 #   operator[] passes (target 463337): content cannot place one byte, and the census pairs no function that loads it.
 #   The rest of the body is the target's up to operands (64 rows, all operand-only).
 # Matched later, with what held each:
-# - CSqlStatement::SetDateTime (9422) waited for the target's copies of the Boost date_time code it reaches, which
-#   src/app/roots_boost.o (-O2, no -fexceptions, ahead of both trees) gave our link: from_day_number (1376),
-#   to_simple_string_type over a time_duration (9415, which it calls through invoke_vij) and ymd_to_string in
-#   iso_extended_format, which the target holds inlined here, its one caller, where the root's probe gave it a second.
-#   It matches since that root leaves them to ecourna's objects (fragment 265 has the measurements), and this unit's
-#   object then gives 9415 and month_formatter's format_month in iso_extended_format (9414) as well.
+# - CSqlStatement::SetDateTime (9422) waited for its inlined ymd_to_string in iso_extended_format: the target holds it
+#   inlined here, its one caller, and the probe that src/app/roots_boost.o compiles (-O2, no -fexceptions, ahead of both
+#   trees) gave it a second call site. 9422 matches since that call left tools/libs/boost/probe.cpp (fragment 265 has
+#   the measurements). Its callees from_day_number (1376) and to_simple_string_type over a time_duration (9415, which
+#   it calls through invoke_vij) come from ecourna's objects too since the root declares them `extern template`, and
+#   this unit's object gives 9415 and month_formatter's format_month in iso_extended_format (9414); 9422 reaches 1376
+#   and 9415 through their table slots, which re-point by name whichever copy fills them, so its bytes do not rest on
+#   those two lines (measured: a whole link without either line keeps 9422 verified).
 # - CSqlStatement::Close (9429) waited for a target name of the file-static std::mutex it unlocks (our .bss `s_mutex`;
 #   the target's is at 1911796): a .bss object gets a name only from a vote of a census-paired function, and the census
 #   paired neither 9429 nor 9431, the mutex's exit-time destructor. 9429 is a `srcloc-anchor` now, and its vote names

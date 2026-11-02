@@ -129,8 +129,8 @@ void CReimprimindoResumoZeresima::StartState()
     __builtin_trap();
 }
 
-// CFimAquisicaoVotos::StartState: fn 10737 (79 B), callees with no name: 316, 3610 (501 is named: unit 174; 2520 is
-// vota::RegistraMesarios, unit 168).
+// CFimAquisicaoVotos::StartState: fn 10737 (79 B), callee with no name: 3610 (316 is vota::CThreadEleitor::GetInst,
+// unit 116; 501 matches, unit 269; 2520 is vota::RegistraMesarios, unit 168).
 void CFimAquisicaoVotos::StartState()
 {
     __builtin_trap();

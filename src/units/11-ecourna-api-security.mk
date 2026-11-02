@@ -39,7 +39,8 @@ ECOURNA_SRCS += api/security/csha.cpp api/security/csiphashmac.cpp api/security/
 #   key's bounds for the copy, read as the size being read before the call, and the local gives the throw path's blocks.
 #   With the size in the condition the target's `unreachable` after __cxa_throw is a block of its own where ours shared
 #   the one after __resumeException: 26 over 161 rows (1 inserted, 2 deleted); with the local, 19 over 160, operand rows
-#   only. The local's name and type are chosen: `const int` with the cast and `const auto` (size_t) give the same wasm.
+#   only. The local's name, type and line are chosen (line 68, the last before the `if` at 69, of the base's unrecovered
+#   64 to 68): `const int` with the cast and `const auto` (size_t) give the same wasm.
 # - Encrypt and Decrypt declare `erro` among their locals and assign ERR_get_error's result in the test. With the
 #   if-initializer (`if (const unsigned long erro = ERR_get_error(); erro != 0)`) ERR_get_error's call gets a landing
 #   pad of its own, read as the local's lifetime-end cleanup, which clang pushes before the initializer runs
@@ -68,10 +69,11 @@ ECOURNA_SRCS += api/security/csha.cpp api/security/csiphashmac.cpp api/security/
 #   CIFRAS's root word, whose name only its own vote gives (`evidence:vote:3 by:9495`). It holds through 9496, which
 #   reads the same object (docs/reference/splat.md section 3, "No circular evidence", as 5158 holds through 9402).
 #   9496's one call is 2682, which no generated name reaches: its callers are 14478, the static constructors, which do
-#   not match, and 9496. A hand line below the marker of splat/symbol_addrs.txt names it (callers+content: 14478 builds
-#   the map at 1911772 by calling 5174, the same __tree's __find_equal, named by pair-fingerprint, and calls 2682 on
-#   that object on its unwind path). Weighed: with the line out and the match lines of 2682, 9496 and 9495 out, a scan
-#   run twice beside a control over the same match list has 11472 match rows against 11475, those three fewer, and
+#   not match, 9496, and 2682 itself (two recursive calls, ledger/callgraph.tsv). A hand line below the marker of
+#   splat/symbol_addrs.txt names it (callers+content: 14478 builds the map at 1911772 by calling 5174, the same
+#   __tree's __find_equal, named by pair-fingerprint, and calls 2682 on that object on its unwind path). Weighed: with
+#   the line out and the match lines of 2682, 9496 and 9495 out, a scan run twice beside a control over the same match
+#   list has 11472 match rows against 11475, those three fewer, and
 #   splat-build on each pair of copies gives the target's sha256 with 11472 and 11475 matches; written `evidence:call
 #   by:9496` instead, the line refuses nothing (11475).
 # - 9493's and 9491's names are step 8's (srcloc-anchor) now. The two callers+content hand lines that named them for
