@@ -17,7 +17,7 @@
 #   with the code 3409 and the text "Assert (mesario)", so the macro's argument is spelled `mesario`; then it copies at
 #   most 40 characters of the voter's string at +36 (GetNomeUrna) when that is not empty, else of the one at +24
 #   (GetNome), each in a copy path of its own, so each path has its own substr call.
-# - 5374: it takes the directory from fn 3793 (unit 122's GetPathWsqNaoRegistrado), iterates it with
+# - 5374: it takes the directory from fn 3793 (unit 122's GetPathWsqNaoRegistrado, pathwsq.h), iterates it with
 #   std::filesystem::directory_iterator (fn 3373, libc++'s constructor with no error_code and no options), skips the
 #   entries whose file_type is 2 (directory) and moves each other entry's path().filename() into a vector of 12-byte
 #   elements that its callers (fns 1149, 10451) destroy as strings: a std::vector<std::filesystem::path>, built in the
@@ -35,16 +35,14 @@
 #   code 3409 at the same offset on both sides, the message, the record, the typeinfo) and the table slot of the
 #   destructor __cxa_throw takes. It matches.
 #
-# Written, not matching: 5374, 403 over 753 rows. Its callees 3373 and 3372 (libc++'s directory_iterator constructor
-# and __increment) have one other direct caller in the target, fn 11584 (comum::CGravadorLog's slot 7), and fn 5821
-# (cgravadorwsq.cpp) passes both by table slot to invoke_ thunks; neither caller is written, so binaryen inlines both
-# into 5374 (names.tsv holds neither). Measured with a stand-in for 11584's two calls and both addresses taken, not
-# kept: 5374 then scored 115 over 516 rows (inserted 37, deleted 13), a remainder not explained: 5821 also passes fn
-# 2574 (directory_iterator::operator*) by table slot 6148, which the stand-in left out, so operator* stayed inlined,
-# and no link measured the three together; 3372 differed in operands only (12 over 111) and 3373
-# inlined a std::shared_ptr release the target calls (51 over 152); steps 7 to 9 named none of the three and moved no
-# row, so the stand-in went. Fn 3793 keeps its call (it has a stand-in), but its body is not the target's thunk (unit
-# 122's fragment says why), so the call has no target name either.
+# Written, not matching: 5374, 102 over 505 rows (pnpm wasm score against the target, before step 8), 403 over 753
+# before 5821 was written. Its callees 3373 and 3372 (libc++'s directory_iterator constructor and __increment) have one
+# other direct caller in the target, fn 11584 (comum::CGravadorLog's slot 7, not written), and fn 5821 (unit 122's
+# CompactaWsq) passes both by table slot to invoke_ thunks: with 5821 in the link both stay out of line here
+# (names.tsv holds them, from libc++.a's directory_iterator.o), and neither has a target name yet, so 5374 calls two
+# unnamed functions. Measured before 5821 was written, with a stand-in for 11584's two calls and both addresses taken,
+# not kept: 115 over 516 rows (inserted 37, deleted 13). Fn 3793, its first callee, matches as the target's thunk
+# (unit 122's fragment). The rest of the remainder is not explained.
 #
 # Chosen: ListaArquivosNaoRegistrados and its being a free function (it takes no object; a static member of
 # CControladorReconhecimentoMesario would fit as well); its file, by its band's

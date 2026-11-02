@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "app/comum/gravadores/cgravadorwsq.h"
+#include "app/comum/gravadores/pathwsq.h"
 
 namespace comum {
 

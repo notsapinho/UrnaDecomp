@@ -28,11 +28,6 @@
 // f4676 · 15 B · unmatched · placement: link order · name unknown
 // ? f4676(i32, i32, i32) { ... }
 
-// link-order cluster 704 · uses=2
-
-// f4787 · 13 B · unmatched · placement: link order · name unknown
-// ? f4787(i32) { ... }
-
 // link-order cluster 709 · uses=2
 
 // f4937 · 1038 B · unmatched · placement: link order · name unknown

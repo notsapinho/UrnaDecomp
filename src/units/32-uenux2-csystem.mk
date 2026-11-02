@@ -54,12 +54,24 @@
 # target has them (ld_index order in build/out/wasm-map/vota_web/names.tsv: ZeroFill, RemoveFile, GetFileSize);
 # with RemoveFile the first to mention it, ZeroFill and RemoveFile were the other way round. Either way the
 # order is no difference of bytes (docs/how-to-decompile.md step 3, "The order of two members"). IsEmptyDir (2762,
-# record at line 255) is not written.
-# Written over ExistDir, the CDirReader members of unit 21 and the entry's name, it scores `62 over 416 rows (same 354,
-# replaced 47 [43 operand-only], inserted 0, deleted 15)` in the whole link: ours returns the inverse of the last
-# NextEntry's result, where the target keeps the flag in a local of its own. Three spellings of the flag's update (`else
-# if (IsFile()) vazio = false`, `vazio = !IsFile()`, `vazio &= !IsFile()`) give the same object, and whole-link tries at
-# `--flags -fstrict-aliasing` and `--flags -O2` give the same score. Not reconstructed either: AreFilesEqual (12134). The flag CSystem::s_dorme, defined here, and the inline CSystem::Dorme over it are
+# record at line 255:15, a static member as the record prints it) is written there: ExistDir's test inlined (ExistResource
+# and S_IFDIR), the throw of 7036 with "O diretório [{}] não existe: {}" and strerror(errno), then a CDirReader over the
+# directory (unit 21) that stops with false at the first subdirectory other than "." and ".." and at the first file.
+# Written so with a break at each (pnpm wasm score against the target, before step 8): every row operand-only (30 over
+# 416), and it matches. With the flag tested in the loop's condition (`while (vazio && leitor.NextEntry())` and an
+# if/else that sets it) it scored 59 over 416, and this fragment's earlier spellings 62 over 416 (`else if (IsFile())
+# vazio = false`, `vazio = !IsFile()`, `vazio &= !IsFile()`): the target goes round the loop on a test of its own, not on
+# the flag's value (a reading of its rows). The break form, the variables' names and the enumerator's name (7036,
+# api/util/eueutilerror.h) are chosen. Its target callers are 5572, 5821, 11167 and 12134; 5821 is written (unit 122's
+# CompactaWsq), and the roots stand in for the others with one call.
+# api::CreateDir (a chosen name, a free function, no record and no target index): it walks a path held in a
+# std::string component by component (std::find of '/', each component's characters pushed onto the prefix) and calls
+# mkdir(prefix, 0755) for each component ExistDir does not find, stopping at a failure; binaryen inlines it into its one
+# caller, fn 5821, where it keeps its own 112-byte frame and holds ExistDir's code inlined, which only this file's
+# functions can do (ExistResource is file-static), so it is here. Its result, false at a failure, is chosen (5821 reads
+# none), and so are the std::copy into a back_inserter for the pushes, `std::distance(...) > 0` for the signed test and
+# its line after IsEmptyDir; its rows are not scored apart from 5821's (unit 122's fragment).
+# Not reconstructed either: AreFilesEqual (12134). The flag CSystem::s_dorme, defined here, and the inline CSystem::Dorme over it are
 # unit 81's (ISound::Wait, fn 8461, is the first reader written); api/util/csystem.h says what is chosen about them.
 #
 # CopyFile (378), records at lines 390 to 476 (390:15, 397:15, 414:15, 448:15, 456:19, 465:19, 471:19, 476:19). Its

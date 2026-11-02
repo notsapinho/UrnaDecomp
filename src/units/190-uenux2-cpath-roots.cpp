@@ -16,14 +16,15 @@
 //   so it has no stand-in.
 // - GetPathResult (fn 1399): callers 1164 and 1274, both in the link (1164 is unit 95's), so it has no stand-in.
 // - GetPathResult(EFlashOrigem) (fn 1274): callers 5873, 5874, 6041, 11579, 11630, 11631, 11632, 12098, 12134; 5873,
-//   5874 (unit 160's) and 11630 to 11632 (unit 122's) are in the link.
+//   5874 (unit 160's), 11630 to 11632, 6041 and 11579 (unit 122's) are in the link.
 // - GetPathTrab(EFlashOrigem) (fn 436): 24 callers, among them 1836, 2890, 4657, 6035, 6036, 7174, 7787, 12098;
 //   11630 to 11632 (unit 122's), 2890 (unit 156's) and 11852 (unit 104's) are in the link.
-// - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451.
+// - GetPathWsq (fn 2864): callers 2298, 3898, 5382, 10451; 2298 and 3898 (unit 122's pathwsq.cpp) are in the link.
 // GetPathTrab with the turn (fn 358) gets none: the unit's GetPathTrab(EFlashOrigem) and GetPathWsq are two call sites.
 // std::filesystem::path::operator/=(const path&) (fn 183), which the members call, is table slot 71 in the target,
 // which fn 5968 (libc++'s operator/ of directory_iterator.o, in the link since unit 214's code brings it in) and fn
-// 5821 pass to invoke_iii; 5821 is not in the link, so its address is taken here. Without it binaryen drops the result
+// 5821 pass to invoke_iii; its address was taken here while 5821 was not in the link, and unit 122's CompactaWsq (5821)
+// now passes it as well. Without a reader binaryen drops the result
 // no caller of our link reads, and each call of it
 // loses the target's `drop` (the fragment has the rows).
 // The stand-ins differ from each other and add offsets, so none is a target function's body. Each builds its results in

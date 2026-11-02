@@ -7,8 +7,10 @@
 // They also keep CSystem::ExistFile, ExistDir and ZeroFill (target fns 412, 5459 and 2761), whose callers are not
 // reconstructed but for 3653, 2760 and 1487: ExistFile is called directly by 23 target functions (1487, 2725, 3653 and
 // others) and its address is in the table (slot 3567), so it is address-taken here and called from two stand-ins;
-// ExistDir is called once each by 5572 and 5821, so it gets two call sites. ZeroFill is called by 2760 (RemoveFile)
-// and 5458 (RemoveTree) once and by 5455 (CSystem::ReplaceFile) twice, all reconstructed.
+// ExistDir is called once each by 5572 and 5821: 5821 is in the link (unit 122's CompactaWsq), and ArquivoNoDiretorio's
+// call stands for 5572. IsEmptyDir (target fn 2762) is called once each by 5572, 5821, 11167 and 12134: DiretorioVazio
+// stands for the three not written, so binaryen keeps it out of line as the target does. ZeroFill is called by 2760
+// (RemoveFile) and 5458 (RemoveTree) once and by 5455 (CSystem::ReplaceFile) twice, all reconstructed.
 // RemoveFile (target fn 2760) is called directly by 1487 and 7160 once and 6737 twice: RemoveDois gives it two call
 // sites and stands for 7160 and 6737 (1487 is in the link, unit 168).
 // CopyFile (target fn 378) is called directly by 15 target functions (1836, 2725, 3333, 4657, 4682, 4687, 5371, 5873,
@@ -49,6 +51,7 @@ void w11584_root_0(int, int) __asm__("_ZN3api7CSystem6RenameERKNSt3__212basic_st
 void w5455_root_0(int, int, int) __asm__("_ZN3api7CSystem11ReplaceFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_");
 void w2763_root_0(int, int) __asm__("_ZN3api11GetFileNameERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 void w5462_root_0(int, int) __asm__("_ZN3api10GetDirNameERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
+int w2762_root_0(int) __asm__("_ZN3api7CSystem10IsEmptyDirERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 }
 
 namespace {
@@ -65,7 +68,7 @@ __attribute__((noinline)) int ArquivoNoDiretorio(int arquivo, int diretorio)
 
 __attribute__((noinline)) int ContaRecursos(int arquivo, int diretorio, int outro)
 {
-    return w412_root_0(arquivo) + w412_root_0(outro) * 2 + w5459_root_0(diretorio) * 4;
+    return w412_root_0(arquivo) + w412_root_0(outro) * 2 + diretorio * 4;
 }
 
 __attribute__((noinline)) void RemoveDois(int arquivoA, int arquivoB)
@@ -109,6 +112,11 @@ __attribute__((noinline)) void PartesDoCaminho(int arquivo, int diretorio, int c
     w5462_root_0(diretorio, caminho);
 }
 
+__attribute__((noinline)) int DiretorioVazio(int diretorio)
+{
+    return w2762_root_0(diretorio) + 3;
+}
+
 void* volatile w2759_sink;
 
 struct SW2759Roots {
@@ -125,6 +133,7 @@ struct SW2759Roots {
         w2759_sink = reinterpret_cast<void*>(&RepoeDois);
         w2759_sink = reinterpret_cast<void*>(&MedeEspaco);
         w2759_sink = reinterpret_cast<void*>(&PartesDoCaminho);
+        w2759_sink = reinterpret_cast<void*>(&DiretorioVazio);
     }
 } w2759_roots;
 
