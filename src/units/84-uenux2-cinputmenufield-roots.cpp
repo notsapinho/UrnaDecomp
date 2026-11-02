@@ -12,12 +12,6 @@
 // CMenuItem::UpdateRect (fn 3657), whose other target callers are 3655 (CMenuItem::SetSearchText, written) and 11884 (not
 // reconstructed), so AdicionaItem calls it too, or binaryen would inline it into SetSearchText. SetSearchText has two
 // target callers, 11884 and 11888, neither reconstructed: BuscaItem stands for both and calls it twice.
-// std::sregex_token_iterator's constructor from a regex and a list of submatches (fn 4307) and its operator++ (fn 6970),
-// which cinputmenufield.o instantiates for CMenuItem::GetTextoFormatado (fn 5492), have one other target caller, 6999
-// (not reconstructed), so binaryen would inline them into 5492: PercorreTokens stands for 6999 and passes the default
-// match flag (0) as 5492 does, which binaryen's dead-argument pass folds in the target. It also calls
-// std::sregex_iterator's operator++ (fn 6939), whose callers are 6970 and 6958 (not reconstructed, called by 6999 only),
-// standing for 6958. Declared through asm labels, so they instantiate nothing.
 #include <memory>
 
 #include "api/gui/cinputmenufield.h"
@@ -29,11 +23,6 @@ void cinputmenufield_destroy_item(void*) __asm__(
 void cmenuitem_updaterect(void*) __asm__("_ZN3api9CMenuItem10UpdateRectEv");
 void* cmenuitem_setsearchtext(void*, const void*) __asm__(
     "_ZN3api9CMenuItem13SetSearchTextERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
-int sregex_token_iterator_cria(void*, const char*, const char*, const void*, const void*, int) __asm__(
-    "_ZNSt3__220regex_token_iteratorINS_11__wrap_iterIPKcEEcNS_12regex_traitsIcEEEC2ES4_S4_RKNS_11basic_regexIcS6_EESt16initializer_listIiENS_15regex_constants15match_flag_typeE");
-int sregex_token_iterator_avanca(void*) __asm__(
-    "_ZNSt3__220regex_token_iteratorINS_11__wrap_iterIPKcEEcNS_12regex_traitsIcEEEppEv");
-int sregex_iterator_avanca(void*) __asm__("_ZNSt3__214regex_iteratorINS_11__wrap_iterIPKcEEcNS_12regex_traitsIcEEEppEv");
 }
 
 namespace {
@@ -55,14 +44,6 @@ __attribute__((noinline)) void* BuscaItem(void* item, const void* busca)
     return cmenuitem_setsearchtext(item, busca);
 }
 
-__attribute__((noinline)) void PercorreTokens(void* it, const char* inicio, const char* fim, const void* re,
-                                              const void* submatches)
-{
-    sregex_token_iterator_cria(it, inicio, fim, re, submatches, 0);
-    sregex_token_iterator_avanca(it);
-    sregex_iterator_avanca(it);
-}
-
 void* volatile w10899_sink;
 const void* volatile w84_sink;
 
@@ -73,7 +54,6 @@ struct SW10899Roots {
         w84_sink = cinputmenufield_vt;
         w84_sink = reinterpret_cast<const void*>(&AdicionaItem);
         w84_sink = reinterpret_cast<const void*>(&BuscaItem);
-        w84_sink = reinterpret_cast<const void*>(&PercorreTokens);
     }
 } w10899_roots;
 

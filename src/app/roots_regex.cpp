@@ -1,17 +1,34 @@
-// std::basic_regex<char>'s copies that are ecourna's code in the target: its constructor from a C string (target fn
-// 2416, called by ecourna::app::dados::CSerialMidia::ValidaSerial, fn 9258, and by uenux2's 5492 and 6999) and what that
-// constructor instantiates (the parser, the states' members, the destructor). Before uenux2 used std::regex, ecourna's
-// objects gave those rows: 51 matched from api_compression_icompressor.cpp.o and 4 from app_dados_cserialmidia.cpp.o
-// (splat/scan.tsv's object column at 9202406). api::CMenuItem::GetTextoFormatado (fn 5492, cinputmenufield.cpp) uses
-// std::regex too, and uenux2's objects link ahead of ecourna's, so its copies, at uenux2's flags, took those rows: 8 of
-// them then differed or left the link. This object, ahead of both trees, holds the copies at ECOURNA_CXXFLAGS, the flags
-// of the objects that gave them, after src/app/roots_vector.o: both define std::vector<std::string>'s destructor, whose
-// target callers reach that object's -Oz copy (fn 2255). It only instantiates: urna_regex has no caller and leaves the
-// link.
-// src/units/84-uenux2-cinputmenufield.mk has the rows.
+// std::basic_regex<char>'s copies that are an -fexceptions object's code in the target: its constructor from a
+// std::string (target fn 9534, which only table slot 6142 reaches, and only comum::CGravadorWSQ's writer, fn 5821, passes
+// that slot, to an invoke_* thunk) and what the constructor instantiates over the string's iterators: 9534 calls 9518
+// through table slot 6153, which calls 2689, then 2688; the rows that match from this object are 424 (a shared_ptr
+// destructor of the parser), 3523, 3524, 5184 to 5188 and 9511 to 9514. 9534's target body has landing pads, and those
+// rows equal the copies of these ECOURNA_CXXFLAGS (-fexceptions, without strict aliasing); the flags of 5821's own object
+// are not measured. UrnaRegexTexto stands for 5821, not written: it builds the regex from a std::string, and its address
+// in a sink keeps it in the link, as 5821's table slot keeps the target's constructor. It goes when 5821 is in the link.
+// The parser over const char* and the token iterator's members are uenux2's code in the target, without landing pads:
+// src/app/roots_cbasetype.cpp holds them, ahead of this object (the constructor from a C string, 2416, comes from
+// cinputmenufield.cpp's object). Before, this file held the const char* copies at these flags, which have the same
+// bodies as the std::string ones (the rows above matched so) and differ from the target's const char* copies
+// (src/units/97-uenux2-cvotacaostateaudio.mk has the measurement).
 #include <regex>
+#include <string>
 
-void urna_regex(const char* padrao)
+namespace {
+
+__attribute__((noinline)) unsigned UrnaRegexTexto(const std::string& padrao)
 {
     const std::regex re(padrao);
+    return re.mark_count();
 }
+
+const void* volatile urna_regex_sink;
+
+struct SUrnaRegexRoots {
+    SUrnaRegexRoots()
+    {
+        urna_regex_sink = reinterpret_cast<const void*>(&UrnaRegexTexto);
+    }
+} urna_regex_roots;
+
+} // namespace

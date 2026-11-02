@@ -117,7 +117,7 @@ void CMenuFiltrarCandidatosPorNumero::ProcessInput()
 }
 
 // CMenuVisualizarCandidatos::StartState: fn 11881 (2561 B), records cmenuvisualizarcandidatos.cpp:55, callees with no
-// name: 202, 203, 455, 502, 576, 653, 1279, 1693, 1763, 3675, 3861.
+// name: 653, 1693, 1763, 3675, 3861 (202, 203, 455, 502, 576 and 1279 have names).
 void CMenuVisualizarCandidatos::StartState()
 {
     __builtin_trap();
@@ -163,7 +163,7 @@ namespace comum {
 
 // CPedeTituloMesario::StartState: fn 10388 (4789 B), records cpedetitulomesario.cpp:33,
 // cpedetitulomesariofinal.cpp:45, cpedetitulomesarioinicial.cpp:44, cpedetitulomesariovotacao.cpp:44, callees with no
-// name: 180, 203, 301, 728, 1151, 1255.
+// name: 180, 203, 301, 728, 1151.
 void CPedeTituloMesario::StartState()
 {
     __builtin_trap();

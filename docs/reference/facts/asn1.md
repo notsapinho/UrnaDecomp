@@ -97,6 +97,12 @@ since the symbol file and the ledger stay committed; each compiles nothing:
 That table is the `-fexceptions` RHVoice objects. On the objects `src/Makefile` builds now ([libraries.md](libraries.md) §B6),
 measured by steps 7 to 9, all of RHVoice just before the runtime loses 16 rows (777, 1917, 2649, 5055, 8750 and 11 `AVNDecoder`
 visitors), and `language` with `document`, the one object that defines `vector<unsigned>::push_back(&&)`, loses none and adds none.
+Neither RHVoice row reaches 1917's copy now: `std::getline`'s weak definers are `ctextfieldmultiline.cpp.o` (unit 14's
+`GetTextLines`), `AVNDecoder.o` and RHVoice's `ini_parser.cpp.o`, the first wins, and it lies ahead of every place those
+rows put RHVoice (`tr ' ' '\n' < build/out/wasm/vota_web/link.cmd | /usr/bin/grep -n -E
+'ctextfieldmultiline\.cpp\.o|/AVNDecoder\.o|ini_parser\.cpp\.o|^app/ecourna/' | head -3` prints 158, the first
+`app/ecourna/` object at 481, and 828). By link order, not re-measured: how many of the 16 rows still leave needs the
+private link below.
 
 ```sh
 P=build/out/order-last; mkdir -p $P; cp -cpR build/out/app $P/app
@@ -417,9 +423,9 @@ Not every leftover is the runtime's. By their rows:
 
 | rows | what they are | what they wait for |
 | --- | --- | --- |
-| 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | the executable TU, at its own `-Oz -fexceptions` rule, once it is reconstructed ([levels.md](levels.md) §V1) |
+| 1928, 3552, 518 | `pair::~pair`, `vector<Visitante>::__destroy_vector` and `~CoderEnv` at `-Oz`: a compile of the vector's destructor at `-Oz -fexceptions` holds `pair::~pair` as a function of 1928's rows, and `__destroy_vector` calling it, where `-O2` and `-O3` inline it and `-Os` holds `allocator::destroy`. 518 is `~CoderEnv`, which 5706 proves; only that it is the same `-Oz` copy is a reading | the executable TU, at its own `-Oz -fexceptions` rule, once it is reconstructed ([levels.md](levels.md) §V1); 1928 matches since unit 237, whose tree root at that rule holds `pair<string, shared_ptr<api::CWavFile>>`'s destructor, the same body, and whose roots file reads its result for 3552 |
 | 1843 | `string::find_first_not_of` at `-Oz`: it keeps `__str_find_first_not_of`'s loop, a compile of the member at `-Oz -fexceptions` shows it, and `-Os`, `-O2` and `-O3` do not | matched: `src/app/roots_vector.cpp` emits it as a `minsize` instance, until the executable TU's code that instantiates it is written ([levels.md](levels.md) §V1) |
 | 1532, 2706, 5282, 5290 | `CoderEnv::encodeBER` over a `back_insert_iterator<vector<char>>` and libc++ instances it brings (`vector<char>::reserve`, called by the runtime's own 3464, 3472 and 5055 too; a `__split_buffer<char>` constructor; `std::copy` into the iterator); 1532, 2706 and 5290 have a landing pad each, 5282 none | matched: `src/app/roots_coderenv.cpp` holds them at the executable TU's rule (unit 229) |
 | 2704, 2896 | `__split_buffer<char>`'s destructor, a thunk into 2896, the merge body of 2704, 2545, 4675 and 5523 | the merge's other members |
 | 8902 | calls 5056 and 1872, `api`'s, and no runtime symbol | a class of `api` |
-| 2650 | `allocator<Visitante>::destroy`: it calls 388, a `~shared_ptr` that keeps its result, where ours calls 424, the one that has none, over which 2183 and 3469 match | a second `~shared_ptr` body in our link |
+| 2650 | `allocator<Visitante>::destroy`: it calls 388, a `~shared_ptr` that keeps its result, where ours calls 424, the one that has none, over which 2183 and 3469 match | a copy of `~shared_ptr<IAbstractVisitor>` with 388's body ahead of the runtime: since unit 237 our link holds that body (388 matches, its result read by 11530), and 2650 still calls 424's |

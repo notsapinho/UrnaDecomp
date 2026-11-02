@@ -7,9 +7,10 @@
 # Their forms come from functions this unit adds to other units' files, whose paragraphs have the evidence: unit 110's
 # ctelasvota.cpp (vota::AdicionaTelaAguarde 4152, TelaPreparandoDadosEncerramento 6583, and TelaVotacaoEncerrada and
 # TelaCopiaResultadoParaMR, which binaryen inlines into 6129 and 6174) and unit 165's cpreshowformvota.cpp
-# (vota::GetFormulario 886, written, differs). The destructors are the bodies other states share (448 and 765 for
-# CGeraBU's two std::shared_ptr; 244 and 387 for the other two), matched already. 220-uenux2-fimvotacao-estados-pending.cpp
-# traps the three StartState and says what each waits for; the class heads say what each layout rests on.
+# (vota::GetFormulario 886, a thunk of binaryen's 6117, matched since unit 247). The destructors are the bodies other
+# states share (448 and 765 for CGeraBU's two std::shared_ptr; 244 and 387 for the other two), matched already.
+# 220-uenux2-fimvotacao-estados-pending.cpp traps the three StartState and says what each waits for; the class heads say
+# what each layout rests on.
 #
 # Evidence: the records name the .cpp files (cgerabu.cpp:54, cgerarelatorios.cpp:51, ccopiaresultadoparamr.cpp:59 to
 # 174, all StartState's); the vtables' slots and the D0s (a call of the D2 and a free: out of line; D2s with no vptr
@@ -32,21 +33,11 @@
 # section 3, "No circular evidence"): a landing that drops one of them checks the other.
 #
 # Not written, with what each waits for:
-# - fn 1255 (612 B, the voter's screen of the poll workers' registration, "REGISTRO DE MESÁRIOS") and fn 11140, which
-#   it calls: written and taken out again. Their place was read from the data: 1255's two fonts, SFont {35, 0} and
-#   {25, 0} (@540572, @540580), follow the name of comum::CRegistrarMesarios's typeinfo (@540542), so
-#   comum/comparecimentomesario/estados/cregistrarmesarios.cpp (a stub-only file); 11140 builds an
-#   api::CPreShowClearScreen, whose vtable, typeinfo and typeinfo name lie in cformbuilder.cpp's data, so an
-#   api::CFormBuilder::GetForm(const std::string&) there. Written so (copies in build/out of the worktree only), our link
-#   inlines 11140 into 1255, its one call site: 1255 scored 95 over 321 rows (57 inserted, the inlined body), and 11140
-#   and fn 6117 (binaryen's body of 11140 and 886, whose thunks pass it two vptrs) had no body. In the target 11140
-#   keeps its body with 1255 its one caller, and it is in no table slot (wasm-objdump -x -j Elem prints no
-#   ref.func:11140). docs/reference/facts/tool-traps.md X1's "a surviving twin that its callers became" was measured: a
-#   second 1255, identical, in the same file left one body in our link (names.tsv names the first only) and 11140 was
-#   still inlined into it (that the two merged before the inlining pass is a reading). Not explained.
-#   1255's six callers (3610, 5386, 5389, 10313, 10337, 10388) are not written, so nothing needs it.
-# - fn 886 stays written, as unit 165's paragraph says: 6129, 6174, 6583 and 5936, matched, call it. Its target body is
-#   a 21-B thunk of 6117, which forms only with 11140 in the link.
+# - fn 1255 (the voter's screen of the poll workers' registration, "REGISTRO DE MESÁRIOS") and fn 11140, which it calls,
+#   with fn 886 and binaryen's 6117: written and matched by unit 247 (1255 in
+#   comum/comparecimentomesario/estados/cregistrarmesarios.cpp, 11140 in cformbuilder.cpp). This unit wrote both and
+#   took them out again: our link inlined 11140 into 1255, its one call site, and a second, identical 1255 did not keep
+#   it out of line; unit 247's fragment has what does.
 # - the three StartState (12110, 12105, 12134): the pending file's header.
 # - fns 11236, 11237, 11238 and 11239: the __func members of comum::(anonymous)::MontaCabecalho's lambda
 #   (comum::CGeradorRelEleitoresHabBiograf), whose std::function only CGeraRelatorios::StartState (12105) builds

@@ -7,7 +7,6 @@
 //   @1536140 and @1536204), and calls PlayInterruptibleMessage (fn 3143).
 // - EmiteEcoComInputField 3139 (slot 13, record :188), 525 B: waits for api::CInteractiveForm::Read() (record
 //   cinteractiveform.h:57), which this tree does not hold, and for a definition of api::EInputResult.
-// - FormataMensagem 6999 (slot 14, a chosen name), 4946 B: fills the {cargo-atual}-style tags; waits for the tags' sources.
 // vota::CConfirmaVotoEmCargo, slot 9 (ProcessInputAudio 11754, record cvotacaostateaudio.cpp:209 of its inlined
 // EmiteEcoCorrigeConfirma): it calls fn 1455, which has no name, and fns 3229 and 4471 (vota::CEleitorVotando's
 // GetInst and RegistraVoto, unit 197), and reads vota::g_numeroDigitado
@@ -29,8 +28,8 @@
 //
 // vota::IConfereVotoEmCargo, slots 9, 10 and 12 (ProcessInputAudio 11791, record cconferevotoemcargo.cpp:80, 71 B;
 // StartStateAudio 11793, 333 B, which holds the record :41 of an anonymous-namespace GetCargoID; ProcessTickAudio 11790,
-// 131 B): 11791 waits for fn 455, CPolySingleton<api::IInputKbd>::instance, which has no name, and fn 1455
-// (CVotacaoStateAudio's, not written); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
+// 131 B): 11791 waits for fn 1455 (CVotacaoStateAudio's, not written; fn 455, CPolySingleton<api::IInputKbd>::instance,
+// matches since unit 237); 11790 for ExecutarAposAudioAtual (fn 3851, record :95, 781 B, not written) and the
 // std::function it builds; 11793 is not read here. The class's key function is its destructor, in
 // cconferevotoemcargo.cpp, so that object emits the vtable.
 //
@@ -55,11 +54,6 @@ void CVotacaoStateAudio::ProcessTick(uebyte)
 }
 
 std::pair<api::EInputResult, std::string> CVotacaoStateAudio::EmiteEcoComInputField(const CFormInterativoTelaVota&) const
-{
-    __builtin_trap();
-}
-
-std::string CVotacaoStateAudio::FormataMensagem(const std::string&) const
 {
     __builtin_trap();
 }

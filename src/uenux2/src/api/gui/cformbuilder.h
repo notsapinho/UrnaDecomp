@@ -9,8 +9,10 @@
 // record names an adder: every adder's name, and which overloads share a name, are chosen from the field each builds.
 //
 // GetForm (fn 5550) builds the api::IForm<IScreen> of the fields added, names it, and clears the vector: its name and
-// its parameters are chosen. m_campos is protected because api::CInteractiveFormBuilder (cinteractiveformbuilder.h)
-// builds its forms from it, a choice that goes with deriving that class.
+// its parameters are chosen. The overload of a name alone (fn 11140) passes it an api::CPreShowClearScreen, whose
+// vtable and typeinfo lie in cformbuilder.cpp's data (cpreshowclearscreen.h); its being an overload, its name and its
+// place after the first in the .cpp are chosen. m_campos is protected because api::CInteractiveFormBuilder
+// (cinteractiveformbuilder.h) builds its forms from it, a choice that goes with deriving that class.
 //
 // AddStatusHeader (fn 502, records cformbuilder.cpp 292:30 and 305:24) adds up to four fields, one per bit of its
 // argument: 1 the date and time, 8 the battery's charge, 4 the battery's icon, 2 the mode's text. RTTI types the
@@ -113,6 +115,8 @@ public:
     static SPoint GetLabeledKeyPos(const SRect& area, ETextAlignment alinhamento, TPosition deslocamento);
 
     std::shared_ptr<IForm<IScreen>> GetForm(const std::shared_ptr<IPreShow<IScreen>>& preShow, const std::string& nome);
+
+    std::shared_ptr<IForm<IScreen>> GetForm(const std::string& nome);
 
 protected:
     std::vector<SharedField> m_campos;

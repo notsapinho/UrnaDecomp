@@ -37,9 +37,11 @@ public:
 // EmiteEcoComInputField (:188); the overriders' records name slots 9 and 10 (ProcessInputAudio and StartStateAudio,
 // cinstrucaovotacaoacessibilidade.cpp:54 and :129). StartState and FinishState are comum::CAppState's names. Chosen:
 // the names of slots 11 (FinishState calls it last), 12 (ProcessTick calls it with any other tick's id), 14 and 15, and
-// slots 14 and 15's const. ProcessTick (fn 7010) calls slot 15 and hands the result to slot 14: slot 15 is the message, with
-// {cargo-atual}-style tags, and slot 14 fills them in (fn 6999 holds those tags and returns a string).
-// Slots 7, 8, 13 and 14 are pending (src/units/97-uenux2-cvotacaostateaudio-pending.cpp).
+// slot 15's const. ProcessTick (fn 7010) calls slot 15 and hands the result to slot 14: slot 15 is the message, with
+// {cargo-atual}-style tags, and slot 14 fills them in (fn 6999 holds those tags and returns a string). Slot 14 is not
+// const, and the target forces it: its tags' member, SubstituiMarcador, calls FormatPartyName (fn 6954), whose record
+// shows it not const, and 6999 calls 6954 twice, which a const slot 14 could not do on `this`.
+// Slots 7, 8 and 13 are pending (src/units/97-uenux2-cvotacaostateaudio-pending.cpp).
 //
 // The layout is what the constructor (fn 1785) stores: +11 a flag read before every use of audio (fn 7028 stores a
 // comparison's result there, and the readers compare it with 1: the width is evidence, the bool is chosen), +12 and +13
@@ -74,7 +76,7 @@ public:
 
     virtual std::pair<api::EInputResult, std::string> EmiteEcoComInputField(const CFormInterativoTelaVota& form) const;
 
-    virtual std::string FormataMensagem(const std::string& mensagem) const;
+    virtual std::string FormataMensagem(const std::string& mensagem);
 
     virtual std::string GetMensagem() const = 0;
 
@@ -85,6 +87,10 @@ private:
     // The record (cvotacaostateaudio.cpp:297, fn 6954) names it and shows it neither static nor const; fn 6999, slot 14,
     // calls it twice. Its access is chosen.
     std::string FormatPartyName(const std::string& numero);
+
+    // The text of one tag of slot 14's message: fn 6999 holds it, inlined by binaryen with a 48-byte frame of its own,
+    // and it calls FormatPartyName. Its name, its being a member and its access are chosen.
+    std::string SubstituiMarcador(const std::string& marcador);
 
     void CancelaEsperaFimAudio()
     {

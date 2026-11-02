@@ -9,7 +9,7 @@
 # StartState and destructors (3857, one body with CEnviarManutencao's and CTesteFalhou's, 785 and 1560, bodies of eight
 # states), over the head of vota::CEstadoComDesligamentoAutomatico. api::CPosixRWMutex: constructor and destructors
 # (10245, 5353, 10244) and slots 2 to 4, which binaryen merges into 2219, api::IRWSyncCtl and six enumerators of
-# EUeIpcError. The class headers say what each layout and name rests on. The fourteen members not written are in
+# EUeIpcError. The class headers say what each layout and name rests on. The thirteen members not written are in
 # 97-uenux2-cvotacaostateaudio-pending.cpp, with what each waits for.
 #
 # The constructors and two slots, over unit 02's tick names: CVotacaoStateAudio's constructor (1785), StartState (7028)
@@ -196,10 +196,79 @@
 # it (a reading). The number is read into a local first, since the target calls atoi before CPartidos::GetInst; the
 # form with the conversion in Find's argument is not compiled. Chosen: the parameter's and locals' names, the test of the
 # null result before the return, its access (private) and the enumerator's name. Its one target caller is fn 6999
-# (slot 14, pending), which calls it twice: src/units/212-uenux2-app-vota-callers-roots.cpp stands for it. Slot 14 is
-# declared const in cvotacaostateaudio.h, a choice that a body calling FormatPartyName on `this` cannot keep, so the
-# writer of 6999 revisits it. The four include lines it needed, with a blank line, took five of the blank lines above
-# line 69 (ProcessInput's record, not written). Scored 13 over 112 rows, all operand-only, before step 8; matched at step 9.
+# (slot 14), which calls it twice, from SubstituiMarcador (below). The four include lines it needed, with a blank line,
+# took five of the blank lines above line 69 (ProcessInput's record, not written). Scored 13 over 112 rows, all
+# operand-only, before step 8; matched at step 9.
+#
+# Slot 14, FormataMensagem (fn 6999, written, `unresolved`: what it waits for is below), in cvotacaostateaudio.cpp after
+# FormatPartyName, a choice (in use band 1 it is linked after ProcessTick, fn 7010, whose record is :120). It returns ""
+# for an empty message, else the message with each {...} tag replaced: a std::regex("\\{.+?\\}") built in its frame
+# (the constructor inlined, its __parse called, fn 2062), a std::sregex_token_iterator over it with the submatches
+# {-1, 0}, and std::for_each over named iterators whose lambda appends SubstituiMarcador's text for each part, the shape
+# of unit 84's CMenuItem::GetTextoFormatado (5492). The target holds these functions of the file each behind a stack
+# frame of its own, binaryen's inlining (docs/reference/facts/reading.md R10), so they are out of line here, external,
+# and binaryen inlines them into their one caller: SubstituiMarcador (a 48-byte frame), GetNomeCargoAtual (432),
+# GetCandidatoComSuplentes (80), GetQuantidadeDigitos (400) and FormataProgresso (400). GetProgresso, over
+# FormataProgresso, has no frame, so no evidence makes it a function: it is one as a measured form ({progresso}, below).
+# Chosen: the helpers' names (SoletraNumero and TextoConsulta, which picks the consulta's string, in an anonymous
+# namespace; GetNomeCargoAtual, GetCandidatoComSuplentes, GetQuantidadeDigitos, FormataProgresso and GetProgresso, in
+# vota), their being free functions, their locals' names, and their place after `#line 228` (cvotacaostateaudio.cpp:65).
+# Each tag's text, read from 6999's code:
+# - {cargo-atual}: the current post's GetNomeNeutro (fn 1547), or for a consulta the detail's string at +36, else the
+#   one at +12 (GetDetalheConsulta, fn 1923), then, when the post has more than one choice, " {}ª {}" of
+#   vota::g_escolhaAtual and "escolha" or "vaga";
+# - {voto} and {legenda}: the number typed, whole or its first two characters, with ", " before every digit but the
+#   first: std::regex_replace with a static std::regex("\\B\\d") and ", $&" (SoletraNumero; the static's guard test
+#   is in the target twice, so clang inlined it at both);
+# - {nome-partido}: FormatPartyName of the number's first two characters;
+# - {escolha-referendo}: the current answer's string at +16, else the one at +4 (comum::CRespostas, fns 2812, 3125);
+# - {o/a}: 'a' when the current candidacy's holder is a woman, else 'o' (vota::ArtigoCandidato, below);
+# - {candidato}: the holder's optional name at +24 when it is engaged, else its name at +12;
+# - {candidato-com-suplentes}: that, then for each substitute ", " + comum::CCargoDSNomeSexoCandidato(n, true)() + " "
+#   + the substitute's name (fn 2268);
+# - {quantidade-digitos}: "{} {}" of the post's digit count and "dígitos" or "dígito";
+# - {progresso}: "{} de {}" of the votes cast plus one and the sum of the posts' choice counts (fn 861).
+# Measured, on the object (wasm-objdump -d at the file's flags) and in the whole link (pnpm wasm score):
+# - {o/a} written in this file, as a bool or a char local or a conditional, gives a select the target does not have; a
+#   function of another TU gives the target's branches. ArtigoCandidato, in comum/cinformacaoeleitor.cpp beside the
+#   voter's statics (src/units/197-uenux2-celeitorvotando.mk), its name and its being a free function are chosen.
+# - The first argument of " {}ª {}" as `g_escolhaAtual` is loaded after the store of the arguments' types, where the
+#   target loads it before; `static_cast<unsigned>(g_escolhaAtual)`, written, and the value or the second argument in a
+#   local first give the same object code (the function's disassembly, masked).
+# - {progresso} with the count computed in GetProgresso puts its arithmetic after the loop (clang sinks it), and with
+#   the format in the same function as the loop, the frame comes before the loop; the count as GetProgresso's argument
+#   gives the target's order.
+# - GetDetalheConsulta (fn 1923) has six direct callers in the target and one here: with 6999 alone binaryen inlines
+#   it. Unit 232's roots stand for the other five (two calls), and our link then forms the target's merge 6029 of it and
+#   comum::md::CLocal::GetContingencia (3724): 1923, 3724 and 6029 match. The static std::regex's exit destructor
+#   (14464) merges with 5492's static's (10901) into 6096, which matches, and 10901 with it; 14464 waits for the
+#   static's name.
+# What 6999 waits for (pnpm wasm score at this commit's link: 523 over 2253 rows, 440 of the 447 replaced operand-only,
+# 35 inserted, 41 deleted): std::regex_replace (fn 6958) keeps the regex and the format
+# as parameters in the target, (i32 i32 i32 i32 i32)->(), and loses them to dead-argument elimination here, (i32 i32
+# i32)->(), as both its call sites pass the same constants; that is not explained: SoletraNumero declared inline (its
+# static then reached through the GOT) gives the same fold, and a live caller passing another regex keeps the regex here and
+# moves no other row of 6999. So 6958 is `no-candidate`. In {progresso} the target leaves FormataProgresso's code with
+# one branch out of the tag's chain, and ours keeps one more block (FormataProgresso defined after GetProgresso gives
+# the same). The rest are local numbers. 6999 also reads its static std::regex and guard (1833216, 1833256), which no
+# other target function reads but 14464, which reads the object. 6999 scores the same with cvotacaostateaudio.cpp
+# compiled without strict aliasing. It stays written, as slot 14
+# (a trap would hide it), and the matches above rest on its code.
+#
+# std::regex's copies, src/app/roots_cbasetype.cpp and src/app/roots_regex.cpp (their comments say what each holds),
+# measured by whole links of this unit with roots_regex.o compiled at each set by hand (census, splat-symbols,
+# splat-match; rows against a081739b's splat/scan.tsv, 5 of whose new matches are the ones above):
+# - roots_regex.cpp as it was (the constructor from a C string at ECOURNA_CXXFLAGS): 5 rows turn `match`, none stops;
+# - the same at UENUX2_CXXFLAGS (no -fexceptions, no strict aliasing): 31 turn `match`, 5 stop (3329, 3524, 5186, 5188,
+#   6770; 3524, 5186 and 5188 are the std::string constructor's copies of three parser members whose const char*
+#   copies are 4242, 4203 and 6862);
+# - at UENUX2_CXXFLAGS with strict aliasing: 19 turn `match`, 8 stop;
+# - the C-string constructor in roots_cbasetype.o and a std::string one in roots_regex.o: 60, none stops; with the token
+#   iterator and std::regex_replace in roots_cbasetype.cpp too, as written: 65, none stops (2054, 4276, 4279, 4307 and
+#   5492 besides).
+# So the target's copies over const char* and of the token iterator are uenux2's without strict aliasing and without
+# landing pads, though cinputmenufield.cpp and cvotacaostateaudio.cpp, their users here, build in UENUX2_TBAA_DIRS;
+# that flag is not changed here.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CVOTACAOSTATEAUDIO_SRCS := src/app/vota/eleitor/cvotacaostateaudio.cpp \
@@ -234,7 +303,9 @@ UENUX2_SRCS += $(CVOTACAOSTATEAUDIO_SRCS)
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cconferevotoemcargo.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # cestadocomdesligamentoautomatico.cpp includes cconfiguracaoeleicao.h too
 $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cestadocomdesligamentoautomatico.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# fourteen members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
+# cvotacaostateaudio.cpp includes cconfiguracaoeleicao.h too
+$(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# thirteen members are not reconstructed: 97-uenux2-cvotacaostateaudio-pending.cpp gives the vtables trapping bodies, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/97-uenux2-cvotacaostateaudio-pending.o: $(ROOT)/src/units/97-uenux2-cvotacaostateaudio-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/97-uenux2-cvotacaostateaudio.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votaproporcional/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/votamajoritario/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/97-uenux2-cvotacaostateaudio-pending.cpp -o $(R)

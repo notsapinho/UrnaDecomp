@@ -8,7 +8,7 @@
 //   1267  CProcessoEleitoral::GetPleito2  1543 2787 5586 7787 11191 11223 11902
 //   1388  CCargo::GetDetalheCandidato 2268 6660 6671 7787 11888 12272, and 5747, written (3715 holds it inlined)
 //   1545  CDetalheCandidato::GetSuplente  2268 6660 6671 7787 12272, and 3715, which is written
-//   1547  GetNomeNeutro               6999 12587 13550, and 2796, 2302 and 4464, which are written
+//   1547  GetNomeNeutro               12587 13550, and 2796, 2302, 4464 and 6999, which are written
 //   2257  CEleicaoPE::GetCargos       861 5790 7787 (3774 and 3775, CConfiguracaoEleicao's GetCargosEleicoes and GetCargos,
 //         are written)
 //   3714  CEleicaoPE::ValidaOrdem     11371, three call sites; it reads nothing of this, and binaryen drops the parameter

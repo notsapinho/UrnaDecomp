@@ -49,6 +49,10 @@
 // TelaCompleta stand for the four ProcessInputAudio. The forms they return are left as they are, as nothing calls
 // these.
 //
+// comum::md::CCargo::GetDetalheConsulta (target fn 1923, a thunk into binaryen's merge 6029, whose other member is
+// comum::md::CLocal::GetContingencia, fn 3724) has six direct callers in the target: fns 3074, 3819, 5604, 6999, 7787 and
+// 11253. 6999 is written; unit 232's roots stand for the other five (DetalhesConsulta, two calls).
+//
 // The rest is declared through asm labels (a constructor returns `this` before binaryen runs).
 #include <cstdint>
 

@@ -44,7 +44,9 @@
 # Pending, none a trap, each with what it waits for (facts/asn1.md A10 has the measurements):
 # - 1928, 3552: pair::~pair and vector<Visitante>::__destroy_vector at -Oz. A compile at -Oz -fexceptions holds pair::~pair as
 #   a function of 1928's rows, and __destroy_vector calling it; -O2 and -O3 inline the destructor and -Os holds
-#   allocator::destroy. So they are the executable TU's copies, and wait for that TU's reconstruction. 518 is
+#   allocator::destroy. So they are the executable TU's copies, and wait for that TU's reconstruction. 1928 matches since
+#   unit 237, whose tree root at that TU's rule holds pair<string, shared_ptr<api::CWavFile>>'s destructor, the same
+#   body, and whose roots file reads its result in a stand-in for 3552, which still waits. 518 is
 #   ~CoderEnv: 5706 stores the rule at +0 and passes that address to 679 and to 518. That it is the same -Oz copy, as its
 #   call of 3552 suggests, is a reading. 3552 carries a hand edit for 2183's and 8851's sake.
 # - 1843 find_first_not_of: the same, the rows -Oz gives; -Os, -O2 and -O3 do not. It matches from src/app/roots_vector.cpp's
@@ -53,8 +55,8 @@
 #   5290 match from unit 229's root, at the executable TU's rule. 2704 and 2896 stay: 2704 is __split_buffer<char>'s
 #   destructor, a thunk into 2896, the body of a merge of 2704, 2545, 4675 and 5523, and our link has the whole
 #   destructor (unit 229's fragment).
-# - 2650 differs on one call: target 388, ours 424. Our link keeps one ~shared_ptr body where the target has two, and 2183
-#   and 3469 match over it (unit 86's note).
+# - 2650 differs on one call: target 388, ours 424. Our link kept one ~shared_ptr body where the target has two, and 2183
+#   and 3469 match over it (unit 86's note); since unit 237 it has both, and 2650 still calls 424's.
 # - 8902: calls 5056 and 1872, api's, and no runtime symbol.
 #
 # Chosen, with the forms measured to give the same bytes (one function's rows, object-local numbers masked):
