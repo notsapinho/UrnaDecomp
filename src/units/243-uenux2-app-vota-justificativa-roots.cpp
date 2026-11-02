@@ -1,5 +1,5 @@
 // Roots of src/units/243-uenux2-app-vota-justificativa.mk: the second call sites of four functions whose other target
-// caller, fn 10635 (vota::CEleitorEncontrado::StartState, pending in this unit), is not reconstructed. Each has two
+// caller, fn 10635 (vota::CEleitorEncontrado::StartState, pending in unit 104), is not reconstructed. Each has two
 // target callers or more (ledger/callgraph.tsv), and binaryen inlines a function with one call site:
 // - vota::NaoAceitaJustificativa (fn 4578, unit 168's votadefs.cpp): 10631 (in the link) and 10635;
 // - vota::CEleitorNaoEncontrado::GetInst (fn 5424, unit 161): 10631 (in the link) and 10635;

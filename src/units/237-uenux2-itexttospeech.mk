@@ -73,8 +73,9 @@
 # - 9650, 9831, 9897 and 10307 (main): `unresolved` on table slots of set<T> bodies that have no target name; 640 on
 #   unlock_shared_and_lock's; 9372 on a table slot of ours whose function the target's table does not hold.
 #   Since then 9372 matches (fragment 241), and 9650, 9831, 9897, 10307 and 640 with unit 170's has<T> roots and unit
-#   100's guard parameter of unlock_shared_and_lock; the push bodies' frame slot is no form of push but the order in
-#   which the executable TU emits its format code (unit 170's fragment), and 8834's first call matches (5417).
+#   100's guard parameter of unlock_shared_and_lock; none of the forms of push tried moves the push bodies' frame slot,
+#   read as the order in which the executable TU emits its format code (unit 170's fragment), and 8834's first call
+#   matches (5417).
 # - 2650 called the body matched as 424 (named after a twin with no result, boost's
 #   ~shared_ptr<basic_regex_implementation> of ecourna's cstringutils.cpp.o) where the target calls 388, read as waiting
 #   for a copy of ~shared_ptr<ASN1::IAbstractVisitor> with 388's body ahead of the runtime: it matches since unit 229's

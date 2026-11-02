@@ -165,8 +165,9 @@ each included: 8 agents on 12 CPUs and 24 GB, 4 on 8 CPUs and 12 GB.
   flag value, so the object would survive into everyone's link. Add the flag with `UENUX2_EXTRA=…` (or
   `ECOURNA_EXTRA=…`), never a command-line `UENUX2_CXXFLAGS`, which drops the fragments' target-specific additions
   and reaches the stand-ins. [facts/app-flags.md](reference/facts/app-flags.md) §F9 item 6 has the command and the
-  splat check of such a link. The directories `UENUX2_TBAA_DIRS` lists drop every `-fno-strict-aliasing` of the line,
-  an `UENUX2_EXTRA` one too, so measure them without strict aliasing with `UENUX2_TBAA_DIRS=`
+  splat check of such a link. The directories and files `UENUX2_TBAA_DIRS` lists, but the files `UENUX2_NOTBAA_FILES`
+  lists, drop every `-fno-strict-aliasing` of the line, an `UENUX2_EXTRA` one too, so measure them without strict
+  aliasing with `UENUX2_TBAA_DIRS=`
   ([facts/levels.md](reference/facts/levels.md) §V5). To measure one variant object in the whole link (a companion
   file against an overlay header, a source with one more flag), clone the objects with their mtimes (`cp -Rp
   build/out/app build/out/<handle>/app`), replace that one object, and pass the clone as `APP`: `make -n` then counts 0

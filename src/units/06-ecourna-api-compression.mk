@@ -12,8 +12,8 @@
 # CZip's destructor is declared in czip.hpp and defined in czip.cpp after Close: CompactaWsq calls its D2 (2690) out of
 # line, twice. Defined in the class, clang inlined it there (-Rpass=inline: cost 110 against 250; 170 with
 # ICompressor's destructor inline in its header, still inlined), and 5821 then held the D2's code where the target
-# calls 2690. Out of line, 2690 and the D0 (9540) still match from this object (the D0 holds the D2's code, the shape
-# an ecourna destructor out of line can take: docs/how-to-decompile.md step 5). Its line after Close is a choice the
+# calls 2690. Out of line, 2690 and the D0 (9540) still match from this object (the D0 holds the D2's code; measured:
+# 9540 matches from this object with the destructor out of line). Its line after Close is a choice the
 # use bands allow: in czip.cpp.o Close (2691) comes before the D2 (2690) in band 4 and the D0 (9540) between
 # CreateZipFile (9543) and ConvertToCompressLevel (9539) in band 1, as the index order asks (docs/how-to-decompile.md
 # step 3, "The order of two members"); defined right after the constructor, the D2 came before Close.
@@ -41,7 +41,9 @@
 # matches). globToFileList's lambda, `$_0::operator()` (9532, out of line: both loops invoke it through table slot
 # 6145, its two captures passed as parameters: a reading, clang's argument promotion), matches: it copies the entry's
 # path before it asks is_regular_file, as the target's 9532 does (its first rows copy the string at +0; with the test
-# first, as written before, it scored 104 over 388 rows). The rest is read from the rows of 5821, which hold Add and
+# first, as written before, it scored 104 over 388 rows). `&&` or a nested `if` for the two tests, and the copy `const`
+# or `auto`, give the same object; a reference for the copy gives another (the object compared at its compile line).
+# The rest is read from the rows of 5821, which hold Add and
 # globToFileList inlined:
 # Add calls Add(const std::vector<path>&) once on globToFileList's result (one invoke of slot 6151 with the vector at
 # +12, after the regex and the two paths are destroyed); the message of the throw builds on caminho (a copy of +128),
@@ -67,7 +69,8 @@
 # 261's stand-in gives it its second caller, and localtime (6270) and generic_category (1053) are unresolved
 # self-voted on a .bss word that only each reads in the target (localtime's buffer 1932496, generic_category's guard
 # 1926460: grep of the split's pieces), which no hand line may name (docs/reference/splat.md section 3, "No circular
-# evidence"). DoAdd now reads `unresolved` on table slot 3818, CZip::AtualizaProgresso, which has no target function.
+# evidence"). DoAdd now reads `unresolved` on table slot 3818, CZip::AtualizaProgresso, which no symbol line names
+# (9537 pairs with it by shape and is unresolved).
 # The ecourna compile rule has only -Isrc; these TUs include <boost/signals2/...> and <minizip/zip.h> (zlib contrib).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp

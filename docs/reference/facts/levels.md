@@ -410,7 +410,8 @@ uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TB
 `src/app/comum/gravadores/cgeracaoversoescontratos.cpp`) but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s
 `ctelasvota.cpp` and `crelvotautil.cpp`), and without it elsewhere; [app-flags.md](app-flags.md) §F6 has the
 evidence and the measurement of the split, and [reading.md](reading.md) §R21 reads the setting from a body. Measured
-at bbf27ac1.
+at bbf27ac1 for the four directories, at 36dda756 for `carquivossavd.cpp`, at b7c2e8a5 for the two files
+`UENUX2_NOTBAA_FILES` lists and at e5577685 for `cgeracaoversoescontratos.cpp` (§F6 has each).
 
 - **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
   written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object
@@ -421,7 +422,7 @@ at bbf27ac1.
   restates the split or its rule, which this lists (`asmlift-wasm/benchmark/dataset/selection-inputs/` is a snapshot
   pinned by blob id, and stays):
 
-      git grep -n -e UENUX2_TBAA_DIRS -e UENUX2_NOTBAA_FILES -e 'carquivossavd.cpp`' -- docs src/Makefile src/units/README.md asmlift-wasm/benchmark/README.md asmlift-wasm/benchmark/dataset/setups.json
+      git grep -n -e UENUX2_TBAA_DIRS -e UENUX2_NOTBAA_FILES -e 'carquivossavd.cpp`' -e 'cgeracaoversoescontratos.cpp`' -- docs src/Makefile src/units/README.md asmlift-wasm/benchmark/README.md asmlift-wasm/benchmark/dataset/setups.json
 
 - **The list drops every `-fno-strict-aliasing` of a line**, an `UENUX2_EXTRA` one too (`uenux2_cxxflags` in
   `src/Makefile`), but in the files `UENUX2_NOTBAA_FILES` lists. So `UENUX2_EXTRA=-fno-strict-aliasing` does not reach a

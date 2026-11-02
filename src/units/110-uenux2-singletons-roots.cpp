@@ -15,8 +15,8 @@
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 652, 2881, 11242 and 12110
 //   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 6034, 7174, 10635 and 11616 (2822, 2825 and 10210 are
 //                       in the link)
-//   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fns 3616
-//                       and 10631 (5385, unit 214's, 10789 and 10790, unit 119's, are in the link)
+//   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fn 3616
+//                       (5385, unit 214's, 10631, unit 104's, 10789 and 10790, unit 119's, are in the link)
 //   s11479              comum::RespostaCorrente, which the target reaches only by table slot 1096 (fn 6652 passes it):
 //                       its address is taken
 //   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes

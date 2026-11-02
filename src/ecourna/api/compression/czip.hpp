@@ -10,7 +10,9 @@
 namespace ecourna::api::compression {
 
 // A zip archive written through zlib's minizip (zipOpen64/zipOpenNewFileInZip2_64/zipWriteInFileInZip/zipClose).
-// Layout (40 bytes): ICompressor(16) + m_arquivo(12) + m_zip(4) + m_nivel(4) + m_modo(4).
+// Layout (40 bytes): ICompressor(16) + m_arquivo(12) + m_zip(4) + m_nivel(4) + m_modo(4). The destructor is defined in
+// czip.cpp: CompactaWsq calls its D2 (target fn 2690) out of line, which a definition in the class does not give
+// (src/units/06-ecourna-api-compression.mk).
 class CZip : public ICompressor {
 public:
     enum class EModoAbertura {
@@ -21,8 +23,6 @@ public:
     // Defined in czip.cpp (target fn 5193), where comum::CGravadorWSQ::CompactaWsq calls it out of line
     // (src/units/06-ecourna-api-compression.mk).
     CZip(const std::filesystem::path& arquivo, ENivelCompressao nivel);
-    // Defined in czip.cpp too: CompactaWsq calls its D2 (target fn 2690) out of line, which a definition in the class
-    // does not give (the same fragment).
     ~CZip() override;
 
     void Close() override;

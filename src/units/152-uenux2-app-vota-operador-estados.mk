@@ -64,6 +64,7 @@
 #   target's +24 (27 over 101 rows, ten of them frame offsets), and so with the text taken through a helper instead;
 #   through Justificou, 10 over 101, no frame offset among them. 3741 now comes from this object, which links ahead of
 #   unit 113's roots (their stand-in for 10587's search went). Chosen: the helper's name and linkage, the local's name.
+#   Not measured, and they may give the same bytes: a lambda or a static member in Justificou's place.
 #
 # Chosen, no evidence names them: every data member's name and, where only a width shows, its type (bool for the bytes,
 # ueint64 for +16); GetInst and the private constructors, declared and not defined but for CDesabilitaAudioEleitor's

@@ -15,7 +15,9 @@ const void* volatile w261_sink;
 
 // Stands for fn 5571 (comum, not written; its callers are 5572 and 11166, slot 9 of comum::impl::CValidaMidia's
 // vtable), which calls std::filesystem::remove_all on each path of a list it builds, with __remove_all inlined into it
-// (its one caller). One call here, so binaryen inlines it into this stand-in in the same way.
+// (its one caller). One call here, so binaryen inlines it into this stand-in in the same way. The `+ 1` gives the
+// stand-in a body of its own and stands for no reader: 5571 drops both results, and a stand-in that drops this one
+// moves no row (measured).
 __attribute__((noinline)) unsigned long long RemoveTudo(const void* caminho)
 {
     return w261_remove_all(caminho, nullptr) + 1;

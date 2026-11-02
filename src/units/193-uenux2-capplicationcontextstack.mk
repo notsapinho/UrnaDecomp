@@ -82,7 +82,8 @@
 #   defined after the guard's destructor, and a hand loop over the reverse iterators scored 53 over 110. Returning the
 #   bool, the found case written first (`return true` in the if, `return false` after it) and `(it + 1).base()` give
 #   the object's Pop and guard destructor unchanged (wasm-objdump -d of the object at the tree's flags, against the
-#   form written). The guard's destructor (fn 675), which holds Pop inlined and drops its result, matches either way.
+#   form written; the guard's destructor compared by its D1, the symbol the object defines). The guard's destructor (fn
+#   675), which holds Pop inlined and drops its result, matches either way.
 # - Roots: 193-uenux2-capplicationcontextstack-roots.cpp stands for the callers of Pop, CriaContextoAplicacao,
 #   CriaContextoPadrao and the copy constructor that are not reconstructed (its header lists them); the guard's are in
 #   unit 171's.

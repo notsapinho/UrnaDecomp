@@ -65,7 +65,8 @@
 # pnpm wasm score before steps 7 to 9:
 # - The constructor (fn 1905, matched, named by `call` from 5424), out of line in ieleitorimpedidovotar.cpp, above the
 #   destructor (a choice: no band holds both). Its callers are 5424 and 10635, which calls it five times, for the other
-#   five derived classes, passing 1; 5424 passes 0, so binaryen folds no constant. It takes two
+#   five derived classes, passing 1; 5424 passes 0, so binaryen folds no constant (in our link the call that passes 1
+#   is unit 243's stand-in for 10635). It takes two
 #   std::function<std::string()> by value (a choice: const& was not tried; the body copies each into the builder's
 #   AddTextField over a std::function, fn 5419, which the target does too) and the int at +20, which it stores before it
 #   clears the form member at +12 and reads back for the switch; the form: AddLed(0), the identity typed (table slot 3907, fn

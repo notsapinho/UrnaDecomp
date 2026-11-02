@@ -34,17 +34,17 @@
 #         (wasm-objdump -d of GetTextLines with the call and global.get indices masked, every object compiled from one
 #         path); a count is of the lines that differ:
 #         - UltimoEspaco takes the line as a parameter: a lambda in GetTextLines that takes it as its parameter gives the
-#           same code, one that reads the captured linha differs (94).
+#           same code, one that reads the captured linha differs (96).
 #         - its loop has the find in its test, from a start position: `while ((espaco = linha.find(' ', inicio)) !=
 #           npos && ... <= largura)`; `while (true)` with the find at the top and one break gives the same code. The
-#           next find at the end of the body (the earlier form) differs (110), and so do a for over the finds (110) and
+#           next find at the end of the body (the earlier form) differs (112), and so do a for over the finds (112) and
 #           the find from corte + 1 (454).
 #         - the character search is `while (tamanho < linha.size())` with the cut set in the else of the width test: the
 #           target sets corte = tamanho - 1 straight from the width test, with no test of tamanho against the size it
 #           reloads after the call, and lays the increment's block before the cut's. A for with continue gives the same
 #           code. The earlier form, the test after the loop, differs (297), and so do a for with the cut set before a
 #           break and a while with the break first (63 each).
-#         - find(' '), since the target calls memchr and subtracts, the char overload's code: find(" ") differs (331).
+#         - find(' '), since the target calls memchr and subtracts, the char overload's code: find(" ") differs (333).
 #         - const int largura = m_rect.Width(), read before GetText, since the target loads m_rect.left and .right
 #           before its first call: const TPosition largura differs (18), m_rect.right - m_rect.left + 1 written out
 #           differs (9).
@@ -63,10 +63,11 @@
 #   Draw's CFixedText likewise brings CFixedText's GetText (1139), D0 (7666) and D2 (7706) from this object, ahead of
 #   app/uenux2/src/app/vota/operador/outrasopcoes/cinputfieldmt.cpp.o, whose copies they were; all three still match.
 # Chosen, as no evidence gives them: every local and parameter name, the data members' names (ctextfieldmultiline.h),
-# UltimoEspaco's name, that it is a free function of the anonymous namespace (it reads no class state) rather than the
-# lambda above, its parameters' order and types, its place (the lines before GetTextLines, which no record holds),
-# Move's place in the file, and Draw and Rect after GetTextLines, whose line its record fixes. Draw before Rect is the
-# band's order (ledger/ordinals.tsv, uses 1).
+# UltimoEspaco's name, that it is a free function (it reads no class state) rather than the lambda above (its internal
+# linkage is the bytes': with external linkage GetTextLines differs, 669 lines, and `static` gives the same object as
+# the anonymous namespace), its parameters' order and types, its place (the lines before GetTextLines, which no record
+# holds), Move's place in the file, and Draw and Rect after GetTextLines, whose line its record fixes. Draw before Rect
+# is the band's order (ledger/ordinals.tsv, uses 1).
 UENUX2_SRCS += src/api/gui/ctextfieldmultiline.cpp
 # a caller of the ctor beside 2782 (api::CFormBuilder::AddTextFieldMultiLine, unit 31) and two more CUeGuiError throw
 # sites (14-uenux2-ctextfieldmultiline-roots.cpp), so binaryen neither inlines the ctor nor the CBaseError<EUeGuiError>

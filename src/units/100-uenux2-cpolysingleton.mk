@@ -195,7 +195,8 @@
 #   std::literals for std::string_literals; std::pair{…} for make_pair; end() != it; find_if over two iterators; std::find_if;
 #   a local bool in has<T>; a non-const name in has<T>; const_cast for mutable; `const auto&` for the structured binding;
 #   has<T> taking the info non-const (the rows differ in the symbol of one call, which binaryen merges with the other).
-# - other bytes: no `inline` on unlock_shared, or none on ~CTravaLeitura; std::shared_lock (its destructor stays out of
+# - other bytes: no `inline` on unlock_shared, or none on ~CTravaLeitura; std::shared_lock<CMutexCompartilhado> in
+#   CTravaLeitura's place, whose two words and release() read as fitting 13621's stores too (its destructor stays out of
 #   line, cost 245 against 225: levels.md §V2); a while loop for the wait's predicate, or `<= 0` in it; no copy of the
 #   shared_ptr; has<T>(info); the name before the lock in instance<T> or after it in has<T>; a non-const name in
 #   instance<T>; .first and .second for the structured binding; the test inverted around the throw in

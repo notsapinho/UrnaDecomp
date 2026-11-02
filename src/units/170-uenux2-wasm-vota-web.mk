@@ -131,6 +131,7 @@
 # - `new simulador::CWasmWebSound()` in the lambda, value-initialized: the object is zeroed and the implicit
 #   constructor's stores leave the target's i32 at +4 and i64 at +8 (15 over 123 rows, all operand-only), where
 #   `new simulador::CWasmWebSound` gave an i64 at +4 and a byte at +12 (23 over 126, 3 inserted, 3 deleted).
+#   `new simulador::CWasmWebSound{}` gives the same object as `()` (`cmp`, the TU compiled at its rule).
 # - simulador::Inicializa taking the std::function by reference (unit 188's fragment): by value, main's frame is 96
 #   bytes and InitApplication's first string has a slot of its own (234 over 958 rows, 15 inserted); by `const&`, as
 #   written, or by `&&` (both 80 bytes, the TU's object compiled alone) the frame is 80 bytes, the string sharing the

@@ -176,21 +176,21 @@
 #   written (docs/how-to-decompile.md step 5).
 # - comum::CGravadorWSQ::CompactaWsq (fn 5821): written (above) and `differs`, its first difference the frame (scan
 #   detail +0x6: the target's is 160 bytes, ours 80). It scores 453 over 3911 rows (pnpm wasm score: 15 inserted, 19
-#   deleted, 411 of 419 replaced operand-only); ecourna's globToFileList, its lambda and ~CZip are written as the target
-#   has them (unit 06's fragment), and the rest is the frame's slot offsets, the locals' numbering, block placement (the
-#   place of the inlined Add's epilogue) and the store order of the inlined CreateDir's string (unit 32's code).
-#   The frame, measured on cgravadorwsq.cpp.o (wasm-objdump -d, and -emit-llvm for the allocas): clang gives
-#   CompactaWsq seven allocas (the vector, two CZip, three paths and the "*.wsq" string) and packs them into 80 bytes,
-#   the vector at 68, the CZip at 28, the paths at 16 and the string at 0. The target's 5821 uses 148 (the vector), 104
-#   (the CZip), 88 (the string) and 64 (the paths) of 160, and no instruction of it addresses 0 to 63, 76 to 87, 100 to
-#   103 or 144 to 147. A reading of that layout, slots in frame-index order from the top and an inline memset or memcpy
-#   raising a slot's alignment to 8 (our string at 0 leaves 12 to 15 empty so): the vector, the CZip, the string, a
-#   12-byte object, the paths and a 64-byte object aligned to 16, the size of a three-argument std::format store or of
-#   a std::filesystem::directory_entry. No instruction of the target uses the two, so their code is gone: a reading
-#   that binaryen removed it after folding a constant (docs/reference/facts/reading.md R1 has the pass). The file's three
-#   records are all loaded (ledger/source-locations.tsv), so no record shows it. What it was is not recovered, so it is
-#   not written, and 5821 waits for it. Its name is a callers+content hand line of splat/symbol_addrs.txt, on the three
-#   records it alone loads
+#   deleted, 411 of 419 replaced operand-only); ecourna's globToFileList, its lambda and ~CZip are written in the forms
+#   5821's rows show (unit 06's fragment; the lambda matches, and globToFileList is read off 5821's rows), and the rest
+#   is the frame's slot offsets, the locals' numbering, block placement (the place of the inlined Add's epilogue) and
+#   the store order of the inlined CreateDir's string (unit 32's code). The frame, measured on cgravadorwsq.cpp.o
+#   (wasm-objdump -d, and -emit-llvm for the allocas): clang gives CompactaWsq seven allocas (the vector, two CZip,
+#   three paths and the "*.wsq" string) and packs them into 80 bytes, the vector at 68, the CZip at 28, the paths at 16
+#   and the string at 0. The target's 5821 uses 148 (the vector), 104 (the CZip), 88 (the string) and 64 (the paths) of
+#   160, and no instruction of it addresses 0 to 63, 76 to 87, 100 to 103 or 144 to 147. A reading of that layout, slots
+#   in frame-index order from the top and an inline memset or memcpy raising a slot's alignment to 8 (our string at 0
+#   leaves 12 to 15 empty so): the vector, the CZip, the string, a 12-byte object, the paths and a 64-byte object
+#   aligned to 16, the size of a three-argument std::format store or of a std::filesystem::directory_entry. No
+#   instruction of the target uses the two, so their code is gone: a reading that binaryen removed it after folding a
+#   constant (docs/reference/facts/reading.md R1 has the pass). The file's three records are all loaded
+#   (ledger/source-locations.tsv), so no record shows it. What it was is not recovered, so it is not written, and 5821
+#   waits for it. Its name is a callers+content hand line of splat/symbol_addrs.txt, on the three records it alone loads
 #   (cgravadorwsq.cpp:175 and :192, icompressor.cpp:61), which slots 2, 3 and 6 and their merged body need: no vote
 #   reaches 5821, since its callers are named by vtable or by content.
 GRAVADORES_SRCS := src/app/comum/gravadores/cgravadorutil.cpp src/app/comum/gravadores/iresultado.cpp \

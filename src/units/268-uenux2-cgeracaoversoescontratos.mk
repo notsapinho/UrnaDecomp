@@ -56,8 +56,9 @@
 # of each was measured. GetInst and the constructor are not written: they wait for 12098 and the INI loader (fn 5480).
 # Nor is the destructor (fn 5866, a function of its own in the target, called by 12098 and fn 11636): its band place
 # follows md/cversoesarquivos.cpp's rows, not this file's. The stand-in for 1163's callers (two calls through its
-# label) and roots_set.cpp's body (an uncalled insert at the end hint), its name and its place are choices; one form of
-# each was measured.
+# label), roots_set.cpp's body (an uncalled insert at the end hint) and its name are choices; one form of each was
+# measured. The root's place is measured as far as it goes: ahead of roots_rhvoice.o 152 differs and 447 reads
+# unresolved (above), so it links after it; that it is last, after roots_boost.o too, is the choice.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 W268_SRCS := src/app/comum/gravadores/cgeracaoversoescontratos.cpp

@@ -13,11 +13,12 @@
 //   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620; 652,
 //   10527, 10676), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10689, 10706; 10680 is in the link), SetIdentidadeDigitada (5414;
 //   10677), SetTipoIdentidadeDigitada (3619; 10626, 10627, 10677), GetIdentidadeDigitada (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link),
-//   GetTipoIdentidadeDigitada (5416; 10588, 10664), GetIdentidadeEleitor (1535; 3616, 10425, 10587, 10590, 10631),
+//   GetTipoIdentidadeDigitada (5416; 10588; 10664, unit 161's, is in the link), GetIdentidadeEleitor (1535; 3616,
+//   10425, 10590; 10587 and 10631, units 152's and 104's, are in the link),
 //   SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor (2745; 10425).
 //   GetTextoAudio (10584) and GetTextoComparecimento (10583) have no direct caller: fn 652 passes their table slots (4054
 //   and 4053), and the sink takes their addresses. So does it for GetTextoIdentidadeDigitada (10586), whose slot 3907 fns
-//   1905, 2735, 2747, 3625, 5418, 10439, 10500, 10588 and 10635 pass (1150, 1901 and 5401, which pass it too, are in
+//   2735, 5418, 10439, 10500, 10588 and 10635 pass (1150, 1901, 1905, 2747, 3625 and 5401, which pass it too, are in
 //   the link).
 extern "C" {
 int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv");

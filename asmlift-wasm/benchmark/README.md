@@ -120,10 +120,11 @@ share it.
 - **uenux2** has few reconstructed units, so its rows also come from the ledger's attribution
   (components `vota-web` and `comum` for `uenux2`, `vota` and `simulador` for `uenux2-tbaa`): `evidence: "component"`, no object, no
   reference. A component is listed by one setup, the first that lists it decides (`resolveIndex`), and a split by
-  directory can divide one: `comum`'s data classes (`dados/md/`) and `carquivossavd.cpp` build with strict aliasing
-  and the rest of `comum` without, so a `component` row of `comum` takes `uenux2`'s flags wherever its function was, a
-  guess; `vota`'s two files without it (`ctelasvota.cpp`, `crelvotautil.cpp`) divide `vota` the other way. A row with
-  a strong name is resolved by its object instead. `api` is in no setup's list, so an `api` row comes only by a name.
+  directory can divide one: `comum`'s data classes (`dados/md/`), `carquivossavd.cpp` and
+  `gravadores/cgeracaoversoescontratos.cpp` build with strict aliasing and the rest of `comum` without, so a `component`
+  row of `comum` takes `uenux2`'s flags wherever its function was, a guess; `vota`'s two files without it
+  (`ctelasvota.cpp`, `crelvotautil.cpp`) divide `vota` the other way. A row with a strong name is resolved by its object
+  instead. `api` is in no setup's list, so an `api` row comes only by a name.
 
 ## The dataset
 

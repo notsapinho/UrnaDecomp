@@ -232,7 +232,8 @@
 #   or after it) nor StartState above or below its helper moved that score.
 # Chosen: EstadoAposProcura's name and its being a free function of namespace vota (it reads no state of the class), the
 # found branch last (the target's block order), the locals' names, celeitorencontrado.h's path and the lines of
-# CEleitorEncontrado's members and statics.
+# CEleitorEncontrado's members and statics. Not measured, and they may give the same bytes: EstadoAposProcura in
+# another file, or a static member in its place.
 #
 # Roots: the pair for vota::CQuerReimprimirZeresima::GetInst (5940) went, its one target caller, 11835, being in the
 # link (unit 138). The pairs for CReimprimindoZeresima::GetInst (5941) and CReimprimindoResumoZeresima::GetInst (5942)

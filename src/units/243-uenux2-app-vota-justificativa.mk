@@ -12,14 +12,16 @@
 #   IIniciaJustificativa's constructor (3624) after. In one TU clang inlines it, and 10631 scored `69 over 277 rows
 #   (same 208, replaced 64 [61 operand-only], inserted 3, deleted 2)` with the object reloaded before 3624's call; in two,
 #   `69 over 276 rows (same 207, replaced 65 [65 operand-only], inserted 2, deleted 2)`, the reload gone (pnpm wasm score,
-#   the rest of the tree unchanged; the rows left were unit 104's measured local swap). The data agree: each class's
-#   vtable is followed by its typeinfo (ledger/classes.json), and CConfirmaJustificativa's, CIniciaJustificativa's,
-#   CConfirmaJustificativaTemporario's, CIniciaJustificativaTemporario's, CConfirmaJustificativaTransito's and
-#   CIniciaJustificativaTransito's alternate in that order (@1589252 to @1589532), after IEleitorImpedidoVotar's
-#   (@1589136, unit 161) and before CJustificativaEfetuada's (@1589804, unit 142); in use band 1 the statics' exit
-#   destructors link in the same order, 10622 and 10621, then 10617 and 10616. Which file names the six objects have,
-#   and that the link line is not in name order there, is not evidence: the names are the classes', how-to step 3's
-#   rule 4, chosen. The sources below keep the data's order.
+#   the rest of the tree unchanged; the rows left were unit 104's measured local swap). The data order is evidence for
+#   the two files too: compiled in one TU the two classes lay out both vtables, then both typeinfos (wasm-objdump -x),
+#   and in two each vtable is followed by its typeinfo, the target's order (ledger/classes.json), and
+#   CConfirmaJustificativa's, CIniciaJustificativa's, CConfirmaJustificativaTemporario's,
+#   CIniciaJustificativaTemporario's, CConfirmaJustificativaTransito's and CIniciaJustificativaTransito's alternate in
+#   that order (@1589252 to @1589532), after IEleitorImpedidoVotar's (@1589136, unit 161) and before
+#   CJustificativaEfetuada's (@1589804, unit 142); in use band 1 the statics' exit destructors link in the same order,
+#   10622 and 10621, then 10617 and 10616. Which file names the six objects have, and that the link line is not in name
+#   order there, is not evidence: the names are the classes', how-to step 3's rule 4, chosen. The sources below keep the
+#   data's order.
 # - CConfirmaJustificativa's destructor is out of line in its .cpp, so the class has a key function: 10631 frees a
 #   replaced object with `this` after a call of IConfirmaJustificativa's D2 (1688), the out-of-line shape
 #   (docs/reference/facts/reading.md R5); with the destructor implicit, our object freed what the D2 returns. Its slot 0
@@ -38,7 +40,8 @@
 #   it waits for them, and the pointer's .bss name rests on a `callers+content` hand line in splat/symbol_addrs.txt
 #   (10622 reads it; without the line 10631 reads `unresolved self-voted`).
 #
-# Chosen: the four paths, FraseNaoPertence's name and linkage, the statics' names and the lines.
+# Chosen: the four paths, FraseNaoPertence's name and linkage, the statics' names and the lines. Not measured, and
+# they may give the same bytes: a lambda or a static member in FraseNaoPertence's place.
 #
 # Roots (243-uenux2-app-vota-justificativa-roots.cpp): CEleitorEncontrado::StartState (10635, pending in unit 104) is
 # not written, and four functions it calls have one other caller each in the link: vota::NaoAceitaJustificativa (4578,

@@ -148,7 +148,8 @@
 #   AceitaJustificativa (5918) on CConfiguracaoEleicao::GetInst().GetParametrosUrna() (fns 187 + 88, 603), the `xor 1`
 #   in the target's body. Its two callers keep the call: vota::CProcuraEleitor::StartState (10631, unit 104's
 #   cprocuraeleitor.cpp, through its helper) and vota::CEleitorEncontrado::StartState (10635, pending in unit 104,
-#   celeitorencontrado.cpp's), so it is in a TU of neither; 10631 is in the link and unit 243's roots stand in for
+#   celeitorencontrado.cpp's), so it reads as in a TU of neither (a reading: clang inlining it into a caller of its own
+#   TU was not measured); 10631 is in the link and unit 243's roots stand in for
 #   10635. `pnpm wasm score` against the link: 1 over 21 rows, operand-only; matched (named by `call` from 10631). It
 #   reads no state: a free function of vota. Chosen: the name (the field 5918 reads is the one cparametrosurna.hpp calls
 #   aceitarJustificativa), the file and the line, last.

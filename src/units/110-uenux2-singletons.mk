@@ -231,16 +231,17 @@
 # blank lines above the statics (lines 11 to 22 stay unknown).
 #
 # CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) (fn 2264; callers 3616, 5385, 10631, 10789
-# and 10790, only 5385 written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it, which clang
-# inlines into 2264 and binaryen into fn 2225 (unit 50's CInformacaoThreadOperador::AtualizaIdentidadesEleitor), its
-# one other caller; out of line is a measurement, in src/units/50-uenux2-cinformacaothreadoperador.mk. 2264 builds a
-# CEleitorIdentidade (566) from a copy of the string and the type, finds it in the map at +112 (1703), finds the value
-# it maps to in the base's map (1703 again), sets the cursor at +16 and returns the record's address, or null. The map
-# at +112 is std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265)
-# and the find (1703) keep their bytes under the new types, and step 9 renamed both match lines to the new symbols. The
-# names, the file and the lines (after the destructor, the CEleitorIdentidade overload first) are chosen; the named
-# local for the identity is measured (celeitores.h). The roots' LocalizaEleitores stands for 2264's callers not in the
-# link, 3616 and 10631 (5385 is, and so are 10789 and 10790, unit 119's slots 14 and 13).
+# and 10790, 5385 and 10631 written) in celeitores.cpp, over the CEleitorIdentidade overload, out of line before it,
+# which clang inlines into 2264 and binaryen into fn 2225 (unit 50's
+# CInformacaoThreadOperador::AtualizaIdentidadesEleitor), its one other caller; out of line is a measurement, in
+# src/units/50-uenux2-cinformacaothreadoperador.mk. 2264 builds a CEleitorIdentidade (566) from a copy of the string and
+# the type, finds it in the map at +112 (1703), finds the value it maps to in the base's map (1703 again), sets the
+# cursor at +16 and returns the record's address, or null. The map at +112 is std::map<md::CEleitorIdentidade,
+# md::CEleitorIdentidade> now (celeitores.h says why): its destroy (2265) and the find (1703) keep their bytes under the
+# new types, and step 9 renamed both match lines to the new symbols. The names, the file and the lines (after the
+# destructor, the CEleitorIdentidade overload first) are chosen; the named local for the identity is measured
+# (celeitores.h). The roots' LocalizaEleitores stands for 2264's caller not in the link, 3616 (5385 and 10631 are, unit
+# 104's, and so are 10789 and 10790, unit 119's slots 14 and 13).
 #
 # ctelasvota.cpp also holds vota::MensagemErroCargo (target fn 690, 735 B, no record), the text the screens throw with:
 # tela + " - cargo " + std::to_string(cargo.GetID()) + " (" + cargo.GetNomeMasculino() + ") - " + erro (fn 6602 throws

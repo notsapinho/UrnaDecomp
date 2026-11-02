@@ -443,7 +443,7 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   does. Whether TSE's build gave strict aliasing to that TU or to its directory, no row says: with all nine of
   `src/app/comum/`'s top-level files built with it (six of the other eight objects change), the link is byte-identical to
   the one with the file alone. So the file is listed and its directory stays a choice, and the split, by directory and
-  one file, is a reading of the original build's settings like the rest of it.
+  file, is a reading of the original build's settings like the rest of it.
 
   One file was measured the other way and is not in the rule: `md/rdv/cvotoscargos.cpp` without strict aliasing. Its
   copy of a map's `__emplace_hint_unique_key_args` (5681) reloads the child pointer after the begin node's store, as
@@ -487,9 +487,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   | all five | 1 no longer verifies | 6579 12006 12007 | 5491 |
 
   With the two files listed, the compile lines `make -n -C src link APP=<a new directory>` prints (845) differ from
-  b7c2e8a5's in those two objects' alone, each by `-fno-strict-aliasing`; built in place, 921 of the 923 objects are
-  `cmp`-equal to b7c2e8a5's, the other two are the variants', and so is the link. The other three files keep strict
-  aliasing, each for its own reason:
+  b7c2e8a5's in those two objects' alone, each by `-fno-strict-aliasing`; with every link object compiled again from
+  nothing, 845 of the 847 are `cmp`-equal to b7c2e8a5's, the other two are the variants', and so is the link. The other
+  three files keep strict aliasing, each for its own reason:
   - `cinputmenufield.cpp`'s destructor (5491) clears a `std::list` as only code with TBAA does (unit 84's fragment).
   - `ctesteteclado.cpp` gains no row. Its scores read as built without TBAA, but no verdict follows: with 5412's
     distribution as `unsigned long`, 11803 (`GeraSequencia`'s `std::shuffle`) goes from 255 over 447 rows to 24, and
