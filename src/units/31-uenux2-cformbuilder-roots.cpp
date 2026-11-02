@@ -148,7 +148,7 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 //                         (652, 1901, 1905, 2734, 2735 and the other 44)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
 //   FormPapelC   the callers of 357 (Build): 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11908, 11946,
-//                12005, 12105 and 12110, not reconstructed (11256 and 2890 are in the link); it calls Build twice
+//                12105 and 12110, not reconstructed (11256, 2890 and 12005 are in the link); it calls Build twice
 __attribute__((noinline)) int FormMTA(api::CMTFormBuilder& form, const std::string& nome, bool limpa)
 {
     const auto simples = form.GetForm(nome);

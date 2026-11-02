@@ -2,7 +2,8 @@
 // signatures, so this TU instantiates nothing and each template below keeps the copy of the first object that defines it.
 //
 // - std::string::append<const char*> (178): 76 direct callers in the target, one in our link, std::getline's, so binaryen
-//   inlines it there. AppendStandIn stands in for the others. ecourna's icompressor object is the first to define it.
+//   inlines it there. AppendStandIn stands in for the others. The first object to define it is
+//   mock/app/comum/cappinfobuilder.cpp's (unit 253).
 extern "C" {
 int avn_append(int, int, int) __asm__("_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendB8ne210108IPKcTnNS_9enable_ifIXsr31__has_forward_iterator_categoryIT_EE5valueEiE4typeELi0EEERS5_SA_SA_");
 }

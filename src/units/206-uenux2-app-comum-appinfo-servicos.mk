@@ -39,14 +39,15 @@
 #   turn, the origin and the vptr and, when the turn is 51 (TURNO_ATUAL), builds a CServicoEstadoGeral (1941) and calls
 #   3791 on it, taking the turn at +32 of the state it returns. 3791 (3956 B, its stub in api/io/asn/cfileasn.h) reads
 #   the file, with CFileASN's reading inlined (a reading of its strings, "ReadFromFile de " and "O arquivo [{}] não
-#   existe"), and calls 518 and 679, both no-candidate: 518 is ~CoderEnv at -Oz and 679 holds CoderEnv::decode
+#   existe"), and calls 518 and 679, which match since unit 229: 518 is ~CoderEnv at -Oz and 679 holds CoderEnv::decode
 #   (docs/reference/facts/asn1.md A10). The headers declare the constructors with the types of the members they store.
 # - The template's save, 2894 (thunks 3592, 5329, 10089, 10112), and what it calls through the table slots its thunks
 #   pass: IConversorASN<E, D>::Converte, merged as 2893 (thunks 9997, 10019, 10051, 10170, which pass the records
 #   iconversorasn.h:56 and the entities' typeid names), with 9843, a format-argument store whose only caller is 2893;
 #   and CFileASN's writer, merged as 2892 (thunks 9985, 10008, 10040, 10168), which opens a CFile "wb" through slot 445
 #   (fn 517) and calls a second merge, 2891 (thunks 9820, 9703, 9701, 9684), over CFileASN::CodeObjectFunction (9801,
-#   9702, 9695, 9673, records cfileasn.h 161 and 171), with CFile's inline destructor 3564 (callers 2892 and 9538). Each
+#   9702, 9695, 9673, records cfileasn.h 161 and 171; they and their merge 2927 match since unit 229), with CFile's
+#   inline destructor 3564 (callers 2892 and 9538). Each
 #   has landing pads, an -fexceptions TU's copies. The target calls the four saves through invoke_* only in
 #   mock/app/comum/cappinfobuilder.cpp's 10243 (slot 422) and 10212 (slots 433, 436, 440); 3333 and 6039 call 3592 and
 #   5329 directly. A probe object that instantiates the save for two of the classes (the path, a copy of its string, the

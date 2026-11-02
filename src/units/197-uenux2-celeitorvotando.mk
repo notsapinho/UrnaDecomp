@@ -172,8 +172,9 @@
 #   __emplace_hint_unique_key_args: 4454's call is the only vote for 5681's name (`evidence:call by:4454` in
 #   splat/symbol_addrs.txt), and 5681 does not match (unit 13's fragment). 4454 waits for a second voter: 5681's other
 #   target caller, 11349 (comum::asn::CConversorEleicoesVota::DoDesconverte, not written), or 5681's own match. 5681's
-#   target body has the reload a TU without strict aliasing gives, which 4454's does not, so the two are read as copies
-#   of different TUs: 11349's object, app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp, is outside UENUX2_TBAA_DIRS
+#   target body has the reload that cvotoscargos.cpp gives without strict aliasing (measured), which 4454's does not; a
+#   reload is no proof by itself (docs/reference/facts/app-flags.md F9 item 8), so that the two are copies of different
+#   TUs is a reading: 11349's object, app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp, is outside UENUX2_TBAA_DIRS
 #   and its records (1571240) lie ahead of md/rdv/'s in the target's data, so a reading, not measured, is that the
 #   target keeps that object's copy of 5681. 3709, the destroy of ConfereCedula's count map (written by it,
 #   std::map<TCargoID, size_t>), matches: 4454's srcloc-anchor name casts its call votes. So do the exit destructors of

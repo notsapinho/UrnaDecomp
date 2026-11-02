@@ -13,7 +13,8 @@
 // and copies it to +0 (src/units/219-uenux2-cwasmclp.mk has the store order measured); +0's type, IImpressora*, and
 // +4's, IImpressoraRelatorios*, are chosen.
 //
-// A singleton: GetInst (fn 3876) keeps the object in a static std::unique_ptr (@1834044, destroyed at exit by fn 12016)
+// A singleton: GetInst (fn 3876, a chosen name) keeps the object in a static std::unique_ptr (@1834044, destroyed at
+// exit by fn 12016)
 // under a static std::mutex (@1834020, by fn 12015), the shape of the vota states' accessors, with the constructor out
 // of line. Fn 3875 is a member: it reads +4. Its three callers (fns 2882, 3671, 11908) pass a CSubReport and a
 // std::function<void()> they build (a lambda's __func); it calls the printer's slot 9 when +4 is set, the

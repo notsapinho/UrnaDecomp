@@ -123,7 +123,8 @@ public:
     // fits parameters every caller passes alike, folded by binaryen (a reading). With both colours constants of the
     // body 3678 differs; with the text colour a parameter it matches, the background a parameter or a constant alike
     // (src/units/31-uenux2-cformbuilder.mk has the measurements). The names, the overloading, the background's being a
-    // parameter and the parameters' order beyond the wasm's are chosen
+    // parameter, the colours as default arguments (= 2, = 1: each call passing them gives the same code) and the
+    // parameters' order beyond the wasm's are chosen
     void AddLabeledKey(const std::string& tecla, const std::string& rotulo, ETextAlignment alinhamento,
                        TColor corTexto = static_cast<TColor>(2), TColor corFundo = static_cast<TColor>(1));
 

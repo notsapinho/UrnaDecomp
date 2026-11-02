@@ -420,8 +420,10 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   simulator strict aliasing, clang's default, and comum's converters and the directories around them none. It is a
   reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it; `dados/md/` and the files
   beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
-  directories) the setting is a choice. Still open: 4454, whose `md/rdv/` members reload in the target, is written and differs, and a probe link with
-  `md/rdv/` built with `-fno-strict-aliasing` does not close it (unit 197's fragment); 5725 and
+  directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, written), which holds
+  `md/rdv/`'s `InsereCedula` and `ConfereCedula` inlined, has none of their reloads in the target: at the split every
+  row of it is an operand row, and with `md/rdv/` or `cvotoscargos.cpp` alone built with `-fno-strict-aliasing` it
+  scores worse, the reloads inserted (unit 197's fragment). Still open: 5725 and
   5377, one template at one record line, split (5377 matches from `comparecimentomesario/`). The sites with no call to
   explain the reload are converters and keep the flag: 10289 (`gravadores/asn/`) and 11383 (`dados/asn/`) match, 10276
   (`CConversorHistoricoVotoImpresso`, no record) is `no-candidate`.
@@ -441,6 +443,20 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `src/app/comum/`'s top-level files built with it (six of the other eight objects change), the link is byte-identical to
   the one with the file alone. So the file is listed and its directory stays a choice, and the split, by directory and
   one file, is a reading of the original build's settings like the rest of it.
+
+  One file was measured the other way and is not in the rule: `md/rdv/cvotoscargos.cpp` without strict aliasing. Its
+  copy of a map's `__emplace_hint_unique_key_args` (5681) reloads the child pointer after the begin node's store, as
+  only code without TBAA does (15 over 167 rows with the flag, 4 over 167 without it, operand rows only). On the whole
+  link at 59592a0e (F9 item 6's private link, that object alone rebuilt) the file without strict aliasing gains 5681
+  and loses no match, where all of `md/rdv/` without it gains 5681 and loses 13 (1083, 5640, 10862, 10911, 10939,
+  11322, 11323, 11327, 11328, 11333, 11334, 11338, 11339). On a tree where 4454 (unit 197's FinalizaEleitor, written)
+  holds the file's `InsereCedula` and `ConfereCedula` inlined, the same carve-out gains 5681 and loses 7187 and 7195,
+  which 4454's srcloc-anchor names, leaves 3709 named by its own match line alone, and loses 7352 too unless 4454's
+  hand line names 4454; 4454 scores 178 over 2686 rows, every one an operand row, with the file at strict aliasing,
+  and 222 over 2696 (10 inserted, the reloads) without it. So the file keeps strict aliasing, and the two rows are
+  read as two TUs' code, a reading: 4454's as built with strict aliasing, and 5681's as another TU's copy, that of
+  11349 (`comum::asn::CConversorEleicoesVota::DoDesconverte`, not written), in `dados/asn/rdv/`, which builds without
+  it. 5681 waits for 11349.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'

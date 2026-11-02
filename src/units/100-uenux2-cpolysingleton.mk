@@ -82,8 +82,8 @@
 #   object since unit 237. Only their names matter to their callers. 3095, 1549, 5646 and
 #   13876 match from unit 170's object, the executable TU, which instantiates CPolySingleton<api::ISound>::instance at those
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
-#   and 1166, 6147 and 1009 as binaryen's merges of its code; the rest wait for the TU's code that instantiates them (unit
-#   170's fragment).
+#   and 1166, 6147 and 1009 as binaryen's merges of its code, and with fragment 241's interfaces and unit 165's GetInsts
+#   the push thunks 5395, 5398 and 5407; the rest wait for the TU's code that instantiates them (unit 170's fragment).
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
 #   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
 #   unit 121's fragment says why no roots builder stands in for it.

@@ -91,13 +91,11 @@
 #   10857: all but 407 and 3594 have no name.
 # - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532,
 #   9873, 2247, 2249 and 1843 (src/app/roots_vector.cpp keeps them, the last three with minsize instances measured
-#   there), 3552 and 518 (asn1.md A10: 1928, which 3552 calls, is std::pair's implicit destructor, which clang refuses to
-#   instantiate explicitly; it matches since unit 237, from a tree root at this TU's rule that instantiates it
-#   implicitly), 2650 (a minsize instance of ~shared_ptr<ASN1::IAbstractVisitor> in a probe link is (i32)->() where 388
-#   returns `this`, `pnpm wasm score` 10 over 26 rows, one deleted: read as no caller in our link reading the result;
-#   since unit 237 writes 11530, the reader, 388 matches from this object and 2650 still calls 424's body, unit 86's
-#   note), and units 100's and 94's rows that wait for the TU (their fragments). 11489 and 11518 (unit 82) match since
-#   unit 237, from its tree root src/app/roots_texttospeech.cpp at this TU's rule.
+#   there; since unit 253 the link's 306, 520, 4967, 5294, 5532 and 9873 are mock/app/comum/cappinfobuilder.cpp's, at
+#   this TU's rule), and units 100's and 94's rows that wait for the TU (their fragments). 3552, 518 and 2650, listed
+#   here before, match since unit 229 (asn1.md A10): 3552 and 518 from src/app/roots_coderenv.cpp at this TU's rule,
+#   and 2650's call reaches 388's body. 11489 and 11518 (unit 82) match since unit 237, from its tree root
+#   src/app/roots_texttospeech.cpp at this TU's rule.
 #
 # main (fn 10307) and what it builds, added after the rest: the settings (unit 188's simulador::SConfiguracao, fn 8311),
 # InitApplication ("VOTA", "Software de Votacao" in Latin-1, the version text, an ELogAplicativos of 1: the
@@ -126,14 +124,14 @@
 # - 10307 (main): `unresolved` on the && set of IInterfaceSavd (fn 10090), which has no target name: every push body of
 #   this TU calls fn 388 (~shared_ptr<void>, this TU's -Oz copy, which returns `this` for a reader of votaInit's side,
 #   2650) and drops the result, where ours returns nothing (10090: `pnpm wasm score` 161 over 885 rows, 159
-#   operand-only, 2 deleted, the two `drop`s). The same holds 9507, 9437 (whose push bodies 5407 and 5398 have second
-#   callers, 5925 and 7181, not written), the set thunks 9372 9574 9650 9685 9731 9831 9897 9986 (operand-only: 9986 is
-#   2 over 6 rows) and 10356 (9 over 52, operand-only), whose push 5384 has the same two drops.
+#   operand-only, 2 deleted, the two `drop`s). The same held 9507, 9437 (whose push bodies 5407 and 5398 have second
+#   callers, 5925 and 7181), the set thunks 9372 9574 9650 9685 9731 9831 9897 9986 (operand-only: 9986 is 2 over 6
+#   rows) and 10356 (9 over 52, operand-only), whose push 5384 has the same two drops.
 #   Since unit 237 (11530 written, 388 matched with its result) the push bodies have the drops: 10090 is `differs`,
-#   156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower, and 5384, 8758, 8911, 8986 and
-#   9233 read the same 288 against 280; 9574, 9685, 9731, 9986 and 10356 match (unit 237's fragment); main reads
-#   `unresolved +0x363` on the table slot of the ISymmetricCipherFactory set, which has no target name, as 9897 does;
-#   9372, 9650 and 9831 stay `unresolved` and 9507 and 9437 `no-candidate`.
+#   156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower, and 3882, 5384, 8758, 8911,
+#   8986 and 9233 read the same 288 against 280; 9574, 9685, 9731, 9986 and 10356 match (unit 237's fragment), and
+#   9507, 9437 and 9372 since fragment 241 (below); main reads `unresolved +0x363` on the table slot of the
+#   ISymmetricCipherFactory set, which has no target name, as 9897 does; 9650 and 9831 stay `unresolved`.
 # - 10384 (the lambda's operator()): on 10356's name, and CWasmWebSound's inline constructor stores +4 and +8 (an i32
 #   and an i64) where ours stores an i64 at +4 and a byte at +12 (unit 74's header's layout): 23 over 126 rows.
 # - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours (11962) reads 22
@@ -158,9 +156,9 @@
 # has<T> thunks 2736, 2741 and 2744 (IExecucaoVota, impl::ISincronismoVotoEleitor, impl::IPoliticaExecucaoEleitor),
 # which this TU's static initializer (14478), its set<T> bodies and the three GetInsts call (3594, and the copies 7181
 # and 5925 hold inlined), with binaryen's body 3884 they share; the push thunks 5395, 5398 and 5407 (into binaryen's
-# 3882, still `unresolved`); the set<T> bodies 8728, 9437 and 9507; and 9372
-# (CPolySingleton<IExecucaoVota>::set<CExecucaoVotaCooperativa>, which passes 8728's table slot to 1562). The bullet
-# on 10307 above lists 9507, 9437 and 9372 as waiting. What held them was the type's name: this TU passed the name's
+# 3882, which differs on its frame offset, as the bullet on 10307 says); the set<T> bodies 8728, 9437 and 9507; and
+# 9372 (CPolySingleton<IExecucaoVota>::set<CExecucaoVotaCooperativa>, which passes 8728's table slot to 1562).
+# What held them was the type's name: this TU passed the name's
 # own address, from the typeinfo it emitted, where the target's thunks pass the typeinfo's name field (the typeinfo +
 # 4), the typeinfo being external since each interface's destructor is out of line, its key function (unit 165's
 # fragment has the evidence). At the base 2736, 2741, 2744 and 3884 were `no-candidate`, and 5395, 5398 and 5407 read

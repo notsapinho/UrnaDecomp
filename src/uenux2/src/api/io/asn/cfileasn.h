@@ -1,3 +1,11 @@
+// The reconstruction's notes. The records name four static members of api::CFileASN, each a member template over
+// the ASN.1 entity it reads or writes (they print "[T = ...]"): ReadFromFile(const CFile &) at lines 48 and 60,
+// ReadFromFile(const std::string &) at 78, DecodeObjectFunction(const std::vector<char> &, const std::string &) at
+// 135 and 143, and CodeObjectFunction(std::vector<char> &, const T &, const std::string &) at 161 and 171. Only
+// CodeObjectFunction is written, from target fn 2927, binaryen's merge of its instances for the four ESTADO GERAL
+// entities, whose thunks 9801, 9702, 9695 and 9673 pass each instance's two records; the other members' record lines
+// are left blank. src/units/229-asn1-coderenv.mk has the evidence. Chosen: that CFileASN is a class, the lines of
+// every statement but the two throws, and the names of the locals.
 #pragma once
 
 #include <format>
@@ -10,14 +18,6 @@
 
 namespace api {
 
-// The reconstruction's notes. The records name four static members of api::CFileASN, each a member template over
-// the ASN.1 entity it reads or writes (they print "[T = ...]"): ReadFromFile(const CFile &) at lines 48 and 60,
-// ReadFromFile(const std::string &) at 78, DecodeObjectFunction(const std::vector<char> &, const std::string &) at
-// 135 and 143, and CodeObjectFunction(std::vector<char> &, const T &, const std::string &) at 161 and 171. Only
-// CodeObjectFunction is written, from target fn 2927, binaryen's merge of its instances for the four ESTADO GERAL
-// entities, whose thunks 9801, 9702, 9695 and 9673 pass each instance's two records; the other members' record lines
-// are left blank. src/units/229-asn1-coderenv.mk has the evidence. Chosen: that CFileASN is a class, the lines of
-// every statement but the two throws, and the names of the locals.
 class CFileASN {
 public:
 

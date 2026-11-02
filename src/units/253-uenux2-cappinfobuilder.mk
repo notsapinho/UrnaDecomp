@@ -49,13 +49,15 @@
 #   536's, which step 8 now writes as a generated table line, the votes no longer split with the turn's handle a body
 #   of its own; 2240's and 2250's, now generated pair-addr lines; and unit 123's 1249's, a body that matches here.
 # - Two data lines of splat/symbol_addrs.txt, below the marker, name libc++'s __format_spec::__fields_integral and
-#   __fields_bool, 2 bytes each, right after the typeinfo name "NSt3__212format_errorE" in both links (target 450343,
-#   ours 344597; each object at +23 and +25). Six rows match over them (11373): 9868, this object's handle, and its
-#   callee 1558 (the executable TU's __formatter_integer<char>::parse), which were `unresolved` on the first; 3923
-#   (__process_display_type_bool_string), on the second; and the handles 536, 1699 and 1711, which hold both inlined.
-#   Each line weighed (taken out, then splat-match): without __fields_integral, 536, 1558, 1699, 1711 and 9868 leave
-#   match; without __fields_bool, 536, 1558, 1699, 1711 and 3923.
-# - 7884 (money_get<char>::do_get, libc++.a) reads `differs` at +0xf2 where it read `unresolved` on a table slot: no
+#   __fields_bool, 2 bytes each (37 01 and 30 01, libc++'s two field sets, in both links), right after the typeinfo name
+#   "NSt3__212format_errorE" in both links (target 450343, ours 344597; each object at +23 and +25). Six rows match over
+#   them (11373): 9868, this object's handle, and its callee 1558 (the executable TU's
+#   __formatter_integer<char>::parse), which were `unresolved` on the first; 3923 (__process_display_type_bool_string),
+#   on the second; and the handles 536, 1699 and 1711, which hold both inlined. Each line weighed (taken out, then
+#   splat-match): without __fields_integral, 536, 1558, 1699, 1711 and 9868 leave match; without __fields_bool, 536,
+#   1558, 1699, 1711 and 3923, and the splat build then refuses 9868 too (`UNCONFIRMED: self-voted`: 1558's name, `call
+#   by:9868`, rests on 9868's own call), so that line carries all six. 7884 (money_get<char>::do_get, libc++.a) reads
+#   `differs` at +0xf2 where it read `unresolved` on a table slot: no
 #   match either way.
 #
 # Written, and not in the link: nothing reaches these, so wasm-ld drops them (their rows are no-candidate) and only
@@ -67,9 +69,10 @@
 #   and 3787 of 3897, over CFileASN::ReadFromFile, 3791). A root taking their addresses, as the target's 10256 and 6004
 #   do, would need those bodies. The estado copies they pass (10205, 10123, 10101, 10067) and ~CEstadoGeral (2793) come
 #   with them. The writer's chain ends in a keystone of its own: CodeObjectFunction's four members (9801, 9702, 9695,
-#   9673, the thunks 2891's thunks pass by slot) call the merge 2927 (1275 B), which calls ~CoderEnv (518,
-#   no-candidate) and 9790 (no-candidate). And 2894 is binaryen's merge of the four saves, so its shape needs the four
-#   in the link, three of them 10212's (pnpm wasm fn on each).
+#   9673, the thunks 2891's thunks pass by slot) call the merge 2927 (1275 B), which calls ~CoderEnv (518) and 9790: all
+#   of them match since unit 229, from src/app/roots_coderenv.cpp's instances; 2891 and 2892 are not written. And 2894
+#   is binaryen's merge of the four saves, so its shape needs the four in the link, three of them 10212's (pnpm wasm fn
+#   on each).
 # - Converte(EMidia) (5344): its callers are those two. With them, its handle (9935) and format<int> (5924) come too.
 # - The file writer (10293, table slot 420, called by both).
 #

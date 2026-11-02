@@ -99,9 +99,9 @@
 #   with "Arquivo não foi codificado para " + the name (345, slot 62) at the fourth argument, record 171, when that
 #   fails, and swaps the vector's three words with the first argument's before destroying it (520) and the CoderEnv
 #   (518). Its calls that can throw while a local lives go through invoke_* with landing pads (trace_invalid, str(), the
-#   format, the constructor, the throw, encode): an -fexceptions object's code, so this rule's (unit 206's
-#   fragment has a lead to mock/app/comum/cappinfobuilder.cpp, at the same flags, whose saves reach this writer
-#   through 2892 and 2891; that the copies are that TU's or the executable TU's is a reading).
+#   format, the constructor, the throw, encode): an -fexceptions object's code, so this rule's
+#   (mock/app/comum/cappinfobuilder.cpp, whose saves reach this writer through 2892 and 2891 in the target, compiles
+#   at this rule too, unit 253; that the copies are that TU's or the executable TU's is a reading).
 # - Measured forms (CodeObjectFunction<EstadoGeralUrna>'s rows in a probe object at this rule, object-local numbers
 #   masked): the encode call in the if, set_encodingRule(ber) for set_ber() and std::swap for the member swap give the
 #   same function; move-assigning the vector, or declaring it before the CoderEnv (its clearing then comes first,

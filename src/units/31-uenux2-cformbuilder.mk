@@ -24,8 +24,9 @@
 #                      (CMTFormBuilder::GetForm and GetInteractiveForm, each
 #                      inlining a private overload that takes the pre-show) and 5515 (CPaperFormBuilder::GetForm): they
 #                      build the forms of api/gui/iform.h and api/gui/cinteractiveform.h, whose code these objects emit,
-#                      and src/units/120-uenux2-iform.mk has their notes. Their names are chosen. GetForm sits after
-#                      the adders of cformbuilder.cpp, a choice; in cmtformbuilder.cpp GetForm comes before the adders
+#                      and src/units/120-uenux2-iform.mk has their notes. Their names are chosen. GetForm sits after the
+#                      adders of cformbuilder.cpp but AddLabeledKey's two and AddTextFieldMultiLine, which follow
+#                      GetLabeledKeyPos by their bands, a choice; in cmtformbuilder.cpp GetForm comes before the adders
 #                      and GetInteractiveForm after them, the order of their first uses in the target's data
 #                      (IForm<IScreenMT>'s vtable @1579936 before the adders' control blocks @1580040 to @1580240, and
 #                      CInteractiveForm<IScreenMT, IInputMT>'s @1580280 after them)
@@ -225,8 +226,8 @@
 # builder's vector is emptied, a clear() as the target's loop shows (each pointer released from the last, the end then
 # set to the start). The target passes its own result to 5515, which `return form;` of a named local gives by copy
 # elision. 16 target functions call it (2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,
-# 11946, 12005, 12105, 12110); 11256 and 2890 (unit 156) are in the link and the stand-in FormPapelC calls it twice
-# for the others. In the whole link it scores
+# 11946, 12005, 12105, 12110); 11256 and 2890 (unit 156) and 12005 (unit 246) are in the link and the stand-in
+# FormPapelC calls it twice for the others. In the whole link it scores
 # 1 over 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name is chosen: 5515 has GetForm, and the
 # screens' builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
 #
@@ -241,7 +242,8 @@
 # slots 10995, 10996, 10997, 10999 and 11000, which step 8 names by the lambda's vtable. Its declaration in
 # cpaperformbuilder.h takes the blank line between the header's two include groups, so that GetRenderForm keeps line
 # 51, record 1581300's. Show's callers are not written: fragment 246's roots stand in for them, passing true (fragment
-# 246 brought Show in; src/units/README.md "Landing a unit" item 2). Chosen: the parameters' names; the header line the
+# 246 brought Show in; src/units/README.md "Landing a unit" item 2). Chosen: the parameters' names; the lambda's capture
+# spelled `[this]` (`[&]` captures the same by the language's rules, not compiled here); the header line the
 # declaration takes (any line above 51 would do); Show's place last in the file (it is the file's only function with 3
 # uses in ledger/ordinals.tsv, so no band neighbour orders it).
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp

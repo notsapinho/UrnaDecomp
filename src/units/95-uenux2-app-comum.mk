@@ -6,7 +6,7 @@
 # the records name, DesconverteHeader (553:15, 559:15) and DesconverteMensagem (568:15, 574:15, 578:15), and with
 # ConverteHeader; the class headers beside them and app/comum/euecomumerror.h, with the handle formatter of the three
 # SAVD enums. The formatter's handle body (fn 536) is the one binaryen keeps for every such enum, ours named by the
-# table vote of 275, 680 and 5900; it stays unresolved on libc++'s __fields_integral, and no match here waits for it.
+# table vote of 275, 680 and 5900; it matches since unit 253's data hand line names libc++'s __fields_integral.
 # 480, CBaseError<comum::EUeComumError, ...>'s constructor, is named by the calls and matches with this header's enum:
 # it is a thunk of 710, the body unit 94's form gives (the constructor in ecourna/api/exception/cbaseerror.hpp).
 #

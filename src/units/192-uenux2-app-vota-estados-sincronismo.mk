@@ -4,16 +4,18 @@
 # Target functions matched:
 #   vota::CSincronismoEleitor::StartState (slot 2)             7178
 #   vota::CSincronismoEleitor::ProcessKey (slot 6)              7181
+#   the exit destructors of s_inst and s_mutex                  7195, 7187
 #   vota::CPedeDigital's destructor and deleting destructor     2739, 10469
 #   vota::CPedeDigital::ProcessInput (slot 7)                   10466
 # Pending, trapped in 192-uenux2-app-vota-estados-sincronismo-pending.cpp (its header says what each waits for):
 # CPedeDigital's StartState (10468), FinishState (10467) and ProcessTick (10465).
-# CSincronismoEleitor's GetInst and statics are in csincronismoeleitor.cpp and its constructor inline in the class
-# (csincronismoeleitor.h says what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is written
-# and not matched (unit 197's fragment). Not written: CPedeDigital's GetInst and constructor, inlined into fn 2740,
-# which calls functions with no name or that no form has matched. The roots keep CPedeDigital's vtable by its address
-# (the roots' header); CSincronismoEleitor's vptr store is in the link, inlined into FinalizaEleitor, so its vtable's
-# stand-in went (the link without it moves no row into or out of match).
+# CSincronismoEleitor's GetInst, statics and constructor are in csincronismoeleitor.cpp, the constructor out of line
+# (csincronismoeleitor.h says why, and what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is
+# written and not matched (unit 197's fragment); its srcloc-anchor names the statics, over which 7195 and 7187 match.
+# Not written: CPedeDigital's GetInst and constructor, inlined into fn 2740, which calls functions with no name or that
+# no form has matched. The roots keep CPedeDigital's vtable by its address (the roots' header); CSincronismoEleitor's
+# vptr store is in the link, inlined into FinalizaEleitor, so its vtable's stand-in went (the link without it moves no
+# row into or out of match).
 #
 # Evidence:
 # - CSincronismoEleitor::StartState posts 13 to the operator's queue (the queue's inline Post: Insert, fn 501, with

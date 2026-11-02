@@ -23,8 +23,9 @@
 # (`differs +0x3 target i32.const 1543240 | ours local.get 0`), and 12007, a thunk into binaryen's merge of clone bodies,
 # calls another merge (`target call 786 | ours call 1083`). A variant link with this object compiled with
 # -fno-strict-aliasing added (docs/reference/facts/workflow.md W13, scanned with the committed symbol file and match
-# list) turns 12006 and 12007 to match and moves no other row in or out of match: the target compiled this TU without
-# strict aliasing, while src/app/vota/ is in UENUX2_TBAA_DIRS (src/Makefile). The lambda of
+# list) turns 12006 and 12007 to match and moves no other row in or out of match: the target's order is what this
+# object gives without strict aliasing (a reading of that variant link, which only a measured flag for the file can
+# settle), while src/app/vota/ is in UENUX2_TBAA_DIRS (src/Makefile). The lambda of
 # api::CPaperFormBuilder::Show, of the same shape in an src/api object, which builds with strict aliasing too, has the
 # load first in the target (fn 10999, matched). The two rows wait for that question, and the body stays as written: a
 # flag for this file is the user's decision, and a path outside UENUX2_TBAA_DIRS would take the flags as tree evidence
@@ -33,7 +34,8 @@
 #
 # Chosen, no evidence names them: the file's path and the header's beside it; CRelVotaUtil as a class of static members,
 # as comum::CRelUtil is (its records read `static`), where the mangled name does not tell a class from a namespace; the
-# two empty strings' spelling `""`; the local's name. No record names the file. The data put this object right after
+# two empty strings' spelling `""`; the local's name; the lambda's capture spelled `[&builder]` (`[&]` captures the
+# same by the language's rules, not compiled here). No record names the file. The data put this object right after
 # cwasmclp.cpp's records (@1543108 to @1543156: CSubReport's vtable @1543172 and the lambda's @1543232 follow), and
 # then CDefineRotaPreVotacao's vtable (@1543448, unrecorded) and app/vota/eleitor/iniciovotacao/cimprimindozeresima.cpp's
 # records (@1543548). In use band 4, fn 2882 follows vota::CExibeAlertaDesligamento's 2883
@@ -41,8 +43,9 @@
 # vota::CInicioVotacao::GetInst 2880; in bands 1 and 2 cwasmclp.cpp's 12015 and 5978 come right before this object's
 # 12014 and 5977. So the adjacent recorded object in the data is cwasmclp.cpp, in mock/app/simulador/wasm/, the side
 # docs/reference/facts/placing.md P5 takes, and the band-4 neighbours and the callers' files are in
-# app/vota/eleitor/iniciovotacao/, the directory the use band gives (docs/how-to-decompile.md step 3, "A member with no
-# record is placed by its use band"). The directory is a choice, the band's and the class's namespace's; both
+# app/vota/eleitor/iniciovotacao/, the band neighbours' directory (ledger/tu-clusters.tsv labels stretch 1118, 2881 to
+# 2883, iniciovotacao/cexibealertadesligamento.cpp), which docs/reference/facts/placing.md P4 lets a fragment take
+# when it names both neighbours, as here. The directory is a choice, the band's and the class's namespace's; both
 # candidates build with strict aliasing, which 12006 and 12007 say this TU did not have.
 #
 # Not written: CriaCabecalho (fn 5977) and its lambda's slots (2881, 12000 to 12002).

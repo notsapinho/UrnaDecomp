@@ -33,7 +33,7 @@ template bool ASN1::CoderEnv::encode<std::back_insert_iterator<std::vector<char>
 // its thunks 9801, 9702, 9695 and 9673, which pass each instance's records, cfileasn.h 161 and 171), with ~CoderEnv
 // (518), which each calls on its two paths. src/units/229-asn1-coderenv.mk has the evidence and the measurements.
 // - Whose copy: 2927 has landing pads, so an -fexceptions object's; this rule is the executable TU's, -Oz -fexceptions
-//   (unit 206's fragment has a lead to mock/app/comum/cappinfobuilder.cpp, at the same flags, whose saves reach the
+//   (mock/app/comum/cappinfobuilder.cpp compiles at this rule too, unit 253; in the target its saves reach the
 //   writer). That they are that TU's copies is a reading.
 // - The target reaches each instance only through a table slot (478, 488, 489 and 490), which 2891's thunks (9820,
 //   9703, 9701, 9684) pass, not written: urna_roots_cfileasn takes the four addresses.

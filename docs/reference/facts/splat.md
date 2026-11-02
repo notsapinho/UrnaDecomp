@@ -811,8 +811,9 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     do. After the tree roots the object gives 12 of the 17, after both trees none (unit 253's fragment has the four
     places): an object that brings one of these copies ahead of it, or `EUrnaTurno`'s `-O3` handle, takes rows out
     (item 12). 536, 1558, 1699, 1711, 3923 and 9868 rest on the hand lines of `__format_spec::__fields_integral` and
-    `__fields_bool` too, below the marker of `splat/symbol_addrs.txt`; taken out one at a time, each line takes five
-    of the six with it (unit 253's fragment).
+    `__fields_bool` too, below the marker of `splat/symbol_addrs.txt`; taken out one at a time, `__fields_integral`'s
+    line takes five of the six with it, and `__fields_bool`'s all six at the splat build, which then refuses 9868 as
+    self-voted (unit 253's fragment).
 
 ## S11. A match among bodies of the same content can take the other one's name
 

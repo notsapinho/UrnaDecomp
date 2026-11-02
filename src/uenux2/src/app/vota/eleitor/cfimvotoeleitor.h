@@ -18,8 +18,8 @@ namespace vota {
 //
 // The constructor is out of line in cfimvotoeleitor.cpp: 7181 keeps what operator new returned as the object and takes
 // the vptr store's address from the base constructor's result, the shape that fragment gives an out-of-line constructor
-// binaryen inlines. Measured in the whole link (pnpm wasm score of 7181 against ProcessKey): defined in the class, 101
-// over 858 rows (99 replaced, 98 of them operand-only, 1 inserted, 1 deleted), the base constructor's result kept as
+// binaryen inlines. Measured in the whole link (pnpm wasm score of 7181 against ProcessKey): defined in the class, 97
+// over 858 rows (95 replaced, 94 of them operand-only, 1 inserted, 1 deleted), the base constructor's result kept as
 // the object where the target keeps operator new's; out of line, 7181 matches. GetInst and the statics are in
 // cfimvotoeleitor.cpp too; the target has no function of GetInst's own, and
 // whether clang or binaryen inlined it into 7181 is not decided: its place is a choice. The statics are members defined

@@ -30,8 +30,9 @@
 // returns it and has no target function: binaryen inlines it into its one caller, 3678, whose calls of 5544 keep their
 // area argument as the target's do. With 3678 naming the static itself, our link folds that argument into 5544
 // (src/units/31-uenux2-cformbuilder.mk has both measurements), which fits a call binaryen inlines only after its
-// dead-argument elimination (a reading). The names, the static's being a public member, the accessor and its being out
-// of line here are chosen; the values and the width are the bytes'.
+// dead-argument elimination (a reading). The names, the static's being a public member, the accessor, its being a
+// static member of CApplication, out of line here and on the last line of capplication.cpp are chosen; the values and
+// the width are the bytes'.
 
 #include <string>
 #include <vector>

@@ -172,7 +172,9 @@
 #   same full-expression, which loads the end before the temporary vote's string is freed and again at the case's
 #   start, as the target does, where a named result compared after it reloads the end after the free (both forms
 #   together: 562 over 2719 rows, 33 inserted, to 180 over 2687, 1 inserted). Both are ordinary forms of the same
-#   statements; their being the source's is read from those rows.
+#   statements; their being the source's is read from those rows. Two other spellings give the same object (compiled
+#   at this file's flags, cmp): `std::swap(mapa, m_mapa)` for the swap, and the search's comparison kept in a named
+#   `const bool` that the `if` tests.
 # - CVotos::Insere (cvotos.cpp:40): the record's column 9 is a call at indent 8, ErroPosicao's (cvotos.h says why it
 #   is a function of its own), then m_votos.insert, which clang keeps out of line (-Rpass-missed=inline: cost 925,
 #   threshold 250; the target's 32-byte prologue there). The constructor moved from line 39 to after them (its line
