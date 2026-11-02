@@ -11,11 +11,11 @@
 #   Loga builds CWasmCanaisLog's static through the inline GetInst, so this object also emits the static's destructor,
 #   fn 5154 (unit 141's fragment), and std::deque<std::string>'s D2, fn 3503, which that destructor calls.
 # - simulador::CWasmResource (cwasmresource.cpp, cwasmresource.h), over api::IResource, whose slots 2 to 6 this unit
-#   declares (api/gui/iresource.h): GetImage (8633, slot 2), GetFile (8611, slot 3), Exists (8600, slot 5) and
-#   IsResource (8591, slot 6); the file-static helpers ComMulher (4996) and Le (3452), and Caminho (2626), with
-#   Normaliza, Candidatos and Existe, which clang inlines into Caminho, and TamanhoImagem, which it inlines into
-#   GetMovie. The std::ifstream of Le and Existe brings libc++'s basic_filebuf<char>::open (2145), which matches from
-#   libc++.a. Written and not matched: Caminho (2626) and GetMovie (8605, slot 4), below.
+#   declares (api/gui/iresource.h): GetImage (8633, slot 2), GetFile (8611, slot 3), GetMovie (8605, slot 4, below),
+#   Exists (8600, slot 5) and IsResource (8591, slot 6); the file-static helpers ComMulher (4996) and Le (3452), and
+#   Caminho (2626), with Normaliza, Candidatos and Existe, which clang inlines into Caminho, and TamanhoImagem, which it
+#   inlines into GetMovie. The std::ifstream of Le and Existe brings libc++'s basic_filebuf<char>::open (2145), which
+#   matches from libc++.a. Written and not matched: Caminho (2626), below.
 # - api::CFixedImage (api/gui/cfixedimage.h): its vector member, GetData (4975, already matched as an RHVoice twin; its
 #   line is renamed to this class's) and the implicit destructors, which binaryen merges into the shared bodies the
 #   target has: 8563 and 8554, the D2 and D0, are thunks of 3937 and 3936, whose two match lines are renamed to this
@@ -34,27 +34,43 @@
 # name for 2626; its name is the hand edit under splat/symbol_addrs.txt's marker (`callers+content`, the callers and the
 # literals only 2626 loads), and 8600, 8611 and 8633 match through it.
 #
-# Written and not matched:
-# - Caminho (2626): 200 over 1934 rows at the tree's -O3 (202 at -O2, d4cbc1a). The target loads the path's size, its long-string flag and its data again after
-#   each rfind, for the substr, where ours keeps the values from before the search. With the existence test written in
-#   the loop (an std::ifstream temporary in the condition) the frame's shared slot sits at the bottom, 391 rows; Existe,
-#   the test as a helper, gives the target's frame. Scored the same, 200: a non-const path, the prefix test as a helper
-#   (ComecaCom). Further: Candidatos written into Caminho (928), Normaliza into Candidatos (365), the normalised path as
-#   Candidatos' parameter (293).
-# - GetMovie (8605): at the tree's -O3 it is 16 over 507 rows, all operand-only, and `differs` in one store's alignment
-#   (+0x9e: `i32.store align=1 offset=52` in the target, `align=2` here). That store copies a GIF's width and height,
-#   one 32-bit load of the header's bytes 6 to 9, into the SPoint CMovie's constructor gets: the target's store has
-#   the SPoint's 2-byte alignment, and our object's is 4-byte aligned (`i32.store 2 52` in its disassembly). Measured in the
-#   object: each field copied alone (a memcpy per field, the two bytes joined with a shift, or the size locals of the other
-#   cases assigned) gives two 16-bit stores; TamanhoImagem with external linkage stays a call (cost 395 against 250,
+# GetMovie (8605): TamanhoImagem reads a GIF's width and height (the header's bytes 6 to 9) into two locals, each two
+#   bytes joined little-endian, and returns a new SPoint of them. The target copies them with one `i32.load align=0
+#   offset=6` and one `i32.store align=1 offset=52`: a 4-byte store at the SPoint's 2-byte alignment. Measured in the
+#   object (GetMovie's disassembly, em++ at the tree's flags, the rest of cwasmresource.cpp as landed): that form gives
+#   the pair, and so do the two values read with std::memcpy into TPosition or uint16_t locals, or returned as `{...}`,
+#   each the same function as the form written, which is a choice among them. The SPoint copied whole with one memcpy
+#   gives `i32.store 2 52`, 4-byte aligned (16 over 507 rows in the whole link at 441ae041, all operand-only); the
+#   values stored into the SPoint's fields one after the other (a memcpy each, in either order, or each pair of bytes
+#   joined), or read through a `const uint16_t*`, give two `i32.store16`, and assigned to the other cases' size locals
+#   (one return for all cases) the one pair of `i32.store16` all cases share. A reading of the IR (-S -emit-llvm): the
+#   form written loads the four bytes and the uint16_t memcpy form two 16-bit values, each before two 16-bit stores,
+#   which the backend joins into one 32-bit load and store at the first store's alignment; the whole-SPoint memcpy is
+#   an i32 store in the IR, for which LLVM raises the SPoint's alloca to 4.
+#   Measured before, in the whole link: TamanhoImagem with external linkage stays a call (cost 395 against 250,
 #   -Rpass-missed=inline) whose own store is 2-byte aligned, and binaryen then inlines it into GetMovie with a frame of
-#   its own and the JPEG tests in another order, 135 over 526 rows in the whole link. At -O2 clang left
-#   std::vector<CMovieFrame>'s __init_with_size out of line (cost 230 against 225, -Rpass-missed), 172 over 562 rows. std::vector<CMovieFrame>(1, ...) is inlined at -O2 and gives 41 over 518 rows, but
-#   64 over 522 at -O3: of the two forms tried, the initializer list is the one that gives the target's rows. That
-#   CMovieFrame's constructor is out of line is read from 8605, which holds code as binaryen inlines a call (the moved
-#   vector stored to the frame and read back, the member zeroed before it is overwritten:
-#   docs/reference/facts/reading.md R10); a CMovieFrame aggregate built in GetMovie, with the vector moved through a
-#   local, gives 221 over 516 rows at -O3.
+#   its own and the JPEG tests in another order, 135 over 526 rows. At -O2 clang left
+#   std::vector<CMovieFrame>'s __init_with_size out of line (cost 230 against 225, -Rpass-missed), 172 over 562 rows.
+#   std::vector<CMovieFrame>(1, ...) is inlined at -O2 and gives 41 over 518 rows, but 64 over 522 at -O3: of the two
+#   forms tried, the initializer list is the one that gives the target's rows. That CMovieFrame's constructor is out of
+#   line is read from 8605, which holds code as binaryen inlines a call (the moved vector stored to the frame and read
+#   back, the member zeroed before it is overwritten: docs/reference/facts/reading.md R10); a CMovieFrame aggregate built
+#   in GetMovie, with the vector moved through a local, gives 221 over 516 rows at -O3.
+#
+# Written and not matched:
+# - Caminho (2626): 200 over 1934 rows at the tree's -O3 (202 at -O2, d4cbc1a), and 200 at 441ae041, with this
+#   directory at strict aliasing. The target loads the path's size, its long-string flag and its data again after each
+#   rfind, for the substr, and again before the second rfind, where ours keeps the values from before the first search:
+#   the target's body has 5 loads of the size (frame +52), 5 of the flag (+59, signed) and 6 of the data (+48), ours
+#   3, 2 and 4. With the existence test written in the loop (an std::ifstream temporary in the condition) the frame's
+#   shared slot sits at the bottom, 391 rows; Existe, the test as a helper, gives the target's frame. Scored the same,
+#   200: a non-const path, the prefix test as a helper (ComecaCom). Further: Candidatos written into Caminho (928),
+#   Normaliza into Candidatos (365), the normalised path as Candidatos' parameter (293). Counted in the object
+#   (Caminho's disassembly, em++ at the tree's flags), loads of the size: 3 at -O2, with -fno-strict-aliasing, with
+#   -mllvm -memdep-block-number-limit= 2, 5, 20, 50 or 100, with -memdep-block-scan-limit=5, with GVN off
+#   (-opt-disable=gvn) or with its load PRE off (-enable-load-pre=false), and 1 at -Os; 3 with the substr as
+#   std::string(caminho, 17), the prefixes as std::string_view, the test as a lambda, or a non-const path given to
+#   push_back, and 4 with the images' substr written twice. What keeps the target from reusing the values is not found.
 #
 # EnviarMensagem: the cases and the answers are the target's (its br_table on the message less 6, and each block's
 #   constants). The order of the case bodies is measured: in value order the blocks come out in another order (108 over

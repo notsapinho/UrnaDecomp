@@ -8468,7 +8468,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8602	-	-	-	no-candidate	no symbol and no ledger pair	71	none	7zip	0	-
 8603	-	-	-	no-candidate	no symbol and no ledger pair	66	none	7zip	0	-
 8604	-	-	-	no-candidate	no symbol and no ledger pair	68	none	7zip	0	-
-8605	_ZN9simulador13CWasmResource8GetMovieERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	12101	symbol	differs	+0x9e target +0x9d i32.store align=1 offset=52 | ours +0x9d i32.store align=2 offset=52	1029	none	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmresource.cpp.o
+8605	_ZN9simulador13CWasmResource8GetMovieERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	12101	symbol	match	readings: address string	1029	none	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmresource.cpp.o
 8606	_ZNK8NWindows5NFile3NIO9CFileBase4seekExi	8566	symbol	match	-	14	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_Windows_FileIO.cpp.o
 8607	_ZN14CTailOutStreamD0Ev	8403	symbol	unresolved	ours +0x7 call 6158: byn$mgfn-shared$_ZN14CTailOutStreamD0Ev has no target function	43	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_LimitedStreams.cpp.o
 8608	_ZN14CTailOutStreamD2Ev	8404	symbol	unresolved	ours +0x7 call 6159: byn$mgfn-shared$_ZN14CTailOutStreamD2Ev has no target function	40	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_LimitedStreams.cpp.o

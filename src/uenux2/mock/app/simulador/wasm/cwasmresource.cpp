@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <cstdint>
-#include <cstring>
 #include <fstream>
 #include <iterator>
 #include <memory>
@@ -112,9 +111,9 @@ api::SPoint TamanhoImagem(const std::vector<uint8_t>& dados)
     const uint8_t* bytes = dados.data();
     const size_t tamanho = dados.size();
     if (tamanho >= 10 && bytes[0] == 'G' && bytes[1] == 'I' && bytes[2] == 'F') {
-        api::SPoint ponto;
-        std::memcpy(&ponto, bytes + 6, sizeof(ponto));
-        return ponto;
+        const api::TPosition largura = static_cast<api::TPosition>(bytes[6] | bytes[7] << 8);
+        const api::TPosition altura = static_cast<api::TPosition>(bytes[8] | bytes[9] << 8);
+        return api::SPoint{largura, altura};
     }
     api::TPosition altura = 1;
     api::TPosition largura = 1;
