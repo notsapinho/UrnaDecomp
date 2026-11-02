@@ -1,7 +1,7 @@
-// api::CBmpConversor (/home/rubio/tse/uenux2/src/api/gui/cbmpconversor.cpp), two static members whose throws are
-// records of the target, so their positions in this file are fixed:
-//   3664  VerticalFlip(unsigned char*, const int, const int)   records at lines 23 and 27, column 15
-//   3663  InvertColors(unsigned char*, const int, const int)   record at line 60, column 15
+// api::CBmpConversor (/home/rubio/tse/uenux2/src/api/gui/cbmpconversor.cpp), three static members whose throws are
+// records of the target, so their positions in this file are fixed: 3664 VerticalFlip, records at lines 23 and 27; 3663
+// InvertColors, line 60; CreateBitmapHeader, line 122 (no index of its own: inlined into fn 10967), all at column 15.
+// CreateBitmapHeader's other lines, its local structs and their place are chosen (src/units/22-uenux2-cbmpconversor.mk).
 
 #include "api/gui/cbmpconversor.h"
 
@@ -60,6 +60,77 @@ void CBmpConversor::InvertColors(unsigned char* data, const int width, const int
     for (int i = 0; i < width * height; ++i) {
         data[i] = ~data[i];
     }
+}
+
+// (original lines 68-90: content not recovered)
+#line 91
+namespace {
+
+#pragma pack(push, 1)
+struct SBitmapFileHeader {
+    uint16_t type;
+    uint32_t size;
+    uint32_t reserved;
+    uint32_t offBits;
+};
+
+struct SBitmapInfoHeader {
+    uint32_t size;
+    int32_t width;
+    int32_t height;
+    uint16_t planes;
+    uint16_t bitCount;
+    uint32_t compression;
+    uint32_t sizeImage;
+    int32_t xPelsPerMeter;
+    int32_t yPelsPerMeter;
+    uint32_t clrUsed;
+    uint32_t clrImportant;
+};
+#pragma pack(pop)
+
+} // namespace
+
+std::vector<uebyte> CBmpConversor::CreateBitmapHeader(const unsigned long dataSize, const unsigned long width,
+                                                      const unsigned long height, const int numColors)
+{
+    if (numColors != 256) {
+        throw CUeGuiError(EUE_GUI_CREATEBITMAPHEADER_CORES_NAO_SUPORTADAS, "Numero de cores nao suportado");
+    }
+
+    const unsigned long offBits = sizeof(SBitmapFileHeader) + sizeof(SBitmapInfoHeader) + 4 * 256;
+
+    SBitmapFileHeader fileHeader;
+    fileHeader.type = 0x4D42;
+    fileHeader.size = offBits + dataSize;
+    fileHeader.reserved = 0;
+    fileHeader.offBits = offBits;
+
+    SBitmapInfoHeader infoHeader;
+    infoHeader.size = sizeof(SBitmapInfoHeader);
+    infoHeader.width = width;
+    infoHeader.height = height;
+    infoHeader.planes = 1;
+    infoHeader.bitCount = 8;
+    infoHeader.compression = 0;
+    infoHeader.sizeImage = dataSize;
+    infoHeader.xPelsPerMeter = 20000;
+    infoHeader.yPelsPerMeter = 20000;
+    infoHeader.clrUsed = 0;
+    infoHeader.clrImportant = 0;
+
+    std::vector<uebyte> header(offBits);
+    std::memcpy(header.data(), &fileHeader, sizeof(fileHeader));
+    std::memcpy(header.data() + sizeof(fileHeader), &infoHeader, sizeof(infoHeader));
+
+    uebyte* palette = header.data() + sizeof(fileHeader) + sizeof(infoHeader);
+    for (int i = 0; i < 256; ++i) {
+        palette[4 * i] = i;
+        palette[4 * i + 1] = i;
+        palette[4 * i + 2] = i;
+        palette[4 * i + 3] = 0;
+    }
+    return header;
 }
 
 } // namespace api

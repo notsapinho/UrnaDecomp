@@ -9,6 +9,12 @@ enum EUeGuiError {
     // messages, "Dado de entrada nulo" and "Dimensões inválidas": no evidence names them
     EUE_GUI_VERTICALFLIP_DADO_NULO = 4900,
     EUE_GUI_VERTICALFLIP_DIMENSOES_INVALIDAS = 4901,
+    // the code api::CBmpConversor::CreateBitmapHeader throws (record cbmpconversor.cpp 122:15) is not in the target's code;
+    // read as docs/reference/facts/reading.md R1 reads such a record, binaryen inlined the function into its one caller,
+    // fn 10967, and folded the constant argument the test reads, the test and the throw with it. The value is chosen, the
+    // gap in CBmpConversor's run (4900, 4901, 4903), and so is the name, from the message chosen for the throw, "Numero
+    // de cores nao suportado", a literal no target function loads (R1 again)
+    EUE_GUI_CREATEBITMAPHEADER_CORES_NAO_SUPORTADAS = 4902,
     // the value is the code api::CBmpConversor::InvertColors (target fn 3663) throws; the name is chosen from its message,
     // "Dado de entrada nulo": no evidence names it
     EUE_GUI_INVERTCOLORS_DADO_NULO = 4903,
@@ -35,6 +41,12 @@ enum EUeGuiError {
     // the value is the code api::CMovie::CMovie (target fn 5526) throws; the name is chosen from its message, "Não
     // havia frames": no evidence names it
     EUE_GUI_MOVIE_SEM_FRAMES = 4943,
+    // the value is the code api::CQRCodeGuard's constructor (target fn 5502) throws; the name is chosen from its message,
+    // "Não foi possível criar o QR code": no evidence names it
+    EUE_GUI_QRCODEGUARD_FALHA_AO_CRIAR = 4947,
+    // the value is the code api::CQRCodeImage::MontaImagem throws (record cqrcodeimage.cpp 36:15, inlined into fn 10967);
+    // the name is chosen from its message, "A largura do qrcode ({}) superou o espaço disponível ({})": no evidence names it
+    EUE_GUI_QRCODEIMAGE_LARGURA_EXCEDIDA = 4948,
     // the value is the code api::CTextBox's constructor throws (record ctextbox.cpp 41:15, inlined into fn 11805); the name
     // is chosen from its message, the same as 4963's: no evidence names it
     EUE_GUI_TEXTBOX_POSICAO_INICIAL_INVALIDA = 4961,

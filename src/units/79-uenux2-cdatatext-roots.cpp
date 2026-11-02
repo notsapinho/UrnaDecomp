@@ -15,9 +15,6 @@
 //     over CTextSource (652) and std::string (*)(const std::string&) (651);
 //   SharedIImage(new X): CQRCodeImage (3059);
 //   std::shared_ptr<X>(new X): CDataTextFmt over const std::string (*)(const std::string&) (7787).
-// And one member of a class template the target calls directly (src/units/README.md "Companion files"): the fill insert
-// of std::vector<unsigned char>, fn 3661, which CQRCodeImage::GetData (fn 10967, pending) calls three times; one
-// stand-in calls it twice, so that it stays a function of its own, as in the target.
 // So this object instantiates the classes, as the sanctioned exception for std::make_shared does (src/units/README.md
 // "Companion files"), and it is where their vtables, slots and control blocks come from until those callers land: they
 // are template instances of landed headers, compiled with APP_CXXFLAGS like the other stand-ins. The destructors have no
@@ -145,14 +142,6 @@ __attribute__((noinline)) SharedIText TextoCandidaturaNumero(const comum::CCandi
     return std::make_shared<CDataText<comum::CCandidaturasDSNumero>>(fonte);
 }
 
-// Stands for fn 10967, CQRCodeImage::GetData (pending), which calls std::vector<unsigned char>::insert(const_iterator,
-// size_type, const value_type&), fn 3661, three times with a byte of 255. Two calls, so binaryen keeps it a function.
-__attribute__((noinline)) void BordaImagem(std::vector<unsigned char>& imagem, std::size_t tamanho)
-{
-    imagem.insert(imagem.begin(), tamanho, 255);
-    imagem.insert(imagem.end(), tamanho + 1, 255);
-}
-
 __attribute__((noinline)) SharedIImage ImagemQRCodeCompartilhada(api::TPosition tamanho, const FuncaoTexto& fonte)
 {
     return std::make_shared<api::CQRCodeImage>(tamanho, fonte);
@@ -185,7 +174,6 @@ struct SW79Roots {
         w79_sink = reinterpret_cast<void*>(&TextoCargoSexo);
         w79_sink = reinterpret_cast<void*>(&TextoCandidaturaNome);
         w79_sink = reinterpret_cast<void*>(&TextoCandidaturaNumero);
-        w79_sink = reinterpret_cast<void*>(&BordaImagem);
     }
 } w79_roots;
 

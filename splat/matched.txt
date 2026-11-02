@@ -10736,7 +10736,7 @@
 493 BitStream_appendNum
 1147 QRspec_lengthIndicator
 1253 MMask_writeFormatInformation
-1254 BitStream_free
+1254 QRcode_free
 1534 QRinput_estimateBitsMode8
 1899 QRinput_estimateBitsModeAn
 2719 QRinput_estimateBitsModeNum
@@ -11078,3 +11078,4 @@
 10428 __cxx_global_array_dtor.2@app/uenux2/src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp.o
 10429 __cxx_global_array_dtor@app/uenux2/src/app/vota/operador/aguardaeleitor/cmostraeleitorvotando.cpp.o
 10523 _ZN4vota21CHabilitaAudioEleitor12ProcessInputEv
+5502 _ZN3api12CQRCodeGuardC2ERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
