@@ -51,6 +51,13 @@ public:
 
     void MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados);
     void ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const;
+    // The unsigned word at +104, a count of the voters who voted (a reading of its readers): fn 12098
+    // (vota::CGravaResultado's slot 2) compares it with comum::CRdvVota::Comparecimento() (fn 1269),
+    // vota::CSincronismoOperador's slot 2 (fn 10210) adds one to it, and vota::impl::CInformacaoThreadOperador's
+    // slots 16 and 19 (fns 10569, 10566) read it in place; 10569 formats it as an unsigned (argument type 6) where it
+    // stands for 1269's result. The member's and the accessor's names and the accessor's being inline in the class are
+    // chosen.
+    unsigned int GetComparecimento() const { return m_comparecimento; }
 
 private:
     std::string m_arquivoDinamico;
@@ -60,7 +67,8 @@ private:
     std::vector<std::string> m_lista2;
     std::vector<std::string> m_lista3;
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
-    int m_naoRecuperado3[2];
+    unsigned int m_comparecimento;
+    int m_naoRecuperado3;
     std::map<md::CEleitorIdentidade, md::CEleitorIdentidade> m_identidades;
 
     static std::unique_ptr<CEleitores> s_instance;

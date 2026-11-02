@@ -10774,7 +10774,7 @@
 11628 _ZN5comum11CGravadorBUD0Ev
 5474 _ZN3api9CDateTimepLERKNSt3__26chrono8durationIxNS1_5ratioILx1ELx1EEEEE
 5979 _ZN4vota24CExibeAlertaDesligamento7GetInstEv
-11718 __cxx_global_array_dtor.14
+11718 __cxx_global_array_dtor.14@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11719 __cxx_global_array_dtor.12@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11720 __cxx_global_array_dtor.6@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11721 __cxx_global_array_dtor.4@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
@@ -10800,7 +10800,7 @@
 599 _ZN4vota4impl25IInformacaoThreadOperador7GetInstEv
 3622 _ZN3api18CPolySingletonList3hasIN4vota4impl25IInformacaoThreadOperadorEEEbRKNS_19TPolySingletonsInfoE
 5935 _ZNSt3__213random_deviceC2B8ne210108Ev
-10553 __cxx_global_array_dtor.13@app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
+10553 __cxx_global_array_dtor.14@app/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o
 10568 _ZN4vota4impl25CInformacaoThreadOperador14AgendaInspecaoEv
 1535 _ZN4vota20GetIdentidadeEleitorEv
 1687 _ZN4vota21IsAudioAtivadoMesarioEv
@@ -10949,3 +10949,8 @@
 2220 _ZN3api4hash14CHashDiretorioD2Ev
 5450 _ZN3api12CTickManager15GetExpiredTicksEv
 5463 _ZN3api10GetMemInfoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+1269 _ZNK5comum8CRdvVota14ComparecimentoEv
+1387 _ZN4vota17AdicionaSeparadorERN3api17CPaperFormBuilderENS0_14ETextAlignmentE
+3774 _ZNK5comum20CConfiguracaoEleicao17GetCargosEleicoesEv
+5791 _ZNK5comum20CConfiguracaoEleicao14GetIDsEleicoesEv
+10566 _ZNK4vota4impl25CInformacaoThreadOperador28IsVotacaoBloqueadaPorHorarioEv

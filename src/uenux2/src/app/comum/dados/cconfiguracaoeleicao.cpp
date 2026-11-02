@@ -17,7 +17,27 @@ SINGLETON_IMPL_GET_INST(CConfiguracaoEleicao, s_mutex, s_instance)
 
 CConfiguracaoEleicao::~CConfiguracaoEleicao() = default;
 
-// (original lines 41-284: content not recovered)
+std::vector<md::TEleicaoID> CConfiguracaoEleicao::GetIDsEleicoes() const
+{
+    std::vector<md::TEleicaoID> ids;
+    for (const md::CEleicaoPE& eleicao : m_pleito.GetEleicoes()) {
+        ids.push_back(eleicao.GetID());
+    }
+    return ids;
+}
+
+std::vector<CCargos::TCargoEleicao> CConfiguracaoEleicao::GetCargosEleicoes() const
+{
+    std::vector<CCargos::TCargoEleicao> cargos;
+    for (const md::CEleicaoPE& eleicao : m_pleito.GetEleicoes()) {
+        for (const md::CCargo& cargo : eleicao.GetCargos()) {
+            cargos.push_back({eleicao.GetID(), cargo.GetID()});
+        }
+    }
+    return cargos;
+}
+
+// (original lines 61-284: content not recovered)
 #line 285
 const md::CEleicaoPE& CConfiguracaoEleicao::GetEleicao(const TEleicaoID eleicao) const
 {

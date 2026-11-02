@@ -91,6 +91,22 @@
 #   does. With -fno-strict-aliasing it differed from the target in the reload of __child after __insert_node_at's store
 #   of the begin node (`pnpm wasm score` against the plain link: 8 over 122 rows, the reload's three rows, the local
 #   numbers after it and one call operand).
+# - comum::CConfiguracaoEleicao::GetIDsEleicoes (fn 5791, 87 B) and GetCargosEleicoes (fn 3774, 389 B), in
+#   cconfiguracaoeleicao.cpp after the destructor. 5791 pushes the id (+0) of each 52-byte CEleicaoPE of m_pleito into
+#   a vector through push_back(const&): the target calls fn 543, matched as std::vector<long>'s, and our body's call
+#   goes to that body (ours 532, roots_boost.o's, in build/out/wasm-map/vota_web/names.tsv), binaryen keeping one of
+#   identical bodies for our std::vector<unsigned int>'s instance (a reading); its callers are 1269
+#   (comum::CRdvVota::Comparecimento(), unit 13) and 5735. 3774 pairs each
+#   election's id with the id of each of its cargos (CEleicaoPE::GetCargos, fn 2257, out of line) into a
+#   std::vector<CCargos::TCargoEleicao>; its callers are 4454 (vota::CEleitorVotando's, not written) and 7787 (which
+#   holds CCargos::CreateInst; ccargos.h has it). Each pair is one 8-byte store in the target: `push_back({id, cargo})`
+#   gives it, 5 over 195 rows, all operand-only, where `emplace_back(id, cargo)` builds the pair in place with two stores,
+#   33 over 201 rows (6 inserted, 10 deleted); 5791 scores 1 over 44, operand-only (`pnpm wasm score` before step 8).
+#   The scan matched 5791 through the census's pair (`shape`) and 3774 by its content. In use band 2 the target's 5791
+#   comes right after the destructor (5792) in link order, which is what puts it after the destructor here; in use band
+#   3 its 3774 lies after ccargos.cpp's 3784 and 3783 and before cnomearquivo.cpp's 3773, with 3775 to 3782 between (all
+#   unwritten but 3779, a std::__split_buffer instance), which this file fits (a reading). Chosen: both names, their being members (they read m_pleito), the line of
+#   each and their order. The roots' IDsEleicoes stands for 5735 and CargosEleicoesDuas for 4454 and 7787.
 # Not matched:
 # - fn 170, CBaseError<comum::EUeComumDadosError, ...>'s constructor: the target's is a thunk of 2294, whose body makes the
 #   base call through invoke; ours is a thunk of the uenux2 shape. The callers need only its name, which their call votes

@@ -16,8 +16,8 @@
 #   IsVotacaoBloqueadaPorHorario 2226, SetIdentidadeDigitada 5414, SetTipoIdentidadeDigitada 3619, GetIdentidadeDigitada
 #   3623, GetTipoIdentidadeDigitada 5416, GetIdentidadeEleitor 1535, SetEleitorSemFoto 5413, SetFotoNaoApresentada 1904,
 #   GetApresentacaoFotoEleitor 2745.
-# Written and not matched: CInformacaoThreadOperador::SorteiaDataHoraInspecao (5412), below. Pending (the -pending.cpp
-# header says what each waits for): slots 16 and 19 (10569, 10566).
+# Written and not matched: CInformacaoThreadOperador::SorteiaDataHoraInspecao (5412), below. Slots 16 and 19 (10569,
+# 10566): below.
 # With them: the vota::impl::IInformacaoThreadOperador interface (iinformacaothreadoperador.h beside the source, with the
 # vota:: functions' declarations), the 9401 to 9404 and 9409 enumerators of EUeVotaError, the layouts of
 # comum::md::CEleitorIdentidade (src/app/comum/dados/md/eleitor/celeitoridentidade.h), api::CDateTime and api::CDate
@@ -105,6 +105,31 @@
 # and 11265 on this tree. Its body scores operand rows only against the target (`pnpm wasm score ... 5412 ...`: 31 over
 # 350, after this unit's step 6), and 599 and 10568 match over it.
 #
+# Slots 16 and 19, written in slot order (16 after slot 15, 19 after slot 18; their lines are chosen like the others'):
+# - Slot 19, IsVotacaoBloqueadaPorHorario (fn 10566), matches: false in the training phase (vota::EhTreinamento, fn
+#   1485); else CDateTime::Now (479) against comum::CConfiguracaoEleicao's GetDataHoraFimEleicao (+580) through
+#   operator<=> (759), `>=` read as `(a <=> b) >= 0`: before it, false; past it, true when
+#   comum::CEleitores::GetComparecimento (the word at +104, an accessor added to celeitores.h) is 0, else true when Now
+#   is not before CEstadoGeralVota::GetDtHrUltimoVoto plus 300 (operator+=, fn 2233). The getter is inlined, with its
+#   record (cestadogeralvota.h:131, code 8092 "Nenhum eleitor votou"), which anchors the match line; the target reaches
+#   it through fn 903, CAppInfo's const GetVota, so the source calls GetVota on a const CAppInfo& (the named local
+#   appInfo is a choice; no other spelling was tried). `pnpm wasm score` before step 8: 14 over 83 rows, all
+#   operand-only.
+# - Slot 16, GetTextoComparecimento (fn 10569), is written and `differs`: std::format("{:04}") over
+#   CAppInfo::EhTreinamentoEleitor() (697) ? CRdvVota::GetInst().Comparecimento() (555, 1269) :
+#   CEleitores::GetInst().GetComparecimento() (326, +104); the format's argument type is 6, an unsigned, which that
+#   conditional of a TQtdVoto and an unsigned int gives. The target's "{:04}" (8862) is the tail of the 39-byte literal
+#   "Local                             {:04}" at 8828, which only fn 11188 (comum::CRelatorioTesteImpressora's pending
+#   slot, unit 123) loads; our link holds the 5 bytes elsewhere, and the scan stops at the end pointer (+0x77). In a
+#   variant link with a scratch object that keeps that literal (docs/reference/facts/workflow.md W13), a scan with this
+#   unit's symbol file and match list reads 10569 `match` and moves no other row into or out of `match`. 12 over 169
+#   rows, all operand-only, in this link.
+# The -pending.cpp went with them. cinformacaothreadoperador.cpp includes app/comum/appinfo/cappinfo.h,
+# app/comum/dados/crdvvota.h and app/vota/comum/votadefs.h for them: the three include lines come out of the blank run
+# above TipoToStr (line 30), and the 27 lines of the two members out of the run above the vota:: functions, which move
+# up as much, so every record stays on its line (check_srcloc.py --strict: all the object's records are the target's).
+# Chosen, no other form tried: the slots' bodies as written (the order of the tests, `>=`, the local `limite`).
+#
 # Forms the bytes decide, each other form measured object against object. Slot 8 is one conditional over two const
 # char*: an if with two returns, or a conditional over two std::string, builds the string twice. Slots 23 to 26 test
 # !m_x and throw: if (m_x) return ...; else throw ... tests == 1 where the target tests eqz. Slot 20 resets +24, +40,
@@ -144,13 +169,11 @@ CINFORMACAOTHREADOPERADOR_SRCS := src/app/vota/operador/comum/cinformacaothreado
 UENUX2_SRCS += $(CINFORMACAOTHREADOPERADOR_SRCS)
 # cinformacaothreadoperador.cpp includes app/comum/dados/cconfiguracaoeleicao.h, whose ecourna headers include Boost
 $(ROOT)/$(APP)/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# Two members of slots 16 to 22 are not reconstructed (one calls a function with no name, one needs header lines other
-# units own): the file below defines them with trapping bodies, compiled with the unit's flags, and its header names
-# each with its target function and what it waits for
-$(ROOT)/$(APP)/50-uenux2-cinformacaothreadoperador-pending.o: $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador.mk $(ROOT)/src/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.h $(ROOT)/src/uenux2/src/app/vota/operador/comum/iinformacaothreadoperador.h $(ROOT)/src/uenux2/src/app/comum/dados/md/eleitor/celeitoridentidade.h $(ROOT)/src/uenux2/src/api/util/cdatetime.h $(ROOT)/src/uenux2/src/api/util/cdate.h $(ROOT)/src/uenux2/src/api/util/ctime.h $(ROOT)/src/ecourna/app/dados/tiposbasicos.hpp $(ROOT)/src/ecourna/app/dados/resultadournacadastro/capresentacaofotoeleitor.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/50-uenux2-cinformacaothreadoperador-pending.cpp -o $(R)
+# and app/comum/dados/crdvvota.h, which holds the RDV's converter over generated ASN.1 modules: the generic uenux2 rule
+# does not depend on them
+$(ROOT)/$(APP)/uenux2/src/app/vota/operador/comum/cinformacaothreadoperador.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 # the target callers of GetInst, of the vota:: functions and of random_device's constructor are not reconstructed:
 # 50-uenux2-cinformacaothreadoperador-roots.cpp stands in for them
 $(ROOT)/$(APP)/50-uenux2-cinformacaothreadoperador-roots.o: $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/50-uenux2-cinformacaothreadoperador.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/50-uenux2-cinformacaothreadoperador-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/50-uenux2-cinformacaothreadoperador-pending.o $(APP)/50-uenux2-cinformacaothreadoperador-roots.o
+override EXTRA_OBJS += $(APP)/50-uenux2-cinformacaothreadoperador-roots.o

@@ -9,8 +9,8 @@
 //   CVerificaHorarioZeresima::GetInst, fn 5947, unit 138).
 //
 // vota::CInicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/ciniciovotacao.cpp:
-// - StartState 11988 (slot 2) and ProcessTick 11987 (slot 8): each calls fn 5972, not written, which calls fns 491 and
-//   1269, with no name.
+// - StartState 11988 (slot 2) and ProcessTick 11987 (slot 8): each calls fn 5972, not written, which calls fn 491, with
+//   no name, and fn 1269 (comum::CRdvVota::Comparecimento(), unit 13).
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/iniciovotacao/cgeradadosdinamicos.h"

@@ -5,8 +5,10 @@
 //   (5911), ProcessTick (5910), AcceptsKey (3842), AcceptsInput (5909) and AcceptsTick (5908), each of the last six called
 //   by 4349 and 10204: 7061 and 10204 are unit 116's traps, 4349 and 4713 are not written. ProcessTick's two calls pass
 //   two values, so that dead-argument elimination keeps the parameter the target's 5910 has.
-// - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 is unit 50's trap, the others are not
-//   written.
+// - vota::EhTreinamento (fn 1485; callers 10425, 10566, 10680, 12098): 10566 is in the link (unit 50), the others are
+//   not written.
+// - vota::AdicionaSeparador (fn 1387; callers 11908, 11946, 12105, 12110, none written), with the two alignments they
+//   pass, 0 and 2, so that dead-argument elimination keeps the parameter.
 // - api::CPolySingletonList::has<vota::IAjusteInicial> (fn 2450; callers 7061, unit 116's trap, and the static
 //   initializers in fn 14478, which call it with g_polySingletonsInfo's result and drop what it returns). The instance
 //   is the header's template, emitted here first: no object before this one instantiates it.
@@ -39,6 +41,12 @@ __attribute__((noinline)) int w168_ajuste(comum::CAppState* estado)
            (contexto.AcceptsTick() ? 73 : 79) + (contexto.AcceptsInput() ? 83 : 89);
 }
 
+__attribute__((noinline)) void w168_separadores(api::CPaperFormBuilder* builder, api::CPaperFormBuilder* outro)
+{
+    vota::AdicionaSeparador(*builder, api::ALINHAMENTO_ESQUERDA);
+    vota::AdicionaSeparador(*outro, api::ALINHAMENTO_CENTRO);
+}
+
 const void* volatile w168_sink;
 
 struct SW168Roots {
@@ -46,6 +54,7 @@ struct SW168Roots {
     {
         w168_sink = reinterpret_cast<const void*>(&w168_tecla);
         w168_sink = reinterpret_cast<const void*>(&w168_ajuste);
+        w168_sink = reinterpret_cast<const void*>(&w168_separadores);
     }
 } w168_roots;
 
