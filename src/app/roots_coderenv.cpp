@@ -11,8 +11,8 @@
 //   at -Oz -fexceptions and not at uenux2's flags (docs/reference/facts/levels.md V4). So this file compiles at
 //   VOTA_WEB_CXXFLAGS, the rule of the executable TU, whose object is first on the link line; that the copies are that
 //   TU's is a reading.
-// - 9770 is reached only through table slot 482, which 2927 (CFileASN's CodeObjectFunction merge, not written) passes to
-//   invoke_iiii: urna_roots_coderenv takes its address.
+// - 9770 is reached only through table slot 482, which 2927 (CFileASN's CodeObjectFunction merge, below) passes to
+//   invoke_iiii.
 // - 1532 has seven direct target callers besides 9770 (11488 11582 11587 11616 11629 5366 6006), none in our link:
 //   without the call below, binaryen inlined it into 9770, its one caller. encodeBER is protected, so the call goes
 //   through an __asm__ label, with [[clang::noinline]] on the call as roots_vector.cpp has it (src/units/README.md
@@ -29,17 +29,49 @@
 template bool ASN1::CoderEnv::encode<std::back_insert_iterator<std::vector<char>>>(const ASN1::AbstractData&,
                                                                                   std::back_insert_iterator<std::vector<char>>);
 
-extern "C" int urna_codifica(int, int, int) __asm__("_ZN4ASN18CoderEnv6encodeINSt3__220back_insert_iteratorINS2_6vectorIcNS2_9allocatorIcEEEEEEEEbRKNS_12AbstractDataET_");
+// api::CFileASN::CodeObjectFunction for the four ESTADO GERAL entities (target fn 2927, binaryen's merge of the four, and
+// its thunks 9801, 9702, 9695 and 9673, which pass each instance's records, cfileasn.h 161 and 171), with ~CoderEnv
+// (518), which each calls on its two paths. src/units/229-asn1-coderenv.mk has the evidence and the measurements.
+// - Whose copy: 2927 has landing pads, so an -fexceptions object's; this rule is the executable TU's, -Oz -fexceptions
+//   (unit 206's fragment has a lead to mock/app/comum/cappinfobuilder.cpp, at the same flags, whose saves reach the
+//   writer). That they are that TU's copies is a reading.
+// - The target reaches each instance only through a table slot (478, 488, 489 and 490), which 2891's thunks (9820,
+//   9703, 9701, 9684) pass, not written: urna_roots_cfileasn takes the four addresses.
+#include "api/io/asn/cfileasn.h"
+#include "asn1/modules/ModuloEstadoGeralGap.h"
+#include "asn1/modules/ModuloEstadoGeralSA.h"
+#include "asn1/modules/ModuloEstadoGeralUrna.h"
+#include "asn1/modules/ModuloEstadoGeralVota.h"
+
+template void api::CFileASN::CodeObjectFunction<ModuloEstadoGeralUrna::EstadoGeralUrna>(
+    std::vector<char>&, const ModuloEstadoGeralUrna::EstadoGeralUrna&, const std::string&);
+template void api::CFileASN::CodeObjectFunction<ModuloEstadoGeralGap::EstadoGeralGap>(
+    std::vector<char>&, const ModuloEstadoGeralGap::EstadoGeralGap&, const std::string&);
+template void api::CFileASN::CodeObjectFunction<ModuloEstadoGeralSA::EstadoGeralSA>(
+    std::vector<char>&, const ModuloEstadoGeralSA::EstadoGeralSA&, const std::string&);
+template void api::CFileASN::CodeObjectFunction<ModuloEstadoGeralVota::EstadoGeralVota>(
+    std::vector<char>&, const ModuloEstadoGeralVota::EstadoGeralVota&, const std::string&);
+
+// Stands in for 2891's thunks, which pass the four instances' table slots.
+static int urna_roots_cfileasn()
+{
+    return reinterpret_cast<int>(&api::CFileASN::CodeObjectFunction<ModuloEstadoGeralUrna::EstadoGeralUrna>) +
+           reinterpret_cast<int>(&api::CFileASN::CodeObjectFunction<ModuloEstadoGeralGap::EstadoGeralGap>) +
+           reinterpret_cast<int>(&api::CFileASN::CodeObjectFunction<ModuloEstadoGeralSA::EstadoGeralSA>) +
+           reinterpret_cast<int>(&api::CFileASN::CodeObjectFunction<ModuloEstadoGeralVota::EstadoGeralVota>);
+}
+
 extern "C" int urna_codifica_ber(int, int, int) __asm__("_ZN4ASN18CoderEnv9encodeBERINSt3__220back_insert_iteratorINS2_6vectorIcNS2_9allocatorIcEEEEEEEEbRKNS_12AbstractDataET_");
 extern "C" int urna_recomenda(int, int) __asm__("_ZNKSt3__26vectorIcNS_9allocatorIcEEE11__recommendB8ne210108Em");
 
-// Stands in for 9770's, 1532's and 3656's target callers named above.
+// Stands in for 1532's and 3656's target callers named above.
 int urna_roots_coderenv(int a)
 {
     [[clang::noinline]] urna_codifica_ber(a, a + 4, a + 8);
+    a += urna_roots_cfileasn();
     int n;
     [[clang::noinline]] n = urna_recomenda(a, a + 12);
-    return n + reinterpret_cast<int>(&urna_codifica);
+    return n;
 }
 
 // std::vector<std::string>'s range construction from std::string* (target fn 5585): __vallocate and __construct_at_end

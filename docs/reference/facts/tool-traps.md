@@ -86,8 +86,8 @@ target files were fetched through a browser.
 1. A function that calls `std::to_string(int)` or `std::to_string(unsigned)` (targets 296 and 327, 128 callers
    between them) pairs at tier `none` at depth 2 in the skeleton however exact its own body is. `to_string` calls
    `string::__init<const char*>` (target 1544, 16 B), which in the target wraps an out-of-line
-   `__init_with_size` (5607, called by 1544 and 679). While 679's owner is not built, the skeleton has one caller
-   and wasm-opt inlines it, so the depth-2 fingerprints differ. `to_string` itself is identical at depth 0
+   `__init_with_size` (5607, called by 1544 and 679). While 679 was not in the skeleton, the skeleton had one caller
+   and wasm-opt inlined it, so the depth-2 fingerprints differed. `to_string` itself is identical at depth 0
    (`pnpm wasm score <target> 327 <a named link> <to_string(unsigned)> --depth 0` gives 0 differing rows of 27). Shown
    on 1931 (`CRdvVota::Candidato`) in a whole link: depth 0 `addr` with 3 differing data addresses, depth 1 `shape`
    with 8 operand-only rows, depth 2 `none`. This is why the symbol file names `to_string(unsigned)` by its depth-0

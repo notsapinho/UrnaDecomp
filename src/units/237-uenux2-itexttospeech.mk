@@ -51,9 +51,11 @@
 # never reads), the cast's spelling, the root's file name, the stand-ins' names.
 #
 # Stand-ins, 237-uenux2-itexttospeech-roots.cpp, at APP_CXXFLAGS (it calls through __asm__ labels and includes nothing):
-# w237_guarda for fn 921 (5685's other direct caller), w237_par for fn 3552 (the one reader of 1928's result). Measured
-# on a variant link without them: 11447 372 over 394 (367 inserted: 5685 inlined into it), and a drop deleted in each of
-# 11436 (two), 3722, 3746 and 5720; with them every one is operand-only. They go when 921 and 3552 are in the link.
+# w237_guarda for fn 921 (5685's other direct caller), and w237_par for fn 3552 (the one reader of 1928's result) until
+# unit 229's root brought 3552. Measured on a variant link without them: 11447 372 over 394 (367 inserted: 5685 inlined
+# into it), and a drop deleted in each of 11436 (two), 3722, 3746 and 5720; with them every one is operand-only.
+# w237_guarda goes when 921 is in the link. w237_par went with 3552 in the link (from unit 229's root, which reads 1928's
+# result): a link without it moves no row (unit 229's fragment).
 #
 # Hand lines: the five that a generated line now repeats or that nothing needs went from splat/symbol_addrs.txt: 3746
 # and 3764 (unit 158's, callers+content; 3746 has a generated pair-addr line) and 3618, 3627 and 5423 (unit 100's has<T>
@@ -70,10 +72,12 @@
 #   3281 and 5417, ours 3618 and 5423).
 # - 9650, 9831, 9897 and 10307 (main): `unresolved` on table slots of set<T> bodies that have no target name; 640 on
 #   unlock_shared_and_lock's; 9372 on a table slot of ours whose function the target's table does not hold.
-# - 2650 still calls the body matched as 424 (named after a twin with no result, boost's
-#   ~shared_ptr<basic_regex_implementation> of ecourna's cstringutils.cpp.o) where the target calls 388: read as waiting for a copy of ~shared_ptr<ASN1::IAbstractVisitor> with 388's body
-#   ahead of the runtime.
-# - 921 (above) and 13877 (unit 82's fragment) are not written; 3552 is asn1.md A10's.
+# - 2650 called the body matched as 424 (named after a twin with no result, boost's
+#   ~shared_ptr<basic_regex_implementation> of ecourna's cstringutils.cpp.o) where the target calls 388, read as waiting
+#   for a copy of ~shared_ptr<ASN1::IAbstractVisitor> with 388's body ahead of the runtime: it matches since unit 229's
+#   root emits that copy.
+# - 921 (above) and 13877 (unit 82's fragment) are not written; 3552 matches from unit 229's root, and 1928's line names
+#   that root's pair<string, shared_ptr<IAbstractVisitor>> copy now, the same body, which links ahead of this one's.
 $(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/237-uenux2-itexttospeech-roots.o

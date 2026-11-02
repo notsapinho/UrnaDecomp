@@ -62,8 +62,16 @@ bool CoderEnv::decode(const char* first, size_t size, AbstractData& val, bool de
     }
   case ber_partial:
     {
+      // decode(seeder, val)'s steps, written out: the target holds this function only inside fn 679, where this case
+      // keeps the BERDecoderPartial in this frame and calls no decode(seeder, val) (fn 5060, whose callers are 7787 and
+      // 11523), and clang inlines that call at none of -Os, -O2 and -O3 (src/units/115-asn1-leftovers.mk)
       ASN1_STD shared_ptr<ISeeder> seeder(new BufferSeeder(first, size));
-      return decode(seeder, val);
+      BERDecoderPartial decoder(seeder, this);
+      decoder.setVisitors(visitors);
+      bool result = val.accept(decoder);
+      ASN1_STD string text = decoder.getLog().str();
+      log = text;
+      return result;
     }
   case avn:
     {
