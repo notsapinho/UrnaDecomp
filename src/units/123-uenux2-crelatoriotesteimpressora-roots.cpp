@@ -35,6 +35,11 @@
 //   2, not reconstructed), takes the address of crelutil.cpp's internal TituloPartido (fn 11181, table slot 3050, which
 //   only 11946 passes): w123_titulo stands for 11946 and calls it once, so binaryen inlines it here as there, and 11181
 //   is reached as the target reaches it. It goes when 11946 lands.
+// - CRelUtil::ImprimeSeparadorVia, fn 5581, has one caller in the target, fn 12110 (vota::CGeraBU's slot 2, not
+//   reconstructed), which calls it twice (awk -F'\t' '$2==5581' ledger/callgraph.tsv): w123_vias stands for it with
+//   two call sites, so binaryen keeps 5581 out of line. 12110 passes no constant (the same builder at both calls, a
+//   counter plus one and a total), and w123_vias passes different ones where it passes constants, so that
+//   dead-argument elimination folds none. It goes when 12110 lands.
 #include <source_location>
 #include <string>
 
@@ -91,6 +96,12 @@ __attribute__((noinline)) unsigned w123_titulo(unsigned base)
     return comum::CRelUtil::FormTituloPartido() ? base + 123 : base;
 }
 
+__attribute__((noinline)) void w123_vias(api::CPaperFormBuilder& builder, api::CPaperFormBuilder& outro, unsigned total)
+{
+    comum::CRelUtil::ImprimeSeparadorVia(builder, 1, total);
+    comum::CRelUtil::ImprimeSeparadorVia(outro, 3, total + 5);
+}
+
 const void* volatile relatoriotesteimpressora_sink;
 unsigned (*volatile w123_sink_labels)(const std::map<char, ecourna::app::dados::CLabelParametrizado>&);
 int (*volatile w123_sink_mapa)(void*, const void*, const void*);
@@ -99,6 +110,7 @@ void (*volatile w123_sink_erro)(int, const std::string&);
 unsigned (*volatile w123_sink_idcarga)(const std::string&, const std::string&);
 void (*volatile w123_sink_demonstracao)(api::CPaperFormBuilder&, api::CPaperFormBuilder&);
 unsigned (*volatile w123_sink_titulo)(unsigned);
+void (*volatile w123_sink_vias)(api::CPaperFormBuilder&, api::CPaperFormBuilder&, unsigned);
 
 struct SRelatorioTesteImpressoraRoots {
     SRelatorioTesteImpressoraRoots()
@@ -111,6 +123,7 @@ struct SRelatorioTesteImpressoraRoots {
         w123_sink_idcarga = w123_idcarga;
         w123_sink_demonstracao = w123_demonstracao;
         w123_sink_titulo = w123_titulo;
+        w123_sink_vias = w123_vias;
     }
 } relatoriotesteimpressora_roots;
 

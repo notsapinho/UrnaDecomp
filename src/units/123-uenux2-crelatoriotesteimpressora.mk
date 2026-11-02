@@ -108,8 +108,30 @@
 #   (fn 1543, record crelutil.cpp:307) and fn 5591, and it tests CInformacaoEleicao::EhModoDemonstracao as
 #   GetSeparadorFase does. It adds the demonstration-mode line, centred in style 1, and two blank lines: 10 over 69,
 #   all operand-only. Its name, its lines and its being a static member are chosen.
-# - ImprimeSeparadorVia (fn 5581, no record), on lines 403 to 408: src/units/235-uenux2-imprimeseparadorvia.mk has its
-#   evidence and choices, and its roots stand for its caller.
+# - ImprimeSeparadorVia (fn 5581, no record), on lines 403 to 408 (427 B, `pnpm wasm fn ../target/vota_web_wasm.wasm
+#   5581`), builds std::format's result for "-------------- {:02} / {:02} ---------------" (the 44-byte literal at
+#   378206, which no other target function loads: `/usr/bin/grep -rlE 'i32\.const 378206($|[^0-9])'
+#   build/out/splat/pieces/asm`) over its second and third arguments, both of argument code 6, unsigned (the i64 198
+#   it stores: docs/reference/facts/reading.md R13), adds it to the api::CPaperFormBuilder its first argument is with
+#   AddTextField (fn 193), style 1 and alignment 0, then calls AddNewLine(1) (fn 198). Its one caller is fn 12110,
+#   vota::CGeraBU's slot 2 (ledger/vtables.json), which calls it twice (+0xdbe and +0x1086), each time with the
+#   builder at +36 of its frame, a counter plus one and a total, and which also calls GetIDCargaFormatado (fn 2786).
+#   Before steps 7 to 9 it scored 11 over 187 rows (`pnpm wasm score`), all operand-only, the one operand that is no
+#   call and no data address being the format buffer's table slot (148 in the target). No symbol-file line names
+#   it: the scan's content pass pairs it (its `source` read `content` in the first scan), and no other target
+#   function loads its literal. w123_vias stands for 12110 with two calls; it goes when 12110 is in the link.
+#   Chosen: the file. No record names it, and in the uses-2 band of ledger/ordinals.tsv no function between the
+#   matched cparte*.cpp rows (5590 to 5587) and cvalidamidia.cpp's GetInst (5575, record line 182) holds a record. In
+#   link order 5581 follows fn 5583, which this unit put in crelutil.cpp by choice, and fn 5582 (no record), and
+#   precedes fns 5580 to 5576 (no record; 5576's callers are fn 3689, which holds csubstituidortitulo.cpp's records,
+#   and fn 11175). crelutil.cpp is taken for that neighbour and for the caller's other CRelUtil call; the other
+#   relatorios files whose names sort in that stretch, csigverifier.cpp (unit 26) and csubstituidortitulo.cpp, were
+#   not linked with it (docs/reference/facts/placing.md P5). Also chosen: its name, its being a static member of
+#   CRelUtil (the class's records name only static members: how-to step 3, "Names no evidence gives"), its
+#   parameters' unsigned int (the argument code gives the signedness, not the width), its line (in the blank run
+#   between IncluiCabecalhoEleicoesMZS's record, line 307, and DSCodigoVerificador, line 410), and the style's
+#   spelling as a cast of 1 and the alignment's as api::ALINHAMENTO_ESQUERDA, as IncluiAvisoModoDemonstracao spells
+#   its style.
 # - TituloPartido (fn 11181, record crelutil.cpp:58:15, `std::string comum::(anonymous namespace)::TituloPartido()`)
 #   returns CTradutorFrase::Traduz("<PLSN>") + ": " + the current party's number + " - " + its abbreviation (the string
 #   at +4 of md::CPartido, GetSigla), and throws CUeComumRelatoriosError 9084 "Partido não posicionado" when
