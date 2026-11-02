@@ -1,11 +1,12 @@
 // Reconstruction notes, not TSE's text: this file holds CParteCandidatos::Imprime (fn 11215),
 // CParteCandidatosMajoritarios::Imprime (fn 11214), whose throw is the file's record at line 75, the constructors of
-// cpartecandidatos.h's four classes, which binaryen inlined into fn 11946 (no target function), and after them
-// CParteCandidatosProporcionais::Imprime (fn 11213). The record at line 174, CParteCandidatosConsultas::Imprime's, is
-// not written (src/units/77-uenux2-ireportpart-pending.cpp traps it). That the file holds the other two classes is
-// chosen: the vtables interleave with the records at 1576388-1576484. The lines of what has no record are chosen.
+// cpartecandidatos.h's four classes, which binaryen inlined into fn 11946 (no target function), then
+// CParteCandidatosProporcionais::Imprime (fn 11213) and CParteCandidatosConsultas::Imprime (fn 11212), whose throw is the
+// record at line 174. That the file holds the other two classes is chosen: the vtables interleave with the records at
+// 1576388-1576484. The lines of what has no record are chosen, and so is where 11212 starts above its record's line.
 #include "app/comum/relatorios/cpartecandidatos.h"
 
+#include <algorithm>
 #include <format>
 #include <utility>
 #include <vector>
@@ -13,6 +14,7 @@
 #include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargos.h"
 #include "app/comum/dados/cpartidos.h"
+#include "app/comum/dados/crespostas.h"
 #include "app/comum/relatorios/euecomumrelatorioserror.h"
 
 namespace comum {
@@ -32,7 +34,7 @@ void CParteCandidatos::Imprime() const
     }
 }
 
-// (original lines 35-66: content not recovered)
+// (original lines 37-66: content not recovered)
 #line 67
 void CParteCandidatosMajoritarios::Imprime() const
 {
@@ -112,6 +114,24 @@ void CParteCandidatosProporcionais::Imprime() const
             }
         }
         m_rodapePartido->Imprime();
+    }
+    m_rodape->Imprime();
+}
+
+// (original lines 149-164: content not recovered)
+#line 165
+void CParteCandidatosConsultas::Imprime() const
+{
+    const TCargoID cargo = CCargos::GetInst().GetCurrentCargoID();
+    CRespostas& respostas = CRespostas::GetInst();
+    std::vector<TCandidatoID> numeros = respostas.GetNumeros(cargo);
+    std::sort(numeros.begin(), numeros.end());
+    m_cabecalho->Imprime();
+    for (const TCandidatoID& numero : numeros) {
+        if (respostas.Busca(cargo, numero) == nullptr) {
+            throw CUeComumRelatoriosError(EUE_COMUM_RELATORIOS_9083, std::format("Resposta não encontrada: {}/{}", cargo, numero));
+        }
+        m_candidato->Imprime();
     }
     m_rodape->Imprime();
 }

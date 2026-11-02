@@ -88,7 +88,9 @@ private:
     std::function<bool()> m_filtro;
 };
 
-// 28 bytes, the same as CParteCandidatosMajoritarios: Imprime (fn 11212) reads the same three members.
+// 28 bytes, the same as CParteCandidatosMajoritarios: Imprime (fn 11212) reads the same three members. It prints
+// m_cabecalho, m_candidato per answer of the current post (CRespostas::GetNumeros, sorted) after checking that
+// CRespostas::Busca finds it, and m_rodape.
 class CParteCandidatosConsultas final : public api::IReportPart {
 public:
     CParteCandidatosConsultas(std::shared_ptr<api::IReportPart> cabecalho, std::shared_ptr<api::IReportPart> candidato,
