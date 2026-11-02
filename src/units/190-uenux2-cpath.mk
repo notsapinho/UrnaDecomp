@@ -62,9 +62,9 @@
 #   helper declared `inline` in cpath.cpp stays a call in 634.
 # - Every call of operator/= keeps the target's `drop` only while its result has a reader: the target's 183 is table
 #   slot 71, which fns 5968 (libc++'s operator/ of directory_iterator.o, in the link since unit 214) and 5821 (unit
-#   122's CompactaWsq, in the link now too) pass to invoke_iii. Without the roots'
-#   address of it, binaryen drops the result, and 358, 1399, 634, 2864, 6047 and 5899 each lost a row per call (`deleted
-#   2`, `1`, `2`, `1`, `1`, `1`).
+#   122's CompactaWsq) pass to invoke_iii; both are in the link and take its address, as the roots did before 5821
+#   was. Without that address, binaryen drops the result, and 358, 1399, 634, 2864, 6047 and 5899 each lost a row per
+#   call (`deleted 2`, `1`, `2`, `1`, `1`, `1`).
 # - The scores with the forms above: 634 42 over 484, 436 and 1274 3 over 8, 2864 8 over 83, 3834 6 over 23, 762 and
 #   1082 3 over 7, 6047 5 over 66, 949 and 1948 3 over 6, 6048 12 over 153, 5899 11 over 61, all operand rows.
 #
@@ -89,7 +89,7 @@
 #
 # Roots (190-uenux2-cpath-roots.cpp): it gives the members whose target callers are not all in the link the call sites
 # its header lists (two each; none for 1399, whose callers 1164 and 1274 are both in the link, none for 634, whose
-# callers 1164, 1487 and 1488 are, and none for 358), emits GetPathLog's copy and takes operator/='s address. It
+# callers 1164, 1487 and 1488 are, and none for 358) and emits GetPathLog's copy. It
 # compiles at UENUX2_CXXFLAGS, app/comum's flags, since it emits GetPathLog, code of a tree header.
 #
 # Added since: CPath::GetPathTrabExterno (no target index), `std::filesystem::path path("/dsk/fe/dinamico/trab/");

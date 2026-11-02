@@ -23,10 +23,9 @@
 // GetPathTrab with the turn (fn 358) gets none: the unit's GetPathTrab(EFlashOrigem) and GetPathWsq are two call sites.
 // std::filesystem::path::operator/=(const path&) (fn 183), which the members call, is table slot 71 in the target,
 // which fn 5968 (libc++'s operator/ of directory_iterator.o, in the link since unit 214's code brings it in) and fn
-// 5821 pass to invoke_iii; its address was taken here while 5821 was not in the link, and unit 122's CompactaWsq (5821)
-// now passes it as well. Without a reader binaryen drops the result
-// no caller of our link reads, and each call of it
-// loses the target's `drop` (the fragment has the rows).
+// 5821 pass to invoke_iii. Both are in the link (5821 is unit 122's CompactaWsq) and pass it, so it needs no line here;
+// without a reader binaryen drops the result no caller of our link reads, and each call of it loses the target's
+// `drop` (the fragment has the rows).
 // The stand-ins differ from each other and add offsets, so none is a target function's body. Each builds its results in
 // place (`::new (destino) path(...)`), so the stand-ins hold no constructor or destructor of path.
 #include <new>
@@ -98,7 +97,6 @@ __attribute__((noinline)) void DoisWsq(void* destino, comum::EFlashOrigem origem
 }
 
 const void* volatile r190_sink;
-path& (path::* volatile r190_barra)(const path&);
 
 struct SRoots190 {
     SRoots190()
@@ -112,7 +110,6 @@ struct SRoots190 {
         r190_sink = reinterpret_cast<const void*>(&DoisResultadosAtuais);
         r190_sink = reinterpret_cast<const void*>(&DoisTrabalhos);
         r190_sink = reinterpret_cast<const void*>(&DoisWsq);
-        r190_barra = &path::operator/=;
     }
 } roots190;
 

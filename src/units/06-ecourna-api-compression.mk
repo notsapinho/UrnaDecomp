@@ -7,8 +7,8 @@
 # measured before step 8). Its band, 5194 (clzmacompress.cpp's), 5193, 5192 (icompressor.cpp's), puts it in czip.cpp.o.
 # It stores CZip's vptr after ICompressor's constructor (5192), copies the path's string to +16, stores 0, the level
 # and 0 at +36, +32 and +28 and invokes CreateZipFile through table slot 6119; every row is operand-only and it
-# matches, under a vptr+shape hand line of splat/symbol_addrs.txt (its depth-0 shape is the only one on both sides,
-# and its one caller is named by hand, so nothing votes for it).
+# matches by content (the scan's content pass finds it: its depth-0 shape is the only one on both sides; a
+# vptr+shape hand line that named it carried no row, measured, and went).
 # CreateZipFile (9543, with ConvertToOpen and minizip's zipOpen64 inlined) matches since the constructor that invokes it
 # is in this object; before, its only reference was the roots' address and it was 380 rows over 2051 against the
 # target (343 of the 344 replaced operand-only, 15 inserted and 21 deleted: `this` pushed for the store of m_zip
