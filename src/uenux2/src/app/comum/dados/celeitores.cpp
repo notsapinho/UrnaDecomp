@@ -70,7 +70,18 @@ void CEleitores::MarcaEleitorFoiHabilitado(const CEleitorDadosHabilitacao& dados
     }
 }
 
-// (original lines 451-733: content not recovered)
+// (original lines 451-639: content not recovered)
+#line 640
+ueword CEleitores::QuantidadeHabilitacaoSemBiometria() const
+{
+    return std::count_if(m_registros.begin(), m_registros.end(), [](const Container::value_type& registro) {
+        const CEleitorDetalhe& detalhe = registro.second;
+        return detalhe.TemDadosDinamicos() && detalhe.GetDinamico().GetTipoHabilitacao() == 0 &&
+               detalhe.GetDinamico().GetEstadoComparecimento() == 3;
+    });
+}
+
+// (original lines 649-733: content not recovered)
 #line 734
 void CEleitores::ValidaIdentidadesEleitor(const md::CEleitorDecorator& eleitor) const
 {

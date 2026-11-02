@@ -21,6 +21,12 @@ public:
     CFotos();
     ~CFotos();
 
+    // Whether the map at +0 holds the code: comum::VerificaFotoCandidatura (fn 5746) calls the map's find (fn 163,
+    // matched under another std::map<std::string, ...>'s find, into whose body our link merges this map's) on the CFotos
+    // fn 7787 passes it, and compares the result with the end node at +4. The name, and that the search is a member of
+    // CFotos, are chosen.
+    bool ExisteFoto(const std::string& codigo) const { return m_fotos.find(codigo) != m_fotos.end(); }
+
 private:
     static std::unique_ptr<CFotos> s_inst;
     static std::mutex s_mutex;

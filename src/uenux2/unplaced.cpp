@@ -838,12 +838,6 @@
 // f5750 · 133 B · unmatched · placement: link order · name unknown
 // void f5750(i32, i32, i32, i32) { ... }
 
-// f5747 · 1495 B · unmatched · placement: link order · name unknown
-// void f5747(i32, i32, i32, i32) { ... }
-
-// f5746 · 1021 B · unmatched · placement: link order · name unknown
-// void f5746(i32, i32, i32, i32) { ... }
-
 // link-order cluster 826 · uses=2 · neighbours' file uenux2/src/app/comum/dados/celeitores.cpp
 
 // f5758 · 839 B · unmatched · placement: link order · name unknown
@@ -999,9 +993,6 @@
 // void f3745(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1008 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cfotos.cpp
-
-// f3754 · 42 B · unmatched · placement: link order · name unknown
-// void f3754(i32, i32) { ... }
 
 // f3752 · 861 B · unmatched · placement: link order · name unknown
 // void f3752(i32, i32) { ... }

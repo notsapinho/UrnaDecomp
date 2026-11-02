@@ -16,7 +16,10 @@ using TVectorSuplencia = std::vector<CSuplencia>;
 
 class CDetalheCandidato {
 public:
+    // The names are chosen: comum::md::CCargo's TemFoto and QtdSuplentes (fns 1546, 1157) read the two fields.
+    bool TemFoto() const { return m_temFoto; }
     const CNomesCargo& GetNomes() const { return m_nomes; }
+    const TVectorSuplencia& GetSuplentes() const { return m_suplentes; }
     const CSuplencia& GetSuplente(uebyte suplente) const;
 
 private:

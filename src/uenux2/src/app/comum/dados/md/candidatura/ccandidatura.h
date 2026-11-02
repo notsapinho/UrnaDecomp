@@ -30,6 +30,9 @@ public:
     TCandidatoID GetCandidatoID() const { return m_candidato; }
     const CDadosCandidato& GetTitular() const { return m_titular; }
     const CDadosCandidato& GetSuplente(uebyte ordem) const;
+    // The name is chosen: comum::VerificaCargoCandidatura (fn 5747) compares the size of the vector at +60 with the
+    // post's substitutes.
+    const std::vector<CDadosCandidato>& GetSuplentes() const { return m_suplentes; }
 
 private:
     TCargoID m_cargo;

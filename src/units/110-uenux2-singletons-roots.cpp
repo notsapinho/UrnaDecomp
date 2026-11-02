@@ -12,8 +12,8 @@
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
-//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 2822, 6034, 7174, 10210, 10635 and 11616 (2825 is in the
-//                       link)
+//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 6034, 7174, 10210, 10635 and 11616 (2822 and 2825 are in
+//                       the link)
 //   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fns 3616, 5385,
 //                       10631, 10789 and 10790
 //   t11526 to t11529    the four CEleitorDado*::Text, which the target reaches only by table slot (fn 5401 passes all

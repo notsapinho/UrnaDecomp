@@ -21,7 +21,7 @@
 // - vota::CInspecionaUrna::ProcessInput (fn 11797, slot 7): fns 2380 and 6557.
 // - vota::CHabilitaAudioEleitor::ProcessInput (fn 10523, slot 7): fn 1150 (599 and 5415 are unit 50's).
 // - vota::IIniciaJustificativa::StartState (fn 10587, slot 2, the key function, so this object emits the class's
-//   vtable and its implicit destructors): fns 1391 and 2747 (1535 is unit 50's).
+//   vtable and its implicit destructors): fn 2747 (1535 is unit 50's, 1391, CJustificador::GetInst, unit 113's).
 #include "app/vota/eleitor/cinspecionaurna.h"
 #include "app/vota/operador/aguardaeleitor/cdesabilitaaudioeleitor.h"
 #include "app/vota/operador/aguardaeleitor/cperguntaeleitorvotando.h"
