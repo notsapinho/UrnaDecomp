@@ -990,7 +990,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 1124	EC_KEY_up_ref	1008	symbol	match	-	22	byte	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_key.o
 1125	EC_GROUP_get_degree	1007	symbol	match	readings: address string	58	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
 1126	_ZN3api19CMutexCompartilhado4lockEv	1498	symbol	match	readings: address symbol,table slot	141	shape	ecourna	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-1127	_ZN4vota8CLogVota23LogaImprimindoRelatorioEN5comum13ERelatoriosUEEj	5980	symbol	match	readings: table slot,address string	491	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
+1127	_ZN4vota8CLogVota23LogaImprimindoRelatorioEN5comum13ERelatoriosUEEj	5977	symbol	match	readings: table slot,address string	491	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
 1128	DSA_up_ref	1010	symbol	match	-	22	byte	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_lib.o
 1129	BN_consttime_swap	1012	symbol	match	-	443	byte	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 1130	BN_set_negative	1013	symbol	match	-	27	byte	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
@@ -4385,20 +4385,20 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4519	ossl_ec_encoding_name2id	4126	symbol	match	readings: address string,address symbol	57	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_backend.o
 4520	ossl_ec_key_private_check	4113	symbol	match	readings: address symbol,address string	119	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_key.o
 4521	EC_KEY_check_key	4114	symbol	match	readings: address string	120	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_key.o
-4522	_ZN4vota8CLogVota45LogaHabilitacaoCanceladaCapturaDigitalMesarioEv	5991	symbol	match	readings: address string	187	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
+4522	_ZN4vota8CLogVota45LogaHabilitacaoCanceladaCapturaDigitalMesarioEv	5982	symbol	match	readings: address string	187	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
 4523	ECDH_compute_key	4108	symbol	match	readings: address string	212	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_kmeth.o
 4524	EC_GROUP_new_from_params	4102	symbol	match	readings: address string,address symbol,address same-content	1874	none	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
 4525	ossl_ec_group_set_params	4103	symbol	match	readings: address string	370	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
 4526	EC_GROUP_get_pentanomial_basis	4104	symbol	match	readings: address string	152	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
 4527	EC_GROUP_get_trinomial_basis	4105	symbol	match	readings: address string	106	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
 4528	EC_GROUP_set_curve	4107	symbol	match	readings: address string	66	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
-4529	_ZN4vota8CLogVota29LogaAudioDesativadoFimVotacaoEv	5986	symbol	match	readings: address string	150	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
+4529	_ZN4vota8CLogVota29LogaAudioDesativadoFimVotacaoEv	5980	symbol	match	readings: address string	150	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
 4530	ossl_ec_GFp_simple_group_set_curve	4070	symbol	match	readings: address string	283	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ecp_smpl.o
 4531	ossl_ec_GFp_simple_group_copy	4071	symbol	match	-	71	addr	app	1	openssl/O3/crypto/ec/libcrypto-lib-ecp_smpl.o
 4532	ossl_ec_GFp_simple_group_clear_finish	4072	symbol	match	-	26	addr	app	1	openssl/O3/crypto/ec/libcrypto-lib-ecp_smpl.o
 4533	ossl_ec_GFp_simple_group_init	4073	symbol	match	-	91	addr	app	1	openssl/O3/crypto/ec/libcrypto-lib-ecp_smpl.o
 4534	ecdsa_sign_setup	4092	symbol	match	readings: address string	663	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ecdsa_ossl.o
-4535	_ZN4vota8CLogVota21LogaSuspensaoAbortadaEv	5982	symbol	match	readings: address string	150	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
+4535	_ZN4vota8CLogVota21LogaSuspensaoAbortadaEv	5979	symbol	match	readings: address string	150	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
 4536	ECDSA_sign_ex	4088	symbol	match	readings: address string	69	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ecdsa_sign.o
 4537	-	-	-	no-candidate	no symbol and no ledger pair	17	none	app	0	-
 4538	d2i_ECDSA_SIG	4127	symbol	match	readings: address string	30	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_asn1.o
@@ -4420,13 +4420,13 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4554	BN_kronecker	6416	symbol	match	readings: address symbol	472	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-bn_kron.o)
 4555	ossl_ec_wNAF_mul	4101	symbol	match	readings: address string	2441	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_mult.o
 4556	_ZN4vota8CLogVota33LogaQtdViasAdicionaisExcedeMaximoEv	5973	symbol	match	readings: address string	35	addr	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
-4557	_ZN4vota8CLogVota37LogaMesarioNaoSolicitouViasAdicionaisEv	5977	symbol	match	readings: address string	162	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
+4557	_ZN4vota8CLogVota37LogaMesarioNaoSolicitouViasAdicionaisEv	5986	symbol	match	readings: address string	162	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
 4558	ossl_dsa_key_from_pkcs8	4163	symbol	match	readings: address string	386	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_backend.o
 4559	ossl_dsa_dup	4164	symbol	match	readings: address symbol	202	addr	app	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_backend.o
 4560	ossl_dsa_key_fromdata	4165	symbol	match	readings: address string,address same-content	185	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_backend.o
 4561	i2d_DSAPublicKey	6400	symbol	match	readings: address symbol	14	addr	openssl	2	openssl/O3/libcrypto.a(libcrypto-lib-dsa_asn1.o)
 4562	d2i_DSAPrivateKey	6401	symbol	match	readings: address symbol	16	addr	openssl	2	openssl/O3/libcrypto.a(libcrypto-lib-dsa_asn1.o)
-4563	_ZN4vota8CLogVota36LogaMesarioIndagadoQtdViasAdicionaisEv	5979	symbol	match	readings: address string	174	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
+4563	_ZN4vota8CLogVota36LogaMesarioIndagadoQtdViasAdicionaisEv	5991	symbol	match	readings: address string	174	none	vota	1	app/uenux2/src/app/vota/log/clogvota.cpp.o
 4564	ossl_dsa_ffc_params_fromdata	4161	symbol	match	-	46	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_lib.o
 4565	DSA_security_bits	4162	symbol	match	-	49	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_lib.o
 4566	dsa_sign_setup	4159	symbol	match	readings: address string	760	addr	openssl	1	openssl/O3/crypto/dsa/libcrypto-lib-dsa_ossl.o

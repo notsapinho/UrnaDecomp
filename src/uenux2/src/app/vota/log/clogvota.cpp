@@ -1,9 +1,9 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
 //   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
-// Members with no record sit at chosen lines, each unit's fragment says why: 119's, 161's five after GetInst, 152's
-// seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, then 138's two, 176's, 61's, 197's,
-// and 156's six after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's and 119's two.
+// Members with no record sit at chosen lines, each fragment says why: 119's, 161's five and 156's two after GetInst,
+// 152's seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's,
+// 197's, 156's four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two.
 #include "app/vota/log/clogvota.h"
 
 #include <format>
@@ -56,6 +56,16 @@ void CLogVota::LogaSolicitacaoDadoPessoalEleitor()
 void CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado()
 {
     loga("Habilitação cancelada durante confirmação de dado do eleitor");
+}
+
+void CLogVota::LogaMesarioIndagadoQtdViasAdicionais()
+{
+    loga("Mesário indagado sobre quantidade de vias adicionais");
+}
+
+void CLogVota::LogaMesarioNaoSolicitouViasAdicionais()
+{
+    loga("Mesário não solicitou emissão de vias adicionais");
 }
 
 void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
@@ -137,16 +147,6 @@ void CLogVota::LogaPedidoTituloSuspensao()
 void CLogVota::LogaImprimindoRelatorio(comum::ERelatoriosUE relatorio, unsigned int via)
 {
     loga(std::format("Imprimindo relatório [{}] via nº [{}]", ConverteERelatoriosUE(relatorio), via));
-}
-
-void CLogVota::LogaMesarioIndagadoQtdViasAdicionais()
-{
-    loga("Mesário indagado sobre quantidade de vias adicionais");
-}
-
-void CLogVota::LogaMesarioNaoSolicitouViasAdicionais()
-{
-    loga("Mesário não solicitou emissão de vias adicionais");
 }
 
 void CLogVota::LogaQtdViasAdicionaisExcedeMaximo()
