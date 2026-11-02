@@ -1,15 +1,20 @@
 // vota's free functions (uenux2/src/app/vota/comum/votadefs.cpp). The reconstruction's own note: the file's records
 // (lines 103, 110 and 135: vota::VerificaAssinaturaMI, VerificaAssinaturaMV, GetQuantidadeMaximaBUsAdicionais) are
 // of functions not written, and their lines stay blank. EhTreinamento (target fn 1485) and AdicionaSeparador (fn 1387)
-// have no record: their file and lines, after the last record, are a choice (src/units/168-uenux2-app-helpers.mk).
+// have no record: their file and lines, after the last record, are a choice (src/units/168-uenux2-app-helpers.mk), and
+// so are those of CriaArquivoImprimindo, ExisteArquivoImprimindo and RemoveArquivoImprimindo (fns 1488, -, 1487).
 #include "app/vota/comum/votadefs.h"
 
 #include <string>
 
 #include "api/gui/cpaperformbuilder.h"
+#include "api/io/cfile.h"
+#include "api/util/csynchronizer.h"
+#include "api/util/csystem.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/cpath.h"
 
-// (original lines 12-99: content not recovered)
+// (original lines 17-99: content not recovered)
 #line 100
 // <stubs>
 // f3290 · 356 B · unmatched · name unknown
@@ -35,6 +40,26 @@
 
 
 namespace vota {
+
+void CriaArquivoImprimindo()
+{
+    api::CFile arquivo((comum::CPath::GetPathRootSemSA(comum::FLASH_INTERNA) / "dinamico/imprimindo").string(), "wb");
+    arquivo.Close();
+    api::CSynchronizer::GetInst().Sync();
+}
+
+bool ExisteArquivoImprimindo()
+{
+    return api::CSystem::ExistFile((comum::CPath::GetPathRootSemSA(comum::FLASH_INTERNA) / "dinamico/imprimindo").string());
+}
+
+void RemoveArquivoImprimindo()
+{
+    if (ExisteArquivoImprimindo()) {
+        api::CSystem::RemoveFile((comum::CPath::GetPathRootSemSA(comum::FLASH_INTERNA) / "dinamico/imprimindo").string());
+        api::CSynchronizer::GetInst().Sync();
+    }
+}
 
 bool EhTreinamento()
 {

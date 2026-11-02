@@ -8,11 +8,11 @@
 //   which app/vota/'s objects drop (src/Makefile UENUX2_TBAA_DIRS): 744's body is the same without it (wasm-objdump -d
 //   of the object compiled both ways).
 // - api::CSynchronizer::GetInst (target fn 600) is called directly by 14 target functions (378, 491, 1487 and others):
-//   CSystem::CopyFile (378, unit 32) is reconstructed, and InstanciaDuasVezes, which calls it twice, stands for the
-//   other 13.
+//   CSystem::CopyFile (378, unit 32) and 1487 and 1488 (vota/comum/votadefs.cpp, unit 168) are reconstructed, and
+//   InstanciaDuasVezes, which calls it twice, stands for the other 11.
 // - CSynchronizer::Sync (target fn 620) is called directly by 14 target functions (378, 491, 1487, 1488, 1836, 3333,
-//   4657, 6737, 7174, 10590, 12098, 12105, 12110 and 12134): CopyFile (378) is reconstructed, and SincronizaDuas stands
-//   for the other 13 with two call sites, so binaryen keeps Sync out of line as the target does. Its constructor (fn 5729) has two callers in the
+//   4657, 6737, 7174, 10590, 12098, 12105, 12110 and 12134): CopyFile (378), 1487 and 1488 are reconstructed, and
+//   SincronizaDuas stands for the other 11 with two call sites, so binaryen keeps Sync out of line as the target does. Its constructor (fn 5729) has two callers in the
 //   target, 600 and 6652 (not reconstructed): Constroi stands for 6652, so that binaryen keeps the constructor out of
 //   line beside GetInst's call. Both are declared through asm labels, the constructor with the object's int result.
 // The stand-ins' bodies differ from each other and from every target function.

@@ -1,6 +1,10 @@
 #include "app/vota/eleitor/iniciovotacao/cquerreimprimirzeresima.h"
 
+#include "api/gui/cinteractiveform.h"
+#include "app/comum/dados/crdvvota.h"
+#include "app/vota/euevotaerror.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/log/clogvota.h"
 
 namespace vota {
 
@@ -22,5 +26,18 @@ CQuerReimprimirZeresima& CQuerReimprimirZeresima::GetInst()
 
 std::unique_ptr<CQuerReimprimirZeresima> CQuerReimprimirZeresima::s_inst;
 std::mutex CQuerReimprimirZeresima::s_mutex;
+
+// (original lines 30-40: content not recovered)
+#line 41
+void CQuerReimprimirZeresima::StartState()
+{
+    if (comum::CRdvVota::GetInst().Comparecimento() != 0) {
+        CLogVota::GetInst().LogaErroVerificacaoComparecimento();
+        throw CUeVotaError(EUE_VOTA_ERRO_VERIFICACAO_COMPARECIMENTO, "Erro na verificação do comparecimento");
+    }
+    CLogVota::GetInst().LogaMesarioIndagadoImprimirZeresima();
+    m_form->Slot2();
+    m_pNextState = this;
+}
 
 } // namespace vota

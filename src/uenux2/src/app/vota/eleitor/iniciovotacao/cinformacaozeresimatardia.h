@@ -26,8 +26,7 @@ namespace vota {
 // docs/reference/facts/reading.md R5, and fn 2879 releases +40 and stores no vptr, as a final class's (R4). A
 // singleton: fn 11931 keeps the object in a static std::unique_ptr (@1834156, destroyed at exit by fn 11986) under a
 // static std::mutex (@1834132, by fn 11985). Not recovered: the constructor and GetInst (fn 11931 holds them inlined;
-// the constructor reads a private member of vota::CTelasVota, whose head has no accessor for it), the statics, and
-// ProcessInput (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp).
+// the constructor reads a private member of vota::CTelasVota, whose head has no accessor for it) and the statics.
 // src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk says which of this is evidence and which is chosen.
 class CInformacaoZeresimaTardia final : public comum::CAppState {
 public:

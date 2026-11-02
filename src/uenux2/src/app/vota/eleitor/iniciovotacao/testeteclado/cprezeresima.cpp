@@ -3,6 +3,7 @@
 #include <string>
 
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/md/estadoaplicacao/cestadogeralvota.h"
 #include "app/vota/euevotaerror.h"
 #include "app/vota/eleitor/iniciovotacao/cgeradadosdinamicos.h"
@@ -30,7 +31,7 @@ CPreZeresima& CPreZeresima::GetInst()
 std::unique_ptr<CPreZeresima> CPreZeresima::s_inst;
 std::mutex CPreZeresima::s_mutex;
 
-// (original lines 33-44: content not recovered)
+// (original lines 34-44: content not recovered)
 #line 45
 comum::CAppState* CPreZeresima::GetEstadoPassouNoTeste()
 {
@@ -46,6 +47,15 @@ comum::CAppState* CPreZeresima::GetEstadoPassouNoTeste()
             throw CUeVotaError(EUE_VOTA_PRE_ZERESIMA_ESTADO_NAO_ESPERADO,
                                "Estado nao esperado " + std::to_string(estado));
     }
+}
+
+comum::CAppState* CPreZeresima::GetEstadoSemTeste()
+{
+    const api::CDate dataZeresima = comum::CConfiguracaoEleicao::GetInst().GetDataHoraZeresima().GetData();
+    if (m_dataHora.GetData() < dataZeresima - 1) {
+        return GetEstadoPassouNoTeste();
+    }
+    return this;
 }
 
 } // namespace vota::testeteclado

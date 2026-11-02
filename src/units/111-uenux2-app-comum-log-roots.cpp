@@ -7,11 +7,11 @@
 // - comum::IEventosLog::ConverteERelatoriosUE: the target's fns 1047 and 1127;
 // - comum::IEventosLog::logaAlerta (fn 1398): the target's fns 6115, 10415, 10420, 10512 and 10676 (10774, unit 119's
 //   slot 28, 10416, unit 152's, and 10642, unit 161's, are in the link);
-// - comum::IEventosLog::logaErro (fn 2282): the target's fns 10478 and 11849 (4459, unit 197's, 3279 and 4550, unit
-//   119's, are in the link);
+// - comum::IEventosLog::logaErro (fn 2282): the target's fn 10478 (4459, unit 197's, 3279 and 4550, unit 119's, and
+//   11849, unit 104's, are in the link);
 // - comum::IEventosLog's members that log a fixed text: the target's fns 7160 and 12134 (5885), 12134 twice (5883),
-//   11849 and 11921 (5882), 11869 and 11911 (5880) (11921 is in the link, unit 169); LogaErroEstadoAplicativo (5881)
-//   needs none, its two callers 5945 and 11914 (units 138 and 199) being in the link;
+//   11849 and 11921 (5882), 11869 and 11911 (5880) (11921 and 11849 are in the link, units 169 and 104);
+//   LogaErroEstadoAplicativo (5881) needs none, its two callers 5945 and 11914 (units 138 and 199) being in the link;
 // - comum::CInformacaoEleicao's constructor and members: fn 603 has 22 callers in the target; each member's own callers
 //   are listed in the class header.
 #include <string>
@@ -58,7 +58,7 @@ __attribute__((noinline)) int w111_alerta(comum::IEventosLog& log, const std::st
     return 2;
 }
 
-// stands for fns 10478 and 11849 (4550 is in the link)
+// stands for fn 10478 (4550 and 11849 are in the link)
 __attribute__((noinline)) int w111_erro(comum::IEventosLog& log, const std::string& mensagem, const std::string& outra)
 {
     log.logaErro(mensagem);
@@ -67,7 +67,7 @@ __attribute__((noinline)) int w111_erro(comum::IEventosLog& log, const std::stri
     return 3;
 }
 
-// stands for fns 7160, 12134, 11849, 11869 and 11911 (11921 is in the link)
+// stands for fns 7160, 12134, 11869 and 11911 (11921 and 11849 are in the link)
 __attribute__((noinline)) int w111_textos(comum::IEventosLog& log, comum::IEventosLog& outro)
 {
     log.LogaMidiaResultadoAusente();

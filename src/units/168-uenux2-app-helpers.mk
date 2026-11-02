@@ -4,7 +4,8 @@
 #   constructor (target fn 3844), ProcessKey (3843), ProcessInput (5911), ProcessTick (5910), AcceptsKey (3842),
 #   AcceptsInput (5909) and AcceptsTick (5908), which read the state's flags at +8, +9 and +10 as CAppState's friend (a
 #   line of app/comum/cappstate.h), and the inline accessor GetState;
-# - vota::EhTreinamento (src/app/vota/comum/votadefs.cpp, declared in the new app/vota/comum/votadefs.h): fn 1485;
+# - vota::EhTreinamento (src/app/vota/comum/votadefs.cpp, declared in the new app/vota/comum/votadefs.h): fn 1485, and
+#   since, in the same file, CriaArquivoImprimindo (fn 1488) and RemoveArquivoImprimindo (fn 1487), below;
 # - api::CPolySingletonList::has<vota::IAjusteInicial> (fn 2450), the template of api/pattern/cpolysingletonlist.h, which
 #   in both links is a 19-B thunk into the has<T> merge body 2924, as unit 100's has<T> 1654, 2160 and 2469 are.
 # Paths relative to src/uenux2.
@@ -77,6 +78,26 @@
 # band 9, where the target's 1387 lies between md/processoeleitoral/ccargo.cpp's 1388 and 1386, comum code not
 # written, and then api/gui/cframedtext.cpp's 1385, none of them app/vota/ code), the line after EhTreinamento, and
 # static_cast<api::IPaper::EStyle>(1), as cgeradorrelpu.cpp spells it.
+#
+# vota::CriaArquivoImprimindo (fn 1488, 405 B) and vota::RemoveArquivoImprimindo (fn 1487, 587 B), above EhTreinamento
+# in votadefs.cpp, with vota::ExisteArquivoImprimindo between them, which has no target index of its own. The marker
+# file "dinamico/imprimindo" under comum::CPath::GetPathRootSemSA(FLASH_INTERNA) (fn 634; the literal at 135131): 1488
+# opens an api::CFile on the path's string with mode "wb" (fn 517), closes it (fn 336) and calls
+# api::CSynchronizer::GetInst().Sync() (fns 600, 620), then the CFile's inline destructor; 1487 opens a stack frame of
+# its own around the existence test (api::CSystem::ExistFile, fn 412, on the same path), a function binaryen inlined
+# into its one caller (docs/reference/facts/reading.md R10), ExisteArquivoImprimindo, out of line here (votadefs.cpp.o
+# keeps it, `wasm-objdump -x -j Function`), and when the file exists removes it (CSystem::RemoveFile, fn 2760) and syncs.
+# Seven printing functions call both, 2890 and 11852 (units 156 and 104, in the link) and 11855, 11991, 12068, 12071,
+# 12074.
+# Scores before step 8 (`pnpm wasm score`): 1488 18 over 190 rows, 1487 25 over 280, all operand-only. Each path is
+# `(GetPathRootSemSA(FLASH_INTERNA) / "dinamico/imprimindo").string()`: the temporaries the target builds and destroys
+# are the root path, the literal's path, the operator/ result and its string copy (fns 178, 138, 183). In use band 8
+# the target's 1488 and 1487 lie right above 1485 among the TSE rows (1486 is OpenSSL's), and the object keeps that
+# order (build/out/wasm-map/vota_web/names.tsv: ld_index 3947, 3949, 3950 for 1488, 1487, 1485). Chosen, no record,
+# slot or string names them: the three names; that they are free functions of namespace vota (they read no state; their
+# callers are vota states of fimvotacao/ and iniciovotacao/); the file, votadefs.cpp, as for 1485, which agrees with
+# the band's order but is not evidence; ExisteArquivoImprimindo in the same TU as its caller, measured: clang keeps it
+# out of line; `.string()` for the conversion.
 APP_HELPERS_SRCS := src/app/comum/cappstatecontext.cpp src/app/vota/comum/votadefs.cpp
 UENUX2_SRCS += $(APP_HELPERS_SRCS)
 # nothing in the link calls these functions yet: 168-uenux2-app-helpers-roots.cpp gives each two call sites. It compiles

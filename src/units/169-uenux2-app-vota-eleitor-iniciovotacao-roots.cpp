@@ -3,7 +3,7 @@
 //
 // vota::CInformacaoZeresimaTardia's vtable is referenced in the target only by its constructor, inlined into the
 // function that creates the singleton (fn 11931, not reconstructed). Taking the vtable's address keeps every slot
-// (target fns 2879, 11984, 11983 and the pending trap). The other classes' vtables are stored by the constructors
+// (target fns 2879, 11984, 11983 and 11982). The other classes' vtables are stored by the constructors
 // written here.
 //
 // GetInst is called directly in the target, and binaryen inlines a function with one call site, so one noinline

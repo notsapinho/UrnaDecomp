@@ -29,7 +29,7 @@ produces is replaced by our own bytes, and the result must still be the target's
 ## Status
 
 <!-- status:headline -->
-**11,173 of 14,343 functions matched (77.90%), 3,011,562 of 5,883,903 code bytes (51.18%).**
+**11,180 of 14,343 functions matched (77.95%), 3,016,392 of 5,883,903 code bytes (51.27%).**
 <!-- /status:headline -->
 
 <picture>

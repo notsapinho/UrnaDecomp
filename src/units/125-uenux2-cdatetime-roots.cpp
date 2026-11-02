@@ -19,8 +19,8 @@
 //   7787 calls it four times, one stand-in calls it twice), CDate's operator<=> (fn 1261: 759, 11198 through
 //   comum::md::CHorarioVerao::Contem, and a stand-in for 1543, ...), CDateTime's (fn 759, 15 target callers: two
 //   stand-ins), CTime::Format (fn 779, 13 target callers: 5473, and two stand-ins for the others) and CDate's operator-
-//   (fn 3648, callers 654, 11861, 11862: 654, CTradutorFrase::Traduz, is in the link; two stand-ins for 11861 and 11862,
-//   which wait).
+//   (fn 3648, callers 654, 11861, 11862: 654, CTradutorFrase::Traduz, and 11861, CPreZeresima::GetEstadoSemTeste (unit
+//   138), are in the link; one stand-in for 11862, which waits).
 // - the rest have two callers in the link already and no stand-in: IsValidDate (fn 5479: 3649 and the check 5475
 //   inlines), CDate(dia, mes, ano) (fn 2765: 5475, 5476 and 2233), CTime() (fn 2230: 1000 and 5475), operator-= (fn 5477:
 //   operator+= and operator-), CDate's operator+= (fn 5478: operator-= and 654). IsValidDateTime is left unrooted: its
@@ -72,11 +72,6 @@ __attribute__((noinline)) int DiaDeHoje()
 __attribute__((noinline)) void DiasAntes(void* resultado, const void* data, int dias)
 {
     w3648_menos(resultado, data, dias);
-}
-
-__attribute__((noinline)) void SemanaAntes(void* resultado, const void* data)
-{
-    w3648_menos(resultado, data, 7);
 }
 
 __attribute__((noinline)) bool DataAnterior(const void* data, const void* outra)
@@ -160,7 +155,6 @@ struct SW125Roots {
         w125_sink = reinterpret_cast<void*>(&DataFormatadaDuasVezes);
         w125_sink = reinterpret_cast<void*>(&DiaDeHoje);
         w125_sink = reinterpret_cast<void*>(&DiasAntes);
-        w125_sink = reinterpret_cast<void*>(&SemanaAntes);
         w125_sink = reinterpret_cast<void*>(&DataAnterior);
         w125_sink = reinterpret_cast<void*>(&DataHoraAgora);
         w125_sink = reinterpret_cast<void*>(&DuasDataHorasAgora);

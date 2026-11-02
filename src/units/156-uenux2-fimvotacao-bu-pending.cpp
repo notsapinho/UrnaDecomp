@@ -1,7 +1,8 @@
 // Pending of unit 156: the slots of its states not reconstructed, with trapping bodies so that the vtables link.
 // - vota::CImprimindoBU::StartState (slot 2, target fn 12078, records cimprimindobu.cpp:70 and 71): it calls
-//   CImprimindoBU::ImprimeBU (fn 2890, records cimprimindobu.cpp:111 and 114), which has no body here, besides two
-//   CLogVota members that have (fns 1127 and 4551, app/vota/log/clogvota.cpp).
+//   CImprimindoBU::ImprimeBU (fn 2890, written) and two CLogVota members (fns 1127 and 4551,
+//   app/vota/log/clogvota.cpp), and reads a .bss flag that no written function reads, which has no name; the records'
+//   lines 70 and 71 stay blank in cimprimindobu.cpp.
 // - vota::CImprimindoBU::ProcessInput (slot 7, fn 12077): it calls fn 491, which has no body here, and 3701 (unit 93).
 // - vota::CMostraQRCodeCertificado::StartState (slot 2, fn 12040, 1932 B): it builds the screen through fns 502, 576,
 //   653 and 2782, which have no body here.
