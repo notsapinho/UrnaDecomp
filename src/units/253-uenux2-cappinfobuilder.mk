@@ -27,7 +27,8 @@
 #   and 2250, at the stand-ins' -O2), and from D on the trees'.
 #   A and B give the same rows; A keeps the object in the setup of its flags.
 #
-# Matches, 17, all from the link this object changes (none is a body of a function this file writes):
+# Matches, 17, all from the link this object changes (none is a body of a function this file writes), and six more
+# over two data lines (below):
 # - 358 and 1399 (CPath::GetPathTrab and GetPathResult, unit 190), 1553 (CAppInfo::IndiceTurno, unit 109) and 11401
 #   (CConversorDadoCarga::DoConverte, unit 96): each differed only by slot 474, and their anchors' table votes now name
 #   this object's handle 9868.
@@ -47,6 +48,15 @@
 #   2240's and 2250's, then with 1249's: splat-match moves no row each time, and the splat build verifies 11367):
 #   536's, which step 8 now writes as a generated table line, the votes no longer split with the turn's handle a body
 #   of its own; 2240's and 2250's, now generated pair-addr lines; and unit 123's 1249's, a body that matches here.
+# - Two data lines of splat/symbol_addrs.txt, below the marker, name libc++'s __format_spec::__fields_integral and
+#   __fields_bool, 2 bytes each, right after the typeinfo name "NSt3__212format_errorE" in both links (target 450343,
+#   ours 344597; each object at +23 and +25). Six rows match over them (11373): 9868, this object's handle, and its
+#   callee 1558 (the executable TU's __formatter_integer<char>::parse), which were `unresolved` on the first; 3923
+#   (__process_display_type_bool_string), on the second; and the handles 536, 1699 and 1711, which hold both inlined.
+#   Each line weighed (taken out, then splat-match): without __fields_integral, 536, 1558, 1699, 1711 and 9868 leave
+#   match; without __fields_bool, 536, 1558, 1699, 1711 and 3923.
+# - 7884 (money_get<char>::do_get, libc++.a) reads `differs` at +0xf2 where it read `unresolved` on a table slot: no
+#   match either way.
 #
 # Written, and not in the link: nothing reaches these, so wasm-ld drops them (their rows are no-candidate) and only
 # their linkonce copies above link.
@@ -55,16 +65,13 @@
 #   10112, 10089, 5329), declared in iservicoestado.h, whose body waits for cfileasn.h's writer (2892, and 2891 over
 #   CFileASN::CodeObjectFunction's merge); 10212 waits for the derived services' constructors too (thunks 5812, 11566
 #   and 3787 of 3897, over CFileASN::ReadFromFile, 3791). A root taking their addresses, as the target's 10256 and 6004
-#   do, would need those bodies. The writer's chain ends in a keystone of its own: CodeObjectFunction's four members
-#   (9801, 9702, 9695, 9673, the thunks 2891's thunks pass by slot) call the merge 2927 (1275 B), which calls
-#   ~CoderEnv (518, no-candidate) and 9790 (no-candidate). And 2894 is binaryen's merge of the four saves, so its shape
-#   needs the four in the link, three of them 10212's (pnpm wasm fn on each). The estado copies they pass (10205, 10123, 10101, 10067) and ~CEstadoGeral (2793) come
-#   with them.
+#   do, would need those bodies. The estado copies they pass (10205, 10123, 10101, 10067) and ~CEstadoGeral (2793) come
+#   with them. The writer's chain ends in a keystone of its own: CodeObjectFunction's four members (9801, 9702, 9695,
+#   9673, the thunks 2891's thunks pass by slot) call the merge 2927 (1275 B), which calls ~CoderEnv (518,
+#   no-candidate) and 9790 (no-candidate). And 2894 is binaryen's merge of the four saves, so its shape needs the four
+#   in the link, three of them 10212's (pnpm wasm fn on each).
 # - Converte(EMidia) (5344): its callers are those two. With them, its handle (9935) and format<int> (5924) come too.
 # - The file writer (10293, table slot 420, called by both).
-# - 9868 is in the link, this object's, and named by the votes above, but `unresolved self-voted`: its callee 1558 (the
-#   executable TU's parse) has no name but 9868's own call, and 1558's row is unresolved on
-#   __format_spec::__fields_integral, a 2-byte object nothing names.
 #
 # Evidence for the code (pnpm wasm fn on each): 10243 loops over the media, converts each (5344, with the record
 # 112:37), writes "assinatura EG" to the dynamic path's "eg.vsu" through 10293 when its bool is set, and saves the

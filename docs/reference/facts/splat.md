@@ -587,7 +587,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -799,6 +799,17 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     84) calls it too and votes for it (`/usr/bin/grep -n 'func:2416;' splat/symbol_addrs.txt` prints `evidence:call
     by:5492,9258`), and 9258 matches. 5492 is itself `unresolved self-voted` (its static's guard), so 9258 rests on that
     unmatched body's call: a landing that takes 5492 out, or makes 2416 another function's callee, takes 9258 out.
+24. **178, 194, 358, 857, 1249, 1399, 1553, 2240, 2250, 4669, 4727, 5906, 8084, 9872, 10145, 11257 and 11401, by the
+    place of `mock/app/comum/cappinfobuilder.cpp`'s object; 536, 1558, 1699, 1711, 3923 and 9868, by two data lines
+    as well.** Unit 253 compiles that file at the executable TU's rule and links its object second, in `VOTA_WEB_OBJS`,
+    so its copies of inline code are the link's: `EUrnaTurno`'s `-Oz` format handle (9868), which keeps
+    `format<unsigned int>` (5906) out of line and gives 358, 1399, 1553 and 11401 the target's slot 474, and 178, 194,
+    857, 1249, 2240, 2250, 9872, 10145 and 11257, which the libc++.a bodies 4669, 4727 and 8084 meet as the target's
+    do. After the tree roots the object gives 12 of the 17, after both trees none (unit 253's fragment has the four
+    places): an object that brings one of these copies ahead of it, or `EUrnaTurno`'s `-O3` handle, takes rows out
+    (item 12). 536, 1558, 1699, 1711, 3923 and 9868 rest on the hand lines of `__format_spec::__fields_integral` and
+    `__fields_bool` too, below the marker of `splat/symbol_addrs.txt`; taken out one at a time, each line takes five
+    of the six with it (unit 253's fragment).
 
 ## S11. A match among bodies of the same content can take the other one's name
 
