@@ -1464,5 +1464,6 @@ a field (bbf27ac1, from `asmlift-wasm/`):
 The begin comes from the object again (`local.get 0; i32.load offset=8` at +0x333), which with TBAA would stay in a
 local. The other sites [app-flags.md](app-flags.md) §F6 measured read the same way the other way round: a `std::map`
 insert that does not reload `__child` before `__tree_balance_after_insert`, a `std::list` clear, a lambda's `__clone`
-store order. uenux2 sets strict aliasing by directory (`UENUX2_TBAA_DIRS` in `src/Makefile`, §F6), so read the sign
-against the body's directory: a body that differs only by it is [levels.md](levels.md) §V5's case.
+store order. uenux2 sets strict aliasing by directory and file (`UENUX2_TBAA_DIRS` and `UENUX2_NOTBAA_FILES` in
+`src/Makefile`, §F6), so read the sign against the body's file and directory: a body that differs only by it is
+[levels.md](levels.md) §V5's case.

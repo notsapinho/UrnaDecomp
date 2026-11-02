@@ -405,21 +405,27 @@ name, and a probe object lands nowhere.
 
 ## V5. Strict aliasing by directory: a body that differs only by it
 
-uenux2 compiles with strict aliasing in the directories `UENUX2_TBAA_DIRS` lists in `src/Makefile` (`src/api/`,
-`src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`) and without it elsewhere;
-[app-flags.md](app-flags.md) §F6 has the evidence and the measurement of the split, and [reading.md](reading.md) §R21
-reads the setting from a body. Measured at bbf27ac1.
+uenux2 compiles with strict aliasing in the directories and the file `UENUX2_TBAA_DIRS` lists in `src/Makefile`
+(`src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, `src/app/comum/carquivossavd.cpp`)
+but the files `UENUX2_NOTBAA_FILES` lists (`app/vota/`'s `ctelasvota.cpp` and `crelvotautil.cpp`), and without it
+elsewhere; [app-flags.md](app-flags.md) §F6 has the evidence and the measurement of the split, and
+[reading.md](reading.md) §R21 reads the setting from a body. Measured at bbf27ac1.
 
 - **A body that differs only by it** in a directory of the other setting waits for a flag its tree lacks: it lands
   written, with the measurement in its fragment, and its row stays as it is (how-to step 5). Measure it with its object
   at the other setting, one variant object in the plain link ([workflow.md](workflow.md) §W13).
-- **The split is the tree's flag.** A directory moved into or out of the list is a flag change, measured on the whole
-  link by F6's recipe, and it lands as a commit of its own only when it gains rows and loses no match. A lane reports
-  such a measurement; it does not change the list.
+- **The split is the tree's flag.** A directory or file moved into or out of the lists is a flag change, measured on
+  the whole link by F6's recipe, and it lands as a commit of its own only when it gains rows and loses no match. A lane
+  reports such a measurement; it does not change the lists. The commit that changes them rewrites every text that
+  restates the split or its rule, which this lists (`asmlift-wasm/benchmark/dataset/selection-inputs/` is a snapshot
+  pinned by blob id, and stays):
+
+      git grep -n -e UENUX2_TBAA_DIRS -e UENUX2_NOTBAA_FILES -e 'carquivossavd.cpp`' -- docs src/Makefile src/units/README.md asmlift-wasm/benchmark/README.md asmlift-wasm/benchmark/dataset/setups.json
+
 - **The list drops every `-fno-strict-aliasing` of a line**, an `UENUX2_EXTRA` one too (`uenux2_cxxflags` in
-  `src/Makefile`). So `UENUX2_EXTRA=-fno-strict-aliasing` does not reach a listed directory; `UENUX2_TBAA_DIRS=` on the
-  command line builds the whole tree without strict aliasing, and `UENUX2_EXTRA=-fstrict-aliasing` gives it to the
-  others, each in a private link ([app-flags.md](app-flags.md) §F9 item 6). The count of each compile line's
+  `src/Makefile`), but in the files `UENUX2_NOTBAA_FILES` lists. So `UENUX2_EXTRA=-fno-strict-aliasing` does not reach a
+  listed directory; `UENUX2_TBAA_DIRS=` on the command line builds the whole tree without strict aliasing, and
+  `UENUX2_EXTRA=-fstrict-aliasing` gives it to the others, each in a private link ([app-flags.md](app-flags.md) §F9 item 6). The count of each compile line's
   `-fno-strict-aliasing`:
 
       make -n -B -C src "$PWD/build/out/app/uenux2/src/api/util/cwait.cpp.o" UENUX2_EXTRA=-fno-strict-aliasing | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -c -e '-fno-strict-aliasing'

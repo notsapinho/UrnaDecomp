@@ -275,7 +275,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 409	137	43	-	-	skeleton	314	addr	1	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::push_back(char)
 410	351	44	7zip	comum	-	-	none	-	
 411	19	0	libcxx	libc++	skeleton	377	byte	0	std::__2::__shared_ptr_emplace<api::CPosixMutex, std::__2::allocator<api::CPosixMutex>>::__on_zero_shared()
-412	11	43	app	-	skeleton	1416	shape	2	api::CSystem::ExistFile(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
+412	11	43	app	-	skeleton	1415	shape	2	api::CSystem::ExistFile(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 413	99	44	sqlite	-	skeleton	373	addr	1	sqlite3VdbeAddOp1
 414	98	44	-	-	skeleton	374	addr	2	sqlite3ErrorFinish
 415	205	44	-	openssl	-	-	none	-	
@@ -380,7 +380,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 514	80	33	-	libc++	skeleton	473	addr	2	std::__2::locale::id::__get()
 515	233	32	app	-	skeleton	591	addr	1	ASN1::SEQUENCE::includeOptionalField(unsigned int, unsigned int)
 516	35	33	-	ASN1	skeleton	621	addr	2	ASN1::SEQUENCE_OF_Base::SEQUENCE_OF_Base(void const*)
-517	137	32	-	-	skeleton	1276	addr	5	ecourna::api::io::CFile::CFile(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, ecourna::api::io::FileMode)
+517	137	32	-	-	skeleton	1277	addr	5	ecourna::api::io::CFile::CFile(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, ecourna::api::io::FileMode)
 518	155	33	-	-	skeleton	5556	addr	3	ASN1::CoderEnv::~CoderEnv()
 519	4	0	libcxx	libc++abi	probe	100	byte	0	std::__2::__shared_weak_count::__get_deleter(std::type_info const&) const
 520	35	33	-	-	skeleton	1177	addr	1	std::__2::vector<unsigned char, std::__2::allocator<unsigned char>>::~vector[abi:ne210108]()
@@ -626,7 +626,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 760	239	19	-	-	-	-	none	-	
 761	342	19	app	comum	skeleton	678	addr	6	comum::md::CDetalheCandidato::operator=(comum::md::CDetalheCandidato&&)
 762	17	18	app	-	-	-	none	-	
-763	32	19	-	-	skeleton	1291	addr	1	
+763	32	19	-	-	skeleton	1292	addr	1	
 764	71	19	-	-	-	-	none	-	
 765	13	0	app	comum	skeleton	873	addr	1	comum::CConfirmaFimRegistroMesarios::~CConfirmaFimRegistroMesarios()_3817
 766	24	19	libc	RHVoice	skeleton	681	fingerprint	0	out
@@ -641,7 +641,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 775	946	18	-	openssl	-	-	none	-	
 776	618	18	7zip	libc++	-	-	none	-	
 777	163	18	asn1	ASN1	skeleton	580	shape	2	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::operator>>[abi:ne210108]<char, std::__2::char_traits<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, char&)
-778	12	17	app	ecourna	skeleton	1277	addr	2	ecourna::app::dados::IIdentificadorEleitor::~IIdentificadorEleitor()
+778	12	17	app	ecourna	skeleton	1278	addr	2	ecourna::app::dados::IIdentificadorEleitor::~IIdentificadorEleitor()
 779	1196	18	sqlite	-	skeleton	1180	addr	16	api::CTime::Format(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const
 780	32	18	-	-	skeleton	731	addr	1	std::__2::__tree<unsigned int, std::__2::less<unsigned int>, std::__2::allocator<unsigned int>>::destroy(std::__2::__tree_node<unsigned int, void*>*)
 781	60	18	app	-	-	-	none	-	
@@ -670,7 +670,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 804	15	17	-	openssl	skeleton	752	addr	2	EVP_CIPHER_CTX_new
 805	95	16	-	openssl	skeleton	724	addr	7	ossl_ecx_key_free
 806	313	17	app	openssl	skeleton	725	addr	16	BUF_MEM_grow
-807	12	17	app	vota	skeleton	1211	shape	1	vota::CThreadVota::AddStoppedTick(unsigned long)
+807	12	17	app	vota	skeleton	1212	shape	1	vota::CThreadVota::AddStoppedTick(unsigned long)
 808	455	16	rhvoice	-	skeleton	2753	addr	4	std::__2::filesystem::path::__compare(std::__2::basic_string_view<char, std::__2::char_traits<char>>) const
 809	252	17	sqlite	-	skeleton	742	shape	12	std::__2::basic_ostream<char, std::__2::char_traits<char>>::sentry::~sentry()
 810	46	17	7zip	7zip	skeleton	3197	byte	0	LzmaDec_Free
@@ -716,13 +716,13 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 850	77	16	7zip	7zip	-	-	none	-	
 851	497	16	7zip	7zip	skeleton	728	byte	0	ConvertUInt64ToString(unsigned long long, char*)
 852	255	16	7zip	7zip	-	-	none	-	
-853	92	15	sqlite	-	skeleton	1272	addr	1	ASN1::SEQUENCE::SEQUENCE(ASN1::SEQUENCE const&)
+853	92	15	sqlite	-	skeleton	1273	addr	1	ASN1::SEQUENCE::SEQUENCE(ASN1::SEQUENCE const&)
 854	135	16	rhvoice	-	-	-	none	-	
 855	278	16	rhvoice	-	-	-	none	-	
 856	472	16	rhvoice	RHVoice	-	-	none	-	
 857	38	16	sqlite	comum	skeleton	1075	addr	2	comum::md::estadoaplicacao::CDadoCorrespondencia::~CDadoCorrespondencia()
 858	304	15	app	libc++	skeleton	2056	addr	15	std::__2::basic_stringstream<char, std::__2::char_traits<char>, std::__2::allocator<char>>::basic_stringstream[abi:ne210108]()
-859	52	0	asn1	ASN1	skeleton	1421	addr	3	ASN1::SEQUENCE_OF<ModuloLocal::IdentificacaoAgregada, ASN1::EmptyConstraint>::~SEQUENCE_OF()
+859	52	0	asn1	ASN1	skeleton	1420	addr	3	ASN1::SEQUENCE_OF<ModuloLocal::IdentificacaoAgregada, ASN1::EmptyConstraint>::~SEQUENCE_OF()
 860	276	16	-	-	skeleton	3689	fingerprint	0	std::__2::__tree_node_base<void*>*& std::__2::__tree<std::__2::__value_type<comum::md::CEleitorIdentidade, comum::md::CComparecimentoMesario>, std::__2::__map_value_compare<comum::md::CEleitorIdentidade, std::__2::pair<comum::md::CEleitorIdentidade const, comum::md::CComparecimentoMesario>, std::__2::less<comum::md::CEleitorIdentidade>, true>, std::__2::allocator<std::__2::pair<comum::md::CEleitorIdentidade const, comum::md::CComparecimentoMesario>>>::__find_equal<comum::md::CEleitorIdentidade>(std::__2::__tree_end_node<std::__2::__tree_node_base<void*>*>*&, comum::md::CEleitorIdentidade const&)
 861	593	16	app	ecourna	-	-	none	-	
 862	1772	16	app	ecourna	-	-	none	-	
@@ -805,7 +805,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 939	769	14	app	-	-	-	none	-	
 940	77	14	app	-	skeleton	5611	addr	1	api::CTextBox::SetStatus(api::ETextStatus)
 941	385	14	-	api	-	-	none	-	
-942	107	14	app	ecourna	skeleton	1289	shape	7	comum::CCalculaCV::IncluiString(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
+942	107	14	app	ecourna	skeleton	1290	shape	7	comum::CCalculaCV::IncluiString(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 943	74	14	app	ecourna	-	-	none	-	
 944	1216	14	app	-	-	-	none	-	
 945	1833	14	app	libc++	-	-	none	-	
@@ -820,7 +820,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 954	133	14	libcxx	RHVoice	skeleton	881	addr	1	__floatsitf
 955	573	14	openssl	-	skeleton	1010	addr	21	fopen
 956	557	13	openssl	RHVoice	skeleton	882	addr	4	exp
-957	17	14	-	ecourna	skeleton	1312	addr	2	closedir
+957	17	14	-	ecourna	skeleton	1311	addr	2	closedir
 958	631	14	sqlite	openssl	skeleton	853	addr	8	whereClauseInsert
 959	750	14	openssl	sqlite	skeleton	854	addr	17	lockTable
 960	255	14	openssl	openssl	skeleton	855	addr	3	sqlite3KeyInfoAlloc
@@ -864,13 +864,13 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 998	864	13	sqlite	libc++	-	-	none	-	
 999	16	13	sqlite	RHVoice	skeleton	905	byte	0	HTS_SStreamSet_get_duration
 1000	25	13	-	-	skeleton	874	shape	3	api::CDateTime::CDateTime(long long)
-1001	60	12	libcxx	libc++	skeleton	1413	addr	4	std::__2::basic_ostringstream<char, std::__2::char_traits<char>, std::__2::allocator<char>>::~basic_ostringstream()
+1001	60	12	libcxx	libc++	skeleton	1412	addr	4	std::__2::basic_ostringstream<char, std::__2::char_traits<char>, std::__2::allocator<char>>::~basic_ostringstream()
 1002	15	12	openssl	RHVoice	skeleton	933	addr	1	std::__2::ios_base::setstate[abi:ne210108](unsigned int)
 1003	187	13	app	ecourna	-	-	none	-	
 1004	122	13	app	-	-	-	none	-	
 1005	61	0	-	-	skeleton	999	fingerprint	0	api::SPolySingletonInfo* std::__2::construct_at[abi:ne210108]<api::SPolySingletonInfo, char const*&, std::type_info const&, std::__2::shared_ptr<comum::IInterfaceSavd> const&, api::SPolySingletonInfo*>(api::SPolySingletonInfo*, char const*&, std::type_info const&, std::__2::shared_ptr<comum::IInterfaceSavd> const&)
 1006	257	13	app	-	-	-	none	-	
-1007	89	12	app	comum	skeleton	1280	addr	4	comum::CAssinador::~CAssinador()
+1007	89	12	app	comum	skeleton	1281	addr	4	comum::CAssinador::~CAssinador()
 1008	572	13	app	ecourna	-	-	none	-	
 1009	329	13	app	-	skeleton	1002	shape	14	
 1010	63	13	-	libc++	-	-	none	-	
@@ -916,7 +916,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1050	103	12	-	openssl	skeleton	961	addr	8	BN_MONT_CTX_new
 1051	382	12	sqlite	openssl	skeleton	962	addr	6	BN_usub
 1052	492	12	-	openssl	skeleton	963	addr	21	BIO_gets
-1053	29	12	-	-	skeleton	1301	addr	3	std::__2::generic_category()
+1053	29	12	-	-	skeleton	1300	addr	3	std::__2::generic_category()
 1054	211	11	-	-	skeleton	659	addr	1	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::append(unsigned long, char)
 1055	33	11	-	-	skeleton	1831	addr	1	std::__2::filesystem::detail::posix_stat(std::__2::filesystem::path const&, std::__2::error_code*)
 1056	99	12	libcxx	libc++	skeleton	1006	byte	0	std::__2::__num_put_base::__identify_padding(char*, char*, std::__2::ios_base const&)
@@ -930,8 +930,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1064	191	12	7zip	7zip	-	-	none	-	
 1065	193	12	app	ASN1	skeleton	926	addr	4	ASN1::PERDecoder::decodeLength(unsigned int, unsigned int, unsigned int&)
 1066	42	12	-	ASN1	skeleton	924	byte	0	ASN1::CountBits(unsigned int)
-1067	44	11	-	-	skeleton	1273	addr	1	ASN1::CHOICE::isStrictlyValid() const
-1068	57	11	-	-	skeleton	1274	addr	1	ASN1::CHOICE::isValid() const
+1067	44	11	-	-	skeleton	1274	addr	1	ASN1::CHOICE::isStrictlyValid() const
+1068	57	11	-	-	skeleton	1275	addr	1	ASN1::CHOICE::isValid() const
 1069	923	12	rhvoice	RHVoice	skeleton	965	addr	18	HTS_get_pattern_token
 1070	27	0	app	comum	skeleton	5863	byte	0	comum::CDigitalMesarioNaoReconhecida::StartState()
 1071	2048	12	app	ecourna	-	-	none	-	
@@ -944,7 +944,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1078	167	12	app	ecourna	-	-	none	-	
 1079	32	12	-	comum	skeleton	1133	addr	1	std::__2::__tree<boost::re_detail_600::digraph<char>, std::__2::less<boost::re_detail_600::digraph<char>>, std::__2::allocator<boost::re_detail_600::digraph<char>>>::destroy(std::__2::__tree_node<boost::re_detail_600::digraph<char>, void*>*)
 1080	609	12	sqlite	asn1-modules	-	-	none	-	
-1081	18	12	-	-	skeleton	1412	byte	0	comum::md::estadoaplicacao::CAjusteDataHora::CAjusteDataHora(comum::md::estadoaplicacao::CAjusteDataHora::ETipoDeltaT, int)
+1081	18	12	-	-	skeleton	1411	byte	0	comum::md::estadoaplicacao::CAjusteDataHora::CAjusteDataHora(comum::md::estadoaplicacao::CAjusteDataHora::ETipoDeltaT, int)
 1082	17	11	-	-	-	-	none	-	
 1083	28	12	app	libc++	-	-	none	-	
 1084	71	12	-	openssl	skeleton	1004	addr	3	
@@ -976,20 +976,20 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1110	52	12	-	openssl	skeleton	1019	byte	0	OPENSSL_sk_pop
 1111	901	12	openssl	openssl	-	-	none	-	
 1112	13	11	-	openssl	skeleton	1104	addr	1	CRYPTO_THREAD_set_local
-1113	227	11	openssl	ecourna	skeleton	1418	fingerprint	0	std::__2::__format_arg_store<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, unsigned long, void const*>::__format_arg_store[abi:ne210108](unsigned long&, void const*&)
+1113	227	11	openssl	ecourna	skeleton	1417	fingerprint	0	std::__2::__format_arg_store<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, unsigned long, void const*>::__format_arg_store[abi:ne210108](unsigned long&, void const*&)
 1114	231	11	-	openssl	skeleton	1037	addr	18	DSO_free
 1115	92	11	app	openssl	skeleton	1106	addr	2	evp_pkey_ctx_set_params_strict
 1116	12	11	-	openssl	skeleton	1107	byte	0	evp_keymgmt_freedata
 1117	71	11	openssl	openssl	skeleton	1108	addr	2	evp_generic_fetch
 1118	327	10	-	openssl	skeleton	1109	addr	27	EVP_EncryptUpdate
-1119	395	11	openssl	ecourna	skeleton	1419	addr	1	std::__2::__format_arg_store<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, char const [5], char const*>::__format_arg_store[abi:ne210108](char const (&) [5], char const*&)
+1119	395	11	openssl	ecourna	skeleton	1418	addr	1	std::__2::__format_arg_store<std::__2::basic_format_context<std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, char>, char const [5], char const*>::__format_arg_store[abi:ne210108](char const (&) [5], char const*&)
 1120	132	11	-	openssl	skeleton	1110	addr	11	EVP_Digest
 1121	273	11	-	openssl	skeleton	1111	addr	4	evp_md_ctx_clear_digest
 1122	2208	11	-	openssl	skeleton	1099	fingerprint	0	add_niels_to_pt
 1123	680	11	-	openssl	skeleton	1100	fingerprint	0	gf_mulw_unsigned
 1124	22	11	-	openssl	skeleton	1036	byte	0	EC_KEY_up_ref
 1125	58	11	-	openssl	skeleton	1035	addr	6	EC_GROUP_get_degree
-1126	141	11	openssl	ecourna	skeleton	1420	shape	6	api::CMutexCompartilhado::lock()
+1126	141	11	openssl	ecourna	skeleton	1419	shape	6	api::CMutexCompartilhado::lock()
 1127	491	11	app	vota	-	-	none	-	
 1128	22	11	openssl	openssl	skeleton	1038	byte	0	DSA_up_ref
 1129	443	11	-	openssl	skeleton	1040	byte	0	BN_consttime_swap
@@ -1002,11 +1002,11 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1136	150	10	-	-	skeleton	1083	byte	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::__erase_external_with_move(unsigned long, unsigned long)
 1137	63	10	libcxx	libc++abi	skeleton	1087	byte	0	void std::__2::__reverse_impl[abi:ne210108]<std::__2::_ClassicAlgPolicy, char*>(char*, char*, std::__2::random_access_iterator_tag)
 1138	30	11	app	libc++	skeleton	1091	addr	1	std::__2::__split_buffer<std::__2::filesystem::__dir_stream*, std::__2::allocator<std::__2::filesystem::__dir_stream*>>::~__split_buffer()
-1139	49	8	app	api	skeleton	1284	addr	1	api::CFixedText::GetText() const
+1139	49	8	app	api	skeleton	1285	addr	1	api::CFixedText::GetText() const
 1140	274	11	sqlite	7zip	-	-	none	-	
 1141	62	11	app	comum	skeleton	871	shape	4	ecourna::api::util::CStringUtils::ToQWord(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1142	18	11	app	-	skeleton	997	shape	2	ecourna::api::util::CStringUtils::ToByte(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
-1143	1778	10	app	ecourna	skeleton	1279	shape	67	ecourna::api::exception::CError::CError(int, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
+1143	1778	10	app	ecourna	skeleton	1280	shape	67	ecourna::api::exception::CError::CError(int, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
 1144	153	11	rhvoice	-	-	-	none	-	
 1145	792	11	rhvoice	RHVoice	-	-	none	-	
 1146	1047	11	-	-	-	-	none	-	
@@ -1035,7 +1035,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1169	65	11	app	RHVoice	skeleton	1093	byte	0	__shlim
 1170	34	11	-	-	probe	90	fingerprint	0	time
 1171	16	11	-	-	skeleton	883	byte	0	__isspace
-1172	2020	10	rhvoice	RHVoice	skeleton	1197	addr	16	pow
+1172	2020	10	rhvoice	RHVoice	skeleton	1198	addr	16	pow
 1173	6186	11	sqlite	sqlite	skeleton	1050	addr	116	jsonTranslateTextToBlob
 1174	372	11	-	-	skeleton	1051	byte	0	kahanBabuskaNeumaierStepInt64
 1175	10992	11	sqlite	openssl	skeleton	1053	addr	139	exprAnalyze
@@ -1066,37 +1066,37 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1200	14	11	app	-	-	-	none	-	
 1201	47	11	app	-	skeleton	1097	byte	0	CRYPTO_ccm128_tag
 1202	466	10	app	vota	-	-	none	-	
-1203	55	10	app	openssl	skeleton	1209	addr	3	CRYPTO_THREAD_cleanup_local
+1203	55	10	app	openssl	skeleton	1210	addr	3	CRYPTO_THREAD_cleanup_local
 1204	306	10	app	libc++	-	-	none	-	
-1205	36	10	sqlite	openssl	skeleton	1212	addr	1	WPACKET_close
-1206	79	10	app	openssl	skeleton	1213	fingerprint	0	OPENSSL_strncasecmp
+1205	36	10	sqlite	openssl	skeleton	1213	addr	1	WPACKET_close
+1206	79	10	app	openssl	skeleton	1214	fingerprint	0	OPENSSL_strncasecmp
 1207	23	10	sqlite	openssl	skeleton	1116	addr	1	ossl_namemap_name2num
-1208	134	10	-	openssl	skeleton	1214	addr	10	OPENSSL_LH_new
-1209	170	10	-	openssl	skeleton	1215	addr	24	EVP_PKEY_new
+1208	134	10	-	openssl	skeleton	1215	addr	10	OPENSSL_LH_new
+1209	170	10	-	openssl	skeleton	1216	addr	24	EVP_PKEY_new
 1210	75	10	sqlite	openssl	skeleton	1029	addr	5	evp_do_ciph_ctx_getparams
-1211	45	10	sqlite	openssl	skeleton	1216	addr	6	evp_md_free_int
-1212	37	10	app	openssl	skeleton	1217	addr	2	EVP_CipherUpdate
-1213	100	10	app	openssl	skeleton	1218	addr	6	ENGINE_free
+1211	45	10	sqlite	openssl	skeleton	1217	addr	6	evp_md_free_int
+1212	37	10	app	openssl	skeleton	1218	addr	2	EVP_CipherUpdate
+1213	100	10	app	openssl	skeleton	1219	addr	6	ENGINE_free
 1214	616	10	sqlite	openssl	skeleton	1118	addr	1	BN_GF2m_mod_arr
 1215	343	10	-	openssl	skeleton	1115	addr	29	dsa_new_intern
 1216	69	10	-	openssl	skeleton	1120	byte	0	X509_ALGOR_get0
 1217	227	10	sqlite	openssl	skeleton	1123	addr	10	BN_to_ASN1_INTEGER
-1218	12	10	sqlite	openssl	skeleton	1204	addr	2	ASN1_TYPE_free
+1218	12	10	sqlite	openssl	skeleton	1205	addr	2	ASN1_TYPE_free
 1219	64	10	-	openssl	skeleton	1121	addr	8	ASN1_STRING_new
 1220	124	10	sqlite	openssl	skeleton	1122	byte	0	ASN1_object_size
 1221	268	10	app	-	-	-	none	-	
 1222	461	10	-	openssl	skeleton	1117	addr	10	BN_MONT_CTX_set
 1223	151	9	-	libc++	skeleton	1828	addr	9	std::__2::__throw_system_error(int, char const*)
 1224	206	9	-	-	skeleton	1580	addr	1	std::__2::filesystem::path::__filename() const
-1225	225	10	libcxx	libc++	skeleton	1190	fingerprint	0	int std::__2::__get_up_to_n_digits[abi:ne210108]<wchar_t, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>>(std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>&, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, unsigned int&, std::__2::ctype<wchar_t> const&, int)
-1226	252	10	libcxx	libc++	skeleton	1191	fingerprint	0	int std::__2::__get_up_to_n_digits[abi:ne210108]<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>>(std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>&, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>, unsigned int&, std::__2::ctype<char> const&, int)
+1225	225	10	libcxx	libc++	skeleton	1191	fingerprint	0	int std::__2::__get_up_to_n_digits[abi:ne210108]<wchar_t, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>>(std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>&, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, unsigned int&, std::__2::ctype<wchar_t> const&, int)
+1226	252	10	libcxx	libc++	skeleton	1192	fingerprint	0	int std::__2::__get_up_to_n_digits[abi:ne210108]<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>>(std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>&, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>, unsigned int&, std::__2::ctype<char> const&, int)
 1227	467	10	app	-	skeleton	1090	shape	24	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::__input_arithmetic[abi:ne210108]<unsigned int, char, std::__2::char_traits<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, unsigned int&)
 1228	64	10	sqlite	libc++	skeleton	2160	byte	0	std::__2::operator==[abi:ne210108](std::__2::error_code const&, std::__2::error_condition const&)
-1229	18	10	-	ecourna	skeleton	1288	shape	2	ecourna::api::exception::CBaseError<comum::EUeComumRelatoriosError, ecourna::api::exception::SErrorLimits{9050, 9150}>::CBaseError(comum::EUeComumRelatoriosError, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
+1229	18	10	-	ecourna	skeleton	1289	shape	2	ecourna::api::exception::CBaseError<comum::EUeComumRelatoriosError, ecourna::api::exception::SErrorLimits{9050, 9150}>::CBaseError(comum::EUeComumRelatoriosError, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
 1230	324	10	app	ecourna	skeleton	1126	fingerprint	0	zip64local_getLong
 1231	112	10	sqlite	7zip	-	-	none	-	
 1232	48	10	7zip	7zip	-	-	none	-	
-1233	153	10	7zip	7zip	skeleton	1241	addr	2	PROPVARIANT_to_bool(tagPROPVARIANT const&, bool&)
+1233	153	10	7zip	7zip	skeleton	1242	addr	2	PROPVARIANT_to_bool(tagPROPVARIANT const&, bool&)
 1234	19	0	7zip	7zip	skeleton	729	byte	0	non-virtual thunk to CArchiveExtractCallback::AddRef()
 1235	9	10	sqlite	7zip	skeleton	1139	fingerprint	0	UString::ReverseFind(wchar_t) const
 1236	238	10	sqlite	libc++	-	-	none	-	
@@ -1105,7 +1105,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1239	23	9	-	libc++	-	-	none	-	
 1240	97	0	asn1	ASN1	skeleton	1172	addr	8	ASN1::SEQUENCE_OF<ModuloParametrizacaoUrna::TituloRelatorio, ASN1::EmptyConstraint>::~SEQUENCE_OF()
 1241	33	9	app	ecourna	-	-	none	-	
-1242	32	10	sqlite	-	skeleton	1410	addr	1	std::__2::__tree<int, std::__2::less<int>, std::__2::allocator<int>>::destroy(std::__2::__tree_node<int, void*>*)
+1242	32	10	sqlite	-	skeleton	1409	addr	1	std::__2::__tree<int, std::__2::less<int>, std::__2::allocator<int>>::destroy(std::__2::__tree_node<int, void*>*)
 1243	283	10	sqlite	-	-	-	none	-	
 1244	97	10	rhvoice	RHVoice	skeleton	1132	addr	7	HTS_fclose
 1245	1989	10	rhvoice	RHVoice	-	-	none	-	
@@ -1138,7 +1138,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1272	178	10	-	-	skeleton	1801	addr	4	std::__2::vector<ecourna::app::dados::CFederacao, std::__2::allocator<ecourna::app::dados::CFederacao>>::__destroy_vector::operator()[abi:ne210108]()
 1273	116	10	app	-	skeleton	1583	addr	1	comum::CRespostas::Busca(unsigned char, unsigned int)
 1274	18	10	app	-	-	-	none	-	
-1275	32	0	app	ASN1	skeleton	1314	addr	2	ModuloTiposEleitorais::SiglaUF::~SiglaUF()
+1275	32	0	app	ASN1	skeleton	1313	addr	2	ModuloTiposEleitorais::SiglaUF::~SiglaUF()
 1276	32	10	app	comum	-	-	none	-	
 1277	870	10	app	ecourna	-	-	none	-	
 1278	10	0	app	vota	skeleton	1173	addr	2	vota::CConfereVotoEmCargo<vota::CCandidatoInapto, (vota::ETelaVotacao)14>::~CConfereVotoEmCargo()
@@ -1148,15 +1148,15 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1282	1784	10	app	ecourna	-	-	none	-	
 1283	14	10	app	-	-	-	none	-	
 1284	156	6	app	vota	skeleton	2102	fingerprint	0	vota::CRetirarMR::~CRetirarMR()
-1285	81	10	app	vota	skeleton	1411	shape	5	vota::CEstadoComDesligamentoAutomatico::CEstadoComDesligamentoAutomatico(int)
+1285	81	10	app	vota	skeleton	1410	shape	5	vota::CEstadoComDesligamentoAutomatico::CEstadoComDesligamentoAutomatico(int)
 1286	29	10	app	-	skeleton	1185	addr	2	
-1287	45	10	libcxx	libc++	skeleton	1189	fingerprint	0	is_equal(std::type_info const*, std::type_info const*, bool)
-1288	207	10	libcxx	RHVoice	skeleton	1193	addr	1	__extenddftf2
+1287	45	10	libcxx	libc++	skeleton	1190	fingerprint	0	is_equal(std::type_info const*, std::type_info const*, bool)
+1288	207	10	libcxx	RHVoice	skeleton	1194	addr	1	__extenddftf2
 1289	20	10	sqlite	-	skeleton	1590	byte	0	toupper
-1290	204	10	-	openssl	skeleton	1194	byte	0	strspn
+1290	204	10	-	openssl	skeleton	1195	byte	0	strspn
 1291	56	10	-	libc++	skeleton	1094	addr	1	__lseek
 1292	167	10	sqlite	-	skeleton	1440	fingerprint	0	fread
-1293	9	10	-	-	skeleton	1196	byte	0	top12
+1293	9	10	-	-	skeleton	1197	byte	0	top12
 1294	58	10	-	-	skeleton	1011	fingerprint	0	gettimeofday
 1295	764	10	sqlite	-	skeleton	1146	addr	22	nodeAcquire
 1296	649	10	-	sqlite	skeleton	1147	addr	2	jsonBlobEdit
@@ -1178,54 +1178,54 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1312	324	9	-	-	skeleton	1068	addr	7	sqlite3_column_int64
 1313	737	10	sqlite	sqlite	skeleton	1163	addr	6	sqlite3StrAccumEnlarge
 1314	84	10	-	comum	skeleton	3768	addr	1	std::__2::__tree<std::__2::__value_type<vota::ETelaVotacao, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>, std::__2::__map_value_compare<vota::ETelaVotacao, std::__2::pair<vota::ETelaVotacao const, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>, std::__2::less<vota::ETelaVotacao>, true>, std::__2::allocator<std::__2::pair<vota::ETelaVotacao const, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<vota::ETelaVotacao, std::__2::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>>, void*>*)
-1315	115	10	-	openssl	skeleton	1202	addr	2	ossl_DER_w_end_sequence
-1316	10	10	-	openssl	skeleton	1203	addr	1	ossl_DER_w_begin_sequence
+1315	115	10	-	openssl	skeleton	1203	addr	2	ossl_DER_w_end_sequence
+1316	10	10	-	openssl	skeleton	1204	addr	1	ossl_DER_w_begin_sequence
 1317	2129	10	openssl	openssl	-	-	none	-	
-1318	12	0	-	-	skeleton	1206	addr	1	sm2_to_type_specific_no_pub_der_free_object
-1319	19	0	-	-	skeleton	1207	addr	1	dsa_to_type_specific_der_import_object
-1320	32	0	-	-	skeleton	1208	byte	0	type_specific_no_pub_der2ec_does_selection
+1318	12	0	-	-	skeleton	1207	addr	1	sm2_to_type_specific_no_pub_der_free_object
+1319	19	0	-	-	skeleton	1208	addr	1	dsa_to_type_specific_der_import_object
+1320	32	0	-	-	skeleton	1209	byte	0	type_specific_no_pub_der2ec_does_selection
 1321	226	9	openssl	libc++	-	-	none	-	
 1322	10	10	sqlite	-	skeleton	996	shape	2	api::CTravaLeitura::~CTravaLeitura()
-1323	208	10	-	openssl	skeleton	1210	fingerprint	0	OPENSSL_sk_find
-1324	4192	10	-	openssl	skeleton	1198	byte	0	sha1_block_data_order
-1325	490	10	-	-	skeleton	1199	fingerprint	0	CRYPTO_cfb128_1_encrypt
-1326	1627	10	-	-	skeleton	1200	fingerprint	0	CRYPTO_cbc128_decrypt
-1327	852	10	-	-	skeleton	1201	fingerprint	0	CRYPTO_cbc128_encrypt
-1328	53	9	-	openssl	skeleton	1331	addr	2	ossl_provider_up_ref
-1329	44	9	sqlite	openssl	skeleton	1319	addr	1	ossl_param_build_set_octet_string
-1330	103	9	-	openssl	skeleton	1332	addr	8	WPACKET_start_sub_packet
-1331	19	9	sqlite	openssl	skeleton	1320	byte	0	ossl_tolower
-1332	98	9	-	openssl	skeleton	1223	addr	8	ossl_algorithm_get1_first_name
-1333	25	9	openssl	openssl	skeleton	1336	addr	4	EVP_KDF_fetch
-1334	24	8	openssl	openssl	skeleton	1335	fingerprint	0	EVP_MAC_init
-1335	75	9	sqlite	openssl	skeleton	1337	addr	5	evp_do_ciph_ctx_setparams
-1336	729	9	openssl	openssl	skeleton	1321	byte	0	cmov
+1323	208	10	-	openssl	skeleton	1211	fingerprint	0	OPENSSL_sk_find
+1324	4192	10	-	openssl	skeleton	1199	byte	0	sha1_block_data_order
+1325	490	10	-	-	skeleton	1200	fingerprint	0	CRYPTO_cfb128_1_encrypt
+1326	1627	10	-	-	skeleton	1201	fingerprint	0	CRYPTO_cbc128_decrypt
+1327	852	10	-	-	skeleton	1202	fingerprint	0	CRYPTO_cbc128_encrypt
+1328	53	9	-	openssl	skeleton	1330	addr	2	ossl_provider_up_ref
+1329	44	9	sqlite	openssl	skeleton	1318	addr	1	ossl_param_build_set_octet_string
+1330	103	9	-	openssl	skeleton	1331	addr	8	WPACKET_start_sub_packet
+1331	19	9	sqlite	openssl	skeleton	1319	byte	0	ossl_tolower
+1332	98	9	-	openssl	skeleton	1224	addr	8	ossl_algorithm_get1_first_name
+1333	25	9	openssl	openssl	skeleton	1335	addr	4	EVP_KDF_fetch
+1334	24	8	openssl	openssl	skeleton	1334	fingerprint	0	EVP_MAC_init
+1335	75	9	sqlite	openssl	skeleton	1336	addr	5	evp_do_ciph_ctx_setparams
+1336	729	9	openssl	openssl	skeleton	1320	byte	0	cmov
 1337	22	8	-	vota	skeleton	1613	addr	4	vota::CAguardaMensagem::GetInst()
-1338	616	9	sqlite	openssl	skeleton	1322	byte	0	fe_tobytes
-1339	105	9	-	openssl	skeleton	1220	addr	11	EC_POINT_set_to_infinity
-1340	15	9	-	openssl	skeleton	1221	byte	0	EC_GROUP_order_bits
+1338	616	9	sqlite	openssl	skeleton	1321	byte	0	fe_tobytes
+1339	105	9	-	openssl	skeleton	1221	addr	11	EC_POINT_set_to_infinity
+1340	15	9	-	openssl	skeleton	1222	byte	0	EC_GROUP_order_bits
 1341	125	9	-	openssl	-	-	none	-	
-1342	120	9	sqlite	openssl	skeleton	1230	addr	6	X509_ALGOR_set0
-1343	115	9	-	openssl	skeleton	1323	addr	6	ASN1_TYPE_unpack_sequence
-1344	19	9	sqlite	openssl	skeleton	1226	addr	2	BN_GENCB_free
-1345	52	9	sqlite	openssl	skeleton	1227	byte	0	BN_abs_is_word
+1342	120	9	sqlite	openssl	skeleton	1231	addr	6	X509_ALGOR_set0
+1343	115	9	-	openssl	skeleton	1322	addr	6	ASN1_TYPE_unpack_sequence
+1344	19	9	sqlite	openssl	skeleton	1227	addr	2	BN_GENCB_free
+1345	52	9	sqlite	openssl	skeleton	1228	byte	0	BN_abs_is_word
 1346	911	9	-	-	skeleton	1968	fingerprint	0	std::__2::__tree_node_base<void*>*& std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, unsigned short>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, unsigned short>, std::__2::less<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, unsigned short>>>::__find_equal<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>(std::__2::__tree_const_iterator<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, unsigned short>, std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, unsigned short>, void*>*, long>, std::__2::__tree_end_node<std::__2::__tree_node_base<void*>*>*&, std::__2::__tree_node_base<void*>*&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
-1347	304	9	-	openssl	skeleton	1228	addr	24	bn_expand2
+1347	304	9	-	openssl	skeleton	1229	addr	24	bn_expand2
 1348	249	9	app	comum	-	-	none	-	
-1349	31	9	-	openssl	skeleton	1225	addr	1	BN_mod_sqr
-1350	295	9	-	openssl	skeleton	1224	addr	1	BN_rshift1
-1351	542	9	openssl	openssl	skeleton	1340	addr	53	ENGINE_ctrl_cmd_string
+1349	31	9	-	openssl	skeleton	1226	addr	1	BN_mod_sqr
+1350	295	9	-	openssl	skeleton	1225	addr	1	BN_rshift1
+1351	542	9	openssl	openssl	skeleton	1339	addr	53	ENGINE_ctrl_cmd_string
 1352	288	9	-	openssl	-	-	none	-	
-1353	56	9	-	-	skeleton	1339	addr	4	engine_table_cleanup
-1354	16	9	sqlite	openssl	skeleton	1229	byte	0	BIO_next
+1353	56	9	-	-	skeleton	1338	addr	4	engine_table_cleanup
+1354	16	9	sqlite	openssl	skeleton	1230	byte	0	BIO_next
 1355	190	8	app	simulador	skeleton	1085	addr	1	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::assign(unsigned long, char)
-1356	578	9	libcxx	libc++	skeleton	1302	addr	7	std::__2::time_get<wchar_t, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>>::get(std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, std::__2::ios_base&, unsigned int&, tm*, wchar_t const*, wchar_t const*) const
-1357	621	9	libcxx	libc++	skeleton	1303	shape	7	std::__2::time_get<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>>::get(std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::ios_base&, unsigned int&, tm*, char const*, char const*) const
-1358	23	8	libcxx	boost	skeleton	1304	addr	2	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::~basic_streambuf()
-1359	21	9	sqlite	libc++abi	skeleton	1305	fingerprint	0	std::__2::basic_string_view<char, std::__2::char_traits<char>>::basic_string_view[abi:ne210108](char const*)
+1356	578	9	libcxx	libc++	skeleton	1301	addr	7	std::__2::time_get<wchar_t, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>>::get(std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, std::__2::istreambuf_iterator<wchar_t, std::__2::char_traits<wchar_t>>, std::__2::ios_base&, unsigned int&, tm*, wchar_t const*, wchar_t const*) const
+1357	621	9	libcxx	libc++	skeleton	1302	shape	7	std::__2::time_get<char, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>>::get(std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::istreambuf_iterator<char, std::__2::char_traits<char>>, std::__2::ios_base&, unsigned int&, tm*, char const*, char const*) const
+1358	23	8	libcxx	boost	skeleton	1303	addr	2	std::__2::basic_streambuf<char, std::__2::char_traits<char>>::~basic_streambuf()
+1359	21	9	sqlite	libc++abi	skeleton	1304	fingerprint	0	std::__2::basic_string_view<char, std::__2::char_traits<char>>::basic_string_view[abi:ne210108](char const*)
 1360	166	9	libcxx	-	skeleton	1587	addr	11	std::__2::chrono::steady_clock::now()
 1361	16	9	7zip	-	-	-	none	-	
-1362	1179	7	7zip	7zip	skeleton	1236	addr	69	NCompress::NLzma2::CDecoder::QueryInterface(GUID const&, void**)
+1362	1179	7	7zip	7zip	skeleton	1237	addr	69	NCompress::NLzma2::CDecoder::QueryInterface(GUID const&, void**)
 1363	46	9	-	7zip	skeleton	968	addr	2	SResToHRESULT(int)
 1364	17	9	sqlite	7zip	skeleton	1496	addr	2	NArchive::N7z::ThrowUnsupported()
 1365	142	9	7zip	7zip	skeleton	4798	byte	0	LzmaEnc_Destroy
@@ -1237,16 +1237,16 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1371	455	9	sqlite	-	-	-	none	-	
 1372	376	8	sqlite	-	-	-	none	-	
 1373	2313	9	boost	-	-	-	none	-	
-1374	12	9	-	-	skeleton	1278	addr	2	ecourna::api::util::CStringUtils::Trim(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
+1374	12	9	-	-	skeleton	1279	addr	2	ecourna::api::util::CStringUtils::Trim(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1375	993	9	app	ecourna	skeleton	10923	shape	57	ecourna::api::util::CBitArray::GetValor(unsigned char)
 1376	552	8	app	libc++	-	-	none	-	
 1377	10	0	rhvoice	RHVoice	-	-	none	-	
 1378	116	5	app	comum	skeleton	2090	addr	1	comum::IPedeTituloMesario::~IPedeTituloMesario()
-1379	16	9	sqlite	-	skeleton	1374	byte	0	Xzs_Construct
-1380	57	9	-	-	skeleton	1264	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::abstract_property*>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::abstract_property*>, RHVoice::str::less, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::abstract_property*>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::abstract_property*>, void*>*)
+1379	16	9	sqlite	-	skeleton	1373	byte	0	Xzs_Construct
+1380	57	9	-	-	skeleton	1265	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::abstract_property*>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::abstract_property*>, RHVoice::str::less, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, RHVoice::abstract_property*>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, RHVoice::abstract_property*>, void*>*)
 1381	132	9	sqlite	-	skeleton	3652	addr	5	api::CDateTime::ConvertToLocalTime() const
 1382	111	9	-	-	-	-	none	-	
-1383	468	9	-	-	skeleton	1247	shape	6	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::operator>>[abi:ne210108]<char, std::__2::char_traits<char>, std::__2::allocator<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&)
+1383	468	9	-	-	skeleton	1248	shape	6	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::operator>>[abi:ne210108]<char, std::__2::char_traits<char>, std::__2::allocator<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&)
 1384	21	8	-	libc++	skeleton	1806	addr	2	std::invalid_argument::invalid_argument[abi:ne210108](char const*)
 1385	260	9	app	api	-	-	none	-	
 1386	6360	9	app	ecourna	-	-	none	-	
@@ -1258,65 +1258,65 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1392	608	9	app	ecourna	-	-	none	-	
 1393	15	9	sqlite	vota	-	-	none	-	
 1394	179	9	sqlite	-	skeleton	3613	addr	7	comum::md::CUrna::~CUrna()
-1395	74	9	-	-	skeleton	1290	byte	0	std::__2::__formatter::__find_exponent[abi:ne210108](char*, char*)
+1395	74	9	-	-	skeleton	1291	byte	0	std::__2::__formatter::__find_exponent[abi:ne210108](char*, char*)
 1396	572	9	app	comum	-	-	none	-	
 1397	107	9	-	ecourna	-	-	none	-	
 1398	14	9	app	vota	skeleton	1428	shape	1	comum::IEventosLog::logaAlerta(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1399	745	9	app	ecourna	-	-	none	-	
 1400	318	9	-	-	-	-	none	-	
 1401	372	9	app	-	skeleton	1563	addr	2	api::CInteractiveForm<api::IScreen, api::IInputKbd>::SetFocus(unsigned long)
-1402	56	8	-	-	skeleton	1325	fingerprint	0	decltype(fp1) std::__2::__formatter::__copy[abi:ne210108]<char*, char, char, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>>(char*, char*, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>)
-1403	79	8	sqlite	-	skeleton	1334	fingerprint	0	std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>> std::__2::__formatter::__fill[abi:ne210108]<char, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>>(std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, unsigned long, std::__2::__format_spec::__code_point<T>)
+1402	56	8	-	-	skeleton	1324	fingerprint	0	decltype(fp1) std::__2::__formatter::__copy[abi:ne210108]<char*, char, char, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>>(char*, char*, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>)
+1403	79	8	sqlite	-	skeleton	1333	fingerprint	0	std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>> std::__2::__formatter::__fill[abi:ne210108]<char, std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>>(std::__2::back_insert_iterator<std::__2::__format::__output_buffer<char>>, unsigned long, std::__2::__format_spec::__code_point<T>)
 1404	74	9	-	-	-	-	none	-	
 1405	32	9	sqlite	-	skeleton	1780	addr	1	std::__2::__tree<std::__2::__value_type<CBaseType<unsigned int, 0u, 99999u, 6>, ecourna::app::dados::CConfiguracaoMunicipio>, std::__2::__map_value_compare<CBaseType<unsigned int, 0u, 99999u, 6>, std::__2::pair<CBaseType<unsigned int, 0u, 99999u, 6> const, ecourna::app::dados::CConfiguracaoMunicipio>, std::__2::less<CBaseType<unsigned int, 0u, 99999u, 6>>, true>, std::__2::allocator<std::__2::pair<CBaseType<unsigned int, 0u, 99999u, 6> const, ecourna::app::dados::CConfiguracaoMunicipio>>>::destroy(std::__2::__tree_node<std::__2::__value_type<CBaseType<unsigned int, 0u, 99999u, 6>, ecourna::app::dados::CConfiguracaoMunicipio>, void*>*)
 1406	72	9	-	ecourna	skeleton	1293	shape	6	
 1407	40	9	7zip	7zip	-	-	none	-	
 1408	37	9	7zip	7zip	-	-	none	-	
-1409	242	9	libcxx	-	skeleton	1232	shape	17	std::__2::__format_spec::__throw_invalid_type_format_error[abi:ne210108](char const*)
+1409	242	9	libcxx	-	skeleton	1233	shape	17	std::__2::__format_spec::__throw_invalid_type_format_error[abi:ne210108](char const*)
 1410	738	9	sqlite	libc++abi	-	-	none	-	
-1411	16	9	sqlite	libc++abi	skeleton	1298	addr	2	(anonymous namespace)::itanium_demangle::Node* (anonymous namespace)::itanium_demangle::AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator>::make<(anonymous namespace)::itanium_demangle::NameType, std::__2::basic_string_view<char, std::__2::char_traits<char>>&>(std::__2::basic_string_view<char, std::__2::char_traits<char>>&)
-1412	86	6	libcxx	libc++abi	skeleton	1299	addr	3	(anonymous namespace)::itanium_demangle::PODSmallVector<(anonymous namespace)::itanium_demangle::ForwardTemplateReference*, 4ul>::operator[](unsigned long)
-1413	25	9	libcxx	libc++abi	skeleton	1300	addr	1	(anonymous namespace)::itanium_demangle::PODSmallVector<(anonymous namespace)::itanium_demangle::PODSmallVector<(anonymous namespace)::itanium_demangle::Node*, 8ul>*, 4ul>::~PODSmallVector()
-1414	35	9	-	-	skeleton	1307	byte	0	wcslen
-1415	267	8	sqlite	libc++	skeleton	1306	addr	8	wcrtomb
-1416	126	9	sqlite	-	skeleton	1308	addr	2	vsnprintf
+1411	16	9	sqlite	libc++abi	skeleton	1297	addr	2	(anonymous namespace)::itanium_demangle::Node* (anonymous namespace)::itanium_demangle::AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator>::make<(anonymous namespace)::itanium_demangle::NameType, std::__2::basic_string_view<char, std::__2::char_traits<char>>&>(std::__2::basic_string_view<char, std::__2::char_traits<char>>&)
+1412	86	6	libcxx	libc++abi	skeleton	1298	addr	3	(anonymous namespace)::itanium_demangle::PODSmallVector<(anonymous namespace)::itanium_demangle::ForwardTemplateReference*, 4ul>::operator[](unsigned long)
+1413	25	9	libcxx	libc++abi	skeleton	1299	addr	1	(anonymous namespace)::itanium_demangle::PODSmallVector<(anonymous namespace)::itanium_demangle::PODSmallVector<(anonymous namespace)::itanium_demangle::Node*, 8ul>*, 4ul>::~PODSmallVector()
+1414	35	9	-	-	skeleton	1306	byte	0	wcslen
+1415	267	8	sqlite	libc++	skeleton	1305	addr	8	wcrtomb
+1416	126	9	sqlite	-	skeleton	1307	addr	2	vsnprintf
 1417	1477	9	libcxx	-	-	-	none	-	
-1418	168	9	-	RHVoice	skeleton	1310	addr	6	scalbn
+1418	168	9	-	RHVoice	skeleton	1309	addr	6	scalbn
 1419	15	8	-	-	skeleton	946	addr	1	lstat
-1420	30	8	-	openssl	skeleton	1195	addr	4	__fstat
-1421	23	8	-	RHVoice	skeleton	1313	byte	0	__memset
-1422	327	9	-	sqlite	skeleton	1248	addr	16	nodeBlobReset
-1423	1674	9	sqlite	sqlite	skeleton	1249	addr	33	jsonParseFuncArg
-1424	275	9	sqlite	sqlite	skeleton	1250	fingerprint	0	getDigits
-1425	547	9	-	openssl	skeleton	1251	addr	5	sqlite3ExprIsInteger
-1426	4577	9	sqlite	sqlite	skeleton	1252	addr	37	selectInnerLoop
-1427	28699	9	sqlite	openssl	skeleton	1253	addr	325	sqlite3WhereBegin
-1428	83	9	sqlite	openssl	skeleton	1254	addr	1	sqlite3WalkExprList
-1429	1127	9	sqlite	sqlite	skeleton	1255	addr	20	viewGetColumnNames
-1430	760	9	sqlite	sqlite	skeleton	1256	addr	9	sqlite3SrcListAppend
-1431	511	9	-	sqlite	skeleton	1257	addr	3	sqlite3FindIndex
-1432	489	9	sqlite	sqlite	skeleton	1258	addr	27	btreeComputeFreeSpace
-1433	290	9	sqlite	sqlite	skeleton	1259	addr	15	sqlite3VtabImportErrmsg
-1434	398	9	sqlite	sqlite	skeleton	1260	addr	10	ptrmapGet
-1435	307	9	sqlite	sqlite	skeleton	1261	addr	5	walIndexPageRealloc
-1436	310	9	-	-	skeleton	1262	addr	4	sqlite3PcacheTruncate
-1437	572	9	sqlite	sqlite	skeleton	1263	addr	9	sqlite3VtabCreateModule
-1438	364	9	sqlite	sqlite	skeleton	1265	addr	24	sqlite3HashClear
-1439	281	9	-	sqlite	skeleton	1266	addr	3	saveCursorsOnList
-1440	288	8	-	sqlite	skeleton	1267	addr	7	sqlite3SchemaClear
-1441	309	9	sqlite	sqlite	skeleton	1268	addr	8	sqlite3BtreeSetPageSize
-1442	2798	9	sqlite	sqlite	skeleton	1269	addr	34	btreeBeginTrans
-1443	1779	9	sqlite	-	skeleton	1271	addr	1	getSafetyLevel
+1420	30	8	-	openssl	skeleton	1196	addr	4	__fstat
+1421	23	8	-	RHVoice	skeleton	1312	byte	0	__memset
+1422	327	9	-	sqlite	skeleton	1249	addr	16	nodeBlobReset
+1423	1674	9	sqlite	sqlite	skeleton	1250	addr	33	jsonParseFuncArg
+1424	275	9	sqlite	sqlite	skeleton	1251	fingerprint	0	getDigits
+1425	547	9	-	openssl	skeleton	1252	addr	5	sqlite3ExprIsInteger
+1426	4577	9	sqlite	sqlite	skeleton	1253	addr	37	selectInnerLoop
+1427	28699	9	sqlite	openssl	skeleton	1254	addr	325	sqlite3WhereBegin
+1428	83	9	sqlite	openssl	skeleton	1255	addr	1	sqlite3WalkExprList
+1429	1127	9	sqlite	sqlite	skeleton	1256	addr	20	viewGetColumnNames
+1430	760	9	sqlite	sqlite	skeleton	1257	addr	9	sqlite3SrcListAppend
+1431	511	9	-	sqlite	skeleton	1258	addr	3	sqlite3FindIndex
+1432	489	9	sqlite	sqlite	skeleton	1259	addr	27	btreeComputeFreeSpace
+1433	290	9	sqlite	sqlite	skeleton	1260	addr	15	sqlite3VtabImportErrmsg
+1434	398	9	sqlite	sqlite	skeleton	1261	addr	10	ptrmapGet
+1435	307	9	sqlite	sqlite	skeleton	1262	addr	5	walIndexPageRealloc
+1436	310	9	-	-	skeleton	1263	addr	4	sqlite3PcacheTruncate
+1437	572	9	sqlite	sqlite	skeleton	1264	addr	9	sqlite3VtabCreateModule
+1438	364	9	sqlite	sqlite	skeleton	1266	addr	24	sqlite3HashClear
+1439	281	9	-	sqlite	skeleton	1267	addr	3	saveCursorsOnList
+1440	288	8	-	sqlite	skeleton	1268	addr	7	sqlite3SchemaClear
+1441	309	9	sqlite	sqlite	skeleton	1269	addr	8	sqlite3BtreeSetPageSize
+1442	2798	9	sqlite	sqlite	skeleton	1270	addr	34	btreeBeginTrans
+1443	1779	9	sqlite	-	skeleton	1272	addr	1	getSafetyLevel
 1444	141	9	app	libc++	-	-	none	-	
-1445	12	0	-	-	skeleton	1324	addr	1	rsapss_to_EncryptedPrivateKeyInfo_der_free_object
-1446	19	0	-	-	skeleton	1328	addr	1	aes_192_cfb_get_params
-1447	19	0	-	-	skeleton	1329	addr	1	aes_256_cfb_get_params
-1448	23	9	sqlite	openssl	skeleton	1330	byte	0	RSA_public_decrypt
-1449	1440	9	sqlite	-	skeleton	1315	byte	0	RC4
-1450	153	9	-	openssl	skeleton	1316	byte	0	Poly1305_Init
+1445	12	0	-	-	skeleton	1323	addr	1	rsapss_to_EncryptedPrivateKeyInfo_der_free_object
+1446	19	0	-	-	skeleton	1327	addr	1	aes_192_cfb_get_params
+1447	19	0	-	-	skeleton	1328	addr	1	aes_256_cfb_get_params
+1448	23	9	sqlite	openssl	skeleton	1329	byte	0	RSA_public_decrypt
+1449	1440	9	sqlite	-	skeleton	1314	byte	0	RC4
+1450	153	9	-	openssl	skeleton	1315	byte	0	Poly1305_Init
 1451	205	9	-	openssl	-	-	none	-	
-1452	346	9	-	openssl	skeleton	1317	addr	2	gcm_gmult_4bit
-1453	847	9	sqlite	openssl	skeleton	1318	addr	3	CRYPTO_gcm128_setiv
+1452	346	9	-	openssl	skeleton	1316	addr	2	gcm_gmult_4bit
+1453	847	9	sqlite	openssl	skeleton	1317	addr	3	CRYPTO_gcm128_setiv
 1454	8	8	sqlite	openssl	skeleton	1456	addr	1	CRYPTO_THREAD_init_local
 1455	496	8	app	vota	-	-	none	-	
 1456	32	7	-	openssl	skeleton	1465	addr	3	CRYPTO_secure_zalloc
@@ -1331,35 +1331,35 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1465	25	8	-	openssl	skeleton	1473	addr	1	EVP_CIPHER_get0_name
 1466	12	8	-	openssl	skeleton	1474	addr	1	EVP_CIPHER_get_mode
 1467	39	8	sqlite	openssl	skeleton	1476	addr	3	evp_is_a
-1468	181	8	-	-	skeleton	1422	addr	5	api::CApplicationContext::~CApplicationContext()
+1468	181	8	-	-	skeleton	1421	addr	5	api::CApplicationContext::~CApplicationContext()
 1469	754	8	-	openssl	skeleton	1451	addr	33	AES_set_decrypt_key
-1470	292	8	-	openssl	skeleton	1359	addr	11	EVP_PKEY_asn1_find
+1470	292	8	-	openssl	skeleton	1358	addr	11	EVP_PKEY_asn1_find
 1471	1082	8	openssl	openssl	skeleton	1446	fingerprint	0	ge_add
 1472	410	8	openssl	openssl	skeleton	1447	fingerprint	0	ge_p3_to_cached
-1473	28	8	-	openssl	skeleton	1344	byte	0	EC_KEY_set_flags
-1474	165	8	-	openssl	skeleton	1342	addr	7	EC_POINT_set_affine_coordinates
-1475	66	8	-	openssl	skeleton	1343	addr	6	EC_GROUP_get_curve
-1476	468	8	-	openssl	skeleton	1352	addr	3	BN_GF2m_mod_sqr_arr
+1473	28	8	-	openssl	skeleton	1343	byte	0	EC_KEY_set_flags
+1474	165	8	-	openssl	skeleton	1341	addr	7	EC_POINT_set_affine_coordinates
+1475	66	8	-	openssl	skeleton	1342	addr	6	EC_GROUP_get_curve
+1476	468	8	-	openssl	skeleton	1351	addr	3	BN_GF2m_mod_sqr_arr
 1477	16	8	-	openssl	skeleton	1450	addr	2	d2i_PKCS8_PRIV_KEY_INFO
-1478	12	8	sqlite	openssl	skeleton	1356	addr	2	X509_ALGOR_free
-1479	566	8	sqlite	openssl	skeleton	1358	addr	26	asn1_check_tlen
-1480	419	8	-	openssl	skeleton	1346	byte	0	BUF_reverse
-1481	52	8	-	openssl	skeleton	1347	addr	8	BUF_MEM_new
-1482	154	8	-	openssl	skeleton	1357	addr	4	ossl_asn1_template_free
-1483	127	8	-	openssl	skeleton	1360	addr	11	ASN1_INTEGER_to_BN
-1484	548	8	-	openssl	skeleton	1361	addr	25	ASN1_INTEGER_get
+1478	12	8	sqlite	openssl	skeleton	1355	addr	2	X509_ALGOR_free
+1479	566	8	sqlite	openssl	skeleton	1357	addr	26	asn1_check_tlen
+1480	419	8	-	openssl	skeleton	1345	byte	0	BUF_reverse
+1481	52	8	-	openssl	skeleton	1346	addr	8	BUF_MEM_new
+1482	154	8	-	openssl	skeleton	1356	addr	4	ossl_asn1_template_free
+1483	127	8	-	openssl	skeleton	1359	addr	11	ASN1_INTEGER_to_BN
+1484	548	8	-	openssl	skeleton	1360	addr	25	ASN1_INTEGER_get
 1485	14	8	-	vota	skeleton	2645	shape	2	vota::EhTreinamento()
-1486	11	8	-	openssl	skeleton	1345	addr	1	DH_test_flags
+1486	11	8	-	openssl	skeleton	1344	addr	1	DH_test_flags
 1487	587	8	app	-	-	-	none	-	
 1488	405	8	app	-	-	-	none	-	
-1489	18	8	-	openssl	skeleton	1349	fingerprint	0	BN_to_montgomery
-1490	55	8	-	openssl	skeleton	1350	byte	0	BN_is_word
-1491	182	8	sqlite	openssl	skeleton	1351	fingerprint	0	BN_bn2bin
-1492	914	8	sqlite	openssl	skeleton	1353	addr	12	BN_gcd
-1493	192	8	-	openssl	skeleton	1348	addr	2	BN_lshift1
+1489	18	8	-	openssl	skeleton	1348	fingerprint	0	BN_to_montgomery
+1490	55	8	-	openssl	skeleton	1349	byte	0	BN_is_word
+1491	182	8	sqlite	openssl	skeleton	1350	fingerprint	0	BN_bn2bin
+1492	914	8	sqlite	openssl	skeleton	1352	addr	12	BN_gcd
+1493	192	8	-	openssl	skeleton	1347	addr	2	BN_lshift1
 1494	811	8	-	openssl	skeleton	1449	addr	5	bn_mul_recursive
-1495	18	8	-	openssl	skeleton	1354	byte	0	BIO_clear_flags
-1496	273	8	-	openssl	skeleton	1355	addr	27	BIO_new
+1495	18	8	-	openssl	skeleton	1353	byte	0	BIO_clear_flags
+1496	273	8	-	openssl	skeleton	1354	addr	27	BIO_new
 1497	71	8	openssl	ASN1	-	-	none	-	
 1498	14	8	-	libc++	skeleton	1433	addr	1	std::runtime_error::runtime_error(std::runtime_error const&)
 1499	14	8	-	libc++	skeleton	1579	addr	1	std::logic_error::logic_error(std::logic_error const&)
@@ -1371,33 +1371,33 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1505	56	8	sqlite	libc++	skeleton	1437	addr	3	std::__2::filesystem::__dir_stream::~__dir_stream()
 1506	53	8	-	comum	skeleton	1438	fingerprint	0	bool std::__2::__sort3[abi:ne210108]<std::__2::_ClassicAlgPolicy, std::__2::ranges::less, unsigned int*, 0>(unsigned int*, unsigned int*, unsigned int*, std::__2::ranges::less)
 1507	53	8	-	comum	-	-	none	-	
-1508	55	8	app	ecourna	skeleton	1363	fingerprint	0	call_ztell64
+1508	55	8	app	ecourna	skeleton	1362	fingerprint	0	call_ztell64
 1509	80	8	7zip	7zip	skeleton	4805	shape	8	Lzma2Enc_Destroy
 1510	505	7	7zip	7zip	-	-	none	-	
 1511	798	8	7zip	-	-	-	none	-	
-1512	1179	7	7zip	7zip	skeleton	1371	addr	69	CArchiveUpdateCallback::QueryInterface(GUID const&, void**)
+1512	1179	7	7zip	7zip	skeleton	1370	addr	69	CArchiveUpdateCallback::QueryInterface(GUID const&, void**)
 1513	223	7	7zip	7zip	-	-	none	-	
 1514	27	8	7zip	7zip	skeleton	811	addr	2	CrcCalc
 1515	24	8	7zip	-	skeleton	1143	addr	2	CrcUpdate
 1516	246	8	7zip	7zip	-	-	none	-	
 1517	594	8	asn1	ASN1	-	-	none	-	
 1518	261	8	asn1	ASN1	-	-	none	-	
-1519	114	8	openssl	ASN1	skeleton	1392	addr	4	ASN1::toInt(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned long, unsigned long, int)
-1520	123	8	asn1	libc++	skeleton	1393	shape	5	ASN1::read_dec2(std::__2::basic_istream<char, std::__2::char_traits<char>>&)
+1519	114	8	openssl	ASN1	skeleton	1391	addr	4	ASN1::toInt(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, unsigned long, unsigned long, int)
+1520	123	8	asn1	libc++	skeleton	1392	shape	5	ASN1::read_dec2(std::__2::basic_istream<char, std::__2::char_traits<char>>&)
 1521	89	7	-	ASN1	skeleton	1763	addr	4	ASN1::AbstractString::AbstractString(void const*, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1522	32	8	sqlite	ecourna	skeleton	2112	addr	1	std::__2::__tree<std::__2::__value_type<unsigned char, api::CTickManager::STick>, std::__2::__map_value_compare<unsigned char, std::__2::pair<unsigned char const, api::CTickManager::STick>, std::__2::less<unsigned char>, true>, std::__2::allocator<std::__2::pair<unsigned char const, api::CTickManager::STick>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned char, api::CTickManager::STick>, void*>*)
 1523	67	8	app	vota	skeleton	1782	shape	4	ecourna::api::util::CStringUtils::ToDWord(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1524	705	8	app	simulador	-	-	none	-	
-1525	964	8	app	ecourna	skeleton	1406	shape	42	ecourna::api::sql::sqlite::CSqlResultSet::IndexForColumnName(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
-1526	182	6	app	ecourna	skeleton	1275	addr	9	ecourna::api::compression::ICompressor::~ICompressor()
-1527	1269	8	app	simulador	skeleton	1239	byte	0	void std::__2::__tree_remove[abi:ne210108]<std::__2::__tree_node_base<void*>*>(std::__2::__tree_node_base<void*>*, std::__2::__tree_node_base<void*>*)
+1525	964	8	app	ecourna	skeleton	1405	shape	42	ecourna::api::sql::sqlite::CSqlResultSet::IndexForColumnName(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
+1526	182	6	app	ecourna	skeleton	1276	addr	9	ecourna::api::compression::ICompressor::~ICompressor()
+1527	1269	8	app	simulador	skeleton	1240	byte	0	void std::__2::__tree_remove[abi:ne210108]<std::__2::__tree_node_base<void*>*>(std::__2::__tree_node_base<void*>*, std::__2::__tree_node_base<void*>*)
 1528	2	0	libcxx	libc++abi	skeleton	1544	byte	0	std::__2::__node<char>::__exec_split(bool, std::__2::__state<char>&) const
-1529	71	8	-	RHVoice	skeleton	1365	addr	2	HTS_Node_clear
-1530	440	8	rhvoice	RHVoice	skeleton	1366	addr	13	HTS_Model_clear
+1529	71	8	-	RHVoice	skeleton	1364	addr	2	HTS_Node_clear
+1530	440	8	rhvoice	RHVoice	skeleton	1365	addr	13	HTS_Model_clear
 1531	158	8	rhvoice	libc++	-	-	none	-	
 1532	252	8	app	ASN1	skeleton	5588	shape	12	bool ASN1::CoderEnv::encodeBER<std::__2::back_insert_iterator<std::__2::vector<char, std::__2::allocator<char>>>>(ASN1::AbstractData const&, std::__2::back_insert_iterator<std::__2::vector<char, std::__2::allocator<char>>>)
 1533	36	8	app	-	-	-	none	-	
-1534	7	8	app	ecourna	skeleton	1362	byte	0	QRinput_estimateBitsMode8
+1534	7	8	app	ecourna	skeleton	1361	byte	0	QRinput_estimateBitsMode8
 1535	20	8	sqlite	-	-	-	none	-	
 1536	22	8	app	vota	skeleton	2196	addr	4	comum::CPedeTituloMesario::GetInst()
 1537	106	5	app	comum	skeleton	2663	fingerprint	0	comum::CPedeDigitalMesario::~CPedeDigitalMesario()
@@ -1407,7 +1407,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1541	197	8	app	-	-	-	none	-	
 1542	515	8	app	-	-	-	none	-	
 1543	6279	8	app	ecourna	-	-	none	-	
-1544	16	8	-	-	skeleton	1414	addr	1	void std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::__init<char const*, 0>(char const*, char const*)
+1544	16	8	-	-	skeleton	1413	addr	1	void std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::__init<char const*, 0>(char const*, char const*)
 1545	99	8	app	ecourna	-	-	none	-	
 1546	16	8	app	-	skeleton	5564	byte	0	comum::md::CCargo::TemFoto() const
 1547	184	7	app	ecourna	-	-	none	-	
@@ -1424,7 +1424,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1558	89	8	-	-	-	-	none	-	
 1559	66	5	app	vota	skeleton	1804	addr	1	vota::testeteclado::CBase::~CBase()
 1560	13	0	app	vota	skeleton	1805	addr	1	vota::CAplicacaoEncerrada::~CAplicacaoEncerrada()_3933
-1561	215	8	app	ecourna	skeleton	1424	shape	16	
+1561	215	8	app	ecourna	skeleton	1423	shape	16	
 1562	142	8	app	libc++	skeleton	1426	addr	3	
 1563	572	8	app	ecourna	-	-	none	-	
 1564	32	8	-	-	skeleton	2120	addr	1	
@@ -1433,26 +1433,26 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1567	39	7	libcxx	libc++abi	skeleton	1429	byte	0	(anonymous namespace)::itanium_demangle::Node::hasArray((anonymous namespace)::itanium_demangle::OutputBuffer&) const
 1568	164	8	libcxx	libc++abi	skeleton	1430	addr	4	(anonymous namespace)::itanium_demangle::AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator>::parseSourceName((anonymous namespace)::itanium_demangle::AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator>::NameState*)
 1569	18	8	sqlite	libc++abi	skeleton	1431	addr	2	(anonymous namespace)::itanium_demangle::Node* (anonymous namespace)::itanium_demangle::AbstractManglingParser<(anonymous namespace)::itanium_demangle::ManglingParser<(anonymous namespace)::DefaultAllocator>, (anonymous namespace)::DefaultAllocator>::make<(anonymous namespace)::itanium_demangle::NameWithTemplateArgs, (anonymous namespace)::itanium_demangle::Node*&, (anonymous namespace)::itanium_demangle::Node*&>((anonymous namespace)::itanium_demangle::Node*&, (anonymous namespace)::itanium_demangle::Node*&)
-1570	271	8	7zip	7zip	skeleton	1309	addr	9	casemap
+1570	271	8	7zip	7zip	skeleton	1308	addr	9	casemap
 1571	19	8	sqlite	openssl	skeleton	1439	byte	0	tolower
 1572	31	8	-	-	skeleton	2168	addr	1	remove
 1573	69	7	-	-	skeleton	1847	addr	1	read
 1574	5	7	-	-	probe	82	fingerprint	0	abort
-1575	826	8	sqlite	sqlite	skeleton	1375	addr	31	jsonStringGrow
-1576	8006	8	sqlite	sqlite	skeleton	1376	addr	114	isDate
-1577	465	8	sqlite	openssl	skeleton	1377	addr	2	disableTerm
-1578	1686	8	sqlite	-	skeleton	1379	addr	32	sqlite3CodeSubselect
-1579	58	8	sqlite	sqlite	skeleton	1381	addr	1	sqlite3GetVdbe
-1580	805	8	sqlite	sqlite	skeleton	1382	addr	26	moveToRoot
-1581	1502	8	sqlite	sqlite	skeleton	1383	addr	30	freePage2
-1582	142	8	sqlite	sqlite	skeleton	1384	byte	0	pcacheFetchFinishWithInit
-1583	961	8	sqlite	sqlite	skeleton	1385	addr	14	createCollation
-1584	2012	8	-	sqlite	skeleton	1386	addr	38	valueFromExpr
-1585	247	8	sqlite	sqlite	skeleton	1387	addr	5	addModuleArgument
-1586	53	8	-	-	skeleton	1389	addr	2	sqlite3DbMallocZero
-1587	178	8	-	-	skeleton	1390	addr	9	pagerUnlockAndRollback
+1575	826	8	sqlite	sqlite	skeleton	1374	addr	31	jsonStringGrow
+1576	8006	8	sqlite	sqlite	skeleton	1375	addr	114	isDate
+1577	465	8	sqlite	openssl	skeleton	1376	addr	2	disableTerm
+1578	1686	8	sqlite	-	skeleton	1378	addr	32	sqlite3CodeSubselect
+1579	58	8	sqlite	sqlite	skeleton	1380	addr	1	sqlite3GetVdbe
+1580	805	8	sqlite	sqlite	skeleton	1381	addr	26	moveToRoot
+1581	1502	8	sqlite	sqlite	skeleton	1382	addr	30	freePage2
+1582	142	8	sqlite	sqlite	skeleton	1383	byte	0	pcacheFetchFinishWithInit
+1583	961	8	sqlite	sqlite	skeleton	1384	addr	14	createCollation
+1584	2012	8	-	sqlite	skeleton	1385	addr	38	valueFromExpr
+1585	247	8	sqlite	sqlite	skeleton	1386	addr	5	addModuleArgument
+1586	53	8	-	-	skeleton	1388	addr	2	sqlite3DbMallocZero
+1587	178	8	-	-	skeleton	1389	addr	9	pagerUnlockAndRollback
 1588	640	8	app	libc++	-	-	none	-	
-1589	891	8	-	sqlite	skeleton	1391	addr	40	sqlite3ParseObjectReset
+1589	891	8	-	sqlite	skeleton	1390	addr	40	sqlite3ParseObjectReset
 1590	412	7	openssl	openssl	skeleton	1455	addr	30	ossl_cipher_generic_set_ctx_params
 1591	658	8	app	vota	-	-	none	-	
 1592	228	8	openssl	openssl	skeleton	1452	addr	2	do_hmac
@@ -1460,10 +1460,10 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1594	32	8	-	-	skeleton	2333	addr	1	std::__2::__tree<std::__2::__value_type<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), boost::function<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>>, boost::signals2::mutex>>, void*>>, std::__2::__map_value_compare<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, std::__2::pair<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>> const, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), boost::function<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>>, boost::signals2::mutex>>, void*>>, boost::signals2::detail::group_key_less<int, std::__2::less<int>>, false>, std::__2::allocator<std::__2::pair<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>> const, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), boost::function<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>>, boost::signals2::mutex>>, void*>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), boost::function<void (unsigned long, unsigned long, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>>, boost::signals2::mutex>>, void*>>, void*>*)
 1595	19	0	-	-	skeleton	1453	addr	1	rsapss_to_EncryptedPrivateKeyInfo_der_import_object
 1596	19	0	-	-	skeleton	1454	addr	1	sm2_to_type_specific_no_pub_der_import_object
-1597	7	8	-	libc++	skeleton	1401	shape	1	void std::__2::__throw_regex_error[abi:ne210108]<(std::__2::regex_constants::error_type)5>()
-1598	198	7	openssl	libc++	skeleton	1402	addr	5	std::__2::__bracket_expression<char, std::__2::regex_traits<char>>::__bracket_expression[abi:ne210108](std::__2::regex_traits<char> const&, std::__2::__node<char>*, bool, bool, bool)
-1599	7	8	openssl	libc++	skeleton	1403	shape	1	void std::__2::__throw_regex_error[abi:ne210108]<(std::__2::regex_constants::error_type)3>()
-1600	7	7	openssl	libc++	skeleton	1404	shape	1	void std::__2::__throw_regex_error[abi:ne210108]<(std::__2::regex_constants::error_type)6>()
+1597	7	8	-	libc++	skeleton	1400	shape	1	void std::__2::__throw_regex_error[abi:ne210108]<(std::__2::regex_constants::error_type)5>()
+1598	198	7	openssl	libc++	skeleton	1401	addr	5	std::__2::__bracket_expression<char, std::__2::regex_traits<char>>::__bracket_expression[abi:ne210108](std::__2::regex_traits<char> const&, std::__2::__node<char>*, bool, bool, bool)
+1599	7	8	openssl	libc++	skeleton	1402	shape	1	void std::__2::__throw_regex_error[abi:ne210108]<(std::__2::regex_constants::error_type)3>()
+1600	7	7	openssl	libc++	skeleton	1403	shape	1	void std::__2::__throw_regex_error[abi:ne210108]<(std::__2::regex_constants::error_type)6>()
 1601	253	7	-	openssl	skeleton	1442	fingerprint	0	SHA1_Update
 1602	52	8	openssl	openssl	skeleton	1457	byte	0	RSA_X931_hash_id
 1603	117	8	openssl	openssl	skeleton	1443	addr	8	ossl_rsa_oaeppss_nid2name
@@ -1530,14 +1530,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1664	123	7	7zip	7zip	-	-	none	-	
 1665	103	7	app	libc++	-	-	none	-	
 1666	166	7	7zip	7zip	-	-	none	-	
-1667	49	7	asn1	ASN1	skeleton	1394	addr	1	ASN1::PEREncoder::encodeBlock(char const*, unsigned int)
-1668	335	7	asn1	ASN1	skeleton	1396	byte	0	ASN1::BERDecoderPartial::decodeHeader(unsigned int&, bool&, unsigned int&)
-1669	312	7	asn1	ASN1	skeleton	1398	byte	0	ASN1::BERDecoder::decodeHeader(unsigned int&, bool&, unsigned int&)
+1667	49	7	asn1	ASN1	skeleton	1393	addr	1	ASN1::PEREncoder::encodeBlock(char const*, unsigned int)
+1668	335	7	asn1	ASN1	skeleton	1395	byte	0	ASN1::BERDecoderPartial::decodeHeader(unsigned int&, bool&, unsigned int&)
+1669	312	7	asn1	ASN1	skeleton	1397	byte	0	ASN1::BERDecoder::decodeHeader(unsigned int&, bool&, unsigned int&)
 1670	4	0	libcxx	libc++abi	skeleton	1543	byte	0	ASN1::ConstVisitor::visitExtensionRoot(ASN1::SEQUENCE const&, int)
 1671	44	6	app	ASN1	skeleton	1541	addr	4	ASN1::AbstractString::AbstractString(ASN1::AbstractString const&)
 1672	98	7	-	ASN1	-	-	none	-	
 1673	105	7	app	ecourna	skeleton	929	addr	2	std::__2::vector<ecourna::app::dados::CTituloRelatorio, std::__2::allocator<ecourna::app::dados::CTituloRelatorio>>::~vector[abi:ne210108]()
-1674	62	7	-	ASN1	skeleton	1408	addr	1	std::__2::__split_buffer<ASN1::AbstractData*, std::__2::allocator<ASN1::AbstractData*>&>::~__split_buffer()
+1674	62	7	-	ASN1	skeleton	1407	addr	1	std::__2::__split_buffer<ASN1::AbstractData*, std::__2::allocator<ASN1::AbstractData*>&>::~__split_buffer()
 1675	401	6	app	ecourna	skeleton	3456	shape	19	ecourna::app::dados::CRegistroIdentificacaoEleitor::CRegistroIdentificacaoEleitor(std::__2::shared_ptr<ecourna::app::dados::IIdentificadorEleitor>)
 1676	55	7	boost	-	skeleton	4586	addr	3	boost::re_detail_600::basic_char_set<char, boost::regex_traits<char, boost::cpp_regex_traits<char>>>::~basic_char_set()
 1677	57	7	app	-	skeleton	1546	addr	2	std::__2::__tree<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, int>, std::__2::__map_value_compare<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, int>, std::__2::less<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>>, true>, std::__2::allocator<std::__2::pair<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const, int>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, int>, void*>*)
@@ -1563,7 +1563,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1697	61	6	libcxx	libc++	skeleton	3410	shape	6	std::__2::basic_ifstream<char, std::__2::char_traits<char>>::~basic_ifstream()
 1698	35	7	-	libc++	skeleton	5255	addr	1	std::__2::vector<comum::md::estadoaplicacao::CDadoCorrespondencia, std::__2::allocator<comum::md::estadoaplicacao::CDadoCorrespondencia>>::~vector[abi:ne210108]()
 1699	411	0	libcxx	-	-	-	none	-	
-1700	107	6	app	-	skeleton	1415	fingerprint	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::operator=(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
+1700	107	6	app	-	skeleton	1414	fingerprint	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::operator=(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)
 1701	15	7	app	-	-	-	none	-	
 1702	101	7	app	-	-	-	none	-	
 1703	298	7	-	-	skeleton	1837	fingerprint	0	std::__2::__tree_iterator<std::__2::__value_type<comum::md::CEleitorIdentidade, comum::md::CEleitorIdentidade>, std::__2::__tree_node<std::__2::__value_type<comum::md::CEleitorIdentidade, comum::md::CEleitorIdentidade>, void*>*, long> std::__2::__tree<std::__2::__value_type<comum::md::CEleitorIdentidade, comum::md::CEleitorIdentidade>, std::__2::__map_value_compare<comum::md::CEleitorIdentidade, std::__2::pair<comum::md::CEleitorIdentidade const, comum::md::CEleitorIdentidade>, std::__2::less<comum::md::CEleitorIdentidade>, true>, std::__2::allocator<std::__2::pair<comum::md::CEleitorIdentidade const, comum::md::CEleitorIdentidade>>>::find<comum::md::CEleitorIdentidade>(comum::md::CEleitorIdentidade const&)
@@ -1573,20 +1573,20 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1707	32	7	-	-	skeleton	2654	addr	1	std::__2::__tree<std::__2::__value_type<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (), boost::function<void ()>>, boost::signals2::mutex>>, void*>>, std::__2::__map_value_compare<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, std::__2::pair<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>> const, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (), boost::function<void ()>>, boost::signals2::mutex>>, void*>>, boost::signals2::detail::group_key_less<int, std::__2::less<int>>, false>, std::__2::allocator<std::__2::pair<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>> const, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (), boost::function<void ()>>, boost::signals2::mutex>>, void*>>>>::destroy(std::__2::__tree_node<std::__2::__value_type<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, std::__2::__list_iterator<boost::shared_ptr<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (), boost::function<void ()>>, boost::signals2::mutex>>, void*>>, void*>*)
 1708	94	7	app	ecourna	-	-	none	-	
 1709	156	7	-	comum	skeleton	3517	addr	5	std::__2::__tree<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, std::__2::__map_value_compare<unsigned int, std::__2::pair<unsigned int const, comum::md::CCandidatura>, std::__2::less<unsigned int>, true>, std::__2::allocator<std::__2::pair<unsigned int const, comum::md::CCandidatura>>>::destroy(std::__2::__tree_node<std::__2::__value_type<unsigned int, comum::md::CCandidatura>, void*>*)
-1710	18	7	app	ecourna	skeleton	1327	shape	2	ecourna::api::exception::CBaseError<api::EUeHwilError, ecourna::api::exception::SErrorLimits{5150, 5950}>::CBaseError(api::EUeHwilError, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
+1710	18	7	app	ecourna	skeleton	1326	shape	2	ecourna::api::exception::CBaseError<api::EUeHwilError, ecourna::api::exception::SErrorLimits{5150, 5950}>::CBaseError(api::EUeHwilError, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
 1711	404	0	libcxx	-	-	-	none	-	
 1712	524	7	app	asn1-modules	-	-	none	-	
 1713	556	7	app	asn1-modules	-	-	none	-	
 1714	1772	7	app	ecourna	-	-	none	-	
-1715	18	7	app	ecourna	skeleton	1405	shape	2	ecourna::api::exception::CBaseError<api::EUeIpcError, ecourna::api::exception::SErrorLimits{6150, 6350}>::CBaseError(api::EUeIpcError, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
+1715	18	7	app	ecourna	skeleton	1404	shape	2	ecourna::api::exception::CBaseError<api::EUeIpcError, ecourna::api::exception::SErrorLimits{6150, 6350}>::CBaseError(api::EUeIpcError, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>, std::__2::source_location)
 1716	224	7	app	simulador	-	-	none	-	
 1717	151	6	app	vota	skeleton	1550	addr	2	vota::IConfereVotoEmCargo::~IConfereVotoEmCargo()
 1718	29	0	app	vota	skeleton	11901	byte	0	vota::CUrnaInspecionada::StartState()
 1719	201	7	sqlite	-	skeleton	3628	addr	4	std::__2::vector<comum::md::CDadosCandidato, std::__2::allocator<comum::md::CDadosCandidato>>::__destroy_vector::operator()[abi:ne210108]()
 1720	12	6	app	vota	skeleton	3612	addr	1	vota::IEleitorImpedidoVotar::~IEleitorImpedidoVotar()
 1721	296	7	app	api	-	-	none	-	
-1722	39	7	-	-	skeleton	1295	addr	2	
-1723	36	7	-	-	skeleton	1296	addr	1	
+1722	39	7	-	-	skeleton	1294	addr	2	
+1723	36	7	-	-	skeleton	1295	addr	1	
 1724	183	7	-	openssl	skeleton	1567	addr	21	
 1725	183	7	-	openssl	-	-	none	-	
 1726	183	7	-	openssl	-	-	none	-	
@@ -1724,7 +1724,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 1858	926	6	7zip	7zip	-	-	none	-	
 1859	366	6	7zip	7zip	skeleton	1501	byte	0	CStdOutStream::Normalize_UString(UString&)
 1860	217	6	7zip	7zip	-	-	none	-	
-1861	208	6	7zip	7zip	skeleton	1270	addr	7	CArc::~CArc()
+1861	208	6	7zip	7zip	skeleton	1271	addr	7	CArc::~CArc()
 1862	11	0	7zip	7zip	skeleton	1741	byte	0	nolockCheckReservedLock
 1863	38	6	7zip	7zip	-	-	none	-	
 1864	48	6	7zip	7zip	skeleton	1684	byte	0	UString::Delete(unsigned int)
@@ -2534,7 +2534,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 2668	1745	4	app	ecourna	skeleton	5439	shape	81	ecourna::app::dados::CErroLeituraBiometria::CErroLeituraBiometria(ecourna::app::dados::EErroLeituraBiometria)
 2669	294	3	app	ecourna	skeleton	5436	shape	19	ecourna::app::dados::CRegistroIdentificacaoEleitor::GetIdentificadorHabilitacao() const
 2670	359	4	app	simulador	-	-	none	-	
-2671	55	4	app	ecourna	skeleton	1409	addr	1	std::__2::__exception_guard_exceptions<std::__2::vector<int, std::__2::allocator<int>>::__destroy_vector>::~__exception_guard_exceptions[abi:ne210108]()
+2671	55	4	app	ecourna	skeleton	1408	addr	1	std::__2::__exception_guard_exceptions<std::__2::vector<int, std::__2::allocator<int>>::__destroy_vector>::~__exception_guard_exceptions[abi:ne210108]()
 2672	1496	3	app	-	-	-	none	-	
 2673	2581	4	boost	-	-	-	none	-	
 2674	914	4	boost	boost	-	-	none	-	
@@ -3226,7 +3226,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 3360	16	2	libcxx	libc++	skeleton	3813	addr	2	std::__2::basic_iostream<char, std::__2::char_traits<char>>::~basic_iostream()_22136
 3361	16	1	libcxx	-	skeleton	3814	addr	2	std::__2::basic_ostream<char, std::__2::char_traits<char>>::~basic_ostream()_22109
 3362	332	3	asn1	libc++	skeleton	2779	shape	15	std::__2::basic_istream<char, std::__2::char_traits<char>>::get()
-3363	467	3	libcxx	RHVoice	skeleton	1192	shape	24	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::__input_arithmetic[abi:ne210108]<double, char, std::__2::char_traits<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, double&)
+3363	467	3	libcxx	RHVoice	skeleton	1193	shape	24	std::__2::basic_istream<char, std::__2::char_traits<char>>& std::__2::__input_arithmetic[abi:ne210108]<double, char, std::__2::char_traits<char>>(std::__2::basic_istream<char, std::__2::char_traits<char>>&, double&)
 3364	16	1	libcxx	-	skeleton	3815	addr	2	std::__2::basic_istream<char, std::__2::char_traits<char>>::~basic_istream()_22083
 3365	214	3	libcxx	-	skeleton	3816	shape	16	std::__2::filesystem::detail::format_string(char const*, ...)
 3366	35	3	libcxx	-	skeleton	3817	byte	0	std::__2::__pow5Factor[abi:ne210108](unsigned int)
@@ -10160,13 +10160,13 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10294	7	0	app	libc++	skeleton	11443	addr	1	std::__2::__function::__func<main::$_0, void ()>::target_type() const
 10295	20	0	app	libc++	skeleton	11401	addr	1	std::__2::__function::__func<api::CTextFieldBlinking::CTextFieldBlinking(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, api::SFont const&, api::TColor, api::TColor, api::TColor)::$_0, void ()>::target(std::type_info const&) const
 10296	24	0	app	libc++	-	-	none	-	
-10297	22	0	app	libc++	skeleton	11774	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+10297	22	0	app	libc++	skeleton	11592	addr	1	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
 10298	12	0	app	libc++	skeleton	9790	addr	2	RHVoice::value::concrete_container<unsigned int>::clone() const
 10299	7	0	app	libc++	skeleton	11461	addr	1	std::__2::__function::__func<api::CSystem::ZeroFill(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)::$_0, void ()>::target_type() const
 10300	20	0	app	libc++	skeleton	11421	addr	1	std::__2::__function::__func<api::CTextFieldUpdate::CTextFieldUpdate(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, std::__2::chrono::duration<long long, std::__2::ratio<1ll, 1000ll>> const&, api::SFont const&, api::TColor, api::TColor)::$_0, void ()>::target(std::type_info const&) const
 10301	10	0	app	libc++	-	-	none	-	
-10302	22	0	app	libc++	skeleton	11779	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
-10303	12	0	app	libc++	skeleton	11775	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
+10302	22	0	app	libc++	skeleton	11774	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+10303	12	0	app	libc++	skeleton	11593	addr	2	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone() const
 10304	25	0	app	-	-	-	none	-	
 10305	10	0	app	-	skeleton	11044	addr	2	__cxx_global_array_dtor.2_6454
 10306	12	0	app	-	skeleton	11839	addr	2	__cxx_global_array_dtor_4249
@@ -10801,8 +10801,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10935	7	0	app	libc++	skeleton	12018	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Legendas(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target_type() const
 10936	20	0	app	libc++	skeleton	11777	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::target(std::type_info const&) const
 10937	78	0	app	libc++	skeleton	11402	addr	1	std::__2::__function::__func<api::CTextFieldBlinking::CTextFieldBlinking(api::SPoint const&, std::__2::shared_ptr<api::IText> const&, api::SFont const&, api::TColor, api::TColor, api::TColor)::$_0, void ()>::operator()()
-10938	22	0	app	libc++	skeleton	11592	addr	1	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone(std::__2::__function::__base<void ()>*) const
-10939	12	0	app	libc++	skeleton	11593	addr	2	std::__2::__function::__func<vota::CRelVotaUtil::CortaPapel()::$_0, void ()>::__clone() const
+10938	22	0	app	libc++	skeleton	12047	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+10939	12	0	app	libc++	skeleton	12048	addr	2	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 10940	21	0	app	api	skeleton	11405	addr	4	api::CTextFieldBlinking::GetTypeName() const
 10941	154	0	app	api	skeleton	11406	addr	4	api::CTextFieldBlinking::~CTextFieldBlinking()_5582
 10942	151	0	app	api	skeleton	11407	addr	3	api::CTextFieldBlinking::~CTextFieldBlinking()
@@ -10845,14 +10845,14 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10979	7	0	libcxx	libc++	skeleton	12023	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Nominais(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target_type() const
 10980	20	0	app	libc++	skeleton	11929	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target(std::type_info const&) const
 10981	433	0	app	libc++	-	-	none	-	
-10982	22	0	libcxx	libc++	skeleton	11931	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone(std::__2::__function::__base<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>*) const
+10982	22	0	libcxx	libc++	skeleton	11779	addr	1	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
 10983	9	0	libcxx	-	skeleton	11012	fingerprint	0	std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>::resize[abi:ne210108](unsigned long)
-10984	12	0	libcxx	libc++	skeleton	11780	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
+10984	12	0	libcxx	libc++	skeleton	11775	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
 10985	7	0	-	libc++	skeleton	12028	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Partido(unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target_type() const
 10986	20	0	app	libc++	skeleton	12003	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Cargo(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 10987	433	0	app	libc++	-	-	none	-	
-10988	22	0	app	libc++	skeleton	12165	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> ()>::__clone(std::__2::__function::__base<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> ()>*) const
-10989	12	0	app	libc++	skeleton	11932	addr	2	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone() const
+10988	22	0	app	libc++	skeleton	11931	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone(std::__2::__function::__base<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>*) const
+10989	12	0	app	libc++	skeleton	11780	addr	2	std::__2::__function::__func<api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)1>::BatteryIconDataSource()::'lambda'(), void ()>::__clone() const
 10990	10	0	app	api	skeleton	11781	addr	2	api::BatteryIconDataSource<(api::CPowerInformation::IconOrientation)0>::~BatteryIconDataSource()_4453
 10991	18	0	app	-	skeleton	11782	addr	3	__cxx_global_array_dtor_4448
 10992	17	0	app	libc++	skeleton	11390	addr	1	std::__2::__shared_ptr_pointer<api::ISound*, std::__2::default_delete<api::ISound>, std::__2::allocator<api::ISound>>::__get_deleter(std::type_info const&) const
@@ -10862,8 +10862,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 10996	20	0	app	libc++	skeleton	12008	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Brancos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 10997	101	0	app	libc++	skeleton	11470	addr	1	std::__2::__function::__func<api::CPaperFormBuilder::Show(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&, bool)::$_0, void ()>::operator()()
 10998	102	0	app	libc++	skeleton	11096	shape	8	std::__2::basic_stringbuf<char, std::__2::char_traits<char>, std::__2::allocator<char>>::basic_stringbuf[abi:ne210108](unsigned int)
-10999	22	0	app	libc++	skeleton	12047	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11000	12	0	app	libc++	skeleton	12048	addr	2	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+10999	22	0	app	libc++	skeleton	12052	addr	1	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+11000	12	0	app	libc++	skeleton	12053	addr	2	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 11001	17	0	app	libc++	skeleton	11474	addr	1	std::__2::__shared_ptr_pointer<api::IFormImpressao<api::IPaperRelatorios>*, std::__2::shared_ptr<api::IForm<api::IPaper>>::__shared_ptr_default_delete<api::IForm<api::IPaper>, api::IFormImpressao<api::IPaperRelatorios>>, std::__2::allocator<api::IFormImpressao<api::IPaperRelatorios>>>::__get_deleter(std::type_info const&) const
 11002	193	0	-	-	skeleton	12199	addr	6	void std::__2::__call_once_proxy[abi:ne210108]<std::__2::tuple<api::CFormStack<api::IScreen>::GetObservable()::'lambda'()&&>>(void*)
 11003	11	0	-	-	skeleton	12200	addr	2	__cxx_global_array_dtor.7
@@ -10885,8 +10885,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11019	17	0	app	libc++	skeleton	11485	addr	1	std::__2::__shared_ptr_pointer<api::CNewLineFieldPaper*, std::__2::shared_ptr<api::IFormField<api::IPaper>>::__shared_ptr_default_delete<api::IFormField<api::IPaper>, api::CNewLineFieldPaper>, std::__2::allocator<api::CNewLineFieldPaper>>::__get_deleter(std::type_info const&) const
 11020	7	0	app	libc++	skeleton	12038	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Candidato(unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char, std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::target_type() const
 11021	20	0	app	libc++	skeleton	12014	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Nulos(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
-11022	22	0	app	libc++	skeleton	12169	addr	1	std::__2::__function::__func<api::IInputField<api::IScreenMT>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
-11023	12	0	app	libc++	skeleton	12166	addr	2	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> ()>::__clone() const
+11022	22	0	app	libc++	skeleton	12165	addr	1	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> ()>::__clone(std::__2::__function::__base<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> ()>*) const
+11023	12	0	app	libc++	skeleton	11932	addr	2	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&)>::__clone() const
 11024	673	0	app	api	skeleton	12172	shape	9	api::IInputField<api::IScreenMT>::Read(api::IInput&)
 11025	39	0	app	-	-	-	none	-	
 11026	9	0	app	-	-	-	none	-	
@@ -10920,8 +10920,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11054	7	0	app	libc++	skeleton	12044	addr	1	std::__2::__function::__func<comum::md::CVotos::TotalQue(bool (comum::md::CVoto::*)() const) const::$_0, bool (comum::md::CVoto const&)>::target_type() const
 11055	20	0	app	libc++	skeleton	12019	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Legendas(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 11056	237	0	app	libc++	-	-	none	-	
-11057	22	0	app	libc++	skeleton	12052	addr	1	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11058	12	0	app	libc++	skeleton	12053	addr	2	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+11057	22	0	app	libc++	skeleton	12057	addr	1	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+11058	12	0	app	libc++	skeleton	12058	addr	2	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 11059	17	0	app	api	skeleton	11307	addr	3	api::CInputField<api::CFramedText>::GetTypeName() const
 11060	29	0	app	api	skeleton	11330	byte	0	api::CMovieField::Hide()
 11061	77	0	app	api	skeleton	11331	addr	1	api::CMovieField::Show()
@@ -10946,8 +10946,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11080	7	0	app	libc++	skeleton	12049	addr	1	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::target_type() const
 11081	20	0	app	libc++	skeleton	12024	addr	1	std::__2::__function::__func<comum::md::CVotosEleicoesVota::Nominais(unsigned char) const::$_0, unsigned short (comum::md::CVotosCargos const&, unsigned char)>::target(std::type_info const&) const
 11082	65	0	app	libc++	-	-	none	-	
-11083	22	0	app	libc++	skeleton	12057	addr	1	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11084	12	0	app	libc++	skeleton	12058	addr	2	std::__2::__function::__func<comum::md::CVotos::Legenda(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+11083	22	0	app	libc++	skeleton	12062	addr	1	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
+11084	12	0	app	libc++	skeleton	12063	addr	2	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
 11085	73	0	app	api	-	-	none	-	
 11086	10	0	app	api	skeleton	11414	addr	2	api::CImageFieldUpdate::~CImageFieldUpdate()_5573
 11087	97	0	app	api	-	-	none	-	
@@ -11114,8 +11114,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11248	7	0	app	libc++	skeleton	12183	addr	1	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::target_type() const
 11249	20	0	app	libc++	skeleton	12050	addr	1	std::__2::__function::__func<comum::md::CVotos::Partido(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::target(std::type_info const&) const
 11250	15	0	app	libc++	-	-	none	-	
-11251	22	0	app	libc++	skeleton	12185	addr	1	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
-11252	12	0	app	libc++	skeleton	12170	addr	2	std::__2::__function::__func<api::IInputField<api::IScreenMT>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone() const
+11251	22	0	app	libc++	skeleton	12169	addr	1	std::__2::__function::__func<api::IInputField<api::IScreenMT>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+11252	12	0	app	libc++	skeleton	12166	addr	2	std::__2::__function::__func<std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> (*)(), std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> ()>::__clone() const
 11253	2730	0	app	comum	-	-	none	-	
 11254	1443	0	app	comum	-	-	none	-	
 11255	1749	0	app	comum	-	-	none	-	
@@ -11185,8 +11185,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11319	7	0	app	libc++	skeleton	12920	addr	1	legacy_gettable_params
 11320	20	0	app	libc++	skeleton	14527	shape	2	boost::detail::sp_counted_impl_pd<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (int), boost::function<void (int)>>, boost::signals2::mutex>*, boost::detail::sp_ms_deleter<boost::signals2::detail::connection_body<std::__2::pair<boost::signals2::detail::slot_meta_group, boost::optional<int>>, boost::signals2::slot<void (int), boost::function<void (int)>>, boost::signals2::mutex>>>::get_deleter(std::type_info const&)
 11321	124	0	app	libc++	-	-	none	-	
-11322	22	0	app	libc++	skeleton	12062	addr	1	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone(std::__2::__function::__base<bool (comum::md::CVoto const&)>*) const
-11323	12	0	app	libc++	skeleton	12063	addr	2	std::__2::__function::__func<comum::md::CVotos::Candidato(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>> const&) const::$_0, bool (comum::md::CVoto const&)>::__clone() const
+11322	22	0	app	libc++	-	-	none	-	
+11323	12	0	app	libc++	-	-	none	-	
 11324	7	0	app	libc++	skeleton	12925	addr	1	deflt_gettable_params
 11325	20	0	app	libc++	skeleton	14538	shape	2	boost::detail::sp_counted_impl_pd<boost::signals2::detail::signal_impl<void (int), boost::signals2::optional_last_value<void>, int, std::__2::less<int>, boost::function<void (int)>, boost::function<void (boost::signals2::connection const&, int)>, boost::signals2::mutex>::invocation_state*, boost::detail::sp_ms_deleter<boost::signals2::detail::signal_impl<void (int), boost::signals2::optional_last_value<void>, int, std::__2::less<int>, boost::function<void (int)>, boost::function<void (boost::signals2::connection const&, int)>, boost::signals2::mutex>::invocation_state>>::get_deleter(std::type_info const&)
 11326	121	0	app	libc++	-	-	none	-	
@@ -11633,8 +11633,8 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11767	20	0	app	libc++	-	-	none	-	
 11768	23	0	app	libc++	-	-	none	-	
 11769	640	0	app	-	skeleton	12755	shape	22	void std::__2::__formatter::__escape[abi:ne210108]<char>(std::__2::basic_string<char, std::__2::char_traits<char>, std::__2::allocator<char>>&, std::__2::basic_string_view<char, std::__2::char_traits<char>>, std::__2::__formatter::__escape_quotation_mark)
-11770	22	0	app	libc++	-	-	none	-	
-11771	12	0	app	libc++	skeleton	12186	addr	2	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone() const
+11770	22	0	app	libc++	skeleton	12185	addr	1	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone(std::__2::__function::__base<void ()>*) const
+11771	12	0	app	libc++	skeleton	12170	addr	2	std::__2::__function::__func<api::IInputField<api::IScreenMT>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone() const
 11772	7	0	app	libc++	skeleton	13347	addr	1	mac_gettable_params
 11773	20	0	app	libc++	-	-	none	-	
 11774	12	0	app	libc++	-	-	none	-	
@@ -11642,7 +11642,7 @@ index	size	uses	owner	component	best_label	best_index	best_kind	best_score	best_
 11776	7	0	app	libc++	skeleton	13349	addr	1	cmac_gettable_params
 11777	20	0	app	libc++	-	-	none	-	
 11778	22	0	app	libc++	-	-	none	-	
-11779	12	0	app	libc++	-	-	none	-	
+11779	12	0	app	libc++	skeleton	12186	addr	2	std::__2::__function::__func<api::IInputField<api::IScreen>::IInputField(std::__2::shared_ptr<api::IInputValidation> const&, unsigned long, bool, bool, bool, bool, bool)::'lambda'(), void ()>::__clone() const
 11780	7	0	app	libc++	skeleton	13384	addr	1	sm2_settable_params
 11781	20	0	app	libc++	-	-	none	-	
 11782	22	0	app	libc++	-	-	none	-	
