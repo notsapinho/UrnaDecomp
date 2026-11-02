@@ -21,13 +21,33 @@ struct SRect {
     TPosition right = 0;
     TPosition bottom = 0;
 
+    // keeps SRect{} and a default-constructed rectangle all zero, as the aggregate's were
+    SRect() = default;
+
+    // the rectangle of two opposite corners, in any order. Evidence: target fn 5506 (CStepsProgressBar's Divide, in
+    // cstepsprogressbar.cpp) builds each area with std::vector<SRect>::emplace_back and narrows the int corner
+    // x + l - 1 to TPosition in emplace_back's fast and slow paths both, after a zero extension of each operand (two
+    // `i32.and 65535`); fn 10971 holds the same loop. Measured on cstepsprogressbar.cpp's object: emplace_back of the
+    // four corners through this constructor gives those two masks, and Divide matches with it (the splat build);
+    // SRect::Normalized in the argument stores the area as one 64-bit word, and std::min and std::max written in the
+    // arguments narrow the corner once, with no mask. The parameter names are chosen. With it SRect is no aggregate, so
+    // a brace form of four values calls it: of the 909 objects the tree compiles, compared byte for byte with the build
+    // before it, only cstepsprogressbar.cpp's (whose source changed too) and the stand-ins of units 14 and 90 differ,
+    // the stand-ins because their corners are not known to be in order and are now normalized
+    SRect(TPosition x1, TPosition y1, TPosition x2, TPosition y2)
+        : left(std::min(x1, x2))
+        , top(std::min(y1, y2))
+        , right(std::max(x1, x2))
+        , bottom(std::max(y1, y2))
+    {
+    }
+
     // right and left both count: api::CTextBox::Draw (target fn 10958) centres on this value, and api::CTextFieldUpdate::Draw
     // and api::CTextRectField::Draw (fns 10916, 10906) compare it with 1. The member, its name and its sign are chosen
     TPosition Width() const { return right - left + 1; }
 
-    // the rectangle of two opposite corners, in any order. The target writes the min and max at every site, so it may
-    // be a constructor of the original; SRect stays an aggregate here because the brace forms of the landed bodies
-    // keep their order that way. The name is chosen
+    // the same rectangle by value, which the landed bodies call. The name and its being a static member are chosen: the
+    // target's code shows the constructor above (fn 5506), and this one's callers' objects are unchanged since it came
     static SRect Normalized(TPosition x1, TPosition y1, TPosition x2, TPosition y2)
     {
         return SRect{std::min(x1, x2), std::min(y1, y2), std::max(x1, x2), std::max(y1, y2)};

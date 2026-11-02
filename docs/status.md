@@ -6,7 +6,7 @@ produces that target function's body byte for byte, once its calls and addresses
 Everything else that counts functions, such as the census tiers at the end of this page, is a diagnostic.
 
 <!-- status:headline -->
-**11,468 of 14,343 functions matched (79.96%), 3,170,529 of 5,883,903 code bytes (53.88%).**
+**11,469 of 14,343 functions matched (79.96%), 3,171,365 of 5,883,903 code bytes (53.90%).**
 <!-- /status:headline -->
 
 Every block between `status:` markers on this page is written by
@@ -28,10 +28,10 @@ name ([Not attributed](#not-attributed)).
 <!-- status:origin -->
 | origin | components | functions | | code bytes | |
 | --- | --- | ---: | ---: | ---: | ---: |
-| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,581 / 3,285 | 78.57% | 808,500 / 2,168,476 | 37.28% |
+| TSE code | `vota`, `comum`, `api`, `simulador`, `vota-web`, `ecourna`, `asn1-modules`, `ASN1` | 2,582 / 3,285 | 78.60% | 809,336 / 2,168,476 | 37.32% |
 | upstream libraries | `openssl`, `libc++`, `sqlite`, `7zip`, `RHVoice`, `libc++abi`, `boost`, `utf8cpp`, `rapidxml` | 6,784 / 8,294 | 81.79% | 2,047,410 / 3,145,292 | 65.09% |
 | not attributed | `unknown`, `app` | 2,103 / 2,764 | 76.09% | 314,619 / 570,135 | 55.18% |
-| **total** | | **11,468 / 14,343** | **79.96%** | **3,170,529 / 5,883,903** | **53.88%** |
+| **total** | | **11,469 / 14,343** | **79.96%** | **3,171,365 / 5,883,903** | **53.90%** |
 <!-- /status:origin -->
 
 `ASN1` is TSE's fork of the III ASN.1 runtime: upstream code with TSE's additions ([src/asn1/README.md](../src/asn1/README.md)). The upstream
@@ -47,10 +47,10 @@ come from getting the version, the flags and the link order right, not from writ
 | --- | --- | ---: | ---: | ---: | ---: |
 | `vota` | uenux2 `src/app/vota`: the voting application | 488 / 780 | 62.56% | 95,647 / 470,204 | 20.34% |
 | `comum` | uenux2 `src/app/comum`: shared urna code (domain model, converters, reports) | 430 / 599 | 71.79% | 173,913 / 606,487 | 28.68% |
-| `api` | uenux2 `src/api`: GUI toolkit, io, ipc, util, logging, audio | 456 / 516 | 88.37% | 75,279 / 214,120 | 35.16% |
+| `api` | uenux2 `src/api`: GUI toolkit, io, ipc, util, logging, audio | 457 / 516 | 88.57% | 76,115 / 214,120 | 35.55% |
 | `simulador` | the web simulator's `CWasm*` devices | 132 / 144 | 91.67% | 21,139 / 58,157 | 36.35% |
 | `vota-web` | the web engine (`CVotaWebEngine`, …) | 9 / 11 | 81.82% | 168 / 2,808 | 5.98% |
-| **uenux2** | the five rows above | **1,515 / 2,050** | **73.90%** | **366,146 / 1,351,776** | **27.09%** |
+| **uenux2** | the five rows above | **1,516 / 2,050** | **73.95%** | **366,982 / 1,351,776** | **27.15%** |
 | `ecourna` | the ecourna library: security, SQLite wrapper, compression, `app/dados` | 647 / 799 | 80.98% | 365,229 / 721,680 | 50.61% |
 | `asn1-modules` | the generated `Modulo*` ASN.1 types | 49 / 59 | 83.05% | 25,946 / 41,909 | 61.91% |
 | `ASN1` | TSE's fork of the III ASN.1 runtime | 370 / 377 | 98.14% | 51,179 / 53,111 | 96.36% |
@@ -120,14 +120,14 @@ candidate are not placed by anything yet.
 <!-- status:verdicts -->
 | verdict | functions | code bytes | what it means |
 | --- | ---: | ---: | --- |
-| `match` | 11,468 | 3,170,529 | matched |
+| `match` | 11,469 | 3,171,365 | matched |
 | `differs` | 461 | 126,976 | our link has a candidate body and it differs; `detail` names the first difference. These are the closest to a match. |
 | `unresolved` | 508 | 591,680 | an operand of our body has no counterpart in the target: a callee the symbol file maps to no target function (such as our roots stand-in or a `byn$mgfn-shared$` thunk), an address or table slot of ours (by its operand kind) whose object or function has no target image, or a data name only this function voted for (*self-voted*). It is checked before the bytes are compared, so a body that is also different shows only this |
-| `no-candidate` | 1,906 | 1,994,718 | our link has no body for it yet |
+| `no-candidate` | 1,905 | 1,993,882 | our link has no body for it yet |
 <!-- /status:verdicts -->
 
 <!-- status:tse-verdicts -->
-For TSE code alone: 2,581 `match`, 77 `differs`, 39 `unresolved` and 588 `no-candidate`.
+For TSE code alone: 2,582 `match`, 77 `differs`, 39 `unresolved` and 587 `no-candidate`.
 <!-- /status:tse-verdicts -->
 
 [how-to-decompile.md](how-to-decompile.md) walks from picking one of these to a match.
@@ -183,7 +183,7 @@ functions pair at a weaker tier, because a fingerprint also covers the callees t
 | `fingerprint` | 674 | 673 | 0 | 1 | 0 |
 | `addr` | 7,304 | 6,953 | 209 | 140 | 2 |
 | `shape` | 845 | 804 | 31 | 10 | 0 |
-| `none` | 4,271 | 1,789 | 221 | 357 | 1,904 |
+| `none` | 4,271 | 1,790 | 221 | 357 | 1,903 |
 <!-- /status:tiers -->
 
 `pnpm wasm progress --by component`, run from `asmlift-wasm/`, prints the tiers per component, with what moved
