@@ -82,8 +82,8 @@
 #   object since unit 237. Only their names matter to their callers. 3095, 1549, 5646 and
 #   13876 match from unit 170's object, the executable TU, which instantiates CPolySingleton<api::ISound>::instance at those
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
-#   and 1166, 6147 and 1009 as binaryen's merges of its code; the rest wait for the TU's code that instantiates them (unit
-#   170's fragment).
+#   and 1166, 6147 and 1009 as binaryen's merges of its code, and with fragment 241's interfaces and unit 165's GetInsts
+#   the push thunks 5395, 5398 and 5407; the rest wait for the TU's code that instantiates them (unit 170's fragment).
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
 #   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
 #   unit 121's fragment says why no roots builder stands in for it.
@@ -93,8 +93,9 @@
 #   hand edit named it 305 (`3387 differs +0xd8 target +0xd7 call 608 | ours +0xd7 call 305`). Unit 170's object, the
 #   executable TU, links first and holds both copies with their pads, so our link keeps them apart and its callers' votes
 #   name each; with the hand edit gone, 3387, 2509, 4867, 4873, 2924, 3928, 6131 and 11004 (an instance that holds
-#   has<T> inlined) match, and 2279 still has no body of ours. 1155 and 3876 call has<T> as a callee and hold other code besides; tried, they stay far
-#   from the target's rows, and they are not read further.
+#   has<T> inlined) match, and 2279 still has no body of ours. 1155 and 3876 call has<T> as a callee and hold other code besides; tried, they stayed far
+#   from the target's rows, and were not read further here. 3876 (api::CLp::GetInst, unit 219) matches since, with its
+#   has<IImpressoraRelatorios> (3392).
 # - trace 212, find 305 and 608, debug 13156, the error thunks 235 and 331: the executable TU's copies (levels.md §V1),
 #   as 212's and 6161's landing pads show. 235 and 331 match from unit 170's object; 212, 305, 608 and 6161 come from it
 #   too and stay `unresolved` on operands with no target name (debug's table slot, the find_if slot, ranges::find_if's

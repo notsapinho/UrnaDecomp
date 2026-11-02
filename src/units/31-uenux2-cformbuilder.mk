@@ -7,6 +7,7 @@
 # Target functions, all matched but two:
 #   CFormBuilder       203 (constructor, one body with CMTFormBuilder's), 202 and 1191 (AddTextField), 3068 (AddDoubleLineField),
 #                      5547 (AddImage), 2244 (AddLine), 2245 (AddFill), 3680 (AddRect), and 426 (AddField), written and differs;
+#                      3678 and 2243 (AddLabeledKey, over a key's name and over a key) and 2782 (AddTextFieldMultiLine), below;
 #                      1265 (AddBlinkingTextField, below); 3058 (AddTextFieldUpdate over std::string (*)(const std::string&),
 #                      a template of cformbuilder.h, which says why; the scan's content pass finds it, no vote names it); 502 (AddStatusHeader), written and differs, below,
 #                      with the members of its lambda's CDataText: 11107 (GetText), 11109 and 11108 (the control block's
@@ -23,8 +24,9 @@
 #                      (CMTFormBuilder::GetForm and GetInteractiveForm, each
 #                      inlining a private overload that takes the pre-show) and 5515 (CPaperFormBuilder::GetForm): they
 #                      build the forms of api/gui/iform.h and api/gui/cinteractiveform.h, whose code these objects emit,
-#                      and src/units/120-uenux2-iform.mk has their notes. Their names are chosen. GetForm sits after
-#                      the adders of cformbuilder.cpp, a choice; in cmtformbuilder.cpp GetForm comes before the adders
+#                      and src/units/120-uenux2-iform.mk has their notes. Their names are chosen. GetForm sits after the
+#                      adders of cformbuilder.cpp but AddLabeledKey's two and AddTextFieldMultiLine, which follow
+#                      GetLabeledKeyPos by their bands, a choice; in cmtformbuilder.cpp GetForm comes before the adders
 #                      and GetInteractiveForm after them, the order of their first uses in the target's data
 #                      (IForm<IScreenMT>'s vtable @1579936 before the adders' control blocks @1580040 to @1580240, and
 #                      CInteractiveForm<IScreenMT, IInputMT>'s @1580280 after them)
@@ -76,20 +78,35 @@
 # lambda's capture by reference, every line but the records' (and the blank runs between), the font's name
 # FONTE_PADRAO, and SFont{20, 1} for the mode's text, a temporary as the target builds it on the stack.
 #
-# Not written, each measured with it written here and taken out again, as nothing that matches needs it:
-# - 3678, two key labels at GetLabeledKeyPos's offsets 0 and 21, the second named "labelAcao" + the key's name
-#   (callers 653, 2243, 7787). It passes 5544 the screen's area, the SRect {0, 0, 639, 479} at .data 1577200 among
-#   capplication.cpp's statics, as a constant. Written so, our link folds 5544's area parameter (5544, matched
-#   today, then scores 96 over 244 rows, 5 inserted and 5 deleted), which the target keeps; with the area from an accessor out of line in capplication.cpp
-#   that only 3678 calls, 5544 keeps it (15 over 239, operand-only), which fits a target whose binaryen folds the
-#   parameter before it inlines such a call (a reading). With both positions and the second field temporaries,
-#   3678's frame is the target's, and it differs in two locals' numbers alone (27 over 264: "labelAcao" + the key's
-#   name keeps its size and its sum in locals 2 and 0, the target in 0 and 2), not explained. PosicoesTecla (the
-#   roots) still stands for its two calls of 5544.
-# - 2243 (callers 6569, 7787, 12055; 7787's and 12055's calls pass the keys 'B' and 'D' as constants) is KeyName and
-#   a call of 3678. 653 holds that
-#   code behind a second prologue, so what it inlined had 653 as its one caller when binaryen inlined, a twin of 2243
-#   (docs/reference/facts/tool-traps.md X1): which of the two is CFormBuilder's is not settled.
+# 3678 and 2243, AddLabeledKey over a key's name and over a key, and 2782, AddTextFieldMultiLine, match; the scan's
+# content pass names each (source `content`), as no vote reaches them. Their target callers are screens, none written
+# (3678's 653, 2243 and 7787; 2243's 6569, 7787 and 12055; 2782's 1588, 3074, 7787 and 12040): the roots say which
+# stand-in stands for which. Each measured in the link (`pnpm wasm score`, and `pnpm wasm splat-remap`, which reads
+# 3678 and 2782 IDENTICAL, and 2243 unresolved on its one call, of 3678, whose name only that match gives):
+# - 3678 passes 5544 the screen's area, api::CApplication::s_areaTela (capplication.h lists its readers), through
+#   CApplication::GetAreaTela, out of line in capplication.cpp, which binaryen inlines into it. With 3678 naming the
+#   static itself, our link folds 5544's area parameter, which the target keeps: 5544, matched, then scores 96 over
+#   244 rows (5 inserted, 5 deleted), and 3678 15 over 264 with 2 deleted.
+# - The colours. The target's 3678 takes none. Written as constants of the body (2 over 1), 3678 scores 27 over 264
+#   rows and splat-remap stops at body byte 164, the target's local.tee 0. With the text colour a parameter whose
+#   default every caller here leaves, it matches, with the background a parameter too or a constant of the body: the two
+#   give one plain link (sha256 c3f8a83f01c01a68... both). Both parameters is the choice.
+# - With both positions and the second field temporaries, 3678's frame is the target's.
+# - 2243 is KeyName (744, api/hwil/iinput.h) and a call of 3678; 744's copy now links from this object, still matching.
+#   653 holds that code behind a second prologue, so what it inlined had 653 as its one caller when binaryen inlined, a
+#   twin of 2243 (docs/reference/facts/tool-traps.md X1): which of the two is CFormBuilder's is not settled.
+# - 2782 has AddTextField's shape over the CTextFieldMultiLine constructor (5498, unit 14). Its CFixedText control
+#   block's vptr, 1578304, is the one 202 and 1265 store; its CTextFieldMultiLine control block's, 1539360, which only
+#   2782, 12055 and that block's members 12298 and 12300 hold, is no neighbour of it, so the target's copy of that block
+#   is another object's (a reading). 12298 and 12300 now link from this object, still matching.
+# - The three are defined after GetLabeledKeyPos, by their use bands (docs/how-to-decompile.md step 3, "The order of
+#   two members", on build/out/wasm-map/vota_web/names.tsv's ld_index): 3678 links after AddRect (band 3), 2243 after
+#   AddFill and AddLine (band 5), 2782 after AddDoubleLineField and 3058 (band 4), which AddStatusHeader mentions
+#   first, and 3678's call of GetLabeledKeyPos places 5544 there, which band 2 puts after GetForm (5550). Written
+#   above GetForm, 2782's pair with 3058 and 5544's with 5550 read inverted. Their order among themselves and their
+#   lines are chosen. Band 2's other pairs, 5547 with 5550 and each with 6404, read inverted in both placements and
+#   involve nothing the three mention; band 1 lists 12298 and 12300 out of order: another object's copies, which say
+#   nothing (step 3).
 #
 # 1265, AddBlinkingTextField: AddTextField's shape over a api::CTextFieldBlinking, whose constructor binaryen inlines
 # here with its timer's lambda (unit 44 has the class). Its name, and the colours 2 and 3 over 1 as constants of the body
@@ -209,14 +226,31 @@
 # builder's vector is emptied, a clear() as the target's loop shows (each pointer released from the last, the end then
 # set to the start). The target passes its own result to 5515, which `return form;` of a named local gives by copy
 # elision. 16 target functions call it (2890, 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11256, 11908,
-# 11946, 12005, 12105, 12110); 11256 and 2890 (unit 156) are in the link and the stand-in FormPapelC calls it twice
-# for the others. In the whole link it scores
+# 11946, 12005, 12105, 12110); 11256 and 2890 (unit 156) and 12005 (unit 246) are in the link and the stand-in
+# FormPapelC calls it twice for the others. In the whole link it scores
 # 1 over 51 rows (`pnpm wasm score`), the one row its call of 5515. Its name is chosen: 5515 has GetForm, and the
 # screens' builders, whose getters empty the vector themselves (unit 120's fragment), give no name for this split.
+#
+# CPaperFormBuilder::Show (target fn 3671, cpaperformbuilder.cpp), written with unit 246: its name and parameters are
+# its lambda's RTTI, api::CPaperFormBuilder::Show(const std::string &, const std::string &, bool)::$_0 (vtable @1581356,
+# right after cpaperformbuilder.h's record 1581300, so this file's object). It prints through api::CLp::GetInst() (fn
+# 3876, unit 219) and CLp::Imprime (fn 3875) an api::CSubReport of copies of the two strings and the bool (fn 3660),
+# with a lambda that captures this and calls GetForm (fn 5515) and slot 2 of the form (fn 10997, the lambda's call),
+# and then empties the vector (the same clear() loop as Build's). Every target caller (5591, 5592, 11902) passes true,
+# which binaryen's dead-argument elimination folds (fn 3671 is (i32 i32 i32)->(), and fn 3660 gets 1). pnpm wasm score
+# against the link: 11 over 229 rows, operand-only; matched by the scan's content pass, with the lambda's std::function
+# slots 10995, 10996, 10997, 10999 and 11000, which step 8 names by the lambda's vtable. Its declaration in
+# cpaperformbuilder.h takes the blank line between the header's two include groups, so that GetRenderForm keeps line
+# 51, record 1581300's. Show's callers are not written: fragment 246's roots stand in for them, passing true (fragment
+# 246 brought Show in; src/units/README.md "Landing a unit" item 2). Chosen: the parameters' names; the lambda's capture
+# spelled `[this]` (`[&]` captures the same by the language's rules, not compiled here); the header line the
+# declaration takes (any line above 51 would do); Show's place last in the file (it is the file's only function with 3
+# uses in ledger/ordinals.tsv, so no band neighbour orders it).
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # the callers of the unit's members are not reconstructed, but for 502 (AddStatusHeader, here), which calls 3058 and
-# 202: 31-uenux2-cformbuilder-roots.cpp gives each member the calls it has in the target, and says which they stand for
+# 202, and 2243, which calls 3678: 31-uenux2-cformbuilder-roots.cpp gives each member the calls it has in the target,
+# and says which they stand for
 $(ROOT)/$(APP)/31-uenux2-cformbuilder-roots.o: $(ROOT)/src/units/31-uenux2-cformbuilder-roots.cpp $(ROOT)/src/units/31-uenux2-cformbuilder.mk $(ROOT)/src/Makefile $(wildcard $(ROOT)/src/uenux2/src/api/gui/*.h) $(wildcard $(ROOT)/src/uenux2/src/api/util/*.h) $(wildcard $(ROOT)/src/ecourna/api/*.hpp) $(wildcard $(ROOT)/src/ecourna/api/exception/*.hpp)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/31-uenux2-cformbuilder-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/31-uenux2-cformbuilder-roots.o

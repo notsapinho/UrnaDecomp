@@ -587,7 +587,7 @@ take them away without touching their sources, and how-to step 10's `comm` then 
 these after its step 9, and stops if one left `match`:
 
 ```sh
-awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
+awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 10888 11205 6026 10887 11204 10881 7722 480 1715 2260 9046 9047 7282 7283 1497 543 2656 5066 11388 252 3717 1654 2160 2469 14072 14073 14241 14242 275 680 1712 2253 3702 3801 5633 5689 5900 11392 11405 349 389 11510 13695 10231 11640 11660 5805 12991 4505 8750 306 520 4967 5294 1698 5532 9873 3792 6043 11585 11621 11622 1257 2902 3473 13522 13528 13536 13543 13549 13556 13562 13570 13577 13242 13256 13945 13963 3199 3308 6914 6980 7037 7048 7718 14424 956 6278 6279 6280 9639 12297 12315 14063 14064 762 1082 6047 949 1948 6048 9530 9258 178 194 358 857 1249 1399 1553 2240 2250 4669 4727 5906 8084 9872 10145 11257 11401 536 1558 1699 1711 3923 9868", a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} ($1 in w) && $5 != "match" {print $1, $5}' splat/scan.tsv     # prints nothing when all hold
 ```
 
 1. **9517 and 2056, libc++ regex, by a table slot of ours at or above 1024.** 9517 (`std::regex_match` from
@@ -692,13 +692,16 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     awk -F'\t' '$1==13242 && $2 !~ /^test_rng_/ || $1==13256 && $2 !~ /^seed_src_/ || $1==13945 && $2 !~ /^sha1_/ || $1==13963 && $2 !~ /^md5_sha1_/ {print $1, $2}' splat/scan.tsv     # prints nothing
     ```
 
-12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's hand edit.** Each holds a table slot
-    of 536, the one body of the enums' format handles, at the aligned site. Our link merges `EUrnaTurno`'s handle into
-    it, so the votes disagree and only a hand edit names it ([../splat.md](../splat.md) §2, "A name kept by hand when
-    votes disagree"). The line names the surviving symbol, the handle of the first object in link order that makes one,
-    today `cappinfo.cpp.o`. When a unit adds an enum's handle ahead of it, the eleven go `unresolved` and `status.py`
-    stops on `matched.txt only:`: take the new name from `build/out/wasm-map/vota_web/names.tsv`, rewrite the name on
-    the line and keep its evidence, and run step 9 again, as for 2924 above.
+12. **275, 680, 1712, 2253, 3702, 3801, 5633, 5689, 5900, 11392 and 11405, by 536's name.** Each holds a table slot of
+    536, the one body of the enums' format handles, at the aligned site. Our link merged `EUrnaTurno`'s handle into it,
+    so the votes disagreed and a hand edit named it ([../splat.md](../splat.md) §2, "A name kept by hand when votes
+    disagree"), until `mock/app/comum/cappinfobuilder.cpp`'s object (unit 253), second on the link line at the
+    executable TU's rule, gave every user of that handle its `-Oz` copy, a body of its own (9868). Step 8 names 536 by a
+    generated `table` line since, and the hand edit went. The name is the surviving symbol, the handle of the first
+    object in link order that makes one of 536's shape, today `cdefinerotaposreinicio.cpp.o`'s: a unit that adds an
+    enum's handle ahead of it renames it, a generated change. An object that gave `EUrnaTurno`'s `-O3` handle ahead of
+    unit 253's would merge it into 536's body again, the eleven would go `unresolved` and `status.py` would stop on
+    `matched.txt only:`.
 13. **349 and 389, and the thunks 11510, 13695, 10231, 11640 and 11660, by the exit destructors that form them.** Each
     body forms only from enough members, 4 of fn 349's shape and 3 of fn 389's ([codegen.md](codegen.md) §C8): the
     singletons' pointer destructors of units 104, 110, 111 and 116. The thunks are `f349(p0, <pointer>)`, so each also
@@ -778,7 +781,7 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     (`GetPathMR` and `GetPathChave`) of 6048, each body formed by its two members in our link as in the target: item 2's
     case, so a member with another differing operand, or one taken away, reshapes it. 9530 (unit 06's
     `ICompressor::Add` over a vector of paths) calls `path::__filename` (1224), whose name rested on the calls of
-    `CPath::GetPathTrab` and `GetPathResult` (358, 1399), two `differs` rows, until 1224 matched (unit 190's fragment
+    `CPath::GetPathTrab` and `GetPathResult` (358, 1399), two `differs` rows then, until 1224 matched (unit 190's fragment
     says how): its line is `pair-addr` now. Before unit 190, 9530 read `no-candidate`
     (`no symbol and no ledger pair` in 9202406's scan):
 
@@ -799,6 +802,18 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
     Since unit 97 wrote fn 6999 and std::regex's `const char*` copies in `src/app/roots_cbasetype.cpp`, 2416 and 5492
     match, both from `cinputmenufield.cpp.o` (`splat/scan.tsv`'s object column), and 2416's line reads
     `evidence:call` with no voter list: 9258 rests on a matched callee now.
+24. **178, 194, 358, 857, 1249, 1399, 1553, 2240, 2250, 4669, 4727, 5906, 8084, 9872, 10145, 11257 and 11401, by the
+    place of `mock/app/comum/cappinfobuilder.cpp`'s object; 536, 1558, 1699, 1711, 3923 and 9868, by two data lines
+    as well.** Unit 253 compiles that file at the executable TU's rule and links its object second, in `VOTA_WEB_OBJS`,
+    so its copies of inline code are the link's: `EUrnaTurno`'s `-Oz` format handle (9868), which keeps
+    `format<unsigned int>` (5906) out of line and gives 358, 1399, 1553 and 11401 the target's slot 474, and 178, 194,
+    857, 1249, 2240, 2250, 9872, 10145 and 11257, which the libc++.a bodies 4669, 4727 and 8084 meet as the target's
+    do. After the tree roots the object gives 12 of the 17, after both trees none (unit 253's fragment has the four
+    places): an object that brings one of these copies ahead of it, or `EUrnaTurno`'s `-O3` handle, takes rows out
+    (item 12). 536, 1558, 1699, 1711, 3923 and 9868 rest on the hand lines of `__format_spec::__fields_integral` and
+    `__fields_bool` too, below the marker of `splat/symbol_addrs.txt`; taken out one at a time, `__fields_integral`'s
+    line takes five of the six with it, and `__fields_bool`'s all six at the splat build, which then refuses 9868 as
+    self-voted (unit 253's fragment).
 
 ## S11. A match among bodies of the same content can take the other one's name
 

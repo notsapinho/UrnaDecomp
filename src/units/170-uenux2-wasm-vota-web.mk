@@ -87,17 +87,15 @@
 #   GetPathTrab and GetPathRootSemSA (358, 634), a builder and its setters (10268, 10197, 10188, 10181, 10176), 11733,
 #   11572, 11641, 11642, 7787 and more.
 # - 10619 (votaTick) and 10171 (votaGetStateJson): 5500 (6871 B, read as the state's text: votaGetStateJson moves its
-#   result into +24; stub in celeitorvotando.cpp), 3594 (1923 B, stub in iexecucaovota.cpp), 5408, 407, 2369, 10376,
-#   10857: all but 407 have no name.
+#   result into +24; stub in celeitorvotando.cpp), 3594 (IExecucaoVota::GetInst, unit 165's), 5408, 407, 2369, 10376,
+#   10857: all but 407 and 3594 have no name.
 # - The copies the docs name for this TU that what is written does not instantiate: 306, 520 and 4967, 5294, 1698, 5532,
 #   9873, 2247, 2249 and 1843 (src/app/roots_vector.cpp keeps them, the last three with minsize instances measured
-#   there), 3552 and 518 (asn1.md A10: 1928, which 3552 calls, is std::pair's implicit destructor, which clang refuses to
-#   instantiate explicitly; it matches since unit 237, from a tree root at this TU's rule that instantiates it
-#   implicitly), 2650 (a minsize instance of ~shared_ptr<ASN1::IAbstractVisitor> in a probe link is (i32)->() where 388
-#   returns `this`, `pnpm wasm score` 10 over 26 rows, one deleted: read as no caller in our link reading the result;
-#   since unit 237 writes 11530, the reader, 388 matches from this object and 2650 still calls 424's body, unit 86's
-#   note), and units 100's and 94's rows that wait for the TU (their fragments). 11489 and 11518 (unit 82) match since
-#   unit 237, from its tree root src/app/roots_texttospeech.cpp at this TU's rule.
+#   there; since unit 253 the link's 306, 520, 4967, 5294, 5532 and 9873 are mock/app/comum/cappinfobuilder.cpp's, at
+#   this TU's rule), and units 100's and 94's rows that wait for the TU (their fragments). 3552, 518 and 2650, listed
+#   here before, match since unit 229 (asn1.md A10): 3552 and 518 from src/app/roots_coderenv.cpp at this TU's rule,
+#   and 2650's call reaches 388's body. 11489 and 11518 (unit 82) match since unit 237, from its tree root
+#   src/app/roots_texttospeech.cpp at this TU's rule.
 #
 # main (fn 10307) and what it builds, added after the rest: the settings (unit 188's simulador::SConfiguracao, fn 8311),
 # InitApplication ("VOTA", "Software de Votacao" in Latin-1, the version text, an ELogAplicativos of 1: the
@@ -126,18 +124,25 @@
 # - 10307 (main): `unresolved` on the && set of IInterfaceSavd (fn 10090), which has no target name: every push body of
 #   this TU calls fn 388 (~shared_ptr<void>, this TU's -Oz copy, which returns `this` for a reader of votaInit's side,
 #   2650) and drops the result, where ours returns nothing (10090: `pnpm wasm score` 161 over 885 rows, 159
-#   operand-only, 2 deleted, the two `drop`s). The same holds 9507, 9437 (whose push bodies 5407 and 5398 have second
-#   callers, 5925 and 7181, not written), the set thunks 9372 9574 9650 9685 9731 9831 9897 9986 (operand-only: 9986 is
-#   2 over 6 rows) and 10356 (9 over 52, operand-only), whose push 5384 has the same two drops.
+#   operand-only, 2 deleted, the two `drop`s). The same held 9507, 9437 (whose push bodies 5407 and 5398 have second
+#   callers, 5925 and 7181), the set thunks 9372 9574 9650 9685 9731 9831 9897 9986 (operand-only: 9986 is 2 over 6
+#   rows) and 10356 (9 over 52, operand-only), whose push 5384 has the same two drops.
 #   Since unit 237 (11530 written, 388 matched with its result) the push bodies have the drops: 10090 is `differs`,
-#   156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower, and 5384, 8758, 8911, 8986 and
-#   9233 read the same 288 against 280; 9574, 9685, 9731, 9986 and 10356 match (unit 237's fragment); main reads
-#   `unresolved +0x363` on the table slot of the ISymmetricCipherFactory set, which has no target name, as 9897 does;
-#   9372, 9650 and 9831 stay `unresolved` and 9507 and 9437 `no-candidate`.
+#   156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower, and 3882, 5384, 8758, 8911,
+#   8986 and 9233 read the same 288 against 280; 9574, 9685, 9731, 9986 and 10356 match (unit 237's fragment), and
+#   9507, 9437 and 9372 since fragment 241 (below); main reads `unresolved +0x363` on the table slot of the
+#   ISymmetricCipherFactory set, which has no target name, as 9897 does; 9650 and 9831 stay `unresolved`.
 # - 10384 (the lambda's operator()): on 10356's name, and CWasmWebSound's inline constructor stores +4 and +8 (an i32
 #   and an i64) where ours stores an i64 at +4 and a byte at +12 (unit 74's header's layout): 23 over 126 rows.
-# - 10949 (RecebeMensagem): our link inlines vector<unsigned char>'s assign (5496), whose other target caller, 5702, is
-#   not written: 121 over 174 rows, 103 inserted.
+# - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours (11962) reads 22
+#   over 74 rows, 15 replaced (all operand-only), 3 inserted and 4 deleted, the rows of the response's slot. The target
+#   holds the 12-byte comum::ueRespostaSavd at +4 of the frame, 4-aligned (`i64.store align=2 offset=4`, `i32.store
+#   offset=12`, the mark's `i32.store8 offset=4`, and `i32.const 4; i32.add` for assign's range); ours at +0, 8-aligned
+#   (`i64.store align=3 offset=0`, `i32.store offset=8`). The
+#   TU compiled alone at its flags with three forms of the zeroing, `resposta{}` then the mark (written), `resposta{254}`,
+#   and the declaration above the size test, gives our slot for each (wasm-objdump -d of the object, RecebeMensagem's
+#   stores). 5496 (vector<unsigned char>'s __assign_with_size, which assign calls) is out of line now and matches
+#   (below).
 # - 10878 (the CWasmThread factory's Create): 35 over 40 rows, 29 deleted, not read further.
 # - 10869 (the CPosixMutex factory's Create): `unresolved`, CPosixMutex's constructor has no target name.
 #
@@ -146,3 +151,22 @@
 # (main), and the roots lines that stood for main's table slots (units 100's Registra, 137's CPrng constructor, 171's
 # InitApplication). Unit 100's chosen
 # file src/uenux2/src/api/pattern/cpolysingletonlist.cpp goes too: its two definitions are here.
+#
+# Rows of this object that match with fragment 241 and the GetInsts unit 165 writes (against 36dda756, by index): the
+# has<T> thunks 2736, 2741 and 2744 (IExecucaoVota, impl::ISincronismoVotoEleitor, impl::IPoliticaExecucaoEleitor),
+# which this TU's static initializer (14478), its set<T> bodies and the three GetInsts call (3594, and the copies 7181
+# and 5925 hold inlined), with binaryen's body 3884 they share; the push thunks 5395, 5398 and 5407 (into binaryen's
+# 3882, which differs on its frame offset, as the bullet on 10307 says); the set<T> bodies 8728, 9437 and 9507; and
+# 9372 (CPolySingleton<IExecucaoVota>::set<CExecucaoVotaCooperativa>, which passes 8728's table slot to 1562).
+# What held them was the type's name: this TU passed the name's
+# own address, from the typeinfo it emitted, where the target's thunks pass the typeinfo's name field (the typeinfo +
+# 4), the typeinfo being external since each interface's destructor is out of line, its key function (unit 165's
+# fragment has the evidence). At the base 2736, 2741, 2744 and 3884 were `no-candidate`, and 5395, 5398 and 5407 read
+# `differs` on that constant (`git show 36dda756:splat/scan.tsv`).
+# And 5496, vector<unsigned char>'s __assign_with_size, this TU's -Oz copy: RecebeMensagem (10949) calls it through
+# assign, and 170-uenux2-wasm-vota-web-roots.cpp stands for its other target caller, 5702 (ecourna's, not written), so
+# that binaryen keeps it out of line. The roots object compiles at APP_CXXFLAGS and emits no TSE code: it calls 5496
+# through an asm label.
+$(ROOT)/$(APP)/170-uenux2-wasm-vota-web-roots.o: $(ROOT)/src/units/170-uenux2-wasm-vota-web-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/170-uenux2-wasm-vota-web.mk
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/170-uenux2-wasm-vota-web-roots.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/170-uenux2-wasm-vota-web-roots.o

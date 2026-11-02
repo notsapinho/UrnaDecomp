@@ -70,7 +70,7 @@
 # VerificaUrnaDesligando inlined too: 491 calls 3789 and 3790, thunks over 6039, not written; 3333 calls 1941 and 3592;
 # 6737 calls 1551, 1701, 2826, 5736, 5737, 5761 and 5762, none of them matched. Fn 1164, CArquivosSavd::GetInst, which
 # most members here call,
-# is unit 95's: written, and waiting for strict aliasing in its TU (that fragment has the measurement); its name comes
+# is unit 95's, matched with strict aliasing in its TU (that fragment has the measurement); its name comes
 # from the calls of 1501 and 1836 (step 8's `call by:1501,1836`).
 CSINCRONIZAVOTA_SRCS := src/api/hwil/euedesligandoerror.cpp src/app/vota/comum/csincronizavota.cpp
 UENUX2_SRCS += $(CSINCRONIZAVOTA_SRCS)

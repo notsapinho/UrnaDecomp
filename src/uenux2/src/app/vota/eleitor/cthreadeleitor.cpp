@@ -6,6 +6,7 @@
 #include "api/hwil/iinput.h"
 #include "api/util/uedebug.h"
 #include "app/vota/eleitor/cestadoaudio.h"
+#include "app/vota/iexecucaovota.h"
 
 namespace vota {
 
@@ -67,7 +68,7 @@ bool CThreadEleitor::ProcessarMensagens(comum::CAppStateContext& contexto)
     return processou;
 }
 
-// (original lines 70-131: content not recovered)
+// (original lines 71-131: content not recovered)
 #line 132
 bool CThreadEleitor::ProcessarEntrada(comum::CAppStateContext& contexto)
 {
@@ -106,6 +107,11 @@ bool CThreadEleitor::ProcessaEventos()
         m_contexto->TrocaEstado();
     }
     return mensagens || eventos;
+}
+
+void CThreadEleitor::ParaOutrasThreads()
+{
+    IExecucaoVota::GetInst().ParaThreadsOperadorMonitor();
 }
 
 } // namespace vota

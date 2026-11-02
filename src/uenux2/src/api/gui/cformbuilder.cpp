@@ -11,8 +11,10 @@
 //   11140 GetForm(nome)            over an api::CPreShowClearScreen, through 5550 (GetForm(preShow, nome))
 //   502   AddStatusHeader          written, differs: the fragment has the measurement. The members of its lambda's
 //         CDataText, 11107 (GetText) and 11109 and 11108 (the control block's D2 and D0), match from this object
-// FONTE_PADRAO is the SFont {20, 0} at .rodata 520920 that 502 passes twice; its name and its being a constant of this
-// file are chosen (its one other reader, fn 3678, is not written). GeraNome has no target function: binaryen inlined it
+//   3678, 2243  AddLabeledKey      over a key's name, over a key (KeyName, then 3678)
+//   2782  AddTextFieldMultiLine    over a CFixedText. The three come after GetLabeledKeyPos (the fragment says why)
+// FONTE_PADRAO is the SFont {20, 0} at .rodata 520920 that 502 and 3678 each pass twice, and no other target function
+// reads; its name and its being a constant of this file are chosen. GeraNome has no target function: binaryen inlined it
 // into 426, which shows its second prologue. The order of the definitions above line 290 is read from band 1
 // (src/units/31-uenux2-cformbuilder.mk); their lines are a choice.
 
@@ -34,10 +36,12 @@
 #include "api/gui/cpreshowclearscreen.h"
 #include "api/gui/ctextfield.h"
 #include "api/gui/ctextfieldblinking.h"
+#include "api/gui/ctextfieldmultiline.h"
 #include "api/gui/ctextfieldupdate.h"
 #include "api/gui/iscreen.h"
 #include "api/gui/ctextfielddoubleline.h"
 #include "api/gui/eueguierror.h"
+#include "api/hwil/iinput.h"
 #include "api/hwil/ipower.h"
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/cdatetime.h"
@@ -174,7 +178,7 @@ std::shared_ptr<IForm<IScreen>> CFormBuilder::GetForm(const std::string& nome)
     return GetForm(std::shared_ptr<IPreShow<IScreen>>(new CPreShowClearScreen()), nome);
 }
 
-// (original lines 177-289: content not recovered)
+// (original lines 181-289: content not recovered)
 #line 290
 void CFormBuilder::AddStatusHeader(StatusHeaderFields campos)
 {
@@ -244,6 +248,29 @@ SPoint CFormBuilder::GetLabeledKeyPos(const SRect& area, ETextAlignment alinhame
     }
 
     throw CUeGuiError(EUE_GUI_GETLABELEDKEYPOS_ALINHAMENTO_DESCONHECIDO, std::format("Alinhamento desconhecido ({})", static_cast<int>(alinhamento)));
+}
+
+void CFormBuilder::AddLabeledKey(const std::string& tecla, const std::string& rotulo, ETextAlignment alinhamento,
+                                 TColor corTexto, TColor corFundo)
+{
+    const SRect& area = CApplication::GetAreaTela();
+    AddTextField(tecla, GetLabeledKeyPos(area, alinhamento, 0), FONTE_PADRAO, alinhamento, corTexto, corFundo);
+    AddTextField(rotulo, GetLabeledKeyPos(area, alinhamento, 21), FONTE_PADRAO, alinhamento, corTexto, corFundo)
+        ->SetName("labelAcao" + tecla);
+}
+
+void CFormBuilder::AddLabeledKey(char tecla, const std::string& rotulo, ETextAlignment alinhamento)
+{
+    AddLabeledKey(KeyName(tecla), rotulo, alinhamento);
+}
+
+CFormBuilder::SharedField CFormBuilder::AddTextFieldMultiLine(const std::string& texto, const SRect& rect, const SFont& fonte,
+                                                              ETextAlignment alinhamento)
+{
+    const auto text = std::make_shared<CFixedText>(texto, alinhamento);
+    SharedField campo = std::make_shared<CTextFieldMultiLine>(rect, text, fonte, static_cast<TColor>(2), static_cast<TColor>(1));
+    AddField(campo);
+    return campo;
 }
 
 } // namespace api

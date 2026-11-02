@@ -63,7 +63,8 @@
 # operand-only).
 #
 # Not matched, and what each waits for (this unit's -pending.cpp names the traps):
-# - 11398, CConversorEstadoGeral::DoDesconverte: CEstadoGeral's constructor, fn 5637, which calls fn 1249 (no name).
+# - 11398, CConversorEstadoGeral::DoDesconverte: CEstadoGeral's constructor, fn 5637, which calls fn 1249
+#   (CDadoCorrespondencia's copy constructor, matched since unit 253).
 # CConversorDadoCorrespondencia's slots (11399, 11400; 11397 builds the class on its stack) were traps here: fragment
 # 172 writes and matches them, and its object emits the class's vtable now.
 # The base's default DoConverte of the two converters that override only DoDesconverte (11380, 11358) is emitted with

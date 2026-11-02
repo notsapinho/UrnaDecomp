@@ -82,7 +82,7 @@ ECOURNA_CXXFLAGS   := -O3 -fexceptions -std=c++20 -DNDEBUG $(ECOURNA_PREFIX_MAP)
 # uenux2 (the app itself, /home/rubio/tse/uenux2, tree mirrored under src/uenux2 so the records' paths map): -O3 -fPIC,
 # NO -fexceptions (emcc's default -fignore-exceptions: throw sites call __cxa_throw directly, no landing pads),
 # -DNDEBUG, -fno-strict-aliasing (no TBAA: comum's converters reload a vector's begin after an int store, fn 10289)
-# except in the directories UENUX2_TBAA_DIRS lists (below);
+# except in the directories and the file UENUX2_TBAA_DIRS lists (below);
 # measured on the api/util, api/io, api/ipc/posix and comum units (docs/reference/facts/app-flags.md §F6), the level on
 # the whole tree (docs/reference/facts/levels.md §V3: every match holds and the bodies that call
 # std::string::append where -O2 inlines it match), and -std=c++23 on the whole tree too (§V3: every match holds, and
@@ -95,9 +95,10 @@ UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX
 # strict aliasing by directory: the generic uenux2 rule compiles these without -fno-strict-aliasing (TBAA on), where
 # std::set and std::map inserts, a list's clear and lambdas' __clone keep in a local what the flag reloads; the rest of
 # comum keeps the flag, and its ASN.1 converters, comparecimentomesario, gravadores, relatorios and cfederacoes.cpp lose
-# matches with TBAA (docs/reference/facts/app-flags.md §F6). The -pending and roots objects keep their rules' flags.
+# matches with TBAA, but one file of comum's own directory, carquivossavd.cpp, whose map insertions match only with it
+# (docs/reference/facts/app-flags.md §F6). The -pending and roots objects keep their rules' flags.
 # UENUX2_TBAA_DIRS= on the command line builds the whole tree with -fno-strict-aliasing.
-UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/%
+UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/% src/app/comum/carquivossavd.cpp
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
@@ -170,7 +171,7 @@ UENUX2_OBJS := $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(UENUX2_SRCS))
 # in UENUX2_TBAA_DIRS
 uenux2_cxxflags = $(if $(filter $(UENUX2_TBAA_DIRS),$(1)),$(filter-out -fno-strict-aliasing,$(UENUX2_CXXFLAGS)),$(UENUX2_CXXFLAGS))
 $(ROOT)/$(APP)/uenux2/%.cpp.o: $(ROOT)/src/uenux2/%.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
-	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(call uenux2_cxxflags,$*) -c /work/src/uenux2/$*.cpp -o $(R)
+	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(call uenux2_cxxflags,$*.cpp) -c /work/src/uenux2/$*.cpp -o $(R)
 $(ROOT)/$(APP)/roots_uenux2.o: $(ROOT)/src/app/roots_uenux2.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/app/roots_uenux2.cpp -o $(R)
 # instances of ecourna's templates that are uenux2's code in the target, ahead of ecourna's objects and at the tree's flags
@@ -203,6 +204,12 @@ $(ROOT)/$(APP)/roots_coderenv.o: $(ROOT)/src/app/roots_coderenv.cpp $(ROOT)/src/
 # (src/app/roots_texttospeech.cpp): landing pads and -Oz shapes, so that TU's rule, ahead of the uenux2 objects that emit them too
 $(ROOT)/$(APP)/roots_texttospeech.o: $(ROOT)/src/app/roots_texttospeech.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c src/app/roots_texttospeech.cpp -o $(R)
+# mock/app/comum/cappinfobuilder.cpp (comum::teste::CAppInfoBuilder) has landing pads, and the target keeps its -Oz copies
+# of inline code (EUrnaTurno's format handle, fn 9868): that TU's rule, its object second on the line, in the setup
+# `vota-web` (src/units/253-uenux2-cappinfobuilder.mk has the measurements)
+VOTA_WEB_OBJS += $(ROOT)/$(APP)/uenux2/mock/app/comum/cappinfobuilder.cpp.o
+$(ROOT)/$(APP)/uenux2/mock/app/comum/cappinfobuilder.cpp.o: $(ROOT)/src/uenux2/mock/app/comum/cappinfobuilder.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
+	$(H) mkdir -p $(dir $(R)) && build/docker-build.sh em++ $(VOTA_WEB_CXXFLAGS) -c /work/src/uenux2/mock/app/comum/cappinfobuilder.cpp -o $(R)
 
 # generated root callers: tools/libs/openssl/gen-probe-main.py writes a main() that calls each root once with dummy
 # arguments; compiled with -Dmain=<name> so it becomes a plain function urna_roots() calls.

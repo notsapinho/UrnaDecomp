@@ -6,7 +6,7 @@
 # the records name, DesconverteHeader (553:15, 559:15) and DesconverteMensagem (568:15, 574:15, 578:15), and with
 # ConverteHeader; the class headers beside them and app/comum/euecomumerror.h, with the handle formatter of the three
 # SAVD enums. The formatter's handle body (fn 536) is the one binaryen keeps for every such enum, ours named by the
-# table vote of 275, 680 and 5900; it stays unresolved on libc++'s __fields_integral, and no match here waits for it.
+# table vote of 275, 680 and 5900; it matches since unit 253's data hand line names libc++'s __fields_integral.
 # 480, CBaseError<comum::EUeComumError, ...>'s constructor, is named by the calls and matches with this header's enum:
 # it is a thunk of 710, the body unit 94's form gives (the constructor in ecourna/api/exception/cbaseerror.hpp).
 #
@@ -156,10 +156,10 @@
 #
 # Added since: comum::CArquivosSavd's construction and singleton in carquivossavd.cpp, comum::AssinarUE in
 # iinterfacesavd.cpp, and app/comum/gravadores/cassinador.cpp moved into this list from unit 34's:
-#   1164  CArquivosSavd::GetInst, with the constructor and its three loaders inlined  written, unresolved (below)
+#   1164  CArquivosSavd::GetInst, with the constructor and its three loaders inlined  matched (below)
 #   5907  CArquivosSavd::~CArquivosSavd                                              matched
 #   3839, 3840, 3841  the three maps' __tree::destroy (each calls itself)           matched, named by 5907's calls
-#   11658, 11657      the exit destructors of s_instancia and s_mutex (slots 2144, 2145)  wait for 1164 (below)
+#   11658, 11657      the exit destructors of s_instancia and s_mutex (slots 2144, 2145)  matched (below)
 #   AssinarUE  record iinterfacesavd.cpp 1004:15, code 7336; no target index: binaryen inlined it into 1277
 #              (comum::CAssinador::Assina, unit 34's), its one caller, behind a stack frame of its own
 # - GetInst: a std::lock_guard on s_mutex (@1838520; 1164 unlocks it through fn 150), s_instancia.reset(new
@@ -178,16 +178,15 @@
 #   path("/dsk/fe/dinamico/trab/").relative_path()` in a frame of its own, the form of CPath::GetPathMR (949); it is
 #   CPath::GetPathTrabExterno in unit 190's cpath.cpp, a chosen name. The +24 map's key is a signed type of its own
 #   (carquivossavd.h says why); no target function reads that map.
-#   1164 differs by strict aliasing alone. This TU builds with uenux2's -fno-strict-aliasing (src/app/comum/'s top-level
-#   files are not in UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6: a choice no row had decided), and every map
-#   insertion then reloads __child before __tree_balance_after_insert (fn 152), F6's sign: 80384 B against 77002 B. In a
-#   copy of link.cmd with carquivossavd.cpp.o alone compiled from its own compile line without -fno-strict-aliasing
-#   (workflow.md W13, "One variant object"), 1164 scores 1850 over 35494 rows, every one operand-only, a scan of that
-#   link with the committed symbol file moves no row into or out of match, and with one more line in a copy of the
-#   symbol file, a callers+content line for s_mutex of CFederacoes::s_mutex's form (GetInst unlocks it, its exit
-#   destructor destroys it, both through fn 150), 1164, 11657 and 11658 match and splat-build gives the target's sha256
-#   with 11097 matches. So 1164 waits for strict aliasing in this TU, a flag decision that is not this unit's to make, and
-#   11657 and 11658 wait with it: s_mutex's one other reader is 1164, and s_instancia's line reads vote:2 by:11658.
+#   1164 matches with strict aliasing in this TU: src/Makefile lists carquivossavd.cpp in UENUX2_TBAA_DIRS, the one file
+#   of src/app/comum/'s own directory there (docs/reference/facts/app-flags.md F6). With uenux2's -fno-strict-aliasing
+#   every map insertion reloads __child before __tree_balance_after_insert (fn 152), F6's sign: our body is 80384 B
+#   against the target's 77002 B and scores 35926 over 37186 rows (1692 inserted); with strict aliasing it is 77000 B and
+#   scores 1850 over 35494, every row operand-only. Built so in place, step 8 names s_mutex by 1164's operand (vote:1
+#   by:1164) and s_instancia by 1164's and 11658's (vote:6), and step 9 matches 1164, 11658 and 11657, our s_mutex's
+#   exit destructor, which the scan pairs by its body. A private link with that one object changed, scanned with the
+#   plain link's symbol file, moves none of the three: their names come from step 8 at the flag, so s_mutex takes no
+#   hand line (one of CFederacoes::s_mutex's form, tried, carries nothing there: without it the same three match).
 # - The destructor is out of line, `= default` in the .cpp, as CArquivosResultado's is: 1164 and 11658 call 5907. 3839
 #   to 3841 follow 5907's calls, the +24 map first.
 # - AssinarUE: `if (!savd.AssinarArquivo(aplic, comando, 61, arquivo)) throw CUeComumError(EUE_COMUM_ASSINAR_UE,

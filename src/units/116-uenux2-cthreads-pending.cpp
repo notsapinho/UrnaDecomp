@@ -27,9 +27,6 @@
 // - vota::CThreadEleitor::Run 7061 (slot 2), 4119 B: fns 2450 and 3844, and ProcessaEventos 4349 (written in
 //   cthreadeleitor.cpp, not matched: the fragment says why). 7061's records all belong to code inlined from
 //   cajusteinicial.cpp, so its stub sat there, and that file's stub-only state is unchanged by this trap's taking the stub.
-// - vota::CThreadEleitor::ParaOutrasThreads 7030 (slot 5), 18 B: `IExecucaoVota::GetInst().ParaThreadsOperadorMonitor();`
-//   (slot 6, the call at vtable + 24; fragment 165 writes CExecucaoVota's, fn 10232), which needs GetInst, fn 3594,
-//   record iexecucaovota.cpp:74, 1923 B, not written.
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/monitor/cthreadmonitor.h"
 
@@ -46,11 +43,6 @@ void CThreadVota::TrataErro(const std::exception&)
 }
 
 void CThreadEleitor::Run()
-{
-    __builtin_trap();
-}
-
-void CThreadEleitor::ParaOutrasThreads()
 {
     __builtin_trap();
 }

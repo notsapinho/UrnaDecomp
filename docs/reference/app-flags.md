@@ -11,8 +11,9 @@ shows it, as for `-fPIC`; the per-flag measurements are in
 
 | tree | sources | flags | set in | evidence |
 | --- | --- | --- | --- | --- |
-| uenux2 | `src/uenux2/` | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` and `mock/app/simulador/wasm/` | `UENUX2_CXXFLAGS` and `UENUX2_TBAA_DIRS` in `src/Makefile` (setups `uenux2`, `uenux2-tbaa`) | facts §F6 (PIC, and aliasing by directory); the level and the `-std`, each measured on the whole tree: [facts/levels.md](facts/levels.md) §V3; `-DNDEBUG` is ecourna's measurement (§F1), carried over; exceptions below |
+| uenux2 | `src/uenux2/` | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, no `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/` and the file `src/app/comum/carquivossavd.cpp` | `UENUX2_CXXFLAGS` and `UENUX2_TBAA_DIRS` in `src/Makefile` (setups `uenux2`, `uenux2-tbaa`) | facts §F6 (PIC, and aliasing by directory and one file); the level and the `-std`, each measured on the whole tree: [facts/levels.md](facts/levels.md) §V3; `-DNDEBUG` is ecourna's measurement (§F1), carried over; exceptions below |
 | the executable TU, `wasm/vota_web/vota_web_wasm.cpp` | `src/uenux2/wasm/vota_web/` (unit 170, in part), first on the link line | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` | `VOTA_WEB_CXXFLAGS` in `src/Makefile` (setup `vota-web`) | [facts/levels.md](facts/levels.md) §V1: the inline members of a class whose typeinfo sits in its data are its copies, and each flag is measured on the whole link; `-std=c++23` matches eleven rows more there than `-std=c++20` and loses none |
+| `mock/app/comum/cappinfobuilder.cpp` | `src/uenux2/mock/app/comum/` (unit 253), second on the link line | the executable TU's, `VOTA_WEB_CXXFLAGS` | its own rule beside that TU's in `src/Makefile`, the object in `VOTA_WEB_OBJS` (setup `vota-web`) | [facts/app-flags.md](facts/app-flags.md) §F6: landing pads, records right after the executable TU's data, and on the whole link 17 rows more and none lost; it also gives every user `EUrnaTurno`'s `-Oz` format handle (9868), which matches over a data hand line (unit 253's fragment) |
 | ecourna | `src/ecourna/` | `-O3 -fexceptions -std=c++20 -DNDEBUG`, no `-fPIC` | `ECOURNA_CXXFLAGS` in `src/Makefile` | facts §F1, §F5 |
 | ecourna, every unit | | `+ -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow` | `src/mk/ecourna-flags.mk` | facts §F2, §F3, §F4 |
 | the stand-in and roots TUs (`src/app/`, `src/web/`, the units' `-roots.cpp`), but for `src/app/roots_cbasetype.cpp`, `roots_iconversorasn.cpp` and `roots_vector.cpp` and the units' roots whose rule names `$(UENUX2_CXXFLAGS)`, at that (the dry run of facts §F9 item 6 lists them: 16 roots at bbf27ac1) | | `APP_CXXFLAGS` = `UENUX2_CXXFLAGS` at `-O2`, `-std=c++20` and without `-fno-strict-aliasing`; `APP_CFLAGS` for the generated C roots | `src/Makefile` | they stand in for app code; the library templates they instantiate win the link, and the target's copies have TBAA (facts §F6) |
@@ -91,9 +92,11 @@ target call an `invoke_*` import.
 
 The `mock/` tree splits the same way, by file. The record-bearing functions of `mock/app/simulador/wasm/` call no
 `invoke_*` (9655 in `cwasmthread.cpp`, 3876 in `cwasmclp.cpp`), while both of `mock/app/comum/cappinfobuilder.cpp`
-do (10243: 18 calls, 10212: 62); [facts/app-flags.md](facts/app-flags.md) §F6 has the command. The generic uenux2 rule
-compiles all of `mock/` with `UENUX2_CXXFLAGS`, which is right for `mock/app/simulador/wasm/`; a unit in
-`mock/app/comum/` measures its exception flag first.
+do (10243 at 7 call sites of `invoke_*`, 10212 at 29); [facts/app-flags.md](facts/app-flags.md) §F6 has the command. The generic uenux2 rule
+compiles all of `mock/` with `UENUX2_CXXFLAGS`, which is right for `mock/app/simulador/wasm/`.
+`mock/app/comum/cappinfobuilder.cpp` takes the executable TU's rule instead, `-Oz -fexceptions`, measured on the
+whole link ([facts/app-flags.md](facts/app-flags.md) §F6); another unit in `mock/app/comum/` measures its exception flag
+first.
 
 ## Measuring a flag
 

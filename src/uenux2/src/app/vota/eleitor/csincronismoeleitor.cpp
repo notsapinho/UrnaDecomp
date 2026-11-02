@@ -1,15 +1,19 @@
-// vota::CSincronismoEleitor's StartState (target fn 7178), with GetInst and its statics (held inlined by fn 4454). The
-// reconstruction's note: no record names this file, and src/units/192-uenux2-app-vota-estados-sincronismo.mk says what
-// is chosen.
+// vota::CSincronismoEleitor's ProcessKey and StartState (target fns 7181 and 7178), with GetInst and its statics (held
+// inlined by fn 4454). The reconstruction's note: no record names this file, and
+// src/units/192-uenux2-app-vota-estados-sincronismo.mk says what is chosen.
 #include "app/vota/eleitor/csincronismoeleitor.h"
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cprogressbar.h"
 #include "api/ipc/cmessagequeue.h"
+#include "app/vota/eleitor/cfimvotoeleitor.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
+#include "app/vota/eleitor/isincronismovotoeleitor.h"
 #include "app/vota/operador/cthreadoperador.h"
 
 namespace vota {
+
+CSincronismoEleitor::CSincronismoEleitor() : comum::CAppState(EVENTO_TECLA) {}
 
 CSincronismoEleitor& CSincronismoEleitor::GetInst()
 {
@@ -22,6 +26,14 @@ CSincronismoEleitor& CSincronismoEleitor::GetInst()
 
 std::unique_ptr<CSincronismoEleitor> CSincronismoEleitor::s_inst;
 std::mutex CSincronismoEleitor::s_mutex;
+
+void CSincronismoEleitor::ProcessKey(uebyte tecla)
+{
+    m_pNextState = this;
+    if (tecla == 5 && impl::ISincronismoVotoEleitor::GetInst().Sincroniza()) {
+        m_pNextState = &CFimVotoEleitor::GetInst();
+    }
+}
 
 void CSincronismoEleitor::StartState()
 {

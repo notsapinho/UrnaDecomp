@@ -10,6 +10,9 @@
 // member: IdentificadorGeradorMidia's Converte and Deconverte went with 10290, 10291, 11399 and 11400, and Foto's
 // Deconverte with 11440 (fragment 172's objects, which link ahead of ecourna's). DadosComparecimento's Converte stays
 // for 11616, not written.
+#include <vector>
+
+#include "asn1.h"
 #include "ModuloResultadoUrnaCadastro.h"
 #include "ModuloTiposEleitorais.h"
 #include "ecourna/api/asn/iconversorasn.hpp"
@@ -50,9 +53,28 @@ void urna_copia_dados_comparecimento(void* destino, const CDadosComparecimento& 
 extern "C" void urna_deconverte_foto(int, int, int) __asm__(
     "_ZNK7ecourna3api3asn13IConversorASNIN21ModuloTiposEleitorais4FotoENS_3app5dados5CFotoEE10DeconverteERKS4_");
 
+// ASN1::CoderEnv::decode over a range of std::vector<char> (target fn 679), the copy of asn1.h's template its callers
+// keep, read as uenux2's: no landing pad, and istringstream's constructor inlined where the runtime's -Os decode(const
+// char*, ...) calls it. binaryen inlined that decode(const char*, ...) and BERDecoder's constructor into it, each with
+// one caller, which src/units/115-asn1-leftovers.mk takes out of the generated roots. Its target callers are
+// api::CFileASN's readers inlined into 1937, 2280, 3735, 3755, 3771, 3791, 5706, 5740, 5778, 5825, 7787, 11419, 11517
+// and 11905, none in our link: urna_roots_iconversorasn stands in for them with two calls, each passing defered as
+// false, the constant binaryen folded. The iterator type is chosen: the instance over const char* gives the same
+// function, and so does this file's rule with strict aliasing (each compiled, the function's rows compared with
+// object-local numbers masked).
+template bool ASN1::CoderEnv::decode<std::vector<char>::const_iterator>(std::vector<char>::const_iterator,
+                                                                        std::vector<char>::const_iterator,
+                                                                        ASN1::AbstractData&, bool);
+
+extern "C" bool urna_decodifica(int, int, int, int, bool) __asm__(
+    "_ZN4ASN18CoderEnv6decodeINSt3__211__wrap_iterIPKcEEEEbT_S7_RNS_12AbstractDataEb");
+
 int urna_roots_iconversorasn(int a)
 {
     urna_deconverte_foto(a, a + 4, a + 8);
     urna_deconverte_foto(a + 16, a + 4, a + 24);
-    return a;
+    bool lido;
+    [[clang::noinline]] lido = urna_decodifica(a, a + 4, a + 8, a + 12, false);
+    [[clang::noinline]] lido &= urna_decodifica(a + 16, a + 4, a + 8, a + 20, false);
+    return a + lido;
 }

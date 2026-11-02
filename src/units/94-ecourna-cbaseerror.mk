@@ -44,9 +44,13 @@
 # unwritten, ours came from ecourna objects, on 1011, and one uenux2-flags instantiation first in a clone of the objects
 # (facts/workflow.md §W13) scored 2 over 8 rows, both operands, the vptr and the call into the 710 body.
 # 235 and 331 (EUePatternError's and EPatternError's) match from unit 170's object, the executable TU at -Oz
-# -fexceptions, whose CPolySingleton<api::ISound>::instance throws both, with 2294, 2379 and 1940. Left as they are: 170, 210 and 255
-# (EUeComumDadosError's, EUeIoError's, EUeComumAsnError's), since ours are uenux2's copies (210: target `i32.const 483`,
-# ours `call 710`). Their vptrs, 1528096, 1528208 and 1528128 (ledger/vtables.json), lie after the records of
+# -fexceptions, whose CPolySingleton<api::ISound>::instance throws both, with 2294, 2379 and 1940. 210
+# (EUeIoError's: target `i32.const 483`, a uenux2 copy's `call 710`) matches since unit 229, from
+# src/app/roots_coderenv.cpp at the executable TU's rule. Left as they are: 170 and 255 (EUeComumDadosError's,
+# EUeComumAsnError's), since ours are uenux2's copies. The three vptrs, 1528096, 1528208 and 1528128
+# (ledger/vtables.json), lie after the records of
 # mock/app/comum/cappinfobuilder.cpp (1528028 to 1528060), a TU with landing pads, and the executable TU's data ends
-# before them: read as that TU's copies, not the executable TU's. 1143, CError's constructor, matches since its
+# before them: read as that TU's copies, not the executable TU's. That file is unit 253's, linked second at the
+# executable TU's rule, and the members it writes throw no CBaseError, so 170 and 255 wait for the rest of its code.
+# 1143, CError's constructor, matches since its
 # literal's tail is in the link: unit 112's fragment says which.

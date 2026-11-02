@@ -9,9 +9,9 @@
 //
 // vota::CInicioVotacao::GetInst (fn 2880) has four direct callers in the target, fns 7306, 11848, 11858 and 11920
 // (vota::CIniciodeCiclo::StartState, CQuerReimprimirZeresima::ProcessInput, CDefineRotaPosReinicio::NeedChangeState,
-// CQuerImprimirZeresima::ProcessInput): the noinline stand-in calls it twice for 7306, 11848 and 11920, still pending
-// (11858, unit 104's, is in the link), and subtracts the results, so its body is no target function's. It goes when
-// they are in the link.
+// CQuerImprimirZeresima::ProcessInput): the noinline stand-in calls it twice for 7306 and 11920, still pending
+// (11858 and 11848, unit 104's, are in the link), and subtracts the results, so its body is no target function's. It
+// goes when they are in the link.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {

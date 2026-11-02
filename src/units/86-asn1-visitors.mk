@@ -4,12 +4,12 @@
 # docs/how-to-decompile.md step 3 asks a fragment to say.
 #
 # Pending, each written and in its source, none a trap:
-# - 2650 allocator<Visitante>::destroy: one call, 3 over 19 rows. Target 424, shared_ptr<ISeeder>'s destructor among
-#   others, has no result, and BERDecoderPartial's destructor and constructor (2183, 3469) match over it. Target 388 is a
-#   second copy that reads +4 and keeps its result, and 2650 calls it and drops that, so one body of ours cannot serve
-#   both. 8831 matches by their names. Since unit 237 our link has both bodies (388 matches from the executable TU's
-#   object, its result read by 11530), and our 2650 still calls the one matched as 424, read as waiting for a copy of
-#   ~shared_ptr<ASN1::IAbstractVisitor> with 388's body ahead of the runtime (unit 237's fragment).
+# - 2650 allocator<Visitante>::destroy matches since unit 229's root. It differed by one call, 3 over 19 rows: target 424,
+#   shared_ptr<ISeeder>'s destructor among others, has no result, and BERDecoderPartial's destructor and constructor
+#   (2183, 3469) match over it; target 388 is a second copy that reads +4 and keeps its result, and 2650 calls it and
+#   drops that, so one body of ours could not serve both. Since unit 237 our link has both bodies (388 matches from the
+#   executable TU's object, its result read by 11530), and since unit 229's root emits ~shared_ptr<IAbstractVisitor> at
+#   that TU's rule, ahead of the runtime, our 2650's call reaches 388's body.
 # - 8811 PERDecoder::do_visit(SEQUENCE_OF_Base&): differs. It calls 543, which no body of the runtime equals
 #   (docs/reference/facts/asn1.md A5), with one block more than the target around the vector growth wasm-opt inlined
 #   from SEQUENCE_OF_Base::resize, which asn1.cxx holds.
@@ -53,8 +53,8 @@
 #
 # splat/symbol_addrs.txt holds hand edits for this unit, by the method of docs/reference/facts/asn1.md A5: pair the
 # calls of every named function whose rows equal ours up to callees. 2182, 3464, 3469, 2650, 5054, 376, 220 and
-# 2706 each pair with one symbol, and that symbol with them alone. A name frees callers, not bodies: 2650 stays
-# unmatched, 376 matches from unit 109, 2182, 5034, 8976 and 8987 with unit 115's edits, 2247 from
+# 2706 each pair with one symbol, and that symbol with them alone. A name frees callers, not bodies: 2650 stayed
+# unmatched until unit 229's root (its hand edit went then: a generated line names it), 376 matches from unit 109, 2182, 5034, 8976 and 8987 with unit 115's edits, 2247 from
 # src/app/roots_vector.cpp's minsize instance, whose census pair names it now, so its hand edit went, and 220 and 2706
 # from unit 229's root, whose generated lines name them now, so their hand edits went too.
 # _ZN4ASN1L14badEndOfStreamE is .bss, so no content places it: 14478, the static

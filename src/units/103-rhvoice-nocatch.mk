@@ -36,15 +36,18 @@
 # - The roots' stand-in names and bodies.
 #
 # What waits, and for what:
-# - 2650 calls 388 where ours calls 424: two ~shared_ptr bodies in the target. Since unit 237 our link has both (388
-#   keeps the result 11530 reads), and 2650 still calls 424's (unit 86's note). 3552 is unit 115's.
+# - 2650 calls 388 where ours called 424: two ~shared_ptr bodies in the target. Since unit 237 our link has both (388
+#   keeps the result 11530 reads), and 2650 and 3552 match since unit 229's root emits their copies (unit 237's
+#   fragment).
 # - 3473 (decodeCommon) waits no more: it matches since unit 89's ccandidaturas.cpp.o defines
 #   vector<unsigned>::push_back(&&) ahead of asn1.o (unit 89's fragment). document.cpp.o, which defines it too, put
 #   ahead of the runtime, had moved the row to `call 938` and matched nothing.
 # - 3674 waits no more: it matches since unit 31 wrote it (api::CMTFormBuilder::AddField) with its caller 395. With
 #   its callers unwritten, it had matched by content only with RHVoice at -fignore-exceptions, where a twin's body is
 #   the target's; userdict.cpp.o alone at -fignore-exceptions does not give it.
-# - 8811, 194: differ past the first local. Not read further. (2706, listed here before, matches from unit 229's root.)
+# - 8811: differs past the first local. Not read further. (2706, listed here before, matches from unit 229's root; 194,
+#   __put_character_sequence, from mock/app/comum/cappinfobuilder.cpp's -Oz -fexceptions object, unit 253, where it
+#   differed from src/app/roots_rhvoice.o's copy.)
 # - C++20 (B6): the best per-object build found has 9601 matches, 45 more than this one, and loses 354, whose callee
 #   needs language.cpp.o at -fignore-exceptions while 938 and 1682 need it at the allow-list.
 $(ROOT)/$(APP)/103-rhvoice-nocatch-roots.o: $(ROOT)/src/units/103-rhvoice-nocatch-roots.cpp $(ROOT)/src/units/103-rhvoice-nocatch.mk $(ROOT)/src/Makefile

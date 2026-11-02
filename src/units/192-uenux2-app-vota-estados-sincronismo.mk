@@ -3,16 +3,19 @@
 #
 # Target functions matched:
 #   vota::CSincronismoEleitor::StartState (slot 2)             7178
+#   vota::CSincronismoEleitor::ProcessKey (slot 6)              7181
+#   the exit destructors of s_inst and s_mutex                  7195, 7187
 #   vota::CPedeDigital's destructor and deleting destructor     2739, 10469
 #   vota::CPedeDigital::ProcessInput (slot 7)                   10466
 # Pending, trapped in 192-uenux2-app-vota-estados-sincronismo-pending.cpp (its header says what each waits for):
-# CSincronismoEleitor::ProcessKey (7181), CPedeDigital's StartState (10468), FinishState (10467) and ProcessTick (10465).
-# CSincronismoEleitor's GetInst and statics are in csincronismoeleitor.cpp and its constructor inline in the class
-# (csincronismoeleitor.h says what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is written
-# and not matched (unit 197's fragment). Not written: CPedeDigital's GetInst and constructor, inlined into fn 2740,
-# which calls functions with no name or that no form has matched. The roots keep CPedeDigital's vtable by its address
-# (the roots' header); CSincronismoEleitor's vptr store is in the link, inlined into FinalizaEleitor, so its vtable's
-# stand-in went (the link without it moves no row into or out of match).
+# CPedeDigital's StartState (10468), FinishState (10467) and ProcessTick (10465).
+# CSincronismoEleitor's GetInst, statics and constructor are in csincronismoeleitor.cpp, the constructor out of line
+# (csincronismoeleitor.h says why, and what is chosen): fn 4454, unit 197's FinalizaEleitor, holds them inlined and is
+# written and not matched (unit 197's fragment); its srcloc-anchor names the statics, over which 7195 and 7187 match.
+# Not written: CPedeDigital's GetInst and constructor, inlined into fn 2740, which calls functions with no name or that
+# no form has matched. The roots keep CPedeDigital's vtable by its address (the roots' header); CSincronismoEleitor's
+# vptr store is in the link, inlined into FinalizaEleitor, so its vtable's stand-in went (the link without it moves no
+# row into or out of match).
 #
 # Evidence:
 # - CSincronismoEleitor::StartState posts 13 to the operator's queue (the queue's inline Post: Insert, fn 501, with
@@ -21,6 +24,12 @@
 #   through ctelasvota.h's GetBarraSincronismo and GetTelaSincronismo. Insert of a temporary message gives the same
 #   function (measured: both `4 over 43 rows`, every row a call's or an address's operand); Post is written, as for
 #   the operador states' messages (fragment 152 has the case where only Post gives the target's frame).
+# - CSincronismoEleitor::ProcessKey sets m_pNextState (+4) to this and, on the key 5 when
+#   vota::impl::ISincronismoVotoEleitor::GetInst().Sincroniza() (slot 2) returns true, to vota::CFimVotoEleitor's
+#   GetInst. It holds both GetInsts inlined, the interface's with its default instance and the state's with its
+#   constructor, and calls the executable TU's has<T> and push<T> thunks (2741, 5398): fragment 241 writes those
+#   classes, and its fragment has their evidence. The bare 5 is the key, as CPerguntaEleitorVotando::ProcessKey
+#   (fragment 152) compares it; the `&&` in one if is a choice.
 # - CPedeDigital: 84 bytes (fn 2740 allocates them and passes EVENTO_ENTRADA | EVENTO_TICK, 6, to the base's
 #   constructor); its destructor is out of line, 10469 being `f2739(p0); drop; f136(p0)` (docs/reference/facts/reading.md
 #   R5), and final, 2739 storing no vptr first (R4): it calls api::CApplicationContext's destructor (fn 1468) for +32 and

@@ -21,7 +21,7 @@ a whole-skeleton link over a lone link (`tools/round/try-tu.sh --single`): a lon
 | component | flags |
 | --- | --- |
 | ecourna (`src/ecourna`) | `-O3 -fexceptions -std=c++20 -DNDEBUG -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow`, no `-fPIC` (F5) |
-| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/` and `mock/app/simulador/wasm/` (F6) |
+| uenux2 (`src/uenux2`) | `-O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing`, without `-fexceptions`; without `-fno-strict-aliasing` in `src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/` and the file `src/app/comum/carquivossavd.cpp` (F6) |
 | the executable TU (`wasm/vota_web/vota_web_wasm.cpp`, unit 170 in part) | `-Oz -fexceptions -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing` ([levels.md](levels.md) §V1) |
 | ASN.1 runtime (`src/asn1`) | `-Os -fexceptions -fignore-exceptions -std=c++17 -DNDEBUG` ([asn1.md](asn1.md) §A2) |
 
@@ -279,7 +279,7 @@ So a table read with an `i32.add` proves nothing, and neither does one function'
 12's externs included. The `-roots.cpp` files are stand-ins and compile with `APP_CXXFLAGS`. Why the package differs from conan's default
 `fPIC=True` ([libraries.md](libraries.md) §B1) is not known: the target shows the result, not the reason.
 
-## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG`, `-fno-strict-aliasing` by directory, without `-fexceptions`
+## F6. uenux2: `-O3 -fPIC -std=c++23 -DNDEBUG`, `-fno-strict-aliasing` by directory and one file, without `-fexceptions`
 
 Compared on three reconstructed units (`api/util/cwait.cpp`, `api/io/cinikey.cpp`,
 `api/ipc/posix/cposixmutex.cpp` + `cposixsemaphore.cpp`; 13 target functions), each flag set in a private
@@ -334,7 +334,15 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
 
   (the files from `awk -F'\t' '$2 ~ /\/mock\// {print $2, $6}' ledger/source-locations.tsv`). So
   `mock/app/simulador/wasm/` is throw-only like `src/`, and `cappinfobuilder.cpp` has landing pads, like the executable
-  TU.
+  TU. It compiles at that TU's rule, `VOTA_WEB_CXXFLAGS` (unit 253). Its records (1528028 to 1528060) follow that TU's
+  data (up to 1527964) and come before those of the `src/` files that pass `EUrnaTurno`'s format handle, so its object
+  links second, a reading from that order. The handle the target keeps, 9868, calls `__formatter_integer<char>::parse`
+  and `format<unsigned int>` out of line, where the uenux2 objects' copies hold both inlined: compiled at this rule and
+  linked second, the object gives every user that copy. On the whole link at 36dda756 (`TMPDIR=/tmp make -C src link
+  census splat-symbols splat-match`, counts by index of how-to step 10), the rule with the object second gains 17 rows
+  and loses none (358, 1399, 1553 and 11401, which differed only by the handle's slot, 5906, and copies of inline code
+  the target keeps from this object); after the tree roots the object gains 12, and after both trees none (unit 253's
+  fragment lists them). The rule is measured as a whole: no flag of it is measured alone for this TU.
 - **`-fno-strict-aliasing` by directory: no TBAA in comum's converters.** `comum::asn::CConversorCorrespResultado::DoConverte`
   (fn 10289, rows 355-360 of `pnpm wasm fn ../target/vota_web_wasm.wasm 10289`) stores a constant into a SEQUENCE field and
   then reloads the fields vector's begin (`local.get 0; i32.load offset=8; i32.load offset=4; i32.const 1; i32.store
@@ -412,11 +420,43 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   simulator strict aliasing, clang's default, and comum's converters and the directories around them none. It is a
   reading by directory: inside `app/vota/` one directory has a row, and its siblings follow it; `dados/md/` and the files
   beside it differ, by `cfederacoes.cpp`. Where the rows say nothing (`app/vota/`'s other directories, comum's other
-  directories) the setting is a choice. Still open: 4454, whose `md/rdv/` members reload in the target, is written and differs, and a probe link with
-  `md/rdv/` built with `-fno-strict-aliasing` does not close it (unit 197's fragment); 5725 and
+  directories) the setting is a choice. 4454 (`vota::CEleitorVotando::FinalizaEleitor`, written), which holds
+  `md/rdv/`'s `InsereCedula` and `ConfereCedula` inlined, has none of their reloads in the target: at the split every
+  row of it is an operand row, and with `md/rdv/` or `cvotoscargos.cpp` alone built with `-fno-strict-aliasing` it
+  scores worse, the reloads inserted (unit 197's fragment). Still open: 5725 and
   5377, one template at one record line, split (5377 matches from `comparecimentomesario/`). The sites with no call to
   explain the reload are converters and keep the flag: 10289 (`gravadores/asn/`) and 11383 (`dados/asn/`) match, 10276
   (`CConversorHistoricoVotoImpresso`, no record) is `no-candidate`.
+
+  One file joins the directories: `src/app/comum/carquivossavd.cpp`, whose `comum::CArquivosSavd::GetInst` (1164) holds
+  the catalogue's `std::map` insertions, with the constructor and its loaders inlined. Without TBAA every insertion
+  reloads `__child` before `__tree_balance_after_insert` (fn 152), the sign above, and our body is 80384 B against the
+  target's 77002 B (35926 rows differ over 37186); with TBAA it is 77000 B, and 1850 rows over 35494 differ, every one
+  operand-only (unit 95's fragment). At 36dda756 (11350 matches) the compile lines `make -n` prints with and without the
+  file in the list differ in that one object's, and F9 item 6's private link with only that object rebuilt gives the
+  target's sha256 with every match (the list and the symbol file re-keyed to the clone's objects); its scan, with the
+  plain link's symbol file, moves no row, since the names 1164 needs come from step 8 at the flag. Built in place, steps
+  7 to 9 turn 1164 and the exit destructors of its `s_mutex` and `s_instancia` (11657, 11658) `match` and none leaves,
+  11350 to 11353, and `make -C src splat` gives the target's sha256. `UENUX2_TBAA_DIRS` lists the file beside the
+  directories, and the generic rule passes `uenux2_cxxflags` the source's path with its `.cpp`, as a fragment's own rule
+  does. Whether TSE's build gave strict aliasing to that TU or to its directory, no row says: with all nine of
+  `src/app/comum/`'s top-level files built with it (six of the other eight objects change), the link is byte-identical to
+  the one with the file alone. So the file is listed and its directory stays a choice, and the split, by directory and
+  one file, is a reading of the original build's settings like the rest of it.
+
+  One file was measured the other way and is not in the rule: `md/rdv/cvotoscargos.cpp` without strict aliasing. Its
+  copy of a map's `__emplace_hint_unique_key_args` (5681) reloads the child pointer after the begin node's store, as
+  only code without TBAA does (15 over 167 rows with the flag, 4 over 167 without it, operand rows only). On the whole
+  link at 59592a0e (F9 item 6's private link, that object alone rebuilt) the file without strict aliasing gains 5681
+  and loses no match, where all of `md/rdv/` without it gains 5681 and loses 13 (1083, 5640, 10862, 10911, 10939,
+  11322, 11323, 11327, 11328, 11333, 11334, 11338, 11339). On a tree where 4454 (unit 197's FinalizaEleitor, written)
+  holds the file's `InsereCedula` and `ConfereCedula` inlined, the same carve-out gains 5681 and loses 7187 and 7195,
+  which 4454's srcloc-anchor names, leaves 3709 named by its own match line alone, and loses 7352 too unless 4454's
+  hand line names 4454; 4454 scores 178 over 2686 rows, every one an operand row, with the file at strict aliasing,
+  and 222 over 2696 (10 inserted, the reloads) without it. So the file keeps strict aliasing, and the two rows are
+  read as two TUs' code, a reading: 4454's as built with strict aliasing, and 5681's as another TU's copy, that of
+  11349 (`comum::asn::CConversorEleicoesVota::DoDesconverte`, not written), in `dados/asn/rdv/`, which builds without
+  it. 5681 waits for 11349.
 - **The stand-ins keep strict aliasing.** `APP_CXXFLAGS` (the `src/app` stand-ins and the units' roots) is uenux2's set
   without the flag, at -O2, the level the stand-ins were measured at, where the tree builds at -O3, and at `-std=c++20`
   (the bullet above); the units'

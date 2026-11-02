@@ -1,27 +1,30 @@
-// Roots of unit 219. api::CLp's destructor (fn 5978, in mock/app/simulador/wasm/cwasmclp.cpp) has two direct callers in
-// the target (ledger/callgraph.tsv): CLp's singleton accessor (fn 3876), which destroys the object a new one replaces,
-// and the exit-time destructor of the static pointer it fills (fn 12016). Neither is written. The stand-in below calls
-// the destructor twice for them and drops its result, as both do, so binaryen keeps the destructor out of line and
-// removes the `this` it returns, as the target's (i32)->() shows. It goes when those callers are in splat/matched.txt or
-// written in the link. Declared through an asm label, int for the destructor's `this`, so this TU needs no uenux2 header;
-// compiled as app code.
-extern "C" int w219_clp_d2(int) __asm__("_ZN3api3CLpD2Ev");
+// Roots of unit 219. api::CLp::GetInst (fn 3876) and the member fn 3875 (CLp::Imprime, a chosen name), both in
+// mock/app/simulador/wasm/cwasmclp.cpp, have three direct callers each in the target (ledger/callgraph.tsv): fn 2882
+// (vota::CRelVotaUtil::CortaPapel, unit 246), fn 3671 (api::CPaperFormBuilder::Show, unit 31) and fn 11908. The first
+// two are in the link; 11908 is not written. The stand-in below calls both once for fn 11908; it stays while 11908
+// waits (src/units/README.md "Companion files": a stand-in whose callers landed in part stays) and goes when 11908
+// is in splat/matched.txt or written in the link. Declared through asm labels with the objects' types, so this TU needs
+// no uenux2 header; compiled as app code.
+//
+// The destructor's stand-in this file held went: its two target callers, fn 3876 and the static pointer's exit-time
+// destructor fn 12016, are in the link.
+extern "C" int w219_getinst() __asm__("_ZN3api3CLp7GetInstEv");
+extern "C" void w219_imprime(int, int, int) __asm__("_ZN3api3CLp7ImprimeERKNS_10ISubReportERKNSt3__28functionIFvvEEE");
 
 namespace {
 
 volatile int w219_n;
 
-// Stands for fns 3876 and 12016. It adds an offset to its argument and returns another sum, so its body is no target
+// Stands for fn 11908. It adds an offset to its argument and returns another sum, so its body is no target
 // function's.
-__attribute__((noinline)) int DestroiLp(int p)
+__attribute__((noinline)) int ImprimeLp(int p)
 {
-    w219_clp_d2(p);
-    w219_clp_d2(p + 12);
+    w219_imprime(w219_getinst(), p, p + 8);
     return p + 5;
 }
 
 struct SW219Roots {
-    SW219Roots() { w219_n = DestroiLp(w219_n); }
+    SW219Roots() { w219_n = ImprimeLp(w219_n); }
 } w219_roots;
 
 } // namespace
