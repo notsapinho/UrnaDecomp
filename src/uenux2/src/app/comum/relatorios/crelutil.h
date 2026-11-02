@@ -33,6 +33,10 @@ public:
     static void IncluiAvisoModoDemonstracao(api::CPaperFormBuilder& builder);
     static std::string DSCodigoVerificador();
     static std::string GetSeparadorFase(const EUrnaFase fase);
+    // Target fn 5581, which vota::CGeraBU's slot 2 (fn 12110) calls twice with a counter plus one and a total: no record
+    // names it, so its name, its being a static member (the class's records name only static members) and its
+    // parameters' unsigned int (the format's argument code says unsigned, not the width) are chosen.
+    static void ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias);
 };
 
 } // namespace comum

@@ -68,8 +68,15 @@ void CRelUtil::IncluiAvisoModoDemonstracao(api::CPaperFormBuilder& builder)
 // void f1543(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 309-409: content not recovered)
-#line 410
+// (original lines 309-402: content not recovered)
+#line 403
+void CRelUtil::ImprimeSeparadorVia(api::CPaperFormBuilder& builder, unsigned int via, unsigned int totalVias)
+{
+    builder.AddTextField(std::format("-------------- {:02} / {:02} ---------------", via, totalVias),
+                         static_cast<api::IPaper::EStyle>(1), api::ALINHAMENTO_ESQUERDA);
+    builder.AddNewLine(1);
+}
+
 std::string CRelUtil::DSCodigoVerificador()
 {
     CCalculaCV& calculo = api::CPolySingleton<CCalculaCV>::instance();

@@ -42,7 +42,6 @@
 #include "app/comum/iinterfacesavd.h"
 #include "app/comum/log/ieventoslog.h"
 #include "app/comum/relatorios/ccalculacv.h"
-#include "app/comum/validamidia/ivalidamidia.h"
 #include "app/vota/eleitor/comum/ipoliticaexecucaoeleitor.h"
 #include "app/vota/eleitor/fimvotacao/cmostraqrcodebu.h"
 #include "app/vota/eleitor/iajusteinicial.h"
@@ -140,7 +139,6 @@ struct SW100Roots {
         w100_sink_bloco = reinterpret_cast<void*>(&w100_troca);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<api::IAjusteDataHora>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::IControladorRegistraMesarios>);
-        w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<comum::impl::IValidaMidia>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IAjusteInicial>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::IQRCodeBUDS>);
         w100_sink_bloco = reinterpret_cast<void*>(&w100_bloco<vota::testeteclado::impl::IGeradorTeclas>);

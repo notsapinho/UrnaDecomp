@@ -2951,6 +2951,7 @@ _ZNK3api11CFramedText4RectEv = func:3677; // size:0x85 evidence:pair-fingerprint
 _ZN3api10CLineFieldD0Ev = func:3681; // size:0xc evidence:vtable
 _ZN3api21CriaContextoAplicacaoEiNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_S6_ = func:3682; // size:0x14d evidence:call by:676,3229
 _ZN3api12CApplication11PushContextENS_19CApplicationContextE = func:3684; // size:0x274 evidence:call by:11159
+_ZN3api18CPolySingletonList3hasIN5comum4impl12IValidaMidiaEEEbRKNS_19TPolySingletonsInfoE = func:3686; // size:0x171 evidence:content-anchor
 _ZNSt3__29use_facetB8ne210108INS_5ctypeIcEEEERKT_RKNS_6localeE = func:3690; // size:0xc evidence:call
 _ZNSt3__26vectorIjNS_9allocatorIjEEE18__assign_with_sizeB8ne210108IPjS5_EEvT_T0_l = func:3693; // size:0x23 evidence:pair-addr
 _ZNSt3__29basic_iosIcNS_11char_traitsIcEEE4initB8ne210108EPNS_15basic_streambufIcS2_EE = func:3694; // size:0x1b evidence:pair-addr
