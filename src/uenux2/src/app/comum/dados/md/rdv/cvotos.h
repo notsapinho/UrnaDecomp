@@ -36,8 +36,7 @@ private:
     // throws only. A call of a [[noreturn]] function is cold, so clang keeps it out of line (-Rpass-missed=inline:
     // cost 400, threshold 0) and binaryen inlines it. Its name, that it is a private member and its parameter's
     // type are chosen.
-    [[noreturn]] void ErroPosicao(size_t posicao,
-                                  std::source_location local = std::source_location::current()) const;
+    void ErroPosicao(size_t posicao, std::source_location local = std::source_location::current()) const;
 
     std::vector<CVoto> m_votos;
 };
