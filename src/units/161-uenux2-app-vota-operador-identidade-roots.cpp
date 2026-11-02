@@ -3,16 +3,18 @@
 // reconstructed yet.
 //
 // - Each vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
-//   singleton (fns 1256, 10635, 10489, 10627, 2735, 10443, 652 and 5424, none reconstructed). Taking the vtables'
+//   singleton (fns 1256, 10635, 10489, 10627, 2735, 10443 and 5424, none reconstructed). Taking the vtables'
 //   addresses keeps every slot. vota::IEleitorImpedidoVotar's comes with CEleitorNaoEncontrado's destructor, which
-//   calls the base's.
+//   calls the base's. CPedeIdentidade's constructor is in the link, inlined into its GetInst (fn 652).
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
 //   CControlaReconhecimento::PrimeiraTentativa (fn 5403, called twice by 10465), AtingiuLimiteVerificacoes (5404:
 //   10447, and 10448, which is in the link), AtingiuLimiteTentativas and AvancaTentativa (5405 and 5406: 10473 and
 //   10485), CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado (2097: 10443, 10447, 10489, 10500 and 10626) and
-//   LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451 and 10452), and libc++'s std::stoul (4661: 10443 and
-//   10489). A stand-in goes when the target callers it names are in splat/matched.txt or written in the link.
+//   LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451 and 10452), libc++'s std::stoul (4661: 10443 and
+//   10489), and CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
+//   10430, is in the link). A stand-in goes when the target callers it names are in splat/matched.txt or written in
+//   the link.
 // The stand-ins differ in their bytes, from each other and from every target function. Compiled with APP_CXXFLAGS.
 #include <string>
 
@@ -26,8 +28,8 @@ extern const char cinformaanonascimentoerrado_vt[] __asm__("_ZTVN4vota27CInforma
 extern const char cidentidadeinvalida_vt[] __asm__("_ZTVN4vota19CIdentidadeInvalidaE");
 extern const char cverificadadoeleitor_vt[] __asm__("_ZTVN4vota20CVerificaDadoEleitorE");
 extern const char cdadoeleitornaoconfere_vt[] __asm__("_ZTVN4vota22CDadoEleitorNaoConfereE");
-extern const char cpedeidentidade_vt[] __asm__("_ZTVN4vota15CPedeIdentidadeE");
 extern const char celeitornaoencontrado_vt[] __asm__("_ZTVN4vota21CEleitorNaoEncontradoE");
+int w161_pede_identidade() __asm__("_ZN4vota15CPedeIdentidade7GetInstEv");
 }
 
 namespace {
@@ -87,6 +89,13 @@ __attribute__((noinline)) unsigned long LeDois(const std::string& primeiro, cons
     return std::stoul(primeiro) + 3 * std::stoul(segundo);
 }
 
+// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 2295, 10209, 10217, 10404, 10435, 10443,
+// 10447, 10452, 10527, 10588, 10590, 10624, 10626, 10646, 10689, 10718, 10721, 10731, 10734, 10751 and 10762.
+__attribute__((noinline)) int PedeIdentidade()
+{
+    return w161_pede_identidade() + 89;
+}
+
 const void* volatile w161_sink;
 
 struct SW161Roots {
@@ -98,7 +107,6 @@ struct SW161Roots {
         w161_sink = cidentidadeinvalida_vt;
         w161_sink = cverificadadoeleitor_vt;
         w161_sink = cdadoeleitornaoconfere_vt;
-        w161_sink = cpedeidentidade_vt;
         w161_sink = celeitornaoencontrado_vt;
         w161_sink = reinterpret_cast<const void*>(&PrimeiraDuasVezes);
         w161_sink = reinterpret_cast<const void*>(&LimiteVerificacoes);
@@ -107,6 +115,7 @@ struct SW161Roots {
         w161_sink = reinterpret_cast<const void*>(&CancelaUm);
         w161_sink = reinterpret_cast<const void*>(&CancelaDois);
         w161_sink = reinterpret_cast<const void*>(&LeDois);
+        w161_sink = reinterpret_cast<const void*>(&PedeIdentidade);
     }
 } w161_roots;
 

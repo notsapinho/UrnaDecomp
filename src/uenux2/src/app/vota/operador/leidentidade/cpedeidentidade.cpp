@@ -12,13 +12,17 @@
 #include "app/vota/comum/votadefs.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/comum/telasoperador.h"
 #include "app/vota/operador/cthreadoperador.h"
 
 namespace vota {
 
 CPedeIdentidade::~CPedeIdentidade() = default;
 
-// (original lines 21-55: content not recovered)
+std::unique_ptr<CPedeIdentidade> CPedeIdentidade::s_inst;
+std::mutex CPedeIdentidade::s_mutex;
+
+// (original lines 25-55: content not recovered)
 #line 56
 void CPedeIdentidade::StartState()
 {
@@ -44,6 +48,26 @@ void CPedeIdentidade::FinishState()
     CThreadOperador::GetInst().StopTick(m_tickIdentidade);
     CThreadOperador::GetInst().StopTick(m_tickEspera);
     CThreadOperador::GetInst().StopTick(m_tickAviso);
+}
+
+CPedeIdentidade& CPedeIdentidade::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CPedeIdentidade());
+    }
+    return *s_inst;
+}
+
+CPedeIdentidade::CPedeIdentidade()
+    : comum::CAppState(EVENTO_ENTRADA | EVENTO_TICK)
+    , m_tickIdentidade(CThreadOperador::GetInst().AddStoppedTick(60000))
+    , m_tickEspera(CThreadOperador::GetInst().AddStoppedTick(5000))
+    , m_tickAviso(CThreadOperador::GetInst().AddStoppedTick(1000))
+    , m_aviso(std::make_shared<std::string>(" "))
+    , m_form(MontaTelaPedeIdentidade(m_aviso))
+{
+    AgendaInspecao();
 }
 
 } // namespace vota

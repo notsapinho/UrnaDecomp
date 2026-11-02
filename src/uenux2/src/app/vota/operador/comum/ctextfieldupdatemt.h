@@ -3,13 +3,15 @@
 // api::CTextFieldUpdateMT (/home/rubio/tse/uenux2/src/app/vota/operador/comum/ctextfieldupdatemt.h; no record names
 // the class's files: the header's name is the class's and its directory the source's, both chosen, see
 // src/units/51-uenux2-ctextfieldupdatemt.mk). RTTI: an si_class of IFormField<IScreenMT> (ledger/classes.json), 56
-// bytes: the constructor, inlined into fn 652 with f137(56), stores the position at +24 and the SharedIText at +28,
-// starts the string at +36 empty and puts at +48 the timer that slot 0 of ITimerScheduler::GetInst() (fn 1259)
-// creates with the interval and a lambda; the constructor's parameters are the ones the RTTI name of that lambda's
-// std::function spells (vtable @1590528). Draw (fn 10548) draws the text at +24 and keeps the text it drew at +36;
-// Show and Hide (fns 10546, 10545) call slots 2 and 3 of the timer, Start and Stop in api/util/itimer.h; the
-// destructor (fn 5411) releases +48, +36 and +28 in that order. The member names are chosen; the timer's type is only
-// declared here.
+// bytes: the constructor, inlined by binaryen into fn 652 after f137(56), stores the position at +24 and the
+// SharedIText at +28, starts the string at +36 empty and puts at +48 the timer that slot 0 of ITimerScheduler::GetInst()
+// (fn 1259) creates with the interval and a lambda, then throws std::invalid_argument when +28 is null; the
+// constructor's parameters are the ones the RTTI name of that lambda's std::function spells (vtable @1590528). The
+// lambda calls Atualiza, a private member out of line that binaryen inlines into the lambda's operator() (fn 10542), as
+// api::CTextFieldUpdate's does; Atualiza, its name and its being a member are chosen. Draw (fn 10548) draws the text at
+// +24 and keeps the text it drew at +36; Show and Hide (fns 10546, 10545) call slots 2 and 3 of the timer, Start and
+// Stop in api/util/itimer.h; the destructor (fn 5411) releases +48, +36 and +28 in that order. The member names are
+// chosen; the timer's type is only declared here.
 
 #include <chrono>
 #include <memory>
@@ -37,6 +39,8 @@ public:
     void Hide() override;
 
 private:
+    void Atualiza();
+
     SPoint m_posicao;
     SharedIText m_text;
     mutable std::string m_textoDesenhado;
