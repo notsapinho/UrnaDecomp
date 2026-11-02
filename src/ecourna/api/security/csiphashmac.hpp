@@ -7,7 +7,7 @@ namespace ecourna::api::security {
 
 class CSiphashMac final : public IMacAlgorithm {
 public:
-    CSiphashMac();
+    CSiphashMac() = default;
     virtual ~CSiphashMac() = default;
 
 protected:

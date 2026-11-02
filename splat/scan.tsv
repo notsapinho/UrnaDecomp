@@ -8504,7 +8504,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8638	-	-	-	no-candidate	no symbol and no ledger pair	138	none	7zip	0	-
 8639	-	-	-	no-candidate	no symbol and no ledger pair	103	none	7zip	0	-
 8640	-	-	-	no-candidate	no symbol and no ledger pair	169	none	7zip	0	-
-8641	__cxx_global_array_dtor.8	13875	content	match	readings: address symbol; __cxx_global_array_dtor.2@app/uenux2/src/app/vota/eleitor/votamajoritario/cmajoritarionulo.cpp.o differs	10	addr	7zip	2	app/uenux2/src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp.o
+8641	__cxx_global_array_dtor.8	13875	symbol	match	readings: address symbol	10	addr	7zip	2	app/uenux2/src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp.o
 8642	_ZThn56_N12CFilterCoder7ReleaseEv	8349	symbol	match	-	9	fingerprint	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FilterCoder.cpp.o
 8643	_ZThn56_N12CFilterCoder14QueryInterfaceERK4GUIDPPv	8350	symbol	match	-	14	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FilterCoder.cpp.o
 8644	_ZThn52_N12CFilterCoder7ReleaseEv	8351	symbol	match	-	9	fingerprint	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FilterCoder.cpp.o

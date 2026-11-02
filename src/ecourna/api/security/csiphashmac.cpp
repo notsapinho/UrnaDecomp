@@ -20,8 +20,6 @@ const size_t TAMANHO_CHAVE = 16;
 
 } // namespace
 
-CSiphashMac::CSiphashMac() = default;
-
 void CSiphashMac::DoMac(const std::vector<uebyte>& dados, std::vector<uebyte>& mac, const std::vector<uebyte>& chave) const
 {
     mac = std::vector<uebyte>(TAMANHO_MAC);
@@ -39,7 +37,7 @@ void CSiphashMac::DoMac(const std::vector<uebyte>& dados, std::vector<uebyte>& m
 
     std::unique_ptr<EVP_MAC_CTX, decltype(&EVP_MAC_CTX_free)> ctx(EVP_MAC_CTX_new(algoritmo.get()), EVP_MAC_CTX_free);
 
-    // (original lines 42-50: content not recovered)
+    // (original lines 40-50: content not recovered)
 #line 51
     if (EVP_MAC_init(ctx.get(), chave.data(), chave.size(), params.get()) != 1) {
         throw CSecurityError(ESE_MAC_FALHA_INICIAR, std::format("Falha ao autenticar. - {}", ERR_get_error()));
