@@ -1,8 +1,9 @@
 # std::shared_ptr control blocks over this tree's classes: the __shared_ptr_pointer<T*, ...> and __shared_ptr_emplace<T>
-# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 50 come from
-# 102-uenux2-control-blocks-roots.cpp (its header says how). Sixteen come from the objects of units 31, 120, 101, 165,
+# members of 66 blocks, with what a block's slot 2 said of its class's destructor. 49 come from
+# 102-uenux2-control-blocks-roots.cpp (its header says how). Seventeen come from the objects of units 31, 120, 101, 165,
 # 91, 127, 164, 113, 163 and 110, whose builders are written, so the roots no longer instantiate them:
-# IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550),
+# IFormImpressao<IPaperRelatorios>'s and CPreShowNothing<IPaper>'s (5515), IForm<IScreen>'s (5550), CPreShowClearScreen's
+# (11140, CFormBuilder::GetForm(const std::string&), unit 31's cformbuilder.cpp, from which 11138 matches),
 # CInteractiveForm<IScreen, IInputKbd>'s (554), CInteractiveForm<IScreenMT, IInputMT>'s (301), FormControlBlock's (5515,
 # 6024), api::CTimer's (10846, unit 101's itimerscheduler.cpp, from which 10844, 10843 and 2967 match) and
 # vota::CPreShowFormVota's (576, unit 165's cpreshowformvota.cpp, from which 7660 matches; its other builder, 886, is
@@ -28,8 +29,7 @@
 #   IText: CDataText<vota::CEscolheOpcao::COpcaoDS> 2753: 10684 (CDataText<CPadDS<CToUpperDS<CCargoDSNome>>>'s, 11246,
 #     comes from its builder, fn 5613, which unit 139 matches)
 #   IForm<IPaper>: IFormImpressao<IPaperRelatorios> 5515: 11001
-#   IPreShow<IScreen>: CPreShowClearScreen 11140: 11138.
-#     CPreShowNothing<IScreen> 11891: 11137
+#   IPreShow<IScreen>: CPreShowNothing<IScreen> 11891: 11137
 #   IPreShow<IPaper>: CPreShowNothing<IPaper> 5515: 11010
 #   IDAO: IComparecimentoMesarioDAO 7787: 11664. IJustificadorDAO 7787: 11663
 #   comum::IGravador, all 12098: CGravadorBU 12097, RDV 12096, RCSecao 12095, EnvelopeArquivo 12094, Hashes 12093,

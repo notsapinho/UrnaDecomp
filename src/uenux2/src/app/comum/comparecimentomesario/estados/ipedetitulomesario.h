@@ -33,11 +33,11 @@ namespace comum {
 // The layout is what the constructor (fn 3608) stores: +12 and +20 two std::shared_ptr it takes by value (it copies
 // their four words and writes nothing back). +12 is the operator's form: fn 10313 reads it through
 // api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() (record cinteractiveform.h:57 @1595652). +20 is the form
-// on the voter's terminal: fn 10388 builds it with fn 1255 ("REGISTRO DE MESÁRIOS"), which reaches fn 5550 through fns
-// 11140 and 6117; 5550's control block is __shared_ptr_pointer<api::IForm<api::IScreen>*, ...> (vptr 1578144). Fn 3608
-// passes comum::CAppState::EVENTO_ENTRADA (2) to the base constructor. Slot 9's name and result type are chosen: the
-// derived classes return 1 (Inicial, Votacao, fn 434) and 2 (Final, fn 2254), and fn 10313 only passes the value on to
-// fn 2738. The member and parameter names are not in the target.
+// on the voter's terminal: fn 10388 builds it with fn 1255 ("REGISTRO DE MESÁRIOS", GetTelaEleitor below), which
+// reaches fn 5550 through fns 11140 and 6117; 5550's control block is __shared_ptr_pointer<api::IForm<api::IScreen>*,
+// ...> (vptr 1578144). Fn 3608 passes comum::CAppState::EVENTO_ENTRADA (2) to the base constructor. Slot 9's name and
+// result type are chosen: the derived classes return 1 (Inicial, Votacao, fn 434) and 2 (Final, fn 2254), and fn 10313
+// only passes the value on to fn 2738. The member and parameter names are not in the target.
 class IPedeTituloMesario : public CAppState {
 public:
     virtual void StartState() override;
@@ -49,6 +49,15 @@ public:
 protected:
     IPedeTituloMesario(std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> form,
                        std::shared_ptr<api::IForm<api::IScreen>> formEleitor);
+
+    // The voter's screen of the registration: comum::TelaRegistroMesarios's code (cregistrarmesarios.h) a second time,
+    // as a member that does not read `this`; target fn 1255 is the one body of both. That the source had two functions
+    // is read from fn 11140 (api::CFormBuilder::GetForm(const std::string &)): fn 1255 is its one caller and it is in
+    // no table slot, yet it is out of line, and binaryen inlines a function with one call site and no slot
+    // (docs/reference/facts/tool-traps.md X1). src/units/247-uenux2-cregistrarmesarios.mk has the measurements. Chosen:
+    // that this class holds the second copy, as a non-static member, its name, and that the three derived classes'
+    // constructors call it.
+    std::shared_ptr<api::IForm<api::IScreen>> GetTelaEleitor();
 
 private:
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;

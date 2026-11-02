@@ -43,6 +43,11 @@
 # which); Slot9, its name and its int result (no record, symbol or caller
 # names it, and the derived classes return 1 and 2); the member and parameter names.
 #
+# IPedeTituloMesario::GetTelaEleitor, after StartState, is unit 247's: the second copy of comum::TelaRegistroMesarios
+# (cregistrarmesarios.cpp), which binaryen joins with it into target fn 1255. Unit 247's fragment has the evidence for a
+# second function and what is chosen (this class, a protected non-static member, its name), and its roots stand in for
+# the copy's callers, the three derived constructors in fn 10388.
+#
 # Slot 2 of api::IForm is called through its chosen name, as api/gui/iform.h declares it. That header is unit 120's now
 # (unit 65 wrote its first form): this unit adds nothing to it.
 #
