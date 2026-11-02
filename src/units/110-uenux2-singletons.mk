@@ -241,6 +241,35 @@
 # CDataImage<CCandidaturasDSFoto> and CDataText<CCargoDSNomeSexoCandidato> fields whose
 # vtables lie between this file's records in the data; fn 6561 (adicionaFotoEmoldurada over the lambda of
 # CriaTelaVisualizacaoCandidato, record :487) has callers 6569 and 12272 only.
+#
+# ctelasvota.cpp also holds six screen builders outside CTelasVota, free functions of vota that ctelasvota.h declares
+# (its comment says what places them in this file): AdicionaTelaAguarde (fn 4152), AdicionaCabecalhoTesteTeclado (fn
+# 3054) and TelaPreparandoDadosEncerramento (fn 6583), which match, and TelaVotacaoEncerrada, TelaCopiaResultadoParaMR
+# and TelaEsperaRepetirTesteTeclado, which have no index of their own: binaryen inlines each into its one target caller,
+# the GetInst of vota::CGeraBU (6129) and vota::CCopiaResultadoParaMR (6174), unit 220's, and of
+# vota::testeteclado::CEsperaRetestar (5936, unit 138's), where each sits behind a second stack-pointer prologue (so out
+# of line in its object, in another TU than its caller: docs/how-to-decompile.md step 3). Measured in the whole link
+# before steps 7 to 9 (pnpm wasm score against names.tsv): 4152 10 over 127 rows, 6583 16 over 167, 3054 8 over 125, all
+# operand-only, calls and data addresses. Step 8 named 4152 and 6583 by the GetInst's call votes and 3054 by 5936's; 4152
+# and 3054 name api::CFormBuilder::AddStatusHeader (fn 502) in turn (unit 220's fragment). The fonts: the file constants
+# FONTE_TITULO {30, 0} and FONTE_AGUARDE {25, 0}, which the scan places by their bytes (the target holds them at @474888
+# and @474992, among 3 and 63 places at a multiple of 4 in the first 65 occurrences, the most splat-symbols.ts's
+# resolveBytes reads), and a local SFont {25, 0} in TelaEsperaRepetirTesteTeclado,
+# which 5936 builds in its frame. TelaEsperaRepetirTesteTeclado instantiates AddTextFieldUpdate over a
+# std::function<std::string(const std::string &)>, and with it the CDataTextFmt and the two control blocks it builds:
+# their members (12287, 12290, 12291, the block's 12294 and 12292, and 12316, 12314 of api::CTextFieldUpdate's block)
+# link from this object now,
+# ahead of the objects that gave them before (79's roots and unit 31's cformbuilder.cpp), with the same bytes.
+# 3054's other target callers (11804, 11805, 11809) are not written: unit 220's roots stand in for them.
+# The three include lines this needs (<functional>, api/gui/cformbuilder.h, app/vota/comum/cpreshowformvota.h) took
+# blank lines above line 291. cformbuilder.h brings iform.h, so the TU now also initializes api::CFormStack<IScreen>'s
+# guarded statics, and its own static's exit destructor (12875) took another local suffix: step 9 renamed that match
+# line (__cxx_global_array_dtor.7 to .19 of this object), the same body.
+# Chosen: the names, their being functions of vota with external linkage (the file's recorded helpers are internal, and
+# these have no record), their parameters' types and names, the fonts' names and their being file constants, the
+# interval and the font in TelaEsperaRepetirTesteTeclado written as named locals before the call (the target stores
+# them at +72 and +64 of its frame before the std::function's copy at +32; temporaries were not compiled), and their
+# lines (3370 to 3429, in the blank run below the record line 1582 and above GetInst at 3434).
 SINGLETONS_SRCS := src/app/comum/dados/celeitores.cpp \
   src/app/comum/dados/chv.cpp src/app/comum/dados/cpe.cpp src/app/comum/dados/crespostas.cpp \
   src/app/comum/dados/md/cvalidadoridentidade.cpp src/app/vota/eleitor/comum/ctelasvota.cpp

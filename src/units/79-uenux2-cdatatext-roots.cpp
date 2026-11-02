@@ -4,8 +4,8 @@
 // the RTTI spells:
 //   std::make_shared<X>, where the target has __shared_ptr_emplace<X>: CDataText over std::string (*)() (fn 3068 builds it
 //     so), const std::string& (*)() (3060) and std::function<std::string()> (12055), CDataTextFmt over std::string
-//     (*)(const std::string&) (3058 builds it so), const std::string (*)(const std::string&) (2028) and
-//     std::function<std::string(const std::string&)> (5936), CDataImage over std::vector<unsigned char> (*)() (6689),
+//     (*)(const std::string&) (3058 builds it so) and const std::string (*)(const std::string&) (2028), CDataImage
+//     over std::vector<unsigned char> (*)() (6689),
 //     and CQRCodeImage (12040, 12055), and CDataText over comum::CCargoDSNomeSexoCandidato (6528), whose GetText calls
 //     the source's matched call operator (2268); it (12632) and the block link from unit 102's object, which is first;
 //     and so do CDataText over comum::CCandidaturasDSNome and comum::CCandidaturasDSNumero (4185 builds both), whose
@@ -61,7 +61,6 @@ using FonteFormato = std::string (*)(const std::string&);
 using FonteFormatoConst = const std::string (*)(const std::string&);
 using FonteImagem = std::vector<unsigned char> (*)();
 using FuncaoTexto = std::function<std::string()>;
-using FuncaoFormato = std::function<std::string(const std::string&)>;
 
 __attribute__((noinline)) SharedIText TextoDaFonte(const CTextSource& fonte, api::ETextAlignment alinhamento)
 {
@@ -97,12 +96,6 @@ __attribute__((noinline)) SharedIText TextoFuncao(const FuncaoTexto& fonte)
 __attribute__((noinline)) SharedIText TextoFuncaoProprio(const FuncaoTexto& fonte, api::ETextAlignment alinhamento)
 {
     return SharedIText(new CDataText<FuncaoTexto>(fonte, alinhamento));
-}
-
-__attribute__((noinline)) SharedIText TextoFormatoFuncao(const FuncaoFormato& fonte, const std::string& formato,
-                                                         api::ETextAlignment alinhamento)
-{
-    return std::make_shared<CDataTextFmt<FuncaoFormato>>(fonte, formato, alinhamento);
 }
 
 __attribute__((noinline)) SharedIText TextoFormatoProprio(FonteFormato fonte, const std::string& formato,
@@ -180,7 +173,6 @@ struct SW79Roots {
         w79_sink = reinterpret_cast<void*>(&TextoFormatoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoDaFonte);
         w79_sink = reinterpret_cast<void*>(&TextoReferencia);
-        w79_sink = reinterpret_cast<void*>(&TextoFormatoFuncao);
         w79_sink = reinterpret_cast<void*>(&TextoProprio);
         w79_sink = reinterpret_cast<void*>(&TextoCargoSexo);
         w79_sink = reinterpret_cast<void*>(&TextoCandidaturaNome);

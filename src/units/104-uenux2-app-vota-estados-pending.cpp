@@ -31,7 +31,7 @@
 
 namespace vota {
 
-// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 491, 2376, 6129, 6557.
+// CAguardaMensagem::ProcessKey: fn 7481 (742 B), callees with no name: 491, 2376, 6557.
 void CAguardaMensagem::ProcessKey(uebyte)
 {
     __builtin_trap();
@@ -45,8 +45,9 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name: 491, 502, 886, 1164, 1935, 2281, 2543, 2763, 2821, 2824, 2860, 3782,
-// 3825, 3826, 5462, 5480, 5545, 5866, 5869, 5870 and 6174; its other callees have names (units 193's 675 and 676,
+// with no name: 491, 1164, 1935, 2281, 2543, 2763, 2821, 2824, 2860, 3782,
+// 3825, 3826, 5462, 5480, 5545, 5866, 5869 and 5870; its other callees have names (502, 886 and 6174, units 31's,
+// 165's and 220's, units 193's 675 and 676,
 // 195's 5824, 95's 3829, 5889, 5891 and 5905, 32's 378, 154's 620, 13's 1269 and 110's 2822 among them).
 void CGravaResultado::StartState()
 {
@@ -69,8 +70,8 @@ void CImprimindoBim::StartState()
 }
 
 // CImprimirBUOutrasObrigatorias::StartState: fn 12065 (1790 B), records cimprimirbuoutrasobrigatorias.cpp:50,
-// cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 491, 502, 886,
-// 2291, 2890; the others have names (3701 unit 93's, 1880 unit 00's).
+// cimprimirbuoutrasobrigatorias.cpp:53, cimprimirbuoutrasobrigatorias.cpp:57, callees with no name: 491, 2291, 2890;
+// the others have names (3701 unit 93's, 1880 unit 00's, 502 unit 31's, 886 unit 165's).
 void CImprimirBUOutrasObrigatorias::StartState()
 {
     __builtin_trap();

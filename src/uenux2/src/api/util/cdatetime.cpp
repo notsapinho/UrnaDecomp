@@ -121,7 +121,12 @@ CDateTime CDateTime::operator+(time_t segundos) const
     return resultado;
 }
 
-// (original lines 133-202: content not recovered)
+time_t CDateTime::operator-(const CDateTime& dataHora) const
+{
+    return ConvertToLocalTime() - dataHora.ConvertToLocalTime();
+}
+
+// (original lines 138-202: content not recovered)
 #line 203
 CDateTime CDateTime::ConvertFromTimestamp(const std::string& timestamp)
 {

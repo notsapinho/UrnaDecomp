@@ -93,6 +93,12 @@
 # (5475, 5474, 5473), so it is defined after operator+=(int), a place among those the band allows. Its name, its
 # parameter's type and its void result are chosen. And CDateTime's operator== and CTime's (defaulted, inline in their
 # headers), which 12061 holds: four 16-bit compares, then one 32-bit.
+# Added since: fn 5471, CDateTime::operator-(const CDateTime &), ConvertToLocalTime of this one minus the other's,
+# which clang inlines twice over one struct tm (the target fills its frame's tm from each in turn and calls timegm after each,
+# fn 2961). Its callers are two text callbacks, vota::testeteclado::CEsperaRetestar's (fn 11826, unit 138) and fn
+# 13012, not written, for which unit 220's roots stand in. 10 over 113 rows, operand-only, before step 8, which named
+# it by pair-addr; matched at step 9. Its place, after FormatCurrentDate and operator+ (line 133, in the blank run
+# before :203), follows the band (cdatetime.h); the name, const and time_t are chosen.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CDATETIME_SRCS := src/api/util/cdate.cpp src/api/util/cdatetime.cpp
 UENUX2_SRCS += $(CDATETIME_SRCS)

@@ -37,22 +37,46 @@
 #   operand-only. It was `unresolved self-voted` while it was the only reader in the link of the CDateTime at 1835000,
 #   which __wasm_call_ctors builds with CDateTime(time_t) of 0; it matches since CEsperaRetestar's slot 9 (fn 11823,
 #   below) reads the object too (`evidence:vote:3 by:11823,11825`). Its other target reader is the text callback fn
-#   11826 (which calls fn 5471, with no name).
+#   11826, written since (below).
 # - CReinicioVotacao follows unit 104's states with a std::shared_ptr (104-uenux2-app-vota-estados.mk has the evidence
 #   for GetInst's shape, the statics' order and final); 5938 copies the shared_ptr at +148 of CTelasVota::GetInst(). Its
 #   statics are named by 5938's votes; their exit destructors 11836 and 11837 load the same two addresses. GetInst has
 #   two target callers, 11829 and 11830 (pending); the roots stand in for 11830.
 # - CPreZeresima's slot 12 (fn 11861) calls slot 11 (fn 5945) directly: final, on the class here (on the member alone
 #   it would do the same, a choice).
+# - CEsperaRetestar's constructor, GetInst (fn 5936) and statics, written since in cesperaretestar.cpp, unit 104's
+#   shape: the base's constructor with 4 (EVENTO_TICK), at +28 the form vota::TelaEsperaRepetirTesteTeclado builds
+#   (unit 110's ctelasvota.cpp, inlined by binaryen behind its own stack frame) over a std::function of the text
+#   callback, at +36 CThreadEleitor::GetInst().AddStoppedTick(100) (fns 316 and 807) and +40 cleared; the pointer
+#   @1835036 and the mutex @1835012, whose exit destructors 11828 and 11827 alone load them besides 5936. +28 is what
+#   vota::GetFormulario (fn 886) returns, so the member is a std::shared_ptr<api::IForm<api::IScreen>> now, where the
+#   head had CFormInterativoTelaVota: StartState and FinishState call its slot 2 and Hide, IForm's, and 11825 and 11824
+#   still match (step 9). The text callback, fn 11826 (483 B, table slot 1862, which 5936 passes), is TextoEspera in
+#   the anonymous namespace below s_fimEspera: the seconds from Now to s_fimEspera through api::CDateTime::operator-
+#   (fn 5471, unit 125), 0 when that time has passed, given to std::vformat with the text as the format (argument code
+#   6, unsigned). Its date is a local scoped to the if: with it a plain local before the if, the frame was 400 bytes and
+#   the date at +44, against the target's 384 and +40 (each compiled, try-tu.sh --symbols, the frame read in the object);
+#   three more spellings with the plain local gave 400 too. Measured in the whole link (pnpm wasm score against
+#   names.tsv): 5936 50 over 791 rows before steps 7 to 9, 11826 10 over 223 with the if form (38 over 223 before it,
+#   the frame's offsets), operand-only. 5936 first scored 378 over 794,
+#   155 rows deleted: unit 79's roots built CDataTextFmt<std::function<...>> for it with std::make_shared, which kept
+#   construct_at out of line, a second caller, where the target inlines it; that stand-in went with 5936's landing.
+#   Step 8 named 5936 by vptr-anchor and 11826 by its table vote; 11827 and 11828 matched through the content pass. The
+#   std::function's __func members over the pointer (11817, 11819, 11820, 11821, 11822) match from this object. 5936
+#   has two target callers, CTesteFalhou's and CEnviarManutencao's ProcessInput (11809, 11812), not written: unit 220's
+#   roots stand in for them, and this unit's roots no longer keep CEsperaRetestar's vtable, which GetInst stores.
+#   Chosen: GetInst, s_inst, s_mutex, TextoEspera and their names, the locals, the lines, and the callback's internal
+#   linkage.
 # No other spelling of a written body was compiled.
 #
 # Not written, with what each waits for:
-# - CEsperaRetestar's constructor and GetInst (fn 5936, not read for this unit); CTesteTeclado's are unit 217's;
+# - CTesteTeclado's constructor and GetInst are unit 217's;
 # - vota::CQuerImprimirBU: StartState 12035 (records :40 and :41), which throws api::EUeAssertError 3474 and 3475, is
 #   written and matched since, in unit 156, with the assert codes, the EEstadoVota enumerators and CEstadoGeralVota's
 #   getters; its ProcessInput 12034 calls fns 455, 491, 3877 and 5986;
 # - CMostraQRCodeBU's and CMostraQRCodeCertificado's slots (12055, 12051, 12040; 12038, ProcessInput, matches since in
-#   unit 156): callees with no name, 455 and 502 among them (576 has one since unit 165); CTesteTeclado is unit 217's;
+#   unit 156): callees with no name, 455 among them (576 has one since unit 165, 502 since unit 220); CTesteTeclado
+#   is unit 217's;
 # - 138-uenux2-testeteclado-pending.cpp names the slots this unit's vtables trap and what each waits for.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv

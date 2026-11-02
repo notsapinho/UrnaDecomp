@@ -1,12 +1,12 @@
 // Roots: keep unit 138's classes in the skeleton link the way the target keeps them.
 //
-// vota::testeteclado::CRetomada and CEsperaRetestar are reached only through their vtables: the target's constructors
-// that store them are inlined into fn 7160 and into CEsperaRetestar's GetInst (fn 5936), neither reconstructed. Taking
-// the vtables' address keeps every slot, vota::testeteclado::CBase's StartState (fn 11875, slot 2 of CRetomada's) and
-// the destructors among them (fns 1559, 5946, 785, 1560). The vtables of vota::CAplicacaoEncerrada,
-// vota::testeteclado::CPreZeresima and vota::CVerificaHorarioZeresima are stored by code in the link: GetInst (fn
-// 3877), written here; CPreZeresima's GetInst inlined into vota::CVerificaEleicaoPassou::StartState (fn 11914, unit
-// 199); CVerificaHorarioZeresima's GetInst (fn 5947), written here.
+// vota::testeteclado::CRetomada is reached only through its vtable: the target's constructor that stores it is inlined
+// into fn 7160, not reconstructed. Taking the vtable's address keeps every slot, vota::testeteclado::CBase's StartState
+// (fn 11875, slot 2) and the destructors among them (fns 1559, 5946). The vtables of vota::CAplicacaoEncerrada,
+// vota::testeteclado::CPreZeresima, vota::CVerificaHorarioZeresima and vota::testeteclado::CEsperaRetestar are stored
+// by code in the link: GetInst (fn 3877), written here; CPreZeresima's GetInst inlined into
+// vota::CVerificaEleicaoPassou::StartState (fn 11914, unit 199); CVerificaHorarioZeresima's GetInst (fn 5947), written
+// here; CEsperaRetestar's GetInst (fn 5936), written in unit 220's paragraph of this unit (138-uenux2-testeteclado.mk).
 //
 // vota::CAplicacaoEncerrada::GetInst (fn 3877) has three direct callers in the target, 12034, 12051 and 12055
 // (vota::CQuerImprimirBU's and vota::CMostraQRCodeBU's slots, pending in units 156 and 37). The noinline stand-in calls
@@ -30,7 +30,6 @@
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 extern const char cretomada_vt[] __asm__("_ZTVN4vota12testeteclado9CRetomadaE");
-extern const char cesperaretestar_vt[] __asm__("_ZTVN4vota12testeteclado15CEsperaRetestarE");
 int w5938_getinst(void) __asm__("_ZN4vota16CReinicioVotacao7GetInstEv");
 int w5948_cbase(void* objeto) __asm__("_ZN4vota12testeteclado5CBaseC2Ev");
 int w3877_getinst(void) __asm__("_ZN4vota19CAplicacaoEncerrada7GetInstEv");
@@ -65,7 +64,6 @@ struct STesteTecladoRoots {
     STesteTecladoRoots()
     {
         testeteclado_sink = cretomada_vt;
-        testeteclado_sink = cesperaretestar_vt;
         testeteclado_sink = reinterpret_cast<const void*>(&ChamaReinicioVotacao);
         testeteclado_sink = reinterpret_cast<const void*>(&ChamaCBase);
         testeteclado_sink = reinterpret_cast<const void*>(&ChamaAplicacaoEncerrada);
