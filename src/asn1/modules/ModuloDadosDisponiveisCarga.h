@@ -148,7 +148,7 @@ public:
     idPE::const_reference get_idPE () const { return *static_cast<idPE::const_pointer>(fields[1]); }
     idPE::reference ref_idPE () { return *static_cast<idPE::pointer>(fields[1]); }
     idPE::reference set_idPE () { return *static_cast<idPE::pointer>(fields[1]); }
-    idPE::reference set_idPE (ASN1::INTEGER::int_type v)
+    idPE::reference set_idPE (idPE::const_reference v)
     { return *static_cast<idPE::pointer>(fields[1]) = v; }
 
     class idPleito
@@ -164,7 +164,7 @@ public:
     idPleito::const_reference get_idPleito () const { return *static_cast<idPleito::const_pointer>(fields[2]); }
     idPleito::reference ref_idPleito () { return *static_cast<idPleito::pointer>(fields[2]); }
     idPleito::reference set_idPleito () { return *static_cast<idPleito::pointer>(fields[2]); }
-    idPleito::reference set_idPleito (ASN1::INTEGER::int_type v)
+    idPleito::reference set_idPleito (idPleito::const_reference v)
     { return *static_cast<idPleito::pointer>(fields[2]) = v; }
 
     class serialFlashCarga
@@ -251,7 +251,7 @@ public:
     zona::const_reference get_zona () const { return *static_cast<zona::const_pointer>(fields[6]); }
     zona::reference ref_zona () { return *static_cast<zona::pointer>(fields[6]); }
     zona::reference set_zona () { return *static_cast<zona::pointer>(fields[6]); }
-    zona::reference set_zona (ASN1::INTEGER::int_type v)
+    zona::reference set_zona (zona::const_reference v)
     { return *static_cast<zona::pointer>(fields[6]) = v; }
 
     class municipios

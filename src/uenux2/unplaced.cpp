@@ -783,9 +783,6 @@
 // f2811 · 678 B · unmatched · placement: link order · name unknown
 // void f2811(i32, i32, i32, i32, i32, i32) { ... }
 
-// f2807 · 237 B · unmatched · placement: link order · name unknown
-// void f2807(i32, i32, i32, i32) { ... }
-
 // link-order cluster 1110 · uses=4 · neighbours' file uenux2/src/app/comum/dados/ccandidaturas.cpp
 
 // f2839 · 57 B · unmatched · placement: link order · name unknown
