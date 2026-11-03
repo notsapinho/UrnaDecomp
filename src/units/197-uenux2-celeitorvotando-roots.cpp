@@ -1,9 +1,9 @@
 // Roots: keep vota::CEleitorVotando's functions in the skeleton link the way the target keeps them.
-// - GetInst (fn 3229) has three direct callers in the target, fns 7428, 7481 and 11754, of which 7428 is reconstructed
-//   (unit 150): Obtem stands for the other two, two call sites. GetInst holds the constructor inlined, whose vptr store
+// - GetInst (fn 3229) has three direct callers in the target, fns 7428, 7481 and 11754, of which 7428 (unit 150) and
+//   11754 (unit 97) are reconstructed: Obtem stands for 7481, two call sites. GetInst holds the constructor inlined, whose vptr store
 //   is the target's reference to the class's vtable, and so keeps every slot.
 // - RegistraVoto (fn 4471) has two direct callers in the target, fns 7428 and 11754, each calling it right after
-//   GetInst: 7428 is reconstructed (unit 150), and Registra stands for 11754, two call sites on GetInst's result.
+//   GetInst, both reconstructed (units 150 and 97): no stand-in.
 // - AdicionaVoto (fn 4192) and the five CLogVota::LogaVoto* members (fns 3272, 4546, 4542, 4541 and 4537) have two
 //   direct callers in the target each, RegistraVoto and suspenderEleitor (fn 4442, records celeitorvotando.cpp:410 and
 //   :427, not written), which makes RegistraVoto's calls; FinalizaEleitor (fn 4454) has two too, NeedChangeState (fn
@@ -21,9 +21,6 @@
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 extern "C" {
 char* w197_inst() __asm__("_ZN4vota15CEleitorVotando7GetInstEv");
-void w197_registra(void* eleitor, unsigned char cargo, int tipo, const void* numero) __asm__(
-    "_ZN4vota15CEleitorVotando12RegistraVotoEhN5comum2md5CVoto5ETipoERKNSt3__212basic_stringIcNS5_11char_traitsIcEENS5_"
-    "9allocatorIcEEEE");
 void w197_adiciona(unsigned char cargo, const void* voto) __asm__("_ZN4vota12AdicionaVotoEhRKN5comum2md5CVotoE");
 void* w197_log() __asm__("_ZN4vota8CLogVota7GetInstEv");
 void w197_loga_cssp(void* log, unsigned char cargo) __asm__(
@@ -52,21 +49,12 @@ namespace {
 
 const void* volatile celeitorvotando_sink;
 
-// stands for fns 7481 and 11754 (7428 is in the link)
+// stands for fn 7481 (7428 and 11754 are in the link)
 __attribute__((noinline)) int Obtem(int vezes)
 {
     const char* primeiro = w197_inst();
     const char* segundo = w197_inst();
     return primeiro[vezes] - segundo[3];
-}
-
-// stands for fn 11754 (7428 is in the link)
-__attribute__((noinline)) int Registra(const unsigned char* cargos, int tipo, const char* numeros)
-{
-    char* eleitor = w197_inst();
-    w197_registra(eleitor, cargos[0], tipo, numeros);
-    w197_registra(eleitor, cargos[1], tipo + 1, numeros + 12);
-    return cargos[2] + tipo;
 }
 
 // stands for fn 4442
@@ -117,7 +105,6 @@ struct SCEleitorVotandoRoots {
     SCEleitorVotandoRoots()
     {
         celeitorvotando_sink = reinterpret_cast<const void*>(&Obtem);
-        celeitorvotando_sink = reinterpret_cast<const void*>(&Registra);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Suspende);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Abrange);
         celeitorvotando_sink = reinterpret_cast<const void*>(&Imprime);

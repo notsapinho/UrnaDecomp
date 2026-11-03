@@ -24,15 +24,15 @@
 #   (10218); its D2 and D0 are the bodies 49 states share (244, 387). GetInst (5343) is written and differs (below).
 # - app/vota/eleitor/comum/cpoliticaexecucaoeleitor.cpp: LimpaBufferInput (13564), records 33:18, 34:35 and 37:38.
 #   IPoliticaExecucaoEleitor::GetInst (record 45:100) has no target function of its own: its one target caller, 5925
-#   (unit 97's pending header), holds it inlined, and the roots' stand-in for 5925 inlines it the same way. The exit
-#   destructor of its mutex is in our link and matches nothing: the census pairs it with 10483, which reads
-#   `unresolved` on the mutex's address, a .bss object with no target name (splat/scan.tsv).
+#   (the slot 17 of vota::CConfirmaVotoNominal and CMajoritarioValido, one body, unit 97's), holds it inlined, as ours
+#   does. The exit destructor of its mutex (13574, which destroys 1833324) matches since 5925 does, the mutex's other
+#   reader.
 # - app/vota/comum/cpreshowformvota.cpp: GetFormularioInterativo (576), and the __shared_ptr_pointer<CPreShowFormVota*>
 #   block it builds, whose __get_deleter (7660) unit 102's roots gave until now (unit 102's header says so);
 #   CPreShowFormVota::PreShow (7707, slot 2, the class's key function) and DesenhaDescricaoModo (4620), below.
 # Not matched, and why: the -pending.cpp traps CAguardaInicio's ProcessKey
-# (10217), with what it waits for. The roots file says what stands for the unwritten callers of both GetInsts (5408
-# for 3594, 5925 for IPoliticaExecucaoEleitor's) and for 576's 16 callers.
+# (10217), with what it waits for. The roots file says what stands for the unwritten caller of IExecucaoVota's GetInst
+# (5408 for 3594) and for 576's 16 callers.
 #
 # The two GetInsts are unit 50's macro, POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO (api/pattern/
 # polysingletongetinst.h), over CExecucaoVota and CPoliticaExecucaoEleitor: each record's column (74:78, 45:100) is the

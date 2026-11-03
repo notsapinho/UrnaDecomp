@@ -197,8 +197,13 @@
 # wasm score, before the match; step 8 named it by its census pair, pair-fingerprint). The loop variable written as the
 # party's 16-bit integer (comum's TPartidoID, from ecourna's TPartidoID through its conversion) loads each party once in
 # the outer loop, as the target does; as `const auto&` the object loads it again in the inner loop (try-tu.sh --symbols,
-# the function's disassembly compared; not linked). Its callers, fns 5922 and 11976, are not reconstructed; the roots'
-# Federacoes stands for both.
+# the function's disassembly compared; not linked). Its callers are fns 5922 (vota::LegendaValida, unit 97's, written)
+# and 11976, not reconstructed, for which the roots' Federacoes stands.
+#
+# CCandidaturas::ExisteCandidatoPartido, in ccandidaturas.cpp after Busca, has no target function of its own: its one
+# caller, fn 5922, holds its loop inlined by binaryen, its result a block's tested again, and unit 97's fragment has the
+# measurement (inline in ccandidaturas.h, clang's early return, the row that differed). Its name, its being a member and
+# its line are chosen.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \

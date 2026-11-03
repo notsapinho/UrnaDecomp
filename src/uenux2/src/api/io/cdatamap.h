@@ -88,6 +88,10 @@ public:
         return &it->second;
     }
 
+    // Whether a record has the key, the cursor left where it is: the lookup vota::LegendaValida (target fn 5922) holds
+    // inlined over comum::CPartidos, a find with no store of +12. The name and its being the base's member are chosen.
+    bool Existe(const KeyType& chave) const { return m_registros.find(chave) != m_registros.end(); }
+
 protected:
     Container m_registros;
     typename Container::iterator m_corrente;

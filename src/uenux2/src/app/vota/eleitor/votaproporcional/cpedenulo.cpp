@@ -11,14 +11,31 @@
 
 namespace vota {
 
+CPedeNulo::CPedeNulo()
+    : CCompletaProporcional(5)
+{
+}
+
 CPedeNulo::~CPedeNulo() = default;
+
+CPedeNulo& CPedeNulo::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CPedeNulo());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CPedeNulo> CPedeNulo::s_inst;
+std::mutex CPedeNulo::s_mutex;
 
 std::string CPedeNulo::GetMensagem() const
 {
     return "Você está votando para {cargo-atual} no candidato {voto}. Número errado. Aperte confirma para prosseguir, ou corrige para reiniciar este voto.";
 }
 
-// (original lines 21-39: content not recovered)
+// (original lines 38-39: content not recovered)
 #line 40
 comum::CAppState* CPedeNulo::GetProximoEstado(const std::string& numero) const
 {

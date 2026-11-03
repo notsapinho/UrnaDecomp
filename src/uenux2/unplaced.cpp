@@ -147,11 +147,6 @@
 // f5870 · 87 B · unmatched · placement: link order · name unknown
 // void f5870(i32, i32) { ... }
 
-// link-order cluster 856 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/votaproporcional/cpedeproporcional.cpp
-
-// f5922 · 243 B · unmatched · placement: link order · name unknown
-// ? f5922(i32, i32) { ... }
-
 // link-order cluster 862 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cconfirmaregerarzeresima.cpp
 
 // f5953 · 527 B · unmatched · placement: link order · name unknown

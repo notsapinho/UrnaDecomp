@@ -12,7 +12,24 @@
 
 namespace vota {
 
+CPedeNominal::CPedeNominal()
+    : CCompletaProporcional(8)
+{
+}
+
 CPedeNominal::~CPedeNominal() = default;
+
+CPedeNominal& CPedeNominal::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CPedeNominal());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CPedeNominal> CPedeNominal::s_inst;
+std::mutex CPedeNominal::s_mutex;
 
 std::string CPedeNominal::GetMensagem() const
 {

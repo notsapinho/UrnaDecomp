@@ -13,6 +13,10 @@ enum EUeVotaError {
     // throws; the name is chosen from its message, "O arquivo{} não é um relatório válido para sincronização": no
     // evidence names it
     EUE_VOTA_RELATORIO_INVALIDO_SINCRONIZACAO = 9302,
+    // the value is the code vota::IConfereVotoEmCargo's anonymous-namespace GetCargoID (record cconferevotoemcargo.cpp:41,
+    // inlined into target fn 11793) throws; the name is chosen from its message, "O cargo atual nao esta posicionado",
+    // and the class: no evidence names it
+    EUE_VOTA_CONFERE_VOTO_EM_CARGO_CARGO_NAO_POSICIONADO = 9305,
     // the values are the codes the GetTelaCargoAtual(const std::string &) of vota::CConfirmaVotoEmCargo and
     // vota::CConfirmaVotoSemCandidato throw (target fns 5928 and 4483, which pass them to fn 3921); the names are chosen
     // from the message, "<caller> - o cargo atual nao esta posicionado", and the class: no evidence names them
@@ -38,6 +42,10 @@ enum EUeVotaError {
     // cvotacaostateaudio.cpp:188) throws; the name is chosen from its message, "Nao havia campos de input no formulario
     // sem nada digitado", and the class: no evidence names it
     EUE_VOTA_STATE_AUDIO_SEM_INPUT = 9318,
+    // the value is the code vota::CVotacaoStateAudio::EmiteEcoCorrigeConfirma (record cvotacaostateaudio.cpp:209,
+    // inlined into target fn 11754) throws; the name is chosen from its message, "Nao havia campos de input no
+    // formulario sem nada digitado", and the function: no evidence names it
+    EUE_VOTA_STATE_AUDIO_CORRIGE_CONFIRMA_SEM_INPUT = 9319,
     // the value is the code vota::CVotacaoStateAudio::FormatPartyName (target fn 6954, record
     // cvotacaostateaudio.cpp:297) throws; the name is chosen from its message, "Nao foi encontrado o partido": no
     // evidence names it
@@ -73,11 +81,23 @@ enum EUeVotaError {
     // vota::CPedeProporcional throw (target fns 5920, 5931 and 5923, which pass them to fns 6050 and 3921); the names
     // are chosen from the message, "O cargo atual nao esta posicionado", and the class: no evidence names them
     EUE_VOTA_PEDE_MAJORITARIO_CARGO_NAO_POSICIONADO = 9380,
+    // the values are the codes vota::CPedeMajoritario::ProcessInputAudio (target fn 11683, record cpedemajoritario.cpp:64)
+    // and its ExisteCandidatoValidoResposta (record :125, inlined there) throw, and vota::CCompletaProporcional's
+    // EmiteEcoComInputField (target fn 5930, record ccompletaproporcional.cpp:60); the names are chosen from their
+    // messages, "O cargo atual nao esta posicionado", "Nao foi encontrado o partido do candidato" and "Nao havia campos de
+    // input no formulario sem nada digitado", and the classes: no evidence names them
+    EUE_VOTA_PEDE_MAJORITARIO_ENTRADA_CARGO_NAO_POSICIONADO = 9381,
+    EUE_VOTA_PEDE_MAJORITARIO_PARTIDO_NAO_ENCONTRADO = 9382,
+    EUE_VOTA_COMPLETA_PROPORCIONAL_SEM_INPUT = 9383,
     EUE_VOTA_COMPLETA_PROPORCIONAL_CARGO_NAO_POSICIONADO = 9384,
     // the value is the code vota::CPedeNulo::GetProximoEstado (target fn 11744, record cpedenulo.cpp:44) throws; the
     // name is chosen from its message, "O cargo atual nao esta posicionado", and the class: no evidence names it
     EUE_VOTA_PEDE_NULO_CARGO_NAO_POSICIONADO = 9385,
     EUE_VOTA_PEDE_PROPORCIONAL_CARGO_NAO_POSICIONADO = 9386,
+    // the value is the code vota::CPedeProporcional::ProcessInputAudio (target fn 11711, record
+    // cpedeproporcional.cpp:84) throws; the name is chosen from its message, "O cargo atual nao esta posicionado", and the
+    // class: no evidence names it
+    EUE_VOTA_PEDE_PROPORCIONAL_ENTRADA_CARGO_NAO_POSICIONADO = 9387,
     // the values are the codes vota::CThreadMonitor::VerificaErroCriticoFlash (record cthreadmonitor.cpp:156) and
     // VerificaErroCriticoKbdTE (cthreadmonitor.cpp:167), inlined into target fn 10226, throw; the names are chosen from
     // their messages, "Erro na Mídia Externa - Mídia não está presente" and "Erro no teclado do eleitor - dispositivo

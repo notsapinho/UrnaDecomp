@@ -94,6 +94,11 @@ protected:
     // By its record (:136), not static and const; the derived classes' input slots call it. Its access is chosen.
     void PlayKey(const char tecla) const;
 
+    // By its record (:209), not static, not virtual and const: vota::CConfirmaVotoEmCargo's ProcessInputAudio (fn 11754,
+    // the slot 9 its derived classes inherit) holds it in a stack frame of its own, inlined by binaryen. Its access is
+    // chosen.
+    api::EInputResult EmiteEcoCorrigeConfirma(const CFormInterativoTelaVota& form) const;
+
 private:
     // Static by its record (:226); PlayKey, its one caller, holds it inlined. Its access is chosen.
     static void PlayFile(const std::string& arquivo);
@@ -124,13 +129,17 @@ private:
     // one TU that calls it; its name, its being a member and where it is defined are chosen.
     void PararTicks();
 
+protected:
     // The current message, its tags filled in, spoken when audio is on: ProcessTick (fn 7010) holds the test and both
     // slot calls with no frame of their own, and frees slot 15's string before PlayInterruptibleMessage, which a local
-    // holding slot 14's result gives (a reading: the temporaries of one full expression live until its end). Defined
-    // inline in cvotacaostateaudio.cpp; its name, its being a member, and that it is a function at all (the lines of
-    // ProcessTick's record and of PlayKey's leave its statements no room in ProcessTick) are chosen.
+    // holding slot 14's result gives (a reading: the temporaries of one full expression live until its end). A function
+    // of its own: vota::IConfereVotoEmCargo's StartStateAudio lambda (fn 11786) reads its capture before the one stack
+    // frame it opens, so binaryen inlined these statements there from a call (unit 97's fragment has the rows). Defined
+    // in cvotacaostateaudio.cpp without `inline`: clang inlines it into ProcessTick, and the lambda's object calls it.
+    // Its name, its being a member and its access are chosen.
     void FalaMensagem();
 
+private:
     bool m_bAudioHabilitado;
     uebyte m_tickEco;
     uebyte m_tickMensagem;
