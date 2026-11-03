@@ -16,11 +16,18 @@ namespace comum::servico {
 // registrador's destructor (fn 5380) calls 3607 on +40. The constructor calls Entregar: its record follows this class's
 // typeinfo in the data, in this object's run. No record names this file or the .cpp: their path, in a servico/ beside
 // the DAO's dao/ (the vtable lies after estados/' data and before cregistradormesario.cpp's), and the member's name are
-// chosen. No other member is recovered.
+// chosen.
+//
+// Inserir hands a comparecimento to the DAO's slot 3 (api::persistencia::IUenuxGenericDAO::Inserir): comum::
+// CRegistradorMesario::SaveCurrentInternal, which fn 10337 holds inlined, loads +44 of the registrador (this class's
+// m_dao, at +40 + 4) and calls that slot with the current record, no call of its own between. Its name, its being an
+// inline const member of this class and its parameter are chosen.
 class CComparecimentoMesarioServico {
 public:
     CComparecimentoMesarioServico();
     virtual ~CComparecimentoMesarioServico();
+
+    void Inserir(const md::CComparecimentoMesario& comparecimento) const { m_dao->Inserir(comparecimento); }
 
 private:
     std::shared_ptr<dao::IComparecimentoMesarioDAO> m_dao;

@@ -23,8 +23,8 @@ namespace vota {
 // overrides StartState (slot 2, fn 10454, records cregistradigitaloperador.cpp:95 and :98), FinishState (slot 5, fn
 // 10453, records :104 and :105, a thunk into binaryen's fn 6012, the body it shares with
 // comum::CPedeDigitalMesario::FinishState), ProcessInput (slot 7, fn 10452), which cancels the habilitation on CORRIGE
-// and goes back to vota::CPedeIdentidade, and ProcessTick (slot 8, fn 10451, records :143 to :145). FinishState and
-// ProcessTick are pending (src/units/221-uenux2-app-comum-constructors-pending.cpp says what each waits for). The
+// and goes back to vota::CPedeIdentidade, and ProcessTick (slot 8, fn 10451, records :143 to :145). ProcessTick is
+// pending (src/units/221-uenux2-app-comum-constructors-pending.cpp says what it waits for). The
 // destructor is out of line, the body comum::CPedeDigitalMesario and vota::CPedeIdentidade share (fns 1537 and 3629),
 // which releases the std::shared_ptr at +24 and then the one at +16.
 //

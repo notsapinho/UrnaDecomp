@@ -17,7 +17,8 @@
 #   build/out/splat/pieces/asm`). Weighed together: scanned twice on copies without the ten lines and the ten match
 #   lines, the ten rows fall (to differs and no-candidate), the five slots go from differs to unresolved, and so do six
 #   other exit destructors the census pairs with these statics' destructors, unmatched either way (7239, 10223, 10341,
-#   10364, 10371 and 10418).
+#   10364, 10371 and 10418; 10341, 10364 and 10371 match since, as comum::CMesarioRegistrado's and the
+#   CPedeTituloMesario* states' own: units 279 and 97).
 # This unit's members in other units' files, each noted in that unit's fragment: CPerguntaFilaEleitorVazia's GetInst
 # (5426) with its statics' destructors (10716, 10717), its ProcessInput (10713) and CHorarioVotacaoTerminou's (10757)
 # (unit 152); CSincronizaVota::SincronizaEstadoGeral (3333, unit 205) over CAppInfo::SalvaGeralInterno and

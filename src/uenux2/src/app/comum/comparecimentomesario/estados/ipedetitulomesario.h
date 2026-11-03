@@ -34,7 +34,7 @@ namespace comum {
 // The layout is what the constructor (fn 3608) stores: +12 and +20 two std::shared_ptr it takes by value (it copies
 // their four words and writes nothing back). +12 is the operator's form: fn 10313 reads it through
 // api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() (record cinteractiveform.h:57 @1595652). +20 is the form
-// on the voter's terminal: fn 10388 builds it with fn 1255 ("REGISTRO DE MESÁRIOS", GetTelaEleitor below), which
+// on the voter's terminal: fn 10388 builds it with fn 1255 ("REGISTRO DE MESÁRIOS", TelaEleitorRegistroMesarios below), which
 // reaches fn 5550 through fns 11140 and 6117; 5550's control block is __shared_ptr_pointer<api::IForm<api::IScreen>*,
 // ...> (vptr 1578144). Fn 3608 passes comum::CAppState::EVENTO_ENTRADA (2) to the base constructor. Slot 9's name and
 // result type are chosen: the derived classes return 1 (Inicial, Votacao, fn 434) and 2 (Final, fn 2254), and fn 10313
@@ -51,17 +51,6 @@ protected:
     IPedeTituloMesario(std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> form,
                        std::shared_ptr<api::IForm<api::IScreen>> formEleitor);
 
-    // The voter's screen of the registration: comum::TelaRegistroMesarios's code (cregistrarmesarios.h) a second time,
-    // as a member that does not read `this`; target fn 1255 is the one body of both. That the source had two functions
-    // is read from fn 11140 (api::CFormBuilder::GetForm(const std::string &)): fn 1255 is its one caller and it is in
-    // no table slot, yet it is out of line, and binaryen inlines a function with one call site and no slot
-    // (docs/reference/facts/tool-traps.md X1). src/units/247-uenux2-cregistrarmesarios.mk has the measurements. Chosen:
-    // that this class holds the second copy, as a non-static member, its name, and that the three derived classes'
-    // constructors call it. The target calls 1255 at those sites (fn 10388) before this class's constructor (fn 3608)
-    // runs, so the chosen calls run a member before its base subobject exists, undefined behaviour ([class.base.init]);
-    // a function of the same body with a parameter dead-argument elimination drops would not, and is not measured.
-    std::shared_ptr<api::IForm<api::IScreen>> GetTelaEleitor();
-
 private:
     // Whether the register holds the mesario with this formatted titulo in this state's period (Slot9): fn 10313 holds it
     // inlined by binaryen, a 48-byte frame of its own that opens before CRegistradorMesario::GetInst's call and calls
@@ -72,5 +61,26 @@ private:
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
     std::shared_ptr<api::IForm<api::IScreen>> m_formEleitor;
 };
+
+// The voter's screen of the registration: comum::TelaRegistroMesarios's code (cregistrarmesarios.h) a second time; target
+// fn 1255 is the one body of both. That the source had two functions is read from fn 11140
+// (api::CFormBuilder::GetForm(const std::string &)): fn 1255 is its one caller and it is in no table slot, yet it is out
+// of line, and binaryen inlines a function with one call site and no slot (docs/reference/facts/tool-traps.md X1).
+// src/units/247-uenux2-cregistrarmesarios.mk has the measurements. What the second copy is, measured in the whole link
+// (pnpm wasm score of fn 10388, and build/out/wasm-map/vota_web/names.tsv for 11140):
+// - the three derived classes' constructors, which fn 10388 holds, call fn 1255 in their base's initializer with no
+//   vptr store before it; a member of this class called there uses `this`, and clang then stores the derived class's
+//   vptr before the base initializer (wasm-objdump -d of cpedetitulomesarioinicial.cpp.o: the store of
+//   _ZTVN5comum25CPedeTituloMesarioInicialE+8 opens the constructor; 10388 at 195 over 2070 rows, 9 inserted);
+// - a free function with TelaRegistroMesarios's wasm type is merged with it by binaryen before it inlines, and 11140,
+//   left with one caller, is inlined (it leaves names.tsv, and splat-symbols drops its line and 6117's);
+// - a delegating constructor that calls the member gives no vptr store but a second copy of each argument (24 inserted
+//   rows).
+// A function of comum that takes a parameter its body does not read gives the target's rows (186 over 2061, all
+// operand-only, the statics' addresses) and keeps 11140: binaryen's dead-argument elimination drops the parameter after
+// the first merge pass. So the second copy reads no object and has a parameter; which one is not in the target. Chosen:
+// its name, the parameter's type and name, the values the constructors pass (their slot 9's), its declaration here and
+// its definition in ipedetitulomesario.cpp, and that those three constructors are its callers.
+std::shared_ptr<api::IForm<api::IScreen>> TelaEleitorRegistroMesarios(int periodo);
 
 } // namespace comum

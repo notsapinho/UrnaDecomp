@@ -23,7 +23,11 @@
 #   binaryen forms from the two;
 # - CPedeDigitalMesario's s_mutex destructor 10320; api::CPolySingleton<api::IFingerScanner>::instance 816 (the copy of
 #   cpededigitalmesario.cpp.o, whose StartState calls it) and <api::IFingerMatcher>::instance 1686 (the roots' copy,
-#   below), thunks into 6013, the body binaryen forms from the two.
+#   below), thunks into 6013, the body binaryen forms from the two;
+# - CPedeDigitalMesario::FinishState (10315), at its records' lines (cpededigitalmesario.cpp:298 and :299, column 5:
+#   instance<api::IFingerScanner>() with slot 7 given 0, then slot 6), which with vota::CRegistraDigitalOperador's
+#   (10453, unit 221, records cregistradigitaloperador.cpp:104 and :105) forms binaryen's 6012, as in the target: the
+#   three match (step 8 names both thunks by srcloc-anchor and 6012 by their calls).
 # The states read their controller through comum::IControladorRegistraMesarios, now const (its header says why), and
 # slot 7 through api::CInteractiveForm<MEDIA, INPUT>::Read(), now written in api/gui/cinteractiveform.h at its record's
 # line 57. Both 448 and 765 are named after CConfirmaFimRegistroMesarios, the first object of ours that defines them.
@@ -121,6 +125,30 @@
 # api/hwil/ifingerscanner.h and ifingermatcher.h are new heads, and say what their slots rest on.
 #
 # Written, not matching:
+# - 10337, IGestorDadoMesario::StartState, in igestordadomesario.cpp (listed before the Gestor states, whose vtables
+#   follow its typeinfo in the target's data): GetControlador's record is line 65 column 12, `return` and instance() as
+#   in the other files. Evidence (pnpm wasm fn): StartState has no frame of its own; it opens with the 96-byte frame of
+#   a member binaryen inlined (RegistraMesario, a chosen name; it calls slot 9 on `this`) and, after that frame closes,
+#   stores CMesarioRegistrado::GetInst()'s result (inlined: unit 279's constructor and form) in m_pNextState.
+#   RegistraMesario: CRegistradorMesario::GetInst (fn 815), CControladorReconhecimentoMesario::GetInst (fn 1149, unit
+#   214), the controller's slot 13 (passed as the constructors' bool, pertence_secao's column), the reads of +0, +8 and
+#   the 8 bytes at +12 of 1149's object, the controller's slot 17 (GetTituloMesario) copied into the by-value string of
+#   md::CEleitorIdentidade's constructor (fn 566, TipoIDInscricaoEleitoral); then, by the optional's flag (+16), fn 2730
+#   with its value or fn 2731 without, each after Slot9() and api::CDateTime::Now() (fn 479) and followed by
+#   CRegistradorMesario::Registra (fn 5378); then CRegistradorMesario::SaveCurrentInternal behind a 16-byte frame of its
+#   own (binaryen inlined it: record cregistradormesario.cpp:85 column 15, written in unit 113's file, its throw code
+#   7754 in euecomumcomparecimentomesarioerror.h, its call the DAO's slot 3 through the servico's new inline Inserir)
+#   and the controller's slot 16. Measured in the whole link (pnpm wasm score, 10337 against ours): 289 over 761 rows
+#   (same 472, replaced 268 [264 operand-only], inserted 11, deleted 10): binaryen's local numbers, the statics'
+#   addresses and the throw's destructor slot. The locals are not renamed one for one (the target's local 0 is ours 1 at
+#   70 rows and 0 at 2, its 1 ours 2, 3 or 1), so the coalescing differs. The estado read before the dedo gives the
+#   target's order of the two loads (+0, then +8); the other order, 298 over 766 (16 inserted, 15 deleted). The same 289
+#   over 761: RegistraMesario above StartState; igestordadomesario.cpp linked after cmesarioregistrado.cpp (a scratch
+#   list). Not explained. Its three slots need it, so it stays written; the statics it reads are named by the hand lines
+#   of units 214 and 279 (src/units/279-uenux2-nomearquivoeleitores-cmesarioregistrado.mk), without which it reads
+#   `unresolved`. Chosen: RegistraMesario's name, its being private and non-const, the locals and their const, the
+#   std::optional<int> copy, `has_value()`, the temporaries passed to Registra, and the lines of igestordadomesario.cpp
+#   but the record's.
 # - 10380, CEncerraRegistroMesarios::StartState: the scan says `the locals`. The target stores m_pNextState before its
 #   stack prologue. It is read as a frameless StartState with an out-of-line member binaryen inlined, a reading: how-to
 #   step 3 does not list a store before the only prologue among binaryen's tells. So the switch is in
@@ -156,10 +184,7 @@
 # - CDigitalMesarioNaoReconhecida's GetInst, inlined into fn 10316 (pending), with its file's anonymous
 #   CNomeMesariosUrnaDS::Text (10323), the other half of fn 6008.
 # - comum::CMesarioRegistrado (10339, 10338) is written in unit 279, whose fragment says what of it matches.
-# - The pending traps (135-uenux2-comum-mesario-estados-pending.cpp names each): IGestorDadoMesario::StartState
-#   (10337), CPedeDigitalMesario's FinishState (10315, a thunk into fn 6012, which it shares with
-#   vota::CRegistraDigitalOperador::FinishState, 10453, not written; the pending file holds its source) and ProcessTick
-#   (10316).
+# - The pending trap (135-uenux2-comum-mesario-estados-pending.cpp names it): CPedeDigitalMesario::ProcessTick (10316).
 #
 # Chosen, no evidence names them: DefineProximoEstado; every data member's name; the forms' builders' names
 # (TelaConfirmaFimRegistroMesarios, TelaTituloMesarioVazio, TelaTituloMesarioInvalido, TelaTituloMesarioJaRegistrado,
@@ -173,6 +198,7 @@
 COMUM_MESARIO_ESTADOS_SRCS := src/app/comum/comparecimentomesario/estados/cconfirmafimregistromesarios.cpp \
     src/app/comum/comparecimentomesario/estados/cdigitalmesarionaoreconhecida.cpp \
     src/app/comum/comparecimentomesario/estados/cencerraregistromesarios.cpp \
+    src/app/comum/comparecimentomesario/estados/igestordadomesario.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesarioinicial.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesariovotacao.cpp \
     src/app/comum/comparecimentomesario/estados/cgestordadomesariofinal.cpp \
@@ -182,7 +208,7 @@ COMUM_MESARIO_ESTADOS_SRCS := src/app/comum/comparecimentomesario/estados/cconfi
     src/app/comum/comparecimentomesario/estados/ctitulomesariojaregistrado.cpp \
     src/app/comum/comparecimentomesario/estados/ctitulomesariovazio.cpp
 UENUX2_SRCS += $(COMUM_MESARIO_ESTADOS_SRCS)
-# IGestorDadoMesario::StartState and two slots of CPedeDigitalMesario are not reconstructed:
+# a slot of CPedeDigitalMesario (ProcessTick) is not reconstructed:
 # 135-uenux2-comum-mesario-estados-pending.cpp gives the vtables trapping bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/135-uenux2-comum-mesario-estados-pending.o: $(ROOT)/src/units/135-uenux2-comum-mesario-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/135-uenux2-comum-mesario-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/135-uenux2-comum-mesario-estados-pending.cpp -o $(R)

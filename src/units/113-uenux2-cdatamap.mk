@@ -123,24 +123,25 @@
 #
 # Chosen, no evidence names them: Find, Registra, AtualizaMesarioSecao, GetInst, HasInst, QuantidadeMesariosInicio,
 # QuantidadeMesariosFim, s_inst, s_mutex, the CRegistradorMesario m_servico, GetMesario, PertenceSecao, m_registros,
-# m_corrente, m_nome, m_mesariosSecao, m_mesario and m_periodoPresente (the columns of fn 10403 name their roles), m_ano,
-# the four enumerators (from their messages), the paths of cregistradormesario.h and
-# cjustificadordetalhe.h, and cjustificador.cpp as the file of 3743: its use band puts it beside 3741 and 3742, whose
-# callers are in that file, and the band is the only evidence. Find returns the record because 3614 uses that result.
-# For CJustificador: the path of cjustificador.h, m_servico, and the CDataMap as a base, not a member at +0 (the same
-# choice as CRegistradorMesario's). The constructor follows 3743 in the file: band uses 3 runs 3743, 3742 downwards.
-# The lines in cregistradormesario.cpp and cjustificador.cpp are a choice, and each file's records (85; 55, 83 and 104)
-# belong to functions not written; in cregistradormesario.cpp the order is the use bands' where they say (the destructor
-# first, above) and a choice elsewhere.
+# m_corrente, m_nome, m_mesariosSecao, m_mesario and m_periodoPresente (the columns of fn 10403 name their roles),
+# m_ano, the four enumerators (from their messages), the paths of cregistradormesario.h and cjustificadordetalhe.h, and
+# cjustificador.cpp as the file of 3743: its use band puts it beside 3741 and 3742, whose callers are in that file, and
+# the band is the only evidence. Find returns the record because 3614 uses that result. For CJustificador: the path of
+# cjustificador.h, m_servico, and the CDataMap as a base, not a member at +0 (the same choice as CRegistradorMesario's).
+# The constructor follows 3743 in the file: band uses 3 runs 3743, 3742 downwards. The lines in cregistradormesario.cpp
+# and cjustificador.cpp are a choice, and cjustificador.cpp's records (55, 83 and 104) belong to functions not written;
+# cregistradormesario.cpp's (85) is SaveCurrentInternal's throw, written for fn 10337
+# (src/units/135-uenux2-comum-mesario-estados.mk); in cregistradormesario.cpp the order is the use bands' where they say
+# (the destructor first, above) and a choice elsewhere.
 #
 # CDataMap's constructor from a name, IsFim and Reset are written for their users in units 89, 129 and 77
 # (comum::CCandidaturas's constructor 5811; fn 2268, which holds IsFim inline; comum::CParteEleitores::Imprime, fn 11206,
 # which holds Reset and IsFim inline); cdatamap.h's comment says which parts are chosen.
 #
-# Not reconstructed: CRegistradorMesario::SaveCurrentInternal (record 85), which only fn 10337 holds, inlined
-# (IGestorDadoMesario::StartState, unit 135's trap: its callee 1149 has no name), and
-# CJustificador's other members: Justifica and SaveCurrentInternal (records 55 and 83, both held by fn 10590) and 11474,
-# the other data source that holds GetInst's code. 5378 and 5379's other callers are 10337 and 6734.
+# Not reconstructed: CJustificador's other members: Justifica and SaveCurrentInternal (records 55 and 83, both held by
+# fn 10590) and 11474, the other data source that holds GetInst's code. 5378 and 5379's other callers are 10337 (unit
+# 135's IGestorDadoMesario::StartState, written, which also holds CRegistradorMesario::SaveCurrentInternal, record 85,
+# inlined) and 6734.
 #
 # comum::CJustificador's singleton, destructor and current titulo, in cjustificador.cpp after the constructor; the
 # stand-ins of their callers are in src/units/216-uenux2-app-comum-dados-loaders-roots.cpp:

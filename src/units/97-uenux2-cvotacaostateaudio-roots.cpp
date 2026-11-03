@@ -1,10 +1,10 @@
 // Roots: keep unit 97's classes in the skeleton link the way the target keeps them.
 //
-// The three comum::CPedeTituloMesario* states' D0 (3609) and vota::testeteclado::CErroTesteTecladoFim's StartState and
-// destructors (3857, 785, 1560) are reached only through their vtables, each referenced in the target by a constructor
-// inlined into a builder not reconstructed (fn 10388 for the CPedeTituloMesario* states). Taking the vtables' address
-// keeps every slot. None of those direct callers of the destructors is stood in for: the destructors are in the table,
-// so binaryen keeps them out of line. The ten confirmation states' vtables are referenced by their constructors, inlined
+// vota::testeteclado::CErroTesteTecladoFim's StartState and destructors (3857, 785, 1560) are reached only through its
+// vtable, referenced in the target by a constructor inlined into a builder not reconstructed. Taking the vtable's
+// address keeps every slot. None of the direct callers of the destructors is stood in for: the destructors are in the
+// table, so binaryen keeps them out of line. The three comum::CPedeTituloMesario* states' vtables, with their D0 (3609),
+// are stored by their constructors, which fn 10388 (CPedeTituloMesario::StartState, written) holds inlined. The ten confirmation states' vtables are referenced by their constructors, inlined
 // into their GetInst, which slot 16 of the CConfereVotoEmCargo instances calls, and vota::CPedeNulo's and CPedeNominal's
 // by theirs, inlined into their GetInst, inlined into fn 11711 (written).
 //
@@ -44,9 +44,6 @@
 // Everything is declared through asm labels (a constructor returns `this` before binaryen runs), so this TU includes no
 // header and instantiates nothing.
 extern "C" {
-extern const char cpedetitulomesarioinicial_vt[] __asm__("_ZTVN5comum25CPedeTituloMesarioInicialE");
-extern const char cpedetitulomesariofinal_vt[] __asm__("_ZTVN5comum23CPedeTituloMesarioFinalE");
-extern const char cpedetitulomesariovotacao_vt[] __asm__("_ZTVN5comum25CPedeTituloMesarioVotacaoE");
 extern const char cerrotestetecladofim_vt[] __asm__("_ZTVN4vota12testeteclado20CErroTesteTecladoFimE");
 int w97_desligamento(void*, int) __asm__("_ZN4vota32CEstadoComDesligamentoAutomaticoC2Ei");
 int w97_legenda_valida(int, int) __asm__("_ZN4vota13LegendaValidaEht");
@@ -65,9 +62,6 @@ __attribute__((noinline)) int DoisDesligamentos(void* estado, void* outro, int e
 struct SCVotacaoStateAudioRoots {
     SCVotacaoStateAudioRoots()
     {
-        cvotacaostateaudio_sink = cpedetitulomesarioinicial_vt;
-        cvotacaostateaudio_sink = cpedetitulomesariofinal_vt;
-        cvotacaostateaudio_sink = cpedetitulomesariovotacao_vt;
         cvotacaostateaudio_sink = cerrotestetecladofim_vt;
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&DoisDesligamentos);
         cvotacaostateaudio_sink = reinterpret_cast<const void*>(&w97_legenda_valida);

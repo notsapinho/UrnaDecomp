@@ -56,7 +56,7 @@ private:
 // The voter's screen while the poll workers register: the status header (date and time, mode, battery icon), "REGISTRO
 // DE MESÁRIOS" at (320, 150) in a 35-point font and "Siga as instruções no terminal do mesário." at (320, 250) in a
 // 25-point one, centred, colours 2 over 1, as an unnamed api::IForm<api::IScreen> over a clear screen. Target fn 1255
-// is its body, which binaryen keeps once for this function and for comum::IPedeTituloMesario::GetTelaEleitor
+// is its body, which binaryen keeps once for this function and for comum::TelaEleitorRegistroMesarios
 // (ipedetitulomesario.h says why there are two). Its name, its being a free function of comum, and this header's path,
 // beside cregistrarmesarios.cpp, are chosen.
 std::shared_ptr<api::IForm<api::IScreen>> TelaRegistroMesarios();

@@ -30,16 +30,18 @@
 #   target +0x2d local.tee 1 | ours +0x2d local.tee 4`; the record's address and the controllers sit in other locals).
 #   Not explained, as unit 135's 10318 and 10383; its vtable slot needs it, so it stays written.
 # - GetInst, the constructor and the operator's form (TelaMesarioRegistrado) are written from IGestorDadoMesario::
-#   StartState (10337, unit 135's trap), which holds them inlined: the 28-byte object, CAppState's constructor with 2
+#   StartState (10337, unit 135), which holds them inlined: the 28-byte object, CAppState's constructor with 2
 #   (EVENTO_ENTRADA), the vptr, both forms assigned (fn 1255's at +20, then the builder's at +12, a frame of its own),
 #   the builder's buzz (51, 10), the texts @364807, @335481 and @86376 at {1, 1}, {1, 2} and {1, 4}, AddInputControl
-#   and GetInteractiveForm("", true). Nothing in the link calls GetInst, so wasm-ld drops the three: they are compared
-#   with nothing until 10337 is written (docs/how-to-decompile.md step 5).
+#   and GetInteractiveForm("", true). 10337 is written and calls GetInst: it differs in binaryen's local numbers only
+#   (unit 135's fragment has its score), and the rows of the inlined GetInst, constructor and form are among those.
 # - The statics, @1909736 (s_inst, which 10337 loads and stores) and @1909712 (s_mutex, whose address 10337 passes to
-#   the mutex's call): their exit destructors are 10341 and 10340. 10341 reads `unresolved`
-#   (`_ZN5comum18CMesarioRegistrado6s_instE (.bss) has no target symbol`) and 10340 `differs` (the census pairs it with
-#   vota::CEleitorVotouNaoVotou's s_mutex destructor): no target function that is written uses either address, so no
-#   vote names them; they wait for 10337. Their object adds a second local
+#   the mutex's call): their exit destructors are 10341 and 10340. 10337 is named by vtable, which casts no vote, so no
+#   generated line names either object; each takes a hand line in splat/symbol_addrs.txt led by its two readers (10337,
+#   whose inlined GetInst tests and stores the pointer and unlocks the mutex, and the exit destructor), and 10341 and
+#   10340 match with them. Weighed by removal (a copy of the symbol file without the line, the match list without the
+#   row, two scan passes beside a control, then splat-build on the copies): each line carries its destructor. Their
+#   object adds a second local
 #   __cxx_global_array_dtor.5 to the link, so step 9 renamed 10760's match line to the one qualified by its object.
 # Chosen: the files' paths and names, the order of the definitions in each (cmesarioregistrado.cpp as unit 247's
 # cregistrarmesarios.cpp), the class's `final` and its destructor declared first and out of line (as
@@ -48,7 +50,7 @@
 # holds it behind a frame of its own, the sign unit 247's fragment measured for CRegistrarMesarios's form.
 #
 # Not written here: 1937 (unit 98's fragment has the measurement), and the rest of the class's file:
-# IGestorDadoMesario::StartState (10337) is a trap in unit 135's pending file.
+# IGestorDadoMesario::StartState (10337) is unit 135's, written and `differs`.
 NOMEARQUIVOELEITORES_MESARIOREGISTRADO_SRCS := src/app/comum/nomearquivo/cnomearquivoeleitores.cpp \
     src/app/comum/comparecimentomesario/estados/cmesarioregistrado.cpp
 UENUX2_SRCS += $(NOMEARQUIVOELEITORES_MESARIOREGISTRADO_SRCS)

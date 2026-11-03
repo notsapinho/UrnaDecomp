@@ -4,11 +4,14 @@
 #   its record's file (229:84, the ASSERT's), with the code 3409 in api/util/eueasserterror.h; the class head is in
 #   cimprimiridentificacaomesariosfinal.h, the file of the record of GetPrinter (line 41, which fn 12105 holds inlined,
 #   not written).
-# - the libc++ code of the std::sort in comum::ListaArquivosNaoRegistrados (5374, written, not matching: below), in
-#   ccontroladorreconhecimetomesario.cpp: std::__introsort (5373), __insertion_sort_incomplete (5370) and __sort4 (2726)
-#   over std::filesystem::path*, and the comparator (310). 5374 also brings into the link more of libc++.a's
+# - comum::ListaArquivosNaoRegistrados (5374) in ccontroladorreconhecimetomesario.cpp, and the libc++ code of its
+#   std::sort: std::__introsort (5373), __insertion_sort_incomplete (5370) and __sort4 (2726) over
+#   std::filesystem::path*, and the comparator (310). 5374 also brings into the link more of libc++.a's
 #   directory_iterator.o, and ten of its functions match with it (703, 845, 3370, 4784, 4790, 4792, 4794, 5968, 8078,
 #   8080): library code, which no source of ours writes.
+# - comum::CControladorReconhecimentoMesario::GetInst (1149), in the same file, with its constructor inlined and its
+#   statics' exit destructors (10306, 10305), the class head in ccontroladorreconhecimetomesario.h, which says what the
+#   layout and the name rest on.
 #
 # Evidence:
 # - 5385: the record's text names a member and has neither `static` nor `const`; the wasm type has no `this`, which
@@ -18,11 +21,30 @@
 #   most 40 characters of the voter's string at +36 (GetNomeUrna) when that is not empty, else of the one at +24
 #   (GetNome), each in a copy path of its own, so each path has its own substr call.
 # - 5374: it takes the directory from fn 3793 (unit 122's GetPathWsqNaoRegistrado, pathwsq.h), iterates it with
-#   std::filesystem::directory_iterator (fn 3373, libc++'s constructor with no error_code and no options), skips the
-#   entries whose file_type is 2 (directory) and moves each other entry's path().filename() into a vector of 12-byte
-#   elements that its callers (fns 1149, 10451) destroy as strings: a std::vector<std::filesystem::path>, built in the
-#   result. Then it calls __introsort(first, last, 2 * log2(n), true). The comparator copies both arguments' strings and
-#   returns whether the first copy compares greater than the second: a.string() > b.string() over two const paths.
+#   std::filesystem::directory_iterator (fn 3373, libc++'s constructor with no error_code and no options, and fn 3372,
+#   __increment), skips the entries whose file_type is 2 (directory) and moves each other entry's path().filename() into
+#   a vector of 12-byte elements that its callers (fns 1149, 10451) destroy as strings: a
+#   std::vector<std::filesystem::path>, built in the result. Then it calls __introsort(first, last, 2 * log2(n), true).
+#   The comparator copies both arguments' strings and returns whether the first copy compares greater than the second:
+#   a.string() > b.string() over two const paths. The frame says where the loop is: the directory at +12 and the
+#   iterator at +4, below the loop's iterator copy (+24) and the entry's temporaries (+32 to +63), so the loop's locals
+#   are an inlined callee's above the function's own (how-to step 3); the iterator's reference count is raised once and
+#   one more copy is made and destroyed, which reads as a range's begin and end (a reading). Measured in the whole link
+#   (pnpm wasm score, 5374 against ours): a range-for over the iterator, 102 over 505 rows (26 inserted, 12 deleted: the
+#   loop's locals below the function's); std::for_each over begin and end of a named iterator, 126 over 523 (the frame
+#   the target's, a reference copy more); a helper taking the iterator by value, 209 over 519; std::ranges::for_each
+#   over the iterator and a lambda, 14 over 479, all operand-only, then a match at step 9 (scan source `content`). The
+#   comparator's lambda is the function's second now, $_1 for $_0: steps 8 and 9 renamed the names and match lines of
+#   310, 2726, 5370 and 5373.
+# - 1149: CControladorReconhecimentoMesario::GetInst (ccontroladorreconhecimetomesario.h has the evidence). Its
+#   constructor is out of line, as unit 104's singletons' (the frame opens after the new: binaryen inlined it); in the
+#   class it is not tried. 11 over 114 rows before steps 8 and 9, all operand-only (the statics' addresses). No
+#   generated route names 1149 or its statics: it has no record or vptr, the census pairs it with nothing (tier none),
+#   and its one written caller, 10337 (unit 135), is named by vtable, which casts no vote. Its two statics take hand
+#   lines in splat/symbol_addrs.txt, led by their other reader, each one's exit destructor (10306 `f349(p0, 1909960)`,
+#   10305 `f150(1909936)`); with them the content pass matches 1149, 10306 and 10305. Weighed by removal (a copy of the
+#   symbol file without the line, the match list without the rows it may carry, two scan passes beside a control, then
+#   splat-build on the copies): the pointer's line carries 1149 and 10306, the mutex's 1149 and 10305.
 # - Order: inside the use band of 5370, 5373 and 5374 (ledger/ordinals.tsv) and the object, a higher index has the lower
 #   ld_index in build/out/wasm-map/vota_web/names.tsv (5374, 5373, 5370), as docs/how-to-decompile.md step 3 wants. 5385,
 #   in the same band, comes before 5374 in the target, so its source is listed first here, a choice the data allow.
@@ -35,27 +57,20 @@
 #   code 3409 at the same offset on both sides, the message, the record, the typeinfo) and the table slot of the
 #   destructor __cxa_throw takes. It matches.
 #
-# Written, not matching: 5374, 102 over 505 rows (pnpm wasm score against the target, before step 8), 403 over 753
-# before 5821 was written. Its callees 3373 and 3372 (libc++'s directory_iterator constructor and __increment) have one
-# other direct caller in the target, fn 11584 (comum::CGravadorLog's slot 7, not written), and fn 5821 (unit 122's
-# CompactaWsq) passes both by table slot to invoke_ thunks: with 5821 in the link both stay out of line here
-# (names.tsv holds them, from libc++.a's directory_iterator.o), and neither has a target name yet, so 5374 calls two
-# unnamed functions. Measured before 5821 was written, with a stand-in for 11584's two calls and both addresses taken,
-# not kept: 115 over 516 rows (inserted 37, deleted 13). Fn 3793, its first callee, matches as the target's thunk
-# (unit 122's fragment). The rest of the remainder is not explained.
-#
 # Chosen: ListaArquivosNaoRegistrados and its being a free function (it takes no object; a static member of
-# CControladorReconhecimentoMesario would fit as well); its file, by its band's
+# CControladorReconhecimentoMesario would fit as well) declared in the class's header; its file, by its band's
 # neighbours (cluster 748 of src/uenux2/unplaced.cpp names ccontroladorreconhecimetomesario.cpp, from ComparaDigitais's
-# records); the comparator as a lambda and `.string()` for its copies; `continue` over is_directory() and push_back; the
-# class head's access and that it declares nothing else; the enumerator's name, to the record's column; the lines of
-# 5374 (above ComparaDigitais's records at lines 65 and 76) and of GetNomeMesario's first lines; every local's name;
-# the if and the second return around GetNomeMesario's two substr calls, where one ternary over them was not compiled.
-# No other spelling was measured, so no form here is listed as giving the same bytes.
+# records); the comparator and the loop's body as lambdas, `.string()` for the comparator's copies, the lambda's capture
+# and its `if` over is_directory(); GetInst's name and the statics' (the project's singleton), the constructor's member
+# list; the class head's access (CImprimirIdentificacaoMesariosFinal's) and that it declares nothing else; the
+# enumerator's name, to the record's column; the lines of 5374, GetInst, the constructor and the statics (above
+# ComparaDigitais's records at lines 65 and 76) and of GetNomeMesario's first lines; every local's name; the if and the
+# second return around GetNomeMesario's two substr calls, where one ternary over them was not compiled. No other
+# spelling was measured, so no form here is listed as giving the same bytes.
 #
 # Not written, and what each waits for:
 # - CControladorReconhecimentoMesario::ComparaDigitais (5372, records 65 and 76): not tried; its callers are fns 3614
-#   and 10451.
+#   and 10451, which pass it 1149's result.
 # - 5376, a hinted emplace into a std::map of a string key and a 68-byte value: its one caller, fn 10451, calls it twice
 #   and holds the instance's only use.
 #
@@ -63,7 +78,7 @@
 COMPARECIMENTOMESARIO_SRCS := src/app/comum/comparecimentomesario/estados/cimprimiridentificacaomesariosfinal.cpp \
     src/app/comum/comparecimentomesario/ccontroladorreconhecimetomesario.cpp
 UENUX2_SRCS += $(COMPARECIMENTOMESARIO_SRCS)
-# the functions' callers (fns 1149, 10451 and 12105) are not reconstructed:
+# the functions' callers not reconstructed (fns 3614, 5382, 10316, 10451 and 12105):
 # 214-uenux2-app-comum-comparecimentomesario-roots.cpp stands for them
 $(ROOT)/$(APP)/214-uenux2-app-comum-comparecimentomesario-roots.o: $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/214-uenux2-app-comum-comparecimentomesario.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/214-uenux2-app-comum-comparecimentomesario-roots.cpp -o $(R)

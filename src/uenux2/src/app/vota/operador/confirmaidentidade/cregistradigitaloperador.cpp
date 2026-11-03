@@ -1,7 +1,7 @@
 // vota::CRegistraDigitalOperador's file, the path its records give:
 // /home/rubio/tse/uenux2/src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp. The reconstruction's
-// note, not TSE's text: the records fix StartState's lines (95 and 98); FinishState's (104 and 105), ProcessTick's (143
-// to 145) and BiometriaMesarioPresenteNosEleitores's (328 and 371) hold no code of ours, those members not written.
+// note, not TSE's text: the records fix StartState's lines (95 and 98) and FinishState's (104 and 105); ProcessTick's
+// (143 to 145) and BiometriaMesarioPresenteNosEleitores's (328 and 371) hold no code of ours, those members not written.
 // Every other line is a choice. comum::md::CComparecimentoMesarioPK's constructor (target fn 2738) is at chosen lines
 // after the records. src/units/221-uenux2-app-comum-constructors.mk has the notes on both classes.
 #include "app/vota/operador/confirmaidentidade/cregistradigitaloperador.h"
@@ -76,8 +76,12 @@ void CRegistraDigitalOperador::StartState()
     m_pNextState = this;
 }
 
-// (original lines 102-107: content not recovered)
-#line 108
+void CRegistraDigitalOperador::FinishState()
+{
+    api::CPolySingleton<api::IFingerScanner>::instance().Slot7(0);
+    api::CPolySingleton<api::IFingerScanner>::instance().Slot6();
+}
+
 void CRegistraDigitalOperador::ProcessInput()
 {
     if (m_form->Read() == api::INPUT_CORRIGE) {

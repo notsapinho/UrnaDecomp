@@ -41,9 +41,6 @@
 // f5376 · 343 B · unmatched · placement: link order · name unknown
 // void f5376(i32, i32, i32, i32, i32) { ... }
 
-// f5374 · 988 B · unmatched · placement: link order · name unknown
-// void f5374(i32) { ... }
-
 // link-order cluster 755 · uses=2 · neighbours' file uenux2/src/app/vota/operador/confirmaidentidade/cpededigital.cpp
 
 // f5400 · 82 B · unmatched · placement: link order · name unknown
@@ -523,29 +520,6 @@
 
 // component api
 
-// link-order cluster 274 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f10377 · 12 B · unmatched · placement: link order · name unknown
-// ? f10377(i32) { ... }
-
-// f10374 · 12 B · unmatched · placement: link order · name unknown
-// void f10374(i32) { ... }
-
-// f10370 · 12 B · unmatched · placement: link order · name unknown
-// ? f10370(i32) { ... }
-
-// f10369 · 12 B · unmatched · placement: link order · name unknown
-// void f10369(i32) { ... }
-
-// f10368 · 454 B · unmatched · placement: link order · name unknown
-// void f10368(i32, i32) { ... }
-
-// f10363 · 12 B · unmatched · placement: link order · name unknown
-// ? f10363(i32) { ... }
-
-// f10362 · 12 B · unmatched · placement: link order · name unknown
-// void f10362(i32) { ... }
-
 // link-order cluster 348 · uses=1 · neighbours' file uenux2/src/api/gui/audiocollector.cpp
 
 // f10820 · 830 B · unmatched · placement: link order · name unknown
@@ -601,11 +575,6 @@
 
 // f5338 · 964 B · unmatched · placement: link order · name unknown
 // void f5338(i32, i32, i32) { ... }
-
-// link-order cluster 752 · uses=2 · neighbours' file uenux2/src/api/gui/cdatatextfmt.cpp
-
-// f5387 · 454 B · unmatched · placement: link order · name unknown
-// void f5387(i32, i32) { ... }
 
 // link-order cluster 758 · uses=2 · neighbours' file uenux2/src/api/gui/crhvoicetexttospeech.cpp
 
