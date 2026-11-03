@@ -181,13 +181,16 @@
 #
 # CIdentidadeInvalida::ProcessInput (10667, slot 7) is written in cidentidadeinvalida.cpp: `f2295(p0, 5, <its Read()
 # record>)`, a thunk into the body binaryen merges from five states' slot 7 that go to CPedeIdentidade::GetInst's state
-# on one key (2295's callers 10461, 10604, 10667, 10709 and 10757: ledger/callgraph.tsv). Our link forms 2295 from
-# 10667, unit 278's 10461 and unit 283's 10604 (vota::CEleitorImpedidoJustificarVotoCPF::ProcessInput, slot 7 of the
-# vtable @1589588 in ledger/vtables.json), each written as `if (m_form->Read() == <key>) m_pNextState =
-# &CPedeIdentidade::GetInst();` (wasm-objdump -d of the link: our 2295's three callers are those three), and the four
-# match. Each thunk passes its own TU's record of Read() (`readings: address same-content`); the census pairs each
-# target slot with its own class's member, so 10604's line names that member: before unit 283's file held it, the
-# census paired 10604 with our 10667, the same thunk over the same key, and the line carried 10667's symbol.
+# on one key (2295's callers 10461, 10604, 10667, 10709 and 10757: ledger/callgraph.tsv). Our link forms 2295 from the
+# same five: 10667, unit 278's 10461, unit 283's 10604 (vota::CEleitorImpedidoJustificarVotoCPF::ProcessInput, slot 7
+# of the vtable @1589588 in ledger/vtables.json) and unit 277's 10709 and 10757, each written as `if (m_form->Read() ==
+# <key>) m_pNextState = &CPedeIdentidade::GetInst();` (wasm-objdump -d of the link: our 2295's five callers are those
+# five), and the six match. Each thunk passes its own TU's record of Read() (`readings: address same-content`), and
+# step 8 names each slot by its class's vtable, so each line names its own class's member. The census's pairs among the
+# five thunks are a tie and move with the link (at one landing it paired 10604 with our 10709's body): before unit
+# 283's file held 10604, the census paired it with our 10667, the same thunk over the same key, and its line carried
+# 10667's symbol. 10709 and 10757 matched once 10461's key, 9 against the others' 5, made binaryen pass the key as a
+# parameter, as the target's 2295 does.
 #
 # CVerificaDadoEleitor::GetInst (2735) is written in cverificadadoeleitor.cpp with the constructor and the statics:
 # s_inst @1909204 and s_mutex @1909180 (exit destructors 10446, `f389(p0, 1909204)`, and 10445), a new of 20 bytes,

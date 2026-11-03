@@ -140,8 +140,10 @@ public:
     void MarcaInicioAquisicao();
     // Records cestadogeralvota.cpp:131 and :136 (8086, 8087); fn 4454 holds it behind a 48-byte prologue.
     void MarcaUltimoVoto();
+    // Records cestadogeralvota.cpp:108 and :113 (8084, 8085); fn 10734 holds it behind a 48-byte prologue.
+    void MarcaFimAquisicao();
 
-    // (original lines 147-155: content not recovered)
+    // (original lines 149-155: content not recovered)
 #line 156
     const api::CDateTime& GetDtHrEmissaoBU() const
     {

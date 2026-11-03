@@ -89,10 +89,10 @@ __attribute__((noinline)) unsigned long LeDois(const std::string& primeiro, cons
     return std::stoul(primeiro) + 3 * std::stoul(segundo);
 }
 
-// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 10209, 10404, 10443, 10447, 10590,
-// 10689, 10718, 10721, 10731, 10734 and 10751 (in the link: 2295, the body binaryen merges from 10667 and 10461, 10452
-// and 10626, units 161, 221 and 278; 10217, 10435, 10527, 10646 and 10762, units 165, 152, 281, 104 and 119; and 10588
-// and 10624, units 174's and 161's).
+// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 10209, 10404, 10443, 10447, 10590 and
+// 10689 (in the link: 2295, the body binaryen merges from the five states' slot 7, 10452 and 10626, units 161, 221,
+// 278, 283 and 277; 10217, 10435, 10527, 10646 and 10762, units 165, 152, 281, 104 and 119; 10588 and 10624, units
+// 174's and 161's; and 10718, 10721, 10731, 10734 and 10751, unit 277's).
 __attribute__((noinline)) int PedeIdentidade()
 {
     return w161_pede_identidade() + 89;

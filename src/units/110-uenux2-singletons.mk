@@ -275,8 +275,9 @@
 #   rule whose slot 2 (GetTipo) is 3 or the argument, calling the slot twice (the bytes); with none it throws code 8108
 #   with std::format over the type packed as an int (type code 3, docs/reference/facts/reading.md R13), else it calls the
 #   rule's Valida (unit 178).
-# - EhValida (fn 2803, callers 2225, 10313, 10420 and 10721, all in the link but 10721) is the same search with false
-#   for no rule and the rule's EhValida (fn 3723) else. It matches; unit 178's roots keep it, standing for 10721.
+# - EhValida (fn 2803, callers 2225, 10313, 10420 and 10721, all in the link) is the same search with false for no rule
+#   and the rule's EhValida (fn 3723) else. It matches; unit 178's stand-ins for 10721 went once 10721 (unit 277) was in
+#   the link.
 # Chosen: EhValida's name, the search written as a lambda in each member (a shared helper was not tried), Valida's line
 # but its throw's and EhValida's after it, and the three include lines it adds with a blank one, which take four of the
 # blank lines above the statics (lines 11 to 22 stay unknown).

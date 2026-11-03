@@ -26,26 +26,6 @@
 // f10530 · 701 B · unmatched · placement: link order · name unknown
 // void f10530(i32, i32) { ... }
 
-// link-order cluster 330 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/ciniciafinalizacao.cpp
-
-// f10706 · 1498 B · unmatched · placement: link order · name unknown
-// void f10706(i32) { ... }
-
-// link-order cluster 334 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cpedetituloencerramento.cpp
-
-// f10722 · 974 B · unmatched · placement: link order · name unknown
-// void f10722(i32) { ... }
-
-// link-order cluster 342 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/chabilitaaudiomanualmente.cpp
-
-// f10751 · 370 B · unmatched · placement: link order · name unknown
-// void f10751(i32) { ... }
-
-// link-order cluster 343 · uses=1 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/chabilitacaoaudionaopermitida.cpp
-
-// f10754 · 49 B · unmatched · placement: link order · name unknown
-// void f10754(i32) { ... }
-
 // link-order cluster 697 · uses=2
 
 // f4633 · 675 B · unmatched · placement: link order · name unknown
@@ -201,14 +181,6 @@
 
 // f3258 · 17 B · unmatched · placement: link order · name unknown
 // void f3258(i32, i32) { ... }
-
-// link-order cluster 976 · uses=3 · neighbours' file uenux2/src/app/vota/operador/leidentidade/cpedeidentidade.cpp
-
-// f3632 · 856 B · unmatched · placement: link order · name unknown
-// ? f3632() { ... }
-
-// f3631 · 1120 B · unmatched · placement: link order · name unknown
-// ? f3631() { ... }
 
 // link-order cluster 978 · uses=3 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
 
@@ -739,11 +711,6 @@
 
 // f6737 · 878 B · unmatched · placement: link order · name unknown
 // void f6737(i32) { ... }
-
-// link-order cluster 944 · uses=3
-
-// f3333 · 1260 B · unmatched · placement: link order · name unknown
-// void f3333() { ... }
 
 // link-order cluster 962 · uses=3 · neighbours' file ecourna/api/io/cfile.cpp
 

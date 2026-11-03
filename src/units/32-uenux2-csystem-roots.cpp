@@ -15,8 +15,8 @@
 // sites and stands for 7160 and 6737 (1487 is in the link, unit 168).
 // CopyFile (target fn 378) is called directly by 15 target functions (1836, 2725, 3333, 4657, 4682, 4687, 5371, 5873,
 // 5874, 6737, 7174, 11630, 11631, 11632 and 12098); 5873, 5874, 11630, 11631 and 11632 are in the link (units 160 and
-// 122), and so are vota::CSincronizaVota's 1836, 4657, 4682 and 4687 (fragment 205): CopiaDuas stands for the other
-// six. Every target
+// 122), and so are vota::CSincronizaVota's 1836, 3333, 4657, 4682 and 4687 (fragment 205): CopiaDuas stands for the
+// other five. Every target
 // caller passes the same value for one of its two bools, which the target's type (i32 i32 i32) has folded, and 0 or 1
 // for the other (2725 passes 1, the rest 0): CopiaDuas passes the folded one as 1 at both sites, the other as 0 and 1.
 // Rename has no target index of its own: binaryen inlines it into its one caller, fn 11584 (comum::CGravadorLog's slot

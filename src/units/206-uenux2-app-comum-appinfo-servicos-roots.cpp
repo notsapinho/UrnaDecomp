@@ -1,11 +1,12 @@
 // Roots: keep what unit 206 reaches in the skeleton link the way the target reaches it.
 //
 // comum::CServicoEstadoGeral's constructor (target fn 1941) has five direct callers in the target, fns 2273, 3333,
-// 3897, 10243 and 11572. 3897, binaryen's merge of the three derived classes' constructors, is in the link; the other
-// four are not. UmGeral and DoisGerais stand for those four, with three call sites, each reading the returned object as
+// 3897, 10243 and 11572. 3897, binaryen's merge of the three derived classes' constructors, is in the link, and so is
+// 3333 (unit 205); the other three are not. UmGeral and DoisGerais stand for those three, with three call sites, each
+// reading the returned object as
 // every target caller does (2273 and 11572 pass it to fn 3791, 3333 and 10243 to the save, fns 3592 and its slot 422),
 // and passing the origin as a variable and as both constants, so dead-argument elimination folds nothing in. Their
-// bodies add offsets, so neither is a target function's. They go when those four callers are in the link.
+// bodies add offsets, so neither is a target function's. They go when those three callers are in the link.
 //
 // CServicoEstadoGeralVota's, -Gap's and -SA's constructors (thunks 3787, 5812 and 11566 of fn 3897) fill table slots
 // 438, 431 and 434, which fn 10212 (mock/app/comum/cappinfobuilder.cpp, written, not in the link) passes to invoke_*;
@@ -38,13 +39,13 @@ namespace {
 
 const void* volatile r206_sink;
 
-// stands for fns 2273, 3333, 10243 and 11572, with DoisGerais
+// stands for fns 2273, 10243 and 11572, with DoisGerais
 __attribute__((noinline)) char* UmGeral(char* destino, int origem)
 {
     return r206_geral(destino + 8, origem) + 4;
 }
 
-// stands for fns 2273, 3333, 10243 and 11572, with UmGeral
+// stands for fns 2273, 10243 and 11572, with UmGeral
 __attribute__((noinline)) char* DoisGerais(char* destino)
 {
     char* externa = r206_geral(destino + 16, 1);

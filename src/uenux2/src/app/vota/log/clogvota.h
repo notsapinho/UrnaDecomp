@@ -86,6 +86,10 @@
 #include "app/comum/log/ieventoslog.h"
 #include "app/vota/euevotaerror.h"
 
+namespace api {
+class CDateTime;
+} // namespace api
+
 namespace vota {
 
 class CLogVota : public comum::IEventosLog {
@@ -238,6 +242,29 @@ public:
     void LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade);
 
     void LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento);
+
+    // The closing of the voting (app/vota/operador/outrasopcoes/): each held inlined by its one caller, which calls
+    // GetInst before the member's own stack frame opens. LogaEncerramentoAntesDoHorario by vota::CIniciaFinalizacao's
+    // StartState (fn 10706): "Encerramento só pode ser solicitado após as {} horas" with the time of its argument
+    // formatted "hh:mm:ss" (api::CTime::Format, fn 779), api::CLoga::loga (fn 433) with +4 and severity 2.
+    // LogaTodosEleitoresVotaram by vota::CPerguntaFilaEleitorVazia::ProcessInput (fn 10713): "Todas as pessoas presentes
+    // já votaram? {}" with "SIM" or "NÃO", a char array formatted as a string (its length found with memchr, fn 287, up
+    // to 4), fn 433 with severity 1. LogaTituloDigitadoEncerramento and LogaEncerramentoCancelado by
+    // vota::CPedeTituloEncerramento::ProcessInput (fn 10721): "Título digitado para encerramento: {}" with the title (fn
+    // 433, severity 1), and "Operador cancelou o encerramento da votação" through loga (fn 233).
+    // LogaEncerramentoAbortado and LogaEncerramentoConfirmado by vota::CConfirmaEncerramento::ProcessInput (fn 10734):
+    // "Procedimento de encerramento abortado" and "... confirmado", fn 433 with severity 2 and 1.
+    // LogaAudioAtivadoPeloMesario and LogaAudioDesativadoPeloMesario by vota::CHabilitaAudioManualmente::StartState (fn
+    // 10751): "Áudio ativado pelo mesário" and "Áudio desativado pelo mesário" through loga (fn 233). Their names, their
+    // parameters' types and their place here and in clogvota.cpp are chosen: they have no index to order.
+    void LogaEncerramentoAntesDoHorario(const api::CDateTime& dataHora);
+    void LogaTodosEleitoresVotaram(bool votaram);
+    void LogaTituloDigitadoEncerramento(const std::string& titulo);
+    void LogaEncerramentoCancelado();
+    void LogaEncerramentoAbortado();
+    void LogaEncerramentoConfirmado();
+    void LogaAudioAtivadoPeloMesario();
+    void LogaAudioDesativadoPeloMesario();
 
 private:
     CLogVota();
