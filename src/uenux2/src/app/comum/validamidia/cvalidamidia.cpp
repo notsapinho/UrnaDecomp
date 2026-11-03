@@ -1,4 +1,4 @@
-// comum::impl::CValidaMidia's slots 2 to 7 and 9 (target fns 11173 to 11168 and 11166), with
+// comum::impl::CValidaMidia's slots 2 to 9 (target fns 11173 to 11166), with
 // EhValida (slot 2) its key function (cvalidamidia.h), and comum::impl::IValidaMidia::GetInst (target fn 5575). The
 // reconstruction's own note: the file's one record is GetInst's, line 182 column 76, the closing parenthesis of
 // POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO's invocation (api/pattern/polysingletongetinst.h;
@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "api/pattern/polysingletongetinst.h"
+#include "api/util/csystem.h"
 #include "api/util/uedebug.h"
 #include "app/comum/cpath.h"
 #include "app/comum/validamidia/cfabricaconteudomidiastart.h"
@@ -28,10 +29,10 @@ SResultadoValidacao CValidaMidia::Valida(EAplicativosDeUrna aplicativo, EUrnaTur
         return {false, 4};
     }
 
-    if ((aplicativo == eAplicativo07 || aplicativo == eAplicativo08 || aplicativo == eAplicativo09 ||
+    if (turno != TURNO_1 && turno != TURNO_2 &&
+        (aplicativo == eAplicativo07 || aplicativo == eAplicativo08 || aplicativo == eAplicativo09 ||
          aplicativo == eAplicativo10 || aplicativo == eAplicativo16 || aplicativo == eAplicativo17 ||
-         aplicativo == eAplicativo15) &&
-        turno != TURNO_1 && turno != TURNO_2) {
+         aplicativo == eAplicativo15)) {
         return {false, 5};
     }
 
@@ -72,12 +73,18 @@ bool CValidaMidia::ContemArquivo(const std::string& arquivo)
     return ConteudoValido(CPath::GetPathMR(), esperados);
 }
 
+bool CValidaMidia::ContemApenasArquivosResultado()
+{
+    const std::vector<std::string> esperados = {"#regex#[ost][0-9]{5}[a-z]{2}[0-9]{13}-[a-z]+\\.[a-z]+"};
+    return api::DiretorioContemApenas(CPath::GetPathMR(), esperados);
+}
+
 void CValidaMidia::LimpaMidia()
 {
     RemoveArquivosDeSistema(CPath::GetPathMR());
 }
 
-// (original lines 80-181: content not recovered)
+// (original lines 87-181: content not recovered)
 #line 182
 POLYSINGLETON_IMPL_GET_INST_COM_INSTANCIA_PADRAO(IValidaMidia, CValidaMidia)
 

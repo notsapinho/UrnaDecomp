@@ -21,8 +21,10 @@
 //   and 5 on its first two exits); reading its arguments as that function's is a reading;
 // - slots 4, 6 and 7 return ConteudoValido's verdict for the medium, slot 7 over the one name it takes (a
 //   std::string), slot 5 over a name it formats from its six arguments (the format's argument types are char,
-//   unsigned, string, then unsigned three times; the char is the last parameter); slot 8 takes nothing and returns a
-//   word; slot 9 takes nothing and returns nothing. bool for the words the slots return is chosen.
+//   unsigned, string, then unsigned three times; the char is the last parameter); slot 8 takes nothing and returns
+//   the word api::DiretorioContemApenas (csystem.cpp) gives for the medium and the result-file pattern of slot 6 (a
+//   one-name list): every file a result file, no subdirectory (its name, ContemApenasArquivosResultado, is chosen
+//   from that); slot 9 takes nothing and returns nothing. bool for the words the slots return is chosen.
 // SResultadoValidacao is that result: its name and its members' names are chosen; the byte's being a bool and the
 // word's being an int are the plainest types of those widths.
 // GetInst (fn 5575, record `static IValidaMidia &comum::impl::IValidaMidia::GetInst()`, cvalidamidia.cpp:182) is
@@ -46,7 +48,7 @@ public:
                                  unsigned int numero, char fase) = 0;
     virtual bool ContemArquivosResultado() = 0;
     virtual bool ContemArquivo(const std::string& arquivo) = 0;
-    virtual int Slot8() = 0;
+    virtual bool ContemApenasArquivosResultado() = 0;
     virtual void LimpaMidia() = 0;
 
     static IValidaMidia& GetInst();
