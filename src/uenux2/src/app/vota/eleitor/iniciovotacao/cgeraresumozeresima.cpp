@@ -1,5 +1,7 @@
 #include "app/vota/eleitor/iniciovotacao/cgeraresumozeresima.h"
 
+#include "app/comum/appinfo/cappinfo.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/eleitor/iniciovotacao/cimprimindozeresima.h"
 
 namespace vota {
@@ -25,6 +27,12 @@ std::mutex CGeraResumoZeresima::s_mutex;
 comum::CAppState* CGeraResumoZeresima::GetProximoEstado()
 {
     return &CImprimindoZeresima::GetInst();
+}
+
+void CGeraResumoZeresima::AposGeracao()
+{
+    comum::CAppInfo::GetInst().GetVota().SetEstadoVota(comum::EAVZERESIMAGERADA);
+    CSincronizaVota::SincronizaEstadoGeralVota();
 }
 
 } // namespace vota

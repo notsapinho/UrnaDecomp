@@ -102,8 +102,8 @@
 #   count a TQtdImpresso, an int or bound to a const reference: 20 over 74 (2 inserted, 2 deleted: clang adds the extras
 #   first).
 # - The roots give each two call sites: 7174 (vota::impl::CSincronismoVotoEleitor's slot 2) calls 3288 and 3290 three
-#   times each, 12081 and 12974 call 4582; none is written. votadefs.cpp includes app/comum/dados/cconfiguracaoeleicao.h,
-#   which reaches Boost, hence the include path on its object.
+#   times each, 12081 and 12974 call 4582; 7174 and 12974 are not written (12081 is since, unit 104). votadefs.cpp
+#   includes app/comum/dados/cconfiguracaoeleicao.h, which reaches Boost, hence the include path on its object.
 #
 # vota::CriaArquivoImprimindo (fn 1488, 405 B) and vota::RemoveArquivoImprimindo (fn 1487, 587 B), above EhTreinamento
 # in votadefs.cpp, with vota::ExisteArquivoImprimindo between them, which has no target index of its own. The marker

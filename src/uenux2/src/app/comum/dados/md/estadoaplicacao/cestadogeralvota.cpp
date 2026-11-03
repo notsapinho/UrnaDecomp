@@ -63,4 +63,14 @@ void CEstadoGeralVota::MarcaUltimoVoto()
     ++m_comparecimento;
 }
 
+void CEstadoGeralVota::SetEstadoVota(EEstadoVota estadoVota)
+{
+    m_estadoVota = estadoVota;
+}
+
+void CEstadoGeralVota::SetEstadoEncerramento(EEstadoEncerramento estadoEncerramento)
+{
+    m_estadoEncerramento = estadoEncerramento;
+}
+
 } // namespace comum::md::estadoaplicacao

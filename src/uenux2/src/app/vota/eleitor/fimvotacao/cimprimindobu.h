@@ -25,16 +25,20 @@ enum PrintMessageMode {
 
 // vota::CImprimindoBU (RTTI: si_class of comum::CAppState; vtable @1541292 [244, 387, 12078, 7480, 1661, 218, 425,
 // 12077, 425]): it overrides StartState (slot 2, fn 12078, records lines 70 and 71) and ProcessInput (slot 7, fn
-// 12077), both pending: StartState calls fns 1127 and 4551 and ImprimeBU (fn 2890) and reads a .bss flag with no name,
-// ProcessInput calls fns 491 (unit 205's now) and 3701. ImprimeBU is static by its records' text (`static void
-// vota::CImprimindoBU::ImprimeBU(uebyte, PrintMessageMode)`, lines 111 and 114), and public:
-// CEmitirMaisBU::ProcessInput (fn 12081) and CImprimirBUOutrasObrigatorias::StartState (fn 12065) call it too. The
-// destructors are the bodies the states over one std::shared_ptr at +12 share (fns 244 and 387): final, and out of line
-// (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn 5986) keeps the object in a static std::unique_ptr
-// (@1833652, destroyed at exit by fn 12080) under a static std::mutex (@1833628, by fn 12079), and builds it as the
-// base's constructor with 2 and, at +12, a copy of CTelasVota::GetInst()'s member at +100, the form. Chosen: the
-// member's name and its type (CTelasVota's members' type, which ctelasvota.h chooses), the names GetInst, s_inst and
-// s_mutex, the destructor declared first. This header's path is chosen, beside the .cpp the records name.
+// 12077): both print the first copy, a sequence each holds inlined (fns 1127, 2890 and 4551 between two reads of
+// vota::CSincronizaVota::s_urnaDesligando, then the form's slot 2), written once as the private ImprimePrimeiraVia, its
+// name chosen; ProcessInput reprints on api::INPUT_CORRIGE, and on INPUT_CONFIRMA counts the BU (fn 3701), sets the
+// vote's state, saves it (fn 491) and goes, in a voter training (fn 697), to vota::CEmitirMaisBU (fn 3879) with the
+// vote closed (EAVENCERRADA, EAEFIMDOSTRABALHOS), else to vota::CGravaResultado (fn 6037) with EAVGRAVARRESULTADOS.
+// ImprimeBU is static by its records' text (`static void vota::CImprimindoBU::ImprimeBU(uebyte, PrintMessageMode)`,
+// lines 111 and 114), and public: CEmitirMaisBU::ProcessInput (fn 12081) and CImprimirBUOutrasObrigatorias::StartState
+// (fn 12065) call it too. The destructors are the bodies the states over one std::shared_ptr at +12 share (fns 244 and
+// 387): final, and out of line (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn 5986) keeps the
+// object in a static std::unique_ptr (@1833652, destroyed at exit by fn 12080) under a static std::mutex (@1833628, by
+// fn 12079), and builds it as the base's constructor with 2 and, at +12, a copy of CTelasVota::GetInst()'s member at
+// +100, the form. Chosen: the member's name and its type (CTelasVota's members' type, which ctelasvota.h chooses), the
+// names GetInst, s_inst and s_mutex, the destructor declared first. This header's path is chosen, beside the .cpp the
+// records name.
 class CImprimindoBU final : public comum::CAppState {
 public:
     virtual ~CImprimindoBU() override;
@@ -49,6 +53,8 @@ public:
 
 private:
     CImprimindoBU();
+
+    void ImprimePrimeiraVia();
 
     static std::mutex s_mutex;
     static std::unique_ptr<CImprimindoBU> s_inst;

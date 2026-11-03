@@ -155,7 +155,44 @@
 #   throws). StartState is the class's key function, so cemitirmaisbu.cpp's object emits CEmitirMaisBU's vtable now, no
 #   longer the pending object. Chosen: `using namespace comum;`, which lets the texts spell comum's EAVENCERRADA and
 #   EAEFIMDOSTRABALHOS unqualified, the local's name being the texts'; StartState's first line, 42, below the
-#   definitions written before it; ProcessInput's record line, 64, stays blank.
+#   definitions written before it.
+# - vota::CInicioZeresima::StartState (fn 11924, in ciniciozeresima.cpp after the statics, lines a choice): the vote's
+#   state EAVAGUARDAHORAZERESIMA (51) through comum::CAppInfo::GetInst().GetVota() (fns 185, 261) and
+#   CEstadoGeralVota::SetEstadoVota (unit 169's fragment) and vota::CSincronizaVota::SincronizaEstadoGeralVota (fn
+#   491), then CQuerImprimirZeresima::GetInst (fn 5957) in a voter training (comum::CAppInfo::EhTreinamentoEleitor,
+#   fn 697), else CConfirmaImpressaoZeresima::GetInst (fn 5959). 6 over 18 rows, operand-only. It is the class's key
+#   function now, so ciniciozeresima.cpp's object emits CInicioZeresima's vtable, no longer the pending object.
+# - vota::CEmitirMaisBU::ProcessInput (fn 12081, record cemitirmaisbu.cpp 64:23). It copies CTelasVota's +196 (the form
+#   GetTelaEmitirMaisBU returns by value) and reads it. On api::INPUT_CONFIRMA (9): GetQuantidadeMaximaBUsAdicionais (fn
+#   4582, unit 168); the form's input fields (GetEntradas), and vota::EUeVotaError 9371 "Era esperado pelo menos um
+#   input" (ledger/strings.tsv 19402, the name chosen, app/vota/euevotaerror.h) when there is none, at 64:23 (lines 61
+#   and 62 blank, a chosen layout that puts the throw there); a copy of the first field's text, and when it is empty
+#   LogaMesarioNaoSolicitouViasAdicionais (fn 4557) and no change of state; else
+#   ecourna::api::util::CStringUtils::ToByte (fn 1142) on a std::string built from its c_str(), a CLogVota member
+#   binaryen inlines (below), and over the maximum LogaQtdViasAdicionaisExcedeMaximo (fn 4556), slot 2 of a copy of
+#   CTelasVota's +204 (ctelasvota.h's GetTelaLimiteViasAdicionais, by value as GetTelaEmitirMaisBU, its name chosen),
+#   api::CSystem::Dorme(3000), LogaMesarioIndagadoQtdViasAdicionais (fn 4563) and the form's slot 2; within it
+#   api::CFormStack<api::IScreen>::Remove (fn 5987) on the form, then per copy, while
+#   vota::CSincronizaVota::s_urnaDesligando is clear (else it returns), the copy number GetQtdBU() + 1 of the const
+#   comum::CAppInfo's GetVota (fn 903, GetInst called once before the loop), LogaImprimindoRelatorio (fn 1127),
+#   CImprimindoBU::ImprimeBU (fn 2890, mode 0), IncrementaQtdBU (fn 3701) on the non-const GetVota (fn 261) and fn 491,
+#   and CMostraQRCodeBU::GetInst (fn 2888) as the next state. On INPUT_CORRIGE (5) fn 4557 and CMostraQRCodeBU. The
+#   inlined member, vota::CLogVota::LogaSolicitadaEmissaoViasAdicionais(uebyte), formats "Solicitada a emissão de [{}] "
+#   (ledger/strings.tsv 443494) with the count (argument code 6, an unsigned) into a named const std::string, and passes
+#   it plus "via adicional" (156552) or "vias adicionais" (72051, the tail of 4563's text at 72014) to IEventosLog::loga
+#   (fn 233): operator+ on the named string builds a new one with both parts copied, as 12081 does inline. Its name, its
+#   parameter's type and its place in clogvota.cpp (after LogaMesarioIndagadoHorarioUrna and the members unit 156 adds
+#   there) are chosen. The order of the objects decided the locals (docs/reference/facts/codegen.md C4): with
+#   cemitirmaisbu.cpp in this list, ahead of clogvota.cpp, 12081 scored 199 over 717 rows (13 inserted, 13 deleted), the
+#   target's 703 instructions and 16 locals with the locals numbered otherwise (binaryen gave the count ToByte returns a
+#   local of its own); the CORRIGE case written first, there, 219 over 725 (21 inserted, 21 deleted). A copy of link.cmd
+#   with cemitirmaisbu.cpp.o right after clogvota.cpp.o gave 59 over 704 rows, operand-only (calls, data, a table slot
+#   of std::format's buffer, the exception's destructor slot and the flag's .bss address). So cemitirmaisbu.cpp moved to
+#   unit 116's list, right after clogvota.cpp (src/units/README.md "Names"): that link's wasm is the copy's, sha256
+#   c66910426504aa7605ea94fb2c7c9ce7dac12aa83103b9e2393d416bd1157e02. Its functions stay this unit's (GetInst 3879, the
+#   statics' exit destructors 12083 and 12084, StartState 12082 and ProcessInput 12081). Chosen: the locals' names
+#   (tela, maximo, entradas, texto, quantidade, appInfo, via), the uebyte loop counter, the case order and the empty
+#   default.
 # - vota::CQuerReimprimirZeresima::StartState (fn 11849, record cquerreimprimirzeresima.cpp:45:15): when
 #   comum::CRdvVota::GetInst().Comparecimento() (fns 555, 1269) is not 0 it logs "Erro na verificação do comparecimento"
 #   (ledger/strings.tsv 125479, which only 11849 loads) through vota::CLogVota::LogaErroVerificacaoComparecimento, a
@@ -259,7 +296,6 @@
 APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
     src/app/vota/eleitor/fimvotacao/cgravaresultado.cpp \
-    src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp \
     src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp \
     src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp \
     src/app/vota/eleitor/fimvotacao/ciniciobu.cpp \

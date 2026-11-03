@@ -6,9 +6,14 @@
 
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/dados/cconfiguracaoeleicao.h"
+#include "app/comum/dados/crdvvota.h"
+#include "app/vota/comum/csincronizavota.h"
+#include "app/vota/eleitor/caguardamensagem.h"
 #include "app/vota/eleitor/comum/ctelasvota.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
+#include "app/vota/operador/cthreadoperador.h"
 
 namespace vota {
 
@@ -48,5 +53,42 @@ CInicioVotacao& CInicioVotacao::GetInst()
 
 std::unique_ptr<CInicioVotacao> CInicioVotacao::s_inst;
 std::mutex CInicioVotacao::s_mutex;
+
+namespace {
+
+void IniciaVotacao()
+{
+    if (comum::CRdvVota::GetInst().Comparecimento() == 0) {
+        comum::CAppInfo::GetInst().GetVota().MarcaInicioAquisicao();
+        CSincronizaVota::SincronizaEstadoGeralVota();
+        CTelasVota::GetInst().GetTelaAguardaEleitor()->Slot2();
+    } else {
+        CTelasVota::GetInst().GetTelaAguardaProximoEleitor()->Slot2();
+    }
+    CThreadOperador::GetInst().GetMensagens().Post(8);
+}
+
+} // namespace
+
+void CInicioVotacao::StartState()
+{
+    if (api::CDateTime::Now() < m_inicio) {
+        CThreadEleitor::GetInst().StartTick(m_tick);
+        m_form->Slot2();
+        m_formOperador->Slot2();
+        m_pNextState = this;
+    } else {
+        m_pNextState = &CAguardaMensagem::GetInst();
+        IniciaVotacao();
+    }
+}
+
+void CInicioVotacao::ProcessTick(uebyte tick)
+{
+    if (tick == m_tick && m_inicio < api::CDateTime::Now()) {
+        m_pNextState = &CAguardaMensagem::GetInst();
+        IniciaVotacao();
+    }
+}
 
 } // namespace vota

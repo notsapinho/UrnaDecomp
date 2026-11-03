@@ -46,6 +46,11 @@ enum EUeAssertError {
     // 45 characters for each name, chosen to that length
     EUA_VERIFICAQTDBUSADICIONAIS_ESTADO_ENCERRADA = 3461,
     EUA_VERIFICAQTDBUSADICIONAIS_ENCERRAMENTO_FIM = 3462,
+    // vota::CImprimindoBU::StartState (fn 12078, records cimprimindobu.cpp 70:87 and 71:70): the texts "Assert
+    // (vota.GetEstadoVota() == EAVIMPRIMIRBU)" and "Assert (vota.GetQtdBU() == 0)". With the invocations indented four
+    // columns and the codes qualified api::, the columns leave 31 characters for each name, chosen to that length
+    EUA_IMPRIMINDOBU_ESTADOINVALIDO = 3465,
+    EUA_IMPRIMINDOBU_QTDBU_NAO_ZERO = 3466,
     // vota::CImprimindoBU::ImprimeBU (fn 2890, record cimprimindobu.cpp 114:79): the text "Assert (estVota.GetQtdBU() ==
     // numVia - 1)". With the invocation indented four columns and the code qualified api::, the column leaves 28
     // characters for the name, chosen to that length
@@ -61,6 +66,12 @@ enum EUeAssertError {
     // the names are chosen to that length
     EUA_QUERIMPRIMIRBU_ESTADO_INVALIDO = 3474,
     EUA_QUERIMPRIMIRBU_QTD_BU_NAO_ZERO = 3475,
+    // vota::CRetirarMR::StartState (fn 12031, records cretirarmr.cpp 54:83 and 55:90): the texts "Assert
+    // (vota.GetEstadoVota() == EAVENCERRADA)" and "Assert (vota.GetEstadoEncerramento() == EAERETIRAMR)". With the
+    // invocations indented four columns and the codes qualified api::, the columns leave 28 characters for each name,
+    // chosen to that length
+    EUA_RETIRARMR_ESTADOINVALIDO = 3476,
+    EUA_RETIRARMR_ENCERRINVALIDO = 3477,
     // vota::CVerificaHorarioZeresima::StartState (fn 11871, record cverificahorariozeresima.cpp 64:60) and
     // ProcessTickNaoDesligamento (fn 11870, record 80:61): the text "Assert (appinfo.GetVota().GetEstadoVota() ==
     // EAVAGUARDAHORAZERESIMA)" in both. The columns are less than the condition's length, so each invocation closes on a

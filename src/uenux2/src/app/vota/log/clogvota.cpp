@@ -289,6 +289,44 @@ void CLogVota::LogaMesarioIndagadoHorarioUrna()
     loga("Mesário indagado se horário da urna está correto");
 }
 
+void CLogVota::LogaMesarioConfirmaHorarioUrnaErrado()
+{
+    loga("Mesário confirma que o horário da urna está errado");
+}
+
+void CLogVota::LogaMesarioConfirmaHorarioUrnaCorreto()
+{
+    loga("Mesário confirma que o horário da urna está correto");
+}
+
+void CLogVota::LogaMesarioIndicouReimprimirBU()
+{
+    loga("Mesário indicou reimprimir Boletim de Urna");
+}
+
+void CLogVota::LogaMesarioIndicouQualidadeBU()
+{
+    loga("Mesário indicou qualidade OK para Boletim de Urna");
+}
+
+void CLogVota::LogaSolicitadaRetiradaMR()
+{
+    const std::string mensagem = "Solicitada a retirada da mídia de resultado";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaMRRetirada()
+{
+    const std::string mensagem = "Mídia de resultado retirada";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaSolicitadaEmissaoViasAdicionais(uebyte quantidade)
+{
+    const std::string mensagem = std::format("Solicitada a emissão de [{}] ", quantidade);
+    loga(mensagem + (quantidade == 1 ? "via adicional" : "vias adicionais"));
+}
+
 void CLogVota::LogaTempoLimiteBateriaInterna()
 {
     const std::string mensagem = "Tempo limite de espera usando bateria interna atingido";

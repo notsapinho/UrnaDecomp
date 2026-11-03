@@ -23,8 +23,8 @@
 #   4551 against 4535, 4529 and 4522, and those three among themselves) are older than them. Each builds a std::string
 #   of its literal (ledger/strings.tsv 72014, 52 bytes, and 71965, 48 bytes)
 #   and calls IEventosLog::loga (fn 233). 4563 is called by vota::CEmitirMaisBU::StartState (fn 12082, unit 104's)
-#   and ProcessInput (fn 12081, pending in unit 104), 4557 twice by 12081: the roots stand in for 12081. Scored on
-#   the whole link before steps 7 to 9: 10 over 67 and 9 over 63 rows, operand-only.
+#   and ProcessInput (fn 12081, unit 104's, written since), 4557 twice by 12081; the roots' stand-in for 12081 went
+#   with it. Scored on the whole link before steps 7 to 9: 10 over 67 and 9 over 63 rows, operand-only.
 # 156-uenux2-fimvotacao-bu-pending.cpp names the slots left as traps and what each waits for; the class heads say what
 # each layout rests on. The destructors are bodies other states share, so the match lines of 785 and 1560, and of 1284
 # and 2884, name this unit's symbols, the first in link order (docs/reference/facts/splat.md S6).
@@ -89,17 +89,18 @@
 # steps 7 to 9 matched it:
 # - vota::CImprimindoBU::ImprimeBU (fn 2890, records cimprimindobu.cpp 111:22 and 114:79, `static void
 #   vota::CImprimindoBU::ImprimeBU(uebyte, PrintMessageMode)`), public: four target slots call it (12077 and 12078 here,
-#   12065 and 12081 in unit 104), all pending, so the roots stand in. It takes CPolySingleton<api::IPaperRelatorios>'s
-#   instance (fn 905) at :111:22 (the 21 characters `    auto& impresso = ` before the call, a chosen spelling of that
-#   length, as in unit 104's creimprimindozeresima.cpp:51), asserts the vote's BU count against the copy number (the
-#   text "Assert (estVota.GetQtdBU() == numVia - 1)", ledger/strings.tsv 402739, names the local and the parameter;
-#   GetVota is the non-const fn 261; code 3467, api/util/eueasserterror.h, its name chosen to the column 79), formats
-#   "{}a. VIA" with the copy number, adds it to an api::CPaperFormBuilder (AddTextField with style 2 and
-#   ALINHAMENTO_CENTRO, AddNewLine(3), Build: fns 193, 198, 357), builds GetPathTrab(FLASH_INTERNA) / "bu.dat", calls
-#   vota::CriaArquivoImprimindo (fn 1488), api::IPaper's slot 8 (PrintFile) with the path's string, a comum::CSigVerifier
-#   of 1, GetPathTrab(FLASH_INTERNA), "bu.dat" and "bu.vsu" (fn 1540), the form by value (the callee releases it) and,
-#   for mode 0, the title "boletim de urna" and std::format("{}ª via", numVia), else two empty strings; then slot 10
-#   (EndPrintFile) and vota::RemoveArquivoImprimindo (fn 1487). 62 over 818 rows, operand-only. What the rows decided:
+#   12065 and 12081 in unit 104); 12065 is pending, and the roots stand in for it. It takes
+#   CPolySingleton<api::IPaperRelatorios>'s instance (fn 905) at :111:22 (the 21 characters ` auto& impresso = ` before
+#   the call, a chosen spelling of that length, as in unit 104's creimprimindozeresima.cpp:51), asserts the vote's BU
+#   count against the copy number (the text "Assert (estVota.GetQtdBU() == numVia - 1)", ledger/strings.tsv 402739,
+#   names the local and the parameter; GetVota is the non-const fn 261; code 3467, api/util/eueasserterror.h, its name
+#   chosen to the column 79), formats "{}a. VIA" with the copy number, adds it to an api::CPaperFormBuilder
+#   (AddTextField with style 2 and ALINHAMENTO_CENTRO, AddNewLine(3), Build: fns 193, 198, 357), builds
+#   GetPathTrab(FLASH_INTERNA) / "bu.dat", calls vota::CriaArquivoImprimindo (fn 1488), api::IPaper's slot 8 (PrintFile)
+#   with the path's string, a comum::CSigVerifier of 1, GetPathTrab(FLASH_INTERNA), "bu.dat" and "bu.vsu" (fn 1540), the
+#   form by value (the callee releases it) and, for mode 0, the title "boletim de urna" and std::format("{}ª via",
+#   numVia), else two empty strings; then slot 10 (EndPrintFile) and vota::RemoveArquivoImprimindo (fn 1487). 62 over
+#   818 rows, operand-only. What the rows decided:
 #   - The title is a named const char array, TITULO_BOLETIM: the target loads its first eight bytes with align=3, and
 #     the text (485696, 16-aligned) lies right before CImprimindoBU's typeinfo name (485712, read from the typeinfo at
 #     1541400), among the objects of this file, not in the merged literals. Measured: the named array's load reads
@@ -114,11 +115,54 @@
 #     first, where the target falls into the building one; an if/else of two PrintFile calls keeps two calls. Of these,
 #     the const char* conditional gives the target's order and stores, and in the whole link 62 over 818, operand-only.
 #   PrintMessageMode (cimprimindobu.h) has the values the callers pass, 0 and 1; its scope, enumerators and kind are
-#   chosen. The roots' ImprimeBUs stands for the four callers.
+#   chosen. The roots' ImprimeBUs stands for 12065, the caller that passes mode 1 and still waits.
 # - vota::CLogVota::LogaImprimindoRelatorio (fn 1127) takes its copy number as uebyte, not unsigned int: every target
 #   caller that passes a computed number masks it to 8 bits (11852, 11855 and 11991 their loop counter `& 255`, 12065
 #   and 12081 a byte plus one `& 255`), which a byte parameter gives the callers; the body is the same, and the match
 #   line moved to the new symbol (`...ERelatoriosUEEh`). The roots' label follows it.
+#
+# Written since too, measured the same way (pnpm wasm score on the whole link, before steps 7 to 9):
+# - vota::CQuerImprimirBU::ProcessInput (fn 12034): Read() on the form (record cinteractiveform.h:57); on
+#   api::INPUT_CORRIGE (5) the vote's state EAVENCERRADA (64) through comum::CAppInfo::GetInst().GetVota() (fns 185,
+#   261) and CEstadoGeralVota::SetEstadoVota (unit 169's fragment), vota::CSincronizaVota::SincronizaEstadoGeralVota
+#   (fn 491), and vota::CAplicacaoEncerrada::GetInst (fn 3877, unit 138) as the next state; on INPUT_CONFIRMA (9)
+#   CImprimindoBU::GetInst (fn 5986). 9 over 76 rows, operand-only.
+# - vota::CRetirarMR::StartState (fn 12031, records cretirarmr.cpp 54:83, 55:90, 56:36 and 96:36): the closing state
+#   EAERETIRAMR (51) through the setter CEstadoGeralVota::SetEstadoEncerramento (cestadogeralvota.cpp, beside
+#   SetEstadoVota, binaryen inlines it; its name chosen) and fn 491, then the two Assert texts (ledger/strings.tsv
+#   401008 and 399334: "Assert (vota.GetEstadoVota() == EAVENCERRADA)" and "Assert (vota.GetEstadoEncerramento() ==
+#   EAERETIRAMR)", codes 3476 and 3477, their names chosen to the columns 83 and 90, api/util/eueasserterror.h), and
+#   CPolySingleton<comum::IInterfaceInit>'s instance at :56:36 (`    comum::IInterfaceInit& poIni = `, a chosen
+#   spelling of that length). In the demo mode it stores EAEFIMDOSTRABALHOS (52) and shows +28, else it shows +12,
+#   logs, waits while comum::IInterfaceInit::IsMRPresenteSemHabilitar (fn 2862) holds, with api::CSystem::Dorme(250)
+#   inlined, logs again, stores EAEFIMDOSTRABALHOS, saves (fn 491) and shows +20; this state is the next. The wait is
+#   `bool vota::CRetirarMR::AguardaRetiradaMR()` by its record (96:36, the instance() call, spelled as :56's), a
+#   private member that binaryen inlines into its one caller; its `return true` is a choice (the caller drops the
+#   result). The two log members build their texts ("Solicitada a retirada da mídia de resultado" and "Mídia de
+#   resultado retirada", ledger/strings.tsv 137825 and 232292) and call api::CLoga::loga (fn 433) with CLogVota's +4
+#   and severity 1, after CLogVota::GetInst (fn 184), as unit 169's LogaFinalizacaoAplicativo:
+#   LogaSolicitadaRetiradaMR and LogaMRRetirada, added to app/vota/log/clogvota.cpp after
+#   LogaMesarioIndagadoHorarioUrna, their names and place chosen. 46 over 250 rows, operand-only (calls, data, and the
+#   exception's destructor slot in the two throws). `using namespace comum;` in cretirarmr.cpp lets the texts spell the
+#   states unqualified (a choice, as in cquerimprimirbu.cpp); the local `vota` is the texts' name.
+# - vota::CImprimindoBU::StartState (fn 12078, records cimprimindobu.cpp 70:87 and 71:70) and ProcessInput (fn 12077):
+#   the Assert texts "Assert (vota.GetEstadoVota() == EAVIMPRIMIRBU)" and "Assert (vota.GetQtdBU() == 0)"
+#   (ledger/strings.tsv 398594 and 403011; codes 3465 and 3466, their names chosen to the columns), then the first copy,
+#   which both slots hold inlined: unless vota::CSincronizaVota::s_urnaDesligando is set,
+#   LogaImprimindoRelatorio(RELATORIO_BU, 1), ImprimeBU(1, mode 0) and LogaMesarioIndagadoQualidadeBU (fns 1127, 2890,
+#   4551), and unless the flag is set by then, the form's slot 2. Written once, as the private member ImprimePrimeiraVia
+#   (it reads m_form) above StartState: its name and its being a function are chosen. StartState then stores this as the
+#   next state, 23 over 81 rows, operand-only. ProcessInput: on api::INPUT_CORRIGE a log member and the first copy
+#   again, this state next; on INPUT_CONFIRMA a log member, IncrementaQtdBU (fn 3701), and with
+#   comum::CAppInfo::EhTreinamentoEleitor (fn 697) EAVENCERRADA (64) and EAEFIMDOSTRABALHOS (52) at +0 and +4, fn 491
+#   and CEmitirMaisBU::GetInst (fn 3879), else EAVGRAVARRESULTADOS (62), fn 491 and CGravaResultado::GetInst (fn 6037).
+#   The two stores at +0 and +4 decided the setters' place: written in the class, clang merged them into one i64.store
+#   and 12077 scored 44 over 243 rows (3 deleted, at the stores); out of line in cestadogeralvota.cpp, where binaryen
+#   inlines them, 39 over 243, operand-only. The log members, LogaMesarioIndicouReimprimirBU and
+#   LogaMesarioIndicouQualidadeBU ("Mesário indicou reimprimir Boletim de Urna", "Mesário indicou qualidade OK para
+#   Boletim de Urna", ledger/strings.tsv 227002 and 227097), have LogaMesarioIndagadoHorarioUrna's shape (fns 184, 233),
+#   added after the two above, their names and place chosen. `using namespace comum;` in cimprimindobu.cpp, as in
+#   cretirarmr.cpp; the order of the cases and the empty default are chosen (the other order was not measured).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 # CQuerImprimirBU's GetInst, its constructor and statics are written since in cquerimprimirbu.cpp, above StartState
@@ -142,7 +186,7 @@ $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-pending.o: $(ROOT)/src/units/156-uenux2-
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-pending.cpp -o $(R)
 # nothing reconstructed builds CMostraQRCodeCertificado, CRetirarMR or comum's items yet:
 # 156-uenux2-fimvotacao-bu-roots.cpp keeps their vtables, the way the target reaches their slots, and stands for the
-# callers of CImprimindoBU::GetInst and ImprimeBU and of the six CLogVota members (CLimiteCopiasBUAtingido's vptr is stored by unit
+# callers of ImprimeBU and of two CLogVota members that still wait (CLimiteCopiasBUAtingido's vptr is stored by unit
 # 185's 12023, CQuerImprimirBU's by unit 104's 12062)
 $(ROOT)/$(APP)/156-uenux2-fimvotacao-bu-roots.o: $(ROOT)/src/units/156-uenux2-fimvotacao-bu-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/156-uenux2-fimvotacao-bu.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/156-uenux2-fimvotacao-bu-roots.cpp -o $(R)

@@ -50,16 +50,11 @@ __attribute__((noinline)) void w168_assinaturas(const std::string& arquivo, cons
     vota::VerificaAssinaturaMV(outro);
 }
 
-// stand for fns 12081 (vota::CEmitirMaisBU::ProcessInput) and 12974, not written, which call
-// GetQuantidadeMaximaBUsAdicionais (fn 4582) once each and read what it returns
+// stands for fn 12974, not written, which calls GetQuantidadeMaximaBUsAdicionais (fn 4582) once and reads what it
+// returns; its other target caller, vota::CEmitirMaisBU::ProcessInput (fn 12081), is in the link (unit 104)
 __attribute__((noinline)) int w168_qtdbu(int base)
 {
     return vota::GetQuantidadeMaximaBUsAdicionais() + base;
-}
-
-__attribute__((noinline)) int w168_qtdbu_vezes(int fator)
-{
-    return vota::GetQuantidadeMaximaBUsAdicionais() * fator;
 }
 
 const void* volatile w168_sink;
@@ -72,7 +67,6 @@ struct SW168Roots {
         w168_sink = reinterpret_cast<const void*>(&w168_separadores);
         w168_sink = reinterpret_cast<const void*>(&w168_assinaturas);
         w168_sink = reinterpret_cast<const void*>(&w168_qtdbu);
-        w168_sink = reinterpret_cast<const void*>(&w168_qtdbu_vezes);
     }
 } w168_roots;
 

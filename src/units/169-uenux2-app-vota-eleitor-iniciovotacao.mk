@@ -1,4 +1,4 @@
-# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and 7 more, "Written since" below):
+# uenux2 the zeresima states of app/vota/eleitor/iniciovotacao/, 28 target rows (and 12 more, "Written since" below):
 # vota::CInformacaoZeresimaTardia's destructors and StartState (target fns 2879, 11984, 11983); the abstract bases
 # vota::CGeraZeresimaBase and
 # vota::CGeraResumoZeresimaBase, their constructors (5965, 11945), their destructors (1720, 1952) and the body binaryen
@@ -12,9 +12,8 @@
 # slot 2), with the vota::CLogVota member it holds inlined, added to app/vota/log/clogvota.cpp (unit 119's file).
 # vota::CTelasVota (app/vota/eleitor/comum/ctelasvota.h, unit 110's) gains three getters for the members the
 # constructors copy (+212, +220, +228). The class heads say what each layout rests on;
-# 169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp names every slot left and what it waits for. Not written: the
-# constructor and GetInst of vota::CInformacaoZeresimaTardia (fn 11931 holds them inlined), which copy CTelasVota's
-# member at +68, which app/vota/eleitor/comum/ctelasvota.h has no accessor for; its statics are not written either.
+# 169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp names every slot left and what it waits for.
+# vota::CInformacaoZeresimaTardia's constructor, GetInst and statics are written since (below).
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:
@@ -25,8 +24,8 @@
 #   splits m_naoRecuperado2: fns 5959 and 5947 copy +544, fn 2880 copies +556), then adds 10800 seconds in its body
 #   (CDateTime::operator+=(int), fn 2233); `3 * 60 * 60` is a chosen spelling of the target's constant. Its object gets
 #   Boost's include path (below), which cconfiguracaoeleicao.h reaches through CHorariosUrna, as unit 88's objects do.
-#   GetInst's two target callers (11920, 11924) are not written: the roots stand in for them, and the vtable has no
-#   sink, GetInst stores it.
+#   GetInst's two target callers (11920 here, 11924 unit 104's) are written since, and the roots' stand-in went;
+#   the vtable has no sink, GetInst stores it.
 # - vota::CQuerImprimirZeresima::StartState (fn 11921): comum::IEventosLog::LogaMesarioIndagadoImprimirZeresima (fn
 #   5882) on CLogVota::GetInst()'s result, the form's slot 2, this state as the next. 2 over 14 rows, operand-only.
 # - vota::CRegerarZeresima's statics' exit destructors (11844, 11843) match since fn 11838 (unit 176) holds its GetInst
@@ -47,6 +46,30 @@
 # - vota::CRegerarZeresima::AposGeracao (slot 9, fn 11842): one call of vota::CRelVotaUtil::CortaPapel (fn 2882, unit
 #   246), 1 over 3 rows, operand-only, the call. Defined in cregerarzeresima.cpp after the statics and before
 #   GetProximoEstado, the order of their target indices in their use band (11844, 11843, 11842, 11841).
+# - The three slots that set the vote's state, each through comum::CAppInfo::GetInst().GetVota() (fns 185, 261), a
+#   store of the state at +0, and vota::CSincronizaVota::SincronizaEstadoGeralVota (fn 491), which saves it:
+#   - vota::CQuerImprimirZeresima::ProcessInput (fn 11920): Read() on the form (record cinteractiveform.h:57); on
+#     api::INPUT_CORRIGE (5) EAVVOTAR (56), fn 491 and vota::CInicioVotacao::GetInst (fn 2880, unit 199) as the next
+#     state, on INPUT_CONFIRMA (9) CConfirmaImpressaoZeresima::GetInst (fn 5959). 9 over 76 rows, operand-only.
+#   - vota::CConfirmaImpressaoZeresima::ProcessInput (fn 11927): on INPUT_CONFIRMA, api::CDateTime::Now() (fn 479)
+#     compared with the limit at +20 (fn 759): past it vota::CImpressaoZeresimaTardia::GetInst (unit 176's file),
+#     which binaryen inlines here, its one caller, else EAVGERARZE (52), fn 491 and CGeraZeresima::GetInst (fn 5962);
+#     on INPUT_BRANCO (3) vota::CMaisInformacoes::GetInst(this) (fn 1280). 21 over 146 rows, operand-only (calls,
+#     data, and the .bss addresses of CImpressaoZeresimaTardia's two statics).
+#   - vota::CGeraResumoZeresima::AposGeracao (slot 9, fn 11940): EAVZERESIMAGERADA (53) and fn 491. 3 over 8 rows,
+#     operand-only.
+#   The store is comum::md::estadoaplicacao::CEstadoGeralVota::SetEstadoVota, out of line in cestadogeralvota.cpp
+#   (unit 93's file, after MarcaUltimoVoto, a chosen place), whose one-store body binaryen inlines into every caller,
+#   so it has no target index; app/comum/dados/md/estadoaplicacao/cestadogeralvota.h says what decided out of line
+#   (unit 156's 12077). Its name, and that it is a setter, are chosen.
+# - vota::CInformacaoZeresimaTardia's constructor, GetInst and statics, in cinformacaozeresimatardia.cpp above
+#   StartState (lines a choice, above ProcessInput's records, whose #line holds them): unit 104's shape, the new of
+#   48 bytes, the base's constructor with 2, api::CWait's constructor with 1000 (fn 5447) and the copy of CTelasVota's
+#   +68 through ctelasvota.h's GetTelaInformacaoZeresimaTardia (a getter added there, its name chosen, as for the
+#   others). vota::CImpressaoZeresimaTardia::ProcessInput (fn 11931, unit 176) holds them inlined, so they have no
+#   index of their own. The statics' exit destructors match with 11931: 11986 the pointer's (@1834156), 11985 the
+#   mutex's (@1834132), 11985 by the scan's content pass. The mutex's name is `vote:1 by:11931` in
+#   splat/symbol_addrs.txt; its other reader is its exit destructor, 11985.
 #
 # Evidence, each read in the target (pnpm wasm fn) or measured on this unit's links:
 # - The destructors' forms (docs/reference/facts/reading.md R4, R5). CInformacaoZeresimaTardia's is out of line and the
@@ -95,7 +118,9 @@
 # the destructor instead of the class; the forms written here are chosen.
 #
 # Chosen, no evidence names them: every data member's name (m_form, m_espera, m_limite, s_mutex, s_inst); the three
-# CTelasVota getters' names, that they are getters, and their place, after GetTelaReinicioVotacao; the slots' names
+# CTelasVota getters' names, that they are getters, and their place, after GetTelaReinicioVotacao; in 11920 and 11927
+# the order of the cases and the empty default (the order written gives the scores above; the other was not
+# measured); the slots' names
 # AposGeracao (9) and GetProximoEstado (10), their protected access and the pointer result of slot 10; the pointee of
 # the bases' forms (the type of vota::CTelasVota's members, which ctelasvota.h chose);
 # LogaAguardandoConfirmacaoZeresima's name, from its message, and its place last, after LogaVotacaoEncerrada; GetInst
@@ -134,8 +159,4 @@ $(ROOT)/$(APP)/uenux2/src/app/vota/eleitor/iniciovotacao/cconfirmaimpressaozeres
 # bodies, compiled with the unit's flags
 $(ROOT)/$(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-pending.o: $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/util/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp -o $(R)
-# nothing reconstructed references the zeresima states yet: 169-uenux2-app-vota-eleitor-iniciovotacao-roots.cpp takes
-# their vtables' addresses
-$(ROOT)/$(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-roots.o: $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/169-uenux2-app-vota-eleitor-iniciovotacao.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/169-uenux2-app-vota-eleitor-iniciovotacao-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-pending.o $(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-roots.o
+override EXTRA_OBJS += $(APP)/169-uenux2-app-vota-eleitor-iniciovotacao-pending.o

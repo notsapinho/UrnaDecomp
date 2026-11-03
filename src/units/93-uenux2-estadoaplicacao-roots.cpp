@@ -10,7 +10,8 @@
 //   9863 and 11389) and CEstadoGeralSA (fn 5625, 10101 and 11393) have one real caller here, so one stand-in each, and
 //   so has CEstadoGeralVota's (fn 5628, 10067 and 11391: 11391 is fragment 172's, and estadoaplicacao_build_vota
 //   stands for 10067). The constructor of CDadoCarga (fn 5633, 10167 and 11402), CEstadoGeralVota::IncrementaQtdBU
-//   (fn 3701, 12065, 12077 and 12081: estadoaplicacao_use_qtdbu), GetFaseChar
+//   (fn 3701, 12065, 12077 and 12081: estadoaplicacao_use_qtdbu stands for 12065; 12077 and 12081 are in the link,
+//   units 156 and 104), GetFaseChar
 //   (fn 2253, five callers), AdicionaDeltaT (fn 3702, three callers) and CCabecalhoQRCodeBuilder's DefineHistoricoCarga
 //   and DefineCodigoCarga (fns 5622 and 5623, 1956 and 12110 each) and CCabecalhoQRCodeBuilder's constructor (fn 5624,
 //   1956 and 12110: estadoaplicacao_build_qrcode) have none, so one stand-in that calls each twice.
@@ -23,8 +24,8 @@
 // - CDadoCorrespondencia's constructor (fn 5630) has one direct caller in the target (11400, written, fragment 172's)
 //   and a table slot (450), so its address. The same for CEstadoGeralGap's constructor (fn 5626: its direct caller is
 //   11395, written, and fn 10123 calls it through table slot 453 with invoke_iiiiiiiiiiii) and for
-//   CEstadoGeralVota::MarcaInicioAquisicao (fn 5627: its direct caller is fn 5972, not written, and table slot 52
-//   holds it).
+//   CEstadoGeralVota::MarcaInicioAquisicao (fn 5627: its direct caller, fn 5972, is in the link, unit 199's, and table
+//   slot 52 holds it).
 // - ValidaCriacao, ValidaModelo, ConverteEstadoSA, DesconverteEstadoSA and the two *TipoAjusteDataHora helpers have one
 //   caller each in the target and here, so binaryen inlines them; they are left unrooted.
 // Declared through asm labels with the object's signatures (a constructor returns `this`), so this TU needs no uenux2 or

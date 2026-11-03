@@ -5,7 +5,10 @@
 # with the members it holds inlined, CMonitoraAlimentacao's GetInst and VerificaAlimentacao and CLogVota's five, and its
 # std::async state. The sources are the six named below, five in CTHREADS_SRCS (clogvota.cpp, unit 119's file, moved
 # here ahead of cthreadmonitor.cpp: Run's paragraph says why) and cthreadoperador.cpp in unit 197's list (its bullet says
-# why); the headers are api/ipc/cmessagequeue.h (the queue's constructor, CMessageInterface, Vazia), api/ipc/cthread.h
+# why); CTHREADS_SRCS also lists unit 104's cemitirmaisbu.cpp, right after clogvota.cpp, for its order only: its
+# vota::CEmitirMaisBU::ProcessInput (fn 12081) holds a CLogVota member binaryen inlines from clogvota.cpp's object, and
+# matches with its object after that one (unit 104's fragment has the scores);
+# the headers are api/ipc/cmessagequeue.h (the queue's constructor, CMessageInterface, Vazia), api/ipc/cthread.h
 # (slots 3 and 4, Stop, PararSolicitado, Yield; Dorme is out of line in cthread.cpp, unit 18), api/hwil/ipower.h
 # (FoneDesconectado, and for Run ChaveDesligada, MidiaExternaAusente, TecladoEleitorDesconectado),
 # app/vota/cthreadvota.h, the new app/comum/cappstatecontext.h (TrocaEstado), app/comum/util/euecomumutilerror.h,
@@ -237,7 +240,7 @@
 #   row reads unresolved on s_mutex, the first operand the scan cannot place.
 # - SaiPorVotacaoSuspensa's state: with set_value (4771) inlined into its __execute, 10224 read 99 over 117 rows (89
 #   inserted): 4771's other target caller is 11151, not written, so the roots file's ConcluiEstado stands for it.
-CTHREADS_SRCS := src/app/vota/log/clogvota.cpp src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
+CTHREADS_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
 UENUX2_SRCS += $(CTHREADS_SRCS)
 CTHREADS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/116-uenux2-cthreads-pending.o: $(ROOT)/src/units/116-uenux2-cthreads-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/116-uenux2-cthreads.mk $(CTHREADS_HDRS)

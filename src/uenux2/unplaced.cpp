@@ -155,11 +155,6 @@
 // f5952 · 284 B · unmatched · placement: link order · name unknown
 // void f5952(i32, i32) { ... }
 
-// link-order cluster 866 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/iniciovotacao/cgeradorresumozeresima.cpp
-
-// f5972 · 108 B · unmatched · placement: link order · name unknown
-// void f5972() { ... }
-
 // link-order cluster 868 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cmostraqrcodebu.cpp
 
 // f5980 · 225 B · unmatched · placement: link order · name unknown
