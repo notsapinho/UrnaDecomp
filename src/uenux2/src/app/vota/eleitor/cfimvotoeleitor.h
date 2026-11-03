@@ -8,8 +8,8 @@
 namespace vota {
 
 // vota::CFimVotoEleitor (RTTI: si_class of comum::CAppState; vtable @1534004 [174, 144, 7198, 7480, 1661, 218, 425,
-// 218, 425]): it overrides StartState alone (slot 2, fn 7198, record cfimvotoeleitor.cpp:42; pending:
-// src/units/241-uenux2-app-vota-eleitor-pending.cpp says what it waits for). Its singleton lives in fn 7181
+// 218, 425]): it overrides StartState alone (slot 2, fn 7198, record cfimvotoeleitor.cpp:42; written:
+// src/units/241-uenux2-app-vota-eleitor.mk has its notes). Its singleton lives in fn 7181
 // (vota::CSincronismoEleitor::ProcessKey), which holds GetInst and the constructor inlined: it allocates 12 bytes,
 // passes 0 to the base's constructor and stores only the vptr, keeps the object in a static std::unique_ptr (@1833132)
 // under a static std::mutex (@1833108), and frees an old object with no call through the vtable, as for a final class

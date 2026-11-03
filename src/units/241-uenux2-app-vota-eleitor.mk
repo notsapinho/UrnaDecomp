@@ -15,9 +15,16 @@
 # - Rows this unit's sources release in other units: 7181 (unit 192), with the executable TU's has<T> and push<T> thunks
 #   2741 and 5398 that it calls and the TU's set<ISincronismoVotoEleitor>, 9437, over them (unit 170's paragraph).
 #
-# Pending, trapped in 241-uenux2-app-vota-eleitor-pending.cpp (its header says what each waits for):
-# CFimVotoEleitor::StartState (7198) and CSincronismoVotoEleitor::Sincroniza (7174). Each is its class's key function,
-# so the pending object emits both vtables.
+# Pending, trapped in 241-uenux2-app-vota-eleitor-pending.cpp (its header says what it waits for):
+# CSincronismoVotoEleitor::Sincroniza (7174), the class's key function, so the pending object emits its vtable.
+#
+# Written since: CFimVotoEleitor::StartState (7198, slot 2, record cfimvotoeleitor.cpp:42), the class's key function,
+# so cfimvotoeleitor.cpp.o emits the vtable. It shows the form at +156 of vota::CTelasVota (slot 2, through a getter
+# ctelasvota.h has now), beeps through IBeep's slot 2 with 4 (its instance() call at :42), says "fim" (the 3 bytes
+# at 150256) through CVotacaoStateAudio::PlayMessage (1204, unit 97's) when CEstadoAudio is active, posts a message
+# of type 1 to CThreadOperador's queue (api::SMessage{1, &fila} at priority 1, as cverificaeleicaopassou.cpp posts
+# its own) and goes to CAguardaMensagem. It waited for 1204 alone, and matched as written (pnpm wasm score before
+# step 8: operand rows only). Its lines and the includes' are a choice, StartState's above :42.
 #
 # What the target shows:
 # - ISincronismoVotoEleitor's destructor is out of line in csincronismovotoeleitor.cpp, its key function
@@ -28,9 +35,9 @@
 #   macro, whose column reading this record fits: 52 plus the two names' lengths). CSincronismoVotoEleitor is 4 bytes:
 #   7181 allocates 4 and stores only the vptr (@1534164).
 # - CFimVotoEleitor: cfimvotoeleitor.h has the layout, the constructor out of line (measured on 7181: an in-class
-#   constructor leaves one row inserted and one deleted) and the statics' order. StartState's record line 42 stays
-#   blank in cfimvotoeleitor.cpp; the constructor, GetInst and the statics are above it, as the exit destructors'
-#   order puts them.
+#   constructor leaves one row inserted and one deleted) and the statics' order. The constructor, GetInst and the
+#   statics are above StartState in cfimvotoeleitor.cpp, as the exit destructors' order puts them (ld_index 4911,
+#   4912, 4913 for 7212, 7202 and 7198).
 # - Link order: in the target's use band 1 cfimvotoeleitor.cpp's functions (7212, 7202, 7198) link before
 #   csincronismoeleitor.cpp's (7195, 7187, 7181, 7178), which link before csincronismovotoeleitor.cpp's (7175, 7174):
 #   the directory's name order. This fragment lists cfimvotoeleitor.cpp after unit 192's csincronismoeleitor.cpp.

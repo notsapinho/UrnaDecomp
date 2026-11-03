@@ -1,10 +1,11 @@
-// Roots: vota::CThreadVota::StartTick (target fn 700) is called on the CThreadEleitor and CThreadOperador
-// singletons by 16 target functions; five are in the link (fn 10798, unit 119's slot 4, fn 7028, unit 97's
-// CVotacaoStateAudio::StartState, fn 10220, and fns 11825 and 11871, unit 138's), the others not. Address-taken from a
-// static constructor (as in 06-ecourna-api-compression-roots.cpp) so the link keeps it out of line.
+// Roots: vota::CThreadVota::StartTick (target fn 700) is called on the CThreadEleitor and CThreadOperador singletons by
+// 16 target functions; seven are in the link (fn 10798, unit 119's slot 4, fns 7028 and 7029, unit 97's
+// CVotacaoStateAudio::StartState and ProcessInput, fn 10220, and fns 11825 and 11871, unit 138's), the others not.
+// Address-taken from a static constructor (as in 06-ecourna-api-compression-roots.cpp) so the link keeps it out of
+// line.
 // CThreadVota::StopTick (fn 422) has 23 callers in the target; two are reconstructed (fn 10799, unit 119's slot 3, and
-// fn 7022, unit 97's CVotacaoStateAudio::FinishState): ParaDoisTicks stands for the others (7010, 10451, ...; unit
-// 197's 7349, 7352 and 4454 are in the link too).
+// fn 7022, unit 97's CVotacaoStateAudio::FinishState): ParaDoisTicks stands for the others (10451, ...; unit
+// 197's 7349, 7352 and 4454 and unit 97's 7010 and 7029 are in the link too).
 // CThreadVota::AddStoppedTick (fn 807) has 11, of which unit 97's fn 1785 calls it twice and 1165 and 2880 (unit 199),
 // 3229 (unit 197), 5343 (unit 165), 5936 (unit 138), 10409 and 652 (unit 161) are linked: DoisTicksParados stands for
 // the other three (2740, 5396, 10440).

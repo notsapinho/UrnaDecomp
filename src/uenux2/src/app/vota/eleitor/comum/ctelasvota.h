@@ -80,6 +80,9 @@ public:
     // name, and that it is one, are chosen, as for the others
     const CFormInterativoTelaVota& GetTelaConfirmaRegerarZeresima() const { return m_tela10; }
     CFormInterativoTelaVota GetTelaEmitirMaisBU() const { return m_tela24; }
+    // +156, whose slot 2 vota::CFimVotoEleitor::StartState (fn 7198) calls with no copy; the getter's name, and that it
+    // is one, are chosen, as for the others
+    const CFormInterativoTelaVota& GetTelaFimVoto() const { return m_tela19; }
 
 private:
     std::map<comum::TCargoID, CTelasCargo> m_mapaTelas;

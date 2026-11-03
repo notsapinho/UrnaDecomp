@@ -9,7 +9,7 @@
 # records): the destructor (D2 2871, D0 11877), GetInst (1279), its constructor inlined, and its statics' exit-time
 # destructors (11878, 11880). vota::NomeTela (6718, comum/ctelascargo.cpp, record :60), with ETelaVotacao's enumerators
 # (comum/ctelascargo.h) and EUeVotaError's 9327 (app/vota/euevotaerror.h). The class headers say what each layout and
-# name rests on; the five members not written are in 150-uenux2-eleitor-estados-pending.cpp with what each waits for.
+# name rests on; the member not written is in 150-uenux2-eleitor-estados-pending.cpp with what it waits for.
 #
 # Not written, and why. CTelasCargo's constructor (fn 2386) calls fn 3251, which had no name. 3251 matches now, as the
 # __find_equal of md::CVotosCargos' map, which unit 13's InsereCedula brings (unit 197); 2386 is still not written.
@@ -31,8 +31,8 @@
 # wasm fn 4135), binaryen's inlining of a function with one caller, so it is written out of line here and left
 # unrooted; it is inlined into CTelasVota::GetTelaCargo (unit 110) in our link too. CConfirmaVotoSemCandidato's
 # GetTelaCargoAtual (fn 4483, record :64, code 9307) and StartStateAudio (fn 7441) are unit 97's form (that fragment
-# says what it rests on): 4483 joins fn 3921 with three of unit 97's, and its second caller, ProcessInputAudio (7428),
-# pending, has a stand-in in the roots. Measured before step 8 (pnpm wasm score, whole link): 4420 12 over 55 rows, 4483
+# says what it rests on): 4483 joins fn 3921 with three of unit 97's, now with its second caller, ProcessInputAudio
+# (7428, below), in the link. Measured before step 8 (pnpm wasm score, whole link): 4420 12 over 55 rows, 4483
 # 3 over 8, 7441 11 over 107, 7284 2 over 4 and 7287 4 over 16, all operand-only; each matched at step 9, where 2466's
 # match line was renamed from the D2 to its D1 alias. Chosen: GetTelaCargoAtual's parameter name and its being private,
 # GetTela's local, the find form, and GetTela's place below NomeTela (lines 76 to 84: the constructor's records :67 and
@@ -41,6 +41,23 @@
 # in cvisualizarcandidatos.cpp, its place after the statics a choice, and so is its name. Its two target callers,
 # vota::CMenuFiltrarCandidatosPorNumero's slots (fns 11891 and 11892), are pending in unit 104, and the roots stand in
 # for them. 0 over 10 rows (pnpm wasm score, whole link, byte-exact); `m_cargo ? *m_cargo : 0` is not measured.
+# CInstrucaoVotacaoAcessibilidade's slots 9 and 10 (ProcessInputAudio 7248, records :54 to :60, code 9314;
+# StartStateAudio 7242, records :129 and :131) and CConfirmaVotoSemCandidato's slots 13 and 9 (EmiteEcoComInputField
+# 4477, record :77, code 9308; ProcessInputAudio 7428), written since and matched. 7242 sets api::ISound's volume (+4)
+# to 7 and api::ITextToSpeech's speed to 2 (slot 4), shows the form and keeps the state. 7248 throws unless the form has
+# one input field; on Read's 9 it leaves the state and echoes 'C', on 5 it echoes 0, and on 13 it takes the field's last
+# key: '3' and '9' raise and lower ISound's volume, '4' and '6' lower and raise ITextToSpeech's speed (slots 5 to 7),
+# each saying whether it moved, and any other key echoes 0 (the echo is unit 97's PlayKey). The volume's accessors are
+# inline in api/audio/isound.h and the last key's in api/gui/iinputfield.h, each header saying what is chosen. 4477
+# echoes the field's last key unless Read returns 5 or 13 and returns Read's result with an empty string; 7428 votes
+# null for the post (comum::md::CVoto::NULO_CARGO_SEM_CANDIDATO) when it returns 9 and leaves the state. Measured (pnpm
+# wasm score, whole link): the post's id read into a local before CEleitorVotando::GetInst(), as the target calls
+# GetInst after it; in RegistraVoto's argument place 7428 scored 15 over 128 rows (3 inserted, 3 deleted), as written
+# operand rows only. Lines: StartStateAudio moved below EmiteEcoComInputField, whose throw sits on :77; in use band 1
+# the target links 7441, 7428 and 7425 in that order, as our link does (names.tsv's ld_index 4014, 4015, 4016), and the
+# rest of the lines are a choice. The locals' names, whose lengths put the calls at :59, :60, :129 and :131's column 18,
+# are chosen. TemFala, in the roots, stands for has<api::ITextToSpeech>'s callers 7667 and 14478 (unit 97 has its copy);
+# TelaSemCandidato went with 7428, the caller it stood for.
 #
 # Measured. GetKeyboardPosition: the instance of api::CPolySingleton<api::IUrna> bound to a reference before Modelo() is
 # called gives the target's frame, its std::source_location temporary in the slot of the string GetMensagem keeps
@@ -65,13 +82,13 @@ ELEITOR_ESTADOS_SRCS := src/app/vota/eleitor/cconfirmavotosemcandidato.cpp \
     src/app/vota/eleitor/iniciovotacao/auxiliares/cvisualizarcandidatos.cpp \
     src/app/vota/eleitor/comum/ctelascargo.cpp
 UENUX2_SRCS += $(ELEITOR_ESTADOS_SRCS)
-# five members are not reconstructed: 150-uenux2-eleitor-estados-pending.cpp gives the vtables trapping bodies, compiled
+# one member is not reconstructed: 150-uenux2-eleitor-estados-pending.cpp gives the vtable a trapping body, compiled
 # with the unit's flags
 $(ROOT)/$(APP)/150-uenux2-eleitor-estados-pending.o: $(ROOT)/src/units/150-uenux2-eleitor-estados-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/150-uenux2-eleitor-estados.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/eleitor/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/comum/*.h $(ROOT)/src/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/app/comum/dados/*.h $(ROOT)/src/uenux2/src/app/comum/dados/md/candidatura/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/audio/*.h $(ROOT)/src/uenux2/src/api/util/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/150-uenux2-eleitor-estados-pending.cpp -o $(R)
-# nothing reconstructed calls CVisualizarCandidatos::GetInst, CInstrucaoVotacaoAcessibilidade::GetInst, NomeTela or
-# CConfirmaVotoSemCandidato::GetTelaCargoAtual from all of their target callers yet: 150-uenux2-eleitor-estados-roots.cpp
-# stands in for the missing callers
+# nothing reconstructed calls CVisualizarCandidatos::GetInst, CInstrucaoVotacaoAcessibilidade::GetInst, NomeTela,
+# CVisualizarCandidatos::GetCargo or has<api::ITextToSpeech> from all of their target callers yet:
+# 150-uenux2-eleitor-estados-roots.cpp stands in for the missing callers
 $(ROOT)/$(APP)/150-uenux2-eleitor-estados-roots.o: $(ROOT)/src/units/150-uenux2-eleitor-estados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/150-uenux2-eleitor-estados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/150-uenux2-eleitor-estados-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/150-uenux2-eleitor-estados-pending.o $(APP)/150-uenux2-eleitor-estados-roots.o

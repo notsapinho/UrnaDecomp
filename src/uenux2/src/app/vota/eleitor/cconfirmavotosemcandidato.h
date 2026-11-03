@@ -13,7 +13,7 @@ namespace vota {
 // vota::CConfirmaVotoSemCandidato (RTTI: si_class of vota::CVotacaoStateAudio; vtable @1533012 [884, 883, 7028, 7480,
 // 1661, 7022, 425, 7029, 7010, 7428, 7441, 218, 425, 4477, 6999, 7425]): the state that confirms a vote for a post with
 // no candidate. Slot 15 (fn 7425, CVotacaoStateAudio's GetMensagem, a name unit 97 chose) returns its message; slots
-// 9 and 13 are pending (src/units/150-uenux2-eleitor-estados-pending.cpp): 13 is EmiteEcoComInputField, record
+// 9 and 13 are written (src/units/150-uenux2-eleitor-estados.mk): 13 is EmiteEcoComInputField, record
 // cconfirmavotosemcandidato.cpp:77; 9 is CVotacaoStateAudio's ProcessInputAudio. Slot 10, StartStateAudio (fn 7441),
 // passes a string of its own signature, "virtual void vota::CConfirmaVotoSemCandidato::StartStateAudio()", to
 // GetTelaCargoAtual (fn 4483, record :64): read as __PRETTY_FUNCTION__ (a literal: same bytes); no record, so no

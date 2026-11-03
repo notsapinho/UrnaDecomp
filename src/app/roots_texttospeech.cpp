@@ -21,8 +21,19 @@
 #include <memory>
 
 #include "uenux2/mock/app/simulador/wasm/cwasmnulltexttospeech.h"
+#include "uenux2/src/api/pattern/cpolysingletonlist.h"
 
 __attribute__((optnone)) std::unique_ptr<api::ITextToSpeech> urna_texttospeech_constroi()
 {
     return std::make_unique<simulador::CWasmNullTextToSpeech>();
 }
+
+// api::CPolySingletonList::has<api::ITextToSpeech> (target fn 3281) is the executable TU's copy too: its 11 bytes are a
+// thunk into fn 1166, the body binaryen merges from that TU's has<T> (has<api::ISound>, fn 3343, matched from
+// vota_web_wasm.cpp.o, is another thunk of it), where the copy simulador.cpp.o gives at the uenux2 tree's flags is a
+// thunk into a body of three constants (pnpm wasm score of 3281 against it: 2 rows inserted). Its target callers are fn
+// 2079 (CPolySingleton<api::ITextToSpeech>::instance, cinstrucaovotacaoacessibilidade.cpp's copy, in the link) and fns
+// 7667 (the executable TU's set<api::ITextToSpeech>) and 14478 (__wasm_call_ctors), not written, for which
+// src/units/150-uenux2-eleitor-estados-roots.cpp's TemFala stands. The instance goes when 7667 lands, whose object then
+// gives the same copy.
+template bool api::CPolySingletonList::has<api::ITextToSpeech>(const api::TPolySingletonsInfo&);

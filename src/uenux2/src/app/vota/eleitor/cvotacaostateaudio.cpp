@@ -6,6 +6,12 @@
 #include <format>
 #include <regex>
 
+#include "api/audio/isound.h"
+#include "api/audio/itexttospeech.h"
+#include "api/gui/cinteractiveform.h"
+#include "api/hwil/ibeep.h"
+#include "api/hwil/iinput.h"
+#include "api/pattern/cpolysingleton.h"
 #include "app/comum/dados/ccandidaturas.h"
 #include "app/comum/dados/ccargods.h"
 #include "app/comum/dados/ccargos.h"
@@ -32,8 +38,40 @@ CVotacaoStateAudio::~CVotacaoStateAudio()
     CancelaEsperaFimAudio();
 }
 
-// (original lines 35-79: content not recovered)
-#line 80
+inline void CVotacaoStateAudio::PararTicks()
+{
+    if (m_bAudioHabilitado) {
+        CThreadEleitor::GetInst().StopTick(m_tickEco);
+        CThreadEleitor::GetInst().StopTick(m_tickMensagem);
+    }
+}
+
+inline void CVotacaoStateAudio::FalaMensagem()
+{
+    if (m_bAudioHabilitado) {
+        const std::string mensagem = FormataMensagem(GetMensagem());
+        PlayInterruptibleMessage(mensagem);
+    }
+}
+
+// (original lines 57-63: content not recovered)
+#line 64
+void CVotacaoStateAudio::ProcessInput()
+{
+    if (m_bAudioHabilitado) {
+        CancelaEsperaFimAudio();
+        PararTicks();
+        api::CPolySingleton<api::ISound>::instance().Stop();
+        PararTicks();
+    }
+    ProcessInputAudio();
+    if (GetNextState() == this && m_bAudioHabilitado) {
+        const uebyte tick = m_tickEco;
+        CThreadEleitor::GetInst().StartTick(tick);
+    }
+}
+
+
 void CVotacaoStateAudio::StartState()
 {
     m_bAudioHabilitado = CEstadoAudio::GetInst().Ativo();
@@ -47,22 +85,107 @@ void CVotacaoStateAudio::StartState()
 void CVotacaoStateAudio::FinishState()
 {
     CancelaEsperaFimAudio();
-    if (m_bAudioHabilitado) {
-        CThreadEleitor::GetInst().StopTick(m_tickEco);
-        CThreadEleitor::GetInst().StopTick(m_tickMensagem);
-    }
+    PararTicks();
     FinishStateAudio();
 }
 
-// (original lines 100-132: content not recovered)
-#line 133
-// <stubs>
-// f1455 · 496 B · unmatched · name unknown
-// void f1455(i32, i32) { ... }
-// </stubs>
+// (original lines 97-116: content not recovered)
+#line 117
+void CVotacaoStateAudio::ProcessTick(uebyte tick)
+{
+    if (tick == m_tickEco || tick == m_tickMensagem) {
+        const auto statusAudio = api::CPolySingleton<api::ISound>::instance().GetStatus();
+        if (statusAudio != api::ISound::TOCANDO) {
+            CancelaEsperaFimAudio();
+            PararTicks();
+            FalaMensagem();
+            IniciarEsperaFimAudio();
+        }
+    } else {
+        ProcessTickAudio(tick);
+    }
+}
 
-// (original lines 138-227: content not recovered)
-#line 228
+
+void CVotacaoStateAudio::PlayKey(const char tecla) const
+{
+    if (tecla == 0) {
+        api::CPolySingleton<api::IBeep>::instance().BeepKey();
+        CLogVota::GetInst().LogaTeclaIndevida();
+    }
+    if (m_bAudioHabilitado) {
+        switch (tecla) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'B':
+        case 'D':
+            PlayInterruptibleMessage(api::KeyName(tecla));
+            break;
+        case 'C':
+            PlayMessage(api::KeyName(tecla));
+            break;
+        case 0:
+            PlayFile(":/resource/sounds/tecE.wav");
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+// (original lines 167-169: content not recovered)
+#line 170
+void CVotacaoStateAudio::PlayInterruptibleMessage(const std::string& mensagem)
+{
+    auto wav = api::CPolySingleton<api::ITextToSpeech>::instance().Synthesize(mensagem);
+    api::CPolySingleton<api::ISound>::instance().Play(wav, api::ISound::INTERROMPE);
+}
+
+void CVotacaoStateAudio::PlayMessage(const std::string& mensagem)
+{
+    auto wav = api::CPolySingleton<api::ITextToSpeech>::instance().Synthesize(mensagem);
+    auto& audioUrna = api::CPolySingleton<api::ISound>::instance();
+    audioUrna.Play(wav, api::ISound::ENFILEIRA);
+    audioUrna.Wait();
+}
+
+
+std::pair<api::EInputResult, std::string> CVotacaoStateAudio::EmiteEcoComInputField(const CFormInterativoTelaVota& form) const
+{
+    if (form->GetEntradas().size() != 1) {
+        throw CUeVotaError(EUE_VOTA_STATE_AUDIO_SEM_INPUT, "Nao havia campos de input no formulario sem nada digitado");
+    }
+    const auto* campo = form->GetEntradas().at(0);
+    const std::string antes = campo->GetTexto();
+    const api::EInputResult resultado = form->Read();
+    const std::string depois = campo->GetTexto();
+    char tecla = 0;
+    if ((resultado != api::INPUT_CORRIGE && resultado != api::INPUT_SEM_TECLA) || antes != depois) {
+        tecla = campo->GetUltimaTecla();
+    }
+    PlayKey(tecla);
+    return {resultado, depois};
+}
+
+// (original lines 202-221: content not recovered)
+#line 222
+void CVotacaoStateAudio::PlayFile(const std::string& arquivo)
+{
+    if (CEstadoAudio::GetInst().Ativo()) {
+        const std::string caminho = arquivo;
+        auto& reprodutora = api::CPolySingleton<api::ISound>::instance();
+        reprodutora.Play(caminho);
+    }
+}
+
 namespace {
 
 std::string SoletraNumero(std::string numero)
@@ -122,8 +245,7 @@ std::string GetProgresso(size_t atual)
     return FormataProgresso(atual, total);
 }
 
-// (original lines 287-290: content not recovered)
-#line 291
+
 std::string CVotacaoStateAudio::FormatPartyName(const std::string& numero)
 {
     const ueword numeroPartido = static_cast<ueword>(std::atoi(numero.c_str()));
@@ -185,6 +307,21 @@ std::string CVotacaoStateAudio::FormataMensagem(const std::string& mensagem)
         resultado += SubstituiMarcador(parte);
     });
     return resultado;
+}
+
+// (original lines 354-384: content not recovered)
+#line 385
+void CVotacaoStateAudio::IniciarEsperaFimAudio()
+{
+    if (m_bAudioHabilitado) {
+        auto& sound = api::CPolySingleton<api::ISound>::instance();
+        m_esperaFimAudio = sound.WaitAsync([] { return false; }, [this](bool terminou) {
+            if (terminou && m_bAudioHabilitado) {
+                const uebyte tick = m_tickEco;
+                CThreadEleitor::GetInst().StartTick(tick);
+            }
+        });
+    }
 }
 
 } // namespace vota
