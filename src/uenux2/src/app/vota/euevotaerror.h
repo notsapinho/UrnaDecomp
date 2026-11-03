@@ -34,6 +34,11 @@ enum EUeVotaError {
     // celeitorvotando.cpp:229) throws; the name is chosen from its message, "Tipo de cargo nao identificado": no evidence
     // names it
     EUE_VOTA_TIPO_CARGO_NAO_IDENTIFICADO = 9310,
+    // the values are the codes vota::CEleitorVotando::suspenderEleitor (target fn 4442, records celeitorvotando.cpp:410
+    // and :427) throws; the names are chosen from their messages, "Forma suspensao sem voto invalida" and "Forma
+    // suspensao com voto invalida": no evidence names them
+    EUE_VOTA_FORMA_SUSPENSAO_SEM_VOTO_INVALIDA = 9312,
+    EUE_VOTA_FORMA_SUSPENSAO_COM_VOTO_INVALIDA = 9313,
     // the value is the code vota::CInstrucaoVotacaoAcessibilidade::ProcessInputAudio (target fn 7248, record
     // cinstrucaovotacaoacessibilidade.cpp:54) throws; the name is chosen from its message, "Número de inputs inválido",
     // and the class: no evidence names it

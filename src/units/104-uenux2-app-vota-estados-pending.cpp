@@ -19,7 +19,6 @@
 #include "app/vota/eleitor/iniciovotacao/auxiliares/cmenuvisualizarcandidatos.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindoresumozeresima.h"
 #include "app/vota/eleitor/iniciovotacao/creimprimindozeresima.h"
-#include "app/vota/operador/leidentidade/ccancelahabilitacaoeleitor.h"
 #include "app/vota/operador/leidentidade/celeitorencontrado.h"
 #include "app/comum/comparecimentomesario/estados/cpedetitulomesario.h"
 #include "app/vota/operador/cfinalizaoperador.h"
@@ -125,12 +124,6 @@ void CMenuVisualizarCandidatos::StartState()
 // CReimprimindoResumoZeresima::StartState: fn 11855 (1305 B), records creimprimindoresumozeresima.cpp:60, callees with
 // no name: 185, 187, 261, 1127, 6587 (491 is named now, unit 205; 1487 and 1488 are unit 168's).
 void CReimprimindoResumoZeresima::StartState()
-{
-    __builtin_trap();
-}
-
-// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee 652 unresolved (unit 161; 599 and 1687 are unit 50's).
-void CCancelaHabilitacaoEleitor::StartState()
 {
     __builtin_trap();
 }

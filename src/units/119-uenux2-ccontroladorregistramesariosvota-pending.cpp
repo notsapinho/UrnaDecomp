@@ -1,4 +1,4 @@
-// vota::CControladorRegistraMesariosVota's slots that are not written yet, and vota::CRegistroMesarioEncerrado's two. Each
+// vota::CControladorRegistraMesariosVota's slots that are not written yet. Each
 // traps, so no match can land on it, and each moves into its class's .cpp when it is written. What each holds and waits
 // for (the target's bodies, read with pnpm wasm fn):
 // - slot 5, fn 10797: reads comum::CAppInfo::GetInst().GetVota().GetEstadoVota() and writes 55 for 54 and 58 for 57;
@@ -7,11 +7,8 @@
 //   comum::CRdvVota::Comparecimento(), unit 13, and 1391 comum::CJustificador::GetInst, unit 113);
 // - slot 16, fn 10786: calls fn 4662, which throws an api::CUeDesligandoError that fn 1685 builds when the byte at
 //   1832936 is 1, and else calls fn 4657 (1048 B); no callee waits now (4662 is vota::CSincronizaVota's
-//   SincronizaBancoDados, unit 205's, as 1685 and 4657 are): not written yet;
-// - CRegistroMesarioEncerrado::ProcessKey, fn 10762: for key 12, stores fn 652's result at +4, the next state; fn 652
-//   is named now (unit 161's CPedeIdentidade::GetInst): not written yet.
+//   SincronizaBancoDados, unit 205's, as 1685 and 4657 are): not written yet.
 #include "app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.h"
-#include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 
 namespace vota {
 
@@ -21,11 +18,6 @@ void CControladorRegistraMesariosVota::Slot5() const
 }
 
 void CControladorRegistraMesariosVota::Slot16() const
-{
-    __builtin_trap();
-}
-
-void CRegistroMesarioEncerrado::ProcessKey(uebyte)
 {
     __builtin_trap();
 }

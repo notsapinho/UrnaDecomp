@@ -10,9 +10,9 @@
 <rect x="275.4" y="34" width="11" height="11" rx="2" fill="#21262d"/>
 <text x="292.4" y="44" font-size="12" fill="#c3c2b7">no candidate yet</text>
 <text x="0" y="80" font-size="13" fill="#f0efec" font-weight="600">TSE code</text>
-<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">2,715 / 3,285 · 82.6%</text>
+<text x="800" y="80" font-size="12" fill="#c3c2b7" text-anchor="end">2,723 / 3,285 · 82.9%</text>
 <text x="0" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">vota</text>
-<text x="0" y="118" font-size="11" fill="#c3c2b7">70.3% · 548 / 780</text>
+<text x="0" y="118" font-size="11" fill="#c3c2b7">71.0% · 554 / 780</text>
 <rect x="0" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="11" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="22" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -83,10 +83,10 @@
 <rect x="77" y="194" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="88" y="194" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="99" y="194" width="10" height="10" rx="1.7" fill="#199e70"/>
-<rect x="0" y="205" width="10" height="10" rx="1.7" fill="#3987e5"/>
-<rect x="11" y="205" width="10" height="10" rx="1.7" fill="#d95926"/>
+<rect x="0" y="205" width="10" height="10" rx="1.7" fill="#199e70"/>
+<rect x="11" y="205" width="10" height="10" rx="1.7" fill="#3987e5"/>
 <rect x="22" y="205" width="10" height="10" rx="1.7" fill="#d95926"/>
-<rect x="33" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
+<rect x="33" y="205" width="10" height="10" rx="1.7" fill="#d95926"/>
 <rect x="44" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="55" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="66" y="205" width="10" height="10" rx="1.7" fill="#21262d"/>
@@ -522,7 +522,7 @@
 <rect x="620" y="227" width="10" height="10" rx="1.7" fill="#3987e5"/>
 <rect x="631" y="227" width="10" height="10" rx="1.7" fill="#3987e5"/>
 <text x="665" y="102" font-size="12" fill="#f0efec" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">ecourna</text>
-<text x="665" y="118" font-size="11" fill="#c3c2b7">84.5% · 675 / 799</text>
+<text x="665" y="118" font-size="11" fill="#c3c2b7">84.7% · 677 / 799</text>
 <rect x="665" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="676" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="687" y="128" width="10" height="10" rx="1.7" fill="#199e70"/>
@@ -607,10 +607,10 @@
 <rect x="676" y="216" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="687" y="216" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="698" y="216" width="10" height="10" rx="1.7" fill="#199e70"/>
-<rect x="709" y="216" width="10" height="10" rx="1.7" fill="#3987e5"/>
+<rect x="709" y="216" width="10" height="10" rx="1.7" fill="#199e70"/>
 <rect x="720" y="216" width="10" height="10" rx="1.7" fill="#3987e5"/>
 <rect x="731" y="216" width="10" height="10" rx="1.7" fill="#3987e5"/>
-<rect x="742" y="216" width="10" height="10" rx="1.7" fill="#d95926"/>
+<rect x="742" y="216" width="10" height="10" rx="1.7" fill="#3987e5"/>
 <rect x="753" y="216" width="10" height="10" rx="1.7" fill="#d95926"/>
 <rect x="764" y="216" width="10" height="10" rx="1.7" fill="#21262d"/>
 <rect x="665" y="227" width="10" height="10" rx="1.7" fill="#21262d"/>

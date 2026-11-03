@@ -24,6 +24,15 @@
 // at +400 the flag that header calls registrarMesarios. The constructor's parameter type is that class: the slots
 // of comum::CRelatorioTesteImpressora (fn 11193) and CRelUtil::GetSeparadorFase (fn 1919) hand it
 // CConfiguracaoEleicao::GetParametrosUrna().
+// The two suspension forms (the CParametrosUrna fields at +0 and +4) are read by vota::CEleitorVotando::suspenderEleitor
+// (fn 4442) on an object it builds as the others do: the form with a vote through a call of fn 657, a body binaryen keeps
+// once for 20 callers that read a word at +4 through the object's first word, so that getter is out of line here; the
+// form without one is read in place, through +0, and the target has no function of that body (a word at +0 read
+// through the object's first word), so that getter is defined in the class. Out of line in cinformacaoeleicao.cpp it
+// stays a call in the whole link (measured): binaryen merges its body with one that urna_roots (src/app/roots.cpp)
+// calls, so it has two callers and is not inlined, and fn 4442 scores one row more (76 over 506 against 74). No record
+// names either member: their names, their result types (the enums of the fields they read) and where each is defined
+// are chosen.
 
 #include "ecourna/app/dados/parametrizacaourna/cparametrosurna.hpp"
 
@@ -42,6 +51,11 @@ public:
     int GetNumViasEleitores() const;
     int GetNumViasVersoesDados() const;
     int GetNumViasPU() const;
+    ecourna::app::dados::CParametrosUrna::EFormaSuspenderSemVoto GetFormaSuspensaoSemVoto() const
+    {
+        return m_parametros.GetFormaSuspensaoSemVoto();
+    }
+    ecourna::app::dados::CParametrosUrna::EFormaSuspenderComVoto GetFormaSuspensaoComVoto() const;
 
 private:
     const ecourna::app::dados::CParametrosUrna& m_parametros;

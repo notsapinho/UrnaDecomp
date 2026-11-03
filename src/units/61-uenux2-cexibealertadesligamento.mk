@@ -38,9 +38,12 @@
 # typeinfo lie between comum::CAbstractTelaProgresso's and the records of app/comum/carquivosresultado.cpp,
 # comum::CAppStateContext's vtable right after them, which is the name order of the root of app/comum/ (cappstate.h
 # says more); the file name cappstate.cpp is the class-name convention. The destructor is
-# its key function: chosen, as no evidence says which member is out of line, only that one is. cstate.h's directory is
-# chosen. Chosen names, marked in the headers: CAppState's slots 4 (GetNextState) and 6 (ProcessKey), its constructor's
-# argument type and the enumeration of its bits, CExibeAlertaDesligamento::GetInst and SetProximoEstado, the statics'
+# its key function: chosen, as no evidence says which member is out of line, only that one is. ProcessKey (slot 6) is
+# out of line there too, empty, a choice for unit 165's vota::CAguardaInicio::ProcessKey (10217), whose default case
+# calls it (unit 165's fragment has the forms measured); binaryen merges the body with the other empty ones (425) and
+# inlines it away in 10217. cstate.h's directory is chosen. Chosen names, marked in the headers: CAppState's slots 4
+# (GetNextState) and 6 (ProcessKey), its constructor's argument type and the enumeration of its bits,
+# CExibeAlertaDesligamento::GetInst and SetProximoEstado, the statics'
 # names (s_mutex, s_inst), the type of the +24 pointee (api::IForm<api::IScreen>) and every member name. The +12
 # member's type is unit 50's api::CDateTime (api/util/cdatetime.h and cdate.h).
 #

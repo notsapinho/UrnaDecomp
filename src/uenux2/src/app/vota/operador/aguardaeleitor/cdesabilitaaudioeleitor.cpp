@@ -1,8 +1,13 @@
 #include "app/vota/operador/aguardaeleitor/cdesabilitaaudioeleitor.h"
 
+#include <unistd.h>
+
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
+#include "app/vota/eleitor/cestadoaudio.h"
+#include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/log/clogvota.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
@@ -46,6 +51,18 @@ void CDesabilitaAudioEleitor::StartState()
     CLogVota::GetInst().LogaPedidoDesconexaoFone();
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CDesabilitaAudioEleitor::ProcessInput()
+{
+    if (m_form->Read() == api::INPUT_CONFIRMA) {
+        CThreadEleitor::GetInst().GetMensagens().Post(10);
+        while (CEstadoAudio::GetInst().Ativo()) {
+            usleep(300);
+        }
+        CLogVota::GetInst().LogaAudioDesativadoFimVotacao();
+        m_pNextState = &CPedeIdentidade::GetInst();
+    }
 }
 
 } // namespace vota

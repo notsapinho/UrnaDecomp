@@ -156,8 +156,10 @@
 #   copy of the symbol file (splat-remap reads no match list). At the tree's -O3 it matches.
 #
 # Pending (119-uenux2-ccontroladorregistramesariosvota-pending.cpp names each and what it waits for): the controller's
-# slots 5 and 16 (fns 10797, 10786);
-# CRegistroMesarioEncerrado's ProcessKey (fn 10762).
+# slots 5 and 16 (fns 10797, 10786).
+# CRegistroMesarioEncerrado's ProcessKey (fn 10762, slot 6, in cregistromesarioencerrado.cpp after StartState, a chosen
+# line): for key 12 the next state is CPedeIdentidade::GetInst() (fn 652, unit 161). 1 over 10 rows, an operand row,
+# before step 8; matched at step 9, named by its vtable slot.
 #
 # Roots: the controller's vtable in a sink (fn 7160, its builder, is not written). CLogVota::GetInst's callers are the
 # slots, and CRegistroMesarioEncerrado::GetInst's is slot 11, so neither has a stand-in.
@@ -174,7 +176,9 @@
 # at step 9.
 # app/vota/log/clogvota.cpp, the first of this list until vota::CThreadMonitor::Run (unit 116) held CLogVota members
 # inlined, is in unit 116's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
-# has the measurement. Its notes stay here and in clogvota.h.
+# has the measurement. Its notes stay here and in clogvota.h. After LogaEspacoUtilizadoMV, five members their one
+# callers hold inlined (clogvota.h says which and what each logs): LogaInspecaoTerminada (unit 281's 10527), three that
+# vota::CEleitorVotando::suspenderEleitor (4442) holds and LogaEleitorSuspensoSemVoto (DescartaVotos, 4449; unit 197).
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 # clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost

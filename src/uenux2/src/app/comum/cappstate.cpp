@@ -12,4 +12,8 @@ CAppState::CAppState(int eventos)
 
 CAppState::~CAppState() = default;
 
+void CAppState::ProcessKey(uebyte)
+{
+}
+
 } // namespace comum

@@ -22,9 +22,9 @@ namespace vota {
 // Written: the constructor (held inlined by GetInst, fn 3229), GetInst, the destructor (D2 fn 2483, D0 fn 7385),
 // RegistraVoto (fn 4471), StartState (slot 2, fn 7377) with IniciaCiclo, NeedChangeState (slot 3, fn 7352),
 // FinishState (slot 5, fn 7370), ChamaEstadoProximoCargo, FinalizaEleitor (fn 4454, written and not matched),
-// ProcessInput (slot 7, fn 7345) and ProcessTick (slot 8, fn 7349). Pending
-// (src/units/197-uenux2-celeitorvotando-pending.cpp): ProcessKey. The destructor is out of line (the D0 calls the D2 and
-// frees `this`:
+// DescartaVotos (fn 4449), suspenderEleitor (fn 4442) with RegistraVotosSuspensao, ProcessKey (slot 6, fn 7337),
+// ProcessInput (slot 7, fn 7345) and ProcessTick (slot 8, fn 7349). The destructor is out of line (the D0 calls the D2
+// and frees `this`:
 // docs/reference/facts/reading.md R5) and the D2 stores no vptr, so the class is final (R4); declared first, it is the
 // key function, a choice, so this class's own object emits the vtable.
 //
@@ -39,6 +39,15 @@ namespace vota {
 // beside celeitorvotando.cpp, are chosen.
 class CEleitorVotando final : public comum::CAppState {
 public:
+    // suspenderEleitor's parameter (record :410, `const EOrigemSuspensao`): ProcessKey (fn 7337) passes 0 for key 2 and
+    // 1 for key 3, and suspenderEleitor logs "Eleitor foi suspenso automaticamente no treinamento eleitor" for 1 and
+    // "Eleitor foi suspenso pelo mesário" for any other. The record prints the type unqualified, so its scope (here
+    // the class), the enumerators' names and the unscoped enum are chosen (docs/reference/facts/reading.md R11).
+    enum EOrigemSuspensao {
+        SUSPENSAO_PELO_MESARIO = 0,
+        SUSPENSAO_AUTOMATICA_TREINAMENTO = 1,
+    };
+
     virtual ~CEleitorVotando() override;
 
     static CEleitorVotando& GetInst();
@@ -76,6 +85,28 @@ private:
     // hands over to CSincronismoEleitor; it holds the records of the md members those calls reach, which binaryen
     // inlines (src/units/197-uenux2-celeitorvotando.mk). No record names it: the name is chosen.
     void FinalizaEleitor();
+
+    // fn 4449, records :253 and :254 (the IBeep and ISound instance() calls, column 5): with the voter suspended before
+    // any vote, or after some when the urna's parameters say the voter did not vote, it posts 2 to the operator thread's
+    // queue, shows CTelasVota's +164 form (GetTelaDescartaVotos), goes to vota::CAguardaMensagem, finishes the post's
+    // state, logs "Eleitor foi suspenso e não confirmou nenhum voto" (a CLogVota member binaryen inlines), and calls
+    // IBeep's slot 5 (BeepDiscard) and ISound's slot 5 (Stop). Its two calls are suspenderEleitor's (fn 4442).
+    void DescartaVotos();
+
+    // fn 4442, records :410 and :427 (the CUeVotaError 9312 and 9313 throws): ProcessKey's keys 2 and 3. It logs who
+    // suspended the voter, then, with no vote cast yet (the first post's first choice), reads the urna's
+    // EFormaSuspenderSemVoto, else its EFormaSuspenderComVoto, through comum::CInformacaoEleicao (fn 603), and either
+    // discards the votes (DescartaVotos) or fills every choice left with a blank or a null vote (RegistraVotosSuspensao),
+    // logs "Eleitor votou parcialmente e em seguida foi suspenso" and ends the voter (FinalizaEleitor). A form the
+    // parameters do not give throws. Private: a choice.
+    void suspenderEleitor(const EOrigemSuspensao origem);
+
+    // The loop over the posts left that suspenderEleitor (fn 4442) holds behind a 32-byte stack frame of its own, which
+    // binaryen inlines into its one caller (docs/reference/facts/reading.md R10): for each choice left of each post it
+    // calls RegistraVoto, which clang inlines, with the vote's type, or with NULO_APOS_SUSPENSAO_CARGO_SEM_CANDIDATO for
+    // a post with no candidate that is no referendum, then resets g_escolhaAtual and moves to the next post. No target
+    // index and no record: its name, that it is a private member (it calls RegistraVoto) and its parameter are chosen.
+    void RegistraVotosSuspensao(const comum::md::CVoto::ETipo tipo);
 
     // Finishes the post's state and clears the pointer, as IniciaCiclo does when the posts are over and
     // FinalizaEleitor does at the end. A helper of the reconstruction, inline: its name, that it is a function and
