@@ -4,7 +4,7 @@
 // - vota::impl::CSincronismoVotoEleitor::Sincroniza 7174 (slot 2), 3288 B: it holds the records of
 //   csincronizavota.cpp's vota::(anonymous namespace)::SincronizaRDVInternoSeguro and SincronizaRDVExternoSeguro (lines
 //   290 and 303), so it calls into that file, and of the 48 functions it calls (imports aside) fns 1551, 1692, 1701,
-//   2369, 2543 and 2826 have no name and no match (3789 and 3790 match now: unit 109). Its stub, which sat at csincronizavota.cpp:287, goes
+//   2369 and 2826 have no name and no match (3789 and 3790 match now: unit 109; 2543, unit 98). Its stub, which sat at csincronizavota.cpp:287, goes
 //   with this trap.
 #include "app/vota/eleitor/csincronismovotoeleitor.h"
 

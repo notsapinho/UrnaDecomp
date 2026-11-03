@@ -1,7 +1,8 @@
 // Roots: keep this unit's functions in the skeleton link the way the target reaches them. Each has direct callers only:
 // CTradutorFrase::Traduz (654) fns 1543, 3689, 4160, 4161, 5591, 10631, 11181, 11188, 11260, 11261 and 11946 (11181,
-// 3689, 10631 and 11188 are in the link, the others not), Lanca (2263) fns 2543 and 7787, ConfereDadosDinamicos (3770)
-// fns 1271, 2825 and 10210 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`). RecuperaLabel (5658) needs none: its
+// 3689, 10631 and 11188 are in the link, the others not), Lanca (2263) fns 2543 (in the link) and 7787,
+// ConfereDadosDinamicos (3770) fns 1271, 2825 and 10210 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`).
+// RecuperaLabel (5658) needs none: its
 // two call sites are in 654, which ctradutorfrase.cpp holds. binaryen inlines a function with one call site, so each
 // gets two here, and the stand-ins' bodies differ from each other's and from every target function. 3770's callers
 // 1271 (CEleitorDetalhe::GetDinamico), 2825 (which holds CEleitorDetalhe::MarcaHabilitado inlined) and 10210 (which
@@ -20,6 +21,9 @@ void w654_root(void*, int) __asm__("_ZN5comum2md14CTradutorFrase6TraduzERKNSt3__
 void w2263_root(int) __asm__("_ZN5comum23CIntegridadeReferencial5LancaERKNSt3__24pairIbNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEE");
 int w2266_root(int) __asm__("_ZNK5comum15CEleitorDetalhe14SemImpedimentoEv");
 void w1937_root(void*, int) __asm__("_ZNK5comum15CEleitorDetalhe12GetBiometriaEv");
+void w2543_root() __asm__("_ZN5comum24VerificaIntegridadeVotosEv");
+void w2834_root(void*, int) __asm__("_ZNK5comum7CCargos13GetMapaCargosEv");
+void w11514_root(void*, int, int, int, int, int) __asm__("_ZN5comum13VerificaVotosERKNS_4CRdvERKNSt3__23mapIhNS_2md6CCargoENS3_4lessIhEENS3_9allocatorINS3_4pairIKhS6_EEEEEERKNS_13CCandidaturasERKNS_9CPartidosERKNS_10CRespostasE");
 }
 
 namespace {
@@ -57,6 +61,39 @@ __attribute__((noinline)) int BiometriasDosDois(int a, int b)
     return biometrias[9] + biometrias[19];
 }
 
+// Stands for fn 2543's target callers (comum::VerificaIntegridadeVotos): 6734, 7174 (twice) and 12098, none in the
+// link.
+__attribute__((noinline)) void VerificaDuasVezes(int vezes)
+{
+    w2543_root();
+    if (vezes > 1) {
+        w2543_root();
+    }
+}
+
+// Gives fn 11514 (comum::VerificaVotos) its second call site. Its one target caller is 2543 (ledger/callgraph.tsv),
+// and binaryen inlines a function with one call site (docs/reference/facts/tool-traps.md X1), so the target's Inlining
+// pass saw a second call that a later merge removed: 2543 read as the survivor of two identical callers, a reading, and
+// that caller is not identified. Without this stand-in our link inlines 11514 into 2543 (measured: 2543 scored 3051
+// over 3085 rows, VerificaVotos gone from names.tsv). It goes once the second caller is identified and in the link.
+__attribute__((noinline)) int VerificaVotosDeOutro(int rdv, int cargos, int candidaturas, int partidos, int respostas)
+{
+    int resultado[4];
+    w11514_root(resultado, rdv + 4, cargos, candidaturas, partidos, respostas);
+    return resultado[0] & 255;
+}
+
+// Stands for fn 2834's target callers but 2543: 5953, 7787 and 12244, none in the link
+// (comum::CCargos::GetMapaCargos, ccargos.cpp, unit 88's file). The two 12-byte maps are left undestroyed: nothing
+// calls this.
+__attribute__((noinline)) int MapasDeCargos(int a, int b)
+{
+    int mapas[6];
+    w2834_root(mapas, a);
+    w2834_root(mapas + 3, b + 28);
+    return mapas[2] + mapas[5];
+}
+
 const void* volatile comum_dados_sink;
 
 struct SComumDadosRoots {
@@ -68,6 +105,9 @@ struct SComumDadosRoots {
         comum_dados_sink = reinterpret_cast<const void*>(&LancaOsDois);
         comum_dados_sink = reinterpret_cast<const void*>(&SemImpedimentoEmOutro);
         comum_dados_sink = reinterpret_cast<const void*>(&BiometriasDosDois);
+        comum_dados_sink = reinterpret_cast<const void*>(&VerificaDuasVezes);
+        comum_dados_sink = reinterpret_cast<const void*>(&VerificaVotosDeOutro);
+        comum_dados_sink = reinterpret_cast<const void*>(&MapasDeCargos);
     }
 } comum_dados_roots;
 

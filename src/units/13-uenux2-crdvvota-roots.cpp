@@ -20,8 +20,8 @@
 //   comum::asn::CConversorVoto::DoDesconverte (fn 11354), are in the link.
 // - md::CVotosCargos::QuantidadeEscolhas (fn 5642) has none: its one target caller, 4454 (unit 197's FinalizaEleitor,
 //   holding ConfereCedula), is in the link.
-// - w13_nulo calls the static md::CVoto::EhNulo (fn 5645), standing for its target caller 11514; CVoto::EhNulo() const
-//   (fn 11316) is the other call site.
+// - md::CVoto::EhNulo (fn 5645) has none: its two target callers, CVoto::EhNulo() const (fn 11316) and
+//   comum::VerificaVotos (fn 11514, unit 98's cintegridadereferencial.cpp), are in the link.
 // Declared through asm labels with the wasm-level signatures (a constructor returns this); compiled as uenux2 code.
 extern "C" {
 int w13_comparecimento_alvo(int) __asm__("_ZNK5comum8CRdvVota14ComparecimentoEv");
@@ -30,7 +30,6 @@ int w13_votoscargos(void*, void*) __asm__(
 int w13_votoseleicoes(void*, void*) __asm__(
     "_ZN5comum2md18CVotosEleicoesVotaC1ENSt3__23mapIjNS0_12CVotosCargosENS2_4lessIjEENS2_9allocatorINS2_4pairIKjS4_EEEEEE");
 int w13_compativel(const void*, const void*) __asm__("_ZNK5comum2md18CVotosEleicoesVota10CompativelERKS1_");
-int w13_eh_nulo(int) __asm__("_ZN5comum2md5CVoto6EhNuloENS1_5ETipoE");
 }
 extern const char w13_rdvvota_vt[] __asm__("_ZTVN5comum8CRdvVotaE");
 extern const char w11496_vt[] __asm__("_ZTVN5comum20CRdvPosicionadorVotaE");
@@ -64,11 +63,6 @@ __attribute__((noinline)) int w13_confere(const char* rdv, const char* outro)
     return w13_compativel(rdv + 20, outro + 8) * 11;
 }
 
-__attribute__((noinline)) int w13_nulo(const int* tipos)
-{
-    return w13_eh_nulo(tipos[2]) + 2;
-}
-
 void* volatile w13_sink;
 
 struct SW13Roots {
@@ -81,7 +75,6 @@ struct SW13Roots {
         w13_sink = reinterpret_cast<void*>(&w13_desconverte);
         w13_sink = reinterpret_cast<void*>(&w13_desconverte_rdv);
         w13_sink = reinterpret_cast<void*>(&w13_confere);
-        w13_sink = reinterpret_cast<void*>(&w13_nulo);
     }
 } w13_roots;
 

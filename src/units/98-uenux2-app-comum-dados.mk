@@ -4,7 +4,9 @@
 #   std::map<char, CLabelParametrizado>: the map's global destructor (11341) and __tree::destroy (1706) match with it;
 #   CTradutorFrase::Traduz (654), with TraduzLabel (records at lines 104, 119 and 132), TraduzTexto (141, 156) and
 #   TraduzData inlined in it ("CTradutorFrase's members" below);
-# - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344);
+# - comum::CIntegridadeReferencial::Lanca (2263, cintegridadereferencial.cpp line 344), and in the same file the free
+#   functions VerificaCargoCandidatura (5747), VerificaFotoCandidatura (5746), VerificaVotos (11514, written, does not
+#   match yet) and VerificaIntegridadeVotos (2543), with what 2543 calls in other units' files (below);
 # - comum::CEleitorDetalhe::ConfereDadosDinamicos (3770, celeitordetalhe.cpp line 224), and below it three members no
 #   record names, GetImpedimento (3769), SemImpedimento (2266), GetDinamico (1271) and MarcaHabilitado ("CEleitorDetalhe's
 #   members" below). celeitordetalhe.cpp is compiled by unit 110 now, first in its list, ahead of celeitores.cpp: its
@@ -218,6 +220,60 @@
 # node); the lines; and the inline accessors they read, CFotos::ExisteFoto (cfotos.h), CDadosCandidato::GetCodigo
 # (cdadoscandidato.h) and CCandidatura::GetSuplentes (ccandidatura.h). CDetalheCandidato::GetSuplentes is
 # cdetalhecandidato.h's.
+# comum::VerificaIntegridadeVotos (2543) and comum::VerificaVotos (11514), in cintegridadereferencial.cpp after Lanca,
+# with what 2543 needs from other units' files: comum::CCargos::GetMapaCargos (2834, ccargos.cpp, unit 88's), the two
+# key functions binaryen keeps as fn 1939 (ChaveCandidatura in ccandidaturas.cpp, unit 89's; ChaveResposta in
+# crespostas.cpp, unit 110's) and api::CDataMap's Procura (api/io/cdatamap.h). 2543, 2834, 1939 and the destroy of
+# std::map<md::TCargoID, md::CCargo> (1835, emitted by this TU for 2543) match; 11514 is written and differs.
+# - 2543 calls CRdvVota::GetInst (555), then CCargos::GetInst (273) and 2834 into a 12-byte temporary at +4, the GetInst
+#   of CCandidaturas, CPartidos and CRespostas (521, 819, 2812), 11514 into a 16-byte temporary at +16, then Lanca, then
+#   frees the result's string and destroys the map (1835) after Lanca: one full-expression,
+#   Lanca(VerificaVotos(CRdvVota::GetInst(), CCargos::GetInst().GetMapaCargos(), ...)), the result created first (the
+#   higher offset). A named local for the map would end its life before Lanca's call (a reading; not compiled).
+# - 2834 loads the end of m_todos (+8) before it builds the empty map in its result and the begin after: the end held in
+#   a local declared before the map gives that order (measured on the object: a range-for, an iterator loop, a
+#   std::for_each and an emplace all build the map before both loads, and a test of empty() first loads both before);
+#   with the end cached, 2834 matches. Each post is inserted as {GetID(), copy of GetCargo's CCargo}, a pair moved into
+#   the node (the target builds the pair before the tree search). Its place in ccargos.cpp is after GetCurrentEleicaoID,
+#   as band 4 orders 2835, 2834 and ccargos.cpp's sort instance 2833; the line is chosen.
+# - 1939 is p0 * 1000000 + p1. 11514 calls it five times: once in each arm of the post's IsConsulta test for the
+#   nominal and the null votes, and once for a legend vote whose number has the post's digits; the target also passes it
+#   to invoke_iii from fn 5500 (table slot 101). One key function gives three calls in the object, clang hoisting the
+#   call common to both arms; one per map (the candidacies' three, the answers' two) gives the five (measured on the
+#   object): the reading that the target held two functions too, which its binaryen made one. Ours merges the two in
+#   the same way and keeps crespostas.cpp's, whose object links first, so 1939's line names ChaveResposta, as 1273's
+#   names CRespostas::Busca (unit 110's fragment). In band 6 the target's 1939 lies between the executable TU's 1940
+#   and ccargos.cpp's 1938, a run ccandidaturas.cpp fits, which is where ChaveCandidatura is (a reading).
+# - 11514: CRdv's slot 0 (GetVotos) into a map at +68 whose nodes hold the post's byte at +16 and an md::CVotos at +20;
+#   for each, the post's find in the map (the not-found message returns at once), then a per-post check whose result
+#   the target writes into the return slot and tests: {true, ""} stored after the post's last vote, and after each
+#   failure a test of the flag before the next post. That is a static function of this file inlined, its result named
+#   and returned (VerificaVotosCargo), a reading. Inside it, per vote: LEGENDA requires a proportional post, two
+#   characters at least, the party (CStringUtils::ToWord of the first two) among CPartidos, and, when the number has the
+#   post's digits, no candidacy with that number; NOMINAL requires an answer (a post with a consultation detail) or an
+#   apt candidacy (holder's situation 0); a null vote (CVoto::EhNulo, but NULO_POR_REPETICAO, 7) with the post's digits
+#   must have no answer, or no apt candidacy. The post's id for the messages is read once before the vote loop into a
+#   local (the target's local 11, set at +0x27f and read at each message; each key call reloads +20 after ToDWord, four
+#   loads of +20 in both bodies). The two null-vote messages are cold call sites in the target, std::__format's
+#   __try_constant_folding and the string_view constructor called out of line (fns 154, 155), and in ours
+#   (`-Rpass-missed=inline`: cost 45, threshold 45), and both frames are 528 bytes. What still differs (`pnpm wasm
+#   score` against the plain link, ours 5454 at the link of this commit: 546 over 3086 rows, 422 of the 430 replaced
+#   operand-only, 66 inserted, 50 deleted): the format parse context and its optional result lie at +80 and +112 in the
+#   target and at +416 and +448 in ours, which puts the other format temporaries 48 bytes lower in ours (the buffer at
+#   +156 against +204); at the seven in-loop failures whose message is built inline the target loads the message's
+#   capacity word (+516, the sized delete's argument) before the copy into the result (fn 138), ours after it, as the
+#   not-found and null-vote failures do in both; and ours opens two more outer blocks. Measured and not removing them:
+#   [[unlikely]] on the two null-vote tests (546 over 3086, the same rows; it would not land: an attribute), and with it
+#   the post's find inside the per-post function (664 over 3100 rows). Not explained.
+# - Its name: fn 11514 has no record, slot or census pair; the hand line in splat/symbol_addrs.txt
+#   (`callers+content`) names it by the ten literals only it loads in the target, which ours loads, so that 2543
+#   matches.
+# - The stand-ins in 98-uenux2-app-comum-dados-roots.cpp: two calls of 2543 for its callers 6734, 7174 and 12098; a
+#   second call of 11514, without which our link inlines it into 2543 (2543 then scored 3051 over 3085 rows); and two of
+#   2834 for 5953, 7787 and 12244. The one for 11514 stands for a caller the target's merges removed (the roots
+#   comment), a reading.
+# Chosen: the names (VerificaVotosCargo, ChaveCandidatura, ChaveResposta, Procura, GetMapaCargos included), the free
+# functions' linkage and files, GetMapaCargos' being a member (it reads m_todos), the parameters' names, and the lines.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp \
   src/app/comum/dados/cintegridadereferencial.cpp \

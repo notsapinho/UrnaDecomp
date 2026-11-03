@@ -83,7 +83,20 @@ comum::TEleicaoID CCargos::GetCurrentEleicaoID() const
 // void f5604(i32, i32, i32) { ... }
 // </stubs>
 
-// (original lines 95-204: content not recovered)
+// (original lines 95-109: content not recovered)
+#line 110
+std::map<TCargoID, md::CCargo> CCargos::GetMapaCargos() const
+{
+    const std::vector<TCargoEleicao>::const_iterator fim = m_todos.end();
+    std::map<TCargoID, md::CCargo> cargos;
+    for (std::vector<TCargoEleicao>::const_iterator item = m_todos.begin(); item != fim; ++item) {
+        const md::CCargo& cargo = CConfiguracaoEleicao::GetInst().GetCargo(item->second);
+        cargos.insert({cargo.GetID(), cargo});
+    }
+    return cargos;
+}
+
+// (original lines 121-204: content not recovered)
 #line 205
 void CCargos::RemoveFiltro()
 {

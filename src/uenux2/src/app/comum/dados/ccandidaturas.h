@@ -72,4 +72,10 @@ private:
 // The record does not show the linkage: external is chosen, and so is this declaration's place.
 const md::CCandidatura& GetCandidaturaAtual(const std::string& funcao);
 
+// A candidacy's key in the base's map, the post times 1000000 plus the candidate, as Localiza and Busca compute it.
+// With ChaveResposta (crespostas.h) it is target fn 1939: binaryen keeps one body for the two in our link, and that the
+// target held two functions as well is a reading of comum::VerificaVotos' five calls (unit 98's fragment has the
+// measurement). Its name, its being a free function and its file are chosen.
+uedword ChaveCandidatura(md::TCargoID cargo, TCandidatoID candidato);
+
 } // namespace comum

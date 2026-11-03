@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -47,6 +48,10 @@ public:
     // The posts kept: vota::CVotacaoStateAudio::FormataMensagem (fn 6999) walks the vector at +16 and reads each pair's
     // post id (+4). The accessor and its name are chosen.
     const std::vector<TCargoEleicao>& GetCargos() const { return m_cargos; }
+    // fn 2834: every post of m_todos (the vector at +4) by its id, each a copy of CConfiguracaoEleicao::GetCargo's (fn
+    // 861) CCargo. Its target callers (2543, 5953, 7787, 12244) call it on GetInst()'s result, and it reads the private
+    // m_todos, so it is a member; its name is chosen.
+    std::map<TCargoID, md::CCargo> GetMapaCargos() const;
 
     // fn 3784: copies the vector at +4 over the one at +16, through std::vector's range assign (fn 3783, which fn 7377,
     // FiltraPorAbrangencia, calls too). Its callers, fns 12098 and 12110 (vota::CGravaResultado's and vota::CGeraBU's slot
