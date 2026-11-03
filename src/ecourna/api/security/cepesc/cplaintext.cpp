@@ -51,4 +51,11 @@ CPlainText::CPlainText(const uebyte tipoArquivo, const uebyte idCriptografia, co
 {
 }
 
+CPlainText::CPlainText(const ueword identificadorUE, const ueword versao, std::vector<uebyte> tabelaCriptografiaUE,
+                       std::vector<uebyte> numeroAleatorioUE, std::vector<uebyte> chave, std::vector<uebyte> conteudo)
+    : CPlainText(0, 1, identificadorUE, versao, std::move(tabelaCriptografiaUE), std::move(numeroAleatorioUE), std::move(chave),
+                 std::move(conteudo), nullptr)
+{
+}
+
 } // namespace ecourna::api::cepesc

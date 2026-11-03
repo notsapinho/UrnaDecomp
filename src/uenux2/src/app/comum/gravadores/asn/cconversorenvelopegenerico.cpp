@@ -9,6 +9,7 @@
 #include <optional>
 #include <vector>
 
+#include "api/io/asn/cfileasn.h"
 #include "app/comum/asn/cconversorcabecalhoentidade.h"
 #include "app/comum/asn/cconversorseguranca.h"
 #include "app/comum/asn/util.h"
@@ -17,7 +18,7 @@
 
 namespace comum::asn {
 
-// (original lines 20-32: content not recovered)
+// (original lines 21-32: content not recovered)
 #line 33
 CConversorEnvelopeGenerico::TEntidade CConversorEnvelopeGenerico::DoConverte(const TDado& dado) const
 {
@@ -168,6 +169,12 @@ md::CEnvelopeGenerico::Tipo CConversorEnvelopeGenerico::DesconverteTipoEnvelope(
             break;
     }
     throw CUeComumGravadoresError(EUE_COMUM_GRAVADORES_8615, std::format("Tipo de envelope inválido: {}", tipo));
+}
+
+void GravaArquivo(const api::CFile& arquivo, const md::CEnvelopeGenerico& envelope)
+{
+    const CConversorEnvelopeGenerico conversor;
+    api::CFileASN::WriteToFile(arquivo, conversor.Converte(envelope));
 }
 
 } // namespace comum::asn

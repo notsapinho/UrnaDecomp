@@ -5,6 +5,14 @@
 # over 383 rows (3 inserted, 3 deleted), this one matches. No record covers the statement, so the form is the one these
 # bytes choose. Measured in the object to load the end first as well: the local reference with std::begin and std::end,
 # with cbegin and cend, with data() and data() + size(), in braces, and declared before cifrado.
+# CPlainText's constructor over two words and four vectors (5168, no record, cplaintext.hpp's notes) delegates to the
+# 9-argument one (9465) with the file type 0, the cipher id 1 and no salt (nullptr). The four moves in parameter order
+# and the empty shared_ptr zeroed twice, at +8 and at +0 of the frame with 8-byte alignment (the by-value argument's
+# copy), are the target's stores in the object as first written (wasm-objdump -d of a try-tu.sh --symbols run).
+# Its callers, 2725 (comum::CControlaArmazenamentoDeImagens') and 11629 (comum::CGravadorBU), are not written: the
+# roots' TextosPlanos stands for both and reads the result, as 2725 does. Measured on the whole link: 12 over 207
+# rows, every row an operand (calls, data addresses, the __THREW__ word's address), and it matches; its line after the
+# other two constructors is a choice.
 ECOURNA_SRCS += api/security/cepesc/cinfosalt.cpp api/security/cepesc/ccipheredout.cpp api/security/cepesc/ccipheredin.cpp \
                 api/security/cepesc/cplaintext.cpp api/security/asn1/ckeyloader.cpp
 # the units' bodies have no caller in the skeleton yet: 05-ecourna-api-security-cepesc-roots.cpp keeps them the way the target reaches them

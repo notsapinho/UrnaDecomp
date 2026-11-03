@@ -150,6 +150,11 @@ void CLocal::VerificaEhSecao(const std::string& funcao) const
     }
 }
 
+bool CLocal::TemSecao() const
+{
+    return m_local->TemSecao();
+}
+
 std::string FormataAgregadas(const std::string& formato)
 {
     const CLocal& local = CLocal::GetInst();

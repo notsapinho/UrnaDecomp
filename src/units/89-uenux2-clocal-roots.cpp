@@ -27,6 +27,7 @@ int w5743(int) __asm__("_ZNK5comum6CLocal12GetLocalDataEv");
 int w820(int) __asm__("_ZNK5comum6CLocal14UrnaBiometricaEv");
 void w5742(int, int) __asm__("_ZNK5comum6CLocal15VerificaEhSecaoERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 int w1933(int) __asm__("_ZNK5comum6CLocal10GetLocalIDEv");
+int w5739(int) __asm__("_ZNK5comum6CLocal8TemSecaoEv");
 int w5676(int, int, int, int, int) __asm__("_ZN5comum2md14CInfoMunicipioC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEsb");
 int w5674(int, int, int, int, int, int) __asm__("_ZN5comum2md14CInfoMunicipioC1EjRKNSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEsbRKNS0_13CHorarioVeraoE");
 int w3725(int) __asm__("_ZNK5comum2md14CInfoMunicipio15GetHorarioVeraoEv");
@@ -96,6 +97,8 @@ __attribute__((noinline)) void EhSecoes(int a, int b, int f)
 }
 // Stands for fn 1933's callers 1543, 2725, 7787, 11242 and 12098 (11188, unit 123's, is in the link).
 __attribute__((noinline)) int LocaisID(int a, int b) { return (w1933(a) << 2) - w1933(b); }
+// Stands for fn 5739's callers 2725 and 4161, neither in the link.
+__attribute__((noinline)) int TemSecoes(int a, int b) { return w5739(a) * 5 + w5739(b); }
 __attribute__((noinline)) int Infos(int a, int b, int c, int d, int e, int f)
 {
     return w5676(a, c, d, e, f) * w5676(b, c + 1, d, e, f);
@@ -177,6 +180,7 @@ struct SCLocalRoots {
         clocal_sink = reinterpret_cast<const void*>(&Biometricas);
         clocal_sink = reinterpret_cast<const void*>(&EhSecoes);
         clocal_sink = reinterpret_cast<const void*>(&LocaisID);
+        clocal_sink = reinterpret_cast<const void*>(&TemSecoes);
         clocal_sink = reinterpret_cast<const void*>(&Infos);
         clocal_sink = reinterpret_cast<const void*>(&InfosVerao);
         clocal_sink = reinterpret_cast<const void*>(&Horarios);
