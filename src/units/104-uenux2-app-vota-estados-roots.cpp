@@ -16,8 +16,8 @@
 // 11911, 11927 (11834, 11838 and 11848 are in the link); 5954: 11881, 11888; 2288: 11876, 11884, 11888, 11891 (11896 is
 // in the link); 5943: 11855 (11834 is in the link); 5428: 10217, 10734; 1536: 10473, 10477, 10485, 10489, 10500
 // (6015, 10466 and 10593 are in the link); 5421: 10626, 10627; 2729: 6011, which still waits (2895, 10317 and 10383 are in the
-// link); 5383: 10313, 10316; 5342: 10737 (10791 is in the link); 1897: 10404, 10419, 10425. The pairs for 5942 and 5941
-// went: their target callers, 11848 with 11852 and with 11845, are in the link.
+// link); 5383: 10313, 10316; 1897: 10404, 10419, 10425. The pairs for 5942 and 5941 went: their target callers, 11848 with
+// 11852 and with 11845, are in the link; so did 5342's, whose callers 10737 and 10791 are.
 //
 // vota::CMaisInformacoes::GetInst (fn 1280) takes the state to go back to: its target callers pass 0 and their own
 // `this`, so one call passes 0 and the other the stand-in's argument, and binaryen folds no constant into the body.
@@ -45,7 +45,6 @@ int w1536_getinst(void) __asm__("_ZN4vota26CCancelaHabilitacaoEleitor7GetInstEv"
 int w5421_getinst(void) __asm__("_ZN4vota15CProcuraEleitor7GetInstEv");
 int w2729_getinst(void) __asm__("_ZN5comum18CPedeTituloMesario7GetInstEv");
 int w5383_getinst(void) __asm__("_ZN5comum18CGestorDadoMesario7GetInstEv");
-int w5342_getinst(void) __asm__("_ZN4vota17CFinalizaOperador7GetInstEv");
 int w1897_getinst(void) __asm__("_ZN4vota20CSincronismoOperador7GetInstEv");
 }
 
@@ -73,7 +72,6 @@ __attribute__((noinline)) int ChamaGetInstDosEstados(int n)
     total += w5421_getinst() + w5421_getinst();
     total += w2729_getinst() + w2729_getinst();
     total += w5383_getinst() + w5383_getinst();
-    total += w5342_getinst() + w5342_getinst();
     total += w1897_getinst() + w1897_getinst();
     return total;
 }
