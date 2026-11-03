@@ -48,7 +48,9 @@ EMSCRIPTEN_KEEPALIVE int probe_app_signal(unsigned long a, unsigned long b, cons
   heap->connect([&acc](unsigned long, unsigned long, const std::string &s) { acc += s.size(); });
   (*heap)(a, b, std::string(text));
   delete heap;
-  c.disconnect();
+  // no c.disconnect(), here or in probe_signals: connection_body_base::disconnect is no template, so the tree root that
+  // includes this file (src/app/roots_boost.cpp) cannot declare it extern, and its copy, without landing pads, would
+  // take the place of ecourna's (target fn 9570) in the app link (src/units/06-ecourna-api-compression.mk)
   boost::shared_ptr<std::string> sp = boost::make_shared<std::string>(text);
   boost::weak_ptr<std::string> wp(sp);
   if (boost::shared_ptr<std::string> l = wp.lock()) {
@@ -63,7 +65,6 @@ EMSCRIPTEN_KEEPALIVE int probe_signals(int x) {
   sig.connect([&acc] { acc++; });
   boost::signals2::connection c = sig.connect([&acc] { acc += 2; });
   sig();
-  c.disconnect();
   sig();
   boost::signals2::signal<void(int)> sig2;
   sig2.connect([&acc](int v) { acc += v; });

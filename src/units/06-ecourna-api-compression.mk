@@ -36,13 +36,33 @@
 # 9521 9526 9527 9536 9549 9551 9553 9554 9555 9557 9558 do not match; without make_shared's, 9521 9549 9551 9553 9554
 # 9555 9557 9558; without operator()'s, 2204 5203 5204 9564 9576; 5192 and 2203 match in each, no line loses a row of
 # the base, and with none of them (5e41daca) 5192 is unresolved (90 over 155 rows, 68 inserted: ~shared_count inlined
-# in its landing pad). operator() (9583, ours from clzmacompress.cpp.o)
-# scores 59 over 683 rows, all operand-only, and reads unresolved on the table slot of slot_call_iterator_t's
-# lock_next_callable (9578, no candidate: ours scores 198 over 810 rows, 130 inserted), so CZip's and CLzmaCompress's
-# AtualizaProgresso (9537, 9585), which invoke operator(), read unresolved on its slot. The rtti-vptr hand line that
-# named 5192 for 5193's call (the only target function that holds ICompressor's vtable address point) went: with 5192
-# matched, a generated `call` line names it, and without the hand line steps 8 to 10 move no scan row and build the
-# target's sha256 with every match.
+# in its landing pad).
+# operator() (9583) and slot_call_iterator_t's lock_next_callable (9578) match from clzmacompress.cpp.o, and with them
+# CZip's and CLzmaCompress's AtualizaProgresso (9537, 9585), which invoke operator(). At 34125a18 lock_next_callable
+# held, in a landing pad, the code of garbage_collecting_lock<connection_body_base>'s destructor (ours 198 over 810 rows
+# against 9578, 130 inserted), which the target calls out of line there (5202, whose callers are 9570 and 9578), and
+# operator() read unresolved on lock_next_callable's table slot (59 over 683 rows, all operand-only). The Boost probe
+# called connection::disconnect, so the link took the root's connection_body_base::disconnect, with no landing pad and
+# no call of that destructor (the target's 9570 has both: pnpm wasm fn; the root's object: wasm-objdump -d), so the
+# destructor's one caller in our link was lock_next_callable, into which binaryen inlined it (a reading; the object
+# calls it there twice, both in landing pads). disconnect is no template, so no extern line keeps the root's copy out;
+# the probe (tools/libs/boost/probe.cpp) no longer calls it, and clzmacompress.cpp.o's disconnect (9570) and destructor
+# (5202) link and match. The root also declares extern, for clzmacompress.cpp.o's copies, connection_body_base's
+# dec_slot_refcount over a connection body's lock (9575), the connection list's erase (9579), the reserve_impl of the
+# slot-call cache's tracked pointers (9563, with 9560, 9561 and 9562) and of a lock's garbage (9572), and, for
+# icompressor.cpp.o's, sp_counted_impl_p<signal_impl>::dispose (9519). Measured on whole links (steps 6 to 10, gains and
+# losses by index against 34125a18, every other change of the root and the probe in place), each left out alone: with
+# the probe's two disconnect calls back, 5202 9537 9570 9578 9583 9585 do not match (and 9538 reads unresolved again;
+# either call alone makes roots_boost.o define disconnect: wasm-objdump -x -j linking); without dec_slot_refcount's
+# line, 9572 9575; without erase's, 9579; without the tracked pointers' reserve_impl, 9560 9561 9562 9563; without the
+# garbage's, 9572; without dispose's, 9519. No variant loses a row of 34125a18. Not landed:
+# throw_exception<bad_function_call> (9571) declared extern as well, measured with these lines but sp_counted_impl_p
+# declared extern as a whole class, adds 5197 5198 5199 5200 9566 9567 9569 and takes 9537, 9583 and 9585 out of match
+# (9571 then reads no-candidate, and 2223 and 9378 unresolved); 9577 (slot_call_iterator_t's dereference) stays
+# unresolved self-voted on 9571, whose only name is 9577's table operand.
+# The rtti-vptr hand line that named 5192 for 5193's call (the only target function that holds ICompressor's vtable
+# address point) went: with 5192 matched, a generated `call` line names it, and without the hand line steps 8 to 10 move
+# no scan row and build the target's sha256 with every match.
 # ICompressor::Add(const std::filesystem::path&) and globToFileList (record icompressor.cpp:61) are in the link inside
 # 5821, where binaryen inlines Add; with them come libc++'s std::regex members this object instantiates (9534, the
 # constructor from a std::string, and 3526, 5187, 9518), vector<path>'s __init_with_size and slow push_back (9531,
@@ -71,7 +91,7 @@
 # (2062, 9518) both hold __end_state<char>'s vptr (1535228) and four other regex vptrs, and with
 # src/app/roots_cbasetype.cpp's copy matching 2062 each forms a same-shape pair with ours (pnpm wasm fingerprint
 # --depth 0), so the vptr anchors nothing (docs/reference/splat.md, `vptr-anchor`).
-# DoAdd (9538) is written and unresolved on std::system_category: 582 rows over 2643, the 561 replaced all
+# DoAdd (9538) is written and does not match: 582 rows over 2643, the 561 replaced all
 # operand-only, 7 inserted and 14 deleted, measured after unit 206 gave CFile's destructor the catch DoAdd holds
 # inlined. Its callees in the target 891 and 1053 pair with libc++'s system_category
 # and generic_category (census addr), and each is unresolved on its static's guard (.bss, no target symbol); 3564
@@ -79,8 +99,8 @@
 # 261's stand-in gives it its second caller, and localtime (6270) and generic_category (1053) are unresolved
 # self-voted on a .bss word that only each reads in the target (localtime's buffer 1932496, generic_category's guard
 # 1926460: grep of the split's pieces), which no hand line may name (docs/reference/splat.md section 3, "No circular
-# evidence"). DoAdd now reads `unresolved` on the table slot of CZip::AtualizaProgresso, which no symbol line names
-# (9537 pairs with it by the census and is unresolved, on operator()'s slot: above).
+# evidence"). With CZip::AtualizaProgresso (9537) matched, DoAdd reads `differs` at its stack frame (800 bytes in the
+# target, 784 in ours: the scan's detail), with the same score as above, measured again with these changes.
 # The ecourna compile rule has only -Isrc; these TUs include <boost/signals2/...> and <minizip/zip.h> (zlib contrib).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp

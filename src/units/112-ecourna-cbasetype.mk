@@ -128,8 +128,8 @@
 #     in roots_boost.o, at APP_CXXFLAGS, in a scratch link, it scores 2708 over 4726 rows, 1764 deleted: not the target's body.
 #   - 2204, a Boost body, matches from clzmacompress.cpp.o with two of its callers, 5204 and 9576, since the tree root
 #     src/app/roots_boost.cpp leaves the app signal's operator() to unit 06's objects (fragment 06); its callers 9570,
-#     9578 and 9583 do not match. 9032, which waited for 306, matches
-#     since src/app/roots_vector.cpp holds it.
+#     9578 and 9583 match too, since the Boost probe calls no disconnect (fragment 06). 9032, which waited for 306,
+#     matches since src/app/roots_vector.cpp holds it.
 #
 # Hand line: CSerialMidia::ValidaSerial (9258), a callee with one user, the slot 9259's constructor takes, or 9259 stays
 # `self-voted`: the literal only it loads is its own evidence, and the line says so. 9258 itself matches (above).
