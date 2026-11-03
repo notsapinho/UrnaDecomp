@@ -9,8 +9,6 @@
 
 namespace vota {
 
-CInformacaoZeresimaTardia::~CInformacaoZeresimaTardia() = default;
-
 CInformacaoZeresimaTardia::CInformacaoZeresimaTardia()
     : comum::CAppState(EVENTO_ENTRADA), m_espera(1000), m_form(CTelasVota::GetInst().GetTelaInformacaoZeresimaTardia())
 {
@@ -27,6 +25,8 @@ CInformacaoZeresimaTardia& CInformacaoZeresimaTardia::GetInst()
 
 std::unique_ptr<CInformacaoZeresimaTardia> CInformacaoZeresimaTardia::s_inst;
 std::mutex CInformacaoZeresimaTardia::s_mutex;
+
+CInformacaoZeresimaTardia::~CInformacaoZeresimaTardia() = default;
 
 void CInformacaoZeresimaTardia::StartState()
 {

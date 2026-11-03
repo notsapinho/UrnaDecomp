@@ -8726,7 +8726,7 @@
 9246 __cxx_global_array_dtor.24@app/ecourna/app_dados_tiposbasicos.cpp.o
 9247 __cxx_global_array_dtor.21
 9248 __cxx_global_array_dtor.18@app/ecourna/app_dados_tiposbasicos.cpp.o
-9249 __cxx_global_array_dtor.15
+9249 __cxx_global_array_dtor.15@app/ecourna/app_dados_tiposbasicos.cpp.o
 9250 __cxx_global_array_dtor.12
 9251 __cxx_global_array_dtor.9@app/ecourna/app_dados_tiposbasicos.cpp.o
 9252 __cxx_global_array_dtor.6@app/ecourna/app_dados_tiposbasicos.cpp.o
@@ -9706,9 +9706,9 @@
 5550 _ZN3api12CFormBuilder7GetFormERKNSt3__210shared_ptrINS_8IPreShowINS_7IScreenEEEEERKNS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE
 5987 _ZN3api10CFormStackINS_7IScreenEE6RemoveEPNS_5IFormIS1_EE
 6024 byn$mgfn-shared$_ZN3api5IFormINS_7IScreenEEC2ERKNSt3__26vectorINS3_10shared_ptrINS_10IFormFieldIS1_EEEENS3_9allocatorIS8_EEEERKNS5_INS_8IPreShowIS1_EEEE
-8177 __cxx_global_array_dtor.10@app/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp.o
-8187 __cxx_global_array_dtor.8@app/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp.o
-8641 __cxx_global_array_dtor.4@app/uenux2/src/app/vota/eleitor/iniciovotacao/auxiliares/cmaisinformacoes.cpp.o
+8177 __cxx_global_array_dtor.17
+8187 __cxx_global_array_dtor.15@app/uenux2/src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp.o
+8641 __cxx_global_array_dtor.11@app/uenux2/src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp.o
 8727 __cxx_global_array_dtor.7@app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 8879 _ZNSt3__26vectorIN3api10FormHandleINS1_7IScreenEEENS_9allocatorIS4_EEE7reserveEm
 8910 __cxx_global_array_dtor.120
@@ -10161,7 +10161,7 @@
 10663 _ZN4vota21CEleitorNaoEncontrado15LogaImpedimentoEv
 1720 _ZN4vota17CGeraZeresimaBaseD2Ev
 1952 _ZN4vota23CGeraResumoZeresimaBaseD2Ev
-2879 _ZN4vota25CInformacaoZeresimaTardiaD2Ev
+2879 _ZN4vota25CInformacaoZeresimaTardiaD1Ev
 2902 byn$mgfn-shared$_ZN4vota21IEleitorImpedidoVotarD2Ev
 5958 _ZN4vota26CConfirmaImpressaoZeresima10StartStateEv
 5960 _ZN4vota13CGeraZeresimaD0Ev
@@ -10776,7 +10776,7 @@
 5979 _ZN4vota24CExibeAlertaDesligamento7GetInstEv
 11718 __cxx_global_array_dtor.18@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11719 __cxx_global_array_dtor.16
-11720 __cxx_global_array_dtor.10@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
+11720 __cxx_global_array_dtor.10
 11721 __cxx_global_array_dtor.8@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11722 __cxx_global_array_dtor.6@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o
 11723 __cxx_global_array_dtor.4@app/uenux2/src/app/vota/eleitor/votaproporcional/cpedenominal.cpp.o

@@ -2476,7 +2476,7 @@ _ZNSt3__29__unicode33__extended_grapheme_cluster_break15__evaluate_noneB8ne21010
 _ZN5comum9CParteRdvD2Ev = func:2876; // size:0x100 evidence:pair-fingerprint
 _ZNSt3__26__treeINS_12__value_typeIhN5comum2md6CVotosEEENS_19__map_value_compareIhNS_4pairIKhS4_EENS_4lessIhEELb1EEENS_9allocatorIS9_EEE7destroyEPNS_11__tree_nodeIS5_PvEE = func:2877; // size:0x87 evidence:pair-addr
 _ZNSt3__28__format15__output_bufferIcE15__prepare_writeB8ne210108Em = func:2878; // size:0x25 evidence:pair-fingerprint
-_ZN4vota25CInformacaoZeresimaTardiaD2Ev = func:2879; // size:0x38 evidence:pair-fingerprint
+_ZN4vota25CInformacaoZeresimaTardiaD1Ev = func:2879; // size:0x38 evidence:pair-fingerprint
 _ZN4vota14CInicioVotacao7GetInstEv = func:2880; // size:0x7f7 evidence:vptr-anchor
 _ZN4vota24CExibeAlertaDesligamentoD1Ev = func:2883; // size:0x38 evidence:pair-fingerprint
 _ZN4vota10CRetirarMRD0Ev = func:2884; // size:0xd evidence:pair-addr

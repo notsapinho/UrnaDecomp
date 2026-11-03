@@ -3,12 +3,10 @@
 # of fn 509 and comum::util::CMonitoraAlimentacao::CreateInst; CThreadOperador::Run, CThreadEleitor::ProcessaEventos
 # and the debug wrapper of api/util/uedebug.h they call; CThreadMonitor::Run (written, not matched: its paragraph below),
 # with the members it holds inlined, CMonitoraAlimentacao's GetInst and VerificaAlimentacao and CLogVota's five, and its
-# std::async state. The sources are the six named below, five in CTHREADS_SRCS (clogvota.cpp, unit 119's file, moved
-# here ahead of cthreadmonitor.cpp: Run's paragraph says why) and cthreadoperador.cpp in unit 197's list (its bullet says
-# why); CTHREADS_SRCS also lists unit 104's cemitirmaisbu.cpp, right after clogvota.cpp, for its order only: its
-# vota::CEmitirMaisBU::ProcessInput (fn 12081) holds a CLogVota member binaryen inlines from clogvota.cpp's object, and
-# matches with its object after that one (unit 104's fragment has the scores);
-# the headers are api/ipc/cmessagequeue.h (the queue's constructor, CMessageInterface, Vazia), api/ipc/cthread.h
+# std::async state. The sources are the six named below, four in CTHREADS_SRCS, clogvota.cpp (unit 119's file) at the
+# head of unit 104's list, ahead of cthreadmonitor.cpp (Run's paragraph says why), and cthreadoperador.cpp in unit 197's
+# list (its bullet says why); the headers are api/ipc/cmessagequeue.h (the queue's constructor, CMessageInterface,
+# Vazia), api/ipc/cthread.h
 # (slots 3 and 4, Stop, PararSolicitado, Yield; Dorme is out of line in cthread.cpp, unit 18), api/hwil/ipower.h
 # (FoneDesconectado, and for Run ChaveDesligada, MidiaExternaAusente, TecladoEleitorDesconectado),
 # app/vota/cthreadvota.h, the new app/comum/cappstatecontext.h (TrocaEstado), app/comum/util/euecomumutilerror.h,
@@ -229,6 +227,10 @@
 #   14 deleted), the four disk-space logs' locals swapped; with it moved ahead of this list, 331 over 3171 (52, 6), and
 #   the swaps gone (docs/reference/facts/codegen.md C4). The target's data hold clogvota.cpp's records (@1532800) ahead of
 #   those of every file here (cmonitoraalimentacao.cpp's @1600680 first), so clogvota.cpp moved into this list, first.
+#   It moved on to the head of unit 104's list for that unit's fn 12081, which holds a CLogVota member binaryen inlines:
+#   of the two moves codegen.md C4 measures for it, both 59 over 704 rows and 11898 matches, that one keeps the target's
+#   data order (unit 104's fragment has both). It is still ahead of cthreadmonitor.cpp.o, and Run reads the same there
+#   (as landed, below).
 # - the select's operand order (`> 0 ? Ext : Int`): 331 to 328 with it inverted; the doubles' order (above): 322.
 # - as landed: 317 over 3167 rows (269 replaced, 267 operand-only, 48 inserted, 0 deleted). The inserted rows and the two
 #   replaced ones are DepuraInfo's body (iinterfaceinit.cpp's priority-6 wrapper, the target's 5895) inside Run: the
@@ -240,7 +242,7 @@
 #   row reads unresolved on s_mutex, the first operand the scan cannot place.
 # - SaiPorVotacaoSuspensa's state: with set_value (4771) inlined into its __execute, 10224 read 99 over 117 rows (89
 #   inserted): 4771's other target caller is 11151, not written, so the roots file's ConcluiEstado stands for it.
-CTHREADS_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
+CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp
 UENUX2_SRCS += $(CTHREADS_SRCS)
 CTHREADS_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/116-uenux2-cthreads-pending.o: $(ROOT)/src/units/116-uenux2-cthreads-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/116-uenux2-cthreads.mk $(CTHREADS_HDRS)

@@ -173,7 +173,7 @@
 # 4522), counted from those ld_index values, not linked. Scored 7 over 55 rows, all operand-only, before step 8; matched
 # at step 9.
 # app/vota/log/clogvota.cpp, the first of this list until vota::CThreadMonitor::Run (unit 116) held CLogVota members
-# inlined, is in unit 116's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
+# inlined, heads unit 104's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
 # has the measurement. Its notes stay here and in clogvota.h.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)

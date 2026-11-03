@@ -183,16 +183,23 @@
 #   (fn 233): operator+ on the named string builds a new one with both parts copied, as 12081 does inline. Its name, its
 #   parameter's type and its place in clogvota.cpp (after LogaMesarioIndagadoHorarioUrna and the members unit 156 adds
 #   there) are chosen. The order of the objects decided the locals (docs/reference/facts/codegen.md C4): with
-#   cemitirmaisbu.cpp in this list, ahead of clogvota.cpp, 12081 scored 199 over 717 rows (13 inserted, 13 deleted), the
-#   target's 703 instructions and 16 locals with the locals numbered otherwise (binaryen gave the count ToByte returns a
-#   local of its own); the CORRIGE case written first, there, 219 over 725 (21 inserted, 21 deleted). A copy of link.cmd
-#   with cemitirmaisbu.cpp.o right after clogvota.cpp.o gave 59 over 704 rows, operand-only (calls, data, a table slot
-#   of std::format's buffer, the exception's destructor slot and the flag's .bss address). So cemitirmaisbu.cpp moved to
-#   unit 116's list, right after clogvota.cpp (src/units/README.md "Names"): that link's wasm is the copy's, sha256
-#   c66910426504aa7605ea94fb2c7c9ce7dac12aa83103b9e2393d416bd1157e02. Its functions stay this unit's (GetInst 3879, the
-#   statics' exit destructors 12083 and 12084, StartState 12082 and ProcessInput 12081). Chosen: the locals' names
-#   (tela, maximo, entradas, texto, quantidade, appInfo, via), the uebyte loop counter, the case order and the empty
-#   default.
+#   cemitirmaisbu.cpp in this list and clogvota.cpp after it, first in unit 116's, 12081 scored 199 over 717 rows (13
+#   inserted, 13 deleted), the target's 703 instructions and 16 locals with the locals numbered otherwise (binaryen gave
+#   the count ToByte returns a local of its own); the CORRIGE case written first, there, 219 over 725 (21 inserted, 21
+#   deleted). Both moves C4 asks for were measured on whole links, and each gives 59 over 704 rows, operand-only (calls,
+#   data, a table slot of std::format's buffer, the exception's destructor slot and the flag's .bss address), with 11898
+#   matches and the target's sha256 from the splat build: cemitirmaisbu.cpp.o moved right after clogvota.cpp.o, at unit
+#   116's head, and clogvota.cpp.o moved ahead of this list's first object. The target's data order is the second:
+#   clogvota.cpp's records (@1532800) and CLogVota's vtable (0x176370) lie before CAguardaMensagem's (0x17641c;
+#   caguardamensagem.cpp is this list's first file), and cemitirmaisbu.cpp's records (@1541216 to @1541248) and vtable
+#   (0x178434) between cgravaresultado.cpp's (@1540672, 0x178214) and cimprimindobu.cpp's (@1541336, 0x1784ac). Of the
+#   31 objects with records that the first move put ahead of cemitirmaisbu.cpp.o, 30 lie after it in the data; the
+#   second leaves clogvota.cpp.o ahead of the 34 others with records from this list's head to
+#   cmonitoraalimentacao.cpp.o, none of which lies before it (first record per object, ledger/source-locations.tsv). So
+#   clogvota.cpp heads this list (src/units/README.md "Names"), still ahead of unit 116's cthreadmonitor.cpp, which that
+#   unit's Run needs (its fragment), and cemitirmaisbu.cpp keeps its place after cgravaresultado.cpp. Chosen: the
+#   locals' names (tela, maximo, entradas, texto, quantidade, appInfo, via), the uebyte loop counter, the case order and
+#   the empty default.
 # - vota::CQuerReimprimirZeresima::StartState (fn 11849, record cquerreimprimirzeresima.cpp:45:15): when
 #   comum::CRdvVota::GetInst().Comparecimento() (fns 555, 1269) is not 0 it logs "Erro na verificação do comparecimento"
 #   (ledger/strings.tsv 125479, which only 11849 loads) through vota::CLogVota::LogaErroVerificacaoComparecimento, a
@@ -292,10 +299,13 @@
 # link (unit 138). The pairs for CReimprimindoZeresima::GetInst (5941) and CReimprimindoResumoZeresima::GetInst (5942)
 # went: their target callers, 11848 with 11845 and with 11852, are in the link.
 #
-# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
-APP_VOTA_ESTADOS_SRCS := src/app/vota/eleitor/caguardamensagem.cpp \
+# Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header. The first,
+# app/vota/log/clogvota.cpp, is unit 119's file, listed here for its order only (fn 12081's bullet above).
+APP_VOTA_ESTADOS_SRCS := src/app/vota/log/clogvota.cpp \
+    src/app/vota/eleitor/caguardamensagem.cpp \
     src/app/vota/eleitor/ciniciodeciclo.cpp \
     src/app/vota/eleitor/fimvotacao/cgravaresultado.cpp \
+    src/app/vota/eleitor/fimvotacao/cemitirmaisbu.cpp \
     src/app/vota/eleitor/fimvotacao/cimprimindobim.cpp \
     src/app/vota/eleitor/fimvotacao/cimprimirbuoutrasobrigatorias.cpp \
     src/app/vota/eleitor/fimvotacao/ciniciobu.cpp \

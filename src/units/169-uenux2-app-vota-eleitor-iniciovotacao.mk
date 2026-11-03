@@ -57,13 +57,16 @@
 #     on INPUT_BRANCO (3) vota::CMaisInformacoes::GetInst(this) (fn 1280). 21 over 146 rows, operand-only (calls,
 #     data, and the .bss addresses of CImpressaoZeresimaTardia's two statics).
 #   - vota::CGeraResumoZeresima::AposGeracao (slot 9, fn 11940): EAVZERESIMAGERADA (53) and fn 491. 3 over 8 rows,
-#     operand-only.
+#     operand-only. Defined in cgeraresumozeresima.cpp after the statics and before GetProximoEstado, the order of
+#     their target indices in their use band (11942, 11941, 11940, 11939), as for CRegerarZeresima above.
 #   The store is comum::md::estadoaplicacao::CEstadoGeralVota::SetEstadoVota, out of line in cestadogeralvota.cpp
 #   (unit 93's file, after MarcaUltimoVoto, a chosen place), whose one-store body binaryen inlines into every caller,
 #   so it has no target index; app/comum/dados/md/estadoaplicacao/cestadogeralvota.h says what decided out of line
 #   (unit 156's 12077). Its name, and that it is a setter, are chosen.
-# - vota::CInformacaoZeresimaTardia's constructor, GetInst and statics, in cinformacaozeresimatardia.cpp above
-#   StartState (lines a choice, above ProcessInput's records, whose #line holds them): unit 104's shape, the new of
+# - vota::CInformacaoZeresimaTardia's constructor, GetInst and statics, in cinformacaozeresimatardia.cpp above the
+#   destructor, where the target's band puts the statics (below, "Order"; the constructor and GetInst above them as
+#   in unit 104, with no index to order them), all above ProcessInput's records, whose #line holds them (the lines a
+#   choice): unit 104's shape, the new of
 #   48 bytes, the base's constructor with 2, api::CWait's constructor with 1000 (fn 5447) and the copy of CTelasVota's
 #   +68 through ctelasvota.h's GetTelaInformacaoZeresimaTardia (a getter added there, its name chosen, as for the
 #   others). vota::CImpressaoZeresimaTardia::ProcessInput (fn 11931, unit 176) holds them inlined, so they have no
@@ -110,8 +113,11 @@
 #   CLogVota member binaryen inlined (reading.md R10), as unit 142's three members are.
 # - Order: our link keeps each object's functions in the target's order for each use band
 #   (build/out/wasm-map/vota_web/names.tsv, ld_index; how-to step 3, "The order of two members"). In
-#   CInformacaoZeresimaTardia's .cpp the destructor and StartState come before ProcessInput (its records, lines 48 and
-#   51): fns 11984, 11983 and 11982 run in that link order in band 1 (reading.md R9). StartState's call of the form
+#   CInformacaoZeresimaTardia's .cpp the statics come before the destructor, and the destructor and StartState before
+#   ProcessInput (its records, lines 48 and 51): fns 11986 and 11985 (the statics' exit destructors), 11984 (D0), 11983
+#   and 11982 run in that link order in band 1 (reading.md R9); with the destructor defined below the statics the
+#   object lists the constructor, GetInst, the two exit destructors, D2, D0, StartState and ProcessInput in that order
+#   (wasm-objdump -x -j Function), and with it above them D2 and D0 came first. StartState's call of the form
 #   comes before the store of the next state in fns 11983 and 5958.
 #
 # Same bytes by unit 97's fragment (not compiled for these classes): `{}` for a destructor's `= default`, and final on

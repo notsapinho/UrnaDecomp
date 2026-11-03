@@ -24,15 +24,15 @@ CGeraResumoZeresima::~CGeraResumoZeresima() = default;
 std::unique_ptr<CGeraResumoZeresima> CGeraResumoZeresima::s_inst;
 std::mutex CGeraResumoZeresima::s_mutex;
 
-comum::CAppState* CGeraResumoZeresima::GetProximoEstado()
-{
-    return &CImprimindoZeresima::GetInst();
-}
-
 void CGeraResumoZeresima::AposGeracao()
 {
     comum::CAppInfo::GetInst().GetVota().SetEstadoVota(comum::EAVZERESIMAGERADA);
     CSincronizaVota::SincronizaEstadoGeralVota();
+}
+
+comum::CAppState* CGeraResumoZeresima::GetProximoEstado()
+{
+    return &CImprimindoZeresima::GetInst();
 }
 
 } // namespace vota
