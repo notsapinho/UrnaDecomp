@@ -21,6 +21,11 @@
 //                       its address is taken
 //   s11478              comum::LinhaRespostaCorrente, which the target reaches only by table slot 3051 (fn 11946 passes
 //                       it): its address is taken
+//   LeImpedidos         CEleitores::GetEleitoresImpedidos 5767: fns 6734 and 7787
+//   MontaListas         comum::MontaCaminhos 1936: fns 5772, 6734 and 7787
+//   vt_CEleitores       comum::CEleitores's vtable (@1559112), whose one slot is QuantidadeAptosPorAbrangencia (fn 2824):
+//                       the target stores its vptr in fn 7787 alone (a constructor inlined there), which is not
+//                       written; the sink goes when 7787 lands
 // 273, 332 and 407 hold table slots 84, 86 and 108, so their addresses are taken. A destructor returns `this` in the object;
 // DestroiTodos drops it, which lets binaryen remove the result as the target's did. Bodies differ from every target
 // function's. Declared through asm labels with the object's signatures, so this TU instantiates nothing.
@@ -62,6 +67,9 @@ int w1271(int) __asm__("_ZNK5comum15CEleitorDetalhe11GetDinamicoEv");
 void s11479(int) __asm__("_ZN5comum16RespostaCorrenteEv");
 int w2264(int, int, int) __asm__("_ZN5comum10CEleitores15LocalizaEleitorERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void s11478(int) __asm__("_ZN5comum21LinhaRespostaCorrenteEv");
+void w5767(int, int) __asm__("_ZN5comum10CEleitores21GetEleitoresImpedidosERKNSt3__26vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE");
+void w1936(int, int, int) __asm__("_ZN5comum13MontaCaminhosERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKNS0_6vectorIS6_NS4_IS6_EEEE");
+extern const char vt_CEleitores[] __asm__("_ZTVN5comum10CEleitoresE");
 }
 
 namespace {
@@ -133,6 +141,18 @@ __attribute__((noinline)) int LocalizaEleitores(int eleitores, int identificador
     return w2264(eleitores, identificador, 1) + w2264(eleitores, identificador + 12, 3) * 5;
 }
 
+__attribute__((noinline)) void LeImpedidos(int resultado, int arquivos)
+{
+    w5767(resultado, arquivos);
+    w5767(resultado + 12, arquivos + 24);
+}
+
+__attribute__((noinline)) void MontaListas(int resultado, int diretorio, int nomes)
+{
+    w1936(resultado, diretorio, nomes);
+    w1936(resultado + 12, diretorio, nomes + 12);
+}
+
 const void* volatile singletons_sink;
 
 struct SSingletonsRoots {
@@ -152,6 +172,9 @@ struct SSingletonsRoots {
         singletons_sink = reinterpret_cast<const void*>(&s11479);
         singletons_sink = reinterpret_cast<const void*>(&LocalizaEleitores);
         singletons_sink = reinterpret_cast<const void*>(&s11478);
+        singletons_sink = reinterpret_cast<const void*>(&LeImpedidos);
+        singletons_sink = reinterpret_cast<const void*>(&MontaListas);
+        singletons_sink = vt_CEleitores;
     }
 } singletons_roots;
 
