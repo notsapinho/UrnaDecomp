@@ -102,16 +102,20 @@ UENUX2_CXXFLAGS    := -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing $(UENUX
 # UENUX2_TBAA_DIRS= on the command line builds the whole tree with -fno-strict-aliasing.
 UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app/simulador/wasm/% \
                       src/app/comum/carquivossavd.cpp src/app/comum/gravadores/cgeracaoversoescontratos.cpp
-# the files inside those directories that keep -fno-strict-aliasing, each read from code that only its own functions
-# reach: in ctelasvota.cpp the map constructor GetKeyboardLayout alone calls (fn 6579) reloads the tree's begin after a
-# new node's stores, and in crelvotautil.cpp the __clone of CortaPapel's lambda (fns 12006, 12007), in
-# cvotacaostateaudio.cpp that of IniciarEsperaFimAudio's second lambda (fns 13732, 13740) and in cconferevotoemcargo.cpp
-# those of the four lambdas of IConfereVotoEmCargo that capture `this` alone (fns 11770, 11771, 11778, 11779, 11782,
-# 11783, 11787, 11788) store the vptr before they copy the capture, as only code without TBAA does. The other files of
-# their directories keep strict aliasing (docs/reference/facts/app-flags.md §F6 has the measurements, and those of the
-# files measured and not listed).
+# the files inside those directories that keep -fno-strict-aliasing. The first four are each read from code that only
+# their own functions reach: in ctelasvota.cpp the map constructor GetKeyboardLayout alone calls (fn 6579) reloads the
+# tree's begin after a new node's stores, and in crelvotautil.cpp the __clone of CortaPapel's lambda (fns 12006,
+# 12007), in cvotacaostateaudio.cpp that of IniciarEsperaFimAudio's second lambda (fns 13732, 13740) and in
+# cconferevotoemcargo.cpp those of the four lambdas of IConfereVotoEmCargo that capture `this` alone (fns 11770, 11771,
+# 11778, 11779, 11782, 11783, 11787, 11788) store the vptr before they copy the capture, as only code without TBAA
+# does. In celeitorencontrado.cpp the copy of std::set<ETipoIdentificadorEleitor>'s range insert that
+# CEleitorEncontrado::StartState calls (fn 6733, and with it fn 10635) has the target's locals only without TBAA;
+# its other target caller, fn 7787, is not written, so that the target's copy is this file's is a reading. The other
+# files of their directories keep strict aliasing (docs/reference/facts/app-flags.md §F6 has the measurements, and
+# those of the files measured and not listed).
 UENUX2_NOTBAA_FILES := src/app/vota/eleitor/comum/ctelasvota.cpp src/app/vota/eleitor/iniciovotacao/crelvotautil.cpp \
-                       src/app/vota/eleitor/cvotacaostateaudio.cpp src/app/vota/eleitor/cconferevotoemcargo.cpp
+                       src/app/vota/eleitor/cvotacaostateaudio.cpp src/app/vota/eleitor/cconferevotoemcargo.cpp \
+                       src/app/vota/operador/leidentidade/celeitorencontrado.cpp
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports
