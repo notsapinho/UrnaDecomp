@@ -28,11 +28,11 @@
 //   power (below); bit 13 is slot 0's and nothing says what it is. Bits 1-2 hold 1 while the urn runs on its
 //   internal battery: fns 12017 and 12061 test `(word & 6) == 2`, and 12017 logs "Tempo limite de espera usando
 //   bateria interna atingido" when its time limit passes; fn 2774 tests them for 2 and then reads the external
-//   battery's bits. The field's name is chosen.
+//   battery's bits. The field's name is chosen. Bits 9 and 14 are vota::CThreadMonitor::Run's (fn 10226, below).
 // - word 1: bit 1 is the headphone (fn 10226: set is "Fone de ouvido desconectado"); the top half is slot 1's.
 // - word 2: the low half is slot 3's, the top half slot 4's.
 // - word 3: the low half is what slot 2 signs and slot 5 scales, and the level of the mock's slot 7; the next byte is
-//   slot 6's.
+//   slot 6's; bit 24 is fn 10226's (below).
 //
 // Slot roles, from vota::CThreadMonitor::LogaStatusRedeAcBateria (its records sit in fn 10226), which divides each by
 // 100 for "{} rede CA em [{:3.2f}V] e " and "na Bateria Interna com [{:2.2f}V/{}A]": slot 4 is the mains voltage, slot
@@ -59,11 +59,14 @@ public:
         std::uint32_t m_fonte : 2;
         std::uint32_t m_statusBatInt : 2;
         std::uint32_t m_statusBatExt : 2;
-        std::uint32_t : 4;
+        std::uint32_t : 2;
+        std::uint32_t m_midiaExternaAusente : 1;
+        std::uint32_t : 1;
         std::uint32_t m_bit11 : 1;
         std::uint32_t : 1;
         std::uint32_t m_bit13 : 1;
-        std::uint32_t : 18;
+        std::uint32_t m_chaveDesligada : 1;
+        std::uint32_t : 17;
 
         std::uint32_t : 1;
         std::uint32_t m_foneDesconectado : 1;
@@ -75,7 +78,8 @@ public:
 
         std::uint32_t m_carga : 16;
         std::uint32_t m_byte14 : 8;
-        std::uint32_t : 8;
+        std::uint32_t m_tecladoEleitorDesconectado : 1;
+        std::uint32_t : 7;
     };
 
     virtual bool Slot0()
@@ -169,7 +173,7 @@ public:
 
     virtual uebyte BatLevel() = 0;
 
-    // (original lines 172-351: content not recovered)
+    // (original lines 176-351: content not recovered)
 #line 352
     virtual float BatIntMaxSocValue()
     {
@@ -276,6 +280,29 @@ public:
     {
         ReadStatus(m_status);
         return m_status.m_fonte == 1;
+    }
+
+    // The slot-15 calls and tests that vota::CThreadMonitor::Run (fn 10226) holds inlined from the records' members: word
+    // 0's bit 14 (VotacaoSuspensa, after which Run logs "Mudança do estado da chave: URNA DESLIGADA"), word 0's bit 9
+    // (VerificaErroCriticoFlash, which then throws "Erro na Mídia Externa - Mídia não está presente") and word 3's bit 24
+    // (VerificaErroCriticoKbdTE: "Erro no teclado do eleitor - dispositivo desconectado"). The members, their names and
+    // the fields' names are chosen from those texts, as FoneDesconectado's are.
+    bool ChaveDesligada()
+    {
+        ReadStatus(m_status);
+        return m_status.m_chaveDesligada;
+    }
+
+    bool MidiaExternaAusente()
+    {
+        ReadStatus(m_status);
+        return m_status.m_midiaExternaAusente;
+    }
+
+    bool TecladoEleitorDesconectado()
+    {
+        ReadStatus(m_status);
+        return m_status.m_tecladoEleitorDesconectado;
     }
 
 protected:

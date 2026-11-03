@@ -12,8 +12,17 @@
 # landed, once unit 111 gave fn 837 (CPolySingleton<IEventosLog>::instance) and fn 233 (IEventosLog::loga) their
 # bodies: it logs "Urna desligada a pedido do aplicativo", sends message 48 and throws codes 7268 and 7269
 # (euecomumerror.h). The instance in a local named `logs`, as unit 111's clogcomum.cpp has it, fills column 18; the
-# local's name and `auto&` are chosen. MontarMRSemHabilitar (5896) and LogDiskInfo (inlined into fn
-# 10226, vota::CThreadMonitor's slot 2) are not reconstructed.
+# local's name and `auto&` are chosen. MontarMRSemHabilitar (5896) is not reconstructed.
+# LogDiskInfo (record 285:15), added since, has no target index: binaryen inlines it into its one caller, fn 10226
+# (vota::CThreadMonitor::Run, unit 116's, written, not matched), behind a 32-B stack frame of its own. It sends message
+# 19, throws code 7277 with "Resposta nula" when the answer is empty (euecomumerror.h) and, when its first word is not 0,
+# logs "%s: erro [%d] ao tentar logar informações sobre as partições" with "LogDiskInfo" (the strings 72624 and 134831)
+# through the target's fn 5895: f2921(p0, p1, 6, @1552472), the priority-6 wrapper whose word lies right after this
+# class's typeinfo (@1552464), so this object's copy, written as DepuraInfo in api/util/uedebug.h. Its lines (281 to 290)
+# are a choice inside the range its record's data order allows (after 188's record, before 522's); `__func__` for the
+# literal is a reading. DepuraInfo's other target caller is 5896, not written, so our link holds one call site of it,
+# inlined into 10226, which then differs (unit 116 has the measurement). uedebug.h's include took one blank line of the
+# run above line 43, so no record moved.
 # Evidence and choices. The records fix each throw's line; EnviarMensagemThrowVoid's `inline` is read from where its
 # records lie (iinterfaceinit.h). HabilitarMR's place before line 137 is read from fn 2863 sitting before fn 2862 in
 # their use band, with fn 3833 after it and before fn 3832 in theirs (docs/reference/facts/reading.md R8, an inline

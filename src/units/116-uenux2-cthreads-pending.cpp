@@ -17,18 +17,10 @@
 //   "Exceptions"); not written. The
 //   first is the class's key function, so CThreadVota's vtable, typeinfo and D2 are emitted in this object, and move to
 //   cthreadvota.cpp when it lands.
-// - vota::CThreadMonitor::Run 10226 (slot 2), 7171 B: its records name VotacaoSuspensa, MonitorFoneOuvido,
-//   VerificaErroCriticoFlash, VerificaErroCriticoKbdTE, LogaEspaco, LogaStatusRedeAcBateria and
-//   CMonitoraAlimentacao::GetInst and VerificaAlimentacao, all inlined there, and IInterfaceInit::LogDiskInfo
-//   (iinterfaceinit.cpp:285) and CLogComum's LogaSuspensoMonitoramenteRepeticao and LogaTipoBateria (clogcomum.cpp:136
-//   to 158). Its callees 5453 and 5454 (unit 32, written) wait for libc++'s __space (4677), 1947 and 3268
-//   (comum::FormataTamanho and vota::CLogVota::LogaQuantidade, fragment 234's) match, and 3336, 5895 and 10224 are
-//   not written.
 // - vota::CThreadEleitor::Run 7061 (slot 2), 4119 B: fns 2450 and 3844, and ProcessaEventos 4349 (written in
 //   cthreadeleitor.cpp, not matched: the fragment says why). 7061's records all belong to code inlined from
 //   cajusteinicial.cpp, so its stub sat there, and that file's stub-only state is unchanged by this trap's taking the stub.
 #include "app/vota/eleitor/cthreadeleitor.h"
-#include "app/vota/monitor/cthreadmonitor.h"
 
 namespace vota {
 
@@ -43,11 +35,6 @@ void CThreadVota::TrataErro(const std::exception&)
 }
 
 void CThreadEleitor::Run()
-{
-    __builtin_trap();
-}
-
-void CThreadMonitor::Run()
 {
     __builtin_trap();
 }

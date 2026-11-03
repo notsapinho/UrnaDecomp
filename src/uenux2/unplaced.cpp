@@ -59,11 +59,6 @@
 // f4633 · 675 B · unmatched · placement: link order · name unknown
 // void f4633() { ... }
 
-// link-order cluster 700 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cassinadorvota.cpp
-
-// f4677 · 494 B · unmatched · placement: link order · name unknown
-// void f4677(i32, i32) { ... }
-
 // link-order cluster 742 · uses=2 · neighbours' file uenux2/src/api/audio/alsa/cwavfile.cpp
 
 // f5341 · 1052 B · unmatched · placement: link order · name unknown
@@ -100,14 +95,6 @@
 
 // f5418 · 1000 B · unmatched · placement: link order · name unknown
 // ? f5418() { ... }
-
-// link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
-
-// f5454 · 122 B · unmatched · placement: link order · name unknown
-// ? f5454(i32) { ... }
-
-// f5453 · 132 B · unmatched · placement: link order · name unknown
-// ? f5453(i32) { ... }
 
 // link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
 

@@ -5,8 +5,9 @@
 // GetFileName and GetDirName (412, 5459, 2760, 5458, 5454, 5453, 5463, 2763, 5462; binaryen merges the first two as 6019)
 // have no record: their names and lines are chosen, and so are the last six's being free functions and their namespace,
 // api: RemoveTree, which only this file calls, and the five csystem.h declares (unit 32's fragment says why). So do
-// CreateDir, which binaryen inlines into fn 5821 (no target index), and AlteraDono and AlteraPermissoes, inlined into
-// CopyFile: their names, lines and linkage are chosen (unit 32's fragment says what the target shows). CScopeGuard
+// CreateDir, which binaryen inlines into fn 5821, GetMemTotal and GetMemFree, into fn 10226 (no target index), and
+// AlteraDono and AlteraPermissoes, inlined into CopyFile: their names, lines and linkage are chosen (unit 32's fragment
+// says what the target shows). CScopeGuard
 // (lines 990-1011, an anonymous namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in
 // a std::function. ReplaceFile (5455) holds TemporaryPath (records 236:15 and 243:15) and the anonymous namespace's
 // PrepareReplace (916:15 to 928:15) and ReplaceResource (954:15, 962:15) inlined; its name, and RenameResource's (3645),
@@ -46,7 +47,7 @@ constexpr size_t TAMANHO_BUFFER_MEMINFO = 4096;
 
 } // namespace
 
-// (original lines 49-57: content not recovered)
+// (original lines 50-57: content not recovered)
 #line 58
 static bool ExistResource(struct stat& info, const std::string& recurso)
 {
@@ -584,6 +585,16 @@ uedword GetMemInfo(const std::string& campo)
         }
     }
     return valor;
+}
+
+long GetMemTotal()
+{
+    return GetMemInfo("MemTotal");
+}
+
+long GetMemFree()
+{
+    return GetMemInfo("MemFree");
 }
 
 std::string GetDirName(const std::string& caminho)

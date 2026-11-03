@@ -24,11 +24,14 @@
 // then gives the std::format arguments' builder that CopyFile shares (fn 5456) the second caller it has in the target.
 // libc's utime (fn 6238) is called by CopyFile and by 7-Zip's fn 2585, which our link does not hold: AjustaHora stands
 // for 2585, so binaryen keeps utime out of line as the target does.
+// libc's statfs (fn 3972) is called by libc++'s std::filesystem::__space (fn 4677, which GetFreeSpace and GetUsedSpace
+// call), through statvfs, and directly by 2725 (comum::CControlaArmazenamentoDeImagens, its records at
+// ccontrolaarmazenamentodeimagens.cpp 73 to 152) and 5371 (the "me{:06}.wsq" writer), neither reconstructed: with
+// __space its only caller, binaryen inlines it there and __space is not the target's. LivreEmDois stands for 2725 and
+// 5371 with one call site each.
 // api::RemoveTree (target fn 5458) is called by itself and by 5455 (CSystem::ReplaceFile), both reconstructed.
 // CSystem::ReplaceFile (target fn 5455) is called twice by fn 7174 (vota::impl::CSincronismoVotoEleitor's slot 2),
 // not reconstructed: RepoeDois stands for it with two call sites, each passing an empty third string as 7174 does.
-// api::GetFreeSpace, GetUsedSpace and GetMemInfo (target fns 5454, 5453 and 5463) are each called twice by 10226
-// (vota::CThreadMonitor's slot 2), not reconstructed: MedeEspaco stands for it with two call sites of each.
 // api::GetFileName and GetDirName (target fns 2763 and 5462) are called by 1501 (vota::CAssinadorVota's constructor,
 // with comum::CAssinador's inlined, reconstructed) once each and by 12098, and GetFileName by 5360 and 5461 too, none of
 // which is reconstructed: PartesDoCaminho stands for them with one call site of each.
@@ -36,6 +39,7 @@
 // site but CopyFile's folded bool, which the target folds too, so dead-argument elimination folds no other. They are
 // address-taken from a static constructor. Declared through asm labels with the wasm-level signatures; compiled as
 // uenux2 code.
+#include <sys/statfs.h>
 #include <utime.h>
 
 extern "C" {
@@ -44,9 +48,6 @@ int w412_root_0(int) __asm__("_ZN3api7CSystem9ExistFileERKNSt3__212basic_stringI
 int w5459_root_0(int) __asm__("_ZN3api7CSystem8ExistDirERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w2760_root_0(int) __asm__("_ZN3api7CSystem10RemoveFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
 void w378_root_0(int, int, int, int) __asm__("_ZN3api7CSystem8CopyFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_bb");
-long long w5454_root_0(int) __asm__("_ZN3api12GetFreeSpaceERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
-long long w5453_root_0(int) __asm__("_ZN3api12GetUsedSpaceERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
-int w5463_root_0(int) __asm__("_ZN3api10GetMemInfoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 void w11584_root_0(int, int) __asm__("_ZN3api7CSystem6RenameERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
 void w5455_root_0(int, int, int) __asm__("_ZN3api7CSystem11ReplaceFileERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_S9_");
 void w2763_root_0(int, int) __asm__("_ZN3api11GetFileNameERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
@@ -95,15 +96,19 @@ __attribute__((noinline)) void RepoeDois(int novoA, int atualA, int novoB, int a
     w5455_root_0(novoB + 12, atualB, reinterpret_cast<int>(vazio));
 }
 
-__attribute__((noinline)) long long MedeEspaco(int caminhoA, int caminhoB)
-{
-    return w5454_root_0(caminhoA) * 3 + w5454_root_0(caminhoB) - w5453_root_0(caminhoA) - w5453_root_0(caminhoB) * 2 +
-           w5463_root_0(caminhoA) - w5463_root_0(caminhoB + 4);
-}
-
 __attribute__((noinline)) int AjustaHora(const char* arquivo)
 {
     return utime(arquivo, nullptr) + 1;
+}
+
+__attribute__((noinline)) unsigned long long LivreEmDois(const char* particaoA, const char* particaoB)
+{
+    struct statfs infoA;
+    struct statfs infoB;
+    if (statfs(particaoA, &infoA) != 0 || statfs(particaoB, &infoB) != 0) {
+        return 0;
+    }
+    return infoA.f_bavail * infoA.f_bsize + infoB.f_bfree;
 }
 
 __attribute__((noinline)) void PartesDoCaminho(int arquivo, int diretorio, int caminho)
@@ -130,8 +135,8 @@ struct SW2759Roots {
         w2759_sink = reinterpret_cast<void*>(&CopiaDuas);
         w2759_sink = reinterpret_cast<void*>(&RenomeiaUma);
         w2759_sink = reinterpret_cast<void*>(&AjustaHora);
+        w2759_sink = reinterpret_cast<void*>(&LivreEmDois);
         w2759_sink = reinterpret_cast<void*>(&RepoeDois);
-        w2759_sink = reinterpret_cast<void*>(&MedeEspaco);
         w2759_sink = reinterpret_cast<void*>(&PartesDoCaminho);
         w2759_sink = reinterpret_cast<void*>(&DiretorioVazio);
     }

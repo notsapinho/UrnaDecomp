@@ -7,6 +7,7 @@
 
 #include "api/pattern/cpolysingleton.h"
 #include "api/util/csystem.h"
+#include "api/util/uedebug.h"
 #include "app/comum/euecomumerror.h"
 #include "app/comum/log/ieventoslog.h"
 
@@ -16,7 +17,7 @@ IInterfaceInit::IInterfaceInit() = default;
 
 IInterfaceInit::~IInterfaceInit() = default;
 
-// (original lines 19-42: content not recovered)
+// (original lines 20-42: content not recovered)
 #line 43
 EBootDeviceId IInterfaceInit::CurrentBootDevice()
 {
@@ -109,7 +110,20 @@ void IInterfaceInit::DesmontarMRSemDesabilitar()
     }
 }
 
-// (original lines 192-519: content not recovered)
+// (original lines 192-280: content not recovered)
+#line 281
+void IInterfaceInit::LogDiskInfo()
+{
+    const std::vector<int> resposta = EnviarMensagem(19);
+    if (resposta.empty()) {
+        throw CUeComumError(EUE_COMUM_LOG_DISK_INFO_RESPOSTA_NULA, "Resposta nula");
+    }
+    if (resposta[0] != 0) {
+        DepuraInfo("%s: erro [%d] ao tentar logar informações sobre as partições", __func__, resposta[0]);
+    }
+}
+
+// (original lines 292-519: content not recovered)
 #line 520
 void IInterfaceInit::DesligarUrna()
 {
