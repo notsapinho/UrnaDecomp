@@ -156,9 +156,11 @@
 #   again, this state next; on INPUT_CONFIRMA a log member, IncrementaQtdBU (fn 3701), and with
 #   comum::CAppInfo::EhTreinamentoEleitor (fn 697) EAVENCERRADA (64) and EAEFIMDOSTRABALHOS (52) at +0 and +4, fn 491
 #   and CEmitirMaisBU::GetInst (fn 3879), else EAVGRAVARRESULTADOS (62), fn 491 and CGravaResultado::GetInst (fn 6037).
-#   The two stores at +0 and +4 decided the setters' place: written in the class, clang merged them into one i64.store
-#   and 12077 scored 44 over 243 rows (3 deleted, at the stores); out of line in cestadogeralvota.cpp, where binaryen
-#   inlines them, 39 over 243, operand-only. The log members, LogaMesarioIndicouReimprimirBU and
+#   The two stores at +0 and +4: with both setters written in the class, clang merged them into one i64.store and 12077
+#   scored 44 over 243 rows (3 deleted, at the stores); out of line in cestadogeralvota.cpp, where binaryen inlines
+#   them, 39 over 243, operand-only. With SetEstadoVota alone in the class, 12077 still scores 39 over 243, but 11920
+#   and 12034 leave `match` (11 over 76 against 9 over 76, local numbers): they keep SetEstadoVota out of line
+#   (cestadogeralvota.h). The log members, LogaMesarioIndicouReimprimirBU and
 #   LogaMesarioIndicouQualidadeBU ("Mesário indicou reimprimir Boletim de Urna", "Mesário indicou qualidade OK para
 #   Boletim de Urna", ledger/strings.tsv 227002 and 227097), have LogaMesarioIndagadoHorarioUrna's shape (fns 184, 233),
 #   added after the two above, their names and place chosen. `using namespace comum;` in cimprimindobu.cpp, as in

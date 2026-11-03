@@ -132,12 +132,12 @@
 #   this object: __introsort (5789), __insertion_sort_incomplete (5785), __sort4 (2829), std::swap of two CCargo (320),
 #   CDetalheCandidato's move assignment (761), the move assignments of std::optional<CDetalheConsulta> (783) and of
 #   std::vector<CRespostaConsulta> (5784), and CDetalheConsulta's copy (374, a std::construct_at, which matches from
-#   cpe.cpp.o's copy since unit 280 links that object's instance first). 5789 and 761 also call
-#   the destroy of a std::vector<CSuplencia>'s tail (1135), whose one caller in our link was ~CDetalheCandidato (242, unit
+#   cpe.cpp.o's copy: cpe.cpp, compiled by unit 110 and holding CPE::CreateInst since unit 280's work, is the first
+#   object of the link with an instance, ahead of unit 280's objects in print-LINK_OBJS). 5789 and 761 also call the
+#   destroy of a std::vector<CSuplencia>'s tail (1135), whose one caller in our link was ~CDetalheCandidato (242, unit
 #   110's, `differs` on its locals, binaryen having inlined 1135 there); with these calls 1135 stays out of line, and it
-#   and 242 match from cpe.cpp.o. 365, 2289,
-#   2341 and 3018 keep matching, from cpe.cpp.o's copies now (splat/scan.tsv's object column): the copies give the same
-#   bytes.
+#   and 242 match from cpe.cpp.o. 365, 2289, 2341 and 3018 keep matching, from cpe.cpp.o's copies now (splat/scan.tsv's
+#   object column): the copies give the same bytes.
 #   Evidence for the existence test: the target holds it as a loop binaryen inlined from another function (a bool built
 #   as `if (result i32) ... else 0 end` and tested again, how-to step 3) that takes the pleito (+28) and the id, so it is
 #   written as CPleito::ExisteEleicao, out of line in cpleito.cpp, with GetCargos its one caller and no index of its own.

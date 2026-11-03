@@ -1,10 +1,9 @@
 // Roots: keep this unit's functions in the skeleton link the way the target reaches them. Each has direct callers only:
 // CTradutorFrase::Traduz (654) fns 1543, 3689, 4160, 4161, 5591, 10631, 11181, 11188, 11260, 11261 and 11946 (11181,
 // 3689, 10631 and 11188 are in the link, the others not), Lanca (2263) fns 2543 and 7787, ConfereDadosDinamicos (3770)
-// fns 1271,
-// 2825 and 10210 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`). RecuperaLabel (5658) needs none: its two call
-// sites are in 654, which ctradutorfrase.cpp holds. binaryen inlines a function with one call site, so
-// each gets two here, and the stand-ins' bodies differ from each other's and from every target function. 3770's callers
+// fns 1271, 2825 and 10210 (ledger/callgraph.tsv, the "uses" of `pnpm wasm fn`). RecuperaLabel (5658) needs none: its
+// two call sites are in 654, which ctradutorfrase.cpp holds. binaryen inlines a function with one call site, so each
+// gets two here, and the stand-ins' bodies differ from each other's and from every target function. 3770's callers
 // 1271 (CEleitorDetalhe::GetDinamico), 2825 (which holds CEleitorDetalhe::MarcaHabilitado inlined) and 10210 (which
 // holds CEleitorDetalhe::MarcaVotou inlined, unit 104's csincronismooperador.cpp) are all in the link: it has no
 // stand-in. The converter's

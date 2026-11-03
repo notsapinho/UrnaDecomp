@@ -229,8 +229,7 @@
 #   of the two moves codegen.md C4 measures for it, both 59 over 704 rows and 11898 matches, that one keeps the target's
 #   data order for clogvota.cpp.o: none of the objects with records from unit 104's list head to
 #   cmonitoraalimentacao.cpp.o lies before it (unit 104's fragment has both). It is still ahead of cthreadmonitor.cpp.o,
-#   and Run reads the same there
-#   (as landed, below).
+#   and Run reads the same there (as landed, below).
 # - the select's operand order (`> 0 ? Ext : Int`): 331 to 328 with it inverted; the doubles' order (above): 322.
 # - before 5896 was written: 317 over 3167 rows (269 replaced, 267 operand-only, 48 inserted, 0 deleted). The inserted
 #   rows and the two replaced ones were DepuraInfo's body (iinterfaceinit.cpp's priority-6 wrapper, the target's 5895)

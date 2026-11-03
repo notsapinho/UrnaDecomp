@@ -231,8 +231,8 @@ public:
     // vota::CEleitorVotando::suspenderEleitor (fn 4442), the first two after one call of GetInst; and
     // LogaEleitorSuspensoSemVoto ("Eleitor foi suspenso e não confirmou nenhum voto") by
     // vota::CEleitorVotando::DescartaVotos (fn 4449). Each literal is loaded by its caller alone. Their names are chosen
-    // from their messages, and their place here, before LogaQuantidade, and in clogvota.cpp, at its end, is chosen:
-    // they have no index to order.
+    // from their messages, and their place here, before LogaQuantidade, and in clogvota.cpp, below LogaEleitorImpedido
+    // and ahead of unit 277's eight members, is chosen: they have no index to order.
     void LogaInspecaoTerminada();
     void LogaEleitorSuspensoTreinamento();
     void LogaEleitorSuspensoPeloMesario();

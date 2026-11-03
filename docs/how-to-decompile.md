@@ -1187,11 +1187,11 @@ stub goes too, although its body is only a trap: `stubs.py` counts a function in
 code of ours, and any virtual member of a class once a `.cpp` of ours that holds the class's stubs defines one of its
 members, so the first member written there takes the stubs of slots it never mentions (`src/units/README.md` "Pending
 members" has the rule and its cases). So a stub can go with no body of ours. Such a row is still `no-candidate`: when
-your class leaves a slot with no body, name it in the fragment, the only note left. The
-scan lists a pending member one of two ways. When binaryen merged its trap with another trap of the same wasm type, the
-slot gets no name and the row stays `no-candidate` (7481, unit 104's `CAguardaMensagem::ProcessKey`). When the trap
-is a function of its own, step 8 names the target function after the trap by `vtable` evidence, and the row is
-`differs` with the `-pending.o` as its object (11486, unit 13's `CRdvVota::Confere`). A landing moves these rows ("Pending members" says how).
+your class leaves a slot with no body, name it in the fragment, the only note left. The scan lists a pending member
+one of two ways. When binaryen merged its trap with another trap of the same wasm type, the slot gets no name and the
+row stays `no-candidate` (7481, unit 104's `CAguardaMensagem::ProcessKey`). When the trap is a function of its own,
+step 8 names the target function after the trap by `vtable` evidence, and the row is `differs` with the `-pending.o`
+as its object (11486, unit 13's `CRdvVota::Confere`). A landing moves these rows ("Pending members" says how).
 
 ```sh
 awk -F'\t' '$1==7481 || $1==11486 {print $1, $4, $5, $11}' splat/scan.tsv

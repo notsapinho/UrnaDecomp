@@ -37,10 +37,9 @@
 #
 # Chosen: every name of a member, a data member and the helper but the overrides' (StartState, ProcessInput and the
 # destructors are comum::CAppState's slots, app/comum/cappstate.h); ProximoEstadoOpcaoDigitada's being a member (it
-# reads
-# the form and the map) and its result type; the map's value type, md::CEleitorIdentidade: ProcessInput formats the
-# string at +0 of the value and passes the word at +12 to SetTipoIdentidadeDigitada, which fits that class's layout (a
-# std::pair<std::string, ETipoIdentificadorEleitor> has the same layout and is not measured); the switch and if
+# reads the form and the map) and its result type; the map's value type, md::CEleitorIdentidade: ProcessInput formats
+# the string at +0 of the value and passes the word at +12 to SetTipoIdentidadeDigitada, which fits that class's layout
+# (a std::pair<std::string, ETipoIdentificadorEleitor> has the same layout and is not measured); the switch and if
 # spellings; the files (how-to step 3, rule 4: the class's name in lower case) and their directories, by the data:
 # CTentativaCapturaDigitalEsgotada's and CDigitalNaoCapturada's vtables and typeinfos lie between cpededigital.cpp's
 # last record (@1592092) and cregistradigitaloperador.cpp's vtable (@1592424), each followed by its own copy of the

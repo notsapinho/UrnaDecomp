@@ -9,10 +9,10 @@
 //   vota::CIniciaFinalizacao::StartState (fn 10706, unit 277) calls twice, so no sink keeps those three vtables.
 // - The GetInst of those two (fns 5393 and 5430), whose target callers are not in the link but 10430 (unit 71) and
 //   10677 (unit 161): fns 10209 and 10430 call 5393, fns 10677 and 10689 call 5430. Each stand-in calls its GetInst
-//   twice, so that binaryen
-//   keeps it a function of its own; one subtracts the two results and the other adds them, so the two bodies differ.
-// - vota::IIniciaJustificativa's constructor (target fn 3624) needs none: its two target callers, 10631 and 10635, are in
-//   the link (unit 104, through unit 243's and unit 283's constructors of the derived states).
+//   twice, so that binaryen keeps it a function of its own; one subtracts the two results and the other adds them, so
+//   the two bodies differ.
+// - vota::IIniciaJustificativa's constructor (target fn 3624) needs none: its two target callers, 10631 and 10635, are
+//   in the link (unit 104, through unit 243's and unit 283's constructors of the derived states).
 // - vota::CLogVota::LogaAudioDesativadoFimVotacao (fn 4529) and LogaSuspensaoAbortada (fn 4535) need none: their callers,
 //   10435 (CDesabilitaAudioEleitor::ProcessInput) and 10646 (unit 104's CCancelaHabilitacaoEleitor::StartState), and
 //   10407 (CSuspensaoAutomaticaEleitor::ProcessInput) and 10420 (CPerguntaCodigoSuspensao::ProcessInput), are in the link.

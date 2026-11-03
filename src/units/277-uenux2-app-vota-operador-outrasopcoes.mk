@@ -71,9 +71,9 @@
 #   ending in return each give one store after the switch in the object (measured). Not explained.
 # - CConfirmaEncerramento::ProcessInput (10734): 49 over 273 (inserted 2, deleted 2), all in MarcaFimAquisicao (unit
 #   93's fragment has the forms measured), on the whole link with its store of the state through
-#   CEstadoGeralVota::SetEstadoVota out of line in cestadogeralvota.cpp (unit 156's measurement); with the setter
-#   written in the class it scored the same 49 over 273 on an earlier link, one without unit 156's setter (not measured
-#   on this one).
+#   CEstadoGeralVota::SetEstadoVota out of line in cestadogeralvota.cpp (cestadogeralvota.h says what keeps it there);
+#   with the setter written in the class it scores the same 49 over 273, both on the link that also holds unit 156's
+#   CEstadoGeralVota::SetEstadoEncerramento (left out of line) and on an earlier one without it.
 # - CEncerramentoHorarioInvalido::ProcessInput (10709) and unit 152's CHorarioVotacaoTerminou::ProcessInput (10757)
 #   match since the link holds 2295's other three members (units 161, 278 and 283): with only these two, our link
 #   merged them into one shared body of two parameters, each 14-byte thunk passing its record, where the target's 2295

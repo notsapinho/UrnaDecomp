@@ -62,7 +62,8 @@
 #   The store is comum::md::estadoaplicacao::CEstadoGeralVota::SetEstadoVota, out of line in cestadogeralvota.cpp
 #   (unit 93's file, after MarcaUltimoVoto, a chosen place), whose one-store body binaryen inlines into every caller,
 #   so it has no target index; app/comum/dados/md/estadoaplicacao/cestadogeralvota.h says what decided out of line
-#   (unit 156's 12077). Its name, and that it is a setter, are chosen.
+#   (11920, this unit's, and 12034 leave `match` with it in the class; 12077 matches either way). Its name, and that it
+#   is a setter, are chosen.
 # - vota::CInformacaoZeresimaTardia's constructor, GetInst and statics, in cinformacaozeresimatardia.cpp above the
 #   destructor, where the target's band puts the statics (below, "Order"; the constructor and GetInst above them as
 #   in unit 104, with no index to order them), all above ProcessInput's records, whose #line holds them (the lines a

@@ -187,11 +187,12 @@
 # at step 9.
 # app/vota/log/clogvota.cpp, the first of this list until vota::CThreadMonitor::Run (unit 116) held CLogVota members
 # inlined, heads unit 104's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
-# has the measurement. Its notes stay here and in clogvota.h. At the file's end, five members their one
-# callers hold inlined (clogvota.h says which and what each logs): LogaInspecaoTerminada (unit 281's 10527), three that
-# vota::CEleitorVotando::suspenderEleitor (4442) holds and LogaEleitorSuspensoSemVoto (DescartaVotos, 4449; unit 197).
-# The members added after the file's line 361, which no record orders, sit below LogaEleitorImpedido: its record is
-# line 432, under the gap of lines 362 to 382, and lines added above that gap would move it.
+# has the measurement. Its notes stay here and in clogvota.h. Below LogaEleitorImpedido and ahead of unit 277's eight,
+# five members their one callers hold inlined (clogvota.h says which and what each logs): LogaInspecaoTerminada (unit
+# 281's 10527), three that vota::CEleitorVotando::suspenderEleitor (4442) holds and LogaEleitorSuspensoSemVoto
+# (DescartaVotos, 4449; unit 197). The members added after the file's line 361, which no record orders, sit below
+# LogaEleitorImpedido: its record is line 432, under the gap of lines 362 to 382, and lines added above that gap would
+# move it.
 CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 # clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost
