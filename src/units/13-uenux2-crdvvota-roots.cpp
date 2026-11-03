@@ -21,7 +21,8 @@
 // - md::CVotosCargos::QuantidadeEscolhas (fn 5642) has none: its one target caller, 4454 (unit 197's FinalizaEleitor,
 //   holding ConfereCedula), is in the link.
 // - md::CVoto::EhNulo (fn 5645) has none: its two target callers, CVoto::EhNulo() const (fn 11316) and
-//   comum::VerificaVotos (fn 11514, unit 98's cintegridadereferencial.cpp), are in the link.
+//   comum::VerificaVotos (fn 11514, unit 98's cintegridadereferencial.cpp, which our link inlines into 2543), are in
+//   the link.
 // Declared through asm labels with the wasm-level signatures (a constructor returns this); compiled as uenux2 code.
 extern "C" {
 int w13_comparecimento_alvo(int) __asm__("_ZNK5comum8CRdvVota14ComparecimentoEv");
