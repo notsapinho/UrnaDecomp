@@ -30,6 +30,11 @@ class CEleitorDetalhe;
 
 class IControladorRegistraMesarios {
 public:
+    // The limit that "Quantidade máxima permitida: {}" shows: comum::CLimiteMesariosRegistradosAtingido's constructor (in
+    // fn 5386) calls GetControlador and formats 6, an unsigned argument (std::format's type code 6), into that text with
+    // no call through the reference. The name, its being a static constant of this class and its type are chosen.
+    static constexpr std::size_t QUANTIDADE_MAXIMA_MESARIOS = 6;
+
     virtual ~IControladorRegistraMesarios() = default;
 
     virtual uebyte AddTick(size_t milissegundos) const = 0;

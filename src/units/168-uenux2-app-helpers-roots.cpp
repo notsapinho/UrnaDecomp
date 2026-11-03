@@ -10,9 +10,6 @@
 //   link, the stand-in stays for the other two, not written.
 // - vota::AdicionaSeparador (fn 1387; callers 11908, 11946, 12105, 12110, none written), with the two alignments they
 //   pass, 0 and 2, so that dead-argument elimination keeps the parameter.
-// - vota::RegistraMesarios (fn 2520; callers 2753, 10737, 11848, 11858): 11858 (unit 104), 11848 (unit 104's
-//   CQuerReimprimirZeresima::ProcessInput) and 2753 (unit 121) are in the link; the stand-in call stays for 10737,
-//   not written.
 // - api::CPolySingletonList::has<vota::IAjusteInicial> (fn 2450; callers 7061, unit 116's trap, and the static
 //   initializers in fn 14478, which call it with g_polySingletonsInfo's result and drop what it returns). The instance
 //   is the header's template, emitted here first: no object before this one instantiates it.
@@ -26,7 +23,7 @@ namespace {
 __attribute__((noinline)) int w168_tecla(comum::CAppState* estado, uebyte tecla)
 {
     comum::CAppStateContext contexto(estado);
-    return (vota::EhTreinamento() ? 3 : 5) + tecla + (vota::RegistraMesarios() ? 97 : 101);
+    return (vota::EhTreinamento() ? 3 : 5) + tecla;
 }
 
 __attribute__((noinline)) int w168_ajuste(comum::CAppState* estado)

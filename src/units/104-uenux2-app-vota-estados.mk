@@ -116,6 +116,22 @@
 #   of a call or of the throws' destructor slot; this object moved after both others with celeitores.cpp.o first, or
 #   celeitordetalhe.cpp.o moved right after this object (ahead of celeitores.cpp.o), read 40 over 150 as ours. Our link has this unit's object ahead of
 #   unit 110's and unit 98's, which only renumbering landed units would change, so the row waits for that order.
+# - vota::CFimAquisicaoVotos::StartState (fn 10737, in cfimaquisicaovotos.cpp after the statics, a chosen line) is
+#   written and differs. When vota::RegistraMesarios() (fn 2520) says so the next state is
+#   comum::CRegistrarMesarios::GetInst() (fn 3610, unit 247); else the eleitor's queue's Post(7) (CThreadEleitor::GetInst,
+#   fn 316, +36; the type 7 and the queue stored in the frame, then Insert, fn 501), then CFinalizaOperador::GetInst()
+#   (fn 5342). The target stores m_pNextState in each branch (two `i32.store offset=4`, the first followed by `br 1`);
+#   every form compiled here stores it once after the join: as written, `16 over 41 rows (same 25, replaced 8 [5
+#   operand-only], inserted 3, deleted 5)` (pnpm wasm score). clang's MergedLoadStoreMotion pass joins the two stores
+#   (-mllvm -print-after-all on a scratch copy: two stores after VectorCombinePass, one after
+#   MergedLoadStoreMotionPass). Forms tried, each object read with wasm-objdump -d at this directory's flags, each with
+#   one store: the early return as written; if/else; the condition negated; a local next state stored once; a reference
+#   to m_pNextState bound first; the queue and the message as named locals of the else branch; a ternary for the state;
+#   and the if/else at -O1, -O2, -Os and -Oz, with -fno-strict-aliasing and with -fexceptions. In the target, fn 5400
+#   (not written; its callers are vota::CNomeEleitor's slots 2 and 7, 10501 and 10500) has the same shape, a store in
+#   each branch, the second after a Post(1), and fn 10511 (vota::CControlaReconhecimento's slot 7) holds the same calls
+#   with one store after the join. Not explained. It stays
+#   written: it is CFimAquisicaoVotos's slot 2 (a trap would hide it: docs/how-to-decompile.md step 5) and 3610's caller.
 #
 # Written since, each measured in the whole link with pnpm wasm score against build/out/wasm-map/vota_web/names.tsv
 # before steps 7 to 9 matched it:
