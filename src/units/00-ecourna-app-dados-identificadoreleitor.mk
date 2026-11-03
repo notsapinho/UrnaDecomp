@@ -44,7 +44,7 @@
 # `4 * (...)`, the terms swapped, `n / 3 * 4 + n % 3 * 4` and `n % 3` written out); `(n - n / 3 * 2) * 4` computes both
 # without one (base64.cpp's object, instruction kinds only). base64.cpp stays as it was until 3703's class is written.
 #
-# CStringUtils' string members, all matched but FindRegex, none named by a record, so every name below, each being a
+# CStringUtils' string members, all matched, none named by a record, so every name below, each being a
 # CStringUtils member and each one's line is chosen; the overloads follow Trim's pair and unit 12's Replace. That their
 # file is this one is a reading of the bands (ledger/ordinals.tsv), as for the zero helpers above: in uses 3, 3509 lies
 # between 3510 and 3508; in uses 6, 1880 between 1881 and 1879; in uses 5, 2199 right after 2200; in uses 1, 9407 right
@@ -74,21 +74,29 @@
 #   __find_equal (2676), and __split_buffer<std::string>'s destructor (5184), come from this object now, which ToUpper and
 #   Split instantiate first, ahead of the externs and datahoraasn.cpp.o on the link line; they are linkonce copies and
 #   their places in this object are no evidence.
-# - FindRegex (2199), written and `differs`: the start and end of a boost::regex's first match in a string, npos for
-#   both when there is none, either string is empty, or the regex throws (catch (...)). The regex, the boost::smatch and
-#   inicio/fim, set to npos and changed on a match, are locals of the try block, which returns {inicio, fim}: that gives
-#   the target's one store of the result for a match and for none; returning from inside the if gave the case of no
-#   match a cleanup of its own (pnpm wasm score 2199: 111 rows inserted). `{std::string::npos, std::string::npos}` loads
-#   npos from its definition (the object's i32.load of _ZNSt3__212basic_string...4nposE; a reading: std::pair's
-#   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and
+# - FindRegex (2199): the start and end of a boost::regex's first match in a string, npos for both when there is none,
+#   either string is empty, or the regex throws (catch (...)). The regex and the boost::smatch are locals of the try
+#   block, which returns {npos, npos} at once when regex_search finds nothing and {inicio, inicio + length()} after a
+#   match. Measured: with that early return the object's FindRegex holds four __cxa_find_matching_catch_3 calls, the
+#   target's four landing pads (regex_search's invoke and that of the logic_error constructor of match_results'
+#   position(), inlined, kept apart: a reading of pnpm wasm fn 2199), and 2199 matches; with inicio and fim set to npos,
+#   changed on a match and returned once after the if, the form this unit had, it holds three, those two pads shared,
+#   and 2199 scored 40 over 341 rows on 34125a18's link (26 of the 28 replaced operand-only, 4 inserted, 8 deleted). The
+#   same object (wasm-objdump -d of FindRegex, call and global.get indices masked, each form compiled at this file's
+#   flags with tools/round/try-tu.sh --symbols): the match's return inside the if and {npos, npos} after it, both in the
+#   try; position() called twice in the return; inicio and fim as named locals, const or not; std::make_pair for either
+#   return; regex_search's result in a named bool; the iterator overload over valor.begin() and valor.end(); a regex
+#   that is not const; boost::match_results<std::string::const_iterator> spelled out. Which one is written is a choice.
+#   `{std::string::npos, std::string::npos}` loads npos from its definition (the object's i32.load of
+#   _ZNSt3__212basic_string...4nposE; a reading: std::pair's constructor binds it by reference), so the npos results
+#   go through a local copy, naoEncontrada. Its callers 654 and
 #   1539 match, and so does 5465 (api::CStringUtils::CasaRegex, unit 179's), through FindRegexPosition. The match
 #   results are over std::string's iterators (boost::smatch): the target's regex_search (9400)
 #   zeroes the matcher's restart and search_base (an i64.store of 0 at offset 24), which the std::string::const_iterator
 #   instance does (libc++'s __wrap_iter value-initializes) and the const char* one does not: with boost::cmatch over
 #   valor.data() it scored 17 over 260 rows, the 3 deleted rows that store; with smatch it matches. The string overload
-#   of regex_search is a choice: that evidence fixes the iterator type, not the overload, and the string overload calls
-#   the iterator one over s.begin() and s.end() (third_party/boost/boost/regex/v5/regex_search.hpp; the iterator form
-#   was not measured). Its callees do_assign (9401), regex_search (9400) and
+#   of regex_search is a choice: that evidence fixes the iterator type, not the overload, and the iterator overload
+#   gives the same object (above). Its callees do_assign (9401), regex_search (9400) and
 #   throw_exception<std::logic_error> (9399), with landing pads in the target and in this file's band (above), and
 #   match_results' destructor (5153) match from this object since the tree root src/app/roots_boost.cpp (the Boost
 #   probe at APP_CXXFLAGS, no landing pads, which linked first) declares do_assign, perl_matcher over std::string's
@@ -99,11 +107,7 @@
 #   not match (9401 among them), without perl_matcher's 50 (5121, 5153, 9399), without throw_exception's 16 (9399);
 #   none loses a row of the base. The root keeps std::map<std::string, std::string>'s find, which the regex parser
 #   instantiated there before: without it RHVoice's simple_search (5263) leaves `match`, its call (163 in the target)
-#   then reaching this object's copy, another body (18 over 149 rows against 163; the root's comment). FindRegex
-#   itself is 40 over 341 rows (26 of the 28 replaced operand-only, 4 inserted, 8 deleted): the target keeps two
-#   landing pads apart that ours shares, the regex_search invoke's and that of logic_error's constructor in
-#   match_results::position()'s inlined raise_logic_error (a reading of both bodies, pnpm wasm fn); no other form was
-#   measured.
+#   then reaching this object's copy, another body (18 over 149 rows against 163; the root's comment).
 # - FindRegexPosition (no target index: binaryen inlines it into its one caller, 5465), added for unit 179: FindRegex's
 #   start, behind a stack frame of its own in 5465; its name, its being a member and this file are chosen
 #   (src/units/179-uenux2-cvalidamidia.mk).
