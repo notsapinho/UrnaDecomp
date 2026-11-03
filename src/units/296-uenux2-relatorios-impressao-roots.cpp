@@ -7,6 +7,7 @@ extern "C" void w5591(const void*, const void*, const void*) __asm__(
     "_ZNK5comum21CImprimirExtratoCarga7ImprimeERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_");
 extern "C" void w2792(void*, const void*) __asm__(
     "_ZN5comum26FormataCodigoCargaResumidoERKNS_2md15estadoaplicacao20CDadoCorrespondenciaE");
+extern "C" void w2273(void*, const void*) __asm__("_ZNK5comum8CAppInfo14LeGeralInternoEv");
 
 namespace {
 
@@ -26,6 +27,15 @@ __attribute__((noinline)) int CodigosResumidos(const char* primeira, const char*
     return codigos[1] + codigos[4];
 }
 
+// Stands for fn 2273's callers 1543, 5740, 11223, 11902 and 12110, none written. The first argument is the result's
+// room, the second the object it is called on, which 2273 never reads (binaryen drops it, as in the target).
+__attribute__((noinline)) int EstadosGerais(char* estados, const char* appInfo)
+{
+    w2273(estados, appInfo);
+    w2273(estados + 1024, appInfo + 16);
+    return estados[7] + estados[1031];
+}
+
 const void* volatile relatorios_impressao_sink;
 
 struct SRelatoriosImpressaoRoots {
@@ -33,6 +43,7 @@ struct SRelatoriosImpressaoRoots {
     {
         relatorios_impressao_sink = reinterpret_cast<const void*>(&ImprimeExtrato);
         relatorios_impressao_sink = reinterpret_cast<const void*>(&CodigosResumidos);
+        relatorios_impressao_sink = reinterpret_cast<const void*>(&EstadosGerais);
     }
 } relatorios_impressao_roots;
 

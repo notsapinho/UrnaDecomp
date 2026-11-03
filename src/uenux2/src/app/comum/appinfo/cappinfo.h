@@ -49,6 +49,12 @@ public:
     // const are chosen.
     void SalvaGeralInterno() const;
     void SalvaGeralExterno() const;
+    // Target fn 2273: the general state read anew from the internal flash, a comum::CServicoEstadoGeral of origin 0 (fn
+    // 1941) and its Carrega (fn 3791). It reads nothing of the object, and binaryen drops the unused this; that it is a
+    // member is read from a caller: comum::CRelUtil::IncluiCabecalhoEleicoesMZS (fn 1543) calls CAppInfo::GetInst (fn
+    // 185) and discards its result right before the call. Its name, after SalvaGeralInterno's, its const and its place
+    // in cappinfo.cpp are chosen.
+    md::estadoaplicacao::CEstadoGeral LeGeralInterno() const;
 
     static bool EhTreinamentoEleitor();
 

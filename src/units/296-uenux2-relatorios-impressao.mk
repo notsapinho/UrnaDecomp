@@ -4,14 +4,17 @@
 # cgeradorrelversaopacotedados.cpp); the reports' helpers in app/comum/relatorios/auxiliaresrelatorio.{h,cpp} (1156,
 # 2252, 2792 and three functions 5591 holds inlined); api::CQRCodeImagePaper's constructor (2772) and MontaImagem in
 # api/gui/cqrcodeimagepaper.cpp, with api::CStringUtils::SetBit's two overloads in unit 196's api/util/cstringutils.cpp;
-# comum::CDataSourcesRelatorio<CRdvVota, CEleitores>::LinhaPartido (11261) in unit 183's cdatasourcesrelatorio.h. Paths
+# comum::CDataSourcesRelatorio<CRdvVota, CEleitores>::LinhaPartido (11261) in unit 183's cdatasourcesrelatorio.h;
+# comum::asn::CConversorLocal::DoDesconverte (11452) in unit 157's asn/cconversorlocal.cpp and comum::CAppInfo::
+# LeGeralInterno (2273) in unit 109's appinfo/cappinfo.cpp, the two of CLocal's loader (5740, not written) that land
+# without it. Paths
 # relative to src/uenux2. This fragment compiles the two new files; the others extend their units, whose fragments point
 # here, and this unit's roots keep its stand-ins.
 #
-# Matched: 1156, 2252, 2792, 5591 and 11261 (the scan's content pass, then their match names them), 5596 and 11911
-# (vtable). Scores before steps 7 to 9 (pnpm wasm score against this link's names.tsv), all operand-only: 1156 3 over
-# 56 rows, 2252 31 over 1130, 2792 7 over 248, 5596 37 over 356, 11911 22 over 243, 5591 262 over 3779, 11261 23 over
-# 320. 11261 (LinhaPartido) is written for its literal as much as for itself: its one user, fn 12110 (vota::CGeraBU's
+# Matched: 1156, 2252, 2273, 2792, 5591 and 11261 (the scan's content pass, then their match names them), 5596, 11911
+# and 11452 (vtable). Scores before steps 7 to 9 (pnpm wasm score against this link's names.tsv), all operand-only: 1156
+# 3 over 56 rows, 2252 31 over 1130, 2792 7 over 248, 5596 37 over 356, 11911 22 over 243, 5591 262 over 3779, 11261 23
+# over 320, 11452 39 over 721, 2273 2 over 18. 11261 (LinhaPartido) is written for its literal as much as for itself: its one user, fn 12110 (vota::CGeraBU's
 # slot 2, not written), passes its address (table slot 2921), and the target holds 5591's "{}\n" as the tail of 11261's
 # "{}: {} - {}\n" (@445555). While that literal was not in the link, 5591 stayed `no-candidate` (splat-remap: `+1559
 # i32.const 370742: an address of ours: string tail occurs 4098 times`) and 11911 `unresolved` on 5591's name.
@@ -62,6 +65,18 @@
 #   limites ({}) do vetor ({})" (2772 loads that record) and calls the byte overload, which binaryen inlines (a frame of
 #   480 bytes nothing reads). The byte overload's test of the bit is folded (the vector overload passes bit % 8): its
 #   message, "Bit fora dos limites ({})" (@378829, which no target piece loads), and its code 7026 are chosen.
+# - 11452 copies the location's id, country and state strings, then converts the municipality and its complement with
+#   converter objects on the stack (vptrs @1569680, @1569480, stored before each call), then reads the municipality's
+#   comBiometria from the entity itself (its isPresent, then the field), builds the CInfoMunicipio without the
+#   daylight-saving period and, when the complement has one, assigns the one with it; then switches on the id CHOICE:
+#   the section (its converter, vptr @1561712) or the contingency urn (CIdentificacaoUrnaContingencia's constructor, fn
+#   5888, whose urn type 50 binaryen folded), each building the md::CLocal in place through its constructor, which
+#   binaryen inlines (md/clocal.cpp, unit 89: the two constructors have no index of their own); the default throws 7887
+#   at its record's line, 70:15, with the target's literal ("CHOICE de id inválida."). The order of the statements is
+#   the target's; the names of the locals and where the function begins are chosen.
+# - 2273 is `CServicoEstadoGeral(FLASH_INTERNA).Carrega()` (fns 1941 and 3791). Its target callers call
+#   CAppInfo::GetInst() first (1543 discards that result right before the call): a member whose unused this binaryen
+#   dropped, a reading (docs/how-to-decompile.md step 3's member rule names such a caller-passed object).
 # - 11261 formats the party's number as an int (packed types 13421: a string, an int, a string); a ueword local gives
 #   13517 (unsigned).
 #
@@ -74,8 +89,9 @@
 # +4, which 5591 prints); the enumerators' names (api/gui/eueguierror.h, api/util/eueutilerror.h).
 #
 # Roots: 296-uenux2-relatorios-impressao-roots.cpp stands for 5591's caller 11869 (11911 is in the link) and for 2792's
-# callers 1541, 3059 and 7787 (5591 is in the link). 11261's address is taken in unit 183's roots, beside the other text
-# sources'. Unit 204's roots, which stood for 2772's call of api::CQRCodeGuard's constructor, went.
+# callers 1541, 3059 and 7787 (5591 is in the link), and for 2273's callers 1543, 5740, 11223, 11902 and 12110. 11261's
+# address is taken in unit 183's roots, beside the other text sources'. Unit 204's roots, which stood for 2772's call of
+# api::CQRCodeGuard's constructor, went.
 RELATORIOS_IMPRESSAO_SRCS := src/app/comum/relatorios/auxiliaresrelatorio.cpp src/api/gui/cqrcodeimagepaper.cpp
 UENUX2_SRCS += $(RELATORIOS_IMPRESSAO_SRCS)
 # cqrcodeimagepaper.cpp includes api/gui/cqrcodeguard.h, which includes libqrencode's qrencode.h, and UENUX2_CXXFLAGS
