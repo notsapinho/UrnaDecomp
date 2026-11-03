@@ -78,6 +78,11 @@ void CLogVota::LogaTeclaIndevida()
     loga("Tecla indevida pressionada");
 }
 
+void CLogVota::LogaEleitorCorrigiuConfirmacaoCandidato()
+{
+    loga("Eleitor corrigiu na tela de confirmação de candidato");
+}
+
 void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
 {
     loga("Habilitação cancelada durante a captura de digital do mesário");

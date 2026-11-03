@@ -126,7 +126,8 @@
 # - 10688 and 10686, CDataText<COpcaoDS>'s D2 and D0: the implicit destructor cdatatext.h gives, as compiled here. In
 #   the target each is a 12-B thunk into fns 6053 and 6052, binaryen's merges of them with the D2 and D0 of
 #   __func<vota::IConfereVotoEmCargo::ExecutarAposAudioAtual(std::function<void ()>)::$_2, void (bool)> (11765, 11764).
-#   They read `differs` until that lambda's function lands and our link forms the same merge.
+#   That lambda's function is written (unit 97's cconferevotoemcargo.cpp), our link forms the same two merges, and the
+#   four thunks and both merges match.
 #
 # CCalculaCV's destructor, 5614, has two target callers, fn 11263 (the __on_zero_shared of the class's block,
 # __shared_ptr_pointer<CCalculaCV*, std::default_delete<CCalculaCV>, ...>) and fn 12110; neither is in our link, and the

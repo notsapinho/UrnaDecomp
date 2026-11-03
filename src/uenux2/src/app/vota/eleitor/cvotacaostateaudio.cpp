@@ -175,7 +175,20 @@ std::pair<api::EInputResult, std::string> CVotacaoStateAudio::EmiteEcoComInputFi
     return {resultado, depois};
 }
 
-// (original lines 202-221: content not recovered)
+// (original lines 202-204: content not recovered)
+#line 205
+api::EInputResult CVotacaoStateAudio::EmiteEcoCorrigeConfirma(const CFormInterativoTelaVota& form) const
+{
+    const api::EInputResult resultado = form->Read();
+    if (form->GetEntradas().size() != 1) {
+        throw CUeVotaError(EUE_VOTA_STATE_AUDIO_CORRIGE_CONFIRMA_SEM_INPUT, "Nao havia campos de input no formulario sem nada digitado");
+    }
+    const char tecla = form->GetEntradas().at(0)->GetUltimaTecla();
+    PlayKey(tecla == 'C' || tecla == 'D' ? tecla : 0);
+    return resultado;
+}
+
+// (original lines 216-221: content not recovered)
 #line 222
 void CVotacaoStateAudio::PlayFile(const std::string& arquivo)
 {

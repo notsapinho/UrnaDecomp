@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -12,10 +13,20 @@ namespace vota {
 // vota::IConfereVotoEmCargo (RTTI: si_class of vota::CVotacaoStateAudio; vtable @1547576 [1717, 325, 7028, 7480, 1661,
 // 7022, 425, 7029, 7010, 11791, 11793, 11792, 11790, 3139, 6999, 11789, 12143]): the base of the CConfereVotoEmCargo<T,
 // ETelaVotacao> states (RTTI), abstract (slot 1 is the trap 325, slot 16 pure). Records of cconferevotoemcargo.cpp name
-// slot 9 (ProcessInputAudio, :80) and a member slot 12 calls, ExecutarAposAudioAtual (:95, fn 3851); slot 10 holds the
-// record :41 of an anonymous-namespace GetCargoID. Slots 9, 10 and 12 are pending
-// (src/units/97-uenux2-cvotacaostateaudio-pending.cpp); slot 11 (fn 11792) cancels the wait at +32, slot 15 (fn 11789)
-// returns its message. fn 1717, the D2, cancels the +32 wait as slot 11 does, then releases it and calls
+// slot 9 (ProcessInputAudio, fn 11791, :80) and ExecutarAposAudioAtual (fn 3851, :95, its record's signature: not
+// virtual, not const), which slots 10 and 12 (fns 11793 and 11790) call; slot 10 holds the record :41 of an
+// anonymous-namespace GetCargoID. Slot 9 echoes the key and clears the keyboard; slot 10 sets this state as the next
+// one and, with the tick, starts it, shows the post's form for the screen at +30 and speaks the message once the
+// audio ends, else goes to slot 16's state once it ends; slot 12 stops the tick when it fires and goes to slot 16's
+// state once the audio ends; slot 11 (fn 11792) cancels the wait at +32, slot 15 (fn 11789) returns its message.
+// ExecutarAposAudioAtual cancels that wait and runs its function at once when ISound::Wait over `[] { return false; }`
+// (slot 8) returns true, else keeps at +32 the wait ISound::WaitAsync (slot 9) returns, with a lambda that cancels it
+// once the state changes and one that resets +32 and runs the function when the audio ended and the state stayed: the
+// six lambdas' __func typeinfos name them $_0 and $_1 of StartStateAudio(), $_0 of ProcessTickAudio(unsigned char) and
+// $_0 to $_2 of ExecutarAposAudioAtual, in the order this file writes them (target fns 11758 to 11788 but 11769, and
+// 5934, the operator() binaryen keeps once for the two lambdas that set the next state). The speaking lambda holds
+// CVotacaoStateAudio::FalaMensagem's statements and reads the audio flag (+11), which cvotacaostateaudio.h makes
+// protected for it: a form chosen while FalaMensagem stays inline (unit 97's fragment has the measured alternative). fn 1717, the D2, cancels the +32 wait as slot 11 does, then releases it and calls
 // CVotacaoStateAudio's D2. The destructor is out of line: fn 1278, the D0 of every CConfereVotoEmCargo instance, calls fn
 // 1717 and frees what it returns, a destructor not out of line in a class that adds no member over an out-of-line base D2
 // (docs/reference/facts/reading.md R5); defined in the class, the destructor is inlined there at the tree's -O3 (measured
@@ -29,7 +40,8 @@ namespace vota {
 // chosen: its null state stores the 0 at +28 too, and the constructor's rows are the target's with it (whole link,
 // operand rows only); the +32 pointee is chosen as CVotacaoStateAudio's wait type, whose member takes the same call of
 // slot 2 and reset; the member names, the helpers' (CancelaEsperaConfere and the constructor's CriaTickConfere) and the
-// slot-16 name are chosen. This header's path is chosen, beside cconferevotoemcargo.cpp.
+// slot-16 name are chosen, and so are ExecutarAposAudioAtual's access and its parameter's name. This header's path is
+// chosen, beside cconferevotoemcargo.cpp.
 class IConfereVotoEmCargo : public CVotacaoStateAudio {
 public:
     virtual ~IConfereVotoEmCargo() override;
@@ -50,6 +62,8 @@ protected:
     explicit IConfereVotoEmCargo(ETelaVotacao tela);
 
 private:
+    void ExecutarAposAudioAtual(std::function<void()> acao);
+
     void CancelaEsperaConfere()
     {
         if (m_esperaConfere) {

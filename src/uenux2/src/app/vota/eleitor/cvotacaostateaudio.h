@@ -94,6 +94,11 @@ protected:
     // By its record (:136), not static and const; the derived classes' input slots call it. Its access is chosen.
     void PlayKey(const char tecla) const;
 
+    // By its record (:209), not static, not virtual and const: vota::CConfirmaVotoEmCargo's ProcessInputAudio (fn 11754,
+    // the slot 9 its derived classes inherit) holds it in a stack frame of its own, inlined by binaryen. Its access is
+    // chosen.
+    api::EInputResult EmiteEcoCorrigeConfirma(const CFormInterativoTelaVota& form) const;
+
 private:
     // Static by its record (:226); PlayKey, its one caller, holds it inlined. Its access is chosen.
     static void PlayFile(const std::string& arquivo);
@@ -131,7 +136,12 @@ private:
     // ProcessTick's record and of PlayKey's leave its statements no room in ProcessTick) are chosen.
     void FalaMensagem();
 
+protected:
+    // Read by vota::IConfereVotoEmCargo's StartStateAudio lambda (fn 11786, the byte +11), which holds FalaMensagem's
+    // statements (unit 97's fragment says why), so not private.
     bool m_bAudioHabilitado;
+
+private:
     uebyte m_tickEco;
     uebyte m_tickMensagem;
     std::unique_ptr<IRecursoAudio> m_recurso;

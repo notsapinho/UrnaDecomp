@@ -193,8 +193,9 @@
 # Companions. 197-uenux2-celeitorvotando-pending.cpp traps ProcessKey; the destructor, declared first, is the key
 # function, so celeitorvotando.cpp's object emits the vtable. The pending object compiles at the class's flags
 # (uenux2_cxxflags of celeitorvotando.cpp's path, so without -fno-strict-aliasing, as app/vota/'s sources).
-# 197-uenux2-celeitorvotando-roots.cpp stands in for callers not in the link: Obtem for GetInst's (fns 7428, 7481 and
-# 11754), Registra for RegistraVoto's (fns 7428 and 11754), Suspende for suspenderEleitor's (fn 4442) calls of
+# 197-uenux2-celeitorvotando-roots.cpp stands in for callers not in the link: Obtem for GetInst's (fn 7481; 7428 and
+# 11754 are in the link, and Registra, which stood for 11754's RegistraVoto calls, went), Suspende for
+# suspenderEleitor's (fn 4442) calls of
 # AdicionaVoto, the five loggers and FinalizaEleitor, Abrange for GetAbrangencia's (fns 2824 and 5761), Imprime for
 # OrdenaPorImpressao's (fns 5604, 12098 and 12110), Converte for 5681's (fn 11349) and Procura for 3251's (fns 2386 and
 # 3266). Precisa and Inicia, which stood for 7352 and 7377, went with them. GetInst's constructor stores the vptr, the

@@ -130,9 +130,9 @@ __attribute__((noinline)) void Versoes(int r, int s, int a, int b)
 }
 // Stands for the callers of four CCandidaturas members that are not in our link, beside units 77's and 139's:
 // GetCandidatosPartido (2272: 3819, 5604 and 11976, beside 11213 and 11255), ExisteCandidato (2271: 3819 and 4442, beside
-// 11215, 11254 and 11255), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 5604, 11683 and 11891,
-// beside 11214, 11255, 11724, 11744 and 3820, unit 200's, and unit 77's 11212, which calls CRespostas::Busca, the same
-// body; one of 11683's calls is on CRespostas::GetInst()'s result, fn 2812, too).
+// 11215, 11254 and 11255), GetCandidatos (2840: 5604, beside 11214 and 4459) and Busca (1273: 5604 and 11891, beside
+// 11214, 11255, 11724, 11744, 11683 and 3820, unit 200's, and unit 77's 11212, which calls CRespostas::Busca, the same
+// body, as one of 11683's two calls does).
 __attribute__((noinline)) int Consultas(int c, int r, int s, int cargo, int partido, int candidato)
 {
     w2272(r, c, cargo, partido);
@@ -146,7 +146,7 @@ __attribute__((noinline)) void NomesUrna(int r, int s, int a)
     w5807(r, a);
     w5807(s + 12, a + 1);
 }
-// Stands for fn 5809's callers 5922 and 11976, neither reconstructed.
+// Stands for fn 5809's caller 11976, not reconstructed (5922, its other, is in the link).
 __attribute__((noinline)) int Federacoes(int c, int cargo, int f, int g)
 {
     return w5809(c, cargo, f) * 5 - w5809(c, cargo + 2, g);
