@@ -1,6 +1,7 @@
 # ecourna app/dados value types - CRegistroIdentificacaoEleitor, CSerialMidia, tiposbasicos (the CBaseType<...>::NOME
-# names, CErroLeituraBiometria, and the CBaseType<ETipoIdentificadorEleitor, ...> ctor COMDAT the target links from this
-# object), federacoes/CFederacao, processoeleitoral/CConfiguracaoMunicipios.
+# names, CErroLeituraBiometria, and the explicit instantiation of CBaseType<ETipoIdentificadorEleitor, ...>, whose
+# constructor the target links from this object: src/units/112-ecourna-cbasetype.mk), federacoes/CFederacao,
+# processoeleitoral/CConfiguracaoMunicipios.
 DADOS_SRCS := app/dados/tiposbasicos.cpp app/dados/cregistroidentificacaoeleitor.cpp app/dados/cserialmidia.cpp \
                app/dados/federacoes/cfederacao.cpp app/dados/processoeleitoral/cconfiguracaomunicipios.cpp
 ECOURNA_SRCS += $(DADOS_SRCS)

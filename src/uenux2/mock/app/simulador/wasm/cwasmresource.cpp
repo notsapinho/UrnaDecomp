@@ -46,6 +46,12 @@ std::string Normaliza(const std::string& nome)
     return {};
 }
 
+// whether the text begins with the prefix
+bool ComecaCom(const std::string& texto, const std::string& prefixo)
+{
+    return texto.rfind(prefixo, 0) == 0;
+}
+
 // where a resource's file can be, in the order they are tried
 std::vector<std::string> Candidatos(const std::string& nome)
 {
@@ -54,12 +60,12 @@ std::vector<std::string> Candidatos(const std::string& nome)
         return {};
     }
     std::vector<std::string> candidatos = {caminho};
-    if (caminho.rfind("/resource/images/", 0) == 0) {
+    if (ComecaCom(caminho, "/resource/images/")) {
         const std::string resto = caminho.substr(17);
         candidatos.push_back("/uenux/app/img/" + resto);
         candidatos.push_back("/pkg/img/" + resto);
     }
-    if (caminho.rfind("/resource/gifs/", 0) == 0) {
+    if (ComecaCom(caminho, "/resource/gifs/")) {
         const std::string resto = caminho.substr(15);
         candidatos.push_back("/pkg/gifs/" + resto);
         candidatos.push_back(ComMulher(caminho));
