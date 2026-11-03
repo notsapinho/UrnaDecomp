@@ -342,20 +342,23 @@
 #   name them $_0 and $_1 of StartStateAudio(), $_0 of ProcessTickAudio(unsigned char) and $_0 to $_2 of
 #   ExecutarAposAudioAtual, so they are written in that order, each in place in its call. Measured, pnpm wasm score in the
 #   whole link before step 8: 3851 8 over 367 rows, 11790 4 over 63, 11791 4 over 30, 11793 17 over 150, all
-#   operand-only; matched at step 9, with 23 of the 31 __func members the lambdas have of their own (11786 below).
+#   operand-only; matched at step 9, with 23 of the 31 __func members the lambdas have of their own (11786 below); the
+#   other eight, the __clone slots below, match since cconferevotoemcargo.cpp builds without strict aliasing.
 #   Chosen: the locals' names (their lengths put the instance() calls at their records' columns, :80:20 and :95:18),
 #   ExecutarAposAudioAtual's access and parameter name, the early return after the function runs at once, and
 #   `reset()` for clearing +32 in the lambda. The two __func destructors of $_2 (11765, 11764) are thunks into
 #   binaryen's merges 6053 and 6052 with api::CDataText<COpcaoDS>'s (10688, 10686, unit 121), which our link now
 #   forms: all six match.
-# - Not matched among those slots: the eight __clone slots of the four lambdas that capture `this` alone (11770, 11771,
-#   11778, 11779, 11782, 11783, 11787, 11788, `differs`) store the vptr before they copy the capture, as only code
-#   without strict aliasing does (CVotacaoStateAudio's $_1, 13732 and 13740, matches so since its file builds without
-#   strict aliasing, above). In a variant link
-#   with cconferevotoemcargo.cpp.o compiled with -fno-strict-aliasing (one object swapped in a copy of link.cmd,
-#   docs/reference/facts/workflow.md W13, scanned with the committed symbol file and match list) the eight turn `match`
-#   and no other row enters or leaves `match`; its control, the object compiled from the same line, gives the plain
-#   link's sha256. That file's carve-out from strict aliasing is the user's decision, not in this tree.
+# - The eight __clone slots of the four lambdas that capture `this` alone (11770, 11771, 11778, 11779, 11782, 11783,
+#   11787, 11788) store the vptr before they copy the capture, as only code without strict aliasing does (as
+#   CVotacaoStateAudio's $_1, 13732 and 13740, above): with strict aliasing 11782 and 11787 scored 6 over 12 rows (3
+#   inserted, 3 deleted) and the four __clone() slots 2 over 5, operand-only. They match since cconferevotoemcargo.cpp
+#   builds without strict aliasing (src/Makefile's UENUX2_NOTBAA_FILES, the user's decision;
+#   docs/reference/facts/app-flags.md F6 has the measurement on the whole link). Measured first in a variant link with
+#   cconferevotoemcargo.cpp.o compiled with -fno-strict-aliasing (one object swapped in a copy of link.cmd,
+#   docs/reference/facts/workflow.md W13, scanned with the committed symbol file and match list): the eight turned
+#   `match` and no other row entered or left `match`; its control, the object compiled from the same line, gave the
+#   plain link's sha256.
 # - The operator() of StartStateAudio's $_0 (11786) calls CVotacaoStateAudio::FalaMensagem, out of line (protected,
 #   not `inline`, in cvotacaostateaudio.cpp). That the target keeps FalaMensagem as a function of its own is
 #   evidence: its 11786 reads the capture first (+0x3 local.get 0, +0x5 i32.load offset=4, +0x8 local.set 1) and
