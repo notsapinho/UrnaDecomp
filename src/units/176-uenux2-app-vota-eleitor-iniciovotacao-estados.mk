@@ -30,9 +30,9 @@
 #
 # Chosen, no evidence names them: every data member's name, GetInst, s_mutex, s_inst and the local trava (unit 104's
 # convention); the destructor declared first; the private constructor of CConfirmaRegerarZeresima, declared and not
-# defined; StartState as the key function of the four CImpressao* states,
-# so the pending object emits their vtables; LogaMesarioIndagadoHorarioUrna's name, from its message, and its place
-# last in clogvota.cpp. The paths, by how-to step 3's rules (no record names these classes' files), each header beside
+# defined; StartState as the key function of the four CImpressao* states, so the pending object emits three of their
+# vtables and cimpressaoversaopacotes.cpp the fourth; LogaMesarioIndagadoHorarioUrna's name, from its message, and its
+# place last in clogvota.cpp. The paths, by how-to step 3's rules (no record names these classes' files), each header beside
 # its .cpp and named after the class (rule 4):
 # - cconfirmaregerarzeresima.cpp in iniciovotacao/ (rule 2): its vtable and typeinfo follow vota::CRegerarZeresima's in
 #   the data with nothing between (@1546492 to @1546608), and its statics' destructors follow CRegerarZeresima's slot 10
@@ -71,6 +71,26 @@
 #   LogaMesarioConfirmaHorarioUrnaCorreto, from their texts ("Mesário confirma que o horário da urna está errado" and
 #   "... correto"), added to app/vota/log/clogvota.cpp below LogaEleitorImpedido; their names and that place are
 #   chosen. The order of the cases and the empty default are chosen (the other order was not measured).
+#
+# vota::CImpressaoVersaoPacotes::StartState (target fn 11905, slot 2) is written in cimpressaoversaopacotes.cpp and
+# matches, named by its records (srcloc-anchor): cfileasn.h's lines 78, 48, 60, 135 and 143 and iconversorasn.h's 71,
+# CFileASN's two ReadFromFile, DecodeObjectFunction and IConversorASN::Desconverte for ModuloDadosDisponiveisCarga, which
+# it holds inlined through vota::LeDadosDisponiveisCarga (unit 287's, out of line in a TU of its own; that fragment has
+# the measurement). In the order of the disassembly (the folded readout prints the log's literal before
+# CLogVota::GetInst, the disassembly after): comum::CAppInfo::GetInst; the md::CDadosDisponiveisCarga of
+# (CPath::GetPathEstatico(FLASH_INTERNA) / "dadoscarga.dat").string(), whose temporaries go in the reverse of their
+# construction once it is read; comum::CGeradorRelVersaoPacoteDados (unit 287) over its packages, the constructor held
+# inlined; CLogVota::GetInst().loga("Imprimindo versões dos pacotes"); the generator's Imprime (fn 5592) with "versões dos
+# pacotes" and std::format("{}ª via", the byte at +75 of GetVota()'s result plus one); then the byte at +75 of a second
+# GetVota()'s result plus one, CSincronizaVota::SincronizaEstadoGeralVota (fn 491), CMaisInformacoes::GetInst with 0
+# (fn 1280) as the next state, the generator's D2 (fn 3691) and the data's destruction. 183 over 2146 rows, all
+# operand-only, before step 8. Chosen: `&CMaisInformacoes::GetInst()` through its default argument for the 0, the
+# names of the locals, `.string()` for the path's text, and the two members that reach +75
+# (cestadogeralvota.h's non-const GetNumViasImpressasRelatorios, cnumviasimpressasrelatorios.h's
+# IncrementaNumViasVersoesDados). Its object now gives the copies of libc++'s destroy of the two vectors
+# md::CDadosDisponiveisCarga holds (fns 3863 and 5956), with strict aliasing, which the tree root
+# src/app/roots_dadoscarga.cpp stood for until this file was written: it went, and the two keep their scores, 4 over 104
+# and 4 over 118 rows, the four calls of free, and their matches.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/iniciovotacao/cimpressaozeresimatardia.cpp \

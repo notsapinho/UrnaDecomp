@@ -291,17 +291,6 @@
 
 // component comum
 
-// link-order cluster 420 · uses=1 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
-
-// f11224 · 13 B · unmatched · placement: link order · name unknown
-// void f11224(i32) { ... }
-
-// f11223 · 2163 B · unmatched · placement: link order · name unknown
-// void f11223(i32) { ... }
-
-// f11222 · 1130 B · unmatched · placement: link order · name unknown
-// void f11222(i32) { ... }
-
 // link-order cluster 481 · uses=1 · neighbours' file uenux2/src/app/comum/dados/asn/estadoaplicacao/cconversorcandidatura.cpp
 
 // f11448 · 1570 B · unmatched · placement: link order · name unknown
@@ -344,14 +333,6 @@
 
 // f5574 · 16 B · unmatched · placement: link order · name unknown
 // void f5574(i32, i32) { ... }
-
-// link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
-
-// f5596 · 826 B · unmatched · placement: link order · name unknown
-// void f5596(i32) { ... }
-
-// f5592 · 53 B · unmatched · placement: link order · name unknown
-// void f5592(i32, i32, i32) { ... }
 
 // link-order cluster 800 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelbase.cpp
 
@@ -439,11 +420,6 @@
 
 // f3603 · 15 B · unmatched · placement: link order · name unknown
 // ? f3603() { ... }
-
-// link-order cluster 993 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
-
-// f3691 · 168 B · unmatched · placement: link order · name unknown
-// ? f3691(i32) { ... }
 
 // link-order cluster 1000 · uses=3 · neighbours' file uenux2/src/app/comum/dados/md/processoeleitoral/celeicaope.cpp
 

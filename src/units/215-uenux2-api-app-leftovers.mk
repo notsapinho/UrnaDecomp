@@ -35,6 +35,19 @@
 # const, the file and the lines. Whole link, before step 8: 10877 `score 0 over 7 rows`; step 8 names it by
 # pair-fingerprint. Their callers are fragment 227's sources, so the roots below need no stand-in for them.
 #
+# comum::md::estadoaplicacao::CEstadoGeral::GetResumoHashVersoesPacotes (target fn 3703, 1126 B), added for unit 287's
+# ImprimeVersoesPacotes (11222), in cestadogeral.cpp after SetAjusteDataHora, written and `differs`: 133 over 556 rows
+# (pnpm wasm score, whole link). It is the first 8 characters of ecourna::api::security::EncodeBase64 of the hash at
+# +168 (the packages' hash, cestadogeral.h), and holds EncodeBase64 inlined by binaryen with its records base64.cpp:247
+# and :267, EncodeBase64's one caller in our link as in the target; the rows that differ are that inlined code's,
+# base64.cpp's form (unit 00's note; read from the score's alignment). Its target callers are 3059 and 7787, not in our link (src/app/roots_ecourna.cpp's
+# UsaBase64A and UsaBase64B stand for them), and 11222, in it. In use band 3 it links after 3705 and 3704, so after
+# SetAjusteDataHora in the file. The hash goes into a named local before substr(0, 8): this tree's -std=c++23 makes the
+# temporary's substr the rvalue overload, which docs/reference/facts/app-flags.md F1 measured changing 3703 (that form
+# was not linked here). No generated line names it: its opcodes differ, so no srcloc-anchor, and its caller in our link,
+# 11222, is named by its vtable slot, which casts no vote (unit 287 says why there is no hand line). Chosen: the name,
+# its being a member (it reads the class's +168, private in cestadogeral.h), the file (the class's own) and its line.
+#
 # 215-uenux2-api-app-leftovers-roots.cpp stands for the callers: 7160 and 7306 for 3705 (10710, unit 277's, is in the
 # link), 5480 (twice) for 5484.
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
