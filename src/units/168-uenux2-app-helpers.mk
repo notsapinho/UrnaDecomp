@@ -134,8 +134,9 @@
 #   test is written in place, with EhTreinamento (1485, this file) for its first half, which clang inlines here. Four
 #   callers keep the call, in four files (vota::CDefineRotaPosReinicio::NeedChangeState 11858, which then goes to
 #   vota::CReinicioComparecimentoMesario, CFimAquisicaoVotos::StartState 10737, CQuerReimprimirZeresima::ProcessInput
-#   11848, CEscolheOpcao's GetInst 2753), so it is in a TU of none of them; 11858, 11848 and 2753 are in the link, and
-#   the roots' call stays for 10737. `pnpm wasm score` against the link: 6 over 41 rows, operand-only; matched.
+#   11848, CEscolheOpcao's GetInst 2753), so it is in a TU of none of them; all four are in the link (10737 since unit
+#   104 wrote it), so the roots' call that stood for 10737 went. `pnpm wasm score` against the link: 6 over 41 rows,
+#   operand-only; matched.
 #   It reads no state and its callers are vota's: a free function of vota (how-to step 3's member rule). Chosen: the
 #   name RegistraMesarios (CParametrosUrna's field 1950 reads is registrarMesarios, and 11858 goes to the mesarios'
 #   registration when it is true), the file and the line, last.
