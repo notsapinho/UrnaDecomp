@@ -32,6 +32,9 @@ enum EUeComumError {
     // IInterfaceInit::IsMRPresenteSemHabilitar and IsMRMontadoSemHabilitar (fns 2862, 5897), "Resposta nula"
     EUE_COMUM_MR_PRESENTE_RESPOSTA_NULA = 7237,
     EUE_COMUM_MR_MONTADO_RESPOSTA_NULA = 7238,
+    // IInterfaceInit::MontarMRSemHabilitar (fn 5896), "Resposta nula" and "Falha ao montar mídia de resultado ({})"
+    EUE_COMUM_MONTAR_MR_RESPOSTA_NULA = 7239,
+    EUE_COMUM_MONTAR_MR_FALHA = 7240,
     // IInterfaceInit::DesmontarMRSemDesabilitar (fn 3832), "Resposta nula" and "Falha ao desmontar mídia de resultado ({})"
     EUE_COMUM_DESMONTAR_MR_RESPOSTA_NULA = 7241,
     EUE_COMUM_DESMONTAR_MR_FALHA = 7242,
@@ -40,6 +43,9 @@ enum EUeComumError {
     EUE_COMUM_DESLIGAR_URNA_FALHA = 7269,
     // IInterfaceInit::LogDiskInfo (inlined into fn 10226, vota::CThreadMonitor's slot 2), "Resposta nula"
     EUE_COMUM_LOG_DISK_INFO_RESPOSTA_NULA = 7277,
+    // IInterfaceInit::DispositivoMR (inlined into fn 5896), "Resposta nula" and "Falha ao obter dispositivo da MR: {}"
+    EUE_COMUM_DISPOSITIVO_MR_RESPOSTA_NULA = 7282,
+    EUE_COMUM_DISPOSITIVO_MR_FALHA = 7283,
     // IInterfaceInit::EnviarMensagemThrowVoid (fn 3833), "{}: Resposta nula" and "Falha ao enviar mensagem {}, {}: {}"
     EUE_COMUM_ENVIAR_MENSAGEM_RESPOSTA_NULA = 7293,
     EUE_COMUM_ENVIAR_MENSAGEM_FALHA = 7294,

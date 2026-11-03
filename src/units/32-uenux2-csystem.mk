@@ -63,8 +63,8 @@
 # if/else that sets it) it scored 59 over 416, and this fragment's earlier spellings 62 over 416 (`else if (IsFile())
 # vazio = false`, `vazio = !IsFile()`, `vazio &= !IsFile()`): the target goes round the loop on a test of its own, not on
 # the flag's value (a reading of its rows). The break form, the variables' names and the enumerator's name (7036,
-# api/util/eueutilerror.h) are chosen. Its target callers are 5572, 5821, 11167 and 12134; 5821 is written (unit 122's
-# CompactaWsq), and the roots stand in for the others with one call.
+# api/util/eueutilerror.h) are chosen. Its target callers are 5572, 5821, 11167 and 12134; 5821 and 5572 are written
+# (unit 122's CompactaWsq, unit 179's ValidaConteudo), and the roots stand in for the other two with one call.
 # api::CreateDir (a chosen name, a free function, no record and no target index): it walks a path held in a
 # std::string component by component (std::find of '/', each component's characters pushed onto the prefix) and calls
 # mkdir(prefix, 0755) for each component ExistDir does not find, stopping at a failure; binaryen inlines it into its one
@@ -145,7 +145,7 @@
 # the scan matched 3972 (pair-addr), 4677, 5453 and 5454 (census pairs). Its helper
 # std::filesystem::detail::capture_errno (845) matches since it is in our link.
 # GetMemInfo (5463, no record, a chosen name) returns the number on the line of /proc/meminfo that holds the field it
-# is given; its one caller, 10226 (vota::CThreadMonitor's slot 2, unit 116's, written and not matched), passes
+# is given; its one caller, 10226 (vota::CThreadMonitor's slot 2, unit 116's), passes
 # "MemTotal" and "MemFree", each from a stack frame of its own (below). It
 # reads the file into a zeroed 4096-B buffer (a std::vector<char>, a choice, as CopyFile's), keeps of the string built
 # from the buffer as many bytes as read returned, finds the field, cuts its line at '\n' and converts the digits
@@ -156,7 +156,8 @@
 # 0, deleted 0)`, the callees, the literal 4096 at its three uses and the string's address, and the scan matches it.
 # Object probes at the tree's flags: building the string as `std::string(std::string(buffer), 0, lidos)` gives the
 # same object as `std::string(buffer).substr(0, lidos)`; `new char[4096]()` with delete[], and a resize of the string,
-# give others. Its place is a choice: in use band 2 it links after 5465 and 5464 (callees of fn 2758, not written) and
+# give others. Its place is a choice: in use band 2 it links after 5465 and 5464 (api::CStringUtils's CasaRegex and
+# CasaCaractere, unit 179's notes) and
 # before 5462, 5461, 5460 and ExistDir (5459), and its nearest neighbours with records are cgenerictags.cpp's
 # AppendTLV (5466) on one side and this file's truncate (5457) on the other, so it is a function defined ahead of
 # ExistDir in csystem.cpp or in a file that sorts between the two (docs/reference/facts/placing.md P5: the side taken
@@ -234,6 +235,10 @@
 # reading). 10226 widens their results as signed numbers (i64.extend_i32_s), so they return long, a choice of a signed
 # 32-bit type. They give GetMemInfo its two call sites in our link, where the roots' MedeEspaco stood for 10226 until
 # 10226 was written (unit 116); with it in the link, MedeEspaco and its calls of 5454, 5453 and 5463 went.
+# api::CasamTodos (2758) and CasaPadrao (no index: binaryen inlines it into 2758), with the predicate CCasaNome of
+# csystem.cpp's anonymous namespace, added since for unit 179's comum::impl::ValidaConteudo (5572): every chosen name,
+# the form each was measured in and what 2758 waits for are in src/units/179-uenux2-cvalidamidia.mk. They follow ZeroFill
+# in the file: in band 4, 2758 links after GetFileSize (2759), csystem.cpp's last function there.
 # api::TrocaExtensao (target fn 5461; no record: its name, its being a free function and its namespace are chosen, as
 # GetFileName's are), the last function of csystem.cpp: a path with the extension after its last '.' replaced, called
 # by unit 280's comum::CarregaPleito (5778) with "pid" and by 7787 (not written; unit 280's roots stand in for it). It

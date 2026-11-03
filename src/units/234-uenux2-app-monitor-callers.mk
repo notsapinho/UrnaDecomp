@@ -1,7 +1,8 @@
 # Unit 234: no source of its own. Its roots file stands for the unwritten target callers of the functions this unit
 # adds to landed units' sources (src/units/README.md "Landing a unit" item 2), each of which that unit's fragment
 # describes in a paragraph of its own, with its evidence, its choices and its score:
-# - unit 35, app/comum/iinterfaceinit.cpp: comum::FormataTamanho (target fn 1947, a chosen name), a size formatter;
+# - unit 35, app/comum/iinterfaceinit.cpp: comum::FormataTamanho (target fn 1947, a chosen name), a size formatter,
+#   whose stand-in went once its three target callers were in the link (3268, 10226 and 5896, unit 35's);
 # - unit 04, ecourna's app/dados/asn/datahoraasn.cpp: ecourna::app::dados::asn::FormataHora (fn 2686, a chosen name
 #   and file), the time of day of a boost::posix_time::ptime;
 # - unit 165, app/vota/cexecucaovotacooperativa.cpp: vota::CExecucaoVotaCooperativa::ProcessaEntradaEleitor (fn 7823,
@@ -14,8 +15,8 @@
 # code, so no match rests on their flags. The census pairs no target function with a stand-in (step 7's command). Each
 # stand-in's comment names the target callers it stands for; it goes when they are all in the link.
 #
-# LogaQuantidade (3268). Evidence: its one target caller, vota::CThreadMonitor::Run (10226, unit 116's, written and
-# not matched; the roots' Quantidades stood for it until it was in the link, and went), calls
+# LogaQuantidade (3268). Evidence: its one target caller, vota::CThreadMonitor::Run (10226, unit 116's; the roots'
+# Quantidades stood for it until it was in the link, and went), calls
 # it three times (ledger/callgraph.tsv), each time on vota::CLogVota::GetInst()'s result (fn 184) and a temporary of its
 # own frame that holds a std::string at +0 ("memoria total", "memoria livre" and "memoria usada", with accents, 13 bytes
 # each) and a 64-bit word at +16 (fn 5463's "MemTotal" and "MemFree" values widened and shifted left by 10, and their

@@ -29,9 +29,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <utime.h>
+#include <string_view>
 #include <vector>
 
 #include "api/util/cdirreader.h"
+#include "api/util/cstringutils.h"
 #include "api/util/csynchronizer.h"
 #include "api/util/eueutilerror.h"
 #include "ecourna/api/util/cstringutils.hpp"
@@ -47,7 +49,7 @@ constexpr size_t TAMANHO_BUFFER_MEMINFO = 4096;
 
 } // namespace
 
-// (original lines 50-57: content not recovered)
+// (original lines 52-57: content not recovered)
 #line 58
 static bool ExistResource(struct stat& info, const std::string& recurso)
 {
@@ -544,6 +546,55 @@ void CSystem::ZeroFill(const std::string& arquivo)
     off_t tamanho = lseek(descritor, 0, SEEK_END);
     truncate(descritor, 0, arquivo);
     truncate(descritor, tamanho, arquivo);
+}
+
+bool CasaPadrao(const std::string& nome, const std::string& padrao)
+{
+    const std::string_view textoNome(nome);
+    const std::string_view textoPadrao(padrao);
+    if (textoNome.compare(0, 7, "#regex#") == 0) {
+        return CStringUtils::CasaRegex(nome, padrao);
+    }
+    if (textoPadrao.compare(0, 7, "#regex#") == 0) {
+        return CStringUtils::CasaRegex(padrao, nome);
+    }
+    if (textoNome.size() != textoPadrao.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < textoNome.size(); ++i) {
+        if (textoNome[i] != textoPadrao[i] && !CStringUtils::CasaCaractere(textoPadrao[i], textoNome[i]) &&
+            !CStringUtils::CasaCaractere(textoNome[i], textoPadrao[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+namespace {
+
+class CCasaNome {
+public:
+    explicit CCasaNome(std::string nome) : m_nome(std::move(nome)) {}
+
+    bool operator()(const std::string& padrao) const { return CasaPadrao(m_nome, padrao); }
+
+private:
+    std::string m_nome;
+};
+
+} // namespace
+
+bool CasamTodos(const std::vector<std::string>& nomes, const std::vector<std::string>& padroes)
+{
+    if (nomes.empty() || padroes.size() == 0) {
+        return false;
+    }
+    for (const std::string& nome : nomes) {
+        if (std::find_if(padroes.begin(), padroes.end(), CCasaNome(nome)) == padroes.end()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 uintmax_t GetFreeSpace(const std::string& caminho)

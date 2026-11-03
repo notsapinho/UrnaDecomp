@@ -215,11 +215,6 @@
 // f3916 · 593 B · unmatched · placement: link order · name unknown
 // void f3916(i32, i32, i32) { ... }
 
-// link-order cluster 1041 · uses=3
-
-// f3978 · 41 B · unmatched · placement: link order · name unknown
-// void f3978(i32) { ... }
-
 // link-order cluster 1060 · uses=4
 
 // f2499 · 57 B · unmatched · placement: link order · name unknown
@@ -353,9 +348,6 @@
 
 // link-order cluster 764 · uses=2 · neighbours' file uenux2/src/api/util/cgenerictags.cpp
 
-// f5465 · 258 B · unmatched · placement: link order · name unknown
-// ? f5465(i32, i32) { ... }
-
 // f5464 · 110 B · unmatched · placement: link order · name unknown
 // ? f5464(i32, i32) { ... }
 
@@ -363,12 +355,6 @@
 
 // f5574 · 16 B · unmatched · placement: link order · name unknown
 // void f5574(i32, i32) { ... }
-
-// f5572 · 2128 B · unmatched · placement: link order · name unknown
-// void f5572(i32, i32, i32) { ... }
-
-// f5571 · 2179 B · unmatched · placement: link order · name unknown
-// void f5571(i32) { ... }
 
 // link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
@@ -465,11 +451,6 @@
 // f3603 · 15 B · unmatched · placement: link order · name unknown
 // ? f3603() { ... }
 
-// link-order cluster 991 · uses=3 · neighbours' file uenux2/src/api/gui/capplication.cpp
-
-// f3685 · 159 B · unmatched · placement: link order · name unknown
-// void f3685(i32, i32) { ... }
-
 // link-order cluster 993 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
 // f3691 · 168 B · unmatched · placement: link order · name unknown
@@ -530,16 +511,6 @@
 
 // f2579 · 79 B · unmatched · placement: link order · name unknown
 // void f2579(i32, i32, i32) { ... }
-
-// link-order cluster 1085 · uses=4 · neighbours' file uenux2/src/api/util/csystem.cpp
-
-// f2758 · 507 B · unmatched · placement: link order · name unknown
-// ? f2758(i32, i32) { ... }
-
-// link-order cluster 1096 · uses=4 · neighbours' file uenux2/src/api/gui/crectfield.cpp
-
-// f2784 · 37 B · unmatched · placement: link order · name unknown
-// ? f2784(i32, i32) { ... }
 
 // link-order cluster 1104 · uses=4 · neighbours' file uenux2/src/app/comum/dados/crespostas.cpp
 

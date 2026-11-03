@@ -1,7 +1,7 @@
 # uenux2 vota::CThreadEleitor, CThreadOperador, CThreadMonitor and the heads they need: the three threads' singletons and
 # destructors, vota::CMessageEleitor and CMessageOperador, api::CMessageInterface, CThreadVota's D2, the 12-byte singleton
 # of fn 509 and comum::util::CMonitoraAlimentacao::CreateInst; CThreadOperador::Run, CThreadEleitor::ProcessaEventos
-# and the debug wrapper of api/util/uedebug.h they call; CThreadMonitor::Run (written, not matched: its paragraph below),
+# and the debug wrapper of api/util/uedebug.h they call; CThreadMonitor::Run (its paragraph below),
 # with the members it holds inlined, CMonitoraAlimentacao's GetInst and VerificaAlimentacao and CLogVota's five, and its
 # std::async state. The sources are the six named below, four in CTHREADS_SRCS, clogvota.cpp (unit 119's file) at the
 # head of unit 104's list, ahead of cthreadmonitor.cpp (Run's paragraph says why), and cthreadoperador.cpp in unit 197's
@@ -33,13 +33,11 @@
 #   message and name 8062 and 8063, and std::exception_ptr's destructor 3367 (libc++.a's).
 # - cestadoaudio.cpp: fn 509, its mutex's destructor 13685, and the mode's three setters 6745, 6743 and 4195.
 # Not matched, and why: CThreadVota's slots 3 and 4 and CThreadEleitor's slot 2 are traps, listed in the -pending.cpp
-# with what they wait for; CThreadMonitor's slot 2, Run (10226), is written and waits for its debug wrapper's other
-# caller (its paragraph); 10230, CMonitoraAlimentacao::s_mutex's exit destructor (it destroys 1911544, the mutex that
-# Run's inlined GetInst locks at 10226 +0x4e), reads differs: the census pairs it with
-# cpedenulo.cpp's copy of the same 10 bytes (and ours with 10665, which so goes from differs to unresolved), and the
-# mutex at 1911544 has no name in splat/symbol_addrs.txt: the destructor waits for the match that names its object, here
-# 10226 (docs/how-to-decompile.md step 5). ProcessaEventos 4349 is written and differs (below), and the two debug
-# wrappers 3593 and 2072 and the body binaryen merges them into wait for the wrappers of two other files (below).
+# with what they wait for. ProcessaEventos 4349 is written and reads unresolved on 2072 (below), and the two debug
+# wrappers 3593 and 2072 read unresolved on their words (below). CThreadMonitor's slot 2, Run (10226), matches since unit 35 wrote
+# MontarMRSemHabilitar (5896), the other caller of its debug wrapper 5895 (its paragraph); with it 10230,
+# CMonitoraAlimentacao::s_mutex's exit destructor (it destroys 1911544, the mutex that Run's inlined GetInst locks at
+# 10226 +0x4e), which waited for the match that names its object (docs/how-to-decompile.md step 5), matches by content.
 # 13695 and 10231, the pointer destructors of fn 509's object and of CMonitoraAlimentacao, match with no text of their own: each is a thunk
 # of fn 349, f349(p0, addr), binaryen's merge of the trivial unique_ptr destructors, which unit 104's states form and these
 # two alone do not. The D2s of CMessageOperador are one body with CMessageEleitor's (3162, 3157), which the link names by the
@@ -114,13 +112,12 @@
 #   linkage (static) is chosen too.
 # - Its logs go through Depura, the file's priority-7 wrapper of api/util/uedebug.h (3593, which 10204 calls three
 #   times). 3593's name comes from a hand line of splat/symbol_addrs.txt (callers+content), whose comment says what it
-#   rests on: 10204's call is its only vote. 3593 does not match: the target's 3593 and the eleitor's 2072 are thunks
-#   into one body, 2921, which takes the priority and the TU's word, read as binaryen's merge of four wrappers
-#   (api/util/uedebug.h says why), and ours merges only these two, both of priority 7, into a body that takes no
-#   priority: the wrappers of priority 6 (5895, iinterfaceinit.cpp's DepuraInfo, written since for LogDiskInfo but
-#   inlined into 10226 while 5896 is not written: Run's paragraph; 5574 under unit 179's pending slot 11172) are not in
-#   the link. The merged body also holds a printf of a 140-byte local that nothing in the target fills, not written
-#   (uedebug.h).
+#   rests on: 10204's call is its only vote. The target's 3593 and the eleitor's 2072 are thunks into one body, 2921,
+#   which takes the priority and the TU's word: binaryen's merge of the four wrappers, which matches now that the
+#   priority-6 ones are in the link (5895, iinterfaceinit.cpp's, and 5574, cvalidamidia.cpp's: units 35 and 179), with
+#   musl's iprintf (3978), which the merged body calls (uedebug.h). 3593 and 2072 read unresolved, each on its own
+#   word, which nothing in the target but the thunk touches, so no vote and no hand line names it
+#   (docs/reference/splat.md section 3, "No circular evidence").
 #
 # CThreadEleitor::ProcessaEventos (4349, written, differs): one pass over the messages, the input and the ticks, false
 # when there is no context or Stop was asked. Its callers are CThreadEleitor's Run (7061), a trap, for which the roots
@@ -143,7 +140,7 @@
 # them and the pair of static destructors. Two data lines are hand edits of kind callers+content, for objects no vote
 # reaches: fn 509's two statics. With those, 509 and 13685 pair by content, with no line of their own in the symbol file.
 # CMonitoraAlimentacao::s_instancia's only voter is 1898, and it needs no line: its static destructor, 10231, holds the
-# address. No hand line is added for Run: it does not match, and the names it needs come with 5896 (its paragraph).
+# address. Run takes no hand line: the names it needs came with 5896 (its paragraph).
 #
 # Chosen, no evidence names them: GetInst for the three threads and fn 509 (the tree's accessors are spelled so); Stop,
 # TrataErro, ParaOutrasThreads, Espera; the class and path of fn 509's CEstadoAudio, its members' names and bool for its three flags; m_contexto,
@@ -153,7 +150,8 @@
 # CThreadVota's destructor is left implicit. +8's name moved with Stop (unit 18). Also chosen: ProcessaEventos, its
 # being public and the two helpers' being private members; SelecionaModo0, SelecionaModo1 and Desativa;
 # MostraTelaUrnaInoperante; Vazia, TrocaEstado, PararSolicitado, Yield and Dorme (in their headers); uedebug.h's path,
-# DepuraV, Depura and s_habilitado; that m_ticks and m_contexto are protected; where Run, the helpers and the setters
+# Depura, DepuraInfo and s_habilitado (uedebug.h lists its choices); that m_ticks and m_contexto are protected; where
+# Run, the helpers and the setters
 # sit in their files (no record but 87 and 134 falls in them); the members' lines around those two records. For
 # CThreadMonitor::Run (its paragraph): VerificaErrosCriticos and LogaMemoria and their being members; CLogVota's
 # LogaMudancaChaveUrnaDesligada, LogaEspacoLivreMI, LogaEspacoLivreMV, LogaEspacoUtilizadoMI and LogaEspacoUtilizadoMV,
@@ -232,14 +230,11 @@
 #   data order (unit 104's fragment has both). It is still ahead of cthreadmonitor.cpp.o, and Run reads the same there
 #   (as landed, below).
 # - the select's operand order (`> 0 ? Ext : Int`): 331 to 328 with it inverted; the doubles' order (above): 322.
-# - as landed: 317 over 3167 rows (269 replaced, 267 operand-only, 48 inserted, 0 deleted). The inserted rows and the two
-#   replaced ones are DepuraInfo's body (iinterfaceinit.cpp's priority-6 wrapper, the target's 5895) inside Run: the
-#   target calls 5895, which 5896 (IInterfaceInit::MontarMRSemHabilitar, not written) calls as well, and our link holds
-#   one call site of DepuraInfo, so binaryen inlines it. A scratch iinterfaceinit.cpp.o with a second call of DepuraInfo
-#   in DesmontarMRSemDesabilitar gives 269 over 3119 rows, all operand-only: calls, data addresses, two table slots
-#   (148 against 43, std::format's buffer function, eight times; 69 against 9, the exception's destructor, five times)
-#   and CMonitoraAlimentacao's two statics. So Run waits for 5896, which also gives 5895 its second caller's vote; its
-#   row reads unresolved on s_mutex, the first operand the scan cannot place.
+# - before 5896 was written: 317 over 3167 rows (269 replaced, 267 operand-only, 48 inserted, 0 deleted). The inserted
+#   rows and the two replaced ones were DepuraInfo's body (iinterfaceinit.cpp's priority-6 wrapper, the target's 5895)
+#   inside Run: the target calls 5895, which 5896 calls as well, and our link held one call site of DepuraInfo, so
+#   binaryen inlined it. With 5896 in the link (unit 35): 269 over 3119 rows, all operand-only (pnpm wasm score after
+#   link-map), and the scan matches Run.
 # - SaiPorVotacaoSuspensa's state: with set_value (4771) inlined into its __execute, 10224 read 99 over 117 rows (89
 #   inserted): 4771's other target caller is 11151, not written, so the roots file's ConcluiEstado stands for it.
 CTHREADS_SRCS := src/app/comum/util/cmonitoraalimentacao.cpp src/app/vota/eleitor/cestadoaudio.cpp src/app/vota/eleitor/cthreadeleitor.cpp src/app/vota/monitor/cthreadmonitor.cpp

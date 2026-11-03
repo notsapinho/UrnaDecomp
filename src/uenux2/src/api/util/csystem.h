@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <emscripten/emscripten.h>
 #include <string>
+#include <vector>
 
 #include "ecourna/api/uetypes.hpp"
 
@@ -80,6 +81,13 @@ long GetMemFree();
 // the same code: unit 32's fragment), and so are their names and namespace.
 std::string GetFileName(const std::string& caminho);
 std::string GetDirName(const std::string& caminho);
+
+// Target fn 2758: true when every name of the first list matches one of the second, neither list empty. A pattern and a
+// name match when either begins with "#regex#" (CStringUtils::CasaRegex over the rest), or when they have one length and
+// each pair of characters is equal or passes CStringUtils::CasaCaractere one way or the other. Its callers are
+// comum::impl::ValidaConteudo (fn 5572) and comum::impl::CValidaMidia's slot 8 (fn 11167). No record: its name, its being
+// a free function here and its place in csystem.cpp are chosen (src/units/179-uenux2-cvalidamidia.mk).
+bool CasamTodos(const std::vector<std::string>& nomes, const std::vector<std::string>& padroes);
 
 // Creates each missing directory of a path held in a std::string, from its first component on, with the mode 0755;
 // false when a mkdir fails. It has no record and no target index: binaryen inlines it into its one caller, fn 5821

@@ -35,6 +35,10 @@ public:
     // string is empty, nothing matches or the search throws (callers 654, 1539, 5465). No record names it: name, class
     // and result type chosen
     static std::pair<size_t, size_t> FindRegex(const std::string& expressao, const std::string& valor);
+    // Where FindRegex's match starts, npos when it finds none. No target index: binaryen inlines it into its one
+    // caller, api::CStringUtils::CasaRegex (target fn 5465), behind a stack frame of its own that holds FindRegex's
+    // result. Its name, its being a member of this class, this file and its line are chosen (src/units/179-*.mk)
+    static size_t FindRegexPosition(const std::string& expressao, const std::string& valor);
     // fn 9407: replaces every occurrence of a string in place; fn 2677: the same on a copy (callers 3651, 3689 and
     // api::CProgressBar::Draw, 10977). No record names them: the names and the overloads follow Replace(std::string&,
     // char, const std::string&), unit 12's

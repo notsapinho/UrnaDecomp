@@ -81,7 +81,7 @@ __attribute__((noinline)) int w100_todos()
 }
 
 // Stands for the callers of the two GetInst that have not landed: 3059 and 5543 for fn 1259, whose 502, 652, 1265, 2024, 3658, 3673, 5904 and 8302 are in the link, and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
-// 5473, 10226, 10870, 10874 and 10875 are in the link (10226 is written and not matched).
+// 5473, 10226, 10870, 10874 and 10875 are in the link.
 __attribute__((noinline)) int w100_getinst()
 {
     int soma = &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;
