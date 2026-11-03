@@ -9,8 +9,8 @@
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: IsAudioAtivado (fn 2746;
-//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10689, 10695, 10742, 10751; 10539 and 10646 are in the link),
-//   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620;
+//   5400, 10481; 3883, unit 282's merge, and 10511, unit 161's, are in the link), IsAudioAtivadoMesario (1687; 10689, 10695, 10742, 10751; 10539 and 10646 are in the link),
+//   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500; 10511 is in the link), AgendaInspecao (3620;
 //   10676; 652 and 10527 are in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10689, 10706; 10680 is in the link), SetIdentidadeDigitada (5414;
 //   10677), SetTipoIdentidadeDigitada (3619; 10626, 10627, 10677), GetIdentidadeDigitada (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link),
 //   GetTipoIdentidadeDigitada (5416; 10588; 10664, unit 161's, is in the link), GetIdentidadeEleitor (1535; 3616,

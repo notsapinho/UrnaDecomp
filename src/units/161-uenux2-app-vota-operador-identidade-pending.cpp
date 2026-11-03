@@ -6,9 +6,6 @@
 //
 // - vota::CControlaReconhecimento::StartState (target fn 10512, slot 2, 514 B): it resets the class's statics and calls
 //   fns 781, 1393, 1823 and 2740.
-// - vota::CControlaReconhecimento::ProcessInput (target fn 10511, slot 7): through Read() (record cinteractiveform.h:57
-//   @1591088), on CONFIRMA it calls fn 3621 and goes to the state fn 2743 returns or, as fn 2746 decides (3621 and 2746:
-//   unit 50), after a call of fn 501 (api::CPriorityMessageQueue<api::SMessage>::Insert, unit 174), to fn 1150's.
 // - vota::CIdentidadeInvalida::ProcessInput (target fn 10667, slot 7): a thunk that passes INPUT_CORRIGE (5) and its
 //   record (cinteractiveform.h:57 @1588432) to binaryen's fn 2295, whose next state is fn 652's.
 // - vota::CVerificaDadoEleitor::ProcessInput (target fn 10443, slot 7, 2761 B): it calls fns 652, 5396 and 5665.
@@ -37,11 +34,6 @@
 namespace vota {
 
 void CControlaReconhecimento::StartState()
-{
-    __builtin_trap();
-}
-
-void CControlaReconhecimento::ProcessInput()
 {
     __builtin_trap();
 }

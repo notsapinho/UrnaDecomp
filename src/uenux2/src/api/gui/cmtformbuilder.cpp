@@ -140,4 +140,10 @@ void CMTFormBuilder::AddInputControl()
     AddField(campo);
 }
 
+void CMTFormBuilder::AddInputControl(int teclas)
+{
+    const SharedInput campo = std::make_shared<CInputFieldControl<IScreenMT>>(teclas);
+    AddField(campo);
+}
+
 } // namespace api

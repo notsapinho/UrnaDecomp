@@ -6,8 +6,8 @@
 // and each stand-in builds its form on the stack as they do, so the constructor (fn 203) gets its calls and the
 // vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's callers
 // vary varies here, or binaryen would fold it. Of the MT screens listed, 1901, 1905, 2747, 2753, 5393, 5401, 5430 and
-// 652 (units 71, 121, 142, 152, 161 and 239), 3610, 5386, 5389 and 10313 (units 247, 135 and 71) and 3625 (unit 174)
-// are in the link now; the stand-ins stay for the others:
+// 652 (units 71, 121, 142, 152, 161 and 239), 3610, 5386, 5389 and 10313 (units 247, 135 and 71), 3625 (unit 174) and
+// 2743 (unit 152) are in the link now; the stand-ins stay for the others:
 //   TelaMTA, TelaMTB  652, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
 //                     (2734; 1150 is in the link, as for 180, 619, 651 and 435), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
 //                     target callers all pass it, and they have no parameter for it. 5419's one target caller,
@@ -186,34 +186,18 @@ __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPap
 }
 
 // The MT builder's input fields:
-//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (2734, 2740, 2743 and the other 24; 652,
-//                 1901, 1905, 2747, 3610, 3625, 5386, 5389, 5393, 5401, 5430 and 10313 are in the link): it calls
+//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (2734, 2740 and the other 24; 652, 1901,
+//                 1905, 2743, 2747, 3610, 3625, 5386, 5389, 5393, 5401, 5430 and 10313 are in the link): it calls
 //                 it twice, or binaryen would inline it
-//   EntradaMT     5410, the caller of 3674, CMTFormBuilder::AddField, still to come (1151, unit 121's, is in the
-//                 link): it adds a field the way they do,
-//                 a SharedField copied from the input field, and passes the length and the confirm flag of
-//                 IInputField<IScreenMT>'s constructor (3673) on to it through its asm label, as 1151 does through
-//                 CInputFieldMT's: with AddInputControl alone binaryen would inline 3673, and the four flags every
-//                 target caller passes the same (false, true, false, false) are passed so here, so that dead-argument
-//                 elimination folds them as it did in the target and not the length or the flag
-extern "C" {
-int w3673_root_0(void*, const void*, unsigned long, bool, bool, bool, bool, bool) __asm__(
-    "_ZN3api11IInputFieldINS_9IScreenMTEEC2ERKNSt3__210shared_ptrINS_16IInputValidationEEEmbbbbb");
-}
+// The stand-in for 5410, the third caller of 3674 (CMTFormBuilder::AddField) and of 3673 (IInputField<IScreenMT>'s
+// constructor), went: 5410 is in the link (vota::MontaTelaEleitorPodeVotar, unit 161, over AddInputControl(int)), with
+// 395 and 1151 (unit 121), the other two.
 
 __attribute__((noinline)) int ControleMT(api::CMTFormBuilder& form, int vezes)
 {
     form.AddInputControl();
     form.AddInputControl();
     return vezes + 4;
-}
-
-__attribute__((noinline)) int EntradaMT(api::CMTFormBuilder& form, const api::CMTFormBuilder::SharedInput& entrada,
-                                        const std::shared_ptr<api::IInputValidation>& validacao, unsigned long tamanho,
-                                        bool confirma, void* memoria)
-{
-    form.AddField(entrada);
-    return w3673_root_0(memoria, &validacao, tamanho, confirma, false, true, false, false) != 0 ? 5 : 6;
 }
 
 void* volatile w5544_sink;
@@ -234,7 +218,6 @@ struct SW5544Roots {
         w5544_sink = reinterpret_cast<void*>(&FormB);
         w5544_sink = reinterpret_cast<void*>(&FormPapelC);
         w5544_sink = reinterpret_cast<void*>(&ControleMT);
-        w5544_sink = reinterpret_cast<void*>(&EntradaMT);
     }
 } w5544_roots;
 

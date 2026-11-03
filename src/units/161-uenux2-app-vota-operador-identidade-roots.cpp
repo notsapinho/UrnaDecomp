@@ -14,8 +14,8 @@
 //   10447, and 10448, which is in the link), AtingiuLimiteTentativas and AvancaTentativa (5405 and 5406: 10473 and
 //   10485), CLogVota::LogaHabilitacaoCanceladaConfirmacaoDado (2097: 10443, 10447, 10489, 10500 and 10626) and
 //   LogaHabilitacaoCanceladaCapturaDigitalMesario (4522: 10451 and 10452), libc++'s std::stoul (4661: 10443 and
-//   10489), and CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput,
-//   10430, is in the link). A stand-in goes when the target callers it names are in splat/matched.txt or written in
+//   10489), CPedeIdentidade::GetInst (652: 22 target callers, of which CEleitorVotouNaoVotou::ProcessInput, 10430, is
+//   in the link), and vota::MontaTelaEleitorPodeVotar (5410: 1256, beside 5399, unit 282's, in the link). A stand-in goes when the target callers it names are in splat/matched.txt or written in
 //   the link.
 // The stand-ins differ in their bytes, from each other and from every target function. Compiled with APP_CXXFLAGS.
 #include <string>
@@ -31,6 +31,7 @@ extern const char cidentidadeinvalida_vt[] __asm__("_ZTVN4vota19CIdentidadeInval
 extern const char cverificadadoeleitor_vt[] __asm__("_ZTVN4vota20CVerificaDadoEleitorE");
 extern const char cdadoeleitornaoconfere_vt[] __asm__("_ZTVN4vota22CDadoEleitorNaoConfereE");
 int w161_pede_identidade() __asm__("_ZN4vota15CPedeIdentidade7GetInstEv");
+void w161_tela_pode_votar(void* forma) __asm__("_ZN4vota25MontaTelaEleitorPodeVotarEv");
 }
 
 namespace {
@@ -90,12 +91,22 @@ __attribute__((noinline)) unsigned long LeDois(const std::string& primeiro, cons
     return std::stoul(primeiro) + 3 * std::stoul(segundo);
 }
 
-// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 2295, 10209, 10404, 10443, 10447, 10452,
-// 10588, 10590, 10624, 10626, 10689, 10718, 10721, 10731, 10734 and 10751 (10217, 10435, 10527, 10646 and 10762 are
-// in the link: units 165, 152, 281, 104 and 119).
+// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 2295, 10209, 10443, 10447, 10452, 10588,
+// 10590, 10624, 10626, 10689, 10718, 10721, 10731, 10734 and 10751 (10217, 10404, 10435, 10527, 10646 and 10762 are in
+// the link: units 165, 152, 152, 281, 104 and 119).
 __attribute__((noinline)) int PedeIdentidade()
 {
     return w161_pede_identidade() + 89;
+}
+
+// Stands for 1256 (CControlaReconhecimento::GetInst), the caller of vota::MontaTelaEleitorPodeVotar (fn 5410) beside
+// 5399 (unit 282's CInformaEleitorPodeVotar::GetInst). The form is returned through the address it is given, and the
+// stand-in leaves it as it is: the call is all it stands for.
+__attribute__((noinline)) int TelaPodeVotar()
+{
+    alignas(8) unsigned char forma[8];
+    w161_tela_pode_votar(forma);
+    return forma[3] + 97;
 }
 
 const void* volatile w161_sink;
@@ -117,6 +128,7 @@ struct SW161Roots {
         w161_sink = reinterpret_cast<const void*>(&CancelaDois);
         w161_sink = reinterpret_cast<const void*>(&LeDois);
         w161_sink = reinterpret_cast<const void*>(&PedeIdentidade);
+        w161_sink = reinterpret_cast<const void*>(&TelaPodeVotar);
     }
 } w161_roots;
 

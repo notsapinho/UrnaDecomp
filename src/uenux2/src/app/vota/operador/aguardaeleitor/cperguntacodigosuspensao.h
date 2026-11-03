@@ -17,7 +17,7 @@ namespace vota {
 
 // vota::CPerguntaCodigoSuspensao (RTTI: si_class of comum::CAppState; vtable @1593120 [448, 765, 10421, 7480, 1661, 218,
 // 10419, 10420, 425]): an operator's screen; StartState logs that the voter's title was asked for to suspend the voter.
-// It overrides the destructors, StartState (slot 2, fn 10421), ProcessKey (slot 6, fn 10419, pending) and ProcessInput
+// It overrides the destructors, StartState (slot 2, fn 10421), ProcessKey (slot 6, fn 10419) and ProcessInput
 // (slot 7, fn 10420). A singleton: fn 10415 creates the 32-byte object on first use and keeps it in a static
 // std::unique_ptr (@1909344) under a static std::mutex (@1909320), destroyed at exit by fns 10423 and 10422 (elem 4228
 // and 4229, right before this vtable's slots). The constructor, inlined there, passes comum::CAppState::EVENTO_TECLA |

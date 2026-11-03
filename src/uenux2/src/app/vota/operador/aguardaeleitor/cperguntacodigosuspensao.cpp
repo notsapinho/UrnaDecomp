@@ -14,8 +14,10 @@
 #include "app/comum/dados/md/eleitor/celeitoridentidade.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/log/clogvota.h"
+#include "app/vota/operador/aguardaeleitor/celeitorvotounaovotou.h"
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/csincronismooperador.h"
 
 namespace vota {
 
@@ -59,6 +61,27 @@ void CPerguntaCodigoSuspensao::ProcessInput()
         }
         break;
     }
+    default:
+        break;
+    }
+}
+
+void CPerguntaCodigoSuspensao::ProcessKey(uebyte tecla)
+{
+    switch (tecla) {
+    case 5:
+        m_pNextState = &CMostraEleitorVotando::GetInst();
+        break;
+    case 2:
+        m_bLido = false;
+        CEleitorVotouNaoVotou::GetInst().SetVotou(false);
+        m_pNextState = &CEleitorVotouNaoVotou::GetInst();
+        break;
+    case 13:
+        m_bLido = false;
+        CSincronismoOperador::GetInst().SetSincronizado(true);
+        m_pNextState = &CSincronismoOperador::GetInst();
+        break;
     default:
         break;
     }

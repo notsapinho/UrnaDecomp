@@ -185,13 +185,16 @@
 #   masked. A member by choice: it reaches the vector only through AddField.
 # - 3673 matches with api::ITimerScheduler::CreateTimer taking its callback by reference, as api/util/itimerscheduler.h
 #   has it now; unit 120's fragment scored it 12 over 211 rows with the callback by value.
-# The roots' ControleMT and EntradaMT give 395, 3674 and 3673 their second call sites. 1151, which builds an
+# The roots' ControleMT gives 395 its second call site; 3674 and 3673 have their three target callers in the link,
+# 395, 1151 and 5410, so EntradaMT, the roots' stand-in for 5410, went with 5410's landing. 1151, which builds an
 # api::CInputFieldMT over a CNumberValidation ("0123456789") and pushes it through 3674, is unit 121's (cescolheopcao.cpp,
-# vota::AdicionaCampoNumerico; src/units/121-uenux2-datasources.mk has its evidence). Not written, and what it waits for:
-# - 5410 ("ELEITOR(A) PODE VOTAR", callers 1256 and 5399, not written) holds behind a second prologue code that builds a
+# vota::AdicionaCampoNumerico; src/units/121-uenux2-datasources.mk has its evidence). And 5410's code:
+# - 5410 ("ELEITOR(A) PODE VOTAR", callers 1256 and 5399) holds behind a second prologue code that builds a
 #   CInputFieldControl<IScreenMT> with std::make_shared and calls 3674; its block's vtable (@1580748) lies in this
-#   object's data, so that code is a member of this file that binaryen inlined, a reading.
-#   Every direct callee of 5410 has a name now; no record, slot or RTTI names 5410, its class or its file.
+#   object's data, so that code is a member of this file that binaryen inlined, a reading. It is written so:
+#   AddInputControl(int teclas) (name, overload and parameter chosen after api::CInteractiveFormBuilder's), which 5410,
+#   vota::MontaTelaEleitorPodeVotar in unit 161's ccontrolareconhecimento.cpp, calls with 4, the default of
+#   CInputFieldControl's constructor. 5410 differs (unit 161's fragment has the rows); 395, 3674 and 3673 still match.
 #
 # Chosen, the bytes do not decide:
 # - Every adder's name, GeraNome, RectEntre and that it is a free function of the file, every parameter name, the name and

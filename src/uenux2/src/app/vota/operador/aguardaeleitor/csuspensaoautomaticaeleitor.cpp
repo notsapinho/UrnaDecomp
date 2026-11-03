@@ -14,7 +14,9 @@
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/log/clogvota.h"
 #include "app/vota/operador/aguardaeleitor/cmostraeleitorvotando.h"
+#include "app/vota/operador/csincronismooperador.h"
 #include "app/vota/operador/cthreadoperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
@@ -32,7 +34,7 @@ void CSuspensaoAutomaticaEleitor::InicializaTick()
     }
 }
 
-// (original lines 35-79: content not recovered)
+// (original lines 37-79: content not recovered)
 #line 80
 void CSuspensaoAutomaticaEleitor::AtualizaMensagem()
 {
@@ -95,6 +97,28 @@ void CSuspensaoAutomaticaEleitor::ProcessTick(uebyte tick)
     AtualizaMensagem();
     m_form->Slot2();
     CThreadEleitor::GetInst().GetMensagens().Post(3);
+}
+
+void CSuspensaoAutomaticaEleitor::ProcessKey(uebyte tecla)
+{
+    if (tecla == 5) {
+        CThreadOperador::GetInst().StopTick(m_tick);
+        m_pNextState = &CMostraEleitorVotando::GetInst();
+    } else if (m_bSinalizado) {
+        switch (tecla) {
+        case 13:
+            m_bSinalizado = false;
+            CSincronismoOperador::GetInst().SetSincronizado(true);
+            m_pNextState = &CSincronismoOperador::GetInst();
+            break;
+        case 2:
+            m_bSinalizado = false;
+            m_pNextState = &CPedeIdentidade::GetInst();
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 } // namespace vota
