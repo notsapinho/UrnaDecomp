@@ -15,12 +15,13 @@
 //
 // api::CPolySingletonList::has<api::ITextToSpeech> (fn 3281, an 11-byte thunk into binaryen's merge, fn 1166) has three
 // direct callers in the target: fn 2079 (api::CPolySingleton<api::ITextToSpeech>::instance, whose copy the target keeps
-// from cinstrucaovotacaoacessibilidade.cpp, its record 1533836 among that file's), in the link; fn 7667 (the executable
-// TU's set<api::ITextToSpeech>) and fn 14478 (__wasm_call_ctors, a static initializer that calls it and drops the
-// result), not written. TemFala stands for 7667 and 14478 with one call. Our link has one more, simulador::Inicializa
-// (fn 8302, unit 188), which holds set<api::ITextToSpeech> inlined where the target's 8302 calls fn 4162, a wrapper
-// that reaches it (7667, table slot 65) through invoke_vii: in a link of this object without TemFala (W13) 3281 stays
-// out of line, and it and 2079 score as with it (pnpm wasm score: 2 over 5 and 73 over 746 rows, operand-only).
+// from cinstrucaovotacaoacessibilidade.cpp, its record 1533836 among that file's) and fn 7667 (the executable TU's
+// set<api::ITextToSpeech>, whose copy src/app/roots_texttospeech.cpp holds), in the link; fn 14478 (__wasm_call_ctors,
+// a static initializer that calls it and drops the result), not written. TemFala stands for 14478 with one call, and
+// stood for 7667 too until that copy was in the link. simulador::Inicializa (fn 8302, unit 188) was one more caller in
+// our link while it held set<api::ITextToSpeech> inlined; it calls fn 4162 now, as the target's does, a wrapper that
+// reaches 7667 (table slot 65) through invoke_vii. Measured then: in a link of this object without TemFala (W13) 3281
+// stayed out of line, and it and 2079 scored as with it (pnpm wasm score: 2 over 5 and 73 over 746 rows, operand-only).
 //
 // vota::CVisualizarCandidatos::GetCargo (fn 5951) has two direct callers in the target, fns 11891 and 11892
 // (vota::CMenuFiltrarCandidatosPorNumero's slots, pending in unit 104): CargoVisualizado stands for them with two calls.
@@ -61,7 +62,7 @@ __attribute__((noinline)) int NomesTela(int tela)
     return nome[11] + outro[11];
 }
 
-// stands for fns 7667 and 14478
+// stands for fn 14478
 __attribute__((noinline)) int TemFala()
 {
     return w150_tem_fala(w150_info()) + 17;

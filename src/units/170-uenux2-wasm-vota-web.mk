@@ -155,7 +155,9 @@
 #   slot follows whether a push's format calls are emitted before any other format body of the TU. Ours emits
 #   instance<ISound>'s first (SetAudioEnabled);
 #   the target's records of this TU run CVotaWebEngine::Init's (515:13), then 7667's push (set<ITextToSpeech>), then
-#   instance<ISound>'s, so they wait for Init (votaInit, 7840).
+#   instance<ISound>'s, so they wait for Init (votaInit, 7840). 7667's copy is src/app/roots_texttospeech.cpp's now (at
+#   this TU's rule, unit 237's), +584 there too; in a variant of that root (not landed) whose set<api::ITextToSpeech>
+#   code is emitted before its other members', 7667 has +280 and matches (unit 237's fragment).
 # - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours reads 22
 #   over 74 rows, 15 replaced (all operand-only), 3 inserted and 4 deleted, the rows of the response's slot. The target
 #   holds the 12-byte comum::ueRespostaSavd at +4 of the frame, 4-aligned (`i64.store align=2 offset=4`, `i32.store

@@ -70,8 +70,8 @@
 #   against 280 (10090: 156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower), read as a
 #   form of CPolySingletonList::push (unit 100's header); 7667 and 8834 on their first call, a has<T> thunk (target
 #   3281 and 5417, ours 3618 and 5423). 3281 matches since, from src/app/roots_texttospeech.cpp's instance, and 7667
-#   still reads so: its census pair is 8758's body (set<IGenericFactory<ISemaphore>>), since no body of ours is the
-#   executable TU's set<api::ITextToSpeech>, for which unit 150's roots stand.
+#   read so while no body of ours was the executable TU's set<api::ITextToSpeech> (its census pair was 8758's body);
+#   the root holds that copy now (below).
 # - 9650, 9831, 9897 and 10307 (main): `unresolved` on table slots of set<T> bodies that have no target name; 640 on
 #   unlock_shared_and_lock's; 9372 on a table slot of ours whose function the target's table does not hold.
 #   Since then 9372 matches (fragment 241), and 9650, 9831, 9897, 10307 and 640 with unit 170's has<T> roots and unit
@@ -84,6 +84,35 @@
 #   root emits that copy.
 # - 921 (above) and 13877 (unit 82's fragment) are not written; 3552 matches from unit 229's root, and 1928's line names
 #   that root's pair<string, shared_ptr<IAbstractVisitor>> copy now, the same body, which links ahead of this one's.
+#
+# CPolySingleton<api::ITextToSpeech>::set<simulador::CWasmNullTextToSpeech>, target fn 4162 (143 bytes, landing pads),
+# added after the rest: the executable TU's copy, which votaInit (fn 7840, not written) reaches through invoke_vii's
+# table slots 7 and 46 (elem[7] and elem[46] of the target's table) and fn 8302 (unit 188) calls directly. The root
+# takes its address in a static constructor's sink, which stands for votaInit's two slots, so that it emits the copy
+# with what the copy instantiates and binaryen keeps it out of line beside 8302's call (the root's comment has the
+# evidence and the measurement without the sink). 8302's call reaches it, as the target's does: this object links ahead
+# of simulador.cpp.o.
+# Matches with it (3, none lost, against 34125a18 by index, how-to step 10): 4162, from the census's pair with our copy
+# (shape), and two thunks that CPolySingletonList::set<api::ITextToSpeech> (fn 7667) invokes, into binaryen's bodies
+# 1009 and 1010: 14423 (vector<SPolySingletonInfo>::emplace_back for shared_ptr<api::ITextToSpeech>, table slot 154) and
+# 14456 (shared_ptr<api::ITextToSpeech>'s constructor from unique_ptr, slot 153), named by step 8's `table` evidence by
+# 7667, which has its srcloc-anchor now (its push<api::ITextToSpeech> record, which this object loads). No match line
+# was renamed; each new match was read against its callers (4162: 8302 and the two slots of 7840; 14423 and 14456:
+# 7667).
+# Two lines went with it, both taken out in one link, steps 7 to 9, that moves no scan row (its scan differs from the
+# link with them in two `ours` numbers of the detail column only, and the match list and symbol file are the same): the
+# root's explicit instantiation of has<api::ITextToSpeech> (3281), which set<api::ITextToSpeech> instantiates in the
+# same object (with and without the line, 3281's, 7667's and 4162's bodies in the object are the same, wasm-objdump -d
+# with object numbers masked; only the object's order of functions differs), and the two calls of 388
+# (~shared_ptr<void>) in src/units/100-uenux2-cpolysingleton-roots.cpp, which stood for 7667 alone (that file's
+# comment).
+# Not matched: 7667 itself, `differs` on the frame slot of depura's std::format_string (`pnpm wasm score` 156 over 885
+# rows, all operand-only: +584 in ours where the target has +280, the slots between 8 off), as the executable TU's push
+# bodies do (unit 170's fragment). Measured on a variant link (not landed) with the sink and its comment moved above
+# urna_texttospeech_constroi, so that the object emits set<U>'s code first: step 9 matched 7667 there, and the splat
+# build gave the target's sha256 with 12190 matches. That corroborates the reading of unit 170's fragment (the slot
+# follows which format code a TU emits first); it is not landed, since src/units/README.md "Companion files" says the
+# order of a roots file's lines is free and a verdict that turns on it is no reason to tune it.
 $(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/237-uenux2-itexttospeech-roots.o
