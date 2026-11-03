@@ -38,6 +38,7 @@
 #include <vector>
 
 #include "api/gui/cdatatext.h"
+#include "api/gui/cdatatextfmt.h"
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cledfieldmt.h"
 #include "api/gui/ctextfieldmt.h"
@@ -113,6 +114,15 @@ public:
     template <typename FONTE>
     SharedField AddTextField(FONTE fonte, const SPoint& posicao);
 
+    // A text a source of the caller's type gives through a format, CDataTextFmt<FONTE> with CDataTextFmt's default
+    // alignment: its instances over the anonymous CComparecimentoMesariosDS of cpedetitulomesarioinicial.cpp,
+    // cpedetitulomesariofinal.cpp and cpedetitulomesariovotacao.cpp are inlined into the constructors fn 10388 holds,
+    // each in the constructor's frame (the format "{:02}" stored into the new CDataTextFmt, a CTextFieldMT over it,
+    // fn 1262, and vector::push_back in place). Its name, and its being a member template beside the one above, are
+    // chosen.
+    template <typename FONTE>
+    SharedField AddTextField(FONTE fonte, const SPoint& posicao, const std::string& formato);
+
     // A text a source gives through a CDataTextFmt, in an api::CTextFieldUpdateMT that redraws it as it changes: its
     // instance over api::CTextSource is held inlined by binaryen in fn 652, behind a 16-byte frame of its own. It pushes a
     // copy of the field into m_campos with vector::emplace_back in place and releases the field before it returns, so it
@@ -135,6 +145,15 @@ template <typename FONTE>
 CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(FONTE fonte, const SPoint& posicao)
 {
     const SharedIText text(new CDataText<FONTE>(fonte));
+    SharedField campo(new CTextFieldMT(posicao, text));
+    m_campos.push_back(campo);
+    return campo;
+}
+
+template <typename FONTE>
+CMTFormBuilder::SharedField CMTFormBuilder::AddTextField(FONTE fonte, const SPoint& posicao, const std::string& formato)
+{
+    const SharedIText text(new CDataTextFmt<FONTE>(fonte, formato));
     SharedField campo(new CTextFieldMT(posicao, text));
     m_campos.push_back(campo);
     return campo;

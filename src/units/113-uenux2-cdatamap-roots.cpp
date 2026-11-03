@@ -14,18 +14,19 @@
 //   The fourth record's instance is inlined into 12105, not instantiated here; nor is CRespostaConsulta's (no record).
 // - find<CNumeroInscricaoEleitoral>, 3741 (5725, 10587, 10590; 10587 is in the link), through Find, and the copy of the
 //   pair's second member, 3743 (5725, 6734, 10590). Nothing here reaches Add over this key: 5725 waits for a real caller (the fragment says why).
-// - CRegistradorMesario::Registra, 5378 (10337, twice). Add(KeyType, RecordType), 5377 (5378, 6734), and the insert of
-//   the second map, 5379 (5378, 6734): cregistradormesario.cpp's object is ahead of this one on the link line, so its
-//   copies are the link's; a stand-in here only adds their second call site.
+// - CRegistradorMesario::Registra, 5378, has its two call sites in 10337 (unit 135, in the link). Add(KeyType,
+//   RecordType), 5377 (5378, 6734), and the insert of the second map, 5379 (5378, 6734): cregistradormesario.cpp's
+//   object is ahead of this one on the link line, so its copies are the link's; a stand-in here only adds their second
+//   call site.
 // - find<CEleitorIdentidade> and __find_equal<CEleitorIdentidade>, 1703 (2225, 2264, 3614, 5378, 10842) and 860 (2805,
 //   3728, 5379, 6734, 7787, 10842): these bodies do not depend on the mapped type, so a std::map<CEleitorIdentidade, int>
 //   stands for the callers not written (2225 and 2264 are, units 50 and 110, and 3728, fragment 225), and binaryen merges
 //   the copies.
 // - comum::CJustificador's constructor, 3742 (11474; 1391 and 11475 are in the link): two call sites, so binaryen
 //   keeps it out of line; it stores CJustificadorServico's vptr, the reference the target has to that vtable.
-// - CRegistradorMesario::GetInst, 815 (ten callers; 10795, unit 119's slot 7, is in the link), its counts 3606 and 2727
-//   (each called by 10795 and two more), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls GetInst and each
-//   count once, beside 10795, and HasInst twice.
+// - CRegistradorMesario::GetInst, 815 (ten callers; 10795, 10313, 10337, 5387 and 10368 are in the link), its counts
+//   3606 and 2727 (called by 10795 and by 5387 and 10368, the data sources' slot 2, in the link with unit 104's 10388,
+//   and both by 12105), and HasInst, 2221 (11616, 12105): ConsultaRegistrador calls HasInst twice.
 // A stand-in goes when the target callers it names are in splat/matched.txt.
 #include <map>
 #include <new>
@@ -64,14 +65,6 @@ __attribute__((noinline)) bool AvancaDois(TMapa& mapa)
     mapa.Next();
     mapa.Next();
     return mapa.GetCurrent() != nullptr;
-}
-
-// Stands for 10337.
-__attribute__((noinline)) int RegistraDois(comum::CRegistradorMesario& registrador, const TComparecimento& primeiro, const TComparecimento& segundo)
-{
-    registrador.Registra(primeiro);
-    registrador.Registra(segundo);
-    return 11;
 }
 
 // Stands for the load loop 6734 holds: every row goes in the map, and a row of the section in the second map as well.
@@ -124,14 +117,11 @@ __attribute__((noinline)) int CriaJustificadores(void* primeiro, void* segundo)
     return 43;
 }
 
-// Stands for the callers of CRegistradorMesario::GetInst (fn 815) not in the link, 3614, 5387, 6734, 10337, 10368,
-// 10451, 11616 and 12105 (10795 and 10313 are); of QuantidadeMesariosInicio (fn 3606), 5387 and 12105, and of
-// QuantidadeMesariosFim (fn 2727), 10368 and 12105 (10795 calls both); and of HasInst (fn 2221), 11616 and 12105.
-__attribute__((noinline)) int ConsultaRegistrador(std::size_t* quantidades)
+// Stands for the callers of CRegistradorMesario::HasInst (fn 2221), 11616 and 12105, not in the link. GetInst (fn
+// 815) and the two counts (fns 3606 and 2727) have two callers or more in the link: 10795, 10313, 10337 and the data
+// sources' slot 2 (5387 and 10368).
+__attribute__((noinline)) int ConsultaRegistrador()
 {
-    const comum::CRegistradorMesario& registrador = comum::CRegistradorMesario::GetInst();
-    quantidades[0] = registrador.QuantidadeMesariosInicio();
-    quantidades[1] = registrador.QuantidadeMesariosFim();
     return comum::CRegistradorMesario::HasInst() ? 47 : (comum::CRegistradorMesario::HasInst() ? 53 : 59);
 }
 
@@ -146,7 +136,6 @@ struct SW113Roots {
         w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaCandidaturas>);
         w113_sink = reinterpret_cast<const void*>(&AvancaUm<TMapaPartidos>);
         w113_sink = reinterpret_cast<const void*>(&AvancaDois<TMapaPartidos>);
-        w113_sink = reinterpret_cast<const void*>(&RegistraDois);
         w113_sink = reinterpret_cast<const void*>(&CarregaUm);
         w113_sink = reinterpret_cast<const void*>(&ContaEleitor);
         w113_sink = reinterpret_cast<const void*>(&Justifica);

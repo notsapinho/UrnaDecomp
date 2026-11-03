@@ -1,6 +1,6 @@
 # uenux2 comum: the voter's screen of the poll workers' registration (target fn 1255, "REGISTRO DE MESÁRIOS") in
 # app/comum/comparecimentomesario/estados/cregistrarmesarios.cpp, and what keeps api::CFormBuilder::GetForm(const
-# std::string&) (fn 11140) out of line: a second copy of the screen, comum::IPedeTituloMesario::GetTelaEleitor, in unit
+# std::string&) (fn 11140) out of line: a second copy of the screen, comum::TelaEleitorRegistroMesarios, in unit
 # 71's ipedetitulomesario.cpp. 11140 is written in unit 31's cformbuilder.cpp; with it in the link binaryen forms fn
 # 6117, the shared body of 11140 and vota::GetFormulario (fn 886, unit 165), and 886 becomes its thunk, as in the
 # target. The same file holds comum::CRegistrarMesarios, the state that asks whether to register the poll workers
@@ -40,7 +40,7 @@
 #     std::string&) and no shared body either, and holds one of the two only (they are one body before the inlining
 #     pass);
 #   - with the second copy a member that does not read `this` (in this file, of a class declared for the measurement,
-#     or as written, in ipedetitulomesario.cpp), each called twice: names.tsv holds GetForm(const std::string&),
+#     or in ipedetitulomesario.cpp, as first written), each called twice: names.tsv holds GetForm(const std::string&),
 #     TelaRegistroMesarios and byn$mgfn-shared$ of GetFormulario, and no GetTelaEleitor. The image's wasm-opt -Oz runs
 #     duplicate-function-elimination first, then dae-optimizing, inlining-optimizing, duplicate-function-elimination
 #     again and merge-similar-functions (BINARYEN_PASS_DEBUG=1 wasm-opt -Oz in urna-emsdk:6.0.0 prints them as passes 1,
@@ -64,15 +64,16 @@
 #   SBloco in unit 102's, went: cformbuilder.cpp.o, first in the link, now emits 11139 and 11138.
 #
 # Chosen, no evidence names them: TelaRegistroMesarios, its being a free function of comum, and its header's path,
-# cregistrarmesarios.h, beside the .cpp; that the second copy is IPedeTituloMesario's protected non-static member
-# GetTelaEleitor, the one form measured (another function of the same body with a parameter dead-argument elimination
-# drops would read the same, not measured); which target callers call which copy (the three derived constructors of
-# IPedeTituloMesario, inlined into fn 10388, call GetTelaEleitor; the constructors of the states over comum::CAppState,
-# in fns 3610, 5386, 5389, 10313 three times and 10337, call TelaRegistroMesarios). At 10388's three sites the target
-# calls 1255 before IPedeTituloMesario's constructor (fn 3608) runs on the new state, so the chosen calls there run a
-# member before its base subobject exists, undefined behaviour ([class.base.init]); the parameter form above, not
-# measured, would not. The other seven sites call 1255 in a constructor body, after the state's vptr store. Chosen as
-# well: the fonts' names and their being
+# cregistrarmesarios.h, beside the .cpp; that the second copy is comum::TelaEleitorRegistroMesarios, a free function
+# with a parameter its body does not read, and which target callers call which copy (the three derived constructors of
+# IPedeTituloMesario, inlined into fn 10388, call TelaEleitorRegistroMesarios; the constructors of the states over
+# comum::CAppState, in fns 3610, 5386, 5389, 10313 three times and 10337, call TelaRegistroMesarios). The bytes decide
+# part of it, measured with 10388 written (ipedetitulomesario.h has the scores): at 10388's three sites the target calls
+# 1255 in the base's initializer with no vptr store before it, which a member of IPedeTituloMesario called there gives
+# (clang stores the derived vptr first when a base initializer uses `this`), and a free function of
+# TelaRegistroMesarios's own type is merged with it before inlining, as the identical free function above. The other
+# seven sites call 1255 in a constructor body, after the state's vptr store. Chosen as well: the fonts' names and their
+# being
 # external constants of cregistrarmesarios.cpp, which the second copy reads (the target holds one pair);
 # GetForm(const std::string&) as an overload, its name and its place after the first GetForm; the lines of what
 # cregistrarmesarios.cpp defines, but for line 68's record. Which copy names fn 1255's match line is our link's: the one binaryen
@@ -141,8 +142,7 @@
 # The generic uenux2 rule depends on the source and every uenux2 header.
 CREGISTRARMESARIOS_SRCS := src/app/comum/comparecimentomesario/estados/cregistrarmesarios.cpp
 UENUX2_SRCS += $(CREGISTRARMESARIOS_SRCS)
-# target callers of the screen's two copies and of 3610 that are not written: 247-uenux2-cregistrarmesarios-roots.cpp
-# stands for them
+# the target caller of 3610 that is not written (10689): 247-uenux2-cregistrarmesarios-roots.cpp stands for it
 $(ROOT)/$(APP)/247-uenux2-cregistrarmesarios-roots.o: $(ROOT)/src/units/247-uenux2-cregistrarmesarios-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/247-uenux2-cregistrarmesarios.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/247-uenux2-cregistrarmesarios-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/247-uenux2-cregistrarmesarios-roots.o

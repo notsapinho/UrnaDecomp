@@ -23,7 +23,7 @@ class IControladorRegistraMesarios;
 // 10315, 425, 10317, 10316]): it overrides StartState (slot 2, fn 10318), FinishState (slot 5, fn 10315, a thunk into
 // binaryen's fn 6012), ProcessInput (slot 7, fn 10317), which goes back to asking for the titulo on CORRIGE, and
 // ProcessTick (slot 8, fn 10316); the records of cpededigitalmesario.cpp name StartState, FinishState and ProcessTick.
-// StartState is written; FinishState and ProcessTick are pending (src/units/135-uenux2-comum-mesario-estados-pending.cpp).
+// StartState and FinishState are written; ProcessTick is pending (src/units/135-uenux2-comum-mesario-estados-pending.cpp).
 // The destructor is out of line: the deleting one (fn 3629) calls it and frees `this`, and it stores no vptr, as a final
 // class's; vota::CPedeIdentidade and vota::CRegistraDigitalOperador share both bodies (fns 1537 and 3629).
 //

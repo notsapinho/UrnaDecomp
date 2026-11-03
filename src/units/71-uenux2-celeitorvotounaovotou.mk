@@ -88,10 +88,10 @@
 # reader, the exit destructor 10321, a thunk into 3886, matched (src/units/221-uenux2-app-comum-constructors.mk has
 # the measurement).
 #
-# IPedeTituloMesario::GetTelaEleitor, after StartState, is unit 247's: the second copy of comum::TelaRegistroMesarios
+# comum::TelaEleitorRegistroMesarios, after StartState, is unit 247's: the second copy of comum::TelaRegistroMesarios
 # (cregistrarmesarios.cpp), which binaryen joins with it into target fn 1255. Unit 247's fragment has the evidence for a
-# second function and what is chosen (this class, a protected non-static member, its name), and its roots stand in for
-# the copy's callers, the three derived constructors in fn 10388.
+# second function, and ipedetitulomesario.h what the bytes decide of its form and what is chosen; its callers are the
+# three derived constructors fn 10388 holds (unit 97's files).
 #
 # GetInst (1901), the project's singleton, holds the constructor inlined behind a 96-byte frame of its own: CAppState's
 # with EVENTO_ENTRADA, +11 cleared, two std::make_shared<std::string> (the first from "pode/nao pode entregar comp", the
@@ -119,8 +119,8 @@ UENUX2_SRCS += $(CELEITORVOTOUNAOVOTOU_SRCS)
 # IPedeTituloMesario::ProcessInput reads comum::CConfiguracaoEleicao, whose header reaches ecourna's CHorariosUrna and
 # so Boost's headers: an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# nothing reconstructed references either class yet: 71-uenux2-celeitorvotounaovotou-roots.cpp takes the first vtable's
-# address and stands in for the IPedeTituloMesario constructor's callers
+# vota::CEleitorVotouNaoVotou::GetInst's callers are not all written: 71-uenux2-celeitorvotounaovotou-roots.cpp stands
+# in for them
 $(ROOT)/$(APP)/71-uenux2-celeitorvotounaovotou-roots.o: $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/71-uenux2-celeitorvotounaovotou-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/71-uenux2-celeitorvotounaovotou-roots.o

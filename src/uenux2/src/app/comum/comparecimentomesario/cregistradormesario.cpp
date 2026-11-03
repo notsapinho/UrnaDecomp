@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "app/comum/comparecimentomesario/euecomumcomparecimentomesarioerror.h"
+
 namespace comum {
 
 CRegistradorMesario::~CRegistradorMesario() = default;
@@ -58,5 +60,15 @@ bool CRegistradorMesario::HasInst()
 
 std::unique_ptr<CRegistradorMesario> CRegistradorMesario::s_inst;
 std::mutex CRegistradorMesario::s_mutex;
+
+// (original lines 64-81: content not recovered)
+#line 82
+void CRegistradorMesario::SaveCurrentInternal()
+{
+    if (m_registros.empty()) {
+        throw CUeComumComparecimentoMesarioError(EUE_COMUM_COMPARECIMENTO_MESARIO_CONTAINER_VAZIO, "O contêiner estava vazio");
+    }
+    m_servico.Inserir(m_corrente->second);
+}
 
 } // namespace comum

@@ -8,8 +8,5 @@ UENUX2_SRCS += $(CTEXTFIELDMT_SRCS)
 # Draw is the class's only virtual member defined out of line, its key function, so ctextfieldmt.cpp's object emits the
 # vtable with the implicit destructors (fns 10933, 10932) and GetTypeName; the destructor's base vtable brings
 # IFormFieldBase<IScreenMT>'s destructor (11052), which binaryen merges with IFormFieldBase<IScreen>'s (12658, unit 14)
-# into one body taking the vptr (1566), as the target's link did; the ctor's eight callers are not reconstructed either:
-# 30-uenux2-ctextfieldmt-roots.cpp gives it two
-$(ROOT)/$(APP)/30-uenux2-ctextfieldmt-roots.o: $(ROOT)/src/units/30-uenux2-ctextfieldmt-roots.cpp $(ROOT)/src/Makefile
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/30-uenux2-ctextfieldmt-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/30-uenux2-ctextfieldmt-roots.o
+# into one body taking the vptr (1566), as the target's link did; the ctor's eight callers (180, 619, 651, 1152, 2753,
+# 5409, 5419 and 10388) are written and in the link, so it needs no roots file.

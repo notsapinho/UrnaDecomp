@@ -192,7 +192,8 @@
 # app/comum/gravadores/; the blocks and members over a lambda or another TU's anonymous namespace wait for the function that
 # spells them (11107, 11109 and 11108 matched with fn 502, AddStatusHeader, cformbuilder.cpp): 12524, 12522, 12530, 12529, 12520 for fn
 # 6561 (CTelasVota::CriaTelaVisualizacaoCandidato), 12587, 12588, 12589, 12592, 12591 for fn 6627 (ctelasvota.cpp's
-# anonymous namespace, reached through fn 1192), 10373, 10367, 10361 for fn 10388.
+# anonymous namespace, reached through fn 1192); 10373, 10367, 10361 are in the link with fn 10388 (unit 104) and still
+# differ (unit 97's fragment).
 W121_SRCS := src/app/comum/relatorios/ccalculacv.cpp src/app/vota/operador/outrasopcoes/cescolheopcao.cpp
 UENUX2_SRCS += $(W121_SRCS)
 # The roots file reads uenux2 headers, and through them ecourna's (uetypes.hpp, the error templates).
