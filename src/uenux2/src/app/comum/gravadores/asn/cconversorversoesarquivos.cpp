@@ -1,5 +1,7 @@
 #include "app/comum/gravadores/asn/cconversorversoesarquivos.h"
 
+#include "api/io/asn/cfileasn.h"
+
 namespace comum::asn {
 
 ModuloVersaoArquivos::EntidadeVersaoArquivos::arquivos::value_type ConverteArquivos(const md::CVersoesArquivos::TMapVersoes& versoes)
@@ -31,6 +33,12 @@ CConversorVersoesArquivos::TDado CConversorVersoesArquivos::DoDesconverte(const 
         versoes.insert(versao);
     }
     return TDado(versaoTag, versoes);
+}
+
+void GravaArquivo(api::CFile& arquivo, const md::CVersoesArquivos& versoes)
+{
+    CConversorVersoesArquivos conversor;
+    api::CFileASN::WriteToFile(arquivo, conversor.Converte(versoes));
 }
 
 } // namespace comum::asn
