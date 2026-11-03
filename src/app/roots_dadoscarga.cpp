@@ -8,7 +8,7 @@
 //   of the data: CImpressaoVersaoPacotes's vtable (@1545168, ledger/vtables.json) lies before
 //   CConversorDadosDisponiveisCarga's (@1565788, read from the data), so 11905's object links first and gives the
 //   copies. This root stands for that object, src/app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoversaopacotes.cpp,
-//   whose StartState is not written (it calls fn 491, which has no name yet, and holds CFileASN::ReadFromFile inlined),
+//   whose StartState is not written (it calls 3691 and 5592, not written; 491 and CFileASN's readers are written),
 //   and goes once 11905 is written there: unit 176 lists that file ahead of unit 96's list, which holds 11423's object.
 // - It compiles at the flags of that file (src/Makefile's rule). Its place in APP_OBJS, after roots_vector.o, is chosen:
 //   it brings no callee of its own, and first or last there moves no row (measured). Instantiated so, the two score

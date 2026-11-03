@@ -8,11 +8,11 @@
 // bodies add offsets, so neither is a target function's. They go when those four callers are in the link.
 //
 // CServicoEstadoGeralVota's, -Gap's and -SA's constructors (thunks 3787, 5812 and 11566 of fn 3897) fill table slots
-// 438, 431 and 434, which fn 10212 (mock/app/comum/cappinfobuilder.cpp, not written) passes to invoke_*; 6039 and 7787
-// call 3787, and 7787 calls 5812, directly (none of them in the link). Taking each constructor's address stands for
-// 10212's slots, and keeps it out of line whatever its direct callers: binaryen inlines no function the table holds
-// (docs/reference/facts/tool-traps.md X1). Each line goes when 10212 is in the link. The constructors store their
-// classes' vptrs, so the vtables need no sink.
+// 438, 431 and 434, which fn 10212 (mock/app/comum/cappinfobuilder.cpp, written, not in the link) passes to invoke_*;
+// 6039 and 7787 call 3787, and 7787 calls 5812, directly (7787 is not in the link; 6039 is). Taking each constructor's
+// address stands for 10212's slots, and keeps it out of line whatever its direct callers: binaryen inlines no function
+// the table holds (docs/reference/facts/tool-traps.md X1). Each line goes when 10212 is in the link. The constructors
+// store their classes' vptrs, so the vtables need no sink.
 //
 // Declared through asm labels, so this TU needs no uenux2 header and instantiates nothing; compiled with APP_CXXFLAGS.
 // The constructors return their object, as at the target's call sites, so their labels return one.

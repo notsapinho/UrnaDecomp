@@ -510,8 +510,8 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
     built without strict aliasing too they all match again from it, but 5491 does not. Since `IniciarEsperaFimAudio` is
     written (unit 97), the file is listed, measured at fbf5698f (11784 matches) in place: with it in the list the
     compile lines `make -n -C src link APP=<a new directory>` prints (858) differ in its object's alone, by
-    `-fno-strict-aliasing`; the edit recompiled 808 objects, of which 937 of the 938 are `cmp`-equal to fbf5698f's and
-    the other is that file's; how-to steps 7 to 9 and `make -C src splat` give the target's sha256 with 11786 matches,
+    `-fno-strict-aliasing`; the edit recompiled 810 objects (808 C++ and two C roots), and with every link object
+    compiled again from nothing, 857 of the 858 are `cmp`-equal to fbf5698f's and the other is that file's; how-to steps 7 to 9 and `make -C src splat` give the target's sha256 with 11786 matches,
     13732 and 13740 turn `match` and no row leaves it (11778 and 11783, census pairs with `IInputField`'s lambda's
     `__clone`, go from `no-candidate` to `differs`). The regex copies still come from the tree root: none of their rows
     moved.
