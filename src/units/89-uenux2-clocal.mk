@@ -75,9 +75,12 @@
 # link order, not on a source here (docs/reference/facts/splat.md S10 item 19). ccandidaturas.cpp.o defines
 # std::vector<unsigned>::push_back(&&) (273 B, at -O3) ahead of asn1.o's -Os copy (318 B) and RHVoice's document.cpp.o
 # on the link line (their linking sections, wasm-objdump -x, in LINK_OBJS order: inputs 307, 706 and 877), so its
-# copy is the one decodeCommon calls. That copy is the code of roots_boost.o's vector<long>::push_back(const long&),
-# which binaryen merges it into (ours 553, the body that matches 543), and decodeCommon's call re-points to 543, as
-# the target's does.
+# copy is the one decodeCommon calls. That copy is the body that matches 543, and decodeCommon's call re-points to 543,
+# as the target's does. Its match line names crespostas.cpp.o's definition, the first on the link line (LINK_OBJS
+# positions 78 and 417 for crespostas.cpp.o and ccandidaturas.cpp.o at 5e41daca); binaryen merged it into
+# roots_boost.o's byte-identical vector<long>::push_back(const long&) until the Boost tree root's extern template line
+# for basic_regex's do_assign left that object no copy of it (with the line left out, 543 matches from roots_boost.o
+# again: src/units/00-ecourna-app-dados-identificadoreleitor.mk has the measurement).
 #
 # 1709, __tree::destroy over md::CCandidatura, matches at the tree's -O3 and not at -O2:
 # __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.

@@ -30,7 +30,8 @@
 #   without that line and the two match lines, the scan (twice, beside a control that moves nothing) reads 9146 and
 #   9125 `unresolved` and 5113 `no-candidate`, and both copies build to the target's sha256. At -O2 their two
 #   push_backs stayed calls of one vector<int> body, a twin of vector<long>'s in roots_boost.o, which equals target fn
-#   543 by bytes; at -O3 543 still matches, from roots_boost.o.
+#   543 by bytes; at -O3 543 still matched, from roots_boost.o, and since the Boost tree root's do_assign line it matches
+#   from crespostas.cpp.o's vector<unsigned>::push_back(&&) (src/units/89-uenux2-clocal.mk).
 #   5113 itself differs (38 over 256 rows at the tree's flags; the rest of this paragraph was read at 70 over 264, before
 #   cstepsprogressbar.h gave SPathCommand its two constructors): for MOVE_TO, LINE_TO and ARC the target reads every
 #   value of the command before its first store and stores the type (and an arc's two angles) before the scaled

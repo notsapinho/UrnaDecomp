@@ -22,18 +22,27 @@
 # target (343 of the 344 replaced operand-only, 15 inserted and 21 deleted: `this` pushed for the store of m_zip
 # ahead of c_str() in the target, after the inlined code in ours, and an `if ... br` where ours had a `br_if`). What
 # in the object took that difference away was not compared.
-# ICompressor's constructor (5192) is written and unresolved (90 over 155 rows): ours holds boost's
-# shared_count::~shared_count inlined in its landing pad where the target calls fn 2203. clang keeps the call in this
-# object (-Rpass-missed=inline: cost 90, threshold 45), and our link holds no body of ~shared_count (names.tsv), so
-# binaryen inlined it into its one caller there (a reading). The target's other callers of 2203 are 9536
-# (signal_impl's constructor, table slot 6135, which 5192 invokes), 9558 and 9521, each with landing pads. This object
-# instantiates signal_impl's constructor too, but our link takes it first from the tree root src/app/roots_boost.o (the
-# Boost probe at APP_CXXFLAGS, no landing pads), whose copy does not call ~shared_count. Measured in a scratch link whose
-# roots_boost.o declared signal_impl's constructor extern (`extern template`, not committed: the root is not this
-# unit's): 5192 14 over 87 rows, 2203 7 over 70 and 9536 32 over 339, every row operand-only, and the four rows that
-# match from roots_boost.o (519, 5481, 9522, 9552) scored as before. So 5192 and 2203 wait for the Boost root to leave
-# that constructor to this object. A rtti-vptr hand line names 5192 (the only target function that holds ICompressor's
-# vtable address point), which 5193's call needs.
+# ICompressor's constructor (5192) matches, with boost's shared_count::~shared_count (2203) out of line. clang keeps
+# that call in this object (-Rpass-missed=inline: cost 90, threshold 45); at 5e41daca our link held no body of it
+# (names.tsv), binaryen having inlined it into 5192 (a reading). Its other target callers, 9536 (signal_impl's
+# constructor, table slot 6135, which 5192
+# invokes), 9558 and 9521, each with landing pads, are the app signal's -fexceptions copies, which this unit's objects
+# give since the tree root src/app/roots_boost.cpp (the Boost probe at APP_CXXFLAGS, no landing pads, ahead of both
+# trees) declares three of the signal's templates extern: signal_impl's constructor, make_shared of an invocation_state
+# from a copy and the connection list, and operator(). The link then takes icompressor.cpp.o's constructor (9536) with
+# make_shared over a new list (9527) and invocation_state's constructor (9521), and clzmacompress.cpp.o's operator()
+# (9583) and make_shared from a copy (9558). Measured on whole links (steps 6 to 9, gains and losses by index against
+# 5e41daca, with every other line of the root in place), each line left out alone: without the constructor's, 6156 9520
+# 9521 9526 9527 9536 9549 9551 9553 9554 9555 9557 9558 do not match; without make_shared's, 9521 9549 9551 9553 9554
+# 9555 9557 9558; without operator()'s, 2204 5203 5204 9564 9576; 5192 and 2203 match in each, no line loses a row of
+# the base, and with none of them (5e41daca) 5192 is unresolved (90 over 155 rows, 68 inserted: ~shared_count inlined
+# in its landing pad). operator() (9583, ours from clzmacompress.cpp.o)
+# scores 59 over 683 rows, all operand-only, and reads unresolved on the table slot of slot_call_iterator_t's
+# lock_next_callable (9578, no candidate: ours scores 198 over 810 rows, 130 inserted), so CZip's and CLzmaCompress's
+# AtualizaProgresso (9537, 9585), which invoke operator(), read unresolved on its slot. The rtti-vptr hand line that
+# named 5192 for 5193's call (the only target function that holds ICompressor's vtable address point) went: with 5192
+# matched, a generated `call` line names it, and without the hand line steps 8 to 10 move no scan row and build the
+# target's sha256 with every match.
 # ICompressor::Add(const std::filesystem::path&) and globToFileList (record icompressor.cpp:61) are in the link inside
 # 5821, where binaryen inlines Add; with them come libc++'s std::regex members this object instantiates (9534, the
 # constructor from a std::string, and 3526, 5187, 9518), vector<path>'s __init_with_size and slow push_back (9531,
@@ -70,8 +79,8 @@
 # 261's stand-in gives it its second caller, and localtime (6270) and generic_category (1053) are unresolved
 # self-voted on a .bss word that only each reads in the target (localtime's buffer 1932496, generic_category's guard
 # 1926460: grep of the split's pieces), which no hand line may name (docs/reference/splat.md section 3, "No circular
-# evidence"). DoAdd now reads `unresolved` on table slot 3818, CZip::AtualizaProgresso, which no symbol line names
-# (9537 pairs with it by shape and is unresolved).
+# evidence"). DoAdd now reads `unresolved` on the table slot of CZip::AtualizaProgresso, which no symbol line names
+# (9537 pairs with it by the census and is unresolved, on operator()'s slot: above).
 # The ecourna compile rule has only -Isrc; these TUs include <boost/signals2/...> and <minizip/zip.h> (zlib contrib).
 ECOURNA_CXXFLAGS += -I$(BOOST_HDR) -Ithird_party/zlib -Ithird_party/zlib/contrib
 ECOURNA_SRCS += api/compression/icompressor.cpp api/compression/clzmacompress.cpp api/compression/lzmasdkstub.cpp

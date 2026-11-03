@@ -30,11 +30,6 @@
 // f5009 · 606 B · unmatched · placement: link order · name unknown
 // void f5009(i32, i32) { ... }
 
-// link-order cluster 727 · uses=2
-
-// f5153 · 82 B · unmatched · placement: link order · name unknown
-// void f5153(i32) { ... }
-
 // link-order cluster 747 · uses=2 · neighbours' file uenux2/src/api/hash/chasharquivo.cpp
 
 // f5363 · 198 B · unmatched · placement: link order · name unknown

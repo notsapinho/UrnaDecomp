@@ -222,17 +222,20 @@ alone: a name says which function sits there, and the scan still compares the by
   hashes each occur once in the target and once in ours (the `fingerprint` command above).
 
 Names free callers, not bodies. 3473 (`decodeCommon`) calls 543, a 239-B body with 28 callers, the `push_back(&&)` of a
-4-byte element, and no body of the runtime equals it. It matches since `ccandidaturas.cpp.o` (unit 89) defines
-`vector<unsigned>::push_back(&&)` ahead of `asn1.o` on the link line: that `-O3` copy is the code of the `roots_boost.o`
-body below, binaryen merges the two, and the call re-points to 543 ([splat.md](splat.md) §S10 item 19). The target's
+4-byte element, and no body of the runtime equals it. It matches since uenux2's objects define
+`vector<unsigned>::push_back(&&)` ahead of `asn1.o` on the link line (`crespostas.cpp.o` first, then `ccandidaturas.cpp.o`,
+unit 89): that `-O3` copy is the body that matches 543, so the call re-points to 543 ([splat.md](splat.md) §S10 item
+19). The target's
 543 is RHVoice's
 `vector<trie<…>::node*>::push_back(&&)` without landing pads: a link with `userdict.cpp` compiled with `-fignore-exceptions`
 matches 543 by content from that object, and that flag changes more than the pads ([libraries.md](libraries.md) §B6). A twin
 reached the same bytes another way: `vector<int>::push_back`, from `FillPath` and `DrawPath` at uenux2's `-O2`, merged with `vector<long>`'s from
-`roots_boost.o`, and the content pass matched 543 through it, with no source written for it. So 543's match line names
+`roots_boost.o`, and the content pass matched 543 through it, with no source written for it. So 543's match line named
 `vector<long>` by link order and not by evidence: neither `FillPath` nor `DrawPath` calls 543 in the target, which inlines
-it there. At uenux2's `-O3` both inline it, and 543 still matches from `roots_boost.o`
-(`awk -F'\t' '$1==543 {print $5, $11}' splat/scan.tsv` prints `match app/roots_boost.o`).
+it there. At uenux2's `-O3` both inline it, and 543 went on matching from `roots_boost.o` until that tree root's
+`extern template` line for Boost.Regex's `do_assign` (unit 00's fragment) left it no `vector<long>::push_back`; step 9
+then renamed the line to `crespostas.cpp.o`'s `vector<unsigned>::push_back(&&)`, the same bytes
+(`awk -F'\t' '$1==543 {print $5, $11}' splat/scan.tsv` prints `match app/uenux2/src/app/comum/dados/crespostas.cpp.o`).
 
 `vector<AbstractData*>::push_back(&&)` is a `merged-body` hand edit on 543 ([../splat.md](../splat.md) §3): 2656 and 5066
 call it, the target merged that body into 543, and our own body of that name differs from 543 (263 B against 239, 3 `block`s and 3
