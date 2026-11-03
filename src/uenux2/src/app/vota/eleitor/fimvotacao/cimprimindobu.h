@@ -26,7 +26,7 @@ enum PrintMessageMode {
 // vota::CImprimindoBU (RTTI: si_class of comum::CAppState; vtable @1541292 [244, 387, 12078, 7480, 1661, 218, 425,
 // 12077, 425]): it overrides StartState (slot 2, fn 12078, records lines 70 and 71) and ProcessInput (slot 7, fn
 // 12077), both pending: StartState calls fns 1127 and 4551 and ImprimeBU (fn 2890) and reads a .bss flag with no name,
-// ProcessInput calls fns 491, which has no body here, and 3701. ImprimeBU is static by its records' text (`static void
+// ProcessInput calls fns 491 (unit 205's now) and 3701. ImprimeBU is static by its records' text (`static void
 // vota::CImprimindoBU::ImprimeBU(uebyte, PrintMessageMode)`, lines 111 and 114), and public:
 // CEmitirMaisBU::ProcessInput (fn 12081) and CImprimirBUOutrasObrigatorias::StartState (fn 12065) call it too. The
 // destructors are the bodies the states over one std::shared_ptr at +12 share (fns 244 and 387): final, and out of line

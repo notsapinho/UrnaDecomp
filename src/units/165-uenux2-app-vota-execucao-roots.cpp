@@ -2,10 +2,9 @@
 // - vota::IExecucaoVota::GetInst (fn 3594) has two direct callers in the target, 7030
 //   (vota::CThreadEleitor::ParaOutrasThreads, unit 116's) and 5408, not reconstructed: w165_execucao stands for 5408
 //   with one call, so GetInst has two call sites and binaryen keeps it out of line.
-//   vota::impl::IPoliticaExecucaoEleitor::GetInst has one caller in the target, fn 5925, not reconstructed, which holds
-//   it inlined, with the has<T> and push<T> thunks it calls (2744 twice and 5407 once): w165_politica stands for 5925
-//   with one call, so binaryen inlines GetInst into it as the target does, and the two thunks get the call sites that
-//   keep them out of line beside the executable TU's set<T> (fn 9507). Each GetInst stores its class's vptr
+//   vota::impl::IPoliticaExecucaoEleitor::GetInst has one caller in the target, fn 5925 (unit 97's slot 17 of
+//   CConfirmaVotoNominal and CMajoritarioValido, one body), which holds it inlined, with the has<T> and push<T> thunks it
+//   calls (2744 twice and 5407 once), and is in the link: no stand-in. Each GetInst stores its class's vptr
 //   (vota::CExecucaoVota's @1600572, vota::impl::CPoliticaExecucaoEleitor's @1536368), which keeps the vtables that two
 //   vtable sinks kept before GetInst was written. vota::CAssinadorVota's vtable (@1532304) is stored by its
 //   constructor, fn 1501, now in the link (fragment 205's callers reach it), so it needs no sink.
@@ -19,7 +18,6 @@
 extern "C" void w576_formulario(int, int, int) __asm__("_ZN4vota23GetFormularioInterativoERN3api23CInteractiveFormBuilderERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE");
 extern "C" int w7828_construtor(int, int) __asm__("_ZN4vota24CExecucaoVotaCooperativaC2EPN5comum9CAppStateE");
 extern "C" int w165_getinst_execucao() __asm__("_ZN4vota13IExecucaoVota7GetInstEv");
-extern "C" int w165_getinst_politica() __asm__("_ZN4vota4impl24IPoliticaExecucaoEleitor7GetInstEv");
 extern "C" void w4620_modo(int, int) __asm__("_ZN4vota20DesenhaDescricaoModoERN3api7IScreenENS0_6SPointE");
 
 namespace {
@@ -52,12 +50,6 @@ __attribute__((noinline)) int w165_execucao(int vezes)
     return vezes > 1 ? w165_getinst_execucao() + vezes : 31;
 }
 
-// stands for fn 5925, which holds vota::impl::IPoliticaExecucaoEleitor::GetInst inlined
-__attribute__((noinline)) int w165_politica(int base)
-{
-    return w165_getinst_politica() + base * 3;
-}
-
 const void* volatile w165_sink;
 
 struct SW165Roots {
@@ -68,7 +60,6 @@ struct SW165Roots {
         w165_sink = reinterpret_cast<const void*>(&FormulariosVota);
         w165_sink = reinterpret_cast<const void*>(&ModoProgressBar);
         w165_sink = reinterpret_cast<const void*>(&w165_execucao);
-        w165_sink = reinterpret_cast<const void*>(&w165_politica);
     }
 } w165_roots;
 

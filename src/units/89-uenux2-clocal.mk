@@ -72,12 +72,15 @@
 # 23130). The name is the literal's, the reading of these literals below; its line, after GetLocalData, is a choice.
 #
 # 3473, the ASN.1 runtime's OBJECT_IDENTIFIER::decodeCommon, matches with these members in the link, and rests on the
-# link order, not on a source here (docs/reference/facts/splat.md S10 item 19). ccandidaturas.cpp.o defines
-# std::vector<unsigned>::push_back(&&) (273 B, at -O3) ahead of asn1.o's -Os copy (318 B) and RHVoice's document.cpp.o
-# on the link line (their linking sections, wasm-objdump -x, in LINK_OBJS order: inputs 307, 706 and 877), so its
-# copy is the one decodeCommon calls. That copy is the code of roots_boost.o's vector<long>::push_back(const long&),
-# which binaryen merges it into (ours 553, the body that matches 543), and decodeCommon's call re-points to 543, as
-# the target's does.
+# link order, not on a source here (docs/reference/facts/splat.md S10 item 19). crespostas.cpp.o,
+# cconfiguracaoeleicao.cpp.o and ccandidaturas.cpp.o define std::vector<unsigned>::push_back(&&) at -O3 (273 B in
+# ccandidaturas.cpp.o) ahead of asn1.o's -Os copy (318 B) and RHVoice's document.cpp.o on the link line (their linking
+# sections, wasm-objdump -x; LINK_OBJS positions 79, 411, 419, 859 and 1030 at 777a3f69), and the link keeps the first
+# definition, crespostas.cpp.o's, which 543's match line names: that copy is the one decodeCommon calls, the body that
+# matches 543, and decodeCommon's call re-points to 543, as the target's does. binaryen merged it into roots_boost.o's
+# byte-identical vector<long>::push_back(const long&) until the Boost tree root's extern template line for
+# basic_regex's do_assign left that object no copy of it: on a whole link at 0728e320 with that line left out (steps 6
+# to 9, every other line of the root in place), 543 matches from roots_boost.o again.
 #
 # 1709, __tree::destroy over md::CCandidatura, matches at the tree's -O3 and not at -O2:
 # __destroy_at<pair<const uedword, CCandidatura>> is not inlined at cost 230 against 225, and -O3's 250 takes it, the target's frame at entry.
@@ -197,8 +200,13 @@
 # wasm score, before the match; step 8 named it by its census pair, pair-fingerprint). The loop variable written as the
 # party's 16-bit integer (comum's TPartidoID, from ecourna's TPartidoID through its conversion) loads each party once in
 # the outer loop, as the target does; as `const auto&` the object loads it again in the inner loop (try-tu.sh --symbols,
-# the function's disassembly compared; not linked). Its callers, fns 5922 and 11976, are not reconstructed; the roots'
-# Federacoes stands for both.
+# the function's disassembly compared; not linked). Its callers are fns 5922 (vota::LegendaValida, unit 97's, written)
+# and 11976, not reconstructed, for which the roots' Federacoes stands.
+#
+# CCandidaturas::ExisteCandidatoPartido, in ccandidaturas.cpp after Busca, has no target function of its own: its one
+# caller, fn 5922, holds its loop inlined by binaryen, its result a block's tested again, and unit 97's fragment has the
+# measurement (inline in ccandidaturas.h, clang's early return, the row that differed). Its name, its being a member and
+# its line are chosen.
 CLOCAL_SRCS := src/app/comum/dados/ccandidaturas.cpp src/app/comum/relatorios/cpartecandidatos.cpp \
   src/app/comum/dados/clocal.cpp \
   src/app/comum/dados/md/chorarioveraomunicipio.cpp src/app/comum/dados/md/cinfomunicipio.cpp \

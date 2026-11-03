@@ -27,6 +27,9 @@ public:
     static void AssinaRDVEBancoDados();
     static void SincronizaBancoDados();
     static void GravaBancoDadosMI();
+    // Target fn 491 (no record): saves the voting application's state to both flashes under two contexts. Its name is
+    // chosen from the context's text ("Gravando o estado da urna", "... sincronização do estado geral do VOTA.").
+    static void SincronizaEstadoGeralVota();
     // No target index: binaryen inlined it into SincronizaRelatorios (fn 1836), its one caller, behind a stack frame of
     // its own. Name chosen from what it does.
     static void SincronizaAssinaturaRelatorio(const std::string& arquivo);

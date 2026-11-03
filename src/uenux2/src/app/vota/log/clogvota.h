@@ -97,6 +97,11 @@ public:
     // 1455 loads. Its name is chosen from its message, and its place here and in clogvota.cpp, after
     // LogaErroPartidoNaoEncontrado, is chosen: it has no index to order.
     void LogaTeclaIndevida();
+    // Held inlined by the slot 17 of vota::CConfirmaVotoNominal and vota::CMajoritarioValido (fn 5925, one body for
+    // both), which calls GetInst before the member's own stack frame opens; it logs "Eleitor corrigiu na tela de confirmação de candidato"
+    // through loga (fn 233). Its name is chosen from its message, and its place here and in clogvota.cpp, after
+    // LogaTeclaIndevida, is chosen: it has no index to order.
+    void LogaEleitorCorrigiuConfirmacaoCandidato();
 
     void LogaMesarioRegistrado(const std::string& titulo);
     void LogaMesarioJaRegistrado(const std::string& titulo);

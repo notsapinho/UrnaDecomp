@@ -10,7 +10,7 @@ namespace vota {
 // vota::CGeraResumoZeresima (RTTI: si_class of vota::CGeraResumoZeresimaBase; vtable @1544512 [5964, 5963, 11943, 7480,
 // 1661, 218, 425, 218, 425, 11940, 11939]): it overrides slots 9 and 10 and adds no data member (the object it is built
 // in, by fn 6056, is the base's 20 bytes). Slot 10 (fn 11939) returns vota::CImprimindoZeresima::GetInst() (fn 5973).
-// Slot 9 (fn 11940) sets one of comum::CAppInfo's vota values and calls fn 491, which has no name
+// Slot 9 (fn 11940) sets one of comum::CAppInfo's vota values and calls fn 491, named now (unit 205)
 // (src/units/169-uenux2-app-vota-eleitor-iniciovotacao-pending.cpp). The destructor is out of line: slot 0 (fn 5964) is
 // one call of the base's destructor (fn 1952), a body of another object, and the deleting one (fn 5963) is `f1952(p0);
 // drop; f136(p0)`, the 13-B shape of docs/reference/facts/reading.md R5, read as its call of slot 0 with that one-call

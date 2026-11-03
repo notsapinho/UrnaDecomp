@@ -13,9 +13,9 @@ namespace {
 
 const void* volatile cfederacoes_sink;
 
-// Stands for fn 2832's callers: 5922, 7787, 11976.
+// Stands for fn 2832's callers: 7787, 11976 (5922 is in the link).
 __attribute__((noinline)) int Federacoes() { return w2832() - 5 * w2832(); }
-// Stands for fn 5799's callers: 5922, 11976.
+// Stands for fn 5799's caller 11976 (5922, its other, is in the link).
 __attribute__((noinline)) int FederacoesDoPartido(int a, int b) { return w5799(a, b) ^ w5799(a, b + 1); }
 
 struct SCFederacoesRoots {

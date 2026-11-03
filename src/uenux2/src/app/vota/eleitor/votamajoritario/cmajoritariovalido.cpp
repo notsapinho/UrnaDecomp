@@ -1,6 +1,9 @@
 #include "app/vota/eleitor/votamajoritario/cmajoritariovalido.h"
 
+#include "api/gui/iinputfield.h"
 #include "app/comum/dados/ccargos.h"
+#include "app/vota/eleitor/comum/ipoliticaexecucaoeleitor.h"
+#include "app/vota/log/clogvota.h"
 
 namespace vota {
 
@@ -29,6 +32,14 @@ std::string CMajoritarioValido::GetMensagem() const
         return "Você está respondendo à pergunta: {cargo-atual}. Você escolheu a opção {voto}: {escolha-referendo}. Aperte confirma ou corrige.";
     }
     return "Você está votando para {cargo-atual} n{o/a} candidat{o/a} {voto}: {candidato-com-suplentes}. Aperte confirma ou corrige.";
+}
+
+void CMajoritarioValido::AoConcluirEntrada(api::EInputResult resultado)
+{
+    if (resultado == api::INPUT_CORRIGE) {
+        CLogVota::GetInst().LogaEleitorCorrigiuConfirmacaoCandidato();
+        impl::IPoliticaExecucaoEleitor::GetInst().LimpaBufferInput();
+    }
 }
 
 } // namespace vota

@@ -72,19 +72,35 @@
 #   __find_equal (2676), and __split_buffer<std::string>'s destructor (5184), come from this object now, which ToUpper and
 #   Split instantiate first, ahead of the externs and datahoraasn.cpp.o on the link line; they are linkonce copies and
 #   their places in this object are no evidence.
-# - FindRegex (2199), written and `unresolved`: the start and end of a boost::regex's first match in a string, npos for
-#   both when there is none, either string is empty, or the regex throws (catch (...)). The regex, the boost::cmatch and
+# - FindRegex (2199), written and `differs`: the start and end of a boost::regex's first match in a string, npos for
+#   both when there is none, either string is empty, or the regex throws (catch (...)). The regex, the boost::smatch and
 #   inicio/fim, set to npos and changed on a match, are locals of the try block, which returns {inicio, fim}: that gives
 #   the target's one store of the result for a match and for none; returning from inside the if gave the case of no
 #   match a cleanup of its own (pnpm wasm score 2199: 111 rows inserted). `{std::string::npos, std::string::npos}` loads
 #   npos from its definition (the object's i32.load of _ZNSt3__212basic_string...4nposE; a reading: std::pair's
-#   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and 1539 match. It waits for Boost.Regex's
-#   -fexceptions copies: its callees do_assign (9401) and regex_search (9400), both with landing pads in the target, read
-#   as this file's instantiations (their band, above), and our link takes do_assign from src/app/roots_boost.o (APP_CXXFLAGS, no -fexceptions),
-#   which links first: `ours +0x5f i32.const 2875: a table slot of ours: ...do_assign... has no target function`
-#   (splat/scan.tsv). The same copies keep match_results<const char*>'s destructor (5153) inlined in our link: its other
-#   target caller, 5121, reads as the -fexceptions perl_matcher's push of a saved state with a copy of the results, which
-#   our link does not hold.
+#   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and
+#   1539 match. The match results are over std::string's iterators (boost::smatch): the target's regex_search (9400)
+#   zeroes the matcher's restart and search_base (an i64.store of 0 at offset 24), which the std::string::const_iterator
+#   instance does (libc++'s __wrap_iter value-initializes) and the const char* one does not: with boost::cmatch over
+#   valor.data() it scored 17 over 260 rows, the 3 deleted rows that store; with smatch it matches. The string overload
+#   of regex_search is a choice: that evidence fixes the iterator type, not the overload, and the string overload calls
+#   the iterator one over s.begin() and s.end() (third_party/boost/boost/regex/v5/regex_search.hpp; the iterator form
+#   was not measured). Its callees do_assign (9401), regex_search (9400) and
+#   throw_exception<std::logic_error> (9399), with landing pads in the target and in this file's band (above), and
+#   match_results' destructor (5153) match from this object since the tree root src/app/roots_boost.cpp (the Boost
+#   probe at APP_CXXFLAGS, no landing pads, which linked first) declares do_assign, perl_matcher over std::string's
+#   iterators and throw_exception<std::logic_error> extern; 5153 stays out of line, its other target caller,
+#   perl_matcher's push_recursion (5121), matching from this object too. 103 of the rows that match with those lines
+#   come from this object (names.tsv's object column). Measured on whole links (steps 6 to 9, gains and losses by index
+#   against 5e41daca, every other line of the root in place), each line left out alone: without do_assign's 43 rows do
+#   not match (9401 among them), without perl_matcher's 50 (5121, 5153, 9399), without throw_exception's 16 (9399);
+#   none loses a row of the base. The root keeps std::map<std::string, std::string>'s find, which the regex parser
+#   instantiated there before: without it RHVoice's simple_search (5263) leaves `match`, its call (163 in the target)
+#   then reaching this object's copy, another body (18 over 149 rows against 163; the root's comment). FindRegex
+#   itself is 40 over 341 rows (26 of the 28 replaced operand-only, 4 inserted, 8 deleted): the target keeps two
+#   landing pads apart that ours shares, the regex_search invoke's and that of logic_error's constructor in
+#   match_results::position()'s inlined raise_logic_error (a reading of both bodies, pnpm wasm fn); no other form was
+#   measured.
 # The members by band in this object (target index/ld_index in build/out/wasm-map/vota_web/names.tsv) follow the target's
 # order but where a linkonce copy is involved, and 9407 lies, as Trim (9406) already did, after CBaseError<EUtilError>'s
 # constructor (9410), which uses 1 puts before both.

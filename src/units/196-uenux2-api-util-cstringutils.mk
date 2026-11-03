@@ -2,7 +2,7 @@
 # api/util/cstringutils.h, is a chosen path (no record names one). Target functions:
 #   matched    1539 GetVersionNumber (record line 59): the start of a version string that matches
 #              "^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+", through ecourna's CStringUtils::FindRegex (2199, unit 00, written and
-#              `unresolved`, whose name 654's and this function's calls give); when the match does not start at 0, or
+#              `differs`, whose name 654's and this function's calls give); when the match does not start at 0, or
 #              there is none, it throws CUeUtilError 7025 with the message at 231188 (ledger/strings.tsv), formatted with
 #              the string. The expression is a named local: the target frees its string after the substr.
 #   not written SetBit, the records at lines 71 and 83: only functions that hold it inlined load them (2772, the second),

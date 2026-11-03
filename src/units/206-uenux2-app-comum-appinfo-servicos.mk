@@ -1,6 +1,8 @@
 # uenux2 comum::IServicoEstado<ESTADO, CONVERSOR> (src/app/comum/appinfo/servicos/iservicoestado.h) and the four classes
 # derived from its instances, comum::CServicoEstadoGeral, -Vota, -Gap and -SA (servicos/cservicoestadogeral*.{h,cpp}),
-# with three codes of EUeComumAppInfoError (src/app/comum/appinfo/euecomumappinfoerror.h).
+# with three codes of EUeComumAppInfoError (src/app/comum/appinfo/euecomumappinfoerror.h); api::CFileASN's readers and
+# writers (src/api/io/asn/cfileasn.h, unit 229's header) with five codes of EUeIoError (src/api/io/eueioerror.h); and
+# ecourna::api::io::CFile's destructor (src/ecourna/api/io/cfile.hpp), whose catch a member here matches with.
 #
 # Matched: CServicoEstadoGeral's constructor (target fn 1941) and GetPathArquivo (11569, its vtable's slot 2), and
 # CServicoEstadoGeralVota's, -Gap's and -SA's GetPathArquivo (11568, 11567, 11565), thunks of binaryen's merge 3896,
@@ -34,45 +36,92 @@
 # Scores before step 8 (pnpm wasm score against the link): 11569 8 over 83, 3896 11 over 106, 11565, 11567 and 11568 5
 # over 9 each, 1941 1 over 9, all operand rows.
 #
-# Not written, with what each waits for:
-# - The derived classes' constructors, 3787, 5812 and 11566, thunks of 3897 that pass each class's vptr. 3897 stores the
-#   turn, the origin and the vptr and, when the turn is 51 (TURNO_ATUAL), builds a CServicoEstadoGeral (1941) and calls
-#   3791 on it, taking the turn at +32 of the state it returns. 3791 (3956 B, its stub in api/io/asn/cfileasn.h) reads
-#   the file, with CFileASN's reading inlined (a reading of its strings, "ReadFromFile de " and "O arquivo [{}] não
-#   existe"), and calls 518 and 679, which match since unit 229: 518 is ~CoderEnv at -Oz and 679 holds CoderEnv::decode
-#   (docs/reference/facts/asn1.md A10). The headers declare the constructors with the types of the members they store.
-# - The template's save, 2894 (thunks 3592, 5329, 10089, 10112), and what it calls through the table slots its thunks
-#   pass: IConversorASN<E, D>::Converte, merged as 2893 (thunks 9997, 10019, 10051, 10170, which pass the records
-#   iconversorasn.h:56 and the entities' typeid names), with 9843, a format-argument store whose only caller is 2893;
-#   and CFileASN's writer, merged as 2892 (thunks 9985, 10008, 10040, 10168), which opens a CFile "wb" through slot 445
-#   (fn 517) and calls a second merge, 2891 (thunks 9820, 9703, 9701, 9684), over CFileASN::CodeObjectFunction (9801,
-#   9702, 9695, 9673, records cfileasn.h 161 and 171; they and their merge 2927 match since unit 229), with CFile's
-#   inline destructor 3564 (callers 2892 and 9538). Each
-#   has landing pads, an -fexceptions TU's copies. The target calls the four saves through invoke_* only in
-#   mock/app/comum/cappinfobuilder.cpp's 10243 (slot 422) and 10212 (slots 433, 436, 440); 3333 and 6039 call 3592 and
-#   5329 directly. A probe object that instantiates the save for two of the classes (the path, a copy of its string, the
-#   converter on the stack, Converte, then a CFileASN writer declared only), read before binaryen, which is a lead and
-#   no verdict (docs/reference/facts/levels.md V4: the writer and the other merge members are not there to link), holds
-#   2894's calls in its order (call_indirect, invoke_iii of the string's copy, invoke_viii, invoke_vii, then the
-#   entity's, the string's and the path's destructors) and its 80-byte frame at -Oz -fexceptions -fPIC -std=c++23
-#   -DNDEBUG -fno-strict-aliasing, the executable TU's flags, with the path a named local; a temporary path is destroyed
-#   right after the copy, and at -O3 and -Os the copy is no invoke_iii of its own. So these wait for cfileasn.h's
-#   writer, which no unit writes, and for a TU that instantiates the save for the four classes ahead of the trees'
-#   copies, at those flags by the lead above. mock/app/comum/cappinfobuilder.cpp is that TU (unit 253: its object links
-#   second, at the executable TU's rule), and its members call the save, which iservicoestado.h declares for them
-#   (Salva, a chosen name); the save's body and the writer are what is left.
+# The template's members, the derived classes' constructors and CFileASN's readers and writers, written later (the unit
+# grew; how-to step 6 item 2). Matched:
+# - 3791, IServicoEstado<CEstadoGeral, CConversorEstadoGeral>::Carrega (iservicoestado.h; name chosen, named by its
+#   records' anchor): GetPathArquivo through slot 2, the path's string, the converter on the stack, then
+#   api::CFileASN::ReadFromFile(const std::string &), ReadFromFile(const CFile &) and DecodeObjectFunction (cfileasn.h,
+#   at their records' lines 78, 48 and 60, 135 and 143) and IConversorASN::Desconverte (iconversorasn.h 71), each behind
+#   a prologue of its own (frames 480, 528, 736 and 640 inside 3791's 96): out of line in the object, one caller each
+#   in the link, so binaryen inlines them. The five codes are api/io/eueioerror.h's (5950 to 5954, names chosen from
+#   the messages). Its copy is uenux2's (no landing pad), from cservicoestadogeralvota.cpp.o, the first TU that
+#   instantiates it.
+# - 3897, binaryen's merge of the three derived constructors, and its thunks 3787, 5812, 11566 (each passes its vptr):
+#   they store the turn, the origin and the vptr and, for TURNO_ATUAL (51), read the state through a named
+#   CServicoEstadoGeral and take its load's turn (+32).
+# - 2894, IServicoEstado::Salva's merge, with its thunks 3592 (CEstadoGeral), 5329 (Vota), 10112 (Gap) and 10089 (SA),
+#   each passing two table slots and the converter's vptr; 2893, comum::asn::IConversorASN::Converte's merge (thunks
+#   10170, 9997, 10051, 10019), with 9843 (its format-argument store) and 255 (CBaseError<EUeComumAsnError>'s
+#   constructor, which matches from this copy where cconversorcomplementomunicipio.cpp.o's differed); 2892 and 2891,
+#   CFileASN::WriteToFile's two merges (thunks 10168, 9985, 10040, 10008 and 9820, 9684, 9703, 9701); and 3564, CFile's
+#   destructor out of line. All are -Oz -fexceptions copies with landing pads, from mock/app/comum/cappinfobuilder.cpp's
+#   object (unit 253: its SalvaGeral and SalvaApp call the four saves), which links ahead of the trees; the merges'
+#   match lines name our merge bodies, names our link derives (how-to step 9, "Hand edits"). WriteToFile's name is read
+#   from the literal "WriteToFile de " that 2891 passes, as "ReadFromFile de " is ReadFromFile's; the two overloads'
+#   parameters are what 2892 and 2891 pass (a name and an entity; a CFile and an entity), and their lines in cfileasn.h,
+#   between the readers and DecodeObjectFunction, are chosen.
+#
+# Evidence and measurements for the forms (scores: pnpm wasm score of the target's index against ours in
+# build/out/wasm/vota_web/vota_web_wasm.wasm, on links of these sources; frames: wasm-objdump -d of a try object):
+# - The readers' and the save's helpers. 3791's frame is 96 bytes with the converter at its top (+92), then the entity
+#   (+40), the string (+24) and the path (+12), and its vptr store comes after the string's copy. Written in place with
+#   named locals, the frame is 80 and runs the other way (202 over 1664 rows, 4 deleted); as one expression
+#   (CONVERSOR().Desconverte(ReadFromFile(GetPathArquivo())) or a converter declared first), the frame is the target's
+#   but the vptr is stored before the virtual call; through a helper that takes the string and builds the converter,
+#   which clang inlines, both are the target's (137 over 1664, all operand rows). 2894's frame (80: path +0, string
+#   +12, entity +24, converter +76) asks the same of the save at the -Oz rule, where a helper of external linkage stays
+#   a call (a 32-byte frame of its own in the object) and a file-static one is inlined (frame and offsets the target's).
+#   So both helpers, CarregaArquivo and SalvaArquivo (names chosen), are file-static free functions in
+#   iservicoestado.h: no class state is read, and their linkage is measured; that the reader's is file-static too, where
+#   clang inlines either linkage at -O3, keeps the two alike (a choice).
+# - Salva takes `const ESTADO&`: fn 6039 (CAppInfo's two saves, unit 109) passes its singleton's state to 5329 with no
+#   copy. The builders 10243 and 10212 copy the state before each save and destroy the copy after; with the reference
+#   that copy is theirs, written at their calls (unit 253's fragment). Without it their object instantiates no state
+#   copy constructor, and 857, 1249, 2240, 5856, 8084, 9202, 9872, 10145, 11197 and 11395 left match (splat-match on
+#   that link, rows by index against the base); with it none did. The header's note that the state by value was
+#   evidence went: a copy at the call says little (how-to step 2), and a call with none rules the value out.
+# - The constructors: with the service a temporary (`CServicoEstadoGeral(origem).Carrega()`), 3897's frame holds the
+#   state above the service, where the target has the service at its top (+184, the state at +4); a named local gives
+#   that. With the implicit ~CServicoEstadoGeral the merge ends in one block left by two br_if (17 over 150, 1 inserted
+#   and 1 deleted); with it declared and defined out of line, empty, the target's nested ifs (11 over 149, all operand
+#   rows), a reading being that binaryen drops the call of the empty D1 after clang's CFG kept the frees apart. Its D2
+#   is binaryen's shared 174 either way, and the D0 (144) only frees, so the vtable does not tell the forms apart.
+#   Where each constructor starts in its file, before GetPathArquivo's record, is chosen.
+# - CFile's destructor (ecourna/api/io/cfile.hpp) holds Close in a try with an empty catch (...): 3564 calls Close
+#   through invoke_vi and catches with __cxa_begin_catch and invoke_v of __cxa_end_catch, and CZip::DoAdd (9538) holds
+#   the same inlined. Without the catch, 3564 scored 26 over 51 (19 deleted); with it 10 over 51, all operand rows.
+#   Every object the edit rebuilt was compared with the one before (functions by name, object-local numbers masked):
+#   only api_compression_czip.cpp.o (DoAdd and the destructor) and cappinfobuilder.cpp.o (the destructor) changed, so
+#   no uenux2 object without -fexceptions saw it. DoAdd stays unresolved (unit 06's fragment).
+# - The service headers include their estado's and converter's headers, which the template's members need complete
+#   where they are instantiated (cappinfobuilder.cpp instantiates the four saves).
+# - What it moved elsewhere: CoderEnv::decode (679) comes from cservicoestadogeralvota.cpp.o now, and
+#   src/app/roots_iconversorasn.cpp's instance of it went (679 matches without it, steps 7 to 9); CodeObjectFunction's
+#   and encode's copies (2927 and its thunks, 518, 9790, 3552, 1928, 210, 9770 and the rest unit 229 lists) come from
+#   cappinfobuilder.cpp.o now, and src/app/roots_coderenv.cpp's instances and its stand-in for 2891's slots went;
+#   steps 7 to 9 on the link without them moved no row. Step 9 renamed 307's line (make_format_args) to the instance
+#   over a const std::string first, DecodeObjectFunction's, the same body. The vtable sinks of CConversorEstadoGeral
+#   (unit 124) and CConversorEstadoGeralSA (unit 93) went: 3791 and 3592, and 10089, the target's storers of their
+#   vptrs, are in the link.
+# - Stubs: 5825, 5740, 5706, 5778 and 3735 (other entities' readers, unwritten) lost theirs, whose records are
+#   cfileasn.h's reader lines, which hold code now (docs/reference/facts/placing.md P1).
+#
+# Not written: Carrega's other callers, 2273 and 11572, and 1941's, 3333 and the builders 10243 and 10212 (unit 253's,
+# written and not in the link): the roots stand in for them.
 #
 # Chosen, no evidence names them: m_origem and m_turno, that each class, not the template, holds the origin, the
 # template's parameter names, the paths of iservicoestado.h, of CServicoEstadoGeral's header and source and of the
-# derived classes' headers, the destructor's spelling, that GetPathArquivo is pure in the template, the three
-# enumerators' names, the constructors' parameter types, the lines of every member but the three throws, and the order
-# of CServicoEstadoGeral's two members.
+# derived classes' headers, the destructor's spelling, that GetPathArquivo is pure in the template, the eight
+# enumerators' names (three here, five in eueioerror.h), the constructors' parameter types, the names Carrega, Salva,
+# CarregaArquivo, SalvaArquivo and servicoEstadoGeral, the helpers' being free functions, the lines of every member but
+# the throws, the order of CServicoEstadoGeral's three members and of the template's two, and WriteToFile's lines.
 #
 # Roots (206-uenux2-app-comum-appinfo-servicos-roots.cpp): two stand-ins give 1941 three call sites that read its
-# result, for its five target callers (2273, 3333, 3897, 10243, 11572), none in the link; and the three derived classes'
-# vtables, which only their unwritten constructors reference in the target, have their addresses taken.
-# CServicoEstadoGeral's own vtable needs no root: its constructor stores it. The roots declare what they use through asm
-# labels and emit no TSE code, so they compile at APP_CXXFLAGS.
+# result, for four of its target callers (2273, 3333, 10243, 11572; 3897 is in the link); the three derived classes'
+# constructors (table slots 438, 431 and 434) and the four saves (slots 422, 440, 433 and 436) have their addresses
+# taken, for 10243's and 10212's slots, which keeps each out of line whatever its direct callers (6039, in the link,
+# calls 3787 and 5329). The constructors store their classes' vptrs, so the vtables' sinks went. The roots declare
+# what they use through asm labels and emit no TSE code, so they compile at APP_CXXFLAGS.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 SERVICOS_SRCS := src/app/comum/appinfo/servicos/cservicoestadogeral.cpp \

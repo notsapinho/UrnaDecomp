@@ -55,8 +55,3 @@ ModuloEstadoGeralUrna::EstadoUrna CConversorEstadoGeral::ConverteEstadoUrna(cons
 
 
 } // namespace comum::asn
-
-// <stubs>
-// f3592 · 20 B · unmatched · placement: link order · name unknown
-// void f3592(i32, i32) { ... }
-// </stubs>

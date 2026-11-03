@@ -104,12 +104,14 @@ UENUX2_TBAA_DIRS   := src/api/% src/app/comum/dados/md/% src/app/vota/% mock/app
                       src/app/comum/carquivossavd.cpp src/app/comum/gravadores/cgeracaoversoescontratos.cpp
 # the files inside those directories that keep -fno-strict-aliasing, each read from code that only its own functions
 # reach: in ctelasvota.cpp the map constructor GetKeyboardLayout alone calls (fn 6579) reloads the tree's begin after a
-# new node's stores, and in crelvotautil.cpp the __clone of CortaPapel's lambda (fns 12006, 12007) and in
-# cvotacaostateaudio.cpp that of IniciarEsperaFimAudio's second lambda (fns 13732, 13740) store the vptr before they
-# copy the capture, as only code without TBAA does. The other files of their directories keep strict aliasing
-# (docs/reference/facts/app-flags.md §F6 has the measurements, and those of the files measured and not listed).
+# new node's stores, and in crelvotautil.cpp the __clone of CortaPapel's lambda (fns 12006, 12007), in
+# cvotacaostateaudio.cpp that of IniciarEsperaFimAudio's second lambda (fns 13732, 13740) and in cconferevotoemcargo.cpp
+# those of the four lambdas of IConfereVotoEmCargo that capture `this` alone (fns 11770, 11771, 11778, 11779, 11782,
+# 11783, 11787, 11788) store the vptr before they copy the capture, as only code without TBAA does. The other files of
+# their directories keep strict aliasing (docs/reference/facts/app-flags.md §F6 has the measurements, and those of the
+# files measured and not listed).
 UENUX2_NOTBAA_FILES := src/app/vota/eleitor/comum/ctelasvota.cpp src/app/vota/eleitor/iniciovotacao/crelvotautil.cpp \
-                       src/app/vota/eleitor/cvotacaostateaudio.cpp
+                       src/app/vota/eleitor/cvotacaostateaudio.cpp src/app/vota/eleitor/cconferevotoemcargo.cpp
 # the ASN.1 runtime (src/asn1, an app-side tree) has its own flags and compile rule in src/mk/asn1.mk:
 # -Os -fexceptions -fignore-exceptions -std=c++17
 # the src/app stand-ins (exported entry points, root callers) compile with the uenux2 flags (-DNDEBUG: the target imports

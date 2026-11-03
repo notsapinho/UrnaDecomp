@@ -38,6 +38,10 @@ public:
     const md::estadoaplicacao::CEstadoGeralGap& GetGap(EUrnaTurno turno) const;
     std::vector<std::string> GetCodigosCarga(EUrnaTurno turno) const;
     bool TemVota(EUrnaTurno turno) const;
+    // Target fns 3790 and 3789, thunks of 6039, binaryen's merge of the two (they differ in the origin and the name they
+    // pass to IndiceTurno). Those literals are the evidence for the names; that they are const members is chosen.
+    void SalvaVotaInterno() const;
+    void SalvaVotaExterno() const;
 
     static bool EhTreinamentoEleitor();
 

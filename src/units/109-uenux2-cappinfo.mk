@@ -14,6 +14,19 @@
 # m_vota holds a state (the byte at +380 + 104 * index, the optional's flag). Its name is the literal's, as GetVota's
 # is; that it is const and its line in cappinfo.cpp are chosen. Its callers (11242, 12105, 12110) are not written, and
 # the roots' Votos stands for them. It matched with the plain body; nothing else was tried.
+# CAppInfo::SalvaVotaInterno and SalvaVotaExterno (3790, 3789, thunks of binaryen's merge 6039, which the two form here
+# too; its match line names our merge body, a name our link derives): each passes its literal ("SalvaVotaInterno",
+# "SalvaVotaExterno") and TURNO_ATUAL to IndiceTurno and, when that turn's m_vota holds a state, saves it through a
+# CServicoEstadoGeralVota of its origin (FLASH_INTERNA, FLASH_EXTERNA) and TURNO_ATUAL (3787, unit 206) with
+# IServicoEstado's save (5329), passing the state itself. The names are the literals', as TemVota's is. Both go through
+# a file-static helper, SalvaVota (a chosen name), which clang inlines: in 6039's 32-byte frame the service sits above
+# the literal's std::string (+20 and +8), which lives until the save returns (a reading: written in place, with the
+# string a temporary of the index's statement, it would be freed before the save; that form was not compiled). That the
+# two are const, their order (Interno first, as the target's 3790 above 3789 reads), their lines, and the helper's
+# being a free function and its linkage are chosen. Their
+# callers 491 (unit 205), 7174 and 10590: the roots' SalvaVotas stands for the last two, a second call site of each
+# (a reading of docs/reference/facts/tool-traps.md X1: with 491 their one caller, binaryen would inline both into it
+# and form no merge; not linked without it).
 # CPartidos is an api::CDataMap<ueword, md::CPartido>, its base (cpartidos.h says why), and its constructor builds the
 # base from the name "CPartidos": cpartidos.cpp's object is cmp-equal to the one compiled with the layout written out as
 # members, the form before (both built at the tree's flags, before and after the change).

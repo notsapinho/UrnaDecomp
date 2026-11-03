@@ -49,6 +49,10 @@ public:
     // GetCandidatosPartido keeps them. The name is chosen, and so is its being a member (no record, slot or RTTI says
     // so): its callers pass the singleton, and it reads the base's map.
     bool ExisteCandidatoFederacao(TCargoID cargo, const ecourna::app::dados::CFederacao& federacao) const;
+    // The test of ExisteCandidatoFederacao's inner loop for one party, in ccandidaturas.cpp: vota::LegendaValida (target
+    // fn 5922), its one caller, holds that loop over this singleton's map inlined by binaryen (its result a block's,
+    // tested again), before it asks for the party's federation. The name, its being a member and its line are chosen.
+    bool ExisteCandidatoPartido(TCargoID cargo, TPartidoID partido) const;
 
     // Record ccandidaturas.cpp:56 (its throw, code 7800) names it and spells its types. It finds the candidacy by the
     // same key, throws when there is none and moves the cursor to it; fn 11213, CParteCandidatosProporcionais::Imprime,

@@ -4,11 +4,6 @@
 // not evidence; inside a cluster they are in link order.
 
 // <stubs>
-// link-order cluster 236 · uses=1
-
-// f9843 · 88 B · unmatched · placement: link order · name unknown
-// ? f9843(i32, i32) { ... }
-
 // link-order cluster 637 · uses=1 · neighbours' file uenux2/src/api/gui/cdatatext.cpp
 
 // f12310 · 10 B · unmatched · placement: link order · name unknown
@@ -34,11 +29,6 @@
 
 // f5009 · 606 B · unmatched · placement: link order · name unknown
 // void f5009(i32, i32) { ... }
-
-// link-order cluster 727 · uses=2
-
-// f5153 · 82 B · unmatched · placement: link order · name unknown
-// void f5153(i32) { ... }
 
 // link-order cluster 747 · uses=2 · neighbours' file uenux2/src/api/hash/chasharquivo.cpp
 
@@ -109,11 +99,6 @@
 // f3335 · 356 B · unmatched · placement: link order · name unknown
 // void f3335(i32, i32, i32) { ... }
 
-// link-order cluster 966 · uses=3
-
-// f3564 · 120 B · unmatched · placement: link order · name unknown
-// void f3564(i32) { ... }
-
 // link-order cluster 979 · uses=3 · neighbours' file uenux2/src/api/util/cdate.cpp
 
 // f3650 · 312 B · unmatched · placement: link order · name unknown
@@ -156,11 +141,6 @@
 
 // f2820 · 189 B · unmatched · placement: link order · name unknown
 // void f2820(i32, i32, i32, i32, i32) { ... }
-
-// link-order cluster 1120 · uses=4 · neighbours' file uenux2/src/app/vota/eleitor/fimvotacao/cimprimindobu.cpp
-
-// f2893 · 1021 B · unmatched · placement: link order · name unknown
-// void f2893(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1148 · uses=5 · neighbours' file uenux2/src/api/gui/ctextfieldupdate.cpp
 

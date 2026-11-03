@@ -4,13 +4,13 @@
 // typeinfo, with no change when the member lands (src/units/README.md "Pending members").
 //
 // vota::CGeraDadosDinamicos, in src/uenux2/src/app/vota/eleitor/iniciovotacao/cgeradadosdinamicos.cpp:
-// - StartState 11865 (slot 2, record :47, whose line stays blank there): fns 491, 6734 and 6737, with no name; its
+// - StartState 11865 (slot 2, record :47, whose line stays blank there): fns 6734 and 6737, with no name (fn 491 is named now: unit 205); its
 //   other callees are named (vota::CEstadoAudio::GetInst, fn 509, an api::EUeAssertError throw, and
 //   CVerificaHorarioZeresima::GetInst, fn 5947, unit 138).
 //
 // vota::CInicioVotacao, in src/uenux2/src/app/vota/eleitor/iniciovotacao/ciniciovotacao.cpp:
-// - StartState 11988 (slot 2) and ProcessTick 11987 (slot 8): each calls fn 5972, not written, which calls fn 491, with
-//   no name, and fn 1269 (comum::CRdvVota::Comparecimento(), unit 13).
+// - StartState 11988 (slot 2) and ProcessTick 11987 (slot 8): each calls fn 5972, not written, which calls fn 491
+//   (named now: unit 205) and fn 1269 (comum::CRdvVota::Comparecimento(), unit 13).
 //
 // Move each into its class's .cpp when it is reconstructed; delete this file with the last one.
 #include "app/vota/eleitor/iniciovotacao/cgeradadosdinamicos.h"

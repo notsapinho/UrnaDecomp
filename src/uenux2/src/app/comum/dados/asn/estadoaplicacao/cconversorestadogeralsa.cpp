@@ -149,8 +149,3 @@ EEstadoSA CConversorEstadoGeralSA::DesconverteEstadoSA(const ModuloEstadoGeralSA
 }
 
 } // namespace comum::asn
-
-// <stubs>
-// f10089 · 20 B · unmatched · placement: link order · name unknown
-// void f10089(i32, i32) { ... }
-// </stubs>
