@@ -51,9 +51,10 @@ namespace {
 
 const void* volatile clocal_sink;
 
-// Stands for fn 401's callers: 1543, 2725, 3798, 4160, 4161, 5579, 5591, 5604, 5977, 6599, 7787, 10313, 10500,
-// 10689, 10699, 10700, 10701, 11188, 11223, 11242, 11902, 11908, 12071, 12098, 12105, 12110, 12134 (5584, CRelUtil's
-// ImprimeTitulos, and 2753, unit 121's CEscolheOpcao::GetInst, are in the link).
+// Stands for fn 401's callers: 1543, 2725, 3798, 4160, 4161, 5579, 5591, 5604, 5977, 6599, 7787, 10500, 10689,
+// 10699, 10700, 10701, 11188, 11223, 11242, 11902, 11908, 12071, 12098, 12105, 12110, 12134 (5584, CRelUtil's
+// ImprimeTitulos, 2753, unit 121's CEscolheOpcao::GetInst, and 10313, unit 71's IPedeTituloMesario::ProcessInput, are in
+// the link).
 __attribute__((noinline)) int Instancias() { return w401() - 3 * w401(); }
 // 2838 and 5806: one call each, beside the written callers (5806, 5807 and 12742 for 2838, 2268 for 5806).
 __attribute__((noinline)) int CandidaturasAtuais(int f) { return w2838(f + 12); } // stands for 12641

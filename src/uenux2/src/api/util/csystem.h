@@ -67,6 +67,11 @@ public:
 uintmax_t GetFreeSpace(const std::string& caminho);
 uintmax_t GetUsedSpace(const std::string& caminho);
 uedword GetMemInfo(const std::string& campo);
+// The two fields vota::CThreadMonitor::Run (fn 10226) reads: it holds each inlined after a stack frame of its own that
+// builds the field's name, "MemTotal" or "MemFree", for GetMemInfo, and widens the result as a signed number. No
+// target index and no record: their names, their being free functions here, and their long result are chosen.
+long GetMemTotal();
+long GetMemFree();
 
 // Fns 2763 and 5462 have no record: the part of a path held in a std::string after its last '/' (the whole string
 // when it holds none) and the part before it. Their callers are comum's and vota's (2763: 1501, 5360, 5461, 12098;

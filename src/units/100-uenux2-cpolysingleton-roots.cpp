@@ -80,8 +80,8 @@ __attribute__((noinline)) int w100_todos()
         w100_usa<comum::IControladorRegistraMesarios>() + w100_usa<api::IGenericFactory<api::ISyncCtl>>() + w100_usa<comum::IInterfaceSavd>();
 }
 
-// Stands for the callers of the two GetInst that have not landed: 652, 3059 and 5543 for fn 1259, whose 502, 1265, 2024, 3658, 3673 and 5904 are in the link, and 10226 and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
-// 5473, 10870, 10874 and 10875 are in the link.
+// Stands for the callers of the two GetInst that have not landed: 3059 and 5543 for fn 1259, whose 502, 652, 1265, 2024, 3658, 3673, 5904 and 8302 are in the link, and 11862 for fn 1155, whose 479, 1382, 1898, 2230, 5472,
+// 5473, 10226, 10870, 10874 and 10875 are in the link (652 and 10226 are written and not matched).
 __attribute__((noinline)) int w100_getinst()
 {
     int soma = &api::ITimerScheduler::GetInst() == &api::ITimerScheduler::GetInst() ? 2 : 4;
@@ -112,9 +112,9 @@ __attribute__((noinline)) int w100_tem_qrcode()
 
 // Libc++ destructors the target keeps out of line, and uenux2's objects inline: two call sites each, in optnone functions
 // where clang leaves the calls. Each goes when the target callers below are in our link and call it there; those that
-// are not: of 321's, 1091 2893 5344 10212; of 871's, 4771 5560; of 388's, 1091 (2927, 518 and 2650 are in the link and
-// call them since unit 229's root; 3373, 8096 and 8101 match; 9039, 9135 and 13621 are in the link since unit 170's
-// has<T> stand-ins and the guard parameter of unlock_shared_and_lock).
+// are not: of 321's, 1091 2893 5344 10212; of 388's, 1091; of 871's none, its calls here stand for none (4771 and 5560
+// call it since unit 116's std::async; 2927, 518 and 2650 call them since unit 229's root; 3373, 8096 and 8101 match;
+// 9039, 9135 and 13621 are in the link since unit 170's has<T> stand-ins and the guard of unlock_shared_and_lock).
 // - 321, __allocating_buffer<char>: 455 1091 2893 2927 3882 5344 5384 5758 7667 8758 8834 8911 8986 9039 9135 9233 10090 10212.
 // - 871, unique_lock<mutex>: 624 1126 3095 3328 4771 5560 8059 13621 13974.
 // - 388, shared_ptr<void>: 455 518 640 1091 1928 2154 2584 2650 3373 3882 4180 4774 5384 5707 5750 7667 8089 8090 8092 8096

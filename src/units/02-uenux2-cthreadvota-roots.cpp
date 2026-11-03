@@ -6,8 +6,8 @@
 // fn 7022, unit 97's CVotacaoStateAudio::FinishState): ParaDoisTicks stands for the others (7010, 10451, ...; unit
 // 197's 7349, 7352 and 4454 are in the link too).
 // CThreadVota::AddStoppedTick (fn 807) has 11, of which unit 97's fn 1785 calls it twice and 1165 and 2880 (unit 199),
-// 3229 (unit 197), 5343 (unit 165), 5936 (unit 138) and 10409 are linked: DoisTicksParados stands for the other four
-// (652, 2740, 5396, 10440).
+// 3229 (unit 197), 5343 (unit 165), 5936 (unit 138), 10409 and 652 (unit 161) are linked: DoisTicksParados stands for
+// the other three (2740, 5396, 10440).
 // CTickManager::AddStoppedTick (fn 5452) has fn 807 and fn 5947, both in the link (unit 138 writes 5947).
 // CTickManager::GetExpiredTicks (fn 5450) needs no stand-in: its two callers, 4349 and 10204, are unit 116's.
 // CThreadVota::AddTick(const std::chrono::milliseconds&) (fn 4640), CTickManager::AddTick (fn 3644) and StopTick

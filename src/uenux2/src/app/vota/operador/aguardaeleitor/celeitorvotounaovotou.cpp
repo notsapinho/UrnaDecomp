@@ -3,7 +3,10 @@
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
 #include "api/gui/ctextsource.h"
+#include "app/vota/eleitor/cestadoaudio.h"
+#include "app/vota/operador/aguardaeleitor/cdesabilitaaudioeleitor.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
@@ -53,6 +56,17 @@ void CEleitorVotouNaoVotou::StartState()
     *m_complemento = " ";
     m_form->Slot2();
     m_pNextState = this;
+}
+
+void CEleitorVotouNaoVotou::ProcessInput()
+{
+    if (m_form->Read() == api::INPUT_CONFIRMA) {
+        if (CEstadoAudio::GetInst().Ativo()) {
+            m_pNextState = &CDesabilitaAudioEleitor::GetInst();
+        } else {
+            m_pNextState = &CPedeIdentidade::GetInst();
+        }
+    }
 }
 
 } // namespace vota

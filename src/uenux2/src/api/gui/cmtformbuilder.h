@@ -31,6 +31,7 @@
 // (fn 653), a member by its record (1579136), reaches its fields only through CFormBuilder::AddField (fn 426), as
 // AddInputControl reaches the vector only through AddField. src/units/31-uenux2-cformbuilder.mk has what was measured.
 
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
@@ -105,6 +106,16 @@ private:
 public:
     template <typename FONTE>
     SharedField AddTextField(FONTE fonte, const SPoint& posicao);
+
+    // A text a source gives through a CDataTextFmt, in an api::CTextFieldUpdateMT that redraws it as it changes: its
+    // instance over api::CTextSource is held inlined by binaryen in fn 652, behind a 16-byte frame of its own. It pushes a
+    // copy of the field into m_campos with vector::emplace_back in place and releases the field before it returns, so it
+    // is a member and returns nothing. Defined in app/vota/operador/comum/telasoperador.cpp, where CTextFieldUpdateMT is
+    // complete; src/units/51-uenux2-ctextfieldupdatemt.mk says why a template there. Its name (after
+    // api::CFormBuilder::AddTextFieldUpdate) and its parameters' order are chosen.
+    template <typename FONTE>
+    void AddTextFieldUpdate(FONTE fonte, const SPoint& posicao, const std::chrono::milliseconds& intervalo,
+                            const std::string& formato);
 };
 
 // The adder of a text a source of the caller's type gives, CDataText<FONTE> with CDataText's default alignment: its

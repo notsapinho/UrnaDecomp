@@ -130,8 +130,9 @@
 # Not written:
 # - 3683, EnterLoopBeeping's lambda (record 478:13). Its one caller, 11151, fills a slot of the vtable of libc++'s
 #   __async_assoc_state over a lambda of ShowExceptionMsg (ledger/vtables.json) and calls it three times in a loop over
-#   the same two statics, read as EnterLoopBeeping inlined there: it waits for ShowExceptionMsg, and so do that
-#   __async_assoc_state's other slots (5560, 5561, 11151).
+#   the same two statics, read as EnterLoopBeeping inlined there: it waits for ShowExceptionMsg, and so does 11151; that
+#   __async_assoc_state's slots 5560 and 5561 match, as the bodies the target shares with SaiPorVotacaoSuspensa's
+#   std::async state (unit 116).
 # - 5568, ShowExceptionMsg(EExceptionLevel, const std::string& x4, const TExceptionStacktrace*): the typeinfo name of
 #   its lambda's std::async state (ledger/strings.tsv 520532) gives the name and the parameter types, and 5568 is the
 #   one function that holds that state's vptr (1577576). Its whole body is the std::async: the state built, then the

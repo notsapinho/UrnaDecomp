@@ -112,8 +112,8 @@
 #   GetInteractiveForm("", true). 35 over 412 rows, all operand-only, the statics.
 # The two forms are the target's: the member-list helper where 301 writes into the member, the assignment where the
 # member is zeroed first. The helper's being in an anonymous namespace and its name are chosen. Their target callers are
-# not reconstructed (10209 and 10430 for 5393, 10677 and 10689 for 5430): the roots stand in for them, and the vtable
-# sinks for these two classes went.
+# not reconstructed (10209 for 5393, 10677 and 10689 for 5430; 5393's other, 10430, is: unit 71): the roots stand in
+# for them, and the vtable sinks for these two classes went.
 # - the pending slots: the -pending.cpp header lists them.
 #
 # Evidence and forms of the members written since (each measured in the whole link with pnpm wasm score):

@@ -17,7 +17,7 @@
 // - GetContexto (fn 1695) has seven direct calls in the target: GetExceptionLevel's (fn 5569, in the link) and three
 //   each in 7709 and 7710 (vota::CThreadVota's two TrataErro, traps in unit 116's pending file); w171_contexto stands
 //   for those two. GetExceptionLevel's two callers are 7709 and 7710, which w171_nivel stands for, and so are two of
-//   api::Join's (fn 1696) five; w171_junta stands for all five (652, 5604, 7709, 7710, 11233, none reconstructed).
+//   api::Join's (fn 1696) five; w171_junta stands for four (5604, 7709, 7710, 11233; 652, unit 161's, is in the link).
 extern "C" {
 void w5566_root_0() __asm__("_ZN3api12CApplication21EnterLoopDoingNothingEv");
 void w171_empilha_c(void* contexto) __asm__("_ZN3api12CApplication11PushContextENS_19CApplicationContextE");
@@ -80,7 +80,7 @@ __attribute__((noinline)) int w171_nivel(int a)
     return w5569_root() * 3 + w5569_root() + a;
 }
 
-// stands for fns 652, 5604, 7709, 7710 and 11233
+// stands for fns 5604, 7709, 7710 and 11233 (652 is in the link)
 __attribute__((noinline)) int w171_junta(char* bloco)
 {
     w1696_root(bloco, bloco + 12, bloco + 24);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "app/comum/cappstate.h"
 
@@ -19,7 +20,7 @@ namespace comum {
 // comum::IPedeTituloMesario (RTTI: si_class of comum::CAppState; vtable @1595576 [1378, 325, 10314, 7480, 1661, 218,
 // 425, 10313, 425, 12143]): the base of comum::CPedeTituloMesarioInicial, CPedeTituloMesarioFinal and
 // CPedeTituloMesarioVotacao, abstract (slot 1 is the trap 325, slot 9 __cxa_pure_virtual). It overrides the
-// destructors, StartState (slot 2, fn 10314) and ProcessInput (slot 7, fn 10313, pending); slot 2's name is
+// destructors, StartState (slot 2, fn 10314) and ProcessInput (slot 7, fn 10313); slot 2's name is
 // comum::CAppState's. A record in ipedetitulomesario.cpp (line 30, the anonymous GetControlador inlined into fn 10313)
 // names the file; this header's path is chosen, beside it. The vtable and typeinfo lie in that file's data, before that
 // record and after the derived classes' objects, so a member is out of line there: a class with no key function would
@@ -62,6 +63,12 @@ protected:
     std::shared_ptr<api::IForm<api::IScreen>> GetTelaEleitor();
 
 private:
+    // Whether the register holds the mesario with this formatted titulo in this state's period (Slot9): fn 10313 holds it
+    // inlined by binaryen, a 48-byte frame of its own that opens before CRegistradorMesario::GetInst's call and calls
+    // Slot9 inside, so it takes `this`; clang leaves it a call in the object (src/units/71-uenux2-celeitorvotounaovotou.mk).
+    // Its name, its being a const member and its parameter's type are chosen.
+    bool MesarioJaRegistrado(const std::string& titulo) const;
+
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
     std::shared_ptr<api::IForm<api::IScreen>> m_formEleitor;
 };

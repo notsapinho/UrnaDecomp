@@ -1,9 +1,18 @@
-# uenux2 vota::CEleitorVotouNaoVotou::StartState (target fn 10431, slot 2 of its vtable @1592928) with its destructor
+# uenux2 vota::CEleitorVotouNaoVotou::StartState (target fn 10431, slot 2 of its vtable @1592928) and ProcessInput (fn
+# 10430, slot 7) with its destructor
 # and deleting destructor (fns 1284, 2884, slots 0 and 1), its GetInst (fn 1901) with the constructor and the static
 # destructor of s_mutex (fn 10433), and comum::IPedeTituloMesario's StartState, constructor and
-# implicit destructor (fns 10314, 3608, 1378). The class headers say what the layout rests on; ProcessInput of each (fns 10430,
-# 10313) is pending. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) and its base
+# implicit destructor (fns 10314, 3608, 1378), and its ProcessInput (fn 10313). The class headers say what the layout
+# rests on. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) and its base
 # api::IForm<MEDIA> (api/gui/iform.h) are unit 120's.
+#
+# CEleitorVotouNaoVotou::ProcessInput (fn 10430): the form's Read() (record cinteractiveform.h:57 @1592984, the class's
+# inline member) and, on INPUT_CONFIRMA (9), the next state: vota::CDesabilitaAudioEleitor::GetInst (fn 5393) when
+# CEstadoAudio::GetInst()'s mode at +4 (fn 509) is not 2 (CEstadoAudio::Ativo), else vota::CPedeIdentidade::GetInst
+# (fn 652). Its line is after StartState's, as band 1 has them (10431 above 10430). It matches with 652 named by its
+# vptr anchor (652 is the one function that stores CPedeIdentidade's vptr, 1588240: grep over build/out/splat/pieces/asm),
+# while 652 itself is unresolved, self-voted on CPedeIdentidade::s_inst (unit 161's fragment). The if/else around the
+# two GetInst is written as a choice; no other form was measured.
 #
 # The file of vota::CEleitorVotouNaoVotou: no record names it, and the path is chosen, on this evidence. Its cluster's
 # comment, app/vota/eleitor/fimvotacao/celeitorvotounaovotou.cpp, is the tool's class-convention guess, and the data
@@ -37,12 +46,45 @@
 # store.
 #
 # comum::IPedeTituloMesario: src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp is the file its record
-# names. Line 30 of it, the anonymous GetControlador, stays blank, and the functions written come after it: their
-# lines are a choice (no record gives one). The order inside StartState is the target's: the next state, then +20's
+# names. Line 30 of it is the anonymous GetControlador's return (the record's column 12), and the functions written
+# come after it: their lines are a choice (no record gives one). The order inside StartState is the target's: the next state, then +20's
 # form, then +12's. The destructor is implicit: unit 97's derived classes show it inline. Chosen: the header's path,
 # beside that file; StartState as the key function (the vtable's place shows that a member is out of line there, not
 # which); Slot9, its name and its int result (no record, symbol or caller
 # names it, and the derived classes return 1 and 2); the member and parameter names.
+#
+# IPedeTituloMesario::ProcessInput (fn 10313, slot 7) is defined after StartState, the band's order (10314 above 10313),
+# and calls the anonymous GetControlador, whose record returns a non-const reference: the target calls the controller's
+# slot 18 (SetTituloMesario, the one slot not const) through it. What the target holds: Read() (record
+# cinteractiveform.h:57); on 9 or 5, the text of the form's GetEntradas().at(0) (one bounds check, then `== 9`); on 9 an
+# empty text goes to CTituloMesarioVazio, else std::format("{:0>{}}", text, 12) (the format @1034 and the argument types
+# 109, a string and an int: docs/reference/facts/reading.md R13), a std::string of twelve '0' built before
+# SetTituloMesario and freed after the next state is stored, then CTituloMesarioInvalido when
+# md::CValidadorIdentidade::EhValida(1, titulo) (fn 2803) fails or the titulo is the twelve zeros,
+# CTituloMesarioJaRegistrado when MesarioJaRegistrado finds it, CGestorDadoMesario::GetInst (fn 5383) when
+# CLocal::EhExterior (unit 89) holds or CConfiguracaoEleicao's byte at +665 (HabilitaBiometria) is clear, and
+# CPedeDigitalMesario's GetInst otherwise; on 5 an empty text goes to CConfirmaFimRegistroMesarios::GetInst (fn 5389).
+# CConfiguracaoEleicao::GetInst (fn 187) is called whatever EhExterior returns, so both are read before the test. The
+# four other states' GetInst, with their constructors and form builders, are unit 135's, inlined here by binaryen.
+# MesarioJaRegistrado has a 48-byte frame of its own that opens before CRegistradorMesario::GetInst (fn 815) and calls
+# Slot9 inside, so it is a function of its own that takes `this`, and clang leaves it a call in the object; its
+# CEleitorIdentidade and string copy are freed before CDataMap::Find (fn 2222's search, the cursor stored at +12), so the
+# CComparecimentoMesarioPK is a named local.
+# Forms measured in the whole link (`pnpm wasm score` against 10313; the form written gives 202 over 2650 rows, all
+# operand-only, and matches after step 9), each one change from it:
+# - the field held and its text read at each use: a `const std::string&` to the text keeps the text's address in a
+#   local where the target loads at +24 of the field, 216 over 2653 (3 inserted, 2 deleted);
+# - one test for 9 or 5 before at(0): a switch whose two cases each read the field, 239 over 2671 (21 inserted, 8
+#   deleted), where the target sends both to one block (br_table [0 1 1 1 0]);
+# - the next state in a local stored once (the target's block result before one store): a store in each branch, 362
+#   over 2666 (16 inserted, 10 deleted);
+# - CGestorDadoMesario's branch first: the other order, 211 over 2653 (3 inserted, 4 deleted).
+# Same bytes: MesarioJaRegistrado defined above ProcessInput (the whole wasm's sha256 is the same). Chosen:
+# MesarioJaRegistrado's name, its being a const member, the locals' names, and 12 and '0' written as literals.
+# IPedeTituloMesario's slot 7 rests on two hand lines of splat/symbol_addrs.txt, each weighed by removal (10313 alone
+# leaves match without it, `unresolved self-voted`): comum::CPedeDigitalMesario::s_inst, whose other reader, the exit
+# destructor 10321, is a thunk into 3886, a body binaryen keeps once for three classes' statics; and
+# CNomeMesariosUrnaDS::Text (10319), the source of that state's form, which only 10313 holds by table slot.
 #
 # IPedeTituloMesario::GetTelaEleitor, after StartState, is unit 247's: the second copy of comum::TelaRegistroMesarios
 # (cregistrarmesarios.cpp), which binaryen joins with it into target fn 1255. Unit 247's fragment has the evidence for a
@@ -71,12 +113,11 @@
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 CELEITORVOTOUNAOVOTOU_SRCS := src/app/vota/operador/aguardaeleitor/celeitorvotounaovotou.cpp src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp
 UENUX2_SRCS += $(CELEITORVOTOUNAOVOTOU_SRCS)
-# ProcessInput of each class (target fns 10430, 10313) is not reconstructed: 71-uenux2-celeitorvotounaovotou-pending.cpp
-# gives the vtables trapping bodies, compiled with the unit's flags
-$(ROOT)/$(APP)/71-uenux2-celeitorvotounaovotou-pending.o: $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/71-uenux2-celeitorvotounaovotou-pending.cpp -o $(R)
+# IPedeTituloMesario::ProcessInput reads comum::CConfiguracaoEleicao, whose header reaches ecourna's CHorariosUrna and
+# so Boost's headers: an include path, not a flag of the code
+$(ROOT)/$(APP)/uenux2/src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # nothing reconstructed references either class yet: 71-uenux2-celeitorvotounaovotou-roots.cpp takes the first vtable's
 # address and stands in for the IPedeTituloMesario constructor's callers
 $(ROOT)/$(APP)/71-uenux2-celeitorvotounaovotou-roots.o: $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/71-uenux2-celeitorvotounaovotou-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/71-uenux2-celeitorvotounaovotou-pending.o $(APP)/71-uenux2-celeitorvotounaovotou-roots.o
+override EXTRA_OBJS += $(APP)/71-uenux2-celeitorvotounaovotou-roots.o

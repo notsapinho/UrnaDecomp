@@ -61,10 +61,11 @@ public:
     ueword QuantidadeHabilitacaoSemBiometria() const;
     // fn 2823: the records with no impediment (CEleitorDetalhe::SemImpedimento, fn 2266), counted apart by whether the
     // voter is on a temporary transfer (md::CEleitorDecorator's word at +48, which IsTTE tests): two 16-bit counts the
-    // body returns through the result's address, the first for the voters with no transfer. Its callers (fns 652, 2881,
-    // 11242, 12110) are not reconstructed; 652 adds the two. Band 4 puts it between slot 0 (fn 2824) and
-    // QuantidadeHabilitacaoSemBiometria (fn 2822). The struct, its members' names, the function's name and its const are
-    // chosen.
+    // body returns through the result's address, the first for the voters with no transfer. Its callers are fns 652
+    // (whose vota::MontaTelaVotacao, inlined by binaryen, adds the two), 2881, 11242 and 12110, the last three not
+    // reconstructed.
+    // Band 4 puts it between slot 0 (fn 2824) and QuantidadeHabilitacaoSemBiometria (fn 2822). The struct, its members'
+    // names, the function's name and its const are chosen.
     struct SQuantidadeAptos {
         ueword m_semTransferencia;
         ueword m_comTransferencia;

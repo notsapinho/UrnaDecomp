@@ -172,7 +172,10 @@
 # 4529 2285, 4522 2277 and 4511 2299: two new inverted pairs (4556, 4551); below 4551 it would form three (4535, 4529,
 # 4522), counted from those ld_index values, not linked. Scored 7 over 55 rows, all operand-only, before step 8; matched
 # at step 9.
-CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/log/clogvota.cpp src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
+# app/vota/log/clogvota.cpp, the first of this list until vota::CThreadMonitor::Run (unit 116) held CLogVota members
+# inlined, is in unit 116's list now, ahead of cthreadmonitor.cpp, where the target's data put it: unit 116's fragment
+# has the measurement. Its notes stay here and in clogvota.h.
+CCONTROLADORREGISTRAMESARIOSVOTA_SRCS := src/app/vota/eleitor/fimvotacao/ccontroladorregistramesariosvota.cpp src/app/vota/eleitor/fimvotacao/cregistromesarioencerrado.cpp
 UENUX2_SRCS += $(CCONTROLADORREGISTRAMESARIOSVOTA_SRCS)
 # clogvota.cpp's LogaVoto* members (unit 197's fragment) read comum::CConfiguracaoEleicao, whose header reaches Boost
 # through CConfiguracaoMunicipio's CHorariosUrna: an include path, not a flag of the code

@@ -5,7 +5,16 @@
 #   the header euecomumlogerror.h;
 # - comum::CLogComum in src/app/comum/log/clogcomum.cpp: LogaCopiandoArqResParaFI and LogaResultadoCopiadoResFE (5878, 3828,
 #   thunks of binaryen's 6045, records 76:18, 84:18), LogaNivelBateria (5875, record 106:18, holding the ieventoslog.cpp
-#   records 440:19 and 456:19), GetInst (948);
+#   records 440:19 and 456:19), GetInst (948); LogaSuspensoMonitoramenteRepeticao (record 136:18) and LogaTipoBateria
+#   (records 144:18, 145:20, 158:19), added since, with no target index: binaryen inlined each into its one caller,
+#   comum::util::CMonitoraAlimentacao::VerificaAlimentacao, itself inlined into fn 10226 (vota::CThreadMonitor::Run, unit
+#   116's, written, not matched), behind frames of 384 and 32 bytes. The first formats its uebyte (argument type 6, the 20
+#   its caller passes, folded) into an 81-byte literal, whose brace search the target keeps, as -O3 does past 74 bytes
+#   (below); the second logs one of three literals for IPower's source bits (0, 1, 2) and throws 8850 with "Tipo de
+#   alimentação não implementado" otherwise (EUE_COMUM_LOG_8850, a name that says its value). Their records fix their
+#   lines; column 19 of line 158 puts the throw at twelve spaces, which the case labels indented under the switch give,
+#   a reading; `fonte` and the layout of lines 146 to 157 are chosen. The two declarations took three blank lines above
+#   line 74 for the header's three lines, so no record moved.
 # - comum::CArquivosResultado::GetInst (348, in unit 95's files) and 2900, binaryen's body of the two GetInst, with the
 #   mutex destructors 11659 and 11639 and the pointers' 11660 and 11640, thunks of 349, which the content pass pairs once
 #   the statics have names;
@@ -47,7 +56,7 @@
 #   copy of the symbol file, since splat-remap reads no match list). GetInst stays a call there: it is in
 #   another object. 3828 and 5878 match as thunks: their one call is named by `call` evidence, and 6045's two voters are
 #   those thunks.
-# - not reconstructed: 5372 (needs 816, 1686, 1903, 2224), 10226,
+# - not reconstructed: 5372 (needs 1903 and 2224; 816 and 1686 match since unit 135's IFingerMatcher stand-in),
 #   12098 and the other CLogComum members, 2742 and 3603 (the other thunks of 2900: their classes are not named).
 #
 # Inlining, by who did it. clang: EhModoDemonstracao into the seven members (one frame, restored after the member's load)

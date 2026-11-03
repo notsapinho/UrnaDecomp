@@ -6,9 +6,9 @@
 //   them). Taking the vtables' addresses keeps every slot, as unit 142's roots do. vota::CDesabilitaAudioEleitor's and
 //   vota::CHorarioVotacaoTerminou's constructors are in the link, inlined into their GetInst (fns 5393 and 5430), which
 //   the next item keeps, so no sink keeps those two vtables.
-// - The GetInst of those two (fns 5393 and 5430), whose target callers are not in the link: fns 10209 and 10430 call
-//   5393, fns 10677 and 10689 call 5430. Each stand-in calls its GetInst twice, so that binaryen keeps it a function of
-//   its own; one subtracts the two results and the other adds them, so the two bodies differ.
+// - The GetInst of those two (fns 5393 and 5430), whose target callers are not in the link but 10430 (unit 71): fns
+//   10209 and 10430 call 5393, fns 10677 and 10689 call 5430. Each stand-in calls its GetInst twice, so that binaryen
+//   keeps it a function of its own; one subtracts the two results and the other adds them, so the two bodies differ.
 // - vota::IIniciaJustificativa's constructor (target fn 3624) has two direct callers in the target, fns 10631 and 10635,
 //   which build the derived states and use the `this` it returns. 10631 is in the link (unit 104, through
 //   vota::CIniciaJustificativa's constructor, unit 243); a noinline caller stands in for 10635 and uses that result,
@@ -34,7 +34,7 @@ int w5430_root_0() __asm__("_ZN4vota23CHorarioVotacaoTerminou7GetInstEv");
 
 namespace {
 
-// Stands for fns 10209 and 10430, the target callers of vota::CDesabilitaAudioEleitor::GetInst (fn 5393).
+// Stands for fn 10209, the target caller of vota::CDesabilitaAudioEleitor::GetInst (fn 5393) not in the link (10430 is).
 __attribute__((noinline)) int DesabilitaAudio()
 {
     return w5393_root_0() - w5393_root_0();

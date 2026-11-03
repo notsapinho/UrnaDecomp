@@ -65,6 +65,11 @@
 # calls VerificaEhSecao with that literal and returns the place's id, the word at +16 of md::CLocal::GetSecao() (the
 # CIdentificacaoSecao at +4, its TLocalID at +12). Its six callers (1543, 2725, 7787, 11188, 11242, 12098) are not
 # written; the roots' LocaisID stands for them. It has no record; its line, after UrnaBiometrica, is a choice.
+# comum::CLocal::EhExterior has no target index of its own: unit 71's IPedeTituloMesario::ProcessInput (fn 10313) holds
+# it inlined by binaryen, a 16-byte frame of its own opened after CLocal::GetInst's call, which is what keeps it out of
+# line here. It passes "EhExterior" to VerificaLido (the literal @85932, which no other target function loads), then
+# GetUF inlined (VerificaLido("GetUF") and the sigla), compared with "ZZ" (a size test of 2, then `i32.load16_u` against
+# 23130). The name is the literal's, the reading of these literals below; its line, after GetLocalData, is a choice.
 #
 # 3473, the ASN.1 runtime's OBJECT_IDENTIFIER::decodeCommon, matches with these members in the link, and rests on the
 # link order, not on a source here (docs/reference/facts/splat.md S10 item 19). ccandidaturas.cpp.o defines

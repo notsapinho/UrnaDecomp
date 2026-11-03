@@ -193,8 +193,8 @@
 #   voter's md::CEleitorDecorator word at +48 (IsTTE's) is 0, and to the second otherwise. The branch on the false test
 #   first is the target's: the other order swapped the two counts' rows (6 over 72, 5 operands and a deleted eqz);
 #   written so, one row over 72, a call (pnpm wasm score before steps 7 to 9). The struct SQuantidadeAptos, its members'
-#   names and the function's name and const are chosen (celeitores.h). Its callers (652, 2881, 11242, 12110) are not
-#   written: this unit's roots stand for them, QuantidadesAptos.
+#   names and the function's name and const are chosen (celeitores.h). Its callers 2881, 11242 and 12110 are not
+#   written: this unit's roots stand for them, QuantidadesAptos (652, unit 161's, is in the link).
 # - 3754: CHV::CreateInst (records chv.cpp:32 to :68, held by fn 7787, which has it inlined) allocates 28 bytes, calls
 #   3754 on them with a CHorarioVeraoMunicipio it built (5677 or 5679) on each of its three paths, and stores the object
 #   at 1838872, s_instancia; 3754 copies the 28 bytes. It lies in band 3 between cfotos.cpp's 3755 and clocal.cpp's 3753,
@@ -224,8 +224,8 @@
 #   rule whose slot 2 (GetTipo) is 3 or the argument, calling the slot twice (the bytes); with none it throws code 8108
 #   with std::format over the type packed as an int (type code 3, docs/reference/facts/reading.md R13), else it calls the
 #   rule's Valida (unit 178).
-# - EhValida (fn 2803, callers 2225, 10313, 10420 and 10721) is the same search with false for no rule and the rule's
-#   EhValida (fn 3723) else. It matches; the roots that keep it are unit 178's.
+# - EhValida (fn 2803, callers 2225, 10313, 10420 and 10721, all in the link but 10721) is the same search with false
+#   for no rule and the rule's EhValida (fn 3723) else. It matches; unit 178's roots keep it, standing for 10721.
 # Chosen: EhValida's name, the search written as a lambda in each member (a shared helper was not tried), Valida's line
 # but its throw's and EhValida's after it, and the three include lines it adds with a blank one, which take four of the
 # blank lines above the statics (lines 11 to 22 stay unknown).
