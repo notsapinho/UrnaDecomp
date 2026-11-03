@@ -2,11 +2,9 @@
 // factories in the skeleton link the way the target keeps them. Declared through asm labels with the objects'
 // signatures (a constructor returns this; a function that returns a class by value takes the result's address first);
 // compiled with APP_CXXFLAGS. Each stand-in's body differs from the others' and from every target function.
-// - CApplicationContextStack::Pop (fn 5553) has two direct callers in the target, fns 7370 and 10467: 7370,
-//   vota::CEleitorVotando::FinishState (unit 197), is in the link, and w193_desempilha stands for 10467, two call
-//   sites on api::CApplication::s_contextos (unit 171), the stack the target's 5553 reads at its address as a constant.
-//   Pop returns a bool, an int to the label; the stand-in drops it, as both target callers are read to (the target's
-//   5553 has no result).
+// - CApplicationContextStack::Pop (fn 5553) needs no stand-in: its two direct callers in the target, fns 7370
+//   (vota::CEleitorVotando::FinishState, unit 197) and 10467 (vota::CPedeDigital::FinishState, unit 192), are in the
+//   link.
 // - api::CriaContextoAplicacao (fn 3682) has api::CApplication::CriaContexto's code among its callers in our link, and
 //   vota::CEleitorVotando::GetInst (fn 3229, unit 197); w193_contexto stands for the other, fn 2740.
 // - api::CriaContextoPadrao (fn 5558) needs no stand-in: its two target callers, api::CApplication::InitApplication's
@@ -15,22 +13,12 @@
 //   callers in our link, unit 197's StartState (7377), GetContexto (1695, unit 171) and 491 (unit 205's
 //   SincronizaEstadoGeralVota) and 3333 (unit 205's SincronizaEstadoGeral); w193_copia stands for the other, fn 10468.
 extern "C" {
-extern char w193_contextos[] __asm__("_ZN3api12CApplication11s_contextosE");
-int w193_desempilha_c(void* pilha, const void* contexto) __asm__(
-    "_ZN3api24CApplicationContextStack3PopERKNS_19CApplicationContextE");
 void w193_contexto_c(void* contexto, int tipo, void* titulo, void* descricao, void* detalhe) __asm__(
     "_ZN3api21CriaContextoAplicacaoEiNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_S6_");
 int w193_copia_c(void* contexto, const void* outro) __asm__("_ZN3api19CApplicationContextC2ERKS0_");
 }
 
 namespace {
-
-__attribute__((noinline)) int w193_desempilha(char* bloco)
-{
-    w193_desempilha_c(w193_contextos, bloco + 20);
-    w193_desempilha_c(w193_contextos, bloco + 32);
-    return bloco[3] * 9;
-}
 
 __attribute__((noinline)) int w193_contexto(char* bloco, int tipo)
 {
@@ -49,7 +37,6 @@ void* volatile w193_sink;
 struct SW193Roots {
     SW193Roots()
     {
-        w193_sink = reinterpret_cast<void*>(&w193_desempilha);
         w193_sink = reinterpret_cast<void*>(&w193_contexto);
         w193_sink = reinterpret_cast<void*>(&w193_copia);
     }

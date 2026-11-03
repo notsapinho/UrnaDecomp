@@ -11,17 +11,18 @@
 # SEQUENCE_OF assignments, inlined by binaryen. 11423 and 11424 are named by srcloc-anchor, 5669 by pair-addr and 2807 by
 # 11423's call (it matched by its body first).
 # Matched since: 3863 (vector<md::CCabecalhoPacote>'s __destroy_vector) and 5956 (vector<md::CMunicipioDisponivel>'s),
-# from the tree root src/app/roots_dadoscarga.cpp. The target's copies are ones compiled with strict aliasing, and
-# app/comum/dados/asn has none: as this unit's converter object emits them, 3863 is 20 over 108 rows and 5956 45 over
-# 127 (pnpm wasm score); in a private link with src/app/comum/dados/asn/correspondencia/% added to UENUX2_TBAA_DIRS on the
-# make command line (the converter object recompiled, measured before DoConverte was written), 4 over 104 and 4 over 118,
-# call operands only, with 11423 unchanged (11424, written since, differs so). Their other target callers are 11905
-# (vota::CImpressaoVersaoPacotes::StartState, unit 176's pending member, in src/app/vota/, a strict-aliasing directory)
-# and 3691 (comum::CGeradorRelVersaoPacoteDados's slot 0), not written; the root, at the flags of 11905's file, stands for
-# 11905's object (it says so) and gives both bodies, 4 over 104 and 4 over 118 again. The census pairs them now (pair-addr
-# lines in splat/symbol_addrs.txt), and the two callers+content hand lines that named them for 11423 went: on copies of
-# the symbol file without them, two scans beside a control left the same 11723 match rows, and splat-build on the copies
-# gave the target's sha256.
+# from the tree root src/app/roots_dadoscarga.cpp until 11905 was written, and from 11905's object since (unit 176's
+# cimpressaoversaopacotes.cpp; unit 176's fragment has the scores). The target's copies are ones compiled with strict
+# aliasing, and app/comum/dados/asn has none: as this unit's converter object emits them, 3863 is 20 over 108 rows and
+# 5956 45 over 127 (pnpm wasm score); in a private link with src/app/comum/dados/asn/correspondencia/% added to
+# UENUX2_TBAA_DIRS on the make command line (the converter object recompiled, measured before DoConverte was written), 4
+# over 104 and 4 over 118, call operands only, with 11423 unchanged (11424, written since, differs so). Their other
+# target callers are 11905 (vota::CImpressaoVersaoPacotes::StartState, unit 176's, in src/app/vota/, a strict-aliasing
+# directory) and 3691 (comum::CGeradorRelVersaoPacoteDados's D2, unit 287's), both in the link now; the root, at the
+# flags of 11905's file, stood for 11905's object and gave both bodies, 4 over 104 and 4 over 118 again. The census
+# pairs them now (pair-addr lines in splat/symbol_addrs.txt), and the two callers+content hand lines that named them for
+# 11423 went: on copies of the symbol file without them, two scans beside a control left the same 11723 match rows, and
+# splat-build on the copies gave the target's sha256.
 # Matched since as well: CConversorCabecalhoPacote's DoConverte (11438) and DoDesconverte (11437), in
 # cconversorcabecalhopacote.cpp; unit 96 says what they hold of util.cpp and fragment 273 what of the md classes.
 # This unit's three sources are in unit 96's list now, after util.cpp, in the order this list had (unit 96 has the
@@ -86,9 +87,7 @@
 # the functions with no record (the constructors' first lines in cdadosdisponiveiscarga.cpp, every line of the asn files).
 #
 # The sources (cconversorcabecalhopacote.cpp, cconversordadosdisponiveiscarga.cpp, cdadosdisponiveiscarga.cpp) are
-# compiled through 96-uenux2-app-comum-asn.mk's list.
-# the converter's user and the libc++ instances' other callers are not reconstructed yet:
-# 245-uenux2-cdadosdisponiveiscarga-roots.cpp keeps the vtable and gives each instance the call sites the target gives it
-$(ROOT)/$(APP)/245-uenux2-cdadosdisponiveiscarga-roots.o: $(ROOT)/src/units/245-uenux2-cdadosdisponiveiscarga-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/245-uenux2-cdadosdisponiveiscarga.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/245-uenux2-cdadosdisponiveiscarga-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/245-uenux2-cdadosdisponiveiscarga-roots.o
+# compiled through 96-uenux2-app-comum-asn.mk's list. The unit's roots file went once 11905 (unit 176) was in the link:
+# it stores the converter's vptr (through vota::LeDadosDisponiveisCarga, unit 287's) and makes the calls of 5669 (the
+# copy of the packages in comum::CGeradorRelVersaoPacoteDados's constructor), 3863 and 5956 that its stand-in made for
+# it, and 3691 (unit 287) makes 3863's third.

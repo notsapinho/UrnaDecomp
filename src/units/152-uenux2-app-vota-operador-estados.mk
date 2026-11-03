@@ -72,7 +72,7 @@
 #
 # Chosen, no evidence names them: every data member's name and, where only a width shows, its type (bool for the bytes,
 # ueint64 for +16); GetInst and the private constructors, declared and not defined but for CDesabilitaAudioEleitor's,
-# CHorarioVotacaoTerminou's and CPerguntaFilaEleitorVazia's; the CLogVota members' names (from
+# CHorarioVotacaoTerminou's, CPerguntaFilaEleitorVazia's and CHabilitaAudioEleitor's; the CLogVota members' names (from
 # their messages) and their place after LogaTituloInvalidoRegistroMesario; the enumerator's name
 # (app/vota/euevotaerror.h); the headers' paths, beside their .cpp, and every new .cpp's file name (the class name in
 # lower case). The directories (how-to step 3, docs/reference/facts/placing.md P4, P5):
@@ -169,6 +169,20 @@
 #   match since our link forms 2295 from the same five slots as the target's merge (unit 277's fragment).
 # Chosen: InicializaTick's and AtualizaMensagem's names and lines, the enumeration's names, the local names, the queue
 # held in a local for the 8/9 choice in CHabilitaAudioEleitor (one GetInst, as the target calls it once there).
+#
+# Matched since (each read in the target with pnpm wasm fn, and scored with pnpm wasm score before steps 7 to 9):
+# - vota::CHabilitaAudioEleitor::GetInst (2743) with its statics' exit destructors (10526, s_inst's at 1908608; 10525,
+#   s_mutex's at 1908584), the shape of 5393's: the constructor inlined behind a 64-byte frame of its own, the form from
+#   the member list through an anonymous-namespace helper: AddBuzz(51, 10), AddClock({33, 1}), "Este eleitor necessita
+#   de áudio" at {1, 2}, "Coloque o fone de ouvido na urna" at {1, 3}, "CONFIRMA: continuar" at {1, 4} on the right,
+#   AddInputControl, GetInteractiveForm("", true); 40 over 374 rows, all operand-only. Its target callers 10511 (unit
+#   161) and the three ProcessInput slots unit 282 writes are in the link, so the vtable's sink in the roots went.
+# - vota::CSuspensaoAutomaticaEleitor::ProcessKey (10404): key 5 stops the tick (CThreadOperador's StopTick) and goes to
+#   CMostraEleitorVotando::GetInst (1150); while the byte at +24 is set, key 13 clears it, sets CSincronismoOperador's
+#   +11 through SetSincronizado (a setter added to app/vota/operador/csincronismooperador.h, name chosen) and goes to
+#   that state, and key 2 clears it and goes to CPedeIdentidade::GetInst (652). The cases are written 13 first: the
+#   br_table sends key 13 to the first block. With case 2 first, 12 over 47 rows (3 inserted, 3 deleted); as written,
+#   6 over 44, operand rows only, and a match.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_OPERADOR_ESTADOS_SRCS := src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp \

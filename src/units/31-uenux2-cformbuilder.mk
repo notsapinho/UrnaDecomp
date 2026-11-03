@@ -185,13 +185,16 @@
 #   masked. A member by choice: it reaches the vector only through AddField.
 # - 3673 matches with api::ITimerScheduler::CreateTimer taking its callback by reference, as api/util/itimerscheduler.h
 #   has it now; unit 120's fragment scored it 12 over 211 rows with the callback by value.
-# The roots' ControleMT and EntradaMT give 395, 3674 and 3673 their second call sites. 1151, which builds an
+# The roots' ControleMT gives 395 its second call site; 3674 and 3673 have their three target callers in the link,
+# 395, 1151 and 5410, so EntradaMT, the roots' stand-in for 5410, went with 5410's landing. 1151, which builds an
 # api::CInputFieldMT over a CNumberValidation ("0123456789") and pushes it through 3674, is unit 121's (cescolheopcao.cpp,
-# vota::AdicionaCampoNumerico; src/units/121-uenux2-datasources.mk has its evidence). Not written, and what it waits for:
-# - 5410 ("ELEITOR(A) PODE VOTAR", callers 1256 and 5399, not written) holds behind a second prologue code that builds a
+# vota::AdicionaCampoNumerico; src/units/121-uenux2-datasources.mk has its evidence). And 5410's code:
+# - 5410 ("ELEITOR(A) PODE VOTAR", callers 1256 and 5399) holds behind a second prologue code that builds a
 #   CInputFieldControl<IScreenMT> with std::make_shared and calls 3674; its block's vtable (@1580748) lies in this
-#   object's data, so that code is a member of this file that binaryen inlined, a reading.
-#   Every direct callee of 5410 has a name now; no record, slot or RTTI names 5410, its class or its file.
+#   object's data, so that code is a member of this file that binaryen inlined, a reading. It is written so:
+#   AddInputControl(int teclas) (name, overload and parameter chosen after api::CInteractiveFormBuilder's), which 5410,
+#   vota::MontaTelaEleitorPodeVotar in unit 161's ccontrolareconhecimento.cpp, calls with 4, the default of
+#   CInputFieldControl's constructor. 5410 differs (unit 161's fragment has the rows); 395, 3674 and 3673 still match.
 #
 # Chosen, the bytes do not decide:
 # - Every adder's name, GeraNome, RectEntre and that it is a free function of the file, every parameter name, the name and
@@ -237,11 +240,11 @@
 # against the link: 11 over 229 rows, operand-only; matched by the scan's content pass, with the lambda's std::function
 # slots 10995, 10996, 10997, 10999 and 11000, which step 8 names by the lambda's vtable. Its declaration in
 # cpaperformbuilder.h takes the blank line between the header's two include groups, so that GetRenderForm keeps line
-# 51, record 1581300's. Show's callers are not written: fragment 246's roots stand in for them, passing true (fragment
-# 246 brought Show in; src/units/README.md "Landing a unit" item 2). Chosen: the parameters' names; the lambda's capture
-# spelled `[this]` (`[&]` captures the same by the language's rules, not compiled here); the header line the
-# declaration takes (any line above 51 would do); Show's place last in the file (it is the file's only function with 3
-# uses in ledger/ordinals.tsv, so no band neighbour orders it).
+# 51, record 1581300's. Show's callers 5591 and 11902 are not written (5592, unit 287's, is in the link): fragment
+# 246's roots stand in for them, passing true (fragment 246 brought Show in; src/units/README.md "Landing a unit" item
+# 2). Chosen: the parameters' names; the lambda's capture spelled `[this]` (`[&]` captures the same by the language's
+# rules, not compiled here); the header line the declaration takes (any line above 51 would do); Show's place last in
+# the file (it is the file's only function with 3 uses in ledger/ordinals.tsv, so no band neighbour orders it).
 CFORMBUILDER_SRCS := src/api/gui/cformbuilder.cpp src/api/gui/cmtformbuilder.cpp src/api/gui/cpaperformbuilder.cpp
 UENUX2_SRCS += $(CFORMBUILDER_SRCS)
 # the callers of the unit's members are not reconstructed, but for 502 (AddStatusHeader, here), which calls 3058 and

@@ -22,6 +22,10 @@ public:
 
     virtual void ProcessKey(uebyte tecla) override;
 
+    // Set to true by the states that go to this one on key 13 (fns 10404 and 10419 store 1 at +11 of GetInst()'s
+    // object): the setter and its name are chosen.
+    void SetSincronizado(bool sincronizado) { m_bSincronizado = sincronizado; }
+
 private:
     CSincronismoOperador();
 

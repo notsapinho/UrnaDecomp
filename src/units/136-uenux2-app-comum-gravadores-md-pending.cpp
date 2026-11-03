@@ -7,7 +7,6 @@
 // - comum::CGravadorLog::GravaResultado, fn 11584 (slot 7);
 // - comum::CGravadorRDV::GravaResultado, fn 11587 (slot 7): it builds a md::CUrna (fns 2854, 2855) over a
 //   md::CCorrespondenciaResultado (fn 2801);
-// - comum::CGravadorVersoesArquivos::GravaResultado, fn 11582 (slot 7);
 // - comum::IGravadorEnvelope::GravaResultado, fn 11626 (slot 7): it builds a md::CEnvelopeGenerico (fn 5860) over a
 //   md::CUrna, and calls slot 8 (LeConteudo).
 // They go in cgravadorhashes.cpp (the record's file) and in the recorders' own .cpp files, which no record names,
@@ -18,7 +17,6 @@
 #include "app/comum/gravadores/cgravadorhashes.h"
 #include "app/comum/gravadores/cgravadorlog.h"
 #include "app/comum/gravadores/cgravadorrdv.h"
-#include "app/comum/gravadores/cgravadorversoesarquivos.h"
 #include "app/comum/gravadores/igravadorenvelope.h"
 
 namespace comum {
@@ -34,11 +32,6 @@ void CGravadorLog::GravaResultado(api::CFile&) const
 }
 
 void CGravadorRDV::GravaResultado(api::CFile&) const
-{
-    __builtin_trap();
-}
-
-void CGravadorVersoesArquivos::GravaResultado(api::CFile&) const
 {
     __builtin_trap();
 }

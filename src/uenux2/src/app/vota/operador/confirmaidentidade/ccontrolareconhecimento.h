@@ -14,7 +14,7 @@ class CInteractiveForm;
 namespace vota {
 
 // vota::CControlaReconhecimento (RTTI: si_class of comum::CAppState; vtable @1590984 [244, 387, 10512, 7480, 1661, 218,
-// 425, 10511, 425]): it overrides StartState (slot 2, fn 10512) and ProcessInput (slot 7, fn 10511), both pending, and
+// 425, 10511, 425]): it overrides StartState (slot 2, fn 10512, pending) and ProcessInput (slot 7, fn 10511), and
 // keeps the counters of the voter's biometric recognition in statics that other states' slots test and advance through
 // its static members. The records of ccontrolareconhecimento.cpp name three of those: AvancaTentativa (line 167, fn
 // 5406), AvancaVerificacao (line 176, held inlined by fn 10447) and AvancaProximoDedo1x4 (line 187, held inlined by fn
@@ -62,5 +62,11 @@ private:
 
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };
+
+// The form "ELEITOR(A) PODE VOTAR" (fn 5410), which fn 1256 (this class's GetInst) and fn 5399
+// (vota::CInformaEleitorPodeVotar's) call to fill +12: a function of its own, out of line in both callers. It reads no
+// state; its being a free function, its name and its place in ccontrolareconhecimento.cpp, ahead of AvancaTentativa as
+// the uses-2 band links fn 5410 before fn 5406, are chosen.
+std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTelaEleitorPodeVotar();
 
 } // namespace vota

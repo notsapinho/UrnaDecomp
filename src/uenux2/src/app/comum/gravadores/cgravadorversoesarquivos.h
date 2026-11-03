@@ -13,8 +13,9 @@ namespace comum {
 // destructor (fn 11581, slot 0) destroys the map's tree (fn 720) and the string. That the two are one
 // md::CVersoesArquivos is chosen: two members of those types give the same offsets. The destructor is not declared
 // (implicit): the deleting one (fn 11580, slot 1) holds the base-object body and frees `this`. GravaResultado (slot 7,
-// fn 11582) is out of line, so it is the key function; it is not reconstructed, and no record names this class's file
-// (the path follows igravador.h). The constructor is not declared; the member name is chosen.
+// fn 11582) is out of line, so it is the key function: cgravadorversoesarquivos.cpp writes it, with
+// comum::asn::GravaArquivo, and no record names this class's file (the path follows igravador.h). The constructor is
+// not declared; the member name is chosen.
 class CGravadorVersoesArquivos : public IGravador {
 public:
     virtual void GravaResultado(api::CFile& arquivo) const override;

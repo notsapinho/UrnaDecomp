@@ -119,8 +119,28 @@
 # CEleitorJaVotou's (each header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
-# waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10443, 10447, 10676 and
-# 10625 (pending).
+# waits for. Rows of these classes left for later: 10512 (CControlaReconhecimento's StartState), 10443, 10447, 10676
+# and 10625 (pending).
+#
+# Written in ccontrolareconhecimento.cpp since, and not matched (pnpm wasm score in the whole link, and step 9's rows):
+# - CControlaReconhecimento::ProcessInput (10511, slot 7, the line a choice in the blank run before the records): on
+#   CONFIRMA it calls LimpaBiometria (3621) and goes to CHabilitaAudioEleitor::GetInst (2743) when IsAudioAtivado (2746)
+#   says so, else posts 1 to CThreadEleitor's queue and goes to CMostraEleitorVotando::GetInst (1150). 12 over 84 rows,
+#   all operand-only: the calls, the record and binaryen's local numbers, the queue's address in local 1 where the
+#   target reuses local 0 (`differs +0x86 target +0x85 local.tee 0 | ours +0x85 local.tee 1`). The same as a ternary
+#   with the post in a comma expression (12 over 84); with the condition negated and the arms swapped, 18 over 88 (4
+#   inserted, 3 deleted). Not explained; unit 282's 3883 differs the same way. Its slot keeps it written.
+# - vota::MontaTelaEleitorPodeVotar (5410, a free function by choice; name chosen), the form both
+#   CControlaReconhecimento::GetInst (1256, not written) and vota::CInformaEleitorPodeVotar::GetInst (5399, unit 282)
+#   fill +12 with: AddLed(LED_OPERACAO_0), AddBeep(1), "ELEITOR(A) PODE VOTAR" at {1, 1}, "Assinar o caderno de votação
+#   antes de" at {1, 2}, "votar" at {1, 3} (the tail of "CONFIRMA: votar", built in place), "CONFIRMA: prosseguir" at
+#   {1, 4} on the right, api::CMTFormBuilder::AddInputControl(4) (unit 31's file, inlined by binaryen behind its own
+#   frame), GetInteractiveForm("", true). Its place before AvancaTentativa follows the uses-2 band (5410 links before
+#   5406). 207 over 553 rows (195 operand-only, 5 inserted, 7 deleted): the target copies the builder's address into
+#   another local before the inlined AddInputControl (`local.get 3; local.set 2`), ours does not; with the make_shared
+#   in 5410 itself, 276 over 577; with a parameterless AddInputControl over make_shared<...>(), 219 over 563. Not
+#   explained. The roots' TelaPodeVotar stands for 1256, its second caller. Since 5399's call is the only vote for its
+#   name, 5399 reads `unresolved self-voted` until 5410 matches or 1256 is in the link.
 #
 # CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
 # its 16-byte frame follows the `new` of 32 bytes) and the statics. It matches. The end of "/{:04}" in it is, in the

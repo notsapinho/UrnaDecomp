@@ -94,11 +94,11 @@ public:
     // GetQtdBU: the Assert texts name it (`poInfo.GetVota().GetQtdBU() == 0`, ledger/strings.tsv 403041, and three
     // more), and fn 12035 reads the byte at +8 before it throws that text. Defined in the class: a choice.
     uebyte GetQtdBU() const { return m_qtdBU; }
-    // The name is chosen: the menu items' slot 3 (fns 12267, 12266, 12259, 12255) read the four bytes at +73 to +76 of
-    // GetVota()'s result, the member's CNumViasImpressasRelatorios in that class's order.
+    // The names are chosen: the menu items' slot 3 (fns 12267, 12266, 12259, 12255) read the four bytes at +73 to +76
+    // of GetVota()'s result, the member's CNumViasImpressasRelatorios in that class's order, and fn 11905 adds to +75.
     const CNumViasImpressasRelatorios& GetNumViasImpressasRelatorios() const { return m_numViasImpressasRelatorios; }
+    CNumViasImpressasRelatorios& GetNumViasImpressasRelatorios() { return m_numViasImpressasRelatorios; }
     bool GetTreinamentoEleitor() const { return m_treinamentoEleitor; }
-
 
     const api::CDateTime& GetDtHrFimAquisicao() const
     {

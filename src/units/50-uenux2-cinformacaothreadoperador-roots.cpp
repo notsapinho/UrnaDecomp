@@ -9,12 +9,12 @@
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: IsAudioAtivado (fn 2746;
-//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10689, 10742; 10539, 10646, 10695 and 10751 are in the
-//   link), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620;
-//   10676; 652 and 10527 are in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10689; 10677, 10680 and 10706
-//   are in the link), SetTipoIdentidadeDigitada (3619; 10627; 10626 and 10677 are in the link), GetIdentidadeDigitada
-//   (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link), GetIdentidadeEleitor (1535;
-//   3616, 10425, 10590; 10587 and 10631, units 152's and 104's, are in the link),
+//   5400, 10481; 3883, unit 282's merge, and 10511, unit 161's, are in the link), IsAudioAtivadoMesario (1687; 10689,
+//   10742; 10539, 10646, 10695 and 10751 are in the link), LimpaBiometria (3621; 5400, 10500; 10511 is in the link),
+//   AgendaInspecao (3620; 10676; 652 and 10527 are in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10689;
+//   10677, 10680 and 10706 are in the link), SetTipoIdentidadeDigitada (3619; 10627; 10626 and 10677 are in the link),
+//   GetIdentidadeDigitada (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link),
+//   GetIdentidadeEleitor (1535; 3616, 10425, 10590; 10587 and 10631, units 152's and 104's, are in the link),
 //   SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor (2745; 10425).
 //   SetIdentidadeDigitada (5414) needs none: its one target caller, 10677 (unit 161's), calls it twice.
 //   SetAudioAtivadoMesario (5415) and GetTipoIdentidadeDigitada (5416) have their two target callers each in the link
