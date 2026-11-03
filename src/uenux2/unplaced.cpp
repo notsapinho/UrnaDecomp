@@ -351,11 +351,6 @@
 // f5464 · 110 B · unmatched · placement: link order · name unknown
 // ? f5464(i32, i32) { ... }
 
-// link-order cluster 796 · uses=2 · neighbours' file uenux2/src/app/comum/validamidia/cvalidamidia.cpp
-
-// f5574 · 16 B · unmatched · placement: link order · name unknown
-// void f5574(i32, i32) { ... }
-
 // link-order cluster 798 · uses=2 · neighbours' file uenux2/src/app/comum/dados/cgeradorrelversaopacotedados.cpp
 
 // f5596 · 826 B · unmatched · placement: link order · name unknown

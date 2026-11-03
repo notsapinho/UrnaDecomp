@@ -19,13 +19,15 @@ bool IndependeDoTurno(const EAplicativosDeUrna aplicativo);
 
 } // namespace
 
-// (original lines 22-30: content not recovered)
-#line 31
+// (original lines 22-28: content not recovered)
+#line 29
 std::vector<std::string> CFabricaConteudoMidiaStart::ConteudoIncializacao(const EAplicativosDeUrna aplicativo, const EUrnaTurno turno)
 {
-    if (turno == TURNO_1 || turno == TURNO_2 || IndependeDoTurno(aplicativo)) {
-        std::vector<std::string> conteudo = {"infomidia.dat", "infomidia.vsc"};
-        switch (aplicativo) {
+    if (turno != TURNO_1 && turno != TURNO_2 && !IndependeDoTurno(aplicativo)) {
+        return {};
+    }
+    std::vector<std::string> conteudo = {"infomidia.dat", "infomidia.vsc"};
+    switch (aplicativo) {
         case eAplicativo07:
         case eAplicativo08:
         case eAplicativo09:
@@ -37,10 +39,6 @@ std::vector<std::string> CFabricaConteudoMidiaStart::ConteudoIncializacao(const 
         case eAplicativo14:
         case eAplicativo18:
             return conteudo;
-        case eAplicativo15:
-            conteudo.push_back("#regex#t[0-9]{5}[a-z]{2}-pkgsa\\.jez");
-            conteudo.push_back("#regex#t[0-9]{5}[a-z]{2}-pkgsa\\.vsc");
-            return conteudo;
         case eAplicativo16:
             conteudo.push_back("#regex#o[0-9]{5}[a-z]{2}-pkgsa\\.jez");
             conteudo.push_back("#regex#o[0-9]{5}[a-z]{2}-pkgsa\\.vsc");
@@ -49,14 +47,16 @@ std::vector<std::string> CFabricaConteudoMidiaStart::ConteudoIncializacao(const 
             conteudo.push_back("#regex#s[0-9]{5}[a-z]{2}-pkgsa\\.jez");
             conteudo.push_back("#regex#s[0-9]{5}[a-z]{2}-pkgsa\\.vsc");
             return conteudo;
+        case eAplicativo15:
+            conteudo.push_back("#regex#t[0-9]{5}[a-z]{2}-pkgsa\\.jez");
+            conteudo.push_back("#regex#t[0-9]{5}[a-z]{2}-pkgsa\\.vsc");
+            return conteudo;
         case eAplicativo20:
             return {"##.pub", "##.id", "##ue", "###ue##.vpe"};
         default:
             throw CUeComumValidaMidiaError(EUE_COMUM_VALIDA_MIDIA_APLICACAO_SEM_CONTEUDO,
                                            std::format("Não há mídia de resultado de inialização para a aplicação '{}'.", aplicativo));
-        }
     }
-    return {};
 }
 
 namespace {

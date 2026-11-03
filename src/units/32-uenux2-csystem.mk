@@ -63,8 +63,9 @@
 # if/else that sets it) it scored 59 over 416, and this fragment's earlier spellings 62 over 416 (`else if (IsFile())
 # vazio = false`, `vazio = !IsFile()`, `vazio &= !IsFile()`): the target goes round the loop on a test of its own, not on
 # the flag's value (a reading of its rows). The break form, the variables' names and the enumerator's name (7036,
-# api/util/eueutilerror.h) are chosen. Its target callers are 5572, 5821, 11167 and 12134; 5821 and 5572 are written
-# (unit 122's CompactaWsq, unit 179's ValidaConteudo), and the roots stand in for the other two with one call.
+# api/util/eueutilerror.h) are chosen. Its target callers are 5572, 5821, 11167 and 12134; 5821, 5572 and 11167 are
+# written (unit 122's CompactaWsq, unit 179's ValidaConteudo, and DiretorioContemApenas, below, inlined into 11167), and
+# the roots stand in for 12134 with one call.
 # api::CreateDir (a chosen name, a free function, no record and no target index): it walks a path held in a
 # std::string component by component (std::find of '/', each component's characters pushed onto the prefix) and calls
 # mkdir(prefix, 0755) for each component ExistDir does not find, stopping at a failure; binaryen inlines it into its one
@@ -72,7 +73,18 @@
 # functions can do (ExistResource is file-static), so it is here. Its result, false at a failure, is chosen (5821 reads
 # none), and so are the std::copy into a back_inserter for the pushes, `std::distance(...) > 0` for the signed test and
 # its line after IsEmptyDir; its rows are not scored apart from 5821's (unit 122's fragment).
-# Not reconstructed either: AreFilesEqual (12134). The flag CSystem::s_dorme, defined here, and the inline CSystem::Dorme over it are
+# api::DiretorioContemApenas (a chosen name, a free function, no record and no target index): true when a directory
+# holds files only, at least as many as the patterns it is given, each file matching one of them and each of them one of
+# the files (CasamTodos both ways); false for no pattern, a directory ExistDir's code does not find, one IsEmptyDir (fn
+# 2762, a call) finds empty, or one holding a directory other than "." and "..". binaryen inlines it into its one
+# caller, fn 11167 (comum::impl::CValidaMidia's slot 8, unit 179), where it keeps its own 128-byte frame and calls
+# ExistResource (fn 1690) itself, which only this file's functions can do, so it is here. The target tests IsDir first,
+# then the two names, and calls IsFile for "." and ".." as well (its rows), which `IsDir() && nome != "." && nome !=
+# ".."` before `IsFile()` gives. Written so, 11167 scored 43 over 609 rows, every row operand-only and none outside calls
+# and data addresses (pnpm wasm score after tools/round/link-map.sh, before step 8), splat-remap --no-kinds printed
+# IDENTICAL, and it matches. Its parameters' order, the result's type and its place after CasamTodos are chosen.
+# Not reconstructed either: AreFilesEqual (records at lines 724 to 745), which 12134 holds inlined, a trap of unit 220
+# (its pending file says why it stays one). The flag CSystem::s_dorme, defined here, and the inline CSystem::Dorme over it are
 # unit 81's (ISound::Wait, fn 8461, is the first reader written); api/util/csystem.h says what is chosen about them.
 #
 # CopyFile (378), records at lines 390 to 476 (390:15, 397:15, 414:15, 448:15, 456:19, 465:19, 471:19, 476:19). Its

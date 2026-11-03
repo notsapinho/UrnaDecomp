@@ -5,9 +5,9 @@
 // GetFileName and GetDirName (412, 5459, 2760, 5458, 5454, 5453, 5463, 2763, 5462; binaryen merges the first two as 6019)
 // have no record: their names and lines are chosen, and so are the last six's being free functions and their namespace,
 // api: RemoveTree, which only this file calls, and the five csystem.h declares (unit 32's fragment says why). So do
-// CreateDir, which binaryen inlines into fn 5821, GetMemTotal and GetMemFree, into fn 10226 (no target index), and
-// AlteraDono and AlteraPermissoes, inlined into CopyFile: their names, lines and linkage are chosen (unit 32's fragment
-// says what the target shows). CScopeGuard
+// CreateDir and DiretorioContemApenas, which binaryen inlines into fns 5821 and 11167, GetMemTotal and GetMemFree, into
+// fn 10226 (no target index), and AlteraDono and AlteraPermissoes, inlined into CopyFile: their names, lines and
+// linkage are chosen (unit 32's fragment says what the target shows). CScopeGuard
 // (lines 990-1011, an anonymous namespace), its name, place and members' names are chosen: it holds ZeroFill's lambda in
 // a std::function. ReplaceFile (5455) holds TemporaryPath (records 236:15 and 243:15) and the anonymous namespace's
 // PrepareReplace (916:15 to 928:15) and ReplaceResource (954:15, 962:15) inlined; its name, and RenameResource's (3645),
@@ -595,6 +595,26 @@ bool CasamTodos(const std::vector<std::string>& nomes, const std::vector<std::st
         }
     }
     return true;
+}
+
+bool DiretorioContemApenas(const std::string& diretorio, const std::vector<std::string>& padroes)
+{
+    if (padroes.empty() || !CSystem::ExistDir(diretorio) || CSystem::IsEmptyDir(diretorio)) {
+        return false;
+    }
+    std::vector<std::string> arquivos;
+    CDirReader leitor(diretorio);
+    while (leitor.NextEntry()) {
+        const std::string nome = leitor.GetEntryName();
+        if (leitor.IsDir() && nome != "." && nome != "..") {
+            return false;
+        }
+        if (leitor.IsFile()) {
+            arquivos.push_back(nome);
+        }
+    }
+    leitor.Close();
+    return padroes.size() <= arquivos.size() && CasamTodos(padroes, arquivos) && CasamTodos(arquivos, padroes);
 }
 
 uintmax_t GetFreeSpace(const std::string& caminho)

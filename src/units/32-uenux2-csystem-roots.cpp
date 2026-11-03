@@ -8,8 +8,8 @@
 // reconstructed but for 3653, 2760 and 1487: ExistFile is called directly by 23 target functions (1487, 2725, 3653 and
 // others) and its address is in the table (slot 3567), so it is address-taken here and called twice from a stand-in;
 // ExistDir is called once each by 5572 and 5821, both in the link (unit 122's CompactaWsq, unit 179's ValidaConteudo).
-// IsEmptyDir (target fn 2762) is called once each by 5572, 5821, 11167 and 12134: DiretorioVazio stands for the two not
-// written, 11167 and 12134. ZeroFill is called by 2760
+// IsEmptyDir (target fn 2762) is called once each by 5572, 5821, 11167 and 12134: 11167 holds DiretorioContemApenas,
+// written, and DiretorioVazio stands for the one not written, 12134. ZeroFill is called by 2760
 // (RemoveFile) and 5458 (RemoveTree) once and by 5455 (CSystem::ReplaceFile) twice, all reconstructed.
 // RemoveFile (target fn 2760) is called directly by 1487 and 7160 once and 6737 twice: RemoveDois gives it two call
 // sites and stands for 7160 and 6737 (1487 is in the link, unit 168).
