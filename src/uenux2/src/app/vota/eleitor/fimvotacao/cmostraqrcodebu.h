@@ -18,17 +18,48 @@ class CInteractiveForm;
 namespace vota {
 
 // Recovered: the class name and its vtable (RTTI N4vota11IQRCodeBUDSE: no base, slots 0 and 1 the destructors, fns
-// 12050 and 12049), the constructor's signature (record cmostraqrcodebu.cpp:38) and the 20-byte object GetQRDSInst
-// (fn 1956, which inlines the constructor) builds: the vptr, the vector of strings the constructor moves its argument
-// into (+4), and the index at +16 it sets to 0, which CMostraQRCodeBU::ProcessInput (fn 12051) steps within the
-// vector's size and fn 12053 reads the vector at. The member names are not in the target. The destructor is defined here, in the class: the
-// target's D0 (12049) holds the D2's body, which clang gives only for an inline destructor (an out-of-line one is
-// called through the D1 alias). It stores the vptr, so the class is not final. This header's path is chosen: the
-// class's only record is in cmostraqrcodebu.cpp, which defines its members, and no record names a header.
+// 12050 and 12049), the constructor's signature (record cmostraqrcodebu.cpp:38) and the 20-byte object GetQRDSInst (fn
+// 1956, which inlines the constructor) builds: the vptr, the vector of strings the constructor moves its argument into
+// (+4), and the index at +16 it sets to 0, which CMostraQRCodeBU::ProcessInput (fn 12051) steps within the vector's
+// size and fn 12053 reads the vector at. The member names are not in the target, nor are the accessors'. The destructor
+// is defined here, in the class: the target's D0 (12049) holds the D2's body, which clang gives only for an inline
+// destructor (an out-of-line one is called through the D1 alias). It stores the vptr, so the class is not final. This
+// header's path is chosen: the class's only record is in cmostraqrcodebu.cpp, which defines its members, and no record
+// names a header.
 class IQRCodeBUDS {
 public:
     IQRCodeBUDS(std::vector<std::string> partes);
     virtual ~IQRCodeBUDS() = default;
+
+    // GetQRDSInst (fn 1956) holds both inlined by binaryen, each with a stack frame of its own: GeraPartes builds the
+    // boletim's parts (880 bytes: a comum::CCabecalhoQRCodeBuilder and a comum::CGeradorBUQRCodeVota, whose Gera, fn
+    // 5604, it calls with 2500), and CreateInst takes the API's TPolySingletonsInfo before it allocates the object and
+    // installs it. Their being static members, the names and the forms are chosen.
+    static std::vector<std::string> GeraPartes();
+    static void CreateInst(std::vector<std::string> partes);
+
+    // The parts and the index of the one shown: CMostraQRCodeBU's slots (fns 12051, 12055), AjustaTela (fn 5982) and
+    // the three text functions StartState passes by table slot (fns 12052 to 12054) read and step them inline. The
+    // accessors and their names are chosen.
+    const std::vector<std::string>& GetPartes() const { return m_partes; }
+    std::size_t GetAtual() const { return m_atual; }
+    void Reinicia() { m_atual = 0; }
+    bool Anterior()
+    {
+        if (m_atual == 0) {
+            return false;
+        }
+        --m_atual;
+        return true;
+    }
+    bool Proxima()
+    {
+        if (m_atual + 1 == m_partes.size()) {
+            return false;
+        }
+        ++m_atual;
+        return true;
+    }
 
 private:
     std::vector<std::string> m_partes;
@@ -36,8 +67,8 @@ private:
 };
 
 // vota::CMostraQRCodeBU (RTTI: si_class of vota::CEstadoComDesligamentoAutomatico; vtable @1542116 [785, 1560, 12055,
-// 7480, 1661, 218, 425, 12051, 12061, 425]): it overrides StartState (slot 2, fn 12055, record line 70) and
-// ProcessInput (slot 7, fn 12051, record line 85), both pending in 37-uenux2-iqrcodebuds-pending.cpp. The destructors
+// 7480, 1661, 218, 425, 12051, 12061, 425]): it overrides StartState (slot 2, fn 12055, record line 70), pending in
+// 37-uenux2-iqrcodebuds-pending.cpp, and ProcessInput (slot 7, fn 12051, record line 85), written. The destructors
 // are vota::testeteclado::CErroTesteTecladoFim's bodies: the D2 (fn 785) stores no vptr before it releases +32, so the
 // class is final, and the D0 (fn 1560) calls the D2 and frees `this`, so the destructor is out of line
 // (docs/reference/facts/reading.md R4, R5). A singleton: GetInst (fn 2888) keeps the object in a static std::unique_ptr
@@ -57,6 +88,8 @@ public:
     virtual void StartState() override;
 
     virtual void ProcessInput() override;
+
+    static void AjustaTela(std::shared_ptr<api::CInteractiveForm<api::IScreen, api::IInputKbd>>& tela);
 
 private:
     CMostraQRCodeBU();

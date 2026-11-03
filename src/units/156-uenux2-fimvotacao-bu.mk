@@ -64,8 +64,8 @@
 #   that compares its own Read() and sets m_pNextState gives 50 over 125 (32 inserted). No other form found. The
 #   written form's other differing rows are operand-only (12 of 12: calls and data addresses).
 # - fns 12041 and 12042, CMostraQRCodeCertificado's statics' destructors: their only other reader is GetInst, inlined
-#   into fn 12051 (pending in unit 37), so the data have no voter but themselves, and 12042 is also a thunk of fn 1564,
-#   which matches since unit 138 gave our link its third member (unit 37 says so for fn 2888).
+#   into fn 12051, and they match since unit 37 wrote 12051, whose votes name the data; 12042 is also a thunk of fn
+#   1564, which matches since unit 138 gave our link its third member (unit 37 says so for fn 2888).
 #  Chosen, no evidence names them: the member names; GetInst's name and its reference result; s_inst and s_mutex and
 # their order (the shape unit 104 measured: GetInst first, then the pointer and the mutex); the local trava; the
 # destructors declared first; the lines of the functions with no record (above the first record line of each file, and

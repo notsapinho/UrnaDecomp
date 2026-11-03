@@ -39,6 +39,9 @@ public:
     // the name at +8 (fn 11192), the origin at +20 (fn 11194), the pleito at +28 (fn 11191) and the parameters' header at
     // +188 (fn 11195).
     const std::string& GetNome() const { return m_nome; }
+    // The name is chosen: comum::CGeradorBUQRCode's header fields (inlined into target fn 5604) print the word at +0 as
+    // "PROC:{} ", an unsigned, under the label "ProcessoEleitoral". Its type beyond that width is chosen too.
+    unsigned GetProcessoEleitoral() const { return m_processoEleitoral; }
     md::EOrigemConfiguracao GetOrigem() const { return m_origem; }
     const md::CPleito& GetPleito() const { return m_pleito; }
     const ecourna::app::dados::CParametrosUrna& GetParametrosUrna() const { return m_parametros; }
@@ -108,7 +111,8 @@ public:
     std::set<ecourna::app::dados::ETipoIdentificadorEleitor> GetTipos() const { return m_tipos; }
 
 private:
-    unsigned m_naoRecuperado1[2];
+    unsigned m_processoEleitoral;
+    unsigned m_naoRecuperado1;
     std::string m_nome;
     md::EOrigemConfiguracao m_origem;
     bool m_flag;

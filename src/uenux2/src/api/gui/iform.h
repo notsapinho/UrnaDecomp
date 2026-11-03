@@ -14,8 +14,9 @@
 //   through CObservable, whose base is api::IObservable<std::vector<FormHandle<MEDIA>>> (api/pattern/iobservable.h).
 // - Chosen: Slot2, Slot3, Slot6 and Slot7 keep the names the landed callers use; Hide (public, a reading: fn 11824
 //   holds its body inlined; a friend gives the same bytes), Desenha, Redesenha, SetName, every member of CFormStack,
-//   CObservable and FormHandle, the data members and every parameter. FindFieldAs (fn 1721) is not written, so its line
-//   stays blank. The spacing before GetRenderForm's brace puts the call on the record's column, a choice.
+//   CObservable and FormHandle, the data members and every parameter. FindFieldAs (fn 1721, written, differs: unit 37's
+//   fragment) throws on its record's line. The spacing before GetRenderForm's brace puts the call on the record's
+//   column, a choice.
 // - api::IScreen's and api::IScreenMT's destructors are defined at the end, after CFormStack, whose Limpa (fns 5069 and
 //   3461) they call: iscreen.h and iscreenmt.h say why, units 69's and 78's fragments what shows it.
 
@@ -26,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include "api/gui/eueguierror.h"
 #include "api/gui/iformfield.h"
 #include "api/gui/ipaper.h"
 #include "api/gui/ipreshow.h"
@@ -125,6 +127,24 @@ public:
 
     virtual void Slot3() { CFormStack<MEDIA>::Empilha(this); }
 
+    // (original lines 130-131: content not recovered)
+#line 132
+    template <typename T>
+    std::shared_ptr<T> FindFieldAs(const std::string& nome) const
+    {
+        for (const auto& item : m_campos) {
+            if (item->GetName() == nome) {
+                const std::shared_ptr<IFormField<MEDIA>> campo = item;
+                std::shared_ptr<T> resultado = std::dynamic_pointer_cast<T>(campo);
+                if (resultado) {
+                    return resultado;
+                }
+                throw CUeGuiError(EUE_GUI_FINDFIELDAS_TIPO_INVALIDO, "Campo encontrado, mas não é do tipo solicitado: " + nome);
+            }
+        }
+        return nullptr;
+    }
+
     virtual void Refresh()
     {
         std::lock_guard<std::mutex> trava(m_mutex);
@@ -137,7 +157,7 @@ public:
         }
     }
 
-    // (original lines 140-177: content not recovered)
+    // (original lines 160-177: content not recovered)
 #line 178
     virtual MEDIA& GetRenderForm() const  { return CPolySingleton<MEDIA>::instance(); }
 
@@ -311,8 +331,3 @@ inline IScreenMT::~IScreenMT()
 }
 
 } // namespace api
-
-// <stubs>
-// f1721 · 296 B · unmatched · placement: link order · name unknown
-// void f1721(i32, i32, i32) { ... }
-// </stubs>

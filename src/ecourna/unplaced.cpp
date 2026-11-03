@@ -53,11 +53,6 @@
 // f5582 · 96893 B · unmatched · placement: link order · name unknown
 // void f5582(i32, i32, i32, i32) { ... }
 
-// link-order cluster 799 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargos.cpp
-
-// f5605 · 5436 B · unmatched · placement: link order · name unknown
-// void f5605(i32, i32, i32, i32) { ... }
-
 // link-order cluster 822 · uses=2 · neighbours' file uenux2/src/app/comum/dados/md/rdv/cvotoseleicoesvota.cpp
 
 // f5723 · 22 B · unmatched · placement: link order · name unknown

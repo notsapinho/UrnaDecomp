@@ -176,7 +176,9 @@
 #   load's; cprocessoeleitoral.h says what the layout rests on.
 # - ccargos.cpp also holds GetInst, GetCurrent, GetCurrentEleicao, Reset and IsFim (fns 273, 332, 2836, 2269, 602), and
 #   cconfiguracaoeleicao.cpp GetInst, GetCargo and GetEleicao (187, 861, inlined into 2836): unit 110's fragment has their
-#   evidence and why that object links after ccargos.cpp. The file's other records, lines 25 and 93, are not written.
+#   evidence and why that object links after ccargos.cpp. The file's record at line 25 is not written; line 93's,
+#   GetCurrentEleicaoVersaoPacote, and cpleito.cpp's line 158, CPleito::GetVersaoPacoteEleicao, are written for unit
+#   155's Gera (fn 5604), into which binaryen inlines both, one caller each.
 # - FiltraPorAbrangencia (record 249, column 19, EUE_COMUM_DADOS_7821, "Tipo de abrangência inválido: {}" formatting
 #   the reach as an int, the argument code 3 of its i64 constant), held by 7377 behind a 496-byte prologue: for the
 #   municipal reach it copies m_todos into a local vector; otherwise, for each post of m_todos, it reads the post

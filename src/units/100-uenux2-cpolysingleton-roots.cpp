@@ -102,9 +102,9 @@ long w100_bloco(std::unique_ptr<T> instancia)
 }
 
 // has<vota::IQRCodeBUDS> (target fn 2886, a thunk into binaryen's body 6057, which it forms with has<comum::CCalculaCV>,
-// 1954). Its target callers are not written: vota::(anonymous namespace)::GetQRDSInst (fn 1956, a stub in
-// cmostraqrcodebu.cpp) and 14478 (__wasm_call_ctors, the static initializer of a TU not written, which calls
-// has<T>(g_polySingletonsInfo()) and drops the result). w100_tem_qrcode stands for both with two calls.
+// 1954). Its target callers: vota::(anonymous namespace)::GetQRDSInst (fn 1956, unit 37's, in the link, calling it
+// twice) and 14478 (__wasm_call_ctors, the static initializer of a TU not written, which calls
+// has<T>(g_polySingletonsInfo()) and drops the result). w100_tem_qrcode stands for 14478 with two calls.
 __attribute__((noinline)) int w100_tem_qrcode()
 {
     return api::CPolySingletonList::has<vota::IQRCodeBUDS>() ? 9 : (api::CPolySingletonList::has<vota::IQRCodeBUDS>() ? 11 : 13);

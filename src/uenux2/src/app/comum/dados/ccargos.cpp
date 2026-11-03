@@ -1,9 +1,9 @@
 // Reconstruction notes: comum::CCargos's GetInst, Next, GetCurrent, GetCurrentCargoID, GetCurrentEleicao,
 // GetCurrentEleicaoID (273, 1708, 332, 1938, 2836, 2835) and FiltraPorAbrangencia (in 7377), each throw on its record's
 // line, with Reset and IsFim (2269, 602), RemoveFiltro (3784), OrdenaPorAquisicao (in 7377), OrdenaPorImpressao (3782),
-// the comparators at table slots 2357 and 2358 (11559, 11558) and the free NomeEleicaoCorrente (11556). Lines 25 and 93
-// are records of members not written; where the members with no record start is chosen, in the order the use bands give
-// (src/units/88-uenux2-app-comum-dados-md-processoeleitoral.mk).
+// the comparators at table slots 2357 and 2358 (11559, 11558), the free NomeEleicaoCorrente (11556) and
+// GetCurrentEleicaoVersaoPacote (record 93, inlined into fn 5604). Line 25 is a record of a member not written; where
+// the members with no record start is chosen, in the order the use bands give (unit 88's fragment).
 #include "app/comum/dados/ccargos.h"
 
 #include <algorithm>
@@ -78,12 +78,16 @@ comum::TEleicaoID CCargos::GetCurrentEleicaoID() const
     return m_cargos[m_atual].first;
 }
 
-// <stubs>
-// f5604 · 22805 B · unmatched · name unknown
-// void f5604(i32, i32, i32) { ... }
-// </stubs>
+std::string CCargos::GetCurrentEleicaoVersaoPacote() const
+{
+    if (m_atual >= m_cargos.size()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7820, "Cargo não posicionado.");
+    }
+    const TEleicaoID eleicao = m_cargos[m_atual].first;
+    return CConfiguracaoEleicao::GetInst().GetPleito().GetVersaoPacoteEleicao(eleicao);
+}
 
-// (original lines 95-204: content not recovered)
+// (original lines 99-204: content not recovered)
 #line 205
 void CCargos::RemoveFiltro()
 {

@@ -7,6 +7,11 @@
 # 78's roots' static constructor differ only in i32.const offsets, and unit 31's roots gained the getters' stand-ins
 # (docs/agents.md "Shared build outputs").
 #
+# IForm<MEDIA>::FindFieldAs<T> (target fn 1721, the instance for CTextField, record iform.h:142:23) is written in the
+# class, on its record's line, for unit 37's vota::CMostraQRCodeBU::AjustaTela (fn 5982), its one caller: it walks the
+# fields for the name, copies the shared_ptr it finds (the target increments the count before dynamic_cast), casts it,
+# and throws CUeGuiError 4978 when the type differs. It `differs`: unit 37's fragment has the measurement.
+#
 # Target functions, by class (I = IScreen, M = IScreenMT, P = IPaper):
 #   IForm<MEDIA>      constructor: 6024, binaryen's body of I's and M's, with the thunks 5548 and 5522 passing the vptr
 #                     (P's is inlined into 5515); D2 2781 I, 2776 M, 5514 P; D0 11136, 11045, 5513 (IFormImpressao's
