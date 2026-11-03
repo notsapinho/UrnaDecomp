@@ -1,15 +1,16 @@
-// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the vtables of four of its classes, and the second
+// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the vtables of three of its classes, and the second
 // call sites of the static members, CLogVota members and the libc++ function whose target callers are not
 // reconstructed yet.
 //
 // - Each vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
-//   singleton (fns 1256, 10489, 10627 and 10443, none reconstructed). Taking the vtables' addresses keeps every slot.
+//   singleton (fns 1256, 10489 and 10443, none reconstructed). Taking the vtables' addresses keeps every slot.
 //   vota::CVerificaDadoEleitor's constructor is in the link, inlined into its GetInst (fn 2735), so no sink keeps that
 //   vtable. vota::CEleitorNaoEncontrado's constructor is in the link, inlined into its GetInst (fn 5424), which
 //   vota::CProcuraEleitor::StartState (10631) and CEleitorEncontrado::StartState (10635, both unit 104's) call, and
 //   CEleitorJaVotou's, inlined into its GetInst, which 10635 holds (its file is unit 104's now), so no sink keeps those
 //   two vtables; vota::IEleitorImpedidoVotar's comes with its constructor (fn 1905), which 5424 calls. CPedeIdentidade's
-//   constructor is in the link, inlined into its GetInst (fn 652).
+//   constructor is in the link, inlined into its GetInst (fn 652), and so is CIdentidadeInvalida's, inlined into its
+//   GetInst, which vota::CValidaIdentidade::StartState (10627, unit 278's) holds.
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
 //   CControlaReconhecimento::PrimeiraTentativa (fn 5403, called twice by 10465), AtingiuLimiteVerificacoes (5404:
@@ -29,7 +30,6 @@
 extern "C" {
 extern const char ccontrolareconhecimento_vt[] __asm__("_ZTVN4vota23CControlaReconhecimentoE");
 extern const char cinformaanonascimentoerrado_vt[] __asm__("_ZTVN4vota27CInformaAnoNascimentoErradoE");
-extern const char cidentidadeinvalida_vt[] __asm__("_ZTVN4vota19CIdentidadeInvalidaE");
 extern const char cdadoeleitornaoconfere_vt[] __asm__("_ZTVN4vota22CDadoEleitorNaoConfereE");
 int w161_pede_identidade() __asm__("_ZN4vota15CPedeIdentidade7GetInstEv");
 void w161_tela_pode_votar(void* forma) __asm__("_ZN4vota25MontaTelaEleitorPodeVotarEv");
@@ -117,7 +117,6 @@ struct SW161Roots {
     {
         w161_sink = ccontrolareconhecimento_vt;
         w161_sink = cinformaanonascimentoerrado_vt;
-        w161_sink = cidentidadeinvalida_vt;
         w161_sink = cdadoeleitornaoconfere_vt;
         w161_sink = reinterpret_cast<const void*>(&PrimeiraDuasVezes);
         w161_sink = reinterpret_cast<const void*>(&LimiteVerificacoes);

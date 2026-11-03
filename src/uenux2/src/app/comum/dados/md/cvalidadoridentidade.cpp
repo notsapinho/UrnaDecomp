@@ -2,13 +2,14 @@
 
 #include <algorithm>
 #include <format>
+#include <ranges>
 
 #include "app/comum/dados/euecomumdadoserror.h"
 #include "ecourna/api/pattern/singleton.hpp"
 
 namespace comum::md {
 
-// (original lines 11-22: content not recovered)
+// (original lines 12-22: content not recovered)
 #line 23
 std::unique_ptr<CValidadorIdentidade> CValidadorIdentidade::s_instance;
 std::mutex CValidadorIdentidade::s_mutex;
@@ -39,6 +40,17 @@ bool CValidadorIdentidade::EhValida(ecourna::app::dados::ETipoIdentificadorEleit
         return false;
     }
     return (*regra)->EhValida(numero);
+}
+
+std::vector<ecourna::app::dados::ETipoIdentificadorEleitor>
+CValidadorIdentidade::TiposValidos(const std::string& numero) const
+{
+    std::vector<ecourna::app::dados::ETipoIdentificadorEleitor> tipos;
+    const auto valida = [&numero](const std::unique_ptr<IRegraIdentidade>& regra) { return regra->EhValida(numero); };
+    for (const auto& regra : m_regras | std::views::filter(valida)) {
+        tipos.push_back(regra->GetTipo());
+    }
+    return tipos;
 }
 
 } // namespace comum::md

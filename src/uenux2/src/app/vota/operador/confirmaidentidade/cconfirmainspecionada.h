@@ -25,8 +25,8 @@ namespace vota {
 // their own: vota::CAguardaInspecao's slot 6 (fn 10530, its ProcessKey for key 11) holds both inlined, the one store of
 // this class's vptr (1590788): the object made under a static std::mutex (@1908556) and kept in a static
 // std::unique_ptr (@1908580), the constructor passing comum::CAppState::EVENTO_ENTRADA (2) to the base's and building
-// the form from a helper, initialized in the member list (fn 301 writes into the member). They are written here, right
-// by construction and compared with nothing (docs/how-to-decompile.md step 5), and nothing in the link calls them yet.
+// the form from a helper, initialized in the member list (fn 301 writes into the member). They are written here, and
+// 10530 (vota::CAguardaInspecao::ProcessKey, in caguardainspecao.cpp) matches with them inlined.
 // src/units/281-uenux2-cconfirmainspecionada.mk says which of this is chosen.
 class CConfirmaInspecionada final : public comum::CAppState {
 public:
