@@ -101,38 +101,67 @@
 # - GetBiometria, target fn 1937 (records at lines 94 and 101, col 15): the voter's md::CBiometriaEleitor. It tests
 #   md::CEleitor's optional CIndexer (TemBiometria, celeitor.h), builds the file's path (GetArquivoBiometria), throws
 #   when std::filesystem::exists says no, builds an md::CParametro (app/comum/dados/md/eleitor/cparametro.h) from the
-#   identity of the voter's own type, the byte vector and CEleitor::GetOffsetBiometria (celeitor.cpp:79, which 1937 holds
-#   behind a frame of its own), and returns LeBiometriaEleitor's result. It matches; its callers 3614, 3616 and 10316 are
-#   not written (unit 98's roots stand in for them) and 1393, CEleitores::GetCurrentBiometriaEleitor, is (fragment 291).
-#   In the link before steps 7 to 9, `pnpm --silent wasm score ../target/vota_web_wasm.wasm 1937
-#   ../build/out/wasm/vota_web/vota_web_wasm.wasm <ours>` printed `score 184 over 2197 rows (same 2013, replaced 184
-#   [184 operand-only], inserted 0, deleted 0)`: callees, table slots and the format strings' addresses.
+#   identity of the voter's own type, the byte vector and CEleitor::GetOffsetBiometria (celeitor.cpp:79, which 1937
+#   holds behind a frame of its own), and returns comum::CLeitorASN::LeBiometriaEleitor's result
+#   (app/comum/asn/cleitorasn.h, below). Its callers 3614, 3616 and 10316 are not written (unit 98's roots stand in
+#   for them) and 1393, CEleitores::GetCurrentBiometriaEleitor, is (fragment 291), which keeps it written. It is not
+#   matched in this link: it waits for this object to link ahead of carregaarquivo.cpp.o (the forms below), in a list
+#   that puts celeitordetalhe.cpp ahead of unit 280's files, as the head of unit 110's list does (measured with the
+#   object moved there). Its name comes from its records (srcloc-anchor), not from its body.
 #   - GetArquivoBiometria (no record; 1937 holds it behind a 64-byte frame of its own) switches on the voter's transfer
 #     kind (a br_table that sends 0 and 4 to "el", NomeArquivoEleitores, fn 3745, and the rest to "tte", fn 5727) and
 #     returns `(CPath::GetPathEstatico(FLASH_INTERNA) / <name>).string()`. The frame is evidence of the form: the
-#     target has the directory at +36 and operator/'s result at +48. A named local for the directory, then
-#     GetInst bound to a reference and the same return, gives +52 and +40 (in the link: the score's rows at the offset
-#     added before the call of GetPathEstatico and at the copy of the directory). With the directory a temporary of the
-#     return's full expression, the result's temporary is created first and takes the higher slot, which gives +36 and
-#     +48 (wasm-objdump -d of the object, and in the link; docs/reference/facts/codegen.md C5). The target calls GetPathEstatico (fn 762) and then
-#     CConfiguracaoEleicao::GetInst (fn 187) once in each arm, and loads the section after GetInst, so GetInst is
-#     evaluated once inside that full expression. Two helpers take the configuration and the section and call 3745 and
-#     5727; clang inlines both (no frame, no call of their own). Chosen: the helpers, their names, their anonymous
-#     namespace and parameters, and GetArquivoBiometria's name and its being a const member.
+#     target has the directory at +36 and operator/'s result at +48. A named local for the directory, then GetInst bound
+#     to a reference and the same return, gives +52 and +40 (in the link: the score's rows at the offset added before
+#     the call of GetPathEstatico and at the copy of the directory). With the directory a temporary of the return's full
+#     expression, the result's temporary is created first and takes the higher slot, which gives +36 and +48
+#     (wasm-objdump -d of the object, and in the link; docs/reference/facts/codegen.md C5). The target calls
+#     GetPathEstatico (fn 762) and then CConfiguracaoEleicao::GetInst (fn 187) once in each arm, and loads the section
+#     after GetInst, so GetInst is evaluated once inside that full expression. Two helpers take the configuration and
+#     the section and call 3745 and 5727; clang inlines both (no frame, no call of their own). Chosen: the helpers,
+#     their names, their anonymous namespace and parameters, GetArquivoBiometria's name and its being a const member,
+#     and the lines of the block (53 to 82).
 #   - CConfiguracaoEleicao's +620 to +651 (cconfiguracaoeleicao.h): the 24-byte SIdentificacaoArquivo at +620, the
 #     municipality at +644, the 16-bit zone at +648, then m_lista1 at +652 as before. With a word kept after the struct,
 #     the object loaded the two from +648 and +652.
-#   - LeBiometriaEleitor (no record; 1937 holds it behind a 576-byte frame) is legravaentidade.h's LeEntidadeBiometria
-#     over comum::asn::CConversorBiometriaEleitorCifrada, named "LeBiometriaEleitor(" + the identity's identifier + ")".
-#     The frame decides its TU and its place in it, measured on the object (frame slots of the function, first use, with
-#     wasm-objdump -d). Defined in this file after GetBiometria, it gives the target's slots ("LeBiometriaEleitor(" at
-#     +72), and in the link 1937 then differs in operand rows only (above). Defined before GetBiometria, or in a file of
-#     its own, it gives most of them 8 bytes lower ("LeBiometriaEleitor(" at +64). That is the order in which the TU emits std::format's always_inline
-#     parts (codegen.md C5): GetBiometria's message comes first. In an anonymous namespace, clang inlines it into
-#     GetBiometria and the frame goes, so it has external linkage. A reading that agrees: in the target's data,
-#     legravaentidade.h's records of 1937 (@1564660) lie among other TUs' header records in the order of those TUs' own
-#     records, before celeitores.cpp's. Its name is the literal's; its being a free function of comum declared in this
-#     file is chosen.
+#   - LeBiometriaEleitor (no record; 1937 holds it behind a 576-byte frame of its own, binaryen's inlining of a function
+#     with one caller) is legravaentidade.h's LeEntidadeBiometria over comum::asn::CConversorBiometriaEleitorCifrada,
+#     named "LeBiometriaEleitor(" + the identity's identifier + ")"; the class is the one the two throws' texts name
+#     ("CLeitorASN::{} - ..."). Its TU is the data's: LeEntidadeBiometria is a template of an anonymous namespace, so
+#     its records (legravaentidade.h:119 and :125, @1564660 and @1564676, then BiometriaEleitorCifrada's typeinfo and
+#     vtable) lie in the data of the TU that instantiates it, and the target's lie in one object of entity readers with
+#     no .cpp record (1562844 to 1565964, docs/reference/facts/link-order.md L7 item 15), while this file's object holds
+#     its own records only (1558832 to 1558880). So it is defined there, in unit 280's carregaarquivo.cpp, which stands
+#     for that object (unit 280's fragment), and binaryen inlined it into 1937 across the two TUs
+#     (docs/reference/facts/placing.md P2, reading.md R10).
+#     Forms measured, each a whole link of this tree with only the objects named changed (`pnpm --silent wasm score
+#     ../target/vota_web_wasm.wasm 1937 <link> <ours>`), with this object at its place here (529, after
+#     carregaarquivo.cpp.o at 369) and moved ahead of celeitores.cpp.o (90); the slots are those of the 576-byte frame
+#     in the reader's object (wasm-objdump -d, first use), "the target's" with "LeBiometriaEleitor(" at +72:
+#     - in carregaarquivo.cpp between the EleicaoPE and CabecalhoPacote instances, as the data run (written): the
+#       target's slots; here 548 over 2201 rows (540 operand-only, 4 inserted, 4 deleted: locals 1 and 2 swapped and two
+#       stores at +72 in the other order, binaryen's work, docs/reference/facts/codegen.md C4); ahead, 184 over 2197,
+#       all operand-only;
+#     - in carregaarquivo.cpp at its head or at its end: the same object code as the written form (every function the
+#       same with the object-local numbers masked); at its head 548 over 2201 here, as written, and both 184 over 2197
+#       ahead, all operand-only;
+#     - alone in a file of its own (cleitorasn.cpp, linked after carregaarquivo.cpp.o): most slots 8 bytes lower
+#       ("LeBiometriaEleitor(" at +64); here 680 over 2243 (578 of 586 replaced rows operand-only, 46 inserted, 48
+#       deleted), ahead 278 over 2197 (273 of 276 operand-only, 2 deleted);
+#     - an inline member in cleitorasn.h (a weak copy in this object): 8 bytes lower, 278 over 2197 (273 of 276
+#       operand-only, 2 deleted) in both;
+#     - in this file after GetBiometria: the target's slots, 184 over 2197 in both, all operand-only, a match, in the TU
+#       the data rule out;
+#     - in this file before GetBiometria: 8 bytes lower, 680 over 2243 (578 of 586 operand-only, 46 inserted, 48
+#       deleted) in both;
+#     - in an anonymous namespace here: clang inlines it into GetBiometria (a 704-byte frame, no symbol of its own), 782
+#       over 2239 (682 of 691 operand-only, 42 inserted, 49 deleted) in both.
+#     The 8 bytes, measured on objects: alone in its TU, the second throw's packed format string is kept at +488 where
+#     the target's is at +136, and most slots below it lie 8 bytes lower. Another instance of the same templates in the
+#     TU gives the target's: CConversorCabecalhoPacote's Desconverte after the reader, or a CFileASN::ReadFromFile
+#     instance ahead of it; ReadFromFile after it, another entity's DecodeObject, a one-argument std::format, or the
+#     converters' headers alone do not (codegen.md C5's case: what else the TU emits decides where the always_inline
+#     parts' slots go). Chosen: its being a static member, its parameters and its place in carregaarquivo.cpp.
 #
 # ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
 # called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it. The target's data do not

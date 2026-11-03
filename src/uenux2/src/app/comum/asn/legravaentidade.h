@@ -5,7 +5,8 @@
 // so those lines stay blank) and LeEntidadeBiometria(const std::string &, const comum::md::CParametro &, const
 // comum::md::CIndexer &, const std::string &) at lines 119 and 125, written from comum::CEleitorDetalhe::GetBiometria
 // (fn 1937), which holds its one instance, for comum::asn::CConversorBiometriaEleitorCifrada, inside the frame of
-// comum::LeBiometriaEleitor (celeitordetalhe.cpp): it opens the file "rb", seeks to the indexer's offset, reads as many
+// comum::CLeitorASN::LeBiometriaEleitor (cleitorasn.h), defined in the entity readers' TU, which the data show and this
+// tree calls carregaarquivo.cpp (a chosen name): it opens the file "rb", seeks to the indexer's offset, reads as many
 // bytes as its length (the two throws, whose texts begin "CLeitorASN::", the target's literals), decodes the entity
 // through api::CFileASN::DecodeObject and converts it with the parameter. Chosen: the lines of every statement but the
 // throws, the names of the parameters and locals, and the place of the includes.
@@ -24,7 +25,7 @@
 
 namespace {
 
-// (original lines 27-112: content not recovered)
+// (original lines 28-112: content not recovered)
 #line 113
 template <typename CONVERSOR>
 typename CONVERSOR::TDado LeEntidadeBiometria(const std::string& arquivo, const comum::md::CParametro& parametro,
