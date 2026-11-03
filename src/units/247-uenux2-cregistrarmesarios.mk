@@ -7,8 +7,8 @@
 # (its paragraph below). Paths relative to src/uenux2.
 #
 # Target fns matched: 1255 (comum::TelaRegistroMesarios, the one body of both copies), 11140, 6117 and 886;
-# CRegistrarMesarios::GetInst 3610 with its constructor and its operator's form, StartState 10392, and its statics' exit
-# destructors 10394 (s_inst) and 10393 (s_mutex).
+# CRegistrarMesarios::GetInst 3610 with its constructor and its operator's form, StartState 10392, ProcessInput 10391,
+# and its statics' exit destructors 10394 (s_inst) and 10393 (s_mutex).
 #
 # Evidence:
 # - 1255: the status header with the fields 7 (fn 502's bits: date and time, mode, battery icon), then two
@@ -114,19 +114,29 @@
 #   statics' addresses; 10392 `10 over 83 rows (same 73, replaced 10 [10 operand-only], ...)`, calls and data only.
 # - Band: 10394, 10393 and 10392 share use band 1 and their ld_index runs 5017, 5018, 5019 in names.tsv (the higher
 #   index first, as docs/how-to-decompile.md step 3 wants): s_inst, then s_mutex, then StartState, as written.
-# Pending: ProcessInput (10391), a thunk into binaryen's fn 6011, whose other caller is CMesarioRegistrado::ProcessInput
-# (10338, not written); 6011 forms only with both written. Its callee 5389 (CConfirmaFimRegistroMesarios::GetInst,
-# unit 135) matches. 247-uenux2-cregistrarmesarios-pending.cpp traps it and gives its source.
+# - ProcessInput (10391): `f6011(p0, 1593628, 1593656)`, a thunk into binaryen's shared body 6011, whose other caller is
+#   comum::CMesarioRegistrado::ProcessInput (10338, unit 279, `f6011(p0, 1594916, 1594944)`); the constants are each
+#   file's GetControlador record (here line 68) and its copy of cinteractiveform.h:57, CInteractiveForm<IScreenMT,
+#   IInputMT>::Read. The source is read from 6011: a br_table on Read() - 5, INPUT_CONFIRMA (9) logging through the
+#   controller's slot 24 (LogaConfirmouRegistroMesarios) and going to CPedeTituloMesario::GetInst (2729),
+#   INPUT_CORRIGE (5) through slot 25 (LogaCancelouRegistroMesarios) to CConfirmaFimRegistroMesarios::GetInst (5389),
+#   and the next state stored once after the cases. With both ProcessInput written our link forms the shared body too
+#   (names.tsv's byn$mgfn-shared$ of CRegistrarMesarios::ProcessInput), which scores 29 over 100 rows against 6011, all
+#   operand-only, binaryen's local numbers among them (3 and 4 swapped; unit 135's fragment has the same in 10383,
+#   not explained), so 6011 does not match. A hand line in splat/symbol_addrs.txt names it for its two callers
+#   (callers+content, its comment the evidence); without it, step 9 read both thunks `unresolved` (our merge has no
+#   target function), and with it both match. The case order and the labels' spelling are chosen.
 # Chosen, no evidence names them: TelaIndagaRegistroMesarios, its being a free function of comum and its declaration in
 # cregistrarmesarios.h; the order of the definitions (destructor, constructor, the form's builder after it, GetInst, the
-# statics, StartState; the other order of constructor and builder was not measured); the destructor declared first,
-# as the key function, as unit 135's states do (its being out of line is evidence: the vtable's slot 1, fn 765,
-# `f448(p0); f136(p0)`, is what unit 135's fragment reads as an out-of-line destructor, R5); the data members' names
-# (unit 135's); the controller's slot names Slot5 and Slot7 (its header's).
+# statics, StartState, then ProcessInput below GetControlador's record; the other order of constructor and builder
+# was not measured); the destructor declared first, as the key function, as unit 135's states do (its being out of
+# line is evidence: the vtable's slot 1, fn 765, `f448(p0); f136(p0)`, is what unit 135's fragment reads as an
+# out-of-line destructor, R5); the data members' names (unit 135's); the controller's slot names Slot5 and Slot7 (its
+# header's).
 #
-# Not written: nothing else of this class (ProcessInput is pending, above). CConfirmaFimRegistroMesarios::GetInst (5389,
-# unit 135) and IPedeTituloMesario::ProcessInput (10313, unit 71, which calls 5389 too), which build the operator's form
-# with fn 395 (matched, unit 31) too, match.
+# Not written: nothing else of this class. CConfirmaFimRegistroMesarios::GetInst (5389, unit 135) and
+# IPedeTituloMesario::ProcessInput (10313, unit 71, which calls 5389 too), which build the operator's form with fn 395
+# (matched, unit 31) too, match.
 #
 # The generic uenux2 rule depends on the source and every uenux2 header.
 CREGISTRARMESARIOS_SRCS := src/app/comum/comparecimentomesario/estados/cregistrarmesarios.cpp
@@ -136,8 +146,3 @@ UENUX2_SRCS += $(CREGISTRARMESARIOS_SRCS)
 $(ROOT)/$(APP)/247-uenux2-cregistrarmesarios-roots.o: $(ROOT)/src/units/247-uenux2-cregistrarmesarios-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/247-uenux2-cregistrarmesarios.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/247-uenux2-cregistrarmesarios-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/247-uenux2-cregistrarmesarios-roots.o
-# CRegistrarMesarios::ProcessInput (fn 10391) is not reconstructed: 247-uenux2-cregistrarmesarios-pending.cpp gives the
-# vtable a trapping body, compiled with the unit's flags
-$(ROOT)/$(APP)/247-uenux2-cregistrarmesarios-pending.o: $(ROOT)/src/units/247-uenux2-cregistrarmesarios-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/247-uenux2-cregistrarmesarios.mk $(wildcard $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h $(ROOT)/src/uenux2/src/api/gui/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/247-uenux2-cregistrarmesarios-pending.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/247-uenux2-cregistrarmesarios-pending.o

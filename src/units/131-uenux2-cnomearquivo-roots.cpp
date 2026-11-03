@@ -4,7 +4,8 @@
 // and 9 parameters), so binaryen folded none there; no argument here is one constant at both call sites, so that it
 // folds none here. Each stand-in folds the two results into a size, a body no target function has, and none is called:
 // - comum::CNomeArquivo::NomeArquivoUF (fn 1705): fn 5778 calls it twice, fn 7787 five times;
-// - comum::CNomeArquivo::NomeArquivoSecao (fn 3772): fns 3745, 5727 and 7787, once each.
+// - comum::CNomeArquivo::NomeArquivoSecao (fn 3772): fns 3745, 5727 and 7787, once each; 3745 and 5727 are in the link
+//   (unit 279), so w131_secao stands for 7787 alone.
 #include <string>
 
 #include "app/comum/nomearquivo/cnomearquivo.h"
@@ -19,7 +20,7 @@ __attribute__((noinline)) int w131_uf(comum::EUrnaFase fase, uedword pleito, con
         comum::CNomeArquivo::NomeArquivoUF(comum::FASE_TREINAMENTO, pleito + 1, uf, extensao, tipo).size());
 }
 
-// stands for fns 3745, 5727 and 7787
+// stands for fn 7787 (fns 3745 and 5727 are in the link)
 __attribute__((noinline)) int w131_secao(comum::EUrnaFase fase, uedword pleito, const std::string& uf, uedword municipio,
     uedword zona, uedword secao, const std::string& tipo, const std::string& extensao)
 {

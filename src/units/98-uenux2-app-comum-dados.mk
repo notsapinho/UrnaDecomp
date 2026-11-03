@@ -97,6 +97,16 @@
 #   by binaryen (a second stack-pointer prologue around the literal) inside CEleitores::MarcaVotou (unit 110's), and it
 #   has no index of its own. It stores 3 at the dynamic record's +32 through CEleitorDinamico::SetEstadoComparecimento,
 #   a setter whose name is chosen. Its line, below MarcaHabilitado, is a choice.
+# - Not written: GetBiometria, target fn 1937 (records at lines 94 and 101), with the file name it builds, the
+#   md::CEleitor::GetOffsetBiometria it holds (celeitor.cpp:79) and legravaentidade.h's LeEntidadeBiometria inside a
+#   reader of its own. Written whole and measured in the link before steps 7 to 9 (pnpm wasm score): `722 over 2243 rows
+#   (same 1521, replaced 628 [620 operand-only], inserted 46, deleted 48)`. The remainder is inside the body: the
+#   64-byte frame of the file name, held inlined, has the directory's path at +36 and operator/'s result at +48 in the
+#   target and at +52 and +40 in ours, in the three spellings tried (wasm-objdump -d of the object; a fourth, the path
+#   copied and appended with /=, gives a 48-byte frame), and the 576-byte frame builds "LeBiometriaEleitor(" 8 bytes
+#   lower than the target and packs the std::format arguments of its messages in another order and at other offsets.
+#   Not explained, and none of its callers (1393, 3614, 3616, 10316) is written, so it is left out
+#   (docs/how-to-decompile.md step 5). Its two callees with no name then, 3745 and 5727, match in unit 279.
 #
 # ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
 # called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it. The target's data do not

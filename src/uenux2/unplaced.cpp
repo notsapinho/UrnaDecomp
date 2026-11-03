@@ -472,9 +472,6 @@
 // f5728 · 37 B · unmatched · placement: link order · name unknown
 // ? f5728(i32, i32) { ... }
 
-// f5727 · 190 B · unmatched · placement: link order · name unknown
-// void f5727(i32, i32, i32, i32, i32) { ... }
-
 // link-order cluster 823 · uses=2 · neighbours' file uenux2/src/app/comum/dados/crdvvota.cpp
 
 // f5735 · 1046 B · unmatched · placement: link order · name unknown
@@ -520,11 +517,6 @@
 // f5854 · 1843 B · unmatched · placement: link order · name unknown
 // void f5854(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 869 · uses=2
-
-// f6011 · 227 B · unmatched · placement: link order · name unknown
-// void f6011(i32, i32, i32) { ... }
-
 // link-order cluster 903 · uses=2
 
 // f6592 · 942 B · unmatched · placement: link order · name unknown
@@ -559,11 +551,6 @@
 
 // f3713 · 437 B · unmatched · placement: link order · name unknown
 // void f3713(i32, i32, i32) { ... }
-
-// link-order cluster 1006 · uses=3 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
-
-// f3745 · 175 B · unmatched · placement: link order · name unknown
-// void f3745(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1008 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cfotos.cpp
 
