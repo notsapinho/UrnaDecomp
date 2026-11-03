@@ -25,14 +25,17 @@
 # ours (libc++.a's operations.o) holds path::parent_path inlined where the target calls 3706, whose other caller is 11818
 # (table slot 17, which votaInit invokes; not written), `pnpm wasm score` 86 over 390 rows, 36 inserted. Our body is the
 # target's in shape but for, at least:
-# - the ITextToSpeech set: the target calls fn 4162, the executable TU's copy of CPolySingleton<ITextToSpeech>::set
-#   (landing pads), which only votaInit's code instantiates (not written); ours inlines this TU's copy;
 # - CPath::GetPathLog: the target calls fn 5899; clang inlines it into our InicializaLog (it is inline in cpath.h, unit
 #   190's choice), so unit 190's two roots calls stay;
 # - CWasmScreen's constructor: the two forms unit 69's fragment names (the log text's build, the two 16-bit stores);
 # - InicializaDispositivos' frame: the unique_ptr IInterfaceInit's set leaves there is at +4, the target's at +8;
 # - the push bodies 8302 holds inlined differ only in operands.
 #   (`diff` of the two disassemblies with local numbers, call targets and addresses masked.)
+# The ITextToSpeech set no longer differs: 8302 calls fn 4162, the executable TU's copy of
+# CPolySingleton<ITextToSpeech>::set<CWasmNullTextToSpeech> (landing pads), as the target does. That copy comes from
+# src/app/roots_texttospeech.cpp, which links ahead of this object and stands for votaInit's two table slots of 4162
+# (unit 237's fragment); 4162 matches. Before, our 8302 held this TU's own copy inlined, though simulador.cpp.o calls it
+# out of line (wasm-objdump -d of the object): read as binaryen inlining a function with one caller.
 #
 # Evidence and choices.
 # - The layout of 8302: a frameless body that ends with the std::function's call (slot 6, __throw_bad_function_call

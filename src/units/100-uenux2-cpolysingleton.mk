@@ -91,13 +91,13 @@
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
 #   and 1166, 6147 and 1009 as binaryen's merges of its code, and with fragment 241's interfaces and unit 165's GetInsts
 #   the push thunks 5395, 5398 and 5407; 1091 matches from it since unit 97's callers keep it out of line, and 3281
-#   from src/app/roots_texttospeech.cpp's instance at that TU's rule; the rest wait for the TU's code that instantiates
-#   them (unit 170's fragment).
+#   and the push body 7667 from src/app/roots_texttospeech.cpp's instances at that TU's rule (unit 237's fragment); the
+#   rest wait for the TU's code that instantiates them (unit 170's fragment).
 #   5417, 5425 and 5427 match since unit 170's roots give them the second call site the target gives them, and the
 #   set<T> bodies that call them are named; 640 (remove by name) and 13621 (unlock_shared_and_lock) match since the
-#   latter takes the guard (below). The push bodies differ in one frame slot, depura's format string, and unit 170's
-#   fragment has what that waits for: the reading of the frame paragraph above holds there too, since a scratch push
-#   instantiated above the TU's code, ahead of its other format code, gives every push the target's slot.
+#   latter takes the guard (below). The other push bodies differ in one frame slot, depura's format string, and unit
+#   170's fragment has what that waits for: the reading of the frame paragraph above holds there too, since a scratch
+#   push instantiated above the TU's code, ahead of its other format code, gives every push the target's slot.
 # - 11635, 11636, the control block of CGeracaoVersoesContratos: its __on_zero_shared calls the class's destructor out of
 #   line (5866), and the class has no header. CCalculaCV's block (11262, 11263) waits for its builder in ccalculacv.cpp;
 #   unit 121's fragment says why no roots builder stands in for it.

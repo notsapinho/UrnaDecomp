@@ -665,11 +665,6 @@
 
 // component simulador
 
-// link-order cluster 1050 · uses=3
-
-// f4162 · 143 B · unmatched · placement: link order · name unknown
-// void f4162(i32, i32) { ... }
-
 // link-order cluster 1063 · uses=4
 
 // f2548 · 778 B · unmatched · placement: link order · name unknown
