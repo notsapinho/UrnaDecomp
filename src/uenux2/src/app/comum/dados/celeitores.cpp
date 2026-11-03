@@ -138,7 +138,12 @@ md::ETipoAbrangencia CEleitores::GetCurrentAbrangenciaEleitor() const
     return detalhe->GetEleitor().GetAbrangencia(m_uf, m_municipio);
 }
 
-// (original lines 502-559: content not recovered)
+md::CBiometriaEleitor CEleitores::GetCurrentBiometriaEleitor() const
+{
+    return GetCurrent()->GetBiometria();
+}
+
+// (original lines 507-559: content not recovered)
 #line 560
 namespace {
 

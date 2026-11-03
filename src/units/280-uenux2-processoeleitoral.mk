@@ -1,14 +1,14 @@
 # uenux2 comum's load of the processo eleitoral: comum::CarregaProcessoEleitoral (target fn 3771) and CarregaPleito
 # (5778) in app/comum/dados/carregaprocessoeleitoral.{h,cpp}, the ASN.1 file reader they instantiate,
 # comum::CarregaArquivo<CONVERSOR> (app/comum/dados/carregaarquivo.{h,cpp}; its CConversorCabecalhoPacote instance is fn
-# 5706), and comum::SIdentificacaoArquivo's constructor (5726, app/comum/nomearquivo/sidentificacaoarquivo.cpp; the
-# struct is unit 279's, in cnomearquivo.h, one type for the object both units read). The members this load needs
-# in files landed units compile are those units' (their fragments say what each holds): CPE::Existe and CreateInst
-# (2788, 2787; unit 110), CPleito's constructor (5652; unit 88), CProcessoEleitoral's two constructors (unit 88),
-# CProcessoEleitoralDTO::GetPleito2 and its getters (unit 140), api::TrocaExtensao (5461; unit 32), and the name
-# builder NomeArquivoPE in app/comum/nomearquivo/cnomearquivo.cpp (unit 131's file; it has no index). Paths relative to
-# src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header, and these objects get Boost's
-# include path, which cfileasn.h's converters reach.
+# 5706; with comum::CLeitorASN::LeBiometriaEleitor beside it, below), and comum::SIdentificacaoArquivo's constructor
+# (5726, app/comum/nomearquivo/sidentificacaoarquivo.cpp; the struct is unit 279's, in cnomearquivo.h, one type for the
+# object both units read). The members this load needs in files landed units compile are those units' (their fragments
+# say what each holds): CPE::Existe and CreateInst (2788, 2787; unit 110), CPleito's constructor (5652; unit 88),
+# CProcessoEleitoral's two constructors (unit 88), CProcessoEleitoralDTO::GetPleito2 and its getters (unit 140),
+# api::TrocaExtensao (5461; unit 32), and the name builder NomeArquivoPE in app/comum/nomearquivo/cnomearquivo.cpp (unit
+# 131's file; it has no index). Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every
+# uenux2 header, and these objects get Boost's include path, which cfileasn.h's converters reach.
 #
 # What the target shows, and what is chosen:
 # - 3771's wasm type is (i32 i32)->(): the result and the general state; the origin is folded (below). It calls
@@ -33,6 +33,20 @@
 # - CarregaArquivo's form (a converter on the stack, CFileASN::ReadFromFile<TEntidade>, Desconverte), its name, its file,
 #   its being a template over the converter and the order of the explicit instantiations are chosen; the target holds
 #   the ReadFromFile instances it calls (records cfileasn.h:78) inline in each instance.
+# - carregaarquivo.cpp stands for one object of the target, its entity readers': the data from 1562844 to 1565964 hold,
+#   entity by entity, the typeinfo, the records of CFileASN's readers (cfileasn.h:78, :48 and :60, :135 and :143), the
+#   vtable and IConversorASN's Desconverte record for 19 entities, this file's instances among them (ProcessoEleitoral's
+#   @1563464, SituacoesEleicoes' @1563608, Eleicao's @1563740, CabecalhoPacote's @1565368), and no .cpp record (`awk
+#   -F'\t' 'NR>1 && $1>=1562844 && $1<=1565964 {print $1, $2, $3, $6}' ledger/source-locations.tsv`: 109 records, none
+#   a .cpp's), so one TU (docs/reference/facts/link-order.md L7 item 15). Among them lie legravaentidade.h's records of
+#   LeEntidadeBiometria (@1564660, @1564676), a template of an anonymous namespace, which only the TU that instantiates
+#   it emits: so comum::CLeitorASN::LeBiometriaEleitor (app/comum/asn/cleitorasn.h), which instantiates it and which
+#   target fn 1937 (comum::CEleitorDetalhe::GetBiometria) holds behind a frame of its own, is defined here, between the
+#   EleicaoPE and CabecalhoPacote instances as the run orders their records (@1563740, @1564660, @1565368). It has no
+#   index of its own; unit 98's fragment has its class's and its name's evidence, its forms and their scores. With it,
+#   each other function of this object is the same with the object-local numbers masked, and 5706, 3771 and 5778 score
+#   as below. Chosen: this file's name and path, which no record gives. The run's other readers are not in it: the one
+#   fn 11517 holds is written in unit 110's celeitores.cpp (a lambda's), the others are not written.
 # Every name above but the records' (CPE::CreateInst, GetPleito2, the cfileasn.h template) is chosen, and so are the
 # functions' being free functions of comum (they read no class's state), their lines and these paths.
 #

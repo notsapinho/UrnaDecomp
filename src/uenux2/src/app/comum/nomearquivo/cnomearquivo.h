@@ -43,9 +43,8 @@ public:
 // comum::CPE::CreateInst (fn 2787) at CPE+180 (app/comum/dados/cpe.h). +4 is the id each caller passes: 7787 the
 // general state's idPE (md::estadoaplicacao::CEstadoGeral's +4, the ASN.1 field's name), 2787 the processo eleitoral's
 // GetID(); that, the constructor and the reference at +20 are the evidence. The struct, its name, its members' names
-// and its place here are chosen, and so is the constructor's file. app/comum/dados/cconfiguracaoeleicao.h reads the
-// same bytes as the end of m_naoRecuperado3 (+616) and m_descricao (+628): both are readings, and whoever writes 1937
-// or 7787 reconciles them, CConfiguracaoEleicao then holding one.
+// and its place here are chosen, and so is the constructor's file. app/comum/dados/cconfiguracaoeleicao.h holds it at
+// +620 as m_identificacaoArquivo, the municipality and the zone right after it, which 1937 reads through accessors.
 struct SIdentificacaoArquivo {
     SIdentificacaoArquivo(const EUrnaFase fase, const uedword idPE, const std::string& uf, const md::CPleito& pleito);
 

@@ -19,6 +19,11 @@ public:
     CIndexer() = default;
     CIndexer(uedword offset, uedword tamanho) : m_offset(offset), m_tamanho(tamanho) {}
 
+    // legravaentidade.h's LeEntidadeBiometria seeks to the first word and reads as many bytes as the second (fn 1937,
+    // which holds it inlined); the accessors and their names are chosen.
+    uedword GetOffset() const { return m_offset; }
+    uedword GetTamanho() const { return m_tamanho; }
+
 private:
     uedword m_offset;
     uedword m_tamanho;

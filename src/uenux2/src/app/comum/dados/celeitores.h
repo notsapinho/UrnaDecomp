@@ -91,6 +91,12 @@ public:
     unsigned int GetComparecimento() const { return m_qtdVotaram; }
     // Record celeitores.cpp:497 (7847); slot 2 of vota::CEleitorVotando (fn 7377) holds it behind a 32-byte prologue.
     md::ETipoAbrangencia GetCurrentAbrangenciaEleitor() const;
+    // fn 1393: the current record's CEleitorDetalhe::GetBiometria (fn 1937), returned through the result's address. Its
+    // six callers (fns 10425, 10465, 10474, 10478, 10500, 10512, vota's identification states) call it on
+    // CEleitores::GetInst()'s result (10500: `f1393(frame, f326())`), so it takes the singleton as `this`: a member, a
+    // reading. No record, slot or RTTI names it: its name, after GetCurrentAbrangenciaEleitor's, and its const are
+    // chosen; its file is a reading (src/units/291-uenux2-biometria-eleitor.mk).
+    md::CBiometriaEleitor GetCurrentBiometriaEleitor() const;
 
 private:
     // fn 5767: the impediments read from each file of a list, through a std::function over a lambda (RTTI of its

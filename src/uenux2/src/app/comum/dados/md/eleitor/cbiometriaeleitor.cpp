@@ -1,6 +1,6 @@
-// The reconstruction's note, not TSE's text: CriaComum (fn 2799, records at lines 25 and 31) and GetDedo (fn 3720, record
-// at line 93). The other record of this file, GetFoto at line 115, is inlined into fn 3616: not written, its line
-// stays blank, as the constructors' places do.
+// The reconstruction's note, not TSE's text: CriaComum (fn 2799, records at lines 25 and 31), GetDedo (fn 3720, record
+// at line 93) and TemDedo (fn 3719, no record, its line a choice). The other record of this file, GetFoto at line 115,
+// is inlined into fn 3616: not written, its line stays blank, as the constructors' places do.
 #include "app/comum/dados/md/eleitor/cbiometriaeleitor.h"
 
 #include <format>
@@ -35,6 +35,11 @@ CDedo CBiometriaEleitor::GetDedo(CDedo::TipoDedo tipo) const
         throw CUeComumDadosError(EUE_COMUM_DADOS_8058, "Dedo não encontrado.");
     }
     return dedo->second;
+}
+
+bool CBiometriaEleitor::TemDedo(CDedo::TipoDedo tipo) const
+{
+    return m_dedos.has_value() && m_dedos->contains(tipo);
 }
 
 } // namespace comum::md

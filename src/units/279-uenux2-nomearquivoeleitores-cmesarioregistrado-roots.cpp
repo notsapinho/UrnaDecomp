@@ -4,10 +4,11 @@
 //   IGestorDadoMesario::StartState (fn 10337, unit 135's trap) holds inlined with GetInst. The vtable's address keeps
 //   StartState (fn 10339) and ProcessInput (fn 10338) in the table, which is how the target reaches them. The sink goes
 //   when 10337 is written.
-// - comum::NomeArquivoEleitores (fn 3745): the target's table holds it (slot 2464), and its direct callers, fns 1937
-//   (comum::CEleitorDetalhe::GetBiometria) and 7787, are not written: its address is taken, the reference the table is.
-// - comum::NomeArquivoEleitoresTTE (fn 5727): fns 1937 and 7787 call it once each; w279_tte calls it twice for them,
-//   with no argument one constant at both calls, so binaryen folds none, as in the target.
+// - comum::NomeArquivoEleitores (fn 3745): the target's table holds it (slot 2464), and its direct callers are fns 1937
+//   (comum::CEleitorDetalhe::GetBiometria, unit 98, in the link) and 7787, not written: its address is taken, the
+//   reference the table is.
+// - comum::NomeArquivoEleitoresTTE (fn 5727): fns 1937 and 7787 call it once each; 1937 is in the link, and w279_tte
+//   calls it twice for 7787, with no argument one constant at both calls, so binaryen folds none, as in the target.
 // The vtable is declared through an asm label; the stand-in's body is no target function's.
 #include <string>
 
@@ -19,7 +20,7 @@ extern const char cmesarioregistrado_vt[] __asm__("_ZTVN5comum18CMesarioRegistra
 
 namespace {
 
-// stands for fns 1937 and 7787
+// stands for fn 7787 (1937 is in the link)
 __attribute__((noinline)) int w279_tte(const comum::SIdentificacaoArquivo& identificacao, uedword municipio, ueword zona,
     ueword secao)
 {

@@ -1,17 +1,25 @@
-// comum::CEleitorDetalhe: the two constructors (the record at line 49 col 15 is the second's; the first's lines are a choice),
-// ConfereDadosDinamicos (line 224 col 15), and GetImpedimento, GetDinamico, MarcaHabilitado and MarcaVotou below it, which
-// have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not recovered.
+// comum::CEleitorDetalhe (the records' file): the two constructors (the record at line 49 col 15 is the second's; the
+// first's lines are a choice), GetBiometria (records at lines 94 and 101 col 15), ConfereDadosDinamicos (line 224
+// col 15), and GetImpedimento, GetDinamico, MarcaHabilitado and MarcaVotou below it, which have no record; above
+// GetBiometria GetArquivoBiometria and the two name helpers it calls, none with a record. Every line but the throws'
+// is a choice. The reconstruction's own note; the blank lines stand for text not recovered (fragment 98 has more).
 #include "app/comum/dados/celeitordetalhe.h"
 
+#include <filesystem>
 #include <format>
 
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/asn/cleitorasn.h"
+#include "app/comum/cpath.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitordadoshabilitacao.h"
 #include "app/comum/dados/euecomumdadoserror.h"
+#include "app/comum/dados/md/eleitor/cparametro.h"
+#include "app/comum/nomearquivo/cnomearquivo.h"
 
 namespace comum {
 
-// (original lines 14-35: content not recovered)
+// (original lines 22-35: content not recovered)
 #line 36
 CEleitorDetalhe::CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md::ETipoImpedimento impedimentoP1,
     const md::ETipoImpedimento impedimentoP2)
@@ -30,14 +38,58 @@ CEleitorDetalhe::CEleitorDetalhe(const md::CEleitorDecorator& eleitor, const md:
     }
 }
 
-// (original lines 53-90: content not recovered)
-#line 91
-// <stubs>
-// f1937 · 5175 B · unmatched · name unknown
-// void f1937(i32, i32) { ... }
-// </stubs>
+namespace {
 
-// (original lines 96-220: content not recovered)
+std::string NomeArquivoBiometria(const CConfiguracaoEleicao& configuracao, const ueword secao)
+{
+    return NomeArquivoEleitores(configuracao.GetIdentificacaoArquivo(), configuracao.GetMunicipioSecao(),
+                                configuracao.GetZonaSecao(), secao);
+}
+
+std::string NomeArquivoBiometriaTTE(const CConfiguracaoEleicao& configuracao, const ueword secao)
+{
+    return NomeArquivoEleitoresTTE(configuracao.GetIdentificacaoArquivo(), configuracao.GetMunicipioSecao(),
+                                   configuracao.GetZonaSecao(), secao);
+}
+
+} // namespace
+
+std::string CEleitorDetalhe::GetArquivoBiometria() const
+{
+    switch (m_eleitor.GetTipoTransferencia()) {
+    case 0:
+    case 4:
+        return (CPath::GetPathEstatico(FLASH_INTERNA) /
+                NomeArquivoBiometria(CConfiguracaoEleicao::GetInst(), m_eleitor.GetSecao()))
+            .string();
+    default:
+        return (CPath::GetPathEstatico(FLASH_INTERNA) /
+                NomeArquivoBiometriaTTE(CConfiguracaoEleicao::GetInst(), m_eleitor.GetSecao()))
+            .string();
+    }
+}
+
+// (original lines 84-90: content not recovered)
+#line 91
+md::CBiometriaEleitor CEleitorDetalhe::GetBiometria() const
+{
+    if (!m_eleitor.TemBiometria()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7830, "Eleitor corrente não tem biometria.");
+    }
+
+    const std::string arquivo = GetArquivoBiometria();
+
+
+    if (!std::filesystem::exists(arquivo)) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7831, std::format("Arquivo {} não existe", arquivo));
+    }
+
+    const md::CParametro parametro(m_eleitor.GetIdentidadePorTipo(m_eleitor.GetTipoIdentificador()),
+                                   m_eleitor.GetBiometria(), m_eleitor.GetOffsetBiometria());
+    return CLeitorASN::LeBiometriaEleitor(arquivo, parametro);
+}
+
+// (original lines 109-220: content not recovered)
 #line 221
 void CEleitorDetalhe::ConfereDadosDinamicos(const std::string& funcao) const
 {
