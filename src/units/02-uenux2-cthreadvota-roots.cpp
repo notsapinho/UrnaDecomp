@@ -1,9 +1,8 @@
 // Roots: vota::CThreadVota::StartTick (target fn 700) is called on the CThreadEleitor and CThreadOperador singletons by
-// 16 target functions; all but 7337 and 11988 are in the link (fn 10798, unit 119's slot 4, fns 7028 and 7029, unit
-// 97's CVotacaoStateAudio::StartState and ProcessInput, fn 10220, fns 11825 and 11871, unit 138's, and 10468, unit
-// 282's, among them).
-// Address-taken from a static constructor (as in 06-ecourna-api-compression-roots.cpp) so the link keeps it out of
-// line.
+// 16 target functions, all in the link (fn 10798, unit 119's slot 4, fns 7028 and 7029, unit 97's
+// CVotacaoStateAudio::StartState and ProcessInput, fn 10220, fns 11825 and 11871, unit 138's, and 10468, unit 282's,
+// the last, among them), so it needs no stand-in: the address this file took so that the link kept it out of line
+// went.
 // CThreadVota::StopTick (fn 422) has 23 callers in the target, all but 10451 and 10465 in the link, which ParaDoisTicks
 // stands for (fn 10799, unit 119's slot 3, fn 7022, unit 97's CVotacaoStateAudio::FinishState, unit 197's 7337, 7345,
 // 7349, 7352 and 4454, unit 97's 7010 and 7029, unit 221's 10452, unit 152's 10404, 10405, 10407, 10408 and 10409,
@@ -25,7 +24,6 @@
 #include "api/util/cwait.h"
 
 extern "C" {
-void five700_root_0(int, int) __asm__("_ZN4vota11CThreadVota9StartTickEh");
 void w02_para_thread(void*, int) __asm__("_ZN4vota11CThreadVota8StopTickEh");
 }
 
@@ -49,7 +47,6 @@ __attribute__((noinline)) void ParaDoisTicks(void* thread, int id)
 struct SFive700Roots {
     SFive700Roots()
     {
-        five700_sink = reinterpret_cast<void*>(&five700_root_0);
         five700_sink = reinterpret_cast<void*>(&EsperaUsando);
         five700_sink = reinterpret_cast<void*>(&ParaDoisTicks);
     }

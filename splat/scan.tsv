@@ -189,7 +189,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 323	BN_ucmp	314	symbol	match	-	303	byte	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 324	_ZNSt3__29basic_iosIcNS_11char_traitsIcEEED2Ev	330	symbol	match	-	8	addr	unknown	1	sysroot:libc++.a(ios.instantiations.o)
 325	_ZN5comum14IInterfaceSavdD0Ev	232	symbol	match	-	3	byte	libc++abi	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-326	_ZN5comum10CEleitores7GetInstEv	651	symbol	match	readings: address symbol,address srcloc,address string	24	shape	app	2	app/uenux2/src/app/comum/dados/celeitores.cpp.o
+326	_ZN5comum10CEleitores7GetInstEv	650	symbol	match	readings: address symbol,address srcloc,address string	24	shape	app	2	app/uenux2/src/app/comum/dados/celeitores.cpp.o
 327	_ZNSt3__29to_stringEj	373	symbol	match	-	53	addr	unknown	1	sysroot:libc++.a(string.o)
 328	-	-	-	no-candidate	no symbol and no ledger pair	228	none	libc++	0	-
 329	_ZN5boost13re_detail_60019basic_regex_creatorIcNS_12regex_traitsIcNS_16cpp_regex_traitsIcEEEEE12append_stateENS0_19syntax_element_typeEm	319	symbol	match	-	272	none	boost	1	app/ecourna/api_util_cstringutils.cpp.o
@@ -281,7 +281,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 415	OBJ_nid2sn	400	symbol	match	readings: address symbol,address string	205	none	openssl	1	openssl/O3/crypto/objects/libcrypto-lib-obj_dat.o
 416	EVP_CIPHER_CTX_set_num	403	symbol	match	readings: address string	91	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-evp_lib.o
 417	EVP_CIPHER_CTX_get_num	404	symbol	match	readings: address string	93	addr	unknown	1	openssl/O3/crypto/evp/libcrypto-lib-evp_lib.o
-418	_ZNK7ecourna3api2io5CFile8PositionEv	645	symbol	match	readings: address symbol,table slot,address string,address srcloc	385	shape	ecourna	1	app/ecourna/api_io_cfile.cpp.o
+418	_ZNK7ecourna3api2io5CFile8PositionEv	644	symbol	match	readings: address symbol,table slot,address string,address srcloc	385	shape	ecourna	1	app/ecourna/api_io_cfile.cpp.o
 419	_ZNK7ecourna3api2io5CFile4SeekEii	664	symbol	match	readings: address symbol,table slot,address string,address srcloc	385	shape	ecourna	1	app/ecourna/api_io_cfile.cpp.o
 420	OSSL_PARAM_construct_octet_string	410	symbol	match	-	37	byte	openssl	1	openssl/O3/crypto/libcrypto-lib-params.o
 421	EVP_MD_CTX_new	411	symbol	match	readings: address string	14	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-digest.o
@@ -341,7 +341,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 475	EC_KEY_free	465	symbol	match	readings: address string	186	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_key.o
 476	BN_dup	453	symbol	match	readings: address string	346	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_lib.o
 477	BN_add	454	symbol	match	-	459	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_add.o
-478	_ZN4ASN116SEQUENCE_OF_Base5clearEv	641	symbol	match	-	73	byte	sqlite	1	app/asn1/asn1.o
+478	_ZN4ASN116SEQUENCE_OF_Base5clearEv	640	symbol	match	-	73	byte	sqlite	1	app/asn1/asn1.o
 479	_ZN3api9CDateTime3NowEv	559	symbol	match	-	24	none	unknown	1	app/uenux2/src/api/util/cdatetime.cpp.o
 480	_ZN7ecourna3api9exception10CBaseErrorIN5comum13EUeComumErrorEXtlNS1_12SErrorLimitsELi7200ELi7600EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	515	symbol	match	readings: address symbol	18	shape	ecourna	1	app/uenux2/src/app/comum/cpath.cpp.o
 481	-	-	-	no-candidate	no symbol and no ledger pair	390	none	unknown	0	-
@@ -379,7 +379,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 513	gf_sub	496	symbol	match	-	593	byte	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-f_generic.o)
 514	_ZNSt3__26locale2id5__getEv	494	symbol	match	readings: table slot	80	addr	libc++	1	sysroot:libc++.a(locale.o)
 515	_ZN4ASN18SEQUENCE20includeOptionalFieldEjj	583	symbol	match	-	233	addr	app	1	app/asn1/asn1.o
-516	_ZN4ASN116SEQUENCE_OF_BaseC2EPKv	642	symbol	match	readings: address symbol	35	addr	ASN1	1	app/asn1/asn1.o
+516	_ZN4ASN116SEQUENCE_OF_BaseC2EPKv	641	symbol	match	readings: address symbol	35	addr	ASN1	1	app/asn1/asn1.o
 517	_ZN7ecourna3api2io5CFileC2ERKNSt3__212basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEESB_NS1_8FileModeE	713	symbol	match	readings: address symbol,table slot	137	addr	unknown	1	app/ecourna/api_io_cfile.cpp.o
 518	_ZN4ASN18CoderEnvD2Ev	809	symbol	match	-	155	addr	unknown	1	app/uenux2/mock/app/comum/cappinfobuilder.cpp.o
 519	_ZN5boost6detail17sp_counted_impl_pINS_8signals219optional_last_valueIvEEE11get_deleterERKSt9type_info	306	symbol	match	-	4	byte	libc++abi	1	app/roots_boost.o
@@ -525,16 +525,16 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 659	sqlite3LockAndPrepare	621	symbol	match	readings: address string,address same-content,address symbol	494	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 660	ossl_digest_default_get_params	627	symbol	match	readings: address string	173	addr	openssl	1	openssl/O3/providers/implementations/digests/libcommon-lib-digestcommon.o
 661	RSA_free	628	symbol	match	readings: table slot,address string	212	addr	openssl	1	openssl/O3/crypto/rsa/libcrypto-lib-rsa_lib.o
-662	OPENSSL_strlcpy	653	symbol	match	-	97	fingerprint	openssl	1	openssl/O3/crypto/libcrypto-lib-o_str.o
-663	EVP_add_digest	650	symbol	match	-	104	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-names.o)
-664	evp_mac_final	654	symbol	match	readings: address string	403	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-mac_lib.o
-665	EC_POINT_get_affine_coordinates	655	symbol	match	readings: address string	186	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
-666	EC_POINT_free	656	symbol	match	readings: address string	41	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
+662	OPENSSL_strlcpy	652	symbol	match	-	97	fingerprint	openssl	1	openssl/O3/crypto/libcrypto-lib-o_str.o
+663	EVP_add_digest	649	symbol	match	-	104	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-names.o)
+664	evp_mac_final	653	symbol	match	readings: address string	403	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-mac_lib.o
+665	EC_POINT_get_affine_coordinates	654	symbol	match	readings: address string	186	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
+666	EC_POINT_free	655	symbol	match	readings: address string	41	addr	openssl	1	openssl/O3/crypto/ec/libcrypto-lib-ec_lib.o
 667	ASN1_item_d2i	631	symbol	match	readings: address string	137	addr	openssl	1	openssl/O3/crypto/asn1/libcrypto-lib-tasn_dec.o
-668	DH_free	657	symbol	match	readings: address string	136	addr	openssl	1	openssl/O3/crypto/dh/libcrypto-lib-dh_lib.o
+668	DH_free	656	symbol	match	readings: address string	136	addr	openssl	1	openssl/O3/crypto/dh/libcrypto-lib-dh_lib.o
 669	_ZN4ASN112AbstractDataC2EPKv	606	symbol	match	readings: address symbol	21	addr	ASN1	1	app/asn1/ValidChecker.o
 670	_ZN4ASN16CHOICE12setSelectionEiPNS_12AbstractDataE	732	symbol	match	-	45	byte	unknown	1	app/asn1/asn1.o
-671	_ZNSt3__218basic_stringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev	644	symbol	match	readings: address symbol	118	addr	libc++	1	app/ecourna/app_dados_asn_datahoraasn.cpp.o
+671	_ZNSt3__218basic_stringstreamIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev	643	symbol	match	readings: address symbol	118	addr	libc++	1	app/ecourna/app_dados_asn_datahoraasn.cpp.o
 672	-	-	-	no-candidate	no symbol and no ledger pair	162	none	RHVoice	0	-
 673	_ZN4utf86appendINSt3__220back_insert_iteratorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEEEEET_jSA_	340	symbol	match	readings: address symbol,table slot	231	shape	utf8cpp	1	app/roots_rhvoice.o
 674	_ZNSt3__215basic_stringbufIcNS_11char_traitsIcEENS_9allocatorIcEEE15__init_buf_ptrsB8ne210108Ev	911	symbol	match	-	251	fingerprint	unknown	1	app/uenux2/mock/app/comum/cappinfobuilder.cpp.o
@@ -545,16 +545,16 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 679	_ZN4ASN18CoderEnv6decodeINSt3__211__wrap_iterIPKcEEEEbT_S7_RNS_12AbstractDataEb	989	symbol	match	readings: address symbol	1476	none	libc++	1	app/uenux2/src/app/comum/appinfo/cappinfo.cpp.o
 680	_ZNK5comum13CArquivosSavdixENS_14ESavdArquivoUEE	624	symbol	match	readings: table slot,address string,address srcloc,address symbol	612	none	ecourna	1	app/uenux2/src/app/comum/carquivossavd.cpp.o
 681	_ZNSt3__26__treeINS_12__value_typeIjNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEENS_19__map_value_compareIjNS_4pairIKjS7_EENS_4lessIjEELb1EEENS5_ISC_EEE7destroyEPNS_11__tree_nodeIS8_PvEE	1260	symbol	match	-	57	addr	unknown	1	app/uenux2/src/app/comum/dados/cpe.cpp.o
-682	byn$mgfn-shared$_ZNK7ecourna3api3asn13IConversorASNIN24ModuloParametrizacaoUrna18LabelParametrizadoENS_3app5dados19CLabelParametrizadoEE8ConverteERKS7_	648	symbol	match	readings: address symbol,table slot,address string	654	shape	ecourna	1	<binaryen>
-683	strerror_r	649	symbol	match	-	78	addr	sqlite	1	sysroot:libc.a(strerror_r.o)
+682	byn$mgfn-shared$_ZNK7ecourna3api3asn13IConversorASNIN24ModuloParametrizacaoUrna18LabelParametrizadoENS_3app5dados19CLabelParametrizadoEE8ConverteERKS7_	647	symbol	match	readings: address symbol,table slot,address string	654	shape	ecourna	1	<binaryen>
+683	strerror_r	648	symbol	match	-	78	addr	sqlite	1	sysroot:libc.a(strerror_r.o)
 684	fclose	698	symbol	match	readings: address symbol	105	addr	unknown	1	sysroot:libc.a(fclose.o)
-685	sqlite3WhereExprUsageFull	634	symbol	match	-	1403	addr	openssl	1	sqlite/O3pic2/sqlite3.o
-686	out2PrereleaseWithClear	635	symbol	match	-	26	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-687	strAccumFinishRealloc	638	symbol	match	-	185	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-688	sqlite3Realloc	639	symbol	match	readings: address symbol	574	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-689	deleteTable	640	symbol	match	readings: address symbol	2371	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
+685	sqlite3WhereExprUsageFull	633	symbol	match	-	1403	addr	openssl	1	sqlite/O3pic2/sqlite3.o
+686	out2PrereleaseWithClear	634	symbol	match	-	26	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
+687	strAccumFinishRealloc	637	symbol	match	-	185	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
+688	sqlite3Realloc	638	symbol	match	readings: address symbol	574	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
+689	deleteTable	639	symbol	match	readings: address symbol	2371	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 690	_ZN4vota17MensagemErroCargoERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERKN5comum2md6CCargoES8_	6531	symbol	match	readings: address string	735	none	app	1	app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o
-691	ossl_prov_import_key	652	symbol	match	-	190	byte	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-endecoder_common.o
+691	ossl_prov_import_key	651	symbol	match	-	190	byte	unknown	1	openssl/O3/providers/implementations/encode_decode/libdefault-lib-endecoder_common.o
 692	WPACKET_get_total_written	672	symbol	match	-	23	byte	openssl	1	openssl/O3/crypto/libcrypto-lib-packet.o
 693	ossl_namemap_stored	676	symbol	match	readings: address symbol,table slot,address string	412	none	openssl	1	openssl/O3/crypto/libcrypto-lib-core_namemap.o
 694	EVP_CIPHER_CTX_free	673	symbol	match	readings: address string	25	addr	openssl	1	openssl/O3/crypto/evp/libcrypto-lib-evp_enc.o
@@ -562,24 +562,24 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 696	BUF_MEM_free	677	symbol	match	readings: address string	79	addr	openssl	1	openssl/O3/crypto/buffer/libcrypto-lib-buffer.o
 697	_ZN5comum8CAppInfo20EhTreinamentoEleitorEv	822	symbol	match	-	36	none	unknown	1	app/uenux2/src/app/comum/appinfo/cappinfo.cpp.o
 698	BN_add_word	671	symbol	match	-	260	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-bn_word.o)
-699	BN_mod_sub_quick	658	symbol	match	readings: address string	80	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_mod.o
-700	_ZN4vota11CThreadVota9StartTickEh	632	symbol	match	readings: address string,table slot,address srcloc,address symbol	639	none	ecourna	1	app/uenux2/src/app/vota/cthreadvota.cpp.o
+699	BN_mod_sub_quick	657	symbol	match	readings: address string	80	addr	openssl	1	openssl/O3/crypto/bn/libcrypto-lib-bn_mod.o
+700	_ZN4vota11CThreadVota9StartTickEh	660	symbol	match	readings: address string,table slot,address srcloc,address symbol	639	none	ecourna	1	app/uenux2/src/app/vota/cthreadvota.cpp.o
 701	_ZNSt11logic_errorC2EPKc	392	symbol	match	readings: address symbol	14	addr	libc++	1	sysroot:libc++.a(stdexcept.o)
 702	_ZNSt3__28ios_base5clearEj	780	symbol	unresolved	self-voted +0x2d i32.const 1923385: _ZGVZNSt3__217iostream_categoryEvE6helper = 0x1d5939 (evidence:vote:2 by:702) comes from this function's own operand; our object's bytes say nothing (zeros, or pointers that do not resolve) and no other match re-points through it	163	addr	libc++	1	sysroot:libc++.a(ios.o)
 703	_ZNSt3__210error_code5clearB8ne210108Ev	782	symbol	match	-	17	addr	libc++	1	sysroot:libc++.a(directory_iterator.o)
-704	_tr_flush_bits	659	symbol	match	-	166	byte	ecourna	1	zlib/O3pic/trees.o
+704	_tr_flush_bits	658	symbol	match	-	166	byte	ecourna	1	zlib/O3pic/trees.o
 705	-	-	-	no-candidate	no symbol and no ledger pair	111	none	unknown	0	-
 706	_ZNK3api5CDate6FormatERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	776	symbol	match	readings: address string,table slot,address srcloc,address symbol,address content-repointed	1982	none	ecourna	1	app/uenux2/src/api/util/cdate.cpp.o
 707	_ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE13__move_assignB8ne210108ERS5_NS_17integral_constantIbLb1EEE	802	symbol	match	-	61	addr	unknown	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
 708	_ZNK5comum2md17CEleitorDecorator20GetIdentidadePorTipoEN7ecourna3app5dados25ETipoIdentificadorEleitorE	1109	symbol	match	readings: address string,table slot,address srcloc,address symbol	581	none	ecourna	1	app/uenux2/src/app/comum/dados/md/eleitor/celeitordecorator.cpp.o
 709	_ZNSt3__2eqB8ne210108IcNS_11char_traitsIcEENS_9allocatorIcEEEEbRKNS_12basic_stringIT_T0_T1_EEPKS6_	846	symbol	match	readings: address symbol,table slot	97	shape	RHVoice	1	app/uenux2/wasm/vota_web/vota_web_wasm.cpp.o
-710	byn$mgfn-shared$_ZN7ecourna3api9exception10CBaseErrorIN3api12EUeUtilErrorEXtlNS1_12SErrorLimitsELi7000ELi7200EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	647	symbol	match	-	114	shape	ecourna	1	<binaryen>
+710	byn$mgfn-shared$_ZN7ecourna3api9exception10CBaseErrorIN3api12EUeUtilErrorEXtlNS1_12SErrorLimitsELi7000ELi7200EEEEC2ES4_NSt3__212basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEENS7_15source_locationE	646	symbol	match	-	114	shape	ecourna	1	<binaryen>
 711	_ZN12_GLOBAL__N_116itanium_demangle22AbstractManglingParserINS0_14ManglingParserINS_16DefaultAllocatorEEES3_E11parseNumberEb	669	symbol	match	-	164	byte	libc++abi	1	sysroot:libc++abi.a(cxa_demangle.o)
 712	wcscmp	717	symbol	match	-	80	byte	unknown	1	sysroot:libc.a(wcscmp.o)
 713	sqlite3Select	662	symbol	match	readings: address string,address symbol,table slot,address same-content,address content-repointed	37728	addr	openssl	1	sqlite/O3pic2/sqlite3.o
 714	sqlite3ErrorWithMsg	663	symbol	match	readings: table slot	273	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
-715	sqlite3_reset	636	symbol	match	readings: address symbol	299	addr	unknown	1	sqlite/O3pic2/sqlite3.o
-716	sqlite3_snprintf	637	symbol	match	-	97	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
+715	sqlite3_reset	635	symbol	match	readings: address symbol	299	addr	unknown	1	sqlite/O3pic2/sqlite3.o
+716	sqlite3_snprintf	636	symbol	match	-	97	addr	sqlite	1	sqlite/O3pic2/sqlite3.o
 717	CRYPTO_THREAD_get_local	701	symbol	match	readings: address symbol	46	addr	openssl	1	openssl/O3/crypto/libcrypto-lib-threads_pthread.o
 718	ossl_param_build_set_bn	699	symbol	match	-	43	addr	openssl	1	openssl/O3/libcrypto.a(libcrypto-lib-param_build_set.o)
 719	asn1_item_flags_i2d	678	symbol	match	readings: address string	197	addr	openssl	1	openssl/O3/crypto/asn1/libcrypto-lib-tasn_enc.o
@@ -591,7 +591,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 725	-	-	-	no-candidate	no symbol and no ledger pair	126	none	7zip	0	-
 726	_ZN7AStringC2ERKS_	3220	symbol	match	-	91	none	7zip	1	7zip/21.02-st-O3/obj/CPP_Common_MyString.cpp.o
 727	-	-	-	no-candidate	no symbol and no ledger pair	175	none	unknown	0	-
-728	_ZN3api14CMTFormBuilder8AddClockERKNS_6SPointE	646	symbol	match	readings: address symbol	381	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
+728	_ZN3api14CMTFormBuilder8AddClockERKNS_6SPointE	645	symbol	match	readings: address symbol	381	none	api	1	app/uenux2/src/api/gui/cmtformbuilder.cpp.o
 729	_ZN5comum14IInterfaceInit11GetDemoModeEv	970	symbol	match	readings: address string,table slot,address srcloc,address symbol	736	none	libc++	1	app/uenux2/src/app/comum/iinterfaceinit.cpp.o
 730	_ZNSt3__212__destroy_atB8ne210108IN5comum2md10CEleicaoPEETnNS_9enable_ifIXntsr8is_arrayIT_EE5valueEiE4typeELi0EEEvPS5_	1659	symbol	match	-	170	addr	unknown	1	app/uenux2/src/app/comum/dados/cpe.cpp.o
 731	byn$mgfn-shared$_ZNK5comum3asn13IConversorASNIN28ModuloComplementosMunicipios30EntidadeComplementosMunicipiosENS_2md25CComplementosMunicipiosUFEE10DoConverteERKS5_	745	symbol	match	readings: table slot,address symbol	410	none	ecourna	1	<binaryen>
@@ -4755,10 +4755,10 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4889	_ZN8NArchive3N7z5CDbEx5ClearEv	2427	symbol	match	-	477	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 4890	_ZN3api14CPolySingletonINS_15ISystemDateTimeEE3setIN9simulador19CWasmSystemDateTimeEEEvPT_RNS_19TPolySingletonsInfoE	4437	symbol	match	readings: address symbol,address string,table slot,address srcloc	2097	none	libc++	1	app/uenux2/mock/app/simulador/wasm/simulador.cpp.o
 4891	-	-	-	no-candidate	no symbol and no ledger pair	399	none	7zip	0	-
-4892	_ZN8NArchive3N7z8CHandler13SetPropertiesEPKPKwPK14tagPROPVARIANTj	4557	symbol	unresolved	ours +0x20 i32.const 8366: a table slot of ours: _ZN8NArchive17CMultiMethodProps4InitEv has no target function	3239	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandlerOut.cpp.o
+4892	_ZN8NArchive3N7z8CHandler13SetPropertiesEPKPKwPK14tagPROPVARIANTj	4557	symbol	unresolved	ours +0x20 i32.const 8365: a table slot of ours: _ZN8NArchive17CMultiMethodProps4InitEv has no target function	3239	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandlerOut.cpp.o
 4893	_ZN8NArchive3N7z11COutHandler18SetSolidFromStringERK7UString	8175	symbol	match	-	327	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandlerOut.cpp.o
 4894	_ZN13CObjectVectorIN8NArchive3N7z7CFolderEED2Ev	3179	symbol	match	-	173	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandlerOut.cpp.o
-4895	_ZN8NArchive3N7z8CHandler11UpdateItemsEP20ISequentialOutStreamjP22IArchiveUpdateCallback	4561	symbol	unresolved	ours +0x11c i32.const 7488: a table slot of ours: the target function is in no table slot	28965	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandlerOut.cpp.o
+4895	_ZN8NArchive3N7z8CHandler11UpdateItemsEP20ISequentialOutStreamjP22IArchiveUpdateCallback	4561	symbol	unresolved	ours +0x11c i32.const 7487: a table slot of ours: the target function is in no table slot	28965	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandlerOut.cpp.o
 4896	-	-	-	no-candidate	no symbol and no ledger pair	254	none	7zip	0	-
 4897	_ZN13CRecordVectorIN8NArchive3N7z12CFilterMode2EE12SortRefDown2EPS2_jj	3173	symbol	match	-	636	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zUpdate.cpp.o
 4898	-	-	-	no-candidate	no symbol and no ledger pair	299	none	7zip	0	-
@@ -4823,9 +4823,9 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4957	-	-	-	no-candidate	no symbol and no ledger pair	325	none	7zip	0	-
 4958	_ZN22CArchiveUpdateCallback23InFileStream_On_DestroyEm	8662	symbol	differs	+0x9 target +0x8 local.tee 6 | ours +0x8 local.tee 5	228	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
 4959	-	-	-	no-candidate	no symbol and no ledger pair	21	none	7zip	0	-
-4960	_ZN22CArchiveUpdateCallback19ReportExtractResultEjji	4665	symbol	unresolved	ours +0x1e i32.const 7488: a table slot of ours: the target function is in no table slot	248	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
-4961	_ZN22CArchiveUpdateCallback15ReportOperationEjjj	4666	symbol	unresolved	ours +0x29 i32.const 7488: a table slot of ours: the target function is in no table slot	438	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
-4962	_ZN22CArchiveUpdateCallback10GetStream2EjPP19ISequentialInStreamj	4667	symbol	unresolved	ours +0xe7 i32.const 7488: a table slot of ours: the target function is in no table slot	1257	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
+4960	_ZN22CArchiveUpdateCallback19ReportExtractResultEjji	4665	symbol	unresolved	ours +0x1e i32.const 7487: a table slot of ours: the target function is in no table slot	248	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
+4961	_ZN22CArchiveUpdateCallback15ReportOperationEjjj	4666	symbol	unresolved	ours +0x29 i32.const 7487: a table slot of ours: the target function is in no table slot	438	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
+4962	_ZN22CArchiveUpdateCallback10GetStream2EjPP19ISequentialInStreamj	4667	symbol	unresolved	ours +0xe7 i32.const 7487: a table slot of ours: the target function is in no table slot	1257	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
 4963	_ZN22CArchiveUpdateCallback14GetRootRawPropEjPPKvPjS3_	4668	symbol	match	-	25	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
 4964	_ZN22CArchiveUpdateCallback11GetRootPropEjP14tagPROPVARIANT	4669	symbol	unresolved	ours +0x3a call 1008: _ZN8NWindows4NCOM12CPropVariantaSEb has no target function	180	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
 4965	-	-	-	no-candidate	no symbol and no ledger pair	10	none	7zip	0	-
@@ -4846,8 +4846,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 4980	_ZN8NArchive7NParser10CParseItemD2Ev	843	symbol	match	-	64	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_OpenArchive.cpp.o
 4981	-	-	-	no-candidate	no symbol and no ledger pair	61	none	7zip	0	-
 4982	-	-	-	no-candidate	no symbol and no ledger pair	528	none	7zip	0	-
-4983	_ZN16COpenCallbackImp9GetStreamEPKwPP9IInStream	4705	symbol	unresolved	ours +0x78 i32.const 7647: a table slot of ours: the target function is in no table slot	1212	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
-4984	_ZN16COpenCallbackImp11GetPropertyEjP14tagPROPVARIANT	4706	symbol	unresolved	ours +0x3b i32.const 7645: a table slot of ours: _ZN8NWindows4NCOM12CPropVariantaSERK7UString has no target function	208	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
+4983	_ZN16COpenCallbackImp9GetStreamEPKwPP9IInStream	4705	symbol	unresolved	ours +0x78 i32.const 7646: a table slot of ours: the target function is in no table slot	1212	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
+4984	_ZN16COpenCallbackImp11GetPropertyEjP14tagPROPVARIANT	4706	symbol	unresolved	ours +0x3b i32.const 7644: a table slot of ours: _ZN8NWindows4NCOM12CPropVariantaSERK7UString has no target function	208	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 4985	_ZN8NArchive5NLzma8CHandler14QueryInterfaceERK4GUIDPPv	4598	ledger	differs	+0x8 target +0x7 i32.const 1157979 | ours +0x7 i32.const 1158155 [ours 570679 = IID_IArchiveOpenSeq+15: address symbol IID_IArchiveOpenSeq → 0x11ac0b]	171	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_LzmaHandler.cpp.o
 4986	_ZN18COutMultiVolStream14QueryInterfaceERK4GUIDPPv	4672	symbol	match	readings: address symbol	91	addr	7zip	2	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_Update.cpp.o
 4987	-	-	-	no-candidate	no symbol and no ledger pair	21	none	7zip	0	-
@@ -8014,22 +8014,22 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8148	_ZN9NCompress6NLzma28CDecoder21SetDecoderProperties2EPKhj	7962	symbol	match	-	47	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
 8149	_ZN9NCompress6NLzma28CDecoder13SetOutBufSizeEjj	7963	symbol	match	-	11	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
 8150	_ZN9NCompress6NLzma28CDecoder12SetInBufSizeEjj	7964	symbol	match	-	11	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8151	_ZThn28_N9NCompress6NLzma28CDecoderD0Ev	7965	symbol	unresolved	ours +0x77 i32.const 8927: a table slot of ours: the target function is in no table slot	151	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8152	_ZThn24_N9NCompress6NLzma28CDecoderD0Ev	7966	symbol	unresolved	ours +0x74 i32.const 8927: a table slot of ours: the target function is in no table slot	148	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8153	_ZThn20_N9NCompress6NLzma28CDecoderD0Ev	7967	symbol	unresolved	ours +0x71 i32.const 8927: a table slot of ours: the target function is in no table slot	145	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8154	_ZThn16_N9NCompress6NLzma28CDecoderD0Ev	7968	symbol	unresolved	ours +0x6e i32.const 8927: a table slot of ours: the target function is in no table slot	142	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8155	_ZThn12_N9NCompress6NLzma28CDecoderD0Ev	7969	symbol	unresolved	ours +0x6b i32.const 8927: a table slot of ours: the target function is in no table slot	139	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8156	_ZThn8_N9NCompress6NLzma28CDecoderD0Ev	7970	symbol	unresolved	ours +0x68 i32.const 8927: a table slot of ours: the target function is in no table slot	136	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8157	_ZThn4_N9NCompress6NLzma28CDecoderD0Ev	7972	symbol	unresolved	ours +0x65 i32.const 8927: a table slot of ours: the target function is in no table slot	133	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8158	_ZN9NCompress6NLzma28CDecoderD0Ev	7973	symbol	unresolved	ours +0x60 i32.const 8927: a table slot of ours: the target function is in no table slot	128	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8159	_ZThn28_N9NCompress6NLzma28CDecoderD1Ev	7974	symbol	unresolved	ours +0x77 i32.const 8927: a table slot of ours: the target function is in no table slot	148	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8160	_ZThn24_N9NCompress6NLzma28CDecoderD1Ev	7975	symbol	unresolved	ours +0x74 i32.const 8927: a table slot of ours: the target function is in no table slot	145	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8161	_ZThn20_N9NCompress6NLzma28CDecoderD1Ev	7976	symbol	unresolved	ours +0x71 i32.const 8927: a table slot of ours: the target function is in no table slot	142	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8162	_ZThn16_N9NCompress6NLzma28CDecoderD1Ev	7977	symbol	unresolved	ours +0x6e i32.const 8927: a table slot of ours: the target function is in no table slot	139	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8163	_ZThn12_N9NCompress6NLzma28CDecoderD1Ev	7978	symbol	unresolved	ours +0x6b i32.const 8927: a table slot of ours: the target function is in no table slot	136	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8164	_ZThn8_N9NCompress6NLzma28CDecoderD1Ev	7979	symbol	unresolved	ours +0x68 i32.const 8927: a table slot of ours: the target function is in no table slot	133	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8165	_ZThn4_N9NCompress6NLzma28CDecoderD1Ev	7980	symbol	unresolved	ours +0x65 i32.const 8927: a table slot of ours: the target function is in no table slot	130	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
-8166	_ZN9NCompress6NLzma28CDecoderD2Ev	7981	symbol	unresolved	ours +0x60 i32.const 8927: a table slot of ours: the target function is in no table slot	125	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8151	_ZThn28_N9NCompress6NLzma28CDecoderD0Ev	7965	symbol	unresolved	ours +0x77 i32.const 8926: a table slot of ours: the target function is in no table slot	151	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8152	_ZThn24_N9NCompress6NLzma28CDecoderD0Ev	7966	symbol	unresolved	ours +0x74 i32.const 8926: a table slot of ours: the target function is in no table slot	148	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8153	_ZThn20_N9NCompress6NLzma28CDecoderD0Ev	7967	symbol	unresolved	ours +0x71 i32.const 8926: a table slot of ours: the target function is in no table slot	145	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8154	_ZThn16_N9NCompress6NLzma28CDecoderD0Ev	7968	symbol	unresolved	ours +0x6e i32.const 8926: a table slot of ours: the target function is in no table slot	142	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8155	_ZThn12_N9NCompress6NLzma28CDecoderD0Ev	7969	symbol	unresolved	ours +0x6b i32.const 8926: a table slot of ours: the target function is in no table slot	139	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8156	_ZThn8_N9NCompress6NLzma28CDecoderD0Ev	7970	symbol	unresolved	ours +0x68 i32.const 8926: a table slot of ours: the target function is in no table slot	136	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8157	_ZThn4_N9NCompress6NLzma28CDecoderD0Ev	7972	symbol	unresolved	ours +0x65 i32.const 8926: a table slot of ours: the target function is in no table slot	133	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8158	_ZN9NCompress6NLzma28CDecoderD0Ev	7973	symbol	unresolved	ours +0x60 i32.const 8926: a table slot of ours: the target function is in no table slot	128	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8159	_ZThn28_N9NCompress6NLzma28CDecoderD1Ev	7974	symbol	unresolved	ours +0x77 i32.const 8926: a table slot of ours: the target function is in no table slot	148	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8160	_ZThn24_N9NCompress6NLzma28CDecoderD1Ev	7975	symbol	unresolved	ours +0x74 i32.const 8926: a table slot of ours: the target function is in no table slot	145	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8161	_ZThn20_N9NCompress6NLzma28CDecoderD1Ev	7976	symbol	unresolved	ours +0x71 i32.const 8926: a table slot of ours: the target function is in no table slot	142	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8162	_ZThn16_N9NCompress6NLzma28CDecoderD1Ev	7977	symbol	unresolved	ours +0x6e i32.const 8926: a table slot of ours: the target function is in no table slot	139	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8163	_ZThn12_N9NCompress6NLzma28CDecoderD1Ev	7978	symbol	unresolved	ours +0x6b i32.const 8926: a table slot of ours: the target function is in no table slot	136	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8164	_ZThn8_N9NCompress6NLzma28CDecoderD1Ev	7979	symbol	unresolved	ours +0x68 i32.const 8926: a table slot of ours: the target function is in no table slot	133	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8165	_ZThn4_N9NCompress6NLzma28CDecoderD1Ev	7980	symbol	unresolved	ours +0x65 i32.const 8926: a table slot of ours: the target function is in no table slot	130	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
+8166	_ZN9NCompress6NLzma28CDecoderD2Ev	7981	symbol	unresolved	ours +0x60 i32.const 8926: a table slot of ours: the target function is in no table slot	125	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Decoder.cpp.o
 8167	_ZThn16_N8NArchive3NXz8CHandler7ReleaseEv	4579	symbol	match	-	9	fingerprint	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_XzHandler.cpp.o
 8168	_ZNK3api5teste9CUrnaMock15ModeloAbreviadoEv	7455	symbol	differs	+0x6a target +0x69 i32.const 8975 | ours +0x69 i32.const 8962 [ours 7193 = <internal>:(.rodata)+6169: address string → 0x2302]	366	none	api	1	app/uenux2/mock/app/simulador/wasm/simulador.cpp.o
 8169	_ZThn16_N9NCompress10CCopyCoder14QueryInterfaceERK4GUIDPPv	8008	symbol	match	-	14	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_CopyCoder.cpp.o
@@ -8069,14 +8069,14 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8203	_ZN9NCompress5NLzma8CEncoder21SetCoderPropertiesOptEPKjPK14tagPROPVARIANTj	7880	symbol	match	-	77	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
 8204	_ZThn4_N9NCompress5NLzma8CEncoder18SetCoderPropertiesEPKjPK14tagPROPVARIANTj	7881	symbol	unresolved	ours +0xe call 2480: LzmaEncProps_Init has no target function	155	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
 8205	_ZN9NCompress5NLzma8CEncoder18SetCoderPropertiesEPKjPK14tagPROPVARIANTj	7882	symbol	unresolved	ours +0xe call 2480: LzmaEncProps_Init has no target function	155	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8206	_ZThn12_N9NCompress5NLzma8CEncoderD0Ev	7883	symbol	unresolved	ours +0x48 i32.const 9079: a table slot of ours: the target function is in no table slot	85	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8207	_ZThn8_N9NCompress5NLzma8CEncoderD0Ev	7884	symbol	unresolved	ours +0x45 i32.const 9079: a table slot of ours: the target function is in no table slot	82	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8208	_ZThn4_N9NCompress5NLzma8CEncoderD0Ev	7885	symbol	unresolved	ours +0x42 i32.const 9079: a table slot of ours: the target function is in no table slot	79	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8209	_ZN9NCompress5NLzma8CEncoderD0Ev	7886	symbol	unresolved	ours +0x3d i32.const 9079: a table slot of ours: the target function is in no table slot	74	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8210	_ZThn12_N9NCompress5NLzma8CEncoderD1Ev	7887	symbol	unresolved	ours +0x48 i32.const 9079: a table slot of ours: the target function is in no table slot	82	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8211	_ZThn8_N9NCompress5NLzma8CEncoderD1Ev	7889	symbol	unresolved	ours +0x45 i32.const 9079: a table slot of ours: the target function is in no table slot	79	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8212	_ZThn4_N9NCompress5NLzma8CEncoderD1Ev	7890	symbol	unresolved	ours +0x42 i32.const 9079: a table slot of ours: the target function is in no table slot	76	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
-8213	_ZN9NCompress5NLzma8CEncoderD2Ev	7891	symbol	unresolved	ours +0x3c i32.const 9079: a table slot of ours: the target function is in no table slot	71	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8206	_ZThn12_N9NCompress5NLzma8CEncoderD0Ev	7883	symbol	unresolved	ours +0x48 i32.const 9078: a table slot of ours: the target function is in no table slot	85	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8207	_ZThn8_N9NCompress5NLzma8CEncoderD0Ev	7884	symbol	unresolved	ours +0x45 i32.const 9078: a table slot of ours: the target function is in no table slot	82	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8208	_ZThn4_N9NCompress5NLzma8CEncoderD0Ev	7885	symbol	unresolved	ours +0x42 i32.const 9078: a table slot of ours: the target function is in no table slot	79	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8209	_ZN9NCompress5NLzma8CEncoderD0Ev	7886	symbol	unresolved	ours +0x3d i32.const 9078: a table slot of ours: the target function is in no table slot	74	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8210	_ZThn12_N9NCompress5NLzma8CEncoderD1Ev	7887	symbol	unresolved	ours +0x48 i32.const 9078: a table slot of ours: the target function is in no table slot	82	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8211	_ZThn8_N9NCompress5NLzma8CEncoderD1Ev	7889	symbol	unresolved	ours +0x45 i32.const 9078: a table slot of ours: the target function is in no table slot	79	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8212	_ZThn4_N9NCompress5NLzma8CEncoderD1Ev	7890	symbol	unresolved	ours +0x42 i32.const 9078: a table slot of ours: the target function is in no table slot	76	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
+8213	_ZN9NCompress5NLzma8CEncoderD2Ev	7891	symbol	unresolved	ours +0x3c i32.const 9078: a table slot of ours: the target function is in no table slot	71	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaEncoder.cpp.o
 8214	_ZThn28_N9NCompress5NLzma8CDecoder4ReadEPvjPj	7894	symbol	match	-	16	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
 8215	_ZThn20_N9NCompress5NLzma8CDecoder15ReleaseInStreamEv	7895	symbol	match	-	39	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
 8216	_ZN9NCompress5NLzma8CDecoder15ReleaseInStreamEv	7896	symbol	match	-	39	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
@@ -8094,36 +8094,36 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8228	_ZThn8_N9NCompress5NBcj28CEncoder12SetInBufSizeEjj	3171	symbol	match	-	11	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Bcj2Coder.cpp.o
 8229	_ZN9NCompress5NLzma8CDecoder13SetOutBufSizeEjj	7909	symbol	match	-	11	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
 8230	_ZN9NCompress5NBcj28CDecoder13SetOutBufSizeEjj	4546	symbol	match	-	11	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Bcj2Coder.cpp.o
-8231	_ZThn28_N9NCompress5NLzma8CDecoderD0Ev	7910	symbol	unresolved	ours +0x6c i32.const 9019: a table slot of ours: the target function is in no table slot	158	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8232	_ZThn24_N9NCompress5NLzma8CDecoderD0Ev	7911	symbol	unresolved	ours +0x69 i32.const 9019: a table slot of ours: the target function is in no table slot	156	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8233	_ZThn20_N9NCompress5NLzma8CDecoderD0Ev	7912	symbol	unresolved	ours +0x66 i32.const 9019: a table slot of ours: the target function is in no table slot	153	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8234	_ZThn16_N9NCompress5NLzma8CDecoderD0Ev	7913	symbol	unresolved	ours +0x63 i32.const 9019: a table slot of ours: the target function is in no table slot	150	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8235	_ZThn12_N9NCompress5NLzma8CDecoderD0Ev	7914	symbol	unresolved	ours +0x60 i32.const 9019: a table slot of ours: the target function is in no table slot	147	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8236	_ZThn8_N9NCompress5NLzma8CDecoderD0Ev	7915	symbol	unresolved	ours +0x5d i32.const 9019: a table slot of ours: the target function is in no table slot	144	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8237	_ZThn4_N9NCompress5NLzma8CDecoderD0Ev	7916	symbol	unresolved	ours +0x5a i32.const 9019: a table slot of ours: the target function is in no table slot	141	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8238	_ZN9NCompress5NLzma8CDecoderD0Ev	7917	symbol	unresolved	ours +0x55 i32.const 9019: a table slot of ours: the target function is in no table slot	136	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8239	_ZThn28_N9NCompress5NLzma8CDecoderD1Ev	7919	symbol	unresolved	ours +0x6c i32.const 9019: a table slot of ours: the target function is in no table slot	155	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8240	_ZThn24_N9NCompress5NLzma8CDecoderD1Ev	7920	symbol	unresolved	ours +0x69 i32.const 9019: a table slot of ours: the target function is in no table slot	153	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8241	_ZThn20_N9NCompress5NLzma8CDecoderD1Ev	7921	symbol	unresolved	ours +0x66 i32.const 9019: a table slot of ours: the target function is in no table slot	150	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8242	_ZThn16_N9NCompress5NLzma8CDecoderD1Ev	7922	symbol	unresolved	ours +0x63 i32.const 9019: a table slot of ours: the target function is in no table slot	147	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8243	_ZThn12_N9NCompress5NLzma8CDecoderD1Ev	7923	symbol	unresolved	ours +0x60 i32.const 9019: a table slot of ours: the target function is in no table slot	144	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8244	_ZThn8_N9NCompress5NLzma8CDecoderD1Ev	7924	symbol	unresolved	ours +0x5d i32.const 9019: a table slot of ours: the target function is in no table slot	141	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8245	_ZThn4_N9NCompress5NLzma8CDecoderD1Ev	7925	symbol	unresolved	ours +0x5a i32.const 9019: a table slot of ours: the target function is in no table slot	138	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
-8246	_ZN9NCompress5NLzma8CDecoderD2Ev	7926	symbol	unresolved	ours +0x55 i32.const 9019: a table slot of ours: the target function is in no table slot	133	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8231	_ZThn28_N9NCompress5NLzma8CDecoderD0Ev	7910	symbol	unresolved	ours +0x6c i32.const 9018: a table slot of ours: the target function is in no table slot	158	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8232	_ZThn24_N9NCompress5NLzma8CDecoderD0Ev	7911	symbol	unresolved	ours +0x69 i32.const 9018: a table slot of ours: the target function is in no table slot	156	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8233	_ZThn20_N9NCompress5NLzma8CDecoderD0Ev	7912	symbol	unresolved	ours +0x66 i32.const 9018: a table slot of ours: the target function is in no table slot	153	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8234	_ZThn16_N9NCompress5NLzma8CDecoderD0Ev	7913	symbol	unresolved	ours +0x63 i32.const 9018: a table slot of ours: the target function is in no table slot	150	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8235	_ZThn12_N9NCompress5NLzma8CDecoderD0Ev	7914	symbol	unresolved	ours +0x60 i32.const 9018: a table slot of ours: the target function is in no table slot	147	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8236	_ZThn8_N9NCompress5NLzma8CDecoderD0Ev	7915	symbol	unresolved	ours +0x5d i32.const 9018: a table slot of ours: the target function is in no table slot	144	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8237	_ZThn4_N9NCompress5NLzma8CDecoderD0Ev	7916	symbol	unresolved	ours +0x5a i32.const 9018: a table slot of ours: the target function is in no table slot	141	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8238	_ZN9NCompress5NLzma8CDecoderD0Ev	7917	symbol	unresolved	ours +0x55 i32.const 9018: a table slot of ours: the target function is in no table slot	136	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8239	_ZThn28_N9NCompress5NLzma8CDecoderD1Ev	7919	symbol	unresolved	ours +0x6c i32.const 9018: a table slot of ours: the target function is in no table slot	155	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8240	_ZThn24_N9NCompress5NLzma8CDecoderD1Ev	7920	symbol	unresolved	ours +0x69 i32.const 9018: a table slot of ours: the target function is in no table slot	153	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8241	_ZThn20_N9NCompress5NLzma8CDecoderD1Ev	7921	symbol	unresolved	ours +0x66 i32.const 9018: a table slot of ours: the target function is in no table slot	150	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8242	_ZThn16_N9NCompress5NLzma8CDecoderD1Ev	7922	symbol	unresolved	ours +0x63 i32.const 9018: a table slot of ours: the target function is in no table slot	147	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8243	_ZThn12_N9NCompress5NLzma8CDecoderD1Ev	7923	symbol	unresolved	ours +0x60 i32.const 9018: a table slot of ours: the target function is in no table slot	144	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8244	_ZThn8_N9NCompress5NLzma8CDecoderD1Ev	7924	symbol	unresolved	ours +0x5d i32.const 9018: a table slot of ours: the target function is in no table slot	141	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8245	_ZThn4_N9NCompress5NLzma8CDecoderD1Ev	7925	symbol	unresolved	ours +0x5a i32.const 9018: a table slot of ours: the target function is in no table slot	138	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
+8246	_ZN9NCompress5NLzma8CDecoderD2Ev	7926	symbol	unresolved	ours +0x55 i32.const 9018: a table slot of ours: the target function is in no table slot	133	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_LzmaDecoder.cpp.o
 8247	_ZN9NCompress6NLzma28CEncoder4CodeEP19ISequentialInStreamP20ISequentialOutStreamPKyS7_P21ICompressProgressInfo	7930	symbol	unresolved	ours +0x42 call 4758: Lzma2Enc_Encode2 has no target function	2580	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
 8248	_ZThn8_N9NCompress6NLzma28CEncoder20WriteCoderPropertiesEP20ISequentialOutStream	7931	symbol	unresolved	ours +0x13 call 3263: Lzma2Enc_WriteProperties has no target function	45	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
 8249	_ZN9NCompress6NLzma28CEncoder20WriteCoderPropertiesEP20ISequentialOutStream	7932	symbol	unresolved	ours +0x13 call 3263: Lzma2Enc_WriteProperties has no target function	45	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
 8250	_ZThn12_N9NCompress6NLzma28CEncoder21SetCoderPropertiesOptEPKjPK14tagPROPVARIANTj	7933	symbol	differs	+0x39 target +0x37 i64.store align=3 offset=88 | ours +0x37 i64.store align=3 offset=96	76	shape	7zip	2	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
 8251	_ZN9NCompress6NLzma28CEncoder21SetCoderPropertiesOptEPKjPK14tagPROPVARIANTj	7934	symbol	differs	+0x39 target +0x37 i64.store align=3 offset=88 | ours +0x37 i64.store align=3 offset=96	76	shape	7zip	2	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
 8252	_ZThn4_N9NCompress6NLzma28CEncoder18SetCoderPropertiesEPKjPK14tagPROPVARIANTj	7936	symbol	match	-	16	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8253	_ZThn12_N9NCompress6NLzma28CEncoderD0Ev	7937	symbol	unresolved	ours +0x48 i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	75	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8254	_ZThn8_N9NCompress6NLzma28CEncoderD0Ev	7938	symbol	unresolved	ours +0x45 i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	72	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8255	_ZThn4_N9NCompress6NLzma28CEncoderD0Ev	7939	symbol	unresolved	ours +0x42 i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	69	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8256	_ZN9NCompress6NLzma28CEncoderD0Ev	7940	symbol	unresolved	ours +0x3d i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	64	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8257	_ZThn12_N9NCompress6NLzma28CEncoderD1Ev	7941	symbol	unresolved	ours +0x48 i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	72	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8258	_ZThn8_N9NCompress6NLzma28CEncoderD1Ev	7942	symbol	unresolved	ours +0x45 i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	69	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8259	_ZThn4_N9NCompress6NLzma28CEncoderD1Ev	7943	symbol	unresolved	ours +0x42 i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	66	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
-8260	_ZN9NCompress6NLzma28CEncoderD2Ev	7944	symbol	unresolved	ours +0x3c i32.const 8987: a table slot of ours: Lzma2Enc_Destroy has no target function	61	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8253	_ZThn12_N9NCompress6NLzma28CEncoderD0Ev	7937	symbol	unresolved	ours +0x48 i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	75	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8254	_ZThn8_N9NCompress6NLzma28CEncoderD0Ev	7938	symbol	unresolved	ours +0x45 i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	72	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8255	_ZThn4_N9NCompress6NLzma28CEncoderD0Ev	7939	symbol	unresolved	ours +0x42 i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	69	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8256	_ZN9NCompress6NLzma28CEncoderD0Ev	7940	symbol	unresolved	ours +0x3d i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	64	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8257	_ZThn12_N9NCompress6NLzma28CEncoderD1Ev	7941	symbol	unresolved	ours +0x48 i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	72	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8258	_ZThn8_N9NCompress6NLzma28CEncoderD1Ev	7942	symbol	unresolved	ours +0x45 i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	69	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8259	_ZThn4_N9NCompress6NLzma28CEncoderD1Ev	7943	symbol	unresolved	ours +0x42 i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	66	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
+8260	_ZN9NCompress6NLzma28CEncoderD2Ev	7944	symbol	unresolved	ours +0x3c i32.const 8986: a table slot of ours: Lzma2Enc_Destroy has no target function	61	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Compress_Lzma2Encoder.cpp.o
 8261	_ZL7MyWritePK13ISeqOutStreamPKvm	8531	symbol	match	-	74	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_CWrappers.cpp.o
 8262	_ZL6MyReadPK12ISeqInStreamPvPm	8532	symbol	differs	+0x1 target the locals | ours the locals	214	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_CWrappers.cpp.o
 8263	_ZL16CompressProgressPK17ICompressProgressyy	8533	symbol	differs	+0x1 target the locals | ours the locals	164	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_CWrappers.cpp.o
@@ -8139,17 +8139,17 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8273	_ZThn4_N8NArchive3N7z8CHandler14QueryInterfaceERK4GUIDPPv	8189	symbol	match	-	14	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8274	_ZN8NArchive3N7z8CHandlerD0Ev	8190	symbol	match	-	10	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8275	_ZN8NArchive3N7z8CHandler5CloseEv	8191	symbol	differs	+0x1 target the locals | ours the locals	75	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
-8276	_ZN8NArchive3N7z8CHandler4OpenEP9IInStreamPKyP20IArchiveOpenCallback	8192	symbol	unresolved	ours +0xfb i32.const 8580: a table slot of ours: _ZN8NArchive3N7z10CInArchive4OpenEP9IInStreamPKy has no target function	10413	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
+8276	_ZN8NArchive3N7z8CHandler4OpenEP9IInStreamPKyP20IArchiveOpenCallback	8192	symbol	unresolved	ours +0xfb i32.const 8579: a table slot of ours: _ZN8NArchive3N7z10CInArchive4OpenEP9IInStreamPKy has no target function	10413	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8277	_ZN8NArchive3N7z8CHandler11GetPropertyEjjP14tagPROPVARIANT	8193	symbol	unresolved	ours +0x11 call 946: _ZN8NWindows4NCOM17PropVariant_ClearEP14tagPROPVARIANT has no target function	3318	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8278	_ZThn4_N8NArchive3N7z8CHandler10GetRawPropEjjPPKvPjS5_	8194	symbol	match	-	116	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8279	_ZN8NArchive3N7z8CHandler10GetRawPropEjjPPKvPjS5_	8195	symbol	match	-	116	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
-8280	_ZN8NArchive3N7z8CHandler18GetArchivePropertyEjP14tagPROPVARIANT	8196	symbol	unresolved	ours +0x9c i32.const 7487: a table slot of ours: the target function is in no table slot	883	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
+8280	_ZN8NArchive3N7z8CHandler18GetArchivePropertyEjP14tagPROPVARIANT	8196	symbol	unresolved	ours +0x9c i32.const 7486: a table slot of ours: the target function is in no table slot	883	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8281	_ZN8NArchive3N7z8CHandler22GetArchivePropertyInfoEjPPwPjPt	8198	symbol	match	readings: address symbol	60	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8282	_ZN8NArchive3N7z8CHandler28GetNumberOfArchivePropertiesEPj	8199	symbol	match	-	11	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8283	_ZN8NArchive3N7z8CHandler16GetNumberOfItemsEPj	8200	symbol	match	-	15	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zHandler.cpp.o
 8284	_ZN8NArchive3N7z16CFolderOutStreamD0Ev	8212	symbol	differs	+0x1 target the locals | ours the locals	67	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zExtract.cpp.o
 8285	_ZN8NArchive3N7z16CFolderOutStreamD2Ev	8213	symbol	differs	+0x1 target the locals | ours the locals	64	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zExtract.cpp.o
-8286	_ZN8NArchive3N7z8CHandler7ExtractEPKjjiP23IArchiveExtractCallback	8214	symbol	unresolved	ours +0x2c2 i32.const 7742: a table slot of ours: _ZN14CLocalProgress4InitEP9IProgressb has no target function	2297	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zExtract.cpp.o
+8286	_ZN8NArchive3N7z8CHandler7ExtractEPKjjiP23IArchiveExtractCallback	8214	symbol	unresolved	ours +0x2c2 i32.const 7741: a table slot of ours: _ZN14CLocalProgress4InitEP9IProgressb has no target function	2297	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zExtract.cpp.o
 8287	_ZN8NArchive3N7z16CFolderOutStream5WriteEPKvjPj	8216	symbol	unresolved	ours +0x1bd call 3184: _ZN8NArchive3N7z16CFolderOutStream17ProcessEmptyFilesEv has no target function	547	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zExtract.cpp.o
 8288	_ZN8NArchive3N7z8CHandler15GetPropertyInfoEjPPwPjPt	8145	symbol	match	readings: address symbol	341	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zProperties.cpp.o
 8289	_ZN8NArchive3N7z8CHandler21GetNumberOfPropertiesEPj	8146	symbol	match	-	15	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zProperties.cpp.o
@@ -8178,7 +8178,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8312	_ZN8NArchive3N7z15CFolderInStreamD2Ev	8206	symbol	differs	+0x1 target the locals | ours the locals	119	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zFolderInStream.cpp.o
 8313	_ZThn4_N8NArchive3N7z15CFolderInStream16GetSubStreamSizeEyPy	8207	symbol	match	-	114	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zFolderInStream.cpp.o
 8314	_ZN8NArchive3N7z15CFolderInStream16GetSubStreamSizeEyPy	8208	symbol	match	-	114	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zFolderInStream.cpp.o
-8315	_ZN8NArchive3N7z15CFolderInStream4ReadEPvjPj	8209	symbol	unresolved	ours +0x3b4 i32.const 8562: a table slot of ours: the target function is in no table slot	711	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zFolderInStream.cpp.o
+8315	_ZN8NArchive3N7z15CFolderInStream4ReadEPvjPj	8209	symbol	unresolved	ours +0x3b4 i32.const 8561: a table slot of ours: the target function is in no table slot	711	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zFolderInStream.cpp.o
 8316	_ZN9simulador9CWasmLogdD0Ev	11474	symbol	match	-	40	addr	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmlogd.cpp.o
 8317	_ZN8NArchive3N7z22CSequentialOutMtNotifyD0Ev	8217	symbol	unresolved	ours +0x7 call 1239: byn$mgfn-shared$_ZN26CLimitedSequentialInStreamD0Ev has no target function	12	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_7z_7zEncode.cpp.o
 8318	_ZN9simulador9CWasmLogdD2Ev	11475	symbol	match	-	37	addr	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmlogd.cpp.o
@@ -8302,7 +8302,7 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8436	_ZN25CUpdateProduceCallbackImp14ShowDeleteFileEj	8704	symbol	differs	+0x7 target +0x5 i32.load align=2 offset=12 | ours +0x5 i32.load align=2 offset=8	155	shape	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_Update.cpp.o
 8437	_ZN18COutMultiVolStream7SetSizeEy	8710	symbol	unresolved	ours +0xb9 call 3211: _ZN8NWindows5NFile4NDir16DeleteFileAlwaysEPKc has no target function	317	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_Update.cpp.o
 8438	_ZN18COutMultiVolStream4SeekExjPy	8711	symbol	match	-	103	byte	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_Update.cpp.o
-8439	_ZN18COutMultiVolStream5WriteEPKvjPj	8713	symbol	unresolved	ours +0x6f i32.const 7487: a table slot of ours: the target function is in no table slot	1454	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_Update.cpp.o
+8439	_ZN18COutMultiVolStream5WriteEPKvjPj	8713	symbol	unresolved	ours +0x6f i32.const 7486: a table slot of ours: the target function is in no table slot	1454	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_Update.cpp.o
 8440	_ZNKSt3__210__function6__funcIZN3api6ISound4WaitEvEUlvE_FbvEE7__cloneEv	11321	symbol	match	readings: address symbol	19	none	libc++	1	app/uenux2/mock/app/simulador/wasm/cwasmnullsound.cpp.o
 8441	_ZThn28_N22CArchiveUpdateCallbackD0Ev	8627	symbol	match	-	13	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
 8442	_ZThn28_N22CArchiveUpdateCallbackD1Ev	8628	symbol	match	-	10	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_UpdateCallback.cpp.o
@@ -8452,8 +8452,8 @@ index	symbol	ours	source	verdict	detail	size	ledger_kind	group	tried	object
 8586	_ZN16COpenCallbackImp12SetCompletedEPKyS1_	8840	symbol	unresolved	ours +0xb call 6153: byn$mgfn-shared$_ZN16COpenCallbackImp8SetTotalEPKyS1_ has no target function	15	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8587	_ZN16COpenCallbackImp8SetTotalEPKyS1_	8842	symbol	unresolved	ours +0xb call 6153: byn$mgfn-shared$_ZN16COpenCallbackImp8SetTotalEPKyS1_ has no target function	15	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_UI_Common_ArchiveOpenCallback.cpp.o
 8588	_ZThn4_N8NArchive5NLzma8CHandler14QueryInterfaceERK4GUIDPPv	8349	ledger	unresolved	ours +0xa call 4598: _ZN8NArchive5NLzma8CHandler14QueryInterfaceERK4GUIDPPv has no target function	14	addr	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Archive_LzmaHandler.cpp.o
-8589	_ZN14COutFileStreamD0Ev	8507	symbol	unresolved	ours +0x25 i32.const 7589: a table slot of ours: the target function is in no table slot	26	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FileStreams.cpp.o
-8590	_ZN14COutFileStreamD2Ev	8508	symbol	unresolved	ours +0x25 i32.const 7589: a table slot of ours: the target function is in no table slot	23	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FileStreams.cpp.o
+8589	_ZN14COutFileStreamD0Ev	8507	symbol	unresolved	ours +0x25 i32.const 7588: a table slot of ours: the target function is in no table slot	26	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FileStreams.cpp.o
+8590	_ZN14COutFileStreamD2Ev	8508	symbol	unresolved	ours +0x25 i32.const 7588: a table slot of ours: the target function is in no table slot	23	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FileStreams.cpp.o
 8591	_ZN9simulador13CWasmResource10IsResourceERKNSt3__212basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE	12568	symbol	match	-	50	byte	simulador	1	app/uenux2/mock/app/simulador/wasm/cwasmresource.cpp.o
 8592	-	-	-	no-candidate	no symbol and no ledger pair	10	none	7zip	0	-
 8593	_ZN17CStdOutFileStream5WriteEPKvjPj	8509	symbol	differs	+0x39 target +0x38 i32.const -2147467259 | ours +0x38 i32.const 1931660 [ours 1811264 = __errno_storage+0: address symbol __errno_storage → 0x1d798c]	93	none	7zip	1	7zip/21.02-st-O3/obj/CPP_7zip_Common_FileStreams.cpp.o
