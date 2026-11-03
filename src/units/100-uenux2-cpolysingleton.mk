@@ -66,9 +66,10 @@
 #   (byn$mgfn-shared$...IInputKbd...instance) where the target keeps two: the target's 455 has the executable TU's
 #   landing pads (below). Our 455 is that TU's copy now (unit 170's object, matched since unit 237), so the two bodies
 #   differ and 1714 matches (from cescolheopcao.cpp.o on this tree). Their callers 11041, 11075 and 11077 match.
-# - 2079 ITextToSpeech: our headers give it a key function, a trap of unit 82 that the original does not have, so
-#   `typeid(T).name()` loads the name from the typeinfo where the target has a constant: 44 rows more (pnpm wasm
-#   score). It waits for that member, inline in the original.
+# - 2079 ITextToSpeech matches now, from cinstrucaovotacaoacessibilidade.cpp.o (unit 150's file: its record lies after
+#   that file's). While our headers gave ITextToSpeech a key function, a trap of unit 82 that the original does not have,
+#   `typeid(T).name()` loaded the name from the typeinfo where the target has a constant (44 rows more, pnpm wasm
+#   score); api/audio/itexttospeech.h has none now, and unit 97's and 150's callers keep the copy out of line.
 # - 4879 and 4890, set<ITimerScheduler> and set<ISystemDateTime>, match now; they read `differs` in frame offsets alone, a
 #   body right apart from something outside it (how-to step 5), while their copies were another TU's. Their records (1531292, 1531932) lie in fn 8302's object, so the target's
 #   copies are that TU's (unit 188's simulador.cpp now). Which stack slots push's temporaries take depends on what was emitted first
@@ -89,7 +90,9 @@
 #   13876 match from unit 170's object, the executable TU, which instantiates CPolySingleton<api::ISound>::instance at those
 #   flags; with main written there, 3343, 5423, 5434, 5436, 642, 1322, 1126, 624, 1119, 5650 and 6700 match from it too,
 #   and 1166, 6147 and 1009 as binaryen's merges of its code, and with fragment 241's interfaces and unit 165's GetInsts
-#   the push thunks 5395, 5398 and 5407; the rest wait for the TU's code that instantiates them (unit 170's fragment).
+#   the push thunks 5395, 5398 and 5407; 1091 matches from it since unit 97's callers keep it out of line, and 3281
+#   from src/app/roots_texttospeech.cpp's instance at that TU's rule; the rest wait for the TU's code that instantiates
+#   them (unit 170's fragment).
 #   5417, 5425 and 5427 match since unit 170's roots give them the second call site the target gives them, and the
 #   set<T> bodies that call them are named; 640 (remove by name) and 13621 (unlock_shared_and_lock) match since the
 #   latter takes the guard (below). The push bodies differ in one frame slot, depura's format string, and unit 170's

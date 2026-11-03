@@ -69,7 +69,9 @@
 # - the executable TU's push bodies 10090, 5384, 8758, 8911, 8986 and 9233 read `differs` now on a frame offset, 288
 #   against 280 (10090: 156 over 885, all operand-only, its frame offsets from the target's 288 up 8 lower), read as a
 #   form of CPolySingletonList::push (unit 100's header); 7667 and 8834 on their first call, a has<T> thunk (target
-#   3281 and 5417, ours 3618 and 5423).
+#   3281 and 5417, ours 3618 and 5423). 3281 matches since, from src/app/roots_texttospeech.cpp's instance, and 7667
+#   still reads so: its census pair is 8758's body (set<IGenericFactory<ISemaphore>>), since no body of ours is the
+#   executable TU's set<api::ITextToSpeech>, for which unit 150's roots stand.
 # - 9650, 9831, 9897 and 10307 (main): `unresolved` on table slots of set<T> bodies that have no target name; 640 on
 #   unlock_shared_and_lock's; 9372 on a table slot of ours whose function the target's table does not hold.
 #   Since then 9372 matches (fragment 241), and 9650, 9831, 9897, 10307 and 640 with unit 170's has<T> roots and unit
