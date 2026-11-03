@@ -1,15 +1,16 @@
 // Pending members of the classes of src/units/152-uenux2-app-vota-operador-estados.mk, each reached only through its
 // vtable. The classes' vtables need every slot defined; these bodies are NOT the target's, they trap. Move each into
 // its class's .cpp when it is reconstructed, and delete this file with the last. What each waits for is a callee with
-// no name, or fn 652, written and unresolved (unit 161) (ledger/callgraph.tsv against splat/symbol_addrs.txt).
+// no name (ledger/callgraph.tsv against splat/symbol_addrs.txt); fn 652, which two of them call, matches now (unit
+// 161).
 // Fn 501, which six of them call too, matches now (api::CPriorityMessageQueue<api::SMessage>::Insert, named by its
 // callers' calls: src/units/269-uenux2-cmessagequeue-insert.mk):
-// - vota::CSuspensaoAutomaticaEleitor::ProcessKey (fn 10404, slot 6): fn 652, one of the two states it goes to (the
-//   other, fn 1150, is unit 142's CMostraEleitorVotando::GetInst).
+// - vota::CSuspensaoAutomaticaEleitor::ProcessKey (fn 10404, slot 6): it goes to fn 652's state or fn 1150's (unit
+//   142's CMostraEleitorVotando::GetInst), both matched; not written.
 // - vota::CPerguntaEleitorVotando::ProcessInput (fn 10415, slot 7): every direct callee has a name now (1151 is unit
 //   121's vota::AdicionaCampoNumerico, 1150 unit 142's); not written.
-// - vota::CDesabilitaAudioEleitor::ProcessInput (fn 10435, slot 7): fn 652 (it calls
-//   CLogVota::LogaAudioDesativadoFimVotacao, fn 4529, written, and usleep, 3966, matched).
+// - vota::CDesabilitaAudioEleitor::ProcessInput (fn 10435, slot 7): it calls fn 652, matched now,
+//   CLogVota::LogaAudioDesativadoFimVotacao (fn 4529, written) and usleep (3966, matched); not written.
 // - vota::CPerguntaFilaEleitorVazia::ProcessInput (fn 10713, slot 7): fn 3631, CPedeTituloEncerramento's GetInst,
 //   which calls fn 1151.
 // - vota::CHorarioVotacaoTerminou::ProcessInput (fn 10757, slot 7): a thunk into binaryen's fn 2295, with the slots 7 of

@@ -7,7 +7,11 @@
 #   CDadoEleitorNaoConfere (10448); the ProcessInput of CEleitorJaVotou (10641) and CInformaAnoNascimentoErrado (10493),
 #   thunks into binaryen's 6015, which our link forms from the two of them as the target does (matched under
 #   byn$mgfn-shared$_ZN4vota15CEleitorJaVotou12ProcessInputEv); vota::CPedeIdentidade::FinishState (10678) and the exit
-#   destructor of its static std::mutex (10681), its GetInst (652) written and unresolved (below);
+#   destructor of its static std::mutex (10681), its GetInst (652, below), ProcessInput (10677) and the exit destructor
+#   of its static std::unique_ptr (10682, a thunk into binaryen's 3886: src/units/221-uenux2-app-comum-constructors.mk);
+# - CIdentidadeInvalida::ProcessInput (10667), with 2295, the body binaryen forms from it and unit 278's 10461, and
+#   10604 under 10667's symbol (below); CVerificaDadoEleitor::GetInst (2735) and its statics' exit destructors (10446,
+#   10445);
 # - vota::CEleitorNaoEncontrado's slot 9 (10663) and its destructors (1907, 1689), over its new base
 #   vota::IEleitorImpedidoVotar;
 # - two CLogVota members out of line in app/vota/log/clogvota.cpp, unit 119's file: 2097 and 4522; three more there have
@@ -103,21 +107,22 @@
 # celeitornaoencontrado.cpp includes cconfiguracaoeleicao.h, so it takes the Boost include path, as
 # ccontrolareconhecimento.cpp does.
 #
-# Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's (each header names the function
-# that holds them inlined);
+# Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's and CVerificaDadoEleitor's (each
+# header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
-# waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10667, 10443, 10447,
-# 10677, 10676, 10625 and 10624 (pending).
+# waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10443, 10447, 10676, 10625
+# and 10624 (pending).
 #
 # CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
-# its 16-byte frame follows the `new` of 32 bytes) and the statics, and is `unresolved` on a name, not on its bytes.
-# The end of "/{:04}" in it is, in the target, the tail of "{:02}/{:02}/{:04}" (8609), a literal whose start only fns
-# 2687 and 10273 load (grep over build/out/splat/pieces/asm); with 2687 in the link (unit 265's conversaodatahora.cpp)
-# pnpm wasm splat-remap prints `target 652: IDENTICAL` against our GetInst. Its row reads `unresolved self-voted +0x5
-# i32.const 1905336: _ZN4vota15CPedeIdentidade6s_instE = 0x1d12b8 (evidence:vote:8 by:652)`: 652 is the one voter of
-# s_inst's name (docs/reference/splat.md section 3, "No circular evidence"), and the target's other reader of 1905336,
-# 10682 (below), is no function of our link. In the target's order, under a std::lock_guard of the static std::mutex
+# its 16-byte frame follows the `new` of 32 bytes) and the statics. It matches. The end of "/{:04}" in it is, in the
+# target, the tail of "{:02}/{:02}/{:04}" (8609), a literal whose start only fns 2687 and 10273 load (grep over
+# build/out/splat/pieces/asm), and 2687 is in the link (unit 265's conversaodatahora.cpp). 652 is the one voter of
+# s_inst's name (`_ZN4vota15CPedeIdentidade6s_instE = 0x1d12b8; // ... evidence:vote:8 by:652`), so its row read
+# `unresolved self-voted +0x5 i32.const 1905336` while the target's other reader of 1905336, 10682 (below), was no
+# function of our link (docs/reference/splat.md section 3, "No circular evidence"); 10682 matches now and re-points
+# through that name (its row's `readings: address symbol`), and 652 matches with it. In the target's order, under a
+# std::lock_guard of the static std::mutex
 # (the bytes show its unlock, fn 150, at the end): on the first call the object
 # (CAppState's constructor with EVENTO_ENTRADA | EVENTO_TICK, 6), the three ticks through CThreadOperador::GetInst
 # (fn 270) and AddStoppedTick (fn 807) with 60000, 5000 and 1000, the std::make_shared<std::string>(" ") at +16, the
@@ -130,9 +135,10 @@
 # exit destructors (10682, s_inst's, and 10681, s_mutex's) sit above StartState (10680) in band 1. 10681 matches (its
 # body's content; s_mutex is named by 652's votes, the one other reader of 1905312). 10682 is `f3886(1905336)`: 3886 is
 # called by 10321, 10457 and 10682, the exit destructors of three static std::unique_ptr (10313 and 5396 read the other
-# two), read as one body binaryen keeps for three classes' identical ~unique_ptr (the three share the D2 1537); our link
-# holds two of the three statics (10313's, unit 135's CPedeDigitalMesario::s_inst, but not 5396's), and 3886, 10321 and
-# 10682 stay no-candidate. Chosen: the statics' names, the lock_guard's spelling and EVENTO_ENTRADA | EVENTO_TICK for 6.
+# two), read as one body binaryen keeps for three classes' identical ~unique_ptr (the three share the D2 1537). With
+# 5396's static in our link (vota::CRegistraDigitalOperador's, unit 221) binaryen forms 3886 from the three, and 3886,
+# 10321, 10457 and 10682 match (unit 221's fragment). Chosen: the statics' names, the lock_guard's spelling and
+# EVENTO_ENTRADA | EVENTO_TICK for 6.
 #
 # CPedeIdentidade::StartState (10680, slot 2) is written in cpedeidentidade.cpp, its records on lines 62 and 63 (the
 # CPolySingleton<IUrna>::instance() call of the `if` and CPolySingleton<IScreenMT>::instance()'s inside it, both at
@@ -147,6 +153,48 @@
 # steps 7 to 9). Chosen: the log member's name and its place in clogvota.cpp (binaryen inlined it: no index orders it),
 # `>= 2020`, the slot called directly on GetInst's result rather than through a vota:: function over it, and the two
 # `if`s' spelling. ProcessTick (10676) stays pending: the pending file says what it waits for.
+#
+# CPedeIdentidade::ProcessInput (10677, slot 7) is written in cpedeidentidade.cpp, after the constructor, a chosen
+# line. Read() of the form at +24; on CORRIGE (5) the next state is CEscolheOpcao::GetInst's (fn 2753); on CONFIRMA (9),
+# in the training mode (comum::CAppInfo::EhTreinamentoEleitor, fn 697), the state a 16-byte frame returns, else the one
+# a 32-byte frame returns, stored only when not null. Each frame is a function binaryen inlined at its one call site,
+# and clang keeps both out of line (wasm-objdump -x of cpedeidentidade.cpp.o lists them): ProximoEstadoTreinamento
+# (CEleitores::GetInst, fn 326, twice: the cursor's Reset, inline in api/io/cdatamap.h, and GetCurrent, fn 656; the
+# voter's identity of its own type, fn 708; SetIdentidadeDigitada and SetTipoIdentidadeDigitada, fns 5414 and 3619;
+# CNomeEleitor::GetInst, fn 5401) and ProximoEstadoIdentidadeDigitada (the form's first input's text copied, no state
+# when it is empty; CLogVota::GetInst, then the member LogaIdentificadorDigitadoMesario held inlined, which calls
+# api::CLoga::loga, fn 433, with +4, severity 1 and "Identificador do eleitor digitado pelo mesário", added to
+# clogvota.cpp, unit 119's file; CHorarioVotacaoTerminou::GetInst, fn 5430, when IsVotacaoBloqueadaPorHorario, fn
+# 2226; else SetIdentidadeDigitada of the text filled to 12 characters with '0', fns 753 and 5414, and
+# CValidaIdentidade::GetInst, unit 278's, with its constructor inlined: the one store of that vptr, 1589072, is
+# 10677's). It matches. Chosen: the two helpers' names and their result type, ProximoEstadoIdentidadeDigitada's being
+# a member (it reads the form at +24) and ProximoEstadoTreinamento's a free function of vota with external linkage (it
+# reads nothing of the class), the log member's name and its place in clogvota.cpp, and the switch's spelling.
+#
+# CIdentidadeInvalida::ProcessInput (10667, slot 7) is written in cidentidadeinvalida.cpp: `f2295(p0, 5, <its Read()
+# record>)`, a thunk into the body binaryen merges from five states' slot 7 that go to CPedeIdentidade::GetInst's state
+# on one key (2295's callers 10461, 10604, 10667, 10709 and 10757: ledger/callgraph.tsv). Our link forms 2295 from 10667
+# and unit 278's 10461, both written as `if (m_form->Read() == <key>) m_pNextState = &CPedeIdentidade::GetInst();`
+# (wasm-objdump -d of the link: our 2295's two callers are those two), and 2295, 10667 and 10461 match. The scan also
+# lists 10604, vota::CEleitorImpedidoJustificarVotoCPF::ProcessInput (slot 7 of the vtable @1589588 in
+# ledger/vtables.json, a class not in our link), under 10667's symbol: the census pairs 10604 with our 10667, the same
+# thunk over the same key and a record of the same content (`readings: address same-content`), and the build verifies
+# it. No symbol of our link is its own, so the line stays as step 9 wrote it, and it moves to that class's member when
+# a unit writes it.
+#
+# CVerificaDadoEleitor::GetInst (2735) is written in cverificadadoeleitor.cpp with the constructor and the statics:
+# s_inst @1909204 and s_mutex @1909180 (exit destructors 10446, `f389(p0, 1909204)`, and 10445), a new of 20 bytes,
+# CAppState's constructor with EVENTO_ENTRADA (2), the vptr 1592720 (2735 is the one function that stores it: grep over
+# build/out/splat/pieces/asm, so the vtable sink of this class went), and the form at +12 built in the constructor's one
+# 96-byte frame: the voter's name (CEleitorDadoNomeParaUrna::Text) at {1, 1} with "{:2}", GetTextoIdentidadeDigitada at
+# {1, 2}, "Seq:" at {32, 2}, CEleitorDadoSequencial::Text at {40, 2} with "{:04}" on the right, "Digite o ANO de
+# nascimento:" at {1, 3}, AdicionaCampoNumerico(builder, 4, true, {29, 3}) (fn 1151), "CORRIGE: cancelar" at {1, 4} and
+# "CONFIRMA: habilitar" at {40, 4} on the right, GetInteractiveForm("", true); no LED. It matches, with 10446 and 10445.
+# The builder is a function of the file's anonymous namespace, which clang inlines into the constructor
+# (cverificadadoeleitor.cpp.o has no function of its own for it), the shape of unit 239's CNomeEleitor form; the same
+# code written in the constructor's body is not measured. Chosen: the builder's name and namespace, the statics' names,
+# the lock_guard's spelling, and GetInst's and the statics' lines after the destructor. Its four target callers (10447,
+# 10473, 10477, 10485) are not written: unit 278's roots stand for them.
 #
 # Chosen, no evidence names them: the names of the three helpers, of the statics and of every data member, and their
 # types where only a width shows (int for the 32-bit counters), and uebyte as the spelling of the byte's unsigned 8-bit
@@ -172,9 +220,10 @@
 # unrecorded vtables between them and aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side.
 # The order of the sources below follows the data, leidentidade's before confirmaidentidade's.
 #
-# Roots: six classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's went: its constructor is
-# in the link, inlined into 652), and stand-ins for the target callers of 5403 to 5406, 2097, 4522, 4661 and 652 (the
-# roots file names them; 652's other caller in the link is unit 71's 10430). ccontrolareconhecimento.cpp reaches Boost
+# Roots: five classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's and
+# CVerificaDadoEleitor's went: their constructors are in the link, inlined into 652 and 2735), and stand-ins for the
+# target callers of 5403 to 5406, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link).
+# 2735's callers' stand-in is in unit 278's roots. ccontrolareconhecimento.cpp reaches Boost
 # through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #

@@ -129,7 +129,8 @@ void CReimprimindoResumoZeresima::StartState()
     __builtin_trap();
 }
 
-// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee 652 unresolved (unit 161; 599 and 1687 are unit 50's).
+// CCancelaHabilitacaoEleitor::StartState: fn 10646 (40 B), callee 652 matched now (unit 161; 599 and 1687 are unit
+// 50's).
 void CCancelaHabilitacaoEleitor::StartState()
 {
     __builtin_trap();
@@ -164,7 +165,7 @@ namespace vota {
 // CSincronismoOperador::ProcessKey: fn 10209 (120 B), callee with no body: 5341 (a screen it shows with key 14 or 15,
 // which builds its api::CMTFormBuilder in place, its 12 bytes zeroed with no call of fn 203: the remainder this unit's
 // fragment records for 10214, not explained). 509, 697, 1901 (unit 71's) and 5393 (unit 152's) match; 652
-// (vota::CPedeIdentidade::GetInst, unit 161) is written and named by its vptr anchor.
+// (vota::CPedeIdentidade::GetInst, unit 161) matches now.
 void CSincronismoOperador::ProcessKey(uebyte)
 {
     __builtin_trap();

@@ -88,6 +88,17 @@ void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
     loga("Habilitação cancelada durante a captura de digital do mesário");
 }
 
+void CLogVota::LogaSolicitaDigitalMesario()
+{
+    loga("Solicita digital do mesário");
+}
+
+void CLogVota::LogaIdentificadorDigitadoMesario()
+{
+    const std::string mensagem = "Identificador do eleitor digitado pelo mesário";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
 void CLogVota::LogaIndagaRegistroMesarios()
 {
     const std::string mensagem = "Operador indagado se ocorrerá registro de mesários";
