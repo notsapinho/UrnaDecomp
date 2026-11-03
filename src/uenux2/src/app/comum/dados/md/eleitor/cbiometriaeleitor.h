@@ -17,6 +17,7 @@ namespace comum::md {
 class CBiometriaEleitor {
 public:
     CDedo GetDedo(CDedo::TipoDedo tipo) const;
+    bool TemDedo(CDedo::TipoDedo tipo) const;
 
 private:
     void CriaComum(std::vector<CDedo> dedos);

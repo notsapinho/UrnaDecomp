@@ -19,10 +19,10 @@ namespace comum::md {
 // name, which ValidaCriacao trims, and the social name), the transfer at +48, a string at +68, a byte vector at +80 and
 // an optional CIndexer at +92, its flag at +100: fn 946 copies +92 to +103 as plain bytes, fn 5666 leaves the vector
 // and the optional empty and fn 5668 copies both from its last two parameters. comum::md::CEleitorDecorator
-// (celeitordecorator.h) holds these 104 bytes
-// as members of its own. The constructors' parameter types are the widths and the copies the bodies make, but for the
-// first one's signedness, which no width tells: its `int` (the `i` in 5666's and 5668's symbols) against `uedword` is
-// chosen; every member and parameter name, the enum's lack of enumerators and the vector's element type are chosen.
+// (celeitordecorator.h) derives from it. The constructors' parameter types are the widths and the copies the bodies
+// make, but for the first one's signedness, which no width tells: its `int` (the `i` in 5666's and 5668's symbols)
+// against `uedword` is chosen; every member and parameter name, the enum's lack of enumerators and the vector's element
+// type are chosen, and so is the data members' being protected, which lets the decorator's accessors read them.
 class CEleitor {
 public:
     enum ENecessidadeEspecial : int;
@@ -35,11 +35,17 @@ public:
         const CTransferenciaTemporaria& transferencia, const std::string& nomeMae, const std::vector<uebyte>& biometria,
         const CIndexer& offsetBiometria);
 
+    // GetOffsetBiometria throws when the optional is empty (record celeitor.cpp:79). TemBiometria, the test of the
+    // optional's flag (+100), and GetBiometria, the byte vector at +80, are what comum::CEleitorDetalhe::GetBiometria
+    // (fn 1937) reads; their names and their being inline are chosen.
+    bool TemBiometria() const { return m_offsetBiometria.has_value(); }
+    const std::vector<uebyte>& GetBiometria() const { return m_biometria; }
     const CIndexer& GetOffsetBiometria() const;
 
 private:
     void ValidaCriacao() const;
 
+protected:
     int m_sequencial;
     ueword m_secao;
     std::vector<CEleitorIdentidade> m_identidades;

@@ -8,7 +8,9 @@
 //                       ~CParametrosUrna 2267: 7787, beside 5792's and 9171's calls in the link;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
 //                       5604, 11209, 12098, 12110 (7377, unit 197's StartState, is in the link)
-//   DestroiDecoradores  ~CEleitorDecorator 379: 15 callers, some read its result, so this stand-in reads it (R18)
+//   DestroiDecoradores  ~CEleitor 379, the D2 md::CEleitorDecorator's destruction calls (the decorator adds no member
+//                       with a destructor, so it has no D2 of its own): 15 callers, some read its result, so this
+//                       stand-in reads it (R18)
 //   ConsultaTodos       GetCurrent 332, GetCurrentEleicao 2836, GetCargo 861 (12 callers), CHV::GetHorarioVerao 5745
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
@@ -44,7 +46,7 @@ int d267(int) __asm__("_ZN5comum2md16CDetalheConsultaD2Ev");
 int d242(int) __asm__("_ZN5comum2md17CDetalheCandidatoD2Ev");
 int d2267(int) __asm__("_ZN7ecourna3app5dados15CParametrosUrnaD2Ev");
 
-int d379(int) __asm__("_ZN5comum2md17CEleitorDecoratorD2Ev");
+int d379(int) __asm__("_ZN5comum2md8CEleitorD2Ev");
 void w2269(int) __asm__("_ZN5comum7CCargos5ResetEv");
 int w332(int) __asm__("_ZNK5comum7CCargos10GetCurrentEv");
 int w2836(int) __asm__("_ZNK5comum7CCargos17GetCurrentEleicaoEv");

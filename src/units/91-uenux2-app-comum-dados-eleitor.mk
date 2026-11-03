@@ -1,5 +1,5 @@
 # uenux2 comum::md voter classes and the DAOs' shared bodies. Matched: CEleitorDinamico::GetTituloMesarioHabilitacao
-# (target fn 1548) and the class's two constructors (5664, 5663), CBiometriaEleitor::GetDedo (3720),
+# (target fn 1548) and the class's two constructors (5664, 5663), CBiometriaEleitor::GetDedo (3720) and TemDedo (3719),
 # CEleitorDecorator::GetIdentidadePorTipo (708),
 # CEleitorDinamicoDAO::ExcluirID (11543), the three defaults of api/persistencia/iuenuxgenericdao.h with their merge
 # (11540, 11467, 10398, 10397, 10396, thunks of 2297), and the three DAOs' Clone with theirs (11541, 11468, 10399, thunks
@@ -14,6 +14,12 @@
 # the third of each. The sources are the files the records name: md/eleitor/{celeitordinamico,cbiometriaeleitor,
 # celeitordecorator}.cpp, dados/dao/celeitordinamicodao.cpp, comparecimentomesario/dao/ccomparecimentomesariodao.cpp.
 #
+# - CBiometriaEleitor::TemDedo (3719, no record): whether the map is there and holds the finger, `m_dedos.has_value() &&
+#   m_dedos->contains(tipo)`. Its body reads the flag at +32 (compared with 1) and then searches the map at +20 for the
+#   key, signed. Its three target callers (3614, 10316, 10465, not written) are GetDedo's three; the roots' DedosPresentes
+#   stands in for them. It scored 0 over 55 rows (byte-exact) before steps 7 to 9 and matches. 3720 and 3719 are
+#   neighbours in band 3, 3720 first in link order, so TemDedo is defined after GetDedo. Its line, between GetDedo and
+#   GetFoto's record (line 115, kept blank), is a choice; so are its name, its const and the `contains` spelling.
 # - CBiometriaEleitor::CriaComum (2799) matches since comum's data classes build with strict aliasing (src/Makefile
 #   UENUX2_TBAA_DIRS, docs/reference/facts/app-flags.md F6). With -fno-strict-aliasing it differed by one reload of __child
 #   after __tree::__insert_node_at's begin-node store (clang inlines the insert); eight spellings of the insert kept the

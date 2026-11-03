@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 
+#include "app/comum/dados/md/eleitor/cbiometriaeleitor.h"
 #include "app/comum/dados/md/eleitor/celeitordecorator.h"
 #include "app/comum/dados/md/eleitor/celeitordinamico.h"
 #include "app/comum/dados/md/etipoimpedimento.h"
@@ -37,6 +38,10 @@ public:
     // ccargods.cpp's and celeitores.cpp's in link order. Its callers count the voters who can vote (fn 2823 below,
     // CEleitores's slot 0 fn 2824, and fns 10635, 11233, 11616). The name, its being a member and its const are chosen.
     bool SemImpedimento() const;
+    // fn 1937, records celeitordetalhe.cpp:94 and :101: the voter's biometry, read from the section's file of voters
+    // ("el") or of voters temporarily transferred to it ("tte") at the voter's CIndexer and converted under an
+    // md::CParametro of the voter's identity of its own type, its byte vector and that CIndexer.
+    md::CBiometriaEleitor GetBiometria() const;
     // The impediment of the turn given. vota::CEleitorEncontrado::StartState (fn 10635) holds this code inlined twice
     // (comum::CAppInfo::GetInst and its const GetGeral, fns 185 and 457, the turn's test, the load of +196 or +200)
     // beside three calls of GetImpedimento (fn 3769), which reads the same members out of line; the target functions
@@ -50,6 +55,10 @@ public:
     }
 
 private:
+    // The path of that file: fn 1937 holds it behind a 64-byte frame of its own (binaryen's inlining,
+    // docs/reference/facts/reading.md R10), after a br_table on the voter's transfer kind that sends 0 and 4 to "el" and
+    // the rest to "tte". Its name and its being a const member are chosen (src/units/98-uenux2-app-comum-dados.mk).
+    std::string GetArquivoBiometria() const;
     md::CEleitorDecorator m_eleitor;
     std::optional<md::CEleitorDinamico> m_dinamico;
     md::ETipoImpedimento m_impedimentoP1;

@@ -1,24 +1,87 @@
-// comum::CEleitorDetalhe: ConfereDadosDinamicos, the record at line 224 col 15, and GetImpedimento, GetDinamico,
-// MarcaHabilitado and MarcaVotou below it, which have no record (their lines are a choice). The reconstruction's own note; the blank lines stand for text not
-// recovered.
+// comum::CEleitorDetalhe (the records' file): GetBiometria, records at lines 94 and 101 col 15, ConfereDadosDinamicos,
+// the record at line 224 col 15, and below it GetImpedimento, GetDinamico, MarcaHabilitado and MarcaVotou, which have no
+// record; above GetBiometria GetArquivoBiometria and the two name helpers it calls, below it LeBiometriaEleitor, none
+// of them with a record. Every line but the throws' is a choice. The reconstruction's own note; the blank lines stand
+// for text not recovered. src/units/98-uenux2-app-comum-dados.mk has the evidence and what was measured.
 #include "app/comum/dados/celeitordetalhe.h"
 
+#include <filesystem>
 #include <format>
 
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/asn/legravaentidade.h"
+#include "app/comum/cpath.h"
+#include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/celeitordadoshabilitacao.h"
 #include "app/comum/dados/euecomumdadoserror.h"
+#include "app/comum/dados/md/eleitor/cparametro.h"
+#include "app/comum/nomearquivo/cnomearquivo.h"
 
 namespace comum {
 
-// (original lines 14-90: content not recovered)
-#line 91
-// <stubs>
-// f1937 · 5175 B · unmatched · name unknown
-// void f1937(i32, i32) { ... }
-// </stubs>
+// (original lines 23-43: content not recovered)
+#line 44
+md::CBiometriaEleitor LeBiometriaEleitor(const std::string& arquivo, const md::CParametro& parametro);
 
-// (original lines 96-220: content not recovered)
+namespace {
+
+std::string NomeArquivoBiometria(const CConfiguracaoEleicao& configuracao, const ueword secao)
+{
+    return NomeArquivoEleitores(configuracao.GetIdentificacaoArquivo(), configuracao.GetMunicipioSecao(),
+                                configuracao.GetZonaSecao(), secao);
+}
+
+std::string NomeArquivoBiometriaTTE(const CConfiguracaoEleicao& configuracao, const ueword secao)
+{
+    return NomeArquivoEleitoresTTE(configuracao.GetIdentificacaoArquivo(), configuracao.GetMunicipioSecao(),
+                                   configuracao.GetZonaSecao(), secao);
+}
+
+} // namespace
+
+std::string CEleitorDetalhe::GetArquivoBiometria() const
+{
+    switch (m_eleitor.GetTipoTransferencia()) {
+    case 0:
+    case 4:
+        return (CPath::GetPathEstatico(FLASH_INTERNA) /
+                NomeArquivoBiometria(CConfiguracaoEleicao::GetInst(), m_eleitor.GetSecao()))
+            .string();
+    default:
+        return (CPath::GetPathEstatico(FLASH_INTERNA) /
+                NomeArquivoBiometriaTTE(CConfiguracaoEleicao::GetInst(), m_eleitor.GetSecao()))
+            .string();
+    }
+}
+
+// (original lines 77-90: content not recovered)
+#line 91
+md::CBiometriaEleitor CEleitorDetalhe::GetBiometria() const
+{
+    if (!m_eleitor.TemBiometria()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7830, "Eleitor corrente não tem biometria.");
+    }
+
+    const std::string arquivo = GetArquivoBiometria();
+
+
+    if (!std::filesystem::exists(arquivo)) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_7831, std::format("Arquivo {} não existe", arquivo));
+    }
+
+    const md::CParametro parametro(m_eleitor.GetIdentidadePorTipo(m_eleitor.GetTipoIdentificador()),
+                                   m_eleitor.GetBiometria(), m_eleitor.GetOffsetBiometria());
+    return LeBiometriaEleitor(arquivo, parametro);
+}
+
+md::CBiometriaEleitor LeBiometriaEleitor(const std::string& arquivo, const md::CParametro& parametro)
+{
+    return LeEntidadeBiometria<asn::CConversorBiometriaEleitorCifrada>(
+        arquivo, parametro, parametro.GetOffset(), "LeBiometriaEleitor(" + parametro.GetIdentidade().GetIdentificador() + ")");
+}
+
+// (original lines 115-220: content not recovered)
 #line 221
 void CEleitorDetalhe::ConfereDadosDinamicos(const std::string& funcao) const
 {

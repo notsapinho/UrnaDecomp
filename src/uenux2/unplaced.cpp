@@ -285,11 +285,6 @@
 // f1591 · 658 B · unmatched · placement: link order · name unknown
 // void f1591(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 1248 · uses=9 · neighbours' file uenux2/src/app/comum/gravadores/iresultado.cpp
-
-// f1393 · 15 B · unmatched · placement: link order · name unknown
-// void f1393(i32, i32) { ... }
-
 // link-order cluster 1271 · uses=12
 
 // f1047 · 635 B · unmatched · placement: link order · name unknown

@@ -98,16 +98,41 @@
 #   by binaryen (a second stack-pointer prologue around the literal) inside CEleitores::MarcaVotou (unit 110's), and it
 #   has no index of its own. It stores 3 at the dynamic record's +32 through CEleitorDinamico::SetEstadoComparecimento,
 #   a setter whose name is chosen. Its line, below MarcaHabilitado, is a choice.
-# - Not written: GetBiometria, target fn 1937 (records at lines 94 and 101), with the file name it builds, the
-#   md::CEleitor::GetOffsetBiometria it holds (celeitor.cpp:79) and legravaentidade.h's LeEntidadeBiometria inside a
-#   reader of its own. Written whole and measured in the link before steps 7 to 9 (pnpm wasm score): `722 over 2243 rows
-#   (same 1521, replaced 628 [620 operand-only], inserted 46, deleted 48)`. The remainder is inside the body: the
-#   64-byte frame of the file name, held inlined, has the directory's path at +36 and operator/'s result at +48 in the
-#   target and at +52 and +40 in ours, in the three spellings tried (wasm-objdump -d of the object; a fourth, the path
-#   copied and appended with /=, gives a 48-byte frame), and the 576-byte frame builds "LeBiometriaEleitor(" 8 bytes
-#   lower than the target and packs the std::format arguments of its messages in another order and at other offsets.
-#   Not explained, and none of its callers (1393, 3614, 3616, 10316) is written, so it is left out
-#   (docs/how-to-decompile.md step 5). Its two callees with no name then, 3745 and 5727, match in unit 279.
+# - GetBiometria, target fn 1937 (records at lines 94 and 101, col 15): the voter's md::CBiometriaEleitor. It tests
+#   md::CEleitor's optional CIndexer (TemBiometria, celeitor.h), builds the file's path (GetArquivoBiometria), throws
+#   when std::filesystem::exists says no, builds an md::CParametro (app/comum/dados/md/eleitor/cparametro.h) from the
+#   identity of the voter's own type, the byte vector and CEleitor::GetOffsetBiometria (celeitor.cpp:79, which 1937 holds
+#   behind a frame of its own), and returns LeBiometriaEleitor's result. It matches; its callers 3614, 3616 and 10316 are
+#   not written (unit 98's roots stand in for them) and 1393, CEleitores::GetCurrentBiometriaEleitor, is (fragment 291).
+#   In the link before steps 7 to 9, `pnpm --silent wasm score ../target/vota_web_wasm.wasm 1937
+#   ../build/out/wasm/vota_web/vota_web_wasm.wasm <ours>` printed `score 184 over 2197 rows (same 2013, replaced 184
+#   [184 operand-only], inserted 0, deleted 0)`: callees, table slots and the format strings' addresses.
+#   - GetArquivoBiometria (no record; 1937 holds it behind a 64-byte frame of its own) switches on the voter's transfer
+#     kind (a br_table that sends 0 and 4 to "el", NomeArquivoEleitores, fn 3745, and the rest to "tte", fn 5727) and
+#     returns `(CPath::GetPathEstatico(FLASH_INTERNA) / <name>).string()`. The frame is evidence of the form: the
+#     target has the directory at +36 and operator/'s result at +48. A named local for the directory, then
+#     GetInst bound to a reference and the same return, gives +52 and +40 (in the link: the score's rows at the offset
+#     added before the call of GetPathEstatico and at the copy of the directory). With the directory a temporary of the
+#     return's full expression, the result's temporary is created first and takes the higher slot, which gives +36 and
+#     +48 (wasm-objdump -d of the object, and in the link; docs/reference/facts/codegen.md C5). The target calls GetPathEstatico (fn 762) and then
+#     CConfiguracaoEleicao::GetInst (fn 187) once in each arm, and loads the section after GetInst, so GetInst is
+#     evaluated once inside that full expression. Two helpers take the configuration and the section and call 3745 and
+#     5727; clang inlines both (no frame, no call of their own). Chosen: the helpers, their names, their anonymous
+#     namespace and parameters, and GetArquivoBiometria's name and its being a const member.
+#   - CConfiguracaoEleicao's +620 to +651 (cconfiguracaoeleicao.h): the 24-byte SIdentificacaoArquivo at +620, the
+#     municipality at +644, the 16-bit zone at +648, then m_lista1 at +652 as before. With a word kept after the struct,
+#     the object loaded the two from +648 and +652.
+#   - LeBiometriaEleitor (no record; 1937 holds it behind a 576-byte frame) is legravaentidade.h's LeEntidadeBiometria
+#     over comum::asn::CConversorBiometriaEleitorCifrada, named "LeBiometriaEleitor(" + the identity's identifier + ")".
+#     The frame decides its TU and its place in it, measured on the object (frame slots of the function, first use, with
+#     wasm-objdump -d). Defined in this file after GetBiometria, it gives the target's slots ("LeBiometriaEleitor(" at
+#     +72), and in the link 1937 then differs in operand rows only (above). Defined before GetBiometria, or in a file of
+#     its own, it gives most of them 8 bytes lower ("LeBiometriaEleitor(" at +64). That is the order in which the TU emits std::format's always_inline
+#     parts (codegen.md C5): GetBiometria's message comes first. In an anonymous namespace, clang inlines it into
+#     GetBiometria and the frame goes, so it has external linkage. A reading that agrees: in the target's data,
+#     legravaentidade.h's records of 1937 (@1564660) lie among other TUs' header records in the order of those TUs' own
+#     records, before celeitores.cpp's. Its name is the literal's; its being a free function of comum declared in this
+#     file is chosen.
 #
 # ModuloImpedidos::TipoImpedimento, the by-value parameter of 5699, moved from ModuloHashes (where the generated module
 # called it ImpedimentoP1, a synthesized name) to its own module: RTTI and the record name it. The target's data do not
@@ -163,6 +188,10 @@ COMUM_DADOS_SRCS := src/app/comum/dados/md/parametrizacaourna/ctradutorfrase.cpp
   src/app/comum/dados/asn/processoeleitoral/cconversortipoidentificadoreleitor.cpp \
   src/app/comum/dados/asn/eleitor/cconversorimpedido.cpp
 UENUX2_SRCS += $(COMUM_DADOS_SRCS)
+# celeitordetalhe.cpp includes comum::CConfiguracaoEleicao's header (GetBiometria's file name), which reaches Boost's
+# date_time headers through CHorariosUrna, as unit 88 says of ccargos.cpp and cconfiguracaoeleicao.cpp: the include path
+# only, not a flag of the code
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/celeitordetalhe.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
 # the sources' users are not reconstructed yet: 98-uenux2-app-comum-dados-roots.cpp reaches them the way the target does
 $(ROOT)/$(APP)/98-uenux2-app-comum-dados-roots.o: $(ROOT)/src/units/98-uenux2-app-comum-dados-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/98-uenux2-app-comum-dados.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/98-uenux2-app-comum-dados-roots.cpp -o $(R)

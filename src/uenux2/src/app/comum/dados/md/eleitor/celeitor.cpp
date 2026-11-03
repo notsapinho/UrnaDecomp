@@ -1,8 +1,8 @@
 // Reconstruction: comum::md::CEleitor's two constructors (target fns 5668 and 5666) and ValidaCriacao (fn 5667), which
 // both call; ValidaCriacao's records (lines 103 and 107, column 15, and 113, column 19) place its throws. The
 // constructors have no record, so their lines are a choice, above the member they call, in the order the target's
-// indices give (docs/how-to-decompile.md step 3, "The order of two members"). GetOffsetBiometria (record line 79) is not
-// written: binaryen inlines it into its one caller, fn 1937.
+// indices give (docs/how-to-decompile.md step 3, "The order of two members"). GetOffsetBiometria (record line 79) has no
+// index: fn 1937 holds it behind a frame of its own (binaryen's inlining); its lines but the throw's are chosen.
 #include "app/comum/dados/md/eleitor/celeitor.h"
 
 #include "app/comum/dados/euecomumdadoserror.h"
@@ -32,7 +32,17 @@ CEleitor::CEleitor(int sequencial, ueword secao, const std::vector<CEleitorIdent
     ValidaCriacao();
 }
 
-// (original lines 35-98: content not recovered)
+// (original lines 35-75: content not recovered)
+#line 76
+const CIndexer& CEleitor::GetOffsetBiometria() const
+{
+    if (!TemBiometria()) {
+        throw CUeComumDadosError(EUE_COMUM_DADOS_8063, "Não há informação de biometria");
+    }
+    return *m_offsetBiometria;
+}
+
+// (original lines 84-98: content not recovered)
 #line 99
 void CEleitor::ValidaCriacao() const
 {

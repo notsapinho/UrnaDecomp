@@ -12,8 +12,8 @@
 //   It waits for 10315: written alone, either is a whole body where the target has a thunk.
 // - vota::CRegistraDigitalOperador::ProcessTick (target fn 10451, slot 8, 6996 B, records :143 to :145): it calls
 //   BiometriaMesarioPresenteNosEleitores (fn 3614, three call sites, records :328 and :371, not written) and fns 1149,
-//   2223, 2742, 2805, 2972, 3258, 3615, 5371, 5372, 5374, 5376 and 5399, none matched or named (splat/matched.txt,
-//   splat/symbol_addrs.txt), and it holds the GetInst and constructor of vota::CTentativaCapturaDigitalEsgotada and
+//   2223, 2742, 2805, 2972, 3258, 5371, 5372, 5374, 5376 and 5399, none matched or named (splat/matched.txt,
+//   splat/symbol_addrs.txt; 3615 matches since unit 291), and it holds the GetInst and constructor of vota::CTentativaCapturaDigitalEsgotada and
 //   vota::CDigitalNaoCapturada inlined (the one store of each vptr, 1592288 and 1592360).
 #include "app/vota/operador/confirmaidentidade/cregistradigitaloperador.h"
 
