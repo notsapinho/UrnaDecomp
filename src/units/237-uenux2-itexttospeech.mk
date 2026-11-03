@@ -108,14 +108,21 @@
 # (~shared_ptr<void>) in src/units/100-uenux2-cpolysingleton-roots.cpp, which stood for 7667 alone (that file's
 # comment).
 # The root's order: its sink and the sink's struct come before urna_texttospeech_constroi, so that the object emits the
-# set code before the builder's, in the executable TU's order, which that TU's records give (the root's comment cites
-# them and the command: CVotaWebEngine::Init's 1526324, then 7667's push<api::ITextToSpeech> 1526348, then
-# instance<api::ISound>'s 1526584 and the rest of the TU's). Past that one order the root's lines are free
-# (src/units/README.md "Companion files"). Measured both ways, steps 6 to 9 and the splat build on each, the target's
-# sha256 both times: in this order 7667 matches, 12190 matches; with the builder first, as the root was first written,
-# 12189, and 7667 `differs` on the frame slot of depura's std::format_string (`pnpm wasm score` 156 over 885 rows, all
-# operand-only: +584 in ours where the target has +280, the slots between 8 off), as the executable TU's other push
-# bodies do (unit 170's fragment, whose reading this fits: the slot follows which format code a TU emits first).
+# set code before the builder's, in the executable TU's order. That TU's records (CVotaWebEngine::Init's 1526324,
+# 7667's push<api::ITextToSpeech> 1526348, instance<api::ISound>'s 1526584) do not give it, since the builder's code
+# has none; the TU's data between them does, and the root's comment lists that run with the commands: ITextToSpeech's
+# typeinfo (1526340) and push's record (1526348), then the typeinfos of the errors push throws, std::format_error's
+# typeinfo and vtable and the format bool strings (1526364 to 1526428), the errors' vtables and the vtable and typeinfo
+# of the __shared_ptr_pointer 7667 makes (1526440 to 1526508), and only then ITextToSpeech's vtable (1526520), which an
+# ITextToSpeech constructor's vptr store, the builder's, refers to first. In this order the object emits those 13
+# .data.rel.ro objects as the target lies them out; with the builder first it emits ITextToSpeech's vtable and
+# std::format_error's typeinfo and vtable ahead of push's record (wasm-objdump -x, the object's data segments). Past that
+# one order the root's lines are free (src/units/README.md "Companion files"). Measured both ways, steps 6 to 9 and the
+# splat build on each, the target's sha256 both times: in this order 7667 matches, 12190 matches; with the builder
+# first, as the root was first written, 12189, and 7667 `differs` on the frame slot of depura's std::format_string
+# (`pnpm wasm score` 156 over 885 rows, all operand-only: +584 in ours where the target has +280, the slots between 8
+# off), as the executable TU's other push bodies do (unit 170's fragment, whose reading this fits: the slot follows
+# which format code a TU emits first).
 $(ROOT)/$(APP)/237-uenux2-itexttospeech-roots.o: $(ROOT)/src/units/237-uenux2-itexttospeech-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/237-uenux2-itexttospeech.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/237-uenux2-itexttospeech-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/237-uenux2-itexttospeech-roots.o

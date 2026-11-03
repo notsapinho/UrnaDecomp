@@ -156,8 +156,11 @@
 #   instance<ISound>'s first (SetAudioEnabled);
 #   the target's records of this TU run CVotaWebEngine::Init's (515:13), then 7667's push (set<ITextToSpeech>), then
 #   instance<ISound>'s, so they wait for Init (votaInit, 7840). 7667's copy is src/app/roots_texttospeech.cpp's (at
-#   this TU's rule, unit 237's), which emits that set code before its builder's, in the order these records give: 7667
-#   has +280 there and matches; with the builder first it had +584 too (unit 237's fragment).
+#   this TU's rule, unit 237's), which emits that set code before its builder's, in this TU's order: these records do
+#   not place the builder, whose code has none, but the data between them does, ITextToSpeech's vtable (1526520), which
+#   the builder's constructor refers to first, lying after push's record (1526348) and std::format_error's typeinfo and
+#   vtable (1526388, 1526400; that root's comment lists the run and the commands). 7667 has +280 there and matches;
+#   with the builder first it had +584 too (unit 237's fragment).
 # - 10949 (RecebeMensagem): `differs` at +0x63 on the response's zeroing; `pnpm wasm score` against ours reads 22
 #   over 74 rows, 15 replaced (all operand-only), 3 inserted and 4 deleted, the rows of the response's slot. The target
 #   holds the 12-byte comum::ueRespostaSavd at +4 of the frame, 4-aligned (`i64.store align=2 offset=4`, `i32.store
