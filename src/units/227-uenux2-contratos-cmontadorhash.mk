@@ -37,7 +37,8 @@
 #
 # ecourna::api::io::CFile::Write (fn 5180, matched; step 9 found it by the census's pair) is written in ecourna's
 # api/io/cfile.cpp, unit 03's source, and declared in cfile.hpp, whose comment has its evidence and the forms measured;
-# this fragment's roots stand for its two callers. Unit 03's fragment and row name it at the landing.
+# this fragment's roots stand for its caller 5371 (the other, 11587, is unit 305's). Unit 03's fragment and row name it
+# at the landing.
 #
 # fn 5869, CDependenciasContratos::GetValor's other caller (comum::CGeracaoVersoesContratos::ObtemDependencias, a
 # chosen name), is fragment 268's, written in app/comum/gravadores/cgeracaoversoescontratos.cpp and not matched; that
@@ -55,7 +56,7 @@
 # instructions (cfile.hpp says so).
 #
 # Roots: 227-uenux2-contratos-cmontadorhash-roots.cpp stands in for the callers not written (12098 for both GetValor,
-# 5359 for 5358, 11620 for 5854, 5371 and 11587 for 5180; 5869, CDependenciasContratos's other caller, is in the link
+# 5359 for 5358, 11620 for 5854, 5371 for 5180; 5869, CDependenciasContratos's other caller, is in the link
 # since unit 268); each stand-in names them. No census pair falls on a function the roots object defines (step 7's
 # check).
 W227_SRCS := src/api/hash/cmontadorhash.cpp \

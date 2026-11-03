@@ -1,14 +1,16 @@
 # uenux2 comum's load of the processo eleitoral: comum::CarregaProcessoEleitoral (target fn 3771) and CarregaPleito
 # (5778) in app/comum/dados/carregaprocessoeleitoral.{h,cpp}, the ASN.1 file reader they instantiate,
 # comum::CarregaArquivo<CONVERSOR> (app/comum/dados/carregaarquivo.{h,cpp}; its CConversorCabecalhoPacote instance is fn
-# 5706; with comum::CLeitorASN::LeBiometriaEleitor beside it, below), and comum::SIdentificacaoArquivo's constructor
-# (5726, app/comum/nomearquivo/sidentificacaoarquivo.cpp; the struct is unit 279's, in cnomearquivo.h, one type for the
-# object both units read). The members this load needs in files landed units compile are those units' (their fragments
-# say what each holds): CPE::Existe and CreateInst (2788, 2787; unit 110), CPleito's constructor (5652; unit 88),
-# CProcessoEleitoral's two constructors (unit 88), CProcessoEleitoralDTO::GetPleito2 and its getters (unit 140),
-# api::TrocaExtensao (5461; unit 32), and the name builder NomeArquivoPE in app/comum/nomearquivo/cnomearquivo.cpp (unit
-# 131's file; it has no index). Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every
-# uenux2 header, and these objects get Boost's include path, which cfileasn.h's converters reach.
+# 5706, and its CConversorImpedido instance the reader fn 11517 holds; with comum::CLeitorASN::LeBiometriaEleitor beside
+# it, below), the same reader for an ecourna converter, comum::CarregaArquivoEcourna<CONVERSOR> (its
+# ecourna::app::dados::asn::CConversorInformacaoMidia instance is fn 3735), and comum::SIdentificacaoArquivo's
+# constructor (5726, app/comum/nomearquivo/sidentificacaoarquivo.cpp; the struct is unit 279's, in cnomearquivo.h, one
+# type for the object both units read). The members this load needs in files landed units compile are those units'
+# (their fragments say what each holds): CPE::Existe and CreateInst (2788, 2787; unit 110), CPleito's constructor (5652;
+# unit 88), CProcessoEleitoral's two constructors (unit 88), CProcessoEleitoralDTO::GetPleito2 and its getters (unit
+# 140), api::TrocaExtensao (5461; unit 32), and the name builder NomeArquivoPE in app/comum/nomearquivo/cnomearquivo.cpp
+# (unit 131's file; it has no index). Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and
+# every uenux2 header, and these objects get Boost's include path, which cfileasn.h's converters reach.
 #
 # What the target shows, and what is chosen:
 # - 3771's wasm type is (i32 i32)->(): the result and the general state; the origin is folded (below). It calls
@@ -45,14 +47,32 @@
 #   EleicaoPE and CabecalhoPacote instances as the run orders their records (@1563740, @1564660, @1565368). It has no
 #   index of its own; unit 98's fragment has its class's and its name's evidence, its forms and their scores. With it,
 #   each other function of this object is the same with the object-local numbers masked, and 5706, 3771 and 5778 score
-#   as below. Chosen: this file's name and path, which no record gives. The run's other readers are not in it: the one
-#   fn 11517 holds is written in unit 110's celeitores.cpp (a lambda's), the others are not written.
+#   as below. Chosen: this file's name and path, which no record gives. Two more of the run's readers are here, each
+#   where the run orders its records:
+#   - ModuloImpedidos::EntidadeImpedidos' (records @1564800 to @1564916, after LeEntidadeBiometria's and before the
+#     FotosCandidatos reader's, fn 7787's): CarregaArquivo<asn::CConversorImpedido>, which the lambda of
+#     CEleitores::GetEleitoresImpedidos (unit 110's celeitores.cpp) calls, and which binaryen inlines into the lambda's
+#     call operator, fn 11517, which opens with this instance's 64-byte frame (the converter's vptr at +60) as 3735
+#     does. With the read in the lambda itself, as before, 11517 scored 169 over 1604 rows with 35 rows of local
+#     numbers (locals 5 and 6 swapped); from here, 134 over 1604, every differing operand a call, a data address, a
+#     packed format string or a table slot (pnpm wasm score in this unit's link, before step 8).
+#   - ModuloInformacaoMidia::InformacaoMidia's (records @1565512 to @1565628, after CabecalhoPacote's, the run's last
+#     reader): CarregaArquivoEcourna<CConversorInformacaoMidia>, fn 3735, which stores the converter's vptr in a 64-byte
+#     frame of its own and calls ecourna's Deconverte (record iconversorasn.hpp:66); its callers are the recorders
+#     11587 (unit 305), 11626 (unit 160) and 11629 (not written). After its records the run holds
+#     ModuloTiposEcoUrna::Carga's vtable and typeinfo and IConversorASN<IdentificadorGeradorMidia, ...>'s Converte and
+#     Deconverte records (fns 3734 and 3733, matched from other objects): code of this object no function here
+#     accounts for, not identified.
+#   The run's other readers are not written.
 # Every name above but the records' (CPE::CreateInst, GetPleito2, the cfileasn.h template) is chosen, and so are the
-# functions' being free functions of comum (they read no class's state), their lines and these paths.
+# functions' being free functions of comum (they read no class's state), their lines and these paths;
+# CarregaArquivoEcourna's being a second template beside CarregaArquivo (ecourna's converters name the member
+# Deconverte) is chosen too.
 #
 # Matched: 5706 (114 over 1366 rows before step 8, all operand-only: calls, the table slots of the format buffer and the
-# thrown object's destructor, the packed std::format strings), 5726 (1 over 17) and std::vector<CEleicaoPE>::push_back
-# (5777, 13 over 420, from carregaprocessoeleitoral.cpp.o). Written and not matched:
+# thrown object's destructor, the packed std::format strings), 5726 (1 over 17), std::vector<CEleicaoPE>::push_back
+# (5777, 13 over 420, from carregaprocessoeleitoral.cpp.o) and 3735 (126 over 1432, all operand-only, the same kinds as
+# 5706's; the first form written). Written and not matched:
 # - 3771: 1126 over 3025 rows (1019 operand-only, 51 inserted, 56 deleted); the rows left are local numbers and the
 #   order of a few operands, the place of the general state's UF above all (ours computes it before the inner frame, the
 #   target where it reads it). Its scan row is `unresolved` on its call of 5778, which no route names. A
@@ -81,13 +101,18 @@
 # binaryen inlined push_back into CarregaPleito (no body for 5777) and __find_equal into the hinted insert (3870 scored
 # 270 over 345, 244 inserted); with the stand-ins 3870 scores 2 over 101, 3869 0 over 246, 5777 13 over 420. The
 # stand-ins for 3752 and 5738 (unit 89) and the 5586 readers are here because this unit's chain needs them; unit 123's
-# vtable sink went when 5586 was written. A stand-in goes when every target caller its comment names is in the link.
+# vtable sink went when 5586 was written. w280_informacao stands for 3735's caller 11629 (11587 and 11626 are in the
+# link). A stand-in goes when every target caller its comment names is in the link.
 PROCESSOELEITORAL_280_SRCS := src/app/comum/dados/carregaprocessoeleitoral.cpp \
   src/app/comum/nomearquivo/sidentificacaoarquivo.cpp \
   src/app/comum/dados/carregaarquivo.cpp
 UENUX2_SRCS += $(PROCESSOELEITORAL_280_SRCS)
 $(addprefix $(ROOT)/$(APP)/uenux2/,$(addsuffix .o,$(PROCESSOELEITORAL_280_SRCS))): UENUX2_CXXFLAGS += -I$(BOOST_HDR)
+# ecourna's converter headers, which carregaarquivo.cpp includes for CarregaArquivoEcourna's instance, include the
+# generated ASN.1 modules by their bare names
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/carregaarquivo.cpp.o: UENUX2_CXXFLAGS += -Isrc/asn1/modules
+$(ROOT)/$(APP)/uenux2/src/app/comum/dados/carregaarquivo.cpp.o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)
 W280_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp')
 $(ROOT)/$(APP)/280-uenux2-processoeleitoral-roots.o: $(ROOT)/src/units/280-uenux2-processoeleitoral-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/280-uenux2-processoeleitoral.mk $(W280_HDRS) $(wildcard $(ROOT)/src/asn1/*.h)
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -c src/units/280-uenux2-processoeleitoral-roots.cpp -o $(R)
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -I$(BOOST_HDR) -Isrc/asn1/modules -c src/units/280-uenux2-processoeleitoral-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/280-uenux2-processoeleitoral-roots.o

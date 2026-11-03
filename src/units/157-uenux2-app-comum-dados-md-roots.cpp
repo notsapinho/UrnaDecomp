@@ -1,10 +1,11 @@
 // Roots: keep this unit's comum::md members in the skeleton link the way the target keeps them. Their users are not
 // reconstructed yet, and every function below has direct callers in the target and no table slot
 // (ledger/callgraph.tsv), so each noinline stand-in gives it two call sites and binaryen keeps its body out of line:
-//   CCabecalhoEntidade's constructor (fn 1945), called once each by fns 2725, 11587, 11588, 11620, 11626 and 11629;
+//   CCabecalhoEntidade's constructor (fn 1945), called once each by fns 2725, 11587, 11588, 11620, 11626 and 11629
+//   (11587 and 11626 are written, units 305 and 160);
 //   CEleitor's constructors (fns 5666 and 5668), each called twice by fn 11411;
-//   CCarga's constructor (fn 2802), called once each by fns 10290, 11587, 11626 and 11629: 10290 is written (fragment
-//   172), and the stand-in stands for the other three. CCarga::ValidaCriacao (fn 5670) needs none: the constructor,
+//   CCarga's constructor (fn 2802), called once each by fns 10290, 11587, 11626 and 11629: 10290, 11587 and 11626 are
+//   written (fragment 172, units 305 and 160), and the stand-in stands for 11629. CCarga::ValidaCriacao (fn 5670) needs none: the constructor,
 //   its one target caller, calls it twice.
 // CEleitor::ValidaCriacao (fn 5667) has its two callers in celeitor.cpp's object, the two constructors.
 // comum::asn::CConversorLocal (vtable @1561988; fn 11451 and the pending 11452) is reached through its vtable only, whose

@@ -40,6 +40,14 @@
 #   copy constructor
 #   (the two words at +0 and +4 and fn 1556 over the vector at +8), so the name is the reading of a template instance
 #   the stand-in gives, as 2853's is; it comes from cgravadorbu.cpp's object once GravaResultado lands.
+# - comum::FiltraCargos (fn 3818, no record) in cgravadorbu.cpp after AcrescentaVotoVotavel, and the relocation of a
+#   std::vector<md::CCargo> it calls in its reserve and its push_back (std::__uninitialized_allocator_relocate, fn 3816,
+#   from cgravadorbu.cpp's object): cgravadorbu.cpp's notes say what it does, why it reads as an external function
+#   there, and what is chosen. Its one target caller, 11629, calls it three times; the roots file's w200_filtra stands
+#   for it, and 3816's other target caller, 11371 (comum::asn::CConversorEleicaoPE::DoDesconverte, not written), needs
+#   none: 3818 calls it twice. Measured in the whole link before step 8 (pnpm wasm score against the target): 3818 9
+#   over 312 rows and 3816 2 over 243, operand-only, every operand a call's. It is the first form written; std::copy_if
+#   with a lambda was not tried.
 # Measured in this link before step 8 (pnpm wasm score against the target): 3820 23 over 332 rows, 1944 4 over 137,
 # 3824 1 over 30, 1556 4 over 109, 3817 9 over 388, every one operand-only; every operand of 1944, 3824, 1556 and 3817 a
 # call's or a data address, and of 3820 those and the packed format string's address and two constants that are table
@@ -55,9 +63,10 @@
 # chosen; the paths of the md headers and of md/cresultadovotacao.cpp are chosen (beside cvotosvotavel.h).
 #
 # Not written, and what each waits for:
-# - GravaResultado (fn 11629, slot 7): the -pending.cpp header says what it calls.
+# - GravaResultado (fn 11629, slot 7): the -pending.cpp header says what it calls and what it waits for.
 # - AcrescentaVotoVotavel's one target caller, fn 3819 (3993 B, unnamed; it calls 3820 three times and 1944 three
-#   times): the roots file stands in for it.
+#   times, and holds helpers of its own behind 48-byte frames: the answers of a consulta's cargo, the candidates of a
+#   party, each count read through the RDV's slots): not attempted. The roots file stands in for it.
 CGRAVADORBU_SRCS := src/app/comum/gravadores/md/cresultadovotacao.cpp src/app/comum/gravadores/cgravadorbu.cpp
 UENUX2_SRCS += $(CGRAVADORBU_SRCS)
 W200_HDRS := $(shell find $(ROOT)/src/uenux2 $(ROOT)/src/ecourna -name '*.h' -o -name '*.hpp' 2>/dev/null)
