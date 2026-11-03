@@ -269,7 +269,11 @@ line in the list), and the second `diff` prints `same`: the list is the committe
 So a diff of `splat/matched.txt` across such a rename shows a `-246 …FotoD0Ev` line and a `+246 …` line although no
 match was lost, as the first `diff` above does; count lost matches by index (`docs/how-to-decompile.md` step 10). The
 same merging makes a callee's matched name possibly another instantiation's: 760 is matched as
-`vector<pair<unsigned long, unsigned long>>::push_back(&&)` (`awk -v n=760 '$(1) == n' splat/matched.txt`).
+`vector<comum::md::CSituacoesEleicoes>::push_back(&&)` (`awk -v n=760 '$(1) == n' splat/matched.txt`), a 239-B body
+that `roots_boost.o`'s `vector<pair<unsigned long, unsigned long>>::push_back(&&)` shared and whose name the line held
+until that tree root's `extern template` line for Boost.Regex's `do_assign` left the pair's symbol to
+`cstringutils.cpp.o`'s 263-B `-fexceptions` copy, which 3499 matches (`docs/how-to-decompile.md` step 10, "A symbol
+that stays while its body moves").
 
 A unit can also make a twin out of two functions already in our link, by changing what binaryen's dead-argument
 elimination folds. Target 150 (`(i32)->()`, 45 B, 797 call sites in `ledger/callgraph.tsv`, one of them 2778's

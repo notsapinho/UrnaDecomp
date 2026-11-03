@@ -358,6 +358,9 @@ Boost is used header-only: regex, date_time (gregorian `bad_year`/`bad_month`/`b
   | 9519 `sp_counted_impl_p<signal_impl…>::dispose` | 17 | 61 |
 
   1.89.0 is nearest in all five bodies, but the residual rows are inlined context: a ranking, not byte identity.
+  In the link, with the signal's copies from `icompressor.cpp.o` since the Boost tree root declares them extern
+  (`src/units/06-ecourna-api-compression.mk`), 9549, 9553, 9554 and 9555 match at 1.89.0, and 9519 differs
+  (`splat/scan.tsv`); 1.90.0 was not linked.
   It also fits the SQLite snapshot's date (1.89.0 was current in August 2025).
 
 `third_party/boost` holds the 1.89.0 release's headers (`tools/setup/bootstrap.sh`); a probe of 1.90.0 or 1.91.0 puts

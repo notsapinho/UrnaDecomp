@@ -79,11 +79,13 @@
 #   match a cleanup of its own (pnpm wasm score 2199: 111 rows inserted). `{std::string::npos, std::string::npos}` loads
 #   npos from its definition (the object's i32.load of _ZNSt3__212basic_string...4nposE; a reading: std::pair's
 #   constructor binds it by reference), so the npos results go through a local copy, naoEncontrada. Its callers 654 and
-#   1539 match. The match results are over std::string's iterators (boost::smatch, the string overload of
-#   regex_search): the target's regex_search (9400) zeroes the matcher's restart and search_base (an i64.store of 0 at
-#   offset 24), which the std::string::const_iterator instance does (libc++'s __wrap_iter value-initializes) and the
-#   const char* one does not: with boost::cmatch over valor.data() it scored 17 over 260 rows, the 3 deleted rows that
-#   store; with smatch it matches. Its callees do_assign (9401), regex_search (9400) and
+#   1539 match. The match results are over std::string's iterators (boost::smatch): the target's regex_search (9400)
+#   zeroes the matcher's restart and search_base (an i64.store of 0 at offset 24), which the std::string::const_iterator
+#   instance does (libc++'s __wrap_iter value-initializes) and the const char* one does not: with boost::cmatch over
+#   valor.data() it scored 17 over 260 rows, the 3 deleted rows that store; with smatch it matches. The string overload
+#   of regex_search is a choice: that evidence fixes the iterator type, not the overload, and the string overload calls
+#   the iterator one over s.begin() and s.end() (third_party/boost/boost/regex/v5/regex_search.hpp; the iterator form
+#   was not measured). Its callees do_assign (9401), regex_search (9400) and
 #   throw_exception<std::logic_error> (9399), with landing pads in the target and in this file's band (above), and
 #   match_results' destructor (5153) match from this object since the tree root src/app/roots_boost.cpp (the Boost
 #   probe at APP_CXXFLAGS, no landing pads, which linked first) declares do_assign, perl_matcher over std::string's

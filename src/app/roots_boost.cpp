@@ -46,11 +46,11 @@ extern template class boost::re_detail_600::perl_matcher<UrnaStrIt, std::allocat
 template bool boost::re_detail_600::perl_matcher<UrnaStrIt, std::allocator<boost::sub_match<UrnaStrIt>>,
                                                  UrnaRegexTraits>::match_imp();
 extern template void boost::throw_exception<std::logic_error>(const std::logic_error &);
-// std::map<std::string, std::string>'s lookup: the target's copy, fn 163, which RHVoice's 5263 and cpp_regex_traits'
-// lookup_collatename (3498) call, is not ecourna's (that compile is another body, an object comparison) and matches
-// from this root (the same body at uenux2's flags with and without strict aliasing); its object in the target is not
-// identified. The probe's regex code instantiated it here until do_assign went extern, and without this line 5263
-// leaves `match` (src/units/00-ecourna-app-dados-identificadoreleitor.mk).
+// std::map<std::string, std::string>'s lookup (src/units/00-ecourna-app-dados-identificadoreleitor.mk): the target's
+// copy, fn 163, which RHVoice's 5263 and cpp_regex_traits' lookup_collatename (3498) call, is not ecourna's and
+// matches from this root (a scratch TU of the instance, compared as objects: ecourna's flags give another body,
+// uenux2's with and without strict aliasing this root's); its object in the target is not identified. The probe's
+// regex code instantiated it here until do_assign went extern, and without this line 5263 leaves `match`.
 template std::map<std::string, std::string>::const_iterator
 std::map<std::string, std::string>::find(const std::string &) const;
 #include "../../tools/libs/boost/probe.cpp"
