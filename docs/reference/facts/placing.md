@@ -2,9 +2,10 @@
 
 What the evidence says of a function's file, tree and neighbours, beyond the record that names them: what a stub's place
 is worth, a class with no file of its own, what a stretch's label says, how to read link neighbours and the data, an
-error enum's codes, how to lay out a file and the headers a class needs, and how to find a slot's callers.
+error enum's codes, how to lay out a file and the headers a class needs, how to find a slot's callers, and a band's
+order against landed members, two objects and a record.
 `docs/how-to-decompile.md` steps 1 to 3 rely on these, and its rules are there; this page holds their cases. Commands
-run from the repository root, at 0b5f410 where a number moves.
+run from the repository root, at 0b5f410 where a number moves, and at 182dc6c1 where a section says so.
 
 ## P1. What a stub's place is worth
 
@@ -19,24 +20,31 @@ loses its stub at that unit's step 9, since the record's line is then code of ou
 /cinteractiveform.h$/ && $3==57 {print $6}' ledger/source-locations.tsv`), not by their stubs.
 
 A stub is not always a TSE source to write. Its tree follows its callers' component, so a library's code that TSE calls
-gets one: the 7-Zip LZMA encoder (410, 2603, 3419, 4941) has stubs in `src/uenux2/unplaced.cpp`, and Boost's 2199 and
-libc's `chown` (6281, owner `libcxx`) in `src/ecourna/unplaced.cpp`. Read the row's `owner` in `ledger/functions.tsv`
-(column 4) first: a library there means the library's build, not a source, and the row lands with its caller:
+gets one: the 7-Zip LZMA encoder (410, 2603, 3419, 4941) has stubs in `src/uenux2/unplaced.cpp`, and libc++'s 2547 and
+3335 (owner `libcxx`, called by 5360 and 7741) in `src/ecourna/unplaced.cpp`. Read the row's `owner` in
+`ledger/functions.tsv` (column 4) first: a library there means the library's build, not a source, and the row lands with
+its caller (182dc6c1):
 
 ```sh
-awk -F'\t' '$1==410 || $1==2134 || $1==2199 || $1==2546 || $1==2578 || $1==6281 {print $1, $4, $5}' ledger/functions.tsv
+awk -F'\t' '$1==410 || $1==2134 || $1==2199 || $1==2546 || $1==2547 || $1==2578 {print $1, $4, $5}' ledger/functions.tsv
 # 410 7zip comum
 # 2134 - ecourna
 # 2199 boost ecourna
 # 2546 libcxx ecourna
+# 2547 libcxx ecourna
 # 2578 - comum
-# 6281 libcxx ecourna
 ```
 
-A row with no owner can be a library's code too: 2134 calls libc++'s path parser (2546), and 2578 and 2579, libc++
-templates a TSE caller instantiates, read as `std::__sort3` over `unsigned` and `unsigned char`. Read its callees and
-callers: an instance lands with the caller that instantiates it. And `owner` can read `app` for a library function
-whose callers are the library's own code:
+The owner is a lead, not a verdict. It reads a library for a TSE function whose code is mostly the library's, inlined:
+2199 is `ecourna::api::util::CStringUtils::FindRegex`, written in `src/ecourna/api/util/cstringutils.cpp` and matched,
+owner `boost`; the records and the symbol file decide. A row with no owner can be a library's code too: 2134 calls
+libc++'s path parser (2546), and 2578 and 2579 are libc++.a's `algorithm.o`, `std::__partially_sorted_swap` over
+`unsigned` and `unsigned char` (1506 and 1507 are the `__sort3` that call them). libc++ declares `extern template` the
+`__sort<__less<T>&, T*>` of every arithmetic `T` and defines them in the library, so a `std::sort` over such a `T*`
+with the default order calls the library's copies, which land with that caller at the library's flags and need no
+source (2578 matched with 11212's sort: `awk '$1==2578' splat/matched.txt`). A sort over another type, or with a
+comparator of its own (`__introsort` over `filesystem::path`), instantiates in the caller's TU and lands with it. And
+`owner` can read `app` for a library function whose callers are the library's own code:
 
 ```sh
 awk -F'\t' '$1==5009 || $1==9586 || $1==2602 || $1==2170 {print $1, $4, $5}' ledger/functions.tsv
@@ -52,7 +60,7 @@ awk -F'\t' '$1==5009 || $1==9586 || $1==2602 || $1==2170 {print $1, $4, $5}' led
 callees' owners and the body's shape before a cluster label.
 
 A stub can stand for a body binaryen merged in the target, which no source writes. 2302 (483 B, `unplaced.cpp`,
-`placement: link order`) has five callers, thunks of 17 bytes that differ in the two constants they pass, a format
+`placement: link order`) had five callers, thunks of 17 bytes that differ in the two constants they pass, a format
 literal's begin and end, and its neighbours in the index are merge bodies:
 
 ```sh
@@ -60,15 +68,15 @@ cd asmlift-wasm && pnpm --silent wasm fn ../target/vota_web_wasm.wasm 3272 | /us
 #   f2302(p0, p1, 234577, 234519);
 cd .. && awk -F'\t' '$1>=2299 && $1<=2304 {print $1, substr($2, 1, 16), $5}' splat/scan.tsv
 # 2299 byn$mgfn-shared$ match
-# 2300 byn$mgfn-shared$ match
-# 2301 byn$mgfn-shared$ match
-# 2302 - no-candidate
-# 2303 byn$mgfn-shared$ match
-# 2304 byn$mgfn-shared$ match
+# …
+# 2302 byn$mgfn-shared$ match
 ```
 
-Its callers (3272, 4537, 4541, 4542, 4546) are log members that format one name each; it lands when they are written
-and our link forms the same merge (`src/units/README.md` "Pending members", the merge-thunk bullet).
+Its callers (3272, 4537, 4541, 4542, 4546) are log members that format one name each; it matched once they were
+written and our link formed the same merge (`src/units/README.md` "Pending members", the merge-thunk bullet). A body
+whose callers are all thunks that pass it their `this` and one constant each is such a merge of whole functions, and
+its first parameter, which it never reads, is theirs: 6018 (`f6018(p0, 7)` in 10787, `f6018(p0, 11)` in 10792, among
+the merge bodies 6007 to 6065) matched with the slots written whole and no helper.
 
 A stub in `unplaced.cpp` has no evidence for any file only while no file is named after its class: `stubs.py` puts a
 class's stubs in `<class in lower case>.cpp` of the tree as soon as that file exists, so a unit that creates
@@ -104,13 +112,18 @@ vtable by its typeinfo and reads its words). Three shapes, and a call that place
   and its members after the file's external functions; here they come before. A small class one file constructs can be
   defined there: its member goes into that file, and the landed unit that compiles it grows (unit 13).
 - **A class out of its upstream file.** The reverse: a fork can move a class out of the file upstream keeps it in, and
-  the data show it. `ASN1::DataLengthCounter` is in upstream's `BEREncoder.cxx`, and `PEREncoder`'s vtable (1151416) lies
-  between `PrimitiveChecker`'s (1151276) and `DataLengthCounter`'s (1151548) in `ledger/vtables.json`'s address order, so
-  the target's `BEREncoder` object does not hold it. The data separate it from `BEREncoder` only; `PEREncoder.cxx`'s end
-  gives the same module, so its file name is chosen. The sign that sent the search there: a call the target keeps and
-  clang inlines at a low cost, with no flag to explain it, means the callee is in another TU. An out-of-line constructor
-  or destructor is the exception: at `-fPIC` its call stays beside the definition, with no remark
-  ([codegen.md](codegen.md) §C6), so it is no sign at uenux2's flags.
+  the data show it. `ASN1::DataLengthCounter` is in upstream's `BEREncoder.cxx`, and `PEREncoder`'s vtable (1151416)
+  lies between `PrimitiveChecker`'s (1151276) and `DataLengthCounter`'s (1151548) in `ledger/vtables.json`'s address
+  order, so the target's `BEREncoder` object does not hold it. The data separate it from `BEREncoder` only;
+  `PEREncoder.cxx`'s end gives the same module, so its file name is chosen. The sign that sent the search there: a call
+  the target keeps and clang inlines at a low cost, with no flag to explain it, means the callee is in another TU. An
+  out-of-line constructor or destructor is the exception: at `-fPIC` its call stays beside the definition, with no
+  remark ([codegen.md](codegen.md) §C6), so it is no sign at uenux2's flags. A second sign needs no inlining: with the
+  callee's body in its TU, clang can drop work the caller does after the call on what it passed. 3745 and 5727
+  (`NomeArquivoEleitores` and `…TTE`) test the long bit of both their temporary strings before freeing them; written in
+  `cnomearquivo.cpp` beside 3772, the callee they keep a call to, ours tested one (`17 over 80 rows`, 12 deleted), and
+  in a TU of their own both matched (unit 279). A target caller that keeps such a test where ours drops it is in another
+  TU than its callee.
 - **A call of another file's internal function.** With no LTO, only that file's TU can call a function of internal
   linkage (a `(anonymous namespace)::` or `static` name in a record), so a direct call of one puts the call site in that
   TU: the caller is defined there, or binaryen inlined into it a function defined there. 5971, `vota::(anonymous
@@ -183,6 +196,55 @@ vtable, its virtual members and its data come from one object whether it has a k
 a choice the fragment names with both neighbours. `comum::asn::CConversorCodigoCargoConsulta`'s band puts 11591 and
 11592 beside `app/comum/asn/cconversorcabecalhoentidade.cpp`'s functions, and its vtable, typeinfos and `theInfo`
 (1555728 to 1555820) lie between two `app/comum/md/` files' records (unit 126 took the band and says so).
+
+**What each order shows.** Three orders place code, and a comment says which one it rests on and what is a reading:
+
+- *Between objects*, the data: each object's vtables, typeinfos and records lie in link-line order (L7 item 15). That
+  is evidence of the objects' order.
+- *Inside one object*, the code: the use band's reverse index order against `names.tsv`'s `ld_index` (how-to step 3,
+  "The order of two members") is evidence of the order clang emitted the functions, which follows the definitions only
+  as [reading.md](reading.md) §R8 and §R9 say.
+- *Inside one object*, the data: clang creates each object's data when its code first needs it, and the link keeps that
+  order. A record comes with its function's body (§R8); a vtable with the first constructor or destructor that stores
+  it; a typeinfo with its first `typeid` or vtable; an internal constant where the first function that reads it is
+  emitted, and a global or a static data member at its first mention, not at its definition (`ctelasvota.cpp` defines
+  `FONTE_TITULO`, `FONTE_INSTRUCAO_TESTE_TECLADO` and `FONTE_AGUARDE` on lines 176 to 178, and its object holds them as
+  segments 3, 30 and 5, the second after `TelaTesteTeclado`'s data, its only reader, and `CTelasVota::s_mutex` before
+  `s_instancia`, in `GetInst`'s order: `wasm-objdump -x -j Data
+  build/out/app/uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp.o | /usr/bin/grep 'segment\['`). So constants the
+  key function's code reads come before the vtable, typeinfo and typeinfo name of its class, and constants only a
+  deferred (internal) function reads come after them. Two probes at the uenux2 flags, `ext.cpp` (`K::f` reads two
+  `SFont` constants) and `int.cpp` (an anonymous-namespace `g`, kept by a pointer, reads them and `K::f` calls it):
+
+      // ext.cpp                                         // int.cpp: the same head, then
+      struct SFont { int a, b; };                        namespace { const SFont F1{20, 0}; const SFont F2{30, 0};
+      void use(const SFont&);                                        void g() { use(F1); use(F2); } }
+      struct K { virtual ~K(); virtual void f(); };      K::~K() {}
+      const SFont F1{20, 0}; const SFont F2{30, 0};      void K::f() { g(); }
+      K::~K() {}                                         void (*keep)() = g;
+      void K::f() { use(F1); use(F2); }
+
+      P=build/out/placing-probe; for v in ext int; do TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++23 -DNDEBUG -fno-strict-aliasing -c /work/$P/$v.cpp -o /work/$P/$v.o; printf '%s: ' $v; wasm-objdump -x -j Data $P/$v.o | /usr/bin/grep -oE '<\.(rodata|data)[^>]*>' | sed -E 's/<\.(rodata|data)(\.rel\.ro)?\.//; s/>//' | tr '\n' ' '; echo; done
+        ext: _ZL2F1 _ZL2F2 _ZTV1K _ZTI1K _ZTS1K
+        int: keep _ZTV1K _ZTI1K _ZTS1K _ZN12_GLOBAL__N_12F1E _ZN12_GLOBAL__N_12F2E
+
+So two forms that give one object's code can give its data in two orders, and the target's run tells them apart:
+`carregaarquivo.cpp`'s entity reader at the head of the file, between the `EleicaoPE` and `CabecalhoPacote` instances,
+or at its end gives the same 143 functions with the object-local numbers masked, and only "between" puts the reader's
+typeinfo, records and vtable after `EntidadeEleicao`'s vtable and before `CabecalhoPacote`'s records, as the target's
+run 1562844-1565964 does. That our object's data order equals the target's under one form is a measurement (the
+object's `wasm-objdump -x -j Data` segment order against the target's addresses); that the original code was in that
+order is a reading, which the comment marks as one wherever it is restated (1937's reader; 7667, whose tree root's
+builder follows `push<ITextToSpeech>`'s record 1526348 because `ITextToSpeech`'s vtable, 1526520, follows it).
+
+A constant between two classes' typeinfo names belongs most directly to the file of the name that follows it, or to
+the file before it when only file-internal code reads it: 1255's fonts (@540572, @540580) between
+`N5comum18CRegistrarMesariosE` (@540542) and `N5comum18CPedeTituloMesarioE` (@540588) fit either, a choice. A callee
+binaryen inlined across TUs has its records where the object that defined it out of line puts its data, which names
+its file: 11582's writer's records (@1599428 on) lie right after `comum::asn::CConversorVersoesArquivos`'s vtable
+(@1599288), 42 KB from the recorder's own (@1557240), so the writer is the converter's `.cpp`'s (unit 145's
+`asn::GravaArquivo`), and a template of it in the recorder's header would be inlined by clang there instead. For a
+linkonce callee, the kept copy's records are its first emitting object's.
 
 ## P5. When the two sides disagree
 
@@ -308,3 +370,24 @@ pnpm --silent wasm fn ../target/vota_web_wasm.wasm 2890 | sed -n '/folded readou
 
 "No caller" means that every holder of the instance was followed and that search found none. Only then is `Slot8` the
 name.
+
+## P9. A band's order against landed members, two objects and a record
+
+How-to step 3 ("The order of two members") holds a reviewer to the band's order inside one object. Three cases the rule
+alone does not settle:
+
+- **Landed members already out of order.** Run the check over every matched member of the object in the band. A new
+  member goes where it adds no inverted pair; when no place keeps the order with all of them, put it where it adds the
+  fewest, consistent with other lanes' new members, run the check over every band of the file (a move for one band can
+  break another: 3272 and 3279), and name the pairs that stay inverted in the fragment, or fix the old pairs in the same
+  commit with the splat build. Unit 197's `CLogVota` members 4546, 4542, 4541 and 4537 sit right after 4551, which
+  keeps the band's order with 4556, 4551 and 4511 and leaves 12 pairs against 4535, 4529 and 4522, which unit 156 had
+  already put out of order.
+- **A run across two objects of files you chose.** A run of consecutive indices in one band orders the objects as well:
+  arrange the definitions so the run reads in link order across them where a form with the same code exists, and say
+  in the fragment which part of the order the run fixes. The uses-2 run 5558 down to 5552 spans
+  `capplicationcontext.cpp.o` and `capplicationcontextstack.cpp.o` (unit 193).
+- **A recorded function bounds the order.** The code the band puts above a recorded function has to fit in the lines
+  above its record, since a gap is blank lines only and `stubs.py` writes no `#line` that goes back. Where it does not
+  fit, the band's order is not the file's, and the file's comment says so: in unit 193, `Actions` (47 lines) ahead of
+  the guard's constructor, whose record is at line 45 of `capplicationcontextstack.cpp`, would pass it.

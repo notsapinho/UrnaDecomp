@@ -138,8 +138,9 @@ cache's destructor goes into the D2, which is then too costly for the D0. A call
 at cost 225 (unit 78's fragment). So when a body differs in what is inlined, run the remarks first: a cost above the
 threshold at the tree's level says that no source form of the caller changes the decision.
 
-`-O3` has a third threshold, 525, for a call site in a loop, so a callee inlined in a loop and kept as a call outside
-one, beside the same callee, reads as `-O3` (4487d6b):
+`-O3` has a third threshold, 525, for a call site LLVM estimates hot: its block at least 60 times as frequent as the
+function's entry, which nested loops usually give and one loop usually does not. So a callee inlined in a loop and kept
+as a call outside one, beside the same callee, reads as `-O3` (4487d6b):
 
     TMPDIR=/tmp build/docker-build.sh em++ -O3 -fPIC -std=c++20 -DNDEBUG -fno-strict-aliasing -ffile-prefix-map=/work/src/uenux2=/home/rubio/tse/uenux2 -Isrc -Isrc/uenux2/src -Isrc/asn1 -Rpass=inline -Rpass-missed=inline -c /work/src/uenux2/src/app/comum/appinfo/cappinfosingleton.cpp -o build/out/levels-probe/cappinfo-O3.o 2>&1 | /usr/bin/grep -oE "CDadoCorrespondenciaD2Ev' inlined into '_ZN5comum8CAppInfoD2Ev' with \(cost=[0-9]+, threshold=[0-9]+\) at callsite [_a-z]+"
       CDadoCorrespondenciaD2Ev' inlined into '_ZN5comum8CAppInfoD2Ev' with (cost=385, threshold=525) at callsite __destroy_at
@@ -159,13 +160,30 @@ runs at `-O3` only and no inlining remark prints. Probe `unswitch.cpp`:
 426 (`AddField`), whose target holds one compare loop twice, chosen by a string's `__is_long()`, is this case: at the
 tree's `-O3` it holds both copies, and 18 of its 334 rows still differ (unit 31's fragment).
 
-**What the remarks leave out.** A call in a loop has a threshold of its own at `-O3`, and unswitching prints no
-remark. A call the target keeps and clang inlines at a low cost, with no flag to explain it, means the callee is in
-another TU ([placing.md](placing.md) §P2), unless it is an out-of-line constructor or destructor: at `-fPIC` a call of
-its C1 or D1 stays a call in its own TU, and no remark prints it ([codegen.md](codegen.md) §C6). A library callee is no
-other TU's: there the level decides (`-O2` inlines `std::string::append` where the target calls it, and `-O3` keeps
-the call, §V3). An unconditional `std::format` (a throw that only throws, a statement that builds a log message) with a
-literal of 37 to 74 bytes keeps a loop at `-O2` where the target has none: the level, not the source
+The estimate follows clang's cleanup blocks, so where a loop's local is declared can move a call across the threshold.
+`vota::CThreadOperador::Run` (10204) keeps its call of `CPriorityMessageQueue::Remove` (2073, cost 265) inside two
+nested loops. With `bool processou = false;` declared at the top of the main loop's body, the early `return` in the
+inner loop runs through a cleanup block that sends nearly every path back into the loop, Remove's block reads 247.93
+against the entry's 1.0 (`-mllvm -print-bfi -mllvm -print-bfi-func-name=<mangled>`, with `-fno-discard-value-names` on a
+probe compile), and the remark reads `inlined … (cost=265, threshold=525)`; declared before the main loop and set to
+false at the top of its body, `not inlined … (cost=265, threshold=250)`, and Run matches (unit 116's fragment). So when
+the target keeps a call the remarks show inlined at 525, try where the loops' locals are declared before another TU.
+
+The remark flags change the object. A compile with `-Rpass=inline -Rpass-missed=inline` inlines otherwise elsewhere in
+the TU: `cmtformbuilder.cpp`, compiled from the line `make -n -B -C src <its object>` prints, holds 311 functions
+without them and 309 with them at 182dc6c1 (`wasm-objdump -h <object>`'s `Code … count:`; the two missing were
+`std::format` helpers when it was first read), and only the compile without them is `cmp`-equal to the build's object,
+while the functions the remarks were read for were the same in both. Read
+the decisions from the remark compile, and the code (function lists, frame stores, link order) from one without the
+flags.
+
+**What the remarks leave out.** A call in a loop has a threshold of its own at `-O3`, and unswitching prints no remark.
+A call the target keeps and clang inlines at a low cost (a threshold of 250 or 325), with no flag to explain it, means
+the callee is in another TU ([placing.md](placing.md) §P2), unless it is an out-of-line constructor or destructor: at
+`-fPIC` a call of its C1 or D1 stays a call in its own TU, and no remark prints it ([codegen.md](codegen.md) §C6). A
+library callee is no other TU's: there the level decides (`-O2` inlines `std::string::append` where the target calls it,
+and `-O3` keeps the call, §V3). An unconditional `std::format` (a throw that only throws, a statement that builds a log
+message) with a literal of 37 to 74 bytes keeps a loop at `-O2` where the target has none: the level, not the source
 ([reading.md](reading.md) §R13).
 
 ## V3. uenux2 builds at `-O3 -std=c++23`: every match verifies, and sites under both `mock/` and `src/` need the level
@@ -403,7 +421,25 @@ and the fragment that lands it names that TU. The same probe with `AVNEncoder` m
 symbol file and ledger, so other rows move and it is a lead for them ([app-flags.md](app-flags.md) §F9). It names no
 name, and a probe object lands nowhere.
 
-## V5. Strict aliasing by directory: a body that differs only by it
+The `object` column is the verdict only for a row the symbol file or the census already reaches. A row nothing names
+stays `no-candidate` in the probe's scan whatever the copy gives (9868, `EUrnaTurno`'s format handle, at 36f11f02,
+before it matched: the census paired none of libc++'s format code). Then find the probe's symbol in
+`$V/wasm-map/$n/names.tsv` and read it directly: `pnpm --silent wasm splat-remap ../target/vota_web_wasm.wasm
+../$d/vota_web_wasm.wasm sym:<its name> --against <index> --map-dir ../$V/wasm-map/$n --kinds
+../$V/wasm-kinds/$n/kinds.json`, and `pnpm --silent wasm score` on the probe's wasm (9868 against its probe copy: `2
+over 47 rows`, operand-only, the two calls `UNRESOLVED`). Read the rows that differ as names it waits for only when they
+are operand-only calls or data. A probe can also cost rows it does not name: a copy that splits a body the target shares
+(the handle 536, which 31 table slots hold, then named by a hand line after `EUrnaTurno`'s handle) left 22 matched rows
+`unresolved` on `a table slot of ours: <handle> has no target function` until that hand line follows the survivor.
+
+Ahead of the executable TU the probe takes that TU's linkonce copies of what it also instantiates (libc++'s
+`length_error`, the `__throw_*`), which reorders the link: a probe of `CPriorityMessageQueue<SMessage>::Insert` there
+moved 14 rows of other classes out of `match`, and none right after `roots_texttospeech.o`, where a tree root at that
+TU's rule sits, while both added the same six. So the place ahead of the TU says which flags give a copy, and its other
+moved rows are no cost of the copy; to count what a tree root would gain and lose, put the probe where the root goes,
+after `vota_web_wasm.cpp.o` and the roots at its rule (`src/units/README.md` "Companion files").
+
+## V5. Strict aliasing by directory and file: a body that differs only by it
 
 uenux2 compiles with strict aliasing in the directories and the files `UENUX2_TBAA_DIRS` lists in `src/Makefile`
 (`src/api/`, `src/app/comum/dados/md/`, `src/app/vota/`, `mock/app/simulador/wasm/`, `src/app/comum/carquivossavd.cpp`,
@@ -423,10 +459,13 @@ b283f0e0 for `celeitorencontrado.cpp`, at e5577685 for `cgeracaoversoescontratos
 - **The split is the tree's flag.** A directory or file moved into or out of the lists is a flag change, measured on
   the whole link by F6's recipe, and it lands as a commit of its own only when it gains rows and loses no match. A lane
   reports such a measurement; it does not change the lists. The commit that changes them rewrites every text that
-  restates the split or its rule, which this lists (`asmlift-wasm/benchmark/dataset/selection-inputs/` is a snapshot
-  pinned by blob id, and stays):
+  restates the split or its rule: the lines that name the lists or the entry the change adds or removes, the tree roots
+  and fragments among them, and the lines that count the listed files ("five files"), which name neither
+  (`asmlift-wasm/benchmark/dataset/selection-inputs/` is a snapshot pinned by blob id, and stays). At 182dc6c1, with
+  `celeitorencontrado.cpp` for the entry, the first prints 127 lines and the second 28, to read one by one:
 
-      git grep -n -e UENUX2_TBAA_DIRS -e UENUX2_NOTBAA_FILES -e 'carquivossavd.cpp`' -e 'cgeracaoversoescontratos.cpp`' -e 'cfabricaconteudomidiastart.cpp`' -- docs src/Makefile src/units/README.md asmlift-wasm/benchmark/README.md asmlift-wasm/benchmark/dataset/setups.json
+      git grep -n -e UENUX2_TBAA_DIRS -e UENUX2_NOTBAA_FILES -e '<the entry>' -- docs src/Makefile src/units src/app asmlift-wasm/benchmark/README.md asmlift-wasm/benchmark/dataset/setups.json
+      git grep -n -i -E '(two|three|four|five|six|seven|eight) (files|of its files)' -- docs src/Makefile src/units src/app asmlift-wasm/benchmark/README.md
 
 - **The list drops every `-fno-strict-aliasing` of a line**, an `UENUX2_EXTRA` one too (`uenux2_cxxflags` in
   `src/Makefile`), but in the files `UENUX2_NOTBAA_FILES` lists. So `UENUX2_EXTRA=-fno-strict-aliasing` does not reach a
