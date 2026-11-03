@@ -51,7 +51,7 @@
 # operand-only), and the lines of every function with no record (CEleitor's constructors, above GetOffsetBiometria at
 # line 76; the first lines of CCarga::ValidaCriacao, the constructor of CCabecalhoEntidade and DoConverte).
 # GetOffsetBiometria (celeitor.cpp:76-82, its throw on its record's line 79) is written for fn 1937, which holds it
-# behind a frame of its own and is not written: with no caller in this link it is compared with nothing
+# behind a frame of its own and matches (unit 98's fragment), so its body is compared through that match
 # (docs/reference/splat.md "Reviewing a match"; celeitor.cpp's header says which of its lines are chosen).
 #
 # Not written, or pending, in this family, and what each waits for:

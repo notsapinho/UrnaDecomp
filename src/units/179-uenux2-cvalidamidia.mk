@@ -160,8 +160,10 @@
 # functions and csystem.cpp's, and 2758 after csystem.cpp's uses-4 run; api/util's objects link in name order there,
 # and cstringutils.cpp sorts between: a reading; 5465 holds FindRegexPosition behind a frame of its own, so that is
 # another object's, a choice of which); the lines of everything without a record, the order of ConteudoIncializacao's
-# cases but 15, 16 and 17 (above), its case labels indented a level (the throw's column 19 holds either way), and
-# IndependeDoTurno's being declared above ConteudoIncializacao and defined after it (the record leaves no room above).
+# cases but 15, 16 and 17 (above), and IndependeDoTurno's being declared above ConteudoIncializacao and defined after
+# it (the record leaves no room above). Not a choice: ConteudoIncializacao's case labels indented a level, which the
+# throw's record, 62:19, needs with the early return: the thrown error's construction starts at column 19 with the
+# case bodies at twelve spaces, and at 15 with the labels at the switch's level (IndependeDoTurno's style).
 #
 # Pending: nothing; the -pending.cpp went with slot 8's trap, the last, and no other row of the scan moved with it
 # (step 9's join against the base: 11167 and 11172 only). An earlier trap of this unit shared a wasm type with unit 13's

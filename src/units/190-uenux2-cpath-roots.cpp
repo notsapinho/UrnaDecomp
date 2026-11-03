@@ -10,7 +10,7 @@
 //   this object emits the copy the link keeps, at the tree's flags (the rule in 190-uenux2-cpath.mk). 8302 is in the link
 //   (unit 188), but clang inlines GetPathLog there, where the target calls 5899 (unit 188's fragment), so both lines stay.
 // - GetPathMR (fn 949): callers 1164, 5873, 5874, 7160, 11166 to 11172, 12134; 1164 (unit 95's), 5873 and 5874
-//   (unit 160's) are in the link.
+//   (unit 160's) and 11166 to 11172 (unit 179's) are in the link.
 // - GetPathChave (fn 1948): callers 2725, 11419, 11616, 11620, 11629, 12110.
 // - GetPathRootSemSA (fn 634): callers 1164, 1487, 1488, all in the link (1164 is unit 95's, 1487 and 1488 unit 168's),
 //   so it has no stand-in.
