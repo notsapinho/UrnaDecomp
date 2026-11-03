@@ -128,6 +128,14 @@ enum EUeVotaError {
     // the value is the code vota::CControlaReconhecimento::AvancaTentativa (target fn 5406) throws; the name is chosen
     // from its message, "Limite de tentativas atingido.": no evidence names it
     EUE_VOTA_LIMITE_TENTATIVAS_ATINGIDO = 9397,
+    // the value is the code vota::CControlaReconhecimento::AvancaVerificacao (record ccontrolareconhecimento.cpp:176,
+    // inlined into target fn 10447) throws; the name is chosen from its message, "Limite de verificações de dado do
+    // eleitor atingido.": no evidence names it
+    EUE_VOTA_LIMITE_VERIFICACOES_ATINGIDO = 9398,
+    // the value is the code vota::CPedeDigital::StartState (target fn 10468, record cpededigital.cpp:115) throws; the
+    // name is chosen from its message, "Biometria desativada na configuração da eleição, fluxo indevido.": no evidence
+    // names it
+    EUE_VOTA_BIOMETRIA_DESATIVADA = 9400,
     // the values are the codes CInformacaoThreadOperador's four getters throw (target fns 10562, 10561, 10560, 10559);
     // the names are chosen from their messages and their getters, "Identidade não registrada" and "Tipo de identidade
     // não registrado": no evidence names them

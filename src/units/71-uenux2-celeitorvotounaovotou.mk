@@ -105,8 +105,10 @@
 # StartState: their destructors (10434, 10433) sit above 10431 in band 1. s_inst (@1909288) has a hand line in
 # splat/symbol_addrs.txt: step 8 names it by GetInst's votes alone, which the self-vote rule refuses, and its static
 # destructor 10434, the other function that reads it (a thunk into 2903, the body four classes' statics share; elem
-# 4215 to 4222 tie it to this class), does not match: the census pairs our destructor of it with fn 10414 (the same
-# body as ours, over another class's pointer and D2: a shape pair), and 10434 stays no-candidate. The roots stand
+# 4215 to 4222 tie it to this class), matches only since our link forms 2903 too, from three of the target's four
+# members (10434, and 10442 and 10476, the statics of units 152's and 282's vota::CEleitorDemorando and
+# CDigitalNaoReconhecida); before that the census paired our destructor of it with fn 10414 (the same body as ours,
+# over another class's pointer and D2: a shape pair), and 10434 read no-candidate. The roots stand
 # for 1901's target callers not in the link (10209, 10425; 10419, unit 142's, is), and the vtable sink went: 1901's
 # constructor stores the vptr.
 #

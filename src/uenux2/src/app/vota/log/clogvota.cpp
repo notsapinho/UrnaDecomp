@@ -535,4 +535,24 @@ void CLogVota::LogaAudioDesativadoPeloMesario()
     loga("Áudio desativado pelo mesário");
 }
 
+void CLogVota::LogaSolicitaDigital(uebyte tentativa, uebyte total)
+{
+    loga(std::format("Solicita digital. Tentativa [{}] de [{}]", tentativa, total));
+}
+
+void CLogVota::LogaEleitorSemAtividade(uebyte segundos)
+{
+    loga(std::format("Eleitor sem atividade por {} segundos", segundos));
+}
+
+void CLogVota::LogaEleitorNaoEstaVotando()
+{
+    logaAlerta("Eleitor não está votando");
+}
+
+void CLogVota::LogaEleitorEstaVotando()
+{
+    loga("Eleitor está votando");
+}
+
 } // namespace vota

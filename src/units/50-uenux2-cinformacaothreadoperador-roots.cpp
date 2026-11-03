@@ -21,8 +21,8 @@
 //   (10523, unit 152's, and 10751, unit 277's; 10588, unit 174's, and 10664, unit 161's): no stand-in.
 //   GetTextoAudio (10584) and GetTextoComparecimento (10583) have no direct caller: fn 652, the one target function
 //   that passes their table slots (4054 and 4053), is in the link, so no stand-in takes their addresses. The sink takes
-//   GetTextoIdentidadeDigitada's (10586), whose slot 3907 fns 10439 and 10500 pass (1150, 1901, 1905, 2735, 2747,
-//   3625, 5401, 5418, 10588 and 10635, which pass it too, are in the link).
+//   GetTextoIdentidadeDigitada's (10586), whose slot 3907 fn 10500 passes (1150, 1901, 1905, 2735, 2747, 3625, 5401,
+//   5418, 10439, 10588 and 10635, which pass it too, are in the link).
 extern "C" {
 int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv");
 

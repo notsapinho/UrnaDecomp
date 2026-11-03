@@ -16,8 +16,8 @@ namespace vota {
 // vota::CDadoEleitorNaoConfere (RTTI: si_class of comum::CAppState; vtable @1592640 [448, 765, 10448, 7480, 1661, 218,
 // 425, 10447, 425]): an operator's screen shown when the voter's datum does not match. It overrides StartState (slot
 // 2, fn 10448), which shows the form at +20 when vota::CControlaReconhecimento's verifications reached their limit and
-// the one at +12 otherwise, and ProcessInput (slot 7, fn 10447, pending: it calls fn 652, CPedeIdentidade::GetInst,
-// and fn 2735, which has no body here, and holds CControlaReconhecimento::AvancaVerificacao inlined, record ccontrolareconhecimento.cpp:176). The
+// the one at +12 otherwise, and ProcessInput (slot 7, fn 10447), which reads the form at +12 and holds
+// CControlaReconhecimento::AvancaVerificacao inlined (record ccontrolareconhecimento.cpp:176). The
 // destructor is out of line, the body 19 final states share (fns 448 and 765): two std::shared_ptr, +20's released
 // first. A singleton: fn 10443 (vota::CVerificaDadoEleitor::ProcessInput) holds GetInst and the constructor inlined,
 // allocates 28 bytes and passes comum::CAppState::EVENTO_ENTRADA (2) to the base's constructor; neither is

@@ -70,7 +70,8 @@
 #   std::uncaught_exceptions() is the form written; std::uncaught_exception() was not measured.
 # - Pop (fn 5553) returns a bool, which no caller reads; that it says whether the context was found is chosen. The
 #   target's body reads the stack at its address as a constant and has no result, and its two callers (7370,
-#   vota::CEleitorVotando::FinishState, unit 197's, and 10467, not reconstructed) pass only the context: read as
+#   vota::CEleitorVotando::FinishState, unit 197's, and 10467, vota::CPedeDigital::FinishState, unit 282's) pass only
+#   the context: read as
 #   binaryen's dead-argument elimination, which folds the `this` every caller passes (s_contextos) and drops the
 #   result no caller reads. Measured in the whole link (pnpm wasm score against our symbol): Pop declared void scored
 #   `31 over 105 rows (same 74, replaced 23 [21 operand-only], inserted 4, deleted 4)`, which beside the stack's
@@ -84,11 +85,8 @@
 #   the object's Pop and guard destructor unchanged (wasm-objdump -d of the object at the tree's flags, against the
 #   form written; the guard's destructor compared by its D1, the symbol the object defines). The guard's destructor (fn
 #   675), which holds Pop inlined and drops its result, matches either way.
-# - Roots: 193-uenux2-capplicationcontextstack-roots.cpp stands for the callers of CriaContextoAplicacao and the copy
-#   constructor that are not reconstructed (its header lists them; Pop's two target callers are in the link, 10467
-#   with unit 192); the guard's are in unit 171's.
+# - No roots: every target caller of CriaContextoAplicacao (fn 3682) and of the copy constructor (fn 1841) is in the
+#   link, vota::CPedeDigital::GetInst (2740) and StartState (10468) the last two (unit 282), and so are Pop's two
+#   (7370 and 10467); the guard's callers' stand-ins are in unit 171's roots.
 CAPPLICATIONCONTEXTSTACK_SRCS := src/api/gui/capplicationcontext.cpp src/api/gui/capplicationcontextstack.cpp
 UENUX2_SRCS += $(CAPPLICATIONCONTEXTSTACK_SRCS)
-$(ROOT)/$(APP)/193-uenux2-capplicationcontextstack-roots.o: $(ROOT)/src/units/193-uenux2-capplicationcontextstack-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/193-uenux2-capplicationcontextstack.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/193-uenux2-capplicationcontextstack-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/193-uenux2-capplicationcontextstack-roots.o

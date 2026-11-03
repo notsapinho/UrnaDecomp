@@ -8,6 +8,8 @@
 #include <thread>
 
 #include "api/gui/cinteractiveform.h"
+#include "api/gui/cmtformbuilder.h"
+#include "api/gui/ctextsource.h"
 #include "api/gui/iscreenmt.h"
 #include "api/ipc/cmessagequeue.h"
 #include "api/pattern/cpolysingleton.h"
@@ -19,6 +21,46 @@
 #include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
+
+namespace {
+
+std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTela(std::shared_ptr<std::string> situacao,
+                                                                                std::shared_ptr<std::string> mensagem)
+{
+    api::CMTFormBuilder builder;
+    builder.AddLed(api::LED_OPERACAO_1);
+    builder.AddTextField(api::CTextSource(mensagem), api::SPoint{1, 1}, "%s", api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField(api::CTextSource(situacao), api::SPoint{1, 2}, "%s", api::ALINHAMENTO_ESQUERDA);
+    builder.AddTextField("CORRIGE: Cancelar", api::SPoint{40, 3}, api::ALINHAMENTO_DIREITA);
+    builder.AddInputControl();
+    return builder.GetInteractiveForm("", true);
+}
+
+} // namespace
+
+CSuspensaoAutomaticaEleitor::CSuspensaoAutomaticaEleitor()
+    : comum::CAppState(EVENTO_TECLA | EVENTO_ENTRADA | EVENTO_TICK)
+    , m_bVotou(false)
+    , m_tick(CThreadOperador::GetInst().AddStoppedTick(1000))
+    , m_contagem(10)
+    , m_bSinalizado(false)
+    , m_situacao(std::make_shared<std::string>("votou/não votou"))
+    , m_mensagem(std::make_shared<std::string>("contagem regressiva"))
+    , m_form(MontaTela(m_situacao, m_mensagem))
+{
+}
+
+CSuspensaoAutomaticaEleitor& CSuspensaoAutomaticaEleitor::GetInst()
+{
+    std::lock_guard<std::mutex> trava(s_mutex);
+    if (!s_inst) {
+        s_inst.reset(new CSuspensaoAutomaticaEleitor());
+    }
+    return *s_inst;
+}
+
+std::unique_ptr<CSuspensaoAutomaticaEleitor> CSuspensaoAutomaticaEleitor::s_inst;
+std::mutex CSuspensaoAutomaticaEleitor::s_mutex;
 
 CSuspensaoAutomaticaEleitor::~CSuspensaoAutomaticaEleitor() = default;
 
@@ -34,8 +76,7 @@ void CSuspensaoAutomaticaEleitor::InicializaTick()
     }
 }
 
-// (original lines 37-79: content not recovered)
-#line 80
+
 void CSuspensaoAutomaticaEleitor::AtualizaMensagem()
 {
     *m_mensagem = std::string("Suspensão automática em ") + std::to_string(m_contagem) +

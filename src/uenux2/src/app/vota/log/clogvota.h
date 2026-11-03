@@ -266,6 +266,20 @@ public:
     void LogaAudioAtivadoPeloMesario();
     void LogaAudioDesativadoPeloMesario();
 
+    // The identification states (app/vota/operador/confirmaidentidade/ and aguardaeleitor/): each held inlined by its
+    // one caller, which calls GetInst, and evaluates the arguments, before the member's own stack frame opens.
+    // LogaSolicitaDigital (vota::CPedeDigital::StartState, fn 10468: "Solicita digital. Tentativa [{}] de [{}]") and
+    // LogaEleitorSemAtividade (vota::CEleitorDemorando::StartState, fn 10440: "Eleitor sem atividade por {} segundos")
+    // format their bytes as unsigned (argument code 6) and call loga (fn 233); the callers read each argument with
+    // i32.load8_u, so the parameters are bytes. LogaEleitorNaoEstaVotando ("Eleitor não está votando", logaAlerta, fn
+    // 1398) and LogaEleitorEstaVotando ("Eleitor está votando", loga) are held by
+    // vota::CPerguntaEleitorVotando::ProcessInput (fn 10415), on CORRIGE and CONFIRMA. The names (from the messages),
+    // the parameters' type's spelling and the place here and at the end of clogvota.cpp are chosen.
+    void LogaSolicitaDigital(uebyte tentativa, uebyte total);
+    void LogaEleitorSemAtividade(uebyte segundos);
+    void LogaEleitorNaoEstaVotando();
+    void LogaEleitorEstaVotando();
+
 private:
     CLogVota();
 };

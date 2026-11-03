@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "app/comum/cappstate.h"
@@ -19,11 +20,13 @@ namespace vota {
 // destructors (slots 0 and 1, fns 2732 and 10411), StartState (slot 2, fn 10409), FinishState (slot 5, fn 10408),
 // ProcessKey (slot 6, fn 10404), ProcessInput (slot 7, fn 10407) and ProcessTick (slot 8, fn 10405). The destructor is
 // out of line: the deleting one (fn 10411) calls it and frees `this`; it stores no vptr, as a final class's
-// (docs/reference/facts/reading.md R4, R5). A singleton: fn 10440 holds GetInst inlined, which keeps the object in a
-// static std::unique_ptr (@1909400, destroyed at exit by fn 10414) under a static std::mutex (@1909376, fn 10412); it
-// calls fns 395 and 301 to build the form; GetInst, the constructor and the statics are not written, though every
-// callee of 10440 has a name now (395 since unit 31). The record at csuspensaoautomaticaeleitor.cpp:89 names
-// DisparaSinalizacaoSonora's lambda (fn 10410).
+// (docs/reference/facts/reading.md R4, R5). A singleton: GetInst has no target function of its own, fn 10440
+// (vota::CEleitorDemorando::StartState) holds it inlined (the one store of the vptr, 1593272), with the 56-byte object
+// kept in a static std::unique_ptr (@1909400, destroyed at exit by fn 10414) under a static std::mutex (@1909376, fn
+// 10412); the constructor, inlined there behind a 96-byte frame of its own, passes comum::CAppState::EVENTO_TECLA |
+// EVENTO_ENTRADA | EVENTO_TICK (7) to the base's and fills the layout below, the form from a helper clang inlines.
+// 10440 then copies vota::CEleitorDemorando's byte at +11 into this class's +11 (SetVotou, a setter whose name is
+// chosen). The record at csuspensaoautomaticaeleitor.cpp:89 names DisparaSinalizacaoSonora's lambda (fn 10410).
 //
 // The layout: +11 a byte StartState tests to choose the text it writes into +28's string; +12 the id of the tick that
 // FinishState, ProcessKey and ProcessInput stop (CThreadVota::StopTick takes a uebyte) and StartState sets from
@@ -49,8 +52,13 @@ public:
 
     virtual void ProcessTick(uebyte tick) override;
 
+    void SetVotou(bool votou) { m_bVotou = votou; }
+
 private:
     CSuspensaoAutomaticaEleitor();
+
+    static std::unique_ptr<CSuspensaoAutomaticaEleitor> s_inst;
+    static std::mutex s_mutex;
 
     void InicializaTick();
 

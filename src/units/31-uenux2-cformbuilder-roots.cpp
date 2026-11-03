@@ -7,11 +7,13 @@
 // vector's destructor stays in line. Each adder has two call sites, or binaryen would inline it, and what the target's callers
 // vary varies here, or binaryen would fold it. Of the MT screens listed, 1901, 1905, 2735, 2743, 2747, 2753, 5393,
 // 5401, 5430 and 652 (units 71, 121, 142, 152, 161 and 239), 3610, 5386, 5389 and 10313 (units 247, 135 and 71), 3625
-// (unit 174) and 5396 (unit 221) are in the link now; the stand-ins stay for the others:
+// (unit 174), 5396 (unit 221), and 2734, 2740, 5397, 10415, 10439 and 10440 (units 152 and 282) are in the link now;
+// the stand-ins stay for the others:
 //   TelaMTA, TelaMTB  652, 1901, 1905, 2734, 2735, 2740, 2743, 2747, 3610 and the other callers of 180, 619, 651, 1152, 5409
 //                     (2734; 1150 is in the link, as for 180, 619, 651 and 435), 5419 (1905), 435, 1072, 941, 728. 5409's and 5419's alignment stays the default: their
 //                     target callers all pass it, and they have no parameter for it. 5419's one target caller,
-//                     1905, is in the link now: the stand-ins' calls of 5419 stand for none
+//                     1905, is in the link now, and so are 5409's two, 1150 and 2734: the stand-ins' calls of 5419
+//                     and 5409 stand for none
 //   TelaA, TelaB      1255, 2291, 3064, 6569, 7787 and the other callers of 202, 1191, 3068, 5547, 2244, 2245, 3680 and 426,
 //                     and 1190, 3064, 6602, 6603, 6605, 6608, 6624, 6641, 6646 and 7787, the callers of 1265; 1255,
 //                     2291, 2376, 2380, 3059, 6599, 6601, 7787, 11812, 11881, 11884, 11888, 11892, 12040,
@@ -148,8 +150,8 @@ __attribute__((noinline)) int RelatorioA(api::CPaperFormBuilder& form, const std
 // The forms: each of these stands for screens that end a form with the builder's getter, and each getter has two call
 // sites here, or binaryen would inline it; what the target's callers vary varies here (the name, 301's bool).
 //   FormMTA, FormMTB      callers of 1694 (4633, 5341, 10676; 1150, 5343, 10204 and 10214 are in the link) and of 301
-//                         (2734 and the other 32; 652, 1901, 1905, 2735, 2747, 2753, 2880, 3610, 3625, 5386, 5389,
-//                         5393, 5396, 5401, 5430 and 10313 are in the link)
+//                         (13 of its 49 target callers are not in the link: 10316, 10337, 10388, 10443, 10451,
+//                         10465, 10474, 10489, 10500, 10530, 10590, 10627 and 10689)
 //   FormA, FormB          callers of 5550: 6117 (binaryen's body of GetForm overloads that build their pre-show) and 11891
 //   FormPapelC   the callers of 357 (Build): 3699, 3872, 3873, 5579, 5580, 5970, 5971, 5977, 11253, 11908, 11946,
 //                12105 and 12110, not reconstructed (11256, 2890 and 12005 are in the link); it calls Build twice
@@ -187,9 +189,9 @@ __attribute__((noinline)) int FormPapelC(api::CPaperFormBuilder& form, api::CPap
 }
 
 // The MT builder's input fields:
-//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (2734, 2740 and the other 23; 652, 1901,
-//                 1905, 2743, 2747, 3610, 3625, 5386, 5389, 5393, 5396, 5401, 5430 and 10313 are in the link): it calls
-//                 it twice, or binaryen would inline it
+//   ControleMT    the callers of 395, CMTFormBuilder::AddInputControl (12 of its 39 target callers are not in the
+//                 link: 10316, 10337, 10443, 10451, 10465, 10474, 10489, 10500, 10530, 10590, 10627 and 10689): it
+//                 calls it twice, or binaryen would inline it
 // The stand-in for 5410, the third caller of 3674 (CMTFormBuilder::AddField) and of 3673 (IInputField<IScreenMT>'s
 // constructor), went: 5410 is in the link (vota::MontaTelaEleitorPodeVotar, unit 161, over AddInputControl(int)), with
 // 395 and 1151 (unit 121), the other two.
