@@ -5,12 +5,14 @@ lone and whole-link tries, cloned build outputs, counting lost matches, committi
 after step 9, Latin-1 text in pipes, zsh, withdrawing a match, `pnpm test`, the stubs at a merge, what a header
 rebuilds, a match line two branches add, a header two branches add, what a merge does to a commit's pathspec and a
 table's rows, `-j` on the link, leaving a merge after step 9, the notes a merge makes stale, a merge that fails to
-compile with no conflict, and what fails `pnpm test:bench`.
+compile with no conflict, what fails `pnpm test:bench`, make's clock, what a merge joins with no conflict, and reading a
+score and a remap.
 `docs/how-to-decompile.md`, `docs/getting-started.md` and `docs/agents.md` rely on these.
 W1–W13 were measured in a worktree at 7bf701e, the parts marked so and W14–W17 at ee595de, the parts marked bb6f018
 and W18–W20 at bb6f018, the parts marked 0b5f410 and W21–W22 at 0b5f410, the parts marked 4487d6b at 4487d6b, W23 and
-W2's items 6 and 7 at c1b2630, W24 at the merges it names, W25 and the parts marked bbf27ac1 at bbf27ac1, on macOS
-(zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says otherwise.
+W2's items 6 and 7 at c1b2630, W24 at the merges it names, W25 and the parts marked bbf27ac1 at bbf27ac1, W26 to W28 and
+the parts marked 182dc6c1 at 182dc6c1, on macOS (zsh 5.9, wabt 1.0.42), with Node 24 first on PATH unless a section says
+otherwise.
 
 ## W1. Every command that runs the toolkit needs Node 24 first on PATH, and the symbol file a larger heap
 
@@ -212,9 +214,10 @@ strong data. The class's own vtable and typeinfo are strong:
 try-tu's whole link is `make -s -C src link SKIP_UNITS=… EXTRA_OBJS=… OUT=… OUT_NAMED=…` (`tools/round/try-tu.sh` line
 236) with the default `APP`. make first brings every object of the link up to date, so after an edit of a landed
 unit's source or header, a try compiles those objects into `build/out/app/` before its own link, and a later
-`make -n -C src link | /usr/bin/grep -c 'em++.* -c '` prints 0: the try already rebuilt them. To ask whether an edit
-of one file rebuilds anything, name it: `make -n -C src link -W $PWD/<file> | /usr/bin/grep -c 'em++.* -c '`
-(`src/uenux2/src/api/util/cgenerictags.cpp`: 1).
+`make -n -C src link | /usr/bin/grep -c -E '(em\+\+|emcc) .* -c '` prints 0: the try already rebuilt them. To ask
+whether an edit of one file rebuilds anything, name it: `make -n -C src link -W $PWD/<file> | /usr/bin/grep -c -E
+'(em\+\+|emcc) .* -c '` (`src/uenux2/src/api/util/cgenerictags.cpp`: 1). The `emcc` half counts two tree roots,
+`sqlite_roots.o` and `openssl_roots.o`, which compile with `emcc`.
 
 A try of a file a landed unit already compiles, without `--skip-units` for that unit, links the object twice:
 
@@ -325,6 +328,13 @@ Latin-1 directory, at ee595de:
 
 So run it after `git add` of the unit's new files and `git rm` of the removed ones, before the commit.
 
+It checks only what `.editorconfig` gives a charset, and no section covers `src/units/` but the externs file, so a
+fragment that a Latin-1 round trip wrote Latin-1 text into passes, though `src/units/README.md` says those files are
+UTF-8. At 182dc6c1 twelve tracked files there besides the externs file are not UTF-8; test a fragment you wrote:
+
+    python3 -I -c "import sys; open(sys.argv[1],'rb').read().decode('utf-8')" src/units/152-uenux2-app-vota-operador-estados.mk
+      UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe1 in position 12771: invalid continuation byte
+
 ## W9. A Latin-1 line breaks macOS `sed`, `cut` and `tr` in a UTF-8 locale, not only `grep`
 
 Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"`:
@@ -341,6 +351,12 @@ Every stub header holds the Latin-1 middle dot (byte 0xB7). With `LANG="C.UTF-8"
       src/uenux2/src/app/vota/eleitor/cvotacaostateaudio.cpp:13:// f1455 · 496 B · unmatched · name unknown
     git grep -h -E '^// f1455 ' HEAD -- src/uenux2 | wc -l              # 0
     LC_ALL=C git grep -h -E '^// f1455 ' HEAD -- src/uenux2 | wc -l     # 1
+
+`sed -i ''` on a Latin-1 source stops the same way, `sed: RE error: illegal byte sequence`, leaves the source unchanged
+and an untracked partial copy beside it, `.!<pid>!<file>`, which `git status --short` lists as `??` and
+`check_encoding.py`, reading tracked files only, does not see; the Edit tool refuses such a file outright ("File is not
+valid UTF-8"). Edit a Latin-1 source with a script that reads and writes `latin-1`, check that `file <path>` still says
+ISO-8859 or ASCII, and look for `.!` files in `git status --short` before `git add`; remove one by its full name.
 
 ## W10. zsh: `$var:` is a modifier, and a word that starts with `=` is a command path
 
@@ -448,9 +464,14 @@ check failed these, each a different case or none, with `splat` printing the tar
 | `splat-symbols.test.ts`, "drops a voted name that shares its target address" | whether `stdout`'s bytes can refute it there | the re-pointed bytes of `__stdout_FILE`, which place it in the target once since the executable TU's object and three times at 84f5d8d: the case takes a `.bss` word of ours (zeros, as the vtable's offset-to-top word is) |
 | `splat-kinds.test.ts`, "an integer in the target table past ours is a review warning" | an integer between the end of our table and the end of the target's | our table grew past the target's (12881 slots against 12855 with unit 165's address-taken functions), which leaves no such integer: the case gives the target's table an end two slots past ours when the link leaves none, and expects the `past-table` warning there |
 | `report.test.ts`, "pairs functions whose call_indirect type INDICES differ" | how many census fingerprint pairs have a `call_indirect` whose type index differs between the two links (it asked for more than 50) | the order of our type section: with units 206, 109 and 205 our first 19 types are the target's, and 11 of the 476 fingerprint pairs with a `call_indirect` differ (all with equal rows). The case now asks for one such pair, and that each pairs by its rows |
+| `splat-kinds.test.ts`, "offers an operand only the readings of its kind" | `NextEntry`'s `i32.const 7010` without the kind table: the function in our table slot 7010, and the string our data holds at address 7010 | an address-taken function ahead of it in our table; a string a landing puts at 7010, which adds an address reading. The case now takes the function from the link and reads only the slot readings |
+| `splat-sub.test.ts`, the `selfVoted` and `buildSplat` self-vote cases | `__cxa_new_handler`'s voters (`by:137`) | a match of another reader of the name adds a voter (2549): `newHandlerVotedBy137Alone` now sets the premise on a copy of the maps |
+| `splat-review.test.ts`, "confirms a self-voted name through the matches that may use it" | 1877's `call by:9218` line | a table holder of 1877 that matches names it by `table`: `desconverteVotedBy9218Alone` now sets the premise |
 
 Any case that holds a target number as past our data or our table ends so once a landing grows ours past it; such a
-case takes the number from the link ([splat.md](splat.md) §S5 item 3).
+case takes the number from the link ([splat.md](splat.md) §S5 item 3). A case that restates the slot rule reads the
+function in our slot through `resolveFunction(maps, maps.ours.elem.get(N))`, as `slotReadings` does, not by symbol key:
+a slot can hold an import, which `ours.fns` lacks ([splat.md](splat.md) §S5).
 
 So a failure is the branch's only if the commit it started from passes. A real-link case reads `build/out/wasm*`, so
 that takes a build of that commit, not a copy of the tree: `git archive` plus a copied `build/out/` stops on the
@@ -474,17 +495,21 @@ One more way a run alone can mislead (bb6f018):
   `urna-emsdk:6.0.0`. A BuildKit build of `urna-emsdk:6.0.0` can pull its base without tagging it, and the run then
   reads `189 passed | 4 skipped` and exits 0. `docker image ls --format '{{.Repository}}:{{.Tag}}' | /usr/bin/grep
   emsdk` should list both images; `docker pull emscripten/emsdk:6.0.0` adds the tag from the layers already there.
-- **An RPC timeout exits 1 with every case passed.** `Errors  1 error` with `Error: [vitest-worker]: Timeout calling
-  "onTaskUpdate"` beside `Tests  242 passed (242)` is vitest's worker, not a case. It is no load effect: two runs alone
-  at a load average of 2.5 failed so, and a rerun is often no cleaner. `test/splat-symbols.test.ts` is the long file
-  (about 62 s on the MacBook, 61 to 79 s on the Mac mini, two cases near 16 s each), and its cases do not yield to
-  the worker's 60 s RPC timer, so it errs alone on an idle machine. Report the counts (every file and case passed, none
-  skipped) and the error as the harness's. Its two halves by test name, each under 60 s, give a run with no error (at
-  bbf27ac1, from `asmlift-wasm/`):
+- **An RPC timeout exits 1 with every case passed.** `Errors  1 error` (or `2 errors`), each `Error: [vitest-worker]:
+  Timeout calling "onTaskUpdate"`, beside `Tests  242 passed (242)` is vitest's worker, not a case; read the text of
+  every unhandled error, since any other is a failure. It is no load effect alone: two runs alone at a load average of
+  2.5 failed so, and a rerun is often no cleaner. `test/splat-symbols.test.ts` is the long file (about 62 s on the
+  MacBook, 61 to 79 s on the Mac mini, two cases near 16 s each), and its cases do not yield to the worker's 60 s RPC
+  timer, so it errs alone on an idle machine; any real-link file of 60 s or more can (`splat-kinds.test.ts`, 40 cases,
+  took 69 s on a loaded mini), and a file's time grows with the machine's load. Report the counts (every file and case
+  passed, none skipped) and the error as the harness's. Three runs by test name give a run with no error, each under
+  60 s at a load average of 41 (`resolveRepointed`'s four cases take about 40 s), from `asmlift-wasm/`; another long
+  file splits the same way, by `describe` name with `-t`:
 
-      A='^(resolveRepointed|compareObject|srclocAnchors|remapBody|loadOurSide|parseLinkMap) '
-      TMPDIR=/tmp pnpm --silent exec vitest run test/splat-symbols.test.ts -t "$A" 2>&1 | /usr/bin/grep -E 'Tests |Errors'
-            Tests  16 passed | 54 skipped (70)
+      TMPDIR=/tmp pnpm --silent exec vitest run test/splat-symbols.test.ts -t '^resolveRepointed ' 2>&1 | /usr/bin/grep -E 'Tests |Errors'
+            Tests  4 passed | 66 skipped (70)
+      TMPDIR=/tmp pnpm --silent exec vitest run test/splat-symbols.test.ts -t '^(compareObject|srclocAnchors|remapBody|loadOurSide|parseLinkMap) ' 2>&1 | /usr/bin/grep -E 'Tests |Errors'
+            Tests  12 passed | 58 skipped (70)
       TMPDIR=/tmp pnpm --silent exec vitest run test/splat-symbols.test.ts -t '^(?!(resolveRepointed|compareObject|srclocAnchors|remapBody|loadOurSide|parseLinkMap) )' 2>&1 | /usr/bin/grep -E 'Tests |Errors'
             Tests  54 passed | 16 skipped (70)
 - **A suite with no build outputs fails three cases unmutated.** So a mutant run that takes a non-zero exit as
@@ -575,16 +600,61 @@ relative to the source that no `-I` names (bbf27ac1):
       src/app/roots_boost.cpp:5:#include "../../tools/libs/boost/probe.cpp"
       src/app/roots_rhvoice.cpp:5:#include "../../tools/libs/rhvoice/driver.cpp"
 
+A uenux2 header's `-W` list is the whole tree (the generic rule depends on every header, W15), and an object whose
+source does not reach the header through its includes compiles from the same text, so compile only the includers.
+This lists the link objects whose sources reach the given headers through `#include "…"` lines, transitively, over
+the tracked tree (a basename shared by two sources lists both, which costs a compile, not a miss); at 182dc6c1 it
+prints 32 for `cconfiguracaoeleicao.h` and 232 for `cdatetime.h`, in under a second. Add §W15's byte search for an
+`src/asn1` module header, whose users reach it through ecourna's include paths too:
+
+    make -s -C src print-LINK_OBJS | tr ' ' '\n' > build/out/workflow-facts/link-objs.txt
+    python3 -I -c "import os,re,subprocess,sys; fs=[f for f in subprocess.run(['git','ls-files','src'],capture_output=True,text=True).stdout.split() if f.endswith(('.h','.hpp','.cpp','.c'))]; suf={}; [suf.setdefault(f[i+1:],set()).add(f) for f in fs for i in [-1]+[j for j,c in enumerate(f) if c=='/']]; by={}; [by.setdefault(t,set()).add(f) for f in fs for x in re.findall(rb'#include \"([^\"]+)\"',open(f,'rb').read()) for t in suf.get(x.decode('latin-1'),())]; hit=set(sys.argv[2:]); [hit.update([g for h in list(hit) for g in by.get(h,())]) for _ in range(40)]; b={f.split('/')[-1] for f in hit if f.endswith(('.cpp','.c'))}; print('\n'.join(sorted(o.replace(os.getcwd()+'/','') for o in open(sys.argv[1]).read().split() if any(o.endswith(('/'+n+'.o','_'+n+'.o','/'+n.rsplit('.',1)[0]+'.o')) for n in b))))" build/out/workflow-facts/link-objs.txt src/uenux2/src/app/comum/dados/cconfiguracaoeleicao.h > build/out/workflow-facts/many.txt
+
 For a range that rebuilds many objects, `make -n -B` over the list prints every one's compile line at once, and the
 lines of their prerequisites (the `build/out/app/asn1/` objects) beside them; keep those whose `-o` is listed. With
 the list in `build/out/workflow-facts/many.txt`, one path per line from the root:
 
-    make -n -B -C src $(sed "s#^#$PWD/#" build/out/workflow-facts/many.txt) | /usr/bin/grep 'em++.* -c ' | /usr/bin/grep -c -F -f build/out/workflow-facts/many.txt
-      2                                  (cwait.cpp.o and 02-uenux2-cthreadvota-roots.o)
+    make -n -B -C src $(sed "s#^#$PWD/#" build/out/workflow-facts/many.txt) | /usr/bin/grep -E '(em\+\+|emcc) .* -c ' | /usr/bin/grep -c -F -f build/out/workflow-facts/many.txt
+      32
 
-And `roots_asn1.o`, which every fragment edit rebuilds, compiles
-`build/out/app/asn1/roots_asn1.cpp`, a file `tools/round/gen_try_roots.py` writes: copy it from the checkout when the
-range changes no `ASN1_ROOTS_EXCLUDE`, else regenerate it with the base's excludes.
+Run as a batch, those lines mislead five ways:
+
+1. **Each line runs in the checkout.** It starts `cd <checkout> && mkdir -p <dir> &&` and calls `build/docker-build.sh`
+   by a relative path, which `git archive` lacks: as printed it rewrites the checkout's objects. Re-point the `cd` at
+   the scratch tree, call the checkout's `build/docker-build.sh` (or a copy whose `docker run` mounts `third_party/`,
+   `tools/` and `build/out/openssl/` read-only) by its absolute path, and test each compile's exit before its `cmp`.
+   Four at a time with `xargs -0 -n1 -P4 bash -c`: macOS `xargs -I` stops on `command line cannot be assembled, too
+   long`.
+2. **A line ends in spaces.** `… -o build/out/app/<object>   `, so a `sed 's#-o [^ ]*$#…#'` that re-targets the output
+   changes nothing and the variant overwrites the tree's object. Strip the spaces first (`sed 's/[[:space:]]*$//'`), and
+   check the re-targeted line with `/usr/bin/grep -q -- "-o <scratch>.o$"` before running it.
+3. **The branch's flags.** The checkout's line has the branch's fragment flags: when the range edits a fragment that
+   names the object, take the base's lines from the archive's own Makefile, `make -n -B -C <dir>/src
+   <dir>/<object>…`, run with no `ROOT` (a `ROOT` names the fragments `src/Makefile` includes, so `ROOT=$PWD` gives the
+   branch's). Its `awk: can't open file …/tools/libs/7zip/sources.txt` comes from a rule the archive cannot read and
+   changes no TSE object's line.
+4. **An object no rule makes stops make** at `No rule to make target`, and only the lines before it print: leave out of
+   the list the objects `print-LINK_OBJS` does not name (a deleted source's, a probe's), or pass `-k`, and count the
+   lines against the list. With stderr dropped nothing says so.
+5. **A prerequisite outside `src/`** (`third_party/libqrencode/qrencode.h` in fragment 204's rule,
+   `tools/round/gen_try_roots.py` for `roots_asn1.cpp`) gets its object no line, even with `-k`: create an empty file of
+   that name in the archive for `make -n` only, or take the line from the checkout when the range leaves the fragment
+   alone. `roots_asn1.o`, which every fragment edit rebuilds, compiles `build/out/app/asn1/roots_asn1.cpp`, which
+   `tools/round/gen_try_roots.py` writes: copy it from the checkout when the range changes no `ASN1_ROOTS_EXCLUDE`, else
+   regenerate it with the base's excludes.
+
+The base's link line, to show what a range that moves a source between fragments reorders, comes from the archive the
+same way: `git archive <base> src tools | tar -x -C <dir>`, then `make -s -C <dir>/src print-LINK_OBJS | tr ' ' '\n'`,
+with no `ROOT`, and `<dir>/` stripped. The library objects are listed only where they are built, so compare the
+`build/out/app/` lines, which are the ones the fragments order.
+
+**Reading a `DIFFER`.** An edit that moves an inline member out of line (or back) makes every object that emitted a
+linkonce copy of it differ with no code changed: such an object imports the symbol, which shifts every function index
+(116 of 130 `DIFFER`s when `CAppState::ProcessKey` went out of line). Compare those per function: each function's
+`wasm-objdump -d` text with every `<index> <name>` operand reduced to the name and the step 3 masks of
+[how-to](../../how-to-decompile.md) ("To measure the same bytes"); the object's only change is then the copy's
+absence. An object of another unit that differs for real is named in the commit and re-measured
+([agents.md](../../agents.md) "Shared build outputs").
 
 When the range also edits a source that includes the header, the base object differs by that edit, and the question
 is today's source with the base's header. Compile today's sources with the base header put first, `-iquote <dir>` with
@@ -600,7 +670,16 @@ an object `$V/obj/dao.o` compiled from `make -n`'s line at `-O3`, and `n=o3`:
     sed -e "s# app/uenux2/src/app/comum/dados/dao/celeitordinamicodao.cpp.o # variant-probe/obj/dao.o #" -e "s# -o wasm/vota_web/vota_web_wasm.js # -o variant-probe/wasm/$n/vota_web_wasm.js #" build/out/wasm/vota_web/link.cmd > $d/link.cmd
     TMPDIR=/tmp build/docker-build.sh bash -c "cd build/out && $(cat $d/link.cmd)" > $d/link.log 2>&1
     TMPDIR=/tmp tools/round/link-map.sh $d                  # writes $V/wasm-map/$n/names.tsv
-    TMPDIR=/tmp tools/round/link-kinds.sh $d                # for splat-remap; then pnpm wasm splat-kinds on its wasm
+    TMPDIR=/tmp tools/round/link-kinds.sh $d                # for splat-remap
+    (cd asmlift-wasm && pnpm --silent wasm splat-kinds ../$d/vota_web_wasm.wasm)    # the variant's plain wasm, not link-kinds' copy
+
+Both scripts keep their intermediates in `$V/wasm-map/tmp/` and `$V/wasm-kinds/tmp/` (their headers say so), one
+folder for every variant under that `$V`: two run at once overwrite each other's map (`--Map lists 22553 functions,
+wasm-ld wrote 22552`) and lock (`FileNotFoundError: … emscripten.lock`). Map variants one at a time, or give each its
+own `$V`. `splat-kinds` on the `wasm-kinds/<n>/` copy stops with `… does not describe …: run make -C src link-map`.
+Compile the variant object as W26 says, its object removed first. Score the variant's wasm where the link wrote it,
+with its `vota_web_wasm.js` beside it: a copy without the glue scores every import call as a replaced row
+(`asmlift-wasm/README.md`).
 
 Compile a variant from a copy with the `-ffile-prefix-map` of [codegen.md](codegen.md) §C1, or its records move every
 offset. A control with an unchanged object gives the plain link's sha256, so comparing sha256 says "the same module" at
@@ -636,6 +715,16 @@ plain link's indices, so a symbol file regenerated from a variant names the wron
 The same scan with `--symbols` on a file `splat-symbols -o` wrote from the variant takes 230 rows out of `match`, none
 of them a real loss. Read only the rows that enter or leave `match`: unmatched rows trade `unresolved` and `differs`
 between the two links for the same reason. A symbol file of the variant's own needs a census of the variant first.
+
+That scan keeps every name of the committed file, so it cannot show a name the variant no longer earns. When the
+variant removes or changes a body that is an anchor or a voter (`by:` lists it), regenerate the symbol file from the
+variant into scratch (`pnpm wasm splat-symbols <target> <variant wasm> --kinds … --map-dir <V>/wasm-map/<n> -o
+<scratch>`) and read the lines of the indices it named or voted for: anchor names (`srcloc-`, `vptr-`,
+`content-anchor`) and the `call` votes their pairs cast read no census pair and hold there, while a census pair's vote
+in a band the variant reorders does not. Without `CSystem::ReplaceDir`, 5455 scores `717 over 1984`, anchors nothing,
+and 3645 and 5458, `call by:5455`, lose their names, though the committed-symbols scan moved no row. The row set a
+fragment quotes for a variant comes from steps 7 to 9 run on the variant link with private paths
+([app-flags.md](app-flags.md) §F9 item 6 gives the options).
 
 **A header for the whole link.** `UENUX2_EXTRA="-iquote <overlay>"` reaches the tree's objects and not the roots:
 `src/Makefile` sets `APP_CXXFLAGS` from `UENUX2_CXXFLAGS` with `:=` (line 90) before it adds `UENUX2_EXTRA` (line 97).
@@ -885,23 +974,44 @@ This also drops every untracked file it staged, so save what you want first. The
 A landing's new matches make other units' notes false: a pending header's list of callees "with no name", a fragment's
 "waits for fn N", a roots comment that names a stand-in's callers. And a stand-in can stand for references that are no
 call, such as unit 35's address of `IInterfaceInit`'s destructor for the slot 0 of two vtables, which a search of the
-link for calls does not find. The merge's new indices against the comments of `src/units/` find both, with `main` (or
-the merge's first parent) as the base:
+link for calls does not find. The merge's new indices against the comments find both, with `main` (or the merge's
+first parent) as the base. Add to the list, by hand, the functions the merge writes that do not match (each lane's
+result names them): a written caller ends a stand-in as a match does, and one with no name reads `no-candidate` with no
+object in the scan, so look it up by name in `build/out/wasm-map/vota_web/names.tsv`. The search needs no link, so it
+can run from the lanes' lists before steps 6 to 10:
 
     comm -13 <(git show main:splat/matched.txt | cut -d' ' -f1 | sort) <(cut -d' ' -f1 splat/matched.txt | sort) > build/out/<handle>/new.idx
-    LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/units/*.mk src/units/*.cpp src/units/README.md src/app/*.cpp docs
+    LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/units/*.mk src/units/*.cpp src/units/README.md src/app/*.cpp $(git ls-files docs | /usr/bin/grep -v -E '^docs/(img/|status\.md$)')
+    awk '/^# ---- hand edits below/ {h=1} h' splat/symbol_addrs.txt | LC_ALL=C /usr/bin/grep -n -w -F -f build/out/<handle>/new.idx
+    LC_ALL=C /usr/bin/grep -rn -w -F -f build/out/<handle>/new.idx src/uenux2/src src/ecourna | LC_ALL=C /usr/bin/grep -i -E 'no name|not written|not reconstructed|waits|stand'
 
 The tree roots in `src/app/` hold stand-ins too (`roots_ecourna.cpp`'s for unit 00), and the units README's rows and
-the docs' examples name indices. With 9202406 as the base, bbf27ac1's 82 new indices give 228 lines in `src/units/`'s
-companions and fragments and 277 with the rest, each to read: an index also matches a line number or a size. Search
-the trees' comments for the indices of the classes the merge touched too. A stand-in whose callers are now all in the
-link goes in the merge; one found otherwise goes when a link without it moves no row (W13, "One variant object in the
-whole link"). A lane runs the same search on its own new indices before it commits, and fixes what it finds, comment
-lines only, in files it claims (how-to step 10).
+the docs' examples name indices; `docs/img/` and `docs/status.md` are generated and hold coordinates and counts, no
+notes (84 of 100 docs lines at one merge). With 9202406 as the base, bbf27ac1's 82 new indices give 228 lines in
+`src/units/`'s companions and fragments and 277 with the rest, each to read: an index also matches a line number or a
+size. The second search reads the hand lines' comments, whose "our body differs" a new match makes false (the lane whose
+match names the function weighs the line, how-to step 10). The third reads the trees' comments, where a header of any
+class can list a new match among callees "with no name"; a fix keeps the paragraph's line count, so no `#line` moves.
+At 182dc6c1 against 65b4d0e3 (six new indices) they print 39, 0 and 0 lines. A stand-in whose callers are now all in
+the link goes in the merge; one found otherwise goes when a link without it moves no row (W13, "One variant object in
+the whole link"). A lane runs the same search on its own new indices before it commits, and fixes what it finds,
+comment lines only, in files it claims (how-to step 10).
+
+A note's count of a function's callees "with no name" counts against both name files, imports aside (callees below
+136), and says so beside the count: a match line can be a function's only name (2745). For 10425 at 182dc6c1, 5 of 45:
+
+    for c in $(awk -F'\t' -v f=10425 '$1==f && $2>=136 {print $2}' ledger/callgraph.tsv | sort -u); do /usr/bin/grep -q -F "= func:$c;" splat/symbol_addrs.txt || awk -v c=$c '$1==c {f=1} END {exit !f}' splat/matched.txt || echo $c; done | wc -l
 
 ## W24. A merge can fail to compile where no line of either side conflicts
 
-Three ways, each met at a landing (the commits are the merged branch and the `main` it merged onto):
+Four ways, each met at a landing (the commits are the merged branch and the `main` it merged onto):
+
+- **Both sides add one member under one name**, one defined in the class and one declared there and defined out of
+  line: `cestadogeralvota.h:171:10: error: class member cannot be redeclared` (`SetEstadoVota`, fb87775d's inline form
+  against `main`'s out-of-line one, onto 96a1fbc5). Keep the form a match rests on (12077 was measured on the
+  out-of-line one), drop the other, and score the dropped side's users on the merged link (10734: `49 over 273` with the
+  out-of-line form; the inline form was measured on its own branch only). When both forms carry matches, stop and
+  report.
 
 - **A header one side made real reaches a library path the other side's objects lack** (`… file not found`). The fix is
   the fragment's include path, not the header (`src/units/README.md` "What a fragment holds").
@@ -950,3 +1060,103 @@ Two failures are no change of the branch's:
   `make -n -B` over the make setups' objects stops on a rule that reads another (`No rule to make target
   '…/third_party/libqrencode/qrencode.h'`). Every local check passes, since the checkout holds every tree. The fetch
   goes in the commit that reads the tree ([libraries.md](libraries.md) §B11 item 2).
+
+## W26. make's clock: a file written in the same second, and a variable on the command line, rebuild nothing
+
+`/usr/bin/make` is GNU Make 3.81, which compares mtimes in whole seconds. A source written in the same second as its
+object is not newer than it, so make calls the object up to date (182dc6c1, from the repository root):
+
+    mkdir -p build/out/workflow-facts/clock && cd build/out/workflow-facts/clock && /usr/bin/make --version | head -1
+      GNU Make 3.81
+    printf 'out: in\n\tcp in out\n' > Makefile; echo a > in; /usr/bin/make -s; echo b > in; /usr/bin/make; cat out
+      make: `out' is up to date.
+      a
+
+A second later the rule runs. The container's clock is not the cause: a file touched inside `build/docker-build.sh`
+gets an mtime 0.09 s behind the host's. Three ways it bites a variant:
+
+- **A loop of variants.** A form written right after the previous form's compile is not compiled, and its "object" is
+  the previous form's (`cmp`-equal), which reads as two forms giving one object.
+- **A restore with `cp -p`** keeps the saved file's older mtime, so the last variant's object stays, newer than every
+  prerequisite; a `cat <saved> > <file>` in the same second as the compile does the same.
+- **A variable on the command line is no prerequisite.** `make -C src link "APP_OBJS=<another order>"` on a current link
+  prints `make: Nothing to be done for 'link'.`, and steps 7 to 9 then measure the plain link: "no row moves". The sign
+  is the plain link's sha256 and `link.cmd`'s old order. Move the two link outputs aside by name first, or link into a
+  private `OUT`/`OUT_NAMED`; to come back, take `HEAD`'s generated files and move the variant's link aside the same way.
+
+Before each variant's make, remove that one object by name (`rm -f -- <object>`, no wildcard), and require exactly one
+compile line in the make's output: `/usr/bin/grep -c -- '-c .*<file>.cpp' <log>` prints 1. After the last restore,
+remove the object again (or `touch -t` it older than the source), rebuild, and `cmp` it with one built from the restored
+text.
+
+## W27. What a merge joins with no conflict, and what it drops
+
+How-to step 10 ("Landing onto a moved main") resolves the conflicts. These pass every conflict check:
+
+- **A line both sides changed to the same text** is no conflict, whatever the reasons. A count each side lowered by one
+  for its own removal merges lowered once (from the repository root, at 182dc6c1):
+
+      cd build/out/readme-probe && printf 'four of the seven\nsink a\nsink b\nsink c\n' > base2.md && printf 'three of the seven\nsink b\nsink c\n' > ours2.md && printf 'three of the seven\nsink a\nsink c\n' > theirs2.md && git merge-file -p ours2.md base2.md theirs2.md
+        three of the seven
+        <<<<<<< ours2.md
+        sink b
+        =======
+        sink a
+        >>>>>>> theirs2.md
+        sink c
+
+  The count's line merged with no marker, and the join keeps one sink of three. For each fragment, companion and row
+  both sides changed, write the three blobs to files and intersect the lines each side adds (`comm -12` of the sorted
+  `>` lines of `diff <base> <ours>` and `diff <base> <theirs>`), then recount every number their comments give.
+- **Each side removed a different member, sink or stand-in of one companion.** Keep both removals and do what the last
+  one does: a `-pending.cpp` goes with its last member, with its rule and its `EXTRA_OBJS` entry, though neither side
+  removed them.
+- **A gap line** (`// (original lines N-M: …)` over a `#line`) that both sides renumbered conflicts: take the side whose
+  code the merge keeps around it. Step 9 writes the numbers again (`N files written`), and the object is the same either
+  way, since the `#line` sets the lines.
+- **A hand line carried into a side taken whole.** A second `git checkout HEAD -- splat/symbol_addrs.txt` after the
+  carry drops it with no message: take a side of a generated file once, before carrying, and check with read-only
+  commands after. After step 8, `N hand edits kept` (entries, not the section's comment lines) is the parent's count
+  plus the lines carried minus those removed; grep each carried line's name.
+- **A trial of the merge ahead of the landing** that keeps the branch's `splat/symbol_addrs.txt` keeps the branch's
+  anchors, which the merged link may not form (9534's callee 9518 was named by a `vptr-anchor` only the branch's link
+  made): a trial that stands for the landing runs the census and `splat-symbols` on its own link.
+
+`git merge-file -p` reads files, not pipes: on `<(git show …)` blobs of a real fragment it prints nothing and exits 0,
+which reads as no `<<<<<<<` (the fragment is 30099 bytes):
+
+    git merge-file -p <(git show 65b4d0e3:src/units/32-uenux2-csystem.mk) <(git show 6df50018:src/units/32-uenux2-csystem.mk) <(git show 182dc6c1:src/units/32-uenux2-csystem.mk) | wc -c
+      0
+
+Write each blob to a file first.
+`git merge-tree --write-tree --name-only <ours> <theirs>` lists every conflicting file of two branches at once.
+
+## W28. Reading `pnpm wasm score` and `splat-remap`
+
+**What `operand-only` counts.** Every immediate is an operand, not only an address or a slot: a memarg's `offset=` (a
+field, a frame slot, a `call_indirect`'s vtable slot), an `align=` hint, an `i32.const` added to the frame pointer
+([app-flags.md](app-flags.md)'s opening has the cases), a local's index (`local.get 3 ~ local.get 4`: a permutation of
+the locals moves many rows at once, 18 of 11852's 60, and the scan reads it as `differs` however few the rows), the
+header row (`;; (params)->(results) locals(…)`, so a result the target lacks is one such row), and an error code in the
+data range, `data:<segment>+<n>` on both sides ([tool-traps.md](tool-traps.md) §X5).
+
+**What the operand filter prints that is no fault.** `pnpm --silent wasm score … | /usr/bin/grep '~' | /usr/bin/grep -v
+-E 'call fn:|data:'` leaves out only the operands the score tags as calls or data, and it tags some addresses so and not
+others. A matched body prints rows: 5502 (`api::CQRCodeGuard`'s constructor) prints 15, a `.bss` address (`i32.const
+1931660 ~ i32.const 1726192`, `__errno_storage`), four libqrencode table addresses and `i32.const 69 ~ i32.const 9`, the
+table slot `__cxa_throw` takes for the error's destructor; a written body can print a packed `std::format` string
+(`(len << 32) | addr`, [reading.md](reading.md) §R13). Look each up (`splat/symbol_addrs.txt`, `pnpm wasm fn`) before
+reading it as a frame or a layout.
+
+**What it drops.** A table slot at or above 1024, the first data segment's address, prints as `data:` and leaves with
+the data: 10313 passes three data sources to `AddTextField` by slot, and the score prints them as `i32.const
+data:ba4744780c86a45e+3314 ~ …`, while slot 148, below 1024, prints as a number. A wrong function pointer passes the
+filter so; read every function-pointer argument against `wasm-objdump -x -j Elem` of both modules, or the scan's `table
+slot` reading after step 9.
+
+**What `splat-remap` does not apply.** It reads the committed symbol file and none of the matches, so a callee that only
+`splat/matched.txt` names reads `UNRESOLVED` there (scan the variant with the match list instead, W13, "Scan a
+variant"), and it applies no self-vote rule, so a body it prints `IDENTICAL` can read `unresolved self-voted` in the
+scan: 652 (`CPedeIdentidade::GetInst`) printed `IDENTICAL` once its literal was in the link, and the scan left it on
+`_ZN4vota15CPedeIdentidade6s_instE = 0x1d12b8 (evidence:vote:8 by:652)`, whose one other target reader was no function
+of our link. Read the symbol file's `evidence:vote:N by:<the index>` lines for the data the body reaches.

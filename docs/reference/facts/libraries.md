@@ -368,6 +368,29 @@ that release's `boost/` from `https://archives.boost.io/release/<v>/source/` the
 `tools/libs/boost/probe.cpp` instantiates what the app does: `basic_regex<char>` search/match/replace/iterator, the
 signal, date_time, lexical_cast, function, optional.
 
+The probe is also what `src/app/roots_boost.cpp` includes, a stand-in under the roots rules (`src/units/README.md`
+"Companion files"), so an edit of it for the link changes this study's build too. Read the 1.89.0 column again after
+one (1.90.0 and 1.91.0 need their release's headers in `third_party/boost`); at 182dc6c1, from the urna root, then from
+`asmlift-wasm/`:
+
+```sh
+TMPDIR=/tmp tools/libs/boost/build.sh 1.89.0 recheck-O3 -O3
+cd asmlift-wasm
+pnpm --silent exec tsx ../tools/libs/census_subset.ts ../target/vota_web_wasm.wasm ../build/out/boost/1.89.0-recheck-O3/probe.wasm ../tools/libs/cls2.json boost --depth 0 2>&1 | tail -1 | cut -d';' -f1
+#  boost: labelled 166, matched 41 (fingerprint 19, shape 22, byteExact 10), bytes 4354/101725 (4.3%)
+pnpm --silent exec tsx ../tools/libs/vtable_compare.ts ../target/vota_web_wasm.wasm ../tools/libs/vtables.json 'sp_counted_impl_p.*signal' \
+  ../build/out/boost/1.89.0-recheck-O3/probe.wasm=../build/out/boost/1.89.0-recheck-O3/probe.js.symbols 2>/dev/null | /usr/bin/grep -E 'target (9555|9554|9553|9549|9519) ' | sort -u
+#   target 9519 (325 B, 137 rows):  boost/1.89.0-recheck-O3: 17/137 ::dispose()
+#   target 9549 (273 B, 120 rows):  boost/1.89.0-recheck-O3: 14/122 ::dispose()
+#   target 9553 (328 B, 139 rows):  boost/1.89.0-recheck-O3: 17/139 ::dispose()
+#   target 9554 (335 B, 140 rows):  boost/1.89.0-recheck-O3: 29/143 ::dispose()
+#   target 9555 (332 B, 139 rows):  boost/1.89.0-recheck-O3: 29/143 ::dispose()
+```
+
+`build.sh` builds the tracked probe only, so the base's probe, for a review, is the same two `em++` lines of
+`build.sh` on a copy of it (`git show <base>:tools/libs/boost/probe.cpp`); rewriting the tracked file for it restamps
+`roots_boost.o`'s prerequisite.
+
 ## B8. zlib 1.3.1, libc++ `std::format`, and what is absent
 
 - **zlib 1.3.1.** The version literal has no standalone copy: it is the tail of the OID string

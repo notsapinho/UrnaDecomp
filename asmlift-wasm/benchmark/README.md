@@ -117,15 +117,15 @@ share it.
   compile with uenux2's flags at `-O2`, at `-std=c++20` and without `-fno-strict-aliasing`: they come first on the link line, the
   libc++ templates they instantiate win the link, and the target's copies of those have TBAA
   (urna's `docs/reference/facts/app-flags.md` §F6).
-- **uenux2** has few reconstructed units, so its rows also come from the ledger's attribution
-  (components `vota-web` and `comum` for `uenux2`, `vota` and `simulador` for `uenux2-tbaa`): `evidence: "component"`, no object, no
+- **uenux2** has few reconstructed units, so its rows also come from the ledger's attribution (components `vota-web`
+  and `comum` for `uenux2`, `vota` and `simulador` for `uenux2-tbaa`): `evidence: "component"`, no object, no
   reference. A component is listed by one setup, the first that lists it decides (`resolveIndex`), and a split by
   directory can divide one: `comum`'s data classes (`dados/md/`), `carquivossavd.cpp`,
   `gravadores/cgeracaoversoescontratos.cpp` and `validamidia/cfabricaconteudomidiastart.cpp` build with strict aliasing
-  and the rest of `comum` without, so a `component`
-  row of `comum` takes `uenux2`'s flags wherever its function was, a guess; `vota`'s five files without it
-  (`ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`, `cconferevotoemcargo.cpp`, `celeitorencontrado.cpp`) divide `vota` the other way. A row with a strong name is resolved by its object
-  instead. `api` is in no setup's list, so an `api` row comes only by a name.
+  and the rest of `comum` without, so a `component` row of `comum` takes `uenux2`'s flags wherever its function was, a
+  guess; `vota`'s five files without it (`ctelasvota.cpp`, `crelvotautil.cpp`, `cvotacaostateaudio.cpp`,
+  `cconferevotoemcargo.cpp`, `celeitorencontrado.cpp`) divide `vota` the other way. A row with a strong name is
+  resolved by its object instead. `api` is in no setup's list, so an `api` row comes only by a name.
 
 ## The dataset
 

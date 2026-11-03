@@ -76,7 +76,9 @@ another Node, `pnpm exec tsx` exits 134 with nothing but the shell's `Abort trap
 
 One directory per library with its probe build (`build.sh`), the driver or probe source that keeps the app's entry
 points alive, and the scored result (`census.json`): `sqlite/`, `openssl/`, `7zip/`, `rhvoice/`, `boost/`, `asn1/`.
-Each `census.json` is the record of the probe runs that pinned that library; the paths inside it are the ones those runs used.
+Each `census.json` is the record of the probe runs that pinned that library; the paths inside it are the ones those
+runs used. The Boost, 7-Zip and RHVoice probes are also what their tree roots include, so an edit of one for the link
+changes the study's build: `docs/reference/facts/libraries.md` §B7 has the Boost re-check and what it prints.
 `libqrencode/` has a `score.sh` in place of a `census.json`: it scores the target's 20 libqrencode functions against a
 probe of any tag (`docs/reference/facts/libraries.md` §B10), and the link builds the library in
 `src/units/187-libqrencode-encodestring.mk`, as fragment 06 builds zlib, not through its `build.sh`.

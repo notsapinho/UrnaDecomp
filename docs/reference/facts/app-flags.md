@@ -590,9 +590,9 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   tree's stores where the target keeps it in a local, the sign above, and 5571 differs (394 over 992 rows, its local
   numbers besides); with it every row left is an operand row and 5571 matches (unit 179's fragment). Measured in place
   on the merged tree at 6df50018 (12251 matches): the compile lines `make -n -C src link APP=<a new directory>` prints
-  (912) differ in that object's alone, by `-fno-strict-aliasing`; the edit recompiles the 856 objects that depend on
-  `src/Makefile`, and of the 1001 under `build/out/app` 1000 are `cmp`-equal to 6df50018's build, the other the
-  file's; steps 7 to 9 turn 5571 `match`, move no other row and lose none, 12251 to 12252 (the census moves 11166's
+  (906) differ in that object's alone, by `-fno-strict-aliasing`; the edit recompiles the 858 objects that depend on
+  `src/Makefile`, and of the 906 the link compiles, rebuilt from nothing, 905 are `cmp`-equal to 6df50018's, the other
+  the file's; steps 7 to 9 turn 5571 `match`, move no other row and lose none, 12251 to 12252 (the census moves 11166's
   tier alone, `none` to `shape`, its row staying `match`; step 8 adds a `call` name for 4679, already matched, and
   moves `__THREW__`'s voter), and `make -C src splat` gives the target's sha256. With strict aliasing the object's
   code changes in 26 functions, the map's constructor, `__tree_balance_after_insert` and 24 libc++ `std::format`
@@ -720,7 +720,11 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    nothing else. Re-key a copy of the list, and pass that to `--matches`:
    `sed -E 's#@app/#@flags-nodelnull/app/#' splat/matched.txt > $P/matched.txt`. Read the "no longer verify" list by
    symbol before counting it as lost: a link that moves objects also moves the surviving names of twins, so one such
-   link listed 20 with one row lost. The `join` below gives the loss.
+   link listed 20 with one row lost. The `join` below gives the loss. The symbol file keys a local callee by its
+   object too
+   (`/usr/bin/grep -c '@app/' splat/symbol_addrs.txt` prints 53 at 182dc6c1), and such a caller turns `UNRESOLVED`
+   (`_ZL6DepuraPKcz@…cthreadoperador.cpp.o has no target function`) though no flag reaches its object: re-key a copy of
+   it the same way and pass it with `--symbols` to `splat-build` and `splat-scan`.
 
    To take a uenux2 flag off, add its opposite: `UENUX2_EXTRA` comes last on the line, and for a flag em++ does not read
    that is the same as the flag off the line (five objects, `cmp`-equal to the same sources compiled with
@@ -745,9 +749,22 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
    In the directories of `UENUX2_TBAA_DIRS`, but for the files `UENUX2_NOTBAA_FILES` lists, the generic uenux2 rule
    filters `-fno-strict-aliasing` out of the whole line, `UENUX2_EXTRA` included, so `UENUX2_EXTRA=-fno-strict-aliasing`
    leaves them with TBAA; `UENUX2_TBAA_DIRS=` on the command line builds the tree without the split (F6), and
-   `UENUX2_EXTRA=-fstrict-aliasing` the whole tree with TBAA. One file without strict aliasing is its object compiled
-   with `make -C src <object> UENUX2_TBAA_DIRS=` (the line `make -n -B` prints gains `-fno-strict-aliasing` alone), which
-   in place in a worktree of one's own gives steps 7 to 9 too (F6's per-file table was measured so).
+   `UENUX2_EXTRA=-fstrict-aliasing` the whole tree with TBAA. One file without strict aliasing is the list with that
+   file added on the command line, and the compile lines of a new `APP` with and without it name every object it
+   changes, a companion whose rule passes the file's path to `uenux2_cxxflags` among them:
+
+   ```sh
+   P=build/out/flags-onefile; F=src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp
+   make -n -C src link APP=$P/app OUT=$P/w OUT_NAMED=$P/n 2>/dev/null | /usr/bin/grep -E 'em\+\+ .* -c ' | sort > $P.base.txt
+   make -n -C src link APP=$P/app OUT=$P/w OUT_NAMED=$P/n "UENUX2_NOTBAA_FILES=$(make -s -C src print-UENUX2_NOTBAA_FILES) $F" 2>/dev/null \
+     | /usr/bin/grep -E 'em\+\+ .* -c ' | sort > $P.file.txt
+   diff $P.base.txt $P.file.txt | /usr/bin/grep '^>' | /usr/bin/grep -oE -- '-o [^ ]+\.o'
+   # -o …/app/217-uenux2-ctesteteclado-pending.o
+   # -o …/app/uenux2/src/app/vota/eleitor/iniciovotacao/testeteclado/ctesteteclado.cpp.o
+   ```
+
+   Leave those objects out of the clone (the `rsync` above) and link with the same override. `make -C src <object>
+   UENUX2_TBAA_DIRS=` builds the named object only and misses such a companion.
 
    That answers whether a flag set keeps every match. It does not say what the flag set adds: steps 7 to 9 read the
    plain link's fixed paths (`/usr/bin/grep -n 'build/out/wasm' tools/round/census.sh` prints `M=` and `N=` under
@@ -769,8 +786,15 @@ The recovered class layouts are in the sources themselves (`src/ecourna/app/dado
 
    1143 is `CError`'s constructor, an ecourna function whose object the uenux2 flags do not change: its row names
    whatever function 1860 is in the private link. Take a row that moves there to `splat-remap` against the private link
-   (`docs/reference/splat.md` "Matching a function"). To have steps 7 to 9 name what a flag adds, build in place in a
-   worktree of your own, and `rm` the objects whose flags change, since make keeps an object whose flags changed.
+   (`docs/reference/splat.md` "Matching a function"). To have steps 7 to 9 name what a flag adds, run them on the
+   private link with every path given, which writes nothing tracked: the census's `ledger` line
+   (`tools/round/census.sh`) over a copy of `ledger/`, with `skeleton=<$P plain>@<$P named>` and `-o
+   $P/ledger/functions.tsv`; `splat-symbols <target> <$P plain> --kinds $P/wasm-kinds/vota_web/kinds.json --ledger
+   $P/ledger -o $P/symbol_addrs.txt` over the re-keyed copy of the symbol file (it keeps the copy's hand lines); then
+   `splat-scan` and `splat-build` with `--kinds`, `--symbols $P/symbol_addrs.txt`, `--ledger $P/ledger` and the re-keyed
+   list, and the `join` against the committed scan. Or build in place in a worktree of your own, each object whose flags
+   change removed before its make and its one compile line read in the make's log: make keeps an object whose flags
+   changed, and calls one written in the same second as its source up to date (`docs/reference/facts/workflow.md` §W26).
 7. **A lone-link residue of whole-program DAE.** Extra `drop`s after `~shared_ptr` in a landing pad, or a
    `memcpy` return value kept or dropped, come from callers elsewhere in the program; they close only in the
    whole link.

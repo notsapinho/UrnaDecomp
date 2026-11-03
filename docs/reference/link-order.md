@@ -55,6 +55,21 @@ positions follow from the cut equations (the functions of every band certainly a
 it) — up to the "floaters": functions in bands too small to be ordered against anything can move between gaps
 in groups, so every anchored block keeps an interval, not a point.
 
+What each kind of order says about the source:
+
+- **The function order** says link order only through the law and the anchors, as windows
+  (`ledger/ordinals.tsv`), and nothing of a function's place inside its file.
+- **The data order** is link order with no scramble ([facts/link-order.md](facts/link-order.md) §L7 item 15): a
+  record, vtable or typeinfo in a run of an object's data says which object, so which TU, holds the code that refers
+  to it. That is evidence. Inside one object the data lie in the order the TU's code first refers to them
+  ([facts/placing.md](facts/placing.md) §P4 has the probes), so the target's run can also place a member in its file,
+  but only through a measurement: compile the places and compare
+  each object's data order with the target's run (§L7 item 15 has 1937's). A place read so is a reading of the data
+  order, and the fragment says so; a file name no record gives stays a choice.
+- **The code's bytes** can depend on an order too (a frame slot, the locals: [facts/codegen.md](facts/codegen.md)
+  §C4). Forms that give other bytes are measured and the target's kept; forms that give the same bytes leave the
+  order free, and it is a choice.
+
 ## 3. Solver (`tools/linkorder/linkorder.py solve`), offsets mode
 
 Per chunk (rigid run of identified members), the set of feasible bases is shrunk to a fixpoint by: the

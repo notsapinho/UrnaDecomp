@@ -138,9 +138,9 @@
 #     the two TUs (docs/reference/facts/placing.md P2, reading.md R10).
 #     Forms measured, each a whole link with only the objects named changed (`pnpm --silent wasm score
 #     ../target/vota_web_wasm.wasm 1937 <link> <ours>`), with this object "behind", at unit 98's place before the file
-#     moved (529, after carregaarquivo.cpp.o at 369), and "ahead", before celeitores.cpp.o (90), its place in unit
-#     110's list now; the slots are those of the 576-byte frame in the reader's object (wasm-objdump -d, first use),
-#     "the target's" with "LeBiometriaEleitor(" at +72:
+#     moved (the 529th object in the measured links, after carregaarquivo.cpp.o, the 369th), and "ahead", before
+#     celeitores.cpp.o (the 90th in those links), its place in unit 110's list now; the slots are those of the 576-byte
+#     frame in the reader's object (wasm-objdump -d, first use), "the target's" with "LeBiometriaEleitor(" at +72:
 #     - in carregaarquivo.cpp between the EleicaoPE and CabecalhoPacote instances, as the data run (written): the
 #       target's slots; behind 548 over 2201 rows (540 operand-only, 4 inserted, 4 deleted: locals 1 and 2 swapped and
 #       two stores at +72 in the other order, binaryen's work, docs/reference/facts/codegen.md C4); ahead, 184 over

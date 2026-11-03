@@ -125,8 +125,11 @@ namespace ecourna::app::dados {
 CNumeroCPF::CNumeroCPF(const std::string& numeroCPF) : IIdentificadorEleitor(TTipoIdentificadorEleitor(TipoIDCPF), numeroCPF, 11)
 ```
 
-Write nothing of your own into those lines: they stay blank, and step 9 makes a run of three or more a gap, the
-project's statement that the content is not recovered. The lines a record names for a function no file of ours
+Write no comment or note of your own into those lines: they stay blank, and step 9 makes a run of three or more a
+gap, the project's statement that the content is not recovered. Recovered code may take a gap's lines where no record
+lies, a helper the target holds only inlined included (no index of its own, which the caller's rows point at): its
+name, linkage and place are choices the fragment lists (unit 14's `UltimoEspaco` in `ctextfieldmultiline.cpp`). The
+lines a record names for a function no file of ours
 writes (a constructor its only caller inlined, a pending member) stay blank too, and the members you write go after
 them, or before them when evidence says so: their lines are then a choice, which the file's header comment or the
 fragment's header says. Such a run gets no gap when
@@ -136,9 +139,12 @@ stub, step 9 writes the stub over its record's line: `uenux2/src/api/gui/cstepsp
 lines 18-424, then f13550's stub on lines 425-428 (its record is 428:15), then the unit's members. A comment there
 reads as TSE's, and no evidence gives it.
 What a reader needs to know about the reconstruction (which target functions the file holds, which names and paths
-are chosen) goes in the file's header comment. Above a record line (a header whose inline member a record names), every
-line added there moves the records below it: keep the line count above the first record, folding the note into the
-lines already there, and run `TMPDIR=/tmp make -C src check-srcloc` after the link. Files landed before this rule still
+are chosen) goes in the file's header comment; in a file two stages extend at once, each appends its note there as a
+paragraph of its own, and the landing keeps both. Above a record line (a header whose inline member a record names),
+every line added there moves the records below it: keep the line count above the first record, folding the note into
+the lines already there, and a declaration a new member needs takes a blank line above the first record (between
+include groups or members, never a `#line` of your own), which the fragment names. Run `TMPDIR=/tmp make -C src
+check-srcloc` after the link. Files landed before this rule still
 hold doc comments of their own above a function
 (`LC_ALL=C git grep -l '^ */\*\*' -- 'src/uenux2/*.cpp' 'src/ecourna/*.cpp'` lists them); they are not the form to copy.
 
@@ -167,6 +173,12 @@ added at the top, moves every record of the file. Delete as many blank lines of 
 its function out of `match` with its body unchanged: step 9 stops on `matched.txt only: [N]`, and N's row reads
 `unresolved` with `source_location not in the target` at the record's operand. `TMPDIR=/tmp make -C src check-srcloc`
 lists every record that moved, after the link: run it before step 7 when an edit added a line above a record.
+
+A merge can join one side's gap with the other side's lines above it and still apply cleanly: when those lines
+outnumber the gap's blank lines, step 9 stops in `stubs.py` (`lines added above the gap comment reach past the gap`),
+and no blank line is left to take out. Move the members no record places from above the gap to below the function
+the record names, in order, and correct the comments that state their place; a member a record places does not move
+(`clogvota.cpp`'s 14 members moved below `LogaEleitorImpedido`, whose record is line 432).
 
 ## Trying a candidate: tools/round/try-tu.sh
 
