@@ -27,8 +27,8 @@ namespace vota {
 //
 // CEscolheOpcao (vtable @1587996 [2752, 10691, 10690, 7480, 1661, 218, 425, 10689, 425]): it overrides the destructors
 // (slots 0 and 1, fns 2752 and 10691), StartState (slot 2, fn 10690, records cescolheopcao.cpp:150 to 152) and
-// ProcessInput (slot 7, fn 10689), which is pending (src/units/121-uenux2-datasources-pending.cpp says what it waits
-// for). A singleton: GetInst (fn 2753) creates the object under a static std::mutex (@1905284, destroyed at exit by fn
+// ProcessInput (slot 7, fn 10689), written and not matched (src/units/121-uenux2-datasources.mk has the measurement).
+// A singleton: GetInst (fn 2753) creates the object under a static std::mutex (@1905284, destroyed at exit by fn
 // 10696) and keeps it in a static std::unique_ptr (@1905308, by fn 10697). The constructor, which binaryen inlines into
 // GetInst behind a 272-byte frame of its own, passes comum::CAppState::EVENTO_ENTRADA (2) to the base's, fills the map
 // and builds the form. The destructor is out of line: the deleting one (fn 10691) calls it, drops its result and frees
@@ -81,6 +81,11 @@ public:
 
 private:
     CEscolheOpcao();
+
+    // The CONFIRMA branch of ProcessInput: a function of its own that binaryen inlines into fn 10689, its one caller (a
+    // 32-byte frame of its own there). It reads m_form and m_opcoes, so it is a member; its name, its being private and
+    // its result type (the next state, or null to stay) are chosen.
+    comum::CAppState* ConfirmaOpcao();
 
     static std::unique_ptr<CEscolheOpcao> s_inst;
     static std::mutex s_mutex;

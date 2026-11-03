@@ -15,7 +15,7 @@
 //   ValidaEleitores     CEleitores::ValidaIdentidadesEleitor 5765: fns 6734 and 7787
 //   HabilitaEleitores   CEleitores::MarcaEleitorFoiHabilitado 2825: fn 10425
 //   QuantidadesAptos    CEleitores::QuantidadeAptos 2823: fns 2881, 11242 and 12110 (652 is in the link)
-//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 6034, 7174 and 11616 (2822, 2825, 10210 and 10635
+//   ConsultaDinamicos   CEleitorDetalhe::GetDinamico 1271: fns 7174 and 11616 (2822, 2825, 6034, 10210 and 10635
 //                       are in the link)
 //   LocalizaEleitores   CEleitores::LocalizaEleitor(const std::string&, ETipoIdentificadorEleitor) 2264: fn 3616
 //                       (5385, unit 214's, 10631, unit 104's, 10789 and 10790, unit 119's, are in the link)

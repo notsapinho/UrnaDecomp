@@ -69,6 +69,15 @@ public:
     // stores). One of its four callers, fn 10699, formats the count into "Habilitação sem biometria: {}", which
     // the name is chosen from; the result's 16 bits are the body's mask; its const is chosen, as no record gives it.
     ueword QuantidadeHabilitacaoSemBiometria() const;
+    // fns 2821 and 1935: the same count for the kinds of enabling 1 and 2 (the kinds md::CEleitorDinamico's
+    // HabilitaPorBiometria and HabilitaPorMesario store). The target holds each as a 9-byte thunk of one body binaryen
+    // merged, fn 6034, which takes the kind as its second parameter: 2821 passes 1, 1935 passes 2. Of their callers,
+    // fns 10701 and 10700 format the counts into "Habilitação biométrica: {}" and "Habilitação biográfica: {}", which
+    // the names are chosen from; the rest is as for QuantidadeHabilitacaoSemBiometria. Their place after it in
+    // celeitores.cpp is chosen, within what their bands allow (2821 after 2822 in band 4, 1935 after MontaCaminhos, fn
+    // 1936, in band 6).
+    ueword QuantidadeHabilitacaoBiometrica() const;
+    ueword QuantidadeHabilitacaoBiografica() const;
     // fn 2823: the records with no impediment (CEleitorDetalhe::SemImpedimento, fn 2266), counted apart by whether the
     // voter is on a temporary transfer (md::CEleitorDecorator's word at +48, which IsTTE tests): two 16-bit counts the
     // body returns through the result's address, the first for the voters with no transfer. Its callers are fns 652

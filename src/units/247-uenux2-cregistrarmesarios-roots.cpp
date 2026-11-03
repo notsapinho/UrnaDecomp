@@ -3,9 +3,9 @@
 // (src/units/247-uenux2-cregistrarmesarios.mk). binaryen inlines a function with one call site
 // (docs/reference/facts/tool-traps.md X1). The unit rests on each of the two screen functions keeping its body until
 // duplicate-function-elimination joins them, so each gets two call sites here; which target callers called which
-// function is chosen (the fragment says so). GetInst has one caller written, fn 10737, and gets one call here. Each
-// stand-in names the target callers it stands for, and goes when they are all in splat/matched.txt or written in the
-// link.
+// function is chosen (the fragment says so). GetInst's target callers are all in the link (10737, unit 104's; 10217,
+// unit 165's; 10689, unit 121's), so it has no stand-in. Each stand-in names the target callers it stands for, and goes
+// when they are all in splat/matched.txt or written in the link.
 //
 // Declared through asm labels with the wasm-level signatures (the std::shared_ptr result is returned through the
 // address passed first, ahead of `this`), so this TU needs no uenux2 header and instantiates nothing; compiled as app
@@ -13,7 +13,6 @@
 extern "C" {
 void w247_tela(void* resultado) __asm__("_ZN5comum20TelaRegistroMesariosEv");
 void w247_tela_eleitor(void* resultado, void* estado) __asm__("_ZN5comum18IPedeTituloMesario14GetTelaEleitorEv");
-int w247_registrar(void) __asm__("_ZN5comum18CRegistrarMesarios7GetInstEv");
 }
 
 namespace {
@@ -42,19 +41,11 @@ __attribute__((noinline)) int ConstroiPedeTituloEstados(int n)
     return n * 7 + 9;
 }
 
-// Stands for the target's other caller of comum::CRegistrarMesarios::GetInst (fn 3610) not in the link,
-// vota::CEscolheOpcao::ProcessInput (fn 10689); vota::CAguardaInicio's slot 6 (fn 10217, unit 165's) is in the link.
-__attribute__((noinline)) int ChamaRegistrarMesarios(int n)
-{
-    return w247_registrar() + n * 11;
-}
-
 struct SW247Roots {
     SW247Roots()
     {
         w247_n = ConstroiEstadosRegistro(w247_n);
         w247_n = ConstroiPedeTituloEstados(w247_n);
-        w247_n = ChamaRegistrarMesarios(w247_n);
     }
 } w247_roots;
 

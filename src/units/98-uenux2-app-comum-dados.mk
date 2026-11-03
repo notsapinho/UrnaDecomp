@@ -90,8 +90,8 @@
 #   ConfereDadosDinamicos and returns the optional's value at +108. `return *m_dinamico;` is measured: value() adds the
 #   empty optional's throw, 20 over 65 rows with 15 inserted (a link with only this object rebuilt). Its `const` and its
 #   `const md::CEleitorDinamico&` result are chosen: no record gives them. Its target callers
-#   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616; in the link 2822 and 2825 (unit 110), 10210 and 10635 (unit 104)
-#   and a stand-in of unit 110's roots.
+#   are 2822, 2825, 6034, 7174, 10210, 10635 and 11616; in the link 2822, 2825 and 6034 (unit 110), 10210 and 10635
+#   (unit 104), and a stand-in of unit 110's roots for 7174 and 11616.
 # - MarcaHabilitado, named from the "MarcaHabilitado" it passes to ConfereDadosDinamicos (138114): 2825 holds it inlined by
 #   binaryen (a second stack-pointer prologue at +0xaa) and it has no index of its own. Each kind of enabling calls one of
 #   CEleitorDinamico's inline members (md/eleitor/celeitordinamico.h), and its types are fragment 130's. 2825 matches

@@ -123,11 +123,6 @@
 // f5980 · 225 B · unmatched · placement: link order · name unknown
 // void f5980(i32) { ... }
 
-// link-order cluster 871 · uses=2
-
-// f6113 · 446 B · unmatched · placement: link order · name unknown
-// void f6113(i32, i32, i32, i32) { ... }
-
 // link-order cluster 899 · uses=2 · neighbours' file uenux2/src/app/vota/eleitor/comum/ctelasvota.cpp
 
 // f6557 · 166 B · unmatched · placement: link order · name unknown
@@ -171,11 +166,6 @@
 // f6958 · 863 B · unmatched · placement: link order · name unknown
 // void f6958(i32, i32, i32, i32, i32) { ... }
 
-// link-order cluster 938 · uses=3
-
-// f3258 · 17 B · unmatched · placement: link order · name unknown
-// void f3258(i32, i32) { ... }
-
 // link-order cluster 978 · uses=3 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
 
 // f3646 · 666 B · unmatched · placement: link order · name unknown
@@ -208,11 +198,6 @@
 
 // f2499 · 57 B · unmatched · placement: link order · name unknown
 // void f2499(i32, i32) { ... }
-
-// link-order cluster 1061 · uses=4
-
-// f2502 · 15 B · unmatched · placement: link order · name unknown
-// void f2502(i32, i32) { ... }
 
 // link-order cluster 1080 · uses=4 · neighbours' file uenux2/src/app/vota/operador/aguardaeleitor/csuspensaoautomaticaeleitor.cpp
 

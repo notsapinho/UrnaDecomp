@@ -37,7 +37,7 @@ void CIniciodeCiclo::StartState()
 }
 
 // CGravaResultado::StartState: fn 12098 (26731 B), records cgravaresultado.cpp:63, cgravaresultado.cpp:79, callees
-// with no name (491 is named now (unit 205)): 1935, 2543, 2821, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have names
+// with no name (491, 1935 and 2821 are named now (units 205 and 110)): 2543, 2860, 5480, 5545, 5866, 5869 and 5870; its other callees have names
 // (502, 886 and 6174, units 31's, 165's and 220's, units 193's 675 and 676, 195's 5824, 95's 1164, 3829, 5889, 5891
 // and 5905, 32's 378, 2763 and 5462, 154's 620, 13's 1269, 110's 2822 and 2824, 88's 3782, fragment 227's 3825 and 3826, and
 // 2281, std::set<std::string>'s hinted insert, from the tree root src/app/roots_set.cpp, among them).

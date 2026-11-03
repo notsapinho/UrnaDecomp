@@ -22,9 +22,10 @@ namespace vota {
 // destructors 49 final states share: a std::shared_ptr at +12, the form, is all they release; ProcessInput reads it
 // through api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() (record cinteractiveform.h:57 @1587196). A
 // singleton: GetInst creates the 20-byte object under a static std::mutex (@1904976) and keeps it in a static
-// std::unique_ptr (@1905000); binaryen inlines it into its one caller, vota::CEscolheOpcao::ProcessInput (fn 10689,
-// pending), so GetInst, the constructor (whose form's second field is the text of fn 10742, passed by table slot) and
-// the statics are declared and not written here: they wait for that caller. The member names are chosen.
+// std::unique_ptr (@1905000). Its one caller, vota::CEscolheOpcao's ConfirmaOpcao (inlined into fn 10689), holds it
+// inlined with the constructor behind a 64-byte frame of its own, so it has no target function: written in
+// cconfirmaaudio.cpp, it has that one call site in our link too. The form's second field is the text of fn 10742,
+// passed by table slot (TextoConfirmaAudio, defined there). The member names are chosen.
 // src/units/277-uenux2-app-vota-operador-outrasopcoes.mk says which of this is evidence and which is chosen.
 class CConfirmaAudio final : public comum::CAppState {
 public:

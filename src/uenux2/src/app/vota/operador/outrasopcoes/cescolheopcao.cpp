@@ -2,11 +2,14 @@
 // the reconstruction's. The file's records are StartState's, lines 150 to 152. Written here: the statics, the four
 // texts of the options, AdicionaCampoNumerico (fn 1151), GetInst (fn 2753) with the constructor and its two helpers
 // (CriaOpcoes and MontaTela, chosen), whose lines are a choice before the destructor's, in their use bands' order; the
-// destructor (fns 2752 and 10691), whose line is a choice before the records; StartState (fn 10690) at its records; and
-// COpcaoDS's call operator, which has no record and no target function of its own: binaryen inlined it into fn 10685,
-// CDataText<COpcaoDS>::GetText. Its line is a choice, after the records. Unit 121's fragment gives the evidence.
+// destructor (fns 2752 and 10691), whose line is a choice before the records; StartState (fn 10690) at its records;
+// ProcessInput (fn 10689) and ConfirmaOpcao, which binaryen inlines into it; and COpcaoDS's call operator, which has no
+// record and no target function of its own: binaryen inlined it into fn 10685, CDataText<COpcaoDS>::GetText. The lines
+// after the records are a choice. Unit 121's fragment gives the evidence.
 #include "app/vota/operador/outrasopcoes/cescolheopcao.h"
 
+#include <algorithm>
+#include <cctype>
 #include <format>
 #include <syslog.h>
 
@@ -18,9 +21,19 @@
 #include "api/hwil/iurna.h"
 #include "api/pattern/cpolysingleton.h"
 #include "app/comum/appinfo/cappinfo.h"
+#include "app/comum/comparecimentomesario/estados/cregistrarmesarios.h"
+#include "app/comum/dados/cconfiguracaoeleicao.h"
 #include "app/comum/dados/clocal.h"
 #include "app/vota/comum/votadefs.h"
+#include "app/vota/log/clogvota.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
+#include "app/vota/operador/outrasopcoes/cconfirmaaudio.h"
+#include "app/vota/operador/outrasopcoes/ccontadoresbiometria.h"
+#include "app/vota/operador/outrasopcoes/chabilitacaoaudionaopermitida.h"
+#include "app/vota/operador/outrasopcoes/chorariovotacaoterminou.h"
+#include "app/vota/operador/outrasopcoes/ciniciafinalizacao.h"
+#include "ecourna/api/util/cstringutils.hpp"
 
 namespace vota {
 
@@ -119,7 +132,7 @@ CEscolheOpcao& CEscolheOpcao::GetInst()
     return *s_inst;
 }
 
-// (original lines 122-139: content not recovered)
+// (original lines 135-139: content not recovered)
 #line 140
 CEscolheOpcao::~CEscolheOpcao() = default;
 
@@ -133,6 +146,65 @@ void CEscolheOpcao::StartState()
     if (api::CPolySingleton<api::IUrna>::instance().Modelo() >= 2020) {
         api::CPolySingleton<api::IScreenMT>::instance().Slot19(1);
     }
+}
+
+void CEscolheOpcao::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA:
+        if (comum::CAppState* proximo = ConfirmaOpcao()) {
+            m_pNextState = proximo;
+        }
+        break;
+    case api::INPUT_CORRIGE:
+        m_pNextState = &CPedeIdentidade::GetInst();
+        break;
+    default:
+        break;
+    }
+}
+
+comum::CAppState* CEscolheOpcao::ConfirmaOpcao()
+{
+    const std::string texto = m_form->GetEntradas().at(0)->GetTexto();
+    if (texto.empty() || !std::all_of(texto.begin(), texto.end(), ::isdigit)) {
+        return nullptr;
+    }
+    const auto opcao = m_opcoes.find(ecourna::api::util::CStringUtils::ToInt32(texto));
+    if (opcao == m_opcoes.end()) {
+        return nullptr;
+    }
+    switch (opcao->second.m_codigo) {
+    case 1:
+        CLogVota::GetInst().LogaOperadorSelecionou(TextoAudio());
+        if (IsVotacaoBloqueadaPorHorario()) {
+            api::CInteractiveForm<api::IScreenMT, api::IInputMT>& form = *m_form;
+            for (auto* entrada : form.GetEntradas()) {
+                entrada->Clear();
+            }
+            form.SetFocus(0);
+            return &CHorarioVotacaoTerminou::GetInst();
+        }
+        if (!comum::CConfiguracaoEleicao::GetInst().GetParametrosUrna().GetPermitirHabManualAudio()) {
+            return &CHabilitacaoAudioNaoPermitida::GetInst();
+        }
+        return &CConfirmaAudio::GetInst();
+    case 2:
+        CLogVota::GetInst().LogaOperadorSelecionou(TextoEncerrarVotacao());
+        return &CIniciaFinalizacao::GetInst();
+    case 3:
+        CLogVota::GetInst().LogaOperadorSelecionou(TextoRegistrarMesarios());
+        return &comum::CRegistrarMesarios::GetInst();
+    case 4:
+        CLogVota::GetInst().LogaOperadorSelecionou(TextoExibirContadores());
+        if (comum::CLocal::GetInst().UrnaBiometrica()) {
+            return &CContadoresBiometria::GetInst();
+        }
+        break;
+    default:
+        break;
+    }
+    return nullptr;
 }
 
 

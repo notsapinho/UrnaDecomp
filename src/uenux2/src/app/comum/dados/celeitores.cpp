@@ -206,7 +206,25 @@ ueword CEleitores::QuantidadeHabilitacaoSemBiometria() const
     });
 }
 
-// (original lines 649-703: content not recovered)
+ueword CEleitores::QuantidadeHabilitacaoBiometrica() const
+{
+    return std::count_if(m_registros.begin(), m_registros.end(), [](const Container::value_type& registro) {
+        const CEleitorDetalhe& detalhe = registro.second;
+        return detalhe.TemDadosDinamicos() && detalhe.GetDinamico().GetTipoHabilitacao() == 1 &&
+               detalhe.GetDinamico().GetEstadoComparecimento() == 3;
+    });
+}
+
+ueword CEleitores::QuantidadeHabilitacaoBiografica() const
+{
+    return std::count_if(m_registros.begin(), m_registros.end(), [](const Container::value_type& registro) {
+        const CEleitorDetalhe& detalhe = registro.second;
+        return detalhe.TemDadosDinamicos() && detalhe.GetDinamico().GetTipoHabilitacao() == 2 &&
+               detalhe.GetDinamico().GetEstadoComparecimento() == 3;
+    });
+}
+
+// (original lines 667-703: content not recovered)
 #line 704
 CEleitorDetalhe CEleitores::LoadEleitorDetalhe(const md::CEleitorDecorator& eleitor, const std::vector<md::CImpedido>& impedidos,
     size_t& indice, const md::CEleitorDinamico* dinamico) const

@@ -12,9 +12,9 @@ namespace vota {
 // the object is the base's 12 bytes, and slots 0 and 1 hold the destructors the states with no member share (fns 174
 // and 144), the implicit destructor's. StartState is the key function. A singleton: GetInst creates the object under
 // a static std::mutex (@1905228) and keeps it in a static std::unique_ptr (@1905252), the constructor passing
-// EVENTO_NENHUM (0) to the base's; binaryen inlines GetInst into its one caller, vota::CEscolheOpcao::ProcessInput (fn
-// 10689, pending), so GetInst, the constructor and the statics are declared and not written here: they wait for that
-// caller. src/units/277-uenux2-app-vota-operador-outrasopcoes.mk says which of this is evidence and which is chosen.
+// EVENTO_NENHUM (0) to the base's. GetInst's one caller, vota::CEscolheOpcao's ConfirmaOpcao (inlined into fn 10689),
+// holds it inlined, so it has no target function: written in ciniciafinalizacao.cpp, it has that one call site in our
+// link too. src/units/277-uenux2-app-vota-operador-outrasopcoes.mk says which of this is evidence and which is chosen.
 class CIniciaFinalizacao final : public comum::CAppState {
 public:
     static CIniciaFinalizacao& GetInst();
