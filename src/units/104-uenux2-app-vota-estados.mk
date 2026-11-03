@@ -355,8 +355,8 @@
 #   replaced 1 [1 operand-only], inserted 0, deleted 0)`, 10635 did not change, and steps 7 to 9 on that link matched
 #   6733 and 10635, no other row moved; with the file in src/Makefile's list, steps 7 to 9 on the whole link do the
 #   same. That the target's copy is this object's is a reading: by its band, 6733 lies next to 6734, a function of
-#   celeitores.cpp's records (which does not call it), and its other caller 7787's TU, which no record names, could
-#   hold it too.
+#   celeitores.cpp's records (which does not call it), and the TU of its other caller 7787, a body that loads records of
+#   27 files, celeitores.cpp's StaticLoad (395 and 407) among them, after its call of 6733, could hold it too.
 # Chosen: the helpers' names and their being functions of the file's anonymous namespace (they read no state of the
 # class, and clang inlines them all), the predicate's 0 written against the set's element type (the target's compare;
 # the type is cconfiguracaoeleicao.h's choice, whose enumerators start at 1), the order of the definitions, the lines

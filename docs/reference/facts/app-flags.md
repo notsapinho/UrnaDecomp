@@ -481,9 +481,11 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `CEleitorEncontrado::StartState` (10635) calls has the target's six locals only without TBAA: in variant links
   ([workflow.md](workflow.md) §W13) it scores 49 over 186 rows with strict aliasing (7 locals) and 1 over 181,
   operand-only, without it, and 10635, every row an operand, reads `unresolved self-voted` on 6733's name until 6733
-  matches. 6733's other target caller is 7787, not written (unit 283's roots stand in for it), whose TU no record names;
-  no `celeitores.cpp` function calls it. So that the target's copy is this file's object's is a reading: the file was
-  listed last, on the user's decision (below). At b7c2e8a5 (11619 matches) each file of the table was built in place,
+  matches. 6733's other target caller is 7787, not written (unit 283's roots stand in for it), a body that loads records
+  of 27 files, celeitores.cpp's `CEleitores::StaticLoad` (395 and 407) among them, after its call of 6733; 6733's band
+  neighbour 6734 (`CEleitores::CompleteLoad` by its records) does not call it. So that the target's copy is this file's
+  object's is a reading: the file was listed last, on the user's decision (below). At b7c2e8a5 (11619 matches) each file
+  of the table was built in place,
   its object compiled with `make -C src <object> UENUX2_TBAA_DIRS=` (the compile line gains `-fno-strict-aliasing` and
   nothing else), then how-to steps 7 to 9 and `make -C src splat`, the rows against b7c2e8a5's `splat/scan.tsv`; between
   two variants the tracked files went back to b7c2e8a5's and the objects were compiled again, and the link came back
@@ -535,10 +537,10 @@ whole-skeleton link (`make -s -C src link APP=… OUT=… OUT_NAMED=…`; F9 ite
   `celeitorencontrado.cpp` (unit 104) was measured first in a variant link too, its object alone built without strict
   aliasing (a scratch `UENUX2_NOTBAA_FILES` line): 6733 and 10635 turn `match` and no other row moves. It is listed
   since b283f0e0 (12238 matches), measured there in place: with it in the list the compile lines `make -n -C src link
-  APP=<a new directory>` prints (911) differ in its object's alone, by `-fno-strict-aliasing`; the edit recompiled 859
-  objects, and of the 999 under `build/out/app` 998 are `cmp`-equal to b283f0e0's and the other is that file's; how-to
-  steps 7 to 9 and `make -C src splat` give the target's sha256 with 12240 matches, 6733 and 10635 turn `match`, no
-  other row moves and the symbol file is unchanged.
+  APP=<a new directory>` prints (907) differ in its object's alone, by `-fno-strict-aliasing`; the edit recompiled 859
+  objects, and of the 907 the link compiles, rebuilt from nothing, 906 are `cmp`-equal to b283f0e0's and the other is
+  that file's; how-to steps 7 to 9 and `make -C src splat` give the target's sha256 with 12240 matches, 6733 and 10635
+  turn `match`, no other row moves and the symbol file is unchanged.
 
   So the target's copies of the token iterator (4307, whose callers are 5492 and 6999 only) and of the `const char*`
   parser (2062: 2416, 5782, 6833, 6999) have no TBAA while `cinputmenufield.cpp` has it. Whose copies they are, no row

@@ -29,9 +29,12 @@
 #   linkage are chosen; no record names it. `static inline` and an anonymous namespace give this unit's roots object
 #   byte for byte, and `inline` alone keeps the helper out of line and DeserializeFromFile inlined into the stand-in
 #   (each compiled at the roots' rule from a copy of the header found first and prefix-mapped to the tree's path, the
-#   unchanged copy's object cmp-equal to the link's). `static` stays, though a function of internal linkage that a
-#   template of external linkage calls is an ODR hazard once a second TU instantiates DeserializeFromFile (only this
-#   unit's roots include the header now).
+#   unchanged copy's object cmp-equal to the link's). `static` stays. By [basic.def.odr] a name in a template's
+#   definition must refer to the same entity in every TU that defines the template, so a function of internal linkage
+#   that DeserializeFromFile calls makes the program ill-formed (no diagnostic required) as soon as a second TU includes
+#   the header, whether it instantiates the template or not; the failure one would see, the one instance the linker
+#   keeps calling one TU's helper, needs two TUs to instantiate the same specialization. Only this unit's roots include
+#   the header now, so it is harmless today.
 # - 2279 82 over 900 rows, 5367 and 2724 6 over 10 each, 6006 58 over 712, every row an operand.
 # - 6236 against our __futimesat: with the stand-in reading the result, 11 over 69 rows (its i32 result, which the
 #   target's type lacks); dropping it, as both target callers do, 3 over 67, operands only, and dotlockLock 4 over 54

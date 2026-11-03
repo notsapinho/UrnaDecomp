@@ -101,23 +101,27 @@
 #   comum::CRdvVota::Comparecimento() (fn 1269) and CJustificador::QuantidadeJustificados() (its +8) are 0 and the phase
 #   is not FASE_TREINAMENTO (51); after a write it calls CSincronizaVota::SincronizaEstadoGeralVota (fn 491). The
 #   enumerators are the chosen names of cestadogeralvota.h and eurnafase.h; Slot5 stays the slot's name. The target
-#   loads the phase at the start of case 56, before the two GetInst calls, and tests it last, after the count. What
-#   gives that order is the three-part `&&` computed into a bool value before the branch, with the phase read before the
-#   switch: Slot5 holds it in a named `const bool`, and a lambda returning the chain gives the same Slot5 with either
-#   capture (`[&]` or `[=]`: its object byte for byte; the named bool's object differs from the lambda's only in the
-#   numbering of two local data segments' names, and the whole link is the same wasm byte for byte), as does a function
-#   in the anonymous namespace that takes `const comum::EUrnaFase&`. Measured on this object's Slot5 (wasm-objdump -d
-#   after a compile of each form at its rule's line), these test the phase before the count: the same chain as the if's
-#   condition, negated or positive; three early returns; an `||` chain; an `&&` chain with the phase between
-#   Comparecimento and the count; an if chain on the state; QuantidadeJustificados out of line; the phase's test read
-#   into a bool before the calls; the function taking the phase by value. The named bool with the phase read at the
-#   case's start keeps the target's test order with other locals, and the phase read inside the condition tests it last
-#   with its load after the calls. For the if chain and for the phase as a bool, clang's IR (-mllvm -print-after-all)
-#   shows the count's and the phase's tests joined into an `or` (by SimplifyCFG, or by InstCombine from SimplifyCFG's
-#   select), which Reassociate reorders, the phase first; why a bool value computed before the branch keeps the order is
-#   not established (no IR was dumped for it). A raw load of the phase gives the target's rows too (an experiment, not a
-#   form that lands). Chosen: the bool's name and its being a named local rather than a lambda's result. `pnpm wasm
-#   score` against the link: 8 over 47 rows, all operand-only (the calls); matched at step 9, named by its vtable slot.
+#   loads the phase at the start of case 56, before the two GetInst calls, and tests it last, after the count. With the
+#   phase read before the switch, these give that order: the three-part `&&` in a named `const bool` (Slot5's form), a
+#   lambda returning it with either capture (`[&]` or `[=]`, one object byte for byte), and a function in the anonymous
+#   namespace that takes `const comum::EUrnaFase&` and returns it (the lambda's object byte for byte); the named bool's
+#   object differs from the lambda's only in the numbering of two local data segments' names, and the whole link is the
+#   same wasm byte for byte. Each computes the whole chain, the phase's test in it, into one bool value before the
+#   branch, and a named bool of the two count tests alone does not keep the order (below); what in these spellings keeps
+#   it is not established. Measured on this object's Slot5 (wasm-objdump -d after a compile of each form at its rule's
+#   line), these test the phase before the count: the same chain as the if's condition, negated or positive; three early
+#   returns; an `||` chain; an `&&` chain with the phase between Comparecimento and the count; an if chain on the state;
+#   QuantidadeJustificados out of line; the phase's test read into a bool before the calls; the function taking the
+#   phase by value; the two count tests in a named bool and the phase tested in the if, as
+#   `if (!semVotos || fase == comum::FASE_TREINAMENTO)` or `if (!(semVotos && fase != comum::FASE_TREINAMENTO))` (one
+#   object byte for byte). The named bool with the phase read at the case's start keeps the target's test order with
+#   other locals, and the phase read inside the condition tests it last with its load after the calls. For the if chain
+#   and for the phase as a bool, clang's IR (-mllvm -print-after-all) shows the count's and the phase's tests joined
+#   into an `or` (by SimplifyCFG, or by InstCombine from SimplifyCFG's select), which Reassociate reorders, the phase
+#   first; no IR was dumped for the forms that keep the order. A raw load of the phase gives the target's rows too (an
+#   experiment, not a form that lands). Chosen: the bool's name and its being a named local rather than a lambda's or a
+#   function's result. `pnpm wasm score` against the link: 8 over 47 rows, all operand-only (the calls); matched at
+#   step 9, named by its vtable slot.
 # - Slot 6 (10796) reads the first word of comum::CAppInfo::GetInst().GetVota() (fns 185, 261 with 51), the vote state,
 #   and returns 1, 2, 0 and 3 for 55, 56, 57 and 58 (a table at 534720), else 0. The getter's name, GetEstadoVota, is the
 #   target's Assert texts' (cestadogeralvota.h says which). No text or record names EEstadoVota's 52 to 58 (the Assert

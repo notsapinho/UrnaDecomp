@@ -197,9 +197,11 @@
 #   unit's list, which is the target's data order too: celeitordetalhe.cpp's four records lie at 1558832 to 1558880,
 #   ahead of celeitordinamicodao.cpp's (1558940) and celeitores.cpp's (from 1559096; ledger/source-locations.tsv), and
 #   band 3 runs 3770 and 3769 (celeitordetalhe.cpp's) before the DAO's 3768 and 3766 (ledger/ordinals.tsv). A scan of
-#   the link in the old order, with the committed symbol file, moves only 5764 (to differs): the other 32 matches of
-#   celeitores.cpp.o, celeitordetalhe.cpp.o and cimpedido.cpp.o stay, while this object moved after
-#   celeitordetalhe.cpp.o instead (46 over 828 as well) took 1703's twin name to another object. The target's band 2 has
+#   the link in the old order, with the committed symbol file, moves only 5764's verdict (to differs) and 946's object
+#   (it matches from cpededigitalmesario.cpp.o's copy): the other 32 of the 34 match rows celeitores.cpp.o,
+#   celeitordetalhe.cpp.o and cimpedido.cpp.o then held stay (1393 and 1937 joined them later), while this object moved
+#   after celeitordetalhe.cpp.o instead (46 over 828 as well) took 1703's twin name to another object. The target's
+#   band 2 has
 #   5764 after ValidaIdentidadesEleitor (5765) in link order and our object has it before: CompleteLoad, not written,
 #   calls 5765 first (a reading, docs/reference/facts/reading.md R9). Chosen: its being private, its lines but the
 #   throw's, the locals' names, the message's being const (its being a named local is measured: built inside the throw
