@@ -70,13 +70,21 @@
 // function over a comum::IEventosLog& gives the same object) and the std::pair are chosen; fragment 234 has its
 // evidence. Its iinterfaceinit.h include (comum::FormataTamanho) is in this header, not in clogvota.cpp, so that
 // GetInst's record stays on line 37 of the .cpp: a choice made for that record's line.
+// LogaEleitorImpedido is the member its record names (clogvota.cpp:432, column 19: the throw of the vota error 9388,
+// "Tipo inválido"), held inlined by vota::CEleitorEncontrado::StartState (fn 10635) after a call of GetInst, in a stack
+// frame of its own: for comum::md::IMPEDIMENTO_SEM_IMPEDIMENTO it logs nothing, for the fourteen impediments it formats
+// "Eleitor impedido - {}" of a text and logs it through loga (fn 233), for IMPEDIMENTO_INVALIDO it throws, and for a
+// value past it it logs the empty text (the target's branch table). The euevotaerror.h include is in this header for
+// the same reason as iinterfaceinit.h's; the parameter's name, the local's and the switch's spelling are chosen.
 
 #include <cstdint>
 #include <string>
 #include <utility>
 
+#include "app/comum/dados/md/etipoimpedimento.h"
 #include "app/comum/iinterfaceinit.h"
 #include "app/comum/log/ieventoslog.h"
+#include "app/vota/euevotaerror.h"
 
 namespace vota {
 
@@ -91,8 +99,8 @@ public:
     void LogaHabilitacaoCanceladaCapturaDigitalMesario();
     // Held inlined by vota::CRegistraDigitalOperador::StartState (fn 10454), its one caller, which calls GetInst before
     // the member's own stack frame opens and calls fn 233 with the message. The name is chosen from its message, and
-    // its place here and in clogvota.cpp, after LogaHabilitacaoCanceladaCapturaDigitalMesario, is chosen: it has no
-    // index to order.
+    // its place here, after LogaHabilitacaoCanceladaCapturaDigitalMesario, and in clogvota.cpp, right after
+    // LogaEleitorImpedido, is chosen: it has no index to order.
     void LogaSolicitaDigitalMesario();
     // Held inlined by vota::CPedeIdentidade::ProximoEstadoIdentidadeDigitada (inlined into fn 10677), its one caller,
     // which calls GetInst before the member's own stack frame opens; it calls api::CLoga::loga (fn 433) with +4 and
@@ -164,8 +172,9 @@ public:
     void LogaMesarioIndagadoHorarioUrna();
     // The shape of LogaMesarioIndagadoHorarioUrna, GetInst called before the member's own stack frame opens, each
     // calling loga (fn 233): held inlined by vota::CImpressaoZeresimaTardia::ProcessInput (fn 11931), the first on
-    // CORRIGE, the second on CONFIRMA. Their names, and their place here and in clogvota.cpp, after
-    // LogaMesarioIndagadoHorarioUrna, are chosen from their messages: they have no index to order.
+    // CORRIGE, the second on CONFIRMA. Their names, from their messages, and their place here, after
+    // LogaMesarioIndagadoHorarioUrna, and in clogvota.cpp, below LogaEleitorImpedido, are chosen: they have no index to
+    // order.
     void LogaMesarioConfirmaHorarioUrnaErrado();
     void LogaMesarioConfirmaHorarioUrnaCorreto();
     // The same shape, calling loga (fn 233): held inlined by vota::CImprimindoBU::ProcessInput (fn 12077), the first on
@@ -218,8 +227,8 @@ public:
     // vota::CEleitorVotando::suspenderEleitor (fn 4442), the first two after one call of GetInst; and
     // LogaEleitorSuspensoSemVoto ("Eleitor foi suspenso e não confirmou nenhum voto") by
     // vota::CEleitorVotando::DescartaVotos (fn 4449). Each literal is loaded by its caller alone. Their names are chosen
-    // from their messages, and their place here and in clogvota.cpp, before LogaQuantidade, is chosen: they have no
-    // index to order.
+    // from their messages, and their place here, before LogaQuantidade, and in clogvota.cpp, at its end, is chosen:
+    // they have no index to order.
     void LogaInspecaoTerminada();
     void LogaEleitorSuspensoTreinamento();
     void LogaEleitorSuspensoPeloMesario();
@@ -227,6 +236,8 @@ public:
     void LogaEleitorSuspensoSemVoto();
 
     void LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade);
+
+    void LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento);
 
 private:
     CLogVota();

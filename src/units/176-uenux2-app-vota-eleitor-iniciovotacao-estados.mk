@@ -69,8 +69,8 @@
 #   result (fn 184), whose stack frame opens after that call (docs/reference/facts/reading.md R10), and builds its
 #   text for comum::IEventosLog::loga (fn 233): LogaMesarioConfirmaHorarioUrnaErrado and
 #   LogaMesarioConfirmaHorarioUrnaCorreto, from their texts ("Mesário confirma que o horário da urna está errado" and
-#   "... correto"), added to app/vota/log/clogvota.cpp after LogaMesarioIndagadoHorarioUrna; their names and that
-#   place are chosen. The order of the cases and the empty default are chosen (the other order was not measured).
+#   "... correto"), added to app/vota/log/clogvota.cpp below LogaEleitorImpedido; their names and that place are
+#   chosen. The order of the cases and the empty default are chosen (the other order was not measured).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/iniciovotacao/cimpressaozeresimatardia.cpp \

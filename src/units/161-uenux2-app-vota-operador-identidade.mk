@@ -13,7 +13,11 @@
 #   10604 under 10667's symbol (below); CVerificaDadoEleitor::GetInst (2735) and its statics' exit destructors (10446,
 #   10445);
 # - vota::CEleitorNaoEncontrado's slot 9 (10663) and its destructors (1907, 1689), over its new base
-#   vota::IEleitorImpedidoVotar;
+#   vota::IEleitorImpedidoVotar; the two destructor lines name CEleitorOptouPorVotarEmTransito's byte-identical twins
+#   since that class's file (unit 104) links first (step 9 renamed them);
+# - vota::IEleitorImpedidoVotar::ProcessInput (10624, slot 7 of the seven vtables): through Read() (its TU's record of
+#   cinteractiveform.h:57) it goes to CPedeIdentidade::GetInst (652) on CONFIRMA when the int at +20 is 0 and on CORRIGE
+#   when it is 1, the key the form's last line names; the switch's spelling is chosen;
 # - two CLogVota members out of line in app/vota/log/clogvota.cpp, unit 119's file: 2097 and 4522; three more there have
 #   no target index of their own (10642, 10669 and 10444 hold them inlined);
 # - libc++'s std::stoul (4661), which a stand-in brings from libc++.a, and with it 4659 and 4660, 6118 (binaryen's body
@@ -23,6 +27,9 @@
 # no line): 244 and 387 (CControlaReconhecimento, CEleitorJaVotou, CInformaAnoNascimentoErrado, CIdentidadeInvalida,
 # CVerificaDadoEleitor), 448 and 765 (CDadoEleitorNaoConfere), 1537 and 3629 (CPedeIdentidade);
 # CInformaAnoNascimentoErrado's StartState is 1070, matched before.
+# celeitorjavotou.cpp, this unit's file, is listed in unit 104 now, ahead of celeitorencontrado.cpp: 10635 holds
+# CEleitorJaVotou's GetInst and constructor, written there now, and differs in binaryen's locals with the file after it
+# (unit 104's fragment has the scores). Its rows' notes stay here.
 #
 # Evidence, each class's header says the rest (its RTTI, vtable, layout and the function that holds its inlined
 # constructor):
@@ -70,8 +77,8 @@
 # pnpm wasm score before steps 7 to 9:
 # - The constructor (fn 1905, matched, named by `call` from 5424), out of line in ieleitorimpedidovotar.cpp, above the
 #   destructor (a choice: no band holds both). Its callers are 5424 and 10635, which calls it five times, for the other
-#   five derived classes, passing 1; 5424 passes 0, so binaryen folds no constant (in our link the call that passes 1
-#   is unit 243's stand-in for 10635). It takes two
+#   five derived classes, passing 1 for four of them and 0 for CEleitorOptouPorVotarEmTransito; 5424 passes 0, so
+#   binaryen folds no constant (10635 is in the link: unit 104). It takes two
 #   std::function<std::string()> by value (a choice: const& was not tried; the body copies each into the builder's
 #   AddTextField over a std::function, fn 5419, which the target does too) and the int at +20, which it stores before it
 #   clears the form member at +12 and reads back for the switch; the form: AddLed(0), the identity typed (table slot 3907, fn
@@ -82,11 +89,13 @@
 #   &TextoNaoCadastrado, &TextoVazio and 0 (the table slots 3867 and 3868 the target stores in the two
 #   __func<std::string (*)(), std::string ()>), and the statics (the pointer at 1905392, the mutex at 1905368): 15 over
 #   116 rows, all operand rows, with the constructor above GetInst or below it. Its callers are
-#   vota::CProcuraEleitor::StartState (10631, unit 104) and 10635, which unit 243's roots stand in for. The mutex's exit
+#   vota::CProcuraEleitor::StartState (10631) and 10635, both unit 104's, in the link. The mutex's exit
 #   destructor, 10665, matches; the pointer's, 10666, is `f1959(p0, 1905392)`, a thunk into the body binaryen merged
 #   from the exit destructors of the six singletons over IEleitorImpedidoVotar (10640, 10651, 10656, 10659, 10662,
-#   10666), five of which 10635 creates: it waits for them, and the pointer's .bss name rests on a `callers+content` hand
-#   line in splat/symbol_addrs.txt (10666 reads it; without the line 5424 reads `unresolved self-voted`).
+#   10666), five of which 10635 creates (unit 104): 1959 and 10666 match with them. The pointer's .bss name took a
+#   `callers+content` hand line while 10666 waited; with 10666 matched, two scans and splat-build without the line
+#   moved no row and gave the target's sha256 (docs/reference/splat.md "Reviewing a match"), so it went: the
+#   generated line (5424's votes) holds the name, with 10666's match.
 # - TextoNaoCadastrado (fn 10664, written, `differs`): "CPF não encontrado. Digite o Título." when the identity typed
 #   is a CPF (GetTipoIdentidadeDigitada, 5416, is 2) and comum::CConfiguracaoEleicao's GetTipoIdentificadorPrincipal (the
 #   word at +668) is 1, else "NÃO CADASTRADO nesta urna"; both calls come before either test, as two locals. The target
@@ -107,12 +116,12 @@
 # celeitornaoencontrado.cpp includes cconfiguracaoeleicao.h, so it takes the Boost include path, as
 # ccontrolareconhecimento.cpp does.
 #
-# Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's and CVerificaDadoEleitor's (each
-# header names the function that holds them inlined);
+# Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's, CVerificaDadoEleitor's and
+# CEleitorJaVotou's (each header names the function that holds them inlined);
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
-# waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10443, 10447, 10676, 10625
-# and 10624 (pending).
+# waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10443, 10447, 10676 and
+# 10625 (pending).
 #
 # CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
 # its 16-byte frame follows the `new` of 32 bytes) and the statics. It matches. The end of "/{:04}" in it is, in the
@@ -220,17 +229,17 @@
 # unrecorded vtables between them and aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side.
 # The order of the sources below follows the data, leidentidade's before confirmaidentidade's.
 #
-# Roots: five classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's and
-# CVerificaDadoEleitor's went: their constructors are in the link, inlined into 652 and 2735), and stand-ins for the
-# target callers of 5403 to 5406, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link).
-# 2735's callers' stand-in is in unit 278's roots. ccontrolareconhecimento.cpp reaches Boost
+# Roots: four classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's and
+# CVerificaDadoEleitor's went: their constructors are in the link, inlined into 652 and 2735; CEleitorJaVotou's went:
+# its constructor is in the link, inlined into its GetInst, which 10635 holds), and stand-ins for the target callers of
+# 5403 to 5406, 2097, 4522, 4661 and 652 (the roots file names them, and the callers in the link). 2735's callers'
+# stand-in is in unit 278's roots. ccontrolareconhecimento.cpp reaches Boost
 # through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_OPERADOR_IDENTIDADE_SRCS := src/app/vota/operador/leidentidade/cpedeidentidade.cpp \
     src/app/vota/operador/leidentidade/cidentidadeinvalida.cpp \
-    src/app/vota/operador/leidentidade/celeitorjavotou.cpp \
     src/app/vota/operador/leidentidade/celeitornaoencontrado.cpp \
     src/app/vota/operador/leidentidade/ieleitorimpedidovotar.cpp \
     src/app/vota/operador/confirmaidentidade/ccontrolareconhecimento.cpp \

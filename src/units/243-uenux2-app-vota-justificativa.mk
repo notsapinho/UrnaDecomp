@@ -3,7 +3,8 @@
 # (app/vota/operador/justificativa/cconfirmajustificativa.{h,cpp}) and vota::CIniciaJustificativa
 # (justificativa/ciniciajustificativa.{h,cpp}). Paths relative to src/uenux2. Target fns matched: 3626, the D2 the three
 # Confirma classes' slot 0 holds (matched under CConfirmaJustificativa's D1, named by `vtable`), and the statics' exit
-# destructors 10621 (CConfirmaJustificativa's mutex), 10617 and 10616 (CIniciaJustificativa's pointer and mutex). Both
+# destructors 10621 (CConfirmaJustificativa's mutex), 10617 and 10616 (CIniciaJustificativa's pointer and mutex), and
+# 10622 (its pointer's, below). Both
 # GetInst and both constructors have no index of their own: 10631 holds them inlined, and matches with them (unit 104).
 #
 # Evidence, each class's header says the rest (RTTI, vtable, statics):
@@ -36,22 +37,18 @@
 #   allocates the CIniciaJustificativa before it calls that GetInst.
 # - GetInst is defined above the constructor in both files, measured on 10631 (unit 104's fragment has the scores).
 # - CConfirmaJustificativa's pointer's exit destructor, 10622, is `f3885(p0, 1905700)`, a thunk into the body binaryen
-#   merged from the exit destructors of the three Confirma singletons (10611, 10615, 10622), two of which 10635 creates:
-#   it waits for them, and the pointer's .bss name rests on a `callers+content` hand line in splat/symbol_addrs.txt
-#   (10622 reads it; without the line 10631 reads `unresolved self-voted`).
+#   merged from the exit destructors of the three Confirma singletons (10611, 10615, 10622), two of which 10635 creates
+#   (fragment 283's classes): with them in the link, 10622 and 3885 match. The pointer's .bss name took a
+#   `callers+content` hand line while 10622 waited; with 10622 matched, two scans and splat-build without the line moved
+#   no row and gave the target's sha256 (docs/reference/splat.md "Reviewing a match"), so it went: the generated line
+#   (10631's votes) holds the name, with 10622's match.
 #
 # Chosen: the four paths, FraseNaoPertence's name and linkage, the statics' names and the lines. Not measured, and
 # they may give the same bytes: a lambda or a static member in FraseNaoPertence's place.
 #
-# Roots (243-uenux2-app-vota-justificativa-roots.cpp): CEleitorEncontrado::StartState (10635, pending in unit 104) is
-# not written, and four functions it calls have one other caller each in the link: vota::NaoAceitaJustificativa (4578,
-# unit 168), CEleitorNaoEncontrado::GetInst (5424, unit 161), IEleitorImpedidoVotar's constructor (1905, unit 161) and
-# IConfirmaJustificativa's (3625, unit 174). One stand-in for 10635 gives each its second call site, here and not in
-# those units' roots, so that the four go together when 10635 lands; each unit's fragment says so.
+# No roots: the stand-in for CEleitorEncontrado::StartState (10635) that gave vota::NaoAceitaJustificativa (4578, unit
+# 168), CEleitorNaoEncontrado::GetInst (5424, unit 161), IEleitorImpedidoVotar's constructor (1905, unit 161) and
+# IConfirmaJustificativa's (3625, unit 174) their second call site went when 10635 was written (unit 104).
 APP_VOTA_JUSTIFICATIVA_SRCS := src/app/vota/operador/justificativa/cconfirmajustificativa.cpp \
     src/app/vota/operador/justificativa/ciniciajustificativa.cpp
 UENUX2_SRCS += $(APP_VOTA_JUSTIFICATIVA_SRCS)
-# Fn 10635 is not reconstructed: 243-uenux2-app-vota-justificativa-roots.cpp stands in for its calls.
-$(ROOT)/$(APP)/243-uenux2-app-vota-justificativa-roots.o: $(ROOT)/src/units/243-uenux2-app-vota-justificativa-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/243-uenux2-app-vota-justificativa.mk
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/243-uenux2-app-vota-justificativa-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/243-uenux2-app-vota-justificativa-roots.o

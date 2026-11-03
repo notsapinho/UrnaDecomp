@@ -5,6 +5,7 @@
 #include "api/gui/cinteractiveform.h"
 #include "api/gui/cmtformbuilder.h"
 #include "app/vota/operador/comum/iinformacaothreadoperador.h"
+#include "app/vota/operador/leidentidade/cpedeidentidade.h"
 
 namespace vota {
 
@@ -31,5 +32,23 @@ IEleitorImpedidoVotar::IEleitorImpedidoVotar(std::function<std::string()> linha2
 }
 
 IEleitorImpedidoVotar::~IEleitorImpedidoVotar() = default;
+
+void IEleitorImpedidoVotar::ProcessInput()
+{
+    switch (m_form->Read()) {
+    case api::INPUT_CONFIRMA:
+        if (m_tipo == 0) {
+            m_pNextState = &CPedeIdentidade::GetInst();
+        }
+        break;
+    case api::INPUT_CORRIGE:
+        if (m_tipo == 1) {
+            m_pNextState = &CPedeIdentidade::GetInst();
+        }
+        break;
+    default:
+        break;
+    }
+}
 
 } // namespace vota

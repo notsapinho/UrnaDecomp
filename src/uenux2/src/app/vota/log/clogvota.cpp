@@ -1,6 +1,6 @@
 // vota::CLogVota (/home/rubio/tse/uenux2/src/app/vota/log/clogvota.cpp). Its records are records of the target:
 //   184    static CLogVota &GetInst()                                 record at line 37, column 37
-//   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (not written)
+//   10635  LogaEleitorImpedido(comum::md::ETipoImpedimento)            record at line 432, column 19 (held inlined)
 // Lines of members with no record are chosen, fragments say why: 119's, 161's five, 156's two after GetInst; 152's
 // seven after LogaTituloInvalidoRegistroMesario, 142's three, 138's one, 169's one, 138's two, 176's, 61's, 197's, 156's
 // four after LogaPedidoTituloSuspensao; after LogaAguardandoConfirmacaoZeresima, 138's, 199's, 119's two; 104's, 169's two.
@@ -86,17 +86,6 @@ void CLogVota::LogaEleitorCorrigiuConfirmacaoCandidato()
 void CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario()
 {
     loga("Habilitação cancelada durante a captura de digital do mesário");
-}
-
-void CLogVota::LogaSolicitaDigitalMesario()
-{
-    loga("Solicita digital do mesário");
-}
-
-void CLogVota::LogaIdentificadorDigitadoMesario()
-{
-    const std::string mensagem = "Identificador do eleitor digitado pelo mesário";
-    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
 }
 
 void CLogVota::LogaIndagaRegistroMesarios()
@@ -300,44 +289,6 @@ void CLogVota::LogaMesarioIndagadoHorarioUrna()
     loga("Mesário indagado se horário da urna está correto");
 }
 
-void CLogVota::LogaMesarioConfirmaHorarioUrnaErrado()
-{
-    loga("Mesário confirma que o horário da urna está errado");
-}
-
-void CLogVota::LogaMesarioConfirmaHorarioUrnaCorreto()
-{
-    loga("Mesário confirma que o horário da urna está correto");
-}
-
-void CLogVota::LogaMesarioIndicouReimprimirBU()
-{
-    loga("Mesário indicou reimprimir Boletim de Urna");
-}
-
-void CLogVota::LogaMesarioIndicouQualidadeBU()
-{
-    loga("Mesário indicou qualidade OK para Boletim de Urna");
-}
-
-void CLogVota::LogaSolicitadaRetiradaMR()
-{
-    const std::string mensagem = "Solicitada a retirada da mídia de resultado";
-    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
-}
-
-void CLogVota::LogaMRRetirada()
-{
-    const std::string mensagem = "Mídia de resultado retirada";
-    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
-}
-
-void CLogVota::LogaSolicitadaEmissaoViasAdicionais(uebyte quantidade)
-{
-    const std::string mensagem = std::format("Solicitada a emissão de [{}] ", quantidade);
-    loga(mensagem + (quantidade == 1 ? "via adicional" : "vias adicionais"));
-}
-
 void CLogVota::LogaTempoLimiteBateriaInterna()
 {
     const std::string mensagem = "Tempo limite de espera usando bateria interna atingido";
@@ -403,6 +354,116 @@ void CLogVota::LogaEspacoUtilizadoMV(uintmax_t espaco)
     loga(std::format("Espaço utilizado na MV [{}]", comum::FormataTamanho(espaco)));
 }
 
+void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
+{
+    loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
+}
+
+// (original lines 362-382: content not recovered)
+#line 383
+void CLogVota::LogaEleitorImpedido(comum::md::ETipoImpedimento impedimento)
+{
+    std::string descricao;
+    switch (impedimento) {
+        case comum::md::IMPEDIMENTO_SEM_IMPEDIMENTO:
+            return;
+        case comum::md::IMPEDIMENTO_VOTA_NA_SECAO_ORIGINAL:
+            descricao = "vota na seção original";
+            break;
+        case comum::md::IMPEDIMENTO_SOLICITOU_VOTO_EM_TRANSITO:
+            descricao = "solicitou voto em trânsito";
+            break;
+        case comum::md::IMPEDIMENTO_PRESO_PROVISORIO:
+            descricao = "preso provisório";
+            break;
+        case comum::md::IMPEDIMENTO_SUSPENSO:
+            descricao = "título suspenso";
+            break;
+        case comum::md::IMPEDIMENTO_CANCELADO:
+            descricao = "título cancelado";
+            break;
+        case comum::md::IMPEDIMENTO_NAO_LIBERADO:
+            descricao = "eleitor não está liberado para votar";
+            break;
+        case comum::md::IMPEDIMENTO_SEM_IDADE_MINIMA:
+            descricao = "eleitor não tem idade mínima para votar";
+            break;
+        case comum::md::IMPEDIMENTO_MILITAR_EM_SERVICO:
+            descricao = "eleitor é militar em serviço";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_ACESSIBILIDADE:
+            descricao = "eleitor pediu acessibilidade";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_ELEITOR_CONVOCADO:
+            descricao = "eleitor convocado pela Justiça Eleitoral";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_JUSTICA_ELEITORAL:
+            descricao = "eleitor é servidor da Justiça Eleitoral";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_OFICIO:
+            descricao = "eleitor transferido por ofício";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_INDIGENAS_QUILOMBOLAS:
+            descricao = "eleitor é um membro da comunidade indígena ou quilombola";
+            break;
+        case comum::md::IMPEDIMENTO_TTE_SITUACAO_RUA:
+            descricao = "eleitor está em situação de rua";
+            break;
+        case comum::md::IMPEDIMENTO_INVALIDO:
+            throw CUeVotaError(EUE_VOTA_TIPO_IMPEDIMENTO_INVALIDO, "Tipo inválido");
+    }
+    loga(std::format("Eleitor impedido - {}", descricao));
+}
+
+void CLogVota::LogaSolicitaDigitalMesario()
+{
+    loga("Solicita digital do mesário");
+}
+
+void CLogVota::LogaIdentificadorDigitadoMesario()
+{
+    const std::string mensagem = "Identificador do eleitor digitado pelo mesário";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaMesarioConfirmaHorarioUrnaErrado()
+{
+    loga("Mesário confirma que o horário da urna está errado");
+}
+
+void CLogVota::LogaMesarioConfirmaHorarioUrnaCorreto()
+{
+    loga("Mesário confirma que o horário da urna está correto");
+}
+
+void CLogVota::LogaMesarioIndicouReimprimirBU()
+{
+    loga("Mesário indicou reimprimir Boletim de Urna");
+}
+
+void CLogVota::LogaMesarioIndicouQualidadeBU()
+{
+    loga("Mesário indicou qualidade OK para Boletim de Urna");
+}
+
+void CLogVota::LogaSolicitadaRetiradaMR()
+{
+    const std::string mensagem = "Solicitada a retirada da mídia de resultado";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaMRRetirada()
+{
+    const std::string mensagem = "Mídia de resultado retirada";
+    api::CLoga::loga(m_aplicativo, static_cast<api::ESeveridade>(1), mensagem);
+}
+
+void CLogVota::LogaSolicitadaEmissaoViasAdicionais(uebyte quantidade)
+{
+    const std::string mensagem = std::format("Solicitada a emissão de [{}] ", quantidade);
+    loga(mensagem + (quantidade == 1 ? "via adicional" : "vias adicionais"));
+}
+
 void CLogVota::LogaInspecaoTerminada()
 {
     loga("Inspeção da urna terminada");
@@ -426,11 +487,6 @@ void CLogVota::LogaEleitorVotouParcialmenteSuspenso()
 void CLogVota::LogaEleitorSuspensoSemVoto()
 {
     loga("Eleitor foi suspenso e não confirmou nenhum voto");
-}
-
-void CLogVota::LogaQuantidade(const std::pair<std::string, uint64_t>& quantidade)
-{
-    loga(std::format("Quantidade de {} [{}]", quantidade.first, comum::FormataTamanho(quantidade.second)));
 }
 
 } // namespace vota

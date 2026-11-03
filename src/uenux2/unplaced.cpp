@@ -85,9 +85,6 @@
 // f5420 · 788 B · unmatched · placement: link order · name unknown
 // void f5420(i32, i32) { ... }
 
-// f5418 · 1000 B · unmatched · placement: link order · name unknown
-// ? f5418() { ... }
-
 // link-order cluster 783 · uses=2 · neighbours' file uenux2/src/api/gui/cmoviefield.cpp
 
 // f5521 · 72 B · unmatched · placement: link order · name unknown
@@ -151,11 +148,6 @@
 
 // f5980 · 225 B · unmatched · placement: link order · name unknown
 // void f5980(i32) { ... }
-
-// link-order cluster 869 · uses=2
-
-// f6014 · 127 B · unmatched · placement: link order · name unknown
-// void f6014(i32, i32) { ... }
 
 // link-order cluster 871 · uses=2
 

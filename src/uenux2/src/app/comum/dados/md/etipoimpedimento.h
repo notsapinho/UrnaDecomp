@@ -6,6 +6,9 @@ namespace comum::md {
 // comum::md::ETipoImpedimento. CConversorImpedido::DesconverteTipoImpedimento (target fn 5699) maps the ASN.1
 // enumerators 1 to 15 onto value - 1, so the values are evidence; the enumerator names are chosen, from
 // ModuloImpedidos::TipoImpedimento's, and the fixed type and this file's path are chosen too: no record names them.
+// IMPEDIMENTO_INVALIDO (15) is the value comum::md::CImpedido's constructor stores as the second turn's impediment, and
+// the one vota::CLogVota::LogaEleitorImpedido throws on (target fn 10635 branches to the throw for 15 and past the text
+// for any other value above 14): the value is evidence, its name is chosen.
 enum ETipoImpedimento : int {
     IMPEDIMENTO_SEM_IMPEDIMENTO,
     IMPEDIMENTO_VOTA_NA_SECAO_ORIGINAL,
@@ -22,6 +25,7 @@ enum ETipoImpedimento : int {
     IMPEDIMENTO_TTE_OFICIO,
     IMPEDIMENTO_TTE_INDIGENAS_QUILOMBOLAS,
     IMPEDIMENTO_TTE_SITUACAO_RUA,
+    IMPEDIMENTO_INVALIDO,
 };
 
 } // namespace comum::md

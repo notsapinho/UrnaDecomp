@@ -1,13 +1,14 @@
-// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the vtables of five of its classes, and the second
+// Roots of src/units/161-uenux2-app-vota-operador-identidade.mk: the vtables of four of its classes, and the second
 // call sites of the static members, CLogVota members and the libc++ function whose target callers are not
 // reconstructed yet.
 //
 // - Each vtable is referenced in the target only by its class's constructor, inlined into the function that creates the
-//   singleton (fns 1256, 10635, 10489, 10627 and 10443, none reconstructed). Taking the vtables' addresses keeps every
-//   slot. vota::CVerificaDadoEleitor's constructor is in the link, inlined into its GetInst (fn 2735), so no
-//   sink keeps that vtable. vota::CEleitorNaoEncontrado's constructor is in the link, inlined into its GetInst (fn
-//   5424), which vota::CProcuraEleitor::StartState (10631, unit 104) and unit 243's stand-in for 10635 call, so no sink keeps that
-//   vtable; vota::IEleitorImpedidoVotar's comes with its constructor (fn 1905), which 5424 calls. CPedeIdentidade's
+//   singleton (fns 1256, 10489, 10627 and 10443, none reconstructed). Taking the vtables' addresses keeps every slot.
+//   vota::CVerificaDadoEleitor's constructor is in the link, inlined into its GetInst (fn 2735), so no sink keeps that
+//   vtable. vota::CEleitorNaoEncontrado's constructor is in the link, inlined into its GetInst (fn 5424), which
+//   vota::CProcuraEleitor::StartState (10631) and CEleitorEncontrado::StartState (10635, both unit 104's) call, and
+//   CEleitorJaVotou's, inlined into its GetInst, which 10635 holds (its file is unit 104's now), so no sink keeps those
+//   two vtables; vota::IEleitorImpedidoVotar's comes with its constructor (fn 1905), which 5424 calls. CPedeIdentidade's
 //   constructor is in the link, inlined into its GetInst (fn 652).
 // - The functions below have direct callers in the target, two call sites or more each (ledger/callgraph.tsv), so
 //   binaryen keeps them out of line; the stand-ins give them those call sites, each standing for the callers it names:
@@ -26,7 +27,6 @@
 
 extern "C" {
 extern const char ccontrolareconhecimento_vt[] __asm__("_ZTVN4vota23CControlaReconhecimentoE");
-extern const char celeitorjavotou_vt[] __asm__("_ZTVN4vota15CEleitorJaVotouE");
 extern const char cinformaanonascimentoerrado_vt[] __asm__("_ZTVN4vota27CInformaAnoNascimentoErradoE");
 extern const char cidentidadeinvalida_vt[] __asm__("_ZTVN4vota19CIdentidadeInvalidaE");
 extern const char cdadoeleitornaoconfere_vt[] __asm__("_ZTVN4vota22CDadoEleitorNaoConfereE");
@@ -89,10 +89,10 @@ __attribute__((noinline)) unsigned long LeDois(const std::string& primeiro, cons
     return std::stoul(primeiro) + 3 * std::stoul(segundo);
 }
 
-// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 10209, 10404, 10443, 10447, 10588,
-// 10590, 10624, 10689, 10718, 10721, 10731, 10734 and 10751 (in the link: 2295, the body binaryen merges from 10667
-// and 10461, 10452 and 10626, units 161, 221 and 278; and 10217, 10435, 10527, 10646 and 10762, units 165, 152, 281,
-// 104 and 119).
+// Stands for the target's other callers of CPedeIdentidade::GetInst (fn 652): 10209, 10404, 10443, 10447, 10590,
+// 10689, 10718, 10721, 10731, 10734 and 10751 (in the link: 2295, the body binaryen merges from 10667 and 10461, 10452
+// and 10626, units 161, 221 and 278; 10217, 10435, 10527, 10646 and 10762, units 165, 152, 281, 104 and 119; and 10588
+// and 10624, units 174's and 161's).
 __attribute__((noinline)) int PedeIdentidade()
 {
     return w161_pede_identidade() + 89;
@@ -104,7 +104,6 @@ struct SW161Roots {
     SW161Roots()
     {
         w161_sink = ccontrolareconhecimento_vt;
-        w161_sink = celeitorjavotou_vt;
         w161_sink = cinformaanonascimentoerrado_vt;
         w161_sink = cidentidadeinvalida_vt;
         w161_sink = cdadoeleitornaoconfere_vt;

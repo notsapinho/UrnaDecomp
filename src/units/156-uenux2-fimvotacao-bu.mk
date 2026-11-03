@@ -141,8 +141,8 @@
 #   result). The two log members build their texts ("Solicitada a retirada da mídia de resultado" and "Mídia de
 #   resultado retirada", ledger/strings.tsv 137825 and 232292) and call api::CLoga::loga (fn 433) with CLogVota's +4
 #   and severity 1, after CLogVota::GetInst (fn 184), as unit 169's LogaFinalizacaoAplicativo:
-#   LogaSolicitadaRetiradaMR and LogaMRRetirada, added to app/vota/log/clogvota.cpp after
-#   LogaMesarioIndagadoHorarioUrna, their names and place chosen. 46 over 250 rows, operand-only (calls, data, and the
+#   LogaSolicitadaRetiradaMR and LogaMRRetirada, added to app/vota/log/clogvota.cpp below
+#   LogaEleitorImpedido, their names and place chosen. 46 over 250 rows, operand-only (calls, data, and the
 #   exception's destructor slot in the two throws). `using namespace comum;` in cretirarmr.cpp lets the texts spell the
 #   states unqualified (a choice, as in cquerimprimirbu.cpp); the local `vota` is the texts' name.
 # - vota::CImprimindoBU::StartState (fn 12078, records cimprimindobu.cpp 70:87 and 71:70) and ProcessInput (fn 12077):

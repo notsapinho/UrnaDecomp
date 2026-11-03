@@ -94,6 +94,12 @@ public:
     // record names it: its name, the parameters' names, its being a member and the comparator's name and linkage are
     // chosen.
     std::vector<md::CCargo> GetCargos(const TEleicaoID eleicao, const bool ordenados) const;
+    // A copy of the set at +604. vota::CEleitorEncontrado::StartState (fn 10635) and fn 7787 each build an empty set in
+    // their frame and fill it with fn 6733, std::set's range insert, from +604's begin and end: the copy constructor's
+    // code. 10635 then looks for an element that is not 0 and destroys the copy with fn 1594, the destroy
+    // splat/matched.txt names for this element type (the member's, chosen). The accessor, its name and its result by
+    // value are chosen.
+    std::set<ecourna::app::dados::ETipoIdentificadorEleitor> GetTipos() const { return m_tipos; }
 
 private:
     unsigned m_naoRecuperado1[2];
