@@ -80,8 +80,9 @@
 #   compares the counts of mesarios with `> 5`). Measured in the link before steps 7 to 9 (pnpm wasm score at the
 #   default depth): `45 over 637 rows (same 592, replaced 45 [45 operand-only], inserted 0, deleted 0)`, the rows that
 #   are no call and no data address being the statics' addresses and the table slot 148, fn 7324's
-#   (std::__format::__allocating_buffer<char>::__prepare_write, matched), where ours has 43. In this link the literal is
-#   a string of its own (5389 is not written), and 5386 matches. Its other target caller, comum::CMesarioRegistrado's
+#   (std::__format::__allocating_buffer<char>::__prepare_write, matched), where ours has 43; the literal was a string of
+#   its own then. With 5389 in the link it is the tail of 5389's string, one copy as in the target, and 5386 matches
+#   (splat-review passes both ways). Its other target caller, comum::CMesarioRegistrado's
 #   slot 2 (10339), is not written: 135-uenux2-comum-mesario-estados-roots.cpp stands for it. Band: 10360, 10359,
 #   10358 and 10357 run 3727 to 3730 in ld_index. Chosen: TelaLimiteMesariosRegistrados, its being a free function of
 #   comum declared in the class's header, its parameter, and its place at the file's end; the constructor and GetInst
@@ -154,7 +155,7 @@
 #   CNomeMesariosUrnaDS::Text (10323), the other half of fn 6008.
 # - comum::CMesarioRegistrado (10339, 10338): 10339 calls 5386, matched. Fn 6011 is binaryen's shared body of its
 #   ProcessInput and comum::CRegistrarMesarios's (10391, pending in unit 247, whose StartState 10392 matches), each
-#   `f6011(p0, <its Read() record>, <its GetControlador record>)`, so it forms only once both are written; its one
+#   `f6011(p0, <its GetControlador record>, <its Read() record>)`, so it forms only once both are written; its one
 #   callee that had no name, 5389, matches now. Its stub file stays as it is.
 # - The pending traps (135-uenux2-comum-mesario-estados-pending.cpp names each): IGestorDadoMesario::StartState
 #   (10337), CPedeDigitalMesario's FinishState (10315, a thunk into fn 6012, which it shares with

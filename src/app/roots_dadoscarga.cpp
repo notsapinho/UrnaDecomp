@@ -10,10 +10,10 @@
 //   copies. This root stands for that object, src/app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoversaopacotes.cpp,
 //   whose StartState is not written (it calls fn 491, which has no name yet, and holds CFileASN::ReadFromFile inlined),
 //   and goes once 11905 is written there: unit 176 lists that file ahead of unit 96's list, which holds 11423's object.
-// - It compiles at the flags of that file (src/Makefile's rule) and links after roots_vector.o. Instantiated so, the
-//   two score 4 over 104 and 4 over 118 rows against the target, their four calls of free (fn 136) only (pnpm wasm
-//   score on the whole link), where the converter object's copies score 20 over 108 and 45 over 127; they match, and
-//   11423 is unchanged.
+// - It compiles at the flags of that file (src/Makefile's rule). Its place in APP_OBJS, after roots_vector.o, is chosen:
+//   it brings no callee of its own, and first or last there moves no row (measured). Instantiated so, the two score
+//   4 over 104 and 4 over 118 rows against the target, their four calls of free (fn 136) only (pnpm wasm score on the
+//   whole link), where the converter object's copies score 20 over 108 and 45 over 127; they match; 11423 is unchanged.
 // - The instances need no caller here: 11423 calls both, and unit 245's roots stand for 11905's calls.
 #include "app/comum/dados/md/correspondencia/cdadosdisponiveiscarga.h"
 

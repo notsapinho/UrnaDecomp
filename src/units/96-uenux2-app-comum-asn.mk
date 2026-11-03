@@ -125,9 +125,13 @@
 # after util.cpp and cconversordadosdisponiveiscarga.cpp left ahead of it, 11437 is 112 over 1276 and 11438 80 over 923,
 # all operand-only, and 11423 is 835 over 2739 and 11424 242 over 1520 (fragment 245 measured that order of its two
 # converters). With the three after util.cpp, 11437 and 11438 as
-# above, and 11423 (145 over 2696) and 11424 (109 over 1513) as in unit 245's list, all operand-only. The target's data
-# show the same order: util.cpp's records (@1555908 to @1556148) lie before CConversorCabecalhoPacote's vtable
-# (@1562736), which lies before CConversorDadosDisponiveisCarga's (@1565788).
+# above, and 11423 (145 over 2696) and 11424 (109 over 1513) as in unit 245's list, all operand-only. The list follows
+# the target's data: util.cpp's records (@1555908 to @1556148) lie before the vtables of CConversorDadosCandidato
+# (@1562224), CConversorCabecalhoPacote (@1562736) and CConversorDadosDisponiveisCarga (@1565788), then come
+# cconversordadocarga.cpp's records (@1567732 to @1567812) and CConversorDadoCarga's vtable (@1567828), then
+# cdadosdisponiveiscarga.cpp's records (@1572092 to @1572220). So cconversordadocarga.cpp follows the two converters.
+# Its place moves no row: right after util.cpp, as the list had it before, every scan row reads the same, and so do
+# the symbol file and the census's pairs (measured on the whole link).
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 COMUM_ASN_SRCS := src/app/comum/asn/util.cpp \

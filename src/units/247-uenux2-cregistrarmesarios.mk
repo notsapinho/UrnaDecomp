@@ -115,13 +115,14 @@
 # - Band: 10394, 10393 and 10392 share use band 1 and their ld_index runs 5017, 5018, 5019 in names.tsv (the higher
 #   index first, as docs/how-to-decompile.md step 3 wants): s_inst, then s_mutex, then StartState, as written.
 # Pending: ProcessInput (10391), a thunk into binaryen's fn 6011, whose other caller is CMesarioRegistrado::ProcessInput
-# (10338, not written); 6011 forms only with both written, and its callee 5389 (CConfirmaFimRegistroMesarios::GetInst)
-# has no body in this tree. 247-uenux2-cregistrarmesarios-pending.cpp traps it and gives its source.
+# (10338, not written); 6011 forms only with both written. Its callee 5389 (CConfirmaFimRegistroMesarios::GetInst,
+# unit 135) matches. 247-uenux2-cregistrarmesarios-pending.cpp traps it and gives its source.
 # Chosen, no evidence names them: TelaIndagaRegistroMesarios, its being a free function of comum and its declaration in
 # cregistrarmesarios.h; the order of the definitions (destructor, constructor, the form's builder after it, GetInst, the
-# statics, StartState; the other order of constructor and builder was not measured); the destructor out of line and
-# declared first, as the key function, as unit 135's states do; the data members' names (unit 135's); the controller's
-# slot names Slot5 and Slot7 (its header's).
+# statics, StartState; the other order of constructor and builder was not measured); the destructor declared first,
+# as the key function, as unit 135's states do (its being out of line is evidence: the vtable's slot 1, fn 765,
+# `f448(p0); f136(p0)`, is what unit 135's fragment reads as an out-of-line destructor, R5); the data members' names
+# (unit 135's); the controller's slot names Slot5 and Slot7 (its header's).
 #
 # Not written: nothing else of this class (ProcessInput is pending, above). CConfirmaFimRegistroMesarios::GetInst (5389,
 # unit 135) and IPedeTituloMesario::ProcessInput (10313, unit 71, which calls 5389 too), which build the operator's form

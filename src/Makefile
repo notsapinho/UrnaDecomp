@@ -202,7 +202,8 @@ $(ROOT)/$(APP)/roots_vector.o: $(ROOT)/src/app/roots_vector.cpp $(ROOT)/src/Make
 $(ROOT)/$(APP)/roots_set.o: $(ROOT)/src/app/roots_set.cpp $(ROOT)/src/Makefile
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/app/roots_set.cpp -o $(R)
 # libc++'s destroy of two vectors of comum::md classes, at the flags of the vota object whose copies the target keeps
-# (src/app/roots_dadoscarga.cpp): uenux2 with strict aliasing, after roots_vector.o
+# (src/app/roots_dadoscarga.cpp): uenux2 with strict aliasing; its place in APP_OBJS, after roots_vector.o, is chosen:
+# it brings no callee of its own, and first or last there moves no row (measured)
 $(ROOT)/$(APP)/roots_dadoscarga.o: $(ROOT)/src/app/roots_dadoscarga.cpp $(ROOT)/src/Makefile $(UENUX2_HDRS)
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(call uenux2_cxxflags,src/app/vota/eleitor/iniciovotacao/auxiliares/cimpressaoversaopacotes.cpp) -c src/app/roots_dadoscarga.cpp -o $(R)
 
