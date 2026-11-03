@@ -94,6 +94,12 @@
 # unsigned, code 6), CConversorEleicoesVota's map alias, the lines of every function no throw of which has a record, and
 # std::make_pair in 11350.
 #
+# md::CProcessoEleitoralDTO::GetPleito2 (record cprocessoeleitoraldto.cpp:57:15, EUE_COMUM_DADOS_8166 "Não há pleito
+# 2.") is written on that line, out of line in cprocessoeleitoraldto.cpp: unit 280's comum load (fn 3771) holds its
+# throw behind a 16-byte frame of its own, binaryen's inlining of its one caller. It has no index. The DTO's inline
+# getters (GetID, GetNome, GetUtilizaBiometria, GetOrigem, GetPleito1, TemPleito2, GetIdentificadorPrincipal,
+# GetIdentificadores; chosen names, no layout changed) are what 3771 reads.
+#
 # The converters include generated ASN.1 modules; paths relative to src/uenux2; the generic uenux2 rule depends on the
 # sources and every uenux2 header.
 CONVERSORES_140_SRCS := src/app/comum/dados/asn/rdv/cconversoreleicoesvota.cpp \

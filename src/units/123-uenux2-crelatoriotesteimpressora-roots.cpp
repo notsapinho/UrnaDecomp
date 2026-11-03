@@ -1,8 +1,6 @@
-// Roots: keep comum::CRelatorioTesteImpressora in the skeleton link the way the target keeps it.
-// - Its one user is its constructor (fn 5586, not reconstructed), which stores the vptr (@1576660, vtable @1576652) into
-//   an object of the frames of fns 11869 (vota::CVerificaHorarioZeresima's slot 7) and 11911 (vota::CImpressaoEstadoUrna's
-//   slot 2), which hand it to fn 5591; 5591 reaches every member through the vtable, slots 2 to 25. Taking the vtable's
-//   address keeps the same set: every slot in the table and none called directly.
+// Roots: keep comum::CRelatorioTesteImpressora's callees in the skeleton link the way the target keeps them. The class's
+// vtable is kept by its constructor (fn 5586, crelatoriotesteimpressora.cpp), which stores the vptr and which unit 280's
+// roots reach for its callers 11869 and 11911.
 // - GetCorrespondencia (slot 9, fn 11197) calls CDadoCorrespondencia's copy constructor, fn 1249, which has six callers
 //   in the target (awk -F'\t' '$2==1249' ledger/callgraph.tsv: 5637, 5740, 5856, 11197, 11395, 12098). 5856 (unit 160)
 //   and 11395 (comum::asn::CConversorEstadoGeralGap::DoDesconverte, unit 93, three call sites) are in the link, and
@@ -49,7 +47,6 @@
 #include "app/comum/relatorios/euecomumrelatorioserror.h"
 
 extern "C" {
-extern const char relatoriotesteimpressora_vt[] __asm__("_ZTVN5comum25CRelatorioTesteImpressoraE");
 int w123_construtor(void* mapa, const void* lista, const void* comparador) __asm__(
     "_ZNSt3__23mapIcN7ecourna3app5dados19CLabelParametrizadoENS_4lessIcEENS_9allocatorINS_4pairIKcS4_EEEEEC2B8ne210108ESt16"
     "initializer_listISA_ERKS6_");
@@ -102,7 +99,6 @@ __attribute__((noinline)) void w123_vias(api::CPaperFormBuilder& builder, api::C
     comum::CRelUtil::ImprimeSeparadorVia(outro, 3, total + 5);
 }
 
-const void* volatile relatoriotesteimpressora_sink;
 unsigned (*volatile w123_sink_labels)(const std::map<char, ecourna::app::dados::CLabelParametrizado>&);
 int (*volatile w123_sink_mapa)(void*, const void*, const void*);
 unsigned (*volatile w123_sink_separador)(comum::EUrnaFase);
@@ -115,7 +111,6 @@ void (*volatile w123_sink_vias)(api::CPaperFormBuilder&, api::CPaperFormBuilder&
 struct SRelatorioTesteImpressoraRoots {
     SRelatorioTesteImpressoraRoots()
     {
-        relatoriotesteimpressora_sink = relatoriotesteimpressora_vt;
         w123_sink_labels = w123_labels;
         w123_sink_mapa = w123_mapa;
         w123_sink_separador = w123_separador;

@@ -351,11 +351,6 @@
 // f5358 · 1227 B · unmatched · placement: link order · name unknown
 // void f5358(i32, i32) { ... }
 
-// link-order cluster 763 · uses=2 · neighbours' file uenux2/src/api/util/csystem.cpp
-
-// f5461 · 1341 B · unmatched · placement: link order · name unknown
-// void f5461(i32, i32, i32) { ... }
-
 // link-order cluster 764 · uses=2 · neighbours' file uenux2/src/api/util/cgenerictags.cpp
 
 // f5465 · 258 B · unmatched · placement: link order · name unknown
@@ -421,9 +416,6 @@
 // f5787 · 682 B · unmatched · placement: link order · name unknown
 // void f5787(i32, i32) { ... }
 
-// f5777 · 886 B · unmatched · placement: link order · name unknown
-// void f5777(i32, i32) { ... }
-
 // link-order cluster 830 · uses=2 · neighbours' file uenux2/src/app/comum/dados/ccargods.cpp
 
 // f5797 · 348 B · unmatched · placement: link order · name unknown
@@ -488,11 +480,6 @@
 // f3713 · 437 B · unmatched · placement: link order · name unknown
 // void f3713(i32, i32, i32) { ... }
 
-// link-order cluster 1008 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cfotos.cpp
-
-// f3752 · 861 B · unmatched · placement: link order · name unknown
-// void f3752(i32, i32) { ... }
-
 // link-order cluster 1012 · uses=3 · neighbours' file uenux2/src/app/comum/nomearquivo/cnomearquivo.cpp
 
 // f3780 · 235 B · unmatched · placement: link order · name unknown
@@ -533,11 +520,6 @@
 
 // f3815 · 278 B · unmatched · placement: link order · name unknown
 // void f3815(i32) { ... }
-
-// link-order cluster 1030 · uses=3 · neighbours' file uenux2/src/app/comum/dados/cpartecandidatosproporcionais.cpp
-
-// f3869 · 466 B · unmatched · placement: link order · name unknown
-// ? f3869(i32, i32, i32, i32, i32) { ... }
 
 // link-order cluster 1050 · uses=3
 

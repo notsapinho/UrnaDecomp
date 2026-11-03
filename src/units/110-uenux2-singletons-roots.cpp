@@ -2,9 +2,9 @@
 // link the way the target reaches them. Each has direct callers and needs two call sites in the link, the reconstructed
 // callers counted, and this file adds what the link lacks. Stand-ins and the target callers they stand for:
 //   TodasAsInstancias   GetInst: fns 187, 273, 326, 407, 555, 1073, 1926, 2812, 2817 have 4 to 105 direct callers each
-//   DestroiTodos        each class's destructor, beside the exit destructor in the link: fn 2787 for 5598, fn 7787 for
-//                       5671, 5730, 5734, 5773, 5792, 6548 and ~CCargos 5805, and each goes when that caller lands;
-//                       ~CProcessoEleitoral 2830: 2787, 5598, 7787;
+//   DestroiTodos        each class's destructor, beside the exit destructor in the link: fn 7787 for 5671, 5730, 5734,
+//                       5773, 5792, 6548 and ~CCargos 5805, and each goes when that caller lands;
+//                       ~CProcessoEleitoral 2830: 7787 (2787 and 5598 are in the link);
 //                       ~CParametrosUrna 2267: 7787, beside 5792's and 9171's calls in the link;
 //                       ~CDetalheConsulta 267 and ~CDetalheCandidato 242: their optionals' owners; CCargos::Reset 2269:
 //                       5604, 11209, 12098, 12110 (7377, unit 197's StartState, is in the link)
@@ -51,7 +51,6 @@ int w2836(int) __asm__("_ZNK5comum7CCargos17GetCurrentEleicaoEv");
 int w861(int, int) __asm__("_ZNK5comum20CConfiguracaoEleicao8GetCargoEh");
 int w5745(int) __asm__("_ZNK5comum3CHV15GetHorarioVeraoEv");
 int d2830(int) __asm__("_ZN5comum2md18CProcessoEleitoralD2Ev");
-int d5598(int) __asm__("_ZN5comum3CPED1Ev");
 int d5671(int) __asm__("_ZN5comum2md20CValidadorIdentidadeD1Ev");
 int d5730(int) __asm__("_ZN5comum10CRespostasD1Ev");
 int d5734(int) __asm__("_ZN5comum8CRdvVotaD1Ev");
@@ -83,7 +82,6 @@ __attribute__((noinline)) int TodasAsInstancias()
 
 __attribute__((noinline)) void DestroiTodos(int p)
 {
-    d5598(p);
     d5671(p + 4);
     d5730(p + 8);
     d5734(p + 12);

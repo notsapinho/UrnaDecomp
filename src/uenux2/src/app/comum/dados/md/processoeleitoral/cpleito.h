@@ -28,6 +28,8 @@ public:
     const TVectorEleicaoPE& GetEleicoes() const { return m_eleicoes; }
     // The name is chosen too: CGravadorUtil::DeterminaNomeArquivoSemLetra formats the word at +0.
     TPleitoID GetID() const { return m_id; }
+    // The name is chosen: comum::CRelatorioTesteImpressora's constructor (fn 5586) reads the date at +16 inline.
+    const api::CDate& GetData() const { return m_data; }
     const CEleicaoPE& GetEleicao(const TEleicaoID id) const;
     // Whether the pleito has an election with that id. Out of line: CConfiguracaoEleicao::GetCargos (fn 3775) holds its
     // loop as binaryen inlines a call (a bool built as `if (result i32) ... else 0 end` and tested again; of another

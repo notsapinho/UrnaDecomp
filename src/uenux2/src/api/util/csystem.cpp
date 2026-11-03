@@ -602,4 +602,15 @@ std::string GetDirName(const std::string& caminho)
     return caminho.substr(0, caminho.rfind('/'));
 }
 
+std::string TrocaExtensao(const std::string& arquivo, const std::string& extensao)
+{
+    const std::string diretorio = GetDirName(arquivo) != arquivo ? GetDirName(arquivo) : "";
+    const std::string nome = GetFileName(arquivo);
+    const size_t ponto = nome.rfind('.');
+    if (ponto == std::string::npos) {
+        return arquivo;
+    }
+    return (!diretorio.empty() ? diretorio + "/" : "") + nome.substr(0, ponto + 1) + extensao;
+}
+
 } // namespace api

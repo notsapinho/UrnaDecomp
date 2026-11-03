@@ -58,6 +58,11 @@ std::string FormataUF(const std::string& uf)
 
 } // namespace
 
+std::string NomeArquivoPE(EUrnaFase fase, uedword idPE, const std::string& tipo, const std::string& extensao)
+{
+    return FormataFase(fase) + FormataNumero(idPE, 5) + ("-" + tipo) + "." + extensao;
+}
+
 std::string CNomeArquivo::NomeArquivoUF(EUrnaFase fase, uedword pleito, const std::string& uf, const std::string& tipo,
     const std::string& extensao)
 {
