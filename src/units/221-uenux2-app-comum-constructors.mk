@@ -2,8 +2,9 @@
 # (target fns 2731 without an id_arquivo and 2730 with one, defined in that order) in
 # app/comum/comparecimentomesario/md/ccomparecimentomesario.cpp, and comum::md::CComparecimentoMesarioPK's (2738) in
 # app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp, vota::CRegistraDigitalOperador's file (its records'
-# path), which no unit compiled before: that constructor is all it holds. All three match. The fourth constructor of the
-# kind, comum::CEleitorDadosHabilitacao's (2733), is in unit 142's cmostraeleitorvotando.cpp, which has its evidence.
+# path), which no unit compiled before (the class's members came later: below). All three match. The fourth
+# constructor of the kind, comum::CEleitorDadosHabilitacao's (2733), is in unit 142's cmostraeleitorvotando.cpp, which
+# has its evidence.
 #
 # Evidence, read in the target:
 # - The layout is unit 91's ccomparecimentomesario.h: each constructor stores its arguments at those offsets, copying
@@ -36,7 +37,8 @@
 #   among those objects: cregistradigitaloperador.cpp, the recorded one, holds 3614, one of 2738's callers (records :328
 #   and :371), and a small class one file constructs can be defined there (docs/reference/facts/placing.md P2). A file
 #   named after the class there (rule 4) is the other reading; no data place it. The constructor's lines, after the
-#   records of the class's own members (95 to 371, none written), are chosen (src/README.md "Gaps").
+#   records of the class's own members (95 to 371; StartState's are written now: below), are chosen (src/README.md
+#   "Gaps").
 # - 2731 and 2730 link after aguardaeleitor/csuspensaoautomaticaeleitor.cpp's 2732 and before
 #   comparecimentomesario/estados/cpedetitulomesario.cpp's 2729 (stretch 1080, labelled
 #   csuspensaoautomaticaeleitor.cpp). In the data CSuspensaoAutomaticaEleitor's vtable (@1593264) and record are
@@ -51,7 +53,63 @@
 # (UENUX2_TBAA_DIRS) where md/ does not: compiled with -fno-strict-aliasing too, its object is byte-identical. No roots
 # file: the DAO's RecuperarID and RecuperarTodos (unit 91) call the three, as the target's 10402 and 10401 do.
 #
+# vota::CRegistraDigitalOperador's members, written in cregistradigitaloperador.cpp before 2738's constructor, extend
+# this unit (src/units/README.md "Landing a unit" item 2). Target fns matched: GetInst 5396, with the constructor and
+# its two form builders inlined; StartState 10454; ProcessInput 10452; the statics' exit destructors 10457 and 10456;
+# and 3886, the body binaryen forms from three statics' exit destructors, with 10321 (unit 135's) and 10682 (unit
+# 161's), which match through it. Evidence (cregistradigitaloperador.h has the class's RTTI, vtable and layout):
+# - The class: its vtable @1592424 [1537, 3629, 10454, 7480, 1661, 10453, 425, 10452, 10451] is stored by 5396 alone
+#   (its vptr 1592432: /usr/bin/grep -rlE 'i32\.const 1592432($|[^0-9])' build/out/splat/pieces/asm). Slots 0 and 1 are
+#   the bodies comum::CPedeDigitalMesario and vota::CPedeIdentidade share (1537 and 3629, matched as
+#   CPedeDigitalMesario's): a final class with its destructor out of line, releasing +24 then +16.
+# - GetInst (5396, 1586 B, no record), the project's singleton (unit 135's CPedeDigitalMesario::GetInst, unit 161's
+#   CPedeIdentidade::GetInst): s_inst @1909148 and s_mutex @1909124 (its unlock, fn 150, at the end), a new of 36 bytes
+#   and the constructor inlined: CAppState's with 6 (EVENTO_ENTRADA | EVENTO_TICK), the vptr, the bytes
+#   CThreadOperador::GetInst().AddStoppedTick (fns 270, 807) returns for 15000 and 50 at +11 and +12, the form at +16
+#   and the second at +24 (fn 301 writes each in place), then 3 at +32. Each form is built behind a stack frame of its
+#   own (64 and 48 bytes) inside the constructor's code, so each is a function binaryen inlined:
+#   TelaRegistraDigitalOperador (AddLed(LED_OPERACAO_0); "MESÁRIO:", "Posicione seu dedo POLEGAR ou INDICADOR", "sobre o
+#   sensor" and "CORRIGE: não habilitar" at {1, 1} to {1, 4}, on the left; AddInputControl; GetInteractiveForm("",
+#   true)) and TelaDigitalCapturadaOperador (AddLed(LED_OPERACAO_0); AddBeep(1); "Digital capturada" at {20, 1} and "Por
+#   favor aguarde" at {20, 3}, centred; GetInteractiveForm("", true)). Both have external linkage, and clang keeps both
+#   out of line (wasm-objdump -x of cregistradigitaloperador.cpp.o lists them), as unit 135's builder of the same shape,
+#   whose fragment measured that clang inlines one of the anonymous namespace into the constructor.
+# - StartState (10454, records :95 and :98, column 5): CLogVota::GetInst (`call 184` at +0xc, after StartState's own
+#   frame opens) and then a 16-byte frame that builds "Solicita digital do mesário" and calls IEventosLog::loga (fn
+#   233), the shape of the CLogVota members unit 161 reads as held inlined (vota::CLogVota::LogaSolicitaDigitalMesario,
+#   added to clogvota.cpp, unit 119's file); the form at +16 shown (slot 2); CPolySingleton<IFingerScanner>::instance()
+#   (fn 816, record :95) slot 7 with 2; the ticks at +11 and +12 started (fn 700); instance() (record :98) slot 3; and
+#   this as the next state.
+# - ProcessInput (10452): Read() of the form at +16; on CORRIGE (5) it stops the two ticks (fn 422), logs through
+#   CLogVota::LogaHabilitacaoCanceladaCapturaDigitalMesario (fn 4522) and goes to CPedeIdentidade::GetInst's (fn 652).
+# - The statics' exit destructors: 10457 is `f3886(p0, 1909148)`, s_inst's, and 10456 s_mutex's (`f150(1909124)`); both
+#   link above StartState (10454) in use band 1 (ledger/ordinals.tsv; a higher index links earlier), so the statics are
+#   defined above it.
+# - 3886 (32 B) is the body of three statics' std::unique_ptr destructors over the shared D2 1537: CPedeDigitalMesario's
+#   (10321), this class's (10457) and CPedeIdentidade's (10682), its three callers (ledger/callgraph.tsv). With this
+#   class's static in the link, ours holds the three, binaryen forms the body as the target did (it matches under
+#   byn$mgfn-shared$__cxx_global_array_dtor@app/uenux2/src/app/comum/comparecimentomesario/estados/cpededigitalmesario.cpp.o),
+#   and 10321 and 10682 match as its thunks, each re-pointing through its own s_inst's name: 10682's is what unit 161's
+#   652 waited for (unit 161's fragment). With 10321 matched, the hand line that named
+#   comum::CPedeDigitalMesario::s_inst for unit 71's 10313 carried nothing and went: weighed alone
+#   (splat/symbol_addrs.txt without it, the match list without 10313 and 10321, the scan run twice beside a control with
+#   every line, then splat-build on both copies), both sides kept 11905 match rows, 10313 and 10321 among them, and
+#   built the target's sha256.
+# Chosen: every member's and data member's name; the builders' names and their linkage; the CLogVota member's name and
+# its place in clogvota.cpp; the `if` spellings; the lines but the records' (the destructor, the statics, the builders,
+# the constructor and GetInst above StartState, ProcessInput between FinishState's records and ProcessTick's, the band's
+# order).
+# Pending (221-uenux2-app-comum-constructors-pending.cpp says what each waits for): FinishState (10453: written with
+# comum::CPedeDigitalMesario::FinishState, 10315, it forms 6012) and ProcessTick (10451);
+# BiometriaMesarioPresenteNosEleitores (3614) is declared and not written. The stand-in for 5396's other caller (10443)
+# and the vtable sinks of the two states 10451 holds inlined are in unit 278's roots, beside those states' classes.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_COMUM_CONSTRUCTORS_SRCS := src/app/comum/comparecimentomesario/md/ccomparecimentomesario.cpp \
     src/app/vota/operador/confirmaidentidade/cregistradigitaloperador.cpp
 UENUX2_SRCS += $(APP_COMUM_CONSTRUCTORS_SRCS)
+# vota::CRegistraDigitalOperador's members not reconstructed: 221-uenux2-app-comum-constructors-pending.cpp gives its
+# vtable trapping bodies, compiled with UENUX2_CXXFLAGS, as unit 161's pending file is
+$(ROOT)/$(APP)/221-uenux2-app-comum-constructors-pending.o: $(ROOT)/src/units/221-uenux2-app-comum-constructors-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/221-uenux2-app-comum-constructors.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/confirmaidentidade/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
+	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/221-uenux2-app-comum-constructors-pending.cpp -o $(R)
+override EXTRA_OBJS += $(APP)/221-uenux2-app-comum-constructors-pending.o

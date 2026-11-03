@@ -91,16 +91,18 @@ __attribute__((noinline)) unsigned w121_codigo(comum::CCalculaCV& calcula)
     return calcula.CalculaCodigo().size() + 121;
 }
 
-// Stands for the four target callers of vota::CEscolheOpcao::GetInst (fn 2753): fns 10677, 10698, 10740 and 10754,
-// slots of states not reconstructed. Two calls, so binaryen keeps GetInst a function of its own.
+// Stands for three of the four target callers of vota::CEscolheOpcao::GetInst (fn 2753): fns 10698, 10740 and 10754,
+// slots of states not reconstructed (10677, unit 161's, is in the link). Two calls, so binaryen keeps GetInst a
+// function of its own.
 __attribute__((noinline)) bool w121_escolhe()
 {
     return &vota::CEscolheOpcao::GetInst() == &vota::CEscolheOpcao::GetInst();
 }
 
-// Stands for seven target callers of vota::AdicionaCampoNumerico (fn 1151), all but fns 2753 and 652: fns 2735, 3631, 5418,
-// 10388, 10415, 10500 and 10627. They pass the length and the flag as 1 and 0, 4 and 1 or 12 and 1, so these pass 12 and
-// false, which keeps both parameters through binaryen's dead-argument elimination, as fn 2753's 1 and true alone would not.
+// Stands for six target callers of vota::AdicionaCampoNumerico (fn 1151), all but fns 2753, 652 and 2735: fns 3631,
+// 5418, 10388, 10415, 10500 and 10627. The callers pass the length and the flag as 1 and 0, 4 and 1 or 12 and 1, so
+// these pass 12 and false, which keeps both parameters through binaryen's dead-argument elimination, as fn 2753's 1 and
+// true alone would not.
 __attribute__((noinline)) bool w121_campo(api::CMTFormBuilder& builder, const api::SPoint& posicao)
 {
     return vota::AdicionaCampoNumerico(builder, 12, false, posicao) != nullptr;

@@ -21,10 +21,11 @@ namespace vota {
 // vota::CPedeIdentidade (RTTI: si_class of comum::CAppState; vtable @1588232 [1537, 3629, 10680, 7480, 1661, 10678,
 // 425, 10677, 10676]): the operator's screen that asks for the voter's identifier. It overrides StartState (slot 2,
 // fn 10680, records cpedeidentidade.cpp:62 and :63), FinishState (slot 5, fn 10678), which stops the three ticks,
-// ProcessInput (slot 7, fn 10677) and ProcessTick (slot 8, fn 10676); ProcessInput and ProcessTick are pending
-// (src/units/161-uenux2-app-vota-operador-identidade-pending.cpp says what each waits for). The destructor is
-// out of line, the body comum::CPedeDigitalMesario and vota::CRegistraDigitalOperador share (fns 1537 and 3629), which
-// releases the std::shared_ptr at +24 and then the one at +16. The layout is what the slots and the destructor read:
+// ProcessInput (slot 7, fn 10677, src/units/161-uenux2-app-vota-operador-identidade.mk) and ProcessTick (slot 8, fn
+// 10676), which is pending (src/units/161-uenux2-app-vota-operador-identidade-pending.cpp says what it waits for). The
+// destructor is out of line, the body comum::CPedeDigitalMesario and vota::CRegistraDigitalOperador share (fns 1537
+// and 3629), which releases the std::shared_ptr at +24 and then the one at +16. The layout is what the slots and the
+// destructor read:
 // +11, +12 and +13 the three ticks StartState starts through vota::CThreadOperador (fn 700) and FinishState stops
 // (fn 422), +16 a std::shared_ptr to a std::string, and +24 the form StartState shows and ProcessInput reads. The
 // pointee at +16 is a string: ProcessTick (fn 10676, pending) assigns it "CORRIGE: outras opções" or " " on the third
@@ -52,6 +53,12 @@ public:
 private:
     CPedeIdentidade();
 
+    // Held inlined by binaryen in ProcessInput (fn 10677), behind a 32-byte frame of its own that reads the form at
+    // +24: the identifier typed, filled to 12 characters with '0', and the next state, or none when nothing was typed.
+    // Its name, its result type and its being a member are chosen
+    // (src/units/161-uenux2-app-vota-operador-identidade.mk).
+    comum::CAppState* ProximoEstadoIdentidadeDigitada();
+
     static std::unique_ptr<CPedeIdentidade> s_inst;
     static std::mutex s_mutex;
 
@@ -61,5 +68,11 @@ private:
     std::shared_ptr<std::string> m_aviso;
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
 };
+
+// Held inlined by binaryen in CPedeIdentidade::ProcessInput (fn 10677), behind a 16-byte frame of its own: in the
+// training mode the first voter's identifier and its type become the typed identity, and the next state is
+// vota::CNomeEleitor. It reads nothing of the class; its name, its result type and its being a free function of vota
+// with external linkage are chosen (src/units/161-uenux2-app-vota-operador-identidade.mk).
+comum::CAppState* ProximoEstadoTreinamento();
 
 } // namespace vota

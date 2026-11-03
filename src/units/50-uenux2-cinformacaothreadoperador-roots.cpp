@@ -4,22 +4,25 @@
 // and instantiates nothing; a function that returns a class takes the result's address first, as the target's do.
 // - vota::impl::IInformacaoThreadOperador::GetInst (target fn 599): the 16 vota:: functions over it and
 //   GetTextoIdentidadeDigitada (fn 10586) call it in the link, and w50_getinst stands for its callers not written yet,
-//   fns 3616, 10425, 10451, 10481, 10523 and 10676 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10680, unit
-//   161's, and 10646, unit 104's, are in the link). GetInst
+//   fns 3616, 10425, 10451, 10481 and 10676 (`awk -F'\t' '$2==599' ledger/callgraph.tsv`; 10680, unit 161's, 10646,
+//   unit 104's, and 10523 are in the link). GetInst
 //   builds the class with its constructor inlined and stores the vtable (@1590108), which keeps the slots' bodies and the
 //   destructors (fns 10552 and 10551).
 // - the vota:: functions over GetInst, each with the target callers w50_fachada stands for: IsAudioAtivado (fn 2746;
-//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10689, 10695, 10742, 10751; 10539 and 10646 are in the link),
-//   SetAudioAtivadoMesario (5415; 10523, 10751), LimpaBiometria (3621; 5400, 10500, 10511), AgendaInspecao (3620;
-//   10676; 652 and 10527 are in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10677, 10689, 10706; 10680 is in the link), SetIdentidadeDigitada (5414;
-//   10677), SetTipoIdentidadeDigitada (3619; 10626, 10627, 10677), GetIdentidadeDigitada (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link),
+//   3883, 5400, 10481, 10511), IsAudioAtivadoMesario (1687; 10689, 10742, 10751; 10539, 10646 and 10695 are in the
+//   link), SetAudioAtivadoMesario (5415; 10751; 10523 is in the link), LimpaBiometria (3621; 5400, 10500, 10511),
+//   AgendaInspecao (3620;
+//   10676; 652 and 10527 are in the link), IsVotacaoBloqueadaPorHorario (2226; 10676, 10689, 10706; 10677 and 10680
+//   are in the link), SetTipoIdentidadeDigitada (3619; 10627; 10626 and 10677 are in the link), GetIdentidadeDigitada
+//   (3623; 10627, 10670; 10420's validatitulosuspensao.cpp, unit 142, is in the link),
 //   GetTipoIdentidadeDigitada (5416; 10588; 10664, unit 161's, is in the link), GetIdentidadeEleitor (1535; 3616,
 //   10425, 10590; 10587 and 10631, units 152's and 104's, are in the link),
 //   SetEleitorSemFoto (5413; 3616), SetFotoNaoApresentada (1904; 3616) and GetApresentacaoFotoEleitor (2745; 10425).
+//   SetIdentidadeDigitada (5414) needs none: its one target caller, 10677 (unit 161's), calls it twice.
 //   GetTextoAudio (10584) and GetTextoComparecimento (10583) have no direct caller: fn 652, the one target function
 //   that passes their table slots (4054 and 4053), is in the link, so no stand-in takes their addresses. The sink takes
-//   GetTextoIdentidadeDigitada's (10586), whose slot 3907 fns 2735, 5418, 10439, 10500, 10588 and 10635 pass (1150,
-//   1901, 1905, 2747, 3625 and 5401, which pass it too, are in the link).
+//   GetTextoIdentidadeDigitada's (10586), whose slot 3907 fns 5418, 10439, 10500, 10588 and 10635 pass (1150, 1901,
+//   1905, 2735, 2747, 3625 and 5401, which pass it too, are in the link).
 extern "C" {
 int informacaothreadoperador_getinst() __asm__("_ZN4vota4impl25IInformacaoThreadOperador7GetInstEv");
 
@@ -29,8 +32,6 @@ void vota_SetAudioAtivadoMesario(bool ativado) __asm__("_ZN4vota22SetAudioAtivad
 void vota_LimpaBiometria() __asm__("_ZN4vota14LimpaBiometriaEv");
 void vota_AgendaInspecao() __asm__("_ZN4vota14AgendaInspecaoEv");
 int vota_IsVotacaoBloqueadaPorHorario() __asm__("_ZN4vota28IsVotacaoBloqueadaPorHorarioEv");
-void vota_SetIdentidadeDigitada(const void* identidade) __asm__(
-    "_ZN4vota21SetIdentidadeDigitadaERKNSt3__212basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
 void vota_SetTipoIdentidadeDigitada(int tipo) __asm__(
     "_ZN4vota25SetTipoIdentidadeDigitadaEN7ecourna3app5dados25ETipoIdentificadorEleitorE");
 void vota_GetIdentidadeDigitada(void* identidade) __asm__("_ZN4vota21GetIdentidadeDigitadaEv");
@@ -51,7 +52,7 @@ __attribute__((noinline)) int w50_getinst(int salto)
     return primeira == informacaothreadoperador_getinst() ? salto + 3 : salto + 5;
 }
 
-__attribute__((noinline)) int w50_fachada(int salto, void* resultado, const void* identidade)
+__attribute__((noinline)) int w50_fachada(int salto, void* resultado)
 {
     int soma = salto;
     soma += vota_IsAudioAtivado() + 2 * vota_IsAudioAtivado();
@@ -63,8 +64,6 @@ __attribute__((noinline)) int w50_fachada(int salto, void* resultado, const void
     vota_AgendaInspecao();
     vota_AgendaInspecao();
     soma += vota_IsVotacaoBloqueadaPorHorario() + 5 * vota_IsVotacaoBloqueadaPorHorario();
-    vota_SetIdentidadeDigitada(identidade);
-    vota_SetIdentidadeDigitada(resultado);
     vota_SetTipoIdentidadeDigitada(soma);
     vota_SetTipoIdentidadeDigitada(soma + 1);
     vota_GetIdentidadeDigitada(resultado);

@@ -66,6 +66,11 @@
 # - One more after that: unit 217's LogaInicioTesteTeclado, loga of "Inicio do teste de Teclado do TE", held inlined by
 #   fn 11805 (CTesteTeclado::StartState, GetInst called before the member's own frame opens); its name and place are
 #   chosen.
+# - Two more, right after LogaHabilitacaoCanceladaCapturaDigitalMesario: LogaSolicitaDigitalMesario, held inlined by
+#   vota::CRegistraDigitalOperador::StartState (fn 10454; src/units/221-uenux2-app-comum-constructors.mk has the
+#   evidence), and LogaIdentificadorDigitadoMesario, held inlined by CPedeIdentidade::ProcessInput (fn 10677;
+#   src/units/161-uenux2-app-vota-operador-identidade.mk). They have no target function of their own, and 184 still
+#   matches with them in the file.
 #
 # ccontroladorregistramesariosvota.cpp and the interface:
 # - No record names a file of the class. The path is chosen: ledger/tu-clusters.tsv's stretch 346, the slots' run, guesses

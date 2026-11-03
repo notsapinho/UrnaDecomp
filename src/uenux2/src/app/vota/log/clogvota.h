@@ -89,6 +89,16 @@ public:
     void LogaSolicitacaoDadoPessoalEleitor();
     void LogaHabilitacaoCanceladaConfirmacaoDado();
     void LogaHabilitacaoCanceladaCapturaDigitalMesario();
+    // Held inlined by vota::CRegistraDigitalOperador::StartState (fn 10454), its one caller, which calls GetInst before
+    // the member's own stack frame opens and calls fn 233 with the message. The name is chosen from its message, and
+    // its place here and in clogvota.cpp, after LogaHabilitacaoCanceladaCapturaDigitalMesario, is chosen: it has no
+    // index to order.
+    void LogaSolicitaDigitalMesario();
+    // Held inlined by vota::CPedeIdentidade::ProximoEstadoIdentidadeDigitada (inlined into fn 10677), its one caller,
+    // which calls GetInst before the member's own stack frame opens; it calls api::CLoga::loga (fn 433) with +4 and
+    // severity 1. The name is chosen from its message, and its place here and in clogvota.cpp is chosen: it has no
+    // index to order.
+    void LogaIdentificadorDigitadoMesario();
     // Out of line (fn 4550: logaErro, fn 2282), called with GetInst's result by vota::CVotacaoStateAudio::FormatPartyName
     // (fn 6954) and vota::CPedeMajoritario's fn 11683. Its name is chosen from its message.
     void LogaErroPartidoNaoEncontrado();
