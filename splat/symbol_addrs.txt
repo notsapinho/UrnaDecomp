@@ -9430,6 +9430,7 @@ _ZN5comum12CGravadorWSQ5Slot6Ev = func:11578; // size:0x9 evidence:vtable
 _ZN5comum12CGravadorWSQ5Slot2Ev = func:11579; // size:0x13f evidence:vtable
 _ZN5comum24CGravadorVersoesArquivosD0Ev = func:11580; // size:0x5a evidence:pair-addr
 _ZN5comum24CGravadorVersoesArquivosD2Ev = func:11581; // size:0x57 evidence:pair-addr
+_ZNK5comum24CGravadorVersoesArquivos14GravaResultadoERN7ecourna3api2io5CFileE = func:11582; // size:0x684 evidence:srcloc-anchor
 _ZN5comum12CGravadorLogD0Ev = func:11583; // size:0xa evidence:pair-addr
 _ZN5comum12CGravadorRDVD0Ev = func:11585; // size:0x3d evidence:pair-addr
 _ZN5comum12CGravadorRDVD2Ev = func:11586; // size:0xe evidence:pair-addr

@@ -59,14 +59,21 @@
 # --against 11458 --no-kinds` printed `target 11458: IDENTICAL`; 10264, 10263 and 11457 scored there as at -O2 (22/427,
 # 12/505, 49/926, operand rows).
 #
+# comum::asn::GravaArquivo for md::CVersoesArquivos (a chosen name; no target index: binaryen inlines it into its one
+# caller, comum::CGravadorVersoesArquivos::GravaResultado, fn 11582, unit 122's), in cconversorversoesarquivos.cpp after
+# DoDesconverte: it builds the converter on the stack, converts with IConversorASN::Converte and writes with
+# api::CFileASN::WriteToFile. cconversorversoesarquivos.h says why the converter's object defines it (a reading of where
+# the records it holds lie) and what is chosen. Its store of CConversorVersoesArquivos's vptr is in the link with it, so
+# the roots keep CConversorEntidadePartidos's vtable only.
+#
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the sources and every uenux2 header.
 ENTIDADE_CONVERTERS_SRCS := src/app/comum/gravadores/asn/cconversorversoesarquivos.cpp \
   src/app/comum/dados/asn/cconversorentidadepartidos.cpp
 UENUX2_SRCS += $(ENTIDADE_CONVERTERS_SRCS)
 # the converters include generated ASN.1 modules, which the generic uenux2 rule does not depend on
 $(foreach u,$(ENTIDADE_CONVERTERS_SRCS),$(eval $(ROOT)/$(APP)/uenux2/$(u).o: $(wildcard $(ROOT)/src/asn1/*.h $(ROOT)/src/asn1/modules/*.h)))
-# the converters' users are not reconstructed yet: 145-uenux2-comum-entidade-converters-roots.cpp keeps their vtables
-# the way the target reaches them
+# CConversorEntidadePartidos's user is not reconstructed yet: 145-uenux2-comum-entidade-converters-roots.cpp keeps its
+# vtable the way the target reaches it
 $(ROOT)/$(APP)/145-uenux2-comum-entidade-converters-roots.o: $(ROOT)/src/units/145-uenux2-comum-entidade-converters-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/145-uenux2-comum-entidade-converters.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/145-uenux2-comum-entidade-converters-roots.cpp -o $(R)
 override EXTRA_OBJS += $(APP)/145-uenux2-comum-entidade-converters-roots.o
