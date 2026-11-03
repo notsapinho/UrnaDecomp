@@ -173,8 +173,8 @@
 # Matched since (each read in the target with pnpm wasm fn, and scored with pnpm wasm score before steps 7 to 9):
 # - vota::CHabilitaAudioEleitor::GetInst (2743) with its statics' exit destructors (10526, s_inst's at 1908608; 10525,
 #   s_mutex's at 1908584), the shape of 5393's: the constructor inlined behind a 64-byte frame of its own, the form from
-#   the member list through an anonymous-namespace helper: AddBuzz(51, 10), AddClock({33, 1}), "Este eleitor necessita de
-#   áudio" at {1, 2}, "Coloque o fone de ouvido na urna" at {1, 3}, "CONFIRMA: continuar" at {1, 4} on the right,
+#   the member list through an anonymous-namespace helper: AddBuzz(51, 10), AddClock({33, 1}), "Este eleitor necessita
+#   de áudio" at {1, 2}, "Coloque o fone de ouvido na urna" at {1, 3}, "CONFIRMA: continuar" at {1, 4} on the right,
 #   AddInputControl, GetInteractiveForm("", true); 40 over 374 rows, all operand-only. Its target callers 10511 (unit
 #   161) and the three ProcessInput slots unit 282 writes are in the link, so the vtable's sink in the roots went.
 # - vota::CSuspensaoAutomaticaEleitor::ProcessKey (10404): key 5 stops the tick (CThreadOperador's StopTick) and goes to

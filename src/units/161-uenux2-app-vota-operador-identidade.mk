@@ -130,7 +130,7 @@
 #   target reuses local 0 (`differs +0x86 target +0x85 local.tee 0 | ours +0x85 local.tee 1`). The same as a ternary
 #   with the post in a comma expression (12 over 84); with the condition negated and the arms swapped, 18 over 88 (4
 #   inserted, 3 deleted). Not explained; unit 282's 3883 differs the same way. Its slot keeps it written.
-# - vota::MontaTelaEleitorPodeVotar (5410, a free function: it reads no state; name chosen), the form both
+# - vota::MontaTelaEleitorPodeVotar (5410, a free function by choice; name chosen), the form both
 #   CControlaReconhecimento::GetInst (1256, not written) and vota::CInformaEleitorPodeVotar::GetInst (5399, unit 282)
 #   fill +12 with: AddLed(LED_OPERACAO_0), AddBeep(1), "ELEITOR(A) PODE VOTAR" at {1, 1}, "Assinar o caderno de votação
 #   antes de" at {1, 2}, "votar" at {1, 3} (the tail of "CONFIRMA: votar", built in place), "CONFIRMA: prosseguir" at

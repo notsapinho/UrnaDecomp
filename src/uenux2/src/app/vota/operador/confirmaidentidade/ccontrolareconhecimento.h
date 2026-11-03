@@ -65,7 +65,7 @@ private:
 
 // The form "ELEITOR(A) PODE VOTAR" (fn 5410), which fn 1256 (this class's GetInst) and fn 5399
 // (vota::CInformaEleitorPodeVotar's) call to fill +12: a function of its own, out of line in both callers. It reads no
-// state, so it is a free function. Its name and its place in ccontrolareconhecimento.cpp, ahead of AvancaTentativa as
+// state; its being a free function, its name and its place in ccontrolareconhecimento.cpp, ahead of AvancaTentativa as
 // the uses-2 band links fn 5410 before fn 5406, are chosen.
 std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> MontaTelaEleitorPodeVotar();
 

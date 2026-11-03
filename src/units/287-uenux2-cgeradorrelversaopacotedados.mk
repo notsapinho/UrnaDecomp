@@ -1,6 +1,6 @@
 # uenux2 comum::CGeradorRelVersaoPacoteDados, the packages' versions report, in
-# src/app/comum/relatorios/cgeradorrelversaopacotedados.{h,cpp}, with the two out-of-line helpers its user and its slot 4
-# hold inlined: comum::AdicionaParametro (src/app/comum/relatorios/adicionaparametro.{h,cpp}) and
+# src/app/comum/relatorios/cgeradorrelversaopacotedados.{h,cpp}, with the two out-of-line helpers its user and its slot
+# 4 hold inlined: comum::AdicionaParametro (src/app/comum/relatorios/adicionaparametro.{h,cpp}) and
 # vota::LeDadosDisponiveisCarga (src/app/vota/eleitor/iniciovotacao/auxiliares/ledadosdisponiveiscarga.{h,cpp}). Paths
 # relative to src/uenux2. Their one user is vota::CImpressaoVersaoPacotes::StartState (target fn 11905), unit 176's,
 # written with them (src/units/176-uenux2-app-vota-eleitor-iniciovotacao-estados.mk has its notes).
@@ -34,10 +34,10 @@
 #   its own, and keeps the destroy check of its "Dados:" temporary after it. Defined in cgeradorrelversaopacotedados.cpp
 #   (external: clang does not inline it, `too costly to inline (cost=360, threshold=250)` from try-tu.sh --symbols
 #   --flags '-Rpass=inline -Rpass-missed=inline'), 11222 scored 96 over 540 rows, 3 inserted and 15 deleted: the check
-#   is gone (a reading: clang drops it when it can read the callee); in a TU of its own, 26 over 537, operand-only. It takes the
-#   builder, not `this`: written as a member of the class, its body would be comum::CGeradorRelPU::AdicionaParametro's
-#   (fn 677, unit 183) byte for byte, which binaryen's merge of identical functions would give 11222 to call, a reading
-#   (not linked). Its body is 677's, over the builder passed in.
+#   is gone (a reading: clang drops it when it can read the callee); in a TU of its own, 26 over 537, operand-only. That
+#   it takes the builder, not `this`, is chosen: written as a member of the class, its body would be
+#   comum::CGeradorRelPU::AdicionaParametro's (fn 677, unit 183) byte for byte, which binaryen's merge of identical
+#   functions would give 11222 to call, a reading (not linked). Its body is 677's, over the builder passed in.
 # - LeDadosDisponiveisCarga is out of line in another TU than 11905. 11905 holds it behind a 64-byte frame of its own
 #   (the converter's vptr stored at +60, the entity at +8). In cimpressaoversaopacotes.cpp clang inlines it into
 #   StartState (cost=95, threshold=375, the same remarks); in a TU of its own 11905 scores 183 over 2146 rows, all

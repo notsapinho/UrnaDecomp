@@ -119,17 +119,20 @@
 #   of line as the target does; 3793's stand-in for 10451 stays.
 #
 # comum::CGravadorVersoesArquivos::GravaResultado (target fn 11582, slot 7, the class's key function, which unit 136's
-# pending object trapped), in cgravadorversoesarquivos.cpp: a chosen path, the class's name in lower case in
-# app/comum/gravadores/, where its band neighbours lie (CGravadorWSQ's 11575 to 11579 and CGravadorLog's 11583 and 11584
-# in band uses 1 of ledger/ordinals.tsv). The object emits the class's vtable and implicit destructors (11581, 11580)
-# now. It calls comum::asn::GravaArquivo, unit 145's (cconversorversoesarquivos.cpp), which binaryen inlines into it
-# (unit 145's fragment and cconversorversoesarquivos.h say why the converter's object defines it). The file is in this
-# unit's list for the order of the objects, measured with pnpm wasm score against each link: linked after unit 145's
-# object, in a fragment of its own, 11582 scored 100 over 715 rows (98 operand-only, 1 inserted, 1 deleted: the locals
-# are numbered otherwise); linked ahead of it, as the target's band has it (11582 above unit 145's 10264 and 10263), 63
-# over 714, every row an operand: the calls, the data addresses, the format strings' packed addresses and the format
-# buffer's and the exception's table slots. Its place before cgravadorwsq.cpp follows the band (11582 above CGravadorWSQ's
-# rows); that order against cgravadorwsq.cpp was not measured otherwise.
+# pending object trapped), in cgravadorversoesarquivos.cpp: the class's name in lower case, chosen, in
+# app/comum/gravadores/, a reading of the data: the class's vtable (@1557240) lies between cgravadorutil.cpp's records
+# (to @1557172) and cgravadorwsq.cpp's (from @1557332), and no record names CGravadorLog's file. Its band neighbours are
+# CGravadorWSQ's 11575 to 11579 and CGravadorLog's 11583 and 11584 (band uses 1 of ledger/ordinals.tsv). The object
+# emits the class's vtable and implicit destructors (11581, 11580) now, and the kept copy of 720 (the destroy of a
+# std::map<std::string, std::string>'s tree), which came from crelutil.cpp.o before and still matches (splat/scan.tsv's
+# object column). It calls comum::asn::GravaArquivo, unit 145's (cconversorversoesarquivos.cpp), which binaryen inlines
+# into it (unit 145's fragment and cconversorversoesarquivos.h say why the converter's object defines it). The file is
+# in this unit's list for the order of the objects, measured with pnpm wasm score against each link: linked after unit
+# 145's object, in a fragment of its own, 11582 scored 100 over 715 rows (98 operand-only, 1 inserted, 1 deleted: the
+# locals are numbered otherwise); linked ahead of it, as the target's band has it (11582 above unit 145's 10264 and
+# 10263), 63 over 714, every row an operand: the calls, the data addresses, the format strings' packed addresses and the
+# format buffer's and the exception's table slots. Its place before cgravadorwsq.cpp follows the band (11582 above
+# CGravadorWSQ's rows); that order against cgravadorwsq.cpp was not measured otherwise.
 # Evidence: the records give each member's name, file, line and column, and the signatures; the codes, the messages and
 # the bodies give the rest. The enum's values are the codes every thrower passes to fn 283 and the two that fns 3825 and
 # 3826 pass to their merged body 6044 (docs/reference/facts/placing.md P6). IGravador's constructor is in iresultado.cpp

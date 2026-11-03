@@ -18,9 +18,9 @@ namespace vota {
 // 1661, 218, 425, 10496, 425]): the operator is told that the voter may vote. Slots 0 and 1 are fns 244 and 387,
 // the out-of-line destructors the final states share: a std::shared_ptr at +12 is all they release. +12 is the
 // form, from vota::MontaTelaEleitorPodeVotar (fn 5410, ccontrolareconhecimento.h), which
-// vota::CControlaReconhecimento's GetInst (fn 1256) builds its +12 with too. StartState (slot 2) is fn 1070, one body with
-// comum::CDigitalMesarioNaoReconhecida's: `this` as the next state, then the form's slot 2. ProcessInput (slot 7) is
-// fn 10496, a thunk into fn 3883 (below). A singleton: GetInst (fn 5399) creates the 20-byte object under a static
+// vota::CControlaReconhecimento's GetInst (fn 1256) builds its +12 with too. StartState (slot 2) is fn 1070, one body
+// with comum::CDigitalMesarioNaoReconhecida's: `this` as the next state, then the form's slot 2. ProcessInput (slot 7)
+// is fn 10496, a thunk into fn 3883 (below). A singleton: GetInst (fn 5399) creates the 20-byte object under a static
 // std::mutex (@1908844, destroyed at exit by fn 10497) and keeps it in a static std::unique_ptr (@1908868, by fn
 // 10499); the constructor is inlined into it.
 // ProcessInput reads the form through api::CInteractiveForm<api::IScreenMT, api::IInputMT>::Read() and on CONFIRMA

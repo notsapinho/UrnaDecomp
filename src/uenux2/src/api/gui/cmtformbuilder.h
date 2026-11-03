@@ -68,8 +68,8 @@ public:
 
     // The control field built with std::make_shared (its block's vtable, @1580748, beside AddInputControl()'s
     // __shared_ptr_pointer one, @1580708, in this file's data): fn 5410 holds it inlined by binaryen, behind a 16-byte
-    // frame of its own that keeps the SharedField passed to AddField. Its name, the overload and its parameter are chosen
-    // after api::CInteractiveFormBuilder::AddInputControl(int).
+    // frame of its own that keeps the SharedField passed to AddField. Its name, the overload and its parameter are
+    // chosen after api::CInteractiveFormBuilder::AddInputControl(int).
     void AddInputControl(int teclas);
 
     SharedField AddTextField(const std::string& texto, const SPoint& posicao, ETextAlignment alinhamento);

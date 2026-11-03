@@ -19,10 +19,10 @@ namespace vota {
 // destructors, StartState (slot 2, fn 10524) and ProcessInput (slot 7, fn 10523). Slots 0 and 1 are fns 244 and 387,
 // the out-of-line destructors 49 final states share: a std::shared_ptr at +12 is all they release. +12 is the form:
 // StartState shows it (slot 2 of api::IForm) and ProcessInput reads it through api::CInteractiveForm<api::IScreenMT,
-// api::IInputMT>::Read(). A singleton: GetInst (fn 2743) creates the 20-byte object under a static std::mutex (@1908584, destroyed at
-// exit by fn 10525) and keeps it in a static std::unique_ptr (@1908608, by fn 10526); the constructor, inlined into it,
-// initializes the form from a helper that builds it. src/units/152-uenux2-app-vota-operador-estados.mk says which of
-// this is chosen.
+// api::IInputMT>::Read(). A singleton: GetInst (fn 2743) creates the 20-byte object under a static std::mutex
+// (@1908584, destroyed at exit by fn 10525) and keeps it in a static std::unique_ptr (@1908608, by fn 10526); the
+// constructor, inlined into it, initializes the form from a helper that builds it.
+// src/units/152-uenux2-app-vota-operador-estados.mk says which of this is chosen.
 class CHabilitaAudioEleitor final : public comum::CAppState {
 public:
     virtual ~CHabilitaAudioEleitor() override;

@@ -16,9 +16,10 @@ namespace {
 using ecourna::api::util::CStringUtils;
 
 // ecourna::api::security::EncodeBase64's one caller in the target is comum::md::estadoaplicacao::CEstadoGeral::
-// GetResumoHashVersoesPacotes (fn 3703, unit 287), which holds it inlined. 3703's target callers not in our link: 3059
-// and 7787 (11222 is in the link). UsaBase64A and UsaBase64B stand for them, through its label, on an object whose +168
-// is the hash vector, as CEstadoGeral's is, so that this TU needs no uenux2 header.
+// GetResumoHashVersoesPacotes (fn 3703, in unit 215's cestadogeral.cpp, its name chosen), which holds it inlined.
+// 3703's target callers not in our link: 3059 and 7787 (11222, unit 287's, is in the link). UsaBase64A and UsaBase64B
+// stand for them, through its label, on an object whose +168 is the hash vector, as CEstadoGeral's is, so that this TU
+// needs no uenux2 header.
 struct SComResumo {
     char preenchimento[168];
     std::vector<uebyte> dados;

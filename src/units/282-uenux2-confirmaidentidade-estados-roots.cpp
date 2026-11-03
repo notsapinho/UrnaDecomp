@@ -1,5 +1,5 @@
-// Roots of src/units/282-uenux2-confirmaidentidade-estados.mk: keep its functions in the skeleton link the way the target
-// keeps them.
+// Roots of src/units/282-uenux2-confirmaidentidade-estados.mk: keep its functions in the skeleton link the way the
+// target keeps them.
 //
 // - vota::CInformaAnoDesabilitadoDemo's vtable, and with it every slot: the target references it only from its
 //   constructor, inlined with GetInst into fn 10500 (vota::CNomeEleitor::ProcessInput, not reconstructed), so the
@@ -10,8 +10,8 @@
 // - vota::CInformaBioDesabilitadaDemo::GetInst (fn 5402), which fn 10500 calls twice: one stand-in calls it twice, so
 //   that binaryen keeps it a function of its own.
 // - vota::CInformaEleitorPodeVotar::GetInst (fn 5399), whose target callers are fns 10451
-//   (vota::CRegistraDigitalOperador::ProcessTick) and 10489 (vota::CPedeAnoNascimentoSemBiometria::ProcessInput), neither
-//   in the link: one stand-in for each.
+//   (vota::CRegistraDigitalOperador::ProcessTick) and 10489 (vota::CPedeAnoNascimentoSemBiometria::ProcessInput),
+//   neither in the link: one stand-in for each.
 //
 // Declared through asm labels with the object's signatures, so this TU needs no uenux2 header and instantiates nothing;
 // compiled with APP_CXXFLAGS. The stand-ins differ in their bytes, from each other and from every target function.

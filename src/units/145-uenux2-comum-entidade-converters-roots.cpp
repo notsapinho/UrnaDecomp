@@ -1,5 +1,5 @@
-// Roots: keep unit 145's comum::asn::CConversorEntidadePartidos in the skeleton link the way the target keeps it. In the
-// target the converter's vtable is data whose DoConverte/DoDesconverte slots put the bodies in the table, and no
+// Roots: keep unit 145's comum::asn::CConversorEntidadePartidos in the skeleton link the way the target keeps it. In
+// the target the converter's vtable is data whose DoConverte/DoDesconverte slots put the bodies in the table, and no
 // function calls either directly. The function that stores the vptr (@1561344), fn 7787, is not reconstructed, so
 // rooting the vtable keeps the same set. comum::asn::CConversorVersoesArquivos's vptr (@1599296) is stored by its
 // GravaArquivo, which fn 11582 holds inlined (unit 122), in the link.

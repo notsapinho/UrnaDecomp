@@ -36,26 +36,27 @@
 #   GetInteractiveForm("telaInformaAnoDesabilitadoDemo", false). Before steps 7 to 9 (pnpm wasm score), 5402 read 36
 #   over 314 rows and 5399 11 over 40, all operand-only.
 # - CDigitalReconhecida::StartState: `this` as the next state, then CPolySingleton<api::IFingerMatcher>::instance()
-#   (its default argument is the record, column 22 on line 47) and, when the byte at +11 is set, std::format("Score: {}",
-#   slot 4's int) moved into +12's string, then the form at +20 shown. Before steps 7 to 9, 12 over 215 rows, all
-#   operand-only.
+#   (its default argument is the record, column 22 on line 47) and, when the byte at +11 is set,
+#   std::format("Score: {}", slot 4's int) moved into +12's string, then the form at +20 shown. Before steps 7 to 9, 12
+#   over 215 rows, all operand-only.
 #
 # Written and not matched, and what each waits for:
 # - CInformaEleitorPodeVotar::GetInst (5399): `unresolved self-voted` on 5410's name, whose one vote is 5399's own call
-#   (`evidence:call by:5399`); 5410 is written and differs (unit 161's fragment has the rows), and 1256, its other target
-#   caller, is not written. It matches once 5410 matches or 1256 is in the link.
+#   (`evidence:call by:5399`); 5410 is written and differs (unit 161's fragment has the rows), and 1256, its other
+#   target caller, is not written. It matches once 5410 matches or 1256 is in the link.
 # - 3883 itself: 10 over 83 rows against our shared body, all operand-only: the calls, the record and binaryen's local
 #   numbers (the queue's address in local 2 where the target reuses local 0, the same difference as 10511's, unit 161).
 # - CInformaAnoDesabilitadoDemo::GetInst, its constructor and form have no target function of their own: 10500 holds
 #   them inlined and is not written, so they link nowhere (wasm-ld drops the GetInst), and its statics' exit
 #   destructors (10505, 10506) read `differs`: nothing names s_mutex and s_inst, which only 10500 reads.
-# Pending (282-uenux2-confirmaidentidade-estados-pending.cpp says what each waits for): CDigitalReconhecida::ProcessInput
-# (10481). CDigitalReconhecida's GetInst and constructor are declared only: 5397, which holds them inlined, is not
-# written.
+# Pending (282-uenux2-confirmaidentidade-estados-pending.cpp says what each waits for):
+# CDigitalReconhecida::ProcessInput (10481). CDigitalReconhecida's GetInst and constructor are declared only: 5397,
+# which holds them inlined, is not written.
 #
-# Chosen, no evidence names them: the four files' names (the class name in lower case) and their directory, which the
-# data give (the vtables and records lie among confirmaidentidade/'s: ccontrolareconhecimento.cpp's records @1591028,
-# cnomeeleitor.cpp's @1591292, cdigitalnaoreconhecida.cpp's @1591844; cdigitalreconhecida.cpp is the record's own);
+# cdigitalreconhecida.cpp's name and directory are its record's (cdigitalreconhecida.cpp:47). The other three files'
+# directory is a reading of the data: their vtables lie among confirmaidentidade/'s records
+# (ccontrolareconhecimento.cpp's @1591028, cnomeeleitor.cpp's @1591292, cdigitalnaoreconhecida.cpp's @1591844).
+# Chosen, no evidence names them: those three files' names (the class name in lower case);
 # every member name; bool for CDigitalReconhecida's byte; the form helpers' name (MontaTela) and their being in an
 # anonymous namespace; the statics' lines before StartState and ProcessInput (in use band 1 their exit destructors,
 # s_inst's first, link before slot 7: 10510 and 10509 above 10508, 10499 and 10497 above 10496, `awk -F'\t' '$1>=10496
