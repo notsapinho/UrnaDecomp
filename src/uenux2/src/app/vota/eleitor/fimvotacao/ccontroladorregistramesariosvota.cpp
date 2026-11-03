@@ -10,6 +10,9 @@
 #include "app/comum/appinfo/cappinfo.h"
 #include "app/comum/comparecimentomesario/cregistradormesario.h"
 #include "app/comum/dados/celeitores.h"
+#include "app/comum/dados/crdvvota.h"
+#include "app/comum/justificativa/cjustificador.h"
+#include "app/vota/comum/csincronizavota.h"
 #include "app/vota/eleitor/cthreadeleitor.h"
 #include "app/vota/eleitor/fimvotacao/cregistromesarioencerrado.h"
 #include "app/vota/log/clogvota.h"
@@ -32,6 +35,36 @@ void CControladorRegistraMesariosVota::StopTick(uebyte id) const
 void CControladorRegistraMesariosVota::StartTick(uebyte id) const
 {
     CThreadOperador::GetInst().StartTick(id);
+}
+
+void CControladorRegistraMesariosVota::Slot5() const
+{
+    comum::CAppInfo& appInfo = comum::CAppInfo::GetInst();
+    const comum::EEstadoVota estado = appInfo.GetVota().GetEstadoVota();
+    const comum::EUrnaFase fase = appInfo.GetGeral().GetDadoCarga().GetFase();
+    const auto podeRegistrarDuranteVotacao = [&]() {
+        const comum::CRdvVota& rdv = comum::CRdvVota::GetInst();
+        const comum::CJustificador& justificador = comum::CJustificador::GetInst();
+        return rdv.Comparecimento() == 0 && justificador.QuantidadeJustificados() == 0 &&
+               fase != comum::FASE_TREINAMENTO;
+    };
+    switch (estado) {
+    case comum::EAVZERESIMAIMPRESSA:
+        appInfo.GetVota().SetEstadoVota(comum::EAVREGISTROMESARIOINICIAL);
+        break;
+    case comum::EAVVOTAR:
+        if (!podeRegistrarDuranteVotacao()) {
+            return;
+        }
+        appInfo.GetVota().SetEstadoVota(comum::EAVREGISTROMESARIOINICIAL);
+        break;
+    case comum::EAVFIMAQUISICAOVOTOS:
+        appInfo.GetVota().SetEstadoVota(comum::EAVREGISTROMESARIOFINAL);
+        break;
+    default:
+        return;
+    }
+    CSincronizaVota::SincronizaEstadoGeralVota();
 }
 
 int CControladorRegistraMesariosVota::Slot6() const

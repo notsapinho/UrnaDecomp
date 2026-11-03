@@ -4,9 +4,9 @@
 #   vota::testeteclado::CBase (testeteclado/cbase.{h,cpp}): StartState 11875; the implicit D2 1559, which
 #     CPreZeresima's and CRetomada's slot 0 hold too; the constructor 5948
 #   vota::testeteclado::CPreZeresima (testeteclado/cprezeresima.{h,cpp}) and vota::testeteclado::CRetomada
-#     (testeteclado/cretomada.{h,cpp}): the out-of-line destructors, whose D0 is one body, 5946; CRetomada's slot 12,
-#     GetEstadoSemTeste 11829; CPreZeresima's slot 11, GetEstadoPassouNoTeste 5945, and its statics' exit destructors
-#     11864 and 11863 (its GetInst is inlined into unit 199's 11914)
+#     (testeteclado/cretomada.{h,cpp}): the out-of-line destructors, whose D0 is one body, 5946; CRetomada's slots 11
+#     and 12, GetEstadoPassouNoTeste 11830 and GetEstadoSemTeste 11829; CPreZeresima's slot 11, GetEstadoPassouNoTeste
+#     5945, and its statics' exit destructors 11864 and 11863 (its GetInst is inlined into unit 199's 11914)
 #   vota::CReinicioVotacao (iniciovotacao/creiniciovotacao.{h,cpp}): GetInst 5938, with its constructor inlined by
 #     binaryen; the exit destructors of its static std::mutex and std::unique_ptr, 11836 and 11837; ProcessInput 11834
 #   vota::CAplicacaoEncerrada (fimvotacao/caplicacaoencerrada.{h,cpp}): StartState 12058, with
@@ -41,7 +41,7 @@
 # - CReinicioVotacao follows unit 104's states with a std::shared_ptr (104-uenux2-app-vota-estados.mk has the evidence
 #   for GetInst's shape, the statics' order and final); 5938 copies the shared_ptr at +148 of CTelasVota::GetInst(). Its
 #   statics are named by 5938's votes; their exit destructors 11836 and 11837 load the same two addresses. GetInst has
-#   two target callers, 11829 and 11830 (pending); the roots stand in for 11830.
+#   two target callers, 11829 and 11830, both written here, so it has no stand-in.
 # - CPreZeresima's slot 12 (fn 11861) calls slot 11 (fn 5945) directly: final, on the class here (on the member alone
 #   it would do the same, a choice).
 # - CEsperaRetestar's constructor, GetInst (fn 5936) and statics, written since in cesperaretestar.cpp, unit 104's
@@ -163,6 +163,15 @@
 #   dataZeresima is chosen; a form without the local (the target copies the date's 8 bytes into its frame) was not
 #   compiled.
 #
+# - CRetomada::GetEstadoPassouNoTeste (fn 11830, slot 11), in cretomada.cpp above GetEstadoSemTeste (the use band,
+#   11831 to 11829, gives slots 10, 11 and 12 in that order): the load's urna type (CDadoCarga::GetTipoUrna, +32 of
+#   CAppInfo::GetGeral()), then CAppInfo::GetInst() again for GetVota(); when the type is 51 (eUrnaContingenciaVota)
+#   and the vote state's byte at +96 (m_tecladoTestadoPosConversao in cestadogeralvota.h's layout) is 0, it stores 1
+#   there and calls CSincronizaVota::SincronizaEstadoGeralVota (fn
+#   491); it returns CReinicioVotacao::GetInst() (fn 5938). The store goes through a setter added to
+#   cestadogeralvota.h, whose name and inline definition are chosen; the local's name tipoUrna is chosen.
+#   `pnpm wasm score` against the link: 6 over 35 rows, all operand-only (the calls); matched at step 9, named by its
+#   vtable slot.
 # Chosen, no evidence names them: in CBase::ProcessInput, the local holding slot 11's state and CTesteTeclado's setter
 # (that the target calls slot 11 before GetInst is its rows; that the setter called on GetInst() with slot 11 as its
 # argument would call GetInst first, and an assignment to a public member would not, is a reading of C++17's order of
