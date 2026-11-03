@@ -30,10 +30,10 @@
 #
 # Chosen, no evidence names them: every data member's name, GetInst, s_mutex, s_inst and the local trava (unit 104's
 # convention); the destructor declared first; the private constructor of CConfirmaRegerarZeresima, declared and not
-# defined; StartState as the key function of the four CImpressao* states, so the pending object emits three of their
-# vtables and cimpressaoversaopacotes.cpp the fourth; LogaMesarioIndagadoHorarioUrna's name, from its message, and its
-# place in clogvota.cpp, after LogaApresentadaTelaReinicioVotacao. The paths, by how-to step 3's rules (no record names
-# these classes' files), each header beside its .cpp and named after the class (rule 4):
+# defined; StartState as the key function of the four CImpressao* states, so the pending object emits two of their
+# vtables and cimpressaoversaopacotes.cpp and cimpressaoestadourna.cpp the other two; LogaMesarioIndagadoHorarioUrna's
+# name, from its message, and its place in clogvota.cpp, after LogaApresentadaTelaReinicioVotacao. The paths, by how-to
+# step 3's rules (no record names these classes' files), each header beside its .cpp and named after the class (rule 4):
 # - cconfirmaregerarzeresima.cpp in iniciovotacao/ (rule 2): its vtable and typeinfo follow vota::CRegerarZeresima's in
 #   the data with nothing between (@1546492 to @1546608), and its statics' destructors follow CRegerarZeresima's slot 10
 #   (fn 11841) in link order and precede vota::CReinicioVotacao's (11837). The directory's data run from
@@ -91,6 +91,10 @@
 # md::CDadosDisponiveisCarga holds (fns 3863 and 5956), with strict aliasing, which the tree root
 # src/app/roots_dadoscarga.cpp stood for until this file was written: it went, and the two keep their scores, 4 over 104
 # and 4 over 118 rows, the four calls of free, and their matches.
+#
+# vota::CImpressaoEstadoUrna::StartState (target fn 11911, slot 2) is written in cimpressaoestadourna.cpp, after the
+# statics (its line is chosen), and matches, over comum::CImprimirExtratoCarga::Imprime (5591): both, the measurements
+# and what is chosen are in src/units/296-uenux2-relatorios-impressao.mk, whose roots keep 5591's other call site.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.
 APP_VOTA_ELEITOR_INICIOVOTACAO_ESTADOS_SRCS := src/app/vota/eleitor/iniciovotacao/cimpressaozeresimatardia.cpp \

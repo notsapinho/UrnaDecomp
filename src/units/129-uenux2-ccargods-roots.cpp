@@ -19,7 +19,7 @@ namespace {
 
 const void* volatile ccargods_sink;
 
-// Stands for fn 5802's callers 11259 and 11261.
+// Stands for fn 5802's caller 11259 (its other caller, 11261, is in the link).
 __attribute__((noinline)) void Cabecalhos(int a, int b)
 {
     w5802(a + 12);

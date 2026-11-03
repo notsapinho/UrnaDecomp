@@ -47,6 +47,15 @@ enum EUeGuiError {
     // the value is the code api::CQRCodeImage::MontaImagem throws (record cqrcodeimage.cpp 36:15, inlined into fn 10967);
     // the name is chosen from its message, "A largura do qrcode ({}) superou o espaço disponível ({})": no evidence names it
     EUE_GUI_QRCODEIMAGE_LARGURA_EXCEDIDA = 4948,
+    // 4949 and 4951: the codes api::CQRCodeImagePaper::MontaImagem throws (records cqrcodeimagepaper.cpp 35:15 and
+    // 49:15, held inlined by fn 2772); the names are chosen from their messages, "Criação de QRCode com texto vazio."
+    // and "A largura do qrcode ({}) superou o espaço disponível ({})". 4950: its throw at 38:15, whose test binaryen
+    // folded with the width every caller passes; the value is chosen (the gap between the two), and so is the name,
+    // from the message chosen for it, "Criação de QRCode com largura 0.", the one literal of that sense no function
+    // loads. No evidence names them.
+    EUE_GUI_QRCODEIMAGEPAPER_TEXTO_VAZIO = 4949,
+    EUE_GUI_QRCODEIMAGEPAPER_LARGURA_ZERO = 4950,
+    EUE_GUI_QRCODEIMAGEPAPER_LARGURA_EXCEDIDA = 4951,
     // the value is the code api::CTextBox's constructor throws (record ctextbox.cpp 41:15, inlined into fn 11805); the name
     // is chosen from its message, the same as 4963's: no evidence names it
     EUE_GUI_TEXTBOX_POSICAO_INICIAL_INVALIDA = 4961,

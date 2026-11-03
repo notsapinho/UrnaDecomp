@@ -52,6 +52,10 @@
 # UENUX2_CXXFLAGS, with -fno-strict-aliasing: the roots object compiled both ways gives the same D2 and D0
 # (wasm-objdump -d of the two functions: 148 lines in each object, cmp-equal).
 #
+# LinhaPartido (fn 11261, no record; its name and its place in the class, after DetalheCandidatoZE, are chosen) is
+# written for unit 296, which says why and what it measures: its one user, fn 12110, passes its address (table slot
+# 2921), so the roots take it beside the others. It matches by the scan's content pass.
+#
 # Not reconstructed: the other records of cdatasourcesrelatorio.h (TrailerProporcionalPartido 11260,
 # GetLinhasEleitoresAptos's lambda 11968, TrailerProporcional 11981, TrailerMajoritario 11980, CodVerificador 11974);
 # fn 3872, the one user of 11972 and 11973 (no record, a link-order stub in unplaced.cpp); CGeradorRelPU's user,

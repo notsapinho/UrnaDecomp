@@ -29,6 +29,13 @@ enum EUeUtilError {
     EUE_UTIL_TLV_TAG_TAMANHO_INVALIDO = 7017,
     EUE_UTIL_TLV_LIMITE_EXCEDIDO = 7018,
     EUE_UTIL_TLV_ANEXA_TAG_TAMANHO_INVALIDO = 7019,
+    // 7027: the code api::CStringUtils::SetBit(std::vector<uebyte> &, ...) throws (record cstringutils.cpp 83:15, held
+    // inlined by fn 2772); the name is chosen from its message, "Bit fora dos limites ({}) do vetor ({})". 7026: the
+    // byte overload's throw (record 71:15), whose test binaryen folded with the bit its one caller passes; its value is
+    // chosen, the one before 7027, and so is the name, from the message chosen for it, "Bit fora dos limites ({})", the
+    // one literal of that text no function loads. No evidence names either.
+    EUE_UTIL_BIT_FORA_DOS_LIMITES = 7026,
+    EUE_UTIL_BIT_FORA_DOS_LIMITES_DO_VETOR = 7027,
     // the code api::CSynchronizer::CreateInst throws (csynchronizer.cpp); the name is chosen from its message, "Instância já
     // criada": no evidence names it
     EUE_UTIL_SINCRONIZADOR_JA_CRIADO = 7030,

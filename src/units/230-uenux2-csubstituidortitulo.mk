@@ -37,8 +37,8 @@
 # the target calls the copying form.
 #
 # The roots (230-uenux2-csubstituidortitulo-roots.cpp) stand for target callers of unit 123's new members: 1543 and
-# 5579 for 3689, 5591 and 12110 for 5584, 12105 and 12110 for 3688. Each calls twice, and each goes when every caller
-# it stands for is in the link.
+# 5579 for 3689, 12110 for 5584 (5591 is in the link), 12105 and 12110 for 3688. Each calls twice, and each goes when
+# every caller it stands for is in the link.
 CSUBSTITUIDORTITULO_SRCS := src/app/comum/relatorios/csubstituidortitulo.cpp
 UENUX2_SRCS += $(CSUBSTITUIDORTITULO_SRCS)
 # the roots declare what they call through asm labels, so their rule needs no header
