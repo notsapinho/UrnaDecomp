@@ -91,7 +91,8 @@
 # CTextSource's constructor, with the record at 37:19, is written and in no object: no stand-in builds a CTextSource. Built
 # once to measure it, the record is the target's (check_srcloc --strict, 1 of 1). Writing it took the stubs of fns 1150
 # (1768 B) and 652 (4609 B): both inline it, it is their only record, and tools/round/stubs.py counts a function whose
-# record lines all hold code as written. Neither is written; no evidence names their file.
+# record lines all hold code as written. Both are written since: 1150 in cmostraeleitorvotando.cpp and 652 in
+# cpedeidentidade.cpp, its screens in telasoperador.cpp (units 161 and 51).
 UENUX2_SRCS += src/api/gui/cqrcodeimage.cpp
 # cqrcodeimage.cpp includes api/gui/cqrcodeguard.h, which includes libqrencode's qrencode.h, and UENUX2_CXXFLAGS has no
 # path to it. An include path is not a flag of the code (asmlift-wasm/benchmark/README.md "The compile setups").

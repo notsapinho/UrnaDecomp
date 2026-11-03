@@ -6,7 +6,8 @@
 # - the StartState of vota::CEleitorJaVotou (10642), CIdentidadeInvalida (10669), CVerificaDadoEleitor (10444) and
 #   CDadoEleitorNaoConfere (10448); the ProcessInput of CEleitorJaVotou (10641) and CInformaAnoNascimentoErrado (10493),
 #   thunks into binaryen's 6015, which our link forms from the two of them as the target does (matched under
-#   byn$mgfn-shared$_ZN4vota15CEleitorJaVotou12ProcessInputEv); vota::CPedeIdentidade::FinishState (10678);
+#   byn$mgfn-shared$_ZN4vota15CEleitorJaVotou12ProcessInputEv); vota::CPedeIdentidade::FinishState (10678) and the exit
+#   destructor of its static std::mutex (10681), its GetInst (652) written and unresolved (below);
 # - vota::CEleitorNaoEncontrado's slot 9 (10663) and its destructors (1907, 1689), over its new base
 #   vota::IEleitorImpedidoVotar;
 # - two CLogVota members out of line in app/vota/log/clogvota.cpp, unit 119's file: 2097 and 4522; three more there have
@@ -102,11 +103,34 @@
 # celeitornaoencontrado.cpp includes cconfiguracaoeleicao.h, so it takes the Boost include path, as
 # ccontrolareconhecimento.cpp does.
 #
-# Not reconstructed: the other classes' GetInst and constructors (each header names the function that holds them inlined);
+# Not reconstructed: the other classes' GetInst and constructors but CPedeIdentidade's (each header names the function
+# that holds them inlined);
 # CControlaReconhecimento::AvancaVerificacao and AvancaProximoDedo1x4 (records 176 and 187, held inlined by 10447 and
 # 10465, which are pending or not written), whose lines stay blank; the slots the -pending.cpp traps, with what each
 # waits for. Rows of these classes left for later: 10512 and 10511 (CControlaReconhecimento), 10667, 10443, 10447,
 # 10677, 10676, 10625 and 10624 (pending).
+#
+# CPedeIdentidade::GetInst (fn 652, 4609 B) is written in cpedeidentidade.cpp with the constructor (inlined by binaryen:
+# its 16-byte frame follows the `new` of 32 bytes) and the statics, and is `unresolved`: it is right but for one
+# literal. Its row reads `+0x5ab i32.const 6273: an address of ours: string tail occurs 4098 times`: the end of
+# "/{:04}", which the target holds as the tail of "{:02}/{:02}/{:04}" (8609), a literal whose start only fns 2687 and
+# 10273 load (grep over build/out/splat/pieces/asm), neither written. In a scratch link with an object that stores that literal in
+# a volatile sink (docs/reference/facts/workflow.md W13), pnpm wasm splat-remap prints `target 652: IDENTICAL` against
+# our GetInst. In the target's order, under a std::lock_guard of the static std::mutex (the bytes show its unlock, fn
+# 150, at the end): on the first call the object
+# (CAppState's constructor with EVENTO_ENTRADA | EVENTO_TICK, 6), the three ticks through CThreadOperador::GetInst
+# (fn 270) and AddStoppedTick (fn 807) with 60000, 5000 and 1000, the std::make_shared<std::string>(" ") at +16, the
+# form at +24 from vota::MontaTelaPedeIdentidade(m_aviso) (by value: the copy at +8 of the constructor's frame moved to
+# +0; unit 51's telasoperador.cpp, where the reasons it is another object are), then vota::AgendaInspecao (fn 3620,
+# unit 50) in the constructor's body; then the unique_ptr's reset (the old object through its D2, fn 1537, and
+# operator delete) and the mutex's unlock. GetInst is defined before the constructor, both after FinishState: the
+# order is measured with the screens' (unit 51's fragment: binaryen's choice of locals turns on it); the lines are
+# free. The statics are defined before StartState: their exit destructors (10682, s_inst's, and 10681, s_mutex's) sit
+# above StartState (10680) in band 1. 10681 matches (its body's content; s_mutex is named by 652's votes, the one other
+# reader of 1905312). 10682 is `f3886(1905336)`: 3886 is called by 10321, 10457 and 10682, the exit destructors of
+# three static std::unique_ptr (10313 and 5396 read the other two), read as one body binaryen keeps for three classes'
+# identical ~unique_ptr (the three share the D2 1537); our link, with the other two not written, inlines ours, and 10682
+# stays no-candidate. Chosen: the statics' names, the lock_guard's spelling and EVENTO_ENTRADA | EVENTO_TICK for 6.
 #
 # CPedeIdentidade::StartState (10680, slot 2) is written in cpedeidentidade.cpp, its records on lines 62 and 63 (the
 # CPolySingleton<IUrna>::instance() call of the `if` and CPolySingleton<IScreenMT>::instance()'s inside it, both at
@@ -129,7 +153,8 @@
 # counter, not a flag; the CLogVota members' names (from their messages) and their place, after GetInst;
 # IEleitorImpedidoVotar's slot 9 name (LogaImpedimento, from the one override, which logs) and its +20 int;
 # CPedeIdentidade's +16 member's name (m_aviso: its pointee is a std::string, which ProcessTick, fn 10676, assigns);
-# GetInst and the private constructors, declared and not defined; the destructors declared first. The lines:
+# GetInst and the private constructors, declared and not defined (but CPedeIdentidade's); the destructors declared
+# first. The lines:
 # AvancaTentativa's throw is on its record's line, the statics and the destructor above it and the helpers after line
 # 187 are a choice, and so is FinishState after StartState's two record lines. Same bytes: CDadoEleitorNaoConfere's
 # StartState as written and with a conditional operator choosing the form (its object's function, wasm-objdump -d). The
@@ -145,8 +170,10 @@
 # unrecorded vtables between them and aguardaeleitor/cmostraeleitorvotando.cpp's records (@1593044): the adjacent side.
 # The order of the sources below follows the data, leidentidade's before confirmaidentidade's.
 #
-# Roots: seven classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it), and stand-ins for the target callers of 5403 to 5406, 2097, 4522 and 4661 (the
-# roots file names them). ccontrolareconhecimento.cpp reaches Boost through cconfiguracaoeleicao.h, so its object takes
+# Roots: six classes' vtables (CEleitorNaoEncontrado's goes: 5424 stores it; CPedeIdentidade's went: its constructor is
+# in the link, inlined into 652), and stand-ins for the target callers of 5403 to 5406, 2097, 4522, 4661 and 652 (the
+# roots file names them; 652's other caller in the link is unit 71's 10430). ccontrolareconhecimento.cpp reaches Boost
+# through cconfiguracaoeleicao.h, so its object takes
 # the include path below, as unit 88's do.
 #
 # Paths relative to src/uenux2; the generic uenux2 rule depends on the source and every uenux2 header.

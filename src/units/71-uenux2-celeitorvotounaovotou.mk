@@ -1,9 +1,18 @@
-# uenux2 vota::CEleitorVotouNaoVotou::StartState (target fn 10431, slot 2 of its vtable @1592928) with its destructor
+# uenux2 vota::CEleitorVotouNaoVotou::StartState (target fn 10431, slot 2 of its vtable @1592928) and ProcessInput (fn
+# 10430, slot 7) with its destructor
 # and deleting destructor (fns 1284, 2884, slots 0 and 1), its GetInst (fn 1901) with the constructor and the static
 # destructor of s_mutex (fn 10433), and comum::IPedeTituloMesario's StartState, constructor and
-# implicit destructor (fns 10314, 3608, 1378), and its ProcessInput (fn 10313). The class headers say what the layout rests
-# on; vota::CEleitorVotouNaoVotou::ProcessInput (fn 10430) is pending. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) and its base
+# implicit destructor (fns 10314, 3608, 1378), and its ProcessInput (fn 10313). The class headers say what the layout
+# rests on. api::CInteractiveForm<MEDIA, INPUT> (api/gui/cinteractiveform.h, named by records) and its base
 # api::IForm<MEDIA> (api/gui/iform.h) are unit 120's.
+#
+# CEleitorVotouNaoVotou::ProcessInput (fn 10430): the form's Read() (record cinteractiveform.h:57 @1592984, the class's
+# inline member) and, on INPUT_CONFIRMA (9), the next state: vota::CDesabilitaAudioEleitor::GetInst (fn 5393) when
+# CEstadoAudio::GetInst()'s mode at +4 (fn 509) is not 2 (CEstadoAudio::Ativo), else vota::CPedeIdentidade::GetInst
+# (fn 652). Its line is after StartState's, as band 1 has them (10431 above 10430). It matches with 652 named by its
+# vptr anchor (652 is the one function that stores CPedeIdentidade's vptr, 1588240: grep over build/out/splat/pieces/asm),
+# while 652 itself waits for a literal (unit 161's fragment). The if/else around the two GetInst is written as a
+# choice; no other form was measured.
 #
 # The file of vota::CEleitorVotouNaoVotou: no record names it, and the path is chosen, on this evidence. Its cluster's
 # comment, app/vota/eleitor/fimvotacao/celeitorvotounaovotou.cpp, is the tool's class-convention guess, and the data
@@ -107,12 +116,8 @@ UENUX2_SRCS += $(CELEITORVOTOUNAOVOTOU_SRCS)
 # IPedeTituloMesario::ProcessInput reads comum::CConfiguracaoEleicao, whose header reaches ecourna's CHorariosUrna and
 # so Boost's headers: an include path, not a flag of the code
 $(ROOT)/$(APP)/uenux2/src/app/comum/comparecimentomesario/estados/ipedetitulomesario.cpp.o: UENUX2_CXXFLAGS += -I$(BOOST_HDR)
-# vota::CEleitorVotouNaoVotou::ProcessInput (target fn 10430) is not reconstructed: 71-uenux2-celeitorvotounaovotou-pending.cpp
-# gives its vtable a trapping body, compiled with the unit's flags
-$(ROOT)/$(APP)/71-uenux2-celeitorvotounaovotou-pending.o: $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou-pending.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou.mk $(wildcard $(ROOT)/src/uenux2/src/app/vota/operador/aguardaeleitor/*.h $(ROOT)/src/uenux2/src/app/comum/comparecimentomesario/estados/*.h $(ROOT)/src/uenux2/src/app/comum/*.h $(ROOT)/src/uenux2/src/api/pattern/*.h) $(ROOT)/src/ecourna/api/uetypes.hpp
-	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(UENUX2_CXXFLAGS) -c src/units/71-uenux2-celeitorvotounaovotou-pending.cpp -o $(R)
 # nothing reconstructed references either class yet: 71-uenux2-celeitorvotounaovotou-roots.cpp takes the first vtable's
 # address and stands in for the IPedeTituloMesario constructor's callers
 $(ROOT)/$(APP)/71-uenux2-celeitorvotounaovotou-roots.o: $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou-roots.cpp $(ROOT)/src/Makefile $(ROOT)/src/units/71-uenux2-celeitorvotounaovotou.mk
 	$(H) mkdir -p $(APP) && build/docker-build.sh em++ $(APP_CXXFLAGS) -c src/units/71-uenux2-celeitorvotounaovotou-roots.cpp -o $(R)
-override EXTRA_OBJS += $(APP)/71-uenux2-celeitorvotounaovotou-pending.o $(APP)/71-uenux2-celeitorvotounaovotou-roots.o
+override EXTRA_OBJS += $(APP)/71-uenux2-celeitorvotounaovotou-roots.o

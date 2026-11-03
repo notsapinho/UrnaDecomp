@@ -18,8 +18,8 @@ namespace comum {
 // Recovered: the layout, from the destructor (fn 5792) and the order of the constructor's record (line 239): a string at
 // +8, the origin and a flag, a CPleito at +28, a CParametrosUrna at +88 (fn 2267), the municipality, two sets at +592 and
 // +604, a string at +628, vectors at +652 and +672. The bytes between them have no reader here but the words the
-// accessors below read. Which constructor argument each member holds beyond those, the element types and the members'
-// names are chosen.
+// accessors below read. Which constructor argument each member holds beyond those, the element types (but +672's, which
+// GetTiposIdentificador's comment reads) and the members' names are chosen.
 class CConfiguracaoEleicao {
 public:
     ~CConfiguracaoEleicao();
@@ -54,6 +54,15 @@ public:
     // (fn 10468), vota::CNomeEleitor's fn 10500 and fn 7787 read it too. That it says the biometric identification is on
     // is a reading of those uses; the names, and the types of the bytes around it, are chosen.
     bool HabilitaBiometria() const { return m_habilitaBiometria; }
+
+    // The vector at +672: vota::CPedeIdentidade's screen (held inlined by fn 652) reads its 4-byte elements in order and
+    // names each in "Digite {}" by the values 1, 2 and 3 of ETipoIdentificadorEleitor (TipoIDInscricaoEleitoral,
+    // TipoIDCPF, TipoIDNumeroLivre) or else as "a Identidade". Its element type is a reading of that switch, and the
+    // accessor's being inline in the class, its name and the member's name are chosen.
+    const std::vector<ecourna::app::dados::ETipoIdentificadorEleitor>& GetTiposIdentificador() const
+    {
+        return m_tiposIdentificador;
+    }
 
     // Two api::CDateTime of 12 bytes inside the bytes after the municipality: vota::CConfirmaImpressaoZeresima::GetInst
     // (fn 5959) and vota::CVerificaHorarioZeresima::GetInst (fn 5947) copy +544 (`i64.load[+544]`, `i32.load[+552]`),
@@ -109,7 +118,7 @@ private:
     bool m_habilitaBiometria;
     unsigned char m_naoRecuperado7[2];
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
-    std::vector<int> m_lista2;
+    std::vector<ecourna::app::dados::ETipoIdentificadorEleitor> m_tiposIdentificador;
 
     static std::unique_ptr<CConfiguracaoEleicao> s_instance;
     static std::mutex s_mutex;

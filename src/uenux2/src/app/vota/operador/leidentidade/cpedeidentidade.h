@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "app/comum/cappstate.h"
@@ -27,8 +28,12 @@ namespace vota {
 // +11, +12 and +13 the three ticks StartState starts through vota::CThreadOperador (fn 700) and FinishState stops
 // (fn 422), +16 a std::shared_ptr to a std::string, and +24 the form StartState shows and ProcessInput reads. The
 // pointee at +16 is a string: ProcessTick (fn 10676, pending) assigns it "CORRIGE: outras opções" or " " on the third
-// tick (fn 276, string::__assign_external, and a one-character store in place). A singleton: fn 652 holds
-// GetInst and the constructor inlined; neither is reconstructed.
+// tick (fn 276, string::__assign_external, and a one-character store in place). A singleton: GetInst (fn 652) creates
+// the 32-byte object under a static std::mutex (@1905312, destroyed at exit by fn 10681) and keeps it in a static
+// std::unique_ptr (@1905336, by fn 10682); the constructor, inlined there, passes EVENTO_ENTRADA | EVENTO_TICK (6) to
+// the base's, adds the three ticks (60000, 5000 and 1000), makes +16 a std::string " ", builds the form at +24 from a
+// copy of it (vota::MontaTelaPedeIdentidade, app/vota/operador/comum/telasoperador.h) and then calls
+// vota::AgendaInspecao (fn 3620). The member names are chosen.
 // src/units/161-uenux2-app-vota-operador-identidade.mk says which of this is evidence and which is chosen.
 class CPedeIdentidade final : public comum::CAppState {
 public:
@@ -46,6 +51,9 @@ public:
 
 private:
     CPedeIdentidade();
+
+    static std::unique_ptr<CPedeIdentidade> s_inst;
+    static std::mutex s_mutex;
 
     uebyte m_tickIdentidade;
     uebyte m_tickEspera;
