@@ -116,7 +116,10 @@ So a hand edit to `splat/symbol_addrs.txt` needs evidence that does not come fro
 
 Without a kind table (`--no-kinds`), the check offers every `i32.const` (and every memarg offset of 1024 or more)
 each reading its value allows: the literal, the target address of what it points at in our data, and the target slot
-of the function in our table slot. The target's bytes then pick the reading, so an operand's kind comes from the
+of the function in our table slot (an import by its real name: at b06c29c8 three of our slots held `__cxa_throw`,
+`__cxa_end_catch` and `__cxa_rethrow`, so a test that reads a slot's function reads it as `slotReadings` does, through
+`resolveFunction`, not by our defined functions' keys). The target's bytes then pick the reading, so an operand's kind
+comes from the
 target. Patch one operand of a copy of our link and run `splat-build` that way, and these wrong values pass: an
 integer of ours equal to one of our table slots whose function the target keeps in the target's slot of that number
 (c2); an address written as the target's number for the right string (c5); a function-pointer slot written as the
@@ -633,17 +636,20 @@ awk -F'\t' 'BEGIN {n = split("9517 2056 1565 2777 3681 5516 12317 12564 2899 108
    ```
 
    A unit that matches 10362, 10369 or 10374 adds a member to 1565's body; 3607 and 3740 matched with unit 163 and gave
-   2899's body the target's four callers. In our link the three bodies are 1990, 2497 and 5621:
+   2899's body the target's four callers. Our link's index of each body (`ours` in the scan) and of its callers moves at
+   every landing, so read the members by name: the scan's `ours` for the three, then their callers in our link
+   (`wasm-objdump -d`), then `build/out/wasm-map/vota_web/names.tsv` for each caller:
 
    ```sh
    wasm-objdump -d build/out/wasm/vota_web/vota_web_wasm.wasm | awk -v o="$(awk -F'\t' '$1==1565 || $1==2899 || $1==6026 {print $3}' splat/scan.tsv | tr '\n' ' ')" 'BEGIN {n = split(o, a, " "); for (i = 1; i <= n; i++) w[a[i]] = 1} / func\[[0-9]+\]:$/ {f = $2} NF > 1 && $(NF-1) == "call" && ($NF in w) {print $NF, f}' | sort -u | tr '\n' ' '; echo
-   # 1990 func[11364]: 1990 func[2470]: 1990 func[3375]: 1990 func[5411]: 1990 func[9888]: 2497 func[11065]: 2497 func[11073]: 2497 func[5532]: 2497 func[5533]: 5621 func[11064]: 5621 func[11072]:
+   # at 182dc6c1: 2171 func[11683]: 2171 func[2659]: 2171 func[3577]: 2171 func[5560]: 2171 func[9933]: 2752 func[11317]: 2752 func[11323]: 2752 func[3660]: 2752 func[3790]: 5984 func[11315]: 5984 func[11322]:
    ```
 
-   2470 and 3375 are `CLedFieldMT`'s and `CLineField`'s D0, 5411 `api::CCutFieldPaper`'s, 11364 and 9888 two
-   `api::CDataTextFmt<…>` D0s, from `cmtformbuilder.cpp.o` and unit 79's roots object; 11065 and 11073 are
-   `api::CFormPart`'s and `comum::CParteEleitores`' D2s and 11064 and 11072 their D0s, and 5532 and 5533 the two
-   `comum::servico` classes' D2s (`build/out/wasm-map/vota_web/names.tsv`). When such a set changes, the bodies stop
+   1565's body (2171 there) has five members: the D0s of `CLedFieldMT`, `CLineField` and `api::CCutFieldPaper`, and two
+   `api::CDataTextFmt<…>` D0s, from `cformbuilder.cpp.o` and unit 79's roots object; the three
+   `CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>` D0s of the `cpedetitulomesario*.cpp` objects
+   make it eight once they land. 2899's (2752) are the D2s of `api::CFormPart`, `comum::CParteEleitores` and the two
+   `comum::servico` classes, and 6026's (5984) the first two's D0s. When such a set changes, the bodies stop
    verifying, or the merged body takes another member's name and step 9 renames its line (how-to step 10, "A twin whose
    name moved").
 
@@ -923,6 +929,30 @@ for s in [k for k, v in el.items() if v == 7722]:
 # 12188 [(1802196, 'sqlite3Apis')]
 ```
 
+A census pair can name the wrong class's member the same way, and the line then follows the pair. At 5ab3adc2, with
+`vota::CIdentidadeInvalida::ProcessInput` (10667) written as a thunk `f2295(p0, 5, <its Read() record>)`, step 9 added
+10604 under 10667's symbol (source `ledger`, `readings: address same-content`): the census paired 10604 by `shape`,
+and the data that point at 10604 are `vota::CEleitorImpedidoJustificarVotoCPF`'s vtable (slot 7, @1589588), a class
+no object of ours held then. Deleted, the line came back at the next `splat-match`, since the scan's row comes from
+the pair (`scanCandidates` reads `ledger`), not from the line. It took its own name once that class's member was
+written: `awk '$1==10604' splat/matched.txt` prints `10604 _ZN4vota33CEleitorImpedidoJustificarVotoCPF12ProcessInputEv`.
+
+The content pass crosses lines among thunks alike but for a vtable constant. The three
+`api::CDataTextFmt<comum::(anonymous namespace)::CComparecimentoMesariosDS>` D2 and D0 thunks, one pair per
+`cpedetitulomesario{inicial,final,votacao}.cpp`, were first matched each on another file's symbol, and the build
+verified them, until a later scan re-pointed the vtables' words through the crossed names and the vtables stopped
+placing. The vtable that holds each index says whose it is:
+
+```sh
+python3 -I -B -c "import json; [print(e['address'], e['functions']) for e in json.load(open('ledger/vtables.json')) if e['address'] in (1594028, 1594180, 1594332)]"
+# 1594028 [10377, 10374, 5387, 1661]
+# 1594180 [10370, 10369, 10368, 1661]
+# 1594332 [10363, 10362, 5387, 1661]
+```
+
+Corrected by hand to the object whose vtable that is, the six lines held at 95895e6d: the next `splat-match` added
+nothing and `status.py --check` agreed. A hand-corrected line is sound only when such a re-run keeps it.
+
 ## S12. A `std::source_location` record the target holds more than once
 
 clang emits a record per TU and wasm-ld merges none of them, so a header-inline throw has its record once per TU that
@@ -1033,3 +1063,16 @@ and 9281 (boost's `perl_matcher::unwind_extra_block`, whose `mem_block_cache` ob
 awk -F'\t' '$1==5158 || $1==7752 || $1==7754 || $1==7756 || $1==7758 || $1==7760 || $1==7764 || $1==9281 {print $1, $5}' splat/scan.tsv
 # every one of the eight prints match
 ```
+
+## S14. The scan can keep a match the build refuses as self-voted
+
+`selfVoted` (`asmlift-wasm/src/splat-sub.ts`) skips a function name whose index is among the matches it is given. The
+scan gives it every row of the pass that reads `match` before the refusal, so a callee refused later in the same pass
+(its only voter its own operand) has already exempted its callers, and the fixed point does not revisit them. The scan
+writes `match` for those callers; `splat-build`, given only `splat/matched.txt`, where the callee is not, refuses them
+as `UNCONFIRMED: self-voted`. Taken out of the match list, the lines come back at the next `splat-match` (`2 matches
+added`), and `status.py --check` then fails on `scan only: [<indices>]`: no state passes both. At 951cf4b4, 3526 and
+9518 (ecourna's `basic_regex` parsers over a `__wrap_iter`) were such callers, over 5189 and 2689; before 64215e06,
+1166 over 1322. `awk -F'\t' '$1==<caller> || $1==<callee> {print $1, $5, $6}' splat/scan.tsv` prints `match` for the
+caller and `unresolved self-voted` for the callee. The build is the verdict: the lines stay out, and the result says
+`status.py --check` names them. A weighing on such a state takes them out of every copy ("Reviewing a match").

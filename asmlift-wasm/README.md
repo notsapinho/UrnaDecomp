@@ -34,7 +34,7 @@ pnpm bench <command> …               # the lifter benchmark, benchmark/README.
 | `splat-split <wasm> -o <dir> [--names <functions.tsv>] [--attribution <tsv>] [--no-wat]`                    | the module as pieces (function bodies, data segments, manifest), then proves they reassemble to the input's bytes                                                                 |
 | `splat-assemble <dir> -o <wasm> [--substitute <dir\|<index>[-<name>].bin>]…`                                | the module from the pieces alone, with replacement bodies for some functions                                                                                                      |
 | `splat-symbols <target> <plain> [-o <symbol_addrs.txt>] [--kinds f \| --no-kinds]`                         | the target's symbol file (function indices and data addresses → names) from our link's maps and the evidence                                                                      |
-| `splat-maps <target> <plain> (--fn <ours> \| --data <addr> \| --target-fn <n> \| --summary) [--kinds f \| --no-kinds]` | one entry of the symbol maps, re-pointed with no match applied                                                                                                          |
+| `splat-maps <target> <plain> (--fn <ours> \| --data <our addr> \| --target-fn <n> \| --summary) [--kinds f \| --no-kinds]` | one entry of the symbol maps, re-pointed with no match applied                                                                                                          |
 | `splat-remap <target> <plain> <ours> [--against <target fn>] [--kinds f \| --no-kinds]`                     | one body of ours re-pointed into the target, and whether it is the target body                                                                                                    |
 | `splat-sym-coverage <target> <plain> [--smoke N] [--kinds f \| --no-kinds]` / `splat-twin-check <plain> <twin>` | symbol coverage; the `--emit-symbol-map` twin against the plain link                                                                                                       |
 | `splat-scan <target> <plain> [-o scan.tsv] [--match [<matches>]] [--kinds f \| --no-kinds]`                 | every target function against our re-pointed candidate; `--match` appends new matches to the match list                                                                           |
@@ -102,6 +102,13 @@ leading `_` from the JS name (`___cxa_throw` → `__cxa_throw`, `_fd_write` → 
 `js_init` and `invoke_vii` stay). Exports are minified the same way and recovered from the glue's
 `_votaInit=Module["_votaInit"]=wasmExports["Eb"]` assignments; the bare `wasmExports["Db"]()` call is
 `__wasm_call_ctors`.
+
+Each command reads the glue `<name>.js` beside each wasm it is given, and prints `names for <wasm>: <glue>` on stderr
+for each side whose glue it read. A wasm copied without its glue compares imports by their minified fields
+(`import:d`), and nothing warns: `score` then counts every import call as a replaced row (a variant of 7181 scored 101
+against 97 beside its glue), and `fingerprint` gives another hash for every function that calls an import. Score or
+fingerprint a link where it was written, or copy its `.js` with it under the same base name, and check for one
+`names for` line per module.
 
 Table indices are deliberately **not** symbolised from a bare `i32.const`: emscripten's table
 starts at 1 and its data at 1024, so every small integer is a plausible function pointer and vice
@@ -574,7 +581,7 @@ slot reading.
 | command                                                                                        | does                                                                       |
 | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | `splat-symbols <target> <plain> [-o f] [--kinds f \| --no-kinds]`                              | gather the evidence and write the symbol file, keeping its hand edits      |
-| `splat-maps <target> <plain> --fn <i\|sym:n> \| --data <addr> \| --target-fn <i> \| --summary` | one entry of the maps, with no match applied (takes `--kinds` too)         |
+| `splat-maps <target> <plain> --fn <i\|sym:n> \| --data <our addr> \| --target-fn <i> \| --summary` | one entry of the maps, with no match applied (takes `--kinds` too); `--data` re-points an address of our link into the target's |
 | `splat-remap <target> <plain> <i\|sym:n> [--against <t>] [--kinds f \| --no-kinds]`             | one body re-pointed: unresolved operands, or whether it is the target body |
 | `splat-sym-coverage <target> <plain> [--smoke N] [--kinds f \| --no-kinds]`                     | named target functions, and the ledger's pairs re-pointed                  |
 | `splat-twin-check <plain> <twin>`                                                              | the twin's bodies against the plain link's through a name/body pairing     |

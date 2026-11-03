@@ -146,6 +146,7 @@ Post it when you hit it, not at the end of your stage.
      mkdir -p "$W/$(dirname "$p")"
      cp -cpR "$p" "$W/$p"                            # APFS clone; on Linux: cp -a --reflink=auto
    done
+   [ -d "$W/build/out/verify" ] && mv "$W/build/out/verify" "$W/build/out/verify-cloned"   # another stage's scratch
    make -n -C "$W/src" link                          # must print: Nothing to be done for `link'
    ```
 
@@ -197,6 +198,13 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   a body of ours calls something no target function is named for, which the row's `detail` names, and how-to step 1
   tells the three cases apart.
 
+  A row with no stub and no class of its own (group `app`, `libc++` or `unknown`, or a lambda's `__func` slot) is no
+  target by itself: it goes to the lane of its unmatched callers when they are all in one lane, a `__func` slot to the
+  lane of a function that builds it (below), and is counted there; otherwise it is in no lane. The executable TU's
+  copies (`-Oz`, landing pads, no stub: 388, 518, 679, 1091) are picked like any other row: their source is that TU
+  (unit 170) or a tree root at `VOTA_WEB_CXXFLAGS`, and a copy whose shape depends on a reader (a destructor's kept
+  `this`, `docs/reference/facts/reading.md` §R2) needs that reader in the link.
+
   A batch still landing moves the pool of a pick whose base is before it. Count as resolved what its branches match or
   name (`git show <branch>:splat/symbol_addrs.txt`). The rows they write or trap without matching (their diff removes
   the row's stub, or adds the member to a `-pending.cpp`) are out of the pool until they land, and the pick says which
@@ -216,7 +224,10 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   named (`/usr/bin/grep -F '= func:N;' splat/symbol_addrs.txt` prints one). A slot of a lambda's
   `std::__function::__func` vtable is written with the function that builds the lambda, the one whose body stores that
   vtable's vptr (`pnpm wasm fn` of it shows the `i32.const`): count that builder as the slot's callee, since the
-  closure type is local to it. A call of the row itself, or a cycle of rows the lane writes together, blocks nothing:
+  closure type is local to it. binaryen merges identical slot bodies, so one row can be a slot of several `__func`
+  vtables (`ledger/vtables.json` lists it in each, 2881 in four): any one of their builders gives it a body of ours,
+  so it waits for the first of them, not for all. A call of the row itself, or a cycle of rows the lane writes
+  together, blocks nothing:
   the name comes from a caller's vote once the caller matches (how-to step 1, "The row's own symbol"), so the row goes
   in its caller's lane. A function whose callees are unnamed
   needs those first, with one kind of exception: a callee the candidate's own TU instantiates, which step 8 names by
@@ -235,13 +246,33 @@ How to pick, from [how-to-decompile.md](../../docs/how-to-decompile.md) step 1:
   another vector of an 8-byte element in the target: 11361, `CConversorSituacoesEleicoes`'s converter, which builds a
   `vector<CSituacoesEleicoes>`, calls 760 (`pnpm wasm fn ../target/vota_web_wasm.wasm 11361` shows `call 760`). A
   caller that uses that other instantiation still resolves when its body is the same (how-to step 3, "A callee can
-  be a twin").
+  be a twin"). A callee written and `differs` resolves for a lane that writes two of its callers from two target
+  bodies that are pairs themselves (anchored by a record or vptr, or named by an anchored caller): their `call` votes
+  name it, and the two hold each other (`docs/reference/splat.md` §3); the pick names the two, and they land together.
+  A caller with no record, vptr or census pair votes for nothing (1255 over 502).
+- **And every data operand.** A row with a body of ours already (the scan's `ours`, or a symbol of its name in
+  `names.tsv` when it reads `no-candidate`) also needs each data object it reads: from `asmlift-wasm/`, `pnpm wasm
+  splat-remap <target> <plain> sym:<its symbol> --against <row>` prints no `no target symbol` for it. Such an object
+  resolves when a matched or lane-written reader votes for it, or a hand line names it (how-to step 9); else the row
+  waits with it (1558 and 3923 on `__format_spec`'s 2-byte field sets).
+- **And every row has a keeper.** A row lands only if our link keeps it: a caller, a store of its vtable's vptr, or
+  a function that passes its table slot, each matched, written, in the lane, or a roots stand-in (an external
+  function; a vtable through a sink). A template copy or an internal helper whose callers are all unwritten waits for
+  them, under their lane. A function passed by its slot is kept by the passer: the slot's `i32.const` in the passer's
+  piece (`/usr/bin/grep -rlE 'i32\.const <slot>($|[^0-9])' build/out/splat/pieces/asm`), checked in the element
+  section and used as a slot (an `invoke_*` first argument, a `call_indirect` operand, a stored function pointer the
+  code calls), since an integer can equal a slot: 11852 stores `2594` beside `2582` as a value and keeps no 11423, whose
+  keeper is its class's vptr store (`docs/reference/facts/reading.md` §R20). A static's exit destructor (10 to 14 B,
+  its only reference its table slot, which `__cxa_atexit` gets at run time) has no keeper a search sees:
+  `wasm-objdump -x -j Elem target/vota_web_wasm.wasm | /usr/bin/grep -E 'ref\.func:10682$'` prints `elem[3848]`, and
+  no piece holds `i32.const 3848`. It lands with the lane whose match reads the static, and counts there.
 - **A flag not decided.** The user decided three: uenux2 at `-std=c++23` and the executable TU at its own rule
-  (`VOTA_WEB_CXXFLAGS`), both in `src/Makefile` (`docs/reference/facts/levels.md` §V3, §V1), and strict aliasing per
-  directory in uenux2, landed as the directories `UENUX2_TBAA_DIRS` lists in `src/Makefile`
-  (`docs/reference/facts/levels.md` §V5): a lane reports a measurement that would move a directory, and does not move
-  it. Every other flag stays the user's to decide: a member whose body needs one (a no-stub row goes by its callers'
-  tree, not its group) is listed as waiting for that decision, not as expected.
+  (`VOTA_WEB_CXXFLAGS`), both in `src/Makefile` (`docs/reference/facts/levels.md` §V3, §V1), and strict aliasing by
+  directory and file in uenux2, landed as the directories and files `UENUX2_TBAA_DIRS` lists and the files
+  `UENUX2_NOTBAA_FILES` keeps out of them (`docs/reference/facts/app-flags.md` §F6): a lane reports a measurement that
+  would move a directory or a file, and does not move it, and the user decides each file. Every other flag stays the
+  user's to decide: a member whose body needs one (a no-stub row goes by its callers' tree, not its group) is listed
+  as waiting for that decision, not as expected.
 - **The stub may sit over code we have**: search our sources for the class before choosing (step 1).
 - **The name and the file**: from the records, the vtable slot, `ledger/vtables.json` and `ledger/classes.json`;
   for an `unplaced.cpp` stub, the file rules of how-to step 3.
@@ -293,13 +324,19 @@ has changed them since (`git diff "$(git merge-base main HEAD)" main -- docs src
 `main`'s too, since the branch lands under them; the verdict says which text it read. Below, `<base>` is the commit the
 branch started from, `git merge-base main HEAD` for a branch cut from `main`:
 
-1. **Fresh objects.** Move aside, by name (into `build/out/verify/old-objs/`), every object the lane built:
-   `find build/out/app -name '*.o' -newer .git` lists them, since the worktree's `.git` file dates from its creation
-   and the cloned objects keep the checkout's older mtimes. A header the lane added or edited rebuilds every object of
+1. **Fresh objects.** A `build/out/verify/` that exists before your stage is another stage's (a clone of the
+   checkout's, or a verify of the lane the worktree was cut from): move it aside by name first. Move aside, by name
+   (into `build/out/verify/old-objs/`), every object the lane built: `find build/out/app -name '*.o' -newer .git`
+   lists them, since the worktree's `.git` file dates from its creation and the cloned objects keep the checkout's
+   older mtimes. Objects outside `build/out/app/` rebuild too: a fragment's rule can make library objects depend on
+   it (an edit of fragment 06, a comment included, recompiles the 13 zlib objects under `build/out/zlib/O3pic/`), so
+   `make -n -C src link | /usr/bin/grep -oE ' -o [^ ]+\.o'` before the build lists every object it compiles, and
+   each is copied and compared the same way. A header the lane added or edited rebuilds every object of
    its tree and the companions that name its directory, not only the unit's (`src/units/README.md` "What a fragment
    holds" item 3; `docs/reference/facts/workflow.md` §W15), and `-newer <header>` misses an object built before that
    header's last edit. Run `TMPDIR=/tmp make -C src splat`, with no `-j`, check that it compiled exactly those objects, and `cmp`
-   each with its old copy. A stale object means the source edits never rebuilt. An object that does not come back is a
+   each with its old copy, looping over that list, never over `old-objs/`. A stale object means the source edits never
+   rebuilt. An object that does not come back is a
    deleted file's: `cmp` is owed for the objects the link names.
 2. **The splat build** prints the target's sha256, and no index the branch's base matches is lost (how-to step 10's
    `comm`, against `<base>`). A
@@ -376,7 +413,9 @@ lands ("Pausing and resuming" below).
    <commit>` prints nothing), so nothing is regenerated: link, run the splat build and the checks, and commit.
 2. **Each later lane** merges with `git merge --no-ff --no-commit <commit>` and resolves the conflicts as
    [how-to-decompile.md](../../docs/how-to-decompile.md) step 10 "Landing onto a moved main" says, then runs steps 6
-   to 10 again on the merge (link, census, symbols, match, build, checks) and commits it all as the merge commit. Every
+   to 10 again on the merge (link, census, symbols, match, build, checks) and commits it all as the merge commit. The
+   checks are step 3's, `pnpm test` among them (about 200 s on the Mac mini), run on each merge, so that a case that
+   reads a number the merge moved changes in that merge commit (`docs/reference/facts/workflow.md` §W12). Every
    check passes at that commit but one case: a lane that adds or retires a benchmark setup leaves the merge failing
    `pnpm test:bench` until the re-selection, a commit of its own after it (`asmlift-wasm/benchmark/README.md`
    "Re-selecting"), and the merge's message says so. A
