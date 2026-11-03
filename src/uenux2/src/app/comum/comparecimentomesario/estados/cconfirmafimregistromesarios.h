@@ -22,10 +22,10 @@ class IControladorRegistraMesarios;
 // comum::CConfirmaFimRegistroMesarios (RTTI: si_class of comum::CAppState; vtable @1593792 [448, 765, 10385, 7480,
 // 1661, 218, 425, 10383, 425]): it overrides StartState (slot 2, fn 10385), which asks whether to end the registration
 // of mesarios, and ProcessInput (slot 7, fn 10383), which goes on with the next mesario on CORRIGE and ends on
-// CONFIRMA. GetInst (fn 5389) and the constructor inlined there, which builds both forms, are not reconstructed: they
-// call fns 395 (api::CMTFormBuilder::AddInputControl) and 1255 (comum::TelaRegistroMesarios, cregistrarmesarios.h),
-// both now written. A singleton: GetInst keeps the object in a static std::unique_ptr (@1909484, destroyed at exit by
-// fn 10387) under a static std::mutex (@1909460, by fn 10386). The 28-byte object and its two forms are those of the
+// CONFIRMA. GetInst (fn 5389) holds the constructor inlined behind a 16-byte frame of its own, and the constructor the
+// operator's form's builder behind a 48-byte one: binaryen inlined both, each out of line in the .cpp. A singleton:
+// GetInst keeps the object in a static std::unique_ptr (@1909484, destroyed at exit by fn 10387) under a static
+// std::mutex (@1909460, by fn 10386). The 28-byte object and its two forms are those of the
 // 19 states over the destructors 448 and 765: src/units/135-uenux2-comum-mesario-estados.mk says which of this is
 // evidence and which is chosen.
 class CConfirmaFimRegistroMesarios final : public CAppState {
@@ -49,5 +49,11 @@ private:
     std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> m_form;
     std::shared_ptr<api::IForm<api::IScreen>> m_formEleitor;
 };
+
+// The operator's form of this state, which the constructor assigns to m_form. Fn 5389 holds it inlined by binaryen
+// behind a 48-byte frame: "Finalizar registro de mesários?" with AddBuzz(51, 10).
+// Its name and its being a free function of comum with external linkage are chosen; in the anonymous namespace
+// clang inlines it into the constructor, one frame where the target has two (src/units/135-uenux2-comum-mesario-estados.mk).
+std::shared_ptr<api::CInteractiveForm<api::IScreenMT, api::IInputMT>> TelaConfirmaFimRegistroMesarios();
 
 } // namespace comum

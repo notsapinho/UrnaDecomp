@@ -21,7 +21,8 @@ alignas(8) char w247_formularios[64];
 // Stands for the constructors of the states over comum::CAppState that store fn 1255's form at +20, each inlined into
 // the function that holds its GetInst: comum::CRegistrarMesarios's (fn 3610), CConfirmaFimRegistroMesarios's (fn 5389),
 // CLimiteMesariosRegistradosAtingido's (fn 5386), CMesarioRegistrado's (fn 10337) and CTituloMesarioVazio's,
-// CTituloMesarioInvalido's and CTituloMesarioJaRegistrado's (fn 10313, three call sites).
+// CTituloMesarioInvalido's and CTituloMesarioJaRegistrado's (fn 10313, three call sites). 5389 and 10313 are in the link
+// (unit 135, unit 71); the stand-in stays for 3610, 5386 and 10337.
 __attribute__((noinline)) int ConstroiEstadosRegistro(int n)
 {
     w247_tela(w247_formularios + (n & 8));

@@ -96,9 +96,6 @@
 
 // link-order cluster 869 · uses=2
 
-// f6013 · 2101 B · unmatched · placement: link order · name unknown
-// ? f6013(i32, i32, i32, i32, i32, i32, i32, i32) { ... }
-
 // f6006 · 1651 B · unmatched · placement: link order · name unknown
 // void f6006(i32, i32, i32, i32, i32, i32, i32) { ... }
 

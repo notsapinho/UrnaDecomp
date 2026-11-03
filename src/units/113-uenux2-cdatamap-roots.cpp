@@ -124,8 +124,8 @@ __attribute__((noinline)) int CriaJustificadores(void* primeiro, void* segundo)
     return 43;
 }
 
-// Stands for the callers of CRegistradorMesario::GetInst (fn 815) not in the link, 3614, 5387, 6734, 10313, 10337,
-// 10368, 10451, 11616 and 12105 (10795 is); of QuantidadeMesariosInicio (fn 3606), 5387 and 12105, and of
+// Stands for the callers of CRegistradorMesario::GetInst (fn 815) not in the link, 3614, 5387, 6734, 10337, 10368,
+// 10451, 11616 and 12105 (10795 and 10313 are); of QuantidadeMesariosInicio (fn 3606), 5387 and 12105, and of
 // QuantidadeMesariosFim (fn 2727), 10368 and 12105 (10795 calls both); and of HasInst (fn 2221), 11616 and 12105.
 __attribute__((noinline)) int ConsultaRegistrador(std::size_t* quantidades)
 {

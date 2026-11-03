@@ -50,7 +50,13 @@ const md::CLocal& CLocal::GetLocalData() const
     return *m_local;
 }
 
-// (original lines 53-76: content not recovered)
+bool CLocal::EhExterior() const
+{
+    VerificaLido("EhExterior");
+    return GetUF() == "ZZ";
+}
+
+// (original lines 59-76: content not recovered)
 #line 77
 TZonaID CLocal::GetZonaID() const
 {

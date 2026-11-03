@@ -48,6 +48,13 @@ public:
     // (GetIdentidadePrincipalEleitor) returns. Its type is the type it is compared with; the names are chosen.
     ecourna::app::dados::ETipoIdentificadorEleitor GetTipoIdentificadorPrincipal() const { return m_tipoIdentificadorPrincipal; }
 
+    // The byte at +665, tested as a bool (`i32.load8_u[f187()+665]` in fn 10313):
+    // comum::IPedeTituloMesario::ProcessInput (fn 10313) goes on to comum::CPedeDigitalMesario, the request for the
+    // mesario's fingerprint, only when it is set and CLocal::EhExterior() is false, and vota::CPedeDigital::StartState
+    // (fn 10468), vota::CNomeEleitor's fn 10500 and fn 7787 read it too. That it says the biometric identification is on
+    // is a reading of those uses; the names, and the types of the bytes around it, are chosen.
+    bool HabilitaBiometria() const { return m_habilitaBiometria; }
+
     // Two api::CDateTime of 12 bytes inside the bytes after the municipality: vota::CConfirmaImpressaoZeresima::GetInst
     // (fn 5959) and vota::CVerificaHorarioZeresima::GetInst (fn 5947) copy +544 (`i64.load[+544]`, `i32.load[+552]`),
     // the time the zerésima waits for (fn 11870 compares the current time with the copy); vota::CInicioVotacao::GetInst
@@ -98,7 +105,9 @@ private:
     std::string m_descricao;
     unsigned m_naoRecuperado4[3];
     std::vector<int> m_lista1;
-    unsigned m_naoRecuperado5;
+    unsigned char m_naoRecuperado5;
+    bool m_habilitaBiometria;
+    unsigned char m_naoRecuperado7[2];
     ecourna::app::dados::ETipoIdentificadorEleitor m_tipoIdentificadorPrincipal;
     std::vector<int> m_lista2;
 
