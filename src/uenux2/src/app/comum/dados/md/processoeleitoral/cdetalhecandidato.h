@@ -16,6 +16,14 @@ using TVectorSuplencia = std::vector<CSuplencia>;
 
 class CDetalheCandidato {
 public:
+    // comum::asn::CConversorDetalheCandidato::DoDesconverte (fn 11375) holds it inlined: the flag, then copies of the
+    // names and of the substitutes' vector. Its being inline in the class and the parameters are chosen: no record
+    // names it.
+    CDetalheCandidato(bool temFoto, const CNomesCargo& nomes, const TVectorSuplencia& suplentes)
+        : m_temFoto(temFoto), m_nomes(nomes), m_suplentes(suplentes)
+    {
+    }
+
     // The names are chosen: comum::md::CCargo's TemFoto and QtdSuplentes (fns 1546, 1157) read the two fields.
     bool TemFoto() const { return m_temFoto; }
     const CNomesCargo& GetNomes() const { return m_nomes; }

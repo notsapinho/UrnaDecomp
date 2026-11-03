@@ -16,6 +16,7 @@
 #include "app/comum/dados/clocal.h"
 #include "app/comum/dados/chv.h"
 #include "app/comum/dados/cpe.h"
+#include "app/comum/dados/cqrcodeds.h"
 #include "app/comum/dados/md/parametrizacaourna/ctradutorfrase.h"
 #include "app/comum/informacao/cinformacaoeleicao.h"
 #include "app/comum/relatorios/crelutil.h"
@@ -49,6 +50,13 @@ bool CRelatorioTesteImpressora::TemHorarioVerao() const
 bool CRelatorioTesteImpressora::EhTreinamento() const
 {
     return CAppInfo::GetInst().GetGeral().GetDadoCarga().GetFase() == FASE_TREINAMENTO;
+}
+
+std::string CRelatorioTesteImpressora::GetConteudoQRCode() const
+{
+    CQRCodeDS qrCode(CAppInfo::GetInst().GetGeral().GetDadosQRCode());
+    qrCode.SetOrigem(CQRCodeDS::eOrigemImpressora);
+    return qrCode();
 }
 
 const md::CHorarioVerao& CRelatorioTesteImpressora::GetHorarioVerao() const
@@ -148,7 +156,7 @@ std::string ConverteTipoLocal()
     }
 }
 
-// (original lines 151-170: content not recovered)
+// (original lines 159-170: content not recovered)
 #line 171
 std::string ConverteTipoAlimentacao()
 {

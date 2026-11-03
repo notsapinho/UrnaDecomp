@@ -5,12 +5,6 @@
 // The stub of each member here went when this file landed; where it was the last stub of a stub-only file, that file
 // went with it, and writing the member writes the file again at its records' lines (named below, under
 // src/uenux2/src/app/comum/dados/).
-// - comum::asn::CConversorDetalheCandidato::DoDesconverte (slot 3, fn 11375, records
-//   asn/processoeleitoral/cconversordetalhecandidato.cpp:29, :34 and :39; that stub-only file went), not written: its
-//   callees have names (1135 matches since unit 88's GetCargos, 2341 since fragment 191).
-// - comum::asn::CConversorEleicaoPE::DoDesconverte (slot 3, fn 11371: md::CEleicaoPE's checks inlined, records
-//   md/processoeleitoral/celeicaope.cpp:63 to :92), not written: fn 3816 has no name (2289 matches since unit 88's
-//   GetCargos).
 // - comum::asn::CConversorDedo::DoDesconverte (slot 3, fn 11416, records asn/eleitor/cconversordedo.cpp:159 and :169, a
 //   stub-only file that went, and md/eleitor/cdedo.cpp:28 and :33), not written: fn 5702 has no name.
 // - comum::asn::CConversorBiometriaEleitor::DoDesconverte (slot 3, fn 11422, record
@@ -28,21 +22,9 @@
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitor.h"
 #include "app/comum/dados/asn/eleitor/cconversorbiometriaeleitorcifrada.h"
 #include "app/comum/dados/asn/eleitor/cconversordedo.h"
-#include "app/comum/dados/asn/processoeleitoral/cconversordetalhecandidato.h"
-#include "app/comum/dados/asn/processoeleitoral/cconversoreleicaope.h"
 #include "app/comum/gravadores/asn/cconversorentidadehashes.h"
 
 namespace comum::asn {
-
-md::CDetalheCandidato CConversorDetalheCandidato::DoDesconverte(const TEntidade&) const
-{
-    __builtin_trap();
-}
-
-CConversorEleicaoPE::TDado CConversorEleicaoPE::DoDesconverte(const TEntidade&) const
-{
-    __builtin_trap();
-}
 
 md::CDedo CConversorDedo::DoDesconverte(const TEntidade&) const
 {

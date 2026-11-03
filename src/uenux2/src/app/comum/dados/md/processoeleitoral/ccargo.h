@@ -54,6 +54,9 @@ public:
     // CConfiguracaoEleicao::GetCargos's comparator (fn 11547) compares the byte at +16 unsigned.
     uebyte GetOrdemAquisicao() const { return m_ordemAquisicao; }
     uebyte GetOrdemImpressao() const { return m_ordemImpressao; }
+    // The name is chosen: md::CEleicaoPE::ValidaCargos (inlined into fn 11371) checks the byte at +17 as the third
+    // order.
+    uebyte GetOrdemApuracao() const { return m_ordemApuracao; }
     // The name is chosen: comum::CGeradorBUQRCode::GetCamposAptos (fn 3696) reads the field.
     ETipoAbrangencia GetAbrangencia() const { return m_abrangencia; }
     // The name is chosen: vota::CPedeMajoritario::ProcessInputAudio (fn 11683) tests the flag (+14) before it looks

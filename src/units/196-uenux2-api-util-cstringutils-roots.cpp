@@ -22,6 +22,23 @@ __attribute__((noinline)) int VersoesDe(int primeira, int segunda)
     return numeros[2] - numeros[5];
 }
 
+} // namespace
+
+// api::CStringUtils::JuntaTags (target fn 3646) has three direct callers in the target: fn 5782 (comum::CQRCodeDS's
+// call operator, fragment 299, in our link) and fns 12039 and 12110 (vota::CGeraBU's slot 2), not in our link. This
+// stands for those two.
+extern "C" void w3646_junta(void*, const void*) __asm__(
+    "_ZN3api12CStringUtils9JuntaTagsERKNSt3__26vectorINS1_4pairINS1_12basic_stringIcNS1_11char_traitsIcEENS1_"
+    "9allocatorIcEEEES9_EENS7_ISA_EEEE");
+
+namespace {
+
+__attribute__((noinline)) int TextoDosPares(char* texto, const char* pares)
+{
+    w3646_junta(texto, pares + 12);
+    return texto[11] - texto[0];
+}
+
 const void* volatile cstringutils_sink;
 
 struct SCStringUtilsRoots {
@@ -29,6 +46,7 @@ struct SCStringUtilsRoots {
     {
         cstringutils_sink = reinterpret_cast<const void*>(&VersaoDe);
         cstringutils_sink = reinterpret_cast<const void*>(&VersoesDe);
+        cstringutils_sink = reinterpret_cast<const void*>(&TextoDosPares);
     }
 } cstringutils_roots;
 

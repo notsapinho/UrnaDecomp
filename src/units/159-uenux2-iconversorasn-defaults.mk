@@ -19,11 +19,13 @@
 # from the headers' code; the pending object emits this fragment's classes' vtables, and the defaults with them, except
 # CConversorHistoricoVotoImpresso's and CConversorFotoCandidato's: fragment 172 writes their own slots (10276, 11440),
 # and those objects emit the vtables now; CConversorCargo's: fragment 191 writes its slot 3 (11373), and
-# cconversorcargo.cpp.o emits the vtable and the default 11372 with it; and CConversorDetalheConsulta's: fragment 225
-# writes its slot 3 (11377), and cconversordetalheconsulta.cpp.o emits the vtable and the default 11376 with it. The
-# roots keep no vtable of CConversorDetalheCandidato and CConversorDetalheConsulta: fn 11373 (fragment 191's) stores
-# both vptrs, the converters it builds on its stack; nor of CConversorEntidadeHashes, whose vptr fn 5367 (unit 293's
-# comum::asn::GravaArquivo) stores.
+# cconversorcargo.cpp.o emits the vtable and the default 11372 with it; CConversorDetalheConsulta's: fragment 225
+# writes its slot 3 (11377), and cconversordetalheconsulta.cpp.o emits the vtable and the default 11376 with it; and
+# CConversorEleicaoPE's and CConversorDetalheCandidato's: fragment 299 writes their slot 3 (11371, 11375), and
+# cconversoreleicaope.cpp.o and cconversordetalhecandidato.cpp.o emit the vtables and the defaults 11370 and 11374
+# with them. The roots keep no vtable of CConversorDetalheCandidato and CConversorDetalheConsulta: fn 11373 (fragment
+# 191's) stores both vptrs, the converters it builds on its stack; nor of CConversorEntidadeHashes, whose vptr fn 5367
+# (unit 293's comum::asn::GravaArquivo) stores; nor of CConversorCargo, whose vptr fn 11371 (fragment 299's) stores.
 #
 # Evidence. Records name each default, its class template and its throw's line and column: iconversorasn.h 89 and 98,
 # iconversorbiometriaasn.h 81, column 15 (a throw in a body in the class). Each thunk passes its instance's record, code

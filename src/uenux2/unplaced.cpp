@@ -166,11 +166,6 @@
 // f3258 · 17 B · unmatched · placement: link order · name unknown
 // void f3258(i32, i32) { ... }
 
-// link-order cluster 978 · uses=3 · neighbours' file uenux2/src/api/util/ctickmanager.cpp
-
-// f3646 · 666 B · unmatched · placement: link order · name unknown
-// void f3646(i32, i32) { ... }
-
 // link-order cluster 994 · uses=3 · neighbours' file uenux2/src/app/comum/relatorios/cgeradorbuqrcode.cpp
 
 // f3695 · 135 B · unmatched · placement: link order · name unknown
@@ -441,9 +436,6 @@
 // f3818 · 659 B · unmatched · placement: link order · name unknown
 // void f3818(i32, i32, i32) { ... }
 
-// f3816 · 560 B · unmatched · placement: link order · name unknown
-// void f3816(i32, i32, i32) { ... }
-
 // f3815 · 278 B · unmatched · placement: link order · name unknown
 // void f3815(i32) { ... }
 
@@ -476,11 +468,6 @@
 
 // f1507 · 53 B · unmatched · placement: link order · name unknown
 // void f1507(i32, i32, i32) { ... }
-
-// link-order cluster 1241 · uses=9
-
-// f1348 · 249 B · unmatched · placement: link order · name unknown
-// ? f1348(i32, i32, i32) { ... }
 
 // link-order cluster 1283 · uses=14
 
